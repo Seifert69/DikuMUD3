@@ -1,4 +1,4 @@
-# Messages configuration file for for Valhalla.
+# Messages configuration file for Valhalla.
 # Copyright 1995 (C), All Rights Reserved (R), Valhalla I/S,
 # Norre Sogade 37C, 5th floor, 1370 Copenhagen K, Denmark.
 #
@@ -156,7 +156,7 @@
 #    {"insignificantly",           /*       O      */
 #     "slightly",
 #     "lightly",
-#     "fairly",                    /*   Adverbes   */
+#     "fairly",                    /*   Adverbs   */
 #     "seriously",
 #     "severely",
 #     "gravely",
@@ -203,12 +203,12 @@
 #
 # Which when decoded are the following numbers below:
 #
-# Due to wierd program design, there must be a blank line between these
+# Due to weird program design, there must be a blank line between these
 # remarks, and the numbers below... :)
 
 
 
-   0 7 8 11 12 13 14 15 16 17 29 30 31 32 40 46 47 48 52 53 -1 /* SLASHING WEAPONS */
+   0 7 8 11 12 13 14 15 16 17 29 30 31 32 40 46 47 48 52 53 58 59 63 67 70 71 73 75 76 79 83 84 88 89 96 97 98 100 -1 /* SLASHING WEAPONS */
 You split the air with a wild slash.~
 $1n splits the air, swinging $1s $2N wildly at you.~
 $1n splits the air with a wild slash.~
@@ -253,7 +253,7 @@ Your $2N cleaves $3n, and kills $3m instantly.~
 $1n cleaves your body, and kills you instantly.~
 $1n cleaves $3n, and kills $3m instantly.~
 
- 0 9 10 21 22 23 24 25 26 27 45 54 -1 /* BLUDGEON WEAPONS */
+ 0 9 10 21 22 23 24 25 26 27 45 54 66 72 74 77 78 91 92 99 -1 /* BLUDGEON WEAPONS */
 You take a wild swing at the passing wind.~
 $1n strikes the air, swinging $1s $2N wildly at you.~
 $1n looks like a clown, trying hard to hit $3n.~
@@ -298,7 +298,7 @@ Your $2N mashes $3n's skull, and kills $3m instantly.~
 $1n mashes your skull with $1s $2N, and kills you instantly.~
 $1n mashes $3n's skull with $1s $2N, and kills $3m instantly.~
 
-   0 18 19 20 28 33 41 49 50 51 -1      /* PIERCING WEAPONS */
+   0 18 19 20 28 33 41 49 50 51 57 60 61 62 64 65 68 69 80 81 82 85 86 87 90 93 94 95 101 -1      /* PIERCING WEAPONS */
 You pierce the air with a wild stab.~
 $1n pierces the air, swinging $1s $2N wildly at you.~
 $1n pierces the air with a wild stab.~
@@ -387,6 +387,96 @@ $1n #B kicks $3n's feet.~
 Your kick mashes $3n's skull, and kills $3m instantly.~
 $1n mashes your skull with $1s kick, and kills you instantly.~
 $1n mashes $3n's skull with $1s kick, and kills $3m instantly.~
+
+ 0 56 -1 /* ELBOW (Weapon) */
+You elbow at the passing wind.~
+$1n elbows in the air, swinging $1s feet wildly at you.~
+$1n elbows air, trying to hit $3n.~
+
+You hit $3n's $2N as $3e blocks your elbow.~
+You block $1n's elbow with your $2N.~
+$3n blocks $1n's elbow with $3s $2N.~
+
+You elbow $3n, but not hard enough.~
+$1n elbows you, but you are unharmed.~
+$1n elbows $3n, obviously not affecting $3m.~
+
+You #I $3n #B with your elbow.~
+$1n #J you #B with $1s elbow.~
+$1n #J $3n #B with $1s elbow.~
+
+You #B elbow $3n's head.~
+$1n #B elbows your head.~
+$1n #B elbows $3n's head.~
+
+You #B elbow $3n's hand.~
+$1n #B elbows your hand.~
+$1n #B elbows $3n's hand.~
+
+You #B elbow $3n's arm.~
+$1n #B elbows your arm.~
+$1n #B elbows $3n's arm.~
+
+You #B elbow $3n's stomach.~
+$1n #B elbows your stomach.~
+$1n #B elbows $3n's stomach.~
+
+You #B elbow $3n's legs.~
+$1n #B elbows your legs.~
+$1n #B elbows $3n's legs.~
+
+You #B elbow $3n's feet.~
+$1n #B elbows your feet.~
+$1n #B elbows $3n's feet.~
+
+Your elbow mashes $3n's skull, and kills $3m instantly.~
+$1n mashes your skull with $1s elbow, and kills you instantly.~
+$1n mashes $3n's skull with $1s elbow, and kills $3m instantly.~
+
+ 0 55 -1 /* KNEE (Weapon) */
+You knee at the passing wind.~
+$1n knees in the air, swinging $1s feet wildly at you.~
+$1n knees air, trying to hit $3n.~
+
+You hit $3n's $2N as $3e blocks your knee.~
+You block $1n's knee with your $2N.~
+$3n blocks $1n's knee with $3s $2N.~
+
+You knee $3n, but not hard enough.~
+$1n knees you, but you are unharmed.~
+$1n knees $3n, obviously not affecting $3m.~
+
+You #I $3n #B with your knee.~
+$1n #J you #B with $1s knee.~
+$1n #J $3n #B with $1s knee.~
+
+You #B knee $3n's head.~
+$1n #B knees your head.~
+$1n #B knees $3n's head.~
+
+You #B knee $3n's hand.~
+$1n #B knees your hand.~
+$1n #B knees $3n's hand.~
+
+You #B knee $3n's arm.~
+$1n #B knees your arm.~
+$1n #B knees $3n's arm.~
+
+You #B knee $3n's stomach.~
+$1n #B knees your stomach.~
+$1n #B knees $3n's stomach.~
+
+You #B knee $3n's legs.~
+$1n #B knees your legs.~
+$1n #B knees $3n's legs.~
+
+You #B knee $3n's feet.~
+$1n #B knees your feet.~
+$1n #B knees $3n's feet.~
+
+Your knee mashes $3n's skull, and kills $3m instantly.~
+$1n mashes your skull with $1s knee, and kills you instantly.~
+$1n mashes $3n's skull with $1s knee, and kills $3m instantly.~
 
    0 34 -1      /* WEAPON FIST */
 You punch holes in the air.~
@@ -533,8 +623,8 @@ You block $1n's crush with your $2N.~
 $3n blocks $1n's crush with $1s $2N.~
 
 You try to crush $3n, but $3e seems unaffected.~
-$1n try to crush you, but you feel no pain.~
-$1n trys to crush $3n, but $3e seems unaffected.~
+$1n tries to crush you, but you feel no pain.~
+$1n tries to crush $3n, but $3e seems unaffected.~
 
 You #B crush $3n.~
 $1n #B crush you.~
@@ -748,7 +838,7 @@ Bashing your $2N into $3n's skull, you kill $3m instantly.~
 $1n bashes your skull with $1s $2N, and kills you instantly.~
 $1n bashes $3n's skull with $1s $2N, and kills $3m instantly.~
 
-   1 104 105 106 175  -1      /* FROST SPELLS */
+   1 104 105 106 175 216 -1      /* FROST SPELLS */
 Your magical frost hits $3n, but with no effect.~
 $1n's magical frost hits you, but with no effect.~
 $1n casts magical frost on $3n.~
@@ -793,7 +883,7 @@ Your magical frost freezes $3n to death.~
 $1n's magical frost freezes you to death.~
 $1n casts magical frost, and makes an ice cube out of $3n.~
 
-   1 107 108 109 -1      /* ELECTRICITY SPELLS */
+   1 107 108 109 217 -1      /* ELECTRICITY SPELLS */
 Your magical electricity hits $3n, but with no effect.~
 $1n's magical electricity hits you, but with no effect.~
 $1n casts magical electricity on $3n.~
@@ -883,10 +973,10 @@ Your summoned lightning blasts $3n to little pieces.~
 $1n summons lightning from the sky which blasts you to little pieces.~
 $1n summons lightning from the sky which blasts $3n to little pieces.~
 
-   1 110 111 112 -1      /* GAS SPELLS */
-Your gascloud envelop $3n, but with no effect.~
-$1n's gascloud envelops you, but with no effect.~
-$1n's gascloud envelops $3n.~
+   1 110 111 112 220 -1      /* GAS SPELLS */
+Your gas cloud envelop $3n, but with no effect.~
+$1n's gas cloud envelops you, but with no effect.~
+$1n's gas cloud envelops $3n.~
 
 Your gas hits $3n's $2N.~
 You block $1n's gas attack with your $2N.~
@@ -896,9 +986,9 @@ $3n blocks $1n's gas attack with $3s $2N.~
 ~
 ~
 
-$3n suffocates #O from your gascloud.~
-$1n's gascloud causes you to suffocate #O.~
-$1n's gascloud causes $3n to suffocate #O.~
+$3n suffocates #O from your gas cloud.~
+$1n's gas cloud causes you to suffocate #O.~
+$1n's gas cloud causes $3n to suffocate #O.~
 
 ~
 ~
@@ -924,11 +1014,11 @@ $1n's gascloud causes $3n to suffocate #O.~
 ~
 ~
 
-Your gascloud chokes $3n, killing $3m instantly.~
-$1n's gascloud makes you choke, killing you instantly.~
-$1n's gascloud turns $3n into a fish on a dry shore.~
+Your gas cloud chokes $3n, killing $3m instantly.~
+$1n's gas cloud makes you choke, killing you instantly.~
+$1n's gas cloud turns $3n into a fish on a dry shore.~
 
-   1 119 120 121 -1      /* ACID SPELLS */
+   1 119 120 121 218 -1      /* ACID SPELLS */
 Your magical acid hits $3n, but with no effect.~
 $1n's magical acid hits you, but with no effect.~
 $1n casts magical acid on $3n.~
@@ -973,7 +1063,7 @@ Your magical acid corrodes $3n completely, killing $3m instantly.~
 $1n's magical acid completely corrodes you - R.I.P.~
 $1n casts magical acid, and turns $3n into chocolate pudding.~
 
-   1 88 89 90 -1      /* ALL SPELLS - temporary mesgs */
+   1 88 89 90 219 -1      /* ALL SPELLS - temporary mesgs */
 Your magical colours hit $3n, but with no effect.~
 $1n's magical colours hit you, but with no effect.~
 $1n casts magical colours on $3n.~
@@ -1018,7 +1108,7 @@ Your magical colours drain away $3n's sanity, killing $3m instantly.~
 $1n's magical colours drain your sanity, killing you instantly.~
 $1n casts magical colours, and turns $3n into a dead lunatic.~
 
-   1 19 20 21 22 124 189 191 -1      /* DIVINE SPELLS */
+   1 19 20 21 22 124 191 221 -1      /* DIVINE SPELLS */
 Your divine powers hit $3n, but with no effect.~
 $1n's divine powers hit you, but with no effect.~
 $1n uses divine powers on $3n.~
@@ -1062,6 +1152,52 @@ $1n drains $3n #O with $1s divine powers.~
 Your divine powers drain $3n's life, killing $3m instantly.~
 $1n's divine powers drain your life, killing you instantly.~
 $1n uses divine powers on $3n, and turns $3m into an empty shell.~
+
+   1 189 222 223 224 -1      /* HOLY SPELLS */
+Your holy powers hit $3n, but with no effect.~
+$1n's holy powers hit you, but with no effect.~
+$1n uses holy powers on $3n.~
+
+You hit $3n's $2N as you attempt to hurt $3m.~
+You block $1n's hand with your $2N as $1e attempts to touch you.~
+$3n blocks $1n's hand with $3s $2N.~
+
+~
+~
+~
+
+Your holy powers drain $3n #O.~
+$1n drains you #O with $1s holy powers.~
+$1n drains $3n #O with $1s holy powers.~
+
+~
+~
+~
+
+~
+~
+~
+
+~
+~
+~
+
+~
+~
+~
+
+~
+~
+~
+
+~
+~
+~
+
+Your holy powers drain $3n's life, killing $3m instantly.~
+$1n's holy powers drain your life, killing you instantly.~
+$1n uses holy powers on $3n, and turns $3m into an empty shell.~
+
 
    3 1 -1 /* OTHER: BLEEDING */
 ~
@@ -1198,7 +1334,7 @@ You die from starvation.~
 ~
 $1n dies of starvation.~
 
-   1 101 102 103 -1 /* FIRE SPELLS */
+   1 101 102 103 215 -1 /* FIRE SPELLS */
 Your magical fire hits $3n, but with no effect.~
 $1n's magical fire hits you, but with no effect.~
 $1n casts magical fire on $3n.~
@@ -1241,7 +1377,53 @@ $1n casts magical fire, and burns $3n #O.~
 
 Your magical fire fries $3n, killing $3m instantly.~
 $1n's magical fire fries your entire body, killing you instantly.~
-$1n casts magical fire, and turns $3n into barbeque food.~
+$1n casts magical fire, and turns $3n into barbecue food.~
+
+   1 230 231 232 233 -1 /* HELLFIRE SPELLS */
+The forces of darkness hits $3n, but with no effect.~
+$1n's magical spell from the forces of darkness hits you, but with no effect.~
+$1n casts a magical spell from the forces of darkness on $3n.~
+
+The forces of darkness sends forth a spray of hellfire and brimstone that hits $3n's $2N.~
+You block $1n's spray of hellfire and brimstone with your $2N.~
+$3n blocks $1n's spray of hellfire and brimstone with $3s $2N.~
+
+~
+~
+~
+
+Your magical spray of hellfire and brimstone burns $3n #O.~
+$1n burns you #O with magical spray of hellfire and brimstone.~
+$1n casts a magical spray of hellfire and brimstone, and burns $3n #O.~
+
+~
+~
+~
+
+~
+~
+~
+
+~
+~
+~
+
+~
+~
+~
+
+~
+~
+~
+
+~
+~
+~
+
+The forces of darkness spray of hellfire and brimstone burns $3n, killing $3m instantly.~
+$1n's magical spray of hellfire and brimstone burns your entire body, killing you instantly.~
+$1n casts magical spray of hellfire and brimstone, and turns $3n into a pile of ash.~
+
 
    1 36  -1 /* SUN RAY */
 A sun ray beams on $3n, but with no effect but a slight tan.~
@@ -1288,7 +1470,7 @@ Your sun ray roasts $3n, killing $3m instantly.~
 $1n's sun ray roasts your entire body, killing you instantly.~
 $1n's sun ray roasts $3n - consider $3m well done.~
 
-   1 129 -1 /* sun beam SPELL */
+   1 143 -1 /* sun beam SPELL */
 Your sun beam hits $3n, but with no effect.~
 $1n's sun beam hits you, but with no effect.~
 $1n's sun beam hits $3n, but with no effect.~
@@ -1333,7 +1515,7 @@ Your sun beam disintegrates $3n, killing $3s instantly!~
 $1n's sun beam disintegrates you!~
 $1n's sun beam disintegrates $3n, killing $3s instantly!~
 
-   1 129 -1 /* solar flare SPELL */
+   1 144 -1 /* solar flare SPELL */
 Your solar flare strikes $3n, but with no effect.~
 $1n's solar flare strikes you, but with no effect.~
 $1n's solar flare strikes $3n, but with no effect.~
@@ -1421,7 +1603,7 @@ $1n's energy bolt hits $3n, shocking $3m #O.~
 
 Your energy bolt blasts into $3n, killing $3m instantly!~
 $1n's energy bolt blasts into you, killing you instantly!~
-$1n's energy bolt blasts into $3n, killing $3m instatnly!~
+$1n's energy bolt blasts into $3n, killing $3m instantly!~
 
    1   141   -1  /* crushing hand spell */
 Your summoned fist crushes $3n, but to no affect!~
@@ -1780,7 +1962,7 @@ $1n breathes magical colors that #O hurt $3n's mind!~
 ~
 
 You breathe magical colors that fry $3n's brain, killing $3m instantly!~
-$1n breathes magical colors that fry your brain, killing you instatnly!~
+$1n breathes magical colors that fry your brain, killing you instantly!~
 $1n breathes magical colors that fry $3n's brain, killing $3m instantly!~
 
    1   164  -1   /* shards breath spell */
@@ -1873,7 +2055,7 @@ You breathe sonic waves that disintegrate $3n instantly!~
 $1n breathes sonic waves that disintegrate you instantly!~
 $1n breathes sonic waves that disintegrate $3n instantly!~
 
-   1 165  -1   /* shards breath spell */
+   1 165  -1   /* shards spell */
 You release a cone of magical shards but miss $3n!~
 $1n releases a cone of magical shards but misses you!~
 $1n releases a cone of magical shards but misses $3n!~
@@ -2055,7 +2237,7 @@ $1n rips $3n apart with $1s magical wind slash.~
 
    1  206  -1      /* PETRIFY */
 Your stoning gaze fails to affect $3n.~
-$1n's stoning gaze is inneffective against you.~
+$1n's stoning gaze is ineffective against you.~
 $1n's stoning gaze does nothing to affect $3n.~
 
 $3n blocks $3mself from your gaze with $3s $2N.~
@@ -2143,7 +2325,7 @@ Your earthquake throws $3n to the ground, shattering every bone in $3s body!~
 $1n's earthquake throws you to the ground, breaking your neck on impact.~
 $1n's earthquake throws $3n to the ground, shattering every bone in $3s body!~
 
-   1 190 -1      /* UNHOLY SPELLS */
+   1 190 225 226 227 -1      /* UNHOLY SPELLS */
 Your dark powers hit $3n, but with no effect.~
 $1n's dark powers hit you, but with no effect.~
 $1n uses dark powers on $3n.~
