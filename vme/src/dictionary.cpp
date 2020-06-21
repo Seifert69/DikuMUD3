@@ -705,7 +705,7 @@ static int local_dictionary(struct spec_arg *sarg)
     for (i = 0; !CHAR_DESCRIPTOR(sarg->activator)->qInput.IsEmpty();)
         if (i < 256) /* 256 should certainly be enough, but check anyway */
         {
-            struct cQueueElem *qe =
+            class cQueueElem *qe =
                 CHAR_DESCRIPTOR(sarg->activator)->qInput.GetHead();
             cmd_array[i++] = (char *)qe->Data();
             qe->SetNull();
@@ -721,7 +721,7 @@ static int local_dictionary(struct spec_arg *sarg)
          */
         if (!CHAR_DESCRIPTOR(sarg->activator)->qInput.IsEmpty())
         {
-            struct cQueueElem *qe =
+            class cQueueElem *qe =
                 CHAR_DESCRIPTOR(sarg->activator)->qInput.GetHead();
             pcomm = (char *)qe->Data();
             qe->SetNull();
