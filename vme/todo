@@ -52,10 +52,8 @@ Suggests plan to revise data and points and start sequence:
 	Revise the guild teachers in guilddef.h so they actually teach what is reasonable.
 
 
-Vlevel. I'm not a fan. 
-Maybe tilt experience to hockey more at higher levels
-//Training ability +2 / train, or +1?
-//Training skill +5 / train or +2?
+Maybe tilt experience to hockey more at higher levels. (Vlevel. I'm not a fan)
+
 
 Docs
 ----
@@ -81,15 +79,13 @@ maps
 MS: Consider downloading cMUD and adding codes to support the mapping feature and build maps of the zones.
 	If I do then output tags dirty until mapped and then zap them again. 
 
-MS: Directions will likely reveal secret doors right now :o) I need it for cMUD
-    to make maps, then I'll add a check if there's a secret door.
-
 MS: Add graphical maps to the zones from cMUd.
 
 
 server
 ------
-MS: Ken mentioned light issues. Check value overrun. Weight issue as well.
+MS: Ken mentioned light issues. Check value overrun. It's a known bug.
+MS: Performance of DIL. wander_zones would benefit from being ported to C :o)
 
 
 DIL bug
@@ -110,13 +106,6 @@ player convert & checking utility to either dil or other external utility
 
 vmc to work more like gcc for make file use
 
-
-fight system in dil
-level system in dil
-teachers in dil
-
-terminal control in dil not sure if necessary yet.
-
 dil data types:
 	finish zoneptr
 	multidemenisonal arrays	
@@ -126,16 +115,12 @@ dil func search inside a unit and return a list of items that matches criteria
   - would be nice if it returned a unit pointer list
 
 
-
-change file system to sql (needs to have world search  for unique units)
-
 remove the remaining special functions after replacing with dil. see spec_assign.h
 log_obj in whatever beside special
 bank in dil
 justice in dil (just have protect lawful, whistle, and reward board left) 
 
 commands left to convert
-wstat (mostly done but needs a few more dil global vars)
 backstab  (needs combat in dil)
 consider (needs combat in dil)
 kill(needs combat in dil)
