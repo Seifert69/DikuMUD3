@@ -1,19 +1,19 @@
 # DikuMUD3
 DikuMUD III using HTML and websockets. 
 
-GOING TO BE RELEASED BEFORE JULY 1 2020.
+D-Day June 21, 2020
 
-How to build & launch
+// How to build & launch
 
-#
-# First build the binaries
-#
+//
+// First build the binaries
+//
 cd vme/src/
 make all # add -j8 to compile on 8 threads in parallel
 
-#
-# Make sure .def files are pre-processed
-#
+//
+// Make sure .def files are pre-processed
+//
 cd ../etc/
 make all
 
