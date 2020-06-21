@@ -11,8 +11,9 @@ SYSFLAGS = -m64 #-O6
 #debug flags
 DEBUG = -g -Wall
 
-#libs to link in
-LDLIBS = -lcrypt -lpthread -lboost_filesystem  -lboost_regex -lboost_system 
+#libs to link in. LCRYPT allows specification of `make LCRYPT=''` for OS X.
+LCRYPT = -lcrypt
+LDLIBS = $(LCRYPT) -lpthread -lboost_filesystem  -lboost_regex -lboost_system 
 
 #include flags
 MPLEX_INC := -I mplex2/
@@ -256,5 +257,3 @@ $(VMC_DEP_DIR)/%.d: ;
 -include $(DC_DEPS)  
 -include $(PP_DEPS)  
 -include $(VMC_DEPS)  
-
-

@@ -51,7 +51,7 @@
 
 char mudname[50] = "the MUD server (via DikuMUD Mplex)";
 int g_bHadAlarm = FALSE;
-struct arg_type arg;
+struct arg_type mplex_arg;
 
 void bye_signal(int signal)
 {
@@ -221,7 +221,7 @@ int main(int argc, char *argv[])
 
     assert(i++ == 0); /* Make sure we dont call ourselves... cheap hack! :) */
 
-    if (!ParseArg(argc, argv, &arg))
+    if (!ParseArg(argc, argv, &mplex_arg))
         exit(0);
 
 #ifndef _WINDOWS
@@ -234,9 +234,9 @@ int main(int argc, char *argv[])
     /* MS2020 Websockets test hack */
     translate_init();
 
-    slog(LOG_OFF, 0, "Opening mother connection on port %d.", arg.nMotherPort);
+    slog(LOG_OFF, 0, "Opening mother connection on port %d.", mplex_arg.nMotherPort);
 
-    if (arg.bWebSockets)
+    if (mplex_arg.bWebSockets)
     {
         /* MS2020 Websockets test hack */
         void runechoserver(void);
@@ -245,7 +245,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        fd = OpenMother(arg.nMotherPort);
+        fd = OpenMother(mplex_arg.nMotherPort);
         Assert(fd != -1, "NO MOTHER CONNECTION.");
 
         CaptainHook.Hook(fd, &MotherHook);

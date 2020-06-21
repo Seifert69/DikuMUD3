@@ -17,11 +17,11 @@ using websocketpp::lib::bind;
 typedef wsserver::message_ptr message_ptr;
 
 //std::map<std::owner_less<websocketpp::connection_hdl>, void *> g_cMapHandler;
-std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>> g_cMapHandler;
+std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl> > g_cMapHandler;
 
 void remove_gmap(class cConHook *con)
 {
-    std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
+    std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl> >::iterator it;
 
     for (it = g_cMapHandler.begin(); it != g_cMapHandler.end(); it++)
         if (it->second == con)
@@ -36,7 +36,7 @@ void remove_gmap(class cConHook *con)
 void on_close(websocketpp::connection_hdl hdl)
 {
     class cConHook *con = 0;
-    std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
+    std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl> >::iterator it;
 
     it = g_cMapHandler.find(hdl);
 
@@ -94,7 +94,7 @@ void cleanstring(std::string &data) {
             if (data[pos] < 32)
             {
                 // I should soon remove this too.
-                if ((data[pos] == '\n')) // || (data[pos] == '\r'))
+                if (data[pos] == '\n') // || (data[pos] == '\r'))
                     buffer.append(" ", 1);
                     //buffer.append(&data[pos], 1);
                 continue;
@@ -187,7 +187,7 @@ void runechoserver(void)
         echo_server.set_message_handler(bind(&on_message, &echo_server, ::_1, ::_2));
 
         // Listen on port
-        echo_server.listen(arg.nMotherPort);
+        echo_server.listen(mplex_arg.nMotherPort);
 
         // Start the server accept loop
         echo_server.start_accept();

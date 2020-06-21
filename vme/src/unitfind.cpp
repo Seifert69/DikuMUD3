@@ -180,7 +180,7 @@ class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
     }
     else if (sflags == FIND_UNIT_ZONE)
     {
-        struct zone_type *z;
+        class zone_type *z;
 
         if (UNIT_FI_ZONE(ref))
             z = UNIT_FI_ZONE(ref);
@@ -839,7 +839,7 @@ class unit_data *find_symbolic_instance_ref(class unit_data *ref,
     if (IS_SET(bitvector, FIND_UNIT_WORLD))
     {
         for (u = unit_list; u; u = u->gnext)
-            if ((UNIT_FILE_INDEX(u) == fi))
+            if (UNIT_FILE_INDEX(u) == fi)
                 return u;
     }
 
@@ -854,7 +854,7 @@ class unit_data *find_symbolic_instance(class file_index_type *fi)
         return NULL;
 
     for (u = unit_list; u; u = u->gnext)
-        if ((UNIT_FILE_INDEX(u) == fi))
+        if (UNIT_FILE_INDEX(u) == fi)
             return u;
 
     return NULL;

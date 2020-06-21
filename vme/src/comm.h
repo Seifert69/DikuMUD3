@@ -11,7 +11,7 @@
 void page_string (class descriptor_data *d, const char *);
 
 void send_to_outdoor (const char *messg);
-void send_to_zone_outdoor (const struct zone_type *z, const char *messg);
+void send_to_zone_outdoor (const class zone_type *z, const char *messg);
 void send_to_descriptor (const char *messg, class descriptor_data *d);
 void send_to_all (const char *messg);
 void send_to_char (const char *messg, const class unit_data * ch);

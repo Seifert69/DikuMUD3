@@ -154,7 +154,7 @@ another_hour (struct time_info_data time_data)
 
 
 static void
-weather_change (struct zone_type *zone, struct time_info_data time_data)
+weather_change (class zone_type *zone, struct time_info_data time_data)
 {
     int diff, change;
 
@@ -283,7 +283,7 @@ void
 update_time_and_weather (void)
 {
     struct time_info_data time_info;
-    struct zone_type *z;
+    class zone_type *z;
 
     time_info = mud_date (time (0));
 
@@ -309,7 +309,7 @@ weather_and_time_event (void *p1, void *p2)
 void
 boot_time_and_weather (void)
 {
-    struct zone_type *z;
+    class zone_type *z;
     struct time_info_data mud_time_passed (time_t t2, time_t t1);
 
     extern char world_boottime[64];

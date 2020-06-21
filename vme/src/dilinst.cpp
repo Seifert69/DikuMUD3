@@ -15,7 +15,13 @@
 #include <string.h>
 #include <time.h>
 #include <stdarg.h> /* For type_check */
-#ifdef LINUX
+
+/* Per https://sourceforge.net/p/predef/wiki/OperatingSystems/, this identifies
+ *  Mac OS X. This is needed since OS X doesn't have crypt.h and instead uses
+ *  unistd.h for these mappings. */
+#if defined __APPLE__ && __MACH__
+#include <unistd.h>
+#elif defined LINUX
 #include <crypt.h>
 #endif
 
@@ -1026,7 +1032,7 @@ void dil_push_frame(struct dilprg *p, struct diltemplate *rtmpl)
 
         case DILV_CP:
             frm->vars[i].val.cmdptr =
-                (class command_info *)p->stack[-(rtmpl->argc - i)]->val.ptr;
+                (struct command_info *)p->stack[-(rtmpl->argc - i)]->val.ptr;
             break;
 
         case DILV_ZP:

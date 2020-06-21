@@ -44,7 +44,7 @@ struct zone_info_type zone_info = {0, 0, 0, 0};
 
 extern int memory_total_alloc;
 
-struct room_direction_data *create_direction_data(void);
+class room_direction_data *create_direction_data(void);
 
 /* By using this, we can easily sort the list if ever needed */
 void insert_unit_in_zone_list(zone_type *zp, class unit_data *u)
@@ -189,7 +189,7 @@ void resolve_templates(void)
 }
 
 /* Generate and read DIL templates */
-struct diltemplate *generate_templates(FILE *f, struct zone_type *zone)
+struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
 {
     struct diltemplate *tmpllist, *tmpl;
     CByteBuffer Buf;
@@ -442,7 +442,7 @@ void generate_zone_indexes(void)
         z->zone_no = zone_info.no_of_zones - 1;
         z->filename = str_dup(zone);
 
-        if (dilfilepath != NULL)
+        if (*dilfilepath)
         {
             z->dilfilepath = str_dup(dilfilepath);
         }
@@ -630,7 +630,7 @@ int bread_affect(CByteBuffer *pBuf, class unit_data *u, ubit8 nVersion)
     return 0;
 }
 
-struct zone_type *unit_error_zone = NULL;
+class zone_type *unit_error_zone = NULL;
 
 extern int memory_pc_alloc;
 extern int memory_npc_alloc;
@@ -1409,10 +1409,10 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
 void read_all_rooms(void)
 {
     // MS2020 int room_num = 0;
-    struct zone_type *z;
+    class zone_type *z;
     class file_index_type *fi;
 
-    extern struct zone_type *boot_zone;
+    extern class zone_type *boot_zone;
 
     for (z = zone_info.zone_list; z; z = z->next)
     {
@@ -1487,7 +1487,7 @@ void normalize_world(void)
 #define ZON_DIR_UNNEST 2
 
 /* For local error purposes */
-static struct zone_type *read_zone_error = NULL;
+static class zone_type *read_zone_error = NULL;
 
 struct zone_reset_cmd *
 read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
@@ -1606,7 +1606,7 @@ read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
 
 void read_all_zones(void)
 {
-    struct zone_type *zone;
+    class zone_type *zone;
     char filename[FI_MAX_ZONENAME + 41];
     FILE *f;
 

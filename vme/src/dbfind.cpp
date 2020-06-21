@@ -62,7 +62,7 @@ struct bin_search_type *binary_search(struct bin_search_type *ba, const char *st
 }
 
 /* Find a named zone */
-struct zone_type *find_zone(const char *zonename)
+class zone_type *find_zone(const char *zonename)
 {
     struct bin_search_type *ba;
 
@@ -71,13 +71,13 @@ struct zone_type *find_zone(const char *zonename)
 
     ba = binary_search(zone_info.ba, zonename, zone_info.no_of_zones);
 
-    return ba ? (struct zone_type *)ba->block : NULL;
+    return ba ? (class zone_type *)ba->block : NULL;
 }
 
 /* Zonename & name must point to non-empty strings */
 class file_index_type *find_file_index(const char *zonename, const char *name)
 {
-    struct zone_type *zone;
+    class zone_type *zone;
     struct bin_search_type *ba;
 
     if (!*name)
@@ -95,7 +95,7 @@ class file_index_type *find_file_index(const char *zonename, const char *name)
 /* Zonename & name must point to non-empty strings */
 struct diltemplate *find_dil_index(char *zonename, char *name)
 {
-    struct zone_type *zone;
+    class zone_type *zone;
     struct bin_search_type *ba;
 
     if (str_is_empty(name))

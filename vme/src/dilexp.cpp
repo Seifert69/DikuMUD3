@@ -19,9 +19,16 @@ $Revision: 2.18 $
 #include <stdarg.h> /* For type_check */
 #include <sys/stat.h>
 #include <errno.h>
-#ifdef LINUX
+
+/* Per https://sourceforge.net/p/predef/wiki/OperatingSystems/, this identifies
+ *  Mac OS X. This is needed since OS X doesn't have crypt.h and instead uses
+ *  unistd.h for these mappings. */
+#if defined __APPLE__ && __MACH__
+#include <unistd.h>
+#elif defined LINUX
 #include <crypt.h>
 #endif
+
 #include "structs.h"
 #include "handler.h"
 #include "textutil.h"
@@ -3429,7 +3436,7 @@ void dilfe_udir(register struct dilprg *p)
 
             sPath = (char *)v1->val.ptr;
             if (sPath.empty())
-                sPath == ".*";
+                sPath = ".*";
 
             fs::path full_path(uPath);
             fs::directory_iterator end_iter;
@@ -3522,7 +3529,7 @@ void dilfe_sdir(register struct dilprg *p)
 
             sPath = (char *)v1->val.ptr;
             if (sPath.empty())
-                sPath == ".*";
+                sPath = ".*";
 
             fs::path full_path(uPath);
             fs::directory_iterator end_iter;

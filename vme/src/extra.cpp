@@ -157,7 +157,7 @@ int extra_list::isempty(void)
 int extra_list::count(void)
 {
     int i;
-    struct extra_descr_data *e;
+    class extra_descr_data *e;
 
     // Count no of elements in list
     for (e = this->m_pList, i = 0; e; e = e->next)
@@ -278,7 +278,7 @@ void extra_list::remove(const char *name)
 
 void extra_list::AppendBuffer(CByteBuffer *pBuf)
 {
-    struct extra_descr_data *e;
+    class extra_descr_data *e;
 
     assert(this);
 

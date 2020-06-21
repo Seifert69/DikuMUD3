@@ -45,8 +45,8 @@ void dil_free_var (struct dilvar *var);
 
 void dil_free_frame (struct dilframe *frame);
 
-char dil_getbool (struct dilval *v, struct dilprg *prg);
-int dil_getval (struct dilval *v);
+char dil_getbool (class dilval *v, struct dilprg *prg);
+int dil_getval (class dilval *v);
 void dil_add_secure (struct dilprg *prg, class unit_data * sup, ubit8 * lab);
 #ifdef __cplusplus
 int dil_sub_secure (struct dilframe *frm, class unit_data * sup,

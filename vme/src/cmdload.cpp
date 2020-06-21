@@ -384,7 +384,7 @@ void command_read(void)
             }
             continue;
         }
-        if (pTmp)
+        if (*pTmp)
             slog(LOG_ALL, 0, "COMMAND LOAD ERROR: Unexpected text: %s", pTmp);
     }
 

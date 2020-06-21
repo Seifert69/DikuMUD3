@@ -20,7 +20,7 @@
 #include "dilrun.h"
 void special_event(void *p1, void *p2);
 
-extern struct zone_type *boot_zone;
+extern class zone_type *boot_zone;
 extern struct unit_function_array_type unit_function_array[];
 extern eventqueue events;
 extern int mudboot;
@@ -185,7 +185,7 @@ void stop_special(class unit_data *u, struct unit_fptr *fptr)
 void start_special(class unit_data *u, struct unit_fptr *fptr)
 {
     int diltick = 0, i;
-    if ((fptr->index == SFUN_DIL_INTERNAL))
+    if (fptr->index == SFUN_DIL_INTERNAL)
     {
         if (IS_SET(fptr->flags, SFB_TICK))
             diltick = 1;

@@ -105,7 +105,7 @@ public:
     struct bin_search_type *ba; /* Pointer to binarray of type      */
 
     struct zone_reset_cmd *zri; /* List of Zone reset commands      */
-    struct zone_type *next;     /* Next Zone                        */
+    class zone_type *next;     /* Next Zone                        */
 
     struct diltemplate *tmpl;       /* DIL templates in zone            */
     struct bin_search_type *tmplba; /* Pointer to binarray of type      */
@@ -235,7 +235,7 @@ public:
 
     typedef adjacency_list<vecS, vecS, directedS, no_property,
                            property<edge_weight_t, int,
-                                    property<edge_dir_t, int>>>
+                                    property<edge_dir_t, int> > >
         graph_t;
 
     typedef graph_traits<graph_t>::vertex_descriptor vertex_descriptor;

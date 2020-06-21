@@ -91,7 +91,7 @@ static void stat_world_count(const class unit_data *ch, char *arg)
 static void stat_world_extra(const class unit_data *ch)
 {
     char buf[MAX_STRING_LENGTH];
-    struct zone_type *zp;
+    class zone_type *zp;
     int i;
     std::string mystr;
 
@@ -253,7 +253,7 @@ static void stat_zone_reset(const char *indnt, struct zone_reset_cmd *zrip,
         stat_zone_reset(indnt, zrip->next, ch);
 }
 
-static void stat_zone(class unit_data *ch, struct zone_type *zone)
+static void stat_zone(class unit_data *ch, class zone_type *zone)
 {
     static const char *reset_modes[] = {
         "Never Reset",
@@ -305,7 +305,7 @@ static void stat_creators(class unit_data *ch, char *arg)
     char tmp[1024];
     int found;
     char *cname;
-    struct zone_type *z;
+    class zone_type *z;
     if (str_is_empty(arg))
 
     {
@@ -360,7 +360,7 @@ static void stat_creators(class unit_data *ch, char *arg)
     send_to_char(buf, ch);
 }
 
-static void stat_dil(class unit_data *ch, struct zone_type *zone)
+static void stat_dil(class unit_data *ch, class zone_type *zone)
 {
     char buf[MAX_STRING_LENGTH];
     std::string mystr;
@@ -385,7 +385,7 @@ static void stat_global_dil(class unit_data *ch, ubit32 nCount)
     char buf[MAX_STRING_LENGTH];
     std::string mystr;
     struct diltemplate *tmpl;
-    struct zone_type *z;
+    class zone_type *z;
 
     sprintf(buf, "<u>List of global DIL in all zones running for more than %dms:</u><br/>", nCount);
     send_to_char(buf, ch);
@@ -406,7 +406,7 @@ static void stat_global_dil(class unit_data *ch, ubit32 nCount)
     send_to_char(mystr.c_str(), ch);
 }
 
-static void extra_stat_zone(class unit_data *ch, char *arg, struct zone_type *zone)
+static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zone)
 {
     char buf[MAX_STRING_LENGTH], filename[128];
     std::string mystr;
@@ -414,7 +414,7 @@ static void extra_stat_zone(class unit_data *ch, char *arg, struct zone_type *zo
     class file_index_type *fi;
     int search_type = 0, i;
 
-    //  void stat_dijkstraa (class unit_data * ch, struct zone_type *z);
+    //  void stat_dijkstraa (class unit_data * ch, class zone_type *z);
 
     static const char *zone_args[] = {
         "mobiles",
@@ -1194,7 +1194,7 @@ static void stat_contents(const class unit_data *ch, class unit_data *u)
 {
     char buf[MAX_INPUT_LENGTH];
     int bright = 0, light = 0;
-    struct unit_data *orgu;
+    class unit_data *orgu;
 
     orgu = u;
 
@@ -1233,7 +1233,7 @@ void do_wstat(class unit_data *ch, char *argument,
 {
     char buf[4 * MAX_STRING_LENGTH];
     class unit_data *u = NULL;
-    struct zone_type *zone = NULL;
+    class zone_type *zone = NULL;
 
     if (CHAR_DESCRIPTOR(ch) == NULL)
         return;

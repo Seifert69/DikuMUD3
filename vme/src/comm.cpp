@@ -91,7 +91,7 @@ void send_to_all(const char *messg)
                 send_to_descriptor(messg, i);
 }
 
-void send_to_zone_outdoor(const struct zone_type *z, const char *messg)
+void send_to_zone_outdoor(const class zone_type *z, const char *messg)
 {
     class descriptor_data *i;
 

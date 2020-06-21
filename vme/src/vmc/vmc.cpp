@@ -375,12 +375,12 @@ mcreate_func (void)
 }
 
 
-struct room_direction_data *
+class room_direction_data *
 mcreate_exit (void)
 {
-    struct room_direction_data *rslt;
+    class room_direction_data *rslt;
 
-    rslt = new (struct room_direction_data);
+    rslt = new (class room_direction_data);
 
 //   rslt->open_name = NULL;
     rslt->exit_info = 0;

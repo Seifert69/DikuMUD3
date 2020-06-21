@@ -105,7 +105,7 @@ class unit_data *
     {
         if (strcmp (UNIT_FI_ZONE (u)->name, "treasure") == 0)
         {
-            struct extra_descr_data *ed=UNIT_EXTRA(u).m_pList;
+            class extra_descr_data *ed=UNIT_EXTRA(u).m_pList;
             std::cout<<endl<<UNIT_FI_NAME (u)<<"@treasure"<<endl;
             if (ed)
             {

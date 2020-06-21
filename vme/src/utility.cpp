@@ -90,7 +90,7 @@ dice (int number, int size)
     return sum;
 }
 
-struct log_buffer log_buf[MAXLOG];
+class log_buffer log_buf[MAXLOG];
 
 /* writes a string to the log */
 void slog (enum log_level level, ubit8 wizinv_level, const char *fmt, ...)

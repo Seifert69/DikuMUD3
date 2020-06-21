@@ -14,10 +14,18 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+
+/* Per https://sourceforge.net/p/predef/wiki/OperatingSystems/, this identifies
+ *  Mac OS X. This is needed since OS X doesn't have crypt.h and instead uses
+ *  unistd.h for these mappings. */
+#if defined __APPLE__ && __MACH__
+#include <unistd.h>
+#elif defined LINUX
+#include <crypt.h>
+#endif
+
 #include "db.h"
 #include "badnames.h"
-
-#include <crypt.h>
 #include "structs.h"
 #include "utils.h"
 #include "textutil.h"

@@ -466,10 +466,10 @@ struct dilvar
     union
     {
         class unit_data *unitptr;
-        struct zone_type *zoneptr;
+        class zone_type *zoneptr;
         struct command_info *cmdptr;
         sbit32 integer;
-        struct extra_descr_data *extraptr;
+        class extra_descr_data *extraptr;
         char *string;
         class cStringInstance *pHash;
         class cNamelist *namelist;
@@ -535,7 +535,7 @@ struct dilxref
 struct diltemplate
 {
     char *prgname;		/* program name @ zone */
-    struct zone_type *zone;	/* Pointer to owner of structure    */
+    class zone_type *zone;	/* Pointer to owner of structure    */
 
     ubit32 flags;			/* recall, etc. */
     ubit8  priority;

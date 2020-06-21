@@ -856,7 +856,7 @@ int guard_assist(const class unit_data *npc, struct visit_data *vd)
 /*                                               */
 void call_guards(class unit_data *guard)
 {
-    struct zone_type *zone;
+    class zone_type *zone;
     struct unit_fptr *fptr;
     class unit_data *u;
     int ok;
@@ -900,7 +900,7 @@ int protect_lawful(struct spec_arg *sarg)
     if (!IS_CHAR(sarg->owner) || !CHAR_AWAKE(sarg->owner) || CHAR_COMBAT(sarg->owner))
         return SFR_SHARE;
 
-    if ((sarg->cmd->no == CMD_AUTO_TICK))
+    if (sarg->cmd->no == CMD_AUTO_TICK)
     {
         scan4_unit(sarg->owner, UNIT_ST_NPC); /* Implicit can see */
 

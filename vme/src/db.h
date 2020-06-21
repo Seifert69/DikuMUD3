@@ -73,7 +73,7 @@
 struct zone_info_type
 {
     int no_of_zones;		/* Total number of zones       */
-    struct zone_type *zone_list;	/* The Linked List of Zones    */
+    class zone_type *zone_list;	/* The Linked List of Zones    */
     struct bin_search_type *ba;	/* Array of structs for search */
     void **spmatrix;		/* Inter zone shortest paths   */
 };
@@ -84,10 +84,10 @@ class unit_data *read_unit_string (CByteBuffer * pBuf, int type, int len,
 void read_unit_file (class file_index_type *org_fi, CByteBuffer * pBuf);
 class unit_data *read_unit (class file_index_type *fi, int ins_list = TRUE);
 void free_unit (class unit_data * ch);
-void free_extra_descr (struct extra_descr_data *ex);
-void free_extra_descr_list (struct extra_descr_data *ex);
+void free_extra_descr (class extra_descr_data *ex);
+void free_extra_descr_list (class extra_descr_data *ex);
 
-struct extra_descr_data *create_extra_descr (void);
+class extra_descr_data *create_extra_descr (void);
 class unit_data *create_unit (ubit8 type);
 
 

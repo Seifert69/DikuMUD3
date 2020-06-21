@@ -381,7 +381,7 @@ void die_follower(class unit_data *ch)
     plus   Light if it is daylight (depends on time of day)
     plus   Lights of the unit it is inside
 
-ubit1 unit_islight(struct unit_data *u)
+ubit1 unit_islight(class unit_data *u)
 {
     if (!u)
         return 0;
@@ -572,7 +572,7 @@ int unit_recursive(class unit_data *from, class unit_data *to)
     return FALSE;
 }
 
-struct zone_type *unit_zone(const class unit_data *unit)
+class zone_type *unit_zone(const class unit_data *unit)
 {
     class unit_data *org = (class unit_data *)unit;
 
@@ -969,7 +969,7 @@ void weight_change_unit(class unit_data *unit, int weight)
         UNIT_WEIGHT(unit) += weight;
 }
 
-struct extra_descr_data *quest_add(class unit_data *ch, const char *name, const char *descr)
+class extra_descr_data *quest_add(class unit_data *ch, const char *name, const char *descr)
 {
     assert(name != NULL);
     assert(name[0]);
@@ -978,7 +978,7 @@ struct extra_descr_data *quest_add(class unit_data *ch, const char *name, const 
 }
 
 /* void szonelog(char *zonename, const char *fmt, ...) */
-void szonelog(struct zone_type *zone, const char *fmt, ...)
+void szonelog(class zone_type *zone, const char *fmt, ...)
 {
     char name[256];
     char buf[MAX_STRING_LENGTH], buf2[MAX_STRING_LENGTH + 512];

@@ -419,7 +419,7 @@ void game_event(void)
 
         if (--(point->wait) <= 0 && !point->qInput.IsEmpty())
         {
-            struct cQueueElem *qe = point->qInput.GetHead();
+            class cQueueElem *qe = point->qInput.GetHead();
             pcomm = (char *)qe->Data();
             qe->SetNull();
             delete qe;

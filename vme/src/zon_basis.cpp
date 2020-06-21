@@ -81,7 +81,7 @@ void basis_boot(void)
 
 int error_rod(struct spec_arg *sarg)
 {
-    struct zone_type *zone;
+    class zone_type *zone;
     FILE *fl;
     char filename[256];
 
@@ -122,7 +122,7 @@ int error_rod(struct spec_arg *sarg)
 
 int info_rod(struct spec_arg *sarg)
 {
-    struct zone_type *zone;
+    class zone_type *zone;
     FILE *fl;
     char filename[256];
 
@@ -164,7 +164,7 @@ int info_rod(struct spec_arg *sarg)
 
 /* Log stuff below */
 
-extern struct log_buffer log_buf[];
+extern class log_buffer log_buf[];
 
 int log_object(struct spec_arg *sarg)
 {
@@ -308,8 +308,8 @@ int admin_obj(struct spec_arg *sarg)
 {
     char buf[512];
     int zonelist;
-    struct zone_type *zone;
-    struct extra_descr_data *exdp;
+    class zone_type *zone;
+    class extra_descr_data *exdp;
 
     if (sarg->cmd->no != CMD_AUTO_UNKNOWN)
         return SFR_SHARE;
