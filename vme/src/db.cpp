@@ -442,7 +442,7 @@ void generate_zone_indexes(void)
         z->zone_no = zone_info.no_of_zones - 1;
         z->filename = str_dup(zone);
 
-        if (dilfilepath != NULL)
+        if (*dilfilepath)
         {
             z->dilfilepath = str_dup(dilfilepath);
         }
