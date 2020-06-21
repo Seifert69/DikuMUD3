@@ -856,7 +856,7 @@ int guard_assist(const class unit_data *npc, struct visit_data *vd)
 /*                                               */
 void call_guards(class unit_data *guard)
 {
-    struct zone_type *zone;
+    class zone_type *zone;
     struct unit_fptr *fptr;
     class unit_data *u;
     int ok;

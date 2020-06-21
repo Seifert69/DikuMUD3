@@ -10,7 +10,7 @@
 
 class descriptor_data *find_descriptor (const char *name,
                                             class descriptor_data *except);
-struct zone_type *find_zone (const char *zonename);
+class zone_type *find_zone (const char *zonename);
 class file_index_type *find_file_index (const char *zonename, const char *name);
 struct diltemplate *find_dil_index (char *zonename, char *name);
 class unit_data *world_room (const char *zone, const char *name);

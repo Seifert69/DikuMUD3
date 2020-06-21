@@ -20,7 +20,7 @@
 #include "dilrun.h"
 void special_event(void *p1, void *p2);
 
-extern struct zone_type *boot_zone;
+extern class zone_type *boot_zone;
 extern struct unit_function_array_type unit_function_array[];
 extern eventqueue events;
 extern int mudboot;

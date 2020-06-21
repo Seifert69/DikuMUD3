@@ -572,7 +572,7 @@ int unit_recursive(class unit_data *from, class unit_data *to)
     return FALSE;
 }
 
-struct zone_type *unit_zone(const class unit_data *unit)
+class zone_type *unit_zone(const class unit_data *unit)
 {
     class unit_data *org = (class unit_data *)unit;
 
@@ -978,7 +978,7 @@ struct extra_descr_data *quest_add(class unit_data *ch, const char *name, const 
 }
 
 /* void szonelog(char *zonename, const char *fmt, ...) */
-void szonelog(struct zone_type *zone, const char *fmt, ...)
+void szonelog(class zone_type *zone, const char *fmt, ...)
 {
     char name[256];
     char buf[MAX_STRING_LENGTH], buf2[MAX_STRING_LENGTH + 512];

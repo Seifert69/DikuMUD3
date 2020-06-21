@@ -28,7 +28,7 @@
 #include "dilrun.h"
 extern eventqueue events;
 
-struct zone_type *boot_zone = NULL; /* Points to the zone currently booted */
+class zone_type *boot_zone = NULL; /* Points to the zone currently booted */
 
 /* No Operation */
 class unit_data *
@@ -58,7 +58,7 @@ void zone_update_no_in_zone(void)
 
     register class unit_data *u;
     register class file_index_type *fi;
-    register struct zone_type *tmp_zone;
+    register class zone_type *tmp_zone;
 
     /* Clear ALL ->no_in_zone */
     for (tmp_zone = zone_info.zone_list; tmp_zone; tmp_zone = tmp_zone->next)
@@ -346,7 +346,7 @@ bool low_reset_zone(class unit_data *u, struct zone_reset_cmd *cmd)
     return ok;
 }
 
-void zone_reset(struct zone_type *zone)
+void zone_reset(class zone_type *zone)
 {
     /* extern int memory_total_alloc;
        int i = memory_total_alloc; */
@@ -371,7 +371,7 @@ void zone_reset(struct zone_type *zone)
 void reset_all_zones(void)
 {
     int j;
-    struct zone_type *zone;
+    class zone_type *zone;
 
     void zone_event(void *, void *);
 
@@ -393,7 +393,7 @@ void reset_all_zones(void)
     }
 }
 
-bool zone_is_empty(struct zone_type *zone)
+bool zone_is_empty(class zone_type *zone)
 {
     extern class descriptor_data *descriptor_list;
 
@@ -410,7 +410,7 @@ bool zone_is_empty(struct zone_type *zone)
 /* Check if any zones needs updating */
 void zone_event(void *p1, void *p2)
 {
-    struct zone_type *zone = (struct zone_type *)p1;
+    class zone_type *zone = (class zone_type *)p1;
 
     if (zone->reset_mode != RESET_IFEMPTY || zone_is_empty(zone))
     {

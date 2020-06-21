@@ -19,7 +19,7 @@ const char *single_unit_messg (class unit_data * unit,
                                const char *type,
                                const char *pSubStr, const char *mesg);
 
-void szonelog (struct zone_type *zone, const char *fmt, ...);
+void szonelog (class zone_type *zone, const char *fmt, ...);
 
 /* From pcsave.c - I'm just tired of specifying them everywhere */
 void save_player (class unit_data * pc);
@@ -55,7 +55,7 @@ class unit_data *unequip_object (class unit_data * obj);
 void recalc_dex_red (class unit_data * ch);
 
 int unit_recursive (class unit_data * from, class unit_data * to);
-struct zone_type *unit_zone (const class unit_data * unit);
+class zone_type *unit_zone (const class unit_data * unit);
 class unit_data *unit_room (class unit_data * unit);
 
 /* If the transfered unit MIGHT be money, remember to pile_money() it!!!!! */

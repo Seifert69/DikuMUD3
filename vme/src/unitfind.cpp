@@ -180,7 +180,7 @@ class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
     }
     else if (sflags == FIND_UNIT_ZONE)
     {
-        struct zone_type *z;
+        class zone_type *z;
 
         if (UNIT_FI_ZONE(ref))
             z = UNIT_FI_ZONE(ref);

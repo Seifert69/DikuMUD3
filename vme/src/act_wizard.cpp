@@ -41,7 +41,7 @@ extern class descriptor_data *descriptor_list;
 
 struct time_info_data age(class unit_data *ch);
 struct time_info_data real_time_passed(time_t t2, time_t t1);
-struct zone_type *find_zone(char *zonename);
+class zone_type *find_zone(char *zonename);
 
 class descriptor_data *find_descriptor(const char *,
                                        class descriptor_data *);
@@ -161,9 +161,9 @@ void do_users(class unit_data *ch, char *argument,
 /* Reset the zone in which the char is in! */
 void do_reset(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
-    struct zone_type *zone;
+    class zone_type *zone;
 
-    int zone_reset(struct zone_type *);
+    int zone_reset(class zone_type *);
 
     if (!str_is_empty(arg))
     {

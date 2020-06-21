@@ -105,7 +105,7 @@ public:
     struct bin_search_type *ba; /* Pointer to binarray of type      */
 
     struct zone_reset_cmd *zri; /* List of Zone reset commands      */
-    struct zone_type *next;     /* Next Zone                        */
+    class zone_type *next;     /* Next Zone                        */
 
     struct diltemplate *tmpl;       /* DIL templates in zone            */
     struct bin_search_type *tmplba; /* Pointer to binarray of type      */
