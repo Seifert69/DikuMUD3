@@ -3436,7 +3436,7 @@ void dilfe_udir(register struct dilprg *p)
 
             sPath = (char *)v1->val.ptr;
             if (sPath.empty())
-                sPath == ".*";
+                sPath = ".*";
 
             fs::path full_path(uPath);
             fs::directory_iterator end_iter;
@@ -3529,7 +3529,7 @@ void dilfe_sdir(register struct dilprg *p)
 
             sPath = (char *)v1->val.ptr;
             if (sPath.empty())
-                sPath == ".*";
+                sPath = ".*";
 
             fs::path full_path(uPath);
             fs::directory_iterator end_iter;
