@@ -187,7 +187,7 @@ void runechoserver(void)
         echo_server.set_message_handler(bind(&on_message, &echo_server, ::_1, ::_2));
 
         // Listen on port
-        echo_server.listen(arg.nMotherPort);
+        echo_server.listen(mplex_arg.nMotherPort);
 
         // Start the server accept loop
         echo_server.start_accept();

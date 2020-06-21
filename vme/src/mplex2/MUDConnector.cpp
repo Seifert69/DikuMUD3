@@ -84,7 +84,7 @@ void test_mud_up(void)
     char buf[200];
     static int nRetries = 0;
 
-    fd = OpenNetwork(arg.nMudPort, arg.pAddress);
+    fd = OpenNetwork(mplex_arg.nMudPort, mplex_arg.pAddress);
 
     // If this acts up then it might be because of multithreading issues
     // from the clientconnector.
@@ -96,7 +96,7 @@ void test_mud_up(void)
 #else
         sleep(1);
 #endif
-        slog(LOG_OFF, 0, "Unable to connect to MUD server %s:%d", arg.pAddress, arg.nMudPort);
+        slog(LOG_OFF, 0, "Unable to connect to MUD server %s:%d", mplex_arg.pAddress, mplex_arg.nMudPort);
         nRetries++;
         if (nRetries > 600)
         {
@@ -172,7 +172,7 @@ void Control(void)
 #endif
             test_mud_up(); /* Need to do this first... */
 
-            if (arg.bWebSockets)
+            if (mplex_arg.bWebSockets)
             {
                 slog(LOG_ALL, 0, "Waiting for a MUDHook to get reconnected...");
                 continue; // See bug description below. Dont wait until MUDHook is reestablished. 
@@ -205,7 +205,7 @@ void Control(void)
 
 int cMotherHook::IsHooked(void)
 {
-    if (arg.bWebSockets)
+    if (mplex_arg.bWebSockets)
         return TRUE;
     return cHook::IsHooked();
 }
@@ -380,7 +380,7 @@ int cMudHook::read_mud(void)
                     assert(id != 0);
                     con->m_nId = id;
                     protocol_send_host(&MudHook, id, con->m_aHost,
-                                    arg.nMotherPort, con->m_nLine);
+                                    mplex_arg.nMotherPort, con->m_nLine);
                     break;
                 }
             }

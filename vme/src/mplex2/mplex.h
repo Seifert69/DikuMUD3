@@ -30,5 +30,5 @@ struct arg_type
    do { if (!(a)) {fprintf(stderr, "%s\n", b); assert(a);} } while (0);
 
 extern int g_bHadAlarm;
-extern struct arg_type arg;
+extern struct arg_type mplex_arg;
 extern char mudname[50];

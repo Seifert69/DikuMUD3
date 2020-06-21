@@ -835,7 +835,7 @@ const char *GetTag(const char *p, char *pTag, int nTagMax)
 */
 void cConHook::StripHTML(char *dest, const char *src)
 {
-    if (arg.g_bModeRawHTML)
+    if (mplex_arg.g_bModeRawHTML)
     {
         strcpy(dest, src);
         return;
@@ -1272,11 +1272,11 @@ cConHook::cConHook(void)
     //m_pWebsHdl = 0;
     m_pWebsServer = 0;
 
-    m_sSetup.echo = arg.g_bModeEcho;
-    m_sSetup.redraw = arg.g_bModeRedraw;
-    m_sSetup.telnet = arg.g_bModeTelnet;
+    m_sSetup.echo = mplex_arg.g_bModeEcho;
+    m_sSetup.redraw = mplex_arg.g_bModeRedraw;
+    m_sSetup.telnet = mplex_arg.g_bModeTelnet;
 
-    if (arg.g_bModeANSI)
+    if (mplex_arg.g_bModeANSI)
         m_sSetup.emulation = TERM_ANSI;
     else
         m_sSetup.emulation = TERM_TTY;
@@ -1294,7 +1294,7 @@ cConHook::cConHook(void)
     m_nPromptMode = 0;
     strcpy(m_aHost, "");
 
-    if (arg.bWebSockets)
+    if (mplex_arg.bWebSockets)
         return; // Hack for making websockets work
 
     int fd;
