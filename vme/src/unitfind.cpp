@@ -839,7 +839,7 @@ class unit_data *find_symbolic_instance_ref(class unit_data *ref,
     if (IS_SET(bitvector, FIND_UNIT_WORLD))
     {
         for (u = unit_list; u; u = u->gnext)
-            if ((UNIT_FILE_INDEX(u) == fi))
+            if (UNIT_FILE_INDEX(u) == fi)
                 return u;
     }
 
@@ -854,7 +854,7 @@ class unit_data *find_symbolic_instance(class file_index_type *fi)
         return NULL;
 
     for (u = unit_list; u; u = u->gnext)
-        if ((UNIT_FILE_INDEX(u) == fi))
+        if (UNIT_FILE_INDEX(u) == fi)
             return u;
 
     return NULL;
