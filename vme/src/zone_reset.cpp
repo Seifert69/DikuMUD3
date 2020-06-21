@@ -230,10 +230,9 @@ class unit_data *zone_equip(class unit_data *u, struct zone_reset_cmd *cmd)
 /* fi[0] is room in which the door is located.              */
 /* num[0] is the exit number (0..5)                         */
 /* num[1] is the new state                                  */
-class unit_data *
-zone_door(class unit_data *u, struct zone_reset_cmd *cmd)
+class unit_data *zone_door(class unit_data *u, struct zone_reset_cmd *cmd)
 {
-    if ((cmd->fi==NULL) || (cmd->fi[0]->type != UNIT_ST_ROOM))
+    if (!cmd->fi[0] || (cmd->fi[0]->type != UNIT_ST_ROOM))
         szonelog(boot_zone, "Zone Reset Error: Not a room in door reference!");
     else if (!ROOM_EXIT(cmd->fi[0]->unit, cmd->num[0]))
         szonelog(boot_zone,
