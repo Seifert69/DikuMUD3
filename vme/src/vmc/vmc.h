@@ -80,7 +80,7 @@ struct reset_command
 };
 
 class unit_data *mcreate_unit(int type);
-struct room_direction_data *mcreate_exit(void);
+class room_direction_data *mcreate_exit(void);
 struct unit_affected_type *mcreate_affect();
 void *mmalloc(int size);
 void mem_reset(void);
