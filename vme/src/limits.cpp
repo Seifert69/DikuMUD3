@@ -522,7 +522,7 @@ void point_update(void)
 
     assert(regen_pc && regen_npc);
 
-    struct unit_data *u, *next_dude;
+    class unit_data *u, *next_dude;
 
     //
     for (u = unit_list; u; u = next_dude)

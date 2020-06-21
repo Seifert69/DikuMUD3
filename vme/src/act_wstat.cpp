@@ -1194,7 +1194,7 @@ static void stat_contents(const class unit_data *ch, class unit_data *u)
 {
     char buf[MAX_INPUT_LENGTH];
     int bright = 0, light = 0;
-    struct unit_data *orgu;
+    class unit_data *orgu;
 
     orgu = u;
 

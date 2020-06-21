@@ -131,7 +131,7 @@ int has_found_door(class unit_data *pc, int dir)
       return TRUE;
 }
 
-struct unit_data *in_room(struct unit_data *u)
+class unit_data *in_room(class unit_data *u)
 {
    while (u && !IS_ROOM(u))
       u = UNIT_IN(u);
@@ -554,7 +554,7 @@ int self_walk(class unit_data *ch, class unit_data *mover, int direction, int fo
 
    if (res == 1 && (in_room(ch) != room_from))
    {
-      struct unit_data *u = NULL;
+      class unit_data *u = NULL;
 
       if (IS_CHAR(ch) && CHAR_FOLLOWERS(ch))
          u = ch;

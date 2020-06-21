@@ -5,8 +5,8 @@
  $Revision: 2.2 $
  */
 
-#ifndef _MUD_MUD_BADNAMES_
-#define	_MUD_BADNAMES
+#ifndef _MUD_BADNAMES_H_
+#define	_MUD_BADNAMES_H_
 #ifdef _WINDOWS
 #include <string.h>
 #else

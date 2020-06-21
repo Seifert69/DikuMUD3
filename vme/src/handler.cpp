@@ -381,7 +381,7 @@ void die_follower(class unit_data *ch)
     plus   Light if it is daylight (depends on time of day)
     plus   Lights of the unit it is inside
 
-ubit1 unit_islight(struct unit_data *u)
+ubit1 unit_islight(class unit_data *u)
 {
     if (!u)
         return 0;
