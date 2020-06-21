@@ -164,7 +164,7 @@ int info_rod(struct spec_arg *sarg)
 
 /* Log stuff below */
 
-extern struct log_buffer log_buf[];
+extern class log_buffer log_buf[];
 
 int log_object(struct spec_arg *sarg)
 {
