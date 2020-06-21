@@ -969,7 +969,7 @@ void weight_change_unit(class unit_data *unit, int weight)
         UNIT_WEIGHT(unit) += weight;
 }
 
-struct extra_descr_data *quest_add(class unit_data *ch, const char *name, const char *descr)
+class extra_descr_data *quest_add(class unit_data *ch, const char *name, const char *descr)
 {
     assert(name != NULL);
     assert(name[0]);

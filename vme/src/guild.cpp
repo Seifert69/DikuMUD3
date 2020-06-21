@@ -43,7 +43,7 @@ struct guild_type
     char **ppExcludeQuest;
 };
 
-struct extra_descr_data *find_quest(char *word, class unit_data *unit)
+class extra_descr_data *find_quest(char *word, class unit_data *unit)
 {
     if (!IS_PC(unit) || !word)
         return NULL;
@@ -54,7 +54,7 @@ struct extra_descr_data *find_quest(char *word, class unit_data *unit)
 int char_guild_level(class unit_data *ch)
 {
     ubit32 i;
-    struct extra_descr_data *exd;
+    class extra_descr_data *exd;
 
     assert(IS_CHAR(ch));
 
@@ -78,7 +78,7 @@ int char_guild_level(class unit_data *ch)
 
 void advance_guild_level(class unit_data *ch)
 {
-    struct extra_descr_data *exd;
+    class extra_descr_data *exd;
 
     int lvl = char_guild_level(ch);
     ubit32 i;
@@ -316,7 +316,7 @@ int guard_guild_way(struct spec_arg *sarg)
 
 void leave_guild(class unit_data *player)
 {
-    struct extra_descr_data *exd;
+    class extra_descr_data *exd;
 
     assert(PC_GUILD(player));
 
@@ -348,7 +348,7 @@ void leave_guild(class unit_data *player)
 void guild_banish_player(class unit_data *ch)
 {
     char *c;
-    struct extra_descr_data *pExd;
+    class extra_descr_data *pExd;
 
     if (!IS_PC(ch))
         return;
@@ -415,7 +415,7 @@ int can_leave_guild(struct guild_type *pG,
 
 void join_guild(class unit_data *ch, char *guild_name)
 {
-    struct extra_descr_data *exd;
+    class extra_descr_data *exd;
 
     assert(IS_PC(ch));
 
@@ -690,7 +690,7 @@ void do_guild(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     char buf[MAX_STRING_LENGTH];
     int found = FALSE;
-    struct extra_descr_data *exd;
+    class extra_descr_data *exd;
 
     if (!IS_PC(ch))
     {

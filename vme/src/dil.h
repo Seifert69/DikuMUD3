@@ -469,7 +469,7 @@ struct dilvar
         class zone_type *zoneptr;
         struct command_info *cmdptr;
         sbit32 integer;
-        struct extra_descr_data *extraptr;
+        class extra_descr_data *extraptr;
         char *string;
         class cStringInstance *pHash;
         class cNamelist *namelist;

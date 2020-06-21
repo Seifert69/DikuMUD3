@@ -37,7 +37,7 @@ extern struct unit_function_array_type unit_function_array[];
 // Return 1 on error, 0 if OK
 int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version)
 {
-    struct extra_descr_data *e, *te, *first;
+    class extra_descr_data *e, *te, *first;
     ubit8 x;
     ubit32 i; //for 32 bit extra lists
     char *c;
@@ -69,7 +69,7 @@ int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version)
             return 1;
 
         if (unit_version < 70) c = fix_old_codes_to_html(c);
-        e = new (struct extra_descr_data);
+        e = new (class extra_descr_data);
         e->descr = c;
         e->names.ReadBuffer(pBuf, unit_version);
         if (unit_version > 61)

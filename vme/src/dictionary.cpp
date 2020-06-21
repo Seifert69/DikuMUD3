@@ -603,7 +603,7 @@ static int local_dictionary(struct spec_arg *sarg)
     ubit16 i;
     struct alias_t *al = NULL;
     struct alias_head *alias_h;
-    struct extra_descr_data *exd;
+    class extra_descr_data *exd;
 
     /* specproc initialization */
     if ((alias_h = (struct alias_head *)sarg->fptr->data) == NULL)

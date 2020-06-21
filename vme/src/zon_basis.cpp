@@ -309,7 +309,7 @@ int admin_obj(struct spec_arg *sarg)
     char buf[512];
     int zonelist;
     class zone_type *zone;
-    struct extra_descr_data *exdp;
+    class extra_descr_data *exdp;
 
     if (sarg->cmd->no != CMD_AUTO_UNKNOWN)
         return SFR_SHARE;

@@ -29,7 +29,7 @@ void save_player_contents (class unit_data * pc, int fast);
 
 
 /* handler.c */
-struct extra_descr_data *quest_add (class unit_data * ch,
+class extra_descr_data *quest_add (class unit_data * ch,
                                     const char *name, const char *descr);
 
 void insert_in_unit_list (class unit_data * u);
