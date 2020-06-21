@@ -61,7 +61,7 @@
 #include "fight.h"
 #include "skills.h"
 
-extern class command_info *cmd_dirs[MAX_EXIT + 1];
+extern struct command_info *cmd_dirs[MAX_EXIT + 1];
 
 const char *single_unit_messg(class unit_data *unit,
                               const char *type,
@@ -624,7 +624,7 @@ void move_dir(class unit_data *ch, int dir)
    }
 }
 
-void do_move(class unit_data *ch, char *argument, const class command_info *cmd)
+void do_move(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
    /* NOTICE! It uses cmd->no for efficiency, thus cmd->no MUST */
    /* be one of CMD_NORTH..CMD_DOWN which again MUST BE 0..5    */
@@ -851,7 +851,7 @@ int do_simple_move(class unit_data *ch, int direction, int following)
 }
 
 void do_follow(class unit_data *ch, char *arg,
-               const class command_info *cmd)
+               const struct command_info *cmd)
 {
    class unit_data *leader = NULL;
 

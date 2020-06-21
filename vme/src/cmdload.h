@@ -16,7 +16,7 @@ struct cmdload_struct
 {
     const   char *cmd_str;
     void (*cmd_fptr) (class unit_data * ch, char *arg,
-                      const class command_info * c);
+                      const struct command_info * c);
     int inttype;
     int dir;
 };

@@ -39,7 +39,7 @@ int dil_direct_init (struct spec_arg *sarg);
 int dil_init (struct spec_arg *sarg);
 
 void dil_activate (struct dilprg *prg);
-void dil_activate_cmd (struct dilprg *prg, class command_info *cmd_ptr);
+void dil_activate_cmd (struct dilprg *prg, struct command_info *cmd_ptr);
 void dil_init_vars (int varc, struct dilframe *frm);
 void dil_free_var (struct dilvar *var);
 

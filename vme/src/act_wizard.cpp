@@ -48,7 +48,7 @@ class descriptor_data *find_descriptor(const char *,
 int player_exists(const char *pName);
 int delete_player(const char *name);
 
-void do_path(class unit_data *ch, char *argument, const class command_info *cmd)
+void do_path(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
     int i;
     class unit_data *thing;
@@ -80,7 +80,7 @@ void do_path(class unit_data *ch, char *argument, const class command_info *cmd)
 }
 
 void do_users(class unit_data *ch, char *argument,
-              const class command_info *cmd)
+              const struct command_info *cmd)
 {
     char *buf = NULL;
     int cur_size = 1024;
@@ -159,7 +159,7 @@ void do_users(class unit_data *ch, char *argument,
 }
 
 /* Reset the zone in which the char is in! */
-void do_reset(class unit_data *ch, char *arg, const class command_info *cmd)
+void do_reset(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     class zone_type *zone;
 
@@ -181,7 +181,7 @@ void do_reset(class unit_data *ch, char *arg, const class command_info *cmd)
     zone_reset(zone);
 }
 
-void do_at(class unit_data *ch, char *argument, const class command_info *cmd)
+void do_at(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
     char buf[MAX_INPUT_LENGTH];
     class unit_data *target, *original_loc;
@@ -234,7 +234,7 @@ void do_at(class unit_data *ch, char *argument, const class command_info *cmd)
 }
 
 void do_crash(class unit_data *ch, char *argument,
-              const class command_info *cmd)
+              const struct command_info *cmd)
 {
     if (cmd_is_abbrev(ch, cmd))
     {
@@ -249,7 +249,7 @@ void do_crash(class unit_data *ch, char *argument,
 }
 
 void do_execute(class unit_data *ch, char *argument,
-                const class command_info *cmd)
+                const struct command_info *cmd)
 {
     int system_check(class unit_data * pc, char *buf);
     void execute_append(class unit_data * pc, char *str);
@@ -264,7 +264,7 @@ void do_execute(class unit_data *ch, char *argument,
 }
 
 void do_shutdown(class unit_data *ch, char *argument,
-                 const class command_info *cmd)
+                 const struct command_info *cmd)
 {
     char buf[100];
     extern int mud_shutdown;
@@ -284,7 +284,7 @@ void do_shutdown(class unit_data *ch, char *argument,
 }
 
 void do_snoop(class unit_data *ch, char *argument,
-              const class command_info *cmd)
+              const struct command_info *cmd)
 {
     class unit_data *victim;
 
@@ -348,7 +348,7 @@ void do_snoop(class unit_data *ch, char *argument,
 
 /* return -> switch <no_arg> */
 
-void do_switch(class unit_data *ch, char *argument, const class command_info *cmd)
+void do_switch(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
     class unit_data *victim;
 
@@ -390,7 +390,7 @@ void do_switch(class unit_data *ch, char *argument, const class command_info *cm
     }
 }
 
-void do_load(class unit_data *ch, char *arg, const class command_info *cmd)
+void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     char buf[MAX_INPUT_LENGTH];
     class file_index_type *fi;
@@ -500,7 +500,7 @@ void do_load(class unit_data *ch, char *arg, const class command_info *cmd)
 /*  0: free access
  * >0: locked for below this level
  */
-void do_wizlock(class unit_data *ch, char *arg, const class command_info *cmd)
+void do_wizlock(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     extern int wizlock;
     int lvl;

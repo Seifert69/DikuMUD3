@@ -223,7 +223,7 @@ void dilfi_gamestate(register struct dilprg *p)
 
 void dilfi_send_done(register struct dilprg *p)
 {
-    class command_info *cmd_ptr;
+    struct command_info *cmd_ptr;
     dilval *v7 = p->stack.pop();
     dilval *v6 = p->stack.pop();
     dilval *v5 = p->stack.pop();
@@ -242,7 +242,7 @@ void dilfi_send_done(register struct dilprg *p)
                        v7, TYPEFAIL_NULL, 2, DILV_UP, DILV_NULL))
     {
         if ((cmd_ptr =
-                 (class command_info *)search_trie((char *)v1->val.ptr,
+                 (struct command_info *)search_trie((char *)v1->val.ptr,
                                                     intr_trie)))
         {
             send_done((class unit_data *)v2->val.ptr,
@@ -881,7 +881,7 @@ void dilfi_rtf(struct dilprg *p)
         case DILV_CP:
             v->type = DILV_CP;
             v->atyp = DILA_NORM;
-            v->val.ptr = (class command_info *)v1->val.ptr;
+            v->val.ptr = (struct command_info *)v1->val.ptr;
             break;
 
         case DILV_INT:
@@ -1026,7 +1026,7 @@ void dil_push_frame(struct dilprg *p, struct diltemplate *rtmpl)
 
         case DILV_CP:
             frm->vars[i].val.cmdptr =
-                (class command_info *)p->stack[-(rtmpl->argc - i)]->val.ptr;
+                (struct command_info *)p->stack[-(rtmpl->argc - i)]->val.ptr;
             break;
 
         case DILV_ZP:
@@ -1247,8 +1247,8 @@ void dilfi_ass(register struct dilprg *p)
             break;
 
         case DILV_CP:
-            *((class command_info **)v1->ref) =
-                (class command_info *)v2->val.ptr;
+            *((struct command_info **)v1->ref) =
+                (struct command_info *)v2->val.ptr;
             break;
 
         default:
@@ -2114,14 +2114,14 @@ void dilfi_exec(register struct dilprg *p)
             if (IS_IMMORTAL((class unit_data *)v2->val.ptr))
             {
                 char buf[MAX_INPUT_LENGTH];
-                class command_info *cmd_ptr;
+                struct command_info *cmd_ptr;
 
                 extern struct trie_type *intr_trie;
 
                 str_next_word(cmd, buf);
 
                 if ((cmd_ptr =
-                         (class command_info *)search_trie(buf, intr_trie)))
+                         (struct command_info *)search_trie(buf, intr_trie)))
                 {
                     if (cmd_ptr->minimum_level >= IMMORTAL_LEVEL)
                     {
@@ -2426,7 +2426,7 @@ void dilfi_snt(register struct dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
-    extern class command_info cmd_auto_msg;
+    extern struct command_info cmd_auto_msg;
 
     p->waitcmd--;
 
@@ -2462,7 +2462,7 @@ void dilfi_snta(register struct dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
-    extern class command_info cmd_auto_msg;
+    extern struct command_info cmd_auto_msg;
 
     p->waitcmd--;
 

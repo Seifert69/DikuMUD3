@@ -276,7 +276,7 @@ static void chg_echo_say(class unit_data *ch)
             0, 0, TO_CHAR);
 }
 
-void do_change(class unit_data *ch, char *arg, const class command_info *cmd)
+void do_change(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     static const char *args[] = {
         "brief",

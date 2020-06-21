@@ -32,7 +32,7 @@ extern struct unit_function_array_type unit_function_array[];
 
 struct trie_type *intr_trie = NULL;
 
-class command_info cmd_auto_tick = {
+struct command_info cmd_auto_tick = {
     0,
     0,
     NULL,
@@ -42,7 +42,7 @@ class command_info cmd_auto_tick = {
     0,
 };
 
-class command_info cmd_auto_enter = {
+struct command_info cmd_auto_enter = {
     0,
     0,
     NULL,
@@ -52,7 +52,7 @@ class command_info cmd_auto_enter = {
     0,
 };
 
-class command_info cmd_auto_play = {
+struct command_info cmd_auto_play = {
     0,
     0,
     NULL,
@@ -62,7 +62,7 @@ class command_info cmd_auto_play = {
     0,
 };
 
-class command_info cmd_auto_leave = {
+struct command_info cmd_auto_leave = {
     0,
     0,
     NULL,
@@ -72,7 +72,7 @@ class command_info cmd_auto_leave = {
     0,
 };
 
-class command_info cmd_auto_extract = {
+struct command_info cmd_auto_extract = {
     0,
     0,
     NULL,
@@ -82,7 +82,7 @@ class command_info cmd_auto_extract = {
     0,
 };
 
-class command_info cmd_auto_death = {
+struct command_info cmd_auto_death = {
     0,
     0,
     NULL,
@@ -92,7 +92,7 @@ class command_info cmd_auto_death = {
     0,
 };
 
-class command_info cmd_auto_combat = {
+struct command_info cmd_auto_combat = {
     0,
     0,
     NULL,
@@ -102,7 +102,7 @@ class command_info cmd_auto_combat = {
     0,
 };
 
-class command_info cmd_auto_unknown = {
+struct command_info cmd_auto_unknown = {
     0,
     0,
     NULL,
@@ -112,7 +112,7 @@ class command_info cmd_auto_unknown = {
     0,
 };
 
-class command_info cmd_auto_save = {
+struct command_info cmd_auto_save = {
     0,
     0,
     NULL,
@@ -122,7 +122,7 @@ class command_info cmd_auto_save = {
     0,
 };
 
-class command_info cmd_auto_msg = {
+struct command_info cmd_auto_msg = {
     0,
     0,
     NULL,
@@ -132,7 +132,7 @@ class command_info cmd_auto_msg = {
     0,
 };
 
-class command_info cmd_auto_edit = {
+struct command_info cmd_auto_edit = {
     0,
     0,
     NULL,
@@ -142,12 +142,12 @@ class command_info cmd_auto_edit = {
     0,
 };
 
-class command_info cmd_auto_damage = {
+struct command_info cmd_auto_damage = {
     0, 0, NULL, CMD_AUTO_DAMAGE, POSITION_DEAD, NULL, 0};
 
-class command_info *cmd_follow = NULL;
+struct command_info *cmd_follow = NULL;
 
-class command_info *cmd_dirs[MAX_EXIT+1];
+struct command_info *cmd_dirs[MAX_EXIT+1];
 
 
 void wrong_position(class unit_data *ch)
@@ -277,7 +277,7 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
     char argstr[MAX_INPUT_LENGTH + 10];
 
     int is_say, is_emote;
-    class command_info *cmd_ptr;
+    struct command_info *cmd_ptr;
     is_say = FALSE;
     is_emote = FALSE;
     assert(IS_CHAR(ch));
@@ -362,10 +362,10 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
 
     strip_trailing_spaces(argstr);
 
-    if ((cmd_ptr = (class command_info *)search_trie(cmd, intr_trie)) ==
+    if ((cmd_ptr = (struct command_info *)search_trie(cmd, intr_trie)) ==
         NULL)
     {
-        class command_info the_cmd =
+        struct command_info the_cmd =
             {0, 0, NULL, CMD_AUTO_UNKNOWN, POSITION_DEAD, NULL, 0};
 
         the_cmd.cmd_str = str_dup(cmd);
@@ -495,13 +495,13 @@ void descriptor_interpreter(class descriptor_data *d, char *arg)
 }
 
 /* Check to see if the full command was typed */
-ubit1 cmd_is_abbrev(class unit_data *ch, const class command_info *cmd)
+ubit1 cmd_is_abbrev(class unit_data *ch, const struct command_info *cmd)
 {
     return CHAR_DESCRIPTOR(ch) && str_ccmp(CHAR_DESCRIPTOR(ch)->last_cmd, cmd->cmd_str);
 }
 
 /* To check for commands by string */
-ubit1 is_command(const class command_info *cmd, const char *str)
+ubit1 is_command(const struct command_info *cmd, const char *str)
 {
     if ((cmd->no == CMD_AUTO_UNKNOWN))
     {
@@ -509,8 +509,8 @@ ubit1 is_command(const class command_info *cmd, const char *str)
     }
     else
     {
-        class command_info *cmd_ptr =
-            (class command_info *)search_trie(str, intr_trie);
+        struct command_info *cmd_ptr =
+            (struct command_info *)search_trie(str, intr_trie);
 
         return (cmd_ptr == cmd);
     }
@@ -768,7 +768,7 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt,
 }
 
 /* Preprocessed commands */
-int send_preprocess(class unit_data *ch, const class command_info *cmd,
+int send_preprocess(class unit_data *ch, const struct command_info *cmd,
                     char *arg)
 {
     struct spec_arg sarg;
@@ -777,7 +777,7 @@ int send_preprocess(class unit_data *ch, const class command_info *cmd,
     sarg.medium = NULL;
     sarg.target = NULL;
     sarg.pInt = NULL;
-    sarg.cmd = (class command_info *)cmd;
+    sarg.cmd = (struct command_info *)cmd;
     sarg.arg = arg;
 
     return basic_special(ch, &sarg, SFB_CMD);
@@ -877,7 +877,7 @@ int send_prompt(class unit_data *pc)
 int send_ack(class unit_data *activator, class unit_data *medium,
              class unit_data *target,
              int *i,
-             const class command_info *cmd,
+             const struct command_info *cmd,
              const char *arg, class unit_data *extra_target, char *to)
 {
     struct spec_arg sarg;
@@ -892,7 +892,7 @@ int send_ack(class unit_data *activator, class unit_data *medium,
     else
         sarg.pInt = &j;
 
-    sarg.cmd = (class command_info *)cmd;
+    sarg.cmd = (struct command_info *)cmd;
     sarg.arg = (char *)arg;
 
     if (to)
@@ -902,7 +902,7 @@ int send_ack(class unit_data *activator, class unit_data *medium,
 }
 
 void send_done(class unit_data *activator, class unit_data *medium,
-               class unit_data *target, int i, const class command_info *cmd,
+               class unit_data *target, int i, const struct command_info *cmd,
                const char *arg, class unit_data *extra_target, const char *to)
 {
     struct spec_arg sarg;
@@ -911,7 +911,7 @@ void send_done(class unit_data *activator, class unit_data *medium,
     sarg.medium = medium;
     sarg.target = target;
     sarg.pInt = &i;
-    sarg.cmd = (class command_info *)cmd;
+    sarg.cmd = (struct command_info *)cmd;
     sarg.arg = (char *)arg;
 
     if (to)
@@ -923,7 +923,7 @@ void send_done(class unit_data *activator, class unit_data *medium,
 /* Build the trie here :) */
 void assign_command_pointers(void)
 {
-    class command_info *cmd;
+    struct command_info *cmd;
     intr_trie = 0;
     for (cmd = cmdlist; cmd; cmd = cmd->next)
         intr_trie = add_trienode(cmd->cmd_str, intr_trie);
@@ -933,62 +933,62 @@ void assign_command_pointers(void)
     for (cmd = cmdlist; cmd; cmd = cmd->next)
         set_triedata(cmd->cmd_str, intr_trie, cmd, FALSE);
 
-    cmd_follow = (class command_info *)search_trie("follow", intr_trie);
+    cmd_follow = (struct command_info *)search_trie("follow", intr_trie);
 
-    cmd = (class command_info *)search_trie("north", intr_trie);
+    cmd = (struct command_info *)search_trie("north", intr_trie);
     cmd->no = DIR_NORTH;
     cmd_dirs[DIR_NORTH] = cmd;
 
-    cmd = (class command_info *)search_trie("northeast", intr_trie);
+    cmd = (struct command_info *)search_trie("northeast", intr_trie);
     cmd->no = DIR_NORTHEAST;
     cmd_dirs[DIR_NORTHEAST] = cmd;
-    cmd = (class command_info *)search_trie("ne", intr_trie);
+    cmd = (struct command_info *)search_trie("ne", intr_trie);
     cmd->no = DIR_NORTHEAST;
 
-    cmd = (class command_info *)search_trie("east", intr_trie);
+    cmd = (struct command_info *)search_trie("east", intr_trie);
     cmd->no = DIR_EAST;
     cmd_dirs[DIR_EAST] = cmd;
 
-    cmd = (class command_info *)search_trie("southeast", intr_trie);
+    cmd = (struct command_info *)search_trie("southeast", intr_trie);
     cmd->no = DIR_SOUTHEAST;
     cmd_dirs[DIR_SOUTHEAST] = cmd;
 
-    cmd = (class command_info *)search_trie("se", intr_trie);
+    cmd = (struct command_info *)search_trie("se", intr_trie);
     cmd->no = DIR_SOUTHEAST;
 
-    cmd = (class command_info *)search_trie("south", intr_trie);
+    cmd = (struct command_info *)search_trie("south", intr_trie);
     cmd->no = DIR_SOUTH;
     cmd_dirs[DIR_SOUTH] = cmd;
 
-    cmd = (class command_info *)search_trie("southwest", intr_trie);
+    cmd = (struct command_info *)search_trie("southwest", intr_trie);
     cmd->no = DIR_SOUTHWEST;
     cmd_dirs[DIR_SOUTHWEST] = cmd;
 
-    cmd = (class command_info *)search_trie("sw", intr_trie);
+    cmd = (struct command_info *)search_trie("sw", intr_trie);
     cmd->no = DIR_SOUTHWEST;
 
-    cmd = (class command_info *)search_trie("west", intr_trie);
+    cmd = (struct command_info *)search_trie("west", intr_trie);
     cmd->no = DIR_WEST;
     cmd_dirs[DIR_WEST] = cmd;
 
-    cmd = (class command_info *)search_trie("northwest", intr_trie);
+    cmd = (struct command_info *)search_trie("northwest", intr_trie);
     cmd->no = DIR_NORTHWEST;
     cmd_dirs[DIR_NORTHWEST] = cmd;
 
-    cmd = (class command_info *)search_trie("nw", intr_trie);
+    cmd = (struct command_info *)search_trie("nw", intr_trie);
     cmd->no = DIR_NORTHWEST;
-    cmd = (class command_info *)search_trie("up", intr_trie);
+    cmd = (struct command_info *)search_trie("up", intr_trie);
     cmd->no = DIR_UP;
     cmd_dirs[DIR_UP] = cmd;
 
-    cmd = (class command_info *)search_trie("down", intr_trie);
+    cmd = (struct command_info *)search_trie("down", intr_trie);
     cmd->no = DIR_DOWN;
     cmd_dirs[DIR_DOWN] = cmd;
 }
 
 void interpreter_dil_check(void)
 {
-    class command_info *cmd;
+    struct command_info *cmd;
     for (cmd = cmdlist; cmd; cmd = cmd->next)
     {
         if (cmd->tmpl == NULL)

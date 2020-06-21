@@ -454,7 +454,7 @@ void gain_exp(class unit_data *ch, int gain)
         gain_exp_regardless(ch, gain);
 }
 
-void do_level(class unit_data *ch, char *arg, const class command_info *cmd)
+void do_level(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     int now;
 

@@ -81,7 +81,7 @@ destruct_unit (class unit_data * unit)
     void nanny_menu (class descriptor_data *d, char *arg);
     void nanny_close (class descriptor_data *d, char *arg);
 
-    void do_return (class unit_data * ch, char *arg, class command_info *cmd);
+    void do_return (class unit_data * ch, char *arg, struct command_info *cmd);
 
     /* Remove all snooping, snoopers and return from any body */
     if (IS_CHAR (unit))

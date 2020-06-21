@@ -26,7 +26,7 @@
 
 /* extern variables */
 
-void do_hit(class unit_data *ch, char *argument, const class command_info *cmd)
+void do_hit(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
     class unit_data *victim;
 
@@ -63,7 +63,7 @@ void do_hit(class unit_data *ch, char *argument, const class command_info *cmd)
     }
 }
 
-void do_kill(class unit_data *ch, char *argument, const class command_info *cmd)
+void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
     class unit_data *victim;
 

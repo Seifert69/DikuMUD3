@@ -132,7 +132,7 @@ ubit32 rent_calc(class unit_data *ch, time_t savetime)
     return sum;
 }
 
-void do_rent(class unit_data *ch, char *arg, const class command_info *cmd)
+void do_rent(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     ubit32 sum;
 

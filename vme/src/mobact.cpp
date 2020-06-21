@@ -75,7 +75,7 @@ void special_event(void *p1, void *p2)
 
     void add_func_history(class unit_data * u, ubit16, ubit16);
 
-    extern class command_info cmd_auto_tick;
+    extern struct command_info cmd_auto_tick;
 
 /*    if (fptr->index == SFUN_DIL_INTERNAL)
         if (fptr && fptr->data)

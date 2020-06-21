@@ -352,7 +352,7 @@ int get_type(char *typdef, const char *structure[])
 }
 
 /* modification of anything in units */
-void do_set(class unit_data *ch, char *argument, const class command_info *cmd)
+void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
     char arg[MAX_STRING_LENGTH], buf[MAX_STRING_LENGTH];
     int type;
@@ -1297,7 +1297,7 @@ static const char *skill_field_names[] = {
     NULL};
 
 void do_setskill(class unit_data *ch, char *argument,
-                 const class command_info *cmd)
+                 const struct command_info *cmd)
 {
     int type, skillarg, valarg = 0;
     char buf[MAX_STRING_LENGTH], arg[MAX_STRING_LENGTH];

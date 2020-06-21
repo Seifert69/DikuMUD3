@@ -644,7 +644,7 @@ account_flatrate_change (class unit_data * god, class unit_data * whom,
 
 
 void
-do_account (class unit_data * ch, char *arg, const class command_info *cmd)
+do_account (class unit_data * ch, char *arg, const struct command_info *cmd)
 {
     char Buf[256];
     char word[MAX_INPUT_LENGTH];
