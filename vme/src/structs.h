@@ -235,7 +235,7 @@ public:
 
     typedef adjacency_list<vecS, vecS, directedS, no_property,
                            property<edge_weight_t, int,
-                                    property<edge_dir_t, int>>>
+                                    property<edge_dir_t, int> > >
         graph_t;
 
     typedef graph_traits<graph_t>::vertex_descriptor vertex_descriptor;
