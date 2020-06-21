@@ -221,7 +221,7 @@ show_site (class unit_data * ch, struct ban_t *entry)
 
 
 void
-do_ban (class unit_data * ch, char *arg, const struct command_info *cmd)
+do_ban (class unit_data * ch, char *arg, const class command_info *cmd)
 {
     struct ban_t *tmp;
     char site[MAX_INPUT_LENGTH], textfile[MAX_INPUT_LENGTH], mode;

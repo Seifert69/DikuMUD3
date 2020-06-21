@@ -651,7 +651,7 @@ unit_can_hold_amount(class unit_data *unit, class unit_data *money)
 #include "interpreter.h"
 #include "comm.h"
 
-void do_makemoney(class unit_data *ch, char *arg, const struct command_info *cmd)
+void do_makemoney(class unit_data *ch, char *arg, const class command_info *cmd)
 {
     currency_t cur;
     amount_t amt = 0;

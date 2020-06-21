@@ -257,7 +257,7 @@ void destroy_fptr(class unit_data *u, struct unit_fptr *f)
     struct spec_arg sarg;
 
     extern struct unit_function_array_type unit_function_array[];
-    extern struct command_info cmd_auto_extract;
+    extern class command_info cmd_auto_extract;
 
     void register_destruct(int i, void *ptr);
     void add_func_history(class unit_data * u, ubit16, ubit16);
@@ -311,7 +311,7 @@ void stop_following(class unit_data *ch)
 {
     struct char_follow_type *j, *k;
 
-    extern struct command_info *cmd_follow;
+    extern class command_info *cmd_follow;
 
     assert(CHAR_MASTER(ch));
 
@@ -341,7 +341,7 @@ void start_following(class unit_data *ch, class unit_data *leader)
 {
     struct char_follow_type *k;
 
-    extern struct command_info *cmd_follow;
+    extern class command_info *cmd_follow;
 
     assert(!is_destructed(DR_UNIT, leader));
     assert(!is_destructed(DR_UNIT, ch));

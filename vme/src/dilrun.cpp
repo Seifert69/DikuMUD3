@@ -1483,7 +1483,7 @@ void dil_activate(struct dilprg *prg)
     run_dil(&sarg);
 }
 
-void dil_activate_cmd(struct dilprg *prg, struct command_info *cmd_ptr)
+void dil_activate_cmd(struct dilprg *prg, class command_info *cmd_ptr)
 {
     struct spec_arg sarg;
     struct unit_fptr *fptr;

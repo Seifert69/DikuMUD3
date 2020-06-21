@@ -109,14 +109,14 @@ int spell_perform(int spell_no, int spell_type,
                   class unit_data *target,
                   const char *argument, char *pEffect, int bonus)
 {
-    static struct command_info *cmd = NULL;
+    static class command_info *cmd = NULL;
     int hm = -1;
 
     if (!cmd)
     {
         extern struct trie_type *intr_trie;
 
-        cmd = (struct command_info *)search_trie("cast", intr_trie);
+        cmd = (class command_info *)search_trie("cast", intr_trie);
         assert(cmd);
     }
 
@@ -246,7 +246,7 @@ int spell_perform(int spell_no, int spell_type,
 }
 
 /* Assumes that argument does start with first letter of chopped string */
-void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd)
+void do_cast(class unit_data *ch, char *argument, const class command_info *cmd)
 {
     class unit_data *unit;
     int spl;

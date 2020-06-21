@@ -31,7 +31,7 @@
 #include "common.h"
 #include "guild.h"
 #include "dilrun.h"
-void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
+void do_color(class unit_data *ch, char *aaa, const class command_info *cmd)
 {
     char fore[MAX_INPUT_LENGTH];
     char back[MAX_INPUT_LENGTH];

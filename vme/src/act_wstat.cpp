@@ -1229,7 +1229,7 @@ static void stat_descriptor(const class unit_data *ch, class unit_data *u)
 }
 
 void do_wstat(class unit_data *ch, char *argument,
-              const struct command_info *cmd)
+              const class command_info *cmd)
 {
     char buf[4 * MAX_STRING_LENGTH];
     class unit_data *u = NULL;

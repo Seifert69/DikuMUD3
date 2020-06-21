@@ -35,7 +35,7 @@
 extern struct requirement_type pc_race_base[];
 extern int possible_saves;
 
-void do_save(class unit_data *ch, char *arg, const struct command_info *cmd)
+void do_save(class unit_data *ch, char *arg, const class command_info *cmd)
 {
     if (!IS_PC(ch))
         return;

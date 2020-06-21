@@ -467,7 +467,7 @@ struct dilvar
     {
         class unit_data *unitptr;
         class zone_type *zoneptr;
-        struct command_info *cmdptr;
+        class command_info *cmdptr;
         sbit32 integer;
         class extra_descr_data *extraptr;
         char *string;

@@ -11,7 +11,7 @@
 #include "magic.h"
 
 void
-do_backstab (class unit_data * ch, char *arg, const struct command_info *cmd)
+do_backstab (class unit_data * ch, char *arg, const class command_info *cmd)
 /*
  * coded: Mon Jun 22 00:22:44 MET DST 1992 [HH]
  * tested: No

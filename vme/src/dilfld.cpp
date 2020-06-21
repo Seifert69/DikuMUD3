@@ -218,7 +218,7 @@ void dilfe_fld(register struct dilprg *p)
                 v->atyp = DILA_NORM;
                 v->type = DILV_INT;
                 v->val.num =
-                    (((struct command_info *)v1->val.ptr)->combat_speed);
+                    (((class command_info *)v1->val.ptr)->combat_speed);
             }
             else
                 v->type = DILV_FAIL; /* not applicable */
@@ -299,7 +299,7 @@ void dilfe_fld(register struct dilprg *p)
             {
                 v->atyp = DILA_NORM;
                 v->type = DILV_INT;
-                v->val.num = (((struct command_info *)v1->val.ptr)->log_level);
+                v->val.num = (((class command_info *)v1->val.ptr)->log_level);
             }
             else
                 v->type = DILV_FAIL; /* not applicable */
@@ -444,7 +444,7 @@ void dilfe_fld(register struct dilprg *p)
             {
                 v->atyp = DILA_NONE;
                 v->type = DILV_INT;
-                v->val.num = (((struct command_info *)v1->val.ptr)->type);
+                v->val.num = (((class command_info *)v1->val.ptr)->type);
             }
             else
                 v->type = DILV_FAIL; /* not applicable */
@@ -497,7 +497,7 @@ void dilfe_fld(register struct dilprg *p)
             {
                 v->atyp = DILA_NORM;
                 v->type = DILV_CP;
-                v->val.ptr = ((struct command_info *)v1->val.ptr)->next;
+                v->val.ptr = ((class command_info *)v1->val.ptr)->next;
             }
             else
                 v->type = DILV_FAIL; /* not applicable */
@@ -624,7 +624,7 @@ void dilfe_fld(register struct dilprg *p)
                 v->atyp = DILA_NORM;
                 v->type = DILV_SP;
                 v->val.ptr = (void *)
-                    IF_STR(((struct command_info *)v1->val.ptr)->cmd_str);
+                    IF_STR(((class command_info *)v1->val.ptr)->cmd_str);
             }
             else
                 v->type = DILV_FAIL;
@@ -3219,7 +3219,7 @@ void dilfe_fld(register struct dilprg *p)
                 v->atyp = DILA_NONE;
                 v->type = DILV_INT;
                 v->val.num =
-                    (((struct command_info *)v1->val.ptr)->minimum_level);
+                    (((class command_info *)v1->val.ptr)->minimum_level);
             }
             else
                 v->type = DILV_FAIL;
@@ -3354,7 +3354,7 @@ void dilfe_fld(register struct dilprg *p)
                 v->atyp = DILA_NONE;
                 v->type = DILV_UINT1R;
                 v->ref =
-                    &(((struct command_info *)v1->val.ptr)->minimum_position);
+                    &(((class command_info *)v1->val.ptr)->minimum_position);
             }
             else
                 v->type = DILV_FAIL;

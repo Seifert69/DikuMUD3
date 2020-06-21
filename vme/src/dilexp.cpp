@@ -588,7 +588,7 @@ void dilfe_clr(struct dilprg *p)
 void dilfe_sendpre(struct dilprg *p)
 {
     dilval *v = new dilval;
-    struct command_info *cmd;
+    class command_info *cmd;
     dilval *v7 = p->stack.pop();
     dilval *v6 = p->stack.pop();
     dilval *v5 = p->stack.pop();
@@ -624,7 +624,7 @@ void dilfe_sendpre(struct dilprg *p)
                             {
                             case DILV_UP:
                             case DILV_NULL:
-                                cmd = ((struct command_info *)
+                                cmd = ((class command_info *)
                                          search_trie((char *)v1->val.ptr,
                                                      intr_trie));
                                 if (!cmd)
@@ -3674,7 +3674,7 @@ void dilfe_getcmd(register struct dilprg *p)
         if (v1->val.ptr)
         {
             v->val.ptr =
-                (struct command_info *)search_trie((char *)v1->val.ptr,
+                (class command_info *)search_trie((char *)v1->val.ptr,
                                                    intr_trie);
             if (v->val.ptr)
             {

@@ -9,7 +9,7 @@
 #define _MUD_INTERPRETER_H
 
 #include "dil.h"
-extern struct command_info *cmdlist;
+extern class command_info *cmdlist;
 int char_is_playing(class unit_data *u);
 int descriptor_is_playing(class descriptor_data *d);
 void set_descriptor_fptr(class descriptor_data *d,
@@ -25,7 +25,7 @@ struct spec_arg
     class unit_data *medium;    /* Possibly what is used in operation */
     class unit_data *target;    /* Possible target of operation       */
 
-    struct command_info *cmd;
+    class command_info *cmd;
     struct unit_fptr *fptr; /* The fptr is allowed to be modified, destroyed */
 
     int *pInt; /* Potential int to modify */
@@ -33,7 +33,7 @@ struct spec_arg
     ubit32 mflags; /* Would like to make constant, but then can't define.. */
 };
 
-struct command_info
+class command_info
 {
     ubit8 combat_speed;  /* The speed of a combat command         */
     ubit8 combat_buffer; /* Use the combat speed / buffer system? */
@@ -45,7 +45,7 @@ struct command_info
     ubit8 minimum_position;
 
     void (*cmd_fptr)(class unit_data *ch, char *arg,
-                     const struct command_info *c);
+                     const class command_info *c);
 
     ubit8 minimum_level;
     ubit8 log_level; /* For logging certain immortal commands */
@@ -54,8 +54,8 @@ struct command_info
     ubit32 type;
     int inttype;
     int dir;
-    struct command_info *next;
-    struct command_info *prev;
+    class command_info *next;
+    class command_info *prev;
     char *excmd;
     char *excmdc;
 };
@@ -73,25 +73,25 @@ struct unit_function_array_type
     sbit16 tick;  /* Default tick count */
 };
 
-extern struct command_info cmd_auto_play;
-extern struct command_info cmd_auto_leave;
-extern struct command_info cmd_auto_enter;
-extern struct command_info cmd_auto_tick;
-extern struct command_info cmd_auto_extract;
-extern struct command_info cmd_auto_death;
-extern struct command_info cmd_auto_combat;
-extern struct command_info cmd_auto_unknown;
-extern struct command_info cmd_auto_save;
-extern struct command_info cmd_auto_msg;
-extern struct command_info cmd_auto_edit;
-extern struct command_info cmd_auto_damage;
-extern struct command_info cmd_a_social;
+extern class command_info cmd_auto_play;
+extern class command_info cmd_auto_leave;
+extern class command_info cmd_auto_enter;
+extern class command_info cmd_auto_tick;
+extern class command_info cmd_auto_extract;
+extern class command_info cmd_auto_death;
+extern class command_info cmd_auto_combat;
+extern class command_info cmd_auto_unknown;
+extern class command_info cmd_auto_save;
+extern class command_info cmd_auto_msg;
+extern class command_info cmd_auto_edit;
+extern class command_info cmd_auto_damage;
+extern class command_info cmd_a_social;
 
 /* To check for commands by string */
-ubit1 is_command(const struct command_info *cmd, const char *str);
+ubit1 is_command(const class command_info *cmd, const char *str);
 
 /* Check to see if typed command is abbreviated */
-ubit1 cmd_is_abbrev(class unit_data *ch, const struct command_info *cmd);
+ubit1 cmd_is_abbrev(class unit_data *ch, const class command_info *cmd);
 
 /* Interpreter routines */
 void wrong_position(class unit_data *ch);
@@ -108,15 +108,15 @@ int function_activate(class unit_data *u, struct spec_arg *sarg);
 int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt,
                   class unit_data *extra_target = NULL, const char *to = NULL);
 #endif
-int send_preprocess(class unit_data *ch, const struct command_info *cmd,
+int send_preprocess(class unit_data *ch, const class command_info *cmd,
                     char *arg);
 void send_done(class unit_data *activator, class unit_data *medium,
                class unit_data *target, int i,
-               const struct command_info *cmd, const char *arg,
+               const class command_info *cmd, const char *arg,
                class unit_data *extra_target = NULL, const char *to = NULL);
 int send_ack(class unit_data *activator, class unit_data *medium,
              class unit_data *target, int *i,
-             const struct command_info *cmd, const char *arg,
+             const class command_info *cmd, const char *arg,
              class unit_data *extra_target = NULL, char *to = NULL);
 int send_message(class unit_data *ch, char *arg);
 int send_edit(class unit_data *ch, char *arg);
@@ -127,35 +127,35 @@ int send_save_to(class unit_data *from, class unit_data *to);
 
 #include "spec_assign.h"
 
-void do_snoop(class unit_data *, char *, const struct command_info *);
-void do_rent(class unit_data *, char *, const struct command_info *);
-void do_reset(class unit_data *, char *, const struct command_info *);
-void do_kill(class unit_data *, char *, const struct command_info *);
-void do_force(class unit_data *, char *, const struct command_info *);
-void do_shutdown(class unit_data *, char *, const struct command_info *);
-void do_execute(class unit_data *, char *, const struct command_info *);
-void do_save(class unit_data *, char *, const struct command_info *);
-void do_hit(class unit_data *, char *, const struct command_info *);
-void do_set(class unit_data *, char *, const struct command_info *);
-void do_setskill(class unit_data *, char *, const struct command_info *);
-void do_wstat(class unit_data *, char *, const struct command_info *);
-void do_load(class unit_data *, char *, const struct command_info *);
-void do_cast(class unit_data *, char *, const struct command_info *);
-void do_at(class unit_data *, char *, const struct command_info *);
-void do_backstab(class unit_data *, char *, const struct command_info *);
-void do_users(class unit_data *, char *, const struct command_info *);
-void do_where(class unit_data *, char *, const struct command_info *);
-void do_level(class unit_data *, char *, const struct command_info *);
-void do_consider(class unit_data *, char *, const struct command_info *);
-void do_ban(class unit_data *, char *, const struct command_info *);
-void do_switch(class unit_data *, char *, const struct command_info *);
-void do_change(class unit_data *, char *, const struct command_info *);
-void do_color(class unit_data *, char *, const struct command_info *);
-void do_path(class unit_data *, char *, const struct command_info *);
-void do_crash(class unit_data *, char *, const struct command_info *);
-void do_wizlock(class unit_data *, char *, const struct command_info *);
-void do_account(class unit_data *, char *, const struct command_info *);
-void do_move(class unit_data *, char *, const struct command_info *);
+void do_snoop(class unit_data *, char *, const class command_info *);
+void do_rent(class unit_data *, char *, const class command_info *);
+void do_reset(class unit_data *, char *, const class command_info *);
+void do_kill(class unit_data *, char *, const class command_info *);
+void do_force(class unit_data *, char *, const class command_info *);
+void do_shutdown(class unit_data *, char *, const class command_info *);
+void do_execute(class unit_data *, char *, const class command_info *);
+void do_save(class unit_data *, char *, const class command_info *);
+void do_hit(class unit_data *, char *, const class command_info *);
+void do_set(class unit_data *, char *, const class command_info *);
+void do_setskill(class unit_data *, char *, const class command_info *);
+void do_wstat(class unit_data *, char *, const class command_info *);
+void do_load(class unit_data *, char *, const class command_info *);
+void do_cast(class unit_data *, char *, const class command_info *);
+void do_at(class unit_data *, char *, const class command_info *);
+void do_backstab(class unit_data *, char *, const class command_info *);
+void do_users(class unit_data *, char *, const class command_info *);
+void do_where(class unit_data *, char *, const class command_info *);
+void do_level(class unit_data *, char *, const class command_info *);
+void do_consider(class unit_data *, char *, const class command_info *);
+void do_ban(class unit_data *, char *, const class command_info *);
+void do_switch(class unit_data *, char *, const class command_info *);
+void do_change(class unit_data *, char *, const class command_info *);
+void do_color(class unit_data *, char *, const class command_info *);
+void do_path(class unit_data *, char *, const class command_info *);
+void do_crash(class unit_data *, char *, const class command_info *);
+void do_wizlock(class unit_data *, char *, const class command_info *);
+void do_account(class unit_data *, char *, const class command_info *);
+void do_move(class unit_data *, char *, const class command_info *);
 
 
 #endif /* _MUD_INTERPRETER_H */

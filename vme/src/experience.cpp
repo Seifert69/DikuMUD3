@@ -358,7 +358,7 @@ base_consider (class unit_data * att, class unit_data * def)
 
 
 void
-do_consider (class unit_data * ch, char *arg, const struct command_info *cmd)
+do_consider (class unit_data * ch, char *arg, const class command_info *cmd)
 {
     class unit_data *vict;
     int rtd;

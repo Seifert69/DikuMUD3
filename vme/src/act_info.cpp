@@ -101,7 +101,7 @@ void player_where(class unit_data *ch, char *arg)
     }
 }
 
-void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
+void do_where(class unit_data *ch, char *aaa, const class command_info *cmd)
 {
     char *buf = NULL, buf1[MAX_STRING_LENGTH], buf2[512];
     register class unit_data *i;

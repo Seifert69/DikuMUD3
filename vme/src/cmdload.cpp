@@ -28,7 +28,7 @@
 #include "dilrun.h"
 
 struct trie_type *cmd_trie = NULL;
-struct command_info *cmdlist = NULL;
+class command_info *cmdlist = NULL;
 struct cmdload_struct cmdload[] = {
     {"north", do_move, 0, 0},
     {"northeast", do_move, 0, 0},
@@ -138,7 +138,7 @@ void command_read(void)
     char pTmp[256];
     char *pCh;
     FILE *fl;
-    struct command_info *cmdptr = NULL, *lastptr = NULL;
+    class command_info *cmdptr = NULL, *lastptr = NULL;
     struct cmdload_struct *intcmd;
 
     touch_file(str_cc(g_cServerConfig.m_libdir, COMMAND_DEFS));
@@ -195,7 +195,7 @@ void command_read(void)
                 }
             }
 
-            CREATE(cmdptr, struct command_info, 1);
+            CREATE(cmdptr, class command_info, 1);
             cmdptr->next = NULL;
             cmdptr->prev = NULL;
             cmdptr->minimum_level = 0;
