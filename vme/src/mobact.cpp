@@ -185,7 +185,7 @@ void stop_special(class unit_data *u, struct unit_fptr *fptr)
 void start_special(class unit_data *u, struct unit_fptr *fptr)
 {
     int diltick = 0, i;
-    if ((fptr->index == SFUN_DIL_INTERNAL))
+    if (fptr->index == SFUN_DIL_INTERNAL)
     {
         if (IS_SET(fptr->flags, SFB_TICK))
             diltick = 1;
