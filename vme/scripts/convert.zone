@@ -1,0 +1,439 @@
+#!/bin/gawk -f
+BEGIN {
+buf="";}
+
+$1=="dilbegin"{
+buf=$0"\n";
+while ($1!~/dilend.*/){
+getline;
+if ($1~/dilend.*/){
+continue;
+}
+if ($0~/restore/){
+buf=buf""convertrestore($0);
+}else if ($0~/store/){
+							buf=buf""convertstore($0);
+}else{
+buf=buf""$0"\n";
+}
+}
+buf=buf""$0"\n";
+$0=buf;
+}
+
+function convertrestore(line){
+nrestore="";
+
+ret=split (line,a,":=");
+ret=split (a[2],c,"restore");
+if (ret>1){
+gsub(/\ /,"",c[1]);
+if (c[1]!=""){
+return (line);
+}}
+
+ret=split (c[2],d,"(");
+if (ret>1){
+gsub(/\ /,"",d[1]);
+if (d[1]!=""){
+return (line);
+}}
+
+ret=split (line,a,":=");
+if (ret<2){
+return (line);}
+return_value=a[1];
+ret=split(a[2],b,";");
+arguments=b[1];
+ret=split(arguments,a,",");
+if (ret>2){
+return (line);}
+
+arg1=a[1];
+arg2=a[2];
+gsub(/\(/,"",arg1);
+gsub(/restore/,"",arg1);
+gsub(/\)/,"",arg2);
+
+
+ 	 	      nrestore=return_value" := restore ("arg2"+\".\"+"arg1",null);\n";
+			  return (nrestore);
+}
+
+function convertstore(line){
+nstore="";
+ret =split(line,a,"(");
+if (ret<2){
+return (line);}
+ret=split (line,a,"store");
+if (ret>1){
+gsub(/\ /,"",a[1]);
+if (a[1]!=""){
+return (line);
+}}
+
+ret=split (a[2],b,"(");
+if (ret>1){
+gsub(/\ /,"",b[1]);
+if (b[1]!=""){
+return (line);
+}}
+ret=split(line,a,"(");
+ret=split(a[2],b,";");
+argument=b[1];
+ret=split(argument,a,",");
+if (ret>1){
+return(line);}
+
+gsub(/\)/,"",argument);
+                       gsub(/\ /,"",argument);
+ 	 	      nstore="store ("argument","argument".nameidx+\".\"+"argument".zoneidx,TRUE);\n";
+
+			  return (nstore);
+}
+
+$1~/LIQ_DEF/{
+i=split($0,a,"(");
+i=split (a[2],b,")");
+i=split(b[1],a,",");
+$0=a[1]"("a[2]","a[3]","a[4]","a[5]")"
+}
+
+$2=="SFUN_JANITOR"{
+$0="dilcopy janitor@midgaard(60);";
+}
+
+$2=="SFUN_FIDO"{
+$0="dilcopy fido@function(\"$1n slowly devours $2n, crunching the bones.\",\"$1n grabs $2n and hungrily munches it.\");";
+}
+
+	$2=="SFUN_TUBORG"{
+	$0="dilcopy tuborg@function();";
+	}
+	
+	$2=="SFUN_POSTMAN"{
+	$0="dilcopy mail@mail();";
+	}
+	
+	
+	
+	
+$2=="SFUN_RECEP_DAEMON"{
+$0="/*This function has been removed it is a simple dil to write if you needit*/\n/*"$0"*/";
+}
+
+$2=="SFUN_SACRIFICE"{
+$0="/*This function has been removed it is a simple dil to write if you needit*/\n/*"$0"*/";
+}
+
+$2=="SFUN_CHAOS_DAEMON" {
+$0="/*This function has been removed it is a simple dil to write if you needit*/\n/*"$0"*/";
+}
+
+$2=="SFUN_BULLETIN_BOARD"{
+if (NF>3){
+	   $0="dilcopy board@boards("$3"\",\"admin_res@boards\",\"admin_res@boards\",\"admin_res@boards\",100);";
+	}else{
+	   $0="dilcopy board@boards("$3",\"\",\"rem_res@boards\",\"\",100);";
+	}
+	}
+	
+$2=="SFUN_SHOP_INIT"{
+buf="";
+for (val in temp){
+ldelete temp[val];}
+for (val in a){
+ldelete a[val];}
+for (val in b){
+ldelete b[val];}
+
+
+
+while ($1!="Hours2"){
+getline;
+gsub (/\\/," ",$0);
+buf=buf";"$0;
+}
+
+ret=split (buf,a,"=");
+for (i=1;i<ret;i++){
+ gsub(/\"/,"",a[i]);
+  gsub(/&l/,"",a[i]);
+  gsub(/ /,"",a[i]);
+   temp[a[i]]="";
+ rt=split(a[i+1],b,";");
+ if (rt>1){
+ for (bi=1;bi<rt;bi++){
+ temp[a[i]]=temp[a[i]]" "b[bi];
+ }
+ }else{
+temp[a[i]]=temp[a[i]]" "b[1];
+ }
+ a[i+1]=b[rt];
+ }	
+ 
+ for (val in temp){
+ gsub(/+/," ",temp[val]);
+  gsub(/\\/," ",temp[val]);
+gsub (/~/," ",temp[val]);
+gsub (/\"/	," ",temp[val]);
+ }
+
+$0="dilcopy shopkeeper@function(\n";
+ret=split(temp["Production"],a," ");
+$0=$0"{\n";
+if (ret==1){
+$0=$0"\""a[1]" 1 5\"\n";
+}else{
+for (i=1;i<=ret;i++){
+if (i==ret){
+$0=$0"\""a[i]" 1 5\"\n";
+}else{
+$0=$0"\""a[i]" 1 5\",\n";
+}
+}
+}
+$0=$0"},{\n";
+$0=$0"\""temp["Msg1"]"\",\n";
+$0=$0"\""temp["Msg2"]"\",\n";
+$0=$0"\""temp["Msg4"]"\",\n";
+$0=$0"\""temp["Msg5"]"\",\n";
+$0=$0"\""temp["Msg6"]"\",\n";
+$0=$0"\""temp["Msg7"]"\",\n";
+$0=$0"\"$1n says, 'I don't seem to have that many in my stock'\",\n";
+$0=$0"\"$1n says, 'I'm on my break, GET LOST!'\",\n";
+$0=$0"\"$1n says, 'I have no use for a $2n'\",\n";
+$0=$0"\"$1n says, 'Sorry, I can't afford it'\"},\n";
+ret=split(temp["Hours1"],a," ");
+ret=split(temp["Hours2"],b," ");
+$0=$0"{\""a[1]"\",\""a[2]"\",\""b[1]"\",\""b[2]"\"},\n";
+ret=split(temp["Tradetypes"],a," ");
+						   if (a[1]==-1){
+						   $0=$0"\"\",\n";
+}else if (ret==0){
+                           $0=$0"\"\",\n";
+						   } else if (ret==1){
+	$0=$0"\"\"+"a[1]"+\"\",\n";
+}else{
+buf="";
+for (i=1;i<=ret;i++){
+if (i==1){
+buf="\"\"+"a[i];
+}else{
+buf=buf"+\"\"+"a[i];}
+}
+buf=buf"+\"\",";
+$0=$0""buf"\n";
+}
+$0=$0"110,60,286720,\"\",\"\");\n";
+}
+
+{
+gsub(/CMD_NORTH/,"\"north\"",$0);
+gsub(/CMD_EAST/,"\"east\"",$0);
+gsub(/CMD_SOUTH/,"\"south\"",$0);
+gsub(/CMD_WEST/,"\"west\"",$0);
+gsub(/CMD_UP/,"\"up\"",$0);
+gsub(/CMD_DOWN/,"\"down\"",$0);
+gsub(/CMD_NORTHEAST/,"\"northeast\"",$0);
+gsub(/CMD_NORTHWEST/,"\"northwest\"",$0);
+gsub(/CMD_SOUTHEAST/,"\"southeast\"",$0);
+gsub(/CMD_SOUTHWEST/,"\"southwest\"",$0);
+gsub(/CMD_ENTER/,"\"enter\"",$0);
+gsub(/CMD_EXIT/,"\"exit\"",$0);
+gsub(/CMD_GET/,"\"get\"",$0);
+gsub(/CMD_DRINK/,"\"drink\"",$0);
+gsub(/CMD_EAT/,"\"eat\"",$0);
+gsub(/CMD_WEAR/,"\"wear\"",$0);
+gsub(/CMD_WIELD/,"\"wield\"",$0);
+gsub(/CMD_LOOK/,"\"look\"",$0);
+gsub(/CMD_SCORE/,"\"score\"",$0);
+gsub(/CMD_SAY/,"\"say\"",$0);
+gsub(/CMD_SHOUT/,"\"shout\"",$0);
+gsub(/CMD_TELL/,"\"tell\"",$0);
+gsub(/CMD_INVENTORY/,"\"inventory\"",$0);
+gsub(/CMD_GUILD/,"\"guild\"",$0);
+gsub(/CMD_KILL/,"\"kill\"",$0);
+gsub(/CMD_STATUS/,"\"status\"",$0);
+gsub(/CMD_HELP/,"\"help\"",$0);
+gsub(/CMD_WHO/,"\"who\"",$0);
+gsub(/CMD_EMOTE/,"\"emote\"",$0);
+gsub(/CMD_STAND/,"\"stand\"",$0);
+gsub(/CMD_SIT/,"\"sit\"",$0);
+gsub(/CMD_REST/,"\"rest\"",$0);
+gsub(/CMD_SLEEP/,"\"sleep\"",$0);
+gsub(/CMD_WAKE/,"\"wake\"",$0);
+gsub(/CMD_NEWS/,"\"news\"",$0);
+gsub(/CMD_EQUIPMENT/,"\"equipment\"",$0);
+gsub(/CMD_BUY/,"\"buy\"",$0);
+gsub(/CMD_SELL/,"\"sell\"",$0);
+gsub(/CMD_VALUE/,"\"value\"",$0);
+gsub(/CMD_LIST/,"\"list\"",$0);
+gsub(/CMD_DROP/,"\"drop\"",$0);
+gsub(/CMD_GOTO/,"\"goto\"",$0);
+gsub(/CMD_WEATHER/,"\"weather\"",$0);
+gsub(/CMD_READ/,"\"read\"",$0);
+gsub(/CMD_POUR/,"\"pour\"",$0);
+gsub(/CMD_GRAB/,"\"grab\"",$0);
+gsub(/CMD_REMOVE/,"\"remove\"",$0);
+gsub(/CMD_PUT/,"\"put\"",$0);
+gsub(/CMD_SAVE/,"\"save\"",$0);
+gsub(/CMD_HIT/,"\"hit\"",$0);
+gsub(/CMD_SET/,"\"set\"",$0);
+gsub(/CMD_GIVE/,"\"give\"",$0);
+gsub(/CMD_QUIT/,"\"quit\"",$0);
+gsub(/CMD_TIME/,"\"time\"",$0);
+gsub(/CMD_IDEA/,"\"idea\"",$0);
+gsub(/CMD_TYPO/,"\"typo\"",$0);
+gsub(/CMD_BUG/,"\"bug\"",$0);
+gsub(/CMD_WHISPER/,"\"whisper\"",$0);
+gsub(/CMD_CAST/,"\"cast\"",$0);
+gsub(/CMD_AT/,"\"at\"",$0);
+gsub(/CMD_ASK/,"\"ask\"",$0);
+gsub(/CMD_ORDER/,"\"order\"",$0);
+gsub(/CMD_SIP/,"\"sip\"",$0);
+gsub(/CMD_TASTE/,"\"taste\"",$0);
+gsub(/CMD_FOLLOW/,"\"follow\"",$0);
+gsub(/CMD_RENT/,"\"rent\"",$0);
+gsub(/CMD_OFFER/,"\"offer\"",$0);
+gsub(/CMD_JOIN/,"\"join\"",$0);
+gsub(/CMD_AREAS/,"\"areas\"",$0);
+gsub(/CMD_OPEN/,"\"open\"",$0);
+gsub(/CMD_CLOSE/,"\"close\"",$0);
+gsub(/CMD_LOCK/,"\"lock\"",$0);
+gsub(/CMD_UNLOCK/,"\"unlock\"",$0);
+gsub(/CMD_LEAVE/,"\"leave\"",$0);
+gsub(/CMD_MOUNT/,"\"mount\"",$0);
+gsub(/CMD_DISMOUNT/,"\"dismount\"",$0);
+gsub(/CMD_RIDE/,"\"ride\"",$0);
+gsub(/CMD_SAIL/,"\"sail\"",$0);
+gsub(/CMD_WRITE/,"\"write\"",$0);
+gsub(/CMD_HOLD/,"\"hold\"",$0);
+gsub(/CMD_FLEE/,"\"flee\"",$0);
+gsub(/CMD_SNEAK/,"\"sneak\"",$0);
+gsub(/CMD_HIDE/,"\"hide\"",$0);
+gsub(/CMD_BACKSTAB/,"\"backstab\"",$0);
+gsub(/CMD_PICK_POCKET/,"\"pick pocket\"",$0);
+gsub(/CMD_PICK/,"\"pick\"",$0);
+gsub(/CMD_STEAL/,"\"steal\"",$0);
+gsub(/CMD_BASH/,"\"bash\"",$0);
+gsub(/CMD_RESCUE/,"\"rescue\"",$0);
+gsub(/CMD_KICK/,"\"kick\"",$0);
+gsub(/CMD_PRACTICE/,"\"practice\"",$0);
+gsub(/CMD_EXAMINE/,"\"examine\"",$0);
+gsub(/CMD_INFO/,"\"info\"",$0);
+gsub(/CMD_USE/,"\"use\"",$0);
+gsub(/CMD_WHERE/,"\"where\"",$0);
+gsub(/CMD_LEVEL/,"\"level\"",$0);
+gsub(/CMD_WIZ/,"\"wiz\"",$0);
+gsub(/CMD_BRIEF/,"\"brief\"",$0);
+gsub(/CMD_WIZLIST/,"\"wizlist\"",$0);
+gsub(/CMD_CONSIDER/,"\"consider\"",$0);
+gsub(/CMD_GROUP/,"\"group\"",$0);
+gsub(/CMD_QUAFF/,"\"quaf\"",$0);
+gsub(/CMD_RECITE/,"\"recite\"",$0);
+gsub(/CMD_CREDITS/,"\"credits\"",$0);
+gsub(/CMD_COMPACT/,"\"compact\"",$0);
+gsub(/CMD_DIG/,"\"dig\"",$0);
+gsub(/CMD_BURY/,"\"bury\"",$0);
+gsub(/CMD_TURN/,"\"turn\"",$0);
+gsub(/CMD_DIAGNOSE/,"\"diagnose\"",$0);
+gsub(/CMD_APPRAISE/,"\"appraise\"",$0);
+gsub(/CMD_VENTRILOQUATE/,"\"ventriloquate\"",$0);
+gsub(/CMD_AID/,"\"aid\"",$0);
+gsub(/CMD_CLIMB/,"\"climb\"",$0);
+gsub(/CMD_LIGHT/,"\"light\"",$0);
+gsub(/CMD_EXTINGUISH/,"\"extinguish\"",$0);
+gsub(/CMD_WIMPY/,"\"wimpy\"",$0);
+gsub(/CMD_PEACEFUL/,"\"peaceful\"",$0);
+gsub(/CMD_DRAG/,"\"drag\"",$0);
+gsub(/CMD_TRIP/,"\"trip\"",$0);
+gsub(/CMD_CUFF/,"\"cuff\"",$0);
+gsub(/CMD_EXITS/,"\"exits\"",$0);
+gsub(/CMD_MAIL/,"\"mail\"",$0);
+gsub(/CMD_REQUEST/,"\"request\"",$0);
+gsub(/CMD_CONTRACT/,"\"contract\"",$0);
+gsub(/CMD_BREAK/,"\"break\"",$0);
+gsub(/CMD_KNOCK/,"\"knock\"",$0);
+gsub(/CMD_CHANGE/,"\"change\"",$0);
+gsub(/CMD_SPLIT/,"\"split\"",$0);
+gsub(/CMD_PROMPT/,"\"prompt\"",$0);
+gsub(/CMD_REPLY/,"\"reply\"",$0);
+gsub(/CMD_ECHOSAY/,"\"echosay\"",$0);
+gsub(/CMD_SEARCH/,"\"search\"",$0);
+gsub(/CMD_QUESTS/,"quests\"\"",$0);
+gsub(/CMD_DECAPITATE/,"\"decapitate\"",$0);
+gsub(/CMD_PURSE/,"\"purse\"",$0);
+gsub(/CMD_SACRIFICE/,"\"sacrifice\"",$0);
+gsub(/CMD_COMMANDS/,"\"commands\"",$0);
+gsub(/CMD_SOCIALS/,"\"socials\"",$0);
+gsub(/CMD_A_SOCIAL/,"\"broken by conversion\"",$0);
+gsub(/CMD_ACCOUNT/,"\"account\"",$0);
+gsub(/CMD_INFORM/,"\"inform\"",$0);
+gsub(/CMD_EXPERT/,"\"expert\"",$0);
+gsub(/CMD_RESIZE/,"\"resize\"",$0);
+gsub(/CMD_EVALUATE/,"\"evaluate\"",$0);
+gsub(/CMD_DITCH/,"\"ditch\"",$0);
+gsub(/CMD_IGNORE/,"\"ignore\"",$0);
+gsub(/CMD_COLOR/,"\"color\"",$0);
+gsub(/CMD_CONTRIB/,"\"contrib\"",$0);
+gsub(/CMD_HOMES/,"\"homes\"",$0);
+gsub(/CMD_MOTD/,"\"motd\"",$0);
+gsub(/CMD_PEEK/,"\"peak\"",$0);
+gsub(/CMD_FILCH/,"\"filch\"",$0);
+
+gsub(/CMD_DISARM/,"\"disarm\"",$0);
+gsub(/CMD_DONATE/,"\"donate\"",$0);
+gsub(/CMD_ASSIST/,"\"assist\"",$0);
+gsub(/CMD_SKIN/,"\"skin\"",$0);
+gsub(/CMD_FREEZE/,"\"freeze\"",$0);
+gsub(/CMD_NOSHOUT/,"\"noshout\"",$0);
+gsub(/CMD_PATH/,"\"path\"",$0);
+gsub(/CMD_WIZINV/,"\"wizinv\"",$0);
+gsub(/CMD_RESTORE/,"\"restore\"",$0);
+gsub(/CMD_BAN/,"\"ban\"",$0);
+gsub(/CMD_SWITCH/,"\"switch\"",$0);
+gsub(/CMD_USERS/,"\"users\"",$0);
+gsub(/CMD_WIZHELP/,"\"wizhelp\"",$0);
+gsub(/CMD_NOTELL/,"\"notell\"",$0);
+gsub(/CMD_FILE/,"\"file\"",$0);
+gsub(/CMD_CRASH/,"\"crash\"",$0);
+gsub(/CMD_ADVANCE/,"\"advance\"",$0);
+gsub(/CMD_LOAD/,"\"load\"",$0);
+gsub(/CMD_PURGE/,"\"purge\"",$0);
+gsub(/CMD_SHUTDOWN/,"\"reboot\"",$0);
+gsub(/CMD_ECHO/,"\"echo\"",$0);
+gsub(/CMD_FORCE/,"\"force\"",$0);
+gsub(/CMD_TRANSFER/,"\"transfer\"",$0);
+gsub(/CMD_REROLL/,"\"reroll\"",$0);
+gsub(/CMD_SNOOP/,"\"snoop\"",$0);
+gsub(/CMD_WSTAT/,"\"wstat\"",$0);
+gsub(/CMD_SETSKILL/,"\"setskill\"",$0);
+gsub(/CMD_MESSAGE/,"\"message\"",$0);
+gsub(/CMD_BROADCAST/,"\"broadcast\"",$0);
+gsub(/CMD_DELETE/,"\"delete\"",$0);
+gsub(/CMD_TITLE/,"\"title\"",$0);
+gsub(/CMD_MAKEMONEY/,"\"makemoney\"",$0);
+gsub(/CMD_WIZLOCK/,"\"wizlock\"",$0);
+gsub(/CMD_RESET/,"\"reset\"",$0);
+gsub(/CMD_VERIFY/,"\"verify\"",$0);
+gsub(/CMD_BOARDS/,"\"boards\"",$0);
+gsub(/CMD_CORPSES/,"\"corpses\"",$0);
+gsub(/CMD_REBOOT/,"\"reboot\"",$0);
+gsub(/CMD_EXECUTE/,"\"execute\"",$0);
+gsub(/CMD_PRAY/,"\"pray\"",$0);
+gsub(/CMD_INSULT/,"\"insult\"",$0);
+gsub(/CMD_BOW/,"\"bow\"",$0);
+gsub(/CMD_NOD/,"\"nod\"",$0);
+gsub(/CMD_SHAKE/,"\"shake\"",$0);
+gsub(/CMD_PRESS/,"\"press\"",$0);
+gsub(/CMD_PUSH/,"\"push\"",$0);
+gsub(/CMD_TOUCH/,"\"touch\"",$0);
+gsub(/CMD_WORSHIP/,"\"worship\"",$0);
+gsub(/CMD_AFFECT/,"\"affect\"",$0);
+gsub(/CMD_REPORT/,"\"report\"",$0);
+gsub(/CMD_RESPOND/,"\"respond\"",$0);
+
+print $0;
+}
+

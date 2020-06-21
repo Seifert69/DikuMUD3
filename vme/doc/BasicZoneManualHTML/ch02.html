@@ -1,0 +1,509 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Zone source file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="The VMC pre-processor"
+HREF="x163.html"><LINK
+REL="NEXT"
+TITLE="Zone information section"
+HREF="x338.html"></HEAD
+><BODY
+CLASS="CHAPTER"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x163.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x338.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="CHAPTER"
+><H1
+><A
+NAME="CH-02"
+></A
+>Chapter 3. Zone source file</H1
+><P
+>In this chapter we will define all the sections of a zone file
+and go in-depth on the zone info section.  Once complete with this
+chapter you should be able to create an empty yet compilable zone.</P
+><P
+>A zone source file is split up into 6 sections.  A
+zone-declaration section, a mobile (NPC) section, an object
+section, a room section, a reset section, and the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>
+section.  The zone section is the only section that  has to be in the file, and
+they may appear in any order.</P
+><P
+>Each section is preceded by a section header. These are the  six
+possible headers:
+<P
+></P
+><UL
+><LI
+><P
+>%zone</P
+></LI
+><LI
+><P
+>%rooms</P
+></LI
+><LI
+><P
+>%mobiles</P
+></LI
+><LI
+><P
+>%objects</P
+></LI
+><LI
+><P
+>%reset</P
+></LI
+><LI
+><P
+>%<ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+></P
+></LI
+></UL
+>
+The  first  four sections may be considered lists of definitions.
+The reset section can be considered a program in a simple  programming
+language. And the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> section is a bit special - it
+includes the zone templates (DIL functions that can be used from any
+zone, on anything, as opposed to "specialized" DIL functions placed
+inside a unit's
+definitions).  After all sections you are using are defined you
+must tell the compiler you are done the special symbol '%end'
+must be placed at the end of the zone for this reason.</P
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN259"
+>3.1. Definition types</A
+></H1
+><P
+>When creating your zone there are six main building blocks.
+We call these definition types.  Each type represents some kind of
+data you want the compiler to be able to recognize.  These data
+definitions take the basic form:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN262"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;field value&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Where field is the name of a data field, and value is some value.
+Values are of one of 6 types:
+<P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>integer</DT
+><DD
+><P
+>&#13;
+A whole number or if you are in practice of using Hex you can
+use the C style hex numbers in either upper or lower case (i.e 0X0f3
+0x0f3)</P
+></DD
+><DT
+>string</DT
+><DD
+><P
+>&#13;
+						Text enclosed in Double Quotes.  The string can span more than
+one line
+as it would in a description.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN278"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;title "The dark dragon altar"
+descr
+"There are many things you can see and there are many things that 
+can't be seen but this is still a description none the less."&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>stringlist</DT
+><DD
+><P
+>&#13;
+A set of strings, it can be a single string or multiple depending on your needs.
+These are used in names, extras, creators, and special keywords all to be
+defined later in their respective places.  These are defined in the following
+manor.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN286"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;&lt;fieldname&gt;    {"string1","string2","string3", ...}&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>intlist</DT
+><DD
+><P
+>&#13;
+A list of numbers which can be used with an extra.  This type works like the
+stringlist but doesn't need the quotes.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN294"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;extra {"mynumberlist"} {1,2,3,4,5,6,7,...}
+"This is a number list attached to an extra"&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>flags</DT
+><DD
+><P
+>&#13;
+Like the Intlist the flag is defined with a list of numbers.  The list of numbers
+is not taken literally however it is combined to create one number by binary
+oring the number list together.  If that confuses you don't worry, it
+takes some getting used to.  These types are used for Manipulation, flags,
+and positions.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN302"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;flags {2,8}
+manipulate {8}&#13;</PRE
+><P
+></P
+></DIV
+><P
+>In the previous example the 'flags' value after this zone compiles
+would be 10 because binary oring the two flags together is a lot
+like adding.  The two numbers probably make no sense so most flags
+you use will have defines if I used the defines found in
+<TT
+CLASS="FILENAME"
+>vme.h</TT
+> the previous example would look like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN306"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;flags {UNIT_FL_INVISIBILE,UNIT_FL_BURIED}
+manipulate {WEAR_BODY}&#13;</PRE
+><P
+></P
+></DIV
+><P
+>We will cover this more in-depth later but it was necessary to give
+a good overview so you understand this field type enough to recognize
+what it is when you see it.</P
+></DD
+><DT
+>symbol</DT
+><DD
+><P
+>&#13;
+A label you reference from other parts in your zones.  Every
+unit (room,object,room) and even the zone itself has a unique label
+that can be referenced.  It is important to make symbol names that
+are clear so the Administrators of the mud know what each item
+is when using the online administration commands.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN315"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dark_sword /*good symbol*/
+rm_5892 /*Bad symbol*/&#13;</PRE
+><P
+></P
+></DIV
+><P
+>When loading items online the zone symbol and the item symbol are
+combined to create a reference to the item.  For example if our zone
+name was 'dragon' and our item was 'dark_sword' the symbolic name for
+this item would be 'dark_sword@dragon'.  Using symbols will be
+covered more in the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> manual and in the administration manuals for
+loading objects online.  For now it is enough to understand 
+symbols must follow the following rules when being defined.</P
+><P
+></P
+><UL
+><LI
+><P
+>The first letter of the
+symbol must be a letter of the alphabet or a '_' character</P
+></LI
+><LI
+><P
+>Characters following the first can be numbers, alphabet
+letters, and '_' characters</P
+></LI
+><LI
+><P
+>The name can be no longer than
+15 characters</P
+></LI
+><LI
+><P
+>No reserved keywords can be used as a name
+<A
+HREF="a5251.html"
+>Appendix B</A
+></P
+></LI
+></UL
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>the end tag that ends all unit definitions is also
+considered a symbol it is just a symbol that must be included with</P
+></TD
+></TR
+></TABLE
+></DIV
+></DD
+></DL
+></DIV
+></P
+><P
+>There are two other field types that can not be defined as a
+regular field type.  These are the function reference and the
+Structure.  The function reference can be either a reference to a
+<ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> function or a special function called from the
+base code.</P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>Special functions are being replaced with
+<ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> for better performance and should only be used
+when no <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions exist to replace
+them</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>The Structure field types are  a combination of other field types
+to make a special field type for the unit being defined.  A good example
+of this is a 'exit' for a room.  The exit has everything from flag,
+string, stringlist, and even description fields.  The exit field will be
+defined much more in-depth in the chapter on rooms but it is important
+to know some fields are considered Structure fields because they can have
+many values.  The only two Structure fields are the exit and extra
+fields which will both be defined more later because they can be used
+differently depending on what you are using them for.</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x163.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x338.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The VMC pre-processor</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Zone information section</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

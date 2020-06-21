@@ -1,0 +1,19 @@
+#!/bin/sh
+# cyclic srcdir srcfile dstdir app
+#
+# $1 = source directory
+# $2 = source file name
+# $3 = destination directory
+# $4 = destination extension
+#
+if [ -f $1/$2 ]; then
+  rm -f $3/8.$2$4 > /dev/null 2>&1
+  if [ -f $3/7.$2$4 ]; then mv -f $3/7.$2$4 $3/8.$2$4; fi
+  if [ -f $3/6.$2$4 ]; then mv -f $3/6.$2$4 $3/7.$2$4; fi
+  if [ -f $3/5.$2$4 ]; then mv -f $3/5.$2$4 $3/6.$2$4; fi
+  if [ -f $3/4.$2$4 ]; then mv -f $3/4.$2$4 $3/5.$2$4; fi
+  if [ -f $3/3.$2$4 ]; then mv -f $3/3.$2$4 $3/4.$2$4; fi
+  if [ -f $3/2.$2$4 ]; then mv -f $3/2.$2$4 $3/3.$2$4; fi
+  if [ -f $3/1.$2$4 ]; then mv -f $3/1.$2$4 $3/2.$2$4; fi
+  mv -f $1/$2 $3/1.$2$4 >/dev/null 2>&1
+fi

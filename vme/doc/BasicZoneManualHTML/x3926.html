@@ -1,0 +1,482 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Building your first object</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The objects section"
+HREF="ch06.html"><LINK
+REL="PREVIOUS"
+TITLE="Object macros"
+HREF="x3575.html"><LINK
+REL="NEXT"
+TITLE="Compiling and Debugging your first object"
+HREF="x3971.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x3575.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. The objects section</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x3971.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="OBJBASIC"
+>7.3. Building your first object</A
+></H1
+><P
+>Now that you have learned how to make rooms and NPCs its time to
+make the objects for your little world.
+In the last couple of sections you have looked
+through the fields.  In this section we are going to make a nice easy
+object.  There is really not that much new from what you have learned
+with rooms and NPCs so this should be a real quick section.  As always
+we will start with something I like which as you remember is dragons. 
+So the first object we will make is a dragon head.  I didn't say I liked
+them alive now did I?  Anyway this will be a nice simple object that
+your player can pick up and carry around.</P
+><P
+>When making objects you create the zone source file first as shown
+in <A
+HREF="ch02.html"
+>Chapter 3</A
+>.  If you only have objects you do not need the
+%reset, %mobiles, and %rooms fields.  For the examples in this chapter we
+will use the zone we created in <A
+HREF="ch04.html"
+>Chapter 5</A
+> and add the
+%objects section where we will put all the object definitions.  At the end
+of this chapter, in <A
+HREF="x4525.html"
+>Section 7.7</A
+>, we will bring it
+all together with the rooms and NPCs we have defined already.</P
+><P
+>The first part of all object definitions is the symbolic name it is good
+to always pick a name that will match the name of the object so it
+will be easy to load the object.
+The reason the symbolic and name should match is when you use the
+command <B
+CLASS="COMMAND"
+>wstat</B
+> it will only show you a
+list of the objects by symbolic name for example if you type <B
+CLASS="COMMAND"
+>wstat zone dragon objects</B
+> You will get the following:
+<DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3936"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;List of objects in zone Dragon:
+claw info_board dragon_head&#13;</PRE
+><P
+></P
+></DIV
+>
+If you didn't make it clear what the object was by the symbolic name
+it might look like this:
+<DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3938"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;List of objects in zone Dragon:
+obj1 a_obj2 o3&#13;</PRE
+><P
+></P
+></DIV
+>
+While this might be great when you first start imagine trying to
+remember each object if you have over 30 of them.</P
+><P
+>Now lets get started with our dragon head.  As with the rooms and
+npcs all that is required to make an object is the symbolic and end fields. 
+That of course will make a NPC with all defaults.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3941"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dragon_head
+end&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Thats it for that dragon head right?  Nope not quite, like before
+with NPCs, that makes an object with all defaults.  That means this will probably be
+a very blank spot on the screen with no names and no way your players
+can interact with it.
+Now lets start putting the
+Dragon heads other more interesting fields on.</P
+><P
+>Like with rooms and NPCs, the first three things we need are the
+dragon heads title, description and names.  The description should be what you
+see when you do a 'look' in the room.  The title should be what you see
+when the object is in your inventory or you are whacking someone over the
+head with it.  Since we are not making a weapon though the title is what
+will be shown when you are picking up or dropping the object.
+ Finally the names should cover everything
+in the title and description fields so if your player wants to pick
+the object up or wear it will be easy to figure out what the names
+are.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3945"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dragon_head
+
+title "a gold dragon head"
+
+descr "A large golden dragon head is laying here looking sad."
+
+names {"large golden dragon head","large gold dragon head",
+       "golden dragon head","large dragon head","gold dragon head",
+       "dragon head","large head", "sad head","head"}
+...
+end&#13;</PRE
+><P
+></P
+></DIV
+><P
+>The names, title and description shouldn't be to hard so I don't
+think its necessary to go into any more description on the subject. 
+Lets move on.  Now we have to take care of what a player sees when he or
+she looks at an object.  to make the main description of an NPC you place an
+extra on the NPC with no names in the list.  The blank extra is a
+special extra that will be shown every time you look at anything in the
+names list of the object.  So a description of an object would look something
+like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3948"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;extra {}
+"The head is large and beautiful, at least as beautiful as a dead
+dragon head can be.  There is an extreme look of sorrow on the dragons
+face and it seems to be for much more than its own death."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now that you have a main description for the object you need to make
+any smaller descriptions that you want the player to be able to look at.
+In this case it may be good to give some secret information if the
+player looks at the face of the head directly.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3951"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;extra {"gold dragon head face","dragon head face","head face","face"}
+"Looking into the dragons face your eyes are drawn to the eyes of the
+dead dragon.  Could there be something there?"
+
+extra {"eyes","eye"}
+"A world of blue skies and no storms is visible through the eyes and it
+seems to be moving as if you were watching the world from space."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now that we have the object all described we only need to give the
+     object the manipulate flags it needs, weight, height, and maybe
+     some extras that will make some cool acts when a player picks it up
+     or drops it.</P
+><P
+>First thing to do though is pick the manipulate flags you
+	want on the object.  This is not a weapon or armour so all the
+	player really needs to be able to do with it is pick it up and maybe
+	hold it if you want and I do.  The flags would then be as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3955"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+
+	</PRE
+><P
+></P
+></DIV
+><P
+>If you were feeling a little weird you could even make the
+	 person be able to wear the dragon head on his head but that would
+	 just be strange.  of course its always good to know you have
+	 options.</P
+><P
+>Now lets set the height and weight.  Remember you set the height
+in centimeters and the weight in pounds.  In the future the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> will
+standardize to one or the other but for now we have to play the
+conversion game.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3960"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//20 feet  (1 inch = 2.54 cm
+height 33
+
+//566 KG (1 lb. = .45359 kg)
+	 weight 50
+	 
+	 </PRE
+><P
+></P
+></DIV
+><P
+>The final touch to our little dragon head is some cute acts
+when the player picks it up or drops it.  If you remember from the extra
+fields in <A
+HREF="ch06.html#OBJFIELDDESCR"
+>Section 7.1</A
+>, there are some special extras
+that are made just for this purpose.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3964"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;extra {"$get_s"}
+"You suddenly feel very sad for a world that you don't even know."
+
+extra {"$get_o"}
+"A strange look of sadness crosses $1ns face."
+
+extra {"$drop_s"}
+"You feel much happier but you remember a feeling of great sorrow."
+
+extra {"drop_o"}
+"$1n seems to cheer up a bit."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>There are other things we could add to this item but I want to
+keep this first object simple.  The finished head would then look like
+this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3967"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dragon_head
+
+title "a gold dragon head"
+
+descr "A large golden dragon head is laying here looking sad."
+
+names {"large golden dragon head","large gold dragon head",
+       "golden dragon head","large dragon head","gold dragon head",
+       "dragon head","large head", "sad head","head"}
+	   
+	   extra {}
+"The head is large and beautiful, at least as beautiful as a dead
+dragon head can be.  There is an extreme look of sorrow on the dragons
+face and it seems to be for much more than its own death."
+
+
+extra {"gold dragon head face","dragon head face","head face","face"}
+"Looking into the dragons face your eyes are drawn to the eyes of the
+dead dragon.  Could there be something there?"
+
+extra {"eyes","eye"}
+"A world of blue skies and no storms is visible through the eyes and it
+seems to be moving as if you were watching the world from space."
+
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+
+height 33
+	 weight 50
+
+extra {"$get_s"}
+"You suddenly feel very sad for a world that you don't even know."
+
+extra {"$get_o"}
+"A strange look of sadness crosses $1ns face."
+
+extra {"$drop_s"}
+"You feel much happier but you remember a feeling of great sorrow."
+
+extra {"drop_o"}
+"$1n seems to cheer up a bit."
+
+end&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Thats all there is to making regular items.  The rest is just
+adding functionality to what you already know.  We will get much deeper
+into what you can do with items in <A
+HREF="x4362.html"
+>Section 7.6</A
+> but first
+we will go over a debugging example and then all the special DIL functions made
+for objects.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x3575.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x3971.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Object macros</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch06.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Compiling and Debugging your first object</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

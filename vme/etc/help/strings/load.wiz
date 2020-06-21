@@ -1,0 +1,14 @@
+<br/>
+Usage:<br/>
+   &gt;load &lt;pc-name&gt;|&lt;unit-path&gt;<br/>
+<br/>
+This wiz-command enables you to load a player (YES! a player), if the player is<br/>
+not currently playing. The player will behave like a link-dead player once<br/>
+loaded, an if the player actually connects, he will reconnect into the<br/>
+character! You can also use the command to load units from the world database<br/>
+file into the game. You just have to give the unit-path (zone-name and<br/>
+unit-name).<br/>
+<br/>
+See also:<br/>
+   &gt;purge<br/>
+<br/>

@@ -1,0 +1,24 @@
+<br/>
+The clan commands are split up into 4 groups.  The first group is only for the<br/>
+clan master.  The second group is for both the clan Master and the clan Lord<br/>
+which is the second in  charge of the clan.  The third group is commands for the<br/>
+members (some of the member commands only work if the member is appointed to an<br/>
+office of the clan).  Finally the fourth group is commands that can be used by<br/>
+anyone even if your not in a clan.<br/>
+<br/>
+<br/>Clan Master commands:<br/>
+cappoint         cdemote<br/>
+<br/>
+Clan Master and Lord commands:<br/>
+caccept          cremove          csrank              ctitle<br/>
+<br/>
+<br/>Clan Member commands:<br/>
+Normal Members:<br/>
+cinfo            cdeposit         cbalance            cstore<br/>
+cequipment       crank            cdefect             center<br/>
+cexit            clan donate<br/>
+<br/>
+Appointed members:<br/>
+cwithdraw        cunstore<br/>
+<br/>
+<br/>

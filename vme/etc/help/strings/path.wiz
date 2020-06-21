@@ -1,0 +1,8 @@
+<br/>
+Usage: path [&lt;unitpath&gt;]<br/>
+<br/>
+This wiz-command examines the shortest path-matrix for the game. With no<br/>
+argument, it gives debug-info on compression-rates. If you give a unitpath<br/>
+(zonename and unitname) it will return which direction is the shortest to go,<br/>
+to get to the unit.<br/>
+<br/>

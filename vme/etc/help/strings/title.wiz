@@ -1,0 +1,27 @@
+<br/>
+Usage title &lt;playername&gt; &lt;title&gt;<br/>
+Example: title Fizban &amp;<br/>wThe big red One<br/>
+<br/>
+This command allows am Admin to title a player.  It will<br/>
+also allows color titles using the same color codes that the prompts use.<br/>
+<br/>
+Note:<br/>
+No other tags should ever be inserted into titles. The only exception to <br/>
+this is the other automatically assigned Tags such as * Guide * , <br/>
+* Builder * , Admin, ect. Refrain from using and & in titles. Also, <br/>
+no special characters are allowed either examples !@#$%^&*() etc. <br/>
+The title must never exceed one line in length, causing it to wrap to <br/>
+the next line when doing who and/or standing in the same room with that <br/>
+character.  As usual vulgar, obscene terms, curses, flames, out of genre<br/>
+or any other inappropriate title is not permitted.  If you feel the title may<br/>
+not be appropriate, simply don't use it and allow the briber to select another.<br/>
+<br/>
+All titles will be in English.<br/>
+Example:<br/>
+Herdas - Master of The Under-dark  is allowed<br/>
+Herdas - Seeker of The Under-dark {Tag} * LORD *   NOT allowed<br/>
+<br/>
+<br/>See Also:<br/><br/>
+help title<br/>
+help bribe<br/>
+help ctitle<br/>

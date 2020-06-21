@@ -1,0 +1,9 @@
+<br/>
+Usage:<br/>
+   &gt;users<br/>
+<br/>
+This wiz-command gives you a list of users currently in the game, their level<br/>
+and the site they connect from (if known).<br/>
+<br/>
+See also:<br/>
+   &gt;help who<br/>

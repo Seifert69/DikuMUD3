@@ -1,0 +1,403 @@
+wiz<br/>
+<br/>
+Usage: wiz &lt;text&gt;               (standard wiz-line, like shout to wiz's)<br/>
+       wiz #&lt;level&gt; &lt;text&gt;      (as above, but only to wiz's of level+)<br/>
+       wiz @&lt;emotetext&gt;         (emote on the wizline)<br/>
+       wiz @&lt;level&gt; &lt;emotetext&gt; (as above, but only to wiz's of level+)<br/>
+       wiz ?                    (what wizards are on- and offline)<br/>
+       wiz -                    (go offline)<br/>
+       wiz +                    (go online)<br/>
+<br/>
+This wiz-command will allow you to communicate with the others wizards in<br/>
+the usual ways. Consult the list above.<br/>
+#<br/>
+noshout notell<br/>
+<br/>
+Usage:<br/>
+   &gt;noshout &lt;player&gt;<br/>
+   &gt;notell &lt;player&gt;<br/>
+<br/>
+This wiz-command enables you to take away a players ability to shout or tell.<br/>
+This is used mainly to teach players not to shout too much, or if the player<br/>
+is harassing someone with tells. To give the player back the ability, use the<br/>
+same command.<br/>
+#<br/>
+votings administration<br/>
+<br/>
+In some cases the administration disagrees on topics and these conflicts<br/>
+can be resolved by voting. Any member of the administration can call for<br/>
+a vote on a mud related subject. Any god not wishing to participate in<br/>
+the vote can choose to do so but should preferably vote blank so it can<br/>
+get over with quickly. The voting deadline is 3 days, not counting hollidays<br/>
+and weekends. The god requesting the vote will be responsible for collecting<br/>
+all votes (votes are public and should be cc'ed to all). For a vote to be<br/>
+successful, the yes's must amount to more than 50% of the sum.<br/><br/><br/>
+<br/>
+Please only call for a vote if it is really necessary, it should hopefully<br/>
+be possible to resolve most issues with little effort and no voting.<br/><br/><br/>
+<br/>
+The administration votes with the following strengths:<br/>
+<br/>
+    Whistler, Palio, Drevar (1.5)<br/>
+    Skay, Jager, Zandar     (1.0)<br/>
+<br/>
+Papi and God will generally not participate in votes but can choose to<br/>
+do so with a voting strength of 1.5. We do have the option to veto a<br/>
+proposal, but only if we both agree, and only if we feel it truly necessary<br/>
+(generally we disagree on most subjects ;)<br/>
+#<br/>
+users<br/>
+<br/>
+Usage:<br/>
+   &gt;users<br/>
+<br/>
+This wiz-command gives you a list of users currently in the game, their level<br/>
+and the site they connect from (if known).<br/>
+<br/>
+See also:<br/>
+   &gt;help who<br/>
+#<br/>
+wizhelp<br/>
+<br/>
+Special help for wizards:<br/>
+<br/>
+hum hum be gentle....<br/>
+#<br/>
+wizinvisible<br/>
+<br/>
+Usage:<br/>
+   &gt;wizinv [&lt;unit&gt;]<br/>
+<br/>
+This wiz-command enables you to be invisible to every player, including persons<br/>
+who is affected by see-invisible. To give you normal appearance, just use the<br/>
+same command again. You can also specify which unit is to be affected by the<br/>
+wizinvisible.<br/>
+#<br/>
+path<br/>
+<br/>
+Usage: path [&lt;unitpath&gt;]<br/>
+<br/>
+This wiz-command examines the shortest path-matrix for the game. With no<br/>
+argument, it gives debug-info on compression-rates. If you give a unitpath<br/>
+(zonename and unitname) it will return which direction is the shortest to go,<br/>
+to get to the unit.<br/>
+#<br/>
+switch<br/>
+<br/>
+Usage:<br/>
+   &gt;switch &lt;char&gt;<br/>
+<br/>
+This wiz-command gives you the power to control another character. However it<br/>
+must be a non-playing character you switch with. Use the same command without<br/>
+arguments to return from a switch.<br/>
+#<br/>
+file<br/>
+<br/>
+Usage: file wizlist | news | credits | motd | info<br/>
+<br/>
+This wiz-command will update the given text-string from the disk. This is<br/>
+particularly useful if you have some urgent info to give to the players and<br/>
+don't want to close down the mud just to change the motd.<br/>
+#<br/>
+ban<br/>
+<br/>
+Usage:<br/>
+   &gt;ban &lt;t|n&gt; &lt;site_name&gt; [&lt;period&gt;]<br/>
+   &gt;ban d &lt;site_name&gt;<br/>
+   &gt;ban<br/>
+<br/>
+With this wiz-command you can exclude a given site or group of sites from<br/>
+accessing the mud. The site_name may contain the wild cards * and ?, allowing<br/>
+sites like b?zier.daimi.*.dk to be banned. The letters t or n indicates<br/>
+whether the ban is a total one (no chars from the site can connect (VERY harsh<br/>
+punishment!)) or a ban for the creation of any new characters from the site.<br/>
+An optional period can be given to allow for temporary bans, and it must<br/>
+consist of a string of the form "2d 3h 4m" indicating 2days 3hours and 4mins<br/>
+ban. Any of these are optional of course. A temporary ban will lift itself<br/>
+when the time is up.<br/><br/>
+Using the d option means you delete a site, if it's present in the list.<br/>
+No options/arguments to the command gives a list of the banned sites.<br/>
+<br/>
+See also:<br/>
+   &gt;help wizlock<br/>
+#<br/>
+delete<br/>
+<br/>
+Usage:<br/>
+   &gt;delete &lt;player&gt;<br/>
+<br/>
+With this wiz-command you can delete a player from the playerfiles.<br/>
+This is a fast delete and should only be used in emergencies.<br/>
+#<br/>
+crash<br/>
+<br/>
+Usage:<br/>
+   &gt;crash the entire game...<br/>
+<br/>
+This wiz-command is the only possible way of crashing the game.<br/><br/><br/>
+<br/>
+Um, hi, it's me, Kira... OK, I'm updating these files and came across this<br/>
+one.  Maaaybe I'm wrong, but I think there might be one or two other ways<br/>
+to crash the game *grin*.<br/>
+#<br/>
+snoop<br/>
+<br/>
+Usage:<br/>
+   &gt;snoop [&lt;player&gt;]<br/>
+<br/>
+This wiz-command enables you to snoop on another player. You will get every<br/>
+message the player gets, marked by a '%' in front of each line. Snooping<br/>
+is not a nice thing to do, and should only be done to explain things or to<br/>
+guide another player. To stop snooping, just type snoop without an argument.<br/>
+#<br/>
+echo<br/>
+<br/>
+Usage:<br/>
+   &gt;echo &lt;string&gt;<br/>
+<br/>
+This is a fun toy for a wizard, running some sort of quest, making role playing<br/>
+fun for the players. The contents of the &lt;string&gt; will simply appear to<br/>
+everyone in the room.<br/>
+#<br/>
+message<br/>
+<br/>
+Usage:<br/>
+   &gt;message &lt;char&gt; &lt;string&gt;<br/>
+<br/>
+This wiz-command is just like echo, but only the character mentioned sees the<br/>
+string, as opposed to the entire room.<br/>
+<br/>
+See also:<br/>
+   &gt;help echo<br/>
+#<br/>
+broadcast<br/>
+<br/>
+Usage:<br/>
+   &gt;broadcast &lt;string&gt;<br/>
+<br/>
+This wiz-command is just like echo, except all connected players see the<br/>
+string, as opposed to just the room.<br/>
+<br/>
+See also:<br/>
+   &gt;help echo<br/>
+#<br/>
+transfer<br/>
+<br/>
+Usage:<br/>
+   &gt;transfer &lt;item&gt;|&lt;char&gt;|all<br/>
+<br/>
+This is a good tool for the wizard. If you need to get someone or something<br/>
+to the place you are located, you just use this command. All will get you all<br/>
+connected players, plus probably some hassle :)<br/>
+#<br/>
+force<br/>
+<br/>
+Usage:<br/>
+   &gt;force &lt;char&gt;|all &lt;command&gt;<br/>
+<br/>
+This wiz-command forces a character or player to execute a command. This<br/>
+command should only be used to help players in a tight situation. All will<br/>
+make all connected players execute the command; also known as power abuse.<br/>
+#<br/>
+shutdown<br/>
+<br/>
+Usage:<br/>
+   &gt;shutdown<br/>
+<br/>
+BEWARE! This command shuts down the entire game on the spot! It will<br/>
+not come back up unless someone restarts it in Unix...<br/>
+<br/>
+See Also:<br/>
+  &gt; help reboot<br/>
+#<br/>
+reboot<br/>
+<br/>
+Usage:<br/>
+   &gt; reboot<br/>
+   &gt; reboot now<br/>
+   &gt; reboot cancel<br/>
+   &gt; reboot # (in minutes)..Ex. reboot 30<br/>
+<br/>
+This command reboots the server. When the command is given with no<br/>
+argument, the mud is set to reboot in 1 minute and a countdown is<br/>
+held.  When the 'now' arg is passed the mud reboots directly.<br/>
+Reboot cancel will halt the reboot process.  You can also set a reboot<br/>
+for a period of time.  Reboot 30 will set a reboot in 30 minutes. <br/>
+Note players don't receive any messages if the reboot time is over<br/>
+20 minutes.<br/>
+<br/>
+See Also:<br/>
+  &gt; help shutdown<br/>
+#<br/>
+set<br/>
+<br/>
+Usage:<br/>
+   &gt;set &lt;unit&gt; &lt;field&gt; &lt;arguments&gt;<br/>
+<br/>
+This is the command you use, if you want ti fiddle with individual fields in a<br/>
+unit. As there is a LOT of fields to set, i will not list them here. The<br/>
+command will list them, if you just give a unit name. However it is essential,<br/>
+that you understand the argument types.<br/>
+<br/>
+&lt;value&gt;  : a value. beware not to enter a number out of range.<br/>
+&lt;type&gt;   : a type. to list possible types give it an 'X' as type<br/>
+&lt;string&gt; : a single string.<br/>
+(enter description): this gives you the multi-line editor.<br/>
+                     End with a '@' on a single line.<br/>
+&lt;unitpath&gt;: a 'path' to the unit, specifying its zonename and itemname.<br/>
+&lt;keyword&gt; : a single keyword.<br/>
+&lt;direction&gt; : direction can be any of the six: n s e w u d<br/>
+&lt;bitlist&gt; : a list of bitnames. nothing indicates no set bits.<br/>
+            separate bitnames with a single '|'.<br/>
+<br/>
+Combinations of the above occur.<br/>
+<br/>
+See also:<br/>
+   &gt;help setskill<br/>
+   &gt;help stat<br/>
+#<br/>
+wstat<br/>
+<br/>
+Usage:<br/>
+   &gt;wstat &lt;unit&gt; [group]<br/>
+   &gt;wstat room [group]<br/>
+   &gt;wstat zone [zone name] [mobiles|objects|rooms|reset|error|info]<br/>
+   &gt;wstat world [zones]<br/>
+<br/>
+Where [group] is:<br/>
+     &lt;no argumnet&gt;  : The basis unit data<br/>
+     data           : The specific data for the type of unit<br/>
+     contents       : list of unit contents<br/>
+     affect         : list of affect-structures for unit<br/>
+     descriptor     : descriptor data for player<br/>
+     func           : special function for unit<br/>
+     spell          : spells leaned by char<br/>
+     skill          : skills learned by char<br/>
+     weapon         : weapons mastered by char<br/>
+     extra          : extra descriptions<br/>
+     quest          : Quest information (PC's only)<br/>
+<br/>
+Examples:<br/>
+   &gt;wstat world<br/>
+   &gt;wstat world zones<br/>
+   &gt;wstat zone<br/>
+   &gt;wstat zone rooms<br/>
+   &gt;wstat fido<br/>
+   &gt;wstat fido dat<br/>
+   &gt;wstat fido func<br/>
+   &gt;wstat room aff<br/>
+<br/>
+Wstat displays everything about a unit. However all this info will confuse<br/>
+anyone (several screens of info per unit), so we had to split it up. The<br/>
+optional [group] determines which info you want. <br/>
+<br/>
+See also:<br/>
+   &gt;help set<br/>
+   &gt;help setskill<br/>
+#<br/>
+setskill<br/>
+<br/>
+Usage:<br/>
+   &gt;setskill  &lt;name&gt; skill|spell|weapon &lt;field&gt; &lt;value&gt;<br/>
+<br/>
+This wiz-command enables you to set the skill of a character. Remember, that<br/>
+only players have the full weapon-tree, while NPC's only have the basic<br/>
+categories. Likewise for spells; only players have the full spell-tree, while<br/>
+NPC's only have the basic categories. Skills are only for players, NPC's have<br/>
+none.<br/>
+<br/>
+See also:<br/>
+   &gt;help wstat<br/>
+   &gt;help set<br/>
+#<br/>
+load<br/>
+<br/>
+Usage:<br/>
+   &gt;load &lt;pc-name&gt;|&lt;unit-path&gt;<br/>
+<br/>
+This wiz-command enables you to load a player (YES! a player), if the player is<br/>
+not currently playing. The player will behave like a link-dead player once<br/>
+loaded, an if the player actually connects, he will reconnect into the<br/>
+character! You can also use the command to load units from the world database<br/>
+file into the game. You just have to give the unit-path (zone-name and<br/>
+unit-name).<br/>
+<br/>
+See also:<br/>
+   &gt;purge<br/>
+#<br/>
+purge<br/>
+<br/>
+Usage:<br/>
+   &gt;purge [&lt;unit&gt;]<br/>
+<br/>
+This wiz-command enables you to completely remove any unit from the world. Even<br/>
+if a player is in the menu-system, you can remove him. The command is rather<br/>
+violent, and just kick any player off. Only one limit is set, you may not purge<br/>
+rooms. With no argument, you purge everything but players at the location.<br/>
+#<br/>
+at<br/>
+<br/>
+Usage:<br/>
+   &gt;at &lt;room-name&gt;|&lt;unit-path&gt; &lt;command&gt;<br/>
+<br/>
+This wiz-command allows you to execute commands, as if you were at the location<br/>
+itself. You must give the location name, or unit-path as to where you want to<br/>
+execute the command. After you have executed the command, you are moved back to<br/>
+the room you came from, thus making 'at board goto temple' make no difference.<br/>
+<br/>
+See also:<br/>
+   &gt;help goto<br/>
+#<br/>
+goto<br/>
+<br/>
+Usage:<br/>
+   &gt;goto &lt;unit&gt;<br/>
+<br/>
+This is the wizards way of travelling. At an instant, you can move across<br/>
+the worlds. You will appear in the same room, as the unit you specify, thus<br/>
+making 'goto papi' take you to the same room as papi, and 'goto cup' take<br/>
+you to the same room as a cup (but only if the cup is in a room!)<br/>
+<br/>
+See also:<br/>
+   &gt;help at<br/>
+#<br/>
+advance<br/>
+<br/>
+Usage:<br/>
+   &gt;advance &lt;player&gt; &lt;level&gt;<br/>
+<br/>
+This wiz-command gives you the ability to advance a player to a given level.<br/>
+Note ADVANCE.<br/>
+#<br/>
+reroll<br/>
+<br/>
+Usage:<br/>
+   &gt;reroll<br/>
+<br/>
+For good old times sake, reroll command can be issued, but here it restarts<br/>
+a character, totally.<br/>
+#<br/>
+restore<br/>
+<br/>
+Usage:<br/>
+   &gt;restore &lt;char&gt;<br/>
+<br/>
+This is a wiz-command, that restores a characters endurance-, hit- and<br/>
+mana-points to maximum. Besides, it sets the full and thirst to max.<br/>
+#<br/>
+wizlock<br/>
+Usage:<br/>
+   &gt;wizlock [level]<br/>
+<br/>
+This is a wiz-command used to control access to the game. If the game is<br/>
+wizlocked, you unlock it by the 'wizlock' command. If you don't want any<br/>
+new players, you 'wizlock 0'. If the game is not wizlocked, and you type<br/>
+'wizlock' all mortal players (if below your level) are locked out.<br/>
+If you give a level, all players at this level and below is<br/>
+excluded from playing. Players are thrown off, if they try to<br/>
+enter the game from the menu, but is allowed to hang around in the<br/>
+menu. It is never possible to wizlock above your own level.<br/>
+<br/>
+See also:<br/>
+   &gt;help ban<br/>
+#~<br/>

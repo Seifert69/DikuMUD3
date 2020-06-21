@@ -1,0 +1,7 @@
+<br/>
+Usage:<br/>
+   &gt;restore &lt;char&gt;<br/>
+<br/>
+This is a wiz-command, that restores a characters endurance-, hit- and<br/>
+mana-points to maximum. Besides, it sets the full and thirst to max.<br/>
+<br/>

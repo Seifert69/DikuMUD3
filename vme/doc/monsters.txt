@@ -1,0 +1,346 @@
+
+
+                       1.   Monster Creation
+                                 
+Document Name:     monsters.doc
+Version:           7.30
+Author:            Michael Seifert (seifert@diku.dk)
+Questions to:      seifert@diku.dk
+Document intended for:   World Creators
+
+Short Description:
+This  document describes how to create monsters, and  explains  in
+brief  how  the various weapon and armour values interact.  Before
+reading  this  document  you should read the  object.txt  document
+describing weapon and armour quality. Abilities and their  meaning
+is described in the ability.txt document.
+
+I’ve  attempted to remove all old references that  are  no  longer
+valid (hand, toughness, etc).
+     
+                         2.   Introduction
+                                 
+This  document  will  step-by-step go through the  most  important
+attributes of a monster and explain their meaning.
+
+2.1  Monster Level (level)
+When  creating a monster it must be between level 0 and  199.  The
+level  of  the monster decides how many skill points  and  ability
+points  the  monster  has. Players start at third  level  and  are
+expected to be between level [3..100]. The level of the monster is
+specified using the level field.
+
+     level 0        /* Mosquito */
+
+In  general, an area should be designed around a 10 level span  to
+be fairly consistent. For example a goblin camp for newbie players
+should be of level 0-10 (perhaps only 6). An orc area might be  in
+the range 10-20th level.
+The  reason  is,  that monsters 10 levels below a  player  give  0
+experience  points  while monsters 10 levels above  a  player  are
+beginning to be a difficult kill. If you make an area too  diverse
+players  will  give  up since monsters either seem  too  easy  (no
+experience) or too hard.
+
+2.2  Natural armour & attack
+The  natural  armour  is  specified using  the  NATURAL_DEF  macro
+together with natural attack. For example:
+
+NATURAL_DEF(WPN_CRUSH, ARM_PLATE)
+
+You  should  know  that the weight of the monster  determines  the
+maximum  amount of damage it can give when using a natural attack.
+The weight is categorized as follows:
+
+  Lbs   Size
+ 0..5   Tiny
+ 6..40  Small
+41..160 Medium
+161..50 Large
+   0
+ 501+   Huge
+
+By default monsters are medium.
+
+2.3  Good, Evil and Neutral alignments (alignment)
+Alignment  is  a  value between -1000 and +1000,  where  -1000  is
+ultimate  evil, 0 is neutral and +1000 is ultimate good.  Good  is
+per  definition any value from +1000..+350, neutral is  any  value
+from  +349..-349 and evil is any value from -350..-1000. Any value
+in between can also be used.
+     alignment -750 /* Quite evil, maybe a Ghoul  */
+     alignment -350 /* Barely evil.               */
+
+2.4  The Race (race)
+Each  monster  has a race as specified in values.h.  In  case  you
+can’t  find  a race which matches your monster, just  use  #define
+RACE_XXX  in  you  own zonefile with a number that  isn’t  already
+used. We will then later transfer it to values.h. Example:
+
+     race RACE_DRAGON_SILVER
+
+or if the race you need isn’t defined, you could type:
+
+     #define RACE_CRABMAN     7681 /* This is a large red crab man
+*/
+     race RACE_CRABMAN
+
+Later  it  will  be inserted into values.h - and you  should  then
+remove your definition (you will get warnings at that time).
+
+2.5  The gender (sex)
+Each  monster has a gender: male, female or none, as specified  in
+values.h SEX_XXX macros. Example:
+     sex SEX_NEUTRAL
+
+2.6  Setting Abilities (ability[])
+All  abilities are in the range [1..200]. Players usually  have  a
+maximum of 150, modified by magic... 200 is considered divine.
+When  creating a monster you can not directly specify the size  of
+the  abilities,  instead you specify a percentage distribution  of
+points.  The amount of points are then distributed by the computer
+according  to  the  specified level.  The  MSET_ABILITY  macro  is
+available for this purpose, and has the format:
+
+     MSET_ABILITY(str,dex,con,hpp,bra,cha,mag,div)
+
+The  amount of points distributed depends directly upon the  level
+of the monster and the percentage as the table below shows. If for
+example you create a monsters of level 30, then 20% will cause the
+monster to get a little above 30 points.
+
+Note that the sum of the ability values must be 100%. This is thus
+an example of an ability distribution:
+
+     MSET_ABILITY(25,15,10,15,10,5,10,0)  /* Sum is 100% */
+
+2.6.1
+
+Hints
+If you choose high percentages and high levels, you may “waste”  a
+ability  points as it would pop above 200 (all excess  points  are
+simply  removed). For example a level 199 monster with an  ability
+percentage  a  bit above 20% will make an ability  above  the  200
+points maximum.
+Do  not  spend  points on both MAG and DIV, only  the  appropriate
+value  of  the  two  are  used. So magic  users  should  have  MAG
+(fireball,  etc.) and clerics should have DIV (cure light  wounds,
+etc.).
+
+2.7  Setting Weapon and Spell skills (spell[], weapon[])
+NPC's  know about weapons and spells but not at the same  detailed
+level  as  the  player. For NPC’s the spell and weapon  group  are
+used.  Thus the “axe hammer category” defines all defence and  all
+attack for all kind of axes and hammers - whereas the player would
+have  to train individually in each axe and hammer type. The  same
+is  true for spells. Thus if a monster has 25 points in the weapon
+"sword  category" it will fight (and defend) with  all  sword-like
+weapons at skill 25.
+When  you  define weapon and spell skills (monsters have no  skill
+skills)  you  also define these as percentages,  and  the  program
+automatically distributes the points. Use the pre-defined macros:
+
+      MSET_WEAPON(axe_ham,  sword,  club_mace,  polearm,  unarmed,
+special)
+
+Where
+     axe_ham   Is any hammer or axe weapon.
+     sword          Is any sword like weapon, including dagger and
+rapier, etc.
+      club_mace  Is any club or mace like weapon, flails,  morning
+star, etc.
+              polearm    Is any flail or pole like weapon:  spear,
+              staff, halberd, trident, sickle, scythe.
+     unarmed   Is any bite, claw, sting or other natural attack.
+     special   Is any very peculiar weapon, currently only whip.
+
+      MSET_SPELL(div, pro, det, sum, cre, min, hea, col, cel, int,
+ext)
+
+Where
+     div  Covers all divine sphere spell.
+     pro  Covers all protection sphere spells.
+     det  Covers all detection sphere spells.
+     sum  Covers all summoning spells.
+     cre  Covers all creation spells.
+     min  Covers all mind spells.
+     hea  Covers all heat spells (fireball, etc.)
+     col  Covers all cold spells (frostball, etc.)
+      cel   Covers all cell (electricity) spells (jolt,  lightning
+bolt, etc.)
+     int  Covers all internal (poison) spells (toxicate, etc.)
+     ext  Covers all external (acid) spells (acid ball etc.)
+See also values.h and wmacros.h.
+The  sum of all spell and weapon skills must be 100%. For example,
+the sum is 100%:
+
+      MSET_WEAPON(10,10,20,5,15,5)  /*  75%  Total,  Club/Mace  is
+primary   */
+      MSET_SPELL(8,0,0,3,0,3,2,3,3,3,3)  /*  25%  Total,  Fire  is
+primary        */
+
+Remember that the groups define both attack and defence.  Thus  if
+you  make  an Orc which has 0% in the flail group it can only  use
+its  dexterity to defend itself. Likewise with spell  groups.  For
+this  reason  the groups are both "resistance" as well  as  attack
+groups.
+
+2.8  Spell casting monsters
+Some  monsters  are spell casting and spend a  lot  of  points  on
+either  Magic  or  Divine power together with  brain.  To  make  a
+monster  cast  spells  a number of various  special  routines  are
+available, for example:
+
+     special SFUN_COMBAT_MAGIC “cast acid ball”
+     special SFUN_COMBAT_MAGIC_HEAL “cast random teleport”
+
+This  would make a monster use the “acid ball” spell when  engaged
+in  combat.  The  monster would attempt to cast “random  teleport”
+when  it  gets low on hitpoints. The following table  shows  which
+spells a monster should use at a given level:
+
+Level  Circle
+0-14   1st     magic
+       circle
+15-34  2nd     magic
+       circle
+35-200 3rd     magic
+       circle
+
+For  example, a fireusing monster of level 20 would  use  the  2nd
+circle  of  magic (the fireball spell) whereas a level  5  monster
+would  use  the  burn spell. There are also special  routines  for
+breathweapons  for  use  with  for example  dragons.  See  monster
+definitions in composed.h.
+
+2.9  More or less Experience (exp)
+By  default a monster gives the amount of experience it  is  worth
+(which  depends  on the level of the monster).  If  you  create  a
+particular powerful monster or a very weak monster, you  may  wish
+to  raise  or lower the amount of experience given to the  player.
+This   can   be  done  by  specifying  an  experience   percentage
+modification.
+You may want to modify the standard amount (of 0%) when you create
+non-standard  monsters.  The default  amount  is  not  always  the
+correct  amount,  for example an aggressive invisible  10th  level
+dragon with breath weapon and spells, should give more exp than  a
+blind, thieves-friendly dragon. The way I suggest you to calculate
+the  monsters  experience  value should be  adding  the  following
+amplifiers:
+Note  that  if  the  monster is using wands,  scrolls,  staffs  or
+magical  items this should not increase the exp amount, since  the
+item value should be more than enough reward for the players!
+See example application later in this document.
+Amplifiers :
+
+ Ability / Skill   Bonus                  Examples
+Breath weapon         +50  Usually a Dragon or Gorgon
+Special fighting   +20..5  Example : The Evil Iggy remembers who
+routine                 0  he is fighting with. When he gets below
+                           50% hits he casts "random teleport".
+                           Later (when he has full hp) he summons
+                           the player he has been fighting with
+                           and THEN tries to kill the player. This
+                           routine is highly dangerous for groups.
+Low level monster  +10..3  A low level NPC has a special routine
+casts                   0  SFUN_COMBAT_MAGIC or
+high level spells          SFUN_COMBAT_MAGIC_HEAL where the spell
+                           is a high level spell. Ex. a 1. level
+                           wizard casts a "acid ball". This is up
+                           to the creator to decide how tough the
+                           monsters spell should be.
+Monster stings        +20  Player can die even after a successful
+(poison)                   kill
+Monster is            +15  Players can not attack, and player's
+invisible                  group will not be able to help, unless
+                           they can see invisible
+Monster is hiding     +10  A thief
+Monster can see        +5  This is only dangerous if the monster
+invisible                  is aggressive, and this amplifier
+                           should only be used in such a case.
+Monster is team    +5..+5  The guards helps the Captain and each
+working                 0  other.
+Monster is being   +5..+3  The king is hard to kill, you have to
+rescued                 0  kill his lifeguards first.
+Monster is             +5  Monster will hit first and increase
+aggressive                 chance of a kill
+Monster is            +10  The monster is using the special
+ambushing                  function SFUN_RAN_ATTACK
+Monster have to        -5  The monster will always get into a
+rescue                     fight, and the chance of being killed
+                           is higher than the NPC it'll have to
+                           rescue.
+Monster is             -5  A usually stupid cleric etc.
+friendly to
+thieves
+Blind                 -15  A mole in daylight.
+If weapon             -50  If a NPC is equipped with a weapon
+category isn't             which isn't in a category he has
+like wielded               practised.
+weapon
+
+
+2.10
+
+Standard monsters in composed.h
+The  file composed.h contains many standard monsters. It is a good
+idea  to  study these definitions, as they form the basis of  many
+different  monsters. Note that the definitions  by  no  means  are
+perfect,  but  we  are hoping to make a more  or  less  “complete”
+monster  compendium.  If  you create certain  (general)  monsters,
+please design it as a macro so that it can be incorporated in  the
+file. The more monsters created by using these macros the better a
+place the game will be for the players.
+
+2.11 Examples
+The  following  is  an  example  of creating  different  types  of
+monsters.
+
+2.11.1    A Black Dragon
+In  this example a black dragon is created. You should notice that
+the  number  “121”  is the value of the SPL_ACIDBALL_3  definition
+since  I  can’t  currently get it translated  inside  quotes.  The
+following should at least be specified in your zone file.
+
+     race RACE_DRAGON_BLACK
+     sex SEX_FEMALE
+     level 15
+     height625                         /* In centimetres. 1 inch
+== 2.54cm */
+     weight     1250                         /* In pounds, 1 pound
+= 0.45359kg    */
+     NATURAL_DEF(WPN_CLAW, ARM_PLATE)
+     exp 50                             /* Bonus for breath weapon
+*/
+           alignment      -900                      /*       Evil.
+*/
+      MSET_ABILITY(20,12,12,12,12,12,20,0)    /* Most STR and  MAG
+*/
+       MSET_WEAPON(10,10,10,5,30,5)        /*  Natural  is   above
+average        */
+       MSET_SPELL(0,0,0,0,0,0,0,0,0,0,30)       /*   Acid   sphere
+(external)          */
+     special SFUN_BREATH_WEAPON “”+SPL_ACIDBALL_3
+
+Calculation of experience:
+     Breath weapon       =   50%
+                         ----------
+     SUM                 =   50%
+
+The  same  dragon could have been created by using the macro  from
+the file composed.h:
+
+     M_DRAGON_BLACK(15, SEX_FEMALE)
+
+2.11.2
+
+A strong warrior
+See  the composed.h macros - they contain definitions for a  great
+variety of humans!
+
+
+1.   In general when creating a warrior monster, Strength
+determines amount of damage, Dexterity determines chance to
+defend. Armour the amount of damage received. Constitution
+determines hitpoint gain rate. Weapon skills ought to be high,
+spell skills few, and only as 'resistance' against magic.

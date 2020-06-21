@@ -1,0 +1,1625 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Object macros</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The objects section"
+HREF="ch06.html"><LINK
+REL="PREVIOUS"
+TITLE="The objects section"
+HREF="ch06.html"><LINK
+REL="NEXT"
+TITLE="Building your first object"
+HREF="x3926.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="ch06.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. The objects section</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x3926.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="OBJMACROS"
+>7.2. Object macros</A
+></H1
+><P
+>To make the creation of some objects easier we have provided a
+set of Macros.  The macros range from general armour and weapons macros
+to macros that help you create special affects on all items.  We will
+first cover what craftsmanship and magical modifiers are in <A
+HREF="x3575.html#OBJCRAFT"
+>Section 7.2.1</A
+> and <A
+HREF="x3575.html#OBJMAG"
+>Section 7.2.2</A
+> respectively.  After
+which we will show the use of craftsmanship and magical modifiers in
+<A
+HREF="x3575.html#OBJMACROWEAPON"
+>Section 7.2.3</A
+> and <A
+HREF="x3575.html#OBJMACROARMOUR"
+>Section 7.2.4</A
+>.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJCRAFT"
+>7.2.1. Weapon and armour craftsmanship</A
+></H2
+><P
+>The craftsmanship is a way of expressing the overall quality of  a
+piece of armour or weapon.  The quality on the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> servers currently
+means the amount of hit points given to an item.  The craftsmanship
+ranges from 25 to -25 and the hit points range from 125 to 6000.  The craftsmanship can be looked at as how tough or good the armour
+or weapon is.  The following table should help you in deciding how tough
+your armour or weapon should be.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN3586"
+></A
+><P
+><B
+>Table 7-6. Approximate hit points verses craftsmanship</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Craftsmanship</TH
+><TH
+>Hit points</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>25</TD
+><TD
+>6000</TD
+></TR
+><TR
+><TD
+>20</TD
+><TD
+>5000</TD
+></TR
+><TR
+><TD
+>15</TD
+><TD
+>4000</TD
+></TR
+><TR
+><TD
+>10</TD
+><TD
+>3000</TD
+></TR
+><TR
+><TD
+>5</TD
+><TD
+>2000</TD
+></TR
+><TR
+><TD
+>0</TD
+><TD
+>1000</TD
+></TR
+><TR
+><TD
+>-5</TD
+><TD
+>875</TD
+></TR
+><TR
+><TD
+>-10</TD
+><TD
+>650</TD
+></TR
+><TR
+><TD
+>-15</TD
+><TD
+>425</TD
+></TR
+><TR
+><TD
+>-20</TD
+><TD
+>300</TD
+></TR
+><TR
+><TD
+>-25</TD
+><TD
+>125</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>It is suggested the higher the craftsmanship the higher the cost
+of the weapon should be.  This is not a must but it goes with out saying
+the quality of an item should be represented in the cost of it.  Of
+corse there is the time you would want to sell your players poor quality
+items at a high cost just to make them think they are getting something
+cool.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJMAG"
+>7.2.2. Magical modifier</A
+></H2
+><P
+>The magical modifier can be said to modify damage done to an
+opponent.  In a combat the damage is calculated and then the magical
+bonuses on armour or weapons is added in.  This is best explained by an
+example.</P
+><P
+>Lets say that you were about to give 25 hit points of damage to a
+person.  Your sword has a plus 25% in magical bonus.  The bonus is added to
+your damage to make it a total of 50 hit points of damage.  The player
+you are hitting however has a +25% magical bonus on his armour that you
+are about to hit him on.  That will reduce the damage back to its 25%
+hit points originally done.  This is just a nice way to add a bit of
+damage for a special weapon.</P
+><P
+>The magical modifier ranges from 25 to -25.  It affects both the
+damage being given to a player and the damage being given to a weapon or
+a piece of armour.</P
+><P
+>It is suggested that you modify the costs of your objects to fit
+the amount of magical bonus along with adding the magical flag tot he
+objects flag list so an identify spell can pick up that there is
+magic about the object.  This is not a must but your players will love
+you for it.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJMACROWEAPON"
+>7.2.3. Setting weapon fields</A
+></H2
+><P
+>To create a weapon you only need three pieces of information. 
+The weapons craftsmanship and magical modifiers defined in <A
+HREF="x3575.html#OBJCRAFT"
+>Section 7.2.1</A
+> and <A
+HREF="x3575.html#OBJMAG"
+>Section 7.2.2</A
+> and the weapon type. 
+You have seen the weapon types before when defining a NPCs natural
+attack type in <A
+HREF="x1845.html#NPCMACROATTARM"
+>Section 6.2.1</A
+>.  The full list of weapon
+types that are released with the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> 2.0 can be found in <A
+HREF="a5351.html"
+>Appendix D</A
+>.  With craftsmanship, magical modifier and the weapon
+type all you need to do is pick from one of the following macros and
+insert your numbers.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3642"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define WEAPONSZ_DEF(weapon_category, craftsmanship, magic_bonus, hgt)  \
+  WEAPON_DEF(weapon_category, craftsmanship, magic_bonus)\
+  height hgt
+
+#define SHIELD_DEF(shield_type, craftsmanship, magic_bonus)  \
+  manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD} \
+  type ITEM_SHIELD            \
+  value[0] shield_type        \
+  value[1] craftsmanship      \
+  value[2] magic_bonus&#13;</PRE
+><P
+></P
+></DIV
+><P
+>As you can see the first macro uses the second macro so the only
+difference between them is the first one sets the height field.  Using
+the first macro will force your weapon to be a certain size when loaded.
+While not setting the height field by using the second macro would let
+the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> server set the size of the weapon by what NPC it is loaded
+on.</P
+><P
+>	 A  flail (two handed) of non-pure iron (-3%), a little better than
+average craftsmanship (5%) and no magic bonuses would have:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3647"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>     WEAPON_DEF(WPN_FLAIL, +2, 0)&#13;</PRE
+><P
+></P
+></DIV
+><P
+>A  rusty  (-5%) mean sacrificial dagger by a skilled smithy  (+5%)
+and magically enchanted might be:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3650"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;     flags {UNIT_FL_MAGIC}
+     WEAPON_DEF(WPN_DAGGER, 0, +5)
+	 
+	 </PRE
+><P
+></P
+></DIV
+><P
+>An old shaky wooden stick made for a 400 cm tall person could
+     be:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3653"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>	 
+	WEAPONSZ_DEF(WPN_CLUB, -5, 0,400)
+	  
+	  </PRE
+><P
+></P
+></DIV
+><P
+>A wooden bastard sword would have considerable less craftsmanship
+than listed since wood prevents the slashing effect, also it would be
+non-sense to apply better than average craftsmanship in this
+case.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3656"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;     WEAPON_DEF(WPN_BROAD_SWORD, -15, 0)
+	 
+	 </PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJMACROARMOUR"
+>7.2.4. Setting armour fields</A
+></H2
+><P
+>When designing armour it is no more difficult then when designing
+weapons.  There is five main armour types.  The types don't define the
+material type for example if you wanted to create a wooden pair of
+armour that protected like plate armour you could do this by defining
+the armour type as plate and then adding the material as defined in
+<A
+HREF="x3575.html#OBJMACROMATTYPE"
+>Section 7.2.6</A
+>.  The five armour types are as
+follows:</P
+><P
+></P
+><UL
+><LI
+><P
+>Clothes</P
+></LI
+><LI
+><P
+>Leather</P
+></LI
+><LI
+><P
+>Hard leather</P
+></LI
+><LI
+><P
+>Chain</P
+></LI
+><LI
+><P
+>Plate</P
+></LI
+></UL
+><P
+>The armours macros are almost the same as the weapons macro it looks
+as follows.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3674"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define ARMOUR_DEF(atype, craftsmanship, magic_bonus) \
+   manipulate {MANIPULATE_TAKE} \
+   type ITEM_ARMOR              \
+   value[0] atype
+      value[1] craftsmanship       \
+   value[2] magic_bonus
+
+#define ARMOURSZ_DEF(atype, craftsmanship, magic_bonus, hgt)\
+   ARMOUR_DEF(atype,craftsmanship, magic_bonus) \
+   height hgt&#13;</PRE
+><P
+></P
+></DIV
+><P
+>The craftsmanship and magical modifier fields have already been
+explained so the only thing new that you need to pass into these macros
+is the 'atype' which stands for armour type.  As we have mentioned there
+are five different armour types.  The following are the defines for
+each:</P
+><P
+></P
+><UL
+><LI
+><P
+>ARMOUR_CLOTHES</P
+></LI
+><LI
+><P
+>ARMOUR_LEATHER</P
+></LI
+><LI
+><P
+>ARMOUR_HLEATHER</P
+></LI
+><LI
+><P
+>ARMOUR_CHAIN</P
+></LI
+><LI
+><P
+>ARMOUR_PLATE</P
+></LI
+></UL
+><P
+>The armour type defines how different weapons and spells are
+defended against for example plate would be better against acid maybe
+and worse against electricity.  You as a <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+>
+administrator will have to decide which armours are better at what by
+changing your <TT
+CLASS="FILENAME"
+>weapons.def</TT
+> and
+<TT
+CLASS="FILENAME"
+>spells.def</TT
+></P
+><P
+>This explains the entire armour define but there is some more to
+it.  The rest will be covered in <A
+HREF="x4362.html#OBJARMOUR"
+>Section 7.6.6</A
+> For now an
+example use of the armour define would be as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3694"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;flags {UNIT_FL_MAGIC}
+ARMOR_DEF(ARM_PLATE,+15,+5)
+	 
+	 </PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJMACROSHIELD"
+>7.2.5. Setting shield fields</A
+></H2
+><P
+>We have tried to keep the interface of making armours, weapons, and shields the same.  If you have already looked through the defines for weapons and armours you will find that there is very little difference here.  The following is the define for the macro that sets the shield values.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3699"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define SHIELD_DEF(shield_type, craftsmanship, magic_bonus)  \
+   manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD} \
+   type ITEM_SHIELD            \
+   value[0] shield_type        \
+   value[1] craftsmanship      \
+   value[2] magic_bonus
+
+#define SHIELDSZ_DEF(shield_type, craftsmanship, magic_bonus, hgt)  \
+   SHIELD_DEF(shield_type, craftsmanship, magic_bonus)\
+   height hgt
+   
+   </PRE
+><P
+></P
+></DIV
+><P
+>You have already seen the craftsmanship and magical modifiers
+in <A
+HREF="x3575.html#OBJCRAFT"
+>Section 7.2.1</A
+> and <A
+HREF="x3575.html#OBJMAG"
+>Section 7.2.2</A
+>, so the only
+thing different here is the shield type.  There are three shield
+types available in the current combat system and they are categorized by
+size.  the three sizes are small, medium, and large.  to set the type
+you use the defines from <TT
+CLASS="FILENAME"
+>vme.h</TT
+> which define the
+following:</P
+><P
+></P
+><UL
+><LI
+><P
+>SHIELD_SMALL</P
+></LI
+><LI
+><P
+>SHIELD_MEDIUM</P
+></LI
+><LI
+><P
+>SHIELD_LARGE</P
+></LI
+></UL
+><P
+>the larger the shield the better chance of blocking an attack. 
+You may want to remember to add weight as you add size to your shield so
+players are weighted down and can not carry the best of everything
+but that is up to the administrator of the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> server.</P
+><P
+>A small magical wooden shield could be assigned:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3715"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;     flags {UNIT_FL_MAGIC}
+     SHIELD_DEF(SHIELD_SMALL, 0, +5)
+	 
+	 </PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJMACROMATTYPE"
+>7.2.6. Setting material types</A
+></H2
+><P
+>Currently Material types are not used greatly in spells or skills
+but in the future we hope to add more functionality for materials.  For
+example in the future if you are hit by an acid spell we want your
+armour to be damaged depending on the material it is.  The material
+doesn't have any affect on damage given or taken it is just a way you can
+check in <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> what the weapon is made out of.  The following is the list
+you would find in <TT
+CLASS="FILENAME"
+>wmacros.h</TT
+> of in the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> 2.0
+release.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3723"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define MATERIAL_WOOD(DESCR)    extra {"$material", "$mat_wood"} DESCR
+#define MATERIAL_METAL(DESCR)   extra {"$material", "$mat_metal"} DESCR
+#define MATERIAL_STONE(DESCR)   extra {"$material", "$mat_stone"} DESCR
+#define MATERIAL_CLOTH(DESCR)   extra {"$material", "$mat_cloth"} DESCR
+#define MATERIAL_LEATHER(DESCR) extra {"$material", "$mat_leather"} DESCR
+#define MATERIAL_SKIN(DESCR) extra {"$material", "$mat_skin"} DESCR
+#define MATERIAL_ORGANIC(DESCR) extra {"$material", "$mat_organic"} DESCR
+#define MATERIAL_GLASS(DESCR)   extra {"$material", "$mat_glass"} DESCR
+#define MATERIAL_FIRE(DESCR)    extra {"$material", "$mat_fire"} DESCR
+#define MATERIAL_WATER(DESCR)   extra {"$material", "$mat_water"} DESCR
+#define MATERIAL_EARTH(DESCR)   extra {"$material", "$mat_earth"} DESCR
+#define MATERIAL_MAGIC(DESCR)   extra {"$material", "$mat_magic"} DESCR&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Therefore if you had a wooden staff you could add the following to
+your weapon so spells would know what it was made out of.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3726"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;MATERIAL_WOOD("a hard oak")&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJMACROLIQCONT"
+>7.2.7. Drink container macros</A
+></H2
+><P
+>There are two different kinds of macros for drink containers.  The
+one you use depends on the need at the time.  The harder macro is made
+so you can create a drink of any kind.  If however you want normal
+drinks like water, beer, or even lemonade there are more simple macros
+already defined for you to use in <TT
+CLASS="FILENAME"
+>liquid.h</TT
+>.  The
+following is a couple of the macros from the
+<TT
+CLASS="FILENAME"
+>liquid.h</TT
+> for a full listing see
+<A
+HREF="a5357.html"
+>Appendix E</A
+>.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3734"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define LIQ_WATER(WEIGHT,CAPACITY,INSIDE,POISON) \
+				LIQ_DEF("clear", WEIGHT,CAPACITY,INSIDE,10,1,0,POISON)
+#define LIQ_BEER(WEIGHT,CAPACITY,INSIDE,POISON) \
+				LIQ_DEF("brown", WEIGHT,CAPACITY,INSIDE,5,2,3,POISON)
+#define LIQ_WINE(WEIGHT,CAPACITY,INSIDE,POISON) \
+				LIQ_DEF("red", WEIGHT,CAPACITY,INSIDE,5,2,5,POISON)
+#define LIQ_COFFEE(WEIGHT,CAPACITY,INSIDE,POISON) \
+				LIQ_DEF("black", WEIGHT, CAPACITY, INSIDE, 6, 1, 0,POISON)
+				</PRE
+><P
+></P
+></DIV
+><P
+>To use these macros the arguments are pretty simple.</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>weight</DT
+><DD
+><P
+>The first argument just says how heavy your drink container is when
+empty.  Like a barrel might be 15 pounds and a glass might be 1 pound. 
+You may be thinking there is no way the glasses in your kitchen are one
+pound.  The truth is if we had less than a pound then we would set the
+glass to less but currently all units are measured in pounds so the
+least we can make it is a pound.  In the future of the
+<ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> we will be converting to smaller measurements
+like grams or ounces.</P
+></DD
+><DT
+>capacity</DT
+><DD
+><P
+>The second argument is what your container can carry weight wise.
+ So if your barrel is 15 pounds and your barrel can carry 35 pounds of a
+ liquid then the total weight when full would be 50 pounds, if my math
+ is working today.  To make a container with infinity liquid like a
+ fountain you just set capacity to '-1'.</P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>Making capacities ridiculously large can cause weight bugs. 
+ If your going to allow ridiculous amounts you might just want to give
+ them the infinite amount or really work on your drink and pour
+ functions</P
+></TD
+></TR
+></TABLE
+></DIV
+></DD
+><DT
+>inside</DT
+><DD
+><P
+>The third argument is how much liquid by weight your container
+  has inside.  This value should not be greater than the capacity but if
+  you mess up it will be fixed when the player tries to drink from it. 
+  The total weight of the drink container and the liquid it contains
+  will be the weight added to this value.</P
+></DD
+><DT
+>poison</DT
+><DD
+><P
+>the forth argument is the amount of poison in your drink.  There
+ is no limit on the amount of poison but understand that a value of ten
+ would be a very high poison value.</P
+></DD
+></DL
+></DIV
+><P
+>So if you wanted to make a simple small glass of water you would
+use the water macro and it would look like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3758"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;LIQ_WATER(1,2,2,0)&#13;</PRE
+><P
+></P
+></DIV
+><P
+>You are probably wondering what it takes to fill a player from
+empty.  The players thirst ranges from -24 which is dieing of
+thirst all the way to positive 24 which is full.  So if you have a
+barrel that can hold 24 capacity one full barrel can take a person from
+zero thirst to full.</P
+><P
+>Now lets say you want to make something more exotic.  All the
+                           normal drinks are made or at least a great
+                           number of them are in the
+                           <TT
+CLASS="FILENAME"
+>liquid.h</TT
+> but what if
+                           you had a race from outer space that drank
+                           nothing but silicone oil.  This obviously is
+                           not covered in our liquid file so you would
+                           have to make one yourself or use the more
+                           complex macro.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3763"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define LIQ_DEF(color, wgt, max_cap, inside,thirst,full,drunk,poison) \
+  type ITEM_DRINKCON           \
+  weight (wgt)+(inside) \
+  capacity max_cap \
+  value[0] inside        \
+  value[3] poison \
+  extra {"$drink_color"}color \
+  extra {"$drink_thirst"} #thirst \
+  extra {"$drink_full"} #full \
+  extra {"$drink_drunk"} #drunk
+  
+  </PRE
+><P
+></P
+></DIV
+><P
+>As you can see this define has much more information you need to
+pass it but it really is not that hard.  The following are the arguments
+and what they do.</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>color</DT
+><DD
+><P
+>the first argument is the color of the liquid.  this color will be
+shown when you look at the liquid in the container.</P
+></DD
+><DT
+>wgt</DT
+><DD
+><P
+>The second argument is the weight of the container as in the last
+macros.  It is what the container would weigh empty.</P
+></DD
+><DT
+>max_cap</DT
+><DD
+><P
+>The third argument is the maximum capacity of the container.  If
+the value is set to 15 and the container is fulled it will contain 15
+pounds of liquid which adds to the base weight to get the total weight
+of the container.  If you want a container to have unlimited contents
+then you set the capacity to '-1' and the weight will be that of the
+'wgt' field.</P
+></DD
+><DT
+>inside</DT
+><DD
+><P
+>The forth argument is the amount of liquid the container starts
+with.  This amount should not be greater than the 'max_cap' field, but
+if it is it will be corrected when the player takes a drink or acts on
+the container.</P
+></DD
+><DT
+>thirst</DT
+><DD
+><P
+>The fifth field is how much thirst this gives per pound of liquid
+consumed.  For example if you have a glass of water and it only has a
+capacity of 1 with 1 inside.  this value will be added once to the players
+thirst field.</P
+><P
+>this can be a bit confusing so lets first explain that the thirst
+field can be anything from 0 to 10 or even greater but we suggest only 10
+max.  With that in mind know that we set water at 10 because it is one
+of the best thirst quenchers known to man.  Therefore a glass with 1
+capacity and 1 quantity inside will give a player +10 to his thirst so if
+the player was down to zero thirst value one drink will give them 10. 
+remember that a players thirst ranges from -24 to +24 so with three
+drinks of water a person could fill his thirst need entirely.</P
+><P
+>With that in mind when setting this field you have to think what
+kind of thirst quencher is my drink.  If for example it is vodka it would
+have little to know thirst quenching power so you would set this field
+to 0 or 1.</P
+></DD
+><DT
+>full</DT
+><DD
+><P
+>The sixth field like the thirst field sets how the drink will
+affect the chars fullness.  The chars fullness field is normally set
+when a player is eating but as you know drinking some drinks will also
+give you the feeling of being full.  One drink like this would be milk. 
+The chars fullness field ranges from -24 to 24 like the thirst field and
+the argument you are setting on this field should range from 0 to 10
+unless you have a pro teen drink that fills them like food.  Milk might
+have a fullness of something like 5.</P
+></DD
+><DT
+>drunk</DT
+><DD
+><P
+>the seventh field like thirst and full deals with the Drunkenness of
+a character.  A character can range from 0 (not drunk) all the way up to
+24 (smashed).  The drunk field on this macro sets how much drunk is
+added for each quantity of the liquid is consumed.  Therefore something
+like vodka should have a value of 10 while something like water should
+be down at 0 unless you have some weird race that gets drunk from
+water.</P
+></DD
+><DT
+>poison</DT
+><DD
+><P
+>The eighth and final field is again like the last macro we looked
+at it sets the poison factor of a liquid.  The value ranges from 0 (no
+poison) to whatever you want but understand that 10 is an extreme poison
+factor and a player drinking this will most likely die quickly.</P
+></DD
+></DL
+></DIV
+><P
+>So with the definitions of each arguments in mind lets return to
+	the example of making a silicone oil based liquid.  We will first
+	show what it would look like using the hard macro then what the new
+	easy macro that you could create would look like.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3802"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;	LIQ_DEF("blue",5,10,10,5,1,0,0)
+	
+	</PRE
+><P
+></P
+></DIV
+><P
+>Now if you want to make this a liquid your going to use a lot
+you would define your own easier macro like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3805"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define LIQ_SILICONE(WEIGHT,CAPACITY,INSIDE,POISON) \
+				LIQ_DEF("blue", WEIGHT,CAPACITY,INSIDE,5,1,0,POISON)&#13;</PRE
+><P
+></P
+></DIV
+><P
+>That covers the use of the macros but for more information on the
+drink containers see <A
+HREF="x4362.html#OBJDRINK"
+>Section 7.6.3</A
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJMACROFOOD"
+>7.2.8. The food macros</A
+></H2
+><P
+>The food macro is much easier than that of the drink macro so if
+you have drink containers down you will have no problem making food to
+go with your beverage.  The players fullness value ranges from -24 to 24
+as we have already learned when making drink containers and in the
+current food system on the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> server we do not allow thirst to be
+modified by food.  Therefore the only thing you have to set is the
+amount of fullness and the poison factor if there is any.  The following
+is what the define for food looks like.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3813"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define FOOD_DEF(food_amount, poison_factor)  \
+   type ITEM_FOOD         \
+   value[0] food_amount   \
+   value[3] poison_factor
+   
+   </PRE
+><P
+></P
+></DIV
+><P
+>Therefore if you wanted to make sure that only one of your
+foods that you were creating would fill a player entirely in one bite
+you would set it like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3816"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;FOOD_DEF(50,0)&#13;</PRE
+><P
+></P
+></DIV
+><P
+>It is recommended that you only set the value between 1 and 10 so
+that players have to eat a bit as if they were eating in the real
+world.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJMACROLIGHT"
+>7.2.9. Light object macro</A
+></H2
+><P
+>The light macro is very simply to use it only has two values
+duration and brightness of light.  The macro is defined as
+follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3822"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define LIGHT_DEF(hours, how_bright)   \
+   type ITEM_LIGHT     \
+   value[0] hours      \
+   value[1] how_bright&#13;</PRE
+><P
+></P
+></DIV
+><P
+>The first argument is the duration in mud hours which is about 5
+   minutes per mud hour.  The second argument is how bright the object
+   is 0 would be stupid cause it would give off no light but you never
+   know maybe you want to do something like that.  One, two, and three
+   would be small torch, large torch, and lantern respectively.  You
+   could set a brightness greater than 3 but you should be carefull not
+   to over light your characters or you may cause light bugs.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJMACROCONTAINER"
+>7.2.10. Container macro</A
+></H2
+><P
+> The container macro is a simple macro that just sets two fields. 
+The only information you have to give it is the capacity of the
+container.  Remember that capacity of an item is in weight not size. 
+Therefore if some ones corpse weighs 230 pounds you will need a container
+that has a capacity of 230 to fit the corpse in it.  The following is
+the macros definition as found in <TT
+CLASS="FILENAME"
+>wmacros.h</TT
+>:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3829"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define CONTAINER_DEF(max_capacity)  \
+   type ITEM_CONTAINER               \
+   capacity max_capacity&#13;</PRE
+><P
+></P
+></DIV
+><P
+>If you wanted to create a coffin that could carry any normal human
+   corpse you could set it something like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3832"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;container_def(300)&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJMACROMONEY"
+>7.2.11. Money macro</A
+></H2
+><P
+>Money is one of the simplest objects you can make on the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+>
+server.  With this macro all you need is the symbolic before the macro
+and the end keyword after the macro and you have 1 piece of money or a whole pile.  The macro is defined in the <TT
+CLASS="FILENAME"
+>wmacros.h</TT
+> and looks exactly as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3839"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define MONEY(coin_type, coins) \
+  type ITEM_MONEY \
+  manipulate MANIPULATE_TAKE \
+  title coin_type \
+  value[0] coins
+  
+  </PRE
+><P
+></P
+></DIV
+><P
+>The arguments are simple the first argument is the type of money the five possible values are:</P
+><P
+></P
+><UL
+><LI
+><P
+>IRON_PIECE</P
+></LI
+><LI
+><P
+>COPPER_PIECE</P
+></LI
+><LI
+><P
+>SILVER_PIECE</P
+></LI
+><LI
+><P
+>GOLD_PIECE</P
+></LI
+><LI
+><P
+>PLATINUM_PIECE</P
+></LI
+></UL
+><P
+>The second argument is the amount of coins.  If you set it to
+zero then it will still make exactly 1 of the coins.  The following
+would be what one platinum piece would be like in a zone file.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3854"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>  
+platinum_piece
+
+MONEY(PLATINUM_PIECE, 0)
+/* Rest of values are inserted at runtime */
+
+end&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now if you want to make a whole pile of money it would look like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3857"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;platinum_pile
+
+MONEY(PLATINUM_PIECE, 80)
+/* Rest of values are inserted at runtime */
+extra {}
+"Holy cow thats a stash."
+
+end&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJMACROCURSE"
+>7.2.12. Cursed objects macro</A
+></H2
+><P
+>Sometimes when making special objects you want to make an item
+that a person can wear but can't remove.  With the cursed object macro
+this is a simple thing.  The cursed object macro is defined in
+<TT
+CLASS="FILENAME"
+>wmacros.h</TT
+> and looks as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3863"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define CURSED_OBJECT \
+affect \
+   id ID_CURSE \
+   duration -1 \
+   firstf TIF_NONE \
+   tickf  TIF_NONE \
+   lastf  TIF_NONE \
+   applyf APF_MOD_OBJ_FLAGS \
+   data[0] OBJ_NO_UNEQUIP;
+   
+   </PRE
+><P
+></P
+></DIV
+><P
+>to use this macro it is simply a matter of putting the define
+in your object like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3866"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;CURSED_OBJECT    &#13;</PRE
+><P
+></P
+></DIV
+><P
+>When you set this macro on an object it adds an affect that can
+only be removed by the 'set' command or by the 'remove curse
+spell'.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJMACROPWS"
+>7.2.13. Potion, wand, and staff macros</A
+></H2
+><P
+>The macros for potions, scrolls, wands, and staffs are almost the
+same.  In fact there is only two differences. The first  is the potions and scrolls can cast three
+spells while wands can only cast two, The second is wands and staffs
+have multiple charges possible while scrolls and potions only can be
+used once.  The following are the macros
+for all four as found in <TT
+CLASS="FILENAME"
+>wmacros.h</TT
+>.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3873"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define POTION_DEF(power,spell1,spell2,spell3)  \
+  manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD} \
+  flags {UNIT_FL_MAGIC} \
+  spell power      \
+  type ITEM_POTION \
+  value[0] power   \
+  value[1] spell1  \
+  value[2] spell2  \
+  value[3] spell3
+
+#define SCROLL_DEF(power,spell1,spell2,spell3)  \
+  manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD} \
+  flags {UNIT_FL_MAGIC} \
+  spell power      \
+  type ITEM_SCROLL \
+  value[0] power   \
+  value[1] spell1  \
+  value[2] spell2  \
+  value[3] spell3
+
+#define WAND_DEF(power,charge,spell1,spell2)  \
+  manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD} \
+  flags {UNIT_FL_MAGIC} \
+  spell power      \
+  type ITEM_WAND \
+  value[0] power   \
+  value[1] charge  \
+  value[2] spell1  \
+  value[3] spell2  \
+  value[4] charge  /* The max charge */
+
+#define STAFF_DEF(power,charge,spell1,spell2)  \
+  manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD} \
+  flags {UNIT_FL_MAGIC} \
+  spell power      \
+  type ITEM_STAFF  \
+  value[0] power   \
+  value[1] charge  \
+  value[2] spell1  \
+  value[3] spell2  \
+  value[4] charge  /* The max charge */
+  
+  </PRE
+><P
+></P
+></DIV
+><P
+>The arguments are as follows for the macros.</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>power</DT
+><DD
+><P
+>The first argument on potions, scrolls, wands, and staff is the
+power the spell will be cast at.  You can have the power set in the
+range 1-200.  The spell power works the same as a player training in the
+spell.  The higher the number the more powerfull the cast.</P
+></DD
+><DT
+>charge</DT
+><DD
+><P
+>The second argument on the staffs and wands is how many charges it
+has.</P
+></DD
+><DT
+>spell#</DT
+><DD
+><P
+>On potions and scrolls you can set up to 2 spells you do not have
+to set them both the one you don't want set to 0.  On staffs and wands
+you can set three spells.  Again if you want only one or two you can
+leave the one you do not want set to 0.</P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJMACROTRANSFERS"
+>7.2.14. Magical transfer macros</A
+></H2
+><P
+>There are times when you want to give a player a bonus in a
+ability, weapon, skill, and or weapon.  There is even times when you
+want to adjust a characters speed or add a flag to a player when they
+wear an item.  The following macros are what you would use to do any of
+those when a person uses an item.</P
+><P
+></P
+><UL
+><LI
+><P
+>CHAR_FLAG_TRANSFER(_MFLAGS)</P
+></LI
+><LI
+><P
+>SKILL_TRANSFER(skill, amount)</P
+></LI
+><LI
+><P
+>WEAPON_TRANSFER(weapon, amount)</P
+></LI
+><LI
+><P
+>SPELL_TRANSFER(spell, amount)</P
+></LI
+><LI
+><P
+>STR_TRANSFER(amount)</P
+></LI
+><LI
+><P
+>DEX_TRANSFER(amount)</P
+></LI
+><LI
+><P
+>CON_TRANSFER(amount)</P
+></LI
+><LI
+><P
+>CHA_TRANSFER(amount)</P
+></LI
+><LI
+><P
+>BRA_TRANSFER(amount)</P
+></LI
+><LI
+><P
+>MAG_TRANSFER(amount)</P
+></LI
+><LI
+><P
+>DIV_TRANSFER(amount)</P
+></LI
+><LI
+><P
+>HIT_TRANSFER(amount)</P
+></LI
+><LI
+><P
+>SPEED_TRANSFER(newspeed)</P
+></LI
+><LI
+><P
+>SLOW_TRANSFER(amount)</P
+></LI
+></UL
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>For the full definitions of the transfer macros see
+<A
+HREF="a5361.html"
+>Appendix F</A
+> or the header file <TT
+CLASS="FILENAME"
+>wmacros.h</TT
+>.</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>The transfer macros can be broken down into three groups those
+which transfer percentage, flags, and speed.  The skill, weapons,
+spells, and ability macros transfer the amount of percentage you put. 
+If you give a negative percentage it will take that much away from the
+player or NPC in that catagory.  The character flag transfer actually
+adds the flag to the player while the player is using the item.  The
+speed transfer macros add or subtract the amount of speed you give them.
+The range for speed is from zero to twelve with twelve being the
+slowest.</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="ch06.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x3926.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The objects section</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch06.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Building your first object</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,19 @@
+#!/bin/sh
+cd /home/val/vme/log
+if [ -f typos ] 
+then
+  mail -s "Valhalla Admin: TYPOS automated mailing" valadmins@blinksoft.com <typos
+  mv typos typos.old
+fi
+
+if [ -f ideas ] 
+then
+  mail -s "Valhalla Admin: IDEAS automated mailing" valadmins@blinksoft.com <ideas
+  mv ideas ideas.old
+fi
+
+if [ -f bugs ] 
+then
+  mail -s "Valhalla Admin: BUGS automated mailing" valadmins@blinksoft.com <bugs
+  mv bugs bugs.old
+fi

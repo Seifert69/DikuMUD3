@@ -1,0 +1,58 @@
+#<br/>
+"describe"<br/>
+<br/>
+Usage describe (location)<br/><br/>
+i.e. describe eyes<br/><br/>
+<br/>
+To change the default description, you now must do that online, with the<br/>
+"describe" command. You may choose to enter a description for any body parts,<br/>
+or for your general description, that which is seen when another character<br/>
+looks at you.<br/>
+<br/><br/>
+To describe a specific body part, use the describe command followed by the<br/>
+location you would like to describe. Body parts range from hair, head, and ears, to<br/>
+butt, legs, and feet. Color may be used in your description using the syntax described<br/>
+in "help color".<br/>
+<br/><br/>
+Once the command is entered, you will get a ']' prompt for your text.<br/>
+To end your description, type a '@' on a single line.<br/><br/>
+Description locations available are:<br/><br/>
+arms        butt        ears        eyes<br/><br/>
+face        feet        General     hair<br/><br/>
+hands      head        left arm    left leg<br/><br/>
+left foot   left hand   left eye    left ear<br/><br/>
+legs        mouth       neck        nose<br/><br/>
+nostrils    right arm   right leg   right foot<br/><br/>
+right hand  right eye   right ear   teeth<br/><br/>
+toes        tounge<br/><br/>
+<br/>
+See also:<br/><br/>
+color<br/><br/>
+#<br/>
+"password"<br/>
+<br/>
+ You must select a password for your player.  The password can be up to 8<br/>
+characters long but must be at least five characters long.  The password<br/>
+must contain both letters and non-letters. <br/><br/>
+<br/>
+ For your information, your password is encrypted and is unreadable even to<br/>
+the administration.  If you forget your password you will be asked for the<br/>
+following information before a new one is set:<br/><br/>
+Maiden Name/Key Word<br/><br/>
+Email Address<br/><br/>
+<br/>
+We can not confirm your ownership of the character without this information<br/>
+and we will not allow you access to it so it is very important that you set<br/>
+these two fields on log in. <br/><br/>
+<br/>
+To change yuor password online, enter the command "password"<br/><br/>
+It will then ask you for a new password twice. Once confirmed, it is changed.<br/>
+write it down!<br/>
+<br/><br/>
+See Also:<br/><br/>
+Maiden Name&b<br/>
+Email Address<br/><br/>
+#<br/>
+<br/>
+<br/>
+<br/>

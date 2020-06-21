@@ -1,0 +1,26 @@
+<br/>
+<br/>
+<br/>
+<br/>
+Usage unlock [direction] (item)|(keyword)<br/><br/>
+<br/><br/>
+Example:<br/><br/>
+unlock door<br/><br/>
+unlock safe<br/><br/>
+<br/>
+To unlock something, you need a key. If you<br/>
+have the key in your equipment-list,<br/>
+ you can unlock locks, that require that key, just by using this command,<br/>
+like 'unlock box'. If it is not an item, but some sort of a door hatch<br/>
+etc. It will have a keyword, like 'unlock gate'.<br/>
+<br/><br/>
+<br/>See Also:<br/><br/>
+<br/>
+Close<br/><br/>
+Key<br/><br/>
+Open<br/><br/>
+Unlock<br/><br/>
+Spell Lock<br/><br/>
+Spell Unlock<br/><br/>
+<br/>
+<br/>

@@ -1,0 +1,3276 @@
+/*
+filename    kingc
+password    mfxmas
+changedby   Stormtamer
+EmailAdd
+request     compile
+version     7
+END HEADER*/
+
+#include <macros.h>
+/* Eirinn undid his changes 26th May 1997 */
+
+/* Here is the entire Castle Staff... The inhabitants of the Castle
+   should ALWAYS see to their own ones first, and others second.    */
+
+#define CASTLE_STAFF "king welmar / jim / brian / mick / matt / jochem / anne / \
+andrew / bertram / jeanette / captain peter / training master / royal herald / \
+butler james / cleaning woman /astrologer / tim / tom / chef / cook / dick / david / \
+jerry / michael / hans / boris / jack / george / joanna"
+
+#define APPEAR_TEXT \
+"With a rumbling sound, a flood of water runs through the room. You manage to remain standing, quite unlike some strange characters who have been flushed here."
+
+#define TRANS_TEXT \
+"Suddenly you discover that the Monster has somehow \
+triggered a hidden mechanism beneath the surface of \
+the water before dying. A great whirl sucks you down \
+into the cold, black water, throwing you from side to
+side. You hit your head in several places, and your \
+vessel breaks into a thousand pieces. You lose \
+consciousness, and for a while, which seems like an \
+eternity, things are black. When you wake up, you find \
+yourself in...."
+
+
+#define ROYAL_ARMOR \
+        equip guards_sword   position WEAR_WIELD \
+        equip guards_coif    position WEAR_HEAD \
+        equip guards_jerkin  position WEAR_BODY \
+        equip guards_sleeves position WEAR_ARMS \
+        equip guards_skirt   position WEAR_LEGS \
+        equip guards_shield  position WEAR_SHIELD
+
+%zone         kingc
+title "King Welmar's Castle@Mainland"
+lifespan 60
+reset RESET_IFEMPTY
+
+creators {"Pjotr", "Sapovox"}
+
+notes
+"And here she is: The King's Castle (version 0.7071) by
+d90-pem@nada.kth.se (Pjotr) and d90-jkr@nada.kth.se (Sapowox).
+Bug reports to Papi. These notes also apply to the ww1 and ww2 zones
+which are an integral part of the Castle / Warrens zon.
+Monsters range from 1 - 50. Dungeon monsters (intended for introduction)
+range from 20 - 30."
+
+
+%dil
+
+dilbegin move2room(u : unitptr);
+code
+{
+   secure(u, done);
+
+   if (u.objecttype == ITEM_BOAT)
+   {
+      while (u.inside)
+        move2room@kingc(u.inside);
+
+      destroy(u); /* Destroy the boat! */
+      return;
+   }
+
+   if (u.type & (UNIT_ST_PC | UNIT_ST_NPC))
+   {
+      if (u.level < 200)
+      {
+	 u.hp := u.hp - rnd(5, 25);
+	 position_update(u);
+      }
+
+      act(TRANS_TEXT,
+	  A_HIDEINV, u, null, null, TO_CHAR);
+
+      exec("look", u);
+   }
+
+   link(u, findsymbolic("rn_8200@ww1"));
+
+   :done:
+   return;
+}
+dilend
+
+
+%rooms
+
+                kitchen
+
+title "The Kitchen"
+descr
+"   You are in the Kitchen. Lots of helpers hurry to do the Chief Cook's
+bidding, and there is a wonderful smell that makes you feel very hungry.
+All around the room, there are shelves with different kinds of cooking
+gear stacked on them. There is an exit to the south, and one to the east;
+both leading to small passages."
+south to sml_pass_2 descr
+    "You see a small, dimly lit passage.";
+east to sml_pass_1 descr
+    "You see a small, dimly lit passage.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                sml_pass_1
+
+title "A small passage."
+descr
+"   You are standing in a small passage, that is clearly intended mostly
+for the servants of the Castle. It is only dimly lit and quite narrow.
+The passage leads west, and to the east there is a small door."
+east to entrance_hall open {EX_OPEN_CLOSE, EX_CLOSED}
+    descr "The door is small and uninteresting."
+    keyword {"small door","door"};
+west to kitchen descr
+    "You hear clanging of pots, and smell cooking meat.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                entrance_hall
+
+title "The Entrance Hall"
+descr
+"   You are standing in the impressive Entrance Hall of the Castle.
+To the south is an exit into the Great Hall. There is also an exit
+east, and a small door to the west."
+south to great_hall_n descr
+    "You see the King's Great Hall.";
+east to guard_room descr
+    "There seems to be a small guard room to the east.";
+north to midgaard/palace_sq descr
+    "To the north, there is a gate, that leads to the Palace Square."
+    keyword {"gate"};
+west to sml_pass_1 open {EX_OPEN_CLOSE, EX_CLOSED} descr
+    "The door is small and uninteresting." keyword {"small door", "door"};
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                guard_room
+
+title "The Guard Room"
+descr
+"   You are in a small room, evidently meant for guards currently
+not on duty. There is only one exit, back to the entrance hall."
+west to entrance_hall descr
+"You see the Castle Entrance.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                under_ne_tower
+
+title "Under the Tower"
+descr
+"   You are below one the three mighty towers of the Castle. There are
+no guards here, and you sense that this part of the Castle is largely
+unused. There are stairs going up to the tower, and there is also an
+exit to the south."
+south to passage_1 descr
+"You see a small, dimly lit passage.";
+up to mid_ne_tower descr
+"The stairs are old, but in good repair. They lead up into the tower.";
+extra {"stairs"}
+"The stairs are old, but in good repair. They lead up into the tower."
+
+movement SECT_INSIDE
+flags {UNIT_FL_NO_MOB, UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                sml_pass_2
+
+title "The Small Passage"
+descr
+"   You are standing in a small passage, that is clearly intended
+mainly for the servants of the Castle. The passage leads north
+and south."
+south to passage_2 descr
+"You see a small, dimly lit passage.";
+north to kitchen descr
+"You hear the clanging of pots, and smell cooking meat.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                great_hall_nw
+
+title "The Great Hall"
+descr
+"   You are standing in the north-west end of the Great Hall. It
+is truly vast; the roof is so high above your head, that it seems no
+closer than the clouds outside. The roof is beautifully painted, by
+someone who must have been a true master. The hall is very large,
+and could easily seat several hundred people at a banquet."
+south to great_hall_sw descr
+"You see the King's Great Hall.";
+east to great_hall_n descr
+"You see the King's Great Hall.";
+extra {"roof","paintings","paint"}
+"The paintings on the roof depict the great heroes and gods. One of
+the gods is fairly heavy-bellied and incredibly hairy, with a massive beard.
+Also among them are the great enemies and wrongdoers, such as the evil
+Goddess Yochlol and the powerful evil Wizard Tharoecon."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                great_hall_n
+
+title "The Great Hall"
+descr
+"   You are standing in the northern end of the Great Hall. It
+is truly vast; the roof is so high above your head, that it seems no
+closer than the clouds outside. The roof is beautifully painted, by
+someone who must have been a true master. The hall is very large,
+and could easily seat several hundred people at a banquet. To your
+south, you see King Welmar's great throne, and to the north is the
+Castle Entrance."
+south to throne descr
+"You see the part of the Great Hall where the throne is.";
+east to great_hall_ne descr
+"You see the King's Great Hall.";
+north to entrance_hall descr
+"You see the Castle Entrance.";
+west to great_hall_nw descr
+"You see the King's Great Hall.";
+extra {"roof","paintings","paint"}
+"The paintings on the roof depict the great heroes and gods. One of
+the gods is fairly heavy-bellied and incredibly hairy, with a massive beard.
+Also among them are the great enemies and wrongdoers, such as the evil
+Goddess Yochlol and the powerful evil Wizard Tharoecon."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                great_hall_ne
+
+title "The Great Hall"
+descr
+"   You are standing in the north-east end of the Great Hall. It
+is truly vast; the roof is so high above your head, that it seems no
+closer than the clouds outside. The roof is beautifully painted, by
+someone who must have been a true master. The hall is very large,
+and could easily seat several hundred people at a banquet."
+south to great_hall_se descr
+"You see the King's Great Hall.";
+west to great_hall_n descr
+"You see the King's Great Hall.";
+extra {"roof","paintings","paint"}
+"The paintings on the roof depict the great heroes and gods. One of
+the gods is fairly heavy-bellied and incredibly hairy, with a massive beard.
+Also among them are the great enemies and wrongdoers, such as the evil
+Goddess Yochlol and the powerful, evil Wizard Tharoecon."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                passage_1
+
+title "A passage"
+descr
+"   You are standing in a passage, that leads north and south. To the north
+it leads towards one of towers."
+south to sml_pass_3 descr
+    "You see the small passage continue.";
+north to under_ne_tower;
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                passage_2
+
+title "The passage"
+descr
+"   You are in a passage, that leads north and south. To the east there
+is an exit to the Great Hall."
+south to passage_3 descr
+    "You see the passage continue.";
+east to great_hall_sw descr
+    "You see the King's Great Hall.";
+north to sml_pass_2 descr
+    "You see the passage continue.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                great_hall_sw
+
+title "The Great Hall"
+descr
+"   You are standing in the south-west end of the Great Hall. It
+is truly vast; the roof is so high above your head, that it seems no
+closer than the clouds outside. The roof is beautifully painted, by
+someone who must have been a true master. The hall is very large,
+and could easily seat several hundred people at a banquet. To your
+east, you see King Welmar's great throne, and to the west there is
+an exit to a passage."
+east to throne descr
+"You see the part of the Great Hall where the throne is.";
+north to great_hall_nw descr
+"You see the King's Great Hall.";
+west to passage_2 descr
+"You see a passage.";
+extra {"roof","paintings","paint"}
+"The paintings on the roof depict the great heroes and gods. One of
+the gods is fairly heavy-bellied and incredibly hairy, with a massive beard.
+Also among them are the great enemies and wrongdoers, such as the evil
+Goddess Yochlol and the powerful evil Wizard Tharoecon."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                throne
+
+title "By the Throne in the Great Hall"
+descr
+"   You are standing by the King's huge ivory throne. The throne is, to
+an even greater degree than the Hall itself, a masterpiece. It is
+intricately and beautifully carved, and it seems to be made out of a
+single block of ivory, though you shiver at the thought of meeting
+the animal that died to yield a piece of that size. The Hall continues
+to the east, west and north."
+east to great_hall_se descr
+"You see the King's Great Hall.";
+north to great_hall_n descr
+"You see the King's Great Hall.";
+west to great_hall_sw descr
+"You see the King's Great Hall.";
+extra {"roof","paintings","paint"}
+"The paintings on the roof depict the great heroes and gods. One of
+the gods is fairly heavy-bellied and incredibly hairy, with a massive beard.
+Also among them are the great enemies and wrongdoers, such as the evil
+Goddess Yochlol and the powerful evil Wizard Tharoecon."
+extra {"throne","ivory"}
+"It is large and very beautiful. The carvings are mainly of animals and
+magic beasts."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                great_hall_se
+
+title "The Great Hall"
+descr
+"   You are standing in the south-east end of the Great Hall. It
+is truly vast; the roof is so high above your head, that it seems no
+closer than the clouds outside. The roof is beautifully painted, by
+someone who must have been a true master. The hall is very large,
+and could easily seat several hundred people at a banquet. To your
+west, you see King Welmar's great throne, and to the east there is
+an exit to a small passage."
+west to throne descr
+"You see the part of the Great Hall where the throne is.";
+north to great_hall_ne descr
+"You see the King's Great Hall.";
+east to sml_pass_3 descr
+"You see a passage.";
+extra {"roof","paintings","paint"}
+"The paintings on the roof depict the great heroes and gods. One of
+the gods is fairly heavy-bellied and incredibly hairy, with a massive beard.
+Also among them are the great enemies and wrongdoers, such as the evil
+Goddess Yochlol and the powerful evil Wizard Tharoecon."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                sml_pass_3
+
+title "The small passage"
+descr
+"   You are standing in a small passage, that leads north and south.
+To the west, there is an exit into the Great Hall."
+south to sml_pass_4 descr
+"The passage continues to the south.";
+north to passage_1 descr
+"The passage continues to the north.";
+west to great_hall_se descr
+"To the west you see the Great Hall.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                passage_3
+
+title "The passage"
+descr
+"   You are standing in a north-south leading passage. There is a door
+to the east."
+south to stair_room_up descr
+    "The passage leads to a staircase.";
+east to servant_corr_w open {EX_OPEN_CLOSE, EX_CLOSED} descr
+    "The door is quite small and unobtrusive." keyword {"small door", "door"};
+north to passage_2 descr
+    "The passage continues to the north.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                servant_corr_w
+
+title "The servants' corridor"
+descr
+"   You are standing in a corridor, that stretches further to the east.
+There are doors to the south and west. The corridor itself is mainly
+used by servants, and lacks some of the beauty of the rest of the
+castle.."
+south to srvnt_quarter open {EX_OPEN_CLOSE, EX_CLOSED} descr
+    "The door is made out of wood." keyword {"wooden door", "door"};
+east to servant_corr_e descr
+    "The corridor seems to come to its end a bit further east.";
+west to passage_3 open {EX_OPEN_CLOSE, EX_CLOSED} descr
+    "There is a door there!!!" keyword {"small door", "door"};
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                servant_corr_e
+
+title "The end of the servants' corridor"
+descr
+"   The corridor leads only west from here, but there is a door to
+the south."
+south to butler_quarters open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    descr "The door leads to a room intended for the butler."
+    key butler_key keyword {"door"};
+west to servant_corr_w descr
+    "You see the corridor continue.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                training_room
+
+title "The Training Room"
+descr
+"   This is the Training Room of the men of the Castle guard. It is
+very large, with weapons standing in racks by all the walls. Most
+of the weapons seem to be intended for training only, with blunt
+edges and the like, but there are some that might be useful for
+real fighting. There is a door to the south."
+south to guard_barracks descr
+    "The door is large and heavy." keyword {"large, heavy door", "door"};
+east to sml_pass_4 descr
+    "You see a small passage.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                sml_pass_4
+
+title "The small passage"
+descr
+"   You are standing in a small passage leading north and south. There
+is also an exit to the west, from which grunts, cheers and heavy
+blows can be heard."
+south to stair_way_down descr
+    "The passage leads south to some stairs.";
+north to sml_pass_3 descr
+    "You see the passage continuing.";
+west to training_room descr
+    "You see the Training Room.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                stair_room_up
+
+title "The Stair Room"
+descr
+"   You are standing below a great staircase, that leads up to the
+second floor of the Castle. The stairs are made of marble, and there
+are pillars carved in the likenesses of trees with little animals running
+up and down the trunks."
+north to passage_3 descr
+    "You see the passage.";
+up to grand_staircase descr
+    "The stairs lead up to the second floor.";
+extra {"stairs","stair"}
+"Made out of marble, and as all the rest of the Castle made primarily
+for beauty and with great skill."
+extra {"pillar","pillars","tree","trees"}
+"Very nice. Squirrels and little birds all over."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                srvnt_quarter
+
+title "The servants' quarters"
+descr
+"   You are standing in a large room, that seems to house many of the
+servants. The room is full of comfortable-looking beds. There is also
+a large chest, probably containing some of the servants' belongings."
+north to servant_corr_w descr
+    "The door is made out of wood." keyword {"wooden door", "door"};
+extra {"bed"}
+"The beds all look comfortable, despite the fact that this is just
+the servants' place."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                butler_quarters
+
+title "The butler's quarters"
+descr
+"   You see at once that this must be the butler's room, for it lies
+in the servants' wing, and still it is large and comfortable; almost
+luxurious, in fact. There is a large bed and a drawer in the room.
+The only exit is via the door to the north."
+north to servant_corr_e open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    descr "The corridor lies to the north."
+    key butler_key keyword {"door"};
+extra {"bed"}
+"Looks very comfortable indeed."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                guard_barracks
+
+title "The Guards' Barracks"
+descr
+"   You are standing in a very large room with bunks all over. It is
+obvious, that this is where the guards off duty spend most of their
+time, drinking and gambling or, probably, mostly sleeping."
+north to training_room descr
+    "The door is large and heavy." keyword {"large, heavy door", "door"};
+extra {"bunk","bunks"}
+"They look a bit hard, but you could sleep in them."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                stair_way_down
+
+title "The stairs"
+descr
+"   You are standing by a staircase leading down. As you look down,
+you notice that for the first time since you entered the castle,
+things are not aesthetically made. Instead it looks more functional
+and prison-like."
+north to sml_pass_4 descr
+    "You see the small passage.";
+down to prison_stairs descr
+    "The stairs go down to a dimly lit room.";
+extra {"stairs","stair","staircase"}
+"They seem to be made of granite, and stretch down into a more dimly
+lit area than where you come from."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_MOB}
+end
+
+
+                corridor_nw
+
+title "At a bend in the corridor"
+descr
+"  You are standing where the corridor bends from east to south."
+south to corridor_wnw descr
+    "You see the corridor continue.";
+east to corridor_nnw descr
+    "You see the corridor continue.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                corridor_nnw
+
+title "The corridor"
+descr
+"   You are standing in a long corridor, decorated with tapestries
+depicting old times and old heroes. It leads east and west."
+east to corridor_n descr
+    "You see the corridor continue.";
+west to corridor_nw descr
+    "You see the corridor continue.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                corridor_n
+
+title "The corridor"
+descr
+"   You are standing in a long corridor, decorated with tapestries
+depicting old times and old heroes. It leads east and west."
+east to corridor_nne descr
+    "You see the corridor continue.";
+west to corridor_nnw descr
+    "You see the corridor continue.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                corridor_nne
+
+title "The corridor"
+descr
+"   You are standing in a long corridor, decorated with tapestries
+depicting old times and old heroes. The corridor continues west,
+and to the south you see the luxurious guest wing."
+south to guest_wing descr
+    "You see the guest wing.";
+west to corridor_n descr
+    "You see the corridor continue.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                mid_ne_tower
+
+title "In the north-east tower."
+descr
+"   This part of the tower is fairly uninteresting, but it leads further
+upwards..."
+up to top_ne_tower descr
+    "The room at the top of the tower seems darkish for some reason.";
+down to under_ne_tower descr
+    "You see the stairs at the bottom of the tower.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                corridor_wnw
+
+title "The corridor"
+descr
+"   You are standing in a long corridor, decorated with tapestries
+depicting old times and old heroes. It leads north and south. There
+is also an exit to the east here."
+south to corridor_w descr
+    "You see the corridor continue.";
+east to by_treasury descr
+    "You see a small room.";
+north to corridor_nw descr
+    "You see the corridor continue.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                by_treasury
+
+title "By the treasure room"
+descr
+"   You are standing by a great iron door. The door is very large, and
+seems very solid indeed. There is a sign posted by it. "
+east to treasury open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    descr "You see a large steel door."
+    key huge_key keyword {"large steel door", "door"};
+west to corridor_wnw descr
+    "You see the corridor.";
+extra {"sign"}
+"
+              TREASURE ROOM
+
+   Authorized personnel only - all others keep out.
+   ANY trespassing will be SEVERELY punished!!"
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                treasury
+
+title "The Great Treasury"
+descr
+"   As you enter this room, you are astonished by the riches that
+are stowed away here; not so much in gold, but paintings, tapestries,
+skillful carvings and sculptures all over the vast room. You realise,
+however, that most of these things are too well known to be sold
+anywhere, without branding yourself as a thief, and condemning yourself
+to instant death at the hands of the Royal Guard."
+west to by_treasury open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    descr "You see a large steel door."
+    key huge_key keyword {"large steel door", "door"};
+extra {"painting","paintings","carving","carvings","sculptures","tapestries"}
+"It seems they are stored here temporarily to enable changing
+of the decoration in the Castle on a regular basis."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                guest_wing
+
+title "The Guest Wing"
+descr
+"   You have arrived at the part of the Castle where prominent
+guests are housed. To the east there is a large, ornamented
+door, and a somewhat smaller one leads south. "
+south to guest_room open {EX_OPEN_CLOSE, EX_CLOSED}
+    descr "The door seems to lead to a guest room."
+    keyword {"small door", "door"};
+east to guest_suite_n open {EX_OPEN_CLOSE, EX_CLOSED}
+    descr "You see the guest suite behind the door."
+    keyword {"ornamented door", "door"};
+north to corridor_nne descr
+    "You see the corridor.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                guest_suite_n
+
+title "The Guest Suite"
+descr
+"   This must be where only the most highly regarded guests stay, since
+it is luxurious beyond your wildest imagination. This is only the living
+room of the suite, but it is huge and tastefully decorated. All the
+furniture is not only beautiful, but also made for comfort. To the
+south, there is an exit to the bedroom, and there is a door to the west."
+south to guest_suite_s descr
+    "You see the bedroom.";
+west to guest_wing open {EX_OPEN_CLOSE, EX_CLOSED}
+    descr "Behind the door you see the entrance to the Guest Wing."
+    keyword {"ornamented door", "door"};
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                corridor_w
+
+title "The corridor"
+descr
+"   You are standing in a long corridor, decorated with tapestries
+depicting old times and old heroes. It leads north and south."
+south to corridor_ese descr
+    "You see the corridor continue.";
+north to corridor_wnw descr
+    "You see the corridor continue.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                ball_room_nw
+
+title "The Ball Room"
+descr
+"   You are standing in the great Ball Room. It is a truly large room,
+with a stage for an orchestra in the north-east end."
+south to ball_room_sw descr
+    "You see the Ball Room.";
+east to stage descr
+    "To the east you see the stage.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                stage
+
+title "By the stage"
+descr
+"   Before you you see the stage. It is large enough for some 40
+musicians to play on at the same time. The Ball Room continues
+to the west and south."
+south to ball_room_se descr
+    "You see the Ball Room.";
+west to ball_room_nw descr
+    "You see the Ball Room.";
+extra {"stage"}
+"The stage looks large enough for some 40 musicians to play on at the same time." /* XXX What about this extra? */
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                guest_room
+
+title "A Guest Room"
+descr
+"   You are standing in a large room. Although it is comfortable enough,
+you can tell it is not meant for any of the most illustrious guests,
+since it lacks that extreme luxury found elsewhere in the Castle."
+north to guest_wing open {EX_OPEN_CLOSE, EX_CLOSED}
+    descr "Behind the door, you see the entrance to the Guest Wing."
+    keyword {"small door", "door"};
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                guest_suite_s
+
+title "The Bedroom"
+descr
+"   This room is dominated by the huge four-poster bed, that stands
+against the southern wall. The room is large and cosy, and the bed
+virtually begs you to lie down in it and sleep."
+north to guest_suite_n descr
+    "You see the living room of the suite.";
+extra {"bed"}
+"Large, comfortable, bolstered... Invites you to sleep in it."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                corridor_ese
+
+title "The corridor"
+descr
+"   You are standing in a long corridor, decorated with tapestries
+depicting old times and old heroes. It leads north and south. There
+is an exit to the east, that leads to a large room."
+south to grand_staircase descr
+    "You see the corridor continue.";
+east to ball_room_sw descr
+    "You see the Ball Room.";
+north to corridor_w descr
+    "You see the corridor continue.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                ball_room_sw
+
+title "The Ball Room"
+descr
+"   You are standing in the great Ball Room. It is a truly large room,
+with a stage for an orchestra in the north-east end."
+east to ball_room_se descr
+    "You see the Ball Room.";
+north to ball_room_nw descr
+    "You see the Ball Room.";
+west to corridor_ese descr
+    "You see the corridor.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                ball_room_se
+
+title "The Ball Room"
+descr
+"   You are standing in the great Ball Room. It is a truly large room,
+with a stage for an orchestra in the north-east end."
+east to mid_se_tower descr
+    "To the east, you can enter a tower.";
+north to stage descr
+    "To the north you see the stage.";
+west to ball_room_sw descr
+    "You see the Ball Room.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                mid_se_tower
+
+title "In the Tower"
+descr
+"   You are standing in the south-eastern of the three great watch-
+towers of the Castle. To the west, you can enter the Ball Room and
+there are stairs leading up into the Tower."
+west to ball_room_se descr
+    "You see the Ball Room.";
+up to top_se_tower descr
+    "The stairs lead a long way up to the top of the Tower.";
+extra {"stairs"}
+    "The stairs are made out of granite, and seem solid enough."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                grand_staircase
+
+title "The Grand Staircase"
+descr
+"   You are standing on a great staircase, that leads up and down. To
+the east, there is a large oak door, and a corridor leads north."
+east to cosy_room key kingc/w_key descr
+"The door is large and made out of oak."
+open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED} keyword {"large oak door", "door"};
+north to corridor_ese descr
+    "You see the corridor.";
+up to top_sw_tower descr
+    "The stairs continue up to the top of the tower.";
+down to stair_room_up descr
+    "The stairs lead down to the first floor of the Castle.";
+extra {"stairs"}
+" The stairs are made of marble, and there are pillars carved in the
+likenesses of trees with little animals running up and down the trunks."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                cosy_room
+
+title "The Cosy Room"
+descr
+"   You have entered a large, cosy living room. There is a fireplace
+with a fire burning, and a few comfortable chairs around a little
+table. There is a door to the west, and also an exit to the east."
+east to king_bedroom descr
+"You see a large bedroom.";
+west to grand_staircase open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    key kingc/w_key keyword {"large oak door", "door"}
+    descr "The door is large, and made out of oak." ;
+extra {"fire","fireplace"}
+"The fire is built out of logs, and seems to be able to burn for
+quite a while longer."
+extra {"table"}
+"The table is made of mahogany, and elegant in a cosy way(!)"
+extra {"chairs"}
+"The chairs are arranged around the fireplace."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                king_bedroom
+
+title "The King's Bedroom"
+descr
+"   This is a large room, with a wonderful view. To one side of the
+room, stands a large four-poster bed. All around the room there are
+massive bookshelves, filled with all kinds of books. The titles include
+works such as: 'A Treatise on the History of Midgaard and surrounding
+areas', 'Magic - A Beginner's Introduction' and many others. There is
+an exit to the west."
+west to cosy_room descr
+    "There is a large and cosy room to the west.";
+extra {"books","book","shelf","shelves","bookshelf","bookshelves"}
+"Most of the books seem worn, as if thoroughly studied. The King
+evidently is interested in keeping himself educated."
+extra {"bed"}
+"Seems nice enough to sleep in, though you would never dare to, since
+it is a Royal Bed!"
+extra {"history","midgaard"}
+"A dry tome, filled with boring knowledge."
+extra {"magic"}
+"Beginner? This book goes beyond most of what YOU know about magic
+anyway. But then, there are levels of magical knowledge, it seems."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                top_ne_tower
+
+title "Up in the Tower"
+descr
+"   After a long climb, you finally reach the top of the tower. This
+room is small, and the only light source is a flickering candle, on
+a cluttered table, in the middle of the room. The only obvious exit
+is back down the stairs."
+down to mid_ne_tower descr
+    "The stairs go down the tower.";
+extra {"table"}
+"On the table are various objects, all very strange-looking."
+extra {"candle"}
+"Small, uninteresting... A candle that is as normal as can be."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS}
+end
+
+
+                top_sw_tower
+
+title "The Top of the Tower"
+descr
+"   You have arrived at the top of the tower. This tower is pretty
+uninteresting, and seems made purely for reasons of defence and
+guarding. The windows are slits for bowmen, very narrow on the
+outward side and broad inwards to allow a wide shooting angle.
+The only evident exit is down the stairs again."
+down to grand_staircase descr
+    "The stairs go down to the second floor.";
+extra {"window","slit"}
+"As you look out the windows, you are granted a view of the country.."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS}
+end
+
+
+                top_se_tower
+
+title "The Top of the Tower"
+descr
+"   This is the highest of all the towers, and is obviously used for
+lookout purposes. The view is splendid in all four directions. All
+around you, the small town of Midgaard spreads out and you can see
+its people going about their business, looking more ant-like than ever.
+In the west, you can see a vast, green forest like a green cloud by
+the horizon. To the north, you can see a dark moor, crossed by a road
+going north from Midgaard, and somehow looking like a scar. In the east,
+close to Midgaard, you see a lovely garden, and beyond that a river flowing
+from a tall mountain range by the horizon."
+down to mid_se_tower descr
+"You see the stairs going back down to the second floor.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS}
+end
+
+
+                prison_stairs
+
+title "Underneath the Stairs"
+descr
+"   It is evident that this part of the Castle is not meant to be
+beautiful like the rest. In fact, as you look south into the corridor,
+it takes a definitely prisonish aspect. The air is pretty damp and
+smells unhealthy. A cold draft from somewhere sends little shivers
+down your spine. The corridor is lit by torches, mounted in holders on
+the walls."
+south to accuse_room descr
+    "The damp corridor continues south.";
+up to stair_way_down descr
+    "The stairs lead up to the main part of the Castle.";
+
+movement SECT_CITY
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                accuse_room
+
+title "The Damp Corridor"
+descr
+"   On both sides of the corridor there are steel bars, closing the
+entrances to prison cells. Although the straw on the floor seems
+reasonably fresh, the smell down here is anything but nice."
+north to prison_stairs;
+west to cell_1 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    key prison_key keyword {"steel bars", "bar", "bars", "door"};
+east to cell_2 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    key prison_key keyword {"steel bars", "bar", "bars", "door"};
+south to prison_corr_2 descr
+    "The damp corridor continues south.";
+
+movement SECT_CITY
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                cell_1
+
+title "A Cell"
+descr
+"   You are standing in a small and pretty damp cell. Pretty dreary. You
+wouldn't really like to spend a few years here."
+east to accuse_room open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    key prison_key keyword {"steel bars", "bar", "bars", "door"};
+
+movement SECT_CITY
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}
+end
+
+
+                cell_2
+
+title "A Cell"
+descr
+"   You are standing in a small and pretty damp cell. Pretty dreary. You
+wouldn't really like to spend a few years here."
+west to accuse_room open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    key prison_key keyword {"steel bars", "bar", "bars", "door"};
+
+movement SECT_CITY
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}
+end
+
+
+                prison_corr_2
+
+title "The Damp Corridor"
+descr
+"   On both sides of the corridor there are steel bars, closing the
+entrances to prison cells. Although the straw on the floor seems
+reasonably fresh, the smell down here is anything but nice."
+north to accuse_room;
+west to cell_3 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    key prison_key keyword {"steel bars", "bar", "bars", "door"};
+east to cell_4 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    descr "The damp corridor continues north."
+    key prison_key keyword {"steel bars", "bar", "bars", "door"};
+south to prison_corr_3 descr
+    "The damp corridor continues south.";
+
+movement SECT_CITY
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                cell_3
+
+title "A Cell"
+descr
+"   You are standing in a small and pretty damp cell. Pretty dreary. You
+wouldn't really like to spend a few years here."
+east to prison_corr_2 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    key prison_key keyword {"steel bars", "bar", "bars", "door"};
+
+movement SECT_CITY
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}
+end
+
+
+                cell_4
+
+title "A Cell"
+descr
+"   You are standing in a small and pretty damp cell. Pretty dreary. You
+wouldn't really like to spend a few years here."
+west to prison_corr_2 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    key prison_key keyword {"steel bars", "bar", "bars", "door"};
+
+movement SECT_CITY
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}
+end
+
+
+                prison_corr_3
+
+title "A Turn in the Corridor"
+descr
+"   Here the corridor makes a bend from the north to the west. The draft
+is a bit stronger here and makes you wish you had some more clothes on.
+There are steel bars to the south and east."
+north to prison_corr_2 descr
+"The damp corridor continues north.";
+east to cell_5 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    key prison_key keyword {"steel bars", "bar", "bars", "door"};
+south to cell_6 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    key prison_key keyword {"steel bars", "bar", "bars", "door"};
+west to prison_corr_4 descr
+    "The damp corridor continues west.";
+
+movement SECT_CITY
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                cell_5
+
+title "A Cell"
+descr
+"   You are standing in a small and pretty damp cell. Pretty dreary. You
+wouldn't really like to spend a few years here."
+west to prison_corr_3 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    key prison_key keyword {"steel bars", "bar", "bars", "door"};
+
+movement SECT_CITY
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER,
+       UNIT_FL_NO_TELEPORT, UNIT_FL_NO_MOB}
+end
+
+
+                cell_6
+
+title "A Cell"
+descr
+"   You are standing in a small and pretty damp cell. Pretty dreary. You
+wouldn't really like to spend a few years here."
+north to prison_corr_3 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    key prison_key keyword {"steel bars", "bar", "bars", "door"};
+
+movement SECT_CITY
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}
+end
+
+
+                prison_corr_4
+
+title "The Damp Corridor"
+descr
+"   On south side of the corridor there are steel bars, closing the
+entrance to a prison cell. Although the straw on the floor seems
+reasonably fresh, the smell down here is anything but nice. To the west,
+the corridor ends in a brick wall."
+east to prison_corr_3;
+south to cell_7 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    key prison_key keyword {"steel bars", "bar", "bars", "door"};
+
+west to narr_pass_1 open {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN}
+    keyword {"loose brick", "brick wall", "brick", "wall"} difficulty 10;
+
+extra {"brick wall","wall","brick"}
+"One of the bricks seems a bit loose."
+
+movement SECT_CITY
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                cell_7
+
+title "A Cell"
+descr
+"   You are standing in a small and pretty damp cell. Pretty dreary. You
+wouldn't really like to spend a few years here."
+north to prison_corr_4 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+    key prison_key keyword {"steel bars", "bar", "bars", "door"};
+
+movement SECT_CITY
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}
+end
+
+
+                narr_pass_1
+
+title "A Narrow Passage"
+descr
+"   You have entered a narrow passage. You have to force your way through
+it, your shoulders touching the slimy walls on both sides. There is a
+strange, glowing sign here."
+east to prison_corr_4 open {EX_OPEN_CLOSE, EX_CLOSED}
+    keyword {"loose brick", "brick", "wall"};
+west to dark_cave;
+extra {"sign"}
+"
+ ****************************************************************
+ *                                                              *
+ *                         WARNING:                             *
+ *                                                              *
+ *  You are getting close to the entrance to the WightWarrens.  *
+ *  This area is full of evil, dangers and nasty surprises.     *
+ *                                                              *
+ *                       Do NOT enter                           *
+ *   unless in all ways prepared to face unimaginable horrors.  *
+ *        	                                                *
+ * If, however, you choose to disregard this warning and meet   *
+ *    with a cruel fate, we disavow all responsibility.         *
+ *                                                              *
+ *              Pjotr and Sapowox, the Creators                 *
+ *                                                              *
+ ****************************************************************"
+
+movement SECT_CITY
+IN_ALWAYS_DARK
+flags {UNIT_FL_NO_MOB, UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                dark_cave
+
+title "The Dark Cave"
+descr
+"   You are standing in a dark cave with three exits. To the east, a narrow
+passage leads away. The other two exits are tunnels to the north and south."
+east to narr_pass_1;
+south to moldy_pass_1;
+north to junction;
+
+movement SECT_CITY
+IN_ALWAYS_DARK
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                moldy_pass_1
+
+title "A Moldy Passage"
+descr
+"   This passage smells really bad, and there is a lot of rotten stuff on
+the walls and floor. NOT the kind of place you would like to live in.
+The passage leads west and north."
+north to dark_cave;
+west to moldy_pass_2;
+
+movement SECT_CITY
+IN_ALWAYS_DARK
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                moldy_pass_2
+
+title "A Moldy Passage"
+descr
+"   This passage smells really bad, and there is a lot of rotten stuff on
+the walls and floor. NOT the kind of place you would like to live in.
+The passage leads east and north."
+east to moldy_pass_1;
+north to by_the_pool;
+
+movement SECT_CITY
+IN_ALWAYS_DARK
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                by_the_pool
+
+title "By the Pool"
+descr
+"   You are standing to the south of a small but deep pool. Its water is
+very dark, and seems somehow stirred by something. A passage leads south
+and to the east there is an exit to a small room."
+south to moldy_pass_2;
+north to the_pool@ww1;
+east to dank_room;
+
+IN_ALWAYS_DARK
+movement SECT_CITY
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+                dank_room
+
+title "The Dank Room"
+descr
+"   The air in here is quite moist, almost suffocatingly so. It makes
+you feel that staying here too long would make you drown."
+west to by_the_pool;
+north to slimy_cave;
+
+movement SECT_CITY
+IN_ALWAYS_DARK
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                slimy_cave
+
+title "A Slimy Cave"
+descr
+"   What a stench! This place really is awful. Slime all over. You somehow
+get the feeling that the slime is about to come alive... Real soon!"
+south to dank_room;
+east to junction;
+
+movement SECT_CITY
+IN_ALWAYS_DARK
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                junction
+
+title "The Junction"
+descr
+"   This is a junction between three tunnels leading north, south and west.
+To the south, the tunnel seems to get wider, and there is an awful smell
+from the west."
+west to slimy_cave;
+south to dark_cave descr
+"A passage leads to a dark cave.";
+north to narr_pass_2;
+
+movement SECT_CITY
+IN_ALWAYS_DARK
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                narr_pass_2
+
+title "A Narrow Passage"
+descr
+"   You are walking along a narrow passage leading east and south. The roof
+is somewhere up there, far beyond you vision. It almost seems like this is
+the bottom of some deep crack."
+south to junction;
+east to dead_end;
+
+movement SECT_CITY
+IN_ALWAYS_DARK
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                dead_end
+
+title "The Dead End"
+descr
+"   The passage slowly narrows to a dead end here. You couldn't possibly
+squeeze past the walls a single meter further. The only choice is to go back
+west."
+west to narr_pass_2;
+
+movement SECT_CITY
+IN_ALWAYS_DARK
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+%mobiles
+%mobiles
+/*    ----- And here are the inhabitants of the King's Castle -----    */
+
+
+
+                king_welmar
+
+names {"king welmar","king","welmar"}
+title "King Welmar"
+descr "The wise King Welmar sits here in his throne."
+extra {} "In his later middle-age, with his beard starting to grey, King Welmar
+is still very powerfully built, and wouldn't take kindly to an attack.
+Despite that, you know he is well-loved throughout the land, and has
+a reputation as a wise and just ruler."
+
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_DETECT_INVISIBLE, CHAR_PROTECTED}
+
+/* This guy is supposed to be the Cetre of the Universe around here, and isn't
+   supposed to be a realistic kill, unless the opponents are BAD! This is due
+   to the philosophy of being a char ment for Quests. (We don't want him to
+   get killed during one.. :) */
+
+M_HUMAN_CLERIC_STAFF(55, SEX_MALE, "harm", " heal")
+alignment 1000
+position POSITION_SITTING
+default POSITION_SITTING
+money 11 SILVER_PIECE
+
+dilbegin welmar();
+
+var
+   pc : unitptr;
+   cup: unitptr;
+
+code
+{
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   heartbeat := PULSE_SEC * 7;
+
+   :loop:
+   nopriority;
+   wait(SFB_DONE, command("give") and (target == self));
+
+   pc  := activator;
+   cup := medium;
+
+   secure(pc, loop);
+   secure(cup, loop);
+
+   act("$1n examines $2n.", A_HIDEINV, self, cup, null, TO_ROOM);
+   pause;
+
+   if (dilfind("has_ww_water@ww1", cup) and
+       (cup.value[0] > 0))
+   {
+      exec("drink water", self);
+      if (not (QUEST_WELMAR in pc.quests))
+        addextra(pc.quests, {QUEST_WELMAR}, "");
+
+      pause;
+      act("$1n throws $2n hard on the ground, it breaks into a thousand "+
+          "pieces.", A_HIDEINV, self, cup, null, TO_ROOM);
+      unsecure (cup);
+      destroy(cup);
+
+      pause;
+      exec("say Thank you "+pc.name+", I needed that!", self);
+      pause;
+
+      exec("say My Weapons Master will be happy to teach you.", self);
+      pause;
+   }
+   else
+   {
+      exec("shake", self);
+   }
+
+   goto loop;
+}
+dilend
+
+end
+
+                ghost
+names {"horrible ghost","ghost"}
+title "the horrible ghost"
+descr "You hear a frightening wail, and see a horrible Ghost approaching."
+extra {} "The Ghost is almost translucent, and looks really SCARY!"
+romflags {CHAR_DETECT_INVISIBLE, CHAR_SNEAK}
+M_GHOST_MAD(8,SEX_FEMALE)
+money 15 COPPER_PIECE
+dilcopy wander_zones@function("kingc", 15, 0, 0);
+dilcopy fido@function("","");
+
+end
+
+                jim
+names {"jim","royal guard","guard"}
+title "Jim the Royal guard"
+descr "Jim the Royal guard is here on duty."
+extra {} "As all members of the Guard, Jim wears the chain mail required of
+them as uniform. He seems very well trained, and moves like an
+experienced fighter."
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(16, SEX_MALE)
+alignment 800
+money 6 COPPER_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+dilcopy wander_zones@function("kingc", 15, 1, 0);
+
+end
+
+                brian
+names {"brian","royal guard","guard"}
+title "Brian"
+descr "Brian the Royal guard is here, training with the Master."
+extra {} "As all members of the Guard, Brian wears the chain mail required of
+them as uniform. He seems very well trained, and moves like an
+experienced fighter."
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(16, SEX_MALE)
+alignment 800
+
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+
+end
+
+                mick
+names {"mick","royal guard","guard"}
+title "Mick"
+descr "Mick the Royal guard is here, training with the Master."
+extra {} "As all members of the Guard, Mick wears the chain mail required of
+them as uniform. He seems very well trained, and moves like an
+experienced fighter."
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(16, SEX_MALE)
+alignment 800
+money 6 COPPER_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+
+end
+
+                matt
+names {"matt","royal guard","guard"}
+title "Matt the Royal guard"
+descr "Matt the Royal guard is here on duty."
+extra {} "As all members of the Guard, Matt wears the chain mail required of
+them as uniform. He seems very well trained, and moves like an
+experienced fighter."
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(16, SEX_MALE)
+alignment 800
+money 6 COPPER_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+dilcopy wander_zones@function("kingc", 15, 1, 0);
+
+end
+
+                jochem
+names {"jochem","royal guard","guard"}
+title "Jochem the Royal guard"
+descr "Jochem the Royal guard sits here, off duty."
+extra {} "As all members of the Guard, Jochem wears the chain mail required of
+them as uniform. He seems very well trained, and moves like a fighter
+who has seen more than one battle, and longs to see the next!"
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(18, SEX_MALE)
+alignment 900
+money 8 COPPER_PIECE
+
+position POSITION_SITTING
+default POSITION_SITTING
+
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+dilcopy wander_zones@function("kingc", 15, 1, 0);
+
+end
+
+                anne
+names {"anne","royal guard","guard"}
+title "Anne the Royal guard"
+descr "Anne the Royal guard is here on duty."
+extra {} "As all members of the Guard, Anne wears the chain mail required of
+them as uniform. She seems very well trained, and moves like a fighter
+who has seen more than one battle, and longs to see the next!"
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(18, SEX_FEMALE)
+alignment 900
+money 8 COPPER_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+dilcopy wander_zones@function("kingc", 15, 1, 0);
+
+end
+
+                andrew
+names {"andrew","royal guard","guard"}
+title "Andrew the Royal guard"
+descr "Andrew the Royal guard is here on duty."
+extra {} "As all members of the Guard, Andrew wears the chain mail required of
+them as uniform. He seems very well trained, and moves like a fighter
+who has seen more than one battle, and longs to see the next!"
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(18, SEX_MALE)
+alignment 900
+money 8 COPPER_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+dilcopy wander_zones@function("kingc", 15, 1, 0);
+
+end
+
+                bertram
+names {"bertram","bert","royal guard","guard"}
+title "Bertram the Royal guard"
+descr "Bertram the Royal guard is here on duty."
+extra {} "As all members of the Guard, Bertram wears the chain mail required of
+them as uniform. He seems very well trained, and carries his scars
+with pride. This guy seems tough..."
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(18, SEX_MALE)
+alignment 900
+money 9 COPPER_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+dilcopy wander_zones@function("kingc", 15, 1, 0);
+
+end
+
+                jeanette
+names {"jeanette","royal guard","guard"}
+title "Jeanette the Royal guard"
+descr "Jeanette the Royal guard is here on duty."
+extra {}
+"As all members of the Guard, Jeanette wears the chain mail required of
+them as uniform. She seems very well trained, and carries her scars
+with pride. This girl could be nasty if she wanted to..."
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(18, SEX_FEMALE)
+alignment 900
+money 9 COPPER_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+dilcopy wander_zones@function("kingc", 15, 1, 0);
+
+end
+
+                captain_peter
+names {"peter","captain","royal guard","guard"}
+title "Peter, the Captain of the Royal guard"
+descr "Peter, the Captain of the Royal guard, walks around inspecting."
+extra {} "As all members of the Guard, Peter wears the chain mail required of
+them as uniform. Even though all the other guards seem well trained,
+you realise none of them would stand a chance against this man in a
+fight. He stands at least two metres tall, but still moves with an
+almost feline grace. He actually radiates strength and confidence,
+and you have to fight a sudden urge to come to attention as you see
+him."
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(35, SEX_MALE)
+alignment 900
+money 15 COPPER_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+
+special SFUN_WHISTLE
+
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy captain@midgaard("cell_1@kingc");
+
+special SFUN_ACCUSE
+
+dilcopy guard_dir@function("west", null, {""}, "");
+
+dilcopy guard_door@function(WEST,
+"$1n stops you.",
+"$1n prevents $3n from opening the steel bars.");
+
+
+dilcopy fido@function("$1n slowly devours $2n, crunching the bones.",
+		      "$1n grabs $2n and hungrily munches it.");
+
+
+special SFUN_WHISTLE
+/*
+special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+special SFUN_ACCUSE
+special SFUN_CAPTAIN time WAIT_SEC*20 bits SFB_RANTIME
+*/
+dilcopy wander_zones@function ("@loadzone", 70, 0,0);
+
+
+end
+
+                training_master
+names {"training master","master"}
+title "the Training Master"
+descr "The Training Master is here, supervising."
+extra {}
+"Aged, but experienced, the Training Master is skilled in the use
+of virtually every weapon type invented by Man."
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(18, SEX_MALE)
+alignment 950
+money 11 COPPER_PIECE
+
+/* special SFUN_TEACH_SKI */
+
+dilcopy rescue@function(CASTLE_STAFF);
+
+
+dilbegin train_master();
+var
+	pc : unitptr;
+code
+{
+	heartbeat := PULSE_SEC * 4;
+	interrupt(SFB_COM, self.position == POSITION_FIGHTING, combat);
+
+	:start:
+	wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and (self.position != POSITION_FIGHTING)));
+	pc := activator;
+	secure(pc, lost);
+	exec("emote demonstrates superior technique to his students.", self);
+	pause;
+	pause;
+
+	:twait:
+	pause;
+	goto twait;
+
+	:lost:
+	pause;
+	unsecure(pc);
+	goto start;
+
+	:combat:
+	heartbeat := PULSE_SEC*3;
+	while (self.position == POSITION_FIGHTING) pause;
+	heartbeat := PULSE_SEC*10;
+	pause;
+	pause;
+	pause;
+	goto start;
+
+}
+dilend
+
+
+dilcopy teach_q_block@function(QUEST_WELMAR, "say Thou art not a loyal follow of the King you should talk to the Royal Herald.");
+
+special SFUN_TEACH_INIT
+"weapons;1;
+$1n tells you, 'Tell me more, I do not know of such weapons!';
+$1n tells you, 'I will only teach you how to use a rapier.';
+$1n tells you, 'You haven't got %s for me.';
+$1n tells you, 'You haven't got %d skill points.';
+$1n tells you, 'I can not teach you any more';
+$1n tells you, 'You must be unaffected by magic, otherwise I can't teach you';
+$1n tells you, 'Remove all equipment, please.';
+
+ 0;   80; category sword;         20; 100; 10; 0;
+
+ 1; 100; rapier;          50; 100; 10; 0;"
+
+
+end
+
+                royal_herald
+names {"royal herald","herald"}
+title "the Royal Herald"
+descr "The Royal Herald is standing here."
+extra {}
+"This is a young, powerfully built man, whose primary function
+is to make Royal Announcements."
+
+romflags {CHAR_PROTECTED}
+M_AVG_HUMAN(8, SEX_MALE)
+alignment 800
+money 11 COPPER_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+
+dilbegin herald();
+var
+   king : unitptr;
+   pc   : unitptr;
+   u    : unitptr;
+   tick : integer;
+code
+{
+   heartbeat := PULSE_SEC * 12;
+   on_activation((self.position <= POSITION_SLEEPING) or
+		 (self.position == POSITION_FIGHTING), skip);
+
+   :find_king:
+   unsecure(pc);
+   king := findunit(self, "king welmar", FIND_UNIT_SURRO, null);
+   if (king == null)
+   {
+      pause;
+      goto find_king;
+   }
+   secure(king, find_king);
+
+   :start:
+   wait(SFB_CMD, activator.type == UNIT_ST_PC);
+   pc := activator;
+   secure(pc, start);
+
+   pause;
+
+   if (QUEST_WELMAR in pc.quests)
+   {
+      exec("smile "+pc.name, king);
+      goto loop;
+   }
+
+   exec("say "+pc.name+", bow for King Welmar of Midgaard.", self);
+   tick := 0;
+
+   :bow_loop:
+   wait(SFB_DONE | SFB_TICK, TRUE);
+
+   if (activator == null) /* A tick */
+   {
+      tick := tick + 1;
+      if (tick <= 2)
+      {
+         exec("say "+pc.name+", bow for King Welmar!", self);
+	 goto bow_loop;
+      }
+      else if (tick == 3)
+      {
+         exec("say "+pc.name+", this is your last warning, bow now!!", self);
+         goto bow_loop;
+      }
+      else if (tick > 3)
+      {
+         exec("say Guards! Arrest that man for dishonouring the throne!",
+              self);
+         set(pc.charflags, CHAR_OUTLAW | CHAR_PROTECTED);
+         pause;
+	 exec("emote looks very upset.", king);
+         pause;
+         goto start;
+      }
+   }
+   else if ((activator == pc) and command("bow") and (target == king))
+   {
+      if (pc.level < 10)
+	goto loop;
+      pause;
+
+      exec("say His majesty, King Welmar of Midgaard, has declared that "+
+           "he will show his gratitude,", self);
+      pause;
+
+      exec("say to any person which will bring before him a chalice filled "+
+           "with the water of life!", self);
+      pause;
+
+      exec("say "+pc.name+", if thou art brave and strong go into the cellar,"+
+           " of this mighty castle. It contains a secret entrance to the"+
+           " cavern which contains the water of life.", self);
+      pause;
+      u := load("chalice@kingc");
+      link(u, pc);
+
+      exec("emote gives you the chalic.", self);
+      pause;
+      exec("say Return with the water of life, and prove your loyalty to the "+
+           "King of Midgaard.", self);
+
+      pause;
+      exec("smile king", self);
+
+      pause;
+      exec("smile "+pc.name, self);
+      goto loop;
+   }
+   else
+     goto bow_loop;
+
+   :loop:
+   wait(SFB_CMD | SFB_TICK, TRUE);
+   goto loop; /* Keep looping until either the PC or the KING are removed */
+}
+dilend
+
+end
+
+                ergan
+names {"ergan","murderer"}
+title "Ergan the Murderer"
+descr "Slumped in a corner you see Ergan, aka the Murderer of Townsbridge."
+extra {} "You remember a time almost a decade ago, when the news of the day
+was how this man had slaughtered the entire population of the little
+village of Townsbridge. He was imprisoned, and here he is: a shadow
+of the undoubtedly great warrior he once was, but still to be reckoned
+with."
+
+romflags {CHAR_WIMPY}
+M_HUMAN_THIEF_SWORD(13, SEX_MALE)
+alignment -1000
+position POSITION_SITTING
+default POSITION_SITTING
+
+dilcopy fido@function("$1n slowly devours $2n, crunching the bones.",
+		      "$1n grabs $2n and hungrily munches it.");
+
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*15, 0, "ANY",
+                            {"$1n attacks!", ""});
+dilbegin ergan();
+var
+	pc : unitptr;
+	gruel : unitptr;
+
+code
+{
+	heartbeat := PULSE_SEC * 4;
+	interrupt(SFB_COM, self.position == POSITION_FIGHTING, combat);
+
+	:start:
+	wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and (self.position != POSITION_FIGHTING)));
+	pc := activator;
+	secure(pc, lost);
+	gruel := load("yakky_gruel@kingc");
+	link(gruel, self.outside);
+	pause;
+	exec("get gruel", self);
+	pause;
+	exec("emote ravenously attacks the gruel, and quickly swallows it.", self);
+	pause;
+	exec("eat gruel", self);
+	pause;
+	pause;
+
+	:twait:
+	pause;
+	goto twait;
+
+	:lost:
+	pause;
+	unsecure(pc);
+	goto start;
+
+	:combat:
+	heartbeat := PULSE_SEC*3;
+	while (self.position == POSITION_FIGHTING) pause;
+	heartbeat := PULSE_SEC*10;
+	pause;
+	pause;
+	pause;
+	goto start;
+
+}
+dilend
+
+
+end
+
+                butler_james
+names {"butler","james"}
+title "James the Butler"
+descr "James the Butler is standing here, looking pompous."
+extra {} "The typical perfect butler: upper middle age, a bit bald and with
+an impressive belly."
+
+romflags {CHAR_PROTECTED}
+M_AVG_HUMAN(2, SEX_MALE)
+alignment 500
+money 5 COPPER_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+dilcopy wander_zones@function("kingc", 15, 1, 0);
+
+end
+
+                cleaning_woman
+names {"cleaning woman","woman"}
+title "the Cleaning Woman"
+descr "There is a Cleaning Woman here, trying not be noticed."
+extra {} "Although she has a menial job, she seems to like it."
+
+romflags {CHAR_PROTECTED}
+M_AVG_HUMAN(1, SEX_FEMALE)
+alignment 800
+money 2 IRON_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+dilcopy wander_zones@function("kingc", 15, 1, 0);
+dilcopy janitors@midgaard(60);
+
+end
+
+cockroach
+names {"cockroach","roach"}
+title "the Cockroach"
+descr "A large Cockroach is crawling by the wall."
+extra {} "Very large indeed, and they say cockroaches are hard to kill..."
+
+M_COCKROACH_SMALL(6,SEX_NEUTRAL)
+
+end
+
+cockroach2
+names {"cockroach","roach"}
+title "the Cockroach"
+descr "A large Cockroach is crawling by the wall."
+extra {} "Very large indeed, and they say cockroaches are hard to kill..."
+
+M_COCKROACH_MAD(10,SEX_NEUTRAL)
+
+end
+
+
+                astrologer
+names {"astrologer"}
+title "the Astrologer"
+descr "The Astrologer is sitting here, studying a book."
+extra {} "He is old and white-haired, with a long beard. As you see him, you
+can almost believe the rumours about stars deciding Fate, and
+that astrology is capable of seeing the future."
+
+romflags {CHAR_PROTECTED, CHAR_DETECT_INVISIBLE}
+M_HUMAN_CLERIC_STAFF(35, SEX_MALE, " harm", " harm")
+alignment 900
+money 21 COPPER_PIECE
+position POSITION_SITTING
+default POSITION_SITTING
+
+dilcopy rescue@function(CASTLE_STAFF);
+
+dilcopy shopkeeper@function(
+{
+"scroll_o_recall@kingc 1 5",
+"scroll_id@kingc 1 5"
+},{
+"   $1n says, 'I am sorry, but I have no such item for sale' ",
+"   $1n says, 'But you are in posession of no such thing, $3n!' ",
+"   $1n says, 'I will not buy that kind of item.' ",
+"   $1n says, 'I am afraid you cannot afford $2n, $3n.' ",
+"   $1n says, 'That will be %s for $2n' ",
+"   $1n says, 'Thank you $3n, here are %s for $2n.' ",
+"$1n says, 'I don't seem to have that many in my stock'",
+"$1n says, 'I'm on my break, GET LOST!'",
+"$1n says, 'I have no use for a $2n'",
+"$1n says, 'Sorry, I can't afford it'"},
+{"4","12","13","23"},
+""+ITEM_WAND+""+ITEM_STAFF+""+ITEM_SCROLL+"",
+110,60,286720,"","");
+
+
+end
+
+                tim
+names {"tim","royal guard","guard","lifeguard"}
+title "Tim, the King's Lifeguard"
+descr "Tim, the King's Lifeguard, is standing here."
+extra {} "This guy looks just like his twin, Tom. There seems to be no
+doubt that he is completely prepared to give his life
+for the King, if necessary."
+
+romflags {CHAR_DETECT_INVISIBLE, CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(38, SEX_MALE)
+alignment 900
+money 10 COPPER_PIECE
+
+dilcopy guard_dir@function("east", null, {""}, "");
+dilcopy rescue@function("king / tom");
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+
+end
+
+                tom
+names {"tom","royal guard","guard","lifeguard"}
+title "Tom, the King's Lifeguard"
+descr "Tom, the King's Lifeguard, is standing here."
+extra {} "This guy looks just like his twin, Tim. There seems to be no
+doubt that he is completely prepared to give his life
+for the King, if necessary."
+
+romflags {CHAR_DETECT_INVISIBLE, CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(42, SEX_MALE)
+alignment 900
+money 10 COPPER_PIECE
+dilcopy guard_dir@function("east", null, {""}, "");
+dilcopy rescue@function("king / tim");
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+
+end
+
+                chef
+names {"chef","cook"}
+title "the Chef"
+descr "The Chef is here, shouting orders to the other cooks."
+extra {} "It seems he has been tasting his own food a bit too enthusiastically.
+He is, in other words, a bit fat."
+romflags {CHAR_PROTECTED, CHAR_WIMPY}
+M_AVG_HUMAN(7, SEX_MALE)
+alignment 500
+money 4 COPPER_PIECE
+
+dilcopy shopkeeper@function(
+{
+"lobster@kingc 1 5",
+"caviar@kingc 1 5"
+},{
+"   $1n says, 'Je suis tres desole, mais je n'ai pas ca.' ",
+"   $1n says, 'Mais, J'achete pas!' ",
+"   $1n says, 'Mais, J'achete pas!' ",
+"   $1n says, 'Si vous n'avez plus d'argent, vous ne pouvez plus acheter.' ",
+"   $1n says, 'Ca coute %s, s'il vous plait.' ",
+"   $1n says, 'Here is %s...' ",
+"$1n says, 'I don't seem to have that many in my stock'",
+"$1n says, 'I'm on my break, GET LOST!'",
+"$1n says, 'I have no use for a $2n'",
+"$1n says, 'Sorry, I can't afford it'"},
+{"4","12","13","23"},
+""+ITEM_WAND+""+ITEM_STAFF+""+ITEM_SCROLL+"",
+110,60,286720,"","");
+
+
+
+end
+
+                cook
+names {"cook"}
+title "the Cook"
+descr "There is a Cook here, making himself busy with a pot."
+extra {} "A junior cook, eager to do the Chef's bidding."
+romflags {CHAR_PROTECTED, CHAR_WIMPY}
+M_AVG_HUMAN(4, SEX_MALE)
+alignment 300
+money 3 IRON_PIECE
+
+end
+
+                david
+names {"david","royal guard","guard"}
+title "David, the Guard of the Treasury"
+descr "David, a big, mean-looking man, stands here, guarding the door."
+extra {} "He really is big, and you get the feeling he wouldn't take kindly
+to an attempt to get past him."
+
+romflags {CHAR_DETECT_INVISIBLE, CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(24, SEX_MALE)
+alignment 250
+money 11 COPPER_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+dilcopy guard_dir@function("east", null, {""}, "");
+
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+
+end
+
+                dick
+names {"dick","royal guard","guard"}
+title "Dick, the Guard of the Treasury"
+descr "Dick, a big, mean-looking man, stands here, guarding the door."
+extra {} "He really is big, and you get the feeling he wouldn't take kindly
+to an attempt to get past him."
+
+romflags {CHAR_DETECT_INVISIBLE, CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(28, SEX_MALE)
+alignment 250
+money 11 COPPER_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+dilcopy guard_dir@function("east", null, {""}, "");
+
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+
+end
+
+                jerry
+names {"jerry","royal guard","guard"}
+title "Jerry the Royal guard"
+descr "Jerry the Royal guard is here off duty, playing dice."
+extra {} "As all members of the Guard, Jerry wears the chain mail required of
+them as uniform. He seems very well trained, and moves like an
+experienced fighter."
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(16, SEX_MALE)
+alignment 800
+money 6 IRON_PIECE
+position POSITION_RESTING
+default POSITION_RESTING
+
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+dilbegin jerry();
+var
+	pc : unitptr;
+	dice : unitptr;
+code
+{
+	heartbeat := PULSE_SEC * 7;
+	interrupt(SFB_COM, self.position == POSITION_FIGHTING, combat);
+
+	:start:
+	wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and (self.position != POSITION_FIGHTING)));
+	pc := activator;
+	secure(pc, lost);
+	dice := load("dice@manse");
+	link(dice, self);
+	exec("roll", self);
+	pause;
+	exec("curse", self);
+	pause;
+	exec("get dice", self);
+	pause;
+	pause;
+
+	:twait:
+	pause;
+	goto twait;
+
+	:lost:
+	pause;
+	exec("get dice", self);
+	unsecure(pc);
+	goto start;
+
+	:combat:
+	heartbeat := PULSE_SEC*3;
+	while (self.position == POSITION_FIGHTING) pause;
+	heartbeat := PULSE_SEC*10;
+	pause;
+	pause;
+	pause;
+	goto start;
+
+}
+dilend
+
+
+end
+
+                michael
+names {"michael","royal guard","guard"}
+title "Michael the Royal guard"
+descr "Michael the Royal guard is here off duty, playing dice."
+extra {} "As all members of the Guard, Michael wears the chain mail required of
+them as uniform. He seems very well trained, and moves like an
+experienced fighter."
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(18, SEX_MALE)
+alignment 800
+money 4 COPPER_PIECE
+position POSITION_RESTING
+default POSITION_RESTING
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+dilbegin michael();
+var
+	pc : unitptr;
+	dice : unitptr;
+code
+{
+	heartbeat := PULSE_SEC * 4;
+	interrupt(SFB_COM, self.position == POSITION_FIGHTING, combat);
+
+	:start:
+	wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and (self.position != POSITION_FIGHTING)));
+	pc := activator;
+	secure(pc, lost);
+	dice := load("dice@manse");
+	link(dice, self);
+	exec("roll", self);
+	pause;
+	exec("clap", self);
+	pause;
+	exec("get dice", self);
+	pause;
+	pause;
+
+	:twait:
+	pause;
+	goto twait;
+
+	:lost:
+	pause;
+	exec("get dice", self);
+	unsecure(pc);
+	goto start;
+
+	:combat:
+	heartbeat := PULSE_SEC*3;
+	while (self.position == POSITION_FIGHTING) pause;
+	heartbeat := PULSE_SEC*10;
+	pause;
+	pause;
+	pause;
+	goto start;
+
+}
+dilend
+
+
+end
+
+                hans
+names {"hans","royal guard","guard"}
+title "Hans the Royal guard"
+descr "Hans the Royal guard is here on duty."
+extra {} "As all members of the Guard, Hans wears the chain mail required of
+them as uniform. He seems very well trained, and moves like a fighter
+who has seen more than one battle, and longs to see the next!"
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(20, SEX_MALE)
+alignment 900
+money 4 COPPER_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+dilcopy wander_zones@function("kingc", 15, 1, 0);
+
+end
+
+                boris
+names {"boris","royal guard","guard"}
+title "Boris the Royal guard"
+descr "Boris the Royal guard is here on duty."
+extra {} "As all members of the Guard, Boris wears the chain mail required of
+them as uniform. He seems very well trained, and carries his scars
+with pride. This guy seems tough..."
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(19, SEX_MALE)
+alignment 900
+
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+dilcopy wander_zones@function("kingc", 15, 1, 0);
+
+end
+
+                pool_monster
+names {"monster in the pool","monster","water","tentacle"}
+title "the Monster in the Pool"
+descr "From the murky waters of the pool, a mass of tentacles appear!"
+extra {} "It is slimy, with lots of tentacles."
+
+M_OCTOPUS_TINY(22,SEX_NEUTRAL)
+alignment -500
+
+dilbegin pool_monster();
+code
+{
+   wait(SFB_DEAD, activator == self);
+
+   sendto("purge_room", findsymbolic("the_pool@ww1"));
+   quit;
+}
+dilend
+
+end
+
+                jack
+names {"jack","prison guard","guard"}
+title "Jack, the Prison Guard"
+descr "Jack, the Prison guard is here, keeping things under control."
+extra {} "As all members of the Guard, Jack wears the chain mail required of
+them as uniform. Like the other Prison Guards, he seems less occupied
+with formalia than the Royal Guard is. Less shine to the mail, in other
+words."
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(29, SEX_MALE)
+alignment 900
+money 8 COPPER_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+
+/* When he starts a 'go' we hope that he doesn't move around randomly.. */
+
+dilbegin foodfetch();
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+  u : unitptr;
+  i : unitptr;
+
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or
+		 (self.position == POSITION_FIGHTING), skip);
+
+   :begin:
+   heartbeat := PULSE_SEC * 10;
+   exec("say The prisoner needs his food!", self);
+   pause;
+   exec("groan", self);
+   pause;
+tf:=walk_room@function("kitchen@kingc",4);
+
+   u := findunit(self, "chef", FIND_UNIT_SURRO, null);
+
+   if (u #= null)
+     goto chef_gone;
+   else
+   {
+      secure(u, chef_gone);
+      goto chef_here;
+   }
+
+   :chef_gone:
+   exec("say Shit! Trust that Chef to go on break right now.", self);
+   pause;
+   exec("sigh", self);
+   pause;
+   exec("say What the hell, aint my lunch that's gone.", self);
+   pause;
+   exec("grin", self);
+   goto visit_ergan;
+
+   :chef_here:
+   exec("say Chef! The Prisoner needs his porridge.", self);
+   pause;
+   exec("say Oh, all right.", u);
+   pause;
+   exec("emote carelessly slops up some disgusting gruel on a plate.", u);
+   pause;
+   i := load("kingc/yakky_gruel");
+   exec("emote gives a plate of disgusting gruel to jack", u);
+   unsecure(u);
+   pause;
+
+   :visit_ergan:
+   tf:=walk_room@function("prison_corr_3@kingc",4);
+   exec("unlock bars", self);
+   pause;
+   exec("open bars", self);
+   pause;
+
+   priority; /* Disable protect lawful below, or we will kill ergan! */
+   exec("east", self);
+   pause;
+   u := findunit(self, "ergan", FIND_UNIT_SURRO, null);
+   if (u #= null)
+   {
+      exec("say Now what's this? The asshole died? Aaah, never mind.", self);
+      goto leave_cell;
+   }
+
+   exec("say Here's your food, prisoner!", self);
+   pause;
+   if (findunit(self, "gruel", FIND_UNIT_INVEN, null))
+   {
+      exec("drop gruel", self);
+      /* Ergan is supposed to cooperate here, and attack the Yakky Gruel. */
+   }
+   else
+   {
+      exec("emote looks at his hands in confusion.", self);
+      pause;
+      exec("say Er...", self);
+      pause;
+      exec("emote turns around brusquely to leave the room.", self);
+   }
+   pause;
+
+   :leave_cell:
+   tf:=walk_room@function("prison_corr_3@kingc",4);
+   nopriority; /* Re-enable the protect lawful routine */
+   exec("close bars", self);
+   pause;
+   exec("lock east bars", self);
+   pause;
+   heartbeat := PULSE_SEC * (rnd(300, 600));
+   pause;
+   goto begin;
+}
+dilend
+
+/* This is blocked by "priority" when at ergan the murderer */
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+
+end
+
+                george
+names {"george","prison guard","guard"}
+title "George, the Prison Guard"
+descr "George, the Prison guard is here, keeping things under control."
+extra {} "As all members of the Guard, George wears the chain mail required of
+them as uniform. Like the other Prison Guards, he seems less occupied
+with formalia than the Royal Guard is. Less shine to the mail, in other
+words."
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(17, SEX_MALE)
+alignment 900
+money 17 IRON_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+dilcopy wander_zones@function("kingc", 15, 1, 0);
+
+end
+
+                joanna
+names {"joanna","prison guard","guard"}
+title "Joanna, the Prison Guard"
+descr "Joanna, the Prison guard is here, keeping things under control."
+extra {} "As all members of the Guard, Joanna wears the chain mail required of
+them as uniform. Like the other Prison Guards, she seems less occupied
+with formalia than the Royal Guard is. Less shine to the mail, in other
+words."
+
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_SWORD(20, SEX_FEMALE)
+alignment 900
+money 27 IRON_PIECE
+
+dilcopy rescue@function(CASTLE_STAFF);
+special SFUN_WHISTLE
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy arrest_check@midgaard("kingc/accuse_room");
+dilcopy wander_zones@function("kingc", 15, 1, 0);
+
+end
+
+                sewer_rat
+names {"sewer rat", "rat"}
+title "the Great Sewer Rat"
+descr "The Huge Hungry-looking Sewer Rat sits here"
+
+M_RAT_MAD(7,SEX_NEUTRAL)
+dilcopy wander_zones@function("kingc", 15, 0, 0);
+
+end
+
+
+%objects
+
+                           chalice
+
+names {"clay chalice", "chalice"}
+title "a chalice"
+descr "A chalice made from clay has carelessly been left here.."
+
+manipulate {MANIPULATE_TAKE}
+LIQ_DEF("clear", 0,1,0,10,1,0,0)
+cost 10 IRON_PIECE
+
+extra {}
+"Its fairly nice and not as crooked as most clay chalices are theese days.
+You notice an inscription in the bottom of the chalice, it says 'From The
+Castle of his Majesty King Welmar'."
+
+end
+
+
+
+
+
+                           banner
+
+names {"royal banner", "banner","standard"}
+title "the royal banner"
+descr "The royal banner has been firmly planted in the ground here!"
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+type ITEM_TREASURE
+weight 100
+cost 500 GOLD_PIECE
+rent 50 SILVER_PIECE
+extra {}
+"It is large and very heavy. On top of it flutters King Welmar's flag
+proudly."
+extra {"flag"}
+"On the flag is the symbol of King Welmar's house, the rampant stag."
+extra {"$identify"}
+"This is the famous royal banner which was created and used to defeat the evil
+powers that destroyed the legendary Midgaard a long time ago. It has been said
+that the banner will cause the person bearing it to become stronger."
+end
+
+                           telescope
+
+names {"telescope","scope"}
+title "a large telescope"
+descr "There is a large telescope here, pointing at the sky."
+type ITEM_OTHER
+weight 500
+extra {}
+"A small sign says: Made in Siberia."
+end
+
+                           ethereal_ring
+
+names {"ethereal ring","ring"}
+title "an ethereal ring"
+descr "An ethereal-looking ring lies here, barely touching the ground."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+weight 1
+cost 20 GOLD_PIECE
+rent 2 SILVER_PIECE
+DEX_TRANSFER (+1)
+extra {"$identify"}
+"This ring transfers the wearer partially into the ethereal plane, thus making
+him harder to hit."
+extra {"$improved identify"}
+"This ring gives +1 to dexterity."
+end
+
+                           pile_of_gold
+
+MONEY(SILVER_PIECE, 80)
+end
+
+/* ----------------- The royal attributes.. ------------------- */
+
+                           royal_sceptre
+
+names {"golden sceptre","royal sceptre","sceptre"}
+title "a golden sceptre"
+descr "A golden Royal sceptre lies on the ground."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+type ITEM_OTHER
+weight 15
+cost 300 GOLD_PIECE
+rent 50 SILVER_PIECE
+extra {"$identify"}
+"This Sceptre is made by the old Gods and is rumored to give immense strength
+to the person holding it."
+STR_TRANSFER (+1)
+end
+
+                           golden_crown
+
+names {"golden crown","crown"}
+title "a golden crown"
+descr "A magnificently jewelled golden crown has been left here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+/* It is not a "real" chain armour, therefore -5%, gold -20% */
+ARMOUR_CHAIN(-5, 1)  /* Gold / Very good craft 15% */
+weight 40
+cost 100 GOLD_PIECE
+rent 50 SILVER_PIECE
+extra {"$identify"}
+"This Crown is made by the old Gods and is rumored to enhance a persons
+ruling powers and bring the subject closer to the Gods."
+extra {"$improved identify"}
+"The crown gives +2 to brain and +1 to divine when worn on the head."
+end
+
+                           golden_apple
+
+names {"golden apple","apple"}
+title "a golden apple"
+descr "There is a golden apple here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+LIGHT_DEF(-1,2)
+weight 20
+cost 20 GOLD_PIECE
+rent 2 SILVER_PIECE
+extra {"$identify"}
+"This apple sheds eternal light."
+extra {"$improved identify"}
+"The apple shines as two small torches in eternity."
+end
+
+/* ----------------- Keys, keys, keys... --------------------- */
+
+                           w_key
+
+names {"key"}
+title "a key"
+descr "A key lies on the floor."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+type ITEM_KEY
+weight 3
+cost 1 SILVER_PIECE
+rent 100 SILVER_PIECE
+extra {}
+"It has a finely carved letter 'W' inscribed on it."
+end
+
+                           huge_key
+
+names {"huge key","key"}
+title "a huge key"
+descr "There is a huge, heavy-looking key on the floor here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+type ITEM_KEY
+weight 1
+cost 1 SILVER_PIECE
+rent 100 SILVER_PIECE
+end
+
+                           butler_key
+
+names {"butlers key","key"}
+title "the Butler's key"
+descr "The Butler's key is here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+type ITEM_KEY
+weight 3
+cost 2 COPPER_PIECE
+rent 5 IRON_PIECE
+end
+
+                           small_key
+
+names {"small key","key"}
+title "a small key"
+descr "A small key lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+type ITEM_KEY
+weight 3
+cost 2 COPPER_PIECE
+rent 5 IRON_PIECE
+end
+
+                           prison_key
+
+names {"prison key","key"}
+title "the prison key"
+descr "On the floor there is a large key."
+manipulate {MANIPULATE_TAKE}
+type ITEM_KEY
+weight 2
+cost 2 COPPER_PIECE
+rent 10 IRON_PIECE
+end
+
+                           chest
+
+names {"wooden chest","chest"}
+title "a large wooden chest"
+descr "A large wooden chest stands here in a corner."
+manipulate {MANIPULATE_TAKE}
+CONTAINER_DEF(400)
+weight 450
+cost 22 COPPER_PIECE
+extra {}
+"It is equipped with a small lock, that any self-respecting thief
+should be able to pick."
+end
+
+
+/* ------------------- And here are the Guards equips ------------------- */
+
+                           training_sword
+
+names {"training sword","sword"}
+title "a training sword"
+descr "A training sword with blunt edges is leaned against a wall."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+/* Wood 30 % and Poor Craftsmansship = -40 % */
+WEAPON_DEF(WPN_LONG_SWORD, -20, 0)
+weight 7
+cost 2 COPPER_PIECE
+/* Supposed to be negative affect on TODAM or TOHIT */
+end
+
+                           guards_sword
+
+names {"sword","longsword"}
+title "a long sword"
+descr "A long sword has been left here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+/* Iron 100 % Average craft 0 % */
+WEAPON_DEF(WPN_LONG_SWORD, 0, 0)
+weight 8
+cost 12 SILVER_PIECE
+end
+
+                           guards_shield
+names {"guard's shield","shield"}
+title "a guard's shield"
+descr "A guard's shield lies on the floor"
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
+/* Pure iron and decent craft (100% + 5%) */
+SHIELD_DEF(SHIELD_MEDIUM, 1, 0)
+weight 40
+cost 6 SILVER_PIECE
+extra {}
+"The shield is medium-sized, and looks quite sturdy.
+On the shield is the symbol of King Welmar's house,
+the rampant stag."
+end
+
+                           guards_jerkin
+
+names {"guard's mail jerkin","chain mail jerkin","jerkin"}
+title "a guard's chain mail jerkin"
+descr "A chain mail jerkin lies on the floor"
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+ARMOUR_LEATHER(0,0)
+weight 30
+cost 25 SILVER_PIECE
+end
+
+                           guards_skirt
+
+names {"guard's skirt", "chain mail skirt","skirt"}
+title "a guard's chain mail skirt"
+descr "A chain mail skirt lies on the floor"
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+ARMOUR_LEATHER(0,0)
+weight 28
+cost 30 SILVER_PIECE
+end
+
+                           guards_coif
+
+names {"chain mail coif","coif"}
+title "a guard's chain mail coif"
+descr "A chain mail coif lies on the floor"
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+ARMOUR_LEATHER(0,0)
+weight 7
+cost 20 COPPER_PIECE
+end
+
+                           guards_sleeves
+
+names {"chain mail sleeves","mail"}
+title "a guard's chain mail sleeves"
+descr "A pair of chain mail sleeves lie on the floor"
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
+ARMOUR_LEATHER(0,0)
+weight 12
+cost 30 SILVER_PIECE
+end
+
+                           broadsword
+
+names {"broadsword","sword"}
+title "a large broadsword"
+descr "There is a large broadsword lying here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+/* Pure iron and Decent craft (100% + 5%) */
+WEAPON_DEF(WPN_BROAD_SWORD, 0, 0)
+weight 18
+cost 15 SILVER_PIECE
+end
+
+/* ----------------------- Yummy yummy! -------------------------- */
+                           lobster
+
+names {"lobster"}
+title "a delicious-looking lobster"
+descr "A delicious-looking lobster is lying here, tempting your appetite."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(7, 0)
+weight 5
+cost 2 COPPER_PIECE
+end
+
+                           caviar
+
+names {"russion caviar", "caviar"}
+title "some Russian caviar"
+descr
+"There is some delicious-looking Russian caviar here, making your mouth water."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(2, 0)
+weight 1
+cost 4 COPPER_PIECE
+end
+
+                           yakky_gruel /* Erh, not so yummy yummy... */
+
+names {"gruel","plate"}
+title "a plate full of disgusting gruel"
+descr "There is a plate with some kind of porridge here."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(3, 0)
+weight 2
+cost 1 IRON_PIECE
+end
+
+                           scroll_id
+
+names {"scroll","identify"}
+title "a scroll of identify"
+descr "A scroll has carelessly been left here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+type ITEM_SCROLL
+weight 1
+
+cost 5 GOLD_PIECE
+
+SCROLL_DEF(78, SPL_IDENTIFY_1, SPL_NONE, SPL_NONE)
+
+extra {}
+"The scroll has a magic formula drawn upon it:
+     ???
+    ?   ?
+       ?
+      ?
+      ?
+      *"
+extra {"$identify"}
+"This scroll has the power to identify things."
+extra {"$improved identify"}
+"This scroll casts an 'identify'."
+end
+
+                           scroll_o_recall
+
+names {"Scroll of Recall","scroll","parchment"}
+title "a scroll marked Recall"
+descr "A scroll has carelessly been left here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+type ITEM_SCROLL
+weight 4
+cost 5 GOLD_PIECE
+
+SCROLL_DEF(78, SPL_WORD_OF_RECALL, SPL_NONE, SPL_NONE)
+
+extra {}
+"The scroll has written a formulae of 'Word of Recall' upon it."
+extra {"$identify"}
+"This scroll has the power to transfer persons home."
+extra {"$improved identify"}
+"This scroll casts a 'word of recall'."
+end
+
+%reset
+
+load king_welmar into throne max 1
+{
+    equip royal_sceptre max 1 position WEAR_HOLD
+    equip golden_crown max 1 position WEAR_HEAD
+    equip golden_apple max 1 position WEAR_HOLD
+    load w_key max 1
+
+    follow tim max 1 {
+       ROYAL_ARMOR
+       equip guards_sword max 100 position WEAR_WIELD
+    }
+
+    follow tom max 1 {
+       ROYAL_ARMOR
+       equip guards_sword max 100 position WEAR_WIELD
+    }
+}
+
+load captain_peter into accuse_room max 1
+{
+    equip broadsword max 1 position WEAR_WIELD
+    ROYAL_ARMOR
+}
+load astrologer into top_ne_tower max 1
+{
+    load scroll_o_recall max 100
+    load scroll_id max 100
+}
+load training_master into training_room max 1
+{
+    equip guards_sword max 100 position WEAR_WIELD
+}
+load brian into training_room max 1
+{
+    equip training_sword max 100 position WEAR_WIELD
+    equip guards_jerkin max 50 position WEAR_BODY
+}
+load mick into training_room max 1
+{
+    equip training_sword max 100 position WEAR_WIELD
+    equip guards_jerkin max 50 position WEAR_BODY
+}
+load jim into stage max 1 {
+    ROYAL_ARMOR
+    equip guards_sword max 100 position WEAR_WIELD
+}
+load matt into corridor_wnw max 1 {
+    ROYAL_ARMOR
+    equip guards_sword max 100 position WEAR_WIELD
+}
+load jochem into guard_barracks max 1 {
+    ROYAL_ARMOR
+    equip guards_sword max 100 position WEAR_WIELD
+}
+load anne into training_room max 1 {
+    ROYAL_ARMOR
+    equip guards_sword max 100 position WEAR_WIELD
+}
+load andrew into guard_room max 1 {
+    ROYAL_ARMOR
+    equip guards_sword max 100 position WEAR_WIELD
+}
+load bertram into corridor_n max 1 {
+    ROYAL_ARMOR
+    equip guards_sword max 100 position WEAR_WIELD
+}
+load jeanette into sml_pass_3 max 1 {
+    ROYAL_ARMOR
+    equip guards_sword max 100 position WEAR_WIELD
+}
+load hans into ball_room_se max 1 {
+    ROYAL_ARMOR
+    equip guards_sword max 100 position WEAR_WIELD
+}
+load boris into under_ne_tower max 1 {
+    ROYAL_ARMOR
+    equip guards_sword max 100 position WEAR_WIELD
+}
+load jerry into guard_room max 1 {
+    ROYAL_ARMOR
+    equip guards_sword max 100 position WEAR_WIELD
+}
+load michael into guard_room max 1 {
+    ROYAL_ARMOR
+    equip guards_sword max 100 position WEAR_WIELD
+}
+load royal_herald into throne max 1
+load butler_james into butler_quarters max 1
+{
+    load butler_key max 1
+}
+load cleaning_woman into sml_pass_2 max 5
+load cleaning_woman into sml_pass_2 max 5
+load cleaning_woman into ball_room_nw max 5
+load cleaning_woman into ball_room_nw max 5
+load cleaning_woman into guest_wing max 5
+load chef into kitchen max 1
+{
+    load lobster max 50
+    load caviar max 50
+}
+load cook into kitchen max 2
+{
+    load small_key max 1
+}
+load cook into kitchen max 2
+load dick into by_treasury max 1 {
+    ROYAL_ARMOR
+    equip guards_sword max 100 position WEAR_WIELD
+}
+load david into by_treasury max 1
+{
+    ROYAL_ARMOR
+    equip guards_sword max 100 position WEAR_WIELD
+    load huge_key max 1
+    load pile_of_gold into treasury max 1
+}
+load ghost into dank_room max 1
+{
+        equip ethereal_ring max 5 position WEAR_FINGER_R
+}
+
+load sewer_rat into cell_1 local 1
+load sewer_rat into cell_6 local 1
+
+load sewer_rat into dark_cave max 10
+load sewer_rat into dank_room max 10
+load cockroach2 into accuse_room max 5
+load cockroach into accuse_room max 10
+load cockroach into prison_corr_4 max 10
+load cockroach into narr_pass_1 max 10
+load cockroach into cell_4 max 10
+load cockroach2 into cell_4 max 5
+
+load ergan into cell_5 max 1
+load pool_monster into the_pool@ww1 max 1
+load jack into accuse_room max 1
+{
+    equip guards_sword max 50 position WEAR_WIELD
+    ROYAL_ARMOR
+    load prison_key max 3
+}
+load george into prison_corr_3 max 1
+{
+    equip guards_sword max 50 position WEAR_WIELD
+    ROYAL_ARMOR
+    load prison_key max 3
+}
+load joanna into prison_corr_4 max 1
+{
+    equip guards_sword max 50 position WEAR_WIELD
+    ROYAL_ARMOR
+    load prison_key max 3
+}
+
+load midgaard/sword0 into training_room /* Assumes local 1 */
+load midgaard/wdclb0 into training_room /* Assumes local 1 */
+load midgaard/dag0   into training_room /* Assumes local 1 */
+
+load chest into srvnt_quarter zonemax 1
+load telescope into top_ne_tower zonemax 1
+
+door sml_pass_1 EAST {EX_OPEN_CLOSE}
+door entrance_hall WEST {EX_OPEN_CLOSE}
+door passage_3 EAST {EX_OPEN_CLOSE, EX_CLOSED}
+door servant_corr_w WEST {EX_OPEN_CLOSE,EX_CLOSED}
+door servant_corr_w SOUTH {EX_OPEN_CLOSE}
+door srvnt_quarter NORTH {EX_OPEN_CLOSE}
+door servant_corr_e SOUTH {EX_OPEN_CLOSE, EX_CLOSED}
+door butler_quarters NORTH {EX_OPEN_CLOSE, EX_CLOSED}
+door training_room SOUTH {EX_OPEN_CLOSE, EX_CLOSED}
+door guard_barracks NORTH {EX_OPEN_CLOSE,EX_CLOSED}
+door by_treasury EAST {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+door treasury WEST {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+door guest_wing SOUTH {EX_OPEN_CLOSE, EX_CLOSED}
+door guest_room NORTH {EX_OPEN_CLOSE,EX_CLOSED}
+door guest_wing EAST {EX_OPEN_CLOSE,EX_CLOSED}
+door guest_suite_n WEST {EX_OPEN_CLOSE,EX_CLOSED}
+door grand_staircase EAST {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+door cosy_room WEST {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+
+door accuse_room WEST {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+door cell_1 EAST {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+door accuse_room EAST {EX_OPEN_CLOSE}
+door cell_2 WEST {EX_OPEN_CLOSE}
+door prison_corr_2 WEST {EX_OPEN_CLOSE}
+door cell_3 EAST {EX_OPEN_CLOSE}
+door prison_corr_2 EAST {EX_OPEN_CLOSE}
+door cell_4 WEST {EX_OPEN_CLOSE}
+door prison_corr_3 EAST {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+door cell_5 WEST {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+door prison_corr_3 SOUTH {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+door cell_6 NORTH {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+door prison_corr_4 SOUTH {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+door cell_7 NORTH {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+
+door prison_corr_4 WEST {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN}
+door narr_pass_1 EAST {EX_OPEN_CLOSE, EX_CLOSED}
+
+
+%end

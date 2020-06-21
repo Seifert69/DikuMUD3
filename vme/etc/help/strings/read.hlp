@@ -1,0 +1,16 @@
+<br/>
+<br/>
+<br/>
+<br/>
+Usage read (item)<br/><br/>
+<br/>
+If the specified item is a note, this will show you what is written on the<br/>
+note. If it is not a note, the command will be treated as a 'look at'<br/>
+command.<br/>
+<br/><br/>
+<br/>See Also:<br/><br/>
+Board<br/>
+Note<br/>
+Look<br/><br/>
+Write<br/><br/>
+<br/>

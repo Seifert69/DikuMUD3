@@ -1,0 +1,399 @@
+
+This list describes the SFB_DONE messages sent to DIL programs. If you
+are in need of any of the commands on this list which are not supported
+the quickest method to getting it supported is to re-write the command
+in Dil.
+
+The "done" messages are sent after a command has been successfully
+executed. It is sent to the local environment compared to the person
+executing the command and it can also be sent to an alternative unitptr
+now with the Dil send_done.
+
+This list is not really complete the VME 2.0 has had many commands
+converted to Dil if anyone would like to update this list it would be
+greatly appreciated. All the converted commands have had the SFB_DONE
+added and should make for using the SFB_DONE in wait statements much
+more powerful.
+
+ask - Supported
+Medium   - 0
+Target   - Unit asked to
+Power    - 0
+Argument - What was asked
+
+backstab - Supported
+Medium - Unit used to backstab
+Target - Unit backstabbed
+Power  - The amount of damage inflicted.
+
+bash - Supported
+Medium - Unit bashed with
+Target - Unit bashed
+Power  - "hm", i.e. by how much the attacker succeeded the bash.
+
+bury - Supported
+Medium - Unit buried
+Target - Unit buried in
+Power  - 0
+
+cast - Supported
+Medium - Caster
+Target - Depends on spell
+Power  - Depends on spell
+
+close   - Supported (doors or items)
+Medium - 0 if thing closed, otherwise a pointer to the reverse side
+         of the unit. Thus, if this is set, you know, that you are
+         receiving a message "on the other side of the door".
+Target - Unit closed if power = -1, otherwise roomptr to where door is
+Power  - [0..5] (CMD_NORTH..CMD_DOWN) if a door was closed,
+         "-1"  if not a door, but some kind of unit.
+
+consider - Supported
+Medium - 0
+Target - Unit considered
+Power  - The "rounds to die" on which the considering was based.
+
+down  - See "movement"
+
+drink - Supported
+Medium - Unit consumed
+Target - 0
+Power  - 0 if no poison, 1+ if poisoned (the poison factor).
+
+drop - Supported
+Medium - Unit dropped
+Target - 0
+Power  - 0
+
+east  - See "movement"
+
+eat - Supported
+Medium - Unit consumed
+Target - 0
+Power  - 0 if no poison, 1+ if poisoned (the poison factor).
+
+emote/, - Supported
+Medium - 0
+Target - 0
+Power  - 0
+
+follow - Supported
+Medium - 0
+Target - 0 if following self, target if following someone.
+Power  - 0
+
+get - Supported
+Medium - Got from... (if container)
+Target - Unit fetched
+Power  - 0
+
+give - Supported
+Medium - Unit given
+Target - Reciever of unit
+Power  - 0
+
+grab - Supported
+Medium - Unit grabbed
+Target - 0
+Power  - 0
+
+exit - Supported
+Medium - 0
+Target - Unit left
+Power  - 0
+
+hold - Supported
+Medium - Unit worn
+Target - 0
+Power  - 0
+
+knock  - Supported (doors or items)
+Medium - 0 if thing knocked, otherwise a pointer to the reverse side
+         of the unit. Thus, if this is set, you know, that you are
+         receiving a message "on the other side of the door".
+Target - Unit knocked upon if power = -1, otherwise roomptr to where door is
+Power  - [0..5] (CMD_NORTH..CMD_DOWN) if a door was knocked upon,
+         "-1"  if not a door, but some kind of unit.
+
+leave - Supported
+Medium - 0
+Target - Unit left
+Power  - 0
+
+lock   - Supported (doors or items)
+Medium - 0 if thing locked, otherwise a pointer to the reverse side
+         of the unit. Thus, if this is set, you know, that you are
+         receiving a message "on the other side of the door".
+Target - Unit locked if power = -1, otherwise roomptr to where door is
+Power  - [0..5] (CMD_NORTH..CMD_DOWN) if a door was locked,
+         "-1"  if not a door, but some kind of unit.
+
+look   - Supported
+
+Look blank (no arguments)
+Medium - 0
+Target - 0
+Power  - 0
+
+Look at <xxx>'s <yyy>
+Medium - The unitptr to yyy (if there is one, it may just be a description).
+Target - The unitptr to xxx
+Power  - 1
+
+Look at <xxx>
+Medium - 0
+Target - Unitptr to xxx
+Power  - 2
+
+Look in <xxx>
+Medium - 0
+Target - Unitptr to <xxx>
+Power  - 3
+
+"movement" - Supported
+
+  Movements such as the north - down commands, ride and sail are supported
+  in a special way using SFB_DONE. The command(CMD_AUTO_ENTER) will
+  evaluate to TRUE.
+
+  When a character leaves i a direction, a SFB_CMD message is sent, this
+  message may eventually be blocked and the character stopped from leaving.
+  However, if it is ok, then once the character enters the destination
+  room, a SFB_DONE is sent with the following arguments:
+
+  Activator - The unit that moved into the room.
+  Medium    - The unit that caused the activator to move into the room.
+  Target    - Where the unit came from.
+  Power     - [CMD_NORTH..CMD_DOWN], the direction which was orginally left in.
+
+  Typically you will want to catch the SFB_DONE like this:
+
+     wait(SFB_DONE, command(CMD_AUTO_ENTER)); /* as usual */
+
+
+  Example, when "papi" walks east from the square to the temple:
+
+    activator = papi
+    medium    = papi
+    target    = square       /* Note papi.outside = temple */
+    power     = CMD_EAST
+
+  Example, when "papi" sails east (in a canoe) from the square to the temple:
+
+    activator = canoe
+    medium    = papi
+    target    = square       /* Note canoe.outside = temple */
+    power     = CMD_EAST
+
+  If papi had ridden east then activator would simply be the mount.
+
+north - See "movement"
+
+pick - Supported
+Medium - 0
+Target - Unit picked (if doors, room ptr)
+Power  - [0..5] (CMD_NORTH..CMD_DOWN) if a door was picked,
+         "-1" if not a door, but some kind of unit.
+
+
+open   - Supported (doors or items)
+Medium - 0 if thing opened, otherwise a pointer to the reverse side
+         of the unit. Thus, if this is set, you know, that you are
+         receiving a message "on the other side of the door".
+Target - Unit opened if power = -1, otherwise roomptr to where door is
+Power  - [0..5] (CMD_NORTH..CMD_DOWN) if a door was opened,
+         "-1"  if not a door, but some kind of unit.
+
+
+pour - Supported
+Medium - Unit poured
+Target - Unit poured into
+Power  - 0
+
+put - Supported
+Medium - Object put
+Target - Target for medium (put into)
+Power  - 0
+
+quaff - Supported
+Medium - Unit quaffed
+Target - 0
+Power  - 0
+Note that the the spells cast on the quaffer each send a seperate
+done message for each spell cast. They are sent before the quaff
+message.
+
+recite - Supported
+Medium - Scroll read
+Target - 0
+Power  - 0
+Note that the the spells cast on the reciter each send a seperate
+done message for each spell cast. They are sent before the scroll
+message.
+
+
+remove - Supported
+Medium - Unit removed
+Target - 0
+Power  - 0
+
+ride   - See "movement"
+
+sail   - See "movement"
+
+say / '  - Supported
+Medium   - 0
+Target   - 0
+Power    - 0
+Argument - What was said
+
+shout - Supported
+Medium   - 0
+Target   - 0
+Power    - 0
+Argument - What was shouted
+
+sip - Supported
+Medium - Unit sipped
+Target - 0
+Power  - 0 if no poison, 1+ if poisoned (the poison factor).
+
+socials - Supported
+Medium - 0
+Target - Possible target
+Power  - 0
+
+south - See "movement"
+
+steal - Supported
+Medium - Unit stolen
+Target - Unit stolen from
+Power  - "hm", i.e. how much the steal was successful with.
+
+take - Supported
+Medium - 0
+Target - Unit taken
+Power  - 0
+
+taste - Supported
+Medium - Unit sipped
+Target - 0
+Power  - 0 if no poison, 1+ if poisoned (the poison factor).
+
+tell - Supported
+Medium   - 0
+Target   - Unit told to
+Power    - 0
+Argument - What was told
+
+unlock - Supported (doors or items)
+Medium - 0 if thing unlocked, otherwise a pointer to the reverse side
+         of the unit. Thus, if this is set, you know, that you are
+         receiving a message "on the other side of the door".
+Target - Unit unlocked if power = -1, otherwise roomptr to where door is
+Power  - [0..5] (CMD_NORTH..CMD_DOWN) if a door was unlocked,
+         "-1"  if not a door, but some kind of unit.
+
+up    - See "movement"
+
+wear - Supported
+Medium - Unit worn
+Target - 0
+Power  - 0
+
+west  - See "movement"
+
+whisper - Supported
+Medium   - 0
+Target   - Unit whispered to
+Power    - 0
+Argument - What was whispered
+
+wield - Supported
+Medium - Unit worn
+Target - 0
+Power  - 0
+
+aid - Not supported
+appraise - Not supported
+bug - Not supported
+buy - Not supported
+change - Not supported
+close - Not supported
+commands - Not supported
+compact - Not supported
+contract - Not supported
+decapitate - Not supported
+diagnose - Not supported
+dig - Not supported
+directions - Not supported
+doors - Not supported
+echosay - Not supported
+equipment - Not supported
+examine - Not supported
+exits - Not supported
+expert - Not supported
+extinguish - Not supported
+flee - Not supported
+group - Not supported
+guilds - Not Supported
+hide - Not supported
+hit - Not supported
+idea - Not supported
+info - Not supported
+inform - Not supported
+insult - Not supported
+inventory - Not supported
+kick - Not supported
+kill - Not supported
+level - Not supported
+light - Not supported
+list - Not supported
+mail - Noy supported
+news - Not supported
+noshout - Not supported
+notell - Not supported
+offer - Not supported
+peaceful - Not supported
+practice - Not supported
+pray - Not supported
+prompt - Not supported
+purse - Not supported
+quests - Not supported
+quit - Not supported
+read - Not supported
+request - Not supported
+rescure - Not supported
+rest - Not supported
+save - Not supported
+score - Not supported
+search - Not supported
+sell - Not supported
+sit - Not supported
+sleep - Not supported
+sneak - Not supported
+stand - Not supported
+status - Not supported
+time - Not supported
+trip - Not supported
+turn - Not supported
+typo - Not supported
+use - Not supported
+value - Not supported
+ventriloquate - Not supported
+wake - Not supported
+weather - Not supported
+where - Not supported
+who - Not supported
+wimpy - Not supported
+write - Not supported
+
+/*-- Commands unable to test --*/
+account
+break
+climb
+dismount
+mount
+reply
+spli

@@ -1,0 +1,1766 @@
+/*
+filename    goblin_cave
+password    realworld
+changedby   Stormtamer
+EmailAdd     Marc Bellemare <baam@erols.com>
+request     compile
+version     3
+END HEADER*/
+
+
+
+
+
+
+
+
+
+#include <macros.h>
+/*==============================================================*/
+/*                            ZONE                              */
+/*==============================================================*/
+%zone                           goblin_cave
+title "Goblin Caves@Mainland"
+creators {"Beren"}
+notes
+"    This area has been created from a request from PAPI. It has been
+build in a hurry and while the DIKUMUD system (PAIN etc.) are under changes,
+and therefore errors may occur. It's a area for players between 5 and 7
+level. A small quest are attached to the goblin cave:
+     The Hermit in the cypress forest are looking for a robe of +1 to dex
+which is said to be in the goblin kings treasure room. If a player can find
+it, and give it to the hermit, he will be presented with a gift; A goblin-
+slayer sword.
+Version 1.0 made 10/3-94 by Beren (Lars floe Nielsen). Suggestions mail to
+PAPI.
+
+Quest note:  Quest is given by Gwyn in cypress zone. PC must locate robe hidden
+in treasure room hidden behind throne. Reward is a mace, not a sword as 
+stated above. Item is not 
+
+5/20/2008 ETNA Stew stealing sub routine erroring on mud. Remmed it out
+Cleric was casting rai dex (MU spell) changed to bless. Also removed
+King attack on the pc.  4 at once on a newbie is a bit much. Also added
+eq to cook.
+
+"
+help
+"    Somewhere in there are goblins encamped awaiting orders to
+swoop down and take Udgaard and Midgaard for their Masters. They
+have been waiting a very long time. Long enough that one might
+even think maybe, just maybe they have been forgotten, Now
+then must hide and fend for themselves. This includes stealing
+from the locals.
+Zone by Beren. Suggestions mail to PAPI.
+"
+
+lifespan 37
+reset RESET_ANYHOW
+
+/*==============================================================*/
+/*                           ROOMS                              */
+/*==============================================================*/
+%rooms
+				guard_room
+title "A Guardroom"
+descr
+"    You have entered something which looks like a small room. The walls
+have been carved out of the ground, and are NOT the fine craftsmanship of
+the dwarves. A torch is lighting the room up in a dim light. In the middle
+of the room you see a table surrounded by chairs. Small notes are scattered
+around the table. The only obvious exit from here is to the south."
+extra {"table","notes"}
+"  The notes on the table are written in a very childish language: 'Braag
+ar stupiid', 'Now i am not, Ju ar dad'. etc."
+movement SECT_CITY
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+ALWAYS_LIGHT
+south to bed_chamber;
+end
+
+				cave_cross
+title "A Cross in the Cave"
+descr
+"    You are at a cross. Hay is scattered all over the ground. It's very
+dirty, and the smell is awful. It has certainly been a long time since the 
+cleaning woman has been here. A small sign is hanging on the wall."
+extra {"sign"}
+"    The sign says: 'Nort is out tu foreest. vest iS tu sleEP ruum, est is
+Tu da storruum, saut iS tu greet kinG Burp."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_CITY
+north to cypress/cave_entrance;
+west to bed_chamber open {EX_OPEN_CLOSE, EX_CLOSED} keyword {"west door","door"};
+east to storeroom open {EX_OPEN_CLOSE, EX_CLOSED} keyword {"east door","door"};
+south to throne4 open {EX_OPEN_CLOSE, EX_CLOSED} keyword {"south door","door"};
+end
+
+				bed_chamber
+
+title "At a Small Bed Chamber"
+descr
+"    This is a small dirty bed chamber. Small beds rests on the walls. It's
+very hot in here and the air is heavy of moist. Water is drifting down the
+walls. You wonder who can live in this mess. A torch is hanging on the wall,
+lighting the room in a dim light. The only way from this room is to the east."
+extra {"torch"}
+"  The torch is of the refill-type. It is stuck on the wall, so just forget
+to take it with you."
+movement SECT_CITY
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+ALWAYS_LIGHT
+east to cave_cross open {EX_OPEN_CLOSE, EX_CLOSED} keyword {"door"};
+north to guard_room;
+end
+
+				storeroom
+title "The Storeroom"
+descr
+"    You are in the storeroom. Shelves are hanging at the walls, filled with
+all kind of disgusting stuff. To the south you see the kitchen, which is in
+one with the storing area. You would probably think it looks good if you
+were a goblin architect. But now it just looks quite ugly. The exits is
+west to the cross and south to the kitchen."
+extra {"shelves"}
+"   The cans on the shelves says: 'lizarrd aye', 'marmalade', 'grass',
+'banana', etc. After a quick look in one can you firmly decide that you
+DON'T need any of this rotten stuff"
+movement SECT_CITY
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+ALWAYS_LIGHT
+west to cave_cross open {EX_OPEN_CLOSE, EX_CLOSED} keyword {"door"};
+south to kitchen;
+end
+
+				kitchen
+title "The Kitchen"
+descr
+"   Food (if you can call it food) is boiling in a pot. The smell makes you
+sick. Anyway you try to identify what the green boiling mass can be, and
+you decide that it looks like something between spinach with eyes and melted
+pistachio ice with anchovies. To the north you see the store area. Another exit
+is leading through a door to the west."
+extra {"food", "pot"}
+"   Aha! You see a fingernail. How delicious. Nah, you decide to leave this
+to the poor goblins."
+movement SECT_CITY
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+ALWAYS_LIGHT
+west to throne3 open {EX_OPEN_CLOSE, EX_CLOSED} keyword {"door"};
+north to storeroom;
+end
+
+				jail
+title "The Goblin Jail"
+descr
+"    This is a ordinary jail. A bed and a latrine. The only oddity is
+that the jail is more clean than the outside. It's probably the jail's 'guest'
+which has caused this. The only exit from this room is to the east through
+the iron door."
+extra {"latrine"}
+"   Even the latrine is clean. It's a hole in the ground, like an ordinary
+latrine."
+extra {"bed"}
+"Sheets lie on the bed. Nicely folded and ironed."
+movement SECT_CITY
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+ALWAYS_LIGHT
+east to throne1 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED} keyword {"iron door","door"} key gob_jail_key;
+end
+
+				throne1
+title "The Western Part of the Throne Hall"
+descr
+"    You are at the western part of the hall. Tables form a horse
+shoe, and you are at the west part. In the middle of the 'shoe' you see a
+throne, probably belonging to the Great Goblin King Burp. The table is
+covered in grease and some sort of slime. Goblin 'food' crawls around on the
+table. YUCK !
+    The only exits from here lead to the middle of the throne room, which is
+to the east, and through an iron door to the west."
+extra {"food"}
+"This looks like something which has barely escaped the trash can"
+extra {"iron door"}
+"It looks like a door that could stand a massive attack."
+movement SECT_CITY
+flags{UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+ALWAYS_LIGHT
+west to jail open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED} keyword {"iron door", "door"} key gob_jail_key;
+east to throne4;
+end
+
+				throne2
+
+title "At the Throne"
+descr
+"    In front of you, you see a throne, probably belonging to the great
+king Burp. The only obvious exit is to the north to the middle of the
+throne hall."
+extra {"throne","burp throne"}
+"A big bear skin is covering the throne. Also you see a lot of grease and
+some sort of slime. This is probably very good, if you were a goblin. At the
+closer examination you see a something which might be a badly hidden 'secret'
+door behind the throne. You would probably need to search for it! (use the
+search command)."
+movement SECT_CITY
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+ALWAYS_LIGHT
+north to throne4;
+
+south to behind_throne
+    open {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN} 
+    keyword {"secret door","secret","south door","door","wall"} 
+    key gob_tre_key difficulty 0;
+end
+
+				throne3
+title "The Eastern Part of the Throne Hall"
+descr
+"    You are in the eastern part of a great hall. A horse shoe formed of
+tables are 'covering' the floor. You can't help notice that the mearest table 
+is covered in grease. This is really a real goblin table. The exits are to the
+west into the middle of the throne hall and east to the kitchen."
+movement SECT_CITY
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+ALWAYS_LIGHT
+west to throne4;
+east to kitchen open {EX_OPEN_CLOSE, EX_CLOSED} keyword {"door","east door"};
+end
+
+				throne4
+title "Centre of the Throne Hall"
+descr
+"   You are in the throne hall in the middle of the horse shoe formed by
+ tables. The kitchen is further east, the jail is west and the throne
+is south of here. A door leads north."
+movement SECT_CITY
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+ALWAYS_LIGHT
+north to cave_cross open {EX_OPEN_CLOSE, EX_CLOSED} keyword {"door"};
+east to throne3;
+west to throne1;
+south to throne2;
+end
+
+
+				behind_throne
+title "Behind the Throne"
+descr
+"   This is obviously King Burp's very secret public treasure room. It looks
+like something he has made himself. The craftsmanship is like an armless
+blind drunk's. Anyway... in the middle of the room you see a statue of king
+Burp. On the pedestal there is an inscription: 'King Burp, king of wisdom,
+powerfulness and ruler of the world'. The signature of the artist is the
+same, Burp. The only obvious exit from here is to the north."
+extra {"statue","burp"}
+"   The only clue that points in the direction that this is King Burp, is
+the loooong beard and the sceptre"
+movement SECT_CITY
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+north to throne2 open {EX_OPEN_CLOSE, EX_CLOSED} keyword {"secret door","secret","door"} key gob_tre_key;
+end
+
+/*============================================================*/
+/*                            OBJECTS                         */
+/*============================================================*/
+%objects
+
+				robe_gwyn
+
+names {"yellow robe", "robe"}
+title "a yellow robe"
+descr
+"A yellow robe has been left here"
+extra {}
+"It's made of leather, then painted yellow. Actually a VERY ugly thing.
+Looking like something only a pimp, or perhaps Gwyn, would wear."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+DEX_TRANSFER (+1)
+rent 25 IRON_PIECE
+weight 10
+cost 4 COPPER_PIECE
+end
+
+				burp_robe
+names {"fine robe", "robe"}
+title "a fine robe"
+descr
+"A fine robe has been left here"
+extra {}
+"It's made of red and black silk. Runes are all over the robe, making
+it very mystic and special."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+weight 10
+cost 15 COPPER_PIECE
+end
+
+				mguul_robe
+names {"mage robe", "robe"}
+title "a mage robe"
+descr
+"A mage robe has been left here"
+extra {}
+"Even though this robe is made to make it look mystic and magical, even
+a child could see, that it isn't."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+weight 10
+cost 5 COPPER_PIECE
+end
+
+				gob_jail_key
+names {"jail key", "key"}
+title "a jail key"
+descr
+"A key has been left here"
+extra {} "A very normal key, with an inscription saying 'JAIL KEY'"
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+type ITEM_KEY
+weight 1
+cost 2 IRON_PIECE
+end
+ 				gob_tre_key
+names {"treasure key", "key"}
+title "a treasure key"
+descr
+"A key has been left here."
+extra {} "A normal key with an inscription saying 'treasure key'"
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+type ITEM_KEY
+weight 1
+cost 2 IRON_PIECE
+end
+
+                                mushroom
+names {"mushroom"}
+title "a mushroom"
+descr
+"A mushroom has been left here."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+FOOD_DEF(2,0)
+weight 2
+cost 1 IRON_PIECE
+extra {} "This looks like an ordinary mushroom, maybe a little poisonous"
+end
+
+                                stew
+names {"disgusting stew", "green stew", "stew"}
+title "some disgusting green stew"
+descr
+"Some disgusting green stew has been dropped here."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(3,0)
+weight 3
+extra {} "Nah, this food is defiantly NOT for humanoids !"
+end
+
+                           burp_sword
+names {"goblin sword", "short sword", "sword"}
+title "an goblin short sword"
+descr
+"A goblin short sword has been dropped here"
+extra {}
+"   This sword are of great quality. It reminds very much of the sword type
+'Cinquedea', also called five finger sword or ox tongue sword, because of the
+width of the sword. It has a mark with the writing 'Andrea dei Ferara'."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
+WEAPON_DEF(WPN_SHORT_SWORD, 2, 0)
+weight 9
+cost 16 SILVER_PIECE
+end
+
+                           mguul_dagger
+names {"light goblin dagger","light dagger", "goblin dagger","dagger"}
+title "an light goblin dagger"
+descr
+"A light goblin dagger has been left here"
+extra {}
+"   This is a weapon of the type 'kidney-dagger'. It is called so because of
+the hand-protector, which is formed like an kidney. This is a little better
+craftsmanship than an ordinary weapon of this type. The weight balance isn't
+correct though, the blade is to heavy."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
+WEAPON_DEF(WPN_DAGGER, 0, 0)
+weight 2
+cost 7 SILVER_PIECE
+end
+
+                           goblin_sword
+names {"goblin broad sword","broad sword","goblin sword"}
+title "an goblin broad sword"
+descr
+"A goblin broad sword has been left here"
+extra {}
+"  This is a completely normal bastard sword, fitted for a goblin. The only
+thing that are exceptional are the blood line in the middle of the blade."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
+WEAPON_DEF(WPN_BROAD_SWORD, -5, 0)
+weight 12
+cost 8 SILVER_PIECE
+end
+
+                           ghopla_mace
+names {"goblin mace","mace"}
+title "an goblin one-handed mace"
+descr
+"A goblin one-handed mace has been left here"
+extra {}
+"  This looks like the typical wooden mace with an iron head. It has a very
+heavy head, which probably makes it even more devastating for an enemy. An
+inscription on the wooden handle says 'Gooood, Hhe, Hhe, Hhe, Gooood'."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
+WEAPON_DEF(WPN_MACE, -5, 0)
+weight 16
+cost 5 SILVER_PIECE
+end
+
+                          fool_sceptre
+names {"fools sceptre ", "sceptre"}
+title "an fools sceptre"
+descr
+"A fools sceptre has been left here"
+extra {}
+"   This is a normal fools sceptre, with a wooden handle and a bulls bladder
+hanging on the top."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+type ITEM_TRASH
+weight 2
+end
+
+                          burp_sceptre
+names {"king burps sceptre", "kings sceptre", "burps sceptre", "sceptre"}
+title "King Burps sceptre"
+descr
+"King burps sceptre has been left here"
+extra {}
+"   This is not a golden sceptre, nor is it a bronze sceptre. It's simply a
+totally whacked sceptre made of wood and painted with grass. To think this got
+any value you have to have other standards than the civilised world have."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+type ITEM_TRASH
+weight 2
+end
+
+                          fake_beard
+names {"fake beard", "beard"}
+title "an beard"
+descr
+"A fake beard has been left here"
+extra {}
+"   YUCK, this beard is filled with grease. It's really something only a real
+psychopath would wear on his head."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_WEAR_HEAD}
+ARMOUR_CLOTHES(0, 0)
+weight 2
+end
+
+                          fools_hat
+names {"fools hat", "hat"}
+title "an fools hat"
+descr
+"A fools hat has been left here"
+extra {}
+"   Oh, yeah... This is really the most precious thing you have ever seen. A
+small goblin fools hat with tiny bells. This should really make you silent
+if you got the need to sneak someday."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_HEAD}
+ARMOUR_CLOTHES(0, 0)
+DIV_TRANSFER (+1)
+rent 25 IRON_PIECE
+weight 2
+cost 3 IRON_PIECE
+end
+
+                          pointy_hat
+names {"pointy wizard hat", "pointy hat", "hat"}
+title "a pointy wizard hat"
+descr
+"A pointy wizard hat has been left here"
+extra {}
+"   This hat really looks magical. It's covered with small silver stars and
+half-moons, probably to summon the strengths from the dark sides of magic."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WEAR_HEAD}
+ARMOUR_CLOTHES(0, 0)
+weight 2
+rent 25 IRON_PIECE
+cost 6 COPPER_PIECE
+end
+
+
+                        goblin_sleeves
+names {"goblin sleeves", "sleeves"}
+title "some goblin sleeves"
+descr
+"Some goblin sleeves has been left here."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_ARMS}
+/* armour_type, quaility, optimal_strength */
+ARMOUR_LEATHER(0, 0)
+weight 10
+cost 8 COPPER_PIECE
+extra {} " These sleeves looks like normal sleeves, though they are greasy"
+end
+
+                        gob_gauntlets
+names {"goblin gauntlets", "gauntlets"}
+title "a pair of goblin gauntlets"
+descr
+"A pair of goblin gauntlets has been left here."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_HANDS}
+/* armour_type, quaility, optimal_strength */
+ARMOUR_LEATHER(0, 0)
+weight 10
+cost 6 COPPER_PIECE
+extra {}
+"These gauntlets are black with yellow stripes. They are also a little
+greasy."
+end
+
+                                goblin_leggins
+names {"goblin leggings", "leggings"}
+title "a pair of goblin leggings"
+descr
+"A pair of goblin leggings has been left here."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_LEGS}
+/* armour_type, quaility, optimal_strength */
+ARMOUR_LEATHER(0, 0)
+weight 10
+cost 8 COPPER_PIECE
+extra {}
+"It's fine craftsmanship. Made of goblins and decorated by hobgoblins."
+end
+
+                                goblin_breast
+names {"goblin breast plate", "breast plate", "goblin plate", "plate"}
+title "a goblin breast plate"
+descr
+"A goblin breast plate has been left here."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_BODY}
+/* armour_type, quaility, optimal_strength */
+ARMOUR_LEATHER(0, 0)
+weight 10
+cost 6 COPPER_PIECE
+extra {} "It's made of leather. You will like it. "
+end
+
+                        goblin_helmet
+names {"goblin helmet", "helmet"}
+title "a goblin helmet"
+descr
+"A goblin helmet has been left here."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_HEAD}
+ARMOUR_LEATHER(0, 0)
+weight 10
+cost 6 COPPER_PIECE
+extra {}
+" It looks like an ordinary greasy helmet. You see small written letters
+saying 'MADE IN GOB CAV'"
+end
+
+
+                                goblin_boots
+names {"goblin boots", "boots"}
+title "some goblin boots"
+descr
+"Some goblin boots has been left here."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_FEET}
+/* armour_type, quaility, optimal_strength */
+ARMOUR_LEATHER(0, 0)
+weight 10
+cost 6 COPPER_PIECE
+extra {} " Oh, how happy you are to get this fine greasy boots."
+end
+
+                              coins1
+
+MONEY(IRON_PIECE, 35)
+end
+
+
+/*==========================================================*/
+/*                         MOBILES                          */
+/*==========================================================*/
+%mobiles
+%mobiles
+				burp
+names {"king burp", "burp", "king"}
+title "King Burp"
+descr "king Burp is here looking at YOU."
+extra {}
+"  King Burp is a very fat goblin. Grease is running down through the 
+obvious fake beard he wears. In his right hand he holds an extremely ugly 
+sceptre. Around his shoulders there is very fine robe."
+money 30 IRON_PIECE
+M_GOBLIN_WARRIOR_SWORD(6, SEX_MALE)
+
+dilcopy teamwork@function(" fool / cook");
+dilbegin kingprg();
+var
+  char  : unitptr;
+  item  : unitptr;
+code
+{
+  heartbeat:=PULSE_SEC*12;
+  :start:
+  exec("point ", self);
+  pause;
+  exec("say Gho, Gho, Dad is really fhunny.", self);
+  pause;
+  exec("emote throws a bone at a fool.", self);
+  pause;
+  char:=self.outside.inside;
+    secure(char,lostpc);
+  if(char.type!=UNIT_ST_PC)
+  {
+  unsecure(char);
+	  goto start;
+  }	  
+/*  while(char!=null)
+  {
+   secure(char,lostpc);
+    item:=findunit(char, "stew", FIND_UNIT_INVEN, null);
+    exec("steal "+item.name+" from "+char.name, self);
+    if(item==self.inside)
+  	  goto stew;
+    else
+    {
+      char:=char.next;
+      if(char.type!=UNIT_ST_PC)
+      {
+
+        char:=char.next;
+      }
+    }
+  }
+  unsecure(char);
+  goto no_stew;
+
+  :stew:
+  exec("eat stew", self);
+  pause;
+  goto no_stew;  */
+
+  :no_stew:
+  if(char==null)
+    goto start;
+  else
+  {
+    secure(char,lostpc);
+    exec("point "+char.name, self);
+    pause;
+    exec("say Gwho ar yu?", self);
+    pause;
+    exec("say Spai, ar yu spai?", self);
+    pause;
+    exec("say Kill dad man!", self);
+    pause;
+/*  exec("kill "+char.name, self);  */
+    pause;
+	unsecure(char);
+    goto start;
+  }
+:lostpc:
+unsecure(char);
+  goto start;
+}
+dilend
+
+end
+
+
+                                mguul
+names {"mguul", "mage"}
+title "Mguul the mage"
+descr "Mguul the mage is here looking at King Burps fine beard"
+extra {}
+"   This is truly the most magnificent mage you have ever seen. A great
+pointy hat, a long shining robe and a small leather bound book. At a closer
+look you see that his eyes are filled with hate and with greed. This is a man
+you must beware."
+
+
+M_GOBLIN_MAGE_FIRE(5, SEX_MALE, "cast burn")
+money 25 IRON_PIECE
+
+dilcopy teamwork@function("burp / ghopla / fool / officer / cook");
+dilcopy rescue@function("burp");
+dilbegin mguulprg();
+var
+  char  : unitptr;
+  item  : unitptr;
+code
+{
+  heartbeat:=PULSE_SEC*12;
+  :start:
+  exec("grin", self);
+  pause;
+  exec("say Mmm.", self);
+  pause;
+  exec("look fool", self);
+  pause;
+  char:=self.outside.inside;
+    secure(char,lostpc);
+  if(char.type!=UNIT_ST_PC)
+    {
+	  unsecure(char);
+	  goto start;
+	}  
+/*  while(char!=null)
+  {
+   secure(char,lostpc);
+    item:=findunit(char, "stew", FIND_UNIT_INVEN, null);
+    exec("steal "+item.name+" from "+char.name, self);
+    if(item==self.inside)
+      goto stew;
+    else
+    {
+      char:=char.next;
+      if(char.type!=UNIT_ST_PC)
+      {
+        char:=char.next;
+      }
+    }
+  }
+  goto no_stew;
+
+  :stew:
+  exec("eat stew", self);
+  pause;
+  goto no_stew; */
+
+  :no_stew:
+  if(char==null)
+    goto start;
+  else
+  {
+   secure(char,lostpc);    
+	exec("point "+char.name, self);
+    pause;
+    exec("emote turns to a certain page in his spellbook.", self);
+    pause;
+    exec("emote starts reading a spell.", self);
+    pause;
+    exec("cast burn "+char.name, self);
+    pause;
+    goto start;
+  }
+:lostpc:
+unsecure(char) ;
+  goto start;
+
+}
+dilend
+
+
+end
+
+
+                                ghopla
+names {"ghopla", "cleric"}
+title "Ghopla the cleric"
+descr "Ghopla the cleric is here agreeing with king Burp"
+extra {}
+"    This girl must certainly be the most ugly and disgusting of all the
+goblins in the world. Eyes almost touching each other and a mouth as wide as
+her head. Small pointy teeth reveals themselves."
+
+M_GOBLIN_CLERIC_CLUB(5, SEX_FEMALE, "cast cau li wo", "cast cur li wo burp")
+money 25 IRON_PIECE
+
+dilcopy teamwork@function("burp / mguul / fool / officer / cook");
+dilcopy rescue@function("burp");
+dilbegin ghoplaprg();
+var
+  char  : unitptr;
+  item  : unitptr;
+code
+{
+  heartbeat:=PULSE_SEC*12;
+  :start:
+  act("$1n's face crinkles in what you could call a smile.",
+  A_SOMEONE, self, null, null, TO_ALL);
+  pause;
+  exec("giggle", self);
+  pause;
+  exec("laugh fool", self);
+  pause;
+  char:=self.outside.inside;
+    secure(char,lostpc);
+  if(char.type!=UNIT_ST_PC)
+    {
+	  unsecure(char);
+	  goto start;  
+	}
+/*  while(char!=null)
+  {
+    secure(char,lostpc);
+    item:=findunit(char, "stew", FIND_UNIT_INVEN, null);
+    exec("steal "+item.name+" from "+char.name, self);
+    if(item==self.inside)
+      goto stew;
+    else
+    {
+      char:=char.next;
+      if(char.type!=UNIT_ST_PC)
+      {
+        char:=char.next;
+      }
+    }
+  }
+  goto no_stew;
+
+  :stew:
+  exec("eat stew", self);
+  pause;
+  goto no_stew;   */
+
+  :no_stew:
+  if(char==null)
+    goto start;
+  else
+  {
+  secure (char,lostpc);
+    exec("point "+char.name, self);
+    pause;
+    exec("emote grabs a holy symbol.", self);
+    pause;
+/*    exec("cast raise dex burp", self);
+    pause;
+    exec("cast raise dex mguul", self);
+    pause;
+    exec("cast raise dex ghopla", self); */
+	exec("cast bless burp", self);
+    pause;
+    exec("cast bless mguul", self);
+    pause;
+    exec("cast bless ghopla", self); 
+    pause;
+    exec("kill "+char.name, self);
+
+:lostpc:
+
+    unsecure(char);
+    goto start;
+  }
+
+goto start;
+}
+dilend
+
+end
+
+                                fool
+names {"fool"}
+title "the fool"
+descr "The fool is here entertaining"
+extra {}
+"   Hey this guy are actually quite funny, sticking fingers up his nose.
+He is wearing red clothes with yellow lines. On his head he is wearing a
+fools hat. Suddenly you realise that this fool are making fun at king
+Welmar of Midgaard.- HOW RUDE!"
+money 10 IRON_PIECE
+M_GOBLIN_WARRIOR_CLUB(2, SEX_MALE)
+
+dilcopy teamwork@function("burp / mguul / ghopla / officer / cook");
+dilcopy rescue@function("burp");
+dilbegin foolprg();
+code
+{
+  heartbeat:=PULSE_SEC*14;
+  :start:
+  exec("emote stuffs two fingers up his nose.", self);
+  pause;
+  exec("bounce", self);
+  pause;
+  exec("emote emotes that he is king Welmar.", self);
+  pause;
+  exec("puke", self);
+  pause;
+  exec("dance", self);
+  pause;
+  exec("yodel", self);
+  pause;
+  exec("emote gets a greasy bone from the floor.", self);
+  pause;
+  exec("emote eats a greasy bone.", self);
+  pause;
+  exec("emote rolls over like a dog.", self);
+  pause;
+  exec("emote emulates a pig.", self);
+  pause;
+  exec("hit fool", self);
+  pause;
+  goto start;
+}
+dilend
+
+end
+
+                                baa
+names {"baa the goblin", "baa", "goblin"}
+title "Baa the goblin"
+descr "Baa the goblin is here speaking with Boo"
+extra {}
+"   Baa are having a problem with his arms. They are gesturing wildly, like
+a windmill. He is wearing a black goblin dress, especially made for goblins."
+
+M_GOBLIN_WARRIOR_SWORD(2, SEX_MALE)
+
+money 10 IRON_PIECE
+
+dilcopy teamwork@function("boo / officer / cook");
+dilcopy rescue@function("boo");
+dilbegin baaprg();
+code
+{
+  heartbeat:=PULSE_SEC*6;
+  :start:
+  exec("say Dad my fater did. Dad's true.", self);
+  pause;
+  exec("say Bud dad's true!!", self);
+  pause;
+  exec("say And den he also killed da dragon wid a come.", self);
+  pause;
+  exec("say And da lich he also killed, bud wid da head of da dragoon!", self);
+  pause;
+  exec("say My motter vas a very evil and stronng wizdard.", self);
+  pause;
+  exec("she She coud kill all im den world, wit a pen.", self);
+  pause;
+  exec("say She was ruler of da hole MIDGAARD.", self);
+  pause;
+  exec("say Bud da gods had he removed from da world.", self);
+  pause;
+  exec("Bud nod withoud a big figt!", self);
+  pause;
+  exec("say Modder is da one dad I hav da genes from.", self);
+  pause;
+  exec("say Dad's wy I'm dad clevver!", self);
+  pause;
+  exec("agree Baa", self);
+  pause;
+  exec("smile", self);
+  pause;
+  exec("say My fadder killed da god Beren.", self);
+  wait(SFB_CMD|SFB_TICK, TRUE);
+  if(activator.type==UNIT_ST_PC)
+  {
+    act("$1n notices you.", A_SOMEONE, self, null, activator, TO_VICT);
+    act("$1n notices $3n.", A_SOMEONE, self, null, activator, TO_NOTVICT);
+    pause;
+    exec("say Who, YU?", self);
+    pause;
+    exec("kill "+activator.name, self);
+    wait(SFB_TICK, self.position!=POSITION_FIGHTING);
+    exec("get all from corpse", self);
+    pause;
+    goto start;
+  }
+  else goto start;
+}
+dilend
+
+end
+
+                                boo
+
+names {"boo the goblin", "boo", "goblin"}
+title "Boo the goblin"
+descr "Boo the goblin is here listening to Baa"
+extra {}
+"   Boo is really looking bored, listening to Baa. She is wearing normal
+yellow leather-armour."
+
+M_GOBLIN_WARRIOR_SWORD(3, SEX_MALE)
+money 15 IRON_PIECE
+
+dilcopy teamwork@function("baa / officer / cook");
+dilcopy rescue@function("baa");
+dilbegin booprg();
+code
+{
+  heartbeat:=PULSE_SEC*6;
+  :start:
+  exec("say Sure!", self);
+  pause;
+  exec("say Okey, den it's true.", self);
+  pause;
+  exec("say Yes, dads very possiblele.", self);
+  pause;
+  exec("say Yeah, vid lots of brain.", self);
+  pause;
+  exec("say BAH!", self);
+  pause;
+  exec("say Dads in anodder time anodder place.", self);
+  pause;
+  exec("say Nah, dey probably had to remove da smell.", self);
+  pause;
+  exec("say Yeah, no brain, no pain.", self);
+  pause;
+  exec("say Yeah, da are VERY brain(dead).", self);
+  pause;
+  exec("laugh baa", self);
+  pause;
+  exec("emote points a finger to his ear, indicating that Bass isn't to smart.", self);
+  pause;
+  exec("say Yes da gods are wimps.", self);
+  pause;
+  wait(SFB_CMD|SFB_TICK, TRUE);
+  if(activator.type==UNIT_ST_PC)
+  {
+    exec("look "+activator.name, self);
+    pause;
+    exec("say Dads from Udgaard!", self);
+    pause;
+    exec("kill "+activator.name, self);
+    pause;
+    wait(SFB_TICK, self.position!=POSITION_FIGHTING);
+    goto start;
+  }
+  goto start;
+}
+dilend
+
+end
+
+
+                                bii
+names {"bii the goblin","bii","goblin"}
+title "Bii the goblin"
+descr "Bii the goblin is here explaining about life"
+extra {}
+"  Bii is a VERY attractive goblin. Her eyes are green with a spark of blue.
+When she smiles, her brown teeth crinkles up around her extreme round nose.
+Her ears are long and shiny, it's truly a looong time she's taken a shower."
+
+M_GOBLIN_WARRIOR_SWORD(4, SEX_FEMALE)
+money 20 IRON_PIECE
+
+dilcopy teamwork@function("bee / officer / cook");
+dilcopy rescue@function("bee");
+dilbegin biiprg();
+var
+pc : unitptr;
+
+code
+{
+  heartbeat:=PULSE_SEC*6;
+  :start:
+  exec("say Da world has da shape of da banana.", self);
+  pause;
+  exec("say Den all da people gathers in da middle.", self);
+  pause;
+  exec("say And dey all kill all.", self);
+  pause;
+  exec("grin", self);
+  pause;
+  exec("say Did you know dad yu can eat da world?", self);
+  pause;
+  exec("say Dad's true!", self);
+  pause;
+  exec("say Bud yu hav to hav biiiiiggg teeths!", self);
+  pause;
+  exec("say Dad we live on.", self);
+  pause;
+  exec("say Shall I tell you again?", self);
+  pause;
+  wait(SFB_CMD|SFB_TICK, TRUE);
+  if(activator.type==UNIT_ST_PC)
+  {
+    pc:=activator;
+	secure(pc,lostpc);
+    act("$1n notices you.", A_SOMEONE, self, null, activator, TO_VICT);
+    act("$1n notices $2n.", A_SOMEONE, self, null, activator, TO_NOTVICT);
+    pause;
+    exec("say Yu are nod from dis place, Yu DIE...?", self);
+    pause;
+    exec("kill "+activator.name, self);
+    wait(SFB_TICK, self.position!=POSITION_FIGHTING);
+    pause;
+    exec("get all from corpse", self);
+    pause;
+	unsecure(pc);
+    goto start;
+  }
+:lostpc:
+  goto start;
+}
+dilend
+
+end
+
+
+                                bee
+names {"bee the goblin","bee","goblin"}
+title "Bee the goblin"
+descr "Bee the goblin is learning about life"
+extra {}
+"   She's not half the attraction that Bii is. Her clothes are completely
+unstained and not greasy at all. Her hair are well-set, and she's having
+writing on her back saying: 'THIS ONE IS A CLEAN ONE'"
+
+M_GOBLIN_WARRIOR_SWORD(4, SEX_FEMALE)
+money 20 IRON_PIECE
+
+dilcopy teamwork@function("bii / officer / cook");
+dilcopy rescue@function("bii");
+dilbegin beeprg();
+code
+{
+  heartbeat:=PULSE_SEC*6;
+  :start:
+  exec("say Oh I thought that it was round.", self);
+  pause;
+  exec("say Oh, I though that the graverty held them around the world.", self);
+  pause;
+  exec("say The do? Dwarves, elves, gnomes and humans?", self);
+  pause;
+  exec("say Wow! I thought that the lived in peace in towns!", self);
+  pause;
+  exec("say Eat Earth? Thats a lie!", self);
+  pause;
+  exec("say How?", self);
+  pause;
+  exec("say Oh, thats why.", self);
+  pause;
+  exec("say Okay!", self);
+  pause;
+  exec("say YES PLEASE!", self);
+  pause;
+  wait(SFB_CMD|SFB_TICK, TRUE);
+  if(activator.type==UNIT_ST_PC)
+  {
+    exec("look "+activator.name, self);
+    pause;
+    exec("say Thats a person from Midgaard or Udgaard!", self);
+    pause;
+    exec("kill "+activator.name, self);
+    pause;
+    wait(SFB_TICK, self.position!=POSITION_FIGHTING);
+    exec("get all from corpse", self);
+    pause;
+    goto start;
+  }
+  goto start;
+}
+dilend
+
+end
+
+                                officer
+names {"goblin officer", "goblin", "officer"}
+title "the goblin officer"
+descr "The goblin officer is here, looking at you."
+extra {}
+"   This is a strong looking goblin. His eyes reveal that he's been in a
+lot of wars. This is NOT the type you want to mess with, thats for sure."
+
+M_GOBLIN_WARRIOR_SWORD(4, SEX_MALE)
+money 20 IRON_PIECE
+
+dilcopy teamwork@function("burp / mguul / ghopla / goblin");
+dilcopy rescue@function("burp");
+dilcopy wander_zones@function("goblin_cave", 30, 1, 0);
+
+dilbegin officerprg();
+code
+{
+  heartbeat:=PULSE_SEC*8;
+  :start:
+  exec("say Doom, dii daa doom!", self);
+  pause;
+  exec("whistle", self);
+  pause;
+  wait(SFB_CMD|SFB_TICK, TRUE);
+  if(activator.type==UNIT_ST_PC)
+  {
+    exec("kill "+activator.name, self);
+    pause;
+    goto start;
+  }
+  goto start;
+}
+dilend
+
+end
+
+                                cook
+names {"goblin cook", "cook", "goblin"}
+title "the goblin cook"
+descr "The goblin cook is here, preparing a dinner."
+extra {}
+"  This is a small fat goblin. Grease and sweat are running down his chins.
+He's totally uninterested in you, only looking down his supper."
+
+M_GOBLIN_WARRIOR_NATURAL(5, SEX_MALE)
+money 25 IRON_PIECE
+
+dilcopy teamwork@function("burp / mguul / ghopla / baa / boo "+
+    "/ officer / bryan / esbanoviz");
+dilcopy rescue@function("burp");
+
+dilbegin cook();
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+  u1 : unitptr;
+  u2 : unitptr;
+  i : integer;
+
+code
+{
+   heartbeat := PULSE_SEC*25;
+   on_activation((self.position <= POSITION_SLEEPING) or
+		 (self.position == POSITION_FIGHTING), skip);
+
+   :start:
+   pause;
+   exec("emote cuts some onions.", self);
+   pause;
+   exec("whistle", self);
+   i := 0;
+   pause;
+
+   u1 := findunit(self, "bread", FIND_UNIT_INVEN, null);
+   if (u1 #= null)
+     set(i, 1);
+
+   u2 := findunit(self, "mushroom", FIND_UNIT_INVEN, null);
+   if (u2 #= null)
+     set(i, 2);
+
+   if (i != 0)
+   {
+      pause;
+      if (isset(i, 1))
+      {
+	 exec("say I really need some bread.", self);
+	 pause;
+      }
+
+      if (isset(i, 2))
+      {
+	 exec("ask esbanoviz I really need some mushrooms", self);
+	 pause;
+      }
+
+      goto start;
+   }
+
+   i := u1.value[3] + u1.value[3]; /* Test for poison */
+   destroy(u1);
+   destroy(u2);
+   exec("emote puts the bread and mushrooms in a bowl.", self);
+   pause;
+   u1 := load("goblin_cave/stew");
+   u1.value[3] := i;  /* Apply any possible poison from bread/mushroom */
+   exec("emote makes some stew.", self);
+   pause;
+
+   u1 := load("goblin_cave/stew");
+   u1.value[3] := i;  /* Apply any possible poison from bread/mushroom */
+   exec("emote makes some stew.", self);
+   pause;
+
+   u1 := load("goblin_cave/stew");
+   u1.value[3] := i;  /* Apply any possible poison from bread/mushroom */
+   exec("emote makes some stew.", self);
+   pause;
+
+    tf:=walk_room@function("throne2@goblin_cave",4);
+
+   pause;
+   exec("say Dinnher ish sarved, ma lurd!", self);
+   pause;
+   exec("give stew to burp", self);
+   pause;
+   exec("give stew to ghopla", self);
+   pause;
+   exec("give stew to mguul", self);
+   pause;
+   exec("say Mhore is caming raight up, ma lurds!", self);
+   pause;
+    tf:=walk_room@function("kitchen@goblin_cave",4);
+
+    goto start;
+}
+dilend
+
+end
+
+
+                                undercook1
+names {"bryan", "dwarf", "goblin"}
+title "Bryan the dwarf"
+descr "Bryan the dwarf is standing here."
+extra {}
+"   With a closer look at Bryan you notice that this isn't a dwarf after all!
+Under the cape you see green evil eyes, a small bald head and pointy teeth.
+This guy is truly worth checking out!"
+
+money 30 IRON_PIECE
+
+M_DWARF_WARRIOR_AXE(6, SEX_MALE)
+
+dilcopy teamwork@function("gnome / esbanoviz / cook / officer");
+dilbegin bryanprg();
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+  item  : unitptr;
+code
+{
+  heartbeat:=PULSE_SEC*15;
+  :start:
+   tf:=walk_room@function("kitchen@goblin_cave",4);
+
+  pause;
+  exec("say Hree I Amm!", self);
+  wait(SFB_CMD, (command("say")) and (activator.nameidx=="cook") and (activator.zoneidx=="goblin_cave"));
+  pause;
+  item:=findunit(self, "bread", FIND_UNIT_INVEN, null);
+  if(item!=null)
+  {
+    exec("say I'll go ghet it Bozz!", self);
+    exec("stand", self);
+   tf:=walk_room@function("baker_shop@midgaard",4);
+
+    pause;
+    :buy_bread:
+    exec("stand", self);
+    pause;
+    exec("buy bread", self);
+    item:=findunit(self, "bread", FIND_UNIT_INVEN, null);
+    if(item==null)
+    {
+      exec("rest", self);
+      pause;
+      goto buy_bread;
+    }
+    else
+    {
+      exec("say Dhont Yu Hhave some lizzard-aye?", self);
+      pause;
+      exec("emote scratches his BIG green nose.", self);
+      pause;
+      goto start;
+    }
+  }
+  else
+  {
+    exec("say Oh, I hhave it hrere!", self);
+    pause;
+    exec("give bread cook", self);
+    pause;
+    goto start;
+  }
+  goto start;
+}
+dilend
+
+end
+
+                                undercook2
+names {"esbanoviz", "dwarf", "goblin"}
+title "Esbanoviz the dwarf"
+descr "Esbanoviz the dwarf is standing here."
+
+extra {}
+"   By closer look at Esbanoviz you notice that this is'nt a dwarf after all!
+Under the cape you see green evil eyes, a small bald head and pointy teeth.
+This guy is truly worth checking out!"
+
+M_DWARF_WARRIOR_AXE(3, SEX_MALE)
+money 15 IRON_PIECE
+
+dilcopy teamwork@function("gnome / bryan / cook / officer");
+dilbegin undercook2prg();
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+  item  : unitptr;
+code
+{
+  heartbeat:=PULSE_SEC*15;
+  :start:
+   tf:=walk_room@function("kitchen@goblin_cave",4);
+
+  pause;
+  exec("say Ho Bozz, Esbanovizzz De Psydonom Haz Arrivedd!", self);
+  wait(SFB_CMD, (command("say")) and (activator.nameidx=="cook") and (activator.zoneidx=="goblin_cave"));
+  item:=findunit(self, "mushroom", FIND_UNIT_INVEN, null);
+  if(item==null)
+  {
+      tf:=walk_room@function("pt_d_fo@elfdom",4);
+
+    pause;
+    link(self, load("mushroom@goblin_cave"));
+    exec("emote gets a mushroom.", self);
+    pause;
+    exec("say Dad wazz easy.", self);
+    pause;
+    exec("say Hi.",self);
+    pause;
+    exec("whistle", self);
+    pause;
+     tf:=walk_room@function("fireplac@elfdom",4);
+
+    pause;
+    exec("emote looks at the sky.", self);
+    pause;
+    exec("say I'll beddar go bak!", self);
+    pause;
+    goto start;
+  }
+  else
+  {
+    exec("say Oh, I hhave it hrere.", self);
+    pause;
+    exec("give mushroom cook", self);
+    pause;
+    goto start;
+  }
+  goto start;
+}
+dilend
+
+end
+
+                                prisoner
+names {"goblin prisoner", "prisoner", "goblin"}
+title "the goblin prisoner"
+descr "A prisoner is here, desperately looking for a way out"
+extra {}
+"   The creature in front of you is about 4 feet high. His eyes are shining
+with insanity. He's wearing nothing but a loincloth. He is very clean and
+well-shaved. In some way he reminds you of the dirty and disgusting goblins,
+but this guy is really clean!?"
+extra {"cloth", "loincloth"} "Kinky!"
+
+
+M_GOBLIN_WARRIOR_AXE(9, SEX_MALE)
+alignment 100
+money 30 IRON_PIECE
+dilbegin prisonerprg();
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+code
+{
+  heartbeat:=PULSE_SEC*10;
+  :start:
+  wait(SFB_CMD, activator.type==UNIT_ST_PC);
+  pause;
+  exec("say Don't close the door! PLEASE!", self);
+  pause;
+   tf:=walk_room@function("throne1@goblin_cave",4);
+
+  pause;
+  exec("say I'm free....NOW REVENGE!", self);
+  pause;
+  exec("say King Burp... HA, nothing but a simple fool!", self);
+  pause;
+   tf:=walk_room@function("throne2@goblin_cave",4);
+
+  pause;
+  exec("point burp", self);
+  pause;
+  exec("say YOU!", self);
+  pause;
+  exec("say You gotta DIE, You...you...BURP!", self);
+  pause;
+  exec("kill burp", self);
+  wait(SFB_DEAD, (activator.nameidx=="burp") and (activator.zoneidx=="goblin_cave"));
+  pause;
+   tf:=walk_room@function("jail@goblin_cave",4);
+
+  pause;
+  exec("say It's fulfilled...King Burp is DEAD!", self);
+  pause;
+  exec("shout King Burp of the goblins are dead!!!", self);
+  pause;
+  goto start;
+}
+dilend
+
+end
+
+                                sleeper
+names {"small goblin", "goblin"}
+title "the goblin"
+descr "A small goblin is sleeping here."
+extra {}
+"   This is the first nice goblin you have seen. Slit the throat! DO IT !"
+
+M_GOBLIN_WARRIOR_SWORD(4, SEX_FEMALE)
+money 20 IRON_PIECE
+
+position POSITION_SLEEPING
+default POSITION_SLEEPING
+
+dilcopy teamwork@function("officer");
+dilcopy rescue@function("officer");
+dilbegin sleeperprg();
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+code
+{
+  heartbeat:=PULSE_SEC*250;
+  :start:
+   tf:=walk_room@function("bed_chamber@goblin_cave",4);
+
+  pause;
+  exec("yawn", self);
+  pause;
+  exec("sleep", self);
+  pause;
+  goto start;
+}
+dilend
+
+end
+
+                                goblin1
+names {"small goblin", "goblin"}
+title "the goblin"
+descr "A small goblin is here, trying to hide himself."
+extra {}
+"   This is a very tricky goblin. Hiding very good in the bushes. This guy
+is NOT the type YOU want to fight..."
+
+M_GOBLIN_WARRIOR_SWORD(6, SEX_FEMALE)
+money 30 IRON_PIECE
+
+dilcopy teamwork@function("goblin / bryan / esbanoviz");
+dilcopy hideaway@function(120);
+
+dilbegin goblin1prg();
+var
+pc : unitptr;
+code
+{
+  heartbeat:=PULSE_SEC*2;
+  :start:
+  secure (pc,lostpc);
+  wait(SFB_CMD, activator.type==UNIT_ST_PC);
+  act("<div class='whisper'>$1n whispers 'ready?'", A_SOMEONE, self, null, null, TO_ALL);
+  sendto(activator.name, findsymbolic("goblin2@goblin_cave"));
+  exec("kill "+activator.name, self);
+  while(self.position==POSITION_FIGHTING)
+  {
+    pause;
+  }
+:lostpc:
+unsecure(pc);
+   goto start;
+
+
+}
+dilend
+
+end
+
+                                goblin2
+names {"small goblin", "goblin"}
+title "the goblin"
+descr "A small goblin is here, trying to hide himself."
+extra {}
+"   This is a very tricky goblin. Hiding very good in the bushes. This guy
+is NOT the type YOU want to fight..."
+
+M_GOBLIN_WARRIOR_SWORD(5, SEX_MALE)
+money 25 IRON_PIECE
+
+dilcopy teamwork@function("goblin / bryan / esbanoviz");
+dilcopy hideaway@function(120);
+
+dilbegin goblin2prg();
+code
+{
+  heartbeat:=PULSE_SEC*8;
+  :start:
+  wait(SFB_MSG, (activator.nameidx=="goblin1") and (activator.zoneidx=="goblin_cave"));
+  act("$1n whispers 'yes... kill... KILL!", A_SOMEONE, self, null, null, TO_ALL);
+  pause;
+  exec("kill "+argument, self);
+  pause;
+  goto start;
+}
+dilend
+
+end
+
+/*=======================================================================*/
+/*                                RESET                                  */
+/*=======================================================================*/
+%reset
+
+load burp into throne2 max 1
+{ equip burp_sword position WEAR_WIELD
+  equip fake_beard position WEAR_HEAD
+  equip burp_sceptre position WEAR_HOLD
+  equip burp_robe position WEAR_ABOUT
+  equip goblin_sleeves position WEAR_ARMS
+  equip gob_gauntlets position WEAR_HANDS
+  equip goblin_leggins position WEAR_LEGS
+  equip goblin_breast position WEAR_BODY
+  equip goblin_boots position WEAR_FEET
+  load gob_tre_key into burp
+   load mguul into throne2 max 1
+   { equip mguul_dagger position WEAR_WIELD
+     equip pointy_hat position WEAR_HEAD
+     equip mguul_robe position WEAR_ABOUT
+     equip goblin_sleeves position WEAR_ARMS
+     equip gob_gauntlets position WEAR_HANDS
+     equip goblin_leggins position WEAR_LEGS
+     equip goblin_breast position WEAR_BODY
+     equip goblin_boots position WEAR_FEET
+      load ghopla into throne2 max 1
+      { equip ghopla_mace position WEAR_WIELD
+        equip goblin_helmet position WEAR_HEAD
+        equip goblin_sleeves position WEAR_ARMS
+        equip gob_gauntlets position WEAR_HANDS
+        equip goblin_leggins position WEAR_LEGS
+        equip goblin_breast position WEAR_BODY
+        equip goblin_boots position WEAR_FEET
+         load fool into throne2 max 1
+         { equip fool_sceptre position WEAR_HOLD
+           equip fools_hat position WEAR_HEAD
+         }
+      }
+   }
+}
+load baa into throne1 max 1
+{ equip goblin_sword position WEAR_WIELD
+  equip goblin_helmet position WEAR_HEAD
+  equip goblin_sleeves position WEAR_ARMS
+  equip gob_gauntlets position WEAR_HANDS
+  equip goblin_leggins position WEAR_LEGS
+  equip goblin_breast position WEAR_BODY
+  equip goblin_boots position WEAR_FEET
+   load boo into throne1 max 1
+   { equip goblin_sword position WEAR_WIELD
+     equip goblin_helmet position WEAR_HEAD
+     equip goblin_sleeves position WEAR_ARMS
+     equip gob_gauntlets position WEAR_HANDS
+     equip goblin_leggins position WEAR_LEGS
+     equip goblin_breast position WEAR_BODY
+     equip goblin_boots position WEAR_FEET
+   }
+}
+load bii into throne3 max 1
+{ equip goblin_sword position WEAR_WIELD
+  equip goblin_helmet position WEAR_HEAD
+  equip goblin_sleeves position WEAR_ARMS
+  equip gob_gauntlets position WEAR_HANDS
+  equip goblin_leggins position WEAR_LEGS
+  equip goblin_breast position WEAR_BODY
+  equip goblin_boots position WEAR_FEET
+   load bee into throne3 max 1
+   { equip goblin_sword position WEAR_WIELD
+     equip goblin_helmet position WEAR_HEAD
+     equip goblin_sleeves position WEAR_ARMS
+     equip gob_gauntlets position WEAR_HANDS
+     equip goblin_leggins position WEAR_LEGS
+     equip goblin_breast position WEAR_BODY
+     equip goblin_boots position WEAR_FEET
+   }
+}
+load officer into cave_cross max 1
+{ equip goblin_sword position WEAR_WIELD
+  equip goblin_helmet position WEAR_HEAD
+  equip goblin_sleeves position WEAR_ARMS
+  equip gob_gauntlets position WEAR_HANDS
+  equip goblin_leggins position WEAR_LEGS
+  equip goblin_breast position WEAR_BODY
+  equip goblin_boots position WEAR_FEET
+  load gob_jail_key into officer max 1
+}
+
+load prisoner into jail max 1
+
+load cook into kitchen max 1
+{
+  equip battlespoon@midsewers position WEAR_WIELD
+  equip cookapron@midsewers position WEAR_ABOUT
+  equip midgaard/lth_pants position WEAR_LEGS
+}
+
+load undercook1 into kitchen max 1
+{
+  equip midgaard/axe1 position WEAR_WIELD
+  equip midgaard/lth_jerkin position WEAR_BODY
+  equip midgaard/lth_pants position WEAR_LEGS
+  equip midgaard/lth_sleeves position WEAR_ARMS
+}
+
+load undercook2 into kitchen max 1
+{
+  equip midgaard/axe1 position WEAR_WIELD
+  equip midgaard/lth_jerkin position WEAR_BODY
+  equip midgaard/lth_pants position WEAR_LEGS
+  equip midgaard/lth_sleeves position WEAR_ARMS
+}
+
+
+load sleeper into bed_chamber max 2
+{ equip goblin_sword position WEAR_WIELD
+  equip goblin_helmet position WEAR_HEAD
+  equip goblin_sleeves position WEAR_ARMS
+  equip gob_gauntlets position WEAR_HANDS
+  equip goblin_leggins position WEAR_LEGS
+  equip goblin_breast position WEAR_BODY
+  equip goblin_boots position WEAR_FEET
+}
+
+load goblin1 into cypress/cave_entrance max 1
+{ equip goblin_sword position WEAR_WIELD
+  equip goblin_helmet position WEAR_HEAD
+  equip goblin_sleeves position WEAR_ARMS
+  equip gob_gauntlets position WEAR_HANDS
+  equip goblin_leggins position WEAR_LEGS
+  equip goblin_breast position WEAR_BODY
+  equip goblin_boots position WEAR_FEET
+}
+
+load goblin2 into cypress/cave_entrance max 1
+{ equip goblin_sword position WEAR_WIELD
+  equip goblin_helmet position WEAR_HEAD
+  equip goblin_sleeves position WEAR_ARMS
+  equip gob_gauntlets position WEAR_HANDS
+  equip goblin_leggins position WEAR_LEGS
+  equip goblin_breast position WEAR_BODY
+  equip goblin_boots position WEAR_FEET
+}
+
+load robe_gwyn into behind_throne max 1
+load coins1 into behind_throne max 1
+
+door cave_cross WEST {EX_OPEN_CLOSE,EX_CLOSED}
+door cave_cross EAST {EX_OPEN_CLOSE,EX_CLOSED}
+door cave_cross SOUTH {EX_OPEN_CLOSE,EX_CLOSED}
+door bed_chamber EAST {EX_OPEN_CLOSE,EX_CLOSED}
+door storeroom WEST {EX_OPEN_CLOSE,EX_CLOSED}
+door kitchen WEST {EX_OPEN_CLOSE,EX_CLOSED}
+door jail EAST {EX_OPEN_CLOSE,EX_CLOSED,EX_LOCKED}
+door throne1 WEST {EX_OPEN_CLOSE,EX_CLOSED,EX_LOCKED}
+door throne4 NORTH {EX_OPEN_CLOSE,EX_CLOSED}
+door throne2 SOUTH {EX_OPEN_CLOSE,EX_CLOSED,EX_LOCKED,EX_HIDDEN}
+door throne3 EAST {EX_OPEN_CLOSE,EX_CLOSED}
+door behind_throne NORTH {EX_OPEN_CLOSE,EX_CLOSED,EX_LOCKED}
+
+
+%end
+

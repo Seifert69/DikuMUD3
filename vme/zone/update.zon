@@ -1,0 +1,940 @@
+/*
+filename    update
+password    rlscrew
+changedby   Whistler
+EmailAdd
+request     compile
+version     1
+END HEADER*/
+#include <macros.h>
+
+%zone update
+reset RESET_NOT
+weather 1040
+creators {"whistler"}
+
+notes
+"This is the update zone. Don't let any rooms point to this
+zone, or use any objects from this zone without special
+permission. Do not slime objects from this zone."
+
+%dil
+
+dilbegin disarm_pc(); /*added by darg to trip pc by npcs for fun */
+var
+    targ     : unitptr;
+    s        : string;
+    i        : integer;
+code
+{
+  :start:
+    wait(SFB_COM,self.position==POSITION_FIGHTING);
+    heartbeat := PULSE_VIOLENCE;
+    if (self.fighting.type != UNIT_ST_PC)
+        goto start;
+
+    i := rnd(1, 200);
+    if (i <= self.abilities[ABIL_DEX])
+        goto start;
+  
+    targ := self.fighting;
+   
+    secure(targ,losttarg);
+    {
+        block;
+        if (targ==null)goto losttarg;
+            exec("disarm "+targ.name,self);
+        unsecure(targ);
+
+        goto start;
+    }
+     goto start;
+
+    :losttarg:
+    unsecure(targ);
+    goto start;
+}
+dilend /* End trip */
+
+
+
+dilbegin trip_pc(); /*added by darg to trip pc by npcs for fun */
+
+var
+    targ     : unitptr;
+    s        : string;
+    i        : integer;
+code
+{
+:start:
+
+    wait(SFB_COM,self.position==POSITION_FIGHTING);
+     heartbeat := PULSE_VIOLENCE;
+   if (self.fighting.type != UNIT_ST_PC)goto start;
+	{
+    i := rnd(1, 200);
+    if (i <= self.abilities[ABIL_DEX])
+goto start;
+    } 
+   
+   targ := self.fighting;
+   
+      secure(targ,losttarg);
+     {
+	  block;
+	   if (targ==null)goto losttarg;
+      exec("trip "+targ.name,self);
+      unsecure(targ);
+
+      goto start;
+    }
+     goto start;
+ :losttarg:
+
+unsecure(targ);
+goto start;
+
+}
+dilend /* End trip */
+
+
+
+dilbegin integer hit_l_num(pc:unitptr,point:integer);
+code
+{
+    if (pc.type==UNIT_ST_PC)
+    {
+        if (((realtime-pc.birth)/SECS_PER_MUD_YEAR)>pc.lifespan)
+            return (-1);
+        return (3*point+20);
+    }
+    else
+        return (3*point+10);
+}
+dilend
+
+
+
+dilbegin integer hit_limit(pc:unitptr);
+external
+    integer hit_l_num(u:unitptr,i:integer);
+var
+    ret:integer;
+code
+{
+    ret:=hit_l_num(pc, pc.hp);
+    return(ret);
+}
+dilend
+
+
+/* Hitpoint gain pr. game hour */
+dilbegin integer hit_gain(pc:unitptr);
+var
+    gain:integer;
+    u:unitptr;
+    hitln:integer;
+    bonus: integer;
+code
+{
+    if      (pc.race == RACE_HUMAN)     bonus := 1;
+    else if (pc.race == RACE_DWARF)     bonus := 5;
+    else if (pc.race == RACE_HALFLING)  bonus := -1;
+    else if (pc.race == RACE_GNOME)     bonus := 4 ;
+    else if (pc.race == RACE_ELF)       bonus := 1 ;
+    else if (pc.race == RACE_HALF_ELF)  bonus := 1 ;
+    else if (pc.race == RACE_DARK_ELF)  bonus :=1 ;
+    else if (pc.race == RACE_BROWNIE)   bonus := -5;
+    else if (pc.race == RACE_GROLL)     bonus := 5;
+    else if (pc.race == RACE_HALF_ORC)  bonus := 4;
+    else if (pc.race == RACE_HALF_OGRE) bonus :=5;
+    else  bonus := 1;
+
+    if (pc.level <= 20 ) bonus := 5;
+
+    /* 10 turns to regenerate */
+    if (pc.position!=POSITION_FIGHTING)
+        gain:=bonus+(((pc.abilities[ABIL_CON]/10)+(pc.max_hp/10))/4)
+    else
+        gain:=0;
+
+    if ((pc.abilities[ABIL_CON] > 0) and (gain < 1 ))
+      gain :=1;
+
+    if ((pc.position==POSITION_SLEEPING) or (pc.position==POSITION_RESTING))
+        gain := gain + (gain / 2);     /* gain *= 1.5  */
+    else if (pc.position==POSITION_SITTING)
+      gain := gain + (gain / 4); /* gain = 1.25*/
+
+    u:=pc;
+    while (u)
+    {
+        if (isset(u.flags,UNIT_FL_SACRED))
+        {
+          gain:=gain*2;
+          break;
+        }
+        if (u.type==UNIT_ST_ROOM)
+          break;
+        u:=u.outside;
+    }
+
+    if (pc.type==UNIT_ST_PC)
+    {
+        if ((pc.full<0) or (pc.thirst<0))
+          if ((3*pc.thirst)<pc.full)
+              gain:=gain+9*pc.thirst;
+          else
+              gain:=gain+3*pc.full;
+    }
+
+    return(gain);
+}
+dilend
+
+
+/* move gain pr. game hour */
+dilbegin integer move_gain(pc:unitptr);
+var
+    gain:integer;
+    u:unitptr;
+    bonus : integer;
+code
+{
+    if      (pc.race == RACE_HUMAN)     bonus := 1;
+    else if (pc.race == RACE_DWARF)     bonus := 3;
+    else if (pc.race == RACE_HALFLING)  bonus := 5;
+    else if (pc.race == RACE_GNOME)     bonus := 2 ;
+    else if (pc.race == RACE_ELF)       bonus := 3 ;
+    else if (pc.race == RACE_HALF_ELF)  bonus := 2 ;
+    else if (pc.race == RACE_DARK_ELF)  bonus := -3 ;
+    else if (pc.race == RACE_BROWNIE)   bonus := -1;
+    else if (pc.race == RACE_GROLL)     bonus := -3;
+    else if (pc.race == RACE_HALF_ORC)  bonus :=  4;
+    else if (pc.race == RACE_HALF_OGRE) bonus :=  4;
+    else  bonus := 1;
+
+    if (pc.position!=POSITION_FIGHTING)
+      gain := bonus + (pc.max_endurance  / 10); /* 10 turns to regenerate */
+    else
+      gain := 0;
+
+    if ((pc.abilities[ABIL_CON] > 0) and (gain < 1 ))
+      gain :=1;
+
+    if ((pc.position==POSITION_SLEEPING) or (pc.position==POSITION_RESTING))
+        gain := gain+ (gain / 2);     /* gain *= 1.5  */
+    else if (pc.position==POSITION_SITTING)
+        gain := gain+ (gain / 4);/*gain = 1.25*/
+
+    u:=pc;
+    while (u)
+    {
+        if (isset(u.flags,UNIT_FL_SACRED))
+        {
+            gain:=gain*2;
+            break;
+        }
+        if (u.type==UNIT_ST_ROOM)
+            break;
+        u:=u.outside;
+    }
+
+    if (pc.type==UNIT_ST_PC)
+    {
+        if ((pc.full<0) or (pc.thirst<0))
+            if ((3*pc.thirst)<pc.full)
+                gain:=gain+9*pc.thirst;
+            else
+                gain:=gain+3*pc.full;
+    }
+
+    return (gain);
+}
+dilend
+
+
+dilbegin integer mana_gain (pc:unitptr);
+var
+    gain:integer;
+    u:unitptr;
+    bonus : integer;
+code
+{
+    if      (pc.race == RACE_HUMAN)     bonus := 1;
+    else if (pc.race == RACE_DWARF)     bonus := -2;
+    else if (pc.race == RACE_HALFLING)  bonus := -5;
+    else if (pc.race == RACE_GNOME)     bonus := 2 ;
+    else if (pc.race == RACE_ELF)       bonus := 5 ;
+    else if (pc.race == RACE_HALF_ELF)  bonus := 3 ;
+    else if (pc.race == RACE_DARK_ELF)  bonus := 5 ;
+    else if (pc.race == RACE_BROWNIE)   bonus := 5;
+    else if (pc.race == RACE_GROLL)     bonus := -5;
+    else if (pc.race == RACE_HALF_ORC)  bonus := -5;
+    else if (pc.race == RACE_HALF_OGRE) bonus := -3;
+    else  bonus := 1;
+
+    if (pc.position!=POSITION_FIGHTING)
+    {
+        gain := bonus + pc.max_mana/ 10;
+        if (pc.abilities[ABIL_MAG]>pc.abilities[ABIL_DIV])
+            gain :=gain+ (pc.abilities[ABIL_CHA] -pc.abilities[ABIL_MAG])/3;
+        else
+            gain :=gain+ (pc.abilities[ABIL_CHA] -pc.abilities[ABIL_DIV])/3;
+
+        if ((pc.abilities[ABIL_CHA] > 0) and (gain < 1 ))
+            gain :=1;
+
+    }
+    else
+        gain:=0;
+
+    if ((pc.position==POSITION_SLEEPING) or (pc.position==POSITION_RESTING))
+      gain := gain+ (gain / 2);     /* gain *= 1.5  */
+    else if (pc.position==POSITION_SITTING)
+      gain := gain+ (gain / 4);/*gain = 1.25*/
+
+    u:=pc;
+    while (u)
+    {
+        if (isset(u.flags,UNIT_FL_SACRED))
+        {
+            gain:=gain*2;
+            break;
+        }
+        if (u.type==UNIT_ST_ROOM)
+            break;
+        u:=u.outside;
+    }
+
+    if (pc.type==UNIT_ST_PC)
+    {
+        if ((pc.full<0) or (pc.thirst<0))
+            if ((3*pc.thirst)<pc.full)
+                gain:=gain+9*pc.thirst;
+            else
+                gain:=gain+3*pc.full;
+    }
+
+    return (gain);
+}
+dilend
+
+
+// NPCs only
+dilbegin unique fnpri(FN_PRI_BODY) regenerate();
+external
+    integer hit_gain(u:unitptr);
+    integer mana_gain(u:unitptr);
+    integer move_gain(u:unitptr);
+var
+    hgain:integer;
+    mgain:integer;
+    egain:integer;
+code
+{
+    self.hp := self.max_hp;
+    self.endurance := self.max_endurance;
+    self.mana := self.max_mana;
+
+
+  :start:
+    heartbeat := PULSE_POINTS;
+    wait(SFB_TICK,((self.hp<self.max_hp) or (self.mana<self.max_mana) or
+            (self.endurance<self.max_endurance)));
+
+    if (self.position>=POSITION_STUNNED)
+    {
+        hgain:=hit_gain(self);
+        mgain:=mana_gain(self);
+        egain:=(move_gain(self)*2);
+
+        if ((self.mana+mgain)>self.max_mana)
+          self.mana:=self.max_mana;
+        else
+          self.mana:=self.mana+mgain;
+
+        if ((self.endurance+egain)>self.max_endurance)
+          self.endurance:=self.max_endurance;
+        else
+          self.endurance:=self.endurance+egain;
+
+        if (hgain>=0)
+        {
+            if ((self.hp+hgain)>self.max_hp)
+              self.hp:=self.max_hp;
+            else
+              self.hp:=self.hp+hgain;
+        }
+        else
+          self.hp:=self.hp+hgain;
+
+        if (self.mana<0)
+          self.mana:=0;
+        if (self.endurance<0)
+          self.endurance:=0;
+    }
+    else if (self.position==POSITION_INCAP)
+    {
+        self.hp:=self.hp-1;
+    }
+    else if (self.position==POSITION_MORTALLYW)
+    {
+        self.hp:=self.hp-2;
+    }
+    position_update(self);
+    goto start;
+}
+dilend
+
+
+// PCs only
+dilbegin unique fnpri(FN_PRI_BODY-1) regen_pc();
+external
+    integer hit_gain(u:unitptr);
+    integer mana_gain(u:unitptr);
+    integer move_gain(u:unitptr);
+    gain_cond (u:unitptr,cond:string,i:integer);
+var
+    hgain:integer;
+    mgain:integer;
+    egain:integer;
+code
+{
+    :start:
+    heartbeat:=rnd(PULSE_POINTS-PULSE_SEC*5, PULSE_POINTS+PULSE_SEC*5);
+
+    wait (SFB_TICK,((self.hp<self.max_hp) or
+        (self.mana<self.max_mana) or
+        (self.endurance<self.max_endurance) or
+        (self.thirst<0) or
+        (self.full<0)));
+
+    if (isset(self.flags,PC_SPIRIT))
+      goto start;
+
+    if (self.position>=POSITION_STUNNED)
+    {
+        hgain:=hit_gain(self);
+        mgain:=mana_gain(self);
+        egain:=move_gain(self);
+
+        if ((self.mana+mgain)>self.max_mana)
+          self.mana:=self.max_mana;
+        else
+          self.mana:=self.mana+mgain;
+        if ((self.endurance+egain)>self.max_endurance)
+          self.endurance:=self.max_endurance;
+        else
+          self.endurance:=self.endurance+egain;
+
+        if (hgain>=0)
+        {
+            if ((self.hp+hgain)>self.max_hp)
+              self.hp:=self.max_hp;
+            else
+              self.hp:=self.hp+hgain;
+        }
+        else
+          self.hp:=self.hp+hgain;
+
+        if (self.info.["watch_reg"]!=null)
+        {
+            log(self.name+" regained this much mana "+itoa(mgain));
+            log(self.name+" reenergized this much"+itoa(egain));
+            log (self.name+" Healed up this much"+itoa(hgain));
+        }
+
+        if (self.mana<0)
+            self.mana:=0;
+        if (self.endurance<0)
+            self.endurance:=0;
+    }
+    else if (self.position==POSITION_INCAP)
+    {
+        self.hp:=self.hp-1;
+    }
+    else if (self.position==POSITION_MORTALLYW  )
+    {
+        self.hp:=self.hp-2;
+    }
+    position_update(self);
+
+    gain_cond(self,"full",0);
+    gain_cond(self,"thirst",0);
+    goto start;
+}
+dilend
+
+
+dilbegin gain_cond(pc:unitptr,cond:string, i:integer);
+var
+    dr:integer;/*drunk*/
+code
+{
+dr:=pc.drunk;
+
+if (pc.type!=UNIT_ST_PC)
+ return;
+if ((cond=="thirst") and (pc.thirst>=48))
+ return;
+else if (cond=="thirst")
+ {
+ pc.thirst:=pc.thirst+i;
+ if (pc.thirst>24)
+  pc.thirst:=24;
+ if (pc.thirst<-96)
+   pc.thirst:=-96;
+ if (pc.thirst>3)
+  return;
+ if (pc.thirst>-4)
+  sendtext("You are thirsty.<br/>",pc);
+ else if (pc.thirst>-8)
+ {
+  sendtext("You are very thirsty.<br/>",pc);
+ act("$1n is very thirsty.</div> ",A_ALWAYS, pc, null, null, TO_REST);
+ }
+ else if (pc.thirst>-12)
+ {
+  sendtext("You are dehydrated.<br/>",pc);
+ act("$1n is very dehydrated.",A_ALWAYS, pc, null, null, TO_REST);
+ }
+ else if (pc.full>-96)
+ {
+ sendtext("You are dying of thirst.<br/>",pc);
+ act("$1n is dying of thirst. ",A_ALWAYS, pc, null, null, TO_REST);
+  }
+ }
+else if ((cond=="full") and (pc.full>=48))
+ return;
+else if (cond=="full")
+ {
+ pc.full:=pc.full+i;
+ if (pc.full>24)
+  pc.full:=24;
+  if (pc.full<-96)
+   pc.full:=-96;
+ if (pc.full>3)
+  return;
+ if (pc.full>-4)
+ sendtext("You are hungry.<br/>",pc);
+ else if (pc.full>-8)
+ {
+ sendtext("You are very hungry.<br/>",pc);
+ act("$1n is very hungry.",A_ALWAYS, pc, null, null, TO_REST);
+ }
+ else if (pc.full>-12)
+ {
+ sendtext("You are starving.<br/>",pc);
+act("$1n is starving to death.",A_ALWAYS, pc, null, null, TO_REST);
+  }
+ else if (pc.full>-96)
+  {
+ sendtext("You are starving to death.<br/>",pc);
+   act("$1n is dying of starvation.",A_ALWAYS, pc, null, null, TO_REST);
+  }
+ }
+else if ((cond=="drunk") and (pc.drunk>=48))
+ return;
+else if (cond=="drunk")
+    {
+ pc.drunk:=pc.drunk+i;
+ if ((pc.drunk<dr) and (pc.drunk==0))
+  sendtext ("You sober up!<br/>",pc);
+ if (pc.drunk>24)
+  pc.drunk:=24;
+  if (pc.drunk<0)
+   pc.drunk:=0;/*you can't get any more sober than this*/
+   if (pc.drunk>11)
+    sendtext ("You are seeing double!<br/>",pc);
+ else if (pc.drunk>7)
+  sendtext("You are feeling very light headed.<br/>",pc);
+ else if (pc.drunk>3)
+  sendtext ("You are getting tipsy.</br>",pc);
+ }
+return;
+}
+dilend
+
+
+dilbegin unique fnpri(FN_PRI_BODY+1) stomach();
+external
+    gain_cond(pc:unitptr,cond:string, i:integer);
+var
+    u:unitptr;
+    bonus:integer;
+code
+{
+    :start:
+    heartbeat:=rnd((PULSE_SEC * SECS_PER_MUD_HOUR)+PULSE_SEC*60,(PULSE_SEC * SECS_PER_MUD_HOUR)+PULSE_SEC*120);
+    wait (SFB_TICK,TRUE);
+    u:=self;
+    bonus:=0;
+
+    while (u.type!=UNIT_ST_ROOM)
+    {
+        if (isset(u.flags,UNIT_FL_SACRED))
+        {
+            bonus:=-1;
+            goto gotbonus;
+        }
+        u:=u.outside;
+    }
+
+    if (isset(u.flags,UNIT_FL_SACRED))
+      bonus:=-1;
+
+    :gotbonus:
+    gain_cond(self,"full",-1+bonus);
+    gain_cond(self,"thirst",-1+bonus);
+
+    if (self.drunk>0)
+    {
+        if (self.position==POSITION_SLEEPING)
+        {
+            if (self.drunk>2)
+                gain_cond(self,"drunk",-3+bonus);
+            else if (self.drunk>1)
+                gain_cond(self,"drunk",-2+bonus);
+            else
+                gain_cond(self,"drunk",-1+bonus);
+        }
+        else
+            gain_cond(self,"drunk",-1+bonus);
+    }
+
+    position_update(self);
+    goto start;
+}
+dilend
+
+
+// Return the string "hp/maxhp ep/maxep mp/maxmp" to be embedded in prompt div
+dilbegin string prompt_data();
+var
+  s : string;
+code
+{
+  s:= "bars='" + itoa(self.hp) + "/" + itoa(self.max_hp) + " " + 
+      itoa(self.endurance) + "/" + itoa(self.max_endurance) + " " + 
+      itoa(self.mana) + "/" + itoa(self.max_mana) + "'";
+  return(s);
+}
+dilend
+
+
+dilbegin unique aware fnpri(FN_PRI_SYS) send_prompt();
+external
+    string racestring@commands (x:integer);
+    string prompt_data();
+var
+    temp:string;
+    cp:string;
+    tlist:stringlist; /*temp stringlist*/
+    plist:stringlist;/*prompt element list*/
+    i:integer;
+    ln:integer;
+    sp : string;
+    x:integer;
+code
+{
+    :init:
+    tlist:=split(self.prompt,"%");
+    i:=1;
+    ln:=length(tlist);
+    while (i<ln)
+    {
+        if (tlist.[i]==left("hp",length(tlist.[i])))
+        {
+            if (not("%h%" in  plist))
+                addstring(plist,"%h%");
+            tlist.[i]:="%h%";
+        }
+        else if (tlist.[i]==left("maxhp",length(tlist.[i])))
+        {
+            if (not("%mh%" in  plist))
+                addstring(plist,"%mh%");
+            tlist.[i]:="%mh%";
+        }
+        else   if (tlist.[i]==left("mana",length(tlist.[i])))
+        {
+            if (not("%m%" in  plist))
+                addstring(plist,"%m%");
+            tlist.[i]:="%m%";
+        }
+else if (tlist.[i]==left("maxmana",length(tlist.[i])))
+{
+  if (not("%mm%" in  plist))
+  addstring (plist,"%mm%");
+       tlist.[i]:="%mm%";
+    }
+  else   if (tlist.[i]==left("endurance",length(tlist.[i])))
+  {
+    if (not("%e%" in  plist))
+  addstring (plist,"%e%");
+         tlist.[i]:="%e%";
+    }
+  else   if (tlist.[i]==left("maxendurance",length(tlist.[i])))
+  {
+    if (not("%me%" in  plist))
+  addstring (plist,"%me%");
+       tlist.[i]:="%me%";
+    }
+  else   if (tlist.[i]==left("guild",length(tlist.[i])))
+  {
+    if (not("%g%" in  plist))
+  addstring (plist,"%g%");
+       tlist.[i]:="%g%";
+    }
+  else   if (tlist.[i]==left("title",length(tlist.[i])))
+  {
+    if (not("%t%" in  plist))
+  addstring (plist,"%t%");
+       tlist.[i]:="%t%";
+    }
+      else   if (tlist.[i]==left("age",length(tlist.[i])))
+  {
+    if (not("%a%" in  plist))
+  addstring (plist,"%a%");
+       tlist.[i]:="%a%";
+    }
+  else   if (tlist.[i]==left("race",length(tlist.[i])))
+  {
+    if (not("%r%" in  plist))
+  addstring (plist,"%r%");
+       tlist.[i]:="%r%";
+    }
+  else   if (tlist.[i]==left("xp",length(tlist.[i])))
+  {
+    if (not("%x%" in  plist))
+  addstring (plist,"%x%");
+       tlist.[i]:="%x%";
+    }
+      else   if (tlist.[i]==left("xptolvl",length(tlist.[i])))
+  {
+    if (not("%xl%" in  plist))
+  addstring (plist,"%xl%");
+       tlist.[i]:="%xl%";
+    }
+  else   if (tlist.[i]==left("level",length(tlist.[i])))
+  {
+    if (not("%l%" in  plist))
+  addstring (plist,"%l%");
+       tlist.[i]:="%l%";
+    }
+      else   if (tlist.[i]==left("vlevel",length(tlist.[i])))
+  {
+    if (not("%l%" in  plist))
+  addstring (plist,"%l%");
+       tlist.[i]:="%l%";
+    }
+  else   if (tlist.[i]==left("oppname",length(tlist.[i])))
+  {
+    if (not("%o%" in  plist))
+  addstring (plist,"%o%");
+       tlist.[i]:="%o%";
+    }
+  else   if (tlist.[i]==left("oppdiag",length(tlist.[i])))
+  {
+    if (not("%od%" in  plist))
+  addstring (plist,"%od%");
+       tlist.[i]:="%od%";
+    }
+  else   if (tlist.[i]==left("tankname",length(tlist.[i])))
+  {
+    if (not("%tn%" in  plist))
+  addstring (plist,"%tn%");
+       tlist.[i]:="%tn%";
+    }
+  else   if (tlist.[i]==left("tankdiag",length(tlist.[i])))
+  {
+    if (not("%td%" in  plist))
+  addstring (plist,"%td%");
+       tlist.[i]:="%td%";
+    }
+  else   if ((tlist.[i]==left("zone",length(tlist.[i]))) and
+(self.level >= IMMORTAL_LEVEL))
+  {
+    if (not("%z%" in  plist))
+  addstring (plist,"%z%");
+       tlist.[i]:="%z%";
+    }
+  else   if ((tlist.[i]==left("room",length(tlist.[i]))) and
+(self.level >= IMMORTAL_LEVEL))
+  {
+    if (not("%ro%" in  plist))
+  addstring (plist,"%ro%");
+       tlist.[i]:="%ro%";
+    }
+  else   if ((tlist.[i]==left("wizinv",length(tlist.[i]))) and
+(self.level >= IMMORTAL_LEVEL))
+  {
+    if (not("%w%" in  plist))
+  addstring (plist,"%w%");
+       tlist.[i]:="%w%";
+    }
+    else
+    {
+      if (not("%er%" in  plist))
+    addstring(plist,"%er%");
+    tlist.[i]:="%er%";
+    }
+
+      i:=i+2;
+  }
+
+i:=0;
+sp:="";
+while(i<ln)
+{
+sp:=sp+tlist.[i];
+i:=i+1;
+}
+  ln:=length(plist);
+goto start_prompt;
+
+:start:
+    wait(SFB_PROMPT, TRUE);
+    if (self.editing)
+    {
+        sendtext("<div class='prompt'>]</div>",self);
+        goto start;
+    }
+
+    :start_prompt:
+
+    cp:=sp;
+    i:=0;
+    while (i<ln)
+    {
+
+    if (plist.[i]=="%h%")
+cp:=replace("%h%",itoa(self.hp),cp);
+  else if (plist.[i]=="%mh%")
+  cp:=replace("%mh%",itoa(self.max_hp),cp);
+    else if (plist.[i]=="%m%")
+  cp:=replace("%m%",itoa(self.mana),cp);
+  else if (plist.[i]=="%mm%")
+  cp:=replace("%mm%",itoa(self.max_mana),cp);
+  else if (plist.[i]=="%e%")
+  cp:=replace("%e%",itoa(self.endurance),cp);
+  else if (plist.[i]=="%me%")
+  cp:=replace("%me%",itoa(self.max_endurance),cp);
+  else if (plist.[i]=="%g%")
+  cp:=replace("%g%",self.guild,cp);
+    else if (plist.[i]=="%t%")
+  cp:=replace("%t%",self.title,cp);
+    else if (plist.[i]=="%a%")
+  cp:=replace("%a%",itoa((realtime - self.birth) / SECS_PER_MUD_YEAR),cp);/*fuck*/
+    else if (plist.[i]=="%r%")
+    {
+    temp:=racestring@commands(self.race);
+  cp:=replace("%r%",temp,cp);
+  }
+    else if (plist.[i]=="%x%")
+  cp:=replace("%x%",itoa(self.exp),cp);
+    else if (plist.[i]=="%xl%")
+  cp:=replace("%xl%",itoa(self.exptol),cp);
+    else if (plist.[i]=="%l%")
+  cp:=replace("%l%",itoa(self.vlevel),cp);
+    else if (plist.[i]=="%o%")
+    {
+    if (self.fighting !=null)
+  cp:=replace("%o%","[Opponent: "+self.fighting.name+"]",cp);
+    else
+    cp:=replace("%o%","",cp);
+        }
+    else if (plist.[i]=="%tn%")
+    {
+    if (self.fighting.fighting !=null)
+  cp:=replace("%tn%","[Tank: "+self.fighting.fighting.name+"]",cp);
+    else
+    cp:=replace("%tn%","",cp);
+        }
+    else if (plist.[i]=="%od%")
+    {
+    if (self.fighting !=null)
+    {
+      x :=self.fighting.max_hp/4;
+  x := self.fighting.hp/ x;
+  x :=4 - x;
+  if (x <= 0)
+temp:="healthy";
+else if (x==1)
+temp:="bruised";
+else if (x==2)
+temp:="scraped";
+else if (x==3)
+temp:="bleeding";
+else if (x>=4)
+temp:="gushing";
+
+    cp:=replace("%od%","[Opponent diag:  "+temp+"]",cp);
+  }
+    else
+    cp:=replace("%od%","",cp);
+        }
+    else if (plist.[i]=="%td%")
+    {
+    if (self.fighting.fighting !=null)
+    {
+          x :=self.fighting.fighting.max_hp/4;
+  x := self.fighting.fighting.hp/ x;
+  x :=4 - x;
+  if (x <= 0)
+temp:="healthy";
+else if (x==1)
+temp:="bruised";
+else if (x==2)
+temp:="scraped";
+else if (x==3)
+temp:="bleeding";
+else if (x>=4)
+temp:="gushing";
+
+    cp:=replace("%td%","[Tank diag:  "+temp+"]",cp);
+    }
+    else
+    cp:=replace("%td%","",cp);
+        }
+    else if (plist.[i]=="%z%")
+      cp:=replace("%z%",self.outside.zoneidx,cp);
+      else if (plist.[i]=="%ro%")
+      cp:=replace("%ro%",self.outside.nameidx,cp);
+            else if (plist.[i]=="%w%")
+      cp:=replace("%w%",itoa(self.minv),cp);
+      else if (plist.[i]=="%er%")
+      cp:=replace("%er%","ERROR",cp);
+
+
+  i:=i+1;
+  }
+
+    if (not isset(self.pcflags,PC_COMPACT))
+        sendtext("<br/>", self);
+    sendtext("<div class='prompt' "+prompt_data()+">"+cp+"</div>", self);
+    goto start;
+}
+dilend
+
+
+
+dilbegin unique aware rebirth_prompt();
+external
+    string prompt_data();
+code
+{
+  :start:
+    wait(SFB_PROMPT, TRUE);
+    if (self.editing)
+    {
+        sendtext("<div class='prompt'>]</div>",self);
+        goto start;
+    }
+
+    sendtext("<div class='prompt' "+prompt_data()+">"+self.prompt+"</div>",self);
+    goto start;
+}
+dilend
+%end
+

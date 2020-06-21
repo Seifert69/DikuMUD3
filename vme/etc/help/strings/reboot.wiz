@@ -1,0 +1,15 @@
+<br/>
+Usage:<br/>
+   &gt; reboot<br/>
+   &gt; reboot now<br/>
+   &gt; reboot cancel<br/>
+   &gt; reboot # (in minutes)..Ex. reboot 30<br/>
+<br/>
+This command reboots the server. When the command is given with no<br/>
+argument, the mud is set to reboot in 1 minute and a countdown is<br/>
+held.  When the 'now' arg is passed the mud reboots directly.<br/>
+Reboot cancel will halt the reboot process.  You can also set a reboot<br/>
+for a period of time.  Reboot 30 will set a reboot in 30 minutes. <br/>
+Note players don't receive any messages if the reboot time is over<br/>
+20 minutes.<br/>
+<br/>

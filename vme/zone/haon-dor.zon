@@ -1,0 +1,3956 @@
+/*
+filename    haon-dor
+password    rlscrew
+changedby   Darg
+EmailAdd
+request     compile
+version     17
+END HEADER*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include <macros.h>
+
+%zone                          haon_dor
+title "Haon-Dor Forest@Mainland"
+lifespan 10
+reset RESET_ANYHOW
+creators {"quifael", "papi"}
+
+notes
+"The immortal ever-existing Haon-Dor forest by Quifael the magnificent
+creator. All DIL modifications done by Papi the not-so-magnificent
+creator."
+
+help
+"Haon-Dor is the forest located west of Udgaard. The further west you travel
+the darker and more dangerous the forest becomes. Beginners should never
+go into the deep, dark forest beyond the dense forest.<br/><br/>
+
+Haon-Dor contains many small animals, a cabin, an orc camp and many other
+secrets in the deep, dark, forest. There is a beginners quest at the cabin.
+Zone by Quifael and Papi"
+
+%dil
+dilbegin spider();
+var
+   u : unitptr;
+   i : integer;
+
+code
+{
+   heartbeat := PULSE_SEC*5;
+   on_activation((self.position <= POSITION_SLEEPING) or
+		 (self.position == POSITION_FIGHTING), skip);
+
+   :loop:
+   wait(SFB_MSG, argument == "webaction");
+
+   if (self.outside.nameidx != "on_web")
+     goto loop;
+
+   act("$1n jumps down through the web to prey on a victim.",
+       A_HIDEINV, self, null, null, TO_ROOM);
+
+   link(self, findroom("under_web@haon_dor"));
+   /* Now find the victim */
+   foreach (UNIT_ST_PC|UNIT_ST_NPC, u)
+   {
+      if ((u.nameidx != "spider") and
+          (u.nameidx != "queen_spider"))
+      {
+	 act("$1n drops down on $3n from the web above!",
+	     A_SOMEONE, self, null, u, TO_NOTVICT);
+	 act("$1n drops down on you from the web above!",
+	     A_SOMEONE, self , null, u, TO_VICT);
+
+	 i := cast_spell(SPL_POISON, self, self, u, "");
+	 i := cast_spell(SPL_POISON, self, self, u, "");
+	 i := meleeattack(self, u, +75, WPN_BITE);
+	 goto done;
+      }
+   }
+
+   :done:
+	while (self.position == POSITION_FIGHTING) pause;
+   pause;
+
+   /* This could be a fun extension: If the spider survives, let it look
+      for a corpse (foreach) and put web all around it. It then moves the
+      "encased" corpse into the den of the queen (and the corpse "rot"
+      is removed too (subaff)). */
+
+   if (self.position < POSITION_STANDING)
+   {
+      exec("stand", self);
+      pause;
+   }
+
+   exec ("u", self);
+
+   goto loop;
+}
+dilend
+
+dilbegin orc_follower();
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+code
+{
+   heartbeat := PULSE_SEC * 5;
+
+   :start:
+   nopriority;
+   wait(SFB_MSG, activator.nameidx $= "orc_chief");
+   priority;
+   exec("wake", self); pause;
+   exec("yawn", self); pause;
+   exec("stand", self); pause;
+
+   wait(SFB_MSG, activator.nameidx $= "orc_chief");
+   if (argument $= "eat")
+   {
+      pause;
+      exec("emote devours the delicious rabbit stew with great joy.", self);
+      pause;
+      wait(SFB_MSG, activator.nameidx $= "orc_chief");
+   }
+
+tf:=walk_room@function("orc_cave_other@haon_dor",4);
+
+   exec("sleep", self);
+   goto start;
+}
+dilend
+
+dilbegin orc_return();
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+code
+{
+tf:=walk_room@function("throne@dwarves",4);
+   heartbeat := PULSE_SEC*60;
+
+   :start:
+   on_activation(self.position > POSITION_SLEEPING, a_break);
+
+   :loop:
+   exec("sleep", self);
+   pause;
+   exec("snore", self);
+   pause;
+   exec("emote breaks wind.", self);
+   pause;
+   exec("emote turns in his sleep.", self);
+   pause;
+   goto loop;
+
+   :a_break:
+tf:=walk_room@function("orc_cave_other@haon_dor",4);
+   exec("sleep", self);
+   goto start;
+}
+dilend
+
+
+%rooms
+
+#ifdef EXTENDED_MUD
+/*player rooms*/
+                         lr_room1
+
+title "The Sitting Room"
+descr "As you enter the room, the first thing you see is the hat rack.
+As you look around a little more, you notice how cozy and comfortable
+the room is. The fire in the fireplace crackles softly, warming and
+lighting the room. The only other light source that  you can see is the
+four candles placed at the four corners of the room. There is something
+different about the candle in the northeast corner of the room. In the
+dim light you can make out a large painting above the fireplace. There is
+a comfy couch and two comfy chairs in the room. You also notice a piano by
+the east wall. Lightlord's room is to the north and Rejji's room is to the
+west."
+ALWAYS_LIGHT
+extra "fireplace" "The fire crackles softly in the fireplace."
+
+extra "piano"
+"This is Rejji's piano.It is a chestnut console. The keys are ivory and ebony.
+It looks very well taken care of, and played often."
+
+extra "couch"
+"This is a nice comfy couch. It is forest green."
+
+extra "chair"
+"The chairs match the couch. They are a brilliant forest green and look
+very comfy."
+
+extra "hat rack"
+"The hat rack is full of Rejji's hats. If you had a hat it would not fit!
+However there are no coats hanging here."
+
+extra "candle"
+"This candle is different. It has a blue flame that casts a bright beam on
+to the floor. Maybe you should enter the beam...wonder where you'd end up?"
+
+
+south to rn_6023 open {EX_OPEN_CLOSE, EX_CLOSED}
+      descr "You see the lovely maple door from the inside."
+          keyword {"maple door", "door"};
+
+north to lr_room2;
+
+west to lr_room3;
+
+end
+
+
+                                 lr_room2
+
+title "Lightlord's Room"
+descr "This is Lightlord's room. The first thing you notice is his bed. It
+takes up half of the room! At the foot of this huge bed is a small table with
+some interesting things on it. The only other piece of furniture in the room
+is a wardrobe by the west wall. The room is full of candles in silver holders,
+causing the room to have a very romantic glow."
+ALWAYS_LIGHT
+extra "bed"
+"This bed sure is big! It looks comfortable. It has silk sheets and
+feather pillows. It is a very elegant bed. Except for the pair of hand
+cuffs on  the bed post...hummm..."
+
+extra "table"
+"This table has a bottle of champaign chilling on it. There are two
+glasses and a single red rose placed next to it. It looks like Lightlord
+and Rejji are planning for a night in!"
+
+extra "wardrobe"
+"This wardrobe is oak. It looks just big enough to fit two people in.
+The wardrobe has double doors."
+
+south to lr_room1;
+
+end
+
+
+
+                                 lr_room3
+
+
+title "Rejji's room"
+descr "This is Rejji's room. Her bed looks warm and inviting. In the
+southeast corner of the room is her desk. A large bouquet of roses is in
+a vase on the desk. Hanging above the desk is a painting of a very mysterious
+young man. Next to the desk is Rejji's bookshelf. On the south wall is a
+window looking out on the field. Next to the bed is a big comfy chair.
+Rejji's closet is in the northwest corner and a large chest is in the
+northeast corner."
+ALWAYS_LIGHT
+extra "Bed"
+"Rejji's bed is big, comfy, warm and empty."
+
+extra "Desk"
+"Rejji's desk is covered in pens and paper. There is a vase full
+of roses and a bowl full of peaches here too. This desk is an organized
+mess. Please don't touch a thing!"
+
+extra "roses"
+"This is a very nice bouquet! Wonder who it's from?"
+
+extra "chest"
+"This chest looks old."
+
+extra "closet"
+"Why do you care what's in my closet?!"
+
+extra "Chair"
+"This chair, like every other piece of furniture in the house,
+looks very comfy. It is black, very black."
+
+extra "Bookshelf"
+"Rejji sure reads a lot! The shelf is full. Not one more book
+would fit."
+
+extra "painting"
+"This is a portrait of a young man. He is very handsome! You wonder
+who this young man is? There is a small gold plaque on the bottom frame."
+
+extra "plaque"
+"The plaque has one word on it."
+
+extra "word"
+"Parting..."
+
+
+east to lr_room1;
+
+end
+
+#endif // EXTENDED_MUD
+
+/* -------------------- THE RIVER THOUGH THE FOREST ------------------------ */
+
+                            lightriver
+
+title "On the River in Haon-Dor"
+descr
+"The river slowly flows east towards the village of Udgaard. North you see a
+landing spot in the light part of the forest."
+
+movement SECT_WATER_SAIL
+
+north to rn_6018;
+west to darkriver2 difficulty 20 descr
+  "Much further upstream the forest becomes more dense.";
+east to river@udgaard difficulty 0 descr "The river continues to the east.";
+south to river1@toy difficulty 5 descr "The river forks and bends south.";
+
+dilcopy watercurrent@basemove(DIR_EAST, 
+   {"The river current gently takes you east.", "$1n gently flows away to the east.",
+    "You gently flow a little further eastwards.", "$1n flows in from the west."}, 5);
+end
+
+                            darkriver1
+
+title "On the Dark River"
+descr
+"The ancient crowns of trees on both banks reach together forming a dense roof
+above you. On the northern river bank you see a place where landing is
+possible."
+extra {"ancient", "tree", "trees", "roof"}
+"These ancient trees must have been here for many, many years. It is
+impossible
+to catch even a glimpse of anything above the lowest branches."
+
+movement SECT_WATER_SAIL
+IN_ALWAYS_DARK
+
+north to rn_6123;
+west to elfdom/mountriv difficulty 30 descr
+  "Upstream the cold dark river leads into a great mountain.";
+east to darkriver2 difficulty 10 descr
+  "The river continues through the deep dark forest.";
+
+dilcopy watercurrent@basemove(DIR_EAST, 
+   {"The dark river current takes you east.", "$1n flows away to the east.",
+    "You flow a little further eastwards.", "$1n flows in from the west."}, 5);
+
+end
+
+
+                            darkriver2
+
+title "On the Dark River"
+descr
+"You are on the cold and dark river flowing eastwards through the forest.
+The ancient crowns of trees on both banks reach together forming a dense roof
+above you. On the northern river bank you see a place where landing is
+possible."
+extra {"ancient", "tree", "trees", "roof"}
+"These ancient trees must have been here for many, many years. It is
+impossible
+to catch even a glimpse of anything above the lowest branches."
+
+movement SECT_WATER_SAIL
+IN_ALWAYS_DARK
+
+north to rn_6121;
+
+dilcopy watercurrent@basemove(DIR_EAST, 
+   {"The dark river current takes you east.", "$1n flows away to the east.",
+    "You flow a little further eastwards.", "$1n flows in from the west."}, 5);
+
+west to darkriver1 difficulty 20 descr
+"The cold dark river continues through the deep dark forest.";
+east to lightriver difficulty 5 descr
+"The river flows into a lighter part of the forest.";
+end
+
+/* ------------------------ THE LIGHT FOREST ------------------------ */
+
+                forest_edge
+
+title "The Edge of the Forest"
+descr
+"You are standing at the eastern edge of a big forest.  To the east is the
+village of Udgaard and to the west is a narrow trail, leading in through
+the forest."
+
+extra {"trail"}
+"The forest trail winds westwards through the trees."
+extra {"tree","trees"}
+"The trees are quite tall considering most of them appear to be quite young.
+On one of the trees, crude letters forming the word 'Haon-Dor' have been
+carved into the bark."
+
+movement SECT_FIELD
+flags {UNIT_FL_NO_MOB}
+east to udgaard/watch_tower2 descr
+"You see the village of Udgaard.";
+west to rn_6001 descr
+"You see the narrow forest trail winding westwards in between the trees.";
+end
+
+
+                rn_6001
+
+title "A Trail Through the Light Forest"
+descr
+"You are on a trail leading through the forest.  To the east is the forest
+edge
+and to the west, the trail leads further into the forest."
+
+extra {"trail"}
+"The forest trail winds east-west through the trees."
+extra {"tree","trees"}
+"The trees here are quite young and fresh.  They seem to accommodate many
+kinds
+of birds, insects and other small animals."
+extra {"birds","insects","animals"}
+"Very cute little creatures, they seem to enjoy life."
+
+movement SECT_FOREST
+east to forest_edge descr
+"The trail continues eastwards out of the forest.";
+west to rn_6002 descr
+"You see the narrow forest trail winding westwards in between the trees.";
+end
+
+
+                rn_6002
+
+title "A Trail Through the Light Forest"
+descr
+"You are on a narrow trail leading east and west through the forest.  To the
+west, the forest gradually becomes more dense.  A small forest path leads
+south."
+
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"trail"}
+"The forest trail winds east-west through the trees."
+extra {"tree","trees"}
+"The young, slender trees look beautiful, their fresh, green leaves moving
+lightly in the wind."
+
+movement SECT_FOREST
+east to rn_6001 descr
+"The trail continues eastwards through the young trees.";
+south to rn_6011 descr
+"The small path leads south through the young trees.";
+west to rn_6003 descr
+"You see the narrow forest trail winding westwards into the dense forest.";
+end
+
+
+                rn_6003
+
+title "A Trail Through the Dense Forest"
+descr
+"You are on a trail leading east and west through the dense forest.  To the
+east, the forest gradually seems to become lighter.  A small path leads north,
+away from the trail."
+
+extra {"trail"}
+"The forest trail seems almost fragile compared to the massive trunks."
+extra {"tree","trees"}
+"The dense crowns of the mature trees leave only a fraction of the sky to be
+seen through the leaves."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+north to rn_6024 descr
+"The path leads north, away from the trail.";
+east to rn_6002 descr
+"The trail continues eastwards to the younger part of the forest.";
+west to rn_6004 descr
+"You see the narrow trail winding westwards through the dense forest.";
+end
+
+
+                rn_6004
+
+title "A Trail Through the Dense Forest"
+descr
+"You are on a trail leading east through the dense forest.  To the west,
+the trees are so huge and their crowns so dense that forest remains in
+total darkness.  A small path leads south through the trees."
+
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"trail"}
+"The forest trail seems almost fragile compared to the massive trunks."
+extra {"tree","trees"}
+"The crowns of the old trees almost cut out all light and makes it
+impossible to enter the forest from here. However it seems that you
+can enter the dark forest south of here."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+
+west to path_8@fields descr
+"The narrow dusty trail leads west through the forest.";
+
+east to rn_6003 descr
+"The trail continues eastwards through the dense forest.";
+south to rn_6005 descr
+"The small path leads south through the trees..";
+end
+
+
+                rn_6005
+
+title "A Small Path in the Dense Forest"
+descr
+"You are on a small path leading through the dense forest.  The crowns of the
+old trees leave the forest in an unreal twilight illumination.  The path
+continues north and south. A narrow trail leads west into the dark forest."
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The trees are mostly old beeches and oaks."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+west to rn_6100 descr
+"The narrow trail almost seems to disappear between the enourmous trunks.";
+north to rn_6004 descr
+"The small path leads north through the trees.";
+south to rn_6006 descr
+"The small path leads south through the trees.";
+end
+
+
+                rn_6006
+
+title "A Small Path in the Dense Forest"
+descr
+"You are on a small path leading through the dense forest.  The crowns of the
+old trees leave the forest in an unreal twilight illumination.  The path
+continues north and east."
+
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The trees are mostly old beeches and oaks."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+north to rn_6005 descr
+"The small path leads north through the trees.";
+east to rn_6007 descr
+"The small path leads east through the trees.";
+end
+
+
+                rn_6007
+
+title "An Intersection in the Dense Forest"
+descr
+"You are on a small path leading through the dense forest.  The crowns of the
+old trees leave the forest in an unreal twilight illumination.  The forest
+gradually lightens to the east.  Paths lead east, west and south."
+
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The trees are mostly old beeches and oaks."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+east to rn_6008 descr
+"You can barely make out a clearing to the east.";
+south to rn_6012 descr
+"The small path leads south through the trees.";
+west to rn_6006 descr
+"The small path leads west through the trees.";
+end
+
+
+                rn_6008
+
+title "The Forest Clearing"
+descr
+"You are in a clearing in the forest.  Lots of fresh stumps of varying sizes
+protrude from the ground and heavy logs are stacked neatly in a big pile
+supported by stakes set into the ground.  Paths lead north, east and west."
+
+extra {"log","logs"}
+"Even though the logs have been chopped to shorter pieces, they are quite
+heavy
+as they are fresh and still filled with sap."
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"stake","stakes"}
+"The stakes keep the logs from rolling down."
+extra {"stump","stumps"}
+"There are more stumps than logs and some of the stumps are partly covered in
+moss."
+extra {"tree","trees"}
+"The trees are mostly old beeches and oaks."
+
+movement SECT_FOREST
+north to rn_6011 descr
+"The small path leads north through the trees.";
+east to rn_6009 descr
+"The small path leads east through the trees.";
+west to rn_6007 descr
+"The small path leads west through the trees.";
+end
+
+
+                rn_6009
+
+title "Outside a Small Cabin in the Forest"
+descr
+"You are outside a small cabin built entirely from heavy logs.  There is a
+wooden door to the north and small paths lead west and south through the
+trees."
+north to cabin descr
+"The wooden door is quite sturdy but does not appear to be equipped with a
+lock." keyword {"wooden door", "door", "cabin"};
+
+extra {"cabin","logs"}
+"It looks simple but comfortable and the slender trees make the whole place
+seem
+pretty idyllic..  It's a cabin built from logs.  Wooden logs, not system
+logs."
+extra {"path","paths"}
+"The path is probably used by the cabin's inhabitants."
+extra {"tree","trees"}
+"The trees are fairly young, not much more than a hundred years or so."
+
+movement SECT_FOREST
+south to rn_6014 descr
+"The small path leads south through the dense forest.";
+west to rn_6008 descr
+"The small path leads west through the light forest.";
+end
+
+
+                cabin
+
+title "Inside the Cabin"
+descr
+"You are inside a small one-room cabin made entirely from heavy logs.  It is
+very sparsely furnished, containing only most basic housekeeping equipment,
+such as a bed, a chair and a table."
+
+extra {"bed"}
+"It is definitely not the most comfortable bed you have seen in your life."
+extra {"chair"}
+"It is made from oak and looks strong and sturdy."
+extra {"table"}
+"A heavy table that doesn't even appear to rock."
+
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_MOB}
+south to rn_6009 descr
+"The wooden door leads south." keyword {"wooden door", "door"};
+end
+
+
+                rn_6011
+
+title "A Small Path Through the Light Forest"
+descr
+"You are on a small path leading through the forest.  The trees are tall and
+slender.  Paths lead north and south..."
+
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The trees are fairly young, not much more than a hundred years or so."
+
+movement SECT_FOREST
+north to rn_6002 descr
+"The path leads north through the young trees.";
+south to rn_6008 descr
+"The path leads south through the young trees.";
+end
+
+
+                rn_6012
+
+title "An Intersection in the Dense Forest"
+descr
+"You are on a small path leading through the dense forest.  The crowns of the
+old trees leave the forest floor in an unreal twilight illumination.  Paths
+lead north, east and south."
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The trees are mostly old beeches and oaks."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+north to rn_6007 descr
+"The small path leads north through the trees.";
+east to rn_6013 descr
+"The small path leads east through the trees.";
+south to rn_6021 descr
+"The small path leads south through the trees.";
+end
+
+
+                rn_6013
+
+title "A Small Path in the Dense Forest"
+descr
+"You are on a small path leading through the dense forest.  The crowns of the
+old trees leave the forest in an unreal twilight illumination.  The path
+continues east and west."
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The trees are mostly old beeches and oaks."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+east to rn_6014 descr
+"The small path leads east through the trees.";
+west to rn_6012 descr
+"The small path leads west through the trees.";
+end
+
+
+                rn_6014
+
+title "An Intersection in the Dense Forest"
+descr
+"You are on a small path leading through the dense forest.  The forest
+gradually
+lightens to the north.  Paths lead north, east and west."
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The crowns of the old trees leave the forest in an unreal twilight
+illumination."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+north to rn_6009 descr
+"The path leads north to a lighter part of the forest.";
+east to rn_6015 descr
+"The small path leads east through the trees.";
+west to rn_6013 descr
+"The small path leads west through the trees.";
+end
+
+
+                rn_6015
+
+title "A Small Path in the Dense Forest"
+descr
+"You are on a small path leading through the dense forest.  The crowns of the
+old trees leave the forest in an unreal twilight illumination.  The path
+continues south and west."
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The trees are mostly old beeches and oaks."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+south to rn_6016 descr
+"The small path leads south through the trees.";
+west to rn_6014 descr
+"The small path leads west through the trees.";
+end
+
+
+                rn_6016
+
+title "A Small Path in the Dense Forest"
+descr
+"You are on a small path leading through the dense forest.  The crowns of the
+old trees leave the forest in an unreal twilight illumination.  The path
+continues north and south."
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The trees are mostly old beeches and oaks."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+north to rn_6015 descr
+"The small path leads north through the trees.";
+south to rn_6017 descr
+"The small path leads south through the trees.";
+end
+
+
+                rn_6017
+
+title "A Small Path in the Dense Forest"
+descr
+"You are on a small path leading through the dense forest.  The forest
+seems to
+become lighter to the west.  The path continues in all directions but east."
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The crowns of the old trees leave the forest in an unreal twilight
+illumination."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+north to rn_6016 descr
+"The small path leads north through the trees.";
+west to rn_6018 descr
+"The small path leads west through the trees to a lighter part of the
+forest.";
+south to path1@toy descr
+"To the south you see a path going off into the forest.";
+
+end
+
+
+                rn_6018
+
+title "An Intersection in the Light Forest"
+descr
+"You are on a small path leading through the forest.  A path leads north to a
+small field and other paths lead east and west into the dense forest. South
+of here a river flows eastwards through the forest."
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The tall trees are young and slender, not much more than a hundred years
+or so."
+extra {"river"}
+"The river flows gently through the forest towards the village of Udgaard.
+But you would surely need a boat to go there."
+
+movement SECT_FOREST
+north to rn_6023 descr
+"The path leads north to a small, grassy field.";
+east to rn_6017 descr
+"The path leads east to a dense part of the forest..";
+west to rn_6019 descr
+"The path leads west to a dense part of the forest.";
+south to lightriver descr
+"You can easilly reach the river from here.";
+end
+
+
+                rn_6019
+
+title "A Small Path in the Dense Forest"
+descr
+"You are on a small path leading through the dense forest.  The forest seems
+to become lighter to the east.  The path continues north and east.  There is a
+large bush blocking progress to the west."
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The crowns of the old trees leave the forest in an unreal twilight
+illumination."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+north to rn_6020 descr
+"The small path leads north through the trees.";
+east to rn_6018 descr
+"The small path leads east through the trees to a lighter part of the
+forest.";
+
+end
+
+
+                rn_6020
+
+title "A Small Path in the Dense Forest"
+descr
+"You are on a small path leading through the dense forest.  The crowns of
+the old trees leave the forest in an unreal twilight illumination.  The path
+continues south and west."
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The trees are mostly old beeches and oaks."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+south to rn_6019 descr
+"The small path leads south through the trees.";
+west to rn_6021 descr
+"The small path leads west through the trees.";
+end
+
+
+                rn_6021
+
+title "A Small Path in the Dense Forest"
+descr
+"You are on a small path leading through the dense forest.  To the west
+there is a cave entrance.  The path continues north and east."
+north to rn_6012 descr
+"The small path leads north through the trees.";
+east to rn_6020 descr
+"The small path leads east through the trees.";
+west to cave descr
+"The cave is very dark.";
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The crowns of the old trees leave the forest in an unreal twilight
+illumination."
+extra {"cave","entrance"}
+"The irregular opening is eight feet wide and six feet tall.  An acrid smell
+emanates from within."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+end
+
+
+                cave
+
+title "Inside the Cave"
+descr
+"You are in a natural cave.  Various sorts of debris cover the stone floor,
+emitting a rather unpleasant smell that makes the air thick and hard to
+breathe.  The only obvious exit is east."
+east to rn_6021 descr
+"The cave opening is to the east.";
+extra {"debris"}
+"It consists mostly of gnawed bones mixed with small pieces of torn fur."
+extra {"cave","walls","floor","stone"}
+"Quite uninteresting."
+extra {"air","smell"}
+"Kind of transparent, but quite noticeable nevertheless."
+
+movement SECT_INSIDE
+flags {UNIT_FL_NO_MOB, UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+OUT_DARK_NON_NOON
+end
+
+
+                rn_6023
+
+title "On a Small, Grassy Field"
+descr
+"You are in a small, grassy field somewhere in the forest.  The tall grass
+nearly reaches your waist, and the surrounding oaks and beeches form an almost
+wall-like thicket on all sides of the field.  A small path leads south through
+the trees."
+/* EXTENDED_MUD A small cabin with a really nice looking door is north in the thicket."
+
+extra {"message", "words", "carvings", "carving"}
+"Hi! Welcome to our home! Put your feet up and relax a little!
+But watch out for Darion and Hesra. Light &amp; Rej"
+
+north to lr_room1 open {EX_OPEN_CLOSE, EX_CLOSED}
+      descr
+"This lovely maple door must have taken someone a long time to finish!
+It is carved with pictures of places all over Valhalla. There are so
+me words carved around the the top of the door. A message of some sort..."
+          keyword {"maple door", "door"};*/
+
+
+
+south to rn_6018 descr
+"The small path leads south in between the trees.";
+extra {"grass"}
+"The tall grass makes a nice hiding place for animals."
+extra {"path"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees","thicket"}
+"The trees form a close thicket."
+
+movement SECT_FIELD
+end
+
+/* ------------------ THE LIGHT FOREST (NORTHERN PART) --------------- */
+
+                rn_6024
+
+title "An Intersection in the Dense Forest"
+descr
+"You are by an intersection in the dense forest.  Small paths lead east, west
+and south."
+east to rn_6025 descr
+"The small path leads east through the trees.";
+west to rn_6027 descr
+"The small path leads east through the trees.";
+south to rn_6003 descr
+"The small path leads south through the trees.";
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The crowns of the old trees leave the forest in an unreal twilight
+illumination."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+end
+
+
+                rn_6025
+
+title "A Small Path in the Dense Forest"
+descr
+"You are on a small path leading through the dense forest.  The crowns of
+the old trees leave the forest in an unreal twilight illumination.  The path
+continues north and west."
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The trees are mostly old beeches and oaks."
+north to rn_6026 descr
+"The small path leads north through the trees.";
+west to rn_6024 descr
+"The small path leads west through the trees.";
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The crowns of the old trees leave the forest in an unreal twilight
+illumination."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+end
+
+
+                rn_6026
+
+title "By a Tower in the Forest"
+descr
+"You are in a forest clearing.  A small white-chalked tower stands in the
+centre of the clearing and a path leads south.  A bronzewood door leads
+north into the tower."
+extra {"tree","trees"}
+"The trees are mostly old beeches and oaks."
+extra {"bronzewood door","door"}
+"The trees are mostly old beeches and oaks."
+
+movement SECT_FOREST
+north to tower_entrance descr
+"The bronzewood door leads north." keyword {"bronzewood door", "door"};
+south to rn_6025 descr
+"The small path leads south through the trees.";
+
+end
+
+
+                rn_6027
+
+title "A Small Path in the Dense Forest"
+descr
+"You are on a small path leading through the dense forest.  The crowns of
+the old trees leave the forest in an unreal twilight illumination.  The path
+continues north and east."
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The trees are mostly old beeches and oaks."
+north to rn_6028 descr
+"The small path leads north through the trees.";
+east to rn_6024 descr
+"The small path leads east through the trees.";
+extra {"path","paths"}
+"The narrow path is probably used by the animals living in the forest."
+extra {"tree","trees"}
+"The crowns of the old trees leave the forest in an unreal twilight
+illumination."
+
+movement SECT_FOREST
+OUT_DARK_NON_NOON
+end
+
+
+                rn_6028
+
+title "At the Foot of a Green Hill"
+descr
+"You are on the east side of a grassy hill in the forest.  A dark and
+ominous cave entrance is set in the side of the otherwise pleasant-looking
+hillside.  The ground is littered with pieces of bones and other debris.
+The cave is to the west and paths lead south and up."
+extra {"bones","debris"}
+"Many of the bones have marks from sharp teeth."
+extra {"cave entrance","cave","entrance"}
+"The foul stench of dirty orcs emanates from within the cave."
+
+movement SECT_FOREST
+west to orc_cave_other descr
+"The entrance leads into a dark cave.";
+south to rn_6027 descr
+"The small path leads south through the trees.";
+up to rn_6029 descr
+"The small path leads up the hill towards the top.";
+end
+
+
+                rn_6029
+
+title "On the Top of a Green Hill"
+descr
+"You are on the top of a grassy hill in the forest.  This place offers a
+view of an endless sea of green tree-tops in all directions.  On the east
+side, a steep path leads down hill. To the north a small valley heads down
+and looks like it just ends from here."
+movement SECT_FOREST
+flags {UNIT_FL_SACRED}
+north to halfzon/small_valley descr
+"A small valley leads off in that direction.";
+down to rn_6028 descr
+"The path leads down to the foot of the hill.";
+end
+
+
+                orc_cave_other
+
+title "Inside the Orc Cave"
+descr
+"You are in a hole-like cave, crudely dug into the hillside.  The floor is
+littered with debris, and the air is heavy with the smell of dirty orcs.
+The cave extends westwards further into the hill and the exit is to the east."
+
+east to rn_6028 descr
+"The cave opening is to the east.";
+west to orc_cave_chief descr
+"The cave extends into the hill.";
+extra {"debris"}
+"It consists mostly of gnawed and broken bones."
+
+movement SECT_INSIDE
+flags {UNIT_FL_NO_TELEPORT,UNIT_FL_NO_MOB, UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+OUT_DARK_NON_NOON
+end
+
+
+                orc_cave_chief
+
+title "Deep Inside the Orc Cave"
+descr
+"You are deep inside the orcs' hole-like cave.  The ceiling is low and the
+cave extends no further.  The air is cool and musty, and the strong smells
+of damp earth and dirty orcs compete quite equally.  The only exit is east."
+
+east to orc_cave_other descr
+"The cave continues east.";
+
+movement SECT_INSIDE
+flags {UNIT_FL_NO_MOB, UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+OUT_DARK_NON_NOON
+end
+
+
+/* -------------------- THE TOWER -------------------- */
+
+                tower_entrance
+
+title "Inside the Tower"
+descr
+"You are at the ground floor of a small tower.  A narrow stone staircase
+leads up to the next floor, and a bronzewood door leads south."
+
+movement SECT_INSIDE
+flags {UNIT_FL_NO_TELEPORT,UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_MOB}
+south to rn_6026 descr
+"The bronzewood door leads south to a forest clearing."
+keyword {"bronzewood door", "door"};
+up to tower_lab descr
+"The staircase leads up to the next floor.";
+end
+
+
+                tower_lab
+
+title "In the Tower Laboratory"
+descr
+"You are on the top floor of a small tower.  Through the windows you see the
+tops of the nearest trees.  Along the walls are numerous jars and bottles in
+shelves."
+/* TODO: Library, Gate, Crystal ball */
+movement SECT_INSIDE
+flags {UNIT_FL_NO_TELEPORT,UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_MOB}
+down to tower_entrance descr
+"The staircase leads down to the ground floor.";
+end
+
+/* ------------------------ THE DARK FOREST ------------------------ */
+
+                rn_6100
+
+title "A Narrow Trail Through the Deep, Dark Forest"
+descr
+"You are on a narrow trail winding its way between the enormous, grey trunks.
+The crowns of the trees must be very dense, as they leave the forest floor in
+utter darkness.  The trail leads east and west."
+east to rn_6005 descr
+"The narrow trail leads east to a somewhat lighter part of the forest.";
+west to rn_6101 descr
+"The narrow, dusty trail leads west through the forest.";
+extra {"trail"}
+"The dark and dusty trail seems fragile compared to the massive trunks, and in
+some places, giant grey roots have broken up through its surface."
+extra {"tree","trees","trunk","trunks"}
+"These ancient trees must have been here for many, many years. It is
+impossible
+to catch even a glimpse of anything above the lowest branches."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_MOB}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6101
+
+title "A Narrow Trail Through the Deep, Dark Forest"
+descr
+"You are on a dusty trail winding its way east-west between huge, ancient
+trees
+whose grey trunks remind you of ancient pillars in a enormous, deserted hall.
+To the south, a frail path leads away from the trail."
+east to rn_6100 descr
+"The narrow, dusty trail leads east through the forest.";
+south to rn_6104 descr
+"The path leads south - away from the trail.";
+west to rn_6102 descr
+"The narrow, dusty trail leads west through the forest.";
+extra {"trail"}
+"The dark and dusty trail seems fragile compared to the massive trunks, and in
+some places, giant grey roots have broken up through its surface."
+extra {"path"}
+"The path seems fragile and unsafe compared to the enourmous trunks that loom
+around it."
+extra {"tree","trees","trunk","trunks"}
+"These ancient trees must have been here for many, many years.  It is
+impossible
+to catch even a glimpse of anything above the lowest branches."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6102
+
+title "A Narrow Trail Through the Deep, Dark Forest"
+descr
+"You are on a dusty trail winding its way east-west between huge, ancient
+trees
+that stand close on all sides.  Not a sound is to be heard - everything is
+ominously quiet."
+east to rn_6101 descr
+"The narrow, dusty trail leads east through the forest.";
+west to rn_6103 descr
+"The narrow, dusty trail leads west through the forest.";
+extra {"trail"}
+"The dark and dusty trail seems fragile compared to the massive trunks, and in
+some places, giant grey roots have broken up through its surface."
+extra {"path"}
+"The path seems fragile and unsafe compared to the enourmous trunks that loom
+around it."
+extra {"tree","trees","trunk","trunks"}
+"These ancient trees must have been here for many, many years.  It is
+impossible
+to catch even a glimpse of anything above the lowest branches."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                rn_6103
+
+title "A Narrow Trail Through the Deep, Dark Forest"
+descr
+"You are where the dusty trail bends, as to avoid conflict with a colossal
+trunk to the west.  Not a sound is to be heard - everything is ominously
+quiet."
+
+east to rn_6102 descr
+"The narrow, dusty trail leads east through the forest.";
+south to rn_6108 descr
+"The narrow, dusty trail leads south through the forest.";
+north to haon_link@ogre1 descr
+"A path leads north through the trees.";
+
+extra {"trail"}
+"The dark and dusty trail seems fragile compared to the massive trunks, and in
+some places, giant grey roots have broken up through its surface."
+extra {"trees","trunks"}
+"These ancient trees must have been here for many, many years.  It is
+impossible
+to catch even a glimpse of anything above the lowest branches."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6104
+
+title "A Small Path in the Deep, Dark Forest"
+descr
+"You are on a narrow path leading through the deep, dark forest.  You feel
+as if
+the ancient trees observe you in watchful silence.  The path continues north
+and south."
+north to rn_6101 descr
+"The narrow path winds its way through the trees to the north.";
+south to rn_6105 descr
+"The narrow path winds its way through the trees to the south.";
+extra {"tree","trees","trunk","trunks"}
+"The ancient grey giants seem to observe you silently."
+extra {"path"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6105
+
+title "A Small Path in the Deep, Dark Forest"
+descr
+"You are on a narrow path leading through the deep, dark forest.  Ancient grey
+trees loom all around you.  The path continues north and west."
+north to rn_6104 descr
+"The narrow path winds its way through the trees to the north.";
+west to rn_6106 descr
+"The narrow path winds its way through the trees to the west.";
+extra {"tree","trees","trunk","trunks"}
+"The ancient grey giants seem to observe you silently."
+extra {"path"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6106
+
+title "A Junction in the Deep, Dark Forest"
+descr
+"You are by a junction where three paths meet.  Ancient grey trees tower above
+you on all sides.  Paths lead east, south and west."
+east to rn_6105 descr
+"The narrow path winds its way through the trees to the east.";
+south to rn_6117 descr
+"The narrow path winds its way through the trees to the south.";
+west to rn_6107 descr
+"The narrow path winds its way through the trees to the west.";
+extra {"tree","trees","trunk","trunks"}
+"The ancient grey giants seem to observe you silently."
+extra {"path","paths"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6107
+
+title "A Small Path in the Deep, Dark Forest"
+descr
+"You are on a narrow path leading through the deep, dark forest.  Ancient grey
+trees loom all around you.  The path continues north and east."
+north to rn_6108 descr
+"The narrow path winds its way through the trees to the north.";
+east to rn_6106 descr
+"The narrow path winds its way through the trees to the east.";
+extra {"tree","trees","trunk","trunks"}
+"The ancient grey giants seem to observe you silently."
+extra {"path"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6108
+
+title "A Narrow Trail Through the Deep, Dark Forest"
+descr
+"You are on a dusty trail winding its way between huge, ancient trees
+standing close on all sides.  The trail leads north and west and to the south,
+a frail path leads away from the trail."
+north to rn_6103 descr
+"The narrow, dusty trail leads north through the forest.";
+south to rn_6107 descr
+"The path leads south - away from the trail.";
+west to rn_6109 descr
+"The narrow, dusty trail leads west through the forest.";
+extra {"trail"}
+"The dark and dusty trail seems fragile compared to the massive trunks, and in
+some places, giant grey roots have broken up through its surface."
+extra {"path"}
+"The path seems fragile and unsafe compared to the enourmous trunks that loom
+around it."
+extra {"tree","trees","trunk","trunks"}
+"These ancient trees must have been here for many, many years.  It is
+impossible
+to catch even a glimpse of anything above the lowest branches."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6109
+
+title "A Narrow Trail Through the Deep, Dark Forest"
+descr
+"You are on a dusty trail winding its way east-west between huge, ancient
+trees
+that stand close on all sides.  Not a sound is to be heard - everything is
+ominously quiet."
+east to rn_6108 descr
+"The narrow, dusty trail leads east through the forest.";
+west to rn_6110 descr
+"The narrow, dusty trail leads west through the forest.";
+extra {"trail"}
+"The dark and dusty trail seems fragile compared to the massive trunks, and in
+some places, giant grey roots have broken up through its surface."
+extra {"tree","trees","trunk","trunks"}
+"These ancient trees must have been here for many, many years.  It is
+impossible
+to catch even a glimpse of anything above the lowest branches."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6110
+
+title "A Narrow Trail Through the Deep, Dark Forest"
+descr
+"You are on a dusty trail winding its way between huge, ancient trees that
+stand
+close on all sides.  The trail leads east and south.  To the north, a narrow
+path leads away from the trail."
+north to rn_6144 descr
+"The narrow path leads west between the giant trees.";
+east to rn_6109 descr
+"The narrow, dusty trail leads east through the forest.";
+south to rn_6111 descr
+"The narrow, dusty trail leads south through the forest.";
+extra {"trail"}
+"The dark and dusty trail seems fragile compared to the massive trunks, and in
+some places, giant grey roots have broken up through its surface."
+extra {"path"}
+"The path seems fragile and unsafe compared to the enourmous trunks that loom
+around it."
+extra {"tree","trees","trunk","trunks"}
+"Some of the trunks to the west are covered in a thin, almost transparent
+substance.  It looks like small threads woven carefully together."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6111
+
+title "A Narrow Trail Through the Deep, Dark Forest"
+descr
+"You are on a dusty trail winding its way north-south between huge, ancient
+trees that loom ominously above you."
+north to rn_6110 descr
+"The narrow, dusty trail leads north through the forest.";
+south to rn_6112 descr
+"The narrow, dusty trail leads south through the forest.";
+extra {"trail"}
+"The dark and dusty trail seems fragile compared to the massive trunks, and in
+some places, giant grey roots have broken up through its surface."
+extra {"tree","trees","trunk","trunks"}
+"These ancient trees must have been here for many, many years.  It is
+impossible
+to catch even a glimpse of anything above the lowest branches."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6112
+
+title "A Narrow Trail Through the Deep, Dark Forest"
+descr
+"You are on a dusty trail winding its way between huge, ancient trees
+standing close on all sides.  The trail leads north and west and to the east,
+a frail path leads away from the trail."
+north to rn_6111 descr
+"The narrow, dusty trail leads north through the forest.";
+east to rn_6113 descr
+"The path leads east - away from the trail.";
+west to rn_6127 descr
+"The narrow, dusty trail leads west through the forest.";
+extra {"trail"}
+"The dark and dusty trail seems fragile compared to the massive trunks, and in
+some places, giant grey roots have broken up through its surface."
+extra {"path"}
+"The path seems fragile and unsafe compared to the enourmous trunks that loom
+around it."
+extra {"tree","trees","trunk","trunks"}
+"These ancient trees must have been here for many, many years.  It is
+impossible
+to catch even a glimpse of anything above the lowest branches."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6113
+
+title "A Small Path in the Deep, Dark Forest"
+descr
+"You are on a narrow path leading through the deep, dark forest.  Ancient grey
+trees loom in all directions.  The path continues south and west."
+south to rn_6114 descr
+"The narrow path winds its way through the trees to the south.";
+west to rn_6112 descr
+"The narrow path winds its way through the trees to the west.";
+extra {"tree","trees","trunk","trunks"}
+"The ancient grey giants seem to observe you silently."
+extra {"path"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6114
+
+title "A Junction in the Deep, Dark Forest"
+descr
+"You are by a junction where three paths meet.  Ancient grey trees tower above
+you on all sides.  Paths lead north, east and west."
+north to rn_6113 descr
+"The narrow path winds its way through the trees to the north.";
+east to rn_6115 descr
+"The narrow path winds its way through the trees to the east.";
+west to rn_6122 descr
+"The narrow path winds its way through the trees to the west.";
+extra {"tree","trees","trunk","trunks"}
+"The ancient grey giants seem to observe you silently."
+extra {"path","paths"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6115
+
+title "A Small Path in the Deep, Dark Forest"
+descr
+"You are on a narrow path leading through the deep, dark forest.  You feel as
+if the ancient trees observe you in watchful silence.  The path continues
+north
+and west."
+north to rn_6116 descr
+"The narrow path winds its way through the trees to the north.";
+west to rn_6114 descr
+"The narrow path winds its way through the trees to the west.";
+extra {"tree","trees","trunk","trunks"}
+"The ancient grey giants seem to observe you silently."
+extra {"path"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6116
+
+title "A Small Path in the Deep, Dark Forest"
+descr
+"You are on a narrow path leading through the deep, dark forest.  Giant, grey
+trees loom ominously on all sides.  The path continues east and south."
+east to rn_6117 descr
+"The narrow path winds its way through the trees to the east.";
+south to rn_6115 descr
+"The narrow path winds its way through the trees to the south.";
+extra {"tree","trees","trunk","trunks"}
+"The ancient grey giants seem to observe you silently."
+extra {"path"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6117
+
+title "A Junction in the Deep, Dark Forest"
+descr
+"You are by a junction where three paths meet.  Ancient, grey trees seem to
+observe you silently you from all sides.  Paths lead north, east and west."
+north to rn_6106 descr
+"The narrow path winds its way through the trees to the north.";
+east to rn_6118 descr
+"The narrow path winds its way through the trees to the east.";
+west to rn_6116 descr
+"The narrow path winds its way through the trees to the west.";
+extra {"tree","trees","trunk","trunks"}
+"The ancient grey giants seem to observe you silently."
+extra {"path","paths"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6118
+
+title "A small path in the deep, dark forest"
+descr
+"You are on a narrow path leading through the deep, dark forest.  Ancient,
+grey trees loom everywhere.  The path continues south and west."
+south to rn_6119 descr
+"The narrow path winds its way through the trees to the south.";
+west to rn_6117 descr
+"The narrow path winds its way through the trees to the west.";
+extra {"tree","trees","trunk","trunks"}
+"The ancient grey giants seem to observe you silently."
+extra {"path"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6119
+
+title "A Small Path in the Deep, Dark Forest"
+descr
+"You are on a narrow path leading through the deep, dark forest.  Huge,
+ancient
+trees are on all sides.  The path continues north and south."
+north to rn_6118 descr
+"The narrow path winds its way through the trees to the north.";
+south to rn_6120 descr
+"The narrow path winds its way through the trees to the south.";
+extra {"tree","trees","trunk","trunks"}
+"You feel as if they are watching you."
+extra {"path"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6120
+
+title "On the River Bank in the Deep, Dark Forest"
+descr
+"You are on a narrow path leading through the deep, dark forest.  To the south
+beyond the trees you see a river is flowing eastwards through the forest.
+Ancient grey trees loom on both banks.  The path continues north and west."
+
+north to rn_6119 descr
+"The narrow path winds its way through the trees to the north.";
+west to rn_6121 descr
+"The narrow path winds its way through the trees to the west.";
+
+/*south descr
+"The ancient trees makes it impossible to reach the river from here."; */
+
+extra {"river"}
+"The river flows fast and strong.  It is black or looks so in the gloom."
+extra {"bank","banks","tree","trees","trunk","trunks"}
+"The ancient crowns of trees on both banks reach together forming a dense roof
+above the dark river."
+extra {"path"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6121
+
+title "A Dead End Path on the River Bank in the Deep, Dark Forest"
+descr
+"You are on a narrow path leading through the deep, dark forest.  The ancient
+trees stand so close that the path disappears between the dusty roots.  To the
+south a dark river flows from east to west.  The ground beneath you feels
+strange,
+almost alive.  The only exit appears to be east."
+
+east to rn_6120 descr
+"The narrow path winds its way through the trees to the east.";
+
+south to darkriver2 descr
+"It seems that you could just barely get down to the river. The dark and
+cold water gives you second thoughts though.";
+
+extra {"river"}
+"The river flows fast and strong.  It is black or looks so in the gloom."
+extra {"bank","banks","tree","trees","trunk","trunks"}
+"The ancient crowns of trees on both banks reach together forming a dense roof
+above the dark river."
+extra {"path"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6122
+
+title "A Small Path in the Deep, Dark Forest"
+descr
+"You are on a narrow path leading through the deep, dark forest.  Giant, grey
+trees loom ominously all around.  The path continues east and south."
+east to rn_6114 descr
+"The narrow path winds its way through the trees to the east.";
+south to rn_6123 descr
+"The narrow path winds its way through the trees to the south.";
+extra {"tree","trees","trunk","trunks"}
+"The ancient grey giants seem to observe you silently."
+extra {"path"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6123
+
+title "A Junction on the River Bank in the Deep, Dark Forest"
+descr
+"You are by a junction where three paths meet.  Ancient, grey trees seem to
+silently observe you from all around.  To the south a dark river flows
+from
+east to west through the forest.  Paths lead north, east and west."
+
+north to rn_6122 descr
+"The narrow path winds its way through the trees to the north.";
+east to rn_6124 descr
+"The narrow path winds its way through the trees to the east.";
+west to rn_6125 descr
+"The narrow path winds its way through the trees to the west.";
+south to darkriver1 descr
+"You can get down to the river from here but the dark and cold water give you
+second thoughts.";
+
+extra {"river"}
+"The river flows fast and strong.  It is black or looks so in the gloom."
+extra {"bank","banks","tree","trees","trunk","trunks"}
+"The ancient crowns of trees on both banks reach together forming a dense roof
+above the dark river."
+extra {"path","paths"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+                rn_6124
+title "A Dead End Path in the Deep, Dark Forest"
+descr
+"You are on a narrow path leading through the deep, dark forest.  The ancient
+trees stand so close that the path disappears between the dusty roots.  To the
+south beyond the ancient trees a dark river flows from east to west.  The only
+exit appears to be west."
+
+west to rn_6123 descr
+"The narrow path winds its way through the trees to the west.";
+extra {"river"}
+"The river flows fast and strong.  It is black or looks so in the gloom."
+extra {"bank","banks","tree","trees","trunk","trunks"}
+"The ancient crowns of trees on both banks reach together forming a dense roof
+above the dark river."
+extra {"path"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+                rn_6125
+
+title "A Small Path on the River Bank in the Deep, Dark Forest"
+descr
+"You are on a narrow path leading through the deep, dark forest.  Ancient grey
+trees loom everywhere.  To the south beyond the ancient trees a dark river
+flows eastwards through the forest.  The path continues north and east."
+north to rn_6126 descr
+"The narrow path winds its way through the trees to the north.";
+east to rn_6123 descr
+"The narrow path winds its way through the trees to the east.";
+/* south descr
+"The ancient trees make it impossible to reach the river from here."; */
+extra {"river"}
+"The river flows fast and strong.  It is black or looks so in the gloom."
+extra {"bank","banks","tree","trees","trunk","trunks"}
+"The ancient crowns of trees on both banks reach together forming a dense roof
+above the dark river."
+extra {"path"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6126
+
+title "A Narrow Trail Through the Deep, Dark Forest"
+descr
+"You are on a dusty trail winding its way between huge, ancient trees standing
+close on all sides.  The trail leads north and west, and to the south a frail
+path leads away from the trail."
+north to rn_6127 descr
+"The narrow, dusty trail leads north through the forest.";
+south to rn_6125 descr
+"The path leads south - away from the trail.";
+west to rn_6128 descr
+"The narrow, dusty trail leads west through the forest.";
+extra {"trail"}
+"The dark and dusty trail seems fragile compared to the massive trunks, and in
+some places, giant grey roots have broken up through its surface."
+extra {"path"}
+"The path seems fragile and unsafe compared to the enourmous trunks that loom
+around it."
+extra {"tree","trees","trunk","trunks"}
+"These ancient trees must have been here for many, many years.  It is
+impossible
+to catch even a glimpse of anything above the lowest branches."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6127
+
+title "A Narrow Trail Through the Deep, Dark Forest"
+descr
+"You are on a dusty trail winding its way between huge, ancient trees
+standing close on all sides.  The trail leads east and south."
+east to rn_6112 descr
+"The narrow, dusty trail leads east through the forest.";
+south to rn_6126 descr
+"The narrow, dusty trail leads south through the forest.";
+extra {"trail"}
+"The dark and dusty trail seems fragile compared to the massive trunks, and in
+some places, giant grey roots have broken up through its surface."
+extra {"tree","trees","trunk","trunks"}
+"These ancient trees must have been here for many, many years.  It is
+impossible
+to catch even a glimpse of anything above the lowest branches."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6128
+
+
+title "A Narrow Trail Through the Deep, Dark Forest"
+descr
+"You are on a dusty trail winding its way east-west between huge, ancient
+trees
+that stand close on all sides.  Not a sound is to be heard - everything is
+ominously quiet."
+east to rn_6126 descr
+"The narrow, dusty trail leads east through the forest.";
+west to rn_6129 descr
+"The narrow, dusty trail leads west through the forest.";
+extra {"trail"}
+"The dark and dusty trail seems fragile compared to the massive trunks, and in
+some places, giant grey roots have broken up through its surface."
+extra {"tree","trees","trunk","trunks"}
+"These ancient trees must have been here for many, many years.  It is
+impossible
+to catch even a glimpse of anything above the lowest branches."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6129
+
+title "A Narrow Trail Through the Deep, Dark Forest"
+descr
+"You are on a dusty trail winding its way east-west between huge, ancient
+trees
+that stand close on all sides.  Not a sound is to be heard - everything is
+ominously quiet."
+east to rn_6128 descr
+"The narrow, dusty trail leads east through the forest.";
+west to rn_6135 descr
+"The narrow, dusty trail leads west through the forest.";
+extra {"trail"}
+"The dark and dusty trail seems fragile compared to the massive trunks, and in
+some places, giant grey roots have broken up through its surface."
+extra {"tree","trees","trunk","trunks"}
+"These ancient trees must have been here for many, many years.  It is
+impossible
+to catch even a glimpse of anything above the lowest branches."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6130
+
+title "A Narrow Trail Through the Deep, Dark Forest"
+descr
+"You are on a dusty trail winding its way westwards just below huge sticky
+wires suspended like ropes between the trees.  To the west the path seems to
+be completely covered in a giant web made from huge threads covered with glue.
+This place gives you the creeps."
+east to rn_6144 descr
+"The narrow, dusty trail leads east through the forest, away from the web.";
+west to under_web descr
+"The structure to the west looks most of all like an immense spider web.
+It does not look as if you can go further without getting caught in it.";
+up to rn_6132;
+extra {"trail"}
+"The dark and dusty trail seems fragile compared to the massive trunks, and in
+some places, giant grey roots have broken up through its surface."
+extra
+{"substance","wire","wires","rope","ropes","tree","trees","trunk","trunks"}
+"The sticky substance is hanging like ropes between the ancient trees,
+crossing
+the path just out of reach.  It might be possible to climb one of the sticky
+trunks."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_MOB}
+IN_ALWAYS_DARK
+end
+
+
+                under_web
+
+title "The Spider Web"
+descr
+"You are walking along the narrow path, ducking under the sticky ropes of a
+large cobweb as you advance..."
+east to rn_6130;
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+OUT_DARK_NON_NOON
+
+dilbegin web_movement();
+code
+{
+    wait(SFB_CMD, ( (activator.level < 200) and
+		((activator.flags & UNIT_FL_INVISIBLE) == 0) )  );
+   sendtoalldil("webaction", "spider@haon_dor");
+}
+dilend
+end
+
+rn_6132
+title "Up in the Tree"
+descr
+"You are hanging on the outside of a huge tree trunk covered in a sticky
+substance.  Directly to the west is an immense spider web suspended between
+numerous branches of the giant trees including the one you are hanging on."
+west to on_web descr
+"To the west is the immense spider web.  It seems to move softly.";
+down to rn_6130 descr
+"Downwards is the narrow forest path.";
+extra {"web"}
+"The spider web stretches out to the west.  It looks as if it is possible to
+walk on it."
+movement SECT_FOREST
+end
+
+
+                on_web
+
+title "On the Spider Web"
+descr
+"You are balancing carefully on the giant sticky threads that holds the giant
+web in place..  To the east is a giant tree trunk and to the west is an
+entrance
+to a cave-like structure made from many layers of spider web."
+east to rn_6132 descr
+"To the east is the giant tree trunk.";
+west to spider_den descr
+"To the west is the entrance to the cave-like structure.";
+extra {"web"}
+"The immense spider web moves softly."
+extra {"cave","structure"}
+"It covers a ground area corresponding to an irregular circle with a
+diameter of
+about 20 feet and is nearly 10 feet tall.  It looks very old."
+
+movement SECT_FOREST
+end
+
+
+                spider_den
+
+title "The Den of the Queen Spider"
+descr
+"You are inside a cave-like structure that seems to be made entirely from
+countless layers of spider web.  Temperature and humidity is very high making
+it hard to breathe the foul air that lingers here.  The walls are covered with
+open cocoons."
+east to on_web descr
+"Compared to this place the east exit looks inviting.";
+extra {"web","wall","walls"}
+"The sticky walls are covered with open cocoons."
+extra {"cocoon","cocoons"}
+"The cocoons are burst open as if something inside really wanted to get out.
+They are at the size of a human head."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+end
+
+
+                rn_6135
+
+title "A a Dusty Trail in the Deep, Dark Forest"
+descr
+"You are on a dusty trail leading through the deep, dark forest.  Ancient grey
+trees loom all around you.  The trail continues north and east."
+north to rn_6136 descr
+"The dusty trail leads north through the trees.";
+east to rn_6129 descr
+"The dusty trail leads east through the trees.";
+extra {"tree","trees","trunk","trunks"}
+"The ancient grey giants seem to observe you silently."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6136
+
+title "A Dusty Trail in the Deep, Dark Forest"
+descr
+"You are on a dusty trail leading through the deep, dark forest.  Ancient,
+grey trees loom everywhere.  The trail continues south and west.  A broad
+irregular path leads eastwards away from the trail."
+east to rn_6142 descr
+"The trees standing on the sides of the path have scratch marks on them.";
+south to rn_6135 descr
+"The dusty trail leads south through the trees.";
+west to rn_6137 descr
+"The dusty trail leads west through the trees.";
+extra {"tree","trees","trunk","trunks"}
+"To the east the ancient grey giants have many marks as if something with huge
+claws has been tearing at them in rage."
+extra {"path"}
+"The trees standing on the sides of the path have scratch marks on them."
+extra {"trail"}
+"The dark and dusty trail seems fragile compared to the massive trunks, and in
+some places, giant grey roots have broken up through its surface."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6137
+
+title "At the End of the Trail Through the Deep, Dark Forest"
+descr
+"You are on a dusty trail leading through the deep, dark forest.  Ancient grey
+trees loom all around you.  The only exits are east and west."
+east to rn_6136 descr
+"The dusty trail leads east through the trees.";
+extra {"tree","trees","trunk","trunks"}
+"The ancient grey giants seem to observe you silently."
+
+west to elfdom/pt_d_fo;
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6142
+
+title "Outside a Cave in the Deep, Dark Forest"
+descr
+"You are at the end of a broad, irregular path.  To the north is a very large
+ominous-looking cave opening.  The trees here have many marks as if something
+with huge claws has been tearing at them in rage."
+north to dragon_cave descr
+"The disgusting smell of a large reptile emanates from the cave opening.";
+west to rn_6136 descr
+"The path winds its way westwards.";
+extra {"tree","trees"}
+"The ancient grey giants have many marks as if something with huge claws has
+been tearing at them in rage."
+extra {"cave","opening"}
+"The disgusting smell of a large reptile emanates from the cave opening."
+
+movement SECT_FOREST
+IN_ALWAYS_DARK
+end
+
+
+                dragon_cave
+
+title "The Cave of the Green Dragon"
+descr
+"You are in a big natural cave.  The floor is littered with bones of all sorts
+and the stench is so massive that you could cut it with a knife.  The only
+exit
+is to the south."
+south to rn_6142 descr
+"The exit leads out into the forest.";
+extra {"bone","bones","floor"}
+"Most of the bones on the floor appear to be of human origin."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+                rn_6144
+
+title "A Small Path in the Deep, Dark Forest"
+descr
+"You are on a narrow path leading through the deep, dark forest.  Ancient,
+grey trees loom everywhere.  The tree trunks here seem to be covered in some
+sticky substance.  The path continues south and west."
+south to rn_6110 descr
+"The narrow path winds its way through the trees to the south.";
+west to rn_6130 descr
+"The narrow path winds its way through the trees to the west.";
+extra {"substance","rope","ropes","thread","threads"}
+"The substance reminds you of giant threads covered with glue.  If it had not
+been for the size you could have sworn it was part of a spider web."
+extra {"tree","trees","trunk","trunks"}
+"The ancient grey giants seem to observe you silently."
+extra {"path"}
+"The path seems all too frail.  One of the giant roots could probably crush it
+in a single blow."
+
+movement SECT_FOREST
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+end
+
+
+%mobiles
+
+#ifdef EXTENDED_MUD
+/*player houses*/
+
+
+                   lr_mob1
+
+names "Darion"
+title "Darion"
+descr "Darion is here guarding Lightlord's room."
+exp 0
+M_HUMAN_WARRIOR_SWORD(60, SEX_MALE)   /* He shall use a polearm */
+extra {}
+"Darion is a 6'4 man. He lo"
+dilcopy guard_dir@function("north", {"rejji", "lightlord"}, null, "");
+
+end
+
+
+                   lr_mob2
+names "Hesra"
+title "Hesra"
+descr "Hesra is here guarding Rejji's room."
+exp 0
+M_HUMAN_WARRIOR_SWORD(60, SEX_MALE)   /* He shall use a polearm */
+extra {}
+"Hesra is not a small woman. She looks like the typical grandmother.
+However she looks like she has a fiery temper."
+dilcopy guard_dir@function("west" , {"rejji", "lightlord"}, null, "");
+
+end
+
+#endif
+
+
+/* Summary:
+	rabbit 3
+	mary 4
+	john 5
+	fox 5
+	killer_rabbit 6
+	deer 6
+	bear 8
+	grey_wolf 8
+	black_wolf 9
+	vic_warg 10
+	fer_warg 12
+	spider 13
+	green dragon 35
+	queen_spider 40
+	tree 50 */
+
+                john
+
+names {"John","lumberjack"}
+title "John the Lumberjack"
+descr "John the Lumberjack is here, looking for some trees to chop down."
+extra {}
+"He is six feet tall and looks quite strong, muscles bulging under his heavy,
+chequered shirt.  His features are worn with hard work and his expression is
+one of a peaceful man leading a simple life."
+
+M_HUMAN_WARRIOR_AXE(4, SEX_MALE)
+alignment 350
+money 3 COPPER_PIECE
+dilcopy rescue@function ("mary");
+
+dilbegin fnpri(FN_PRI_MISSION) john_assist();
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+   u : unitptr;
+   s : string;
+code
+{
+   /* Once John gets going, he has to move FAST to save his wife! */
+   heartbeat := PULSE_SEC * 3;
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :start:
+   nopriority; /* Release walking routine */
+   wait(SFB_MSG, activator.nameidx == "mary");
+   priority;  /* Block the random walking routine below here */
+   s := argument;  /* Remember the name of the attacker */
+   tf:=walk_room@function("cabin@haon_dor",4);
+   exec("kill "+s, self);
+   pause;
+   exec("emote screams, 'Murderer, "+s+"!'", self);
+   goto start;
+}
+dilend
+
+dilcopy wander_zones@function ("@loadzone", 15, 0, 0);
+
+end
+
+
+                mary
+
+names {"Mary","wife"}
+title "Mary the Lumberjack Wife"
+descr "Mary the Lumberjack Wife is here."
+extra {}
+"She is a small plump woman, about five feet tall."
+
+M_AVG_HUMAN(2, SEX_FEMALE)
+alignment 550
+money 1 COPPER_PIECE
+
+/* This first program simply asks John for help, and uses the priority
+   to halt execution of all other DIL programs while fighting. */
+dilbegin fnpri(FN_PRI_RESCUE) john_helpme();
+code
+{
+   heartbeat := PULSE_SEC*10;
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :start:
+   nopriority;
+   /* Wait for an combat event */
+   wait(SFB_COM, self.position == POSITION_FIGHTING);
+   priority;
+
+   /* All special routines below are now prevented from executing */
+   exec("emote yells, 'John! Help!'", self);
+   sendto(activator.name, findsymbolic("john@haon_dor"));
+   while (self.position == POSITION_FIGHTING)
+     pause;
+   goto start;
+}
+dilend
+
+
+/* This DIL program waits for the Orc Chief to signal that he has stolen
+   the pot. When activated Mary just weeps. */
+dilbegin orc_stoleit();
+code
+{
+   heartbeat := WAIT_SEC*3;
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :start:
+   wait(SFB_MSG, argument $= "gotit");
+
+   pause; pause;
+   exec("cry", self); pause; pause; pause;
+   exec("say The Orcs stole my only and best cooking pot!", self); pause;
+   exec("sniff", self); pause;
+   exec("say How am I supposed to make any more rabbit stew now?", self);
+   pause;
+   goto start;
+}
+dilend
+
+dilbegin pot_quest();
+var
+   u : unitptr;
+   a : unitptr;
+code
+{
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+if (findunit(self, "pot", FIND_UNIT_INVEN | FIND_UNIT_EQUIP, null)== null) goto searchloop;
+
+   :start:
+   nopriority;
+   wait(SFB_MSG, argument $= "gotit");
+   priority; /* Deactivate all programs below */
+
+   :searchloop:
+   heartbeat := PULSE_SEC;
+
+   wait(SFB_DONE, command("give") and (target == self));
+   u := medium;
+   a := activator;
+   secure(a, searchloop);
+   secure(u, searchloop);
+
+   heartbeat := PULSE_SEC * 8;
+
+  if (not (QUEST_RABBIT_COMPLETE in a.quests)) goto start;
+
+   if ((u.nameidx == "marys_pot") and (u.zoneidx == "haon_dor"))
+   {
+      if (u.value[4] == 1)
+      {
+	 if ((a.type == UNIT_ST_PC) and
+	     (not (QUEST_POT_COMPLETE in a.quests)))
+	 {
+	    addextra(a.quests, {QUEST_POT_COMPLETE}, "");
+	    experience(800, a);
+	 }
+	 u.value[4] := 0;
+	 exec("say My cooking pot!", self);
+	 pause;
+	 exec("hug "+a.name, self);
+	 unsecure(a);
+	 pause;
+	 exec("hold pot", self);
+	 pause;
+	 exec("sing", self);
+	 pause;
+	 exec("say I know how to perform first aid and diagnostics. I will "+
+	      "be happy to share my knowledge with you. ", self);
+	 goto start;
+      }
+      else
+      {
+	 exec("say How did you get my pot, "+a.name+"?", self);
+	 pause;
+	 exec("hold pot", self);
+	 pause;
+	 exec("shrug", self);
+     }
+   }
+   else
+   {
+      exec("say I really don't need that, all I need is my cooking pot!",
+	   self);
+      link(u, a); /* Return the item */
+   }
+   unsecure(a);
+   unsecure(u);
+   goto searchloop;
+}
+dilend
+
+/* Part 1 of "The Rabbit Stew" Quest.                                  */
+/* The program aquires new loyal PC subjects for the Rabbit Stew Quest */
+dilbegin stew_quest();
+var
+  pcname : string;
+  item   : unitptr;
+  pc     : unitptr;
+  i      : integer;
+  exdp   : extraptr;
+
+code
+{
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :init:
+   heartbeat := PULSE_SEC*5;
+
+   :start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (not command("give")));
+
+   if (QUEST_RABBIT_COMPLETE in activator.quests)
+     goto waitawhile;
+
+   pc := activator;
+   secure(pc, lostpc);
+
+   if (not (QUEST_RABBIT_ONGOING in pc.quests))
+   {
+      pause;
+      exec("say Hello "+pc.name+" how are you today?", self);
+      pause;
+
+      exec("say I am trying to make a delicious rabbit stew, but I " +
+	   "need some ingredients.", self);
+      pause;
+
+      exec("say I need a dead rabbit, some garlic, some mushrooms and " +
+	   "a few berries.", self);
+
+      pause;
+      exec("say Will you please fetch me these ingredients, "+pc.name+"?",
+	   self);
+
+      i := 0;
+      while (i < 5)
+      {
+         wait(SFB_DONE, activator == pc);
+
+	 if (command("nod"))
+	   goto quest_accepted;
+	 else if (command("say"))
+	 {
+	    pause;
+	    exec("say Please nod if you accept or shake if you reject.", self);
+	 }
+	 else if (command("shake"))
+	   goto no_quest;
+
+	 i := i+1;
+      }
+
+      :no_quest:
+      pause;
+      exec("say Very well, I will find someone else.", self);
+      unsecure(pc);
+      goto waitawhile;
+
+      :quest_accepted:
+      pause;
+      exec("say Please bring me all the items at one time!", self);
+      pause;
+	  exec("say That's very kind of you, please hurry!", self);
+      addextra(pc.quests, {QUEST_RABBIT_ONGOING}, "");
+      unsecure(pc);
+      goto start;
+
+   }
+   else /* QUEST_RABBIT_ONGOING in pc.quests! */
+   {
+      exdp := QUEST_RABBIT_ONGOING in pc.quests;
+
+      if (("rabbit" in exdp.names) and ("mushroom" in exdp.names) and
+	  ("berries" in exdp.names) and ("garlic" in exdp.names))
+      {
+	 pause;
+	 subextra(pc.quests, QUEST_RABBIT_ONGOING);
+	 addextra(pc.quests, {QUEST_RABBIT_COMPLETE}, "");
+	 item := load("rabbit_foot@haon_dor");
+         item.height := pc.height;
+	 link(item, pc);
+         experience(800, pc);
+	 exec("say Here, I have made this special rabbit's foot just for you.", self);
+         pause;
+	 exec("thank "+pc.name, self);
+         pause;
+        unsecure(pc);
+	 exec("emote makes some Rabbit Stew.", self);
+	 item := load("stew@haon_dor");
+	 pc := findunit(self, "marys pot", 0, self.inside);
+	 link(item, pc); /* Put the stew in the pot */
+         pause;
+	 heartbeat := PULSE_SEC * 100;
+	 :loop1:
+         item := findsymbolic("orc_chief@haon_dor");
+	 if (item #= null)
+	 {
+	    pause;
+	    goto loop1;
+	 }
+	 sendto("stew", item);
+      }
+   }
+
+   unsecure(pc);
+   goto start;
+
+   :lostpc:
+   exec("say How rude!", self);
+   goto start;
+
+   :waitawhile:
+   heartbeat := PULSE_SEC*60;
+   pause;
+   goto init;
+}
+dilend
+
+
+/* Part 2 of "The Rabbit Stew" Quest.                                  */
+/* The program tests if an "Ongoing" PC gives any quest items to Mary. */
+dilbegin stew_give();
+
+var
+  pc     : unitptr;
+  item   : unitptr;
+  exdp   : extraptr;
+  u      : unitptr;
+code
+{
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :init:
+   :start:
+   wait(SFB_DONE, command("give") and (target == self));
+
+   pc := activator;
+
+   if (activator.type != UNIT_ST_PC)
+     goto start;
+
+   if (not (QUEST_RABBIT_ONGOING in pc.quests))
+     goto start;
+
+   item := medium;
+   secure(pc, labsecure);
+   secure(item, labsecure);
+
+if (findunit(self, "pot", FIND_UNIT_INVEN | FIND_UNIT_EQUIP, null)== null)
+     {
+	  u := load("marys_pot@haon_dor");
+	  exec("hold pot",self);
+	  }
+   if (item.nameidx != "marys_pot")
+   {
+      unsecure(item);
+      exdp := QUEST_RABBIT_ONGOING in pc.quests;
+
+      if ("mushroom" in item.names)
+      {
+	 addstring(exdp.names, "mushroom");
+	 exec("say Thank you "+pc.name+" these are really nice mushrooms.",
+	      self);
+	 destroy(item);
+      }
+      else if ("berries" in item.names)
+      {
+	 addstring(exdp.names, "berries");
+	 exec("say Thank you "+pc.name+" these are really nice berries.",
+	      self);
+	 destroy(item);
+      }
+      else if ("garlic" in item.names)
+      {
+	 addstring(exdp.names, "garlic");
+	 exec("say Thank you "+pc.name+" this is really some nice garlic.",
+	      self);
+	 destroy(item);
+      }
+      else if (("corpse" in item.names) and
+	       ("rabbit" in item.outside_descr))
+      {
+	 addstring(exdp.names, "rabbit");
+	 exec("say Look at all the blood, "+pc.name+"! Thank you anyway.",self);
+	 destroy(item);
+      }
+      else
+      {
+	 exec("say I can't accept that, "+pc.name, self);
+	 /* Return the item to the player */
+	 link(item, pc);
+      }
+   }
+   unsecure(pc);
+
+   goto start;
+
+   :labsecure:
+   exec("say How rude, leaving just like that!", self);
+   goto start;
+}
+dilend
+
+dilcopy teach_q_block@function(QUEST_POT_COMPLETE, "say I will only teach you if you have helped me retrieve my cooking pot.");
+
+special SFUN_TEACH_INIT
+"skills;1;
+$1n tells you, 'I have never heard of such a skill.';
+$1n tells you, 'I do not know how to teach this skill.';
+$1n tells you, 'You haven't got %s for me.';
+$1n tells you, 'You haven't got %d skill points.';
+$1n tells you, 'I can not teach you any more';
+$1n tells you, 'You must be unaffected by magic, otherwise I can't teach you';
+$1n tells you, 'Remove all equipment, please.';
+ 1; 50; diagnostics;      50; 100; 10; 0;
+ 1; 50; skin;             50; 100; 10; 0;
+ 1; 50; butcher;          50; 100; 10; 0;
+ 1; 50; first aid;        50; 100; 10; 0;"
+end
+
+rabbit
+names {"cute rabbit", "rabbit"}
+title "the cute rabbit"
+descr "A cute rabbit is here."
+extra {} "It is a small, furry creature with long ears and big feet."
+M_RABBIT_TINY(1,SEX_NEUTRAL)
+dilcopy wander_zones@function ("@loadzone", 20, 0, 0);
+
+end
+
+
+
+                brown_bear
+
+names {"brown bear", "bear"}
+title "the brown bear"
+descr "A big, brown, angry-looking bear is here."
+extra {}
+"The bear is a big, brown, furry animal with very large claws and very sharp
+teeth.  It doesn't resemble those cute little thingies from toy shops at all."
+alignment -50
+M_BEAR_TINY(8,SEX_MALE)
+position POSITION_SLEEPING
+default POSITION_STANDING
+
+dilcopy aggressive@function(0, -1, 0, 0, 3, 70, 0, "ANY",
+                            {"$1n attacks $3n!", "$1n attacks you!"});
+dilcopy wander_zones@function ("@loadzone", 20, 0, 0);
+
+end
+
+
+
+                killer_rabbit
+
+names {"killer rabbit", "rabbit", "killer"}
+title "the ferocious rabbit"
+descr "A ferocious killer rabbit is here, glaring hungrily at you."
+extra {}
+"This small, furry creature with long ears and big feet has been attacked by
+the dreaded rabbit rabies, a horrible disease that turns helpless and innocent
+rabbits into ferocious and bloodthirsty monsters."
+M_RABBIT_MAD(15,SEX_MALE)
+alignment -150
+position POSITION_SLEEPING
+default POSITION_STANDING
+dilcopy wander_zones@function ("@loadzone", 12, 0, 0);
+
+
+end
+
+
+
+                deer
+names {"fallow deer", "deer"}
+title "the fallow deer"
+descr "A fallow deer is grazing peacefully here."
+extra {}
+"She is a graceful creature on long, slender legs, and with large, brown eyes
+looking back at you with an air of watchful interest."
+romflags {CHAR_DETECT_INVISIBLE}
+M_DEER_TINY(3,SEX_FEMALE)
+
+end
+
+
+                papi_kitt
+names {"kitten", "cat"}
+title "the tiny black kitten"
+descr "A  tiny black kitten is chasing its tail here."
+extra {}
+"She is a graceful creature, with sleek black fur."
+M_CAT_TINY(2,SEX_FEMALE)
+manipulate {MANIPULATE_TAKE}
+dilcopy obey_animal@function ();
+dilcopy wander_zones@function ("@loadzone", 15, 0, 0);
+flags {UNIT_FL_NO_TELEPORT}
+
+end
+
+
+
+                fox
+names {"brown fox", "fox"}
+title "the brown fox"
+descr "A brown fox is here, looking for some rabbits to chew up."
+extra {}
+"It is a large fox with beautiful, red-brown fur and a long, thick brush."
+M_FOX_TINY(2,SEX_MALE)
+dilcopy wander_zones@function ("@loadzone", 15, 0, 0);
+
+
+end
+
+
+/* ==================== ORCS ==================== */
+
+                orc_chief
+
+names {"orc chief", "orc", "chief"}
+title "the orc chief"
+descr "The orc chief is here."
+extra {}
+"He is smaller than a human, but has a broader back.  His arms are long and
+hairy, and at their ends are crude hands with long claw-like nails.  On the
+sides of his flat, thick head is a set of pointy ears.  He has a stooping
+stature and big flappy feet.  He smells awful."
+
+alignment -700
+M_ORC_WARRIOR_SWORD(5, SEX_MALE)
+money 8 COPPER_PIECE
+position POSITION_SLEEPING
+default POSITION_STANDING
+
+dilcopy teamwork@function ("orc");
+
+dilbegin chief_dinner();
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+   u1 : unitptr;
+   u2 : unitptr;
+   intridx : integer;
+code
+{
+   heartbeat := PULSE_SEC * 13;
+
+   :start:
+   tf:=walk_room@function("orc_cave_chief@haon_dor",4);
+   clear(intridx);
+   exec("sleep", self); pause;
+   nopriority;
+   wait(SFB_MSG, argument == "stew");
+   priority;
+   exec("wake", self);
+
+   intridx := on_activation(self.position <= POSITION_SLEEPING, skip);
+   pause;
+   exec("emote hisses, 'I smell dinner'", self); pause;
+   tf:=walk_room@function("orc_cave_other@haon_dor",4);
+   exec("emote screams, 'Wake up, morons!'", self); pause;
+   send("stew");
+   exec("say Hurry up!", self); pause;
+   exec("say Me have hideous plan, follow!", self); pause;
+   tf:=walk_room@function("cabin@haon_dor",4);
+   exec("close door", self); pause;
+
+   u1 := findunit(self, "mary", FIND_UNIT_SURRO, null);
+   u2 := findunit(u1, "pot", FIND_UNIT_INVEN | FIND_UNIT_EQUIP, null);
+   if (u2 #= null)
+     goto failure;
+
+   :success:
+   link(u2, self);
+   u2.value[4] := 1;
+   sendto("gotit", u1);
+   exec("emote tears the Rabbit Stew out of Mary's hands.", self);
+   pause;
+   tf:=walk_room@function("orc_cave_chief@haon_dor",4);
+   exec("get all from pot", self); pause;
+   send("eat");
+   exec("eat stew", self); pause;
+   exec("wear pot", self); pause;
+   exec("burp", self); pause;
+   send("sleep");
+   goto start;
+
+   :failure:
+   exec("growl", self);
+   tf:=walk_room@function("orc_cave_other@haon_dor",4);
+   send("sleep");
+   goto start;
+}
+dilend
+
+
+dilbegin orc_behaviour();
+code
+{
+   :init:
+   heartbeat := PULSE_SEC * 60;
+   on_activation(self.position > POSITION_SLEEPING, sleep);
+   pause;
+
+   :loop:
+   exec("emote snores loudly.", self); pause;
+   exec("emote breaks a wind.", self); pause;
+   exec("emote turns in his sleep.", self); pause;
+   exec("emote scratches his chest.", self); pause;
+   exec("emote farts in your general direction.", self); pause;
+   goto loop;
+
+   :sleep:
+   exec("sleep", self);
+   goto init;
+}
+dilend
+/* Aggressive is here, then we are sure, that it is ONLY aggressive
+   when not on its way down to loot Mary. */
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*12, 0, "ANY",
+                            {"$1n attacks $3n!", "$1n attacks you!"});
+
+end
+
+                nasty_orc
+
+names {"nasty orc", "nasty", "orc"}
+title "the nasty orc"
+descr "The nasty orc is here."
+extra {}
+"He is smaller than a human, but has a broader back.  His arms are long and
+hairy, and at their ends are crude hands with long claw-like nails.  On the
+sides of his flat, thick head is a set of pointy ears.  He has a stooping
+stature and big flappy feet.  He smells awful."
+
+alignment -500
+M_ORC_WARRIOR_SWORD(3, SEX_MALE)
+money 1 IRON_PIECE
+
+dilcopy teamwork@function ("orc");
+
+dilbegin orc_sleep();
+code
+{
+  on_activation(self.position != POSITION_SLEEPING, skip);
+  heartbeat := PULSE_SEC * 60;
+
+  :loop:
+  exec("emote burps viciously.", self);
+  pause;
+  exec("emote digs something orange out of his ear and eats it.", self);
+  pause;
+  exec("yawn", self);
+  pause;
+  exec("emote scratches his chest.", self);
+  pause;
+  exec("emote breaks a wind.", self);
+  pause;
+  exec("emote digs something green out of his nose and eats it.", self);
+  pause;
+  exec("emote swears loudly.", self);
+  pause;
+  exec("emote snorts and spits something green on the ground.", self);
+  pause;
+  goto loop;
+}
+dilend
+/* Aggressive is here, then we are sure, that it is ONLY aggressive
+   when not on its way down to loot Mary. */
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*12, 0, "ANY",
+                            {"$1n attacks $3n!", "$1n attacks you!"});
+
+end
+
+
+                ugly_orc
+
+names {"ugly orc", "ugly", "orc"}
+title "the ugly orc"
+descr "The ugly orc is here."
+extra {}
+"He is smaller than a human, but has a broader back.  His arms are long and
+hairy, and at their ends are crude hands with long claw-like nails.  On the
+sides of his flat, thick head is a set of pointy ears.  He has a stooping
+stature and big flappy feet.  He smells awful."
+
+alignment -500
+M_ORC_WARRIOR_SWORD(3, SEX_MALE)
+money 1 IRON_PIECE
+
+dilcopy teamwork@function ("orc");
+
+dilcopy orc_return@haon_dor();
+dilcopy orc_follower@haon_dor();
+
+/* Aggressive is here, then we are sure, that it is ONLY aggressive
+   when not on its way down to loot Mary. */
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*12, 0, "ANY",
+                            {"$1n attacks $3n!", "$1n attacks you!"});
+
+end
+
+                disgusting_orc
+
+names {"disgusting orc", "disgusting", "orc"}
+title "the disgusting orc"
+descr "The disgusting orc is here."
+extra {}
+"He is smaller than a human, but has a broader back.  His arms are long and
+hairy, and at their ends are crude hands with long claw-like nails.  On the
+sides of his flat, thick head is a set of pointy ears.  He has a stooping
+stature and big flappy feet.  He smells awful."
+
+alignment -500
+M_ORC_WARRIOR_SWORD(3, SEX_MALE)
+money 1 IRON_PIECE
+
+dilcopy teamwork@function ("orc");
+
+dilcopy orc_return@haon_dor();
+dilcopy orc_follower@haon_dor();
+
+/* Aggressive is here, then we are sure, that it is ONLY aggressive
+   when not on its way down to loot Mary. */
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*12, 0, "ANY",
+                            {"$1n attacks $3n!", "$1n attacks you!"});
+
+end
+
+                hideous_orc
+
+names {"hideous orc", "hideous", "orc"}
+title "the hideous orc"
+descr "The hideous orc is here."
+extra {}
+"He is smaller than a human, but has a broader back.  His arms are long and
+hairy, and at their ends are crude hands with long claw-like nails.  On the
+sides of his flat, thick head is a set of pointy ears.  He has a stooping
+stature and big flappy feet.  He smells awful."
+
+alignment -500
+M_ORC_WARRIOR_SWORD(3, SEX_MALE)
+money 1 IRON_PIECE
+
+dilcopy teamwork@function ("orc");
+
+dilcopy orc_return@haon_dor();
+dilcopy orc_follower@haon_dor();
+
+/* Aggressive is here, then we are sure, that it is ONLY aggressive
+   when not on its way down to loot Mary. */
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*12, 0, "ANY",
+                            {"$1n attacks $3n!", "$1n attacks you!"});
+
+end
+
+/* ==================== DARK FOREST STUFF ==================== */
+
+                vic_warg
+names {"vicious warg","warg"}
+title "the vicious warg"
+descr "A vicious warg is here, snarling angrily at you."
+extra {}
+"It is an exceptionally large wolf with thick, black fur.  Saliva is dripping
+quickly from its long, white fangs.  It looks quite dangerous and very angry."
+M_WOLF_MAD(12,SEX_NEUTRAL)
+alignment -350 /* Override default */
+dilcopy wander_zones@function ("@loadzone", 18, 0, 0);
+
+end
+
+
+
+                fer_warg
+names {"ferocious warg","warg"}
+title "the ferocious warg"
+descr "A ferocious warg is here, snarling angrily at you."
+extra {}
+"It is an exceptionally large wolf with thick, black fur.  Saliva is dripping
+quickly from its long, white fangs.  It looks quite dangerous and very angry."
+M_WOLF_TINY(13,SEX_NEUTRAL)
+alignment -350 /* Override default */
+dilcopy wander_zones@function ("@loadzone", 18, 0, 0);
+
+end
+
+
+
+                grey_wolf
+names {"grey wolf","wolf"}
+title "the large, grey wolf"
+descr "A large, grey wolf is here, glaring hungrily at you."
+extra {}
+"The large, grey wolf eyes you with interest while licking its lips."
+M_WOLF_TINY(6,SEX_NEUTRAL)
+alignment -150 /* Override default */
+dilcopy wander_zones@function ("@loadzone", 15, 0, 0);
+
+end
+
+
+
+                black_wolf
+names {"black wolf","wolf"}
+title "the large, black wolf"
+descr "A large, black wolf is here, glaring hungrily at you."
+extra {}
+"The large, black wolf eyes you with interest while licking its lips."
+M_WOLF_TINY(6,SEX_NEUTRAL)
+alignment -150 /* Override default */
+dilcopy wander_zones@function ("@loadzone", 15, 0, 0);
+
+end
+
+
+
+                tree1
+names {"ancient tree","tree"}
+title "a huge, ancient tree, walking on giant roots"
+descr "A huge, ancient tree towers above you."
+extra {}
+"Its roots are extremely big and large parts of them are above ground.
+The enormous grey trunk shivers slightly, as if sighing deeply."
+romflags {CHAR_DETECT_INVISIBLE, CHAR_SNEAK}
+M_TREE_TINY(45,SEX_NEUTRAL)
+dilcopy wander_zones@function ("@loadzone", 250, 0, 0);
+
+end
+
+
+
+                tree2
+names {"ancient tree","tree"}
+title "a huge, ancient tree, walking on giant roots"
+descr "A huge, ancient tree towers above you."
+extra {}
+"Its roots are extremely big and large parts of them are above ground.
+The enormous grey trunk emits a deep, moaning sound."
+romflags {CHAR_DETECT_INVISIBLE, CHAR_SNEAK}
+M_TREE_TINY(45,SEX_NEUTRAL)
+dilcopy wander_zones@function ("@loadzone", 250, 0, 0);
+
+end
+
+                green_dragon
+
+names {"green dragon","dragon"}
+title "the huge, green dragon"
+descr "A huge green dragon is here, its narrow yellow eyes glowing with rage.."
+extra {}
+"This enormous winged serpent has dark green scales covering most of its
+colossal body.  Numerous holes in its heavy wings tell of many fights as does
+the nicks in the horns on its head.  It smells as disgusting as only dragons
+do."
+M_DRAGON_GREEN_SMALL(42,SEX_FEMALE)
+dilbegin dragon_attack();
+var
+    this_ptr      : unitptr;
+
+code
+{
+   :init:
+   on_activation(self.position != POSITION_STANDING, skip);
+
+   :start:
+   heartbeat := PULSE_SEC * 4;
+
+   :findmob:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+   heartbeat := PULSE_SEC * 3;
+   this_ptr := findrndunit( self, FIND_UNIT_SURRO, UNIT_ST_PC);
+   if ( this_ptr == null ) goto start;
+
+  
+   priority;
+   secure(this_ptr, start);
+if (this_ptr.vlevel <= 70) goto start;
+ 
+   act("$1n roars at you!", A_SOMEONE, self, null,
+        this_ptr, TO_VICT);
+   act("$1n roars at $3n!", A_SOMEONE, self, null,
+        this_ptr, TO_NOTVICT);
+   pause;
+   set_fighting(self, this_ptr);
+   exec("cast firestorm "+this_ptr.name,self);
+   self.hp := self.max_hp;
+   unsecure(this_ptr);
+
+   goto start;
+}
+dilend
+
+
+end
+
+spider
+names {"poisonous spider","spider"}
+title "the huge, poisonous spider"
+descr "A huge, poisonous spider is here."
+extra {}
+"This disgusting creature is at the size of a human crawling on all four.  It
+has eight hairy legs that gives it a tremendous speed on almost any surface
+and sharp poisonous fangs to paralyze or kill its prey."
+M_SPIDER_TINY(15,SEX_MALE)
+dilcopy spider();
+
+end
+
+
+spider2
+names {"poisonous spider","spider"}
+title "the huge, poisonous spider"
+descr "A huge, poisonous spider is here."
+extra {}
+"This disgusting creature is at the size of a human crawling on all four.  It
+has eight hairy legs that gives it a tremendous speed on almost any surface
+and sharp poisonous fangs to paralyze or kill its prey."
+M_WEB_SPIDER_TINY(10,SEX_MALE)
+
+end
+
+
+queen_spider
+names {"queen spider","spider"}
+title "the Queen Spider"
+descr "The huge, bulky Queen Spider is here."
+extra {}
+"This disgusting creature is at the size of a small elephant.  It has eight
+huge, hairy legs that would give it a tremendous speed on almost any surface
+if it wasn't so immensely fat.  Its large, bulbous eyes stare back at you."
+M_SPIDER_SMALL(26,SEX_NEUTRAL)
+
+end
+
+
+
+                shargugh
+
+names {"Shargugh","brownie"}
+title "Shargugh"
+descr "Shargugh the Forest Brownie is here, grinning broadly at you."
+extra {}
+"This little fellow is only three foot tall with wild matted brown hair and
+long tangled brown beard.  He wears ragged brown and green clothing and looks
+as if he is having great fun."
+flags {UNIT_FL_INVISIBLE}
+romflags {CHAR_WIMPY, CHAR_DETECT_INVISIBLE, CHAR_SNEAK}
+money 2 SILVER_PIECE
+M_BROWNIE_MAGE_MIND(10,SEX_MALE, "flash")
+dilcopy janitors@midgaard(15);
+dilcopy wander_zones@function ("@loadzone", 15, 0, 0);
+
+dilbegin brownieprg();
+var
+  num  : integer;
+  num2 : integer;
+  char : unitptr;
+code
+{
+  heartbeat:=PULSE_SEC*120;
+  :init:
+  wait(SFB_CMD, activator.type==UNIT_ST_PC);
+  char:=activator;
+  secure(char, nochar);
+  :start:
+  num:=rnd(1,100);
+  if(num<=40)
+  {
+    exec("follow "+char.name, self);
+    pause;
+    exec("ventriloquate "+char.name+" You fight like a whimp, I don't want to group with you!", self);
+    pause;
+    exec("ventriloquate "+char.name+" Well you are just plain stupid, get lost!", self);
+    pause;
+    exec("ventriloquate "+char.name+" Why don't you shut up, I'm tired of your bitching.", self);
+    pause;
+    exec("ventriloquate "+char.name+" Get lost, do me a favour, quit please.", self);
+    pause;
+    exec("follow "+self.name, self);
+    pause;
+    goto last;
+  }
+  else if(num<=90)
+  {
+    num2:=rnd(1,4);
+    if(num2==1)
+    {
+      act("The flapping of bat-wings are heard just overhead.",
+	  A_SOMEONE, self, null, null, TO_ALL);
+      pause;
+      goto init;
+    }
+    else if(num2==2)
+    {
+      act("You hear the sounds of a big brown bear just south of here.",
+	   A_SOMEONE, self, null, null, TO_ALL);
+      pause;
+      goto init;
+    }
+    else if(num2==3)
+    {
+      act("The howling of a black wolf is heard just north of here.",
+	  A_SOMEONE, self, null, null, TO_ALL);
+      pause;
+      goto init;
+    }
+    else if(num2==4)
+    {
+      act("An owl howls angrily nearby.", A_SOMEONE, self, null, null,TO_ALL);
+      pause;
+      goto init;
+    }
+    else goto init;
+  }
+  else
+  {
+    exec("steal coins from "+char.name, self);
+    pause;
+    goto last;
+  }
+  goto init;
+
+  :nochar:
+  unsecure(char);
+  goto init;
+
+  :last:
+  exec("south", self);
+  pause;
+  exec("east", self);
+  pause;
+  exec("north", self);
+  pause;
+  exec("west", self);
+  pause;
+  goto init;
+}
+dilend
+
+end
+
+
+
+
+%objects
+#ifdef EXTENDED_MUD
+
+                        lr_beam
+
+names {"light beam", "beam", "light"}
+title "a blazing beam of light"
+descr
+"A small but balzing beam of light shines from the candle"
+CONTAINER_DEF(5000)
+cost 100 PLATINUM_PIECE
+weight 1
+flags {UNIT_FL_TRANS}
+manipulate {MANIPULATE_ENTER}
+dilcopy force_move@function(15,"market_sq@midgaard!You are transported!", TRUE);
+
+extra {}
+"This definately looks divine in nature."
+end
+#endif
+
+                           rabbit_foot
+
+names {"rabbit foot", "foot"}
+title "a small rabbits foot"
+descr "A rabbit foot necklace has carelessly been left here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+weight 1
+cost 1 SILVER_PIECE
+extra {}
+"It looks like one of those lucky rabbit foots on a leather strap so that
+you can wear it around your neck."
+SKILL_TRANSFER(SKI_FLEE, 10)
+end
+
+                           lumber_axe
+
+names {"lumber axe","axe"}
+title "a lumber axe"
+descr "A heavy lumber axe lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+/* Iron 100% + Good craftmanship 10% = 110% */
+WEAPON_DEF(WPN_BATTLE_AXE, 1, 1)
+weight 10
+cost 15 SILVER_PIECE
+extra {}
+"It is a heavy axe of the kind lumberjacks use to chop down trees."
+end
+
+                           rolling_pin
+
+names {"rolling pin"}
+title "a rolling pin"
+descr "A heavy wooden rolling pin is left here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+/* Wood/Metal 50%, Avg craftmanship 0% = 50% */
+WEAPON_DEF(WPN_CLUB, -1, -1)
+weight 6
+cost 2 COPPER_PIECE
+extra {}
+"It is a fairly heavy rolling pin of the kind lumberjack wives use
+to chop down bold adventurers."
+end
+
+
+                           shirt
+
+names {"chequered shirt", "shirt"}
+title "a chequered shirt"
+descr "A chequered shirt lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+
+ARMOUR_CLOTHES(-5, 0) /* Good clothes 15%, 5% mary craft */
+weight 2
+cost 10 COPPER_PIECE
+extra {}
+"It is an extra large, chequered shirt made from heavy cloth."
+end
+
+                           boots
+
+names {"leather boots", "boots"}
+title "a pair of leather boots"
+descr "A pair of leather boots lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+
+ARMOUR_HRD_LEATHER(-4, 0) /* 70% Hard leather, 5% mary craft */
+weight 4
+cost 9 COPPER_PIECE
+extra {}
+"They are fashioned from rough leather that has been oiled frequently to make
+it stay waterproof.  They look worn but quite functional."
+end
+
+                           fireplace
+
+names {"fireplace"}
+title "a fireplace"
+descr "A fireplace made from stone is set against the east wall."
+CONTAINER_DEF(400)
+manipulate {MANIPULATE_ENTER}
+extra {}
+"It is fashioned from stones of various sizes that have been stacked on top of
+each other and fastened with mortar.  Its chimney is constructed likewise and
+leads the smoke out through the low cabin ceiling."
+end
+
+                           lantern
+
+names {"hooded brass lantern", "brass lantern", "lantern"}
+title "a hooded brass lantern"
+descr "A hooded brass lantern has been left here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+LIGHT_DEF(100,4)
+weight 4
+cost 2 SILVER_PIECE
+extra {}
+"It is a large and robust but somewhat battered oil lantern made from brass,
+and it is equipped with a handle to make it handy and a hood to protect its
+flame.  Some letters have been scratched on its bottom."
+extra {"letters"}
+"They say, - Light &amp; Hold lantern to activate. -"
+end
+
+                           chest
+
+names {"wooden chest", "chest"}
+title "a wooden chest"
+descr "A wooden chest stands in the corner."
+open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED} difficulty 10
+key brass_key
+manipulate {MANIPULATE_TAKE, MANIPULATE_ENTER}
+CONTAINER_DEF(300)
+weight 40
+cost 18 COPPER_PIECE
+extra {}
+"It is a robust chest made from short, heavy planks that have been fastened
+together with tenons.  It is equipped with a simple brass lock."
+end
+
+                           marys_pot
+
+names {"pot"}
+title "Mary's very best pot"
+descr "Mary's very best pot has been left here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_ENTER, MANIPULATE_WEAR_HEAD,
+            MANIPULATE_HOLD}
+CONTAINER_DEF(50)
+ARMOUR_PLATE(0, 0)
+
+flags {UNIT_FL_NOSAVE}
+weight 40
+cost 15 COPPER_PIECE
+extra {}
+"It is a heavy cauldron-like pot, fashioned from black iron."
+end
+
+
+                           stew
+
+names {"rabbit stew", "stew"}
+title "some rabbit stew"
+descr "Some rabbit stew has been left here."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(10, 0)
+weight 5
+cost 6 IRON_PIECE
+extra {} "It looks very delicious indeed."
+end
+
+
+                           brass_key
+
+names {"small brass key", "brass key", "key"}
+title "a small brass key"
+descr "A small brass key lies here."
+manipulate {MANIPULATE_TAKE}
+type ITEM_KEY
+weight 1
+cost 3 IRON_PIECE
+extra {}
+"It is a small, simple brass key with no inscriptions or marks of any kind."
+end
+
+                           coins
+
+/* Rest is inserted at runtime */
+MONEY(IRON_PIECE, 100)
+end
+
+                           black_berries
+
+names {"black berries","berries"}
+title "some black berries"
+descr "Some black berries grow on a bush nearby."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(3, 0)
+weight 1
+cost 2 IRON_PIECE
+extra {} "They look very tasty indeed."
+end
+
+                           mushroom
+
+names {"small mushroom", "mushroom"}
+title "a mushroom"
+descr "A small mushroom grows nearby."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(6, 0)
+weight 1
+cost 1 IRON_PIECE
+extra {} "It is a tasty little thing."
+end
+
+                           sign
+
+names {"large sign", "sign"}
+title "a large sign"
+descr "A large <a cmd='read #'>sign</a> mounted on a pole is standing by the roadside."
+type ITEM_NOTE
+weight 100
+extra {"pole"}
+"Not the most interesting pole in the world.
+Better leave it here, though, as it holds the sign in place."
+extra {}
+"It says :-<pre><br/>
+                         Haon-Dor<br/>
+                         --------<br/>
+<br/>
+ This is the Forest of Haon-Dor.  Enter at your own risk.<br/>
+     Please report any strange occurrences to Quifael.</pre>"
+end
+
+
+                           water_barrel
+
+/* Drink containers must have liquid name LAST! */
+names {"water barrel", "barrel", "water"}
+title "the barrel"
+descr "A water barrel has been left here."
+manipulate {MANIPULATE_TAKE}
+LIQ_DEF("clear", 15,50,50,10,1,0,0)
+cost 1 COPPER_PIECE
+end
+
+                           orc_sign
+
+names {"warning sign", "sign"}
+title "a warning sign"
+descr "A <a cmd='read #'>warning sign</a> with a skull mounted on its top is here."
+type ITEM_NOTE
+weight 100
+extra {"skull"}
+"The skull is old and weather-worn, and many of its teeth are missing.
+It still looks like a human skull, though."
+extra {}
+"It is of very bad craftmanship, but it still says :-<pre><br/>
+              _<br/>
+       ______|_|______<br/>
+      /               \<br/>
+      \ ORKZ RULE ERE /<br/>
+      /   KEEP OUT!   \<br/>
+      \_______________/<br/>
+             | |</pre>"
+end
+
+
+                           orc_scimitar
+
+names {"scimitar"}
+title "a scimitar"
+descr "A crude scimitar lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_SCIMITAR, -5, 0)
+weight 10
+cost 2 SILVER_PIECE
+extra {}
+"It is a heavy heavy orc-style iron scimitar."
+end
+
+                           tree_opening
+
+names {"tree opening", "opening"}
+title "a colossal tree"
+descr "A colossal tree blocks the way westwards."
+CONTAINER_DEF(1000)
+extra {}
+"The opening is far too narrow for you to squeeze through but it looks as if
+the tree is hollow."
+
+extra {"colossal tree", "tree"}
+"This enourmous tree must be a thousand years old.  Its rough bark looks grey
+and pale and is decorated with scratches and clawmarks.  On its west side is a
+small opening just above ground level."
+end
+
+                           light_branch
+
+names {"grey branch", "branch"}
+title "a long, grey branch"
+descr "A long, grey branch rests heavily on the ground."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+LIGHT_DEF(25,1)
+weight 20
+cost 1 IRON_PIECE
+extra {}
+"It is quite heavy and looks as if it has been dropped from great height.  It
+is long dead and very dry.  Could probably be lighted quite easily."
+end
+
+                           weapon_branch
+
+names {"grey branch", "branch"}
+title "a long, grey branch"
+descr "A long, grey branch rests heavily on the ground."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+/* Fresh wood 55%, -20% Craftmanship = 10%, heavy = 43 str */
+WEAPON_DEF(WPN_BATTLE_CLUB, -10, 0)
+weight 30
+cost 3 IRON_PIECE
+extra {}
+"It is very heavy and looks as if it has been dropped from great height.
+It is
+long and straight and the wood is very hard, still being full of sap.
+Although
+it does not fit very well in your hand, it could be used as a clumsy but very
+heavy weapon."
+end
+
+                           junk_branch
+
+names {"grey branch", "branch"}
+title "a long, grey branch"
+descr "A long, grey branch rests heavily on the ground."
+manipulate {MANIPULATE_TAKE}
+type ITEM_OTHER
+weight 40
+extra {}
+"It is very heavy and looks as if it has been dropped from great height.
+It is
+somewhat twisted and the hard wood is still full of sap."
+end
+
+                           toadstool
+
+names {"toadstool"}
+title "a toadstool"
+descr "A large toadstool grows nearby."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(12, 0)
+weight 5
+cost 2 IRON_PIECE
+extra {}
+"It is a large, brown boletus that must weigh nearly five pounds.  The top
+surface is covered in a thin layer of transparent slime that emits a weak,
+musty smell.  Not the most delicious thing you have seen."
+end
+
+                           poi_toadstool
+
+names {"toadstool"}
+title "a toadstool"
+descr "A large toadstool grows nearby."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(12, 1)
+weight 5
+cost 2 IRON_PIECE
+extra {}
+"It is a large, brown boletus that must weigh nearly five pounds.  It has
+small
+white spots and the top surface is covered in a thin layer of transparent
+slime
+that emits a weak, musty smell.  Not the most delicious thing you have seen."
+end
+
+
+                           blue_potion
+
+names {"blue potion","potion"}
+title "a blue potion"
+descr "A blue potion has been left here."
+manipulate {MANIPULATE_TAKE}
+flags {UNIT_FL_MAGIC}
+POTION_DEF(50, SPL_CURE_WOUNDS_1, SPL_NONE, SPL_NONE)
+weight 2
+cost 8 GOLD_PIECE
+rent 8 IRON_PIECE
+extra {}
+"It has a nice sky blue colour and a smell like peppermint."
+end
+
+                           yellow_potion
+
+names {"yellow potion","potion"}
+title "a yellow potion"
+descr "A yellow potion has been left here."
+manipulate {MANIPULATE_TAKE}
+flags {UNIT_FL_MAGIC}
+POTION_DEF(50, SPL_REMOVE_POISON, SPL_NONE, SPL_NONE)
+weight 2
+cost 4 GOLD_PIECE
+rent 8 IRON_PIECE
+extra {}
+"It has a deep yellow colour and and a strong spicy smell."
+end
+
+                           large_shield
+
+names {"large round shield","round shield","large shield","shield"}
+title "a large round shield"
+descr "A large round shield has been left here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
+/* Wood && Iron, Craftmanship good 10% */
+SHIELD_DEF(SHIELD_LARGE, 0, 0)
+weight 15
+cost 8 SILVER_PIECE
+extra {}
+"It is made from hard wood that has been reinforced with heavy iron bands."
+end
+
+                           iron_crown
+
+names {"iron crown","crown"}
+title "an iron crown"
+descr "An iron crown rests on the ground."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+/* Iron 100%, Good craft = 10%, ostrength 20 */
+flags {UNIT_FL_MAGIC}
+ARMOUR_HRD_LEATHER(0, 0)
+weight 10
+cost 12 SILVER_PIECE
+
+extra {}
+"It is a heavy human-sized crown made from solid iron."
+
+extra {"$identify"}
+"This is a good quality iron crown enchanted with magic and protects
+as a chain coif."
+
+extra {"$improved identify"}
+"This iron crown is of good craftsmanship and magically enchanted to
+give a +5 protection."
+end
+
+                           iron_sceptre
+
+names {"iron sceptre","sceptre"}
+title "an iron sceptre"
+descr "An iron sceptre lies on the ground."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+flags {UNIT_FL_MAGIC}
+type ITEM_OTHER
+bright 2 /* Eternal light source */
+weight 10
+cost 5 SILVER_PIECE
+rent 5 IRON_PIECE
+extra {}
+"It is a heavy sceptre made from solid iron. It glows with a white light."
+end
+
+                           iron_ring
+
+names {"iron ring","ring"}
+title "an iron ring"
+descr "An iron ring has been left here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_TREASURE
+weight 1
+cost 2 COPPER_PIECE
+extra {}
+"It is a quite heavy human-sized ring made from solid iron.  It lacks
+decorations of any kind."
+end
+
+
+
+%reset
+
+/*player resets*/
+#ifdef EXTENDED_MUD
+load lr_mob1 into lr_room1 max 1
+{
+   equip scale_sleeves@midgaard position WEAR_ARMS
+   equip scale_jerkin@midgaard position WEAR_BODY
+   equip scale_skirt@midgaard position WEAR_LEGS
+   equip scale_boots@midgaard position WEAR_FEET
+   equip lsword0@midgaard position WEAR_WIELD
+   equip scale_gloves@midgaard position WEAR_HANDS
+   equip scale_coif@midgaard position WEAR_HEAD
+}
+
+load lr_mob2 into lr_room1 max 1
+{
+   equip scale_sleeves@midgaard position WEAR_ARMS
+   equip scale_jerkin@midgaard position WEAR_BODY
+   equip scale_skirt@midgaard position WEAR_LEGS
+   equip scale_boots@midgaard position WEAR_FEET
+   equip lsword0@midgaard position WEAR_WIELD
+   equip scale_gloves@midgaard position WEAR_HANDS
+   equip scale_coif@midgaard position WEAR_HEAD
+}
+
+load lr_beam into lr_room1 max 1
+#endif
+
+load papi_kitt into rn_6017@haon_dor max 1
+load mary into cabin max 1
+{
+   equip rolling_pin position WEAR_WIELD
+   equip marys_pot position WEAR_HOLD max 1
+}
+
+load john into rn_6009 max 1
+{
+    equip lumber_axe position WEAR_WIELD
+    equip shirt position WEAR_BODY
+    equip boots position WEAR_FEET
+}
+
+load rabbit into rn_6012 zonemax 10
+load rabbit into rn_6013 zonemax 10
+load rabbit into cave zonemax 10
+load rabbit into rn_6015 zonemax 10
+load rabbit into rn_6019 zonemax 10
+
+load brown_bear into cave zonemax 1
+load deer into rn_6023 zonemax 1
+load fox into rn_6014 zonemax 5
+
+door rn_6009 NORTH {EX_OPEN_CLOSE}
+door cabin SOUTH {EX_OPEN_CLOSE}
+load water_barrel into cabin max 3
+load lantern into cabin max 1
+load chest into cabin max 1
+{
+    load coins
+}
+load fireplace into cabin max 1
+{
+    load brass_key max 1
+}
+
+load black_berries into rn_6023 local 1
+load mushroom into rn_6006 local 1
+load mushroom into rn_6013 local 1
+load mushroom into rn_6016 local 1
+
+load sign into forest_edge max 1
+
+
+/* -------------------- ORCS -------------------- */
+
+load orc_sign into rn_6027 max 1
+
+load nasty_orc into rn_6028 max 1 /* into rn_6028 */
+{
+   equip orc_scimitar position WEAR_WIELD
+}
+
+load orc_chief into orc_cave_chief max 1
+{
+   equip orc_scimitar position WEAR_WIELD
+
+   follow ugly_orc max 1
+   {
+      equip orc_scimitar position WEAR_WIELD
+   }
+   follow disgusting_orc max 1
+   {
+      equip orc_scimitar position WEAR_WIELD
+   }
+   follow hideous_orc max 1
+   {
+      equip orc_scimitar position WEAR_WIELD
+   }
+}
+
+/* -------------------- DARK FOREST STUFF -------------------- */
+
+load vic_warg into rn_6116 zonemax 2
+load vic_warg into rn_6116 zonemax 2
+load fer_warg into rn_6127 zonemax 2
+load fer_warg into rn_6127 zonemax 2
+load grey_wolf into rn_6108 zonemax 4
+load grey_wolf into rn_6108 zonemax 4
+load grey_wolf into rn_6104 zonemax 4
+load grey_wolf into rn_6104 zonemax 4
+load black_wolf into rn_6112 zonemax 4
+load black_wolf into rn_6112 zonemax 4
+load black_wolf into rn_6118 zonemax 4
+load black_wolf into rn_6118 zonemax 4
+load tree1 into rn_6120 zonemax 4
+load tree1 into rn_6123 zonemax 4
+load tree2 into rn_6109 zonemax 4
+load tree2 into rn_6105 zonemax 4
+
+load green_dragon into dragon_cave max 1
+{
+    load yellow_potion max 10
+    load iron_crown max 1
+    load large_shield into dragon_cave max 10
+}
+load spider into on_web max 3
+load spider into on_web max 3
+load spider into on_web max 3
+load spider2 into on_web max 1
+load spider into rn_6132 max 3
+
+load queen_spider into spider_den max 1
+{
+    load blue_potion max 10
+    load iron_sceptre max 1
+}
+
+load shargugh into rn_6100 max 1
+{
+    equip iron_ring max 3 position WEAR_FINGER_R
+}
+
+load tree_opening into rn_6103 max 1
+load light_branch into rn_6113 max 1
+load weapon_branch into rn_6125 max 1
+load junk_branch into rn_6105 max 1
+
+load toadstool into rn_6104 local 1
+load toadstool into rn_6111 local 1
+load toadstool into rn_6122 local 1
+load poi_toadstool into rn_6119 local 1
+
+%end

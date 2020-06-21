@@ -1,0 +1,461 @@
+#!/usr/bin/perl
+#
+#  Emailcompiler Version 1.0 
+#
+#  System Requirements:  You must have procmail installed, this 
+#  program uses formail (form the procmail package) to split the 
+#  email headers off.
+#
+#  You must make a directory  zone/nxtzon in your distribution.
+#
+#  Below you will need to modify the directories for your specific 
+#  setup, mainly the $vmehome, if you are using the standard vme 
+#  distribution, then the rest will not have to be changed.
+#
+#  You will also need to define the mailer to use, the mailer must be 
+#  able to be called from the command line with the arguments as follows
+#  
+#  mailer <email address> -s subject < <filename> 
+#
+#  mail and elm are both know to do this, mail is the preferable mailer
+#  to use due to size, and directory requirements.  If you use elm be
+#  sure to run it first and have it make its default directories
+#  or you will probally encounter errors.
+#
+#  Recieving mail
+#
+#  The best way to implement the emailcompiler is through a .forward file
+#  usually created in a seperate account ie mudcomp or the same account as 
+#  the mud is running.  Whichever way you decide you must make sure that the
+#  account that you choose to run it under has access to the zone/nxtzon dir.
+#  IE if both are members of the same group, you can set the group 
+#  permissions of the directory to allow read and write access.  You can do
+#  this by the following command.  You must also have access to the dir_temp.
+#
+#  chmod 770 <directory> 
+#
+#  To install the email compiler the .forward file should be created to look
+#  like this changeing the directory to your muds vme compiler:
+#
+#  "| /home/mud/vme1.1/bin/emailcompiler"
+#
+#  Now if all goes well you can email a zone and it will compile, and be 
+#  placed in the nxtzon directory, and when you reboot the mud, the runvme.csh
+#  script will move them into place.
+#
+
+
+$versioning = 0;   # anynumber > 0 turns versioning on.
+$vmehome      = "/home/mud/vme2.0";
+
+$mailer       = "mail";
+$nozoneresponse = "$vmehome/etc/emailzoneerr.txt";
+
+$vmebin       = "$vmehome/bin";
+$vmcproc      = "$vmehome/bin/vmc";
+$moneyfile    = "$vmehome/etc/";
+$dir_etc      = "$vmehome/etc";
+$dir_lib      = "$vmehome/lib";
+$includes     = "$vmehome/include";
+$vmc          = "$vmcproc -d$moneyfile -I$includes";
+$makedef      = "$vmebin/defconvert.perl";
+$dir_log      = "$vmehome/log";
+$dir_temp     = "/tmp";
+$zonelist     = "$vmehome/etc/zonelist";
+$defpass      = "$vmehome/etc/defpass";
+$hpass        = "$vmehome/etc/hpass";
+$etcpass      = "$vmehome/etc/etcpass";
+$dir_nxtzon   = "$vmehome/zone/nxtzon";
+$dir_nxtdef   = "$vmehome/zone/nxtdef";
+$dir_zon      = "$vmehome/zone";
+$logfile      = "emailcompiler.log";
+
+$ENV{'PATH'} = "$vmebin:/usr/local/bin:/usr/bin:/bin:.";
+
+sub log_mesg {
+  local ($log_file, $message) = @_;
+  open (LOG, ">>$dir_log/$log_file");
+  print LOG $message . "\n";
+  close(LOG);
+  return;
+}
+
+sub recieve {
+  open (RECIEVE, "> $dir_temp/mail.$$");
+  while (<>) {
+    print RECIEVE $_;
+  }
+  close(RECIEVE);
+  $from = `formail -x From: < $dir_temp/mail.$$`;
+  chop($from);
+  $subject = `formail -x Subject: < $dir_temp/mail.$$`;
+  `formail -I "" < $dir_temp/mail.$$ > $dir_temp/zon.$$`;	
+  unlink("$dir_temp/mail.$$");
+  log_mesg($logfile, "RECIEVED: $date  From: $from  Subj: $subject");
+}
+
+sub get_header {
+  local ($line_num) = 0;
+  local ($line);
+  open (ZONE, "$dir_temp/zon.$$");
+  open (HEAD, ">$dir_temp/head.$$");
+  $line_num = 0;
+  while( ($line !~ "END HEADER") ) {
+      $line = <ZONE>;
+		print HEAD $line;
+		if ($line_num > 15) {
+		  $line = "END HEADER";
+		}
+		$line_num ++;
+  }
+  close(HEAD);
+  open (BODY, ">$dir_temp/zone.$$");
+  while (<ZONE>){
+    print BODY $_;
+  }
+  close(BODY);
+  close(ZONE);
+  unlink("$dir_temp/zon.$$");
+}
+
+#used global vars so all function can get the parsed headers varibles.
+
+sub parse_header {
+   local (@words);
+   open (HEAD, "$dir_temp/head.$$");
+	while (<HEAD>){
+
+	  @words = split(/\s+/, $_);
+
+	  if (@words[0] eq "filename") {
+	    $filename = @words[1];
+	  } elsif (@words[0] eq "password") {
+	    $password = @words[1];
+	  } elsif (@words[0] eq "version") {
+	    $version = @words[1];
+	  } elsif (@words[0] eq "request") {
+	    $request = @words[1];
+	  } elsif (@words[0] eq "changedby") {
+	    $changedby = @words[1];
+	  }
+	}	
+	if ($filename eq "") {
+     `$mailer -s \"FAILED: NO FILENAME SPECIFIED\" \"$from\"< $nozoneresponse `;
+	  $request = "FAIL";
+	} elsif ($password eq "") {
+     `$mailer -s \"FAILED: NO PASSWORD SPECIFIED\" \"$from\"< $nozoneresponse`;
+	  $request = "FAIL";
+	} elsif ($changedby eq "") {
+     `$mailer -s \"FAILED: NO CHANGEDBY SPECIFIED\" \"$from\"< $nozoneresponse `;
+	  $request = "FAIL";
+	}
+
+}
+
+
+sub get_password {
+  local ($zonename) = @_;
+  local (@words);
+  local ($line);
+	
+	if ($request eq "compile") {
+	  open(ZONELIST, "$zonelist");
+	} elsif ($request eq "def") {
+	  open(ZONELIST, "$defpass");
+	} elsif ($request eq "header") {
+	  open(ZONELIST, "$hpass");
+	} elsif ($request eq "etc") {
+	  open(ZONELIST, "$etcpass");
+	}
+	
+  while (<ZONELIST>) {
+    $line = $_;
+    @words = split(/\s+/, $line);
+    if( @words[0] eq $zonename ) {
+      close(ZONELIST);
+		$compile_option = @words[2];
+	   return(@words[1]);
+
+	 }
+  }
+  close(ZONELIST);
+  return("ERROR");
+}
+
+sub compile_zon {
+  if ( $password ne &get_password($filename) ) {
+    $result_subject = "$filename Password Missmatch";
+	 open(ERROR, ">$dir_temp/$filename.err");
+	 print ERROR "Your password $password does not equal my password";
+	 close(ERROR);
+	 &send_results;
+	 unlink("$dir_temp/$filename.err");
+	 unlink("$dir_temp/zone.$$");
+	 unlink("$dir_temp/head.$$");
+    return("ERROR");
+  }
+
+  if ( $versioning > 0 )
+  {
+      if (-f "$dir_zon/$filename.zon") {
+	  		$blop = `head -10  $dir_zon/$filename.zon | grep -i version`;
+      }
+			
+      @dubedu = split(/\s+/, $blop);
+      $oversion = @dubedu[1];
+
+      if ( $version ne $oversion)
+      {
+	  $result_subject = "$filename FAILED! Version Mismatch!  My Version is $oversion\n";
+	  open(ERROR, ">$dir_temp/$filename.err");
+	  print ERROR "Your version $version does not equal my version $oversion.\n\nSincerely,\n\nThe Mud Compiler";
+	  close(ERROR);
+	  &send_results;
+	  unlink("$dir_temp/$filename.err");
+	  unlink("$dir_temp/zone.$$");
+	  unlink("$dir_temp/head.$$");
+	  return("ERROR");
+      }
+  }
+
+  if ( $compile_opt == 1 ) {
+      $opt = "";
+  } else {
+      $opt = "-l";
+  }
+
+  rename ("$dir_temp/zone.$$", "$dir_temp/$filename.zon");
+	chdir($dir_temp);
+  `$vmc -v $dir_temp/$filename.zon > $dir_temp/err.$$ 2>&1`;
+  rename ("$dir_temp/err.$$", "$dir_temp/$filename.err");
+  open (RESULT, ">>$dir_temp/$filename.err");
+  print RESULT "$filename HAD MATCHING PASSWORD \n";
+
+  if (-f "$dir_temp/$filename.data" ) {
+      &new_header;
+      open (ZONE, "$dir_temp/$filename.zon");
+      open (HEAD, ">>$dir_temp/head.$$");
+      while (<ZONE>) {
+	  print HEAD $_;
+      }
+      close (HEAD);
+      close (ZONE);
+
+      unlink("$dir_temp/$filename.zon");
+      rename("$dir_temp/head.$$", "$dir_temp/$filename.zon");
+      print RESULT "$filename Compiled Sucessfully \n";
+      close(RESULT);
+      $result_subject = "$filename Compiled Sucessfully";
+      &send_results;
+      `chmod 666 $dir_temp/$filename.*`;
+			`rm $dir_temp/$filename.dh`;
+      `mv $dir_temp/$filename.* $dir_nxtzon`;
+  } else {
+      unlink("$dir_temp$/$filename.zon");
+      unlink("$dir_temp$/head.$$");
+      print RESULT "$filename HAD ERRORS \n";
+      close(RESULT);
+      $result_subject = "$filename FAILED Compiling!";
+      &send_results;
+  }
+
+  close(RESULT);
+  log_mesg ($logfile, "COMPILE: $date  $result_subject");
+}
+
+sub compile_def {
+  if ( $password ne &get_password($filename) ) {
+    $result_subject = "$filename Password Missmatch";
+	 open(ERROR, ">$dir_temp/$filename.err");
+	 print ERROR "Your password $password does not equal my password";
+	 close(ERROR);
+	 &send_results;
+	 unlink("$dir_temp/$filename.err");
+	 unlink("$dir_temp/zone.$$");
+	 unlink("$dir_temp/head.$$");
+    return("ERROR");
+  }
+
+  rename ("$dir_temp/zone.$$", "$dir_temp/$filename.def");
+	chdir($dir_temp);
+  `$makedef $dir_temp/$filename.def $dir_temp/$filename.dat > $dir_temp/err.$$ 2>&1`;
+  rename ("$dir_temp/err.$$", "$dir_temp/$filename.err");
+  open (RESULT, ">>$dir_temp/$filename.err");
+  print RESULT "$filename HAD MATCHING PASSWORD \n";
+
+  if (-f "$dir_temp/$filename.dat" ) {
+      &new_header;
+      open (ZONE, "$dir_temp/$filename.def");
+      open (HEAD, ">>$dir_temp/head.$$");
+      while (<ZONE>) {
+	  print HEAD $_;
+      }
+      close (HEAD);
+      close (ZONE);
+
+      unlink("$dir_temp/$filename.def");
+      rename("$dir_temp/head.$$", "$dir_temp/$filename.def");
+      print RESULT "$filename Compiled Sucessfully \n";
+      close(RESULT);
+      $result_subject = "$filename Compiled Sucessfully";
+      &send_results;
+      `chmod 666 $dir_temp/$filename.*`;
+      `mv $dir_temp/$filename.def $dir_etc`; 
+      `mv $dir_temp/$filename.dat $dir_lib`;
+			unlink("$dir_temp/$filename.err");
+ } else {
+      unlink("$dir_temp$/$filename.def");
+      unlink("$dir_temp$/head.$$");
+      print RESULT "$filename HAD ERRORS \n";
+      close(RESULT);
+      $result_subject = "$filename FAILED Compiling!";
+      &send_results;
+  }
+
+  close(RESULT);
+  log_mesg ($logfile, "DEF COMPILE: $date  $result_subject");
+}
+
+sub compile_h {
+  if ( $password ne &get_password($filename) ) {
+    $result_subject = "$filename Password Missmatch";
+	 open(ERROR, ">$dir_temp/$filename.err");
+	 print ERROR "Your password $password does not equal my password";
+	 close(ERROR);
+	 &send_results;
+	 unlink("$dir_temp/$filename.err");
+	 unlink("$dir_temp/zone.$$");
+	 unlink("$dir_temp/head.$$");
+    return("ERROR");
+  }
+
+  rename ("$dir_temp/zone.$$", "$dir_temp/$filename");
+	chdir($dir_temp);
+  open (RESULT, ">>$dir_temp/$filename.err");
+  print RESULT "$filename HAD MATCHING PASSWORD \n";
+
+  if (-f "$dir_temp/$filename" ) {
+      &new_header;
+      open (ZONE, "$dir_temp/$filename");
+      open (HEAD, ">>$dir_temp/head.$$");
+      while (<ZONE>) {
+	  print HEAD $_;
+      }
+      close (HEAD);
+      close (ZONE);
+
+      unlink("$dir_temp/$filename");
+      rename("$dir_temp/head.$$", "$dir_temp/$filename.h");
+      print RESULT "$filename Compiled Sucessfully \n";
+      close(RESULT);
+      $result_subject = "$filename Compiled Sucessfully";
+      &send_results;
+      `chmod 666 $dir_temp/$filename.h`;
+			unlink("$dir_temp/$filename.err");
+      `mv $dir_temp/$filename.* $includes`;
+  } else {
+      unlink("$dir_temp$/$filename");
+      unlink("$dir_temp$/head.$$");
+      print RESULT "$filename HAD ERRORS \n";
+      close(RESULT);
+      $result_subject = "$filename FAILED Compiling!";
+      &send_results;
+  }
+
+  close(RESULT);
+  log_mesg ($logfile, "HEADER INSTALLED: $date  $result_subject");
+}
+
+sub compile_etc {
+  if ( $password ne &get_password($filename) ) {
+    $result_subject = "$filename Password Missmatch";
+	 open(ERROR, ">$dir_temp/$filename.err");
+	 print ERROR "Your password $password does not equal my password";
+	 close(ERROR);
+	 &send_results;
+	 unlink("$dir_temp/$filename.err");
+	 unlink("$dir_temp/zone.$$");
+	 unlink("$dir_temp/head.$$");
+    return("ERROR");
+  }
+
+  rename ("$dir_temp/zone.$$", "$dir_temp/$filename");
+	chdir($dir_temp);
+  open (RESULT, ">>$dir_temp/$filename.err");
+  print RESULT "$filename HAD MATCHING PASSWORD \n";
+
+  if (-f "$dir_temp/$filename" ) {
+      print RESULT "$filename Compiled Sucessfully \n";
+      close(RESULT);
+      $result_subject = "$filename Compiled Sucessfully";
+      &send_results;
+      `chmod 666 $dir_temp/$filename`;
+			unlink("$dir_temp/$filename.err");
+      `mv $dir_temp/$filename $dir_etc`;
+  } else {
+      unlink("$dir_temp$/$filename");
+      unlink("$dir_temp$/head.$$");
+      print RESULT "$filename HAD ERRORS \n";
+      close(RESULT);
+      $result_subject = "$filename FAILED Compiling!";
+      &send_results;
+  }
+
+  close(RESULT);
+  log_mesg ($logfile, "ETC INSTALLED: $date  $result_subject");
+}
+
+
+sub new_header {
+    open (HEAD, ">$dir_temp/head.$$");
+    $nversion = $oversion + 1;
+    print HEAD "/*\n";
+    print HEAD "filename    $filename\n";
+    print HEAD "password    $password\n";
+    print HEAD "changedby   $changedby\n";
+    print HEAD "EmailAdd    $from\n";
+    print HEAD "request     $request\n";
+    print HEAD "version     $nversion\n";
+    print HEAD "END HEADER*/\n";
+    close(HEAD);
+    return;
+}
+
+sub send_results {
+  `$mailer -s \"$result_subject\" \"$from\" < $dir_temp/$filename.err`
+}
+
+sub do_request {
+  if (($request eq "compile") or ($request eq "")) {
+    &compile_zon;
+  } elsif ($request eq "mail") {
+    if ( $password ne &get_password($filename) ) {
+	   `$mailer -s \"Valhalla Zone Transmission ERROR.  INVALID PASSWORD\" \"$from\" <$nozoneresponse`;
+	   log_mesg ($logfile, "MAIL: $date $filename was requested with wrong password by $from");
+    } else {
+      `$mailer -s \"$filename.zon Valhalla Zone Transmission\" \"$from\" <$dir_zon/$filename.zon`;
+	   log_mesg ($logfile, "MAIL: $date $filename was sent to $from");
+	 }
+  } elsif ($request eq "def") {
+	  &compile_def;
+  } elsif ($request eq "header") {
+	  &compile_h;
+  } elsif ($request eq "etc") {
+	  &compile_etc;
+  } elsif ($request eq "FAIL") {
+    return;
+  }
+}
+
+# if $version = 0 versioning is disabled, any other positive # enables
+
+$date         = `date +'%D %X'`;
+chop($date);
+&recieve;
+&get_header;
+&parse_header;
+&do_request;
+unlink("$dir_temp/head.$$");
+unlink("$dir_temp/zon.$$");
+unlink("$dir_temp/zone.$$");
+

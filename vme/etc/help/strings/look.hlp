@@ -1,0 +1,26 @@
+<br/>
+<br/>
+<br/>
+Usage<br/><br/>
+look<br/><br/>
+look (direction)<br/><br/>
+look (item)|(character)|(keyword)<br/><br/>
+look in (item)<br/><br/>
+<br/><br/>
+Example:<br/><br/>
+look cabal<br/><br/>
+look in bag<br/><br/>
+^^ Notice the IN keyword<br/><br/>
+look at bag<br/><br/>
+<br/><br/>
+The look command gives you a way of examining things:<br/><br/>
+<br/>
+When you type look alone you will get a description of your surroundings.<br/>
+There will be a general description of the area, including which visible<br/>
+items and/or characters are present.<br/><br/>
+<br/>
+<br/>See also:<br/><br/>
+Get<br/><br/>
+Put<br/><br/>
+Drop<br/><br/>
+<br/>

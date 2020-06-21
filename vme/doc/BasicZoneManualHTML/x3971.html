@@ -1,0 +1,405 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Compiling and Debugging your first object</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The objects section"
+HREF="ch06.html"><LINK
+REL="PREVIOUS"
+TITLE="Building your first object"
+HREF="x3926.html"><LINK
+REL="NEXT"
+TITLE="DIL functions for objects"
+HREF="x4005.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x3926.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. The objects section</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4005.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="OBJDEBUG"
+>7.4. Compiling and Debugging your first object</A
+></H1
+><P
+>As we have previously mentioned in <A
+HREF="x978.html"
+>Section 5.3</A
+> and
+<A
+HREF="x2061.html"
+>Section 6.4</A
+> it is always a good idea to build one or two
+things and then compile to make finding errors easy.  In this case we
+have one object to compile and rather than having all the rooms and NPCS 
+get in my way while compiling it I have removed them and only have the
+'%objects' section.  The following is what the zone looks like when it
+has only one object in it.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3976"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#include &lt;composed.h&gt;
+%zone dragonst
+lifespan 20
+reset RESET_ANYHOW
+creator {"whistler"}
+
+notes
+"This is the dragon station I shortened it to dragonst for ease in
+loading.  If you have  any questions email me at whistler@valhalla.com"
+
+help
+"Not sure what could help you now.  You are stuck on one of the
+weirdest space stations you have ever seen and you smell burning
+sulfur."
+
+%objects
+
+dragon_head
+
+title "a gold dragon head"
+
+descr "A large golden dragon head is laying here looking sad."
+
+names {"large golden dragon head","large gold dragon head,
+       "golden dragon head","large dragon head","gold dragon head",
+       "dragon head","large head", "sad head","head"}
+	   
+	   extra {}
+"The head is large and beautiful, at least as beautiful as a dead
+dragon head can be.  There is an extreme look of sorrow on the dragons
+face and it seems to be for much more than its own death."
+
+
+extra {"gold dragon head face","dragon head face","head face","face"}
+"Looking into the dragons face your eyes are drawn to the eyes of the
+dead dragon.  Could there be something there?"
+
+extra {"eyes","eye"}
+"A world of blue skies and no storms is visible through the eyes and it
+seems to be moving as if you were watching the world from space."
+
+manipulate MANIPULATE_TAKE,MANIPULATE_HOLD
+
+height 33
+	 weight 50
+
+extra {"$get_s"}
+"You suddenly feel very sad for a world that you don't even know."
+
+extra {"$get_o"}
+"A strange look of sadness crosses $1ns face."
+
+extra {"$drop_s"}
+"You feel much happier but you remember a feeling of great sorrow."
+
+extra {"drop_o"}
+"$1n seems to cheer up a bit."
+
+end
+
+%end&#13;</PRE
+><P
+></P
+></DIV
+><P
+>I removed the '%rooms' and '%mobiles' sections added a '%objects' section and
+stuck the dragon head in and now its ready to be compiled and put into the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+>
+server for you to be able to look at it in the game.  If you downloaded
+our example zones for this document you can compile this zone along with
+us and fix the errors as we do for practice.  The filename is
+<TT
+CLASS="FILENAME"
+>debug_obj.zon</TT
+>.  Just so you know the errors in this
+zone are intentional so please don't write me an email telling me that
+there are errors in it.</P
+><P
+>The command to compile the zone is
+<B
+CLASS="COMMAND"
+>VMC debug_obj.zon</B
+>.
+Here is what we get when we first try and
+compile the zone.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3983"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;<ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> v2.0 Copyright (C) 2001 by Valhalla [May  9 2001]
+Compiling 'debug_obj.zon'
+&lt;debug_obj.zon&gt; @ 65: EOF in string
+debug_obj.zon: 5: parse error
+   Token: '{'
+debug_obj.zon: 25: parse error
+   Token: 'golden'
+Grave errors in file 'debug_obj.zon'.&#13;</PRE
+><P
+></P
+></DIV
+><P
+>This error file doesn't look any harder than the last one we dealt
+with when compiling our first room or NPC.  We can not stress enough
+always fix the smallest numbered error first.  In this case the lowest
+numbered error shows up in line five of the zone.  The error says
+something is wrong with the '{' but looking at the line it is obvious
+the compiler got confused because I forgot 's' at the end of 'creators'.
+ If we fix line five and recompile this is what we get:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3987"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+> 
+ <ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> v2.0 Copyright (C) 2001 by Valhalla [May  9 2001]
+Compiling 'debug_obj.zon'
+&lt;debug_obj.zon&gt; @ 65: EOF in string
+debug_obj.zon: 25: parse error
+   Token: 'golden'
+Grave errors in file 'debug_obj.zon'.
+ </PRE
+><P
+></P
+></DIV
+><P
+>Now we have come to another one of those weird errors.  If you
+look at line 25 you will find that the line looks like it is correct. 
+As we have said before when you find an error like this it most likely
+means that you are missing a quote or a '{}'.  The only way to find the
+problem is start at the quote or '{}' before the word in the error and
+go backwards through the file till you find a missing one.  Lucky for us
+the missing one is in the very next string.  If you add a double quote
+just before the ending comma on line 24 and recompile you will get the
+following:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3991"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;<ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> v2.0 Copyright (C) 2001 by Valhalla [May  9 2001]
+Compiling 'debug_obj.zon'
+debug_obj.zon: 42: parse error
+   Token: ','
+Compilation aborted.&#13;</PRE
+><P
+></P
+></DIV
+><P
+>This error is a little tricky.  It seems to be pointing at the ','
+as the problem.  If you look at the line though and remember what you
+need for a manipulate field you will notice that the surrounding '{}' are
+missing.  The reason the compiler is pointing at the comma is because it
+doesn't understand what to do with the comma with out the '{}' grouping
+symbols.  Fixing these and recompiling results in the following message
+from the compiler.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3995"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;<ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> v2.0 Copyright (C) 2001 by Valhalla [May  9 2001]
+Compiling 'debug_obj.zon'
+<ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> Done.&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Notice there are no errors and it says '<ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> done', this means that
+you have now successfully compiled the zone.  This is the last debugging
+walk through in the manual.  If you still have a lot of trouble figuring
+out errors don't stress compiling is an art the more you do it the
+easier it will get.  We suggest you take the zones we have provided in
+our release and create errors so you can get used to the messages
+you will see when you are making your own zones.  Never be afraid to
+ask for help from someone else sometimes a bug is so simple you will
+over look it and sometimes it just takes a second person a single glance
+to find it.  Another trick to finding errors if you have been looking
+for more than 5 minutes take a break and come back in 10 minutes
+sometimes that short relaxing time will help you find the
+problem.</P
+><P
+>You have now compiled your first object.  The steps are the same
+to get it into the game as it was for the rooms and NPCs.  We will not
+go over them again except to say copy your files that the compiler made
+over into the zone directory of your mud and reboot.  From there log on
+and you should be able to <B
+CLASS="COMMAND"
+>wstat</B
+> and
+<B
+CLASS="COMMAND"
+>load</B
+> your object by using its full symbolic
+name.  It would be a good idea to try and get this zone into your server
+and lay with the object a bit so when you get to <A
+HREF="x4362.html"
+>Section 7.6</A
+> you will be ready for anything.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x3926.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4005.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Building your first object</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch06.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions for objects</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,9 @@
+<br/>
+Usage:<br/>
+   &gt;purge [&lt;unit&gt;]<br/>
+<br/>
+This wiz-command enables you to completely remove any unit from the world. Even<br/>
+if a player is in the menu-system, you can remove him. The command is rather<br/>
+violent, and just kick any player off. Only one limit is set, you may not purge<br/>
+rooms. With no argument, you purge everything but players at the location.<br/>
+<br/>

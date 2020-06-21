@@ -1,0 +1,19 @@
+<br/>
+<br/>
+<br/>
+<br/>
+Usage close [direction] (item)|(keyword)<br/><br/>
+<br/>
+Example:<br/><br/>
+close south door<br/><br/>
+close coffin<br/><br/>
+<br/>
+If you want to close something close-able, and open, just use this command.<br/>
+If it is not an item, but some sort of a door hatch etc. It will have a<br/>
+keyword, like 'close gate'.<br/>
+<br/><br/>
+<br/>See Also:<br/><br/>
+Open<br/><br/>
+Lock<br/><br/>
+Unlock<br/><br/>
+<br/>

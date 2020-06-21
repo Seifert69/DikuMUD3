@@ -1,0 +1,11 @@
+<br/>
+This wiz-command enables you to take away a players ability to shout or tell.<br/>
+This is used mainly to teach players not to shout too much, or if the player<br/>
+is harassing someone with tells. To give the player back the ability, use the<br/>
+same command.<br/>
+<br/>
+Usage:<br/>
+   &gt;noshout &lt;player&gt;<br/>
+   &gt;notell &lt;player&gt;<br/>
+<br/>
+<br/>

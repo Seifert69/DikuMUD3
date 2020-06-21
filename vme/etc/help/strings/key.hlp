@@ -1,0 +1,27 @@
+<br/>
+<br/>
+<br/>
+<br/>
+Usage lock [direction] (item)|(keyword)<br/><br/>
+<br/><br/>
+Example:<br/><br/>
+lock up iron grating<br/><br/>
+lock coffin<br/><br/>
+<br/>
+To lock something, you need a key. If you have<br/>
+the<br/>
+key in your equipment-list, you can lock<br/>
+locks,<br/>
+that require that key, just by using this command, like 'lock box'. If it<br/>
+is not an item, but some sort of a door hatch etc. It will have a keyword,<br/>
+like 'lock gate'.<br/>
+<br/><br/>
+<br/>See Also:<br/><br/>
+Close<br/><br/>
+Open<br/><br/>
+Unlock<br/><br/>
+Spell Lock<br/><br/>
+Spell Unlock<br/><br/>
+<br/>
+<br/>
+<br/>

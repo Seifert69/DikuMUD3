@@ -1,0 +1,11 @@
+<br/>
+<br/>
+<br/>
+<br/>
+Usage<br/><br/>
+claim (dictionary)<br/><br/>
+&lt;p&gt;<br/>
+Claim is used for initializing a dictionary, but you will only have to type<br/>
+this once when you first start using it.  It will then remember its owner.<br/>
+<br/><br/>
+<br/>

@@ -1,0 +1,9 @@
+<br/>
+Usage:<br/>
+   &gt;snoop [&lt;player&gt;]<br/>
+<br/>
+This wiz-command enables you to snoop on another player. You will get every<br/>
+message the player gets, marked by a '%' in front of each line. Snooping<br/>
+is not a nice thing to do, and should only be done to explain things or to<br/>
+guide another player. To stop snooping, just type snoop without an argument.<br/>
+<br/>

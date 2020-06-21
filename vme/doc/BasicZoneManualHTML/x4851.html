@@ -1,0 +1,284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Reset walk through</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The reset section"
+HREF="ch07.html"><LINK
+REL="PREVIOUS"
+TITLE="Special reset functions"
+HREF="x4779.html"><LINK
+REL="NEXT"
+TITLE="The complete dragon station"
+HREF="x4868.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x4779.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 8. The reset section</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4868.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RESETDRAGON"
+>8.4. Reset walk through</A
+></H1
+><P
+>The dragon station is almost finished.  All you have to do now is
+create the resets for it.  We don't have a lot of stuff in the zone but
+we have enough to make a decent example of how the resets work.  As I
+mentioned at the start of the chapter on resets I like to do the doors
+first, the objects in rooms second, then the NPCs.  again this is
+nothing we force you to do but I find it helps me keep track of my items
+and NPCs.</P
+><P
+>With that in mind we will start by resetting our doors.  In the
+zone there is two doors.  One is a regular door that is closed when the
+mud reboots and the other is a hidden and locked door when the mud
+reboots.  We will not block the rooms in and show you them again but
+if you want to you can see the rooms in <A
+HREF="x4868.html"
+>Section 8.5</A
+>. 
+the resets for these doors would look like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4856"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//Office door reset
+door hallway EAST {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED} 
+door office WEST {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED}
+
+
+//secret door reset
+door office SOUTH {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED,EX_HIDDEN}
+door portal_room   NORTH {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED}&#13;</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>Both sides of the door don't have to have the exact same
+flags the door in the office is hidden but the one on the ship is
+not.</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>The next thing to build resets for is the two items we are loading
+directly into rooms and their contents if they have any.  The two items
+we are loading into rooms are the board and the weapons locker.  I am
+just going to stick the board in the main chamber and the weapons locker
+in the office.  The reset for these two items looks like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4861"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;load info_board into chamber
+
+load wpn_locker into office
+  {
+  load w_stiletto 
+  }&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Notice we also loaded a stiletto into the weapons locker and it will
+only load once a reboot since the cabinet will never be removed and
+unless the cabinet reloads the stiletto will not reload.</P
+><P
+>finally we get to the NPcs and their equipment.  We only have 3
+NPCs in our zone so it shouldn't be any problem especially since we don't
+have that much close.  I am going to load the dragon into the ship on a
+percentage chance basis and then load the Janitor into the station so he
+can get to cleaning it up.  Finally I will load Bob into the office so
+he can sit and count his money.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4865"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;load bob into office
+  {
+  equip pol_plate WEAR_BODY
+  }
+  
+  load janitor into chamber
+    {
+	equip pol_plate WEAR_BODY
+	}
+	
+	random 50 
+	  {
+	  load bldragon
+	      {
+		  load maskwa
+		  }
+  }			  
+		  </PRE
+><P
+></P
+></DIV
+><P
+>Only a couple final things to point out.  It doesn't matter if you
+load the same type of plate or same type of clothing on every NPC.  It
+would look pretty silly if everyone was wearing the same clothes but I
+wanted to make sure you understood you didn't have to make one set for
+everyone.  Also you don't have to equip wearable things you can load
+them into the inventory like we did with the ring on the dragon.  That
+about covers it all.  The resets are now done and we can now put them
+all together with the zone and complete our dragon station.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x4779.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4868.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Special reset functions</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch07.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The complete dragon station</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

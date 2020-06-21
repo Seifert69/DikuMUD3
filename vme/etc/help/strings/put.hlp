@@ -1,0 +1,19 @@
+<br/>
+<br/>
+<br/>
+<br/>
+Usage<br/>
+put (item) [in] (item)<br/><br/>
+<br/>
+This command makes it possible to relocate your things. Is you want an item<br/>
+put inside a container, you use  this command. The command only makes it<br/>
+possible to put into containers in one level, ie. the command<br/>
+<br/><br/><br/>
+put &lt;item1&gt; in &lt;item2&gt; in &lt;item3&gt;<br/>
+is not possible. In fact it will be treated as<br/>
+put &lt;item1&gt; in &lt;item2&gt;<br/>
+<br/><br/>
+<br/>See Also:<br/><br/>
+Get<br/><br/>
+Look<br/><br/>
+<br/>

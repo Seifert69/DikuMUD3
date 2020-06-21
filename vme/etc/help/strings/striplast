@@ -1,0 +1,7 @@
+for U in $(ls $1)<br/>
+do<br/>
+  if [ $(tail -1 $1/$U) = '#' ]<br/>
+  then<br/>
+    head -$[$(cat $1/$U | wc -l) - 1 ] $1/$U | cat &gt; $1/$U<br/>
+  fi<br/>
+done<br/>

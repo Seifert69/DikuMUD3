@@ -1,0 +1,26 @@
+<br/>
+Usage:<br/>
+   &gt;set &lt;unit&gt; &lt;field&gt; &lt;arguments&gt;<br/>
+<br/>
+This is the command you use, if you want ti fiddle with individual fields in a<br/>
+unit. As there is a LOT of fields to set, i will not list them here. The<br/>
+command will list them, if you just give a unit name. However it is essential,<br/>
+that you understand the argument types.<br/>
+<br/>
+&lt;value&gt;  : a value. beware not to enter a number out of range.<br/>
+&lt;type&gt;   : a type. to list possible types give it an 'X' as type<br/>
+&lt;string&gt; : a single string.<br/>
+(enter description): this gives you the multi-line editor.<br/>
+                     End with a '@' on a single line.<br/>
+&lt;unitpath&gt;: a 'path' to the unit, specifying its zonename and itemname.<br/>
+&lt;keyword&gt; : a single keyword.<br/>
+&lt;direction&gt; : direction can be any of the six: n s e w u d<br/>
+&lt;bitlist&gt; : a list of bitnames. nothing indicates no set bits.<br/>
+            separate bitnames with a single '|'.<br/>
+<br/>
+Combinations of the above occur.<br/>
+<br/>
+See also:<br/>
+   &gt;help setskill<br/>
+   &gt;help stat<br/>
+<br/>

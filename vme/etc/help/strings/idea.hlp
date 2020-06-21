@@ -1,0 +1,14 @@
+<h1>Idea</h1>
+Usage:<br/>
+idea (idea string)<br/><br/>
+This command is used to  give good ideas to the creators.<br/>
+<br/>
+Example:<br/>
+idea How about making DikuMUD HTML based?<br/>
+<br/>
+See Also:<br/>
+<br/>
+<a cmd='help #'>Immortal</a><br/>
+<a cmd='help #'>Typo</a><br/>
+<a cmd='help #'>Bug</a><br/>
+<br/>

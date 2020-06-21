@@ -1,0 +1,14 @@
+<br/>
+Usage:<br/>
+   &gt;setskill  &lt;name&gt; skill|spell|weapon &lt;field&gt; &lt;value&gt;<br/>
+<br/>
+This wiz-command enables you to set the skill of a character. Remember, that<br/>
+only players have the full weapon-tree, while NPC's only have the basic<br/>
+categories. Likewise for spells; only players have the full spell-tree, while<br/>
+NPC's only have the basic categories. Skills are only for players, NPC's have<br/>
+none.<br/>
+<br/>
+See also:<br/>
+   &gt;help wstat<br/>
+   &gt;help set<br/>
+<br/>

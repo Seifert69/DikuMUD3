@@ -1,0 +1,68 @@
+<h1>prompt</h1>
+<br/>
+To make a custom prompt simply type the word PROMPT and follow it with any<br/>
+of the following variables. Color may be added to the prompt, see the help<br/>
+at the end of the prompt  variables for this.<br/>
+<br/>
+         ---------PROMPT VARIABLES----------<br/>
+<br/>
+%hp%           - Your Current Hit Points<br/>
+%maxhp%        - Your Maximum Hit Points<br/>
+%mana%         - Your Current Mana<br/>
+%maxmana%      - Your Maximum Mana<br/>
+%endurance%    - Your Current Endurance<br/>
+%maxendurance% - Your Maximum Endurance<br/>
+%guild%        - Your Guild's Name<br/>
+%title%        - Your Title<br/>
+%age%          - Your age<br/>
+%race%         - Your race<br/>
+%xp%           - Your current experience<br/>
+%xptolvl%      - Your experience to next level<br/>
+%level%        - Your current base level<br/>
+%vlevel%       - Your current virtual level<br/>
+%oppname%      - Your opponent's name<br/>
+%tankname%     - Your tank's name<br/>
+%oppdiag%      - Your opponent's condition (diagnoses)<br/>
+%tankdiag%     - Your tank's condition (diagnoses)<br/>
+<br/>
+         -----IMMORTAL ONLY IDENTIFIERS-----<br/>
+%zone%    - The zone idx you are in<br/>
+%room%    - The room idx you are in<br/>
+%wizinv%  - Your wizinv level<br/>
+<br/>
+                -----PROMPT COLOR-----<br/>
+<br/>
+  &amp;b&lt;col&gt;     Change background colour to &lt;col&gt;. Remember to set it back<br/>
+               to the original background (black).<br/>
+<br/>
+  &amp;c[+]&lt;col&gt;  Change the foreground colour to &lt;col&gt;. If + precedes the<br/>
+               colour, then it will be highlighted.<br/>
+<br/>
+   n   : Black<br/>
+   r   : Red<br/>
+   g   : Green<br/>
+   y   : Yellow<br/>
+   b   : Blue<br/>
+   m   : Magenta<br/>
+   c   : Cyan<br/>
+   w   : White<br/>
+<br/>
+Example:<br/>
+prompt (hit:%hp%/Mana:%mana%/Endurance:%endurance%)<br/>
+<br/>
+will give you a prompt like:<br/>
+  (hit:40/Mana:10/Endurance:0)<br/>
+<br/>
+prompt  &My hit &%hp%<br/>
+<br/>
+will give you a prompt like:<br/>
+	My hit 10<br/>
+<br/>
+To get the default prompt back type the following:<br/>
+<br/>
+prompt default<br/>
+<br/>
+<br/>
+<br/>See Also:<br/><br/>
+ &gt; help colors<br/>
+<br/>

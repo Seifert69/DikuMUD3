@@ -1,0 +1,1042 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>More complex objects</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The objects section"
+HREF="ch06.html"><LINK
+REL="PREVIOUS"
+TITLE="DIL functions for objects"
+HREF="x4005.html"><LINK
+REL="NEXT"
+TITLE="Dragon station with rooms, NPCs, and objects"
+HREF="x4525.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x4005.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. The objects section</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4525.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="OBJCOMPLEX"
+>7.6. More complex objects</A
+></H1
+><P
+>In the last sections you learned all the fields and how to make a
+basic object. In this section we will use the information from the last
+sections to create some more unique objects for our dragon station zone
+There is not a lot of new information here we will be using the DIL functions,
+fields, and flags to make objects we have only mentioned before.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJBOARD"
+>7.6.1. Making a communication board</A
+></H2
+><P
+>In <A
+HREF="x4005.html#OBJDILBOARD"
+>Section 7.5.3</A
+> you learned all there you need to
+know about the boards <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> to create a board.  In this small section we
+are going to show you the rest of a board and what a finished one looks
+like.</P
+><P
+>As with all objects the first step is to fully describe and name
+your board.  We will stick with the space station theme since our goal
+is to have a complete example zone for you.  The boards symbolic, names, title,
+description and extra turned out like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4371"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;info_board
+
+title "a merchant information board"
+descr "A merchant information Board is mounted on a wall here."
+
+names {"merchant information board","information board","merchant
+board","board"}
+
+extra {} "A large flashy black steal board."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Just incase the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> server we have has a spell that can damage
+inanimate objects we will give this board a material type.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4375"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;MATERIAL_METAL("A very fine quality black steel")&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now for the special stuff for the board.  We need to give the
+board a type and copy the board <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> to it.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4379"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;type ITEM_BOARD
+dilcopy board@boards("info","","rem_res@boards","",100);&#13;</PRE
+><P
+></P
+></DIV
+><P
+>There you go nothing to it you have just created your first board.
+ Now lets bring it all together and tag on an end symbol and we are all
+ finished.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4382"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13; info_board
+title "a merchant information board"
+descr "A merchant information Board is mounted on a wall here."
+names {"merchant information board","information board","merchant
+board","board"}
+
+extra {}
+"A large flashy black steal board."
+
+MATERIAL_METAL("A very fine quality black steel")
+type ITEM_BOARD
+dilcopy board@boards("info","","rem_res@boards","",100);
+
+end
+ 
+ </PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJCONTAINER"
+>7.6.2. Making a container</A
+></H2
+><P
+>I thought it would be cool to have a small weapons locker on the
+space station not to mention event hough we went over the container
+macro in <A
+HREF="x3575.html#OBJMACROCONTAINER"
+>Section 7.2.10</A
+>, we didn't cover everything
+you need in fact the macro eaves a few things out because you may or may
+not want to set them.</P
+><P
+>As with all objects we start right off by describing the item. 
+There is nothing new here so we will just show it to you and go
+on.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4389"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;wpn_locker
+
+title "a weapons locker"
+names {"weapons locker","weapon locker","locker"}
+
+descr "a small weapons locker hangs on the wall here."
+
+extra {}
+"It is an ordinary weapons locker that looks like it holds any illegal
+weapons that are taken on the station."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now we need to put in all the information that makes this item a
+container that can't be taken but it can be opened and it is
+locked.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4392"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;manipulate {MANIPULATE_ENTER}
+CONTAINER_DEF(500)
+open {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED}
+key black_key&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Notice we didn't make the item 'MANIPULATE_TAKE' because
+we don't want people to be able to walk off with our weapons locker. 
+One final touch and we are all finished with the weapons locker.  It is
+always nice to put a material type on your items so a spell or a skill
+can tell if you can do anything with them.  So with our material added
+in the full locker would look like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4395"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;wpn_locker
+
+title "a weapons locker"
+names {"weapons locker","weapon locker","locker"}
+descr "a small weapons locker hangs on the wall here."
+
+extra {}
+"It is an ordinary weapons locker that looks like it holds any illegal
+weapons that are taken on the station."
+
+MATERIAL_METAL("A very fine quality steel")
+
+manipulate {MANIPULATE_ENTER}
+CONTAINER_DEF(500)
+open {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED}
+key black_key
+
+end&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJDRINK"
+>7.6.3. Creating drinks</A
+></H2
+><P
+>In <A
+HREF="x3575.html#OBJMACROLIQCONT"
+>Section 7.2.7</A
+>, we covered how to set the size and weight of the container and its content but now we need to talk about some other special things about a drink container verses other objects.</P
+><P
+>The drink container is one of the few objects that has rules on
+how you set the title, description and names fields.  The title and
+description fields should ot have anything to do with the liquid inside
+the container.  This means if you have a barrel full of water you do not
+put the word water in the title or the description.  In our case we have
+a bag full of wine so we do not put wine in either the title or
+description.  The reason for this is if the player drinks the bag empty
+and then fills it with water and we had put wine in the title or
+description it would still be there but the bag would now be full of
+water..  Our symbolic, title, and description would then look like
+this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4402"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;liq_ration
+
+title "a red bag"
+descr "A red bag has been gently placed here."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>The names on the other hand MUST have the drink name as the last
+name in the name list.  The reason it must be the last one is when a
+player drinks or pours out the liquid the name is removed.  If a player
+then refills the container the name of the new liquid is added to the
+last name.  The bag we are making is full of wine so our names list would
+look like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4405"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;names {"red bag", "bag", "wine"}&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now we add the liquid define for wine</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4408"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;LIQ_WINE(1,2,2,0)&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Finally we add the material type for the bag, the cost to buy the
+container, an extra players can look at, and finally an identify extra so
+if a player casts either the identify or improved identify spell on the
+bag they will se it.  with all that added The finished drink container
+looks like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4411"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;liq_ration
+names {"red bag", "bag", "wine"}
+title "a red bag"
+descr "A red bag has been gently placed here."
+
+extra {}
+"A small label reads Tassel Grove's finest.  Year 321"
+
+
+MATERIAL_ORGANIC("a soft plastic")
+manipulate {MANIPULATE_TAKE}
+LIQ_WINE(1,2,2,0)
+cost 2 IRON_PIECE
+
+extra {"$identify"}
+"Its the special wine from Tassel grove a small halfling village on the
+planet Valhalla.  It seems like a great vintage wine."
+
+end&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJFOOD"
+>7.6.4. Creating food</A
+></H2
+><P
+>The food is very simple to make its just a regular item with the
+macros you learned in <A
+HREF="x3575.html#OBJMACROFOOD"
+>Section 7.2.8</A
+>.  In fact making
+food is so simple we almost left it out.  I am only adding this to show
+how simple it is to change a regular item like the dragon head we showed
+you in <A
+HREF="x3926.html"
+>Section 7.3</A
+> into a food item.  Now only a sick
+person would make a dragon head into food but if you wanted to you just
+add the 'FOOD_DEF(...)' and your all set.  here is a basic food that you
+might find laying around a space station.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4418"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;beef_stick
+
+title "a tough leathery stick"
+descr "A tough leathery looking stick is laying here."
+names {"tough leathery stick","tough leather stick","leathery stick",
+"leather stick","tough stick","stick"}
+
+extra {}
+"This has the word BEEF burnt into it."
+
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(5,0)
+weight 1
+cost 1 COPPER_PIECE
+MATERIAL_ORGANIC("tough beef")
+
+end&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJWEAPON"
+>7.6.5. Making a weapon</A
+></H2
+><P
+>Whats a game with out some kind of weapon to chop or bash things
+into little pieces.  We examined how to set the weapon fields in <A
+HREF="x3575.html#OBJMACROWEAPON"
+>Section 7.2.3</A
+>, the object transfers in <A
+HREF="x3575.html#OBJMACROTRANSFERS"
+>Section 7.2.14</A
+>, and the restriction DIL functions in <A
+HREF="x4005.html#OBJDILRESTRICT"
+>Section 7.5.1</A
+>.  Now we will pull all we have learned together
+and make a pretty nifty little stiletto.</P
+><P
+>The first part as with all our example objects is to set up the
+symbolic, names, title, description, object extra, and material type.  this is no
+different from any other object so here is what we ended up with</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4427"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13; w_stiletto
+ title "a stiletto"
+	 names {"stiletto", "dagger"}
+ descr
+ "A deadly looking stiletto has been left here."
+
+extra{}
+"This looks like a thieves dream come true. "
+
+MATERIAL_METAL("A very fine quality steel")&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now lets add the defines and DIL functions that make this a special weapon
+along with the manipulate flags that makes it able to be wielded.  We will give
+it a bonus in magic and good craftsmanship along with a plus in
+backstab for all those assassins on the game.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4430"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_DAGGER, 1, 2)
+SKILL_TRANSFER(SKI_BACKSTAB, 2)
+dilcopy abi_restrict@function (ABIL_DEX,10,0,25,"");&#13;</PRE
+><P
+></P
+></DIV
+><P
+>to finish it off we will give the weapon a cost, rent, and finally
+two identifies for the two identify spells.  Now that we have it all
+defined we pull it together and it looks like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4433"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13; w_stiletto
+ title "a stiletto"
+ names {"deadly looking stiletto","deadly stiletto","stiletto", "dagger"}
+ descr
+ "A deadly looking stiletto has been left here."
+
+extra{}
+"This looks like a thieves dream come true. "
+
+MATERIAL_METAL("A very fine quality steel")
+
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_DAGGER, 1, 2)
+SKILL_TRANSFER(SKI_BACKSTAB, 2)
+dilcopy abi_restrict@function (ABIL_DEX,10,0,25,"");
+weight 2
+cost 2 GOLD_PIECE
+rent 1 COPPER_PIECE
+
+extra {"$identify"}
+"The stiletto looks magical in nature and seems really sharp.  You can
+tell if you wield it you would be able to backstab someone really easy."
+
+extra{"$improved identify"}
+"The stiletto gives you a magical bonus of +1 and has a quality of +2. 
+It also raises your back stabbing skill  by 2%.  You have to have at
+least 10% in dex before you can wield this magical weapon."
+
+end&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJARMOUR"
+>7.6.6. Making armour</A
+></H2
+><P
+>In <A
+HREF="x3575.html#OBJMACROARMOUR"
+>Section 7.2.4</A
+> we explained how to set the
+           armour fields now we will finish off by adding some more
+           important information about armour in general.</P
+><P
+>The most important thing to realize is that not all wear
+           positions on the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> server are armour positions.  In fact
+           only seven of the wear positions count as armour the rest are
+           non-armour positions which we will cover next in <A
+HREF="x4362.html#OBJNON-ARMOUR"
+>Section 7.6.7</A
+>.  The following are the armour
+           positions and their defines.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN4442"
+></A
+><P
+><B
+>Table 7-7. Armour positions</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Position</TH
+><TH
+>Define</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>head</TD
+><TD
+>MANIPULATE_WEAR_HEAD</TD
+></TR
+><TR
+><TD
+>hands</TD
+><TD
+>MANIPULATE_WEAR_HANDS</TD
+></TR
+><TR
+><TD
+>arms</TD
+><TD
+>MANIPULATE_WEAR_ARMS</TD
+></TR
+><TR
+><TD
+>body</TD
+><TD
+>MANIPULATE_WEAR_BODY</TD
+></TR
+><TR
+><TD
+>legs</TD
+><TD
+>MANIPULATE_WEAR_LEGS</TD
+></TR
+><TR
+><TD
+>feet</TD
+><TD
+>MANIPULATE_WEAR_FEET</TD
+></TR
+><TR
+><TD
+>cloak</TD
+><TD
+>MANIPULATE_WEAR_ABOUT</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>There is one more field that works as armour, 'MANIPULATE_WEAR_SHIELD' but since that uses another define it is not
+shown here.  We will leave that for an exercise for you to do
+later.</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>First we do the same as we have for every other item, pick the
+symbolic, title, description, extra description, and material type for the plate.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4474"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;pol_plate
+names {"polished breast plate","polished plate","breast plate","plate"}
+title "a polished breast plate"
+descr "A polished breast plate has been left here."
+MATERIAL_METAL("A high luster silver colored metal")&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now we pick the armour type in this case I want it to be made like
+plate mail and I want it to have a magical bonus and a high
+craftsmanship.  Obviously since this is a plate we will pick the body
+position.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4477"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+ARMOUR_DEF(ARM_PLATE,5,9)&#13;</PRE
+><P
+></P
+></DIV
+><P
+>All that is left is to add the cost, rent, the identify extras,
+and I felt like putting a 40% strength restriction on the armour.  With
+all that added together we finish up with the following piece of
+armour.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4480"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;pol_plate
+names {"polished breast plate","polished plate","breast plate","plate"}
+title "a polished breast plate"
+descr "A polished breast plate has been left here."
+
+extra{}
+"This is one shiny plate it seems to be made out of one perfect piece of
+metal.  There doesn't even seem to be any markings of owner ship."
+
+MATERIAL_METAL("A high luster silver colored metal")
+
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+ARMOUR_DEF(ARM_PLATE,5,9)
+
+dilcopy abi_restrict@function (ABIL_STR,40,0,25,"");
+cost 2 GOLD_PIECE
+rent 3 COPPER_PIECE weight 25
+
+extra{"$identify"}
+"This is a high quality plate with a magical feeling."
+
+extra{"$improved identify"}
+"The plate has a magical bonus to your defence of a +5 and a quality of
++9.  You need 40% in strength to be able to wear it."
+end&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="OBJNON-ARMOUR"
+>7.6.7. Making non-armour worn objects</A
+></H2
+><P
+>In the previous section we defined armour that actually protects
+the char in combat.  Here we will learn how to make the clothing and
+jewelery that may not do anything directly to combat but it can give
+your characters bonuses that help in combat in the long run.  We will
+start by listing all the non-armour worn positions and their manipulate
+defines and then we will give a simple ring object.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN4485"
+></A
+><P
+><B
+>Table 7-8. Non-armour positions</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Position</TH
+><TH
+>define</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>ear</TD
+><TD
+>MANIPULATE_WEAR_EAR</TD
+></TR
+><TR
+><TD
+>neck</TD
+><TD
+>MANIPULATE_WEAR_NECK</TD
+></TR
+><TR
+><TD
+>wrist</TD
+><TD
+>MANIPULATE_WEAR_WRIST</TD
+></TR
+><TR
+><TD
+>finger</TD
+><TD
+>MANIPULATE_WEAR_FINGER</TD
+></TR
+><TR
+><TD
+>chest</TD
+><TD
+>MANIPULATE_WEAR_CHEST</TD
+></TR
+><TR
+><TD
+>back</TD
+><TD
+>MANIPULATE_WEAR_BACK</TD
+></TR
+><TR
+><TD
+>waist</TD
+><TD
+>MANIPULATE_WEAR_WAIST</TD
+></TR
+><TR
+><TD
+>ankle</TD
+><TD
+>MANIPULATE_WEAR_ANKLE</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>When giving ability, skill, weapon, or spell bonuses make
+sure you realize that positions like ear, neck, wrist, and ankle can all
+have two on a player.  This means any bonuses you give can be doubled if
+the player gets two of them</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>I don't want to beat a dead horse so since I have already
+explained armour in <A
+HREF="x4362.html#OBJARMOUR"
+>Section 7.6.6</A
+> the only difference here
+is there is no 'ARMOUR_DEF' everything else is the same.  The following
+was one of the first items my wife made as a new builder and I have
+always liked it.  I know, I am a lush but this way I don't have to write
+an example.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4521"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;  maskwa
+
+names {"maskwa platinum ring", "platinum ring","maskwa ring","maskwa","ring"}
+title "a Maskwa ring"
+descr "A Maskwa platinum ring is laying here."
+MATERIAL_METAL("Platinum, and other precious metals")
+extra {}
+"The ring has a large bear head.  Could this be the legendary head of
+Maskwa?  Any thing formed with its head on it is said to strengthen the
+wearer."
+type ITEM_WORN
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_WEAR_FINGER}
+cost 100 COPPER_PIECE
+rent 50 IRON_PIECE
+weight 1
+STR_TRANSFER(+1)
+end&#13;</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>One last thing I forgot to mention.  The item type also
+changes but then that is not hard to understand since this is not armour
+it should be some other thing.  In the case of non-armour worn items the
+item type is 'ITEM_WORN'.</P
+></TD
+></TR
+></TABLE
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x4005.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4525.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions for objects</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch06.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Dragon station with rooms, NPCs, and objects</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

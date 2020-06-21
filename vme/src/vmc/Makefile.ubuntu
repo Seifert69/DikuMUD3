@@ -1,0 +1,31 @@
+# MS: CHANGED SYSPORT		=	-DLINUX -DGENERIC_SYSV
+# This is how my Linux works.
+
+SYSPORT		= -DLINUX -DPOSIX -pipe -m64
+# -fpermissive    
+#-DMEMORY_DEBUG
+#SYSPORT	= -DBITCONV
+PLATFORMDIR =../../build
+PLATFORM    = 
+CPP		    = g++ 
+XCPPFL		=
+CC		= gcc 
+XCFL		=
+
+WARN		= -Wall
+NOWARN		= -ansi
+OPT		= -O0
+#-O6
+DEBUG		= 
+
+LD		= g++
+LDLIBS		= -lfl
+#LDFLAGS	= -static
+
+LEX		= flex
+YACC		= bison
+YFLAGS		= -y -d -v
+
+DIFF		= diff
+
+MKDPND		= g++ -MM  $(DEBUG) $(SYSPORT) $(SYSFLAGS) $(WARN) $(XCPPFL) 

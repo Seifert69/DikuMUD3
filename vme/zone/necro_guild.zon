@@ -1,0 +1,2510 @@
+/*
+filename    necro
+password    2kpwd
+changedby   Ratlin
+EmailAdd    "Mark Pringle" <marco2@cyberzone.net>
+request     compile
+version     12END HEADER*/
+
+#define _GUILD_NECROMANCER
+
+
+#include <macros.h>
+
+#define GOLEM_ONGOING "Golem Quest Ongoing"
+#define GOLEM_COMPLETE "Golem Quest Completed"
+#define GOLEM_BONDED "Golem Bonded"
+#define GOLEM_BAN "Golem Quest Banned"
+
+/* ================================================================== */
+/*                                ZONE                                */
+/* ================================================================== */
+%zone necro_guild
+title "Necromancer Guild@Mainland"
+creators {"tharlock", "papi", "saor"}
+
+notes
+"This is a zone designed to implement the Guild for evil Necromancers.
+Lifespan of zone is very high in order to encourage members to defend
+their guild.<br/>
+Version 1.0 made 3/3-94 by Tharlock (Rene Olsen). Bug reports to Papi.<br/>
+Updates and current guild items (Scythe Of Bone/severed wristlet)
+created by Skray .<br/>"
+
+reset RESET_ANYHOW
+lifespan 137
+
+%dil
+
+dilbegin nokill();
+var
+        pc      : unitptr;
+        room    : unitptr;
+code
+{
+        heartbeat := 3 * PULSE_SEC;
+
+        :start:
+        wait(SFB_COM,  self.position == POSITION_FIGHTING );
+        pc := self.fighting;
+        if(pc.type == UNIT_ST_NPC) goto start;
+        if (pc.level >200) goto start;
+        secure(pc,gone);
+        if (command("flee"))
+                block;
+
+self.hp:= self.max_hp;
+act("Suddenly, several skeletal warriors surround you silently.",
+A_ALWAYS, pc, self, null, TO_ALL);
+act("In a dreadful silence and with a terrible sense of purpose they "+
+"break every bone in your living body."
+, A_ALWAYS, pc, self, null, TO_CHAR);
+act("In dreadful silence and with a terrible sense of purpose they "+
+"break every bone in $1n's body!"
+,A_SOMEONE, pc, self, null, TO_REST);
+pc.hp:= 0;
+pc.endurance:= 0;
+pc.mana:= 0;
+act("Half-dead from pain, you are dragged away."
+,A_ALWAYS, pc, self, null, TO_CHAR);
+position_update(pc);
+act("One of them drag away with the limp body toward the exit, the rest "+
+"of them sail quietly past you and are gone."
+,A_SOMEONE, pc, self, null, TO_REST);
+room:= findroom("altar@necro_guild");
+link(pc,room);
+act("A skeletal warrior drags the limp body of $1n in from below "+
+"and leave $1m on the altar."
+,A_SOMEONE,pc,self,null,TO_REST);
+        :gone:
+unsecure(pc);
+goto start;
+}
+dilend
+
+/* ================================================================== */
+/*                               ROOMS                                */
+/* ================================================================== */
+
+%rooms
+
+
+                               church_ruin
+
+names {"church ruin"}
+title "The Old Church"
+descr
+"   Streaks of light seep through rents in the walls. Scorch marks have
+marred the walls, the floor and what there is left of the ceilings. Where
+once stood a beautiful church is now only molten rock. While you are
+standing
+there in the dim light, you can hear a very faint chanting from the north.
+To the south you see the church entrance."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+
+movement SECT_CITY
+south to ruin_hill@cemetery;
+north to altar;
+end
+
+
+                               altar
+
+names {"the altar"}
+title "By The Altar"
+descr
+"   You are standing at the end of the church. Before you is a huge
+marble Altar. While you are looking around, you notice some difference in
+the ruin. It is as if you are standing by an odd counterpoint, colorful
+tapestries and paintings, masterpieces every one, are hanging undisturbed
+except where tilting walls has pushed them awry. Behind the altar you can
+see some stairs leading down."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+down to tomb;
+south to church_ruin;
+end
+
+
+                               tomb
+
+names {"the tomb"}
+title "The Tomb"
+descr
+"   You get a chilling feeling all over, like you are being watched. A dim
+blue light emanating from two torches beside a small wooden crypt door
+lights
+up the entire place. The crypt door to the north is strangely blackened with
+soot. A small dragon figure is attached to the black marble wall. Stairs
+leading up."
+extra {"dragon figure","dragon","figure"}
+"The dim light gives the sensation of life inside this queer looking
+rock figure. The glassy eyes appear to emanate its own light, or so you
+think. It feels like this might be a guardian of some entrance."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to crypt open {EX_OPEN_CLOSE, EX_CLOSED}
+      keyword {"crypt door","door"};
+up to altar;
+ALWAYS_LIGHT
+end
+
+
+
+                               crypt
+
+names {"the crypt"}
+title "The Crypt"
+descr
+"   A dim light fills the entire crypt, leaving an eerie atmosphere. In
+the centre of the crypt there is a sarcophagus inscribed with runes. The
+dust layer is very thick on the sarcophagus. On the top you can see a few
+strange claw marks in the stone. It is as if something or someone wanted it
+opened - or closed?. A low crypt door opens into the south. To the north you
+see a fairly bright light."
+extra {"runes on the sarcophagus","runes","inscription","sarcophagus"}
+"The runes look old. They read the following:<br/>
+'In the last lost fight, against the fall of long night.<br/>
+The mountains stand guard, and the dead shall be called,<br/>
+I will be the caller when my time comes. The grave is my<br/>
+home for now. My blood, my soul shall once again be whole'.<br/>"
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to catacomb_junc;
+south to tomb open {EX_OPEN_CLOSE, EX_CLOSED}
+      keyword {"crypt door","door"};
+ALWAYS_LIGHT
+end
+
+
+
+                               catacomb_junc
+
+names {"the catacomb junction"}
+title "The Catacombs"
+descr
+"   As you walk into the room, you notice a strong smell. The smell burns in
+your nose. The room is triangle-shaped, in one of the corners you can see a
+well. Torches are filling the room with a calm red light. As you walk
+further
+into the room, the smell is getting stronger. A fine dust layer covers a
+floor painting. Over the well some letters are inscribed in the wall."
+extra {"floor painting","floor","painting"}
+"Under the dust you can barely see a person or a shade. The shade
+looks like an enormous man accompanied by a smaller human form. The smaller
+figure looks like a small child. The man is holding the child in one arm,
+while the other arm is raised in anger towards a cloudy sky.<br/>"
+extra {"letters on the wall","letters","inscription"}
+"The letters say the following: 'The waters of pain, seek and gain'."
+extra {"well"}
+"The well is richly inset with red glowing gems and carvings. The smell
+is incredibly disgusting. The well is filled with boiling sulphur."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+south to crypt;
+west to west_catacomb;
+down to dark_corridor;
+up to damp_shaft;
+ALWAYS_LIGHT
+end
+
+
+
+                               west_catacomb
+
+names {"the western catacomb"}
+title "The Western Catacomb"
+descr
+"   You are standing in a very damp and dark catacomb. A strong smell of
+rotten flesh reaches your nose and you notice corpses lying around on
+several
+shelves. The corpses appear to be fresh, but totally battered. You can see
+some stairs leading down to a dim light. You can also see some stairs
+leading
+up into darkness."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+east to catacomb_junc;
+down to low_damp_crypt;
+up to up_damp_crypt;
+ALWAYS_LIGHT
+end
+
+                               up_damp_crypt
+
+names {"the upper damp crypt"}
+title "The Upper Damp Crypt"
+descr
+"   Before you there is a long table. On the table there is a storm lamp,
+throwing shadows onto the underground walls. At the end of the table you
+can see a large wooden ornamented chair. Some strange marks are painted on
+the walls, figures and mystical runes. A large parchment lies on the
+table. You also see some stairs leading down."
+extra {"parchment on the table","parchment"}
+"<pre>The writing on the parchment proclaims in tall, red letters:<br/>
+<br/>
+        TITLE at the master will give you a title if you are worthy.<br/>
+<br/>
+                                - Wicca the Tainted One<br/>
+<br/>
+</pre>"
+extra {"long table","table"}
+"The long table is carved in dark, heavy wood. Skull and bone motif
+covers the dark wood and a strange chill emanates from the table-top.<br/>"
+extra {"storm lamp on the table","storm lamp","lamp"}
+"The storm lamp is ornamented in heavy, gothic designs, the thick metal
+blackened with age. It casts deep, moving shadows.<br/>"
+extra {"$get","storm lamp","lamp"}
+"You reach for it and the shadows sway dangerously... perhaps you should
+leave it where it is."
+extra {"marks on the wall","runes","marks","figures","wall","rune"}
+"You study the designs on the wall, strange scenes of dark shades, robed
+figures, odd runes, complicated markings... In the middle of it, a single
+rune shines with vague light, melting into your brain and sending chill
+into your bone.<br/>"
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+down to west_catacomb;
+ALWAYS_LIGHT
+end
+
+
+
+                               low_damp_crypt
+
+names {"the lower damp crypt"}
+title "The Lower Crypt"
+descr
+"   You are standing in the middle of a circle painted onto the floor.
+You can see above you a glittering object shaped like a coin. It fills the
+room with a calm, blue light. A lot of old books and scrolls are bundled in
+one corner, almost covering a small oak table. Some stairs lead up."
+extra {"glittering object","object","coin"}
+"The glittering object sends calm, blue light into the room.<br/>"
+extra {"old books and scrolls","books","scrolls","table"}
+"The small table is covered with the books, the covers seem very old and
+the tomes heavy. You decipher a few titles: 'Physiologia Hominidae',
+'Practical Thaumaturgy', 'Necromancy for Fun and Profit'. Most of the
+scrolls are beyond your ability to read so you leave them alone.<br/>"
+extra {"$get","books","scrolls"}
+"Surely this is nothing for someone so well-versed in the Dark Art as you!
+You decide to leave them for people who would need them more."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+up to west_catacomb;
+ALWAYS_LIGHT
+end
+
+
+                               dark_corridor
+
+names {"the dark corridor"}
+title "The Dark Corridor"
+descr
+"   You are in a dark corridor, moss is covering the walls. To the east
+you can see a large oak door, on it is written in large letters: 'Night
+Shade'.
+To the west you can see a large iron door, large letters on this door say:
+'Murdoch - Enter at your own risk'. A staircase leads down to darkness."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT,UNIT_FL_SACRED}
+movement SECT_INSIDE
+west to dark_shaft open {EX_OPEN_CLOSE, EX_CLOSED}
+          keyword {"iron door","door"};
+east to night_shade open {EX_OPEN_CLOSE, EX_CLOSED}
+          keyword {"oak door","door"};
+down to undergr_hall;
+up to catacomb_junc;
+ALWAYS_LIGHT
+end
+
+
+
+                               night_shade
+
+names {"the necromancers' bar"}
+title "The Night Shade"
+descr
+"   You are in a small cosy hall. A lot of tables and chairs are standing
+beside the dark walls. In one end of the hall, there is a counter, a
+small sign stands on it. To the west you see a low oak door."
+extra {"tables and chairs","chairs","tables"}
+"The gothic chairs seem heavy yet quite comfortable. The tables are dark
+and decorated with the now-familiar skull and bone decor, yet the
+universal stains of beer, covering every bar table in the universe, are
+easily visible.<br/>"
+extra {"low counter","counter"}
+"The low counter is covered in a slab of black marble. A variety of
+bottles and barrels can be seen beyond the counter. It makes you feel
+thirsty. A small sign stands on the counter."
+extra {"sign on the counter","sign"}
+"<pre>The sign reads:<br/>
+<br/>
+                LIST to check out our beverages.<br/>
+                BUY &lt;drink&gt; to acquire a refreshment.<br/>
+<br/>
+        Necromancers' General Note: Alcohol preserves your body.<br/>
+<br/>
+</pre>"
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+west to dark_corridor open {EX_OPEN_CLOSE}
+        keyword {"oak door","door"};
+ALWAYS_LIGHT
+end
+
+
+
+                               dark_shaft
+
+names {"the dark shaft"}
+title "The Weapons Masters Quarters"
+descr
+"   You are standing in dark shaft. Two large tapers are standing in one
+end of the shaft. A tall, heavy mirror hangs on one of the dark marble
+walls. In the east wall there is a heavy-looking iron door."
+extra {"tall mirror","mirror"}
+"As you look in the mirror, you are surprised not to see your own
+reflection.
+There is a small golem head at the top of the mirror. An evil grin is on its
+face.<br/>"
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+east to dark_corridor open {EX_OPEN_CLOSE, EX_CLOSED}
+          keyword {"iron door","door"};
+ALWAYS_LIGHT
+end
+
+
+
+                               undergr_hall
+
+names {"the underground hall"}
+title "The Underground Hall"
+descr
+"   Some rusty chains are hanging from the walls. You are standing in an
+underground hall. To the east you can see a melted opening in the wall. A
+large staircase leads up from here."
+extra {"rusty chains","chains"}
+"The rusty chains seem to have served out their purpose, whatever it may
+have been.<br/>"
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+up to dark_corridor;
+east to underground_lab;
+ALWAYS_LIGHT
+end
+
+
+                               underground_lab
+
+names {"the underground laboratory"}
+title "The Underground Laboratory"
+descr
+"   A strange sight meets your eyes here. A dim mist moves around in the
+room by a light breeze. Hanging in a noose from the ceiling is a human form,
+nothing more than bones by now. The air in the room is peculiarly cold and
+silent. Beside the eastern wall you can see a pot over a blue flame, boiling
+with some sort of strange liquid."
+extra {"hanged corpse","corpse","human form","form","human","noose"}
+"The human corpse is mostly bones with a remains of mummified flesh. The
+empty eye sockets stare at you accusingly.<br/>"
+extra {"the boiling pot","pot","flame"}
+"The pot is carved in strange runes. It boils over a peculiar, blue
+flame. As you take a look inside the pot, human eyes stare back at you,
+bobbing up and down in the strange solution.<br/>"
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+west to undergr_hall;
+ALWAYS_LIGHT
+end
+
+
+                               damp_shaft
+
+names {"the damp shaft"}
+title "The Skill Teachers Quarters"
+descr
+"   A small stone ring is in the middle of the room. In the centre of the
+ring there is a pedestal with a glowing orb. The pedestal is engraved with
+figures and marks of magic. Stairs lead down  from here. "
+
+extra {"glowing orb","pedestal","ring","stone ring","orb"}
+"You are standing in the middle of a great storm, lightning is filling the
+sky. Suddenly you can see a great host moving towards a small misty
+island..... The vision fades as suddenly as it came.<br/>"
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+down to catacomb_junc;
+ALWAYS_LIGHT
+end
+
+
+
+
+/* ================================================================== */
+/*                              MOBILES                               */
+/* ================================================================== */
+%mobiles
+
+
+ evil_necro
+names {"evil necromancer", "necromancer","zombie lord","lord","necro"}
+title "the Zombie Lord "
+descr
+"An evil necromancer is looking for corpses."
+extra {}
+"The necromancer is seeking the dead of the world."
+M_HUMAN_WARRIOR_SPECIAL(180, SEX_MALE)
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+exp -100
+dilbegin prg2();
+var
+  pc:   unitptr;
+  item: unitptr;
+  expd : extraptr;
+code
+{
+  :init:
+  heartbeat := PULSE_SEC*4;
+
+  :start:
+  wait (SFB_CMD, activator.type == UNIT_ST_PC);
+  secure(pc,lostpc);
+  pc := activator;
+  expd := "$path" in pc.quests;
+  if (expd == null) goto lostpc;
+  if (GUILD_NECROMANCER in expd.names)
+  {
+  exec("tell "+pc.name+" Hello, Would you like to " +
+       "journey to our guild to increase your powerful skills?  Just nod if"
++
+       "you wish to go.", self);
+  if (command("nod"))
+    {
+    act("The evil necromancer waves his hand, creating a cloud, when the "+
+ "smoke clears you find yourself in a different place!"
+ ,A_ALWAYS,pc,null,null,TO_CHAR);
+    act("The evil necromancer waves his hand, creating a cloud, when the"+
+ "smoke clears, $1n is gone!",A_ALWAYS,pc,null,null,TO_REST);
+    link(pc, findroom("church_ruin@necro_guild"));
+
+      }
+}
+unsecure(pc);
+:lostpc:
+goto start;
+}
+dilend
+
+end
+
+        evil_necro2
+names {"evil necromancer","necromancer","servant of the black ring","servant","necro"}
+title "the Servant of the Black Ring"
+descr
+"An evil necromancer is looking for corpses."
+extra {}
+"The necromancer is seeking the dead of the world."
+M_HUMAN_WARRIOR_SPECIAL(180, SEX_MALE)
+exp -100
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+
+dilbegin prg3();
+var
+  pc:   unitptr;
+  item: unitptr;
+  expd : extraptr;
+code
+{
+  :init:
+  heartbeat := PULSE_SEC*4;
+
+  :start:
+  wait (SFB_CMD, activator.type == UNIT_ST_PC);
+  secure(pc,lostpc);
+  pc := activator;
+  expd := "$path" in pc.quests;
+  if (expd == null) goto lostpc;
+  if (GUILD_NECROMANCER in expd.names)
+  {
+  exec("say Hello, Would you like a lift back to Midgaard? " +
+       "Just nod if you wish to go.", self);
+  if (command("nod"))
+    {
+    act("The evil necromancer waves his hand, creating a cloud, when the"+
+ "smoke clears you find yourself in a different place!"
+ ,A_ALWAYS,pc,null,null,TO_CHAR);
+    act("The evil necromancer waves his hand, creating a cloud, when the"+
+ "smoke clears, $1n is gone!",A_ALWAYS,pc,null,null,TO_REST);
+    link(pc, findroom("market_sq@midgaard"));
+
+      }
+}
+unsecure(pc);
+:lostpc:
+goto start;
+}
+dilend
+
+end
+
+
+                                varac_wolf
+
+names  {"dark grey wolf", "wolf"}
+title "the Varac wolf"
+descr "A great Varac wolf, guardian of the Necromancers, is standing here."
+extra { }
+"The wolf has a mark on his forehead. The mark is the mark of VARAC,
+the legendary race of the Black wolves. With ruby red eyes, the wolf
+looks at you with cold and hatred."
+M_WOLF_GODLY(150,SEX_NEUTRAL)
+special SFUN_GUILD_BASIS GUILD_NECROMANCER
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+/*special SFUN_GUILD_GUARD_WAY
+""+"north"+"#"+GUILD_NECROMANCER+"#tomb#
+#$1n snarls viciously at you as you try to enter..
+#$1n snarls viciously at $3n as $1e tries to enter."
+*/
+
+dilcopy guild_guard@guild_paths(GUILD_NECROMANCER, "north");
+dilcopy teamwork@function ( "wolf");
+dilcopy nokill@necro_guild();
+
+end
+
+
+                                ghost_raven
+names {"ghost raven","raven","ghost"}
+title "Ghost Raven"
+descr "A small ghostly raven is flying in the air before you."
+extra {}
+"A small immortal white glow surrounds the Raven. You can see right
+through it. Eerie."
+M_GHOST_TINY(5,SEX_NEUTRAL)
+alignment -500
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+/*dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE",
+                            {"$1n attacks $3n!", "$1n attacks you!"});   */
+dilbegin ravenprg();
+code
+{
+  heartbeat:=PULSE_SEC*5;
+  :start:
+  wait(SFB_CMD, activator.type==UNIT_ST_PC);
+  exec("say KRAAG KRAAG...", self);
+  exec("follow "+activator.name, self);
+  while(self.master!=null)
+  {
+    pause;
+  }
+  goto start;
+}
+dilend
+
+end
+
+
+
+                                murdock
+names {"murdock","master"}
+title "the weapon master Murdock"
+descr "Murdock nods at you and flashes an evil grin."
+extra {}
+"He looks like a proud and strong man. His raven-black hair have strands
+of gray and his posture is imposing and authoritative."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_HUMAN_WARRIOR_SPECIAL(80, SEX_MALE)
+alignment -900
+
+special SFUN_GUILD_BASIS GUILD_NECROMANCER
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE",
+                            {"$1n attacks $3n!", "$1n attacks you!"});
+/*
+special SFUN_MEMBERS_ONLY GUILD_NECROMANCER+"#$1n says, 'You are not
+initiated, Sinister One.'"
+*/
+dilcopy teacher_prac@guild_paths( GUILD_NECROMANCER );
+
+#define _WEAPON
+#include "guilddef.h"
+#undef _WEAPON
+
+dilcopy nokill@necro_guild();
+
+end
+
+
+                                wicca
+names  {"wicca","guild master","master","tainted one","tainted"}
+title  "Wicca the Tainted One"
+descr
+"Wicca the Tainted One, the Guild master of the Necromancers, is here."
+extra {}
+"A beautiful half-elven woman with long black hair is sitting at the end of
+the table. Her face is the most enchanting and exotic face you have ever
+seen.
+As her enchanting eyes meet yours, a cold shiver runs through you. She is
+wearing a beautiful long dark blue kilt and from her belt hangs a small
+sword. Her naked top is painted with exotic and strange marks."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_ELF_CLERIC_SWORD(90, SEX_FEMALE,"energy drain","heal")
+alignment -1000
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_NECROMANCER
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE",
+                            {"$1n attacks $3n!", "$1n attacks you!"});
+/*
+special SFUN_GUILD_MASTER
+"Guild               = ~"+GUILD_NECROMANCER+"~
+Guild Enter Quest    = ~~
+Guild Enter Cost     = "+(3*GOLD_MULT)+"<br/>
+Guild Leave Quest    = ~~
+Guild Leave Cost     = "+(3*PLATINUM_MULT)+"<br/>
+Guild Exclude Quest  = ~~"
+*/
+
+dilcopy guild_titles@guild_paths(GUILD_NECROMANCER, {"Novice of The Grey
+Ring",
+"Novice of The Grey Ring", "Servant of The Grey Ring",
+"Servant of The Grey Ring", "Sentry of The Grey Ring",
+"Sentry of The Grey Ring", "Holder of The Grey Ring",
+"Holder of The Grey Ring", "Lord of The Grey Ring",
+"Lady of The Grey Ring", "Master of The Grey Ring",
+"Master of The Grey Ring", "Novice of The Black Ring",
+"Novice of The Black Ring", "Servant of The Black Ring",
+"Servant of The Black Ring", "Sentry of The Black Ring",
+"Sentry of The Black Ring", "Holder of The Black Ring",
+"Holder of The Black Ring", "Lord of The Black Ring",
+"Lady of The Black Ring", "Master of Black Ring",
+"Master of Black Ring", "Grand Master of The Rings",
+"Grand Master of The Rings", "Invoker of Dark",
+"Invoker of Dark", "Animist", "Animist", "Spirit Invoker",
+"Spirit Invoker", "Soulforge", "Soulforge", "Necromancer", "Necromancer",
+"Archnecromancer", "Archnecromancer"});
+
+dilcopy nokill@necro_guild();
+
+dilbegin necro_give();
+var
+        pc : unitptr;
+        item : unitptr;
+  expd : extraptr;
+code
+{
+heartbeat:= PULSE_SEC * 3;
+:start:
+
+wait (SFB_DONE, command ("worship")and(self ==target));
+pc:= activator;
+secure(pc, lost);
+        expd := "$path" in pc.quests;
+        if (expd == null) goto lost;
+        if ((GUILD_NECROMANCER in expd.names)  and (pc.alignment < -349))
+{
+pause;
+exec("emote raises her head and stares at you intently.", self);
+pause;
+exec("say "+pc.name+".", self);
+pause;
+exec("say I have been expecting you.", self);
+pause;
+exec("say You crave the power.", self);
+pause;
+exec("say That is why you joined our Guild, "+pc.name+".", self);
+pause;
+exec("say I have something for you.", self);
+        item := load("necro_hand1@necro_guild");
+        item.height := pc.height;
+        link(item, self);
+exec("give hand "+pc.name, self);
+exec ("emote chuckles at your obvious confusion.", self);
+pause;
+exec ("say This is an item of true necromancy... wear it at your
+leisure.",self);
+        expd := "$path" in pc.quests;
+        if (expd == null) goto start;
+        if ((GUILD_NECROMANCER in expd.names) and (pc.level > 19))
+{
+pause;
+exec("say Hmm... undoubtedly, you'd want more...",self);
+pause;
+exec("cackle ",self);
+pause;
+        item := load("necro_scythe1@necro_guild");
+        item.height := pc.height;
+        link(item, self);
+exec("give scythe "+pc.name, self);
+exec("say This is a weapon of your Guild.", self);
+pause;
+exec("say Use it... enjoy it...", self);
+pause;
+exec("wave "+pc.name, self);
+unsecure(pc);
+goto start;
+}
+unsecure(pc);
+goto start;
+}
+
+        expd := "$path" in pc.quests;
+        if (expd == null) goto start;
+else if ((GUILD_NECROMANCER in expd.names) and (pc.alignment > -350))
+{
+exec ("frown ",self);
+pause;
+exec ("say You need to devote yourself more to your studies...", self);
+pause;
+exec ("say Although a necromancer, our gifts would burn your hands.", self);
+exec ("cackle ", self);
+pause;
+exec ("say Leave now, come when you can show greater dedication!", self);
+unsecure (pc);
+goto start;
+}
+else
+{
+block;
+unsecure(pc);
+exec ("say Begone, you disgusting beggar...", self);
+}
+
+unsecure(pc);
+goto start;
+
+:lost:
+
+unsecure(pc);
+exec("emote hisses angrily 'Leaving without even hearing me out!'", self);
+pause;
+exec("cackle ",self);
+exec("say This one will get far...",self);
+goto start;
+
+}
+dilend
+
+
+end
+
+                                murim
+names {"murim","dwarf","bartender"}
+title "Murim the bartender"
+descr
+"A small dwarf is standing behind the desk and washing a small glass cup."
+extra {}
+"   He looks as if he has slain 4 dragons just moments ago, that's how
+proud he seems. Making a deep and concentrated effort to clean his glass
+cup thoroughly, he seems to notice nothing around him. He hums a soft
+battle march. His clothing appears to be completely ordinary."
+M_DWARF_WARRIOR_CLUB(50, SEX_MALE)
+alignment -750
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE",
+                            {"$1n attacks $3n!", "$1n attacks you!"});
+dilcopy shopkeeper@function(
+{
+"firebreather@midgaard 1 5",
+"speciality@midgaard 1 5"
+},{
+"   $1n says, 'Buy my drinks or sod off.' ",
+"   $1n says, 'I don't buy drinks you idiot!' ",
+"   $1n says, 'I DONT BUY DRINKS YOU MORON!' ",
+"   $1n says, 'My drinks are too expensive for peasants like you!' ",
+"   $1n says, 'That's %s for the $2N.' ",
+"   $1n says, 'I don't buy drinks' ",
+"$1n says, 'I don't seem to have that many in my stock'",
+"$1n says, 'I'm on my break, GET LOST!'",
+"$1n says, 'I have no use for a $2n'",
+"$1n says, 'Sorry, I can't afford it'"},
+{"4","12","13","23"},
+"",
+110,60,286720,"","");
+
+
+dilcopy nokill@necro_guild();
+
+
+end
+
+                                  krain
+names {"krain","woman","spellsinger","singer"}
+title "Krain The Spellsinger"
+descr "Krain the Spellsinger is standing before you."
+extra {}
+"Krain the elven Spellsinger is wearing a black robe with silver runes at
+the collar. Her long black hair is put up in a knot. Her eyes are black
+like ebony and her face has a calm grin. You have never seen such a
+beautiful and irresistible creature. Her dark eyes looks at you wisely
+and with charm."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_ELF_CLERIC_CLUB(70, SEX_FEMALE, "plague", "plague")
+alignment -1000
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_NECROMANCER
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE",
+                            {"$1n attacks $3n!", "$1n attacks you!"});
+/*
+special SFUN_MEMBERS_ONLY GUILD_NECROMANCER+"#$1n says, 'You are not
+initiated, Foul One!'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_NECROMANCER );
+
+#define _SPELL
+#include "guilddef.h"
+#undef _SPELL
+
+dilcopy nokill@necro_guild();
+
+
+end
+
+                                kadiya
+
+names {"Kadiya","tearbringer"}
+title "Kadiya the Tearbringer"
+descr "Kadiya the Tearbringer is standing here"
+extra {}
+"A dark-hooded person is standing before you. Under the hood
+you can see to red eyes, you shiver as she looks at you. It is
+like she is seeing right through you...."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_ELF_MAGE_GAS(80, SEX_FEMALE, "stinking cloud")
+alignment -1000
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_NECROMANCER
+
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE",
+                            {"$1n attacks $3n!", "$1n attacks you!"});
+/*
+special SFUN_MEMBERS_ONLY GUILD_NECROMANCER+"#$1n says, 'You are not
+initiated, sinister one'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_NECROMANCER );
+
+#define _ABILITY
+#include "guilddef.h"
+#undef _ABILITY
+
+dilcopy nokill@necro_guild();
+
+
+end
+
+
+                                meclor
+names {"Meclor","master"}
+title "Meclor the Master of the Dark Art"
+descr "Meclor the Master of Dark Art is standing in front of you."
+extra {}
+"A pale light is surrounding him. His white eyes meet yours, he grins with
+an
+evil grin. You notice suddenly that he has no shadow..."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_ELF_MAGE_GAS(70, SEX_MALE, "stinking cloud")
+alignment -1000
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_NECROMANCER
+
+dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*10, 0, "OPPOSITE",
+                            {"$1n attacks $3n!", "$1n attacks you!"});
+/*
+special SFUN_MEMBERS_ONLY GUILD_NECROMANCER+"#$1n says, 'You are not
+initiated, Sinister One.'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_NECROMANCER );
+
+
+#define _SKILL
+#include "guilddef.h"
+#undef _SKILL
+
+dilcopy nokill@necro_guild();
+
+
+end
+
+/*                      GOLEM DIL STUFF                               */
+/* ================================================================== */
+
+
+                golem
+names {"flesh golem","golem"}
+title "a large flesh golem"
+descr "A large flesh golem stands here."
+extra {}
+"This huge abdomination stands 6' tall, and is the sewn together
+from the remains of many once living creatures. It has been forced to
+walk the earth again by some powerful necromancer."
+level 20
+M_GOLEM_FLESH(20,SEX_NEUTRAL)
+position POSITION_STANDING
+alignment 0
+capacity 1000
+romflags {CHAR_DETECT_INVISIBLE, CHAR_PROTECTED}
+flags {UNIT_FL_NO_TELEPORT}
+
+
+dilbegin golem_unbonded();
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+  pcowner: unitptr;
+  str : string;
+expd: extraptr;
+
+code
+{
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+   priority;
+
+   heartbeat := PULSE_SEC*5;
+
+   while (self.outside.type == UNIT_ST_NPC)
+     pause;
+
+
+   heartbeat := PULSE_SEC*8;
+
+   :unbonded:
+   exec("emote sits motionless, waiting for a powerful necromancer to
+control"+
+        " it.", self);
+
+   wait (SFB_CMD, (activator.type == UNIT_ST_PC) and command("whisper") and
+         ("serve" in argument));
+
+   pcowner := activator;
+        expd := "$path" in pcowner.quests;
+        if (expd == null) goto rouge;
+        if (not(GUILD_NECROMANCER in expd.names))
+   {
+      exec ("emote ignore's "+pcowner.name+"'s attempts at control.", self);
+      pause;
+      goto rouge;
+   }
+
+   secure(pcowner, rouge);
+
+
+   if (not (pcowner.level > 19) )
+   {
+      exec ("say You lack enough power to control me.", self);
+      pause;
+      goto rouge;
+   }
+
+
+   exec ("say Say what you want to call me.", self);
+   wait (SFB_CMD, (command("say") and (activator #= pcowner)));
+   addstring(self.names, argument);
+
+   str := self.name;
+
+   substring(self.names, str);
+   addstring(self.names, str);
+
+   exec ("emote is surrounded by a supernatural glow... it has bonded to " +
+         pcowner.name+"!", self);
+
+   addextra(self.extra, {"$owner"}, pcowner.name);
+
+
+
+   :rouge:
+
+   heartbeat := PULSE_SEC*8;
+   tf:= walk_room@function ("turning_point@midgaard",4);
+
+   wait (SFB_CMD, (activator.type == UNIT_ST_PC));
+   pcowner := activator;
+   secure (pcowner, rouge);
+   exec ("follow "+pcowner.name, self);
+   pause;
+   exec ("kill "+pcowner.name, self);
+   quit;
+}
+dilend
+
+dilbegin golem_brain();
+
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+      u:  unitptr;
+   junk:  integer;
+   expd:  extraptr;
+pcowner:  unitptr;
+    exd:  extraptr;
+ loader:  unitptr;
+ pcname:  string;
+  stat1:  string;
+  stat2:  string;
+  stat3:  string;
+
+code
+{
+   exd    := "$owner" in self.extra;
+   pcname := exd.descr;
+
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+   priority;
+
+   heartbeat := PULSE_SEC*50;
+
+   :bond:
+   if ((self.outside.type == UNIT_ST_PC) and (pcname == self.outside.name))
+   {
+      pcowner := self.outside;
+      secure(pcowner, lostowner);
+
+      exec ("follow "+pcowner.name, self);
+      exec("emote stands ready to do as its master wishes.", self);
+      nopriority;
+      goto brains;
+   }
+   pause;
+   goto bond;
+
+   :brains:
+
+
+   wait (SFB_CMD, (command("status") or command("tell")) and
+         (activator #= pcowner) and
+         (findunit(activator, argument, FIND_UNIT_SURRO |
+                   FIND_UNIT_INVEN, null) == self));
+        expd := "$path" in activator.quests;
+        if (expd == null) goto lostbond;
+        if (not(GUILD_NECROMANCER in expd.names))
+     goto lostbond;
+
+
+
+   if (command("tell"))
+   {
+      stat1 := getword(argument);
+      if (stat1 == "shout")
+      {
+         exec ("tell "+pcowner.name+" Shout?!? And give away my "+
+               "presence on the material plane? That's not in my "+
+               "contract.", self);
+         block;
+      }
+
+      goto brains;
+   }
+
+   block;
+
+   act ("**The mental image of your golem appears to you**", A_SOMEONE,
+        self, null, pcowner, TO_VICT);
+
+   if (self.hp > ((self.max_hp / 4) * 3))
+     stat1 := "healthy";
+   if ((self.hp < ((self.max_hp / 4) *3)) and (self.hp > (self.max_hp/2)))
+     stat1 := "battered";
+   if ((self.hp < (self.max_hp/2)) and (self.hp > (self.max_hp/4)))
+     stat1 := "injured";
+   if (self.hp < (self.max_hp/4))
+     stat1 := "devestated";
+
+   if (self.endurance > 140)
+     stat3 := "rested";
+   if ((self.endurance < 140) and (self.endurance > 80))
+     stat3 := "winded";
+   if ((self.endurance < 80) and (self.endurance > 40))
+     stat3 := "fatigued";
+   if (self.endurance < 40)
+     stat3 := "exhausted";
+
+
+   act ("You sense that your familiar is "+stat1+
+        ", "+stat3+".", A_SOMEONE, self, null, pcowner, TO_VICT);
+   goto brains;
+
+
+   :lostbond:
+
+   exec ("follow "+self.name, self);
+   priority;
+   exec ("say "+pcowner.name+", you no longer control me... by straying
+from "+
+         "the paths of magic, you have lost your control over me! ", self);
+   pause;
+
+   junk := pcowner.max_hp;
+   pcowner.hp := (pcowner.hp - (3*(junk/4)));
+   pcowner.mana := 0;
+   position_update (pcowner);
+   exec ("kill "+pcowner.name, self);
+   quit;
+
+
+   :lostowner:
+   heartbeat := PULSE_SEC * 5;
+   exec("follow", self);
+   pause;
+
+   :lostloop:
+   pause;
+   stat1 := pcname;
+
+   u:= findunit(self, stat1, FIND_UNIT_WORLD, null);
+   tf:= walk_room@function (u.nameidx+"@"+u.zoneidx,4);
+   exec("follow "+pcname, self);
+   if (self.master.name == pcname)
+   {
+      pcowner := self.master;
+      secure(pcowner, lostowner);
+      goto brains;
+   }
+   goto lostloop;
+}
+dilend
+
+dilcopy catchit@g_q();
+
+end
+
+
+
+
+                          dalmar
+
+names {"dalmar","necromancer"}
+title "Dalmar the Archnecromancer"
+descr "Dalmar the Archnecromancer is here, preparing golem bodies."
+extra {}
+"This man stands preparing various body parts for creating golems."
+M_HUMAN_CLERIC_SWORD(30,SEX_MALE,"curse","")
+alignment -1000
+position POSITION_STANDING
+default POSITION_STANDING
+romflags {CHAR_DETECT_INVISIBLE,CHAR_PROTECTED}
+flags {UNIT_FL_NO_TELEPORT}
+
+
+dilbegin golem_load();
+
+var
+  pc:        unitptr;
+  familiar:  unitptr;
+expd: extraptr;
+  exdp:      extraptr;
+  i:         integer;
+  in_name:   string;
+  in_title:  string;
+  in_descr:  string;
+  item:      unitptr;
+  junk:      integer;
+
+code
+{
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :start:
+   heartbeat := PULSE_SEC*5;
+   wait (SFB_CMD, (activator.type == UNIT_ST_PC) and
+         ((GOLEM_COMPLETE in activator.quests) or
+         ((GOLEM_BONDED in activator.quests) and not
+         ("familiar" in activator.inside.name))));
+
+        expd := "$path" in pc.quests;
+        if (expd == null) goto waitawhile;
+        if ((GUILD_NECROMANCER in expd.names))
+     goto waitawhile;
+
+   :setup:
+
+   pc := activator;
+   secure (pc, hagsecure);
+   priority;
+   exec ("say So, "+pc.name+", You wish too create a golem? This  "+
+         "can take a little time and is also a little dangerous.", self);
+   pause;
+   exec ("say If you are sure you want to create you a golem now, "+
+         "nod your head.", self);
+
+   i := 0;
+   while (i < 5)
+   {
+      wait (SFB_CMD, activator #= pc);
+
+      if (command ("nod"))
+        goto ritual;
+      else if (command ("say"))
+      {
+         pause;
+         exec ("say Just nod if you want me to, "+pc.name+".", self);
+      }
+      else if (command ("shake"))
+        goto no_ritual;
+
+
+      i := i + 1;
+   }
+
+   :no_ritual:
+   exec ("say Then come back later when you have more nerve...", self);
+   nopriority;
+   unsecure (pc);
+   goto waitawhile;
+
+   :ritual:
+
+   heartbeat := PULSE_SEC*6;
+
+   exec ("say Then let us begin!", self);
+   pause;
+
+   act("Dalmar pulls a lever and a cage containing a sewn body rises out of
+"+
+       "the ground!", A_SOMEONE, self, null, null, TO_ALL);
+   pause;
+
+   act ("The cage rises up too a hole in the cealing, and large metal bars
+"+
+        "rise out of the roof top into the sky.", A_SOMEONE, self,
+        null, pc, TO_ALL);
+   pause;
+   act("Dalmar begins casting a complicated spell, as he finishes, a dark "+
+        "cloud appears above the cage.", A_SOMEONE, self, null, pc, TO_ALL);
+   pause;
+   act("Balls of lighting streak out of the cloud, striking the tall bars!",
+        A_SOMEONE, self, null, null, TO_ALL);
+   pause;
+   act("The body on the cage is encased in blinding light!", A_SOMEONE,
+self,
+        null, pc, TO_ALL);
+   pause;
+   act("The cage slowly lowers too the ground, opens, and the creature
+within"+
+       " stands up on its own.", A_SOMEONE, self, null, pc, TO_ALL);
+   pause;
+
+
+   familiar := load("golem@necro_guild");
+   secure(familiar, hagsecure);
+   exec("say here is a manual of golems, which will explain much about your
+"+
+        "new golem.", self);
+   pause;
+   exec("say any bugs with these guys, report them too Elminster, the golem
+"+
+        "builder, dont come crying too me about it!", self);
+
+   item := load ("golem_manual@necro_guild");
+   link (item, pc);
+
+   subextra (pc.quests, GOLEM_COMPLETE);
+   if (not (GOLEM_BONDED in pc.quests))
+     addextra (pc.quests, {GOLEM_BONDED}, "");
+   pc.capacity := 100;
+
+   link (familiar, pc.outside);
+   unsecure (familiar);
+   pause;
+
+   exec ("say Simply whisper to your golem 'Serve me' and it will bond to
+you.", self);
+   pause;
+   exec ("say When the golem asks you what you want to call it, give it" +
+         " the name you would use to command it.", self);
+   pause;
+   exec ("say I hope this golem serves you well, "+pc.name+".", self);
+   nopriority;
+   unsecure (pc);
+   goto waitawhile;
+
+   :hagsecure:
+   exec ("say fool probably could command it anyhow!", self);
+   goto waitawhile;
+
+   :waitawhile:
+   heartbeat := PULSE_SEC*60;
+   pause;
+   goto start;
+}
+dilend
+
+
+
+dilbegin get_golem();
+var
+  pc:     unitptr;
+  i:      integer;
+expd: extraptr;
+
+code
+{
+
+   :init:
+   heartbeat := PULSE_SEC*5;
+   interrupt (SFB_COM, (self.position == POSITION_FIGHTING), ohno_combat);
+
+   :start:
+   wait (SFB_CMD, (activator.type == UNIT_ST_PC));
+
+
+   pc := activator;
+   secure (pc, lostpc);
+
+   if (not ((GOLEM_ONGOING in pc.quests)
+            or (GOLEM_COMPLETE in pc.quests) or (GOLEM_BONDED in
+pc.quests)))
+   {
+      pause;
+        expd := "$path" in pc.quests;
+        if (expd == null) goto waitawhile;
+        if (not(GUILD_NECROMANCER in expd.names))
+
+      {
+         exec ("say I will have nothing to do with a mundane such as you,
+"+pc.name+"!", self);
+         unsecure (pc);
+         goto waitawhile;
+      }
+
+      if ( not(pc.level >= 20) )
+      {
+        exec("say you are but a weak necromancer, you cannot create a golem
+"+
+        "yet!", self);
+        pause;
+         exec ("say Come visit me again once you reach level 20. Perhaps I
+can
+assist you.", self);
+         unsecure (pc);
+         goto waitawhile;
+      }
+
+      priority;
+      exec("say so you wish to create a golem, do you?", self);
+      pause;
+      exec("say very well, but first i must have the following components:",
+           self);
+      pause;
+      exec("say i need the adamantium of a darkelf's armour.", self);
+      pause;
+      exec("say a darkelf bracer too be precise.",self);
+      pause;
+      exec("say I also need the nectar of a certain flower that grows only
+"+
+           "in the artic", self);
+      pause;
+      exec("say finally, i need valuable amethyst.", self);
+      pause;
+      exec("say i must have these items. Do you still wish too create a "+
+           "golem?", self);
+      i := 0;
+      while (i < 5)
+      {
+         wait (SFB_CMD, (activator #= pc));
+
+         if (command ("nod"))
+           goto quest_accepted;
+         else if (command ("say"))
+         {
+            pause;
+            exec ("say Just nod if you want to, "+pc.name+".", self);
+         }
+         else if (command ("shake"))
+           goto noquest;
+
+         i := i + 1;
+      }
+
+      :noquest:
+      pause;
+      exec ("say Fine... you'll be back, I'm sure of that...", self);
+      exec ("cackle", self);
+      unsecure (pc);
+      nopriority;
+      goto waitawhile;
+
+      :quest_accepted:
+      pause;
+      exec ("cackle", self);
+      pause;
+      exec("say that is what i figured, find me those items and return!",
+           self);
+      addextra (pc.quests, {GOLEM_ONGOING}, "");
+      nopriority;
+      unsecure (pc);
+      goto start;
+   }
+   :waitawhile:
+   heartbeat := PULSE_SEC*60;
+   pause;
+   goto init;
+
+   :lostpc:
+   exec ("say The little snot... doesn't know it's manners!", self);
+   goto start;
+
+   :ohno_combat:
+   heartbeat := PULSE_SEC*5;
+   exec ("say You nasty, rude little brat!", self);
+   exec ("cast curse "+pc.name, self);
+   pause;
+   interrupt (SFB_COM, (self.position == POSITION_FIGHTING), ohno_combat);
+   goto start;
+}
+dilend
+
+
+
+
+dilbegin got_stuff();
+
+var
+ pc:      unitptr;
+ item:    unitptr;
+ exdp:    extraptr;
+
+code
+{
+   heartbeat := PULSE_SEC*5;
+
+   :start:
+   wait (SFB_CMD, ((command ("give")) and (activator.type == UNIT_ST_PC)
+and (self.name in argument)));
+
+   :give:
+   if (not (GOLEM_ONGOING in activator.quests))
+   {
+      exec("say whats this for?", self);
+      pause;
+      goto start;
+   }
+
+   pc := activator;
+   item := self.inside;
+   secure (pc, hagsecure);
+   secure (item, hagsecure);
+
+   wait (SFB_CMD | SFB_TICK, TRUE);
+
+   if (not(item #= self.inside))
+   {
+      unsecure (item);
+      exdp := GOLEM_ONGOING in pc.quests;
+
+      if ("amethyst" in self.inside.name)
+      {
+         addstring (exdp.names, "amethyst");
+         exec("say an amethyst! so you listened too my instructions!",
+self);
+         destroy (self.inside);
+      }
+
+      else if ("darkelf bracers" in self.inside.name)
+      {
+         addstring (exdp.names, "bracers");
+         exec("say ahhh adamantium bracers! This will strengthen the
+golem!",
+              self);
+         destroy (self.inside);
+      }
+      else if ("yellow flower" in self.inside.name)
+      {
+         addstring (exdp.names, "flower");
+         exec ("say nice, the nector of this flower is a powerfull poison!",
+         self);
+         destroy (self.inside);
+      }
+      else
+      {
+         exec ("say This is not ingrediant for the spell! Why do you waste
+my
+time?", self);
+         destroy (self.inside);
+      }
+   }
+   if (("amethyst" in exdp.names) and ("bracers" in exdp.names) and
+("flower" in exdp.names))
+   {
+      pause;
+      subextra (pc.quests, GOLEM_ONGOING);
+      addextra (pc.quests, {GOLEM_COMPLETE}, "");
+      exec ("say Ahhh. That is all the ingrediants! We may now create your
+"+
+            "golem "+pc.name+"!", self);
+      pause;
+   }
+   unsecure (pc);
+
+   if (command ("give") and (activator.type == UNIT_ST_PC))
+     goto give;
+   else
+     goto start;
+
+   :hagsecure:
+   exec ("say I just hate little mages turning their backs on me!", self);
+   goto start;
+}
+dilend
+
+
+
+
+end
+
+
+/* ================================================================== */
+/*                              OBJECTS                               */
+/* ================================================================== */
+%objects
+
+/* ------------------ Necromancer Guild Items ----------------------- */
+
+        necro_scythe1
+names {"scythe of bone","scythe","bone"}
+title "Scythe of Bone"
+descr "A wicked scythe crafted completely of human bone lies here."
+extra {}
+"A wicked yellowish scythe of human bone. Bound into a single mass by
+arcane sorceries, the weapon is completely organic. The handle is made
+from human femurs, molded together by magic and removed from living and
+concious human beings. The blade itself is a masterpiece of magickal
+crafting, jagged and edged with the teeth of innocents.<br/>
+The twisted phrase <div class='cpw'>'Cthulhu fhtagn!'</div><div class='cw'> snakes itselfself around the
+bone, crossed by the words </div><div class='cpy'>'Yog Sothoth!'</div><div class='cw'>.<br/></div>"
+extra {"$identify"}
+"The Scythe of Bone can only be wielded by the foulest of
+Necromancers. In their hands it is capable of affecting enemies of the
+user with fear, madness, confusion or curse. This is achieved by uttering
+the phrase 'Cthulhu fhtagn!', which calls upon the power of the
+sleeping Cthulhu himself. Beware, as Cthulhu has no mercy for weak users!
+The Scythe can be recharged by uttering the name of 'Yog Sothoth!'.
+Beware, as this task is extremely taxing!<br/>
+The Scythe will also increase your Brain and your Scythe and Control Undead
+Skills.<br/>"
+extra {"$improved identify"}
+"The bonus is +2 Bra, +3% Scythe and +2% Control Undead.<br/>
+The Scythe of Bone is of craftmanship 4 and magic bonus 8.<br/>"
+extra {"$no_engrave"}
+""
+extra {"$wear_s"}
+"You wield your $2n and let the power surge through your body!"
+extra {"$wear_o"}
+"$1n grips his $2n tightly, power crackles around $1s hands!"
+extra {"$rem_s"}
+"You let go of your $2n, the power fades away and dies out."
+extra {"$rem_o"}
+"$1n lets go of $1s $2n, you see the power of it fade away and die out."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
+MATERIAL_ORGANIC("This item is made of bone.")
+WEAPON_DEF(WPN_SCYTHE,4,8)
+BRA_TRANSFER(+2)
+WEAPON_TRANSFER(WPN_SCYTHE,+3)
+SPELL_TRANSFER(SPL_CONTROL_UNDEAD,+2)
+dilcopy guild_restrict@function ({GUILD_NECROMANCER},0,25,"");
+dilcopy level_restrict@function(20,0,25,"");
+dilcopy abi_restrict@function (ABIL_BRA,25,0,0,"");
+dilcopy ali_restrict@function (-350,-1000,0,25,"");
+dilcopy mvlev_restrict@function (100,0,25,"");
+weight 7
+rent 138 IRON_PIECE
+spell 50
+
+dilbegin recall chargescythe();
+var
+        n : integer;
+code
+{
+:start:
+heartbeat:= PULSE_SEC*2;
+wait (SFB_CMD,(command ("say"))and("Yog Sothoth" in
+argument)and(self.equip==WEAR_WIELD));
+block;
+act ("You murmur the name of Yog Sothoth, calling its power...",
+A_ALWAYS,self.outside,self,null,TO_CHAR);
+act ("$1n murmurs the name of Yog Sothoth, craving its power...",
+A_ALWAYS,self.outside,self,null,TO_REST);
+pause;
+act ("Lightning crackles along the bone of your Scythe...",
+A_ALWAYS,self.outside,self,null,TO_CHAR);
+act ("Lightning crackles along $1n's $2n!",
+A_ALWAYS,self.outside,self,null,TO_REST);
+self.outside.mana:= 0;
+pause;
+act ("An eerie howl fills the air, tearing your mind apart!",
+A_ALWAYS,self.outside,self,null,TO_CHAR);
+act ("An eerie howl fills the air, $1e sinks to $1s knees!",
+A_ALWAYS,self.outside,self,null,TO_REST);
+self.outside.hp:= 10;
+pause;
+act ("A single drop of blood slides down the edge of your $2n... the
+ritual is complete!", A_ALWAYS,self.outside,self,null,TO_CHAR);
+act ("A single drop of blood slides down the edge of $1n's $2n...",
+A_ALWAYS,self.outside,self,null,TO_REST);
+if (self.outside.abilities[ABIL_BRA] < 35)
+{
+n:=cast_spell(SPL_DISEASE_1,self.outside,self,self.outside,"");
+}
+sendto ("add charge",self);
+goto start;
+}
+dilend
+
+dilbegin recall aware bonescythe();
+var
+        i : integer;
+        enemy :unitptr;
+        n : integer;
+        charge:integer;
+        pwr : integer;
+        flux : integer;
+code
+{
+pwr:=10;
+:init:
+        heartbeat := PULSE_SEC*1;
+charge:=interrupt (SFB_MSG,((self==activator) and
+        (argument=="add charge")), charge);
+:start:
+  wait (SFB_CMD,(command ("say")) and
+  ("Cthulhu fhtagn!" in argument)and(self.equip==WEAR_WIELD));
+        block;
+        enemy:=self.outside.fighting;
+act ("You shriek 'Cthulhu fhtagn!'",
+A_SOMEONE,self.outside,enemy,self,TO_CHAR);
+act ("$1n shrieks 'Cthulhu fhtagn!'",
+A_SOMEONE,self.outside,enemy,self,TO_REST);
+        if (enemy==null) goto nodude;
+        secure (enemy,start);
+        if (pwr<=0) goto fail;
+        pwr:=pwr-1;
+        i := rnd (10,100);
+        flux := rnd (1,100);
+if (i < self.outside.abilities[ABIL_BRA])
+{
+if (flux < 25)
+{
+   act("Your $2n howls ghastly in response to your prayer!",
+   A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+   act("$3n screams in terror and pain!",
+   A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+   act("$1N's $2n emits a ghastly howl in response to $1s call!",
+   A_ALWAYS,self.outside,self,enemy,TO_REST);
+   act("$3n screams in terror and pain!",
+   A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
+   act("You scream as faces of people long dead surround you and rip at
+your flesh!",A_ALWAYS,self.outside,enemy,self,TO_VICT);
+n:=
+cast_spell(SPL_FEAR,self.outside,self,self.outside.fighting,"");
+pause;
+}
+if (flux < 50)
+{
+   act("Your $3n howls ghastly in response to your prayer!",
+   A_ALWAYS,self.outside,enemy,self,TO_CHAR);
+   act("$2n's eyes bulge, $2e looks around wildly!",
+   A_ALWAYS,self.outside,enemy,self,TO_CHAR);
+   act("$1N's $3N emits a ghastly howl in response to $1s call!",
+   A_ALWAYS,self.outside,enemy,self,TO_REST);
+   act("$2n's eyes bulge, $2e looks around wildly!",
+   A_ALWAYS,self.outside,enemy,self,TO_NOTVICT);
+   act("Thoursands of hands rip at your flesh from every direction!"
+,A_ALWAYS,self.outside,enemy,self,TO_VICT);
+n:=
+cast_spell(SPL_CONFUSION,self.outside,self,self.outside.fighting,"");
+pause;
+}
+if (flux < 50)
+{
+   act("Your $3n howls ghastly in response to your prayer!",
+   A_ALWAYS,self.outside,enemy,self,TO_CHAR);
+   act("$2n grasps $2s head and screams wildly!",
+   A_ALWAYS,self.outside,enemy,self,TO_CHAR);
+   act("$1N's $3n emits a ghastly howl in response to $1s call!",
+   A_ALWAYS,self.outside,enemy,self,TO_REST);
+   act("$2n grasps $2s head and screams wildly!",
+   A_ALWAYS,self.outside,enemy,self,TO_NOTVICT);
+   act("Your blood begins to boil in your veins, your flesh to decay!"
+,A_ALWAYS,self.outside,enemy,self,TO_VICT);
+n:=
+cast_spell(SPL_CURSE,self.outside,self,self.outside.fighting,"");
+pause;
+}
+else
+{
+   act("Your $3n howls ghastly in response to your prayer!",
+   A_ALWAYS,self.outside,enemy,self,TO_CHAR);
+   act("$2n's eyes open wide, staring at something unseen beyond you!",
+   A_ALWAYS,self.outside,enemy,self,TO_CHAR);
+   act("$1N's $3N emits a ghastly howl in response to $1s call!",
+   A_ALWAYS,self.outside,enemy,self,TO_REST);
+   act("$2n's eyes open wide, staring at something unseen beyond $1n!",
+   A_ALWAYS,self.outside,enemy,self,TO_NOTVICT);
+   act("Behind $1n, the ghastly face of Cthulhu himself stares at you!"
+,A_ALWAYS,self.outside,enemy,self,TO_VICT);
+n:=
+cast_spell(SPL_DISEASE_1,self.outside,self,self.outside.fighting,"");
+pause;
+}
+}
+else
+{
+act ("Cthulhu is revolted by your weak will, his scream reverberates in
+your mind!", A_SOMEONE,self.outside,enemy,self,TO_CHAR);
+act ("$1n screams in terror as Cthulhu's madness cloaks his mind!"
+, A_SOMEONE,self.outside,enemy,self,TO_REST);
+n:=cast_spell(SPL_DISEASE_1,self.outside,self,self.outside,"");
+}
+goto start;
+
+        :fail:
+block;
+act ("You scream out your call, but the Scythe seems to be drained
+of"+ " power!", A_SOMEONE,self.outside,enemy,self,TO_CHAR);
+act ("$1n screams 'Cthulhu fhtagn!', but $1s Scythe doesn't respond!"
+, A_SOMEONE,self.outside,enemy,self,TO_REST);
+                goto start;
+ :charge:
+clear (charge);
+if (pwr<5)
+  pwr:=pwr+10;
+  goto init;
+  goto start;
+
+:nodude:
+block;
+pwr:=pwr-1;
+if (self.outside.abilities[ABIL_BRA] < 35)
+{
+act ("Cthulhu is revolted by your weak will, his scream reverberates in "+
+"your mind!", A_SOMEONE,self.outside,enemy,self,TO_CHAR);
+act ("$1n screams in terror as Cthulhu's madness cloaks his mind!"+
+" words!", A_SOMEONE,self.outside,enemy,self,TO_REST);
+n:=cast_spell(SPL_DISEASE_1,self.outside,self,self.outside,"");
+goto start;
+}
+else
+act ("Your Scythe emits a ghastly howl in response to your call!",
+A_ALWAYS,self.outside,null,null,TO_CHAR);
+act ("$1n's Scythe emits a ghastly howl that chills you to your "+
+"bones!", A_SOMEONE,self.outside,null,null,TO_REST);
+goto start;
+}
+dilend
+
+dilbegin scytheslay();
+code
+{
+        heartbeat := PULSE_SEC*2;
+        :start:
+        wait(SFB_COM, command(CMD_AUTO_COMBAT) and
+                (self.equip == WEAR_WIELD) and
+                (self.outside.fighting.hp < 10));
+act("A gleeful howl of thoursand ghostly faces erupts in the air...",
+A_ALWAYS, self.outside, null, self.outside.fighting, TO_ALL);
+act("Your Scythe of Bone slices $3n's head clean off!",
+A_ALWAYS, self.outside, null, self.outside.fighting, TO_CHAR);
+act("As $1n's Scythe of Bone slices through your neck, you drift "+
+"off to join the faces around you...", A_SOMEONE, self.outside, self,
+self.outside.fighting, TO_VICT);
+act("$1n's Scythe of Bone slices $3n's head clean off!",
+A_SOMEONE, self.outside, self, self.outside.fighting, TO_NOTVICT);
+
+        self.outside.fighting.hp := -7;
+        pause;
+        goto start;
+}
+dilend
+
+end
+
+necro_hand1
+names {"severed hand","hand"}
+title "a severed hand"
+descr "A mummified, severed human hand lies here."
+extra {}
+"A severed and mummified hand of a human being. As you stare at it, the
+gaunt, dry fingers slowly open and close and you realise that some magic
+is keeping the hand alive!"
+extra {"fingers on the severed hand","fingers","finger"}
+"The dry fingers of the severed hand are not much more but bone covered
+with parchment-thin, yellow skin. You can feel strength in them - the
+enchantment keeps them alive!<br/>"
+extra {"$identify"}
+"When worn, this hand will increase the Brain of the user, as well as
+protect him from the forces of Good. Furthermore, it slightly increases his
+control of the Undead Forces. However, it also decreases your Charisma.<br/>"
+extra {"$improved identify"}
+"The bonuses are +2 to Brain and +2% to Control Undead. Your
+Charisma falls by one.<br/>"
+extra {"$wear_s"}
+"As you near the hand to your wrist, the ghastly fingers grasp it in
+dead-cold grip!"
+extra {"$wear_o"}
+"$1n puts $2n to $1s wrist, the ghastly fingers grasp around it!."
+extra {"$rem_s"}
+"You pull at the severed hand, the fingers reluctantly let go of your
+wrist."
+extra {"$rem_o"}
+"$1n pulls at a severed hand grasping $1s wrist.<br/>
+The fingers reluctantly open and let go."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_WRIST}
+MATERIAL_ORGANIC("This item is mummified flesh and bone.")
+BRA_TRANSFER(+2)
+CHA_TRANSFER(-1)
+SPELL_TRANSFER(SPL_CONTROL_UNDEAD,+2)
+PROTECTION_FROM_GOOD
+dilcopy guild_restrict@function ({GUILD_NECROMANCER},0,25,"");
+dilcopy abi_restrict@function (ABIL_BRA,10,0,0,"");
+dilcopy abi_restrict@function (ABIL_DIV,11,0,0,"");
+dilcopy ali_restrict@function (-350,-1000,0,25,"");
+dilcopy mvlev_restrict@function (100,0,25,"");
+rent 41 IRON_PIECE
+end
+
+
+                             whip
+names {"dark leather whip","whip","leather whip"}
+title "a dark leather whip"
+descr "A dark leather whip lies here."
+extra {}
+"A strange blue glow surrounds the whips sharp end. A few red runes are
+etched into the handle."
+extra {"runes on the handle","runes","handle"}
+"The runes empower the whip, making it a fearsome weapon of pain.<br/>"
+flags {UNIT_FL_MAGIC}
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_WHIP, 2, 0)
+dilcopy ali_restrict@function(-350,-1000,0,25,"");
+dilcopy abi_restrict@function(ABIL_BRA,20,0,0,"");
+weight 3
+rent 80 IRON_PIECE
+cost 9 GOLD_PIECE
+end
+
+                            sword
+names {"Varac sword","sword"}
+title "a Varac sword"
+descr "A Varac sword lies here."
+extra {}
+"It has some strange runes on the blade. It is made of a beautiful
+black metal. The blade is very broad and two edged."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_BROAD_SWORD, 2, 2)
+weight 3
+cost 8 GOLD_PIECE
+dilcopy ali_restrict@function(-350,-1000,0,25,"");
+dilcopy abi_restrict@function(ABIL_DIV,20,0,0,"");
+alignment -750
+PROTECTION_FROM_GOOD
+rent 140 IRON_PIECE
+end
+
+
+                           dagger1
+names {"dagger of Minas", "dagger"}
+title "the dagger of Minas"
+descr "The dagger of Minas lies here."
+extra {}
+"The blade has a crimson glow, as you hold it the glow grows stronger. "
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_DAGGER, 1, 0)
+CHA_TRANSFER(2)
+weight 3
+rent 80 IRON_PIECE
+cost 8 GOLD_PIECE
+dilcopy ali_restrict@function (-350,-1000,0,25,"");
+dilcopy abi_restrict@function(ABIL_CHA,20,0,0,"");
+dilcopy mvlev_restrict@function (100,0,25,"");
+end
+
+                        black_mace
+names {"mace","great mace","black great mace"}
+title "a black great mace"
+descr "A black great mace lies here."
+extra {}
+"It has some strange carvings around the head. The carvings looks like small
+creatures moaning towards a moon. A cold blue glow is surrounding the
+head of the mace."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_BATTLE_MACE, 1, 0)
+weight 15
+rent 80 IRON_PIECE
+cost 8 GOLD_PIECE
+dilcopy ali_restrict@function (-350,-1000,0,25,"");
+dilcopy abi_restrict@function(ABIL_DIV,20,0,0,"");
+end
+
+
+                          club
+names {"wooden warclub", "warclub","club"}
+title "a warclub"
+descr "A large wooden club lies here."
+extra {}
+"The wooden warclub is strangely curved, but it seems to be extremely
+well balanced."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_CLUB, 0, 0)
+weight 10
+cost 1 COPPER_PIECE
+end
+
+                              dark_blue_kilt
+
+names {"dark blue kilt","kilt"}
+title "a dark blue kilt"
+descr "A beautiful dark blue kilt is lying on the ground."
+extra {}
+"The kilt is beautifully woven. It feels very light and yet
+the threads seem to be made of a hard beautiful metal."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+ARMOUR_CHAIN(0, 5)
+weight 15
+cost 10 GOLD_PIECE
+rent 50 IRON_PIECE
+CHAR_FLAG_TRANSFER(CHAR_DETECT_MAGIC)
+dilcopy ali_restrict@function (-350,-1000,0,25,"");
+dilcopy abi_restrict@function(ABIL_DEX,25,0,0,"");
+dilcopy mvlev_restrict@function (50,0,25,"");
+end
+
+                              black_breast
+names {"black breast plate","breast plate","plate","breastplate"}
+title "a black breast plate"
+descr "A black breast plate is lying on the ground."
+extra {}
+"The breast plate is made of a strange black metal. In the centre of
+the plate there is a moonstone. The moonstone has a dim red light."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+ARMOUR_PLATE(0, 0)
+weight 20
+rent 130 IRON_PIECE
+cost 17 GOLD_PIECE
+STR_TRANSFER(2)
+dilcopy ali_restrict@function (-350,-1000,0,25,"");
+dilcopy abi_restrict@function(ABIL_STR,30,0,0,"");
+dilcopy abi_restrict@function(ABIL_DIV,20,0,0,"");
+dilcopy mvlev_restrict@function (50,0,25,"");
+end
+
+silver_belt1
+names {"silver belt","belt"}
+title "a silver belt"
+descr "A beautiful silver belt is lying on the ground."
+extra {} "It has a glowing white gem in the belt buckle."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+weight 2
+rent 75 IRON_PIECE
+cost 20 GOLD_PIECE
+DEX_TRANSFER(3)
+dilcopy ali_restrict@function(-350,-1000,0,25,"");
+dilcopy abi_restrict@function(ABIL_DEX,25,0,0,"");
+dilcopy mvlev_restrict@function (100,0,25,"");
+end
+
+                                 black_robe
+names {"black robe","robe"}
+title "a black robe"
+descr "A black robe is lying on the ground."
+extra {}
+"The robe has some pretty good looking silver runes on the collar."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+weight 5
+cost 5 COPPER_PIECE
+end
+
+dk_blue_robe
+names {"dark blue robe","blue robe","robe"}
+title "a dark blue robe"
+descr "A dark blue robe is lying on the ground."
+extra {}
+"The robe is very strongly woven. The colour change from deep blue to
+almost black, as you hold it."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+weight 5
+cost 15 GOLD_PIECE
+rent 25 IRON_PIECE
+dilcopy ali_restrict@function (-350,-1000,0,25,"");
+dilcopy abi_restrict@function(ABIL_BRA,10,0,0,"");
+extra {"$identify"}
+"These robes bestows its wearer with the power of detecting invisible
+creatures and objects. It can only be worn by evil persons.<br/>"
+end
+
+
+grey_jerkin1
+names {"grey leather jerkin","jerkin"}
+title "a grey studded leather jerkin"
+descr "A grey studded leather jerkin is lying on the ground."
+extra {}
+"The jerkin has the same colour as the rock floor."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+ARMOUR_LEATHER(1, 0)
+weight 10
+rent 95 IRON_PIECE
+cost 12 COPPER_PIECE
+CHAR_FLAG_TRANSFER(CHAR_DETECT_MAGIC)
+dilcopy ali_restrict@function (-350,-1000,0,25,"");
+dilcopy abi_restrict@function(ABIL_BRA,15,0,0,"");
+dilcopy mvlev_restrict@function (100,0,25,"");
+extra {"$identify"}
+"This jerkin bestows its wearer with the power of detecting magical
+auras. It can only be worn by evil persons.<br/>"
+extra {"$improved identify"}
+"The jerkin has craftmanship of 5 and magical bonus of 10.<br/>"
+end
+
+/* -------------------- Old Guild Weapons ------------------------------
+
+                                scythe
+names {"scythe", "apocolypse"}
+title "Apocalypse"
+descr "A throbbing, glowing scythe lies here."
+extra {}
+"The black scythe has an aura of power and death about it. It emits a smoky
+black aura of power, and appears too be carried by death itself."
+
+manipulate{MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_SCYTHE, 7, 7)
+weight 5
+rent 146 COPPER_PIECE
+cost 10 SILVER_PIECE
+DIV_TRANSFER(+2)
+WEAPON_TRANSFER(WPN_SCYTHE, +5)
+dilcopy guild_restrict@function ({GUILD_NECROMANCER},0,25,"");
+extra{"$identify"}
+"This is a magic weapon of the necromancer guild. It gives you a bonus too
+your div attribute and a bonus too your weapon skill. It also has the power
+to drain corpses for mana. Simply saying 'drain corpse' and it
+will drain the corpse in the room for mana. During combat, this weapon
+can be used too cast 3 spells, plague, energy drain, or toxicate. Simply
+by saying the words 'plague', 'drain', and 'poison' during combat will cause
+the staff to cast these spells. Understand that it will drain some mana from
+you but not as much as it would cost the spell on your own. The staff also
+takes a moment too recharge after casting a spell."
+
+
+extra{"$improved identify"}
+"The weapon is a +7 / +7 scythe, it gives +4 Divine power,
+and a +5 increase in the quarterstaff skill."
+
+dilbegin necro_weapon();
+var
+pc: unitptr;
+tgt: unitptr;
+corpse: unitptr;
+code
+{
+        :start:
+        heartbeat := PULSE_SEC*6;
+        wait(SFB_CMD, (activator == self.outside) and
+        (activator.type==UNIT_ST_PC) and
+        (self.equip == WEAR_WIELD) and
+        (command("say")));
+        pc := activator;
+        if("drain corpse" in argument)
+{
+        block;
+        corpse := findunit(self.outside, "corpse", FIND_UNIT_SURRO, null);
+        if(corpse.value[4] <= 20)
+{
+        act(""+pc.name+"'s "+self.name+" glows as it drains the corpse "+
+            "of its magical negative energy.", A_ALWAYS, self.outside, null,
+            null, TO_REST);
+        act("Your "+self.name+" glows as it drains the corpse of its "+
+            "magical negative energy.", A_ALWAYS, self.outside, null, null,
+            TO_CHAR);
+        destroy(corpse);
+        self.outside.mana := (self.outside.mana + 10);
+               if(self.outside.mana > 100)
+                self.outside.mana := 100;
+}
+        if((corpse.value[4] > 20) and (corpse.value[4] <= 40))
+{
+        act(""+pc.name+"'s "+self.name+" glows as it drains the corpse "+
+            "of its magical negative energy.", A_ALWAYS, self.outside, null,
+            null, TO_REST);
+        act("Your "+self.name+" glows as it drains the corpse of its "+
+            "magical negative energy.", A_ALWAYS, self.outside, null, null,
+            TO_CHAR);
+        destroy(corpse);
+        self.outside.mana := (self.outside.mana + 15);
+                if(self.outside.mana > 100)
+                self.outside.mana := 100;
+}
+        if((corpse.value[4] > 40) and (corpse.value[4] <= 60))
+{
+        act(""+pc.name+"'s "+self.name+" glows as it drains the corpse "+
+            "of its magical negative energy.", A_ALWAYS, self.outside, null,
+            null, TO_REST);
+        act("Your "+self.name+" glows as it drains the corpse of its "+
+            "magical negative energy.", A_ALWAYS, self.outside, null, null,
+            TO_CHAR);
+        destroy(corpse);
+        self.outside.mana := (self.outside.mana + 20);
+               if(self.outside.mana > 100)
+                self.outside.mana := 100;
+}
+        if((corpse.value[4] > 60) and (corpse.value[4] <= 80))
+{
+        act(""+pc.name+"'s "+self.name+" glows as it drains the corpse "+
+            "of its magical negative energy.", A_ALWAYS, self.outside, null,
+            null, TO_REST);
+        act("Your "+self.name+" glows as it drains the corpse of its "+
+            "magical negative energy.", A_ALWAYS, self.outside, null, null,
+            TO_CHAR);
+        destroy(corpse);
+        self.outside.mana := (self.outside.mana + 25);
+                if(self.outside.mana > 100)
+                self.outside.mana := 100;
+}
+        if((corpse.value[4] > 80) and (corpse.value[4] <= 100))
+{
+        act(""+pc.name+"'s "+self.name+" glows as it drains the corpse "+
+            "of its magical negative energy.", A_ALWAYS, self.outside, null,
+            null, TO_REST);
+        act("Your "+self.name+" glows as it drains the corpse of its "+
+            "magical negative energy.", A_ALWAYS, self.outside, null, null,
+            TO_CHAR);
+        destroy(corpse);
+        self.outside.mana := (self.outside.mana + 30);
+                if(self.outside.mana > 100)
+                self.outside.mana := 100;
+}
+        if(corpse.value[4] > 100)
+{
+        act(""+pc.name+"'s "+self.name+" glows as it drains the corpse "+
+            "of its magical negative energy.", A_ALWAYS, self.outside, null,
+            null, TO_REST);
+        act("Your "+self.name+" glows as it drains the corpse of its "+
+            "magical negative energy.", A_ALWAYS, self.outside, null, null,
+            TO_CHAR);
+        destroy(corpse);
+        self.outside.mana := (self.outside.mana + 35);
+                if(self.outside.mana > 100)
+                self.outside.mana := 100;
+}
+}
+goto wait_abit;
+
+:wait_abit:
+heartbeat:= PULSE_SEC*100;
+pause;
+pause;
+pause;
+goto start;
+
+}
+dilend
+
+dilbegin spell_com();
+var
+
+tgt: unitptr;
+pc: unitptr;
+lvl: integer;
+pwr: integer;
+num: integer;
+
+code
+
+{
+
+:start:
+
+        wait(SFB_CMD,((self.outside == activator) and
+        (self.equip ==WEAR_WIELD) and
+        (activator.type==UNIT_ST_PC) and
+        (command("say"))));
+
+                tgt := self.outside.fighting;
+                pc := self.outside;
+                lvl := (self.outside.level) *2;
+                pwr := self.outside.abilities[ABIL_DIV];
+                num := rnd(1, 100);
+                if((self.outside.position == POSITION_FIGHTING) and
+                ((lvl*pwr*num)/3 >= 27))
+{
+                if("plague" in argument)
+{
+                block;
+                act("You staff glows as it casts its spell!", A_ALWAYS,
+                self.outside, null, null, TO_CHAR);
+                act(""+pc.name+"'s staff glows as it casts a spell!",
+                A_ALWAYS, self.outside, null, null, TO_REST);
+                cast_spell(SPL_DISEASE_2, self.outside, self, tgt);
+                self.outside.mana := (self.outside.mana - 15);
+                goto waitabit;
+}
+                if("drain" in argument)
+{
+                block;
+                act("Your staff glows as it casts its spell!", A_ALWAYS,
+                self.outside, null, null, TO_CHAR);
+                act(""+pc.name+"'s "+self.name+" glows as it casts a
+spell!",
+                A_ALWAYS, self.outside, null, null, TO_REST);
+                cast_spell(SPL_ENERGY_DRAIN, self.outside, self, tgt);
+                self.outside.mana := (self.outside.mana - 15);
+                goto waitabit;
+}
+                if("poison" in argument)
+{
+                block;
+                act("Your "+self.name+" glows as it casts its spell!",
+A_ALWAYS
+,
+                self.outside, null, null, TO_CHAR);
+                act(""+pc.name+"'s "+self.name+" glows as it casts a
+spell!",
+                A_ALWAYS, self.outside, null, null, TO_REST);
+                cast_spell(SPL_POISON, self.outside, self, tgt);
+                self.outside.mana := (self.outside.mana - 15);
+                goto waitabit;
+}
+else
+block;
+act("Your "+self.name+" attempts too cast a spell, but you fail too control
+" +
+    "it.", A_ALWAYS, self.outside, null, null, TO_CHAR);
+goto start;
+}
+:waitabit:
+heartbeat:= PULSE_SEC*15;
+pause;
+goto start;
+}
+dilend
+
+
+end
+
+
+                                sickle
+
+names {"sickle", "armageddon"}
+title "Armageddon"
+descr "A throbbing, glowing sickle lies here."
+extra {}
+"The black sickle glows with power, emiting a smoky black aura of death and
+destruction."
+
+manipulate{MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_SICKLE, 7, 7)
+weight 5
+rent 146 COPPER_PIECE
+cost 10 SILVER_PIECE
+DIV_TRANSFER(+2)
+WEAPON_TRANSFER(WPN_SICKLE, +5)
+dilcopy guild_restrict@function ({GUILD_NECROMANCER},0,25,"");
+
+extra{"$identify"}
+"This is a magic weapon of the necromancer guild. It gives you a bonus too
+your div attribute and a bonus too your weapon skill. It also has the power
+to drain corpses for mana. Simply say 'drain corpse' and it
+will drain the corpse in the room for mana. During combat, this weapon
+can be used too cast 3 spells, plague, energy drain, or toxicate. Simply
+saying 'plague', 'drain', and 'poison' will cause the staff
+to cast these spells. Understand that it will drain some mana from you,
+but not as much as it would cost the spell on your own. The staff also
+takes a moment too recharge after casting a spell."
+
+extra{"$improved identify"}
+"The weapon is a +7 / +7 sickle, it gives +4 Divine power,
+and a +5 increase in the quarterstaff skill."
+
+dilcopy necro_weapon@necro_guild();
+dilcopy spell_com@necro_guild();
+dilcopy mvlev_restrict@function (100,0,25,"");
+end
+
+
+                                staff
+
+names {"staff"}
+title "Staff of Gabriel"
+descr "A throbbing, glowing staff lies here."
+extra {}
+"This black staff emits a smoky, black aura of death."
+
+manipulate{MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_QUARTERSTAFF, 7,7)
+weight 3
+rent 146 COPPER_PIECE
+cost 10 SILVER_PIECE
+DIV_TRANSFER(+2)
+WEAPON_TRANSFER(WPN_QUARTERSTAFF, +5)
+dilcopy guild_restrict@function ({GUILD_NECROMANCER},0,25,"");
+
+extra{"$identify"}
+"This is a magic weapon of the necromancer guild. It gives you a bonus too
+your div attribute and a bonus too your weapon skill. It also has the power
+to drain corpses for mana. Simply say 'drain corpse' and it
+will drain the corpse in the room for mana. During combat, this weapon
+can be used too cast 3 spells, plague, energy drain, or toxicate. Simply
+saying 'plague', 'drain', and 'poison' will cause the staff
+to cast these spells. Understand that it will drain some mana from you,
+but not as much as it would cost the spell on your own. The staff also
+takes a moment too recharge after casting a spell."
+
+extra{"$improved identify"}
+"The weapon is a +7 / +7 quarterstaff, it gives +4 Divine power,
+and a +5 increase in the quarterstaff skill."
+
+dilcopy necro_weapon@necro_guild();
+dilcopy spell_com@necro_guild();
+dilcopy mvlev_restrict@function (100,0,25,"");
+end
+*/
+
+                        golem_manual
+names {"manual of the golems", "manual"}
+title "a manual of the golems"
+descr
+"An ancient tome sits here."
+extra {}
+" This manual has a large heading title MANUAL OF THE GOLEMS, and
+reads:<pre><br/>
+<br/>
+    Controlling a golem is easy. It will respond to either<br/>
+    golem or to the name you gave it upon bonding. Simply<br/>
+    TELL the golem any commands that a player could exectue,<br/>
+    and the golem will try it's best to comply. These can<br/>
+    range from expressive gestures like TELL GOLEM SMILE to<br/>
+    useful actions like TELL GOLEM GET ALL. The familiar can<br/>
+    use armor, weapons and magic items and gain the effects of<br/>
+    those items. You can command a golem to attack<br/>
+    with TELL GOLEM KILL (target)<br/>
+<br/>
+    If you become seperated from your familiar, it will try<br/>
+    to seek you out by walking to you.<br/>
+<br/>
+    In addition, if you type STATUS GOLEM, your golem will<br/>
+    report to you some of it's vital statistics.... (and this<br/>
+    should actually be working now).<br/>
+<br/>
+    You should keep your golem following you are<br/>
+    all times. If you are forced to leave it behind somewhere,<br/>
+    it will not be able to hear your commands (your telepathic<br/>
+    link with the familiar requires you to be in the same room<br/>
+    with you.) Horrible stories have been told about golems<br/>
+    killing even their high level masters if they cease<br/>
+    to be a Necromancer.<br/>
+<br/>
+</pre>"
+manipulate {MANIPULATE_TAKE}
+type ITEM_NOTE
+weight 1
+end
+
+
+
+
+
+/* ================================================================== */
+/*                            ZONE RESET                              */
+/* ================================================================== */
+%reset
+
+load evil_necro into evil_shrine@ratswarf max 1
+
+load evil_necro2 into crypt@necro_guild max 1
+
+load varac_wolf into tomb max 1
+load ghost_raven into damp_shaft max 2 local 1
+
+load murdock into dark_shaft max 1
+{
+    equip whip position WEAR_WIELD
+
+    equip silver_belt1 position WEAR_WAIST
+    equip black_breast position WEAR_BODY
+    equip dk_blue_robe position WEAR_BODY
+    equip midgaard/iron_leggings position WEAR_LEGS
+    equip midgaard/iron_boots position WEAR_FEET
+}
+
+load wicca into up_damp_crypt max 1
+{
+    equip sword position WEAR_WIELD
+
+    equip midgaard/chain_coif position WEAR_HEAD
+    equip midgaard/hlth_boots position WEAR_FEET
+    equip dark_blue_kilt position WEAR_LEGS
+}
+
+load murim into night_shade max 1
+{
+        equip club position WEAR_WIELD
+
+        load firebreather@midgaard
+        load speciality@midgaard
+
+    equip slth_jerkin@midgaard position WEAR_BODY
+    equip midgaard/slth_pants position WEAR_LEGS
+    equip midgaard/hlth_boots position WEAR_FEET
+}
+
+
+load kadiya into underground_lab max 1
+{
+    equip dagger1 position WEAR_WIELD
+
+    equip black_robe position WEAR_BODY
+    equip midgaard/slth_pants position WEAR_LEGS
+    equip midgaard/hlth_boots position WEAR_FEET
+}
+
+
+load krain into low_damp_crypt max 1
+{
+    equip black_mace position WEAR_WIELD
+
+    equip black_robe position WEAR_ABOUT
+    equip midgaard/slth_pants position WEAR_LEGS
+    equip midgaard/hlth_boots position WEAR_FEET
+    equip midgaard/hlth_cap position WEAR_HEAD
+}
+
+load meclor into damp_shaft max 1
+{
+        equip udgaard/sword_1 position WEAR_WIELD
+        equip dk_blue_robe position WEAR_ABOUT
+        equip grey_jerkin1 position WEAR_BODY
+}
+
+
+%end
+

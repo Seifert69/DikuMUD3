@@ -1,0 +1,62 @@
+<br/>
+Fighter<br/>
+  1)  Udgaard Fighter    / Khorsabad Assassin / Udgaard Thief<br/>
+  2)  Udgaard Fighter    / Udgaard Conjurer   / Khorsabad Assassin<br/>
+  3)  Udgaard Fighter    / Midgaard Paladin   / Nymgaard Ranger<br/>
+  4)  Udgaard Fighter    / Midgaard Paladin   / Udgaard Healer<br/>
+  5)  Udgaard Fighter    / Midgaard Paladin   / Nymgaard Druid<br/>
+  6)  Udgaard Fighter    / Nymgaard Ranger    / Udgaard Healer<br/>
+  7)  Udgaard Fighter    / Nymgaard Ranger    / Nymgaard Druid<br/>
+  8)  Udgaard Fighter    / Nymgaard Ranger    / Udgaard Thief<br/>
+  9)  Udgaard Fighter    / Nymgaard Ranger    / Midgaard Paladin<br/>
+  10) Udgaard Fighter    / Udgaard Thief      / Nymgaard Ranger<br/>
+  11) Udgaard Fighter    / Udgaard Thief      / Khorsabad Assassin<br/>
+  12) Udgaard Fighter    / Udgaard Thief      / Udgaard Conjurer<br/>
+<br/>
+Thief<br/>
+  1)  Udgaard Thief      / Khorsabad Assassin / Udgaard Fighter<br/>
+  2)  Udgaard Thief      / Khorsabad Assassin / Midgaard Sorcerer<br/>
+  3)  Udgaard Thief      / Udgaard Conjurer   / Khorsabad Assassin<br/>
+  4)  Udgaard Thief      / Udgaard Conjurer   / Midgaard Sorcerer<br/>
+  5)  Udgaard Thief      / Udgaard Fighter    / Khorsabad Assassin<br/>
+  6)  Udgaard Thief      / Udgaard Fighter    / Nymgaard Ranger<br/>
+  7)  Udgaard Thief      / Midgaard Sorcerer  / Udgaard Conjurer<br/>
+  8)  Udgaard Thief      / Nymgaard Ranger    / Udgaard Fighter<br/>
+  9)  Udgaard Thief      / Nymgaard Ranger    / Nymgaard Druid<br/>
+<br/>
+Healer<br/>
+  1)  Udgaard Healer     / Udgaard Fighter    / Midgaard Paladin<br/>
+  2)  Udgaard Healer     / Udgaard Fighter    / Nymgaard Ranger<br/>
+  3)  Udgaard Healer     / Midgaard Paladin   / Udgaard Fighter<br/>
+  4)  Udgaard Healer     / Midgaard Paladin   / Nymgaard Druid<br/>
+  5)  Udgaard Healer     / Nymgaard Ranger    / Udgaard Fighter<br/>
+  6)  Udgaard Healer     / Nymgaard Ranger    / Nymgaard Druid<br/>
+  7)  Udgaard Healer     / Nymgaard Druid     / Nymgaard Ranger<br/>
+  8)  Udgaard Healer     / Nymgaard Druid     / Midgaard Paladin<br/>
+<br/>
+Conjurer<br/>
+  1)  Udgaard Conjurer   / Khorsabad Assassin / Udgaard Thief<br/>
+  2)  Udgaard Conjurer   / Khorsabad Assassin / Midgaard Sorcerer<br/>
+  3)  Udgaard Conjurer   / Midgaard Sorcerer  / Khorsabad Assassin<br/>
+  4)  Udgaard Conjurer   / Udgaard Thief      / Khorsabad Assassin<br/>
+  5)  Udgaard Conjurer   / Udgaard Thief      / Udgaard Fighter<br/>
+  6)  Udgaard Conjurer   / Midgaard Sorcerer  / Udgaard Fighter<br/>
+  7)  Udgaard Sorcerer   / Midgaard Conjurer  / Udgaard Fighter<br/>
+  <br/>
+Ranger<br/>
+  1)  Nymgaard Ranger    / Udgaard Healer     / Udgaard Fighter<br/>
+  2)  Nymgaard Ranger    / Udgaard Healer     / Midgaard Paladin<br/>
+  3)  Nymgaard Ranger    / Udgaard Healer     / Nymgaard Druid<br/>
+  4)  Nymgaard Ranger    / Udgaard Fighter    / Udgaard Healer<br/>
+  5)  Nymgaard Ranger    / Udgaard Fighter    / Midgaard Paladin<br/>
+  6)  Nymgaard Ranger    / Midgaard Paladin   / Udgaard Fighter<br/>
+  7)  Nymgaard Ranger    / Midgaard Paladin   / Nymgaard Druid<br/>
+  8)  Nymgaard Ranger    / Midgaard Paladin   / Udgaard Healer<br/>
+  9)  Nymgaard Ranger    / Nymgaard Druid     / Midgaard Paladin<br/>
+  10) Nymgaard Ranger    / Nymgaard Druid     / Udgaard Healer<br/>
+<br/>
+<br/>See Also:<br/><br/>
+<br/>
+ Paths<br/>
+ Path list2<br/><br/>
+<br/>

@@ -1,0 +1,106 @@
+#!/bin/gawk -f
+BEGIN {
+buf="";
+}
+
+{
+if ($0!~"valhalla on line help file"){
+nexttopic="";
+nexttopic=$0;
+buf="";
+	getline;
+while (($1!="#") && ( $1!="#~")){
+	buf=buf"\n"$0;
+		getline;
+		}
+				
+make_topic(nexttopic,ret_topic, buf);
+}else{
+getline;
+
+while (($1!="#") && ($1!="#~")){
+		getline;
+		}
+}		
+		}
+
+function make_topic(line,ret_topic,buf){
+gsub(/#/," ",line);
+gsub(/\&n/," ",line);
+gsub(/\./," ",line);
+gsub(/\r/," ",line);
+gsub(/\n/," ",line);
+gsub(/\t/," ",line);
+r=split(line,z," ");
+for (k=1;k<=r;k++){
+	if (index(z[k],"\"")!=0){
+		sub (/\"/,"",z[k]);
+		ret_buf="";
+		while (k<=r){
+	if (index(z[k],"\"")!=0){
+					sub (/\"/,"",z[k]);
+                    if (ret_buf==""){
+										ret_topic[tolower(z[k])]=buf;
+					}else{
+					ret_topic[tolower(ret_buf" "z[k])]=buf;
+					}
+					break;
+				}else if (z[k]!=""){
+				if (ret_buf==""){
+					ret_buf=tolower(z[k]);
+					}else{
+										ret_buf=tolower(ret_buf" "z[k]);
+					}
+					k++;
+}else{
+k++;
+}}
+}else{
+ret_topic[tolower(z[k])]=buf;
+}
+}
+
+for (val in ret_topic){
+gsub (/\n/,"",et_topic[val]);
+}
+
+
+}
+
+
+END{
+i=1;
+for (val in ret_topic){
+a[i]=val;
+i++;
+}
+
+for (b=1;b<i;b++){
+for(j=1;j<i-1;j++){
+if (a[j]>substr(a[j+1],0,length(a[j]))){
+temp=a[j+1];
+a[j+1]=a[j];
+a[j]=temp;
+}}}
+
+ind=":start:a\n";
+letter="a";
+for (j=1;j<i;j++){
+g=a[j];
+if (letter!=substr(g,0,1)){
+ind=ind":end:"letter"\n";
+letter=substr(g,0,1);
+ind=ind":start:"letter"\n";
+}
+
+fname=g;
+
+gsub(/ /,"_",fname);
+print ret_topic[g]>""fname".wiz";
+ind=ind"" g "=" fname ".wiz\n";
+}                     	
+letter=substr(g,0,1);
+ind=ind":end:"letter"\n";
+print ind>"wiz.index";
+}
+

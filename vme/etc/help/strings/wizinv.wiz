@@ -1,0 +1,8 @@
+<br/>
+Usage:<br/>
+   &gt;wizinv [&lt;unit&gt;]<br/>
+<br/>
+This wiz-command enables you to be invisible to every player, including persons<br/>
+who is affected by see-invisible. To give you normal appearance, just use the<br/>
+same command again. You can also specify which unit is to be affected by the<br/>
+wizinvisible.<br/>

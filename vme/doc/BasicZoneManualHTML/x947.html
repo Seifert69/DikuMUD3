@@ -1,0 +1,359 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Building your first room</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The room section"
+HREF="ch04.html"><LINK
+REL="PREVIOUS"
+TITLE="The room section"
+HREF="ch04.html"><LINK
+REL="NEXT"
+TITLE="Compiling and debugging your first room"
+HREF="x978.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="ch04.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. The room section</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x978.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RMBASIC"
+>5.2. Building your first room</A
+></H1
+><P
+>Now you are ready!  With all you have learned about room
+fields you are now ready to build your first room.  I personally
+like dragons and I like space so I have chosen to make a dragon
+station.  We will first do a simple room and build on to it in the
+next sections.  In this section we will walk you through creating a
+basic room and why we choose what we do where we do.</P
+><P
+>When making rooms you create the zone source file first as shown
+in <A
+HREF="ch02.html"
+>Chapter 3</A
+>.  If you only have rooms you do not need the
+%reset, %objects, and %mobiles.  For the examples in this chapter we
+will use the zone we created in <A
+HREF="ch02.html"
+>Chapter 3</A
+> and add the %room
+tag where we will put all the rooms.  At the end of the chapter we will
+have the entire zone so you can see it all together.</P
+><P
+>The first part of all rooms is the symbolic name it is good to
+always pick a name that will match the title so you can use the
+administrator command <B
+CLASS="COMMAND"
+>goto</B
+> to easily get to the
+room.  The reason is when you use the command
+<B
+CLASS="COMMAND"
+>wstat</B
+> it will only show you a list of the rooms
+by symbolic name for example if you type
+<B
+CLASS="COMMAND"
+>wstat zone dragon room</B
+>
+You will get  the following:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN957"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;List of rooms in zone Dragon:
+chamber portal office&#13;</PRE
+><P
+></P
+></DIV
+><P
+>If you didn't make it clear what the rooms were by the symbolic name
+it might look like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN960"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;List of rooms in zone Dragon:
+st_rm1 st_rm2 st_rm3&#13;</PRE
+><P
+></P
+></DIV
+><P
+>While this might be great when you first start imagine trying to
+remember what all one hundred rooms are.</P
+><P
+>The first room we will create will be a simple chamber with nothing special.  We can build on to it later if we need to.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN964"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;chamber
+end&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Pretty easy so far.  Now lets add some life to it.  The room
+will need a title and a description.  The title should be a one line
+description of a room sort of like if you were walking someone
+around your house and telling them what each room was like this is
+'My houses big bathroom' or maybe this is 'The computer room'.  The
+description should be something you would tell an interior
+decorator you were talking to on the phone and asking for
+advice.  He would want to know everything about the room you
+can see so he could give you good advice.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN967"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;chamber
+title "The middle chamber of the station"
+descr
+"This chamber seems to have the entire station rotating around it.
+Small human size ornate chairs with dragon designs scrawled on the
+arms and back are arranged in a triangle like setting with one large
+chair at the front.  This must be where all station meetings are held.
+large pictures cover the walls depicting dragons in all kinds of
+situations.  Small passages lead of to the west and the east.
+."
+end&#13;</PRE
+><P
+></P
+></DIV
+><P
+>It is a matter of taste if you want the descriptions of the
+exits in your description or not but I like them so I put them.  Now
+if you were reading this description to someone the person might ask
+you what is on the pictures or maybe even what exactly do the chairs
+look like so we better take care of that by adding some extras to
+our little room.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN970"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;extra {"chairs","chair"}
+"The chairs are made of some metal you don't recognize and every inch is covered
+with some kind of dragon."
+
+extra  {"dragon picture","picture"}
+"Thousands of dragons dot the skies of this rather life like picture.  In the
+center you see something move.  It looks to be a little green dragon."
+
+extra{"green dragon","dragon","green"}
+"An intelligent looking dragon is sitting perched on a large chair watching you."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Normally we could put a movement type for the amount of
+endurance lost when a person is moving through the area but we will
+leave it blank and go with the default which is SECT_CITY since
+with the fake gravity that is the closest we could come with the
+sector types availible.  The last thing we need to finish our room
+is the two exits leading to the other rooms.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN973"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;west to portal descr "You see a small room.";
+
+east to office descr "You see what looks to be an office.";&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Thats it that is all there is to making a room.  In the next
+couple of sections we are going to add some more rooms with more
+advanced features and give some debugging hints for compiling your
+rooms but if you understand everything so far your going to have no
+problem.  Lets take a look at our entire finished first room</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN976"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;chamber
+title "The middle chamber of the station"
+descr
+"This chamber seems to have the entire station rotating around it.
+Small human size ornate chairs with dragon designs scrawled on the
+arms and back are arranged in a triangle like setting with one large
+chair at the front.  This must be where all station meetings are held.
+large pictures cover the walls depicting dragons in all kinds of
+situations.  Small passages lead of to the west and the east.
+."
+
+extra {"chairs","chair"}
+"The chairs are made of some metal you don't recognize and every inch is covered
+with some kind of dragon."
+
+extra  {"dragon picture","picture"}
+"Thousands of dragons dot the skies of this rather life like picture.  In the
+center you see something move.  It looks to be a little green dragon."
+
+extra{"green dragon","dragon","green"}
+"An intelligent looking dragon is sitting perched on a large chair watching you."
+west to portal descr "You see a small room.";
+
+east to office descr "You see what looks to be an office.";
+end&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="ch04.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x978.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The room section</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch04.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Compiling and debugging your first room</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,21 @@
+A filename, password, or changedby was not found. 
+
+In order to compile your zone you must have a header as 
+the first few lines of your zone.
+
+ie:
+--------------------------------
+
+/*
+filename   hobgob
+password   mypassword
+changedby  Bakka
+version    0
+request    compile
+
+END HEADER*/
+
+% zone
+...
+...
+

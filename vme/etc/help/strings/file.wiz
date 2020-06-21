@@ -1,0 +1,7 @@
+<br/>
+Usage: file wizlist | news | credits | motd | info<br/>
+<br/>
+This wiz-command will update the given text-string from the disk. This is<br/>
+particularly useful if you have some urgent info to give to the players and<br/>
+don't want to close down the mud just to change the motd.<br/>
+<br/>

@@ -1,0 +1,27 @@
+<br/>
+<br/>
+<br/>
+<br/>
+To move your character around in the world, you can just write the<br/>
+direction, which is limited to:<br/>
+<br/>
+    north               This will take you to the north if it is possible<br/>
+    south               This will take you to the south if it is possible<br/>
+    east                This will take you to the east if it is possible<br/>
+    west                This will take you to the west if it is possible<br/>
+    up                  This will take you upwards if it is possible<br/>
+    down                This will take you downwards if it is possible<br/>
+    enter (item)        This will take you inside the item if possible<br/>
+    leave (item)        This will take you outside the item if possible<br/>
+<br/>
+<br/><br/>
+<br/>
+<br/>See also:<br/><br/>
+South<br/><br/>
+North<br/><br/>
+West<br/><br/>
+East<br/><br/>
+Down<br/><br/>
+Up<br/><br/>
+Drag<br/><br/>
+<br/>

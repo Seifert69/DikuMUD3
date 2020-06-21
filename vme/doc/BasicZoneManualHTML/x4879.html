@@ -1,0 +1,281 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Formatting codes</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Color and formatting codes"
+HREF="ch08.html"><LINK
+REL="PREVIOUS"
+TITLE="Color and formatting codes"
+HREF="ch08.html"><LINK
+REL="NEXT"
+TITLE="Formatting code descriptions and examples"
+HREF="x4931.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="ch08.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 9. Color and formatting codes</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4931.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN4879"
+>9.2. Formatting codes</A
+></H1
+><P
+>As you may have noticed the string fields on the VME are formatted
+   in an english paragraph style.  What that means is all text is
+   formatted with he following rules:</P
+><P
+></P
+><UL
+><LI
+><P
+>   All leading blanks are stripped away. For room descriptions
+    3 leading spaces are added. This way we ensure a consistent
+    formatting of the displayed room descriptions.
+   </P
+></LI
+><LI
+><P
+>&#13;Spaces and blanks (newlines) are contracted to single spaces
+    yielding a correctly 'wrapped' text for any sentence.
+   </P
+></LI
+><LI
+><P
+>If a '.' is encountered followed by a blank, a total of two
+    spaces are inserted after the '.'.
+   </P
+></LI
+></UL
+><P
+>These formatting rules are great for normal descriptions and
+extras but what if you want to make a sign or a map.  You don't always
+want the text to be rapped, if the server rapped your sign it would turn
+out looking like a jumble of punctuation in the form of a paragraph. 
+<A
+HREF="x4879.html#FORMATTABLE"
+>Table 9-1</A
+> contains a list of all formatting
+characters and a short description of them.
+<A
+HREF="x4931.html"
+>Section 9.3</A
+> contains a more in depth discussion of each
+format command with examples and <A
+HREF="x4988.html"
+>Section 9.4</A
+> deals with
+the color commands.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="FORMATTABLE"
+></A
+><P
+><B
+>Table 9-1. Formatting and color codes</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Code</TH
+><TH
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>&amp;</TD
+><TD
+>Used to make an &amp; character instead of an escape code.</TD
+></TR
+><TR
+><TD
+>l</TD
+><TD
+>Text from this point forward will not be formatted. It will
+               be interpreted literally with newlines, spaces, etc.
+               Useful when making a sign or a map.</TD
+></TR
+><TR
+><TD
+>f</TD
+><TD
+>Text from this point forward will be formatted. This option
+               is the reverse of &amp;l and is default on any section of text.</TD
+></TR
+><TR
+><TD
+>s&lt;#&gt;</TD
+><TD
+>Force a singe space character (or &lt;#&gt; if specified, may
+               come in handy, instead of having to toggle formatting).
+			   </TD
+></TR
+><TR
+><TD
+>n</TD
+><TD
+>Force a new line, very handy instead of toggling the &amp;l
+               formatting switch.   </TD
+></TR
+><TR
+><TD
+>h</TD
+><TD
+>Clears the screen if the terminal of the user supports it.</TD
+></TR
+><TR
+><TD
+>x</TD
+><TD
+>A file new line used for split so that you can split a file into lines</TD
+></TR
+><TR
+><TD
+>c&lt;color&gt;</TD
+><TD
+>Set the foreground color.</TD
+></TR
+><TR
+><TD
+>b&lt;color&gt;</TD
+><TD
+>Set the background color.</TD
+></TR
+><TR
+><TD
+>[&lt;color&gt;]</TD
+><TD
+>Set a preset foreground and background color.</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="ch08.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4931.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Color and formatting codes</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch08.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Formatting code descriptions and examples</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,51 @@
+#include <values.h>
+
+/* 
+  You can define up to PROFESSION_MAX different professions.
+
+  If you need more you have to increase PROFESSION_MAX in values.h,
+  add the #define PROFESSION_ and recompile.
+
+  Please note the professions need to be sequential. If there's a gap
+  in the sequence, e.g. if you omit profession 5 but have 6 and 7, then
+  you'll mess stuff up.
+*/
+
+/* - - - - Yet another profession - - - - */
+
+index           = PROFESSION_FIGHTER
+name            = fighter
+
+index           = PROFESSION_KNIGHT
+name            = knight
+
+index           = PROFESSION_PALADIN
+name            = paladin
+
+index           = PROFESSION_RANGER
+name            = ranger
+
+index           = PROFESSION_THIEF
+name            = thief
+
+index           = PROFESSION_ASSASSIN
+name            = assassin
+
+index           = PROFESSION_PRIEST
+name            = priest
+
+index           = PROFESSION_DRUID
+name            = druid
+
+index           = PROFESSION_MYSTIC
+name            = mystic
+
+index           = PROFESSION_NECROMANCER
+name            = necromancer
+
+index           = PROFESSION_CONJURER
+name            = conjurer
+
+index           = PROFESSION_SORCERER
+name            = sorcerer
+

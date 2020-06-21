@@ -1,0 +1,20 @@
+<br/>
+These commands are for new player guides to help new players.<br/>
+New players are those level 20 and under.<br/>
+<br/><br/>
+<br/>
+nbless      -This gives the target a +5 in Str, Dex, Mag, Div<br/>
+ngoto       -This allows you to goto a new player<br/>
+ncorpse     -This allows a new player guide to locate a newbies corpse<br/>
+nsanctuary  -This stops aggressive mobs from attacking a new player and<br/>
+             raises the targets hit points by 5.<br/>
+nheal       -This spell will heal a new player to a max of 5. For example<br/>
+             if a new player has -5 hp it will heal them to 5, If they<br/>
+             have 3 hp it will heal them to 5.<br/>
+naffect     -This removes affects/spells from new players (used to allow<br/>
+             them to practice)<br/>
+<br/><br/>
+<br/>
+<br/>See Also:<br/><br/>
+New Player Guide<br/><br/>
+<br/>

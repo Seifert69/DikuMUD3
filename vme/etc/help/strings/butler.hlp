@@ -1,0 +1,30 @@
+<br/>
+<br/>
+<br/>
+Just as is required for the architectural design of the house, a lot<br/>
+of work must go into the design of the interior. For every object or<br/>
+person you want in your house, you must fill out the following:<br/>
+<br/>
+names<br/>
+  For example: "james", "butler"<br/>
+<br/>
+description<br/>
+  For example: James is standing here greeting you with a friendly smile.<br/>
+<br/>
+extra:<br/>
+  For example: James is a charming young man, dressed in bla bla.<br/>
+<br/>
+where:<br/>
+  What room this object is to be placed in.<br/>
+<br/>
+Servants may be dressed in clothing. They may not be armed and are for <br/>
+display, no DIL will be atached to them. Furthermore you must specify if <br/>
+your house contains any doors, and possibly any keys. Because of the <br/>
+considerable amount of time it takes for us to implement the house, you <br/>
+should count on a $2 - $15 bribe per object or person in your house. <br/>
+With a house of 2 or more rooms you get one door for free other than the <br/>
+front door.<br/>
+<br/>
+See Also:<br/>
+ &gt; help houses<br/>
+ &gt; help architecture<br/>

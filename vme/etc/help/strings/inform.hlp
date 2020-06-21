@@ -1,0 +1,14 @@
+<br/>
+One of the types that can be used with the change command<br/>
+<br/><br/>
+syntax change information<br/>
+<br/><br/>
+This type controls receiving information about who has joined the game and <br/>
+not receiving this information.  When you first type change information you <br/>
+will receive a message every time a new player joins the game.  To stop <br/>
+receiving these messages, just type change information a second time.<br/>
+<br/><br/>
+See Also:<br/><br/>
+Change<br/><br/>
+<br/>
+<br/>

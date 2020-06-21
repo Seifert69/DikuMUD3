@@ -1,0 +1,16 @@
+<br/>
+<br/>
+<br/>
+<br/>
+Usage<br/><br/>
+drop (item)<br/><br/>
+drop ALL<br/><br/>
+<br/>
+This is used to drop an item you have in your inventory. The item is put at<br/>
+the location which you are in. If the item is in a container you have to get<br/>
+it into your inventory first, using 'get'.<br/>
+<br/><br/>
+<br/>See Also:<br/><br/>
+Get<br/><br/>
+Put<br/><br/>
+<br/>

@@ -1,0 +1,38 @@
+<br/>
+Usage:<br/>
+   &gt;wstat &lt;unit&gt; [group]<br/>
+   &gt;wstat room [group]<br/>
+   &gt;wstat zone [zone name] [mobiles|objects|rooms|reset|error|info]<br/>
+   &gt;wstat world [zones]<br/>
+<br/>
+Where [group] is:<br/>
+     &lt;no argumnet&gt;  : The basis unit data<br/>
+     data           : The specific data for the type of unit<br/>
+     contents       : list of unit contents<br/>
+     affect         : list of affect-structures for unit<br/>
+     descriptor     : descriptor data for player<br/>
+     func           : special function for unit<br/>
+     spell          : spells leaned by char<br/>
+     skill          : skills learned by char<br/>
+     weapon         : weapons mastered by char<br/>
+     extra          : extra descriptions<br/>
+     quest          : Quest information (PC's only)<br/>
+<br/>
+Examples:<br/>
+   &gt;wstat world<br/>
+   &gt;wstat world zones<br/>
+   &gt;wstat zone<br/>
+   &gt;wstat zone rooms<br/>
+   &gt;wstat fido<br/>
+   &gt;wstat fido dat<br/>
+   &gt;wstat fido func<br/>
+   &gt;wstat room aff<br/>
+<br/>
+Wstat displays everything about a unit. However all this info will confuse<br/>
+anyone (several screens of info per unit), so we had to split it up. The<br/>
+optional [group] determines which info you want. <br/>
+<br/>
+See also:<br/>
+   &gt;help set<br/>
+   &gt;help setskill<br/>
+<br/>

@@ -1,0 +1,3 @@
+gawk -f count.awk *.cpp *.h *.hpp mplex/*.cpp mplex/*.h comp/*.cpp comp/*.h
+
+

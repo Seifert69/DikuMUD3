@@ -1,0 +1,215 @@
+Battle calastran gives undefined error message
+Sun Jun 21 08:27:01 2020 :: combat_message: Unknown message group 1, number 216
+
+
+I would like the following cleaned up for a distro:
+   (It's really there because Valhalla has been growing and spurting for 25 years and 
+    trying to support veteran players that are level 65,000 :-)))
+
+	Weapons are a mess IMO. Too many. Clean them up
+		Too many staves for example.
+		Too many swords. Makes sense to have short-sword. Long-sword. 2H sword. One could argue also bastard sword (1½). I.e. 4.
+		Then maybe a scimitar because it's very different. But to further add broad-sword, falchion, sabre, katana, etc. just becomes
+		too scattered from a skill training perspective IMO. And bastard sword 1 & 2? Is one BS not enough :-D
+		And what's a fighting staff (2H) vs a 2H quarter-staff, etc.
+
+	Professions
+		Maybe change "Dark Knight" to Barbarian. DK is really just an evil paladin. Guild determines.
+		Maybe change Conjurer to Bard to have a thief / mage prof. Mage and COnjurer are just variants based on guild.
+		Or add the two.
+		Need to go through most Professions and get them steamlined in tune with what players would expect
+		they seem quite messy at the time of writing
+
+Test play
+
+Add code for cMUD mapping ?
+
+Suggests plan to revise data and points and start sequence:
+
+   0) It would be good with a brief summary of each profession
+        Is a fighter generally good with almost all melee weapons ?
+		Is a Paladin mostly good with Swords & 2H swords? The they use battle axes?
+		Are Knights also using huge battle axes?
+	  Just so there is a basic consensus. For example, right now I think
+	  it is incredibly odd that the fighter was unable to practice most
+	  weapons. I think it might be fine that a whip, rapier, stiletto is
+	  less for a fighter and more for someone more dexterous and less strong,
+	  e.g. thieves and assassins, maybe rangers.
+
+	I suggest we add these to the Wiki and get it described at least at a core
+	level. Not too long :)
+
+   1) Revise the ability costs:
+   		- profession practice costs in skills.cpp
+        - Revise etc/ability.def racial modifiers
+
+   2) Revise basis.zon playerinit() DIL
+        - the assigned abilities based on race 
+		- the ability + based on profession.
+		(will +4 MAG with -5 MOD give -1?)
+
+    Revise starting equipment for all new players (udgaard.zon/ DIL odinstatue())
+	Revise starting skills, weapons, spells in playerinit()
+	Revise the four Udgaard basic teachers to teach those starting skills, abilities, weapons, etc. so it also matches equipment  
+
+    Revise weapons, skills, spells costs in skills.cpp
+	Revise the guild teachers in guilddef.h so they actually teach what is reasonable.
+
+
+Vlevel. I'm not a fan. 
+Maybe tilt experience to hockey more at higher levels
+//Training ability +2 / train, or +1?
+//Training skill +5 / train or +2?
+
+Docs
+----
+Improve help files
+Improve documentation on the Wiki
+
+
+Client
+------
+Keep alive from mud client to server
+	Every 5 minutes send a signal if there has been no actions.
+
+Settings button:
+	CSS Style picker.
+
+Map out core zones. I'll pay for a cMUD to use as a mapping tool.
+
+If there's an artist anywhere we should have nice maps drawn
+
+
+maps
+----
+MS: Consider downloading cMUD and adding codes to support the mapping feature and build maps of the zones.
+	If I do then output tags dirty until mapped and then zap them again. 
+
+MS: Directions will likely reveal secret doors right now :o) I need it for cMUD
+    to make maps, then I'll add a check if there's a secret door.
+
+MS: Add graphical maps to the zones from cMUd.
+
+
+server
+------
+MS: Ken mentioned light issues. Check value overrun. Weight issue as well.
+
+
+DIL bug
+-------
+I just triggered a DIL error that said the stack size didn't match.
+Didn't sound good. It's the same error I saw the other day in the log. Now I know how to trigger it.
+
+ hm := skillchecksa@skills(SKI_SEARCH, ABIL_BRA, ext.vals.[1]);
+In this scenario ext was NULL. 
+
+
+---
+Current bugs
+
+fix MAX_STR_LEN problem in szonelog and log.
+  - reboot (means remove autoreboot from base)
+player convert & checking utility to either dil or other external utility
+
+vmc to work more like gcc for make file use
+
+
+fight system in dil
+level system in dil
+teachers in dil
+
+terminal control in dil not sure if necessary yet.
+
+dil data types:
+	finish zoneptr
+	multidemenisonal arrays	
+unit lists
+
+dil func search inside a unit and return a list of items that matches criteria
+  - would be nice if it returned a unit pointer list
+
+
+
+change file system to sql (needs to have world search  for unique units)
+
+remove the remaining special functions after replacing with dil. see spec_assign.h
+log_obj in whatever beside special
+bank in dil
+justice in dil (just have protect lawful, whistle, and reward board left) 
+
+commands left to convert
+wstat (mostly done but needs a few more dil global vars)
+backstab  (needs combat in dil)
+consider (needs combat in dil)
+kill(needs combat in dil)
+cast (needs combat or some of it at least)
+knock (why hasn't this already been done)
+level
+
+These may always be in base but who knows. The top ones are likely to
+change the bottom ones are least likely. They could all change if we
+made them dil functions that could be called from a dil command. This
+would allow for the ability to allow lower level people access if
+needed
+
+																									  set (mostly done needs same thing wstat does we use nset for now)
+wstat																									  
+																									  load (could do this with the load dil func already)
+																									  
+Nanny stuff that could be done now:
+																									 bann
+																									 wizlock
+
+																									  path																									 
+																								 where
+                                                                                          account
+                                                                                     color
+                                                                                                 at 
+																								          save 
+		                                 change
+																 crash
+																									  shutdown
+																									  snoop
+																									  switch
+users
+																			
+																									  
+COMPLETE
+---------
+gotolook in dil
+boards in dil
+competition dil
+ transparent work correctly.
+check $exit_other to make sure people outside see message currently only
+* player check (isplayer)
+social changes so you can't see socials not for your level maybe even
+a total rework of socials 
+skill and weapon names and values
+Internal Function index for commands cmdptr
+	int lists
+*test locking items that have key if you have in inventory the key hole
+ disapears.
+*Fix loadstr, savestr and split.
+removed all warnings
+removed swap code
+*switched (unitptr) field
+*writing (true/false) field
+unit directory
+string directory
+string functions
+  - indexed strings
+  - tolower, toupper
+  - left, right, mid
+  - make sure 'in' returns a position number
+*  skill and weapons info functions like spell_info so that
+    we can make status in dil.
+Fixed the attack_spell function so it will allow for dil effects like the rest
+   of the spells.  This only means it needs to take another argument like the
+   spell_damage in the base code.
+make sure the <> actually works for strings.
+abilities
+spells
+skills
+weapons
+

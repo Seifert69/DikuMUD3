@@ -1,0 +1,24 @@
+<br/>
+<br/>
+<br/>
+<br/>
+Usage wield (item) [two]<br/><br/>
+<br/>
+To start using a weapon, you must use the'wield' command. If the weapon<br/>
+is two-handed, you must have both hands free, else, your right hand must<br/>
+be free. Weapon that can be used both with one or two hands are normally<br/>
+wielded one-handed. If you specify the keyword 'two' after the weapons<br/>
+name, you will wield it in two hands. For example:<br/>
+<br/><br/>
+wield bastard sword<br/><br/>
+You will wield it in one hand.<br/><br/>
+<br/><br/>
+wield bastard sword two<br/><br/>
+You will wield it in two hands.<br/><br/>
+<br/><br/>
+It is not possible to wield two weapons.<br/><br/>
+<br/>
+<br/>See Also:<br/><br/>
+Weapons<br/><br/>
+Remove<br/><br/>
+<br/>

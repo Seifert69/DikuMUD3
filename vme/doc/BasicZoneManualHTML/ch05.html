@@ -1,0 +1,2182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>The NPC section</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Suggested room exercises"
+HREF="x1157.html"><LINK
+REL="NEXT"
+TITLE="NPC macros"
+HREF="x1845.html"></HEAD
+><BODY
+CLASS="CHAPTER"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x1157.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1845.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="CHAPTER"
+><H1
+><A
+NAME="CH-05"
+></A
+>Chapter 6. The NPC section</H1
+><P
+>Now that you have rooms down it is time to start filling your area
+with some life.  The NPC is the Non-player Character or mobile.  These
+are the things players will hunt and interact with</P
+><P
+>In order to get started building NPCs you should first be aware
+of the NPC fields you can use.  The <A
+HREF="ch05.html#NPCFIELDS"
+>Table 6-1</A
+> shows a full listing
+of all the NPC fields and their types as defined in <A
+HREF="ch03.html"
+>Chapter 4</A
+>.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="NPCFIELDS"
+></A
+><P
+><B
+>Table 6-1. NPC fields and types</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL
+WIDTH="192"
+TITLE="C1"><COL
+WIDTH="192"
+TITLE="C2"><COL
+WIDTH="48"
+TITLE="C3"><COL
+WIDTH="192"
+TITLE="C4"><COL
+WIDTH="192"
+TITLE="C5"><THEAD
+><TR
+><TH
+>Field</TH
+><TH
+>Type</TH
+><TH
+>&nbsp;</TH
+><TH
+>Field</TH
+><TH
+>Type</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>Symbolic name</TD
+><TD
+>Symbol</TD
+><TD
+ROWSPAN="18"
+>&nbsp;</TD
+><TD
+>level</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>names</TD
+><TD
+>Stringlist</TD
+><TD
+>height</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>title</TD
+><TD
+>String</TD
+><TD
+>race</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>descr</TD
+><TD
+>String</TD
+><TD
+>attack</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>inside_descr</TD
+><TD
+>String</TD
+><TD
+>armour</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>extra</TD
+><TD
+>Structure</TD
+><TD
+>speed</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>manipulate</TD
+><TD
+>Integer</TD
+><TD
+>position</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>flags</TD
+><TD
+>Integer</TD
+><TD
+>default</TD
+><TD
+> Integer</TD
+></TR
+><TR
+><TD
+>weight</TD
+><TD
+>Integer</TD
+><TD
+>ability</TD
+><TD
+>two Integers</TD
+></TR
+><TR
+><TD
+>capacity</TD
+><TD
+>Integer</TD
+><TD
+>weapon</TD
+><TD
+>two Integers</TD
+></TR
+><TR
+><TD
+>dilbegin or dilcopy</TD
+><TD
+>Function pointer</TD
+><TD
+>spell</TD
+><TD
+>two Integers</TD
+></TR
+><TR
+><TD
+>defensive</TD
+><TD
+>Integer</TD
+><TD
+>romflags</TD
+><TD
+> Integer</TD
+></TR
+><TR
+><TD
+>offensive</TD
+><TD
+>Integer</TD
+><TD
+>light</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>mana</TD
+><TD
+>Integer</TD
+><TD
+>alignment</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>hit</TD
+><TD
+>Integer</TD
+><TD
+>minv</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>money</TD
+><TD
+>Integer</TD
+><TD
+>key</TD
+><TD
+>String</TD
+></TR
+><TR
+><TD
+>exp</TD
+><TD
+>Integer</TD
+><TD
+>open</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>sex</TD
+><TD
+>Integer</TD
+><TD
+>end tag</TD
+><TD
+>Symbol</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>Many of the same fields you found in rooms, as you can see from
+<A
+HREF="ch05.html#NPCFIELDS"
+>Table 6-1</A
+>, can also be found in NPCs.  The fields do
+not always have exactly the same use when coding rooms, NPCs, and
+objects but they are normally set in the same manor.  It is very
+important that you read and understand the differences of each field as
+they pertains to rooms and or NPCs.</P
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="NPCFIELDDESCR"
+>6.1. Description of NPC fields</A
+></H1
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>symbolic name</DT
+><DD
+><P
+>&#13;
+The rules of the symbols has been explained in <A
+HREF="ch03.html"
+>Chapter 4</A
+>, if you didn't read them yet you may want to review.
+ The important thing to realize with the NPC symbol is it is always
+ good practice to give the NPC a symbol that resembles the title so
+ that administrators and builders can use the
+ <B
+CLASS="COMMAND"
+>load</B
+> and the <B
+CLASS="COMMAND"
+>wstat</B
+> to easily
+locate, examine, and load the NPC in question.</P
+></DD
+><DT
+>title</DT
+><DD
+><P
+>&#13;The NPC title is what is shown if the NPC is being attacked or talking.
+It is also what is shown if the NPC can be picked up.  there should be
+no punctuation in the NPC title because of how it is used in the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+>
+server.  If you add punctuation or forget to capitalize something
+that the <ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> thinks you should it will give you a warning when you
+compile.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1303"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;title "a small dog"
+title "Hansen"
+title "a black dragon"
+title "Drako"
+title "an elephant"&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>descr</DT
+><DD
+><P
+>&#13;
+The description field is what the player sees when walking into the room
+or when looking with no arguments. The description on a NPC will only
+show up when the NPC is in the standing position.  All other positions
+will show the title and the position they are in. </P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1311"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;descr
+"a small fluffy dog is chasing its tail here."
+descr
+"Hansen is standing here sorting the mail."&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>names</DT
+><DD
+><P
+>&#13;
+The NPC name field is much more important then the room name field.  It
+        is what is used when players are hunting and killing and even
+        for administrators who are trying to use their administrator commands on a
+        NPC.  The names should match the title and the descr fields and
+        have all normal combinations of each.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1319"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;title "a baby black dragon"
+descr "a tiny baby black dragon is here playing."
+names {"tiny baby black dragon", "tiny black dragon",
+"baby black dragon", "black dragon", "tiny dragon",
+"baby dragon","dragon"}
+
+title "Hansen"
+descr "Hansen the post man is standing here sorting mail."
+names{"postman","hansen"}&#13;</PRE
+><P
+></P
+></DIV
+><P
+>The idea of course is to make any combination that a player may
+type to try and act upon your NPC.  You would not want to describe and
+title your NPC with an entirely different theme than you created its
+names with because a player would not know what it is called.</P
+></DD
+><DT
+>inside_descr</DT
+><DD
+><P
+></P
+><P
+>The inside description is what a player sees if it is inside the
+NPC.  This could be used to show the player its stomach or if on a mount
+it could be used to show the back of the horse.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1329"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;inside_descr
+"The lining of this stomach looks indestructible.  Looks like you are in
+for a long digestion cycle."&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>extra</DT
+><DD
+><P
+></P
+><P
+>The extra's on the NPC can be used to do many things.  It can be
+used to store information for <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> programs or it can be used to show a
+part of the NPC like the room extras show a part of the room.  There is
+also a special extra, the NPCs description when you look at it
+with the look &lt;NPC&gt; command.</P
+><P
+>Lets show the NPC description extra first.  If you use an extra
+with no names list it will become the NPCs description when you look at
+any of the names on the NPC.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1340"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;extra {}
+"The green furry hamster seems to be glowing and it doesn't seem very
+happy."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>You can also use extras to show parts of the NPC.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1343"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;extra {"hamster head","head"}
+"This human like head is covered with a lot of green fur and it looks
+really  upset."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>You can also use the extras to give more detailed and vivid
+descriptions when the NPC is acted upon.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN1346"
+></A
+><P
+><B
+>Table 6-2. NPC special action extras</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Extra</TH
+><TH
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>$get_s</TD
+><TD
+>A message shown to activator when getting a NPC.</TD
+></TR
+><TR
+><TD
+>$get_o</TD
+><TD
+>A message shown to others when getting a NPC.</TD
+></TR
+><TR
+><TD
+>$drop_s</TD
+><TD
+>a message shown to activator when dropping a NPC.</TD
+></TR
+><TR
+><TD
+>$drop_o</TD
+><TD
+>A message shown to others when dropping an NPC.</TD
+></TR
+><TR
+><TD
+>$enter_s</TD
+><TD
+>A message shown to activator When mounting</TD
+></TR
+><TR
+><TD
+>$enter_o</TD
+><TD
+>A message shown to others when mounting.</TD
+></TR
+><TR
+><TD
+>$exit_s</TD
+><TD
+>A message shown to others when dismounting</TD
+></TR
+><TR
+><TD
+>$exit_o</TD
+><TD
+>a message shown to others when dismounting</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+> In the following example, $1n is the activator and $2n is the
+unit in question.  Assume you are defining a familiar.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1379"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;extra {"$get_s"}
+"You pick up the $2n it is very warm and cuddles right up to you."
+
+extra {"$get_o"}
+"$1n picks up the $2n and you see them cuddle together."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Finally you can use extras to store information for <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> programs. 
+We will not cover this because it is a topic covered in-depth in
+the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> documentation.</P
+></DD
+><DT
+>manipulate</DT
+><DD
+><P
+></P
+><P
+>The manipulate filed only has two values for NPCs The two values
+are 'MANIPULATE_TAKE' and 'MANIPULATE_ENTER'.  The 'MANIPULATE_TAKE'
+makes it possible for a NPC to be picked up this would be good for
+something like a familiar.  The 'MANIPULATE_ENTER' is used for things
+like mounts when making a mount you will also have to set the capacity
+so a fat player can jump on.  The following is how you set the
+manipulate flag.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1391"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//Make a  NPC takable.
+manipulate {MANIPULATE_TAKE}
+
+//Make a NPC takable and able to be entered
+manipulate {MANIPULATE_TAKE|MANIPULATE_ENTER}&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>flags</DT
+><DD
+><P
+></P
+><P
+>This field on a NPC is used to set special attributes in order to make
+the NPC able to be buried or not or no-teleportable and many others.  The NPC
+flag list uses the UNIT_FL_* variables that both the objects and the
+rooms also use, therefore while you can set some flags on an NPC it may
+not have any affect unless you as a builder or administrator adds the
+functionality.  You can also add extras on an NPC that can be used as a
+special flag which you will learn as you learn to use <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>.  The
+following is a full list of all unit flags and how they affect NPC, if
+they do.
+         <DIV
+CLASS="TABLE"
+><A
+NAME="UNITFLAGSNPC"
+></A
+><P
+><B
+>Table 6-3. NPC unit flag affects</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Flag</TH
+><TH
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>UNIT_FL_PRIVATE</TD
+><TD
+>Currently has no affect on a NPC.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_INVISIBLE</TD
+><TD
+>Makes unit invisible</TD
+></TR
+><TR
+><TD
+>UNIT_FL_NO_BURY</TD
+><TD
+>Makes it so you can create NPC that can be taken like familiars or
+pets that can not be buried.  This flag is not needed on every NPC
+because the bury command will not allow you to bury an NPC outside of
+your inventory.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_BURIED</TD
+><TD
+>Makes unit buried when loaded</TD
+></TR
+><TR
+><TD
+>UNIT_FL_NO_TELEPORT</TD
+><TD
+>Makes it so you can not summon the NPC with this flag and the NPC with
+this flag can not teleport.  You can still teleport to NPC with this
+flag the current way teleport is written.  Remember all spells are in
+<ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> and you can modify them in <TT
+CLASS="FILENAME"
+>spells.zon</TT
+> </TD
+></TR
+><TR
+><TD
+>UNIT_FL_NO_MOB</TD
+><TD
+>Currently has no affect on a NPC.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_NO_WEATHER</TD
+><TD
+>Currently has no affect on a NPC.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_INDOORS</TD
+><TD
+>Currently has no affect on NPC.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_TRANS</TD
+><TD
+>Makes unit transparent If the Unit is transparent you will be able
+to see any other NPCs that it is carrying.  For example if a NPC was
+carrying a familiar you would see that as you walked into the room.  It
+also is used in mounts so the PC can see outside its mount.  If the
+flag is not set on its mount the player will not see what is in the
+room. </TD
+></TR
+><TR
+><TD
+>UNIT_FL_NO_SAVE</TD
+><TD
+>Makes it so a PC can't save with unit</TD
+></TR
+><TR
+><TD
+>UNIT_FL_SACRED</TD
+><TD
+>Currently has no affect on a NPC.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_MAGIC</TD
+><TD
+>Currently has no affect on a NPC.</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></P
+><P
+>If you wanted to make a NPC that a player can carry around but can
+not save you would set the manipulate and flags as follows.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1448"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;manipulate {MANIPULATE_TAKE}
+flags {UNIT_FL_NO_SAVE}&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>romflags</DT
+><DD
+><P
+></P
+><P
+>Like flags these are just integer values that are used to change
+how the NPC interacts with its environment.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="ROMFLAGSNPC"
+></A
+><P
+><B
+>Table 6-4. Room flags for NPCs</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Flag</TH
+><TH
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>CHAR_PROTECTED</TD
+><TD
+>Set this flag if the character is protected by the law-system.</TD
+></TR
+><TR
+><TD
+>CHAR_LEGAL_TARGET</TD
+><TD
+>This flag is used by the law system and should not be set unless you are re-writing your law system.</TD
+></TR
+><TR
+><TD
+>CHAR_OUTLAW</TD
+><TD
+>This flag is used by the law system and should not be set unless you are re-writing your law system.</TD
+></TR
+><TR
+><TD
+>CHAR_GROUP</TD
+><TD
+>This is used by the follow and group commands and should not be set unless you are re-writing your, movement, status, and combat systems.</TD
+></TR
+><TR
+><TD
+>CHAR_BLIND</TD
+><TD
+>Set this if the character is blinded.</TD
+></TR
+><TR
+><TD
+>CHAR_HIDE</TD
+><TD
+>Set flag if character is hidden.</TD
+></TR
+><TR
+><TD
+>CHAR_MUTE</TD
+><TD
+>Set flag if character is mute.</TD
+></TR
+><TR
+><TD
+>CHAR_SNEAK</TD
+><TD
+>Set flag if character is in sneaking mode.</TD
+></TR
+><TR
+><TD
+>CHAR_DETECT_ALIGN</TD
+><TD
+>No actual effect on NPCs.</TD
+></TR
+><TR
+><TD
+>CHAR_DETECT_INVISIBLE</TD
+><TD
+>Set flag if character can see invisible units.</TD
+></TR
+><TR
+><TD
+>CHAR_DETECT_MAGIC</TD
+><TD
+>No actual effect on NPCs.</TD
+></TR
+><TR
+><TD
+>CHAR_DETECT_POISON</TD
+><TD
+>No actual effect on NPCs.</TD
+></TR
+><TR
+><TD
+>CHAR_DETECT_UNDEAD</TD
+><TD
+>No actual effect on NPCs.</TD
+></TR
+><TR
+><TD
+>CHAR_DETECT_CURSE</TD
+><TD
+>No actual effect on NPCs.</TD
+></TR
+><TR
+><TD
+>CHAR_DETECT_LIFE</TD
+><TD
+>No actual effect on NPCs.</TD
+></TR
+><TR
+><TD
+>CHAR_WIMPY</TD
+><TD
+>Set flag if character if wimpy. Wimpy characters flee when they are
+low on hit points, and they gain less experience when killing others.
+If a character is both wimpy and aggressive (NPC_AGGRESSIVE) it will
+only attack sleeping players.</TD
+></TR
+><TR
+><TD
+>CHAR_SELF_DEFENCE</TD
+><TD
+>This is an internal combat flag set this only if you create your own combat system.</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>These flags are set in the same way as other flags in rooms NPCs
+and objects.  The following are a few examples.
+<DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1517"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//wimpy and hidden
+romflags {CHAR_HIDDEN, CHAR_WIMPY}
+
+//NPC can see invisible
+romflags {CHAR_DETECT_INVISIBLE}&#13;</PRE
+><P
+></P
+></DIV
+></P
+></DD
+><DT
+>weight</DT
+><DD
+><P
+></P
+><P
+>The weight is the weight of the NPC in pounds.  In the future we
+may adjust this to allow you to make things lighter for example you
+could set it in ounces or grams.  Right now however all we have is
+pounds so we have some pretty heavy feathers out there.</P
+><P
+>To use this you just enter the 'weight' keyword and then the
+value.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1527"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;/80 lbs.
+weight 80&#13;</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>The weight affects the NPCs natural attack damage.</P
+></TD
+></TR
+></TABLE
+></DIV
+></DD
+><DT
+>capacity</DT
+><DD
+><P
+></P
+><P
+>This field along with the NPCs strength and dexterity decides how
+much a NPC can carry.  If you set the capacity to 300 lbs.  the NPC will
+only be able to carry that much depending if it has the strength and
+dexterity to carry that much.  This of course doesn't affect <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> programs
+that link the objects directly into the NPC.  To set the capacity you
+just put the keyword and the amount in your NPC.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1539"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;capacity  300&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>height</DT
+><DD
+><P
+></P
+><P
+>The height field is the size of the NPC in centimeters.  This determines
+the size of the equipment the NPC is wearing.  You will learn more about
+size and height in the object section but for now just understand this
+makes your NPC the right or wrong size.  To set the 'height' you just
+put the 'height' keyword followed by the number of centimeters.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1548"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;
+//6 feet tall since 1 inch equals 2.54
+height 183&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>dilbegin or dilcopy</DT
+><DD
+><P
+></P
+><P
+>The <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions are what give <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> servers the edge over all other muds.
+We will only give some examples here and leave it up to the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> manual to teach
+you how to create your own functions that will make your rooms, NPC, and
+objects more than special.</P
+><P
+>There are several NPC functions that come standard with the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+>
+2.0.  The following is a list of the functions.</P
+><P
+></P
+><UL
+><LI
+><P
+>Mercenary</P
+></LI
+><LI
+><P
+>obey</P
+></LI
+><LI
+><P
+>evaluate</P
+></LI
+><LI
+><P
+>guard direction</P
+></LI
+><LI
+><P
+>shop keeper</P
+></LI
+><LI
+><P
+>combat magic</P
+></LI
+><LI
+><P
+>fido</P
+></LI
+><LI
+><P
+>zone wander</P
+></LI
+><LI
+><P
+>global wander</P
+></LI
+><LI
+><P
+>team work</P
+></LI
+><LI
+><P
+>rescue</P
+></LI
+><LI
+><P
+>agressive</P
+></LI
+></UL
+><P
+>These are the only NPC functions currently documented in the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+>
+2.0 release but if you go through the zones that are released with the
+<ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> you are sure to find many more.  Hopefully with the descriptions in
+<A
+HREF="x2097.html"
+>Section 6.5</A
+>.  You will be able to use the functions
+listed here and figure out ones that are not.</P
+><P
+>Since these are just <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>'s written by builders for the
+Valhalla mud all you have to do is use the dilcopy keyword in the
+NPC with the function name you want to use and the arguments that
+function require.  The following is what you would find in the
+<TT
+CLASS="FILENAME"
+>function.zon</TT
+> for evaluate.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1594"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;/* Evaluate <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>. amt is the cost of evaluation in iron pieces.
+  Note: not to be confused with <CODE
+CLASS="FUNCTION"
+>evaluate@commands</CODE
+>, which
+  is a command.
+*/
+dilbegin aware evaluate (amt: integer);
+
+var u1 : unitptr;
+    arg: string;
+    buf: string;
+    cur: integer;
+    craft: integer;
+    category: integer;
+
+    pc : unitptr;
+    pcn: string;
+
+    arm_text  : stringlist;
+    shi_text  : stringlist;
+    craft_text: stringlist;
+code
+{
+
+craft_text:=  {"horrible","very bad","bad","worse than average","average",
+  "a little better than average","better than average","good","very good",
+  "supreme"};
+arm_text:= {"clothes", "leather", "hard leather", "chain", "plate"};
+shi_text:= {"small", "medium", "large"};
+
+heartbeat:= PULSE_SEC*3;
+
+:start:
+arg:= "";
+u1:= null;
+
+wait (SFB_CMD, command("evaluate"));
+
+if (visible(pc, self) == FALSE)
+    goto start; // Pc is just trying to evaluate using the command
+
+block;
+
+pc:= activator;
+if (pc.type == UNIT_ST_PC) pcn := pc.name;
+else pcn := pc.title;
+
+arg:= argument;
+
+if (visible(self, pc) == FALSE)
+    {
+    exec ("say I don't do business with people I can't see.", self);
+    goto start;
+    }
+
+if (arg == "")
+    {
+    exec ("say Which item do you wish to evaluate, "+pcn+"?", self);
+    goto start;
+    }
+
+u1:= findunit (pc, arg, FIND_UNIT_IN_ME, null);
+
+if (not u1)
+    {
+    exec ("say You do not have such an item, "+pcn+".", self);
+    goto start;
+    }
+
+if ((u1.type != UNIT_ST_OBJ) or ( (u1.objecttype != ITEM_WEAPON) and
+    (u1.objecttype != ITEM_ARMOR) and (u1.objecttype != ITEM_SHIELD) ))
+    {
+    exec ("say The "+u1.name+" is neither a sword, shield nor armor!", self);
+    goto start;
+    }
+
+// Currency, skip for now
+
+if (not transfermoney (pc, null, amt * IRON_MULT))
+    {
+    exec ("say The cost is merely "+moneystring(amt*IRON_MULT, TRUE)+
+        ", get them first.", self);
+    goto start;
+    }
+
+category:= u1.value[0];
+craft:= u1.value[1] / 5 + 4; // / 5 + 4 is to get corresponding craft_text val
+
+if (craft &#60; 0) craft := 0;  if (craft &#62; 9) craft := 9;
+
+// Change the following to use skill_text(craft) instead of itoa(craft)
+if (u1.objecttype == ITEM_WEAPON)
+    buf := "say The "+u1.name+" is a "+weapon_name(category)+" of "+
+        craft_text.[craft]+" craftmanship and material.";
+
+if (u1.objecttype == ITEM_ARMOR)
+    buf := "say The "+u1.name+" is made of "+arm_text.[category]+" and is of "+
+        craft_text.[craft]+" craftmanship and material.";
+
+if (u1.objecttype == ITEM_SHIELD)
+    buf := "say The "+u1.name+" is a "+shi_text.[category]+" shield of "+
+        craft_text.[craft]+" craftmanship and material.";
+
+exec (buf, self);
+
+goto start;
+
+}
+
+dilend&#13;</PRE
+><P
+></P
+></DIV
+><P
+>If this <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> function scares you don't worry you don't have to
+understand it or adjust it you only have to use it.  In fact this is a
+really easy <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> to use.  It only has one argument which is 'amt', the integer value of money you want the evaluator to charge when a
+person evaluates their stuff.  So to use this function it would look
+like this on an NPC.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1601"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy evaluate@function (5*GOLD_PIECE);&#13;</PRE
+><P
+></P
+></DIV
+><P
+>this tells the evaluate <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> to charge 5 gold pieces each time a player
+evaluates something.  For more information on the money see the money
+field.</P
+><P
+>All released <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> NPC functions are described in
+<A
+HREF="x2097.html"
+>Section 6.5</A
+>.
+Then we put some to work so you can see how
+to use them in <A
+HREF="x2629.html"
+>Section 6.6</A
+></P
+></DD
+><DT
+>defensive</DT
+><DD
+><P
+></P
+><P
+>This field sets the NPC natural defense.  The defense is a natural
+bonus the NPC gets when being attacked.  If this value is set high
+enough the NPC becomes almost indestructible.  You should use the macro
+to set the NPC natural attack and defense in <A
+HREF="x1845.html#NPCMACROATTDEF"
+>Section 6.2.2</A
+>.</P
+></DD
+><DT
+>offensive</DT
+><DD
+><P
+></P
+><P
+>This field sets the NPC natural offense.  The offense is a natural
+bonus the NPC gets when being attacked.  If this value is set high
+enough the NPC can do some serious damage when attacking.  You should use the macro
+to set the NPC natural attack and defense in <A
+HREF="x1845.html#NPCMACROATTDEF"
+>Section 6.2.2</A
+>.</P
+></DD
+><DT
+>mana</DT
+><DD
+><P
+></P
+><P
+>This sets the NPC max mana points.  Using this field you can create
+special NPCs that have more or less mana points than the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> server would
+normally give when a NPC is loaded.</P
+><P
+>this field is simple all you have to do to set it is put the 'mana'
+keyword followed by the amount of mana points you want the NPC to have as
+its max.  The following definition would make an NPC with only 100 mana
+points no matter what level.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1634"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;mana 100&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>hit</DT
+><DD
+><P
+></P
+><P
+>This sets the NPC max hit points.  Using this field you can create
+special NPCs that have more or less hit points than the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> server would
+normally give when a NPC is loaded.</P
+><P
+>this field is simple all you have to do to set it is put the 'hit'
+keyword followed by the amount of hit points you want the NPC to have as
+its max.  The following definition would make an NPC with only 100 hit
+points no matter what level.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1645"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;hit 100&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>money</DT
+><DD
+><P
+></P
+><P
+>The money field is how you give your NPC money to have while going
+along its marry way through your world.  The money field is an integer
+that tells the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> how much money the NPC is carrying.  It would however
+be hard to calculate the amount you want on an NPC with out the macros
+we have provided.  For example to put 5 gold on an NPC you would have to
+use the following on your NPC.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1655"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;money 25600&#13;</PRE
+><P
+></P
+></DIV
+><P
+>I of course am not sure this will make 5 gold pieces since I did
+the math in my head and with all this righting I am doing my math mind
+doesn't seem to be working right.  So to make life easier for you and me
+we have added some macros to help that are rather self
+explanatory.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1658"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;IRON_PIECE
+COPPER_PIECE
+SILVER_PIECE
+GOLD_PIECE
+PLATINUM_PIECE&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now if we wanted to make a NPC carrying five gold it would be as
+simple as this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1661"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;money 5*GOLD_PIECE&#13;</PRE
+><P
+></P
+></DIV
+><P
+>the macro method also gains you the ability to tell the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> what
+amount of each coin you want on the NPC.  If you set it using a single
+integer the compiler would pick how many of each coin.  This of course
+is not what is desired in fact you want to be able to set your money
+however you like.  So setting more than one coin is as simple as adding
+a comma between the first and second coin.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1665"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;money 5*GOLD_PIECE, 20*IRON_PIECE&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>exp</DT
+><DD
+><P
+></P
+><P
+>By default a monster gives 100% of the experience it is worth. 
+This amount is calculated according to the level of the NPC verses the
+level of the person fighting it.  Sometimes the amount of experience is
+not right since the NPC is really hard to kill for example a dragon with
+breath weapon and heal at the same level as a merchant with a dagger. 
+These should of course give different experience.  The 'exp' field is
+designed to do just that.  The possible range for the 'exp' field is
+-500% to 500%.  If you put the NPC at a negative experience value it
+will take experience away when it is killed.  If you want the default of
+100% you do not even need to place this field in your NPC.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1674"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//add 50% to the experience gained
+exp 150
+
+/subtract 150% from the experience gained
+exp -50 &#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>sex</DT
+><DD
+><P
+></P
+><P
+>Gender, one of these:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1683"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;SEX_NEUTRAL
+SEX_MALE
+SEX_FEMALE&#13;</PRE
+><P
+></P
+></DIV
+><P
+>the values are pretty obvious which is which gender so all we will
+show here is how to set it.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1686"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//Setting a male NPC
+sex SEX_MALE&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>level</DT
+><DD
+><P
+></P
+><P
+>When  creating a NPC it must be between level 0 and  199.  The
+level  of  the NPC decides how many skill points  and  ability
+points the NPC has.  It, along with the 'exp' percentage, determines the amount of experience gained
+when the NPC is killed. To set the level of the NPC you use
+the 'level' keyword and then follow it by the level you are
+setting.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1695"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//set a NPC to level 50
+level 50&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>race</DT
+><DD
+><P
+></P
+><P
+>The 'race' keyword is what you use to set the characters race. 
+Races in <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> are defined by using an integer that lets the spells and
+skills act differently for each specific type.  The <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> comes standard
+with many races defined in the <TT
+CLASS="FILENAME"
+>values.h</TT
+>.  For
+ease in access we have provided them in <A
+HREF="a5346.html"
+>Appendix C</A
+>.  For now
+you can look at the short list below taken from the over all
+race list.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1708"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define RACE_RAT            1102
+#define RACE_HORSE          1103
+#define RACE_BADGER         1104
+#define RACE_SKUNK          1105
+#define RACE_BOAR           1106
+#define RACE_MOUSE          1107
+#define RACE_MONKEY         1108
+#define RACE_PORCUPINE      1110
+#define RACE_ELEPHANT       1112
+#define RACE_CAMEL          1113
+#define RACE_FERRET         1114&#13;</PRE
+><P
+></P
+></DIV
+><P
+>If for example you wanted to make a monkey you could simply put
+the 'race' keyword and follow it by the monkey define like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1711"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;race RACE_MONKEY&#13;</PRE
+><P
+></P
+></DIV
+><P
+>If the race your looking for doesn't exist in the
+<TT
+CLASS="FILENAME"
+>values.h</TT
+> list, you can either add one buy picking a
+number not already used and creating your own define in the
+<TT
+CLASS="FILENAME"
+>values.h</TT
+> or by adding the define to your zone. 
+Defines added to a single zone will not be accessible if another builder
+wants to use it.  You could also just set it using a number.  The
+following two methods would act the same.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1716"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>//add define to values.h and use in your zone
+#define RACE_SPACE_TROLL  5059
+race RACE_SPACE_TROLL
+
+//Just plug in a number
+race 5059&#13;</PRE
+><P
+></P
+></DIV
+><P
+>If you don't use the macros things can get confusing really fast with
+the amount of races there are.</P
+></DD
+><DT
+>attack</DT
+><DD
+><P
+></P
+><P
+>This field sets the NPCs natural attack type.  Do not use this
+field directly instead use the macro described in <A
+HREF="x1845.html#NPCMACROATTARM"
+>Section 6.2.1</A
+></P
+></DD
+><DT
+>armour</DT
+><DD
+><P
+></P
+><P
+>This field sets the NPCs natural armour type.  Do not use this
+field directly instead use the macro described in <A
+HREF="x1845.html#NPCMACROATTARM"
+>Section 6.2.1</A
+></P
+></DD
+><DT
+>speed</DT
+><DD
+><P
+></P
+><P
+>Speed determines the NPCs speed.  The range is one to twelve.  You
+should not set this when compiling an NPC since the result is really
+undefined.  If you have a special NPC that you want to try to make move
+faster and hit faster then you could try setting this.  This field is
+mainly added so <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> can adjust speed.  The lower the number the
+faster the NPC speed.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1743"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//fastest speed.
+speed 0
+
+//slowest speed
+speed 12&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>position</DT
+><DD
+><P
+></P
+><P
+>This field sets the position that the NPC will be in when it is
+first loaded.  The following positions are recognized by the
+compiler.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1752"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;POSITION_DEAD
+POSITION_MORTALLYW
+POSITION_INCAP
+POSITION_STUNNED
+POSITION_SLEEPING
+POSITION_RESTING
+POSITION_SITTING
+POSITION_FIGHTING
+POSITION_STANDING&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Some of these positions make no sense you would not load a
+  NPC into a fight or you would not load an NPC that is already dead. 
+  The positions are availible for <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> and you will need to read the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>
+  manuals to find out what you would want those for.  For now the
+  following are enough.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1757"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>  
+  POSITION_SLEEPING
+POSITION_RESTING
+POSITION_SITTING
+POSITION_STANDING&#13;</PRE
+><P
+></P
+></DIV
+><P
+>The position combined with the default position determines what
+will be shown when a player looks in the room.  If the position of the
+NPC matches its default position the NPC description will be shown.  If
+it doesn't match the NPCs title and position will be shown.  The
+default value for both 'position' and 'default' is 'POSITION_STANDING'</P
+><P
+>To set the position like with other fields you type the 'position'
+keyword first and follow it by the position you are setting.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1761"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;position POSITION_SITTING&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>default</DT
+><DD
+><P
+></P
+><P
+>The default position along with the position determines what is
+shown when a NPC is in each position.  If the position and default
+positions match the 'descr' field is shown.  If they do not match the
+NPC title is shown along with the current position information.  If
+'default' is not set it defaults to 'POSITION_STANDING'.  The following
+are possible default positions.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1770"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>  
+    POSITION_DEAD
+POSITION_MORTALLYW
+POSITION_INCAP
+POSITION_STUNNED
+POSITION_SLEEPING
+POSITION_RESTING
+POSITION_SITTING
+POSITION_FIGHTING
+POSITION_STANDING&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Setting the default field is exactly like setting the 'position'
+field you place the 'default' keyword first and then the position you
+want to be default like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1773"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;default POSITION_RESTING&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>ability</DT
+><DD
+><P
+></P
+><P
+>this field is used to set each of the NPCs abilities. 
+It should not be used directly but instead set through the macro described
+in <A
+HREF="x1845.html#NPCMACROABILITY"
+>Section 6.2.3</A
+></P
+></DD
+><DT
+>weapon</DT
+><DD
+><P
+></P
+><P
+>this field is used to set each of the NPCs weapon proficiencies. 
+It should not be used directly but instead set through the macro described
+in <A
+HREF="x1845.html#NPCMACROWEAPSPL"
+>Section 6.2.4</A
+></P
+></DD
+><DT
+>spell</DT
+><DD
+><P
+></P
+><P
+>this field is used to set each of the NPCs spells. 
+It should not be used directly but instead set through the macro described
+in <A
+HREF="x1845.html#NPCMACROWEAPSPL"
+>Section 6.2.4</A
+></P
+></DD
+><DT
+>light</DT
+><DD
+><P
+></P
+><P
+>The light field on NPC is not normally set.  If however you have a
+strange creature like a 'light bug' you can set a light value on a NPC. 
+The default light is set to 0 which means it neither adds or subtracts
+from the rooms light.  To set the light value on a NPC you just put the
+'light' keyword first and then the value you want to add to the current
+light.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1806"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//add one to light in room
+light 1
+
+//default 
+light 0
+
+//take one away
+light -1&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>alignment</DT
+><DD
+><P
+></P
+><P
+>This field   is  a  value between -1000 and +1000,  where  -1000  is
+ultimate  evil, 0 is neutral and +1000 is ultimate good.  Good  is
+per  definition any value from +1000..+350, neutral is  any  value
+from  +349..-349 and evil is any value from -350..-1000. Any value
+in between can also be used.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1815"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;// Quite evil, maybe a Ghoul  
+alignment -750
+
+// Barely evil.
+alignment -350
+
+//barely good
+alignment 350&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>minv</DT
+><DD
+><P
+></P
+><P
+>This field is the administrator invisible level of the NPC it is
+set on.  This means that if you set the 'minv' to two hundred it will
+make it so the NPC can not be seen by anyone below the administrator
+level of two hundred.  This is good for hiding ghosts that only come
+visible when they attack.  In order for the 'minv' to be removed an
+administrator or a <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> function must change it.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1825"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;minv 239&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>key</DT
+><DD
+><P
+></P
+><P
+>Currently this field is not used in the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> 2.0 release.  It was
+added so in the future you wanted to add keys to a NPC for some
+weird reason like a living trunk then you can.  In order to set the key
+you first place the 'key' keyword and then add the symbolic name of the
+key.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1835"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//if the key is in your zone
+key mynpckey
+
+//if the key is in some other zone
+key someoneelses@keyzone&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>open</DT
+><DD
+><P
+></P
+><P
+>this field is not used yet in the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> 2.0 release.  The field was
+added so you could make a NPC that can be opened, closed, locked,
+and everything else that a room or an object can have set on it.  For
+now we will not document this but if you are interested in how you could
+use it study the open fields on objects or rooms.</P
+></DD
+></DL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x1157.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1845.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Suggested room exercises</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>NPC macros</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

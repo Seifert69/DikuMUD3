@@ -1,0 +1,527 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Color code descriptions and examples</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Color and formatting codes"
+HREF="ch08.html"><LINK
+REL="PREVIOUS"
+TITLE="Formatting code descriptions and examples"
+HREF="x4931.html"><LINK
+REL="NEXT"
+TITLE="The DIL section"
+HREF="ch09.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x4931.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 9. Color and formatting codes</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="ch09.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="COLORDESCR"
+>9.4. Color code descriptions and examples</A
+></H1
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>&amp;c and &amp;b</DT
+><DD
+><P
+>In order to allow you to change the colors there are two codes.  One is
+for the foreground color (&amp;c) and the other is for the background
+color (&amp;b).  '&amp;c' is used with one or two
+arguments depending on brightness, while the '&amp;b' s only used with
+one because it has only one brightness.  They both have the forms as follows:</P
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;&amp;c&lt;bright&gt;&lt;color&gt;
+&amp;b&lt;color&gt;&#13;</PRE
+><P
+>It is important to set both the foreground and background color
+because if a player has his default background color set to blue and you
+use blue as a foreground color it will make the letters invisible to the
+player.  It is also important to set the colors back to the default
+color when done.  this is done by using the following command:</P
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;&amp;[default]&#13;</PRE
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>The '&amp;[default]' command will be described in the next
+section.  It is enough to know for now that it will return the players
+colors to their default colors.</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>Before we give some color examples we should now define the
+symbols for brightness and the symbols for each color and what they
+are.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN5001"
+></A
+><P
+><B
+>Table 9-2. Colors</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Code</TH
+><TH
+>Color</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>n</TD
+><TD
+>Black</TD
+></TR
+><TR
+><TD
+>r</TD
+><TD
+>Red</TD
+></TR
+><TR
+><TD
+>g </TD
+><TD
+>Green</TD
+></TR
+><TR
+><TD
+>y</TD
+><TD
+>Yellow</TD
+></TR
+><TR
+><TD
+>b</TD
+><TD
+>Blue</TD
+></TR
+><TR
+><TD
+>m</TD
+><TD
+>Magenta</TD
+></TR
+><TR
+><TD
+>c</TD
+><TD
+>Cyan</TD
+></TR
+><TR
+><TD
+>w</TD
+><TD
+>White</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN5033"
+></A
+><P
+><B
+>Table 9-3. Sample Color codes</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Code</TH
+><TH
+>Resulting Colors</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>&amp;cb&amp;bw</TD
+><TD
+>&nbsp;</TD
+></TR
+><TR
+><TD
+>&amp;+g&amp;bn</TD
+><TD
+>&nbsp;</TD
+></TR
+><TR
+><TD
+>&amp;c+w&amp;r</TD
+><TD
+>&nbsp;</TD
+></TR
+><TR
+><TD
+>&amp;c+w&amp;bn</TD
+><TD
+>&nbsp;</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></DD
+><DT
+>&amp;[&lt;color&gt;]</DT
+><DD
+><P
+>As we have said in the previous section if you are not careful you
+can make your text not visible by the player by setting the foreground to
+the same color as the background.  In order to make it possible for you
+to easily change how the color looks and to even match it with the way
+players have their colors set already we have created colors that the
+players can set.  and you can use.  The <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> comes
+with a default list of colors which can be added to by either the
+<TT
+CLASS="FILENAME"
+>color.def</TT
+> or even by a <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>
+program on line.   The default colors are as follows:</P
+><DIV
+CLASS="INFORMALTABLE"
+><P
+></P
+><A
+NAME="AEN5060"
+></A
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><COL><TBODY
+><TR
+><TD
+>death</TD
+><TD
+>default</TD
+><TD
+>exit</TD
+></TR
+><TR
+><TD
+>group</TD
+><TD
+>hit_me</TD
+><TD
+>hit_opponent</TD
+></TR
+><TR
+><TD
+>hit_other</TD
+><TD
+>immort_descr</TD
+><TD
+>immort_title</TD
+></TR
+><TR
+><TD
+>log</TD
+><TD
+>miss_me</TD
+><TD
+>miss_opponent</TD
+></TR
+><TR
+><TD
+>miss_other</TD
+><TD
+>nodam_me</TD
+><TD
+>nodam_opponent</TD
+></TR
+><TR
+><TD
+>nodam_other</TD
+><TD
+>npc_descr</TD
+><TD
+>npc_title</TD
+></TR
+><TR
+><TD
+>obj_descr</TD
+><TD
+>obj_title</TD
+><TD
+>pc_descr</TD
+></TR
+><TR
+><TD
+>pc_title</TD
+><TD
+>prompt</TD
+><TD
+>respond</TD
+></TR
+><TR
+><TD
+>room_descr</TD
+><TD
+>broom_title</TD
+><TD
+>say_other</TD
+></TR
+><TR
+><TD
+>say_self</TD
+><TD
+>shield_me</TD
+><TD
+>shield_opponent</TD
+></TR
+><TR
+><TD
+>shield_other</TD
+><TD
+>shout_other</TD
+><TD
+>shout_self</TD
+></TR
+><TR
+><TD
+>social_other</TD
+><TD
+>social_self</TD
+><TD
+>spells</TD
+></TR
+><TR
+><TD
+>tell_other</TD
+><TD
+>tell_self</TD
+><TD
+>time</TD
+></TR
+><TR
+><TD
+>weather</TD
+><TD
+>whisper</TD
+><TD
+>who</TD
+></TR
+><TR
+><TD
+>who_guild</TD
+><TD
+>who_inv</TD
+><TD
+>who_name</TD
+></TR
+><TR
+><TD
+>who_title</TD
+><TD
+>wiz</TD
+><TD
+>xpgain</TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+></DIV
+><P
+>To use these colors all you have to do is use the following formatting command:</P
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;&amp;[color]&#13;</PRE
+><P
+>The color that will be shown is the color that the player has set
+for the color in question.  If for example the player has his or her
+'death' color set to bright red with a black background and you have a
+description as follows:</P
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;descr
+"This is a &amp;[death]death&amp;[room_descr]room"&#13;</PRE
+><P
+>The description would be in the players 'room_descr' color while
+the word death would be in his or hers 'death' color.  You should note
+we had to set the color back to the room description color so that the
+rest of the description was not in the 'death' color.</P
+><P
+>To change the players color to the default out put color which is the color that is
+used when no color is specified by the server then you use
+'default'.  You probably won't use this in normal zone building but it
+is very important to know it exists when you start making spells,
+skills, and commands with <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+></P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x4931.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="ch09.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Formatting code descriptions and examples</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch08.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> section</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

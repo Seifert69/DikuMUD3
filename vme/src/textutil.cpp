@@ -1,0 +1,1221 @@
+/*
+ $Author: All $
+ $RCSfile: textutil.cpp,v $
+ $Date: 2003/11/29 03:31:16 $
+ $Revision: 2.4 $
+ */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#include "structs.h"
+#include "utils.h"
+#include "utility.h"
+#include "textutil.h"
+#include "common.h"
+
+/*  From char * input stream 'str' copy characters into 'buf' until
+ *  end of string or newline. Returns position of 'str' after copied
+ *  characters.
+ */
+char *str_line(const char *str, char *buf)
+{
+    if (str == NULL || buf == NULL)
+        return NULL;
+
+    for (; *str == ' ' || *str == '\n' || *str == '\r'; str++)
+        ;
+
+    if (*str == '\0')
+        return NULL;
+
+    for (; (*buf = *str); buf++, str++)
+        if (*str == '\n' || *str == '\r')
+            break;
+
+    *buf = '\0'; /* Erase last separator */
+
+    return (char *)str;
+}
+
+/* Make a string lowercase, and also return length of string */
+int str_lower(char *s)
+{
+    int l;
+
+    for (l = 0; *s; s++, l++)
+        if (isupper(*s))
+            *s = tolower(*s);
+
+    return l;
+}
+
+int str_upper(char *s)
+{
+    int l;
+
+    for (l = 0; *s; s++, l++)
+        if (islower(*s))
+            *s = toupper(*s);
+
+    return l;
+}
+
+/* Make a string lowercase in another buffer. Also return length of string */
+
+int str_lower(const char *s, char *d, int nBufSize)
+{
+    int l;
+
+    for (l = 0; *s && (l < nBufSize); s++, d++, l++)
+        if (isupper(*s))
+            *d = tolower(*s);
+        else
+            *d = *s;
+
+    if (l < nBufSize)
+        *d = 0;
+    else
+    {
+        slog(LOG_ALL, 0, "ERROR: str_lower destination buffer too small!");
+        *(d - 1) = 0;
+    }
+
+    return l;
+}
+
+/* Return a string consisting of `n' spaces */
+char *spc(int n)
+{
+    static char buf[256];
+
+    buf[n] = '\0';
+
+    if (n > 256)
+        n = 256;
+
+    for (; n;)
+        buf[--n] = ' ';
+
+    return buf;
+}
+
+/*  Return a pointer to the string containing the ascii reresentation
+ *  of the integer 'n'
+ *  I've made it the easy way :)
+ */
+#ifdef DOS
+char *itoa_dos(int n)
+#else
+char *itoa(int n)
+#endif
+{
+    static char buf[32]; /* 32 digits can even cope with 64 bit ints */
+
+    sprintf(buf, "%d", n);
+    return buf;
+}
+
+/*  Return a pointer to the string containing the ascii reresentation
+ *  of the integer 'n'
+ *  I've made it the easy way :)
+ */
+char *ltoa(long n)
+{
+    static char buf[32]; /* 32 digits can even cope with 64 bit ints */
+
+    sprintf(buf, "%ld", n);
+    return buf;
+}
+
+/*  STR Convention: "str_" [n] [c] <meaning>
+ *  n means - take number as argument, to limit operation
+ *  c means - ignore possible difference in case sensitivity
+ *  n always precedes c
+ *  Example: str_nccmp - compare n letters non-casesensitive
+ */
+
+/*  Compare two strings without case-sensitivity
+ *  Return result as defined in strcmp
+ */
+int str_ccmp(const char *s, const char *d)
+{
+    if (s == d)
+        return 0;
+
+    if (s == NULL)
+        return -1;
+    else if (d == NULL)
+        return 1;
+
+    for (; tolower(*s) == tolower(*d); s++, d++)
+        if (*s == '\0')
+            return 0;
+
+    return (tolower(*s) - tolower(*d));
+}
+
+/*  Compare max n chars without case-sensitivity
+ *  Return result as defined in strcmp
+ */
+int str_nccmp(const char *s, const char *d, int n)
+{
+    if (s == d)
+        return 0;
+
+    if (s == NULL)
+        return -1;
+    else if (d == NULL)
+        return 1;
+
+    for (n--; tolower(*s) == tolower(*d); s++, d++, n--)
+        if (*s == '\0' || n <= 0)
+            return 0;
+
+    return (tolower(*s) - tolower(*d));
+}
+
+/* Allocate space for a copy of source */
+char *str_dup(const char *source)
+{
+    char *dest;
+
+    if (source)
+    {
+        CREATE(dest, char, strlen(source) + 1);
+        strcpy(dest, source);
+
+        return dest;
+    }
+
+    return NULL;
+}
+
+/*  As defined by 2nd Ed. of K&R ANSI C
+ *  Return pointer to first occurence of ct in cs - or NULL
+ *  Used to determine ei. "from" and "in"
+ */
+char *str_str(register const char *cs, register const char *ct)
+{
+    register char *si;
+    register char *ti;
+
+    do
+    {
+        si = (char *)cs;
+        ti = (char *)ct;
+
+        while (*si++ == *ti++)
+            if (*ti == '\0')
+                return (char *)cs;
+
+    } while (*cs++);
+
+    return NULL;
+}
+
+/*  As defined by 2nd Ed. of K&R ANSI C, but non case sensitive
+ *  Return pointer to first occurence of ct in cs - or NULL
+ *  Used to determine ei. "from" and "in"
+ */
+char *str_cstr(register const char *cs, register const char *ct)
+{
+    register char *si;
+    register char *ti;
+
+    do
+    {
+        for (si = (char *)cs, ti = (char *)ct;
+             tolower(*si) == tolower(*ti); si++)
+            if (*++ti == '\0')
+                return (char *)cs;
+    } while (*cs++);
+
+    return NULL;
+}
+
+/* return string without leading spaces */
+char *skip_blanks(const char *string)
+{
+    if (string == NULL)
+        return NULL;
+
+    for (; *string && isspace(*string); string++)
+        ;
+
+    return (char *)string;
+}
+
+/* return string without leading spaces */
+char *skip_spaces(const char *string)
+{
+    if (string == NULL)
+        return NULL;
+
+    for (; *string && isaspace(*string); string++)
+        ;
+
+    return (char *)string;
+}
+
+void strip_trailing_blanks(char *str)
+{
+    if (!*str) /* empty string: return at once      */
+        return;
+
+    for (; *str; ++str) /* wind to end of string             */
+        ;
+
+    if (!isspace(*--str)) /* Not a spaceterminated string      */
+        return;           /* This is mainly for `inter-code' strings */
+
+    while (isspace(*--str)) /* rewind to last nonspace character */
+        ;
+
+    *++str = '\0'; /* step ahead and end string         */
+}
+
+void strip_trailing_spaces(char *str)
+{
+    if (!*str) /* empty string: return at once      */
+        return;
+
+    for (; *str; ++str) /* wind to end of string             */
+        ;
+
+    if (!isaspace(*--str)) /* Not a spaceterminated string      */
+        return;            /* This is mainly for `inter-code' strings */
+
+    while (isaspace(*--str)) /* rewind to last nonspace character */
+        ;
+
+    *++str = '\0'; /* step ahead and end string         */
+}
+
+/* Returns true is arg is empty */
+ubit1 str_is_empty(const char *arg)
+{
+    if (arg == NULL)
+        return TRUE;
+
+    return *(skip_blanks(arg)) == '\0';
+}
+
+/* Check if the string contains nothing but numbers */
+ubit1 str_is_number(const char *str)
+{
+    if (!*str)
+        return FALSE;
+    if ((*str == '-') || (*str == '+'))
+        str++;
+    for (; *str; str++)
+        if (!isdigit(*str))
+            return FALSE;
+
+    return TRUE;
+}
+
+/* Check if the next word in str is a number */
+ubit1 next_word_is_number(const char *str)
+{
+    char tmp[MAX_STRING_LENGTH];
+    str_next_word(str, tmp);
+    return str_is_number(tmp);
+}
+
+/* Block must end with null pointer, -1 if not found otherwise index */
+/* Warning, argument 1 is made into lowercase!                       */
+/* Warning, list of names must be in lowercase to match up! */
+int search_block(const char *oarg, const char **list, ubit1 exact)
+{
+    char arg[4096];
+    register int i, l;
+
+    /* Make into lower case, and get length of string */
+    l = str_lower(oarg, arg, sizeof(arg));
+
+    if (exact)
+    {
+        for (i = 0; list[i]; i++)
+            if (strcmp(arg, list[i]) == 0)
+                return i;
+    }
+    else
+    {
+        if (!l)
+            l = 1; /* Avoid "" to match the first available string */
+
+        for (i = 0; list[i]; i++)
+            if (strncmp(arg, list[i], l) == 0)
+                return i;
+    }
+
+    return -1;
+}
+
+/* Block must end with null pointer                                  */
+/* Warning, argument 1 is made into lowercase!                       */
+int search_block_length(const char *oarg, int length,
+                        const char **list, ubit1 exact)
+{
+    char arg[4096];
+    register int i;
+
+    /* Make into lower case, and get length of string */
+    str_lower(oarg, arg, sizeof(arg));
+
+    if (exact)
+    {
+        for (i = 0; list[i]; i++)
+            if (!strncmp(arg, list[i], length))
+                if (list[i][length] <= ' ')
+                    return i;
+    }
+    else
+    {
+        if (!length)
+            length = 1; /* Avoid "" to match the first available string */
+        for (i = 0; list[i]; i++)
+            if (!strncmp(arg, list[i], length))
+                return i;
+    }
+
+    return -1;
+}
+
+int fill_word(const char *argument)
+{
+    return (search_block(argument, fillwords, TRUE) >= 0);
+}
+
+/* Exactly as str_next-word, except it wont change the case */
+char *str_next_word_copy(const char *argument, char *first_arg)
+{
+    /* Find first non blank */
+    argument = skip_spaces(argument);
+
+    /* Copy next word and make it lower case */
+    for (; *argument > ' '; argument++)
+        *first_arg++ = *argument;
+
+    *first_arg = '\0';
+
+    return skip_spaces(argument);
+}
+
+/* Copy next word from argument into first_arg and make lowercase*/
+char *str_next_word(const char *argument, char *first_arg)
+{
+    /* Find first non blank */
+    argument = skip_spaces(argument);
+
+    /* Copy next word and make it lower case */
+    for (; *argument > ' '; argument++)
+        *first_arg++ = tolower(*argument);
+
+    *first_arg = '\0';
+
+    return skip_spaces(argument);
+}
+
+/*  Find the first sub-argument of a string,
+ *  return pointer to first char in primary argument, following the sub-arg
+ */
+char *one_argument(const char *argument, char *first_arg)
+{
+    assert(argument && first_arg);
+
+    do
+        argument = str_next_word(argument, first_arg);
+    while (fill_word(first_arg));
+
+    return (char *)argument;
+}
+
+/* determine if 'arg1' is an abbreviation of 'arg2'. */
+ubit1 is_abbrev(const char *arg1, const char *arg2)
+{
+    if (!*arg1)
+        return FALSE;
+
+    for (; *arg1; arg1++, arg2++)
+        if (tolower(*arg1) != tolower(*arg2))
+            return FALSE;
+
+    return TRUE;
+}
+
+/* determine if 'arg1' is an abbreviation of 'arg2'.          */
+/* The empty string is never an abbrevation of another string */
+ubit1 is_multi_abbrev(const char *arg1, const char *arg2)
+{
+    if (!*arg1)
+        return FALSE;
+
+    for (; *arg1 && !isspace(*arg1); arg1++, arg2++)
+        if (tolower(*arg1) != tolower(*arg2))
+            return FALSE;
+
+    return TRUE;
+}
+
+/* Block must end with null pointer, -1 if not found otherwise index */
+/* Warning, argument 1 is converted into lowercase!                  */
+int search_block_abbrevs(const char *oarg, const char **list, const char **end)
+{
+    char arg[4096];
+    char buf1[MAX_INPUT_LENGTH], buf2[MAX_INPUT_LENGTH];
+    char *s, *ps, *bestpos;
+    const char *d;
+    int i;
+    int match, bestidx;
+
+    i = str_lower(skip_spaces(oarg), arg, sizeof(arg));
+
+    bestidx = -1;
+    bestpos = NULL;
+
+    for (i = 0; list[i]; i++)
+    {
+        for (match = 0, s = arg, d = list[i];;)
+        {
+            ps = s;
+            s = str_next_word(s, buf1);
+            d = str_next_word(d, buf2);
+            if (is_multi_abbrev(buf1, buf2))
+            {
+                s = skip_spaces(s);
+                d = skip_spaces(d);
+                match++;
+            }
+            else
+                break;
+        }
+        if (match && ps > bestpos)
+        {
+            bestpos = ps;
+            bestidx = i;
+        }
+    }
+
+    if (bestidx != -1)
+    {
+        *end = oarg + (bestpos - arg);
+        return bestidx;
+    }
+
+    *end = oarg;
+
+    return -1;
+}
+
+/* returns a pointer to a (static) string wich contains s1 and s2 */
+char *str_cc(const char *s1, const char *s2)
+{
+    static char buf[16384];
+
+    strncpy(buf, s1, sizeof(buf) - 1);
+    strncat(buf, s2, sizeof(buf) - 1 - strlen(buf));
+
+    return buf;
+}
+
+/* =================================================================== */
+/* Insert the string "str" at the first position in the "itxt" string. */
+
+void str_insert(char *str, char *itxt)
+{
+    int nlen, slen;
+
+    nlen = strlen(itxt);
+    slen = strlen(str);
+
+    memmove(str + nlen, str, slen + 1);
+    memcpy(str, itxt, nlen);
+}
+
+
+/*
+   Scan the string 'str' for the string OLD and replace each
+   occurence with new. Does not handle memory overrun so str
+   must be large enough to hold it.
+   */
+void str_substitute(const char *old, const char *newstr, char *str)
+{
+    char *b;
+    int olen, nlen, slen;
+
+    if (!str)
+        return;
+
+    if (!old)
+        return;
+
+    if (!newstr)
+        nlen = 0;
+    else
+        nlen = strlen(newstr);
+
+    olen = strlen(old);
+    slen = strlen(str);
+
+    while ((b = str_str(str, old)))
+    {
+        if (nlen <= olen)
+        {
+            if (nlen != 0)
+            {
+                memcpy(b, newstr, nlen);
+            }
+            memmove(b + nlen, b + olen, slen - (b - str + olen) + 1);
+            slen -= olen - nlen;
+        }
+        else
+        {
+            memmove(b + nlen, b + olen, slen - (b - str));
+            memcpy(b, newstr, nlen);
+            slen += nlen - olen;
+        }
+    }
+}
+
+void str_substitute(const std::string &search, const std::string &replace, std::string &subject)
+{
+    size_t pos = 0;
+
+    if (search.empty())
+        return;
+        
+    while ((pos = subject.find(search, pos)) != std::string::npos)
+    {
+        subject.replace(pos, search.length(), replace);
+        pos += replace.length();
+    }
+}
+
+
+/* Remove all occurences of c in s */
+void str_rem(char *s, char c)
+{
+    int diff;
+
+    if (c == '\0')
+        return;
+
+    for (diff = 0; *(s + diff);)
+    {
+        if (*s == c)
+            diff++;
+        else
+            s++;
+
+        *s = *(s + diff);
+    }
+}
+
+/* Remove all occurences of control codes in s, keeps \n and \r */
+void str_rem_codes(char *s)
+{
+    int diff;
+
+    for (diff = 0; *(s + diff);)
+    {
+        if ((*s < ' ') && (*s != '\n') && (*s != '\r'))
+            diff++;
+        else
+            s++;
+
+        *s = *(s + diff);
+    }
+}
+
+/* Change all \n\r to <br/>\n\r */
+void str_amp_html(const char *s, char *d)
+{
+    for (; *s;)
+    {
+        if (*s == '&')
+        {
+            *d++ = '&';
+            *d++ = 'a';
+            *d++ = 'm';
+            *d++ = 'p';
+            *d++ = ';';
+            s++; // Skip &
+        }
+        else
+            *d++ = *s++;
+    }
+    *d = 0;
+}
+
+/* Change all \n\r to <br/>\n\r */
+void str_nr_brnr(const char *s, char *d)
+{
+    for (; *s;)
+    {
+        if ((*s == '\n') && (*(s + 1) == '\r'))
+        {
+            *d++ = '<';
+            *d++ = 'b';
+            *d++ = 'r';
+            *d++ = '/';
+            *d++ = '>';
+            *d++ = '\n';
+            *d++ = '\r';
+            s += 2;
+        }
+        else
+            *d++ = *s++;
+    }
+    *d = 0;
+}
+
+/* Replace all occurences of non alfa, digit with space in s */
+void str_blank_punct(char *s)
+{
+    static char c[3] = {' ', ' ', 0};
+
+    for (; *s; s++)
+        if (ispunct(*s))
+        {
+            c[0] = *s;
+            *s = ' ';
+            str_insert(s + 1, c);
+            s += 2;
+        }
+}
+
+/* Remove all multiple space occurences in s */
+void str_remspc(register char *s)
+{
+    register char *cp;
+
+    while (*s && (*s != ' ' || *(s + 1) != ' '))
+        s++;
+
+    if (*s == 0)
+        return;
+
+    cp = s;
+
+    while (*cp)
+    {
+        while (*cp == ' ' && *(cp + 1) == ' ')
+            cp++;
+
+        *s++ = *cp++;
+    }
+    *s = 0;
+}
+
+void str_chraround(char *str, char c)
+{
+    int l;
+
+    l = strlen(str);
+    memmove(str + 1, str, l);
+    str[0] = c;
+    str[l + 1] = c;
+    str[l + 2] = 0;
+}
+
+/* Names has the format :                                 */
+/*     names[0] pointer to a string                       */
+/*     names[N] pointer to the last N'th string           */
+/*     names[N+1] NIL pointer                             */
+/*                                                        */
+/*   Assumes nothing that arg is without leading spaces,  */
+/*   no double spaces and contains text                   */
+
+const char *is_name_raw(const char *arg, char const *const *names) // MS2020 const char *names[])
+{
+    register int i, j;
+
+    for (i = 0; names[i]; i++)
+    {
+        for (j = 0; names[i][j]; j++)
+            if (tolower(arg[j]) != tolower(names[i][j]))
+                break;
+
+        if (!names[i][j])
+            if (!arg[j] || isaspace(arg[j]))
+                return (arg + j);
+    }
+
+    return NULL;
+}
+
+/*
+ ******** Utility routines for the name lists. *******
+ */
+
+/*  Names has the format:
+ *     names[0] pointer to a string
+ *     names[N] pointer to the last N'th string
+ *     names[N+1] NIL pointer
+ *  Assumes nothing nice about arg - only about names[]
+ */
+/* We need to copy to BUF in order to prevent crash when */
+/* str_remspc might want to change "constant" strings    */
+
+const char *is_name(const char *arg, char const *const *names) // MS2020 const char *names[])
+{
+    char buf[MAX_INPUT_LENGTH];
+
+    for (; isaspace(*arg); arg++)
+        ;
+
+    if (!*arg)
+        return 0;
+
+    strcpy(buf, arg);
+    str_remspc(buf);
+
+    return is_name_raw(buf, names);
+}
+
+/* Create an empty namelist */
+char **create_namelist(void)
+{
+    char **list;
+
+    CREATE(list, char *, 1);
+    list[0] = NULL;
+
+    return list;
+}
+
+/* Add a new name to the end of an existing namelist */
+char **add_name(const char *name, char **namelist)
+{
+    int pos = 0;
+
+    assert(name && namelist);
+
+    while (namelist[pos])
+        pos++;
+
+    RECREATE(namelist, char *, pos + 2);
+
+    namelist[pos] = str_dup(name);
+    namelist[pos + 1] = NULL;
+
+    return namelist;
+}
+
+/* free space allocated to a namelist */
+void free_namelist(char **list)
+{
+    char **original;
+
+    assert(list);
+
+    original = list;
+
+    while (*list)
+    {
+#ifdef MEMORY_DEBUG
+        FREE(*(list));
+#else
+        free(*list);
+#endif
+        list++;
+        /* MS: Well, ugly but we have to do while free macro is in use! */
+    }
+
+    FREE(original);
+}
+
+/*  Compare if 'next_word' is the next word in buf - if true return pointer
+ *  Put no space before or after 'next_word'
+ *  Return NIL if not identical, otherwise return pointer to location
+ *  just after the match
+ */
+char *str_ccmp_next_word(const char *buf, const char *next_word)
+{
+    buf = skip_spaces(buf);
+
+    for (; *next_word; next_word++, buf++)
+        if (*next_word != *buf)
+            return NULL;
+
+    if (!*buf || isaspace(*buf)) /* Buf must end here or be word separated */
+        return (char *)buf;
+
+    return NULL;
+}
+
+/*  Must receive a string of the format 'name@zone\0' or
+ *  'zone/name\0'. It sabotages the special symbol '@'
+ *  or '/' if any. If no special symbol name will
+ *  contain the string
+ */
+void split_fi_ref(const char *str, char *zone, char *name)
+{
+    char *c, *t;
+    int l;
+
+    if (!str)
+        return;
+
+    str = skip_spaces(str);
+
+    if ((c = (char *)strchr(str, '@')))
+    {
+        l = MIN(c - str, FI_MAX_UNITNAME);
+        strncpy(name, str, l);
+        name[l] = '\0';
+
+        l = MIN(strlen(c + 1), FI_MAX_ZONENAME);
+        if ((t = strchr(c + 1, ' ')))
+            l = MIN(l, t - (c + 1));
+        strncpy(zone, c + 1, l);
+        zone[l] = 0;
+    }
+    else if ((c = (char *)strchr(str, '/')))
+    {
+        l = MIN(c - str, FI_MAX_ZONENAME);
+        strncpy(zone, str, l);
+        zone[l] = '\0';
+
+        l = MIN(strlen(c + 1), FI_MAX_UNITNAME);
+        if ((t = strchr(c + 1, ' ')))
+            l = MIN(l, t - (c + 1));
+        strncpy(name, c + 1, l);
+        name[l] = 0;
+    }
+    else
+    {
+        if ((c = (char *)strchr(str, ' ')))
+        {
+            l = MIN(c - str, FI_MAX_UNITNAME);
+            strncpy(name, str, l);
+            name[l] = '\0';
+        }
+        else
+        {
+            l = MIN(strlen(str), FI_MAX_UNITNAME);
+            strncpy(name, str, l);
+            name[l] = 0;
+        }
+
+        *zone = '\0';
+    }
+}
+
+char *catnames(char *s, char **names)
+{
+    char **nam;
+    ubit1 ok = FALSE;
+
+    if (names)
+    {
+        strcpy(s, "{");
+        TAIL(s);
+        for (nam = names; *nam; nam++)
+        {
+            ok = TRUE;
+            sprintf(s, "\"%s\",", *nam);
+            TAIL(s);
+        }
+        if (ok)
+            s--; /* remove the comma */
+        strcpy(s, "}");
+    }
+    else
+        sprintf(s, "NULL");
+
+    TAIL(s);
+
+    return s;
+}
+
+// Translates C style backslashed escapes to ascii codes.
+// never writes more characters than in src.
+void str_cescape_format(const char *src, char *dest)
+{
+    while (*src)
+    {
+        *dest = *src++;
+
+        if (*dest == '\\')
+        {
+            switch (*src)
+            {
+            case 'n':
+                *dest = '\n';
+                src++;
+                break;
+            case 'r':
+                *dest = '\r';
+                src++;
+                break;
+            case '\\':
+                break;
+            default:
+                dest++;       // Save the backslash
+                *dest = *src; // Copy the unknown code
+                src++;
+                break;
+            }
+        }
+        dest++;
+    }
+    *dest = 0;
+}
+
+// Transforms str in-place with C-style escaping
+void str_cescape_transform(char *src)
+{
+    str_cescape_format(src, src);
+}
+
+/* Format the string "str" following the format rules. No longer than */
+/* 'destlen' result. Returns resulting length.                        */
+int str_escape_format(const char *src, char *dest, int destlen, int formatting)
+{
+    assert((size_t)destlen >= strlen(src) + 1);
+    str_cescape_format(src, dest);
+    return strlen(dest);
+}
+
+char *str_escape_format(const char *src, int formatting)
+{
+    char dest[MAX_STRING_LENGTH] = "";
+    str_escape_format(src, dest, sizeof(dest), formatting);
+
+    return str_dup(dest);
+}
+
+// This both encodes and prepares string for interpreter.
+// Removes all leading and trailing whitespace.
+// Ensures only one whitespace between each word.
+// HTML encodes and preserves UTF8
+// Returns a memory allocated string.
+//
+char *html_encode_utf8(const char *src)
+{
+    if (!src)
+        return NULL;
+
+    int nLen = strlen(src);
+    std::string sBuffer;
+    sBuffer.reserve(nLen * 1.2);
+    int pos = 0;
+
+    // First skip all leading whitespace
+    while (isspace(src[pos]))
+        pos++;
+
+    for (; pos < nLen; ++pos)
+    {
+        if ((src[pos] & 0x80) == 0) // lead bit is zero, must be a single ascii
+        {
+            if (src[pos] < 32) // ignore all odd/control ascii characters.
+                continue;
+
+            switch (src[pos])
+            {
+            case ' ':
+            { // Trim all whitespace to one space
+                sBuffer.append(" ");
+                while (isspace(src[pos + 1]))
+                    pos++;
+                continue;
+            }
+            case '&':
+            {
+                sBuffer.append("&amp;");
+                continue;
+            }
+            case '\"':
+            {
+                sBuffer.append("&quot;");
+                continue;
+            }
+            case '<':
+            {
+                sBuffer.append("&lt;");
+                continue;
+            }
+            case '>':
+            {
+                sBuffer.append("&gt;");
+                continue;
+            }
+            } //Switch
+            sBuffer.append(&src[pos], 1);
+            continue;
+        }
+        else if ((src[pos] & 0xE0) == 0xC0) // 110x xxxx
+        {
+            if (pos + 1 < nLen)
+            {
+                sBuffer.append(&src[pos], 2);
+                pos += 1;
+                continue;
+            }
+            sBuffer.append(&src[pos], 1); // Must be a UTF8 error of sorts
+        }
+        else if ((src[pos] & 0xF0) == 0xE0) // 1110 xxxx
+        {
+            if (pos + 2 < nLen)
+            {
+                sBuffer.append(&src[pos], 3);
+                pos += 2;
+                continue;
+            }
+            sBuffer.append(&src[pos], 1); // Must be a UTF8 error of sorts
+        }
+        else if ((src[pos] & 0xF8) == 0xF0) // 1111 0xxx
+        {
+            if (pos + 3 < nLen)
+            {
+                sBuffer.append(&src[pos], 4);
+                pos += 3;
+                continue;
+            }
+            sBuffer.append(&src[pos], 1); // Must be a UTF8 error of sorts
+        }
+        else
+        {
+            // printf( "Unrecognized lead byte (%02x)\n", lb );
+            sBuffer.append("?"); // Must be a UTF8 error of sorts
+        }
+    } // end for
+
+    slog(LOG_ALL, 0, sBuffer.c_str());
+
+    return strdup(sBuffer.c_str()); // Oh if only we used strings everywhere :))
+}
+
+// Helper function to wrap javascript into something. This something might change
+// so it was easier to write a helper function. E.g. to onload for image. who knows.
+std::string scriptwrap(const char *str)
+{
+    std::string mystr;
+
+    mystr = "<script>";
+    mystr.append(str);
+    mystr.append("</script>");
+
+    return mystr;
+}
+
+// return 1 as long as we substitute &s
+// Potential crash if string is full of many &s99, no OOB check
+int my_str_replace_space(char *sbuf)
+{
+    int i = 0;
+    int ln = strlen(sbuf);
+
+    while (i < ln)
+    {
+        if ((*sbuf == '&') && ((*(sbuf + 1) == 's') || (*(sbuf + 1) == 'S')))
+        {
+            char Buf[3];
+            int rep = 0;
+            char *src = sbuf + 2;
+
+            while (isdigit(*src) && rep < (int)sizeof(Buf) - 1)
+                Buf[rep++] = *src++;
+            Buf[rep] = 0;
+
+            char buf2[10];
+            strcpy(buf2, "&s");
+            strcat(buf2, Buf);
+            str_substitute(buf2, spc(atoi(Buf)), sbuf);
+            return 1;
+        }
+        sbuf++;
+        i++;
+    }
+
+    return 0;
+}
+
+//
+// Changes old codes such as &l &c to HTML
+// Only used in char conversion of units < v70
+// so no bother with mem leaks of strings
+char *fix_old_codes_to_html(const char *c)
+{
+    char buf[2 * MAX_STRING_LENGTH];
+    int bPre = 0;
+
+    assert(strlen(c) < sizeof(buf) / 2);
+    strcpy(buf, c);
+
+    // Remove all codes (anything less than ' ')
+    str_rem_codes(buf);
+
+    // Make sure && is unique by using ESC which we just removed
+    str_substitute("&&", "\x1B", buf);
+
+    // Colors
+    str_substitute("&cw", "", buf);
+    str_substitute("&cr", "", buf);
+    str_substitute("&cy", "", buf);
+    str_substitute("&cg", "", buf);
+    str_substitute("&cb", "", buf);
+    str_substitute("&cm", "", buf);
+    str_substitute("&cn", "", buf);
+    str_substitute("&c+w", "", buf);
+    str_substitute("&c+r", "", buf);
+    str_substitute("&c+y", "", buf);
+    str_substitute("&c+g", "", buf);
+    str_substitute("&c+b", "", buf);
+    str_substitute("&c+m", "", buf);
+    str_substitute("&c+n", "", buf);
+
+    // Specials
+    str_substitute("&x", "\n", buf);
+    str_substitute("&n", "<br/>", buf);
+
+    if (str_str(buf, "&l"))
+    {
+        str_substitute("&l", "<pre>", buf);
+        bPre = 1;
+    }
+
+    str_substitute("&h", "", buf);
+    str_substitute("&p", "", buf);
+    str_substitute("&f", "", buf);
+    str_substitute("&bb", "", buf);
+    str_substitute("&bn", "", buf);
+
+    char buf2[2 * MAX_STRING_LENGTH];
+    str_amp_html(buf, buf2);
+    strcpy(buf, buf2);
+
+    str_substitute("'", "&apos;", buf);
+    str_substitute("<", "&lt;", buf);
+    str_substitute(">", "&gt;", buf);
+
+    // replace &s[0-9] with spaces
+    //sed -i -- 's/&s[0-9][0-9]/ /g' *.zon
+    // replace &s[00-99] with spaces
+    //sed -i -- 's/&s[0-9]/ /g' *.zon
+
+    str_substitute("&[default]", "</div>", buf);
+
+    while (my_str_replace_space(buf))
+        ;
+
+    // I'm hoping this is not necessary to change
+    // Replace &[name] with <div class='name'>
+    //sed -i -- 's/&\[\([^]]*\)\]/\<div class\=\x27\1\x27\>/g' *.zon
+
+    str_substitute("\x1B", "&amp;", buf);
+
+    if (bPre)
+    {
+        strcat(buf, "</pre>");
+    }
+
+    str_nr_brnr(buf, buf2);
+    return strdup(buf2); // Dont worry about memory leaks it's a one time thing
+}

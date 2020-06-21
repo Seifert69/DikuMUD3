@@ -1,0 +1,15 @@
+<br/>
+Usage personal &lt;playername&gt; &lt;item&gt;<br/>
+Example: personal Fizban anklet<br/>
+<br/>
+This command allows an Admin to set a PI or other special object. To a player.<br/>
+the object and the sticker object must be in the admin inventory and <br/>
+the character for whom it is intended must be loaded and in same room.<br/>
+<br/>
+Note:<br/>
+This command will cause an object to repop with player after death.<br/>
+Do not use this on anything but PI's and/or special competition<br/>
+objects.<br/>
+<br/>
+<br/>See Also:<br/><br/>
+<br/>

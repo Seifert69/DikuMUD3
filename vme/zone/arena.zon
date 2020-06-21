@@ -1,0 +1,4666 @@
+/*
+filename    arena
+password    mfxmas
+changedby   Aelf
+EmailAdd
+request     compile
+version     21
+END HEADER*/
+
+#include <macros.h>
+
+#define BLUE_LEVEL 12
+#define GREEN_LEVEL 24
+#define YELLOW_LEVEL 39
+#define RED_LEVEL 255
+#define BLUE_ROOM  "arena_1@arena"
+#define GREEN_ROOM "arena_36@arena"
+#define YELLOW_ROOM "arena_61@arena"
+#define RED_ROOM "arena_26@arena"
+ #define ARENA_DILS \
+ dilcopy withdraw@arena(); \
+ dilcopy nono_trans@arena (); \
+ dilcopy watch_dog@arena();\
+dilcopy no_quit@arena(); \
+dilcopy no_save@arena(); \
+dilcopy no_donate@arena();
+
+#define WPN_ARENA \
+dilcopy ret_arena@arena(); \
+dilcopy arena_size@arena (); \
+flags {UNIT_FL_MAGIC,UNIT_FL_NOSAVE}\
+dilcopy blowaway@function (1500,"An arena Janitor sprints through and picks up some trash");
+
+%zone arena
+title "Battle Arena@Mainland"
+lifespan 20
+reset RESET_ANYHOW
+creators {"whistler","palio","bakka"}
+
+
+
+
+
+
+
+help
+"
+
+                             X
+                           X X X
+                         X X X X X
+
+                      X  X X X X X  X
+                    X X  X X X X X  X X
+                  X X X  X X X X X  X X X
+                    X X  X X X X X  X X
+                      X  X X X X X  X
+
+                        X X X X X
+                          X X X
+                            X 
+
+
+The arena is a place where one can enjoy some harmless PKing with out
+worry of experience loss or becoming wanted. Your personal Equipment
+is stored for the time you are in the arena and you are encouraged to
+wander and see what you can find. You will find that the colored area's
+are level specific and only players of those levels may fight in them.
+However the main arena is open to anyone of any level so if some of you
+lower players would like to try your hand at a high level player or a god
+go check out the open area.
+
+ Blue levels  1 - 12
+ Green levels 13 - 24
+ Yellow levels 25 - 39
+ Red Levels  40 - 255"
+
+%dil
+
+dilbegin aware recall pc_arena ();
+var
+ speed_int:integer;
+ exp_int:integer;
+ charflags_int:integer;
+ mana_int:integer;
+ endurance_int:integer;
+ attacktype_int:integer;
+ armourtype_int:integer;
+ race_int:integer;
+ sex_int:integer;
+ level_int:integer;
+ vlevel_int:integer;
+ position_int:integer;
+ pcflags_int:integer;
+ crimes_int:integer;
+ full_int:integer;
+ thirst_int:integer;
+ drunk_int:integer;
+ hit_int:integer;
+code
+{
+
+ speed_int:=0;
+ exp_int:=0;
+ charflags_int:=0;
+ mana_int:=0;
+ endurance_int:=0;
+ attacktype_int:=0;
+ armourtype_int:=0;
+ race_int:=0;
+ sex_int:=0;
+ level_int:=0;
+ vlevel_int:=0;
+ position_int:=0;
+ pcflags_int:=0;
+ crimes_int:=0;
+ full_int:=0;
+ thirst_int:=0;
+ drunk_int:=0;
+ hit_int:=0;
+
+ speed_int:=self.speed;
+  exp_int:=self.exp;
+ charflags_int:=self.charflags;
+ mana_int:=self.mana;
+  endurance_int:=self.endurance;
+   attacktype_int:=self.attack_type;
+ armourtype_int:=self.natural_armour;
+ race_int:=self.race;
+ sex_int:=self.sex;
+ level_int:=self.level;
+ vlevel_int:=self.vlevel;
+ position_int:=self.position;
+ pcflags_int:=self.pcflags;
+ crimes_int:=self.crimes;
+ full_int:=self.full;
+ thirst_int:=self.thirst;
+ drunk_int:=self.drunk;
+hit_int:=self.hp;
+
+set (self.pcflags,PC_PK_RELAXED);
+
+interrupt (SFB_MSG, ((argument=="destroy arena") and
+(self==activator)),exit_arena);
+wait (SFB_MSG, (argument =="never come") and
+(activator==self));
+
+
+:exit_arena:
+/*self.speed:=speed_int;*/
+self.exp:=  exp_int;
+self.charflags:= charflags_int;
+self.mana:= mana_int;
+self.endurance:=  endurance_int;
+self.attack_type:=   attacktype_int;
+self.natural_armour:= armourtype_int;
+self.race:= race_int;
+self.sex:= sex_int;
+self.level:= level_int;
+/*self.vlevel:= vlevel_int;*/
+self.position:= position_int;
+self.pcflags:=pcflags_int;
+self.crimes:= crimes_int;
+self.full:= full_int;
+self.thirst:= thirst_int;
+self.drunk:= drunk_int;
+self.hp:=hit_int;
+subextra(self.extra,"$PK_TIMER");
+position_update(self);
+quit;
+}
+dilend
+
+
+
+dilbegin arena_size ();
+code
+{
+:start:
+wait (SFB_DONE, command ("get") and
+(self==target));
+self.height := activator.height;
+goto start;
+}
+dilend
+dilbegin no_quit ();
+code
+{
+:start:
+wait (SFB_CMD, command ("quit") and
+(activator.level<200));
+block;
+act ("For your safety  you must withdraw from the arena to quit.",
+A_ALWAYS,activator,null,null,TO_CHAR);
+goto start;
+}
+dilend
+dilbegin no_save();
+code
+{
+:start:
+wait (SFB_CMD, command ("save") and
+(activator.level<200));
+block;
+act ("For your safety  you must withdraw from the arena to save.",
+A_ALWAYS,activator,null,null,TO_CHAR);
+goto start;
+}
+dilend
+dilbegin no_donate ();
+
+
+code
+{
+:start:
+wait (SFB_CMD, command ("donate"));
+block;
+act ("Donating arena items is not allowed.",
+A_ALWAYS,activator,null,null,TO_CHAR);
+goto start;
+}
+dilend
+
+
+
+
+
+dilbegin bone_aff(medi : unitptr, targ : unitptr, hm : integer);
+code
+{
+        act("$1n slams $3n HARD, you hear some bones BREAK!",
+        A_SOMEONE, self, null,targ, TO_NOTVICT);
+        act("$1n pounds your kneecap HARD! *CRUNCH*",
+        A_ALWAYS, self, null,null, TO_VICT);
+        act("You go berserk and slam $3n's kneecap! *CRUNCH*",
+        A_ALWAYS, self, null,targ , TO_CHAR);
+        act("That really did HURT!",
+        A_ALWAYS, self, null,targ, TO_VICT);
+        act("$1n screams with agony!",
+        A_SOMEONE, targ, null, null, TO_REST);
+                                                 return;
+                                                 }
+                                                 dilend
+
+
+
+
+dilbegin bone_bonker(medi : unitptr, targ : unitptr, hm : integer);
+code
+{
+      act("$1n's $2N thumps $3n's head, leaving a dent!",
+      A_SOMEONE, self, medi,targ, TO_NOTVICT);
+      act("$1n thumps your head with $1s $2N. OUCH!",
+      A_ALWAYS, self, medi,targ , TO_VICT);
+      act("Your $2N thumps $3n's head, leaving a dent!",
+      A_ALWAYS, self, medi,targ , TO_CHAR);
+
+                                                  return;
+                                                 }
+                                                 dilend
+
+
+
+dilbegin flame_aff(medi : unitptr, targ : unitptr, hm : integer);
+code
+{
+
+
+        act("Flames ERUPT from $1n's $2N, melting $3n's skin gravely!",
+        A_SOMEONE, self, medi,targ, TO_NOTVICT);
+
+        act("Flames ERUPT from $1n's $2N, melting your skin gravely!",
+        A_ALWAYS, self, medi,null, TO_VICT);
+
+        act("Flames ERUPT from your $2N, melting $3n's skin gravely!",
+        A_ALWAYS, self, medi,targ , TO_CHAR);
+
+        act("That really did HURT!",
+        A_ALWAYS, self, medi,null, TO_VICT);
+
+        act("$1n screams with agony!",
+        A_SOMEONE, target, medi, null, TO_REST);
+
+                                         return;
+  }
+                                                 dilend
+
+dilbegin flame_aff2(medi : unitptr, targ : unitptr, hm : integer);
+code
+{
+
+        act("Flames ERUPT from $1n's $2N, burning $3n's skin fairly!",
+        A_SOMEONE, self, medi,targ, TO_NOTVICT);
+
+        act("Flames ERUPT from $1n's $2N, burning your skin fairly!",
+        A_ALWAYS, self, medi,null, TO_VICT);
+
+        act("Flames ERUPT from your $2N, burning $3n's skin fairly!",
+        A_ALWAYS, self, medi,targ , TO_CHAR);
+
+
+                                         return;
+  }
+                                                 dilend
+
+
+
+dilbegin claw_heal(medi : unitptr, targ : unitptr, hm : integer);
+code
+{
+        act("Your $2N digs into your skin, drawing your pain.",
+        A_ALWAYS, self, medi,targ , TO_CHAR);
+
+        act("$1n's $2N digs into $1s flesh",
+        A_SOMEONE, targ, medi, null, TO_REST);
+
+        return;
+}
+dilend
+
+
+
+
+dilbegin dagger_nheal(medi : unitptr, targ : unitptr, hm : integer);
+code
+{
+       act("Your $2N glows brightly! as it digs into $3n's flesh",
+       A_ALWAYS, self, medi,targ , TO_CHAR);
+
+
+       act("$1n's $2N glows brightly as it digs into $3n's flesg!",
+        A_SOMEONE, self, medi,targ, TO_NOTVICT);
+
+
+        act("$1n's $2N, glows brightly as it digs into your flesh.",
+        A_ALWAYS, self, medi,null, TO_VICT);
+                                                 return;
+                                                 }
+                                                 dilend
+
+
+
+
+
+dilbegin spirit_heal(medi : unitptr, targ : unitptr, hm : integer);
+code
+{
+        act("You gathers your will and heals your wounds",
+        A_ALWAYS, self, medi, targ , TO_CHAR);
+        act("The Spirit gathers it's will and heals it's wounds",
+        A_SOMEONE, targ, null, null, TO_ALL);
+
+                                     return;
+                                                 }
+                                                 dilend
+ dilbegin blood_heal(medi : unitptr, targ : unitptr, hm : integer);
+ code
+{
+        act("Blood drips from the severed arm carried by $1n.",
+        A_SOMEONE, targ, medi, null, TO_REST);
+
+        act("Blood drips from the severed arm healing you slightly.",
+        A_ALWAYS, self, medi,targ , TO_CHAR);
+
+
+return;
+                                                 }
+                                                 dilend
+
+
+
+dilbegin flames();
+var
+     i : integer;
+     pc :unitptr;
+code
+{
+     heartbeat := PULSE_SEC*30;
+
+     :start:
+     wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and
+     (command("touch")) and (("flame" in argument) or
+      ("fire" in argument))));
+      block;
+      secure(pc,lost);
+      i := rnd (1,30);
+      if (i < 10)
+      {
+    act("$1n burns $1s hand severely as $1e reaches out to touch the flames.",
+          A_ALWAYS, activator, null, null, TO_REST);
+     act("You burn your self severely as you touch the flames.",
+          A_ALWAYS, activator, null, null, TO_CHAR);
+     activator.hp := activator.hp -75;
+     goto start;
+     }
+
+     if (i < 20)
+     {
+      act("$1n burns $1s mildly as $1e reaches out to touch the flames.",
+          A_ALWAYS, activator, null, null, TO_REST);
+      act("You burn your self mildly as you touch the flames.",
+          A_ALWAYS, activator, null, null, TO_CHAR);
+     activator.hp := activator.hp -30;
+     goto start;
+     }
+  if (1 < 30)
+    {
+    act("$1n passes $1s hand through the  flame with ease and the flame "+
+    "becomes one with $1m.",
+          A_ALWAYS, activator, null, null, TO_REST);
+     act("You pass your hands through the flame with ease as the flame "+
+     "becomes one with you.",
+          A_ALWAYS, activator, null, null, TO_CHAR);
+     activator.hp := activator.hp +2;
+     goto start;
+     }
+
+       :lost:
+        pause;
+        unsecure(pc);
+        goto start;
+
+}
+dilend
+
+
+dilbegin shitthrow();
+var
+    wordlist     : stringlist;
+    a            : unitptr;
+    enemy        : unitptr;
+    i            : integer;
+
+code
+{
+  :start:
+        unsecure (a);
+        unsecure ( enemy);
+  heartbeat := PULSE_SEC * 10;
+  wait(SFB_CMD, command("throw") and (self.equip == WEAR_HOLD) and
+(argument in self.names));
+  block;
+  a := activator;
+  secure (a,losta);
+  secure (enemy,lostenemy);
+   {
+     enemy:=findrndunit (a,FIND_UNIT_SURRO,UNIT_ST_PC);
+     if (enemy == null)
+     {
+        act("I see no " + enemy.name + " here!",
+             A_SOMEONE, a, null, null, TO_CHAR);
+        goto start;
+     }
+   i:= rnd(1,100);
+   if ( i < 50 )
+    {
+     act("You neatly launch the $2n into the air, it explodes as it hits" +
+         "$3n .", A_SOMEONE, a, self, enemy, TO_CHAR);
+     act("$1n neatly launches a $2n that explodes as it hits" +
+         "$3n ." ,A_SOMEONE, a, self, enemy, TO_REST);
+       link(self, enemy);
+       enemy.hp := enemy.hp - 75 ;
+        destroy(self);
+
+        goto start;
+    }
+if ( i < 100 )
+   {
+    act("You neatly launch the $2n in a arc towards $3n "+
+      " but it goes wild and lands on the ground exploding in a large puff.",
+       A_SOMEONE, a,self, enemy, TO_CHAR);
+   act("$1n neatly launches the $2n in a arc towards $3n "+
+" but it goes wild and lands on the ground exploding in a large puff." ,
+    A_SOMEONE, a, self, enemy, TO_REST);
+block;
+destroy(self);
+goto start;
+   }
+   }
+
+                   :fail:
+                   pause;
+                   goto start;
+
+                   :losta:
+                    pause;
+                    goto start;
+
+
+                   :lostenemy:
+                   pause;
+                   goto start;
+}
+dilend
+
+dilbegin nighteff();
+code
+{
+   act("The area grows darker as your $2n absorbs $3n's lifeforce!",
+        A_SOMEONE, self, medium, target, TO_CHAR);
+   act("The area grows darker as $1n's $2n drains $3n of $3s lifeforce!",
+        A_SOMEONE, self, medium, target, TO_NOTVICT);
+   act("Your vision blurs and fades as $1n's $2n drains you!",
+        A_SOMEONE, self, medium, target, TO_VICT);
+   return;
+}
+dilend
+
+
+
+
+dilbegin nono_trans();
+var
+pc:unitptr;
+code
+{
+:start:
+wait (SFB_CMD,(((command ("transfer")) or
+(command ("load")) or
+(command ("eat")) or
+(command ("purge"))) and
+(activator.level >=200) and
+(activator.level<254)));
+block;
+pc:=activator;
+secure (pc,losthim);
+act ("That command has been disabled for the safety of the players in the arena",
+A_SOMEONE,pc,null,null,TO_CHAR);
+unsecure (pc);
+:losthim:
+goto start;
+}
+dilend
+
+dilbegin aware recall set_pk ();
+code
+{
+set (self.pcflags,PC_PK_RELAXED);
+interrupt (SFB_MSG, (("destroy arena"==argument) and
+(self==activator)),dest);
+wait (SFB_MSG, (argument =="never come") and
+(activator==self));
+
+:dest:
+unset (self.pcflags,PC_PK_RELAXED);
+				 quit;
+				 }
+				 dilend
+
+dilbegin aware recall pro ();
+code
+{
+interrupt (SFB_MSG, (("destroy arena"==argument) and
+(self==activator)),dest);
+wait (SFB_MSG, (argument =="never come") and
+(activator==self));
+
+:dest:
+				 set (self.charflags,CHAR_PROTECTED);
+				 unset (self.charflags,CHAR_LEGAL_TARGET);
+
+				 quit;
+				 }
+				 dilend
+dilbegin aware recall leg ();
+code
+{
+interrupt (SFB_MSG, ((argument=="destroy arena") and
+(self==activator)),dest);
+wait (SFB_MSG, (argument =="never come") and
+(activator==self));
+:dest:
+				 set (self.charflags,CHAR_LEGAL_TARGET);
+
+quit;
+				 }
+				 dilend
+
+
+dilbegin aware recall pro_leg ();
+code
+{
+interrupt (SFB_MSG, ((argument=="destroy arena") and
+(self==activator)),dest);
+wait (SFB_MSG, (argument =="never come") and
+(activator==self));
+:dest:
+				 set (self.charflags,CHAR_PROTECTED);
+				 quit;
+				 }
+				 dilend
+
+dilbegin aware recall n_pro_leg ();
+code
+{
+interrupt (SFB_MSG, ((argument=="destroy arena") and
+(self==activator)),dest);
+wait (SFB_MSG, (argument =="never come") and
+(activator==self));
+:dest:
+unset (self.charflags,CHAR_PROTECTED);
+unset (self.charflags,CHAR_LEGAL_TARGET);
+				 quit;
+				 }
+				 dilend
+
+dilbegin watch_dog ();
+var
+cheat:unitptr;
+code
+{
+heartbeat := PULSE_SEC*5;
+:loop:
+wait (SFB_COM, (not ("$arena" in activator.quests)) and
+(activator.type==UNIT_ST_PC));
+cheat:=activator;
+secure (cheat,lostpc);
+act ("You some how illegally entered the arena your equipment is being destroyed "+
+"please speak to a god about your crimes.",
+A_SOMEONE, cheat,null,null,TO_CHAR);
+while (cheat.inside!=null) destroy (cheat.inside);
+link (cheat,findroom ("temple@udgaard"));
+unsecure (cheat);
+goto loop;
+:lostpc:
+unsecure (cheat);
+goto loop;
+}
+dilend
+dilbegin aware recall arena_check ();
+code
+{
+interrupt (SFB_MSG, ((argument=="destroy arena") and
+(self==activator)),dest);
+heartbeat := PULSE_SEC*60;
+:loop:
+wait (SFB_TICK|SFB_COM,TRUE);
+if ((self.zone!="arena") and (self.outside!=findroom("deathseq_room@basis")))
+{
+act ("Some how you left the Arena illegally you are being restored to "+
+"your status before entering the arena.",
+A_SOMEONE,self,null,null,TO_CHAR);
+sendtoall ("emptyout","bag@arena");
+sendto ("destroy arena",self);
+quit;
+}
+
+goto loop;
+:dest:
+quit;
+}
+dilend
+
+
+
+dilbegin recall ret_arena ();
+code
+{
+heartbeat := PULSE_SEC*60;
+interrupt (SFB_MSG, ((argument=="destroy arena") and
+(activator==self.outside)),dest);
+:loop:
+wait (SFB_TICK|SFB_COM,TRUE);
+if (self.zone!="arena")
+{
+act ("Your $2n disappears.",
+A_SOMEONE,self.outside,self,null,TO_CHAR);
+:dest:
+destroy (self);
+ }
+
+goto loop;
+}
+dilend
+
+
+
+dilbegin aware recall exit_arena();
+var
+   i : integer;
+   u : unitptr;
+code
+{
+   heartbeat := PULSE_SEC * 3;
+act ("Two arena guards appear from nowhere to escort $1n safely out.",
+A_SOMEONE,self,null,null,TO_REST);
+act ("Two arena guards appear from nowhere to escort you safely out.",
+A_SOMEONE,self,null,null,TO_CHAR);
+sendto ("destroy arena",self);
+sendtoalldil ("destroy arena","ret_arena@arena");
+sendtoall ("emptyout", "bag@arena");
+
+pause;
+act ("A hidden exit opens up and the two guards escort $1n out",
+A_SOMEONE,  self,null,null,TO_REST);
+act ("A hidden door opens in the arena and the guards escort you out.",
+A_SOMEONE,  self,null,null,TO_CHAR);
+pause;
+act ("As you step out of the arena your guards disappear and a proud voice "+
+"booms in your head, 'Come again young adventurer.'",
+A_SOMEONE,  self,null,null,TO_CHAR);
+pause;
+act ("Your equipment suddenly appears in your hands and you return to the arena "+
+"entrance.",
+A_SOMEONE,  self,null,null,TO_CHAR);
+exec ("comm del arena",self);
+
+link (self,findroom("entrance@arena"));
+subextra(self.quests, "$ARENA");
+										 act ("$1n returns from the arena.",
+A_SOMEONE, self,null,null,TO_REST);
+
+sendto ("action",self);
+exec ("save",self);
+
+exec ("look",self.outside);
+
+   :abort:
+	 quit;
+}
+dilend
+
+
+dilbegin rot ();
+code
+{
+heartbeat := PULSE_SEC*15;
+pause;
+while (self.inside!=null) link (self.inside,self.outside);
+act ("Arena maggots eat the corpse with tremendous speed.",
+A_ALWAYS,self, null,null,TO_ALL);
+destroy (self);
+}
+dilend
+
+
+
+
+dilbegin aware recall noaction();
+code
+{
+interrupt (SFB_MSG,argument=="action",action);
+
+:loop:
+wait(SFB_CMD, activator == self);
+
+if (activator.level < 253)
+block;
+
+goto loop;
+:action:
+if (activator==self)
+quit;
+else goto loop;
+}
+dilend
+
+dilbegin aware recall arena_enter();
+var
+   i : integer;
+	bag : unitptr;
+	entry_point : string;
+	entry_room : unitptr;
+	item : unitptr;
+code
+{
+   if (not ("$ARENA" in self.quests)) {
+      addextra(self.quests, {"$ARENA"}, "" );
+   }
+
+   sendto ("remove kill prottection",self);
+
+   heartbeat := PULSE_SEC * 3;
+
+   act("As you speak the words of entry you feel your body " +
+	    "slowly begin to separate.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+	act("$1n chants the words of entry and slowly fades from view",
+	    A_ALWAYS, self, null, null, TO_REST);
+
+	bag := load("bag@arena");
+	secure (bag,abort);
+	link (bag,self.outside);
+   while (self.inside != null)
+	  link(self.inside,bag);
+		bag.weight:=0;
+		bag.baseweight:=0;
+
+	link (bag, self);
+
+	unsecure (bag);
+
+   act("A sullen voice whispers through your being saying, 'Your equipment " +
+	    "has been stored for safe keeping during your transfer into the arena.'",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   pause;
+
+
+dilcopy ("pc_arena@arena",self);
+/*   act("The same sullen voice echos, 'Take these and watch " +
+       "your back.",
+       A_ALWAYS, self, null, null, TO_CHAR);*/
+   pause;
+          exec ("comm add arena",self);
+
+/*   item := load("mesh_shirt@arena");
+	link(item, self);
+   item := load("loin_cloth@arena");
+	link(item, self);
+	item := load("sandals@arena");
+	link(item, self);*/
+
+  if(self.level < BLUE_LEVEL) {
+	   entry_point := BLUE_ROOM;
+  } else if (self.level < GREEN_LEVEL) {
+	  entry_point := GREEN_ROOM;
+  } else if (self.level < YELLOW_LEVEL) {
+	  entry_point := YELLOW_ROOM;
+  } else {
+	  entry_point := RED_ROOM;
+  }
+   entry_room := findroom(entry_point);
+
+   act("You feel yourself gain substance and find yourself standing in the " +
+       "middle of $2t.",
+       A_ALWAYS, self, entry_room.title, null, TO_CHAR);
+   pause;
+
+   entry_room := findsymbolic(entry_point);
+	link(self, entry_room);
+   self.position := POSITION_STANDING;
+dilcopy ("arena_check@arena",self);
+
+sendto ("action",self);
+exec ("save",self);
+exec("look",self);
+   :abort:
+	 quit;
+}
+dilend
+
+dilbegin aware recall infirm_arena();
+var
+   i : integer;
+	entry_point : string;
+	entry_room : unitptr;
+code
+{
+   heartbeat := PULSE_SEC * 3;
+   act("As you speak the words of entry you feel your body " +
+	    "slowly begin to separate.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+	act("$1n chants the words of entry and slowly fades from view",
+	    A_ALWAYS, self, null, null, TO_REST);
+  if(self.level < BLUE_LEVEL) {
+	   entry_point := BLUE_ROOM;
+  } else if (self.level < GREEN_LEVEL) {
+	  entry_point := GREEN_ROOM;
+  } else if (self.level < YELLOW_LEVEL) {
+	  entry_point := YELLOW_ROOM;
+  } else {
+	  entry_point := RED_ROOM;
+  }
+   entry_room := findroom(entry_point);
+
+   act("You feel yourself gain substance and find yourself standing in the " +
+       "middle of $2t.",
+       A_ALWAYS, self, entry_room.title, null, TO_CHAR);
+   pause;
+
+   entry_room := findsymbolic(entry_point);
+	link(self, entry_room);
+   self.position := POSITION_STANDING;
+   :abort:
+	 quit;
+}
+dilend
+
+dilbegin withdraw ();
+var
+pc:unitptr;
+code
+{
+:start:
+heartbeat := PULSE_SEC*3;
+wait (SFB_CMD, command ("withdraw"));
+block;
+pc:=activator;
+secure (pc,losthim);
+dilcopy ("noaction@arena",pc);
+dilcopy ("exit_arena@arena",pc);
+
+:losthim:
+unsecure (pc);
+goto start;
+}
+dilend
+
+dilbegin enter ();
+var
+pc:unitptr;
+code
+{
+heartbeat := PULSE_SEC*3;
+interrupt (SFB_CMD,(( command ("lock")) and
+(activator.level>=IMMORTAL_LEVEL) and
+("arena" in argument)), close_arena);
+interrupt (SFB_CMD,(( command ("unlock")) and
+(activator.level>=IMMORTAL_LEVEL) and
+("arena" in argument)), open_arena);
+
+:start:
+wait (SFB_CMD, (command ("enter")) and
+(argument =="arena")  and
+(activator.type==UNIT_ST_PC));
+block;
+pc:=activator;
+secure (pc,losthim);
+ if (isset (pc.charflags,CHAR_OUTLAW))
+ {
+ act ("This is an Arena of Honor, 'Outlaws' are not wanted here.",
+ A_SOMEONE, PC,null,null,TO_CHAR);
+ pause;
+act ("Go now and feel free to come again when you have cleared your crimes.",
+ A_SOMEONE, PC,null,null,TO_CHAR);
+ unsecure (pc);
+ goto start;
+ }
+
+if (pc.level<4)
+{
+act ("You are not high enough level to enter the arena.",
+ A_SOMEONE, PC,null,null,TO_CHAR);
+pause;
+act ("You need "+itoa ((4-pc.level))+" levels to enter.",
+ A_SOMEONE, PC,null,null,TO_CHAR);
+ unsecure (pc);
+goto start;
+}
+
+
+
+dilcopy ("noaction@arena",pc);
+dilcopy ("arena_enter@arena",pc);
+:losthim:
+unsecure (pc);
+goto start;
+
+
+:close_arena:
+act ("The arena is now closed for a private event.",
+A_ALWAYS, activator,null,null,TO_ALL);
+
+block;
+:close_b:
+wait (SFB_CMD, (command ("enter")) and
+(argument =="arena")  and
+(activator.type==UNIT_ST_PC));
+block;
+act ("There is a private event ongoing in the Arena please come back later.",
+A_ALWAYS, activator,null,null,TO_CHAR);
+goto close_b;
+
+:open_arena:
+block;
+act ("The arena is now open.",
+A_ALWAYS, activator,null,null,TO_ALL);
+goto start;
+
+}
+dilend
+
+dilbegin enter_2 ();
+var
+pc:unitptr;
+code
+{
+interrupt (SFB_CMD,(( command ("lock")) and
+(activator.level>=IMMORTAL_LEVEL) and
+("arena" in argument)), close_arena);
+interrupt (SFB_CMD,(( command ("unlock")) and
+(activator.level>=IMMORTAL_LEVEL) and
+("arena" in argument)), open_arena);
+
+:start:
+heartbeat := PULSE_SEC*3;
+wait (SFB_CMD, (command ("enter")) and
+(argument =="arena") and
+(activator.type==UNIT_ST_PC));
+block;
+pc:=activator;
+secure (pc,losthim);
+dilcopy ("infirm_arena@arena",pc);
+:losthim:
+unsecure (pc);
+goto start;
+
+:close_arena:
+block;
+act ("The arena is now closed for a private event.",
+A_ALWAYS, activator,null,null,TO_ALL);
+:close_b:
+
+wait (SFB_CMD, (command ("enter")) and
+(argument =="arena")  and
+(activator.type==UNIT_ST_PC));
+block;
+act ("You may not re-enter the arena now you can either wait till the arena "+
+"re-opens or withdraw.",
+A_ALWAYS, activator,null,null,TO_CHAR);
+goto close_b;
+
+:open_arena:
+block;
+act ("The arena is now open.",
+A_ALWAYS, activator,null,null,TO_ALL);
+goto start;
+
+
+}
+dilend
+
+
+dilbegin arena_death ();
+external
+
+	remove_aff@death();
+	death_cry@death();
+
+var
+
+i:integer;
+u:unitptr;
+temp:unitptr;
+				 code
+				 {
+heartbeat := PULSE_SEC*3;
+sendtext("You are dead. R.I.P.<br/>",self);
+
+u:=self.inside;
+while (u)
+{
+temp:=u.next;
+if ((u.nameidx=="bag") and (u.zoneidx=="arena"))
+{
+u:=temp;
+continue;
+}
+unequip(u);
+link (u,self.outside);
+u:=temp;
+}
+act ("Your equipment falls from your dieing body.",
+A_ALWAYS,self,null,null,TO_CHAR);
+act ("$1n's equipment falls from $1s dieing body.",
+A_ALWAYS,self,null,null,TO_REST);
+remove_aff@death();
+death_cry@death();
+self.weight:=self.baseweight;
+        set (self.pcflags,PC_SPIRIT);
+
+
+stop_fighting(self, null);
+self.position:=POSITION_DEAD;
+
+			dilcopy ("noaction@arena",self);
+			link(self,findroom("deathseq_room@basis"));
+
+   act("There is complete silence, you are floating in utter darkness.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   pause;
+
+   act("Through the darkness you see a white light in the distance.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   pause;
+
+   act("The light grows larger and more intense, it seems to resemble a "+
+       "warrior flying through the darkness.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   pause;
+
+   act("The warrior speaks, 'It is not your time young adventurer'",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   pause;
+
+act ("the warrior leads you down a softly lit tunnel of lights.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   pause;
+										 act ("With blinding speed the Warrior grabs you and "+
+										 "stuffs you into a dark nothing.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+			 pause;
+	 act ("You feel spikes of pain shoot through you as you realize you are back "+
+	 "In your body.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+										 pause;
+				link (self, findroom ("infirm@arena"));
+				        unset (self.pcflags,PC_SPIRIT);
+unset (self.charflags,CHAR_KILL_SELF);
+
+							self.mana:=5;
+			self.hp:=5;
+self.position:=POSITION_RESTING;
+   act("$1n enters the  Arena Recovery room.",
+       A_ALWAYS, self, null, null, TO_ROOM);
+
+	position_update (self);
+sendto ("action",self);
+	exec ("save",self);
+
+
+
+:dest:
+				 quit;
+				 }
+				 dilend
+
+dilbegin aware recall restore_pc ();
+var
+plex:integer;
+				ali:integer;
+				cr:integer;
+				pr_tr:integer;
+				lt_tr:integer;
+				 code
+				 {
+heartbeat := PULSE_SEC*5;
+				 plex:=self.exp;
+				 cr:=self.crimes;
+				 ali:=self.alignment;
+if ((isset(self.charflags,CHAR_PROTECTED)) and
+(isset(self.charflags,CHAR_LEGAL_TARGET)))
+dilcopy ("pro_leg@arena",self);
+else if (isset(self.charflags,CHAR_PROTECTED))
+dilcopy ("pro@arena",self);
+else if (isset(self.charflags,CHAR_LEGAL_TARGET))
+dilcopy ("leg@arena",self);
+else
+  dilcopy ("n_pro_leg@arena",self);
+
+if (not(isset (self.pcflags, PC_PK_RELAXED)))
+ dilcopy ("set_pk@arena",self);
+
+dilcopy ("expcatch@arena",self);
+
+:dest:
+				 self.crimes:=cr;
+				 self.alignment:=ali;
+				 self.exp:=plex;
+quit;
+}
+dilend
+
+%rooms
+
+entrance
+names {"arena entrance", "arena"}
+title "Arena entrance"
+descr
+"You are in a high-ceiling entrance way to the arena.  You can hear the
+clatter of battle all around you.  Screams of honorable death and shouts of
+victory can be heard from inside the building.  There is no visible physical
+entrance but there is a big red sign you might want to read.  To the south
+a arched exit way leads to the square."
+movement SECT_INSIDE
+south to col_sq6@midgaard;
+ALWAYS_LIGHT
+dilcopy enter@arena();
+extra {"big red sign","big sign","red sign","sign"}
+"The sign reads: 
+
+     Welcome to the New Arena.
+
+If you find problems please get the attention of a god and let him/her know.
+The arena will be under going many changes.  The more suggestions we get the
+more fun we can make it.  
+
+To enter the arena just type:
+
+Enter arena
+
+To exit the arena when you are done killing your friends type:
+
+withdraw
+
+For fastest response to arena ideas send mail to
+whistler@blinksoft.com or
+palio@blinksoft.com"
+
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+end
+
+
+arena_1
+title "Blue Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage in all directs except south which leads
+you further into the arena."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_3 descr
+"The arena continues to the south.";
+ARENA_DILS
+end
+
+arena_2
+title "Blue Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the north and west. You notice
+that the arena seems to stretch out forever to the south and east."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_6 descr
+"The arena continues to the south.";
+east to arena_3 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+
+arena_3
+title "Blue Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+continues in all directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+east to arena_4 descr
+"The arena continues to the east.";
+west to arena_2 descr
+"The arena continues to the west.";
+north to arena_1 descr
+"The arena continues to the north.";
+south to arena_7 descr
+"The arena continues to the south.";
+ARENA_DILS
+end
+
+arena_4
+title "Blue Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the north and east. You notice
+that the arena seems to stretch out forever to the south and west."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_6 descr
+"The arena continues to the south.";
+west to arena_3 descr
+"The arena continues to the west.";
+ARENA_DILS
+end
+
+arena_5
+title "Blue Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the in all directions except east."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+east to arena_6 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+arena_6
+title "Blue Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. A large wall
+blocks movement to the south."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"wall"}
+"A large wall blocks movement to the south."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+east to arena_7 descr
+"The arena continues to the east.";
+west to arena_5 descr
+"The arena continues to the west.";
+north to arena_2 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+arena_7
+title "Blue Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. A door is
+visible in the  wall to the south." ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"door"}
+"A plain wooden door with a sign on it."
+extra {"sign"}
+" ***WARNING***
+You are now leaving the 'blue arena'"
+extra {"wall"}
+"A large wall blocks movement to the south. In it you notice a door."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+east to arena_8 descr
+"The arena continues to the east.";
+west to arena_6 descr
+"The arena continues to the west.";
+north to arena_3 descr
+"The arena continues to the north.";
+south to arena_13 descr
+"The arena continues to the south."
+keyword {"door"} open {EX_OPEN_CLOSE, EX_CLOSED};
+
+ARENA_DILS
+end
+
+arena_8
+title "Blue Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. A large wall
+blocks movement to the south."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"wall"}
+"A large wall blocks movement to the south."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+east to arena_9 descr
+"The arena continues to the east.";
+west to arena_7 descr
+"The arena continues to the west.";
+north to arena_4 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+arena_9
+title "Blue Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage  in all directions except west."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+west to arena_8 descr
+"The arena continues to the west.";
+ARENA_DILS
+end
+
+arena_10
+title "Red Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage in all directions except south.."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_18 descr
+"The arena continues to the south.";
+ARENA_DILS
+end
+
+arena_11
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty
+Arena walls block your movement to the west and north."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"walls","wall"}
+"Large white walls rise up as if to touch the sky."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+east to arena_12 descr
+"The arena continues to the east.";
+south to arena_19 descr
+"The arena continues to the south.";
+ARENA_DILS
+end
+
+arena_12
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The might
+arena walls block movement to the north."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"walls","wall"}
+"Huge white walls."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+east to arena_13 descr
+"The arena continues to the east.";
+west to arena_11 descr
+"The arena continues to the west.";
+south to arena_20 descr
+"The arena continues to the south.";
+ARENA_DILS
+end
+
+arena_13
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls","wall"}
+"A large white wall with a door in it."
+east to arena_14 descr
+"The arena continues to the east.";
+west to arena_12 descr
+"The arena continues to the west.";
+south to arena_21 descr
+"The arena continues to the south.";
+
+ARENA_DILS
+end
+
+arena_14
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+wall rise up to block movement to the north."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+extra {"walls","wall"}
+"Huge white walls rise up"
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+east to arena_15 descr
+"The arena continues to the east.";
+west to arena_13 descr
+"The arena continues to the west.";
+south to arena_22 descr
+"The arena continues to the south.";
+ARENA_DILS
+end
+
+arena_15
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+walls block movement to the north and east."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"walls","wall"}
+"Huge white walls"
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+west to arena_14 descr
+"The arena continues to the west.";
+south to arena_23 descr
+"The arena continues to the south.";
+ARENA_DILS
+end
+
+arena_16
+title "Green Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage  in all directions except south."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls","wall"} "huge white walls surrounds the arena."
+south to arena_24 descr
+"The arena continues to the south.";
+ARENA_DILS
+end
+
+arena_17
+title "Red Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the north and west. You notice
+that the arena seems to stretch out forever to the south and east."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_27 descr
+"The arena continues to the south.";
+east to arena_18 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+arena_18
+title "Red Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the east. The red arena continues
+in all other directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"wall"}
+"Large white walls."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_28 descr
+"The arena continues to the south.";
+west to arena_17 descr
+"The arena continues to the west.";
+north to arena_10 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+
+
+arena_19
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the west. The arena continues
+in all other directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls","wall"}
+ "huge white walls surrounds the arena."
+south to arena_29 descr
+"The arena continues to the south.";
+east to arena_20 descr
+"The arena continues to the east.";
+north to arena_11 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+arena_20
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+continues in all directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_30 descr
+"The arena continues to the south.";
+west to arena_19 descr
+"The arena continues to the west.";
+north to arena_12 descr
+"The arena continues to the north.";
+east to arena_21 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+
+arena_21
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+continues in all directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_31 descr
+"The arena continues to the south.";
+west to arena_20 descr
+"The arena continues to the west.";
+north to arena_13 descr
+"The arena continues to the north.";
+east to arena_22 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+
+arena_22
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+continues in all directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_32 descr
+"The arena continues to the south.";
+west to arena_21 descr
+"The arena continues to the west.";
+north to arena_14 descr
+"The arena continues to the north.";
+east to arena_23 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+arena_23
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+walls block movement to the east."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_33 descr
+"The arena continues to the south.";
+west to arena_22 descr
+"The arena continues to the west.";
+north to arena_15 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+
+
+
+arena_24
+title "Green Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the west. The green arena continues
+in all other directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls","wall"} "huge white walls surrounds the arena."
+south to arena_34 descr
+"The arena continues to the south.";
+east to arena_25 descr
+"The arena continues to the west.";
+north to arena_16 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+
+arena_25
+title "Green Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the north and east. You notice
+that the arena seems to stretch out forever to the south and west."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_35 descr
+"The arena continues to the south.";
+west to arena_24 descr
+"The arena continues to the west.";
+ARENA_DILS
+end
+
+arena_26
+title "Red Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage in all directs except east which leads
+you further into the arena."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+east to arena_27 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+arena_27
+title "Red Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+continues in all directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_37 descr
+"The arena continues to the south.";
+west to arena_26 descr
+"The arena continues to the west.";
+north to arena_17 descr
+"The arena continues to the north.";
+east to arena_28 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+arena_28
+title "Red Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. A door is
+visible in the  wall to the east."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"door"}
+"A plain wooden door with a sign on it."
+extra {"sign"}
+" ***WARNING***
+You are now leaving the 'red arena'"
+extra {"walls","wall"}
+"A large wall blocks movement to the south. In it you notice a door."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+south to arena_38 descr
+"The arena continues to the south.";
+west to arena_27 descr
+"The arena continues to the west.";
+north to arena_18 descr
+"The arena continues to the north.";
+east to arena_29 descr
+"The arena continues to the east."
+keyword {"door"} open {EX_OPEN_CLOSE, EX_CLOSED};
+ARENA_DILS
+end
+
+arena_29
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"walls","wall"}
+"A large wall blocks movement to the south. In it you notice a door."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+east to arena_30 descr
+"The arena continues to the east.";
+north  to arena_19 descr
+"The arena continues to the north.";
+south to arena_39 descr
+"The arena continues to the south.";
+ARENA_DILS
+end
+
+arena_30
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+continues in all directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_40 descr
+"The arena continues to the south.";
+west to arena_29 descr
+"The arena continues to the west.";
+north to arena_20 descr
+"The arena continues to the north.";
+east to arena_31 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+
+arena_31
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+continues in all directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_41 descr
+"The arena continues to the south.";
+west to arena_30 descr
+"The arena continues to the west.";
+north to arena_21 descr
+"The arena continues to the north.";
+east to arena_32 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+arena_32
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+continues in all directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_42 descr
+"The arena continues to the south.";
+west to arena_31 descr
+"The arena continues to the west.";
+north to arena_22 descr
+"The arena continues to the north.";
+east to arena_33 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+
+
+
+arena_33
+title "Ring of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"walls","wall"}
+"A large wall blocks movement to the south. In it you notice a door."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+south to arena_43 descr
+"The arena continues to the south.";
+west to arena_32 descr
+"The arena continues to the west.";
+north to arena_23 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+
+
+arena_34
+title "Green Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. A door is
+visible in the  wall to the west."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"door"}
+"A plain wooden door with a sign on it."
+extra {"sign"}
+" ***WARNING***
+You are now leaving the 'green arena'"
+extra {"walls","wall"}
+"A large wall blocks movement to the south. In it you notice a door."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+south to arena_44 descr
+"The arena continues to the south.";
+east to arena_35 descr
+"The arena continues to the west.";
+north to arena_24 descr
+"The arena continues to the north.";
+west to arena_33 descr
+"The arena continues to the west."
+keyword {"door"} open {EX_OPEN_CLOSE, EX_CLOSED};
+
+ARENA_DILS
+end
+
+
+arena_35
+title "Green Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+continues in all directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls","wall"} "huge white walls surrounds the arena."
+south to arena_45 descr
+"The arena continues to the south.";
+east to arena_36 descr
+"The arena continues to the west.";
+north to arena_25 descr
+"The arena continues to the north.";
+west to arena_34 descr
+"The arena continues to the west.";
+ARENA_DILS
+end
+
+arena_36
+title "Green Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage in all directs except west which leads
+you further into the arena."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls","wall"} "huge white walls surrounds the arena."
+west to arena_35 descr
+"The arena continues to the west.";
+ARENA_DILS
+end
+
+
+arena_37
+title "Red Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the south and west. You notice
+that the arena seems to stretch out forever to the north and east."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls","wall"} "huge white walls surrounds the arena."
+north to arena_27 descr
+"The arena continues to the north.";
+east to arena_38 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+arena_38
+title "Red Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the east. The red arena continues
+in all other directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls","wall"} "huge white walls surrounds the arena."
+south to arena_46 descr
+"The arena continues to the south.";
+west to arena_37 descr
+"The arena continues to the west.";
+north to arena_28 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+arena_39
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the west. The arena continues
+in all other directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls","wall"}
+ "huge white walls surrounds the arena."
+south to arena_47 descr
+"The arena continues to the south.";
+east to arena_40 descr
+"The arena continues to the east.";
+north to arena_29 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+
+arena_40
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+continues in all directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_48 descr
+"The arena continues to the south.";
+west to arena_39 descr
+"The arena continues to the west.";
+north to arena_30 descr
+"The arena continues to the north.";
+east to arena_41 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+
+
+arena_41
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+continues in all directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_49 descr
+"The arena continues to the south.";
+west to arena_40 descr
+"The arena continues to the west.";
+north to arena_31 descr
+"The arena continues to the north.";
+east to arena_42 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+
+arena_42
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+continues in all directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_40 descr
+"The arena continues to the south.";
+west to arena_41 descr
+"The arena continues to the west.";
+north to arena_32 descr
+"The arena continues to the north.";
+east to arena_43 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+
+
+arena_43
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The arena
+continues in all directions except east which is blocked by a huge wall."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_51 descr
+"The arena continues to the south.";
+west to arena_42 descr
+"The arena continues to the west.";
+north to arena_33 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+arena_44
+title "Green Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the west. The green arena continues
+in all other directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"walls","wall"}
+"Large white walls."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_52 descr
+"The arena continues to the south.";
+east to arena_45 descr
+"The arena continues to the west.";
+north to arena_34 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+
+arena_45
+title "Green Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the south and east. You notice
+that the arena seems to stretch out forever to the north and west."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+north to arena_35 descr
+"The arena continues to the north.";
+west to arena_44 descr
+"The arena continues to the west.";
+ARENA_DILS
+end
+
+
+
+arena_46
+title "Red Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage in all directions except north."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+north to arena_38 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+arena_47
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the west and south."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls","wall"}
+ "huge white walls surrounds the arena."
+east to arena_48 descr
+"The arena continues to the east.";
+north to arena_39 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+arena_48
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the south. The arena continues
+in all other directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls","wall"}
+ "huge white walls surrounds the arena."
+west to arena_47 descr
+"The arena continues to the west.";
+east to arena_49 descr
+"The arena continues to the east.";
+north to arena_40 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+
+arena_49
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"wall"}
+"A large wall blocks movement to the south. In it you notice a door."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+east to arena_50 descr
+"The arena continues to the south.";
+west to arena_48 descr
+"The arena continues to the west.";
+north to arena_41 descr
+"The arena continues to the north.";
+
+ARENA_DILS
+end
+
+
+
+arena_50
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the south. The arena continues
+in all other directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls","wall"}
+ "huge white walls surrounds the arena."
+west to arena_49 descr
+"The arena continues to the west.";
+east to arena_51 descr
+"The arena continues to the east.";
+north to arena_42 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+arena_51
+title "Ring Of Honor"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the south and east."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls","wall"}
+ "huge white walls surrounds the arena."
+west to arena_50 descr
+"The arena continues to the west.";
+north to arena_43 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+arena_52
+title "Green Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage in all directions except north."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+north to arena_44 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+
+
+arena_53
+title "Yellow Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage in all directions except east."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+east to arena_54 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+arena_54
+title "Yellow Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the north. The yellow arena continues
+in all other directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"wall"}
+"Large white walls."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_58 descr
+"The arena continues to the south.";
+west to arena_53 descr
+"The arena continues to the west.";
+east to arena_55 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+
+arena_55
+title "Yellow Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. A door is
+visible in the  wall to the north."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"door"}
+"A plain wooden door with a sign on it."
+extra {"sign"}
+" ***WARNING***
+You are now leaving the 'yellow arena'"
+extra {"wall"}
+"A large wall blocks movement to the south. In it you notice a door."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+south to arena_59 descr
+"The arena continues to the south.";
+west to arena_56 descr
+"The arena continues to the west.";
+east to arena_54 descr
+"The arena continues to the east.";
+north to arena_49 descr
+"The arena continues to the north."
+keyword {"door"} open {EX_OPEN_CLOSE, EX_CLOSED};
+
+ARENA_DILS
+end
+
+
+
+
+arena_56
+title "Yellow Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the north. The yellow arena continues
+in all other directions."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"wall"}
+"Large white walls."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_60 descr
+"The arena continues to the south.";
+west to arena_55 descr
+"The arena continues to the west.";
+east to arena_57 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+arena_57
+title "Yellow Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage in all directions except west."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+west to arena_56 descr
+"The arena continues to the west.";
+ARENA_DILS
+end
+
+
+
+arena_58
+title "Yellow Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the south and west. You notice
+that the arena seems to stretch out forever to the north and east."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+north to arena_54 descr
+"The arena continues to the north.";
+east to arena_59 descr
+"The arena continues to the east.";
+ARENA_DILS
+end
+
+
+arena_59
+title "Yellow Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. You may
+travel in any direction."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"wall"}
+"Large white walls."
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+south to arena_61 descr
+"The arena continues to the south.";
+west to arena_58 descr
+"The arena continues to the west.";
+east to arena_60 descr
+"The arena continues to the east.";
+north to arena_55 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+arena_60
+title "Yellow Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage to the south and east. You notice
+that the arena seems to stretch out forever to the north and west."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+north to arena_56 descr
+"The arena continues to the north.";
+west to arena_59 descr
+"The arena continues to the west.";
+ARENA_DILS
+end
+
+arena_61
+title "Yellow Arena"
+descr
+"The ground under your feet consists of a thick brown dirt which is
+darker  in places probably due to being soaked  with blood. The mighty arena
+walls rise up to block your passage in all directs except north which leads
+you further into the arena."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+extra {"ground","grass"}
+"The thick brown dirt of the floor has been trampled to a rock hardness
+preventing most of the dust one would expect from a normal dirt floor."
+extra {"walls"} "huge white walls surrounds the arena."
+north to arena_59 descr
+"The arena continues to the north.";
+ARENA_DILS
+end
+
+infirm
+title "Hospital"
+descr
+"The hospital rooms is small and filthy with a cot along one wall.  Piles
+of body parts are around the room, and the floor is slick with blood. On
+the shelves sit jars of internal organs and there are some tortuous looking
+instruments laying about in total disregard around the room.  There doesn't
+seem to be any exits but there is a big red sign you might want to read."
+extra {"big red sign","big sign","red sign","sign"}
+"The sign reads: 
+
+     Welcome to the New Arena.
+
+If you find problems please get the attention of a god and let him/her know.
+The arena will be under going many changes.  The more suggestions we get the
+more fun we can make it.  
+
+To enter the arena just type:
+
+Enter arena
+
+To exit the arena when you are done killing your friends type:
+
+withdraw
+
+For fastest response to arena ideas send mail to
+whistler@blinksoft.com or
+ palio@blinksoft.com"
+
+extra {"jars"}
+"livers, hearts, intestines. Some have extra eye balls and fingers.
+Looking in the finger jar you see one that still has a ruby ring
+attached to it."
+extra {"instruments"}
+"claws to pull gold teeth, saws to remove limbs, and one item that has
+two small cups on it inside the cups razor sharp blades stick out...looks
+like something one may have used to castrate  bulls...but you know there
+are no bulls about...could it be?...better cross your legs just in case guys!"
+extra {"body parts","parts"}
+"arms, legs, heads...all those useless parts."
+ALWAYS_LIGHT
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
+ARENA_DILS
+dilcopy enter_2@arena();
+flags {UNIT_FL_SACRED}
+
+end
+
+ %objects
+                           arenaboard
+
+names {"bulletin board","board"}
+title "the Arena Board"
+descr "The Arena Board is mounted on a wall here."
+type ITEM_OTHER
+dilcopy board@boards("arena","","rem_res@boards","",100);
+end
+
+
+
+swor1
+names {"mattock", "sword"}
+title "an Evil Mattock"
+descr "A an evil mattock is lying on the ground here."
+extra {}
+"Can one ever control the powers of evil?"
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_WAR_MATTOCK, 20, 16)
+DEX_TRANSFER (+7)
+STR_TRANSFER (+5)
+CON_TRANSFER (-1)
+weight 10
+WPN_ARENA
+
+dilbegin lio();
+var
+   pc : unitptr;
+   enemy : unitptr;
+   i : integer;
+code
+{
+   :init:
+
+
+   on_activation(self.outside.position != POSITION_FIGHTING, skip);
+
+   :start:
+
+        wait(SFB_COM,(activator.type == UNIT_ST_PC)and(self.equip == WEAR_WIELD));
+
+   pc := activator;
+   enemy := self.outside.fighting;
+
+   i := rnd(1, 100);
+
+   if (i < 50)
+      {
+      enemy.hp := enemy.hp + i ;
+      act("Your $2n shoots forth a burst of pure evil ",
+      A_SOMEONE,self.outside,self,enemy,TO_CHAR);
+      act("$1n's $2n emits  a force of pure evil",
+      A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+
+   }
+   goto start;
+}
+dilend
+end
+
+
+magicdus1
+title "a bag of magic dust"
+names {"magic dust","dust","bag"}
+descr "You see  a small bag of magic dust."
+extra {}
+"This bag holds a very lethal dose of fire dust. hold it and throw it
+at  the person you are fighting."
+ type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+weight 2
+WPN_ARENA
+dilcopy shitthrow@arena();
+end
+
+phoenixcla1
+title "a bloody phoenix claw"
+names {"phoenix claw","claw"}
+descr "A bloody birds claw is laying here."
+extra {}
+"The claw is  the bloody stump from some poor bird."
+WEAPON_DEF(WPN_CLAW, 16, 10)
+SPELL_TRANSFER(SPL_SUMMONING, 6)
+SPELL_TRANSFER(SPL_CONTROL_TELEPORT, 6)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WPN_ARENA
+dilbegin claw_wie();
+code
+{
+        heartbeat := PULSE_SEC*2;
+        :start:
+        wait(SFB_CMD,((command("wield") or command("wear")) and
+                (activator #= self.outside)));
+        if (self.equip == 0)
+        {
+        pause;
+        if (self.equip != 0)
+        {
+        act("As you wield your $2n, it reaches around and wraps its "+
+        " talons about your wrist. ",
+                A_ALWAYS, self.outside, self, null, TO_CHAR);
+        act("$1n's wrist is grabbed by $1s $2n.",
+                A_SOMEONE, self.outside, self, null, TO_REST);
+        }
+        }
+        goto start;
+}
+
+dilend
+dilbegin claw_rem();
+code
+{
+        heartbeat := PULSE_SEC*2;
+        :start:
+        wait(SFB_CMD,(command("remove") and
+                (activator #= self.outside)));
+        if (self.equip != 0)
+        {
+        pause;
+        if (self.equip == 0)
+        {
+        act("The $2n  reluctantly releases your wrist.",
+                A_ALWAYS, self.outside, self, null, TO_CHAR);
+        act("$1n's wrist is released by $1s $2n.",
+                A_SOMEONE, self.outside, self, null, TO_REST);
+        }
+        }
+        goto start;
+}
+
+dilend
+
+
+dilbegin claw_hea();
+var
+        i : integer;
+        n:integer;
+   enemy :unitptr;
+
+code
+{
+        heartbeat := PULSE_SEC*5;
+        :start:
+        wait(SFB_COM,(activator.type == UNIT_ST_PC)and
+                (command(CMD_AUTO_COMBAT))and
+                (self.equip == WEAR_WIELD));
+        i := rnd (1,8);
+
+   enemy := self.outside.fighting;
+
+        if (i > 2) goto start; /* 2 in 8 chance of glowing */
+ n:= cast_spell (SPL_CURE_WOUNDS_1,self.outside,self,self.outside,"claw_heal@arena");
+        goto start;
+}
+
+dilend
+end
+
+gdagge1
+
+names {"dagger"}
+title "a deadly dagger"
+descr "A deadly dagger lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_DAGGER, 17, 14)
+weight 40
+spell 50
+extra {}
+"You examine the glimmering blade of this dagger. It is crafted from the
+finest platinum. Made by the gods, weapons like these are hard to find."
+WPN_ARENA
+dilbegin goddaggerdil();
+var
+	i : integer;
+        enemy :unitptr;
+        n:integer;
+
+code
+{
+	heartbeat := PULSE_SEC*5;
+	:start:
+	wait(SFB_COM,(activator.type ==
+		UNIT_ST_PC)and(command(CMD_AUTO_COMBAT))
+and (self.equip == WEAR_WIELD));
+	i := rnd (1,100);
+   enemy := self.outside.fighting;
+
+
+
+	if (i > 50) goto start;
+n:= cast_spell
+(SPL_LIGHTNING_3,self.outside,self,self.outside,"dagger_nheal@arena");
+
+	goto start;
+}
+
+dilend
+end
+
+gclu1
+
+names {"severed arm", "arm"}
+title "the severed arm of Toxic"
+descr "A severed arm has been left here, covered in blood."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_CLUB, 17, 11)
+WPN_ARENA
+spell 50
+weight 70
+extra {}
+"This is all that's left of the evil player Toxic. Bloody still drips from where
+it was cruelly ripped from his body while he was still alive."
+
+dilbegin arm_dil();
+
+var
+        i : integer;
+        enemy :unitptr;
+                                n:integer;
+code
+{
+	heartbeat := PULSE_SEC*5;
+	:start:
+	wait(SFB_COM,(activator.type ==
+		UNIT_ST_PC)and(command(CMD_AUTO_COMBAT)) and
+(self.equip == WEAR_WIELD));
+ i := rnd (1,10);
+	if (i > 2) goto start; /* 2 in ten chance of glowing */
+n:= cast_spell (SPL_CURE_WOUNDS_1,self.outside,self,self.outside,"blood_heal@arena");
+
+	goto start;
+}
+
+dilend
+end
+
+
+ravencla1
+title "Raven Claw"
+names {"raven claw","claw"}
+descr "A bloody birds claw is laying here."
+extra {}
+"The claw is  the bloody stump from some poor bird."
+WEAPON_DEF(WPN_CLAW, 16, 10)
+SPELL_TRANSFER(SPL_SUMMONING, 6)
+SPELL_TRANSFER(SPL_CONTROL_TELEPORT, 6)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WPN_ARENA
+spell 50
+WEAPON_SLAYER(RACE_HUMAN)
+dilbegin rclaw_wie();
+code
+{
+        heartbeat := PULSE_SEC*2;
+        :start:
+        wait(SFB_CMD,((command("wield") or command("wear")) and
+                (activator #= self.outside)));
+        if (self.equip == 0)
+        {
+        pause;
+        if (self.equip != 0)
+        {
+        act("As you wield your $2n, it reaches around and wraps its "+
+        " talons about your wrist. ",
+                A_ALWAYS, self.outside, self, null, TO_CHAR);
+        act("$1n's wrist is grabbed by $1s $2n.",
+                A_SOMEONE, self.outside, self, null, TO_REST);
+        }
+        }
+        goto start;
+}
+
+dilend
+dilbegin rclaw_rem();
+code
+{
+        heartbeat := PULSE_SEC*2;
+        :start:
+        wait(SFB_CMD,(command("remove") and
+                (activator #= self.outside)));
+        if (self.equip != 0)
+        {
+        pause;
+        if (self.equip == 0)
+        {
+        act("The $2n  reluctantly releases your wrist.",
+                A_ALWAYS, self.outside, self, null, TO_CHAR);
+        act("$1n's wrist is released by $1s $2n.",
+                A_SOMEONE, self.outside, self, null, TO_REST);
+        }
+        }
+        goto start;
+}
+
+dilend
+
+end
+hamme1
+
+names {"warhammer","war hammer","hammer"}
+title "the Huge Warhammer"
+descr "The huge Warhammer is laying here."
+extra {}
+"This warhammer is fashioned from the finest metal with a large blunt
+head. The handle is inlaid with diamond that sparkle with the slightest
+light."
+WPN_ARENA
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_WAR_HAMMER, 20, 21)
+end
+
+
+
+
+dagger1
+names {"dagger"}
+title "the Dagger of bone"
+descr "A dagger made from human bone is laying here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_DAGGER, 16, 20)
+MAG_TRANSFER(+5)
+weight 15
+extra {}
+"The dagger is crafted from human bones and razor sharp"
+WPN_ARENA
+end
+
+kopes1
+names {"kopesh"}
+title "a kopesh"
+descr "A kopesh has been left here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_KOPESH, 25, 23)
+weight 20
+WPN_ARENA
+extra {}
+"This is a kopesh, it has been crafted by skilled hands. The blade is of supreme
+quality, able to cut through flesh and most armor with ease."
+end
+
+
+
+leftshor1
+names {"left handed short sword", "short sword","short"}
+title "a left handed short sword"
+descr "A short sword has been left here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_SHORT_SWORD, 15, 9)
+WEAPON_TRANSFER(WPN_SHORT_SWORD, +15)
+spell 75
+weight 10
+WPN_ARENA
+
+extra {}
+"This is a small but sharp short sword. This sword might also be useful
+when held in the left hand, with it's small size you might be able to hit
+with it while still wielding another weapon."
+dilbegin short_hit();
+var
+        i : integer;
+        pwr : string;
+        powerplace : string;
+        enemy : unitptr;
+        n:integer;
+code
+{
+        heartbeat := PULSE_SEC*5;
+        :start:
+        wait(SFB_COM, (command(CMD_AUTO_COMBAT)) and
+                (self.equip == WEAR_HOLD));
+
+   enemy := self.outside.fighting;
+
+    if (enemy.level >IMMORTAL_LEVEL)
+     {
+      goto start;
+      }
+
+        i := rnd (1,3);
+
+        if (i > 1) goto start;
+           /* one in 3 times will it do a hit */
+ i:=meleeattack (self.outside,self.outside.fighting,0,WPN_ROOT);
+        pwr := "meekly poke";
+        if (i > 1) pwr := "cut";
+        if (i > 5) pwr := "stab";
+        if (i > 10) pwr := "lance";
+        if (i > 15) pwr := "slice";
+        if (i > 20)
+            pwr := "boldly stab";
+
+        act("$1n $2ts $3n with $1s dagger.",
+          A_SOMEONE, self.outside, pwr, self.outside.fighting, TO_NOTVICT);
+        act("$1n $2ts you with $1s dagger.",
+             A_ALWAYS, self.outside, pwr, self.outside.fighting, TO_VICT);
+        act("You $2t $3n with your dagger!",
+             A_ALWAYS, self.outside, pwr, self.outside.fighting, TO_CHAR);
+
+wait(SFB_COM, command(CMD_AUTO_COMBAT));
+goto start;
+}
+dilend
+
+end
+
+
+
+bbreake1
+names {"bone breaker", "breaker of bones", "breaker", "hammer"}
+title "the breaker of bones"
+descr "A hammer lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_WAR_HAMMER, 18, 11)
+WEAPON_TRANSFER(WPN_WAR_HAMMER, +5)
+weight 30
+WPN_ARENA
+
+STR_TRANSFER(5)
+DEX_TRANSFER(5)
+extra {}
+"This looks like a normal war hammer but is it?"
+spell 75
+dilbegin bone_break();
+var
+        i : integer;
+        enemy :unitptr;
+				n:integer;
+code
+{
+        heartbeat := PULSE_SEC*5;
+        :start:
+        wait(SFB_COM,
+                (command(CMD_AUTO_COMBAT))and
+                (self.equip == WEAR_WIELD));
+        i := rnd (45,300);
+
+   enemy := self.outside.fighting;
+
+    if (enemy.level >IMMORTAL_LEVEL)
+      goto start;
+
+   if (i < self.outside.weapons[WPN_WAR_HAMMER])
+        {
+n:= cast_spell
+(SPL_COLOURSPRAY_3,self.outside,self,enemy,"bone_aff@arena");
+        }
+wait(SFB_COM, command(CMD_AUTO_COMBAT));
+goto start;
+}
+dilend
+
+dilbegin bone_death();
+code
+{
+        heartbeat := PULSE_SEC*3;
+        :start:
+        wait(SFB_COM, command(CMD_AUTO_COMBAT) and
+                (self.equip == WEAR_WIELD) and
+                (self.outside.fighting.hp < 10));
+        act("$1n crushes $3n's head FLAT against the ground! *SPLAT*",
+            A_SOMEONE, self.outside, self, self.outside.fighting, TO_NOTVICT);
+        act("$3n tries to duck under your blow, $3s head is really low!",
+            A_ALWAYS, self.outside, self, self.outside.fighting, TO_CHAR);
+        act("Your $2N crushes $3n's head FLAT against the floor! *SPLAT*",
+            A_ALWAYS, self.outside, self, self.outside.fighting, TO_CHAR);
+        act("As you duck to avoid $1n's blow - *SPLAT*",
+            A_ALWAYS, self.outside, self, self.outside.fighting, TO_VICT);
+        act("You feel no pain, it goes dark and very quiet. It's time to die!",
+            A_ALWAYS, self.outside, self, self.outside.fighting, TO_VICT);
+        self.outside.fighting.hp := -7;
+        pause;
+        goto start;
+}
+dilend
+
+end
+
+
+
+
+hugeclu1
+names {"huge club", "club"}
+title "a huge club"
+descr "A huge club has been left here."
+
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_CLUB, 18, 24)
+weight 35
+extra {}
+"As you carefully examine this club you realize this thing is much bigger than
+most clubs. If you are strong enough to swing this club properly you could
+inflict a lot of damage to your enemies."
+WPN_ARENA
+end
+
+handax1
+names {"hand axe", "axe"}
+title "a hand axe"
+descr "A hand axe with a sharp blade has been left here."
+
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_HAND_AXE, 7, 0)
+weight 35
+extra {}
+"This hand axe is beautifully decorated along the length of the handle. The
+blade is sharp and true. It's sturdy feel gives this weapon good potential in
+the right hands."
+WPN_ARENA
+
+end
+
+
+pick1
+title "a Miners Pick"
+names {"miners pick","pick"}
+descr "A miners pick has been left here"
+extra {}
+"The minors pick is large  with a wooden handle and a metal head."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_HAND_AXE, 18, 20)
+extra {"$identify"}
+"A plain old pick"
+weight 25
+WPN_ARENA
+end
+
+
+longswor1
+names {"sword", "long sword"}
+title "a Long Sword"
+descr "A long sword has been left here"
+extra {"$identify"}
+"An average long sword"
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_LONG_SWORD, 20, 10)
+weight 25
+WPN_ARENA
+
+end
+
+spea1
+names {"spear"}
+title "a Spear"
+descr "A spear has been left here"
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_SPEAR, 25,25)
+weight 25
+WPN_ARENA
+
+end
+
+shortswor1
+names {"sword", "short sword"}
+title "a Short Sword"
+descr "A short sword has been left here"
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_SHORT_SWORD, 25, 25)
+weight 15
+WPN_ARENA
+
+end
+
+
+chain_whi1
+
+names {"chain whip","whip"}
+title "a chain whip"
+descr "A chain whip lies here."
+extra {}
+"This Chain whip is very heavy and seems as if it can do some serious
+damage if you master it."
+extra {"$identify"}
+"When wielded this whip drops your strength and dexterity."
+extra {"$improved identify"}
+"Your strength and dexterity are reduced by 1 each.  Which is a small price
+to pay for a weapon that eats Gnomes for breakfast."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_SLAYER(RACE_GNOME)
+WEAPON_DEF(WPN_WHIP, 18, 15)
+WEAPON_TRANSFER(WPN_WHIP,+20)
+STR_TRANSFER(-1)
+DEX_TRANSFER(-1)
+weight 35
+WPN_ARENA
+
+dilbegin whip();
+var
+   strskll : integer;
+   dexmodi : integer;
+   levmodi : integer;
+   rannum  : integer;
+   damage  : integer;
+   enemy   : unitptr;
+   pc      : unitptr;
+
+code
+{
+ :init:
+   on_activation(self.outside.position != POSITION_FIGHTING, skip);
+
+ :start:
+   wait(SFB_COM, ((self.outside.fighting) and
+       (self.equip == WEAR_WIELD)));
+
+   pc := self.outside;
+   enemy := self.outside.fighting;
+   secure(enemy,lostpc);
+   rannum := rnd(1,100);
+   strskll := pc.abilities[ABIL_STR];
+   if ((strskll*rannum)/100 >= 30)
+   {
+      levmodi := (pc.level*10)/100;
+      dexmodi := (strskll*10)/100;
+      if (((strskll*rannum)/100) >= 70) goto exdam;
+      damage := levmodi+dexmodi;
+      act("Your $2N hits $3n with a loud clang!.",
+          A_ALWAYS,pc,self,enemy,TO_CHAR);
+      act("You hear a large clang, as $1n's $2N hits $3n",
+          A_SOMEONE,pc,self,enemy,TO_NOTVICT);
+      act("You hear a large clang, as $1n's $2N hits you.",
+          A_SOMEONE,pc,self,null,TO_VICT);
+      enemy.hp := enemy.hp - damage;
+      goto start;
+
+    :exdam:
+      damage := (levmodi+dexmodi)*2;
+      act("Your $2N FLOGS $3n severely.",
+          A_ALWAYS,pc,self,enemy,TO_CHAR);
+      act("$1n's $2N FLOGS $3n severely.",
+          A_SOMEONE,pc,self,enemy,TO_NOTVICT);
+      act("$1n's $2N FLOGS you severely.",
+          A_SOMEONE,pc,self,null,TO_VICT);
+      if (enemy.level < 200) enemy.hp := enemy.hp - damage;
+   }
+   unsecure(enemy);
+   goto start;
+
+ :lostpc:
+   unsecure(enemy);
+   goto init;
+}
+dilend
+end
+
+
+hellma1
+title "a War Mattock From Hell"
+names {"war mattock from hell","mattock","hell"}
+descr "The war mattock from hell is laying here."
+extra {}
+"The mattock is huge and looks like it can do some serious damage when
+wielded."
+WEAPON_DEF(WPN_WAR_MATTOCK,25,25)
+
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+
+dilbegin gel();
+var
+   pc : unitptr;
+   enemy : unitptr;
+   i : integer;
+   r : integer;
+code
+{
+   :init:
+
+
+   on_activation(self.outside.position != POSITION_FIGHTING, skip);
+
+   :start:
+       wait(SFB_COM,(activator.type == UNIT_ST_PC)and(self.equip == WEAR_WIELD));
+   pc := activator;
+   enemy := self.outside.fighting;
+
+   i := rnd(1, 100);
+      if ((enemy.level >IMMORTAL_LEVEL)and ( i < 60))
+     {
+            enemy.hp := enemy.hp - (i*2);
+
+      }
+
+    else  if ((enemy.level >IMMORTAL_LEVEL)and ( i < 70))
+     {
+            enemy.hp := enemy.hp - (i*3);
+
+      }
+
+    else  if ((enemy.level >IMMORTAL_LEVEL)and ( i < 80))
+     {
+            enemy.hp := enemy.hp - (i*4);
+
+      }
+
+
+   else if ((i < 30) and (enemy.level < IMMORTAL_LEVEL))
+      {
+      enemy.hp := enemy.hp - i ;
+      pc.hp := pc.hp + i ;
+      act("Your $2n hits  $3n with a jolt of pure power.",
+      A_SOMEONE,self.outside,self,enemy,TO_CHAR);
+      act("$1n's $2n hits $3n with a jolt of pure power",
+      A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+
+
+   }
+   goto start;
+
+
+}
+dilend
+WPN_ARENA
+end
+
+/*--------------------------------Armor--------------------------------*/
+
+s1legging1
+names {"leggings"}
+title "a pair of slick Leggings"
+descr "A pair of slick leggings has been left here."
+extra {}
+"The leggings are slick with the blood of thine enemies."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+ARMOUR_PLATE(23, 20)
+weight 15
+WPN_ARENA
+end
+
+s2legging1
+names {"leggings"}
+title "a pair of horrible Leggings"
+descr "A pair of horrible leggings has been left here."
+extra {}
+"The leggings look like someone's leg just rotted in them. "
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+ARMOUR_PLATE(19, 21)
+STR_TRANSFER(+5)
+BRA_TRANSFER(+6)
+weight 15
+WPN_ARENA
+end
+
+s1boot1
+names {"boots"}
+title "a pair of slick Boots"
+descr "A pair of slick boots been left here."
+extra {}
+"A pair of boot red with blood and some other slimy substance."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+ARMOUR_PLATE(19, 21)
+weight 15
+DIV_TRANSFER(+5)
+CON_TRANSFER(+9)
+WPN_ARENA
+end
+
+s1plat1
+names {"breast plate","breastplate","plate"}
+title "a slick Breastplate"
+descr "A slick breastplate has been left here."
+extra {}
+"The slick plate is full of intestinal slime and blood."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+ARMOUR_PLATE(19,21)
+weight 25
+CHA_TRANSFER(+4)
+MAG_TRANSFER(+9)
+WPN_ARENA
+end
+
+s1sleeve1
+names {"sleeves"}
+title "a pair of slick Sleeves"
+descr "A pair of slick sleeves has been left here."
+extra {}
+"A  pair of sleeves slick with blood."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
+ARMOUR_PLATE(19,21)
+weight 20
+DEX_TRANSFER(+8)
+STR_TRANSFER(+6)
+WPN_ARENA
+end
+
+s1helme1
+names {"helmet"}
+title "a slick Helmet"
+descr "A slick helmet has been left here."
+extra {}
+"A slick helmet with a large spike on top. Stuck on the spike is a large
+eyeball."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+ARMOUR_PLATE(19,21)
+weight 10
+CON_TRANSFER(+5)
+MAG_TRANSFER(+7)
+WPN_ARENA
+end
+
+
+dragcla1
+names {"boots","claws"}
+title "a pair of dragon claws"
+descr "A pair of dragon claws are laying here."
+extra {}
+"The dragon claws are very big and very sharp."
+
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+ARMOUR_PLATE(18, 18)
+weight 25
+SKILL_TRANSFER(SKI_SNEAK, 18)
+STR_TRANSFER(+6)
+DEX_TRANSFER(+6)
+WPN_ARENA
+end
+
+elflegging1
+names {"leggings"}
+title "a pair of elf Leggings"
+descr "A pair of elf leggings has been left here."
+extra {}
+"The difference between these leggings and other elf leggings is that
+these are made from real elves."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+ARMOUR_PLATE(18, 18)
+SKILL_TRANSFER(SKI_FLEE,13)
+weight 15
+BRA_TRANSFER(+3)
+DEX_TRANSFER(+5)
+WPN_ARENA
+end
+
+
+bplat1
+names {"breast plate","breastplate","plate"}
+title "a  Breastplate"
+descr "A breast plate has been left here."
+extra {}
+"The breast plate is made out of a real breast. The rib cage seems to be
+perfect for protection from harm."
+
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+ARMOUR_PLATE(18,18)
+SKILL_TRANSFER(SKI_KICK ,16)
+weight 25
+DEX_TRANSFER(+5)
+CHA_TRANSFER(+7)
+WPN_ARENA
+end
+
+gorsleeve1
+names {"sleeves"}
+title "a pair of gory sleeves"
+descr "A pair of gory sleeves has been left here."
+extra {}
+"The sleeves have flesh and skin hanging from them. It is hard to tell
+just what they are made from...maybe flesh maybe something else."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
+ARMOUR_PLATE(18,18)
+STR_TRANSFER(+7)
+MAG_TRANSFER(+6)
+weight 20
+WPN_ARENA
+end
+
+skhelme1
+names {"helmet","skull"}
+title "a large skull"
+descr "A large skull has been left here."
+extra {}
+"As you look at the skull you realize you can slip it over your head. You
+should be able to see out the eye holes and the nostrils and mouth
+provide perfect breathing areas."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+ARMOUR_PLATE(18,18)
+BRA_TRANSFER(+7)
+STR_TRANSFER(+5)
+weight 10
+WPN_ARENA
+end
+
+
+loinclot1
+title "a  loin cloth"
+names {"loin cloth","cloth","loin"}
+descr "A leather cloth is laying here"
+extra{}
+"This little pile of leather looks as if it might give you some protection.
+Not much but some."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+
+DEX_TRANSFER(+3)
+SKILL_TRANSFER(SKI_FLEE, 3)
+WPN_ARENA
+end
+meshshirt
+names {"mesh shirt","shirt","mesh"}
+title "a rusty old shirt"
+descr "An old rusted mesh shirt has been left here."
+extra {}
+"This covers you  more than protects you but maybe it was made for those female
+warriors."
+
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+ARMOUR_HRD_LEATHER(6,4)
+CHA_TRANSFER(+2)
+weight 15
+WPN_ARENA
+end
+sandal1
+names {"sandals"}
+title "a pair of sandals"
+descr "A pair of sandals has been left here."
+extra {}
+"Just something to keep everyone else's blood from your feet."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+ARMOUR_HRD_LEATHER(6, 4)
+weight 10
+SPELL_TRANSFER(SPL_FIREBALL_1, +10)
+WPN_ARENA
+end
+rbplat1
+
+names {"rusty plate","breast plate","plate"}
+title "a rusty plate"
+descr "A rusted breast plate lies here."
+extra {}
+"This breast plate is old and rusted It looks like it has been left
+laying in a puddle of water or worse."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+ARMOUR_PLATE(+25,+23)
+SPELL_TRANSFER(SPL_PROTECTION,+20)
+STR_TRANSFER(+4)
+DEX_TRANSFER(+4)
+weight 20
+WPN_ARENA
+dilbegin plate();
+var
+   rannum : integer;
+   temphp : integer;
+   pc     : unitptr;
+
+code
+{
+ :init:
+   on_activation(self.outside.position != POSITION_FIGHTING, skip);
+
+ :start:
+   wait(SFB_COM, ((self.outside.fighting) and
+       (self.equip == WEAR_BODY)));
+
+   pc := self.outside;
+   temphp := self.outside.hp;
+
+   rannum := rnd(1,30);
+   if (rannum < 5)
+   {
+      act("Your $2N glows brightly and reflex your pain",
+          A_ALWAYS, pc, self, null, TO_CHAR);
+      act("$1n's $2N starts to glow and prevents $1m from pain.",
+          A_SOMEONE, pc, self, null, TO_REST);
+      pc.hp := temphp;
+   }
+   else if (rannum < 10)
+   {
+      act("Your $2N shimmmers and draws you pain",
+          A_ALWAYS, pc, self, null, TO_CHAR);
+      act("$1n's $2N starts to glow and heals $1s pains.",
+          A_SOMEONE, pc, self, null, TO_REST);
+      pc.hp := pc.hp + rnd(75,150);
+      if (pc.hp > pc.max_hp)
+          pc.hp := pc.max_hp;
+   }
+   goto start;
+
+}
+dilend
+end
+
+
+ratcloa1
+title "a Rat Skin Cloak"
+names {"rat skin cloak","cloak","skin"}
+descr "A rat skin cloak is laying here."
+extra {}
+"The cloak is made out of the fur of old brown rats."
+ARMOUR_PLATE(+24, +24)
+weight 15
+DEX_TRANSFER(7)
+MAG_TRANSFER(5)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+CHAR_FLAG_TRANSFER(CHAR_HIDE)
+WPN_ARENA
+end
+
+
+
+
+moldcloa1
+title "a Molding Cloak"
+names {"molding cloak","cloak","mold"}
+descr "A pile mold is laying here."
+extra {}
+"The cloak looks like it has been laying out in the rain too long.  Green
+fungi has started to grow on the surface of the cloak"
+ARMOUR_PLATE(+25, +25)
+DEX_TRANSFER(10)
+STR_TRANSFER(10)
+extra {"$identify"}
+"A godly cloak"
+extra {"$improved identify"}
+" 25 craftsmanship 25 magical
+DEX bonus +10 STR bonus +10
+Cloak Hides you and helps you with summoning +10 and teleporting +10
+Armor Plate"
+SPELL_TRANSFER(SPL_SUMMONING, 10)
+SPELL_TRANSFER(SPL_CONTROL_TELEPORT, 10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+CHAR_FLAG_TRANSFER(CHAR_HIDE)
+WPN_ARENA
+end
+
+
+		mboot1
+
+names {"muddy boots","boots"}
+title "Muddy boots"
+descr "A pair of muddy boots lie here."
+extra {}
+"These boots look like they have been left laying about in the mud. They
+are just caked with a deep rich red mud."
+ARMOUR_PLATE(25, +23)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+weight 10
+MAG_TRANSFER (10)
+DIV_TRANSFER (9)
+CHAR_FLAG_TRANSFER(CHAR_HIDE)
+extra {"$identify"}
+"An above average pair of boots."
+extra {"$improved identify"}
+" 25 craftsmanship 23 magical
+MAG bonus +10
+DIV bonus +9
+Plate armor"
+
+WPN_ARENA
+end
+
+		crlegging1
+
+names {"cracked leggings","leggings"}
+title "Cracked Leggings"
+descr "A cracked leggings lies here."
+extra {}
+"It looks as if these legging have seen better days. The plate is cracked
+and gaping like it is ready to fall apart."
+CHAR_FLAG_TRANSFER(CHAR_HIDE)
+ARMOUR_PLATE(-25, +25)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+weight 15
+CON_TRANSFER (7)
+CHA_TRANSFER (10)
+extra {"$identify"}
+"An poor quality pair of leggings."
+extra {"$improved identify"}
+" -25 craftsmanship 25 magical
+CON bonus +7
+CHA bonus +10
+Plate armor"
+
+WPN_ARENA
+end
+
+		sliplat1
+
+names {"slime breastplate","breastplate","plate","slime"}
+title "a blob of green slime"
+descr "A disgusting blob of green slime has been left here."
+extra {}
+"The blob of slime looks like it may be a breastplate."
+ARMOUR_PLATE(23, +25)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+weight 25
+CHAR_FLAG_TRANSFER(CHAR_HIDE)
+STR_TRANSFER (9)
+BRA_TRANSFER (8)
+MAG_TRANSFER (10)
+extra {"$identify"}
+"An above average breastplate."
+extra {"$improved identify"}
+" 23 craftsmanship 25 magical
+STR bonus +9
+BRA bonus +8
+MAG bonus +10
+Plate armor"
+
+WPN_ARENA
+end
+
+		livsleeve1
+
+names {"living fungi sleeves","sleeves","fungi"}
+title "living  fungi sleeves"
+descr "A pair of Living sleeves lie here."
+extra {}
+"The sleeves seem to be living. Looking at them you see they are crafted
+from some form of fungi."
+CHAR_FLAG_TRANSFER(CHAR_HIDE)
+ARMOUR_CHAIN(23, +25)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
+weight 15
+DIV_TRANSFER (9)
+STR_TRANSFER (12)
+extra {"$identify"}
+"An above average pair of sleeves that make you more divine."
+extra {"$improved identify"}
+" 23 craftsmanship 25 magical
+DIV bonus +9
+STR bonus 12
+Plate armor"
+
+WPN_ARENA
+end
+
+		ggauntlet1
+
+names {"skin gauntlets","gauntlets"}
+title "Skin gauntlets"
+descr "A pair of Skin gauntlets lie here."
+extra {}
+"These gauntlets look like someone has cut off their enemies hands and
+made a pair of skin tight gauntlets from the skin."
+CHAR_FLAG_TRANSFER(CHAR_HIDE) ARMOUR_PLATE(25, +25)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
+weight 5
+MAG_TRANSFER (8)
+BRA_TRANSFER (13)
+CHA_TRANSFER (11)
+extra {"$identify"}
+"An above average pair of gauntlets that make you more magical."
+extra {"$improved identify"}
+" 20 craftsmanship 14 magical
+MAG bonus +8
+BRA bonus +13
+CHA bonus +11
+Plate armor"
+
+WPN_ARENA
+end
+
+		skullhelme1
+
+names {"skull helmet","helmet","helm","skull"}
+title "Skull helmet"
+descr "A skull helmet lies here."
+extra {} "This helmet is made from the skull of some poor victim."
+ARMOUR_PLATE(25, +25)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+weight 5
+BRA_TRANSFER (4)
+CHA_TRANSFER (2)
+extra {"$identify"}
+"An above average helmet"
+extra {"$improved identify"}
+"
+craftsmanship 25 magical 25
+BRA bonus +4
+CHA bonus +2
+Plate armor"
+
+WPN_ARENA
+end
+
+
+lgshiel1
+names {"large shield","shield"}
+title "a large shield"
+descr "A large shield has been left here."
+extra {}
+"A large shield with a skull and cross-bones in the center of it."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
+SHIELD_DEF(SHIELD_LARGE, 25, 25)
+STR_TRANSFER (15)
+DEX_TRANSFER (13)
+weight 50
+bright 5
+extra {"$identify"}
+"An above average shield"
+extra {"$improved identify"}
+" 25 craftsmanship 25 magical
+DEX bonus +15
+STR bonus +13
+Plate armor"
+WPN_ARENA
+end
+
+
+                                  bag
+names {"invbg"}
+title "a bag"
+descr "A bag has been left here."
+weight 0
+capacity 6000
+minv 254
+
+dilbegin recall empty_out ();
+var
+ code
+ {
+heartbeat := PULSE_SEC*5;
+interrupt (SFB_MSG, (("emptyout"==argument) and
+(self.outside==activator)), dest);
+wait (SFB_MSG, "never one" ==argument);
+:dest:
+while (self.inside!=null) link (self.inside,self.outside);
+destroy (self);
+quit;
+}
+dilend
+
+end
+blackhelme1
+
+names {"blackened helmet", "black helmet", "helmet"}
+title "a blackened helmet"
+descr "A blackened helmet has been tossed in a corner."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+weight 25
+extra {}
+"This helmet is made of the worst steel known to man."
+ARMOUR_CHAIN(18, 12)
+WPN_ARENA
+end
+
+                           blackplat1
+
+names {"blackened plate", "black plate", "plate"}
+title "a blackened plate"
+descr "A blackened plate has been dropped here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+weight 50
+extra {}
+"This plate is made of the worst steel known to man."
+ARMOUR_CHAIN(18, 12)
+WPN_ARENA
+end
+                           blacksleeve1
+
+names {"blackened sleeves", "black sleeves", "sleeves"}
+title "blackened sleeves"
+descr "Some blackened sleeves have been left here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
+weight 35
+extra {}
+"These sleeves have been made of the worst steel known to man."
+ARMOUR_CHAIN(18, 12)
+WPN_ARENA
+end
+                           blacklegging1
+
+names {"blackened leggings", "black leggings", "leggings"}
+title "blackened leggings"
+descr "Some blackened leggings have been thrown aside."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+weight 35
+extra {}
+"These leggings have been made of the worst steel known to man."
+ARMOUR_CHAIN(18, 12)
+WPN_ARENA
+end
+                           blackgauntlet1
+
+names {"blackened gauntlets", "black gauntlets", "gauntlets"}
+title "blackened gauntlets"
+descr "Some blackened gauntlets are piled here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
+weight 15
+extra {}
+"These gauntlets have been made of the worst steel known to man."
+ARMOUR_CHAIN(18, 12)
+WPN_ARENA
+end
+                           blackboot1
+
+names {"blackened boots", "black boots", "boots"}
+title "blackened boots"
+descr "A pair of blackened boots are here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+weight 15
+extra {}
+"These boots have been made of the worst steel known to man."
+ARMOUR_CHAIN(18, 12)
+WPN_ARENA
+end
+
+                            nightswor1
+
+names {"scourge of night", "night scourge", "scourge", "sword"}
+title "Scourge of Night"
+descr "The Scourge of Night is here."
+extra {}
+"This is the Scourge of Night. This is a very special weapon. Designed for
+the Arena only. Special function: MORPH <weapon type>
+                Allows you to alter weapon's type according to range
+                between battle axe and whip in VALUES.H (7-40).
+                Example:
+
+100m/352e/355h> morph war mattock
+Your Scourge of Night transforms itself into a war mattock!
+
+100m/352e/355h>"
+extra {"$identify"}
+"This is a weapon with casting and dil slay. Be warned. It is VERY strong.
+For Arena use ONLY."
+extra {"$improved identify"}
+"Casts a 100 strength HARM spell. Dil slay (5%). It also regens wielder by
+splitting the power drained, and giving 1/2 to mana, and 1/2 to hitpoints.
++5 to str and dex, and +10 to DIVINE spell skill. This weapon is
+extraordinarily powerful. For Arena use ONLY."
+weight 5
+spell 100
+WEAPON_DEF(WPN_LONG_SWORD, 20, 20)
+STR_TRANSFER(5)
+DEX_TRANSFER(5)
+SPELL_TRANSFER(SPL_DIVINE, 10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+dilbegin nightwield();
+code
+{
+        heartbeat := PULSE_SEC*2;
+        :start:
+        wait(SFB_CMD, ((command("wield") or command("wear")) and
+                      (activator == self.outside)));
+
+        if (self.equip == 0)
+        {
+        pause;
+        if (self.equip != 0)
+        {
+        act("A pulse of pure darkness flows up and down your $2n as you "+
+            "wield it.", A_ALWAYS, self.outside, self, null,
+            TO_CHAR);
+        act("$1n's $2n seems to draw in the very light itself as $1e "+
+            "wields it.", A_SOMEONE, self.outside, self, null, TO_REST);
+        }
+        }
+        goto start;
+}
+dilend
+
+dilbegin nightrem();
+code
+{
+        heartbeat := PULSE_SEC*2;
+        :start:
+        wait(SFB_CMD,(command("remove") and (activator == self.outside)));
+
+        if (self.equip != 0)
+        {
+        pause;
+        if (self.equip == 0)
+        {
+        act("Your $2n shudders and tries to keep itself wielded, but "+
+            "to no avail.", A_ALWAYS, self.outside, self, null, TO_CHAR);
+        act("$1n's $2n darken slightly as it leeches a small bit of "+
+            "energy from $1m.", A_SOMEONE, self.outside, self, null, TO_REST);
+        }
+        }
+        goto start;
+}
+dilend
+
+dilbegin nightmorph();
+var
+    pc : unitptr;
+    i : integer;
+    wpn : stringlist;
+code
+{
+      :init:
+      on_activation(self.outside.position <= POSITION_SLEEPING, skip);
+
+      heartbeat := PULSE_SEC*3;
+      wpn := {"battle axe", "hand axe", "war mattock", "war hammer",
+              "great sword", "scimitar", "katana", "falchion", "kopesh",
+              "broad sword", "long sword", "rapier", "short sword",
+              "dagger", "battle mace", "mace", "battle club", "club",
+              "morning star", "flail", "quarterstaff", "spear", "halberd",
+              "bardiche", "sickle", "scythe", "trident", "fist" , "kick",
+              "bite", "sting", "claw", "crush", "whip"};
+      :start:
+      wait(SFB_CMD, (activator == self.outside) and command("morph"));
+
+      pc := self.outside;
+      block;
+      if (self.equip != 0)
+      {
+        act("You may not alter the $2n while it is equipped.",
+            A_SOMEONE, pc, self, null, TO_CHAR);
+        goto start;
+      }
+      if ((argument == null) or not(argument in wpn))
+      {
+        act("The $2n does nothing.", A_SOMEONE, pc, self, null, TO_CHAR);
+        goto start;
+      }
+      if (argument in wpn)
+      {
+        if (argument == "battle axe")
+        {
+          act("Your $2n transforms itself into a battle axe!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a battle axe!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 7;
+          goto start;
+        }
+        if (argument == "hand axe")
+        {
+          act("Your $2n transforms itself into a hand axe!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a hand axe!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 8;
+          goto start;
+        }
+        if (argument == "war mattock")
+        {
+          act("Your $2n transforms itself into a war mattock!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a war mattock!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 9;
+          goto start;
+        }
+        if (argument == "war hammer")
+        {
+          act("Your $2n transforms itself into a war hammer!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a war hammer!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 10;
+          goto start;
+        }
+        if (argument == "great sword")
+        {
+          act("Your $2n transforms itself into a great sword!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a great sword!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 11;
+          goto start;
+        }
+        if (argument == "scimitar")
+        {
+          act("Your $2n transforms itself into a scimitar!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a scimitar!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 12;
+          goto start;
+        }
+        if (argument == "katana")
+        {
+          act("Your $2n transforms itself into a katana!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a katana!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 13;
+          goto start;
+        }
+        if (argument == "falchion")
+        {
+          act("Your $2n transforms itself into a falchion!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a falchion!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 14;
+          goto start;
+        }
+        if (argument == "kopesh")
+        {
+          act("Your $2n transforms itself into a kopesh!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a kopesh!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 15;
+          goto start;
+        }
+        if (argument == "broad sword")
+        {
+          act("Your $2n transforms itself into a broad sword!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a broad sword!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 16;
+          goto start;
+        }
+        if (argument == "long sword")
+        {
+          act("Your $2n transforms itself into a long sword!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a long sword!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 17;
+          goto start;
+        }
+        if (argument == "rapier")
+        {
+          act("Your $2n transforms itself into a rapier!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a rapier!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 18;
+          goto start;
+        }
+        if (argument == "short sword")
+        {
+          act("Your $2n transforms itself into a short sword!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a short sword!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 19;
+          goto start;
+        }
+        if (argument == "dagger")
+        {
+          act("Your $2n transforms itself into a dagger!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a dagger!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 20;
+          goto start;
+        }
+        if (argument == "battle mace")
+        {
+          act("Your $2n transforms itself into a battle mace!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a battle mace!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 21;
+          goto start;
+        }
+        if (argument == "mace")
+        {
+          act("Your $2n transforms itself into a mace!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a mace!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 22;
+          goto start;
+        }
+        if (argument == "battle club")
+        {
+          act("Your $2n transforms itself into a battle club!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a battle club!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 23;
+          goto start;
+        }
+        if (argument == "club")
+        {
+          act("Your $2n transforms itself into a club!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a club!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 24;
+          goto start;
+        }
+        if (argument == "morning star")
+        {
+          act("Your $2n transforms itself into a morning star!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a morning star!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 25;
+          goto start;
+        }
+        if (argument == "flail")
+        {
+          act("Your $2n transforms itself into a flail!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a flail!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 26;
+          goto start;
+        }
+        if (argument == "quarterstaff")
+        {
+          act("Your $2n transforms itself into a quarterstaff!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a quarterstaff!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 27;
+          goto start;
+        }
+        if (argument == "spear")
+        {
+          act("Your $2n transforms itself into a spear!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a spear!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 28;
+          goto start;
+        }
+        if (argument == "halberd")
+        {
+          act("Your $2n transforms itself into a halberd!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a halberd!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 29;
+          goto start;
+        }
+        if (argument == "bardiche")
+        {
+          act("Your $2n transforms itself into a bardiche!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a bardiche!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 30;
+          goto start;
+        }
+        if (argument == "sickle")
+        {
+          act("Your $2n transforms itself into a sickle!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a sickle!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 31;
+          goto start;
+        }
+        if (argument == "scythe")
+        {
+          act("Your $2n transforms itself into a scythe!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a scythe!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 32;
+          goto start;
+        }
+        if (argument == "trident")
+        {
+          act("Your $2n transforms itself into a trident!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a trident!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 33;
+          goto start;
+        }
+        if (argument == "fist")
+        {
+          act("Your $2n transforms itself into a clenched fist!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a clenched fist!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 34;
+          goto start;
+        }
+        if (argument == "kick")
+        {
+          act("Your $2n transforms itself into a kicking hoof!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a kicking hoof!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 35;
+          goto start;
+        }
+        if (argument == "bite")
+        {
+          act("Your $2n transforms itself into a biting maw!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a biting maw!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 36;
+          goto start;
+        }
+        if (argument == "sting")
+        {
+          act("Your $2n transforms itself into a stinger!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a stinger!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 37;
+          goto start;
+        }
+        if (argument == "claw")
+        {
+          act("Your $2n transforms itself into a vicious claw!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a vicious claw!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 38;
+          goto start;
+        }
+        if (argument == "crush")
+        {
+          act("Your $2n transforms itself into a crushing vise!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a crushing vise!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 39;
+          goto start;
+        }
+        if (argument == "whip")
+        {
+          act("Your $2n transforms itself into a whip!", A_SOMEONE,
+              pc, self, null, TO_CHAR);
+          act("$1n's $2n transforms itself into a whip!", A_SOMEONE,
+              pc, self, null, TO_REST);
+          self.value[0] := 40;
+          goto start;
+        }
+      }
+      goto init;
+}
+dilend
+
+dilbegin nightdrain();
+var
+    i : integer;
+    k : integer;
+    j : integer;
+    pc : unitptr;
+    enemy : unitptr;
+code
+{
+       :start:
+       wait(SFB_COM, (self.equip == WEAR_WIELD) and
+                     (self.outside.position == POSITION_FIGHTING));
+
+       k := 0;
+       pc := self.outside;
+       enemy := self.outside.fighting;
+       i := rnd(1, 100);
+       if (i <= 5)
+       {
+          act("$1n's $2n shimmmers and the light seems to slide off of it!",
+              A_SOMEONE, pc, self, null, TO_REST);
+          act("Your $2n shimmmers and the light seems to slide off of it!",
+              A_SOMEONE, pc, self, null, TO_CHAR);
+          act("$3n's soul is ripped from $3s body violently!", A_SOMEONE,
+              pc, self, enemy, TO_NOTVICT);
+          act("Your $2n tears $3n's soul from $3s body!", A_SOMEONE, pc,
+              self, enemy, TO_CHAR);
+          act("The world begins to fade from sight as you lose "+
+              "consciousness!", A_SOMEONE, pc, self, enemy, TO_VICT);
+          enemy.hp := -11;
+          act("FATALITY!", A_SOMEONE, pc, self, null, TO_ALL);
+          goto start;
+       }
+       if (i > rnd(1, 100))
+       {
+          act("$1n's $2n emits a flash of darkness!", A_SOMEONE, pc, self,
+              null, TO_REST);
+          act("Your $2n emits a flash of darkness!", A_SOMEONE, pc, self,
+              null, TO_CHAR);
+          j := cast_spell(SPL_CAUSE_WOUNDS_3, pc, self, enemy,
+                          "nighteff@arena");
+       k := j/2;
+       act("Your $2n shares its surplus power with you!", A_SOMEONE,
+           pc, self, null, TO_CHAR);
+       pc.hp := pc.hp + k;
+       if (pc.hp >= pc.max_hp) pc.hp := pc.max_hp;
+       pc.mana := pc.mana + k;
+       if (pc.mana >= 100) pc.mana := 100;
+       }
+       goto start;
+}
+dilend
+WPN_ARENA
+end
+
+                        ninetail1
+names {"nine tails", "nine", "tails", "tail", "flail", "whip"}
+title "Nine Tails"
+descr "An odd looking weapon is here."
+extra {}
+"The Nine Tails whipping flail is an odd weapon indeed. It can switch
+between a flail and a whip fighting style, using the command 'NINESW'."
+extra {"$identify"}
+"This weapon can change between flail and whip, and has DIL damage/slay
+and adds to brain and dex."
+extra {"$improved identify"}
+"This weapon has dil slay (5% chance), and dil damage (50% x 9 tails to
+hit). Adds 9 to brain and dex."
+weight 7
+WEAPON_DEF(WPN_FLAIL, 22, 20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+DEX_TRANSFER(9)
+BRA_TRANSFER(9)
+dilbegin nine_wield();
+code
+{
+        heartbeat := PULSE_SEC*2;
+        :start:
+        wait(SFB_CMD, ((command("wield") or command("wear")) and
+                      (activator == self.outside)));
+
+        if (self.equip == 0)
+        {
+        pause;
+        if (self.equip != 0)
+        {
+        act("The $2n squirms as you wield it.", A_ALWAYS, self.outside,
+            self, null, TO_CHAR);
+        act("$1n's $2n squirms as $1e wields it.", A_SOMEONE, self.outside,
+            self, null, TO_REST);
+        }
+        }
+        goto start;
+}
+dilend
+
+dilbegin nine_rem();
+code
+{
+        heartbeat := PULSE_SEC*2;
+        :start:
+        wait(SFB_CMD,(command("remove") and (activator == self.outside)));
+
+        if (self.equip != 0)
+        {
+        pause;
+        if (self.equip == 0)
+        {
+        act("Your $2n goes limp as you unwield it.", A_ALWAYS, self.outside,
+            self, null, TO_CHAR);
+        act("$1n's $2n goes limp as $1e unwields it.", A_SOMEONE,
+            self.outside, self, null, TO_REST);
+        }
+        }
+        goto start;
+}
+dilend
+
+dilbegin nine_switch();
+code
+{
+      heartbeat := PULSE_SEC*3;
+      on_activation(self.outside.position <= POSITION_SLEEPING, skip);
+
+      :start:
+      wait(SFB_CMD, (activator == self.outside) and command("ninesw"));
+
+      block;
+      if (self.equip != 0)
+      {
+         act("Your $2n refuses to change!", A_SOMEONE, self.outside, self,
+             null, TO_CHAR);
+         goto start;
+      }
+      if (self.value[0] == 26)
+      {
+         act("Your $2n senses your will and glows softly.", A_SOMEONE,
+             self.outside, self, null, TO_CHAR);
+         act("$1n's $2n glows softly.", A_SOMEONE, self.outside, self,
+             null, TO_REST);
+         self.value[0] := 40;
+         act("Your $2n is now a whip!", A_SOMEONE, self.outside, self,
+             null, TO_CHAR);
+         act("$1n's $2n is now a whip!", A_SOMEONE, self.outside, self,
+             null, TO_REST);
+         goto start;
+      }
+      if (self.value[0] == 40)
+      {
+         act("Your $2n senses your will and glows softly.", A_SOMEONE,
+             self.outside, self, null, TO_CHAR);
+         act("$1n's $2n glows softly.", A_SOMEONE, self.outside, self,
+             null, TO_REST);
+         self.value[0] := 26;
+         act("Your $2n is now a flail!", A_SOMEONE, self.outside, self,
+             null, TO_CHAR);
+         act("$1n's $2n is now a flail!", A_SOMEONE, self.outside, self,
+             null, TO_REST);
+         goto start;
+      }
+}
+dilend
+
+dilbegin nine_whip();
+var
+    pc : unitptr;
+    enemy : unitptr;
+    n : integer;
+    d : integer;
+    k : integer;
+code
+{
+
+      :start:
+       wait(SFB_COM, (self.equip == WEAR_WIELD) and
+                     (self.outside.position == POSITION_FIGHTING));
+
+       n := 9;
+       d := 0;
+       pc := self.outside;
+       enemy := self.outside.fighting;
+       act("Your $2n strikes!", A_SOMEONE, pc, self, enemy, TO_CHAR);
+       act("$1n's $2n strikes!", A_SOMEONE, pc, self, enemy, TO_REST);
+       while (n > 0)
+       {
+         k := rnd(1, 100);
+         if (k >= 50)
+         {
+           enemy.hp := enemy.hp - n*9;
+           d := d + 1;
+           if (enemy.hp < 0) goto start;
+         }
+         n := n - 1;
+       }
+       act("You are struck "+itoa(d)+" times by $1n's $2n!", A_SOMEONE,
+           pc, self, enemy, TO_VICT);
+       act("Your $2n strikes $3n "+itoa(d)+" times!", A_SOMEONE, pc, self,
+           enemy, TO_CHAR);
+       act("$3n is struck "+itoa(d)+" times by $1n's $2n!", A_SOMEONE,
+           pc, self, enemy, TO_NOTVICT);
+       goto start;
+}
+dilend
+
+WPN_ARENA
+end
+
+%reset
+door arena_7 SOUTH {EX_OPEN_CLOSE, EX_CLOSED}
+door arena_28 EAST {EX_OPEN_CLOSE, EX_CLOSED}
+door arena_55 NORTH {EX_OPEN_CLOSE, EX_CLOSED}
+door arena_34 WEST {EX_OPEN_CLOSE, EX_CLOSED}
+
+load pick1 into arena_1
+load longswor1 into arena_2
+load spea1 into arena_3
+load shortswor1 into arena_4
+load chain_whi1 into arena_5
+load hellma1 into  arena_31
+load s1legging1 into  arena_7
+load s2legging1 into  arena_9
+load s1plat1 into  arena_11
+load s1sleeve1 into   arena_12
+load s1helme1 into  arena_13
+load dragcla1 into  arena_14
+load elflegging1 into  arena_36
+load bplat1 into arena_16
+load gorsleeve1 into arena_17
+load skhelme1 into arena_18
+load rbplat1 into arena_19
+load ratcloa1 into arena_56
+load moldcloa1 into arena_21
+load mboot1 into arena_22
+load crlegging1 into arena_23
+load sliplat1 into arena_24
+load livsleeve1 into arena_25
+load ggauntlet1 into arena_26
+load skullhelme1 into  arena_27
+load lgshiel1 into arena_28
+load blackhelme1 into arena_29
+load blackplat1 into arena_30
+load blacksleeve1 into arena_6
+load blacklegging1 into arena_32
+load blackgauntlet1 into arena_33
+load blackboot1 into arena_34
+load nightswor1  into arena_35
+load ninetail1 into arena_15
+load s1plat1 into  arena_37
+load s1sleeve1 into   arena_38
+load s1helme1 into  arena_39
+load dragcla1 into  arena_40
+load elflegging1 into  arena_41
+load bplat1 into arena_42
+load gorsleeve1 into arena_43
+load skhelme1 into arena_44
+load bplat1 into arena_45
+load ratcloa1 into arena_46
+load moldcloa1 into arena_47
+load mboot1 into arena_48
+load crlegging1 into arena_49
+load sliplat1 into arena_50
+load livsleeve1 into arena_51
+load ggauntlet1 into arena_52
+load skullhelme1 into  arena_53
+load lgshiel1 into arena_54
+load blackhelme1 into arena_55
+load blackplat1 into arena_56
+load blacksleeve1 into arena_57
+load blacklegging1 into arena_58
+load blackgauntlet1 into arena_59
+load blackboot1 into arena_60
+load nightswor1  into arena_61
+load ninetail1 into arena_20
+load longswor1 into arena_60
+load swor1 into arena_9
+load magicdus1 into arena_18
+load phoenixcla1 into arena_27
+load gdagge1 into arena_36
+load gclu1 into arena_43
+load ravencla1 into  arena_56
+load hamme1 into arena_22
+load dagger1 into arena_48
+load kopes1 into arena_60
+load leftshor1 into arena_32
+load bbreake1 into arena_29
+load hugeclu1 into arena_3
+load handax1 into arena_46
+
+%end

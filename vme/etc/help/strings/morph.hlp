@@ -1,0 +1,21 @@
+<br/>
+<br/>
+Usage: morph &lt;morph type&gt;<br/>
+If you have rebirthed, you will have the ability to morph into a creature.<br/>
+Your previous life's first guild in its path will define what creature you<br/>
+can morph into. It is possible to have multiple rebirths and therefore<br/>
+multiple morphs (and if you rebirth from the same first guild, your number<br/>
+of morphs into that type will be increased).<br/><br/>
+The morph types are as follows:<br/>
+Fighter: Giant, Thief: Viper, Healer: Phoenix, Conjurer: Red Dragon, Ranger:<br/>
+Panther, Paladin: Lion, Sorcerer: Ice Elemental, Assassin: Shadow Demon,<br/>
+Necromancer: Vampire, Druid: Basilisk ,Dark Knight: Hellhound.<br/><br/><br/>
+Each morph type has different strengths and weaknesses, and unique special<br/>
+powers. For example vampires can transfix their victims and drain their<br/>
+hitpoints. Shadow demons can put their prey to sleep, among other things.<br/>
+Dragons have free teleport and fire breath.<br/>
+<br/><br/><br/>
+To return to normal after morphing, type morph without any arguments. Each<br/>
+morph lasts 5 minutes per charge.<br/>
+<br/>
+<br/>

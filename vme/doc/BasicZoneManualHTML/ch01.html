@@ -1,0 +1,282 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>General compiler information</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="What does this book cover?"
+HREF="x108.html"><LINK
+REL="NEXT"
+TITLE="The VMC pre-processor"
+HREF="x163.html"></HEAD
+><BODY
+CLASS="CHAPTER"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x108.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x163.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="CHAPTER"
+><H1
+><A
+NAME="CH-01"
+></A
+>Chapter 2. General compiler information</H1
+><P
+>In order to get your zone onto a valhalla Mud Engine (<ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+>) server you must convert your zone from readable
+english text to binary form the server can understand.  The way
+you do this is with a compiler.  No don't freak out you don't have
+to be a skilled programmer to use a compiler.  The only thing you
+have to do is format your rooms, objects, and Non-player characters
+(NPC) in a form which the compiler can understand.  The great thing
+about the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> is you can do all your zone writing in your favorite
+editor with out having to log on to code.  For those of you who have
+coded for other mud servers and are used to coding online this may
+be a new experience to you but you will find you can plan out
+better and more well designed areas offline than you can on
+line.</P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>In the future the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> coding team is thinking of adding
+an	online coding module for those mud administrators that can not
+live with out it.  If you are one of these make sure you write
+<CODE
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:whistler@valhalla.com"
+>whistler@valhalla.com</A
+>&#62;</CODE
+> and express your desires so
+you can be counted.</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>This chapter will mainly cover the Valhalla Mud Compiler (<ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+>), how it works, and
+the Valhalla Mud pre processor (<ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> -p) works.  We will also throw in some debugging
+hints but debugging will be covered more as you begin creating parts of
+your areas in the following chapters.</P
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN142"
+>2.1. The compiler</A
+></H1
+><P
+><TT
+CLASS="FILENAME"
+>VMC</TT
+> is the Valhalla Mud Engine Compiler.
+for <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> servers.  A compiler takes a source file or better described
+as your areas input file and converts it to a binary file the
+server can then load and use online.  In the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> we call areas
+you build 'zones', therefore the source file for a zone has the
+extension 'zon'.  In order to make this more clear we will start
+with our first example.</P
+><P
+>Lets say you were making a Zone of dragons.  You may want to
+call the file something resembling its contents like,
+<TT
+CLASS="FILENAME"
+>dragon.zon</TT
+>.  Notice we have appended the
+'.zon' extension.  The compiler requires all zones to end in '.zon'
+in order for it to know this is a zone source file.</P
+><P
+>Now lets say we have completed writing our first zone and want
+to compile it.  The command is simply:
+<B
+CLASS="COMMAND"
+>VMC&#62; dragon.zon</B
+>
+If the zone compiles correctly it will indicate success by printing
+a message to the screen and outputting two files both with the same
+root name as the original zone source file but with different
+extensions.  In this case there would be the following:
+<P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><TT
+CLASS="FILENAME"
+>dragon.data</TT
+></DT
+><DD
+><P
+>The file holding the binary version of the zone</P
+></DD
+><DT
+><TT
+CLASS="FILENAME"
+>dragon.reset</TT
+></DT
+><DD
+><P
+>The file containing the reset information for the
+zone.</P
+></DD
+></DL
+></DIV
+>
+If the zone doesn't compile correctly and you have errors it
+will print a list of the errors and the location where they can be
+found so you can fix them.  The debugging process will be explained
+more as you learn how to create rooms, monsters, and objects.</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x108.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x163.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>What does this book cover?</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The VMC pre-processor</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

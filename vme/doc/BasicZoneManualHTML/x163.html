@@ -1,0 +1,606 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>The VMC pre-processor</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General compiler information"
+HREF="ch01.html"><LINK
+REL="PREVIOUS"
+TITLE="General compiler information"
+HREF="ch01.html"><LINK
+REL="NEXT"
+TITLE="Zone source file"
+HREF="ch02.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="ch01.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 2. General compiler information</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="ch02.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN163"
+>2.2. The VMC pre-processor</A
+></H1
+><P
+>The <ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> Pre-Processor (<ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> -p) can be thought of as a powerful
+search and replace tool used by the compiler before it
+converts the zone to its binary form.  This tool gives you the
+builder the ability to add comments, create short hand expressions
+for repeated items, include other files in your zone, and even to do
+some minor calculations when necessary.</P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>If you have coded in C or c++ before the Pre Processor the
+<ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> uses is no different and you can skip this section.</P
+></TD
+></TR
+></TABLE
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN171"
+>2.2.1. Commenting your zone</A
+></H2
+><P
+>The practice of adding comments to your zone is a good thing
+to get into so the administrators and other builders can help
+you with your zone and know what you were trying to do if there are
+problems.  Comments aren't as important when writing the zone as
+they will be when you start writing your own special <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions
+but it is important to know how comments work and that you can use
+them if you need to.  A comment is a block of text the compiler
+will never see and is there only for you and who ever reads the
+file.  In order to make it so the compiler will not see the block of
+text you must surround it by a set of symbols that tell the CPP to
+strip it out before passing the zone on to the compiler.  These
+symbols are the '/*' and the '*/' symbols or the '//' symbols together in front of a single line.</P
+><P
+>In order to best explain how comments work we will give you a some
+what strange example.  First we will start by showing you a very basic
+line you will see time and time again in rooms.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN176"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;title "this is a title"&#13;</PRE
+><P
+></P
+></DIV
+><P
+>This is a title it will show up in everything from rooms, to objects
+and even NPCs.  Now lets see what a commented line would look like.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN179"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//I am going to make a title now
+title /* I put the keyword
+first*/ "this is a title/*then the title*/&#13;</PRE
+><P
+></P
+></DIV
+><P
+>This of course is very ugly but the point is not to be pretty it is
+to show you both the first way and the second way will look
+exactly the same to the compiler because all comments are removed
+before the compiler ever gets it.  A better use of a comment in a
+zone however would be something like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN182"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;/*
+The following ten rooms are the vineyards,
+there are 97 rooms in the zone.
+*/
+
+//Zone first created 1994&#13;</PRE
+><P
+></P
+></DIV
+><P
+>You will find comments will make coding large zones much easier
+because you can add text meant just for the builders
+eyes.</P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>You will have to decide if you want a multi-line comment or a single
+line comment and use the '//' or the '/**/' respectively.  The rule of thumb is if the comment is longer than 1 line it is easier to put the '/**/' around the comment than to comment each individual line.</P
+></TD
+></TR
+></TABLE
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN187"
+>2.2.2. Macros and what they can do for you</A
+></H2
+><P
+>When making a zone you will find there are things you use more
+than once.  In fact you may find things you want others to use or
+things you want to use in multiple zones.  Its true you could block
+and copy and stick them everywhere. in fact that is what I did when
+I first started building.  I soon found my zone file was
+extremely large and hard to upkeep.  With a few minor changes and a
+lot of deleting I used short hand or better known in the world of coding
+as macros to make my zone readable.</P
+><P
+>Lets say you had some flags you were going to set in
+fifty rooms and you knew they would all be the same.  You could type
+the following line 50 times.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN191"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;flags {UNIT_FL_NO_WEATHER, UNIT_FL_CAN_BURY}&#13;</PRE
+><P
+></P
+></DIV
+><P
+>With the macros however you could make this much easier by just doing
+the following at the beginning of your zone.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN194"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define DIRTFLOOR flags {UNIT_FL_NO_WEATHER, UNIT_FL_CAN_BURY}&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Then where ever you want the flags you just type DIRTFLOOR.  You are
+probably thinking, yeah big deal I can do that with block and copy.
+True but there is another benefit to this.  Lets say later you
+wanted to also make these 50 rooms no teleport.  All you would have
+to change is the define like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN197"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define DIRTFLOOR flags {UNIT_FL_NO_WEATHER,UNIT_FL_CAN_BURY,UNIT_FL_NO_TELEPORT}&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now when you recompile all 50 rooms are changed and you didn't even
+have to do a search and replace.</P
+><P
+>You can also make macros that take arguments.  The ability to
+take arguments is where macros take a leap and a bound out in front
+of your favorite editor to allow you to do things you can not do easily
+with search and replace.  Lets say you have an exit descr you
+want to use in 50 swamp rooms because heck everything looks the same
+in a swamp when you look one direction to the next.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN201"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;east to swamp1 descr
+"You see the swamp stretch out for miles";&#13;</PRE
+><P
+></P
+></DIV
+><P
+>This could be made into a macro like:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN204"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define sexit(direction, place) direction to place descr \
+"You see the swamp stretch out for miles.";&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Then all you need to use it is:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN207"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;SEXIT(east,swamp1)
+SEXIT(north,swamp2)
+SEXIT(south,swamp3)&#13;</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>There is no space between 'SEXIT' and '(' that is
+important because the CPP sees 'SEXIT(' and 'SEXIT (' as two
+different things.  It is also important to notice all defines must start at the
+beginning of the line and be either one line long or have a '\' 
+telling the Pre Processor that it should continue with the next line as if it was
+this line.</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>You can also combine macros together so you have a set
+of macros like:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN212"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define DIRTFLOOR flags {UNIT_FL_NO_WEATHER,UNIT_FL_CAN_BURY,UNIT_FL_NO_TELEPORT}
+#define DIRTSECT  movement SECT_INSIDE \
+DIRTFLOOR&#13;</PRE
+><P
+></P
+></DIV
+><P
+>You may have noticed I capitalize all macros.  This is not a must but it is
+suggested so you can easily tell what is a macro and what is not.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN215"
+>2.2.3. Including other files in your zone</A
+></H2
+><P
+>Another function of the <ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> Pre Processor,
+'#include', allows you to include other files  in
+your zone file.  The <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> comes with some basic include files 
+you can use the macros out of and use as examples on how to make
+your own include files.  These files are the
+<TT
+CLASS="FILENAME"
+>composed.h</TT
+>,, <TT
+CLASS="FILENAME"
+>vme.h</TT
+>,
+<TT
+CLASS="FILENAME"
+>values.h</TT
+>, <TT
+CLASS="FILENAME"
+>base.h</TT
+>,
+<TT
+CLASS="FILENAME"
+>liquid.h</TT
+>, and <TT
+CLASS="FILENAME"
+>wmacros.h</TT
+>.
+Including <TT
+CLASS="FILENAME"
+>composed.h</TT
+> will include all the rest
+of
+the include files into your zone because it has include statements
+that use all the others.</P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>You will want to include the files at the beginning of
+your zone file because all defines you use must be defined before
+you use them.</P
+></TD
+></TR
+></TABLE
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN229"
+>2.2.4. Doing minor calculations</A
+></H2
+><P
+> You can also do minor calculations in a macro.  Lets say you
+wanted to make it so the higher level an NPC was the heavier he
+was and the taller he was.  This would be simple with a macro.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN232"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define MLEVEL(lvl) \
+level lvl \
+height lvl+72 \
+weight lvl*9&#13;</PRE
+><P
+></P
+></DIV
+><P
+>This macro would increase the height and weight depending on what
+level you made the NPC pretty simple.  There is much more a macro
+can	do for you but the Pre Processor and all its uses go far beyond the scope
+of this manual.  If you are really interested in all the neat things
+it can do type the following command at the '$' prompt on your
+Linux box.
+<B
+CLASS="COMMAND"
+>man cpp</B
+> 
+The C-Pre Processor is what the <ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> Pre Processor is based on and most
+if not all functions of the CPP work in the <ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+>. </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="ch01.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="ch02.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>General compiler information</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch01.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Zone source file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

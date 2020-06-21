@@ -1,0 +1,4118 @@
+#include <values.h>
+
+command  = north
+internal = north
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = northeast
+internal = northeast
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = northwest
+internal = northwest
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = nw
+internal = nw
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = ne
+internal = ne
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = east
+internal = east
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = south
+internal = south
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = southeast
+internal = southeast
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = se
+internal = se
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = southwest
+internal = southwest
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = sw
+internal = sw
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = west
+internal = west
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = up
+internal = up
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = down
+internal = down
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = look
+func     = do_look@baselook
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = inventory
+func     = do_inventory@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = get
+func     = do_get@baseget
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 12
+
+command  = tell
+func = do_tell@comm
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = take
+func     = do_get@baseget
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 12
+
+command  = wear
+func     = do_wear@commands
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 12
+
+command  = wield
+func     = do_wield@commands
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 6
+
+command  = say
+func = do_say@comm
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = shout
+func = do_shout@comm
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = help
+func = do_help@helpzon
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = equipment
+func = do_equipment@commands
+minpos   = POSITION_SLEEPING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = examine
+func     = do_examine@baselook
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = enter
+func     = enter_dil@basemove
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+
+command  = exit
+func     = exit_dil@basemove
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = exits
+func     = direc_dil@basemove
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 6
+
+command  = mount
+func     = do_mount@commands
+minpos   = POSITION_STANDING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 6
+
+command  = leave
+func     = leave_dil@basemove
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 6
+
+command  = doors
+func     = direc_dil@basemove
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = directions
+func     = direc_dil@basemove
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = dismount
+func     = do_dismount@commands
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 6
+
+command  = sail
+func     = do_sail@basemove
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 6
+
+command  = ride
+func     = do_ride@basemove
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 6
+
+command  = kill
+internal = kill
+minpos   = POSITION_FIGHTING
+minlevel = 1
+loglevel = 0
+type     = 0
+
+command  = knock
+func     = knock@commands
+minpos   = POSITION_STANDING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 12
+
+command  = decapitate
+func = decap@death
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 6
+
+command  = who
+func          = who_dil@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = emote
+func     = do_emote@comm
+minpos   = POSITION_SLEEPING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = smell
+func     = smell@commands
+minpos   = POSITION_SLEEPING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = listen
+func     = listen@commands
+minpos   = POSITION_SLEEPING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = stand
+func     = do_stand@commands
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = score
+func     = do_score@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = sit
+func     = do_sit@commands
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = respond
+func     = reply@comm
+minpos   = POSITION_RESTING
+
+command  = rest
+func     = do_rest@commands
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = sleep
+func     = do_sleep@commands
+minpos   = POSITION_SLEEPING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = wake
+func     = do_wake@commands
+minpos   = POSITION_SLEEPING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = news
+func     = do_news@commands
+minpos   = POSITION_SLEEPING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = sell
+func     = do_not_here@commands
+minpos   = POSITION_STANDING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = value
+func     = do_not_here@commands
+minpos   = POSITION_STANDING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = list
+func     = do_not_here@commands
+minpos   = POSITION_STANDING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = drop
+func     = do_drop@baseget
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 3
+
+command  = grab
+func     = do_grab@commands
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 6
+
+
+command  = remove
+func     = do_remove@commands
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 6
+
+command  = put
+func     = do_put@baseget
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 12
+
+command  = save
+internal = save
+minpos   = POSITION_SLEEPING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = give
+func     = do_give@baseget
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 12
+
+command  = time
+func     = do_time@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = whisper
+func = do_whisper@comm
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = cast
+internal = cast
+minpos   = POSITION_MORTALLYW
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 0
+
+command  = ask
+func = do_ask@comm
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = areas
+func     = do_areas@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = follow
+func = do_follow@commands
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = offer
+func     = do_not_here@commands
+minpos   = POSITION_STANDING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = open
+func     = open_dil@basemove
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 12
+
+command  = close
+func     = close_dil@basemove
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 12
+
+command       = clear
+func          = cmd_clear@commands
+minpos        = POSITION_RESTING
+
+command  = lock
+func     = lock_dil@basemove
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 12
+
+command  = unlock
+func     = unlock_dil@basemove
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 12
+
+command  = hold
+func     = do_hold@commands
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 6
+
+command  = practice
+func = do_practice@commands
+minpos   = POSITION_STANDING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = info
+func = do_info@commands
+minpos   = POSITION_SLEEPING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = level
+internal = level
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = group
+func =do_group@commands
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = credits
+func     = do_credits@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = dig
+func = dig@commands
+minpos   = POSITION_STANDING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 0
+
+command  = light
+func = do_light@commands
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 12
+
+command  = extinguish
+func = do_extinguish@commands
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 12
+
+command  = drag
+func     = drag_dil@basemove
+minpos   = POSITION_STANDING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 0
+
+command  = mail
+func     = do_not_here@commands
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = request
+func     = do_not_here@commands
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+
+index          = SKI_CONSIDER
+name           = consider
+command        = consider
+minpos         = POSITION_RESTING
+turns          = PULSE_VIOLENCE/2
+internal = consider
+type = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =   0
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =   0
+profession fighter      = +0
+profession knight       = +2
+profession paladin      = +2
+profession ranger       = +5
+profession thief        = +5
+profession assassin     = +5
+profession priest       = +2
+profession druid        = +4
+profession conjurer     = +5
+profession sorcerer     = +0
+
+
+
+command  = contract
+func     = do_not_here@commands
+minpos   = POSITION_RESTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+
+command  = prompt
+func     = do_prompt@commands
+minpos   = POSITION_SLEEPING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = quaff
+func     = quaff_dil@commands
+minpos   = POSITION_RESTING
+turns    = 6
+
+command  = quests
+func     = do_quests@commands
+minpos   = POSITION_SLEEPING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = purse
+func     = do_purse@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = change
+internal = change
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = color
+internal = color
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = commands
+func = comm_dil@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = socials
+func = soc_dil@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = ignore
+func = do_ignore@comm
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = contrib
+func     = do_contrib@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = motd
+func = do_motd@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = quit
+func =do_quit@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 0
+
+command  = delete
+func = do_delete@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = reroll
+func = do_reroll@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command  = account
+internal = account
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+#include <values.h>
+
+
+command       = reply
+func          = do_reply@boards
+minpos        = POSITION_SLEEPING
+
+
+
+
+command       = read
+func = do_read@boards
+minpos        = POSITION_SLEEPING
+turns    = 6
+
+
+
+command       = write
+func = do_write@boards
+minpos        = POSITION_SLEEPING
+
+
+command       = typo
+func          = cmd_typos@commands
+minpos        = POSITION_RESTING
+TION_RESTING
+
+command       = password
+func          = do_password@commands
+minpos        = POSITION_RESTING
+
+
+command       = idea
+func          = cmd_ideas@commands
+minpos        = POSITION_RESTING
+
+
+
+command       = describe
+func          = describe@commands
+minpos        = POSITION_RESTING
+
+
+command       = status
+func          = cmd_stat@commands
+minpos        = POSITION_RESTING
+
+command       = store
+func          = ctnstore@commands
+minpos        = POSITION_RESTING
+
+command       = storage
+func          = ctnstorage@commands
+minpos        = POSITION_RESTING
+
+command       = unstore
+func          = ctnwithdraw@commands
+minpos        = POSITION_RESTING
+
+command       = rent
+func          = ctnrent@commands
+minpos        = POSITION_RESTING
+
+command       = eat
+func          = do_eat@commands
+minpos        = POSITION_RESTING
+
+command       = drink
+func          = do_drink@commands
+minpos        = POSITION_RESTING
+turns    = 6
+
+command       = sip
+func          = do_sip@commands
+minpos        = POSITION_RESTING
+turns    = 6
+
+command       = taste
+func          = do_taste@commands
+minpos        = POSITION_RESTING
+turns    = 6
+
+command       = pour
+func          = do_pour@commands
+minpos        = POSITION_RESTING
+
+
+command       = guilds
+func          = guilds_dil@guild_paths
+minpos        = POSITION_SLEEPING
+
+command       = join
+func          = join_dil@guild_paths
+minpos        = POSITION_RESTING
+
+command       = insult
+func          = insult_dil@guild_paths
+minpos        = POSITION_RESTING
+
+command       = gp
+func          = admin_gp@guild_paths
+minpos        = POSITION_SLEEPING
+
+command       = nbless
+func          = nbless@newbie
+minpos        = POSITION_RESTING
+
+command       = naffect
+func          = naffect@newbie
+minpos        = POSITION_RESTING
+
+command       = ngoto
+func          = ngoto@newbie
+minpos        = POSITION_RESTING
+
+command       = nheal
+func          = nheal@newbie
+minpos        = POSITION_RESTING
+
+command       = nsanctuary
+func          = nsanctuary@newbie
+minpos        = POSITION_RESTING
+
+command       = ncorpse
+func          = ncorpse@newbie
+minpos        = POSITION_RESTING
+
+command       = who
+func          = who_dil@commands
+minpos        = POSITION_RESTING
+
+command       = affect
+func          = affect@commands
+minpos        = POSITION_SLEEPING
+
+command       = ditch
+func          = ditch@commands
+minpos        = POSITION_RESTING
+turns    = 0
+
+command       = report
+func          = report@commands
+minpos        = POSITION_SLEEPING
+
+command       = assist
+func          = assist@commands
+minpos         = POSITION_STANDING
+
+index         = SKI_GLANCE
+name          = glance
+command       = glance
+minpos        = POSITION_STANDING
+func          = ski_glance@skills
+type          = TYPE_SKILL
+race human    =  0
+race elf      =  0
+race dwarf    =  0
+race halfling =  0
+race gnome    =  0
+race half-orc  = 0
+race half-ogre = 0
+race half-elf  = 0
+race brownie   = 0
+race groll     = 0
+race darkelf   = 0
+turns          = 0
+
+index         = SKI_RESIZE_CLOTHES
+name          = resize clothes
+command       = resize
+minpos        = POSITION_STANDING
+func          = resize@skills
+type = TYPE_SKILL
+race human    =  0
+race elf      = +2
+race dwarf    = -2
+race halfling =  0
+race gnome    =  0
+race half-orc  =  -1
+race half-ogre =  -2
+race half-elf  =  +1
+race brownie   =  +2
+race groll     =  -3
+race darkelf   =  +1
+turns    = 0
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index         = SKI_RESIZE_LEATHER
+name          = resize leather
+type = TYPE_SKILL
+race human    =   0
+race elf      =   0
+race dwarf    =   0
+race halfling =   0
+race gnome    =   0
+race half-orc  =   0
+race half-ogre =  -1
+race half-elf  =  +1
+race brownie   =  +1
+race groll     =  -3
+race darkelf   =  +1
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index         = SKI_RESIZE_METAL
+name          = resize metal
+type = TYPE_SKILL
+race human    =  0
+race elf      =  0
+race dwarf    = +3
+race halfling =  0
+race gnome    =  0
+race half-orc  =   0
+race half-ogre =  +1
+race half-elf  =  +1
+race brownie   =  -1
+race groll     =  -2
+race darkelf   =  +1
+
+/* - - - - Yet another definition of a skill - - - - */
+index         = SKI_EVALUATE
+name           = Evaluating
+command       = evaluate
+func          = evaluate@commands
+minpos        = POSITION_STANDING
+type = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =   0
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =  +1
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =   0
+turns    = 6
+
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_CUFF
+name           = hand cuffing
+command        = cuff
+minpos         = POSITION_STANDING
+turns          = PULSE_VIOLENCE/2
+func           = cuff@commands
+type = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =   0
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =  +1
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =   0
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_DUAL_WIELD
+name           = two weapon style
+type = TYPE_SKILL
+race human     =   0
+race elf       =  +1
+race dwarf     =  -1
+race halfling  =  +1
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =  +2
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =  +1
+restrict level          = 10
+profession thief        = +0
+profession assassin     = +2
+
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_TURN_UNDEAD
+name           = turn undead
+command        = turn
+minpos         = POSITION_FIGHTING
+turns          = PULSE_VIOLENCE
+func           = ski_turn@skills
+type = TYPE_SKILL
+race human     =  +1
+race elf       =   0
+race dwarf     =  +1
+race halfling  =  -1
+race gnome     =  -1
+race half-orc  =  -1
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =  +1
+race groll     =   0
+race darkelf   =  +2
+restrict level          = 5
+restrict divine         = +1
+profession knight       = -3
+profession paladin      = -3
+profession priest       = +5
+
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_SCROLL_USE
+name           = scroll use
+command        = recite
+minpos         = POSITION_RESTING
+turns          = 2*PULSE_VIOLENCE
+func = ski_scroll_use@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =  +1
+race dwarf     =  -1
+race halfling  =   0
+race gnome     =  +1
+race half-orc  =  -2
+race half-ogre =  -3
+race half-elf  =  +1
+race brownie   =  +1
+race groll     =  -3
+race darkelf   =  +2
+restrict level          = 13
+profession assassin     = -3
+profession priest       = +2
+profession druid        = +5
+profession mystic       = -3
+profession necromancer  = +2
+profession conjurer     = +5
+profession sorcerer     = +5
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_WAND_USE
+name           = wand use
+command        = use
+minpos         = POSITION_SITTING
+turns          = PULSE_VIOLENCE/2
+func           = do_use@skills
+type           = TYPE_SKILL
+race human     =  +1
+race elf       =   0
+race dwarf     =  -1
+race halfling  =  +1
+race gnome     =  +1
+race half-orc  =  -1
+race half-ogre =  -2
+race half-elf  =   0
+race brownie   =  +2
+race groll     =  -2
+race darkelf   =  +1
+restrict brain           = +3
+profession druid        = +5
+profession mystic       = -3
+profession necromancer  = +0
+profession conjurer     = +5
+profession sorcerer     = +5
+
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index         = SKI_DIAGNOSTICS
+name          = diagnostics
+command       = diagnose
+minpos        = POSITION_RESTING
+turns         = PULSE_VIOLENCE/2
+func          = diagnose@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =   0
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =   0
+turns    = 6
+profession fighter      = +0
+profession knight       = +2
+profession paladin      = +2
+profession ranger       = +2
+profession thief        = +5
+profession assassin     = +5
+profession priest       = +5
+profession druid        = +4
+profession mystic       = +0
+profession necromancer  = +5
+profession conjurer     = +5
+
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_APPRAISAL
+name           = appraisal
+command        = appraise
+minpos         = POSITION_RESTING
+turns          = PULSE_VIOLENCE/2
+func           = ski_appraise@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =   0
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =   0
+profession ranger       = +5
+profession thief        = +5
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_VENTRILOQUATE
+name           = ventriloquate
+command        = ventriloquate
+minpos         = POSITION_RESTING
+func           = ski_ventril@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =  -1
+race halfling  =  +1
+race gnome     =  +1
+race half-orc  =   0
+race half-ogre =  -1
+race half-elf  =   0
+race brownie   =  +1
+race groll     =   0
+race darkelf   =   0
+profession thief        = +5
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_WEATHER_WATCH
+name           = weather watching
+command        = weather
+minpos         = POSITION_RESTING
+func           = ski_weather@skills
+type = TYPE_SKILL
+race human     =  +1
+race elf       =  +2
+race dwarf     =  -2
+race halfling  =   0
+race gnome     =  -1
+race half-orc  =  -1
+race half-ogre =  +1
+race half-elf  =  +1
+race brownie   =  +1
+race groll     =   0
+race darkelf   =  +1
+restrict level          = 12
+profession sorcerer     = +5
+
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_FLEE
+name           = fleeing
+command        = flee
+minpos         = POSITION_FIGHTING
+turns          = PULSE_VIOLENCE/2
+type           = TYPE_SKILL
+func           = flee@skills
+race human     =   0
+race elf       =  +1
+race dwarf     =  -1
+race halfling  =  +1
+race gnome     =   0
+race half-orc  =  +1
+race half-ogre =  -1
+race half-elf  =   0
+race brownie   =  +2
+race groll     =  -2
+race darkelf   =  +2
+profession fighter      = +0
+profession ranger       = +4
+profession thief        = +5
+profession assassin     = +5
+profession priest       = +0
+profession druid        = +0
+profession mystic       = -3
+profession necromancer  = +0
+profession conjurer     = +0
+profession sorcerer     = +0
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_SNEAK
+name           = sneak
+command        = sneak
+minpos        = POSITION_STANDING
+func           = ski_sneak@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =  +2
+race dwarf     =  -1
+race halfling  =  +2
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =  -2
+race half-elf  =  +1
+race brownie   =  +1
+race groll     =  -1
+race darkelf   =   0
+profession ranger       = +2
+profession thief        = +2
+profession assassin     = +2
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_BACKSTAB
+name           = backstab
+command        = backstab
+minpos         = POSITION_STANDING
+turns          = PULSE_VIOLENCE*3
+internal = backstab
+type = TYPE_SKILL
+race human     =   0
+race elf       =  +0
+race dwarf     =  -1
+race halfling  =  +1
+race gnome     =  -1
+race half-orc  =  +2
+race half-ogre =  -1
+race half-elf  =   0
+race brownie   =  +1
+race groll     =   0
+race darkelf   =   0
+restrict dexterity       = +3
+profession thief        = +2
+profession assassin     = +5
+
+/* - - - - Yet another definition of a skill - - - - */
+index          = SKI_BASH
+name           = bash
+command        = bash
+minpos         = POSITION_FIGHTING
+turns          = PULSE_VIOLENCE/2
+func = ski_bash@skills
+type = TYPE_SKILL
+race human     =  +1
+race elf       =   0
+race dwarf     =  +1
+race halfling  =  -2
+race gnome     =  -1
+race half-orc  =  +1
+race half-ogre =  +2
+race half-elf  =   0
+race brownie   =  -2
+race groll     =  +1
+race darkelf   =   0
+restrict level          = 3
+profession fighter      = +2
+profession knight       = +2
+profession paladin      = +2
+profession ranger       = +2
+profession druid        = -4
+
+
+command  = break
+func     = do_not_here@commands
+minpos   = POSITION_STANDING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 0
+
+index          = SKI_BUTCHER
+name           = butcher
+command        = butcher
+minpos         = POSITION_STANDING
+func           = butcher@skills
+type = TYPE_SKILL
+race human     =  -1
+race elf       =  +1
+race dwarf     =   0
+race halfling  =  +2
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =  -2
+race half-elf  =   0
+race brownie   =  +1
+race groll     =   0
+race darkelf   =   0
+restrict level          = 4
+profession ranger       = +3
+
+
+command  = bury
+func     = bury@commands
+minpos   = POSITION_STANDING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 0
+
+
+command  = buy
+func     = do_not_here@commands
+minpos   = POSITION_STANDING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+
+command       = bug
+func          = cmd_bugs@commands
+minpos        = POSITION_RESTING
+
+index          = SKI_HIDE
+name           = hide
+command        = hide
+minpos         = POSITION_RESTING
+func           = ski_hide@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =  +2
+race dwarf     =   0
+race halfling  =  +2
+race gnome     =   0
+race half-orc  =  +1
+race half-ogre =  -2
+race half-elf  =  +1
+race brownie   =  +3
+race groll     =  -1
+race darkelf   =  +1
+profession ranger       = +0
+profession thief        = +2
+profession assassin     = +5
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_FIRST_AID
+name           = first aid
+command        = aid
+minpos         = POSITION_RESTING
+turns          = PULSE_VIOLENCE
+func           = ski_first_aid@skills
+type = TYPE_SKILL
+race human     =  +1
+race elf       =   0
+race dwarf     =   0
+race halfling  =  -1
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =  -1
+race groll     =   0
+race darkelf   =   0
+restrict level          = 6
+profession knight       = +2
+profession paladin      = +2
+profession ranger       = +2
+profession thief        = +0
+profession priest       = +5
+profession druid        = +2
+profession mystic       = +0
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_PICK_LOCK
+name           = pick lock
+command        = pick
+minpos         = POSITION_STANDING
+func           = picklock@skills
+type           = TYPE_SKILL
+race human     =   0
+race elf       =  -1
+race dwarf     =  +2
+race halfling  =  +1
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =  -2
+race half-elf  =   0
+race brownie   =  +1
+race groll     =  -1
+race darkelf   =   0
+restrict level          = 2
+restrict dexterity       = +10
+profession thief        = +2
+
+
+index          = SKI_RESCUE
+name           = rescue
+command        = rescue
+minpos         = POSITION_FIGHTING
+turns          = PULSE_VIOLENCE
+func           = do_rescue@skills
+type           = TYPE_SKILL
+race human     =  +1
+race elf       =  -1
+race dwarf     =  +2
+race halfling  =  -2
+race gnome     =  -2
+race half-orc  =   0
+race half-ogre =  +2
+race half-elf  =   0
+race brownie   =  -1
+race groll     =   0
+race darkelf   =   0
+profession fighter      = +0
+profession knight       = +5
+profession paladin      = +5
+profession ranger       = +5
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_SEARCH
+name           = search
+command        = search
+minpos         = POSITION_STANDING
+func           = search_dil@basemove
+type           = TYPE_SKILL
+race human     =   0
+race elf       =  +2
+race dwarf     =  +2
+race halfling  =  +1
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =  -1
+race half-elf  =  +1
+race brownie   =  +2
+race groll     =   0
+race darkelf   =  +1
+restrict level          = 2
+profession fighter      = -1
+profession knight       = -2
+profession paladin      = -2
+profession ranger       = +3
+profession thief        = +5
+profession assassin     = +2
+profession priest       = -2
+profession druid        = -2
+profession mystic       = -3
+profession necromancer  = -3
+profession conjurer     = -3
+profession sorcerer     = -3
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_LEADERSHIP
+name           = leadership
+/* func          =  */
+type = TYPE_SKILL
+race human     =  +1
+race elf       =   0
+race dwarf     =  +2
+race halfling  =  -1
+race gnome     =  -2
+race half-orc  =  -2
+race half-ogre =  -3
+race half-elf  =   0
+race brownie   =   0
+race groll     =  -2
+race darkelf   =  +2
+restrict level          = 12
+profession fighter      = +2
+profession knight       = +5
+profession paladin      = +5
+profession ranger       = +5
+profession necromancer  = +0
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_KICK
+name           = kick
+command        = kick
+minpos         = POSITION_FIGHTING
+turns          = PULSE_VIOLENCE/2
+func           = kick@skills
+type           fs= TYPE_SKILL
+race human     =   0
+race elf       =  -1
+race dwarf     =  -2
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =  -1
+race groll     =  +1
+race darkelf   =   0
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_ELBOW
+name           = elbow
+command        = elbow
+minpos         = POSITION_FIGHTING
+turns          = PULSE_VIOLENCE/2
+func           = elbow@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =  -1
+race dwarf     =  -2
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =  -1
+race groll     =  +1
+race darkelf   =   0
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_KNEE
+name           = knee
+command        = knee
+minpos         = POSITION_FIGHTING
+turns          = PULSE_VIOLENCE/2
+func           = knee@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =  -1
+race dwarf     =  -2
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =  -1
+race groll     =  +1
+race darkelf   =   0
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_HIT
+name           = hit
+command        = hit
+minpos         = POSITION_FIGHTING
+turns          = PULSE_VIOLENCE/2
+func           = punch@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =  -1
+race dwarf     =  -2
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =  -1
+race groll     =  +1
+race darkelf   =   0
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_PUNCH
+name           = punch
+command        = punch
+minpos         = POSITION_FIGHTING
+turns          = PULSE_VIOLENCE/2
+func           = punch@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =  -1
+race dwarf     =  -2
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =  -1
+race groll     =  +1
+race darkelf   =   0
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_SWIMMING
+name           = swimming
+command        = swim
+type           = TYPE_SKILL
+func           = do_swim@basemove
+race human     =   0
+race elf       =  +1
+race dwarf     =  -1
+race halfling  =  -1
+race gnome     =  -1
+race half-orc  =  -1
+race half-ogre =  -2
+race half-elf  =   0
+race brownie   =  -1
+race groll     =  -3
+race darkelf   =   0
+profession fighter      = +0
+profession knight       = +0
+profession paladin      = +0
+profession ranger       = +1
+profession thief        = +1
+profession assassin     = +1
+profession priest       = -1
+profession druid        = +2
+profession mystic       = -1
+profession necromancer  = -2
+profession conjurer     = -2
+profession sorcerer     = -2
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_CLIMB
+name           = climb
+command        = climb
+minpos         = POSITION_STANDING
+func           = climb_dil@basemove
+type = TYPE_SKILL
+race human     =  -1
+race elf       =  +1
+race dwarf     =   0
+race halfling  =  +2
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =  -2
+race half-elf  =   0
+race brownie   =  +1
+race groll     =   0
+race darkelf   =   0
+profession fighter      = +0
+profession knight       = -3
+profession paladin      = -3
+profession ranger       = +0
+profession thief        = +2
+profession assassin     = +2
+profession priest       = -3
+profession druid        = -3
+profession mystic       = -3
+profession necromancer  = -3
+profession conjurer     = -3
+profession sorcerer     = -3
+
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_TRIP
+name           = tripping
+command        = trip
+minpos         = POSITION_FIGHTING
+turns          = 4
+func           = trip@skills
+type = TYPE_SKILL
+race human     =  0
+race elf       =  +1
+race dwarf     =  +3
+race halfling  =  +1
+race gnome     =  +1
+race half-orc  =  -2
+race half-ogre =  -2
+race half-elf  =   +1
+race brownie   =   +4
+race groll     =   -4
+race darkelf   =   +1
+restrict level          = 7
+profession thief        = +0
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_SHIELD
+name           = shield
+type = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =   0
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =   0
+restrict level          = 3
+profession fighter      = +5
+profession knight       = +2
+profession paladin      = +2
+profession ranger       = +2
+profession thief        = +0
+profession assassin     = +0
+profession priest       = +0
+profession druid        = -4
+profession mystic       = -3
+
+
+/* skill def for peek */
+index          = SKI_PEEK
+name           = peeking
+command        = peek
+minpos         = POSITION_STANDING
+func           = peek@skills
+type = TYPE_SKILL
+race human     = 0
+race elf       = 0
+race dwarf     = -1
+race halfling  = +2
+race gnome     = 0
+race half-orc  = +1
+race half-ogre = -1
+race half-elf  = 0
+race brownie   = +1
+race groll     = -1
+race darkelf   = 0
+restrict level          = 8
+profession thief        = +0
+
+/* skill def for disarm */
+/* original before darg change 2/1/06
+
+index          = SKI_DISARM
+name           = disarming
+command        = disarm
+minpos         = POSITION_FIGHTING
+turns          = PULSE_VIOLENCE
+func           = disarm@skills
+type = TYPE_SKILL
+race human     = 0
+race elf       = 0
+race dwarf     = +1
+race halfling  = -1
+race gnome     = -1
+race half-orc  = +2
+race half-ogre = +3
+race half-elf  = 0
+race brownie   = -2
+race groll     = +1
+race darkelf   = 0
+end original */
+
+index          = SKI_DISARM
+name           = disarming
+command        = disarm
+minpos         = POSITION_FIGHTING
+turns          = 14
+func           = disarm@skills
+type = TYPE_SKILL
+race human     = 0
+race elf       = -3
+race dwarf     = +2
+race halfling  = -1
+race gnome     = -3
+race half-orc  = +2
+race half-ogre = +3
+race half-elf  = -1
+race brownie   = -2
+race groll     = +4
+race darkelf   = 0
+restrict level          = 4
+profession fighter      = +2
+profession thief        = -1
+profession assassin     = +0
+
+
+/* skill def for filch */
+index          = SKI_FILCH
+name           = filching
+command        = filch
+minpos         = POSITION_STANDING
+func           = filch@skills
+turns    = 0
+type = TYPE_SKILL
+race human     = 0
+race elf       = +1
+race dwarf     = 0
+race halfling  = +3
+race gnome     = 0
+race half-orc  = 0
+race half-ogre = -2
+race half-elf  = 0
+race brownie   = +2
+race groll     = -1
+race darkelf   = 0
+restrict level          = 5
+profession thief        = +5
+
+
+/* skill def for new steal */
+index          = SKI_STEAL
+name           = stealing
+command        = steal
+minpos         = POSITION_STANDING
+func           = steal@skills
+turns    = 0
+type = TYPE_SKILL
+race human     = 0
+race elf       = 0
+race dwarf     = -1
+race halfling  = +2
+race gnome     = 0
+race half-orc  = 0
+race half-ogre = -2
+race half-elf  = 0
+race brownie   = +4
+race groll     = -1
+race darkelf   = 0
+restrict level          = 10
+restrict dexterity       = +30
+profession thief        = +0
+
+/* skill def for pickpocket */
+index          = SKI_PICK_POCKETS
+name           = pick pockets
+command        = pickpocket
+minpos         = POSITION_STANDING
+func           = pickpocket@skills
+turns    = 0
+type = TYPE_SKILL
+race human     = 0
+race elf       = +1
+race dwarf     = -1
+race halfling  = +3
+race gnome     = 0
+race half-orc  = 0
+race half-ogre = -2
+race half-elf  = 0
+race brownie   = +4
+race groll     = -1
+race darkelf   = 0
+profession thief        = +2
+
+
+index          = SKI_SKIN
+name           = skin
+command        = skin
+minpos         = POSITION_STANDING
+func          =  skin@skills
+type = TYPE_SKILL
+race human     =  -1
+race elf       =  +1
+race dwarf     =   0
+race halfling  =  +2
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =  -2
+race half-elf  =   0
+race brownie   =  +1
+race groll     =   0
+race darkelf   =   0
+restrict level          = 2
+profession ranger       = +2
+profession druid        = +0
+
+command  = skills
+func = ski_dil@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
+
+
+command       = seize
+func          = seize@commands
+minpos        = POSITION_RESTING
+
+command       = noshout
+func          = no_shout@commands
+minpos        = POSITION_RESTING
+minlevel = 0
+loglevel = 200
+
+
+index         = SKI_CURARE
+name          = curare
+command       = curare
+minpos        = POSITION_STANDING
+func          = curare@skills
+type = TYPE_SKILL
+race human     =   +3
+race elf       =   0
+race dwarf     =  -1
+race halfling  =  +2
+race gnome     =   0
+race half-orc  =  -2
+race half-ogre =  -3
+race half-elf  =  +1
+race brownie   =  +1
+race groll     =  -3
+race darkelf   =  +2
+restrict level          = 40
+profession ranger       = +3
+profession druid        = +3
+
+
+index          = SKI_COOK
+name           = cook
+command        = cook
+minpos         = POSITION_RESTING
+func           = cook@skills
+type = TYPE_SKILL
+race human     =  -1
+race elf       =  +1
+race dwarf     =   0
+race halfling  =  +2
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =  -2
+race half-elf  =   0
+race brownie   =  +1
+race groll     =   0
+race darkelf   =   0
+restrict level          = 10
+profession ranger       = +2
+profession druid        = +0
+
+
+index          = SKI_DOWSE
+name           = dowse
+command        = dowse
+minpos         = POSITION_STANDING
+func           = dowse@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =  -1
+race halfling  =  +2
+race gnome     =   0
+race half-orc  =  -2
+race half-ogre =  -3
+race half-elf  =  +1
+race brownie   =  +1
+race groll     =  -3
+race darkelf   =  +2
+restrict level          = 5
+profession ranger       = +0
+profession druid        = +2
+
+
+index          = SKI_HERBS
+name           = herbs
+command        = herbs
+minpos         = POSITION_STANDING
+func           = herbs@skills
+type = TYPE_SKILL
+race human     =  -2
+race elf       =  -2
+race dwarf     =  -1
+race halfling  =  +2
+race gnome     =   0
+race half-orc  =  -2
+race half-ogre =  -3
+race half-elf  =  +1
+race brownie   =  +1
+race groll     =  -3
+race darkelf   =  +4
+restrict level          = 12
+profession ranger       = +0
+profession druid        = +5
+
+
+index          = SKI_FORAGE
+name           = forage
+command        = forage
+minpos         = POSITION_STANDING
+func           = forage@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =  -1
+race halfling  =  +2
+race gnome     =   0
+race half-orc  =  -2
+race half-ogre =  -3
+race half-elf  =  +1
+race brownie   =  +1
+race groll     =  -3
+race darkelf   =  +4
+restrict level          = 3
+profession ranger       = +1
+profession druid        = +1
+
+
+index          = SKI_AMBUSH
+name           = ambush
+command        = ambush
+minpos         = POSITION_STANDING
+turns          = PULSE_VIOLENCE
+func           = ambush@skills
+type = TYPE_SKILL
+race human     =  +3
+race elf       =  +1
+race dwarf     =  -1
+race halfling  =  +1
+race gnome     =  -1
+race half-orc  =  +2
+race half-ogre =  -1
+race half-elf  =   0
+race brownie   =  +4
+race groll     =  -3
+race darkelf   =   0
+restrict level          = 18
+profession ranger       = +5
+
+
+index          = SKI_SHELTER
+name           = shelter
+command        = shelter
+minpos         = POSITION_STANDING
+func           = shelter@skills
+type = TYPE_SKILL
+race human     =  -1
+race elf       =  +1
+race dwarf     =   0
+race halfling  =  +2
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =  -2
+race half-elf  =   0
+race brownie   =  +1
+race groll     =   0
+race darkelf   =   0
+restrict level          = 8
+profession ranger       = +5
+
+
+index          = SKI_SOOTHE
+name           = soothe
+command        = soothe
+minpos         = POSITION_STANDING
+func           = soothe@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =   0
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =   0
+restrict level          = 3
+profession ranger       = +2
+profession druid        = +2
+
+
+index          = SKI_FASHION
+name           = fashion weapon
+command        = fashion
+minpos         = POSITION_STANDING
+func           = fashion_weapon@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =  -1
+race halfling  =  +2
+race gnome     =   0
+race half-orc  =  -2
+race half-ogre =  -3
+race half-elf  =  +1
+race brownie   =  +1
+race groll     =  -3
+race darkelf   =  +2
+restrict level          = 1
+profession ranger       = +3
+
+
+index          = SKI_SHOOT
+name           = shoot
+command        = shoot
+minpos         = POSITION_STANDING
+func           = shoot@skills
+type = TYPE_SKILL
+turns          = PULSE_VIOLENCE
+race human     =   0
+race elf       =  +1
+race dwarf     =  -1
+race halfling  =   0
+race gnome     =  -1
+race half-orc  =   0
+race half-ogre =  -1
+race half-elf  =  +1
+race brownie   =   0
+race groll     =  -2
+race darkelf   =  +1
+
+index          = SKI_TRACK
+name           = track
+command        = track
+minpos         = POSITION_STANDING
+func           = track@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =  +2
+race dwarf     =  -1
+race halfling  =   0
+race gnome     =  -1
+race half-orc  =  +1
+race half-ogre =  -1
+race half-elf  =  +1
+race brownie   =  +1
+race groll     =  -2
+race darkelf   =   0
+restrict level          = 6
+profession ranger       = +5
+
+
+index          = SKI_HUNT
+name           = hunt
+command        = hunt
+minpos         = POSITION_STANDING
+func           = hunt@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =  +2
+race dwarf     =  -1
+race halfling  =   0
+race gnome     =  -1
+race half-orc  =  +1
+race half-ogre =  -1
+race half-elf  =  +1
+race brownie   =  +1
+race groll     =  -2
+race darkelf   =   0
+restrict level          = 14
+profession ranger       = +2
+
+
+index          = SKI_SCAN
+name           = scan
+command        = scan
+minpos         = POSITION_STANDING
+func           = scan@skills
+type = TYPE_SKILL
+race human     =   0
+race elf       =  +2
+race dwarf     =  -1
+race halfling  =   0
+race gnome     =  -1
+race half-orc  =  +1
+race half-ogre =  -1
+race half-elf  =  +1
+race brownie   =  +1
+race groll     =  -2
+race darkelf   =   0
+profession ranger       = +3
+profession druid        = +3
+
+
+index          = SKI_LAY_TRAP
+name           = lay trap
+command        = lay
+minpos         = POSITION_STANDING
+func           = lay_trap@skills
+turns          = PULSE_VIOLENCE
+type = TYPE_SKILL
+race human     =   1
+race elf       =  +2
+race dwarf     =  -1
+race halfling  =   0
+race gnome     =  -1
+race half-orc  =  +1
+race half-ogre =  -1
+race half-elf  =  +1
+race brownie   =  +1
+race groll     =  -2
+race darkelf   =   0
+restrict level          = 28
+profession ranger       = +4
+
+
+index          = SKI_THROW
+name           = throw
+command        = throw
+minpos         = POSITION_STANDING
+func           = throw@skills
+turns          = PULSE_VIOLENCE
+type = TYPE_SKILL
+race human     =  +3
+race elf       =  +1
+race dwarf     =  -1
+race halfling  =   0
+race gnome     =  -1
+race half-orc  =   0
+race half-ogre =  -1
+race half-elf  =  +1
+race brownie   =   0
+race groll     =  -2
+race darkelf   =  +1
+restrict level          = 20
+profession ranger       = +3
+
+
+index          = SKI_SLIP
+name           = slip
+command        = slip
+minpos         = POSITION_STANDING
+turns          = 12
+func           = slip@skills
+type           = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =   0
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =   0
+restrict level          = 15
+profession thief        = +1
+
+
+index          = SKI_PALM
+name           = palm
+command        = palm
+minpos         = POSITION_RESTING
+turns          = 12
+func           = palm@skills
+type           = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =   0
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =   0
+restrict level          = 10
+profession thief        = +1
+
+
+command = plan
+func = plan@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+index          = SKI_PLANT
+name           = plant
+command        = plant
+minpos         = POSITION_STANDING
+turns          = 12
+func           = plant@skills
+type           = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =   0
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =   0
+restrict level          = 25
+profession thief        = +0
+
+index          = SKI_STALK
+name           = stalk
+command        = stalk
+minpos         = POSITION_RESTING
+turns          = 0
+func           = ski_stalk@skills
+type           = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =   0
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =   0
+restrict level          = 22
+profession assassin     = +2
+
+
+
+command = pat
+func = pat@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+
+
+/* Enter wizard commands(in alpha order) */
+command  = advance
+func=do_advance@commands
+minpos   = POSITION_DEAD
+minlevel = OVERSEER_LEVEL
+loglevel = 0
+type     = 0
+
+command  = at
+internal = at
+minpos   = POSITION_DEAD
+minlevel = 220
+loglevel = 220
+type     = 0
+
+command  = ban
+internal = ban
+minpos   = POSITION_DEAD
+minlevel = 240
+loglevel = 240
+type     = 0
+
+command  = boards
+func     = cmd_board@boards
+minpos   = POSITION_DEAD
+minlevel = 230
+loglevel = 230
+type     = 0
+
+command  = broadcast
+func     = wiz_broadcast@comm
+minpos   = POSITION_DEAD
+minlevel = 240
+loglevel = 240
+type     = 0
+
+command  = copy
+func     = cmd_copy@commands
+minpos   = POSITION_SLEEPING
+minlevel = 253
+loglevel = 253
+type     = 0
+
+command  = corpses
+func = gcrps@death
+minpos   = POSITION_DEAD
+minlevel = 219
+loglevel = 219
+type     = 0
+
+command  = crash
+internal = crash
+minpos   = POSITION_STANDING
+minlevel = 255
+loglevel = 255
+type     = 0
+
+command  = echo
+func = wiz_echo@comm
+minpos   = POSITION_SLEEPING
+minlevel = 213
+loglevel = 213
+type     = 0
+
+command  = execute
+internal = execute
+minpos   = POSITION_DEAD
+minlevel = 254
+loglevel = 0
+type     = 0
+
+command  = force
+func = force@commands
+minpos   = POSITION_SLEEPING
+minlevel = 239
+loglevel = 239
+type     = 0
+
+command  = plog
+func = do_plog@wiz
+minpos   = POSITION_SLEEPING
+minlevel = 255
+loglevel = 255
+type     = 0
+
+
+command  = freeze
+func = do_freeze@commands
+minpos   = POSITION_DEAD
+minlevel = 250
+loglevel = 250
+type     = 0
+
+command  = goto
+func     = do_goto@commands
+minpos   = POSITION_SLEEPING
+minlevel = 219
+loglevel = 219
+type     = 0
+
+command  = load
+internal = load
+minpos   = POSITION_DEAD
+minlevel = 230
+loglevel = 230
+type     = 0
+
+command  = makemoney
+func     = do_makemoney@baseget
+minpos   = POSITION_DEAD
+minlevel = 239
+loglevel = 239
+type     = 0
+
+command  = mash
+func     = mash@socials
+minpos   = POSITION_RESTING
+minlevel = 220
+type     = TYPE_SOCIAL
+
+command  = flick
+func     = flick@socials
+minpos   = POSITION_RESTING
+minlevel = 220
+type     = TYPE_SOCIAL
+
+command = rock
+func = rock@socials
+minpos = POSITION_RESTING
+minlevel = 220
+type = TYPE_SOCIAL
+
+command  = message
+func     = wiz_message@comm
+minpos   = POSITION_DEAD
+minlevel = 220
+loglevel = 220
+type     = 0
+
+command  = notell
+func = do_notell@commands
+minpos   = POSITION_SLEEPING
+minlevel = 200
+loglevel = 200
+type     = 0
+
+command  = nset
+func     = do_set@set
+minpos   = POSITION_RESTING
+minlevel = 254
+loglevel = 254
+
+command  = path
+internal = path
+minpos   = POSITION_DEAD
+minlevel = 230
+loglevel = 230
+type     = 0
+
+command  = petrify
+func     = petrify@commands
+minpos   = POSITION_RESTING
+minlevel = 204
+loglevel = 204
+
+command  = purge
+func = do_purge@commands
+minpos   = POSITION_DEAD
+minlevel = 230
+loglevel = 230
+type     = 0
+
+command  = reboot
+func     = cmd_reboot@commands
+minpos   = POSITION_DEAD
+minlevel = 240
+loglevel = 240
+type     = 0
+
+command  = reset
+internal = reset
+minpos   = POSITION_RESTING
+minlevel = 230
+loglevel = 230
+type     = 0
+
+command  = restore
+func = do_restore@commands
+minpos   = POSITION_DEAD
+minlevel = 239
+loglevel = 239
+type     = 0
+
+command  = set
+internal = set
+minpos   = POSITION_SLEEPING
+minlevel = 230
+loglevel = 230
+type     = 0
+
+command  = setskill
+func =do_setskill@commands
+minpos   = POSITION_SLEEPING
+minlevel = 239
+loglevel = 239
+type     = 0
+
+command  = shutdown
+internal = shutdown
+minpos   = POSITION_DEAD
+minlevel = ULTIMATE_LEVEL
+loglevel = 0
+type     = 0
+
+command  = snoop
+internal = snoop
+minpos   = POSITION_DEAD
+minlevel = 239
+loglevel = 239
+type     = 0
+
+command  = switch
+internal = switch
+minpos   = POSITION_DEAD
+minlevel = 239
+loglevel = 239
+type     = 0
+
+command  = title
+func     = gtitle@commands
+minpos   = POSITION_RESTING
+minlevel = 204
+loglevel = 204
+type     = 0
+
+command  = transfer
+func     = transfer@commands
+minpos   = POSITION_RESTING
+minlevel = 235
+loglevel = 235
+type     = 0
+
+command  = users
+internal = users
+minpos   = POSITION_DEAD
+minlevel = 202
+loglevel = 202
+type     = 0
+
+command  = where
+internal = where
+minpos   = POSITION_DEAD
+minlevel = 200
+loglevel = 0
+type     = 0
+
+command  = wiz
+func     = do_wiz@commands
+minpos   = POSITION_RESTING
+minlevel = 210
+loglevel = 0
+type     = 0
+
+command  = wizhelp
+func     = do_wizhelp@helpzon
+minpos   = POSITION_SLEEPING
+minlevel = 200
+loglevel = 200
+type     = 0
+
+command  = wizinv
+func     = do_wizinv@commands
+minpos   = POSITION_DEAD
+minlevel = 230
+loglevel = 230
+type     = 0
+
+command  = wizlock
+internal = wizlock
+minpos   = POSITION_DEAD
+minlevel = 230
+loglevel = 230
+type     = 0
+
+command  = wizsocials
+func     = wizsoc@commands
+minpos   = POSITION_SLEEPING
+minlevel = 200
+loglevel = 200
+type     = 0
+
+command  = wstat
+internal = wstat
+minpos   = POSITION_DEAD
+minlevel = 215
+loglevel = 215
+type     = 0
+
+command  = competition
+func = cmd_comp@competition
+minpos   = POSITION_DEAD
+minlevel = 215
+loglevel = 215
+type     = 0
+
+command  = zap
+func     = cmd_zap@commands
+minpos   = POSITION_SLEEPING
+minlevel = 253
+loglevel = 253
+type     = 0
+
+command  = wizlist
+func     = do_wizlist@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+type     = 0
+
+command = split
+func = do_split@commands
+minpos = POSITION_RESTING
+minlevel = 0
+
+command = french
+func = french@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = grunt
+func = grunt@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = tug
+func = tug@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = tkiss
+func = tkiss@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = swave
+func = swave@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = ssmile
+func = ssmile@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = mouth
+func = mouth@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = pulse
+func = pulse@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = elaugh
+func = elaugh@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = csmile
+func = csmile@socials
+minpos = POSITION_RESTING
+minlevel =
+type = TYPE_SOCIAL
+
+command = dkiss
+func = dkiss@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = nose
+func = nose@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = ack
+func = ack@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = hmm
+func = hmm@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = shudder
+func = shudder@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = faint
+func = faint@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = grabass
+func = grabass@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = kungfu
+func = kungfu@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = bird
+func = bird@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = warcry
+func = warcry@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = baffle
+func = baffle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = chortle
+func = chortle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = btears
+func = btears@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = bleed
+func = bleed@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = barf
+func = barf@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = stomp
+func = stomp@socials
+minpos = POSITION_STANDING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = cover
+func = cover@socials
+minpos = POSITION_DEAD
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = hidebehind
+func = hidebehind@socials
+minpos = POSITION_STANDING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = squeal
+func = squeal@socials
+minpos = POSITION_DEAD
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = ghug
+func = ghug@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = tap
+func = tap@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = blood
+func = blood@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = secret
+func = secret@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = cheer
+func = cheer@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = iwhistle
+func = iwhistle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = boggle
+func = boggle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = lag
+func = lag@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = bonk
+func = bonk@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = wipe
+func = wipe@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = kiss
+func = kiss@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = bounce
+func = bounce@socials
+minpos = POSITION_STANDING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = smile
+func = smile@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = smooch
+func = smooch@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = innocent
+func = innocent@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = rofl
+func = rofl@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = bdance
+func = bdance@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = dance
+func = dance@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = fan
+func = fan@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = bask
+func = bask@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = caress
+func = caress@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = boot
+func = boot@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = eskimo
+func = eskimo@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = buhbye
+func = buhbye@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = bleh
+func = bleh@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = confer
+func = confer@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = argh
+func = argh@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = cblink
+func = cblink@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = blonde
+func = blonde@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = alone
+func = alone@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = arm
+func = arm@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = halo
+func = halo@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = choke
+func = choke@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = highfive
+func = highfive@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = handshake
+func = handshake@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = cackle
+func = cackle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = laugh
+func = laugh@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = giggle
+func = giggle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = shake
+func = shake@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = puke
+func = puke@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = growl
+func = growl@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = scratch
+func = scratch@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+
+command = scream
+func = scream@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = comfort
+func = comfort@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = nod
+func = nod@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = sigh
+func = sigh@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = sulk
+func = sulk@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = hug
+func = hug@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = snuggle
+func = snuggle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = cuddle
+func = cuddle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = nuzzle
+func = nuzzle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = cry
+func = cry@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = poke
+func = poke@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = accuse
+func = accuse@socials
+minpos = POSITION_SITTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = grin
+func = grin@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = bow
+func = bow@socials
+minpos = POSITION_STANDING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = applaud
+func = applaud@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = blush
+func = blush@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = burp
+func = burp@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = chuckle
+func = chuckle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = clap
+func = clap@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = cough
+func = cough@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = curtsey
+func = curtsey@socials
+minpos = POSITION_STANDING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = fart
+func = fart@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = flip
+func = flip@socials
+minpos = POSITION_STANDING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = fondle
+func = fondle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = frown
+func = frown@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = gasp
+func = gasp@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = glare
+func = glare@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = groan
+func = groan@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = grope
+func = grope@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = hiccup
+func = hiccup@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = lick
+func = lick@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = love
+func = love@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = moan
+func = moan@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = nibble
+func = nibble@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = pout
+func = pout@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = purr
+func = purr@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = ruffle
+func = ruffle@socials
+minpos = POSITION_DEAD
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = shiver
+func = shiver@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = shrug
+func = shrug@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = sing
+func = sing@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = slap
+func = slap@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = smirk
+func = smirk@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = snap
+func = snap@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = sneeze
+func = sneeze@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = snicker
+func = snicker@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = sniff
+func = sniff@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = snore
+func = snore@socials
+minpos = POSITION_SLEEPING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = spit
+func = spit@socials
+minpos = POSITION_DEAD
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = squeeze
+func = squeeze@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = stare
+func = stare@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = strut
+func = strut@socials
+minpos = POSITION_STANDING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = thank
+func = thank@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = twiddle
+func = twiddle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = wave
+func = wave@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = whistle
+func = whistle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = wiggle
+func = wiggle@socials
+minpos = POSITION_STANDING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = wink
+func = wink@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = yawn
+func = yawn@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = snowball
+func = snowball@socials
+minpos = POSITION_DEAD
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = tokiss
+func = tokiss@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = comb
+func = comb@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = massage
+func = massage@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = tickle
+func = tickle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = curse
+func = curse@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = beg
+func = beg@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = cringe
+func = cringe@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = daydream
+func = daydream@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = fume
+func = fume@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = grovel
+func = grovel@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = hop
+func = hop@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = nudge
+func = nudge@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = peer
+func = peer@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = point
+func = point@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = ponder
+func = ponder@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = snarl
+func = snarl@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = spank
+func = spank@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = steam
+func = steam@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = tackle
+func = tackle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = taunt
+func = taunt@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = think
+func = think@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = whine
+func = whine@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = worship
+func = worship@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = yodel
+func = yodel@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = agree
+func = agree@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = jump
+func = jump@socials
+minpos = POSITION_STANDING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = stretch
+func = stretch@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = sweat
+func = sweat@socials
+minpos = POSITION_SLEEPING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = brb
+func = brb@socials
+minpos = POSITION_DEAD
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = bark
+func = bark@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = salute
+func = salute@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = blowkiss
+func = blowkiss@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = picknose
+func = picknose@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = piset
+func = piset@commands
+minpos = POSITION_RESTING
+minlevel = 0
+
+command = hail
+func = hail@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = herald
+func = herald@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = flirt
+func = flirt@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = eyeball
+func = eyeball@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = apologize
+func = apologize@socials
+minpos = POSITION_FIGHTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = bite
+func = bite@socials
+minpos = POSITION_FIGHTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = flipflop
+func = flipflop@socials
+minpos = POSITION_STANDING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = handstand
+func = handstand@socials
+minpos = POSITION_STANDING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = somersault
+func = somersault@socials
+minpos = POSITION_STANDING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = moohaha
+func = moohaha@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = howl
+func = howl@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = hate
+func = hate@socials
+minpos = POSITION_DEAD
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = afk
+func = afk@socials
+minpos = POSITION_DEAD
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = grimace
+func = grimace@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = babble
+func = babble@socials
+minpos = POSITION_SLEEPING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = blink
+func = blink@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = damn
+func = damn@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = drool
+func = drool@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = embrace
+func = embrace@socials
+minpos = POSITION_FIGHTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = fear
+func = fear@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = greet
+func = greet@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = snub
+func = snub@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = loom
+func = loom@socials
+minpos = POSITION_FIGHTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = pinch
+func = pinch@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = respect
+func = respect@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = snivel
+func = snivel@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = snort
+func = snort@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = stagger
+func = stagger@socials
+minpos = POSITION_FIGHTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = stroke
+func = stroke@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = threaten
+func = threaten@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = wrestle
+func = wrestle@socials
+minpos = POSITION_FIGHTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = raisebrow
+func = raisebrow@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = sworddance
+func = sworddance@socials
+minpos = POSITION_STANDING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = zigzag
+func = zigzag@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = holdhand
+func = holdhand@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = tongue
+func = tongue@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = thumbsup
+func = thumbsup@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = squirm
+func = squirm@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = throttle
+func = throttle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = brush
+func = brush@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+
+
+
+command = mumble
+func = mumble@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = meditate
+func = meditate@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = monkey
+func = monkey@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = gag
+func = gag@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command  = attackswitch
+func     = attack_switch@commands
+minpos   = POSITION_FIGHTING
+minlevel = 0
+loglevel = 0
+type     = 0
+
+command = snigger
+func = snigger@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = flowers
+func = flowers@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+
+command = sgiggle
+func = sgiggle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = hoff
+func = hoff@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = batt
+func = batt@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = parchment
+func = parchment@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = annoy
+func = annoy@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = smack
+func = smack@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = baddog
+func = baddog@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = mutter
+func = mutter@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = goose
+func = goose@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = worry
+func = worry@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = sick
+func = sick@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = grumble
+func = grumble@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = startle
+func = startle@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = kneel
+func = kneel@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = sharpen
+func = sharpen@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = swkiss
+func = swkiss@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = melt
+func = melt@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = shysmile
+func = shysmile@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = teardrop
+func = teardrop@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = burlesque
+func = burlesque@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = stench
+func = stench@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = elook
+func = elook@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = neckrub
+func = neckrub@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = headbang
+func = headbang@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = kissoff
+func = kissoff@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = squat
+func = squat@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+
+command = peck
+func = peck@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+
+command = flex
+func = flex@socials
+minpos = POSITION_RESTING
+minlevel = 0
+type = TYPE_SOCIAL
+

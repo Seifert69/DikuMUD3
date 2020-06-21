@@ -1,0 +1,2618 @@
+/*
+filename    ratswarf
+password    2kpwd
+changedby   Ratlin
+EmailAdd    "Mark Pringle" <marco2@cyberzone.net>
+request     compile
+version     12
+END HEADER*/
+
+#include <macros.h>
+
+
+
+%zone ratswarf
+title "Ratswarf@Mainland"
+lifespan 20
+reset RESET_ANYHOW
+
+creators {"mercutio","telegrim"}
+
+notes "This is an evil town, and dungeon which is actually a petrified dragon
+	for levels 4 to about 7."
+
+help
+"The small port town of Ratswharf where slaves are bought and sold and
+the tensions between the Orcs and the Elves threaten to explode into
+a full scale war any moment now. 
+Zone created by Mercutio and Telegrim
+"	
+
+
+%rooms
+
+/*player home*/
+la_room1
+title "The Cottage"
+descr
+"The inside of the cottage is cheery and warmly lit by a small hearth.
+There is the pungent aroma of different incense all through the room.
+There is a small oak table with three chair around it and a small bed
+with big fluffy pillows and an equally fluffy comforter. There is a
+small cabinet against the south wall. The floor is of polished oak
+and has a large black bear fur covering most of it.
+You see a small table that would be just right to put something on.
+A very comfortable looking bed predominates the south west corner.
+A cabinet with a little door that looks as if it yearns to hold something rests
+against the south wall."
+south to kingroad3 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+key monkey_key keyword {"door"} descr
+"There is a locked door in this direction.<br/>";
+end
+
+
+/*----------------------------------RATSWARF-------------------------*/
+
+
+			      kingroad1
+
+names {"kings road"}
+title "Kings Road"
+descr
+"	Here begins the Road commissioned by King Welmar.  It runs east,
+straight as an arrow.  To the west is the turning point near Midgaard."
+west to turning_point;
+east to kingroad2;
+end
+
+                              out_egate
+
+names {"outside", "east gate"}
+title "Outside the East Gate of Midgaard"
+descr
+"   You are by a high city wall.  To your west, two small towers have been
+built into the wall and connected with a footbridge across a heavy wooden
+gate."
+movement SECT_CITY
+east to turning_point;
+west to rn_013@midgaard;
+extra {"bridge","footbridge"}
+"It is too high up to reach but it looks as if one easily could walk across it
+from one tower to the other."
+extra {"gate"}
+"It is a set of very big double doors made from hard wood, that has been
+reinforced with large iron bands to make it even more sturdy.  One of the
+doors is equipped with a very big lock."
+extra {"tower","towers"}
+"Both of the towers are built from large grey rocks that have been fastened to
+each other with some kind of mortar, just like the city wall."
+extra {"wall"}
+"It is built from large grey rocks that have been fastened to each other with
+some kind of mortar.  It is far too high to climb."
+ALWAYS_LIGHT
+end
+
+				turning_point
+
+names {"crossroads"}
+title "The Cross Road"
+descr
+"   All roads lead to Midgaard, they say, well, until the Great Dragon
+toasted it.  Now, most roads lead to Midgaard II and a few of them are here,
+leading in all directions. The city is to the west."
+movement SECT_HILLS
+west to out_egate;
+east to kingroad1;
+north to n_traila@hills;
+south to new_road1@torsbay;
+end
+
+
+
+
+			      kingroad2
+
+names {"kings road"}
+title "Kings Road"
+descr
+"	You continue along Kings Road, realizing this highway is a military
+tool, just as much as a sword is a tool for storm troopers.  By connecting
+his provinces with this fine road, the King insures his armies can reach and
+squash and insurrection that arises."
+west to kingroad1;
+east to kingroad3;
+end
+
+
+			      kingroad3
+
+names {"kings road"}
+title "Kings Road"
+descr
+"	This well-made road of packed earth continues east and west for
+miles on end, a symbol of King Welmar's rule. A small comfortable
+cottage with a straw roof is just north of here."
+west to kingroad2;
+east to kingroad4;
+north to la_room1 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+key monkey_key@houses keyword{"door"} descr "There is a door here.<br/>";
+dilbegin no_magic();
+code
+{
+  :start:
+  wait(SFB_CMD, ((command("cast")) and ("door" in argument)));
+  act("You are not allowed to cast magic on the door.", A_ALWAYS, activator,
+    null, null, TO_CHAR);
+  block;
+  goto start;
+}
+dilend
+
+end
+
+
+			      kingroad4
+
+names {"kings road"}
+title "Kings Road"
+descr
+"	The road leads to a small town by a river to the east. Rocky hills
+border the road to the north and south.  Atop the hills, figures watch you."
+movement SECT_CITY
+north to elf_camp;
+west to kingroad3;
+east to kingstreet1;
+south to hob_camp;
+end
+
+
+
+				elf_camp
+
+names {"elf camp"}
+title "Elf Camp atop a Hill"
+descr
+"	You climb to the highest hill and find tents and equipment set up in
+an orderly fashion.  A small campfire burns in the center, ringed by stones."
+movement SECT_HILLS
+north to darkwood;
+south to kingroad4;
+end
+
+
+			      darkwood
+
+names {"darkwood"}
+title "Darkwood"
+descr
+"	You are in a dark and foreboding forest.  The trees seem to reach out
+to scratch your face.  The terrain turns to rocky hills to the south.
+While the forest continues to the east."
+ movement SECT_FOREST
+/* Elfhill is gone, Papi: north to enter@elfhill; */
+south to elf_camp;
+east to darkwood_east@tower descr
+"You see an old tower hidden in the forest.";
+end
+
+
+			      hob_camp
+
+names {"hobgoblin camp"}
+title "Hobgoblin Encampment on a Hilltop"
+descr
+"	After a strenuous hike you arrive to a messy encampment.  Equipment and
+bedrolls are strewn about and a large bonfire burns foul foodstuffs in the
+center.  To the north you can oversee Kings Road.  To the south a narrow
+pass extends through snow capped mountains."
+movement SECT_HILLS
+north to kingroad4;
+south to mnt_pass;
+end
+
+/*lightbeam portal to lost.zon loaded here */
+			      mnt_pass
+
+names {"mountain pass"}
+title "Mountain Pass"
+descr
+"	Movement is slow through this treacherous path between the mountains.
+High above, small features line the mountain walls in what might be caves.  You
+notice an almost hidden passage up towards the caves.  To the north the land
+becomes hilly, while to the east it softens. "
+movement SECT_MOUNTAIN
+north to hob_camp;
+east to valley_enter;
+up to trail@hobgob descr
+"You see a grassy passage up.";
+end
+
+
+			      kingstreet1
+
+names {"kings street"}
+title "Kings Street"
+descr
+"	Welcome to Ratswharf, a rough port town that grew around where the
+Kings Road touches the river.  A collection of hovels stand before you,
+scattered in a pattern as lawless as its inhabitants. "
+movement SECT_CITY
+north to shack1;
+west to kingroad4;
+east to kingstreet2;
+south to grime_bar;
+end
+
+
+			      shack1
+
+names {"a decrepit shack"}
+title "An Old Shack"
+descr
+"	You are in an old decrepit shack.  Bits of the sky show through the
+roof and rat holes abound elsewhere.  A ragged curtain covers the doorway
+south to Kings Street."
+flags {UNIT_FL_INDOORS}
+movement SECT_INSIDE
+south to kingstreet1;
+end
+
+
+			      grime_bar
+
+names {"low dive"}
+title "The Brazen Strumpet"
+descr
+"	You are in a rowdy bar.  Roaches and ruffians alike ignore your 
+entrance. A worn bar counter lies behind splintered stools and tables."
+flags {UNIT_FL_INDOORS,UNIT_FL_NO_WEATHER}
+movement SECT_INSIDE
+north to kingstreet1;
+end
+
+
+			      kingstreet2
+
+names {"kings street"}
+title "Kings Street"
+descr
+"	You are on Ratswharf's main street and although traffic continues east
+and west to Kings Road, to the south can be seen a bustle of activity: the
+Slave Market.  A small shrine adorned with a skull is to the north."
+movement SECT_CITY
+north to evil_shrine;
+west to kingstreet1;
+east to kingstreet3;
+south to slave_market;
+end
+
+
+			      evil_shrine
+
+names {"a shrine"}
+title "Evil Shrine"
+descr
+"	Icons of foul deeds and wanton vices adorn the walls.  Malice emanates
+from a blood stained altar set against the north wall."
+extra {"altar"}
+"Sacrificial daggers and dark red bowls lie atop this marble slab."
+movement SECT_INSIDE
+down to snake_pit open {EX_OPEN_CLOSE,EX_CLOSED} keyword {"altar","slab"};
+south to kingstreet2;
+end
+
+
+			      snake_pit
+
+names {"too dark to tell"}
+title "Snake Pit"
+descr
+"	You are in a poorly lit alcove beneath the alter.  Darkness and
+something else slither out to meet you."
+flags {UNIT_FL_INDOORS,UNIT_FL_NO_WEATHER}
+light -1
+movement SECT_INSIDE
+up to evil_shrine open {EX_OPEN_CLOSE,EX_CLOSED} keyword {"altar", "slab"};
+end
+
+
+			      kingstreet3
+
+names {"kings street"}
+title "Kings Street"
+descr
+"	You are on the wide road in this city of averice.  A sign to the north
+reads 'General Store'.  To the south is a hovel."
+movement SECT_CITY
+north to gen_store;
+west to kingstreet2;
+east to kingroad5;
+south to shack2;
+end
+
+
+			      gen_store
+
+names {"general store"}
+title "Ratswharf General Store"
+descr
+"	This rude establishment sells all manner of food and equipment. Rats
+and roaches hide beneath sacks of floor, while rusty weapons and armors
+sit in open barrels.  To the south can be heard the busy Kings Street."
+flags {UNIT_FL_INDOORS,UNIT_FL_NO_WEATHER}
+movement SECT_INSIDE
+south to kingstreet3;
+end
+
+
+			      shack2
+
+names {"a weatherbeaten shack"}
+title "Weatherbeaten Shack"
+descr
+"	The huge rent in the south wall affords the occupants a rather
+nice view of a swift river and a small pier.  It also brings a chill
+draft."
+flags {UNIT_FL_INDOORS}
+movement SECT_INSIDE
+north to kingstreet3;
+end
+
+
+			      kingroad5
+
+names {"kings road"}
+title "Kings Road"
+descr
+"	The Kings Road continues east for miles, to the kingdom of Urland.  To
+the west it passes through the small town of Ratswharf."
+movement SECT_CITY
+west to kingstreet3;
+east to vil_path22@urland;   /*  thanks to Venger */
+end
+
+
+			      slave_market
+
+names {"slave market"}
+title "Slave Market"
+descr
+"	You enter a bustling square amid the ramshackle houses of Ratswharf.
+A raised platform is in the center where chained slaves are sold to the
+highest bidder.  To the west is a small tower of stone.  To the north is
+Kings Street and the south leads to an old port."
+movement SECT_CITY
+north to kingstreet2;
+west to slaver_tower;
+south to port;
+end
+
+
+			      slaver_tower
+
+names {"slavers tower"}
+title "Ground Floor of the Slavers Tower"
+descr
+"	You are in the ground floor of a mean and dirty tower.  This appears to
+be the nexus of the slave trade in Ratswharf, for cries from poor souls come
+from beneath an iron grate in the floor.  A wooden ladder also leads up."
+flags {UNIT_FL_INDOORS,UNIT_FL_NO_WEATHER}
+movement SECT_INSIDE
+up to apartment;
+east to slave_market;
+down to slave_pen open {EX_OPEN_CLOSE,EX_CLOSED,EX_LOCKED}
+	key skull_key keyword {"iron grate","grate"};
+end
+
+
+			      slave_pen
+
+names {"slave pen"}
+title "Slave Pen"
+descr
+"	Straw is scattered about the hard stone floors of this chamber.  The
+sense of filth is compounded by the smell of urine.  The only light is that
+which trickles from above."
+flags {UNIT_FL_INDOORS,UNIT_FL_NO_WEATHER}
+light -1
+movement SECT_INSIDE
+up to slaver_tower open {EX_OPEN_CLOSE,EX_CLOSED,EX_LOCKED}
+	key skull_key keyword {"iron grate","grate"};
+end
+
+
+			      apartment
+
+names {"apartment"}
+title "Luxurious Apartment"
+descr
+"	Fine furniture surrounds a large bed in a manner not typical in
+Ratswharf.  From the window, of glass no less, can be seen the Slave Market.
+There is a funny looking fixture on the ceiling."
+flags {UNIT_FL_INDOORS,UNIT_FL_NO_WEATHER}
+movement SECT_INSIDE
+down to slaver_tower;
+end
+
+
+			      port
+
+names {"old port"}
+title "Ratswharf Port"
+descr
+"	Sacks of rotting leather and pillaged crates line this rickety pier.
+Old ropes and lie on weather beaten planks here.  A breeze comes from the
+river to the south, to the north is the busy Slave Market."
+movement SECT_CITY
+north to slave_market;
+south to stream3;
+end
+
+			stream1
+title "On a Wide Stream"
+descr
+"   You are floating on a wide stream that flows from the east to the west
+through the countryside. The water is quite wide and deep here, as if having
+emerged from an underground source."
+east to ww1/river_3;
+west to stream2;
+south to river_0@gazha;
+movement SECT_WATER_SAIL
+end
+
+
+			stream2
+
+title "On a Widening Stream"
+descr
+"   You are floating on a stream flowing slowly to the west through
+the peaceful countryside. To the north and south, large, well-tilled
+fields stretch out, indicating a prospering country cultured by hard-
+working farmers. Further to the east, the country rises to form a
+mountain range. The stream seems to be growing wider and seems quite deep and
+cold, as if having emerged from a deep underground source somewhere upstream
+to the east."
+east to stream1;
+west to stream3;
+
+movement SECT_WATER_SAIL
+end
+
+
+			      stream3
+
+names {"stream"}
+title "The Deep Stream"
+descr
+"	You are on a calm stream.  To the north, a muddy bank gives way to the
+rotting planks of a dock on a small port. The water flows from the east to
+the west."
+movement SECT_WATER_SAIL
+north to port;
+east to stream2;
+west to stream4;
+end
+
+				stream4
+names {"stream"}
+title "The Deep Stream"
+descr
+"     You are floating on a deep but calm stream, flowing from the west past
+the small port town of Ratswarf. The water flows around a large old tree as
+it turns into the dark woods."
+movement SECT_WATER_SAIL
+east to stream3;
+south to torsbay/stream2;
+end
+
+
+
+/*---------------------------------ANCALADOR---------------------------*/
+
+			      valley_enter
+
+names {"valley entrance"}
+title "Valley Entrance"
+descr
+"	A verdant valley stretches before you to the east.  To the west, a
+narrow pass winds through snow capped mountains."
+movement SECT_MOUNTAIN
+west to mnt_pass;
+east to valley;
+end
+
+
+			      valley
+
+
+names {"wild valley"}
+title "Wild Valley"
+descr
+"	You move slowly through the green vines and thick undergrowth that
+cover the valley floor.  It would appear not many have come here in ages.
+To the east, the land rises to leave the valley.  To the west the vegetation
+clears to give way to a strange uprising of stone."
+movement SECT_MOUNTAIN
+west to valley_enter;
+east to before_dragon;
+end
+
+
+			      before_dragon
+
+names {"before dragon"}
+title "Before the Dragon"
+descr
+"	You stand before the Dragon Ancalador.  You can still make out its
+petrified form despite the earth that has filled in the crevices between its
+limbs and the huge oaks, dwarfed by the dragon itself, which have grown
+therein.  A vague evil emanates from the stone that once terrorized nations.
+The oak trees seem to be watching you."
+extra {"dragon"}
+"You peer down the stone dragons's mouth, frozen in snarl, and see only
+darkness."
+movement SECT_MOUNTAIN
+/* must 'enter dragon' to goto dragon_mouth */
+west to valley;
+end
+
+
+			      dragon_mouth
+
+names {"dragon mouth","dragon","the dragon","ancalador"}
+title "In the Dragon's Mouth"
+descr
+"	Rows of stone teeth as large as a troll line the walls here.  A tongue
+of pitted stone leads east, behind a stone molars as large as an iron shields."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+in before_dragon    /* you must 'enter dragon' from before_dragon to enter */
+east to stone_tonsil;
+end
+
+				stone_tonsil
+
+names {"stone tonsils"}
+title "By Stone Tonsils"
+descr
+"	You are in the back of the dragon's mouth.  The throat continues down
+and something oozes from petrified sinuses above."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to dragon_mouth;
+down to throat1;
+end
+
+				throat1
+
+names {"stone throat"}
+title "Throat of Stone"
+descr
+"	The floor is uneven, with the middle of the passage of lower than the
+sides, which rise up to meet the walls.  The whole passage is slightly graded,
+moving east and downward."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+up to stone_tonsil;
+down to throat2;
+end
+
+				throat2
+
+names {"dragon's throat"}
+title "Further Down the Dragon's Throat"
+descr
+"	The tunnel begins to lose its steepness and merely runs eastward now.
+The shapes of what might be petrified muscles line the walls."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+up to throat1;
+east to junct;
+end
+
+				junct
+
+names {"junction"}
+title "Junction"
+descr
+"	You are in a four way junction.  The dragon's throat continues east and
+west, but by squeezing under stone flaps you can make out tunnels leading north
+and south."
+bright -1
+
+
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to throat2;
+north to tunnel1;
+south to tunnel2;
+east to tunnel3;
+end
+
+				tunnel1
+
+names {"stone tunnel"}
+title "Stone Tunnel"
+descr
+"	This circular passage of stone gradually curves up to a place of great
+light and heat."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+up to right_lung;
+south to junct;
+end
+
+				right_lung
+
+names {"dragon lung"}
+title "Dragon Lung"
+descr
+"	Ancient fires burn here, awaiting the rebirth of their master."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+down to tunnel1;
+end
+
+
+
+			      dragon_heart
+
+names {"dragon heart"}
+title "Heart of the Dragon"
+descr
+"	Runes which glow with a blue light are carved into the stone walls of
+Ancalador's heart chamber.  Their magical purity counters his evil and makes
+for a holy balance that is Neutrality.  It seems some music lover has set up
+residence here, judging by all the instruments and sheet music floating here."
+flags {UNIT_FL_SACRED}
+flags {UNIT_FL_INDOORS,UNIT_FL_NO_WEATHER,UNIT_FL_PRIVATE}
+movement SECT_INSIDE
+north to tunnel3;
+down to cth_sanctum@midgaard;
+end
+
+
+				tunnel2
+
+names {"stone tunnel"}
+title "Stone Tunnel"
+descr
+"	This stone passage is lit by a great light and fierce heat from its far
+end, which lies above."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+up to left_lung;
+north to junct;
+end
+
+
+				left_lung
+
+names {"dragon lung"}
+title "Dragon Lung"
+descr
+"	The nuclear fires that empower a dragon with its frightful breath are
+here, though since they have been smouldering for so long, they merely scorch
+you and make you rue the choice wearing of metal armor."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+down to tunnel2;
+end
+
+				tunnel3
+
+names {"stone tunnel"}
+title "Stone Tunnel"
+descr
+"	The dragon's throat continues east and west on a path which neither 
+rises nor falls.  On the south wall, to the dragon's left, a warmth can be felt, followed by a feeling of pure evil."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to junct;
+east to stomache;
+end
+
+
+				stomache
+
+names {"dragon stomach"}
+title "Ancalagor's Stomach"
+descr
+"	The dragon's throat ends to reveal a huge cavern lit from below by
+erie and diffuse lights of yellow and green.  Even more amazingly, a wooden
+bridge spans the stalactite-roofed cavern!  A steep grade leads down to the
+cavern floor safely enough and the bridge leads east."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
+movement SECT_INSIDE
+east to bridge1;
+down to acid_forest4;
+west to tunnel3;
+end
+
+				bridge1
+
+names {"wooden bridge"}
+title "Wooden Bridge"
+descr
+"	You cannot imagine who would want to build a bridge in this fantasist
+cavern.  Large stalactites sit and rise up while the erie lights seem to move
+in the mists below.  The bridge continues to the east. You could of course
+try to go down onto the stalagmites, but that would probably be pure suicide!"
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to stomache;
+east to bridge2;
+down to impale;
+end
+
+
+				bridge2
+
+names {"wooden bridge"}
+title "Wooden Bridge"
+descr
+"	You are in the middle of this wooden bridge. Large stalactites arise
+all around you and the erie lights continue to dance in the mists below.
+The bridge continues to the east.  You could of course
+try to go down onto the stalagmites, but that would probably be pure suicide!"
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to bridge1;
+east to bridge3;
+down to impale;
+end
+
+
+				bridge3
+
+names {"wooden bridge"}
+title "Wooden Bridge"
+descr
+"	The wood here, as in the rest of the bridge is old and acid eaten.
+The deadly stalactites jut up from below and more of the green and yellow light
+can be seen to move in the mists below.  The bridge ends at a small plateau to
+the east. You could of course try to go down onto the stalagmites, but that
+would probably be pure suicide!"
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to bridge2;
+east to stomache_end;
+down to impale;
+end
+
+				impale
+
+names {"sharp stalagmite"}
+title "Stalagmite"
+descr
+"   You take the plunge and find yourself impaled upon a rainbow hued
+stalagmite.  THAT REALLY HURT.  Your lifeblood seeps from you as you thrash
+your limbs ineffectually to pry your self off.  Things become dark..."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
+movement SECT_INSIDE
+dilcopy death_room@function(20, 50, "You spit up blood!!!!!</div>");
+
+end
+
+				acid_forest1
+
+names {"acid forest"}
+title "Acid Forest"
+descr
+"	Sharp stalactites reach up wards, created by the mineral ichor
+dripping off stalagmites far above.  Pools of acid fill every crevice on the
+craggy cavern floor.  The cavern continues to the south and east."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+south to acid_forest4;
+east to acid_forest2;
+end
+
+
+				acid_forest2
+
+names {"acid forest"}
+title "Acid Forest"
+descr
+"	The stalagmites here are large and rainbow-hued, like giants jester's
+garb.  Puddles of weak stomach acid abound.  The cavern stretches in all
+directions but north."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to acid_forest1;
+east to acid_forest3;
+south to acid_forest5;
+end
+
+
+				acid_forest3
+
+names {"acid forest"}
+title "Acid Forest"
+descr
+"	Sharp stalactites reach up wards, created by the mineral ichor
+dripping off stalagmites far above.  Pools of acid fill every crevice on the
+craggy cavern floor."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to acid_forest2;
+south to acid_forest6;
+end
+
+
+				acid_forest4
+
+names {"acid forest"}
+title "Acid Forest"
+descr
+"	You stand before an amazing sight.  Wrapped within the mists here on the
+cavern floor is a forest of oddly shaped stalactites surrounded everywhere by
+puddles of what must be the remnants of the dragon's stomach acid."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+north to acid_forest1;
+south to acid_forest7;
+east to acid_forest5;
+up to stomache;
+end
+
+
+				acid_forest5
+
+names {"acid forest"}
+title "Acid Forest"
+descr
+"	You are in the center of the dragons stomach cavern.  A wooden bridge
+passes far overhead.  Sharp stalactites poise here to meet those who would drop
+from it."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to acid_forest4;
+east to acid_forest6;
+north to acid_forest2;
+south to acid_forest8;
+end
+
+
+				acid_forest6
+
+names {"acid forest"}
+title "Acid Forest"
+descr
+"	The stalagmites here are large and rainbow-hued, like giants jester's
+garb.  Puddles of weak stomach acid abound.  A steep climb up leads to a
+large plateau at the end of the cavern."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
+movement SECT_INSIDE
+west to acid_forest5;
+north to acid_forest3;
+south to acid_forest9;
+up to stomache_end;
+end
+
+
+				acid_forest7
+
+names {"acid forest"}
+title "Acid Forest"
+descr
+"	Mists swirl about here, around strange crystal egg shells.  The cavern
+continues to the north and to the south."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+north to acid_forest4;
+east to acid_forest8;
+end
+
+
+				acid_forest8
+
+names {"acid forest"}
+title "Acid Forest"
+descr
+"	Sharp stalactites reach upwards, created by the mineral ichor
+dripping off stalagmites far above.  Pools of acid fill every crevice on the
+craggy cavern floor."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to acid_forest7;
+east to acid_forest9;
+north to acid_forest5;
+end
+
+
+				acid_forest9
+
+names {"acid forest"}
+title "Acid Forest"
+descr
+"	The stalagmites here are large and rainbow-hued, like giants jester's
+garb.  Puddles of weak stomach acid abound.  The cavern stretches to the north
+and east. "
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to acid_forest8;
+north to acid_forest6;
+end
+
+				stomache_end
+
+names {"stomach's end"}
+title "End of the Stomach"
+descr
+"	The wooden bridge ends here, onto a large plateau above the cavern
+floor. The plateau overlooks the entire forest of acid and stone below. A
+small, steep, path leads to it and a tunnel leading east is set in the cavern
+wall."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to bridge3;
+east to stone_cor;
+down to acid_forest6;
+end
+
+				stone_cor
+
+names {"stone corridor"}
+title "Stone Corridor"
+descr
+"	You are in a circular tunnel of stone.  The walls are irregular and
+pocked-marked.  The tunnel continues east and west."
+extra {"walls"}
+"A small fissure appears to be set in the south wall."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_MOB}
+movement SECT_INSIDE
+west to stomache_end;
+east to sm_int1;
+south to pancreas open {EX_OPEN_CLOSE, EX_CLOSED} keyword {"fissure"};
+end
+
+
+				pancreas
+
+names {"pancreas"}
+title "The Dragons Pancreas"
+descr
+"	You are in an oddly shaped chamber, what might have been some foul
+organ of Ancalador.  A yellowish light fills the room from nowhere, as if only
+by the dragon's will alone.  The feeling of malignant evil is great here."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+north to stone_cor open {EX_OPEN_CLOSE, EX_CLOSED} keyword {"fissure"};
+end
+
+				sm_int1
+
+names {"small intestine"}
+title "Small Intestine"
+descr
+"	You enter a featureless tunnel of what must be the beginning of the
+dragon's small intestine.  Small piles of human bones and armor bits have been
+left here.  The tunnel continues west and to the north a rougher tunnel can be
+seen."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to stone_cor;
+north to sm_int2;
+end
+
+
+				sm_int2
+
+names {"small intestine"}
+title "Small Intestine"
+descr
+"	The tunnel twists to the south and to the east."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+south to sm_int1;
+east to sm_int3;
+end
+
+
+				sm_int3
+
+names {"small intestine"}
+title "Small Intestine"
+descr
+"	The smooth tunnel curves to the west and to the south."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to sm_int2;
+south to sm_int4;
+end
+
+
+				sm_int4
+
+names {"small intestine"}
+title "Small Intestine"
+descr
+"	The blank walls of the tunnel run north and south."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+north to sm_int3;
+south to sm_int5;
+end
+
+
+				sm_int5
+
+names {"small intestine"}
+title "Small Intestine"
+descr
+"	The tunnel comes from the north and dips sharply downward here."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+north to sm_int4;
+down to sm_int6;
+end
+
+
+				sm_int6
+
+names {"small intestine"}
+title "Small Intestine"
+descr
+"	The featureless tunnel leads up and north."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+up to sm_int5;
+north to sm_int7;
+end
+
+
+				sm_int7
+
+names {"small intestine"}
+title "Small Intestine"
+descr
+"	Bits of broken equipment from long dead adventurers have been collected
+here.  The tunnel runs north and south."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+south to sm_int6;
+north to sm_int8;
+end
+
+
+				sm_int8
+
+names {"small intestine"}
+title "Small Intestine"
+descr
+"	The tunnel bends from the south to the east."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+south to sm_int7;
+east to sm_int9;
+end
+
+
+				sm_int9
+
+names {"small intestine"}
+title "Small Intestine"
+descr
+"	The blank walls of the tunnel lead west and south."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to sm_int8;
+south to sm_int10;
+end
+
+
+				sm_int10
+
+names {"small intestine"}
+title "Small Intestine"
+descr
+"	The smooth tunnel constricts to the south of here into a new tunnel."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+south to lg_int1;
+north to sm_int9;
+end
+
+				lg_int1
+
+names {"large intestine"}
+title "Large Intestine"
+descr
+"	Unlike the small intestine, the walls here have a nook and cranny
+quality about them.  They are quite rough and dust fills many of the spaces."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+north to sm_int10;
+east to lg_int2;
+end
+
+
+				lg_int2
+
+names {"large intestine"}
+title "Large Intestine"
+descr
+"	The smell of dust is thick in this section of the tunnel that runs to
+the west and to the north."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to lg_int1;
+north to lg_int3;
+end
+
+
+				lg_int3
+
+names {"large intestine"}
+title "Large Intestine"
+descr
+"	The rough walls of the tunnel scrape your armor and cuts your exposed
+skin as you travel north or south."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+north to lg_int4;
+south to lg_int2;
+end
+
+
+				lg_int4
+
+names {"large intestine"}
+title "Large Intestine"
+descr
+"	The tunnel drops to the south but you find many hand holds among the
+nooks and crannies."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+south to lg_int3;
+east to lg_int5;
+end
+
+
+				lg_int5
+
+names {"large intestine"}
+title "Large Intestine"
+descr
+"	The roughly hewn tunnel constricts to the south."
+bright -1
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+west to lg_int4;
+south to sphinct;
+end
+
+
+				sphinct
+
+names {"stoney sphincter"}
+title "Stoney Sphincter"
+descr
+"	You are in a narrow tunnel, barely able to walk upright without
+knocking your head.  A breeze from the south swirls the dust here and you
+begin to believe that safety is not far off."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+north to lg_int5;
+south to tail;
+end
+
+				tail
+
+names {"dragons tail"}
+title "Dragon's Tail"
+descr
+"	You have never been so happy to see the light of day!  You are by the
+dragon's stone tail, which is covered with green, growing vines and small,
+violet flowers.  The birds sing and you can make out a faint path to the west,
+leading back around the dragon-hill."
+flags {UNIT_FL_NO_MOB}
+movement SECT_FOREST
+west to before_dragon;
+end
+
+%mobiles
+%mobiles
+/*player mobs*/
+
+                 la_mob1
+names {"zombie butler"}
+title "a Zombie Butler"
+descr "A Zombie Butler stands here waiting for his next order."
+M_ZOMBIE_GUARD_TINY(4,SEX_NEUTRAL)
+
+end
+
+
+/* ------------------RATSWARF MOBS--------------------------------*/
+
+				bs_necro
+
+names {"necromancer"}
+title "the Necromancer"
+descr
+"A Necromancer of the Bloodstone, creating zombies, is here."
+extra {}
+"Evil reeks from his dark robes.  His hands are adorned with the long, wicked
+nails which are stained with the ichor of embalmers and malignant salves."
+M_HUMAN_CLERIC_CLUB(7,SEX_MALE,"cast cause serious wounds","")
+alignment -1000
+flags {UNIT_FL_NO_TELEPORT}
+money 35 IRON_PIECE
+
+end
+
+				pu_zombie
+
+names {"putrid zombie","zombie"}
+title "the putrid zombie"
+descr
+"A putrid zombie is here."
+extra {}
+"It is a prime example of the undead:  sickly green skin, sunken eyes with a
+yellowish tinge, and sharp dirt-encrusted claws."
+M_ZOMBIE_GUARD_TINY(5,SEX_NEUTRAL)
+alignment -800
+dilcopy teamwork@function ( "necromancer");
+
+end
+
+				asp
+
+names {"asp","snake"}
+title "the deadly Asp"
+descr "A poisonous asp slithers here."
+M_SNAKE_POISON_TINY(4,SEX_NEUTRAL)
+
+end
+
+				ps_merchant
+
+names {"passing merchant","merchant"}
+title "the merchant"
+descr
+"A passing merchant is here."
+extra {}
+"This plump old fellow is resting here before he sets of again on his travels."
+M_HUMAN_WARRIOR_SWORD (6,SEX_MALE)
+alignment -200
+money 30 IRON_PIECE
+
+end
+
+				ruffian
+
+names {"ruffian"}
+title "the ruffian"
+descr
+"A rowdy looking ruffian is here."
+extra {}
+"The roughneck is eyeing you and your possessions."
+M_HUMAN_WARRIOR_CLUB (5,SEX_MALE)
+alignment -500
+money 25 IRON_PIECE
+
+end
+
+				pauper
+
+names {"pauper"}
+title "the dirty pauper"
+descr
+"A tired and dirty pauper is here."
+extra {}
+"You would look as discontent if this were your lot in life, too."
+romflags {CHAR_WIMPY}
+M_HUMAN_WARRIOR_NATURAL(5,SEX_MALE)
+alignment -100
+
+end
+
+				rabid_rat
+
+names {"rabid rat","rat"}
+title "the rabid rat"
+descr
+"A filthy, rabid rat is thrashing here."
+extra {}
+"This rather large beast has made its presence known for so long, the town came
+to be known by it.  It is foaming at the mouth and coming for you."
+M_RAT_TINY(4,SEX_MALE)
+alignment -300
+dilcopy aggressive@function(0, -1, 0, 0, 3, 30, 0, "ANY",
+                            {"$1n attacks!", ""});
+exp 115
+
+end
+
+				grimey
+
+names {"grimey","cousin"}
+title "Grimey"
+descr
+"Filthy's cousin, Grimey, is here behind the counter."
+extra {}
+"He is wiping the dirty bar counter with an even filthier rag.  The many years
+of living in this tough town have hardened him up, something his cousin in
+Midgaard should do."
+M_HUMAN_WARRIOR_SWORD(6,SEX_MALE)
+alignment -700
+money 30 IRON_PIECE
+/* he COULD be made into a merchant.... */
+
+end
+
+				slaver
+
+names {"slaver"}
+title "the evil Slaver"
+descr
+"The evil Slaver stands here, striking a swashbuckler's pose."
+extra {}
+"This breaded pirate-turned-businessman fancies himself a romantic hero of days
+of old, when men were men, and the bounty was better.  He tips his feathered
+cap at you and sneers."
+flags {UNIT_FL_NO_TELEPORT}
+M_HUMAN_WARRIOR_SWORD (10,SEX_MALE)
+alignment -1000
+money 50 IRON_PIECE
+dilbegin slaverprg();
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+  num : integer;
+code
+{
+  heartbeat:=PULSE_SEC*20;
+  :start:
+  exec("wake", self);
+  pause;
+  exec("emote rubs his bloodshot eyes.", self);
+  pause;
+  tf:=walk_room@function("slave_market@ratswarf",4);
+
+  :market:
+  pause;
+  num:=rnd(1,100);
+  if(num<=30)
+    goto bar;
+  num:=rnd(1,10);
+  if(num<=8)
+    goto auct;
+  exec("say Move your lazy carcass to where the customers can see you!", self);
+  pause;
+  exec("slap slave", self);
+  pause;
+  num:=rnd(1,10);
+  if(num<=8)
+    goto market;
+  else
+    goto auct;
+
+  :bar:
+  exec("say Not a bad days work.", self);
+  pause;
+  tf:=walk_room@function("grime_bar@ratswarf",4);
+  pause;
+  exec("grin grimey", self);
+  pause;
+  exec("say Next round's on me!", self);
+  pause;
+  tf:=walk_room@function("port@ratswarf",4);
+  pause;
+  :check:
+  num:=rnd(1,100);
+  if(num<=24)
+  {
+    exec("say Thems wore the days -hic-.", self);
+    pause;
+    exec("sigh", self);
+    pause;
+    tf:=walk_room@function("apartment@ratswarf",4);
+    pause;
+    exec("grin slave", self);
+    pause;
+    exec("say How about a little kiss, sweetness?", self);
+    pause;
+    exec("slap slave", self);
+    pause;
+    exec("say Ungrateful Wench!", self);
+    pause;
+    exec("sleep", self);
+    pause;
+    pause;
+    goto start;
+  }
+  num:=rnd(1,10);
+  if(num<=8)
+  {
+    exec("drink barrel", self);
+    goto check;
+  }
+  goto start;
+
+  :auct:
+  exec("say I got them selling by the shipload, thanks to you, mate.", self);
+  pause;
+  exec("grin auctioneer", self);
+  pause;
+  goto market;
+}
+dilend
+
+end
+
+				ogre_guard
+
+names {"ogre","market guard"}
+title "the slave market guard"
+descr
+"The slave market guard, a large ogre, is here."
+extra {}
+"Cruelty is just about the only thing that can penetrate this brute's thick
+skull, in fact, he takes joy in it.  He likes to whip the slaves regularly,
+just in case they did anything."
+M_OGRE_WARRIOR_SPECIAL(9,SEX_MALE)
+alignment -1000
+money 45 IRON_PIECE
+dilcopy rescue@function("auctioneer/slaver");
+dilcopy teamwork@function ( "auctioneer/slaver");
+
+end
+
+				auctioneer
+
+names {"auctioneer"}
+title "the Slave Auctioneer"
+descr
+"The slave auctioneer is here."
+extra {}
+"Though he appears to be a lowlife rogue, his booming voice sometimes betrays
+a trace of the learned.  You wonder what drove him to work for the likes of the
+slaver."
+M_HUMAN_MAGE_FIRE (8,SEX_MALE,"cast burn")
+alignment -750
+money 40 IRON_PIECE
+dilcopy combat_mag@function("burn","",25,2);
+dilbegin auctioneerprg();
+var
+  num   : integer;
+code
+{
+  heartbeat:=PULSE_SEC*60;
+  :start:
+  exec("say You Sir, tired of lugging that heavy armor by yourself? Buy a slave!", self);
+  pause;
+  exec("say Who will give me two score gold for this healthy slave?", self);
+  pause;
+  exec("say Two Goblins for the price of one! Hurry, today only!", self);
+  pause;
+  exec("say Come on, come all, to the lands best Slave Emporium!", self);
+  pause;
+  goto start;
+}
+dilend
+
+end
+
+
+				elf_slave
+
+names {"elven slave","slave","elf"}
+title "the beautiful Elven slave"
+descr
+"A beautiful Elven slave is here, softly weeping."
+extra {}
+"Her striking blue eyes are rimmed slightly with red, from all her sorrows."
+romflags {CHAR_WIMPY}
+M_AVG_ELF(7,SEX_FEMALE)
+alignment 200
+
+end
+
+				goblin_slave
+
+names {"goblin slave","slave"}
+title "the Goblin slave"
+descr
+"A lowly Goblin slave is huddled here."
+extra {}
+"A victim of raids along the Goblins' coastal caves, no doubt."
+M_AVG_GOBLIN(7,SEX_MALE)
+alignment 300
+
+end
+
+				human_slave
+
+names {"human slave","slave"}
+title "the Human slave"
+descr
+"A pathetic Human slave is here."
+extra {}
+"This poor soul must have been dragged out of bed, a story often repeated in
+these parts."
+M_AVG_HUMAN(7,SEX_MALE)
+level 4
+alignment 400
+
+end
+
+				one_eye
+
+names {"one-eye","store keeper"}
+title "old One-Eye"
+descr
+"One-Eye, the general store keeper is minding the shop here."
+extra {}
+"Though he lost one eye in a scrape many years back, no one has bothered him
+since--you should see the other guy."
+M_HUMAN_WARRIOR_SWORD (10,SEX_MALE)
+alignment -500
+money 50 IRON_PIECE /*  this could also be a merchant */
+
+end
+
+				elf_commander
+
+names {"elven commander","commander","elf"}
+title "the Elven Commander"
+descr
+"An Elven Commander is arguing here."
+extra {}
+"He wears the crest of Elf Hill on his armor."
+M_ELF_WARRIOR_SWORD (10,SEX_MALE)
+alignment -500
+money 50 IRON_PIECE
+dilcopy teamwork@function ( "captain");
+dilbegin commanderprg();
+var
+  buddy  : unitptr;
+code
+{
+  heartbeat:=PULSE_SEC*60;
+  :start:
+  pause;
+  buddy:=findunit(self, "captain", FIND_UNIT_SURRO, null);
+  if(buddy==null)
+    goto start;
+  secure(buddy, nobuddy);
+  exec("say You insolent cretin!", self);
+  sendto("cretin", buddy);
+  pause;
+  exec("slap captain", self);
+  sendto("slap", buddy);
+  pause;
+  exec("say My troops are more than willing to crush pathetic goblinkin.", self);
+  sendto("goblin", buddy);
+  pause;
+  exec("strut", self);
+  sendto("strut", buddy);
+  pause;
+  exec("growl captain", self);
+  sendto("growl", buddy);
+  pause;
+  exec("say Just what are you insinuating?", self);
+  sendto("insinuating", buddy);
+  pause;
+  exec("say Ratswarf will know law under the Elf Lord's rule!", self);
+  sendto("rule", buddy);
+  pause;
+  exec("glare captain", self);
+  sendto("glare", buddy);
+  pause;
+  goto start;
+
+  :nobuddy:
+  unsecure(buddy);
+  pause;
+  goto start;
+}
+dilend
+
+end
+
+
+
+				hob_captain
+
+names {"hobgoblin captain","hobgoblin","captain"}
+title "the Hobgoblin Captain"
+descr
+"A Hobgoblin Captain is arguing here."
+extra {}
+"The head of the Ancient Dragon is painted on his armor."
+M_HOBGOBLIN_WARRIOR_POLE (10,SEX_MALE)
+alignment -500
+money 50 IRON_PIECE
+dilcopy teamwork@function ( "commander");
+dilbegin captainprg();
+var
+  buddy   : unitptr;
+code
+{
+  heartbeat:=PULSE_SEC*30;
+  :init:
+  buddy:=findunit(self, "commander", FIND_UNIT_SURRO, null);
+  if(buddy==null)
+    goto start;
+  secure(buddy, nobuddy);
+  :start:
+  wait(SFB_MSG, activator==buddy);
+  if(argument=="cretin")
+  {
+    pause;
+    exec("emote rolls up his sleeves.", self);
+    goto start;
+  }
+  else if(argument=="slap")
+  {
+    pause;
+    exec("glare commander", self);
+    goto start;
+  }
+  else if(argument=="goblin")
+  {
+    pause;
+    exec("say My liege's armies will route you faeries off da edge of da earth.", self);
+    goto start;
+  }
+  else if(argument=="strut")
+  {
+    pause;
+    exec("point commander", self);
+    goto start;
+  }
+  else if(argument=="growl")
+  {
+    pause;
+    exec("growl commander", self);
+    goto start;
+  }
+  else if(argument=="insinuating")
+  {
+    pause;
+    exec("say In da name of da Dragon Ancalador, I hereby claim Rastwarf!", self);
+    goto start;
+  }
+  else if(argument=="rule")
+  {
+    pause;
+    exec("say Dems fighting words, back in da caves I come from.", self);
+    goto start;
+  }
+  else if(argument=="glare")
+  {
+    pause;
+    exec("cackle", self);
+    goto start;
+  }
+  else
+    goto start;
+
+  goto start;
+
+  :nobuddy:
+  unsecure(buddy);
+  pause;
+  goto init;
+}
+dilend
+
+end
+
+
+				elf_lieut
+
+names {"elven lieutenant","lieutenant"}
+title "the Elven Lieutenant"
+descr
+"An Elven Lieutenant stands here."
+M_ELF_WARRIOR_AXE(8, SEX_MALE)
+money 40 IRON_PIECE
+alignment -400
+dilcopy teamwork@function ( "elf");
+end
+
+				elf_grunt
+
+names {"elven footman","elf", "footman"}
+title "an Elven Footman"
+descr
+"An Elven Footman is camped here."
+extra {}
+"Weary of long days and nights this elf yearns for the campaign to end and the
+homecoming that follows."
+M_ELF_WARRIOR_SWORD(7,SEX_MALE)
+alignment -300
+money 35 IRON_PIECE
+dilcopy teamwork@function ( "lieutenant/elf");
+end
+
+				hob_serg
+
+names {"hobgoblin sergeant","sergeant"}
+title "the Hobgoblin Sergeant"
+descr
+"The Hobgoblin Sergeant is here, prodding his men."
+extra {}
+"He looks like a mean bastard."
+M_HOBGOBLIN_WARRIOR_SWORD(8,SEX_MALE)
+alignment -400
+money 40 IRON_PIECE
+dilcopy teamwork@function ( "spearman");
+end
+
+				hob_grunt
+
+names {"hobgoblin spearman","hobgoblin", "spearman"}
+title "the Hobgoblin Spearman"
+descr
+"A Hobgoblin Spearman is busy doing nothing here."
+extra {}
+"He awaits to return to his cave, which doesn't seem that small anymore, and to
+his mate, who doesn't seem that ugly anymore."
+M_HOBGOBLIN_WARRIOR_POLE(7,SEX_MALE)
+alignment -300
+money 35 IRON_PIECE
+dilcopy teamwork@function ( "sergeant");
+
+end
+
+/*-----------------------------ANCALAGOR MOBS-------------------------------*/
+
+				drag_hermit
+
+names {"hermit"}
+title "the Hermit"
+descr
+"A Hermit, starved for company, is here."
+extra {}
+"Although raving mad, the hermit has come out of his isolation since he has
+not spoken with anyone for ages.  The shaggy hermit draws you over and tells
+you a tale:
+	Some 800 years ago, when I was but a lad, a great dragon
+	ruled the land.  His name was Ancalador.  Many heros came
+	to do battle with him, but all failed and died, horribly,
+	I imagine.  But one wizard challenged the Drake to a magic
+	duel.  He too died, like the others, but with his last
+	breath, the wizard turned the mighty Ancalador to stone!
+	Many believed the dragon's evil reign ended, but after the
+	dancing and drinking were over, and life returned to its
+	quiet pace, the people began to notice that the Dragon's
+	presence could still be felt.  Ancalador did, in fact,
+	continue to rule from his petrified prison through the
+	manipulation of the minds of men.  Indeed, he has done so
+	to this day.  Many believe he is plotting the day he can
+	return in the flesh, so to speak...
+With that the Hermit begins to cackle madly, tears running down his leathery
+face.  You can get no more out of him."
+M_HUMAN_WARRIOR_NATURAL(11,SEX_MALE)
+alignment 500
+money 55 IRON_PIECE
+
+end
+
+				green_slime
+
+names {"green slime","slime"}
+title "the Green Slime"
+descr
+"A blob of Green Slime drops upon you!"
+extra {}
+"It looks like animated mucous, dissolving and eating all it touches."
+M_SLIME_TINY(15, SEX_NEUTRAL)
+alignment 0
+
+end
+
+				flame_dweller
+
+names {"flame dweller","dweller"}
+title "the Flame Dweller"
+descr
+"A Flame Dweller, basking in fire, is here."
+extra {}
+"It's shape changes like the flame it lives in.  One moment it may resemble a
+serpent, the next, a man.  It seems to be thoroughly enjoying itself."
+M_HUMAN_MAGE_FIRE (19,SEX_MALE,"cast fireball")
+alignment -50
+race RACE_OTHER_CREATURE
+money 25 IRON_PIECE
+
+end
+
+				gr_spider
+
+names {"green crystal spider","spider"}
+title "the Green Crystal Spider"
+descr
+"A Green Crystal Spider is roaming here."
+extra {}
+"The fantastic beast seems to be made of a crystalline substance which is
+giving off a green light.  It clicks it's crystal mandibles in irritation with
+you."
+flags {UNIT_FL_NO_TELEPORT}
+M_SPIDER_TINY(16, SEX_MALE)
+alignment -400
+
+dilcopy fido@function("$1n slowly devours $2n, crunching the bones.",
+		      "$1n grabs $2n and hungrily munches it.");
+
+dilcopy wander_zones@function ("@loadzone", 70, 0,0);
+
+
+end
+
+				yl_spider
+
+names {"yellow crystal spider","spider"}
+title "the Yellow Crystal Spider"
+descr
+"A Yellow Crystal Spider is here"
+extra {}
+"Slightly smaller than it's green cousin, this creature also appears to be made
+of living crystalline substance which glows yellow."
+M_SPIDER_TINY(10, SEX_NEUTRAL)
+alignment -400
+money  35 IRON_PIECE
+dilcopy teamwork@function ( "green crystal spider");
+dilcopy wander_zones@function ("@loadzone", 70, 0,0);
+
+end
+
+				stone_warden
+
+names {"petrified warden","warden"}
+title "the Petrified Warden"
+descr
+"A Petrified Warden guards the way."
+extra {} "He wears the sneer of cold command upon his stoney visage."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_DETECT_INVISIBLE}
+M_HUMAN_WARRIOR_CLUB(13,SEX_MALE)
+alignment -1000
+money 45 IRON_PIECE
+dilcopy guard_dir@function("down", null, {""}, "");
+dilcopy guard_dir@function("east", null, {""}, "");
+
+end
+
+				unseen_guard
+
+names {"unseen guardian","guardian"}
+title "the Unseen Guardian"
+descr
+"The air stirs as something approaches."
+flags {UNIT_FL_NO_TELEPORT}
+M_HUMAN_WARRIOR_CLUB(14,SEX_MALE)
+alignment -1000
+money 40 IRON_PIECE
+dilcopy combat_mag@function("blind","",25,2);
+exp 110
+
+end
+
+				umber_hulk
+
+names {"umber hulk","hulk"}
+title "an Umber Hulk"
+descr
+"A lumbering Umber Hulk is here."
+extra {}
+"This great beast has huge mandibles and a mammals mouth, angry animal eyes set
+between unreadable insect multi eyes.  The effect is confusing."
+M_HUMAN_WARRIOR_NATURAL (18,SEX_MALE)
+alignment -750
+money 35 IRON_PIECE
+
+end
+
+				ochre_jelly
+
+names {"ochre jelly","jelly"}
+title "an Ochre Jelly"
+descr
+"A hideous Ochre Jelly approaches."
+extra {}
+"As it oozes slowly at you, you can make out items undigested within it.  From
+past unfortunates, you presume."
+flags {UNIT_FL_NO_TELEPORT}
+M_SPIDER_MAD(10, SEX_NEUTRAL)
+alignment -700
+dilcopy wander_zones@function ("@loadzone", 70, 0,0);
+money 30 IRON_PIECE
+
+end
+
+
+%objects
+
+/*player objects*/
+/*landolin's key*/
+               monkey_key
+names{"Monkey Key", "key"}
+title "a small key"
+descr "A small key shaped like a monkey is lying here."
+extra {}
+"The key looks like a small monkey with its crimped tail being the actual
+key."
+type ITEM_KEY
+manipulate{MANIPULATE_TAKE, MANIPULATE_HOLD}
+weight 1
+end
+
+
+/*------------------------------RATSWARF OBJECTS-------------------------*/
+
+
+			       grave_beater
+
+names {"grave beater","flail"}
+title "the Grave Beater"
+descr "A rusty grave beater flail has been dropped here."
+extra {}
+"This flail seems only to have been used to keep the dead in their place."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+/* Pure Iron + Craftmanship */
+WEAPON_DEF(WPN_FLAIL, 0, 0)
+weight 6
+rent 4 IRON_PIECE
+cost 8 COPPER_PIECE
+end
+
+			     rapier_sword
+
+names {"rapier","sword"}
+title "a thin rapier"
+descr "A thin rapier lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+/* Not pure Iron + Craftman ship = (90% + -5%) */
+WEAPON_DEF(WPN_RAPIER, -2, -1)
+weight 7
+cost 7 IRON_PIECE
+end
+
+			      whip_20
+
+names {"leather whip","whip"}
+title "a leather whip"
+descr "A cruel leather whip is here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_WHIP, 0,0)
+weight 10
+cost 4 COPPER_PIECE
+end
+			      axe1_30
+
+names {"double headed axe","axe"}
+title "a double headed axe"
+descr "A double headed axe is here."
+extra {}
+"This appears to be a well crafted battle axe."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_HAND_AXE,-2,0)
+weight 17
+cost 4 COPPER_PIECE
+end
+
+			      axe1_15
+
+names {"hatchet","axe"}
+title "an ugly hatchet"
+descr "An ugly hatchet is here."
+extra {}
+"This appears to be shoddy battle axe."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+/* Not pure Iron + Craftman ship = (90% - 10%) */
+WEAPON_DEF(WPN_HAND_AXE,-4,0)
+weight 7
+rent 4 IRON_PIECE
+cost 8 COPPER_PIECE
+end
+
+				hlth_belt
+
+names {"black leather belt","belt"}
+title "a black leather belt"
+descr "A black leather belt is lying on the ground."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+weight 3
+cost 1 COPPER_PIECE
+DEX_TRANSFER(+1)
+rent 25 IRON_PIECE
+end
+
+
+			       topaz
+
+names {"topaz","gem"}
+title "a topaz"
+descr "A rather large beautifully polished topaz has been left here."
+type ITEM_TREASURE
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+weight 1
+cost 2 SILVER_PIECE
+end
+
+				 wallsafe
+
+names {"wall safe", "safe"}
+title "the wall safe"
+descr "A seascape painting is placed in a corner of the room."
+extra {"painting"}
+"Upon closer inspection the painting is hinged to the wall.  It swings to
+reveal a wall safe set in plaster against the wall."
+manipulate {MANIPULATE_ENTER}
+open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+key skull_key
+CONTAINER_DEF(100)
+end
+
+			    skull_key
+
+names {"skull key","key"}
+title "a skull key"
+descr "A skull headed key has been left here."
+type ITEM_KEY
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+extra {}
+"The brass key is small and has a small skull as its handle."
+end
+
+
+				 necro_coffer
+
+names {"heavy iron coffer","coffer"}
+title "the heavy iron coffer"
+descr "A heavy iron coffer ."
+extra {} "It looks very heavy."
+weight 100
+open {EX_OPEN_CLOSE, EX_CLOSED}
+CONTAINER_DEF(400)
+end
+
+
+				potion_cure2
+
+names {"comfrey root tonic", "comfrey", "potion"}
+title "a comfrey root tonic"
+descr "A comfrey root tonic has been left here."
+extra {} "It is swirling in a small clay jar and doesn't smell very good."
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(40, SPL_CURE_WOUNDS_1, SPL_NONE, SPL_NONE)
+weight 2
+cost 2 COPPER_PIECE
+end
+
+
+			     potion_rem_psn
+
+names {"white essence", "horehound","potion","essence"}
+title "the essence of white horehound"
+descr "An brew of white horehound essence has been left here."
+extra {} "The potion swishes in a small vial."
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(45, SPL_REMOVE_POISON, SPL_NONE, SPL_NONE)
+ /*   affect:  remove poison spell */
+weight 2
+cost 2 COPPER_PIECE
+end
+
+
+			     potion_det_inv
+
+names {"foxglove", "potion"}
+title "an elixir with pinch of foxglove"
+descr "An elixir with a pinch of foxglove has been left here."
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(25, SPL_DET_INVISIBLE, SPL_NONE, SPL_NONE)
+/* affect:  detect invis. */
+weight 2
+cost 2 COPPER_PIECE
+end
+
+
+			     scroll_cause2
+names {"greasy scroll", "scroll"}
+title "a greasy scroll"
+descr "A  greasy scroll has been left here."
+manipulate {MANIPULATE_TAKE}
+SCROLL_DEF(25, SPL_BLIND, SPL_NONE, SPL_NONE)
+/* affect: cause serious wounds, PAPI: Cause wounds is a HAND attack
+   and can't be placed on scrolls. */
+weight 1
+cost 3 COPPER_PIECE
+end
+
+/*-----------------------------ANCALAGOR OBJECTS----------------------*/
+
+
+			       spider_slippers
+
+names {"spider slippers","slippers"}
+title "a pair of spider of slippers"
+descr "A pair of spider slippers are lying on the ground."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+ARMOUR_HRD_LEATHER(0, 0)
+SKILL_TRANSFER(SKI_CLIMB, +1)
+rent 122 IRON_PIECE
+weight 5
+cost 2 COPPER_PIECE
+extra {}
+"The slippers are made of a strange soft and sticky substance, however they
+look quite comfortable. You notice that the slippers are not sticky at all
+on the inside."
+
+extra {"$identify"}
+"These slippers offer protection as good hard leather and give the wearer
+a bonus on climbing maneuvers."
+
+extra {"$improved identify"}
+"These slippers give +1 to climbing maneuvers."
+
+end
+
+
+			     wand_light
+names {"light wand", "wand"}
+title "a light wand"
+descr "A light wand has been left here."
+manipulate {MANIPULATE_TAKE}
+WAND_DEF(50, 30, SPL_LIGHT_1, SPL_NONE)
+/* affect: cast light spell (else item itself is bright) */
+weight 2
+cost 2 SILVER_PIECE
+rent 50 IRON_PIECE
+end
+
+			       mace2_35
+
+names {"granite mace","mace"}
+title "a granite mace"
+descr "A large, heavy granite mace is here."
+extra {} "This huge puppy appears to be of the Great Mace variety."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_MACE,-4,0)
+weight 25
+
+
+rent 80 IRON_PIECE
+cost 160 COPPER_PIECE
+end
+
+			      scroll_icestorm
+
+names {"ice storm scroll","scroll"}
+title "a scroll"
+descr "A scroll has been left here."
+manipulate {MANIPULATE_TAKE}
+SCROLL_DEF(45, SPL_FROSTBALL_3, SPL_NONE, SPL_NONE)
+/* affect: cast icestorm spell */
+weight 2
+cost 2 COPPER_PIECE
+end
+
+				potion_strpsn
+
+names {"tea of alfalfa", "alfalfa","potion"}
+title "the tea of alfalfa"
+descr "A tea of alfalfa has been left here."
+extra {}
+"Its a milky white solution that billows and churns."
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(100, SPL_RAISE_DEX, SPL_NONE, SPL_NONE)
+/*  affect: raise dex*/
+weight 2
+cost 2 SILVER_PIECE
+end
+
+
+			       shabby_armor
+
+names {"shabby armor", "armor"}
+title "some shabby armor"
+descr "Some shabby armor is lying on the ground."
+extra {} "It appears to be in bad condition, but it is curiously light."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+ARMOUR_HRD_LEATHER(0, 0)
+weight 25
+cost 2 SILVER_PIECE
+end
+
+			       dragon_egg
+
+names {"dragon egg","egg"}
+title "a huge diamond egg"
+descr "A huge diamond dragon egg has been left here."
+extra {}
+"From deep within this stone, you barely make out vaguely malignant shapes."
+type ITEM_TREASURE
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+CURSED_OBJECT
+CHA_TRANSFER(-5)
+rent 25 IRON_PIECE
+weight 20
+cost 1 GOLD_PIECE
+end
+
+
+/*---------------------------------ZONE RESET------------------------*/
+
+%reset
+
+/*player resets*/
+load la_mob1 into la_room1 max 1
+
+
+/*-----------------------------RATSWARF RESET---------------*/
+
+load necro_coffer into snake_pit max 1
+{
+	load potion_cure2
+	load scroll_cause2
+	load topaz
+}
+
+load wallsafe into apartment max 1
+{
+	load potion_rem_psn
+	load midgaard/silver_dag
+}
+
+load midgaard/beer_barrel into grime_bar local 2
+
+load midgaard/beer_barrel into grime_bar local 2
+
+load bs_necro into evil_shrine max 1
+{
+	equip grave_beater position WEAR_WIELD max 1
+	equip midgaard/scale_sleeves position WEAR_ARMS
+	equip midgaard/scale_jerkin position WEAR_BODY
+	equip midgaard/scale_skirt position WEAR_LEGS
+	equip midgaard/scale_boots position WEAR_FEET
+	equip midgaard/scale_gloves position WEAR_HANDS
+	equip midgaard/scale_coif position WEAR_HEAD
+}
+
+load pu_zombie into evil_shrine local 2
+
+load asp into snake_pit local 3
+
+load ps_merchant into kingstreet1 local 1
+{
+	equip midgaard/sword0 position WEAR_WIELD
+}
+
+load  ps_merchant into slave_market local 2
+{
+	equip midgaard/sword0 position WEAR_WIELD
+}
+
+load ps_merchant into kingstreet3 local 1
+{
+	equip midgaard/sword0 position WEAR_WIELD
+}
+
+load ruffian into grime_bar local 2
+{
+	equip midgaard/wdclb0 position WEAR_WIELD
+	equip midgaard/lth_sleeves position WEAR_ARMS
+	equip midgaard/lth_jerkin position WEAR_BODY
+	equip midgaard/lth_pants position WEAR_LEGS
+}
+
+load ruffian into kingstreet3 local 1
+{
+	equip midgaard/wdclb0 position WEAR_WIELD
+	equip midgaard/lth_sleeves position WEAR_ARMS
+	equip midgaard/lth_jerkin position WEAR_BODY
+	equip midgaard/lth_pants position WEAR_LEGS
+}
+
+load ruffian into port local 1
+{
+	equip midgaard/wdclb0 position WEAR_WIELD
+	equip midgaard/lth_sleeves position WEAR_ARMS
+	equip midgaard/lth_jerkin position WEAR_BODY
+	equip midgaard/lth_pants position WEAR_LEGS
+}
+
+load pauper into shack1 local 1
+
+load pauper into kingstreet2 local 1
+
+load pauper into gen_store local 1
+
+load rabid_rat into shack2 local 1
+
+load rabid_rat into shack1 local 1
+
+load rabid_rat into port local 1
+
+load grimey into grime_bar max 1
+{
+    load midgaard/firebreather
+    load midgaard/speciality
+    equip midgaard/lsword0 position WEAR_WIELD
+}
+
+load slaver into apartment max 1
+{
+	equip rapier_sword position WEAR_WIELD
+	equip midgaard/cloak1 position WEAR_ABOUT
+	equip midgaard/slth_sleeves position WEAR_ARMS
+	equip midgaard/slth_jerkin position WEAR_BODY
+	equip midgaard/slth_pants position WEAR_LEGS
+	equip midgaard/hlth_boots position WEAR_FEET
+	equip midgaard/hlth_gloves position WEAR_HANDS
+	load midgaard/beer_barrel
+	load skull_key
+        equip  hlth_belt position WEAR_WAIST
+}
+
+load elf_slave into apartment max 1
+
+load human_slave into slave_pen local 1
+
+load goblin_slave into slave_pen local 2
+
+load goblin_slave into slave_pen local 2
+
+load ogre_guard into slave_market max 1
+{
+	equip whip_20 position WEAR_WIELD
+	equip midgaard/slth_sleeves position WEAR_ARMS
+	equip midgaard/slth_jerkin position WEAR_BODY
+	equip midgaard/slth_pants position WEAR_LEGS
+	equip midgaard/hlth_boots position WEAR_FEET
+}
+
+load auctioneer into slave_market max 1
+{
+	equip midgaard/dag0 position WEAR_WIELD
+}
+
+load human_slave into slave_market local 2
+
+load human_slave into slave_market local 2
+
+load goblin_slave into slave_market local 1
+
+load one_eye into gen_store max 1
+{
+	equip midgaard/lsword0 position WEAR_WIELD
+	load midgaard/lantern
+	load midgaard/bag
+	load midgaard/turkey_dstick
+	load midgaard/beer_bottle
+	load midgaard/raft1
+	load midgaard/water_cup
+	load midgaard/turkey_dstick
+}
+
+load elf_commander into kingroad4 max 1
+{
+	equip midgaard/lsword0 position WEAR_WIELD
+	equip midgaard/chain_sleeves position WEAR_ARMS
+	equip midgaard/chain_jerkin position WEAR_BODY
+	equip midgaard/chain_skirt position WEAR_LEGS
+	equip midgaard/hlth_boots position WEAR_FEET
+	equip midgaard/hlth_gloves position WEAR_HANDS
+	equip midgaard/chain_coif position WEAR_HEAD
+}
+
+load hob_captain into kingroad4 max 1
+{
+	equip midgaard/spear0 position WEAR_WIELD
+	equip midgaard/scale_sleeves position WEAR_ARMS
+	equip midgaard/scale_jerkin position WEAR_BODY
+	equip midgaard/scale_skirt position WEAR_LEGS
+	equip midgaard/scale_boots position WEAR_FEET
+	equip midgaard/scale_gloves position WEAR_HANDS
+	equip midgaard/scale_coif position WEAR_HEAD
+}
+
+load elf_lieut into elf_camp max 1
+{
+	equip axe1_15 position WEAR_WIELD
+	equip midgaard/chain_sleeves position WEAR_ARMS
+	equip midgaard/chain_jerkin position WEAR_BODY
+	equip midgaard/chain_skirt position WEAR_LEGS
+	equip midgaard/hlth_boots position WEAR_FEET
+	equip midgaard/hlth_gloves position WEAR_HANDS
+	equip midgaard/chain_coif position WEAR_HEAD
+}
+
+load hob_serg into hob_camp max 1
+{
+	equip midgaard/sword0 position WEAR_WIELD
+	equip midgaard/slth_sleeves position WEAR_ARMS
+	equip midgaard/slth_jerkin position WEAR_BODY
+	equip midgaard/slth_pants position WEAR_LEGS
+	equip midgaard/hlth_boots position WEAR_FEET
+	equip midgaard/hlth_gloves position WEAR_HANDS
+	equip midgaard/lth_cap position WEAR_HEAD
+	load potion_det_inv
+}
+
+load elf_grunt into elf_camp local 3
+{
+	equip midgaard/sword0 position WEAR_WIELD
+	equip midgaard/chain_sleeves position WEAR_ARMS
+	equip midgaard/chain_jerkin position WEAR_BODY
+	equip midgaard/chain_skirt position WEAR_LEGS
+	equip midgaard/chain_coif position WEAR_HEAD
+}
+
+load elf_grunt into elf_camp local 3
+{
+	equip midgaard/sword0 position WEAR_WIELD
+	equip midgaard/chain_sleeves position WEAR_ARMS
+	equip midgaard/chain_jerkin position WEAR_BODY
+	equip midgaard/chain_skirt position WEAR_LEGS
+	equip midgaard/chain_coif position WEAR_HEAD
+}
+
+load elf_grunt into elf_camp local 3
+{
+	equip axe1_30 position WEAR_WIELD
+	equip midgaard/chain_sleeves position WEAR_ARMS
+	equip midgaard/chain_jerkin position WEAR_BODY
+	equip midgaard/chain_skirt position WEAR_LEGS
+	equip midgaard/chain_coif position WEAR_HEAD
+}
+
+load hob_grunt into hob_camp local 4
+{
+	equip midgaard/spear0 position WEAR_WIELD
+	equip midgaard/slth_sleeves position WEAR_ARMS
+	equip midgaard/slth_jerkin position WEAR_BODY
+	equip midgaard/slth_pants position WEAR_LEGS
+	equip midgaard/lth_cap position WEAR_HEAD
+}
+
+load hob_grunt into hob_camp local 4
+{
+	equip midgaard/spear0 position WEAR_WIELD
+	equip midgaard/slth_sleeves position WEAR_ARMS
+	equip midgaard/slth_jerkin position WEAR_BODY
+	equip midgaard/slth_pants position WEAR_LEGS
+	equip midgaard/lth_cap position WEAR_HEAD
+}
+
+load hob_grunt into hob_camp local 4
+{
+	equip midgaard/spear0 position WEAR_WIELD
+	equip midgaard/slth_sleeves position WEAR_ARMS
+	equip midgaard/slth_jerkin position WEAR_BODY
+	equip midgaard/slth_pants position WEAR_LEGS
+	equip midgaard/lth_cap position WEAR_HEAD
+        equip hlth_belt position WEAR_WAIST
+}
+
+load hob_grunt into hob_camp local 4
+{
+	equip midgaard/spear0 position WEAR_WIELD
+	equip midgaard/slth_sleeves position WEAR_ARMS
+	equip midgaard/slth_jerkin position WEAR_BODY
+	equip midgaard/slth_pants position WEAR_LEGS
+	equip midgaard/lth_cap position WEAR_HEAD
+}
+
+/*-----------------Ancalagor reset---------------*/
+
+load drag_hermit into valley_enter max 1
+
+load green_slime into stone_tonsil local 2
+
+load flame_dweller into right_lung local 1
+
+load flame_dweller into left_lung local 1
+
+load gr_spider into acid_forest2 local 1 max 5
+
+load gr_spider into acid_forest4 local 1 max 5
+
+load gr_spider into acid_forest5 local 1 max 5
+{
+	equip spider_slippers position WEAR_FEET max 1
+}
+
+load gr_spider into acid_forest8 local 1 max 5
+
+load yl_spider into acid_forest1 local 1 max 5
+
+load yl_spider into acid_forest3 local 1 max 5
+
+load yl_spider into acid_forest7 local 1 max 5
+
+load yl_spider into acid_forest9 local 1 max 5
+{
+	load wand_light
+}
+
+load stone_warden into stomache_end max 1
+{
+	equip mace2_35 position WEAR_WIELD
+}
+
+load unseen_guard into pancreas max 1
+{
+	load dragon_egg max 1
+        load asgaard/ancient_staff
+}
+
+load umber_hulk into sm_int2 local 1 max 8
+
+load umber_hulk into sm_int4 local 1 max 8
+
+load umber_hulk into sm_int7 local 1 max 8
+
+load umber_hulk into sm_int10 local 1 max 8
+
+load umber_hulk into lg_int3 local 1 max 8
+
+load umber_hulk into sphinct local 1 max 8
+
+load ochre_jelly into sm_int3 local 1 max 8
+{
+	load midgaard/dag0
+}
+
+load ochre_jelly into sm_int5 local 1 max 8
+{
+	load midgaard/lmetal_shiel
+}
+
+load ochre_jelly into lg_int5 local 1 max 8
+{
+	load shabby_armor max 1
+}
+
+load ochre_jelly into sm_int9 local 1 max 8
+{
+	load scroll_icestorm
+}
+
+load ochre_jelly into sm_int4 local 1 max 8
+{
+	load potion_strpsn
+}
+
+load ochre_jelly into sm_int2 local 1 max 8
+{
+	load midgaard/pointy_hat
+}
+
+
+%end
+

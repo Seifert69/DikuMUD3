@@ -1,0 +1,809 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>NPC macros</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The NPC section"
+HREF="ch05.html"><LINK
+REL="PREVIOUS"
+TITLE="The NPC section"
+HREF="ch05.html"><LINK
+REL="NEXT"
+TITLE="Building your first NPC"
+HREF="x2000.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="ch05.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. The NPC section</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x2000.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="NPCMACROS"
+>6.2. NPC macros</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="NPCMACROATTARM"
+>6.2.1. The attack and armour macro</A
+></H2
+><P
+>The natural attack and armour fields allow you to set the NPC to
+do damage like a certain type of weapons and to defend like a certain
+type of armour respectively.  Lets say you had a metal cougar it would
+have an attack type of claw and an armour type of plate while a normal
+dog would have an armour type of leather and an attack type of bite. 
+The 'NATURAL_DEF' macro is what allows you to set these fields.  This
+macro is defined in <TT
+CLASS="FILENAME"
+>wmacros.h</TT
+> and looks like
+this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1851"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define NATURAL_DEF(weapon_category, armour_category) \
+   armour armour_category \
+   attack weapon_category
+   
+   </PRE
+><P
+></P
+></DIV
+><P
+>The word natural can sometimes be a little confusing since you can
+set any of the weapons types you like on the NPC.  It doesn't exactly
+make sense to have a dog that attacks as if it uses a long sword but if
+you wish it you can do it.  The following is a short list of just the
+natural weapon types but you can find a full list in
+<A
+HREF="a5351.html"
+>Appendix D</A
+> or in the <TT
+CLASS="FILENAME"
+>values.h</TT
+> of your mud
+just in case you have added some weapon types.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1856"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define WPN_FIST         34
+#define WPN_KICK         35
+#define WPN_BITE         36
+#define WPN_STING        37
+#define WPN_CLAW         38
+#define WPN_CRUSH        39&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Again you don't have to use leather for dogs as we have already
+mentioned with our metal cat idea you could make a cloth dragon if you
+really want but its up to you to keep some sanity on your <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+>.  The
+following is the list of armour types that can be set.  You will see
+that the list is exactly the same as the list you will find later when
+making armour.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1860"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define ARM_CLOTHES  0  /*Same as a Human in jeans and a T-shirt*/
+#define ARM_LEATHER  1  /* A soft flexible leather base armour   */
+#define ARM_HLEATHER 2  /* A hard un flexible leather base armour */
+#define ARM_CHAIN    3  /* A flexible armour composed of interlocking rings */
+#define ARM_PLATE    4  /* An un flexible plate armour. */&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now that you have the defines to work with we will return to our
+metal cat and normal dog.  The definitions for them would look something
+like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1863"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//Metal Cat 
+NATURAL_DEF(WPN_CLAW, ARM_PLATE)
+
+//normal dog
+NATURAL_DEF(WPN_BITE, ARM_LEATHER)&#13;</PRE
+><P
+></P
+></DIV
+><P
+>You  should  know  that the weight of the monster  determines  the
+maximum  amount of damage it can give when using a natural attack.
+The weight is categorized as follows:</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN1866"
+></A
+><P
+><B
+>Table 6-5. Weight size chart</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>LBS</TH
+><TH
+>Size</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>0 - 5</TD
+><TD
+>Tiny</TD
+></TR
+><TR
+><TD
+>6 - 40</TD
+><TD
+>Small</TD
+></TR
+><TR
+><TD
+>41 - 160</TD
+><TD
+>Medium</TD
+></TR
+><TR
+><TD
+>161 - 500</TD
+><TD
+>Large</TD
+></TR
+><TR
+><TD
+>500 and up</TD
+><TD
+>Huge</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>By default monsters are medium.  So make sure you take this into
+account when you are creating your NPC.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="NPCMACROATTDEF"
+>6.2.2. The defense and offense bonus macro</A
+></H2
+><P
+>There comes a time when you may want to make your NPC super
+naturally powerful.  It is for those times that the offense and defense
+fields are available for you to set.  Normally they default to 0 but you
+can set them from 0 to 5000.  The higher you set the offense number the
+harder you will hit people you a re in combat with.  The higher you set
+the defense the harder it will be for people to hit your NPC.  The
+following macro allows you to set both the offense and defense.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1893"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define ATTACK_DEFENSE(attack, defense) \
+offensive attack \
+defensive defense&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Using this macro is rather easy you just put the value you want
+for each and your all done</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1896"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//a really hard hitting hard to kill NPC
+ATTACK_DEFENSE( 1000, 1000)&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="NPCMACROABILITY"
+>6.2.3. The NPc abilities macro</A
+></H2
+><P
+>All  abilities are in the range [1..200]. Players usually  have  a
+maximum of 150, modified by magic... 200 is considered divine.
+When  creating a monster you can not directly specify the size  of
+the  abilities,  instead you specify a percentage distribution  of
+points.  The amount of points are then distributed by the computer
+according  to  the  specified level.  The  'MSET_ABILITY'  macro  is
+available for this purpose, and is defined as:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1901"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define MSET_ABILITY(str,dex,con,hpp,bra,cha,mag,div)   \
+		ability[ABIL_STR]  str   \
+  ability[ABIL_DEX]  dex   \
+  ability[ABIL_CON]  con   \
+  ability[ABIL_HP]   hpp   \
+  ability[ABIL_BRA]  bra   \
+  ability[ABIL_MAG]  mag   \
+  ability[ABIL_DIV]  div   \
+  ability[ABIL_CHA]  cha
+  
+  </PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>Note the sum of the ability values must be 100%. This is thus
+an example of an ability distribution:
+<DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1905"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;     MSET_ABILITY(25,15,10,15,10,5,10,0)  /* Sum is 100% */
+	 
+	 </PRE
+><P
+></P
+></DIV
+>
+	 </P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>The  amount of points distributed depends directly upon the  level
+of the monster and the percentage.  If the percentage is too high and the
+level is also set High some ability points may be lost since a NPC gets
+all abilities over 255 cut off.  For example a level 199 monster with an  ability
+percentage  a  bit above 20% will make an ability  above  the  255
+points maximum.  In the current combat system in the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> 2.0 it is not
+necessary to spend points on both 'mag' and 'div' on the NPC since only
+one or the other is ever used depending on which is higher.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="NPCMACROWEAPSPL"
+>6.2.4. The NPc weapon and spell macros</A
+></H2
+><P
+>NPCs know about weapons and spells but not at the same detailed
+level as the player.  For NPCs the spell and weapon group are used. 
+Thus the Axe hammer category defines all defence and all attack for all
+kinds of axes and hammers, whereas the player would have to train
+individually in each axe and hammer type. The same is true for spells.
+Thus if a monster has 25 points in the weapon sword category it will
+fight (and defend) with all sword-like weapons at skill 25. When you
+define weapon and spell skills (monsters have no skill skills) you also
+define these as percentages, and the program automatically distributes
+the points. Use the pre-defined macros:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1912"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define MSET_WEAPON(axe_ham, sword, club_mace, pole, unarmed, special)  \
+weapon[WPN_AXE_HAM]    axe_ham   \
+weapon[WPN_SWORD]      sword      \
+weapon[WPN_CLUB_MACE]  club_mace  \
+weapon[WPN_POLEARM]    pole \
+weapon[WPN_UNARMED]    unarmed    \
+weapon[WPN_SPECIAL]    special&#13;</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN1914"
+></A
+><P
+><B
+>Table 6-6. MSET_WEAPON arguments</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Argument</TH
+><TH
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>axe_ham</TD
+><TD
+>any hammer or axe</TD
+></TR
+><TR
+><TD
+>sword</TD
+><TD
+>any sword like weapon, including dagger and rapier, etc.</TD
+></TR
+><TR
+><TD
+>club_mace</TD
+><TD
+>any club or mace like weapon, flails,  morning star, etc.</TD
+></TR
+><TR
+><TD
+>polearm</TD
+><TD
+>any spear or pole like weapon:  spear, trident, sickle, scythe etc.</TD
+></TR
+><TR
+><TD
+>unarmed</TD
+><TD
+> Is any bite, claw, sting or other natural attack.</TD
+></TR
+><TR
+><TD
+>special</TD
+><TD
+>any very peculiar weapon, currently only whip.</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1940"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define MSET_SPELL(div, pro, det, sum, cre, min, hea, col, cel, int, ext)  \
+spell[SPL_DIVINE]      div  \
+spell[SPL_PROTECTION]  pro  \
+spell[SPL_DETECTION]   det  \
+spell[SPL_SUMMONING]   sum  \
+spell[SPL_CREATION]    cre  \
+spell[SPL_MIND]        min  \
+spell[SPL_HEAT]        hea  \
+spell[SPL_COLD]        col  \
+spell[SPL_CELL]        cel  \
+spell[SPL_INTERNAL]    int  \
+spell[SPL_EXTERNAL]    ext&#13;</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN1942"
+></A
+><P
+><B
+>Table 6-7. MSET_SPELL arguments</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Argument</TH
+><TH
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>div</TD
+><TD
+>Covers all divine sphere spell.</TD
+></TR
+><TR
+><TD
+>pro</TD
+><TD
+>Covers all protection sphere spells.</TD
+></TR
+><TR
+><TD
+>det</TD
+><TD
+>Covers all detection sphere spells.</TD
+></TR
+><TR
+><TD
+>sum</TD
+><TD
+>Covers all summoning spells.</TD
+></TR
+><TR
+><TD
+>Cre</TD
+><TD
+>Covers all creation spells.</TD
+></TR
+><TR
+><TD
+>min</TD
+><TD
+>Covers all mind spells.</TD
+></TR
+><TR
+><TD
+>hea</TD
+><TD
+>Covers all heat spells (fireball, etc.)</TD
+></TR
+><TR
+><TD
+>col</TD
+><TD
+>Covers all cold spells (frostball, etc.)</TD
+></TR
+><TR
+><TD
+>cel</TD
+><TD
+>Covers all cell (electricity) spells (lightning bolt, etc.)</TD
+></TR
+><TR
+><TD
+>int</TD
+><TD
+>Covers all internal (poison) spells (toxicate, etc.)</TD
+></TR
+><TR
+><TD
+>ext</TD
+><TD
+>Covers all external (acid) spells (acid ball etc).</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>If your not sure what your weapon or spell is categorized as
+ you can look in the <TT
+CLASS="FILENAME"
+>weapons.def</TT
+> or the
+ <TT
+CLASS="FILENAME"
+>spells.def</TT
+> for that you are using for your <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+>
+ server.</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>The sum of all spell and weapon
+ skills must be 100%. For example, the following would be a legal
+ setting of weapons and spells.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1989"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//  75%  Total,  Club/Mace  is primary
+      MSET_WEAPON(10,10,20,5,15,5)
+
+//  25%  Total,  Fire  is primary
+      MSET_SPELL(8,0,0,3,0,3,2,3,3,3,3)
+	  
+	  </PRE
+><P
+></P
+></DIV
+><P
+>Remember that the groups define both attack and defence.  Thus  if
+you  make  an Orc which has 0% in the flail group it can only  use
+its  dexterity to defend itself. Likewise with spell  groups.  For
+this  reason  the groups are both "resistance" as well  as  attack
+groups.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="NPCMACROCOMPOSED"
+>6.2.5. Using the composed.h</A
+></H2
+><P
+>The  file composed.h contains many standard monsters. It is a good
+idea  to  study these definitions, as they form the basis of  many
+different  monsters. Note that the definitions  by  no  means  are
+perfect,  but  we  are hoping to make a more  or  less  complete
+monster  compendium.  If  you create certain  (general)  monsters,
+please design it as a macro so it can be incorporated in  the
+file. The more monsters created by using these macros the easier it will
+be for your builders to create NPCs.  If you think you have a really
+all inclusive Composed.h and want to share it with the rest of the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+>
+servers running out there on the internet.  Feel free to submit it to
+the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> staff and we will put it in the contribution directories on our
+release site.</P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>For more information on how to use the composed.h when
+ building your NPC see <A
+HREF="x2000.html"
+>Section 6.3</A
+>.</P
+></TD
+></TR
+></TABLE
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="ch05.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x2000.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The NPC section</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch05.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Building your first NPC</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

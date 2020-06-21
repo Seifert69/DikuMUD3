@@ -1,0 +1,174 @@
+#!/bin/gawk -f
+BEGIN {
+RS="";
+FS="\n";
+cmdstr="";
+vis="";
+minu="";
+vmin="";
+level=0;
+}
+{
+gsub (/&/,"&&",$0);
+gsub (/\"/,"'",$0);
+gsub (/\$\$/,"%?",$0);
+gsub (/\^/," .",$0);
+gsub (/\%/,"s",$0);
+
+split($1,a," ");
+cmdstr=a[1];
+print "Converting:  "cmdstr;
+vis=a[2];
+umin=a[3];
+vmin=a[4];
+level=a[5];
+
+defbuf=defbuf"command = "cmdstr"\n";
+defbuf=defbuf"func = "cmdstr"@socials\n";
+if (umin=="rest"){
+defbuf=defbuf"minpos = POSITION_RESTING\n";}
+if (umin=="sleep"){
+defbuf=defbuf"minpos = POSITION_SLEEPING\n";}
+if (umin=="sit"){
+defbuf=defbuf"minpos = POSITION_SITTING\n";}
+if (umin=="stand"){
+defbuf=defbuf"minpos = POSITION_STANDING\n";}
+if (umin=="fight"){
+defbuf=defbuf"minpos = POSITION_FIGHTING\n";}
+if (umin=="dead"){
+defbuf=defbuf"minpos = POSITION_DEAD\n";}
+defbuf=defbuf"minlevel = "level"\n";
+defbuf=defbuf"type = TYPE_SOCIAL\n\n";
+
+
+dilbuf=dilbuf"dilbegin "cmdstr"(arg:string);\n";
+dilbuf=dilbuf"var\n";
+dilbuf=dilbuf"	vict:unitptr;\n";
+dilbuf=dilbuf"code\n{\n\n";
+if (level>0){
+dilbuf=dilbuf"if (self.level<"level")\n";
+dilbuf=dilbuf"	{\n";
+dilbuf=dilbuf"	sendtext (cmdstr+\" is not a command.&n\",self);\n";
+dilbuf=dilbuf"	quit;\n";
+dilbuf=dilbuf"	}\n\n";}
+if (umin=="rest"){
+	dilbuf=dilbuf"if (self.position<POSITION_RESTING)\n";}
+if (umin=="sleep"){
+	dilbuf=dilbuf"if (self.position<POSITION_SLEEPING)\n";}
+if (umin=="sit"){
+	dilbuf=dilbuf"if (self.position<POSITION_SITTING)\n";}
+if (umin=="stand"){
+	dilbuf=dilbuf"if (self.position<POSITION_STANDING)\n";}
+if (umin=="fight"){
+	dilbuf=dilbuf"if (self.position<POSITION_FIGHTING)\n";}
+if (umin=="dead"){
+	dilbuf=dilbuf"if (self.position<POSITION_DEAD)\n";}
+dilbuf=dilbuf"  {\n";
+dilbuf=dilbuf"	sendtext (\"&[social_self]You can't seem to do that from this position.&n&[default]\",self);\n";
+dilbuf=dilbuf"	quit;\n";
+dilbuf=dilbuf"	}\n";
+if ((NF==9 &&	($4!="#" || $5!="#" ||$6!="#" || $8!="#" || $9!="#")) ||
+(NF==8 &&	($4!="#" || $5!="#" ||$6!="#" || $8!="#")) ||
+(NF==7 &&	($4!="#" || $5!="#" ||$6!="#")) ||
+(NF==6 &&	($4!="#" || $5!="#" ||$6!="#")) ||
+(NF==5 &&	($4!="#" || $5!="#")) ||
+(NF==4 &&	($4!="#"))){
+dilbuf=dilbuf"if (arg!=\"\")\n";
+dilbuf=dilbuf"	{\n";
+dilbuf=dilbuf"	vict:=findunit(self,arg,FIND_UNIT_SURRO,null);\n";
+dilbuf=dilbuf"	if (vict==null)\n"
+dilbuf=dilbuf"		{\n";
+if (NF>7 && $7=="#"){
+	dilbuf=dilbuf"		sendtext (\"&[social_self]No such person here.&n&[default]\",self);\n";
+	}else{
+	dilbuf=dilbuf"		sendtext (\"&[social_self]"$7"&n&[default]\",self);\n";}
+dilbuf=dilbuf"		quit;\n";
+dilbuf=dilbuf"		}\n";
+dilbuf=dilbuf"	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))\n";
+dilbuf=dilbuf"		{\n";
+if (NF>7 && $7=="#"){
+	dilbuf=dilbuf"		sendtext (\"&[social_self]No such person here.&n&[default]\",self);\n";
+	}else{
+	dilbuf=dilbuf"		sendtext (\"&[social_self]"$7"&n&[default]\",self);\n";}
+dilbuf=dilbuf"		quit;\n";
+dilbuf=dilbuf"		}\n";
+if (vmin=="rest"){
+	dilbuf=dilbuf"if (vict.position<POSITION_RESTING)\n";}
+if (vmin=="sleep"){
+	dilbuf=dilbuf"if (vict.position<POSITION_SLEEPING)\n";}
+if (vmin=="sit"){
+	dilbuf=dilbuf"if (vict.position<POSITION_SITTING)\n";}
+if (vmin=="stand"){
+	dilbuf=dilbuf"if (vict.position<POSITION_STANDING)\n";}
+if (vmin=="fight"){
+	dilbuf=dilbuf"if (vict.position<POSITION_FIGHTING)\n";}
+if (vmin=="dead"){
+	dilbuf=dilbuf"if (vict.position<POSITION_DEAD)\n";}
+dilbuf=dilbuf"{\n";
+dilbuf=dilbuf"act (\"&[social_self]$3n is not positioned so you can do that to $3m&[default]\",\n";
+dilbuf=dilbuf"A_ALWAYS,self,null,vict,TO_CHAR);\n";
+dilbuf=dilbuf"quit;\n";
+dilbuf=dilbuf"}\n";
+dilbuf=dilbuf"if (self==vict)\n";
+dilbuf=dilbuf"	{\n";
+	if ($8!="#"){
+dilbuf=dilbuf"	act (\"&[social_self]"$8"&[default]\",\n";
+dilbuf=dilbuf"	A_ALWAYS,self,null,null,TO_CHAR);\n";}
+	if (NF == 9 && $9!="#"){
+dilbuf=dilbuf"	act (\"&[social_other]"$9"&[default]\",\n";
+dilbuf=dilbuf"	A_ALWAYS,self,null,null,TO_REST);\n";}
+dilbuf=dilbuf"  send_done (\""cmdstr"\",self,null,vict,0,\"\",null);\n";
+dilbuf=dilbuf"	quit;\n";
+dilbuf=dilbuf"	}\n";
+
+	if ($4!="#"){
+dilbuf=dilbuf"	act (\"&[social_self]"$4"&[default]\",\n";
+dilbuf=dilbuf"	A_SOMEONE,self,null,vict,TO_CHAR);\n";}
+	if (NF >= 5 && $5!="#"){
+dilbuf=dilbuf"	act (\"&[socail_other]"$5"&[default]\",\n";
+dilbuf=dilbuf"	A_SOMEONE,self,null,vict,TO_NOTVICT);\n";}
+	if (NF >= 6 && $6!="#"){
+dilbuf=dilbuf"	act (\"&[social_other]"$6"&[default]\",\n";
+dilbuf=dilbuf"	A_SOMEONE,self,null,vict,TO_VICT);\n";}
+dilbuf=dilbuf"  send_done (\""cmdstr"\",self,null,vict,0,\"\",null);\n";
+dilbuf=dilbuf"	quit;\n";
+dilbuf=dilbuf"	 }\n\n";}
+
+if ((NF>=3 && ( $2!="#" || $3!="#")) ||
+(NF>=2 && ($2!="#"))){
+if ($2!="#"){
+dilbuf=dilbuf"	act (\"&[social_self]"$2"&[default]\",\n";
+dilbuf=dilbuf"A_ALWAYS,self,null,null,TO_CHAR);\n";}
+	if (NF >= 3 && $3!="#"){
+dilbuf=dilbuf"	act (\"&[social_other]"$3"&[default]\",\n";
+dilbuf=dilbuf"A_ALWAYS,self,null,null,TO_REST);\n";}}
+dilbuf=dilbuf"  send_done (\""cmdstr"\",self,null,null,0,\"\",null);\n";
+dilbuf=dilbuf"quit;\n";
+dilbuf=dilbuf"}\n";
+dilbuf=dilbuf"dilend\n\n";
+}
+
+END {
+print "Writing Socials.def";
+print defbuf >"socials.def";
+zonbuf="/*\n";
+zonbuf=zonbuf"filename    socials\n";
+zonbuf=zonbuf"password    release\n";
+zonbuf=zonbuf"changedby   Whistler\n";
+zonbuf=zonbuf"request     compile\n";
+zonbuf=zonbuf"version     12\n";
+zonbuf=zonbuf"END HEADER*/\n\n";
+
+zonbuf=zonbuf"#include <composed.h>\n";
+zonbuf=zonbuf"%zone socials\n";
+zonbuf=zonbuf"title \"\"\n\n";
+
+zonbuf=zonbuf"lifespan 20\n";
+zonbuf=zonbuf"reset RESET_NOT\n\n";
+
+zonbuf=zonbuf"creators {\"whistler\"}\n\n";
+
+zonbuf=zonbuf"%dil\n\n";
+print "Writing Socials.zon";
+print zonbuf"\n"dilbuf"\n%end" >"socials.zon"
+}

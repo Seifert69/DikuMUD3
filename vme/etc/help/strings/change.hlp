@@ -1,0 +1,24 @@
+<h1>Change</h1>
+<br/>
+Usage change &lt;type&gt; [arguments]<br/>
+&lt;type&gt; being one of:<br/>
+<br/>
+See also:<br/>
+Brief</br>
+Compact</br>
+Expert</br>
+Inform</br>
+Shout</br>
+Tell</br>
+Communications</br>
+Wimpy</br>
+Peaceful</br>
+Prompt</br>
+Exits</br>
+Columns</br>
+Rows</br>
+Terminal</br>
+Telnet</br>
+Character echo</br>
+Redraw prompt</br>
+<br/>

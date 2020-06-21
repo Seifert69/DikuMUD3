@@ -1,0 +1,2707 @@
+/*
+filename    sorcerer
+password    rlscrew
+changedby   Etna
+EmailAdd
+request     compile
+version     43.01
+END HEADER*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+v 43.01 2010.07.21 Changed weapons some to be 
+  Sorc only. FIxed imp ids and spelling errors
+  fixed Desc so they match weapon type per bug
+ reported - ETNA  
+ 
+ 02/09/2001 Mesmer upgraded recall scrolls  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#define _GUILD_MIDGAARD_SORCERER
+
+#include <macros.h>
+
+#define MARY_POT "Mary's Pot Retrieved"
+#define WIGHT_COMPLETE "Wight warrens quest"
+#define SORCERER_GUILD "Midgaard Sorcerer"
+#define SORCERER_COMPLETE "Sorcerer Quest Complete"
+#define SORCERER_ONGOING "Sorcerer Quest Ongoing"
+#define SORCERER_SKILLS_ONGOING "Sorcerer Skills Quest Ongoing"
+#define SORCERER_SKILLS_COMPLETE "Sorcerer Skills Quest Complete"
+#define SORCERER_SPELLS_ONGOING "Sorcerer Spells Quest Ongoing"
+#define SORCERER_SPELLS_COMPLETE "Sorcerer Spells Quest Complete"
+#define SORCERER_ABILITIES_ONGOING "Sorcerer Abilities Quest Ongoing"
+#define SORCERER_ABILITIES_COMPLETE "Sorcerer Abilities Quest Complete"
+
+%zone sorcerer
+
+lifespan 20
+reset RESET_ANYHOW
+creators {"icculus","skay"}
+title "Sorcerer's Guild@Mainland"
+notes
+"This is the original Sorcerer Guild, build by Icculus and rearranged by
+Sk(r)ay.<br/>
+Skray email: otap@dorit.ihi.ku.dk<br/>"
+
+help
+"Welcome to the caves of the Midgaard Sorcerers, the practicers of combat
+magic and shapers of the materia. This Guild concentrates of the
+development of ones magical abilities rather than the physical values.
+
+        Training/Education
+
+  Spell Practice        - Claudius the Spell Master, from the entrance follow
+			  path North-North-West-West-North-West-Nort-North.
+  Skill Practice        - Forbin the Master of Skills, from the entrance
+follow
+			  path North-North-West-West-North-West-West-South.
+  Weapon Practice       - Lasheetah the Weaponmistress, from the entrance walk
+			  North-North-North-East-East-East.
+  Attribute Training	- Calastran the Master of Abilities, from the entrance
+			  walk North-North-North-East-East-North-North.
+
+        Other services
+
+  Title change          - Type 'title' at Phoebius to gain a new and
+                          hopefully better title.
+  Sorcerer items        - Especially created for Sorcerers. Worshipping or
+			  bowing to Phoebius will cause him to grant you one.
+  Sorcerer Parlor 	- A small area for relaxation, with a complete bar
+			  and boards. Walk down from inside the Tower.
+			  Notice, only Sorcerers are welcome there.
+
+
+zone created by Icculus and Skay
+"
+
+
+%dil
+
+/* Total Healing for teachers */
+
+dilbegin restoration();
+code
+{
+   :start:
+   wait(SFB_COM, activator.type == UNIT_ST_PC);
+
+   if (self.hp < self.max_hp)
+   {
+      act("An eerie chant fills the air around you...",
+          A_ALWAYS, activator, null, null, TO_ALL);
+      act("$1n glows in a pale light as his wounds close up!",
+          A_ALWAYS, self, null, null, TO_ALL);
+      self.hp := self.max_hp;
+   }
+   goto start;
+}
+dilend
+
+/* No-kill DIL for teachers */
+
+dilbegin no_kill();
+code
+{
+   :start:
+   wait(SFB_COM, ((activator.type == UNIT_ST_PC) and
+       (activator.name $= self.fighting.name)));
+if (self.fighting.level>200) goto start;
+        if(self.fighting.type == UNIT_ST_NPC) goto start;
+
+act("$1n chants in a foreboding tone...",
+       A_SOMEONE, self, null, self.fighting,TO_ALL);
+act("You feel your life being drained away!",
+       A_SOMEONE, self.fighting, null, null,TO_CHAR);
+act("$3n pales and sinks to $3s knees, $3s body depraved of "+
+"strength!",A_SOMEONE, self, null, self.fighting,TO_NOTVICT);
+   self.fighting.hp := 0;
+   self.fighting.position := POSITION_INCAP;
+   self.position := POSITION_STANDING;
+   goto start;
+}
+dilend
+
+/* Dil to simulate unexpected bump on the head by a stalagtite */
+
+dilbegin headbump();
+external
+	integer level_guild_chk@guild_paths(pc:unitptr,s:string);
+var
+  num   :       integer;
+code
+{
+   heartbeat := PULSE_SEC*5;
+   :start:
+   wait(SFB_CMD, activator.type == UNIT_ST_PC);
+	 num:=level_guild_chk@guild_paths(activator,GUILD_SORCERER);
+	 if (num>-1)
+	 	goto start;
+
+   num := rnd(1,10);
+   if (num > 2) goto start;
+   exec("scream", self.inside);
+   act(self.inside.name+" cries out and stumbles backwards .",
+       A_ALWAYS, self.inside, null, null, TO_REST);
+   act("You cry out loud as you bump your head on a stalactites.",
+       A_ALWAYS, self.inside, null, null, TO_CHAR);
+   self.inside.hp := self.inside.hp - (rnd(1,10));
+   pause;
+   goto start;
+}
+dilend
+
+dilbegin recall charger();
+code
+{
+:start:
+heartbeat:=PULSE_SEC*SECS_PER_MUD_DAY/4;
+wait (SFB_TICK,(self.equip==WEAR_WIELD));
+heartbeat:=PULSE_SEC*5;
+sendto ("add charge",self);
+goto start;
+}
+dilend
+
+dilbegin recall mana_drain();
+external
+	integer level_guild_chk@guild_paths(pc:unitptr,s:string);
+var
+    storenum    :   integer;
+    charge      :   integer;
+	num 		:	integer;
+    pwr         :   integer;
+	num2		:	integer;
+	diff		:	integer;
+	mag_skill	:	integer;
+    fire        :   integer;
+code
+{
+   pwr := 10;
+   :init:
+   heartbeat := PULSE_SEC*9;
+   charge:=interrupt (SFB_MSG,((self==activator) and (argument=="add charge")), charge);
+   :start:
+   heartbeat := PULSE_SEC*9;
+wait(SFB_COM, ((self.outside.fighting) and
+       (self.equip == WEAR_WIELD)));
+
+if (self.outside.position != POSITION_FIGHTING)
+     goto start;
+
+if(pwr <= 0)
+     goto start;
+
+fire := rnd(1,50);
+if(fire < 25)
+     goto start;
+
+	 num:=level_guild_chk@guild_paths(activator,GUILD_SORCERER);
+	 if (num>-1)
+   {
+      num2 := rnd(1, 5);
+      storenum := self.outside.fighting.mana / (2 * num2);
+      mag_skill := self.outside.abilities[ABIL_MAG];
+      num2 := rnd(1,110);
+      if (mag_skill > num2)
+      {
+         self.outside.fighting.mana := self.outside.fighting.mana - storenum;
+         num := rnd(10,130);
+         if (mag_skill > num)
+         {
+             act("Your $2n sends a surge of energy into your body!"
+                ,A_ALWAYS, self.outside, self,self.outside.fighting,TO_CHAR);
+             act("$3n pales visibly as $3s mana is drained away!"
+                ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
+             act("$1n's $2n glows, energy crackles along $1n's arm!"
+               ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_REST);
+             act("$3n pales visibly as $3s mana is drained away!"
+               ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_NOTVICT);
+             act("You can feel your magic essence being siphoned!"
+             ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_VICT);
+
+	    diff := self.outside.max_mana - self.outside.mana;
+	    if (storenum < diff)
+	    {
+              self.outside.mana := self.outside.mana + storenum;
+	       position_update(self.outside);
+               goto wait_time;
+	    }
+            else
+	    {
+               self.outside.mana := self.outside.mana + diff;
+	       position_update(self.outside);
+               goto wait_time;
+            }
+              goto wait_time;
+         }
+         else
+	 {
+          act("Your $2n glows as it drains mana from $3n!"
+            ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
+          act("$1n's $2n glows as it drains mana from $3n!"
+          ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_NOTVICT);
+          act("$1n's $2n glows as it drains your mana!"
+          ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_VICT);
+              pause;
+             goto wait_time;
+         }
+      }
+      else
+      {
+        act("Your $2n glows slightly as it attempts to battle $3n's will!"
+           ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
+        act("$1n's $2n glows slightly in an attempt to battle $3n will!"
+           ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_NOTVICT);
+        act("You feel $1n's $2n intruding on your will, you push the assault back!"
+           ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_VICT);
+        pause;
+        goto wait_time;
+      }
+        pause;
+        goto wait_time;
+      }
+      goto wait_time;
+
+ :wait_time:
+ heartbeat:=PULSE_SEC*SECS_PER_MUD_DAY/48;
+ wait(SFB_TICK, TRUE);
+ pwr := pwr - 1;
+ self.outside.mana := self.outside.mana - 1;
+ position_update(self.outside);
+ act("Your Vorous glows a little as it draws your energy to prepare for battle!"
+     ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
+ act("$1n's grimaces a bit as $1s $2n glows."
+     ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_REST);
+ goto start;
+
+:charge:
+clear (charge);
+if (pwr<12)
+pwr:=pwr+6;
+if (pwr>12) pwr := 12;
+ act("Your Vorous hums as it regenerates itself."
+     ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
+ act("$1n's Vorous hums quietly ."
+     ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_REST);
+goto init;
+}
+dilend
+
+/* **********     Room Definitions Section     ********** */
+
+%rooms
+
+				ent_tower
+names {"tower entrance", "entrance"}
+title "The Tower Entrance"
+descr
+"You stand in the doorway of what will soon be the newly
+constructed tower of Midgaard. Legend has it that the original
+tower stood through the fierce days of combat and only fell
+during the final days of struggle. The tower of old symbolized
+the importance of Midgaard in this land and gave hope to the forces
+of good during the mighty battles.<br/>
+The reconstruction has apparently only just begun and there
+is not much built so far. The first floor is all that has been
+completed thus far and is still in a state of disarray."
+movement SECT_INSIDE
+up to midwalls/rn_040;
+north to midgaard/wall_rd3 open {EX_OPEN_CLOSE, EX_CLOSED}
+keyword {"oak door", "door"};
+south to inside_tower1;
+ALWAYS_LIGHT
+end
+
+				parlor
+names {"sorcerer's parlor"}
+title "The Sorcerer's Parlor"
+descr
+"The mighty Sorcerers of Midgaard congregate in this spacious
+den after a fierce day of magic flailing, often times too weary
+to go on, they are assured of a safe resting place deep in the
+belly of the tower. There are more than enough fancy leather
+sofas and plush throw pillows to accommodate all of the various
+guilds, yet only the true sorcerers may remain. The founder of
+this guild has conveniently placed an exit to the heart of Udgaard,
+you may enter down through the magical hole in the floor or ascend
+to the tower of Midgaard. You can also exit to the north, where a bar of
+the sorcerers offers a variety of drinks and refreshments."
+extra {"magical hole", "hole", "door"}
+"It is magical in the fact that it should not even be here! You
+cannot tell where it leads, the only choice is to enter it!"
+extra {"leather sofas", "leather sofa", "leather", "sofas", "sofa"}
+"Made of the finest dragon leather, these sofas have been
+crafted for the most finicky of customers, and the sorcerers
+of Midgaard have been known to be finicky."
+extra {"throw pillows", "throw pillow", "pillows", "pillow"}
+"They are everywhere, scattered about on the floor and ready for you to
+rest on."
+flags {UNIT_FL_SACRED}
+movement SECT_INSIDE
+up to inside_tower1;
+north to parlorbar;
+ALWAYS_LIGHT
+
+/* Dil to simulate a door */
+
+dilbegin parlor_door();
+var
+        pc      :       unitptr;
+        room    :       unitptr;
+code
+{
+   :start:
+   wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and (command("enter")) and
+        (("magical hole" in argument) or ("hole" in argument) or
+        ("door" in argument))));
+
+   block;
+   pc := activator;
+   secure(pc, lost_pc);
+
+   room := findroom("square@udgaard");
+
+   act("You enter the door and peer out on the other side.",
+        A_ALWAYS, pc, null, null, TO_CHAR);
+   act("$1n enters the door and vanishes!",
+        A_SOMEONE, pc, null, null, TO_REST);
+   link(pc, room);
+
+   unsecure(pc);
+   :lost_pc:
+   exec("look", pc);
+
+   act("$1n suddenly emerges from the thin air!",
+        A_SOMEONE, pc, null, null, TO_REST);
+   goto start;
+}
+dilend
+
+/* Dil to remove non-sorcerers */
+
+dilbegin parlor_kickout();
+external
+	integer level_guild_chk@guild_paths(pc:unitptr,s:string);
+var
+	num:integer;
+	pc	:	unitptr;
+code
+{
+   :start:
+   wait(SFB_CMD, activator.type == UNIT_ST_PC);
+	 num:=level_guild_chk@guild_paths(activator,GUILD_SORCERER);
+	 if (num>-1)
+	 	goto start;
+
+   pc := activator;
+   secure(pc, lost_pc);
+   act("Only Sorcerers may rest here, begone cretin!",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   act("$1n starts to levitate and is instantly sucked " +
+	"through the ceiling.",
+	A_ALWAYS, pc, null, null, TO_REST);
+   link(pc, findroom("udgaard/square"));
+   act("You are sucked through the ceiling and dropped in Udgaard.",
+	A_ALWAYS, pc, null, null, TO_CHAR);
+   act("$1n drops from the sky and falls to the ground.",
+        A_ALWAYS, pc, null, null, TO_REST);
+
+   :lost_pc:
+   pause;
+   goto start;
+}
+dilend
+
+end
+
+		parlorbar
+names {"sorcerers bar","bar","parlor bar"}
+title "At 'The Fizzled Spell'"
+descr
+"A small, yet extremely luxurious bar of the Midgaard Sorcerers, the
+place has obviously been designed for rest and relaxation. Comfy chairs
+and cushions are everywhere around you. Servants course discreetly around
+the room, in constant attention to the mages' needs."
+extra {"chairs","cushions","chair","cushion"}
+"The chairs and cushions are padded to the point of extreme. They look
+EXTREMELY comfy.<br/>"
+extra {"servants"}
+"Mostly gnomes as those are not only the most trusted among Sorcerers but
+the ones with best manners as well.<br/>"
+south to parlor;
+flags {UNIT_FL_SACRED,UNIT_FL_NO_WEATHER}
+movement SECT_INSIDE
+ALWAYS_LIGHT
+
+dilbegin bar_kickout();
+external
+	integer level_guild_chk@guild_paths(pc:unitptr,s:string);
+var
+        pc      :       unitptr;
+				num:integer;
+code
+{
+   :start:
+   wait(SFB_CMD, activator.type == UNIT_ST_PC);
+	 num:=level_guild_chk@guild_paths(activator,GUILD_SORCERER);
+	 if (num>-1)
+	 	goto start;
+
+   pc := activator;
+   secure(pc, lost_pc);
+   act("Only Sorcerers may rest here, begone cretin!",
+A_ALWAYS, pc, null, null, TO_CHAR);
+   act("$1n starts to fade away and disappears!",
+A_ALWAYS, pc, null, null, TO_REST);
+   link(pc, findroom("udgaard/square"));
+act("You fade out of existence and find yourself falling down in Udgaard.",
+        A_ALWAYS, pc, null, null, TO_CHAR);
+act("$1n drops from the sky and falls to the ground.",
+        A_ALWAYS, pc, null, null, TO_REST);
+
+   :lost_pc:
+   pause;
+   goto start;
+}
+dilend
+
+end
+
+				inside_tower1
+names {"inside tower"}
+title "Inside the Tower"
+descr
+"There is much debris scattered about this room, having only
+been completed recently it is covered in dust and there are still
+many tools and stone blocks lying around. There is an exit leading
+to the entrance and the other directions lead onward through the
+first floor of the tower."
+extra {"debris"}
+"All of the remnants of its construction are left here, most probably
+have not been moved in quite awhile.<br/>"
+extra {"tools"}
+"There are all kinds still here, hammers, sanding devices, you name
+it and you could probably find it here.<br/>"
+extra {"blocks"}
+"They are large and still sitting where they were put when first brought
+here.<br/>"
+movement SECT_INSIDE
+north to ent_tower;
+east to inside_tower3;
+west to inside_tower2;
+south to inside_tower4;
+down to parlor;
+ALWAYS_LIGHT
+end
+
+				inside_tower2
+names {"inside tower"}
+title "Inside the Tower"
+descr
+"   There is much debris scattered about this room, having only
+been completed recently it is covered in dust and there are still
+many tools and stone blocks lying around. There is an exit leading
+to the entrance and the other directions lead onward through the
+first floor of the tower."
+extra {"debris"}
+"All of the remnants of its construction are left here, most probably
+have not been moved in quite awhile.<br/>"
+extra {"tools"}
+"There are all kinds still here, hammers, sanding devices, you name
+it and you could probably find it here.<br/>"
+extra {"blocks"}
+"They are large and still sitting where they were put when first brought
+here.<br/>"
+movement SECT_INSIDE
+east to inside_tower1;
+ALWAYS_LIGHT
+end
+
+				inside_tower3
+names {"inside tower"}
+title "Inside the Tower"
+descr
+"There is much debris scattered about this room, having only
+been completed recently it is covered in dust and there are still
+many tools and stone blocks lying around. There is an exit leading
+to the entrance and the other directions lead onward through the
+first floor of the tower."
+extra {"debris"}
+"All of the remnants of its construction are left here, most probably
+have not been moved in quite awhile.<br/>"
+extra {"tools"}
+"There are all kinds still here, hammers, sanding devices, you name
+it and you could probably find it here.<br/>"
+extra {"blocks"}
+"They are large and still sitting where they were put when first brought
+here.<br/>"
+movement SECT_INSIDE
+west to inside_tower1;
+ALWAYS_LIGHT
+end
+
+				inside_tower4
+names {"inside tower"}
+title "Inside the Tower"
+descr
+"There is much debris scattered about this room, having only
+been completed recently it is covered in dust and there are still
+many tools and stone blocks lying around. There is an exit leading
+to the entrance and the other directions lead onward through the
+first floor of the tower.<br/>
+You notice what appears to be a cave mouth jutting from the
+wall to your west. If it is then you may have discovered the
+purpose for this tower. It may not be the symbol of power and
+unity thought for so many years but simply a hiding place
+for some unknown regions of Midgaard."
+extra {"debris"}
+"All of the remnants of its construction are left here, most probably
+have not been moved in quite awhile."
+extra {"tools"}
+"There are all kinds still here, hammers, sanding devices, you name
+it and you could probably find it here."
+extra {"blocks"}
+"They are large and still sitting where they were put when first brought
+here."
+movement SECT_INSIDE
+north to inside_tower1;
+west to ent_guild;
+ALWAYS_LIGHT
+end
+
+				ent_guild
+
+names {"guild entrance"}
+title "The Mouth of a Cave"
+descr
+"The space you stand before is not very large, but perhaps you can
+squeeze your body through. A faint glow emits from the mouth and you
+can barely hear a strange chanting from within. You have heard rumors
+of a great magical presence in Midgaard, this just might be the source.
+You notice a sign near the mouth of the cave."
+extra {"cave mouth", "cave", "entrance", "mouth"}
+"The cave mouth is not very large, but with some effort you could pass
+through to the other side. The only question though is do you want to?"
+extra {"sign"}
+"The sign reads:
+
+	Attention: The Sorcerers of Midgaard are proud in their
+		   numbers. If you know the ways of a Paladin,
+		   Mystic or Fighter then do not bother us, for
+		   it has been decided that we will not accept
+		   you!"
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_MOB, UNIT_FL_NO_TELEPORT}
+movement SECT_CITY
+north to inside_cave1;
+east to inside_tower4;
+end
+
+				inside_cave1
+
+names {"inside cave"}
+title "Inside the Cave"
+descr
+"The ceiling is very low making travel slow and tiring but you are
+driven ahead by the strange chanting you hear all around. You must be
+very careful however, the stalactites seem to come from thin air, and the
+darkness makes matters all the worse. There is a very good chance you
+will hurt your head if you stick around."
+extra {"stalactites", "stalactite"}
+"They seem to appear almost magically where you least expect it, right
+in front of your face, causing you to hit your head."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to inside_cave5;
+south to ent_guild;
+east to inside_cave3;
+west to inside_cave2;
+dilcopy headbump@sorcerer();
+end
+
+                                inside_cave2
+
+names {"inside cave"}
+title "Inside the Cave"
+descr
+"The ceiling is very low making travel slow and tiring but you are
+driven ahead by the strange chanting you hear all around. You must be
+very careful however, the stalactites seem to come from thin air, and
+the darkness makes matters all the worse. There is a very good chance you
+will hurt your head if you stick around."
+extra {"stalactites", "stalactite"}
+"They seem to appear almost magically where you least expect it, right
+in front of your face, causing you to hit your head."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to inside_cave6;
+west to inside_cave1;
+dilcopy headbump@sorcerer();
+end
+
+                                inside_cave3
+
+names {"inside cave"}
+title "Inside the Cave"
+descr
+"   The ceiling is very low making travel slow and tiring but you are
+driven ahead by the strange chanting you hear all around. You must be
+very careful however, the stalactites seem to come from thin air, and
+the darkness makes matters all the worse. There is a very good chance you
+will hurt your head if you stick around."
+extra {"stalactites", "stalactite"}
+"They seem to appear almost magically where you least expect it, right
+in front of your face, causing you to hit your head."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to inside_cave4;
+east to inside_cave1;
+dilcopy headbump@sorcerer();
+end
+
+                                inside_cave4
+
+names {"inside cave"}
+title "Inside the Cave"
+descr
+"   The ceiling is very low making travel slow and tiring but you are
+driven ahead by the strange chanting you hear all around. You must be
+very careful however, the stalactites seem to come from thin air, and
+the darkness makes matters all the worse. There is a very good chance you
+will hurt your head if you stick around."
+extra {"stalactites", "stalactite"}
+"They seem to appear almost magically where you least expect it, right
+in front of your face, causing you to hit your head."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+south to inside_cave3;
+east to inside_cave5;
+west to small_cavern1;
+dilcopy headbump@sorcerer();
+end
+
+                                inside_cave5
+
+names {"inside cave"}
+title "Inside the Cave"
+descr
+"   The ceiling is very low making travel slow and tiring but you are
+driven ahead by the strange chanting you hear all around. You must be
+very careful however, the stalactites seem to come from thin air, and
+the darkness makes matters all the worse. There is a very good chance you
+will hurt your head if you stick around."
+extra {"stalactites", "stalactite"}
+"They seem to appear almost magically where you least expect it, right
+in front of your face, causing you to hit your head."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to medium_cavern1;
+south to inside_cave1;
+east to inside_cave6;
+west to inside_cave4;
+dilcopy headbump@sorcerer();
+end
+
+                                inside_cave6
+
+names {"inside cave"}
+title "Inside the Cave"
+descr
+"The ceiling is very low making travel slow and tiring but you are
+driven ahead by the strange chanting you hear all around. You must be
+very careful however, the stalactites seem to come from thin air, and
+the darkness makes matters all the worse. There is a very good chance you
+will hurt your head if you stick around."
+extra {"stalactites", "stalactite"}
+"They seem to appear almost magically where you least expect it, right
+in front of your face, causing you to hit your head."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to large_cavern1;
+south to inside_cave2;
+west to inside_cave5;
+dilcopy headbump@sorcerer();
+end
+
+				small_cavern1
+
+names {"small cavern"}
+title "A Small Cavern"
+descr
+"   The first thing you notice is that the room size has decreased
+dramatically. It is a struggle just to move about within but the
+chanting you hear seemingly calls to you, beckoning you onward. You
+see a slight mist developing, it hovers low to the ground and is still
+translucent enough to view the cavern floor."
+extra {"mist"}
+"It is pretty thin at this point and you have no problems viewing the
+ground before you. It hovers about a foot off the cavern floor."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to small_cavern2;
+east to inside_cave4;
+end
+
+                                small_cavern2
+
+names {"small cavern"}
+title "A Small Cavern"
+descr
+"   The first thing you notice is that the room size has decreased
+dramatically. It is a struggle just to move about within but the
+chanting you hear seemingly calls to you, beckoning you onward. You
+see a slight mist developing, it hovers low to the ground and is still
+translucent enough to view the cavern floor."
+extra {"mist"}
+"It is pretty thin at this point and you have no problems viewing the
+ground before you. It hovers about a foot off the cavern floor."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+south to small_cavern1;
+west to small_cavern3;
+end
+
+                                small_cavern3
+
+names {"small cavern"}
+title "A Small Cavern"
+descr
+"   The first thing you notice is that the room size has decreased
+dramatically. It is a struggle just to move about within but the
+chanting you hear seemingly calls to you, beckoning you onward. You
+see a slight mist developing, it hovers low to the ground and is still
+translucent enough to view the cavern floor."
+extra {"mist"}
+"It is pretty thin at this point and you have no problems viewing the
+ground before you. It hovers about a foot off the cavern floor."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to small_cavern4;
+east to small_cavern2;
+west to small_cavern5;
+end
+
+                                small_cavern4
+
+names {"small cavern"}
+title "A Small Cavern"
+descr
+"   The first thing you notice is that the room size has decreased
+dramatically. It is a struggle just to move about within but the
+chanting you hear seemingly calls to you, beckoning you onward. You
+see a slight mist developing, it hovers low to the ground and is still
+translucent enough to view the cavern floor."
+extra {"mist"}
+"It is pretty thin at this point and you have no problems viewing the
+ground before you. It hovers about a foot off the cavern floor."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to shimmering_room;
+south to small_cavern3;
+end
+
+                                small_cavern5
+
+names {"small cavern"}
+title "A Small Cavern"
+descr
+"   The first thing you notice is that the room size has decreased
+dramatically. It is a struggle just to move about within but the
+chanting you hear seemingly calls to you, beckoning you onward. You
+see a slight mist developing, it hovers low to the ground and is still
+translucent enough to view the cavern floor."
+extra {"mist"}
+"It is pretty thin at this point and you have no problems viewing the
+ground before you. It hovers about a foot off the cavern floor."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+east to small_cavern3;
+south to mist_room;
+end
+
+				shimmering_room
+
+names {"shimmering room"}
+title "The Shimmering Room"
+descr
+"   As you enter this room it seems to take on an atmosphere all its
+own. The darkness of the caverns you just passed through is about as
+far off as you could imagine and your whole being is bathed in the
+most wonderful shimmering light. Particles of miniscule size take on
+a life of their own and join the cascade of light eminating from every
+nook of the room. You cannot trace the source of the light but its
+effect is almost hypnotic, driving any curiosity far from your mind."
+extra {"light", "lights", "shimmering light", "shimmering lights"}
+"They dance and sparkle to a beat all their own driving you onward
+towards the center of the room. The lights seem extremely bright yet
+your eyes do not take offense."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+south to small_cavern4;
+ALWAYS_LIGHT
+end
+
+				mist_room
+
+names {"mist room"}
+title "Room of Mist"
+descr
+"   The slight fog you encountered through the caverns seems to
+culminate here creating a blanket so thick you fear walking an inch in
+every direction. Although there is no wind that you could feel, there
+is definitely something causing the mist to swirl the way it does. It
+behaves similarly to a whirl pool yet there appears nowhere it could
+possibly descend to!"
+extra {"mist", "fog"}
+"It is quite thick here, making you second guess any movement you make.
+You wonder what would use this mist as a hiding place as your foot gently
+bumps something on the ground."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to small_cavern5;
+ALWAYS_LIGHT
+end
+
+				medium_cavern1
+
+names {"medium cavern"}
+title "A Medium-Sized Cavern"
+descr
+"   You are somewhat relieved to find the caverns open up, giving a much
+more spacious area to traverse. There is an uncomfortable dampness which
+lingers in the air and you find immediately that your clothes are quite
+wet. The slight mist present through the smaller caverns is still here
+and seems to grow in intensity as you move further from the cave mouth."
+extra {"mist"}
+"It grows thicker as you move northward, making it hard to see in front
+of you. Be careful as you walk, you cannot tell what may be lying in wait."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to medium_cavern2;
+east to large_cavern1;
+south to inside_cave5;
+end
+
+                                medium_cavern2
+
+names {"medium cavern"}
+title "A Medium-Sized Cavern"
+descr
+"   You are somewhat relieved to find the caverns open up, giving a much
+more spacious area to traverse. There is an uncomfortable dampness which
+lingers in the air and you find immediately that your clothes are quite
+wet. The slight mist present through the smaller caverns is still here
+and seems to grow in intensity as you move further from the cave mouth.
+    To the north you can vaguely make out a mist filled room and you
+think the chanting might be coming from there as well."
+extra {"mist"}
+"It grows thicker as you move northward, making it hard to see in front
+of you. Be careful as you walk, you cannot tell what may be lying in wait."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+south to medium_cavern1;
+north to grotto;
+end
+
+				grotto
+
+names {"the grotto"}
+title "The Grotto"
+descr
+"   Visuals come difficult to you now, the foggy mist is almost unbearable
+and you could easily break your neck trying to navigate through here. You
+can somewhat make out a small natural pool formed out of the cavernous rock
+at the far corner of this room. The dampness is almost too much to bear
+though and the walls seem to sweat with no end.
+    There is a glow to this room though the source is not easily seen. The
+glow produces just enough light to see but the mist makes any detail quite
+impossible.
+There is a large sign mounted on the wall."
+extra {"pool", "natural pool"}
+"It remains calm so you doubt there is any inlet here. It is out of your
+reach so there is no point trying to drink from it."
+extra {"sign", "large sign"}
+"
+The Sign Reads:
+	Attention fellow sorcerers:
+	Please worship your master Phoebius often. Occasionally
+	he may have a new gift for you, but he only gives them
+	to worthy Sorcerers who love and worship their master.
+"
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+south to medium_cavern2;
+ALWAYS_LIGHT
+end
+
+				large_cavern1
+
+names {"large cavern"}
+title "A Large Cavern"
+descr
+"   You find you can move about much easier now and the claustrophobic
+feeling is completely gone. The smaller caverns have opened up into
+quite a wide space but even so, the mist grows thicker here and it
+gets harder to see as you move farther into the cave."
+extra {"mist"}
+"It seems to be getting much thicker although you are not sure where
+it is coming from. It hovers low to the ground causing your feet to
+be cast from view."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+east to large_cavern2;
+south to inside_cave6;
+west to medium_cavern1;
+end
+
+                                large_cavern2
+
+names {"large cavern"}
+title "A Large Cavern"
+descr
+"   You find you can move about much easier now and the claustrophobic
+feeling is completely gone. The smaller caverns have opened up into
+quite a wide space but even so, the mist grows thicker here and it
+gets harder to see as you move farther into the cave.<br/>
+The chanting you hear continuously is definitely getting closer
+and you think it might be coming from the east. You also notice that
+the mist you wade through grows thicker in that direction and any
+chance of seeing will most likely not be possible."
+extra {"mist"}
+"It seems to be getting much thicker although you are not sure where
+it is coming from. It hovers low to the ground causing your feet to
+be cast from view."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+east to large_cleft;
+north to large_cavern3;
+west to large_cavern1;
+end
+
+                                large_cavern3
+
+names {"large cavern"}
+title "A Large Cavern"
+descr
+"   You find you can move about much easier now and the claustrophobic
+feeling is completely gone. The smaller caverns have opened up into
+quite a wide space but even so, the mist grows thicker here and it
+gets harder to see as you move farther into the cave.<br/>
+The chanting seems to build up as you approach the northern most
+point of the cave, and you can see that the mist grows much thicker
+in that direction."
+extra {"mist"}
+"It seems to be getting much thicker although you are not sure where
+it is coming from. It hovers low to the ground causing your feet to
+be cast from view."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to throng_room;
+south to large_cavern2;
+end
+
+				large_cleft
+
+names {"large cleft"}
+title "A Cleft in the Rock"
+descr
+"   This part of the cave doesn't appear more than a large cleft, with
+just enough room for you to squeeze through. The rock walls are bathed
+in sweat, most likely attributed to the mist which is now overwhelming.
+The chanting you hear comes to a climax at this spot and you immediately
+understand why."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+west to large_cavern2;
+end
+
+				throng_room
+
+names {"throng room"}
+title "The Throng Room"
+descr
+"   This is a spacious area within the cave and could easily be used as
+a meeting ground for the sorcerers of Midgaard. The chanting heard throughout
+the cave reaches a peak here, and its volume is enough to shake the very
+foundations you walk through. The mist hangs like a translucent blanket
+and sticks to your skin as you stand here."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+south to large_cavern3;
+ALWAYS_LIGHT
+end
+
+/* ************ Guard, Teacher and Master Definition Sect. *********** */
+
+%mobiles
+
+			servant
+names {"servant","sorcerer servant"}
+title "a servant"
+descr "A servant discreetly keeps an eye on you, in case you need
+something."
+extra {}
+"A discreet person, he can provide all the drinks to keep you relaxed!
+Just check out the list of refreshments."
+M_SHOP_KEEPER(70, SEX_MALE, RACE_GNOME)
+flags {UNIT_FL_NO_TELEPORT}
+height 100
+weight 100
+alignment 0
+money 1 GOLD_PIECE
+
+dilcopy shopkeeper@function(
+{"brandy_bottle@midgaard 4 16",
+"beer_bottle@midgaard 4 20","firebreather@midgaard 5 10",
+"ale_bottle@midgaard 4 20","chinese_tea@xiyang 8 16",
+"coffe_cup@midgaard 5 10","coffee@arabian 10 20"},
+{
+ "$1n apologizes 'We seem to be out of this drink.'",
+ "$1n discreetly points out lack of such item.",
+ "$1n smiles 'We do not buy this here...'",
+ "$1n smiles 'I am sorry, but your monetary situation disallows this...'",
+ "$1n serves you your drink.",
+ "$1n says, 'My pleasure, sir.'",
+ "$1n sighs, 'I am sorry sir... we seem to be out for the moment.'",
+ "$1n says, 'Be with you in a second, sir.'"
+  },{"3","2"}, "", 150, 10,2*PLATINUM_MULT,"", "");
+
+
+end
+
+                               	mist_dweller
+names {"dweller", "mist dweller"}
+title "a Mist Dweller"
+descr "A Mist Dweller hovers by."
+extra {}
+"When still, trying to distinguish them from the surrounding mist is
+nearly impossible but when they move you can make out their forms clearly
+enough. They are mostly translucent and make great guards for the sorcerers,
+being that they have an uncanny knack for detecting character personality.
+If you are an assassin there is little doubt you will be assaulted."
+M_MIST_DWELLER_LARGE(100,SEX_NEUTRAL)
+money 4 COPPER_PIECE
+flags {CHAR_SNEAK}
+dilcopy wander_zones@function ("cypress", 40,0, 0);
+
+end
+
+                                dark_mage
+names {"mage of darkness", "dark mage", "mage"}
+title "the Mage of Darkness"
+descr "The Mage of Darkness stands here, awaiting your test of strength!"
+extra {}
+"This mage is an awesome foe and a sorcerer of the highest caliber!
+He has been sent here for one purpose, to test the sorcerers of the
+Sorcerer Guild. His arcane knowledge is said to be unsurpassed.<br/>
+As you regard him, he sweeps back his stark-white hair and stares at you
+with cold disgust in his elvin eyes."
+alignment -800
+money 1 SILVER_PIECE
+exp 120
+M_DARK_ELF_MAGE_ACID(100,SEX_MALE,"acid ball")
+
+end
+
+                                good_mage
+names {"mage of goodness", "good mage", "mage"}
+title "the Mage of Goodness"
+descr "The Mage of Goodness awaits your show of strength!"
+extra {}
+"Although old and withered, the Mage of Goodness is known to be a powerful
+sorcerer indeed! His single practice and assignment is to test Sorcerers
+in their abilities. Don't let his senile ramblings fool you, his arcane
+skills are more than a match for any magician!"
+M_DARK_ELF_MAGE_FIRE(98,SEX_MALE,"firestorm")
+alignment 800
+money 5 SILVER_PIECE
+exp 120
+#define MAGE_ONGOING "Damned Mage Quest Ongoing"
+#define MAGE_COMPLETE "Damned Mage Quest Complete"
+#define PIT_ONGOING "Infinity Quest Ongoing"
+flags {UNIT_FL_NO_TELEPORT}
+dilbegin m_g1();
+var
+  pcname   : string;
+  item     : unitptr;
+  pc       : unitptr;
+  i        : integer;
+  exdp     : extraptr;
+
+code
+{
+
+  :init:
+  heartbeat := PULSE_SEC*5;
+  on_activation((self.position <= POSITION_SLEEPING) or
+	       (self.position == POSITION_FIGHTING), skip);
+
+  :start:
+  wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (not
+      command("give")) and ((PIT_ONGOING in activator.quests)));
+  if(MAGE_ONGOING in activator.quests)
+      goto waitawhile;
+  priority;
+  pc := activator;
+  secure(pc, lostpc);
+
+  if(not(MAGE_ONGOING in pc.quests))
+  {
+     pause;
+     exec("say Have you brought it?", self);
+     pause;
+     exec("say Its power must be contained, " +
+	  "you must have the book, please say you do.", self);
+  }
+
+      unsecure(pc);
+        nopriority;
+      goto start;
+
+	:waitawhile:
+        nopriority;
+	heartbeat := PULSE_SEC*60;
+	pause;
+	goto init;
+
+	:lostpc:
+	exec("say They always leave too soon.", self);
+	pause;
+	exec("sigh", self);
+        nopriority;
+	goto start;
+}
+dilend
+
+dilbegin m_g2();
+var
+  pc     : unitptr;
+  item   : unitptr;
+  exdp   : extraptr;
+
+  code
+  {
+    heartbeat := PULSE_SEC*5;
+    on_activation((self.position <= POSITION_SLEEPING) or
+	       (self.position == POSITION_FIGHTING), skip);
+
+    :start:
+    wait(SFB_CMD, command("give") and
+	(activator.type == UNIT_ST_PC));
+    priority;
+    :give:
+    if (not(MAGE_COMPLETE in activator.quests))
+	goto start;
+
+    pc := activator;
+    item := self.inside;
+    secure(pc, labsecure);
+    secure(item, labsecure);
+
+    wait(SFB_CMD | SFB_TICK, TRUE);
+    if(not(item #= self.inside))
+    {
+     unsecure(item);
+
+     if("necronomicon" in self.inside.name)
+     {
+		exec("say Ahh, the evil of this book shall be "+
+		     "sealed within the deepest of vaults.", self);
+		pause;
+		exec("say Its power can finally be contained.", self);
+		pause;
+		exec("say for too long it has reigned evil upon the "+
+			"world.  There shall be great things said about "+
+			"your name.", self);
+		pause;
+		exec("say Perhaps the world Zangleyot will be of some "+
+			"aid to you, it is rumored that it has the "+
+			"power to open doors.", self);
+		destroy(self.inside);
+     }
+     else
+     {
+		exec("say This is not what I am looking " +
+		      "for " +pc.name + ".", self);
+		pause;
+		exec("say Please have it back.", self);
+		link(self.inside, pc);
+     }
+    }
+    unsecure(pc);
+
+    if((command("give")) and
+       (activator.type == UNIT_ST_PC))
+    {
+      goto give;
+    }
+      else
+	goto start;
+
+    :labsecure:
+    exec("sigh", self);
+    nopriority;
+    goto start;
+
+}
+dilend
+
+
+dilbegin goodchat();
+var
+	flux : integer;
+code
+{
+	:start:
+heartbeat := PULSE_SEC*(rnd(3,7));
+flux := rnd(1,100);
+
+exec("emote straightens his hat.",self);
+pause;
+
+if (flux < 10)
+{
+exec("say I remember the times when a dragon was a dragon...",self);pause;
+exec("say ...Tiamat, you old girl... how many times haven't we bickered..."
+,self);pause;
+exec("sigh",self);pause;
+goto start;
+}
+if (flux < 20)
+{
+exec("emote peers at you from beneath the brim of his hat.",self);pause;
+exec("say You call this battle armour..?",self);pause;
+exec("snicker",self);pause;
+exec("say Naaaah, when I was young, there were REAL battle armours..!",self);
+pause;
+goto start;
+}
+if (flux<30)
+{
+exec("sigh",self);pause;
+exec("say I am as ancient as the world itself... well almost...",self);pause;
+exec("say But do they do me honours?",self);pause;
+exec("emote whispers loudly 'Not even put me on the oldbie list, did "+
+"they.'" ,self);pause;
+exec("nod",self);pause;
+goto start;
+}
+if (flux<40)
+{
+act("The mage's pointy hat slides down on his nose."
+,A_ALWAYS,null,null,null,TO_ALL);
+pause;
+exec("say Struck blind, by gods!",self);
+exec("emote flails around blindly with his staff!",self);pause;
+exec("emote stops suddenly and pulls his hat back on the top of his head."
+,self);pause;
+exec("blink",self);
+exec("say Now, what was I saying again?",self);pause;
+goto start;
+}
+if (flux<50)
+{
+exec("say ...and remember the silver dragon?",self);pause;
+exec("think",self);pause;
+exec("say Boy, was HE ever a chat head... never seemed to stop...",self);
+pause;
+exec("emote whispers loudly 'Can't abide such people... "+
+"annoying...'",self); pause;
+goto start;
+}
+if (flux<60)
+{
+exec("emote peers at his magus staff.",self);
+exec("blink",self);pause;
+exec("say Now, where did THAT thing came from?",self);pause;
+exec("say Say, sonny, you didn't snatch me staff while I wasn't looking?"
+,self);pause;
+exec("emote peers suspiciously at you.",self);pause;
+goto start;
+}
+if (flux<70)
+{
+exec("emote scratches his head.",self);pause;
+exec("say Say, sonny, ever seen a white dragon toast a city?",self);pause;
+exec("say No? Believe me, the sight is rather overrated...",self);pause;
+exec("emote sighs 'And the place is a bloody mess later on...'",self);
+pause;
+goto start;
+}
+if (flux<80)
+{
+exec("say Kid, if you see my sister, bring her me regards...",self);pause;
+exec("say We worked together, you know?",self);pause;
+exec("say ...but she took some low-payment, no-respect, no-benefits job..."
+,self); pause;
+exec("say ...as the so-called 'Mage of Neutrality' for the Sorcerers.",self);
+pause;
+exec("emote grins 'Have you ever heard of something as "+
+"ridiculous?'",self);pause;
+goto start;
+}
+if (flux<90)
+{
+exec("say Huh?",self);pause;
+exec("Say No respect for the aged and wise..!",self);pause;
+exec("emote gives you a beating of your life with his staff.",self);pause;
+exec("say Learn to treat the elderly with respect, sonny!",self);pause;
+goto start;
+}
+else
+{
+exec("say I will let you in on a secret.",self);pause;
+exec("peer",self);
+exec("emote whispers loudly 'Don't tell anyone...'",self);pause;
+exec("emote whispers loudly '...but Thor is starting to get "+
+"senile...'",self);pause;
+exec("snicker",self);pause;
+exec("say He cannot even remember where he puts that hammer of his.",self);
+pause;
+exec("say You know..? Hammer..? Huge, nasty thing, you can't miss it "+
+"if you see it...",self);pause;
+exec("say Half the world population of heroes is using it any ways.",self);
+pause;
+goto start;
+}
+goto start;
+}
+dilend
+
+end
+
+                                neutral_mage
+names {"mage of neutrality", "neutral mage", "mage"}
+title "the Mage of Neutrality"
+descr "The Mage of Neutrality flexes her fingers and grins at you."
+extra {}
+"A woman of older age, gray streaks showing in her black hair. A powerful
+aura surrounds her, confidence and power radiating from her. Her task is
+to challenge Sorcerers to test of strength - it is widely known that she
+is more than a match for most."
+M_HUMAN_MAGE_FROST(100,SEX_FEMALE,"icestorm")
+alignment 0
+money 2 GOLD_PIECE
+exp 120
+
+end
+
+
+                                mist_guard
+names {"dweller", "mist dweller"}
+title "a Mist Dweller Guard"
+descr "A Mist Dweller Guard hovers here."
+extra {}
+"When still, trying to distinguish them from the surrounding mist is
+nearly impossible but when they move you can make out their forms
+clearly enough. They are mostly translucent and make great guards for the
+sorcerers, being that they have an uncanny knack for detecting character
+personality."
+romflags {CHAR_DETECT_INVISIBLE,CHAR_SNEAK}
+M_MIST_DWELLER_LARGE(120,SEX_NEUTRAL)
+alignment 0
+money 3 COPPER_PIECE
+
+end
+
+
+                                magic_keeper
+names {"magic keeper", "keeper"}
+title "the Magic Keeper"
+descr "The Magic Keeper stands solemnly by."
+extra {}
+"A powerful sorcerer indeed yet his solemn manner indicates he doesn't
+use it often. As you regard him, he catches your eye with an air of
+badly-hidden amusement and with a slight nod of his head invites you to
+take a look at his offer.<br/>
+You get a strange feeling as you look at him... Apparently his power is
+much greater than that of any ordinary mage. Better not to trifle with him."
+alignment 100
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED, CHAR_DETECT_INVISIBLE}
+money 1 GOLD_PIECE
+M_HUMAN_MAGE_ACID(100,SEX_MALE,"acid ball")
+
+dilcopy shopkeeper@function(
+{"recall_scroll@sorcerer 10 20", \
+"channel_scrol1@sorcerer 8 16",  \
+"fast_scroll@sorcerer 6 12", \
+"prot_scroll@sorcerer 6 12", \
+"charge_scroll@sorcerer 5 10",
+"br_potion@ww1 9 18", \
+"libram@sorcerer 5 10"},
+{
+ "$1n shrugs and shakes his head.",
+ "$1n frowns, 'You offer to sell me what?'",
+ "$1n chuckles lightly, 'I do not buy this, $3n.'",
+ "$1n smiles, 'I am sorry, no credit here.'",
+ "$1n smiles, 'It's a deal, $3n.'",
+ "$1n nods his head, 'It's a deal, $3n.'",
+ "$1n sighs, 'I seem to be out of this at the moment.'",
+ "$1n chuckles, 'I am quite busy at the moment... come back later.'"
+  },{"4","23"}, "2 3 4 8 23 24", 200, 50,2*PLATINUM_MULT, "", "" );
+
+end
+
+				phoebius
+names {"phoebius", "master sorcerer", "master", "sorcerer"}
+title "Phoebius the Master Sorcerer"
+descr
+"Phoebius the Master Sorcerer sits here devouring new knowledge from his
+tome."
+extra {}
+"As far as gnomes go he seems quite typical to you, a tiny man whose
+size could be compared to a tree stump. He has a large red nose and a
+set of old spectacles barely hanging on to the edge of his face. Though
+he may not look like much, he could easily turn you into a newt with a
+glance in your direction!"
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED, CHAR_DETECT_INVISIBLE}
+alignment 0
+M_GNOME_MAGE_ACID(70,SEX_MALE,"acid swirl")
+exp -300
+dilcopy no_kill@sorcerer();
+dilcopy restoration@sorcerer();
+
+dilbegin parlor_home();
+var
+expd : extraptr;
+	item	: 	unitptr;
+        pc      :       unitptr;
+	i	:	integer;
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*4;
+
+        :start:
+wait (SFB_CMD,(command("worship"))and(activator.type == UNIT_ST_PC));
+	   pc := activator;
+	   secure(pc, lost_pc);
+
+        expd := "$path" in pc.quests;
+        if (expd == null) goto lost_pc;
+        if (not (GUILD_SORCERER in expd.names) )goto lost_pc;
+
+pause;
+exec("say Welcome, "+pc.name+".", self);pause;
+exec("say Glad to see you here.", self); pause;
+exec("say How is the world outside?",self);pause;
+exec("ponder ",self);pause;
+exec("say "+pc.name+", I assume you come here seeking the symbol of our "+
+"Guild...",self);pause;
+exec("say An item to identify you as a Sorcerer.",self);
+           item := load("sorc_pendant@sorcerer");
+           item.height := pc.height;
+           link(item, self);
+exec("give pendant "+pc.name, self);pause;
+exec("say Although not the most powerful item in existence, I think you "+
+"will find it quite useful.",self);pause;
+exec("say Also, take this weapon, "+pc.name+".",self);pause;
+exec("say This dagger is crafted by magic, and magic it will bring
+you.",self);
+           item := load("vorous2@sorcerer");
+           item.height := pc.height;
+           link(item, pc);
+exec("emote gives a vorous to "+pc.name, self);
+pause;
+exec("say Wield it when needed... it is hardly a weapon of power, yet
+useful.",self);pause;
+exec("hand "+pc.name, self);pause;
+exec("say Always glad to see a fellow Sorcerer.",self);pause;
+exec("say Fare Thee well, "+pc.name+", bring the wide world my
+regards.",self);
+	   unsecure(pc);
+           goto start;
+
+	:lost_pc:
+	pause;
+exec("sigh",self);
+	goto start;
+}
+dilend
+
+/*
+special SFUN_GUILD_MASTER
+"Guild               = ~"+SORCERER_GUILD+"~
+Guild Enter Quest    = ~~
+Guild Enter Cost     = "+(1*PLATINUM_MULT)+"<br/>
+Guild Leave Quest    = ~~
+Guild Leave Cost     = "+(2*PLATINUM_MULT)+"<br/>
+Guild Exclude Quest  = ~Midgaard Sorcerer Quitter~"*/
+/* Guild Exclude Quest  = ~Midgaard Paladin Quitter~ ~Midgaard Mystic
+Quitter~ ~Udgaard Fighter Quitter~ ~Necromancer Quitter~  */
+/*  special SFUN_GUILD_MASTER SORCERER_GUILD   Now format changed */
+
+dilcopy guild_titles@guild_paths(GUILD_SORCERER, {"Third Order Mesmerist",
+"Third Order Mesmerist", "Secondary Mesmerist", "Secondary Mesmerist",
+"Mesmerist Prime", "Mesmerist Prime", "Lesser Cagliostro", "Lesser Cagliostra",
+"Greater Cagliostro", "Greater Cagliostra", "Cagliostro Prime",
+"Cagliotsra Prime", "Student of Alchemy", "Student of Alchemy",
+"Third Order Alchemist", "Third Order Alchemist", "Secondary Alchemist",
+"Secondary Alchemist", "Alchemist Prime", "Alchemist Prime",
+"Master Alchemist of the Ages", "Alchemist Mistress of the Ages",
+"Third Order Thaumaturgist", "Third Order Thaumaturgist",
+"Secondary Thaumaturgist", "Secondary Thaumaturgist", "Thaumaturgist Prime",
+"Thaumaturgist Prime", "Third Order Magus", "Third Order Magicka",
+"Secondary Magus", "Secondary Magicka", "Master Magus of the Ages",
+"Magicka Mistress of the Ages", "Third Order Sorcerer", "Third Order Sorceress",
+"Secondary Sorcerer", "Secondary Sorceress", "Sorcerer Prime",
+"Sorceress Prime", "Master Sorcerer of the Ages",
+"Sorceress Mistress of the Ages"});
+
+
+end
+
+                                claudius
+names {"claudius", "sorcerer", "teacher"}
+title "Claudius the Master of Spells"
+descr "Claudius the Master of Spells is here to teach you."
+extra {}
+"Claudius is the only human Sorcerer talented enough to join the ranks
+of the Midgaard Sect. He hopes to enlighten other humans in the ways of
+deep magic and to expand humans' so limited boundaries of the mind. He
+seems old and fragile but his eyes shine power and strength."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED, CHAR_DETECT_INVISIBLE}
+M_HUMAN_MAGE_ACID(100,SEX_MALE,"acid swirl")
+exp -300
+alignment 200
+ATTACK_DEFENSE(+100, +300)
+special SFUN_GUILD_BASIS GUILD_SORCERER
+/*
+special SFUN_MEMBERS_ONLY "Midgaard Sorcerer#$1n mumbles 'Huh? Who? But
+you're not a Sorcerer!'"
+*/
+dilcopy teacher_prac@guild_paths( GUILD_SORCERER );
+
+dilcopy no_kill@sorcerer();
+dilcopy restoration@sorcerer();
+
+
+#define _SPELL
+#include "guilddef.h"
+#undef _SPELL
+
+
+end
+
+                   calastran
+names {"Calastran", "sorcerer", "teacher"}
+title "Calastran"
+descr "Calastran the Master of Abilities awaits you silently."
+extra {}
+"The elf representative to the Midgaard Sorcerers is quite tall
+for his race, and looks very fit and agile. His demeanor is one of
+impatience - it seems that all training here will be hard but effective. "
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED, CHAR_DETECT_INVISIBLE}
+M_DARK_ELF_MAGE_FROST(80,SEX_MALE,"icestorm")
+alignment 0
+exp -100
+position POSITION_STANDING
+default POSITION_STANDING
+
+dilcopy no_kill@sorcerer();
+dilcopy restoration@sorcerer();
+special SFUN_GUILD_BASIS SORCERER_GUILD
+/*
+special SFUN_MEMBERS_ONLY "Midgaard Sorcerer#$1n shrugs and exclaims 'You
+are not a Sorcerer, begone!'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_SORCERER );
+
+#define _ABILITY
+#include "guilddef.h"
+#undef _ABILITY
+
+
+end
+
+                                lasheetah
+names {"lasheetah", "sorcerer", "teacher","master","weaponmaster"}
+title "Lasheetah"
+descr "Lasheetah the Weaponmistress awaits your training."
+extra {}
+"A dark-elf, an unusual denizen of Midgaard, Lasheetah is slender, very
+fit and obviously extremely adept at weapons. A half-smile plays upon her
+lips as she regards you, obvious mockery and disgust in her dark eyes."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED, CHAR_DETECT_INVISIBLE}
+M_DARK_ELF_MAGE_GAS(100,SEX_FEMALE,"sinking cloud")
+exp -100
+alignment -200
+dilcopy no_kill@sorcerer();
+dilcopy restoration@sorcerer();
+special SFUN_GUILD_BASIS SORCERER_GUILD
+/*
+special SFUN_MEMBERS_ONLY "Midgaard Sorcerer#$1n hisses, 'You are not a
+Sorcerer, fool!'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_SORCERER );
+
+#define _WEAPON
+#include "guilddef.h"
+#undef _WEAPON
+
+
+end
+
+                                forbin
+names {"forbin", "sorcerer", "teacher"}
+title "Forbin the Master of Skills"
+descr "Forbin the Master of Skills is here to teach you."
+extra {}
+"The halfling representative for the Midgaard Sorcerers. Quick with his
+wits he can use his great knowledge of skills to perform almost any feat.
+You notice at most of his feet hair has been burned away - perhaps a
+result of a fumbled fireball."
+ flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED, CHAR_DETECT_INVISIBLE}
+M_HALFLING_MAGE_FIRE(80,SEX_MALE,"acid ball")
+level 80
+alignment 100
+exp -200
+dilcopy no_kill@sorcerer();
+dilcopy restoration@sorcerer();
+special SFUN_GUILD_BASIS SORCERER_GUILD
+/*
+special SFUN_MEMBERS_ONLY "Midgaard Sorcerer#$1n rolls his eyes 'You are
+not a Sorcerer.'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_SORCERER );
+
+#define _SKILL
+#include "guilddef.h"
+#undef _SKILL
+
+
+end
+
+
+/* **********        Objects Def. Section        ********** */
+%objects
+/* Guild Items	*/
+
+        sorc_pendant
+names {"sorcerer pendant","pendant"}
+title "the Pendant of Sorcery"
+descr "A slender, elaborately decorated pendant lies here."
+extra {}
+"A slender, elaborately decorated pendant of gold and silver. Slowly, you
+decipher the runes in the metal: the pendant is a symbol of Midgaard
+Sorcerers and can only be worn by those."
+extra {"runes on the Pendant","runes","rune","metal","sign"}
+"The runes proclaim the wearer of the Pendant to be a Sorcerer of
+Midgaard.<br/>"
+extra {"$wear_s"}
+"You clasp your $2n around your neck."
+extra {"$wear_o"}
+"$1n clasps the $2n around $1s neck."
+extra {"$rem_s"}
+"You open and remove your $2n."
+extra {"$rem_o"}
+"$1n opens and removes $1s $2n."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
+MATERIAL_METAL("This item is made of silver.")
+dilcopy guild_restrict@function ({GUILD_SORCERER},0,25,"");
+end
+
+        vorous2
+names {"Vorous","dagger","blade"}
+title "the dagger 'Vorous'"
+descr "A silvery dagger lies here."
+extra {}
+"A silvery dagger of great beauty. The word 'Vorous' runs along the
+blade of the weapon. The handle is covered in soft, black leather. Soft,
+blue light gently illuminates the blade."
+extra {"handle"}
+"The soft handle is covered in black leather and fits perfectly into your
+grip."
+extra {"$identify"}
+"The weapon of only a true sorcerer, Vorous feeds off of the magical
+abilities of your opponents.  Depending on your Magic, Vorous will
+attempt to transfer the mana it eats from your opponents to you.<br/>"
+extra {"$wear_s"}
+"You slip your hand around the handle of $2n."
+extra {"$wear_o"}
+"$1n slips $1s hand around the handle of $2n and prepares for combat."
+extra {"$rem_s"}
+"You sheath $2n in your belt."
+extra {"$rem_o"}
+"$1n sheaths $2n in $1s belt."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
+WEAPON_DEF(WPN_DAGGER,0,0)
+MATERIAL_METAL("This item is made of fine steel.")
+dilcopy guild_restrict@function ({GUILD_SORCERER},0,25,"");
+dilcopy abi_restrict@function (ABIL_BRA,25,0,0,"bra_rest@skaven");
+dilcopy abi_restrict@function (ABIL_MAG,20,0,25,"mag_rest@skaven");
+dilcopy mvlev_restrict@function (75,25,"");
+dilcopy charger@sorcerer();
+dilcopy mana_drain@sorcerer();
+rent 100 IRON_PIECE
+end
+
+        board
+names {"orb of communication","board","orb","lines","text"}
+title "the orb of communication"
+descr "An orb with lines of text visible inside hangs in the air near you."
+dilcopy board@boards("citizen","","rem_res@boards","",100);
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+	chatboard
+names {"lines of text","text","lines","gossip"}
+title "the glowing text"
+descr "Thin lines of glowing text hang in the air, providing latest gossip."
+dilcopy board@boards("chat","","rem_res@boards","",100);
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+	libram
+names {"libram","tome","book"}
+title "a libram entitled Practical Demonology"
+descr "A huge tome lies here, bound in deeply red leather."
+extra {}
+"A huge tome bound in deeply red leather with golden letters on the cover
+depicting 'Practical Demonology'. As you peer at the heavy pages of  the
+libram, you notice various images and diagrams of summoning circles,
+binding sigla and controlling power words... This tome looks like a
+good source of knowledge for a Demonologist of any kind."
+extra {"$identify"}
+"This tome, when held and studied, will provide you with extensive
+knowledge of summoning techniques.<br/>"
+extra {"$improved identify"}
+"It will add 1% to your Summoning Sphere knowledge.<br/>
+Its heavy weight and akward size will reduce your effective dexterity by
+three.<br/>"
+extra {"wear_s"}
+"You lift the heavy tome and open it."
+extra {"$wear_o"}
+"$1n holds $2n and opens it."
+extra {"$rem_o"}
+"$1n snaps $1s $2N shut and puts it away."
+extra {"$rem_s"}
+"You snap your $2N shut and put it away for later studies."
+type ITEM_BOOK
+SPELL_TRANSFER(SPL_SUMMONING,+1)
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+DEX_TRANSFER(-3)
+weight 10
+cost 15 GOLD_PIECE
+rent 50 IRON_PIECE
+dilcopy abi_restrict@function (ABIL_BRA,50,0,25,"bra_rest@skaven");
+dilcopy abi_restrict@function (ABIL_BRA,50,0,25,"bra_rest@skaven");
+dilcopy abi_restrict@function (ABIL_MAG,30,0,0,"mag_rest@skaven");
+end
+
+
+/* Magical Items for Magic Keeper to sell */
+
+
+        charge_scroll
+names {"energy scroll","scroll of energy","scroll","parchment","roll"}
+title "a scroll marked Energy"
+descr "A heavy roll of sigil-covered parchment lies here."
+extra {}
+"You study the parchment carefully and recognise the leading sigil at the
+scroll to be the sign of 'Energy'."
+extra {"sigils on the scroll","sigils","sigil","sigla","sign"}
+"The sigils form a magical spell on the scroll.<br/>"
+extra {"$identify"}
+"This scroll contains spells to recharge your wands and staffs..<br/>"
+extra {"$improved identify"}
+"The scroll has unknown powers.<br/>"
+SCROLL_DEF(78,SPL_CHARGE_WAND,SPL_CHARGE_STAFF,SPL_NONE)
+weight 1
+cost 4 GOLD_PIECE
+rent 2 GOLD_PIECE //v43.01
+end
+
+
+        prot_scroll
+names {"protection scroll","scroll of protection","scroll","parchment","roll"}
+title "a scroll marked Protection"
+descr "A heavy roll of sigil-covered parchment lies here."
+extra {}
+"You study the parchment carefully and recognise the leading sigil at the
+scroll to be the sign of 'Protection'."
+extra {"sigils on the scroll","sigils","sigil","sigla","sign"}
+"The sigils form a magical spell on the scroll.<br/>"
+extra {"$identify"}
+"This scroll contains the spells of Stone Skin, Protection vs. Evil and
+Protection vs. Good.<br/>"
+extra {"$improved identify"}
+"The scroll has unknown powers.<br/>"
+SCROLL_DEF(78,SPL_STONE_SKIN,SPL_PRO_EVIL,SPL_PRO_GOOD)
+weight 1
+cost 4 GOLD_PIECE
+rent 2 GOLD_PIECE //v43.01
+end
+
+        recall_scroll
+names {"recall scroll","scroll of recall","scroll","parchment"}
+title "a scroll marked Recall"
+descr "A roll of sigil-covered parchment lies here."
+extra {}
+"You study the parchment carefully and recognise the leading sigil at the
+scroll to be the sign of 'Recall'."
+extra {"sigils on the scroll","sigils","sigil","sigla","sign"}
+"The sigils form a magical spell on the scroll.<br/>"
+extra {"$identify"}
+"This scroll contains a single Word of Recall spell.<br/>"
+extra {"$improved identify"}
+"The scroll has unknown powers.<br/>"
+SCROLL_DEF(78,SPL_WORD_OF_RECALL,SPL_NONE,SPL_NONE)
+weight 1
+cost 6 GOLD_PIECE
+rent 3 GOLD_PIECE //v43.01
+end
+
+	rep_scroll
+names {"repair scroll","scroll of repair","scroll","parchment","roll"}
+title "a scroll marked Repair"
+descr "A heavy roll of sigil-covered parchment lies here."
+extra {}
+"You study the parchment carefully and recognise the leading sigil at the
+scroll to be the sign of 'Repair'."
+extra {"sigils on the scroll","sigils","sigil","sigla","sign"}
+"The sigils form a magical spell on the scroll.<br/>"
+extra {"$identify"}
+"This scroll contains a Repair spell to strengen your weapons and
+armour.<br/>"
+extra {"$improved identify"}
+"The scroll has unknown powers.<br/>"
+SCROLL_DEF(78,SPL_REPAIR,SPL_NONE,SPL_NONE)
+weight 1
+cost 7 GOLD_PIECE
+rent 4 GOLD_PIECE //v43.01
+end
+
+        channel_scrol1
+names {"channeling scroll","scroll of channeling","scroll","parchment"}
+title "a scroll marked Channeling"
+descr "A roll of sigil-covered parchment lies here."
+extra {}
+"You study the parchment carefully and recognise the leading sigil at the
+scroll to be the sign of 'Channeling' and the sigil for 'Danger'."
+extra {"sigils on the scroll","sigils","sigil","sigla","sign"}
+"The sigils form a magical spell on the scroll.<br/>"
+extra {"$identify"}
+"This scroll will raise your Mana but drain your hitpoints. Use
+carefully, can be deadly in inexperienced hands..<br/>"
+extra {"$improved identify"}
+"The scroll has unknown powers.<br/>"
+SCROLL_DEF(25,SPL_MANA_BOOST,SPL_NONE,SPL_NONE)
+weight 1
+/*cost 10 GOLD_PIECE  v43.01*/
+cost 7 GOLD_PIECE   //v43.01
+rent 4 GOLD_PIECE   //v43.01
+
+dilbegin channelscroll();
+var
+	pc : unitptr;
+code
+{
+	:start:
+wait(SFB_DONE,(command("recite"))and(medium==self));
+
+pc:= activator;
+secure(pc,gone);
+act("Your body shivers as the magic drains your lifeblood!"
+,A_ALWAYS,pc,null,null,TO_CHAR);
+act("$1n pales as the magic drains his lifeblood!"
+,A_ALWAYS,pc,null,null,TO_REST);
+pc.hp := (pc.hp/2);
+position_update(pc);
+	:gone:
+unsecure(pc);
+}
+dilend
+
+end
+
+        fast_scroll
+names {"rush scroll","scroll of rush","scroll","parchment"}
+title "a scroll marked Rush"
+descr "A roll of sigil-covered parchment lies here."
+extra {}
+"You study the parchment carefully and recognise the leading sigil at the
+scroll to be the sign of 'Rush'."
+extra {"sigils on the scroll","sigils","sigil","sigla","sign"}
+"The sigils form a magical spell on the scroll.<br/>"
+extra {"$identify"}
+"This scroll contains a single Quicken spell to aid you in combat.<br/>"
+extra {"$improved identify"}
+"The scroll has unknown powers.<br/>"
+SCROLL_DEF(50,SPL_QUICKEN,SPL_NONE,SPL_NONE)
+weight 1
+cost 5 GOLD_PIECE
+rent 3 GOLD_PIECE //v43.01
+end
+
+/* Mages Items */
+
+	rec_scroll
+names {"reconstruction scroll","scroll of reconstruction","scroll","parchment","roll"}
+title "a scroll marked Reconstruction"
+descr "A roll of sigil-covered parchment lies here."
+extra {}
+"You study the parchment carefully and recognise the leading sigil at the
+scroll to be the sign of 'Reconstruction'."
+extra {"sigils on the scroll","sigils","sigil","sigla","sign"}
+"The sigils form a magical spell on the scroll.<br/>"
+extra {"$identify"}
+"This scroll contains a Reconstruction spell to strenghen your weapons and
+armour.<br/>"
+extra {"$improved identify"}
+"The scroll has unknown powers.<br/>"
+SCROLL_DEF(80,SPL_RECONSTRUCT,SPL_NONE,SPL_NONE)
+weight 1
+cost 5 GOLD_PIECE
+rent 3 GOLD_PIECE //v43.01
+end
+
+	acid_rod
+names {"Rod of Acideration","rod","wand"}
+title "a Rod of Acideration"
+descr "A gnarled, twisted rod lies here."
+extra {}
+"A twisted rod of heavy, strong wood. Sigla cover the rod and a tiny iron
+ring embraces one end of the item."
+extra {"sigla on the Rod","sigil","sigils","sigla"}
+"The strange sigla seem to be twisted into eachother, forming a pattern
+of magical signs.<br/>"
+extra {"$identify"}
+"This rod is a wand with the ability to inflict acid on an opponent.<br/>"
+extra {"$improved identify"}
+"The power of the item is good and the rod holds 10 charges. This item can
+only be used by people with high brain.<br/>"
+MATERIAL_WOOD("The rod is made of heavy, twisted wood.")
+weight 1
+WAND_DEF(50,10,SPL_ACIDBALL_2,SPL_NONE)
+dilcopy abi_restrict@function (ABIL_BRA,40,0,25,"bra_rest@skaven");
+/*cost 26 GOLD_PIECE  v43.01*/
+cost 7 GOLD_PIECE   //v43.01
+rent 4 GOLD_PIECE   //v43.01
+end
+
+	blkm_stiletto
+names {"black mithril dagger","mithril dagger","dagger"}
+title "black mithril dagger"
+descr "A thin, long dagger of dark mithril lies here."
+extra {}
+"A sharp and long dagger of exquisite craftmanship. The metal used for
+the weapon is black mithril, one of the rarest metals avaliable. The
+stiletto is marked with a glowing rune near the hilt and the elaborate
+handguard is decorated with tiny rubies and diamonds."
+extra {"rune on your dagger","rune"}
+"The single glowing rune provides some mystery in your otherwise boring
+life, as you completely and absolutely fail to decipher it.<br/>"
+extra {"hilt of the dagger","hilt"}
+"The hilt is covered in soft, dark leather and ornamented with gold
+threads.<br/>"
+extra {"handguard of the dagger","handguard"}
+"The elaborate handguard curls along your hand and has several small
+gemstones embedded in it.<br/>"
+extra {"gemstones on the handguard","gemstones","rubies","diamonds"}
+"The tiny gemstones are pretty to look at, but hardly of any higher value.<br/>"
+extra {"$identify"}
+"It lies easily in your hand, aiding in combat and makes you more
+agile in the arcane contacts.<br/>"
+flags {UNIT_FL_MAGIC}  //v43.01
+WEAPON_DEF(WPN_DAGGER,0,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
+MATERIAL_METAL("This weapon is made of black mithril.")
+weight 1
+/*cost 4 PLATINUM_PIECE  v43.01
+rent 220 IRON_PIECE v43.01 */
+cost 4 COPPER_PIECE   //v43.01
+rent 2 COPPER_PIECE   //v43.01
+dilcopy guild_restrict@function ({GUILD_SORCERER},0,25,"");
+dilcopy abi_restrict@function(ABIL_BRA,50,0,0,"bra_rest@skaven");
+dilcopy abi_restrict@function(ABIL_DEX,30,0,0,"dex_rest@skaven");
+dilcopy level_restrict@function(34,0,0,"lvl_rest@skaven");
+dilcopy mvlev_restrict@function(84,0,0,"You are too high of level to use this Dagger");  //43.01
+DEX_TRANSFER(+2)  //v43.01 put back in but lower than orig id
+MAG_TRANSFER(+1)  //v43.01 put back in but lower than orig id
+WEAPON_TRANSFER(WPN_DAGGER  , +2)  //v43.01 put back in guessed at percentage
+dilbegin daggerchat ();
+var
+        enemy : unitptr;
+        flux : integer;
+code
+{
+        :init:
+on_activation(self.outside.position != POSITION_FIGHTING, skip);
+        :start:
+wait(SFB_COM,(self.equip == WEAR_WIELD));
+enemy := self.outside.fighting;
+flux := rnd(1,100);
+if (enemy.hp < 10)
+{
+act("You pierce $3n's eye and impale $3s brains!",
+A_SOMEONE,self.outside,self,enemy,TO_CHAR);
+act("$1n pierces $3n's eye and impales $3s brains!"
+, A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+act("$1n's $2n pierces your eye and impales your brains like a shish-kebab."
+,A_SOMEONE,self.outside,self,enemy,TO_VICT);
+enemy.hp := -8;
+position_update(enemy);
+goto start;
+}
+if (flux < 10)
+{
+act("The rune on your $2n glows with a violent light!"
+, A_SOMEONE,self.outside,self,enemy,TO_CHAR);
+act("The rune on $1n's $2n glows with a violent light!",
+A_SOMEONE,self.outside,self,enemy,TO_REST);
+goto start ;
+}
+if ((flux < 20)and(enemy.race<1000))
+{
+act("Your pierce cuts deep into $3n's stomach!"
+, A_SOMEONE,self.outside,self,enemy,TO_CHAR);
+act("$1n's pierce cuts deep into $3n's stomach!",
+A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+act("$1n's pierce cuts deep into your stomach!"
+,A_SOMEONE,self.outside,self,null,TO_VICT);
+goto start ;
+}
+if (flux < 30)
+{
+act("You make a sudden spin and place your stiletto in $3n's side!"
+, A_SOMEONE,self.outside,self,enemy,TO_CHAR);
+act("$1n makes a sudden spin and places $1s stiletto in $3n's side!",
+A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+act("With a rapid spin, $1n avoids your blow and places his stiletto in
+your side!",A_SOMEONE,self.outside,self,null,TO_VICT);
+goto start ;
+}
+if (flux < 40)
+{
+act("An eerie, bluish light bathes your $2n as you raise it to strike!"
+, A_SOMEONE,self.outside,self,enemy,TO_CHAR);
+act("$1n's $2n emits eerie, bluish light as $1n raises it to strike!",
+A_SOMEONE,self.outside,self,enemy,TO_REST);
+goto start;
+}
+if (flux < 50)
+{
+act("Your $2n vibrates in your hand as you strike at $3n."
+, A_SOMEONE,self.outside,self,enemy,TO_CHAR);
+act("$1n's $2n vibrates rapidly as $1e strikes.",
+A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+act("$1n's $2n vibrates rapidly as it bites into your flesh!"
+,A_SOMEONE,self.outside,self,enemy,TO_VICT);
+goto start ;
+}
+goto start;
+}
+dilend
+end
+
+	magus_staff
+names {"magus staff","staff","quarterstaff"}
+title "a magus staff"
+descr "A long staff, covered with intricate runes, lies here."
+extra {}
+"The staff is completely covered with intricate runes and sigla and
+topped with a ram's skull. Feathers and beads are incorporated into the
+design. The total impression is that of an awesome wizards' staff. If
+nothing else, at least it looks good."
+extra {"runes on the staff","runes","sigla","rune","sigil"}
+"The runes and sigla are undoubtely of arcane heritage. Their meaning is
+lost to you, however - perhaps you should have payed attention during
+your runemagic classes, instead of hunting skunks in the Cypress Forest.<br/>"
+extra {"ram's head on the staff","skull"}
+"Painted and decorated, it is a genuine ram's skull. Wow.<br/>"
+extra {"feathers and beads on the staff","feathers","beads"}
+"The feathers and beads make a nice finish to the overall arcane look of
+the staff.<br/>"
+extra {"$wear_s"}
+"You wield the $2n and raise it toward the heavens...<br/>
+Lightning crackles along the staff, drunk with power and exhilaration
+you scream in joy!"
+extra {"$wear_o"}
+"$1n wields a $2n and raises it toward the heavens...<br/>
+Lightning crackles along the staff, $1n howls in joy and
+exhilaration!"
+WEAPON_DEF(WPN_QUARTERSTAFF,0,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
+MATERIAL_WOOD("This weapon is made of oak.")
+cost 1 PLATINUM_PIECE
+rent 181 IRON_PIECE
+dilcopy guild_restrict@function ({GUILD_SORCERER},0,25,"");  //v43.01
+dilcopy abi_restrict@function (ABIL_BRA,50,0,0,"bra_rest@skaven");
+dilcopy abi_restrict@function (ABIL_MAG,25,0,25,"mag_rest@skaven");
+dilcopy level_restrict@function (20,0,0,"lvl_rest@skaven");
+dilcopy mvlev_restrict@function (100,0,0,""); //v43.01
+dilbegin staff_period();
+var
+	flux : integer;
+code
+{
+:start:
+wait (SFB_TICK,(self.equip==WEAR_WIELD)and(self.outside.type == UNIT_ST_PC));
+heartbeat:= PULSE_SEC * 60;
+flux := rnd(1,100);
+
+if (flux < 10)
+{
+act ("Your $2N glows in pale, blue light.",
+A_SOMEONE,self.outside,self,null,TO_CHAR);
+act ("$1n's $2N glows in pale, blue light.",
+A_SOMEONE,self.outside,self,null,TO_REST);
+goto start;
+}
+if (flux < 20)
+{
+act ("Your $2N glows in sharp, red light.",
+A_SOMEONE,self.outside,self,null,TO_CHAR);
+act ("$1n's $2N glows in sharp, red light.",
+A_SOMEONE,self.outside,self,null,TO_REST);
+goto start;
+}
+if (flux < 30)
+{
+act ("A wave of rainbow-coloured light sweeps along your $2N.",
+A_SOMEONE,self.outside,self,null,TO_CHAR);
+act ("A wave of rainbow-coloured light sweeps along $1n's $2N.",
+A_SOMEONE,self.outside,self,null,TO_REST);
+goto start;
+}
+if (flux < 40)
+{
+act ("You have a distinct feeling that the ram's skull on your $2N "+
+"is watching you!",A_SOMEONE,self.outside,self,null,TO_CHAR);
+act ("$1n stares suspiciously at $1s $2N.",
+A_SOMEONE,self.outside,self,null,TO_REST);
+goto start;
+}
+if (flux < 50)
+{
+act ("The sigla on your $2N suddenly flare up.",
+A_SOMEONE,self.outside,self,null,TO_CHAR);
+act ("The sigla on $1n's $2N suddenly flare up!",
+A_SOMEONE,self.outside,self,null,TO_REST);
+goto start;
+}
+if (flux < 60)
+{
+act ("The runes on your $2N flash sharply.",
+A_SOMEONE,self.outside,self,null,TO_CHAR);
+act ("The runes on $1n's $2N flash sharply.",
+A_SOMEONE,self.outside,self,null,TO_REST);
+goto start;
+}
+if (flux < 70)
+{
+act ("A loud whistling sound from your $2N startles you!",
+A_SOMEONE,self.outside,self,null,TO_CHAR);
+act ("$1n jumps startled as $1s $2N emits a loud whistling sound!",
+A_SOMEONE,self.outside,self,null,TO_REST);
+goto start;
+}
+if (flux < 80)
+{
+act ("The skull on your $2N turns around and stares at you.",
+A_SOMEONE,self.outside,self,null,TO_CHAR);
+act ("$1n's mouth fall open as the skull on $1s $2N turns around, "+
+"looking at $1m.", A_SOMEONE,self.outside,self,null,TO_REST);
+goto start;
+}
+if (flux < 90)
+{
+act ("Your $2N glows in eerie, white light.",
+A_SOMEONE,self.outside,self,null,TO_CHAR);
+act ("$1n's $2N glows in eerie, white light.",
+A_SOMEONE,self.outside,self,null,TO_REST);
+goto start;
+}
+else
+act ("The sigla on your $2N starts to move, changing places.",
+A_SOMEONE,self.outside,self,null,TO_CHAR);
+act ("The sigla on $1n's $2N starts to move, changing places.",
+A_SOMEONE,self.outside,self,null,TO_REST);
+goto start;
+}
+dilend
+
+end
+
+mith_cut
+names {"black mithril scimitar","scimitar","sword"}
+title "black mithrill scimitar"
+descr "A scimitar of black mithril lies here."
+extra {}
+"This scimitar is an impressive work of craftmanship and weaponcraft.
+The darkly-hued black mithril contrasts sharply with the gold and
+silver used for ornaments. The handguard of the cutlass has been formed
+in the shape of a spider and gold threads form a web along the blade of
+the weapon."
+extra {"ornaments on the cutlass","ornaments","web"}
+"The ornaments form a spider web pattern on the blade of the cutlass.<br/>"
+extra {"handguard of the cutlass","handguard"}
+"The handguard is elaborately crafted and forms a spidery shape.<br/>"
+WEAPON_DEF(WPN_SCIMITAR,0,0)
+MATERIAL_METAL("This weapon is made of black mithril.")
+manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
+/*cost 2 PLATINUM_PIECE v43.01*/
+cost 5 GOLD_PIECE  //v43.01
+rent 3 GOLD_PIECE  //v43.01
+dilcopy guild_restrict@function ({GUILD_SORCERER},0,25,"");   //v43.01
+dilcopy abi_restrict@function (ABIL_DEX,50,0,0,"dex_rest@skaven");
+dilcopy abi_restrict@function (ABIL_MAG,10,0,25,"mag_rest@skaven");
+dilcopy level_restrict@function (50,0,25,"lvl_rest@skaven");
+/*below added v43.01*/
+WEAPON_TRANSFER(WPN_SCIMITAR  , +3) 
+DEX_TRANSFER(+1)
+MAG_TRANSFER(+1)
+dilbegin cutlass_chat ();
+var
+        enemy : unitptr;
+        random : integer;
+code
+{
+        :init:
+on_activation(self.outside.position != POSITION_FIGHTING, skip);
+        :start:
+wait(SFB_COM,(self.equip == WEAR_WIELD));
+enemy := self.outside.fighting;
+random := rnd(1,100);
+
+if (enemy.hp < 10)
+{
+act("Your slash almost parts $3n's head from $3s body.",
+A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("The lifeless corpse keels over at your feet.",
+A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$1n's slash almost parts $3n's head from $3n's body!",
+A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+act("$3n's lifeless corpse slowly keels over at $1n's feet.",
+A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+act("$1n's slash cuts your throat!",
+A_SOMEONE,self.outside,self,enemy,TO_VICT);
+goto start;
+}
+if ((random < 10)and(enemy.race<1000))
+{
+act("Your low slash forces $3n to jump back!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$1n's low slash forces $3n to jump back!",
+A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+act("$1n's low slash forces you to take a jump back!"
+,A_SOMEONE,self.outside,self,enemy,TO_VICT);
+goto start;
+}
+if (random < 20)
+{
+act("Your $2n cuts a deep wound in $3n's side!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$1n's slash cuts a deep wound in $3n's side!",
+A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+act("$1n's slash cuts a deep wound in your side!"
+,A_SOMEONE,self.outside,self,enemy,TO_VICT);
+goto start;
+}
+if ((random < 30)and(enemy.race<1000))
+{
+act("Your feint cause $3n to advance boldly!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("You grin as you parry $3s weak attack and smash your fist in "+
+"$3s face!", A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$1n's feint causes $3n to advance boldly!",
+A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+act("$1n grins as $1e parries $3s weak attack and smashes $1s fist "+
+"in $3s face!",A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+act("$1n's attack leaves $1m wide open!"
+,A_SOMEONE,self.outside,self,enemy,TO_VICT);
+act("You realise the feint as $1n's armoured fist breaks your nose!"
+,A_SOMEONE,self.outside,self,enemy,TO_VICT);
+goto start;
+}
+if ((random < 40)and(enemy.race<1000))
+{
+act("Your cruel slash opens a deep rift in $3n's chest, you stare at the "+
+"bloodied muscles!", A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$1n's slash opens a deep rift in $3n's chest, you can see the "+
+"bloodied muscle moving!", A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+act("$1n's slash opens a deep rift in your chest!"
+,A_SOMEONE,self.outside,self,enemy,TO_VICT);
+goto start;
+}
+if ((random < 50)and(enemy.race<1000))
+{
+act("You roll under $3n's weapon and slice a cut in $3s leg!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$1n rolls under $3n's weapon and slices a cut in $3s leg!",
+A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+act("$1n rolls under your weapon and slices a cut in your leg!"
+,A_SOMEONE,self.outside,self,enemy,TO_VICT);
+goto start;
+}
+if ((random < 60)and(enemy.race<1000))
+{
+act("You lock weapons with $3n, $3s face inches from yours!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("Deciding to break the deadlock, you give $3m a swift kick in the crotch!"
+,A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$1n locks weapons with $3n, their muscles swelling with effort!"
+,A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+act("With a swift kick in the crotch, $1n ends the deadlock!"
+,A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
+act("$1n lock $1s weapon with yours, $1s face inches from yours!"
+,A_SOMEONE,self.outside,self,enemy,TO_VICT);
+act("As you slowly force $1s weapon down, pain explodes in your crotch!"
+,A_SOMEONE,self.outside,self,enemy,TO_VICT);
+goto start ;
+}
+if ((random < 70)and(enemy.race<1000))
+{
+act("You roll along the ground and send a fistfull of dirt into $3n's face!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$3n screams, slashing around blindly!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$1n rolls along the ground and sends a fistfull of dirt in $3n's face!",
+A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
+act("$3n screams, slashing around blindly!",
+A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
+act("$1n rolls along the ground and sends a fistfull of dirt into your face!"
+,A_ALWAYS,self.outside,self,enemy,TO_VICT);
+act("Aaaargh! You are blinded!"
+,A_ALWAYS,self.outside,self,enemy,TO_VICT);
+goto start ;
+}
+goto start;
+}
+dilend
+
+end
+
+invi_cloak1
+names {"rune-embroidered cloak","cloak","rune cloak"}
+title "a rune-embroidered cloak"
+descr "A rune-embroidered cloak catches your eye here."
+extra {}
+"The cloak seems to be made of delicate, yet strong silk. The light blue
+material is ornamented with threads of gold and silver. Runes are
+embroidered into the hem of the cloak and a hood seems capable to cover
+your head, concealing you completely. A silver brooch fastens the cloak
+on your body."
+extra {"silver brooch","brooch"}
+"Beautifully ornamented and with a single rune in the middle.<br/>"
+extra {"runes on the cloak","runes","rune","hem"}
+"The runes are a sure sign of a magical enchantment. Altough you wonder
+what one.<br/>"
+extra {"hood on the cloak","hood"}
+"The hood is as richly embroidered with runes as the rest of the cloak.<br/>"
+extra {"$identify"}
+"Just by wearing this cloak, you will be hidden from your surroundings.<br/>
+The magic will also slighlty increase your dexterity, making you harder to
+hit.<br/>"
+extra {"$improved identify"}
+"The command to become invisible is simply 'raise hood'. Remember, the
+invisibility will fade as soon as you enter combat. The power of the
+cloak is not limitless, however - it will turn you invisible 7 times
+before needing to recharge. Dex bonus granted is +2.<br/>
+This cloak is cloth of craftmanship and magic bonus 7.<br/>"
+extra {"$wear_s"}
+"You wrap $2n about your body and fasten the brooch."
+extra {"$wear_o"}
+"$1n wraps $2n about $1s body and fastens the brooch."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
+ARMOUR_CLOTHES(0,0)
+MATERIAL_CLOTH("The cloak is made of silk.")
+weight 1
+cost 1 PLATINUM_PIECE
+rent 400 IRON_PIECE
+dilcopy abi_restrict@function(ABIL_BRA,30,0,0,"bra_rest@skaven");
+dilcopy abi_restrict@function(ABIL_MAG,10,0,25,"mag_rest@skaven");
+dilcopy level_restrict@function(25,0,0,"lvl_rest@skaven");
+spell 50
+
+dilbegin recall chargecloak();
+code
+{
+:start:
+wait (SFB_DONE,(self.equip==WEAR_ABOUT));
+heartbeat:=PULSE_SEC*300;
+pause;
+act ("The runes on your $2n glow in pale light...",
+A_SOMEONE,self.outside,self,null,TO_CHAR);
+act ("A strange shimmering in the air briefly outlines $1n near you!",
+A_SOMEONE,self.outside,self,null,TO_REST);
+sendto ("add charge",self);
+goto start;
+}
+dilend
+
+dilbegin recall aware cloak_invi();
+var
+	n:integer;
+        charge:integer;
+	pwr:integer;
+code
+{
+pwr:=7;
+:init:
+        heartbeat := PULSE_SEC*2;
+charge:=interrupt (SFB_MSG,((self==activator)and
+(argument=="add charge")), charge);
+
+:start:
+wait (SFB_CMD,(command("raise hood") and (self.equip==WEAR_ABOUT) and
+               (activator == self.outside)));
+block;
+act ("You raise the hood on your cloak to cover your head.",
+A_ALWAYS,self.outside,self,null,TO_CHAR);
+act ("$1n raises the hood on $2n to cover $1s head."
+, A_ALWAYS,self.outside,self,null,TO_REST);
+if (pwr<=0) goto fail;
+pwr:=pwr-1;
+{
+pause;
+act ("The runes on your cloak glow and you slowly fade from view..."
+,A_ALWAYS,self.outside,self,null,TO_CHAR);
+act ("The runes on $1n's cloak glow and the cloak shimmers..."
+,A_ALWAYS,self.outside,self,null,TO_REST);
+n:=cast_spell(SPL_INVISIBILITY,self.outside,self,self.outside,"");
+}
+goto start;
+
+	:fail:
+act ("The runes on your cloak shimmer slightly yet nothing happens...",
+A_SOMEONE,self.outside,self,null,TO_CHAR);
+act ("The runes on $1n's cloak shimmer slightly, yet nothing happens...",
+A_SOMEONE,self.outside,self,null,TO_REST);
+goto start;
+
+	:charge:
+clear (charge);
+if (pwr<7)
+pwr:=pwr+2;
+goto init;
+goto start;
+}
+dilend
+end
+
+        bluerobe
+names {"blue robe","robe"}
+title "a blue mage's robe"
+descr "A blue robe lies here in a heap."
+extra {}
+"A blue robe, much like those mages are traditionally using. It is soft
+and very comfy. The hem of the robe is embroidered in red symbols -
+for that truly arcane look, so favoured among wizards!"
+extra {"symbols"}
+"Those look even more magical than true arcane symbols would do. The word
+'eldricht' springs to mind.<br/>"
+ARMOUR_CLOTHES(0,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
+weight 1
+cost 2 SILVER_PIECE
+rent 12 IRON_PIECE
+end
+
+	blackrobe
+names {"black robe","robe"}
+title "a black mage's robe"
+descr "A black robe lies here in a heap."
+extra {}
+"A black robe, much like those mages are traditionally using. It is soft
+and very comfy. The hem of the robe is embroidered in silver symbols -
+for that truly arcane look, so favoured among wizards!"
+extra {"symbols"}
+"Those look even more magical than true arcane symbols would do. The word
+'elrdicht' springs to mind.<br/>"
+ARMOUR_CLOTHES(0,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
+weight 1
+cost 2 SILVER_PIECE
+rent 12 IRON_PIECE
+end
+
+        whiterobe
+names {"white robe","robe"}
+title "a white mage's robe"
+descr "A white robe lies here in a heap."
+extra {}
+"A white robe, much like those mages are traditionally using. It is soft
+and very comfy. The hem of the robe is embroidered in golden symbols -
+for that truly arcane look, so favoured among wizards!"
+extra {"symbols"}
+"Those look even more arcane than true arcane symbols would do. The word
+'magickal' springs to mind.<br/>"
+ARMOUR_CLOTHES(0,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
+weight 1
+cost 2 SILVER_PIECE
+rent 12 IRON_PIECE
+end
+
+        redrobe
+names {"red robe","robe"}
+title "a red mage's robe"
+descr "A red robe lies here in a heap."
+extra {}
+"A red robe, much like those mages are traditionally using. It is soft
+and very comfy. The hem of the robe is embroidered in black symbols -
+for that truly arcane look, so favoured among wizards!"
+extra {"symbols"}
+"Those look even more magical than true arcane symbols would do. The word
+'mystical' springs to mind.<br/>"
+ARMOUR_CLOTHES(0,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
+weight 1
+cost 2 SILVER_PIECE
+rent 12 IRON_PIECE
+end
+
+	curshoes
+names {"curly shoes","shoes"}
+title "a pair of curly, embroidered shoes"
+descr "A pair of fancy shoes with curling toes awaits you here."
+extra {}
+"Fancy shoes with curling toe, richly embroidered with golden threads and
+silver buttons. Those surely are the shoes of the upper class. With shoes
+like this, you'd be the center of attention wherever you go."
+ARMOUR_LEATHER(0,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_FEET}
+weight 1
+cost 2 SILVER_PIECE
+rent 12 IRON_PIECE
+end
+
+
+/* **********        Reset Section for Zone      ********** */
+
+%reset
+
+load servant into parlorbar max 1
+{
+	equip xiyang/butterfly position WEAR_NECK_1
+	equip xiyang/white_gloves position WEAR_HANDS
+	equip xiyang/black_shoes position WEAR_FEET
+	equip xiyang/black_suit position WEAR_ABOUT
+}
+
+load board into parlorbar max 1
+load chatboard into parlor max 1
+
+load mist_dweller into small_cavern1 max 4
+load mist_dweller into medium_cavern1 max 4
+load mist_dweller into large_cavern2 max 4
+load mist_guard into ent_guild max 2
+
+
+load magic_keeper into kingc/under_ne_tower max 1
+{
+        equip midgaard/pointy_hat position WEAR_HEAD
+        equip bluerobe position WEAR_ABOUT
+        equip curshoes position WEAR_FEET
+}
+
+load dark_mage into ratswarf/sphinct max 1
+{
+	equip deadl1/black_hat position WEAR_HEAD
+	equip blackrobe position WEAR_ABOUT
+	equip blkm_stiletto position WEAR_WIELD
+	equip acid_rod position WEAR_HOLD
+	equip curshoes position WEAR_FEET
+}
+load good_mage into torsbay/top_light max 1
+{
+	equip magus_staff position WEAR_WIELD
+	equip midgaard/pointy_hat position WEAR_HEAD
+	equip whiterobe position WEAR_BODY
+	equip invi_cloak1 position WEAR_ABOUT
+        equip curshoes position WEAR_FEET
+}
+load neutral_mage into ratswarf/shack2 max 1
+{
+	equip mith_cut position WEAR_WIELD
+	equip midgaard/pointy_hat position WEAR_HEAD
+	equip redrobe position WEAR_ABOUT
+	load rec_scroll max 1
+        equip curshoes position WEAR_FEET
+}
+
+load phoebius into grotto max 1
+{
+	equip sorc_pendant position WEAR_NECK_1
+	equip libram position WEAR_HOLD
+	equip bluerobe position WEAR_ABOUT
+	equip curshoes position WEAR_FEET
+}
+
+load claudius into shimmering_room max 1
+{
+        equip sorc_pendant position WEAR_NECK_1
+        equip redrobe position WEAR_ABOUT
+        equip curshoes position WEAR_FEET
+}
+
+load forbin into mist_room max 1
+{
+        equip sorc_pendant position WEAR_NECK_1
+	equip bluerobe position WEAR_ABOUT
+	equip curshoes position WEAR_FEET
+}
+
+load lasheetah into large_cleft max 1
+{
+	equip mith_cut position WEAR_WIELD
+	equip darkelf/drchain position WEAR_BODY
+	equip dwarves/mith_skirt position WEAR_LEGS
+	equip darkelf/dar_boots1 position WEAR_FEET
+}
+
+load calastran into throng_room max 1
+{
+        equip magus_staff position WEAR_WIELD
+        equip whiterobe position WEAR_ABOUT
+        equip curshoes position WEAR_FEET
+}
+
+%end

@@ -1,0 +1,33 @@
+<br/>
+<br/>
+<br/>
+<br/>
+Usage<br/><br/>
+list<br/><br/>
+buy (object)<br/><br/>
+sell (object)<br/><br/>
+value (object)<br/><br/>
+request (object)<br/><br/>
+<br/><br/>
+<br/>
+The list command is used inside shops to get a listing of the currently<br/>
+available products. The listing shows the objects along with prices<br/>
+and other information.<br/>
+<br/><br/><br/>
+The request command also shows how much an item costs, but the shop keeper<br/>
+may take into consideration other currencies than his default one.<br/>
+<br/><br/><br/>
+The value command is used when you want to know how much a shop keeper will<br/>
+pay for one of your items.<br/>
+<br/><br/><br/>
+The sell command is used to sell one of your items.<br/>
+<br/><br/><br/>
+The buy command is used to buy an item from the shop keeper.<br/>
+<br/><br/>
+<br/>See Also:<br/><br/>
+Buy<br/><br/>
+Sell<br/><br/>
+Value<br/><br/>
+Request<br/><br/>
+<br/>
+<br/>

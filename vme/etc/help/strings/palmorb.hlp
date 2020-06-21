@@ -1,0 +1,22 @@
+<br/>
+   Mana Palm orb                   bribe of $35<br/>
+	 This item is burnt into the players hand and doesn't take up<br/>
+	 an equipment position.  The owner of this mark can store up to the amount<br/>
+	 of his mana at a ratio of 2:1, this means that the player can store up to<br/>
+	 his max mana but it would take two full charges to fill it.  The Mana<br/>
+	 Palm doesn't work if the player has been in player combat in the last 5<br/>
+	 minutes.  This is very powerful for mages.<br/><br/>
+<br/>
+<br/>
+<br/>
+     Commands for Palm Orb<br/><br/><br/>
+      &lt;examine orb&gt; will display how much is stored<br/><br/>
+          &lt;touch hand to head&gt; will store mana<br/><br/>
+          &lt;touch hand to heart&gt; will unstore mana <br/> <br/>
+     <br/>
+<br/>
+<br/>
+See Also:<br/>
+ &gt; help donation<br/><br/>
+ &gt; help Power Items<br/><br/>
+<br/>

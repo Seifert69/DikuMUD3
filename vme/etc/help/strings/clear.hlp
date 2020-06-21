@@ -1,0 +1,9 @@
+The clear command can clear the screen or your tell history.  If you want to clear<br/>
+your tell history the following is the command<br/>
+<br/>
+clear tell<br/>
+<br/>
+To clear just the screen type clear with no arguments.<br/>
+This clears the screen for people that have terminals that support it.<br/>
+If it does something strange to your screen just don't use it.<br/>
+<br/>

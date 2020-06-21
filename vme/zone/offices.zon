@@ -1,0 +1,1221 @@
+/*
+filename offices
+password realone11
+changedby Etna
+EmailAdd
+request compile
+version 17
+END HEADER*/
+
+#include <macros.h>
+
+%zone offices
+title "Village Of Udgaard@Mainland"
+lifespan 20
+reset RESET_ANYHOW
+creators {"icculus","saor"}
+
+/* fixed blowaway to work 8-7-9-00 Ratlin 
+new paper version 8-30/9-10-00 Bren
+New Paper version 06-01-2008  Aelle 
+New Paper version 08-01-2008 Aelle
+New Paper version 10-01-2008 Aelle
+New paper version 11/28/2008 Aelle 
+New paper version 01/28/2009 Aelle
+New paper version 08/25/2009 Aelle
+Special paper version 10/23/2009 Aelle
+New paper version 01/2/2010 Aelle
+New paper version 02/6/2010 Aelle
+*/
+
+%dil
+
+dilbegin noburyme();
+code
+{
+   heartbeat := PULSE_SEC*5;
+   wait (SFB_TICK, (self.flags & UNIT_FL_BURIED));
+   destroy (self);
+}
+dilend
+
+%rooms
+
+hallway
+names {"hallway"}
+title "A Hallway"
+descr
+"You are above the Chicken's Rest Inn in what seems to be an ordinary
+hallway. The walls are covered in a fine mahogany panelling which gives
+you the feeling this level may contain some offices. There are doorways
+leading East, West and North and there is a set of stairs leading down
+to
+the inn. You notice a small sign above each of the doors."
+extra {"walls", "wall"}
+"They are covered in a very new looking mahogany panel. Even at closer
+inspection they seem flawless, it looks like someone paid a fortune to
+build
+this hallway."
+extra {"signs", "sign"}
+"There is one above each door. The one to the north reads 'Player
+Network', the one to the east reads 'Valhalla Times', and the sign to
+the west reads 'Games Development'."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+movement SECT_INSIDE
+north to helper_room open {EX_CLOSED, EX_OPEN_CLOSE}
+                     keyword {"door"};
+east to vt_o open {EX_CLOSED, EX_OPEN_CLOSE}
+             keyword {"door"};
+west to conference_room open {EX_CLOSED, EX_OPEN_CLOSE}
+                        keyword {"door"};
+south to dil_room;
+
+down to inn@udgaard descr "Go back down to the Chicken's Rest.";
+ALWAYS_LIGHT
+end
+
+helper_room
+title "The Point of View Network"
+descr
+"As you enter the room you are quite taken aback by the sheer amount of
+stuff lying around here and there. This room defies the very definition
+of 'cluttered'! There is a Very large desk in the corner and you notice
+several blueprints scattered about its surface. There is one chair
+stationed at the desk but I sincerely doubt anyone uses it!"
+extra {"desk"}
+"It is a fine oak desk and looks pretty large, although it could be
+twice the size and still not have room enough for eveything on it!"
+extra {"chair"}
+"This is a fine oak chair with a comfortable looking cushion, but it
+really looks like it never has been sat in!"
+extra {"blueprints", "blueprint"}
+"This is very interesting! You see the actual blueprints for the towns
+of Udgaard, Midgaard and Urland! These documents must be ancient indeed!
+One such blueprint says 'The Guild of Rangers'. It looks new compared
+to the others."
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+south to hallway open {EX_CLOSED, EX_OPEN_CLOSE}
+                 keyword {"door"};
+ALWAYS_LIGHT
+end
+
+                            conference_room
+
+title "Conference Room"
+descr
+"You are in a large conference room. In the center of the room is a
+large rectangular table made of solid cherry tree. Around the table are
+twelve nice leather chairs. In one corner is a drawing board with many
+sketches. On the east and west walls are paintings. There is a plaque on
+the north wall right behind the podium. You get the feeling that this
+room is used to discuss game and newspaper ideas."
+extra {"podium"}
+"A very large wood podium is behind the dictator's chair."
+extra {"plaque","north"}
+"The plaque says- This room was made especially for the Valhalla Times
+Newspaper staff."
+extra {"table"}
+"The table is about two inches thick and looks very sturdy. You believe
+a traveling side show could perform on this table without hurting it."
+extra {"chairs","chair","leather"}
+"The chairs are made of very fine leather. The texture looks very
+familiar. Could they be from Tassel Grove?"
+extra {"board","drawing board","sketches"}
+"The board looks alot like slate...there is some white stuff under the
+board itself. Circled many time are the letters- CTF!!"
+extra {"east","west","paintings","walls"}
+"On the east wall is a painting of Market Square in Midgaard, on the
+west wall is a painting of Village Square in Udgaard. You notice that
+the Newsstand sticks out in both pictures."
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+east to hallway open {EX_OPEN_CLOSE, EX_CLOSED}
+                keyword {"door"};
+end
+
+                                   vt_o
+names {"valhalla times main office", "valhalla times office", "ca"}
+title "Valhalla Times Main Office"
+descr
+"This is a very spacious room that looks like it could hold many people
+going through it at once. More the better for a newspaper office. The
+walls are dark oak and there is a desk near the west wall. Behind the
+desk are big gold letters. The carpet is black and it makes you wonder why."
+extra {"walls","wall","oak","dark oak"}
+"The walls are very dark and as you get closer you notice they are very
+solid also."
+extra {"desk"}
+"This is a pretty plain desk, unlike the rest of the office, it has
+silver sides. It just doesn't seem to match."
+extra {"letters","gold letters","big letters","gold","big"}
+"These letters are HUGE!!! They say-
+
+        \        /    -------
+          \    /         |         Valhalla Times Newspaper
+            \/           |"
+
+extra {"carpet","floor","black carpet"}
+"You notice how dark it is and you can't help thinking how well it
+would hide blood stains."
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+west to hallway open {EX_OPEN_CLOSE, EX_CLOSED}
+                keyword {"door"};
+end
+
+dil_room
+
+names {"dil classes room", "dilclass"}
+title "The Main Room for Dil Classes"
+
+descr
+"This room is striking by its disordered appearance. Laying on the floor
+are papers of all sorts, plans, graphs, and even a picture of some irish
+admin. The only furniture here seems to be a large wooden table, on which
+lie more papers. A few torches give light to the whole scene, althought
+it also makes it quite dangerous to stay here."
+
+extra {"papers"}
+"You start reading them but can't decipher the code. It must be DIL."
+
+extra {"irish admin", "picture", "admin"}
+"He looks somehow familiar..."
+
+extra {"wooden table", "table"}
+"This table is pretty bare in itself, but you have a hard time actually
+seeing it, as it is cluttered with ideas."
+
+extra {"torches"}
+"They are burning a bit too bright to your taste."
+
+extra {"Stormtamer"}
+"He's not here, just give up."
+
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+north to hallway;
+
+end
+
+
+%objects
+
+shredder
+names {"paper shredder", "shredder"}
+title "the paper shredder"
+descr "A paper shredder is waiting to shred your old letters."
+extra {}
+"It is a magical device designed to dispose of your old letters and
+notes. To operate it, simply PUT the letter IN SHREDDER. Nothing to it. A
+small emblem is barely visible along the bottom of the machine."
+extra {"emblem"}
+"It appears to be a symbol that looks like a solar eclipse."
+manipulate {MANIPULATE_ENTER}
+weight 200
+CONTAINER_DEF(2)
+dilbegin shred();
+code
+{
+   heartbeat := PULSE_SEC*3;
+
+   :start:
+   wait(SFB_DONE, (activator.type == UNIT_ST_PC) and command("put"));
+
+if ((medium.objecttype == ITEM_NOTE) and (medium.nameidx == "card")and
+(medium.zoneidx == "holidays"))
+   {
+	  log("its a card");
+      if (("$"+activator.name) == medium.extra.["card"].names.[1])
+	  experience (medium.extra.["card"].vals.[0], activator);
+    
+    sendtext("The shredder makes a loud grinding noise and you gain "+
+		 "the experience noted...<br/>",activator);
+
+/*
+	  act("$1n makes a loud grinding noise and you gain the experience noted...",
+	   A_ALWAYS, self, null, null,TO_CHAR);
+*/
+      destroy(medium);               
+sendtext("The shredder spits out a bunch of paper ribbons, which are quickly "+
+          "blown away by the wind.<br/>",activator);
+/*
+      act("$1n spits out a bunch of paper ribbons, which are quickly "+
+          "blown away by the wind.", A_ALWAYS, self, null, null, TO_CHAR);
+*/
+      goto start;
+    }
+ if ((medium.objecttype == ITEM_NOTE) and (target == self))
+   {
+      act("$1n makes a loud grinding noise...",
+	   A_ALWAYS, self, null, null,TO_ALL);
+      destroy(medium);
+      act("$1n spits out a bunch of paper ribbons, which are quickly "+
+          "blown away by the wind.", A_ALWAYS, self, null, null, TO_ALL);
+      goto start;
+    }
+    else
+    {
+       if (target != self) goto start;
+       act("$1n cannot shred that!", A_ALWAYS, self, null, activator,
+           TO_VICT);
+       act("$2n falls out of $3n.", A_ALWAYS, activator, medium, target,
+           TO_ALL);
+       link(medium, self.outside);
+       goto start;
+    }
+}
+dilend
+end
+
+/* ****** Necessary Boards ****** */
+
+pov_board
+names {"pov board", "board"}
+title "the player assistance board"
+descr "The player assistance bulletin board is mounted on the wall."
+type ITEM_OTHER
+dilcopy board@boards("pov","","rem_res@boards","",100);
+end
+
+                           paper_board
+
+names {"newspaper board", "board"}
+title "the Valhalla Times board"
+descr "The Valhalla Times bulletin board is mounted on the wall."
+type ITEM_OTHER
+dilcopy board@boards("paper","","rem_res@boards","",100);
+end
+
+/* ****** End of board defs ****** */
+times_sash
+
+names {"Valhalla Times Sash", "sash"}
+title "The Valhalla Times Sash
+(tm)"
+descr "A beautifully woven sash lies here on the ground."
+
+MATERIAL_CLOTH("White silk")
+extra {}
+"What a beautiful sash! Its been woven of the purest silk,
+which makes it look especially eye-catching, shimmering
+in the light. The symbol of a golden quill has been sewn
+into the sash, the icon of the Valhalla Times Newspaper.
+Obviously, this is a very special sash, made for a very
+special person."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+weight 1
+DEX_TRANSFER(+2)
+MAG_TRANSFER(-1)
+DIV_TRANSFER(-1)
+dilcopy quest_restrict@function("Valhalla Times Contest Winner",0,0,"");
+end
+
+                            newspaper1
+
+names {"newspaper", "paper", "valhalla times", "times", "section a", "a"}
+title "the Valhalla Times newspaper- section A"
+descr "This newspaper is titled 'The Valhalla
+Times' section A."
+manipulate {MANIPULATE_TAKE}
+type ITEM_NOTE
+weight 1
+
+extra {}
+"  
+                 .aO$$'     .  ..a$$               .aO$$'
+              .aO$$X'     a$$    $$$            .aO$$X'
+             $X'$$$  HE   $$$    $$$  ALHALLA  $X'$$$  IMES
+                $$$       $$$    $$$              $$$
+                $$$       $$$..aO$X'              $$$
+                $$$       $$$$OX'                 $$$
+                `X$       `X$                     `X$
+
+
+
+-=-=-=-=-=-=-=-=-
+=-=-=-=-
+   The Valhalla Times
+    Volume 5
+     Issue 2
+      June, 2011
+-=-=-=-=-=-=-=-=-
+=-=-=-=-
+
+To read a specific article, type 'look article #', 'read
+article #', 'examine article #'.
+
+                             TABLE OF CONTENTS
+<br/>
+Section A:
+----------
+Article 1  - Are Vasklor's Royals Missing?
+Article 2  - A Note from the Editor
+Article 3  - News - The Spoils of War
+Article 4  - Rumors
+Article 5  - History - Whesland Hamlet
+Article 6  - The Adventurer's Closet "
+
+
+
+extra {"article 1", "1"}
+"
+ooooOooooOooooOooooOoooo
+The Front Page
+ooooOooooOooooOooooOoooo
+<br/>
+Extra! Where are the King and Queen of Vasklor Extra! 
+<br/>
+(VP) Citizens of Vasklor laboring under the yoke of the Emperor Valmaloch 
+ have mounted a surreptitious search for their missing King Amrod and 
+Queen Elbereth as well as the prince and princess Amras and Amber.
+Many fear the worst in spite of reports of letters proporting to be  
+from the Queen in hiding being received by many. The king and queen
+are not the only ones to have disappeared in Vasklor. Abandoned children
+can be found in homes and wandering the park.<br/>
+<br/>
+One orphan when questioned stated 'a man came into town and claimed he 
+was the brother of the King. He brought a bunch of thugs with him too!'
+Research has shown that the king was an only child, yet a few days later
+Amrod declared the man his long lost brother and left him as regent as
+he and whole family went to visit the gnome king. Reports are they 
+never arrived there.<br/>
+<br/>
+Citizens believe that their king still lives, but is imprisoned.
+Yet recently some citizens received letters from an unknown source 
+detailing the atrocities accomplished by the self-styled Emperor.
+Are they a plea for help or a devious trap to do away with any
+opposition? Only time will tell but one thing is certain. Something
+stinks in Vasklor and it is not just the swamp.
+<br/>"
+
+extra {"article 2", "2"}
+"
+ooooOooooOooooOooooOoooo
+A Note From The Editor
+ooooOooooOooooOooooOoooo
+<br/>
+The world seems to have become a colder place in recent years. 
+The influence of the demons and evil races has brought out the
+the worst in many people and the watchwords of the day seem to be
+greed and overindulgence. <br/> 
+<br/>
+Citizens have been spotted hoarding mushrooms, berries and  <br/>
+other food stuffs. They set up caches of those things they 
+cannot immediately use. They steal goods donated to the poor and 
+sell then for as low as an iron and then the shopkeepers sell them
+at their face value.<br/>
+<br/>
+We have to ask why. Why destroy the patch of berries just to  
+have some hidden away? If you just take what you need then 
+others can do the same, but hoarding leads to panic and to  
+resentment. People begin to resent those with more or as some 
+see it too much. Who could blame them?  If one person has all the 
+food, then even if they share it they exert a power over 
+others. They cause others to rely on them. <br/>
+<br/>
+Imagine you are hungry and you have always been given your food by 
+the mayor. Each day you must wait in line and get your food from him. 
+He decides when you can get it and how much you will get. Now what would 
+if the mayor was eaten by a dragon or assassinated by an ogre?  Would  
+you know where to get food? How to get it? Would you feel resentful  
+that it was no longer provided? Or maybe you already resent that  
+food is provided when the Mayor wants, not when you need it. <br/>
+<br/>
+It is no secret that some of the Citizens of Valhalla harbor a deep 
+seated resentment against others. Even to the point of trying to buy 
+friends to unite against others. This is a common tactic among followers 
+of the dark paths. It is no surprise that many are trying to create
+methods of controlling the populace of the world through first forming
+a dependence then threatening to remove their support if their
+minions show any signs of thinking for themselves. It is even said that
+some have already caused those who were too independent to disappear. 
+It has been noted that the only places in the world to get salad are in 
+Xiyang and in the goblin town. Are these two working together? 
+All evidence points towards that. Maybe the dark times are returning.<br/> 
+<br/>
+Another source was heard to blame the clans for hoarding weapons 
+and tools needed for cooking and preparing food. Mary told the 
+Valhalla Times that 'The orcs are too lazy to farm or hunt 
+break into people's homes and steal their food and cooking pots!'
+Could it be that clans are in cahoots with the evil races? Some claim 
+this must be the case and make a point of being *clanless* claiming that  
+clans are the willing or even unwitting catspaws of the evil ones.  
+Others have pointed fingers at the clanless saying they do not want 
+people to excel at anything that the clans may teach them. This 
+reporter doubts that any particular clan may be serving the ones who
+wish to dominate, but it may be some individuals are who are within the
+ the clans. 
+<br/>
+So how do we tell the good ones from the bad? The ones that want to
+help vs. the ones that want to control. And how do we get out from the 
+control of the dark ones? Easy. If someone gives you food but does not
+tell you how to get it yourself or even tells you it is not important 
+they will take care of everything you need, they want to control you.  
+If someone takes you somewhere to get your own food or even shows you 
+how to grow it or hunt, then that is a person who wishes you to be in
+control of your own future. Which is all any of us want - a chance
+to grow and learn instead of stagnate under the weight of some 
+dictator who tried to force us to do what we may not feel is right. 
+<br/>                                                   
+Note -This newspaper is best viewed with an ANSI terminal  
+<br/>
+"
+
+extra {"article 3", "3"}
+"
+ooooOooooOooooOooooOoooo
+Local News
+ooooOooooOooooOooooOoooo
+<br/>
+ The Spoils of War?
+ By Aelle 
+<br/>
+The talk of the town has been about an individual of the name of 
+Bertha who sent many citizens a plea for aid in her hour of need.  Her  
+husband is dead, she and her children are on the run from assassins. 
+For the duration of this article I will attempt to keep names out of
+it to protect those innocents persecuted. But I have been in correspondence
+with 'Bertha' as has report Kytes. Perhaps Kytes will provide us with
+more information next issue. 
+<br/>
+Her letter states that she has a great deal of money available but 
+she herself cannot collect for fear of her life. So she asks for any
+one who can to help her retrieve a trunk full of platinum. It is a 
+reported hefty sum is in the trunk and but it is held by a bank. 
+<br/>
+All of this sounded a bit odd, so I began to correspond with
+her. According to herm she is a deposed queen. Her husband died   
+in prison. A sympathetic guard helped her and her 2 children escape 
+from the dungeons beneath the castle and they are hiding out in a foreign  
+city. She is destitute, alone and to top it off frustrated because
+if only she had the fee for the storage or a sponser she could change
+all that. 
+
+I asked why she was sending letter to strangers. She said she had gotten
+my name from her old advisor as someone who had helped in the past. 
+That much was true, so I continued my questioning and discovered she 
+and her two children were at the mercy of the government who were  
+threatening to deport and send her back. The thought of her delicate
+children in the damp cell drove her to send the letters. Being a mother 
+myself, I could empathize. Add to that her suspicion that the usurper is 
+a servant of the Dark Queen who ravaged Midgaard in the not so distant 
+past who could refuse? But how to help? 
+<br/>
+She asked that we meet at the bank and if I could see my way to loan 
+her the money for the fee, I would receive a percentage of what was
+in the trunk. So I prepared to leave, but circumstances have thus far 
+halted me from completing the task. I would much rather help depose 
+the usuper of her husband's throne and place her son on it. I am  
+investigating ways to do that and then she can use her own 
+treasury and advisors to reclaim her assets. Although I am skeptical
+as to her authenticity, if she is who she claims, she has been done a 
+grave wrong and it is up to us to correct it. Perhaps Kytes will have
+more to report next issue.
+<br/>
+=====================================================================
+"
+extra {"article 4", "4"}
+
+"
+
+ooooOooooOooooOooooOoooo
+Rumors and Sightings
+ooooOooooOooooOooooOoooo
+<br/>
+It has been said that Drasnian Spies and Unseen Chaos have joined 
+in the realms of the Unseen. No one has witnessed this. 
+<br/>
+----------------------------------------------------------------------------
+
+Bloody has been spotted hovering over corpses of the guilty and innocent 
+alike. He has been seen questioning the corpses as to the whereabouts
+of Krixta. 
+<br/>
+----------------------------------------------------------------------------
+There was a sighting of the elusive Kheldar but he fled ere any could 
+blame him for any missing items.
+<br/>
+----------------------------------------------------------------------------
+
+There have been no weddings or even rumors of romance. Instead there is 
+a dearth of available females in the world. One shudders to think what 
+this might portend. 
+<br/>
+----------------------------------------------------------------------------
+Kytes has been seen lurking about and rumors are that he is behind the
+strange letters received.
+<br/>
+----------------------------------------------------------------------------
+Kwar and Kalrai have been spotted holding hands near the old  
+Heaven's Fury shack. Rumors have been heard that they may be
+considering a comeback. But it seems to be rumor only.
+<br/>
+----------------------------------------------------------------------------
+
+Bren and Gothmog have been sighted many times up in Vasklor Area.  
+<br/>
+----------------------------------------------------------------------------
+
+Rumors are afoot that Nikolai may be stalking a new target,   
+orpses of Vanesselle have been spotted in the Fjord. None of 
+his old flames could be reached by seance for comment.  
+<br/>
+=====================================================================
+"
+
+extra {"article 5","5"}
+"
+
+ooooOooooOooooOooooOoooo
+Valhalla History
+ooooOooooOooooOooooOoooo
+<br/>
+ Whesland Hamlet  
+
+  By Heulflodyn
+<br/>
+North of Udgaard kobolds have taken residence.  One day when  
+assisting others to clean them out I was pushed through a 
+wall of mud to begin an adventure I will never forget. I searched
+my way out of the mess I found myself and wandered into a charming
+town, Whesland Hamlet. 
+<br/>
+The hamlet is small, but fortified with a tall fence as if it  
+expects an attack at any moment, It has some heavy protective
+magic that kicks out evil that walks into their town. It also 
+seems to have more than its share of problems. 
+<br/>
+I spoke to the mayor there. They had citizens kidnapped by kobolds.   
+I helped one return home. Then there was the troll.  It seems some 
+troll was halting trade between Whesland Hamlet and Udgaard. It had
+wandered down from Galgachus and set up a blockade in the canyon.
+So I took care of that problem and provided proof for the mayor 
+but that was still not the end of the problems.   
+<br/>
+It seems a flying snake, perhaps even it is a type of dragon
+had started burning and terrorizing the village.  I went to  
+confront it. It had made a nest in a dead end canyon. The stench 
+was horrible. The battle was difficult but I prevailed and again  
+took proof back to the mayor. The final problem the good people of  
+Whesland have is that the woods surrounding the town are filled 
+with spirits. An old man had hidden something there and I had to 
+go and find it. The problem was that the chest he used was invisible.
+<br/>
+Luckily the herbalist in town had some herbs that helped, but they
+also let me see the spirits and made me hallucinate. But with the 
+mission accomplished I still had to slay a couple of animals for the
+herbalist to make a cure for the old man. However do not think the 
+people who live there are not appreciative, the entire villiage turned
+out for a presentation of a medal to me ny the mayor. The town is well
+worth visiting when you need a break in your studies around half-way.
+but no evil people need to bother. They won't let you in.
+<br/>
+=========================================================================
+"
+extra {"article 6","6"}
+"
+
+ooooOooooOooooOooooOoooo<br/>
+The Aventurer's Closet
+ooooOooooOooooOooooOoooo<br/>
+<br/>     
+ Shoes, Gloves and Purse Pink!
+ By Aelle Llofrudd-Gix
+<br/>
+Ladies and gentlemen of Valhalla, I ask you with all the 
+letters of margue passed out and the offers of some to 
+create custom clothing. Why is that so many do not show
+good taste in having your shoes, gloves and purse or bag match?
+<br/>
+There is no reason to face the evil hordes in any less than perfectly
+matched accessories so that they at least will know their demise was
+brought about by those with a civlized sense of fashion. I have
+noticed SOME people make an effort in wearing their clan colors.
+So many neglect the bag or purse. Why is that? 
+<br/> 
+The back or puse is your most common accessory, it is almost 
+always with you. Of all the items you keep about you, this should 
+is the one that most notice. Why carry around a natty burlap bag of holding
+when you can sport a spiffy purse, knapsack or even ruckersack? Think 
+about it. I know when I send shards whipping through the vitals of
+an enemy, as the light leaves his eyes, he will gaze upon my beautiful
+purple and blue purse as I take the gold he will not longer be requiring.
+It makes me proud to know that some barbarian will know as his last
+coherent thought that he was exterminated by a woman with a keen sense
+of fashion.
+<br/>
+==============================================================
+
+We urge all citizens of Valhalla to submit stories, news, poems, travelogs,
+gossip and sagas of their adventures. There are a couple of guidelines
+to follow which you can read on the Valhalla Times board upstairs
+in the Chicken's Rest. <br/>
+<br/>
+"
+dilcopy noburyme@offices ();
+dilcopy blowaway@function(60,"$1n is scattered into the breezes...");
+end /*newspaper1*/
+
+
+                              newspaper2
+
+names {"newspaper", "paper", "valhalla times", "times", "section b", "b"}
+title "the Valhalla Times newspaper- section B"
+descr "This newspaper is titled 'The Valhalla
+Times' section B."
+manipulate {MANIPULATE_TAKE}
+type ITEM_NOTE
+weight 1
+
+extra {}
+"  
+                 .aO$$'     .  ..a$$               .aO$$'
+              .aO$$X'     a$$    $$$            .aO$$X'
+             $X'$$$  HE   $$$    $$$  ALHALLA  $X'$$$  IMES
+                $$$       $$$    $$$              $$$
+                $$$       $$$..aO$X               $$$
+                $$$       $$$$OX                  $$$
+                `X$       `X$                     `X$
+
+
+
+-=-=-=-=-=-=-=-=-
+=-=-=-=-
+   The Valhalla Times
+    Volume 5
+     Issue 2
+      June, 2011
+-=-=-=-=-=-=-=-=-
+=-=-=-=-
+
+To read a specific article, type <look article #>, <read
+article #>, <examine
+article #>, or simply type <look #>, <read #>, <examine
+#.> 
+
+                             TABLE OF CONTENTS
+
+Section B:
+----------
+Article 7  - MUD News
+Article 8 - Kondundrum Korner 
+Article 9 - Helpful Hints
+Article 10 - The Hunter's Lodge
+Article 11 - Gladiator's Arena 
+Article 12 - Clan News
+Article 13 - Classifieds"
+
+extra {"article 7", "7"}
+"
+ooooOooooOooooOooooOoooo
+State of the Mud
+ooooOooooOooooOooooOoooo
+<br/>
+ Feel free to post questions, concerns and  
+suggestions for the Admin to see on the 
+Point of View board upstairs in the Chicken's Rest. 
+=============================================================
+<br/>
+It has been a while since we wrote an article for the times and a 
+lot has happened. many new ideas, bugs found and lots of zones. First
+the builder news:
+<br/>
+Of the new zones since our last printing, the winner of the 
+builder's contest was Sentrosi for Murhabi. It was a close contest.
+Issa's zone, Soul Lake has many innovative concepts and ideas of the
+type we hope to see more of from the builders and the story is excellent.
+Both zones are in pay areas and are for higher level players. 
+Alvaneu opted to not enter the contest, feeling that he rather
+do a good job on his zone rather than hurry to finish. But his
+did get done and it tells the story of the Demonologists and
+Ishlor's army. He took a unique approach to some aspects of the 
+quest and zone in general and it deserves a look or three.  
+<br/>
+Also added were 3 new zones by Kutter our newest builder. They are
+for lower levels and offer a lot of area to explore as well as 
+promise of more to come!  They are located in a non donation area.
+He has been working with just about all of the builders and has added
+a lot of creativity to the building team. Not even the older players
+know their way around the Mushroom Forest or the Glowing Caverns, so the 
+newer players have an advantage. Sentrosi has also added a lower level 
+zone that many may want to wait until the warmer months to explore. 
+The Barren Isles are cold and the residents there have found ways to
+stay warm and out of the wind.
+<br/>
+Baggins is working on the next phase of the night editor of the Times
+as well as his own zone. He should have Elvira working smoothly soon
+so that the paper will become much easier to publish and contribute to.
+In the meantime though, stories are needed. We like a variety in writers
+So see Aelle about contributing. 
+<br/>
+There have been many bugs reported with morph so we ask you use restraint
+in using it. It maybe we remove it again until it is fixed but some forms
+seem stable. Keep up the good work on reporting find path issues. We are
+slowly finding the causes of that issue and fixing them as we go.
+<br/>
+Speaking of bugs, we have quite a backlog of them. Thanks to everyone
+for reporting them and while it may take a some time, we are working on
+in order of priority. Crash bugs are first, then worldwide ones, then zone
+only, quest only then finally localized. We ask you report all bugs and
+do not exploit them. If you are uncertain do not do it! We do nightmare
+and/or delete players found doing so. 
+<br/>
+Lots of old players have returned citing the Facebook page as the reason. 
+If you have a Facebook account please join the group. We also have a thread
+on MySpace to replace the old group and of course the Twitter account. The
+addresses are on MOTD, in the news and on the God Board in the Chicken's 
+Rest as well at the end of this article.
+<br/>
+Kuros has been working on guild guides for each guild. They should give
+new players an idea of where each teacher is and how to get around 
+the guild. They are slowly being implemented as each one is finished.
+Kuros has also a few ideas on how to help new players if no other 
+players are around to assist. So look for improvements there. As usual any 
+compliments or complaints concerning the Player Helpers, please mud
+mail Kuros. 
+<br/>
+ Facebook - https://www.facebook.com/groups/valhallamud?ap=1
+ MySpace -  http://www.myspace.com/threads/#!__/threads/27829
+ Twitter -  https://twitter.com/#!/ValhallaMud
+<br/>
+ Editor's note - report paper typos on the Valhalla Times board.
+ Report bugs using bug command, all other typos using typo command,
+ and suggestions, complaints, concerns on the player assistance board 
+ upstairs in the Chicken's Rest.
+<br/>       
+=============================================================
+"
+
+
+extra {"article 8", "8"}
+"
+ooooOooooOooooOooooOoooo
+Kondundrum Korner
+ooooOooooOooooOooooOoooo
+<br/>
+ This issue's trivia provided by Relway <br/>
+<br/>
+   In what town can you purchase a pet pig? <br/>
+<br/>
+   Who does Thaka pine for? <br/> 
+<br/>
+  What is the name of the paladin who stands in a ravine? <br/>
+<br/>
+  Beneath wild long grey hair and beard you see black calm eyes looking <br/> 
+ back at you. Who is this and where are they found? <br/>
+<br/>
+  A narrow dusty trail leads through the vineyard, sloping gently up 
+ the hill. Dual ruts run along the path made by years to carts loaded with  
+ fruit being pulled along it. The path leads north and south of here and 
+ the vineyard leads off to the east and west. - What town is this near? <br/>
+<br/>
+  She is a graceful creature, with sleek black fur.  In which
+ forest does this mob roam? <br/>
+<br/>
+   In what town do you find the brothers Eitri and Brokkr? <br/> 
+<br/>
+  In what town can you purchase a maamoul pastry? <br/> 
+<br/>
+  Boa, Fingolfin, Darkar, Sir Wyvern Stormbringer, Ironheart, Sanon,<br/>
+ Morticia, Boromir, and Vervoss all hang out together. In what bar and <br/>
+ what town will you find these unsavory people? <br/>  
+<br/>
+10 Over what town and race does Queen Talena reign? <br/>
+<br/>
+<br/>
+Answers to last issue's trivia will be posted on the Valhalla Times board <br/>
+<br/>
+=============================================================
+"       
+
+extra {"article 9", "9"}
+"
+ooooOooooOooooOooooOoooo<br/>
+Helpful Hints
+ooooOooooOooooOooooOoooo<br/>
+<br/>
+ Mushrooms Herbs and Tubers Oh My!
+ By Alynon
+<br/>
+
+A Rangers Guide to Mushrooms and Herbs
+<br/> 
+Many of you young rangers out there have a chance to pick and gather 
+a variety of mushrooms and herbs as well as some berries and tubers 
+along the waysides. Many of these plants are great for eating. However, 
+as some of you unlucky newbies have found out, not all things that grow 
+in the wild are good to eat. While everyone likes a good fungi, many 
+have side effects that range from poison to tripping your head off. The 
+following is a short guide to help you keep safe while out there. 
+Of course if your one of those hippy types who like being really out
+there, you might consider this a guide to where to find the best stuff. 
+<br/>
+First off most of you young newbies get to explore the light forest 
+west of Udgaard, the Haon-Dor. For the most part you are safe to eat 
+anything you find in this woods, except the toad stools. The mushrooms 
+are rather tasty and good in stews as well as soups and salads. There is 
+a rather wonderful bush south of Mary's cabin that grows some beautiful 
+berries. Those are great for eating raw or cooked in many dishes. 
+As a rule of thumb however, any tubers or other random items you rangers 
+dig up or find while searching for food in the woods, it's a good idea 
+to cook it. Cooking over a fire tends too kill any poisons and molds in 
+these items making them not only delicious when roasted but safe to eat.
+<br/>
+Now for the more practiced and adventurous, Nymgaard is said to hold a 
+great number of interesting, delicious, and dangerous plant life. Many 
+different types of forests surround the city of Nymgaard. East of the 
+city is a strange area near a salt marsh that grows many different 
+and dangerous plants. Some of them will even attack you so be very 
+careful. As I have found in my travels the basic rule when dealing 
+with mushrooms is leave the blue ones alone. Some of them poison you 
+and some of them do much more. I have to admit once I got over the 
+first peak of my trip it kind of mellowed out and wasn't so bad, except
+for the mimes. However I still would suggest staying way from the 
+blue ones. Puffballs are dangerous to even breathe in the spores, stay
+away from them as well.
+<br/> 
+ 
+South of Nymgaard I found a strange forest that I got rather lost in. 
+This place was filled with a great number of different types plant life
+and fungi. For those of you starting out, gathering the red mushrooms 
+might be a good idea. The have some strange natural healing properties. 
+Not to mention they go great in salads. The blue ones here as I have 
+said before stay away! But if for some reason you don't believe me and 
+you just have to go and try one yourself, don't worry. It will all be ok, 
+once that ill feeling kicks in just go hunting for some green mushrooms. 
+This is the only place I have ever seen green ones, But lucky for you 
+I have found they can counteract the effects of those nasty blues.
+<br/>
+As for the herbs that seem to grow all over the place. Good luck with 
+that. Some of them are rather interesting and wonderful. While others 
+can be dangerous or disgusting. I would not suggest making a salad of 
+them. Unless you're willing too spend some time in bed sick as a dog. 
+However if you're in a jam and backed into a corner you never know these 
+herbs just might surprise you and save your life. So for those of you who 
+love to gamble or take risks these herbs are for you! Just remember, the
+herb shop in Nymgaard sells some pretty potent stuff and they must
+collect it somewhere nearby.
+<br/>
+Overall, the great world of Valhalla has many different types of plant 
+life. From forest floors, to shops in towns and other strange 
+locations. Not all are good, but many can aid you in your travels. I 
+suggest if you go out exploring and trying new things to be prepared. 
+Like any good ranger, pack some healing balms and some poison antidotes 
+and you should be ok. And for the gods' sakes, if you end up seeing
+spiders dancing in the streets with green bears and cats under the stars,
+leave your dang clothes on! We don't want to see you running naked down 
+the streets! Especially if we just ate some of those blue mushrooms.
+<br/>
+=============================================================
+"
+extra {"article 10", "10"}
+"
+ooooOooooOooooOooooOoooo<br/>
+       The Hunter's Lodge
+ooooOooooOooooOooooOoooo
+<br/>
+Information about Xp zones, Competitions and news.
+=============================================================
+          All time Legendary Hunters
+
+Doggy still holds top of all time  300,374,622  points.
+<br/>
+Quain is the nearest contender with 169,029,355 points 
+<br/>
+Elros has been replaced by Ninex in the third position with 165,179,734
+points.
+<br/>
+                 
+=============================================================
+            February Competition
+<br/>				
+ Was won by Marin with 5,928,090 points. 
+<br/>
+=============================================================
+            March Competition
+<br/>
+Was dominated by Advocates of Honor taking the first 5 positions. It
+was won by Cosmetica with a total of 4,876,613 points.
+<br/>
+
+=============================================================
+            April Competition
+<br/>				
+ Was won by Chratos with 2,218,523  points. 
+<br/>
+=============================================================
+            May Competition
+<br/>				
+ Was won by Vanesselle with 1,579,288  points. 
+<br/>
+=============================================================
+            June Competition
+<br/>				
+ Was won by Krantos with 226,483  points. 
+<br/>
+=============================================================
+            Yearly Competition 2011  
+<br/>	
+So far is led by Ninex with Doggy in second place and Kytes 
+in third.	
+<br/>
+=============================================================
+           The Ghoul Pool
+<br/>
+Kase holds the record with 1720 deaths.
+<br/>
+=============================================================
+
+"
+
+extra {"article 11", "11"}
+"
+ooooOooooOooooOooooOoooo
+The Gladiator's Arena
+ooooOooooOooooOooooOoooo
+<br/>
+ Law and Order
+ Enforcer of Truth
+  by Kytes
+
+Tegral upholder of truth seeing the failings of the current law system <br/>
+ has started to forge a vigilante group of those who only seek to use  <br/>
+justice for their own means and purposes. However for all sakes of 
+objectivity can one really blame the cityguards for such failings?
+they get paid a measly 3 or 4 iron pieces, are provided with lack luster 
+equipment and weapons and lack the essential training needed to enforce 
+the only true inpartial law that weve come to know as justice.
+<br/>
+Ah for the merriment of the young and the path they walk, for now a <br/>
+new tool has appeared to combat the old evil and push forward the <br/>
+strides of young warriors everywhere on their journey for personal 
+truth and justice. 
+<br/>
+Regardless of intentions the mighty tool of justice has gone forward 
+into the land spreading and encompassing many uses both the slaying <br/>
+of slanderous mages and the mass eradication of the animated dead so 
+beside the reasons of seeking the power of justice should we not simply 
+turn and look at the results?
+<br/>
+Well this is for you, my readers, to decide. Should justice only be <br/>
+based on results or the resolve and reasons of the enforcers of that <br/>
+which keep our land in balance. Whatever the readers decidem to this <br/>
+young reporter only one fact remains true and close to his heart. <br/>
+THIS HAMMER CAN KICK SERIOUS TAIL.
+<br/>
+=============================================================
+"
+extra {"article 12", "12"}
+"
+ooooOooooOooooOooooOoooo
+[Advocates of Honor]<div class='DEFAULT'>
+ooooOooooOooooOooooOoooo
+<br/> 
+No reports of anything worthwhile or interesting happening in 
+Unseen Chaos other than their sudden appearance in the land. 
+Unsurprisingly no members had any thoughts about 
+anything that were able to be shared with the citizens of Valhalla. 
+<br/>
+=============================================================<br/>
+ooooOooooOooooOooooOoooo
+=Bushido=<br/>
+ooooOooooOooooOooooOoooo
+<br/>
+No reports of anything worthwhile or interesting happening in 
+Unseen Chaos other than their sudden appearance in the land. 
+Unsurprisingly no members had any thoughts about 
+anything that were able to be shared with the citizens of Valhalla. 
+<br/>
+=============================================================<br/>
+ooooOooooOooooOooooOoooo
+~Drasnian Spies~<br/> 
+ooooOooooOooooOooooOoooo
+<br/>
+No reports of anything worthwhile or interesting happening in 
+Drasnian Spies. Unsurprisingly no members had any thoughts about 
+anything that were able to be shared with the citizens of Valhalla.  
+<br/>
+=============================================================
+ooooOooooOooooOooooOoooo
+[Kindred]<br/>
+ooooOooooOooooOooooOoooo
+<br/>
+ The Loyal Guardians of our Ways<br/>
+   By Gwymon Gwaedd-Gix
+<br/>
+So there have lots of one or another clan on for a while then
+they all leave to do things in other places and the list
+of citizens looks bereft of colorful clan tags. Except for Kindred.
+As one player mentioned to me they always see Kindred. 
+<br/>
+Remember back when Tardaz wrote of the qualities we seek and why
+we do not accept members for the sake of numbers? This is an
+example of why we prize loyalty. We are not gathered together
+in a large group to exert our will upon the citizens. We do not always   
+gather together to sweep through a town leaving nothing but death and
+decay in our wake. But we are here. There is usually at least one of 
+us around. Because we are loyal.
+<br/>
+Where now are the ranks of yellow, blue, and cyan that ridiculed
+Kindred for being so few. When they log in they lounge in their   
+clans sometimes deigning to emerge to grace the non-clanned with
+their presence and pearls of wisdom. Yet, Kindred remains out
+in the land protecting it from the ravages of those who would
+destroy our way of life. That is because we are loyal and only
+accept those within our number that hold the same trait to be 
+of the utmost importance. That is why we are Kindred.
+<br/>
+=============================================================
+ooooOooooOooooOooooOoooo
+<Unseen Chaos>
+ooooOooooOooooOooooOoooo
+<br/>
+No reports of anything worthwhile or interesting happening in 
+Unseen Chaos other than their sudden appearance in the land. 
+Unsurprisingly no members had any thoughts about 
+anything that were able to be shared with the citizens of Valhalla.  
+<br/>
+=============================================================
+"
+extra {"article 13", "13"}
+"
+ooooOooooOooooOooooOoooo
+    Classified Ads
+ooooOooooOooooOooooOoooo
+<br/>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PERSONAL
+Darling, I found out about your second wife. Perhaps you will find her
+parts before they decompose. I have taken all of the money, the horse, the
+dog and the baby. He is not yours anyway.   
+Snookums
+<br/>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOST
+Package delivery person. Apply to Bill at the Laboratory
+<br/>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+HELP WANTED
+Package delivery person. Apply to Bill at the Laboratory
+<br/>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+No Experience Neccesary!
+Models wanted. We pay top dollar. See Scarlet the the Lady
+of Negotiable Affection. Day care provided.
+<br/>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PERSONAL
+Children, contact me all is forgiven. 
+Grifton
+<br/>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+WANTED TO BUY
+Birthstones - especially Onyx, Ruby and Jasper we pay top price! 
+Contact Heulflodyn.
+<br/>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PERSONAL
+Bertha.
+We are ready.
+Gui
+<br/>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PERSONAL
+Woman seeking man with big heart. Contact Jesealla.
+<br/>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PERSONAL
+Woman seeking man with big wallet. Contact Fanny.
+<br/>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+"
+dilcopy noburyme@offices();
+dilcopy blowaway@function(60,"$1n is scattered into the breezes...");
+end /*newspaper2*/
+
+
+
+                                news_stand
+
+names {"newsstand", "stand"}
+title "the Newsstand"
+descr "The Newsstand is here."
+CONTAINER_DEF(10)
+extra {}
+" This is the Newsstand. This edition is free and can be yours by
+saying 'newspaper please'."
+
+dilbegin gpaper();
+var
+  item1 : unitptr;
+  item2 : unitptr;
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*4;
+
+   :start:
+   wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and (command("say"))
+                   and ("newspaper please" in argument)));
+
+   block;
+  /* item1:= restore("offices",self);
+   if (item1 == null) */
+      item1:= load("newspaper2@offices");
+
+  /* item2 := restore("offices",self);
+   if (item2 == null)*/
+     item2 := load("newspaper1@offices");
+
+   if ((item1.loadcount > 50) or (item2.loadcount > 50))
+   {
+      act("The machine grinds loudly, but produces no newspaper. "+
+          "Obviously, the machine is out of ink because too many copies"+
+          "have been produced... Try again later.",
+          A_ALWAYS, activator, null, null, TO_CHAR);
+      destroy(item1);
+      destroy(item2);
+   }
+   else
+   {
+      act("The machine spits out a newspaper which floats "+
+          "to your inventory.",
+          A_ALWAYS, activator, null, null, TO_CHAR);
+      act("The machine puts a newspaper in "+activator.name+"'s inventory.",
+          A_ALWAYS, activator, null, null, TO_REST);
+      link(item1, activator);
+      link(item2, activator);
+
+   }
+   goto start;
+}
+dilend
+end
+
+/* ****** End of Paper Defs ****** */
+
+%mobiles
+%reset
+
+load shredder into postoffice@udgaard max 4
+load shredder into postoffice@midgaard max 4
+load shredder into postoffice@arabian max 4 
+load shredder into postoffice@gobtown1 max 4 
+
+load pov_board into helper_room zonemax 1
+load paper_board into vt_o zonemax 1
+
+load news_stand into postoffice@udgaard local 1
+load news_stand into market_sq@midgaard local 1
+
+
+door hallway NORTH {EX_CLOSED, EX_OPEN_CLOSE}
+door hallway EAST {EX_CLOSED, EX_OPEN_CLOSE}
+door hallway WEST {EX_CLOSED, EX_OPEN_CLOSE}
+door helper_room SOUTH {EX_CLOSED, EX_OPEN_CLOSE}
+door vt_o WEST {EX_CLOSED, EX_OPEN_CLOSE}
+door conference_room EAST {EX_CLOSED, EX_OPEN_CLOSE}
+
+%end

@@ -1,0 +1,22 @@
+<br/>
+<br/>
+<br/>
+<br/>
+Usage open [direction] (item) | (door-name)<br/><br/>
+<br/>
+Example:<br/><br/>
+open east door<br/><br/>
+open barrel<br/><br/>
+<br/>
+If you want to open something unlocked and closed, just use this command.<br/>
+If it is not an item, but some sort of a door hatch etc. It will have a<br/>
+keyword, like 'open gate'. If what you want to open is  Closed  and<br/>
+locked, you need the key to unlock it first. <br/><br/>
+<br/>See Also:<br/><br/>
+Key<br/><br/>
+Close<br/><br/>
+Lock<br/><br/>
+Unlock<br/><br/>
+Spell lock<br/><br/>
+Spell unlock<br/><br/>
+<br/>

@@ -1,0 +1,471 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>The reset section</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Suggested object exercises"
+HREF="x4531.html"><LINK
+REL="NEXT"
+TITLE="Loading objects and NPCs"
+HREF="x4627.html"></HEAD
+><BODY
+CLASS="CHAPTER"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x4531.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4627.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="CHAPTER"
+><H1
+><A
+NAME="CH-07"
+></A
+>Chapter 8. The reset section</H1
+><P
+>Once you have learned to build rooms, objects and NPCs, you will
+find one main missing thing, while you have created NPCs and objects
+they don't exist in the game unless you load them.  When developing the
+<ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> we found that logging on and loading everything for the players to
+interact with, became a very difficult thing to do when we got over 30
+items.  After many seconds of thought we came up with the idea of a
+reset section that would do all of this work for us.  In fact the reset
+takes care of closing doors after players have opened them, loading NPCs
+and their equipment, loading objects by themselves in rooms or even
+loaded objects in objects.</P
+><P
+>Everything inside the reset section activates once at boot time and
+then again when the reset time is up and the reset flag is true.  These
+two fields were described in <A
+HREF="x338.html"
+>Section 3.2</A
+> and are included
+in the zone header.  The reset section is denoted by the symbol '%reset' and can placed
+anywhere but we try to keep it at the end of our zone files.  There is
+no set order you must reset your doors, objects, and NPCs in but I like
+to do doors first, special reset commands second, objects in rooms third, objects with objects in them
+forth, NPCs fifth,
+and finally NPCs.  You may find that you have a better way of sorting
+them and again it is up to you.</P
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="DOORRESET"
+>8.1. Door resets</A
+></H1
+><P
+>To show how the door resets work we will revisit an old room
+example from <A
+HREF="x1092.html#RMDOOREXITS"
+>Section 5.5.1</A
+>. The following two rooms are
+linked with a door and at boot time they are reset to closed.  When the
+mud boots the door flags set on the room are the door flags that are
+used.  After boot up time the reset section is where the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> gets its
+information about what to do with the door.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4570"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;hallway
+title "Module tunnel"
+descr "The hallway is about 50 meters long and around 100 meters from
+side to side and top to bottom...."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+west to chamber descr
+"The hallway opens up into a chamber."; 
+
+east to office descr
+"You see what looks to be an office."
+keyword {"air lock door","air lock","door"}
+open {EX_OPEN_CLOSE, EX_CLOSED};
+
+end
+
+office
+title "The station office"
+descr
+"Large paintings fill the walls of this part of the station...."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+west to hallway descr
+"You see what looks to be a hallway."
+keyword {"air lock door","air lock","door"}
+open {EX_OPEN_CLOSE, EX_CLOSED};
+end&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now that we have two rooms lets define the reset command and how
+it works.  All reset commands have a keyword and then a set of
+arguments.  The door reset command is simply 'door' followed by a set of
+arguments that tell the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> where the door is, which door in that
+location, and what you want to do with the door.  The command looks like
+this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4574"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;door &lt;room symbol&gt; &lt;Direction number&gt; {&lt;door flags&gt;}&#13;</PRE
+><P
+></P
+></DIV
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><P
+><B
+>Door argument explanation</B
+></P
+><DL
+><DT
+>room symbolic</DT
+><DD
+><P
+>As the name indicates this is the room that the door is located
+in.  If you are resetting a door not in the zone the reset
+command is in you will need to use a full symbolic name with the zone
+extension.  The following would be two valid examples.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4582"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//room symbolic in  this zone
+door myroom ...
+
+//room symbolic in another zone
+door out_room@frogwart ...&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>direction number</DT
+><DD
+><P
+>The direction number can be one of the pre-defined direction
+numbers in the file <TT
+CLASS="FILENAME"
+>vme.h</TT
+>.  shown here so you don't
+have to go flipping file to file.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4589"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define NORTH 0
+#define EAST  1
+#define SOUTH 2
+#define WEST  3
+#define UP    4
+#define DOWN  5
+#define NORTHEAST 6
+#define NORTHWEST 7
+#define SOUTHEAST 8
+#define SOUTHWEST 9
+&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>door flags</DT
+><DD
+><P
+>These flags, surrounded by '{}', describe the state of the door after the reset.  The following is the
+list of possible door flags.</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>EX_OPEN_CLOSE</DT
+><DD
+><P
+> Set this if you can open and close this exit, be it a door, gate or 
+    otherwise.</P
+></DD
+><DT
+>EX_CLOSED</DT
+><DD
+><P
+>Set this if you want the exit to be closed at reset time.</P
+></DD
+><DT
+>EX_LOCKED</DT
+><DD
+><P
+>Set this if you want the exit to be locked at reset time.</P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>An interesting aspect is that if you do not specify a key, you can
+    only unlock this door with the 'pick' skill, 'unlock' spell or from
+    <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> with UnSet();</P
+></TD
+></TR
+></TABLE
+></DIV
+></DD
+><DT
+>EX_PICK_PROOF</DT
+><DD
+><P
+>Using this flag renders the 'pick' skill and 'unlock' spell un useable on the 
+    lock of this exit.</P
+></DD
+><DT
+>EX_HIDDEN</DT
+><DD
+><P
+>If this bit is set, the exit is hidden until the mobile has successfully 
+    searched for it, using the 'search'-command.</P
+></DD
+></DL
+></DIV
+></DD
+></DL
+></DIV
+><P
+>Now that we have all the information we need we can close the door
+after the reset time expires.  For our two rooms the door reset would
+look like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4620"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;door hallway EAST {EX_OPEN_CLOSE, EX_CLOSED} 
+door office WEST {EX_OPEN_CLOSE, EX_CLOSED}
+ </PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>As you can see from the example it is very important to
+close both sides of the door.  If you do not close both sides you will
+get very weird and undefined errors when players are trying to open and
+close them</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>Another thing that you can do with the door reset command is
+change the doors status.  In our previous example we reset the door to
+its status that it has when it first is loaded into the game.  If
+however we wanted to change the door to a locked door we could do that
+by adding the locked flag like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4625"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;door hallway EAST {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED} 
+door office WEST {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED}&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x4531.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4627.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Suggested object exercises</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Loading objects and NPCs</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,19 @@
+Usage: donate &lt;item&gt; clan<br/><br/>
+Example: donate boots clan<br/>
+<br/>
+You can donate items to your clan chest from anywhere on the mud.  Remember that<br/>
+the chest will only store 25 items permanently.<br/>
+<br/>
+Note:<br/>
+You cannot donate or store containers such as bags that already contain items in<br/>
+the clan chest. Containers must be empty to be stored in the clan chest. Also<br/>
+items for quests should never be stored in clan chests.  Some of these may be<br/>
+world maxed items and if found in a clan chest, the chest may be purged of all<br/>
+contents on the first offense. If the problem continues it can lead to a clans <br/>
+removal.<br/>
+<br/>
+<br/>See Also:<br/><br/>
+cequipment<br/><br/>
+cstore<br/><br/>
+cunstore<br/><br/>
+<br/>

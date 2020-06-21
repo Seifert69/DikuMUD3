@@ -1,0 +1,3432 @@
+  Dil Updates
+  Ken Perry whistler@valhalla.com
+  v4.1, 22 March 2001
+
+  The Following sections describe all the added functions to Dil from
+  Version 4.0.  This document was created to bring older builders
+  quickly up to date with new functions in dil.  If you are a new user
+  of Dil it would be better to read the Dil Document.  All functions
+  found here are in the Dil document.
+  ______________________________________________________________________
+
+  Table of Contents
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1. String Functions
+
+     1.1 Compare strings with Case
+     1.2 Compare partial strings with Case
+     1.3 Delete a String file
+     1.4 Insert a string into a stringlist or integer into an intlist by index
+     1.5 Remove a string from a stringlist or an integer from an intlist by index
+     1.6 Get a listing of the String Directory
+     1.7 Check a file size
+     1.8 Edit a String field
+     1.9 interrupt editing before done"
+     1.10 Return left portion of String
+     1.11 Return Middle portion of String
+     1.12 Load a String file
+     1.13 String Comparison Operators
+     1.14 Replace a sub String with another String
+     1.15 Return Right portion of String
+     1.16 Save a String file
+     1.17 Change Case of String
+        1.17.1 Change to Lower Case
+        1.17.2 Change to UPper Case
+     1.18 Create Zone Logs
+
+  2. Unit functions
+
+     2.1 Delete a Unit file
+     2.2 Check to see if a Player exists
+     2.3 Check a players password
+     2.4 Set a players password
+     2.5 Delete a player
+     2.6 Get a listing of the Unit Directory
+     2.7 Remove a Unit from the game
+     2.8 Restore a Unit from a Unit file
+     2.9 Send the SFB_DONE message
+     2.10 Send the SFB_PRE message
+     2.11 Stop Units from fighting
+     2.12 Store Units to a Unit file
+     2.13 Reset a players level
+     2.14 Reset a players virtual level
+     2.15 Reset a players race information
+     2.16 Do Melee Damage to a enemy
+     2.17 Get an opponent from the combat list
+
+  3. New fields
+
+     3.1 The exptol field
+     3.2 The key field
+     3.3 The key field
+     3.4 opponentcount
+     3.5 The switched field on NPC
+     3.6 The Editing field on PC
+     3.7 The natural armour type field on PC and NPC
+     3.8 the vals field on extra
+
+  4. Miscellaneous functions
+
+     4.1 Adding a color in Dil
+     4.2 deleting a color in Dil
+     4.3 Getting a color
+     4.4 Changing a color
+     4.5 Changing the Game state
+     4.6 Does an item fit
+     4.7 Getting a weapons name
+     4.8 Getting a weapons info
+     4.9 Getting a skills name
+     4.10 Is an unit a light label id="sect-islight">
+     4.11 Reboot the mud
+
+  5. New Variable Types
+
+     5.1 The command pointer
+     5.2 The Integer List
+     5.3 The New extra pointer
+     5.4 The zone pointer
+
+  6. New built-in variables
+
+     6.1 The excmdstr
+     6.2 The excmdstr_case< label id="sect-excmdstr_case">
+
+  7. Internal interaction Dils
+
+     7.1 The Death function
+     7.2 The Link Dead function
+     7.3 The On Connect function
+
+
+  ______________________________________________________________________
+
+  1.  String Functions
+
+  1.1.  Compare strings with Case
+
+  Function:  integer strcmp( s1:string, s2:string) ;
+
+     s1 first string
+
+     s2 second string
+
+     returns
+
+        -1 if s1 < s2
+
+        0  if s1 = s2
+
+        1  if s1 > s2
+
+  This allows you to compare strings with case sensitivity in place.  If
+  you don't care about the case of the string use the normal '==' '>',
+
+  example:
+
+
+       ______________________________________________________________________
+
+
+       if (strcmp("I Care about Capitals",s2)==0))
+               {
+               sendtext ("You care I can see.&n",self);
+               quit;
+               }
+
+
+       ______________________________________________________________________
+
+
+
+
+
+
+
+
+  1.2.  Compare partial strings with Case
+
+  Function:  integer strcmp( s1:string, s2:string l :integer) ;
+
+     s1 first string
+
+     s2 second string
+
+     l  amount of significant digits to compare
+
+     returns
+
+        -1 if s1 < s2
+
+        0  if s1 = s2
+
+        1  if s1 > s2
+
+  This allows you to compare strings with case sensitivity in place and
+  it allows you to choose how much of the strings are compared.
+
+  example:
+
+
+       ______________________________________________________________________
+
+
+       if (strcmp("Mark Carper",s2,4)==0))
+               {
+               sendtext ("Hi Mark hows it going?&n",self);
+                       quit;
+               }
+
+
+       ______________________________________________________________________
+
+
+
+
+
+  1.3.  Delete a String file
+
+  Function:  integer delstr( filename : string ) ;
+
+     filename
+        The name of the String file to be deleted
+
+     Return
+        Returns an integer TRUE if deleted FALSE if not
+
+  The delstr is used to delete files that are used with the 'loadstr'
+  and each individual Zone has access to which is set up in the Zonelist
+  file in the VME etc directory.
+
+  Example:
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  dilbegin news|del ("arg : string /*filename to be deleted);
+  var
+          ret:integer;/*to hold the return value if deleted or not*/
+  code
+  {
+  ret:= delstr("news.txt");
+  if (!ret)
+          {
+          log ("File not deleted.");
+          quit;
+          }
+
+  sendtext ("News file deleted[&]n",self);
+  quit;/*dil delete routine done
+  }
+  dilend
+  ______________________________________________________________________
+
+
+
+
+  See Also ``Load String file'' and ``Save String file''
+
+
+  1.4.  Insert a string into a stringlist or integer into an intlist by
+  index
+
+  Function:  insert( sl : <stringlist or intlist>, i : integer, s :
+  string ) ;
+
+     sl the stringlist or intlist you are inserting to
+
+     i  the index where you want to insert the string
+
+     s  the string you want to insert
+
+  This function allows you to insert a string in a stringlist or intlist
+  with out re-writing the entire stringlist or intlist to do it.  The
+  following Dil will add a string in order to a stringlist.
+
+  Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  dilbegin stringlist add_in_order (sl:stringlist,s:string);
+  var
+   i:integer;
+   ln:integer;
+  code
+  {
+  if (length(sl)==0)
+   {
+   addstring (sl,s);
+   return (sl);
+   }
+
+  ln:=length(s);
+  i:=0;
+  while (i<ln)
+   {
+   if (length(sl.[i]) <=ln)
+    {
+    insert (sl,i,s);
+   return(sl);
+   }
+   i:=i+1;
+   }
+
+  addstring (sl,s);
+  return (sl);
+  }
+  dilend
+  ______________________________________________________________________
+
+
+
+
+
+  1.5.  Remove a string from a stringlist or an integer from an intlist
+  by index
+
+  Function:  remove( sl : stringlist, i : integer ) ;
+
+     sl the stringlist you are removing from
+
+     i  the index you want to remove
+
+  This function allows you to remove a string from a stringlist with out
+  leaving a blank spot in the stringlist.
+
+  Example:  remove (sl, i);
+
+
+  1.6.  Get a listing of the String Directory
+
+  Function:  stringlist strdir( match : string ) ;
+
+     match
+        The wild card file you want to match or '*' for all.
+
+     return
+        a Stringlist with all the filenames that match the 'match'
+        argument.
+
+  The 'match' argument uses the same wild cards as the Linux 'ls'
+  command so the following will work.
+
+
+     *  Match any character or group of characters
+
+     ?  Match one of any character
+
+     [...]
+        Match one of a set of characters
+
+  Example:
+
+
+       ______________________________________________________________________
+
+       "corpse*" matches:  corpse.10938 corpse.whistler corpseofwhistler ...
+       "corpse?" matches corpse1 corpses corpse5 ...
+       "[abc]*" matches ability about cost back ...
+       "[a-z]*" about zoo man father ...
+       "start[nm]end" matches startnend startmend
+       ______________________________________________________________________
+
+
+
+
+  Example DIL:
+
+
+       ______________________________________________________________________
+
+       dilbegin wanted ();
+       var
+               wantedlist:stringlist;
+               templist:stringlist;
+               i:integer;
+               ln:integer;
+       code
+       {
+
+               wantedlist := strdir ("dead*");
+
+                       i := 0;
+                       ln := length (wantedlist);
+
+               while (i < ln )
+                       {
+                       templist := split (wantedlist.[i],".");
+                       sendtext (templist.[1]+" wanted dead!&n",self);
+                       i:=i+1;
+                       }
+
+       quit;
+       }
+       dilend
+
+       ______________________________________________________________________
+
+
+
+
+  The previous DIL would be an example of a command to check the wanted
+  dead players on the VME if you saved the files with the first word
+  being 'dead' and separated it with a '.' and the players name. For
+  example if 'whistler' was wanted dead the file name would be
+  'dead.whistler'
+
+
+
+
+  1.7.  Check a file size
+
+  Function:  integer filesize ( filename :string);
+
+     filename
+        file you want to check
+
+     return
+        a file size in bites 0 if no file
+
+  Example DIL:
+
+
+       ______________________________________________________________________
+
+       dilbegin notebook ();
+       code
+       {
+               ns := filesize (self.name+"notebook");
+               if ( ns >500000)
+               {
+                       sendtext ("Your notebook is full.&n",self);
+                       quit;
+               }
+               else if ( ns > 250000)
+               {
+                       sendtext ("Your notebook is more than half full.&n",self);
+                       quit;
+               }
+               else if (ns >125000)
+               {
+                       sendtext ("Your Notebook is only 1/4 full.&n",self);
+                       quit;
+               }
+               else if (ns >0)
+               {
+                       sendtext ("Your notebook is less than 1/4 full.&n",self);
+                       quit;
+               }
+               else
+               {
+                       sendtext ("You don't have anything in your Notebook.&n",self);
+                       quit;
+               }
+
+       }
+       dilend
+       ______________________________________________________________________
+
+
+
+
+  The previous DIL example shows how you could use the 'filesize'
+  instruction to check the size of a player stored notebook.
+
+
+  1.8.  Edit a String field
+
+  Function:  beginedit ( u : unitptr);
+
+     u  the PC unit doing the editing
+
+     return
+        When done  editing it returns SFB_EDIT and activator is set to
+        PC
+
+  The 'BEGINEDIT' function sets a PC into editing mode.  while in edit
+  mode the PC field 'editing is set to true.  Once the PC is done
+  editing a 'SFB_EDIT' message is sent to the unit editing to continue
+  on with the DIL.  If for some reason the PC needs to break out of the
+  editor before it is done editing then the Dil needs to call the
+  'killedit' function ``interrupt editing before done''
+
+  example:
+
+
+       ______________________________________________________________________
+
+       dilbegin edextra ();
+       var
+               temp:string;
+       code
+       {
+               beginedit (self);
+               wait(SFB_EDIT,self==activator) ;
+               temp:=textformat(argument);
+               addextra (self.extra,"general",temp);
+               quit;
+       }
+       dilend
+       ______________________________________________________________________
+
+
+
+
+  The previous DIL is an example of how you could make a command to set
+  the general extra which is the characters description when you do
+  'look player'
+
+
+
+
+  1.9.  interrupt editing before done"
+
+  Function:  killedit ;
+
+  This function is used to kill the editor on a PC if it needs to stop
+  editing before the PC is done editing.  An example of when this is
+  needed is when a player is killed while editing or is transfered away
+  from a place where he was editing.  You can let them finish but it may
+  be wierd for a person to finish posting in one room while in another.
+
+  Example
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  dilbegin editextra (arg:string);
+  code
+  {
+  interrupt (SFB_DEAD,self==activator,int_quit);
+          beginedit (self);
+          wait(SFB_EDIT,self==activator) ;
+          temp := textformat(argument);
+  addextra (self.outside.extra ,{"graphitee"},temp);
+  quit;
+  :int_quit:
+  killedit;
+  quit;
+  }
+  dilend
+  ______________________________________________________________________
+
+
+
+
+
+  1.10.  Return left portion of String
+
+  Function:  string left ( o : string, l : integer );
+
+     o  the original string to be parsed
+
+     l  The amount of characters to parse out
+
+     return
+        the left portion of the string with length l
+
+  This function parses the string passed to it and returns the number of
+  characters defined in its second argument.
+
+  Example:  "short" := left ("shorten me",5);
+
+  Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  dilbegin aware describe (arg:string);
+  var
+          side:string;
+          oneword:stringlist;
+          location:string;
+          ln:integer;
+          args:stringlist;
+          temp:string;
+          i:integer;
+          x:extraptr;
+  code
+  {
+          if (self.type!=UNIT_ST_PC)
+                  quit;
+          if (self.position <POSITION_SLEEPING)
+          {
+                  act ("Recover first and then you can describe your body parts.",
+                          A_ALWAYS,self,null,null,TO_CHAR);
+                  quit;
+          }
+
+          args:=getwords(arg);
+          ln:=length(args);
+          if ((ln<1) or (ln>2))
+          {
+                  sendtext ("No such location to describe.",self);
+                  quit;
+          }
+          else if (ln>1)
+                  goto two_word;
+
+          :one_word:
+
+          if ((arg==left("help",length(arg))) or
+                  (arg==""))
+                  goto hlp_dscr;
+
+          oneword := {"arms","butt","ears","eyes","face","feet","General","hair","hands",
+                  "head","legs","mouth","neck","nose","nostrils","teeth","toes","tongue"};
+
+          i := 0;
+          ln := length(args.[0]);
+          temp:="ERROR";
+          while (i<18)
+          {
+                  if (args.[0]==left(oneword.[i],ln))
+                  {
+                          temp := oneword.[i];
+                          break;
+                  }
+                  i := i+1;
+          }
+
+          if (temp=="ERROR")
+          {
+                  sendtext ("No such location to describe.",self);
+                  quit;
+          }
+
+          goto describe;
+
+          :two_word:
+
+          oneword := {"arm","leg","foot","hand","eye","ear"};
+          temp := "ERROR";
+          ln := length(args.[0]);
+          if (args.[0] == left("left",ln))
+                  side:="left";
+          else if (args.[0] == left("right",ln))
+                  side:="right";
+          else
+          {
+                  sendtext ("No such location to describe.",self);
+                  quit;
+          }
+
+          i := 0;
+          while (i<6)
+          {
+                  if (args.[1]==left(oneword.[i],ln))
+                  {
+                          temp := oneword.[i];
+                          break;
+                  }
+                  i := i+1;
+          }
+
+          if (temp=="ERROR")
+          {
+                  sendtext ("No such location to describe.",self);
+                  quit;
+          }
+
+          temp := side+" "+temp;
+
+          :describe:
+          if (temp=="General")
+                  location := "";
+          else
+                  location := temp;
+
+          x := location in self.extra;
+          if (x!=null)
+                  if (location=="")
+                          sendtext("your Current description for your body is:  &n"+x.descr+"&n",self);
+                  else
+                          sendtext("your Current description for your "+location+"is:  &n"+x.descr+"&n",self);
+
+
+          if (location=="")
+                  sendtext ("Enter a text you would like others to see when they look at your body.&n",self);
+          else
+                  sendtext ("Enter a text you would like others to see when they look at your "+location+".&n",self);
+
+          beginedit (self);
+          wait(SFB_EDIT,self==activator) ;
+          temp := textformat(argument);
+          oneword:={""};
+          subextra(self.extra,location);
+          addstring (oneword, location);
+          addextra (self.extra,oneword,temp);
+          sendtext ("Description added.&n",self);
+          quit;
+
+          :hlp_dscr:
+
+          sendtext ("&nCorrect usage of 'describe':&n&n",self);
+          sendtext ("describe <position>&n&n",self);
+          sendtext("<position> being one of the following:&n&n",self);
+          sendtext( "arms        butt        ears        eyes&n"+
+                                                  "face        feet        General     hair&n"+
+                                                  "hands             head        left arm    left leg&n"+
+                                                  "left foot   left hand   left eye    left ear&n"+
+                                                  "legs        mouth       neck        nose&n"+
+                                                  "nostrils    right arm   right leg   right foot&n"+
+                                           "right hand  right eye   right ear   teeth&n"+
+                                          "toes        tounge&n&n",self);
+          sendtext ("Example:  &n&n",self);
+          sendtext ("describe left leg&n",self);
+          quit;
+  }
+  dilend
+  ______________________________________________________________________
+
+
+
+
+
+  1.11.  Return Middle portion of String
+
+  Function:  string mid ( o : string, s : integer, e : integer );
+
+     o  the original string to be parsed
+
+     s  The starting point of the string to be parsed out
+
+     e  the ending point of the string to be parsed out
+
+     return
+        the portion of the string defined by the 's' and 'e' values
+
+  This function parses the string passed to it and returns the portion
+  of the string defined by the start value and the end value that is
+  also passed to the function.
+
+  Example:  "rock" := mid ("sprocket",3,6);
+
+
+  1.12.  Load a String file
+
+  Function:  integer loadstr( filename : string , buff : string );
+
+     filename
+        The name of the string file to be loaded
+
+     buff
+        The string that you wish to read the file contents into
+
+     Return
+        FILE_LOADED, FILE_NOT_FOUND, FILE_OUT_OF_MEMORY, or
+        FILE_TO_LARGE
+
+  Loadstr is used to load strings from disk that were saved either by
+  savestr or any text editor.  The 'loadstr' is perfect for operations
+  such as on-line edited newspaper, a lottery where the tickets are sold
+  to players, creating smarter NPC's that can remember through reboots
+  who they are hunting, Dil based teachers, message boards, mail system,
+  news command., zone or room based help,  competition boards, and much
+  much more.
+
+  Disk access is always slow.  attempt to keep file sizes to a minimum
+  for quick loading.  Otherwise you might cause serious delays on the
+  server.
+
+  Example:
+
+  ______________________________________________________________________
+
+  dilbegin news_load ();
+  var
+          ret:integer;/*to hold the return value if loaded or not*/
+          buff:string;/*to hold the loaded string*/
+  code
+  {
+  ret:= loadstr("news.txt",buff);
+  if (!ret)
+          {
+          log ("File not read.");
+          quit;
+          }
+
+  sendtext(buff+"[&]n",self);
+  quit;/*dil load routine done destroy self.*/
+  }
+  dilend
+  ______________________________________________________________________
+
+
+
+
+  See Also ``Delete a String file'' and ``Save String file''
+
+
+  1.13.  String Comparison Operators
+
+  Operators:   <= >= < >
+
+  All of these operators can now support sorting strings.  They are non-
+  case sensitive which means they don't care if it has capitals or not
+  it sorts them the same.
+
+
+  1.14.  Replace a sub String with another String
+
+  Function:  string replace( t :string, n : string, o : string);
+
+     t  the target string you want to replace
+
+     n  what you want to replace the target with
+
+     o  the original string
+
+     return
+        the string with the old string replaced by the new string
+
+  This function replaces all occurences of a string in another string
+  with a new string.
+
+  Example:
+
+  "Jafar %t% %l%" := replace(%n%,pc.name,"%n% %t% %l%"); "Jafar the
+  human %l%" := replace(%t%,pc.title,"Jafar %t% %l%"); "Jafar the human
+  1" := replace(%l%,itoa(pc.vlevel),"Jafar the human %l%");
+
+
+  1.15.  Return Right portion of String
+
+  Function:  string right ( o : string, r : integer );
+
+     o  the original string to be parsed
+
+
+     r  The amount of characters to parse out
+
+     return
+        the right portion of the string with length r
+
+  This function parses the string passed to it and returns the number of
+  characters from the right defined in its second argument.
+
+  Example:  "Easy" := right ("This is Easy",4);
+
+
+  1.16.  Save a String file
+
+  Function:  integer savestr( filename : string , buff : string , wa
+  :string);
+
+     filename
+        The name of the String file to save the String to
+
+     buff
+        The String you wish to save into the file
+
+     wa Write or append
+
+     Return
+        FILE_SAVED, FILE_NOT_SAVED, FILE_NOT_CREATED, or FILE_ILEGAL_OPP
+
+  Savestr is used to save strings to disk to be loaded later by the
+  'load' function.  The 'savestr' and 'Loadstr' is perfect for
+  operations such as on-line edited newspaper, a lottery where the
+  tickets are sold to players, creating smarter NPC's that can remember
+  through reboots who they are hunting, Dil based teachers, message
+  boards, mail system, news command., zone or room based help,
+  competition boards, and much much more.
+
+  Note:The append/write argument must be in lower case and can only be a
+  any string file by that name.  If the argument is 'a' it will append
+  to the file by that name.
+
+  Disk access is always slow.  If you use loadstr on a continuous basis
+  always attempt to keep file sizes to a minimum for quick loading.
+  Otherwise you might cause serious delays on the server.
+
+  Example:
+
+
+       ______________________________________________________________________
+
+       dilbegin news_save (arg:string  /*for saving*/);
+       var
+               ret:integer;/*to hold the return value if saved or not*/
+       code
+       {
+       ret:= savestr("news.txt",arg,"w");
+       if (!ret)
+               {
+               log ("File not wrote");
+               quit;
+               }
+
+       sendtext("New news file wrote.[&]n",self);
+       quit;/*dil save routine done destroy self.*/
+       }
+       dilend
+       ______________________________________________________________________
+
+  See Also ``Delete a String file'' and ``Load a String file''
+
+
+  1.17.  Change Case of String
+
+  1.17.1.  Change to Lower Case
+
+  Function:  string tolower ( s : string );
+
+
+     s  String to lower case
+
+     return
+        the string passed in lower cased
+
+  This function returns a copy of the string passed in but with out
+  capitals.
+
+  Example:  "hello!" := tolower("HELLO!");
+
+
+  1.17.2.  Change to UPper Case
+
+  Function:  string toupper ( s : string );
+
+     s  String to lower case
+
+     return
+        the string passed in lower cased
+
+  This function returns a copy of the string passed in with all
+  characters changed to be capitalized.
+
+  Example:  "HELLO!" := toupper ("hello!");
+
+
+  1.18.  Create Zone Logs
+
+  Function:  flog (filename : string,  s : string, wa : string );
+
+     filename
+        The Filename of the file to appear in the log directory.
+
+     s  The string to be logged.
+
+     wa Write or Append
+
+  The 'flog' function allows you to split up your logs in the log
+  directory so that you don't end up with everything in the main
+  vme.log.
+
+  Note:The append/write argument must be in lower case and can only be a
+  any log file by that name.  If the argument is 'a' it will append to
+  the file by that name.
+
+  Example:
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  dilbegin zonelog (s:string);
+  code
+  {
+  flog (self.zonidx+".log",s,"a");
+  return;
+  }
+  dilend
+  ______________________________________________________________________
+
+
+
+
+  The previous DIL function will work in any zone to log to a file with
+  that zones name each zone could use it to keep zone logs separated.
+
+
+  2.  Unit functions
+
+  2.1.  Delete a Unit file
+
+  Function:  integer delunit( filename : string ) ;
+
+     filename
+        The name of the Unit file to be deleted
+
+     Return
+        Returns an integer TRUE if deleted FALSE if not
+
+  delunit is used to delete files that are used with the 'Restore' and
+
+  Example:
+
+
+       ______________________________________________________________________
+
+       dilbegin chest_del ("arg : string /*filename to be deleted*/);
+       var
+               ret:integer;/*to hold the return value if deleted or not*/
+       code
+       {
+       ret:= delstr("chest.file");
+       if (!ret)
+               {
+               log ("File not deleted.");
+               quit;
+               }
+
+       sendtext("Chest file deleted[&]n",self);
+       quit;/*dil delete routine done
+       }
+       dilend
+       ______________________________________________________________________
+
+
+
+
+  See Also ``Restore a Unit from a Unit file'' and ``Store Units to a
+  Unit file''.
+
+
+  2.2.  Check to see if a Player exists
+
+  Function:  integer isplayer( pcname : string ) ;
+
+     pcname
+        the name of the player being checked
+
+     Return
+        Returns an integer TRUE if pcname is a player FALSE if not
+
+  This function is used to find out if a string you pass to it is a
+  player or not.  This can be used and is used to find out if a player
+  is truly a player that an Administrator is deleting with out having
+  that player on line.
+
+  Example:
+
+
+       ______________________________________________________________________
+
+       if (not isplayer(arg))
+               {
+               sendtext (arg+" is not a character.&n",self);
+               quit;
+               }
+
+
+       ______________________________________________________________________
+
+
+
+
+
+  2.3.  Check a players password
+
+  Function:  integer check_password( u : unitptr, s : string ) ;
+
+     u  the unit that you want to check the password of
+
+     s  the password you are using to check
+
+     Return
+        Returns an integer TRUE if pcname is the units password FALSE if
+        not
+
+  This function checks the string against the units password and returns
+  TRUE if they match.
+
+  Example:
+
+
+       ______________________________________________________________________
+
+       if (not check_password(pc,arg))
+               {
+               sendtext (arg+" is not "+pc.name"'s password.",self);
+                       quit;
+               }
+
+
+       ______________________________________________________________________
+
+
+
+
+
+  2.4.  Set a players password
+
+  Function:  set_password( u : unitptr, s : string ) ;
+
+     u  the unit that you want to set the password of
+
+     s  the password you are using to set
+
+  This function sets a unit password it only works on Players characters
+  of corse.
+
+  Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  dilbegin aware do_password (arg:string);
+  var
+          prmt:string;
+   firstpwd:string;
+
+   i:integer;
+   tlist:stringlist;
+
+  code
+  {
+
+  if(self.type != UNIT_ST_PC) quit;
+  arg:="";
+  prmt:=self.prompt;
+  self.prompt:="Enter new password:  ";
+  wait (SFB_CMD,self==activator);
+  block;
+  tlist:=getwords (excmdstr);
+  if (length(tlist)>1){
+  sendtext ("Password must be only one word.  Try again.&n",self);
+  self.prompt:=prmt;
+  quit;
+  }
+  if (length(excmdstr)<5){
+          sendtext ("Password to short. Password must be 5 characters or longer.  Try again.&n",self);
+          self.prompt:=prmt;
+          quit;
+          }
+
+  if (length(excmdstr)>16){
+          sendtext ("Password to long. Try again.&n",self);
+          self.prompt:=prmt;
+          quit;
+          }
+
+          firstpwd:=excmdstr;
+          self.prompt:="Enter password again:  ";
+  wait (SFB_CMD,self==activator);
+  block;
+  if (excmdstr!=firstpwd){
+  sendtext ("Passwords do not match try again.&n",self);
+  self.prompt:=prmt;
+  quit;
+  }
+  set_password(self,excmdstr);
+  sendtext("Changed your Password to '"+excmdstr+"' Please write it down!&n",self);
+  self.prompt:=prmt;
+
+  quit;
+  }
+  dilend
+
+
+  ______________________________________________________________________
+
+
+
+
+
+  2.5.  Delete a player
+
+  Function:  checkdelete_player( s : string ) ;
+
+
+     s  the player name you want to delete
+
+  This function deletes a player but it doesn't check to see if it was
+  deleted or if it even existed you will have to do that with
+  'isplayer'.
+
+  Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  dilbegin aware do_delete (arg:string);
+  var
+          temp:string;
+          err:integer;
+  code
+  {
+
+  if(self.type != UNIT_ST_PC) quit;
+
+  if (self.level>200)
+          goto admin_delete;
+
+  :char_delete:
+          if (arg!="self forever")
+                  {
+                  sendtext ("To delete your char type:  'delete self forever'&n",self);
+                  quit;
+                  }
+
+  err:=loadstr("delete.txt",temp);
+
+  if (err<1)
+          goto no_insure;
+
+  sendtext (temp,self);
+
+  sendtext ("If your sure you still want to delete your character, 'say delete me'&n",self);
+  sendtext ("Doing anything else will abort the deletion.&n",self);
+
+  wait (SFB_CMD, self==activator);
+  if (command ("say"))
+
+          if (argument=="delete me")
+          if (self.extra.[CLAN_RANK]!=null)
+                  exec ("cdefect",self);
+                  delete_player(self.name);
+
+  sendtext("Deletion aborted&n",self);
+
+  quit;
+
+          :no_insure:
+                  if (self.extra.[CLAN_RANK]!=null)
+                  exec ("cdefect",self);
+                          delete_player(self.name);
+
+  quit;
+          :admin_delete:
+          if (arg=="self forever")
+                  goto char_delete;
+  if (arg==""){
+  sendtext("You must supply a characters name to delete one.&n",self);
+  quit;
+  }
+
+  if (arg==self.name){
+  sendtext ("To delete self you need to type 'delete self forever'&n",self);
+  quit;
+  }
+
+  if (not isplayer(arg))
+          {
+          sendtext (arg+" is not a character.&n",self);
+          quit;
+          }
+  dilcopy ("god_delete@clans("+arg+")",self);
+
+          sendtext (arg+" has been deleted.&n",self);
+  quit;
+  }
+  dilend
+
+
+  ______________________________________________________________________
+
+
+
+
+
+  2.6.  Get a listing of the Unit Directory
+
+  Function:  stringlist unitdir( match : string ) ;
+
+     match
+        The wild card file you want to match or '*' for all.
+
+     return
+        a Stringlist with all the filenames that match the 'match'
+        argument.
+
+  The 'match' argument uses the same wild cards as the Linux 'ls'
+  command so the following will work.
+
+     *  Match any character or group of characters
+
+     ?  Match one of any character
+
+     [...]
+        Match one of a set of characters
+
+  Example:
+
+
+       ______________________________________________________________________
+
+       "corpse*" matches:  corpse.10938 corpse.whistler corpseofwhistler ...
+       "corpse?" matches corpse1 corpses corpse5 ...
+       "[abc]*" matches ability about cost back ...
+       "[a-z]*" about zoo man father ...
+       "start[nm]end" matches startnend startmend
+       ______________________________________________________________________
+
+
+
+
+  Example DIL:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  dilbegin aware reload_corpse();
+  var
+          corpselist:stringlist;
+          u:unitptr;
+          ln:integer;
+          i:integer;
+          x:extraptr;
+  code
+  {
+          corpselist:=unitdir("corpse*");
+          ln:=length(corpselist);
+          i:=0;
+          while (i<ln)
+          {
+          u:=restore(corpselist.[i],null);
+          x:=CORPSE_EXTRA in u.extra;
+          if (u!=null)
+                  if (x!=null)
+                          link (u,findroom(x.descr));
+                  else
+                          link (u,findroom("temple@udgaard"));
+          i:=i+1;
+          }
+
+  quit;
+  }
+  dilend
+  ______________________________________________________________________
+
+
+
+
+  The previous DIL example is the DIL used in restoring corpses to the
+  game in case of a crash.  For more information you can see how the
+  death DIL'S work by reading through the file death.zon in the
+  vme2.0/zone.  directory.
+
+
+  2.7.  Remove a Unit from the game
+
+  Function:  destroy ( u : unitptr );
+
+     u  :Unit to remove from game
+
+  The destroy function works in two ways depending on the Unit being
+  acted on.  If the Unit being acted on is a PC the player is saved and
+  ejected from the game.  If the Unit being acted on is a NPC, or an
+  Object. the purge function destroys the Unit.  Currently destroy will
+  not destroy rooms.  This is different from the old destroy function in
+  that it removes the player out of the game instead of leaving the
+  player in the menu.
+
+  Example
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  dilbegin purge_all_pc();
+  var
+          u:unitptr/*Unit used to purge each player*/
+          n:unitptr;/*used to keep track of next player*/
+  code
+  {
+  u:=ghead();/*get first pc in game list*/
+  n:=u;
+
+
+  while (n.type==UNIT_ST_PC)/*while unit is a pc*/
+          {
+          n:=u.gnext;
+          purge(u);
+          }
+
+  quit;/*done whiping out the players*/
+  }
+  dilend
+  ______________________________________________________________________
+
+
+
+
+
+  2.8.  Restore a Unit from a Unit file
+
+  Function:  unitptr restore( filename : string , u : unitptr );
+
+     filename
+        The name of the Unit file
+
+     u  The Unit you want to restore into or null if none
+
+     Return
+        if 'u' null returns a pointer to the Unit loaded, if 'u' not
+        null returns null and loads Units from the specified file into
+        the unit 'u'
+
+  restore loads a copy of a unit or units which were previously saved
+  with the unit which executes the restore command unless the 'u'
+  argument is not null.  If the 'u' argument is an unitptr like room,
+  object, npc, or pc the items restored will be placed inside the 'u'
+  Unit..
+
+  Note, It is only possible to restore items as long as the main-
+  database contains a reference for the unit 'name@zone'.  Use 'Store'
+  and 'Restore' sparingly - remember that items saved in player's
+  inventories are automatically saved in their instance.
+
+  The 'store' and 'restore' are perfect for operations such as mud
+  mailing objects from player to player, storage devices for players
+  that will keep inventory through a reboot.  Even the ability to save a
+  players inventory while they fight in an arena and restore it to them
+  undamaged when finished.  finally it could be used to save a donation
+  room through reboots since it can be used on a room to store the
+  contents of a room any NPC or objects in the room would be saved
+  through reboot.
+
+  Disk access is always slow.  If you use 'Restore' on a continuous
+  basis always attempt to keep file sizes to a minimum for quick
+  loading.  Otherwise you might cause serious delays on the server.  If
+  the Dil that uses Restore saves at certain times try to make it so the
+  saves are spread out over as large amounts of time as possible.
+  Example 1:
+
+
+       ______________________________________________________________________
+
+       dilbegin chest_load ();
+       var
+               waist:unitptr;/*to hold the null returned in this example*/
+               chest:unitptr;/*pointer to the storage chest*/
+       code
+       {
+       chest:=load ("chest@myzone");/*get the container*/
+       if (chest==null)
+               {
+               log ("Error");/*log an error*/
+               quit;
+               }
+
+       waist:=restore("chest."+self.zoneidx,chest);
+       /*
+       restore given filename into chest
+       waist can be ignored in this dil since it is not used.
+       */
+       link (chest, self);/*link chest into room*/
+       quit;/*dil load routine done destroy self.*/
+       }
+       dilend
+       ______________________________________________________________________
+
+
+
+
+  Example 2:
+
+
+       ______________________________________________________________________
+
+       dilbegin chest_load ();
+       var
+               chest:unitptr;/*item to be loaded*/
+       code
+       {
+       chest:=restore("chest."+self.zoneidx,null);/*restore into chest*/
+       if (chest== null)/*see if something was restored*/
+               chest:=load("donate_chest@"+self.zoneidx);
+               /*load a new one if there is nothing restored*/
+
+       link (chest, self);/*link item into room*/
+       quit;/*destroy the load dil.*/
+       }
+       dilend
+       ______________________________________________________________________
+
+
+
+
+  Note:  Example 1 is to be used if 'storall' was used not storing a
+  container.  Example 2 is for items stored with 'store' with the
+  container saved as well.
+
+  See Also ``Restore a Unit from a Unit file'' and ``Delete a Unit
+  file''.
+
+
+
+
+  2.9.  Send the SFB_DONE message
+
+  Function:/send_PRE( c : string, a :unitptr, m : unitptr, t :unitptr, p
+  : integer, arg : string, o : unitptr);
+
+     c  the command string that is sending the message
+
+     a  the unitptr (activator) that activated the message
+
+     m  the unitptr (medium) that the Dil is acting through
+
+     t  the unitptr (target) the Dil is acting on
+
+     p  the power of the message
+
+     arg
+        the argument sent with the message
+
+     o  the unitptr (other) you also want the message to go to
+
+  This sends the 'SFB_DONE' message to any dils that are waiting for it
+  in the surrounding area and to the other pointer if not null.  The
+  following is just one example you can find many more in commands.zon
+
+  Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  dilbegin do_read (arg:string);
+  var
+  brdname : string;
+  i       : integer;
+  u       : unitptr;
+  x       : extraptr;
+  ln      : integer;
+  temp    : string;
+  templist: stringlist;
+  buff    : string;
+  f_name  : string;
+  act_str : string;
+  code
+  {
+  i:=atoi (arg);
+  if (i<0)
+          {
+          exec ("look "+arg,self);
+          goto read_quit;
+          }
+
+  if (itoa (i)!=arg)
+          {
+          exec ("look "+arg,self);
+          goto read_quit;
+          }
+
+  u:=self.outside.inside;
+  while (u!=null)
+          {
+          if ((u.type==UNIT_ST_OBJ) and (u.objecttype==ITEM_BOARD))
+                  break;
+          u:=u.next;
+          }
+
+  if (u==null)
+          {
+          act ("You do not see that here.",A_ALWAYS,self,null,null,TO_CHAR);
+          quit;
+          }
+
+                  if (u.extra.["$BOARD_L_RES"].descr!="")
+                  {
+                  act_str:=u.extra.["$BOARD_L_RES"].descr(self,u);
+                  if (act_str!="")
+                  {
+          act(act_str,
+                          A_ALWAYS,self,null,null,TO_CHAR);
+                  quit;
+                  }
+                  }
+
+  brdname:=u.names.[length (u.names)-1];
+  i:=loadstr (brdname+".idx",temp);
+  if (i<=0)
+          {
+          act ("But the board is empty!",
+                  A_ALWAYS,self,null,null,TO_CHAR);
+          goto read_quit;
+          }
+
+  templist:=split(temp,"&x");
+  ln:=length (templist);
+  x:="$BOARD_MAX" in self.extra;
+  if ((atoi(arg)>atoi(x.descr)) or
+  (atoi(arg)>ln))
+          {
+          act("That message exists only within the boundaries of your mind.",
+                  A_ALWAYS,self,null,null,TO_CHAR);
+          goto read_quit;
+          }
+
+  i:=atoi(arg);
+  temp:=templist.[i-1];
+  f_name:=getword(temp);
+  i:=loadstr (brdname+"."+f_name,buff);
+  if (i==0)
+          {
+          sendtext("You have to let the poster finish the post before reading it.",self);
+          quit;
+          }
+  if (i<1)
+          {
+          log("05: Error when loading board info.");
+          act ("This board is not working report to an Adminstrator",
+                  A_ALWAYS,self,null,null,TO_CHAR);
+                  quit;
+                  }
+
+  templist:=split(f_name,".");
+  if (length(templist)<2)
+          act ("Message "+arg+":  "+temp,
+                  A_ALWAYS,self,null,null,TO_CHAR);
+  else
+          act ("Message "+arg+":  Re:  "+temp,
+                  A_ALWAYS,self,null,null,TO_CHAR);
+
+  pagestring(buff,self);
+
+  :read_quit:
+   send_done("read",self,null,u,0,arg,null);
+  quit;
+  }
+  dilend
+  ______________________________________________________________________
+
+
+
+
+  2.10.  Send the SFB_PRE message
+
+  Function:/send_PRE( c : string, a :unitptr, m : unitptr, t :unitptr, p
+  : integer, arg : string, o : unitptr);
+
+     c  the command string that is sending the message
+
+     a  the unitptr (activator) that activated the message
+
+     m  the unitptr (medium) that the Dil is acting through
+
+     t  the unitptr (target) the Dil is acting on
+
+     p  the power of the message
+
+     arg
+        the argument sent with the message
+
+     o  the unitptr (other) you also want the message to go to
+
+
+  takes same arguments as send_done but returns either SFR_SHARE or
+  SFR_BLOCK.
+
+  If the command is blocked by another special or dil, then SFB_BLOCK
+  will be returned, and you should quit your dil.
+
+  Example:
+
+
+       ______________________________________________________________________
+
+
+       dilbegin cmdtst(arg : string);
+       var
+         i : integer;
+       code
+       {
+          i:=send_pre("cmdtest",self,null,null,0,argument,null);
+
+       if (i == SFR_BLOCK)
+         quit;
+
+                 sendtext ("No one blocked me!&n",self);
+                 quit;
+                 }
+                 dilend
+
+
+       dilbegin pretest();
+       code
+       {
+          :loop:
+          wait(SFB_PRE, command("cmdtest"));
+          block;
+               act("hahahaha I blocked your cmdtest command",
+              A_SOMEONE, activator, medium, null, TO_ALL);
+               goto loop;
+       }
+       dilend
+       ______________________________________________________________________
+
+
+
+
+
+  2.11.  Stop Units from fighting
+
+  Function:  stop_fighting( ch: unitptr, vict : unitptr ) ;
+
+     ch unitptr - person you are stoping the fighting for
+
+     vict
+        unitptr - person you are removing from the fighting or null for
+        everyone
+
+  This function can be used to cancel combat in a room or with two
+  people.  The following example copied to a player will stop any fight
+  the player is in.
+
+  Example:
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  dilbegin stop_combat();
+  code
+  {
+  stop_fighting(self,null);
+  quit;
+  }
+  dilend
+  ______________________________________________________________________
+
+
+
+
+
+  2.12.  Store Units to a Unit file
+
+  Function:  store( u : unitptr , filename : string , container :
+  integer );
+
+     u  The Unit that has the contents to be stored or is to be stored
+
+     filename
+        The name of the file you want to store the Units to
+
+     container
+        Do you want to save the container 'TRUE' for yes, 'False' for no
+
+  Store saves a copy of a unit or units.  if the container value is
+  'TRUE' everything inside  including the container itself will be
+  saved.  If the container argument is 'FALS' only the contents of the
+  object will be saved.  You will want to use the 'TRUE' value when
+  saving something like a Clan chest that has items inside to store and
+  has extras on the chest that you also wish to keep.  The 'FALSE' value
+  for container would be good for temporary storage of PC inventory or
+  for storing room contents.
+
+  The 'store' and 'restore' are perfect for operations such as mud
+  mailing objects from player to player, storage devices for players
+  that will keep inventory through a reboot.  Even the ability to save a
+  players inventory while they fight in an arena and restore it to them
+  undamaged when finished.  finally it could be used to save a donation
+  room through reboots since it can be used on a room to store the
+  contents of a room any NPC or objects in the room would be saved
+  through reboot.
+
+  Disk access is always slow.  If you use store on a continues basis, it
+  is essential that you do so ONLY if it is needed and even then, only
+  at amply spaced intervals.  Otherwise you might cause serious delays
+  on the server.  Remember that items saved in player's inventories are
+  automatically saved in their instance.
+
+  Example 1:
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  dilbegin save_contents ();
+  code
+  {
+
+  :start:
+  wait (SFB_CMD,command ("store")); wait for the store command*/
+  block;
+  store("chest."+self.zoneidx,self,FALSE);/*store everything inside self.*/
+  goto start;
+  }
+  dilend
+  ______________________________________________________________________
+
+
+
+
+  Example 2:
+
+
+       ______________________________________________________________________
+
+       dilbegin save_container_n_contents ();
+       code
+       {
+
+       :start:
+       wait (SFB_CMD,command ("store")); wait for the store command*/
+       block;
+       store("chest."+self.zoneidx,self,TRUE);/*store everything inside self and self.*/
+       goto start;
+       }
+       dilend
+       ______________________________________________________________________
+
+
+
+
+  See Also ``Store a Unit to a Unit file'' and ``Delete a Unit file''.
+
+
+  2.13.  Reset a players level
+
+  Function:  reset_level( u : unitptr ) ;
+
+     u  player your resetting
+
+  This function simply resets a players level.  Can be used in functions
+  like reroll where you set the players back to the way he first logged
+  on.
+
+  Example:  reset_level (u);
+
+  See Also ``reset a players virtual level'' and ``reset a players race
+  information''
+
+
+  2.14.  Reset a players virtual level
+
+  Function:  reset_vlevel( u : unitptr ) ;
+
+     u  player your resetting
+
+  This function simply resets a players virtual level.  Can be used in
+  functions like reroll where you set the players back to the way he
+  first logged on.
+
+  Example:  reset_vlevel (u);
+
+  See Also ``reset a players level'' and ``reset a players race
+  information''
+
+
+  2.15.
+
+  Reset a players race information
+
+  Function:  reset_race( u : unitptr ) ;
+
+     u  player your resetting
+
+  Reset a characters race, weight, height, age, lifespan, and costs for
+  training.  As if you first log on the character.  Great for reroll
+  along with 'reset_level' and 'reset_vlevel'.
+
+  Example:  reset_race (u);
+
+  See Also ``reset a players level'' and ``reset a players virtual
+  level''
+
+
+  2.16.  Do Melee Damage to a enemy
+
+  Function:  meleedamage ( c : unitptr, v : unitptr, b : integer, wt :
+  integer );
+
+     c  the character that should make an additional attack
+
+     v  the character being attacked
+
+     b  any penalty or bonus added to the attack.
+
+     wt the weapon type of the attack, if a valid type then that is
+        used for the attack purpose, otherwise the default weapon/hand
+        attack is used.
+
+     returns
+        The amount of damage done or -1 for failed
+
+  ch' performs an attack (using whatever weapon is wielded or his bare
+  hands) against 'vict'.
+
+  If wtype is within a valid weapon range (WPN_XXX) any weapon will be
+  bypassed, and the value will be used as the attacktype. Good for
+  things like "meleeattack(ch, vict, bonus, WPN_CIRCLE_KICK)" if you
+  want person to be able to perform an extra attack even though wielding
+  a weapon or something. Note that this will require BOTH a weapon type
+  WPN_CIRCLE_KICK and a skill "kick" in order for it to work.
+
+  Example:
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+  dilbegin kick(arg : string);
+  external
+     provoked_attack (victim : unitptr, ch : unitptr);
+
+  var
+     bonus : integer;
+     targ  : unitptr;
+
+  code
+  {
+     if ((self.type == UNIT_ST_PC) and (self.weapons[WPN_KICK] <= 0))
+     {
+        act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+     }
+
+     if (arg == "")
+     {
+        if (self.fighting)
+        {
+           targ := self.fighting;
+           goto kick;
+        }
+
+        act("Kick who?", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+     }
+
+     targ := findunit(self, arg, FIND_UNIT_SURRO, null);
+
+     if ((targ == null) or not visible(self, targ))
+     {
+        act("That person is not here!", A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+     }
+
+     if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+     {
+        act("You can't kick that, silly!", A_SOMEONE, self, null, null,
+            TO_CHAR);
+        quit;
+     }
+
+     if (targ == self)
+     {
+        act("You kick yourself.", A_HIDEINV, self, null, null,
+            TO_CHAR);
+        act("$1n kicks $1mself.", A_HIDEINV, self, null, null,
+            TO_ROOM);
+        quit;
+     }
+
+     if ((targ.type==UNIT_ST_PC) and
+     (self.type==UNIT_ST_PC))
+    {
+  if (not(isset (self.pcflags, PC_PK_RELAXED)))
+    {
+    act ("You are not allowed to do this unless you sign the book of blood.",
+    A_ALWAYS,self,null,null,TO_CHAR);
+    quit;
+    }
+
+  if (not(isset (targ.pcflags, PC_PK_RELAXED)))
+    {
+    act ("You are not allowed to do this unless $2e signs the book of blood.",
+    A_ALWAYS,self,targ,null,TO_CHAR);
+    quit;
+    }
+    }
+
+
+     :kick:
+     /* Penalty for wielding a weapon while kicking! */
+     if (equipment(self, WEAR_WIELD))
+       bonus := -25;
+     else
+       bonus := +25;
+     if (self.endurance < 2)
+       act("You are too exhausted to attempt that.", A_ALWAYS, self, null,
+           null, TO_CHAR);
+     else self.endurance := self.endurance - 2;
+     provoked_attack (targ, self);
+     bonus := meleeattack(self, targ, (bonus+self.level), WPN_KICK);
+     quit;
+  }
+  dilend
+  ______________________________________________________________________
+
+
+
+
+
+
+  2.17.  Get an opponent from the combat list
+
+  Function:  unitptr getopponent( ch : unitptr, i : integer ) ;
+
+     ch NPC or PC you are checking
+
+     i  The number opponent you want to check.
+
+     Return
+        Returns the (I)th NPC or PC in ch's list or null if there isn't
+        one.an integer TRUE if deleted FALSE if not
+
+  This function allows you to spin through a NPC or PC's combat list so
+  that you can deal with characters that are distance attacking and so
+  you could attack people that you are not yet in full melee with
+
+  Example:  Dil command to list people you are fighting with
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  dilbegin ch_combat (arg:string);
+  var
+   oppo:unitptr;
+   i:integer;
+
+  code
+  {
+  sendtext ("You are fighting the following:&n&n",self);
+  if (self.opponentcount==0){
+  sendtext ("NONE!",self);
+  quit;
+  }
+  oppo:=getopponent(self,0);
+  i:=1;
+  while (oppo!=null){
+  sendtext (oppo.name+"&n",self);
+  oppo:=getopponent(self,i);
+  i:=i+1;
+  }
+
+  quit;
+  }
+  dilend
+  ______________________________________________________________________
+
+
+
+
+
+
+  3.  New fields
+
+  3.1.  The exptol field
+
+  Field:  exptol Type:  integer
+
+  This field shows the amount of experience the char needs for its next
+  level.  Obviously this is a Pc field.
+
+
+
+  3.2.  The key field
+
+  Field:  key Type:  string
+
+
+
+  3.3.  The key field
+
+  Field:  key Type:  string
+
+  This field allows you to check or set the key that can open this unit.
+
+  Example:
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  if (obj.key=key_obj.key)
+  {
+  sendtext ("Yup you have the key.&",self);
+  quit;
+  }
+  ______________________________________________________________________
+
+
+
+
+
+  3.4.  opponentcount
+
+  Field:  opponentcount Type:  integer
+
+  This field gives you the count of PC or NPC that the PC or NPC is
+  fighting.
+
+  Example:  Dil command to list people you are fighting with
+
+
+       ______________________________________________________________________
+
+       dilbegin ch_combat (arg:string);
+       var
+        oppo:unitptr;
+        i:integer;
+       code
+       {
+       sendtext ("You are fighting the following:&n&n",self);
+       if (self.opponentcount==0){
+       sendtext ("NONE!",self);
+       quit;
+       }
+       oppo:=getopponent(self,0);
+       i:=1;
+       while (oppo!=null){
+       sendtext (oppo.name+"&n",self);
+       oppo:=getopponent(self,i);
+       i:=i+1;
+       }
+
+       quit;
+       }
+       dilend
+       ______________________________________________________________________
+
+
+
+
+
+  3.5.  The switched field on NPC
+
+  Field:  switched Type:  unitptr
+
+  Points at the Character that is switched into this NPC.
+
+  Example:\
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  if (npc.switched.name=="Papi")
+          {
+  act ("Papi is my controller!",
+  A_ALWAYS,npc,null,null,TO_REST);
+          quit;
+          }
+  ______________________________________________________________________
+
+
+
+
+
+  3.6.  The Editing field on PC
+
+  Field:  editing Type:  integer
+
+  This field is either 'TRUE' or 'FALSE'.  'TRUE' means the PC is
+  editing and 'False' means it is not.  This can be used to make sure
+  you do not bother someone who is editing something with the
+  'BEGINEDIT' functions.
+
+  Example:\
+
+
+       ______________________________________________________________________
+
+       if (pc.editing==TRUE)
+               {
+               sendtext ("This character is editing leave him alone.&n",self);
+                       quit;
+               }
+       ______________________________________________________________________
+
+
+
+
+
+  3.7.  The natural armour type field on PC and NPC
+
+  Field:  natural_armour Type:  integer
+
+  This field is the value of armour that the NPC has when naked.  Can be
+  used to create your own damage Dils that act on what an NPC is
+  wearing.
+
+  Example:
+
+
+       ______________________________________________________________________
+
+       if (npc.natural_armour==ARM_CHAIN)
+               {
+               damage:=50;/*chain damage*/
+               }
+
+
+       ______________________________________________________________________
+
+
+
+
+
+
+
+  3.8.  the vals field on extra
+
+  Field:  vals Type:  intlist
+
+  This field is used to access the integer values on an extra.
+
+  Example:\
+
+
+       ______________________________________________________________________
+
+       if (xptr.vals.[0]==5)
+               {
+               sendtext ("The buttons says '5'&n",self);
+                       quit;
+               }
+       ______________________________________________________________________
+
+
+
+
+
+  4.  Miscellaneous functions
+
+  4.1.  Adding a color in Dil
+
+  Function:  addcolor (ch : unitptr, ks : string, cstr : string ) ;
+
+     ch character you are adding the color to
+
+     ks key string for the color
+
+     cstr
+        color string
+
+  This function allows your Dils to create and add their own personal
+  colors to a players color list.  That way you can actually make an act
+  in a color that the player chooses or you yourself choose.
+
+  Function:  addcolor(pc, "clan_who","&c+w&bn");
+
+
+  4.2.  deleting a color in Dil
+
+  Function:  addcolor (ch : unitptr, ks : string) ;
+
+     ch character you are deleting the color from
+
+     ks key string for the color
+
+  This function is used to delete any colors from a players personal
+  color list.
+
+  Function:  delcolor(pc, "clan_who");
+
+
+  4.3.  Getting a color
+
+  Function:  getcolor (ch : unitptr, ks : string) ;
+
+     ch character you are deleting the color from
+
+     ks key string for the color
+
+  This function returns what color a player has for a key in the players
+  list.
+  Function:  string := getcolor(pc, "clan_who");
+
+
+  4.4.  Changing a color
+
+  Function:  addcolor (ch : unitptr, ks : string, cstr : string ) ;
+
+     ch character you are adding the color to
+
+     ks key string for the color
+
+     cstr
+        color string
+
+  This will change a color in a players personal list.
+
+  Function:  changecolor(pc, "clan_who","&c+w&bn");
+
+
+  4.5.  Changing the Game state
+
+  Function:    gamestate( u : unitptr, gs : integer );
+
+  Change the gamestate of a unitptr, uses the GS_ defines from the
+  vme.h. This is used on the log on menu of the VME 2.0 release.  which
+  is shown here as an example but it can also be used in a command.
+  When used it removes the char from playing so be aware that players
+  could use this to hide if you run a player killing style mud.
+
+  Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  dilbegin informer();
+  var
+  tgt : unitptr;
+  code
+  {
+  heartbeat := PULSE_SEC;
+
+  tgt := ghead();
+
+  while(tgt.type == UNIT_ST_PC)
+  {
+
+   if((isset(tgt.pcflags,PC_INFORM)) and (tgt != self))
+   {
+          if(visible(tgt,self))
+          {
+          if(self.outside == tgt.outside)
+           sendtext(self.name+" has arrived.&n", tgt);
+            else
+             sendtext(self.name+" has entered the world.&n", tgt);
+          }
+   }
+
+  tgt := tgt.gnext;
+  }
+
+  return;
+  }
+  dilend
+
+  dilbegin aware on_connect();
+  external
+          informer();
+          login_modify(tgt : unitptr);
+
+  var
+    wizlvl : integer;
+          i:integer;
+  err : integer;
+  motd : string;
+  welcome : string;
+  goodbye : string;
+  code
+  {
+  heartbeat := PULSE_SEC;
+
+  if(dilfind("do_quit@commands",self))
+          i := dildestroy("do_quit@commands", self);
+
+  err := loadstr("motd",motd);
+
+  if(err > 0)
+  {
+          motd := textformat(motd);
+          sendtext(motd+"&n&n", self);
+
+  }
+
+  err := loadstr("welcome",welcome);
+  if(welcome)
+          welcome := textformat(welcome);
+
+  if (self.level < 200)
+  {
+  login_modify(self);
+  dilcopy ("clan_delete@clans",self);
+  dilcopy ("clan_clear@clans",self);
+
+
+  if(err > 0)
+          sendtext("&n"+welcome+"&n&n", self);
+    informer();
+    exec("look", self);
+    quit;
+  }
+  gamestate(self, GS_MENU);
+
+  :wiz_menu:
+  sendtext("Welcome to Valhalla&n&n", self);
+  sendtext("1) Enter Valhalla&n", self);
+  sendtext("W) Change Wizinv level&n [&c+g"+itoa(self.minv)+"&[default]]&n",self);
+  sendtext("0) Exit Valhalla&n&n", self);
+  sendtext("Make your choice: ", self);
+  wait(SFB_CMD, TRUE);
+
+  if (command("1") )
+  {
+    gamestate(self, GS_PLAY);
+    if(err > 0)
+          sendtext("&n"+welcome+"&n&n", self);
+    informer();
+    exec("look", self);
+    quit;
+  } else if (command("0") ) {
+    err := loadstr("goodbye",goodbye);
+    if(err > 0)
+    {
+    goodbye := textformat(goodbye);
+    sendtext(goodbye, self);
+    }
+    destroy(self);
+    quit;
+  } else if (command("w") ) {
+    sendtext("Enter new WizInv Level: ", self);
+    wait(SFB_CMD, TRUE);
+    wizlvl := atoi(cmdstr);
+    if (wizlvl > self.level)
+      wizlvl := self.level;
+    self.minv := wizlvl;
+  } else {
+    sendtext("Invalid Selection&n&n", self);
+    goto wiz_menu;
+  }
+
+  }
+  dilend
+  ______________________________________________________________________
+
+
+
+
+  Look in vme.h for the possible values you can send to the menu
+  function.
+
+
+  4.6.  Does an item fit
+
+  Function:  string fits ( ch : unitptr, obj : unitptr, n : integer);
+
+
+     ch character you are checking for a fit
+
+     obj
+        object you are checking if fits
+
+     n  the wear position in 'VME.h'
+
+     returns
+
+  This will return if an item fits or a string describing why not if
+  not.
+
+  Example:
+
+
+       ______________________________________________________________________
+       act_str:=fits(ch,obj,WEAR_BODY);
+       if (act_str=="")
+               sendtext ("This object fits!",self);
+       else
+               sendtext ("This object is "+act_str+" to fit.&n",self);
+               quit;
+               }
+
+
+       ______________________________________________________________________
+
+
+
+
+
+  4.7.
+
+  Getting a weapons name
+
+  Function:  string weapon_name( i : integer ) ;
+
+     i  Weapon to get the name of ass defined in 'values.h' and
+        'weapons.def'
+
+     returns
+        The name of the weapon that corresponds with the integer value
+
+  example:
+
+
+       ______________________________________________________________________
+
+       myweap:=weapon_name(5);
+       ______________________________________________________________________
+
+
+
+
+
+  4.8.
+
+  Getting a weapons info
+
+  Function:  intlist weapon_info( i : integer ) ;
+
+     i  Weapon to get the info of as defined in 'values.h' and
+        'weapons.def'
+
+     returns
+        Intlist containing 4 values:
+        0  Number of hands
+
+        1  weapon speed
+
+        2  weapon type
+
+        3  shield block value
+
+  This function gives you access to the values in the weapons.def file.
+  With this things like 'wear' equipment' and 'look' are much easier to
+  write in Dil.
+
+  Example
+
+
+       ______________________________________________________________________
+
+       dilcopy id_weap (arg:string);
+       var
+         i:integer;
+         il:intlist;
+       code
+       {
+       il:=weapon_info(atoi(arg));
+
+       if (il!=null)
+       {
+       sendtext ("Number of hands:  "+itoa(il.[0])+"&n";
+                    sendtext ("Speed:  " +itoa(il.[1])+"&n",self);
+                                sendtext ("Type:  "+itoa(il.[0])+"&n",self);
+                                sendtext ("Shield value:  "+itoa(il.[0])+"&n",self);
+                                }
+       else
+       {
+       sendtext ("No such weapon.&n",self);
+       }
+
+       quit;
+       }
+       dilend
+
+       ______________________________________________________________________
+
+
+
+
+
+
+  4.9.
+
+  Getting a skills name
+
+  Function:  string skill_name( i : integer ) ;
+
+     i  Skill to get the name of ass defined in 'values.h' and
+        'commands.def'
+
+     returns
+        The name of the skill that corresponds with the integer value
+
+  example:
+
+
+
+
+
+  ______________________________________________________________________
+
+  myski:=skill_name(5);
+  ______________________________________________________________________
+
+
+
+
+
+  4.10.  Is an unit a light label id="sect-islight">
+
+  Function:  integer islight ( u : unitptr )
+
+     u  Unit that you are checking
+
+     returns
+
+  Simply checks the item to see if it is a light.
+
+
+  4.11.  Reboot the mud
+
+  Function:  reboot ;
+
+  This function works like a quit command.  Anything after the reboot
+  function in a Dil will not be executed the mud will reboot instantly.
+  The zone must have root privileges in the zonelist in order to use
+  this function.
+
+  Simple reboot command
+
+
+       ______________________________________________________________________
+
+       dilbegin cmd_reboot (arg:string);
+       code
+       {
+       sendtext ("Rebooting the mud.&n",self);
+       reboot;
+       }
+       dilend
+       ______________________________________________________________________
+
+
+
+
+
+  5.  New Variable Types
+
+  5.1.  The command pointer
+
+  Type:  cmdptr
+
+  cmdptr fields
+
+     name
+        string - command name
+
+     type
+        integer - command type like social or skill or just command
+
+     level
+        integer - minimum level to use command
+
+     loglevel
+        integer - level of character that can see the log 0 for no logs
+     position
+        integer - minimum position to use command
+
+     next
+        cmdptr - pointer to the next cmdptr
+
+     previous
+        cmdptr - pointer to the previous cmdptr
+
+  The cmdptr can be used to search the command list or display all the
+  commands.  It is also now possible to sort the commands by type by
+  defining your own command types and using the type field to sort on.
+
+  In order to get the first command in the list you use the following
+  function:
+
+  Function:  chead();
+
+  If you want to get a specific command then you use the following
+  function:
+
+  Function:  cmdptr := getcommand (s : string );
+
+  Example:
+
+
+       ______________________________________________________________________
+
+       dilbegin cmdtst(arg : string);
+       var
+         cmd : cmdptr;
+         st : string;
+
+       code
+       {
+          cmd := chead();
+               while (cmd)
+               {
+               st := cmd.name + " " + itoa(cmd.level) + " " + itoa(cmd.type) + " " +
+                     itoa(cmd.loglevel) + " " + itoa(cmd.position);
+          act("CMD: $2t", A_ALWAYS, self, st, null, TO_CHAR);
+               cmd := cmd.next;
+               }
+
+               cmd:=getcommand("kick");
+               sendtext ("You must be "+itoa(cmd.level+" to use kick&n",self);
+
+                  quit;
+       }
+       dilend
+       ______________________________________________________________________
+
+
+
+
+
+  5.2.  The Integer List
+
+  Type:  intlist
+
+  This variable type allows you to keep an ordered list of integers with
+  out having to create a variable for each integer.
+
+  Example:  Setting an intlist
+
+
+  ______________________________________________________________________
+
+  myintlist:={1,5,9,2,8,5};
+  myintlist.[10]:=50;
+  ______________________________________________________________________
+
+
+
+
+  If you set a index that is higher then the highest index every index
+  in between will be set to zero.  For example if you only have to
+  values in the intlist and you set index value 10 to 50 all indexes
+  between 2 and 10 will be set to 0.
+
+  Example:  Using intlists
+
+
+       ______________________________________________________________________
+       if (myintlist.[5]==5){
+       stuff
+       }
+
+       if (myintlist<myint){
+       stuff
+       }
+
+       i:=0;
+       ln:=length(myintlist);
+       while (i<ln){
+       myintlist.[i]:=i;
+       i:=i+1;
+       }
+       ______________________________________________________________________
+
+
+
+
+  See Also ``Insert a string into a stringlist or integer into an
+  intlist by index'' and ``Remove a string from a stringlist or integer
+  from an intlist by index''
+
+
+
+
+
+
+  5.3.  The New extra pointer
+
+  The only change is that extra pointers now have a intlist attached.
+  An example of defining one in a zone file would look like this.
+
+  Example:
+
+
+       ______________________________________________________________________
+
+       extra {"old extra"}
+       "old extra descrs"
+
+
+       extra {"new extra"}{1,5,9}
+       "new extra descrs"
+       ______________________________________________________________________
+
+
+
+  Both the old and new format works so you decide if you need the
+  intlist.  If you need a Dil can add an intlist later online.
+
+  Example:
+
+
+       ______________________________________________________________________
+
+        myext.vals.[5]:=6
+        myext2.vals:={5,4,3,2,1};
+
+        if ( myext.vals.[2]==5){
+        do stuff
+        }
+
+
+       ______________________________________________________________________
+
+
+
+
+
+  5.4.  The zone pointer
+
+  >WARNING: Please be very careful witht he Zoneptr variable type.
+  Understand that Zoneptr's are not finished and could be unstable.  All
+  bugs that you find please report and make sure you send any
+  suggestions to
+
+
+  Type:  zoneptr Zone Pointer Fields
+
+     next
+        unitptr - pointer to next zoneptr
+
+     previous
+        unitptr - pointer to previous zone
+
+     creators
+        stringlist - list of creators
+
+     name
+        string - zone name (%zone)
+
+     title
+        string - zone title (title "")
+
+     rooms
+        unitptr - pointer to the base room
+
+     objs
+        unitptr - pointer to the base objects of the zone
+
+     npcs
+        unitptr - pointer to base NPCs of the zone
+
+     resetmode
+        integer- reset mode of zone in 'values.h'
+
+     resettime
+        integer - the reset time of the zone
+
+     access
+        integer - the access level of the zone
+
+
+     loadlevel
+        integer - the loadlevel of the zone
+
+     payonly
+        integer - the paystatus of the zone
+
+     roomcount
+        integer - the number of rooms in a zone
+
+     objcount
+        integer - the numbner of objects in a zone
+
+     npccount
+        integer - the number of npcs/mobiles in a zone
+
+     fname
+        string - the filename of a zone
+
+     notes
+        string - the Zone Notes
+
+     help
+        string - the Zone Help
+
+  The 'zoneptr' works like a unitptr but it has some serious
+  differences.
+
+
+  WARNING: The 'rooms', 'objs'', and 'npcs' fields point to the base
+  unit not to a regular unitptr.  This means if you change what these
+  fields point to it will change all instances of that object that have
+  not been loaded.  Further more currently there is no protection so if
+  you delete the object it could cause nasty things.  We suggest you do
+  not delete these units it could cause you serious head ache.
+
+  To get the first zoneptr in the global list of zones you use 'zhead'.
+
+  Example: zoneptr := zhead();
+
+  Zone list command
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+
+  dilbegin zonelist (arg:string);
+  var
+   z:zoneptr;
+   buf:string;
+  code
+  {
+  z:=zhead();
+  while (z)
+          {
+          buf:="Name:  "+z.name+"&n";
+          buf:=buf+"Filename:  "+z.fname+"&n";
+          buf:=buf+"Creator:  "+z.creators.[0]+"&n";
+             buf:=buf+"Notes:  &n"+z.notes+"&n&n";
+             z:=z.next;
+             }
+
+             pagestring (buf,self);
+             quit;
+             }
+             dilend
+
+
+  ______________________________________________________________________
+
+
+
+
+
+  6.  New built-in variables
+
+  6.1.  The excmdstr
+
+  Field:  excmdstr Type:  string
+
+  This variable is a string which contains the "first string" which was
+  entered by a player.  The result of adding:
+
+
+       excmdstr + " " + argument
+
+
+  is the entire string as entered by the player. The 'excmdstr' is not
+  EXPANDED by the interpreter, but it is converted to lower case. So
+  assume a player types 'S' then the string is returned as 's'.  The it
+  to be changed to lower case see 'excmdstr_case'.
+
+
+  6.2.  The excmdstr_case< label id="sect-excmdstr_case">
+
+  Field:  excmdstr_case Type:  string
+
+  This variable is a string which contains the "first string" which was
+  entered by a player. The result of adding:
+
+
+       excmdstr_case + " " + argument
+
+
+  is the exact string as entered by the player.  The 'excmdstr' is not
+  changed in anyway from how a player types it.  If a player types 'S'
+  then the 'excmdstr_case' will have 'S' in it.
+
+
+
+  7.  Internal interaction Dils
+
+  7.1.  The Death function
+
+  Making this Dil will replace all that happens when a player is killed.
+  The VME staff will release their death code as soon as it has been
+  well tested.  For now you can give it a shot if you wish the following
+  is the Dil header that you have to use.  If you put this as is in your
+  mud it will make it so no one can die.  The death Dil must be placed
+  in the basis.zon in order for it to take affect.
+
+  Example:  Death Dil header
+
+
+       ______________________________________________________________________
+       dilbegin death (arg:string);
+       code
+       {
+       sendtext ("You died but we don't care.&n",self);
+       quit;
+       }
+       dilend
+       ______________________________________________________________________
+
+
+
+
+
+  7.2.  The Link Dead function
+
+  This Dil has been provided with the VME 2.0 release and it allows you
+  as an Administrator to do anything with a player you wish when they go
+  link dead.  Even tot he extent of just leaving them in the game as if
+  they never lost their link.  The example below does exactly that.  For
+  a better linkdead function you can look up the one used in the release
+  in the basis.zon The linkdead function must be in the basis.zon in
+  order for it to take affect.
+
+  Example  Link Dead
+
+
+       ______________________________________________________________________
+
+       dilbegin aware link_dead();
+       code
+       {
+       sendtext("You are now a NPC while your human is gone.&n",self);
+       quit;
+       }
+       dilend
+       ______________________________________________________________________
+
+
+
+
+
+  7.3.  The On Connect function
+
+  This function is what shows the start up menu or not when you log onto
+  the VME.  You now can do what ever you like when a player logs on.
+  This Dil has been included in the VME 2.0 release in the basis.zon
+  with all the other interaction dils the on_connect function must be in
+  basis.zon.  The following Dil just logs you on with a single message
+  and no menus at all.
+
+
+  Example:  On connect
+
+
+       ______________________________________________________________________
+
+       dilbegin aware on_connect();
+       code
+       {
+         gamestate(self, GS_PLAY);
+         if(err > 0)
+               sendtext("&n"+welcome+"&n&n", self);
+         exec("look", self);
+         quit;
+       }
+
+       destroy(self);
+       }
+       dilend
+       ______________________________________________________________________
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

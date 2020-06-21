@@ -1,0 +1,7 @@
+.depends
+*.o
+*~
+dilpar.tab.c
+dilpar.tab.h
+y.tab.c
+y.tab.h

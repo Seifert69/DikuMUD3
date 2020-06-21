@@ -1,0 +1,1097 @@
+/*
+filename    boards
+password    time
+changedby   Whistler
+EmailAdd
+request     compile
+version     1
+END HEADER*/
+
+#include <macros.h>
+
+
+%zone                                  boards
+reset RESET_NOT
+
+weather 1040
+
+creators {"whistler"}
+
+notes
+"This is boards what did you think?"
+help
+"This zone is not intended for players."
+%dil
+
+
+dilbegin cmd_board (arg:string);
+var
+ u:unitptr;
+code
+{
+u:=findroom("board_room@boards");
+if (u==null)
+ {
+ sendtext("No boards found.<br/>",self);
+ quit;
+ }
+
+ if (u.extra.["$board_extra"]==null)
+ {
+ sendtext("No boards found.<br/>",self);
+ quit;
+ }
+
+ sendtext ("Valhalla boards:<br/><br/>",self);
+ sendtext(u.extra.["$board_extra"].descr,self);
+quit;
+}
+dilend
+
+dilbegin string admin_res (u:unitptr,v:unitptr);
+code
+{
+if (u.level<200)
+	return ("You do not have access to this board.");
+
+return ("");
+}
+dilend
+
+dilbegin string rem_res (u:unitptr, v:unitptr);
+var
+ x:extraptr;
+code
+{
+
+if (u.level>=200)
+	return ("");
+
+	x:="Valhalla Editor" in u.quests;
+	if (x!=null)
+	return ("");
+
+return ("You can not remove other peoples posts.");
+}
+dilend
+
+dilbegin aware do_reply (arg:string);
+var
+	err:integer;
+	msg_old:stringlist;
+	msg:string;
+	msg_time:string;
+	u:unitptr;
+	xn:extraptr;
+	i:integer;
+	ln:integer;
+	msg_num:integer;
+	temp:string;
+	act_str:string;
+	buff:string;
+	indexlist:stringlist;
+	brdname:string;
+code
+{
+if (self.type!=UNIT_ST_PC)
+quit;
+
+u:=self.inside;
+while (u!=null)
+	{
+	if (u.type!=UNIT_ST_OBJ)
+		{
+		u:=u.next;
+		continue;
+		}
+	if (u.objecttype==ITEM_BOARD)
+		break;
+	u:=u.next;
+	}
+
+if (u==null)
+	{
+	u:=self.outside.inside;
+	while (u!=null)
+		{
+		if (u.type!=UNIT_ST_OBJ)
+			{
+			u:=u.next;
+			continue;
+			}
+	if (u.objecttype==ITEM_BOARD)
+			break;
+		u:=u.next;
+		}
+		}
+
+if (u.objecttype!=ITEM_BOARD)
+	{
+			act ("You have nothing to write on.",
+				A_ALWAYS,self,null,null,TO_CHAR);
+			quit;
+			}
+
+	if (u.extra.["$BOARD_P_RES"].descr!="")
+		{
+		act_str:=(string)u.extra.["$BOARD_P_RES"].descr(self,u);
+		if (act_str!="")
+		{
+	act(act_str,
+			A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+		}
+		}
+else
+{
+		if (self.level<10)
+				{
+	act("You need to be level 10 to post to this board.",
+			A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+		}
+		}
+
+if (arg=="")
+	{
+	act("Reply to which post?",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+		}
+
+msg_num:=atoi(arg);
+xn:="$BOARD_MAX" in u.extra;
+if ((msg_num<=0) or
+(msg_num>atoi(xn.descr)))
+{
+act ("You must Reply to a post between 1 - "+xn.descr+".",
+A_ALWAYS,self,null,null,TO_CHAR);quit;
+quit;
+}
+brdname:=u.names.[length(u.names)-1];
+err:=loadstr (brdname+".idx",temp);
+if (err<0)
+	{
+	log ("02:  Error in boards on:  "+brdname);
+	act ("This board doesn't work report to an administrator.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+	goto quitboard;
+	}
+
+if (err==0)
+	{
+	act ("But the board is empty.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+	goto quitboard;
+		}
+
+indexlist:=split(temp,"<br/>");
+ln:=length(indexlist);
+if (msg_num>ln)
+	{
+	act ("That message exists only within the boundaries of your mind.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+	goto quitboard;
+	}
+
+if (ln>=atoi (xn.descr))
+	{
+	act ("You can't reply to that the board is full.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+	goto quitboard;
+	}
+
+msg_time:=indexlist.[msg_num-1];
+msg_time:=getword( msg_time);
+/*msg_old:=split(msg_time,".");*/
+
+	err:=loadstr(brdname+"."+msg_time,buff);
+	if (err==0)
+		{
+		sendtext ("You can only reply to finished posts please wait and try again.<br/>",self);
+		quit;
+		}
+msg:=indexlist.[msg_num-1];
+buff:=getword(msg);
+msg_old:=split(msg," (");
+ln:=length(msg_old);
+if (ln >2)
+	{
+i:=0;
+while (i<ln-1)
+	{
+	if (i==0)
+	msg:=msg_old.[i];
+else
+	msg:=msg+" ("+msg_old.[i];
+	i:=i+1;
+	}
+ }
+ else
+	msg:=msg_old.[0];
+
+msg_time:=itoa(realtime);
+msg:=msg_time+ ".re "+msg+" ("+self.name+")";
+msg:="<br/>"+msg;
+err:=savestr(brdname+".idx",msg,"a");
+if (err<1)
+	{
+	log ("03:  Error in boards on:  "+brdname);
+	act ("This board doesn't work report to an administrator.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+	goto quitboard;
+	}
+temp:=indexlist.[msg_num-1];
+msg:=getword(temp);
+act ("You begin to reply to '"+temp+"'",
+A_ALWAYS,self,null,null,TO_CHAR);
+act ("$1n begins to write a message on the board.",
+A_ALWAYS,self,null,null,TO_REST);
+
+interrupt (SFB_MSG,((activator==self) and (argument=="linkdead")),clean_up);
+	interrupt(SFB_DEAD, activator == self, clean_up);
+interrupt (SFB_COM,activator==self,clean_up);
+interrupt (SFB_DONE, ((command("eat")) and
+(medium==self)),clean_up);
+
+	beginedit (self);
+	wait(SFB_EDIT,self==activator) ;
+if (argument!="")
+	{
+temp:=argument;
+	err:=savestr(brdname+"."+msg_time+".re",temp,"w");
+	if (err<1)
+		{
+		log ("04:  Error in boards on:  "+brdname);
+		act ("This board doesn't work report to an administrator.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+	goto quitboard;
+	}
+act ("Message:  "+itoa(length(indexlist)+1)+" posted.",
+	A_ALWAYS,self,null,null,TO_CHAR);
+	}
+else
+	{
+:clean_up:
+
+	err:=loadstr(brdname+".idx",buff);
+	if (err<1)
+		goto quitboard;
+	indexlist:=split(buff,"<br/>");
+	msg_num:=length(indexlist);
+	msg_num:=msg_num-1;
+
+temp:=indexlist.[msg_num];
+temp:=getword(temp);
+err:=delstr (brdname+".idx");
+err:=delstr (brdname+"."+temp);
+ln:=length(indexlist);
+i:=0;
+buff:="";
+while (i<ln)
+	{
+	if (msg_num==i)
+		{
+		i:=i+1;
+		continue;
+		}
+	if (length(buff)==0)
+		buff:=indexlist.[i];
+	else
+		buff:=buff+"<br/>"+indexlist.[i];
+	i:=i+1;
+	}
+
+err:=savestr(brdname+".idx",buff,"w");
+if (err<1)
+{
+	log ("07:  Error in writing new idx file. in remove for "+self.nameidx+"@"+self.zoneidx);
+goto quitboard;
+}
+	act ("Blank posts are such a waste of space!  Removing.",
+		A_ALWAYS, self,null,null,TO_CHAR);
+}
+  act ("$1n finishes posting to the board.",
+	A_ALWAYS,self,null,null,TO_REST);
+
+:quitboard:
+ send_done("reply",self,null,u,0,arg,null);
+killedit(self);
+quit;
+}
+dilend
+
+dilbegin board (idxfile:string,l_res:string,r_res:string,p_res:string,bmax:integer);
+var
+	msg_time:string;
+	tname:string;
+	msg_num:integer;
+	x:extraptr;
+	timestr:string;
+	timelist:stringlist;
+buff:string;
+ln:integer;
+	pc:unitptr;
+	index:stringlist;
+	i:integer;
+	err:integer;
+	temp:string;
+	templist:stringlist;
+	fixlist:stringlist;
+	fixstr:string;
+	act_str:string;
+	pname:stringlist;
+	buflist:string;
+code
+{
+addstring (self.names,idxfile);
+addextra (self.extra,{"$BOARD_MAX"},itoa(bmax));
+self.objecttype:=ITEM_BOARD;
+addextra (self.extra,{"$BOARD_L_RES"},l_res);
+addextra (self.extra,{"$BOARD_P_RES"},p_res);
+
+pc:=findroom("board_room@boards");
+
+if (pc!=null)
+{
+if (pc.extra.["$board_extra"]!=null)
+{
+if ((pc.type==UNIT_ST_ROOM) or (pc.type==UNIT_ST_PC))
+pc.extra.["$board_extra"].descr:=pc.extra.["$board_extra"].descr+self.title+" in "+self.outside.title+"<br/>";
+else
+pc.extra.["$board_extra"].descr:=pc.extra.["$board_extra"].descr+self.title+" in "+self.outside.outside_descr+"<br/>";
+}
+else
+{
+if ((pc.type==UNIT_ST_ROOM) or (pc.type==UNIT_ST_PC))
+addextra (pc.extra,{"$board_extra"},self.title+" in "+self.outside.title+"<br/>");
+else
+addextra (pc.extra,{"$board_extra"},self.title+" in "+self.outside.outside_descr+"<br/>");
+}
+}
+pc:=null;
+
+
+err:=loadstr (idxfile+".idx",temp);
+if (err<0)
+	{
+	log ("0.1:  Error in boards on:  "+idxfile);
+	act ("This board doesn't work report to an administrator.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+quit;
+	}
+
+if (err!=0)
+	{
+fixlist:=split(temp,"<br/>");	
+ln:=length(fixlist);
+err:=delstr (idxfile+".idx");
+
+i:=0;
+buff:="";
+temp:="";
+while (i<ln)
+	{
+if(fixlist.[i]=="")
+		{
+		i:=i+1;
+		continue;
+		}
+		templist:=getwords(fixlist.[i]);
+		if (templist.[0]==temp)
+		{
+		i:=i+1;
+		      continue;
+		}
+	if (length(buff)==0)
+		buff:=fixlist.[i];
+	else
+		buff:=buff+"<br/>"+fixlist.[i];
+	i:=i+1;
+	}
+
+err:=savestr(idxfile+".idx",buff,"w");
+if (err<1)
+log ("error in fix it list");
+}
+
+
+
+interrupt(SFB_CMD,command("remove"),rem_post);
+:start:
+wait (SFB_DONE,((command("look")) and
+(self ==target)));
+
+if (l_res!="")
+{
+act_str:=(string)l_res(activator,self);
+if (act_str!="")
+{
+act (act_str,
+A_ALWAYS,activator,null,null,TO_CHAR);
+	goto start;
+	}
+	}
+
+pc:=activator;
+secure (pc,lostpc);
+
+i:=loadstr(idxfile+".idx",buff);
+if (i==0)
+	{
+	act ("The board is empty.",
+		A_ALWAYS,pc,null,null,TO_CHAR);
+		unsecure (pc);
+		goto start;
+	}
+index:=split(buff,"<br/>");
+ln:=length (index);
+if (ln==0)
+	{
+	act ("The board is empty.",
+		A_ALWAYS,pc,null,null,TO_CHAR);
+		unsecure (pc);
+		goto start;
+	}
+i:=0;
+buflist:="<pre>";
+while (i<ln)
+	{
+	temp:=index.[i];
+	timestr:=getword(temp);
+	timelist:=split (timestr,".");
+	if (length(timelist)<2)
+		timestr:=asctime(atoi(timestr));
+	 else
+	 	{
+		temp:="Re:  "+temp;
+		timestr:=asctime(atoi(timelist.[0]));
+		}
+	timelist:=getwords(timestr);
+	timestr:=timelist.[0]+" "+timelist.[1]+" "+timelist.[2];
+	if (i<9)
+	buflist:=buflist+"  "+ itoa(i+1)+" - "+timestr+" "+temp+"<br/>";
+	else if (i<99)
+	buflist:=buflist+" "+itoa(i+1)+" - "+timestr+" "+temp+"<br/>";
+		else
+	buflist:=buflist+itoa(i+1)+" - "+timestr+" "+temp+"<br/>";
+
+i:=i+1;
+
+}
+buflist := buflist + "</pre>";
+if (pc.type==UNIT_ST_PC)
+sendtext(buflist,pc);
+else
+sendtext(buflist,pc);
+goto start;
+:lostpc:
+unsecure (pc);
+goto start;
+
+:rem_post:
+x:="$BOARD_MAX" in  self.extra;
+if (x==null)
+	goto start;
+msg_num:=atoi(argument);
+if ((itoa(msg_num)!=argument) or
+	(msg_num<0) or
+	(msg_num>atoi(x.descr)))
+	goto start;
+
+err:=loadstr(idxfile+".idx",buff);
+if (err<1)
+	goto start;
+templist:=split(buff,"<br/>");
+
+block;
+
+ln:=length(templist);
+if (ln<1)
+	{
+	act ("But the board is empty!",
+	A_ALWAYS,activator,null,null,TO_CHAR);
+	goto start;
+	}
+if (msg_num>ln)
+	{
+	act("That message exists only within the boundaries of your mind.",
+		A_ALWAYS,activator,null,null,TO_CHAR);
+	goto start;
+	}
+
+pname:=split(templist.[msg_num-1],"(");
+tname:=pname.[length(pname)-1];
+if (activator.name==left(tname,length(activator.name)))
+	goto remove_act;
+
+
+if (r_res!="")
+{
+act_str:=(string)r_res(activator,self);
+if (act_str!="")
+{
+act(act_str,
+A_ALWAYS,activator,null,null,TO_CHAR);
+	goto start;
+	}
+	}
+
+:remove_act:
+msg_time:=getword(templist.[msg_num-1]);
+	err:=loadstr(idxfile+"."+msg_time,buff);
+	if (err==0)
+		{
+	act("That message exists only within the boundaries of your mind.",
+		A_ALWAYS,activator,null,null,TO_CHAR);
+	goto start;
+		}
+
+act ("You remove message "+argument+" from $3n",
+	A_ALWAYS,activator,null,self,TO_CHAR);
+
+temp:=templist.[msg_num-1];
+
+temp:=getword(temp);
+err:=delstr (idxfile+".idx");
+err:=delstr (idxfile+"."+temp);
+
+i:=0;
+buff:="";
+while (i<ln)
+	{
+	if ((msg_num-1)==i)
+		{
+		i:=i+1;
+		continue;
+		}
+	if (length(buff)==0)
+		buff:=templist.[i];
+	else
+		buff:=buff+"<br/>"+templist.[i];
+	i:=i+1;
+	}
+
+err:=savestr(idxfile+".idx",buff,"w");
+if (err<1)
+	log ("07:  Error in writing new idx file. in remove for "+self.nameidx+"@"+self.zoneidx);
+goto start;
+}
+dilend
+
+
+dilbegin do_read (arg:string);
+external 
+ string racestring@commands(i:integer);
+var
+brdname:string;
+	i:integer;
+	u:unitptr;
+	x:extraptr;
+	ln:integer;
+	temp:string;
+	templist:stringlist;
+	buff,buf,cname:string;
+	f_name:string;
+	act_str:string;
+code
+{
+	if (self.type!=UNIT_ST_PC)
+		quit;
+
+	i:=atoi (arg);
+	if (i<0)
+	{
+		exec ("look "+arg,self);
+		goto read_quit;
+	}
+
+	if (itoa (i)!=arg)
+	{
+		exec ("look "+arg,self);
+		goto read_quit;
+	}
+
+	u:=self.outside.inside;
+	while (u!=null)
+	{
+		if ((u.type==UNIT_ST_OBJ) and (u.objecttype==ITEM_BOARD))
+			break;
+		u:=u.next;
+	}
+
+	if (u==null)
+	{
+		act ("You do not see that here.",A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
+
+	if (dilfind("board@competition",u))
+	{
+		u:=findsymbolic("board_obj@competition");
+		i:=atoi(arg);
+		ln:=length(u.extra.["competitions"].names);
+		if ((i<1) or (i>(ln-1)))
+		{
+			sendtext ("No competition found with a value of +"+arg+"<br/>",activator);
+			quit;
+		}
+		cname:=itoa(u.extra.["competitions"].vals.[i]);
+
+		buf := u.extra.[cname+" INFO"].names.[1]+" information<br/><br/>";
+		if (realtime>u.extra.[cname+" INFO"].vals.[0])
+		{
+			buf:=buf+"Started:  " + asctime(u.extra.[cname +" INFO"].vals.[0])+"<br/>";
+		}
+		else
+		{
+			buf:=buf+"Started:  "+
+			asctime(u.extra.[cname +" INFO"].vals.[0])+"<br/>";
+		}
+
+if (realtime>(u.extra.[cname+" INFO"].vals.[0]+u.extra.[cname+" INFO"].vals.[1])) 
+{
+buf:=buf+"Ended:  "+
+asctime(u.extra.[cname +" INFO"].vals.[1]+u.extra.[cname +" INFO"].vals.[0])+"<br/>";
+}
+else
+{
+buf:=buf+"Ends:  "+
+asctime(u.extra.[cname +" INFO"].vals.[1]+u.extra.[cname +" INFO"].vals.[0])+"<br/>";
+}
+
+if ((u.extra.[cname+" INFO"].vals.[2]>0) and (u.extra.[cname+" INFO"].vals.[3]>0))
+buf :=buf+"Open to players between level "+
+itoa(u.extra.[cname+" INFO"].vals.[2])+" and "+
+itoa(u.extra.[cname+" INFO"].vals.[3])+".<br/>";
+else if (u.extra.[cname+" INFO"].vals.[2]>0)
+buf :=buf+"Open to players above level "+
+itoa(u.extra.[cname+" INFO"].vals.[2])+".<br/>";
+else if (u.extra.[cname+" INFO"].vals.[3]>0)
+buf :=buf+"Open to players below level "+
+itoa(u.extra.[cname+" INFO"].vals.[3])+".<br/>";
+else
+buf:=buf+"Open to players of all levels.<br/>";
+
+if (u.extra.[cname+" INFO"].names.[2]=="yes")
+buf:=buf+"Open to people who have signed the book of blood only.<br/>";
+else if (u.extra.[cname+" INFO"].names.[2]=="no")
+buf:=buf+"Open to people who have not signed the book of blood only.<br/>";
+else if (u.extra.[cname+" INFO"].names.[2]=="both")
+buf:=buf+"Open to people who have or have not signed the book of blood.<br/>";
+
+
+if (u.extra.[cname+" INFO"].vals.[4]==-1)
+buf:=buf+"Open to all races of players.<br/>";
+else
+buf:=buf+"Open to only "+racestring@commands(u.extra.[cname+" INFO"].vals.[4])+".<br/>";
+
+
+if (self.level>=200)
+{
+if (u.extra.[cname+" INFO"].names.[3]!="")
+buf:=buf+"Quests not allowed in this <br/> competition:  "+u.extra.[cname+" INFO"].names.[3]+"<br/>";
+if (u.extra.[cname+" INFO"].names.[4]!="")
+buf:=buf+"Only these Quests allowed in this <br/> competition:  "+u.extra.[cname+" INFO"].names.[3]+"<br/>";
+
+}
+sendtext(buf,self);
+
+
+quit;
+}
+
+		if (u.extra.["$BOARD_L_RES"].descr!="")
+		{
+		act_str:=(string)u.extra.["$BOARD_L_RES"].descr(self,u);
+		if (act_str!="")
+		{
+	act(act_str,
+			A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+		}
+		}
+
+brdname:=u.names.[length (u.names)-1];
+i:=loadstr (brdname+".idx",temp);
+if (i<=0)
+	{
+	act ("But the board is empty!",
+		A_ALWAYS,self,null,null,TO_CHAR);
+	goto read_quit;
+	}
+templist:=split(temp,"<br/>");
+ln:=length (templist);
+x:="$BOARD_MAX" in self.extra;
+if ((atoi(arg)>atoi(x.descr)) or
+(atoi(arg)>ln))
+	{
+	act("That message exists only within the boundaries of your mind.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+	goto read_quit;
+	}
+
+i:=atoi(arg);
+temp:=templist.[i-1];
+f_name:=getword(temp);
+i:=loadstr (brdname+"."+f_name,buff);
+if (i==0)
+	{
+	sendtext("You have to let the poster finish the post before reading it.",self);
+	quit;
+	}
+if (i<1)
+	{
+	log("05: Error when loading board info.");
+	act ("This board is not working report to an Administrator",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
+
+templist:=split(f_name,".");
+if (length(templist)<2)
+	act ("Message "+arg+":  "+temp,
+		A_ALWAYS,self,null,null,TO_CHAR);
+else
+	act ("Message "+arg+":  Re:  "+temp,
+		A_ALWAYS,self,null,null,TO_CHAR);
+
+sendtext("<pre>"+buff+"</pre>",self);
+
+:read_quit:
+ send_done("read",self,null,u,0,arg,null);
+quit;
+}
+dilend
+
+
+dilbegin aware do_write (arg:string);
+var
+	ln:integer;
+	msg_time:integer;
+	err:integer;
+	msg:string;
+	templist:stringlist;
+	i:integer;
+	msg_num:integer;
+	x:extraptr;
+	xm:extraptr;
+	u:unitptr;
+	act_str:string;
+	temp:string;
+	buff:string;
+	brdname:string;
+	maxnum:integer;
+
+code
+{
+
+if (self.type!=UNIT_ST_PC)
+quit;
+temp:=arg;
+	u:=findunit (self,temp,FIND_UNIT_SURRO|FIND_UNIT_INVEN,null);
+	temp:="";
+
+	if ((u.type==UNIT_ST_PC) or
+	(u.type==UNIT_ST_NPC))
+	u:=null;
+
+
+if (u==null)
+	{
+	u:=self.inside;
+	while (u!=null)
+		{
+		if (u.type!=UNIT_ST_OBJ)
+			{
+			u:=u.next;
+			continue;
+			}
+		if (u.objecttype==ITEM_BOARD)
+			break;
+		u:=u.next;
+		}
+		}
+
+	if (u==null)
+		{
+		u:=self.outside.inside;
+		while (u!=null)
+			{
+			if (u.type!=UNIT_ST_OBJ)
+				{
+				u:=u.next;
+				continue;
+				}
+		if (u.objecttype==ITEM_BOARD)
+				break;
+			u:=u.next;
+			}
+		}
+
+	if (u==null)
+		{
+		if (self.outside.nameidx!="postoffice")
+			{
+			:no_paper:
+			act ("You have nothing to write on.",
+				A_ALWAYS,self,null,null,TO_CHAR);
+			quit;
+			}
+		else
+			{
+			u:=load ("letter@basis");
+			if (u==null)
+				goto no_paper;
+			act ("You have nothing to write on, so you grab a piece of paper from the Post Office.",
+				A_ALWAYS,self,null,null,TO_CHAR);
+			goto item_note;
+			}
+		}
+	else if (u.objecttype!=ITEM_NOTE)
+             goto item_board;
+
+
+:item_note:
+
+if (u.type!=UNIT_ST_OBJ)
+	goto no_paper;
+
+
+if (u.objecttype!=ITEM_NOTE)
+	goto no_paper;
+
+
+if (u.extra==null)
+	{
+	act ("You begin to jot down a note on $2n",
+		A_ALWAYS,self,u,null,TO_CHAR);
+act ("$1n begins to jot down a note.",
+A_ALWAYS,self,null,null,TO_REST);
+
+		secure (u,lostpaper);
+		interrupt (SFB_MSG,((activator==self) and (argument=="linkdead")),lostpaper);
+		         	interrupt(SFB_DEAD, activator == self, lostpaper);
+interrupt (SFB_COM,activator==self,lostpaper);
+interrupt (SFB_DONE, ((command("eat")) and
+(medium==self)),lostpaper);
+
+	beginedit (self);
+	wait(SFB_EDIT,self==activator);
+temp:=argument;
+	addextra (u.extra,null,temp);
+	act ("Done editing",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		unsecure(u);
+		:lostpaper:
+		unsecure (u);
+	quit;
+	}
+else
+	{
+	act ("The $3n already has something written on it.",
+		A_ALWAYS,self,null,u,TO_CHAR);
+	quit;
+	}
+
+
+:item_board:
+
+if (u.objecttype!=ITEM_BOARD)
+	goto no_paper;
+
+if (dilfind("board@competition",u))
+{
+sendtext("Only Administrators can write to competition boards silly.<br/>",self);
+quit;
+}
+
+if (u.extra.["$BOARD_P_RES"].descr!="")
+		{
+		act_str:=(string)u.extra.["$BOARD_P_RES"].descr(self,u);
+		if (act_str!="")
+		{
+	act(act_str,
+			A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+		}
+		}
+else
+{
+		if (self.level<10)
+				{
+	act("You need to be level 10 to post to this board.",
+			A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+		}
+		}
+
+
+if (arg=="")
+	{
+	act("You must write a headline first.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+		}
+if (length (arg)>50)
+	{
+	act ("Headline to long truncating.",
+	A_ALWAYS,self,null,null,TO_CHAR);
+	arg:=left(arg,50);
+	}
+
+msg_time:=realtime;
+msg:=itoa(msg_time)+" "+arg+" ("+self.name+")";
+brdname:=u.names.[length(u.names)-1];
+xm:="$BOARD_MAX" in u.extra;
+maxnum:=atoi(xm.descr);
+
+err:=loadstr (brdname+".idx",temp);
+if (err==0)
+	{
+	err:=savestr(brdname+".idx",msg,"w");
+	if (err<1)
+		{
+		:lostboard:
+		log ("01:  Error in boards on:  "+brdname);
+		act ("This board doesn't work report to an administrator.",
+			A_ALWAYS,self,null,null,TO_CHAR);
+		goto quitboard;
+		}
+		msg_num:=1;
+	goto new_msg;
+	}
+if (err<0)
+	{
+	log ("02:  Error in boards on:  "+brdname);
+	act ("This board doesn't work report to an administrator.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		goto quitboard;
+	}
+
+templist:=split(temp,"<br/>");
+msg_num:=length(templist)+1;
+if (msg_num>maxnum)
+	{
+	act ("The board is full.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		goto quitboard;
+	}
+
+temp:="<br/>"+msg;
+err:=savestr(brdname+".idx",temp,"a");
+if (err<1)
+	{
+	log ("03:  Error in boards on:  "+brdname);
+	act ("This board doesn't work report to an administrator.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		goto quitboard;
+	}
+
+:new_msg:
+
+interrupt (SFB_MSG,((activator==self) and (argument=="linkdead")),clean_up);
+	interrupt(SFB_DEAD, activator == self, clean_up);
+interrupt (SFB_COM,activator==self,clean_up);
+interrupt (SFB_DONE, ((command("eat")) and
+(medium==self)),clean_up);
+
+act ("You begin to write a message on the board",
+A_ALWAYS,self,null,null,TO_CHAR);
+act ("$1n begins to write a message on the board.",
+A_ALWAYS,self,null,null,TO_REST);
+	beginedit (self);
+	wait(SFB_EDIT,self==activator) ;
+if (argument!="")
+	{
+temp:=argument;
+	err:=savestr(brdname+"."+itoa(msg_time),temp,"w");
+	if (err<1)
+		{
+		log ("04:  Error in boards on:  "+brdname);
+		act ("This board doesn't work report to an administrator.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+	goto quitboard;
+	}
+act ("Message:  "+itoa(msg_num)+" posted.",
+	A_ALWAYS,self,null,null,TO_CHAR);
+	}
+else
+	{
+	:clean_up:
+
+
+
+
+	err:=loadstr(brdname+".idx",buff);
+	if (err<1)
+		goto quitboard;
+	templist:=split(buff,"<br/>");
+
+temp:=templist.[msg_num-1];
+temp:=getword(temp);
+err:=delstr (brdname+".idx");
+err:=delstr (brdname+"."+temp);
+ln:=length(templist);
+i:=0;
+buff:="";
+while (i<ln)
+	{
+	if ((msg_num-1)==i)
+		{
+		i:=i+1;
+		continue;
+		}
+	if (length(buff)==0)
+		buff:=templist.[i];
+	else
+		buff:=buff+"<br/>"+templist.[i];
+	i:=i+1;
+	}
+
+err:=savestr(brdname+".idx",buff,"w");
+if (err<1)
+{
+	log ("07:  Error in writing new idx file. in remove for "+brdname);
+goto quitboard;
+}
+	act ("Blank posts are such a waste of space!  Removing.",
+		A_ALWAYS, self,null,null,TO_CHAR);
+}
+	act ("$1n finishes posting to the board.",
+	A_ALWAYS,self,null,null,TO_REST);
+
+:quitboard:
+ send_done("write",self,null,u,0,arg,null);
+killedit(self);
+		 quit;
+}
+dilend
+
+
+
+
+%rooms
+
+board_room
+names {"brd_rm"}
+title "Test Board room."
+descr
+"The board room."
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+%objects
+
+                           bull_board
+
+names {"bulletin board", "board"}
+title "a bulletin board"
+descr "A large bulletin board is mounted on a wall here."
+extra{}
+"Its a big ugly Oak Bulletin board."
+type ITEM_BOARD
+dilcopy board("citizen","","","",50);
+end
+
+%end

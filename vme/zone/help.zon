@@ -1,0 +1,477 @@
+/*
+filename    helpzon
+password    test
+changedby   Whistler
+request     compile
+version     0
+END HEADER*/
+
+
+#include <macros.h>
+%zone                                  helpzon
+reset RESET_NOT
+
+
+creators {"whistler"}
+
+notes
+"This is help what did you think?"
+help
+"This zone is not intended for players."
+
+%dil
+dilbegin string spinsearch(sl:stringlist,s:string);
+var
+ i:integer;
+ ln:integer;
+ temp:stringlist;
+
+ code
+ {
+ i:=0;
+ ln:=length(sl);
+ while (i<ln){
+ if (s==left(sl.[i],length(s)))
+ {
+ temp:=split(sl.[i],"=");
+ return (temp.[1]);
+ }
+ i:=i+1;
+ }
+
+ return ("");
+ }
+ dilend
+
+
+
+dilbegin integer bin_search (s:stringlist,t:string);
+var
+	top:integer;
+	start:integer;
+	i:integer;
+	ln:integer;
+code
+{
+	start:=0;
+	top:=length(s);
+	top:=top-1;
+	ln:=length(t);
+
+	while (start<top){
+		if (t==left(s.[start],ln))
+			return (start);
+	if (t==left(s.[top],ln))
+	return (top);
+	i:=(start+top)/2;
+
+	if ((i==start) or (i==top))
+		return (-1);
+	if (t==left(s.[i],ln))
+		return (i);
+		else if (t<left(s.[i],ln))
+		top:=i;
+			else
+			start:=i;
+
+			top:=top-1;
+			start:=start+1;
+			if ((top==start) and
+			(t==left(s.[start],ln)))
+			return (i);
+			else if (top==start)
+			return (-1);
+
+	}
+
+	return (-1);
+}
+dilend
+
+dilbegin stringlist readindex(filename:string,letter:string);
+var
+	err:integer;
+	buf:string;
+	newlist:stringlist;
+	tmp:string;
+	newlist2:stringlist;
+	newlist3:stringlist;
+code
+{
+	err:=loadstr(filename,buf);
+	if (err<1)
+	{
+		log("error loading "+filename);
+		return ({""});
+	}
+
+	if (letter=="all")
+	{
+		newlist:=split(buf, "\n");
+
+		substring(newlist,":start:a");
+		substring(newlist,":start:b");
+		substring(newlist,":start:c");
+		substring(newlist,":start:d");
+		substring(newlist,":start:e");
+		substring(newlist,":start:f");
+		substring(newlist,":start:g");
+		substring(newlist,":start:h");
+		substring(newlist,":start:i");
+		substring(newlist,":start:j");
+		substring(newlist,":start:k");
+		substring(newlist,":start:l");
+		substring(newlist,":start:m");
+		substring(newlist,":start:n");
+		substring(newlist,":start:o");
+		substring(newlist,":start:p");
+		substring(newlist,":start:q");
+		substring(newlist,":start:r");
+		substring(newlist,":start:s");
+		substring(newlist,":start:t");
+		substring(newlist,":start:u");
+		substring(newlist,":start:v");
+		substring(newlist,":start:w");
+		substring(newlist,":start:x");
+		substring(newlist,":start:y");
+		substring(newlist,":start:z");
+		substring(newlist,":end:a");
+		substring(newlist,":end:b");
+		substring(newlist,":end:c");
+		substring(newlist,":end:d");
+		substring(newlist,":end:e");
+		substring(newlist,":end:f");
+		substring(newlist,":end:g");
+		substring(newlist,":end:h");
+		substring(newlist,":end:i");
+		substring(newlist,":end:j");
+		substring(newlist,":end:k");
+		substring(newlist,":end:l");
+		substring(newlist,":end:m");
+		substring(newlist,":end:n");
+		substring(newlist,":end:o");
+		substring(newlist,":end:p");
+		substring(newlist,":end:q");
+		substring(newlist,":end:r");
+		substring(newlist,":end:s");
+		substring(newlist,":end:t");
+		substring(newlist,":end:u");
+		substring(newlist,":end:v");
+		substring(newlist,":end:w");
+		substring(newlist,":end:x");
+		substring(newlist,":end:y");
+		substring(newlist,":end:z");
+		return (newlist);
+	}
+	else
+	{
+		tmp:=":start:"+letter;
+		newlist:=split(buf,tmp);
+		tmp:=":end:"+letter;
+		if (length(newlist)==2)
+			newlist2:=split(newlist.[1],tmp);
+		else
+			newlist2:=split(newlist.[0],tmp);
+		newlist3:=split(newlist2.[0],"\n");
+
+		//log("Help other than all: ");
+		//log("other: " + newlist3.[0]);
+
+		return(newlist3);
+	}
+}
+dilend
+
+
+dilbegin string gettopic(s:stringlist);
+var
+	temp:stringlist;
+	i:integer;
+	ln : integer;
+	buf:string;
+
+code
+{
+	i:=0;
+	ln := length(s);
+
+	buf:="<div class='threecol'>";
+
+	while (i<ln)
+	{
+		temp := split(s.[i],"=");
+		buf := buf + "<a cmd='help #'>"+temp.[0]+"</a><br/>";
+		i := i + 1;
+	} // end while
+
+	buf:=buf+"</div>";
+
+	return(buf);
+}
+dilend
+
+
+dilbegin string selecttopic(s:stringlist,t:string);
+var
+	temp:stringlist;
+	b:integer;
+
+	i:integer;
+	count:integer;
+	max_len:integer;
+		max_count:integer;
+	buf:string;
+	ln:integer;
+
+code
+{
+	i:=0;
+	count:=0;
+	b:=0;
+	max_len:=25;
+	ln:=length(s);
+	max_count:=80/max_len;
+	max_count:=max_count-1;
+	buf:="<div class='threecol'>";
+
+	while (i<ln)
+	{
+		temp:=split (s.[i],"=");
+		if (temp.[0] != "")
+			buf:=buf + "<a cmd='help #'>"+ temp.[0] + "</a><br/>";
+		i:=i+1;
+	} // end while
+
+	buf:=buf+"</div>";
+
+	return (buf);
+}
+dilend
+
+
+dilbegin do_help (s:string);
+external
+   stringlist readindex(s:string,letter:string);
+   string gettopic(s:stringlist);
+   string selecttopic(s:stringlist,t:string);
+   string spinsearch (s:stringlist,t:string);
+
+
+var
+	txt:string;
+	i:integer;
+	ln:integer;
+	buf:string;
+	rm:unitptr;
+	zptr:zoneptr;
+	err:integer;
+	fileindex:stringlist;
+	ind:stringlist;
+	ref:stringlist;
+	temp:stringlist;
+	tlist:stringlist;
+    pay : string;
+code
+{
+   	if (s=="")
+		s:="help";
+
+	if (s==left("topics",length(s)))
+	{
+		fileindex := readindex("help.index", "all");
+		sendtext ("This is the full help topic list.  "+
+		"To find out how to get a partial listing do 'help help'<br/>",self);
+		buf:=gettopic(fileindex);
+		pagestring(buf,self);
+		quit;
+	}
+
+	if (s==left("area",length(s)))
+	{
+	zptr:=zhead();
+	rm:=self.outside;
+    while (rm.type!=UNIT_ST_ROOM)
+	rm:=rm.outside;
+    while (zptr.name!=rm.zoneidx)
+    while (left(zptr.name,length(rm.zoneidx)) != rm.zoneidx)
+
+	zptr:=zptr.next;
+
+    /*log("checking pay"); */
+    if (not(zptr.payonly))
+    pay := "This area is not restricted.";
+	if (zptr.payonly)
+    pay := "This area is restricted to people with donation status.";
+
+
+
+	if (length(zptr.help)>1)
+	{
+    tlist := split(zptr.title,"@");
+    sendtext ("You are in the area known as: "+tlist.[0]+".<br/>",self);
+	sendtext (pay+".<br/>",self);
+    pagestring (zptr.help,self);
+	quit;
+	}
+	else
+	{
+	sendtext ("There is no help on this area written by the creators. You're on your own<br/>",self);
+	quit;
+	}
+	}
+
+
+
+
+	if  ("topic"==left(s,5))
+	{
+	ind:=getwords(s);
+	fileindex:=readindex("help.index",ind.[1].[0]);
+	buf:=selecttopic(fileindex,ind.[1]);
+	pagestring(buf,self);
+	quit;
+	}
+
+
+                                   fileindex:=readindex("help.index",s.[0]);
+
+txt:=spinsearch(fileindex,s);
+
+if (txt=="")
+	{
+	sendtext ("There is no help available on the subject '"+s+"'<br/>",self);
+	quit;
+	}
+
+err:=loadstr (txt,buf);
+if (err<1)
+	{
+	sendtext ("There is no help available on the subject '"+s+"'<br/>",self);
+	quit;
+	}
+
+buf:=textformat (buf);
+pagestring (buf,self);
+quit;
+}
+dilend
+
+dilbegin string getwiztopic(s:stringlist);
+var
+	i:integer;
+	count:integer;
+max_len:integer;
+		max_count:integer;
+	buf:string;
+	ln:integer;
+
+code
+{
+	i:=0;
+	count:=0;
+	max_len:=0;
+	ln:=length(s);
+	max_len:=25;
+	max_count:=80/max_len;
+	max_count:=max_count-1;
+	buf:="<div class='threecol'>";
+
+	while (i<ln)
+	{
+		buf:=buf+"<a cmd='wizhelp #'>"+s.[i]+"</a><br/>";
+		i:=i+1;
+	}
+
+	buf:=buf+"</div>";
+
+	return(buf);
+}
+dilend
+
+
+
+dilbegin do_wizhelp (s:string);
+external
+ string getwiztopic(s:stringlist);
+ 		string spinsearch (s:stringlist,t:string);
+
+				stringlist readindex(s:string,letter:string);
+var
+txt:string;
+	rm:unitptr;
+zptr:zoneptr;
+	cmd:cmdptr;
+	i:integer;
+		ln:integer;
+	buf:string;
+	err:integer;
+	fileindex:stringlist;
+	ind:stringlist;
+	ref:stringlist;
+	temp:stringlist;
+
+code
+{
+
+if ((s=="") or (s==left("topics",length(s))))
+{
+   cmd := chead();
+ while (cmd)
+ {
+ if ((cmd.level<=self.level) and
+ (cmd.level>=200))
+  addstring (ind,cmd.name);
+ cmd := cmd.next;
+ }
+ buf:=getwiztopic(ind);
+pagestring(buf,self);
+quit;
+}
+if (s==left("notes",length(s)))
+	{
+	zptr:=zhead();
+	rm:=self.outside;
+	while (rm.type!=UNIT_ST_ROOM)
+	rm:=rm.outside;
+	while (zptr.name!=rm.zoneidx)
+	zptr:=zptr.next;
+	if (length(zptr.notes)>1)
+	{
+	pagestring (zptr.notes,self);
+	quit;
+	}
+	else
+	{
+	sendtext ("There are no notes in this area written by the creators. You're on your own!<br/>",self);
+	quit;
+	}
+	}
+
+	fileindex:=readindex("wiz.index",s.[0]);
+
+
+txt:=spinsearch(fileindex,s);
+
+
+
+if (txt=="")
+	{
+	sendtext ("There is no help available on the subject '"+s+"'<br/>",self);
+	quit;
+	}
+
+err:=loadstr (txt,buf);
+if (err<1)
+	{
+	sendtext ("There is no help available on the subject '"+s+"'<br/>",self);
+	quit;
+	}
+
+buf:=textformat (buf);
+pagestring (buf,self);
+quit;
+}
+dilend
+
+
+%end

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <h2>MUD Connector (websockets)</h2>
+
+        <a href="http://www.valhalla.com/v3/client-a.html?protocol=ws&host=valhalla.com&port=4280&endpoint=%2Fecho&reader=true">Accessible Quick Link Valhalla.com</a><br/>
+        <a href="http://www.valhalla.com/v3/client-a.html?protocol=ws&host=valhalla.com&port=4280&endpoint=%2Fecho&reader=false">Quick Link Valhalla.com (no screen reader)</a><br/>
+        <br/>
+
+        <input type="checkbox" id="sreader" checked="checked">Screen Reader Support (helps with screen readers but adds additional line breaks on screen)</input>
+        <br/>
+        <select id="protocol">
+            <option value="ws" selected="selected">ws</option>
+            <option value="wss">wss</option>
+        </select>
+        <input type="text" id="hostname" value="localhost"/>
+        <input type="text" id="port" value="4280"/>
+        <input type="text" id="endpoint" value="/echo"/>
+        <input type="button" value="Connect" onclick="ConnectClick()" />
+    </body>
+
+    <script>
+        function encodeQueryData(data) {
+        const ret = [];
+        for (let d in data)
+            ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+        return ret.join('&');
+        }
+
+        function ConnectClick() {
+            const data = { 'protocol': document.getElementById("protocol").value, 'host': document.getElementById("hostname").value,
+                    'port': document.getElementById("port").value, 'endpoint' : document.getElementById("endpoint").value,
+                    'reader' : document.getElementById("sreader").checked };
+            const querystring = encodeQueryData(data);
+            //alert(document.getElementById("sreader").checked );
+            window.open ('client-a.html?'+querystring,'_self', false)
+        }            
+    </script>
+
+</html>

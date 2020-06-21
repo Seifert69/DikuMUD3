@@ -1,0 +1,40 @@
+<br/>
+<br/>
+<br/>
+<br/>
+Usage practice (skill|weapon|ability)<br/><br/>
+<br/><br/>
+Examples:<br/><br/>
+practice strength<br/><br/>
+practice hand axe<br/><br/>
+practice flee<br/><br/>
+<br/>
+This command enables you to raise your  abilities, and practice your<br/>
+skills, spells and weapons. The command can only be used at a teacher.<br/>
+Different teachers teach different abilities and skills, spells or<br/>
+weapons and the cost is different in each  guild. Your race also modifies<br/>
+this cost.<br/>
+<br/><br/><br/>
+When you look at your 'status' you will notice you have got a<br/>
+certain amount of skill and ability practice points. The skill-points are<br/>
+used for practicing spells, weapons and skills. The ability-points<br/>
+are used for practicing abilities  (str,dex,con, etc).<br/>
+<br/><br/><br/>
+All your abilities and knowledge about spells, weapons and skills<br/>
+are in the range [0..200] percent. You can only get above 150% by<br/>
+finding magic items or very unique special teachers.<br/>
+<br/><br/><br/>
+Each time you raise a level you get more skill and ability points, and<br/>
+thus you can get better abilities  and better spell, weapon and<br/>
+skill knowledge.<br/>
+<br/><br/>
+<br/>See Also:<br/><br/>
+Experience<br/><br/>
+Guild<br/><br/>
+Level<br/><br/>
+Info<br/><br/>
+Skills<br/><br/>
+Spells<br/><br/>
+Weapons<br/><br/>
+abilities<br/><br/>
+<br/>

@@ -1,0 +1,1948 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>The objects section</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Suggested NPC exercises"
+HREF="x2919.html"><LINK
+REL="NEXT"
+TITLE="Object macros"
+HREF="x3575.html"></HEAD
+><BODY
+CLASS="CHAPTER"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x2919.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x3575.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="CHAPTER"
+><H1
+><A
+NAME="CH-06"
+></A
+>Chapter 7. The objects section</H1
+><P
+>The previous chapters would be enough for you to create an entire
+game of nudists with no technology and no items of any kind.  This of
+corse would be a very boring game of naked people fighting with no
+weapons.  don't worry the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> has a solution to this you can build
+objects to dress up the NPCs and to fill the rooms with cluttered
+junk.</P
+><P
+>In order to get started building objects you should first be aware
+of the object fields you can use.  The <A
+HREF="ch06.html#OBJFIELDS"
+>Table 7-1</A
+> shows a full listing
+of all the object fields and their types as defined in <A
+HREF="ch03.html"
+>Chapter 4</A
+>.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="OBJFIELDS"
+></A
+><P
+><B
+>Table 7-1. Object fields and types</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL
+WIDTH="192"
+TITLE="C1"><COL
+WIDTH="192"
+TITLE="C2"><COL
+WIDTH="48"
+TITLE="C3"><COL
+WIDTH="192"
+TITLE="C4"><COL
+WIDTH="192"
+TITLE="C5"><THEAD
+><TR
+><TH
+>Field</TH
+><TH
+>Type</TH
+><TH
+>&nbsp;</TH
+><TH
+>Field</TH
+><TH
+>Type</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>symbolic name</TD
+><TD
+>Symbol</TD
+><TD
+ROWSPAN="11"
+>&nbsp;</TD
+><TD
+>affect</TD
+><TD
+>affect function</TD
+></TR
+><TR
+><TD
+>names</TD
+><TD
+>Stringlist</TD
+><TD
+>dilbegin or dilcopy</TD
+><TD
+>function pointer</TD
+></TR
+><TR
+><TD
+>title</TD
+><TD
+>String</TD
+><TD
+>key</TD
+><TD
+>String</TD
+></TR
+><TR
+><TD
+>descr</TD
+><TD
+>String</TD
+><TD
+>open</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>inside_descr</TD
+><TD
+>String</TD
+><TD
+>manipulate</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>extra</TD
+><TD
+>Structure</TD
+><TD
+>spell</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>minv</TD
+><TD
+>Integer</TD
+><TD
+>value</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>alignment</TD
+><TD
+>Integer</TD
+><TD
+>cost</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>flags</TD
+><TD
+>Integer</TD
+><TD
+>rent</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>weight</TD
+><TD
+>Integer</TD
+><TD
+>type</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>capacity</TD
+><TD
+>Integer</TD
+><TD
+>end tag</TD
+><TD
+>Symbol</TD
+></TR
+><TR
+><TD
+>light</TD
+><TD
+>Integer</TD
+><TD
+>&nbsp;</TD
+><TD
+>&nbsp;</TD
+><TD
+>&nbsp;</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>Many of the same fields you found in rooms and NPCs, as you can see from
+<A
+HREF="ch06.html#OBJFIELDS"
+>Table 7-1</A
+>, can also be found in objects.  The fields do
+not always have exactly the same use when coding rooms, NPCs, and
+objects but they are normally set in the same manor.  It is very
+important that you read and understand the differences of each field as
+they pertains to rooms, objects, and or NPCs.</P
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="OBJFIELDDESCR"
+>7.1. Description of object fields</A
+></H1
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>symbolic name</DT
+><DD
+><P
+></P
+><P
+>The rules of the symbols has been explained in
+<A
+HREF="ch03.html"
+>Chapter 4</A
+>, if you didn't read them yet you may want to review.
+ The important thing to realize with the object symbol is it is always
+ good practice to give the object a symbol that resembles the title and
+ description so administrators and builders can use the
+ <B
+CLASS="COMMAND"
+>load</B
+> and the <B
+CLASS="COMMAND"
+>wstat</B
+> to easily
+ locate, examine, and load the object in question. </P
+></DD
+><DT
+>title</DT
+><DD
+><P
+></P
+><P
+>The object title is what is shown if the object is being picked
+up, dropped, given to someone, when you do the inventory command, , or being used in combat.
+there should be no punctuation in the object title
+because of how it is used in the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> server.  If you add punctuation or
+forget to capitalize something that the <ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> thinks you should it will
+give you a warning when you compile. The following are good examples of
+an object title.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3046"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;title "a big rock"
+title "the flame tongue"
+title "a lap top"
+title "a garbage bag"
+title "an oval hover car"&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>descr</DT
+><DD
+><P
+></P
+><P
+>The description field is what the player sees when walking into the room
+or when looking with no arguments.  It is good practice to make this no
+longer than one line not counting the 'descr' tag.</P
+><P
+>Some examples of the object description field would be as
+follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3056"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;descr
+"a green bloody sword is laying here."
+
+descr
+"A massive wooden round table sits here."
+
+descr
+"a funny looking hammer is laying here."&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>names</DT
+><DD
+><P
+></P
+><P
+>The object names are as important as the NPC names.  They are what
+you act on when picking the object up, dropping it, throwing it, just
+about anything you do to objects use these name fields.  On drink
+containers you add the liquid name at the end, so people can drink the liquid.  You
+always need to make sure you put every possible name that the player may
+use to examine or take your item.  The rule of thumb is if it is in the
+title or description it should be in the names list.  conversely if it is
+not in the title or description it shouldn't be in the names list
+because the players will not use it if they don't know about it.</P
+><P
+>The following is some examples of good 'names' fields with respect to
+        their 'title' and 'descr'.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3066"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;title "a big rock"
+descr "a big rock is here blocking the road."
+names {"big rock","rock"}
+
+title "an old twisted staff"
+descr "An old twisted staff has been discarded here."
+names{"old twisted staff","twisted staff","old staff","staff"}&#13;</PRE
+><P
+></P
+></DIV
+><P
+>The idea of course is to make any combination that a player may
+type to try and act upon your object.  You would not want to describe and
+title your object with an entirely different theme than you created its
+names with because a player would not know what it is called.</P
+></DD
+><DT
+>inside_descr</DT
+><DD
+><P
+></P
+><P
+>The inside description is what a player sees if it is inside the
+object.  This is used for things like Coffins or boxes or boats that a
+player can climb inside.  The inside description is defined the same way
+the normal description is but you can make it as many lines as you want
+like you would with a room description.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3076"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;                                      inside_descr
+"You are inside a black coffin with a red velvet padding - scary!"
+
+                                      inside_descr
+"You are inside the pink time machine.  a small control panel is on the
+floor and seems to be operated by stepping on it."	&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>extra</DT
+><DD
+><P
+></P
+><P
+>The extra's on the object like the NPC, can be used to do many things.  It can be
+used to store information for <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> programs or it can be used to show a
+part of the object like the room extras show a part of the room.  They
+can even be used to create new acts when a person picks the item up,
+drops, or enters it.There is also a special extra that is the object's description when
+you look at it with the look &lt;object&gt; command.</P
+><P
+>Lets go over the object description extra first.  If you use an extra
+with no names list it will become the object's description when you look at
+any of the names on it.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3087"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;extra {}
+"Its just a rock nothing special about it."  
+
+extra {}
+"The ice cube is about 40 meters perfectly cubed.  It seems to be
+melting slightly but waiting for it to finish would be sort of like
+waiting for the ice age to end."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>You can also use extras to show parts of the object.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3090"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;extra {"crack"}
+"There is a big crack in the side of the ice cube.  Maybe if you mess
+with the crack you will be able to open it or something."
+
+extra {"bed post","post"}
+"Its a big gold bed post don't you wish you could get this sucker off it
+would make you a rich adventurer indeed."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>You can also use the extras to give more detailed and vivid
+descriptions when the object is acted upon.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN3093"
+></A
+><P
+><B
+>Table 7-2. Object special action extras</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Extra</TH
+><TH
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>$wear_s</TD
+><TD
+>A message shown to activator when wearing (+wield/grab/hold) an
+item.</TD
+></TR
+><TR
+><TD
+>$wear_o</TD
+><TD
+>A message shown to others when wearing an item.</TD
+></TR
+><TR
+><TD
+>$rem_s</TD
+><TD
+>A message shown to activator when removing worn stuff.</TD
+></TR
+><TR
+><TD
+>$rem_o</TD
+><TD
+>A message shown to others when removing an item.</TD
+></TR
+><TR
+><TD
+>$get_s</TD
+><TD
+>A message shown to activator when getting an item.</TD
+></TR
+><TR
+><TD
+>$get_o</TD
+><TD
+>A message shown to others when getting an item.</TD
+></TR
+><TR
+><TD
+>$drop_s</TD
+><TD
+>A message shown to activator when dropping an item.</TD
+></TR
+><TR
+><TD
+>$drop_o</TD
+><TD
+>A message shown to other when dropping an object.</TD
+></TR
+><TR
+><TD
+>$enter_s</TD
+><TD
+>A message shown to activator when entering an item.</TD
+></TR
+><TR
+><TD
+>$enter_o</TD
+><TD
+>A message shown to other when entering an item.</TD
+></TR
+><TR
+><TD
+>$exit_s</TD
+><TD
+>A message shown to activator when leaving an item.</TD
+></TR
+><TR
+><TD
+>$exit_o</TD
+><TD
+>A message shown to other when leaving an item.</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>In the following example of an ice cube, 1n is the activator and
+$2n is the unit in question.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3138"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;extra {"$get_s"}
+"You pick up the $2N, it is very cold and begins to melt in your hands."
+
+extra {"$get_o"}
+"$1n picks up the $2N, you notice that a drop of water hits the ground as
+it begins to melt in $1s hand."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Finally you can use extras to store information for <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> programs. 
+We will not cover this because it is a topic covered in-depth in
+the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> documentation.</P
+></DD
+><DT
+>manipulate</DT
+><DD
+><P
+></P
+><P
+>This field is what defines the things that can be done to the
+object.  For example a piece of armour should be able to be taken and
+worn, while a fountain should be able to be entered but not taken unless its some
+magical portable fountain.  There are two sets of manipulate flags even
+though you can use them together.  We separate them because the first
+two are flags that tell you if you can take or enter something while the
+rest of the manipulate flags are for worn positions.</P
+><P
+>First the two flags for taking and entering are:</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN3151"
+></A
+><P
+><B
+>Table 7-3. Take and enter flags</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Manipulate</TH
+><TH
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>MANIPULATE_TAKE</TD
+><TD
+> Set this flag if the unit can be taken
+(picked up/moved about).</TD
+></TR
+><TR
+><TD
+>MANIPULATE_ENTER</TD
+><TD
+> Set this flag if it is possible to
+enter a unit, ie set it in a coffin if you want players to be able to
+enter the coffin.</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>These flags are
+set to indicate on what body positions a particular object can be
+worn:</P
+><P
+></P
+><UL
+><LI
+><P
+>MANIPULATE_WEAR_FINGER</P
+></LI
+><LI
+><P
+>MANIPULATE_WEAR_NECK</P
+></LI
+><LI
+><P
+>MANIPULATE_WEAR_BODY</P
+></LI
+><LI
+><P
+>MANIPULATE_WEAR_HEAD</P
+></LI
+><LI
+><P
+>MANIPULATE_WEAR_LEGS</P
+></LI
+><LI
+><P
+>MANIPULATE_WEAR_FEET</P
+></LI
+><LI
+><P
+>MANIPULATE_WEAR_HANDS</P
+></LI
+><LI
+><P
+>MANIPULATE_WEAR_ARMS</P
+></LI
+><LI
+><P
+>MANIPULATE_WEAR_SHIELD</P
+></LI
+><LI
+><P
+>MANIPULATE_WEAR_ABOUT</P
+></LI
+><LI
+><P
+>MANIPULATE_WEAR_WAIST</P
+></LI
+><LI
+><P
+>MANIPULATE_WEAR_WRIST</P
+></LI
+><LI
+><P
+>MANIPULATE_WIELD</P
+></LI
+><LI
+><P
+>MANIPULATE_HOLD</P
+></LI
+><LI
+><P
+>MANIPULATE_WEAR_EAR</P
+></LI
+><LI
+><P
+>MANIPULATE_WEAR_BACK</P
+></LI
+><LI
+><P
+>MANIPULATE_WEAR_CHEST</P
+></LI
+><LI
+><P
+> MANIPULATE_WEAR_ANKLE</P
+></LI
+></UL
+><P
+>Currently you can only set one of the worn positions flags on an
+item at a time.  You can set both enter and take on an item with a
+position or just one or the other.  Some legal examples of combinations
+are as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3204"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//An earring
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+
+//A backpack
+manipulate {MANIPULATE_TAKE, MANIPULATE_ENTER, MANIPULATE_WEAR_BACK}
+
+//strange true but its legal an earring pack
+manipulate {MANIPULATE_TAKE, MANIPULATE_ENTER, MANIPULATE_WEAR_EAR}&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>flags</DT
+><DD
+><P
+></P
+><P
+>This field on an object is used to set special attributes in order to make
+the object able to be buried or not or no-teleportable and many others.  The
+object flag list uses the UNIT_FL_* variables that both the NPCs and
+the rooms also use, therefore while you can set some flags on an object it
+may not have any affect unless you as a builder or administrator adds
+the functionality.  You can also add extras on an object that can be used
+as a special flag which you will learn as you learn to use <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>.  The
+following is a full list of all unit flags and how they affect objects, if
+they do.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="UNITFLAGSOBJ"
+></A
+><P
+><B
+>Table 7-4. Object unit flag affects</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Flag</TH
+><TH
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>UNIT_FL_PRIVATE</TD
+><TD
+> Currently has no affect on a NPC.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_INVISIBLE</TD
+><TD
+>Makes unit invisible</TD
+></TR
+><TR
+><TD
+>UNIT_FL_NO_BURY</TD
+><TD
+>Makes it so you can create objects that
+can not be buried for example a weapon that for some reason shouldn't be
+buried.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_BURIED</TD
+><TD
+>Makes
+unit buried when loaded</TD
+></TR
+><TR
+><TD
+>UNIT_FL_NO_TELEPORT</TD
+><TD
+>Makes it so you can not teleport into this object.  This flag only
+works on containers.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_NO_MOB</TD
+><TD
+>Currently has no affect on an object.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_NO_WEATHER</TD
+><TD
+> Currently has no affect on a NPC.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_INDOORS</TD
+><TD
+>Currently has no affect on an object.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_TRANS</TD
+><TD
+>Makes unit transparent If the Unit is
+transparent you will be able to see any NPCs that it is carrying.
+For example if a canoe was carrying a familiar you would see that as you
+walked into the room.  If this flag is not set and you are in a canoe you
+will not see outside the canoe and no one will see in.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_NO_SAVE</TD
+><TD
+>Makes it so a PC can't save with
+unit</TD
+></TR
+><TR
+><TD
+>UNIT_FL_SACRED</TD
+><TD
+>Currently has no affect on an object.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_MAGIC</TD
+><TD
+>This flag is used by spells to tell if the object is magic.</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>If you wanted to make an object that a player can carry around but can
+not save you would set the manipulate and flags as follows.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3259"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;manipulate {MANIPULATE_TAKE}
+flags {UNIT_FL_NO_SAVE}&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>type</DT
+><DD
+><P
+></P
+><P
+>This field is what you use to set the objects type.  The type
+field is used when spells are cast or commands are executed on the
+object.  You can add your own item types but they will not change the
+actions of base code commands.  The following is the list of item types
+and what they mean when you set them.  Some are not supported with the
+current code but you can add support for them if you like by making <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>
+commands, which is covered in another manual.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="ITEMTYPES"
+></A
+><P
+><B
+>Table 7-5. Item types</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Type</TH
+><TH
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>ITEM_LIGHT</TD
+><TD
+>Items of this type can be lighted and extinguished.</TD
+></TR
+><TR
+><TD
+>ITEM_SCROLL</TD
+><TD
+>Items of this type can be read as a magical scroll.</TD
+></TR
+><TR
+><TD
+>ITEM_WAND</TD
+><TD
+>Items of this type can be used with the <B
+CLASS="COMMAND"
+>use</B
+>
+command.</TD
+></TR
+><TR
+><TD
+>ITEM_STAFF</TD
+><TD
+>Items of this type can be used with the <B
+CLASS="COMMAND"
+>tap</B
+>
+command as a magical staff</TD
+></TR
+><TR
+><TD
+>ITEM_WEAPON</TD
+><TD
+>Items of this type are used as weapons.</TD
+></TR
+><TR
+><TD
+>ITEM_FIREWEAPON</TD
+><TD
+>Currently not supported but could be used to classify a special type
+of weapon.</TD
+></TR
+><TR
+><TD
+>ITEM_MISSILE</TD
+><TD
+>Currently not supported but could be used to classify a special type
+of weapon.</TD
+></TR
+><TR
+><TD
+>ITEM_TREASURE</TD
+><TD
+>Items of this type are of some great value to sell but nothing else
+like a Gem or a block of gold.</TD
+></TR
+><TR
+><TD
+>ITEM_ARMOR</TD
+><TD
+>Items of this type can be worn or used as armour.</TD
+></TR
+><TR
+><TD
+>ITEM_POTION</TD
+><TD
+>Items of this type can be used with the <B
+CLASS="COMMAND"
+>quaff</B
+> as
+a position.</TD
+></TR
+><TR
+><TD
+>ITEM_WORN</TD
+><TD
+>Items of this type can be worn but not normally used for armour it
+is more for clothing.</TD
+></TR
+><TR
+><TD
+>ITEM_OTHER</TD
+><TD
+>This item type is for items that don't fit any other type.  Now
+that you can make your own commands with the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> 2.0 you should just make
+your own item type instead of using this value.</TD
+></TR
+><TR
+><TD
+>ITEM_TRASH</TD
+><TD
+>Items of this type are usually junk or broken equipment.</TD
+></TR
+><TR
+><TD
+>ITEM_TRAP</TD
+><TD
+>Not currently supported but could be used to make a trap command by
+creating a trap item</TD
+></TR
+><TR
+><TD
+>ITEM_CONTAINER</TD
+><TD
+>Items that can be used as containers.</TD
+></TR
+><TR
+><TD
+>ITEM_NOTE</TD
+><TD
+>Items of this type can be used to write on like paper or
+slates.</TD
+></TR
+><TR
+><TD
+>ITEM_DRINKCON</TD
+><TD
+>Items of this type can carry liquids.</TD
+></TR
+><TR
+><TD
+>ITEM_KEY</TD
+><TD
+>Items of this type can be used as a key.</TD
+></TR
+><TR
+><TD
+>ITEM_FOOD</TD
+><TD
+>Items of this type can be eaten</TD
+></TR
+><TR
+><TD
+>ITEM_MONEY</TD
+><TD
+>Items of this type can be spent as currency</TD
+></TR
+><TR
+><TD
+>ITEM_PEN</TD
+><TD
+>No longer supported but could be used to force people to have a
+writing instrument before writing a message.</TD
+></TR
+><TR
+><TD
+>ITEM_BOAT</TD
+><TD
+>Items of this type can be used as a water craft</TD
+></TR
+><TR
+><TD
+>ITEM_SPELL</TD
+><TD
+>Not currently supported but it could be used to make a page in a spell book</TD
+></TR
+><TR
+><TD
+>ITEM_BOOK</TD
+><TD
+>Not currently supported but could be used to make
+regular and spell books.</TD
+></TR
+><TR
+><TD
+>ITEM_SHIELD</TD
+><TD
+>Items of this type can be used as a shield.</TD
+></TR
+><TR
+><TD
+>ITEM_SKIN</TD
+><TD
+>Not currently supported in the release but could be used to make the
+skin command and create skins of animals</TD
+></TR
+><TR
+><TD
+>ITEM_BOARD</TD
+><TD
+>Items of this type are used for public communications in the form
+of boards that can be read from and written to.</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>Unlike flags and manipulate fields only one item type can be set
+on an object at a time.  The format for the 'type' field is simply the
+keyword followed by the value as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3363"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;type ITEM_BOARD&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>weight</DT
+><DD
+><P
+></P
+><P
+>The weight is the weight of the object in pounds.  In the future we
+may adjust this to allow you to make things lighter for example you
+could set it in ounces or grams.  Right now however all we have is
+pounds so we have some pretty heavy feathers out there.</P
+><P
+>To use this you just enter the 'weight' keyword and then the
+value.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3373"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;/80 lbs.
+weight 80&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>capacity</DT
+><DD
+><P
+></P
+><P
+>This field sets the size of a container object.  If the object does not have the manipulate enter flag set then this field doesn't have to be set.  The capacity is currently by pounds since the weight of objects is set in pounds.  In the future we may take into account size and weight but right now it goes only by weight.  The following line of code would set an item to carry 600 pounds of stuff.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3382"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;capacity 600&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>key</DT
+><DD
+><P
+></P
+><P
+>The key field sets the key name of the key that will open the item.  This field should be set to the symbolic name of the key that opens the item it is on.  If the item is in the same zone as the key then you do not need to put the zone extension on the key name.  The following are the three possible examples of using the key field.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3391"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//if object and key are in same zone.
+key brasskey
+
+//if key and object are in same zone
+key brasskey@zonename
+
+//if key and object are not in same zone
+key brasskey@otherzonename&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Notice you can put the zone name on it if the key is in the same
+zone but if the key is not in the same zone you must put the zone name
+on it.</P
+></DD
+><DT
+>cost</DT
+><DD
+><P
+></P
+><P
+>This is the field you set to add a cost to your object.  If you
+leave this field out it will default to no cost and will not be able to
+be sold at stores.  The system for setting cost on an item is the same
+as setting money on a NPC.  As with a NPC we could set it using a single
+number but it would not be easy to understand.  For example 5 gold
+pieces would be something like:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3401"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;money 25600&#13;</PRE
+><P
+></P
+></DIV
+><P
+>I am no more sure this will make five gold pieces than I was when
+I used this same example with the money field in NPC.  The problem is I
+just did the math in my head so its not very accurate.  It is much
+easier to use the defined money types to set exactly what you want as
+follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3404"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;IRON_PIECE
+COPPER_PIECE
+SILVER_PIECE
+GOLD_PIECE
+PLATINUM_PIECE&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now if we wanted to make an object costing five gold it would be as
+simple as this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3407"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;money 5*GOLD_PIECE&#13;</PRE
+><P
+></P
+></DIV
+><P
+>the define method also gains you the ability to tell the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> what
+amount of each coin you want on the NPC.  If you set it using a single
+integer the compiler would pick how many of each coin.  This of course
+is not what is desired in fact you want to be able to set your cost
+however you like.  So setting more than one coin is as simple as adding
+a comma between the first and second coin.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3411"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;money 5*GOLD_PIECE, 20*IRON_PIECE&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>rent</DT
+><DD
+><P
+></P
+><P
+>This field tells how much it costs you to keep an item while your
+offline.  The rent is not always taken if the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> server is set up to
+not take any rent then it will not matter if you set this or not.  Also
+the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> can be set up to take a percentage of this field so it may not
+take the exact amount you et.  If the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> server is set up to take 100%
+of the rent then what you set will be taken.  To set this field you do
+the same as you do with the cost field.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3423"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;money 5*GOLD_PIECE, 20*IRON_PIECE&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>minv</DT
+><DD
+><P
+></P
+><P
+>This field is the administrator invisible level of the object it is
+set on.  This means that if you set the 'minv' to two hundred it will
+make it so the object can not be seen by anyone below the administrator
+level of two hundred.  This is good for hiding objects that you need for
+administrators but you don't want players to see.
+In order for the 'minv' to be removed an
+administrator or a <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> function must change it.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3433"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;minv 239&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>alignment</DT
+><DD
+><P
+></P
+><P
+>The object alignment is not currently used.  It is an integer
+value that can be set on an object to be used with any <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions. 
+In the future it will be what determines if a good or evil person can
+wield an item.  The value is set by placing the 'alignment' keyword
+first followed by the alignment desired from -1000 to +1000.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3443"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;alignment -250&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>open</DT
+><DD
+><P
+></P
+><P
+>The open field is used if you want to give your object the ability
+to be opened, closed, and or locked.  If you add the open flags you need
+to also add a key field which has already been explained.
+The following are all
+the possible open flags and what they are used for.</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>EX_OPEN_CLOSE</DT
+><DD
+><P
+> Set this if you can open and close this object.
+	</P
+></DD
+><DT
+>EX_CLOSED</DT
+><DD
+><P
+>Set this if you want the object to be closed when loaded.</P
+></DD
+><DT
+>EX_LOCKED</DT
+><DD
+><P
+>Set this if you want the object to be locked when loaded.</P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>An interesting aspect is that if you do not specify a key, you can
+    only unlock this door with the 'pick' skill, 'unlock' spell or from
+    <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> with UnSet();</P
+></TD
+></TR
+></TABLE
+></DIV
+></DD
+><DT
+>EX_PICK_PROOF</DT
+><DD
+><P
+>Using this flag renders the 'pick' skill and 'unlock' spell un useable on the 
+    lock of this object.</P
+></DD
+><DT
+>EX_INSIDE_OPEN</DT
+><DD
+><P
+>Usable on container objects only, this enables the mobile to 'open' and 
+    'lock' from the inside.</P
+></DD
+></DL
+></DIV
+><P
+>The simplest use of this field is to make an object that opens
+and closes.  A coffin for example would have its flags set as
+follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3477"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;open {EX_OPEN_CLOSE}&#13;</PRE
+><P
+></P
+></DIV
+><P
+>If you wanted to set an object that is locked and closed and
+having a brass key that can open it, when it is loaded.  It would look as follows.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3480"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+key brass_key&#13;</PRE
+><P
+></P
+></DIV
+><P
+>You would have to define the key in the object section as well and
+the symbolic name for that key would be 'brass_key'</P
+></DD
+><DT
+>spell</DT
+><DD
+><P
+></P
+><P
+>The spell field is the power of the objects defense against
+spells.  You can set it from zero which is just not setting the field
+all the way to 200% which means a person who has 100% in a spell will
+fail almost all the time.  To set this field it would look as
+follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3490"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>//Spell resistance at 150%
+spell 150&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>value</DT
+><DD
+><P
+></P
+><P
+>The object values are used for just about any special item from
+armour to drink containers.  They should not be set directly unless you
+have a reason to do so, like a special <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> command that checks a
+value on an item.  You also have to be carefull not to over write what a
+value is already used for example value one is already used on
+weapons and armours for craftsman ship that will be explained later in
+<A
+HREF="x3575.html"
+>Section 7.2</A
+>.</P
+><P
+>If you find you need to set the values there are a total of five
+of them and they can be set to any integer value as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3502"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;   value[0]   5
+   value[1] 16
+   value[2] -2
+   value[3] -10
+   value[4] 12   &#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>affect</DT
+><DD
+><P
+></P
+><P
+>The affect field should not be set directly, instead you should
+use the macros defined in <A
+HREF="x3575.html"
+>Section 7.2</A
+>.</P
+></DD
+><DT
+>dilbegin or dilcopy</DT
+><DD
+><P
+></P
+><P
+>As has been mentioned in previous sections the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions are what give <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> servers the edge over all other muds.
+We will only give some examples here and leave it up to the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> manual to teach
+you how to create your own functions that will make your rooms, NPC, and
+objects more than special.</P
+><P
+>There are several object functions that come standard with the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+>
+2.0.  The following is a list of those functions.</P
+><P
+></P
+><UL
+><LI
+><P
+>Guild restrict</P
+></LI
+><LI
+><P
+>Anti-guild restrict</P
+></LI
+><LI
+><P
+>Quest restrict</P
+></LI
+><LI
+><P
+>Quests restrict</P
+></LI
+><LI
+><P
+>Alignment restrict</P
+></LI
+><LI
+><P
+>Level restrict</P
+></LI
+><LI
+><P
+>Virtual level restrict</P
+></LI
+><LI
+><P
+>Race restrict</P
+></LI
+><LI
+><P
+>Ability restrict</P
+></LI
+><LI
+><P
+>Skill restrict</P
+></LI
+><LI
+><P
+>Spell restrict</P
+></LI
+><LI
+><P
+>Weapon restrict</P
+></LI
+><LI
+><P
+>Gender restrict</P
+></LI
+><LI
+><P
+>Player restrict</P
+></LI
+><LI
+><P
+>boards</P
+></LI
+><LI
+><P
+>tuborg/dilbegin</P
+></LI
+></UL
+><P
+>These are the only object functions currently documented in the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+>
+2.0 release but if you go through the zones that are released with the
+<ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> you are sure to find many more.  Hopefully with the descriptions in
+<A
+HREF="x4005.html"
+>Section 7.5</A
+>.  You will be able to use the functions
+listed here and figure out ones that are not.</P
+><P
+>Since these are just <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>'s written by builders for the
+Valhalla mud all you have to do is use the dilcopy keyword in the
+NPC with the function name you want to use and the arguments that
+function requires.  The following is what you would find in the
+<TT
+CLASS="FILENAME"
+>function.zon</TT
+> for tuborgs.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3564"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilbegin tuborg(s:string);
+external
+	sub_drink_info@commands(d:unitptr);
+var
+  u : unitptr;
+code
+{
+  :start:
+  wait(SFB_CMD, ( (command("drink")) or
+	                (command("sip")) or
+								  (command("taste")) ) );
+	u := activator;
+	secure (u,start);
+if (findunit (activator,argument,FIND_UNIT_INVEN|FIND_UNIT_SURRO,null)!=self)
+	goto start;
+	if ( command("sip") or command("taste") )
+	{
+	  block;
+	  act("$1n tastes $2n enjoying every drop.", A_HIDEINV, u, self, null,
+        TO_ROOM);
+    act("The taste of the $2N is nothing less than divine.", A_HIDEINV, u, self,
+		    null, TO_CHAR);
+	  goto start;
+   }
+
+	 if ( u.thirst &#62;20 )
+	 {
+	   block;
+		 act("Your not thirsty.", A_HIDEINV, u, null, null, TO_CHAR);
+     goto start;
+	 }
+block;
+   act ("You drink $2n and it makes you feel more energetic!", A_HIDEINV, u, self,
+	      null, TO_CHAR);
+   act ("$1n drinks $2n and looks more energetic!", A_HIDEINV, u, self,
+	      null, TO_ROOM);
+
+	 u.thirst := u.thirst + 10;
+	 u.full := u.full + 10;
+	 if (u.thirst &#62; 24)
+	 {
+	   u.thirst := 24;
+	 }
+
+	 if (u.full &#62; 24)
+	 {
+	   u.full := 24;
+	 }
+	 u.endurance := u.endurance+50;
+	 if (u.endurance &#62; u.max_endurance)
+	 {
+	   u.endurance := u.max_endurance;
+	 }
+	 sub_drink_info@commands(self);
+	 quit;
+}
+dilend&#13;</PRE
+><P
+></P
+></DIV
+><P
+>If this <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> function scares you don't worry you don't have to
+understand it or adjust it you only have to use it.  In fact this is a
+really easy <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> to use.  The argument on the tuborg function is not used
+yet so all you have to do is pass in a blank string or any string for
+that matter.  So if you wanted to make a tuborg in the game you would
+just add this to your drink container.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN3569"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy tuborg@function ("");&#13;</PRE
+><P
+></P
+></DIV
+><P
+>All of the above listed <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> object functions are described in
+<A
+HREF="x4005.html"
+>Section 7.5</A
+>.
+Then we put some to work so you can see how
+to use them in <A
+HREF="x4362.html"
+>Section 7.6</A
+></P
+></DD
+></DL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x2919.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x3575.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Suggested NPC exercises</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Object macros</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

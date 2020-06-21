@@ -1,0 +1,497 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Special reset functions</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The reset section"
+HREF="ch07.html"><LINK
+REL="PREVIOUS"
+TITLE="Loading objects and NPCs"
+HREF="x4627.html"><LINK
+REL="NEXT"
+TITLE="Reset walk through"
+HREF="x4851.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x4627.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 8. The reset section</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4851.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RESETFUNCTION"
+>8.3. Special reset functions</A
+></H1
+><P
+>Now that we have gone over the basic load and equip commands we
+have some special commands that you can add to them to make them do more
+interesting things.  Sometimes when doing resets you don't always want
+items or NPCs to load or sometimes you want them to load but only if a
+certain amount of other things correctly load.  There are also times you
+want to clear the rooms or reload an entire object after removing the
+old one.  All these things and more can be accomplished with the reset
+section. </P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="RESETCOMPLETE"
+>8.3.1. The complete directive.</A
+></H2
+><P
+>The 'load' and 'equip' commands have one more argument that can be
+placed at the end of them to make them act a bit different.the complete
+directive. In the case where this directive is placed at the end
+of a 'load or 'equip' command, the unit is only loaded in case all immediate commands inside
+its nesting are executed successfully.  For example:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4785"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;load captain into jail_room complete
+{
+   equip magic_sword position WEAR_WIELD max 1
+   load bag
+   {
+      load ruby_ring max 1
+   }
+}&#13;</PRE
+><P
+></P
+></DIV
+><P
+>In this case the captain is only loaded if the objects magic_sword
+and bag are successfully loaded. if the ruby_ring is not loaded,
+it will have no effect on the complete directive. To make the ruby_ring
+affect to captains complete directive, the bag must also have specified a
+complete directive (because the bag would then not be complete, and thus the
+captain would not be complete). </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN4788"
+>8.3.2. The follow command</A
+></H2
+><P
+>Once you load a NPC you may want that NPC to follow another NPC. 
+  That is what the 'follow' command is for.  The following is the format
+  of the 'follow' command</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4791"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>  
+   follow &lt;symbol&gt; &lt;load amount #&gt; &lt;complete&gt;
+   
+   </PRE
+><P
+></P
+></DIV
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>symbol</DT
+><DD
+><P
+>The first argument to the follow command is the symbolic name of
+the NPC to follow the NPC of the outer grouping.</P
+></DD
+><DT
+>load amount</DT
+><DD
+><P
+>the second argument is an optional argument that tells the reset
+how many of the NPC followers of this type  are allowed in the world, zone, or locally.  The
+possible values for this field are as follows:</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>max &lt;num&gt;</DT
+><DD
+><P
+>This  command  is  always  part  of  another reset command (load,
+equip, etc.).  At reset time the entire world is scanned for occurences
+of the loaded unit - only if the currently existing number is less than
+&lt;num&gt; will the command be executed.</P
+></DD
+><DT
+>local &lt;num&gt;</DT
+><DD
+><P
+>This command is always  part  of  another  reset  command  (load,
+equip, etc.).  At reset time the location of which the unit is to
+be loaded into is scanned for occurences of the loaded unit - only  if  the currently existing number is less than &lt;num&gt; will the
+command be executed.</P
+></DD
+><DT
+>zonemax &lt;num&gt;</DT
+><DD
+><P
+>This command is always  part  of  another  reset  command  (load,
+equip,  etc.).   At  reset  time  the  entire zone being reset is
+scanned for occurences of the loaded unit - only if the currently
+existing number is less than &lt;num&gt; will the command be
+executed.</P
+></DD
+></DL
+></DIV
+></DD
+><DT
+>complete</DT
+><DD
+><P
+>This only makes the NPC follow if all the other things in the
+grouping finishes completely.  For a better description of how this
+directive works see <A
+HREF="x4779.html#RESETCOMPLETE"
+>Section 8.3.1</A
+>.</P
+></DD
+></DL
+></DIV
+><P
+>The follow command is always used nested inside a loaded
+NPC to force the NPC &lt;symbol&gt; to follow the NPC of the outer
+grouping.  The following would be a correct use of the follow
+command.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4821"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;load captain into jail
+  {
+  follow guard max 4
+    {
+	equip guard_helmet WEAR_HEAD
+	equip guard_plate WEAR_BODY
+	equip guard_legs WEAR_LEGS
+	equip guard_boots WEAR_FEET
+	}
+	  follow guard max 4
+    {
+	equip guard_helmet WEAR_HEAD
+	equip guard_plate WEAR_BODY
+	equip guard_legs WEAR_LEGS
+	equip guard_boots WEAR_FEET
+	} 
+  } 
+  
+  </PRE
+><P
+></P
+></DIV
+><P
+>This example would load two guards that are fully dressed and
+they would start following the captain which is also loaded.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN4824"
+>8.3.3. The purge command</A
+></H2
+><P
+>There are times when you want to clean up a room.  This can be
+done very easy by using the <B
+CLASS="COMMAND"
+>purge</B
+>.  The following is
+the format of the purge command.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4828"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;purge &lt;symbol&gt;&#13;</PRE
+><P
+></P
+></DIV
+><P
+>This command doesn't take much description.  The symbol is the
+room you want to empty of all objects and NPCs.  If you wanted to get
+rid of all objects and NPCs from a room with the symbolic name of jail
+it would look like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4831"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;purge jail&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN4833"
+>8.3.4. The random command</A
+></H2
+><P
+>If you ever want to load something only some of the time.  There
+is a built in <B
+CLASS="COMMAND"
+>random</B
+> command that allows you to pick
+the percentage of the time that the item will load.  The random command
+has the following format.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4837"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;random &lt;num&gt;
+  {group or single set of resets}
+  
+  </PRE
+><P
+></P
+></DIV
+><P
+>It is important to point out this is done by a random percentage
+chance where as 1% of the time would be almost not at all and 100% of
+the time would be all the time.  If we wanted to load a group of things
+only 80% of the time it would look like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4840"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;random 80
+  {
+  load captain into jail_room complete
+    {
+    equip magic_sword position WEAR_WIELD max 1
+    load bag
+      {
+      load ruby_ring max 1
+      }
+    }
+}&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN4842"
+>8.3.5. The remove command</A
+></H2
+><P
+>Many times players take items out of containers like chests or
+steal items from your NPCs and leave them naked.  If the NPC is not dead
+the resets don't reload them therefore your NPCs will stand there empty
+and so will your chests.  This is fine if that is what you want but
+sometimes you want them to get dressed or refilled again at reset time.  that is
+what the <B
+CLASS="COMMAND"
+>remove</B
+> command is for.  The following is the
+format of the remove command.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4846"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;remove &lt;symbol1&gt; in &lt;symbol2&gt;&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Again the remove command is a simple command and it only has two
+arguments, the item and where it is to remove it from.  If you
+wanted to have a cabinet that at every reset it would have a knife and a
+bag of sugar in it would look like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4849"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;remove cabinet in kitchen
+load cabinet into kitchen
+ {
+ load sugarbag
+ load knife
+ }
+ 
+ </PRE
+><P
+></P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x4627.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4851.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Loading objects and NPCs</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch07.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Reset walk through</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

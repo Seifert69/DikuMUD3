@@ -1,0 +1,24 @@
+<br/>
+<br/>
+Usage<br/><br/>
+tell (character)(words to tele-communicate)<br/><br/>
+<br/>
+You may speak to a player that is anywhere in the game with the use of the<br/>
+tell command.  Beware that immortals or<br/>
+gods can intercept any message you deliver or<br/>
+receive (although it is considered rude to do so!) Tell enables you to<br/>
+communicate via telepathy with a character who for one reason or another<br/>
+is not at the same location as you are. No other player will hear this. Be<br/>
+warned that a player can stop receiving tells by using the not (no tell)<br/>
+command.<br/><br/>
+<br/><br/>
+To read your tell history just type 'tell' with no argument.<br/>
+This will keep your last 20 tells.  To clear your tell history the command is<br/><br/>clear tell<br/><br/><br/>
+<br/>See Also:<br/><br/>
+Ignore<br/><br/>
+Say<br/><br/>
+Whisper<br/><br/>
+Yell<br/><br/>
+Ask<br/><br/>
+respond<br/><br/>
+<br/>

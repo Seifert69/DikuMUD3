@@ -1,0 +1,18 @@
+<br/>
+Usage cstore &lt;item&gt;<br/><br/>
+Example: cstore hammer<br/><br/>
+<br/>
+This allows all Clan Members to store items in the clan equipment box. The clan<br/>
+can only store a max of 25 items safely.  All items stored in this way will be<br/>
+saved over reboots.<br/>
+<br/>
+Note:<br/>
+You must be at the clan chest to use this command.<br/>
+<br/>
+<br/>See Also:<br/><br/>
+cequipment<br/>
+cunstore<br/>
+cdeposit<br/>
+cwithdraw<br/>
+<br/>
+<br/>

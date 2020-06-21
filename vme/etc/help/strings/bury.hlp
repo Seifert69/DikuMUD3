@@ -1,0 +1,16 @@
+<br/>
+<br/>
+Usage <br/><br/>
+bury &lt;item&gt;     this will bury one item<br/>
+bury all        this will bury all in the room<br/>
+bury all.&lt;item&gt; this will bury all item by that name in the<br/>
+                       room and inventory. use at own risk :)<br/>
+<br/>
+Bury an item, you were carrying in the dust. When an item is buried,<br/>
+you cannot see it directly, but have to dig to find it.<br/>
+<br/>
+<br/><br/>
+See Also:<br/><br/>
+Dig<br/><br/>
+Donate<br/><br/>
+<br/>

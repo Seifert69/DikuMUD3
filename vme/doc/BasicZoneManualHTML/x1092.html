@@ -1,0 +1,696 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>A more complex set of rooms</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The room section"
+HREF="ch04.html"><LINK
+REL="PREVIOUS"
+TITLE="DIL functions for rooms"
+HREF="x1028.html"><LINK
+REL="NEXT"
+TITLE="Putting the rooms together"
+HREF="x1152.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x1028.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. The room section</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1152.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RMCOMPLEX"
+>5.5. A more complex set of rooms</A
+></H1
+><P
+>In the last section you learned to make basic rooms.  In this
+section we will build on what you already know to allow you to make much
+more fancy rooms.  IN this section we will give a much better view of
+the exits and what can be done with them including doors, hidden doors and
+rooms inside other rooms.  We will also show some examples of the room
+<ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions being used that were described in the previous section. 
+Finally we will pull it all together in a completed zone for you to
+compile and play with. </P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="RMDOOREXITS"
+>5.5.1. Exits with doors</A
+></H2
+><P
+>When we first defined exits we included the 'keyword' and 'open'
+fields on a door.  In this section we will give an example of two rooms
+linked together with a door.  There is no new information you have
+not already encountered so we will start with an example.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1099"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;hallway
+title "Module tunnel"
+descr "The hallway is about 50 meters long and around 100 meters from
+side to side and top to bottom...."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+west to chamber descr
+"The hallway opens up into a chamber."; 
+
+east to office descr
+"You see what looks to be an office."
+keyword {"air lock door","air lock","door"}
+open {EX_OPEN_CLOSE, EX_CLOSED};
+
+end
+
+office
+title "The station office"
+descr
+"Large paintings fill the walls of this part of the station...."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+west to hallway descr
+"You see what looks to be a hallway."
+keyword {"air lock door","air lock","door"}
+open {EX_OPEN_CLOSE, EX_CLOSED};
+end
+&#13;</PRE
+><P
+></P
+></DIV
+><P
+>One important thing you should notice is, whatever you put as a
+keyword, along with the direction, is what a person must use to open
+the door.  To make sure the door closes at reset time you will have to
+add the doors reset to the '%reset' section.  The door resets will be
+explained in <A
+HREF="ch07.html"
+>Chapter 8</A
+>.  Notice also in this example 
+we have a direction both in the room you are going to and the room you
+came from.  This means you need a 'west' direction for every 'east'
+direction leading to it.  If you do not put both you will end up with a
+one way direction.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN1103"
+>5.5.2. Locked exits</A
+></H2
+><P
+>Now that you have making a door down, you may find that it is not
+safe to leave your doors unlocked.  Well the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> is ready for you.  You
+have already seen the 'keyword' and 'open' sections and what you can set
+in them.  Now lets use the 'EX_LOCKED field with them and introduce a
+new macro to allow you to set the difficulty to unlock the lock with out
+a key.</P
+><P
+>First lets look at the macro that allows you to set a difficulty
+ on a lock.  If you set the lock with out this macro it will default to
+ 0 and thus be easy to pick.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1108"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+> 
+#define DOOR_LOCK_DEF(north_lock, east_lock, south_lock, west_lock,\
+up_lock, down_lock, northeast_lock, northwest_lock, southeast_lock,\
+southwest_lock)&#13;</PRE
+><P
+></P
+></DIV
+><P
+>When using this macro you only set the value of the exit you want
+to add the difficulty to, you can leave the rest of the exits '0'.  Only
+one of these macros are needed on a room no matter how many exits
+because each of the exits are included..  If you have an exit to the
+north that is locked and you want it to have a difficulty of 50% the
+following would be the line you would add to your room</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1111"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;DOOR_LOCK_DEF(50, 0, 0, 0, 0, 0, 0, 0, 0, 0)&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now lets add the macro and the locked flag to the exits and create
+the room.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1114"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;hallway
+title "Module tunnel"
+descr "The hallway is about 50 meters long and around 100 meters from
+side to side and top to bottom...."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+west to chamber descr
+"The hallway opens up into a chamber."; 
+
+DOOR_LOCK_DEF(0, 50, 0, 0, 0, 0, 0, 0, 0, 0)
+east to office descr
+"You see what looks to be an office."
+keyword {"air lock door","air lock","door"}
+key nokey
+open {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED};
+
+end
+
+office
+title "The station office"
+descr
+"Large paintings fill the walls of this part of the station...."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+DOOR_LOCK_DEF(0, 0, 0, 50, 0, 0, 0, 0, 0, 0)
+west to hallway descr
+"You see what looks to be a hallway."
+keyword {"air lock door","air lock","door"}
+key nokey
+open {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED};
+end&#13;</PRE
+><P
+></P
+></DIV
+><P
+>The only thing you may be wondering about in this example is the
+'key' field.  I have picked 'nokey' as my value of the key.  There is no
+key in this zone so all this does is create a key hole.  If you leave
+the 'key' field out totally the only way you can open the lock is by a
+magical spell.  It is also important that you read about resets of door locks in
+<A
+HREF="ch07.html"
+>Chapter 8</A
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN1118"
+>5.5.3. Hidden exits</A
+></H2
+><P
+>Locking the doors may not be enough.  In fact sometimes you may
+not want to lock the door but you might want to hide it.  You can do
+both or either with the following macro added to your exit.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1121"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define SECRET_DOOR_DIFFICULTY(DIR, SKILL) \ 
+extra{SECRET_DOOR} {DIR, SKILL}\            
+""                                         &#13;</PRE
+><P
+></P
+></DIV
+><P
+>So if you wanted a door or just a passage to the north hidden you
+would add this before or after your exits.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1124"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;SECRET_DOOR_DIFFICULTY(NORTH, 50)&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now lets put it all together and link two rooms together with a
+hidden door.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1127"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;office
+title "The station office"
+descr
+"Large paintings fill the walls of this part of the station..."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+west to hallway descr
+"You see what looks to be a hallway."
+keyword {"air lock door","air lock","door"}
+open {EX_OPEN_CLOSE, EX_CLOSED};
+
+SECRET_DOOR_DIFFICULTY(SOUTH, 50)
+south to portal_room descr
+"You see what looks to be a portal room."
+keyword {"air lock door","air lock","staff","door"}
+key nokey
+open {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED,EX_HIDDEN};
+
+end
+
+portal_room
+title "Green field room"
+descr
+"Like the other rooms on the station this one is large enough for
+dragons to comfortably fit in.  The strange thing about this room though
+is it is totally empty except for a green field right in the center. 
+there is a door that leads to another room to the north."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+north  to office descr
+"You see what looks to be an office."
+keyword {"air lock door","air lock","door"}
+key nokey
+open {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED};
+
+end&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN1129"
+>5.5.4. Rooms inside of rooms</A
+></H2
+><P
+>Now that you have normal exits down its time to take a look at
+something a bit different.  Lets say you wanted to put a barrel in a
+room that is also a room that has exits to other rooms.  Or maybe in my
+case I want to put a transporter pad in the room that is also a room
+so you can exit back into the room you came from.  In the case of the
+teleporter I could use an object but as you will find it is much easier
+to deal with a room for this than an object.</P
+><P
+>To put a room in a room it is much different than using the normal
+exit fields.  The only thing needed is the 'in' keyword and the
+room you are linking the current room into. There is no need for a
+semi-colon.  The following is what the line would look like.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1133"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;in &lt;room that room is in&gt;&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Not too hard.  The following are two rooms one in the other.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1136"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;portal_room
+title "Green field room"
+descr
+"Like the other rooms on the station this one is large enough for
+dragons to comfortably fit in.  The strange thing about this room though
+is it is totally empty except for a green field right in the center. 
+there is a door that leads to another room to the north."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+extra {"green field","field"}
+"The field looks to be a green fog shifting and churning as you watch. 
+if you are nuts you could probably enter it."
+
+north  to office descr
+"You see what looks to be an office."
+keyword {"air lock door","air lock","door"}
+key nokey
+open {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED};
+
+//A link to the portal is also here
+end
+
+room_port
+names{"green field", "field"}
+title "Green field"
+descr
+"Green Mist swirls about you."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+in portal_room
+end
+&#13;</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>After adding a room in a room you should note the room in the
+description or put an 'outside_descr' on the room inside it.  In
+our example we have chosen to add the description into the room instead
+of using the 'outside_descr'.  Also doors and locks work the same way as before you can even hide this exit.</P
+></TD
+></TR
+></TABLE
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN1140"
+>5.5.5. A room using force move.</A
+></H2
+><P
+>Sometimes you will want to help players along
+their path.  This could be for a river that flows strongly enough to
+force a players raft down stream or maybe for a room of quick sand that
+sucks the player into another room.  In these situations we need to use
+the force move <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>, explained in the previous section.  Here we
+have built two rooms linked only by a forced move.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1144"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;portal_room
+title "Green field room"
+descr
+"Like the other rooms on the station this one is large enough for
+dragons to comfortably fit in.  The strange thing about this room though
+is it is totally empty except for a green field right in the center. 
+there is a door that leads to another room to the north."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+extra {"green field","field"}
+"The field looks to be a green fog shifting and churning as you watch. 
+if you are nuts you could probably enter it."
+
+north  to office descr
+"You see what looks to be an office."
+keyword {"air lock door","air lock","door"}
+key nokey
+open {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED};
+
+//A link to the portal is also here
+
+end
+ship_port
+names{"green field", "field"}
+title "Green field"
+descr
+"Green Mist swirls about you."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+in ship
+
+dilcopy force_move@function(
+//Time to activation
+4,
+//room and act
+"portal_room@dragonst!You feel your body dissolving for lack of a better
+description.&amp;nYou appear on the deck of a ship.",
+//True or False for randomizing or not
+FALSE);
+
+
+end                                             
+&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN1146"
+>5.5.6. A death room</A
+></H2
+><P
+>As a final touch to my little example zone I want to create a
+room that will kill a player instantly.  I will use the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> function
+Death room and the room would simply look as follows.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1150"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;deathspace
+title"Open space"
+descr
+"You see the ship and the station far off in the distance and you are in Space!"
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+dilcopy death_room@function (
+//how often is damage done 4 would be 1 second
+4, 
+//damage
+400,
+//act for the damage.
+"You realize		 to late that was the trash disposal transporter and you feel your lungs explode.");
+
+end&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x1028.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1152.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions for rooms</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch04.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Putting the rooms together</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

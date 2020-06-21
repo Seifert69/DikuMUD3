@@ -1,0 +1,38 @@
+<h1>practice</h1>
+Usage practice (skill|weapon|ability)<br/>
+<br/>
+Examples:<br/>
+ practice strength<br/>
+ practice hand axe<br/>
+ practice flee<br/>
+<br/>
+This command enables you to raise your abilities, and practice your<br/>
+skills, spells and weapons. The command can only be used at a teacher.<br/>
+Different teachers teach different abilities and skills, spells or weapons<br/>
+and the cost is different in each guild. Your race also modifies this<br/>
+cost.<br/>
+<br/>
+When you look at your 'status' you will notice you have got a certain<br/>
+amount of skill and ability practice points. The skill-points are used for<br/>
+practicing spells, weapons and skills. The ability-points are used for<br/>
+practicing abilities  (str, dex,con, etc).<br/>
+<br/>
+All your abilities and knowledge about spells, weapons and skills<br/>
+are in the range [0..200] percent. You can only get above 150% by<br/>
+finding magic items or very unique special teachers.<br/>
+<br/>
+Each time you raise a level you get more skill and ability points, and<br/>
+thus you can get better abilities  and better spell, weapon and<br/>
+skill knowledge.<br/>
+<br/>
+<br/>See Also:<br/>
+ <a cmd='help #'>Info</a><br/>
+ <a cmd='help #'>Experience</a><br/>
+ <a cmd='help #'>Guild</a><br/>
+ <a cmd='help #'>Level</a><br/>
+ <a cmd='help #'>Skills</a><br/>
+ <a cmd='help #'>Spells</a><br/>
+ <a cmd='help #'>Weapons</a><br/>
+ <a cmd='help #'>Abilities</a><br/>
+<br/>
+<br/>

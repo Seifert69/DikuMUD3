@@ -1,0 +1,30 @@
+/*
+ $Author: All $
+ $RCSfile: files.h,v $
+ $Date: 2003/11/29 03:31:16 $
+ $Revision: 2.2 $
+ */
+
+#ifndef _MUD_FILES_H
+#define _MUD_FILES_H
+
+#include "bytestring.h"
+
+#define FCACHE_MAX         100
+
+int store_name_test (char *name);
+void fstrcpy (CByteBuffer * pBuf, FILE * f);
+char *fread_line_commented (FILE * fl, char *buf, int max);
+long fsize (FILE * f);
+void touch_file (char *name);
+char *fread_string (FILE * fl);
+char *fread_string_copy (FILE * fl, char *buf, int max);
+int file_to_string (char *name, char *buf, int max_len);
+int config_file_to_string (char *name, char *buf, int max_len);
+FILE *fopen_cache (const char *name, const char *mode);
+void fclose_cache (void);
+ubit1 file_exists (const char *name);
+int load_string (char *filename, char **file_str);
+int save_string (char *filename, char **file_str, char *opp);
+
+#endif

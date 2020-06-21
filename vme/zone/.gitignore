@@ -1,0 +1,5 @@
+*.data
+*.dh
+*.dot
+*.err
+*.reset

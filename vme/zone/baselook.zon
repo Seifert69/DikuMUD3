@@ -1,0 +1,2386 @@
+
+/*  BASELOOK :  This zone controls the dils that make the look command
+possible.  The main dil is
+    do_look, which then calls the other dils as they are needed.
+
+    There are several contingencies that must be taken into account, such as
+if the player is just
+    looking at the room, looking at an object/person in the room, an object
+a person is wearing,
+    an extra on an object in the room/inventory.  All of this is taken into
+account.
+*/
+
+#define ITEM_VEHICLE  28
+
+#include <macros.h>
+
+%zone baselook
+title ""
+
+lifespan 20
+reset RESET_ANYHOW
+creators {"whistler", "azzurathe"}
+
+
+%dil
+
+/* do_examine : This will replace the basecode examine command.  It will
+make use of the look dils already made.
+Examine Dils:
+                              do_examine
+                              get_aura
+                              liq_content
+                              exam_in
+*/
+
+dilbegin do_examine(arg : string);
+external
+    string   get_aura(u1 : unitptr);
+             exam_in (u1 : unitptr);
+             liq_content(u1 : unitptr);
+             show_eq(u1 : unitptr, u2 : unitptr);
+	unitptr find_here(pc:unitptr,a:string);
+var
+  item       :  unitptr;
+  cnt        :  integer;
+  temp       :  string;
+  aura       :  string;
+  buff       :  string;
+
+code
+{
+   if (arg == "")
+   {
+      sendtext("What do you wish to examine?<br/>", self);
+      quit;
+   }
+
+   temp := arg;
+
+   item:=find_here(self,temp);
+   temp:="";
+   if (item == null)
+   {
+      sendtext("You do not see that here.<br/>", self);
+      quit;
+   }
+
+   if (item == self)
+      act("$1n looks at $1mself.", A_SOMEONE, self, null, null, TO_REST);
+   else if (item.outside != self)
+   {
+      act("$1n looks at $3n.", A_SOMEONE, self, null, item, TO_NOTVICT);
+      act("$1n looks at you.", A_SOMEONE, self, null, item, TO_VICT);
+   }
+
+   aura := "";
+
+   if (item.bright > 0)
+      aura := aura + sact("Light comes from $2m.", A_SOMEONE, self, item, null, TO_CHAR);
+   else if (item.bright < 0)
+      aura := aura + sact("Darkness comes from $2m.", A_SOMEONE, self, item, null, TO_CHAR);
+
+   buff := get_aura(item);
+
+   if (buff != "")
+      aura := aura + buff;
+
+   sendtext(aura, self);
+
+   if (item.extra.[""])
+      temp := temp + item.extra.[""].descr + "<br/>";
+   else if (item.extra.[item.names.[0]])
+      temp := temp + item.extra.[item.names.[0]].descr + "<br/>";
+   else
+   {
+      if ((item.type == UNIT_ST_PC) and (item.level < IMMORTAL_LEVEL))
+         temp := sact("<div class='pc_title'>$2e has big green ears, and long greasy hair.</div><br/>", A_SOMEONE, self, item, null, TO_CHAR);
+      else if ((item.type == UNIT_ST_PC) and (item.level >= IMMORTAL_LEVEL))
+      {
+         temp := temp + sact("<div class='immort_title'>$2n has a glowing light surrounding $2m.</div><br/>", A_SOMEONE, self, item, null, TO_CHAR);         
+      }
+      else
+      {
+         if (item.type == UNIT_ST_OBJ)
+            temp := temp + "<div class='obj_title'>";
+         else
+            temp := temp + "<div class='npc_title'>";
+
+         temp := temp + "You see nothing special.</div><br/>";
+      }
+
+      if ((item.type == UNIT_ST_OBJ) and (item.objecttype == ITEM_WEAPON))
+      {
+         buff := weapon_name(item.value[0]);
+         temp := temp +  "The " + item.name + " clearly requires a "	+ buff + " fighting style.";
+      }
+   }
+
+   sendtext(temp, self);
+
+   if ((item.type == UNIT_ST_PC) or (item.type == UNIT_ST_NPC))
+   {
+      if (isaff(item, ID_REWARD))
+         act("There is a reward on $2s head.", A_ALWAYS, self, item, null,TO_CHAR);
+
+      if ((isset(item.charflags, CHAR_PROTECTED)) and
+         (isset(item.charflags,CHAR_OUTLAW)))
+         act("$2n is an outlaw and wanted alive.", A_ALWAYS, self, item,null, TO_CHAR);
+      else if (isset(item.charflags, CHAR_PROTECTED))
+         act("$2n is a protected citizen.", A_ALWAYS, self, item, null,TO_CHAR);
+      else if (isset(item.charflags, CHAR_OUTLAW))
+         act("$2n is an outlaw, wanted dead or alive.", A_ALWAYS, self,item, null, TO_CHAR);
+
+      if (isset(item.charflags, CHAR_LEGAL_TARGET))
+          act("You may kill $2m now.", A_ALWAYS, self, item, null, TO_CHAR);
+
+      if ((item.type == UNIT_ST_PC) and (isset(item.pcflags, PC_PK_RELAXED)))
+          act("You notice a scar on $2s wrist from the Book of Blood.", A_ALWAYS, self, item, null, TO_CHAR);
+
+      show_eq(self, item);
+   }
+
+   if (item.objecttype == ITEM_CONTAINER)
+   {
+      sendtext("When you look inside, you see:<br/>", self);
+      exam_in(item);
+   }
+   else if (item.objecttype == ITEM_DRINKCON)
+   {
+      sendtext("When you look inside, you see:<br/>", self);
+      liq_content(item);
+   }
+
+   send_done("examine", self, item, null, 0, "", null);
+   quit;
+}
+dilend
+
+
+/* get_aura : This will return a string listing all the different auras an
+item has */
+
+dilbegin string get_aura(item : unitptr);
+
+var
+
+    temp    :  string;
+
+code
+{
+   temp := "";
+
+   if (isset(self.charflags, CHAR_DETECT_ALIGN))
+   {
+      if (item.alignment > 350)
+         temp := temp + " (blue)";
+      else if (item.alignment < -350)
+         temp := temp + " (red)";
+      else
+         temp := temp + " (green)";
+   }
+
+   if (isset(self.charflags, CHAR_DETECT_INVISIBLE) and
+         (isset(item.flags,UNIT_FL_INVISIBLE)))
+      temp := temp + " (clear)";
+
+
+   if (isset(self.charflags, CHAR_DETECT_MAGIC)
+         and (isset(item.flags,UNIT_FL_MAGIC)))
+      temp := temp + " (yellow)";
+
+
+   if ((item.type == UNIT_ST_OBJ) and ((item.objecttype == ITEM_FOOD) or
+            (item.objecttype == ITEM_DRINKCON)))
+   {
+      if (isset(self.charflags, CHAR_DETECT_POISON) and (item.value[3] > 0))
+         temp := temp + " (black)";
+   }
+   else if ((item.type == UNIT_ST_OBJ) and (item.objecttype == ITEM_WEAPON))
+   {
+      if (isset(self.charflags, CHAR_DETECT_POISON) and
+         (dilfind("weapon_curare@skills", item)))
+         temp := temp + " (black)";
+   }
+   else if ((item.type == UNIT_ST_PC) or (item.type == UNIT_ST_NPC))
+   {
+      if (isset(self.charflags, CHAR_DETECT_POISON) and
+            (dilfind("spl_poison@spells", item)))
+         temp := temp +  " (black)";
+
+      if (isset(self.charflags, CHAR_DETECT_UNDEAD) and
+         ((item.race > RACE_SPIRIT_MIN) and (item.race < RACE_SPIRIT_MAX)))
+         temp := temp + " (violet)";
+   }
+
+   if (temp != "")
+      temp :=  "The " + item.name + " reveals an aura of" + temp + "<br/>";
+
+   return(temp);
+}
+dilend
+
+
+
+/* liq_content : This returns the contents of a liquid container to the
+player */
+
+dilbegin liq_content (u : unitptr);
+
+var
+     buff      :  string;
+
+code{
+
+if (u.extra.["$drink_color"])
+   buff := u.extra.["$drink_color"].descr;
+else
+   buff := "";
+
+if (u.value[0] >= u.capacity)
+   act("It is full of a $2t liquid.", A_ALWAYS, self, buff, null, TO_CHAR);
+else if (u.value[0] > (u.capacity / 2))
+   act("It is more than half full of a $2t liquid.", A_ALWAYS, self, buff,
+null, TO_CHAR);
+else if (u.value[0] > 0)
+   act("It is less than half full of a $2t liquid.", A_ALWAYS, self, buff,
+null, TO_CHAR);
+else
+   act("It is empty.", A_ALWAYS, self, null, null, TO_CHAR);
+
+
+return;
+
+}dilend
+
+
+/* exam_in : This shows the contents of a container to a player when they
+use examine */
+
+dilbegin exam_in (u : unitptr);
+
+external
+	string obj_content (l : unitptr, u:unitptr);
+
+var
+     buff      :  string;
+
+code{
+
+if (isset (u.openflags, EX_CLOSED))
+     {
+       act ("It is closed.", A_ALWAYS, self, null, null, TO_CHAR);
+       return;
+     }
+
+
+buff := obj_content (self, u);
+
+/* MS2020 buff := buff + "<br/>"; */
+
+if (self.type == UNIT_ST_PC)
+      sendtext(buff, self);
+else
+      sendtext(buff, self);
+
+return;
+
+}dilend
+
+/* End do_area dils */
+
+/* do_look : This is the head dil.  the command "look" calls this dil and it
+then parses
+   the argument, seeing which of the work dils it needs to call. */
+
+dilbegin do_look (arg:string);
+
+external
+
+     string is_dir (s:string);
+            look_blank (l2 : unitptr, arg:string);
+            look_at (l3 : unitptr, s:string);
+            look_in (l4 : unitptr, s:string);
+ integer             look_dir(l5 : unitptr, s:string);
+
+var
+     arg1    :  string;
+args:stringlist;
+     temp    :  string;
+     dir     :  string;
+
+code
+{
+if (self.position < POSITION_SLEEPING)
+     {sendtext("You can't see anything but stars!<br/>", self);
+      quit;
+     }
+else if (self.position == POSITION_SLEEPING)
+     {sendtext("You can not see anything when you are sleeping.<br/>", self);
+      quit;
+     }
+else if ((isaff (self, ID_BLIND_CHAR)) or
+(isset(self.charflags,CHAR_BLIND)))
+     {sendtext("You can't see a damn thing, you are blind!<br/>",self);
+      quit;
+     }
+else if (isset(self.flags, UNIT_FL_BURIED))
+     {sendtext("You are buried alive!<br/>", self);
+      quit;
+     }
+else if (not (islight(self.outside)))
+     {sendtext("It is pitch black.<br/>",self);
+      quit;
+     }
+     else if ((isaff (self, ID_BLIND_CHAR)) or
+     (isset(self.charflags,CHAR_BLIND)))
+     {sendtext("You can't see a damn thing, you are blind!<br/>",self);
+      quit;
+     }
+
+if (arg=="self")
+ arg:=self.name;
+if ((arg == "") or (arg == ":brief:"))
+    {look_blank(self, arg);
+     quit;
+    }
+
+temp := arg;
+
+arg1 := getword(temp);
+
+if (arg1 == "at")
+   {if (temp != "")
+       look_at(self, temp);
+    else
+       look_at(self, arg);
+    quit;
+   }
+
+if ((arg1 == "in") or (arg1 == "i"))
+   {if (temp != "")
+       look_in (self, temp);
+    else
+       look_at (self, arg);
+    quit;
+   }
+
+dir := is_dir(arg1);
+
+if (dir != "")
+   {
+if (look_dir (self, dir)==FALSE)
+{
+args:=getwords (arg);
+if (length(args)>1)
+look_at(self, arg);
+else
+     sendtext("<div class='exit'>No such direction here?</div>", self);
+}
+    quit;
+   }
+else
+                   look_at(self, arg);
+
+
+
+
+quit;
+
+}dilend
+
+
+
+/* look_blank : This is the general look, and will show the room/object that
+the player is in, as well as its contents.
+*/
+dilbegin look_blank (looker : unitptr, arg : string);
+external
+	string room_content (l : unitptr, u : unitptr, arg : string);
+        string obj_content (l2 : unitptr, u : unitptr);
+
+var
+	temp:string;
+	buff:string;
+code
+{
+   if (looker.type!=UNIT_ST_PC)
+      if ((looker.type!=UNIT_ST_NPC) or (looker.switched==null))
+         return;
+
+   if (not (islight(looker.outside)))
+   {
+      sendtext("It is pitch black.<br/>",looker);
+      return;
+   }
+   else if ((isaff (looker, ID_BLIND_CHAR)) or (isset(looker.charflags,CHAR_BLIND)))
+   {
+      sendtext("You can't see a damn thing, you are blind!<br/>",self);
+      return;
+   }
+
+   if (isaff(looker, ID_BLIND_CHAR))
+   {
+      sendtext("You can't see a damn thing, you are blind!", looker);
+      return;
+   }
+
+   buff := "";
+
+   if (looker.outside.type == UNIT_ST_ROOM)
+      buff := room_content(looker, looker.outside, arg);
+   else if ((looker.outside.type == UNIT_ST_OBJ) or (looker.outside.type == UNIT_ST_NPC))
+   {
+      if (looker.outside.type == UNIT_ST_OBJ)
+      {
+         if (looker.outside.inside_descr != "")
+         {
+            buff := "<div class='obj_descr'>" + looker.outside.inside_descr +"</div><br/>";
+            buff := buff + sact("<div class='obj_title'>$2n</div> contains:<br/>",
+                                 A_SOMEONE, looker, looker.outside, null, TO_CHAR);
+         }
+         else
+            buff:= sact("You are inside <div class='obj_title'>$2n</div> which contains:<br/>",
+                         A_SOMEONE, looker, looker.outside, null, TO_CHAR);
+      }
+      else /* Looker is inside NPC */
+      {
+         if (looker.outside.inside_descr != "")
+         {
+            buff := buff + "<div class='npc_descr'>" + looker.outside.inside_descr +"</div><br/>";
+            buff := buff + sact("<div class='npc_title'>$2n</div> contains:<br/>",
+                                 A_SOMEONE, looker, looker.outside, null, TO_CHAR);
+               // "<div class='npc_title'>" +textformat("&& }"+ looker.outside.title) +"</div> contains:<br/>";
+         }
+         else
+            buff := sact("You are riding <div class='npc_title'>$2n</div> which is carrying:<br/>",
+                           A_SOMEONE, looker, looker.outside, null, TO_CHAR);
+      }
+
+      temp := obj_content(looker, looker.outside);
+      buff := buff + temp;
+
+      if ((isset(looker.outside.flags, UNIT_FL_TRANS)) and
+         (not isset(looker.outside.flags, UNIT_FL_BURIED)))
+      {
+         if (looker.outside.outside.type == UNIT_ST_ROOM)
+         {
+            temp := room_content (looker, looker.outside.outside,arg);
+            /* MS2020 buff := buff + "<br/>" + temp;*/
+            buff := buff + temp;
+         }
+         else if ((looker.outside.outside.type == UNIT_ST_NPC) or (looker.outside.outside.type == UNIT_ST_OBJ))
+         {
+            if (looker.outside.outside.type==UNIT_ST_OBJ)
+               buff := buff + sact("<div class='obj_title'>$2n</div> is inside <div class='obj_title'>$3n</div> and which contains:<br/>",
+                              A_SOMEONE, looker, looker.outside, looker.outside.outside, TO_CHAR);
+            else
+               buff := buff + sact("<div class='obj_title'>$2n</div> is inside <div class='npc_title'>$3n</div> and which is carrying:<br/>",
+                              A_SOMEONE, looker, looker.outside, looker.outside.outside, TO_CHAR);
+
+            temp := obj_content(looker, looker.outside.outside);
+            /* MS2020 buff := buff + "<br/>" + temp;*/
+            buff := buff + temp;
+         }
+         else
+         {
+            buff := buff + sact("<div class='obj_title'>$2n</div> is inside <div class='pc_title'>$3n</div> and which contains:<br/>",
+                              A_SOMEONE, looker, looker.outside, looker.outside.outside, TO_CHAR);
+            temp := obj_content (looker, looker.outside.outside);
+            /* MS2020 buff := buff + "<br/>" + temp;*/
+            buff := buff+ temp;
+         }
+      }
+   }
+   else /* looker is inside a UNIT_ST_PC*/
+   {
+      if (looker.outside.inside_descr != null)
+         buff := buff + "<div class='pc_descr'>" + looker.outside.inside_descr +"</div><br/>";
+      else
+         buff := buff + sact("You are riding <div class='pc_title'>$2n</div> which is carrying:</div><br/>",
+                           A_SOMEONE, looker, looker.outside, null, TO_CHAR);
+
+      temp := obj_content (looker, looker.outside);
+      buff := buff + temp;
+      if (isset(looker.outside.flags, UNIT_FL_TRANS))
+      {
+         if (looker.outside.outside.type == UNIT_ST_ROOM)
+         {
+            temp := room_content (looker, looker.outside.outside,arg);
+            buff := buff + temp;
+         }
+         else if ((looker.outside.outside.type == UNIT_ST_NPC) or (looker.outside.outside.type == UNIT_ST_OBJ))
+         {
+            if (looker.outside.outside.type == UNIT_ST_OBJ)
+               buff := buff + sact("<div class='obj_title'>$2n</div> is inside <div class='obj_title'>$3n</div> and which contains:<br/>",
+                           A_SOMEONE, looker, looker.outside, looker.outside.outside, TO_CHAR);
+            else
+               buff := buff + sact("<div class='obj_title'>$2n</div> is riding <div class='npc_title'>$3n</div> and which is carrying:<br/>",
+                           A_SOMEONE, looker, looker.outside, looker.outside.outside, TO_CHAR);
+            
+            temp := obj_content (looker, looker.outside.outside);
+            buff := buff + temp;
+         }
+         else // It's a PC
+         {
+            buff := buff + sact("<div class='pc_title'>$2n</div> is inside $3n and which contains:<br/>",
+                           A_SOMEONE, looker, looker.outside, looker.outside.outside, TO_CHAR);
+            temp := obj_content (looker, looker.outside.outside);
+            buff := buff + temp;
+         }
+      }
+   }
+
+   /* Show the room! */
+   sendtext(buff, looker);
+   send_done ("look", looker, null, null, 0, "", null);
+
+   return;
+
+}dilend
+
+dilbegin unitptr find_here(looker:unitptr,arg:string);
+var
+ ln:integer;
+ count:integer;
+ item:unitptr;
+  item_inside:unitptr;
+ args:stringlist;
+
+code
+{
+  args:=split(arg,".");
+  ln:=length (args);
+  if (ln>1)
+  {
+  	arg:=args.[1];
+	count:=atoi(args.[0]);
+	}
+else
+count:=1;
+
+item:=looker.inside;
+while (item!=null){
+
+if (not(visible(looker,item))){
+
+item:=item.next;
+continue;
+}
+
+if (arg in item.names){
+if (count>1){
+count:=count-1;
+item:=item.next;
+continue;
+}
+return (item);
+}
+
+item:=item.next;
+}
+
+item:=looker.outside.inside;
+while (item!=null){
+
+if ((not(visible(looker,item))) or
+(isset(item.flags,UNIT_FL_BURIED))){
+item:=item.next;
+continue;
+}
+
+ if (arg in item.names){
+ if (count>1){
+ count:=count-1;
+  /*transparent items*/
+ if (isset(item.flags,UNIT_FL_TRANS))
+ {
+
+  item_inside:=item.inside;
+while (item_inside!=null){
+
+if ((not(visible(looker,item_inside))) or
+(isset(item_inside.flags,UNIT_FL_BURIED))){
+item_inside:=item_inside.next;
+continue;
+}
+
+ if (arg in item_inside.names){
+ if (count>1){
+ count:=count-1;
+ item_inside:=item_inside.next;
+ continue;
+ }
+ return (item_inside);
+ }
+
+ item_inside:=item_inside.next;
+}
+}
+
+
+ item:=item.next;
+ continue;
+ }
+ return (item);
+ }
+
+ if (isset(item.flags,UNIT_FL_TRANS))
+ {
+
+  item_inside:=item.inside;
+while (item_inside!=null){
+
+if ((not(visible(looker,item_inside))) or
+(isset(item_inside.flags,UNIT_FL_BURIED))){
+item_inside:=item_inside.next;
+continue;
+}
+
+ if (arg in item_inside.names){
+ if (count>1){
+ count:=count-1;
+ item_inside:=item_inside.next;
+ continue;
+ }
+ return (item_inside);
+ }
+
+ item_inside:=item_inside.next;
+}
+}
+
+
+
+ item:=item.next;
+}
+
+if ((looker.outside.type!=UNIT_ST_ROOM) and (isset(looker.outside.flags,UNIT_FL_TRANS)))
+ {
+item:=looker.outside.outside.inside;
+while (item!=null){
+
+if ((not(visible(looker,item))) or
+(isset(item.flags,UNIT_FL_BURIED))){
+item:=item.next;
+continue;
+}
+
+ if (arg in item.names){
+ if (count>1){
+ count:=count-1;
+   /*transparent items*/
+ if (isset(item.flags,UNIT_FL_TRANS))
+ {
+
+  item_inside:=item.inside;
+while (item_inside!=null){
+
+if ((not(visible(looker,item_inside))) or
+(isset(item_inside.flags,UNIT_FL_BURIED))){
+item_inside:=item_inside.next;
+continue;
+}
+
+ if (arg in item_inside.names){
+ if (count>1){
+ count:=count-1;
+ item_inside:=item_inside.next;
+ continue;
+ }
+ return (item_inside);
+ }
+
+ item_inside:=item_inside.next;
+}
+}
+
+
+ item:=item.next;
+ continue;
+ }
+ return (item);
+ }
+
+   /*transparent items*/
+ if (isset(item.flags,UNIT_FL_TRANS))
+ {
+
+  item_inside:=item.inside;
+while (item_inside!=null){
+if ((not(visible(looker,item_inside))) or
+(isset(item_inside.flags,UNIT_FL_BURIED))){
+item_inside:=item_inside.next;
+continue;
+}
+
+ if (arg in item_inside.names){
+ if (count>1){
+ count:=count-1;
+ item_inside:=item_inside.next;
+ continue;
+ }
+ return (item_inside);
+ }
+
+ item_inside:=item_inside.next;
+}
+}
+
+
+ item:=item.next;
+}
+}
+
+
+item:=null;
+return (item);
+}
+dilend
+
+dilbegin unitptr find_equip(looker:unitptr,arg:string);
+var
+ ln:integer;
+ count:integer;
+ item:unitptr;
+ args:stringlist;
+
+code
+{
+  args:=split(arg,".");
+  ln:=length (args);
+  if (ln>1)
+  {
+  	arg:=args.[1];
+	count:=atoi(args.[0]);
+	}
+else
+count:=1;
+
+item:=looker.inside;
+while (item!=null){
+if (not(visible(self,item))){
+
+item:=item.next;
+continue;
+}
+
+if (arg in item.names){
+if (count>1){
+count:=count-1;
+item:=item.next;
+continue;
+}
+return (item);
+}
+
+item:=item.next;
+}
+item:=null;
+return (item);
+}
+dilend
+
+
+
+
+
+/* look_in : This allows a player to look inside of a container, a boat, a
+vehicle or a water container. */
+
+dilbegin look_in (looker : unitptr, arg:string);
+
+external
+	string obj_content (l : unitptr, u:unitptr);
+	unitptr find_here(pc:unitptr,a:string);
+
+var
+     buff      :  string;
+     t_object  :  string;
+     u         :  unitptr;
+     i         :  integer;
+
+code{
+
+u:=find_here(looker,arg);
+
+if ((u == null) or (not visible(looker, u)))
+    {act ("No such thing here.", A_ALWAYS, looker, null, null, TO_CHAR);
+     quit;
+    }
+
+if ((u.type ==UNIT_ST_PC) or (u.type==UNIT_ST_NPC))
+    {act ("Well, if you kill $3m you could look inside of $3m.",
+	 A_ALWAYS,looker, null, u, TO_CHAR);
+     quit;
+    }
+
+if ((u.nameidx=="portal") and (u.zoneidx=="spells"))
+ goto portal;
+
+
+if ((u.nameidx=="moot_buck") and (u.zoneidx=="udgaard"))
+ goto gold_bucket;
+
+ if ((u.nameidx=="gate") and (u.zoneidx=="spells"))
+ goto portal;
+
+if ((u.objecttype != ITEM_CONTAINER) and (u.objecttype != ITEM_BOAT)
+    and (u.objecttype != ITEM_DRINKCON) and (u.objecttype != ITEM_VEHICLE))
+    {act ("It doesn't appear to be able to contain anything.",
+	 A_ALWAYS,looker, null, null, TO_CHAR);
+     quit;
+    }
+
+if (isset (u.openflags, EX_CLOSED))
+    {act ("It is closed.", A_ALWAYS, looker, null, null, TO_CHAR);
+     quit;
+    }
+
+if (u.objecttype == ITEM_DRINKCON)
+   goto drink_cont;
+
+
+t_object := "<div class='obj_title'>$2n ";
+
+if ((u.outside == looker) and (u.equip != 0))
+      t_object := t_object + "(worn):</div>";
+else if (u.outside == looker)
+      t_object := t_object + "(carried):</div>";
+else
+      t_object := t_object + "(here):</div>";
+
+act(t_object, A_ALWAYS, looker, u, null, TO_CHAR);
+
+buff := obj_content (looker, u);
+
+if (looker.type == UNIT_ST_PC)
+    sendtext(buff, looker);
+else
+    sendtext(buff, looker);
+quit;
+	:portal:
+sendto ("lookin",u);
+quit;
+
+
+	:Gold_bucket:
+sendto ("lookin",u);
+quit;
+
+:drink_cont:
+
+if (u.extra.["$drink_color"])
+   buff := u.extra.["$drink_color"].descr;
+else
+   buff := "";
+
+if (u.value[0] >= u.capacity)
+   act("It is full of a $2t liquid.", A_ALWAYS, self, buff, null, TO_CHAR);
+else if (u.value[0] > (u.capacity / 2))
+   act("It is more than half full of a $2t liquid.",
+        A_ALWAYS, self, buff,null, TO_CHAR);
+else if (u.value[0] > 0)
+   act("It is less than half full of a $2t liquid.",
+        A_ALWAYS, self, buff,null, TO_CHAR);
+else
+   act("It is empty.", A_ALWAYS, self, null, null, TO_CHAR);
+
+send_done ("look", looker, null, u, 0, "", null);
+
+quit;
+
+}dilend
+
+
+
+/* look_at : This is for when a player looks at something that is in the
+room, be it an object or an extra of some sort.  This is the tricky part,
+as we will have to scan all items in this order :
+
+      1) Object worn
+      2) Object in inventory
+      3) Object in container that player is in.
+      4) Object in room player is in.
+      5) Room (if room has name ?)
+      6) extra on container player is in
+      7) extra on room
+      8) extra on object in room
+      9) extra on object in container player is in
+     10) extra on object in inventory (eq/or inventory, whichever is first)
+     11) extra on looker
+*/
+
+dilbegin look_at (looker : unitptr, arg:string);
+
+
+external
+unitptr find_here(u:unitptr,s:string);
+unitptr find_equip(u:unitptr,s:string);
+    search_item(l1 : unitptr, unit1 : unitptr,  string1 : string,truearg:string);
+    show_eq(l2 : unitptr, unit2 : unitptr);
+
+var
+
+    item     :  unitptr;
+    pc       :  unitptr;
+
+    temp     :  string;
+    arg1     :  string;    /* placeholder to keep arg intact */
+    temp1    :  string;
+
+code
+{
+   arg1 := arg;
+   temp := getword(arg1);
+
+   if (right(temp, 2) == "'s")     /* Looking at temp's someting, so we need to concentrate on temp */
+   {
+      temp := left(temp, (length(temp) - 2));  /* Get temp's real name */
+      pc:=find_here(looker,temp);
+
+      if ((pc == null) or (not visible(looker, pc)))
+      {
+         act("You do not see that here.", A_ALWAYS, looker, null, null,TO_CHAR);
+         quit;
+      }
+
+      if (arg1 == "")
+      {
+         act("Look at $3n's what?", A_ALWAYS, looker, null, pc, TO_CHAR);
+         quit;
+      }
+
+      item := find_equip (pc,arg1);
+
+	   /* See if temp has something named arg1 */
+      if (item == null) /* If not, search for an extra on temp */
+      {
+         if ((pc.extra.[arg1]) and (left(pc.extra.[arg1].names.[0], 1) != "$"))
+         {
+            act("You look at $2n's $3t.", A_ALWAYS, looker, pc, arg1,TO_CHAR);
+            sendtext(pc.extra.[arg1].descr+"<br/>", looker);
+            act("$1n looks at $3n's $2t.", A_ALWAYS, looker, arg1, pc,TO_NOTVICT);
+            act("$1n looks at your $2t.", A_SOMEONE, looker, arg1, pc,TO_VICT);
+            send_done("look", looker, item, pc, 1, arg, null);
+            quit;
+         }
+         else
+         {
+		      act("$3n does not seem to have a $2t.", A_ALWAYS, looker, arg1,pc, TO_CHAR);   /* doesnt have anything name arg1 */
+            send_done ("look", looker, item, pc, 1, arg, null);
+            quit;
+         }
+      }
+      else  /* Look at temp's arg1 */
+      {
+         if (pc == looker)
+            act("You look at your $2n.", A_ALWAYS, looker, item, pc, TO_CHAR);
+         else if (item.equip!=0)
+            act("You look at $3n's $2n.", A_ALWAYS, looker, item, pc,TO_CHAR);
+		   else
+		   {
+            act("$3n does not seem to have a $2t.", A_ALWAYS, looker, arg1,pc, TO_CHAR);   /* doesnt have anything name arg1 */
+            quit;
+         }
+
+
+         if (item.extra.[""]) /* this is for the extra{} on the item */
+            temp := "<div class='obj_descr'>" + item.extra.[""].descr;
+         else if (item.extra.[item.names.[0]])    /* if not above, then extra{"item's name"}  */
+            temp := "<div class='obj_descr'>" + item.extra.[item.names.[0]].descr;
+         else
+            temp := "<div class='obj_descr'>You see nothing special.";   /* NOthing to describe for item */
+
+         temp := temp + "</div>";
+
+         if (item.objecttype == ITEM_WEAPON)
+         {
+            temp1 := weapon_name(item.value[0]);
+            temp := temp + "The " + item.name + " clearly requires a " +temp1 + " fighting style.</div>";
+         }
+         sendtext(temp,looker);
+
+         act("$1n looks at $3n's $2N.", A_ALWAYS, looker, item, pc,TO_NOTVICT);
+         if (pc != looker)
+            act("$1n looks at your $2N.", A_SOMEONE, looker, item, pc,TO_VICT);
+         send_done ("look", looker, item, pc, 1, arg, null);
+         quit;
+      }
+    }
+
+   arg1 := arg; /* Ok, now we need to scan the room for arg1 */
+
+   item :=find_here(looker,arg1);
+
+   if ((item != null) and (visible(looker, item)))
+   /* we found an item with the name of arg1, going to look at it */
+   {
+      if (item.type == UNIT_ST_PC)
+         temp := "<div class='pc_descr'>";
+      else if (item.type == UNIT_ST_NPC)
+         temp := "<div class='npc_descr'>";
+      else if (item.type == UNIT_ST_ROOM)
+         temp := "<div class='room_descr'>";
+      else
+         temp := "<div class='obj_descr'>";
+
+      if (item.extra.[""])
+         temp := temp + item.extra.[""].descr + "";
+      else if (item.extra.[item.names.[0]])
+         temp := temp + item.extra.[item.names.[0]].descr + "";
+      else
+      {
+         if ((item.type == UNIT_ST_PC) and (item.level < IMMORTAL_LEVEL))
+         {
+            if (item.sex == SEX_MALE) 
+               temp := temp + "He ";
+            else if (item.sex == SEX_FEMALE) 
+               temp := temp + "She ";
+            else
+               temp := temp + "It ";
+            temp := temp + "has big green ears, and long greasy hair.";
+         }
+         else if ((item.type == UNIT_ST_PC) and (item.level >= IMMORTAL_LEVEL))
+         {
+            temp := temp + item.name + " has a glowing light surrounding ";
+            if (item.sex == SEX_MALE)
+               temp := temp + "him.";
+            else if (item.sex == SEX_FEMALE) 
+               temp := temp + "her.";
+            else 
+               temp := temp + "it.";
+         }
+         else
+             temp := temp + "You see nothing special.";
+      }
+
+      if ((item.type == UNIT_ST_OBJ) and (item.objecttype == ITEM_WEAPON))
+      {
+         temp1 := weapon_name(item.value[0]);
+         temp := temp + "The " + item.name + " clearly requires a " + temp1 + " fighting style.";
+      }
+
+      temp := temp + "</div><br/>";
+
+      if (looker.type == UNIT_ST_PC)
+         sendtext(temp, looker);
+      else
+         act("", A_ALWAYS, looker, null, null, TO_CHAR);
+
+      if ((item.type == UNIT_ST_PC) or (item.type == UNIT_ST_NPC))
+      {
+         if (isaff(item, ID_REWARD))
+            act("There is a reward on $2s head.", A_ALWAYS, looker, item,null, TO_CHAR);
+
+         if ((isset(item.charflags, CHAR_PROTECTED))
+		           and (isset(item.charflags, CHAR_OUTLAW)))
+            act("$2n is an outlaw and wanted alive.", A_ALWAYS, looker,item, null, TO_CHAR);
+         else if (isset(item.charflags, CHAR_PROTECTED))
+            act("$2n is a protected citizen.", A_ALWAYS, looker, item, null,TO_CHAR);
+         else if (isset(item.charflags, CHAR_OUTLAW))
+            act("$2n is an outlaw, wanted dead or alive.", A_ALWAYS,looker,item, null, TO_CHAR);
+
+         if (isset(item.charflags, CHAR_LEGAL_TARGET))
+            act("You may kill $2m now.", A_ALWAYS, looker, item, null,TO_CHAR);
+
+         if ((item.type == UNIT_ST_PC) and (isset(item.pcflags,PC_PK_RELAXED)))
+            act("You notice a scar on $2s wrist from the Book of Blood.",
+			   A_ALWAYS, looker, item, null, TO_CHAR);
+
+         if (item != self)
+             show_eq(looker, item);
+      }
+
+      if (looker == item)
+         act("$1n looks at $1mself.", A_SOMEONE, looker, arg1, item,TO_NOTVICT);
+      else
+         act("$1n looks at $3n.", A_HIDEINV, looker, arg1, item, TO_NOTVICT);
+
+      if (item != looker)
+         act("$1n looks at you.", A_HIDEINV, looker, arg1, item, TO_VICT);
+      send_done ("look", looker, null, item, 2, arg, null);
+      quit;
+    }
+
+   arg1 := arg;
+
+   /* No item here with the name of arg1, so going to search for extras */
+   item := looker.outside;
+
+   if ((item.type == UNIT_ST_OBJ) or (item.type == UNIT_ST_NPC))
+   {
+      if ((item.extra.[arg1]) and (left(item.extra.[arg1].names.[0], 1) != "$"))
+      {
+         act("You look at the $2t.", A_ALWAYS, looker, arg1, null, TO_CHAR);
+         sendtext(item.extra.[arg1].descr+"<br/>", looker);
+         send_done ("look", looker, null, item, 1, arg, null);
+         quit;
+      }
+
+      if (isset(item.flags, UNIT_FL_TRANS))
+         item := item.outside;
+   }
+
+   if ((item.extra.[arg1]) and (left(item.extra.[arg1].names.[0], 1) != "$"))
+   {
+      act("You look at the $2t.", A_ALWAYS, looker, arg1, null, TO_CHAR);
+      sendtext(item.extra.[arg1].descr+"<br/>", looker);
+      send_done ("look", looker, null, item, 1, arg, null);
+      quit;
+   }
+
+   item := item.inside;
+   search_item(looker, item, arg1,arg);
+
+   if (((looker.outside.type == UNIT_ST_OBJ) or (looker.outside.type == UNIT_ST_NPC))
+      and (isset(looker.outside.flags, UNIT_FL_TRANS)))
+   {
+      item := looker.outside.inside;
+      search_item(looker, item, arg1,arg);
+   }
+
+   item := looker.inside;
+   search_item(looker, item, arg1,arg);
+
+   if ((looker.extra.[arg1]) and (left(looker.extra.[arg1].names.[0], 1) != "$"))
+   {
+      act("You look at the $2t.", A_ALWAYS, looker, arg1, null, TO_CHAR);
+      sendtext(looker.extra.[arg1].descr + "<br/>", looker);
+      send_done ("look", looker, null, null, 2, arg, null);
+      quit;
+   }
+
+   act("You do not see that here.", A_ALWAYS, looker, null, null, TO_CHAR);
+   quit;
+}dilend
+
+
+/* show_eq : This shows the equipment on a mobile/pc looked at. It has been formatted to go from head to toe. */
+dilbegin show_eq(looker : unitptr, pc  :  unitptr);
+var
+   item      : unitptr;
+   wpn_list  : intlist;
+   buf       : string;
+
+code
+{
+   buf := "<table class='colh2'>";
+
+   /* Here we have to check for two-handed weapons.  Let me know if there is a better system */
+   item := equipment(pc, WEAR_WIELD);
+   if (item)
+   {
+      wpn_list := weapon_info(item.value[0]); /* This is a list of the two-handed weapons */
+      if (wpn_list.[0] == 2)
+         buf := buf + sact("<tr><td>&lt;two hand wielded&gt;</td><td><div class='worn'>$2n</div></td></tr>",
+            A_ALWAYS, looker, item, null,TO_CHAR);
+      else
+         buf := buf + sact("<tr><td>&lt;wielded&gt;</td><td><div class='worn'>$2n</div></td></tr>",
+             A_ALWAYS, looker, item, null,TO_CHAR);
+   }
+
+   item := equipment(pc, WEAR_HOLD);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;held&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_SHIELD);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn as shield&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_HEAD);  /* this is the same for all positions.  Check to see if there is any eq there */
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn on head&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+   /* If so, show it to the player */
+
+   item := equipment(pc, WEAR_EAR_L);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn on left ear&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_EAR_R);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn on right ear&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_NECK_1);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn around neck&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_NECK_2);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn around neck&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_BODY);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn on body&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_ABOUT);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn about body&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+
+   item := equipment(pc, WEAR_CHEST);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn across chest&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_BACK);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn on back&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_ARMS);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn on arms&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_WRIST_L);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn around wrist&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_WRIST_R);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn around wrist&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_FINGER_R);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn on finger&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_FINGER_L);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn on finger&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_HANDS);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn on hands&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_WAIST);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn about waist&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_LEGS);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn on legs&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_ANKLE_L);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn on ankle&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_ANKLE_R);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn on ankle&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   item := equipment(pc, WEAR_FEET);
+   if (item)
+      buf := buf + sact("<tr><td>&lt;worn on feet&gt;</td><td><div class='worn'>$2n</div></td></tr>", A_ALWAYS, looker, item, null, TO_CHAR);
+
+   buf := buf + "</table>";
+
+   sendtext(buf, looker);
+   return;
+}dilend
+
+
+/* search_item : To keep from repeating the same code over again.  Used to
+search items in a unit for extras.  */
+
+dilbegin search_item(looker : unitptr, item : unitptr, arg1 : string, truearg:string);
+code
+{
+   while (item != null)
+   {
+      if ((item.extra.[arg1]) and (left(item.extra.[arg1].names.[0], 1) != "$") and (visible(looker, item)))
+      {
+         act("You look at the $2t.", A_ALWAYS, looker, arg1, null, TO_CHAR);
+         sendtext(item.extra.[arg1].descr + "<br/>", looker);
+         send_done("look", looker, null, item, 1, truearg, null);
+         quit;
+      }
+      item := item.next;
+   }
+   return;
+}
+dilend
+
+
+
+/* srchlist : This is used to replace the "x in list" as it seems to get
+confused when 'x' has a period in the middle of the string. */
+
+
+dilbegin integer srchlist(list : stringlist, st : string);
+
+var
+
+    counter  :  integer;
+
+code{
+
+counter := 0;
+
+while (counter < length(list))
+   {
+     if (st == list.[counter])
+        return(counter + 1);
+
+     counter := counter + 1;
+
+   }
+
+return(0);
+
+}dilend
+
+
+
+/* look_dir : This shows what a player sees when he does a 'look east' */
+
+dilbegin integer look_dir (looker : unitptr, arg : string);
+
+external
+
+   integer is_hidden@basemove(unit1 : unitptr, int1 : integer, unit2 : unitptr);
+
+var
+
+   room   :  unitptr;
+   dir    :  integer;
+   test   :  integer;
+
+code
+{
+    /* if we cant see the exits, we get none */
+if ((looker.outside.type != UNIT_ST_ROOM) and (not isset(looker.outside.flags, UNIT_FL_TRANS)))
+return(FALSE);
+
+if ((looker.outside.type != UNIT_ST_ROOM) and (looker.outside.outside.type != UNIT_ST_ROOM))
+     return (FALSE);
+
+
+room := looker.outside;
+
+while (room.type != UNIT_ST_ROOM)
+   room := room.outside;
+
+dir := -1;         /* Initialize counter */
+
+if(arg == "north") dir := NORTH;
+else if(arg == "up") dir := UP;
+else if(arg == "south") dir := SOUTH;
+else if(arg == "east") dir := EAST;
+else if(arg == "west") dir := WEST;
+else if(arg == "down") dir := DOWN;
+else if(arg == "northeast") dir := NORTHEAST;
+else if(arg == "northwest") dir := NORTHWEST;
+else if(arg == "southeast") dir := SOUTHEAST;
+else if(arg == "southwest") dir := SOUTHWEST;
+
+
+test := is_hidden@basemove(looker, dir, room);
+
+if ((isset(room.exit_info[dir], EX_CLOSED)) and (not(test)))
+sendtext ("<div class='exit'>You see a closed "+room.exit_names[dir].[0]+".</div>",looker);
+else if ((room.extra.[arg]) and (not test))
+    sendtext ("<div class='exit'>" + arg + " - " + room.extra.[arg].descr +"</div>",looker);
+else if (room.exit_to[dir].extra.["$exit_descr"]!=null)
+    sendtext ("<div class='exit'>" + arg + " - " + room.exit_to[dir].extra.["$exit_descr"].descr +"</div>",looker);
+else if ((room.exit_to[dir]) and (not test))
+    sendtext ("<div class='exit'>" + arg + " - You see nothing special.</div>",looker);
+else
+return (FALSE);
+send_done ("look", looker, null, null, 0, arg, null);
+return(TRUE);
+}dilend
+
+
+
+// I wanted this in movement but couldn't make external work .... :-(
+/* exits_html  : Returns string like N, S, W with links  (MS)       */
+dilbegin string exits_h(looker : unitptr);
+external
+   integer is_hidden@basemove(u1 : unitptr, int1 : integer, u2 : unitptr);
+   string  dirstring@function(i2 : integer);
+
+var
+   room    :  unitptr;
+   buff    :  string;
+   dir     :  integer;
+   sl      :  stringlist;
+code
+{
+   if (not islight(looker.outside))
+      return("");
+
+   room := looker.outside;
+
+   if ((room.type != UNIT_ST_ROOM) and (isset(room.flags, UNIT_FL_TRANS)))
+      room := room.outside;
+
+   if (room.type != UNIT_ST_ROOM)
+      return("");
+
+   buff := "";
+   dir := NORTH;
+   sl := DIR_SL_SHORT;
+
+   while (dir <= MAX_EXIT)
+   {
+      if (room.exit_to[dir])
+      {
+         if (is_hidden@basemove(looker, dir, room))
+         {
+            dir := dir + 1;
+            continue;
+         }
+
+         buff := buff + sl.[dir] + " ";
+       }
+      dir := dir + 1;
+   }
+
+   return(buff);
+}
+dilend
+
+
+
+
+
+/* room_content  :  This dil shows all the stuff to the player that is in
+the room that he or she is in.  It has quite a bit to do, noting if the player can see it,
+if it is hidden, if it is a transperant object with pcs/npcs in it, etc.
+*/
+
+dilbegin string room_content (looker : unitptr, room : unitptr, arg : string);
+external
+    string carried_by(l2 : unitptr, u:unitptr);
+    string get_pos (l3 : unitptr, u:unitptr);
+    string obj_content(l : unitptr, u:unitptr);
+    string display_exits (l4 : unitptr, u:unitptr);
+    integer srchlist(sl1 : stringlist, st1 : string);
+    string exits_h(looker : unitptr);
+
+var
+    u             : unitptr;
+    temp_pos      : string;
+    pc            : stringlist;
+    npc           : stringlist;
+    obj           : stringlist;
+    n_npc         : stringlist;
+    n_obj         : stringlist;
+    i             : integer;
+    temp          : string;
+    temp_in       : integer;
+    buff          : string;
+    tpbuff        : string;
+
+	   snpc:string;
+	   spc:string;
+	   sobj:string;
+	   inpc:integer;
+	   ipc:integer;
+	   iobj:integer;
+
+
+code
+{
+   if (room.type != UNIT_ST_ROOM)
+   {
+      log ("Non-room entered room_content dil in look");
+      quit;
+   }
+
+   temp := "";
+   tpbuff := "";
+   
+   temp_pos := "";
+   if (room.mapx != -1)
+      temp_pos := " map='"+itoa(room.mapx) + "," + itoa(room.mapy)+"'";
+
+   if (looker.level >= IMMORTAL_LEVEL)
+      temp := " [" + room.nameidx + "@" + room.zoneidx + "]";
+
+   buff := "<h1 class='room_title' zone='"+room.zoneidx+"' exits='" + exits_h(looker) + "'"+ temp_pos + ">" +
+                     room.title + temp + "</h1><br/>";
+   temp_pos := "";
+
+
+   if (looker.type == UNIT_ST_PC)
+   {
+      if ((not(isset(looker.pcflags,PC_BRIEF))) or (arg != ":brief:"))
+         buff := buff + "<div class='room_descr'>" + room.inside_descr + "</div><br/>";
+
+   }
+   else
+      buff := buff + "<div class='room_descr'>" + room.inside_descr + "</div><br/>";
+
+   temp := display_exits (looker, room);
+
+   buff := buff + temp;
+
+   u := room.inside;
+   while (u != null)
+   {
+      if ((u==looker) or (u == looker.outside) or (isset (u.flags,UNIT_FL_BURIED)))
+      {
+         u := u.next;
+         continue;
+      }
+
+      if (u.type == UNIT_ST_PC)
+      {
+         /*if (u.outside!=looker.outside)
+           {u := u.next;
+            continue;
+         }*/
+
+		   if ((visible (looker, u)) and
+            ((not (isset(u.charflags, CHAR_HIDE)))) or (looker.level>=IMMORTAL_LEVEL))
+         {
+            if (isset(u.flags,UNIT_FL_TRANS))
+               tpbuff := carried_by(looker, u);
+
+               temp_pos := get_pos(looker, u);
+
+               if (length (tpbuff))
+               {
+                  tpbuff := u.name + " carries:<br/>" + tpbuff;
+                  if (u.level >= IMMORTAL_LEVEL)
+                  {
+                     temp := "<div class='immort_title'>" + u.name + " " + u.title + temp_pos;
+
+                     if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                        temp := temp + " (wizinv)";
+
+                     if ((isset(u.charflags, CHAR_HIDE)) and (looker.level  >= IMMORTAL_LEVEL))
+                        temp := temp + " (hidden)";
+
+                     temp := temp + "</div><br/>";
+
+                     temp := temp + tpbuff;
+                  }
+                  else
+                  {
+                     temp := "<div class='pc_title'>" + u.name + " " + u.title + temp_pos;
+
+                     if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                        temp := temp + " (wizinv)";
+
+                     if ((isset(u.charflags, CHAR_HIDE)) and (looker.level  >= IMMORTAL_LEVEL))
+                        temp := temp + " (hidden)";
+
+                     temp := temp + "</div><br/>" + tpbuff;
+                  }
+
+                   addstring(pc, temp);
+               }
+               else
+               {
+                  if (u.level >= IMMORTAL_LEVEL)
+                  {
+                     temp := "<div class='immort_title'>" + u.name + " " + u.title + temp_pos;
+                     if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                        temp := temp + " (wizinv)";
+
+                     if ((isset(u.charflags, CHAR_HIDE)) and (looker.level  >= IMMORTAL_LEVEL))
+                        temp := temp + " (hidden)";
+
+                     temp := temp + "</div><br/>";
+                  }
+                  else
+                  {
+                     temp := "<div class='pc_title'>" + u.name + " " + u.title + temp_pos;
+                     if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                        temp := temp + " (wizinv)";
+
+                     if ((isset(u.charflags, CHAR_HIDE)) and (looker.level  >= IMMORTAL_LEVEL))
+                        temp := temp + " (hidden)";
+
+                     temp := temp + "</div><br/>";
+                  }
+
+                  addstring (pc, temp);
+               }
+            }
+            else if ((isaff(looker, ID_DETECT_LIFE)) and (u.level <IMMORTAL_LEVEL))
+            {
+               temp := "You sense a hidden life form in the room.</div>";
+               temp_in:=textformat(temp) in npc;
+
+             if (temp_in > 0)
+                {i := atoi(n_npc.[temp_in - 1]) + 1;
+                 n_npc.[temp_in - 1] := itoa(i);
+                }
+             else
+                {addstring(npc, textformat(temp));
+                 addstring(n_npc, "1");
+                }
+
+            }
+
+        }
+      else if (u.type == UNIT_ST_NPC)
+      {
+         /*   if (u.outside!=looker.outside)
+               {u := u.next;
+                  continue; }*/
+
+         if ((visible (looker, u)) and
+            ((not (isset(u.charflags, CHAR_HIDE)))) or (looker.level>=IMMORTAL_LEVEL))
+         {
+            if (u.position != POSITION_STANDING)
+            {
+               temp_pos := get_pos(looker, u);
+               temp := u.title + temp_pos;
+            }
+            else
+               temp:=u.outside_descr;
+
+            if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+               temp := temp + " (wizinv)";
+
+            if ((isset(u.charflags, CHAR_HIDE)) and (looker.level >= IMMORTAL_LEVEL))
+               temp := temp + " (hidden)";
+
+             if (isset (u.flags,UNIT_FL_TRANS))
+                 tpbuff := carried_by(looker, u);
+
+            if (length(tpbuff))
+            {
+               tpbuff := sact("$2n carries:<br/>" + tpbuff, A_SOMEONE, looker, u, null, TO_CHAR);
+               temp := temp  + tpbuff;
+            }
+
+            /*temp_in := srchlist(npc, temp);*/
+			   temp_in:=temp in npc;
+
+             if (temp_in > 0)
+                {i := atoi(n_npc.[temp_in - 1]) + 1;
+                 n_npc.[temp_in - 1] := itoa(i);
+                }
+             else
+                {addstring(npc, temp);
+                 addstring(n_npc, "1");
+                }
+            }
+else if ((isaff(looker, ID_DETECT_LIFE)) and (isset(u.charflags,CHAR_HIDE))
+         and (u.level < IMMORTAL_LEVEL))
+{temp := "You sense a hidden life form in the room.<br/>";
+
+             /*temp_in := srchlist(npc, temp);*/
+			 			 temp_in:=temp in npc;
+
+             if (temp_in > 0)
+                {i := atoi(n_npc.[temp_in - 1]) + 1;
+                 n_npc.[temp_in - 1] := itoa(i);
+                }
+             else
+                {addstring(npc, temp);
+                 addstring(n_npc, "1");
+                }
+
+            }
+        }
+     else if (u.type == UNIT_ST_OBJ)
+        {if (u == looker.outside)
+        {u := u.next;
+         continue;
+        }
+
+/*  if (u.outside!=looker.outside)
+        {u := u.next;
+         continue;
+        }*/
+
+
+         if (visible(looker, u))
+            {if (isset (u.flags, UNIT_FL_TRANS))
+                 tpbuff := carried_by(looker, u);
+
+             temp := u.outside_descr;
+
+             if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                 temp := temp + " (wizinv)";
+
+             if ((isset(u.charflags, CHAR_HIDE)) and (looker.level >= IMMORTAL_LEVEL))
+                 temp := temp + " (hidden)";
+
+            if (length(tpbuff))
+            {
+               tpbuff := sact("$2n carries:<br/>" + tpbuff, A_SOMEONE, looker, u, null, TO_CHAR);
+               temp := temp + tpbuff;
+            }  
+
+
+
+            /*temp_in := srchlist(obj, temp);*/
+			 			 temp_in:=temp in obj;
+
+            if (temp_in > 0)
+            {i := atoi(n_obj.[temp_in - 1]) + 1;
+                 n_obj.[temp_in - 1] := itoa(i);
+            }
+            else
+            {addstring (obj, temp);
+                 addstring( n_obj,"1");
+            }
+         }
+      }
+
+      tpbuff := "";
+
+      u := u.next;
+   }
+
+   iobj:= length(obj);
+   ipc := length(pc);
+   inpc:= length(npc);
+   snpc :="";
+   spc  :="";
+   sobj :="";
+   i:=0;
+
+   while ((i<iobj) or (i<inpc) or (i<ipc))
+	{
+      if (i<iobj)
+      {
+         if (atoi(n_obj.[i])>1)
+            sobj:=sobj+"<div class='obj_title'>"+"[x"+n_obj.[i]+"] "+obj.[i]+"</div><br/>";
+         else
+            sobj:=sobj+"<div class='obj_title'>"+obj.[i]+"</div><br/>";
+      }
+      if (i<inpc)
+      {
+         if (atoi(n_npc.[i])>1)
+            snpc:=snpc+"<div class='npc_title'>"+"[x"+n_npc.[i]+"] "+npc.[i]+"</div><br/>";
+         else
+            snpc:=snpc+"<div class='npc_title'>"+npc.[i]+"</div><br/>";
+      }
+
+      if (i<ipc)
+         spc:=spc+pc.[i]; // spc:=spc+pc.[i]+"<br/>";
+
+ 
+      i:=i+1;
+	}
+	buff:=buff+""+sobj+""+snpc+""+spc;
+   return(buff);
+}
+dilend
+
+
+
+dilbegin string obj_content (looker : unitptr, item:unitptr);
+
+external
+    string carried_by(l1 : unitptr, u:unitptr);
+    integer srchlist(sl1 : stringlist, st1 : string);
+
+var
+    u        : unitptr;
+    pc       : stringlist;
+    npc      : stringlist;
+    obj      : stringlist;
+    n_npc    : stringlist;
+    n_obj    : stringlist;
+    i        : integer;
+    temp     : string;
+    temp_in  : integer;
+    buff     : string;
+
+code
+{
+
+u := item.inside;
+
+if ((u == looker) or (u == looker.outside))
+   u := u.next;
+
+if (u == null)
+    goto null_inside;
+
+while (u!=null)
+   {if ((u == looker ) or (u == looker.outside) or (isset (u.flags,UNIT_FL_BURIED)) or (not visible(looker, u)))
+       {u := u.next;
+        continue;
+       }
+
+    if (u.type == UNIT_ST_PC)
+       {if (u.level >= IMMORTAL_LEVEL)
+           {temp := "<div class='immort_title'>" + u.name + " " + u.title;
+
+            if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                temp := temp + " (wizinv)";
+
+            if ((isset(u.charflags, CHAR_HIDE)) and (looker.level >= IMMORTAL_LEVEL))
+                temp := temp + " (hidden)";
+
+            temp := temp + "</div><br/>";
+         }
+
+        else
+         {
+            temp := "<div class='pc_title'>" + u.name + " " + u.title;
+
+            if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                temp := temp + " (wizinv)";
+
+            if ((isset(u.charflags, CHAR_HIDE)) and (looker.level >= IMMORTAL_LEVEL))
+                temp := temp + " (hidden)";
+
+            temp := temp + "</div><br/>";
+         }
+
+         addstring (pc, temp);
+       }
+    else if (u.type == UNIT_ST_NPC)
+       {if (visible (looker, u))
+           {
+              temp := "";
+            if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                temp := temp + " (wizinv)";
+
+            if ((isset(u.charflags, CHAR_HIDE)) and (looker.level >= IMMORTAL_LEVEL))
+                temp := temp + " (hidden)";
+
+              temp := sact("$2n" + temp, A_SOMEONE, looker, u, null, TO_CHAR); 
+
+            temp_in := srchlist(npc, temp);
+
+            if (temp_in > 0)
+               {i := atoi(n_npc.[temp_in - 1]) + 1;
+                n_npc.[temp_in - 1] := itoa(i);
+               }
+            else
+               {addstring(npc, temp);
+                addstring(n_npc, "1");
+               }
+           }
+        else if ((isaff(looker, ID_DETECT_LIFE)) and (u.level < IMMORTAL_LEVEL))
+   {addstring(pc, "You sense a hidden life form somewhere near by.</div>");
+            addstring( n_npc,"1");
+           }
+       }
+    else if (u.type == UNIT_ST_OBJ)
+       {
+          temp := "";
+
+         if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+               temp := temp + " (wizinv)";
+
+         if ((isset(u.charflags, CHAR_HIDE)) and (looker.level >= IMMORTAL_LEVEL))
+               temp := temp + " (hidden)";
+
+         temp := sact("$2n"+temp+"<br/>", A_SOMEONE, looker, u, null, TO_CHAR);
+
+	temp_in := srchlist(obj, temp);
+
+        if (temp_in > 0)
+           {i := atoi(n_obj.[temp_in - 1]) + 1;
+            n_obj.[temp_in - 1] := itoa(i);
+           }
+        else
+           {addstring(obj, temp);
+            addstring(n_obj, "1");
+           }
+       }
+
+
+    u := u.next;
+   }
+
+buff := "";
+
+temp_in := length (obj);
+
+i := 0;
+
+while (i < temp_in)
+    {if (atoi(n_obj.[i]) > 1)
+         buff := buff + "<div class='obj_title'>[x" + n_obj.[i] + "] " + obj.[i];
+     else
+         buff := buff + "<div class='obj_title'>" + obj.[i];
+      buff := buff + "</div>";
+
+     i := i + 1;
+    }
+
+temp_in := length (npc);
+
+i := 0;
+
+while(i < temp_in)
+    {if (atoi(n_npc.[i]) > 1)
+         buff := buff + "<div class='npc_title'>[x" + n_npc.[i] + "] " + npc.[i];
+     else
+         buff := buff + "<div class='npc_title'>" + npc.[i];
+      buff := buff + "</div><br/>";
+     i := i + 1;
+    }
+
+temp_in := length (pc);
+
+i := 0;
+
+   while (i < temp_in)
+   {buff := buff + pc.[i];
+     i := i + 1;
+   }
+   return (buff);
+
+   :null_inside:
+   buff := "<div class='obj_title'>Nothing.</div><br/>";
+   return(buff);
+}dilend
+
+dilbegin string carried_by(looker : unitptr, item:unitptr);
+external
+   integer srchlist(sl1 : stringlist, st1 : string);
+
+var
+   u        : unitptr;
+   pc       : stringlist;
+   npc      : stringlist;
+   n_npc    : stringlist;
+   i        : integer;
+   temp     : string;
+   temp_in  : integer;
+   buff     : string;
+
+code
+{
+   if (item.type==UNIT_ST_ROOM)
+   {
+      log ("Room entered obj_content dil in look");
+      quit;
+   }
+
+   u := item.inside;
+
+   if (u == null)
+      return ("");
+
+   while (u!=null)
+   {
+      if ((u == looker) or (isset (u.flags, UNIT_FL_BURIED)) or (u.type == UNIT_ST_OBJ))
+      {
+         u := u.next;
+         continue;
+      }
+
+      if (u.type == UNIT_ST_PC)
+      {
+         if (visible (looker,u))
+         {
+            if (u.level >= IMMORTAL_LEVEL)
+            {
+               temp := "<div class='immort_title'>" + u.name + " " + u.title;
+
+               if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                  temp := temp + " (wizinv)";
+
+               if ((isset(u.charflags, CHAR_HIDE)) and (looker.level >= IMMORTAL_LEVEL))
+                  temp := temp + " (hidden)";
+
+               temp := temp + "</div>";
+            }
+            else
+            {
+               temp := "<div class='pc_title'>" + u.name + " " + u.title;
+
+                 if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                     temp := temp + "  (wizinv)";
+
+                 if ((isset(u.charflags, CHAR_HIDE)) and (looker.level >=IMMORTAL_LEVEL))
+                     temp := temp + " (hidden)";
+
+                 temp := temp + "</div>";
+                }
+
+             addstring (pc, temp);
+            }
+else if ((isaff(looker, ID_DETECT_LIFE)) and (u.level <IMMORTAL_LEVEL))
+             addstring (pc, "You sense a hidden life form somewhere near by.<br/>");
+       }
+    else if (u.type == UNIT_ST_NPC)
+       {if (visible (looker, u))
+           {
+              temp := "";
+            if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                temp := temp + " (wizinv)";
+
+            if ((isset(u.charflags, CHAR_HIDE)) and (looker.level >= IMMORTAL_LEVEL))
+                temp := temp + " (hidden)";
+
+            temp := sact("$2n"+temp, A_SOMEONE, looker, u, null, TO_CHAR);
+
+            temp_in := srchlist(npc, temp);
+
+            if (temp_in > 0)
+               {i := atoi(n_npc.[temp_in - 1]) + 1;
+                n_npc.[temp_in - 1] := itoa(i);
+               }
+            else
+               {addstring(npc, temp);
+                addstring(n_npc, "1");
+               }
+           }
+        else if ((isaff(looker, ID_DETECT_LIFE)) and (u.level < IMMORTAL_LEVEL))
+           {temp := "You sense a hidden life form somewhere near by.<br/>";
+            temp_in := srchlist(npc, temp);
+
+            if (temp_in > 0)
+               {i := atoi(n_npc.[temp_in - 1]) + 1;
+                n_npc.[temp_in - 1] := itoa(i);
+               }
+            else
+               {addstring(npc, temp);
+                addstring(n_npc, "1");
+               }
+
+           }
+	}
+
+
+    u := u.next;
+   }
+
+buff := "";
+
+temp_in := length (npc);
+
+i := 0;
+
+while (i < temp_in)
+   {if (atoi(n_npc.[i]) > 1)
+        buff := buff + "   <div class='npc_title'>[x" + n_npc.[i] + "] " + npc.[i];
+    else
+        buff := buff + "   <div class='npc_title'>" + npc.[i];
+     buff := buff + "</div><br/>";
+    i := i + 1;
+   }
+
+temp_in := length (pc);
+i := 0;
+while (i < temp_in)
+   {buff := buff + "   <div class='pc_title'>" + pc.[i] + "</div><br/>";
+    i := i + 1;
+   }
+
+return (buff);
+}dilend
+
+
+/* display_exits : This generates the list of exits in the room for those players
+   that have 'show exits' turned on.  It cycles through the possible exits and
+   checks if there is one and if it is hidden from the player. */
+
+dilbegin string display_exits (looker : unitptr, u : unitptr);
+external
+   integer is_hidden@basemove(unit1 : unitptr, int1 : integer, unit2 : unitptr);
+   string  dirstring@function(int2 : integer);
+
+var
+   text       :  string;
+   i          :  integer;
+   exit_list  :  stringlist;
+   exit_str   :  string;
+
+code
+{
+   if (u.type != UNIT_ST_ROOM)
+   {
+      log ("Non-room entered display_exits dil in look");
+      quit;
+   }
+
+if ((looker.type == UNIT_ST_PC) and (not (isset(looker.pcflags, PC_EXITS))))
+   /* Check if player has show exits turned on */
+    return ("");
+
+exit_str := "<div class='exit'>Exits:  ";
+
+i := NORTH;
+
+while (i <= MAX_EXIT)    /* Cycle through all exit possiblities */
+  {if (u.exit_to[i])
+     {text := dirstring@function(i);
+      if (((not (is_hidden@basemove(looker, i, u))) or (not isset(u.exit_info[i], EX_CLOSED)))  /* if it is open, everyone can see it */  )
+          addstring(exit_list, text);
+     }
+   i := i + 1;
+  }
+
+if (length(exit_list) == 0)     /* no exits, so give the players a big ole 'none' */
+  addstring(exit_list, "none");
+
+exit_str := exit_str + exit_list.[0];
+
+i := 1;
+
+while(i < length(exit_list))             /* generate the string from the stringlist */
+  {exit_str := exit_str + ", " + exit_list.[i];
+   i := i + 1;
+  }
+
+exit_str := exit_str + "</div>";
+
+return (exit_str);
+
+}dilend
+
+
+
+dilbegin string get_pos (looker : unitptr, u:unitptr);
+
+var
+
+     p    :  stringlist;
+     i    :  integer;
+     pc   :  unitptr;
+
+code{
+
+i := u.position;
+p := {" is lying here, dead ... creepy.",
+      " is lying here, mortally wounded.",
+      " is lying here, incapacitated.",
+      " is lying here, stunned.",
+      " is sleeping here.",
+      " is resting here.",
+      " is sitting here.",
+      " is here, fighting ",
+      " is standing here."};
+
+if (i != 7)
+    return (p.[i]);
+
+
+if ((u.fighting == null) and (u.opponentcount == 0))
+    return (p.[i] + "someone who has already left.");
+
+pc := getopponent(u, 0);
+
+if (u.fighting == null)
+    return (p.[i] + pc.name + " at a distance.");
+
+if (u.fighting == looker)
+    return (p.[i] + "YOU!");
+
+return (p.[i] + u.fighting.name);
+
+}dilend
+
+
+
+
+dilbegin string is_dir (s : string);
+
+var
+
+      dir   :  stringlist;
+      i     :  integer;
+      ln    :  integer;
+
+code{
+
+dir :={"north","south","west","east","up","down","nw","ne","se","sw","northwest","northeast","southeast","southwest"};
+
+ln := length(dir);
+i := 0;
+
+while ( i < ln)
+   {if (left(dir.[i], length(s)) == s)
+        return (dir.[i]);
+
+    i := i + 1;
+   }
+
+return ("");
+}dilend
+
+dilbegin stringlist list_insrt (namel:stringlist,s:string,x:integer);
+var
+  temp:stringlist;
+  newl:stringlist;
+  test_str:string;
+  i:integer;
+  last:integer;
+  insrt:integer;
+code
+{
+insrt:=0;
+last:=length (namel);
+if  ((last==0))
+  {
+  addstring (namel,s+" "+itoa(x));
+  return (namel);
+  }
+
+i:=0;
+while (i<last)
+  {
+  test_str:=namel.[i];
+  temp:=getwords(test_str);
+  if (temp.[0]==s){
+    substring (namel,namel.[i]);
+    break;
+    }
+    i:=i+1;
+  }
+
+last:=length (namel);
+if  ((last==0))
+  {
+  addstring (namel,s+" "+itoa(x));
+  return (namel);
+  }
+
+i:=0;
+while (i<last)
+  {
+  test_str:=namel.[i];
+  temp:=getwords(test_str);
+  if (insrt!=1){
+  if (x>atoi(temp.[1]) )
+  {
+    addstring (newl,s+" "+itoa(x));
+    log (s+" "+itoa(x));
+    addstring (newl,namel.[i]);
+	 insrt:=1;
+    }
+    else
+    {
+    addstring (newl,namel.[i]);
+    }
+  }
+  else
+    {
+    addstring (newl,namel.[i]);
+    }
+    i:=i+1;
+    }
+
+	 if ((insrt!=1) and (length(newl)<=25)) {
+       addstring (newl,s+" "+itoa(x));
+	 }
+    return (newl);
+}
+dilend
+
+
+
+dilbegin recall exp_board (s:string);
+external
+  stringlist list_insrt(sl:stringlist,s:string,x:integer);
+var
+  list:stringlist;
+  i:integer;
+  temp:stringlist;
+  last:integer;
+  u:unitptr;
+  counter:integer;
+  found:integer;
+code
+{
+found:=0;
+/*u:=restore (self.zoneidx,self.nameidx);*/
+if (u!=null)
+  {
+  link (u, self.outside);
+  destroy (self);
+  }
+counter:=0;
+heartbeat:=PULSE_SEC*60;
+
+interrupt (SFB_TICK,TRUE, tck);
+interrupt (SFB_CMD,command ("rank"),rank);
+:start:
+wait (SFB_DONE, ((command ("look")) and
+(self ==target)));
+if ((activator.guild==s) or
+(itoa(activator.sex)==s) or
+(s==""))
+  list:=list_insrt(list,activator.name,activator.exp);
+  if (list.[0]=="BLANK")
+  {
+  act ("",A_ALWAYS,activator,null,null,TO_CHAR);
+  act ("The board is blank.",A_ALWAYS,activator,null,null,TO_CHAR);
+  goto start;
+  }
+i:=0;
+last:=length(list);
+while (i<last)
+  {
+  temp:=getwords(list.[i]);
+  act (itoa(i+1)+".  "+temp.[0]+"     ("+temp.[1]+")",
+  A_ALWAYS,activator,null,null,TO_CHAR);
+  list.[i]:=temp.[0]+" "+temp.[1];
+  i:=i+1;
+
+   }
+
+goto start;
+
+:tck:
+u:=findrndunit(self,FIND_UNIT_WORLD,UNIT_ST_PC);
+while(u.gprevious.type==UNIT_ST_PC  ) u:=u.gprevious;
+
+while (u.type==UNIT_ST_PC)
+  {
+  list:=list_insrt(list,u.name,u.exp);
+  u:=u.gnext;
+  }
+  counter:=counter+1;
+  if (counter==3) goto sv;
+  goto start;
+
+:sv:
+/*store (self);*/
+counter:=0;
+goto start;
+
+:rank:
+block;
+if (argument==""){
+  act ("Rank who?",
+    A_ALWAYS,activator,null,null,TO_CHAR);
+    }
+
+if ((activator.guild==s) or
+(itoa(activator.sex)==s) or
+(s==""))
+  list:=list_insrt(list,activator.name,activator.exp);
+  if (list.[0]=="BLANK")
+  {
+  act ("",A_ALWAYS,activator,null,null,TO_CHAR);
+  act ("The board is blank.",A_ALWAYS,activator,null,null,TO_CHAR);
+  goto start;
+  }
+  exec ("look "+self.name,activator);
+
+i:=0;
+last:=length(list);
+while (i<last)
+  {
+  temp:=getwords(list.[i]);
+  if (argument in temp.[0]){
+  act (itoa(i+1)+".  "+temp.[0]+"     ("+temp.[1]+")",
+  A_ALWAYS,activator,null,null,TO_CHAR);
+  found:=1;
+  }
+  list.[i]:=temp.[0]+" "+temp.[1];
+  i:=i+1;
+
+   }
+
+if (found!=1)
+  act ("No matches found on the board.",
+  A_ALWAYS,activator,null,null,TO_CHAR);
+  found:=0;
+goto start;
+
+  }
+  dilend
+
+
+
+%end
+

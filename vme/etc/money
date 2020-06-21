@@ -1,0 +1,72 @@
+# File   : lib/money
+# Version: 1.03
+# Author : gnort@daimi.aau.dk
+# Purpose: Definitions of values to run money system
+#          Look up currency and money-type values in values.h
+# Format : Empty lines or comments only _between_ money-definitions...
+#
+#   currency-strings ... 
+#   ~
+#   currency  money-type
+#   list of strings applied to all objects, ';', list of strings only
+#       applied to objects of amount 2 or more
+#   abbrev-string
+#   value relative to internal calculations
+#       Use a postfix '*' to indicate relative to previous value
+#   amount of coins per weight unit
+#   object to be loaded...
+#   string to be inserted in currency string
+
+# DEF_CURRENCY strings:
+0
+There is an battered engraving of the Midgaard city arms on one side, and %s on the other.
+~
+
+# DEF_CURRENCY begin
+
+# IRON_PIECE
+0 0
+iron piece, iron; iron pieces
+ip
+10
+9
+iron_piece@basis
+a picture of a wolf
+
+# COPPER_PIECE
+0 1
+copper piece, copper; copper pieces
+cp
+8*
+8
+copper_piece@basis
+a picture of a guard standing honour
+
+# SILVER_PIECE
+0 2
+silver piece, silver; silver pieces
+sp
+8*
+7
+silver_piece@basis
+a picture of a hovering falcon
+
+# GOLD_PIECE
+0 3
+gold piece, gold; gold pieces
+gp
+8*
+6
+gold_piece@basis
+a picture of a dragon
+
+# PLATINUM_PIECE
+0 4
+platinum piece, platinum; platinum pieces
+pp
+8*
+5
+platinum_piece@basis
+a picture of a unicorn
+
+# DEF_CURRENCY end

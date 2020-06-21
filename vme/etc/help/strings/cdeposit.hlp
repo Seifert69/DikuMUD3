@@ -1,0 +1,16 @@
+<br/>
+Usage cdeposit &lt;amount&gt;<br/>
+Example: cdeposit 5 gold<br/>
+Example: cdeposit 5 gp<br/>
+<br/>
+This command allows a Clan member to deposit money into the Clans safe box in<br/>
+their clan house.  All members can deposit.<br/>
+<br/>
+Note:<br/>
+You must be at the clan chest to use this command.<br/>
+<br/>
+<br/>See Also:<br/><br/>
+cbalance<br/>
+cwithdraw<br/>
+<br/>
+<br/>

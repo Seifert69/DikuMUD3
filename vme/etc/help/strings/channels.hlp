@@ -1,0 +1,72 @@
+<br/>
+<br/>
+<br/>
+<br/>
+Channels are wholly controlled by the player. You can either make<br/>
+your own channel or check around and try to find a channel that someone<br/>
+else has started. You can type 'comm help' on line to get a copy of this<br/>
+help file.<br/>
+<br/><br/>
+To add a channel:<br/><br/>
+comm add (channel name)<br/><br/>
+<br/><br/>
+To delete a channel type:<br/><br/>
+comm delete (channel name)<br/><br/>
+<br/><br/>
+To see all your active channels type:<br/><br/>
+comm #<br/><br/>
+<br/><br/>
+To see who is on a specific channel type:<br/><br/>
+(channel name) <br/><br/>
+<br/><br/>
+To see who joins or departs a channel type:<br/><br/>
+wcomm inform (on|off|depart|join)<br/><br/>
+<br/><br/>
+To toggle echoing of your message type:<br/><br/>
+wcomm echo<br/><br/>
+<br/><br/>
+<br/>See Also:<br/><br/>
+Ask<br/><br/>
+Shout<br/><br/>
+Say<br/><br/>
+Tell<br/><br/>
+Whisper<br/><br/>
+Yell<br/><br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+Channels are wholly controlled by the player. You can either make<br/>
+your own channel or check around and try to find a channel that someone<br/>
+else has started. You can type 'comm help' on line to get a copy of this<br/>
+help file.<br/>
+<br/><br/>
+To add a channel:<br/><br/>
+comm add (channel name)<br/><br/>
+<br/><br/>
+To delete a channel type:<br/><br/>
+comm delete (channel name)<br/><br/>
+<br/><br/>
+To see all your active channels type:<br/><br/>
+comm<br/><br/>
+<br/><br/>
+To see who is on a specific channel type:<br/><br/>
+(channel name) <br/><br/>
+<br/><br/>
+To see who joins or departs a channel type:<br/><br/>
+wcomm inform (on|off|depart|join)<br/><br/>
+<br/><br/>
+To toggle echoing of your message type:<br/><br/>
+wcomm echo<br/><br/>
+<br/><br/>
+<br/>See Also:<br/><br/>
+Ask<br/><br/>
+Shout<br/><br/>
+Say<br/><br/>
+Tell<br/><br/>
+Whisper<br/><br/>
+Yell<br/><br/>
+<br/>
+<br/>

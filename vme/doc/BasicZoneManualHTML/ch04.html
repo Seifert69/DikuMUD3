@@ -1,0 +1,1538 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>The room section</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Unit building blocks"
+HREF="ch03.html"><LINK
+REL="NEXT"
+TITLE="Building your first room"
+HREF="x947.html"></HEAD
+><BODY
+CLASS="CHAPTER"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="ch03.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x947.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="CHAPTER"
+><H1
+><A
+NAME="CH-04"
+></A
+>Chapter 5. The room section</H1
+><P
+> The previous chapter gave you the basic building blocks that
+will be used all through creating rooms, NPCs, and objects.  If you
+jumped straight to this chapter without reading about the general
+building blocks you might want to return to <A
+HREF="ch03.html"
+>Chapter 4</A
+>
+first.  This chapter will deal with all the fields
+of rooms what they are and how to use them but with out the previous
+chapter you may get lost.</P
+><P
+>In order to get started building rooms you should first be aware
+of the room fields you can use.  The <A
+HREF="ch04.html#RMFIELDS"
+>Table 5-1</A
+> shows a full listing
+of all the room fields and their types as defined in <A
+HREF="ch03.html"
+>Chapter 4</A
+>.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="RMFIELDS"
+></A
+><P
+><B
+>Table 5-1. Room fields and types listing</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL
+WIDTH="192"
+TITLE="C1"><COL
+WIDTH="192"
+TITLE="C2"><COL
+WIDTH="48"
+TITLE="C3"><COL
+WIDTH="192"
+TITLE="C4"><COL
+WIDTH="192"
+TITLE="C5"><THEAD
+><TR
+><TH
+>Field</TH
+><TH
+>Type</TH
+><TH
+>&nbsp;</TH
+><TH
+>Field</TH
+><TH
+>Type</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>symbolic name</TD
+><TD
+>Symbol</TD
+><TD
+ROWSPAN="10"
+>&nbsp;</TD
+><TD
+>manipulate</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>names</TD
+><TD
+>Stringlist</TD
+><TD
+>alignment</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>title</TD
+><TD
+>String</TD
+><TD
+>flags</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>descr</TD
+><TD
+>String</TD
+><TD
+>weight</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>outside_descr</TD
+><TD
+>String</TD
+><TD
+>capacity</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>extra</TD
+><TD
+>Structure</TD
+><TD
+>light</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>minv</TD
+><TD
+>Integer</TD
+><TD
+>exit</TD
+><TD
+>Structure</TD
+></TR
+><TR
+><TD
+>key</TD
+><TD
+>string</TD
+><TD
+>movement</TD
+><TD
+>Integer</TD
+></TR
+><TR
+><TD
+>spell</TD
+><TD
+>Integer</TD
+><TD
+>end</TD
+><TD
+>Symbol</TD
+></TR
+><TR
+><TD
+>dilbegin or dilcopy</TD
+><TD
+>Function pointer</TD
+><TD
+>&nbsp;</TD
+><TD
+>&nbsp;</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>As you can see there is not a whole lot of fields you have to
+learn in order to make a room.  In fact as you will see shortly some of
+these fields are not even used on rooms.  In <A
+HREF="ch04.html#RMFIELDDESCR"
+>Section 5.1</A
+> we will expand your knowledge from just knowing what the
+field types are to how to set them as well.</P
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RMFIELDDESCR"
+>5.1. Description of room fields</A
+></H1
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>symbolic name</DT
+><DD
+><P
+>&#13;
+The rules of the symbols has been explained in <A
+HREF="ch03.html"
+>Chapter 4</A
+>, if you didn't read them yet you may want to review.
+ The important thing to realize with the room symbol is it is always
+ good practice to give the room a symbol resembling the title so
+ administrators and builders can use the
+ <B
+CLASS="COMMAND"
+>goto</B
+> and the <B
+CLASS="COMMAND"
+>wstat</B
+> to easily
+ goto the room in question.</P
+></DD
+><DT
+>title</DT
+><DD
+><P
+>&#13;
+The room title field should start with a capital and depending on
+your preference the compiler will not complain if you add punctuation
+at the end.  The following are good examples of a room title.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN563"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;title "The Post Office"
+title "The deep dark jungle floor:"
+title "The Dragon Station control room"&#13;</PRE
+><P
+></P
+></DIV
+><P
+>It is really up to you weather you want to use punctuation or not, it
+is more administrator personal opinion than anything.</P
+></DD
+><DT
+>names</DT
+><DD
+><P
+>&#13;
+The names field on the rooms are not that important and only should be
+used if the builder wishes the room to be accessed by the players by a
+teleport command.  If the room has no names no one will be able to
+teleport to it.  On some muds there will be no teleport spell so the
+only use for this field will be for <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions the administrator
+creates.  If a builder wants the room to be accessible by teleport then
+the names should match the title since that is what the player will try
+to teleport to.  A few good examples of names on a room would look as
+follows.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN573"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;title "The Post Office"
+Names {"post office","office"}
+
+title "the thrown room"
+names {"thrown room","thrown"}&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>descr</DT
+><DD
+><P
+>&#13;
+The description field is what the player sees when walking into the room or
+when looking with no arguments.</P
+></DD
+><DT
+>outside_descr</DT
+><DD
+><P
+>&#13;
+This field is what is shown to a char if the room is loaded inside
+another room.  For example if you had a room linked inside
+another room and called a barrel this would be the description that
+lets the character know it is a barrel.  An example would be like:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN587"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;outside_descr "a big old barrel is laying here on its side."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>This allows a builder to make a room that looks like an object
+inside another room.</P
+></DD
+><DT
+>movement</DT
+><DD
+><P
+>&#13;
+The movement field defines the endurance cost to a character when moving through
+this room.  In the future these fields will be adjustable by the use of a define
+file.  Currently all movement fields are constants and are defined in the
+<TT
+CLASS="FILENAME"
+>vme.h</TT
+>  The following is the movement sector types and their values.
+<DIV
+CLASS="TABLE"
+><A
+NAME="SECTORS"
+></A
+><P
+><B
+>Table 5-2. Sector movement values</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><COL><THEAD
+><TR
+><TH
+>Symbol</TH
+><TH
+>Name</TH
+><TH
+>Endurance Cost</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>SECT_INSIDE</TD
+><TD
+>inside</TD
+><TD
+>1</TD
+></TR
+><TR
+><TD
+>SECT_CITY</TD
+><TD
+>city</TD
+><TD
+>1</TD
+></TR
+><TR
+><TD
+>SECT_FIELD</TD
+><TD
+>field</TD
+><TD
+>2</TD
+></TR
+><TR
+><TD
+>SECT_FOREST</TD
+><TD
+>forest</TD
+><TD
+>3</TD
+></TR
+><TR
+><TD
+>SECT_HILLS</TD
+><TD
+>hills</TD
+><TD
+>4</TD
+></TR
+><TR
+><TD
+>SECT_MOUNTAIN</TD
+><TD
+>mountain</TD
+><TD
+>6</TD
+></TR
+><TR
+><TD
+>SECT_DESERT</TD
+><TD
+>desert</TD
+><TD
+>8</TD
+></TR
+><TR
+><TD
+>SECT_SWAMP</TD
+><TD
+>swamp</TD
+><TD
+>8</TD
+></TR
+><TR
+><TD
+>SECT_WATER_SWIM</TD
+><TD
+>water-swim</TD
+><TD
+>4</TD
+></TR
+><TR
+><TD
+>SECT_WATER_SAIL</TD
+><TD
+>water-sail</TD
+><TD
+>50</TD
+></TR
+><TR
+><TD
+>SECT_UNDER_WATER</TD
+><TD
+>under-water</TD
+><TD
+>8</TD
+></TR
+><TR
+><TD
+>SECT_SNOW</TD
+><TD
+>snow</TD
+><TD
+>8</TD
+></TR
+><TR
+><TD
+>SECT_SLUSH</TD
+><TD
+>slush</TD
+><TD
+>6</TD
+></TR
+><TR
+><TD
+>SECT_ICE</TD
+><TD
+>ice</TD
+><TD
+>10</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+>
+The movement is simply defined by placing the 'movement' keyword first
+followed by the type of sector you desire.  For example a few
+movement fields would look as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN662"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;movement SECT_FOREST
+movement SECT_HILLS&#13;</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>Only one movement is needed for a room if you put more than one
+the last one added will be the one used.</P
+></TD
+></TR
+></TABLE
+></DIV
+></DD
+><DT
+>flags</DT
+><DD
+><P
+>&#13;
+This field on a room is used to set special attributes in order to make the room
+private or no-teleportable and many others.  The following is the list of possible
+already defined flags.  Extras can also be used to create special room flags.
+<DIV
+CLASS="TABLE"
+><A
+NAME="UNITFLAGSROOM"
+></A
+><P
+><B
+>Table 5-3. Room unit flag affects</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Flag</TH
+><TH
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>UNIT_FL_PRIVATE</TD
+><TD
+>When this flag is set on a room it marks it as a private room.  Commands
+that honor the private flag will not let more than 2 players into this room.
+Commands like <B
+CLASS="COMMAND"
+>goto</B
+> and direction commands are a few
+commands that do honor this flag.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_INVISIBLE</TD
+><TD
+>Makes unit invisible</TD
+></TR
+><TR
+><TD
+>UNIT_FL_NO_BURY</TD
+><TD
+>Makes a hard floor so items can't be buried.</TD
+></TR
+><TR
+><TD
+>UNIT_FL_BURIED</TD
+><TD
+>Makes unit buried when loaded</TD
+></TR
+><TR
+><TD
+>UNIT_FL_NO_TELEPORT</TD
+><TD
+>makes unit so no one can teleport to it</TD
+></TR
+><TR
+><TD
+>UNIT_FL_NO_MOB</TD
+><TD
+>Makes it so no mobile will enter the unit</TD
+></TR
+><TR
+><TD
+>UNIT_FL_NO_WEATHER</TD
+><TD
+>keeps weather and natural light out of unit</TD
+></TR
+><TR
+><TD
+>UNIT_FL_INDOORS</TD
+><TD
+>Makes unit inside and doesn't affect weather</TD
+></TR
+><TR
+><TD
+>UNIT_FL_TRANS</TD
+><TD
+>Makes unit transparent</TD
+></TR
+><TR
+><TD
+>UNIT_FL_NO_SAVE</TD
+><TD
+>Makes it so you can't save with unit</TD
+></TR
+><TR
+><TD
+>UNIT_FL_SACRED</TD
+><TD
+>Makes unit a double gain unit</TD
+></TR
+><TR
+><TD
+>UNIT_FL_MAGIC</TD
+><TD
+>Marks a unit to be magic</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+>&#13;</P
+></DD
+><DT
+>extra</DT
+><DD
+><P
+></P
+><P
+>Extras are the work horse of the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+>.  Extras are used in everything from <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> to just normal
+extra descriptions on rooms.  The first job for an extra was to hold extra description information
+on a room.  For example if you had a computer room and you described it might look something like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN726"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;descr
+"This small room houses the computer power of the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> development team.
+All four walls are lined with various pieces of computer equipment old pizza
+boxes and plenty of empty soda cans."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>The problem is as a player if you saw this description you might want to know what kind
+of pizza we eat or maybe you would want to see what kind of soda we drink.  Or heaven forbid you might want to know
+what kinds of computer equipment is scattered about the room.  In the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> servers we
+do this by adding extra descriptions to the room.  In this case the builder of the zone
+may do something like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN731"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;descr
+"This small room houses the computer power of the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> development team.
+All four walls are lined with various pieces of computer equipment old pizza
+boxes and plenty of empty soda cans."
+
+extra {"soda cans", "cans", "soda", "can"}
+"These cans are all Canadian blue.  Maybe the Valhalla team hates American
+beer.  Strange all of them look to have strange indentations."
+
+extra {"strange indentations", "strange indentation","indentation"}
+"They are human bite marks.  Is this what happens when code doesn't work right?"
+
+extra {"pizza boxes","pizza","boxes","box"}
+"Dominos could make a fortune from all these boxes and probably already have
+from the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> team.  you notice all the boxes are empty at least they finish what
+they start."
+
+extra {"computer pieces","computer parts", "equipment","hardware", "pieces", "parts"}
+"I bet you thought you would see what we have running.  Yeah right you might come
+over and rob us if we told you that.  All you see is an old XT."
+
+extra {"xt"}
+"Its a hunk of junk really!"&#13;</PRE
+><P
+></P
+></DIV
+><P
+>There is a lot to notice in the previous examples.  First we will start with
+extras when defined on rooms, NPC, and objects must be in length
+order for the names.  There are a few reasons for this but lets just
+say the most important reason is we wanted it this way.  If you
+don't put them in order the <ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> will give you a fatal error and
+will not compile your zone.</P
+><P
+>The next thing you should notice is we have used an extra to
+describe something in another extra.  We actually did this twice
+once for the beer cans and once for the computer parts.  That way
+you	can actually give quest information but make the person really
+have to explore your rooms descriptions to find it.</P
+><P
+>The previous example is what we consider normal extras in a
+room.  There are also extras that hold information for DIL functions.  These
+special extras can have extra fields and they can be hidden to the
+players eyes.  Here are some
+examples of special extras.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN739"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;extra {"$rockcount"}
+"5"
+
+extra {"$playerkill"}
+"0"
+
+extra {"$coke","$milk","$water"}{1,5,10}
+"Drinks and amounts"&#13;</PRE
+><P
+></P
+></DIV
+><P
+>These extras all have the '$' sign appended to the front of
+the names in order to tell the look command the player
+shouldn't be able to look at the extra.  If you have not already seen
+<ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> coding you may not understand why you would want extras 
+players can't see.  The <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> language can manipulate these extras by
+reading and writing them in order to change the way a command or
+another function works.  For example the last <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> could be used for
+a shopkeeper to tell how many of each type of drink he has.  Notice
+the drink extra also has something you haven't seen yet, an added integer list after the namelist. all extras can have these but
+only extras being used with DIL functions really need
+them.</P
+><P
+>Some of these special functions are supported already in the code
+ and the ones that affect the rooms are as follows.  In the
+ following $1n is the activator and $2n is the unit in question.</P
+><P
+>There is only one special extra already supported for rooms and
+that would be the '$get'.  As we have previously
+mentioned the extras that start with a dollar sign are not seen by the
+players.  This one however is shown to the player when the person
+types get on the other names in the extras list.  This easier to
+describe in an example than in words so the following would be a good
+example.:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN747"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;extra {"$get", "statues", "statue"}
+"You attempt to pick up a statue but quickly discover your feeble
+attempts will never work."
+
+{"$get", "red roses", "roses"}
+"You bend down to pick a rose, but then decide to leave the beautiful
+flower to itself."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>With this one special extra we have made it so you don't need to
+make millions of items so the person can act upon them.  You can
+just make the acts as if the items were in the room.</P
+></DD
+><DT
+>Exits</DT
+><DD
+><P
+></P
+><P
+>Every room has ten possible exits; North, East, South, West, Northeast,
+Southeast, Southwest, Northwest, Up and Down. To
+enable mobile use of these commands, you must specify these exits as outlined 
+below:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN757"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;exit &lt;direction&gt; [to &lt;destination&gt;] [open {&lt;infoflags&gt;}]
+[key &lt;keyname&gt;] [keyword {&lt;keywords&gt;}] descr &lt;description&gt; ; &#13;</PRE
+><P
+></P
+></DIV
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>exit &lt;directions&gt;</DT
+><DD
+><P
+>Is the direction the exit leads, ie. one of north, south ..
+  up, down.</P
+></DD
+><DT
+>to &lt;destinations&gt;</DT
+><DD
+><P
+>The symbolic reference to the room, you want this exit 
+  to lead to. If you reference a room within another zone, post pend the name 
+  with @&lt;zone name&gt;</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN768"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;  to myotherroom
+
+  to hisotherroom@hiszone&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>open &lt;info flags&gt;</DT
+><DD
+><P
+>These flags describe the state of the door.  The following is the
+list of possible door flags.</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>EX_OPEN_CLOSE</DT
+><DD
+><P
+> Set this if you can open and close this exit, be it a door, gate or 
+    otherwise.</P
+></DD
+><DT
+>EX_CLOSED</DT
+><DD
+><P
+>Set this if you want the exit to be closed at boot time.</P
+></DD
+><DT
+>EX_LOCKED</DT
+><DD
+><P
+>Set this if you want the exit to be clocked at boot time.</P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>An interesting aspect is, if you do not specify a key, you can
+    only unlock this door with the 'pick' skill, 'unlock' spell or from
+    <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> with UnSet();</P
+></TD
+></TR
+></TABLE
+></DIV
+></DD
+><DT
+>EX_PICK_PROOF</DT
+><DD
+><P
+>Using this flag renders the 'pick' skill and 'unlock' spell un useable on the 
+    lock of this exit.</P
+></DD
+><DT
+>EX_HIDDEN</DT
+><DD
+><P
+>If this bit is set, the exit is hidden until the mobile has successfully 
+    searched for it, using the 'search'-command.</P
+></DD
+></DL
+></DIV
+></DD
+><DT
+>key &lt;keyname&gt;</DT
+><DD
+><P
+>The symbolic name of a key object used for unlocking this exit.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN802"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+> 
+ 
+	key mykey@myzone
+	</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>keyword { &lt;stringlist&gt; }</DT
+><DD
+><P
+>This stringlist holds all the names of the exit,  
+you specify to manipulate the exit. If the exit is 
+  hidden exit, these are the keywords the mobile can search for.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN808"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>	
+keyword {"wooden door","door"}
+
+keyword {"hidden door","door","hatch","floor"}&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>descr &lt;description&gt;</DT
+><DD
+><P
+>This string is the description of what you see if you look in 
+  the direction of the exit.</P
+></DD
+><DT
+>;</DT
+><DD
+><P
+>Every exit statement needs to be terminated with a semi-colon.</P
+></DD
+></DL
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TH
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+><B
+>General notes</B
+></TH
+></TR
+><TR
+><TD
+>&nbsp;</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>Even though you do not need an exit in all directions, you can use it to place 
+descriptions of the direction.</P
+></TD
+></TR
+></TABLE
+></DIV
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN821"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;      exit north descr "An unsurmountable mountain blocks your way.";&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>minv</DT
+><DD
+><P
+></P
+><P
+>This field is rarely used on rooms.  It could however be used to
+make a room invisible inside another room.  Or it could be used to store numbered values on a room.  The reason this
+field is on a room is it is part of the base object which all objects
+are derived from.  If the room is going to be inside another room and
+you don't want it visible the following would make it invisible to all
+players below the level of 20.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN830"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;minv 20&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>key</DT
+><DD
+><P
+></P
+><P
+>This field is not used normally on a room.  It is a string that
+can be used for anything you desire.  The reason it exists on rooms is
+it is a part of the base object all unitptrs (unit pointers like,
+rooms, objects, and NPCs) are derived from.</P
+></DD
+><DT
+>manipulate</DT
+><DD
+><P
+></P
+><P
+>This field is not used normally on a room.  It is an integer that can be
+used for anything you desire.  The reason it exists on rooms is it is a
+part of the base object all unitptrs are derived from.</P
+></DD
+><DT
+>alignment</DT
+><DD
+><P
+></P
+><P
+>This field is not used normally on a room.  It is an integer that can be
+used for anything you desire.  The reason it exists on rooms is it is a
+part of the base object all unitptrs are derived from.</P
+></DD
+><DT
+>weight</DT
+><DD
+><P
+></P
+><P
+>This field is not used normally on a room.  It is an integer that can be
+used for anything you desire.  The reason it exists on rooms is it is a
+part of the base object all unitptrs are derived from.</P
+></DD
+><DT
+>capacity</DT
+><DD
+><P
+></P
+><P
+>This field is not used normally on a room.  It is an integer that can be
+used for anything you desire.  The reason it exists on rooms is it is a
+part of the base object all unitptrs are derived from.</P
+></DD
+><DT
+>light</DT
+><DD
+><P
+></P
+><P
+>This field sets the light on a room.  Normally this is not done
+directly, instead it is set using macros defined in
+<TT
+CLASS="FILENAME"
+>wmacros.h</TT
+>.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="SEG-LIGHT"
+></A
+><P
+><B
+>Table 5-4. Light defines</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><COL><THEAD
+><TR
+><TH
+>Define</TH
+><TH
+>Light Value</TH
+><TH
+>Affect</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>ALWAYS_LIGHT</TD
+><TD
+>1</TD
+><TD
+>Room is always light no matter time of day</TD
+></TR
+><TR
+><TD
+>IN_ALWAYS_DARK  </TD
+><TD
+>-1</TD
+><TD
+>When an inside room is always dark - both inside and outside </TD
+></TR
+><TR
+><TD
+>OUT_DARK_NON_NOON </TD
+><TD
+>-1</TD
+><TD
+>Always a dark room, except when it is high noon </TD
+></TR
+><TR
+><TD
+>OUT_ALWAYS_DARK  </TD
+><TD
+>-2</TD
+><TD
+>Always a Dark room, no matter the time of day</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>To set natural light that changes depending on the type of day
+nothing is needed to be put in the light field the compiler will default
+to '0'.  If you for some reason want to set the light to default
+lighting you can do so but you don't need to.  You will also notice
+there are two macros that set the light to the exact same value.  This is
+for compatibility with older code base and if you wish to combine these
+two macros or only use one it would not change the way the mud
+works.</P
+><P
+>This is probably one of the simplest fields you will have to deal
+with in the rooms.  In order to set it all that is needed is to place
+the macro or the light and value on a line in the room and your all
+done.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN902"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//To Set always light with macro
+ALWAYS_LIGHT
+
+//To set Always light with out macro
+light 1&#13;</PRE
+><P
+></P
+></DIV
+><P
+>You can decide which is easiest for you.</P
+></DD
+><DT
+>link</DT
+><DD
+><P
+></P
+></DD
+><DT
+>spell</DT
+><DD
+><P
+></P
+></DD
+><DT
+>dilbegin or dilcopy</DT
+><DD
+><P
+></P
+><P
+>The <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions are what give <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> servers the edge over all other muds.
+We will only give some examples here and leave it up to the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> manual to teach
+you how to create your own functions that will make your rooms, NPC, and
+objects more than special.</P
+><P
+>There are only currently three room functions that come
+standard with a <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> in the <TT
+CLASS="FILENAME"
+>function.zon</TT
+>.  There
+are much more in the zones released with the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> but you
+will have to hunt for those.  The three that come standard are Safe
+room, Death room, and forced move.  The safe room makes it
+impossible for players to kill each other, the death room is a
+function that lets you make things like rock slides and quick sand,
+and the forced move lets you make an easy river.</P
+><P
+>Since these are just <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>'s written by builders for the
+Valhalla mud all you have to do is use the dilcopy keyword in the
+room with the function name you want to use and the arguments the
+function requires.  The following is what you would find in the
+<TT
+CLASS="FILENAME"
+>function.zon</TT
+> for death room.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN934"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;/* Death room <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>
+	*tick is in 4th's of seconds
+	* Damage is damage done per tick
+		*act_s is string shown to damaged player.
+ */
+dilbegin death_room(tick: integer, damage: integer, act_s: string);
+
+var ext: extraptr;
+    u  : unitptr;
+    i  : integer;
+
+code
+{
+
+if (tick &#60; 12) tick := 12;
+
+heartbeat := tick;
+
+if (damage &#60; 0)
+    damage := -damage;
+
+if ("$death room for mobs" in self.extra)
+    i := UNIT_ST_PC|UNIT_ST_NPC;
+else
+    i := UNIT_ST_PC;
+
+while (TRUE)
+{
+wait (SFB_TICK, TRUE);
+
+foreach (i, u)
+    {
+    if (u.level &#62;= IMMORTAL_LEVEL)
+        continue;
+
+    if (("$no death room" in u.extra) and (u.type == UNIT_ST_NPC))
+        continue; // Don't allow pcs to get this flag
+
+    if (act_s != "")
+        act ("&#38;[hit_me]"+act_s, A_ALWAYS, u, null, null, TO_CHAR);
+    else
+        act ("&#38;[hit_me]You bleed from your wounds.",
+            A_ALWAYS, u, null, null, TO_CHAR);
+
+    u.hp := u.hp - damage;
+    position_update (u);
+    }
+
+}
+
+}
+
+dilend&#13;</PRE
+><P
+></P
+></DIV
+><P
+>If this <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> function scares you don't worry you don't have to
+understand or adjust it you just have to use it.  In this function it requires a time,
+damage, and act.  So you could use this in a room definition like
+this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN939"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy death@function (60,25,"Flames shoot from the floor burning
+your rear.");&#13;</PRE
+><P
+></P
+></DIV
+><P
+>This says to copy the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> from zone function with the arguments 60
+seconds, damage 25% and act as shown.  Pretty simple eh?</P
+><P
+>All released <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> room functions are described in
+<A
+HREF="x1028.html"
+>Section 5.4</A
+>.
+Then we put some to work so you can see how
+to use them in <A
+HREF="x1092.html"
+>Section 5.5</A
+></P
+></DD
+></DL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="ch03.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x947.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Unit building blocks</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Building your first room</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

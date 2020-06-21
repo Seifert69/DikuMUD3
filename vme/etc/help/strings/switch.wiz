@@ -1,0 +1,8 @@
+<br/>
+Usage:<br/>
+   &gt;switch &lt;char&gt;<br/>
+<br/>
+This wiz-command gives you the power to control another character. However it<br/>
+must be a non-playing character you switch with. Use the same command without<br/>
+arguments to return from a switch.<br/>
+<br/>

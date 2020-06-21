@@ -1,0 +1,35 @@
+<br/>
+Usage ctitle &lt;member&gt; &lt;title&gt;<br/>
+Example: ctitle Fizban &amp;<br/>wThe big red One<br/>
+<br/>
+This command allows a Clan Master or Lord to title its members.  It will<br/>
+also allows color titles using the same color codes that the prompts use.<br/>
+The clan Tag is automaticly inserted at the end of a title.  The clan Tag<br/>
+is chosen at the start of a clan and remains the same throughout the life<br/>
+of that clan. Once a clan is removed the clan tag is retired from use.<br/>
+<br/>
+Note:<br/>
+No other tags should ever be inserted into clan titles, the clan is allowed<br/>
+one Clan Tag and that is the one automaticly inserted when a member is given<br/>
+a title by their Clan Master or Lord. The only exception to this is the other<br/>
+automaticly assigned Tag such as * Guide * , * Builder * , Admin, ect.<br/>
+Please refrain from using & and & in titles. Also, no special characters<br/>
+are allowed either examples !@#$%^&*() etc. The title must never exceed one<br/>
+line in length, causing it to wrap to the next line when doing who and/or<br/>
+standing in the same room with that character.  If this command is abused<br/>
+in anyway, by lord or master, for example vulgar, obscene terms, curses, flames,<br/>
+or any other inappropriate title is given, the clan can be and will be<br/>
+disbanded so this should give Clan Masters and Lords a reason not to mess<br/>
+around and try to be slide one past the Admin.  If you feel the title may<br/>
+not be appropriate, simply don't use it and avoid the consequences.<br/>
+<br/>
+All titles will be in English.<br/>
+Example:<br/>
+Herdas - Master of The Under-dark {clan Tag}   is allowed<br/>
+Herdas - Seeker of The Under-dark {clan Tag} * LORD *   NOT allowed<br/>
+Herdas - Seeker of The Under-dark * LORD * {clan Tag}   NOT allowed<br/>
+<br/>
+<br/>See Also:<br/><br/>
+colors<br/>
+prompt<br/>
+crank<br/>

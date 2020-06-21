@@ -1,0 +1,31 @@
+<br/>
+<br/>
+<br/>
+Type VME Command<br/><br/>
+Usage<br/><br/>
+typo (typo string)<br/><br/>
+<br/>
+<br/>
+This command is used to report typos to the creators as well as help file<br/>
+issues. To use type the word typo and press enter. This will open the <br/>
+editor as if you were writing a letter at the post office. Turn off all <br/>
+triggers that may echo in the editor. Type in the details of the typo.<br/>
+Close the editor with @ on a single line at the end.<br/><br/>
+<br/><br/>
+If at all possible issue the command from the room in which the <br/>
+typo is found.  If aggro mobiles or death room type situation render <br/>
+it not possible to do so, please report from nearest safe room you can. <br/>
+Avoid reporting from inside a container like a tent or a canoe unless the <br/>
+typo is on the object.<br/><br/>
+<br/><br/>
+If the typo is on an object in a place like the donations room, please copy <br/>
+the object title as best you can so that we may find the exact<br/>
+item. If the typo affects game play please report as a bug also, if<br/>
+it is just annoying use the this command.<br/>
+<br/><br/>
+<br/>See Also:<br/><br/>
+Bug<br/><br/>
+Idea<br/><br/>
+<br/>
+<br/>
+<br/>

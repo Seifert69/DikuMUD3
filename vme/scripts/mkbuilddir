@@ -1,0 +1,18 @@
+#!/usr/bin/python
+import os
+
+try:  os.makedirs(os.path.join('..','..','build','bin'))
+except: pass
+try:  os.makedirs(os.path.join('..','..','build','platform','ubuntu','mplex'))
+except: pass
+try:  os.makedirs(os.path.join('..','..','build','platform','ubuntu','vmc'))
+except: pass
+try:  os.makedirs(os.path.join('..','..','build','platform','ubuntu','utilities'))
+except: pass
+try:  os.makedirs(os.path.join('..','..','build','platform','ubuntu','key'))
+except: pass
+
+
+
+
+

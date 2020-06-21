@@ -1,0 +1,14 @@
+Usage:<br/>
+   &gt;wizlock [level]<br/>
+<br/>
+This is a wiz-command used to control access to the game. If the game is<br/>
+wizlocked, you unlock it by the 'wizlock' command. If you don't want any<br/>
+new players, you 'wizlock 0'. If the game is not wizlocked, and you type<br/>
+'wizlock' all mortal players (if below your level) are locked out.<br/>
+If you give a level, all players at this level and below is<br/>
+excluded from playing. Players are thrown off, if they try to<br/>
+enter the game from the menu, but is allowed to hang around in the<br/>
+menu. It is never possible to wizlock above your own level.<br/>
+<br/>
+See also:<br/>
+&gt; ban  <br/>

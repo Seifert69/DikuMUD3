@@ -1,0 +1,37 @@
+<br/>
+<br/>
+Usage describe (location)<br/><br/>
+i.e. describe eyes<br/><br/>
+<br/>
+To change the default description, you now must do that online, with the<br/>
+"describe" command. You may choose to enter a description for any body parts, or<br/>
+for your general description, that which is seen when another character looks at<br/>
+you.<br/>
+<br/><br/>
+To describe a specific body part, use the describe command followed by the<br/>
+location you would like to describe. Body parts range from hair, head, and ears,<br/>
+to butt, legs, and feet. Color may be used in your description using the syntax<br/>
+described in "help color".<br/>
+<br/><br/>
+Once the command is entered, you will get a ']' prompt for your text. To<br/>
+end your description, type a '@' on a single line.<br/><br/>
+<br/><br/>
+<br/><br/>
+<br/><br/>
+<br/>
+Description locations available are:<br/><br/>
+<br/>
+arms        butt        ears        eyes<br/>
+face        feet        general     hair<br/>
+hands       head        left arm    left leg<br/>
+left foot   left hand   left eye    left ear<br/>
+legs        mouth       neck        nose<br/>
+nostrils    right arm   right leg   right foot<br/>
+right hand  right eye   right ear   teeth<br/>
+toes        tounge<br/>
+<br/><br/>
+<br/>
+See also:<br/><br/>
+color<br/><br/>
+<br/>
+<br/><br/>

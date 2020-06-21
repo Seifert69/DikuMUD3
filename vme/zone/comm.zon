@@ -1,0 +1,1290 @@
+/*
+filename    comm
+password    mfxmas
+changedby   Mesmer
+EmailAdd
+request     compile
+version     17
+END HEADER*/
+
+#include <macros.h>
+
+#define MIN_SHOUT_LEVEL 5
+
+%zone comm
+
+creators {"Mesmer","Whistler","Telemachos"}
+
+notes "This is the DIL communications zone for the Valhalla MUD Engine.
+Original base code conversion by Telemachos, revamped by Mesmer."
+
+
+%dil
+
+dilbegin integer is_ignored(ch : unitptr,victim : unitptr);
+var
+ex : extraptr;
+code
+{
+if("$ignore" in ch.info)
+	subextra(ch.info,"$ignore");
+
+/* Out with the old */
+if("$ignore" in victim.info)
+	subextra(victim.info,"$ignore");
+
+ex := victim.info.["$ignore_list"];
+
+if(not ex) /* In with the new */
+{
+ addextra(victim.info,{"$ignore_list"},"");
+ return(FALSE);
+}
+
+if(ch.name in ex.names)
+	return(TRUE);
+else return(FALSE);
+}
+dilend
+
+dilbegin do_ignore(arg : string);
+external
+	stringlist shell@commands(s:stringlist);
+var
+ex : extraptr;
+ch : unitptr;
+lst : stringlist;
+i : integer;
+imax : integer;
+ln : integer;
+str : string;
+code
+{
+
+ex := self.info.["$ignore_list"];
+
+if(not ex)
+{
+	addextra(self.info,{"$ignore_list"},"");
+	ex := self.info.["$ignore_list"];
+}
+
+if(arg == "")
+{
+
+if(length(ex.names) <= 1)
+{
+	sendtext("You are ignoring no one.<br/>", self);
+	quit;
+}
+
+  lst := ex.names;
+  substring(lst,"$ignore_list");
+  lst := shell@commands(lst);
+
+  sendtext("<u>You are ignoring the following people.</u><br/>",self);
+  i := 0;
+  imax := length(lst);
+  str := "<div class='threecol'>";
+
+  while(i < imax)
+  {
+    str := str+lst.[i]+"<br/>";
+    i := i + 1;
+  }
+
+  str := str + "</div>";
+  pagestring(str,self);
+  quit;
+}
+else
+{
+
+if(arg in ex.names)
+{
+substring(ex.names,arg);
+sendtext("You no longer ignore "+arg+".<br/>", self);
+quit;
+}
+
+ch := findunit(self,arg,FIND_UNIT_GLOBAL,null);
+
+if((ch == null) or (not visible(self,ch)))
+{
+sendtext("No such person around to ignore!<br/>", self);
+quit;
+}
+
+if(ch == self)
+{
+sendtext("So you don't think to highly of yourself?<br/>",self);
+quit;
+}
+
+if(ch.type != UNIT_ST_PC)
+{
+sendtext("You can only ignore playing characters!<br/>", self);
+quit;
+}
+
+if(ch.name in ex.names)
+{
+sendtext("You are alreadying ignoring "+ch.name+".<br/>", self);
+quit;
+}
+
+if(length(ex.names) > 100)
+{
+sendtext("You can only ignore 100 people at once!<br/>", self);
+quit;
+}
+
+addstring(ex.names,ch.name);
+sendtext("You will now ignore "+ch.name+".<br/>", self);
+
+}
+quit;
+}
+
+dilend
+
+dilbegin add_history(ch : unitptr,s : string);
+code
+{
+
+if (ch.extra.["$tell_history"]==null)
+addextra(ch.extra,{"$tell_history"},"");
+
+insert(ch.extra.["$tell_history"].names,1,s);
+if(length(ch.extra.["$tell_history"].names) > 21)
+{
+while(length(ch.extra.["$tell_history"].names)>20)
+	remove(ch.extra.["$tell_history"].names,length(ch.extra.["$tell_history"].names)-1);
+}
+return;
+}
+dilend
+
+dilbegin string get_history(ch : unitptr);
+var
+i : integer;
+s : string;
+ln:integer;
+
+code
+{
+
+if(not ch.extra.["$tell_history"]) return("You currently have no tell history.");
+else
+{
+i := 1;
+s := "";
+ln:=length(ch.extra.["$tell_history"].names);
+while(i<ln)
+{
+s := s+itoa(i)+". "+ch.extra.["$tell_history"].names.[i]+"<br/>";
+i := i + 1;
+}
+return(s);
+}
+
+}
+dilend
+
+dilbegin do_tell(arg : string);
+external
+	integer is_ignored(ch : unitptr,victim : unitptr);
+	string exclaim_ask(s : string);
+	string drunk_speech(str : string,i : integer);
+	add_history(ch : unitptr,s : string);
+	string get_history(ch : unitptr);
+var
+vict : unitptr;
+nme : string;
+vnme : string;
+i : integer;
+punct : string;
+dr : string;
+me : string;
+str : string;
+mast : unitptr;
+code
+{
+
+if((self.type == UNIT_ST_PC) and (isset(self.pcflags,PC_NOTELLING)))
+{
+ sendtext("Your telepatic ability is lost!<br/>", self);
+ quit;
+}
+
+if(arg == "")
+{
+ str := get_history(self);
+ str := textformat(str);
+ pagestring(str,self);
+ quit;
+}
+if(isset(self.charflags, CHAR_MUTE))
+{
+act("But, you're mute?!",
+A_ALWAYS, self, null, null, TO_CHAR);
+quit;
+}
+
+if(isset(self.flags,UNIT_FL_BURIED))
+{
+ sendtext("You are buried alive!<br/>", self);
+ quit;
+}
+
+if(left(arg,5) == "group")
+{
+
+ str := getword(arg); /* "group" */
+
+ if(not isset(self.charflags,CHAR_GROUP))
+ {
+  sendtext("What group?<br/>", self);
+  quit;
+ }
+
+ if(arg == "")
+ {
+  sendtext("What?<br/>", self);
+  quit;
+ }
+
+ if(self.level >= IMMORTAL_LEVEL)
+ 	arg := textformat(arg);
+
+ if(self.drunk)
+ dr := drunk_speech(arg,self.drunk);
+ else dr := arg;
+
+ if("!" == right(arg,1))
+ {
+  me := "You exclaim to the group '"+arg+"'";
+  str := self.name+" exclaims to the group '"+dr+"'";
+ }
+ else if("?" == right(arg,1))
+ {
+  me := "You ask the group '"+arg+"'";
+  str := self.name+" asks the group '"+dr+"'";
+ }
+ else
+ {
+  me := "You tell the group '"+arg+"'";
+  str := self.name+" tells the group '"+dr+"'";
+ }
+
+ if((self.type == UNIT_ST_PC) and (not isset(self.pcflags,PC_ECHO)))
+ 	sendtext("Ok.<br/>", self);
+ else
+  sendtext("<div class='tell_self'>"+me+"</div>", self);
+
+ mast := self.master;
+ if(mast == null) mast := self;
+ vict := ghead();
+
+ while(vict.type == UNIT_ST_PC)
+ {
+   if(((vict == mast) and (vict != self)) or ((vict.master == mast) and
+       (isset(vict.charflags,CHAR_GROUP)) and (vict != self)))
+   {
+    sendtext("<div class='tell_other'>"+str+"</div><br/>", vict);
+
+    if(vict.type == UNIT_ST_PC)
+    {
+    add_history(vict,str);
+    subextra(vict.extra,"$reply");
+    addextra(vict.extra,{"$reply"},self.name);
+    }
+    send_done("tell",self,null,vict,0,arg,null);
+   }
+
+  vict := vict.gnext;
+ }
+
+
+ quit;
+}
+
+vict := findunit(self,arg,FIND_UNIT_GLOBAL,null,UNIT_ST_PC);
+if (vict==null)
+vict := findunit(self,arg,FIND_UNIT_HERE,null,UNIT_ST_NPC);
+
+
+
+if((vict == null) or (not visible(self,vict)))
+{
+ sendtext("No-one by that name here..<br/>", self);
+ quit;
+}
+
+if(not (vict.type & (UNIT_ST_PC|UNIT_ST_NPC)))
+{
+ sendtext("It can't hear you! (It's not alive!)<br/>", self);
+ quit;
+}
+
+if(vict == self)
+{
+ sendtext("You try to tell yourself something.<br/>", self);
+ quit;
+}
+
+if(arg == "")
+{
+ sendtext("What?<br/>", self);
+ quit;
+}
+
+if((vict.position <= POSITION_SLEEPING) or
+   (isset(vict.pcflags,PC_NOTELL)))
+{
+ act("$3e can't hear you.",
+ 	A_ALWAYS, self, null, vict, TO_CHAR);
+ quit;
+}
+if ((vict.outside.zoneidx=="hobgob") and (vict.outside.nameidx=="nightmare")and
+(self.level < IMMORTAL_LEVEL))
+{
+ act("$3e can't hear you .",
+ 	A_ALWAYS, self, null, vict, TO_CHAR);
+ quit;
+}
+
+i := is_ignored(self, vict);
+if(i == TRUE)
+{
+ act("$3n ignores you.",
+ 	A_ALWAYS, self, null, vict, TO_CHAR);
+ quit;
+}
+else if(vict.editing == TRUE)
+{
+ act("$3n is busy writing a message, $3e can't hear you!",
+ 	A_ALWAYS, self, null, vict, TO_CHAR);
+ quit;
+}
+else
+{
+ str := getword(arg);/* get rid of ' blah' problem */
+
+ if(arg != "")
+  arg := str+" "+arg;
+ else arg := str;
+
+ if((visible(vict,self)) and (self.type == UNIT_ST_PC))
+ 	nme := self.name;
+ else if((visible(vict,self)) and (self.type == UNIT_ST_NPC))
+ 	nme := self.title;
+ else
+ {
+ 	if(self.sex == SEX_NEUTRAL)
+ 		nme := "Something";
+ 	else	nme := "Someone";
+ }
+
+ punct := exclaim_ask(arg);
+
+ if(self.drunk)
+ dr := drunk_speech(arg,self.drunk);
+ else dr := arg;
+
+ if(self.level >= IMMORTAL_LEVEL)
+ {
+  arg := textformat(arg);
+ }
+
+ if(vict.type == UNIT_ST_PC)
+ 	vnme := vict.name;
+ else vnme := vict.title;
+
+ if((self.type == UNIT_ST_PC) and (not isset(self.pcflags,PC_ECHO)))
+   sendtext("Ok.<br/>", self);
+ else
+   sendtext("<div class='tell_self'>You tell "+vnme+" "+punct+"'"+arg+"'</div><br/>",self);
+
+ str := "<div class='tell_other'>"+nme+" tells you "+punct+"'"+dr+"'</div><br/>";
+ sendtext(str,vict);
+
+ if((self.type == UNIT_ST_PC) and (isset(self.pcflags,PC_NOTELL)))
+   sendtext("You realize that you can't hear people telling back.<br/>", self);
+
+ subextra (vict.quests,"$reply");
+ addextra (vict.quests,{"$reply"},self.name);
+
+ if(vict.type == UNIT_ST_PC)
+ {
+  add_history(vict,str);
+  subextra (vict.quests,"$reply");
+  addextra (vict.quests,{"$reply"},self.name);
+ }
+ send_done("tell",self,null,vict,0,arg,null);
+
+}
+
+quit;
+}
+dilend
+
+
+dilbegin integer swear_check(str : string);
+var
+i: integer;
+lst: stringlist;
+badwords: stringlist;
+loc: integer;
+tm: integer;
+ret: integer;
+code
+{
+lst:= getwords(str);
+i:= 0;
+ret:= FALSE;
+/* I had to go to church and confess after writing this list */
+badwords:=
+{"fuck","f*ck","fu*k","fuc*","fuck!","FUCK,", \
+ "fucker!","shit","s*it","sh*t","shi*","s**t","s***t", \
+ "s******t","s*****t","cunt","c*nt","slut","fucker", \
+ "a$$!","@$$!","asshole","ass","a**","d@mn", \
+ "damn","whore","hoar","bitch","b*tch","bastard", \
+ "b@stard","faggot","homo","dick","d*ck","dickhead", \
+ "f*cker","fucking","f*cking","a$$","a$$","a@@", \
+ "shit!","bullshit","bullsh!t","bullsh*t","que", \
+ "qui","hoar","arse","caesure"};
+
+while(i < length(lst))
+{
+
+if(lst.[i] in badwords)
+{
+loc:= lst.[i] in badwords;
+tm:= 100 * PULSE_SEC * SECS_PER_REAL_HOUR;
+dilcopy("no_shouted@commands(" + itoa(tm) + ")", self);
+addextra(self.quests, {"$noshout"},"Shouted swear word "+
+asctime(realtime));
+set(self.pcflags, PC_NOSHOUTING);
+ret:= TRUE;
+break;
+}
+else i := i + 1;
+}
+
+return(ret);
+}
+dilend
+
+
+dilbegin reply (arg:string);
+external
+	string exclaim_ask(s:string);
+	integer is_ignored(ch : unitptr,victim : unitptr);
+		add_history(ch : unitptr,s : string);
+var
+sx:string;
+  person:extraptr;
+  pc:unitptr;
+punct:string;
+i : integer;
+  code
+  {
+
+if (arg=="")
+  {
+  act ("<div class='respond'>Respond what?</div>",A_ALWAYS,self,null,null,TO_CHAR);
+  quit;
+  }
+
+person:="$reply" in self.quests;
+
+if (person==null)
+  {
+  act ("<div class='respond'>No one to respond to.</div>",
+  	A_ALWAYS,self,null,null,TO_CHAR);
+  quit;
+  }
+
+pc:=findunit (self,person.descr,FIND_UNIT_WORLD,null,UNIT_ST_PC);
+
+if (pc==null)
+pc := findunit(self,person.descr,FIND_UNIT_HERE,null,UNIT_ST_NPC);
+
+if (pc==null)
+{
+act ("<div class='respond'>No one to respond
+to.</div>",A_ALWAYS,self,null,null,TO_CHAR);
+quit;
+ }
+
+i := is_ignored(self,pc);
+if(i == TRUE)
+{
+ act("$3n ignores you.",
+ 	A_SOMEONE, self, null, pc, TO_CHAR);
+ quit;
+}
+
+:speak:
+
+if (isset (self.pcflags, PC_NOTELLING))
+{
+act ("You have lost your telepathic ability.",
+A_ALWAYS,self,null,null,TO_CHAR);
+quit;
+}
+
+if(pc.editing == TRUE)
+{
+ act("$3n is writing a message right now, try back later.",
+ 	A_SOMEONE, self, null, pc, TO_CHAR);
+ quit;
+}
+if(isset(self.charflags, CHAR_MUTE))
+{
+act("But, you're mute?!",
+A_ALWAYS, self, null, null, TO_CHAR);
+quit;
+}
+
+punct:=exclaim_ask(arg);
+
+if (visible(self,pc))
+sendtext("<div class='respond'>You respond to "+pc.name+" "+punct+"'"+arg+"'</div>", self);
+else
+{
+if ((pc.sex==SEX_MALE) or (pc.sex==SEX_FEMALE))
+sx:="Someone";
+else
+sx:="Something";
+sendtext("<div class='respond'>You respond to "+sx+" "+punct+"'"+arg+"'</div>",
+self);
+}
+
+if (visible (pc,self))
+{
+sendtext("<div class='respond'>"+self.name+" responds "+punct+"'"+arg+"'</div>",pc);
+ 	add_history(pc,"<div class='respond'>"+self.name+" responds "+punct+"'"+arg+"'</div>");
+	}
+else
+{
+if ((self.sex==SEX_MALE) or (self.sex==SEX_FEMALE))
+sx:="Someone";
+else
+sx:="Something";
+sendtext("<div class='respond'>"+sx+" responds "+punct+"'"+arg+"'</div>",pc);
+add_history(pc,"<div class='respond'>"+sx+" responds "+punct+"'"+arg+"'</div>");
+}
+
+subextra (pc.quests,"$reply");
+addextra (pc.quests,{"$reply"},self.name);
+quit;
+
+}
+dilend
+
+
+dilbegin string exclaim_ask(s : string);
+code
+{
+
+ if("!" == right(s,1))
+  return("exclaiming ");
+   else if("?" == right(s,1))
+     return("asking ");
+      else
+       return("");
+}
+dilend
+
+dilbegin string drunk_speech(str : string,i : integer);
+external
+string ins_string(let : string, pattern : string, origstr : string);
+string add_hics(st : string);
+var
+tmp: string;
+ret: string;
+code
+{
+  if(self.type != UNIT_ST_PC) return(str);
+  if(i <= 4) return(str); /* Not drunk yet */
+  if(self.level >= IMMORTAL_LEVEL) return(str);
+  if(str == "") return(str);
+
+  ret := "";
+  tmp := getword(str);
+
+  while(tmp != "")
+ {
+/*  if(length(tmp) == 1)
+  {
+  tmp := getword(ret);
+  continue;
+  }*/
+  tmp := ins_string("s","sch",tmp);
+  if(i > 8) tmp := ins_string("o","oh",tmp);
+  if(i > 16) tmp := ins_string("t","ta",tmp);
+  if(i > 22) tmp := add_hics(tmp);
+  ret := ret+" "+tmp;
+  tmp := getword(str);
+ }
+  tmp := getword(ret);
+  if(ret != "") ret := tmp+" "+ret;
+  else ret := tmp;
+ return(ret);
+}
+dilend
+
+dilbegin string ins_string(let : string, pattern : string, origstr :
+string);
+var
+lst: stringlist;
+lt: integer;
+rt: integer;
+i: integer;
+ret: string;
+code
+{
+
+ if((left(origstr,1) == let) and (left(origstr,2) != let)) lt := 1;
+ if((right(origstr,1) == let) and (right(origstr,2) != let)) rt := 1;
+
+ lst := split(origstr,let);
+
+ if(lt == 1) ret := pattern+lst.[0];
+ else ret := lst.[0];
+ i := 1;
+
+ while(i <= (length(lst) - 1))
+ {
+  ret := ret+pattern+lst.[i];
+  i := i + 1;
+ }
+
+ if(rt == 1) ret := ret+pattern;
+
+ return(ret);
+}
+dilend
+
+dilbegin string add_hics(st : string);
+var
+ret: string;
+tmp: string;
+code
+{
+
+ tmp := getword(st);
+ ret := "";
+ while(tmp != "")
+ {
+  if(rnd(0,3) == 0)
+   ret := ret+tmp+" *HIC*";
+    else ret := ret+tmp;
+   tmp := getword(st);
+ }
+
+return(ret);
+}
+dilend
+
+dilbegin string sex_name(sx : integer);
+code
+{
+ if((sx == SEX_MALE) or (sx == SEX_FEMALE))
+return("Someone");
+ else
+return("Something");
+}
+dilend
+
+dilbegin string cap_first(nm : string);
+var
+str: string;
+code
+{
+ str:= toupper(nm.[0]);
+ str := str+""+right(nm,(length(nm)-1));
+return (str);
+}
+dilend
+
+
+dilbegin do_ask(arg : string);
+external
+string drunk_speech(str : string,i : integer);
+var
+tgt: unitptr;
+dr: string;
+tst: string;
+str : string;
+code
+{
+
+  if(isset(self.charflags, CHAR_MUTE))
+  {
+  sendtext("But, you're mute?!<br/>", self);
+  quit;
+  }
+
+  if(isset(self.flags, UNIT_FL_BURIED))
+  {
+  sendtext("You are buried alive!<br/>", self);
+  quit;
+  }
+
+  if(arg == "")
+  {
+  sendtext("Who or what do you want to ask??<br/>", self);
+  quit;
+  }
+
+  tst := arg; /* Save the string in case tgt is not visible. */
+  tgt := findunit(self, arg, FIND_UNIT_SURRO, null);
+
+
+  if(self.level >= IMMORTAL_LEVEL)
+  arg := textformat(arg);
+
+  /* Little something special since findunit will detect invis */
+  if((not visible(self,tgt)) or (not (tgt.type & (UNIT_ST_PC|UNIT_ST_NPC))))
+  {
+  arg := tst;
+  tgt := null;
+  }
+
+  if(self.drunk)
+dr:= drunk_speech(arg, self.drunk);
+else dr := arg;
+
+/* Hate this, but need it for ' blah' problem */
+str := getword(dr);
+if(dr != "")
+	dr := str+" "+dr;
+else dr := str;
+
+  if(tgt == null)
+  {
+act("<div class='ask_other'>$1n asks '$2t'</div>",
+A_SOMEONE, self, dr, null, TO_REST);
+
+if((self.type == UNIT_ST_PC) and (not isset(self.pcflags, PC_ECHO)))
+sendtext("Ok.<br/>", self);
+else
+act("<div class='ask_self'>You ask '$2t'</div>",
+A_ALWAYS, self, arg, null, TO_CHAR);
+send_done("ask",self,null,null,0,arg,null);
+quit;
+   }
+
+  if(tgt == self)
+  {
+  sendtext("You think about it for a while...<br/>", self);
+  act("$1n quietly asks $1mself a question.",
+  A_SOMEONE, self, null, null, TO_REST);
+  }
+  else
+  {
+  if(arg == "")
+  sendtext("What?<br/>", self);
+  else
+  {
+tst:= getword(arg);
+if(arg != "") arg := tst+" "+arg;
+else arg := tst; /* To avoid blank space in first arg */
+  act("<div class='ask_other'>$1n asks you '$2t'</div>",
+  A_SOMEONE, self, dr, tgt, TO_VICT);
+  if((self.type == UNIT_ST_PC) and (not isset(self.pcflags, PC_ECHO)))
+  sendtext("Ok.<br/>", self);
+  else
+  act("<div class='ask_self'>You ask $3n '$2t'</div>",
+  A_ALWAYS, self, arg, tgt, TO_CHAR);
+
+  act("<div class='ask_other'>$1n asks $3n '$2t'</div>",
+  A_SOMEONE, self, dr, tgt, TO_NOTVICT);
+  }
+  }
+  send_done("ask", self, null, tgt, 0, arg, null);
+ quit;
+}
+dilend
+
+dilbegin do_emote(arg : string);
+external
+string sex_name(sx : integer);
+string cap_first(nm : string);
+var
+u: unitptr;
+my_name: string;
+inv_name: string;
+code
+{
+if(isset(self.charflags, CHAR_MUTE))
+{
+act("But, you're mute?!",
+A_ALWAYS, self, null, null, TO_CHAR);
+quit;
+}
+
+ if(isset(self.flags,UNIT_FL_BURIED))
+ {
+act("You are buried alive!",
+A_ALWAYS, self, null, null, TO_CHAR);
+quit;
+ }
+
+ if(arg == "")
+ {
+act("What do you want to emote?",
+A_ALWAYS, self, null, null, TO_CHAR);
+quit;
+ }
+ else
+ {
+ if(self.level >= IMMORTAL_LEVEL)
+arg:= textformat(arg);
+
+ inv_name := sex_name(self.sex);
+ if(self.type == UNIT_ST_NPC)
+ {
+my_name:= cap_first(self.title);    /*?*/
+/*my_name:= cap_first(my_name);*/
+ }
+else my_name := cap_first(self.name);  /* ?*/
+
+/*
+ foreach(UNIT_ST_PC|UNIT_ST_NPC,u)
+ {
+if((u != self) and (u.position > POSITION_SLEEPING))
+{
+if(visible(u,self))
+{
+sendtext("<div class='social_other'>"+my_name+" "+arg+"</div>", u);
+        }
+else
+sendtext("<div class='social_other'>"+inv_name+" "+arg+"</div>", u);
+ }
+}*/
+
+  act ("<div class='social_other'>$1n $3t</div>", A_SOMEONE, self, null, arg, TO_ROOM);
+
+  if((self.type == UNIT_ST_PC) and (isset(self.pcflags, PC_ECHO)))
+    act("<div class='social_self'>$1n $2t</div>", A_ALWAYS, self, arg, null, TO_CHAR);
+  else
+    sendtext("Ok.<br/>", self);
+
+}
+send_done("emote", self, null, null, 0, arg, null);
+quit;
+}
+dilend
+
+
+dilbegin do_say(arg : string);
+external
+string drunk_speech(str : string,i : integer);
+        string sex_name(sx : integer);
+string cap_first(nm : string);
+var
+mode: string;
+dr: string;
+u: unitptr;
+my_name: string;
+inv_name: string;
+code
+{
+  if(isset(self.charflags, CHAR_MUTE))
+  {
+    sendtext("But, you are mute!?!<br/>", self);
+    quit;
+    }
+
+  if(isset(self.flags, UNIT_FL_BURIED))
+  {
+    sendtext("You are buried alive!<br/>", self);
+    quit;
+    }
+
+  if(arg == "")
+  {
+    sendtext("What do you want to say?<br/>", self);
+    quit;
+  }
+  else
+  {
+    if(right(arg,1) == "!")
+    mode:= "exclaim";
+    else if(right(arg,1) == "?")
+    mode:= "ask";
+    else mode := "say";
+
+    if(self.drunk)
+    dr:= drunk_speech(arg,self.drunk);
+    else
+    dr:= arg;
+
+    if(self.level >= IMMORTAL_LEVEL) {
+      arg:= textformat(arg);
+      dr:= textformat(dr);
+    }
+
+    inv_name:= sex_name(self.sex);
+    if(self.type == UNIT_ST_NPC)
+    {
+      my_name:= cap_first(self.title);  /*?*/
+    }
+    else
+      my_name:= cap_first(self.name);  /*?*/
+
+/*  foreach(UNIT_ST_PC|UNIT_ST_NPC,u)
+    {
+      if((u != self) and (u.position > POSITION_SLEEPING))
+      {
+        if(visible(u,self))
+          sendtext("<div class='say_other'>"+my_name+" "+mode+"s '"+dr+"'</div>", u);
+        else
+          sendtext("<div class='say_other'>"+inv_name+" "+mode+"s '"+dr+"'</div>", u);
+      }
+    } MS2020 act also deals with e.g. invisibility */
+
+    act ("<div class='say_other'>$1n $2ts '$3t'</div>", A_SOMEONE, self, mode, arg, TO_ROOM);
+
+    if((self.type == UNIT_ST_PC) and (not isset(self.pcflags,PC_ECHO)))
+      sendtext("Ok.<br/>", self);
+    else
+      act("<div class='say_self'>You $2t '$3t'</div>", A_ALWAYS, self, mode, arg, TO_CHAR);
+  }
+  send_done("say", self, null, null, 0, arg, null);
+  quit;
+}
+dilend
+
+dilbegin do_shout(arg : string);
+external
+string exclaim_ask(s:string);
+        string drunk_speech(str : string,i : integer);
+string sex_name(sx : integer);
+string cap_first(nm : string);
+integer swear_check(str : string);
+var
+endcost: integer;
+ex_ask: string;
+mode_self: string;
+mode_other: string;
+my_name: string;
+inv_name: string;
+tgt: unitptr;
+swear: integer;
+code
+{
+
+if((self.type == UNIT_ST_PC) and (self.level < MIN_SHOUT_LEVEL))
+{
+act("You can not shout until you are level "+itoa(MIN_SHOUT_LEVEL)+".",
+A_ALWAYS, self, null, null, TO_CHAR);
+quit;
+}
+
+if(isset(self.charflags,CHAR_MUTE))
+{
+act("But, you're mute?",
+A_ALWAYS, self, null, null, TO_CHAR);
+quit;
+}
+
+if(isset(self.flags,UNIT_FL_BURIED))
+{
+act("You are buried alive!",
+A_ALWAYS, self, null, null, TO_CHAR);
+quit;
+}
+
+if(isset(self.pcflags,PC_NOSHOUTING))
+{
+act("You can't shout, your throath is sore!!",
+A_ALWAYS, self, null, null, TO_CHAR);
+quit;
+}
+
+if(arg == "")
+{
+act("Shout? Yes! Fine! Shout we must, but WHAT??",
+A_ALWAYS, self, null, null, TO_CHAR);
+quit;
+}
+
+if(self.level < IMMORTAL_LEVEL)
+swear:= swear_check(arg);
+
+if(swear == TRUE)
+{
+sendtext("You suddenly get a sore throat!<br/>", self);
+sendtext("You have been noshouted for 100 hours for "+
+"using a swear word in a public shout.<br/>", self);
+log(self.name+" was noshouted for shouting a swear word..."+
+"Argument was "+arg);
+quit;
+}
+
+if((self.type == UNIT_ST_PC) and (self.level <= START_LEVEL))
+endcost:= 50;
+else
+endcost:= 10;
+
+if((self.type == UNIT_ST_PC) and (self.level < IMMORTAL_LEVEL))
+{
+if(self.endurance < endcost)
+{
+act("You are too exhausted.",
+A_ALWAYS, self, null, null, TO_CHAR);
+quit;
+}
+else
+self.endurance:= self.endurance - endcost;
+}
+
+if(self.level >= IMMORTAL_LEVEL)
+arg:= textformat(arg);
+
+ex_ask:= exclaim_ask(arg);
+
+if(ex_ask == "exclaiming ")
+{
+mode_self:= "yell";
+mode_other:= "yells";
+}
+else if(ex_ask == "asking ")
+{
+mode_self:= "shout asking";
+mode_other:= "shouts asking";
+}
+else
+{
+mode_self:= "shout";
+mode_other:= "shouts";
+}
+
+inv_name:= sex_name(self.sex);
+
+if(self.type == UNIT_ST_NPC)
+my_name:=cap_first(self.title); /*?*/
+else
+my_name:= cap_first(self.name);          /*?*/
+
+
+if((self.type == UNIT_ST_PC) and (isset(self.pcflags,PC_ECHO)))
+  act("<div class='shout_self'>You $2t '$3t'</div>", A_ALWAYS, self,
+mode_self, arg, TO_CHAR);
+else
+sendtext("Ok.<br/>", self);
+
+if((self.type == UNIT_ST_PC) and (isset(self.pcflags, PC_NOSHOUT)))
+sendtext("You realize that you can't hear people shouting back.<br/>", self);
+
+if(self.drunk)
+arg:= drunk_speech(arg,self.drunk);
+
+tgt:= ghead();
+
+while(tgt.type == UNIT_ST_PC)
+{
+if((tgt != self) and (tgt.editing != TRUE) and
+(not isset(tgt.pcflags, PC_NOSHOUT) and (tgt.position > POSITION_SLEEPING)))
+{
+if(visible(tgt, self))
+sendtext("<div class='shout_other'>"+my_name+" "+mode_other+" '"+arg+"'</div><br/>", tgt);
+else
+sendtext("<div class='shout_other'>"+inv_name+" "+mode_other+" '"+arg+"'</div><br/>", tgt);
+}
+
+tgt:= tgt.gnext;
+}
+
+send_done("shout", self, null, null, 0, arg, null);
+
+quit;
+}
+dilend
+
+dilbegin wiz_broadcast(arg : string);
+var
+tgt: unitptr;
+code
+{
+
+ if(arg == "")
+ {
+   act("Yeah, that makes a LOT of sense!",
+     A_ALWAYS, self, null, null, TO_CHAR);
+   quit;
+ }
+
+ arg := textformat(arg);
+
+ tgt := ghead();
+
+ while(tgt.type == UNIT_ST_PC)
+ {
+
+  act("$2t", A_ALWAYS, tgt, arg, null, TO_CHAR);
+
+  tgt := tgt.gnext;
+ }
+
+ quit;
+}
+dilend
+
+
+dilbegin wiz_echo(arg : string);
+code
+{
+
+ if(arg == "")
+ {
+  act("Echo needs an argument",
+      A_ALWAYS, self, null, null, TO_CHAR);
+  quit;
+ }
+
+ arg := textformat(arg);
+
+ act("$2t",A_SOMEONE, self, arg, null, TO_ALL);
+
+ quit;
+}
+dilend
+
+
+dilbegin wiz_message(arg : string);
+var
+tgt: unitptr;
+code
+{
+
+ if(arg == "")
+ {
+  act("Who? What ??",
+    A_ALWAYS, self, null, null, TO_CHAR);
+  quit;
+ }
+
+ tgt := findunit(self,arg,FIND_UNIT_GLOBAL,null);
+
+ if((tgt == null) or (not(visible(self,tgt))))
+ {
+  act("No-one by that name here.",
+     A_ALWAYS, self, null, null, TO_CHAR);
+  quit;
+ }
+
+ if(arg == "")
+ {
+  act("What??",
+    A_ALWAYS, self, null, null, TO_CHAR);
+  quit;
+ }
+
+ arg := textformat(arg);
+
+ act("$2t", A_ALWAYS, tgt, arg, null, TO_CHAR);
+ act("Ok.", A_ALWAYS, self, null, null, TO_CHAR);
+
+quit;
+}
+dilend
+
+dilbegin do_whisper(arg : string);
+external
+string drunk_speech(str : string,i : integer);
+string sex_name(sx : integer);
+string cap_first(nm : string);
+var
+tgt: unitptr;
+tst: string;
+my_name: string;
+inv_name: string;
+code
+{
+
+if(isset(self.charflags, CHAR_MUTE))
+{
+act("But, you're mute?!",
+A_ALWAYS, self, null, null, TO_CHAR);
+quit;
+}
+
+if(isset(self.flags, UNIT_FL_BURIED))
+{
+act("You are buried alive!",
+A_ALWAYS, self, null, null, TO_CHAR);
+quit;
+}
+
+if(arg == "")
+{
+act("Who do you want to whisper to.. and what??",
+A_ALWAYS, self, null, null, TO_CHAR);
+quit;
+}
+
+tgt:= findunit(self,arg,FIND_UNIT_SURRO,null);
+
+if((tgt == null) or (not visible(self,tgt)) or (not tgt.type &
+(UNIT_ST_PC|UNIT_ST_NPC)))
+{
+act("No-one by that name here..",
+A_ALWAYS, self, null, null, TO_CHAR);
+quit;
+}
+
+tst:= getword(arg); /* blank space in findunit, get word/readd it */
+if(arg != "") arg := tst+" "+arg;
+else arg := tst;
+
+if(tgt == self)
+{
+act("$1n whispers quietly to $1mself.",
+A_SOMEONE, self, null, null, TO_REST);
+act("You can't seem to get your mouth close enough to your ear...",
+A_ALWAYS, self, null, null, TO_CHAR);
+}
+else
+{
+if(arg == "")
+act("Whisper what?", A_ALWAYS, self, null, null, TO_CHAR);
+else
+{
+
+if(self.level >= IMMORTAL_LEVEL)
+arg:= textformat(arg);
+
+if((self.type == UNIT_ST_PC) and (isset(self.pcflags,PC_ECHO)))
+act("<div class='whisper'>You whisper to $3n '$2t<div class='whisper'>'</div>", A_ALWAYS,
+self, arg, tgt, TO_CHAR);
+else
+sendtext("Ok.", self);
+
+if(self.drunk)
+arg:= drunk_speech(arg,self.drunk);
+
+if(not visible(tgt, self))
+my_name:= sex_name(self.sex);
+else if(self.type == UNIT_ST_PC)
+my_name:= self.name;
+else
+my_name:=self.title;
+
+sendtext("<div class='whisper'>"+my_name+" whispers to you, '"+arg+"'</div>", tgt);
+act("<div class='whisper'>$1n whispers something to $3n.</div>",
+A_ALWAYS, self, null, tgt, TO_NOTVICT);
+
+send_done("whisper", self, null, tgt, 0, arg, null);
+}
+   }
+quit;
+}
+dilend
+
+%end

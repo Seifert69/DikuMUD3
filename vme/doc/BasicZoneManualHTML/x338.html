@@ -1,0 +1,315 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Zone information section</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Zone source file"
+HREF="ch02.html"><LINK
+REL="PREVIOUS"
+TITLE="Zone source file"
+HREF="ch02.html"><LINK
+REL="NEXT"
+TITLE="Unit building blocks"
+HREF="ch03.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="ch02.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 3. Zone source file</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="ch03.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="ZONEINFO"
+>3.2. Zone information section</A
+></H1
+><P
+>The zone information section is the only section that must
+exist in the source file of your area.  With out this section the
+compiler is unable to create the zone because frankly it doesn't
+know what to call it.  It is also the easiest of the sections to
+learn because there is only a few possible fields. The  Zone-section  defines  the global parameters for the current
+zone. It is usually wise to place this section in the top of  the
+source file to make it easy to find the zone information when editing the file.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN341"
+></A
+><P
+><B
+>Table 3-1. Zone section field descriptions</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><COL><THEAD
+><TR
+><TH
+>Field</TH
+><TH
+>Type</TH
+><TH
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>creators</TD
+><TD
+>Stringlist</TD
+><TD
+>This field is where you place the creators of the zone.  With
+this field filled out the Administrators and builders can easily find out who
+the zone was written by and be able to contact them if there are problems.</TD
+></TR
+><TR
+><TD
+>lifespan</TD
+><TD
+>Number</TD
+><TD
+>This  defines  the interval between resets for this zone, in minutes.
+Default is 60 if this field is left out of the information section.</TD
+></TR
+><TR
+><TD
+>notes</TD
+><TD
+>String</TD
+><TD
+>This is a plain text description of the zone for administrators and builders.
+It is often a good idea to
+include your e-mail address in the  notes so you can be
+reached easily by the administrators.</TD
+></TR
+><TR
+><TD
+>reset</TD
+><TD
+>Number</TD
+><TD
+>This combined with 'lifespan' defines if the zone will be reset.  This
+field gives the condition that must be met to reset the zones you
+should use the defines in the <TT
+CLASS="FILENAME"
+>vme.h</TT
+>,	RESET_NOT,
+RESET_IFEMPTY, and RESET_ANYHOW.  Default is RESET_ANYHOW, which
+means, the zone will be reset even if players are present within it.</TD
+></TR
+><TR
+><TD
+>title</TD
+><TD
+>String</TD
+><TD
+> This is the title of the zone, for example Dragons Nest, Dark
+station, and
+creators hide out.  It is used mainly for the areas command so
+players can get a list of all the areas in the game.  It can
+however be accessed by the 'zoneptr' variable type in <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>.  If you
+have
+a zone that spans across multiple source files you only need to
+define the title once.  If you put the title in all source files it
+will show up multiple times in the area listing.  You would also
+leave this blank if the zone should not be on the areas list like an
+administration zone.</TD
+></TR
+><TR
+><TD
+>weather</TD
+><TD
+>Integer</TD
+><TD
+>This field sets the humidity level of the zone.  If for example you want
+a hot desert like zone you would want to set this to its highest value. 
+The range of this field is 1000 to -1000.  This is an optional field and
+will not be covered else where because it is simple to use.</TD
+></TR
+><TR
+><TD
+>%zone</TD
+><TD
+>Symbol</TD
+><TD
+>This entry defines the name of the
+zone. Default is the preceding  component of the current filename,
+minus the trailing ".zon". Note, the symbol should be added
+after the %zone tag, which should always be put, even if you
+do not add a symbol after it.</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>The only field that must exist when you go to create the zone
+information section is the '%zone'.  Leaving the '%zone' field out
+will cause an error when you try to compile it.  We suggest you
+not only put the '%zone' field but you also add a symbol or as I
+call it a zone name.  The following are three legal examples of a Zone information header.  You be the judge of
+which is more informative.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN381"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;/*very bad*/
+%zone
+
+/*bad but better than nothing*/
+%zone bug_planet
+
+/*The way it should be done!*/
+%zone dragonst
+lifespan 20
+reset RESET_ANYHOW
+creators {"whistler"}
+
+notes
+"This is the dragon station I shortened it to dragonst for ease in
+loading.  If you have  any questions email me at whistler@valhalla.com"
+
+help
+"Not sure what could help you now.  You are stuck on one of the
+weirdest space stations you have ever seen and you smell burning
+sulfur."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>If you felt like it you could add a '%end' to the proceeding
+examples and compile them.  They would create an empty zone so
+wouldn't be very exciting but at least its possible.  We will not go into any compiling until we have at least one unit
+type to compile because it is pretty useless to do.
+   the next chapters will
+define the basic unit building blocks you will use for rooms,
+objects, and NPCs and start you off on compiling.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="ch02.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="ch03.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Zone source file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch02.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Unit building blocks</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

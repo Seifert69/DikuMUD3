@@ -1,0 +1,1191 @@
+/*
+filename    fightersguild
+password    realworld
+changedby   Stormtamer
+EmailAdd     Marc Bellemare <baam@erols.com>
+request     compile
+version     17
+END HEADER*/
+
+#define _GUILD_UDGAARD_FIGHTER
+#define BELT_GIVEN "$Swordsman Belt given"
+
+/* This zone is the Fighters Guild. It has been made as                  */
+/* a separate zone in order to make Midgaard smaller.                    */
+/* seifert@diku.dk 24/02/93                                              */
+
+#include <macros.h>
+
+/* ================================================================== */
+/*                                ZONE                                */
+/* ================================================================== */
+%zone fightersguild
+title "Fighters Guild@Mainland"
+creators {"redferne", "papi"}
+
+notes
+"This is a zone designed to implement the Guild for Fighters. The zone
+is not a part of Midgaard, since it is too large already. The zone
+contains teachers and guards. Lifespan of zone is very high in order
+to encourage members to defend their guild.<br/>
+Version 1.0 made 21/2-93 by Redferne (Michael Curran).<br/>
+NPC's and reset by Papi.<br/>
+Juni 4th, 1996 - Swordsman's Belt added as a guild item by Sk(r)ay.<br/>"
+
+help
+"<pre>Fighter's Guild<br/>
+<br/>
+  1 2 3 4 5 6<br/>
+<br/>
+A         O M                                 Metallurgist . . . . A5<br/>
+          |/                                  Guild Master . . . . A6<br/>
+B   @-E-#-#-I                                 Entrance . . . . . . B3<br/>
+        |                                     Midgaard . . . . . . B2<br/>
+C     T-#-T                                   Bar  . . . . . . . . B6<br/>
+        |                                     Ability Teacher  . . C3<br/>
+D       T                                     Skill Teacher  . . . D4<br/>
+                                              Weapon Teacher . . . C5<br/>
+<br/>
+ The Midgaard Fighter Guild specializes in weapon and battle training,<br/>
+ leaving little time for non-combat skills practice. This guild can<br/>
+ teach you most of the existing fighting styles.<br/>
+<br/>
+			 <div class='cpw'>Other services:</div><div class='cw'><br/>
+ Titles				at the Guild Master (Sir Arthur)<br/>
+ Evaluation services		at the Metallurgist (Cleena)<br/>
+ Relaxation &amp; local gossip	at the Bar<br/>
+<br/>
+<br/></div></pre>"
+
+reset RESET_ANYHOW
+lifespan 118
+
+%dil
+/* Nokill dill for Guild Staff - ejects the sinner out with 0 hp and
+endurance + incapacitated */
+
+dilbegin nokill();
+var
+        pc      : unitptr;
+        room    : unitptr;
+        i       : integer;
+code
+{
+        heartbeat := 3 * PULSE_SEC;
+
+        :start:
+        wait(SFB_COM,  self.position == POSITION_FIGHTING);
+        pc := self.fighting;
+        if(pc.type == UNIT_ST_NPC) goto start;
+        if (pc.level > 200) goto start;
+        secure(pc,gone);
+        if (command("flee"))
+                block;
+
+self.hp := self.max_hp;
+act("The sounds of battle attract attention of the training mercenaries.",
+A_ALWAYS, pc, self, null, TO_ALL);
+act("Several of them charge into the room, grabbing you and repeatedly "+
+"smashing your head into the wall!", A_ALWAYS, pc, self, null, TO_CHAR);
+act("Several of them charge into the room, grabbing $1n and repeatedly "+
+"smashing $1s head into the wall!",A_SOMEONE, pc, self, null, TO_REST);
+pc.hp := 0;
+pc.endurance := 0;
+act("Your face a bloody mess, you are dragged away into the streets."
+,A_ALWAYS, pc, self, null, TO_CHAR);
+position_update(pc);
+act("Two of them grab $1n and drag $1m out of the Guild, dumping "+
+"$1m in the streets.",A_ALWAYS, pc, self, null, TO_REST);
+room := findroom("col_sq3@midgaard");
+link(pc,room);
+act("Two large warriors emerge from the Guild houses, dragging $1n"+
+"between them and dump $1m unceremoniously on the street."
+,A_SOMEONE,pc,self,null,TO_REST);
+        :gone:
+unsecure(pc);
+goto start;
+}
+dilend
+
+dilbegin metallurgist();
+var
+	pc	: unitptr;
+	item	: unitptr;
+	craft	: string;
+	mag	: string;
+	prot	: string;
+	i	: integer;
+code
+{
+heartbeat:=PULSE_SEC*3;
+	:start:
+wait(SFB_DONE,command("give") and (activator.type==UNIT_ST_PC) and
+(target==self));
+pc:=activator;
+secure(pc,gone);
+item:=medium;
+secure(item,gone);
+mag:="undecipherable";
+craft:="undecipherable";
+
+/* If self cannot see the giver/item: drop item,		*/
+
+if (not(visible(self,medium)))
+{
+exec("say I cannot work on invisible objects!",self);
+goto gone;
+}
+
+if (not(visible(self,activator)))
+{
+exec("say Huh?! Who goes there!",self);
+exec("say I do not work for people whom I don't see!",self);
+goto gone;
+}
+
+/* If item_worn only						*/
+
+if (item.objecttype==ITEM_WORN)
+{
+exec("emote examines "+item.name+" carefully.",self);
+exec("say This item has no value as armour... If it has any "+
+"powers, those are beyond my grasp.",self);
+exec("give "+item.name+" "+pc.name,self);
+goto gone;
+}
+
+/* If not armor or weapon is given: give back			*/
+
+if ((item.objecttype!=ITEM_WEAPON)and(item.objecttype!=ITEM_ARMOR)
+and(item.objecttype!=ITEM_SHIELD))
+{
+exec("exec stares at the "+item.name+".", self);
+exec("say I am sorry, this item is beyond my skills.",self);
+exec("give "+item.name+" "+pc.name,self);
+goto gone;
+}
+
+/* If PC does not have cash for the evaluation (1 SP) 		*/
+
+i:=1*SILVER_MULT;
+if (not(transfermoney(pc,null,i)))
+{
+exec("say I'm sorry, "+pc.name+". You seem to be a bit low on cash.",self);
+exec("say I've got bills to pay, you know.",self);
+exec("give "+item.name+" "+pc.name,self);
+goto gone;
+}
+
+/* Bubbles and some simple magics... One of three rituals	*/
+i:=rnd(1,3);
+
+if (i==1)
+{
+exec("emote rubs gently the surface of "+item.title+", mumbling to "+
+"herself...",self);
+goto effect;
+}
+if (i==2)
+{
+exec("emote examines "+item.title+" carefully under the lamp light.",self);
+goto effect;
+}
+if (i==3)
+{
+exec("emote mumbles a short, strange phrase, staring at "+item.title+
+".",self);
+goto effect;
+}
+	:effect:
+/* Various names for various craftmanships		*/
+
+if (item.value[1] < -10)
+	{ craft:="terrible"; goto effect2; }	/* craft below -10 */
+if (item.value[1] < -5)
+	{ craft:="very bad"; goto effect2; }	/* craft below -5  */
+if (item.value[1] < 0)
+	{ craft:="bad"; goto effect2; }		/* craft below 0   */
+if ((item.value[1] > -1) and (item.value[2] < 3))
+	{ craft:="average"; goto effect2; }   	/* craft 0-2	*/
+if ((item.value[1] > 2) and (item.value[2] < 5))
+	{ craft:="above average"; goto effect2; }  /* craft 3-4	*/
+if ((item.value[1] > 4) and (item.value[2] < 8))
+	{ craft:="fine"; goto effect2; }	/* craft 5-7	*/
+if ((item.value[1] > 7) and (item.value[2] < 11))
+	{ craft:="excellent"; goto effect2; }	/* craft 8-10	*/
+if ((item.value[1] > 10) and (item.value[2] <16))
+	{ craft:="amazing"; goto effect2; }	/* craft 11-15	*/
+if (item.value[1] > 15)
+	{ craft:="unique"; goto effect2; }	/* craft over 15 */
+
+	:effect2:
+/* various names for various enchantment		*/
+
+if (item.value[2] < -10)
+        { mag:="strong negative"; goto effect3; }    /* mag below -10 */
+if (item.value[2] < -5)
+        { mag:="negative"; goto effect3; }    		/* mag below -5  */
+if (item.value[2] < 0)
+        { mag:="slightly negative"; goto effect3; }	/* mag below 0	 */
+if (item.value[2]==0)
+	{ mag:="no magical"; goto effect3; }		/* mag 0	*/
+if ((item.value[2] > 0) and (item.value[2] < 5))
+        { mag:="weak"; goto effect3; }     		/* mag 1-4    */
+if ((item.value[2] > 4) and (item.value[2] < 8))
+        { mag:="quite strong"; goto effect3; }        	/* mag 5-7    */
+if ((item.value[2] > 7) and (item.value[2] < 11))
+        { mag:="strong"; goto effect3; }   		/* mag 8-10   */
+if ((item.value[2] > 10) and (item.value[2] <16))
+        { mag:="extremely strong"; goto effect3; }     	/* mag 11-15  */
+if (item.value[2] > 15)
+        { mag:="divine strength"; goto effect3; }     		/* mag over 15 */
+
+	:effect3:
+/* Decides type of armour/shield			*/
+
+if (item.objecttype==ITEM_ARMOR)
+{
+if (item.value[0]==0)
+	prot:="normal clothing";
+if (item.value[0]==1)
+	prot:="leather";
+if (item.value[0]==2)
+	prot:="hardened leather";
+if (item.value[0]==3)
+	prot:="chain mail";
+if (item.value[0]==4)
+	prot:="plated armour";
+goto speakup;
+}
+
+if (item.objecttype==ITEM_SHIELD)
+{
+if (item.value[0]==0)
+	prot:="small-sized shield";
+if (item.value[0]==1)
+	prot:="medium-sized shield";
+if (item.value[0]==2)
+	prot:="large-sized shield";
+goto speakup;
+}
+
+	:speakup:
+if (item.objecttype==ITEM_WEAPON)
+{
+exec("say "+pc.name+", your "+item.name+" seems to be a weapon of "+
+craft+" workmanship.",self);
+pause;
+exec("say Furthermore, I can detect a "+mag+" enchantment on it.",
+self);
+exec("emote gives "+item.name+" to "+pc.name,self);
+link(item, pc);
+goto gone;
+}
+if (item.objecttype==ITEM_ARMOR)
+{
+exec("say "+pc.name+", "+item.title+" seems to be an armour with "+
+"protection equivalent to at least "+prot+".",self);
+pause;
+exec("say The craftmanship seems to be "+craft+" and there seems to be a "+
+mag+" enchantment placed on it.",self);
+exec("emote gives "+item.name+" to "+pc.name,self);
+link(item, pc);
+goto gone;
+}
+if (item.objecttype==ITEM_SHIELD)
+{
+exec("say "+pc.name+", "+item.title+" will protect you as a "+prot+".",self);
+pause;
+exec("say Your "+item.name+" is of "+craft+" craftmanship and there seems to "
++"be a "+ mag+" enchantment empowering it.",self);
+exec("emote gives "+item.name+" to "+pc.name,self);
+link(item, pc);
+goto gone;
+}
+
+	:gone:
+if (item !=null)
+exec("drop "+item.name,self);
+unsecure(pc);
+unsecure(item);
+goto start;
+}
+dilend
+
+
+/* ================================================================== */
+/*                               ROOMS                                */
+/* ================================================================== */
+
+%rooms
+
+                               entrance
+
+title "The Fighters Guild Entrance"
+descr
+"    You are standing in a vast gate entrance of a fortress yard. There is
+a big sign hanging on the wall. The way west leads out into the Swordsman
+Way, and portcullis of incredible dimensions functions as a gate there.
+The east opens into the yard."
+extra {"portcullis","gate"}
+"Huge and imposing."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+east to yard_entrance;
+west to col_sq3@midgaard;
+ALWAYS_LIGHT
+extra {"sign", "wall"}
+"The sign says:<pre><br/>
+<br/>
+   Welcome to the Midgaard Fighters' Guild.<br/>
+<br/>
+   - Sir Arthur the Guild Master.<br/>
+</pre>"
+end
+
+
+                               yard_entrance
+
+names {"yard entrance"}
+title "The Fighters Guild Yard"
+descr
+"    The south opens into the yard. To the east a tower rises
+majestically with a tall opening at ground level. Lit torches
+light up the place from brackets in the walls. To the west a large gate
+leads outside the guild."
+extra {"gate"}
+"The large gate leads outside the guild."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+south to yard;
+east to tower;
+west to entrance;
+ALWAYS_LIGHT
+end
+
+
+                               yard
+
+names {"the yard"}
+title "The Yard"
+descr
+"    You stand in an open space surrounded by towering walls of the
+fortress. No wind blows here making this place awfully quiet. A barn lies
+to the south of here. A large smithy lies in the shadow of the western yard
+wall. To the east a broad but short bridge runs over an oblong pond. The gate
+entrance is to the north."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_CITY
+north to yard_entrance;
+south to barn;
+west to smithy;
+east to bridge;
+ALWAYS_LIGHT
+end
+
+
+                               barn
+
+names {"the barn"}
+title "In a Large Barn"
+descr
+"    A dim light of a torch lights up the barn, where hay and dirt cover the
+floor. A feeling of peace and quiet descends over you, as all sounds from
+the outside seem to be strangely muted. The barn door leads north back to
+the yard."
+extra {"torch","light"}
+"A large torch, securely fastened to the wall.<br/>"
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to yard open {EX_OPEN_CLOSE}
+      keyword {"door","barn door"};
+ALWAYS_LIGHT
+
+/* ------------------ Fighters Skills Master Sir Robin -------------------*/
+
+end
+
+
+
+                               smithy
+names {"the smithy"}
+title "The Smithy of the Fighters Guild"
+descr
+"    This place is hot-aired, due to the fact that an open furnace is
+burning intensely here. It is kept going by a mechanical setup of sprockets
+and transaxels, powered, as you estimate, by the flow from a local water
+source. The smithy opens out into the yard to the east."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+east to yard;
+ALWAYS_LIGHT
+
+/* -------------------- The Blacksmith (Ability Teacher) ---------------*/
+
+end
+
+
+
+                               bridge
+names {"the bridge"}
+title "The Bridge"
+descr
+"    This is a low hanging bridge running over an oblong pond that looks
+deep. Fresh air blows through here and chills you to the bone. Be as
+it may, this makes you fresh to practice the weapons of a fighter. To the
+west of here lies the yard."
+extra {"oblong pond","pond"}
+"The pond seems rather deep. Murky waters reveal no secrets to a passer-by."
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
+movement SECT_CITY
+west to yard;
+
+/* ------------------- Sir Lancelot (Weapons Teacher) -------------------*/
+
+ALWAYS_LIGHT
+end
+
+
+
+                               tower
+names {"the tower"}
+title "The Tower of the Fighters Guild"
+descr
+"    You stand inside a large tower connecting the fortress walls to the
+west and south. A broad staircase leads around the inside of the tower walls
+up into a watch room. An opening in the west wall leads to the Guild
+entrance. A heavy looking door is set into the north wall."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to laboratory open {EX_OPEN_CLOSE}
+      keyword {"door","heavy door","heavy"};
+west to yard_entrance;
+east to bar;
+up to outlook;
+ALWAYS_LIGHT
+end
+
+
+                               laboratory
+
+names {"the laboratory"}
+title "The Metallurgic Laboratory"
+descr
+"    The room is filled with shelves and racks containing scraps of metal
+and other materials. Tubes and glass containers cover a large table in the
+middle of the room. Odd charts and scrolls cover the walls. A heavy door
+makes an exit to the south and a large lamp sputters under the ceiling.<br/>
+A large sign hangs among the charts on the wall."
+extra {"large lamp","lamp"}
+"The lamp illuminates the lab in a strong, yellowish light."
+extra {"strange charts","charts","scrolls","walls"}
+"The charts are covered with numbers, alchemical symbols and odd
+combinations of letters. All this is quite clearly beyond your patience."
+extra {"shelves and racks","shelves","racks","scraps","materials","metal"}
+"The shelves are filled with all sorts of odd stuff."
+extra {"large table","table","tubes","glass","containers"}
+"The table is filled with odd containers and glassware, some of it
+emitting foul smoke."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+south to tower open {EX_OPEN_CLOSE}
+      keyword {"door","heavy door","heavy"};
+ALWAYS_LIGHT
+
+/* ----------- The Chief Metallurgist (Assessment of Weapons) ----------- */
+extra {"gold plated sign", "sign", "wall"}
+"It says :-<pre><br/>
+<br/>
+    The Metallurgist will estimate the quality of your equipment for the<br/>
+    reasonable price of only one silver coin.<br/>
+<br/>
+    Give the item in question to Cleena for an approximate evaluation of<br/>
+    the craftmanship and the magical enchantment.<br/>
+<br/>
+    Notice: the examination will give you the basic idea of the quality<br/>
+    of your weapons, armour or shield, but any complex enchantment is<br/>
+    beyond the limited divinatory powers of the Metallurgist.<br/>
+<br/></pre>"
+end
+
+
+
+                               outlook
+
+names {"the tower outlook"}
+title "The Tower Outlook"
+descr
+"    Here is a place from which you can see all of Midgaard, all four
+directions are free for inspection of the curious. A large desk and a chair
+occupy one corner and light-shedding torches are set into the wall beside
+each window. A staircase leads down into the tower. There is a big sign
+on the wall."
+extra {"north", "n"}
+"    Looking out, you see the temple, the bank, the Chicken's Rest and
+several other small shops."
+extra {"south", "s"}
+"    The yard of the Fighters' Guild lies spread out beneath you, walled off
+from the rest of the world by a tall wall."
+extra {"east", "e"}
+"    Directly east of here you see the Cypress forest."
+extra {"west", "w"}
+"    West of here is the rather large monastery."
+extra {"torches","light"}
+"The torches burn with an even flame."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+down to tower;
+ALWAYS_LIGHT
+extra {"big sign","sign"}
+"<pre>                            The Fighters' Guild<br/>
+<br/>
+   'title'      - to get a new title (if you deserve it!).<br/>
+<br/>
+Members, remember to show respect to you master by bowing or worshipping<br/>
+him. The Fighters' Guild is rich and can aid you with minor items, should<br/>
+you be deemed worthy.<br/>
+<br/>
+</pre>"
+
+/* ------------- The Fighters Guild Master ------------- */
+
+end
+
+                               bar
+names {"the fighters bar"}
+title "At `The Broken Shield'"
+descr
+"The bar is filled with mercenaries and fighters of all kind, most of
+them drinking heavily, chatting and exchanging tales. Candles illuminate
+the place and the smell of food makes your mouth water. The north wall is
+inset with a long bar with a selection of ales and beers. A large sign
+hangs over the counter."
+extra {"people in the bar","people","mercenaries","fighters","fighter",
+"mercenary","drinkers"}
+"Rugged fighters of all kind. You join the chat for a while and feel
+strongly like ordering a beer.<br/>"
+extra {"bar"}
+"The long bar features a barmaid and a selection of ales and beers to
+quench your thirst.<br/>"
+extra {"candles","light"}
+"The candles provide flickering light for the bar."
+extra {"large sign","sign"}
+"The sign says:<pre><br/>
+<br/>
+    	Absolutely no credit!<br/>
+  	Keep your weapons sheathed.<br/>
+<br/></pre>"
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT,UNIT_FL_SACRED}
+movement SECT_INSIDE
+west to tower;
+ALWAYS_LIGHT
+end
+
+/* ================================================================== */
+/*                              MOBILES                               */
+/* ================================================================== */
+%mobiles
+%mobiles
+
+/* ---------------------------- TEACHERS ---------------------------- */
+
+                              arthur
+
+names {"arthur", "guild master", "master", "sir arthur"}
+title "Sir Arthur"
+descr "Sir Arthur the Guild master is standing here."
+extra {}
+"A seasoned fighter, made knight by King Welmar for his long and faithful
+service to the Crown and now placed in charge of the Fighters' Guild in
+Midgaard."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_HUMAN_WARRIOR_AXE(90, SEX_MALE)
+exp -100
+alignment 1000
+money 2 IRON_PIECE
+
+special SFUN_GUILD_BASIS GUILD_UDG_FIGHTER
+/*
+special SFUN_GUILD_MASTER
+"Guild               = ~"+GUILD_UDG_FIGHTER+"~
+Guild Enter Quest    = ~~
+Guild Enter Cost     = "+(1*SILVER_MULT)+"<br/>
+Guild Leave Quest    = ~~
+Guild Leave Cost     = "+(5*SILVER_MULT)+"<br/>
+Guild Exclude Quest  = ~Udgaard Fighter Quitter~"
+*/
+
+dilcopy guild_titles@guild_paths(GUILD_UDG_FIGHTER, {"Swordpupil",
+"Swordpupil", "Recruit", "Recruit", "Sentry", "Sentress", "Fighter",
+"Fighter", "Soldier", "Soldier", "Warrior", "Warrior", "Veteran",
+"Veteran", "Swordsman", "Swordswoman", "Fencer", "Fenceress",
+"Combatant", "Combatess", "Hero", "Heroine", "Myrmidon", "Myrmidon",
+"Swashbuckler", "Swashbuckleress", "Mercenary", "Mercenaress",
+"Swordmaster", "Swordmistress", "Lieutenant", "Lieutenant", "Champion",
+"Lady Champion", "Dragoon", "Lady Dragoon", "Cavalier", "Cavalier", "Knight",
+"Lady Knight"});
+
+dilcopy nokill@fightersguild();
+
+/* Fighter Master DIL - gives out the swordman's belt*/
+
+dilbegin fighter_give();
+var
+	pc : unitptr;
+	item : unitptr;
+        expd : extraptr;
+code
+{
+	heartbeat := PULSE_SEC * 4;
+
+	:start:
+
+wait (SFB_DONE, command ("worship")and(self ==target));
+	pc := activator;
+	secure(pc, lost);
+        expd := "$path" in pc.quests;
+        if (expd == null) goto lost;
+	if ((GUILD_UDG_FIGHTER in expd.names))
+	{
+pause;
+exec("emote puts away the battle axe he has been polishing. ", self);
+pause;
+exec("say Yes, greetings to you, too, "+pc.name+".",self);
+pause;
+exec("say I do not approve of hour-long chats, unlike some other people "+
+"in our city...", self);
+exec("eyeball", self);
+pause;
+exec("whisper "+pc.name+" Especially them spell-tossers next door. ", self);
+exec("nod",self);pause;
+exec("say When them idiots start their magic babbling, you don't even know "+
+"if you'll wake up the next day, much less in what shape.",self);pause;
+exec("say But let's leave this behind... to business.",self);pause;
+exec("say As a Guild, we have a special item for you, a seasoned fighter, "+
+"no doubt.",self);pause;
+exec("say A belt, it is the perfect item for a swordsman, although much "+
+"less so for an axe-wielding maniac, like myself.", self);
+exec("emote looks with longing at his battle axe.",self);pause;
+exec("say But I will not keep you waiting in suspense.",self);
+	item := load("fight_belt@fightersguild");
+        item.height := pc.height;
+	link(item, pc);
+sendtext("Sir Arthur hands you a belt.<br/>.",self);
+act("$3n hands $1n a belt.",A_SOMEONE,pc,null,self,TO_REST);
+pause;
+exec ("say There you go. Run along now.", self);pause;
+exec ("say And hey... a free advice...",self);
+exec ("peer",self);pause;
+exec ("say You should take care worshipping people like that...",self);pause;
+exec("say You might run into someone less open-minded than myself.", self);
+pause;
+exec("wave "+pc.name, self);
+unsecure(pc);
+goto start;
+}
+else
+      {
+	unsecure(pc);
+pause;
+exec("say Beat it, bootlicker or I will have you flogged.", self);
+exec("emote spits on your boots.",self);
+      }
+
+unsecure(pc);
+goto start;
+
+:lost:
+
+unsecure(pc);
+exec("shrug", self);
+goto start;
+
+}
+dilend
+
+end
+
+
+                            robin
+
+names {"Sir Robin", "robin"}
+title "Sir Robin"
+descr "Sir Robin is here looking quite nervous."
+extra {}
+"His eyes darting to and fro, this knight seems quite nervous."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_HUMAN_WARRIOR_CLUB(80, SEX_MALE)
+alignment 1000
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_UDG_FIGHTER
+/*
+special SFUN_MEMBERS_ONLY GUILD_UDG_FIGHTER+"#$1n says, 'Begone $3n!'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_UDG_FIGHTER );
+
+#define _SKILL
+#include "guilddef.h"
+#undef _SKILL
+
+dilcopy nokill@fightersguild();
+
+end
+
+
+                             lancelot
+
+names {"Sir Lancelot","lancelot"}
+title "Sir Lancelot the Brave"
+descr "Sir Lancelot the Brave stands here, ready to face any opponent."
+extra {}
+"An example of a honorable knight and a mighty warrior... you think."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_HUMAN_WARRIOR_SWORD(80, SEX_MALE)
+alignment 1000
+money 70 IRON_PIECE
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_UDG_FIGHTER
+/*
+special SFUN_MEMBERS_ONLY GUILD_UDG_FIGHTER+"#$1n says, 'Buggar yee off, $3n'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_UDG_FIGHTER );
+
+
+#define _WEAPON
+#include "guilddef.h"
+#undef _WEAPON
+dilcopy nokill@fightersguild();
+
+end
+
+
+
+                            jones
+
+names {"blacksmith", "smith", "Jones"}
+title "Jones the blacksmith"
+descr "The venerable Jones Blacksmith is here."
+extra {}
+"The smith is old but his arms still retain the strength of his youth.
+He looks as if he has retired, but he can still put you through the
+drills of physical training."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_HUMAN_WARRIOR_AXE(80, SEX_MALE)
+alignment 0
+money 80 IRON_PIECE
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_UDG_FIGHTER
+/*
+special SFUN_MEMBERS_ONLY GUILD_UDG_FIGHTER+"#$1n says, 'Buggar ye off, $3n.'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_UDG_FIGHTER );
+
+#define _ABILITY
+#include "guilddef.h"
+#undef _ABILITY
+dilcopy nokill@fightersguild();
+
+end
+
+
+                              alchymist
+names {"Cleena","metallurgist","alchymist"}
+title "Cleena the Metallurgist"
+descr "Cleena the Metallurgist is busy at work here."
+extra {}
+"As a metallurgist, Cleena found employment in the Fighters' Guild, where
+weapons and armour are examined on a daily basis. Her skills with armour
+and weapons are said to be unexcelled, insofar theoretical knowledge is
+concerned."
+M_AVG_HUMAN(60, SEX_FEMALE)
+exp 0
+money 8 IRON_PIECE
+flags {UNIT_FL_NO_TELEPORT}
+special SFUN_GUILD_BASIS GUILD_UDG_FIGHTER
+romflags {CHAR_PROTECTED}
+dilcopy metallurgist@fightersguild();
+dilcopy nokill@fightersguild();
+
+end
+
+                             bartender
+names {"Maia","bartender"}
+title "Maia the Bartender"
+descr "Maia the Bartender is serving people here."
+extra {}
+"A rather nice looking girl. What is she doing in a place like this?"
+M_SHOP_KEEPER(7, SEX_FEMALE, RACE_HUMAN)
+money 8 IRON_PIECE
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+dilcopy shopkeeper@function(
+{"firebreather@midgaard 20 20","beer_bottle@midgaard 20 20"
+,"ale_bottle@midgaard 20 20"
+,"brandy_bottle@midgaard 20 20","tuborg@udgaard 20 50"},
+ { "$1n says, 'We are out of it, $3n.'",
+   "$1n says, 'You don't have it, $3n.'",
+   "$1n says, 'We don't buy drinks here, $3n.'",
+   "$1n exclaims, 'No credit here, $3n.'",
+   "$1n exclaims, 'One $2N coming right up!'",
+   "$1n says, 'Excellent, it's a deal, $3n.'",
+   "$1n says, 'This is too costly for me, $3n.'",
+   "$1n asks, 'I'm having a break, can you stop by later?.'" },
+{},"",100,10,2*PLATINUM_MULT,"",""
+);
+special SFUN_GUILD_BASIS GUILD_UDG_FIGHTER
+dilcopy nokill@fightersguild();
+
+end
+
+
+/* -------------------------- GUILD GUARDS -------------------------- */
+
+
+                             gate_guard
+names {"gate guard","guard","fighter"}
+title "a gate guard"
+descr "A large fighter guards the entrance to the guild of warriors here."
+extra {}
+"A large fighter and experienced warrior, one of the finest students of the
+Fighters' Guild."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_HUMAN_WARRIOR_POLE(140, SEX_MALE)
+alignment 1000
+money 10 IRON_PIECE
+
+special SFUN_GUILD_BASIS GUILD_UDG_FIGHTER
+dilcopy rescue@function("gate guard");
+dilcopy teamwork@function("gate guard");
+/*
+special SFUN_GUILD_GUARD_WAY
+        ""+"east"+"#"+GUILD_UDG_FIGHTER+"#entrance#guard#$1n stops you
+and says, 'Members only!'#$1n stops $3n, and says, 'Members only!'"
+*/
+dilcopy guild_guard@guild_paths(GUILD_UDG_FIGHTER, "east");
+dilcopy nokill@fightersguild();
+
+end
+
+/* The Barbarian is a quest mob for the Fighter Quest - the Bet	*/
+
+		barbarian
+names {"barbarian","warrior","fighter","hero"}
+title "the barbarian"
+descr "A barbarian hero sits in the corner of the bar, drinking and boasting
+of his deeds."
+extra {}
+"Muscular and clad in leather-and-fur outfit, with a huge bastard sword
+leaning on his table and a cape of wolf-fur piled at his feet, this
+barbarian is not so much drinking, as quaffing from the mug made tiny by
+his huge fist."
+flags {UNIT_FL_NO_TELEPORT}
+M_HUMAN_WARRIOR_SWORD(50, SEX_MALE)
+alignment -150
+money 3 SILVER_PIECE
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+
+end
+
+/* ================================================================== */
+/*                              OBJECTS                               */
+/* ================================================================== */
+%objects
+
+		bardiche
+names {"bardiche","poleaxe"}
+title "a bardiche"
+descr "A huge poleaxe lies on the ground here."
+extra {}
+"A huge poleaxe, capable of large amounts of damage and perfect for
+mutilating people."
+WEAPON_DEF(WPN_BARDICHE,0,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
+weight 16
+cost 1 COPPER_PIECE
+end
+
+		kirtle
+names {"stained kirtle","kirtle"}
+title "a stained kirtle"
+descr "A severely stained, brown kirtle lies here."
+extra {}
+"A brown kirtle, totally covered in stains."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+weight 5
+cost 8 IRON_PIECE
+end
+
+/* Fighter Item - a belt that improves Str by one and sword skills by 2%.
+If a player is fighting with a sword, it also enriches the combat by
+several ACTs to make the swordplay more exciting. */
+
+
+        fight_belt
+names {"Swordman's Belt","belt"}
+title "Swordsman's Belt"
+descr "A broad belt with a sword sheath lies here."
+extra {}
+"A broad, strong belt with a sheath for your sword. It seems a typical
+fighter's item and, true enough, you notice a symbol of the Fighters
+Guild on the buckle of the belt."
+extra {"sheath on the belt","sheaths","sheath"}
+"The sheath fit your weapons, but you'd rather have them ready in your
+hands.<br/>"
+extra {"buckle of the belt","buckle","symbol"}
+"The symbol on the buckle is the sign of Fighters Guild in Midgaard.<br/>"
+extra {"$identify"}
+"The belt is only usable by Midgaard Fighters and will increase their
+strength and their sword skills.<br/>"
+extra {"$improved identify"}
+"The bonuses are +1 to Str and +2% to all your sword skills.<br/>"
+extra {"$wear_s"}
+"You let the belt circle your waist and fasten the buckle."
+extra {"$wear_o"}
+"$1n lets the belt circle $1s waist and fastens the buckle."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_WAIST}
+STR_TRANSFER(+1)
+WEAPON_TRANSFER(WPN_SWORD,+2)
+dilcopy guild_restrict@function ({GUILD_UDG_FIGHTER},0,25,"");
+dilcopy abi_restrict@function (ABIL_STR,10,0,25,"");
+dilcopy level_restrict@function (5,0,25,"");
+rent 40 IRON_PIECE
+cost 1 IRON_PIECE
+
+dilbegin beltchat ();
+var
+        pc : unitptr;
+        vict : unitptr;
+        flux : integer;
+	item : unitptr;
+code
+{
+        :init:
+on_activation(self.outside.position != POSITION_FIGHTING, skip);
+        :start:
+wait(SFB_COM,(self.equip == WEAR_WAIST));
+vict := self.outside.fighting;
+pc := self.outside;
+flux := rnd(1,100);
+item := equipment(pc,WEAR_WIELD);
+secure (pc,gone);
+secure (item,gone);
+
+if ((item.value[0] > 10)and(item.value[0] < 21))
+{
+if (flux < 10)
+{
+act("Your $2N finds its mark between $3n's ribs!"
+, A_ALWAYS,pc,item,vict,TO_CHAR);
+act("$1n's $2N finds its mark between $3n's ribs!",
+A_ALWAYS,pc,item,vict,TO_NOTVICT);
+act("$1n's $2N cuts in between your ribs!"
+,A_ALWAYS,pc,item,vict,TO_VICT);
+goto start ;
+}
+if (flux < 20)
+{
+act("Your cunning feint catches $3n off-guard!"
+, A_ALWAYS,pc,item,vict,TO_CHAR);
+act("$1n's cunning feint catches $3n off-guard!",
+A_ALWAYS,pc,item,vict,TO_NOTVICT);
+act("$1n's sudden feint catches you off-guard!"
+,A_ALWAYS,pc,item,vict,TO_VICT);
+goto start ;
+}
+if (flux < 30)
+{
+act("You follow up your attack with a fist, just to show you mean it."
+, A_ALWAYS,pc,item,vict,TO_CHAR);
+act("$1n follows up $1s attack with a punch, just to show, $1e means it."
+,A_ALWAYS,pc,item,vict,TO_NOTVICT);
+act("$1n's fist smashes into your face!",A_ALWAYS,pc,item,vict,TO_VICT);
+goto start ;
+}
+if (flux < 40)
+{
+act("With the elegance of a true fighter, you grab a handful of dirt and "+
+"send it in $3n's face!",A_ALWAYS,pc,item,vict,TO_CHAR);
+act("$1n sends a handful of dirt in $3n's face!",
+A_ALWAYS,pc,item,vict,TO_NOTVICT);
+act("Argh! A handful of dirt hits you in the eyes, courtesy of $1n!"
+,A_ALWAYS,pc,item,vict,TO_VICT);
+goto start ;
+}
+if (flux < 50)
+{
+act("You smack $3n in the head with the hilt of your $2N."
+, A_ALWAYS,pc,item,vict,TO_CHAR);
+act("$1n smashes $3n in the head with his $2N!",
+A_ALWAYS,pc,item,vict,TO_NOTVICT);
+act("$1n smashes the hilt of $1s $2N in your face!"
+,A_ALWAYS,pc,item,vict,TO_VICT);
+goto start ;
+}
+else goto start;
+}
+else goto start;
+	:gone:
+unsecure(pc);
+unsecure(item);
+goto start;
+}
+dilend
+
+end
+
+/* Barbarian items & Fighter Quest Items		*/
+
+		bastardsword
+names {"sword","bastard sword"}
+title "the skull-hilted bastard sword"
+descr
+"A bastard sword lies here, the skull on its crosspiece grinning at you."
+extra {}
+"A barbarian bastard sword, its crosspiece sculpted into an animal skull.
+It looks very well-balanced and sharp. The handle is long enough to be
+used with either one or both hands ('wield sword two' to wield it
+two-handedly)."
+extra {"skull on the crosspiece","crosspiece","skull"}
+"The skull is an animal skull, most probably one of a wolf. It grins at
+you with its yellowing fangs.<br/>"
+extra {"$identify"}
+"This sword bears a weak enchantment, increasing your battle strength and
+skill.<br/>"
+extra {"$improved identify"}
+"The magic of the tribal shamans will increase your Strength by one and
+your sword-fighting abilities by 3% whenever you wield it. However, this
+weapon is too large to be used as a secondary weapon.<br/>
+This sword is of craftmanship 5 and magic bonus 3.<br/>"
+manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
+WEAPON_DEF(WPN_LONG_SWORD,0,0)
+WEAPON_TRANSFER(WPN_SWORD,+1)
+weight 10
+cost 3 SILVER_PIECE
+rent 50 IRON_PIECE
+dilcopy twohand@skaven(17,67);
+romflags {OBJ_NO_DUAL}
+dilcopy abi_restrict@function(ABIL_STR,15,0,0,"str_rest@skaven");
+dilcopy abi_restrict@function(ABIL_CON,10,0,0,"con_rest@skaven");
+end
+
+		skull_belt
+names {"skull-buckled belt","belt"}
+title "a skull-buckled belt"
+descr "A broad leather belt with a skull-shaped buckle lies here."
+extra {}
+"A broad belt made of dark leather. The buckle is made of blackened steel
+and shaped like a human skull. The broad belt is studded with heavy iron
+rings."
+extra {"skull-buckle","buckle","skull"}
+"The skull-shaped buckle seems to grin at you.<br/>"
+type ITEM_WORN
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_WAIST}
+weight 4
+cost 2 SILVER_PIECE
+end
+
+/* ================================================================== */
+/*                            ZONE RESET                              */
+/* ================================================================== */
+%reset
+
+/* Load teachers */
+
+load alchymist into laboratory max 1
+{
+	equip kirtle			WEAR_ABOUT
+}
+
+load bartender into bar max 1
+{
+	equip midgaard/goldring		WEAR_FINGER_L
+	equip wcastle/dress2		WEAR_BODY
+}
+
+load arthur into outlook max 1
+{
+   equip paladin_guild/vambracers 	WEAR_ARMS
+   equip paladin_guild/hauberk 		WEAR_BODY
+   equip paladin_guild/chausses		WEAR_LEGS
+   equip midgaard/axe1			WEAR_WIELD
+}
+
+
+load robin into barn max 1
+{
+   equip midgaard/chain_sleeves position WEAR_ARMS
+   equip midgaard/chain_jerkin  position WEAR_BODY
+   equip midgaard/chain_skirt   position WEAR_LEGS
+   equip midgaard/flail1        position WEAR_WIELD
+}
+
+load jones into smithy max 1
+{
+   equip midgaard/chain_sleeves position WEAR_ARMS
+   equip midgaard/chain_jerkin  position WEAR_BODY
+   equip midgaard/chain_skirt   position WEAR_LEGS
+   equip midgaard/axe1          position WEAR_WIELD
+}
+
+
+load lancelot into bridge max 1
+{
+   equip midgaard/chain_sleeves position WEAR_ARMS
+   equip midgaard/chain_jerkin  position WEAR_BODY
+   equip midgaard/chain_skirt   position WEAR_LEGS
+   equip midgaard/lsword0       position WEAR_WIELD
+}
+
+load gate_guard into entrance max 1
+{
+   equip midgaard/iron_bracers  position WEAR_ARMS
+   equip midgaard/iron_plate    position WEAR_BODY
+   equip midgaard/iron_leggings position WEAR_LEGS
+   equip midgaard/iron_boots    position WEAR_FEET
+   equip midgaard/iron_gloves   position WEAR_HANDS
+   equip midgaard/iron_helmet   position WEAR_HEAD
+   equip bardiche               position WEAR_WIELD
+}
+/*
+load gate_guard into entrance max 2
+{
+   equip midgaard/iron_bracers  position WEAR_ARMS
+   equip midgaard/iron_plate    position WEAR_BODY
+   equip midgaard/iron_leggings position WEAR_LEGS
+   equip midgaard/iron_boots    position WEAR_FEET
+   equip midgaard/iron_gloves   position WEAR_HANDS
+   equip midgaard/iron_helmet   position WEAR_HEAD
+   equip bardiche	        position WEAR_WIELD
+}
+*/
+
+/*
+load barbarian into bar max 1
+{
+	equip skull_belt 			position WEAR_WAIST
+	equip bastardsword 			position WEAR_WIELD
+}
+*/
+%end
+
+

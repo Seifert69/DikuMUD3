@@ -1,0 +1,1274 @@
+/*
+filename    clericguild
+password    realworld
+changedby   Stormtamer
+EmailAdd     Marc Bellemare <baam@erols.com>
+request     compile
+version     18
+END HEADER*/
+
+#define _GUILD_UDGAARD_HEALER
+#define TORC_GIVEN "$Cleric torc given"
+#define TORC_REPL "Replacing Torc"
+
+#include <macros.h>
+
+/* ================================================================== */
+/*                                ZONE                                */
+/* ================================================================== */
+%zone clericguild
+title "Healers Guild@Mainland"
+creators {"papi","quifael"}
+
+notes
+"This is a zone designed to implement the Guild for Clerics. The zone is
+not a part of Midgaard, since the zone is already too large. The zone
+contains teachers and guards. Large lifespan in order to force players
+to defend their own guild.<br/>
+June 4th, 1996 - Silver Torc added as the guild item by Sk(r)ay.<br/>"
+
+help
+"<pre>Healers Guild<br/>
+<br/>
+    1 2 3 4 5 6 7 8<br/>
+<br/>
+A   T-----#-----#      Entrance C7<br/>
+    |           |      Midgaard C8<br/>
+B   |   # M     |      Guild Master B4<br/>
+    |    \|     |      Ability Teacher C4<br/>
+C   #   T-T-#---E-@    Skill Teacher C3<br/>
+    |  /  |     |      //Dark Spell Teacher D2<br/>
+D   | T   #     |      Weapon Teacher A1<br/>
+    |           |      Spell Teacher E4<br/>
+E   #-----T-----#<br/>
+<br/>
+This is the Midgaard Healer Guild. It is supposed to teach characters up<br/>
+to about level 30 - 50.<br/><br/>
+Ability Teacher - from the entrance 2 west<br/>
+Guildmaster - from the entrance 2 west 1 north<br/>
+Skill Teacher - from the entrance 3 west<br/>
+Spell Teacher -  from the entrance 1 west, 1 north, 2 west<br/>
+Weapon Teacher - from the entrance 1 west, 1 south, 1 west<br/>
+</pre>"
+/* MOD notes:
+2/19/2009 bug reported on cleric item  research shows it does not
+load and has been slimed starting tracing ETNA
+3/21/2009 Added player restrict to cleric item and quest flag. Also
+replacement quest should it be lost. ETNA 
+
+
+At that point you are expected to leave the guild
+and join another, maybe more powerful, guild.<br/>"*/
+
+reset RESET_ANYHOW
+lifespan 118
+
+/* ================================================================== */
+/*                                DIL                                 */
+/* ================================================================== */
+
+%dil
+/* The DIL programs for Healers - causes the Spiritual Hammer to appear
+and vanish after the desired time. Those DILs are copied into the player.
+issue if player logs out.  need to perhaps have hammer disappear if lands on
+ground or if player logs. */
+
+dilbegin recall hammer_vanish();
+var
+        blah : integer;
+	blih : integer;
+        ting : unitptr;
+code
+{
+        :start:
+interrupt(SFB_DEAD,activator == self,gone);
+ting := equipment(self,WEAR_WIELD);
+if (ting.nameidx != "sp_hammer") goto gone;
+secure(ting,gone);
+heartbeat :=
+PULSE_SEC*(rnd(30,60)+self.abilities[ABIL_DIV]+self.abilities[ABIL_CHA]);
+wait(SFB_TICK,TRUE);
+wait(SFB_TICK,TRUE);
+act("Your $2n flickers and starts to fade..."
+,A_ALWAYS,self,ting,null,TO_CHAR);
+act("$1n's $2n flickers and starts to fade..."
+,A_ALWAYS,self,ting,null,TO_REST);
+heartbeat := PULSE_SEC*10;
+pause;
+act("Your $2n ceases its brief existence and merges with your soul."
+,A_ALWAYS,self,ting,null,TO_CHAR);
+act("$1n's $2n ceases its brief existence and merges with $1n's soul."
+,A_ALWAYS,self,ting,null,TO_REST);
+:gone:
+destroy(ting);
+unsecure(ting);
+blah := dildestroy("hammernosteal@clericguild",self);
+blih := dildestroy("hammer_vanish@clericguild",self);
+}
+dilend
+
+/*mob disarm seems to work need to see why */
+
+dilbegin hammernosteal();
+var
+        vict : unitptr;
+	ting : unitptr;
+code
+{
+        :start:
+wait(SFB_CMD,(command("disarm"))and(argument)
+and(activator != self));
+vict := activator;
+secure(vict,start);
+ting:=findunit(vict,argument,FIND_UNIT_SURRO,null);
+if (ting!=self) goto start;
+block;
+act("You can't disarm $3n, he's using an etheral weapon!"
+,A_SOMEONE,vict,null,self,TO_CHAR);
+act("$1n tries to disarm you, but $1s weapon moves straight through yours!"
+,A_SOMEONE,vict,null,self,TO_VICT);
+act("$1n tries to disarm $3n, but $1s weapon moves straight through $3n's!"
+,A_SOMEONE,vict,null,self,TO_NOTVICT);
+goto start;
+}
+dilend    
+
+/* The DIL for the Guild Master - gives out the Silver Torc to Healers. 
+does not set as already having gotten one at this time need to set
+and use a secondary quest if lost. ETNA*/
+
+dilbegin healer_give();
+var
+	pc : unitptr;
+	item : unitptr;
+        expd : extraptr;
+code
+{
+	heartbeat := PULSE_SEC * 4;
+
+	:start:
+
+wait (SFB_DONE,command("worship")and(self ==target));
+	pc := activator;
+	secure(pc, lost);
+        expd := "$path" in pc.quests;
+        if (expd == null)
+		
+        {
+           unsecure(pc);
+           goto start;
+        }
+    if (TORC_GIVEN in pc.quests) goto lecture;		
+	if (GUILD_UDG_CLERIC in expd.names)
+	{
+exec("bow"+pc.name,self);pause;
+exec("say Hello, "+pc.name+".", self);pause;
+exec("say I trust you are in good health?",self);
+exec("nudge "+pc.name,self);pause;
+exec("say A minor jest. Not a very good one, I fear, but I was told those "+
+"can easily break up the ice at parties.",self);pause;
+exec("say Not that I do get invited to many...",self);
+exec("sigh",self);pause;
+exec("say Comes from the line of business, I am afraid. Monks are hardly "+
+"the party animal type.",self);
+exec("think ",self);pause;
+exec("say Never mind. Let us get to the matter at hand.",self);pause;
+exec("say As a wandering healer you'll meet many dangers, no doubt.",self);
+pause;
+exec("say To ease your work and travels, accept this small token of "+
+"our Guild.",self);
+	item := load("heal_torc@clericguild");
+    dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
+        item.height := pc.height;
+		link(item, self);
+		addextra (pc.quests, {TORC_GIVEN}, "");
+exec("give torc "+pc.name, self);pause;
+exec("say Beside several small enchantments, this item can also provide "+
+"you with means of self-defence.",self);
+exec("say Examine it carefully and you will know.", self);pause;
+exec("say Our blessings will follow you, young acolyte.", self);pause;
+exec("say Let your faith guide your ways.",self);pause;
+exec("bow "+pc.name,self);
+unsecure(pc);
+goto start;
+}
+else
+{
+pause;
+exec("say Please, not here, "+pc.name+". People are watching.", self);
+exec("peer",self);pause;
+exec("tokiss "+pc.name,self);           //this sub works
+}
+
+:lecture:
+pause;
+exec("emote stares at the top of "+pc.name+"'s head coldly.",self);
+pause;
+exec("say You were given a powerful protection, "+pc.name+".", self);
+pause;
+exec("say Did you not take care of our gift to you?",self);
+exec("glare "+pc.name,self);
+pause;
+exec("sigh",self);pause;
+exec("say If you have lost or broken it, go see Sister Morenae "+
+      "for your penance.",self);
+unsecure(pc);
+goto start;
+
+:lost:
+unsecure(pc);
+exec("say Oh well, got bored with my speeches, I guess.", self);
+goto start;
+}
+dilend
+
+/*One torc allows 1 at a time*/
+dilbegin one_torc();
+var
+item:unitptr;
+dest_item:unitptr;
+code
+{
+:start:
+wait (SFB_DONE, (((self.outside==activator) and (self.equip!=0)) and
+((medium.equip==WEAR_NECK_1) or  (medium.equip==WEAR_NECK_2))));
+item:=activator.inside;
+while (item!=null)
+      {
+if ((item!=self) and (item.idx==self.idx))
+    {
+       if (item.equip!=0) unequip(item);
+act("The hand of an angry God takes the extra torcs from you.",
+                A_ALWAYS, self.outside,null, null, TO_CHAR);
+act("One of $1n's $2N is taken by the hand of an angry God.", A_HIDEINV,
+              self.outside, self, null, TO_REST);
+ dest_item:=item;
+ item:=item.next;
+    destroy(dest_item);
+ }
+else item:=item.next;
+}
+goto start;
+}
+dilend
+
+
+/* ================================================================== */
+/*                               ROOMS                                */
+/* ================================================================== */
+%rooms
+				entrance
+
+names {"monastery gate"}
+title "Monastery Gate"
+descr
+"You are standing just inside the gates to the entrance of the healers guild,
+Midgaards's bastion of goodness and righteousness. The large monastery
+buildings stand to the west, and Tranquility Path leads away to the east.
+A large sign on the wall attracts your attention."
+movement SECT_FIELD
+east to col_rd2@midgaard;
+west to garden1;
+ALWAYS_LIGHT
+extra {"sign", "wall"}
+"<pre>The sign says:<br/>
+<br/>
+   Welcome to the Midgaard Healer guild.<br/>
+<br/>
+   - Tuck the Guild Master.<br/></pre>"
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+
+
+                              garden1
+
+names {"monastery garden"}
+title "Monastery Garden"
+descr
+"   You are on a small gravel path leading through a well-tended flourishing
+garden, encircled by a whitewashed stone wall.  To the east is the monastery
+gate and to the west, through an archway, is the entrance to the white
+monastery building.  Gravel paths lead north and south around the monastery.
+Centered in the middle of the path west is a huge, overflowing oak tree.
+Its massive limbs rise across the garden and encase it nearly completely.
+You get a great sense of peace from this tree, and also one of near timeless
+age. "
+
+extra{"tree", "oak tree"}
+"This tree was supposidly a sapling of the Legendary Tree of Life. Although it
+doesnt have the massive healing and regenative powers of its forebearer, it
+still exudes a sense of peace and goodness."
+movement SECT_FIELD
+north to garden2;
+south to garden8;
+west to yard;
+east to entrance;
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+                              garden2
+
+names {"monastery garden"}
+title "Monastery Garden"
+descr
+"You are standing just outside the massive monastery housing the followers of
+the 'Way of the Petal', the Midgaard healers. The large monastery rises into
+the air, made of a gorgeous white marble. To the east the monastery's large
+golden doors stand open, and a small path leads north and south around the
+building."
+
+movement SECT_FIELD
+south to garden1;
+west to garden3;
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+
+                              garden3
+
+names {"monastery garden"}
+title "Monastery Garden"
+descr
+"You are walking on a small gravel path, inside the walls of the Midgaard
+Healers Guild Monastery. The monastery itself is to the south-west, and the
+path continues west and south. "
+
+movement SECT_FIELD
+east to garden2;
+west to garden4;
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+                              garden4
+
+names {"monastery garden"}
+title "Monastery Garden"
+descr
+"You are standing on a small gravel path just inside the walls surrounding the
+Midgaard Healers guild Monastery. The path leads around the monastery to the
+east and south."
+
+movement SECT_FIELD
+south to garden5;
+east to garden3;
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+
+                              garden5
+
+names {"monastery garden"}
+title "Monastery Garden"
+descr
+"   You are on a small gravel path leading through a well-tended flourishing
+garden, encircled by a whitewashed stone wall.  The path leads north and
+south around the white monastery building to the east."
+movement SECT_FIELD
+north to garden4;
+south to garden6;
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+
+                              garden6
+
+names {"monastery garden"}
+title "Monastery Garden"
+descr
+"   You are on a small gravel path leading through a well-tended flourishing
+garden, encircled by a whitewashed stone wall.  The path leads north and east
+around the white monastery building to the northeast."
+movement SECT_FIELD
+north to garden5;
+east to garden7;
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+
+                              garden7
+
+names {"monastery garden"}
+title "Monastery Garden"
+descr
+"   You are on a small gravel path leading through a well-tended flourishing
+garden, encircled by a whitewashed stone wall.  The path leads east and west
+around the white monastery building to the north."
+movement SECT_FIELD
+east to garden8;
+west to garden6;
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+
+                              garden8
+
+names {"monastery garden"}
+title "Monastery Garden"
+descr
+"   You are on a small gravel path leading through a well-tended flourishing
+garden, encircled by a whitewashed stone wall.  The path leads north and west
+around the white monastery building to the northwest."
+movement SECT_FIELD
+north to garden1;
+west to garden7;
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+
+
+                                yard
+
+names {"monastery foyer"}
+title "Monastery Foyer"
+descr
+"You have entered the large entry chamber of the Midgaard Healers Guild's
+monestary. The room has a tall roof, and a green marbled floor. There are
+white marble columns leading across the room, and a spiral staircase leading
+upwards into a higher floor. To the north is a sanctuary chamber, to the
+south a refectory. The infirmary of the guild is to the west, and large golden
+doors lie open to the east."
+
+movement SECT_FIELD
+north to sanctuary;
+south to refectory;
+east to garden1;
+west to infirmary;
+up to dormitory;
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+
+                            sanctuary
+
+names {"monastery sanctuary"}
+title "Sanctuary"
+descr
+"   You are in a rather bare, but peaceful, room.  The heavy wall hangings in
+tranquil colours and the stone statue at the north wall seem to be the only
+decoration.  You can go south to the monastery yard. There is a big sign on
+the wall."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT,UNIT_FL_SACRED}
+movement SECT_INSIDE
+south to yard;
+extra {"statue"}
+"It is a simple, but beautiful, statue of a man holding his hands out in
+benediction."
+ALWAYS_LIGHT
+extra {"sign", "big sign"}
+"<pre>                            The Healers' Guild<br/>
+<br/>
+   'title'      - to get a new title (if you deserve it!).<br/>
+</pre>"
+
+end
+
+
+                            refectory
+
+names {"monastery refectory"}
+title "Refectory"
+descr
+"   You are in a rather bare room with long tables and hard benches made from
+wood.  The white walls and the stone floor are scrupulously clean.  You can
+go north to the monastery yard."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+north to yard;
+ALWAYS_LIGHT
+end
+
+
+                            infirmary
+
+names {"monastery infirmary"}
+title "Infirmary"
+descr
+"  You are in a tranquil room with many soft-looking beds along the white
+walls.  By the northern wall stands a statue of a man, holding his hands out
+in benediction.  You can go east to the monastery yard, or through the
+archway in the southern wall down into the crypt."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT,UNIT_FL_SACRED}
+movement SECT_INSIDE
+east to yard;
+down to crypt;
+ALWAYS_LIGHT
+end
+
+                            crypt
+
+names {"monastery crypt"}
+title "The Crypt"
+descr
+"You are in a dark and humid crypt, underneath the infirmary. A single
+holy symbol is placed on the wall and a pair of torches illuminate this
+cold place. Stairs lead back up."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_SACRED,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+up to infirmary;
+ALWAYS_LIGHT
+end
+
+                            dormitory
+
+names {"monastery dormitory"}
+title "Dormitory"
+descr
+"  You are in a long dark low-celinged room directly below the roof.  Heavy
+wooden beams support the countless red tiles and many thin, hard mattresses
+lie on the floor, the covers neatly arranged.  A staircase leads down into
+the monastery yard."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT,UNIT_FL_SACRED}
+movement SECT_INSIDE
+down to yard;
+ALWAYS_LIGHT
+end
+
+
+
+/* ================================================================== */
+/*                              MOBILES                               */
+/* ================================================================== */
+%mobiles
+%mobiles
+
+/* ---------------------------- TEACHERS ---------------------------- */
+
+                              tuck
+
+names {"tuck", "guild master", "master", "father tuck"}
+title "Father Tuck"
+descr "Father Tuck is sitting here, chanting softly."
+extra {}
+"You are in no doubt that Brother Tuck is truly close to divine forces;
+he has a fat, peaceful, and loving look. You notice that he is surrounded
+by a white aura. Brother Tuck is, as you ought to know, the Guild Master
+of the Healers Guild."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_HUMAN_CLERIC_STAFF(90, SEX_MALE, "harm", "heal")
+alignment 1000
+money 2 IRON_PIECE
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_UDG_CLERIC
+/*
+removed due to new guild paths    
+special SFUN_GUILD_MASTER
+"Guild               = ~"+GUILD_UDG_CLERIC+"~
+Guild Enter Quest    = ~~
+Guild Enter Cost     = "+(1*SILVER_MULT)+"<br/>
+Guild Leave Quest    = ~~
+Guild Leave Cost     = "+(5*GOLD_MULT)+"<br/>
+Guild Exclude Quest  = ~Udgaard Cleric Quitter~"
+*/
+
+dilcopy guild_titles@guild_paths(GUILD_UDG_CLERIC, { "Believer", "Believer",
+"Attendant", "Attendant", "Acolyte", "Acolyte", "Novice", "Novice",
+"Missionary", "Missionary", "Adept", "Adept", "Deacon", "Deaconess",
+"Vicar", "Vicaress", "Priest", "Priestess", "Levite", "Levitess", "Canon",
+"Canon", "Minister", "Lady Minister", "Curate", "Curess", "Monk", "Nunne",
+"Healer", "Healess", "Chaplain", "Chaplain", "Expositor", "Expositress",
+"Bishop", "Bishop", "Arch Bishop", "Arch Lady of the Church", "Patriarch",
+"Matriarch"});
+
+dilcopy healer_give@clericguild();
+
+end
+
+
+                            isabella
+
+names {"isabella"}
+title "Isabella"
+descr "Isabella is standing here, practicing her skills."
+extra {}
+"Isabella is tall, slender and yet muscular, her flaming red hair glitters
+when she moves about. Isabella is a skilled warrior, ready to teach Healers
+how to defend themselves."
+
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_HUMAN_CLERIC_HAMMER(80, SEX_FEMALE, "harm", "heal")
+alignment 1000
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_UDG_CLERIC
+/*
+nit sure why this was removed probabaly guild paths again
+special SFUN_MEMBERS_ONLY GUILD_UDG_CLERIC+"#$1n says, 'I only teach true
+believers, begone $3n, you foul atheist.'"
+*/
+dilcopy teacher_prac@guild_paths( GUILD_UDG_CLERIC );
+
+#define _WEAPON
+#include "guilddef.h"
+#undef _WEAPON
+
+
+end
+
+
+                            bartholomew
+
+names {"bartholomew"}
+title "Bartholomew"
+descr "Bartholomew is here, chanting softly."
+extra {}
+"Bartholomew is ready to teach you skills that are essential to every
+respectable Healer."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_HUMAN_CLERIC_HAMMER(80, SEX_MALE, "harm", "heal")
+alignment 1000
+money 10 IRON_PIECE
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_UDG_CLERIC
+/*
+special SFUN_MEMBERS_ONLY GUILD_UDG_CLERIC+"#$1n says, 'I only teach true
+believers, begone $3n, you foul atheist.'"
+*/
+dilcopy teacher_prac@guild_paths( GUILD_UDG_CLERIC );
+
+#define _SKILL
+#include "guilddef.h"
+#undef _SKILL
+
+
+end
+
+
+                           tack
+names {"tack"}
+title "Tack"
+descr "Brother Tack is here, chanting softly."
+extra {}
+"Brother Tack is ready to improve your abilities."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_HUMAN_CLERIC_HAMMER(80, SEX_MALE, "harm", "heal")
+alignment 1000
+money 2 IRON_PIECE
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_UDG_CLERIC
+/*
+special SFUN_MEMBERS_ONLY GUILD_UDG_CLERIC+"#$1n says, 'I only teach true
+believers, begone $3n, you foul atheist.'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_UDG_CLERIC );
+
+#define _ABILITY
+#include "guilddef.h"
+#undef _ABILITY
+
+
+end
+
+
+                                tick
+
+names {"tick"}
+title "Tick"
+descr "Brother Tick is here, chanting softly."
+extra {}
+"You are in no doubt that Brother Tick is truly close to divine forces;
+he has a fat, peaceful, and loving look. You notice that he is surrounded
+by a white aura."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_HUMAN_CLERIC_HAMMER(80, SEX_MALE, "harm", "heal")
+alignment 1000
+money 2 IRON_PIECE
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_UDG_CLERIC
+/*
+special SFUN_MEMBERS_ONLY GUILD_UDG_CLERIC+"#$1n says, 'I only teach true
+believers, begone $3n, you foul atheist.'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_UDG_CLERIC );
+
+#define _SPELL
+#include "guilddef.h"
+#undef _SPELL
+
+
+end
+
+                             morenae
+
+names {"sister Morenae","sister","morenae"}
+title "Sister Morenae"
+descr "Sister Morenae is here, contemplating the evil of her past life."
+extra {}
+"Once a teacher of the darker side of the divine forces, sister Morenae
+has long ago abandoned her evil ways and spends her time praying and
+aiding the poor."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_HUMAN_CLERIC_HAMMER(80, SEX_FEMALE, "harm", "heal")
+alignment 800
+money 2 IRON_PIECE
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_UDG_CLERIC
+
+/* The DIL for the Sister Morenae - gives replacement Silver Torc to Healers.*/
+dilbegin torc_repl();
+var
+pc	:	unitptr;
+code
+{
+heartbeat := PULSE_SEC*7;
+    on_activation((self.position <= POSITION_SLEEPING) or  
+    (self.position == POSITION_FIGHTING), skip);  // make sure mob isn't busy
+   
+  :start:
+  wait(SFB_CMD,(command ("look"))and("sister" in argument) or
+  (command ("look"))and("morenae" in argument)); //get her attention
+  pc := activator;
+  if (not(pc.type == UNIT_ST_PC)) goto start;
+  secure(pc, start);
+  if (pc.level < IMMORTAL_LEVEL) 
+   {
+     if ((TORC_GIVEN in pc.quests) and (not(TORC_REPL in pc.quests))) 
+ /*If was given torc but not already replacing */
+     { 
+	   pause;
+       exec("say So "+pc.name+", you have fallen from grace and " +
+             "they have sent you to me for penance." , self);
+	   exec("emote studies "+pc.name+", for a long moment.", self);
+       exec("say Where is your torc? Did you lose or break it?", self);
+        goto torc_acc;
+     }
+  else if ((TORC_GIVEN in pc.quests) and (TORC_REPL in pc.quests)) 
+    /*if quest completed and already replacing */
+    {
+     exec("emote looks up and squints her eyes at "+pc.name+".", self);
+     exec("say Well?", self);
+     pause;
+     exec("emote beckons to " +pc.name+".",self);
+     exec("say Have you performed your penance?", self);  
+     goto start;
+    }
+    else  
+  {
+    goto start;
+   } 
+ :torc_acc:
+   wait(SFB_CMD, activator == pc);
+   if (command("nod"))
+   { 
+   exec("emote frowns at "+pc.name+".", self);
+   pause;
+   exec("say Very well, your penance shall be performed while " +
+         "getting those things we will need to get make a new torc." , self);
+   pause;
+   goto torc_list;
+   }
+    else if (command("shake"))
+   {
+    goto torc_den;
+   }
+    else
+   {
+    exec("say Please nod if you need your torc replaced " +
+          "or shake if you do not.", self);  
+    goto torc_acc;
+   }
+:torc_den:
+  exec("say Good! Cherish the gift as a symbol of the divine "+
+       "blessing of healing bestowed upon you by the gods.", self);
+  pause;
+  exec("emote returns to her meditations.", self);
+   unsecure(pc); 
+  goto start;
+  
+  :torc_list:
+pause;
+exec("say There is one who is responsible for causing doubt in many " + 
+     "healers. He carries a tool to beat the graves of the dead and "+
+	 "awaken them from their peaceful repose. Bring me the grave beater.", self);
+pause;
+exec("say Bring me comfrey root tonic. Be careful, asps are dangerous. "+
+      "Those who have faith shall be safe from the serpent." , self);
+ exec("emote looks at "+pc.name+ " and adds 'Perhaps you should take "+
+       "some antivenom along just in case.' ", self);	  
+pause;
+exec("say Last, you will need to prove your faith and ability to " +
+      "show it to those who will not hear. Bring me a mummified, " +
+      "severed hand such as the necromancers use.", self);
+pause;
+exec("say That should be sufficient penance " +
+     "here when you have the items collected.", self);     
+pause;
+addextra(pc.quests,{TORC_REPL},"");
+ unsecure(pc); 
+goto start; 
+}
+}
+dilend   /*torc_repl*/
+
+/*DIL for quest items given */
+dilbegin torc_give();
+var
+pc   : unitptr;
+item : unitptr;
+pin  : extraptr;
+code
+{
+heartbeat := PULSE_SEC*3;
+:start:
+wait(SFB_DONE, command("give") and (activator.type == UNIT_ST_PC));
+
+if (target == self)
+ {
+   pc := activator;
+   item := medium;
+   secure(pc, start);
+   pin := TORC_REPL in pc.quests;
+
+/* Pc doesn't have quest active but tries to give items anyway - no go 
+   return to start and wait then give quest */
+
+ if (not(TORC_REPL in pc.quests))
+ {
+  exec("say I have no need for material objects to tie me to this place. ", self);
+  exec("drop "+item.name, self);
+  unsecure(pc);
+  goto start;
+ } 
+
+/*gravebeater from bs_necro@ratswarf */
+
+  if ((item == findsymbolic(self, "grave_beater@ratswarf", FIND_UNIT_INVEN))
+  and (not ("beater" in pin.names)))
+  {
+    addstring(pin.names, "beater");
+    exec("say It shall recruit for its undead army again, "+
+	"but your valor shall delay its ultimate plan, "+pc.name+".", self);
+    destroy(item);
+    goto check;
+   }
+/* comfrey root potion from coffer in snake_pit@ratswarf*/
+  if ((item == findsymbolic(self, "potion_cure2@ratswarf", FIND_UNIT_INVEN))
+  and (not ("tonic" in pin.names)))
+  {
+   addstring(pin.names, "tonic");
+   exec("say I see your faith is strong.", self);
+   destroy(item);
+   goto check;
+  }
+/*severed hand from a necromancer character */  
+  if ((item == findsymbolic(self, "necro_hand1@necro_guild", FIND_UNIT_INVEN))
+  and (not ("hand" in pin.names)))
+  {
+  addstring(pin.names, "hand");
+  exec("say I hope you saved him from his perversion of our healing path.", self);
+  destroy(item);
+  goto check;
+ }
+/* pc gave her wrong item */
+
+exec("say It seems you must add failure to listen to your sins.", self);
+exec("drop "+item.name, self);
+goto check;
+
+/* ok she has it all, now for the torc */
+
+:check:
+pin := TORC_REPL in activator.quests;
+
+if (("hand" in pin.names) and ("tonic" in pin.names) and ("beater" in pin.names))
+{
+exec("emote pours the potion in semi-circle upon the floor.", self);
+pause;
+exec("emote places the hand in the center of the semi-circle.",self);
+exec("chants a mantra as she prays.",self);
+pause;
+sendtext("The potion starts to glow. ", self.outside);
+exec("emote takes the grave beater in her hand and gestures, a bright light surrounds the grave beater.", self);
+pause;
+sendtext("The gravebeater flares with bright light and starts disinegrate. ", self.outside);
+exec("emote holds the beater over the semi-circle letting motes of light fall "+
+      "upon the hand within.", self);
+pause;	  
+exec("emote continues chanting calmly.", self);
+sendtext("There is a blinding flash in the center of the room "+
+          "when the light clears a Silver Torc glows where the "+
+		  "semi-circle had been. ", self.outside);
+sendtext("emote pick up the glowing torc.", self);
+act ("Sister Morenae gives you your torc.",
+A_SOMEONE, pc, null, null, TO_CHAR);
+act ("The Sister gives $1n a silver torc.",
+A_SOMEONE, pc, null, null, TO_REST);
+pause;
+exec("say Take care of that this time and remember to stay on the path.", self);
+subextra(pc.quests, TORC_REPL);
+item := load("heal_torc@clericguild"); //
+item.height := pc.height;
+dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
+link(item, pc);
+}
+goto start;
+}
+}
+dilend 
+
+end
+
+/* -------------------------- GUILD GUARDS -------------------------- */
+
+
+                             gate_guard
+
+names {"guard"}
+title "the Guard"
+descr "A guard is here, guarding the entrance to the Monastery."
+extra {} "A fairly heavy duty guard."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_HUMAN_CLERIC_STAFF(150, SEX_MALE, "harm", "heal")
+alignment 1000
+money 5 IRON_PIECE
+
+special SFUN_GUILD_BASIS GUILD_UDG_CLERIC
+dilcopy teamwork@function ("guard");
+dilcopy rescue@function ("guard");
+/*replaced below with routines from function*/
+/* Guard WEST (3), GUILD_UDG_CLERIC */
+/*special SFUN_GUILD_GUARD_WAY
+""+"west"+"#"+GUILD_UDG_CLERIC+"#entrance#guard#$1n stops you and says,
+'Healers only!'#$1n stops $3n, and says, 'Healers only!'" */
+
+dilcopy guild_guard@guild_paths(GUILD_UDG_CLERIC, "west");
+
+end
+
+
+/* ================================================================== */
+/*                              OBJECTS                               */
+/* ================================================================== */
+%objects
+
+                              hammer
+names {"war hammer","hammer"}
+title "a war hammer"
+descr "A medium-sized war hammer is here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+/* Iron + Craftman ship = + 0% */
+WEAPON_DEF(WPN_WAR_HAMMER, 0, 0)
+weight 6
+cost 1 COPPER_PIECE,4 IRON_PIECE
+end
+
+                              staff
+names {"white staff","staff"}
+title "a white staff"
+descr "A white healer's staff lies here."
+extra {}
+"A white staff of a healer, a snake carved into the wood."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_QUARTERSTAFF,0,0)
+weight 2
+cost 1 COPPER_PIECE,4 IRON_PIECE
+end
+
+	robes
+names {"white robes","robes","robe"}
+title "white robes of a healer"
+descr "Some white robes lie here."
+extra {}
+"White robes of a healer, marked with a holy symbol on the chest."
+ARMOUR_CLOTHES(0,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
+cost 2 SILVER_PIECE
+weight 2
+end
+
+	sandals
+names {"sandals","pair"}
+title "a pair of sandals"
+descr "A pair of sandals lies here."
+extra {}
+"A pair of leather-thonged sandals."
+ARMOUR_LEATHER(0,-3)
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_FEET}
+weight 1
+cost 2 COPPER_PIECE
+end
+
+/* Spiritual Hammer - this weapon appears when a Healer wears his Silver
+Torc and types the codeword 'pray'. The hammer will stay in his hand for
+a while before flicking to give a warning and then disappearing. It will
+also disappear when removed. The weapon has a random Magic Bonus value
+(0-3) and cannot be stolen from the player. Activation of the weapon
+takes 5-8 Mana points and cannot proceed if the player is already
+wielding a weapon. */
+
+
+	sp_hammer
+names {"Spiritual Hammer","hammer"}
+title "Spiritual Hammer"
+descr "A hammer seems to fade away as you approach."
+extra {}
+"A weapon of pure magic, this hammer is a personification of your faith,
+given shape by the Silver Torc. It seems to be an extension of the hand,
+rather than an independant weapon... it flares and radiates warmth,
+pleasant to the body. You recognise the magic composing the weapon and
+know that it will probably cease to exist after a while."
+extra {"$identify"}
+"The Spiritual Hammer is is part of one's very being. It will only exist
+in physical world for a while and will be gone instantly if if you let
+go of it. In case of wielder's death, it will simply fade away into
+nothingness, merging once again with the creator's soul.<br/>
+Calling forth the hammer sharpens your combat senses, slightly improving
+your strength.<br/>"
+extra {"$improved identify"}
+"Calling forth the hammer sharpens your combat senses, slightly improving
+your strength.<br/>"
+extra {"$wear_s"}
+"You wield a $2n.<br/>
+This is a bug, Spiritual Hammers should not be wielded in this way!
+Please report."
+extra {"$wear_o"}
+"A flare illuminates $1n's body for a second as $1e wields a $2n!"
+extra {"$rem_s"}
+"As you let go of your $2n, it flickers and starts to fade..."
+extra {"$rem_o"}
+"$1n lets go of $1s $2n, it flickers and fades away..."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
+WEAPON_DEF(WPN_HAND_HAMMER,0,0)   //changed to one handed weapon ETNA
+STR_TRANSFER(+1)
+flags {UNIT_FL_MAGIC}
+romflags {OBJ_NO_DUAL}
+dilcopy guild_restrict@function ({GUILD_UDG_CLERIC},0,25,"");
+
+dilbegin recall hammercopies();
+var
+	blah : integer;
+	pc : unitptr;
+code
+{
+	:start:
+pc := self.outside;
+secure(pc,gone);
+dilcopy("hammernosteal@clericguild",pc);
+dilcopy("hammer_vanish@clericguild",pc);
+:gone:
+blah := dildestroy("hammercopies@clericguild",self);
+unsecure(pc);
+}
+dilend
+
+dilbegin recall hammerremove();
+var
+	pc : unitptr;
+	blah : integer;
+	blih : integer;
+code
+{
+wait(SFB_DONE,(command("remove"))and(medium.nameidx == "sp_hammer")and
+(activator == self.outside));
+
+pc := activator;
+secure(pc,gone);
+act("Your $2n fades from the reality and re-joins your soul.",
+A_ALWAYS,self.outside,self,null,TO_CHAR);
+:gone:
+blah := dildestroy("hammernosteal@clericguild",pc);
+blih := dildestroy("hammer_vanish@clericguild",pc);
+unsecure(pc);
+destroy(self);
+}
+dilend
+
+end
+
+
+        heal_torc
+names {"Silver Torc","torc"}
+title "Silver Torc"
+descr "A silvery torc lies on the ground, sparkling brightly."
+extra {}
+"Torc of white silver, symbol of Midgaard Healers, beautifully ornamented.
+Sigla of healing cover the torc. Apparently it is a dedicated item of the
+Healers. A small inscription in gold letters borders the torc."
+extra {"sigla on the Torc","sigla","sigil","sigils"}
+"The sigla form an enchantment to boost your clerical abilities.<br/>"
+extra {"inscription on the torc","inscription"}
+"The inscription reads: 'PRAY and you shall receive'.<br/>"
+extra {"$identify"}
+"The torc will increase your Divine Contact as well as your skill in
+Divine Sphere. "
+extra {"$improved identify"}
+"It also makes you more proficient at offering first
+aid and your strength of faith is refelcted in your strength of arm.
+By praying while the torc is worn a spiritual weapon is called forth into
+your hand.<br/>"
+extra {"$wear_s"}
+"You put on the $2n.<br/>
+You feel proud.<br/>"
+extra {"$wear_s"}
+"$1n puts on a $2n."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
+MATERIAL_METAL("This item is made of silver.")
+SKILL_TRANSFER(SKI_FIRST_AID,+2)
+
+dilcopy one_torc();
+dilcopy guild_restrict@function ({GUILD_UDG_CLERIC},0,25,"");
+dilcopy abi_restrict@function (ABIL_DIV,10,0,25,"");
+dilcopy abi_restrict@function (ABIL_BRA,8,0,25,"");
+dilcopy level_restrict@function (5,0,25,"");
+weight 1
+rent 57 IRON_PIECE
+
+dilbegin recall aware spirithammer ();
+var
+	item : unitptr;
+	pc : unitptr;
+	flux : integer;
+	masher : unitptr;
+code
+{
+	:init:
+	heartbeat := PULSE_SEC*1;
+
+	:start:
+wait(SFB_CMD,(command("pray"))and
+((self.equip==WEAR_NECK_1)or(self.equip==WEAR_NECK_2)) and
+(activator==self.outside));
+block;
+pc := activator;
+flux := rnd(0,3);
+secure(pc,gone);
+act("You touch your $2n and pray silently for aid."
+,A_ALWAYS,pc,self,null,TO_CHAR);
+act("$1n touches $1s $2n, $1s lips moving in a silent prayer."
+,A_ALWAYS,pc,self,null,TO_REST);
+if (pc.mana < 6)
+{
+act("The magic fades, your magic cannot sustain a weapon!"
+,A_ALWAYS,pc,self,null,TO_CHAR);
+act("$1n's magic fades away."
+,A_ALWAYS,pc,self,null,TO_REST);unsecure(pc);
+goto start;
+}
+masher := (equipment(pc,WEAR_WIELD));
+if (masher)
+{
+act("Your magic fades, you are already wielding a weapon!"
+,A_ALWAYS,pc,self,null,TO_CHAR);
+act("$1n's magic fades away."
+,A_ALWAYS,pc,self,null,TO_REST);
+goto gone;
+}
+else
+{
+pc.mana := (pc.mana-((flux*2)+4));
+act("You extend your arm, with a flash of light a hammer forms in your "+
+"hand!" ,A_ALWAYS,pc,self,null,TO_CHAR);
+act("$1n extends $1s arm, with a flash of light a hammer forms in $1s "+
+"hand!" ,A_ALWAYS,pc,self,null,TO_REST);
+item := load("sp_hammer@clericguild");
+item.height := pc.height;
+item.value[2] := flux;
+link(item,pc);
+addequip(item,WEAR_WIELD);
+unsecure(pc);
+goto start;
+}
+:gone:
+unsecure(pc);
+goto start;
+}
+dilend 
+end
+
+
+/* ================================================================== */
+/*                            ZONE RESET                              */
+/* ================================================================== */
+%reset
+
+/* Load teachers */
+
+load tuck into sanctuary max 1
+{
+	equip robes position WEAR_ABOUT
+	equip sandals position WEAR_FEET
+   	equip staff position WEAR_WIELD
+	equip udgaard/holybook WEAR_HOLD
+}
+
+load isabella into garden4 max 1
+{
+	equip robes position WEAR_ABOUT
+	equip sandals position WEAR_FEET
+   	equip hammer position WEAR_WIELD
+   	equip midgaard/smetal_shield position WEAR_SHIELD
+}
+
+load bartholomew into infirmary max 1
+{
+	equip robes position WEAR_ABOUT
+	equip sandals position WEAR_FEET
+   	equip udgaard/hand_mace position WEAR_WIELD
+}
+
+load tack into yard max 1
+{
+	equip robes position WEAR_ABOUT
+	equip sandals position WEAR_FEET
+   	equip udgaard/hand_mace position WEAR_WIELD
+}
+
+load tick into garden7 max 1
+{
+	equip robes position WEAR_ABOUT
+	equip sandals position WEAR_FEET
+   	equip hammer position WEAR_WIELD
+}
+
+load morenae into crypt max 1
+{
+	equip robes position WEAR_ABOUT
+	equip sandals position WEAR_FEET
+	equip udgaard/holybook WEAR_HOLD
+}
+
+load gate_guard into entrance max 1
+{
+   equip midgaard/iron_bracers  position WEAR_ARMS
+   equip midgaard/iron_plate    position WEAR_BODY
+   equip midgaard/iron_leggings position WEAR_LEGS
+   equip midgaard/iron_boots    position WEAR_FEET
+   equip midgaard/iron_gloves   position WEAR_HANDS
+   equip midgaard/iron_helmet   position WEAR_HEAD
+   equip midgaard/spear0        position WEAR_WIELD
+}
+
+%end
+
+
+

@@ -1,0 +1,903 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>VME basic zone writing manual</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="NEXT"
+TITLE="Introduction"
+HREF="ch00.html"></HEAD
+><BODY
+CLASS="BOOK"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="BOOK"
+><A
+NAME="BASICZONE"
+></A
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="TITLE"
+><A
+NAME="AEN2"
+>VME basic zone writing manual</A
+></H1
+><H3
+CLASS="AUTHOR"
+><A
+NAME="AEN4"
+></A
+>Ken Perry</H3
+><P
+CLASS="COPYRIGHT"
+>Copyright &copy; 2001 Ken Perry</P
+><HR></DIV
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+>1. <A
+HREF="ch00.html"
+>Introduction</A
+></DT
+><DD
+><DL
+><DT
+>1.1. <A
+HREF="ch00.html#AEN12"
+>Giving credit where credit is due!</A
+></DT
+><DT
+>1.2. <A
+HREF="x103.html"
+>Who should read this book?</A
+></DT
+><DT
+>1.3. <A
+HREF="x108.html"
+>What does this book cover?</A
+></DT
+></DL
+></DD
+><DT
+>2. <A
+HREF="ch01.html"
+>General compiler information</A
+></DT
+><DD
+><DL
+><DT
+>2.1. <A
+HREF="ch01.html#AEN142"
+>The compiler</A
+></DT
+><DT
+>2.2. <A
+HREF="x163.html"
+>The VMC pre-processor</A
+></DT
+><DD
+><DL
+><DT
+>2.2.1. <A
+HREF="x163.html#AEN171"
+>Commenting your zone</A
+></DT
+><DT
+>2.2.2. <A
+HREF="x163.html#AEN187"
+>Macros and what they can do for you</A
+></DT
+><DT
+>2.2.3. <A
+HREF="x163.html#AEN215"
+>Including other files in your zone</A
+></DT
+><DT
+>2.2.4. <A
+HREF="x163.html#AEN229"
+>Doing minor calculations</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>3. <A
+HREF="ch02.html"
+>Zone source file</A
+></DT
+><DD
+><DL
+><DT
+>3.1. <A
+HREF="ch02.html#AEN259"
+>Definition types</A
+></DT
+><DT
+>3.2. <A
+HREF="x338.html"
+>Zone information section</A
+></DT
+></DL
+></DD
+><DT
+>4. <A
+HREF="ch03.html"
+>Unit building blocks</A
+></DT
+><DT
+>5. <A
+HREF="ch04.html"
+>The room section</A
+></DT
+><DD
+><DL
+><DT
+>5.1. <A
+HREF="ch04.html#RMFIELDDESCR"
+>Description of room fields</A
+></DT
+><DT
+>5.2. <A
+HREF="x947.html"
+>Building your first room</A
+></DT
+><DT
+>5.3. <A
+HREF="x978.html"
+>Compiling and debugging your first room</A
+></DT
+><DT
+>5.4. <A
+HREF="x1028.html"
+><ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions for rooms</A
+></DT
+><DT
+>5.5. <A
+HREF="x1092.html"
+>A more complex set of rooms</A
+></DT
+><DD
+><DL
+><DT
+>5.5.1. <A
+HREF="x1092.html#RMDOOREXITS"
+>Exits with doors</A
+></DT
+><DT
+>5.5.2. <A
+HREF="x1092.html#AEN1103"
+>Locked exits</A
+></DT
+><DT
+>5.5.3. <A
+HREF="x1092.html#AEN1118"
+>Hidden exits</A
+></DT
+><DT
+>5.5.4. <A
+HREF="x1092.html#AEN1129"
+>Rooms inside of rooms</A
+></DT
+><DT
+>5.5.5. <A
+HREF="x1092.html#AEN1140"
+>A room using force move.</A
+></DT
+><DT
+>5.5.6. <A
+HREF="x1092.html#AEN1146"
+>A death room</A
+></DT
+></DL
+></DD
+><DT
+>5.6. <A
+HREF="x1152.html"
+>Putting the rooms together</A
+></DT
+><DT
+>5.7. <A
+HREF="x1157.html"
+>Suggested room exercises</A
+></DT
+></DL
+></DD
+><DT
+>6. <A
+HREF="ch05.html"
+>The NPC section</A
+></DT
+><DD
+><DL
+><DT
+>6.1. <A
+HREF="ch05.html#NPCFIELDDESCR"
+>Description of NPC fields</A
+></DT
+><DT
+>6.2. <A
+HREF="x1845.html"
+>NPC macros</A
+></DT
+><DD
+><DL
+><DT
+>6.2.1. <A
+HREF="x1845.html#NPCMACROATTARM"
+>The attack and armour macro</A
+></DT
+><DT
+>6.2.2. <A
+HREF="x1845.html#NPCMACROATTDEF"
+>The defense and offense bonus macro</A
+></DT
+><DT
+>6.2.3. <A
+HREF="x1845.html#NPCMACROABILITY"
+>The NPc abilities macro</A
+></DT
+><DT
+>6.2.4. <A
+HREF="x1845.html#NPCMACROWEAPSPL"
+>The NPc weapon and spell macros</A
+></DT
+><DT
+>6.2.5. <A
+HREF="x1845.html#NPCMACROCOMPOSED"
+>Using the composed.h</A
+></DT
+></DL
+></DD
+><DT
+>6.3. <A
+HREF="x2000.html"
+>Building your first NPC</A
+></DT
+><DT
+>6.4. <A
+HREF="x2061.html"
+>Compiling and debugging your first NPC</A
+></DT
+><DT
+>6.5. <A
+HREF="x2097.html"
+><ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions for NPCs</A
+></DT
+><DT
+>6.6. <A
+HREF="x2629.html"
+>A more complex set of NPCs</A
+></DT
+><DD
+><DL
+><DT
+>6.6.1. <A
+HREF="x2629.html#AEN2632"
+>Magic casting NPC</A
+></DT
+><DT
+>6.6.2. <A
+HREF="x2629.html#AEN2648"
+>A wandering janitor</A
+></DT
+><DT
+>6.6.3. <A
+HREF="x2629.html#SPECTEACH"
+>Creating a teacher</A
+></DT
+><DT
+>6.6.4. <A
+HREF="x2629.html#SPECGUILDMASTER"
+>Guild master functions</A
+></DT
+><DT
+>6.6.5. <A
+HREF="x2629.html#SPECBANK"
+>NPC banker</A
+></DT
+></DL
+></DD
+><DT
+>6.7. <A
+HREF="x2914.html"
+>Dragon station with rooms and NPCs</A
+></DT
+><DT
+>6.8. <A
+HREF="x2919.html"
+>Suggested NPC exercises</A
+></DT
+></DL
+></DD
+><DT
+>7. <A
+HREF="ch06.html"
+>The objects section</A
+></DT
+><DD
+><DL
+><DT
+>7.1. <A
+HREF="ch06.html#OBJFIELDDESCR"
+>Description of object fields</A
+></DT
+><DT
+>7.2. <A
+HREF="x3575.html"
+>Object macros</A
+></DT
+><DD
+><DL
+><DT
+>7.2.1. <A
+HREF="x3575.html#OBJCRAFT"
+>Weapon and armour craftsmanship</A
+></DT
+><DT
+>7.2.2. <A
+HREF="x3575.html#OBJMAG"
+>Magical modifier</A
+></DT
+><DT
+>7.2.3. <A
+HREF="x3575.html#OBJMACROWEAPON"
+>Setting weapon fields</A
+></DT
+><DT
+>7.2.4. <A
+HREF="x3575.html#OBJMACROARMOUR"
+>Setting armour fields</A
+></DT
+><DT
+>7.2.5. <A
+HREF="x3575.html#OBJMACROSHIELD"
+>Setting shield fields</A
+></DT
+><DT
+>7.2.6. <A
+HREF="x3575.html#OBJMACROMATTYPE"
+>Setting material types</A
+></DT
+><DT
+>7.2.7. <A
+HREF="x3575.html#OBJMACROLIQCONT"
+>Drink container macros</A
+></DT
+><DT
+>7.2.8. <A
+HREF="x3575.html#OBJMACROFOOD"
+>The food macros</A
+></DT
+><DT
+>7.2.9. <A
+HREF="x3575.html#OBJMACROLIGHT"
+>Light object macro</A
+></DT
+><DT
+>7.2.10. <A
+HREF="x3575.html#OBJMACROCONTAINER"
+>Container macro</A
+></DT
+><DT
+>7.2.11. <A
+HREF="x3575.html#OBJMACROMONEY"
+>Money macro</A
+></DT
+><DT
+>7.2.12. <A
+HREF="x3575.html#OBJMACROCURSE"
+>Cursed objects macro</A
+></DT
+><DT
+>7.2.13. <A
+HREF="x3575.html#OBJMACROPWS"
+>Potion, wand, and staff macros</A
+></DT
+><DT
+>7.2.14. <A
+HREF="x3575.html#OBJMACROTRANSFERS"
+>Magical transfer macros</A
+></DT
+></DL
+></DD
+><DT
+>7.3. <A
+HREF="x3926.html"
+>Building your first object</A
+></DT
+><DT
+>7.4. <A
+HREF="x3971.html"
+>Compiling and Debugging your first object</A
+></DT
+><DT
+>7.5. <A
+HREF="x4005.html"
+><ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions for objects</A
+></DT
+><DD
+><DL
+><DT
+>7.5.1. <A
+HREF="x4005.html#OBJDILRESTRICT"
+>Restriction functions</A
+></DT
+><DT
+>7.5.2. <A
+HREF="x4005.html#OBJDILTUBORG"
+>Tuborg function</A
+></DT
+><DT
+>7.5.3. <A
+HREF="x4005.html#OBJDILBOARD"
+>Message board</A
+></DT
+></DL
+></DD
+><DT
+>7.6. <A
+HREF="x4362.html"
+>More complex objects</A
+></DT
+><DD
+><DL
+><DT
+>7.6.1. <A
+HREF="x4362.html#OBJBOARD"
+>Making a communication board</A
+></DT
+><DT
+>7.6.2. <A
+HREF="x4362.html#OBJCONTAINER"
+>Making a container</A
+></DT
+><DT
+>7.6.3. <A
+HREF="x4362.html#OBJDRINK"
+>Creating drinks</A
+></DT
+><DT
+>7.6.4. <A
+HREF="x4362.html#OBJFOOD"
+>Creating food</A
+></DT
+><DT
+>7.6.5. <A
+HREF="x4362.html#OBJWEAPON"
+>Making a weapon</A
+></DT
+><DT
+>7.6.6. <A
+HREF="x4362.html#OBJARMOUR"
+>Making armour</A
+></DT
+><DT
+>7.6.7. <A
+HREF="x4362.html#OBJNON-ARMOUR"
+>Making non-armour worn objects</A
+></DT
+></DL
+></DD
+><DT
+>7.7. <A
+HREF="x4525.html"
+>Dragon station with rooms, NPCs, and objects</A
+></DT
+><DT
+>7.8. <A
+HREF="x4531.html"
+>Suggested object exercises</A
+></DT
+></DL
+></DD
+><DT
+>8. <A
+HREF="ch07.html"
+>The reset section</A
+></DT
+><DD
+><DL
+><DT
+>8.1. <A
+HREF="ch07.html#DOORRESET"
+>Door resets</A
+></DT
+><DT
+>8.2. <A
+HREF="x4627.html"
+>Loading objects and NPCs</A
+></DT
+><DT
+>8.3. <A
+HREF="x4779.html"
+>Special reset functions</A
+></DT
+><DD
+><DL
+><DT
+>8.3.1. <A
+HREF="x4779.html#RESETCOMPLETE"
+>The complete directive.</A
+></DT
+><DT
+>8.3.2. <A
+HREF="x4779.html#AEN4788"
+>The follow command</A
+></DT
+><DT
+>8.3.3. <A
+HREF="x4779.html#AEN4824"
+>The purge command</A
+></DT
+><DT
+>8.3.4. <A
+HREF="x4779.html#AEN4833"
+>The random command</A
+></DT
+><DT
+>8.3.5. <A
+HREF="x4779.html#AEN4842"
+>The remove command</A
+></DT
+></DL
+></DD
+><DT
+>8.4. <A
+HREF="x4851.html"
+>Reset walk through</A
+></DT
+><DT
+>8.5. <A
+HREF="x4868.html"
+>The complete dragon station</A
+></DT
+></DL
+></DD
+><DT
+>9. <A
+HREF="ch08.html"
+>Color and formatting codes</A
+></DT
+><DD
+><DL
+><DT
+>9.1. <A
+HREF="ch08.html#ESCAPECODE"
+>The escape character</A
+></DT
+><DT
+>9.2. <A
+HREF="x4879.html"
+>Formatting codes</A
+></DT
+><DT
+>9.3. <A
+HREF="x4931.html"
+>Formatting code descriptions and examples</A
+></DT
+><DT
+>9.4. <A
+HREF="x4988.html"
+>Color code descriptions and examples</A
+></DT
+></DL
+></DD
+><DT
+>10. <A
+HREF="ch09.html"
+>The <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> section</A
+></DT
+><DD
+><DL
+><DT
+>10.1. <A
+HREF="ch09.html#DILSECT"
+>What is <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>?</A
+></DT
+><DT
+>10.2. <A
+HREF="x5153.html"
+>What can <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> be used for?</A
+></DT
+><DT
+>10.3. <A
+HREF="x5209.html"
+>Where do I get more information on <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+></A
+></DT
+></DL
+></DD
+><DT
+>A. <A
+HREF="a5225.html"
+>VMC command line options</A
+></DT
+><DT
+>B. <A
+HREF="a5251.html"
+>Reserved keyword listing</A
+></DT
+><DT
+>C. <A
+HREF="a5346.html"
+>Race Definitions in values.h</A
+></DT
+><DT
+>D. <A
+HREF="a5351.html"
+>weapon definitions in values.h</A
+></DT
+><DT
+>E. <A
+HREF="a5357.html"
+>Liquid macros file</A
+></DT
+><DT
+>F. <A
+HREF="a5361.html"
+>Complete magical transfers macros listing</A
+></DT
+><DT
+>G. <A
+HREF="a5367.html"
+>Skill definitions in values.h</A
+></DT
+><DT
+>H. <A
+HREF="a5373.html"
+>Spell definitions in values.h</A
+></DT
+></DL
+></DIV
+><DIV
+CLASS="LOT"
+><DL
+CLASS="LOT"
+><DT
+><B
+>List of Tables</B
+></DT
+><DT
+>3-1. <A
+HREF="x338.html#AEN341"
+>Zone section field descriptions</A
+></DT
+><DT
+>5-1. <A
+HREF="ch04.html#RMFIELDS"
+>Room fields and types listing</A
+></DT
+><DT
+>5-2. <A
+HREF="ch04.html#SECTORS"
+>Sector movement values</A
+></DT
+><DT
+>5-3. <A
+HREF="ch04.html#UNITFLAGSROOM"
+>Room unit flag affects</A
+></DT
+><DT
+>5-4. <A
+HREF="ch04.html#SEG-LIGHT"
+>Light defines</A
+></DT
+><DT
+>6-1. <A
+HREF="ch05.html#NPCFIELDS"
+>NPC fields and types</A
+></DT
+><DT
+>6-2. <A
+HREF="ch05.html#AEN1346"
+>NPC special action extras</A
+></DT
+><DT
+>6-3. <A
+HREF="ch05.html#UNITFLAGSNPC"
+>NPC unit flag affects</A
+></DT
+><DT
+>6-4. <A
+HREF="ch05.html#ROMFLAGSNPC"
+>Room flags for NPCs</A
+></DT
+><DT
+>6-5. <A
+HREF="x1845.html#AEN1866"
+>Weight size chart</A
+></DT
+><DT
+>6-6. <A
+HREF="x1845.html#AEN1914"
+>MSET_WEAPON arguments</A
+></DT
+><DT
+>6-7. <A
+HREF="x1845.html#AEN1942"
+>MSET_SPELL arguments</A
+></DT
+><DT
+>6-8. <A
+HREF="x2097.html#AEN2170"
+>Combat magic arguments</A
+></DT
+><DT
+>6-9. <A
+HREF="x2097.html#AEN2207"
+>Fido arguments</A
+></DT
+><DT
+>6-10. <A
+HREF="x2097.html#AEN2238"
+>Zone wander arguments</A
+></DT
+><DT
+>6-11. <A
+HREF="x2097.html#AEN2279"
+>Global wander arguments</A
+></DT
+><DT
+>6-12. <A
+HREF="x2097.html#AEN2342"
+>Agressive arguments</A
+></DT
+><DT
+>6-13. <A
+HREF="x2097.html#AEN2505"
+>Sale types</A
+></DT
+><DT
+>6-14. <A
+HREF="x2629.html#OLDGOLD"
+>Old to new money conversions.</A
+></DT
+><DT
+>7-1. <A
+HREF="ch06.html#OBJFIELDS"
+>Object fields and types</A
+></DT
+><DT
+>7-2. <A
+HREF="ch06.html#AEN3093"
+>Object special action extras</A
+></DT
+><DT
+>7-3. <A
+HREF="ch06.html#AEN3151"
+>Take and enter flags</A
+></DT
+><DT
+>7-4. <A
+HREF="ch06.html#UNITFLAGSOBJ"
+>Object unit flag affects</A
+></DT
+><DT
+>7-5. <A
+HREF="ch06.html#ITEMTYPES"
+>Item types</A
+></DT
+><DT
+>7-6. <A
+HREF="x3575.html#AEN3586"
+>Approximate hit points verses craftsmanship</A
+></DT
+><DT
+>7-7. <A
+HREF="x4362.html#AEN4442"
+>Armour positions</A
+></DT
+><DT
+>7-8. <A
+HREF="x4362.html#AEN4485"
+>Non-armour positions</A
+></DT
+><DT
+>8-1. <A
+HREF="x4627.html#AEN4692"
+>Wear positions</A
+></DT
+><DT
+>9-1. <A
+HREF="x4879.html#FORMATTABLE"
+>Formatting and color codes</A
+></DT
+><DT
+>9-2. <A
+HREF="x4988.html#AEN5001"
+>Colors</A
+></DT
+><DT
+>9-3. <A
+HREF="x4988.html#AEN5033"
+>Sample Color codes</A
+></DT
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="ch00.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Introduction</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

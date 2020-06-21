@@ -1,0 +1,80 @@
+>
+                      Ability Description
+                               
+Document Name:     ability.doc
+Version:           3.40
+
+Author:            Michael Seifert (seifert@diku.dk)
+Questions to:      seifert@diku.dk
+
+Document intended for:   World Creators
+
+Short Description:
+This  document  describes  how the  various  abilities  affect
+skills and game play for both players and monsters.
+
+
+1. [STR] Strength
+Strength determines:
+     ·    How hard a character can hit with a weapon (or hand). The
+      strength is basically added to the weapon attack skill and
+      looked up on a table.
+     ·    How much weight a character can carry.
+
+2. [DEX] Dexterity
+Dexterity determines:
+     ·    A reduction in the damage when attacked (subtracted from
+      strength / skill of opponent).
+     ·    A factor in deciding if a PC successfully uses a shield.
+      100% factor for NPC's.
+     ·    A PC factor in sneaking, hiding and stealing etc.- 100%
+      for NPC’s.
+
+3. [CON] Constitution
+Constitution determines:
+     ·    How fast hit points are gained.
+     ·    How fast Endurance points are gained.
+
+4. [CHA] Charisma
+Charisma determines:
+     ·    How fast Mana points are regained. Gain rate is relative
+      to the MAG or DIV power of the character.
+     ·    Reduction/Increase on prices in standard shops.
+     ·    Who is hit by aggressive monsters, not yet decided if
+      this will be people with high or low charisma. It ought to be
+      high, but that would be disadvantageous.
+
+5. [BRA] Brain
+Brain is a combination of Intelligence, Wisdom, Awareness  and
+Perception. Brain Determines:
+     ·     A  defense factor when spells are cast against you.
+      (Exactly like dexterity for warriors).
+     ·    A 50% factor for PC's in discovering theft. 100% for
+      NPC's.
+·    A 50% factor for PC's in discovering sneaking. 100% for
+NPC's.
+·    A 50% factor for PC's in discovering hidden. 100% for
+NPC's.
+
+6. [MAG] Magical Essence
+The  Energy  from which Magic Users draw their power.  Magical
+Essence determines:
+     ·    A 50% factor in power for all magic user spells.
+     ·    A 50% factor in success/reduction for all saving throws
+      versus all spells.
+·    A "level" limitation for which spells can be learned by
+PC's.
+
+7. [DIV] Divine Contact
+The  contact which is established between the priest  and  his
+God.
+     ·    A 50% factor in power for all cleric spells.
+     ·    A 50% factor in success/reduction for all saving throws
+      versus all spells.
+·    A "level" limitation for which spells can be learned by
+PC's.
+
+8. [HPP] Hit points points (yes points points)
+Hit-point-points are used to buy more hit points. For each HPP
+bought  the  characters  hit points (HP)  is  increased  by  a
+certain number (which varies according to size of HPP).

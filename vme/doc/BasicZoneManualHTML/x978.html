@@ -1,0 +1,501 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Compiling and debugging your first room</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The room section"
+HREF="ch04.html"><LINK
+REL="PREVIOUS"
+TITLE="Building your first room"
+HREF="x947.html"><LINK
+REL="NEXT"
+TITLE="DIL functions for rooms"
+HREF="x1028.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x947.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. The room section</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1028.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RMDEBUG"
+>5.3. Compiling and debugging your first room</A
+></H1
+><P
+>It is time we put the zone header information together with
+your first zone and compile it into a format the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> server can
+use.  This is done by using the <ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> compiler.  Depending on if you
+are doing this on your own Linux server or if you are building for a
+<ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> already set up you will have to use the compiler access
+method they have defined.  No matter if you are compiling by email,
+ftp, or at the command line with <ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> the error messages will all be
+the same.  Since I have no idea how your particular set up is
+designed I will explain the errors that the compiler will return and
+you will have to ask your system administrator how to access the
+compiler.  The rest of this section is written as if you have your
+own <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> running on your own Linux box using the <ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> at the command
+line.</P
+><P
+>When you are working on your first zone it is always a good
+idea to start with one or two rooms and compile them instead of
+writing all the rooms and then trying to compile.  The reason is the
+more rooms you have the more confused you can make the compiler if
+you have a lot of errors and you may not be able to figure out where
+your first mistake was easily.  In our case we only have our first
+room and the header information for the zone so lets put it together
+now and try and compile it.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN988"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#include composed.h&#62;
+%zone dragonst
+lifespan 20
+reset RESET_ANYHOw
+creators {"whistler"}
+
+notes
+"This is the dragon station I shortened it to dragonst for ease in
+loading.  If you have  any questions email me at whistler@valhalla.com"
+
+help
+"Not sure what could help you now.  You are stuck on one of the
+weirdest space stations you have ever seen and you smell burning
+sulfur."
+
+%rooms
+
+chamber
+title "The middle chamber of the station
+descr
+"This chamber seems to have the entire station rotating around it.
+Small human size ornate chairs with dragon designs scrawled on the
+arms and back are arranged in a triangle like setting with one large
+chair at the front.  This must be where all station meetings are held.
+large pictures cover the walls depicting dragons in all kinds of
+situations.  Small passages lead of to the west and the east.
+."
+
+extra {"chair","chairs"}
+"The chairs are made of some metal you don't recognize and every inch is
+covered with some kind of dragon."
+
+extra  {"dragon picture","picture"}
+"Thousands of dragons dot the skies of this rather life like picture.  In the
+center you see something move.  It looks to be a little green dragon."
+
+extra{"green dragon","dragon","green"}
+"An intelligent looking dragon is sitting perched on a large chair watching you."
+west to portal descr "You see a small room.";
+
+east to office descr "You see what looks to be an office.";
+end
+
+%end&#13;</PRE
+><P
+></P
+></DIV
+><P
+>We added the %room tag to our zone header stuck our room in
+and now its ready to be compiled and put into the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> server for
+you to be able to look at it in the game.  If you downloaded our
+example zones for this document you can compile this zone along with
+us and fix the errors as we do for practice.  The filename is
+<TT
+CLASS="FILENAME"
+>debug_rm.zon</TT
+>.  Just so you know the errors in this
+zone are intentional so please don't write me an email telling me
+there are errors in it.</P
+><P
+>The command to compile the zone is
+<B
+CLASS="COMMAND"
+>VMC debug_rm.zon</B
+>.
+Here is what we get when we first try and
+compile the zone.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN995"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;<ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> v2.0 Copyright (C) 2001 by Valhalla [Apr 28 2001]
+Compiling 'debug_rm.zon'
+&lt;debug_rm.zon&gt; @ 2: Bad include argument
+&lt;debug_rm.zon&gt; @ 48: Token too long
+Fatal error compiling in preprocessor stage in file 'debug_rm.zon'.&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Don't worry if this looks scary, it really is much easier to read than it looks like. 
+The first thing you need to realize about compiling is always fix one error
+and compile again because it might fix two or three errors after
+with one fix.  The reason is once a compiler hits something it
+doesn't understand it gets confused with the rest of the file.  It
+is sort of like if you thought the word 'water' meant 'fire' and you
+tried to read a book it would get confusing really fast.  So you have
+to correct the definition of 'water' to understand the rest of the
+book.</P
+><P
+>Lets take the first error with this in mind.  The first error
+shows up on line three of the error file it says: </P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1000"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;&lt;debug_rm.zon&gt; @ 2: Bad include argument&#13;</PRE
+><P
+></P
+></DIV
+><P
+>This line is not really cryptic reading it in a more english form
+would sound like:  In file 'debug_rm.zon' you have an error at line 2, the
+argument to the include statement is not correct.  Not all errors will
+be this clear but the compiler does its best to get you close to the
+error.  Now if you look at line two in <TT
+CLASS="FILENAME"
+>debug_rm.zon</TT
+>,
+you will find, we forgot to put in the '&lt;' symbol.  If you fix
+the line to look like:
+<DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1004"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#include &lt;composed.h&gt;&#13;</PRE
+><P
+></P
+></DIV
+>
+Then recompile you will have fixed your first error and get a whole new
+set to play with.  The following is the errors we got after fixing line
+two:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1006"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;<ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> v2.0 Copyright (C) 2001 by Valhalla [May  9 2001]
+Compiling 'debug_rm.zon'
+&lt;debug_rm.zon&gt; @ 47: EOF in string
+debug_rm.zon: 4: parse error
+   Token: 'RESET_ANYHOw'
+debug_rm.zon: 21: parse error
+   Token: 'This'
+debug_rm.zon: 26: parse error
+   Token: 'and'
+debug_rm.zon: 26: parse error
+   Token: '.'
+Grave errors in file 'debug_rm.zon'.&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now this looks to be a much more interesting error file than the
+previous one.  Remember we mentioned you should always fix the
+first error first so the compiler doesn't get confused.  In this error
+file the first line is not the first error we need to fix.  We have
+to do some logical reasoning here.  The first error the compiler
+came across was the one on line 4 that shows up around line 4 of the
+error file.  The lines before it are letting you know somewhere
+else in the file there is a missing quote.  If we clean up the first
+error however we might be able to find this missing quote much easier. 
+So lets do that lets start by looking at line 4 which is saying the
+compiler doesn't understand what the token 'RESET_ANYHOw' is.  This
+makes sense the token should be 'RESET_ANYHOW' and the compiler is
+case sensitive.  So all we need to do to fix this one is capitalize the
+'w' and the error should be cleared up lets try that and recompile and
+see what the errors look like.  With that line fixed the following is
+the errors we get.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1010"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;<ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> v2.0 Copyright (C) 2001 by Valhalla [May  9 2001]
+Compiling 'debug_rm.zon'
+&lt;debug_rm.zon&gt; @ 47: EOF in string
+debug_rm.zon: 21: parse error
+   Token: 'This'
+debug_rm.zon: 26: parse error
+   Token: 'and'
+debug_rm.zon: 26: pars
+e error
+   Token: '.'
+Grave errors in file 'debug_rm.zon'.&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Again we must figure out which error message we should deal with
+first.  As before we need to deal with the lowest number error.  The
+error we need to fix first then is the one on line '21'.  If you go
+to line '21' you will notice the line looks fine.  When you run
+into an error like this where the error is not exactly on the line
+scroll up to the field before the one in question and you should find the
+problem.  In this case we forgot a '"' on the 'title' line and 
+confused the compiler because it thought the ending quote was the one
+after the 'descr' field.  Therefore the compiler didn't understand the
+'This' as a field.  This is one of the harder errors to find but once
+you get used to it will come naturally and the compiler does try to
+get you close.  Now if we add the '"' we are missing and recompile
+the following is the output we get.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1014"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;<ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> v2.0 Copyright (C) 2001 by Valhalla [May  9 2001]
+Compiling 'debug_rm.zon'
+<ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> Done.&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Notice there are no errors and it says '<ACRONYM
+CLASS="ACRONYM"
+>VMC</ACRONYM
+> done', this means
+you have now successfully compiled the zone.  I want you to look at the
+last error file and the fact that we only changed a quote to go from it
+to no errors.  This is why you always deal with one error at a time. 
+Sometimes fixing one error can fix a lot of the weird errors that make
+no sense.  In fact I have seen one quote cause as much as 50 errors so
+if you jump around trying to fix errors that look like they make sense
+you may end up making more work for yourself.</P
+><P
+>Now that you have a compiled zone you should check and make sure
+all the files are there.  When you compile a zone you will end up
+with  three extra files. the files will have the same filename as your zone
+with a new extension in this case you should have the following.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1021"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;debug_rm.data
+debug_rm.err
+debug_rm.reset
+debug_rm.zon&#13;</PRE
+><P
+></P
+></DIV
+><P
+>If you have all of these you are all set to go.  If not then there
+is something seriously wrong and you may want to write the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> staff for
+help.  To get your new zone in the mud all that is needed is to make
+sure your zone is in the zonelist in the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> etc directory and copy
+these files into your zone directory.  Then reboot the mud.  You should
+be able to log on your builder character and goto your zone by typing,
+<B
+CLASS="COMMAND"
+>goto chamber@dragonst</B
+>.</P
+><P
+>There you go you have now compiled your first zone.  Its not much
+to look at but with what you already know you could make a full zone of
+very basic rooms.  The next few sections will teach you some of the more
+interesting things you can do when making your rooms.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x947.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1028.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Building your first room</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch04.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions for rooms</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

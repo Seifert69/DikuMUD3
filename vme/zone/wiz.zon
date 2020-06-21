@@ -1,0 +1,939 @@
+/*
+filename    wiz
+password    rlscrew
+changedby   Papi
+EmailAdd
+request     compile
+version     27.01
+END HEADER*/
+
+
+#include <macros.h>
+
+%zone wiz
+
+notes
+"
+v27.01 August 2010 - Player wound up in here using a rt. They
+then planted a tele mob in the chat rooms to be abkle to come and 
+go. Made the chat rooms no tele.
+
+No doors from any room outside of this zone should point to this
+zone. Interconnecting rooms within the zone has been implemented
+to make the reading of the wizboards easier."
+
+help
+"This zone is not intended for mortals - hence the name wiz."
+creators {"quinn","god","gnort","carter","cabal"}
+
+%dil
+
+dilbegin do_plog(arg:string);
+var
+ u:unitptr;
+ i:integer;
+code
+{
+
+if (arg=="")
+{
+sendtext ("Log who?",self);
+quit;
+}
+
+
+ u:=findunit(self,arg,FIND_UNIT_GLOBAL,null,UNIT_ST_PC);
+if (u==null)
+ {
+act ("No one by that name found.",
+A_ALWAYS,self,arg,null,TO_CHAR);
+quit;
+}
+
+if (not(visible(self,u)))
+ {
+act ("No one by that name found.",
+A_ALWAYS,self,arg,null,TO_CHAR);
+quit;
+}
+
+if (u.level>=self.level)
+{
+act("$3n would not like that.",
+A_SOMEONE,self,null,u,TO_CHAR);
+quit;
+}
+
+if (dilfind("plog@wiz",u))
+{
+sendtext ("Removing the log function from "+u.name+"<br/>",self);
+i:=dildestroy("plog@wiz",u);
+}
+else
+{
+sendtext ("Adding the log function to "+u.name+"<br/>",self);
+dilcopy ("plog@wiz()",u);
+}
+
+quit;
+}
+dilend
+
+
+dilbegin aware plog();
+var
+ i:integer;
+code
+{
+   :loop:
+   wait(SFB_CMD, TRUE);
+i:=flog(self.name+"watchdog",activator.name+ " " + cmdstr + " " + argument+"<br/>","a");
+   goto loop;
+}
+dilend
+
+
+dilbegin aware tester ();
+var
+  pc:unitptr;
+  i:intlist;
+  splno:integer;
+  s:string;
+  t:string;
+code
+{
+
+
+interrupt(SFB_PRE, command("cast"),spl_inf);
+interrupt (SFB_PRE, command( CMD_AUTO_DAMAGE),wpn_inf);
+:start:
+wait (SFB_CMD, command("tester"));
+block;
+if (argument=="off")
+  quit;
+
+  sendtext ("You must type tester off",self);
+
+  goto start;
+
+  :spl_inf:
+s := getword(argument);
+splno := atoi(s);
+   s:=spellinfo(splno,i.[0],i.[1],i.[2],i.[3],i.[4],i.[5],i.[6]);
+   t:="Spell: ";
+goto act_inf;
+:wpn_inf:
+s:=weapon_name(medium.value[0]);
+t:="Weapon: ";
+:act_inf:
+pc:=pc_head();
+while (pc.type==UNIT_ST_PC){
+if (pc.extra.["weaponlog"]!=null)
+{
+sendtext (t+" "+s+" hit for:  "+itoa(power)+"<br/>",pc);
+}
+pc:=pc.gnext;
+}
+goto start;
+
+
+goto start;
+}
+dilend
+
+
+
+dilbegin aware watchdog();
+code
+{
+   :loop:
+   wait(SFB_CMD, TRUE);
+   log(activator.name+ " " + cmdstr + " " + argument);
+   goto loop;
+}
+dilend
+
+// To send to a specific person - Stormtamer
+// Not tested yet
+
+dilbegin aware watchdog2(pcname: string, ID: integer);
+
+var pc: unitptr;
+
+code
+{
+:start:
+pc:= findunit (ghead(), pcname, FIND_UNIT_WORLD, null);
+
+if (pc == null) quit;
+if (not dilfind ("watch_catch@wiz", pc)) quit;
+
+wait (SFB_CMD,TRUE);
+
+sendtoalldil ("watchdog "+pcname+" "+itoa(ID)+" "+activator.name+" "+
+    excmdstr+" "+argument, "watch_catch@wiz");
+
+goto start;
+}
+
+dilend
+
+dilbegin watch_catch(ID: integer);
+
+var s: string;
+
+code
+{
+
+if (self.type != UNIT_ST_PC)
+    quit;
+
+:start:
+wait (SFB_MSG, TRUE);
+
+if (getword(argument) != "watchdog")
+    goto start;
+
+if (getword(argument) != self.name)
+    goto start;
+
+if (getword(argument) != itoa(ID))
+    goto start;
+
+sendtext ("Watchdog "+itoa(ID)+": "+argument, self);
+goto start;
+}
+
+dilend
+
+
+dilbegin personal(pname : string);
+var
+  s : string;
+  exdp : extraptr;
+  u : unitptr;
+
+code
+{
+   heartbeat := PULSE_SEC * 15;
+
+   interrupt(SFB_DEAD, activator == self.outside, death);
+
+	 if (self.zoneidx=="treasure")
+	 	{
+		dilcopy ("personal@treasure("+pname+")",self);
+		quit;
+		}
+	 if (self.extra.["$piname"]==null)
+	 addextra (self.extra,{"$piname"},pname);
+   :loop:
+
+self.hp:=-1;
+self.max_hp:=-1;
+   wait(SFB_TICK | SFB_RANTIME,TRUE);
+	if ((self.outside.zoneidx=="rebirth") and (self.outside.nameidx=="rebirth_bag"))
+	goto loop;
+
+if ((self.outside.type==UNIT_ST_PC) and
+(self.outside.name==pname))
+goto loop;
+
+if (self.outside.zoneidx=="g_q")
+	{
+	log (self.outside.name+" cheating with power items and familiar");
+	sendtext ("You were caught cheating with your familiar and power items and are logged<br/>",self.outside.outside);
+	sendtext ("Your familiar and all on it have been destroyed.",self.outside.outside);
+	destroy (self);
+	}
+
+   while (self.outside.type != UNIT_ST_ROOM)
+   {
+      if ((self.outside.type == UNIT_ST_PC) and (self.outside.name == pname))
+	goto loop;
+      if ((self.outside.outside.type == UNIT_ST_PC) and (self.outside.outside.name == pname) and
+      (self.outside.outside.zone=="arena"))
+	goto loop;
+
+
+      if ((self.outside.type == UNIT_ST_PC) and (self.outside.level>220))
+	goto loop;
+
+      act("Powerful energy from the $3n shocks you, "+
+	  "it falls to the ground.",
+	  A_ALWAYS, self.outside, null, self, TO_CHAR);
+      act("Powerful energy from the $3n shocks $1n, "+
+	  "it falls to the ground.",
+	  A_ALWAYS, self.outside, null, self, TO_ROOM);
+
+      if ((self.outside.type == UNIT_ST_PC) and (self.equip))
+      {
+	 self.outside.hp := self.outside.hp - (self.outside.hp/2) - 2;
+	 position_update(self.outside);
+      }
+
+      link(self, self.outside.outside);
+   }
+   goto loop;
+
+   :death:
+   self.minv := 200;
+
+   :loop2:
+   pause;
+   if (self.outside.type == UNIT_ST_PC)
+   {
+      if (isset(PC_SPIRIT, self.outside.pcflags))
+         goto loop2;
+
+      self.minv := 0;
+
+      act("Suddenly $3n appears before you.",
+          A_SOMEONE, self.outside, null, self, TO_CHAR);
+
+      act("Suddenly $3n appears before $1n.",
+          A_HIDEINV, self.outside, null, self, TO_ROOM);
+   }
+   self.minv := 0;
+
+   goto loop;
+}
+dilend
+
+
+
+dilbegin recall make_personal();
+var
+  exdp : extraptr;
+  u : unitptr;
+  p : unitptr;
+
+code
+{
+   heartbeat := PULSE_SEC * 15;
+   :start:
+   wait(SFB_CMD, command("personal"));
+
+   block;
+
+
+   p := findunit(activator, argument, FIND_UNIT_HERE, null);
+   if ((p == null) or (p.type != UNIT_ST_PC))
+   {
+      act("No such player here to remake $2n for.",
+          A_HIDEINV, activator, p, null, TO_CHAR);
+      goto start;
+   }
+
+   u := findunit(activator, argument, FIND_UNIT_HERE, null);
+   if (u == null)
+   {
+      act("No such thing to make personal.",
+          A_HIDEINV, activator, null, null, TO_CHAR);
+      goto start;
+   }
+
+if (activator.level <IMMORTAL_LEVEL)
+  {
+log ("bug: "+activator.name+" personalized "+u.name+" for "+p.name);
+experience (-16000,activator);
+act ("This abuse of a god item has been logged and you have been punished.",
+A_ALWAYS,activator,null,null,TO_CHAR);
+destroy (u);
+destroy (self);
+goto start;
+}
+
+
+
+log (activator.name+" personalized "+u.name+" for "+p.name);
+   dilcopy("personal@wiz("+p.name+")", u);
+   u.height := p.height;
+
+   act("$3n now belongs and is refitted to $2n.",
+       A_HIDEINV, activator, p, u, TO_CHAR);
+
+   goto start;
+}
+dilend
+
+dilbegin submit (addp:string,nod:string);
+var
+ pc:unitptr;
+ paper:unitptr;
+ arg_1:string;
+ arg_2:string;
+ j:integer;
+code
+{
+heartbeat:=PULSE_SEC*5;
+:start:
+wait (SFB_CMD, (command ("submit")));
+block;
+pc:=activator;
+secure (pc,lostpc);
+arg_1:=getword(argument);
+arg_2:=argument;
+paper:=findunit (pc,arg_1,FIND_UNIT_INVEN,null);
+if (paper==null) goto no_paper;
+if (paper.objecttype!=ITEM_NOTE) goto no_note;
+secure (paper, lostpaper);
+link (paper, self);
+if (arg_2=="") goto no_subject;
+:subject:
+exec ("say Ahhh nice article "+pc.name,self);
+exec ("say Hmmmmm so you sure you want '"+arg_2+"' as the subject?",self);
+j:=(integer)nod (pc);
+if (j==0) goto no_subject;
+/*============*/
+log ("running addpaper");
+/*============*/
+addp (arg_2,paper);
+exec ("emote places the "+arg_1+" into a slot in the wall.",self);
+act ("You hear a large machine behind the wall grumble to life.",
+A_ALWAYS,self,null,null,TO_ALL);
+exec ("say Well thats all there is to it.",self);
+exec ("say Your article should be in the next issue of the paper.  buy one and see", self);
+goto start;
+
+:no_subject:
+exec ("emote Scans over the page ok then what should the Articles title be.",self);
+wait (SFB_DONE,(command ("say")) and
+(pc==activator));
+arg_2:=argument;
+goto subject;
+
+:no_paper:
+exec ("say Hmmmm you don't seem to have one of those.",self);
+unsecure (pc);
+goto start;
+:no_note:
+exec ("say I am sorry I only take paper type material.",self);
+unsecure (pc);
+goto start;
+:lostpc:
+:lostpaper:
+exec ("ponder",self);
+unsecure (pc);
+unsecure (paper);
+
+
+goto start;
+}
+dilend
+
+dilbegin integer nod_dil (pc:unitptr);
+var
+i:integer;
+code
+{
+heartbeat:= PULSE_SEC*7;
+secure(pc,losthim);
+i:= 0;
+
+while (i < 5)
+{
+wait(SFB_CMD, activator == pc);
+if (command("nod"))
+return (1);
+else if (command("say"))
+{
+/*  This specifies what happens if the pc says something */
+
+pause;
+exec("say Nod if it is what you want, shake your head" +
+"otherwise.", self);
+}
+else if (command("shake"))
+return (0);
+
+i:= i+1;
+pause;
+}
+:losthim:
+
+return (0);
+}
+dilend
+dilbegin myeffect();
+code
+{
+   act("The caster is : "+self.name, A_ALWAYS, self, null, null, TO_ALL);
+   act("The medium is : "+medium.name, A_ALWAYS, medium, null, null, TO_ALL);
+   act("The target is : "+target.name, A_ALWAYS, target, null, null, TO_ALL);
+
+   act("The spell result : "+itoa(power), A_ALWAYS, self, null, null, TO_ALL);
+   quit;
+}
+dilend
+
+
+%rooms
+
+chat_1
+title "A quiet chat room"
+names {"chat room 1","chat room one","chat one","chat 1","c1"}
+descr
+"The room is fairly small and painted yellow. Along the north wall is a
+fireplace with a magical fire that never goes out and seems to keep the
+room's temperature to a constantly pleasant degree."
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_PRIVATE,UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+end
+
+chat_2
+title "A quiet chat room"
+names {"chat room 2","chat room two","chat two","chat 2","c2"}
+descr
+"The room is fairly small and painted red. Along the north wall is a
+fireplace with a magical fire that never goes out and seems to keep the
+room's temperature to a constantly pleasant degree."
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_PRIVATE,UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+end
+
+chat_3
+title "A quiet chat room"
+names {"chat room 3","chat room three","chat three","chat 3","c3"}
+descr
+"The room is fairly small and painted blue. Along the north wall is a
+fireplace with a magical fire that never goes out and seems to keep the
+room's temperature to a constantly pleasant degree."
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_PRIVATE,UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+end
+
+chat_4
+title "A quiet chat room"
+names {"chat room 4","chat room four","chat four","chat 4","c4"}
+descr
+"The room is fairly small and painted white. Along the north wall is a
+fireplace with a magical fire that never goes out and seems to keep the
+room's temperature to a constantly pleasant degree."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_PRIVATE,UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+end
+
+
+		     quest_hall
+names {"quest hall", "quest"}
+title "The Grand Quest Hall"
+descr
+"    You have arrived in the vaulted Quest Hall, where gods discuss
+the tasks they will set for mortals. Many devious schemes and terrible
+secrets have echoed of its ancient stones. The owners of this place
+obviously have no need of exits, as none are provided."
+movement SECT_INSIDE
+flags {UNIT_FL_SACRED}
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+east to builders_bar;
+north to board_room;
+south to history_hall;
+end
+		     dil_hall
+names {"dil hall", "dil"}
+title "The Grand DIL Hall"
+descr
+"    You have arrived in the vaulted DIL Hall, where gods discuss the
+non-trivial task of making the world a better place by the use of DIL."
+movement SECT_INSIDE
+flags {UNIT_FL_SACRED}
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+west to quest_hall;
+east to builders_bar;
+north to board_room;
+south to history_hall;
+end
+
+		     history_hall
+names {"history hall", "history"}
+title "The Hall of History"
+descr
+"
+The Hall of history, a swirling chaos of things that might have been
+and things that might be, is as insubstantial as it is vast and exitless.
+Occasionally, lumps of potential history form here for the review of
+the gods, before being dumped into the mortal world."
+movement SECT_INSIDE
+flags {UNIT_FL_SACRED}
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+down to dil_hall;
+north to board_room;
+east to builders_bar;
+west to quest_hall;
+end
+
+
+			       papis_cottage
+
+title "Papi's Cosy Cottage"
+descr
+" You are inside Papi's small wooden cottage. A fireplace is placed against
+the north wall and a large rocking chair is placed in front of the fire."
+flags {UNIT_FL_SACRED}
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+up to papis_cottage;
+end
+
+
+
+
+
+				 chat
+names {"chat room", "chat","ct"}
+title "The Chat Room"
+descr
+"   You are lounging in a quiet cosy parlor, warmed by a gentle magical fire
+which twinkles happily in a warm fireplace. There are no doors out. Clearly
+the owner of this room needs none."
+flags {UNIT_FL_SACRED}
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+end
+
+			      moses_home
+
+names {"moses's hangout", "hangout"}
+title "Moses's Hangout"
+descr
+"   This room is completely for relaxing.  It has *everything* you could
+ever want in a room.  It's a big room with a window looking out over the
+land.  It's more like an apartment than a room, with features such as a
+large bed, satellite television, excellent stereo system, a fireplace,
+a bear skin rug, and much much more."
+flags {UNIT_FL_SACRED}
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+end
+
+				board_room
+names "board_room"
+title "The Board Room of the Gods"
+descr
+"  You are floating in a endless void, infinity surrounding you on all sides.
+The effect on your eyes and mind is a soothing one. By some freak accident of
+nature there is a pleasant little sofa group right next to you, set for tea."
+extra {"sofa group", "sofa"}
+"It looks really soft and comfortable. Have a seat!"
+flags {UNIT_FL_SACRED}
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+
+south to history_hall;
+east to builders_bar;
+west to quest_hall;
+down to dil_hall;
+
+#ifdef SUSPEKT
+
+/* I gave up... too much work.. :-) */
+
+dilbegin sofa();
+var
+   s : string;
+
+code
+{
+   on_activation((activator.position == POSITION_FIGHTING) or
+		 (activator.position < POSITION_SITTING), skip);
+
+   :starting_point:
+   wait(SFB_CMD, command("sit"));
+
+   s := getword(argument);
+
+   if ((s == "") or (s != "sofa"))
+   {
+      on activator.position goto skip,skip,skip,skip,skip,
+                                skip,skip,skip,a_standing;
+
+      goto starting_point;
+
+      :a_standing:
+      act("$1n sits down on the floor.",A_SOMEONE,activator,null,null,TO_ROOM);
+      act("You sit down on the floor.",A_SOMEONE,activator,null,null,TO_CHAR);
+      activator.position := POSITION_SITTING;
+      block;
+      goto starting_point;
+
+      :a_sitting:
+      act("You sit down on the floor.",A_SOMEONE,activator,null,null,TO_CHAR);
+	 send_to_char("You're sitting already.\n\r",sarg->activator);
+	 break;
+	case POSITION_RESTING:
+	 act("You stop resting, and sit on the floor.",
+	     A_SOMEONE,sarg->activator,0,0,TO_CHAR);
+	 act("$1n stops resting, and sits on the floor.",
+	     A_SOMEONE,sarg->activator,0,0,TO_CHAR);
+	 CHAR_POS(sarg->activator) = POSITION_SITTING;
+	 break;
+	case POSITION_SLEEPING:
+	 send_to_char("Zzzzzz!?\n\r",sarg->activator);
+	 act("$1n moves restlessly in $1s sleep.",A_SOMEONE,
+	     sarg->activator,0,0,TO_ROOM);
+	 break;
+	default:
+	 return SFR_SHARE;
+      }
+      return SFR_BLOCK;
+   }
+
+   switch(CHAR_POS(sarg->activator))
+   {
+     case POSITION_STANDING:
+     case POSITION_SITTING:
+     case POSITION_RESTING:
+      send_to_char("You seat yourself comfortably in the sofa\n\r",sarg->activator);
+      act("$1n sits down in the sofa.",A_SOMEONE,sarg->activator,0,0,TO_ROOM);
+      act("The sofa purrs $2t$3t.",A_SOMEONE,sarg->activator,number(0,1)?"":"very ",
+	  number(0,1)?"loudly":"contentedly",TO_ALL);
+      CHAR_POS(sarg->activator) = POSITION_SITTING;
+      return SFR_BLOCK;
+     default:
+      return SFR_SHARE;
+   }
+}
+else if (is_command(sarg->cmd, "pat"))
+{
+   if(strcmp(tmp,"sofa"))
+     return SFR_SHARE;
+   send_to_char("You pat the sofa.\n\r",sarg->activator);
+   act("$1n pats the sofa on its $2t.",A_SOMEONE,sarg->activator,
+       number(0,1)?"back":"pillow",0,TO_ROOM);
+   act("The sofa purrs $2tly and stretches $3tly.",A_SOMEONE,sarg->activator,
+       number(0,1)?number(0,1)?"contented":"loud":"playful",
+       number(0,1)?number(0,1)?"blissful":"thorough":"thankful",TO_ALL);
+   return SFR_BLOCK;
+}
+
+   return SFR_SHARE;
+}
+#endif
+
+end
+
+				builders_bar
+names {"builders_bar","bbar"}
+title "Builders' Bar"
+descr
+"   This is where weary gods go to relax and knock back a few cold ones after
+ a hard day's work creating new worlds.  The room has a red glow to it, you
+notice a large red sphere hovering in the air."
+flags {UNIT_FL_SACRED}
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+north to board_room;
+south to history_hall;
+west to quest_hall;
+down to dil_hall;
+
+extra {"$get", "red sphere", "sphere"}
+"The sphere moves away as you try to grab it, you can only look at it."
+
+extra {"sphere", "red sphere"}
+"This important builder information is to keep you up to speed on how
+Valhalla is operated.<br/><br/>
+
+The Valhalla engine is being licensed out to different
+people interested in running a mud in a more professional manner. Currently,
+there is a Valhalla in Cananda, Denmark, California and Singapore. With these
+engines come a stock of zones (write: look stock zones to see a
+listing of these zones).<br/><br/>
+
+Be sure that you read the builders agreement on the web site. The zones you
+build here will only be used on Valhalla USA. If you currently
+have a zone 'out there' which you would like removed, please mail Papi and
+he will take care of it."
+
+extra {"stock zones", "zones"}
+"The following zones are delivered standard with the Valhalla engine:
+
+Basis, Wiz
+Function
+Newbie
+Midgaard
+Udgaard
+Cypress
+Haon Dor
+Elfdom
+Goblin Cave
+Halfling Zone
+Kings Castle
+Wight Warrens 1 / 2
+Udgaard Guilds
+Midgaard Guilds
+Arena
+Moor
+
+If you would like your zone added to this list, please let me know (I may
+choose not to, we would like the Valhallas to be as different as possible)."
+
+end
+
+				gnort_home
+names "gnort_home"
+title "Gnort's Hangout"
+descr
+"   Nothing much, just a wellstocked virtual bar and an unspecified number of a
+counting lounge chair. So called as noone has yet managed to count it."
+flags {UNIT_FL_SACRED}
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_INDOORS,UNIT_FL_PRIVATE,UNIT_FL_NO_TELEPORT}
+/*special SFUN_SOFA*/
+end
+
+				wolf_home
+names {"wolfwalker_home","wolf_home","wolf_den"}
+title "In the Den of the Wolves"
+descr
+"  You find yourself in a large cave-like structure, wondering what force of
+nature brought you here, as no visible entries or exits are present. As you
+examine the room, you are struck with awe and wonder at the beauty of it.
+There are large paintings and etchings in the walls, representing the Lir of
+the world. The edge of the room is bathed in shadows, indicating the presence
+of strong magical powers, as the walls themselves glow with in inner light.
+Standing in the midst of this beauty, you feel like a trespasser, not sure if
+you have violated someones sense of privacy. There is a musky, unfamiliar scent
+in the air, as if you were in the den of a pack of Wolves."
+flags {UNIT_FL_SACRED}
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_INDOORS,UNIT_FL_PRIVATE,UNIT_FL_NO_TELEPORT}
+/*special SFUN_SOFA*/
+end
+
+				carter_home
+names {"carter_home","chez carter","thome"}
+title "Chez Carter"
+descr
+"  Oh, sod off."
+flags {UNIT_FL_SACRED}
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_INDOORS,UNIT_FL_PRIVATE,UNIT_FL_NO_TELEPORT}
+/*special SFUN_SOFA*/
+end
+
+			aaaaa
+title "The Wiz Zone"
+descr
+"You are in the Wiz zone, be sure to visit the Builder's Bar"
+flags {UNIT_FL_SACRED}
+flags {UNIT_FL_NO_WEATHER,UNIT_FL_INDOORS,UNIT_FL_PRIVATE,UNIT_FL_NO_TELEPORT}
+end
+
+%mobiles
+%mobiles
+
+     odin
+
+/* God of death */
+names {"odin"}
+title "Odin"
+descr
+"Odin is here."
+BASE_NORSE_GOD(199,SEX_MALE,ARM_CLOTHES)
+
+end
+
+
+%objects
+                           sticker
+
+names {"sticker"}
+title "a sticker"
+descr "A sticker is here."
+manipulate {MANIPULATE_TAKE}
+type ITEM_OTHER
+weight 1
+extra {}
+"Usage:<br/>
+personal <playername> <item>"
+
+dilcopy make_personal@wiz();
+
+end
+
+
+		     dil_board
+names {"dil_board", "board"}
+title "the dil board"
+descr
+"In the middle of the void a bulletin board hangs unexplicably."
+dilcopy board@boards("dil","","rem_res@boards","",100);
+
+HIT_TRANSFER(+5)
+
+end
+
+builder_board
+names {"builder_board", "board"}
+title "the builders' board"
+descr
+"A bulletin board for world builders stands tall here."
+dilcopy board@boards("builder","admin_res@boards","admin_res@boards","admin_res@boards",100);
+end
+
+		     wiz_board
+names {"wiz_board", "board"}
+title "the wizard board"
+descr
+"In the middle of the void a bulletin board hangs unexplicably."
+dilcopy board@boards("wiz","admin_res@boards","admin_res@boards","admin_res@boards",100);
+end
+
+		quest_board
+names {"quest board", "bulletin board", "board"}
+title "the quest board"
+descr
+"The sinister quest board, containing dark plans of the gods, hovers
+mysteriously in mid-air."
+type ITEM_OTHER
+dilcopy board@boards("quest","admin_res@boards","admin_res@boards","admin_res@boards",100);
+end
+
+		time_board
+names {"history board", "bulletin board", "board"}
+title "the history board"
+descr
+"The mysterious history board, where the gods discuss their manipulation
+of the past, emerges from the chaos to hang in mid-air."
+type ITEM_OTHER
+dilcopy board@boards("time","admin_res@boards","admin_res@boards","admin_res@boards",100);
+end
+
+		      bell
+names {"silver bell","bell"}
+title "a silver bell"
+descr "A tiny silver bell has been placed here."
+type ITEM_TREASURE
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+weight 1
+cost 4 GOLD_PIECE
+extra {}
+"It really is a very small bell. Perhaps it is a toy, lost by a child."
+dilbegin ringbell();
+
+var
+    targ : unitptr;
+    pc:unitptr;
+code
+{
+:start:
+      unsecure(targ);
+      wait(SFB_CMD,command("ring"));
+      targ := activator;
+      secure(targ,start);
+      block;
+      act("You ring $2n and it tinkles softly.",
+          A_ALWAYS,targ,self,null,TO_CHAR);
+      act("$1n rings $2n and it tinkles softly.",
+          A_SOMEONE,targ,self,null,TO_REST);
+          pc:=findunit (targ,"whistler",FIND_UNIT_WORLD,null);
+if (not ("$nobell" in pc.quests))
+          act ("You here a loud bell clanging ... someone wants coffee!.",
+          A_ALWAYS,pc,null,null,TO_CHAR);
+          unsecure (targ);
+      goto start;
+}
+dilend /* ring_bell */
+
+end
+
+/* ------------ test af vampire club */
+
+%reset
+load wiz_board into board_room local 1
+load builder_board into builders_bar local 1
+load dil_board into dil_hall local 1
+load quest_board into quest_hall local 1
+load time_board into history_hall local 1
+load bell into chat local 1
+load odin into chat local 1
+%end

@@ -1,0 +1,915 @@
+/*
+filename    cypress
+password    rlscrew
+changedby   Darg
+EmailAdd
+request     compile
+version     29
+END HEADER*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include <macros.h>
+
+#define GWYN_QUEST "Gwyn Quest Complete"
+
+%zone				cypress
+title "Cypress Forest@Mainland"
+creators {"papi"}
+lifespan 8
+reset RESET_ANYHOW
+
+
+%rooms
+
+                                 trail1
+
+title "Dusty Trail west of Midgaard"
+descr
+"   Gravel, sand and dust makes this desert like trail, which leads away
+from the city of Midgaard. Further west, cypress trees are growing in small
+numbers."
+movement SECT_CITY
+east to out_wgate;
+west to ct_23;
+end
+
+                              out_wgate
+
+names {"outside", "west gate"}
+title "Outside the West Gate of Midgaard"
+descr
+"   You are by a high city wall.  To your east, two small towers have been
+built into the wall and connected with a footbridge across a heavy wooden
+gate. A small dusty trail leads west to the edge of a big cypress forest."
+movement SECT_CITY
+west to trail1;
+east to rn_001@midgaard;
+extra {"bridge","footbridge"}
+"It is too high up to reach but it looks as if one easily could walk across it
+from one tower to the other."
+extra {"gate"}
+"It is a set of very big double doors made from hard wood, that has been
+reinforced with large iron bands to make it even more sturdy.  One of the
+doors is equipped with a very big lock."
+extra {"tower","towers"}
+"Both of the towers are built from large grey rocks that have been fastened to
+each other with some kind of mortar, just like the city wall."
+extra {"wall"}
+"It is built from large grey rocks that have been fastened to each other with
+some kind of mortar.  It is far too high to climb."
+ALWAYS_LIGHT
+end
+
+
+				cave_entrance
+
+names {"hole", "bush", "bushes", "whitethorn"}
+title "Amidst Whitethorn Bushes"
+descr
+"   You are amidst many vigorous whitethorn bushes, some stand nearly seven
+feet tall. The bushes prevent any further movement up the hill, but a small
+cave entrance is visible to the south."
+
+extra {"cave entrance", "entrance", "cave"}
+"The entrance is fairly small being some five feet tall with many small roots
+hanging around the edge of the entrance."
+
+movement SECT_FOREST
+south to goblin_cave/cave_cross;
+in bushes
+end
+
+				bushes
+
+title "In Cypress Woods"
+descr
+"   Many old cypress trees rise tall above you and a small hill is to the
+south. Upon the top of the hill is a lushly young cypress tree surrounded
+by vigorous whitethorn bushes which completely cover the hill. One small
+section of the whitethorn bushes seems to be thinner then the rest,
+indicating that there just MIGHT be something of note in them. A small
+nearly invisible path runs north through the trees."
+
+extra {"bush", "bushes", "whitethorn"}
+"The whitethorn bushes makes it impossible to ascend the hill, but you
+spot a small hole in one of the bushes. Perhaps you would be able to
+squeeze your way into these bushes."
+extra {"hole", "opening"}
+"Perhaps you would fit?"
+
+movement SECT_FOREST
+north to ct_1;
+end
+
+				ct_1
+
+title "In Cypress Woods"
+descr
+"   The cypress trees stand dense making it possible only to follow the path
+going east or the frail trail to the north.."
+
+movement SECT_FOREST
+north to ct_2;
+east to ct_3;
+south to bushes;
+end
+
+				ct_2
+
+title "In Cypress Woods"
+descr
+"   Surrounded by cypress trees the only possible exits are south and west.
+To the west the woods seems to become less dense."
+
+movement SECT_FOREST
+south to ct_1;
+west to clearing;
+end
+
+				clearing
+
+title "Clearing by small Hut"
+descr
+"   A hut lies at the northern point of a small clearing which is shaped in
+an almost triangular form. Many stumps are along the edge of the clearing
+and only golden dead grass cover the ground."
+
+movement SECT_FOREST
+east to ct_2;
+north to hut open {EX_OPEN_CLOSE, EX_CLOSED} keyword "door";
+
+extra {"hut", "small hut"}
+"The hut is crudely made from tree logs, a small door is placed in the
+middle of the southern wall."
+end
+
+				hut
+title "Inside Hut"
+descr
+"   A gloomy and sparsely decorated place with a fireplace set against the
+northern wall. The exit leads south with small windows on each side of the
+door."
+
+movement SECT_FOREST
+south to clearing open {EX_OPEN_CLOSE, EX_CLOSED} keyword "door";
+end
+
+				ct_3
+
+title "In Cypress Woods"
+descr
+"   A path continues north, south and west through the trees. The thicket is
+dense and vigorous."
+
+movement SECT_FOREST
+west to ct_1;
+north to ct_10;
+south to ct_4;
+end
+
+				ct_4
+
+title "In Cypress Woods"
+descr
+"   Here the wood is very dense and only occasional peeks at the sky above is
+possible. An apparently often used path continues north and east through the
+woods."
+
+movement SECT_FOREST
+north to ct_3;
+east to ct_5;
+end
+
+				ct_5
+
+title "In Cypress Woods"
+descr
+"   Six old and gnarled cypress trees almost form an archway leading east
+though the dense woods. A seemingly often used path continues north and
+west through the woods."
+
+movement SECT_FOREST
+north to ct_7;
+west to ct_4;
+east to ct_6;
+end
+
+				ct_6
+
+title "In Cypress Woods"
+descr
+"   Silence and peace dominates this part of the woods. An archway formed
+by six old and gnarled cypress trees leads west. A mystical light seems to
+glow between the trees to the north. South of here you can see a river
+flowing east through the forest."
+
+movement SECT_FOREST
+north to tree_circle;
+south to river;
+west to ct_5;
+end
+
+                                  river
+
+title "On the River in Cypress Forest"
+descr
+"   You are on the river flowing eastwards though the Cypress forest. If you
+continue east you will reach the city of Midgaard while the village of
+Udgaard is upstream to the west. A quiet part of the Cypress forest is just
+north of here."
+
+movement SECT_WATER_SAIL
+
+north to ct_6;
+east to midgaard/river1 difficulty 0;
+west to udgaard/river difficulty 10;
+
+dilcopy watercurrent@basemove(DIR_EAST, 
+   {"The river current gently takes you east.", "$1n gently flows away to the east.",
+    "You gently flow further eastwards.", "$1n flows in from the west."}, 6);
+
+south to river_1@nymgaard descr
+"You see water to the south.";
+end
+
+				tree_circle
+
+title "Cypress Tree Circle"
+descr
+"   You are surrounded by eleven vigorous cypress trees all of the same
+height. A mystical shimmering green light flows between the treetops.
+You can hear no sounds native to these woods."
+
+movement SECT_FOREST
+flags {UNIT_FL_SACRED}
+light 5
+south to ct_6;
+end
+
+				ct_7
+
+title "In Cypress Woods"
+descr
+"   The path leads south into the denser parts of these woods and also
+continues north. The thriving thicket forms a green carpet covering
+the forest floor. Occasional wavering green light appears in the treetops."
+
+movement SECT_FOREST
+north to ct_8;
+south to ct_5;
+end
+
+
+				ct_8
+
+title "In Cypress Woods"
+descr
+"   Thriving thicket covers the forest floor like a green carpet. A well
+used trail continues south. The cypress trees allows further movement
+east as well as west."
+
+movement SECT_FOREST
+east to ct_9;
+west to ct_10;
+south to ct_7;
+end
+
+
+				ct_9
+
+title "In Cypress Woods"
+descr
+"   Cypress trees stand dense in an eastbound curve leaving only an exit
+to the west. Through the thicket you notice a very small hole which appears
+to be the entrance to a badgers burrow.."
+
+extra {"hole", "badgers burrow", "burrow"}
+"The hole is very small and it seems like it hasn't been used for
+a long time."
+/* A "hole" (room) is inside this room */
+
+movement SECT_FOREST
+west to ct_8;
+end
+
+
+                                burrow
+
+names {"burrow", "badgers burrow", "hole"}
+title "In Badgers Burrow"
+descr
+"   You are miraculously small enough to be inside a badgers burrow!"
+
+movement SECT_INSIDE
+in ct_9
+end
+
+
+				ct_10
+
+title  "In Cypress Woods"
+descr
+"   A carpet of green thriving thicket covers the forest floor, only the
+moist brown mold is visible at the path going in a north south direction.
+A frail trail twists its way eastwards through the thicket."
+
+movement SECT_FOREST
+north to ct_11;
+east to ct_8;
+south to ct_3;
+end
+
+				ct_11
+
+title "In Cypress Woods"
+descr
+"   A path twisting its way through the moss covering the forest floor leads
+east to south. Westwards the cypress trees remain fairly closely together."
+
+movement SECT_FOREST
+south to ct_10;
+east to ct_12;
+west to ct_13;
+end
+
+				ct_12
+
+title "In Cypress Woods"
+descr
+"   Brown dirt covers the small well used path which twists its way north
+and west through the cypress trees."
+movement SECT_FOREST
+north to ct_19;
+west to ct_11;
+end
+
+				ct_13
+
+title "In Cypress Woods"
+descr
+"   Many cypress trees stand closely together almost completely covering
+the sky above. A trail leads from east to north."
+
+movement SECT_FOREST
+east to ct_11;
+north to ct_14;
+end
+
+				ct_14
+
+title "In Cypress Woods"
+descr
+"   Trails lead in all directions from this forest intersection. Eastwards
+the forest seems much lighter compared to here, where the cypress tree
+crowns almost forms a ceiling of green scale like leaves."
+
+movement SECT_FOREST
+south to ct_13;
+north to ct_16;
+east to ct_15;
+west to ct_18;
+end
+
+
+				ct_15
+
+title "Clearing in Cypress Woods"
+descr
+"   A huge evergreen live oak is in the middle of this forest clearing.
+Two inch tall green grass and a few brightly yellow daisy flowers covers the
+ground around the oak tree. The nearest cypress tree is three yards from
+the edge of the oak, making the clearing almost ten yards in radius."
+
+movement SECT_FOREST
+west to ct_14;
+end
+
+				ct_16
+
+title "Edge of Cypress Forest"
+descr
+"   Going south will take you further into the forest of cypress trees. Here
+only a few cypress trees are in between the beech and oak trees. The edge
+of the forest continues eastwards."
+
+movement SECT_FOREST
+east to ct_17;
+south to ct_14;
+end
+
+				ct_17
+
+title "Edge of Cypress Forest"
+descr
+"   Few cypress trees stand in between the beech and oak trees. A trail
+continues west at the edge of the cypress forest.  An old run down shack
+is off to the east."
+
+movement SECT_FOREST
+west to ct_16;
+
+end
+
+				ct_18
+
+title "In Cypress Forest"
+descr
+"   The cypress trees grow vigorously up towards the hill to the north.
+It appears that there are no trees at the top of the hill as all you see
+is a smooth green surface. A trail leads east through the cypress trees
+to an intersection."
+
+movement SECT_FOREST
+east to ct_14;
+north to hill;
+end
+
+				hill
+
+title "Top of Hill"
+descr
+"   Standing at the very top of a small hill in the cypress forest you have
+a magnificent view. The hill is just tall enough for you to peek above the
+tree crowns of the cypress trees. Udgaard is just west of here and a
+stable is to the north."
+
+/* XXX If you plant a cone here something shall happen */
+
+movement SECT_FOREST
+
+west to udgaard/watch_tower descr
+"Half a mile west is the small village of Udgaard, just down the hill and
+along the moist forest trail.";
+
+south to ct_18 descr
+"The cypress forest seems quite large stretching out to the south. You notice
+a clearing further south and a strange greenish light in a southeast
+direction";
+north to stable1 descr
+"You see a stable to the north";
+
+
+extra {"east"}
+"The Cypress forest stretches out eastwards and in the distance you can make
+out the city of Midgaard."
+end
+
+                                stable1
+
+title "The Stable"
+names {"stable"}
+descr
+"You are standing in the stables which serve Udgaard.
+Various items of tack line the walls, while brightly
+polished saddles sit on large racks.  You seem to sense
+the overpowering stench of something that doesn't exactly
+smell like hay.  The building has a sloped roof, and there
+are large doorways leading to the north and east."
+extra {"stables"}
+"These stables house the finest warhorses of Udgaard."
+extra {"tack", "saddles"}
+"These items look to be owned by the stable."
+extra {"racks"}
+"These racks hold the saddles."
+extra {"roof"}
+"This heavy timbered roof look to be constructed of oak
+beams."
+extra {"door", "doors", "doorways"}
+"These doorways look to be large enough to allow the passage
+of a massive stud."
+flags {UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+south to hill descr
+"Top of hill";
+east to tack_shop descr
+"The Tack Shop";
+north to stall1 descr
+"Stalls";
+end
+
+
+                       tack_shop
+
+title "The Tack Shop"
+names {"tack shop"}
+descr
+"It is in this store that you may buy the various items
+needed to care for and ride your horse.   A large assortment
+of bridles, saddles, and other care items line hooks and
+shelves along the walls.  There is a doorway leading to the
+main stables to the west."
+extra {"bridles", "saddles"}
+"These were made by Myrna in Midgaard, and shipped here for
+sale."
+extra {"care items"}
+"Everything to make your horse happy."
+extra {"hook"}
+"OOHHH, sharp."
+extra {"shelves"}
+"OOHHH, flat and made of oak."
+extra {"door", "doors", "doorway"}
+"Looks big enough to fit your stud."
+
+flags {UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+west to stable1 descr
+"The Stable";
+end
+
+
+
+                       stall1
+
+title "The stalls"
+names {"stalls"}
+descr
+"You are standing in a room with many doors.  This is the part of
+the stables which houses the horses."
+extra {"doors"}
+"These doors appear to be very sturdy."
+flags {UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+south to stable1 descr
+"The Stable";
+north to smithy descr
+"The Blacksmith's";
+end
+
+                       smithy
+
+title "The Blacksmith's forge"
+names {"smithy"}
+descr
+"This room is hot and smoky, and contains a large forge with
+gigantic bellows.  Various smithing tools lie around and there
+is a large anvil in the center of the room.  Travel south to the
+stalls is possible."
+extra {"large forge", "forge"}
+"The forge is used to heat metal."
+extra {"gigantic bellows", "bellows"}
+"The bellows are used to feed the fire with air."
+extra {"smithing tools", "tools"}
+"These consist of hammers, tongs, and the like."
+extra {"anvil"}
+"The anvil is large and heavy."
+flags {UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+south to stall1 descr
+"The Stalls";
+end
+
+
+				ct_19
+title "In Cypress Forest"
+descr
+"   Through the moist moss covering the forest floor a path has been trampled
+to a mixture of brown mold and lifeless moss twisting its way from north to
+south. A trail leads east to the outskirts of the cypress forest."
+
+movement SECT_FOREST
+south to ct_12;
+north to ct_20;
+east to ct_21;
+end
+
+				ct_20
+
+title "Edge of Cypress Forest"
+descr
+"   You are at the edge of the cypress forest with only a few cypress
+trees mingling in with the darker, taller trees of the northern forest.
+A slight trail leads north and south from here."
+
+movement SECT_FOREST
+south to ct_19;
+north to att_4@haunted;
+end
+
+				ct_21
+
+title "In Cypress Forest"
+descr
+"   Moist moss is covering the forest floor and occasionally growing
+partly on the cypress tree trunks. Trails lead to the north and south.
+The forest seems to become denser to the west."
+
+movement SECT_FOREST
+north to ct_23;
+south to ct_22;
+west to ct_19;
+end
+
+
+				ct_22
+
+title "Dead end in Cypress Forest"
+descr
+"   The monterey cypress trees stand closely together leaving it possible
+only to go north. Soft moss covers the forest floor concealing most sounds
+of walking animals."
+
+movement SECT_FOREST
+north to ct_21;
+end
+
+				ct_23
+
+title "Edge of Cypress Forest"
+descr
+"   This is a light part of the forest and only a few cypress trees are
+growing here. The dusty trail around the city walls of Midgaard is visible
+to the east, and another trail leads south, deeper into the forest. A close stand
+of trees blocks progress to the north."
+
+movement SECT_FOREST
+east to trail1;
+south to ct_21;
+end
+
+
+%objects
+
+
+                                 acorn
+
+names  "acorn"
+title "an acorn"
+descr "A small acorn has been dropped here."
+flags {UNIT_FL_MAGIC, UNIT_FL_BURIED}
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+weight 1
+extra {} "It looks like an acorn, perhaps from a Live Oak tree."
+/* XXX special SFUN_PLANT */
+end
+
+
+                              skeleton
+
+names {"goblin skeleton", "skeleton"}
+title "a skeleton"
+descr "A skeleton has been left here."
+extra {}
+"It looks like a goblins skeleton, must have been dead for a long time.
+There are some markings on the bones."
+extra {"markings","bone","bones"}
+   "It looks like markings from strong claws."
+
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+weight 15
+type ITEM_TRASH
+end
+
+
+                           goblin_slayer
+
+names {"hand mace","mace"}
+title "a hand mace"
+descr "A good looking hand mace has been left here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_MACE, +2, +3)
+WEAPON_SLAYER(RACE_ORC)
+weight 20
+dilcopy quest_restrict@function (GWYN_QUEST,0,0,"");
+cost 6 COPPER_PIECE
+rent 3 COPPER_PIECE
+extra {}
+"The mace is quite remarkable. It is without doubt of fine craftsmanship
+and the very metal of which it is made seems to be of a high quality. The
+mace has a good feel to it. There are some runes engraved on the shaft of
+the mace."
+extra {"runes", "rune", "shaft"}
+"They are quite incomprehensible."
+extra {"$identify"}
+"This mace was crafted by the famous Gnome blacksmith Akwaha Nuuil
+over two centuries ago. It has powerful Gnome magic bestowed upon it."
+extra {"$improved identify"}
+"This is a mace of Orc Slaying."
+end
+
+%mobiles
+%mobiles
+
+
+                                  badger
+names "badger"
+title "the badger"
+descr "A badger is nosing around."
+extra {}
+"The badger is long and slender, it has a cute pointy nose, white and black
+markings on its head and ears. The fur covering its body is brownish blended
+with black and white. You notice it has especially large claws and sharp
+teeth."
+weight 30
+height 30
+M_BADGER_TINY(4,SEX_MALE)
+dilcopy wander_zones@function ("cypress", 30, 0,0);
+
+end
+
+
+                                  skunk
+names "skunk"
+title "a skunk"
+descr "A spotted skunk is here looking for some beetles to munch up."
+extra {}
+"The skunk has large white blotches all over its black fur. A triangular
+patch of white covers its forehead. A very strong and unpleasant smell
+reaches you as you approach the skunk."
+M_SKUNK_TINY(3,SEX_FEMALE)
+dilcopy wander_zones@function ("cypress", 30, 0,0);
+/* special SFUN_SKUNK_ATTACK "$1n sprays you with musk." */
+
+end
+
+
+                                  boar
+names {"wild boar", "boar"}
+title "the wild boar"
+descr "A wild black boar is running around here, not having noticed you."
+extra {}
+"The boar has short grayish-black hair and coarse bristles. It has two sharp
+and quite powerful looking tusks."
+M_BOAR_TINY(6,SEX_MALE)
+dilcopy wander_zones@function ("cypress", 30,0, 0);
+
+end
+
+
+                            gwyn1
+
+names {"gwyn", "hermit"}
+title "gwyn"
+descr "Gwyn the gnome hermit is here, impatiently twiddling her thumbs."
+
+extra {}
+"She is actually a bit revolting, but apparently a pleasant old gnome living
+by herself in these woods. She is small and plump, has a nose the size of an
+orange and the colour of a ripe plum. Several large warts cover her face."
+
+money 3 COPPER_PIECE, 5 IRON_PIECE
+
+M_GNOME_WARRIOR_NATURAL(4, SEX_FEMALE)
+
+dilbegin gwyn_quest();
+var
+  pc : unitptr;
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*15;
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+   interrupt(SFB_COM, self.position == POSITION_FIGHTING, iamfighting);
+
+   :start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (not command("give"))
+                 and not (GWYN_QUEST in activator.quests));
+   pc := activator;
+   secure(pc, start);
+
+   pause;
+   if (GWYN_QUEST in pc.quests) goto end;
+   exec("emote sings, 'In this ancient wood, hidden in an ugly hood'", self);
+
+   pause;
+   if (GWYN_QUEST in pc.quests) goto end;
+   exec("emote sings, 'Lives, not far from here, Burp with his slimy beard'", self);
+
+   pause;
+   if (GWYN_QUEST in pc.quests) goto end;
+   exec("emote sings, 'Burp is King, but he can't sing'", self);
+
+   pause;
+   if (GWYN_QUEST in pc.quests) goto end;
+   exec("emote sings, 'He is a thief and causes me grief'", self);
+
+   pause;
+   if (GWYN_QUEST in pc.quests) goto end;
+   exec("emote sings, 'It is my hope, that you retrieve my yellow robe'", self);
+   pause;
+   if (GWYN_QUEST in pc.quests) goto end;
+   exec("emote sings, 'A great reward from space, will be a magical mace...'", self);
+
+   pause;
+   if (GWYN_QUEST in pc.quests) goto end;
+   exec("wave "+pc.name, self);
+   unsecure(pc);
+   pause;
+   pause;
+   goto start;
+
+   :iamfighting:
+   pause;
+   exec("emote sings, I am hit, by a little shit.", self);
+   while (self.position == POSITION_FIGHTING)
+     pause;
+   goto init;
+
+   :end:
+   exec("emote sings, left it did, that little prick.", self);
+   unsecure(pc);
+   goto start;
+}
+dilend
+
+
+dilbegin gwyn_give();
+var
+  pc     : unitptr;
+  item   : unitptr;
+
+code
+{
+   heartbeat := PULSE_SEC*10;
+   on_activation((self.position <= POSITION_SLEEPING) or
+		 (self.position == POSITION_FIGHTING), skip);
+
+   :start:
+   wait(SFB_CMD, command("give") and (activator.type == UNIT_ST_PC));
+
+   :give:
+   if (GWYN_QUEST in activator.quests)
+     goto start;
+   pc := activator;
+   item := self.inside;
+   secure(pc, labsecure);
+   secure(item, labsecure);
+
+   wait(SFB_CMD | SFB_TICK, TRUE);
+
+   if (not (item #= self.inside))
+   {
+      unsecure(item);
+
+      if ("yellow robe" in self.inside.name)
+      {
+	 destroy(self.inside);
+	 addextra(pc.quests, {GWYN_QUEST}, "");
+	 item := load("goblin_slayer@cypress");
+         item.height := pc.height;
+	 link(item, pc);
+         experience(500, pc);
+	 exec("emote sings, 'The hero "+pc.name+" is born, please do not yawn'", self);
+         pause;
+	 exec("emote sings, 'Here is your mace, my lord of space!'", self);
+	 goto start;
+      }
+      else
+      {
+	 exec("emote sings, 'Of that I am not in need, but the try was good indeed.'", self);
+	 /* Return the item to the player */
+	 link(self.inside, pc);
+      }
+   }
+   unsecure(pc);
+
+   if ((command("give")) and (activator.type == UNIT_ST_PC))
+     goto give;
+   else
+     goto start;
+
+   :labsecure:
+   exec("emote sings, 'How very rude, leaving just like that dude!", self);
+   goto start;
+}
+dilend
+
+end
+
+%reset
+
+load acorn into burrow max 1
+load skeleton into bushes max 1
+
+load badger into ct_9 zonemax 6
+load skunk into ct_15 zonemax 5
+load boar into ct_2 zonemax 4
+load gwyn1 into hut local 1
+
+
+%end

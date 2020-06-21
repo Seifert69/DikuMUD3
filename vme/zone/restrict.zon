@@ -1,0 +1,353 @@
+/*
+filename    restrict
+password    quicky
+changedby   Mesmer
+EmailAdd    
+request     compile
+version     1
+END HEADER*/
+#include <macros.h>
+
+%zone restrict
+lifespan 60
+reset RESET_NOT
+creators {"Whistler"}
+
+
+%dil
+
+dilbegin integer damage_calc(p:integer,d:integer);
+var
+ a:integer;
+code
+{
+if (p!=0)
+  a:=(self.outside.hp*p)/100;
+if (d==-1)
+  d:=openroll (100,5);
+if (p!=0)
+  if (d>a)
+    d:=a;
+  else if (d==0)
+  d:=a;
+  
+  return (d);
+  
+  }
+  dilend
+  
+  dilbegin integer is_restricted(u:unitptr);
+  external
+integer damage_calc(p:integer,d:integer);
+                             string abistr (ability:integer);
+var
+ damage:integer;
+ percent:integer;
+ act_str:string;
+ action:integer;
+ act_dil:string;
+                   i,ln:integer;
+  code
+  {
+action:=0;  
+
+if   (self.zoneidx=="g_q")
+goto restricted;//do not let fams wear restricted items.
+
+  if ((self.type == UNIT_ST_NPC) and not ("$pc obey" in u.extra)
+   and (self.master.type != UNIT_ST_PC) )
+   return (FALSE);// normal NPC not affected.
+
+if (self.level>=IMMORTAL_LEVEL)
+  return (FALSE);// Admin not affected.
+
+					     if (u.extra.[ABILITY_R]!=null)
+{
+if (self.abilities[u.extra.[ABILITY_R].vals.[2]]>=u.extra.[ABILITY_R].vals.[3])
+goto wpn;
+action:= self.abilities[u.extra.[ABILITY_R].vals.[2]]-u.extra.[ABILITY_R].vals.[3];
+  act_str:="You don't have enough "+abistr (u.extra.[ABILITY_R].vals.[2]) +" to use $3n.";
+  	  	  act_dil:=u.extra.[ABILITY_R].descr;
+                                                            goto restricted;
+															}
+
+										:wpn:
+					     if (u.extra.[WEAPON_R]!=null)
+{
+if (self.weapons[u.extra.[WEAPON_R].vals.[2]]>=u.extra.[WEAPON_R].vals.[3])
+goto spl;
+action:= self.weapons[u.extra.[ABILITY_R].vals.[2]]-u.extra.[ABILITY_R].vals.[3];
+  act_str:="You are not skilled enough to use $3n.  $2t skill needed to use it.";
+  	  	  act_dil:=u.extra.[WEAPON_R].descr;
+                                                            goto restricted;
+															}
+
+
+										:spl:
+					     if (u.extra.[SPELL_R]!=null)
+{
+if (self.spells[u.extra.[SPELL_R].vals.[2]]>=u.extra.[SPELL_R].vals.[3])
+goto ski;
+action:= self.spells[u.extra.[SPELL_R].vals.[2]]-u.extra.[SPELL_R].vals.[3];
+  act_str:="You are not skilled enough to use $3n.  $2t skill needed to use it.";
+  	  	  act_dil:=u.extra.[SPELL_R].descr;
+                                                            goto restricted;
+															}
+
+										:ski:
+					     if (u.extra.[SKILL_R]!=null)
+{
+if (self.skills[u.extra.[SKILL_R].vals.[2]]>=u.extra.[SKILL_R].vals.[3])
+goto gld;
+action:= self.skills[u.extra.[SKILL_R].vals.[2]]-u.extra.[SKILL_R].vals.[3];
+  	  	  act_dil:=u.extra.[SKILL_R].descr;
+		    act_str:="You are not skilled enough to use $3n.  $2t skill needed to use it.";
+                                                            goto restricted;
+															}
+
+										:gld:					
+if (u.extra.[GUILD_R]!=null)
+{
+   if (u.extra.["$path"] != null)
+   {
+      if ((self.outside.extra.["$path"].names.[1] in u.extra.[GUILD_R].names) or
+          (self.outside.extra.["$path"].names.[2] in u.extra.[GUILD_R].names) or
+          (self.outside.extra.["$path"].names.[3] in u.extra.[GUILD_R].names))
+		  goto agld;
+   }
+      Act_str:="Being in the right guild might help.";
+	  act_dil:=u.extra.[GUILD_R].descr;
+   goto restricted;
+   }
+
+
+:agld:  
+if (u.extra.[ANTI_GUILD_R]!=null)
+{
+   if (u.extra.["$path"] != null)
+   {
+		        if ((not(self.outside.extra.["$path"].names.[1] in u.extra.[ANTI_GUILD_R].names)) and
+          (not(self.outside.extra.["$path"].names.[2] in u.extra.[ANTI_GUILD_R].names)) and
+          (not(self.outside.extra.["$path"].names.[3] in u.extra.[ANTI_GUILD_R].names)))
+		  goto qst;
+   }
+      Act_str:=  "Not being in this guild might help.";
+	  	  act_dil:=u.extra.[ANTI_GUILD_R].descr;
+   goto restricted;
+   }
+
+:qst:
+if (u.extra.[QUEST_R]!=null)
+{
+		  if (u.extra.[QUEST_R].names.[1] in self.quests)
+		  goto ali; 
+      Act_str:="Doing the right Quest might help.";
+	  	  act_dil:=u.extra.[QUEST_R].descr;
+   goto restricted;
+   }
+
+:ali:   
+   if (u.extra.[ALIGNMENT_R]!=null)
+{
+if ((self.alignment<=u.extra.[ALIGNMENT_R].vals.[2]) and
+(self.alignment>=u.extra.[ALIGNMENT_R].vals.[3]))
+goto mlvl;
+  if (activator.alignment>u.extra.[ALIGNMENT_R].vals.[2])
+    act_str:="You are too good to use $2n";
+  else
+    act_str :="You are too evil to use $2n";
+		  	  act_dil:=u.extra.[ALIGNMENT_R].descr;
+                      goto restricted;
+					  }
+:mlvl:					  
+					     if (u.extra.[MAX_LEVEL_R]!=null)
+{
+action:= self.vlevel-u.extra.[MAX_LEVEL_R].vals.[2];
+if (self.vlevel<=u.extra.[MAX_LEVEL_R].vals.[2])
+goto lvl;
+  act_str:= "You are above the maximum level allowed to use $3n.";
+  	  	  act_dil:=u.extra.[MAX_LEVEL_R].descr;
+                                                            goto restricted;
+															}
+
+:lvl:
+					     if (u.extra.[LEVEL_R]!=null)
+{
+action:= u.extra.[LEVEL_R].vals.[2]-self.vlevel;
+if (self.vlevel>=u.extra.[LEVEL_R].vals.[2])
+goto rcs;
+act_str:= "You are not high enough level to use $3n. $2t levels needed to use it.";
+  	  	  act_dil:=u.extra.[LEVEL_R].descr;
+                                                            goto restricted;
+															}
+															
+:rcs:
+					     if (u.extra.[RACE_R]!=null)
+{
+if (self.race!=u.extra.[RACE_R].vals.[2])
+goto sx;
+act_str:="Being the right race might help.";
+  	  	  act_dil:=u.extra.[RACE_R].descr;
+                                                            goto restricted;
+															}
+
+:sx:
+					     if (u.extra.[SEX_R]!=null)
+{
+if (self.sex!=u.extra.[SEX_R].vals.[2])
+ goto ply;					  
+act_str:="You are not the right sex to use $3n.";
+  	  	  act_dil:=u.extra.[SEX_R].descr;
+                                                            goto restricted;
+															}
+
+:ply:
+					     if (u.extra.[PLAYER_R]!=null)
+{
+if (self.name==u.extra.[PLAYER_R].names.[1])
+return (FALSE);
+  act_str:="You really shouldn't try to use someone else's personal item.";
+  	  	  act_dil:=u.extra.[PLAYER_R].descr;
+                                                            goto restricted;
+															}
+
+
+
+return (FALSE);
+
+:restricted:
+if (damage < 0) damage := -damage;
+if (percent < 0) percent := -percent;
+
+if (act_dil=="")
+  {
+act ("Your $2n burns you and you drop it to the ground.",
+A_ALWAYS,self,u,null,TO_CHAR);
+act ("$1n's $2n burns $1m and $1e drops it to the ground.",
+A_SOMEONE,self,u,null,TO_REST);
+    act(act_str,
+A_ALWAYS,self,itoa(action),u,TO_CHAR);
+}
+else act_dil(action);
+
+self.hp:=self.hp-Damage_calc(percent,damage);
+position_update (self);
+link (u,self.outside);
+  return (FALSE); //Item is not restricted.
+  }
+  dilend
+
+
+
+
+
+dilbegin string abistr (ability:integer);
+
+var
+ ablst:stringlist;
+code
+{
+ablst:={"magic" , "divinity" , "strength" , "dexterity","constitution" ,
+    "charisma" ,"brains" , "hit points"};
+return (ablst.[ability]);
+    }
+    dilend
+
+/*
+*The following restricts must stay as dils only till the macro language used by DIL 
+* is adjusted to accept stringlists and lists of quoted strings with out {}
+*/
+
+dilbegin glds(sl:stringlist,damage:integer,percent:integer,action:string);
+var
+ i:intlist;
+code
+{
+insert (sl,0,GUILD_R);
+i.[0]:=damage;
+i.[1]:=percent;
+addextra (self.extra,sl,action,i);
+quit;
+}
+dilend
+
+dilbegin anti_glds (sl:stringlist,damage:integer,percent:integer,action:string);
+var
+ i:intlist;
+code
+{
+insert (sl,0,ANTI_GUILD_R);
+i.[0]:=damage;
+i.[1]:=percent;
+
+addextra (self.extra,sl,action,i);
+quit;
+}
+dilend
+
+/*
+* This dil was added to convert old zones easier.  In the future you only need use the extra
+* to set this restrict which makes it much easier in a dil.
+*/
+
+dilbegin ply (s:string,damage:integer,percent:integer,action:string);
+var
+ i:intlist;
+ sl:stringlist;
+code
+{
+addstring (sl,PLAYER_R);
+addstring(sl,s);
+i.[0]:=damage;
+i.[1]:=percent;
+addextra (self.extra,sl,action,i);
+quit;
+}
+dilend
+
+
+%objects
+
+coin_leggings
+names {"gold laced leather leggings", "gold leggings","lace leggings","leggings"}
+title "a pair of gold laced leather leggings"
+descr "A pair of gold laced leggings has been left here."
+MATERIAL_METAL("Precious metal coins, and metal mesh")
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+ARMOUR_HRD_LEATHER(0, 0)
+ABILITY_RESTRICT (ABIL_STR,35,0,25,"")
+LEVEL_RESTRICT (10,0,25,"")
+cost 5 GOLD_PIECE
+weight 20
+
+extra {}
+"A heavy pair of leggings made from overlapping gold coins."
+end
+
+
+
+                hammer
+
+names {"Iron Hammer","hammer"}
+title "an old  iron hammer"
+descr "An old iron hammer is lying here."
+extra {}
+"Nothing realy special about this hammer. it is old and slightly rustted.
+It looks to have seen lots of battles in its time."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_WAR_MATTOCK, -0, 0)
+weight 15
+ABILITY_RESTRICT (ABIL_STR,35,0,25,"")
+LEVEL_RESTRICT (10,0,25,"")
+QUEST_RESTRICT ("Test quest",0,25,"")
+ALIGNMENT_RESTRICT(1000,0,0,25,"")
+MAX_LEVEL_RESTRICT(25,0,25,"")
+RACE_RESTRICT(RACE_ELF,0,25,"")
+SEX_RESTRICT(SEX_MALE,0,25,"")
+PLAYER_RESTRICT("whistler",0,25,"")
+
+end
+
+
+
+%end

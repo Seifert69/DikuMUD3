@@ -1,0 +1,605 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Loading objects and NPCs</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The reset section"
+HREF="ch07.html"><LINK
+REL="PREVIOUS"
+TITLE="The reset section"
+HREF="ch07.html"><LINK
+REL="NEXT"
+TITLE="Special reset functions"
+HREF="x4779.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="ch07.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 8. The reset section</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4779.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RESETLOADOBJNPC"
+>8.2. Loading objects and NPCs</A
+></H1
+><P
+>Time to start loading your zone with its life and all the other
+strange things you have built.  There is two commands that do all the
+loading and equipping of objects.  Oddly enough the commands are called
+'load' and 'equip'.  The format of the commands are almost the same
+but equip must be used inside a NPC grouping.  With that in mind lets
+start with simple loads and work our way up.</P
+><P
+>The command to load an object or an NPC into a room is as
+follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4631"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;load &lt;object or NPC&gt; [into] [&lt;room&lt;] [&lt;load amount&gt;]
+  [{Other loads and equip commands}]
+  </PRE
+><P
+></P
+></DIV
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>object or NPC</DT
+><DD
+><P
+>The first argument to the load command is the object or NPC
+symbolic name that you want to load.  The first argument is the only one
+that must be included in all load commands.</P
+></DD
+><DT
+>into</DT
+><DD
+><P
+>This is just a symbol that tells the reset that we are loading the
+object or NPC into some other unit.</P
+></DD
+><DT
+>object, NPC, and room</DT
+><DD
+><P
+>The third argument is the symbolic name of the place where you are loading the object
+and the NPC.</P
+></DD
+><DT
+>load amount</DT
+><DD
+><P
+>the fourth argument is an optional argument that tells the reset
+how many of the objects are allowed in the world, zone, or locally.  The
+possible values for this field are as follows:</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>max &lt;num&gt;</DT
+><DD
+><P
+>This  command  is  always  part  of  another reset command (load,
+equip, etc.).  At reset time the entire world is scanned for occurences
+of the loaded unit - only if the currently existing number is less than
+&lt;num&gt; will the command be executed.</P
+></DD
+><DT
+>local &lt;num&gt;</DT
+><DD
+><P
+>This command is always  part  of  another  reset  command  (load,
+equip, etc.).  At reset time the location of which the unit is to
+be loaded into is scanned for occurences of the loaded unit only  if  the currently
+existing number is less than &lt;num&gt; will the
+command be executed.</P
+></DD
+><DT
+>zonemax &lt;num&gt;</DT
+><DD
+><P
+>This command is always  part  of  another  reset  command  (load,
+equip,  etc.).   At  reset  time  the  entire zone being reset is
+scanned for occurences of the loaded unit - only if the currently
+existing number is less than &lt;num&gt; will the command be
+executed.</P
+></DD
+></DL
+></DIV
+></DD
+><DT
+>Optional grouping</DT
+><DD
+><P
+>Any reset command may be followed by a pair of curly brackets {}
+containing  more reset commands. The commands inside the brackets
+will only be executed in case the associated command was successful.</P
+></DD
+></DL
+></DIV
+><P
+>Don't be alarmed if this sounds a bit hard.  It all gets much
+more clear as some examples are explained.  Lets take a look at the
+following example and see if we can't make this much more clear.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4668"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;load udgaard/fido into midgaard/temple max 1&#13;</PRE
+><P
+></P
+></DIV
+><P
+>This example is pretty simple it says load the fido into the
+temple only if there isn't already 1 in the world.  Now lets get a bit
+more complicated.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4671"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;load udgaard/fido into midgaard/temple max 1
+{
+   load bone
+   load excrement into midgaard/temple
+}&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now we have said again load the fido into the temple if there is
+not already one in the world.  Then if fido loads fill his inventory
+with a bone and load excrement into the temple as well.</P
+><P
+>We can get even more complicated but still just using the load
+commands by doing the following</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4675"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;load udgaard/fido into midgaard/temple max 1
+{
+   load bone
+   load excrement into midgaard/temple
+      load bag
+   {
+      load apple max 1
+   }
+}
+&#13;</PRE
+><P
+></P
+></DIV
+><P
+>now we still have the fido loading if there isn't one already in
+the world then the bone and the excrement and finally we load a bag. 
+If there isn't an apple already in the world we load the bag with a
+apple in it other wise the bag will be empty.</P
+><P
+>Well that should be enough load examples for now but we will get
+right back to them in a bit.  Now we should introduce another reset
+command called the 'equip' command that we have already mentioned.  The
+'equip' command works a lot like load but has much simpler arguments. 
+The 'equip' command is as follows.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4679"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;equip &lt;symbol&gt; position [load amount &lt;num&gt;]&#13;</PRE
+><P
+></P
+></DIV
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>symbol</DT
+><DD
+><P
+>The first argument is just the symbolic name of the item 
+being worn by the NPC.</P
+></DD
+><DT
+>position</DT
+><DD
+><P
+>The position is any of the positions available in the
+<TT
+CLASS="FILENAME"
+>vme.h</TT
+>.  The following are all the positions along
+side there defines as found in the <TT
+CLASS="FILENAME"
+>vme.h</TT
+>.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN4692"
+></A
+><P
+><B
+>Table 8-1. Wear positions</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Position</TH
+><TH
+>Define(s)</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>head</TD
+><TD
+>WEAR_HEAD</TD
+></TR
+><TR
+><TD
+>hands</TD
+><TD
+>WEAR_HANDS</TD
+></TR
+><TR
+><TD
+>arms</TD
+><TD
+>WEAR_ARMS</TD
+></TR
+><TR
+><TD
+>body</TD
+><TD
+>WEAR_BODY</TD
+></TR
+><TR
+><TD
+>legs</TD
+><TD
+>WEAR_LEGS</TD
+></TR
+><TR
+><TD
+>feet</TD
+><TD
+>WEAR_FEET</TD
+></TR
+><TR
+><TD
+>cloak</TD
+><TD
+>WEAR_ABOUT</TD
+></TR
+><TR
+><TD
+>shield</TD
+><TD
+>WEAR_SHIELD</TD
+></TR
+><TR
+><TD
+>hold</TD
+><TD
+>WEAR_HOLD</TD
+></TR
+><TR
+><TD
+>wield</TD
+><TD
+>WEAR_WIELD</TD
+></TR
+><TR
+><TD
+>ear</TD
+><TD
+>WEAR_EAR_R and WEAR_EAR_L</TD
+></TR
+><TR
+><TD
+>neck</TD
+><TD
+>WEAR_NECK_1 and WEAR_NECK_2</TD
+></TR
+><TR
+><TD
+>wrist</TD
+><TD
+>WEAR_WRIST_R and WEAR_WRIST_L</TD
+></TR
+><TR
+><TD
+>finger</TD
+><TD
+>WEAR_FINGER_R and WEAR_FINGER_L</TD
+></TR
+><TR
+><TD
+>chest</TD
+><TD
+>MANIPULATE_WEAR_CHEST</TD
+></TR
+><TR
+><TD
+>back</TD
+><TD
+>MANIPULATE_WEAR_BACK</TD
+></TR
+><TR
+><TD
+>waist</TD
+><TD
+>MANIPULATE_WEAR_WAIST</TD
+></TR
+><TR
+><TD
+>ankle</TD
+><TD
+>WEAR_ANKLE_R and WEAR_ANKLE_L</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></DD
+><DT
+>load amount</DT
+><DD
+><P
+>the fourth argument is an optional argument that tells the reset
+how many of the objects are allowed in the world, zone, or locally.  The
+possible values for this field are as follows:</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>max &lt;num&gt;</DT
+><DD
+><P
+>This  command  is  always  part  of  another reset command (load,
+equip, etc.).  At reset time the entire world is scanned for occurences
+of the loaded unit - only if the currently existing number is less than
+&lt;num&gt; will the command be executed.</P
+></DD
+><DT
+>local &lt;num&gt;</DT
+><DD
+><P
+>This command is always  part  of  another  reset  command  (load,
+equip, etc.).  At reset time the location of which the unit is to
+be loaded into is scanned for occurences of the loaded unit - only  if  the currently
+existing number is less than &lt;num&gt; will the
+command be executed.</P
+></DD
+><DT
+>zonemax &lt;num&gt;</DT
+><DD
+><P
+>This command is always  part  of  another  reset  command  (load,
+equip,  etc.).   At  reset  time  the  entire zone being reset is
+scanned for occurences of the loaded unit - only if the currently
+existing number is less than &lt;num&gt; will the command be
+executed.</P
+></DD
+></DL
+></DIV
+></DD
+></DL
+></DIV
+><P
+>Now with the equipment command you can now get your NPCs dressed
+and ready for battle.  The 'load' and 'equip' commands are not the
+easiest though so lets go through some simple examples.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4772"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;load guard into jail
+  {
+  equip helmet WEAR_HEAD
+  equip plate WEAR_BODY
+  equip pants WEAR_LEGS
+  equip specialsword max 1
+  load brass_key
+  }  &#13;</PRE
+><P
+></P
+></DIV
+><P
+>This is how you would equip a NPC with all items from the current
+zone.  As you can see we didn't need full symbolics because the server
+knows to grab the items from the zone the resets are in.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4775"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;load guard into safe_room max 2
+ {
+ equip plate WEAR_BODY
+ load powersword max1
+  {
+  load silver_pile into safe_room
+  }
+ }    &#13;</PRE
+><P
+></P
+></DIV
+><P
+>In this example we only load the silver pile if the guard loads
+and if the power sword loads which may or may not happen since there is
+only a max of one sword allowed while there is a max of 2 guards
+allowed.  What will happen in this case is at the first reset there will
+be one guard and one pile of silver.  The next reset there will still
+only be one pile of silver but now there will be two guards.</P
+><P
+>Hopefully you have got the basic resets down.  If not don't worry
+there are plenty more examples to come and we still have to make the
+resets for our dragon station zone.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="ch07.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4779.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The reset section</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch07.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Special reset functions</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

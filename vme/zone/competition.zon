@@ -1,0 +1,1434 @@
+/*
+filename    competition
+password    test
+changedby   Whistler
+request     compile
+version     0
+END HEADER*/
+
+#include <macros.h>
+
+%zone                                  competition
+reset RESET_NOT
+
+creators {"whistler"}
+
+notes
+"This is competition code  what did you think?"
+
+help
+"This zone is not intended for players."
+
+%dil
+
+#define MAX_PLY_IN_COMP 21
+
+dilbegin death_brd ();
+external 
+ upd_dead_ch(u:unitptr);
+string rlc_format (sl:stringlist,s:string);
+var
+rm:unitptr;
+i,ln:integer;
+buf,cname,l1,l2:string;
+code
+{
+:start:
+wait (SFB_DONE,((command("look")) and
+(self ==target)));
+                                       rm:=findsymbolic("dead_obj@competition");
+if (rm.extra.["dead_comp"]==null)
+{
+sendtext("NO Player has been added to the board yet.&n",activator);
+goto start;
+}
+
+upd_dead_ch(activator);
+ln:=length(rm.extra.["dead_comp"].names);
+i:=1;
+buf:=rlc_format({"c","40"}, textformat("Ghoul Pool"));
+buf:=buf+"&n&n";
+l1:=rlc_format({"c","20"},"Players");
+l2:=rlc_format({"c","20"},"Total deaths");
+buf:=buf+l1+""+l2+"&n";
+buf:=buf+"----------------------------------------&n";
+     buf:=textformat(buf);
+i:=1;
+while((i<ln) and (i<MAX_PLY_IN_COMP))
+{
+l1:=rlc_format({"l","27"},itoa(i)+") "+rm.extra.["dead_comp"].names.[i]);
+l2:=itoa(rm.extra.["dead_comp"].vals.[i]);
+buf:=buf+textformat(l1)+""+l2+"&n";
+i:=i+1;
+}
+
+if (not(activator.name in rm.extra.["dead_comp"].names))
+{
+l1:=rlc_format({"l","27"},"* "+activator.name);
+if ("$TOTAL_DEATHS" in rm.extra)
+l2:=itoa(activator.extra.["$TOTAL_DEATHS"].vals.[0]);
+else 
+l2:="0";
+                                   buf:=buf+textformat(l1)+""+l2+"&n";
+								   }
+pagestring (textformat(buf),activator);
+goto start;
+goto start;
+}
+dilend
+
+dilbegin xp_brd ();
+external 
+ upd_xp_char(u:unitptr);
+string rlc_format (sl:stringlist,s:string);
+var
+rm:unitptr;
+i,ln:integer;
+buf,cname,l1,l2:string;
+code
+{
+:start:
+wait (SFB_DONE,((command("look")) and
+(self ==target)));
+                                       rm:=findsymbolic("xp_obj@competition");
+if (rm.extra.["xp_comp"]==null)
+{
+sendtext("NO Player has been added to the board yet.&n",activator);
+goto start;
+}
+
+upd_xp_char(activator);
+ln:=length(rm.extra.["xp_comp"].names);
+i:=1;
+buf:=rlc_format({"c","40"}, textformat("Heroes of Valhalla"));
+buf:=buf+"&n&n";
+l1:=rlc_format({"c","20"},"Players");
+l2:=rlc_format({"c","20"},"XP");
+buf:=buf+l1+""+l2+"&n";
+buf:=buf+"----------------------------------------&n";
+     buf:=textformat(buf);
+i:=1;
+while((i<ln) and (i<MAX_PLY_IN_COMP))
+{
+l1:=rlc_format({"l","27"},itoa(i)+") "+rm.extra.["xp_comp"].names.[i]);
+l2:=itoa(rm.extra.["xp_comp"].vals.[i]);
+buf:=buf+textformat(l1)+""+l2+"&n";
+i:=i+1;
+}
+
+if (not(activator.name in rm.extra.["xp_comp"].names))
+{
+l1:=rlc_format({"l","27"},"* "+activator.name);
+l2:=itoa(activator.exp);
+                                   buf:=buf+textformat(l1)+""+l2+"&n";
+								   }
+pagestring (textformat(buf),activator);
+goto start;
+}
+dilend
+
+
+
+
+dilbegin upd_xp_char(u:unitptr);
+var
+ i,ln,p:integer;
+rm:unitptr;
+line:stringlist;
+nl:stringlist;
+il:intlist;
+code 
+{
+if (u.level>=200)
+ return;
+rm:=findsymbolic("xp_obj@competition");
+if (rm==null)
+ {
+log ("Error no room found for xp information&n");
+return;
+}
+ if (rm.extra.["xp_comp"]==null)
+return;
+
+p:=u.name in rm.extra.["xp_comp"].names;
+p:=p-1;
+if (p>=1)
+{
+remove (rm.extra.["xp_comp"].names,p);
+remove (rm.extra.["xp_comp"].vals,p);
+}
+
+
+i:=1;
+ln:=length(rm.extra.["xp_comp"].names);
+p:=u.exp;
+if (ln==1)
+{
+insert (rm.extra.["xp_comp"].names,1,u.name);
+insert (rm.extra.["xp_comp"].vals,1,p);
+}
+else
+{
+ln:=ln-1;
+while (p>rm.extra.["xp_comp"].vals.[ln])
+{
+ln:=ln-1;
+if (ln==0)
+break;
+}
+
+if (ln<= MAX_PLY_IN_COMP) 
+{
+insert (rm.extra.["xp_comp"].names,ln+1,u.name);
+insert (rm.extra.["xp_comp"].vals,ln+1,p);
+ }
+
+ln:=length(rm.extra.["xp_comp"].names);
+if (ln>MAX_PLY_IN_COMP)
+{
+ln:=ln-1;
+remove(rm.extra.["xp_comp"].names,ln);
+remove(rm.extra.["xp_comp"].vals,ln);
+}
+
+}
+
+store (rm,"xp_obj",TRUE);
+return;
+}
+dilend
+
+dilbegin upd_dead_ch(u:unitptr );
+var
+ i,ln,p:integer;
+rm:unitptr;
+line:stringlist;
+nl:stringlist;
+il:intlist;
+code 
+{
+if (u.level>=200)
+ return;
+
+rm:=findsymbolic("dead_obj@competition");
+if (rm==null)
+ {
+log ("Error no room found for xp information&n");
+return;
+}
+ if (rm.extra.["dead_comp"]==null)
+return;
+
+p:=u.name in rm.extra.["dead_comp"].names;
+p:=p-1;
+if (p>=1)
+{
+remove (rm.extra.["dead_comp"].names,p);
+remove (rm.extra.["dead_comp"].vals,p);
+}
+
+
+i:=1;
+ln:=length(rm.extra.["dead_comp"].names);
+if (u.extra.["$TOTAL_DEATHS"])
+p:=u.extra.["$TOTAL_DEATHS"].vals.[0];
+else 
+ p:=0;
+if (ln==1)
+{
+insert (rm.extra.["dead_comp"].names,1,u.name);
+insert (rm.extra.["dead_comp"].vals,1,p);
+}
+else
+{
+ln:=ln-1;
+while (p>rm.extra.["dead_comp"].vals.[ln])
+{
+ln:=ln-1;
+if (ln==0)
+break;
+}
+
+if (ln<= MAX_PLY_IN_COMP) 
+{
+insert (rm.extra.["dead_comp"].names,ln+1,u.name);
+insert (rm.extra.["dead_comp"].vals,ln+1,p);
+ }
+
+ln:=length(rm.extra.["dead_comp"].names);
+if (ln>MAX_PLY_IN_COMP)
+{
+ln:=ln-1;
+remove(rm.extra.["dead_comp"].names,ln);
+remove(rm.extra.["dead_comp"].vals,ln);
+}
+
+}
+store (rm,"dead_obj",TRUE);
+return;
+}
+dilend
+
+
+dilbegin add_cply(u:unitptr,cname:string,v:integer);
+code
+{
+if (u.extra.["$comp"]==null)
+ addextra(u.extra,{"$comp"},"Competitions player is in");
+ 
+insert(u.extra.["$comp"].names,1,cname);
+insert(u.extra.["$comp"].vals,1,v); 
+return;
+}
+dilend
+
+
+dilbegin del_cply();
+var 
+ p,i:integer;
+ rm,u:unitptr;
+ ln_u,ln_rm:integer;
+ cname:string;
+ code
+{
+rm:=findsymbolic("board_obj@competition");
+if (rm==null)
+return;
+
+if (rm.extra.["competition loaded"]==null)
+return;
+if (self.extra.["$comp"]==null)
+ return;
+
+
+ ln_u:=length (self.extra.["$comp"].names);
+ 
+ i:=1;
+ while (i<ln_u)
+  {
+if (rm.extra.[self.extra.["$comp"].names.[i]+" INFO"]!=null)
+{
+i:=i+1;
+continue;
+}
+
+
+ remove(self.extra.["$comp"].names,i);
+  remove(self.extra.["$comp"].vals,i);
+
+ln_u:=ln_u-1;  
+}
+
+
+  
+  return;
+}
+dilend
+
+dilbegin string rlc_format (sl:stringlist,sc:string);
+var
+buf:string; 
+ln:integer;
+sln:integer;
+starts:integer;
+start:integer;
+ s:string;
+ code
+ {
+ s:=textformat(sc);
+ if (s=="")
+return("&&s"+sl.[1]); 
+ buf:="";
+ sln:=length(s);
+ ln:=atoi(sl.[1]);
+ if (ln<1)
+ return (s);
+ if (sl.[0]=="r")
+ {
+ if (ln>sln)
+{
+  buf:="&&s"+itoa(ln-sln)+s;
+}
+ else
+					  buf:=right(s,ln);
+					  }
+else   if (sl.[0]=="l")
+  {
+ if (ln>sln)
+  buf:=s+"&&s"+itoa(ln-sln);
+ else
+					  buf:=left(s,ln);
+  }
+else  if (sl.[0]=="c")
+{
+ if (ln>sln)
+ {
+ start:=ln/2;
+starts:=sln/2;
+buf:="&&s"+itoa((start-starts)-1)+s;
+start:=start-starts;
+start:=start+sln;
+buf:=buf+"&&s"+itoa(ln-start);
+}
+ else
+					  buf:=left(s,ln);
+}
+else
+return (s);
+   
+   return (buf);
+ }
+dilend
+
+dilbegin act_world (s:string);
+var
+  pc:unitptr;
+  code
+  {
+  heartbeat:=PULSE_SEC*3;
+	pc:=ghead();
+     while (pc.type==UNIT_ST_PC)
+      {
+     sendtext(s,pc);
+      pc:=pc.gnext;
+      }
+return;
+}
+dilend
+
+dilbegin board ();
+external 
+ upd_char(u:unitptr,s:string);
+string rlc_format (sl:stringlist,s:string);
+ string racestring@commands(k:integer);
+var
+rm:unitptr;
+i,ln:integer;
+buf,cname,l1,l2:string;
+code
+{
+interrupt(SFB_CMD,command("list"),list_comp);
+:start:
+wait (SFB_DONE,((command("look")) and
+(self ==target)));
+if ("corner" in argument)
+goto start;
+                                       rm:=findsymbolic("board_obj@competition");
+if (rm.extra.["competitions"]==null)
+{
+sendtext("No competitions Ongoing&n",activator);
+goto start;
+}
+ln:=length(rm.extra.["competitions"].names);
+if (ln<2)
+{
+sendtext("No competitions Ongoing&n",activator);
+goto start;
+}
+i:=1;
+buf:="Ongoing competitions:&n&n";
+while(i<ln)
+{
+if (realtime>(rm.extra.["competitions"].vals.[i] +rm.extra.[itoa(rm.extra.["competitions"].vals.[i])+" INFO"].vals.[1]))
+                              buf:=buf+itoa(i)+"  "+textformat("&&}"+rm.extra.["competitions"].names.[i])+"  ended&n";
+else if (realtime<rm.extra.["competitions"].vals.[i])
+                              buf:=buf+itoa(i)+"  "+rm.extra.["competitions"].names.[i]+"  starts:  "+
+asctime(rm.extra.["competitions"].vals.[i])+"&n";
+else
+                              buf:=buf+itoa(i)+"  "+rm.extra.["competitions"].names.[i]+"  started:  "+
+asctime(rm.extra.["competitions"].vals.[i])+"&n";
+i:=i+1;	
+}
+pagestring (buf,activator);
+goto start;
+:list_comp:
+if ((excmdstr=="liste") or
+(excmdstr=="listen"))
+goto start;
+block;
+                                       rm:=findsymbolic("board_obj@competition");
+ln:=length(rm.extra.["competitions"].names);
+if (ln<2)
+{
+sendtext ("No competitions currently running.&n",activator);
+goto start;
+}
+i:=atoi(argument);
+if ((i<1) or (i>(ln-1)))
+{
+if (ln==1)
+sendtext ("No such competition found, try 'list 1'.",activator);
+else
+sendtext ("No such competition found, try 'list 1' to 'list "+itoa(ln-1) +"'.&n",activator);
+goto start;
+}
+cname:=itoa(rm.extra.["competitions"].vals.[i]);
+upd_char(activator,cname);
+ln:=length(rm.extra.[cname+" LIST"].names);
+buf:=rlc_format({"c","40"}, textformat("&&}"+rm.extra.[cname+" INFO"].names.[1]));
+buf:=buf+"&n&n";
+l1:=rlc_format({"c","20"},"Players");
+l2:=rlc_format({"c","20"},"Score");
+buf:=buf+l1+""+l2+"&n";
+buf:=buf+"----------------------------------------&n";
+     buf:=textformat(buf);
+i:=1;
+while((i<ln) and (i<MAX_PLY_IN_COMP))
+{
+l1:=rlc_format({"l","27"},itoa(i)+") "+rm.extra.[cname+ " LIST"].names.[i]);
+l2:=itoa(rm.extra.[cname+" LIST"].vals.[i]);
+buf:=buf+textformat(l1)+""+l2+"&n";
+i:=i+1;
+}
+
+if ((not(activator.name in rm.extra.[cname+" LIST"].names)) and
+("$comp" in activator.extra) and
+((cname in activator.extra.["$comp"].names)>1))
+{
+l1:=rlc_format({"l","27"},"* "+activator.name);
+l2:=itoa(activator.exp-activator.extra.["$comp"].vals.[(cname in activator.extra.["$comp"].names)-1]);
+                                   buf:=buf+textformat(l1)+""+l2+"&n";
+								   }
+pagestring (textformat(buf),activator);
+goto start;
+goto start;
+}
+dilend
+
+dilbegin run_comp(cname:string);
+external 
+  upd_comp(cname:string);
+  act_world (s:string);
+var
+rm:unitptr;
+ i,ln:integer;
+ s:string;
+code
+{
+:start:
+heartbeat:=PULSE_SEC* rnd(60,120);
+wait(SFB_TICK,TRUE);
+           heartbeat:=3;
+rm:=findsymbolic("board_obj@competition");
+if (rm==null)
+ {
+quit;
+}
+if ( rm.extra.[cname+" info"]==null)
+{
+quit;
+}
+if ( rm.extra.[cname+" LIST"]==null)
+{
+quit;
+}
+                          heartbeat:=3;
+upd_comp(cname);
+pause;
+rm:=findsymbolic("board_obj@competition");
+/*store the files*/
+store (rm,"comp_obj",TRUE);
+/*check to see if competition is over*/
+if (realtime>(rm.extra.[cname+" INFO"].vals.[0]+rm.extra.[cname+" INFO"].vals.[1])) 
+{
+if (length(rm.extra.[cname+" LIST"].names)<=1)
+{
+log ("No one was in the competition when it ended "+cname+"&n");
+quit;
+}
+act_world(rm.extra.[cname+" LIST"].names.[1]+ " has just won the "+rm.extra.[cname+" INFO"].names.[1]+ " competition!  Congratulations!");
+quit;
+}
+goto start;
+}
+dilend
+
+dilbegin integer load_file(cname:string);
+var
+rm:unitptr;
+ i,e,ln:integer;
+err:integer;
+buf:string;
+line:stringlist;
+nl:stringlist;
+code
+{
+                 heartbeat:=3;
+rm:=findsymbolic("board_obj@competition");
+if (rm==null)
+ {
+log ("Error no room found for Competition information&n");
+goto fail;
+}
+subextra(rm.extra,cname+" LIST");
+insert(line,0,cname+" LIST");
+addextra(rm.extra,line,"Experience and name");
+remove (line,0);
+insert(line,0,cname+" INFO");
+addextra(rm.extra,line,"Competition Information");           
+remove (line,0);
+if (rm.extra.["competitions"]==null)
+addextra (rm.extra,{"competitions"},"Current competitions");
+:cur_names:
+buf:="";
+err:=loadstr (cname+".list",buf);
+if (err>0)
+	{
+line:=split(buf,"&x");
+i:=0;
+e:=1;
+ln:=length(line);
+if (ln>MAX_PLY_IN_COMP-1)
+ln:=MAX_PLY_IN_COMP-1;
+while (i<ln)
+ {
+if (line.[i]=="")
+{
+i:=i+1;e:=e+1;
+continue;
+}
+nl:=split(line.[i],":");
+if (length(nl)<2)
+{
+i:=i+1;e:=e+1;
+continue;
+}
+
+insert(rm.extra.[cname+" LIST"].names,e,nl.[0]);
+insert(rm.extra.[cname+" LIST"].vals,e,atoi(nl.[1]));
+i:=i+1;
+e:=e+1;
+}
+}
+:load_info:
+buf:="";
+err:=loadstr (cname+".comp",buf);
+if (err<1)
+	{
+     log ("Competition error:  No competition file  named "+cname+".comp found.&n");
+goto fail;
+}
+line:=split(buf,":");
+if (length(line)<9)
+{
+log (cname+" competition missing information&n");
+goto fail;
+}
+insert(rm.extra.[cname+" INFO"].names,1,line.[0]);
+insert(rm.extra.[cname+" INFO"].names,2,line.[1]);
+insert(rm.extra.[cname+" INFO"].names,3,line.[2]);
+insert(rm.extra.[cname+" INFO"].names,4,line.[3]);
+insert(rm.extra.[cname+" INFO"].vals,0,atoi(line.[4]));
+insert(rm.extra.[cname+" INFO"].vals,1,atoi(line.[5]));
+insert(rm.extra.[cname+" INFO"].vals,2,atoi(line.[6]));
+insert(rm.extra.[cname+" INFO"].vals,3,atoi(line.[7]));
+insert(rm.extra.[cname+" INFO"].vals,4,atoi(line.[8]));
+:add_comp:
+i:=1;
+ln:=length(rm.extra.["competitions"].names);
+while (i<ln)
+ {
+if (rm.extra.[cname+" INFO"].vals.[0]>rm.extra.["competitions"].vals.[i])
+{
+insert (rm.extra.["competitions"].names,i,rm.extra.[cname+" INFO"].names.[1]);
+insert (rm.extra.["competitions"].vals,i,atoi(cname));
+goto finish;
+}
+i:=i+1;
+}
+insert (rm.extra.["competitions"].names,ln,rm.extra.[cname+" INFO"].names.[1]);
+insert (rm.extra.["competitions"].vals,ln,atoi(cname));
+:finish:
+if (realtime<=(rm.extra.[cname+" INFO"].vals.[0]+rm.extra.[cname+" INFO"].vals.[1]))
+dilcopy ("run_comp@competition("+cname+")",rm);
+return (1);
+:fail:
+subextra(rm.extra,cname+" LIST");
+subextra(rm.extra,cname+" INFO");
+return (0);
+}
+dilend
+
+dilbegin boot_comp ();
+external 
+ integer load_file(cname:string);
+var
+ rm:unitptr;
+flist:stringlist;
+i:integer;
+ln:integer;
+nl,cl:stringlist;
+code
+{
+heartbeat:=5*60*PULSE_SEC;
+rm:=restore("comp_obj",null);
+if (rm==null)
+{
+rm:=load("board_obj@competition");
+if (rm==null)
+{
+log ("Competition board_obj error.&n");
+goto xp_load;
+}
+link(rm,self);
+flist:=strdir(".*.comp");
+i:=0;         
+ln:=length(flist);
+while (i<ln)
+{
+if (flist.[i]=="")
+{
+i:=i+1;
+continue;
+}
+nl:=split(flist.[i],".");
+if (length(nl)<2)
+{
+i:=i+1;
+continue;
+}
+load_file(nl.[0]);
+                  i:=i+1;
+}
+pause;
+addextra (self.extra,{"competition loaded"},"Extra to fix quick reboot log on problem");
+}
+else 
+link(rm,self);
+
+:xp_load:
+rm:=restore("xp_obj",null);
+if (rm==null)
+{
+rm:=load("xp_obj@competition");
+if (rm==null)
+{
+log ("XP board_obj error.&n");
+goto dead_load;
+}
+    }
+link (rm,self);
+:dead_load:
+rm:=restore("dead_obj",null);
+if (rm==null)
+{
+rm:=load("dead_obj@competition");
+if (rm==null)
+{
+log ("Death board_obj error.&n");
+quit;
+}
+
+     }
+               link (rm,self);
+			   quit;
+}
+dilend
+
+dilbegin aware cmd_comp(arg:string);
+external 
+                     upd_comp(cname:string);
+ string racestring@commands(i:integer);
+var
+args:stringlist; 
+cname,buf,pk,ncname,nename:string;
+dt,edt,cmax,cmin,rc,ln,i,err:integer;
+il:intlist;
+nl,line,qlist,clist:stringlist;
+rm:unitptr;
+code 
+{
+if (arg!="")
+{
+args:=split(arg," ");
+if (length(args)>1)
+    goto del_single_comp;
+if (arg==left("delete",length(arg)))
+ goto del_comp;
+ }
+cname:="Questing for true power";
+ncname:="";
+nename:="";
+qlist:={""};
+clist:={""};
+
+cmax:=0;
+cmin:=0;
+pk:="Both";
+rc:=-1;
+dt:=realtime;
+edt:=2592000;
+gamestate(self, GS_MENU);
+:comp_menu:
+sendtext ("To add a competition set the following or use defaults.&n&n",self);
+sendtext("1)  Competition name:  "+cname+"&n",self);
+sendtext("2)  Min level:  "+itoa(cmin)+"&n",self);
+sendtext("3)  Max level:  "+itoa(cmax)+"&n",self);
+sendtext("4)  PK:  "+pk+"&n",self);
+if (rc==-1)
+sendtext("5)  Race:  All&n",self);
+else
+                                  sendtext("5)  Race:  "+racestring@commands(rc)+"&n",self);
+sendtext("6)  Start day:  "+asctime(dt)+"&n",self);
+sendtext("7)  End day:  "+asctime(dt+edt)+"&n",self);
+sendtext("8)  A slash (/) delimited list of quests not allowed in this &n competition:  "+ncname+"&n",self);
+sendtext("9)  A slash (/) delimited list of quests allowed in this &n competition:  "+nename+"&n",self);
+
+
+sendtext ("D) for done and save&n",self);
+sendtext ("C) for cancel&n",self);
+wait(SFB_CMD, TRUE);
+if (command("c") )
+{
+  gamestate(self, GS_PLAY);
+quit;
+}
+else if (command ("1"))
+{
+  sendtext("Enter the name of the competition:  ",self);
+  wait(SFB_CMD, TRUE);
+cname:=textformat("&&}"+excmdstr+" "+argument);
+goto comp_menu;
+}
+else if (command ("2"))
+{
+  sendtext("Enter the level a player must be equal to or above to enter:  ",self);
+  wait(SFB_CMD, TRUE);
+cmin:=atoi(excmdstr);
+goto comp_menu;
+}
+else if (command ("3"))
+{
+  sendtext("Enter the level a player must be equal to or below to enter:  ",self);
+  wait(SFB_CMD, TRUE);
+cmax:=atoi(excmdstr);
+goto comp_menu;
+}
+                       else if (command ("4"))
+{
+:pk_menu:
+sendtext  ("Are the characters PK, not PK, or both?&n&n",self);
+sendtext ("1)  Yes&n",self);
+sendtext("2)  No&n",self);
+sendtext("3)  Both&n",self);
+sendtext ("&nSelect (1 or 2):  ",self);
+wait (SFB_CMD,TRUE);
+if (command("1"))
+{
+pk:="yes";
+sendtext ("Pk set on.&n",self);
+}
+else if (command("2"))
+{
+pk:="no";
+sendtext ("Pk set off.&n",self);
+}
+else if (command("3"))
+{
+pk:="Both";
+sendtext ("Pk set to both.&n",self);
+}
+else
+{
+sendtext ("Try again.&n",self);
+goto pk_menu;
+}
+goto comp_menu;
+}
+else if (command("5"))
+{
+:race_menu:
+      sendtext("&nPlease choose your race:&n"
+	+"  &c+w1&cw) Human&cw            &c+w 7&cw) Dark-Elf (hard)&n"
+	+"  &c+w2&cw) Dwarf&cw            &c+w 8&cw) Brownie&n"
+	+"  &c+w3&cw) Halfling&cw         &c+w 9&cw) Groll&n"
+	+"  &c+w4&cw) Gnome&cw            &c+w10&cw) Half-Orc&n"
+	+"  &c+w5&cw) Elf&cw              &c+w11&cw) Half-Ogre&n"
+	+"  &c+w6&cw) Half-elf            &c+w12&cw) All races&n"
+	+"Please select 1 - 12: ", self);
+wait (SFB_CMD,TRUE);
+if (command ( "1"))
+   {
+      sendtext("Set to human.&n", self);
+      rc := RACE_HUMAN;
+   }
+   else if (command ( "2"))
+   {
+      sendtext("Set to dwarf.&n", self);
+      rc := RACE_DWARF;
+   }
+   else if (command ( "3"))
+   {
+      sendtext("Set to halfling.&n", self);
+      rc := RACE_HALFLING;
+   }
+   else if (command ( "4"))
+   {
+      sendtext("Set to gnome.&n", self);
+      rc := RACE_GNOME;
+   }
+   else if (command ( "5"))
+   {
+      sendtext("You are now an elf.&n", self);
+      rc := RACE_ELF;
+   }
+   else if (command ( "6"))
+   {
+      sendtext("Set to half-elf.&n", self);
+      rc := RACE_HALF_ELF;
+   }
+   else if (command ( "7"))
+   {
+      sendtext("Set to dark-elf.&n", self);
+      rc := RACE_DARK_ELF;
+   }
+   else if (command ( "8"))
+   {
+      sendtext("Set to Brownie.&n", self);
+      rc := RACE_BROWNIE;
+   }
+   else if (command ( "9"))
+   {
+      sendtext("Set to Groll.&n", self);
+      rc := RACE_GROLL;
+   }
+   else if (command ( "10"))
+   {
+      sendtext("Set to half-orc.&n", self);
+      rc := RACE_HALF_ORC;
+   }
+   else if (command ( "11"))
+   {
+      sendtext("Set to half-ogre.&n", self);
+      rc := RACE_HALF_OGRE;
+   }
+   else if (command ( "12"))
+   {
+sendtext ("Set to all races&n",self);
+      rc :=-1;
+   }
+   else
+{
+sendtext ("Try again&n",self);
+goto race_menu;
+               }
+goto comp_menu;
+}
+else if (command("6"))
+{
+sendtext ("how many hours from now do you want the competition to start:  ",self);
+wait(SFB_CMD,TRUE);
+dt:=realtime+60*60*atoi(excmdstr);
+goto comp_menu;
+}
+else if (command("7"))
+{
+sendtext ("how many hours from "+asctime(dt)+ " do you want it to end:  ",self);
+wait(SFB_CMD,TRUE);
+edt:=60*60*atoi(excmdstr);
+goto comp_menu;
+}
+else if (command ("8"))
+{
+  sendtext("Enter a slash (/) delimited list of Competitions you don't want to participate in this &n competition:  ",self);
+  wait(SFB_CMD, TRUE);
+ncname:=textformat("&&}"+excmdstr+" "+argument);
+goto comp_menu;
+}
+else if (command ("9"))
+{
+  sendtext("Enter a slash (/) delimited list of Extra flags you don't want to participate in this &n competition:  ",self);
+  wait(SFB_CMD, TRUE);
+nename:=excmdstr+" "+argument;
+goto comp_menu;
+}
+else if (command ("d"))
+{
+rm:=findsymbolic("board_obj@competition");
+if (rm==null)
+{
+sendtext ("No competition room found fix it&n",self);
+  gamestate(self, GS_PLAY);
+quit;
+}
+ if (not("competitions" in rm.extra))
+addextra (rm.extra,{"competitions"},"Competitions  currently ongoing");
+ i:=1;
+ln:=length(rm.extra.["competitions"].names);
+insert(nl,0,itoa(dt)+" INFO" );
+insert(nl,1,cname);
+insert(nl,2,pk);
+insert(nl,3,ncname);
+insert(nl,4,nename);
+
+insert(il,0,dt);
+insert(il,1,edt);
+insert(il,2,cmin);
+insert(il,3,cmax);
+insert(il,4,rc);
+subextra(rm.extra,nl.[0]);
+while (i<ln)
+{
+if(dt>rm.extra.["competitions"].vals.[i])
+{
+insert(rm.extra.["competitions"].names,i,cname);
+insert (rm.extra.["competitions"].vals,i,dt);
+break;
+}
+i:=i+1;
+}
+if (i==ln)
+{
+insert(rm.extra.["competitions"].names,ln,cname);
+insert (rm.extra.["competitions"].vals,ln,dt);
+}
+ addextra (rm.extra,nl,"Competition Information",il);
+ /*store the files*/
+store (rm,"comp_obj",TRUE);
+
+dilcopy ("run_comp@competition("+itoa(il.[0])+")",rm);
+sendtext (cname+ " has been added to competitions&n",self);
+cname:=itoa(dt);
+subextra(rm.extra,cname+" LIST");
+insert(line,0,cname+" LIST");
+addextra(rm.extra,line,"Top 20 and experience");
+remove (line,0);
+}
+upd_comp(cname);
+  gamestate(self, GS_PLAY);
+quit;
+:del_single_comp:
+rm:=findsymbolic("board_obj@competition");
+if (rm==null)
+{
+sendtext ("No competition board room found&n",self);
+quit;
+}
+if (rm.extra.["competitions"]==null)
+{
+sendtext("No competitions Ongoing&n",self);
+quit;
+}
+ln:=length(rm.extra.["competitions"].names);
+if (ln<2)
+{
+sendtext("No competitions Ongoing&n",self);
+quit;
+}
+i:=atoi(args.[1]);
+if ((i<1) or (i>(ln-1)))
+{
+sendtext ("No such quest found try again.&n",self);
+quit;
+}
+sendtext("Deleting "+rm.extra.["competitions"].names.[i]+".&n",self);
+cname:=itoa(rm.extra.["competitions"].vals.[i]);
+remove (rm.extra.["competitions"].names,i);
+remove (rm.extra.["competitions"].vals,i);
+subextra(rm.extra,cname+" LIST");
+subextra(rm.extra,cname+" INFO");
+err:=delstr(cname+".comp");
+err:=delstr(cname+".list");
+quit;
+
+
+:del_comp:
+rm:=findsymbolic("board_obj@competition");
+if (rm==null)
+{
+sendtext ("No competition board room found&n",self);
+quit;
+}
+if (rm.extra.["competitions"]==null)
+{
+sendtext("No competitions Ongoing&n",self);
+quit;
+}
+gamestate(self, GS_MENU);
+ln:=length(rm.extra.["competitions"].names);
+if (ln<2)
+{
+sendtext("No competitions Ongoing&n",self);
+  gamestate(self, GS_PLAY);
+quit;
+}
+i:=1;
+buf:="Which competition do you want to delete?&n&n";
+while(i<ln)
+{
+                              buf:=buf+itoa(i)+"  "+rm.extra.["competitions"].names.[i]+" end on:  "+
+asctime(rm.extra.["competitions"].vals.[i]+rm.extra.[itoa(rm.extra.["competitions"].vals.[i])+" INFO"].vals.[1])+"&n";
+i:=i+1;	
+}
+if (ln==2)
+buf:=buf+"&nSelect (1) to delete this quest or (C) to cancel.&n";
+else
+buf:=buf+"&nSelect (1 to "+itoa(ln-1) +") to delete a quest or (C) to cancel.&n";
+sendtext (buf,self);
+wait(SFB_CMD, TRUE);
+                                       rm:=findsymbolic("board_obj@competition");
+if (command("c") )
+{
+  gamestate(self, GS_PLAY);
+quit;
+}
+i:=atoi(excmdstr);
+if ((i<1) or (i>(ln-1)))
+{
+sendtext ("No such quest found try again.&n",self);
+  gamestate(self, GS_PLAY);
+quit;
+}
+sendtext("Deleting "+rm.extra.["competitions"].names.[i]+".&n",self);
+cname:=itoa(rm.extra.["competitions"].vals.[i]);
+remove (rm.extra.["competitions"].names,i);
+remove (rm.extra.["competitions"].vals,i);
+subextra(rm.extra,cname+" LIST");
+subextra(rm.extra,cname+" INFO");
+err:=delstr(cname+".comp");
+err:=delstr(cname+".list");
+:quit_del:
+  gamestate(self, GS_PLAY);
+quit;
+}
+dilend
+
+
+dilbegin copy_upd(cname:string);
+external
+ upd_char(u:unitptr,s:string);
+code
+{
+upd_char(self, cname);
+quit;
+}
+dilend
+
+dilbegin upd_comp(cname:string);
+var
+pc:unitptr;
+code
+{
+           pc:=pc_head();
+while (pc.type==UNIT_ST_PC)
+{
+
+dilcopy("copy_upd@competition("+cname+")",pc);
+pc:=pc.gnext;
+}
+return;
+}
+dilend
+
+dilbegin upd_char(u:unitptr,cname:string);
+external 
+add_cply(u:unitptr,cname:string,v:integer);
+var
+ i,ln,p:integer;
+rm:unitptr;
+line:stringlist;
+nl:stringlist;
+il:intlist;
+code 
+{
+   if ("$morphed" in u.extra)
+   return;
+if (u.level>=200)
+return;
+rm:=findsymbolic("board_obj@competition");
+if (rm==null)
+ {
+log ("Error no room found for Competition information&n");
+return;
+}
+ if (rm.extra.[cname+" LIST"]==null)
+return;
+ if (rm.extra.[cname+" INFO"]==null)
+return;
+
+if ((realtime<rm.extra.[cname+" INFO"].vals.[0]) or
+(realtime>(rm.extra.[cname+" INFO"].vals.[1]+atoi(cname))))
+return;
+
+p:=u.name in rm.extra.[cname+" LIST"].names;
+p:=p-1;
+if (p>=1)
+{
+remove (rm.extra.[cname+" LIST"].names,p);
+remove (rm.extra.[cname+" LIST"].vals,p);
+}
+
+
+if (rm.extra.[cname+" INFO"].vals.[2]>0)
+if (u.vlevel<rm.extra.[cname+" INFO"].vals.[2])
+return ;
+if (rm.extra.[cname+" INFO"].vals.[3]>0)
+if (u.vlevel>rm.extra.[cname+" INFO"].vals.[3])
+return ;
+if (rm.extra.[cname+" INFO"].vals.[4]>=0)
+if (u.race!=rm.extra.[cname+" INFO"].vals.[4])
+return;
+if (rm.extra.[cname+" INFO"].names.[2]!="both")
+{
+if ((isset(u.pcflags,PC_PK_RELAXED)) and
+(rm.extra.[cname+" INFO"].names.[2]=="no"))
+return;
+if (not ((isset(u.pcflags,PC_PK_RELAXED))) and
+(rm.extra.[cname+" INFO"].names.[2]=="yes"))
+return;
+if ((dilfind("no_kill@function",u)) and
+(rm.extra.[cname+" INFO"].names.[2]=="no"))
+return;
+}
+
+if (rm.extra.[cname+" INFO"].names.[3]!="")
+{
+line:=split(rm.extra.[cname+" INFO"].names.[3],"/");
+i:=0;
+ln:=length(line);
+while (i<ln)
+{
+if (line.[i] in u.quests)
+return;
+i:=i+1;
+}
+}
+
+if (rm.extra.[cname+" INFO"].names.[4]!="")
+{
+line:=split(rm.extra.[cname+" INFO"].names.[4],"/");
+i:=0;
+ln:=length(line);
+while (i<ln)
+{
+if (line.[i] in u.quests)
+ goto got_quest;
+ i:=i+1;
+}
+}
+
+:got_quest:
+
+if (u.extra.["$comp"]==null)
+{
+add_cply(u,cname,u.exp);
+sendtext("You have been added to "+rm.extra.[cname+" INFO"].names.[1]+"&n",u);
+}
+if (not(cname in u.extra.["$comp"].names))
+{
+add_cply(u,cname,u.exp);
+sendtext("You have been added to "+rm.extra.[cname+" INFO"].names.[1]+"&n",u);
+}
+
+i:=1;
+ln:=length(rm.extra.[cname+" LIST"].names);
+i:=cname in u.extra.["$comp"].names;
+i:=i-1;
+p:=u.exp-u.extra.["$comp"].vals.[i];
+i:=1;
+if (ln==1)
+{
+insert (rm.extra.[cname+" LIST"].names,1,u.name);
+insert (rm.extra.[cname+" LIST"].vals,1,p);
+}
+else
+{
+
+ln:=ln-1;
+while (p>rm.extra.[cname+" LIST"].vals.[ln])
+{
+ln:=ln-1;
+if (ln==0)
+break;
+}
+
+if (ln<= MAX_PLY_IN_COMP) 
+{
+insert (rm.extra.[cname+" LIST"].names,ln+1,u.name);
+insert (rm.extra.[cname+" LIST"].vals,ln+1,p);
+ }
+
+ln:=length(rm.extra.[cname+ " LIST"].names);
+if (ln>MAX_PLY_IN_COMP)
+{
+ln:=ln-1;
+remove(rm.extra.[cname+" LIST"].names,ln);
+remove(rm.extra.[cname+" LIST"].vals,ln);
+}
+
+}
+
+return;
+}
+dilend
+
+dilbegin upd_all_comp(u:unitptr);
+var
+ rm:unitptr;
+ln:integer;
+i,p:integer;
+
+code
+{
+
+if (u.extra.["$competition"]!=null)
+{
+insert(u.extra.["$competition"].names,0,"$comp");
+insert(u.extra.["$competition"].vals,0,0);
+p:="$competition" in u.extra.["$comp"].names;
+p:=p-1;
+remove (u.extra.["$comp"].names,p);
+}
+
+         rm:=findsymbolic("board_obj@competition");
+if (rm==null)
+ {
+log ("Error no room found for Competition information&n");
+return;
+}
+if (rm.extra.["competitions"]==null)
+return;
+ln:=length(rm.extra.["competitions"].names);
+i:=1;
+while (i<ln)
+{
+dilcopy("copy_upd@competition("+itoa(rm.extra.["competitions"].vals.[i])+")",u);
+
+i:=i+1;
+}
+
+       return;
+}
+dilend
+
+
+dilbegin upd_rebirth(u:unitptr);
+var
+ rm:unitptr;
+ln:integer;
+i,t,p:integer;
+cname:string;
+code
+{
+         rm:=findsymbolic("board_obj@competition");
+if (rm==null)
+ {
+log ("Error no room found for Competition information&n");
+return;
+}
+if (rm.extra.["competitions"]==null)
+return;
+if (u.extra.["$comp"]==null)
+return;
+ln:=length(rm.extra.["competitions"].names);
+i:=1;
+while (i<ln)
+{
+cname:=itoa(rm.extra.["competitions"].vals.[i])+" INFO";
+p:=cname in u.extra.["$comp"].names;
+p:=p-1;
+if (p<1)
+return;
+t:=u.exp-u.extra.["$comp"].vals.[p];
+u.extra.["$comp"].vals.[p]:=u.exp-t;
+
+i:=i+1;
+}
+
+       return;
+}
+dilend
+
+%rooms
+board_room
+names {"brd_rm"}
+title "Test Board room."
+descr
+"The board room."
+flags {UNIT_FL_NO_TELEPORT}
+dilcopy boot_comp();
+end
+
+%objects
+
+board_obj
+names {"boardobj"}
+title "The comp object"
+descr
+"A board obj that should not be seen by mortals is here."
+minv 200
+end
+
+xp_obj
+names {"xpobj"}
+title "The xp object"
+descr
+"A XP board obj that should not be seen by mortals is here."
+minv 200
+extra {"xp_comp"}
+"May 27, 2006" 
+
+end
+
+dead_obj
+names {"deadobj"}
+title "The dead  object"
+descr
+"A death board obj that should not be seen by mortals is here."
+minv 200
+extra {"dead_comp"}
+"May 27, 2006" 
+
+end
+
+
+
+/*death and exp board.*/
+
+death_board
+names {"board of the dead", "death board", "dead board", "board"}
+title "The board of the dead."
+descr
+"A board held up by carved Valkeries is here."
+type ITEM_BOARD
+dilcopy death_brd();
+end
+
+xp_board
+names {"ornate board","silver names","board","names"}
+title "Legends of Valhalla board"
+descr
+"An ornate board with names in silver is mounted on the wall here."
+extra{}
+"A carved wooden board with parchment magically
+adhered to it. The parchment has silver writing on it."
+
+dilcopy xp_brd();
+end
+
+
+comp_board
+names {"Competition board", "board"}
+title "a competition board"
+descr "A magical competition board is mounted on a wall here."
+extra{}
+"Its a big shiny competition board with a small sign in the lower corner."
+extra {"sign","corner"}
+"&l
+The Sign Says:
+-look board      [shows all competitions]
+-read <number>   [shows individual competition information]
+-list <number>   [shows the top 200 leaders for that competition]
+
+"
+type ITEM_BOARD
+dilcopy board();
+end
+
+%reset
+
+load comp_board into moot_sou@udgaard
+load xp_board into moot_nor@udgaard
+load death_board into moot_nowe@udgaard
+                           
+%end 

@@ -1,0 +1,22 @@
+<br/>
+<br/>
+<br/>
+<br/>
+Usage light (torch)|(lantern)<br/><br/>
+<br/>
+Example:<br/><br/>
+light lantern<br/><br/>
+hold lantern<br/><br/>
+<br/>
+This command enables you to light a torch or a lamp or whatever<br/>
+light-source you are carrying. A light source will not shed any light<br/>
+unless it is equipped somehow, for example by holding it in your hand.<br/>
+Some light sources are not strong enough to light up a location, for<br/>
+example a small torch is not strong enough to make you see inside the<br/>
+deepest and darkest part of the Haon-Dor forest. To get more light, buy a<br/>
+stronger light source (for example a lantern).<br/>
+<br/><br/>
+<br/>See Also:<br/><br/>
+spell light<br/><br/>
+extinguish<br/><br/>
+<br/>

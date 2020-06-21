@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DikuMUD Web Client</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy"  content="connect-src * 'unsafe-inline';">
+    <meta name="viewport" content="width=device-width, initial-scale=2">
+    <script src="wsclient.js"></script>
+
+    <style>
+        /* ============ STRUCTURE ============== */
+        .c_container {
+            width: 100vw;
+            display: inline-flex;
+            flex-wrap: wrap;
+            overflow-y: hidden;
+            overflow-x: hidden;
+        }
+        
+        .flex-direction {
+            flex-direction: row;
+        }
+        
+        .c_left {
+            width: 70%;
+            height: 100vh;
+            background-color: #727272;
+        }
+        
+        .c_center {
+            width: 25%;
+            height: 100vh;
+            background-color: #bbb;
+        }
+        
+        .c_right {
+            width: 5%;
+            height: 100vh;
+            background-color: #666;
+        }
+        
+        /* ============ LEFT AREA ============== */
+        
+        #al_text {
+            width: 100%;
+            height: 100%; /* fill up the screen when empty */
+            max-height: calc(100% - 40px);
+            background-color: black;
+            color:white;
+            overflow-y: auto;
+        }
+        
+        #al_cmd {
+            width: 100%;
+            background-color: darkslategray;
+            height: 40px;
+        }
+        
+        /* ============ CENTER AREA ============== */
+        
+        #ac_map {
+            width:100%;
+            height: 25%;
+            background-color: #111111;
+            color: white;
+            background-image: url('img/logo.gif');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;            
+        }
+        #ac_paged {
+            width:100%;
+            height: 54%;
+            background-color: #333333;
+            color: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        #ac_progress {
+            width:100%;
+            height: 11%;
+            background-color: black;
+            color: white;
+        }
+        #ac_exits {
+            width:100%;
+            height: 10%;
+            background-color: darkolivegreen;
+            color: white;
+        }
+        #hp-progress {
+            width: 97%;
+            background-color: #333333;
+            border: 1px solid dimgray;
+            padding: 1%;
+        }
+        #mp-progress {
+            width: 97%;
+            background-color: #333333;
+            border: 1px solid dimgray;
+            padding: 1%;
+        }
+        #ep-progress {
+            width: 97%;
+            background-color: #333333;
+            border: 1px solid dimgray;
+            padding: 1%;
+        }
+        #hp-bar {
+            width: 10%;
+            height: 15px;
+            background-color: red;
+        }
+        #mp-bar {
+            width: 10%;
+            height: 15px;
+            background-color: blue;
+        }
+        #ep-bar {
+            width: 10%;
+            height: 15px;
+            background-color: green;
+        }
+        
+        /* ============ RIGHT AREA ============== */
+        
+        #ac_right {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background-color:darkslategray;
+            color:white;
+        }
+        
+        
+        /* ============ MEDIA ============== */
+        
+        @media screen and (max-width: 1200px) {
+        /*  .flex-direction {
+            flex-direction: column;
+          }*/
+        
+          .c_left {
+            width: 75%;
+            height: 100vh;
+            background-color: #bbb;
+            overflow: hidden;
+          }
+        
+          .c_center {
+            width: 25%;
+            height: 100vh;
+            background-color: #bbb;
+            overflow: hidden;
+          }
+        
+          .c_right {
+            display: none;
+          }
+        }
+        
+        @media screen and (max-width: 800px) {
+        /*  .flex-direction {
+            flex-direction: column;
+          }*/
+        
+          .c_left {
+            width: 100%;
+            height: 100vh;
+            background-color: #bbb;
+            overflow: hidden;
+          }
+        
+          .c_center {
+            display: none;
+          }
+        
+          .c_right {
+            display: none;
+          }
+        }
+        
+        /* ============ MAIN ============== */
+        html,body {
+            height: 100%; margin: 0px; padding: 0px;
+        }
+        a:link {
+            color:currentColor;
+        }
+        a:visited {
+            color:currentColor;
+        }
+        
+        /* ============ STYLES ============== */
+        h1              { font-size: medium; } /* Used for screen readers, room title */
+
+        #btnConnect    { width: 100px; }
+        #btnDisconnect { width: 100px; }
+        #btnSend       { width: 100px; }
+        .command     { display: inline; }
+
+        /* Combat */
+        .hit_me         { display: inline; color:darkred; font-weight: bold;}
+        .hit_opponent   { display: inline; color:orange; font-weight: bold;}
+        .hit_other      { display: inline; color:darkslategray;}
+
+        .nodam_me       { display: inline; color:darkslategray; }
+        .nodam_opponent { display: inline; color:darkslategray; }
+        .nodam_other    { display: inline; color:darkslategray; }
+
+        .miss_me        { display: inline; color:darkslategray; }
+        .miss_opponent  { display: inline; color:darkslategray; }
+        .miss_other     { display: inline; color:darkslategray; }            
+
+        .shield_me       { display: inline; color:darkslategray; }
+        .shield_opponent { display: inline; color:darkslategray; }
+        .shield_other    { display: inline; color:darkslategray; }
+
+
+        /* Communication */
+        .ask_self      { display: inline; color:aliceblue;}
+        .ask_other     { display: inline; color:cadetblue;}
+        .say_self      { display: inline; color:aliceblue;}
+        .say_other     { display: inline; color:cadetblue;}
+        .shout_self      { display: inline; color:aliceblue;}
+        .shout_other     { display: inline; color:cadetblue;}
+        .whisper       { display: inline; color:aliceblue;}
+        .tell_self     { display: inline; color:aliceblue;}
+        .tell_other    { display: inline; color:cadetblue;}
+
+        .death       { display: inline; color:tomato;}
+        .prompt      { display: inline; color:darkorange;}
+        .npc_title   { display: inline; color:aqua; }
+        .npc_descr   { display: inline; color:aqua; }
+        .obj_descr   { display: inline; color:bisque; }
+        .obj_title   { display: inline; color:bisque; }
+        .immort_title    { display: inline; color:aqua; }
+        .pc_title    { display: inline; color:aqua; }
+        .pc_descr    { display: inline; color:aqua; }
+
+        .room_title  { display: inline; }
+        .room_descr  { display: inline; font-style: italic; width: 600px; }
+        .score       { display: inline; color:aquamarine; }
+        .social_self { display: inline; color:white; }
+        .social_other { display: inline; color:white; }
+        .score       { display: inline; color:aquamarine; }
+        .spell       { display: inline; color:aqua; }
+        .worn        { display: inline; color:bisque; }
+        .who_name    { display: inline; color:coral; }
+        .who_title   { display: inline; color:darkorange; }
+        .who_inv     { display: inline; }
+
+        .xpgain         { display: inline; color:firebrick; font-weight: bold;}
+
+        .converse    { list-style: none; } 
+        .colh2       { border: 0px solid black; margin:0; } /* Table class */
+        .colh3       { border: 0px solid black; margin:0; } /* Table class */
+
+        /* Support for the old MUD colors */
+        .cr     { display: inline; color:darkred; }
+        .cpr    { display: inline; color:red; }
+        .br     { display: inline; background-color:darkred; }
+        .cn     { display: inline; color:black; }
+        .cpn    { display: inline; color:black; }
+        .bn     { display: inline; background-color:black; }
+        .cg     { display: inline; color:darkgreen; }
+        .cpg    { display: inline; color:green; }
+        .bg     { display: inline; background-color:darkgreen; }
+        .cy     { display: inline; color:darkgoldenrod; }
+        .cpy    { display: inline; color:yellow; }
+        .by     { display: inline; background-color:darkgoldenrod; }
+        .cb     { display: inline; color:darkblue; }
+        .cpb    { display: inline; color:blue; }
+        .bb     { display: inline; background-color:darkblue; }
+        .cm     { display: inline; color:darkorchid; }
+        .cpm    { display: inline; color:magenta; }
+        .bm     { display: inline; background-color:darkorchid; }
+        .cc     { display: inline; color:darkcyan; }
+        .cpc    { display: inline; color:cyan; }
+        .bc     { display: inline; background-color:darkcyan; }
+        .cb     { display: inline; color:darkblue; }
+        .cpb    { display: inline; color:blue; }
+        .bb     { display: inline; background-color:darkblue; }
+        .cw     { display: inline; color:#ccc; }
+        .cpw    { display: inline; color:white; }
+        .bw     { display: inline; background-color:#ccc; }
+
+        .default,.DEFAULT { display: inline; color:#ccc; }
+
+
+        .fourcol
+        {
+            -webkit-column-count: 4;
+            -webkit-column-gap: 20px;
+            column-count:4;
+            column-gap:20px;
+        }
+        .threecol
+        {
+            -webkit-column-count: 3;
+            -webkit-column-gap: 20px;
+            column-count:3;
+            column-gap:20px;
+        }
+        .twocol  {
+            -webkit-column-count: 2;
+            -webkit-column-gap: 20px;
+            column-count:2;
+            column-gap:20px;
+        }
+        .row {
+            /* Clear floats after the columns */
+            clear: both;
+        }
+
+
+/* The Modal (background) */
+.modal 
+{
+    z-index: 1;
+    position: absolute;
+    display:none; /* Hidden by default */
+    top: 100px;
+    left: 100px;
+    background-color: #444444;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 90%;
+    max-height: 80%;
+    resize: both;
+    overflow-y: auto; /* Enable scroll if needed */
+    border: 2px solid rgb(177, 177, 177);
+
+}
+/*
+  position: fixed; // Stay in place
+  z-index: 1; // Sit on top
+  left: 0;
+  top: 0;
+  width: 100%; // Full width
+  height: 100%; / Full height
+  overflow-y: auto; // Enable scroll if needed 
+  background-color: rgb(0,0,0); // Fallback color
+  background-color: rgba(0,0,0,0.4); // Black w/ opacity
+*/
+
+.modal-header {
+  width: 100%;
+  height: 40px;
+  cursor: move;
+  z-index: 3;
+  background-color: darkslateblue;
+  color: #fff;
+}
+
+/* Modal Content/Box */
+.modal-content {
+    width: 100%;
+    height: calc(100% - 40px);
+    z-index: 2;
+    overflow-y: auto; /* Enable scroll if needed */
+    background-color: #222222;
+    color: white;
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+} 
+
+/* ============ END OF STYLES ============== */
+</style>
+</head>
+<body>
+    <!-- ============ CONTENT ============== *-->
+    <div class="c_container flex-direction"> <!-- Outer -->
+        <div class="c_left">
+            <div id="al_text" role="log" aria-live="polite">
+                <ul id="converse" style="list-style-type: none; display: inline;"></ul>
+            </div>
+            <div id="al_cmd">
+                <table width="100%">
+                    <tr>
+                        <td style="width:4%; height:34px; color:white;">&nbsp;Cmd</td>
+                        <td style="width:76%;height:34px;"><input style="width:97%;" type="text" id="message"/></td>
+                        <td style="width:15%;height:34px;"><input id="btnSend" type="button" value=">" disabled="disabled" onclick="onSendClick()"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="c_center">
+            <div id="ac_map">
+                <div id="mymap"></div>
+            </div>
+            <div id="ac_paged" aria-live="polite">
+                <div id="acp_text">Text that sticks.</div>
+            </div>
+            <div id="ac_progress">
+                <div id="hp-progress">
+                <div id="hp-bar"></div>
+                </div>
+                <div id="ep-progress">
+                    <div id="ep-bar"></div>
+                </div>
+                <div id="mp-progress">
+                    <div id="mp-bar"></div>
+                </div>
+            </div>
+            <div id="ac_exits">
+                <div id="ace_text">N, S, E, W</div>
+            </div>
+        </div> <!-- ac_center -->
+        <div class="c_right">
+            <div id="ac_right">
+                <a href="#" onclick="cmd('inventory')">In</a><br/>
+                <a href="#" onclick="cmd('equipment')">Eq</a><br/>
+                <a href="#" onclick="cmd('help')">He</a><br/>
+                <a href="#" onclick="modalShow()">MOD</a><br/>
+            </div>
+        </div> <!-- ac_right -->
+    </div> <!-- outer -->
+
+    <!-- ============ MODAL ============== *-->
+
+    <!-- The Modal -->
+    <div id="myModal" class='modal'>
+        <!-- Modal content -->
+        <div id="modal-header" class="modal-header"><span class="close" onclick="modalHide()">&times;</span></div>
+        <div class="modal-content"><div id="modtext" role="modal text" aria-live="polite">Text in the Modal</div></div>
+    </div>
+
+    <!-- ============ SCRIPTS ============== *-->
+
+
+<script type="text/javascript">
+
+            document.addEventListener("keyup", event => {
+                if (event.key == "Escape")
+                {
+                    var modal = document.getElementById("myModal");
+                    if (modal.style.display != "none")
+                    {
+                        modalHide();
+                        event.preventDefault();
+                    }
+                    else
+                        InputFocus();
+                }
+            });
+
+            document.querySelector("#message").addEventListener("keyup", event => {
+                if(event.key !== "Enter") return;
+                
+                document.querySelector("#btnSend").click();
+                event.preventDefault(); // No need to `return false;`.
+            });
+
+            window.onload = function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                var strConn = urlParams.get('protocol') + "://" + urlParams.get('host') + ":" + urlParams.get('port') + urlParams.get('endpoint');
+                outputText("Accessible MUD client<br/>");
+                openWSConnection(urlParams.get('protocol'), urlParams.get('host'), urlParams.get('port'), urlParams.get('endpoint'));
+            
+                if (urlParams.get('reader') != 'true')
+                {
+                    bScreenReader = false;
+                }
+                console.log("Screen Reader = " + bScreenReader + " " + urlParams.get('reader'));
+            };
+
+            function PasswordOn() {
+                document.getElementById("message").setAttribute('type','password');
+            }
+            function PasswordOff() {
+                document.getElementById("message").setAttribute('type','text');
+            }
+
+            function alertme(){
+                alert("Alert me called");
+            }
+
+            document.addEventListener('visibilitychange', function(e) {
+                if (document.hidden == false)
+                {
+                    InputFocus();
+                    console.log("Putting input in focus after window got focus.");
+                }
+            });
+
+
+        // DRAG
+
+// Make the DIV element draggable:
+dragElement(document.getElementById("myModal"));
+
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById("modal-header")) {
+    // if present, the header is where you move the DIV from:
+    document.getElementById("modal-header").onmousedown = dragMouseDown;
+  } else {
+    // otherwise, move the DIV from anywhere inside the DIV:
+    elmnt.onmousedown = dragMouseDown;
+    return;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    // stop moving when mouse button is released:
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}        
+        </script>
+
+        </body>
+</html>

@@ -1,0 +1,4431 @@
+/*
+filename    movement
+password    test
+changedby   Azzurathe
+EmailAdd
+request     compile
+version     1
+END HEADER*/
+/*
+TODO
+auto climb
+wander
+ */
+/*Sunday May 14, 2006 I changed Open, Close, lock, and unlock so that they work correctly if the doors are not the opposit of the door on the other side.*/
+/* movement dils  by Azzurathe
+
+This section of dils will control all movement on the mud, replacing the basecode
+movement as well as the ride dil that was written by me earlier in the year.
+
+It will compose of 10 basic dils for each direction, which will then call the main
+movement dil.  This main movement dil will check
+
+   a) if person is in a room
+   b) in a boat object
+   c) on a mount
+
+It will then call the movement dil for the said system.  All followers in the room
+will then follow.
+
+SEARCH  and secret doors needs to be re-done into dil and extras.
+
+LOOK has to be re-done in dil for this to work properly.
+
+OPEN     done in dil so new secret doors work correctly
+
+CLOSE    done in dil so new secret doors work correctly
+
+ENTER    done so movement is complete.
+
+LEAVE    done so movement is complete.
+
+LOCK     Done except for exit locks need 'key' field
+
+UNLOCK   Done except for exit locks need 'key' field
+
+DIRECTIONS / EXITS   Done. This uses the new secret doors.
+
+DRAG     Needs to be done to use the new secret doors/look dils.
+
+RIDE / SAIL   These commands are to be removed from service (wizi them or better yet,
+              just make a dummy dil that does nothing or starts a movement)
+*/
+
+#include <macros.h>
+
+#define SWIM_ON  "$swim_on"
+
+#define IS_FISH  "$is_fish"
+
+#define IS_AMPHIB "$is_amphib"
+
+
+%zone basemove
+
+title ""
+reset RESET_NOT
+
+weather 1040
+
+creators {"whistler", "azzurathe"}
+
+notes
+"This zone contains the dils used for movement, search and other goodies like that."
+
+help
+"This zone is not intended for players."
+
+%dil
+
+/* fall_dil. Copy onto a character and they will fall through rooms marked
+ * with EX_FALL_THIS_WAY. When a room is entered with no such flag, they 
+ * hit the ground and take damaage. 
+ * 
+ */
+dilbegin aware unique fnpri(FN_PRI_BLOCK-1) fall_dil(damage:integer);	
+external
+   look_blank@baselook(l1 : unitptr, str12 : string);
+   unitptr unit_room@function(u:unitptr);
+   integer rev_dir@function(d:integer);
+   string dirstring@function(i:integer); 
+
+var
+   from_dir:integer;
+   room:unitptr;
+   room_going:unitptr;
+   room_next:unitptr;
+   fall_from:integer;
+   dir:integer;
+   idir:integer;
+   dir_name:string;
+   rev_name:string;
+
+code
+{
+   heartbeat:=PULSE_SEC;
+
+   room := unit_room@function(self); // Register start location
+   fall_from := room.idx;
+
+   :loop:
+   room:=unit_room@function(self);
+ 
+   heartbeat:=3;
+
+   dir := 0;
+   while (dir <= MAX_EXIT)
+   {
+      if (isset(room.exit_info[dir], EX_FALL_THIS_WAY))
+         break;
+      dir := dir + 1;
+   }
+
+   if (dir > MAX_EXIT)
+      goto splat_now;
+
+   // Movable direction
+   room_next:=room.exit_to[dir];	
+
+   // If circular or doesn't exist, end here
+   if ((room==room_next) or (fall_from==room_next.idx) or (room_next == null))
+      goto splat_now;
+
+   // On the ships, if the cargo hold is closed, dont fall through...
+   if (isset(room.exit_info[dir], EX_CLOSED))
+      goto splat_now;
+
+   // Get ready for messages when falling through this room
+
+   from_dir:=rev_dir@function(dir);
+   rev_name:=dirstring@function(from_dir);
+   if (rev_name=="up")
+      rev_name:="above";
+   else if (rev_name=="down")
+      rev_name:="below";
+   else
+      rev_name:="the "+rev_name;
+
+
+   dir_name:=dirstring@function(dir);
+   if (dir_name=="up")
+      dir_name:="up above";
+   else if (dir_name=="down")
+      dir_name:="down below";
+   else
+      dir_name:="out to the "+dir_name;
+
+   if (fall_from == room.idx)
+   {
+      // In the room where you first fail your climb
+      act("You fall and tumble "+dir_name+", screaming all the way.", A_ALWAYS,self,null,null,TO_CHAR);
+      act("$1n falls and tumbles "+dir_name+", screaming all the way.", A_SOMEONE, self,null,null,TO_REST);
+   }
+   else
+   {
+      // In the room where you first fail your climb
+      act("You fall in from "+rev_name+" and tumble "+dir_name+", screaming all the way.",
+         A_ALWAYS,self,null,null,TO_CHAR);
+      act("$1n falls in from "+rev_name+" and tumbles "+dir_name+", screaming all the way.",
+         A_SOMEONE, self,null,null,TO_REST);
+      look_blank@baselook(self, ":brief:");   /* get the rooms contents.  The :brief: tells the look dil*/
+   }
+
+   link(self,room_next);
+
+   :briefwait:
+   wait(SFB_TICK | SFB_CMD, TRUE);
+   if (command(CMD_AUTO_TICK))
+      goto loop;
+
+   act("You try to do that but instead you decide to wave your arms frantically in the air.", A_ALWAYS,self,null,null,TO_CHAR);
+   block;
+   goto briefwait;
+
+   :splat_now:
+   rev_name:=dirstring@function(from_dir);
+   if (rev_name=="up")
+      rev_name:="above";
+   else if (rev_name=="down")
+      rev_name:="below";
+   else
+   {
+      rev_name:="the "+dirstring@function(from_dir);
+   }
+
+   self.hp:=self.hp-damage;
+   act ("You fall down and land with a loud splat.",
+      A_ALWAYS,self,null,null,TO_CHAR);
+   act ("$1n falls down and lands with a loud splat.",
+      A_HIDEINV, self,null,null,TO_REST);
+   look_blank@baselook(self, ":brief:");   /* get the rooms contents.  The :brief: tells the look dil*/
+
+   position_update(self);
+   quit;
+}
+dilend
+
+
+
+/* Aka do_climb() in the normal naming convention :-) MS2020 */ 
+dilbegin climb_dil(arg : string);
+external
+   checkstand();
+   integer checkexit(arg : string, bMessage:integer);
+   string  dirstring@function(int123 : integer);
+   integer is_hidden(unit2 : unitptr, int1 : integer, unit23 : unitptr);
+   integer skillchecksa@skills(skillidx : integer, abiidx : integer, difficulty : integer);
+   string exitname@function(room:unitptr, dir:integer);
+   fall_dil(damage:integer);
+   look_blank@baselook(l1 : unitptr, str12 : string);
+
+var
+   fall_to:string;
+   res:integer;
+   args:stringlist;
+   first_arg:string;
+   last_arg:string;
+   len_arg:integer;
+   in_vehicle:integer;
+   dir         :  integer;
+   send_dir         :string; 
+   dir_name:string;
+   room:unitptr;
+   room_going:unitptr;
+   i:integer;
+   skilla:integer;
+   skillb:integer;
+   hm : integer; 
+   difficulty:integer;
+   damage:integer;
+   amount:integer;
+   percent:integer;
+   exd : extraptr;
+   dmg : integer;
+   exit_name : string;
+   
+code
+{
+   heartbeat := PULSE_SEC * 5;
+   checkstand();
+
+   if (self.endurance < 10)
+   {
+      act("You are too exhausted.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   if (arg == "")
+   {
+      act("Climb what?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   room := self.outside;
+   if (room.type != UNIT_ST_ROOM)
+   {
+      act("You can't climb while inside $2n.", A_SOMEONE, self, room, null, TO_CHAR);
+      return;      
+   }
+
+   dir := checkexit(arg, 1);
+   dir_name := dirstring@function(dir);
+   exit_name := exitname@function(room, dir);
+
+   if (isset(room.exit_info[dir], EX_CLOSED))
+   {
+      act("The $2t seems to be closed.", A_SOMEONE, self, exit_name, null, TO_CHAR);
+      return;
+   }
+
+   if (not isset(room.exit_info[dir], EX_CLIMB))
+   {
+      act("Doesn't seem like you have to climb the $2t, perhaps just try to move normally?", A_SOMEONE, self, exit_name, null, TO_CHAR);
+      return;
+   }
+
+   /*
+   * test for success and fail including endurance loss
+   *	including drunk code
+   */	
+
+   room_going := room.exit_to[dir];
+   difficulty := room.exit_diff[dir];
+
+   if (self.drunk > 0)
+   {
+      difficulty := difficulty + 5 * self.drunk;
+      act("Climbing under influence isn't easy.", A_SOMEONE, self, null, null, TO_CHAR);
+   }
+
+   hm := skillchecksa@skills(SKI_CLIMB, ABIL_DEX, difficulty);
+   dmg := 5; /* Default: 5 hits per 10 fail */
+
+   exd := room.extra.["$climb_"+dir_name];
+   if (exd != null)
+   {
+      if (exd.vals != null)
+      {
+         dmg := exd.vals.[0];
+      }
+   }
+
+   self.endurance := self.endurance-6;
+
+   if (hm <= 0)
+   {
+      dmg := dmg * (-hm / 10);
+
+      act("You begin climbing the $2t but slip and fall.",	A_ALWAYS, self, exit_name, null, TO_CHAR);
+      act("$1n begins climbing the $2t but slips and falls.", A_HIDEINV, self, exit_name, null, TO_ROOM);
+      dilcopy("fall_dil@basemove("+itoa(dmg)+")", self);
+      quit;
+   }
+
+   /* Issue the command() stuff so that all movers send the command "north" etc to the mud.
+   //                        sendtext("after endurance test<br/>",self);
+   *   This is necessary for dils like the guard dil.
+   */
+
+   res := send_pre(dirstring@function(dir), self, null, null, 0, arg, null);
+   if (res != SFR_SHARE)
+      quit;
+
+   res := send_pre("climb", self, null, null, 0, arg, null);
+   if (res != SFR_SHARE)
+      quit;
+
+   link(self, room_going);
+
+   act("$1n climbs in on the $2t.", A_HIDEINV, self, arg , null, TO_ROOM);
+
+   look_blank@baselook(self, ":brief:");   /* get the rooms contents.  The :brief: tells the look dil*/
+
+   send_done("climb", self, null, null, 0, "", null);
+   send_done(dirstring@function(dir), self, null, null, 0, "", null);
+   quit;
+}
+dilend
+
+//end do_climb
+
+
+
+
+dilbegin integer movementloss (sector:integer);
+code
+{
+
+if (sector==SECT_INSIDE)
+	return (1);
+else if (sector==SECT_CITY)
+	return (1);
+else if (sector==SECT_FIELD)
+	return (2);
+else if (sector==SECT_FOREST)
+	return (3);
+else if (sector==SECT_HILLS)
+	return (4);
+else if (sector==SECT_MOUNTAIN)
+	return (6);
+else if (sector==SECT_DESERT)
+	return (8);
+else if (sector==SECT_SWAMP)
+	return (8);
+else if (sector==SECT_WATER_SWIM)
+	return (4);
+else if (sector==SECT_WATER_SAIL)
+	return (50);
+else if (sector==SECT_UNDER_WATER)
+	return (8);
+else if (sector==SECT_SNOW)
+	return (8);
+else if (sector==SECT_SLUSH)
+	return (6);
+else if (sector==SECT_ICE)
+	return (10);
+else
+	return (1);
+}
+dilend
+
+dilbegin move_follower(mover : unitptr, dir : integer, room_in : unitptr, arg : string);
+
+external
+
+   start_move(u3 : unitptr, d3 : integer, arg34 : string, fol45 : integer);
+
+var
+
+    pc     :  unitptr;
+    cnt    :  integer;
+    mu     :  unitptr;
+
+code{
+
+cnt := 0;
+
+while (cnt < mover.followercount)
+   {
+     pc := getfollower(mover, cnt);
+
+     /* This is were we make the followers walk.  The first part is to keep people
+        from leading away horses that dont belong to them (ie, someone is on it).
+
+        The second part checks to see if the follower is on a horse.
+
+        The third if in a boat/vehicle.
+
+        Lastly, if they are walking.
+     */
+
+     if ((pc.type == UNIT_ST_NPC) and (isset(pc.flags, UNIT_FL_TRANS)))
+        {
+          mu := pc.inside;
+
+          while (mu)
+             {
+               if ((mu.type == UNIT_ST_NPC) or (mu.type == UNIT_ST_PC))
+                  break;
+
+               mu := mu.next;
+             }
+
+          if ((mu == null) and (pc.outside == room_in))
+             start_move(pc, dir, arg, TRUE);
+        }
+     else if ((pc.outside.type == UNIT_ST_NPC) and (isset(pc.outside.flags, UNIT_FL_TRANS)) and
+         (pc.outside.outside == room_in))
+          start_move(pc, dir, arg, TRUE);
+     else if ((pc.outside.type == UNIT_ST_OBJ) and ((pc.outside.objecttype == ITEM_BOAT) or
+          (pc.outside.objecttype == ITEM_VEHICLE)) and (pc.outside.outside == room_in))
+          start_move(pc, dir, arg, TRUE);
+     else if (pc.outside == room_in)
+          start_move(pc, dir, arg, TRUE);
+
+     cnt := cnt + 1;
+   }
+
+return;
+
+}dilend
+
+
+ /* current_move is used to move chars and objects along streams, oceans, etc.
+  *   dir is the direction the stream flows, e.g. east.
+  *   messages [0] = act() message to char when flowing to new room in direction, 
+  *            [1] act() message to others when flowing to new room in direction,
+  *            [2] act() message to char that he's moving with current
+  *            [3] act() message to others arriving when flowing to new room in direction,
+  *   beats  How many 5 second intervals before the current takes you to the next room.
+  */
+dilbegin watercurrent(dir : integer, messages: stringlist, beats: integer);
+external
+   integer skillchecksau@skills(u : unitptr, skillidx : integer, abiidx : integer, difficulty : integer);
+
+var
+   i    : integer;
+   u    : unitptr;
+   sl : stringlist;
+   exd : extraptr;
+
+code
+{
+   if (not(self.exit_to[dir]))
+   {
+      log("DIL watercurrent(): No such direction "+itoa(dir)+" in room "+self.nameidx+"@"+self.zoneidx);
+      quit;
+   }
+
+   heartbeat := 5 * PULSE_SEC;
+
+   while (TRUE)
+   {
+      wait(SFB_TICK|SFB_RANTIME, TRUE);
+
+      u := self.inside;
+
+      while (u != null)
+      {
+         exd := "$current" in u.extra;
+
+         if (exd == null)
+         {
+            sl := {"$current"};
+            addstring(sl, self.nameidx);
+            addextra(u.extra, sl, "0");
+            exd := "$current" in u.extra;
+         }
+
+         if (exd.names.[1] != self.nameidx) // Other room's current
+         {
+            exd.names.[1] := self.nameidx;
+            exd.descr := "0";
+         }
+
+         i := atoi(exd.descr) + 1;
+         exd.descr := itoa(i);
+
+         if (i < beats)
+         {
+            if (i % 2 == 0)
+               act(messages.[2], A_ALWAYS, u, null, null, TO_CHAR);
+         }
+         else
+         {
+            subextra(u.extra, "$current");
+
+            if ((u.type == UNIT_ST_PC) or (u.type == UNIT_ST_NPC))
+            {
+               i := 0;
+               if ((u.race >= RACE_ARTHROPODA_MIN) and (u.race <= RACE_ARTHROPODA_MAX))
+               {
+                  i := 50; // Additional bonus for races born to swim :) 
+               }
+               if ("$is_amphib" in u.extra)
+               {
+                  i := 80;
+               }
+               if ("$is_fish" in u.extra)
+               {
+                  i := 100;
+               }
+               log("exit diff: " + itoa(self.exit_diff[dir]));
+               i := skillchecksau@skills(u, SKI_SWIMMING, ABIL_CON, self.exit_diff[dir] - i);
+               if (i < 0)
+               {
+                  act("You flounder and take in water!", A_ALWAYS, u, null, null, TO_CHAR);
+                  act("$1n flounders and takes in water!", A_ALWAYS, u, null, null, TO_REST);
+                  u.hp := u.hp + i / 10;
+                  position_update(u);
+                  if (u.position == POSITION_DEAD)
+                     continue;
+               }
+            }
+
+            // Maybe copy code over from climb for messages
+            act(messages.[0], A_ALWAYS, u, null, null, TO_CHAR);
+            act(messages.[1], A_ALWAYS, u, null, null, TO_REST);
+
+            link(u, self.exit_to[dir]);
+            if (u.type == UNIT_ST_PC)
+               exec("look", u);
+
+            act(messages.[3], A_ALWAYS, u, null, null, TO_REST);
+         }
+
+         u := u.next;
+      }
+   }
+}
+dilend
+
+
+/* do_swim : This will add the 'swim' command.  This will allow players to turn on auto-swimming
+   or just simply swim in one direction at a time. */
+dilbegin do_swim(arg : string);
+var
+
+    arg1   :   string;
+    dir    :   integer;
+
+code
+{
+
+   if (arg == "")
+   {
+      act("Where do you wish to swim?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   if (arg == "on")
+   {
+      if (self.extra.[SWIM_ON])
+      {
+         act("You already have auto-swimming turned on.", A_ALWAYS, self, null, null, TO_CHAR);
+         return;
+      }
+
+     addextra(self.extra, {SWIM_ON}, "");
+     act("Automatic swimming is now on.", A_ALWAYS, self, null, null, TO_CHAR);
+     return;
+   }
+
+   if (arg == "off")
+   {
+      if (not self.extra.[SWIM_ON])
+      {
+         act("You are not automatically swimming at this time.", A_ALWAYS, self, null, null, TO_CHAR);
+         return;
+      }
+
+      subextra(self.extra, SWIM_ON);
+      act("Automatic swimming is now off.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   if (self.outside.type != UNIT_ST_ROOM)
+   {
+      act("You cant swim here!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* check for direction */
+   arg1 := getword(arg);
+   dir := -1;         /* Initialize counter */
+
+   if(arg1 in "north") dir := NORTH;
+   else if(arg1 in "up") dir := UP;
+   else if(arg1 in "south") dir := SOUTH;
+   else if(arg1 in "east") dir := EAST;
+   else if(arg1 in "west") dir := WEST;
+   else if(arg1 in "down") dir := DOWN;
+   else if(arg1 in "northeast") dir := NORTHEAST;
+   else if(arg1 in "northwest") dir := NORTHWEST;
+   else if(arg1 in "southeast") dir := SOUTHEAST;
+   else if(arg1 in "southwest") dir := SOUTHWEST;
+   else if(arg1 in "sw") dir := SOUTHWEST;
+   else if (arg1 in "se") dir := SOUTHEAST;
+   else if (arg1 in "ne") dir := NORTHEAST;
+   else if (arg1 in "nw") dir := NORTHWEST;
+
+
+   if (dir > -1)
+   {
+      if ((self.outside.movement != SECT_WATER_SAIL) and (self.outside.exit_to[dir].movement != SECT_WATER_SAIL))
+      {
+         act("You need water in order to swim.", A_ALWAYS, self, null, null, TO_CHAR);
+         return;
+      }
+
+      addextra(self.extra, {SWIM_ON}, "");
+      exec(arg1, self);
+      subextra(self.extra, SWIM_ON);
+   }
+   else
+   {
+     act("$2t is not a direction!", A_ALWAYS, self, arg1, null, TO_CHAR);
+     return;
+   }
+
+   return;
+}
+dilend
+
+
+/* do_ride : This will replace the basecode ride commands */
+
+dilbegin do_ride(arg : string);
+
+var
+
+   dir  : integer;
+   arg1 : string;
+
+code{
+
+
+
+if ((self.outside.type != UNIT_ST_NPC) or (not isset(self.outside.flags, UNIT_FL_TRANS)))
+   {act("You must be on a mount to ride.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if (arg == "")
+   {act("Which direction do you wish to ride?", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+arg1 := getword(arg);
+
+dir := -1;         /* Initialize counter */
+
+if(arg1 in "north") dir := NORTH;
+else if(arg1 in "up") dir := UP;
+else if(arg1 in "south") dir := SOUTH;
+else if(arg1 in "east") dir := EAST;
+else if(arg1 in "west") dir := WEST;
+else if(arg1 in "down") dir := DOWN;
+else if(arg1 in "northeast") dir := NORTHEAST;
+else if(arg1 in "northwest") dir := NORTHWEST;
+else if(arg1 in "southeast") dir := SOUTHEAST;
+else if(arg1 in "southwest") dir := SOUTHWEST;
+else if(arg1 in "sw") dir := SOUTHWEST;
+else if (arg1 in "se") dir := SOUTHEAST;
+else if (arg1 in "ne") dir := NORTHEAST;
+else if (arg1 in "nw") dir := NORTHWEST;
+
+
+if (dir > -1)
+    exec(arg1, self);
+
+else
+   {act("$2t is not a direction!", A_ALWAYS, self, arg1, null, TO_CHAR);
+    return;
+   }
+
+return;
+
+}dilend
+
+/* do_ride : This will replace the basecode ride commands */
+
+dilbegin do_sail(arg : string);
+
+var
+
+   dir  : integer;
+   arg1 : string;
+
+code{
+
+
+
+if ((self.outside.type != UNIT_ST_OBJ) or (self.outside.objecttype != ITEM_BOAT))
+   {act("You must be in a boat to sail.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if (arg == "")
+   {act("Which direction do you wish to sail?", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+arg1 := getword(arg);
+
+dir := -1;         /* Initialize counter */
+
+if(arg1 in "north") dir := NORTH;
+else if(arg1 in "up") dir := UP;
+else if(arg1 in "south") dir := SOUTH;
+else if(arg1 in "east") dir := EAST;
+else if(arg1 in "west") dir := WEST;
+else if(arg1 in "down") dir := DOWN;
+else if(arg1 in "northeast") dir := NORTHEAST;
+else if(arg1 in "northwest") dir := NORTHWEST;
+else if(arg1 in "southeast") dir := SOUTHEAST;
+else if(arg1 in "southwest") dir := SOUTHWEST;
+else if(arg1 in "sw") dir := SOUTHWEST;
+else if (arg1 in "se") dir := SOUTHEAST;
+else if (arg1 in "ne") dir := NORTHEAST;
+else if (arg1 in "nw") dir := NORTHWEST;
+
+
+if (dir > -1)
+    exec(arg1, self);
+
+else
+   {act("$2t is not a direction!", A_ALWAYS, self, arg1, null, TO_CHAR);
+    return;
+   }
+
+return;
+
+}dilend
+
+/* NORTH */
+dilbegin do_north(arg : string);
+
+external
+
+   start_move(unit1 : unitptr, direc : integer, arg1 : string, fol1 : integer);
+
+code{
+
+start_move(self, NORTH, arg, FALSE);
+
+return;
+
+}dilend
+
+
+/* EAST */
+dilbegin do_east(arg : string);
+
+external
+
+   start_move(unit1 : unitptr, direc : integer, arg1 : string, fol1 : integer);
+
+code{
+
+start_move(self, EAST, arg, FALSE);
+
+return;
+
+}dilend
+
+
+/* SOUTH */
+dilbegin do_south(arg : string);
+
+external
+
+   start_move(unit1 : unitptr, direc : integer, arg1 : string, fol1 : integer);
+
+code{
+
+start_move(self, SOUTH, arg, FALSE);
+
+return;
+
+}dilend
+
+
+/* WEST */
+dilbegin do_west(arg : string);
+
+external
+
+   start_move(unit1 : unitptr, direc : integer, arg1 : string, fol1 : integer);
+
+code{
+
+start_move(self, WEST, arg, FALSE);
+
+return;
+
+}dilend
+
+
+/* NORTHEAST */
+dilbegin do_northeast(arg : string);
+
+external
+
+   start_move(unit1 : unitptr, direc : integer, arg1 : string, fol1 : integer);
+
+code{
+
+start_move(self, NORTHEAST, arg, FALSE);
+
+return;
+
+}dilend
+
+
+/* NORTHWEST */
+dilbegin do_northwest(arg : string);
+
+external
+
+   start_move(unit1 : unitptr, direc : integer, arg1 : string, fol1 : integer);
+
+code{
+
+start_move(self, NORTHWEST, arg, FALSE);
+
+return;
+
+}dilend
+
+
+/* SOUTHEAST */
+dilbegin do_southeast(arg : string);
+
+external
+
+   start_move(unit1 : unitptr, direc : integer, arg1 : string, fol1 : integer);
+
+code{
+
+start_move(self, SOUTHEAST, arg, FALSE);
+
+return;
+
+}dilend
+
+
+/* SOUTHWEST */
+dilbegin do_southwest(arg : string);
+
+external
+
+   start_move(unit1 : unitptr, direc : integer, arg1 : string, fol1 : integer);
+
+code{
+
+start_move(self, SOUTHWEST, arg, FALSE);
+
+return;
+
+}dilend
+
+
+/* UP */
+dilbegin do_up(arg : string);
+
+external
+
+   start_move(unit1 : unitptr, direc : integer, arg1 : string, fol1 : integer);
+
+code{
+
+start_move(self, UP, arg, FALSE);
+
+return;
+
+}dilend
+
+
+/* DOWN */
+dilbegin do_down(arg : string);
+
+external
+
+   start_move(unit1 : unitptr, direc : integer, arg1 : string, fol1 : integer);
+
+code{
+
+start_move(self, DOWN, arg, FALSE);
+
+return;
+
+}dilend
+
+
+
+/* start_move :  This dil is the command dil for all movement.  It will discern
+if the person initiating the move.  All it does is checks for what mode of transportation
+the mover is using, walking, horse or vehicle.  It then calls one of three dils:
+
+self_walk
+steed_walk
+vehicle_walk
+
+These dils perform the actual movements.
+
+
+*/
+
+dilbegin start_move(mover : unitptr, direc : integer, arg : string, follows : integer);
+
+external
+   self_walk(mover2 : unitptr, direc1 : integer, arg1 : string, fol2 : integer);
+   steed_walk(mover2 : unitptr, direc1 : integer, arg1 : string, fol2 : integer);
+   vehicle_walk(mover2 : unitptr, direc1 : integer, arg1 : string, fol2 : integer);
+   string dirstring@function(i1 : integer);
+
+var
+   dir  : string;
+
+code
+{
+   if (mover.position == POSITION_FIGHTING)
+   {
+      act("You are fighting for your life!", A_ALWAYS, mover, null, null, TO_CHAR);
+      return;
+   }
+
+   if (mover.position == POSITION_RESTING)
+   {
+      act("You feel too relaxed to do that, perhaps you should stand up?", A_ALWAYS, mover, null, null, TO_CHAR);
+      return;
+   }
+
+   if (mover.position == POSITION_SITTING)
+   {
+      act("Perhaps you should get on your feet first?", A_ALWAYS, mover, null, null, TO_CHAR);
+      return;
+   }
+
+   if (mover.position == POSITION_SLEEPING)
+   {
+      act("In your dreams, or what?", A_ALWAYS, mover, null, null, TO_CHAR);
+      return;
+   }
+
+   if (mover.position != POSITION_STANDING)
+   {
+      act("All you can do right now, is think about the stars!", A_ALWAYS, mover, null, null, TO_CHAR);
+      return;
+   }
+
+/*  MS2020 - copied this onto the char itself rather than messing up global 
+             functions.
+   if (dilfind("shelter@skills", mover))
+   {
+      act("You realize you are busy building a shelter and decide not to move "
+         +"until it is finished!", A_ALWAYS, mover, null, null, TO_CHAR);
+      return;
+   }
+*/
+   if (mover.outside.type == UNIT_ST_ROOM)
+      self_walk(mover, direc, arg, follows);
+   else if (mover.outside.type == UNIT_ST_NPC)
+      steed_walk(mover, direc, arg, follows);
+   else if (mover.outside.type == UNIT_ST_OBJ)
+      vehicle_walk(mover, direc, arg, follows);
+     /* The following makes sure the PC isnt in another PC's inventory, which shouldnt
+        be possible */
+else if ((mover.outside.type == UNIT_ST_PC) and (mover.type == UNIT_ST_PC))
+  {log(mover.name + " is somehow in " + mover.outside.name + "'s inventory.");
+   act("Hmm.  You shouldnt be in here.", A_SOMEONE, mover, null, null, TO_CHAR);
+   link(mover, mover.outside.outside);
+   exec("look", mover);
+   act("$1n appears out of thin air.", A_HIDEINV, mover, null, null, TO_REST);
+  }
+
+/*dir := dirstring@function(direc);*/
+
+
+return;
+
+}dilend
+
+
+
+/* is_hidden : this dil returns TRUE if the door is still hidden to the player,
+   FALSE if he has found it. */
+dilbegin integer is_hidden(mover : unitptr, direc : integer, room_in : unitptr);
+var
+   ext : extraptr;
+   s : string;
+code
+{
+   if (not isset(room_in.exit_info[direc], EX_HIDDEN))
+      return(FALSE);
+
+   s := SECRET_DOOR + itoa(direc);
+   ext := s in room_in.extra;
+
+   if (ext == null)
+      return(TRUE);
+
+   if (mover.name in ext.names)
+      return(FALSE);
+   else 
+      return(TRUE);
+}
+dilend
+
+
+/* Find the exit expressed in the arg.
+ * bMessage is TRUE (1):
+ *   Returns DIR if found.
+ *   If no DIR a message is sent to self and DIL QUITs.
+ * bMessage is FALSE (0):
+ *   Returns DIR if found or -1
+ */
+dilbegin integer checkexit(arg : string, bMessage : integer);
+external
+   integer is_hidden(unit2 : unitptr, int1 : integer, room2 : unitptr);
+   string dirstring@function(i:integer); 
+
+var
+   room   : unitptr; 
+   oppdir : intlist;
+   dirsl  : stringlist;
+   arg2   : string;
+   arg1   : string;
+   arg3   : stringlist;
+
+   count   : integer;
+   counter : integer;
+   dir     : integer;
+   test    : integer;
+
+code
+{
+   /* first we are going to check if the player dictated what direction they want to open */
+   /* set up so we can close 'both' doors (room player is in and room the door leads to.) */
+
+   oppdir := {SOUTH, WEST, NORTH, EAST, DOWN, UP, SOUTHWEST, SOUTHEAST, NORTHWEST, NORTHEAST};
+   dirsl := DIR_SL_LONG;
+
+   arg2 := arg;            /* save arg for later use */
+   arg1 := getword(arg2);  /* Check arg2 for directions */
+   arg3 := split(arg1, ".");   /* checking for 2.door, 3.door, etc */
+   count := 0;
+
+   if (length(arg3) > 1)
+   {
+      count := atoi(arg3.[0]);
+      if (count > 0)
+         arg1 := arg3.[1];
+      if (count < 0)
+         count := 0;
+   }
+
+   /* Find the room the player is in.  If the player is in something that is
+      transparent, we take that objects outside as our room */
+   room := self.outside;
+
+   if ((room.type != UNIT_ST_ROOM) and (isset(room.flags, UNIT_FL_TRANS)))
+      room := room.outside;
+
+   /* If not a room, no doors */
+   if (room.type != UNIT_ST_ROOM)
+   {
+      act("You see no $2t here.", A_ALWAYS, self, arg, null, TO_CHAR);
+      quit;
+   }
+
+   dir := -1;         /* Initialize counter */
+   if(arg1 in "north") dir := NORTH;
+   else if(arg1 in "up") dir := UP;
+   else if(arg1 in "south") dir := SOUTH;
+   else if(arg1 in "east") dir := EAST;
+   else if(arg1 in "west") dir := WEST;
+   else if(arg1 in "down") dir := DOWN;
+   else if(arg1 in "northeast") dir := NORTHEAST;
+   else if(arg1 in "northwest") dir := NORTHWEST;
+   else if(arg1 in "southeast") dir := SOUTHEAST;
+   else if(arg1 in "southwest") dir := SOUTHWEST;
+   else if(arg1 in "sw") dir := SOUTHWEST;
+   else if (arg1 in "se") dir := SOUTHEAST;
+   else if (arg1 in "ne") dir := NORTHEAST;
+   else if (arg1 in "nw") dir := NORTHWEST;
+
+   /* if we didnt put in 'go down hole' then we need to find the 'exit' we want */
+   if (dir == -1)
+   {
+      counter := 0;
+      dir := NORTH;
+      /* Try and find the door */
+      while (dir <= MAX_EXIT)
+      {
+         if ((room.exit_to[dir]) and (arg1 in room.exit_names[dir]))   /* found an exit! */
+         {
+            if (not is_hidden(self, dir, room))
+            {
+               counter := counter + 1;
+               if (counter >= count)
+                  break;
+            }
+         }
+
+         dir := dir + 1;
+      }
+
+      /* we have cycled through all the doors, no such exit */
+      if (dir > MAX_EXIT)
+      {
+         if (bMessage)
+         {
+            act("You see no $2t here.", A_ALWAYS, self, arg, null, TO_CHAR);
+            quit;
+         }
+         else
+            return(-1);
+      }
+   }
+   else
+   {
+      /* check to make sure the player can see the door */
+      test := is_hidden@basemove(self, dir, room);
+
+      if ((room.exit_to[dir] == null) or (test))
+      {
+         if (bMessage)
+         {
+            act("You see no exit in that direction.", A_ALWAYS, self, null, null, TO_CHAR);
+            quit;
+         }
+         else
+            return(-1);
+      }
+
+      if (arg2 != "") // A name was specified on top of the direction e.g. south door
+      {
+         /*  That direction has no such door */
+         if (not (arg2 in room.exit_names[dir]))
+         {
+            if (bMessage)
+            {
+               act("You see no such exit '$2t' in that direction.", A_ALWAYS, self, arg2, null, TO_CHAR);
+               quit;
+            }
+            else
+               return(-1);
+         }
+      }
+   }
+
+   if (room.exit_to[dir]==null)
+   {
+      if (bMessage)
+      {
+         act("It's very peculiar indeed, there is an exit but it leads to nowhere.", A_ALWAYS,self, null, null, TO_CHAR);
+         quit;
+      }
+      else
+         return(-1);
+   }
+
+   return(dir);
+}
+dilend
+
+
+
+/* Find the exit expressed in the arg and return the direction. */
+/* No messages to char. Returns -1 if no valid exit             */
+/* Just like checkdoor in all other apects                      */
+
+dilbegin integer checkdoorraw(arg : string);
+external
+   integer checkexit(arg : string, bMessage : integer);
+   unitptr unit_room@function(u:unitptr);
+
+var
+   dir     : integer;
+   room    : unitptr;
+
+code
+{
+   dir := checkexit(arg, 0);
+
+   if (dir == -1)
+      return(-1);
+
+   room := unit_room@function(self);
+
+   if (not isset(room.exit_info[dir], EX_OPEN_CLOSE))
+      return(-1);
+
+   return(dir);
+}
+dilend
+
+
+
+/* Find the exit expressed in the arg and return the direction. */
+/* Sends messages to the char. Quits if no valid exit           */
+/* You can say, open door, open south, or open south door,      */
+/* or open south 2.door, or open 2.door                         */
+
+dilbegin integer checkdoor(arg : string);
+external
+   integer checkexit(arg : string, bMessage : integer);
+   unitptr unit_room@function(u:unitptr);
+
+var
+   dir     : integer;
+   room    : unitptr;
+
+code
+{
+   dir := checkexit(arg, 1);
+
+   room := unit_room@function(self);
+
+   if (not isset(room.exit_info[dir], EX_OPEN_CLOSE))
+   {
+      act("There doesn't seem to be anything to open or close there.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   return(dir);
+}
+dilend
+
+
+
+
+/* Checks if self is standing and otherwise sends a message and quits */
+dilbegin checkstand();
+code
+{
+   if (self.position == POSITION_STANDING)
+      return;
+
+   if (self.position == POSITION_FIGHTING)
+   {
+      act("You are fighting for your life!", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   if (self.position == POSITION_RESTING)
+   {
+      act("You feel too relaxed to do that, perhaps you should stand up?", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   if (self.position == POSITION_SITTING)
+   {
+      act("Perhaps you should get on your feet first?", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   if (self.position == POSITION_SLEEPING)
+   {
+      act("In your dreams, or what?", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   if (self.position < POSITION_SLEEPING)
+   {
+      act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   act("You're bizarrely floating a few inches above ground.", A_ALWAYS, self, null, null, TO_CHAR);
+   log("Character is in an unknown position: " + itoa(self.position));
+   quit;
+}
+dilend
+
+
+
+/* show_lv_walk : This dil will show the acts of the peson as they leave the room.
+   It checks if the player is sneaking and if there are extras in the room to override
+   the standard movement acts. */
+
+dilbegin show_lv_walk(mover : unitptr, direc : integer, room_in : unitptr);
+var
+
+   lv_s    : string;
+   lv_o    : string;
+   dirlist : stringlist;
+   clr_code : string;
+
+code
+{
+   if (mover.type == UNIT_ST_PC)
+      clr_code := "<div class='pc_title'>";
+   else
+      clr_code := "<div class='npc_title'>";
+
+   dirlist := {"north","east","south","west","up","down",
+               "northeast", "northwest","southeast","southwest"};
+
+   /* give leaving acts to others in the room */
+   /* NOTE: THIS NEEDS MODIFICATION FOR INVISIBILITY, SNEAK, ETC */
+
+   /* Check to see if the room has any special exiting extras to use in place of standard movement messages. */
+
+   lv_s := "$leave_" + dirlist.[direc] + "_s";
+   /*lv_s := "$leave_s";*/
+
+   if (room_in.extra.[lv_s])
+      lv_s := room_in.extra.[lv_s].descr;
+   else if ((room_in.exit_to[direc].movement == SECT_WATER_SAIL) or (room_in.movement == SECT_WATER_SAIL))
+      lv_s := "You swim " + dirlist.[direc] + ".";
+   else
+      lv_s := "";
+
+
+   /* Now the leave for others */
+   lv_o := "$leave_" + dirlist.[direc] + "_o";
+   /*lv_o := "$leave_o"; */
+
+
+   if (room_in.extra.[lv_o])
+      lv_o := clr_code + room_in.extra.[lv_o].descr + ".</div>";
+   else if ((room_in.exit_to[direc].movement == SECT_WATER_SAIL) or (room_in.movement == SECT_WATER_SAIL))
+      lv_o := clr_code + "$1n swims " + dirlist.[direc] + ".</div>";
+   else
+      lv_o := "";
+
+
+   /* Now we show the acts */
+   if (lv_s != "")
+      act(lv_s + "</div>", A_SOMEONE, mover, dirlist.[direc], null, TO_CHAR);
+
+   if (lv_o != "")
+      act(clr_code + lv_o + "</div>", A_HIDEINV, mover, dirlist.[direc], null, TO_REST);
+   else if (not isset(mover.charflags, CHAR_SNEAK))
+      act(clr_code + "$1n leaves $2t.</div>", A_HIDEINV, mover, dirlist.[direc], null, TO_REST);
+
+   return;
+}
+dilend
+
+
+/* show_ar_walk : This dil shows the acts of the person arriving into a room.  It checks
+   if he or she is sneaking and if the room has any movement extras to override the standard
+   acts.  */
+dilbegin show_ar_walk(mover : unitptr, direc : integer, room_going : unitptr);
+
+var
+
+   ar_s    : string;
+   ar_o    : string;
+   opplist : stringlist;
+   clr_code : string;
+   i        : integer;
+   variedtext : stringlist;
+code
+{
+   if (mover.type == UNIT_ST_PC)
+      clr_code := "<div class='pc_title'>";
+   else
+      clr_code := "<div class='npc_title'>";
+
+   opplist := {"south", "west", "north", "east", "down", "up", "southwest", "southeast",
+               "northwest", "northeast"};
+
+   ar_s := "$arrive_" + opplist.[direc] + "_s";
+
+   if (room_going.extra.[ar_s])
+      ar_s := room_going.extra.[ar_s].descr;
+   else
+      ar_s := "";
+
+   ar_o := "$arrive_" + opplist.[direc] + "_o";
+
+   opplist := {"the south","the west","the north","the east","below","above",
+               "the southwest", "the southeast","the northwest","the northeast"};
+
+   if (room_going.extra.[ar_o])
+      ar_o := room_going.extra.[ar_o].descr;
+   else if (room_going.movement == SECT_WATER_SAIL)
+      ar_o := "$1n swims from " + opplist.[direc] + ".";
+   else
+      ar_o := "";
+
+   if (ar_s != "")
+      act(clr_code+ar_s+"</div>", A_HIDEINV, mover, opplist.[direc], null, TO_CHAR);
+
+   if (ar_o != "")
+      act(clr_code+ar_o+"</div>", A_HIDEINV, mover, opplist.[direc], null, TO_REST);
+   else if (not isset(mover.charflags, CHAR_SNEAK))
+   {
+      i := rnd(0,4);
+      variedtext := {"$1n has arrived from $2t.</div>",
+                     "$1n wanders in from $2t.</div>",
+                     "$1n approaches from $2t.</div>",
+                     "$1n arrives from $2t.</div>",
+                     "$1n staggers in with a limp from $2t due to a combat injury.</div>"};
+      act(clr_code+variedtext.[i], A_HIDEINV, mover, opplist.[direc], mover.outside, TO_REST);
+   }
+   return;
+
+/* MS2020 can't understand the avoidance of act() putting it back in. Act is better.
+
+darg fucked Now we show the acts 
+
+if (ar_s != "")
+     act(ar_s, A_,mover,textformat("& }"+ mover.title), null, TO_CHAR);
+
+if (ar_o != "")
+   act(ar_o, A_HIDEINV, mover,textformat("& }"+mover.title), null, TO_REST);
+else if (not isset(mover.charflags, CHAR_SNEAK))
+
+    i := rnd(1,5);
+	if (i == 1) goto one;
+	if (i == 2) goto two;
+    if (i == 3) goto three;
+	if (i == 4) goto four;
+	if (i == 5) goto five;
+:one:
+    if (mover.type == UNIT_ST_PC)
+   act(clr_code + "$2t has arrived from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.name), mover.outside, TO_REST);
+else
+   act(clr_code + "$2t has arrived from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.title), mover.outside, TO_REST);
+return;
+
+:two:
+    if (mover.type == UNIT_ST_PC)
+   act(clr_code + "$2t wanders in from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.name), mover.outside, TO_REST);
+else
+   act(clr_code + "$2t wanders in from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.title), mover.outside, TO_REST);
+return;
+
+:three:
+    if (mover.type == UNIT_ST_PC)
+   act(clr_code + "$2t approaches from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.name), mover.outside, TO_REST);
+else
+   act(clr_code + "$2t approaches from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.title), mover.outside, TO_REST);
+return;
+
+:four:
+    if (mover.type == UNIT_ST_PC)
+   act(clr_code + "$2t arrives from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.name), mover.outside, TO_REST);
+else
+   act(clr_code + "$2t arrives from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.title), mover.outside, TO_REST);
+return;
+
+:five:
+    if (mover.type == UNIT_ST_PC)
+   act(clr_code + "$2t staggers in with a limp from "+ opplist.[direc] +" due to a combat scar.", A_HIDEINV, mover,textformat("& }"+mover.name), mover.outside, TO_REST);
+else
+   act(clr_code + "$2t staggers in with a limp from "+ opplist.[direc] +" due to a combat scar.", A_HIDEINV, mover,textformat("& }"+mover.title), mover.outside, TO_REST);
+*/
+
+
+/* MS2020 can't understand the avoidance of act() putting it back in. Act is better.
+
+darg fucked Now we show the acts 
+
+if (ar_s != "")
+     act(ar_s, A_SOMEONE,mover,textformat("& }"+ mover.title), null, TO_CHAR);
+
+if (ar_o != "")
+   act(ar_o, A_HIDEINV, mover,textformat("& }"+mover.title), null, TO_REST);
+else if (not isset(mover.charflags, CHAR_SNEAK))
+
+    i := rnd(1,5);
+	if (i == 1) goto one;
+	if (i == 2) goto two;
+    if (i == 3) goto three;
+	if (i == 4) goto four;
+	if (i == 5) goto five;
+:one:
+    if (mover.type == UNIT_ST_PC)
+   act(clr_code + "$2t has arrived from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.name), mover.outside, TO_REST);
+else
+   act(clr_code + "$2t has arrived from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.title), mover.outside, TO_REST);
+return;
+
+:two:
+    if (mover.type == UNIT_ST_PC)
+   act(clr_code + "$2t wanders in from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.name), mover.outside, TO_REST);
+else
+   act(clr_code + "$2t wanders in from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.title), mover.outside, TO_REST);
+return;
+
+:three:
+    if (mover.type == UNIT_ST_PC)
+   act(clr_code + "$2t approaches from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.name), mover.outside, TO_REST);
+else
+   act(clr_code + "$2t approaches from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.title), mover.outside, TO_REST);
+return;
+
+:four:
+    if (mover.type == UNIT_ST_PC)
+   act(clr_code + "$2t arrives from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.name), mover.outside, TO_REST);
+else
+   act(clr_code + "$2t arrives from "+ opplist.[direc] +".", A_HIDEINV, mover,textformat("& }"+mover.title), mover.outside, TO_REST);
+return;
+
+:five:
+    if (mover.type == UNIT_ST_PC)
+   act(clr_code + "$2t staggers in with a limp from "+ opplist.[direc] +" due to a combat scar.", A_HIDEINV, mover,textformat("& }"+mover.name), mover.outside, TO_REST);
+else
+   act(clr_code + "$2t staggers in with a limp from "+ opplist.[direc] +" due to a combat scar.", A_HIDEINV, mover,textformat("& }"+mover.title), mover.outside, TO_REST);
+*/
+
+/* darg fix */
+/*
+if (ar_s != "")
+   act(ar_s, A_SOMEONE, mover, null, null, TO_CHAR);
+
+if (ar_o != "")
+   act(ar_o, A_HIDEINV, mover, null, null, TO_REST);
+else if (not isset(mover.charflags, CHAR_SNEAK))
+   act(clr_code + "$1n has arrived from $2t.", A_HIDEINV, mover, opplist.[direc], null, TO_REST);
+*/
+return;
+
+}dilend
+
+
+
+
+
+dilbegin self_walk(mover : unitptr, direc : integer, arg : string, follows : integer);
+external
+   look_blank@baselook(l1 : unitptr, str12 : string);
+   move_follower(u3 : unitptr, d3 : integer, u4 : unitptr, arg34 : string);
+   unitptr unit_room@function(unit1 : unitptr);
+   integer is_hidden(unit2 : unitptr, int1 : integer, room2 : unitptr);
+   integer movementloss(int2 : integer);
+   show_lv_walk(unit5 : unitptr, int5 : integer, room5 : unitptr);
+   show_ar_walk(unit6 : unitptr, int6 : integer, room6 : unitptr);
+   string  dirstring@function(int123 : integer);
+   integer issetclimb@function(d:integer);
+
+var
+   room_in               :  unitptr;
+   room_going            :  unitptr;
+   pc_fol                :  unitptr;
+   old_pc                :  unitptr;
+   mu                    :  unitptr;
+   exit_hidden           :  integer;
+   exit_descr            :  extraptr;
+   dirlist               :  stringlist;
+   opplist               :  stringlist;
+   test                  :  integer;
+   end_need              :  integer;
+   text                  :  string;
+   res                   :  integer;
+
+code
+{
+   room_in :=unit_room@function(mover);
+
+   /* Issue the command() stuff so that all movers send the command "north" etc to the mud.
+      This is necessary for dils like the guard dil. */
+
+   text := dirstring@function(direc);
+
+   if (follows)
+      res := send_pre(text, mover, null, null, 0, arg, null);
+   else
+      res := SFR_SHARE;
+
+   room_going := unit_room@function(mover);    /* This will be redefined, just want to use it to save creating another var*/
+
+   if ((res != SFR_SHARE) or (room_in != room_going))
+      return;
+
+   if (not room_in.exit_to[direc])
+   {
+      act("Alas, you cannot go that way...", A_SOMEONE, mover, null, null, TO_CHAR);
+      return;
+   }
+
+   test := is_hidden(mover, direc, room_in);
+   if ((isset(room_in.exit_info[direc], EX_CLOSED)) and (test))
+   {
+      act("Alas, you cannot go that way...", A_SOMEONE, mover, null, null, TO_CHAR);
+      return;
+   }
+
+   if (isset(room_in.exit_info[direc], EX_CLOSED))
+   {
+      act("The $2t seems to be closed.", A_SOMEONE, mover, room_in.exit_names[direc].[0], null, TO_CHAR);
+      return;
+   }
+
+   if (issetclimb@function(direc))
+   {
+      act("Alas, you must climb to go that way.", A_SOMEONE, mover, null, null, TO_CHAR);
+      return;
+   }
+
+   room_going := room_in.exit_to[direc];
+
+   if ((not(paycheck(mover, room_going))) and (mover.level < IMMORTAL_LEVEL))
+      return;
+
+  /* Swimming Code : We are finally going to allow players to use that 100% swimming skill.
+     every movement will cost 50 points of endurance (unless the IS_FISH extra is found, then it is 1)
+     and also there will be a skill check to determine if there is drowning damage. If
+ 	  it can use water or land it will use the is-amphib extra Darg added */
+
+   if ((room_going.movement == SECT_WATER_SAIL) or (room_in.movement == SECT_WATER_SAIL))
+   {
+      if ((not mover.extra.[SWIM_ON]) and ((not mover.extra.[IS_FISH]) or (not mover.extra.[IS_AMPHIB])))
+      {
+         act("You might want to swim or get a boat.", A_ALWAYS, mover, null, null, TO_CHAR);
+         return;
+      }
+      
+    if ((mover.type == UNIT_ST_NPC) and (mover.race >=RACE_ARTHROPODA_MIN) and (mover.race <=RACE_ARTHROPODA_MAX))
+	   goto insect;
+
+    if ((mover.type == UNIT_ST_NPC) and (mover.extra.[IS_FISH]))
+	   goto fish;
+
+	if ((mover.type == UNIT_ST_NPC) and (mover.extra.[IS_AMPHIB]))
+	   goto amphib;
+
+
+    if (mover.type == UNIT_ST_PC)
+       test := openroll(5,100) + mover.skills[SKI_SWIMMING] + mover.abilities[ABIL_CON] - 100;
+
+    else
+       test := openroll(5,100) + mover.abilities[ABIL_CON] + mover.abilities[ABIL_DEX] - 100;
+
+    if (test < 0)
+       {act ("As you try to swim, you flounder and take in water!", A_ALWAYS, mover, null, null, TO_CHAR);
+        act ("$1n tries to swim, but flounders and takes in water!", A_ALWAYS, mover, null, null, TO_REST);
+        mover.hp := mover.hp - rnd(10,50);
+        position_update(mover);
+        return;
+       }
+   }
+else if (mover.extra.[IS_FISH])   /* If the mover is a fish, then we dont want them walking on land */
+     return;
+
+
+end_need := movementloss(room_in.movement);
+test := movementloss(room_going.movement);
+
+end_need := (end_need + test) / 2;
+
+if ((mover.extra.[IS_FISH]) and (end_need > 1))
+   end_need := 1;
+
+if ((mover.endurance - end_need < 0) and (not follows))
+   {act("You are too exhausted to move.", A_SOMEONE, mover, null, null, TO_CHAR);
+    return;
+   }
+else if (mover.endurance - end_need < 0)
+   {act("You are too exhausted to follow.", A_SOMEONE, mover, null, null, TO_CHAR);
+    return;
+   }
+/* MS2020 MOVED THIS TO ENTANGLED_2 darg added to block movement while entangled 
+ if ((mover.type == UNIT_ST_PC)and (dilfind ("entangled@spells", mover)) and (follows))
+   {
+   act("The vines prevent you from moving you best inform your group!", A_ALWAYS, mover, null, null, TO_CHAR);
+  return;
+       } */
+
+
+:amphib:
+    if ((mover.race >=RACE_ARTHROPODA_MIN)
+	and (mover.race <=RACE_ARTHROPODA_MAX))
+{
+ if (mover.endurance <= 10)
+ { mover.endurance := mover.max_endurance;
+   position_update(mover);
+ }
+  mover.endurance := mover.endurance - rnd(1,5);
+  position_update(mover);
+}
+
+:insect:
+if (mover.extra.[IS_AMPHIB])
+{
+ if (mover.endurance <= 10)
+ { mover.endurance := mover.max_endurance;
+   position_update(mover);
+ }
+  mover.endurance := mover.endurance - rnd(1,5);
+  position_update(mover);
+}
+
+:fish:
+/* OK, the person can move, so we now do the movement and check for followers. */
+
+dirlist := {"north","east","south","west","up","down",
+            "northeast", "northwest","southeast","southwest"};
+
+
+
+if (follows)
+  act("You follow $2n.", A_ALWAYS, mover, mover.master, null, TO_CHAR);
+
+show_lv_walk(mover, direc, room_in);    /* Show the leaving acts */
+
+if (mover.level < IMMORTAL_LEVEL)                      /* If not an immortal */
+      mover.endurance := mover.endurance - end_need;   /* drain endurance and do the move */
+
+link(mover, room_going);
+
+show_ar_walk(mover, direc, room_going);   /* show arrival acts */
+
+look_blank@baselook(mover, ":brief:");   /* get the rooms contents.  The :brief: tells the look dil*/
+                                  /* to check the player for PC_BRIEF flag */
+
+if (room_going == room_in)             /* This is here to keep infinite loops from happening when rooms */
+   return;                             /* link back on themselves */
+
+
+send_done (dirlist.[direc], mover, null, null, 0, "", null);
+
+/* Using the new getfollower and followercount, we have replaced the cumbersome
+   code with a sleek coding that should be much faster.
+*/
+
+text := dirstring@function(direc);
+
+if (mover.followercount > 0)                    /* If mover has followers, then check the room for them*/
+    move_follower(mover, direc, room_in, arg);
+
+return;
+
+}dilend
+
+
+
+dilbegin show_lv_steed(mover : unitptr, direc : integer, room_in : unitptr);
+
+var
+
+   lv_s    : string;
+   lv_o    : string;
+   dirlist : stringlist;
+   clr_code : string;
+
+code
+{
+   if (mover.type == UNIT_ST_PC)
+      clr_code := "<div class='pc_title'>";
+   else
+      clr_code := "<div class='npc_title'>";
+
+
+   dirlist := {"north","east","south","west","up","down",
+               "northeast", "northwest","southeast","southwest"};
+
+   /* give leaving acts to others in the room */
+   /* Check to see if the room has any special exiting extras to use in place of standard movement messages. */
+
+   lv_s := "$leave_steed_" + dirlist.[direc] + "_s";
+
+   if (room_in.extra.[lv_s])
+      lv_s := clr_code + room_in.extra.[lv_s].descr;
+   else
+      lv_s := "";
+
+
+   /* Now the leave for others */
+   lv_o := "$leave_steed_" + dirlist.[direc] + "_o";
+   if (room_in.extra.[lv_o])
+      lv_o := clr_code + room_in.extra.[lv_o].descr;
+   else
+      lv_o := "";
+
+
+   /* Now we show the acts */
+   if (lv_s != "")
+      act(lv_s+"</div>", A_ALWAYS, mover, dirlist.[direc], mover.outside, TO_CHAR);
+   else
+      act(clr_code + "You ride $2t on your $3N.</div>", A_ALWAYS, mover, dirlist.[direc], mover.outside, TO_CHAR);
+
+   if (lv_o != "")
+      act(lv_o+"</div>", A_HIDEINV, mover, dirlist.[direc], mover.outside, TO_REST);
+   else if (not isset(mover.charflags, CHAR_SNEAK))
+      act(clr_code + "$2t rides $2t on $1s $3N.</div>", A_HIDEINV, mover, dirlist.[direc], mover.outside, TO_REST);
+
+   return;
+   /* darg fix */
+/*
+if (lv_s != "")
+   act(lv_s, A_SOMEONE, mover, null, mover.outside, TO_CHAR);
+else
+   act(clr_code + "You ride $2t on your $3N.", A_ALWAYS, mover, dirlist.[direc], mover.outside, TO_CHAR);
+
+
+if (lv_o != "")
+   act(lv_o, A_HIDEINV, mover, null, mover.outside, TO_REST);
+else if (not isset(mover.charflags, CHAR_SNEAK))
+   act(clr_code + "$1n rides $2t on $1s $3N.", A_HIDEINV, mover, dirlist.[direc], mover.outside, TO_REST);
+*/
+
+}dilend
+
+
+dilbegin show_ar_steed(mover : unitptr, direc : integer, room_going : unitptr);
+
+var
+
+   ar_s    : string;
+   ar_o    : string;
+   opplist : stringlist;
+   clr_code : string;
+
+code
+{
+   if (mover.type == UNIT_ST_PC)
+      clr_code := "<div class='pc_title'>";
+   else
+      clr_code := "<div class='npc_title'>";
+
+
+   opplist := {"south", "west", "north", "east", "down", "up", "southwest", "southeast",
+               "northwest", "northeast"};
+
+   ar_s := "$arrive_steed_" + opplist.[direc] + "_s";
+
+   if (room_going.extra.[ar_s])
+      ar_s := clr_code + room_going.extra.[ar_s].descr;
+   else
+      ar_s := "";
+
+   ar_o := clr_code + "$arrive_steed_" + opplist.[direc] + "_o";
+
+   opplist := {"the south","the west","the north","the east","below","above",
+               "the southwest", "the southeast","the northwest","the northeast"};
+
+   if (room_going.extra.[ar_o])
+      ar_o := clr_code + room_going.extra.[ar_o].descr;
+   else
+      ar_o := "";
+
+   /* Now we show the acts */
+   if (ar_s != "")
+      act(ar_s+"</div>", A_ALWAYS, mover, opplist.[direc], mover.outside, TO_CHAR);
+   else
+      act(clr_code + "You ride $2t on your $3N.</div>", A_ALWAYS, mover, opplist.[direc], mover.outside, TO_CHAR);
+
+   if (ar_o != "")
+      act(ar_o, A_HIDEINV, mover, opplist.[direc], mover.outside, TO_REST);
+   else if (not isset(mover.charflags, CHAR_SNEAK))
+      act(clr_code + "$1n rides $2t on $1s $3N.", A_HIDEINV, mover, opplist.[direc], mover.outside, TO_REST);
+
+   return;
+
+/* darg fix */
+/*if (ar_s != "")
+   act(ar_s, A_SOMEONE, mover, null, mover.outside, TO_CHAR);
+
+if (ar_o != "")
+   act(ar_o, A_HIDEINV, mover, null, mover.outside, TO_REST);
+else if (not isset(mover.charflags, CHAR_SNEAK))
+   act(clr_code + "$1n rides in from $2t on $1s $3N.", A_HIDEINV, mover, opplist.[direc], mover.outside, TO_ROOM);*/
+}dilend
+
+
+dilbegin steed_walk(mover : unitptr, direc : integer, arg : string, follows : integer);
+
+external
+
+           move_follower(u3 : unitptr, d3 : integer, u4 : unitptr, arg34 : string);
+   unitptr unit_room@function(unit1 : unitptr);
+   integer is_hidden(unit2 : unitptr, int1 : integer, unit8 : unitptr);
+           show_lv_steed(unit5 : unitptr, int5 : integer, room5 : unitptr);
+		   integer issetclimb@function(d:integer);
+           show_ar_steed(unit6 : unitptr, int6 : integer, room6 : unitptr);
+   integer movementloss(int12 : integer);
+   string  dirstring@function(int123 : integer);
+           look_blank@baselook(l1 : unitptr, str12 : string);
+
+var
+
+   room_in               :  unitptr;
+   room_going            :  unitptr;
+   pc_fol                :  unitptr;
+   old_pc                :  unitptr;
+   mu                    :  unitptr;
+   exit_hidden           :  integer;
+   exit_descr            :  extraptr;
+   dirlist               :  stringlist;
+   opplist               :  stringlist;
+   test                  :  integer;
+   end_need              :  integer;
+   text                  :  string;
+   res                   :  integer;
+
+code{
+
+room_in := unit_room@function(mover);
+
+text := dirstring@function(direc);
+
+if (follows)
+    res := send_pre(text, mover, null, null, 0, arg, null);
+else
+    res := SFR_SHARE;
+
+room_going := unit_room@function(mover);    /* This will be redefined, just want to use it to save creating another var*/
+
+if ((res != SFR_SHARE) or (room_in != room_going))
+    return;
+
+if (mover.outside.outside.type != UNIT_ST_ROOM)
+   {act("Alas, you cannot go that way...", A_SOMEONE, mover, null, null, TO_CHAR);
+    return;
+   }
+
+if (mover.outside.position < POSITION_FIGHTING)
+   {
+     act("It would help if your $2N would stand first...", A_ALWAYS, mover, mover.outside, null, TO_CHAR);
+     return;
+   }
+
+if (mover.outside.position == POSITION_FIGHTING)
+   {
+     act("Your $2N is too busy fighting!", A_ALWAYS, mover, mover.outside, null, TO_CHAR);
+     return;
+   }
+
+if (not room_in.exit_to[direc])
+   {act("Alas, you cannot go that way...", A_SOMEONE, mover, null, null, TO_CHAR);
+    return;
+   }
+
+test := is_hidden(mover, direc, room_in);
+
+if ((isset(room_in.exit_info[direc], EX_CLOSED)) and (test))
+   {act("Alas, you cannot go that way...", A_SOMEONE, mover, null, null, TO_CHAR);
+    return;
+   }
+
+
+
+   if (isset(room_in.exit_info[direc], EX_CLOSED))
+   {act("The $2t seems to be closed.", A_SOMEONE, mover, room_in.exit_names[direc].[0], null, TO_CHAR);
+    return;
+   }
+
+   if (issetclimb@function(direc))
+   {
+      act("Alas, you must climb to go that way.", A_SOMEONE, mover, null, null, TO_CHAR);
+      return;
+   }
+
+room_going := room_in.exit_to[direc];
+
+if ((not(paycheck(mover, room_going))) and (mover.level < IMMORTAL_LEVEL))
+    return;
+
+
+
+if (room_going.movement == SECT_WATER_SAIL)
+   {act("Your $2N cant swim with you on its back!", A_SOMEONE, mover, mover.outside, null, TO_CHAR);
+    return;
+   }
+
+end_need := movementloss(room_in.movement);
+test := movementloss(room_going.movement);
+
+end_need := (end_need + test) / 2;
+
+if ((mover.outside.endurance - end_need < 0) and (not follows))
+   {act("Your $3N too exhausted to move.", A_SOMEONE, mover, null, mover.outside, TO_CHAR);
+    return;
+   }
+else if (mover.outside.endurance - end_need < 0)
+   {act("Your $3N too exhausted to follow $2n.", A_SOMEONE, mover, mover.master, mover.outside, TO_CHAR);
+    return;
+   }
+
+/* OK, the person can move, so we now do the movement and check for followers. */
+
+dirlist := {"north","east","south","west","up","down",
+            "northeast", "northwest","southeast","southwest"};
+
+
+opplist := {"the south","the west","the north","the east","below","above",
+            "the northwest", "the northeast","the southwest","the southeast"};
+
+
+/* Here we are going to check the horses contents for other players/mobiles that might
+   be fighting something.  This will cause the movement not to happen, as it can cause
+   some abusable bugs.  ie.  two people on a horse, on fights a mobile, when it gets
+   dangerous, the first person moves the horse.  This will cause the horse to move if
+   we dont scan its contents for other pc/npc's fighting.  VERY BAD.
+
+   Also, checking to make sure everyone in the horse has paid up to go into pay areas
+*/
+
+pc_fol := mover.outside.inside;
+
+while (pc_fol != null)
+   {if ((pc_fol.type == UNIT_ST_PC) or (pc_fol.type == UNIT_ST_NPC))
+       if (pc_fol.position == POSITION_FIGHTING)
+          {act("$2n seems to be busy fighting, better not leave $2m here by $2mself!",
+               A_ALWAYS, mover, pc_fol, null, TO_CHAR);
+           return;
+          }
+
+       if ((not(paycheck(pc_fol, room_going))) and (pc_fol.level < IMMORTAL_LEVEL))
+           {act("You can not enter that part of the game unless $2n gives a donation.",
+	        A_ALWAYS, mover, pc_fol, null, TO_CHAR);
+            return;
+           }
+
+    pc_fol := pc_fol.next;
+   }
+
+
+/* give messaged of following someone to the follower */
+if (follows)
+   act("You follow $2n.", A_SOMEONE, mover, mover.master, null, TO_CHAR);
+
+
+show_lv_steed(mover, direc, room_in);    /* Show the leaving acts */
+
+mover.outside.endurance := mover.outside.endurance - end_need;   /* drain endurance and do the move */
+link(mover.outside, room_going);
+
+
+show_ar_steed(mover, direc, room_going);   /* show arrival acts */
+
+pc_fol := mover.outside.inside;            /* if there is more than one person on horse, show them room too */
+while(pc_fol != null)
+   {if ((pc_fol.type == UNIT_ST_PC) and (pc_fol != mover))
+        exec("look :brief:", pc_fol);
+    pc_fol := pc_fol.next;
+   }
+
+look_blank@baselook(mover, ":brief:");   /* get the rooms contents.  The :brief: tells the look dil*/
+                                  /* to check the player for PC_BRIEF flag */
+
+
+send_done (dirlist.[direc], mover, null, null, 0, "", null);
+
+if (room_going == room_in)             /* This is here to keep infinite loops from happening when rooms */
+   return;                             /* link back on themselves */
+
+
+
+/* See the walking movement above for description of following code */
+
+text := dirstring@function(direc);
+
+if (mover.followercount > 0)
+    move_follower(mover, direc, room_in, arg);
+
+/* Here, we redo the whole thing in case someone is following the horse. */
+
+if (mover.outside.followercount > 0)
+    move_follower(mover.outside, direc, room_in, arg);
+
+return;
+
+}dilend
+
+
+dilbegin show_lv_vehic(mover : unitptr, direc : integer, room_in : unitptr);
+
+var
+
+   lv_s    : string;
+   lv_o    : string;
+   dirlist : stringlist;
+   clr_code : string;
+
+code
+{
+   if (mover.type == UNIT_ST_PC)
+      clr_code := "<div class='pc_title'>";
+   else
+      clr_code := "<div class='npc_title'>";
+
+   dirlist := {"north","east","south","west","up","down",
+               "northeast", "northwest","southeast","southwest"};
+
+   /* give leaving acts to others in the room */
+   /* Check to see if the room has any special exiting extras to use in place of standard movement messages. */
+
+   lv_s := "$leave_vehicle_" + dirlist.[direc] + "_s";
+
+   if (room_in.extra.[lv_s])
+      lv_s := clr_code + room_in.extra.[lv_s].descr;
+   else
+      lv_s := "";
+
+
+   /* Now the leave for others */
+   lv_o := "$leave_vehicle_" + dirlist.[direc] + "_o";
+
+   if (room_in.extra.[lv_o])
+      lv_o := clr_code + room_in.extra.[lv_o].descr;
+   else if ( mover.outside.extra.["$leaving"].descr )
+      lv_o := clr_code + mover.outside.extra.["$leaving"].descr;
+   else
+      lv_o := "";
+
+   if (lv_s != "")
+      act(lv_s+"</div>", A_ALWAYS, mover, dirlist.[direc], mover.outside, TO_CHAR);
+   else
+   {
+      if (mover.outside.objecttype == ITEM_VEHICLE)
+         act(clr_code + "You drive your $3N $2t.</div>", A_ALWAYS, mover, dirlist.[direc], mover.outside, TO_CHAR);
+      else
+         act(clr_code + "You sail your $3N $2t.</div>", A_ALWAYS, mover, dirlist.[direc], mover.outside, TO_CHAR);
+   }
+
+   if (lv_o != "")
+      act(lv_o+"</div>", A_HIDEINV, mover, dirlist.[direc], mover.outside, TO_REST);
+   else
+   {
+      if (mover.outside.objecttype == ITEM_VEHICLE)
+         act(clr_code + "$1n drives $1s $3N $2t.</div>", A_HIDEINV, mover, dirlist.[direc], mover.outside, TO_REST);
+      else
+         act(clr_code + "$1n sails $1s $3N $2t.</div>", A_HIDEINV, mover, dirlist.[direc], mover.outside, TO_REST);
+   }
+   return;
+
+   /* Now we show the acts 
+   
+   MS2020: Looks odd & wrong
+   
+   if (lv_s != "")
+      act(lv_s, A_SOMEONE,mover,textformat("& }"+ mover.title), mover.outside, TO_CHAR);
+   else
+   {
+   if (mover.outside.objecttype == ITEM_VEHICLE)
+   {
+   if (mover.type == UNIT_ST_PC)
+   act(clr_code + "You drive "+dirlist.[direc]+" on your $3N.", A_ALWAYS, mover, dirlist.[direc], mover.outside, TO_CHAR);
+   else
+   act(clr_code + "You drive "+dirlist.[direc]+" on your $3N.", A_ALWAYS, mover, dirlist.[direc], mover.outside, TO_CHAR);
+   }
+   if (mover.type == UNIT_ST_PC)
+   act(clr_code + "You sail "+dirlist.[direc]+" on your $3N.", A_ALWAYS, mover, dirlist.[direc], mover.outside, TO_CHAR);
+   else
+   act(clr_code + "You sail "+dirlist.[direc]+" on your $3N.", A_ALWAYS, mover, dirlist.[direc], mover.outside, TO_CHAR);
+   }
+
+   if (lv_o != "")
+      act(lv_o, A_HIDEINV, mover,textformat("& }"+mover.title), mover.outside, TO_REST);
+   else
+   {
+      if (mover.outside.objecttype == ITEM_VEHICLE)
+   {
+   if (mover.type == UNIT_ST_PC)
+      act(clr_code + "$2t rides "+ dirlist.[direc]+" on $1s $3N.", A_HIDEINV, mover,textformat("& }"+mover.name), mover.outside, TO_REST);
+      else
+   act(clr_code + "$2t rides "+ dirlist.[direc]+" on $1s $3N.", A_HIDEINV, mover,textformat("& }"+mover.title), mover.outside, TO_REST);
+   }
+   else
+   {
+   if (mover.type == UNIT_ST_PC)
+   act(clr_code + "$2t sails "+ dirlist.[direc]+" on $1s $3N.", A_HIDEINV, mover,textformat("& }"+mover.name), mover.outside, TO_REST);
+   else
+   act(clr_code + "$2t sails "+ dirlist.[direc]+" on $1s $3N.", A_HIDEINV, mover,textformat("& }"+mover.title), mover.outside, TO_REST);
+   }
+   }*/
+/*
+darg fix */
+/*
+if (lv_s != "")
+   act(lv_s, A_SOMEONE, mover, null, mover.outside, TO_CHAR);
+else
+   {if (mover.outside.objecttype == ITEM_VEHICLE)
+        act(clr_code + "You drive your $3N $2t.", A_HIDEINV, mover, dirlist.[direc], mover.outside, TO_CHAR);
+    else
+        act(clr_code + "You sail your $3N $2t.", A_HIDEINV, mover, dirlist.[direc], mover.outside, TO_CHAR);
+   }
+
+if (lv_o != "")
+   act(lv_o, A_HIDEINV, mover, dirlist.[direc], mover.outside, TO_REST);
+else
+   {if (mover.outside.objecttype == ITEM_VEHICLE)
+        act(clr_code + "$1n drives $1s $3N $2t.", A_HIDEINV, mover, dirlist.[direc], mover.outside, TO_REST);
+    else
+        act(clr_code + "$1n sails $1s $3N $2t.", A_HIDEINV, mover, dirlist.[direc], mover.outside, TO_REST);
+   }
+*/
+}dilend
+
+
+dilbegin show_ar_vehic(mover : unitptr, direc : integer, room_going : unitptr);
+
+var
+
+   ar_s    : string;
+   ar_o    : string;
+   opplist : stringlist;
+   clr_code : string;
+
+code
+{
+   if (mover.type == UNIT_ST_PC)
+      clr_code := "<div class='pc_title'>";
+   else
+      clr_code := "<div class='npc_title'>";
+
+
+   opplist := {"south", "west", "north", "east", "down", "up", "southwest", "southeast",
+               "northwest", "northeast"};
+
+   ar_s := "$arrive_vehicle_" + opplist.[direc] + "_s";
+
+   if (room_going.extra.[ar_s])
+      ar_s := clr_code + room_going.extra.[ar_s].descr;
+   else
+      ar_s := "";
+
+   ar_o := clr_code + "$arrive_vehicle_" + opplist.[direc] + "_o";
+
+   opplist := {"the south","the west","the north","the east","below","above",
+               "the southwest", "the southeast","the northwest","the northeast"};
+
+if (room_going.extra.[ar_o])
+   ar_o := clr_code + room_going.extra.[ar_o].descr;
+else
+    if ( mover.outside.extra.["$ariving"].descr )
+      ar_o := clr_code + mover.outside.extra.["$ariving"].descr;
+    else
+      ar_o := "";
+
+   /* Now we show the acts */
+   if (ar_s != "")
+      act(ar_s, A_ALWAYS,mover,opplist.[direc], mover.outside, TO_CHAR);
+
+   if (ar_o != "")
+      act(ar_o, A_HIDEINV, mover, opplist.[direc], mover.outside, TO_REST);
+   else
+   {
+      if (mover.outside.objecttype == ITEM_VEHICLE)
+         act("$1n drives $1s $3N in from $2t.", A_HIDEINV, mover, opplist.[direc], mover.outside, TO_REST);
+      else
+         act("$1n sails $1s $3N in from $2t.", A_HIDEINV, mover, opplist.[direc], mover.outside, TO_REST);
+   }
+   return;
+
+}dilend
+
+
+dilbegin vehicle_walk(mover : unitptr, direc : integer, arg : string, follows : integer);
+
+external
+
+           move_follower(u3 : unitptr, d3 : integer, u4 : unitptr, arg34 : string);
+   unitptr unit_room@function(unit1 : unitptr);
+   integer issetclimb@function(d:integer);
+   integer is_hidden(unit2 : unitptr, int1 : integer, unit23 : unitptr);
+           show_lv_vehic(unit5 : unitptr, int5 : integer, room5 : unitptr);
+           show_ar_vehic(unit6 : unitptr, int6 : integer, room6 : unitptr);
+   integer movementloss(int12 : integer);
+   string  dirstring@function(int123 : integer);
+           look_blank@baselook(l1 : unitptr, str12 : string);
+
+var
+
+   room_in               :  unitptr;
+   room_going            :  unitptr;
+   pc_fol                :  unitptr;
+   old_pc                :  unitptr;
+   mu                    :  unitptr;
+   exit_hidden           :  integer;
+   exit_descr            :  extraptr;
+   dirlist               :  stringlist;
+   opplist               :  stringlist;
+   test                  :  integer;
+   end_need              :  integer;
+   text                  :  string;
+   res                   :  integer;
+   boat_dump             :  unitptr;
+code{
+
+room_in := unit_room@function(mover);
+
+text := dirstring@function(direc);
+
+if (follows)
+    res := send_pre(text, mover, null, null, 0, arg, null);
+else
+    res := SFR_SHARE;
+
+room_going := unit_room@function(mover);    /* This will be redefined, just want to use it to save creating another var*/
+
+if ((res != SFR_SHARE) or (room_in != room_going))
+    return;
+
+if (isset(self.outside.flags, UNIT_FL_BURIED))
+   {act("Your $2N is buried! It cannot move.", A_ALWAYS, self, self.outside, null, TO_CHAR);
+    return;
+   }
+
+if (not (isset(mover.outside.flags, UNIT_FL_TRANS)))
+   {act("Alas, you cannot go that way...", A_SOMEONE, mover, null, null, TO_CHAR);
+    return;
+   }
+
+if (mover.outside.outside.type != UNIT_ST_ROOM)
+   {act("Alas, you cannot go that way...", A_SOMEONE, mover, null, null, TO_CHAR);
+    return;
+   }
+
+if (not room_in.exit_to[direc])
+   {act("Alas, you cannot go that way...", A_SOMEONE, mover, null, null, TO_CHAR);
+    return;
+   }
+
+
+test := is_hidden(mover, direc, room_in);
+
+if ((isset(room_in.exit_info[direc], EX_CLOSED)) and (test))
+   {act("Alas, you cannot go that way...", A_SOMEONE, mover, null, null, TO_CHAR);
+    return;
+   }
+
+
+if (isset(room_in.exit_info[direc], EX_CLOSED))
+   {act("The $2t seems to be closed.", A_SOMEONE, mover, room_in.exit_names[direc].[0], null, TO_CHAR);
+    return;
+   }
+
+if (issetclimb@function(direc))
+{
+  act("Alas, you must climb to go that way.", A_SOMEONE, mover, null, null, TO_CHAR);
+return;
+}
+
+
+room_going := room_in.exit_to[direc];
+
+if ((not(paycheck(mover, room_going))) and (mover.level < IMMORTAL_LEVEL))
+    return;
+
+
+if ((room_going.movement == SECT_WATER_SAIL) and (mover.outside.objecttype != ITEM_BOAT))
+   {act("You need a boat to go there.", A_SOMEONE, mover, null, null, TO_CHAR);
+    return;
+   }
+
+if (((room_going.movement != SECT_WATER_SAIL) and (room_in.movement != SECT_WATER_SAIL))
+     and (mover.outside.objecttype == ITEM_BOAT))
+   {act("A boat needs water to sail in.", A_SOMEONE, mover, null, null, TO_CHAR);
+    return;
+   }
+
+if ((mover.outside.objecttype != ITEM_VEHICLE) and (mover.outside.objecttype != ITEM_BOAT))
+   {act("This isn't a vehicle!", A_SOMEONE, mover, null, null, TO_CHAR);
+    return;
+   }
+
+/* Now we need to check if the vehicle has the fuel to move (if not a boat) */
+
+if (mover.outside.objecttype == ITEM_VEHICLE)
+   {end_need := movementloss(room_in.movement);
+    test := movementloss(room_going.movement);
+
+    end_need := (end_need + test) / 2;
+
+    if (mover.outside.value[1] - end_need < 0)
+       {act("Your $2N doesnt have the energy to move.", A_SOMEONE, mover, mover.outside, null, TO_CHAR);
+        return;
+       }
+   }
+
+/* OK, the person can move, so we now do the movement and check for followers. */
+
+dirlist := {"north","east","south","west","up","down",
+            "northeast", "northwest","southeast","southwest"};
+
+
+opplist := {"the south","the west","the north","the east","below","above",
+            "the northwest", "the northeast","the southwest","the southeast"};
+
+
+/* Here we are going to check the vehicles contents for other players/mobiles that might
+   be fighting something.  This will cause the movement not to happen, as it can cause
+   some abusable bugs.  ie.  two people on a horse, on fights a mobile, when it gets
+   dangerous, the first person moves the horse.  This will cause the horse to move if
+   we dont scan its contents for other pc/npc's fighting.  VERY BAD. */
+
+pc_fol := mover.outside.inside;
+
+while (pc_fol != null)
+   {
+   if ((pc_fol.type == UNIT_ST_PC) or (pc_fol.type == UNIT_ST_NPC))
+       if (pc_fol.position == POSITION_FIGHTING)
+          {act("$2n seems to be busy fighting, better not leave $2m here by $2mself!",
+               A_ALWAYS, mover, pc_fol, null, TO_CHAR);
+           return;
+          }
+if (pc_fol.type==UNIT_ST_PC)
+{
+       if ((not(paycheck(pc_fol, room_going))) and (pc_fol.level < IMMORTAL_LEVEL))
+          {act("You can not enter that part of the game unless $2n gives a donation.",
+               A_ALWAYS, mover, pc_fol, null, TO_CHAR);
+           return;
+          }
+          }
+
+
+    pc_fol := pc_fol.next;
+   }
+
+
+
+
+/* give messaged of following someone to the follower */
+if (follows)
+   act("You follow $2n.", A_SOMEONE, mover, mover.master, null, TO_CHAR);
+
+
+/* give leaving acts to others in the room */
+show_lv_vehic(mover, direc, room_in);    /* Show the leaving acts */
+
+mover.outside.value[1] := mover.outside.value[1] - end_need;   /* Lower the vehicles available energy */
+
+link(mover.outside, room_going);
+
+show_ar_vehic(mover, direc, room_going);   /* show arrival acts */
+
+pc_fol := mover.outside.inside;            /* if there is more than one person in cart, show them room too */
+while(pc_fol != null)
+   {if ((pc_fol.type == UNIT_ST_PC) and (pc_fol != mover))
+        exec("look :brief:", pc_fol);
+    pc_fol := pc_fol.next;
+   }
+
+
+look_blank@baselook(mover, ":brief:");   /* get the rooms contents.  The :brief: tells the look dil*/
+                                  /* to check the player for PC_BRIEF flag */
+
+send_done (dirlist.[direc], mover, null, null, 0, "", null);
+
+/* start dargs lava fix mess */
+if ((room_going.movement == SECT_WATER_SAIL) and (room_going.extra.["$lava_river"]==null) and (mover.outside.names.[0]=="lava boat"))
+{
+	 act("The weight of the lava boat causes it to sink.",
+	  A_ALWAYS, mover, null, null, TO_ALL);
+     act("Maybe you should try sailing such a boat on lava?.",
+	  A_ALWAYS, mover, null, null, TO_ALL);	  
+boat_dump:=mover.outside;
+		 while (boat_dump.inside)
+		 link (boat_dump.inside,boat_dump.outside);
+		 
+         destroy(boat_dump);
+		 
+   }
+/* end dargs lava fix mess */
+
+
+if (room_going == room_in)             /* This is here to keep infinite loops from happening when rooms */
+   return;                             /* link back on themselves */
+
+
+
+/* See the walking movement dil for an explanation of this. */
+
+text := dirstring@function(direc);
+
+if (mover.followercount > 0)
+    move_follower(mover, direc, room_in, arg);
+
+
+return;
+
+}dilend
+
+
+
+/* enter_dil :  This dil will replace the current enter command.  This is necessary to complete the
+   use of movement into dil. do_enter() */
+
+
+dilbegin enter_dil (arg : string);
+external
+   unitptr unit_room@function(unit1 : unitptr);
+   integer is_hidden(unit2 : unitptr, int1 : integer, unit23 : unitptr);
+   integer movementloss(int12 : integer);
+   string  dirstring@function(int123 : integer);
+   look_blank@baselook(l1 : unitptr, str12 : string);
+   integer checkexit(arg : string, bMessages : integer);
+
+var
+   item        :  unitptr;
+   pc          :  unitptr;
+   arg1        :  string;
+   arg2        :  string;
+   oppdir      :  intlist;
+   dir         :  integer;
+   test        :  integer;
+
+
+code
+{
+   /*  Check positions of player to make sure he can enter */
+
+   if (self.position == POSITION_FIGHTING)
+   {act("You are fighting for your life!", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+   if (self.position == POSITION_RESTING)
+   {act("You feel too relaxed to do that, perhaps you should stand up?", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if (self.position == POSITION_SITTING)
+   {act("Perhaps you should get on your feet first?", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if (self.position == POSITION_SLEEPING)
+   {act("In your dreams, or what?", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if (self.position != POSITION_STANDING)
+   {act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+/*  MS2020 - copied this onto the char itself rather than messing up global 
+             functions.
+
+if (dilfind("shelter@skills", self))
+   {act("You realize you are busy building a shelter and decide not to leave "
+   +"until it is finnished!", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   } */
+
+/* Make sure player told us what to enter */
+
+if (arg == "")
+   {act("Enter what?", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+/* Find what the player wants to enter */
+
+arg1 := arg;
+
+item := findunit(self, arg, FIND_UNIT_SURRO, null);
+
+
+   /* If item not there, cant enter it! */
+if ((item == null) or (not visible(self, item)))
+    goto check_door;
+
+
+if (isset(item.flags, UNIT_FL_BURIED))
+   {act("You do not see a $2t here.", A_ALWAYS, self, arg1, null, TO_CHAR);
+    return;
+   }
+
+
+   /* If not set to ENTER, cant enter it */
+if (not isset(item.manipulate, MANIPULATE_ENTER))
+   {act("You cannot enter $2m!", A_ALWAYS, self, item, null, TO_CHAR);
+    return;
+   }
+
+   /* IF a pc or npc, cant enter it */
+if ((item.type == UNIT_ST_PC) or (item.type == UNIT_ST_NPC))
+   {act("You cannot enter that!", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+   /* if it is closed, cant enter */
+if (isset(item.openflags, EX_CLOSED))
+   {act("$2n is closed.", A_ALWAYS, self, item, null, TO_CHAR);
+    return;
+   }
+
+if (item == self.outside)
+   {act("You are already there!", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+   /* IF cant fit, cant enter */
+test := item.weight + self.weight - item.baseweight;
+
+
+if (test > item.capacity)
+   {act("There is no room for you in there.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if ((self.outside.type == UNIT_ST_OBJ) and (self.outside.objecttype == ITEM_BOAT))
+   {act("You are in a $3N, you must exit first to enter!",
+   A_ALWAYS, self, null,self.outside, TO_CHAR);
+    return;
+    }
+
+
+
+  /* This following bit allows the pc to enter something and bring his horse or vehicle with
+     him.  This makes horses and vehicles easier to use and more appealing to the players. */
+if (((((self.outside.type == UNIT_ST_NPC) and (isset(self.outside.flags, UNIT_FL_TRANS))) or
+    ((self.outside.type == UNIT_ST_OBJ) and ((self.outside.objecttype == ITEM_BOAT) or (self.outside.objecttype == ITEM_VEHICLE))))) and
+    (item.outside != self.outside))
+   {if (self.outside.outside == item)
+       {act("You and your $2N are already in it!", A_ALWAYS, self, self.outside, null, TO_CHAR);
+        return;
+       }
+
+    if (self.outside.type == UNIT_ST_NPC)
+       {act("$1n spurs $1s $3N into $2n.", A_SOMEONE, self, item, self.outside, TO_REST);
+        act("You spur your $3N into $2n.", A_ALWAYS, self, item, self.outside, TO_CHAR);
+
+        link(self.outside, item);
+        look_blank@baselook(self, ":brief:");
+
+        pc := self.outside.inside;
+        while (pc != null)
+           {if ((pc != self) and ((pc.type == UNIT_ST_NPC) or (pc.type == UNIT_ST_PC)))
+               look_blank@baselook(pc, ":brief:");
+
+            pc := pc.next;
+           }
+
+        if (not isset(item.flags, UNIT_FL_TRANS))
+            act("$1n has entered the $2N on $1s $3N.", A_ALWAYS, self, item, self.outside, TO_REST);
+       }
+    else
+       {act("$1n steers $1s $3N into $2n.", A_HIDEINV, self, item, self.outside, TO_REST);
+        act("You steer your $3N into $2n.", A_ALWAYS, self, item, self.outside, TO_CHAR);
+
+        link(self.outside, item);
+        look_blank@baselook(self, ":brief:");
+
+
+        pc := self.outside.inside;
+        while (pc != null)
+           {if ((pc != self) and ((pc.type == UNIT_ST_NPC) or (pc.type == UNIT_ST_PC)))
+               look_blank@baselook(pc, ":brief:");
+
+            pc := pc.next;
+           }
+
+        if (not isset(item.flags, UNIT_FL_TRANS))
+            act("$1n has entered the $2N in $1s $3N.", A_ALWAYS, self, item, self.outside, TO_REST);
+       }
+   }
+else    /* Not on a horse or vehicle, so just enter pc */
+   {
+     if (item.extra.["$enter_s"])
+        act(item.extra.["$enter_s"].descr, A_ALWAYS, self, item, null, TO_CHAR);
+     else
+        act("You enter $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+
+     if (item.extra.["$enter_o"])
+        act(item.extra.["$enter_o"].descr, A_ALWAYS, self, item, null, TO_REST);
+     else
+        act("$1n enters $2n.", A_HIDEINV, self, item, null, TO_REST);
+
+    link(self, item);
+
+    look_blank@baselook(self, ":brief:");
+
+    if (not isset(item.flags, UNIT_FL_TRANS))
+        act("$1n has entered the $2N.", A_HIDEINV, self, item, null, TO_REST);
+   }
+
+send_done ("enter", self, null, item, 0, "", null);
+
+return;
+
+:check_door:
+
+/* first we are going to check if the player dictated what direction
+   they want to enter */
+
+   /* set up so we can close 'both' doors (room player is in and room the door leads to.) */
+oppdir := {SOUTH, WEST, NORTH, EAST, DOWN, UP, SOUTHWEST, SOUTHEAST, NORTHWEST, NORTHEAST};
+
+arg2 := arg;            /* save arg for later use */
+arg1 := getword(arg2);  /* Check arg2 for directions */
+
+item := self.outside;
+
+  /* Find the room the player is in.  If the player is in something that is
+     transparent, we take that objects outside as our item */
+if ((item.type != UNIT_ST_ROOM) and (isset(item.flags, UNIT_FL_TRANS)))
+   item := item.outside;
+
+
+   /* If not a room, no doors */
+   if (item.type != UNIT_ST_ROOM)
+   {
+      act("You see no $2t here.", A_ALWAYS, self, arg, null, TO_CHAR);
+      return;
+   }
+
+   dir := checkexit(arg, 1);
+
+   /* Execute the move */
+   /* MS2020 start_move(self, dir, arg, FALSE); */
+   exec(dirstring@function(dir), self);
+   return;
+}
+dilend
+
+
+/* exit_dil :  This dil will replace  the basecode exit and leave command.  This will make
+   movement complete. */
+
+dilbegin exit_dil(arg : string);
+
+external
+
+     look_blank@baselook(l1 : unitptr, str12 : string);
+
+var
+
+     item        :  unitptr;
+     arg1        :  string;
+
+code{
+
+
+
+/*  Check positions of player to make sure he can exit */
+
+if (self.position == POSITION_FIGHTING)
+   {act("You are fighting for your life!", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if (self.position == POSITION_RESTING)
+   {act("You feel too relaxed to do that, perhaps you should stand up?", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if (self.position == POSITION_SITTING)
+   {act("Perhaps you should get on your feet first?", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if (self.position == POSITION_SLEEPING)
+   {act("In your dreams, or what?", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if (self.position != POSITION_STANDING)
+   {act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+item := self.outside;
+
+
+if (item.outside == null)
+   {act("But there is nowhere to exit to.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if ((item.type == UNIT_ST_NPC) or (item.type == UNIT_ST_PC))
+   {act("You should try dismounting instead.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+   /* if it is closed, cant exit */
+if (isset(item.openflags, EX_CLOSED))
+   {act("$2n is closed.", A_ALWAYS, self, item, null, TO_CHAR);
+    return;
+   }
+
+   /* If the thing outside isnt enterable, cant exit */
+if (not isset(item.outside.manipulate, MANIPULATE_ENTER))
+   {act("Something is preventing you from exiting.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+   /* IF cant fit, cant exit */
+if (can_carry(item, self, 1))
+   {act("There is no room for you in there.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+
+   /* If the thing the player is in is buried, then they cant get out! */
+if (isset(item.flags, UNIT_FL_BURIED))
+   {act("You are buried alive!", A_ALWAYS, self, arg1, null, TO_CHAR);
+    return;
+   }
+
+
+
+if ((item.outside.type == UNIT_ST_ROOM) and (item.outside.movement == SECT_WATER_SAIL))
+   {act("You jump out of the $2N and into the water! *SPLASH*", A_ALWAYS, self, item, null, TO_CHAR);
+    act("$1n jumps out of the $2N and into the water! *SPLASH*", A_ALWAYS, self, item, null, TO_REST);
+   }
+else
+   {
+     if (item.extra.["$exit_s"])
+        act(item.extra.["$exit_s"].descr, A_ALWAYS, self, item, null, TO_CHAR);
+     else
+        act("You exit $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+
+     if (item.extra.["$exit_o"])
+        act(item.extra.["$exit_o"].descr, A_ALWAYS, self, item, null, TO_REST);
+     else
+        act("$1n exits $2n.", A_HIDEINV, self, item, null, TO_REST);
+
+   }
+
+link(self, item.outside);
+
+look_blank@baselook(self, ":brief:");
+
+if (not isset(item.flags, UNIT_FL_TRANS))
+    act("$1n has exited the $2N.", A_HIDEINV, self, item, null, TO_REST);
+
+send_done ("exit", self, null, item, 0, "", null);
+
+return;
+
+}dilend
+
+
+
+/* leaving_dil : This allows us two choices :  exit command to get out of a boat or vehicle, or what ever,
+   but leaving the boat behind.  leave to take the boat, vehicle, horse with us.  */
+
+dilbegin leave_dil(arg : string);
+
+external
+
+     look_blank@baselook(l1 : unitptr, str12 : string);
+
+var
+
+     item        :  unitptr;
+     arg1        :  string;
+     horse       :  unitptr;
+     pc          :  unitptr;
+
+code{
+
+
+
+/*  Check positions of player to make sure he can exit */
+
+if (self.position == POSITION_FIGHTING)
+   {act("You are fighting for your life!", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if (self.position == POSITION_RESTING)
+   {act("You feel too relaxed to do that, perhaps you should stand up?", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if (self.position == POSITION_SITTING)
+   {act("Perhaps you should get on your feet first?", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if (self.position == POSITION_SLEEPING)
+   {act("In your dreams, or what?", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if (self.position != POSITION_STANDING)
+   {act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+item := self.outside;
+
+if ((((item.type == UNIT_ST_NPC) or (item.type == UNIT_ST_PC)) and (isset(item.flags, UNIT_FL_TRANS))) or
+    ((item.type == UNIT_ST_OBJ) and ((item.objecttype == ITEM_BOAT) or (item.objecttype == ITEM_VEHICLE))))
+   {horse := item;
+    item := item.outside;
+   }
+
+if (item.outside == null)
+   {act("But there is nowhere to leave to.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if ((item.type == UNIT_ST_NPC) or (item.type == UNIT_ST_PC))
+   {act("You should try dismounting instead.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+   /* if it is closed, cant exit */
+if (isset(item.openflags, EX_CLOSED))
+   {act("$2n is closed.", A_ALWAYS, self, item, null, TO_CHAR);
+    return;
+   }
+
+   /* If the thing outside isnt enterable, cant exit */
+if (not isset(self.outside.manipulate, MANIPULATE_ENTER))
+   {act("Something is preventing you from leaving.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+   /* IF cant fit, cant exit */
+if (can_carry(item, self, 1))
+   {act("There is no room for you in there.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+
+   /* If the thing the player is in is buried, then they cant get out! */
+if (isset(item.flags, UNIT_FL_BURIED))
+   {act("You are buried alive!", A_ALWAYS, self, arg1, null, TO_CHAR);
+    return;
+   }
+
+if (horse)
+   {if (self.outside.type == UNIT_ST_NPC)
+       {act("$1n spurs $1s $3N out of $2n.", A_SOMEONE, self, item, self.outside, TO_REST);
+        act("You spur your $3N out of $2n.", A_ALWAYS, self, item, self.outside, TO_CHAR);
+
+        link(self.outside, item.outside);
+        look_blank@baselook(self, ":brief:");
+
+        pc := self.outside.inside;
+        while (pc != null)
+           {if ((pc != self) and ((pc.type == UNIT_ST_NPC) or (pc.type == UNIT_ST_PC)))
+               look_blank@baselook(pc, ":brief:");
+
+            pc := pc.next;
+           }
+
+        if (not isset(item.flags, UNIT_FL_TRANS))
+            act("$1n has left the $2N on $1s $3N.", A_ALWAYS, self, item, self.outside, TO_REST);
+       }
+    else
+       {act("$1n steers $1s $3N out of $2n.", A_SOMEONE, self, item, self.outside, TO_REST);
+        act("You steer your $3N out of $2n.", A_ALWAYS, self, item, self.outside, TO_CHAR);
+
+        link(self.outside, item.outside);
+        look_blank@baselook(self, ":brief:");
+
+
+        pc := self.outside.inside;
+        while (pc != null)
+           {if ((pc != self) and ((pc.type == UNIT_ST_NPC) or (pc.type == UNIT_ST_PC)))
+               look_blank@baselook(pc, ":brief:");
+
+            pc := pc.next;
+           }
+
+        if (not isset(item.flags, UNIT_FL_TRANS))
+            act("$1n has left the $2N in $1s $3N.", A_ALWAYS, self, item, self.outside, TO_REST);
+       }
+   }
+else    /* Not on a horse or vehicle, so just enter pc */
+   {
+     if (item.extra.["$exit_s"])
+        act(item.extra.["$exit_s"].descr, A_ALWAYS, self, item, null, TO_CHAR);
+     else
+        act("You leave $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+
+     if (item.extra.["$exit_o"])
+        act(item.extra.["$exit_o"].descr, A_ALWAYS, self, item, null, TO_REST);
+     else
+        act("$1n leaves $2n.", A_HIDEINV, self, item, null, TO_REST);
+
+    link(self, item.outside);
+
+    look_blank@baselook(self, ":brief:");
+
+    if (not isset(item.flags, UNIT_FL_TRANS))
+        act("$1n has left the $2N.", A_HIDEINV, self, item, null, TO_REST);
+   }
+
+send_done ("leave", self, null, item, 0, "", null);
+
+return;
+
+}dilend
+
+
+
+
+
+/* open_dil : This dil will replace the basecode open command.  This is neccessary as
+   new secret door code for movement made the old secret doors obsolete.
+
+   do_open
+*/
+dilbegin open_dil(arg : string);
+
+external
+   integer checkdoor(arg : string);
+   integer is_hidden(u1 : unitptr, int1 : integer, u2 : unitptr);
+   string  dirstring@function(i2 : integer);
+
+var
+   item       :  unitptr;
+   pc         :  unitptr;
+   arg1       :  string;
+   arg2       :  string;
+   arg3       :  stringlist;
+   dir        :  integer;
+   rm:unitptr;
+   ct:integer;
+   i:integer;
+   test       :  integer;
+   count      :  integer;
+   counter    :  integer;
+
+
+code
+{
+
+if (self.position < POSITION_RESTING)
+   {act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if (arg == "")
+   {act("Open what?", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+/* next we see if the player has anything in his inventory or around him that he can open */
+
+arg1 := arg;       /* saves the string in case we need it later */
+
+item := findunit(self, arg1, FIND_UNIT_HERE, null);
+
+   /* If there is no item or we cant see it, check the doors in the room */
+if (item == null)
+    goto check_doors;
+
+if (not visible(self, item))
+    goto check_doors;
+
+if (isset(item.flags, UNIT_FL_BURIED))
+    goto check_doors;
+
+
+   /* If it cant be opened, let the player know */
+if (not isset(item.openflags, EX_OPEN_CLOSE))
+   {act("You cannot do that.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+   /* See if it is already opened */
+if (not isset(item.openflags, EX_CLOSED))
+   {act("$2n is already open!", A_ALWAYS, self, item, null, TO_CHAR);
+    return;
+   }
+
+   /* Check if it is locked */
+if (isset(item.openflags, EX_LOCKED))
+   {act("$2n is locked.", A_ALWAYS, self, item, null, TO_CHAR);
+    return;
+   }
+
+act("You open $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+act("$1n opens $2n.", A_ALWAYS, self, item, null, TO_REST);
+
+unset(item.openflags, EX_CLOSED);
+
+send_done ("open", self, null, item, 0, "", null);
+
+return;
+
+:check_doors:
+
+/* first we are going to check if the player dictated what direction
+   they want to open */
+
+arg1 := arg;
+
+arg3 := split(arg1, ".");   /* checking for 2.door, 3.door, etc */
+
+if (length(arg3) > 1)
+   {count := atoi(arg3.[0]);
+    if (count > 0)
+        arg := arg3.[1];
+   }
+
+arg2 := arg;
+arg1 := getword(arg2);
+
+
+   item := self.outside;
+
+   /* Find the room the player is in.  If the player is in something that is
+      transparent, we take that objects outside as our item */
+   if ((item.type != UNIT_ST_ROOM) and (isset(item.flags, UNIT_FL_TRANS)))
+      item := item.outside;
+
+
+  /* If not a room, no doors */
+if (item.type != UNIT_ST_ROOM)
+   {act("You see no $2t here.", A_ALWAYS, self, arg, null, TO_CHAR);
+    return;
+   }
+
+   dir := checkdoor(arg);
+
+   if (dir == -1)
+   {
+      act("You see no such exit in that direction.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   if (not isset(item.exit_info[dir], EX_CLOSED))
+   {act("But it is already opened!", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+   if (isset(item.exit_info[dir], EX_LOCKED))
+   {act("It seems to be locked.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+act("You open the $2t.", A_ALWAYS, self, item.exit_names[dir].[0], null, TO_CHAR);
+act("$1n opens the $2t.", A_HIDEINV, self, item.exit_names[dir].[0], null, TO_REST);
+pc := item.exit_to[dir].inside;
+rm:= item.exit_to[dir];
+
+
+i:=0;
+ct:=FALSE;
+while (i <= MAX_EXIT)
+{
+if (rm.exit_to[i]==item)
+{
+ct:=TRUE;
+    break;
+	}
+	i:=i+1;
+	}
+
+if ((pc != null)
+and (ct==TRUE))
+    act("The $2t is opened.", A_ALWAYS, pc, rm.exit_names[i].[0], null, TO_ALL);
+	
+unset(item.exit_info[dir], EX_CLOSED);
+if (ct==TRUE)
+unset(item.exit_to[dir].exit_info[i], EX_CLOSED);
+
+send_done ("open", self, null, null, 0, "", null);
+
+return;
+
+}dilend
+
+
+
+/* close_dil : This is to supplement the new movement and secret doors.
+   do_close() */
+dilbegin close_dil(arg : string);
+external
+   integer checkdoor(arg : string);
+   integer is_hidden(u1 : unitptr, int1 : integer, u2 : unitptr);
+   string  dirstring@function(i2 : integer);
+
+var
+   item       :  unitptr;
+   pc         :  unitptr;
+   arg1       :  string;
+   arg2       :  string;
+   arg3       :  stringlist;
+   dir        :  integer;
+   test       :  integer;
+   count      :  integer;
+   counter    :  integer;
+   rm:unitptr;
+   i:integer;
+   ct:integer;
+code
+{
+   if (arg == "")
+   {
+      act("Close what?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   if (self.position < POSITION_RESTING)
+   {
+      act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* next we see if the player has anything in his inventory or around him that he can open */
+   arg1 := arg;       /* saves the string in case we need it later */
+
+   item := findunit(self, arg1, FIND_UNIT_HERE, null);
+
+   /* If there is no item or we cant see it, check the doors in the room */
+   if (item == null)
+      goto check_doors;
+
+   if (not visible(self, item))
+      goto check_doors;
+
+   if (isset(item.flags, UNIT_FL_BURIED))
+      goto check_doors;
+
+   /* If it cant be opened, let the player know */
+   if (not isset(item.openflags, EX_OPEN_CLOSE))
+   {
+      act("You cannot do that.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* See if it is already opened */
+   if (isset(item.openflags, EX_CLOSED))
+   {
+      act("$2n is already closed!", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
+   }
+
+   act("You close $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+   act("$1n closed $2n.", A_ALWAYS, self, item, null, TO_REST);
+
+   set(item.openflags, EX_CLOSED);
+
+   send_done ("close", self, null,item, 0, "", null);
+   return;
+
+   :check_doors:
+
+   /* first we are going to check if the player dictated what direction
+      they want to open */
+
+   arg1 := arg;
+   arg3 := split(arg1, ".");   /* checking for 2.door, 3.door, etc */
+
+   if (length(arg3) > 1)
+      {count := atoi(arg3.[0]);
+      if (count > 0)
+         arg := arg3.[1];
+      }
+
+   arg2 := arg;
+   arg1 := getword(arg2);
+
+
+   item := self.outside;
+
+  /* Find the room the player is in.  If the player is in something that is
+     transparent, we take that objects outside as our item */
+   if ((item.type != UNIT_ST_ROOM) and (isset(item.flags, UNIT_FL_TRANS)))
+      item := item.outside;
+
+
+   /* If not a room, no doors */
+   if (item.type != UNIT_ST_ROOM)
+   {
+      act("You see no $2t here.", A_ALWAYS, self, arg, null, TO_CHAR);
+      return;
+   }
+
+   dir := checkdoor(arg);
+
+   /*  That direction has no such door */
+   if ((dir == -1) or (item.exit_to[dir] == null))
+   {
+      act("You see no such exit in that direction.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   if (isset(item.exit_info[dir], EX_CLOSED))
+   {
+      act("But it is already closed!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   act("You close the $2t.", A_ALWAYS, self, item.exit_names[dir].[0], null, TO_CHAR);
+   act("$1n closes the $2t.", A_HIDEINV, self, item.exit_names[dir].[0], null, TO_REST);
+
+   pc := item.exit_to[dir].inside;
+   rm := item.exit_to[dir];
+
+   i:=0;
+   ct:=FALSE;
+   while (i <= MAX_EXIT)
+   {
+      if (rm.exit_to[i]==item)
+      {
+         ct:=TRUE;
+         break;
+      }
+      i:=i+1;
+   }
+
+   if ((pc != null) and (ct==TRUE))
+      act("The $2t is closed.", A_ALWAYS, pc, rm.exit_names[i].[0], null, TO_ALL);
+
+   set(item.exit_info[dir], EX_CLOSED);
+   
+   if (ct==TRUE)
+      set(item.exit_to[dir].exit_info[i], EX_CLOSED);
+
+   send_done ("close", self, null, null, 0, "", null);
+
+   return;
+}
+dilend
+
+
+
+/* lock_dil  : This will replace the basecode lock dil  */
+
+
+dilbegin lock_dil(arg : string);
+external
+   unitptr find_here@baselook(looker:unitptr,arg:string);
+   integer is_hidden(u1 : unitptr, int1 : integer, u2 : unitptr);
+   string  dirstring@function(i2 : integer);
+   integer checkdoor(arg : string);
+
+var
+   mykey:unitptr;
+   item       :  unitptr;
+   pc         :  unitptr;
+   arg1       :  string;
+   arg2       :  string;
+   arg3       :  stringlist;
+   dir        :  integer;
+   test       :  integer;
+   count      :  integer;
+   counter    :  integer;
+   rm:unitptr;
+   i:integer;
+   ct:integer;
+code
+{
+   if (self.position < POSITION_RESTING)
+   {
+      act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   if (arg == "")
+   {
+      act("Lock what?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* next we see if the player has anything in his inventory or around him that he can lock */
+
+   arg1 := arg;       /* saves the string in case we need it later */
+
+   item :=find_here@baselook(self,arg1);
+
+      /* If there is no item or we cant see it, check the doors in the room */
+   if (item == null)
+      goto check_doors;
+
+   if (not visible(self, item))
+      goto check_doors;
+
+   if (isset(item.flags, UNIT_FL_BURIED))
+      goto check_doors;
+
+      /* If it cant be opened, it cant be locked. let the player know */
+   if (not isset(item.openflags, EX_OPEN_CLOSE))
+   {
+      act("That is impossible", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+      /* Check to make sure the object has a 'key' associated with it. */
+   if (item.key == "")
+   {
+      act("Odd, you can't seem to find a keyhole.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+      /* See if it is opened */
+   if (not isset(item.openflags, EX_CLOSED))
+   {
+      act("Maybe you should close it first...", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
+   }
+
+   /* Check if it is locked */
+   if (isset(item.openflags, EX_LOCKED))
+   {
+      act("It is already locked!", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
+   }
+
+   pc := findsymbolic(self, item.key , FIND_UNIT_IN_ME);
+
+   if ((pc == null) and (self.level < IMMORTAL_LEVEL))    /* Imms dont need keys. */
+   {
+      act("You don't seem to have the proper key.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   act("You lock $2n - *cluck*", A_ALWAYS, self, item, null, TO_CHAR);
+   act("$1n locks $2n - *cluck*", A_ALWAYS, self, item, null, TO_REST);
+
+   set(item.openflags, EX_LOCKED);
+
+   send_done ("lock", self, null,item, 0, "", item);
+
+   return;
+
+   :check_doors:
+
+   /* first we are going to check if the player dictated what direction
+      they want to lock */
+
+   arg2 := arg;            /* save arg for later use */
+   arg1 := getword(arg2);  /* Check arg2 for directions */
+   arg3 := split(arg1, ".");   /* checking for 2.door, 3.door, etc */
+
+   if (length(arg3) > 1)
+   {
+      count := atoi(arg3.[0]);
+      if (count > 0)
+         arg1 := arg3.[1];
+   }
+
+
+   item := self.outside;
+
+   /* Find the room the player is in.  If the player is in something that is
+      transparent, we take that objects outside as our item */
+   if ((item.type != UNIT_ST_ROOM) and (isset(item.flags, UNIT_FL_TRANS)))
+      item := item.outside;
+
+
+   /* If not a room, no doors */
+   if (item.type != UNIT_ST_ROOM)
+   {
+      act("You see no $2t here.", A_ALWAYS, self, arg, null, TO_CHAR);
+      return;
+   }
+
+   dir := checkdoor(arg);
+
+   /*  That direction has no such door */
+   if (dir == -1)
+   {
+      act("You see no such exit in that direction.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   if (not isset(item.exit_info[dir], EX_CLOSED))
+   {
+      act("Perhaps you should close it first....", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* UNCOMMENT WHEN THIS COMES IN */
+   if (item.exit_key[dir] == "")
+   {
+      act("Odd - you can't seem to find a keyhole.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+
+   if (isset(item.exit_info[dir], EX_LOCKED))
+   {
+      act("It is already locked.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* UNCOMMENT THIS WHEN THIS COMES IN */
+   mykey := findsymbolic(self, item.exit_key[dir] , FIND_UNIT_IN_ME);
+
+   if ((mykey == null) and (self.level < IMMORTAL_LEVEL))    // Imms dont need keys.
+   {
+      act("You don't seem to have the proper key.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   act("You lock the $2t - *cluck*", A_ALWAYS, self, item.exit_names[dir].[0], null, TO_CHAR);
+   act("$1n locks the $2t - *cluck*", A_HIDEINV, self, item.exit_names[dir].[0], null, TO_REST);
+
+   pc := item.exit_to[dir].inside;
+   rm:= item.exit_to[dir];
+
+   i:=0;
+   ct:=FALSE;
+   while (i <= MAX_EXIT)
+   {
+      if (rm.exit_to[i]==item)
+      {
+         ct:=TRUE;
+         break;
+      }
+      i:=i+1;
+   }
+
+   if ((pc != null) and (ct==TRUE))
+      act("A soft *cluck* comes from the $2t.", A_SOMEONE, pc, item.exit_to[dir].exit_names[i].[0], null, TO_ALL);
+      
+   set(item.exit_info[dir], EX_LOCKED);
+   if (ct==TRUE)
+      set(item.exit_to[dir].exit_info[i], EX_LOCKED);
+
+   send_done ("lock", self, mykey, null, 0, "", mykey);
+   return;
+}dilend
+
+
+/* unlock_dil  : This will replace the basecode unlock dil  */
+
+
+dilbegin unlock_dil(arg : string);
+external
+   unitptr find_here@baselook(looker:unitptr,arg:string);
+   integer is_hidden(u1 : unitptr, int1 : integer, u2 : unitptr);
+   string  dirstring@function(i2 : integer);
+   integer checkdoor(arg : string);
+
+var
+   item       :  unitptr;
+   pc         :  unitptr;
+      mykey:unitptr;
+   arg1       :  string;
+   arg2       :  string;
+   arg3       :  stringlist;
+   dir        :  integer;
+   test       :  integer;
+   count      :  integer;
+   counter    :  integer;
+   rm:unitptr;
+   i:integer;
+   ct:integer;
+
+code
+{
+
+   if (self.position < POSITION_RESTING)
+   {
+      act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   if (arg == "")
+   {
+      act("Unlock what?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* next we see if the player has anything in his inventory or around him that he can lock */
+
+   arg1 := arg;       /* saves the string in case we need it later */
+
+   item :=find_here@baselook(self,arg1);
+
+
+   /* If there is no item or we cant see it, check the doors in the room */
+   if (item == null)
+      goto check_doors;
+
+   if (not visible(self, item))
+      goto check_doors;
+
+   if (isset(item.flags, UNIT_FL_BURIED))
+      goto check_doors;
+
+   /* If it cant be opened, it cant be locked. let the player know */
+   if (not isset(item.openflags, EX_OPEN_CLOSE))
+   {
+      act("That is impossible", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* Check to make sure the object has a 'key' associated with it. */
+   if (item.key == "")
+   {
+      act("Odd, you can't seem to find a keyhole.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* See if it is opened */
+   if (not isset(item.openflags, EX_CLOSED))
+   {
+      act("Maybe you should close it first...", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
+   }
+
+   /* Check if it is locked */
+   if (not isset(item.openflags, EX_LOCKED))
+   {
+      act("Oh... it wasn't locked, after all.", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
+   }
+
+   pc := findsymbolic(self, item.key , FIND_UNIT_IN_ME);
+
+   if ((pc == null) and (self.level < IMMORTAL_LEVEL))    /* Imms dont need keys. */
+   {
+      act("You don't seem to have the proper key.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   act("You unlock $2n - *click*", A_ALWAYS, self, item, null, TO_CHAR);
+   act("$1n unlocks $2n - *click*", A_ALWAYS, self, item, null, TO_REST);
+
+   unset(item.openflags, EX_LOCKED);
+   send_done ("unlock", self, pc, item, 0, "", pc);
+   return;
+
+   :check_doors:
+
+   /* first we are going to check if the player dictated what direction
+      they want to open */
+   arg2 := arg;            /* save arg for later use */
+   arg1 := getword(arg2);  /* Check arg2 for directions */
+   arg3 := split(arg1, ".");   /* checking for 2.door, 3.door, etc */
+
+   if (length(arg3) > 1)
+   {
+      count := atoi(arg3.[0]);
+      if (count > 0)
+         arg1 := arg3.[1];
+   }
+
+
+   item := self.outside;
+
+  /* Find the room the player is in.  If the player is in something that is
+     transparent, we take that objects outside as our item */
+   if ((item.type != UNIT_ST_ROOM) and (isset(item.flags, UNIT_FL_TRANS)))
+      item := item.outside;
+
+
+  /* If not a room, no doors */
+   if (item.type != UNIT_ST_ROOM)
+   {
+      act("You see no $2t here.", A_ALWAYS, self, arg, null, TO_CHAR);
+      return;
+   }
+
+   dir := checkdoor(arg);
+
+   /*  That direction has no such door */
+   if (dir == -1)
+   {
+      act("You see no such exit in that direction.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   if (not isset(item.exit_info[dir], EX_CLOSED))
+   {
+      act("Perhaps you should close it first....", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+
+   /* UNCOMMENT WHEN THIS IS PUT INTO USE*/
+   if (item.exit_key[dir] == "")
+   {
+      act("Odd - you can't seem to find a keyhole.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   if (not isset(item.exit_info[dir], EX_LOCKED))
+   {
+      act("Oh... it wasn't locked, after all.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* UNCOMMENT WHEN THIS IS PUT INTO USE*/
+   mykey:= findsymbolic(self, item.exit_key[dir] , FIND_UNIT_IN_ME);
+
+   if ((mykey == null) and (self.level < IMMORTAL_LEVEL))    // Imms dont need keys.
+   {
+      act("You don't seem to have the proper key.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   act("You unlock the $2t - *click*", A_ALWAYS, self, item.exit_names[dir].[0], null, TO_CHAR);
+   act("$1n unlocks the $2t - *click*", A_HIDEINV, self, item.exit_names[dir].[0], null, TO_REST);
+
+   pc:= item.exit_to[dir].inside;
+   rm:= item.exit_to[dir];
+
+   i:=0;
+   ct:=FALSE;
+   while (i <= MAX_EXIT)
+   {
+      if (rm.exit_to[i]==item)
+      {
+         ct:=TRUE;
+         break;
+      }
+      i:=i+1;
+   }
+
+   if ((pc != null) and (ct==TRUE))
+      act("A soft *click* comes from the $2t.", A_SOMEONE, pc, item.exit_to[dir].exit_names[i].[0], null, TO_ALL);
+
+   unset(item.exit_info[dir], EX_LOCKED);
+   if (ct==TRUE)
+      unset(item.exit_to[dir].exit_info[i], EX_LOCKED);
+      
+   send_done ("unlock", self, mykey, null, 0, "", mykey);
+   return;
+}
+dilend
+
+
+
+
+
+/* direc_dil  : This will replace the directions command so that */
+/*  it uses the new secret doors.                                */
+dilbegin direc_dil(arg : string);
+external
+   integer is_hidden(u1 : unitptr, int1 : integer, u2 : unitptr);
+   integer issetclimb@function(direction:integer);
+   string  dirstring@function(i2 : integer);
+
+var
+   room    :  unitptr;
+   buff    :  string;
+   dir     :  integer;
+   test    :  integer;
+   temp    :  string;
+
+code{
+   if (not islight(self.outside))
+   {
+      act("It is pitch black.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   room := self.outside;
+
+   if ((room.type != UNIT_ST_ROOM) and (isset(room.flags, UNIT_FL_TRANS)))
+      room := room.outside;
+
+   if (room.type != UNIT_ST_ROOM)
+   {
+      act("<div class='exit'>Obvious exits:<br/>None.<br/></div>", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   buff := "";
+   dir := NORTH;
+
+   while (dir <= MAX_EXIT)
+   {
+      if (room.exit_to[dir])
+      {
+         test := is_hidden(self, dir, room);
+
+         if (test)
+         {
+            dir := dir + 1;
+            continue;
+         }
+
+        temp := dirstring@function(dir);
+
+        buff := buff + "<div class='exit'><a cmd='#'>" + temp + "</a> - ";
+        if (isset(room.exit_info[dir], EX_CLOSED))
+            buff := buff + "Closed " + room.exit_names[dir].[0] + "<br/>";
+        else
+            buff := buff + room.exit_to[dir].title + "<br/>";
+       }
+      dir := dir + 1;
+   }
+
+   if (buff == "")
+      buff := "<div class='exit'>Obvious exits:<br/>None.</div>";
+   else
+      buff := "<div class='exit'>Obvious exits:<br/>" + buff + "</div>";
+
+   sendtext(textformat(buff), self);
+   return;
+}
+dilend
+
+
+/* drag_dil : This dil replaces the basecode drag commands so that the new secret doors
+   will work correctly.  It will check a) for something to drag, b) the direction is
+   available and c) if the person can drag it (enough endurance).  If all is a go, then
+   we will start movement and link the object to the room */
+
+dilbegin drag_dil(arg : string);
+external
+   integer issetclimb@function(d:integer);
+   unitptr unit_room@function(unit1 : unitptr);
+   integer is_hidden(unit2 : unitptr, int1 : integer, unit23 : unitptr);
+   integer movementloss(int12 : integer);
+   string  dirstring@function(int123 : integer);
+   look_blank@baselook(l1 : unitptr, str12 : string);
+   integer checkexit(arg : string, bMessage:integer);
+
+
+var
+   dir       :  integer;
+   item      :  unitptr;
+   end_cost  :  integer;
+   test      :  integer;
+   room      :  unitptr;
+   iname     :  string;
+   cnt       :  integer;
+
+code
+{
+   if (arg == "")
+   {act("What do you want to drag?", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if (self.outside.type != UNIT_ST_ROOM)
+   {act("You cannot drag anything while in $2n.", A_ALWAYS, self, self.outside, null, TO_CHAR);
+    return;
+   }
+
+if (arg == "self")
+   {
+     act("You cannot drag yourself, silly.", A_ALWAYS, self, null, null, TO_CHAR);
+     return;
+
+   }
+
+room := self.outside;
+
+   /* Find the item we want to drag */
+   /* Didnt use findunit() as it has issues with buried and invisible items */
+
+cnt := 2;
+iname := arg;
+item := findunit(self, arg, FIND_UNIT_SURRO, null);
+
+
+:loop:
+if (item == null)
+   {act("No such thing here.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+if ((not visible(self, item)) or (isset(item.flags, UNIT_FL_BURIED)))
+   {
+     arg := itoa(cnt) + "." + iname;
+     item := findunit(self, arg, FIND_UNIT_SURRO, null);
+     cnt := cnt + 1;
+     goto loop;
+   }
+
+
+  /* cant drag people unless they are unconcious */
+if (((item.type == UNIT_ST_PC) or (item.type == UNIT_ST_NPC)) and (item.position > POSITION_SLEEPING))
+   {act("Maybe $2e would object to that?", A_ALWAYS, self, item, null, TO_CHAR);
+    return;
+   }
+  /* or rooms :P */
+if (item.type == UNIT_ST_ROOM)
+   {act("That would be quite impossible.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+
+  /* Also, needs to be manipulate take in order to drag it */
+if (not isset(item.manipulate, MANIPULATE_TAKE))
+   {act("You cannot move $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+    return;
+   }
+
+
+  /* if arg is nothing, then we didnt put in a direction to drag it in */
+if (arg == "")
+   {act("What direction do you wish to drag $2n in?", A_ALWAYS, self, item, null, TO_CHAR);
+    return;
+   }
+
+  /* remove the whitespace from the direction */
+arg := getword(arg);
+
+  /*  Now we find the direction the player is dragging the item in.  If at the end,
+      dir still is -1, then we know that no valid direction was given */
+
+   dir := checkexit(arg, 1);
+
+   if (issetclimb@function(dir))
+   {
+      act("Alas, you must climb to go that way.", A_SOMEONE, self, null, null, TO_CHAR);
+      return;
+   }
+
+   // What about swim?
+
+   /* make sure the way is clear */
+   if (isset(self.outside.exit_info[dir], EX_CLOSED))
+   {
+      act("Perhaps you should open the $2t first?", A_ALWAYS, self, self.outside.exit_names[dir].[0], null, TO_CHAR);
+      return;
+   }
+
+   /* make sure the person can move it (has enough endurance) */
+   test := movementloss(self.outside.movement);
+
+end_cost := movementloss(self.outside.exit_to[dir].movement);
+end_cost := (end_cost + test) / 2;
+
+end_cost := (item.weight / 5) + end_cost;
+
+if (self.endurance < end_cost)
+   {act("You are too exhausted.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+   }
+
+    /* the movement dil will take care of the movenet cost  for the walking */
+end_cost := item.weight / 5;
+
+  /* start the walking */
+exec(arg, self);
+
+  /* Couldnt move for some reason */
+if (room == self.outside)
+   return;
+
+act("$1n is dragged away by $3n.", A_SOMEONE, item, null, self, TO_NOTVICT);
+link(item, self.outside);
+act("You drag it along.", A_ALWAYS, self, null, null, TO_CHAR);
+act("$1n is dragged along by $3n.", A_SOMEONE, item, null, self, TO_NOTVICT);
+
+if (self.level < IMMORTAL_LEVEL)
+    self.endurance := self.endurance - end_cost;
+
+position_update(self);
+
+send_done ("drag", self, null, item, 0, "", null);
+
+return;
+
+}dilend
+
+
+/* recharge_fuel : This dil recharges the energy for vehicles once a minute.
+*/
+
+
+dilbegin recall recharge_fuel();
+
+code{
+
+heartbeat := 60 * PULSE_SEC;
+
+:start:
+wait(SFB_TICK, TRUE);
+
+self.value[1] := self.value[1] + 50;
+
+if (self.value[1] > self.value[2])
+   self.value[1] := self.value[2];
+
+goto start;
+
+}dilend
+
+
+
+/*
+   This is for the search skill to be put into dil.  This will require ofcourse
+   that a) look be put into dil  b) open/close be put into dil and c) movement
+   be put into dil.
+
+
+   For any of these ideas, it will be necessary to change look and open to dils so that
+   instead of scanning the affects to see if the player has seen the door, it will
+   check the extras in the room or on the player (depending on the idea used) to see
+   if the door has been found.  Same for what a person sees when the move into a
+   room and has 'change exits' enabled.
+
+
+   The ideas are listed in order of my preference :
+
+
+   Idea #1 :
+
+      We replace the affects that are used to determine difficulty/success with one
+      dil and an extra:
+
+      #define SECRET_DOOR_DIFFICULTY(DIR, SKILL) \
+      extra{"$secret_door", #DIR}                \
+      #SKILL                                     \
+      dilcopy secret_wipe@whateverzone(DIR, SKILL);
+
+
+
+      dilbegin search_dil(arg : string);
+
+      the search function would then scan as follows :
+
+         a) check if the room has any doors with the name in arg
+
+         b) if the search dil doesnt find an exit in that room, it
+            deducts the 10 endurance and reports 'You find nothing.'
+
+         c) If the search dil does find an exit with that name, it checks
+            to see if it is hidden.  If it isnt, sends message 'It is not hidden!'
+
+         d) If it is hidden, it then checks the room for "$secret_door" extras with
+            the direction in names.[1].  If it cant find it, it logs an error to the log
+            and sets that direction to not hidden.
+
+       d.1) If the directions "$secret_door" extra is found, it checks the namelist and if
+            the pc's name is in the list, it sends the message 'You have already spotted it.'
+
+         e) If the player hasnt spotted the door, the search dil then does a skill check against
+            the difficulty of the door.  If the person is not successful, it deducts 10 endurance
+            and says 'You find nothing.'
+
+         f) If the player succeeds, the pc's name is added to "$secret_door" namelist, 10 endurance
+            is deducted from the pc and sends the message 'As you search you discover <door's name here>.'
+
+         g) Every reset of the zone, the room clears its "$secret_door" extras of names.
+
+
+    Idea #2 : Same as above, but instead placing a players name in the extra's namelist, an extra is
+              added to the player. There is then a master dil that every 20 minutes scans the
+              playerbase for any "$secret_door" extras and deletes them.
+
+
+    Idea #3 : Same as #2, it places an extra on the player along with a timer dil to remove the extra
+              after 20 minutes.
+
+
+    Idea #4 : same as #1, but instead of pasting or modifying extras, it uses dil's and sends
+              message to the players dil's asking if it found this particular door.
+
+
+
+Have decided on Idea #1:  Eventually, will add the functionality to search for
+hidden objects.  Right now, I am just going to concentrate on doors and adding in
+the ability to haveto search for multiple doors.
+
+
+*/
+
+
+/* do_search */
+dilbegin search_dil(arg : string);
+
+external
+   search_item(u2 : unitptr, s1 : string);
+   unitptr  unit_room@function(u1  :  unitptr);
+   integer  skillresist@skills(a1 : integer, a2 : integer, a3 : integer, a4 : integer);
+   string   dirstring@spells(i1 : integer);
+   integer skillchecksa@skills(skillidx : integer, abiidx : integer, difficulty : integer);
+
+var
+   room   :  unitptr;        /* Points to the room the player is in */
+   ext    :  extraptr;       /* Used to find the extra in the room pertaining to the hidden door */
+   count  :  integer;        /* Counter integer used to cycle through the exits */
+   hm     :  integer;        /* Roll for success in searching */
+   vowels :  stringlist;     /* Holds the list of vowels in english */
+   item   :  unitptr;        /* Used to check if player is searching for an item */
+   arg1   :  string;         /* Placeholder for arg while doing findunit()s  */
+   arg2   :  string;
+   door   :  string;         /* Used to store the dirstring() return for examining extras */
+   a_an   :  string;         /* Used to hold a or an depending on the first letter of 'door' */
+   s      : string;
+   sl     : stringlist;
+
+code
+{
+   vowels := {"a", "e", "i", "o", "u"};
+   heartbeat := 5 * PULSE_SEC;
+
+   /* Check to make sure it is  PC that is searching.  Perhaps we should allow
+      mobs to search, but for now, I am going to only allow PC's to search. */
+
+   if (self.type != UNIT_ST_PC)
+      return;
+
+   /* Check for argument */
+   if (arg == "")
+   {
+      act("What is the name of the exit you wish to search for?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* Check endurance to make sure we are not too tuckered out. */
+   if (self.endurance < 10)
+   {
+      act("You are too exhausted.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* This will add the ability to set objects to hidden and have the players
+      search for them
+
+      NOT DONE DO NOT USE
+
+   arg1 := arg;
+
+   item := findunit(self, arg1, FIND_UNIT_SURRO, null);
+
+   if (item != null)
+      search_item(item, arg);
+
+   */
+
+   /* Check to see if the player can see the room.  Check if player is in a object or mobile
+      that is transparent and in a room */
+   if (self.outside.type != UNIT_ST_ROOM)
+   {
+      /* See if the outside unit is transparent. If not, fail automatically */
+      /* This is used so if a person is on a horse, in a cart, etc etc */
+
+      if ((self.outside.outside.type != UNIT_ST_ROOM) or (not isset(self.outside.flags, UNIT_FL_TRANS)))
+      {
+         act("You search but find nothing.", A_ALWAYS, self, null, null, TO_CHAR);
+         if (self.level < IMMORTAL_LEVEL)
+            self.endurance := self.endurance - SEARCH_DRAIN_AMOUNT;
+         return;
+      }
+   }
+
+   /* Check to see if the person put in 'north' or 'south', designating a
+      direction */
+
+   arg1 := arg;
+
+   arg2 := getword(arg1);
+
+   count := -1;         /* Initialize counter */
+
+   if(arg2 in "north") count := NORTH;
+   else if(arg2 in "up") count := UP;
+   else if(arg2 in "south") count := SOUTH;
+   else if(arg2 in "east") count := EAST;
+   else if(arg2 in "west") count := WEST;
+   else if(arg2 in "down") count := DOWN;
+   else if(arg2 in "northeast") count := NORTHEAST;
+   else if(arg2 in "northwest") count := NORTHWEST;
+   else if(arg2 in "southeast") count := SOUTHEAST;
+   else if(arg2 in "southwest") count := SOUTHWEST;
+
+   /* Get the room the player is in */
+
+   room := unit_room@function(self);
+
+   secure(room, lostit);
+
+   /* If player didnt put in a direction to search, start at north and
+      search all exits for that name. */
+
+   if (count == -1)
+   {
+      count := NORTH;
+
+      while (count <= MAX_EXIT)
+      {
+         if (arg in room.exit_names[count])
+            break;
+         count := count + 1;
+      }
+
+      if (count > MAX_EXIT)
+      {
+         act("You search but find nothing.", A_ALWAYS, self, null, null, TO_CHAR);
+         if (self.level < IMMORTAL_LEVEL)
+            self.endurance := self.endurance - SEARCH_DRAIN_AMOUNT;
+         return;
+      }
+   }
+
+   //MS2020 removed second check, too difficult to know the name of the hidden exit
+   if (room.exit_to[count] == null) /*  or (not (arg1 in room.exit_names[count]))) */
+   {
+      act("You search but find nothing.x", A_ALWAYS, self, null, null, TO_CHAR);
+      if (self.level < IMMORTAL_LEVEL)
+         self.endurance := self.endurance - SEARCH_DRAIN_AMOUNT;
+      return;
+   }
+
+   /* OK, found an exit with the name, now lets check to make sure it is hidden */
+   if (not isset(room.exit_info[count], EX_HIDDEN))
+   {
+      act("It is not hidden!", A_ALWAYS, self, null, null, TO_CHAR);
+      if (self.level < IMMORTAL_LEVEL)
+         self.endurance := self.endurance - SEARCH_DRAIN_AMOUNT;
+      return;
+   }
+
+   /* Here is where the specific changes will be made.  I am going to go ahead and
+      start with Idea #1, and then it wont be too hard to change for whatever we choose
+      to do. */
+
+   s := SECRET_DOOR + itoa(count);
+   if (not room.extra.[s])
+   {
+      sl := getwords(s);
+      addextra(room.extra, sl, "");
+   }
+
+   ext := s in room.extra;
+   if (ext == null)
+      goto logerror;
+
+   if (self.name in ext.names)
+   {
+      act("You have already spotted it.", A_ALWAYS, self, null, null, TO_CHAR);
+      if (self.level < IMMORTAL_LEVEL)
+         self.endurance := self.endurance - SEARCH_DRAIN_AMOUNT;
+      return;
+   }
+
+   if (self.level < IMMORTAL_LEVEL)
+      hm := skillchecksa@skills(SKI_SEARCH, ABIL_BRA, room.exit_diff[count]); //  ext.vals.[1]);
+   else
+      hm := 1;       /* Make Imms automatically find secret doors */
+
+   if (hm <= 0)
+   {
+      act("You search but find nothing.", A_ALWAYS, self, null, null, TO_CHAR);
+      if (self.level < IMMORTAL_LEVEL)
+         self.endurance := self.endurance - SEARCH_DRAIN_AMOUNT;
+      return;
+   }
+   else
+   {
+      door := room.exit_names[count].[0];
+
+      /* For proper grammar, have to find if we need an 'a' or an 'an' in front of the
+         doors name */
+
+      a_an := left(door, 1);
+
+      if (a_an in vowels)
+         a_an := "an";
+      else
+         a_an := "a";
+
+      act("As you search you discover $3t $2t.", A_ALWAYS, self, door, a_an, TO_CHAR);
+
+      if (self.level < IMMORTAL_LEVEL)
+         self.endurance := self.endurance - SEARCH_DRAIN_AMOUNT;
+
+      addstring(ext.names, self.name);
+      return;
+   }
+
+   :lostit:
+   return;
+
+   :logerror:
+   log("SEARCH ERROR: " + room.nameidx + "@" + room.zoneidx + " has a secret door without a secret door extra for it.  Direction : " + itoa(count));
+   unset(room.exit_info[count], EX_HIDDEN);
+   act("Whoa! There was a door there all the time!", A_ALWAYS, self, null, null, TO_CHAR);
+   return;
+}
+dilend
+
+
+
+/* secret_wipe :  This dil is placed for each secret door in a room.  It then
+   clears the name list of the extra for its particular secret door of all
+   names every reset of the zone.
+*/
+
+dilbegin secret_wipe(dir : integer);
+external
+   string  dirstring@spells(i1 : integer);
+
+var
+   ext   :  extraptr;
+   zon   :  zoneptr;
+   door  :  string;
+
+code
+{
+   zon := zhead();
+
+   while(zon.name != self.zone)
+      zon := zon.next;
+
+   if (zon.name != self.zone)
+   {
+      log("SECRET DOOR ERROR: " + self.nameidx + "@" + self.zoneidx + " somehow isnt in a zone.");
+      return;
+   }
+
+   /* Set the ticker to the zone's reset time */
+   heartbeat :=  zon.resettime * 60 * PULSE_SEC;
+
+   :start:
+   wait(SFB_TICK, TRUE);
+
+   door := SECRET_DOOR+itoa(dir); 
+   ext :=  door in self.extra;
+
+   /* If no SECRET_DOOR extras at all, there is an error */
+   if (ext == null)
+   {
+      log("SECRET DOOR ERROR: " + self.nameidx + "@" + self.zoneidx + " has secret_wipe() but no secret doors.");
+      return;
+   }
+
+
+   /* Clear the extra of all pc's that have found the secret door  */
+   while(length(ext.names) > 1)
+      substring(ext.names, ext.names.[1]);
+
+   goto start;
+}
+dilend
+
+
+
+
+%rooms
+azz_room
+names{"azzroom"}
+title "This is the Azz Room"
+descr
+"This is the Azz Room."
+
+north to azz1 open {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN}
+key guard_key keyword {"arch", "door"} difficulty 20;
+south to azz2 open {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN}
+key guard_key keyword {"gate", "door"} difficulty 10;
+end
+
+azz1
+title "Azz1"
+descr
+"Azz1 room"
+
+south to azz_room;
+
+end
+
+azz2
+title "Azz2"
+descr
+"Azz2 room"
+
+north to azz_room;
+south to azz2;
+end
+
+
+room1
+names{"room1"}
+title "Room Number One"
+
+descr
+"This is room number one."
+
+extra{"an extra"} {1,2}
+"testing if this is possible."
+
+
+end
+
+
+azz3
+names{"azz3"}
+title "azz3"
+
+descr
+"Azz3 room"
+
+in azz2
+
+end
+
+%objects
+canoe1
+names {"canoe"}
+title "a canoe"
+descr "A canoe has been left here."
+inside_descr
+"You are in a light but sturdy canoe."
+type ITEM_BOAT
+manipulate {MANIPULATE_TAKE, MANIPULATE_ENTER}
+flags {UNIT_FL_TRANS}
+capacity 1350
+weight 80
+cost 4   SILVER_PIECE
+extra {}
+"The canoe is fairly light."
+end
+
+
+cart
+names {"cart"}
+title "a cart"
+descr "A cart has been left here."
+inside_descr
+"You are in a light but sturdy cart."
+weight 30
+cost 4   SILVER_PIECE
+
+VEHICLE_DEFINITION(2000, 300, "$1n drives $1s $3N to the $2t.", "$1n drives $1s $3N from $2t.")
+extra {}
+"The cart is fairly light."
+end
+
+%end

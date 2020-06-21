@@ -1,0 +1,1258 @@
+
+
+
+                     Valhalla Mud Engine v1.02
+           -- The New and Improved Database Format --
+                   Comments to whistler@valhalla.com
+
+Updated by Stormtamer, Darg, and Whistler
+
+Note that some VMEs, such as Valhalla USA, use a direct compiler,
+either by FTP or by email, which somewhat makes the things faster.
+
+HISTORY
+v1.02: Added exit_descr room extra
+v1.02: Added Intlist
+                    v1.02: Changed CPP text to use new vmc -p
+
+										
+					
+
+v1.01: updated to meet the new definitions and general changes.
+	   Also, merged the tutorial into this file, since both
+	   completed each other. The part zone at the end is the old
+	   tutorial zone (by Icculus), but I modified the dil a
+	   little.
+
+NAME
+
+vmc - valhalla mud compiler.
+
+SYNOPSIS
+
+vmc -y moneyfile [-v] [-m] [-s] pathname ...
+
+DESCRIPTION
+
+Vmc is the database-compiler for VME Server. It takes  as  input
+a number of source files, and produces a corresponding number of
+binary data files, in a format readable by  the VME-Server.
+
+FILENAMES
+
+A source file should have a filename ending in '.zon'.  Output is placed in
+files with corresponding filenames, and the suffixes '.data' and '.reset'.
+If you use email compiling, the output will be returned in a reply
+from the compiler.
+
+OPTIONS
+
+The argument string is processed from left to right. Options  may
+appear  between  filenames, but it should be noted that an option
+only takes effect when it is encountered. In most cases,  options
+should be placed to the left of the filename arguments.
+
+-m The location of the money file.  Normally etc/money.
+
+-v Verbose output.
+
+-m  Make option. Only compile source files if they have been
+    modified more recently than the corresponding output files.
+
+-s Suppress the generation of output files.
+
+These options are not available to the email or FTP compiler, but
+normally you should not bother with them - they are probably
+set automatically.
+
+GENERAL CONCEPT
+
+The new database format is designed to improve the system on  two
+factors: Runtime efficiency and user-friendliness (ease of build-
+ing). The second part is achieved through the  use  of  a  format
+that  imitates  a series of data assignments in a high-level pro-
+gramming language.  To prevent this higher-level format from  af-
+fecting  the  performance  of  the game, the data files are 'com-
+piled' into a binary format that is easily  read  by  the  server
+program.  In some cases, it is possible to store data directly in
+the structures used by the server; Thus, data can be read and as-
+signed in a single operation. Symbolic names are used for all da-
+ta-fields.  The Compiler is able to  supply  default  values  for
+most fields, so the builder frequently only needs to define a few
+key values.  All units will be referred  to  by  symbolic,  user-
+selected  names  within  the source files, improving readability.
+The  compiler  will  filter  the  input  files  through  the   C-
+preprocessor,  allowing  builders  to benefit from the use of in-
+cluded files and macro definitions. Predefined macros for  often-
+used values and names will be automatically included. Each 'zone'
+of the game will be contained in one single file, making the pro-
+cess  of  using constructors from foreign sites considerably more
+attractive.
+
+The VMC-PREPROCESSOR
+
+If your already fimiliar with the C-pre-processor then you can skip this
+section there is no major differences between the VMC pre processor and
+the C-pre processor.  We have made them as similar as possible so that C
+programmers can quickly addapt.  In fact if you consult a C-manual (or
+man cpp), you will find all the info you need on how to use it.  In
+short however the following are good examples of what we use the pre
+processor for in the VMC.
+
+MACRO SUBSTITUTION
+
+For our purposes, this is the most powerful feature of  the  pre-
+processor. It allows you to enter lines like:
+
+#define DIRTFLOOR {UNIT_FL_NO_WEATHER, UNIT_FL_CAN_BURY}
+
+(note that the '#' must be in column one)
+
+Then, later on in the text, you can write:
+
+flags {DIRTFLOOR, UNIT_FL_SACRED}
+
+The preprocessor will substitute the 'macro' resulting in:
+
+flags {{UNIT_FL_NO_WEATHER, UNIT_FL_CAN_BURY}, UNIT_FL_SACRED}
+
+Macros can be of more than one line:
+
+#define EVIL_BAD_GUY \
+alignment -1000 \
+exp 200
+
+(Note the back slash at the end of all the #define lines, except the
+last one.)
+
+can include arguments, or mathematical expressions:
+
+#define BASE_DRAGON(MLVL, GENDER, BREATH)  \
+   sex GENDER \
+   level MLVL \
+   height    400 + MLVL*15 \
+   weight    800 + MLVL*30 \
+   NATURAL_DEF(WPN_CLAW, ARM_PLATE) \
+   exp       150  /* For breath weapon */ \
+   dilcopy combat_mag@function(BREATH, "", 25, 2);
+
+and can be nested inside another macro:
+
+#define M_DRAGON_SHADOW_ANCIENT(GENDER)  \
+   BASE_DRAGON_SHADOW(112, GENDER)
+
+Definitions can also be overrode, such as in the following example -
+but remember! special functions cannot be removed or changed (although
+more can be added).
+
+
+shadow_lord
+names {"shadow lord", "shadow", "lord"}
+title "The Shadow Lord stands majestically here."
+
+descr "The Shadow Lord is in fact a crossbreed between a human and
+a dragon, giving him human shape, but dragon features and powers.
+His dark eyes make him look terrible, as if his black silk cape wasn't
+enough. He wields a deadly blade."
+
+M_DRAGON_SHADOW_ANCIENT (SEX_FEMALE) (defines alignment, exp and others)
+EVIL_BAD_GUY (redefines alignment and exp)
+money 1 PLATINUM_PIECE
+dilcopy aggressive@function(0,-1,0,0,0,PULSE_SEC*5,-1,"DALIGN",
+{"$1n swings his sword at $3n!", "$1n swings his sword at you!"});
+
+/* I am not going to describe this in detail - it is explained in
+function.zon */
+
+end
+
+Another function, #include, allows you to include other files  in
+your zone description. Files containing macro definitions for the
+most important values are automatically included. Including compo-
+sed.h will also automatically include values.h, base.h and wmacros.h.
+
+In addition, of course, the preprocessor permits you to put  com-
+ments  enclosed  in  /* ... */ anywhere in your file - increasing
+the readability. But remember that before cluttering your file with
+comments, you should make sure you use pre-defined easy-to-read
+macros such as PULSE_SEC instead of 4, RACE_SHARGUGH instead of
+37... etc.
+
+THE ZONE FILES (data format)
+
+Spaces, tabs, and line feeds are considered  white space  and  ig-
+nored.
+
+A  zonefile  is split up into 6 sections. A zone-declaration sec-
+tion, a mobile (NPC) section, an object section, a room  section,
+and  a reset section and the new dil section. None of the sections
+actually have to be in the file, and they may appear in any order.
+
+Each section is preceded by a section header. These are the  six
+possible headers:
+
+%zone
+%rooms
+%mobiles
+%objects
+%reset
+%dil
+
+The  first  four sections may be considered lists of definitions.
+The reset section can be considered a program in a simple  pro-
+gramming language. And the dil section is a bit special - it in-
+cludes the zone templates (dils that can be used from any zone,
+on anything, as opposed to "specialized" dils placed after an unit's
+definitions).
+
+A definition takes the general form:
+
+                           field value
+
+Where field is the name of a data field, and value is some value.
+Values are of one of 5 types:
+
+Number: A (possibly hexa-) decimal integer, possibly prepended by
+a  '-'. Hexadecimal numbers are on the normal C-style format (eg.
+0x0f3). Hexadecimal digits may be in lower or upper case.
+
+/* Here */
+String: A string of characters enclosed in '"'s. New lines may ap-
+pear in the string.
+
+Stringlist: Either a single string (see above), or a construction
+like:
+
+             { "Adolf Adolfson", "Adolf", "guard" }
+
+NOTE: A stringlist is used to provide a unit  with  one  or  more
+names  by  which  the players can refer to it. Due to the way the
+parser works, there are some  important  considerations  to  make
+when writing a stringlist.
+   An obvious namelist for, say, a small dwarf would be:
+
+names {"small", "small dwarf", "dwarf"}
+
+However, if a player were to type:
+
+hit small dwarf with bottle,
+
+The  parser  would assume that "small" was the name of the dwarf,
+and that "dwarf bottle" was the weapon to be used.
+
+Thus, if one name can form a prefix for another in this style, it
+should be placed AFTER that name, e.g.:
+
+names {"small dwarf", "small", "dwarf"}
+
+Anyway, recent versions of the compiler normally give you a warning
+or even an error message if you write a shorter name before a long
+one.
+
+Note also that the name "small" is really a very questionable way
+of referring to a small dwarf, and that maybe "small  dwarf"  and
+"dwarf" should be left as the only alternatives.
+
+Flags: Either a single number, or a list like:
+
+                         {8, 16, 1, 128}
+
+A  list like the above has the effect of binary ORing each member
+of the list together. Thus, the list above  would have  the  value
+153.
+   Actually,  one  would  rarely  see lists like the above; macro
+definitions are supplied for all of the commonly-used  flag  val-
+ues. Thus, you might see:
+
+          uflags {UNIT_FL_NO_WEATHER, UNIT_FL_CAN_BURY}
+
+in the definition for a room with a dirt floor.
+
+the '{'...'}' pairs may be nested, to ease the creation of macros
+with multi-flag values.
+
+Symbol: Either a standard C-style identifier, denoting some  unit
+within  the zone, or two identifiers, separated by a @ or a /, to
+reference a unit in a different zone. The format is:
+
+<unit-ident> @ <zone-ident>
+
+or:
+
+<zone-ident> / <unit-ident>
+
+The two versions are interchangeable, but it is probably wise  to
+stick to one format within a single zonefile in order to maintain
+readability.
+   The usual care should be applied when choosing  identifiers  -
+they  should be easy to remember and easy to type - especially for
+objects that are to be frequently loaded 'manually', eg. by immor-
+tals within the game. Yet, remember than object identifiers such
+as item32_4 should be replaced by easily remembered names, such as
+bl_potion.
+
+Below are descriptions for each of the sections.
+
+HEADER
+
+This is not a real section, but rather a header where you enter
+your zone filename and password (and the version, when you compile
+your zone on the main site). The full header is like this:
+
+/*
+filename korandin
+password ***
+changedby Stormtamer
+EmailAdd stormtamer@hotmail.com
+request compile
+version 1
+END HEADER */
+
+
+ZONE section
+
+The  Zone-section  defines  the global parameters for the current
+zone. It is usually wise to place this section in the top of  the
+file. The fields and their formats are as follows:
+
+title <string> This is the title of the zone, for example Town of
+Midgaard, Thieves Guild, Forest of Haon Dor, or whatever.  It  is
+currently  only used when players request a list or available ar-
+eas in the game. Leaving it undefined will keep it away from  the
+areas list.
+
+lifespan <number>
+This  defines  the interval between resets for this zone, in min-
+utes. Default is 60.
+
+reset <number>
+This should be set to one of the macros RESET_NOT, RESET_IFEMPTY,
+RESET_ANYHOW.  Default is RESET_ANYHOW, which means that the zone
+will be reset even if players are present within it.
+
+creators <stringlist>
+This should contain the MUD names of the creators  of  the  zone.
+Filling  out  this field will enable immortals to see who to con-
+tact in case of zone problems. It also gives the possibility  for
+directing errors to you directly via mud-mail. Seen via the 'wstat
+zone' mud-command - available, of course, only to immortals.
+
+notes <string>
+This is a plain text description of the zone for other immortals.
+Seen  via the 'wstat zone' mud-command. It is often a good idea to
+include your e-mail address in the  notes  so  that  you  can  be
+reached easily by the implementers.
+
+<symbol>  If  existing,  this entry defines the name of the
+zone. Default is the trailing component of the current filename,
+minus the trailing ".zon". Note that the symbol should be added
+after the %zone tag, which should always been put, even if you
+do not add a symbol after it.
+
+Example:
+
+#include <composed.h>
+%zone tiny_zone
+lifespan 20
+reset RESET_ANYHOW
+creators {"icculus", "venger"}
+
+notes "What can I say but this will be short and probably not a
+       very fun zone to adventure in!  Send all complaints to:
+       Andrew Cowan agcowan@turing.uncg.edu."
+
+help  "My, what a tiny zone you're in!  Beware the death room,
+       it's been said that visitors to this room often find
+       things mildly uncomfortable."
+
+exit_descr <string>
+As an addition to the above a new exit_descr field has been added.  The
+easiest way to explain this is by example. I have left only the very basic
+fields in an attempt to make understanding easier. 
+
+
+SAMPLE ONE
+market_sq
+names {"market square"}
+title "The Market Square"
+descr
+"   A huge ancient ......"
+movement SECT_CITY
+north to cth_square1 descr "The great Cathedral";
+south to royal_av1 descr "A long row of well-grown";
+west to main_st3 descr "Main street continues";
+east to main_st4 descr "The intersection of ....";
+end
+
+In this example each room must have the descr of what the player would
+see if the were to type 'look east', 'look west' and so on.
+
+SAMPLE TWO
+
+market_sq
+names {"market square"}
+title "The Market Square"
+descr
+"   A huge ancient ......"
+movement SECT_CITY
+north to cth_square1; 
+south to royal_av1;
+west to main_st3;
+east to main_st4;
+exit_descr "The Market Square of Midgaard";
+end
+
+main_st3
+names {"main street"}
+title "Main Street"
+descr
+"   You are on a broad street leading east-west...."
+movement SECT_CITY
+north to th_entrance;
+south to greeng_shop;
+east to market_sq;
+west to main_st2;
+ALWAYS_LIGHT
+exit_descr "The intersection of .... ";
+end
+
+In this example we added just one descr per room. If player standing
+in the room main_st3 were to type 'look east' they would receive the
+exit_descr from the room labeled market_sq, "The Market Square of
+Midgaard".  Any and all rooms connected to this room would see that
+description if it is set.
+
+Note: You may add and exit_descr to a room and also selectively add
+regular exit descr's as in sample one. The exit descr as shown in
+sample one will over ride the exit_descr.
+
+
+UNIT-fields
+
+All the unit definitions begin by a symbol, which is the identifier
+of that particular unit. No matter the unit type (except pc, of
+course), the identifier is always a plain name, without any field
+in front of it. Thus, the identifier is the start of this unit's
+definitions, and their end is indicated by the 'end' keyword.
+
+In   addition   to   their specific fields,   each  type of  unit
+(room/mobile/object)  has  a  common set of fields. These are de-
+scribed below:
+
+names <stringlist>
+The namelist of the unit. Default is a list consisting of a  sin-
+gale  name,  namely the identifier of the unit. See the discussion
+about stringlists above.
+Be aware of the proper use of capital letters.  Any  proper  name
+such  as Mary, Adolf, Tiamat, Jafar, Hansen and John should be in
+caps, whereas names like cityguard, guard, armourer, weaponsmith,
+alchymist and mage should be in lowercase only. The reason should
+be fairly obvious - if not mail me and I will add a  lengthy  ex-
+planation.  The  "caps"  consideration  is exactly the same which
+must be used in the "title" section (below).
+
+For example:
+   names {"Adolf Adolfsson", "Adolf", "cityguard", "guard", "cap-
+tain"}
+
+title <string>
+For  rooms   :  the string shown before the long description, eg.
+"The Temple".
+For objects: eg. "an apple", "a dagger", etc.
+For mobiles: eg. "the dragon", "the dwarf", "Fido", etc.
+
+Please be conscious  of  the  capitalization  of  these  strings:
+Whereas  the title of a room should often contain leading capital
+letters, this is rarely the case for mobiles and objects. An  ex-
+ception is a monster like "Puff".
+   Default is the first name of the namelist.
+
+descr <string>
+The long-description of the unit. Again, this is treated somewhat
+differently for the various kinds of units.
+
+For rooms: The description people see when they stand in the room
+(unless they're in compact mode).
+For  mobiles:  What people see of a mobile if it's in its default
+position, Eg. "A big ugly troll looms before you.".
+For objects: What people see when the  object  is  lying  in  the
+room.
+
+extra  <stringlist>  <intlist> <string>  Adds  an  extra-description to the
+unit. An arbitrary  number  may  exist  in  any  unit.  An  empty
+stringlist  ('{}')  matches  the  namelist  of  the current unit.
+this is a good shorthand. That means an empty stringlist is the
+look/read at description. Hence, if you want to tag a description to the
+name(s) of a unit,
+
+Normally the intlist will be empty but if you have need for an intlist
+for a Dil this is where you would add it.
+
+Example:
+
+extra{"dog tag"},{45,98,48}
+"Its a shiny tag"
+
+extra {""}
+"This is a milk can"
+
+extra {"inscription"}
+"It says stop looking at me!"
+
+key <symbol>
+The object necessary to lock/unlock this unit.
+You can put a default value in htis and change it with a Dil program
+later.
+
+   key goldkey@midgaard
+
+open <flags>
+Some  characteristics  related  to  containers. The flags are the
+same as for room-exits (the EX_ prefix macros).
+
+manipulate <flags>
+Flags describing the handling-characteristics of  the  unit.  The
+flags are defined in values.h, with MANIPULATE_ prefixes.
+
+
+alignment <number>
+The  alignment of a unit, -1000 is most evil, 0 is neutral, +1000
+is most good. Any value in [-1000..-350] is considered evil.  Any
+value  in [+350..+1000] is considered good. Values in between are
+neutral. Default is 0.
+
+
+minv <level 1..255>
+The level for which this unit is invisible. Default is zero.
+
+flags <flags>
+Flags describing the unit. The values have  the  prefix  UNIT_FL_
+(see values.h)
+
+weight <number>
+The weight of the unit. Note that to make an item weight less
+than a pound (to prevent items such as 1-pound small pearls), simply
+set the weight to a fraction, ie. 1/5, or 1/20.
+
+capacity <number>
+The carrying-capacity of the unit. You should set this through
+the CONTAINER_DEF macro, since it makes the zone clearer to
+anyone reading it (including you!).
+
+height <number>
+The height a monster in centimeters, the length of a rope, or the
+size of a weapon, shield or armour (the latter  have  their  size
+specified  as  the  size of the humanoid required to wield them).
+One centimeter = 0.3937 inches, and 1 inch = 2.54 cm.  12  inches
+is 30.48 cm, 12*6 inches = 72 inches = 182.88 cm
+
+special <number> text <string> time <number> bits <bitfield>
+The  number  of  a special routine to associate with this mobile.
+An arbitrary number of special routines may be associated with  a
+mobile.  The text-field is optional. If included, it sets the da-
+ta-field associated with that function. Note that only some func-
+tions  use  the data-field, and that others elect to set it them-
+selves. An example of a special-routine that uses  a  text-string
+stored  in the data-field is SFUN_RANSAY, which, at random inter-
+vals, feeds the text to the 'say'-command.  The <time>  specifies
+how  often  the special routine is activated on an event-basis (0
+if only commands and the like) and the bits  specify  variability
+of the time field (see values.h SFB_XXX). Eg:
+
+special  RANSAY text "Oh my god, it is full of stars!"       time
+WAIT_SEC*60 bits SFB_TIME1
+
+This would cause activation of the special routine every 60  sec-
+onds  in the random interval described for SFB_TIME1 in values.h.
+The time should never be set to less than WAIT_SEC*3 (3  seconds)
+unless  zero.   The  possible special routines are defined in the
+file values.h and have a SFUN_ prefix along with the SFB_ macros.
+Note that most SFUNs are either buggy or take lots of memory, and
+they are or should be replaced with DIL functions.
+
+For example, the SFUN_POISON has a nasty bug that makes it poison
+everyone fighting, which shouldn't be, unless you intend the mobile
+to bite more than a person per round.
+
+You can also use a function, called dilcopy(), to copy templates
+on a unit. Example:
+
+money 1 GOLD_PIECE
+dilcopy engrave@midgaard(); /* Note the semi-colon */
+
+end
+
+
+ROOM section
+
+This section defines the rooms in the zone. Each room consists of
+a symbol, which is the identifier of the room; a number (possibly
+zero)  room  fields, and a trailing 'end', to mark the end of the
+room.
+
+The fields are as follows:
+
+movement <number>
+How hard it is to walk in and out of the room. The possible  val-
+ues are defined and described in values.h, and have SECT_ prefix-
+es.
+
+romflags <flags>
+Special flags for this room (room/object/mobile-flags; hence  the
+name).  The  values  are defined in values.h, and have the prefix
+ROOM_FL_.
+Actually they have UNIT_FL_* equivalents, and I strongly suggest
+that you combine the romflags with the flags definition (do not
+forget that ROOM_FL_SACRED becomes UNIT_FL_SACRED, and so).
+
+exit[<number>] to <symbol>, key <symbol>, keyword <stringlist>,
+open <flags>, descr <string> ;
+
+At least one of the subfields must be defined, and they  may  ap-
+pear  in  any  order. The separating commas are optional, whereas
+the trailing semicolon must be present.
+
+The macros NORTH, SOUTH, EAST, WEST, UP, and DOWN denote the  ex-
+its. Further, the macros north, south, east, west, up, down (low-
+ercase) are supplied. The macro north is defined to  exit[NORTH],
+etc. A valid exit definition is thus:
+
+exit[NORTH] to temple@midgaard keyword "temple";
+
+or:
+
+north to temple@midgaard keyword "temple";
+
+(note that the '{' and '}'s are not needed for the stringlist, if
+it contains only a single string.)
+
+The keywords can be used, for example, for the 'enter'-command in
+the game (eg, "enter shop").
+
+The  description  is seen by a player which tries to look in that
+direction. If none is defined, he/she sees "You  see  nothing  of
+interest.", or some such string.
+
+the  to-field says which room the exit leads to (it may be in an-
+other zone). If it is left undefined, the exit is 'blocked'.
+
+The flags for the open-subfield are defined in values.h, and have
+EX_ prefixes.
+
+The  key defines the key which can lock/unlock this door. If none
+is defined, the door cannot be locked/unlocked.
+
+Example:
+
+
+                        cluttered_room
+names {"cluttered room"}
+title "A Cluttered Room"
+descr
+"   You have entered a very cluttered room, in fact you find difficulty
+in finding an empty place to stand!  Scattered all about you are various
+maps made recently by explorers, as well as assorted trinkets from around
+the globe.  You notice an exit north, which appears to lead to Midgaard,
+and something looking like a hinge on the floor at your feet."
+
+extra {"various maps", "maps", "map"}
+"Newly received information allowed for these maps to be made. Though many
+died to ensure safe transport of this information, the contents will prove
+their value in time!"
+
+extra {"assorted trinkets", "trinkets", "trinket"}
+"All sorts of neat stuff it seems, you feel like a little child as you
+gaze in wonder at the plethora of fun looking toys. *sigh* It sure brings
+back the days when life was easier!"
+
+extra {"hinges", "hinge"}
+"Looks like there may be a hidden exit here! Could this be a trapdoor?"
+
+flags {UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+movement SECT_INSIDE
+north to midgaard/market_sq descr "The amazing city of Midgaard is there";
+down to death_room open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED, EX_HIDDEN}
+	key death_key keyword {"trapdoor", "door", "hinge", "floor"};
+SECRET_DOOR_DIFFICULTY(DOWN, 10)
+ALWAYS_LIGHT
+end   /* cluttered_room */
+
+
+-----------------------------
+
+OBJECT fields
+
+action <string>
+The  'action-description'. Currently, this string is only used to
+contain the text on notes - and most of the time, the notes' text
+should be written directly in the look at extra, since read and
+look give exactly the same result.
+
+value[<number>] <flags>
+This sets the element of the value-array associated with objects.
+The standard uses of this array are described elsewhere, and
+macros should be used whenever possible. A WEAPON_DEF (WPN_FIST,
+1,1) is always more descriptive than writing all the values (and
+shorter too).
+
+spell[<number>] <number>
+Associate  a  spell with this object. The spell-types (to be used
+as index) are defined in values.h,  with  the  prefix  SPL_.  The
+macro MSET_SPELL() should be used for this purpose.
+
+cost <money list>
+The standard price for this object. Used by shops, etc. The money
+list is a number followed by a money definition. Use  the  prede-
+fined  money  constants  XXX_PIECE  in  values.h. Example: cost 7
+SILVER_PIECE, 4 IRON_PIECE. Note that you should put the different
+coins in order, starting with PLATINUM_PIECE and ending with IRON_
+PIECE - again for clarity.
+
+rent <money list>
+The cost for storing this object for one day.  See  the  document
+wpn_arm  for  a description of rent with associated items. Speci-
+fied as 'cost' above.
+
+type <number>
+The type of object. The values are defined in values.h  with  the
+ITEM_ prefix. Note that many macros such as WEAPON_DEF already
+define the type of an item (in this case, ITEM_WEAPON).
+
+romflags <flags>
+Object flags. The values are defined in values.h with a OBJ_ pre-
+fix.
+
+Example:
+
+                        sacrifice_robe
+names {"sacrificial robe", "robe"}
+title "a sacrificial robe"
+descr "A dark black sacrificial robe lies here."
+extra {}
+"This robe is made of a very fine and delicate silken material.  However,
+you feel uneasy looking at it... the robe seems meant only for those who are
+preparing to die!"
+extra {"$identify"}
+"When worn,an enhanced dexterity is attained, but your knowledge
+of magic will weaken slightly."
+extra {"$improved identify}
+"When worn, this robe will add 3 to DEX, and reduce DIV by 1.  You will
+also receive a bonus in the war mattock skill."
+
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+flags {UNIT_FL_MAGIC}
+ARMOUR_FULL_PLATE(+15, +15)
+DEX_TRANSFER(+3)
+DIV_TRANSFER(-1)
+WEAPON_TRANSFER(WPN_WAR_MATTOCK, 25)
+weight 12
+cost 3 GOLD_PIECE
+rent 1 GOLD_PIECE
+special SFUN_RESTRICT_OBJ "Level = 85 Dex = 30"
+end   /* sacrifice_robe */
+
+
+
+MOBILE fields
+
+mana <number>
+Do not use, there's MSET_ABILITY.
+
+hit <number>
+Hitpoints. Do not use, MSET_ABILITY does that.
+
+money <money list>
+Wallet size, see 'cost' in object fields.
+
+exp <number>
+Experience.  A value of 0% .. 200%. See the monster document  for
+further explanation.  Default is 100%.
+
+
+sex <number>
+Gender, one of these:
+
+SEX_NEUTRAL
+SEX_MALE
+SEX_FEMALE
+
+(defined in values.h, and pretty obvious anyway, no?)
+
+level <number>
+
+race <number>
+Race. Values defined in values.h with the RACE_ prefix. Be sure
+to #define new races (and give them a number that fits their
+type, such as >RACE_OTHER_HUMANOID and <RACE_OTHER_MAMMAL in the
+case of a normal animal - this for the purpose of spells).
+
+attack <number>
+Attack type. Values defined in values.h with the prefix WPN_.
+Again, it has been replaced by the NATURAL_DEF macro.
+
+position <number>
+default <number>
+The  position  and  default position of the mobile. Values are in
+values.h - prefix POSITION_. When a monster is loaded it  is  put
+in  the  position  'position'.  When the monsters position equals
+'default' the 'descr' text will be shown  to  players,  otherwise
+the  monsters  title  along  with current position information is
+displayed.
+
+npcflags <flags>
+Mobile flags - defined in values.h; prefix NPC_.
+
+romflags <flags>
+Character flags - defined in values.h; prefix CHAR_.
+
+Again, both of these flags can added to the flags field, but there
+are no UNIT_ equivalent - thus, the original prefixes must be used,
+even if these flags are put in the flags field.
+
+hand <number>
+A measure for how much damage the mobile can  do  with  its  bare
+hand  (or  tentacles). See the monster and wpn_arm document for a
+detailed discussion of this attribute. Normally you should keep it
+at default value, and simply adjust your mob's weight (unless it
+is a very special mob, such as a powerful brownie boxer).
+
+ability [<number>] <number>
+Set an ability-value. The Ability-types (to be used as index) are
+defined  in  values.h, with the prefix ABIL_. See the monster and
+wpn_arm document for a detailed discussion of this attribute.
+
+
+weapon [<number>] <number>
+Set the skill in the usage of a certain weapon. Weapon-types  are
+defined  in values.h - prefix WPN_. Use the available MSET_WEAPON
+macro.  See the monster and wpn_arm document for a detailed  dis-
+cussion of this attribute.
+
+spell [<number>] <number>
+Set  the  mobile's  knowledge of a certain spell. Spell-types are
+defined in values.h with the  prefix  SPL_.   Use  the  available
+MSET_SPELL macro.  See the monster and wpn_arm document for a de-
+tailed discussion of this attribute.
+
+
+Example:
+                        human_sacrifice
+names {"human sacrifice", "sacrifice", "human"}
+title "A human sacrifice"
+descr "A human sacrifice waits here for his death."
+extra {}
+"   He looks very gaunt, almost to the point of starvation.  His bones
+show clearly through the skin and you can tell its been very long since
+his last meal.  There are tattoos all over his arms and legs, all seem
+to be of a dragon, one which you recognize as the dragon Queen."
+
+M_HUMAN_WARRIOR_SWORD(50,SEX_MALE)
+money 1 COPPER_PIECE
+
+/*  Dil to make the sacrifice 'sacrifice' himself */
+dilbegin sacrifice1();
+code {
+  :init:
+    heartbeat := PULSE_SEC*20;
+    on_activation((self.position <= POSITION_SLEEPING) or
+         (self.position == POSITION_FIGHTING), skip);
+  :start:
+    exec("emote shifts uneasily, obviously he is nervous.", self); pause;
+    exec("say My time has come now, pity me not my friend, it was a "+
+         "choice that I had to make.", self); pause;
+    exec("ponder", self); pause;
+    exec("emote gathers his wits and gets ready to do his master's "+
+         "bidding.", self); pause;
+    exec("sigh", self); pause;
+    exec("wave", self); pause;
+    exec("say I must feed my master Tiamat now, goodbye life!", self); pause;
+    exec("search trapdoor", self);
+    exec("unlock trapdoor", self);
+    exec("open trapdoor", self);
+    walkto(findroom("death_room@tiny_zone"));
+    pause;
+    goto init;
+}
+dilend
+end   /* human_sacrifice */
+
+
+-----------------------------
+
+RESET fields
+
+Any reset command may be proceeded by a pair of curly brackets {}
+containing  more reset commands. The commands inside the brackets
+will only be executed in case the associated command was success-
+ful.
+
+load udgaard/fido into midgaard/temple max 1
+{
+   load bone
+   load excrement into midgaard/temple
+   load bag
+   {
+      load apple
+   }
+}
+
+The  above example would load 'fido' into the temple, and if suc-
+cessful (i.e. if the max has not been  exceeded)  then  it  would
+nest into the brackets load a bone (in fido's inventory), load an
+excrement into the temple (same room as fido), load a  bag  (into
+fido) and put an apple inside the bag.
+
+max <num>
+This  command  is  always  part  of  another reset command (load,
+equip, etc.).  At reset time the entire world is scanned for  oc-
+curences of the loaded unit - only if the currently existing num-
+ber is less than <num> will the command be executed.
+
+local <num>
+This command is always  part  of  another  reset  command  (load,
+equip, etc.).  At reset time the location of which the unit is to
+be loaded into is scanned for occurences of the loaded unit - on-
+ly  if  the currently existing number is less than <num> will the
+command be executed.
+
+zonemax <num>
+This command is always  part  of  another  reset  command  (load,
+equip,  etc.).   At  reset  time  the  entire zone being reset is
+scanned for occurences of the loaded unit - only if the currently
+existing  number is less than <num> will the command be executed.
+
+load <symbol1> [into <symbol2>] [max <num>] [zonemax <num>]  [lo-
+cal <num>] [complete]
+Loads the unit <symbol1> into the location <symbol2>. If the load
+command is nested, the into <symbol2> defaults to the unit  which
+the command is inside. The complete flag is specified later.
+
+equip <symbol> position <num> [max <num>] [complete]
+Command is always used nested inside a loaded mobile to equip the
+object <symbol> on the mobile. Position can be  any  macro  value
+WEAR_ from values.h.
+
+follow  <symbol>  [max <num>] [zonemax <num>] [local <num>] [com-
+plete]
+Command is always used nested inside a loaded mobile to force the
+mobile <symbol> to follow the mobile.
+
+door <symbol> <num> <flags>
+The  command  is  used to reset door status. In the room <symbol>
+the door in the direction <num> gets its flags  set  to  <flags>.
+(Use  the  macros NORTH, EAST, SOUTH, WEST, UP and DOWN for <num>
+and the EX_ macros for the flags).
+
+purge <symbol>
+Inside the room <symbol> all units are purged from existence.
+
+remove <symbol1> in <symbol2>
+Removes all occurences of <symbol1> in the room <symbol2>.
+
+random <num>
+Make set of resets on a given chance (percent). For example:
+
+random 80 {
+   load captain into jail_room complete
+   {
+      equip magic_sword position WEAR_WIELD max 1
+      load bag
+      {
+         load ruby_ring max 1
+      }
+   } }
+
+complete
+Some of the above specified commands may be proceeded by the com-
+plete  flag. In the case where this flag is set, the unit is only
+loaded in case all immediate commands inside its nesting are exe-
+cuted successfully.  For example:
+
+
+load captain into jail_room complete
+{
+   equip magic_sword position WEAR_WIELD max 1
+   load bag
+   {
+      load ruby_ring max 1
+   }
+}
+
+In  this  case  the  captain  is  only loaded if the objects mag-
+ic_sword and bag are successfully loaded. In case  the  ruby_ring
+is  not  loaded this will have no effect on the complete flag. To
+make the ruby_ring affect to captains complete flag, the bag must
+also  have  specified a complete flag (because the bag would then
+not be complete, and thus the captain would not be complete).
+
+
+Example:
+
+See below.
+
+
+DIL section
+
+I won't go in the detail, since this is the point of another
+documentation, dil.txt (or maybe a new one is available, check
+out at your fellow admins).
+
+
+
+
+
+Example of a "complete" zone
+
+/*pwd:this_is_my_password*/
+#include <composed.h>
+%zone tiny_zone
+lifespan 20
+reset RESET_ANYHOW
+creators {"icculus", "venger"}
+
+notes "What can I say but this will be short and probably not a
+       very fun zone to adventure in!  Send all complaints to:
+       Andrew Cowan agcowan@turing.uncg.edu."
+
+help  "My, what a tiny zone you're in!  Beware the death room,
+       it's been said that visitors to this room often find
+       things mildly uncomfortable."
+
+%rooms
+
+                        cluttered_room
+names {"cluttered room"}
+title "A Cluttered Room"
+descr
+"   You have entered a very cluttered room, in fact you find difficulty
+in finding an empty place to stand!  Scattered all about you are various
+maps made recently by explorers, as well as assorted trinkets from around
+the globe.  You notice an exit north, which appears to lead to Midgaard,
+and something looking like a hinge on the floor at your feet."
+
+extra {"various maps", "maps", "map"}
+"Newly received information allowed for these maps to be made. Though many
+died to ensure safe transport of this information, the contents will prove
+their value in time!"
+
+extra {"assorted trinkets", "trinkets", "trinket"}
+"All sorts of neat stuff it seems, you feel like a little child as you
+gaze in wonder at the plethora of fun looking toys. *sigh* It sure brings
+back the days when life was easier!"
+
+extra {"hinges", "hinge"}
+"Looks like there may be a hidden exit here! Could this be a trapdoor?"
+
+flags {UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+movement SECT_INSIDE
+north to midgaard/market_sq descr "The amazing city of Midgaard is there";
+down to death_room open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED, EX_HIDDEN}
+	key death_key keyword {"trapdoor", "door", "hinge", "floor"};
+SECRET_DOOR_DIFFICULTY(DOWN, 10)
+ALWAYS_LIGHT
+end   /* cluttered_room */
+
+                        death_room
+names {"room of death", "death room"}
+title "The Room of Death"
+descr
+"   The stink is so deep, it seems to take on a life all its own and
+you are convinced it is actually visible!  Carcasses lay scattered about
+like so much rubbish, and splintered bones are arranged in a haphazard
+fashion all about you.  There looks to be some sort of nest in the corner
+of the room."
+
+extra {"stink"}
+"Yes, you can actually see this smell it is so powerful!"
+
+extra {"carcasses", "carcass", "corpse", "body"}
+"There are many, all perished in truly horrid ways!  Some are missing
+limbs, most appear chewed, and you notice charred flesh remaining on a few
+such corpses.  Definitely looks like a dragon's work."
+
+extra {"splintered bones", "bones", "bone"}
+"Something was very hungry for there is very little remaining on most
+of these bones, even the marrow looks to have been sucked out!"
+
+extra {"corner", "nest"}
+"This is definitely a nest here, and from what you can tell, the owner is
+very large!"
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+movement SECT_INSIDE
+up to cluttered_room open {EX_OPEN_CLOSE, EX_CLOSED}
+	descr "There is a door here." keyword {"door"};
+special SFUN_DEATH_ROOM "100" time WAIT_SEC*20
+end   /* death_room */
+
+%mobiles
+
+                        dragon_tiamat
+names {"tiamat", "dragon"}
+title "Tiamat"
+descr "Tiamat, the Queen of all evil dragon kind is here."
+extra {}
+"Tiamat is the most powerful evil dragon known to exist.  Her massive body
+is topped with the heads of all five of her guardian dragons.  Her claws are
+huge, and her scales are multi-colored.  She has come to this place to spawn
+evil dragons and obviously does not like your presence.  In a way, this dragon
+is very beautiful in all of her splendor, but at the same time, the sheer evil
+of this beast could make the strongest warrior cower in fear."
+
+level 160
+alignment -1000
+race RACE_DRAGON_GREEN
+sex SEX_FEMALE
+height 2650
+weight 5300
+money 4 PLATINUM_PIECE
+exp 50
+NATURAL_DEF(WPN_CLAW, ARM_PLATE)
+MSET_ABILITY(18,15,16,19,9,14,9,0)
+MSET_WEAPON(4,5,4,4,9,4)
+MSET_SPELL(1,1,1,1,1,1,11,20,11,11,11)
+special SFUN_COMBAT_MAGIC "cast fire breath"
+special SFUN_AGGRESSIVE time 20
+romflags {CHAR_DETECT_INVISIBLE}
+end   /* dragon_tiamat */
+
+                        human_sacrifice
+names {"human sacrifice", "sacrifice", "human"}
+title "A human sacrifice"
+descr "A human sacrifice waits here for his death."
+extra {}
+"   He looks very gaunt, almost to the point of starvation.  His bones
+show clearly through the skin and you can tell its been very long since
+his last meal.  There are tattoos all over his arms and legs, all seem
+to be of a dragon, one which you recognize as the dragon Queen."
+
+M_HUMAN_WARRIOR_SWORD(50,SEX_MALE)
+money 1 COPPER_PIECE
+dilcopy sacrifice1@tiny_zone();
+
+end   /* human_sacrifice */
+
+%objects
+
+                        sacrifice_robe
+names {"sacrificial robe", "robe"}
+title "a sacrificial robe"
+descr "A dark black sacrificial robe lies here."
+extra {}
+"This robe is made of a very fine and delicate silken material.  However,
+you feel uneasy looking at it... the robe seems meant only for those who are
+preparing to die!"
+extra {"$identify"}
+"When worn,an enhanced dexterity is attained, but your knowledge
+of magic will weaken slightly."
+extra {"$improved identify}
+"When worn, this robe will add 3 to DEX, and reduce DIV by 1.  You will
+also receive a bonus in the war mattock skill."
+
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+flags {UNIT_FL_MAGIC}
+ARMOUR_FULL_PLATE(+15, +15)
+DEX_TRANSFER(+3)
+DIV_TRANSFER(-1)
+WEAPON_TRANSFER(WPN_WAR_MATTOCK, 25)
+weight 12
+cost 3 GOLD_PIECE
+rent 1 GOLD_PIECE
+special SFUN_RESTRICT_OBJ "Level = 85 Dex = 30"
+end   /* sacrifice_robe */
+
+                        death_key
+names {"death key","key"}
+title "the Key to Death (Tiamat)"
+descr "A blood red key is here."
+extra {}
+"This key has an inscription of a dragon's head. It looks very
+old and perhaps you should take care not to lose it."
+
+type ITEM_KEY
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 3 IRON_PIECE
+weight 1
+end   /* death_key */
+
+                        ugly_sword
+names {"ugly sword", "sword"}
+title "an ugly sword"
+descr "An ugly sword has been left here"
+extra{}
+"This sword bears the mark of Tiamat, the wielder must be a human sacrifice
+in the last days of his life."
+
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_LONG_SWORD, +5, +5)
+WEAPON_SLAYER(RACE_HUMAN)
+weight 25
+cost 1 SILVER_PIECE
+rent 1 SILVER_PIECE
+end   /* ugly_sword */
+
+                        gnarled_sign
+names {"gnarled sign", "sign"}
+title "the gnarled sign"
+descr "A gnarled sign is here."
+extra {}
+"&lThe sign reads:
+
+        'Beware those who explore this zone!  While the zone
+        might be tiny in size, the mobs which you may find
+        here are anything but tiny!  It is rumored that even
+        the Queen of the dragons has taken up residence within
+        the boundaries of the tiny zone...'"
+weight 100
+type ITEM_NOTE
+end    /* gnarled_sign */
+
+%dil
+
+/*  Dil to make the sacrifice 'sacrifice' himself */
+dilbegin sacrifice1();
+var tiamat: unitptr;
+
+code {
+  :init:
+    heartbeat := PULSE_SEC*20;
+    on_activation((self.position <= POSITION_SLEEPING) or
+         (self.position == POSITION_FIGHTING), skip);
+  :start:
+    exec("emote shifts uneasily, obviously he is nervous.", self); pause;
+    exec("say My time has come now, pity me not my friend, it was a "+
+         "choice that I had to make.", self); pause;
+    exec("ponder", self); pause;
+    exec("emote gathers his wits and gets ready to do his master's "+
+         "bidding.", self); pause;
+    exec("sigh", self); pause;
+    exec("wave", self); pause;
+    exec("say I must feed my master Tiamat now, goodbye life!", self); pause;
+    exec("search trapdoor", self);
+    exec("unlock trapdoor", self);
+    exec("open trapdoor", self);
+    walkto(findroom("death_room@tiny_zone"));pause;pause;
+	tiamat := findunit(self,"Tiamat",FIND_UNIT_SURRO,null);
+	exec("say Finally you are here, my lunch.",tiamat);pause;
+	exec("emote eats "+self.title+".",tiamat);destroy(self);
+    pause;
+	quit;
+}
+dilend
+
+%reset
+
+door cluttered_room DOWN {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED, EX_HIDDEN}
+door death_room UP {EX_OPEN_CLOSE, EX_CLOSED}
+
+load human_sacrifice into cluttered_room max 1
+  {
+     equip blue_robe position WEAR_ABOUT
+     equip ugly_sword position WEAR_WIELD
+     load death_key
+  }
+
+load tiamat into death_room local 1
+
+
+%end

@@ -1,0 +1,5205 @@
+/*
+filename    midwalls
+password    2kpwd
+changedby   Ratlin
+EmailAdd
+request     compile
+version     13
+END HEADER*/
+
+#include <macros.h>
+
+%zone    midwalls
+title "City Walls of Midgaard@Mainland"
+lifespan 25
+reset RESET_ANYHOW
+creators {"isildur"}
+notes
+"This zone was written by Isildur as an addition to Midgaard, and
+serves as the walls for the same.  Zone written summer-winter 1996-97.
+Major thanks to whistler for doing a lot of work on the Walk Room function
+which helps to make this zone more neato. :)  This zone is for players
+level 40-50."
+
+
+%dil
+
+/* MS2020: Simplifying patrol guards */
+dilbegin lunch(lunchplace : string);
+external
+    integer walk_room@function (s:string,i:integer);    
+var
+    tf:integer;
+    i : integer;
+code
+{
+    heartbeat := PULSE_SEC * 5;
+    pause;
+    exec("say Gee... time for lunch.", self);
+
+    tf := walk_room@function(lunchplace, 9 * PULSE_SEC);
+    pause;
+
+    if (tf==TRUE) // We reached the destination
+    {
+        if (not transfermoney(self, null, 1 * COPPER_MULT))
+          i := transfermoney(null, self, 2 * COPPER_MULT);
+
+        heartbeat := PULSE_SEC*15;
+        exec("buy beef", self);
+        exec("buy coffee", self);
+        pause;
+        exec("sit", self);
+        pause;
+        exec("eat beef", self);
+        pause;
+        exec("drink coffee", self);
+        pause;
+
+        heartbeat := PULSE_SEC*SECS_PER_MUD_HOUR;
+        wait(SFB_TICK, TRUE);
+
+        heartbeat := PULSE_SEC*10;
+        exec("stand", self);
+        pause;
+        exec("say Back to work.", self);
+    }
+    heartbeat := PULSE_SEC*10;
+    pause;
+    exec("sigh", self);
+    return;
+}
+dilend
+
+
+dilbegin dinner(dinnerplace : string);
+external
+    integer walk_room@function(s:string, i:integer);    
+var
+    tf:integer;
+    i : integer;
+code
+{
+    heartbeat := PULSE_SEC * 5;
+    pause;
+    exec("say Oh Good... time for dinner.", self);
+    pause;
+
+    tf := walk_room@function(dinnerplace, 9 * PULSE_SEC);
+
+    if (tf==TRUE)
+    {
+        if (not transfermoney (self, null, 1 * COPPER_MULT))
+          i := transfermoney(null, self, 2 * COPPER_MULT);
+        heartbeat := PULSE_SEC*30;
+        exec("buy beef", self);
+        exec("buy coffee", self);
+        pause;
+        exec("sit", self);
+        pause;
+        exec("eat beef", self);
+        pause;
+        exec("drink coffee", self);
+        pause;
+
+        heartbeat := PULSE_SEC*SECS_PER_MUD_HOUR;
+        wait(SFB_TICK, TRUE);
+        heartbeat := PULSE_SEC*30;
+        exec("stand", self);
+        exec("say Back to work.", self);
+    }
+
+    heartbeat := PULSE_SEC*10;
+    pause;
+    exec("sigh", self);
+    return;
+}
+dilend
+
+
+// E.g. if wakehour is 6 then it will keep sleeping until 6am.
+dilbegin bedtime(bedplace : string, wakehour : integer);
+external
+    integer walk_room@function(s:string,i:integer);
+var
+    tf:integer;
+code
+{
+    heartbeat := PULSE_SEC * 5;
+    pause;
+    exec("yawn", self);
+    pause;
+
+    tf := walk_room@function(bedplace, 9 * PULSE_SEC);
+
+    if (tf==TRUE)
+    {
+        :pre_sleep:
+        heartbeat := PULSE_SEC*30;
+        exec("sleep", self);
+        pause;
+
+        :sleeping:
+        exec("snore", self);
+        heartbeat := PULSE_SEC*SECS_PER_MUD_HOUR;
+        wait(SFB_TICK, TRUE);
+        if(mudhour < wakehour)
+        {
+            goto sleeping;
+        }
+        heartbeat := PULSE_SEC*15;
+        exec("wake", self);
+    }
+
+    heartbeat := PULSE_SEC*10;
+    pause;
+    exec("stretch", self);
+    return;
+}
+dilend
+
+
+
+// locations is a list of places to visit on patrol
+dilbegin patrol(locations : stringlist);
+external
+    integer walk_room@function (s:string,i:integer);
+var
+    tf : integer;
+    i : integer;
+code
+{
+    heartbeat := PULSE_SEC*10;
+    pause;
+
+    i := 0;
+    while (i < length(locations))
+    {
+        tf := walk_room@function(locations.[i], PULSE_SEC * 8);
+        pause;
+        if (tf == TRUE)
+        {
+            exec("emote Speaks with the Guards.", self);
+        }
+        i:=i+1;
+    }
+
+    pause;
+    heartbeat := PULSE_SEC*10;
+
+    if (tf==TRUE)
+    {
+        pause;
+        exec("emote jots some notes on a piece of paper.", self);
+        pause;
+        exec("emote dispatches a runner to the captain.", self);
+    }
+    return;
+}
+dilend
+
+
+// Don't use any hour as 23 or it wont roll correctly (24 vs 0)
+dilbegin guardschedule(lunchhour : integer, lunchplace : string,
+                        dinnerhour:integer, dinnerplace : string,
+                        bedhour:integer, bedroom : string,
+                        wakehour:integer,
+                        patrollist : stringlist);
+external
+    integer walk_room@function (s:string,i:integer);
+    lunch(lunchplace : string);
+    dinner(dinnerplace : string);
+    bedtime(bedplace : string, wakehour : integer);
+    patrol(locations : stringlist);
+code
+{
+    on_activation((self.position == POSITION_FIGHTING), skip);
+
+    :start:
+    heartbeat := WAIT_SEC*5;
+    pause;
+
+    if((mudhour >= lunchhour) and (mudhour < lunchhour+1))
+    {
+        lunch(lunchplace);
+    }
+    if((mudhour >= dinnerhour) and (mudhour < dinnerhour+1))
+    {
+        dinner(dinnerplace);
+    }
+    if((mudhour > bedhour) and (mudhour < bedhour+1))
+    {
+        bedtime("rn_026@midwalls", wakehour);
+    }
+    else
+    {
+        patrol(patrollist);
+    }
+    goto start;
+}
+dilend
+
+
+
+%rooms
+			rn_003
+
+title "Northern Gate Tower"
+descr
+"In the bottom room of the northern gate tower, a ladder leads upwards.  
+There is a table standing in one corner, with some wooden chairs sitting 
+around it.  A weapon rack stands in another corner, and there are a few beds 
+for the gateguards. The gatehouse's main passage can be seen through the 
+arrow loops which line the walls."
+
+extra {"northern gatehouse", "gate tower", "gatehouse"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"ladder"}
+"This ladder leads to the upper rooms of the gate tower."
+extra {"wooden chairs", "chairs", "table"}
+"This table and chairs has been provided for the gateguards."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+extra {"weapon rack", "rack"}
+"This rack holds a few crossbows and some swords."
+extra {"beds"}
+"The gateguards find sleepy satisfaction in these beds."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+south to rn_002@midgaard 
+open {EX_OPEN_CLOSE, EX_CLOSED} 
+descr "A large oaken door." 
+keyword {"door"};
+up to rn_023
+descr "Northern Gate Tower";
+
+end
+
+			rn_004
+
+title "Southern Gate Tower"
+descr
+"In the bottom room of the southern gate tower, is a ladder leading upwards.
+There is a table standing in one corner, with some wooden chairs sitting
+around it. The floor is covered with some food scraps, and a few bones are
+scattered about. The gatehouse's main passage  can be seen through the arrow
+loops which line the walls."
+
+extra {"food scraps", "scraps", "floor", "bones"}
+"It looks as if the guards are none to careful about making a mess."
+extra {"southern gatehouse", "gate tower","gatehouse"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"ladder"}
+"This ladder leads to the upper rooms of the gatehouse."
+extra {"wooden chairs", "chairs", "table"}
+"This table and chairs has been provided for the gateguards."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+extra {"weapon rack", "rack"}
+"This rack holds a few crossbows and some swords."
+extra {"beds"}
+"The gateguards find sleepy satisfaction in these beds."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+north to rn_002@midgaard 
+open {EX_OPEN_CLOSE, EX_CLOSED} 
+descr "A large oaken door." 
+keyword {"door"};
+
+up to rn_021
+descr "Southern Gate Tower";
+end
+
+			rn_005
+
+title "North Western Tower"
+descr
+"The ground level of the massive Northwest tower roughly thirty feet wide.
+There is a spiral staircase leading down and up, while an immense oaken
+door is hung in the southern part of this tower.  The tower is built of
+large blocks of stone, and aside from a few cobwebs, this room is
+relatively bare."
+
+extra {"northwest tower", "tower"}
+"This is one of the massive towers which stand at the four corners of
+Midgaard."
+extra {"spiral staircase", "staircase"}
+"This staircase leads upwards to the next level of the tower, and
+downwards into the basement."
+extra {"oaken door", "door"}
+"This oaken door is much like the ones you have seen elsewhere in
+Midgaard."
+extra {"blocks", "stone"}
+"These block of stone were quarried south of Midgaard."
+extra {"cobwebs"}
+"These cobwebs are the home of fat and happy spiders."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+south to midgaard/wall_rd14 
+open {EX_OPEN_CLOSE, EX_CLOSED} 
+descr "A large oaken door." 
+keyword {"door"};
+
+up to rn_025
+descr "North Western Tower";
+down to rn_005a
+descr "Basement of the North Western Tower";
+end
+			rn_005a
+
+title "Basement of the North Western Tower"
+descr
+"The basement of this massive tower is dark and damp.  A chill air seems
+to flow from the very roots of this monolithic pillar.  Some grain is scattered
+about the floor, and a mouse scurries about here and there.
+A well sits in one corner of the room, to be used in times of siege.
+ A spiral staircase extends to the ground level of the north western tower."
+extra {"well"}
+"This well provides fresh water in time of need.  There is an immense
+stone cover on it."
+extra {"north western tower", "massive tower", "basement", "tower"}
+"You are standing in the dank and musty basement of the north west tower."
+extra {"spiral staircase", "staircase"}
+"This staircase leads upwards to the ground floor of the tower."
+extra {"blocks", "stone"}
+"These block of stone were quarried south of Midgaard."
+extra {"monolithic pillar", "pillar"}
+"The north west tower of the walls of Midgaard."
+extra {"grain"}
+"The grain looks moldy and stinks of rot."
+
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+up to rn_005
+descr "North Western Tower";
+end
+
+
+
+			rn_006
+
+title "Western Gate Tower"
+descr
+"The lowermost room of the western gate tower reeks of intestinal discharge.
+Some of the floor paving is cracked, and the walls appear to be covered
+with a slight slime.  A weapon rack stands in one corner, and
+there are a few beds for the gateguards.  The gatehouse's main passage can be
+seen through the arrow loops which line the walls.  There is a ladder leading upwards here."
+extra {"floor paving", "paving", "floor"}
+"It appears that something large and heavy was dropped on the floor,
+almost shattering the slate paving."
+extra {"walls", "slime"}
+"The walls here are covered with a green, oozing slime."
+extra {"western gatehouse", "gate tower", "gatehouse"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"ladder"}
+"This ladder leads to the upper rooms of the gatehouse."
+extra {"wooden chairs", "chairs", "table"}
+"This table and chairs has been provided for the gateguards."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+extra {"weapon rack", "rack"}
+"This rack holds a few crossbows and some swords."
+extra {"beds"}
+"The gateguards find sleepy satisfaction in these beds."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+east to rn_008@midgaard open {EX_OPEN_CLOSE, EX_CLOSED}
+	descr "A large oaken door." keyword {"door"};
+up to rn_027
+descr "Western Gate Tower";
+end
+
+			rn_009
+
+title "Eastern Gate Tower"
+descr
+"This is the bottom chamber of the eastern gate tower, and spy a ladder leading upwards.
+The ceiling here is reinforced with oaken
+timbers, and it appears to be sagging slightly.
+A weapon rack stands in one
+corner, and there are a few beds for the gateguards.
+The gatehouse's main passage can be seen through the arrow loops which line the walls."
+extra {"oaken timbers", "ceiling", "timbers"}
+"The timbers seem to be doing a good job at keeping the ceiling up."
+extra {"eastern gatehouse", "gate tower","gatehouse","tower"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"ladder"}
+"This ladder leads to the upper rooms of the gatehouse."
+extra {"wooden chairs", "chairs", "table"}
+"This table and chairs has been provided for the gateguards."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+extra {"weapon rack", "rack"}
+"This rack holds a few crossbows and some swords."
+extra {"beds"}
+"The gateguards find sleepy satisfaction in these beds."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+west to rn_008@midgaard open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+up to rn_029
+descr "Eastern Gate Tower";
+end
+
+				rn_010
+
+title "North Eastern Tower"
+descr
+"this is the ground level of the massive northeast tower.
+There is a spiral staircase leading down and up, while a gigantic oaken
+door is hung in the southern part of this tower.  Scattered about
+the floor is bit of loose gravel, and a sack of flower leans
+against the wall.  The massive tower is built of large blocks of stone, and could withstand any assault."
+extra {"loose gravel", "gravel", "floor"}
+"You should be careful, and watch your footing."
+extra {"sack of flour", "flour", "sack"}
+"Perhaps Barnie was too tired to lug this bag back to his shop."
+extra {"northeast tower", "tower"}
+"This is one of the massive towers which stand at the four corners of Midgaard."
+extra {"spiral staircase", "staircase"}
+"This staircase leads upwards to the next level of the tower, and
+downwards into the basement."
+extra {"oaken door", "door"}
+"This oaken door is much like the ones you have seen elsewhere in
+Midgaard."
+extra {"blocks", "stone"}
+"These block of stone were quarried south of Midgaard."
+extra {"cobwebs"}
+"These cobwebs are the home of fat and happy spiders."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+south to midgaard/wall_rd11 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+up to rn_030
+descr "North Eastern Tower";
+down to rn_010a descr
+"Basement of the North Eastern Tower";
+end
+
+				rn_010a
+
+title "Basement of the North Eastern Tower"
+descr
+"This room is quite dry, and looks well suited to the task for which it
+was designed.  Barrels, sacks of grain, and every imaginable sort of
+iron rations are stacked here in case of siege.  Aside from these provisions,
+the room is relatively bare, and a spiral staircase leads upwards."
+extra{"sacks of grain", "iron rations", "barrels", "rations", "grain", "sacks"}
+"The piles of provisions are both enormous and astounding."
+extra {"loose gravel", "gravel", "floor"}
+"You should be careful, and watch your footing."
+extra {"sack of flour", "flour", "sack"}
+"Perhaps Barnie was too tired to lug this bag back to his shop."
+extra {"northeast tower", "tower"}
+"This is one of the massive towers which stand at the four corners of Midgaard."
+extra {"spiral staircase", "staircase"}
+"This staircase leads upwards to the next level of the tower, and
+downwards into the basement."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+up to rn_010
+descr "North Eastern Tower";
+end
+			rn_011
+
+title "Northern Gate Tower"
+descr
+"The lower chamber of the northern gate towers is dimly lit.
+Some rough chairs lean against the wall,
+and a broken sword lies gathering dust.  A weapon rack stands in one
+corner, and there are a few beds for the gateguards.  The gatehouse's main passage can be seen through the arrow loops which line the walls.  A ladder
+leads up to the next level in this tower."
+extra {"broken sword", "sword"}
+"This blade, though broken, appears to be extremely sharp."
+extra {"dust"}
+"Poof! You cough a few times."
+extra {"northern gatehouse", "gatehouse"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"ladder"}
+"This ladder leads to the upper rooms of the gatehouse."
+extra {"wooden chairs", "rough chairs", "chairs", "table"}
+"The chairs have been provided for the gateguards."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+extra {"weapon rack", "rack"}
+"This rack holds a few crossbows and some swords."
+extra {"beds"}
+"The gateguards find sleepy satisfaction in these beds."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+south to rn_012@midgaard open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+up to rn_031
+descr "Northern Gate Tower";
+end
+
+			rn_014
+
+title "Southern Gate Tower"
+descr
+"There is a ladder leading upwards from the ground floor of this gate tower.
+In the center of the room is a table,
+and the wooden chairs which should be standing around it have been
+knocked over.  A weapon rack stands in one
+corner, and there are a few beds for the gateguards.  The gatehouse's main passage can be seen through the arrow loops which line the walls."
+extra {"southern gatehouse", "gatehouse"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"ladder"}
+"This ladder leads to the upper rooms of the gatehouse."
+extra {"table", "chairs"}
+"This table and chairs has been provided for the gateguards."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+extra {"weapon rack", "rack"}
+"This rack holds a few crossbows and some swords."
+extra {"beds"}
+"The gateguards find sleepy satisfaction in these beds."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+north to rn_012@midgaard open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+up to rn_033
+descr "Southern Gate Tower";
+end
+
+				rn_015
+
+title "South Eastern Tower"
+descr
+"The south eastern tower is as impressive as the other three which
+protect the City of Midgaard.  A spiral staircase leads up and down,
+and an immense oaken door is hung in the northern part of this lower level.
+The floor is worn smooth with the passage of many feet, and there is a
+rusty sword sitting in a dark corner near the stairs.  The air smells musty,
+and carries a slight tang, while torches sputter in their racks."
+extra {"floor"}
+"The massive blocks of the floor are quite smooth to the touch."
+extra {"rusty sword", "sword"}
+"This sword looks as if it has been disused for many years."
+extra {"torches", "racks"}
+"The torches are thick, and coated with a tar like substance."
+extra {"south eastern tower", "tower"}
+"This is one of the massive towers which stand at the four corners of Midgaard."
+extra {"spiral staircase", "staircase"}
+"This staircase leads upwards to the next level of the tower, and
+downwards into the basement."
+extra {"oaken door", "door"}
+"This oaken door is much like the ones you have seen elsewhere in
+Midgaard."
+extra {"blocks", "stone"}
+"These block of stone were quarried south of Midgaard."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+north to midgaard/wall_rd6 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+up to rn_035
+descr "South Eastern Tower";
+down to tower_0
+descr "Basement of the South Eastern Tower";
+end
+
+tower_0
+	title "Basement of the South Eastern Tower"
+	names {"tower", "guard room", "room"}
+	descr
+	"The cold stone walls of this basement are slick with slime and water.  Torches sputter in their racks on the wall, and set up in the center of the room is a table, some chairs, and a bench.  A spiral staircase leads upwards to the next level in this tow
+
+
+
+
+
+
+
+
+
+
+
+
+
+er."
+
+	movement SECT_CITY
+	ALWAYS_LIGHT
+	flags {UNIT_FL_NO_WEATHER}
+
+	extra {"light", "torches", "torch", "wall", "rack"}
+	"The torches are built into the wall and cannot be taken, on closer inspection you notice the flame
+	is not quite right and you suspect they are magically enhanced."
+
+	extra {"bench", "table", "chairs", "furniture"}
+	"The furniture in the room is simple but sturdy, built from solid wood from the cypress forest."
+
+	up to rn_015 descr
+	"South Eastern Tower";
+end
+
+			rn_016
+
+title "Eastern Gate Tower"
+descr
+"The lowermost room of the eastern gate tower is dark and ominous.
+A pair of old boots sit on the floor,
+and some clothing lays in a rumpled pile.  A weapon rack stands in one
+corner, and some tossed beds rest on the floor.  The gatehouse's main passage can be seen through the arrow loops which line the walls."
+extra {"pair of boots", "old boots", "boots"}
+"These boots look as if they were loved by the wearer."
+extra {"rumpled pile","clothing", "pile"}
+"You see what appears to be a tabard and a pair of pants or two."
+extra {"eastern gatehouse", "gatehouse"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"ladder"}
+"This ladder leads to the upper rooms of the gatehouse."
+extra {"chairs", "table"}
+"This table and chairs has been provided for the gateguards."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+extra {"weapon rack", "rack"}
+"This rack holds a few crossbows and some swords."
+extra {"beds"}
+"The gateguards find sleepy satisfaction in these beds."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+west to rn_017@midgaard open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+up to rn_037
+descr "Eastern Gate Tower";
+end
+			rn_019
+
+title "Western Gate Tower"
+descr
+"The lower chamber of the western gate tower is blackened with soot and grime.
+It is hardly well kept, which is surpising in comparison to similar chambers along the walls.  It looks as if there was a fire here recently, and the air is thick with the smell of soot.  Small bits of charred wood and metal lie scattered about, but other
+
+
+
+
+
+
+
+
+
+
+
+
+
+wise, there is nothing in this room except for a ladder leading upwards.  The gatehouse's main passage can be seen through the arrow loops which line the walls."
+extra {"charred wood", "metal", "wood"}
+"These look to be the remains of a fire."
+extra {"grime", "soot"}
+"The residue left on the walls after a fire."
+extra {"western gatehouse", "gatehouse"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"ladder"}
+"This ladder leads to the upper rooms of the gatehouse."
+extra {"table", "chairs"}
+"This table and chairs has been provided for the gateguards."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+east to rn_017@midgaard open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+up to rn_039
+descr "Western Gate Tower";
+
+end
+
+
+			rn_021
+title "Southern Gate Tower"
+descr
+"This is the upper chamber of the southern gatehouse.  The
+room extends far to the north, and northward can see some sort of machinery.
+Some crossbow bolts are scattered across the floor,
+and the walls looks to be slick with water. The arrow loops in the walls
+provide a good view of the bridge, and the moat below.  There is a
+ladder leading down, and another leading upwards."
+extra {"crossbow bolts", "bolts"}
+"They are about seven inches long, with razor sharp tips."
+extra {"walls", "water"}
+"A faint sheen of dampness covers the walls."
+extra {"southern gatehouse", "gatehouse"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"ladder"}
+"These ladders lead to the upper and lower rooms of the gatehouse."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+extra {"machinery"}
+"It looks to be a winch of some sort."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+north to rn_022
+descr "Winch Room";
+up to rn_081
+descr "Southern Gate Tower";
+down to rn_004
+descr "Southern Gate Tower";
+end
+
+
+			rn_022
+
+title "Winch Room"
+descr
+"This room houses the winch which is used to raise the gates.
+The winch is massive, and looks as if it would take ten people to turn it.
+Through the murder holes in the floor, people can be seen passing through
+the gates.  The two wrought iron portcullises are also raised into this
+room, ready to be dropped in an instant.  The arrow loops in the wall
+provide a good view of the bridge and the moat below.  A large cauldron
+of oil sits next to each murder hole."
+extra {"large cauldron", "cauldron", "oil"}
+"In case of attack, this oil can be heated to scaulding temperature
+and pourn down upon those trapped within the gate house."
+extra {"winch"}
+"The winch has large spokes radiating from in, and ropes which are
+connected to counterweights, which are in turn connected to the massive
+chains connected to the bridge."
+extra {"murder holes", "holes"}
+"They are large square holes in the floor used for throwing items
+such as rocks and boiling oil upon attackers who have breached the
+gates."
+extra {"wrought iron portcullises", "iron portcullises", "portcullises", "portcullis"}
+"These wrought iron grates can be dropped down to block passage through the
+gates."
+extra {"arrow loops", "loops"}
+"Through these holes can be shot arrow at attackers."
+extra {"bridge"}
+"The massive drawbridge of the city gates."
+extra {"moat"}
+"You probably wouldnt want to fall in there."
+
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+north to rn_023
+descr "Northern Gate Tower";
+south to rn_021
+descr "Southern Gate Tower";
+end
+
+
+			rn_023
+title "Northern Gate Tower"
+descr
+"This is the upper chamber of the northern gate tower, and to the south is some sort of machinery.  There is a clear view of the bridge below, and
+can see the moat stretching along the wall.   A ladder leads
+down, and another leads upwards."
+extra {"northern gatehouse", "gatehouse"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"ladder"}
+"These ladders lead to the upper and lower rooms of the gatehouse."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+extra {"machinery"}
+"It looks to be a winch of some sort."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+south to rn_022
+descr "Winch Room";
+up to rn_043
+descr "Northern Gate Tower";
+down to rn_003
+descr "Northern Gate Tower";
+end
+
+
+			rn_024
+
+title "The Stone Tankard"
+descr
+"This smoky room is the bar and tavern for the guards of the city
+walls.  Large stone walls surround the room, and a fire burns on the eastern
+side of this room.  A large bar runs along the northern end, and the
+room is filled with chairs and tables.  A staircase leads upwards to the
+top of the city walls."
+extra {"stone walls", "walls"}
+"The walls are blackened with smoke, and there are three arrow loops on
+the western wall."
+extra {"fire"}
+"The fire is warm and inviting."
+extra {"large bar", "bar"}
+"The bar is covered with mugs and bottles."
+extra {"chairs", "tables"}
+"Here and there, someone is passed out in a chair, or laying face
+down on a table."
+extra {"staircase"}
+"This stone staircase leads upwards to the city walls."
+extra {"bastion"}
+"This is an enclosed defensive point along the city walls."
+
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+up to rn_045
+descr "Bastion";
+end
+
+			rn_025
+
+title "In the tower"
+descr
+"This large circular chamber is midway up in the
+North Western tower.
+A spiral staircase runs up and down, and the large stone steps are worn
+from the passage of many feet."
+extra {"large circular chamber", "north western tower","circular chamber",
+"large chamber", "chamber", "tower"}
+"You are standing in a chamber in the middle of the tower."
+extra {"spiral staircase", "staircase"}
+"This staircase leads upwards and downwards in the tower."
+extra {"large stone steps", "stone steps", "steps"}
+"These stone steps are almost polished smooth by the passage of many
+feet."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+up to rn_047
+descr "In the Tower";
+down to rn_005
+descr "North Western Tower";
+end
+
+			rn_026
+
+title "Guard Dorm"
+descr
+"This long room is filled with metal bunk beds.  There is a
+trunk before each bed, and some crossbows hang from the walls.
+Here and there, a guard is tossing in his sleep.
+You can pass up a staircase into the bastion."
+extra {"metal bunk beds","bunk beds", "beds"}
+"These beds are where the guards sleep."
+extra {"crossbows"}
+"These are the choice weapon for use with an arrow loop."
+extra {"staircase"}
+"This staircase looks well used."
+extra {"bastion"}
+"This is an enclosed defensive point along the city walls."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}
+
+movement SECT_CITY
+up to rn_049
+descr "Bastion";
+end
+			rn_027
+
+title "Western Gate Tower"
+descr
+"The upper chamber of the western gatehouse is clean and free of all grime.  The
+room extends far to the east, and there appears to be some sort of machinery
+in the next room.  Through the arrow loops in the walls can be seen the
+city of Midgaard.  The floor here is quite dirty,
+and some dust clouds fill the air.  There is a ladder leading down, and another leading upwards."
+extra {"floor", "dust"}
+"It appears that this room has been left uncleaned for ages."
+extra {"western gatehouse", "gatehouse"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"ladder"}
+"These ladders lead to the upper and lower rooms of the gatehouse."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+extra {"machinery"}
+"It looks to be a winch of some sort."
+extra {"midgaard"}
+"Ahhh, What a great city!"
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+east to rn_028
+descr "Winch Room";
+up to rn_051
+descr "Western Gate Tower";
+down to rn_006
+descr "Western Gate Tower";
+end
+
+			rn_028
+
+title "Winch Room"
+descr
+"This room houses the winch which is used to raise the gates.
+The winch is massive, and looks as if it would take ten people to turn it.
+Through the murder holes in the floor, people can be seen passing through
+the gates.  The two wrought iron portcullises are also raised into this
+room, ready to be dropped in an instant.  The arrow loops in the wall
+provide a good view of the bridge and the moat below.  Aside from
+the cauldrons of oil next to the murder holes, there is a large
+pile of rocks."
+extra {"large pile of rocks", "pile of rocks", "rocks", "pile"}
+"These rocks can be thrown through the murder holes at attackers."
+extra {"cauldrons of oil", "cauldrons", "oil"}
+"This oil can be heated, and pourn down upon those who breach
+the gates in an attack."
+extra {"winch"}
+"The winch has large spokes radiating from in, and ropes which are
+connected to counterweights, which are in turn connected to the massive
+chains connected to the bridge."
+extra {"murder holes", "holes"}
+"They are large square holes in the floor used for throwing items
+such as rocks and boiling oil upon attackers who have breached the
+gates."
+extra {"wrought iron portcullises", "iron portcullises", "portcullises", "portcullis"}
+"These wrought iron grates can be dropped down to block passage through the
+gates."
+extra {"arrow loops", "loops"}
+"Through these holes can be shot arrow at attackers."
+extra {"bridge"}
+"The massive drawbridge of the city gates."
+extra {"moat"}
+"You probably wouldnt want to fall in there."
+
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+east to rn_029
+descr "Eastern Gate Tower";
+west to rn_027
+descr "Western Gate Tower";
+end
+
+			rn_029
+
+title "Eastern Gate Tower"
+descr
+"The upper chamber of the eastern gate tower has fresh air coursing through it.  
+The room extends far to the west, and there is some sort of machinery in the next room.  
+Hanging from the wall are a pair of shields, and a large halberd is lying on the ground.
+The arrow loops in the walls provide a good view of the bridge and the moat 
+below.  There is a ladder leading down, and another leading upwards."
+
+extra {"shields", "wall"}
+"These shields bear the Midgaard coat of arms."
+extra {"large halberd", "halberd"}
+"A gruesome weapon indeed."
+extra {"eastern gatehouse", "gatehouse"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"ladder"}
+"These ladders lead to the upper and lower rooms of the gatehouse."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+extra {"machinery"}
+"It looks to be a winch of some sort."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+west to rn_028
+descr "Winch Room";
+up to rn_053
+descr "Eastern Gate Tower";
+down to rn_009
+descr "Eastern Gate Tower";
+end
+			rn_030
+
+title "In the tower"
+descr
+"This large circular chamber is midway up in the north eastern tower.
+It is amazing that the builders could craft such a structure.  A spiral 
+staircase with large stone steps leads upwards and downwards."
+
+extra {"large circular chamber", "circular chamber", "large chamber", "structure", "chamber"}
+"You are standing in a chamber in the middle of the tower."
+extra {"spiral staircase", "staircase"}
+"This staircase leads upwards and downwards in the tower."
+extra {"large stone steps", "stone steps", "steps"}
+"These stone steps are almost polished smooth by the passage of many
+feet."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+down to rn_010
+descr "North Eastern Tower";
+up to rn_057
+descr "In the Tower";
+end
+
+			rn_031
+
+title "Northern Gate Tower"
+descr
+"This upper chamber the northern gate tower smells clean and fresh.  The
+room extends far to the south, and some sort of machinery can be seen
+in the next room.  Sitting on the floor is a sack of potatoes, and there
+is a pile of medium sized rocks in one corner.
+The arrow loops in the walls give a fabulous view
+of the bridge and the moat below.  There is a ladder leading down, and
+another leading upwards."
+extra {"sack of potatos", "sack"}
+"These potatos are quite large."
+extra {"medium sized rocks", "rocks", "pile"}
+"You get the impression that these are used in conjunction with the murder
+holes in the winch room."
+extra {"northern gatehouse", "gatehouse"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"ladder"}
+"These ladders lead to the upper and lower rooms of the gatehouse."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+extra {"machinery"}
+"It looks to be a winch of some sort."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+south to rn_032
+descr "Winch Room";
+up to rn_061
+descr "Northern Gate Tower";
+down to rn_011
+descr "Northern Gate Tower";
+end
+
+			rn_032
+
+title "Winch Room"
+descr
+"This room houses the winch which is used to raise the gates.
+The winch is massive, and looks as if it would take ten people to turn it.
+Through the murder holes in the floor, people can be seen passing through
+the gates.  The two wrought iron portcullises are also raised into this
+room, ready to be dropped in an instant.  The arrow loops in the wall
+provide a good view of the bridge and the moat below.  A cauldron of oil
+sits by each murder hole."
+extra {"cauldron of oil", "cauldron", "oil"}
+"This oil can be heated and pour down on people who have breached the gates."
+extra {"winch"}
+"The winch has large spokes radiating from in, and ropes which are
+connected to counterweights, which are in turn connected to the massive
+chains connected to the bridge."
+extra {"murder holes", "holes"}
+"They are large square holes in the floor used for throwing items
+such as rocks and boiling oil upon attackers who have breached the
+gates."
+extra {"wrought iron portcullises", "iron portcullises", "portcullises", "portcullis"}
+"These wrought iron grates can be dropped dow to block passage through the
+gates."
+extra {"arrow loops", "loops"}
+"Through these holes can be shot arrow at attackers."
+extra {"bridge"}
+"The massive drawbridge of the city gates."
+extra {"moat"}
+"You probably wouldnt want to fall in there."
+
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+north to rn_031
+descr "Northern Gate Tower";
+south to rn_033
+descr "Southern Gate Tower";
+end
+
+
+			rn_033
+
+title "Southern Gate Tower"
+descr
+"The upper chamber of this southern gate tower is caked in grime.
+The ceiling is covered in a black soot, and it is obvious
+that a fire might have occurred here at one time.  The room extends far to
+the north, and some sort of machinery can be seen in the next room.  The
+arrow loops in the walls give a good view of the bridge and the moat
+below.  There is a ladder leading down, and another leading upwards."
+extra {"black soot","ceiling", "grime", "soot"}
+"The walls and ceiling of this part of the gatehouse are charred and sooty."
+extra {"southern gatehouse", "gatehouse"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"ladder"}
+"These ladders lead to the upper and lower rooms of the gatehouse."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+extra {"machinery"}
+"It looks to be a winch of some sort."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+north to rn_032
+descr "Winch Room";
+up to rn_063
+descr "Southern Gate Tower";
+down to rn_014
+descr "Southern Gate Tower";
+end
+
+			rn_034
+
+title "Armory"
+descr
+"This armory hosts an enormous cache of weapons.
+Crossbows hang from the walls, swords rest in racks,
+spears line the walls, axes, maces, and any other imaginable weapon
+is here.  A staircase leads upwards into the bastion."
+extra {"staircase"}
+"This staircase looks well used."
+extra {"bastion"}
+"This is an enclosed defensive point along the city walls."
+extra {"crossbows", "weapons", "swords", "spears", "racks", "walls","maces","axes"}
+"There are a lot of weapons in this room."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+up to rn_065
+descr "Bastion";
+end
+
+			rn_035
+
+title "In the tower"
+descr
+"This large circular chamber is midway up in the south eastern tower.
+A spiral staircase runs up and down, and the large stone steps are worn
+from the passage of many feet."
+extra {"large circular chamber", "circular chamber","large chamber","chamber"}
+"You are standing in a chamber in the middle of the tower."
+extra {"spiral staircase", "staircase"}
+"This staircase leads upwards and downwards in the tower."
+extra {"large stone steps", "stone steps", "steps"}
+"These stone steps are almost polished smooth by the passage of many
+feet."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+up to rn_070
+descr "In the Tower";
+down to rn_015
+descr "South Eastern Tower";
+end
+
+			rn_036
+
+title "Guard Dorm"
+descr
+"This long room is filled with bunk beds for the guards to sleep in.  There are a
+few trunks on the floor, and some crossbows hang from the walls.
+Here and there, a guard snores in his sleep.  A staircase leads upwards into the bastion."
+extra {"bunk beds", "beds"}
+"These beds are where the guards sleep."
+extra {"crossbows"}
+"These are the choice weapon for use with an arrow loop."
+extra {"staircase"}
+"This staircase looks well used."
+extra {"bastion"}
+"This is an enclosed defensive point along the city walls."
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}
+
+movement SECT_CITY
+up to rn_068
+descr "Bastion";
+end
+
+			rn_037
+
+title "Eastern Gate Tower"
+descr
+"A few large blankets are hanging from the walls in this eastern gate tower.
+A rough wooden ladder leads down here, and another leads upwards.
+The room extends far to the west, and some sort of machinery can be seen
+in the next room.  The arrow loops in the walls give an expansive view
+of the bridge and the moat below."
+extra {"large blankets", "blankets", "doorway"}
+"You might imagine that these are used to fight back the cold of winter."
+extra {"eastern gatehouse", "gatehouse"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"rough wooden ladder", "wooden ladder", "ladder"}
+"These ladders lead to the upper and lower rooms of the gatehouse."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+extra {"machinery"}
+"It looks to be a winch of some sort."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+west to rn_038
+descr "Winch Room";
+up to rn_071
+descr "Eastern Gate Tower";
+down to rn_016
+descr "Eastern Gate Tower";
+end
+			rn_038
+
+title "Winch Room"
+descr
+"This room houses the  winch that is used to raise the gates.
+The winch is massive, and looks as if it would take ten people to turn it.
+Through the murder holes in the floor, people can be seen passing through
+the gates.  The two wrought iron portcullises are also raised into this
+room, ready to be dropped in an instant.  The arrow loops in the wall
+provide a good view of the bridge and the moat below."
+extra {"winch"}
+"The winch has large spokes radiating from in, and ropes which are
+connected to counterweights, which are in turn connected to the massive
+chains connected to the bridge."
+extra {"murder holes", "holes"}
+"They are large square holes in the floor used for throwing items
+such as rocks and boiling oil upon attackers who have breached the
+gates."
+extra {"wrought iron portcullises", "iron portcullises", "portcullises", "portcullis"}
+"These wrought iron grates can be dropped dow to block passage through the
+gates."
+extra {"arrow loops", "loops"}
+"Through these holes can be shot arrow at attackers."
+extra {"bridge"}
+"The massive drawbridge of the city gates."
+extra {"moat"}
+"You probably wouldnt want to fall in there."
+
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+west to rn_039
+descr "Western Gate Tower";
+east to rn_037
+descr "Eastern Gate Tower";
+end
+
+			rn_039
+
+title "Western Gate Tower"
+descr
+"This upper room of the western gate tower was definitely ravaged
+by fire at some time or another.  The roof beams are charred, though still
+appear to be quite strong.  This room extends far to the east,
+and there appears to be some sort of machinery in the next room.  The arrow loops
+in the walls give provide a good view of the bridge, and the moat below.
+There is a ladder leading down, and another leading upwards."
+extra {"roof beams", "beams", "roof"}
+"Hot stuff!  Must have been a scorcher."
+extra {"western gatehouse", "gatehouse"}
+"This gatehouse is the home for the gate guards, and one of the
+main protective points for the gate itself."
+extra {"ladder"}
+"These ladders lead to the upper and lower rooms of the gatehouse."
+extra {"arrow loops", "loops"}
+"Arrows can be fired through these narrow slits at attackers who have
+breached the gates."
+extra {"machinery"}
+"It looks to be a winch of some sort."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+east to rn_038
+descr "Winch Room";
+up to rn_073
+descr "Western Gate Tower";
+down to rn_019
+descr "Western Gate Tower";
+end
+
+			rn_040
+
+title "In the tower"
+descr
+"This large circular chamber is in the middle of the south west tower.
+A spiral staircase runs up and down, and the large stone steps are worn
+from the passage of many feet."
+extra {"large circular chamber", "circular chamber","large chamber","chamber"}
+"You are standing in a chamber in the middle of the tower."
+extra {"spiral staircase", "staircase"}
+"This staircase leads upwards and downwards in the tower."
+extra {"large stone steps", "stone steps", "steps"}
+"These stone steps are almost polished smooth by the passage of many
+feet."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+up to rn_077
+descr "In the Tower";
+down to ent_tower@sorcerer;
+end
+
+			rn_041
+
+title "Kitchen"
+descr
+"This room is filled with pots and pans, and there are a number of long
+tables in the southern end.  The smell of roasted meat reaches fills the air.
+There appears to be a few puddles of drool on the floor.
+A staircase leads upwards into the bastion."
+extra{"puddles","drool"}
+"They appear to be a bit slimy."
+extra {"pots", "pans"}
+"These would be used for cooking food, or bonking would be theives
+on the head."
+extra {"drool"}
+"You should learn to control that nasty habit."
+extra {"staircase"}
+"This staircase looks well used."
+extra {"bastion"}
+"This is an enclosed defensive point along the city walls."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+up to rn_079
+descr "Bastion";
+end
+
+
+			rn_043
+
+title "Northern Gate Tower"
+descr
+"From the roof of the northern gate tower, the bridge across the
+moat appears quite a bit smaller. To the south and across a gap
+the southern gatehouse is visble, and the wall walk extends to the north.
+The Cypress forest grows west of here, and the city of Midgaard lies to the east.
+There is a ladder leading downwards into the gate tower."
+extra {"northern gatehouse", "gatehouse","roof"}
+"From this position, you could easily assail anyone who might dare
+to attack the gate."
+extra {"southern gatehouse"}
+"The southern gatehouse looks much the same as the one you are standing
+on."
+extra {"cypress forest"}
+"This is the forest separating Midgaard and Udgaard."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"ladder"}
+"This ladder is made of wood."
+extra {"bridge"}
+"The brige, while massive, looks much smaller from this high."
+extra {"wall walk", "walls"}
+"These massive walls are built of stone and protect the city of Midgaard."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+north to rn_044
+descr "Along the Wall";
+down to rn_023
+descr "Northern Gate Tower";
+end
+
+			rn_044
+
+title "Along the Wall"
+descr
+"Atop the mighty walls of Midgaard, the lands are visible for miles in every direction.
+To the north is a massive stone bastion, while to the west
+the tops of the trees in the Cypress Forest can be seen.  To the east over the
+rooftops is the glorious Midgaard Cathedral, and to the south is one of Midgaard's
+gate towers."
+extra {"tops of the trees", "trees", "tops"}
+"The trees grow together quite densely."
+extra {"rooftops"}
+"These are the dwellings and businesses of Midgaard."
+extra {"mighty wall", "wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"massive stone bastion", "stone bastion","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"midgaard cathedral", "cathedral"}
+"The cathedrals spires seem to be about level with this wall."
+extra {"cypress forest"}
+"This is the forest separating Midgaard and Udgaard."
+extra {"city", "midgaard"}
+"The city looks quite a bit smaller from this point of view."
+extra {"city gates","gates"}
+"You realize that the gates are quite large."
+
+
+movement SECT_CITY
+north to rn_045
+descr "Bastion";
+south to rn_043
+descr "Northern Gate Tower";
+end
+
+			rn_045
+
+title "Bastion"
+descr
+"This stone chamber provides a defensive point along the Midgaard
+city wall.  It is completely enclosed, save for a few arrow loops in the
+walls.  There is a small charcoal burner here, and a ladder leads
+downwards.   The chatter of some people can be heard from below, and
+faint whisps of smoke pass upwards."
+extra {"massive stone bastion", "stone bastion","stone chamber", "chamber","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"arrow loops", "loops"}
+"From these you can shoot arrows at people with relative safety."
+extra {"charcoal burner", "burner"}
+"This burner allows the guards to warm themselves when it gets cold outside."
+extra {"ladder"}
+"The ladder is made of wood."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+north to rn_046
+descr "Along the Wall";
+south to rn_044
+descr "Along the Wall";
+down to rn_024
+descr "The Stone Tankard";
+end
+
+			rn_046
+
+title "Along the Wall"
+descr
+"A cool breeze blows across the high walls of the city.
+To the north rises one of the four towers of Midgaard,
+while westwards can be seen the tops of the trees in the Cypress Forest.  To
+the east and below is the wall road, and to the south is a stone
+bastion."
+extra {"tops of the trees", "trees", "tops"}
+"The trees grow together quite densely."
+extra {"mighty wall","high walls","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"massive stone bastion", "stone bastion","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"cypress forest"}
+"This is the forest separating Midgaard and Udgaard."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"tower"}
+"This tower rises into the sky, far above your head."
+extra {"wall road"}
+"This road circles the city walls on the inside."
+
+
+movement SECT_CITY
+north to rn_047 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+south to rn_045
+descr "Bastion";
+end
+
+			rn_047
+
+title "In the tower"
+descr
+"A spiral staircase leads upwards and down in this north west tower room.  Doors open to the east and the south, allowing access to the wall walks."
+extra {"mighty wall", "walls","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"tower"}
+"This massive tower was built with immense blocks of stone."
+extra {"spiral staircase","staircase"}
+"This spiral staircase is constructed of immense blocks of stone."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+east to rn_048 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+up to rn_082
+descr "In the Tower";
+south to rn_046 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+down to rn_025
+descr "In the Tower";
+end
+
+			rn_048
+
+title "Along the Wall"
+descr
+"This section of the wall looks to be in a bit of disrepair.  Some of the mortar has come loose around the large stone blocks, and the merlon looks as if it might come down.  To the west, one of the four towers of Midgaard rises to the sky,
+while northwards stretches a bleak moor.  To the east is a stone bastion,
+and the wall road runs to the south and down ."
+extra {"mortar"}
+"Mortar hold the walls together."
+extra {"merlon"}
+"This is a part of the battlement, the square sawtooth between crenels."
+extra {"mighty wall","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"massive stone bastion", "stone bastion","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"bleak moor", "moor"}
+"The moor is barren and flat."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"tower"}
+"This tower rises into the sky, far above your head."
+extra {"wall road"}
+"This road circles the city walls on the inside."
+
+
+movement SECT_CITY
+west to rn_047 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+east to rn_049
+descr "Bastion";
+end
+
+			rn_049
+
+title "Bastion"
+descr
+"This stone chamber provides a defensive point along the Midgaard
+city wall.  It is completely enclosed, save for a few arrow loops in the
+walls.  There is a small charcoal burner here, and a ladder leads
+downwards.  Some long wooden poles are standing in one corner."
+extra {"long wooden poles", "wooden poles", "poles"}
+"These poles are used to push the ladders of attackers off the walls."
+extra {"massive stone bastion", "stone bastion","stone chamber" ,"chamber","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"arrow loops", "loops"}
+"From these you can shoot arrows at people with relative safety."
+extra {"charcoal burner", "burner"}
+"This burner allows the guards to warm themselves when it gets cold outside."
+extra {"ladder"}
+"The ladder is made of wood."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+west to rn_048
+descr "Along the Wall";
+east to rn_050
+descr "Along the Wall";
+down to rn_026
+descr "Guard Dorm";
+end
+
+			rn_050
+
+title "Along the Wall"
+descr
+"The city wall of Midgaard is an impressive and massive ediface.
+To the west is an enclosed stone bastion, while to the north a dismal moor is visible.  To the east are the city gates,
+and to the south and downward is Baker Street."
+extra {"mighty wall","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"massive stone bastion", "stone bastion","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"midgaard cathedral", "cathedral"}
+"The cathedrals spires seem to be about level with this wall."
+extra {"dismal moor", "moor"}
+"The moor is barren and flat."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"city gates","gates"}
+"You realize that the gates are quite large."
+extra {"baker street"}
+"One of the many thoroughfares of Midgaard."
+
+
+movement SECT_CITY
+west to rn_049
+descr "Along the Wall";
+east to rn_051
+descr "Western Gate Tower";
+end
+
+			rn_051
+
+title "Western Gate Tower"
+descr
+"From this vantage point on the roof of the western gate tower, the people
+below look like small bugs.  To the east across a gap
+is the eastern gate tower,
+and the wall extends to the west.  A bleak moor stretches northwards, and
+to the south the roof of Midgaard Cathedral level with the walls.  There
+is a ladder leading downwards into the gate tower, and a large pile of sharp
+rocks sit on the ground."
+extra {"large pile of sharp rocks", "pile of sharp rocks", "pile of rocks",
+"sharp rocks", "rocks"}
+"These rocks can be thrown off the walls at attackers."
+extra {"western gatehouse",
+"gatehouse","roof"}
+"From this position, you could easily assail anyone who might dare
+to attack the gate."
+extra {"eastern gatehouse"}
+"The southern gatehouse looks much the same as the one you are standing on."
+extra {"bleak moor", "moor"}
+"The moor is barren and flat."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"ladder"}
+"This ladder is made of wood."
+extra {"bridge"}
+"The brige, while massive, looks much smaller from this high."
+extra {"midgaard cathedral", "cathedral"}
+"The cathedrals spires seem to be about level with this wall."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+west to rn_050
+descr "Along the Wall";
+down to rn_027
+descr "Western Gate Tower";
+end
+
+			rn_053
+
+title "Eastern Gate Tower"
+descr
+"The machicolation here is crumbling, and it appears possible to fall though the walls and into the moat.  To the west over a gap is the western gate tower, and the city wall
+runs eastward.  The North Road streatches in the same direction as it always
+will, and the Midgaard Cathedral reaches into the sky to the south.
+There is a ladder leading downwards into the gate tower."
+extra {"machicolation"}
+"The machicolation, through which stones and other materials can be thrown at attackers, is crumbling here."
+extra {"eastern gatehouse", "gatehouse","roof"}
+"From this position, you could easily assail anyone who might dare
+to attack the gate."
+extra {"western gatehouse"}
+"The southern gatehouse looks much the same as the one you are standing
+on."
+extra {"bleak moor", "moor"}
+"The moor is barren and flat."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"ladder"}
+"This ladder is made of wood."
+extra {"bridge"}
+"The brige, while massive, looks much smaller from this high."
+extra {"midgaard cathedral", "cathedral"}
+"The cathedrals spires seem to be about level with this wall."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+east to rn_054
+descr "Along the Wall";
+down to rn_029
+descr "Eastern Gate Tower";
+end
+			rn_054
+
+title "Along the Wall"
+descr
+"Aside from some sand and food scraps, the top of the wall is reasonably boring.
+To the west are the gates of Midgaard, and to the north
+a mansion fades into the gloom of the moor.  To the east is a stone bastion, and below Tailor Street runs southward into the city."
+extra {"mansion"}
+"The owner must have been a bit daft to build a castle in a swamp."
+extra {"mighty wall","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"massive stone bastion", "stone bastion","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"midgaard cathedral", "cathedral"}
+"The cathedrals spires seem to be about level with this wall."
+extra {"bleak moor", "moor"}
+"The moor is barren and flat."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"city gates","gates"}
+"You realize that the gates are quite large."
+extra {"tailor street"}
+"One of the many thoroughfares of Midgaard."
+
+
+movement SECT_CITY
+west to rn_053
+descr "Eastern Gate Tower";
+east to rn_055
+descr "Bastion";
+end
+			rn_055
+
+title "Bastion"
+descr
+"This stone chamber provides a defensive point along the Midgaard
+city wall.  It is completely enclosed, save for a few arrow loops in the
+walls.  There is a small charcoal burner here, and a fresh breeze blows
+through the doorway.  Some swords and axes are stacked in a rack, and
+there are large bundles of crossbow bolts."
+extra {"swords", "axes", "rack"}
+"These weapons are sharp, and polished brightly."
+extra {"crossbow bolts", "large bundles", "bundles", "bolts"}
+"The guards are well prepared in the event of a siege."
+extra {"massive stone bastion", "stone bastion", "stone chamber", "chamber","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"arrow loops", "loops"}
+"From these you can shoot arrows at people with relative safety."
+extra {"charcoal burner", "burner"}
+"This burner allows the guards to warm themselves when it gets cold outside."
+extra {"ladder"}
+"The ladder is made of wood."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+west to rn_054
+descr "Along the Wall";
+east to rn_056
+descr "Along the Wall";
+end
+			rn_056
+
+title "Along the Wall"
+descr
+"To the east one of the four towers of Midgaard shoots skyward, while northwards stretches a foggy and barren moor.  To the west is a nondescript stone bastion, and below and to the
+south is the wall road."
+extra {"mighty wall","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"massive stone bastion", "stone bastion","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"bleak moor", "moor"}
+"The moor is barren and flat."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"tower"}
+"This tower rises into the sky, far above your head."
+extra {"wall road"}
+"This road circles the city walls on the inside."
+
+
+movement SECT_CITY
+west to rn_055
+descr "Bastion";
+east to rn_057 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+end
+
+			rn_057
+
+title "In the tower"
+descr
+"This room in the north east tower is parallel with the wall walk.  A spiral staircase leads
+up and down, and oaken doors allow access to the walls."
+extra {"mighty wall", "walls","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"tower", "room"}
+"This massive tower was built with immense blocks of stone."
+extra {"spiral staircase","staircase"}
+"This spiral staircase is constructed of immense blocks of stone."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+west to rn_056 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+up to rn_083
+descr "In the Tower";
+south to rn_058 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+down to rn_030
+descr "In the Tower";
+end
+
+			rn_058
+
+title "Along the Wall"
+descr
+"The stones of the wall are stained black at this point along the city walls.
+To the north one of the four towers of Midgaard rises upwards,
+and some hills roll to the east. To the west and below is the
+wall road, and to the south is an all too familiar stone bastion."
+extra {"stains", "black"}
+"Looks like tar or some sort."
+extra {"mighty wall","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"massive stone bastion", "stone bastion","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"rolling hills", "hills"}
+"These are the foothills which surround Midgaard to the northeast."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"tower"}
+"This tower rises into the sky, far above your head."
+extra {"wall road"}
+"This road circles the city walls on the inside."
+
+
+movement SECT_CITY
+north to rn_057 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+south to rn_059
+descr "Bastion";
+end
+
+			rn_059
+
+title "Bastion"
+descr
+"This boring stone chamber provides a defensive point along the Midgaard
+city wall.  It is completely enclosed, save for a few arrow loops in the
+walls.  There is a small charcoal burner here, and a ladder leads
+downwards.  A garderobe provides the pleasant spot for a sit or perhaps other duties."
+extra {"garderobe"}
+"It is here that you make your reconing with that which you eat."
+extra {"massive stone bastion", "stone bastion", "stone chamber","chamber","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"arrow loops", "loops"}
+"From these you can shoot arrows at people with relative safety."
+extra {"charcoal burner", "burner"}
+"This burner allows the guards to warm themselves when it gets cold outside."
+extra {"ladder"}
+"The ladder is made of wood."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+north to rn_058
+descr "Along the Wall";
+south to rn_060
+descr "Along the Wall";
+end
+
+			rn_060
+
+title "Along the Wall"
+descr
+"From this vantage point, the people milling about the streets
+look like little bugs.  To the north stands a secure stone bastion, and
+to the east are some beautiful rolling hills.  West and below
+stand the city stables, and a gatehouse protects the city to the south."
+extra {"mighty wall","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"massive stone bastion", "stone bastion","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"rolling hills", "hills"}
+"These are the foothills which surround Midgaard to the northeast."
+extra {"city of midgaard","midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"stables"}
+"You might be able to purchase a horse here."
+extra {"city gates", "gates"}
+"The city gates guard the entrance to the city."
+
+
+movement SECT_CITY
+north to rn_059
+descr "Bastion";
+south to rn_061
+descr "Northern Gate Tower";
+end
+
+			rn_061
+
+title "Northern Gate Tower"
+descr
+"To the south and across a gap is the
+southern  gate tower, while the wall travels to the north.  The Kings
+Road runs below and to the east, and the Main Street of
+Midgaard is to the west and down.  There is a ladder leading downwards into the
+gate tower."
+extra {"northern gate tower", "gate tower","roof"}
+"From this position, you could easily assail anyone who might dare
+to attack the gate."
+extra {"bird"}
+"Its a pretty big bird."
+extra {"southern gate tower"}
+"The southern gate tower looks much the same as the one you are standing
+on."
+extra {"kings road", "road"}
+"This is a mighty highway constructed for times of war."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"ladder"}
+"This ladder is made of wood."
+extra {"bridge"}
+"The brige, while massive, looks much smaller from this high."
+
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+north to rn_060
+descr "Along the Wall";
+down to rn_031
+descr "Northern Gate Tower";
+end
+
+			rn_063
+
+title "Southern Gate Tower"
+descr
+"The roof of the southern gate tower is covered with sand,
+which is surprising for the top of a wall.  To the north across a gap is the
+northern gate tower, while the wall extends to the south.  The Kings
+Road runs below to the east of here, and the city of
+Midgaard is to the west.  There is a ladder leading downwards into the
+gatehouse."
+extra {"sand"}
+"This sand was probably used to repair a portion of the walls."
+extra {"southern gatehouse", "gatehouse","roof"}
+"From this position, you could easily assail anyone who might dare
+to attack the gate."
+extra {"northern gatehouse"}
+"The southern gatehouse looks much the same as the one you are standing
+on."
+extra {"kings road", "road"}
+"This is a mighty highway constructed for times of war."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"ladder"}
+"This ladder is made of wood."
+extra {"bridge"}
+"The brige, while massive, looks much smaller from this high."
+
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+south to rn_064
+descr "Along the Wall";
+down to rn_033
+descr "Southern Gate Tower";
+end
+
+			rn_064
+
+title "Along the Wall"
+descr
+"The wind whips over the top of the wall here, and the clamor of Midgaard can barely be heard above it. To the north stand the city gates, and a small river flows generally east.
+To the west and below is a stone bridge, and to the south is a
+mighty stone bastion."
+extra {"mighty wall","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"mighty stone bastion", "stone bastion","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"rolling hills", "hills"}
+"These are the foothills which surround Midgaard to the northeast."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"city gates", "gates"}
+"The city gates guard the entrance to the city."
+extra {"small river", "river"}
+"This river leads eventually to Torsbay."
+extra {"stone bridge","bridge"}
+"This bridge spans the river."
+
+movement SECT_CITY
+north to rn_063
+descr "Southern Gate Tower";
+south to rn_065
+descr "Bastion";
+end
+
+
+			rn_065
+
+title "Bastion"
+descr
+"This stone chamber is as boring as the rest, but it  provides a
+defensive point along the Midgaard city wall.  It is completely enclosed,
+save for a few arrow loops in the walls.  There is a small charcoal
+burner here, and a ladder leads downwards."
+extra {"massive stone bastion", "stone bastion", "stone chamber","chamber","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"arrow loops", "loops"}
+"From these you can shoot arrows at people with relative safety."
+extra {"charcoal burner", "burner"}
+"This burner allows the guards to warm themselves when it gets cold outside."
+extra {"ladder"}
+"The ladder is made of wood."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+south to rn_066
+descr "Along the Wall";
+north to rn_064
+descr "Along the Wall";
+down to rn_034
+descr "Armory";
+end
+
+			rn_066
+
+title "Along the Wall"
+descr
+"The moat can be seen by looking through the machicolation, and it appears to be quite clean below.  To the south rises one of the four towers of Midgaard,
+and a thick forest grows east of the walls. To the west and below is the
+wall road, and to the north is a large stone bastion."
+extra {"moat"}
+"The moat is quite clean here."
+extra {"machicolation"}
+"Things like rocks can be dropped through these holes onto attackers."
+extra {"mighty wall","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"large stone bastion", "stone bastion","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"thick forest", "forest"}
+"The trees in this forest are as old as the hills."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"tower"}
+"This tower rises into the sky, far above your head."
+extra {"wall road"}
+"This road circles the city walls on the inside."
+
+
+movement SECT_CITY
+north to rn_065
+descr "Bastion";
+south to rn_070 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+end
+
+			rn_070
+
+title "In the tower"
+descr
+"This circular room is halfway up in the south east tower.  A spiral staircase leads
+up and down, while two oaken doors allow passage to the north or west along the city walls."
+extra {"mighty wall", "walls","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"tower"}
+"This massive tower was built with immense blocks of stone."
+extra {"spiral staircase","staircase"}
+"This spiral staircase is constructed of immense blocks of stone."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+west to rn_067 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+up to rn_084
+descr "Captains Chambers";
+north to rn_066 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+down to rn_035
+descr "In the Tower";
+end
+
+
+			rn_067
+
+title "Along the Wall"
+descr
+"The craftsmanship of the walls is quite impressive, it is obvious that the dwarves love their work.  To the east rises one of the four towers of Midgaard,
+and to the south and below can be seen a road leading to a large complex.
+To the north and below is the wall road, and to the west it is possible to make out a
+stone bastion."
+extra {"large complex","complex"}
+"You would assume this to be the great research laboratory."
+extra {"mighty wall","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"massive stone bastion", "stone bastion","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"thick forest", "forest"}
+"The trees in this forest are as old as the hills."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"tower"}
+"This tower rises into the sky, far above your head."
+extra {"wall road"}
+"This road circles the city walls on the inside."
+
+
+movement SECT_CITY
+west to rn_068
+descr "Bastion";
+east to rn_070 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+end
+
+			rn_068
+
+title "Bastion"
+descr
+"This stone chamber provides a defensive point along the Midgaard
+city wall.  It is completely enclosed, save for a few arrow loops in the
+walls.  There is a small charcoal burner here, and a ladder leads
+downwards."
+extra {"massive stone bastion", "stone bastion", "stone chamber","chamber","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"arrow loops", "loops"}
+"From these you can shoot arrows at people with relative safety."
+extra {"charcoal burner", "burner"}
+"This burner allows the guards to warm themselves when it gets cold outside."
+extra {"ladder"}
+"The ladder is made of wood."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+west to rn_069
+descr "Along the Wall";
+east to rn_067
+descr "Along the Wall";
+down to rn_036
+descr "Guard Dorm";
+end
+
+			rn_069
+
+title "Along the Wall"
+descr
+"The wall of Midgaard is high above the city streets, and it is possible to see for miles in any direction.  To the west are the city gates, and to the south appears to be
+a great and impenetrable forest.  To the north, the roof of King
+Welmars castle rises skyward, and to the east is the square form of a stone bastion."
+extra {"impenatrable forest", "forest"}
+"A slight wind blows in the trees, making them ripple and wave."
+extra {"king welmars castle", "castle"}
+"From the turrets of the castle wave many brightly colored flags."
+extra {"mighty wall","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"massive stone bastion", "stone bastion","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"rolling hills", "hills"}
+"These are the foothills which surround Midgaard to the northeast."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"city gates", "gates"}
+"The city gates guard the entrance to the city."
+
+movement SECT_CITY
+west to rn_071
+descr "Eastern Gate Tower";
+east to rn_068
+descr "Bastion";
+end
+
+			rn_071
+
+title "Eastern Gate Tower"
+descr
+"The bridge and moat of the southern gates lie far below the roof of this
+gate tower.  Looking west, the western gate tower is across a gap,
+and to the east runs the city wall.  A small road runs south in the midst
+of a great forest to the south, and King Welmars castle stands proud to
+the north and below.  There is a ladder leading downwards into the
+gatehouse."
+extra {"impenatrable forest", "forest"}
+"A slight wind blows in the trees, making them ripple and wave."
+extra {"king welmars castle", "castle"}
+"From the turrets of the castle wave many brightly colored flags."
+
+extra {"eastern gatehouse", "gatehouse","roof"}
+"From this position, you could easily assail anyone who might dare
+to attack the gate."
+extra {"western gatehouse"}
+"The southern gatehouse looks much the same as the one you are standing
+on."
+extra {"bleak moor", "moor"}
+"The moor is barren and flat."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"ladder"}
+"This ladder is made of wood."
+extra {"bridge"}
+"The brige, while massive, looks much smaller from this high."
+extra {"midgaard cathedral", "cathedral"}
+"The cathedrals spires seem to be about level with this wall."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+east to rn_069
+descr "Eastern Gate Tower";
+down to rn_037
+descr "Along the Wall";
+end
+
+			rn_073
+
+title "Western Gate Tower"
+descr
+"From this vantage point the people going about their business in the streets below
+look like little bugs.  To the east stands the eastern gate tower,
+and the wall travels to the west.  To the north and below is King Welmars
+Castle, and to the south and below a road runs into the midst of a great
+forest. There is a ladder leading downwards into the gate tower."
+extra {"western gatehouse", "gatehouse","roof"}
+"From this position, you could easily assail anyone who might dare
+to attack the gate."
+extra {"impenatrable forest", "forest"}
+"A slight wind blows in the trees, making them ripple and wave."
+extra {"king welmars castle", "castle"}
+"From the turrets of the castle wave many brightly colored flags."
+
+extra {"eastern gatehouse"}
+"The southern gatehouse looks much the same as the one you are standing
+on."
+extra {"bleak moor", "moor"}
+"The moor is barren and flat."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"ladder"}
+"This ladder is made of wood."
+extra {"bridge"}
+"The brige, while massive, looks much smaller from this high."
+extra {"midgaard cathedral", "cathedral"}
+"The cathedrals spires seem to be about level with this wall."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+west to rn_074
+descr "Along the Wall";
+down to rn_039
+descr "Western Gate Tower";
+end
+
+			rn_074
+
+title "Along the Wall"
+descr
+"The stone paving of the wall walk is cracked here, and the footing appears to be dangerous.
+To the east stand the mighty city gates, while to the south appears to
+be a great and impenatrable forest.  To the north and below is King Welmars castle, and to the west is one of the defensive points along the wall."
+extra {"stone paving", "wall walk", "paving", "stone"}
+"It looks as if something large and heavy was dropped here, cracking the stone."
+extra {"impenatrable forest", "forest"}
+"A slight wind blows in the trees, making them ripple and wave."
+extra {"king welmars castle", "castle"}
+"From the turrets of the castle wave many brightly colored flags."
+extra {"mighty wall","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"massive stone bastion", "defensive point","stone bastion", "bastion","point"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"rolling hills", "hills"}
+"These are the foothills which surround Midgaard to the northeast."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"city gates", "gates"}
+"The city gates guard the entrance to the city."
+
+movement SECT_CITY
+west to rn_075
+descr "Bastion";
+east to rn_073
+descr "Western Gate Tower";
+end
+
+			rn_075
+
+title "Bastion"
+descr
+"This stone chamber provides a defensive point along the Midgaard
+city wall.  It is completely enclosed, save for a few arrow loops in the
+walls.  There is a small charcoal burner here, which the guards might
+light if it were to become cold outside.  A garderobe provides a point of repite for the guards who walk these walls."
+extra {"garderobe"}
+"This is known as an unsanitary facility, dumping its contents into the moat."
+extra {"massive stone bastion", "stone bastion", "stone chamber","chamber","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"arrow loops", "loops"}
+"From these you can shoot arrows at people with relative safety."
+extra {"charcoal burner", "burner"}
+"This burner allows the guards to warm themselves when it gets cold outside.."
+extra {"ladder"}
+"The ladder is made of wood."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+west to rn_076
+descr "Along the Wall";
+east to rn_074
+descr "Along the Wall";
+end
+
+			rn_076
+
+title "Along the Wall"
+descr
+"This wall is so high up that falling from it would mean instant death.  To the west rises one of the four towers of Midgaard, while to the south is a large and impenatrable forest.
+To the north and below is the wall road, and to the east a
+large stone bastion provides protection."
+extra {"impenatrable forest", "forest"}
+"A slight wind blows in the trees, making them ripple and wave."
+extra {"mighty wall","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"massive stone bastion", "stone bastion","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"thick forest", "forest"}
+"The trees in this forest are as old as the hills."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"tower"}
+"This tower rises into the sky, far above your head."
+extra {"wall road"}
+"This road circles the city walls on the inside."
+
+
+movement SECT_CITY
+west to rn_077 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+east to rn_075
+descr "Bastion";
+end
+
+			rn_077
+
+title "In the tower"
+descr
+"This circular chamber is midway up the south western tower.  A spiral staircase leads
+up and down, and oaken doors allow access to the wall walks."
+extra {"mighty wall", "walls","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"tower"}
+"This massive tower was built with immense blocks of stone."
+extra {"spiral staircase","staircase"}
+"This spiral staircase is constructed of immense blocks of stone."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+east to rn_076 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+up to rn_085
+descr "In the Tower";
+north to rn_078 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+down to rn_040
+descr "In the Tower";
+end
+
+
+			rn_078
+
+title "Along the Wall"
+descr
+"Creeping ivy grows on the walls here. but has been trimmed back to ten feet below the top of the parapet.
+To the south rises one of the four towers of Midgaard,
+and to the west the Cypress Forest grows thickly.
+The wall extends to the north, and the wall road runs to the
+east and below."
+extra {"creeping ivy", "ivy"}
+"The ivy is leafy and green."
+extra {"parapet"}
+"This is a wall that proctects the guards from missile fire below the walls."
+extra {"impenatrable forest", "forest"}
+"A slight wind blows in the trees, making them ripple and wave."
+extra {"mighty wall", "walls", "wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"massive stone bastion", "stone bastion","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"thick forest", "forest"}
+"The trees in this forest are as old as the hills."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"tower"}
+"This tower rises into the sky, far above your head."
+extra {"wall road"}
+"This road circles the city walls on the inside."
+extra {"cypress forest"}
+"This is the forest separating Midgaard and Udgaard."
+
+
+movement SECT_CITY
+south to rn_077 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
+north to rn_079
+descr "Bastion";
+end
+
+
+			rn_079
+
+title "Bastion"
+descr
+"This stone chamber provides a defensive point along the Midgaard
+city wall.  It is completely enclosed, save for a few arrow loops in the
+walls.  There is a small charcoal burner here,
+and a ladder leads downwards.  The pleasant scents of food wafts
+upwards."
+
+extra {"massive stone bastion", "stone bastion", "stone chamber","chamber","bastion"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"arrow loops", "loops"}
+"From these you can shoot arrows at people with relative safety."
+extra {"charcoal burner", "burner"}
+"This burner allows the guards to warm themselves when it gets cold outside."
+extra {"ladder"}
+"The ladder is made of wood."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+south to rn_078
+descr "Along the Wall";
+north to rn_080
+descr "Along the Wall";
+down to rn_041
+descr "Kitchen";
+end
+
+			rn_080
+
+title "Along the Wall"
+descr
+"The parapet here looks to be slightly decayed, and mortar is falling from the stones.
+To the north stand the western gates of the city,
+while to the west is the Cypress forest.
+To the east and below is a large coliseum, and to the south
+appears to be a stone bastion."
+extra {"parapet"}
+"The protective wall running along the top of the wall walk is in great disrepair."
+extra {"mortar"}
+"Someone had better fix this soon."
+extra {"cypress forest"}
+"This is the forest separating Midgaard and Udgaard."
+extra {"king welmars castle", "castle"}
+"From the turrets of the castle wave many brightly colored flags."
+extra {"mighty wall","wall"}
+"This wall was built by the dwarves of the arctic, with stones
+which were quarried to the south of midgaard."
+extra {"massive stone bastion", "defensive point","stone bastion",
+"bastion", "point"}
+"This enclosed stone room is a defensive point along the city wall."
+extra {"rolling hills", "hills"}
+"These are the foothills which surround Midgaard to the northeast."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"city gates", "gates"}
+"The city gates guard the entrance to the city."
+
+movement SECT_CITY
+south to rn_079
+descr "Bastion";
+north to rn_081
+descr "Southern Gate Tower";
+end
+
+			rn_081
+
+title "Southern Gate Tower"
+descr
+"The roof of the southern gate tower, makes the gates look even more
+impressive that they would normally seem.   To the north and across a
+rift is the northern gate tower, while the wall extends to the south.
+The Cypress forest  grows to the west, and it is possible to look over the city of
+Midgaard to the east.  There is a ladder leading downwards into the gate
+tower.  A few heads are mounted on pikes along the parapet."
+extra {"parapet"}
+"The wall which runs along to top of the wall walk."
+extra {"heads", "pikes"}
+"These are the heads of criminals, who were committed various unspeakable acts."
+extra {"southern gatehouse", "gatehouse","roof"}
+"From this position, you could easily assail anyone who might dare
+to attack the gate."
+extra {"northern gatehouse"}
+"The northern gatehouse looks much the same as the one you are standing
+on."
+extra {"cypress forest"}
+"This is the forest separating Midgaard and Udgaard."
+extra {"midgaard","city"}
+"The city looks quite a bit smaller from this point of view."
+extra {"ladder"}
+"This ladder is made of wood."
+extra {"bridge"}
+"The brige, while massive, looks much smaller from this high."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+south to rn_080
+descr "Along the Wall";
+down to rn_021
+descr "Southern Gate Tower";
+end
+
+			rn_082
+
+title "In the tower"
+descr
+"This circular chamber in the north western tower is quite close to the top.
+A spiral staircase runs up and down, and the large stone steps are worn
+from the passage of many feet."
+extra {"large circular chamber", "circular chamber", "large chamber",
+"chamber"}
+"You are standing in a chamber in the middle of the tower."
+extra {"spiral staircase", "staircase"}
+"This staircase leads upwards and downwards in the tower."
+extra {"large stone steps", "stone steps", "steps"}
+"These stone steps are almost polished smooth by the passage of many
+feet."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+up to rn_086
+descr "Roof of the North Western Tower";
+down to rn_047
+descr "In the Tower";
+end
+
+			rn_083
+
+title "In the tower"
+descr
+"This circular chamber in the north eastern tower is quite close to the top.
+A spiral staircase runs up and down, and the large stone steps are worn
+from the passage of many feet."
+extra {"large circular chamber", "circular chamber","large chamber",
+"chamber"}
+"You are standing in a chamber in the middle of the tower."
+extra {"spiral staircase", "staircase"}
+"This staircase leads upwards and downwards in the tower."
+extra {"large stone steps", "stone steps", "steps"}
+"These stone steps are almost polished smooth by the passage of many
+feet."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+up to rn_087
+descr "Roof of the North Eastern Tower";
+down to rn_057
+descr "In the Tower";
+end
+
+			rn_084
+
+title "Captains Office"
+descr
+"This room in the south east tower houses the Captain of the
+Wall Guard's office.  There are various items of war hung on the walls,
+and a large wooden desk sits in one corner.  Upon the desk are a motley
+collection of papers, and behind the desk sits a large chair.  A spiral
+staircase leads upwards and downwards."
+extra {"office", "room"}
+"This is where the captain conducts his day to day business for the
+upkeep of the walls."
+extra {"items of war", "items"}
+"These are composed of swords and shields and the like."
+extra {"large wooden desk", "wooden desk","large desk", "desk"}
+"This desk is covered with an assortment of notes and papers."
+extra {"papers"}
+"These papers are all related to the governing of the wall guards."
+extra {"large chair", "chair"}
+"Most obviously, the captains chair."
+extra {"spiral staircase","staircase"}
+"The spiral staircase leads up to the top of the tower, and down to the
+wall level."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+up to tower_3
+descr "Roof of the South Eastern Tower";
+down to rn_070
+descr "In the Tower";
+end
+
+tower_3
+	title "The Top of the Southeast Tower"
+	names {"top", "tower", "room"}
+	descr
+	"This is the top of the southeast tower and a beautiful view is unidirectional.
+	The roofs of the city spread out to the north west, and farther north than that is visible 		the barren moor.
+	South lies a highway which cuts through a canyon, and a research laboratory is visable.
+	Looking off to the west, the top of the Cypress forest looks pristine from this position in 		the sky.  Eastwards the King's Road spans into the distance, and Torsbay can be seen to 	the south east. 	Stairs lead down into the tower."
+
+	movement SECT_CITY
+	ALWAYS_LIGHT
+	extra {"great city", "city"}
+	"The fair city of Midgaard."
+	extra {"moors", "moor"}
+	"You really can't see much of the moor from here, try the Northern towers."
+	extra {"light", "torches", "torch", "wall"}
+	"The torches are built into the walls and cannot be taken, on closer inspection you notice the flame
+	is not quite right and you suspect they are magically enhanced."
+	extra {"research laboratory","laboratory","highway","canyon","lab"}
+	"It looks to be a large building."
+	down to rn_084 descr
+	"Captains Office";
+end
+
+			rn_085
+
+title "In the tower"
+descr
+"This large circular chamber is near to the top of the south western tower.
+A spiral staircase runs up and down, and the large stone steps are worn
+from the passage of many feet."
+extra {"large circular chamber", "circular chamber","large chamber",
+"chamber"}
+"You are standing in a chamber in the middle of the tower."
+extra {"spiral staircase", "staircase"}
+"This staircase leads upwards and downwards in the tower."
+extra {"large stone steps", "stone steps", "steps"}
+"These stone steps are almost polished smooth by the passage of many
+feet."
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+movement SECT_CITY
+up to rn_088
+descr "Roof of the North Western Tower";
+down to rn_077
+descr "In the Tower";
+end
+
+			rn_086
+
+title "Atop the Northwest Tower"
+descr
+"The top of the northwest tower of the Midgaard walls provides a breathtaking scene.
+To the north past the city is the expanse of a desolate moor,
+a building can be made out to the northeast.  To the west is the town of Udgaard
+and the forest of Haon dor farther is west.  To the southeast stretches the
+city of Midgaard, and a large banner bearing the Midgaard coat of arms
+flies from a flagpole."
+extra {"desolate moor","building", "moor"}
+"The moor is quite expansive, and looks flat and barren, save for
+the building to the northeast."
+extra {"town of udgaard", "haon dor","udgaard"}
+"You are surprised by the distance which you can see from the top of
+this tower."
+extra {"city of midgaard", "midgaard","city"}
+"The people below look like tiny ants, scurrying to and fro."
+extra {"coat of arms","large banner", "banner"}
+"On it you see a slain dragon with its head tilted back, and a sword
+piercing its neck.  The dragon lies amid a shining city, which is placed
+on a shield.  A crown sits above the shield, a sceptre below, and there are
+two crossed rapiers behind the shield."
+extra {"flagpole"}
+"This flagpole must make quite a lightning rod."
+
+
+
+movement SECT_CITY
+down to rn_082
+descr "In the Tower";
+end
+
+
+			rn_087
+
+title "Atop the Northeast Tower"
+descr
+"On the top of the northeast tower of the Midgaard walls, a cool breeze blows all around.
+To the north is the expanse of a desolate moor, and is it possible to make out
+some sort of building.  To the east are a vast number of rolling hills,
+and farther east can be seen the town of Ratswharf.
+To the southwest stretches the
+city of Midgaard, and a large banner bearing the Midgaard coat of arms
+flies from a flagpole."
+extra {"desolate moor", "building","moor"}
+"The moor is quite expansive, and looks flat and barren, save for
+the building to the northeast."
+extra {"rolling hills", "hills"}
+"These hills lie north of the Crossroads outside Midgaards east gate."
+extra {"town of ratswharf","ratswharf"}
+"This shambling little town is barely visible, though you can see
+the Kithryn tower poking through the treeline."
+extra {"city of midgaard", "midgaard","city"}
+"The people below look like tiny ants, scurrying to and fro."
+extra {"coat of arms","large banner", "banner"}
+"On it you see a slain dragon with its head tilted back, and a sword
+piercing its neck.  The dragon lies amid a shining city, which is placed
+on a shield.  A crown sits above the shield, a sceptre below, and there are
+two crossed rapiers behind the shield."
+extra {"flagpole"}
+"This flagpole must make quite a lightning rod."
+
+
+
+movement SECT_CITY
+down to rn_083
+descr "In the Tower";
+end
+
+			rn_088
+title "Atop the Southwest Tower"
+descr
+"Arriving at the top of the southwest tower of Midgaard, it is surprising
+that the air feels rather chill.  From this point,  the Cypress
+Forest and the town of Udgaard look close together, though the view becomes
+obscured by the forest of Haon dor.  To the south, the tops
+of many trees stretch into the distance.  To the northeast spans the
+city of Midgaard, and a large banner bearing the Midgaard coat of arms
+flies from a flagpole."
+extra {"town of udgaard", "cypress forest", "udgaard", "forest"}
+"You are surprised by the distance which you can see from the top of
+this tower."
+extra {"trees"}
+"The trees seem to extend into infinity."
+extra {"city of midgaard", "midgaard", "city"}
+"The people below look like tiny ants, scurrying to and fro."
+extra {"coat of arms", "large banner", "banner"}
+"On it you see a slain dragon with its head tilted back, and a sword
+piercing its neck.  The dragon lies amid a shining city, which is placed
+on a shield.  A crown sits above the shield, a sceptre below, and there are
+two crossed rapiers behind the shield."
+extra {"flagpole"}
+"This flagpole must make quite a lightning rod."
+movement SECT_CITY
+down to rn_085
+descr "In the Tower";
+end
+
+%mobiles
+
+				lieu1
+names {"patrol guard", "lieutenant", "brian", "guard"}
+title "Brian"
+descr "Brian, a lieutenant of the wall guard, patrols the area."
+extra {}
+"Brian looks to be about forty years old, and is a lieutenant of the
+wall guard.  He has attained this position through years of battle, and
+good service to King Welmar.  He is cloaked in a tabard bearing the
+Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(58, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(13, "rn_041@midwalls",
+                      19, "rn_041@midwalls",
+                      23, "rn_036@midwalls",
+                      6,
+                      {"rn_059@midwalls", "rn_012@midgaard",
+                       "rn_055@midwalls", "rn_008@midgaard"});
+end
+
+
+				lieu2
+names {"patrol guard", "lieutenant", "norm"}
+title "Norm"
+descr "Norm, a lieutenant of the wall guard, patrols the area."
+extra {}
+"Norms hands are rough and callused, and it appears that he has
+worked hard all of his life.  Perhaps this is how he became a lieutenant
+of the wall guards.  He is cloaked in a tabard bearing the Midgaard coat
+of arms."
+
+M_HUMAN_WARRIOR_SWORD(58, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy guardschedule(13, "rn_041@midwalls",
+                      19, "rn_041@midwalls",
+                      23, "rn_036@midwalls",
+                      6,
+    {"rn_045@midwalls", "rn_002@midgaard", "rn_049@midwalls", "rn_008@midgaard"});
+end
+
+
+				lieu3
+names {"patrol guard", "lieutenant", "jeremy"}
+title "Jeremy"
+descr "Jeremy, a lieutenant of the wall guard, patrols the area."
+extra {}
+"Jeremy is neatly dressed, and wears his outfit with a look of pure
+satisfaction.  He steps lightly as he keeps the wall guards in check.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(56, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(13, "rn_041@midwalls",
+                      19, "rn_041@midwalls",
+                      23, "rn_036@midwalls",
+                      6,
+    {"rn_079@midwalls", "rn_002@midgaard", "rn_075@midwalls", "rn_017@midgaard"});
+end
+
+
+			     lieu4
+names {"patrol guard", "lieutenant", "ural"}
+title "Ural"
+descr "Ural, a lieutenant of the wall guard, patrols the area."
+extra {}
+"Ural looks at you with keen eyes as he passes you by.  He is more
+than happy with his position and stature among the wall guards.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(52, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(13, "rn_041@midwalls",
+                      19, "rn_041@midwalls",
+                      23, "rn_026@midwalls",
+                      6,
+    {"rn_065@midwalls", "rn_012@midgaard", "rn_068@midwalls", "rn_017@midgaard"});
+end
+
+
+				patrol4
+names {"patrol guard", "wallguard", "sam"}
+title "Sam"
+descr "Sam, one of the wall guards, patrols the area."
+extra {}
+"Sam is a short man with long brown hair.  He walks the walls with
+diligence and care, looking for anything which may be amiss.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(54, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(12, "rn_041@midwalls",
+                      18, "rn_041@midwalls",
+                      23, "rn_026@midwalls",
+                      6,
+        {"rn_061@midwalls", "rn_058@midwalls", "rn_056@midwalls",
+                "rn_053@midwalls", "rn_056@midwalls", "rn_058@midwalls"});
+end
+
+				patrol3
+names {"patrol guard", "wallguard", "frank"}
+title "Frank"
+descr "Frank, one of the wall guards, patrols the area."
+extra {}
+"Frank looks alert and aware, and he marches across the walls with
+steadfast grace.  It would, perhaps, be unwise to mess with him.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(53, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+
+dilcopy guardschedule(12, "rn_041@midwalls",
+                      18, "rn_041@midwalls",
+                      23, "rn_026@midwalls",
+                      6,
+        {"rn_051@midwalls", "rn_048@midwalls", "rn_046@midwalls",
+                "rn_043@midwalls", "rn_046@midwalls", "rn_048@midwalls"});
+end
+
+				patrol2
+names {"patrol guard", "wallguard", "stephen"}
+title "Stephen"
+descr "Stephen, one of the wall guards, patrols the area."
+extra {}
+"Stephen has been in service of the wall guards for twelve years.
+He has a grim look to his eyes, and scans the distance for wrongdoing.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(58, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(12, "rn_041@midwalls",
+                      18, "rn_041@midwalls",
+                      23, "rn_036@midwalls",
+                      6,
+        {"rn_081@midwalls", "rn_078@midwalls", "rn_076@midwalls",
+                "rn_073@midwalls", "rn_076@midwalls", "rn_078@midwalls"});
+end
+				patrol1
+
+names {"patrol guard", "wallguard", "jake"}
+title "Jake"
+descr "Jake, one of the wall guards, patrols the area."
+extra {}
+"Jake has a kind look to his eyes, and has long blonde hair.
+He looks out over the walls, scanning the distance in wide
+sweeping glances.  He is cloaked in a tabard bearing the Midgaard coat of
+arms."
+
+M_HUMAN_WARRIOR_SWORD(52, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(12, "rn_041@midwalls",
+                      18, "rn_041@midwalls",
+                      23, "rn_036@midwalls",
+                      6,
+        {"rn_071@midwalls", "rn_067@midwalls", "rn_066@midwalls",
+                "rn_063@midwalls", "rn_066@midwalls", "rn_067@midwalls"});
+end
+
+			       gate_n1
+names {"gate guard", "wallguard", "jeremy", "guard"}
+title "Jeremy"
+descr "Jeremy, one of the gate guards, stands here."
+extra {}
+"Jeremy is a young man with a shock of brown hair and deep brown
+eyes.  He has a faint smile on his lips, and looks to be not yet
+touched by war.  He looks back at you, as if telling you to go about
+your business.  He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_POLE(55, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(13, "rn_041@midwalls",
+                      19, "rn_041@midwalls",
+                      23, "rn_006@midwalls",
+                      6,
+        {"rn_008@midgaard"});
+end
+
+			       gate_n2
+names {"gate guard", "wallguard", "andrew"}
+title "Andrew"
+descr "Andrew, one of the gate guards, stands here."
+extra {}
+"Andrew stands roughly six feet tall, and has a cloak thrown over his
+shoulders.  You notice a short sword strapped to his side, and a small
+pouch peeking from beneath his chain mail.  His boots are polished and new,
+and seem to gleam in the light.  He is cloaked in a tabard bearing
+the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_POLE(54, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(12, "rn_041@midwalls",
+                      18, "rn_041@midwalls",
+                      23, "rn_006@midwalls",
+                      6,
+        {"rn_008@midgaard"});
+end
+
+
+			       gate_e1
+names {"gate guard", "wallguard", "randle"}
+title "Randle"
+descr "Randle, one of the gate guards, watches the passers by."
+extra {}
+"Randle appears to be a grizzled veteran of war.  His eyes are deep and
+all too knowing, and he bears a large scar on his left cheek.  He appears
+to be gripping his large axe tightly, and sweat covers his brow.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_DWARF_WARRIOR_AXE(50, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(13, "rn_041@midwalls",
+                      19, "rn_041@midwalls",
+                      23, "rn_011@midwalls",
+                      6,
+        {"rn_012@midgaard"});
+end
+
+			       gate_e2
+
+
+names {"gate guard", "wallguard", "fenris"}
+title "Fenris"
+descr "Fenris, one of the gate guards, looks quite bored."
+extra {}
+"Fenris is a man aged roughly thirty, and is cloaked in a tabard bearing
+the Midgaard coat of arms.  He looks to be tired of his job, and appears
+to be considering retirement from the cityguards.  At least then he would
+be able to walk around.  He looks at you with pitiful eyes."
+
+M_HUMAN_WARRIOR_POLE(48, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(12, "rn_041@midwalls",
+                      18, "rn_041@midwalls",
+                      23, "rn_011@midwalls",
+                      6,
+        {"rn_014@midwalls"});
+end
+
+			       gate_w1
+
+names {"gate guard", "wallguard", "jack"}
+title "Jack"
+descr "Jack, one of the gate guards, shuffles his feet."
+extra {}
+"Jack shuffles his feet, as if he were deep in thought.  You think
+perhaps that this isn't the best action of a gate guard, but shrug
+off the thought.  He looks to be quite strong, and stands roughly five
+feet tall.  He is cloaked in a tabard bearing the Midgaard coat of arms."
+M_DWARF_WARRIOR_AXE(50, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(13, "rn_041@midwalls",
+                      19, "rn_041@midwalls",
+                      23, "rn_004@midwalls",
+                      6,
+        {"rn_002@midgaard"});
+end
+
+			       gate_w2
+names {"gate guard", "wallguard", "shaun"}
+title "Shaun"
+descr "Shaun, one of the gate guards, stands at attention."
+extra {}
+"Shaun appears to be strong and stalwart, his eyes watch every move,
+waiting for something to happen.  His large glaive stands vertacle,
+and his uniform is fitted neatly.  He is cloaked in a tabard bearing the
+Midgaard coat of arms."
+M_HUMAN_WARRIOR_POLE(52, SEX_MALE)
+alignment 400
+romflags {CHAR_PROTECTED}
+
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(12, "rn_041@midwalls",
+                      18, "rn_041@midwalls",
+                      23, "rn_003@midwalls",
+                      6,
+        {"rn_002@midgaard"});
+end
+
+
+			       gate_s1
+names {"gate guard", "wallguard", "brewster"}
+title "Brewster"
+descr "Brewster, one of the gate guards, looks bored."
+extra {}
+"It doesn't appear the Brewster sees much action in his job, and
+as a result, looks to be extremely bored.  He has a sleepy look in his
+eyes, and wonders what you are doing here.  He is cloaked in a tabard
+bearing the Midgaard coat of arms."
+M_HUMAN_WARRIOR_POLE(53, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(13, "rn_041@midwalls",
+                      19, "rn_041@midwalls",
+                      23, "rn_016@midwalls",
+                      6,
+        {"rn_017@midgaard"});
+end
+
+			       gate_s2
+names {"gate guard", "wallguard", "roger"}
+title "Roger"
+descr "Roger, one of the gate guards, appears to be bored."
+extra {}
+"Roger appears to be rather bored.
+He snaps to attention, and peers inquisitively at you, as if you
+were up to no good.  He is cloaked in a tabard bearing the Midgaard coat
+of arms."
+M_HUMAN_WARRIOR_POLE(52, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(12, "rn_041@midwalls",
+                      18, "rn_041@midwalls",
+                      23, "rn_019@midwalls",
+                      6,
+        {"rn_017@midgaard"});
+end
+
+				guard1
+names {"patrol guard", "lieutenant", "jed"}
+title "Jed"
+descr "Jed, one of the wall guards, stands watch."
+extra {}
+"Jed is a short lanky man with a shifty look in his eyes.  He seems
+none too happy about guarding the walls, and as such, you don't
+think he's doing a very good job.  He is cloaked in a tabard bearing the
+Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(56, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(12, "rn_041@midwalls",
+                      18, "rn_041@midwalls",
+                      23, "rn_026@midwalls",
+                      6,
+        {"rn_045@midwalls"});
+end
+
+				guard2
+
+names {"patrol guard", "lieutenant", "jerry"}
+title "Jerry"
+descr "Jerry, one of the wall guards, stands watch."
+extra {}
+"Jerry has thick black hair, and a scar running down his cheek.
+His arms and legs are thick and muscular, and he grips his weapon tightly.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(55, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(12, "rn_041@midwalls",
+                      18, "rn_041@midwalls",
+                      23, "rn_026@midwalls",
+                      6,
+        {"rn_049@midwalls"});
+end
+
+
+				guard3
+
+names {"patrol guard", "lieutenant", "terry"}
+title "Terry"
+descr "Terry, one of the wall guards, stands watch."
+extra {}
+"Terry towers above you, taking on almost gigantic proportions.  He
+leers at you from the corner of his eye, not quite sure as to why
+you are on the city walls.  He is cloaked in a tabard bearing the Midgaard
+coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(51, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(12, "rn_041@midwalls",
+                      18, "rn_041@midwalls",
+                      23, "rn_026@midwalls",
+                      6,
+        {"rn_055@midwalls"});
+end
+
+
+				guard4
+
+names {"patrol guard", "lieutenant", "brian"}
+title "Brian"
+descr "Brian, one of the wall guards, stands watch."
+extra {}
+"Brian has thick blonde hair and deep blue eyes.  He looks to have
+come from noble blood, but has landed this lousy job as a wall guard.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(47, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(12, "rn_041@midwalls",
+                      18, "rn_041@midwalls",
+                      23, "rn_026@midwalls",
+                      6,
+        {"rn_059@midwalls"});
+end
+
+
+				guard5
+
+names {"patrol guard", "lieutenant", "stan"}
+title "Stan"
+descr "Stan, one of the wall guards, stands watch."
+extra {}
+"Stan looks like he had a bit too much to drink last night.  His clothes
+are rumpled, and his boots are scuffed and unpolished.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(53, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(12, "rn_041@midwalls",
+                      18, "rn_041@midwalls",
+                      23, "rn_026@midwalls",
+                      6,
+        {"rn_022@midwalls"});
+end
+
+
+				guard6
+
+names {"patrol guard", "lieutenant", "jake"}
+title "Jake"
+descr "Jake, one of the wall guards, stands watch."
+extra {}
+"Jake is fat and untidy, and you are surprised that he is able to hold
+his job as a wall guard, much less hold himself up.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(54, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(12, "rn_041@midwalls",
+                      18, "rn_041@midwalls",
+                      23, "rn_026@midwalls",
+                      6,
+        {"rn_028@midwalls"});
+end
+
+
+				guard7
+names {"patrol guard", "lieutenant", "bob"}
+title "Bob"
+descr "Bob, one of the wall guards, stands watch."
+extra {}
+"Bob has deep brown hair and eyes, and is quite good looking considering
+the fact that he is a wall guard.  His forearms look as if they could
+bend steel, and you think twice about looking at him the wrong way.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(54, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(13, "rn_041@midwalls",
+                      19, "rn_041@midwalls",
+                      23, "rn_036@midwalls",
+                      6,
+        {"rn_064@midwalls"});
+end
+
+				guard8
+names {"patrol guard", "lieutenant", "brent"}
+title "Brent"
+descr "Brent, one of the wall guards, stands watch."
+extra {}
+"Brent looks to be a stalwart fellow aged thirty-seven.  He has burly
+arms, and smiles at you as you walk by.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(54, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(13, "rn_041@midwalls",
+                      19, "rn_041@midwalls",
+                      23, "rn_036@midwalls",
+                      6,
+        {"rn_068@midwalls"});
+end
+
+
+				guard9
+names {"patrol guard", "lieutenant", "fred"}
+title "Fred"
+descr "Fred, one of the wall guards, stands watch."
+extra {}
+"Fred has a cowlick which makes his hair stick up in the back.  He
+smells like a stable, and looks much like the floor of the latter.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(55, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(13, "rn_041@midwalls",
+                      19, "rn_041@midwalls",
+                      23, "rn_036@midwalls",
+                      6,
+        {"rn_075@midwalls"});
+end
+
+				guard10
+names {"patrol guard", "lieutenant", "robert"}
+title "Robert"
+descr "Robert, one of the wall guards, stands watch."
+extra {}
+"Robert coughs loudly and spits a big ball of fleghm on the ground
+as you walk by.  His hair is a bit greasy, and his fingernails are
+dirty.  He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(56, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(13, "rn_041@midwalls",
+                      19, "rn_041@midwalls",
+                      23, "rn_036@midwalls",
+                      6,
+        {"rn_079@midwalls"});
+end
+
+				guard11
+names {"patrol guard", "lieutenant", "rudy"}
+title "Rudy"
+descr "Rudy, one of the wall guards, stands watch."
+extra {}
+"Rudy shuffles his feet in anticipation of that attack which
+never seems to come.  You notice that one of his boots is untied.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(54, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(13, "rn_041@midwalls",
+                      19, "rn_041@midwalls",
+                      23, "rn_036@midwalls",
+                      6,
+        {"rn_032@midwalls"});
+end
+
+				guard12
+names {"patrol guard", "lieutenant", "ren"}
+title "Ren"
+descr "Ren, one of the wall guards, stands watch."
+extra {}
+"Ren the ever faithful is looks out across the town.  He asks you
+about his friend Stimpy, but you reply that you have never met the
+man.  He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(44, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(13, "rn_041@midwalls",
+                      19, "rn_041@midwalls",
+                      23, "rn_036@midwalls",
+                      6,
+        {"rn_038@midwalls"});
+end
+				captain
+
+names {"patrol guard", "captain", "george"}
+title "George"
+descr "George, the captain of the wall guards, sits behind his desk."
+extra {}
+"George did not attain his position through any other way than
+being a grizzled veteran of war.  His thick muscles ripple beneath
+his clothes, and he looks at you with piercing green eyes.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(60, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+end
+
+
+
+				guard13
+names {"patrol guard", "lieutenant", "rich"}
+title "Rich"
+descr "Rich, one of the wall guards, stands watch."
+extra {}
+"Rich hardly fits the name he was given.  He has been working
+as a wall guard for most of his life, and probably will be until he
+dies.  He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(52, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      11, "rn_026@midwalls",
+                      19,
+        {"rn_045@midwalls"});
+end
+
+
+				guard14
+names {"patrol guard", "lieutenant", "stan"}
+title "Stan"
+descr "Stan, one of the wall guards, stands watch."
+extra {}
+"Stan is missing an eye, and has a long scar running down one side
+of his face.  He peers at you with his good eye, and you shiver at
+the thought of facing him in battle.  He is cloaked in a tabard bearing
+the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(51, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      11, "rn_026@midwalls",
+                      19,
+        {"rn_049@midwalls"});
+end
+
+				guard15
+names {"patrol guard", "lieutenant", "bruce"}
+title "Bruce"
+descr "Bruce, one of the wall guards, stands watch."
+extra {}
+"Bruce is missing three fingers on his left hand, all of them chopped
+off at the hilt.  You think that it is rather uncanny that he can still
+wield a sword.  He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(49, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      11, "rn_026@midwalls",
+                      19,
+        {"rn_055@midwalls"});
+end
+
+				guard16
+names {"patrol guard", "lieutenant", "gerald"}
+title "Gerald"
+descr "Gerald, one of the wall guards, stands watch."
+extra {}
+"Gerald heaves a sigh as you pass by, and you get the impression that
+he is bored.  He is eating a piece of bread, and throwing rocks over the
+wall and into the moat.  He is cloaked in a tabard bearing the Midgaard
+coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(49, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      11, "rn_026@midwalls",
+                      19,
+        {"rn_059@midwalls"});
+end
+
+				guard17
+names {"patrol guard", "lieutenant", "brant"}
+title "Brant"
+descr "Brant, one of the wall guards, stands watch."
+extra {}
+"Brant looks like he had a few too many beers last night.  He coughs
+loudly, and as you pass by, you get the feeling that he might
+be vomiting soon.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(54, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      11, "rn_026@midwalls",
+                      19,
+        {"rn_024@midwalls"});
+end
+
+				guard18
+names {"patrol guard", "lieutenant", "carl"}
+title "Carl"
+descr "Carl, one of the wall guards, stands watch."
+extra {}
+"Carl looks wistfully out and over the walls, straining his eyes at
+nothing in particular.  You notice that he reeks of garlic and sausages.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(54, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      11, "rn_026@midwalls",
+                      19,
+        {"rn_028@midwalls"});
+end
+
+				guard19
+names {"patrol guard", "lieutenant", "peter"}
+title "Peter"
+descr "Peter, one of the wall guards, stands watch."
+extra {}
+"At one time in his life, Peter played a pipe and sold pickled peppers.
+Now he has become a wall guard full time, much to his fathers dismay.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(54, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(2, "rn_041@midwalls",
+                      9, "rn_041@midwalls",
+                      11, "rn_036@midwalls",
+                      19,
+        {"rn_079@midwalls"});
+end
+
+				guard20
+names {"patrol guard", "lieutenant", "zack"}
+title "Zack"
+descr "Zack, one of the wall guards, stands watch."
+extra {}
+"Zack worked as an apprentice to a blacksmith in his youth, and
+plans to follow that trade when his is done being a wall guard.
+That is, if he is ever done being a wall guard.  He is cloaked in a tabard
+bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(54, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(2, "rn_041@midwalls",
+                      9, "rn_041@midwalls",
+                      11, "rn_036@midwalls",
+                      19,
+        {"rn_075@midwalls"});
+end
+
+				guard21
+names {"patrol guard", "lieutenant", "luke"}
+title "Luke"
+descr "Luke, one of the wall guards, stands watch."
+extra {}
+"Luke wishes that these were his walls, but it is doubtful that
+he will ever become king.  Its good to be the king, but he is happily
+married to a wonderful woman named Leia.  He is cloaked in a tabard
+bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(54, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(2, "rn_041@midwalls",
+                      9, "rn_041@midwalls",
+                      11, "rn_036@midwalls",
+                      19,
+        {"rn_068@midwalls"});
+end
+
+
+
+				guard22
+names {"patrol guard", "lieutenant", "ed"}
+title "Ed"
+descr "Ed, one of the wall guards, stands watch."
+extra {}
+"Ed tells you that he once met a talking horse, but you are not
+convinced that he is telling the truth.  You notice that his
+finger nails are a bit too long.  He is cloaked in a tabard bearing the
+Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(54, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(2, "rn_041@midwalls",
+                      9, "rn_041@midwalls",
+                      11, "rn_036@midwalls",
+                      19,
+        {"rn_065@midwalls"});
+end
+
+
+
+				guard23
+names {"patrol guard", "lieutenant", "trent"}
+title "Trent"
+descr "Trent, one of the wall guards, stands watch."
+extra {}
+"Trent looks like half his face was bitten off by at dog or some similar
+animal.  He is quite a nice fellow, even though half of his face is
+missing.  He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(54, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(2, "rn_041@midwalls",
+                      9, "rn_041@midwalls",
+                      11, "rn_036@midwalls",
+                      19,
+        {"rn_038@midwalls"});
+end
+
+				guard24
+names {"patrol guard", "lieutenant", "john"}
+title "John"
+descr "John, one of the wall guards, stands watch."
+extra {}
+"John looks like he has too much energy.  He paces about the walls,
+muttering things to himself and passing a lot of gas.  You're not quite
+sure what his problem is, but you are sure that it's big.  He is cloaked
+in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(54, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(2, "rn_041@midwalls",
+                      9, "rn_041@midwalls",
+                      11, "rn_036@midwalls",
+                      19,
+        {"rn_032@midwalls"});
+end
+
+			       gate_n3
+
+names {"gate guard", "wallguard", "jake"}
+title "Jake"
+descr "Jake, one of the gate guards, stands here."
+extra {}
+"Jake watches the people pass through the gate as he picks his nose.
+He kicks the dust at his feet, and whistles a merry tune.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_POLE(55, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(2, "rn_041@midwalls",
+                      9, "rn_041@midwalls",
+                      11, "rn_006@midwalls",
+                      19,
+        {"rn_008@midgaard"});
+end
+
+
+			       gate_n4
+
+names {"gate guard", "wallguard", "jim"}
+title "Jim"
+descr "Jim, one of the gate guards, stands here."
+extra {}
+"Jim spits at an old man who is walking by, and cackles with mirth.
+He is missing an eye, two fingers, and three finger nails.  It
+looks as if he got attacked by a dog or something.  He is cloaked in a
+tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_POLE(55, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      11, "rn_009@midwalls",
+                      19,
+        {"rn_008@midgaard"});
+end
+			       gate_e3
+
+names {"gate guard", "wallguard", "sven"}
+title "Sven"
+descr "Sven, one of the gate guards, watches the passers by."
+extra {}
+"Sven is a stocky fellow with thick brown hair.  He is well groomed,
+and smells of aromatic spices.  You get the idea that he has been
+to visit a fanny recently.  He is cloaked in a tabard bearing the Midgaard
+coat of arms."
+
+M_DWARF_WARRIOR_AXE(50, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(2, "rn_041@midwalls",
+                      9, "rn_041@midwalls",
+                      11, "rn_011@midwalls",
+                      19,
+        {"rn_012@midgaard"});
+end
+
+			       gate_e4
+
+names {"gate guard", "wallguard", "larry"}
+title "Larry"
+descr "Larry, one of the gate guards, looks quite bored."
+extra {}
+"Larry stands roughly six feet tall, and looks at you with a  daunting
+stare.  His clothes are clean and wrinkle free, and he whistles a
+familiar tune to himself.  He is cloaked in a tabard bearing the Midgaard
+coat of arms."
+
+M_HUMAN_WARRIOR_POLE(50, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      11, "rn_014@midwalls",
+                      19,
+        {"rn_012@midgaard"});
+end
+			       gate_w3
+
+names {"gate guard", "wallguard", "rod"}
+title "Rod"
+descr "Rod, one of the gate guards, shuffles his feet."
+extra {}
+"Rod is a burly dwarf who looks sad to be away from the mountains.
+He coughs up some fleghm and spits it on the ground.  He is cloaked in a
+tabard bearing the Midgaard coat of arms."
+M_DWARF_WARRIOR_AXE(50, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+
+dilcopy guardschedule(2, "rn_041@midwalls",
+                      9, "rn_041@midwalls",
+                      11, "rn_004@midwalls",
+                      19,
+        {"rn_002@midgaard"});
+end
+
+			       gate_w4
+
+names {"gate guard", "wallguard", "rupert"}
+title "Rupert"
+descr "Rupert, one of the gate guards, stands at attention."
+extra {}
+"Rupert looks to be the best of the best of the wall guards.
+He follows all of the rules, and is never doing what he is not
+supposed to be doing.  Most often, this involves watching the gate.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+M_HUMAN_WARRIOR_POLE(50, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      11, "rn_003@midwalls",
+                      19,
+        {"rn_002@midgaard"});
+end
+
+			       gate_s3
+
+names {"gate guard", "wallguard", "bill"}
+title "Bill"
+descr "Bill, one of the gate guards, looks bored."
+extra {}
+"Bill looks as if he has been guarding this gate for a long time.
+Hardly anyone passes by, and he looks at you with baleful eyes.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+M_HUMAN_WARRIOR_POLE(50, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(2, "rn_041@midwalls",
+                      9, "rn_041@midwalls",
+                      12, "rn_016@midwalls",
+                      19,
+        {"rn_017@midgaard"});
+end
+
+			       gate_s4
+
+names {"gate guard", "wallguard", "david"}
+title "David"
+descr "David, one of the gate guards, appears to be bored."
+extra {}
+"David is roughly six feet tall, and has sort brown hair.  His
+hazel-green eyes peer at you intently, and he bears a faint
+grin upon his young face.  He is cloaked in a tabard bearing the Midgaard
+coat of arms."
+
+M_HUMAN_WARRIOR_POLE(50, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      12, "rn_019@midwalls",
+                      19,
+        {"rn_017@midgaard"});
+end
+
+
+
+				 patrol5
+
+names {"patrol guard", "wallguard", "steve"}
+title "Steve"
+descr "Steve, one of the wall guards, patrols the area."
+extra {}
+"Steve looks out over the town of Midgaard as he patrols the walls.
+He has a slight smile on his face, and grim determination in his eyes.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(56, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      12, "rn_026@midwalls",
+                      19,
+              {"rn_061@midwalls", "rn_058@midwalls", "rn_056@midwalls",
+                "rn_053@midwalls", "rn_056@midwalls", "rn_058@midwalls"});
+end
+
+				patrol6
+names {"patrol guard", "wallguard", "peter"}
+title "Peter"
+descr "Peter, one of the wall guards, patrols the area."
+extra {}
+"Peter looks tired and sad.  His eyes almost seem to be tearing, though
+you can see that he chokes back whatever is ailing him.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(56, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      12, "rn_026@midwalls",
+                      19,
+              {"rn_043@midwalls", "rn_046@midwalls", "rn_048@midwalls",
+                "rn_051@midwalls", "rn_048@midwalls", "rn_046@midwalls"});
+end
+
+				patrol7
+names {"patrol guard", "wallguard", "jack"}
+title "Jack"
+descr "Jack, one of the wall guards, patrols the area."
+extra {}
+"Jack is a swarthy looking fellow with short black hair and green eyes.
+He hums quietly to himself as he patrols the walls.  He is cloaked in a
+tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(56, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      12, "rn_036@midwalls",
+                      19,
+        {"rn_081@midwalls", "rn_078@midwalls", "rn_076@midwalls",
+                "rn_073@midwalls", "rn_076@midwalls", "rn_078@midwalls"});
+end
+
+				patrol8
+
+names {"patrol guard", "wallguard", "jimmy"}
+title "Jimmy"
+descr "Jimmy, one of the wall guards, patrols the area."
+extra {}
+"Jimmy is of medium height, and is a little overweight.  He almost
+dances across the walls, fleetfooted and happy with the job he is
+doing.  He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(56, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      12, "rn_036@midwalls",
+                      19,
+          {"rn_071@midwalls", "rn_067@midwalls", "rn_066@midwalls",
+                "rn_063@midwalls", "rn_066@midwalls", "rn_067@midwalls"});
+end
+
+				lieu5
+
+names {"patrol guard", "lieutenant", "john"}
+title "John"
+descr "John, a lieutenant of the wall guard, patrols the area."
+extra {}
+"John is a stalwart individual who has attained his position through
+years of hard work and good service.  He has a full beard, and
+eyes that gleam from beneath his heavy brow.  He is cloaked in a tabard
+bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(58, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      12, "rn_036@midwalls",
+                      19,
+        {"rn_059@midwalls", "rn_012@midgaard", "rn_055@midwalls",
+                "rn_008@midgaard" });
+end
+
+
+				lieu6
+
+names {"patrol guard", "lieutenant", "chris"}
+title "Chris"
+descr "Chris, a lieutenant of the wall guard, patrols the area."
+extra {}
+"Chris Strolls the walls with a look of pure satisfaction on his face.
+His boots clomp along as he patrols the area and takes care of the
+other guards.  He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(58, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      12, "rn_036@midwalls",
+                      19,
+        {"rn_045@midwalls", "rn_002@midgaard", "rn_049@midwalls",
+                "rn_008@midgaard" });
+end
+
+
+				lieu7
+
+names {"patrol guard", "lieutenant", "matt"}
+title "Matt"
+descr "Matt, a lieutenant of the wall guard, patrols the area."
+extra {}
+"Matt is one of the lieutenants of the wall guard, and looks well suited to
+his profession.  He is clean shaven, and his hair is neatly brushed.
+He is cloaked in a tabard bearing the Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(58, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      12, "rn_026@midwalls",
+                      19,
+        {"rn_079@midwalls", "rn_002@midgaard", "rn_075@midwalls",
+                "rn_017@midgaard" });
+end
+
+				lieu8
+
+names {"patrol guard", "lieutenant", "scott"}
+title "Scott"
+descr "Scott, a lieutenant of the wall guard, patrols the area."
+extra {}
+"Great Scott a well known poet once wrote.  Scott appears to be at least
+seven feet tall, and wields his sword with ease.  He peers at you
+intently as you pass him by.  He is cloaked in a tabard bearing the
+Midgaard coat of arms."
+
+M_HUMAN_WARRIOR_SWORD(58, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+dilcopy rescue@function("guard / captain / mayor");
+dilcopy arrest_check@midgaard("accuse_room@midgaard");
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+dilcopy guardschedule(1, "rn_041@midwalls",
+                      8, "rn_041@midwalls",
+                      12, "rn_026@midwalls",
+                      19,
+        {"rn_065@midwalls", "rn_012@midgaard", "rn_068@midwalls",
+                "rn_017@midgaard" });
+end
+
+
+		      barkeep
+
+names {"barkeep", "ryan"}
+title "Ryan"
+descr "Ryan the barkeep awaits your order."
+extra {}
+"The barkeep is a stocky individual who has worked the walls for
+many years.  He chats merrily with some guards as he wipes the
+bar clean."
+
+M_HUMAN_WARRIOR_SWORD(58, SEX_MALE)
+dilcopy shopkeeper@function(
+{
+"beer_barrel@midgaard 1 5",
+"beer_bottle@midgaard 1 5",
+"tuborg@udgaard 1 5",
+"firebreather@midgaard 1 5"
+},{
+"   $1n says, 'I've got no such item!' ",
+"   $1n says, '$3n, you haven't even got it!' ",
+"   $1n says, 'I can't afford it, sorry!' ",
+"   $1n says, '$3n, you can't afford $2n' ",
+"   $1n says, 'That's %s for $2n' ",
+"   $1n says, 'Thank you $3n, here are %s for $2n.' ",
+"$1n says, 'I don't seem to have that many in my stock'",
+"$1n says, 'I'm on my break, GET LOST!'",
+"$1n says, 'I have no use for a $2n'",
+"$1n says, 'Sorry, I can't afford it'"},
+{"4","12","13","23"},
+"",
+110,60,286720,"","");
+
+
+end
+
+		      cook
+
+names {"cook", "jeff"}
+title "Jeff"
+descr "Jeff the cook awaits your order."
+extra {}
+"Jeff is spattered with a number of different dishes, but it
+appears that the fare for the evening is beef.  Your mouth waters
+as you smell its aroma."
+M_HUMAN_WARRIOR_SWORD(58, SEX_MALE)
+dilcopy shopkeeper@function(
+{
+"coffe_cup@midwalls 50 50",
+"food@midwalls 50 50"
+},{
+"   $1n says, 'I've got no such item!' ",
+"   $1n says, '$3n, you haven't even got it!' ",
+"   $1n says, 'I can't afford it, sorry!' ",
+"   $1n says, '$3n, you can't afford $2n' ",
+"   $1n says, 'That's %s for $2n' ",
+"   $1n says, 'Thank you $3n, here are %s for $2n.' ",
+"$1n says, 'I don't seem to have that many in my stock'",
+"$1n says, 'I'm on my break, GET LOST!'",
+"$1n says, 'I have no use for a $2n'",
+"$1n says, 'Sorry, I can't afford it'"},
+{"0","23","0","23"},
+"",
+110,60,286720,"","");
+
+
+end
+				armorer
+
+names {"armorer", "ned"}
+title "Ned"
+descr "Ned, the armorer of the wall guards stands here."
+extra {}
+"Ned is an older man with greying hair.  He looks to be very strong, and is
+moving suits of armor to various locations around the store room."
+
+M_HUMAN_WARRIOR_SWORD(58, SEX_MALE)
+alignment 400
+
+romflags {CHAR_PROTECTED}
+special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+
+end
+
+%objects
+			sign
+
+names {"sign"}
+title "a sign"
+descr "A sign from god."
+extra {}
+"As it would be silly to have a simple wooden door leading out of the city of midgaard's mighty tower, the reslab has been moved south and east of the southen gate of midgaard.  Please look for it there."
+type ITEM_OTHER
+weight 10000
+end
+			head
+
+names {"head"}
+title "the head of a crossbow bolt"
+descr "A small piece of metal glimmers here."
+extra {}
+"This is the small metal head of a crossbow bolt.  You wonder if it is
+sad to be decapitated from its body."
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+weight 1
+end
+			shaft
+
+names {"shaft"}
+title "the shaft of a crossbow bolt"
+descr "A thin piece of wood is here."
+extra {}
+"This appears to be the shaft of a crossbow bolt.  A fleeting thought of
+giving someone the shaft and them not minding passes through your head.
+Then it is gone."
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+weight 1
+end
+                bundle
+
+names {"crossbow bolts", "bundle", "bolts"}
+title "a bundle of crossbow bolts"
+descr "A large bundle of crossbow bolts is stacked here."
+extra {}
+"These crossbow bolts are bundles for use if Midgaard is attacked.  In
+such circumstances, the wall guards would be well equipped."
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+weight 40
+end
+
+			flight
+
+names {"flight"}
+title "the flight of a crossbow bolt"
+descr "A small cut feather is here."
+extra {}
+"This small feather probably came from a goose or some similar bird."
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+weight 1
+end
+
+			bolt
+
+names {"bolt"}
+title "a crossbow bolt"
+descr "A crossbow bolt lies here."
+extra {}
+"This crossbow bolt is tipped with a razor sharp head, and has
+a set of feathers on the opposite end."
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+weight 1
+end
+
+bow_string
+
+names {"bow string", "string"}
+title "a bow string"
+descr "A small string is curled on the ground."
+extra {}
+"This string looks as if it once adorned a crossbow."
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+weight 1
+end
+
+rocks
+names {"pile of rocks", "rocks", "rock"}
+title "a pile of rocks"
+descr "A large pile of rocks is here."
+extra {}
+"These rocks can be thrown off the walls, through murder holes, or generally
+anwhere with the intent of causing severe bodily harm to another person.
+They are most effective after falling forty or fifty feet, though ten or
+fifteen would also work just fine."
+type ITEM_OTHER
+weight 50
+
+dilbegin rock();
+var
+  pc       : unitptr;
+code
+{
+
+  :init:
+  heartbeat := PULSE_SEC*5;
+  on_activation((self.position <= POSITION_SLEEPING) or
+	       (self.position == POSITION_FIGHTING), skip);
+
+  :start:
+  wait(SFB_CMD, command("get") and ("rock" in argument) or
+                (command("get") and ("rocks" in argument) and
+		(activator.type == UNIT_ST_PC)));
+
+  pc := activator;
+  {
+      if ((self.outside.nameidx+"@"+self.outside.zoneidx=="rn_022@midwalls") or
+	(self.outside.nameidx+"@"+self.outside.zoneidx=="rn_028@midwalls") or
+	(self.outside.nameidx+"@"+self.outside.zoneidx=="rn_032@midwalls") or
+	(self.outside.nameidx+"@"+self.outside.zoneidx=="rn_038@midwalls"))
+      {
+      block;
+        act("You pick up a rock.",
+         A_SOMEONE, pc, null, null, TO_CHAR);
+
+         act("$1n picks up a rock.",
+         A_SOMEONE, self.outside, null, null, TO_ROOM);
+
+	act("You hurl the rock through the murder hole.",
+            A_SOMEONE, pc, null, null, TO_CHAR);
+
+           act("$1n hurls a rock through the murder hole.",
+           A_SOMEONE, self.outside, null, null, TO_ROOM);
+
+	act("You hear someone cursing from the room below.",
+            A_SOMEONE, pc, null, null, TO_CHAR);
+
+           act("You hear someone cursing from the room below.",
+           A_SOMEONE, self.outside, null, null, TO_ROOM);
+
+	goto start;
+   }
+        block;
+        act("You pick up a rock.",
+         A_SOMEONE, pc, null, null, TO_CHAR);
+
+         act("$1n picks up a rock.",
+         A_SOMEONE, self.outside, null, null, TO_ROOM);
+
+	act("You hurl the rock off the walls.",
+            A_SOMEONE, pc, null, null, TO_CHAR);
+
+           act("$1n hurls a rock off the walls.",
+           A_SOMEONE, self.outside, null, null, TO_ROOM);
+
+	goto start;
+     }
+     goto start;
+}
+dilend
+end
+
+coffe_cup
+
+names {"coffee", "cup"}
+title "a cup of coffee"
+extra {}
+"Ummmm good"
+LIQ_DEF("hot black", 2,5,5,10,1,0,0)
+manipulate {MANIPULATE_TAKE}
+weight 1
+end
+
+      food
+names {"beef"}
+title "a hunk o beef"
+extra {}
+"Ummmm good"
+FOOD_DEF(50, 0)
+manipulate {MANIPULATE_TAKE}
+weight 1
+end
+
+
+
+			halberd
+
+names {"halberd"}
+title "a halberd"
+descr "An halberd sits on the ground."
+extra {}
+"This halberd bears the Midgaard coat of arms, and the stamp of the
+wall guards."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_HALBERD, 1, 1)
+type ITEM_WEAPON
+weight 8
+cost 12 SILVER_PIECE
+end
+
+			axe
+
+names {"battle axe", "axe"}
+title "a battle axe"
+descr "A battle axe sits on the ground."
+extra {}
+"This battle axe bears the Midgaard coat of arms, and the stamp of the
+wall guards."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_BATTLE_AXE, 1, 1)
+type ITEM_WEAPON
+weight 8
+cost 12 SILVER_PIECE
+end
+			great_sword
+
+names {"great sword", "sword"}
+title "a great sword"
+descr "A greatsword sits on the ground."
+extra {}
+"This greatsword bears the Midgaard coat of arms, and the stamp of the
+wall guards."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_GREAT_SWORD, 1, 1)
+type ITEM_WEAPON
+weight 5
+cost 12 SILVER_PIECE
+end
+
+			long_sword
+
+names {"long sword", "sword"}
+title "a long sword"
+descr "A long sword sits on the ground."
+extra {}
+"This longsword bears the Midgaard coat of arms, and the stamp of the
+wall guards."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_LONG_SWORD, 1, 1)
+romflags {OBJ_NO_DUAL}
+type ITEM_WEAPON
+weight 5
+cost 12 SILVER_PIECE
+end
+			cross_bow
+
+names {"crossbow", "bow"}
+title "a crossbow"
+descr "A large crossbow sits here."
+extra {}
+"This crossbow looks as if it could hurl a bolt a great distance.  It
+bears the stamp of the Midgaard wall guards."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+weight 5
+cost 10 SILVER_PIECE
+end
+
+			belt
+
+names {"belt"}
+title "belt with bolt case"
+descr "A belt that holds crossbow bolts sits here."
+extra {}
+"This leather belt is used to hold crossbow bolts.  It bears the stamp
+of the Midgaard wall guards."
+type ITEM_WORN
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+weight 1
+cost 2 COPPER_PIECE
+end
+			tabard
+
+names {"tabard"}
+title "a tabard"
+descr "A tabard bearing the midgaard coat of arms lies here."
+extra {}
+"This tabard of the wall guards bears the Midgaard coat of arms.
+On it you see a slain dragon with its head tilted back, and a sword
+piercing the neck.  The dragon lies amid a shining city, which is placed
+on a shield.  A crown sits above the shield, a sceptre below, and there are
+two crossed rapiers behind all."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+weight 2
+cost 5 COPPER_PIECE
+end
+
+			boots
+
+names {"boots"}
+title "a pair of leather boots"
+descr "A pair of leather boots sit on the ground."
+extra {}
+"These leather boots appear to be standard issue for the wall guards
+of Midgaard."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+type ITEM_ARMOR
+ARMOUR_HRD_LEATHER(0, 0)
+weight 3
+cost 1 SILVER_PIECE
+end
+
+			plate
+
+names {"breast plate", "breastplate", "plate"}
+title "a wall guard breastplate"
+descr "A breastplate of the wall guards lies here."
+extra {}
+"This plate looks as if it belongs to the wall guards of Midgaard.
+On it you see a slain dragon with its head tilted back, and a sword
+piercing its neck.  The dragon lies amid a shining city, which is placed
+on a shield.  A crown sits above the shield, a sceptre below, and there are
+two crossed rapiers behind the shield."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+type ITEM_ARMOR
+ARMOUR_PLATE(0, 0)
+weight 14
+end
+
+			gaunts
+
+names {"gauntlets", "gauntlet"}
+title "a pair of wall guard gauntlets"
+descr "Some gauntlets of the wall guards lie here."
+extra {}
+"These gauntlets appear to be from the stockpile of the Midgaard wall guards."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
+type ITEM_ARMOR
+ARMOUR_PLATE(0, 0)
+weight 14
+cost 140 COPPER_PIECE
+end
+
+			bracers
+
+names {"bracers"}
+title "a pair of wall guard bracers"
+descr "A pair of bracers of the wall guards lie here."
+extra {}
+"These bracers appear to be from the stockpile of the Midgaard wall guards."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
+type ITEM_ARMOR
+ARMOUR_PLATE(0, 0)
+weight 14
+cost 140 COPPER_PIECE
+end
+
+			leggings
+
+names {"leggings"}
+title "a pair of wall guard leggings"
+descr "A pair of leggings of the wall guards lie here."
+extra {}
+"These leggings appear to be from the stockpile of the Midgaard wall guards."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+type ITEM_ARMOR
+ARMOUR_PLATE(0, 0)
+weight 14
+cost 140 COPPER_PIECE
+end
+
+			helmet
+
+names {"helmet"}
+title "a wall guard helmet"
+descr "A helmet of the wall guards lies here."
+extra {}
+"This helmet appears to be from the stockpile of the Midgaard wall guards."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+type ITEM_ARMOR
+ARMOUR_PLATE(0, 0)
+weight 14
+cost 140 COPPER_PIECE
+end
+
+
+captain_plate
+names {"breast plate", "breastplate", "plate"}
+title "the captains breastplate"
+descr "A breastplate of the wall guard captain lies here."
+extra {}
+"This plate looks as if it belongs to the captain of the wall guards of
+Midgaard. On it you see a slain dragon with its head tilted back, and a sword
+piercing its neck.  The dragon lies amid a shining city, which is placed
+on a shield.  A crown sits above the shield, a sceptre below, and there are
+two crossed rapiers behind the shield.  This plate glows softly."
+flags {UNIT_FL_MAGIC}
+extra {"$identify"}
+"This plate might improve your strength and dexterity a bit.  It will
+hurt your magical ability a little."
+extra {"$improved identify"}
+"This plate will add 2 to your strength and 2 to your dexterity.
+It will remove 2 from magic."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+type ITEM_ARMOR
+ARMOUR_PLATE(0, 0)
+STR_TRANSFER(+2)
+DEX_TRANSFER(+2)
+MAG_TRANSFER(-2)
+DIV_TRANSFER(-2)
+weight 14
+cost 100 IRON_PIECE
+end
+
+#define ARMOR \
+   equip boots position WEAR_FEET \
+   equip plate position WEAR_BODY \
+   equip gaunts position WEAR_HANDS \
+   equip leggings position WEAR_LEGS \
+   equip bracers position WEAR_HANDS \
+   equip helmet position WEAR_HEAD \
+   equip tabard position WEAR_ABOUT \
+   equip belt position WEAR_WAIST \
+   equip cross_bow position WEAR_BACK \
+
+#define ARMOR2 \
+   equip boots position WEAR_FEET \
+   equip captain_plate position WEAR_BODY \
+   equip gaunts position WEAR_HANDS \
+   equip leggings position WEAR_LEGS \
+   equip bracers position WEAR_HANDS \
+   equip helmet position WEAR_HEAD \
+   equip tabard position WEAR_ABOUT \
+
+%reset
+door rn_002@midgaard NORTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_002@midgaard SOUTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_003 SOUTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_004 NORTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_005 SOUTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_006 EAST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_008@midgaard EAST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_008@midgaard WEST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_009 WEST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_010 SOUTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_014 NORTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_011 SOUTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_012@midgaard SOUTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_012@midgaard NORTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_016 WEST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_017@midgaard WEST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_017@midgaard EAST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_019 EAST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_046 NORTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_047 SOUTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_047 EAST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_048 WEST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_056 EAST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_057 WEST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_057 SOUTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_058 NORTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_066 SOUTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_070 WEST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_070 NORTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_067 EAST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_076 WEST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_077 EAST {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_077 NORTH {EX_OPEN_CLOSE, EX_CLOSED}
+door rn_078 SOUTH {EX_OPEN_CLOSE, EX_CLOSED}
+load rocks into rn_032 zonemax 12
+load rocks into rn_028 zonemax 12
+load rocks into rn_038 zonemax 12
+load rocks into rn_022 zonemax 12
+load rocks into rn_054 zonemax 12
+load rocks into rn_060 zonemax 12
+load rocks into rn_063 zonemax 12
+load rocks into rn_066 zonemax 12
+load rocks into rn_069 zonemax 12
+load rocks into rn_074 zonemax 12
+load rocks into rn_081 zonemax 12
+load rocks into rn_044 zonemax 12
+load shaft into rn_049 zonemax 7
+load shaft into rn_053 zonemax 7
+load shaft into rn_057 zonemax 7
+load shaft into rn_065 zonemax 7
+load shaft into rn_030 zonemax 7
+load shaft into rn_034 zonemax 7
+load shaft into rn_023 zonemax 7
+load head into rn_055 zonemax 8
+load head into rn_059 zonemax 8
+load head into rn_073 zonemax 8
+load head into rn_074 zonemax 8
+load head into rn_077 zonemax 8
+load head into rn_011 zonemax 8
+load head into rn_009 zonemax 8
+load head into rn_031 zonemax 8
+load bow_string into rn_045 zonemax 7
+load bow_string into rn_057 zonemax 7
+load bow_string into rn_087 zonemax 7
+load bow_string into rn_082 zonemax 7
+load bow_string into rn_078 zonemax 7
+load bow_string into rn_029 zonemax 7
+load bow_string into rn_006 zonemax 7
+load bolt into rn_006 zonemax 20
+load bolt into rn_025 zonemax 20
+load bolt into rn_041 zonemax 20
+load bolt into rn_040 zonemax 20
+load bolt into rn_032 zonemax 20
+load bolt into rn_034 zonemax 20
+load bolt into rn_026 zonemax 20
+load bolt into rn_009 zonemax 20
+load bolt into rn_014 zonemax 20
+load bolt into rn_054 zonemax 20
+load bolt into rn_056 zonemax 20
+load bolt into rn_047 zonemax 20
+load bolt into rn_075 zonemax 20
+load bolt into rn_083 zonemax 20
+load bolt into rn_088 zonemax 20
+load bolt into rn_066 zonemax 20
+load bolt into rn_058 zonemax 20
+load bolt into rn_053 zonemax 20
+load bolt into rn_043 zonemax 20
+load bundle into rn_049 zonemax 40
+load bundle into rn_049 zonemax 40
+load bundle into rn_049 zonemax 40
+load bundle into rn_049 zonemax 40
+load bundle into rn_049 zonemax 40
+load bundle into rn_055 zonemax 40
+load bundle into rn_055 zonemax 40
+load bundle into rn_055 zonemax 40
+load bundle into rn_055 zonemax 40
+load bundle into rn_055 zonemax 40
+load bundle into rn_059 zonemax 40
+load bundle into rn_059 zonemax 40
+load bundle into rn_059 zonemax 40
+load bundle into rn_059 zonemax 40
+load bundle into rn_059 zonemax 40
+load bundle into rn_065 zonemax 40
+load bundle into rn_065 zonemax 40
+load bundle into rn_065 zonemax 40
+load bundle into rn_065 zonemax 40
+load bundle into rn_065 zonemax 40
+load bundle into rn_068 zonemax 40
+load bundle into rn_068 zonemax 40
+load bundle into rn_068 zonemax 40
+load bundle into rn_068 zonemax 40
+load bundle into rn_068 zonemax 40
+load bundle into rn_075 zonemax 40
+load bundle into rn_075 zonemax 40
+load bundle into rn_075 zonemax 40
+load bundle into rn_075 zonemax 40
+load bundle into rn_075 zonemax 40
+load bundle into rn_079 zonemax 40
+load bundle into rn_079 zonemax 40
+load bundle into rn_079 zonemax 40
+load bundle into rn_079 zonemax 40
+load bundle into rn_079 zonemax 40
+load bundle into rn_045 zonemax 40
+load bundle into rn_045 zonemax 40
+load bundle into rn_045 zonemax 40
+load bundle into rn_045 zonemax 40
+load bundle into rn_045 zonemax 40
+load sign into rn_015 max 1
+load lieu1 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load lieu2 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load lieu3 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load lieu4 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load patrol1 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load patrol2 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load patrol3 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load patrol4 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load gate_w1 into rn_004 max 1
+{
+  equip axe position WEAR_WIELD
+  ARMOR
+}
+load gate_w2 into rn_003 max 1
+{
+  equip halberd position WEAR_WIELD
+  ARMOR
+}
+load gate_n1 into rn_006 max 1
+{
+  equip halberd position WEAR_WIELD
+  ARMOR
+}
+load gate_n2 into rn_009 max 1
+{
+  equip halberd position WEAR_WIELD
+  ARMOR
+  load pheasant@deathlink
+}
+load gate_e1 into rn_011 max 1
+{
+  equip axe position WEAR_WIELD
+  ARMOR
+  load moss@isledead
+}
+load gate_e2 into rn_014 max 1
+{
+  equip halberd position WEAR_WIELD
+  ARMOR
+  load pate@deathlink
+}
+load gate_s1 into rn_016 max 1
+{
+  equip halberd position WEAR_WIELD
+  ARMOR
+}
+load gate_s2 into rn_019 max 1
+{
+  equip halberd position WEAR_WIELD
+  ARMOR
+  load spam@arctic
+}
+load guard1 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load guard2 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load dag_20@deadl1
+}
+load guard3 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load sai@outxiyang
+}
+load guard4 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load guard5 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load guard6 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load donut@arctic
+}
+load guard7 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load guard8 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load apple@midgaard
+}
+load guard9 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load guard10 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load bread@midgaard
+}
+load guard11 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load candlestick@midgaard
+}
+load guard12 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load coffe_cup@midgaard
+}
+load captain into rn_084 max 1
+{
+  equip great_sword position WEAR_WIELD
+  ARMOR2
+  load garlic@midgaard
+}
+load barkeep into rn_024 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load cook into rn_041 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load kipper@midgaard max 50
+  load coffe_cup@midwalls max 400
+  load salted_beef@midgaard max 400
+}
+load armorer into rn_034 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load pastry@midgaard
+}
+/* second shift */
+load guard13 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load paper@midgaard
+}
+load guard14 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load quill@midgaard
+}
+load guard15 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load kipper@midgaard
+}
+load guard16 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load coffe_cup@midgaard
+}
+load guard17 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load candlestick@midgaard
+}
+load guard18 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load bread@midgaard
+}
+load guard19 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load guard20 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load apple@midgaard
+}
+load guard21 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load ale_bottle@midgaard
+}
+load guard22 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load guard23 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load guard24 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load sai@outxiyang
+}
+load gate_w3 into rn_004 max 1
+{
+  equip axe position WEAR_WIELD
+  ARMOR
+  load dag_20@deadl1
+}
+load gate_w4 into rn_003 max 1
+{
+  equip halberd position WEAR_WIELD
+  ARMOR
+  load pate@deathlink
+}
+load gate_n3 into rn_006 max 1
+{
+  equip halberd position WEAR_WIELD
+  ARMOR
+}
+load gate_n4 into rn_009 max 1
+{
+  equip halberd position WEAR_WIELD
+  ARMOR
+}
+load gate_e3 into rn_011 max 1
+{
+  equip axe position WEAR_WIELD
+  ARMOR
+}
+load gate_e4 into rn_014 max 1
+{
+  equip halberd position WEAR_WIELD
+  ARMOR
+}
+load gate_s3 into rn_016 max 1
+{
+  equip halberd position WEAR_WIELD
+  ARMOR
+}
+load gate_s4 into rn_019 max 1
+{
+  equip halberd position WEAR_WIELD
+  ARMOR
+  load moss@isledead
+}
+load patrol7 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load patrol8 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load patrol5 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load patrol6 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load lieu5 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load lieu6 into rn_036 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+}
+load lieu7 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load spam@arctic
+}
+load lieu8 into rn_026 max 1
+{
+  equip long_sword position WEAR_WIELD
+  ARMOR
+  load sai@outxiyang
+}
+%end

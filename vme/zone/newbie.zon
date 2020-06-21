@@ -1,0 +1,3736 @@
+/*
+filename    newbie
+password    rlscrew
+changedby   Ratlin
+EmailAdd
+request     compile
+version     46
+END HEADER*/
+
+
+
+
+#include <macros.h>
+
+#define NEWBIE_ONGOING  "Newbie Quest Ongoing"
+#define NEWBIE_COMPLETE "Newbie Quest Complete"
+#define GUIDE           "New Player Helper"
+
+
+%zone newbie
+
+lifespan 10
+reset RESET_ANYHOW
+title "Village of Udgaard@Mainland"
+creators {"icculus"}
+
+%dil
+
+dilbegin naffect (arg:string);
+var
+ tgt:unitptr;
+ x:extraptr;
+code
+{
+:start:
+x:="New Player Helper" in self.quests;
+if (x==null)
+ {
+ act ("You are not a member of the Newbie Council.",
+  A_ALWAYS,self,null,null,TO_CHAR);
+  quit;
+  }
+tgt:=findunit (self, arg,FIND_UNIT_WORLD,null);
+
+if (tgt==null)
+ {
+ act("No such player found.",
+  A_ALWAYS, self, null,null, TO_CHAR);
+ quit;
+ }
+
+if (tgt.type!=UNIT_ST_PC)
+ {
+ act("No such player found.",
+  A_ALWAYS, self, null,null, TO_CHAR);
+ quit;
+ }
+if (tgt.level > 200)
+ {
+ act("No such player found.",
+  A_ALWAYS, self, null,null, TO_CHAR);
+ quit;
+ }
+if (tgt.level > 20)
+ {
+ act ("that person is not a newbie this only works for level 20 and down.",
+  A_ALWAYS, self, null, null, TO_CHAR);
+ quit;
+ }
+:loop:
+   if (isaff(tgt, ID_BLESS))
+     subaff(tgt, ID_BLESS);
+   else if (isaff(tgt, ID_NBLESS))
+     subaff(tgt, ID_NBLESS);
+   else if (isaff(tgt, ID_CONDEMN))
+     subaff(tgt, ID_CONDEMN);
+   else if (isaff(tgt, ID_FOCUS))
+     subaff(tgt, ID_FOCUS);
+   else if (isaff(tgt, ID_DETECT_ALIGN))
+     subaff(tgt, ID_DETECT_ALIGN);
+   else if (isaff(tgt, ID_DETECT_INVISIBLE))
+     subaff(tgt, ID_DETECT_INVISIBLE);
+   else if (isaff(tgt, ID_DETECT_MAGIC))
+     subaff(tgt, ID_DETECT_MAGIC);
+   else if (isaff(tgt, ID_DETECT_POISON))
+     subaff(tgt, ID_DETECT_POISON);
+   else if (isaff(tgt, ID_DETECT_UNDEAD))
+     subaff(tgt, ID_DETECT_UNDEAD);
+   else if (isaff(tgt, ID_DETECT_CURSE))
+     subaff(tgt, ID_DETECT_CURSE);
+   else if (isaff(tgt, ID_DETECT_LIFE))
+     subaff(tgt, ID_DETECT_LIFE);
+   else if (isaff(tgt, ID_ENCHANT_WEAPON))
+     subaff(tgt, ID_ENCHANT_WEAPON);
+   else if (isaff(tgt, ID_ENCHANT_ARMOUR))
+     subaff(tgt, ID_ENCHANT_ARMOUR);
+   else if (isaff(tgt, ID_ABSORBTION))
+     subaff(tgt, ID_ABSORBTION);
+   else if (isaff(tgt, ID_INVISIBILITY))
+     subaff(tgt, ID_INVISIBILITY);
+   else if (isaff(tgt, ID_HOLD))
+     subaff(tgt, ID_HOLD);
+   else if (isaff(tgt, ID_CHARM))
+     subaff(tgt, ID_CHARM);
+   else if (isaff(tgt, ID_MAGIC_LIGHT))
+     subaff(tgt, ID_MAGIC_LIGHT);
+   else if (isaff(tgt, ID_MAGIC_DARK))
+     subaff(tgt, ID_MAGIC_DARK);
+   else if (isaff(tgt, ID_SPL_RAISE_MAG))
+     subaff(tgt, ID_SPL_RAISE_MAG);
+   else if (isaff(tgt, ID_SPL_RAISE_DIV))
+     subaff(tgt, ID_SPL_RAISE_DIV);
+   else if (isaff(tgt, ID_SPL_RAISE_STR))
+     subaff(tgt, ID_SPL_RAISE_STR);
+   else if (isaff(tgt, ID_SPL_RAISE_DEX))
+     subaff(tgt, ID_SPL_RAISE_DEX);
+   else if (isaff(tgt, ID_SPL_RAISE_CON))
+     subaff(tgt, ID_SPL_RAISE_CON);
+   else if (isaff(tgt, ID_SPL_RAISE_CHA))
+     subaff(tgt, ID_SPL_RAISE_CHA);
+   else if (isaff(tgt, ID_SPL_RAISE_BRA))
+     subaff(tgt, ID_SPL_RAISE_BRA);
+   else if (isaff(tgt, ID_SPL_RAISE_HPP))
+     subaff(tgt, ID_SPL_RAISE_HPP);
+   else if (isaff(tgt, ID_SPL_RAISE_DIVINE))
+     subaff(tgt, ID_SPL_RAISE_DIVINE);
+   else if (isaff(tgt, ID_SPL_RAISE_SUMMONING))
+     subaff(tgt, ID_SPL_RAISE_SUMMONING);
+   else if (isaff(tgt, ID_SPL_RAISE_MIND))
+     subaff(tgt, ID_SPL_RAISE_MIND);
+   else if (isaff(tgt, ID_SPL_RAISE_HEAT))
+     subaff(tgt, ID_SPL_RAISE_HEAT);
+   else if (isaff(tgt, ID_SPL_RAISE_COLD))
+     subaff(tgt, ID_SPL_RAISE_COLD);
+   else if (isaff(tgt, ID_SPL_RAISE_CELL))
+     subaff(tgt, ID_SPL_RAISE_CELL);
+   else if (isaff(tgt, ID_SPL_RAISE_INTERNAL))
+     subaff(tgt, ID_SPL_RAISE_INTERNAL);
+   else if (isaff(tgt, ID_SPL_RAISE_EXTERNAL))
+     subaff(tgt, ID_SPL_RAISE_EXTERNAL);
+   else if (isaff(tgt, ID_RAISE_MAG))
+     subaff(tgt, ID_RAISE_MAG);
+   else if (isaff(tgt, ID_RAISE_DIV))
+     subaff(tgt, ID_RAISE_DIV);
+   else if (isaff(tgt, ID_RAISE_STR))
+     subaff(tgt, ID_RAISE_STR);
+   else if (isaff(tgt, ID_RAISE_DEX))
+     subaff(tgt, ID_RAISE_DEX);
+   else if (isaff(tgt, ID_RAISE_CON))
+     subaff(tgt, ID_RAISE_CON);
+   else if (isaff(tgt, ID_RAISE_CHA))
+     subaff(tgt, ID_RAISE_CHA);
+   else if (isaff(tgt, ID_RAISE_BRA))
+     subaff(tgt, ID_RAISE_BRA);
+   else if (isaff(tgt, ID_RAISE_HPP))
+     subaff(tgt, ID_RAISE_HPP);
+   else if (isaff(tgt, ID_RAISE_DIVINE))
+     subaff(tgt, ID_RAISE_DIVINE);
+   else if (isaff(tgt, ID_RAISE_SUMMONING))
+     subaff(tgt, ID_RAISE_SUMMONING);
+   else if (isaff(tgt, ID_RAISE_MIND))
+     subaff(tgt, ID_RAISE_MIND);
+   else if (isaff(tgt, ID_RAISE_HEAT))
+     subaff(tgt, ID_RAISE_HEAT);
+   else if (isaff(tgt, ID_RAISE_COLD))
+     subaff(tgt, ID_RAISE_COLD);
+   else if (isaff(tgt, ID_RAISE_CELL))
+     subaff(tgt, ID_RAISE_CELL);
+   else if (isaff(tgt, ID_RAISE_INTERNAL))
+     subaff(tgt, ID_RAISE_INTERNAL);
+   else if (isaff(tgt, ID_RAISE_EXTERNAL))
+     subaff(tgt, ID_RAISE_EXTERNAL);
+   else if (isaff(tgt, ID_POISON))
+     subaff(tgt, ID_POISON);
+   else if (isaff(tgt, ID_SPEED))
+     subaff(tgt, ID_SPEED);
+   else
+   {
+  act ("$3n purifies your body.",
+   A_SOMEONE,tgt,null,self,TO_CHAR);
+  act ("You  purify $3n's body.",
+   A_SOMEONE,self,null,tgt,TO_CHAR);
+   quit;
+   }
+   goto loop;
+}
+dilend
+
+dilbegin nbless (arg:string);
+var
+ tgt:unitptr;
+ x:extraptr;
+code
+{
+x:="New Player Helper" in self.quests;
+if (x==null)
+ {
+ act ("You are not a member of the Newbie Council.",
+  A_ALWAYS,self,null,null,TO_CHAR);
+  quit;
+  }
+
+tgt:=findunit (self, arg,FIND_UNIT_WORLD,null);
+if (tgt==null)
+ {
+ act("No such player found.",
+  A_ALWAYS, self, null,null, TO_CHAR);
+ quit;
+ }
+
+if (tgt.type!=UNIT_ST_PC)
+ {
+ act("No such player found.",
+  A_ALWAYS, self, null,null, TO_CHAR);
+ quit;
+ }
+if (tgt.level > 200)
+ {
+ act("No such player found.",
+  A_ALWAYS, self, null,null, TO_CHAR);
+ quit;
+}
+if (tgt.level > 20)
+ {
+ act ("that person is not a newbie this only works for level 20 and down.",
+  A_ALWAYS, self, null, null, TO_CHAR);
+ quit;
+ }
+
+if (isaff(tgt,ID_NBLESS))
+ {
+ act ("$3n has already been given the Newbie Council's blessing.",
+  A_ALWAYS,self,null,tgt,TO_CHAR);
+  quit;
+  }
+
+   addaff(tgt, ID_NBLESS, 10, WAIT_SEC*30,
+   ABIL_DIV, 5, 0, TIF_BLESS_ON, TIF_BLESS_TICK, TIF_BLESS_OFF,
+   APF_ABILITY);
+
+   addaff(tgt, ID_NBLESS, 10, WAIT_SEC*30,
+   ABIL_DEX, 5, 0, TIF_NONE, TIF_NONE, TIF_NONE,
+   APF_ABILITY);
+
+   addaff(tgt, ID_NBLESS, 10, WAIT_SEC*30,
+   ABIL_STR, 5, 0, TIF_NONE, TIF_NONE, TIF_NONE,
+   APF_ABILITY);
+
+   addaff(tgt, ID_NBLESS, 10, WAIT_SEC*30,
+   ABIL_BRA, 5, 0, TIF_NONE, TIF_NONE, TIF_NONE,
+   APF_ABILITY);
+
+act ("You feel the blessing of $3n and the Newbie Council surround you.",
+ A_ALWAYS,tgt, null,self, TO_CHAR);
+act ("You give your blessing to $3n.",
+ A_ALWAYS,self, null,tgt, TO_CHAR);
+   quit;
+}
+dilend
+dilbegin nheal (arg:string);
+var
+ tgt:unitptr;
+ x:extraptr;
+code
+{
+x:="New Player Helper" in self.quests;
+if (x==null)
+ {
+ act ("You are not a member of the newbie council.",
+  A_ALWAYS,self,null,null,TO_CHAR);
+  quit;
+  }
+
+tgt:=findunit (self, arg,FIND_UNIT_WORLD,null);
+if (tgt==null)
+ {
+ act("No such player found.",
+  A_ALWAYS, self, null,null, TO_CHAR);
+ quit;
+ }
+
+if (tgt.type!=UNIT_ST_PC)
+ {
+ act("No such player found.",
+  A_ALWAYS, self, null,null, TO_CHAR);
+ quit;
+ }
+if (tgt.level > 200)
+ {
+ act("No such player found.",
+  A_ALWAYS, self, null,null, TO_CHAR);
+ quit;
+}
+if (tgt.level > 20)
+ {
+ act ("that person is not a newbie this only works for level 20 and down.",
+  A_ALWAYS, self, null, null, TO_CHAR);
+ quit;
+ }
+
+if (tgt.hp>5)
+ {
+ act ("$3n is not in need of the Newbie Council's healing.",
+  A_ALWAYS,self,null,tgt,TO_CHAR);
+  quit;
+  }
+
+act ("You feel the healing of $3n and the Newbie Council pulse through your veins.",
+ A_ALWAYS,tgt, null,self, TO_CHAR);
+act ("You cure $3n's most serious wounds.",
+ A_ALWAYS,self, null,tgt, TO_CHAR);
+  tgt.hp:=5;
+position_update(tgt);
+ quit;
+}
+dilend
+dilbegin nsanctuary (arg:string);
+var
+ tgt:unitptr;
+ x:extraptr;
+code
+{
+x:="New Player Helper" in self.quests;
+if (x==null)
+ {
+ act ("You are not a member of the Newbie Council.",
+  A_ALWAYS,self,null,null,TO_CHAR);
+  quit;
+  }
+
+tgt:=findunit (self, arg,FIND_UNIT_WORLD,null);
+if (tgt==null)
+ {
+ act("No such player found.",
+  A_ALWAYS, self, null,null, TO_CHAR);
+ quit;
+ }
+
+if (tgt.type!=UNIT_ST_PC)
+ {
+ act("No such player found.",
+  A_ALWAYS, self, null,null, TO_CHAR);
+ quit;
+ }
+if (tgt.level > 200)
+ {
+ act("No such player found.",
+  A_ALWAYS, self, null,null, TO_CHAR);
+ quit;
+}
+if (tgt.level > 20)
+ {
+ act ("that person is not a newbie this only works for level 20 and down.",
+  A_ALWAYS, self, null, null, TO_CHAR);
+ quit;
+ }
+
+if (isaff(tgt,ID_SANCTUARY))
+ {
+ act ("$3n is already affected by sanctuary.",
+  A_ALWAYS,self,null,tgt,TO_CHAR);
+  quit;
+  }
+
+   addaff(tgt, ID_SANCTUARY, 10, WAIT_SEC*30,
+   ABIL_HP, 5, 0, TIF_SANCTUARY_ON, TIF_SANCTUARY_TICK, TIF_SANCTUARY_OFF,
+   APF_ABILITY);
+act ("You feel the protection of $3n and the Newbie Council surround you.",
+ A_ALWAYS,tgt, null,self, TO_CHAR);
+act ("You give your protection to $3n.",
+ A_ALWAYS,self, null,tgt, TO_CHAR);
+   quit;
+}
+dilend
+dilbegin ngoto (arg:string);
+var
+ tgt:unitptr;
+ x:extraptr;
+code
+{
+    if (isset(self.pcflags, PC_SPIRIT))
+   {
+   act ("Return to the living world first then jump around.",
+    A_ALWAYS, self, null,null,TO_CHAR);
+    quit;
+    }
+
+x:="New Player Helper" in self.quests;
+if (x==null)
+ {
+ act ("You are not a member of the newbie council.",
+  A_ALWAYS,self,null,null,TO_CHAR);
+  quit;
+  }
+
+if (self.position==POSITION_FIGHTING)
+ {
+ act ("No way you're fighting for your life.",
+  A_SOMEONE,self, null,null,TO_CHAR);
+  quit;
+  }
+
+if (arg=="offices")
+ {
+ act ("$1n returns to the newbie Council offices.",
+  A_SOMEONE,self,null,null,TO_REST);
+ act ("You return to the newbie Council offices.",
+  A_SOMEONE,self,null,null,TO_CHAR);
+  link (self, findroom("hall@newbie"));
+  exec ("look",self);
+  act ("$1n appears from nowhere.",
+   A_SOMEONE, self,null,null,TO_REST);
+   quit;
+   }
+else if (arg=="hangout")
+ {
+ act ("$1n returns to the Newbie Council Hangout.",
+  A_SOMEONE,self,null,null,TO_REST);
+ act ("You return to the Newbie Council Hangout.",
+  A_SOMEONE,self,null,null,TO_CHAR);
+  link (self, findroom("newbie_hangout@newbie"));
+  exec ("look",self);
+  act ("$1n appears from nowhere.",
+   A_SOMEONE, self,null,null,TO_REST);
+   quit;
+   }
+
+tgt:=findunit (self, arg,FIND_UNIT_WORLD,null);
+if (tgt==null)
+ {
+ act("No such player found.",
+  A_ALWAYS, self, null,null, TO_CHAR);
+ quit;
+ }
+
+if (tgt.type!=UNIT_ST_PC)
+ {
+ act("No such player found.",
+  A_ALWAYS, self, null,null, TO_CHAR);
+ quit;
+ }
+
+if ((tgt.zone=="arena") or (tgt.zone=="basis") or
+ ((tgt.outside.nameidx+"@"+tgt.outside.zoneidx)=="nightmare@hobgob"))
+  {
+ act ("the player is either in nightmare or the arena restricted areas.",
+ A_ALWAYS, self,null,null,TO_CHAR);
+ quit;
+ }
+if (tgt.level > 200)
+ {
+ act("No such player found.",
+  A_ALWAYS, self, null,null, TO_CHAR);
+ quit;
+}
+if (tgt.level > 20)
+ {
+ act ("You can only travel to a newbie.",
+  A_ALWAYS, self, null, null, TO_CHAR);
+ quit;
+ }
+
+x:="$newbie_l_o" in self.extra;
+if (x==null)
+ act ("$1n claps $1s hands and vanishes.",
+  A_SOMEONE, self, null,null,TO_REST);
+else
+ act (x.descr,
+  A_SOMEONE, self, null,null,TO_REST);
+x:="$newbie_l_s" in self.extra;
+if (x==null)
+ act ("You clap your hands and vanish.",
+  A_ALWAYS, self, null,null,TO_CHAR);
+else
+ act (x.descr,
+  A_ALWAYS, self, null,null,TO_CHAR);
+link (self,tgt.outside);
+exec ("look",self);
+x:="$newbie_a_o" in self.extra;
+if (x==null)
+ act ("$1n appears in a blinding flash of light.",
+  A_SOMEONE, self, null,null,TO_REST);
+else
+ act (x.descr,
+  A_SOMEONE, self, null,null,TO_REST);
+x:="$newbie_a_s" in self.extra;
+if (x==null)
+ act ("You appear in a blinding flash of light.",
+  A_ALWAYS, self, null,null,TO_CHAR);
+else
+ act (x.descr,
+  A_ALWAYS, self, null,null,TO_CHAR);
+
+   quit;
+}
+dilend
+
+dilbegin ncorpse (arg:string);
+var
+ x:extraptr;
+code
+{
+x:="New Player Helper" in self.quests;
+if (x==null)
+ {
+ act ("You are not a member of the Newbie Council.",  A_ALWAYS,self,null,null,TO_CHAR);
+  quit;
+  }
+
+
+act ("The following newbie corpses were found:", A_ALWAYS,self,null,null,TO_CHAR);
+sendtoalldil ("report","report_corpse@death");
+quit;
+}
+dilend
+
+
+dilbegin getem();
+var
+        pc : unitptr;
+        pc_name : string;
+        gd : unitptr;
+code
+{
+
+:init:
+heartbeat:= PULSE_SEC*5;
+
+:start:
+wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and
+ (GUIDE in activator.quests) and (command("bring"))));
+block;
+pc:=findunit(activator, argument, FIND_UNIT_GLOBAL, null);
+gd:= activator;
+secure(pc,losthim);
+secure(gd,losthim);
+if (pc == null)
+        {
+     act("There is no such person logged in.",A_SOMEONE,self,null,null,TO_ALL);
+     unsecure(pc);
+     unsecure(gd);
+     goto start;
+        }
+    if (pc.minv > gd.level)
+       {
+     act("There is no such person logged in.",A_SOMEONE,self,null,null,TO_ALL);
+     unsecure(pc);
+     unsecure(gd);
+     goto start;
+        }
+
+    if (pc.level >IMMORTAL_LEVEL)
+      {
+      act("Good try pea brain!",A_SOMEONE,self,null,null,TO_ALL);
+      unsecure(pc);
+      unsecure(gd);
+      goto start;
+      }
+    if (pc.level >20)
+      {
+      act("I think they can manage by themselves!",A_SOMEONE,self,null,null,TO_ALL);
+      unsecure(pc);
+      unsecure(gd);
+      goto start;
+      }
+     if ((isset(pc.pcflags, PC_SPIRIT)))
+      {
+      act("Spirits are not transferable!",A_SOMEONE,self,null,null,TO_ALL);
+      unsecure(pc);
+      unsecure(gd);
+      goto start;
+       }
+
+    if ("nightmare" in pc.outside.name)
+
+      {
+      act("Sorry they are there for a reason!",A_SOMEONE,self,null,null,TO_ALL);
+      unsecure(pc);
+      unsecure(gd);
+      goto start;
+       }
+       if (not(pc.type == UNIT_ST_PC))
+
+       {
+       act("That is not a player.",A_SOMEONE, activator, null, null, TO_CHAR);
+       unsecure(pc);
+       unsecure(gd);
+       goto start;
+       }
+
+else
+     {
+    link(pc, findroom("hall@newbie"));
+      act("As a cloud of smoke dissipates "+pc.name+" has appeared"+
+      " in the room.",A_SOMEONE,self,null,null,TO_ALL);
+      exec("look",pc);
+      exec("save",pc);
+      unsecure(pc);
+      unsecure(gd);
+      goto start;
+      }
+
+:losthim:
+unsecure(pc);
+unsecure(gd);
+goto start;
+}
+dilend
+/*
+This function asks the pc if he/she has time to continue the
+quest.
+*/
+dilbegin integer stop_test (pc:unitptr,i:integer);
+code
+{
+   heartbeat := PULSE_SEC*6;
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :start:
+   if (pc #= null)
+      goto stop;
+   secure(pc, lost_pc);
+ on i goto zero,one,two,three,four;
+:zero:
+:one:
+act ("$1n says 'You have now finished the first phase of your training.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+goto there;
+:two:
+act ("$1n says 'You have now finished the second phase of your training.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+goto there;
+:three:
+act ("$1n says 'You have now finished the third phase of your training.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+goto there;
+:four:
+act ("$1n says 'You have now finished the fourth phase of your training.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+
+:there:
+act ("$1n says 'If you don't have time to continue we can stop now and continue later.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+:again:
+act ("$1n says 'Just 'nod' if you want to continue or 'shake' otherwise''",
+A_ALWAYS,self,null,pc,TO_VICT);
+
+wait (SFB_DONE,TRUE);
+if (cmdstr=="nod")
+  {
+  act ("$1n says 'Very well lets continue.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+  pause;
+   return (TRUE);
+   }
+else if (cmdstr=="shake")
+  {
+  :lost_pc:
+  act ("$1n says 'Very well then I will go help other newbies.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+ pause;
+ act ("$1n says ' if you ever need me just say 'help me Newbie Guide''",
+A_ALWAYS,self,null,pc,TO_VICT);
+ pause;
+  exec ("wave",self);
+  pause;
+  :stop:
+
+return (FALSE);
+}
+else goto again;
+}
+dilend
+
+dilbegin newbie_nospl ();
+var
+  pc:unitptr;
+code
+{
+
+:start:
+wait (SFB_PRE, ((command("cast")) and (self== target)));
+pc:=activator;
+secure (pc,start);
+power:=-1;
+block;
+pause;
+
+act ("$1n glows brightly.",A_ALWAYS,self,null,pc,TO_ALL);
+act ("$1n's Newbie magic protects him and you are thrown to the ground stunned.",
+A_ALWAYS,self,null,pc,TO_VICT);
+act ("$1n's Newbie magic protects him and $3n is thrown to the ground stunned.",
+A_ALWAYS,self,null,pc,TO_NOTVICT);
+pc.position:=POSITION_STUNNED;
+self.position:=POSITION_STANDING;
+pc.hp:=0;
+unsecure (pc);
+goto start;
+
+}
+dilend
+
+dilbegin newbie_nokill ();
+var
+code
+{
+
+:start:
+wait (SFB_PRE, command (CMD_AUTO_DAMAGE) and
+(self==target));
+power:=0;
+block;
+
+act ("Magic Newbie guardians knock you unconscious.",
+A_ALWAYS,self,null,activator,TO_VICT);
+activator.position:=POSITION_STUNNED;
+self.position:=POSITION_STANDING;
+activator.hp:=0;
+goto start;
+}
+dilend
+
+/* newbie guide tour part one basic commands*/
+dilbegin integer newbie_part1(pc : unitptr);
+var
+   i : integer;
+   u:unitptr;
+   h:integer;
+   s:string;
+   qst:extraptr;
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*6;
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :start:
+   if (pc #= null)
+      goto stop;
+   secure(pc, stop);
+
+   :quest_accepted:
+act ("$1n says 'Ok now, here we are, this is our Newbie Guide Chat room," +
+     " just perfect for this little talk.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   goto stage1;
+
+   :no_quest:
+   pause;
+   exec("tell "+pc.name+" I wish thee well then, make use of the help "+
+     "files frequently as they will be your only source of " +
+     "information.",self);
+   pause;
+   exec("tell "+pc.name+" If you wish to get my help later, just say 'help me"+
+   "newbie guide'. You must do this before reaching "+
+     "level six!", self);
+   pause;
+   goto stop;
+
+   :stage1:
+   pause;
+act ("$1n says 'If we get separated during the course " +
+     "of your training one of two things may occur.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'If another newbie logs in before we can find each " +
+     "other again I will most likely be helping them.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'If I am not you can just say help me newbie guide
+and I will "+
+   "find you and bring you back to Udgaard to finish your training.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'If I am busy, one of the other many newbie guides will come "+
+     "and help you.",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'Now, it would probably be best if you turned off " +
+     "your shout and tell.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+act ("$1n says 'Otherwise it may be hard to follow what I say " +
+     "during the course of training.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'To do this, type 'change shout' and 'change tell'. Please " +
+     "do this now.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says you can toggle many different things with the
+change command."+
+        "When we are finished our tour you can type change to see them all'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+pause;
+act ("$1n says 'Remember to turn them back on again after training " +
+     "by typing each command again.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+     pause;
+act ("$1n says 'The first thing I will talk about are basic mud commands.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+pause;
+act ("$1n says 'If you have played other muds, you can skip this part by saying "+
+"'go on' and I will move on to more Valhalla specific topics.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+h:=interrupt (SFB_DONE, command ("say") and
+(pc==activator) and
+(argument =="go on"), hurry);
+pause;
+act ("$1n says 'Before we start I would like to mention that most commands "+
+        " can be abbreviated. For example 'l' will work for 'look' and "+
+        "'inv' will work for 'inventory''",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'You must first learn the 'look' command - try to type: "+
+     "'look' (do not type the ' around look).'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   i := TRUE;
+   while (i)
+   {
+      wait(SFB_DONE | SFB_TICK, activator == pc);
+      if (not command("look"))
+      {
+act ("$1n says 'You must type 'look' before we can go on.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+      }
+      else
+     i := FALSE;
+   }
+act ("$1n says 'Very good! What you see is the description of the location "+
+     "in which we are standing as well as any objects and/or "+
+     "people that are here.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'If you would like to see a list of the people that are currently "+
+     "playing Valhalla you may do so with the 'who' command.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'The 'who' command will show you all the players visible to "+
+         "you that are currently playing.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'Please type 'who' now.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   wait(SFB_CMD | SFB_TICK, command("who") and (activator == pc));
+   pause;
+act ("$1n says 'Great.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'You may notice that some people on the who list have "+
+        "(Admin) after their names. These are the people that help "+
+         "run the game.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'If you have a 'game' related question you can talk to "+
+        "any Admin on line and ask for help. Remember however that "+
+        "immortals are not allowed to interfere with game play.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+  pause;
+act ("$1n says 'You can also get a list of Admin and their email addresses by typing "+
+        "'wizlist''",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'Next I would like to talk to you about communicating. "+
+     "The say command will allow you to speak to others in the same "+
+     "room as you. Try this now. type: 'say hello''",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   wait(SFB_DONE | SFB_TICK, command("say") and (activator == pc));
+  pause;
+act ("$1n says 'Very good.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+  pause;
+act ("$1n says 'There may be times when you want to communicate with someone "+
+        "that is not in the same room as you. Or you wish to communicate "+
+        "privately with someone. This can be done with the 'tell' command.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'You use tell command like this 'tell <name> <message>'. Try "+
+        "this now, type: 'tell "+self.name+" hello''",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   wait(SFB_DONE | SFB_TICK, command("tell")
+     and (activator == pc) and (target== self));
+   pause;
+act ("$1n says 'Perfect.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'You are bound to come across a time you would like to speak "+
+     "to everyone in the game. This can be done with the 'shout' "+
+        "command. It works the same as the say command but everyone will "+
+         "hear you.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'I would like to remind you that this is a family game and there "+
+     "are often young children playing so you are expected to keep your "+
+     "language on the shout channel clean.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'One last form of communication we have on Valhalla is channels.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+  pause;
+act ("$1n says 'You can create as many or as few channels as you like. Type "+
+        "'comm help' to get information on how to do this.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+ pause;
+act ("$1n says 'For now however it would be a good idea to add the newbie "+
+       "comm channel in case you need ever need help.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+  pause;
+act ("$1n says 'To do this type 'comm add newbie' do this now please.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+pause;
+act ("$1n says 'To talk to other players on the newbie channel or to get help "+
+        "type newbie and what you want to say.",	
+  A_ALWAYS, self,null,pc,TO_VICT);
+pause;
+act ("$1n says ' For example try this now - type 'newbie hello everyone!'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+pause;  
+act ("$1n says 'Newbie comm is also a great place to ask for help. "+
+        "If you lose your corpse ask on newbie for help retrieving it!'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+pause;
+act ("$1n says 'There will be questions you have that I do not cover in the "+
+        "course of our chat. You can usually find helps for such times in "+
+        "our help files.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'To get a listing of help topics you simply type 'help help'. "+
+        "Do this now please.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+
+   wait(SFB_CMD | SFB_TICK, command("help") and ("help" in argument));
+   pause;
+   pause;
+act ("$1n says 'Very good. Now we will now discuss manipulation of objects.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+	  u := load("silring@newbie");
+      u.height := pc.height;
+   exec("give "+u.name+" to "+pc.name, self);
+   pause;
+   pause;
+   pause;
+act ("$1n says 'I just gave you a silver ring, to see the ring you must check "+
+        " your 'inventory'. You can do this by typing the word  'inventory', "+
+     "please try this now.'", A_ALWAYS, self,null,pc,TO_VICT);
+
+   wait(SFB_CMD | SFB_TICK, command("inventory") and (activator == pc));
+   pause;
+act ("$1n says 'Good! Notice that the ring I just gave you is listed "+
+     "in your inventory.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   pause;
+act ("$1n says 'Now, please wear the ring on your finger by typing 'wear ring'.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+
+   wait(SFB_DONE | SFB_TICK, command("wear") and (activator == pc) and
+   ((medium.nameidx+"@"+medium.zoneidx)=="silring@newbie"));
+   pause;
+   pause;
+act ("$1n says 'The ring you just wore is no longer in your 'inventory', "+
+     "because you are wearing it. To see the things you are wearing, use "+
+     "the 'equipment' command, try this now.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+
+   wait(SFB_CMD | SFB_TICK, command("equipment") and (activator == pc));
+   pause;
+act ("$1n says 'To remove the things you are wearing, you can use the "+
+     "'remove' command, for example 'remove ring'.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'That ring will provide you light until you're level 20.'",
+     A_ALWAYS, self,null,pc,TO_VICT);
+
+act ("$1n says 'Now onto movement.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+act ("$1n says 'In order to move around the game you must first know "+
+        "which direction you can go.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+  pause;
+act ("$1n says 'You can type 'exits' or you can type 'direction'. Give this  "+
+        "a try now. type 'exits''",
+  A_ALWAYS, self,null,pc,TO_VICT);
+   wait(SFB_CMD | SFB_TICK, command("exits") and (activator == pc));
+
+   pause;
+act ("$1n says 'What you see is the obvious directions you can leave in. "+
+     "There are six directions, 'north', 'east', 'south', 'west', 'up' "+
+     "and 'down''",
+  A_ALWAYS, self,null,pc,TO_VICT);
+  pause;
+act ("$1n says 'To move in a specific direction you simple type the direction. "+
+      "You can also use just the first letter of the direction. Most find "+
+      "this to be easier.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+act ("$1n says 'If you can also type 'change exits' if you want to "+
+      "always have the obvious exits in a room displayed.",
+  A_ALWAYS, self,null,pc,TO_VICT);  
+  pause;
+act ("$1n says 'One last command I would like to tell you about before we move "+
+       "on  is 'commands'. This will give you a list of every command in "+
+        "the game.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+pause;
+qst:=NEWBIE_ONGOING in pc.quests;
+qst.descr:="part 1 done";
+return (TRUE);
+:hurry:
+pause;
+act ("$1n says 'Ah!  So you're some what familiar with muds.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+pause;
+act ("$1n says 'Then all I will tell you in this phase of training is to get a "+
+"list of commands on this mud just type 'commands''",
+  A_ALWAYS, self,null,pc,TO_VICT);
+pause;
+act ("$1n says 'Being the expert you are you know that you can get info on each "+
+"command by typing 'help <command>'.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+pause;
+act ("$1n says 'It would be a good idea to add the newbie "+
+       "comm channel in case you ever need help.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+pause;
+act ("$1n says 'To do this type 'comm add newbie'.'",
+  A_ALWAYS, self,null,pc,TO_VICT);
+
+   addextra (pc.quests,{NEWBIE_ONGOING},"");
+
+qst:=NEWBIE_ONGOING in pc.quests;
+qst.descr:="part 1 done";
+   return (TRUE);
+   :stop:
+   return (FALSE);
+}
+dilend
+
+/* newbie guide part 2 law system and rules */
+dilbegin integer newbie_part2(pc : unitptr);
+var
+   i : integer;
+   qst:extraptr;
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*6;
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :start:
+   if (pc #= null)
+      goto stop;
+   secure(pc, stop);
+pause;
+act ("$1n says 'Now lets talk about some more important matters.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   :next1:
+   pause;
+   pause;
+   act ("$1n says 'When something is wrong and the game does something that "+
+        "it should not, it's called a 'bug'.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+    act ("$1n says 'Sometimes bugs hinder play, other times  they benefit play.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'For this reason we insist that every player "+
+     "use the bug command (syntax: bug <describe bug found>)" +
+     " to report all bugs.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'We will take appropriate action if a player is found " +
+     "to have been taking advantage of bugs.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Now we must discuss our rules of multi-playing.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Valhalla allows a max of 2 characters owned by the same "+
+        "player on line at the same time. If you are caught with more "+
+        "on you will be asked to log the extras off.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Also I would like to mention that you must be in full control "+
+        "of your characters at all time. We do not allow scripts to run "+
+        "players.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   exec("emote glances at the rule book to refresh his memory.",self);
+   pause;
+   act ("$1n says 'Player killing is another area that may concern you.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'We have an arena, a special area for players wishing to kill "+
+        "each other without suffering the usual consequences of death.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'As a newbie you will not be able to choose to PK till you have "+
+   "reached level 50. Before you get to level 50 you should take "+
+   "time to read 'help bob' and 'help pk''",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Now, hard as it is to believe, some people actually " +
+     "find they must leave the game for real life occasionally.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'To do this you use the 'quit' command. You may quit in any "+
+       "room in the game. But remember if you quit in a dangerous area you "+
+       "may find yourself in trouble when you log back into the game.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+/*   act ("$1n says 'One important thing you need to know about quitting is that "+
+     "while you are gone, you are charged 'rent' for storing your items.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'The system will tell you how much rent you will be charged "+
+     "whenever you type 'save' (which you should get in the " +
+     "habit of doing frequently).'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause; */
+   act ("$1n says 'next we will move onto our tour of Udgaard.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+qst:=NEWBIE_ONGOING in pc.quests;
+qst.descr:="part 2 done";
+   return (TRUE);
+
+   :stop:
+   return (FALSE);
+}
+dilend
+
+/* newbie guide tour part 3 Udgaard tour */
+dilbegin integer newbie_part3(pc : unitptr);
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+        i       :       integer;
+        npc:unitptr;
+   qst:extraptr;
+code
+{
+:init:
+heartbeat:= PULSE_SEC*6;
+on_activation(self.position <= POSITION_SLEEPING, skip);
+
+:start:
+if (pc == null)
+  goto stop;
+secure(pc, stop);
+pc.endurance:=pc.max_endurance;
+self.endurance:=self.max_endurance;
+act ("$1n says 'We can tour Udgaard now...'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+pause;
+   if (not(pc.position == POSITION_STANDING))
+   {
+      act ("$1n says 'Please stand up now so we may begin.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+      :try_again:
+      wait(SFB_CMD, activator #= pc);
+      if (not command("stand"))
+      {
+      pause;
+      act ("$1n says 'Please STAND up.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+      goto try_again;
+      }
+   }
+   pause;
+   exec("stand", self);
+   :rdy_fol:
+   act ("$1n says 'Now for our tour it is important that you don't get lost.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   act ("$1n says 'So you must follow me...'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   if (not(pc.master.name $= self.name))
+  {
+  act ("$1n says 'Please type 'fol "+self.name+"' now.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+  :try_again2:
+  wait (SFB_DONE, activator==pc);
+  if (not(command  ("follow")) or
+    (target!=self))
+    {
+    act ("$1n says 'Please follow me now by typing 'fol newbie" +
+      " guide' now.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+    goto try_again2;
+    }
+  }
+pause;
+   act ("$1n says 'We will visit some important parts of Udgaard now.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   act ("$1n says 'You can always bring up a map of Udgaard by typing 'help area' " +
+     "in the city.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   act ("$1n says 'There is a great little food store just down this street to " +
+     "the west. Lets check it out...'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+npc:=findsymbolic ("rosanne@udgaard");
+if (npc==null)
+  {
+  npc:=load ("rosanne@udgaard");
+  link (npc,findroom ("food_store@udgaard"));
+  }
+if (npc.outside!=findroom ("food_store@udgaard"))
+  link (npc,findroom ("food_store@udgaard"));
+npc.position:=POSITION_STANDING;
+tf:=     walk_room@function ("food_store@udgaard",4);
+   act ("$1n says 'Rosanne makes some delicious bread and pastries! " +
+     "Type help list if you want to see what food you can buy here.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   exec ("emote buys a loaf of bread.",self);
+  link (load ("bread@midgaard"), self);
+   pause;
+   exec("give bread to "+pc.name, self);
+   exec("give bread to "+pc.name, self);
+   pause;
+   act ("$1n says 'Eat that when you get hungry later.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   act ("$1n says 'Let's  visit the Chicken's Rest next, there is a " +
+     "bulletin board there with the latest news and such.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+tf:=        walk_room@function ("inn@udgaard",4);
+   pause;
+   act ("$1n says 'Here we are. It's a good idea to check the board here on a "+
+     "regular basis. It will contain game updates and bugs as well "+
+         "as many other topics you will need to know about.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   act ("$1n says 'There is another board just through the door here but you can  "+
+        "check that out later yourself. Its for player chit chat.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   act ("$1n says 'To get instruction on how to use a board simply "+
+     "look at the board.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   act ("$1n says 'The post office is just a short way off and that is a place "+
+          "you will definitely want to go.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+npc:=findsymbolic ("hansen@udgaard");
+if (npc==null)
+  {
+  npc:=load ("hansen@udgaard");
+  link (npc,findroom ("postoffice@udgaard"));
+  }
+if (npc.outside!=findroom ("postoffice@udgaard"))
+link (npc,findroom ("postoffice@udgaard"));
+npc.position:=POSITION_STANDING;
+tf:=     walk_room@function ("postoffice@udgaard",4);
+act ("$1n says 'Here we are at our neighborhood mail man Hansen.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+pause;
+act ("$1n says 'Sending mail to any player is very simple.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+pause;
+act ("$1n says 'Since many players have trouble with the mail first time around I will "+
+"give you a writing assignment to start you off.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+pause;
+act ("$1n says 'The new player council helps to makes sure our newbies don't have problems "+
+"and I am sure they would love to hear from you.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+pause;
+act ("$1n says 'type 'write letter' now and write a note saying Hi and "+
+"introducing yourself to the council.  When you are done with your note you can exit the editor by "+
+      "typing '@' on a blank line and hitting <enter>.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+pause;
+
+act ("$1n says 'When you are done writing just say 'DONE' and I will tell you what to do next.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+pause;
+act ("$1n says 'I will not respond again until you tell me you are done.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+wait (SFB_DONE, command ("say" ) and
+(pc==activator) and
+("done" in argument));
+
+act ("$1n says 'Great!  Now just type 'mail LETTER NPH''",
+A_ALWAYS , self, null , pc ,TO_VICT);
+act ("$1n says 'I will wait until you have sent the letter.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+wait (SFB_CMD,command ("mail") and (pc==activator) and
+(argument=="letter nph"));
+pause;
+pause;
+pause;
+act ("$1n says 'Great!  Now on with the tour.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+pause;
+   act ("$1n says 'The last shop to visit is Harold's, he is the local " +
+     "Ironmonger and can sell you many items you may need.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+npc:=findsymbolic ("harold@udgaard");
+if (npc==null)
+  {
+  npc:=load ("harold@udgaard");
+  link (npc,findroom ("Ironmonger@udgaard"));
+  }
+if (npc.outside!=findroom ("ironmonger@udgaard"))
+  link (npc,findroom ("ironmonger@udgaard"));
+npc.position:=POSITION_STANDING;
+tf:=walk_room@function("ironmonger@udgaard",4);
+   pause;
+   exec("emote buys a lantern", self);
+   link (load ("lantern@midgaard"),self);
+   pause;
+   exec("give lantern to "+pc.name, self);
+   pause;
+   act ("$1n says 'To see how to use the lantern type 'help light'.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   act ("$1n says 'If you follow the main road to the east you will find the " +
+     " bank and jail house as well as an armorer and weapon shop.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   act ("$1n says 'You can visit them after our tour.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   act ("$1n says 'Ok. This concludes our tour of the Udgaard shops.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   act ("$1n says 'Next I would like to introduce you to someone that will be "+
+        "of some help to you during your time in Valhalla. Your very own "+
+        "healer.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+  pause;
+  npc:=findsymbolic ("healer@g_q");
+if (npc==null)
+  {
+  npc:=load ("healer@g_q");
+  link (npc,findroom ("heal_room@udgaard"));
+  }
+if (npc.outside!=findroom ("heal_room@udgaard"))
+link (npc,findroom ("heal_room@udgaard"));
+npc.position:=POSITION_STANDING;
+tf:=walk_room@function("heal_room@udgaard",4);
+    pause;
+    act ("$1n says 'If you find you need some helping spells come and sit here for "+
+         "a bit and the healer will be more then willing to help you.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+act ("$1n says 'If you go one north of here you can type 'FEAST' and if you are "+
+         "below level 20 and hungry or thirsty you will be magically fed.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   pause;
+   act ("$1n says 'I will finish by taking you back to the Temple where we started and "+
+   "explain one more nice thing.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+tf:=walk_room@function("temple@udgaard",4);
+   act ("$1n says 'If you ever find yourself without equipment you can worship "+
+         "this statue of Odin and it will grant you some very basic "+
+          "equipment.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   act ("$1n says 'This will only work while you're a newbie so you better learn "+
+         "to remember where you died so you can return and get your "+
+          "stuff from your corpse.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   act ("$1n says 'Well that about covers Udgaard.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+qst:=NEWBIE_ONGOING in pc.quests;
+qst.descr:="part 3 done";
+   return (TRUE);
+
+   :stop:
+   return (FALSE);
+}
+dilend
+
+/* newbie guide part 4 combat training */
+dilbegin integer newbie_part4(pc : unitptr);
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+     npc  :    unitptr;
+        i       :       integer;
+   qst:extraptr;
+code
+{
+:init:
+heartbeat:= PULSE_SEC*5;
+on_activation(self.position <= POSITION_SLEEPING, skip);
+:start:
+if (pc == null)
+  goto stop;
+secure(pc, stop);
+
+
+pause;
+act ("$1n says 'Ok now for some very important information, this is the stuff "+
+"you will need to know to stay alive and to level.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+
+act ("$1n says 'I will now take you to some of our newbie hunting grounds and "+
+"give you a chance to make your first kill.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+   if (not(pc.position == POSITION_STANDING))
+   {
+      act ("$1n says 'Please stand up now so we may begin.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+      :try_again:
+      wait(SFB_CMD, activator #= pc);
+      if (not command("stand"))
+      {
+      pause;
+      act ("$1n says 'Please Just STAND up.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+      goto try_again;
+      }
+   }
+   if (not(pc.master.name $= self.name))
+  {
+  act ("$1n says 'Please type 'fol newbie guide' now.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+  :try_again2:
+  wait (SFB_DONE, activator==pc);
+  if (not(command  ("follow")) or
+    (target!=self))
+    {
+    act ("$1n says 'Please follow me now by typing 'fol newbie" +
+      " guide' now.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+    goto try_again2;
+    }
+  }
+   pause;
+
+tf:=   walk_room@function("hill@cypress",4);
+      act ("$1n says 'This is the Cypress forest.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+   act ("$1n says 'Skunks, Badgers and Boar live here and in a level " +
+     "or so you will be able to hunt them all.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+     pause;
+   act ("$1n says 'The Badgers and Skunks you may be able to hunt " +
+     "at your current level but the Boar I would wait for.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'There is also another forest very nearby, with " +
+     "other assorted animals for newbies to hunt.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Let's visit it now so you know how to get there.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+tf:=      walk_room@function("forest_edge@haon_dor",4);
+
+   act ("$1n says 'Here we stand at the entrance to the legendary " +
+     "forest of Haon-Dor.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+   act ("$1n says 'There are a plethora of rabbits and such for you to " +
+     "hunt here and I am sure you will spend some time here " +
+     "for the next few levels.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'A word of warning however do not wander to far west until "+
+        "You have gained a few levels. The wolves are very mean.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'As you might know there is only one way to learn " +
+     "how to fight and that is just to do it.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Lets see if I can find something suitable " +
+     "for your first kill.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   exec("ponder", self); pause;
+   act ("$1n says 'Ahhhh yes. This will do.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   npc := load("ferret@newbie");
+   link(npc, findroom("haon_dor/forest_edge"));
+   act("The ferret appears suddenly.",
+       A_ALWAYS, self, null, null, TO_ALL);
+   exec("chuckle", self); pause;
+   exec("point ferret", self); 
+   pause;
+   act ("$1n says 'This little guy should cause you no trouble, "+
+     "an easy kill I'd say.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+   act ("$1n says 'Now. To find suitable opponents you must use the " +
+     "'consider' command. Try 'con ferret' now and see what " +
+     "it says.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+   act ("$1n says 'It most likely tells you will have no problems " +
+     "with it, I can assure you this ferret won't be able " +
+     "to harm you so the result of the con command would " +
+     "tell you that, perhaps in a roundabout fashion though.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+  act ("$1n says 'Just to see the difference between an easy animal and a hard "+
+  "opponent try 'con newbie guide''",
+A_ALWAYS,self,null,pc,TO_VICT);
+  pause;
+  act ("$1n says 'You only need to type kill the first time. After that you "+
+       "will continue to fight till the animal is dead or mortally "+
+        "wounded or incapacitated.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+ pause;
+ act ("$1n says 'If is it mortally wounded or incapacitated you will need to "+
+       "type the kill <mob> a second time to finish it off.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+
+act ("$1n says 'As a bit of advice, at this level your best weapon to use " +
+     "would be your fists so remove any other weapon and shields you're using now.'",
+	 A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Ok then, you are ready for your first kill! "+
+     "Type 'kill ferret'. When you are done, type " +
+     "'poke newbie guide'.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+   act ("$1n says 'I will wait until he is dead.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+   act ("$1n exclaims 'REMEMBER! Type 'poke newbie guide' after the battle!!!'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   :wait_here:
+   wait(SFB_DONE, activator #= pc);
+   if (not(command("poke")) or
+       (self!=target))
+   {
+      goto wait_here;
+   }
+   exec("clap", self); pause;
+   act ("$1n says 'Very good, you have made your first kill.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'The last thing you want to do is 'loot' the corpse " +
+     "for any goodies he might have had when he was alive.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'To do this now, type 'get all from corpse'.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+   act ("$1n says 'Be careful however, if you are in a room with more than " +
+     "one corpse, you may have to be specific.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+     pause;
+   act ("$1n says 'That is, if the corpse you want to loot is the third " +
+     "in the room, type 'get all from 3.corpse'.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+     pause;
+  act ("$1n says 'You might want to look in the corpse first to make sure it is the "+
+  "correct corpse by typing 'look in corpse'  or 'look in 2.corpse''",
+A_ALWAYS,self,null,pc,TO_VICT);
+  pause;
+qst:=NEWBIE_ONGOING in pc.quests;
+qst.descr:="part 4 done";
+
+   return (TRUE);
+
+   :stop:
+   return (FALSE);
+}
+dilend
+
+dilbegin integer newbie_temp(pc : unitptr);
+var
+     nroom     :    unitptr;
+        i       :       integer;
+        item:unitptr;
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*6;
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :start:
+   if (pc == null)
+      goto stop;
+   secure(pc, stop);
+
+pause;
+   act ("$1n says ' I would normally show you around your starting guild.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+exec ("sigh",self);
+   pause;
+   act ("$1n says ' The problem is I have been so busy with all the Newbies I have not been able to keep"+
+   " up on the new guilds that are being added to the game.",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says ' I can still help you out by letting you know how to get "+
+  "in touch with our Newbie Council Members.",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'If you type 'who guide' you will be shown a list of the "+
+  "Newbie Council members that are on line.",
+   A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'They will be able to help you understand our guild system "+
+  "and answer any questions I have left out.",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'If no guide is on don't be afraid to ask other players "+
+  "most of our players are really good at helping you out if you don't get too "+
+  "annoying.",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'I can tell you that doing 'help info' and 'help practice' will"+
+  " help you out in learning how our teachers work. I am sorry I can't be more "+
+  "helpful than that though.",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Well, I think I have shown you all you need to know to get started.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Now let me give you something for your patience in completing "+
+   "this newbie training.'", A_ALWAYS, self, null,pc,TO_VICT);
+   addextra(pc.quests, {NEWBIE_COMPLETE}, "");
+   subextra(pc.quests, NEWBIE_ONGOING);
+   pause;
+   act ("$1n says I will give you 2000 experience which should be enough to "+
+   "give you a level.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+      if (not("$got exp from newbie guide" in pc.extra))
+          {
+          addextra (pc.extra,{"$got exp from newbie guide"},"whistler");
+    experience (2000,pc);
+   pause;
+   act ("$1n says 'To level just type 'level now', then you can go practice.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+          }
+
+   exec("bow "+pc.name, self);
+   act("A portal opens, the Newbie Guide steps through and disappears.'",
+       A_ALWAYS, self, null, null, TO_ALL);
+                        destroy (self);
+   return (TRUE);
+
+   :stop:
+   return (FALSE);
+}
+dilend
+
+
+/* newbie guide part 5 Guild training and reward*/
+/*healer*/
+dilbegin integer newbie_part5c(pc : unitptr);
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+     nroom     :    unitptr;
+        i       :       integer;
+        item:unitptr;
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*6;
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :start:
+   if (pc == null)
+      goto stop;
+   secure(pc, stop);
+
+pause;
+   act ("$1n says 'I notice you have an affinity for nature.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Well that is grand! I would love to show you "+
+     "around your guild, you'll find it helpful I think.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Now it will be important that you stay close by " +
+     "so you don't get lost.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   if (not(pc.position == POSITION_STANDING))
+   {
+      act ("$1n says 'Please stand up now so we may begin.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+      :try_again:
+      wait(SFB_CMD, activator #= pc);
+      if (not command("stand"))
+      {
+      pause;
+      act ("$1n says 'Please STAND up.'", A_ALWAYS, self,null,pc,TO_VICT);
+      goto try_again;
+      }
+   }
+   if (not(pc.master.name $= self.name))
+  {
+  act ("$1n says 'Please type 'fol newbie guide' now.'",
+A_ALWAYS, self, null,pc,TO_VICT);
+  :try_again2:
+  wait (SFB_DONE, activator==pc);
+  if (not(command  ("follow")) or
+    (target!=self))
+    {
+    act ("$1n says 'Please follow me now by typing 'fol newbie" +
+      " guide' now.'", A_ALWAYS, self, null,pc,TO_VICT);
+    goto try_again2;
+    }
+  }
+   pause;
+   act ("$1n says 'Let us visit your guild master now.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Remember how to get to your guild because you will need to" +
+     "in the future quite frequently.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+tf:=   walk_room@function("entrance@clericguild",4);
+   pause;
+   act ("$1n says 'This is the entrance, and to the west is your guild.'",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'These guards are meant to keep any non-Healers" +
+     "out and so I will have to teleport in.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   exec("emote is not a Healer.",self);
+   pause;
+   act ("$1n says 'I will teleport you to your guild master now, and then " +
+     "I will teleport to you.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act("A portal opens, the Newbie Guide steps through and disappears.'",
+       A_ALWAYS, self, null, null, TO_ALL);
+   act("Suddenly you disappear for transportation.'",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   act("Suddenly "+pc.name+" disappears before your eyes.'",
+       A_ALWAYS, pc, null, null, TO_REST);
+   link(pc, findroom("clericguild/sanctuary"));
+   link(self, findroom("clericguild/sanctuary"));
+   act("A portal opens, the Newbie Guide exits and stands before you.'",
+       A_ALWAYS, self, null, null, TO_ALL);
+   act("Suddenly you re-appear in a new location.'",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   act("Suddenly "+pc.name+" appears before your eyes.'",
+       A_ALWAYS, self.outside, null, null, TO_REST);
+   exec("look", pc);
+   pause;
+
+   act ("$1n says 'Here we are, and this is your Guild Master Tuck!'",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Chances are that you will not always be a healer."+
+         " Many players leave their respective " +
+        "guilds and search out further knowledge in other guilds."+
+         "once they become proficient in their chosen
+path.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+
+   act ("$1n says 'This is where you join and leave the guild. To get more "+
+         "information on this when we are not so busy you can type "+
+          "'help join' and 'help insult' '", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'I will give you a little hint. You will only get ability "+
+       "practice points until level 50. It might be a good idea to '",A_ALWAYS, self, null,pc,TO_VICT);
+pause;
+  act ("$1n says 'save some of these for the next guild you join. Ask a high "+
+      "level player for some pointers on this.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'I will introduce you to one of your teachers now, " +
+     "but you will have to find the rest of them after our " +
+     "tour.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'For the Udgaard Healers, there is an abilities" +
+     "teacher, a skills teacher, a weapons teacher, and " +
+     "a spells teacher'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Let's visit your magic teacher, he's " +
+     "very close by, as are all of the teachers here.'",
+A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+tf:=   walk_room@function("garden7@clericguild",4);
+   act ("$1n says 'Tick here will teach you all about " +
+     "Healer spells.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'When you type 'info' with no arguments " +
+     "your teacher will display all of the categories in which "+
+     "you may train.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   pause;
+   act ("$1n says 'Once you get a list of categories you can type" +
+     " the category after the word info for help on that "+
+     "specific category. For instance 'info div' "+
+     "all of the divine-sphere spells that you can train.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   pause;
+   act ("$1n says 'And finally to actually practice a spell once you have " +
+     "decided on one to train just use 'practice <spell>'.'",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'The info command will show you useful information " +
+     "regarding training costs and your existing spell or " +
+     "skill knowledge.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'You will use it at every level so it would be best " +
+     "to learn it now.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   pause;
+   act ("$1n says 'Well, I think I have shown you all you need to know to get started.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Now let me give you some things for your patience in completing "+
+   "this newbie training.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+     item := load("udgaard/newbie_mace");
+   item.height := pc.height;
+   link(item, pc);
+   act("The newbie guide gives you a better weapon.'",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   pause;
+   addextra(pc.quests, {NEWBIE_COMPLETE}, "");
+   pause;
+   pause;
+   subextra(pc.quests, NEWBIE_ONGOING);
+   pause;
+   act ("$1n says 'Also I will give  you 2000 experience which should be enough to "+
+   "give you a level.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+      if (not("$got exp from newbie guide" in pc.extra))
+          {
+          addextra (pc.extra,{"$got exp from newbie guide"},"whistler");
+    experience (2000,pc);
+   pause;
+   act ("$1n says 'To level just type 'level', then you can go practice.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+          }
+
+   exec("bow "+pc.name, self);
+   act("A portal opens, the Newbie Guide steps through and disappears.'",
+       A_ALWAYS, self, null, null, TO_ALL);
+                        destroy (self);
+   return (TRUE);
+
+   :stop:
+   return (FALSE);
+}
+dilend
+
+/* Part 4f of dil for newbie guide. Guild tour for Fighters. */
+/*fighter*/
+dilbegin integer newbie_part5f(pc : unitptr);
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+        nroom   :       unitptr;
+        item:unitptr;
+        i       :       integer;
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*6;
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :start:
+   if (pc == null)
+      goto stop;
+   secure(pc, stop);
+
+pause;
+   act ("$1n says 'I notice you have a way with combat.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Well now, you could say I am rather a buff in battle " +
+     "myself! Allow me to show you around your guild.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   pause;
+   act ("$1n says 'Now it will be important that you stay close by " +
+     "so you don't get lost.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   if (not(pc.position == POSITION_STANDING))
+   {
+      act ("$1n says 'Please stand up now so we may begin.'",A_ALWAYS, self, null,pc,TO_VICT);
+      :try_again:
+      wait(SFB_CMD, activator #= pc);
+      if (not command("stand"))
+      {
+      pause;
+      act ("$1n says 'Please Just STAND up!'", A_ALWAYS, self,null,pc,TO_VICT);
+      goto try_again;
+      }
+   }
+   if (not(pc.master.name $= self.name))
+  {
+  act ("$1n says 'Please type 'fol newbie guide' now.'",A_ALWAYS, self, null,pc,TO_VICT);
+  :try_again2:
+  wait (SFB_DONE, activator==pc);
+  if (not(command  ("follow")) or
+    (target!=self))
+    {
+    act ("$1n says 'Please follow me now by typing 'fol newbie" +
+      " guide' now!'", A_ALWAYS, self, null,pc,TO_VICT);
+    goto try_again2;
+    }
+  }
+   pause;
+   act ("$1n says 'Let us visit your guild master now.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Remember how to get to your guild because you will need to "+
+     "in the future quite frequently.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+tf:=   walk_room@function("entrance@fightersguild",4);
+   pause;
+   act ("$1n says 'This is the entrance, and to the east is your guild.'",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'These guards are meant to keep any non-fighters " +
+     "out and so I will have to teleport in.'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   exec("emote is not technically a fighter.",self);
+   pause;
+   act ("$1n says 'I will teleport you to your guild master now, and then " +
+     "teleport to you.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act("A portal opens, the Newbie Guide steps through and disappears.'",
+       A_ALWAYS, self, null, null, TO_ALL);
+   act("Suddenly you disappear for transportation.'",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   act("Suddenly "+pc.name+" disappears before your eyes.'",
+       A_ALWAYS, pc, null, null, TO_REST);
+
+   link(self, findroom("fightersguild/outlook"));
+   link(pc, findroom("fightersguild/outlook"));
+
+   act("A portal opens, the Newbie Guide exits and stands before you.'",
+       A_ALWAYS, self, null, null, TO_ALL);
+   act("Suddenly you re-appear in a new location.'",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   act("Suddenly "+pc.name+" appears before your eyes.'",
+       A_ALWAYS, self.outside, null, null, TO_REST);
+   exec("look", pc);
+   pause;
+
+   act ("$1n says 'Here we are, and this is your Guild Master Arthur!'",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Chances are that you will not always be a fighter."+
+         " Many players leave their respective " +
+        "guilds and search out further knowledge in other guilds."+
+         "once they become proficient in their chosen path.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+
+   act ("$1n says 'This is where you join and leave the guild. To get more "+
+         "information on this when we are not so busy you can type "+
+          "'help join' and 'help insult' '", A_ALWAYS, self,null,pc,TO_VICT);
+
+   pause;
+
+   act ("$1n says 'I will give you a little hint. You will only get ability "+
+       "practice points until level 50. It might be a good idea to '",A_ALWAYS, self, null,pc,TO_VICT);
+pause;
+  act ("$1n says 'save some of these for the next guild you join. Ask a high "+
+      "level player for some pointers on this.'",A_ALWAYS, self,
+null,pc,TO_VICT);
+
+   pause;
+act ("$1n says 'I will introduce you to one of your teachers now," +
+     "but you will have to find the rest of them after our " +
+     "tour.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'For the Udgaard Fighters, there is an abilities " +
+     "teacher, a skills teacher, and a weapons teacher.'",
+A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Let's visit your abilities teacher, he's " +
+     "very close by, as are all of the teachers here.'",
+A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+tf:=   walk_room@function("smithy@fightersguild",4);
+   act ("$1n says 'Jones here will train your abilities to a suitable" +
+     "level.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'When you enter 'info' with no arguments " +
+     "your teacher will display all of the categories in which "+
+     "you may train, i.e. str, dex, con, etc....'", A_ALWAYS,self, null,pc,TO_VICT);
+   pause;
+   pause;
+   act ("$1n says 'And to actually train an ability once you have" +
+     "decided on one to train just use 'practice <abil>'.'",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'The info command will show you useful information " +
+     "regarding training costs and your existing skill and " +
+     "abilities knowledge.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'You will use it at every level so it would be best " +
+     "to learn it now.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Well, I think I have shown you all you need to know to get started.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Now let me give you some things for your patience in completing "+
+   "this newbie training.'", A_ALWAYS, self, null,pc,TO_VICT);
+     item := load("udgaard/newbie_sword");
+   item.height := pc.height;
+   link(item, pc);
+   pause;
+   act("The newbie guide gives you a better weapon.'",
+             A_ALWAYS, pc, null, null, TO_CHAR);
+   addextra(pc.quests, {NEWBIE_COMPLETE}, "");
+   subextra(pc.quests, NEWBIE_ONGOING);
+   pause;
+   act ("$1n says 'Also I will give  you 2000 experience which should be enough to "+
+   "give you a level.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+      if (not("$got exp from newbie guide" in pc.extra))
+          {
+          addextra (pc.extra,{"$got exp from newbie guide"},"whistler");
+    experience (2000,pc);
+   pause;
+   act ("$1n says 'To level just type 'level', then you can go practice.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+          }
+   exec("bow "+pc.name, self);
+   act("A portal opens, the Newbie Guide steps through and
+disappears.'",
+       A_ALWAYS, self, null, null, TO_ALL);
+                        destroy (self);
+   return (TRUE);
+
+   :stop:
+   return (FALSE);
+}
+dilend
+
+/* Part 4m of dil for newbie guide. Guild tour for Mages. */
+
+/*conjurer*/
+dilbegin integer newbie_part5m(pc : unitptr);
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+        i       :       integer;
+        item:unitptr;
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*6;
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :start:
+   if (pc == null)
+      goto stop;
+   secure(pc, stop);
+
+pause;
+   act ("$1n says 'I notice you are bound to the ways of magic.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Well, magic is a wonderful power source and I would "+
+     "love to show you around your guild, you'll find it " +
+     "helpful I think.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   pause;
+   act ("$1n says 'Now it will be important that you stay close by " +
+     "so you don't get lost.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   if (not(pc.position == POSITION_STANDING))
+   {
+      act ("$1n says 'Please stand up now so we may begin.'",A_ALWAYS, self, null,pc,TO_VICT);
+      :try_again:
+      wait(SFB_CMD, activator #= pc);
+      if (not command("stand"))
+      {
+      pause;
+      act ("$1n says 'Please Just STAND up!'", A_ALWAYS, self,null,pc,TO_VICT);
+      goto try_again;
+      }
+   }
+   if (not(pc.master.name $= self.name))
+  {
+  act ("$1n says 'Please type 'fol newbie guide' now.'",
+A_ALWAYS, self, null,pc,TO_VICT);
+  :try_again2:
+  wait (SFB_DONE, activator==pc);
+  if (not(command  ("follow")) or
+    (target!=self))
+    {
+    act ("$1n says 'Please follow me now by typing 'fol newbie" +
+      " guide' now!'", A_ALWAYS, self, null,pc,TO_VICT);
+    goto try_again2;
+    }
+  }
+   pause;
+   act ("$1n says 'Let us visit your guild master now.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Remember how to get to your guild because you will need to "+
+     "in the future quite frequently.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+tf:=   walk_room@function("entrance@mageguild",4);
+      pause;
+   act ("$1n says 'This is the entrance, and to the east is your guild.'",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'These guards are meant to keep any non-Conjurers " +
+     "out and so I will have to teleport in.'", A_ALWAYS, self,
+null,pc,TO_VICT);
+   pause;
+   exec("emote is not quite a Conjurer.", self);
+   pause;
+   exec("sigh", self);
+   pause;
+   act ("$1n says 'I will teleport you to your guild master now, and then " +
+     "teleport to you.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+
+   act("A portal opens, the Newbie Guide steps through and disappears.'",
+       A_ALWAYS, self, null, null, TO_ALL);
+   act("Suddenly you disappear for transportation.'",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   act("Suddenly "+pc.name+" disappears before your eyes.'",
+       A_ALWAYS, pc, null, null, TO_REST);
+   link(self, findroom("chan_office@mageguild"));
+   link(pc, findroom("chan_office@mageguild"));
+   act("A portal opens, the Newbie Guide exits and stands before you.'",
+       A_ALWAYS, self, null, null, TO_ALL);
+   act("Suddenly you re-appear in a new location.'",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   act("Suddenly "+pc.name+" appears before your eyes.'",
+       A_ALWAYS, self.outside, null, null, TO_REST);
+   exec("look", pc);
+   pause;
+   act ("$1n says 'Here we are, and this is your Guild Master Rafizir!'",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Chances are that you will not always be a conjurer."+
+         " Many players leave their respective " +
+        "guilds and search out further knowledge in other guilds."+
+         "once they become proficient in their chosen
+path.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+
+   act ("$1n says 'This is where you join and leave the guild. To get more "+
+         "information on this when we are not so busy you can type "+
+          "'help join' and 'help insult' '", A_ALWAYS, self,
+null,pc,TO_VICT);
+
+   pause;
+
+   act ("$1n says 'I will give you a little hint. You will only get ability "+
+       "practice points until level 50. It might be a good idea
+to '",A_ALWAYS, self, null,pc,TO_VICT);
+pause;
+
+  act ("$1n says 'save some of these for the next guild you join. Ask a high "+
+      "level player for some pointers on this.'",A_ALWAYS, self,null,pc,TO_VICT);
+      pause;
+   act ("$1n says 'I will introduce you to one of your teachers now, " +
+     "but you will have to find the rest of them after our " +
+     "tour.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'For the Udgaard Conjurers, there is an abilities " +
+     "teacher, a skills teacher, a weapons teacher, and " +
+     "a spells teacher.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Let's visit your spells teacher, he's " +
+     "very close by, as are all of the teachers here.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+tf:=   walk_room@function("arcane_ground@mageguild",4);
+
+  act ("$1n says 'Zofax here will teach you all about " +
+     "Conjurer spells.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'When you enter 'info' with no arguments " +
+     "your teacher will display all of the categories in which "+
+     "you may train.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   pause;
+   act ("$1n says 'If you type a category after the work 'info' you will "+
+        "get information on that specific category. Try typing 'info "+
+         "mind', you will see " +
+     "all of the mind-sphere spells that you can train.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   pause;
+   act ("$1n says 'And finally to actually practice a spell once you have " +
+     "decided on one to train just use 'practice <spell>'.'",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'The info command will show you useful information " +
+     "regarding training costs and your existing spell or " +
+     "skill knowledge.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'You will use it at every level so it would be best " +
+     "to learn it now.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   pause;
+   act ("$1n says 'Well, I think I have shown you all you need to know to get started.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Now let me give you some things for your patience in completing "+
+   "this newbie training.'", A_ALWAYS, self, null,pc,TO_VICT);
+     item := load("udgaard/newbie_dagger");
+   item.height := pc.height;
+   link(item, pc);
+
+   pause;
+   act("The newbie guide gives you a better weapon.'",
+              A_ALWAYS, pc, null, null, TO_CHAR);
+   addextra(pc.quests, {NEWBIE_COMPLETE}, "");
+   subextra(pc.quests, NEWBIE_ONGOING);
+   pause;
+   act ("$1n says 'Also I will give  you 2000 experience which should be enough to "+
+   "give you a level.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+      if (not("$got exp from newbie guide" in pc.extra))
+          {
+          addextra (pc.extra,{"$got exp from newbie guide"},"whistler");
+    experience (2000,pc);
+   pause;
+   act ("$1n says 'To level just type 'level', then you can go practice.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+          }
+   exec("bow "+pc.name, self);
+   act("A portal opens, the Newbie Guide steps through and
+disappears.'",
+       A_ALWAYS, self, null, null, TO_ALL);
+                        destroy (self);
+   return (TRUE);
+
+   :stop:
+   return (FALSE);
+}
+dilend
+
+/* Part 4t of dil for newbie guide. Guild tour for thieves. */
+
+/*thief*/
+dilbegin integer newbie_part5t(pc : unitptr);
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+        nroom   :       unitptr;
+        item:unitptr;
+        i       :       integer;
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*6;
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :start:
+   if (pc == null)
+      goto stop;
+   secure(pc, stop);
+   pause;
+   act ("$1n says 'I notice you are sly in the ways of deception.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Well that is great! I would love to show you "+
+     "around your guild, you'll find it helpful I think.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   pause;
+   act ("$1n says 'Now it will be important that you stay close by " +
+     "so you don't get lost.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   if (not(pc.position == POSITION_STANDING))
+   {
+      act ("$1n says 'Please stand up now so we may begin.'",
+A_ALWAYS, self, null,pc,TO_VICT);
+      :try_again:
+      wait(SFB_CMD, activator #= pc);
+      if (not command("stand"))
+      {
+      pause;
+      act ("$1n says 'Please Just STAND up!'", A_ALWAYS, self,null,pc,TO_VICT);
+      goto try_again;
+      }
+   }
+   if (not(pc.master.name $= self.name))
+  {
+  act ("$1n says 'Please type 'fol newbie guide' now.'",
+A_ALWAYS, self, null,pc,TO_VICT);
+  :try_again2:
+  wait (SFB_DONE, activator==pc);
+  if (not(command  ("follow")) or
+    (target!=self))
+    {
+    act ("$1n says 'Please follow me now by typing 'fol newbie" +
+      " guide' now!'", A_ALWAYS, self, null,pc,TO_VICT);
+    goto try_again2;
+    }
+  }
+   pause;
+   act ("$1n says 'Let us visit your guild master now.'",
+A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Remember how to get here because you will need to " +
+     "in the future quite frequently.'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+tf:=   walk_room@function("entrance@thievesguild",4);
+
+   pause;
+   act ("$1n says 'This is the entrance, and to the west is your guild.'",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'These guards are meant to keep any non-thieves" +
+     "out and so I will have to teleport in.'", A_ALWAYS, self,
+null,pc,TO_VICT);
+   pause;
+   exec("emote is not a thief (yet).", self);
+   pause;
+   act ("$1n says 'I will teleport you to your guild master now, and then " +
+     "teleport to you.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+
+   act("A portal opens, the Newbie Guide steps through and disappears.'",
+       A_ALWAYS, self, null, null, TO_ALL);
+   act("Suddenly you disappear for transportation.'",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   act("Suddenly "+pc.name+" disappears before your eyes.'",
+       A_ALWAYS, pc, null, null, TO_REST);
+   link(pc, findroom("thievesguild/study"));
+   link(self, findroom("thievesguild/study"));
+   act("A portal opens, the Newbie Guide exits and stands before you.'",
+       A_ALWAYS, self, null, null, TO_ALL);
+   act("Suddenly you re-appear in a new location.'",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   act("Suddenly "+pc.name+" appears before your eyes.'",
+       A_ALWAYS, self.outside, null, null, TO_REST);
+   exec("look", pc);
+
+   act ("$1n says 'Here we are, and this is your Guild Master Oliver!'",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Chances are that you will not always be a thief."+
+         " Many players leave their respective " +
+        "guilds and search out further knowledge in other guilds. "+
+         "once they become proficient in their chosen path.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+
+   act ("$1n says 'This is where you join and leave the guild. To get more "+
+         "information on this when we are not so busy you can type "+
+          "'help join' and 'help insult' '", A_ALWAYS, self,null,pc,TO_VICT);
+
+   pause;
+
+   act ("$1n says 'I will introduce you to one of your teachers now, " +
+     "but you will have to find the rest of them after our " +
+     "tour.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'For the Udgaard Thieves, there is an abilities" +
+     "teacher, a skills teacher, and a weapons teacher.'",
+A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Let's visit your abilities teacher, he's " +
+     "very close by, as are all of the teachers here.'",
+A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+tf:=   walk_room@function("storage_room@thievesguild",4);
+      act ("$1n says 'Bisse here will train your abilities to a suitable " +
+     "degree so that you may be a decent thief.'", A_ALWAYS,
+self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'You have already looked at help info, so you should " +
+     "have an idea what the 'info' command does.'", A_ALWAYS,
+self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'When you enter 'info' with no arguments " +
+     "your teacher will display all of the categories in which "+
+     "you may train such as dex, str, con.'", A_ALWAYS, self,
+null,pc,TO_VICT);
+   pause;
+   pause;
+   act ("$1n says 'And to actually train an ability once you have" +
+     "decided on one to train just use 'practice <abil>'."+
+         "to train your dex you would type: 'train dex'.'",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'The info command will show you useful information " +
+     "regarding training costs and your existing skill or " +
+     "abilities knowledge.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'You will use it at every level so it would be best " +
+     "to learn it now.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   exec("pat "+pc.name, self);
+   pause;
+   act ("$1n says 'Well, I think I have shown you all you need to know to get started.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'Now let me give you some things for your patience in completing "+
+   "this newbie training.'", A_ALWAYS, self, null,pc,TO_VICT);
+     item := load("udgaard/newbie_short");
+   item.height := pc.height;
+   link(item, pc);
+
+   pause;
+   act("The newbie guide gives you a better weapon.'",
+              A_ALWAYS, pc, null, null, TO_CHAR);
+   addextra(pc.quests, {NEWBIE_COMPLETE}, "");
+   subextra(pc.quests, NEWBIE_ONGOING);
+   pause;
+   act ("$1n says 'Also I will give  you 2000 experience which should be enough to "+
+   "give you a level.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+      if (not("$got exp from newbie guide" in pc.extra))
+          {
+          addextra (pc.extra,{"$got exp from newbie guide"},"whistler");
+    experience (2000,pc);
+   pause;
+   act ("$1n says 'To level just type 'level', then you can go practice.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+          }
+   exec("bow "+pc.name, self);
+   act("A portal opens, the Newbie Guide steps through and
+disappears.'",
+       A_ALWAYS, self, null, null, TO_ALL);
+                        destroy (self);
+
+   return (TRUE);
+
+   :stop:
+   return (FALSE);
+}
+dilend
+
+/* Part 4u of dil for newbie guide. Unknown guild! */
+
+/*unknown guild*/
+dilbegin integer newbie_part5u(pc : unitptr);
+var
+        nroom   :       unitptr;
+        i       :       integer;
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*6;
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :start:
+   if (pc == null)
+      goto stop;
+   secure(pc, lost_pc);
+
+pause;
+   act ("$1n says 'This is very strange, you are not a member of any "+
+     "Udgaard guild.'",
+     A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'If you think this is an error, please get hold of an Admin.'",
+   A_ALWAYS, self, null,pc,TO_VICT);
+   log("NEWBIE GUIDE: No known guild for "+pc.name+", tell Papi please.");
+   pause;
+   pause;
+   return (TRUE);
+
+   :lost_pc:
+   act ("$1n says '*sigh* Never stay when they should.'",
+A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+
+   :stop:
+   return (FALSE);
+}
+dilend
+
+dilbegin integer quest_parse (pc:unitptr);
+var
+  count:integer;
+  act_str:string;
+ qst:extraptr;
+ /*
+ This function returns the following values.
+
+-1 if the function errors won't happen grin.
+0 if player hasn't started quest
+1 If player is done with part 1
+2 3 4 Like one if the player is done.
+5 if player wants help with corpse or is lost.
+*/
+code
+{
+secure (pc,lostpc);
+
+if ((NEWBIE_COMPLETE in pc.quests))
+return (5);
+
+qst:=NEWBIE_ONGOING in pc.quests;
+if (qst==null)
+  {
+act ("$1n says 'I notice that you have not done the newbie guide tour.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+  pause;
+act ("$1n asks 'Would you like to do the tour or do you need more help? "+
+     "Just <a cmd='#'>say tour</a> for the quest and <a cmd='#'>say help</a> for assistance from me.",
+  A_ALWAYS,self,null,pc,TO_VICT);
+  :tick:
+  wait (SFB_DONE|SFB_TICK, command ("say") and
+  (pc==activator) and
+  (("tour" in argument ) or
+  ("help" in argument)));
+  if (command (CMD_AUTO_TICK) and
+  (self.outside.idx==pc.outside.idx)) goto tick;
+  if ("tour" in argument)
+  return (0);
+ else
+ return (5);
+  }
+else if (qst.descr=="part 1 done")
+  {
+  count:=1;
+  act_str:="four parts";
+  }
+else if (qst.descr=="part 2 done")
+  {
+  count:=2;
+  act_str:="three parts";
+  }
+else if (qst.descr=="part 3 done")
+  {
+  count:=3;
+  act_str:="two parts";
+  }
+else if (qst.descr=="part 4 done")
+  {
+  count:=4;
+  act_str:="one part";
+  }
+
+act ("$1n says 'I notice although you have started the newbie guide tour you still have "+
+  act_str+" to complete it.", A_ALWAYS,self,null,pc,TO_VICT);
+  pause;
+act ("$1n asks 'Would you like to complete the tour or do you need more help?  Just say "+
+  "'complete' for the quest or 'help' for assistance from me.'",
+  A_ALWAYS,self,null,pc,TO_VICT);
+
+  wait (SFB_DONE, command ("say") and
+  (pc==activator) and
+  (("complete" in argument ) or
+  ("help" in argument)));
+  if ("complete" in argument)
+  return (count);
+ else
+ return (5);
+
+:lostpc:
+return (-1);
+
+
+}
+dilend
+
+/*
+change this define when you add or  subtract names
+*/
+#define AMOUNT_NAMES     11
+dilbegin string newbie_names (i:integer);
+var
+new_names:stringlist;
+  code
+  {
+  /*new_names:={"Melvin", "Andy", "Trent", "Bill","Arthur",
+  "Lance","Steven","Richard","Lewi", "David","Neil"};*/
+   new_names:={"Marvin","Arnold","Troy","Brad","Peter","Lyle",
+  "Paul","Ronald","Leonard","Mike","Clint"};
+  return (new_names.[i]);
+  }
+  dilend
+
+dilbegin integer newbie_help (pc:unitptr);
+external
+   integer walk_room@function (s:string,i:integer);
+var
+  n : integer;
+
+  crp:unitptr;
+  crp_string:string;
+  tf:integer;
+
+  code
+  {
+   heartbeat := PULSE_SEC*6;
+  secure (pc,stop);
+
+act ("$1n asks 'So you need my help do you?'",  A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+act ("$1n says 'There are two things I can help you with.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+act ("$1n says 'I can help you find your corpse or I can help you find your way "+
+"back to Udgaard.  Just <a cmd='#'>say corpse</a> if you have lost your corpse or <a cmd='#'>say udgaard</a> "+
+"if you have just got yourself lost.'",
+  A_ALWAYS,self,null,pc,TO_VICT);
+wait (SFB_DONE, command ("say") and
+  (activator==pc) and
+  (("udgaard" in argument) or
+  ("corpse" in argument)));
+
+if ("corpse" in argument )
+  {
+  if (pc.outside.zoneidx == "basis")
+  {
+ act ("$1n says 'Please try again once you return to the world. I dont like "
+ +"helping while your here, too spooky!'",
+    A_ALWAYS,self,null,pc,TO_VICT);
+	return(0); 
+  }
+  act ("$1n says 'Oh I hope it was an honorable death.'",
+    A_ALWAYS,self,null,pc,TO_VICT);
+  pause;
+  crp:=findunit (self,"corpse of "+pc.name,FIND_UNIT_WORLD,null);
+  if (crp.name=="corpse of "+pc.name)
+    {
+    act ("$1n says 'Well for safety reasons I will just get your corpse and give "+
+      "it to you.'",
+        A_ALWAYS,self,null,pc,TO_VICT);
+    act ("$1n says 'We wouldn't want whatever killed you to try again.'",
+      A_ALWAYS,self,null,pc,TO_VICT);
+    exec ("wink "+pc.name,self);
+    act ("A portal opens up in front of you.",A_ALWAYS,self,null,null,TO_REST);
+    act ("$1n reaches through the portal and grabs $3n's corpse.",
+      A_ALWAYS,self,null,pc,TO_NOTVICT);
+    act ("$1n reaches through the portal and grabs your corpse.",
+      A_ALWAYS,self,null,pc,TO_VICT);
+    pause;
+    crp:=findunit (self,"corpse of "+pc.name,FIND_UNIT_WORLD,null);
+    if (isset(crp.flags,UNIT_FL_BURIED))
+	{
+	unset(crp.flags, UNIT_FL_BURIED);
+     }
+	link (crp, pc);
+    act ("$1n gives your corpse to you.",
+      A_ALWAYS,self,null,pc,TO_VICT);
+    act ("$1n gives $3n's corpse to $3n.",
+      A_ALWAYS,self,null,pc,TO_NOTVICT);
+    pause;
+    act ("$1n says 'There you go just type 'get all from corpse''",
+      A_ALWAYS,self,null,pc,TO_VICT);
+    pause;
+    act ("$1n says 'Well I really must run more newbies await.'",
+      A_ALWAYS,self,null,pc,TO_VICT);
+    pause;
+    exec ("ditch "+pc.name,self);
+    exec ("wave",self);
+    return (0);
+    }
+  else
+    {
+    exec ("sigh",self);
+    pause;
+    act ("$1n says 'Your corpse is not to be found anywhere.'",
+        A_ALWAYS,self,null,pc,TO_VICT);
+    pause;
+    act ("$1n says 'I am sorry I can not help.'",
+      A_ALWAYS,self,null,pc,TO_VICT);
+    exec ("ditch "+pc.name,self);
+    pause;
+    exec ("wave "+pc.name,self);
+    return(0);
+    }
+  }
+else
+  {
+  act ("$1n says 'Yes I used to get lost all the time when I was new.'",
+    A_ALWAYS,self,null,pc,TO_VICT);
+  pause;
+  act ("$1n says 'Well just type 'follow newbie guide' and we will be off.'",
+    A_ALWAYS,self,null,pc,TO_VICT);
+  pause;
+  :fl2:
+  wait (SFB_DONE,command ("follow") and
+    (self==target));
+  if (pc.master!=self) goto fl2;
+  pc.endurance:=pc.max_endurance;
+  if ((self.zone=="haon_dor") or
+    (self.zone=="udgaard") or
+    (self.zone =="cypress") or
+    (self.zone=="midgaard") or
+    (self.zone=="goblin") or
+    (self.zone=="halfzon") or
+    (self.zone =="ratswarf") or
+    (self.zone=="hobgob") or
+    (self.zone=="urland") or
+	(self.zone=="hamlet") or
+    (self.zone=="korandin") or
+	(self.zone=="elfdom")or
+	(self.zone=="ogre1")or
+	(self.zone =="moor"))
+    {
+    tf:=walk_room@function ("temple@udgaard",3);
+    pause;
+    exec ("wave "+pc.name,self);
+    return(0);
+    }
+  else
+    goto to_long2;
+
+  if (tf==FALSE)
+    {
+    :to_long2:
+    act ("$1n says 'I just realized we have a really long way to go.'",
+      A_ALWAYS,self,null,pc,TO_VICT);
+    pause;
+    act ("$1n says 'I am sure you won't mind if I use my Newbie Guide powers "
+	+" to expedite matters.'",A_ALWAYS,self,null,pc,TO_VICT);
+      pause;
+    act ("$1n says 'I will teleport to the temple "+
+  "and then summon you there.'",A_ALWAYS,self,null,pc,TO_VICT);
+  pause;
+  act("A portal opens, the Newbie Guide steps through and disappears.",
+    A_ALWAYS, self, null, null, TO_ALL);
+  link(self, findroom("temple@udgaard"));
+  act("Suddenly you disappear and begin transportation.",
+    A_ALWAYS, pc, null, null, TO_CHAR);
+  act("Suddenly $1n disappears before your eyes.",
+    A_ALWAYS, pc, null, null, TO_REST);
+  act("A portal opens, the Newbie Guide exits and stands before you.",
+    A_ALWAYS, self, null, null, TO_ALL);
+  link(pc, findroom("temple@udgaard"));
+  act("Suddenly you re-appear in a new location.",
+    A_ALWAYS, pc, null, null, TO_CHAR);
+  act("Suddenly $2n appears before your eyes.",
+    A_ALWAYS, self.outside, pc, null, TO_REST);
+  }
+pause;
+act ("$1n says 'Well I really must run! More newbies await.",
+  A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+exec ("ditch "+pc.name,self);
+exec ("wave",self);
+    return(0);
+}
+
+:stop:
+    return(0);
+}
+dilend
+
+dilbegin newbie_brain(new_pc:string);
+external
+  integer quest_parse (pc:unitptr);/*checks what part the pc is on the quest*/
+   integer newbie_part1(u : unitptr);
+   integer newbie_part2(u : unitptr);
+   integer newbie_part3(u : unitptr);
+   integer newbie_part4(u : unitptr);
+   integer newbie_temp(u : unitptr);
+   integer newbie_part5c(u : unitptr);
+   integer newbie_part5f(u : unitptr);
+   integer newbie_part5m(u : unitptr);
+   integer newbie_part5t(u : unitptr);
+   integer newbie_part5u(u : unitptr);
+   integer newbie_help (u:unitptr);
+   integer stop_test (pc:unitptr,i:integer);
+var
+  pc : unitptr;
+  pc_name:string;
+  n:integer;
+code
+{
+pc:=findunit (self,new_pc,FIND_UNIT_WORLD, null);
+if (pc==null) destroy (self);
+  link (self,pc.outside);
+   secure(pc, stop);
+   pc_name:=pc.name;
+act ("A portal opens in front of you.", A_ALWAYS,pc,null,null,TO_ALL);
+act ("$2n steps out of the portal and it vanishes.",A_ALWAYS,pc,self,null,TO_ALL);
+   pause;
+   exec("handshake "+pc.name, self);
+   pause;
+act ("$1n says 'I heard your call for help and came as soon as I could.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+
+n:=quest_parse@newbie (pc);
+if (n==-1 ) goto stop;
+
+on n goto part1,part2,part3,part4,temp_g,complete ;
+goto stop;  /*incase on goto fails*/
+
+:part1:
+   if (self.outside!=findroom("newbie_chat@udgaard"))
+    {
+act ("$1n says 'I will take you some place quiet so we can start your Valhalla tour.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+act ("$1n says 'I will teleport to the Newbie chat room and then summon "+
+    "you there.",
+A_ALWAYS,self,null,pc,TO_VICT);
+    pause;
+act("A portal opens, the Newbie Guide steps through and disappears.",
+       A_ALWAYS, self, null, null, TO_ALL);
+   link(self, findroom("newbie_chat@udgaard"));
+   act("Suddenly you disappear and begin transportation.",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   act("Suddenly $1n  disappears before your eyes.",
+       A_ALWAYS, pc, null, null, TO_REST);
+   act("A portal opens, the Newbie Guide exits and stands before you.",
+       A_ALWAYS, self, null, null, TO_ALL);
+
+   link(pc, findroom("newbie_chat@udgaard"));
+   act("Suddenly you re-appear in a new location.",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   act("Suddenly "+pc.name+" appears before your eyes.",
+       A_ALWAYS, self.outside, null, null, TO_REST);
+   exec ("look",pc);
+       }
+
+   n := newbie_part1@newbie(pc);
+   if (n == FALSE)
+     goto stop;
+n:=stop_test (pc,1);
+   if (n == FALSE)
+     goto stop;
+
+:part2:
+if (self.outside!=findroom("newbie_chat@udgaard"))
+  {
+  act ("$1n says 'I will take you some place quiet so we can continue from "+
+    "where we left off last time.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+    pause;
+  act ("$1n says 'I will teleport to the Newbie chat room and then summon "+
+    "you there.'",
+  A_ALWAYS,self,null,pc,TO_VICT);
+  pause;
+  act("A portal opens, the Newbie Guide steps through and disappears.",
+    A_ALWAYS, self, null, null, TO_ALL);
+  link(self, findroom("newbie_chat@udgaard"));
+  act("Suddenly you disappear and begin transportation.",
+    A_ALWAYS, pc, null, null, TO_CHAR);
+  act("Suddenly $1n  disappears before your eyes.",
+    A_ALWAYS, pc, null, null, TO_REST);
+  act("A portal opens, the Newbie Guide exits and stands before
+you.",
+    A_ALWAYS, self, null, null, TO_ALL);
+
+   link(pc, findroom("newbie_chat@udgaard"));
+   act("Suddenly you re-appear in a new location.",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   act("Suddenly "+pc.name+" appears before your eyes.",
+       A_ALWAYS, self.outside, null, null, TO_REST);
+  exec ("look",pc);
+       }
+
+   n := newbie_part2@newbie(pc);
+   if (n == FALSE)
+     goto stop;
+
+n:=stop_test (pc,2);
+   if (n == FALSE)
+     goto stop;
+
+
+:part3:
+if (self.outside==findroom ("newbie_chat@udgaard")) goto
+newbie_ch;
+if (self.outside==findroom ("temple@udgaard")) goto newbie_te;
+
+act ("$1n says 'I will take you to the Temple in Udgaard so we can continue from "+
+"where we left off last time.'",
+A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+act ("$1n says 'I will teleport to the Temple and then summon "+
+"you there.",
+  A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+act("A portal opens, the Newbie Guide steps through and disappears.",
+A_ALWAYS, self, null, null, TO_ALL); link(self,
+findroom("temple@udgaard"));
+act("Suddenly you disappear and begin transportation.",
+  A_ALWAYS, pc, null, null, TO_CHAR);
+act("Suddenly $1n disappears before your eyes.",
+  A_ALWAYS, pc, null, null,TO_REST);
+act("A portal opens, the Newbie Guide exits and stands before you.",
+  A_ALWAYS, self, null, null, TO_ALL);
+link(pc, findroom("temple@udgaard"));
+act("Suddenly you re-appear in a new location.",
+  A_ALWAYS, pc, null, null, TO_CHAR);
+act("Suddenly $2n appears before your eyes.",
+  A_ALWAYS, self.outside,pc, null, TO_REST);
+exec ("look",pc);
+
+goto newbie_te;
+:newbie_ch:
+act ("$1n says 'I will take you to the Temple in Udgaard so we
+can continue "+
+"your training.'",
+  A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+act ("$1n says 'I will teleport to the Temple and then summon "+
+"you there.'",
+  A_ALWAYS,self,null,pc,TO_VICT);
+pause;
+act("A portal opens, the Newbie Guide steps through and
+disappears.",
+  A_ALWAYS, self, null, null, TO_ALL);
+link(self,findroom("temple@udgaard"));
+act("Suddenly you disappear and begin transportation.",
+  A_ALWAYS, pc, null, null, TO_CHAR);
+act("Suddenly $1n disappears before your eyes.",
+  A_ALWAYS, pc, null, null, TO_REST);
+act("A portal opens, the Newbie Guide exits and stands before
+you.",
+  A_ALWAYS, self, null, null, TO_ALL);
+link(pc, findroom("temple@udgaard"));
+act("Suddenly you re-appear in a new location.",
+  A_ALWAYS, pc, null, null, TO_CHAR);
+act("Suddenly $2n appears before your eyes.",
+  A_ALWAYS, self.outside,pc, null, TO_REST);
+exec ("look",pc);
+
+:newbie_te:
+
+n:= newbie_part3@newbie(pc);
+if (n == FALSE) goto stop;
+n:=stop_test (pc,3);
+if (n == FALSE) goto stop;
+
+:part4:
+if (self.outside!=findroom("temple@udgaard"))
+  {
+  act ("$1n says 'Well we need to get back to a good starting
+place so you know "+
+  "where you are going.'",
+    A_ALWAYS,self,null,pc,TO_VICT);
+  pause;
+  act ("$1n says 'I will teleport back to the temple of udgaard
+and then summon "+
+    "you there.'",
+    A_ALWAYS,self,null,pc,TO_VICT);
+  pause;
+  act("A portal opens, the Newbie Guide steps through and
+disappears.",
+    A_ALWAYS, self, null, null,TO_ALL);
+  link(self, findroom("temple@udgaard"));
+  act("Suddenly you disappear and begin transportation.",
+    A_ALWAYS, pc, null,null, TO_CHAR);
+  act("Suddenly $1n disappears before your eyes.",
+    A_ALWAYS, pc, null, null, TO_REST);
+  act("A portal opens, the Newbie Guide exits and stands before
+you.",
+    A_ALWAYS, self, null,null, TO_ALL);
+
+  link(pc, findroom("temple@udgaard"));
+  act("Suddenly you re-appear in a new location.",
+    A_ALWAYS, pc, null, null, TO_CHAR);
+  act("Suddenly $2n appears before your eyes.",
+    A_ALWAYS,self.outside,pc, null, TO_REST); }
+
+   n := newbie_part4@newbie(pc);
+   if (n == FALSE)
+     goto stop;
+n:=stop_test (pc,4);
+   if (n == FALSE)
+     goto stop;
+
+:temp_g:
+  n := newbie_temp@newbie(pc);
+  goto stop;
+
+:part5:
+if (pc.guild == GUILD_UDG_CLERIC)
+  goto part5c;
+else if (pc.guild == GUILD_UDG_FIGHTER)
+  goto part5f;
+else if (pc.guild == GUILD_UDG_MAGE)
+  goto part5m;
+else if (pc.guild == GUILD_UDG_THIEF)
+  goto part5t;
+else
+  goto part5u;
+
+:part5c:
+  n := newbie_part5c@newbie(pc);
+  goto stop;
+
+:part5f:
+  n := newbie_part5f@newbie(pc);
+  goto stop;
+
+:part5m:
+  n := newbie_part5m@newbie(pc);
+  goto stop;
+
+:part5t:
+  n := newbie_part5t@newbie(pc);
+  goto stop;
+
+:part5u:
+  n := newbie_part5u@newbie(pc);
+  goto stop;
+
+:complete:
+n:=newbie_help@newbie (pc);
+
+:stop:
+act("A portal opens, the Newbie Guide steps through and
+disappears.",  A_ALWAYS, self, null, null, TO_ALL);
+pc:=findunit (self,pc_name,FIND_UNIT_WORLD, null);
+  subextra (pc.quests,"$newbie guide is helping");
+  destroy (self);
+
+}
+dilend
+
+%rooms
+
+hall
+names {"new player council hall","hall"}
+title "New Player Council Hall"
+descr
+"A number of offices run off the main hall. There are a few chairs around
+the hall, to sit in, for those that are waiting to visit a new player
+guide. A large sign hangs along one wall."
+
+extra {"chairs"}
+"They look quite comfortable"
+
+extra {"sign"}
+"Welcome if you are in need of a new player council member please type
+WHO GUIDE and find the ones with GUIDE listed after their name"
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_INDOORS}
+
+northeast to dragon_office descr
+"The dragon office."
+keyword{"door"}
+open {EX_OPEN_CLOSE,EX_CLOSED};
+
+northwest to grif_office descr
+"The griffon office."
+keyword{"door"}
+open {EX_OPEN_CLOSE,EX_CLOSED};
+
+southeast to owl_office descr
+"The owl bear office."
+keyword{"door"}
+open {EX_OPEN_CLOSE,EX_CLOSED};
+
+southwest to raven_office descr
+"The dragon office."
+keyword{"door"}
+open {EX_OPEN_CLOSE,EX_CLOSED};
+south to heal_room@udgaard descr
+"The healers room is to the south";
+end
+
+owl_office
+names {"owlbear office","office"}
+title "The Office of the Owlbear"
+descr
+"The office is fairly large with a fireplace along one wall. Next to the
+fireplace it a huge stuffed owlbear. Obviously a master trophy. A number
+of chairs around the room are available for those wanting to sit and talk.
+"
+
+extra {"owlbear"}
+"A huge and wondrous trophy of a large male owlbear."
+extra {"chairs"}
+"The chairs look very comfortable."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_INDOORS}
+
+northwest to hall descr
+"The main hall is to the northwest"
+keyword{"door"}
+open {EX_OPEN_CLOSE,EX_CLOSED};
+end
+
+grif_office
+names {"griffon office", "office"}
+title "The Office of the Griffon"
+descr
+"A large stuffed griffon stands in the corner, its claw spread out as if
+to grab the first thing they come into contact with. It truly is a
+wondrous sight. A number of painting around the room depict the griffon in
+flight as well as on the ground."
+
+extra {"griffon"}
+"A large half lion, half bird, the upper half of the griffon is covered in
+golden feathers."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_INDOORS}
+
+southeast to hall descr
+"The main hall is to the southwest"
+keyword{"door"}
+open {EX_OPEN_CLOSE,EX_CLOSED};
+end
+
+raven_office
+names {"raven office", "office"}
+title "The Office of the Raven"
+descr
+"The room very obviously is dedicated to the raven. A large chair sits
+next to a fireplace, with 2 stuffed ravens perched on its back.  Some more
+comfortable looking chairs are scattered around the room, placed so that
+their occupants can easily carry on a conversation."
+
+extra {"chair"}
+"The chair is made from jet black wood, with ravens carved into its back.
+It does not look as if it was meant for comfort. One of the other chairs
+in the room would probably be much better."
+
+extra {"chairs"}
+"With the exception of the large black chair, all the chairs in the room
+seem very comfortable."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_INDOORS}
+
+northeast to hall descr
+"The main hall is to the northeast"
+keyword{"door"}
+open {EX_OPEN_CLOSE,EX_CLOSED};
+end
+
+
+dragon_office
+names {"dragon office", "office 1", "office"}
+title "The Office of the Dragon"
+descr
+
+"The office is built upon the theme of dragons. Pictures of dragons hang
+on the wall beside a number of large dragon scales of different colors.
+Chairs are positioned around the room so make it seem more inviting to
+visitors. A desk in the far corner seems to be were the rooms owner does
+his or her monthly reports."
+
+extra {"pictures","picture"}
+"A number of pictures on the walls depict dragons in great battles high
+above the ground. Often good triumphing over evil."
+
+extra {"chairs"}
+"The chairs are placed around the room to make chatting easy."
+
+extra {"dragon scale","scale"}
+"A number of different colored dragon scales hang on the walls, trophies
+of great and wondrous fights"
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_INDOORS}
+
+southwest to hall descr
+"The main hall is to the southwest"
+keyword{"door"}
+open {EX_OPEN_CLOSE,EX_CLOSED};
+end
+
+
+
+
+newbie_hangout
+names {"newbie room", "hangout"}
+title "The Newbie Guide Hangout"
+descr
+"   You have entered the 'newbie zone'. This is where the tired
+newbie guides go when they are sick and tired of dealing with whiny
+'Wahh' newbies."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags{UNIT_FL_NO_TELEPORT}
+dilbegin control();
+external
+  string newbie_names (i:integer);
+var
+  pc : unitptr;
+  npc:unitptr;
+  i:integer;
+  name_str:string;
+  count:integer;
+  code
+  {
+  i:=0;
+:start:
+wait(SFB_MSG,argument =="stillnewbie");
+if ("$newbie guide is helping" in activator.quests) goto start;
+if (i==AMOUNT_NAMES) i:=0;
+pc:=activator;
+addextra (pc.quests,{"$newbie guide is helping"},"");
+npc:=load ("newbie_guide@newbie");
+name_str:=newbie_names(i);
+substring (npc.names,"newbie guide");
+addstring (npc.names,name_str);
+addstring (npc.names,name_str+" the newbie guide");
+addstring (npc.names,"newbie guide");
+addstring (npc.names,"guide");
+npc.title:=name_str;
+name_str:=name_str+" the Newbie Guide is here helping "+pc.name;
+npc.outside_descr:=name_str;
+
+dilcopy ("newbie_brain@newbie("+pc.name+")" , npc);
+I:=i+1;
+goto start;
+}
+dilend
+
+end
+
+
+%mobiles
+%mobiles
+                    ferret
+names {"ferret"}
+title "a sniveling little ferret"
+descr "A sniveling little ferret snarls at you."
+extra {}
+"This tiny creature looks vicious for something about the size
+of a sock. You immediately want nothing more than to kill it."
+M_FERRET_TINY(1,SEX_MALE)
+exp 160
+money 1 COPPER_PIECE
+
+end
+                    newbie_guide
+
+names {"newbie guide"}
+title "the newbie guide"
+descr "The newbie guide is here awaiting your training."
+extra {}
+"This guide will perform a series of valuable lessons with you
+in order to teach you the basics of Valhalla. He will cover
+everything from the 'laws of the land' to actual combat and he
+will reward your progress accordingly."
+M_HUMAN_WARRIOR_NATURAL(199,SEX_MALE)
+alignment 0
+bright 4
+ATTACK_DEFENSE(+500, +500)
+position POSITION_STANDING
+default POSITION_STANDING
+dilcopy newbie_nokill@newbie();
+dilcopy newbie_nospl@newbie();
+
+end
+
+
+%objects
+bull_board
+names {"bulletin board", "board"}
+title "a bulletin board"
+descr "A large bulletin board is mounted on a wall here."
+type ITEM_OTHER
+dilcopy board@boards("newbie","","rem_res@boards","",100);
+end
+
+silring
+names {"silver ring", "ring"}
+title "a silver ring"
+descr "A silver ring has been left here."
+type ITEM_TREASURE
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER, MANIPULATE_HOLD}
+weight 1
+extra {}
+"It appears to be made of solid silver, and is beautifully polished.  It
+almost looks magical enough to use as a light."
+bright 5
+end
+
+                              newbie_sword
+
+names {"newbie sword"}
+title "a Newbie Sword"
+descr
+"A great Newbie Sword is here."
+extra {}
+"It looks like a simple one-handed sword."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_LONG_SWORD, 2, 0)
+end
+
+
+                                signal_box
+names {"signal box", "box"}
+title "a signal box"
+descr "A signal box is mounted to the wall."
+extra {}
+"Its just a black box. The label says :-<br/><br/>
+ 'Forever a friend to the newbies of Valhalla'"
+weight 1
+end
+
+                    newbie_sign
+
+names {"newbie sign", "sign"}
+title "a sign for newbies"
+descr "A <a cmd='read sign'>Sign for Newbies</a> is here."
+extra {}
+"<br/>
+                  Attention Newbies<br/>
+                  ---------------------<br/>
+<br/>
+Valhalla offers an automated Newbie Guide Tour to help you on your<br/>
+journeys through the early years! The guide will take you on a tour of<br/>
+Udgaard and show you some places you might find of interest, after which<br/>
+he will reward you with some experience for your progress. At any<br/>
+time while you are level 3, 4 or 5 and have not completed the Newbie<br/>
+Quest, just simply say <a cmd='say #'>help me newbie guide</a> wherever you are.<br/>
+The guide will respond if he is not busy helping others,<br/>
+otherwise try again a few minutes later. <br/>"
+weight 1
+end
+
+guide_book
+names {"guide book", "manual","book", "guide"}
+title "a player help manual"
+descr "A manual is laying here."
+extra {}
+"This manual will give you an understanding of what is and is not
+expected of you as a player helper. New pages will be added as we go.
+please keep the manual handy, it takes no weight and will be handy for
+reference. Type: LOOK PAGE 1, LOOK PAGE 2 etc"
+manipulate {MANIPULATE_TAKE}
+
+extra {"page 1"}
+"
+Welcome to the New Player Guide program. You have been chosen by
+Newbie Player Council Leader and appointed to this position. This
+is an honoured position in the game. You will be responsible for
+helping players and if possible getting them to stay in the game.
+
+For the benifit of this program we are calling a player under the
+level of 20 a new player or newbie."
+
+extra {"page 2"}
+"
+You ARE expected to be courteous to all players and treat them with
+respect. You will probably get the same question time and time again,
+remember you may have heard this question 15 times in one day but it
+is the first time the player has asked it, please be courteous and
+answer if you can.
+
+You ARE NOT expected to take abuse from a new player. If you find
+a new player is obnoxious to you, swearing cussing and generally
+misbehaving please, if possible get a capture file of the event, put
+them on ignore then forward file to admin@valhalla.com
+
+You ARE expected to help new players to the best of your ability.
+You will receive some commands that will allow you to do this at a
+distance so you don't need to go directly to the new player each time
+they call for help. But there may be some cases where you should go to
+them, if it is at all possible (you will have a teleport that takes
+you in and out of no teleport zones) please do so then return to
+your group after the new player has been helped.
+
+You ARE NOT expected to drop everything all the time to deal with new
+players. You are still here first and formost to have fun playing the
+game. If you are busy please don't ignore the player. Send them a tell.
+Something like 'I am sorry I am busy right now, if you can wait
+10 minutes I would be happy to help you then.'"
+
+extra {"page 3"}
+"
+Before you do anything with a new player encourage him or her to take
+the automated newbie guide tour. This should help prevent some of the
+more basic questions.
+
+Most information can be given out through tells. If you see a new
+player log on then please send them a tell introducing yourself
+and even explaining how to respond. Many new players don't know how
+to 'say' let alone 'tell'. Here is an example conversation:
+Tell newbie1 Hello my name is Pilsa, I am a new player helper. If
+you have any questions please feel free to ask me.
+
+Tell newbie1 I am not sure how much mudding experience you have but
+you can talk to me with the following command:
+Tell newbie1 TELL Pilsa Hello.
+
+Newbie1 tells you 'Hi thank you, I could use some help.'"
+
+extra {"page 4"}
+"
+Whats in it for me?
+
+Uhh now we come right down to it, what are the benefits of being a
+new player guide? Okay here they are:
+
+1) Commands that no one else on the mud has - including the admins
+    teleport without fail to newbie
+    Long distance newbie heal
+    Long distance newbie bless
+    Long distance newbie sanctuary
+    Noshout for players under level 20
+	Nonewbie for players under level 20
+	New player Logs (You will see players level 1-6 log into the game)
+    ngoto office command (this will bring you to the the new player
+    guide office.
+2) For each month you are a new player guide you get 1 free month
+   of pay status for the guide character.
+
+3) A breastplate that over time as you advance in rank up to +5 in all
+   abilities that you can wear during your time as a new player guide.
+   The Leader of the New Player Council will evaluate guides and
+   make recommendations for your advancement, which will increase
+   the stats of the plate as you advance as a New Player Guide.
+
+   Ranks:
+   Trial Phase: No Plate but all other attributes.
+   1st Rank: Reviewed at end of 1st month trial +1 Guide Plate.
+   2nd Rank: Reviewed at end of 3rd month +2 Guide Plate.
+   3rd Rank: Reviewed at end of 5th month +3 Guide Plate.
+   4th Rank: Reviewed at end of 7th month +4 Guide Plate.
+   5th Rank: Reviewed at end of 9th month +5 Guide Plate.
+
+
+4) Special offices you can use during your time as a new player
+   guide with command to bring the newbie to you and a place to let the
+   newbie eat and drink
+"
+extra {"page 5"}
+"
+This appointed position is first made as a recommendation from the
+Newbie Player Council Leader to Admin. You will be in office for
+1 term (2 RL months) and may be re-appointed to office.  But your
+re-appointment depends on your actions as a Player Guide and
+as a player in general. If you can not be here because of real
+life issues let the leader know when you plan on returning. If for
+one reason or another real life prevents you from coming for an
+extended period of time ask to be removed until you can once again
+be here at least 1 hour a day so that the Newbie Council Leader
+can put someone else in the position.
+
+If you find yourself teamed up with another player you can not get 
+along with simply do not deal with that player. If you find you are 
+unable control yourself and work with the other person please inform 
+admin and step down from office. In the real world you need to learn 
+to work with people you don't like, this is no different. You are
+representatives of the Valhalla and as such we DO expect you to put
+on a positive and courteous face at all times."
+end
+
+guide_bplate1
+names {"guide plate","breastplate","grey","guide","plate"}
+title "a Player Guide Plate"
+descr "A glowing grey breastplate is laying on the ground."
+
+extra {}
+"The plate is a glowing grey and denotes a very special person,
+the person wearing this plate has been chosen by the players of
+valhalla to help new characters."
+
+CHAR_FLAG_TRANSFER(CHAR_DETECT_INVISIBLE)
+ARMOUR_PLATE(3, 3)
+STR_TRANSFER (1)
+DEX_TRANSFER (1)
+CON_TRANSFER (1)
+BRA_TRANSFER (1)
+HIT_TRANSFER (1)
+MAG_TRANSFER (1)
+DIV_TRANSFER (1)
+CHA_TRANSFER (1)
+hit -1
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+dilcopy quest_restrict@function(GUIDE,0,5,"");
+flags {UNIT_FL_MAGIC}
+
+extra {"$identify"}
+"As a thank you to the Player Helper guides, the gods have awarded this
+very magical plate"
+
+extra {"$improved identify"}
+"The plate gives you +1 in all abilities and may only be worn by a player
+helper guide"
+
+end
+
+guide_bplate2
+names {"guide plate","breastplate","white","glowing","guide","plate"}
+title "a Player Guide Plate"
+descr "A glowing white breastplate is laying on the ground."
+
+extra {}
+"The plate is a glowing white and denotes a very special person,
+the person wearing this plate has been chosen to help new characters."
+
+CHAR_FLAG_TRANSFER(CHAR_DETECT_INVISIBLE)
+ARMOUR_PLATE(3, 3)
+STR_TRANSFER (2)
+DEX_TRANSFER (2)
+CON_TRANSFER (2)
+BRA_TRANSFER (2)
+HIT_TRANSFER (2)
+MAG_TRANSFER (2)
+DIV_TRANSFER (2)
+CHA_TRANSFER (2)
+hit -1
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+dilcopy quest_restrict@function(GUIDE,0,5,"");
+flags {UNIT_FL_MAGIC}
+
+extra {"$identify"}
+"As a thank you to the Player Helper guides, the gods have awarded this
+very magical plate"
+
+extra {"$improved identify"}
+"The plate gives you +2 in all abilities and may only be worn by a player
+helper guide"
+
+end
+
+guide_bplate3
+names {"guide plate","breastplate","blue","glowing","guide","plate"}
+title "a Player Guide Plate"
+descr "A glowing blue breastplate is laying on the ground."
+
+extra {}
+"The plate is a glowing blue and denotes a very special person,
+the person wearing this plate has been chosen to help new characters."
+
+CHAR_FLAG_TRANSFER(CHAR_DETECT_INVISIBLE)
+ARMOUR_PLATE(3, 3)
+STR_TRANSFER (3)
+DEX_TRANSFER (3)
+CON_TRANSFER (3)
+BRA_TRANSFER (3)
+HIT_TRANSFER (3)
+MAG_TRANSFER (3)
+DIV_TRANSFER (3)
+CHA_TRANSFER (3)
+hit -1
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+dilcopy quest_restrict@function(GUIDE,0,5,"");
+flags {UNIT_FL_MAGIC}
+
+extra {"$identify"}
+"As a thank you to the Player Helper guides, the gods have awarded this
+very magical plate"
+
+extra {"$improved identify"}
+"The plate gives you +3 in all abilities and may only be worn by a player
+helper guide"
+
+end
+
+guide_bplate4
+names {"guide plate","breastplate","green","glowing","guide","plate"}
+title "a Player Guide Plate"
+descr "A glowing green breastplate is laying on the ground."
+
+extra {}
+"The plate is a glowing green and denotes a very special person,
+the person wearing this plate has been chosen to help new characters."
+
+CHAR_FLAG_TRANSFER(CHAR_DETECT_INVISIBLE)
+ARMOUR_PLATE(3, 3)
+STR_TRANSFER (4)
+DEX_TRANSFER (4)
+CON_TRANSFER (4)
+BRA_TRANSFER (4)
+HIT_TRANSFER (4)
+MAG_TRANSFER (4)
+DIV_TRANSFER (4)
+CHA_TRANSFER (4)
+hit -1
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+dilcopy quest_restrict@function(GUIDE,0,5,"");
+flags {UNIT_FL_MAGIC}
+
+extra {"$identify"}
+"As a thank you to the Player Helper guides, the gods have awarded this
+very magical plate"
+
+extra {"$improved identify"}
+"The plate gives you +4 in all abilities and may only be worn by a player
+helper guide"
+
+end
+
+guide_bplate5
+names {"guide plate","breastplate","gold","glowing","golden","guide","plate"}
+title "a Player Guide Plate"
+descr "A glowing golden breastplate is laying on the ground."
+
+extra {}
+"The plate is a solid gold and denotes a very special person,
+the person wearing this plate has been chosen to help new characters."
+
+CHAR_FLAG_TRANSFER(CHAR_DETECT_INVISIBLE)
+ARMOUR_PLATE(3, 3)
+STR_TRANSFER (5)
+DEX_TRANSFER (5)
+CON_TRANSFER (5)
+BRA_TRANSFER (5)
+HIT_TRANSFER (5)
+MAG_TRANSFER (5)
+DIV_TRANSFER (5)
+CHA_TRANSFER (5)
+hit -1
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+dilcopy quest_restrict@function(GUIDE,0,5,"");
+flags {UNIT_FL_MAGIC}
+
+extra {"$identify"}
+"As a thank you to the Player Helper guides, the gods have awarded this
+very magical plate"
+
+extra {"$improved identify"}
+"The plate gives you +5 in all abilities and may only be worn by a player
+helper guide"
+
+end
+
+guide_bplate6
+names {"guide plate","breastplate","purple","guide","plate"}
+title "a Player Guide Plate"
+descr "A glowing purple breastplate is laying on the ground."
+
+extra {}
+"The plate is a glowing purple and denotes a very special person,
+the person wearing this plate has been chosen to help new characters."
+
+CHAR_FLAG_TRANSFER(CHAR_DETECT_INVISIBLE)
+ARMOUR_PLATE(3, 3)
+STR_TRANSFER (10)
+DEX_TRANSFER (10)
+CON_TRANSFER (10)
+BRA_TRANSFER (10)
+HIT_TRANSFER (10)
+MAG_TRANSFER (10)
+DIV_TRANSFER (10)
+CHA_TRANSFER (10)
+hit -1
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+dilcopy quest_restrict@function(GUIDE,0,5,"");
+flags {UNIT_FL_MAGIC}
+
+extra {"$identify"}
+"As a thank you to the Player Helper guides, the gods have awarded this
+very magical plate"
+
+extra {"$improved identify"}
+"The plate gives you a plus in all abilities and may only be worn by a player
+helper guide"
+
+end
+
+
+builder_plate
+names {"builder plate","breastplate","blue","glowing","guide","plate"}
+title "a Valhalla Builder Plate"
+descr "A glowing blue breastplate is laying on the ground."
+
+extra {}
+"The plate is a glowing blue and denotes a very special person,
+the person wearing this plate has built a zone or done some other
+deserving work on the mud. They have worked to make valhalla a better
+place."
+
+ARMOUR_PLATE(3, 3)
+STR_TRANSFER (10)
+DEX_TRANSFER (10)
+CON_TRANSFER (10)
+BRA_TRANSFER (10)
+HIT_TRANSFER (10)
+MAG_TRANSFER (10)
+DIV_TRANSFER (10)
+CHA_TRANSFER (10)
+hit -1
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+dilcopy quest_restrict@function("valhalla builder",0,5,"");
+flags {UNIT_FL_MAGIC}
+
+extra {"$identify"}
+"As a thank you to the builders, the gods have awarded this
+very magical plate"
+
+extra {"$improved identify"}
+"The plate gives you +10 in all abilities and may only be worn by a
+Valhalla builder."
+
+end
+
+pillar
+names {"magic","pillar"}
+title "a magical pillar"
+descr "A magical pillar stands in the center of the room humming"
+extra {}
+"Printed on the pillar is the following:
+
+If you are under level 20 and hungry or thirsty 'type FEAST'
+If you are a guide type 'bring <playername>' to get player
+"
+weight 5000
+dilcopy getem@newbie();
+dilbegin feedme();
+var
+
+pc:unitptr;
+code
+{
+heartbeat:=PULSE_SEC*340;
+:start:
+wait(SFB_CMD, ( (activator.type == UNIT_ST_PC) and
+                                (command("feast"))
+                       and (activator.level < 20) )) ;
+
+pc:= activator;
+              block;
+                   {
+                    pc.full:=24;
+                    pc.thirst:=24;
+                    act("You are no longer hungry or thirsty.",
+                    A_SOMEONE, pc, null, null, TO_CHAR);
+
+
+                    }
+}
+
+dilend
+end
+%reset
+
+load newbie_sign into udgaard/temple max 1
+load pillar into hall max 1
+load bull_board into newbie_hangout max 1
+%end

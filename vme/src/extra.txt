@@ -1,0 +1,10 @@
+
+act_wstat.cpp:stat_extra_info (const class unit_data * ch, class unit_data * u)
+act_wstat.cpp:      send_to_char ("This information is classified for administrators "
+act_wstat.cpp:      send_to_char ("This information is classified for administrators "
+act_wstat.cpp:    stat_extra_info,
+
+structs.h:  class extra_descr_data	/* For saving INFO information             */
+structs.h:  * info;
+structs.h:  class extra_descr_data	/* For saving QUEST information            */
+

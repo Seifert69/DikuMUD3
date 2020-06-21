@@ -1,0 +1,38 @@
+<br/>
+<br/>
+<br/>
+<br/>
+The different races form different characters. Each race has its own<br/>
+advantages. One race may be characterized as being dextrous, others as<br/>
+strong . The table below lists how hard / easy it is for a race to gain<br/>
+in abilities. Note however that races also affect the cost of skills,<br/>
+spells and weapons and also the speed in which they recover endurance,<br/>
+mana and hitpoints (these are not listed as the list is very long):<br/>
+<br/><br/>
+<br/><br/>
+-3 Very hard        +3 Very easy       0 Average<br/>
+-2 Hard             +2 Easy<br/>
+-1 Somewhat hard    +1 Somewhat easy<br/>
+<br/>
+           Magic   Div   Str   Dex   Con   Cha   Brain   HP<br/>
+Human        0     0     0     0     0     0     0      0<br/>
+Elf         -1    +2     0    +2    -1    +2    +1     -1<br/>
+Dwarf       -2     0    +2    -1    +2    -1     0     +2<br/>
+Halfling    +1    -1    -1    +2    -1    +1    -1     -1<br/>
+Gnome       +2    -1    -1    +1    -1    -1    +2     -1<br/>
+Half-orc    -3     0    +2     0    +1    -1    -1     +1<br/>
+Half-ogres  -3    -1    +3    -1    +2    -2    -1     +2<br/>
+Half-elf     0     0     0    +1    -1    +1     0     -1<br/>
+Grolls      -2    -2    +1    +1    +3    -3    -2     +3<br/>
+Brownies    +3    -1    -2    +2    -2    +1    +1     -2<br/>
+Darkelf     +3    -1     0    +1    -1    -1    +1     -1<br/>
+<br/>
+<br/>
+<br/>
+<br/>See Also:<br/><br/>
+(racename)<br/><br/>
+Skills<br/><br/>
+Classes<br/><br/>
+Abilities<br/><br/>
+Spells<br/><br/>
+<br/>

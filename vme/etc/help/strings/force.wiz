@@ -1,0 +1,8 @@
+<br/>
+Usage:<br/>
+   &gt;force &lt;char&gt;|all &lt;command&gt;<br/>
+<br/>
+This wiz-command forces a character or player to execute a command. This<br/>
+command should only be used to help players in a tight situation. All will<br/>
+make all connected players execute the command; also known as power abuse.<br/>
+<br/>

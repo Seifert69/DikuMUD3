@@ -1,0 +1,9 @@
+PATH="$PATH:.:vme2.0/bin"
+
+VME_MONEY=/home/release/vme2.0/etc/
+VME_INCLUDE=/home/release/vme2.0/include/
+VME_SERVER_CFG=/home/release/vme2.0/etc/server.cfg
+export VME_MONEY
+export VME_INCLUDE
+export VME_SERVER_CFG
+

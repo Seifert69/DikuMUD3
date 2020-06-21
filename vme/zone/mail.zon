@@ -1,0 +1,234 @@
+/*
+filename    mail
+password    realworld
+changedby   bakka
+EmailAdd     Whistler <whistler@blinksoft.com>
+request     compile
+version     6
+END HEADER*/
+
+#include <macros.h>
+
+%zone	 mail
+title ""
+
+lifespan 25
+reset RESET_ANYHOW
+
+creators {"whistler","bakka"}
+
+notes
+"This is a module to implement the mail system into dil"
+
+help
+"To make a mob a mailman do the following:
+
+   dilcopy mail@mail();
+
+ on the mob, the request and mail functions will then work
+ when a player is in the room."
+
+%dil
+dilbegin got_mail ();
+var
+	ml:unitptr;
+code
+{
+			ml:=restore(tolower(self.name),null);
+			if (ml!=null)
+				{
+     act("<div class='mail'>You have a sudden urge to visit the post office.</div>",
+	       A_ALWAYS, self, null, null, TO_CHAR);
+				 destroy (ml);
+				 }
+
+quit;
+}
+dilend
+
+
+dilbegin mail();
+var
+	ex:extraptr;
+  i : integer;
+  x : integer;
+  pc : unitptr;
+  sMedium : string;
+  uMedium : unitptr;
+  sDest : string;
+  uDest : unitptr;
+  msglen : integer;
+  msg : string;
+  blkmsg : string;
+  noletter : integer;
+  header : string;
+	cont:unitptr;
+code
+{
+heartbeat:=3;
+:start:
+unsecure(pc);
+
+wait ( SFB_CMD, command("request") or
+                command("mail") );
+
+if (command("mail") )
+  goto mail;
+else
+  goto request;
+
+goto start;
+:mail:
+  block;
+  pc:=activator;
+  secure(pc, start);
+  sMedium:=getword(argument);
+  sDest:=getword(argument);
+  if ((sMedium == "") or (sDest == ""))
+  {
+     act("Correct Usage: mail paper person",
+	       A_SOMEONE, pc, null, null, TO_CHAR);
+     goto start;
+  }
+
+  if ( pc.type != UNIT_ST_PC )
+  {
+     act("Only a player can use the mail system.",
+	       A_SOMEONE, pc, null, null, TO_CHAR);
+	  goto start;
+  }
+
+  uMedium := findunit(pc, sMedium, FIND_UNIT_INVEN, null);
+
+  if (uMedium == null)
+  {
+     act("You don't seem to have such a letter?",
+	       A_SOMEONE, pc, null, null, TO_CHAR);
+	  goto start;
+  }
+
+if (uMedium.type!=UNIT_ST_OBJ)
+  {
+     act("$1n says, '$3n, I'll only accept notes to be delivered.'",
+	       A_SOMEONE, self, null, pc, TO_VICT);
+	  goto start;
+  }
+
+  if (uMedium.objecttype != ITEM_NOTE)
+  {
+     act("$1n says, '$3n, I'll only accept notes to be delivered.'",
+	       A_SOMEONE, self, null, pc, TO_VICT);
+	  goto start;
+  }
+
+  if (uMedium.extra == null)
+  {
+     act("$1n says, 'How stupid of you $3n, the note is empty!'",
+	       A_SOMEONE, self, null, pc, TO_VICT);
+	  goto start;
+  }
+
+  if (not isplayer(sDest) )
+  {
+     act("$1n says, 'Sorry $3n, but I don't know that address.'",
+	       A_SOMEONE, self, null, pc, TO_VICT);
+	  goto start;
+  }
+
+  /* if you want to put a cost in for mailing here is where you would */
+  header := "From: " + pc.name + "<br/>" + asctime(realtime) + "<br/><br/>";
+  header := textformat(header);
+  uMedium.extra.descr := header +uMedium.extra.descr;
+cont:=restore(tolower(sDest),null);
+if (cont==null)
+	{
+	cont:=load("envelope@mail");
+	addextra (cont.extra,{"$letters"},"0");
+	}
+
+ex:="$letters" in cont.extra;
+if (ex==null)
+	{
+	act ("$1n says 'That persons address has problems contact an administrator.",
+		A_SOMEONE,self,null,pc,TO_VICT);
+		destroy (cont);
+		goto start;
+		}
+
+if (atoi(ex.descr)>=100)
+	{
+	act ("$1n says 'Sorry $3n that persons mail box is full try and send it later.",
+		A_SOMEONE,self,null,pc,TO_VICT);
+		destroy (cont);
+		goto start;
+		}
+
+	ex.descr:=itoa(atoi(ex.descr)+1);
+	uMedium.outside_descr:="a letter has been left here.";
+	uMedium.title:="a letter";
+	if (not("letter" in   uMedium.names))
+	addstring (uMedium.names,"letter");
+link (uMedium,cont);
+store(cont,tolower(sDest),TRUE);
+
+  act("$1n gives $3n a letter.", A_SOMEONE, pc, null, self, TO_REST);
+  act("You give a letter to $3n.", A_SOMEONE, pc, null, self, TO_CHAR);
+
+  uDest := findunit(self, sDest, FIND_UNIT_WORLD, null);
+  if ( uDest != null )
+     act("<div class='mail'>You have a sudden urge to visit the post office.</div>",
+	       A_SOMEONE, uDest, null, null, TO_CHAR);
+
+  destroy(uMedium);
+		destroy (cont);
+
+
+  goto start;
+
+:request:
+  block;
+  pc:=activator;
+cont:=restore(tolower(pc.name),null);
+  i:=delunit(tolower(pc.name));
+	noletter:=0;
+while (cont.inside)
+	{
+	link (cont.inside,pc);
+	noletter:=noletter+1;
+	}
+if (noletter>1)
+	{
+       act("$3n hands you $2t pieces of mail.",
+	       A_SOMEONE, pc, itoa(noletter), self, TO_CHAR);
+     act("$3n hands $1n some mail.",
+	       A_SOMEONE, pc, null, self, TO_REST);
+				 }
+				 else if (noletter>0)
+	{
+       act("$3n hands you $2t piece of mail.",
+	       A_SOMEONE, pc, itoa(noletter), self, TO_CHAR);
+     act("$3n hands $1n some mail.",
+	       A_SOMEONE, pc, null, self, TO_REST);
+				 }
+			 else
+			  act ("$1n says 'You don't have any mail.  Sorry.'",
+				A_SOMEONE,self,null,pc,TO_VICT);
+
+		destroy (cont);
+  goto start;
+}
+dilend
+
+%objects
+
+envelope
+names {"envelope"}
+title"temp envelope"
+descr "a temporary envelope is here."
+extra {}
+"Its an Envelope alright!"
+CONTAINER_DEF(1)
+end
+
+%end
+

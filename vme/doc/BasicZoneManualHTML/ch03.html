@@ -1,0 +1,525 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Unit building blocks</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Zone information section"
+HREF="x338.html"><LINK
+REL="NEXT"
+TITLE="The room section"
+HREF="ch04.html"></HEAD
+><BODY
+CLASS="CHAPTER"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x338.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="ch04.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="CHAPTER"
+><H1
+><A
+NAME="CH-03"
+></A
+>Chapter 4. Unit building blocks</H1
+><P
+>When creating your zone you will find some basic
+structures are used in all three unit types rooms, objects, and
+NPCs. In this chapter we will define the main building blocks of
+all units along with some helpful hints </P
+><P
+>No matter which unit type you are dealing with there is a
+simple basic structure that lets the compiler know not only what
+unit type it is dealing with but where one unit begins and where it
+ends.  The way the compiler tells what unit type it is dealing with
+is by the section header '%rooms', '%objects', and '%mobiles'.  All
+rooms must be defined under the '%rooms' header and likewise objects
+and NPCS under their respective headers.  Each unit starts with a
+symbolic name called the unit symbol and ends with the keyword
+end.  The following would be a legal definition of any
+unit type:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN388"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;symbol_name
+end&#13;</PRE
+><P
+></P
+></DIV
+><P
+>If you define a unit like this when it loads it will be blank, while
+this is not	 extremely useful it is good to know you can leave
+out any field you don't feel you need.</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><P
+><B
+>Unit building blocks</B
+></P
+><DL
+><DT
+>symbol field</DT
+><DD
+><P
+>&#13;
+In the last chapter we defined the different field types and
+the rules you must follow when defining a symbol.  It is
+important enough to relist these rules here so you do not run into
+problems when creating your units.
+<P
+></P
+><UL
+><LI
+><P
+>The first letter of the
+symbol must be a letter of the alphabet or a '_' character</P
+></LI
+><LI
+><P
+>Characters following the first can be numbers, alphabet
+letters, and '_' characters</P
+></LI
+><LI
+><P
+>The symbol can be no longer than
+15 characters</P
+></LI
+><LI
+><P
+>No reserved keywords can be used as a symbol<A
+HREF="a5251.html"
+>Appendix B</A
+></P
+></LI
+></UL
+></P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>It is also important to know currently it is hard to deal with units
+having capital letters in them, this may be fixed in the future but it is
+good practice to use all lower case characters in the
+symbols.</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>Another thing you should think about when defining your symbol
+names is to be clear about what the unit is.  When you list units on
+the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> server with <B
+CLASS="COMMAND"
+>wstat</B
+> the symbolic names are
+shown
+if you were to see the list:
+<SAMP
+CLASS="COMPUTEROUTPUT"
+>i6853 b2419 l1854</SAMP
+>
+You would have no idea what those three items were unless you
+personally built them recently, therefore it is a much better coding
+practice to name things what they are like:
+<SAMP
+CLASS="COMPUTEROUTPUT"
+>long_sword healer_hut dog</SAMP
+></P
+></DD
+><DT
+>title field</DT
+><DD
+><P
+>&#13;
+The title field is probably the easiest field on all units it
+is what is shown on the first line of a room when you enter and it
+is the name shown when you get an object or attack a NPC.
+There is only two important things to look at when defining titles
+one is punctuation and the other is capitalization.  Room titles
+need to be capitalized and so do proper names but the first letter of an object
+title or a NPC title do not normally need to be capitalized. this is
+best explained by some examples.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN422"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;title "The dragons in."/*good*/
+title "a big bull dog."/*bad has a period at the end*/
+title "Bill the destroyer"/*good*/
+title "A long dagger"/*bad capital 'a'*/&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now to show why some of those are good we will demonstrate by some
+sample output in the game.
+<SAMP
+CLASS="COMPUTEROUTPUT"
+>&#13;prompt:  l
+The Dragons Inn
+You are standing in a moldy inn.
+
+prompt: get A long dagger
+You get A long dagger.
+
+prompt kick dog
+You kick a bull dog. in the head.</SAMP
+>
+Notice the 'A' and the extra period do not really look right where
+they end up appearing in the game.  These may be minor nit picky
+details but if you do it right the first time you won't have to deal
+with the english major that just happens to be playing on your
+mud.</P
+></DD
+><DT
+>names field</DT
+><DD
+><P
+>&#13;
+The 'names' field defines the names everything in the game can
+use to interact with your unit.  For rooms the names are used as
+teleport or goto points for characters and NPCs or they are
+sometimes	used for special DIL functions on objects to trigger in certain
+rooms.  On NPCs and objects names can be used for anything from
+poking a player to giving a player an object.  The names field is
+very flexible it has even been used to store what a container is
+holding in order to have quick access to the names in the container.
+ it</P
+><P
+>When making rooms it is not necessary to put room names.  In
+fact it is a good way of making sure players can't teleport to
+certain rooms because if the room doesn't have a name the person
+can't teleport to it.  Objects and NPCs must have names because if
+you leave names off of them you can not pick them up or kill them
+depending on which you are dealing with.  It is also good practice
+to use all combinations of the object or NPCs title so a
+player will know exactly what to type to use the item for example:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN433"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;bad_obj
+title a small dog"
+names{"small dog","small","dog"}
+end&#13;</PRE
+><P
+></P
+></DIV
+><P
+>It is up to you as a builder if you want to use names like 'small'
+in your names list since you would not 'get small' in real life it
+may not have to be added to the names list.  It is important however
+to define your extras from big to small because of how the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+>
+command interpreter handles names of things.  For example if you had
+the following names:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN437"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;small_item
+title "a small item"
+names {"small","item","small item"}&#13;</PRE
+><P
+></P
+></DIV
+><P
+>When you try to <B
+CLASS="COMMAND"
+>give small item Bill</B
+>.  The interpreter
+would try to give
+small to item and that would not be what you wanted to do.  Don't
+worry the compiler will catch this and give you an error something
+like:
+<SAMP
+CLASS="COMPUTEROUTPUT"
+>&#13;Fatal name ordering on line ###.&#13;</SAMP
+></P
+></DD
+><DT
+>descr field</DT
+><DD
+><P
+>&#13;
+The description building block is used in many places.  You will find
+description fields on extras, exits, rooms, NPCs, objects, and as
+you have already seen the help and the notes field of the zone
+information section are also description fields.</P
+><P
+>  Depending on what
+you are working on description fields can mean totally different
+things to the person looking in the room.  A description field on a
+room can be the inside or outside of the rooms description.  A
+description on extras can be an NPCs descr or an extra description
+on the room like if you looked at a 'rug' or a 'chair'.  On an exit
+the descr field describes what you see when you look in that
+direction from the room you are in.  The important thing right now
+is no matter where you use them they all work the same.</P
+><P
+>description fields like the title field have a tag or unlike
+the title field can have a set of tags before them like in extras or
+exits but like titles they are just a string surrounded by quotes.
+You can make multiple line descriptions if the description is on a
+NPC you may not want to since it is the description shown when you
+walk into the room.  The following would be some examples of room descriptions.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN450"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;descr
+"this is how you would define a room descr and as you can see it can
+be much longer than a line if you like."
+
+extra {"basic extra"}
+"This is a description field on an extra."
+
+extra{"more advanced","extra"}{1,2,3,4,5,6}
+"This is still the description field.  Like the room description or
+any description field for that matter this can be longer than a
+line."
+
+east to bathroom descr
+"You see one big toilet!";&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>extra fields</DT
+><DD
+><P
+>&#13;
+The extra field is the work horse for the builder.  It is the
+building block that most brings your zone to life.  You can use it
+to describe body parts or items in a room.  When you use
+<ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> you will use extras to store information like quest information
+or special information you need later.  Extras also store the
+main description on NPCs since the descr field on NPCs is really the
+long title shown in the room which will be explained later
+in <A
+HREF="ch05.html"
+>Chapter 6</A
+>.</P
+><P
+>The extra Is the first structure definition you have run into
+so it may take some playing with to figure it out.  The extra has
+actually 4 fields three of them must be there in some form.  The
+first is the identifier that tells the compiler that this is an
+extra, the second is a stringlist, the third is an Optional
+Intlist, and the final one is the extra description field.  If the extra
+had all the fields it would look like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN461"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;extra {"small chair","chair"} {1,2,3,4,5} "Its a chair."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>If the previous wasn't an example we
+would have left out the Intlist because it is not necessary to put
+the Intlist on a chair unless you want it there for some special <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>
+you are creating. the Intlist is the only field that can be totally
+left out but you can leave the string list blank when you want
+to make the extra the default description when the object, room, or
+NPC is being looked at, like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN465"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;extra {}
+"This would be what you see when you look at any of the names in the
+names list."&#13;</PRE
+><P
+></P
+></DIV
+><P
+>We will go more in-depth into why you want to do this in the
+following chapters.</P
+></DD
+></DL
+></DIV
+><P
+>You are now ready to put these building blocks to work.  You have only
+to learn how to put these fields to work for each of the three unit
+types and you will be off and running.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x338.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="ch04.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Zone information section</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The room section</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,19 @@
+<br/>
+<br/>
+<br/>
+<br/>
+Usage<br/>
+pour (drinkcontainer1) (drinkcontainer2)<br/><br/>
+<br/>
+Example:<br/><br/>
+pour fountain into barrel<br/><br/>
+<br/>
+This enables you to pour the contents of drinkcontainer1 into<br/>
+drinkcontainer2.<br/>
+Beware, if drinkcontainer2 has another type of liquid that drinkcontainer1,<br/>
+the result will be SLIME! Also, if one container is poisoned, the liquid in<br/>
+drinkcontainer2 will be it too.<br/>
+<br/><br/>
+<br/>See Also:<br/><br/>
+Drinks<br/><br/>
+<br/>

@@ -1,0 +1,13 @@
+<br/>
+Usage:<br/>
+   &gt;goto &lt;unit&gt;<br/>
+<br/>
+This is the wizards way of travelling. At an instant, you can move across<br/>
+the worlds. You will appear in the same room, as the unit you specify, thus<br/>
+making 'goto papi' take you to the same room as papi, 'goto cup' take<br/>
+you to the same room as a cup (but only if the cup is in a room!)and <br/>
+'goto inn@udgaard' will take you to that specific room.<br/><br/>
+<br/>
+See also:<br/>
+   &gt;help at<br/>
+<br/>

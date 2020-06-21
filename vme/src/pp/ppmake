@@ -1,0 +1,11 @@
+g++ -g -c pp2.cpp -o pp2.o
+g++ -g -c pp1.cpp -o pp1.o
+g++ -g -c pp3.cpp -o pp3.o
+g++ -g -c pp4.cpp -o pp4.o
+g++ -g -c pp5.cpp -o pp5.o
+g++ -g -c pp6.cpp -o pp6.o
+g++ -g -c pp7.cpp -o pp7.o
+g++ -g -c pp8.cpp -o pp8.o
+g++ -g -c ppmain.cpp -o ppmain.o
+g++ -g pp1.o pp2.o pp3.o pp4.o pp5.o pp6.o pp7.o pp8.o ppmain.o -o pp
+

@@ -1,0 +1,12 @@
+<br/>
+<br/>
+Usage: scan [number of rooms] [direction]<br/>
+Scan lets you see surrounding rooms and what's in them. The parameters in<br/>
+[] mean that they are optional. Anyone can scan one room away. Typing 'scan 1'<br/>
+on its own will show you all rooms (if you can see into them) north, south,<br/>
+east, west, up, down, northwest, northeast, southwest, and southeast.<br/><br/>
+'Scan 1 north' will show you the north room. Those more skilled in scan can<br/>
+see further afield, to a maximum of 3 rooms away.<br/>
+Needless to say, this skill is a bit good.<br/>
+<br/>
+<br/>

@@ -1,0 +1,2023 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>DIL functions for NPCs</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The NPC section"
+HREF="ch05.html"><LINK
+REL="PREVIOUS"
+TITLE="Compiling and debugging your first NPC"
+HREF="x2061.html"><LINK
+REL="NEXT"
+TITLE="A more complex set of NPCs"
+HREF="x2629.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x2061.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. The NPC section</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x2629.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="NPCDILFUNC"
+>6.5. <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions for NPCs</A
+></H1
+><P
+>The <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> language is the language a builder can use to make his own
+special functions on rooms, NPCs, objects, PCs, and much more.  This
+manual is for basic zone writing and therefore will not go into how to
+write your own <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions.  The <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> however is released with many
+functions for you as an Administrator and your builders to use to make
+special rooms, NPCs, and objects.  The following is a list of all NPC
+functions released with the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> 2.0 server.</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>Mercenary</DT
+><DD
+><P
+></P
+><P
+>This function allows you to make an NPC hireable by players in the game.  You
+simply dilcopy this unto a mob and the player can then type 'contract &lt;character name&gt;
+and the mob will hunt that char for a fee. This function takes no special
+arguments.  the following is the function definition found in
+<TT
+CLASS="FILENAME"
+>function.zon</TT
+>:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2114"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+> 
+dilbegin mercenary_hire();&#13;</PRE
+><P
+></P
+></DIV
+><P
+>To use it you simply dilcopy it to your NPC as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2117"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy mercenary_hire@function();&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Obey</DT
+><DD
+><P
+></P
+><P
+>This function when dilcopied on the NPC will make it obey there master.  And
+example mobile of this is the familiar. Upon completing a small quest a Mage
+receives a familiar that will obey that player and that player only. The player
+can simply type <B
+CLASS="COMMAND"
+>Tell &lt;familiar name&gt; cast heal
+&lt;player name&gt;</B
+> and it will carry out the command.  This function takes
+no arguments.  The following is the definition found in
+<TT
+CLASS="FILENAME"
+>function.zon</TT
+>:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2128"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilbegin obey();&#13;</PRE
+><P
+></P
+></DIV
+><P
+>To use this function simply dilcopy it to the NPC you want to be a
+mercenary like so:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2131"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy obey@function();&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Evaluate</DT
+><DD
+><P
+></P
+><P
+>This function when placed on an NPC allows it to evaluate items
+for a fee.  The function definition looks as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2140"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilbegin evaluate (amt:integer);&#13;</PRE
+><P
+></P
+></DIV
+><P
+>The function has one argument 'amt' that lets you set the cost of
+the evaluation of items.  If you wanted to set the value to four gold it
+would work just like when setting the money field and look as
+follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2143"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy evaluate@function(4*GOLD_PIECE);&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Guard Direction</DT
+><DD
+><P
+></P
+><P
+>   This is an enhanced version of the Guard Way Function. It will allow both
+   certain players to enter as well as certain mobs. An optional stop <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>
+   can be supplied if you wish to do something special. It takes two
+arguments, the activator and the direction.  The following is the
+function definition:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2153"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+> 
+
+dilbegin guard_dir(direction : string, excludepc : stringlist,
+                   excludenpc : stringlist, stopdil : string);
+
+				   </PRE
+><P
+></P
+></DIV
+><P
+>This function is dilcopied onto the mob in the room that the mob is initially
+loaded. Thus is the mob is summoned or commanded away it will not block the 
+directions until it is back to where it was first created. This <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> takes four
+arguments. The first is the direction to block. The second arguments is for those
+PC's you wish to allow to pass in that direction without being stopped.  The next
+for the NPCs you wish to allow to pass. The last is the 'act you wish the blocking
+mob to display to the PC's that are blocked from proceeding in the selected direction.
+The third and forth arguments may be 'null', this will pass the defaults to the
+dilcopy.  The third argument is a stringlist that tells which players
+or NPCs are excluded from the guard.  The forth is a <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> you can pass in
+to do something special to people who are stopped.  We will not show how
+to use the forth argument because it takes more <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> knowledge than this
+manual covers.  The following would be a valid dilcopy for this
+function:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2159"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy guard_dir@function("south", {"papi",
+{"rejji"}, null, null);&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Combat magic</DT
+><DD
+><P
+></P
+><P
+>This function when placed on a mobile allows it to use any of the
+combat spells.  The function definition is as follows: It also allows
+the NPC to cast heal during combat on itself. </P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2168"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilbegin combat_mag(atk_spl : string, def_spl : string,
+                    def_pct:integer, spd: integer);
+
+					</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN2170"
+></A
+><P
+><B
+>Table 6-8. Combat magic arguments</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><COL><THEAD
+><TR
+><TH
+>argument</TH
+><TH
+>Type</TH
+><TH
+>description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>atk_spl</TD
+><TD
+>string</TD
+><TD
+>Attack spell ie "fireball" or "" for none</TD
+></TR
+><TR
+><TD
+>def_spl</TD
+><TD
+>string</TD
+><TD
+>Defense Spell ie "heal" or "" for none</TD
+></TR
+><TR
+><TD
+>def_pct</TD
+><TD
+>integer</TD
+><TD
+>At what % of hitpoints defense spell will be cast</TD
+></TR
+><TR
+><TD
+>spd</TD
+><TD
+>integer</TD
+><TD
+>speed at which mob will uses its attack magic, 1 for all
+at once (every round) to 5 for every 5 rounds. I suggest 2.</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>Defense spells take priority when the hit points fall below the % specified,
+after (if) the hits have been restored above that number attack magic will
+resume.  If def_spl is used, function automatically makes sure that it retains
+enough mana for at least one healing, ie it will attack 4 times if it don't
+need a healing.  The following would be an example of what you would put
+on your NPC:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2196"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy combat_mag@function ("harm", "heal", 25, 2);&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Fido</DT
+><DD
+><P
+></P
+><P
+>This function turns the NPC into a corpse eating mobile.  The
+following is the functions definition:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2205"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilbegin fido(txt1:string,txt2:string);&#13;</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN2207"
+></A
+><P
+><B
+>Table 6-9. Fido arguments</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><COL><THEAD
+><TR
+><TH
+>Argument</TH
+><TH
+>Type</TH
+><TH
+>description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>txt1</TD
+><TD
+>string</TD
+><TD
+>The text shown when mob finds and eats corpses, default:
+                        'XXX savagely devours a corpse.'
+                  will be shown if txt1 is set to "".
+                  If txt1 is set to "stop", the mob will NOT devour corpses
+                  (convenient if you want your dogs to only eat food leftovers
+                  but not corpses).</TD
+></TR
+><TR
+><TD
+>txt2</TD
+><TD
+>string</TD
+><TD
+>The text shown when mob finds and eats ITEM_FOOD, default:
+                        'XXX hungrily devours YYY.'
+                  will be shown if txt2 is set to "".
+                  If txt2 is set to "stop", the mob will NOT devour
+                  ITEM_FOOD (convenient if you want to make a corpse-eating
+                  ghoul, who'd choke on normal food, etc).</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>In both cases $1n is the mob itself, $2n is the title of the
+    item devoured.</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>An example of the 'fido' function on an NPC would look as
+follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2227"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy fido@function("$1n slowly devours $2n, crunching the bones.",
+                      "$1n grabs $2n and hungrily munches it.");
+					  </PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Wander zone</DT
+><DD
+><P
+></P
+><P
+>This function allows a mob to wander around more than one zone, but not all zones.
+You specify what zones the mob can wander.  Has optional intelligence which allows
+the opening and closing of doors.  The following is the function
+definition:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2236"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilbegin wander_zones(zones : string, spd : integer, doors : integer,
+                      lckd_doors : integer);
+					  </PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN2238"
+></A
+><P
+><B
+>Table 6-10. Zone wander arguments</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><COL><THEAD
+><TR
+><TH
+>argument</TH
+><TH
+>Type</TH
+><TH
+>description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>zones</TD
+><TD
+>string</TD
+><TD
+>A string of zone names separated by spaces.</TD
+></TR
+><TR
+><TD
+>spd</TD
+><TD
+>integer</TD
+><TD
+>The speed (in seconds) at which the mob wanders.
+                              Minimum = 5 secs (for process time).</TD
+></TR
+><TR
+><TD
+>doors</TD
+><TD
+>integer</TD
+><TD
+>Can open/close doors (0 = false, 1 = true)</TD
+></TR
+><TR
+><TD
+>lckd_doors</TD
+><TD
+>integer</TD
+><TD
+>Can open/closed locked doors (0=false, 1=true)</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>The options are not too hard so we will show how to use it and
+leave it at that</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2264"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy wander_zones@function ("halfzon haon_dor", 5, 1);&#13;</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>@loadzone option which is used by inputting @loadzone
+somewhere in the zones string will replace it by the zone the mob is
+loaded in like this:
+<DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2268"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy wander_zones@function ("halfzon haon_dor @loadzone", 5, 1);
+                       </PRE
+><P
+></P
+></DIV
+></P
+></TD
+></TR
+></TABLE
+></DIV
+></DD
+><DT
+>Global wander</DT
+><DD
+><P
+></P
+><P
+>This is similar to wander_zones because it's just a modified version of it,
+which requires no zones argument since it moves in all zones.  The
+following is the function definition:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2277"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilbegin global_wander(spd : integer, doors : integer,
+                       lckd_doors :integer);&#13;</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN2279"
+></A
+><P
+><B
+>Table 6-11. Global wander arguments</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><COL><THEAD
+><TR
+><TH
+>argument</TH
+><TH
+>Type</TH
+><TH
+>description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>spd</TD
+><TD
+>integer</TD
+><TD
+>The speed (in seconds) at which the mob wanders.
+                              Minimum = 5 seconds (for process time).</TD
+></TR
+><TR
+><TD
+>doors</TD
+><TD
+>integer</TD
+><TD
+>Can open/close doors (0 = false, 1 = true)</TD
+></TR
+><TR
+><TD
+>lckd_doors</TD
+><TD
+>integer</TD
+><TD
+>Can open/closed locked doors (0=false, 1=true)</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>The options are not to hard so we will show how to use it and
+leave it at that</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2301"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy global_wander@function (60, 1, 1);&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Team work</DT
+><DD
+><P
+></P
+><P
+>This function when placed on a mob, located in the same room as another mob,
+will allow the mobile to assist the other in combat.  The following is
+the function definition:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2310"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilbegin aware teamwork(lst: string);&#13;</PRE
+><P
+></P
+></DIV
+><P
+>This function takes one argument which is a string of the mobiles it is
+to protect. So if we wanted a NPC to protect both Jesper and Enver the
+dilcopy would look as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2313"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy teamwork@function("jesper/enver");&#13;</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>For this to work both mobs must be in the same room or following
+      each other.</P
+></TD
+></TR
+></TABLE
+></DIV
+></DD
+><DT
+>Rescue</DT
+><DD
+><P
+></P
+><P
+>This function when placed on a mob, located in the same room as another mob,
+will allow the mobile to rescue the other mob if it is attacked.  The
+function is as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2324"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilbegin aware rescue(lst: string);&#13;</PRE
+><P
+></P
+></DIV
+><P
+>This function takes one argument, a string of those mobiles
+you wish this NPC to assist should they be attacked.</P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>For this to work both NPCs must be in the same room or following
+      each other.</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>Again we will use our test subjects Jesper and Enver and if
+we wanted an NPC to protect them and come to their aid the following
+would be the dilcopy:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2330"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy teamwork@function("jesper/enver");&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Agressive</DT
+><DD
+><P
+></P
+><P
+>This function makes a Mob hostile to person(s) in the room with it, under
+ certain conditions which are provided as arguments.
+In short, the all-singing, all-dancing aggression <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>.  The following is
+this functions definition:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2340"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilbegin aggressive (sx : integer, rce : integer, opp : integer,
+                     levl : integer, sanc : integer, tme : integer,
+                     tar : integer, align : string, attack :
+                     stringlist);
+					 
+					 </PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN2342"
+></A
+><P
+><B
+>Table 6-12. Agressive arguments</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><COL><THEAD
+><TR
+><TH
+>argument</TH
+><TH
+>Type</TH
+><TH
+>description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>sx</TD
+><TD
+>integer</TD
+><TD
+>NOTE: not the sex values in values.h.
+                                 This decides the sex of your mob's
+                                 victim.
+                                 0 - Sex doesn't matter,
+                                 1 - Attack opposite sex to self (if not
+                                     neutral!),
+                                 2 - Attack SEX_MALE,
+                                 3 - Attack SEX_FEMALE,
+                                 4 - Attack SEX_NEUTRAL.</TD
+></TR
+><TR
+><TD
+>rce</TD
+><TD
+>integer</TD
+><TD
+>Any of the PC races from 0 to 14. A value
+                                 of -1 means we don't care about the
+                                 victim's race.</TD
+></TR
+><TR
+><TD
+>opp</TD
+><TD
+>integer</TD
+><TD
+>0 - Non race specific (same as rce := -1)
+                                 1 - Attack the specified rce,
+2 - Attack any pc race _but_ the specified rce.</TD
+></TR
+><TR
+><TD
+>levl</TD
+><TD
+>integer</TD
+><TD
+>Allow level specific aggression.
+                                 A value of 30 would make the mob hostile
+                                 to all pcs level 30 and above.
+                                 A value of -30 (note the -) would make the
+                                 mob hostile to all pcs level 30 or below.
+                                 A value of 0 means level doesn't matter.</TD
+></TR
+><TR
+><TD
+>sanc</TD
+><TD
+>integer</TD
+><TD
+>Does this mob obey the sanc/soothe rules?
+                                 (ie, if someone has cast sanctuary on
+                                 themselves, will this mob recognize it, and
+                                 not attack, or attack anyway).
+                                 0 - Doesn't obey sanc or soothe
+                                 1 - Obeys only sanc
+                                 2 - Obeys only soothe
+                                 3 - Obeys both sanc and soothe
+                                 (SOOTHE is a new spell for ranger's guild)</TD
+></TR
+><TR
+><TD
+>tme</TD
+><TD
+>integer</TD
+><TD
+>Time in ticks to wait before attacking (is
+                                 automatically put to RANTIME, ie, time
+                                 variance of time-time/2 to time+time/2).
+                                 Values accepted are from 0 to 400 (that's
+                                 0 - 100 seconds. Can be specified using
+                                 PULSE_SEC).</TD
+></TR
+><TR
+><TD
+>tar</TD
+><TD
+>integer</TD
+><TD
+>This is a special value which determines
+                                 which of the eligible victims we pick.
+                                 -2 - Last eligible victim to into the room.
+                                 -1 - Weakest eligible victim in room.
+                                 0  - Random eligible victim.
+                                 +1 - Strongest eligible victim in room.
++2 - First eligible victim into the room.</TD
+></TR
+><TR
+><TD
+>align</TD
+><TD
+>string</TD
+><TD
+>The desired alignment of the victim.
+                                 "ANY"      - We don't care about the alignment.
+                                 "GOOD"     - Attack only good alignment.
+                                 "EVIL"     - Attack only evil alignment.
+                                 "NEUTRAL " - Attack only neutral alignment.
+                                 "OPPOSITE" - Attack opposite alignment to self
+                                 (provided self isn't neutral).
+								 "SALIGN" - Attack same alignment as self.
+                                 "DALIGN" - Attack any alignment
+                                 different to self.</TD
+></TR
+><TR
+><TD
+>attack</TD
+><TD
+>stringlist</TD
+><TD
+>This is a 2 string stringlist. These are
+                                    the messages sent to the people in the room
+                                    except the victim, and the victim itself,
+                                    in that order.
+                                    If the second (victim) string is "", the
+                                    first string will be shown to the victim,
+                                    as if they were anyone else in the room.
+                                    You can leave both blank if you wish.
+                                    $1n is the mob name (self), $3n is the
+                                    victim's name.
+                                    NOTE: the $ values only apply if you supply
+                                    BOTH string 1 and 2.</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>The argument descriptions pretty much explain everything there is
+to know about the agressive function and what it was so we will finish
+off by giving an example of a dilcopy that will create a NPC that fits
+the following description</P
+><P
+>Let's say our mob is a level 40 Goblin who doesn't like
+dwarves. He's very particular in that he doesn't like evil female
+dwarves who are level 20 and above. He does recognize the sanctuary
+spell, but he doesn't recognize soothe, and he'll wait 10 seconds on
+average before he attacks. The 2 messages sent are: "$1n savagely
+attacks $3n with his big axe!" and "$1n attacks you!"</P
+><P
+>Here's what the function call would look like:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2390"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy aggressive (3, 2, 1, 20, 2, PULSE_SEC*10, 0, "EVIL",
+                    {"$1n savagely attacks $3n with his big axe!",
+                     "$1n attacks you!"});
+					 
+					 </PRE
+><P
+></P
+></DIV
+><P
+>In this example, 3 (attack females), 2 (attack dwarves), 1 (just dwarves),
+  20 (Level 20+ victims), 2 (obey only soothe), PULSE_SEC*10
+ (wait around 10 seconds before attacking), EVIL (attack only
+ evil), and the strings in the stringlist are displayed to
+ the victim and the room, in that order.</P
+></DD
+><DT
+>Janitors</DT
+><DD
+><P
+></P
+><P
+>This function turns the NPC into a janitor that will pick up items left
+lying around and will also tell new  players. those under level 20,
+where there corpse is if they come across it in there wanderings.
+You must also supply the wander_zone <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> for this to work correctly. 
+The definition for the janitor function is as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2401"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilbegin janitors(rate: integer);&#13;</PRE
+><P
+></P
+></DIV
+><P
+>The Janitor function only takes one argument and that determines
+how fast the janitor will pick up stuff in seconds.</P
+><P
+>To make a Janitor that will pick up stuff every thirty seconds the
+following would be the dilcopy:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2405"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy janitor@function(30);&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Shop Keeper</DT
+><DD
+><P
+></P
+><P
+>This is one of the more complex dilcopies and considered by some to be 
+confusing. Below I will step you through the creation of the mobile,
+and the application of this <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> using defines to hopefully simplify the
+use of this function.  The function is defined as:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2415"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilbegin aware shopkeeper(prod: stringlist, custom_acts : stringlist,
+                            opentimes : stringlist, itemtype: string,
+							sellprofit : integer,buyprofit: integer,
+							maxcash : integer,closedil : string,
+							dilparams : string );&#13;</PRE
+><P
+></P
+></DIV
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>Step 1</DT
+><DD
+><P
+>First, figure out what you want your shopkeeper to sell.  He can sell
+pretty much any item from any zone, as long as you know its symbolic
+name.
+For Hogan (our example shopkeeper), he is a bartender, so he sells things
+you would commonly find in a pub, tavern, or bar.
+His list of items (their symbolic names at which zone) are:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2422"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;grain_alcohol@gobtown1
+pretzels@gobtown1
+beer_nuts@gobtown1
+rum_coke@gobtown1
+tuborg@udgaard&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now, since I use defines, I make a define for Hogan's products.  I called
+it TAVERN_PROD (for tavern's products).  And use the following setup
+and just stick the names of your items in where his items are.  
+Each item will have a setup like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2425"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13; "tuborg@udgaard 15 20"  &#13;</PRE
+><P
+></P
+></DIV
+><P
+>A symbolic name followed by two numbers, with the entire thing in
+quotes.  Where :</P
+><P
+></P
+><UL
+><LI
+><P
+>The "tuborg@udgaard" is your item's symbolic name</P
+></LI
+><LI
+><P
+>The 15 (our first number in the string) is the number of that item that
+  will load into your shop daily</P
+></LI
+><LI
+><P
+>The 20 (our second number in the string) is the limit available of that
+  item in the shop ever</P
+></LI
+></UL
+><P
+>So this shop would sell tuborgs.. and every mudday, 15 tuborgs will load
+into our shop to replenish our stock.. and the maximum tuborgs we can have
+at any given time is 20.</P
+><P
+>Next we place all this info into the define we created above, which would look
+like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2437"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define TAVERN_PROD \
+{"grain_alcohol@gobtown1 15 20", \
+ "pretzels@gobtown1 10 15", \
+ "beer_nuts@gobtown1 15 20", \
+ "rum_coke@gobtown1 10 15", \
+ "tuborg@udgaard 15 20"} 
+ 
+ </PRE
+><P
+></P
+></DIV
+><P
+>The above is my define for Hogan's products that he sells.  Each one is in
+quotes and they have commas separating them.  If you put each item on its
+own separate line, you need to put a space and then a back slash after the
+comma which separates the items, like it shows above.  The entire define
+is enclosed in curly brackets, {}. 
+Now we are finished with the items he sells.</P
+></DD
+><DT
+>Step 2</DT
+><DD
+><P
+>Now you must decide what kind of dialogue you would like your
+shopkeeper to say.  There are ten separate responses you can make for your
+shopkeeper.  They do go in a specific order and I will list what each do.</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>Response 1</DT
+><DD
+><P
+>The first response will be used if the shopkeeper doesn't have the
+particular item you're trying to buy in stock, or if he doesn't sell that
+item at all.</P
+></DD
+><DT
+>Response 2</DT
+><DD
+><P
+>The second response is used when the player is trying to sell the
+shopkeeper something which the player does not have in his inventory. Items
+worn by the player can not be sold until removed from there worn position.</P
+></DD
+><DT
+>Response 3</DT
+><DD
+><P
+>The third response is used when the player is trying to sell the shopkeeper
+something that is not one of those of his trade types. (This will be more
+clear when we get to the trade type part below. Such as a player trying to sell
+our bartender a canoe. =)</P
+></DD
+><DT
+>Response 4</DT
+><DD
+><P
+>The fourth response is used when the player tries to buy something from the
+shopkeeper, but doesn't have enough money to buy it.</P
+></DD
+><DT
+>Response 5</DT
+><DD
+><P
+>The fifth response is used when the sale was successful and the player
+buys something from the shopkeeper.</P
+></DD
+><DT
+>Response 6</DT
+><DD
+><P
+>The sixth response is again used when the sale was successful, but this
+time it's for when the player successfully sells something to the
+shopkeeper.</P
+></DD
+><DT
+>Response 7</DT
+><DD
+><P
+>The seventh response is used when the shopkeeper doesn't have enough of the
+item to sell as the player requests. Such as someone trying to buy 10
+tuborgs, but our bartender only has 9.</P
+></DD
+><DT
+>Response 8</DT
+><DD
+><P
+>The eighth response is Used when the shop is closed and a player tries to
+buy something from or sell something to the shopkeeper.</P
+></DD
+><DT
+>Response 9</DT
+><DD
+><P
+>The ninth response is used when the player tries to sell an item to the
+shopkeeper that the shopkeeper doesn't trade that item.</P
+></DD
+><DT
+>Response 10</DT
+><DD
+><P
+>The tenth (and last!) response is for when the shopkeeper has run out of
+money and can't afford to buy what the player is trying to sell him.</P
+></DD
+></DL
+></DIV
+><P
+>Now. again, I made a define called TAVERN_MSG (for tavern messages) and I
+placed all my responses in it.  Don't forget, they do go in that specific
+order!  And below is our setup with responses in it.</P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>In the responses below, $1n refers to the shopkeeper, $2n refers
+to the item being sold, bought, etc.. and $3n refers to the person dealing
+with the shopkeeper.</P
+></TD
+></TR
+></TABLE
+></DIV
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2488"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define TAVERN_MSG \
+{"$1n says, 'This is a tavern, I don't sell such an item as that!'", \
+ "$1n says, '$3n, you don't even have that!'", \
+ "$1n says, 'I don't trade with things such as $2n! Just buy a beer!'", \
+ "$1n says, '$3n, you can't afford $2n.'", \
+ "$1n says, 'Thank you, $3n, here are %s for $2n.'", \
+ "$1n says, 'Thank you, $3n.'", \
+ "$1n says, 'I don't have that many $2ns in stock.'", \
+ "$1n says, 'I'm on break, come back later.'", \
+ "$1n says, 'I haven't got a use for $2n.'", \
+ "$1n says, 'I'd like to buy it, but I can't afford it, sorry.'"} \
+ 
+ </PRE
+><P
+></P
+></DIV
+><P
+>Just like with the items, the responses are in quotes, and are separated
+with commas.  Since I put each on their own separate lines (for neatness
+sake), I put a space and a back slash, \, after each.  The entire define is
+enclosed in curly braces,{}.
+And then you're done with your shopkeeper's messages!
+Don't worry, it gets simpler from here.</P
+></DD
+><DT
+>Step 3</DT
+><DD
+><P
+>Now we get to decide when we want our shop to be open.  We get to use 
+military time, so 1 refers to 1am, 6 refers to 6am, 12 refers to 12pm
+(noon), 18 refers to 6pm, and both 0 and 24 refer to 12am (midnight)..
+etc.. =)
+And my define for this I named TAVERN_OPEN_TIMES (for when the tavern is
+open) and I used the following setup:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2495"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define TAVERN_OPEN_TIMES {"12","18"}&#13;</PRE
+><P
+></P
+></DIV
+><P
+>You just have to make your define and stick your times in quotes and
+enclose them in curly braces.  So Hogan will be opened from 1am ("1")
+until 11pm ("23").  He will close after 11pm and reopen again at 1am.
+You may also add multiple open and close times as per the following 
+example:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2498"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define TAVERN_OPEN_TIMES {"1","12","16","20"}&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Step 4</DT
+><DD
+><P
+>For this step you get to choose your shopkeeper's trade types.  And what
+you pick all depends on what kinds of things you want your shopkeeper to
+sell and buy.  You can find the item types in <TT
+CLASS="FILENAME"
+>values.h</TT
+>, but I'll also list
+them below.</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN2505"
+></A
+><P
+><B
+>Table 6-13. Sale types</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><COL><COL><THEAD
+><TR
+><TH
+>Value</TH
+><TH
+>Type</TH
+><TH
+>Value</TH
+><TH
+>Type</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>1</TD
+><TD
+>ITEM_LIGHT</TD
+><TD
+>14</TD
+><TD
+>ITEM_TRAP</TD
+></TR
+><TR
+><TD
+>2</TD
+><TD
+>ITEM_SCROLL</TD
+><TD
+>15</TD
+><TD
+>ITEM_CONTAINER</TD
+></TR
+><TR
+><TD
+>3</TD
+><TD
+>ITEM_WAND</TD
+><TD
+>16</TD
+><TD
+>ITEM_NOTE</TD
+></TR
+><TR
+><TD
+>4</TD
+><TD
+>ITEM_STAFF</TD
+><TD
+>17</TD
+><TD
+>ITEM_DRINKCON</TD
+></TR
+><TR
+><TD
+>5</TD
+><TD
+>ITEM_WEAPON</TD
+><TD
+>18</TD
+><TD
+>ITEM_KEY</TD
+></TR
+><TR
+><TD
+>6</TD
+><TD
+>ITEM_FIREWEAPON</TD
+><TD
+>19</TD
+><TD
+>ITEM_FOOD</TD
+></TR
+><TR
+><TD
+>7</TD
+><TD
+>ITEM_MISSILE</TD
+><TD
+>20</TD
+><TD
+>ITEM_MONEY</TD
+></TR
+><TR
+><TD
+>8</TD
+><TD
+>ITEM_TREASURE</TD
+><TD
+>21</TD
+><TD
+>ITEM_PEN</TD
+></TR
+><TR
+><TD
+>9</TD
+><TD
+>ITEM_ARMOR</TD
+><TD
+>22</TD
+><TD
+>ITEM_BOAT</TD
+></TR
+><TR
+><TD
+>10</TD
+><TD
+>ITEM_POTION</TD
+><TD
+>23</TD
+><TD
+>ITEM_SPELL</TD
+></TR
+><TR
+><TD
+>11</TD
+><TD
+>ITEM_WORN</TD
+><TD
+>24</TD
+><TD
+>ITEM_BOOK</TD
+></TR
+><TR
+><TD
+>12</TD
+><TD
+>ITEM_OTHER</TD
+><TD
+>25</TD
+><TD
+>ITEM_SHIELD</TD
+></TR
+><TR
+><TD
+>13</TD
+><TD
+>ITEM_TRASH</TD
+><TD
+>&nbsp;</TD
+><TD
+>&nbsp;</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>We are making a bartender, so he should sell food and drinks.  So I
+selected ITEM_FOOD, and it's corresponding number is 19.  So I made my 
+define TAVERN_ITEM_TYPE (for our tavern's type of items) using the 
+following setup:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2581"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define TAVERN_ITEM_TYPE "19" &#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now, if we had a magic shop, and wanted to sell potions and scrolls, I
+would make a define called for example MAGIC_ITEM_TYPE and make it like
+this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2584"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define MAGIC_ITEM_TYPE "2 10"&#13;</PRE
+><P
+></P
+></DIV
+><P
+>The 2 was our number corresponding to the scrolls, and the 10
+corresponded to the potions.  That is how you make your shopkeeper
+sell more than one item type, just stick the corresponding numbers inside
+quotes with a space separating them.</P
+></DD
+><DT
+>Step 5</DT
+><DD
+><P
+>Now you get to decide how much money your shopkeeper gets to have
+to buy things with.  One platinum piece is equal to 40960.  So if I wanted
+him to have two platinum pieces to spend on buying things from players, I
+would make a define called TAVERN_MAX_CASH (for the maximum amount of
+money our shopkeeper gets) and use the following setup:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2591"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define TAVERN_MAX_CASH 81920&#13;</PRE
+><P
+></P
+></DIV
+><P
+>I got 81920 by multiplying the 40960 (one platinum) by 2</P
+></DD
+><DT
+>Step 6</DT
+><DD
+><P
+>The sixth thing we get to do is to decide how much profit does our
+shopkeeper get when he sells his items.  Items should have a cost to them
+already tagged on them, so their whatever their cost is, that is equal to
+100%. Now, if your shopkeeper wants to take an extra 10% on the items he's
+selling so he can support his family, then you would make his selling
+profit 110.  So I made a define called TAVERN_SELL_PROFIT (for his profit
+when he sells things) and gave him 110% selling profit, and used the
+following setup:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2598"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define TAVERN_SELL_PROFIT 110&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Step 7</DT
+><DD
+><P
+>This last define is almost exactly like our selling profit, but now, we're
+doing our buying profit... when a player sells an item to the shopkeeper,
+he doesn't want to pay full price because it must be used since a player
+has it.  Now the item's cost is 100%, and maybe the shopkeeper only wants
+to buy items for half its cost.  So I would make his buying profit 50,
+and use the following setup.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2604"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#define TAVERN_BUY_PROFIT 50&#13;</PRE
+><P
+></P
+></DIV
+><P
+>All of the previous  defines you can place anywhere in the zone.  I like
+to place mine before the %<ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> section just to keep them somewhere where
+I know they all are.  You can place each one on the mob itself, but I
+think that looks cluttered so's why I put them where I put
+them.  And you're going to have a dilcopy placed on your mob also, which
+I'll explain in step 8.</P
+></DD
+><DT
+>Step 8</DT
+><DD
+><P
+>Okay one last step.  Now you get to place the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> on your shopkeeper mob
+using all of those cute little defines you just made.  The syntax for the
+<ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> is:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2614"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;  dilcopy shopkeeper@function(products, responses, opentimes, 
+                             tradetypes, sellprofit, buyprofit,
+                             maxcash, closedil, dilparams);
+							 
+							 </PRE
+><P
+></P
+></DIV
+><P
+>Take your defines from above the defines that you made are
+called:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2617"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;TAVERN_PROD, TAVERN_MSG, TAVERN_OPEN_TIMES, TAVERN_ITEM_TYPE,
+TAVERN_SELL_PROFIT, TAVERN_BUY_PROFIT, and TAVERN_MAX_CASH.&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Now all you have to do is place them in the syntax where they belong like
+in the below example.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2620"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy shopkeeper@function(TAVERN_PROD, TAVERN_MSG, TAVERN_OPEN_TIMES,
+                            TAVERN_ITEM_TYPE, TAVERN_SELL_PROFIT, 
+                            TAVERN_BUY_PROFIT, TAVERN_MAX_CASH, "", "");&#13;</PRE
+><P
+></P
+></DIV
+><P
+>For the last two fields, I just put "", "" because I don't make my own
+unique <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> for those.  By just putting and empty set of quotes for each,
+it makes it go to the default.
+And make sure you don't forget that semicolon at the end either.</P
+><P
+>You are pretty much done now.  All you have to do is place your
+defines either up before %<ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> or somewhere in %mob if you'd like, and
+place the dilcopy onto your mob.</P
+></DD
+></DL
+></DIV
+><P
+>Just to make sure I've completely beaten a very dead horse, this is
+what it would look like in the end.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2627"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;%zone sample_zon
+
+#define TAVERN_PROD \
+{"grain_alcohol@gobtown1 15 20", \
+ "pretzels@gobtown1 10 15", \
+ "beer_nuts@gobtown1 15 20", \
+ "rum_coke@gobtown1 10 15", \
+ "tuborg@udgaard 15 20"} 
+
+#define TAVERN_MSG \
+{"$1n says, 'This is a tavern, I don't sell such an item as that!'", \
+ "$1n says, '$3n, you don't even have that!'", \
+ "$1n says, 'I don't trade with things such as $2n! Just buy a beer!'", \
+ "$1n says, '$3n, you can't afford $2n.'", \
+ "$1n says, 'Thank you, $3n, here are %s for $2n.'", \
+ "$1n says, 'Thank you, $3n.'", \
+ "$1n says, 'I don't have that many $2ns in stock.'", \
+ "$1n says, 'I'm on break, come back later.'", \
+ "$1n says, 'I haven't got a use for $2n.'", \
+ "$1n says, 'I'd like to buy it, but I can't afford it, sorry.'"} \
+
+#define TAVERN_OPEN_TIMES {"1","23"}
+#define TAVERN_ITEM_TYPE "19" 
+#define TAVERN_MAX_CASH 81920
+#define TAVERN_SELL_PROFIT 110
+#define TAVERN_BUY_PROFIT 50
+
+
+%mobiles
+
+bartender
+names {"hogan","goblin","bartender"}
+title "Hogan"
+descr "Hogan stands behind the bar waiting to take your order."
+extra {}
+"He looks back at you, patiently waiting for your order."
+M_AVG_GOBLIN(76,SEX_MALE)
+alignment -1000
+exp 100
+money 2 SILVER_PIECE, 2 COPPER_PIECE
+
+dilcopy shopkeeper@function(TAVERN_PROD, TAVERN_MSG, TAVERN_OPEN_TIMES,
+                            TAVERN_ITEM_TYPE,TAVERN_SELL_PROFIT, 
+                            TAVERN_BUY_PROFIT, TAVERN_MAX_CASH, "", "");
+end&#13;</PRE
+><P
+></P
+></DIV
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x2061.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x2629.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Compiling and debugging your first NPC</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch05.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>A more complex set of NPCs</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

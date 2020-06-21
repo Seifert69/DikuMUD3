@@ -1,0 +1,31 @@
+<br/>
+ **********************************************************************<br/>
+ * File   : vme.h                                Part of Valhalla MUD *<br/>
+ * Version: 1                                                         *<br/>
+ * Author : Darg (Mark Pringle)                                       *<br/>
+ * Status : For sole use on Valhalla Mud not to be copied or          *<br/>
+ * redistributed without the express consent of Blinksoft Consulting. *<br/>
+ *                                                                    *<br/>
+ * Copyright (C) 1994 - 2001 by Valhalla (This work is not published).*<br/>
+ **********************************************************************<br/>
+<br/>
+  The follow contains a list of weapon help files, although<br/>
+  not yet completed, It is hopeful it will aid you to better<br/>
+  understand what some weapons looked like and how they were<br/>
+   <br/>
+  <br/>
+adze	      baculus	      ball and chain   bardiche    bastard sword	         <br/>
+battle axe    bec de corbin   bill guisarme    bill hook   broad sword	     <br/>
+claymore      club            crossbow         crowbill    cudgel<br/>
+curved sword  cutlass         dagger           dirk        estoc<br/>
+falchion      fauchard        fauchard fork    fish spine  flail<br/>
+flamberge     foot lance      gaff             glaive      greatsword<br/>
+guisarme      halberd         hammer of kai    hand axe    javelin<br/>
+jeddart axe   kopesh          lance            lochaber    long bow<br/>
+long sword    lucern          mace             main gauche mattock<br/>
+maul          military fork   morning star     naginata    odd weapons<br/>
+partisan      pike            pilum            pole arms   pole axe<br/>
+pole cleaver  quarterstaff    ranseur          rapier      sappara<br/>
+scimitar      shamshir        shortsword       sickle      spear<br/>
+spear family  spetum          staff            stiletto    talwar<br/>
+trident       voulge          waraxe           war hammer  whip      <br/>

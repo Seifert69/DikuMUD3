@@ -1,0 +1,254 @@
+# This is the Competition file which defines competitions in progress.
+# All competition information is automatically appended to the player
+# whenever he enters the game and is not yet a participant (i.e. he
+# is enrolled automatically!). Each competition structure is removed
+# from the player when he enters the game and no such competition is
+# in progress.
+#
+# The structure is hidden in the player's quest structure, and has the
+# following format:
+#
+#    {"$competition", "<name>", "<start xp>", "<start playing time>"
+#
+# When you start a competition, set Ongoing to 1. When the competition
+# ends, set it to 0 and reboot the game.
+#
+# Several independent competitions can be ongoing at the same time. When
+# a competition ends, it will usually be set to not ongoing for a week or
+# two. Then it is removed (from this file) and it will be removed from each
+# player as he enters the game. Therefore, take great care that you do not
+# name two competitions by the same *name*!! Always use different names.
+# Each individual competition result is stored in compete/ but this is not
+# removed automatically. You should do this manually occasionally.
+#
+
+#Name = ~Month001~
+#Descr = ~The Ultimate Player of April Competition~
+#Range = 1 50
+#Ongoing = 0
+
+#Name = ~Month002~
+#Descr = ~The Ultimate Player of May Competition~
+#Range = 1 50
+#Ongoing = 0
+
+#Name = ~Month003~
+#Descr = ~The Ultimate Player of June Competition~
+#Range = 1 50
+#Ongoing = 0
+
+#Name = ~Month004~
+#Descr = ~The Ultimate Player of July Competition~
+#Range = 1 50
+#Ongoing = 0
+
+#Name = ~Month005~
+#Descr = ~The Ultimate Player of August Competition~
+#Range = 1 50
+#Ongoing = 0
+
+#Name = ~Month006~
+#Descr = ~The Ultimate Player of September Competition~
+#Range = 1 50
+#Ongoing = 0
+
+#Name = ~Month007~
+Descr = ~The Ultimate Player October Competition~
+Range = 1 50
+Ongoing = 0
+
+#Name = ~Month008~
+Descr = ~The Ultimate Player November Competition~
+Range = 1 50
+Ongoing = 0
+
+#Name    = ~Lmonth008~
+Descr   = ~Lowbie of the Month Level 1-25~
+Range   = 1 25
+Ongoing = 0
+
+#Name    = ~Hmonth008~
+Descr   = ~Player of the Month Level 26-50~
+Range   = 26 50
+Ongoing = 0
+
+#Name = ~Month009~
+Descr = ~The Ultimate Player December Competition~
+Range = 1 50
+Ongoing = 0
+
+#Name    = ~Lmonth009~
+Descr   = ~Lowbie of the Month Level 1-25~
+Range   = 1 25
+Ongoing = 0
+
+#Name = ~Month010~
+Descr = ~The Ultimate Player January Competition~
+Range = 1 50
+Ongoing = 0
+
+#Name    = ~Lmonth010~
+Descr   = ~Lowbie of the Month Level 1-25~
+Range   = 1 25
+Ongoing = 0
+
+Name    = ~Year001~
+Descr   = ~Player of the year~
+Range   = 1 50
+Ongoing = 0
+ 
+#Name = ~Month011~
+Descr = ~The Ultimate Player Feb Competition~
+Range = 1 50
+Ongoing = 0
+
+#Name    = ~Lmonth011~
+Descr   = ~Lowbie of the Feb Competition Level 1-25~
+Range   = 1 25
+Ongoing = 0
+
+
+#Name = ~Month012~
+Descr = ~The Ultimate Player March Competition~
+Range = 1 50   
+Ongoing = 0
+
+#Name    = ~Lmonth012~ 
+Descr   = ~Lowbie of the March Competition Level 1-25~
+Range   = 1 25
+Ongoing = 0   
+
+#Name = ~Month013~
+Descr = ~The Ultimate Player April Competition~
+Range = 1 50
+Ongoing = 0
+
+#Name    = ~Lmonth013~
+Descr   = ~Lowbie of the April Competition Level 1-25~
+Range   = 1 25
+Ongoing = 0
+
+
+#Name = ~Month014~
+Descr = ~The Ultimate Player May Competition~
+Range = 1 50
+Ongoing = 0
+
+
+#Name    = ~Lmonth014~
+Descr   = ~Lowbie of the May Competition Level 1-25~
+Range   = 1 25
+Ongoing = 0
+
+#Name = ~Month015~
+Descr = ~The Ultimate Playe June Competition~
+Range = 1 50
+Ongoing = 0
+
+#Name    = ~Lmonth015~
+Descr   = ~Lowbie of the June Competition Level 1-25~
+Range   = 1 25
+Ongoing = 0
+
+#Name = ~Month016~
+Descr = ~The Ultimate Player July Competition~
+Range = 1 50
+Ongoing = 0
+
+#Name    = ~Lmonth016~
+Descr   = ~Lowbie of the July Competition Level 1-25~
+Range   = 1 25
+Ongoing = 0
+
+#Name = ~Month017~
+Descr = ~The Ultimate Player Sept Competition~
+Range = 1 50
+Ongoing = 0
+
+#Name    = ~Lmonth017~
+Descr   = ~Lowbie of the month, Sept Competition Level 1-25~
+Range   = 1 25
+Ongoing = 0
+
+#Name = ~Month019~
+Descr = ~The Ultimate Player Oct Competition~
+Range = 1 50
+Ongoing = 0
+
+#Name    = ~Lmonth018~
+Descr   = ~Lowbie of the month, Oct Competition Level 1-25~
+Range   = 1 25
+Ongoing = 0
+
+
+#Name = ~Month020~
+Descr = ~The Ultimate Player Nov Competition~
+Range = 1 50
+Ongoing = 0
+
+#Name    = ~Lmonth020~
+Descr   = ~Lowbie of the month, Nov Competition Level 1-25~
+Range   = 1 25
+Ongoing = 0
+
+#Name = ~Month021~
+Descr = ~The Ultimate Player Dec Competition~
+Range = 1 50
+Ongoing = 0
+
+#Name    = ~Lmonth021~
+Descr   = ~Lowbie of the month, Dec Competition Level 1-25~
+Range   = 1 25
+Ongoing = 0
+
+
+#Name = ~Month022~
+Descr = ~The Ultimate Player Jan Competition~
+Range = 1 50
+Ongoing = 0
+
+#Name    = ~Lmonth022~
+Descr   = ~Lowbie of the month, Jan Competition Level 1-25~
+Range   = 1 25
+Ongoing = 0
+
+
+
+#Name = ~Month023~
+Descr = ~The Ultimate Player Feb Competition~
+Range = 1 50
+Ongoing = 0
+
+#Name    = ~Lmonth023~
+Descr   = ~Lowbie of the month, Feb Competition Level 1-25~
+Range   = 1 25
+Ongoing = 0
+
+Name = ~Month024~
+Descr = ~The Ultimate Player March Competition~
+Range = 1 50
+Ongoing = 0
+
+Name    = ~Lmonth024~
+Descr   = ~Lowbie of the month, March Competition Level 1-25~
+Range   = 1 25
+Ongoing = 0
+
+Name    = ~Year002~
+Descr   = ~Player of the year 1998~
+Range   = 1 50
+Ongoing = 1
+
+
+
+#Name    = ~Week008~
+#Descr   = ~Newbie of the Week (June 16th - June 22nd)~
+#Range   = 1 5
+#Ongoing = 0
+
+#Name    = ~Week009~
+#Descr   = ~Newbie of the Week (June 23rd - June 30th)~
+#Range   = 1 5
+#Ongoing = 0
+
+

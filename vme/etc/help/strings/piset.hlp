@@ -1,0 +1,74 @@
+<br/>
+<br/>
+You can now set your power items title, short description, and description.<br/>
+Before reading on understand that if abused you can lose your power item.<br/>
+Abusing this command means setting your items title or short description or<br/>
+descr to anything offensive or to something that doesn't fit with the fantasy<br/>
+ of the game.<br/>
+In short make the item unique not offensive or non-fantasy.<br/>
+<br/>
+It will be totally up to Whistler if the item is found offensive it will be<br/>
+removed.<br/>
+  <br/>
+  <br/>
+  This command is only available once per power item so read throughly <br/>
+  before proceeding.<br/><br/>
+  <br/><br/>
+  <br/><br/>
+  <br/><br/>
+  <br/>
+ Usage: piset &lt;item&gt; &lt;action&gt; [adescr]<br/><br/>
+<br/>
+The action can be one of the following:<br/>
+<br/>
+	title, shortdescr, or descr<br/>
+<br/>
+<br/><br/>
+The items Title is what you see when the item is in inventory<br/>
+and what shows when the item is worn. Note: do NOT attempt to<br/>
+add color to the title, the option to add color will be included in a<br/>
+later version of this command.<br/><br/>
+<br/><br/>
+<br/>
+Usage piset (item name) title (description)<br/><br/>
+<br/>
+Example: piset anklet title Jewel Encrusted Anklet.<br/><br/>
+<br/><br/>
+To set an items shortdescr, which is the description you see when the<br/>
+item is on the ground you would do the following: Note: do NOT<br/>
+attempt to add color to the shortdescr, the option to add color may be<br/>
+included in a later version of this command.<br/><br/>
+<br/>
+Usage piset (item name) shortdescr (description)<br/><br/>
+<br/>
+Example:<br/><br/>
+ piset anklet shortdescr A anklet encrusted with fine jewels lies at your feet.<br/>
+<br/>
+<br/>
+<br/><br/>
+<br/>
+Finally to set the items description that you look at. This option allows<br/>
+the use of color.  You type the following: <br/><br/>
+<br/>
+ Usage piset anklet descr<br/><br/>
+<br/>
+The descr works differently from the rest but it is fairly self explanitory<br/>
+once you type in the command. Note:  You can also use colors in the description<br/>
+only as you would in the prompt. see help prompt and help color<br/>
+for more information.<br/><br/>
+<br/>
+Example:<br/><br/>
+<br/>
+ piset anklet descr<br/><br/>
+<br/>
+&Jewel &Encrusted &Anklet<br/><br/>
+<br/><br/>
+<br/>
+This would produce an anklet that looks like:<br/><br/>
+Jewel Encrusted Anklet<br/><br/>
+<br/><br/>
+<br/>See Also:<br/><br/>
+Color<br/><br/>
+Prompt<br/><br/>
+<br/>
+<br/>

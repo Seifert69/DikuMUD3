@@ -1,0 +1,721 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>The complete dragon station</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The reset section"
+HREF="ch07.html"><LINK
+REL="PREVIOUS"
+TITLE="Reset walk through"
+HREF="x4851.html"><LINK
+REL="NEXT"
+TITLE="Color and formatting codes"
+HREF="ch08.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x4851.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 8. The reset section</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="ch08.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="FINISHEDZONE"
+>8.5. The complete dragon station</A
+></H1
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN4870"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#include &lt;composed.h&gt;
+%zone dragonst
+lifespan 20
+reset RESET_ANYHOW
+creators {"whistler"}
+
+notes
+"This is the dragon station I shortened it to dragonst for ease in
+loading.  If you have  any questions email me at whistler@valhalla.com"
+
+help
+"Not sure what could help you now.  You are stuck on one of the
+weirdest space stations you have ever seen and you smell burning
+sulfur."
+
+%rooms
+
+chamber
+title "The middle chamber of the station"
+descr
+"This chamber seems to have the entire station rotating around it.  It is
+unbelievably large the ceiling seems to be a good 200 meeters high and
+the room is perfectly cubic. Small human size ornate chairs with dragon
+designs scrawled on the arms and back are arranged in a triangle like
+setting with one large chair at the front.  This must be where all
+station meetings are held. large pictures cover the walls depicting
+dragons in all kinds of situations.  large passages lead of to the west
+and the east.."
+
+extra {"chair","chairs"}
+"The chairs are made of some metal you don't recognize and every inch is covered
+with some kind of dragon."
+
+extra  {"dragon picture","picture"}
+"Thousands of dragons dot the skies of this rather life like picture.  In the
+center you see something move.  It looks to be a little green dragon."
+
+extra{"green dragon","dragon","green"}
+"An intellegence looking dragon is sitting perched on a large chair watching you."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+
+west to disposal_room descr
+"You see a small room.";
+
+east to hallway descr
+"You see what looks to be a hallway.";
+
+end
+
+hallway
+title "Module tunnel"
+descr "The hallway is about 50 meters long and around 100 meters from
+side to side and top to bottom.  The hallway seems to be dust free.  The
+walls and the floors seem to be made out of the same sterile
+metal-plastic that all space agencies uses.  There are large plate glass
+windows that open up into space.  The hallway is filled with a dim light
+that seems to come from everywhere yet no where all at once.  You notice
+a glimmer of bright light coming from the windows.  To the east you see
+an air lock and to the west the hallway opens up into a larger room."
+
+extra {"windows","window"}
+"Your eyes are drawn to a large ship lit up with running lights sitting
+about 1 kilometer from the station."
+
+extra{"floor","walls","wall"}
+"Well what can be said it looks to be in perfect condition.  What else would
+you want to know?"
+
+extra {"large ship" ,"ship"}
+"The ship looks really big and is shaped like a dragon.  The scales
+sparkle and seem to be multiple colors."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+west to chamber descr
+"The hallway opens up into a chamber."; 
+
+east to office descr
+"You see what looks to be an office."
+keyword {"air lock door","air lock","door"}
+open {EX_OPEN_CLOSE, EX_CLOSED};
+
+end
+
+office
+title "The station office"
+descr
+"Large paintings fill the walls of this part of the station.  The room
+is as large as the other rooms big enough for Dragons to lounge while
+still having a desk in one corner small enough for a humanoid.  The
+floor along the north wall is lined with some kind of fabric and seems
+very soft to walk on, it may be some kind of dragon lounge judging by
+how large an area it covers.  There is a passage to the west."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+extra {"paintings","painting"}
+"The paintings are of many dragons and riders in all kinds of tasks from
+combat to look out.  All the figures seem to be staring at a staff
+being held by a depiction of a wizard on the south wall."
+
+extra {"wizard","staff"}
+"The wizard has his hand stretched out and it seems there is a place
+you can almost grab the staff. Maybe if you searched the staff you would
+find it."
+
+extra {"desk"}
+"Its a desk alright but there doesn't seem to be any drawers and it
+seems totally empty."
+
+extra{"fabric"}
+"Wussshhhhh you bound across the comfortable floor wasn't that fun."
+
+west to hallway descr
+"You see what looks to be a hallway."
+keyword {"air lock door","air lock","door"}
+open {EX_OPEN_CLOSE, EX_CLOSED};
+
+SECRET_DOOR_DIFFICULTY(SOUTH, 50)
+south to portal_room descr
+"You see what looks to be a portal room."
+keyword {"air lock door","air lock","staff","door"}
+key nokey
+open {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED,EX_HIDDEN};
+
+end
+
+	portal_room
+	title "Green field room"
+	descr
+	"Like the other rooms on the station this one is large enough for
+	dragons to comfortably fit in.  The strange thing about this room though
+	is it is totally empty except for a green field right in the center. 
+	there is a door that leads to another room to the north."
+	
+	movement SECT_INSIDE
+	ALWAYS_LIGHT
+	flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+	
+	extra {"green field","field"}
+	"The field looks to be a green fog shifting and churning as you watch. 
+	if you are nuts you could probably enter it."
+	
+	north  to office descr
+	"You see what looks to be an office."
+	keyword {"air lock door","air lock","door"}
+	key nokey
+	open {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED};
+	
+	//A link to the portal is also here from room_port
+	end
+	
+	ship_port
+	names{"green field", "field"}
+	title "Green field"
+	descr
+	"Green Mist swirls about you."
+	
+	movement SECT_INSIDE
+	ALWAYS_LIGHT
+	flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+	
+	in ship
+	
+	dilcopy force_move@function(
+	//Time to activation
+	4,
+	//room and act
+	"portal_room@dragonst!You feel your body dissolving for lack of a better
+	description.&amp;You appear on the deck of a ship.",
+	//True or False for randomizing or not
+	FALSE);
+	
+	
+	end                                             
+
+room_port
+names{"green field", "field"}
+title "Green field"
+descr
+"Green Mist swirls about you."
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+in portal_room
+
+dilcopy force_move@function(
+//Time to activation
+4,
+//room and act
+"ship@dragonst!You feel your body dissolving for lack of a better
+description.&amp;You appear on the deck of a ship.",
+//True or False for randomizing or not
+FALSE);
+
+
+end
+
+disposal_room
+title "Red field room"
+descr
+"Like the other rooms on the station this one is large enough for
+dragons to comfortably fit in.  The strange thing about this room though
+is it is totally empty except for a red field right in the center. 
+there is a door that leads to another room to the east."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+extra {"red field","field"}
+"The field looks to be a red fog shifting and churning as you watch. 
+if you are nuts you could probably enter it."
+
+east to chamber descr
+"You see the main chamber.";
+
+	//A link to the portal is also here from dis_port
+end
+
+dis_port
+names {"red field","field"}
+title "Red field"
+descr
+"Red Mist swirls about you."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+dilcopy force_move@function(
+//how fast to force move in seconds
+4,
+//room to force move to and act
+"deathspace@dragonst!You feel your body dissolving for lack of a better description.",
+//true or false random move or not
+0);
+in disposal_room 
+
+end
+
+ship
+title "War dragon"
+descr
+"Blue light softly glows from con duets that line the walls of this ship.
+The floors beside the east and west wall have what looks to be soft
+fabric covering.  The south wall has small controls that seem to be made
+for humanoids with two small chairs that look to be pilot seats.  view
+portals are about 50 meters up the side of the ship on the west and east
+wall and some kind of electronic screen covers the south wall.  The ship
+seems to be a one room ship but there is a green field by the north
+wall."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+extra {"view port"}
+"Sorry your not 50 meters tall maybe it is made for a dragon?"
+
+extra {"view screen","screen"}
+"It seems to be the pilots view screen but you can't seem to see a way
+to turn it on."
+
+extra {"controls","control"}
+"The controls are in some weird language and your afraid if you start
+pushing buttons you might rocket in to the station or worse slam into
+a planet."
+
+extra {"soft fabric","fabric"}
+"It looks to be a dragon lounge area."
+
+	//A link to the portal is also here from ship_port
+end
+
+deathspace
+title"Open space"
+descr
+"You see the ship and the station far off in the distance and you are in Space!"
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+
+dilcopy death_room@function (
+//how often is damage done 4 would be 1 second
+4, 
+//damage
+400,
+//act for the damage.
+"You realize to late that was the trash disposal transporter and you feel your lungs explode.");
+
+
+end
+
+%mobiles
+
+bldragon
+
+title "a black dragon"
+descr "A big ugly black dragon is clawing the ground here." 
+names {"big ugly black dragon","ugly black dragon","big black dragon",
+"black dragon","dragon"}
+
+extra {}
+"The black dragons scales glitter like black granite that has been
+polished for years by water.  He has a large neck and huge bat like
+wings.  his eyes watch you as you stand before him.  One claw seems to be
+tapping slightly on the ground as if the dragon is waiting for
+something."
+
+extra {"eye","eyes"}
+"The dragons eyes seem to follow you no matter where you go in the room
+nothing seems to escape the dragons attention."
+
+extra {"claws","claw"}
+"The claw is big black and it looks very deadly.  It seems like the
+dragon has two sets of 4 large claws and 2 sets of 4 smaller claws which
+to say means the claws are about the size of short swords and long
+swords."
+
+extra {"scales","scale"}
+"Its a scale!  Haven't you ever seen a dragon before!"
+
+extra {"bat wings","wings"}
+"The dragon sees you looking and flaps his wings creating one heck of a
+wind blast."
+
+M_DRAGON_BLACK_OLD(SEX_MALE)
+
+end
+
+janitor
+names {"ugly janitor", "janitor", "hobgoblin"}
+title "an ugly janitor"
+descr "an ugly janitor is walking around, cleaning up."
+
+extra{}
+"This ugly green thing looks more goblin than hobgoblin but he seems intent
+on cleaning everything around him."
+
+M_AVG_HOBGOBLIN(6, SEX_MALE)
+
+// he is sort of good for cleaning so much
+alignment 900
+
+//give him some money
+money 5 IRON_PIECE
+
+dilcopy janitors@function(15);
+
+// only want him cleaning the station
+dilcopy wander_zones@function("dragonst", 20, 1, 1);
+
+end
+
+bob
+
+names {"Bob"}
+title "Bob"
+descr "Bob the Banker is here, sitting behind the counter."
+extra {}
+"He has a very serious look on his face."
+
+// define from composed.h
+M_SHOP_KEEPER(4, SEX_MALE, RACE_HUMAN)
+
+//discourage people from killing banker
+exp -500
+
+flags {UNIT_FL_NO_TELEPORT}
+
+special SFUN_BANK
+end
+
+%objects
+
+info_board
+
+title "a merchant information board"
+descr "A merchant information Board is mounted on a wall here."
+names {"merchant information board","information board","merchant
+board","board"} extra {} "A large flashy black steal board."
+
+MATERIAL_METAL("A very fine quality black steel")
+type ITEM_BOARD
+dilcopy board@boards("info","","rem_res@boards","",100);
+
+end
+
+w_stiletto
+title "a stiletto"
+names {"deadly looking stiletto","deadly stiletto","stiletto", "dagger"}
+descr "A deadly looking stiletto has been left here."
+
+MATERIAL_METAL("A very fine quality steel")
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_DAGGER, 1, 2)
+weight 2
+cost 2 GOLD_PIECE
+rent 1 COPPER_PIECE
+
+SKILL_TRANSFER(SKI_BACKSTAB, 2)
+dilcopy abi_restrict@function (ABIL_DEX,10,0,25,"");
+
+extra{}
+"This looks like a thieves dream come true. "
+
+extra {"$identify"}
+"The stiletto looks magical in nature and seems really sharp.  You can
+tell if you wield it you would be able to backstab someone really easy."
+
+extra{"$improved identify"}
+"The stiletto gives you a magical bonus of +1 and has a quality of +2. 
+It also raises your back stabbing skill  by 2%.  You have to have at
+least 10% in dex before you can wield this magical weapon."
+
+end
+
+wpn_locker
+
+title "a weapons locker"
+names {"weapons locker","weapon locker","locker"}
+
+descr "a small weapons locker hangs on the wall here."
+manipulate {MANIPULATE_ENTER}
+CONTAINER_DEF(500)
+open {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED}
+weight 400
+MATERIAL_METAL("A very fine quality steel")
+
+extra {}
+"It is an ordinary weapons locker that looks like it holds any illegal
+weapons that are taken on the station."
+
+end
+
+pol_plate
+names {"polished breast plate","polished plate","breast plate","plate"}
+title "a polished breast plate"
+descr "A polished breast plate has been left here."
+extra{}
+"This is one shiny plate it seems to be made out of one perfect piece of
+metal.  There doesn't even seem to be any markings of owner ship." manipulate
+ {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY} ARMOUR_PLATE(5,9)
+
+MATERIAL_METAL("A high luster silver colored metal")
+
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+ARMOUR_DEF(ARM_PLATE,5,9)
+dilcopy abi_restrict@function (ABIL_STR,40,0,25,"");
+cost 2 GOLD_PIECE
+rent 3 COPPER_PIECE
+weight 25
+
+extra{"$identify"}
+"This is a high quality plate with a magical feeling."
+
+extra{"$improved identify"}
+"The plate has a magical bonus to your defence of a +5 and a quality of
++9.  You need 40% in strength to be able to wear it."
+end
+
+liq_ration
+names {"red bag", "bag", "wine"}
+title "a red bag"
+descr "A red bag has been gently placed here."
+
+MATERIAL_ORGANIC("a soft plastic")
+manipulate {MANIPULATE_TAKE}
+
+LIQ_WINE(1,2,2,0)
+cost 2 IRON_PIECE
+extra {}
+"A small label reads Tassel Grove's finest.  Year 321"
+
+extra {"$identify"}
+"Its the special wine from Tassel grove a small halfling village on the
+planet Valhalla.  It seems like a great vintage wine."
+
+end
+
+beef_stick
+
+title "a tough leathery stick"
+descr "A tough leathery looking stick is laying here."
+names {"tough leathery stick","tough leather stick","leathery stick",
+"leather stick","tough stick","stick"}
+
+extra {}
+"This has the word BEEF burnt into it."
+
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(5,0)
+weight 1
+cost 1 COPPER_PIECE
+MATERIAL_ORGANIC("tough beef")
+end
+
+  maskwa
+
+names {"maskwa platinum ring", "platinum ring","maskwa ring","maskwa","ring"}
+title "a Maskwa ring"
+descr "A Maskwa platinum ring is laying here."
+MATERIAL_METAL("Platinum, and other precious metals")
+extra {}
+"The ring has a large bear head.  Could this be the legendary head of
+Maskwa?  Any thing formed with its head on it is said to strengthen the
+wearer."
+type ITEM_WORN
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_WEAR_FINGER}
+cost 100 COPPER_PIECE
+rent 50 IRON_PIECE
+weight 1
+STR_TRANSFER(+1)
+end
+
+%reset
+
+//Office door reset
+door hallway EAST {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED} 
+door office WEST {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED}
+
+
+//secret door reset
+door office SOUTH {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED,EX_HIDDEN}
+door portal_room   NORTH {EX_OPEN_CLOSE, EX_CLOSED,EX_LOCKED}
+
+
+load info_board into chamber
+
+load wpn_locker into office
+  {
+  load w_stiletto 
+  }
+  
+  load bob into office
+  {
+  equip pol_plate WEAR_BODY
+  }
+  
+  load janitor into chamber
+    {
+	equip pol_plate WEAR_BODY
+	}
+
+
+
+	random 50 
+	  {
+	  load bldragon
+	      {
+		  load maskwa
+		  }
+  }			  
+
+%end&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x4851.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="ch08.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Reset walk through</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch07.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Color and formatting codes</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

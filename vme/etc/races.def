@@ -1,0 +1,207 @@
+#include <values.h>
+
+/* You can define up to PC_RACE_MAX-1 different races. All number formats
+   below are as follows: { a, b, c } and is calculated as:
+
+     sum = a + b rolls with a dice of size c,
+
+ e.g.
+
+     { 50, 7, 12 } equals 50 + 7d12 which averages 95.5
+
+   You can make modify the DIL program "playerinit@basis(u : unitptr)"
+   which is called each time a new player is created. When called, the
+   guild, hometown, race, etc. can all be worked with.
+
+*/
+
+/* - - - - Yet another race - - - - */
+
+index           = RACE_HUMAN
+name            = human
+adverb          = human
+
+weight male     = { 140, 6,  10}
+weight female   = { 120, 6,  10}
+
+height male     = { 152, 2,  25} 
+height female   = { 152, 2,  25}
+
+lifespan male   = {  75, 3,  10}
+lifespan female = {  80, 3,  10}
+
+age             = {  15, 1,   4}
+
+
+/* - - - - Yet another race - - - - */
+
+index           = RACE_ELF
+name            = elf
+adverb          = elven
+
+weight male     = {  90,  3,  10}
+weight female   = {  70,  3,  10}
+
+height male     = { 140,  1,  25}
+height female   = { 127,  1,  25}
+
+lifespan male   = {1050,  3, 100}
+lifespan female = {1050,  3, 100}
+
+age             = { 185,  5,   6}
+
+
+/* - - - - Yet another race - - - - */
+
+index           = RACE_DWARF
+name            = dwarf
+adverb          = dwarven
+
+weight male     = { 130,  4,  10}
+weight female   = { 130,  4,  10}
+
+height male     = { 109,  1,  25}
+height female   = { 109,  1,  25}
+
+lifespan male   = { 340,  3,  40}
+lifespan female = { 340,  3,  40}
+
+age             = {  55,  5,   6}
+
+
+/* - - - - Yet another race - - - - */
+
+index           = RACE_HALFLING
+name            = halfling
+adverb          = halfling
+
+weight male     = {  52,  5,   4}
+weight female   = {  48,  5,   4}
+
+height male     = {  81,  2,  20}
+height female   = {  76,  2,  20}
+
+lifespan male   = { 212,  3,  25}
+lifespan female = { 212,  3,  25}
+
+age             = {  36,  3,   4}
+
+
+/* - - - - Yet another race - - - - */
+
+index           = RACE_GNOME
+name            = gnome
+adverb          = gnome
+
+weight male     = {  72,  5,   4}
+weight female   = {  74,  5,   4}
+
+height male     = {  91,  1,  15}
+height female   = {  97,  1,  15}
+
+lifespan male   = { 425,  3,  50}
+lifespan female = { 425,  3,  50}
+
+age             = { 101,  3,  12} 
+
+/* - - - - Yet another race - - - - */
+
+index           = RACE_HALF_ORC
+name            = half-orc
+adverb          = half-orc
+
+weight male     = { 160, 8,  8}
+weight female   = { 140, 8,  8}
+
+height male     = { 156, 2,  25} 
+height female   = { 154, 2,  25}
+
+lifespan male   = {  75, 3,  4}
+lifespan female = {  75, 3,  4}
+
+age             = {  14, 1,   4}
+
+/* - - - - Yet another race - - - - */
+
+index           = RACE_HALF_OGRE
+name            = half-ogre
+adverb          = half-ogre
+
+weight male     = { 208, 6,  12}    
+weight female   = { 189, 6,  12}
+
+height male     = { 198, 2,  18}   /* 6.5 to just over 7.5 feet */
+height female   = { 190, 2,  18}
+
+lifespan male   = {  110, 4,  12}
+lifespan female = {  120, 4,  12}
+
+age             = {  18, 2,   6}
+
+/* - - - - Yet another race - - - - */
+
+index           = RACE_HALF_ELF
+name            = half-elf
+adverb          = half-elven
+
+weight male     = { 120, 4,  10}
+weight female   = { 100, 4,  10}
+
+height male     = { 146, 2,  12} 
+height female   = { 140, 2,  12}
+
+lifespan male   = { 275, 6,  12}
+lifespan female = { 280, 6,  12}
+
+age             = {  22, 3,   6}
+
+/* - - - - Yet another race - - - - */
+
+index           = RACE_BROWNIE
+name            = brownie
+adverb          = brownie
+
+weight male     = { 40, 3,  4}
+weight female   = { 36, 3,  4}
+
+height male     = { 72, 6,  3} 
+height female   = { 72, 6,  3}
+
+lifespan male   = {  325, 4,  12}
+lifespan female = {  330, 3,  20}
+
+age             = {  32, 2,   8}
+
+/* - - - - Yet another race - - - - */
+
+index           = RACE_GROLL
+name            = groll
+adverb          = groll
+
+weight male     = { 216, 8,  12}
+weight female   = { 204, 7,  12}
+
+height male     = { 227, 6,  7} /* 7.5 to 8.5 ft tall */ 
+height female   = { 221, 6,  7}
+
+lifespan male   = {  65, 3,  8}
+lifespan female = {  70, 3,  8}
+
+age             = {  8, 1,   4}
+
+/* - - - - Yet another race - - - - */
+
+index           = RACE_DARK_ELF
+name            = darkelf
+adverb          = darkelven
+
+weight male     = {  92,  3,  10}
+weight female   = {  74,  3,  10}
+
+height male     = { 140,  1,  25}
+height female   = { 127,  1,  25}
+
+lifespan male   = {1150,  3, 100}
+lifespan female = {1150,  3, 100}
+
+age             = { 190,  6,   6}

@@ -1,0 +1,18 @@
+<br/>
+Usage: 'gp &lt;player&gt; &lt;guild #1&gt; &lt;guild #2&gt; &lt;guild #3&gt; &lt;guild #1 level&gt; &lt;guild #2<br/>
+level&gt; &lt;guild #3 level&gt;'<br/>
+<br/>
+The guild numbers are as follows:<br/>
+1: Udgaard Fighter, 2: Udgaard Thief, 3: Udgaard Healer, 4: Udgaard Conjurer,<br/>
+5: Nymgaard Ranger, 6: Midgaard Paladin, 7: Midgaard Sorcerer, 8: Khorsabad<br/>
+Assassin, 9: Necromancer, 10: Nymgaard Druid. 11: Midgaard Dark Knight<br/>
+<br/>
+NOTE: You can remove the path quest by typing 'gp remove &lt;player&gt;.<br/>
+<br/>
+&c&+yYou can get a list of the guild the person was in before guild paths (and their<br/>
+current path) by typing gp list player_name.<br/>
+&c&+rIf you wish to add 0 level guilds to _newbies_ then add the word newbie at the end of the command!<br/>
+<br/>
+<br/>
+<br/><br/><br/>
+<br/>

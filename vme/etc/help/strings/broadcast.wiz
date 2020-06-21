@@ -1,0 +1,10 @@
+<br/>
+Usage:<br/>
+   &gt;broadcast &lt;string&gt;<br/>
+<br/>
+This wiz-command is just like echo, except all connected players see the<br/>
+string, as opposed to just the room.<br/>
+<br/>
+See also:<br/>
+   &gt;help echo<br/>
+<br/>

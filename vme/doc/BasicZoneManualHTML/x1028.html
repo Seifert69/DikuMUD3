@@ -1,0 +1,373 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>DIL functions for rooms</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The room section"
+HREF="ch04.html"><LINK
+REL="PREVIOUS"
+TITLE="Compiling and debugging your first room"
+HREF="x978.html"><LINK
+REL="NEXT"
+TITLE="A more complex set of rooms"
+HREF="x1092.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x978.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. The room section</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1092.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RMDILFUNC"
+>5.4. <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions for rooms</A
+></H1
+><P
+>The <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> language is the language a builder can use to make his own
+special functions on rooms, NPCs, objects, PCs, and much more.  This
+manual is for basic zone writing and therefore will not go into how to
+write your own <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions.  The <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> however is released with many
+functions for you as an Administrator and your builders to use to make
+special rooms, NPCs, and objects.  The following is a list of all room
+functions released with the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> 2.0 server.</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>Death room</DT
+><DD
+><P
+></P
+><P
+>This function is a simple function that allows you to create a
+room to do damage to a player. The death_room can kill them slowly like
+a fire cave would or it can kill them quickly as if you stuck them in a
+microwave it is all up to how you set the arguments.  It also lets you
+see the acts the players see so this function can be used on any number
+of death style rooms.  There is no need to understand how the function
+works just how to use it so with that in mind the following is the
+functions header.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1044"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//In function.zon
+dilbegin death_room(tick: integer, damage: integer, act_s: string);&#13;</PRE
+><P
+></P
+></DIV
+><P
+>As with any function all you have to do is 'dilcopy' the function
+onto your room with the correct zone name and arguments and it will do
+the rest.  In this <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> you have three arguments to pass The first is the
+'tick' or time which in this <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> is broken down into 'ticks' which are 4
+ticks per second.  Thus if you wanted to get something to do damage
+every minute you would put '60*4' in that spot.  The next is the amount
+of damage you want done per your time.  If for example you want '60' hit
++points damage done each round you just put '60' as that argument. 
+Finally is the act shown to the character as a string in quotes.  So a
+finished death room on your room would look like this.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1049"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy death_room@function(4*60,60,
+"Flames shoot up from the floor burning your butt.");&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Climb</DT
+><DD
+><P
+></P
+><P
+>     This special <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> is used for the climb skill and should be set on
+     stationary objects (stationary mast, robe, tree, wall, etc). The
+     'difficulty' is the skill-amount required to climb. A skill of 100
+     would be a 50% chance for the expert thief / climber. The 'damage'
+     is how much damage is given if you fail to climb the object. When
+     you fail, you "fall" to the 'destination', so you can make gravity
+     work correctly. The destination can be the same room in which you
+     started but it doesn't have to be. The 'direction' is the direction
+     in which you want the person to have to climb enclosed in quotes.</P
+><P
+>With all this in mind the following is the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> definition and
+an example use of it.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1061"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//<ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> definition
+dilbegin climb(destination:string, difficulty:integer,
+                damage:integer,direction:integer);
+
+//Example use of Climb
+dilcopy climb@function("deck@ship", 17, 20, "up");&#13;</PRE
+><P
+></P
+></DIV
+><P
+>We should note here, if you wanted the person to have to climb
+back down you will need to put a climb <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> on the room you are climbing
+too that has the "down" directory as an argument.  This <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> also allows
+you to link two rooms not linked by normal directions but we
+suggest you should think before doing this because it may not make sense to not
+have a link between the two places.</P
+></DD
+><DT
+>Force move</DT
+><DD
+><P
+></P
+><P
+>This function allows you to move a player or NPC from a room to another
+room with out having the player or NPC type or do anything.</P
+><P
+>The following is the definition of the force move <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+></P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1076"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilbegin force_move (tick: integer, strings: string, random: integer);&#13;</PRE
+><P
+></P
+></DIV
+><P
+>The 'tick' parameter is how fast you want the force move to be
+triggered.  The 'tick' is in 1/4 second increments so to get a one
+second wait you would place a four.  The second parameter is two strings
+the first being the symbolic name of the room you are forcing the
+character to.  The second string is the act you want shown to the player
+or NPC when it is moved.  The final parameter is either a one or a zero.
+The one stands for true and it would make the timer trigger randomly
+fifty percent of the time, while a zero would make it not random.</P
+><P
+>The following is what the force move would look like if you wanted it to trigger every 30 seconds and give acts of a river.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1080"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;dilcopy force_move@function(4*30,{"river2@riverzon","You float down the river."},0);&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Safe room</DT
+><DD
+><P
+></P
+><P
+>This function creates a safe room where combat is not allowed. 
+The following is the definition and an example of how to use it.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN1089"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;//Safe room <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> definition
+dilbegin safe_room ();
+
+//Example use of Safe room
+dilcopy safe_room@function ();&#13;</PRE
+><P
+></P
+></DIV
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x978.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1092.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Compiling and debugging your first room</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch04.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>A more complex set of rooms</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

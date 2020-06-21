@@ -1,0 +1,1537 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>A more complex set of NPCs</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The NPC section"
+HREF="ch05.html"><LINK
+REL="PREVIOUS"
+TITLE="DIL functions for NPCs"
+HREF="x2097.html"><LINK
+REL="NEXT"
+TITLE="Dragon station with rooms and NPCs"
+HREF="x2914.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x2097.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. The NPC section</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x2914.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="NPCCOMPLEX"
+>6.6. A more complex set of NPCs</A
+></H1
+><P
+>In the last sections you learned all the fields and how to make a basic NPC.
+In this section we will use the information from the last sections to
+create some more unique NPCs for our dragon station zone There is not a
+lot of new information here we will be using the DIL functions from the previous
+section and adding some flags to the NPCs to make them act
+different.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN2632"
+>6.6.1. Magic casting NPC</A
+></H2
+><P
+>The basic Dragon we made in the <A
+HREF="x2000.html"
+>Section 6.3</A
+> looks
+like a real dragon but it is a bit boring when you fight a dragon and
+don't get toasted by an acid or fire spell or two.  in <A
+HREF="x2097.html"
+>Section 6.5</A
+> the 'combat_magic' function was described.  This
+is the function you use to make all NPCs cast magic while in combat. 
+With that in mind lets take a look at how we can make our dragon a bit
+more interesting	g.</P
+><P
+>Well lets see a black dragon is supposed to have the ability to
+either cast fire breath or acid breath depending on who you talk to. 
+Once you learn <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> you could even make fire breath be a skill not a
+spell but for now we will stick with what we know.  I like the acts of
+the acid breath spell so we will use that as the spell of choice.  The
+NPC as we defined it before hasn't changed so the following would be the
+entire dragon with the combat magic function.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2639"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;
+bldragon
+
+title "a black dragon"
+descr "A big ugly black dragon is clawing the ground here." 
+names {"big ugly black dragon","ugly black dragon","big black dragon",
+"black dragon","dragon"}
+
+extra {}
+"The black dragons scales glitter like black granite that has been
+polished for years by water.  He has a large neck and huge bat like
+wings.  his eyes watch you as you stand before him.  One claw seems to be
+tapping slightly on the ground as if the dragon is waiting for
+something."
+
+extra {"eye","eyes"}
+"The dragons eyes seem to follow you no matter where you go in the room
+nothing seems to escape the dragons attention."
+
+extra {"claws","claw"}
+"The claw is big black and it looks very deadly.  It seems like the
+dragon has two sets of 4 large claws and 2 sets of 4 smaller claws which
+to say means the claws are about the size of short swords and long
+swords."
+
+extra {"scales","scale"}
+"Its a scale!  Haven't you ever seen a dragon before!"
+
+extra {"bat wings","wings"}
+"The dragon sees you looking and flaps his wings creating one heck of a
+wind blast."
+
+	race RACE_DRAGON_BLACK
+	sex SEX_MALE
+	height 625
+	weight 1250
+	level 70
+ NATURAL_DEF (WPN_CLAW, ARM_PLATE)
+	alignment -900
+MSET_ABILITY(20,12,12,12,12,12,20,0)
+MSET_WEAPON(10,10,10,5,30,5)
+MSET_SPELL(0,0,0,0,0,0,0,0,0,0,30)
+
+//Combat Magic added.
+   dilcopy combat_mag@function("acid breath", "", 25, 2);
+   
+end&#13;</PRE
+><P
+></P
+></DIV
+><P
+>That is all there is to it.  If you are wondering where I got the
+'acid breath' part of the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> copy all the spells names are in the
+<TT
+CLASS="FILENAME"
+>spells.def</TT
+> or you can just pick a spell by what you
+would type if you wanted to cast it yourself in the game.  Now if this
+still looks like a lot to do to make a dragon the dragon above could
+have been created with exactly the same information by using the
+<TT
+CLASS="FILENAME"
+>composed.h</TT
+> and the 'M_DRAGON_BLACK_OLD' macro.  If
+we use the macro the dragon would look like this</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2645"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;bldragon
+
+title "a black dragon"
+descr "A big ugly black dragon is clawing the ground here." 
+names {"big ugly black dragon","ugly black dragon","big black dragon",
+"black dragon","dragon"}
+
+extra {}
+"The black dragons scales glitter like black granite that has been
+polished for years by water.  He has a large neck and huge bat like
+wings.  his eyes watch you as you stand before him.  One claw seems to be
+tapping slightly on the ground as if the dragon is waiting for
+something."
+
+extra {"eye","eyes"}
+"The dragons eyes seem to follow you no matter where you go in the room
+nothing seems to escape the dragons attention."
+
+extra {"claws","claw"}
+"The claw is big black and it looks very deadly.  It seems like the
+dragon has two sets of 4 large claws and 2 sets of 4 smaller claws which
+to say means the claws are about the size of short swords and long
+swords."
+
+extra {"scales","scale"}
+"Its a scale!  Haven't you ever seen a dragon before!"
+
+extra {"bat wings","wings"}
+"The dragon sees you looking and flaps his wings creating one heck of a
+wind blast."
+
+M_DRAGON_BLACK_OLD(SEX_MALE)
+
+end</PRE
+><P
+></P
+></DIV
+><P
+>As you can see with the second way the dragon was a lot easier to
+make because we let the macro set all the other values we just described
+the NPC and set the macro.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN2648"
+>6.6.2. A wandering janitor</A
+></H2
+><P
+>Our space station is nice but we wouldn't want a lot of people
+coming to visit if we didn't have a janitor to walk around cleaning up. 
+Dragons most likely wouldn't be low life enough to be Janitors so I
+think we will leave that up to a hobgoblin.  the following would be the
+definition of a hobgoblin wandering Janitor.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2651"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;janitor
+names {"ugly janitor", "janitor", "hobgoblin"}
+title "an ugly janitor"
+descr "an ugly janitor is walking around, cleaning up."
+
+extra{}
+"This ugly green thing looks more goblin than hobgoblin but he seems
+intent on cleaning everything around him."
+
+race RACE_HOBGOBLIN
+level 6
+sex SEX_MALE
+height   130       /* cm            */ 
+weight   120       /* Pounds        */ 
+// he is sort of good for cleaning so much
+alignment 900
+
+NATURAL_DEF(WPN_FIST, ARM_LEATHER)
+MSET_ABILITY(10,10,10,23,15,22,10,0)   \
+MSET_WEAPON(10,10,10,10,10,10)    /*  Average in everything, any wpn */
+MSET_SPELL(4,2,2,2,2,2,2,6,6,6,6)  /* Resistances       */
+
+
+//give him some money
+money 5 IRON_PIECE
+
+dilcopy janitors@function(15);
+
+// only want him cleaning the station
+dilcopy wander_zones@function("dragonst", 20, 1, 1);
+
+end&#13;</PRE
+><P
+></P
+></DIV
+><P
+>Like with the dragon if we wanted to create this NPC easier we
+would use the Hobgoblin defines in <TT
+CLASS="FILENAME"
+>composed.h</TT
+> so we
+don't have to fill out all the information.  If we did this it would
+simply look as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2655"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;janitor
+names {"ugly janitor", "janitor", "hobgoblin"}
+title "an ugly janitor"
+descr "an ugly janitor is walking around, cleaning up."
+
+extra{}
+"This ugly green thing looks more goblin than hobgoblin but he seems intent
+on cleaning everything around him."
+
+M_AVG_HOBGOBLIN(6, SEX_MALE)
+
+// he is sort of good for cleaning so much
+alignment 900
+
+//give him some money
+money 5 IRON_PIECE
+
+dilcopy janitors@function(15);
+
+// only want him cleaning the station
+dilcopy wander_zones@function("dragonst", 20, 1, 1);
+
+end&#13;</PRE
+><P
+></P
+></DIV
+><P
+>As you can see you can combine the DIL functions you learned in
+<A
+HREF="x2097.html"
+>Section 6.5</A
+> to make your NPC do more than one thing.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="SPECTEACH"
+>6.6.3. Creating a teacher</A
+></H2
+><P
+>Setting up teachers on valhalla is harder and more strict formed
+than most things in the game.  The reason is the way you set them up is
+to use an old form of functions called special.  In the future guilds
+will be in <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> like everything else but for now the teachers that are
+released with the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> are base code.  Even though the teachers are base
+code they still allow for you to adjust many things.  The truth is you
+don't have to use our teachers you could code your own in <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> but many
+find this easier.</P
+><P
+>Guild teacher definitions are actually less complex than people think
+they are. There really are no big, mysterious secrets. The key is simply
+to understand the numbers and how the balance is achieved.
+(From here on in, GTD will refer to "guild teacher definition", and
+"entity" will be used to refer to the ability/spell/skill/weapon being
+offered by the GTD.)</P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>   Using TAB characters in GTDs is a very bad idea! It will have extremely
+adverse effects, including causing the mud to crash.</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>We need to tart first and explain that to use the teacher special
+functions you need to use a field not described anywhere else in the NPC
+descriptions.  The field is called a 'special'.  The reason the
+'special' field was not included in the field descriptions is because it
+is being removed from the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> as soon as banks and teachers have been
+replaced by <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> there will be no more special functions.  For now
+however we need to use them for the for mentioned purposes.  The format
+for a special function is as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2671"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;special &lt;Function define&gt; &lt;function arguments&gt;&#13;</PRE
+><P
+></P
+></DIV
+><P
+>For teachers the function definition is 'SFUN_TEACH_INIT' and the
+ arguments range from who can join, what the acts of the teacher are,
+ and what the teacher teaches.</P
+><P
+>In the first part of a SFUN_TEACH_INIT definition, there are several
+pieces of important information which allow the mud to know what you are
+trying to provide to players.  The entire set of arguments are enclosed
+in double quotes.  So a teacher with nothing at all in it would look
+like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2675"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;special SFUN_TEACH_INIT "&lt;arguments go here&gt;"&#13;</PRE
+><P
+></P
+></DIV
+><P
+>After the opening double quote ("), the first thing necessary
+is the text formatting code '&amp;l', which tells the compiler to ignore the
+standard text formatting protocols for the rest of the string or until the
+'&amp;f' code is given.</P
+><P
+>Immediately following the '&amp;l' code, with no spaces at all, the type of
+entity the function will teach is defined. It is one of the following
+types:</P
+><P
+></P
+><UL
+><LI
+><P
+>abilities</P
+></LI
+><LI
+><P
+>spells</P
+></LI
+><LI
+><P
+>skills</P
+></LI
+><LI
+><P
+>weapons</P
+></LI
+></UL
+><P
+>The first two lines of the SFUN_TEACH_INIT looks like this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2689"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;special SFUN_TEACH_INIT
+"&amp;labilities;0;&#13;</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>The '0;' is the end of field marker that will be used
+through out the teacher fields</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>The next set of arguments to the teacher function is the acts the
+teacher will use when a person is trying to train.  There are seven acts
+total and they are as follows:</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><P
+><B
+>Teacher acts</B
+></P
+><DL
+><DT
+>Line 1</DT
+><DD
+><P
+>This line is displayed when the player makes a mistake in typing
+        the name of an entity, whether or not it is actually offered at
+        the teacher.</P
+></DD
+><DT
+>Line 2</DT
+><DD
+><P
+>This line is similar to the first, but is usually evident of
+        attempting to practice an entity not offered at this particular
+        teacher.
+		</P
+></DD
+><DT
+>Line 3</DT
+><DD
+><P
+>This is the act displayed when the player has insufficient funds
+        to practice the desired entity.
+		</P
+></DD
+><DT
+>Line 4</DT
+><DD
+><P
+>This is displayed when the player has not got enough ability or
+        skill practice points to learn the desired entity.</P
+></DD
+><DT
+>Line 5</DT
+><DD
+><P
+>Simply put, the player has exceeded the teacher's expertise in the
+        offered entity and must go elsewhere to learn more, if at all
+        possible.</P
+></DD
+><DT
+>Line 6</DT
+><DD
+><P
+>This line is displayed when the player is either wearing magical,
+        stat-modifying equipment or is affected by spells/skills which
+        modify stats.</P
+></DD
+><DT
+>Line 7</DT
+><DD
+><P
+>This line is what is shown when your armour affects you using
+special functions in base code.  This is rare and may never be seen.  In
+the future when the teachers are made in <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> this act may not be
+necessary.</P
+></DD
+></DL
+></DIV
+><P
+>Now we can add the acts to our example it would look as
+follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2726"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;special SFUN_TEACH_INIT
+"&amp;labilities;0;
+ $1n tells you, 'I have never heard of such an ability.'; $1n
+tells you, 'I do not know how to teach this ability.'; $1n tells you,
+'You haven't got %s for me.'; $1n tells you, 'You haven't got %d ability
+points.'; $1n tells you, 'I can not teach you any more.'; $1n tells you,
+'You must be unaffected by magic, else I can't teach you.'; $1n tells
+you, 'Remove all equipment, please.';&#13;</PRE
+><P
+></P
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>   $1n is the substitution variable for the teacher's title (see the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+>
+document for more details).</P
+><P
+>%s is the amount of money the teacher  requires to teach the entity in
+      question.</P
+><P
+>%d is the amount of ability or skill practice points required to
+      practice the given entity.</P
+><P
+>The standard GTD termination character, a semicolon (;) ends each
+act</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>about the actual GTDs, or the lines that actually define what the
+teachers teach and everything to do about how expensive and how high
+they teach it.  A GTD is a single line, composed of several fields. The data contained
+in these fields determines how a particular entity is practiced.</P
+><P
+>Here is an example of a GTD:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2736"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;  0;  100; scan                          ;   9;  9000;   7;          0;
+  
+  </PRE
+><P
+></P
+></DIV
+><P
+>Note that it has a lot of white space in it. It is really not necessary,
+as the field terminators are the semicolons. This means that you could just
+as easily write:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2739"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;0;100;scan;9;9000;7;0;&#13;</PRE
+><P
+></P
+></DIV
+><P
+>When making teachers most people prefer to put the white space in
+   to make it easier to read and find errors.  A larger example would
+   look as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2742"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>   
+  0;  100; scan                          ;   9;  9000;   7;          0;
+  0;   90; consider                      ;   4;  4000;   5; 10;      0;
+  0;  100; appraisal                     ;   9;  4000;   5;          0;
+  0;  100; fleeing                       ;   9;  9000;   6; 12;      0;&#13;</PRE
+><P
+></P
+></DIV
+><P
+> Each part of the GTD separated by a semicolon is called a
+field.  The following is the fields and their definitions.</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>Field 1</DT
+><DD
+><P
+>   Field 1 is the guild level. It is simply the level at which one is
+allowed to practice the particular entity in the guild. A level of 0
+indicates that one can practice it from the beginning.</P
+></DD
+><DT
+>Field 2</DT
+><DD
+><P
+>This is the maximum percentage one is allowed to practice the
+particular entity. It can be anywhere from 1 to 200. For abilities, it
+should be in increments of 2 (or divisible by 2), and for spells, skills,
+or weapons, in increments of 5 (or divisible by 5). This means that the
+effective minimum depends on whether the entity is an ability or a spell,
+skill or weapon.</P
+><P
+>Therefore, the minimums for abilities is 2, and the minimum for spells,
+skills or weapons is 5. Anything less will be automatically practiced to
+the effective minimum. This also means that putting an odd number for
+abilities will result in the player practicing an additional point, and
+for spells, skills or weapons, practicing up to the nearest 5.</P
+><P
+>For example:    Percentage maximum for an ability is set for 95%. Player practices the
+ability, which then becomes 96%.
+   Player then decides to practice a weapon skill. It is set to 77% maximum.
+After practicing, the player has 80% in the weapon.
+   It is better to simply make the ability 96% and the weapon 80% maximum
+instead.</P
+></DD
+><DT
+>Field 3</DT
+><DD
+><P
+>Name of Entity</P
+></DD
+><DT
+>Field 4</DT
+><DD
+><P
+>This is the practice cost minimum in Old gold pieces. Anything less than 10 here
+will simply be translated as 1 iron piece. Anything other than a number divisible
+by 10 is rounded up to the nearest iron piece.</P
+></DD
+><DT
+>Field 5</DT
+><DD
+><P
+>This is the practice cost maximum in old gold pieces. It is generally defined as
+being 1000 times what Field 4 is defined as:</P
+><P
+>The reason for this is because there is a scale related to the current
+practice percentage of the entity. The practice minimum is what the entity
+costs when it is at 0%, and the practice maximum is what it costs to
+practice it to maximum percentage.</P
+><P
+>It is not necessary to multiply the minimum by 1000 to define the
+maximum. It can be any number, as long as the maximum exceeds the minimum.
+Failure to do so will result in the mud crashing. It is unknown what will
+happen if the fields have 0 entered in them. I warn that it could be rather
+unpredictable.</P
+><P
+>Setting the maximum too high will only serve to dissuade players from
+practicing and indeed even playing. This is not to say you cannot make a
+truly powerful entity very expensive. Just make sure that the entity is
+worth the cost.</P
+></DD
+><DT
+>Field 6</DT
+><DD
+><P
+>This is the only necessary practice points field. It allows one to use
+their skill or ability practice points to increase their character's powers.
+This number is generally determined by the desire of the builder to make
+the entity easier or harder to practice, based upon the logical
+consideration of how this class would learn/use the entity.</P
+><P
+>For instance, a Fighter class would find practicing "fist" to be
+exceedingly easy, so they may only need 4 points to practice this skill, 
+but on the other hand, a Mage class would not have such an experience so
+it may cost them 15 points to practice.</P
+><P
+>Don't go overboard, making this field an outrageous number will mean
+that no one is likely to practice the entity, mainly because of lack of
+points. However, like in the cost fields, it can be made expensive to
+reflect the power of the entity.</P
+></DD
+><DT
+>Field 7 - X</DT
+><DD
+><P
+>You can repeat field 6 as many times as you want the player to be
+able to practice in one level so you can set a point cost each
+time.  This is so each time they practice at a level you can make it
+more expensive.</P
+><P
+>An example of this would look as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2782"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;  0;   90; consider                      ;   4;  4000;   5; 10;      0;
+  
+  </PRE
+><P
+></P
+></DIV
+><P
+>This example has consider being practiced at guild level 0 up to 90%,
+costing 4 old gold pieces minimum, 4000 old gold pieces maximum,
+5 practice points for the first practice per level and 10 for the
+second.</P
+><P
+>   For 15 points a level, the player can practice consider twice. It is
+actually quite nice to be able to do this, and generally easier entities
+take advantage of this more often.</P
+><P
+>Each additional field is followed by a semicolon</P
+></DD
+><DT
+>Field X</DT
+><DD
+><P
+>This is the termination field for the GTD. It tells the compiler
+that the GTD is finished. In fact, if you set a practice point field to
+0, it would consider that Field X, and end the GTD.</P
+><P
+>Every GTD line must have an end of field marker!</P
+></DD
+></DL
+></DIV
+><P
+>When we refer to old gold pieces they represent the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> money system as
+follows:</P
+><DIV
+CLASS="TABLE"
+><A
+NAME="OLDGOLD"
+></A
+><P
+><B
+>Table 6-14. Old to new money conversions.</B
+></P
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>Old gold piece</TH
+><TH
+>New money</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>10</TD
+><TD
+>1 Iron Piece (IP)</TD
+></TR
+><TR
+><TD
+>80</TD
+><TD
+>1 copper piece (CP)</TD
+></TR
+><TR
+><TD
+>640</TD
+><TD
+>1 silver piece (SP)</TD
+></TR
+><TR
+><TD
+>5120</TD
+><TD
+>1 gold piece (GP)</TD
+></TR
+><TR
+><TD
+>40960</TD
+><TD
+>1 platinum piece (PP)</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>Of course, to finish up the entire SFUN_TEACH_INIT, you must include a
+closing double quotation mark ("). Failure to do so will cause no end of
+problems for you.</P
+><P
+>A finished teacher of ability function would look like
+this:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2819"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;special SFUN_TEACH_INIT
+"&amp;labilities;0;
+$1n tells you, 'I have never heard of such an ability.';
+$1n tells you, 'I do not know how to teach this ability.';
+$1n tells you, 'You haven't got %s for me.';
+$1n tells you, 'You haven't got %d ability points.';
+$1n tells you, 'I can not teach you any more';
+$1n tells you, 'You must be unaffected by magic, otherwise I can't teach
+you.';
+$1n tells you, 'Remove all equipment, please.';
+
+  0;  100; Strength                      ;   4;  4000;   8;       0;
+  0;   90; Dexterity                     ;  14; 14000;  12;       0;
+  0;   90; Constitution                  ;  14; 14000;   9;       0;
+  0;  100; Hitpoints                     ;   4;  4000;  11;       0;
+  2;   60; Brain                         ;  23; 23000;  14;       0;
+  4;   80; Charisma                      ;  18; 18000;  14;       0;
+"&#13;</PRE
+><P
+></P
+></DIV
+><P
+>There are two other easy to use specials that you will want to use
+with your teacher.  they are 'SFUN_GUILD_BASIS' and
+'SFUN_MEMBERS_ONLY'.</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>SFUN_GUILD_BASIS</DT
+><DD
+><P
+>This initializes the teacher and the only argument is the guild
+name</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2827"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;special SFUN_GUILD_BASIS "Udgaard Fighter"&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>SFUN_MEMBERS_ONLY</DT
+><DD
+><P
+>This simply blocks anyone who is not in the guild from
+practicing This means the argument is the guild name. and the act
+separated by a '#', an example would look as follows:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2833"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;special SFUN_MEMBERS_ONLY "Udgaard fighter#$1n says, 'Buggar ye off, $3n.'"&#13;</PRE
+><P
+></P
+></DIV
+></DD
+></DL
+></DIV
+><P
+>Finally we will show you what a full teacher would look like with
+the entire specials and the NPC definition.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2836"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;jones
+
+names {"blacksmith", "smith", "Jones"}
+title "Jones the blacksmith"
+descr "The venerable Jones Blacksmith is here."
+extra {}
+"The smith is old but his arms still retain the strength of his youth.
+He looks as if he has retired, but he can still put you through the
+drills of physical training."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+//Define from composed.h
+M_HUMAN_WARRIOR_AXE(80, SEX_MALE)
+
+//negative exp to discourage killing teacher
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_UDG_FIGHTER
+special SFUN_MEMBERS_ONLY GUILD_UDG_FIGHTER+"#$1n says, 'Buggar ye off, $3n.'"
+
+special SFUN_TEACH_INIT
+"&amp;labilities;0;
+$1n tells you, 'I have never heard of such an ability.';
+$1n tells you, 'I do not know how to teach this ability.';
+$1n tells you, 'You haven't got %s for me.';
+$1n tells you, 'You haven't got %d ability points.';
+$1n tells you, 'I can not teach you any more';
+$1n tells you, 'You must be unaffected by magic, otherwise I can't teach
+you.';
+$1n tells you, 'Remove all equipment, please.';
+
+  0;  100; Strength                      ;   4;  4000;   8;       0;
+  0;   90; Dexterity                     ;  14; 14000;  12;       0;
+  0;   90; Constitution                  ;  14; 14000;   9;       0;
+  0;  100; Hitpoints                     ;   4;  4000;  11;       0;
+  2;   60; Brain                         ;  23; 23000;  14;       0;
+  4;   80; Charisma                      ;  18; 18000;  14;       0;
+"&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="SPECGUILDMASTER"
+>6.6.4. Guild master functions</A
+></H2
+><P
+>When you make a guild you have to make a guild master for it.  This
+NPC will let people join and leave the guild and it also gives titles.
+To create a guild master you need to use three 'special' functions.  The
+functions you need are 'SFUN_GUILD_BASIS', 'SFUN_GUILD_MASTER', and
+'SFUN_GUILD_TITLES'.</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>SFUN_GUILD_BASIS</DT
+><DD
+><P
+>This initializes the master and the only argument is the guild
+name</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2846"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;special SFUN_GUILD_BASIS "Udgaard Fighter"&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>SFUN_GUILD_MASTER</DT
+><DD
+><P
+>The guild master function takes 6 arguments.  Like the teacher
+function the arguments must be surrounded by double quotes.  The strings
+in the arguments must be surrounded by tilde marks (~).  The following
+is a description of the arguments and what they do.</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>Line1:</DT
+><DD
+><P
+>The first argument on is what the guild name is.  As in the
+teacher you need to pre-pend the '&amp;l' symbol so the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> doesn't
+mess with the formatting of the string when the guild master is
+compiled.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2858"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13; &amp;lGuild = ~Udgaard fighter~
+ 
+ </PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Line 2</DT
+><DD
+><P
+>This argument is what quest needs to be done before the character
+ can enter the guild.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2864"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+> 
+ Guild Enter Quest = ~Fighter Proven~
+
+ </PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Line 3</DT
+><DD
+><P
+>This argument is the amount it costs to enter the guild in old
+  gold pieces.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2870"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13; Guild Enter Cost = 640
+ 
+ </PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Line 4</DT
+><DD
+><P
+>this argument is the quest the player must do before leaving the
+  guild.  If the player has not completed this quest the guild master
+  will not let the player leave.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2876"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>  
+Guild Leave Quest = ~Wimp proven~&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Line 5</DT
+><DD
+><P
+>This argument is how much old gold pieces it will cost to quit
+ the guild.  If the player doesn't have enough money the guild master
+ will not let the player join.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2882"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+> 
+Guild Leave Cost = 3200&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>Line 6</DT
+><DD
+><P
+>This argument is what guild the guild master will not accept
+ players from.  For example the following will make it so no Thief can
+ be in the fighter guild.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2888"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;Guild Exclude Quest = ~Udgaard Thief Quitter~&#13;</PRE
+><P
+></P
+></DIV
+></DD
+></DL
+></DIV
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="90%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>When we refer to old gold pieces they represent the
+<ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> money system as shown in <A
+HREF="x2629.html#OLDGOLD"
+>Table 6-14</A
+></P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>The following is what a full 'SFUN_GUILD_MASTER'
+function would look like</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2895"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+> 
+
+special SFUN_GUILD_MASTER
+"&amp;lGuild               = ~Udgaard fighter~
+Guild Enter Quest    = ~Fighter Proven~
+Guild Enter Cost     = 640
+Guild Leave Quest    = ~Wimp proven~
+Guild Leave Cost     = 3200
+Guild Exclude Quest  = ~Udgaard Fighter Quitter~"&#13;</PRE
+><P
+></P
+></DIV
+></DD
+><DT
+>SFUN_GUILD_TITLES</DT
+><DD
+><P
+>This function allows the player to request a title at the guild
+master.  A title will be given every 5 levels up to level 100 so you
+have 20 titles you can set.  The title function takes one title for male
+chars and one title for female chars so you have to set 40
+titles.</P
+><P
+>The arguments of this function are easy.  The first thing you do is
+the normal '&amp;l' to let the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+> know not to mess with this string. 
+Then you put the guild name.  Finally you follow it by the list of 40
+titles.   The following is the fighter guilds title list</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2903"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;special SFUN_GUILD_TITLES
+"&amp;lUdgaard fighter
+the %s Swordpupil
+the %s Swordpupil
+the %s Recruit
+the %s Recruit
+the %s Sentry
+the %s Sentress
+the %s Fighter
+the %s Fighter
+the %s Soldier
+the %s Soldier
+the %s Warrior
+the %s Warrior
+the %s Veteran
+the %s Veteran
+the %s Swordsman
+the %s Swordswoman
+the %s Fencer
+the %s Fenceress
+the %s Combatant
+the %s Combatess
+the %s Hero
+the %s Heroine
+the %s Myrmidon
+the %s Myrmidon
+the %s Swashbuckler
+the %s Swashbuckleress
+the %s Mercenary
+the %s Mercenaress
+the %s Swordmaster
+the %s Swordmistress
+the %s Lieutenant
+the %s Lieutenant
+the %s Champion
+the %s Lady Champion
+the %s Dragoon
+the %s Lady Dragoon
+the %s Cavalier
+the %s Cavalier
+the %s Knight
+the %s Lady Knight"&#13;</PRE
+><P
+></P
+></DIV
+></DD
+></DL
+></DIV
+><P
+>Put all three of these functions on your NPC and your all set you
+have a guild master.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="SPECBANK"
+>6.6.5. NPC banker</A
+></H2
+><P
+>The banker function is the easiest 'special' function there is to
+use.  The following placed on an NPC will make a banker:</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2909"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;special SFUN_BANK&#13;</PRE
+><P
+></P
+></DIV
+><P
+>As you see its very simple, so we will just show you a completed banker
+and leave it at that.</P
+><DIV
+CLASS="INFORMALEXAMPLE"
+><P
+></P
+><A
+NAME="AEN2912"
+></A
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;bob
+
+names {"Bob"}
+title "Bob"
+descr "Bob the Banker is here, sitting behind the counter."
+extra {}
+"He has a very serious look on his face."
+
+// define from composed.h
+M_SHOP_KEEPER(4, SEX_MALE, RACE_HUMAN)
+
+//discourage people from killing banker
+exp -500
+
+flags {UNIT_FL_NO_TELEPORT}
+
+special SFUN_BANK
+end&#13;</PRE
+><P
+></P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x2097.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x2914.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> functions for NPCs</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch05.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Dragon station with rooms and NPCs</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

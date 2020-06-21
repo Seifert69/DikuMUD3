@@ -1,0 +1,254 @@
+
+1.		Object Creator Documentation
+Document Name:           objects.doc (was wpn_arm.doc)
+Version:                 7.10
+Author:                  Michael Seifert (seifert@diku.dk)
+Questions to:            seifert@diku.dk
+Document intended for:   World Creators
+
+This  document  describes how the world creator specifies  objects
+such as weapons, shields, armours, potions, scrolls, wands, staffs
+and  how  to apply magical properties to items. Also included  are
+guidelines for creating magical items.
+
+2.   General notes about craftsmanship, material and magic bonuses
+
+Note: In general each +5 / -5 could be said to equal AD&D +1 / -1 bonuses.
+
+2.1  Craftsmanship (%, Table 1)
+The  craftsmanship expresses of what material a weapon, shield  or
+armour  is made and how well it has been constructed. The material
+is  calculated  by selecting appropriate material &  craftsmanship
+percentages from Table 1 and Table 2 below.   The result is an overall
+craftsmanship in the range [-25% ..                              +25%].
+Table  1  is  relative to the iron material. Notice  that  a  clubs
+should not  get  penalties because it made of wood,  nor  should  a
+spear  (with an iron tip). However obviously a sword would  get  a
+huge penalty for being made of wood. In general there should be no
+modification  on  a  weapons  default material.  A  wooden  shield
+should not get -15% - it should just have fewer hitpoints  -  hope
+you catch the drift...
+
+Materia  Qty   Weight      Costl              Mul.        Mul.
+Wood      -15%           ?     x 0.2                 (differs)
+Bone      -14%           ?     x 0.3
+Ebony     -13%           ?     x 1.7
+Gold      -11%       19.30     x 512
+Stone      -8%           ?     x 0.2
+Silver    -10%       10.50    x 64.0
+Bronze     -5%        8.50     x 0.8
+Iron        0%        7.90     x 1.0
+Steel       5%        9.00     x 200                    (rare)
+Mithril    10%        6.00    x 4096                   (rarer)
+Diamond    15%           ?   x 32768                 (extreme)
+Table 1
+This table translates materials into a quality relative to iron.
+See  also  Table  2  for  craftsmanship  modifications.  The  cost
+multiplier is multiplied onto the base cost of an item  if  it  is
+made  from  other materials than listed as default (for example  a
+long  sword of steel would have its price multiplied by  a  factor
+1.8).  The Weight Multiplier is included for your information,  to
+illustrate the relative weight of the various materials. The
+craftsmanship is a way of expressing the overall quality of a weapon.
+This  includes  both the skill of  the  black  smith  who created
+the  weapon, the sharpness (where appropriate),  and  the weapon
+balance. Use Table 2 for this purpose. Of course it is  not possible
+to have a “none” sword of metal. NONE only applies  to weapons
+created by nature (for example a branch).  The  resulting
+craftsmanship is a percentage in the range [-15%..+15%].
+
+Craftsmanshi  QTY     Cost     p                Mul.
+None          -15%       N/A
+Poor           -8%     x 0.6
+Average         0%     x 1.0
+Good            5%     x 1.5
+Exceptional    10%     x 2.5
+Divine         15%     x 4.0
+Table 2
+This  table  shows which effect craftsmanship has  on  Weapon  and
+Armour  quality. The cost multiplier is multiplied onto  the  base
+cost of a weapon.Examples:·     A bronze helmet made by a skilled
+smithy would have -5% + 5% = 0% craftsmanship.·
+An ordinary steel dagger would have 5% + 0% = 5%.
+A rusty iron dagger would have -5% + 0% = -5%.
+A normal reinforced wooden shield has 0% + 0% = 0%.·
+A  diamond dagger made by a god would have no more than  25% even
+though the tables would indicate 30%.
+
+2.2  Magic Bonuses
+
+Magic  bonuses can also be applied to weapons, shields &  armours.
+It  is  in the interval -25% to 25% (0% is no magic). Remember  to
+set the UNIT_FL_MAGIC if the weapon has any magic bonuses.
+
+Power of Item Bonus  Maximum in World       Rent          Cost multiplier
+Standard        +5        20-40          Approx. cost    x 1.0  Magic / 10
+Powerful       +10        10-20          Approx. cost    x 2.0  Magic / 10
+Demi-god       +15         5-10          Approx. cost    x 4.0  Magic / 10
+God-Magic      +20         2-5           Approx. cost    x 8.0        / 10
+Artifacts      +25         1-2           Approx. cost    x 16.0       / 10
+
+3.   WEAPON CONSTRUCTION
+To  create  a  weapon  you must determine the  following  specific
+information about your particular weapon. The means by  which  you
+create  a weapon also applies to the definition of the hand  of  a
+monster.
+
+3.1  Weapon Category
+
+Select a weapon type from the file values.h (one of the WPN_XXX
+macros which is larger than (after) WPN_GROUP_MAX). For example
+WPN_DAGGER. The weapon category determines which skill is required
+for using  (and defending against) the weapon.
+
+3.2  Examples
+
+A   standard   macro  “WEAPON_DEF(weapon_category,  craftsmanship,
+magic_bonus)”  is available, and should be used for  defining  the
+weapons values.Note  that both craftsmanship & magic bonuses are in
+the range  [-25%..+25%].
+
+A  flail (two handed) of non-pure iron (-3%), a little better than
+average craftsmanship (5%) and no magic bonuses would have:
+WEAPON_DEF(WPN_FLAIL, +2, 0)
+
+A  rusty  (-5%) mean sacrificial dagger by a skilled smithy  (+5%)
+and magically enchanted might be:     flags {UNIT_FL_MAGIC}
+WEAPON_DEF(WPN_DAGGER, 0, +5)
+
+An old shaky wooden stick could be:     WEAPON_DEF(WPN_CLUB, -5, 0)
+
+A  wooden bastard sword would have considerable less craftsmanship
+than  listed  since wood prevents the ‘slashing’ effect,  also  it
+would  be non-sense to apply better than average craftsmanship  in
+this case:     WEAPON_DEF(WPN_BROAD_SWORD, -15, 0)
+
+Very  special weapons ought to exist only in limited numbers  even
+if  they are not magical, for example, it seems unreasonable  that
+hundreds of daggers made from diamond exists in the world. Perhaps
+only  one or two such weapons exist. Use the max field in the load
+or equip reset-commands.
+The  macro  automatically sets the following manipulate  flags  so
+that the weapon can be picked up and wielded:
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WIELD}
+
+4.   ARMOUR CONSTRUCTION
+
+Armours  are  designed just as for weapons. A  number  of  general
+things  ought  to be noted for armours. There are standard  macros
+for  many  types of armour - use these unless you are designing
+something  unique  (like  a set of T1000 liquid  armour).  Armours
+protect differently against the three different basic attack types
+(slash,  pierce  and bludgeon) and differently  against  different
+spell  attacks (i.e. plate is best against acid but worst  against
+electricity).
+
+4.1  Location
+
+Location  is where the armour is supposed to be used, for  example
+sleeves  are  usually put on the arms. To specify a location,  set
+the  appropriate  manipulate  flags (MAINPULATE_WEAR_XXX).  Armour
+only offers protection on the following body locations:
+Head     Hands     Arms     Body     Legs     Feet
+
+4.2  Examples
+
+Standard macros are available and are used exactly as for weapons:
+     ARMOR_CLOTHES(...)     ARMOR_LEATHER(...)     ARMOR_HRD_LEATHER(...)
+     ARMOR_CHAIN(...)     ARMOR_PLATE(...)
+A magical mithril full plate armour of good craftsmanship could be
+assigned:     flags {UNIT_FL_MAGIC}     ARMOR_PLATE(+15,+5)
+
+5.   SHIELDS
+
+Shields are designed just as for armours & weapons. Use the  macro
+SHIELD_DEF.
+
+5.1  Category
+
+The  shield  category must be one of (SHIELD_XXX,  values.h).  The
+larger  the  shield,  the better the chance of  blocking  attacks.
+Remember  to put weight on your shield to encumber the  character.
+Shields are defined just as weapons & armours.
+
+Shield Type
+Small Shield   Medium   Shield
+Large Shield
+
+Table 3
+Available shield types.
+
+5.2  Examples
+A small magical wooden shield could be assigned:
+     flags {UNIT_FL_MAGIC}     SHIELD_DEF(SHIELD_SMALL, 0, +5)
+
+6.   Various
+
+6.1  Notes, Signs, Papers (reading)
+
+When  you create a note with written text upon it, the proper  way
+is  to  make an extra description with an empty keyword. The empty
+keyword defaults to the name of the object itself.
+
+Example:     note_7
+names {“old paper”, “paper”}
+.......
+extra  {}
+“The paper looks old and worn, and written in blood  you
+see  the  words: Help free the world of the horrible evil
+lurking lurking behind these doors.
+
+”Extra {“blood”} “The blood is red!”
+end
+
+7.   MAGICAL ITEMS
+
+This  chapter describes the rules by which magical items  must  be
+created. The rules are made under the consideration that a  player
+can equip a total of 17 items! It is therefore very important that
+you carefully follow these guidelines.
+
+Magical bonuses are applied to a player
+
+whenever he equips a magical item.
+When you create a magical item you should remember to set the unit-flag
+UNIT_FL_MAGIC  so  that the detect  magic  spell  will  work
+properly. But most of the used macros automatically set the  magic
+flag. (flags {UNIT_FL_MAGIC}).
+
+7.1  Identifying Magical Items
+
+It  is  always important for the players to get information about
+magical  items. The following method gives you the possibility  of
+creating  textual identification descriptions for  the  “identify”
+and “improved identify” spells.
+Add  an extra description with the keyword “$identify” and it will
+show the description when an identify spell is cast upon the item
+Add an extra description with the keyword “$improved identify” and
+it  will  show the description when an improved identify spell  is
+cast upon the item.
+Example:
+crown_of_king
+bla bla......
+extra {“$identify”}
+“This  once  used to be the crown of the evil lich king  Asmodeus,
+the  greatest  of  the undead. The crown is a great  magical  item
+rumored  to  give its posessor fantastic intellectual powers.  The
+crown can only be used by evil persons.”
+extra {“$improved identify”}
+“The Crown of Asmodeus gives +5 to brain. Can only be used by evil
+persons.”
+end
+As  you can see, the two types of descriptions associated with the
+magical  items  gives  a lot more flavor to  your  magical  items.
+Please  always include both descriptions on any magical items  you
+create (they can be used on any kind of item, even unmagical ones,
+but  most  likely there is nothing special to be said  about
+non-magical items).
+
+7.2  Rent on limited items
+Whenever  you create a magical item, you must specify the  maximum
+number  allowed in the world at any given time (the concept  world
+includes  items  saved in the playerfile.).  The  following  table
+shows  the  allowed  number of items in the  world  and  the  rent
+compared with the items power:

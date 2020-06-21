@@ -1,0 +1,12 @@
+<br/>
+Usage: wiz &lt;text&gt;               (standard wiz-line, like shout to wiz's)<br/>
+       wiz #&lt;level&gt; &lt;text&gt;      (as above, but only to wiz's of level+)<br/>
+       wiz @&lt;emotetext&gt;         (emote on the wizline)<br/>
+       wiz @&lt;level&gt; &lt;emotetext&gt; (as above, but only to wiz's of level+)<br/>
+       wiz ?                    (what wizards are on- and offline)<br/>
+       wiz -                    (go offline)<br/>
+       wiz +                    (go online)<br/>
+<br/>
+This wiz-command will allow you to communicate with the others wizards in<br/>
+the usual ways. Consult the list above.<br/>
+<br/>

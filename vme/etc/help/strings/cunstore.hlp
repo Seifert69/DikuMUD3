@@ -1,0 +1,17 @@
+<br/>
+Usage cunstore &lt;item&gt;<br/><br/>
+Example: cunstore  sword<br/>
+<br/>
+This Command is restricted to members of the clan that have been appointed as<br/>
+Quartermasters by the clan master.  It allows a member that has been appointed<br/>
+to unstore items in the clan secret equipment box.<br/>
+<br/>
+Note:<br/>
+You must be at the clan chest to use this command.<br/>
+<br/>
+<br/>See Also:<br/><br/>
+cstore<br/>
+cequipment<br/>
+cdeposit<br/>
+cwithdraw<br/>
+<br/>

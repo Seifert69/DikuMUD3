@@ -1,0 +1,28 @@
+<br/>
+<br/>
+<br/>
+<br/>
+Usage<br/><br/>
+get (item)<br/><br/>
+get (item) in/from (item)<br/><br/>
+get all<br/><br/>
+get all from (item)<br/><br/>
+<br/><br/>
+Example:<br/><br/>
+get all from corpse<br/><br/>
+get butter bread from bag<br/><br/>
+put brass lantern in small bag<br/><br/>
+get all<br/><br/>
+<br/><br/>
+Notice the essential use of the IN and FROM keywords!<br/><br/>
+<br/>
+If you see an item lying around, you can pick it up, use this command.<br/>
+If there is an item in a container that you wish to get, you can pick it up,<br/>
+specifying the container to get it from. If you just want to get everything<br/>
+lying around, type 'get all'.<br/>
+<br/><br/>
+<br/>See Also:<br/><br/>
+Drop<br/><br/>
+Put<br/><br/>
+Look<br/><br/>
+<br/>

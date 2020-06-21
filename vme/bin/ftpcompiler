@@ -1,0 +1,411 @@
+#!/usr/bin/perl
+#
+# Ftpcompiler  Version 1.0
+#
+# You must have access to set up your ftp site.  This file assumes you are
+# using wu-ftp, although you should be able to use any ftp deamon you wish.
+#
+# As root:
+#
+# In your ftpaccess file normally in /etc directory although known to hide  
+# in all sorts of other places.
+#
+# add a line as follows: where <user> and <group> is the user and the group
+# that the mud runs under and <directory> is the incoming directory that
+# people will upload their zones into.  Also make sure you ftp software
+# is looking at /home/ftp or change that to the default ftp directory.
+#
+# upload /home/ftp <directory> yes <user> <group> 0660
+#
+# create a vme/in and an vme/out directory under your ftp root directory
+# or whatever you want to call them.
+#
+# chmod the in directory to 773
+#    chmod 773 <indirectory>
+# chmod the out directory to 775
+#    chmod 775 <out directory>
+#
+# Chown the directories to be owned by the user and group of the mud.
+#
+# chown <user>.<group> <in directory>
+# chown <user>.<group> <out directory>
+#
+#
+# Change the below directory structure to fit your files system structure.
+#
+# if all goes well and you put a file in the in, you should get an error
+# in the out.
+
+
+$versioning = 0;   # any number > 0 enables versioning
+$mailer       = "mail";
+$date         = `date +'%D %X'`;
+chop($date);
+$vmehome     = "/home/mud/vme1.9";
+$vmenotzone  = "$vmehome/etc/ftpzoneerr.txt";
+$vmebin      = "$vmehome/bin";
+$libhome     = "$vmehome/include";
+$zonehome    = "$vmehome/zone";
+$dir_log     = "$vmehome/log";
+$includes    = "$vmehome/include";
+$moneyfile   = "$vmehome/etc/";
+$ftphome     = "/home/ftp/vme";
+$ftpin       = "$ftphome/in";
+$ftpout      = "$ftphome/out";
+
+$zonelist    = "$vmehome/etc/zonelist";
+$logfile     = "ftpcompiler.log";
+$vmcproc     = "$vmehome/bin/vmc";
+$vmc         = "$vmcproc -d$moneyfile -I$includes"; 
+$dir_temp    = "/tmp";
+$nextzon     = "$zonehome/nxtzon";  #A directory to store zones until reboot 
+
+$ENV{'PATH'} = "$vmebin:/bin:/usr/bin:/usr/ucb/bin:/usr/local/bin:.";
+
+$err_wait = 20;			# How long to wait in min before deleting out/*.err
+
+sub get_password {
+  local ($zonename) = @_;
+  local (@words);
+  local ($line);
+
+  open(ZONELIST, "$zonelist");
+  while (<ZONELIST>) {
+    $line = $_;
+    @words = split(/\s+/, $line);
+    if( @words[0] eq $zonename ) {
+      close(ZONELIST);
+		$compile_option = @words[2];
+	   return(@words[1]);
+
+	 }
+  }
+  close(ZONELIST);
+  return("ERROR");
+}
+
+sub ftp_err_msg {
+  local ($errfile, $message) = @_;
+	open (ERR, ">> $ftpout/$errfile.err");
+	print ERR $message . "\n";
+	close (ERR);
+	return;
+}
+
+sub log_mesg {
+  local ($log_file, $message) = @_;
+	open (LOG, ">>$dir_log/$log_file");
+	print LOG $message . "\n";
+	close(LOG);
+	return;
+}
+
+sub get_header {
+  local ($hdfile) = @_; 
+  local ($line_num) = 0;
+  local ($line);
+  open (ZONE, "$hdfile");	
+  open (HEAD, ">$dir_temp/$hdfile.head");
+  $line_num = 0;
+  while( ($line !~ "END HEADER") ) {
+      $line = <ZONE>;
+		print HEAD $line;
+		if ($line_num > 15) {
+		  $line = "END HEADER";
+		}
+		$line_num ++;
+  }
+  close(HEAD);
+  open (BODY, ">$dir_temp/$hdfile.zone");
+	for($x=0;$x<$line_num;$x++) {
+	  print BODY "\n";
+	}
+  while (<ZONE>){
+    print BODY $_;
+  }
+  close(BODY);
+  close(ZONE);
+  unlink("$hdfile");
+}
+					
+sub parse_header {
+   local ($hdfile) = @_;
+   local (@words);
+   open (HEAD, "$dir_temp/$hdfile.head");
+	 $filename  = "";  # set these all to null, might have residual from 
+	 $password  = "";  # last file
+	 $version   = "";
+	 $request   = "";
+	 $changedby = "";
+	 $emailadd  = "";
+	 
+   while (<HEAD>){
+
+	  @words = split(/\s+/, $_);
+
+	  if (@words[0] eq "filename") {
+	    $filename = @words[1];
+	  } elsif (@words[0] eq "password") {
+	    $password = @words[1];
+	  } elsif (@words[0] eq "version") {
+	    $version = @words[1];
+	  } elsif (@words[0] eq "request") {
+	    $request = @words[1];
+	  } elsif (@words[0] eq "changedby") {
+	    $changedby = @words[1];
+	  } elsif (@words[0] eq "email") {
+	    $emailadd = @words[1];
+	  }
+	}
+	if ($filename eq "") {
+     ftp_err_msg($hdfile, "FAILED: NO FILENAME SPECIFIED");
+		 open(NOZONE, $vmenotzone) ;
+     open (LOG, ">>$ftpout/$hdfile.err");
+		 while (<NOZONE>) 
+		 {
+	     print LOG $_ ;
+		 }
+     close(LOG);
+		 close(NOZONE);
+	   $request = "FAIL";
+	} elsif ($password eq "") {
+     ftp_err_msg($hdfile, "FAILED: NO PASSWORD SPECIFIED");
+		 open(NOZONE, $vmenotzone) ;
+     open (LOG, ">>$ftpout/$hdfile.err");
+		 while (<NOZONE>) 
+		 {
+	     print LOG $_ ;
+		 }
+     close(LOG);
+		 close(NOZONE);
+	   $request = "FAIL";
+	} elsif ($changedby eq "") {
+     ftp_err_msg($hdfile, "FAILED: NO CHANGEDBY SPECIFIED");
+		 open(NOZONE, $vmenotzone) ;
+     open (LOG, ">>$ftpout/$hdfile.err");
+		 while (<NOZONE>) 
+		 {
+	     print LOG $_ ;
+		 }
+     close(LOG);
+		 close(NOZONE);
+	   $request = "FAIL";
+	}
+
+}
+
+
+sub new_header {
+   local ($hdfile) = @_;
+    open (HEAD, ">$dir_temp/$hdfile.head");
+    $nversion = $oversion + 1;
+    print HEAD "/*\n";
+    print HEAD "filename    $filename\n";
+    print HEAD "password    $password\n";
+    print HEAD "changedby   $changedby\n";
+    print HEAD "EmailAdd    $from\n";
+    print HEAD "request     $request\n";
+    print HEAD "version     $nversion\n";
+    print HEAD "END HEADER*/\n";
+    close(HEAD);
+    return;
+}
+
+sub minutes_old_p {
+	local($file, $mins) = @_;
+  local($then) = (time - $mins * 60);
+  (stat($file))[9] < $then;
+}
+
+sub zap_errfiles {
+    local($then) = (time - $err_wait * 60);
+    unlink grep((stat($_))[9] < $then, 
+		(<$ftpout/*.err>,  <$ftpin/*.err>));
+}
+
+sub do_request {
+  local ($hdfile) = @_;
+  if (($request eq "compile") or ($request eq "")) {
+    &compile_zon($hdfile);
+  } elsif ($request eq "mail") {
+    if ( $password ne &get_password($filename) ) {
+	   ftp_err_msg($hdfile, "Valhalla Zone Transmission ERROR.  INVALID PASSWORD");
+	   log_mesg ($logfile, "MAIL: $date $filename was requested with wrong password by $emailadd");
+    } else {
+      `$mailer -s \"$filename.zon Valhalla Zone Transmission\" \"$emailadd\" <$dir_zon/$filename.zon`;
+	   log_mesg ($logfile, "MAIL: $date $filename was sent to $emailadd");
+	 }
+  } elsif ($request eq "FAIL") {
+    return;
+  }
+}
+
+# checks if the file contains the %end keyword, and removes all from that
+# line forward.  Also, it gives an error message to the second file...
+# (also makes sure files gets lowercased if uploaded from an MS-DOS machine,
+#  removes line-feeds caused by MS-DOS machines, and understands
+#  compressed files.)
+sub compile_zon {
+  local ($hdfile) = @_;  
+  if ( $password ne &get_password($filename) ) {
+    ftp_err_msg($hdfile, "$filename Password Missmatch");
+	  ftp_err_msg($hdfile, "Your password $password does not equal my password");
+	  close(ERROR);
+	  unlink("$dir_temp/$hdfile.zone");
+	  unlink("$dir_temp/$hdfile.head");
+    return("ERROR");
+  }
+
+  if ( $versioning > 0 )
+  {
+      if (-f "$zonehome/$filename.zon") {
+	      $blop = `head -10  $zonehome/$filename.zon | grep -i version`;
+
+      	@dubedu = split(/\s+/, $blop);
+      	$oversion = @dubedu[1];
+
+      	if ( $version ne $oversion)
+      	{
+	  			ftp_err_msg($hdfile, "$filename FAILED! Version Mismatch!  My Version is $oversion");
+	  			ftp_err_msg($hdfile, "Your version $version does not equal my version $oversion.\n\nSincerely,\n\nThe Mud Compiler");
+				  unlink("$dir_temp/$hdfile.zone");
+				  unlink("$dir_temp/$hdfile.head");
+				  return("ERROR");
+      	}
+		 }
+  }
+
+  if ( $compile_opt == 1 ) {
+      $opt = "";
+  } else {
+      $opt = "-l";
+  }
+
+  rename ("$dir_temp/$hdfile.zone", "$dir_temp/$filename.zon");
+  `$vmc -v $dir_temp/$filename.zon > $ftpout/$filename.err 2>&1`;
+  ftp_err_msg($filename, "$filename HAD MATCHING PASSWORD");
+
+  if (-f "$dir_temp/$filename.data" ) {
+      &new_header;
+      open (ZONE, "$dir_temp/$filename.zon");
+      open (HEAD, ">>$dir_temp/$hdfile.head");
+      while (<ZONE>) {
+	  		print HEAD $_;
+      }
+      close (HEAD);
+      close (ZONE);
+
+      unlink("$dir_temp/$filename.zon");
+      rename("$dir_temp/$hdfile.head", "$dir_temp/$filename.zon");
+      ftp_err_msg($filename, "$filename Compiled Sucessfully");
+			$result_subject= "$date $filename Compiled Sucessfully";
+      `chmod 666 $dir_temp/$filename.*`;
+      `mv $dir_temp/$filename.* $nextzon `;
+  } else {
+      unlink("$dir_temp/$filename.zon");
+      unlink("$dir_temp/$hdfile.head");
+      ftp_err_msg($filename, "$filename HAD ERRORS \n");
+			$result_subject= "$date $filename HAD ERRORS";
+  }
+
+  log_mesg ($logfile, "COMPILE: $result_subject");
+}
+
+sub check_end {
+	local($filein, $error) = (@_, 0);
+  local($end, $zonename, $now) = (0);
+
+  $filename = $filein;	# filename is a global variable
+
+  if ($filein =~ /\.(gz|Z)$/) { # Compressed file
+		open(IN, "gzip -dc $filein |");
+		($filename = $filein) =~ s/\.(gz|Z)$//; 
+  } elsif ($filein =~ /\.(zip|ZIP)$/) {
+    @temp = `unzip $filein -d $ftpin >/tmp/tmp$$ 2>&1`;
+    open(TMP, "/tmp/tmp$$");
+    while(<TMP>) {
+    	if ($_ =~ "inflating:" ) {
+	    	`rm $filein >/dev/null`;
+    	}
+  	}
+    close(TMP);	
+    unlink("/tmp/tmp$$");
+    return(0);
+  } else {
+		if ($filein =~ /\.ZON$/) { # MS-DOS filename!
+	    local($newfile, $fname);
+	    $filein =~ /([^\/]+)$/;
+	    ($fname = $1) =~ tr/A-Z/a-z/;
+	    ($newfile = $filein) =~ s/([^\/]+)$/$fname/;
+	    rename($filein, $newfile);
+	    $filename = $newfile;
+	    $filein = $newfile;
+		}
+	open(IN, $filein);
+  }
+
+  ($zonename = $filename) =~ s/^.*\/(\w+)\.[^.]+$/$1/;
+
+  while (<IN>) {
+		($end = 1, last) if /^%end/;
+  }
+  
+	close(IN);
+
+  if ($end == 0) {
+		chop($now = `date`);
+
+		 	if (&minutes_old_p($filein, 20)){
+	    	unlink $filein;
+	    	print OUT "$now: $zonename: Deleted. Upload again.\n" if $error;
+			}
+		close(OUT) if $error;
+  } else {
+		if ($filein ne $filename) { # Compressed...
+	    open(IN, "gzip -dc $filein |");
+		} else {
+	    $filein .= $$;
+	    rename($filename, $filein);
+	    open(IN, $filein);
+	  }
+
+		open(OUT, "> $filename");
+
+		while (<IN>) {
+	    last if /^%end/;
+	    s/\r$//;		# Get rid of linefeeds.
+	    print OUT $_;
+		}
+		print OUT "%end\n";
+		close(IN);
+		close(OUT);
+
+		unlink($filein);
+  }
+  $end;
+}
+
+for(;;){
+
+umask 0;
+chdir($ftpin);
+@files = (<*>);
+if (@files) {
+    foreach $file (@files) {
+ 
+			chop($now = `date`);
+
+			if (&check_end("$ftpin/$file", "$ftpout/$file.err")) {
+				&get_header("$file");
+				&parse_header("$file");
+				&do_request("$file");
+			} 
+   }
+}
+
+&zap_errfiles;
+
+sleep 10;
+
+}		# Start the whole tirade again.
+

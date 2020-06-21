@@ -1,0 +1,95 @@
+# Configuration file for the serial client for Valhalla.
+# Copyright 1995 (C), All Rights Reserved (R), Valhalla I/S,
+# Norre Sogade 37C, 5th floor, 1370 Copenhagen K, Denmark.
+#
+# Use without license is considered piracy.
+#
+
+# This file is used to setup accounting information and is easilly
+# generalized to different countries.
+#
+
+# The name defaults to 'dollar'. Insert the name of your local
+# currency here.
+#
+Coinage Name = ~dollar~
+
+Account Overdue =
+~&c+yYour account is overdue.&nPlease report this message #1 to Papi.&cw&n~
+
+Account Closed =
+~&c+rYour account is closed.&nPlease report this message #2 to Papi.&cw&n~
+
+# Max Charge specifies how much is the maximum amount to credit a player
+# at noce (or which the player can credit himself via a credit card
+# transaction).
+# Min charge is minimum amount player can credit himself via CC transaction.
+
+Min Charge    =  1000
+Max Charge    = 10000
+
+# This specifies at what level there is no charge for using Valhalla.
+# Currently we have it set to 254, that's our "Co-Sysop".
+#
+Charge Level  =  200
+
+# The Account Free is how much is given free to each new player that is
+# created. If set to zero, you give the player no free playing time, and
+# the account limit will then have to be used.
+#
+Account Free  = 0
+
+# The account limit is how much you can be overdue on your player account
+# before it is closed down by the system. When the account is closed it can
+# only be reopened by a level 255 which loads & uses 'account' on that 
+# player's account.
+#
+Account Limit = 0
+
+#
+# Set to 1 if CC info is usable in the system, 0 otherwise.
+#
+#
+Credit Card = 1
+
+# The charge is in 1/100th of the Coinage above. I.e. an amount
+# of 250 means 2.5 kroner, 2.5 dollar, 2.5 yen, etc.
+#
+# This may be expanded on a need basis.
+#
+#   Minutes: 0 - 59
+#   Hours  : 0 - 23
+#   W days : Mon, Tue, Wed, Thu, Fri, Sat, Sun
+#
+#
+#  Format: <from-time> <to-time> <charge>
+#
+#    <from-time> must be less than <to-time>
+#
+#    This means, that in order to keep the entire day in a single
+#    statement, the time must be from 0000 to 2359
+#
+Base Charge = 0
+Base Range  = 0 0000 2359
+
+#
+#
+#Charge1 = 0000 2359 250
+#Charge2 = 0700 2200 125
+
+#
+# The flat rates are optional and are in the format:
+#
+#    Flatrate1 = <days> <price>
+#    Flatrate2 = <days> <price>
+#
+# For example, flatrate1 = 30 1995 makes a 30 day flat rate available for
+# 19.95 coinage units.
+#
+Flatrate1 =  365  2995
+Flatrate1 Message = ~Donate $29.95 for a year of full access.~
+
+#Flatrate2 = 365 36000
+Account Paypoint = 
+~&c+gYou can not enter that part of the game unless you give a donation.&cw&n~
+

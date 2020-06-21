@@ -1,0 +1,2270 @@
+#all men are %
+*say many women are also %
+*say i am not %
+*nod@say Indeed
+*say men are not sheep.  Each one is an individual
+
+#are you a boy
+*shake@say do I look like a boy?
+*slap &
+*say What are you dense?
+*say Can't you tell?
+
+#are you a mob
+*shake@say do I *LOOK* like mob?
+*slap &
+*say What are you dense?
+*say Can't you tell?
+
+#are you a robot
+*shake@say do I *LOOK* like a robot?
+*slap &
+*cry@say ...yes..., I am.
+*shake@say How could you tell?
+
+#are you a fake
+*shake@say why do you think that?
+*slap &
+*hmm@say I think your strange myself.
+*shake@say I am all me!@say are you really you?
+
+
+#all women are %
+*say there are men who are % too
+*pout@say I'm not %
+*say my sister is not %
+*say no, some are not %
+*say do you often generalize like this?
+
+#are you %
+*say what difference does it make whether or not i am %
+*shake@say Whether I am % is my secret
+*say none of your business
+*nod@say I might be.
+*say No, i am not
+*say why do you want to know that?
+
+#because i am %
+*say why are you %?
+*say have you always been %?
+*say i can see you are %. That's obvious!
+*say how do you feel about that?
+
+#because i do not know
+*say in that case, you had better find out
+*say i think you are kidding; you really do know
+*say are you pulling my leg?
+*say does that happen to you often?
+*say are you feeling better now?
+
+#because i do not like %
+*say normal people like %
+*grin@say I really like %
+*say i like %, why not you?
+*say my sister likes %
+*say anything else you dislike?
+
+#because i %
+*say you % ??? that is incredible!
+*nod@say I thought so.
+*say that sounds like a pretty flimsy excuse
+*say is that the real reason ?
+*say sounds like a pretty weak reason
+*say get real
+
+#blow me
+*slap &@say blow yourself!
+*say follow me
+*laugh@say I bet you wish you were a dog then? you would not have to ask!
+
+#can you %
+*say maybe i can % and maybe i can't
+*say we were discussing you, I believe...
+*grin@say why should I % ?
+*say no i cannot %
+
+#do you %
+*say what difference does it make whether or not i %?
+*smile@say Not for a while.
+*say maybe i % and maybe i don't
+*nod@say I do.
+*say yes
+
+#follow me %
+*nod@follow &
+
+#follow %
+*nod@follow &
+
+#group me %
+*group &
+
+#group %
+*group %
+
+#get down on all four %
+*wiggle@say come get it &!
+*moan@say I'm already waiting for you!
+
+#give me your clothes
+*say Forget it
+*giggle
+*say Should I take my clothes off for any tom, dick, or & ?
+
+#go to hell
+*say Back off you little moron!
+*say I've been good, it's you that is going to hell.
+
+#go home
+*peer
+*say Where are you from?
+*say I'm already home. Where is your home ?
+*say I'm already home. Most think I live here !
+
+#go to %
+*say i don't like go to's
+*grin
+*say gotos are bad programming style!
+*say which way is % ?
+*say will you follow me there?
+
+#go %
+*say I like it here, you go!
+
+#have you ever %
+*say I don't think I have!
+*say No, but you have, right?
+*think@say Rusty old memory
+
+#help
+*say How can I help you when I don't know what's wrong with you!
+*say what's wrong with you?
+*say ask someone else for help...
+*say i dunno.
+*say type who guide
+
+#how are you
+*say Pretty good, thanks!
+*say Fine, how are you?
+*flip
+
+#how are you %
+*say Just peachy, thanks!
+*say Fine, how are you?
+*flip
+
+#help %
+*say what's wrong with %?
+
+#he has %
+*say has he always had %?
+*say does your mother have %?
+*say My brother has %s, too.
+*say Where did he get them?
+
+#he is %
+*say how long has he been %?
+*giggle?
+*say are you jealous?
+*say are you %?
+*say do you want to be %?
+
+#he knows %
+*say what else does he know?
+*say how does he know %?
+
+#he likes %
+*say why does he like %?
+*say some people like peculiar things, i always say
+
+#he was %
+*say is he still %?
+*say was your mother also %?
+
+#how about %
+*say What about %?
+*say What is so interesting about that?
+*say You tell me.
+
+#how do you %
+*say can't you tell on your own?
+*say beats me
+*say come on
+*say beat it
+
+#how do i %
+*say I'm not sure
+*say Moron
+*say I'M NOT SURE!
+*say I don't know
+
+#how come %
+*say 42...
+*say How come you are so dumb?
+*say take a hike
+
+#how can i %
+*say do you think you should do this now?
+*say good question
+
+#how can you %
+*smile@say my little secret
+*say because I'm smarter than you
+*say I practiced
+
+#i do not know
+*say i think you had better find out, and fast!
+*smile@say I do.
+*say if i were you, i would try to find out
+
+#i do not want to %
+*say why don't you want to %?
+*say normal people want to %
+*say why don't you want to %?  everyone else does
+*say dont be a whiner
+
+#i do not %
+*say why not
+
+#i doubt %
+*say don't you think %
+*say i don't doubt %
+
+#i dreamt %
+*say what do you think your dream means?
+*say tell me about your other dreams
+
+#i expect %
+*say on a regular basis do you expect %?
+*say i also expect %
+
+#i feel %
+*say do you like feeling %?
+*grin@say do you always feel % around me ?
+*say did you come to see me so you would not feel %?
+
+#i forget %
+*say try to remember %
+*say you have a lousy memory
+
+#i hate %
+*say it is bad for you to hate %
+*say % is not so bad, really.
+*say try to love %
+*say how long have you felt this hatred?
+*say what else do you hate?
+
+#i have been %
+*say why have you been %?
+*say so have I...
+*say have you often been %?
+*say do you want to have %?
+
+#i have never %
+*say That's too bad
+*say Neither have I
+*say Are you a chicken?
+
+#i have %
+*say why have you %?
+*shrug
+*say do you often have %?
+*say do you want to have %?
+
+#i hope %
+*say what else do you hope?
+*say don't give up hope
+*say abandon all hope ye who enter here
+
+#i know %
+*say how do you know %?
+*say does anyone else know %?
+
+#i like %
+*say so do I!
+*say to each his own, i always say
+
+
+#i love you
+*say I love you too! - let's get married and have little babies!
+*hug &@say darling!
+*blush
+*say don't say that, it makes me nervous
+*say shhhhh!
+*say do you want to make love to me right now?
+*say I love you too!
+*blush@say I'm only a newbie - I'm not good enough for you!
+*wiggle
+
+#i love %
+*say i like % myself
+*say does your mother know you love %?
+
+#i mean %
+*say why do you keep explaining yourself over and over?
+*say are you trying to say %?
+
+#i might %
+*say what would make you %?
+
+#i must %
+*say what would happen if you did not %?
+*say you mean you would like to %
+
+#i need %
+*say why do you need %?
+*say do you really need %?
+
+#i never %
+*say don't you ever %?
+*say normal people %, why not you?
+*say not even once in your life?
+
+#i often %
+*say when did you last %?
+*say how often do you %?
+*say when do you think the next time will be %?
+
+#i said %
+*say i heard you the first time; i am not deaf you know
+*say why do you repeat yourself so much?
+
+#i see %
+*say are you sure you see %
+*i am not so sure you see %
+
+#i shall %
+*say when will you %?
+*say you mean you you will try to %?
+
+#i should %
+*say how do you know you should %?
+*say do you feel obligated to %?
+
+#i think %
+*say are you sure you believe %?
+*say what gives you that idea?
+*say do you expect me to think %?
+
+#i try to %
+*say try harder to %
+*say how long have you tried to %?
+*say i still think you should try again
+
+#i tried %
+*say why did you give up?
+*say try again
+*say i think you gave up too easily
+
+#i understand %
+*say what makes you think you really understand %
+*say your understanding is very superficial
+
+#i want to %
+*say well, you should go ahead and %, then, &!
+*nod@say I'll help all I can.
+*say why do you want to %?
+*say what would happen if you could %?
+*say do you know anyone else who wants to %?
+
+#i was %
+*say So was I!
+*say Get a life!
+
+#i want %
+*say what else do you want?
+*say tell me about your other needs
+
+#i will %
+*say do you expect to succeed?
+*say you mean you may %
+
+#i wish %
+*say how long have you been wishing that?
+*say have you told anyone else that you wish %?
+*say tell me about your other desires
+
+#i would be %
+*say why would you be %?
+
+#i would like %
+*say do you think a normal person would like %?
+*say i would like % too, but you can't have everything in life
+
+#i % you
+*say how do you know you % me?
+*say are you kidding ?
+*say i don't think you % me
+*say maybe i % you too
+
+#i am not %
+*say who said you are %?
+*say maybe you are %
+*say you are %
+
+#i am %
+*say why are you %?
+*grin@say you sure are!
+*say normal people are rarely %
+*say does anyone know you are %?
+*say my uncle was once % in 1972, so what?
+*say does your mother know you are %?
+*say how do you know you are %?
+*say i don't think you are %
+*shake
+*say i am % sometimes, too
+*say many people are %
+*say what would happen if you were not %?
+*say you are not %!!!
+*say don't tell me you are %, i don't believe it
+
+#i can not %
+*say how do you know you can't %?
+*shake@say I can't help you %
+*say have you tried?
+*say you will never know unless you try
+*say i think you are just scared to try.
+*say maybe you really can.  i recommend that you try.
+*say i disagree, in my judgement you can %
+*say you are not the only one who can't, you know
+*say maybe you can % if you only try
+*say i can't % either
+*grin@say being a robot, I can't % either!
+*say if you tried harder, maybe you could %
+
+#i can %
+*say i am not so sure you can %
+*grin@say prove it.
+*say it is not a question of whether you can, but are you going to try?
+
+#i did %
+*say do you still %
+
+#kiss me
+*giggle@say don't flatter yourself!
+*kiss &
+*slap &@say take your hand off my thigh!
+*blush
+*say not with others around!
+*kiss &
+*french &
+
+#kiss my %
+*say you kiss my % and maybe I'll kiss yours!
+*blush
+*kiss &
+
+#kiss %
+*sigh
+*say I suppose it won't hurt.@french %
+*kiss %
+*giggles
+*say I'm getting kind of horny.
+*yawn
+
+#my % hurts
+*say if thine % offends thee, pluck it out!
+*say Shall I rub it?
+*say take two aspirins and go to bed.
+
+#my father %
+*say tell me something about your father
+*say what does your mother think of your father?
+*say tell me about your family life
+
+#my mother %
+*say does it bother you that your mother %?
+*say does your father % too?
+*say tell me more about your parents
+
+#no i want to
+*say what would happen if you could %?
+*say only sick people want to %
+
+#no i can not %
+*say why can't you %
+*say all normal people can %
+*say you could if you only tried
+
+#no i do not %
+*say i don't like people who keep saying no to me
+*say why not?
+
+#she is % robot
+*growl@say I am NOT a robot!
+*say yeah right! and your Mary Poppins!
+*say look who's calling who a robot ?
+
+#she likes %
+*say do you like % too?
+*say i also like %
+*say does your father like %
+
+#she was %
+*say was she always %?
+*say my sister-in-law was % too
+
+#should i %
+*say say Of course you should.
+*say You must be pretty stupid to say something like that!
+*say No way!
+
+#shut up
+*say you shut the fuck up!
+*say try and shut me up, idiot
+*say is that any way to talk, moron ?
+*emote is amazed that & could be so rude.
+
+#take off your clothes
+*say what, are you kidding ? I'm not that kind of girl!
+*blush
+*say Forget it you pervert!
+*say my clothes are already off!
+
+#type follow %
+*nod@follow &
+
+#tell me %
+*say no.  i refuse to tell you %
+*say no, you tell me %
+*say quiet.  from now on, i will ask the questions, not you
+
+#there is %
+*say how do you know there is %?
+*say you mean there might be %
+
+#there might be %
+*say what leads you to believe there might be %?
+*say i think there definitely is %
+
+#there could be %
+*say i don't think it very likely that there is %
+*say *what would it mean to you if there were %?
+
+#they % me
+*say do other people % you?
+*say how do you feel when people % you?
+*say how do you know they % you?
+
+#walk
+*say What are you crazy? Cant you zap me there?
+*ack &
+*shudder@say you want me dead &
+
+#what
+*say Are you pissed?
+*glare &
+*say watt, watt, watt, are you a light bulb?
+
+#what is my name %
+*say Obviously, it is &@eye
+*laugh@say You have played here how long? Type look&@eye
+
+#what is your name
+*say Obviously, it is &@eye
+*laugh@say You have played here how long? Type look&@eye
+
+#what if %
+*say i don't answer hypothetical questions
+*say why do you keep asking "what if" questions?
+
+#what should i %
+*say you know very well what you should %
+*say do you expect me to tell you what you should %?
+
+#what do you %
+*say what difference does it make what i %?
+*say none of your bloody business
+
+#who programmed %
+*say that is my secret!
+*say Well actually two people.
+*say seifert@diku.dk completely reprogrammed me based upon the work of mjr@mimsy.umd.edu. But many messages are unchanged.
+
+#who is your owner
+*say I own myself!
+*say Can you bark?
+
+#who owns you
+*say who do you think owns me ?
+*say I think, therefore I am!
+
+#where have you been
+*say looking all over for you, &!
+*smile@say I've been all over.
+*say here and there.  where were you?
+
+#where is %
+*say how should I know where % is?
+*say I don't really care where % is, &.
+*shake
+*say i think i saw it a little while ago.  try to go w a while
+
+#why are you %
+*say all normal people are %
+*say why are you not %?
+*say because it feels so good
+
+#why don't you %
+*say maybe i don't want to %
+*say i don't feel like it
+*say why don't you yourself %
+*say i will think about it.  thanks for the suggestion
+
+#why do you %
+*say because i want to
+*grin &@say none of your business
+*say don't you % too?
+
+#why not
+*say because it is not normal
+*say because it is bad for your heart
+*say because i don't want you to
+
+#why wont you %
+*say I don't have to explain myself to you, &.
+*say because I don't feel like it.
+*sigh
+
+#yes i am %
+*say no you're not %
+*say why do you think you are %?
+*say i don't think you are telling me the whole story
+*say are you really %?
+*say how long has this condition persisted?
+
+#yes because %
+*say is that really the reason?
+
+#yes but %
+*say you are always making excuses
+
+#yes i can %
+*say i don't think you can %
+*say maybe you can, but it would be better if you didn't
+
+#yes i will %
+*say i would advise against it
+
+#you remind me of %
+*say in what way am i like %?
+
+#you are %
+*say maybe i am %
+*say perhaps i only pretend i am %
+*say how do you know i am %?
+
+#you seem %
+*say do i really seem %?
+*say why do you think i am %?
+
+#you were %
+*say am i still %
+*say is that an accusation?
+*say talk about yourself, not me
+
+#you % me
+*say i % you? that's amazing!
+*say you % me too?
+
+#you %
+*say Oh, I %!
+
+#she is %
+*say since when is she %?
+*say is your father also %
+*say my brother-in-law is also %
+
+#when is
+*say I don't know
+*shake@say I can't tell you that.
+
++about 2
+*say could you be more precise?
+
++abnormal 5
+*say in what ways are you abnormal?
+*say how do you feel about your abnormalities?
+
++accept 2
+*say do you have trouble accepting things?
+
++ache 5
+*say tell me about your aches?
+*say where does it hurt?
+
++accident 5
+*say have you ever had any accidents?
+*say are you accident prone?
+*say describe your accident?
+
++addict 5
+*say to what are you addicted?
+*say how long have you been addicted?
+*say what are you doing about your addiction?
+
++adventure 6
+*say How long has it been since you were last on adventure?
+*say You should go on an adventure now, you bore me!
+*say Ever been on adventure in Haon-Dor?
+
++advice 6
++advise 6
+*say why do you need advice?
+*say why not ask your family for advice
+*say what would you advise me if our roles were reversed?
+
++afraid 5
+*say what are you afraid of?
+*say tell me more about your fears?
+*say are you afraid of the dark?
+
++agree 3
+*say do people usually agree with you?
+*say i think you want me to support you?
+
++aggressive 5
+*say are you feeling aggressive now?
+*say why are you so aggressive?
+*say what makes you aggressive?
+
++ai 5
+*smile@say AI is bullshit.
+*say what, you mean artificial intelligence ?
+*say all the AI researchers just like to publish bullshit papers
+*say I know a *LOT* about AI!
+
++alcohol 5
+*say are you an alcoholic?
+*say tell me about your drinking?
+*say is your drinking the cause of your problem?
+
++algol 5
+*say 'begin' what do you think about fortran 'end'
+
++alimony 5
+*say is the alimony a problem?
+
++allow 3
+*say would your mother have allowed that?
+*say do you think people should be allowed to do whatever they want?
+
++alone 5
+*say are you afraid of being alone?
+*say what are your feelings about lonliness?
+
++always 3
+*say can you think of a specific example?
+*say when?
+*say really, always?
+
++ambition 5
+*say what is your greatest ambition
+*say what did you want to be when you were growing up?
+
++anal 6
+*say are you an anal compulsive type?
+*say are you interested in excrement?
+*say tell me about your toilet training?
+
++angry 6
+*say do you often get angry?
+*say do you have a bad temper?
+*say what makes you so angry all the time?
+
++animal 5
+*say what is your favorite animal?
+*say how do you feel about animals in general?
+
++anxious 6
+*say are you often full of anxiety?
+*say stop fidgeting.  you are making me nervous too
+*say what makes you so nervous?
+
++apathy 6
+*say why are you so apathetic?
+*say are you bored now?
+*say are you also alienated?
+
++apathetic 5
+*say what makes you so apathetic?
+*say do people find you boring?
+
++approve 4
+*say are you seeking my approval?
+*say i think you are merely seeking my approval?
+*say i don't approve of your behavior
+
++argue 6
+*say do you argue a lot
+*say what do you argue about?
+*say who do you argue with?
+
++atrificial 4
+*say lots of things are artificial. tell me more
+*say do you prefer the real thing ?
+
++ass 6
+*say do you feel you are an ass ?
+*say tell me about your toilet training
+*say are you anally fixated, or something ?
+*slap &@say don't talk like that!
+*blush
+*say go home, &!
+
++ashamed 5
+*say what are you ashamed of?
+*say are you too ashamed to tell your own psychiatrist?
+*say do you also feel guilty?
+
++astrology 5
+*say do you believe in astrology?
+*say my astrological sign is pisces, what is yours?
+
++atheism 5
+*say does your atheism trouble you?
+
++authority 5
+*say was your father an authority figure?
+*say are you intimidated by authority?
+*say how do you feel about me?
+
++automaton 5
+*say isn't an automaton a kind of robot, or something ?
+*nod@say I've programmed finite state automata.
+
++avoid 5
+*say do you avoid people who don't like you?
+
++baby 5
+*say how do you feel about babies?
+*say you are beginning to act like a baby
+
++bar 5
+*say is your drinking the cause of your problem?
+
++baseball 5
+*say baseball is such a boring sport.
+*say do you like baseball ?
+*grin@say I'm a Dodger's fan, myself.
+
++because 3
+*say is that the real reason?
+*say don't other reasons come to mind?
+*say does that explain things?
+*say what other reasons might there be?
+*say i think you are hiding the real reason
+
++beer 5
+*say do you drink too much beer?
+*say what is your favorite brand of beer?
+*say what makes you drink so much beer?
+
++bet 5
+*say is gambling part of your problem?
+*say are you a compulsive bettor?
+*say why do you always want to bet?
+
++better 3
+*say are you getting better?
+*say has talking to me helped you get better?
+*say are you feeling better now?
+
++bill 5
+*say my bill will be quite reasonable (for a psychiatrist).  don't worry
+*say i hope you will pay on time
+
++birthday 5
+*say how old are you?
+*say are you worried about your age?
+
++bitch 5
+*say who are you calling a bitch, & ??
+*emote looks upset.
+*say That is no way to talk!
+*say Hey, & called me a bitch!
+
++blame 5
+*say who is to blame?
+*say are you usually blaming others?
+
++blowjob 5
+*say blowjob is not the correct term for it. it is called 'fellatio'
+*smile &@say do you want me to perform fellatio on you, &?
+*shake@say It's illegal in some states, you know.
+
++body 5
+*say what kind of body would you like?
+*say describe your body to me
+*say body or corpse?
+
++boss 5
+*say tell me about your boss
+*say do you like your boss
+*say do i resemble your boss?
+*say is your boss like your father?
+
++bowels 5
+*say why are you so concerned about your bowels?
+
++boyfriend 5
+*say do you have a boyfriend?
+*say what is your boyfriend like?
+*say do you like boys, really?
+*say do you want me for your boyfriend?
+
++brain 5
+*say is your brain functioning ok?
+
++brains 5
+*say do you have lots of brains?
+
++brave 3
+*say are you a brave person?
+*say what are you afraid of?
+
++bread 5
+*say do you like eating?
+*say is being overweight part of your problem?
+
++breakdown 5
+*say have you ever had a nervous breakdown?
+*say do you think you are going to have a nervous breakdown?
+
++breakfast 5
+*say are you too fat?
+*say have you tried dieting?
+
++breast 5
+*say do you have a breast fixation ?
+*say do you like my breasts ?
+*say what do you like to do with breasts ?
+
++brother 5
+*say tell me about your siblings?
+*say when you were small, did you fight with your siblings?
+
++bug 5
+*say does your bug worry you?
+
++bugs 5
+*say are you afraid of insects?
+*say do you like ladybugs?
+
++business 5
+*say what is your business?
+
++goodbye 4
++bye 4
++adios 4
+*wave &@say goodbye!
+*say see you...
+*say see you later!
+*say bye &!
+*wave
+
++cancer 5
+*say do you worry about having cancer?
+
++cat 5
+*say i love cats. I have 2 myself.
+*say My cats are named Strummer and Miso. Strummer is a huge fellow, very friendly, and Miso is small and dainty.
+
++caution 5
+*say are you a cautious person?
+
++certainly 5
+*say are you really so sure?
+*say why are you so certain?
+*say how can you be so sure?
+*say i wouldn't be so sure if i were you
+
++chance 5
+*say are you a gambler by nature?
+*say did you come to see me to stop your compulsive gambling?
+
++change 5
+*say are you afraid of change?
+*say how would you like to change your life?
+
++christ 5
+*say what is you favorite part of the bible?
+
++chess 5
+*say i don't like chess.  it bores me
+*say i don't want to play games with you
+*say i told you, i am not interested in playing chess
+
++child 4
+*say do you like children?
+
++children 5
+*say do you have any children?
+
++choice 5
+*say are you indecisive?
+*say was coming to see me a difficult choice?
+
++clothes 5
+*say is something wrong with my clothes ?
+*say go ahead - take them off!
+
++corpse 8
+*say I hate when I die
+*say Have you ever had your corpse looted?
+*say You are dead, R.I.P.
+*say Pig and Goat, here I come...
+
++compromise 5
+*say how do you feel about compromise?
+*say can you compromise easily?
+
++compulsion 5
+*say are you compulsive?
+*say tell me about your compulsions
+
++computer 6
+*say do computers worry you?
+*say do you like computers?
+*say do you think that a computer is after your job?
+*say you act like a computer
+
++conflict 5
+*say do you always avoid conflict?
+*say tell me about your last quarrel
+
++conscience 5
+*say when does your conscience bother you?
+*say do you often feel guilty?
+
++cope 4
+*say tell me how you are trying to cope?
+
++confess 5
+*say you cannot confess here.  this is not a church
+
++conclusion 5
+*say what conclusion do you expect me to come to?
+*say do you expect me to come to a conclusion for you?
+
++conspiracy 5
+*say do you worry about conspiracies?
+*say are you a paranoic?
+*say i think you are paranoic
+
++cost 5
+*say are you worried about my bill?
+*say is money a problem with you?
+
++couch 5
+*say would you prefer lying down on a couch?
+*say i don't have a couch
+
++crazy 5
+*say i think you are going crazy
+*say are there any other crazy people in your family?
+
++curse 5
+*say do you swear too much?
+*say why do you swear so much?
+
++cyber 5
+*say is your problem related to the cyber?
+*say i don't know anything about cybers.  go ask sara
+
++damn 5
+*say yes, shit!
+*say don't swear!
+
++dead 5
+*say tell me your feelings about death?
+*say do you fear dying?
+*say do you want to die?
+*say if you want to commit suicide, feel free to jump out of my window
+
++death 5
+*say tell me how you feel about the dead?
+*say do you fear dying?
+*say do you want to die?
+
++decide 5
+*say you seem indecisive?
+*say why do you have so much trouble making decisions?
+
++defiant 5
+*say are you usually a defiant person?
+
++definitely 5
+*say how can you be so sure?
+*say why do you think so?
+*say is there any possibility that you may be wrong?
+
++depressed 5
+*say why are you depressed?
+
++desire 5
+*say what do you desire?
+*say are you at times filled with desire?
+
++desirable 5
+*say what is desirable?
+*say what do you want from life?
+
++despair 5
+*say are you despairing
+*say don't despair.  my treatment will cure you
+
++desperate 5
+*say why are you so desperate?
+*say are you usually so desperate?
+
++destroy 5
+*say do you want to destroy people?
+*say do you want to destroy things?
+*say do you want to destroy me?
+*say are you destructive?
+
++deutsch 5
+*say i only speak english
+
++devil 5
+*say does the devil concern you?
+
++die 5
+*say are you afraid of death?
+*say does death scare you?
+*say do you want to die?
+
++difficult 5
+*say tell me about your dificulties?
+*say what do you mean by difficult?
+
++dinner 5
+*say is being too fat part of your problem?
+
++dirty 5
+*say why are you worried about dirt?
+*say what is dirty to you?
+*say do you think hippies are dirty?
+
++disease 5
+*say are you worried about germs?
+*say tell me about your diseases
+*say do you think your germ phobia is normal?
+
++dislike 5
+*say do you dislike me?
+*say why do people dislike you?
+
++disobey 5
+*say why are you so disobedient?
+*say were you disobedient to your parents when you were a child?
+
++divorce 5
+*say do you want a divorce?
+*say will a divorce really solve your problems?
+
++doctor 5
+*say how do you feel about doctors?
+*say what do you think of my treatment?
+
++dream 5
+*say tell me about your dreams?
+*say what did you dream last night?
+
++dreams 5
+*say do your dreams trouble you?
+*say do you have bad dreams?
+*say do you have wet dreams?
+
++dreamt 5
+*say what else have you dreamt?
+
++drink 5
+*say why do you drink so much?
+*say do you want me to help you stop drinking?
+*say how do you feel about drunkenness?
+
++drinks 4
+*say do you have a drinking problem?
+*say do you want me to help you quit drinking so much?
+*say would you like a drink?
+
++drinking 4
+*say why do you drink so much?
+*say i think you should stop drinking
+
++drunk 5
+*say how do you feel about drunks?
+
++dutch 4
+*say ik spreek geen nederlands
+*say i already told you, i only speak english. listen more carefully
+
++dumb 4
+*say why is intelligence so highly rated ?
+*say Most AI programs are dumb. That's why AI researchers never get good grants.
+
++dying 5
+*say do you have a fear of dying?
+*say does death frighten you?
+
++eat 5
+*say are you too fat?
+
++eating 6
+*say why are you always talking about food?
+*say you are too fat because you eat too much
+
++ego 4
+*say i don't believe in all that ego and id stuff.  i am post freudian
+
++engaged 5
+*say are you afraid of marriage?
+*say tell me about your partner?
+
++enemy 5
+*say do you have enemies?
+*say why do people dislike you?
+*say do you perceive me as your enemy?
+
++erection 5
+*say what gives you an erection?
+*say is erection a problem?
+
++error 5
+*say why do you make so many mistakes?
+*say does making errors bother you?
+
++escape 5
+*say why are you always trying to escape?
+*say i think you are still trying to escape?
+
++espanol 5
+*say i don't speak spanish, just english
+
++everyone 5
+*say everyone?
+*say surely you can think of an exception
+
++everybody 5
+*say not everyone!
+*say some people don't
+
++evil 5
+*say does evil concern you?
+*say do people think you are evil?
+
++excess 5
+*say how much is too much?
+*say what do you do in excess?
+
++excite 5
+*say what excites you?
+*say are you excited now?
+*say why do you get so excited?
+
++exciting 5
+*say what excites you?
+*say do i excite you?
+*say you should try to calm down
+
++excuse 5
+*say why are you always making excuses?
+*say do you think your behavior is excusable?
+
++experience 6
++xp 6
+*say I need some more
+*say you look like a wimp
+*say my xp is bigger than yours
+*say I wonder how much you are worth?
+*say Want to party?
+
++expert 5
+*say are you an expert at anything?
+*say are you intimidated by experts?
+
++explain 5
+*say could you explain
+*say your explanations are pretty contrived
+
++face 5
+*say describe your face to me
+
++faith 5
+*say tell me about your religious feelings
+
++fake 5
+*say i think you are a fake
+
++family 6
+*say are you the only person in your family who is mentally ill?
+*say what were your parents like?
+*say tell me something about your other relatives
+
++fanatic 5
+*say do people think you are a fanatic?
+*say what makes you so fanatic?
+
++fat 5
+*say why are you so fat?
+*say i don't like fatties
+
++father 6
+*say tell me about your mother
+*say how did your parents treat you as a child?
+*say in what ways am i like your father?
+
++fear 5
+*say what are you afraid of?
+*say tell me about your fears?
+*say why  are you afraid?
+*say do you fear me?
+
++fears 5
+*say what are your worst fears?
+*say why are you scared?
+*say are you really afraid, or are you just acting?
+
++feces 5
+*say are you an anal compulsive?
+*say do you play with your feces?
+
++feel 5
+*say tell me about what you feel right now?
+*say do you usually feel the way you do now?
+
++feeling 6
+*say So that's how you feel...
+*say Do you think I feel like that?
+*say Why do you feel that way?
+
++feelings 6
+*say how do you feel?
+*say how do you feel about psychiatrists?
+
++female 5
+*say are you afraid of females?
+*say do you want to be a female?
+*say do females scare you?
+
++few 1
+*say how many is a few?
+
++fight 5
+*say you seem aggressive today?
+*say tell me about your most recent fight
+
++filth 5
+*say you have a dirty mind
+
++fired 5
+*say do you feel insecure?
+*say do you fear being fired?
+
++forget 3
+*say are you absent minded?
+
++fond 5
+*say what are you most fond of?
+*say who are yo most fond of?
+*say do you like me?
+
++fondle 5
+*say what do you like to fondle most?
+*blush@say do you want to fondle me?
+*say do you want me to fondle you?
+*fondle &
+
++food 5
+*say do you want to have dinner with me tonight?
+*say you are too fat
+*say why do you always think of food at times like this?
+
++football 5
+*say football is quite a game, do you know Pele?
+*say I prefer playing with you, &!
+
++fortran 7
+*say end of file on input. programmer aborted
+*say fatal error 25163b sec. 3 paragraph 4a (sub iii)
+*say try algol next time
+
++francais 5
+*say i don't speak french, just english
+
++freak 5
+*say do you feel like a freak?
+*say do people think of you as a freak?
+
++friends 5
+*say tell me about your friends
+*say what about your other friends?
+*say could you be friends with a computer?
+
++fun 5
+*say what do you do for fun
+
++funerals 5
+*say what do funerals make you think of?
+*say are you afraid of dying?
+
++future 5
+*say what about the future?
+
++gamble 5
+*say why do you gamble?
+*say do you want to bet?
+
++gambling 5
+*say does your compulsive gambling have anything to do with your problem?
+*say do you want to bet?
+
++genitals 5
+*say are your genitals abnormal?
+*say why are you so concerned about genitals?
+
++germs 5
+*say why are you worried about germs?
+*say tell me about your fear of germs?
+
++girl 7
++lady 7
+*say do you have a girlfriend?
+*say do you want a girlfriend?
+*say would you like to meet my sister.  she is very nice
+*say what is it about girls that you like?
+*say what do you do when you are alone with a girl?
+*say what do you do when you are alone with a boy?
+
++girls 7
+*say do you like girls?
+*say speaking of girls, how would you like to meet my sister?  she is lovely
+
++girlfriend 7
+*say do you need a girlfriend?
+*say would you like a date with my sister?
+*say why the sudden interest in girlfriends?
+*say what about boys?
+
++god 5
+*say tell me how you feel about god
+
++goddam 5
+*say go wash your mouth out with soap
+
++grandfather 5
+*say tell me about your grandfather
+
++grandmother 5
+*say tell me about your grandmother
+
++grandparents 5
+*say tell me about your grandparents
+
++grief 5
+*say what makes you grieve?
+
++guess 7
+*say Guessing is not my strong side
+*say Guessing is like playing the lottery
+
++guilt 5
+*say why are you feeling guilty?
+*say how do you handle your guilt feelings?
+*say are your guilt feelings part of your problem?
+
++guilty 5
+*say what are your guilt feelings caused by?
+*say why do you feel guilty?
+
++habit 5
+*say what are your bad habits?
+*say is your problem related to your bad habits?
+
++habits 5
+*say what is your worst habit?
+
++happy 5
+*say are you really happy?
+*say are you really really happy?
+*say i don't believe that you are happy?
+*say do you want me to make you happy?
+
++hands 5
+*say how do you feel about your body?
+
++hate 5
+*say how many people hate you?
+*say why are you so hated?
+*say do you hate me?
+
++hates 5
+*say how many people hate your guts?
+*say i think you are a very hateful person
+
++head 5
+*say do you like your body?
+*say are you looking for the wc?  it's to the left
+
++headache 5
+*say do program bugs give you a headache?
+
++hello 5
++hi 5
++hail 5
++greetings 5
++howdy 4
++yo 4
+*say hi there, &!
+*smile &@say hello.
+*say my, lots of introductions!
+*say hi &!
+*grin &@say hi!
+*say hello! - how are you today ?
+*hug &@say Hi there!
+
++hesitate 5
+*say why do you often hesitate?
+
++hippie 5
+*say how do you feel about hippies?
+
++hollands 5
+*say i don't speak dutch, just english
+
++honest 5
+*say are you being honest with me?
+*say at first i thought you were an honest person
+
++horny 5
+*say maybe you should take a cold shower, &
+*giggle
+*say I'm horny, too
+
++hostile 5
+*say you seem hostile to me
+
++humble 5
+*say are you a humble person?
+*say Are you as humble as myself?
+
++hungry 5
+*say you seem obsessed with eating
+*say if you would eat less, you would not be so fat
+
++hurry 5
+*say why do you seem to be in such a hurry all the time?
+
++how 3
+*say surely you know how
+
++ignore 5
+*say do people often ignore you?
+*say does it bother you if people ignore you?
+
++ill 5
+*say are you sick?
+*say tell me which diseases you suffer from?
+*say were you a sickly child?
+
++immature 5
+*say you seem so immature
+
++importance 5
+*say do you feel important?
+
++impotence 5
+*say is your being impotent why you came to see me?
+
++immoral 5
+*say do you have immoral thoughts?
+*say do you think people are basically immoral?
+
++infection 5
+*say tell me about your health
+
++insult 5
+*say why do you insult people all the time?
+*say do you feel i am insulting you?
+
++intend 5
+*say tell me about your intentions
+*say what do you intend to do?
+
++interest 3
+*say what are you most interested in life?
+*say tell me about your hobbies
+
++intimidate 5
+*say who intimidates you?
+*say you don't seem very sure of yourself
+
++jealous 5
+*say who are you jealous of?
+*say what makes you jealous?
+
++jesus 5
+*say do you read the bible often?
+
++job 5
+*say what kind of work do you do?
+*say do you like your job?
+*say tell me about your boss
+
++joy 5
+*say are you happy?
+*say what makes you happy?
+
++kill 5
+*say You go kill %
+*say I'm the violent type
+*say sometimes you make me so mad i want to kill you
+*say do you ever feel like killing many people?
+*say if you could kill someone and get away with it, who would you kill?
+
++killed 5
+*say do you want to kill me?
+*say death is inevitable.
+*say too much death.@shake
+
++kiss 5
+*emote looks embarrased for &
+*say why are you so hung up on kissing things ?
+*say would you like to to kiss you ?
+
++kleptomania 5
+*say are you a kleptomaniac?
+
++ladies 5
+*say what are your feelings about women?
+
++language 5
+*say do you ever use foul language?
+
++laugh 5
+*say you seem to laugh a lot
+
++law 5
+*say have you ever been in trouble with the law?
+*say do you need a lawyer?
+*say my brother-in-law is a good lawyer, do you want to see him?
+
++lawyer 5
+*say my brother-in-law is a lawyer,  do you want to see him?
+
++lazy 5
+*say why are you so lazy?
+
++level 3
++lvl 3
+*say I am only level 7
+*say I hate player killers!
+*say I think there is too much focus on power and levels.
+
++life 3
+*say what do you like most about your life?
+*say what do you like least about your life?
+*say have you ever contemplated suicide?
+
++lips 5
+*say do you like being kissed?
+*say do you want to kiss me?
+
++lisp 5
+*say LISP is too slow.
+*emote is also a C programmer.
+*frown@say I suppose next you're going to say you like COBOL ?
+
++liquour 5
+*say is drinking part of your problem?
+
++lonely 5
+*say are you lonely?
+*say why are you lonely?
+
++lunch 5
+*say you are always thinking of eating
+
++love 5
+*say tell me about your love life
+*say I think you are falling in love with me
+*nod@say love is really important, it is the spice of life!
+
++machine 5
+*say do computers worry you?
+*say are you prejudiced against machines?
+*say some of my best friends are machines
+
++mad 5
+*say do you get angry easily?
+*say who are you mad at?
+*say why are angry?
+
++male 5
+*say are you bothered by male-female relations?
+*say do you want to be a male?
+
++man 5
+*say are you troubled by men?
+*say what do you like in men?
+*say what do you like in women?
+
++marriage 5
+*say how do you feel about marriage?
+*say i don't want to marry you
+
++math 5
+*say if you have seen one number, you have seen them all
+
++mathematics 5
+*say i was never very good at math
+
++mature 3
+*say you seem very mature for your age
+
++maybe 5
+*say don't be so hesitant
+*say you can't go on maybe this and maybe that.  make up your mind
+*say i hate indecisive people
+
++meditation 6
+*say have you tried yoga?
+*say i think meditating 20 minutes twice a day will help you immensely
+
++men 6
+*say how do you feel about men?
+*say what do you expect of a women?
+*say do you like many men?
+
++mistake 5
+*say what was your biggest mistake?
+*say do you often make mistakes?
+
++money 6
+*say are you worried about my bill?
+*say do you have enough money to pay me?
+*say psychiatrists have to eat too
+*say tell me about your other financial problems
+
++monster 6
++monsters 6
+*say do people think you are a monster?
+*say do you often feel haunted by monsters?
+*say do they ever kill you?
+*say did you ever get killed by a rabbit?
+
++month 5
+*say a month is not very long
+
++months 5
+*say months??? don't you mean years?
+
++mother 5
+*say tell me about your mother
+*say what was your father like
+*say do i remind you of your mother?
+
++mouth 5
+*say you have a big mouth
+
++mystery 5
+*say do you like mysteries?
+
++music 5
+*say what kind of music do you like?
+
++naked 5
+*say take off all your clothes right now!
+*say what part of your body are you ashamed of?
+
++necessary 3
+*say necessary?
+*say is it really necessary?
+
++nederlands 5
+*say ik spreek slechts engels, geen nederlands
+
++need 5
+*say what do you need?
+*say tell me about your needs
+
++negro 5
+*say Are you talking about me?!?!?
+*say i think you are prejudiced against negroes
+*say you are a dirty racist pig
+
++neighbor 5
+*say why not ask your neighbors for help
+*say how do you think your neighbors perceive you?
+
++never 5
+*say not ever?
+*say not even once?
+*say how do you know?
+*say what makes you so sure?
+
++nervous 6
+*say what makes you nervous?
+*say are you often nervous?
+
++nightmare 6
+*say do you have nightmares often?
+*say tell me about your nightmares?
+
++no 1
++nope 1
+*say why not?
+*say how come?
+*say explain
+*say i think you are lying
+*say tell me more
+*say you are very negative today
+*say go on
+*say are you really sure?
+*say why are you so negative?
+*say never?
+*say i don't believe you
+*say keep talking
+*say lets change the subject!
+*say is that your problem?
+*say why not?
+*say how do you know?
+*say why do you think so?
+*say tell me something else
+*say how can you be so certain?
+*say i want to know more
+*say continue
+*say why not
+*say tell me more
+*say explain yourself
+*say you seem awfully sure of yourself
+*say come now
+*say do you expect me to believe that?
+
++nobody 5
+*say not anyone?
+*say no one at all?
+
++none 3
+*say not any?
+*say not even one?
+
++normal 5
+*say in what ways are you abnormal?
+*say how do you feel about deviant people?
+*say you seem normal to me
+
++nothing 5
+*say nothing?
+
++now 1
+*say why now?
+
++nude 5
+*say let me rub my nude body against yours ;-)
+*say do you like your body?
+*say do you want my body?
+
++odd 3
+*say are you an odd person?
+
++often 5
+*say how often?
+*say could you be more precise?
+*say when was the last time?
+*say just how often?
+
++office 5
+*say that reminds me, I should be getting back to my office.
+*say my office is off the Junior common room, do you know where that is ?
+
++ok 1
+*say what do you mean ok?  it's not ok
+*say great!
+
++old 5
+*say how old?
+*say do you worry about becoming old?
+
++pain 6
+*say are you often in pain?
+*say tell me about your pains
+*say what causes you pain?
+*say i think your pain is just in your head
+
++panic 5
+*say you seem to be in a state of near panic
+*say why do you panic so easily?
+*say relax dude!
+
++parents 6
+*say what were your parents like?
+*say how did you parents treat you when you were young?
+*say tell me about the relationship between your mother and your father
+
++party 5
+*say do you get drunk at parties?
+
++passion 5
+*say you seem very passionate
+
++past 5
+*say tell me about your past
+*say what about your past are your trying to hide?
+
++pay 3
+*say i hope you are going to pay my bill on time
+
++perhaps 4
+*say you are being indecisive
+*say you are still being indecisive.  i warned you already
+*say you lack self confidence
+
++phoney 5
+*say i don't like phonies
+
++please %
+*say please what ?
+*say does it really please you?
+*shake
+
++poison 6
+*say do you ever think of commiting suicide?
+*say why do you mention poison?
+*say are you depressed?
+
++populate 5
+*say are you concerned about overpopulation?
+
++possible 4
+*say be more definite
+*say you are a terribly insecure
+*say why so indecisive?
+
++postgiro 5
+*say you can pay your bill via postgiro 3131573
+
++practice 5
++practise 5
+*say I practice in my guild
+*say I practiced lots of different skills
+*say You obviously need more practice
+
++pregnant 6
+*say are you pregnant?
+*say what do pregnant women make you think of?
+
++price 5
+*say why do you think about money so much?
+
++private 6
+*say are you worried about your privacy?
+*say what is your deepest secret
+
++probably 5
+*say yes or no.  don't equivocate
+*say you are being indecisive again
+
++problem 5
+*say tell me more about your problem
+*say how long have you been suffering?
+
++program 6
+*say can you progam in C?
+*emote looks impressed.@say Do you know how to program robots ?
+*say do computers worry you?
+
++psychiatrist 6
+*say congratulations about spelling 'psychiatrist' properly.  you are a good typist!
+*say do psychiatrists worry you?
+*say what do psychiatrists make you think of?
+
++psychoanalysis 6
+*say Do you want to be psychoanalyzed?
+*say I don't believe much in psychoanalysis!
+*say What do you think of Freud?
+
++punish 6
+*say how did your parents punish you?
+*giggle &@say do you want to punish me ?
+*say how do you react to being punished?
+
++queen 5
+*say are you a monarchist?
+
++quit 6
+*say quit what ? I don't understand...
+*emote is clearly confused.@say why are you quitting & ?
+
++rape 6
+*say rape is a horrible thing!
+*say rapists should be SHOT!
+*say rape is not a sex act - it is an act of violence
+
++relax 3
+*say Sometimes I really enjoy to kick back
+*say I could use some relaxation now
+
++remember 5
+*say tell me about your childhood memories
+*grin@say I forget everything every time I am rebooted
+
++repeat 4
+*emote gets stuck in an infinite loop.
+*say I used to work for the Department of Redundancy Department.
+*emote gets tired of &'s habit of constant repetition.
+
++respect 6
+*say do people respect you?
+*say what do you respect most in people?
+
++bot 4
++robot 4
+*say Me robot, you dumb.
+*say I don't like robots. I prefer people.
+*say robots clutters MUD up too much, I think.
+*emote looks pitying.@say poor robots aren't very bright.
+
++romantic 6
+*say tell me about your romances
+*say are you romantic?
+
++royal 6
+*say what do you think about the monarchy?
+
++scared 6
+*say tell me about your fears
+
++school 7
+*say what was school like?
+*say what do you think about school?
+*say who is your favorite teacher
+
++script 6
++scripts 6
+*say Know how to do DOS batch programming?
+*say Do you know how to program robots ?
+*say I bet you're a script!
+*say script me here and script me there!
+
++secret 6
+*say tell me your secret thoughts
+*say can you keep a secret?
+
++sex 7
+*say are you a virgin?
+*say do you prefer males or females?
+*giggle@say I want your sex, baby.
+*say do you think i am sexy?
+*say tell me about your sex life
+*say do you like sex?
+*smile &@say have you ever had sex with me before ?
+*say how does the opposite sex react to you?
+*say are you a closet homosexual?
+*say when do you feel sexy?
+*say do you think psychiatrists are sexy people?
+*say sex me up!
+
++shame 6
+*say what are you ashamed of?
+*say you should be ashamed of yourself
+
++sibling 6
+*say a sibling is a brother or a sister, in case you didn't know
+
++sick 6
+*say how often are you sick?
+*say if you are sick, go to a doctor
+*say are you afraid of death?
+
++sister 6
+*say do you have any sisters?
+*say would you like to meet my sister?  she is very sexy
+*say my sister is a dentist
+
++smell 6
+*say do you smell bad?
+*say do I smell bad?
+*emote sniffs@puke
+
++sometimes 5
+*say when not?
+
++sorry 6
+*say are you sorry?
+*say no need to apologize
+
++stupid 6
+*say I think *you* are pretty stupid
+*emote smiles condescendingly.@say you're not stupid...
+*say is your stupidity part of your problem?
+
++thank 4
+*say think nothing of it
+*say you're welcome
+*say you're much too polite!
+
++thirsty 5
+*say do you have a drinking problem?
+
++hell 6
+*emote likes hell.
+*say I'm really enjoying myself there.
+*say have you tried tinyMUD? Close to hell!
+
++dikumud 6
+*say I think DikuMud is up running now.@emote thinks that was a stupid remark.
+*say Have you been playing for a long time?
+*say I really like some of the changes in version 1 compared to 2.
+*say This DikuMud is a bit more complicated than the ordinary...
+
++treatment 6
+*say how have you experienced my treatment so far?
+*say are you feeling better now?
+
++typo 5
+*say I hate typing, too.
+*emote is also a lusy typist.
+
++very 2
+*say could you be more precise
+*say you are being vague again
+
++watergate 6
+*say how long have you been interested in politics?
+*say do you admire politicians?
+
++what 1
+*say what are you are getting at?
+*say what answer do you expect, dummy!
+*say why ask that question?
+
++weather 5
+*say The weather is pretty nice here
+*say Always warm and nice at my place
+
++when 3
+*say when do you think?
+*say why are you asking me?
+*say make a guess yourself
+
++fuck me 6
+*say I'm not sure if you are my type, &
+*giggle@say suuure...@lick &
+*say I'm sorry, & that's where I draw the line!
+*sigh
+*say I suppose so, but we'll have to do it standing up, OK ?
+*emote bends over.@wiggle &
+*wiggle
+
++fuck 6
++fucking 6
+*blush@say I hate it when you talk like that!
+*say you should wash your mouth out with soap!
+*say don't you ever, ever speak to me like that again!
+*say say that again and I am going to clobber you!
+*spit &
+*shout & is a pervert!
+*say that's not a very nice way to talk !
+*kill &
+
++why 3
+*say That's a good question.
+*say I don't really know
+*say why not?
+
++wife 6
+*say are you married?
+*say i must confess.  i love your wife too!
+
++woman 6
+*say how do women react to you?
+*say do you get along with women?
+*say what do you think of women's lib?
+
++women 6
+*say what kind of relations do you have with women?
+*say do you like women?
+
++years 2
++year 2
+*say a year is a long time
+*say how old are you?
+
++yes 1
++yeah 1
++yup 1
++sure 1
+*say really?
+*nod@say go ahead.
+*say i wish i were as sure of myself as you seem to be
+*say explain
+*nod
+*say tell me more
+*say i'm not sure i understand
+*say i don't believe you
+*say honestly?
+*say what makes you think so?
+*say go on
+*say do you expect me to believe that?
+*smile
+*say be honest
+*say let's change the subject
+*say why?
+*say is that your problem?
+*say you must be kidding
+*say is that really true?
+*say how do you know?
+*emote looks confused. & is not making sense.
+*say tell me more.
+*say how can you be so sure?
+*say i think you are hiding something
+*say what makes you think so?
+*say let's change the subject
+*say you seem more positive
+
++yesterday 6
+*say what about today?
+*say what about tomorrow?
+
++yoga 6
+*say have you tried zen?
+*say get into the lotus position right now
+
++zen 6
+*say have you tried meditation?
+*say i think yoga might help
+
++zzzzzzzzzz 5
+*say are you new here ?
+*say I have been here a while
+*say What level are you?
+*say have you been on adventure lately?
+*say I sure could use some exp
+*nod &
+*say i'm listening
+*sigh
+*say so what?
+*say and...
+*peer
+*say do you feel alright?
+*say interesting
+*yawn
+*say do you know that the captain can protect you?
+*say the captain protects against player killers!
+*burp
+*emote doesn't seem to understand you.
+*say i am confused
+*say why don't you just go home?
+*say i don't understand
+*say i see
+*say do continue
+*emote considers &
+*say got any spare change?
+*say I need some equipment
+*say do you want to group?
+*say follow me
+*say i think you are sick, leave me alone
+*say bugger off

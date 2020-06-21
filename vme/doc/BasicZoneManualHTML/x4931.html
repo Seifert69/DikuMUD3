@@ -1,0 +1,314 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Formatting code descriptions and examples</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="VME basic zone writing manual"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Color and formatting codes"
+HREF="ch08.html"><LINK
+REL="PREVIOUS"
+TITLE="Formatting codes"
+HREF="x4879.html"><LINK
+REL="NEXT"
+TITLE="Color code descriptions and examples"
+HREF="x4988.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>VME basic zone writing manual</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x4879.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 9. Color and formatting codes</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4988.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="FORMATDESCR"
+>9.3. Formatting code descriptions and examples</A
+></H1
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>&amp;&amp;</DT
+><DD
+><P
+>If you want a single '&#38;' you must let the <ACRONYM
+CLASS="ACRONYM"
+>VME</ACRONYM
+>
+know that you don't want a formatting or a color code.  You do this by
+doubling the '&amp;' sign.  The following is a couple examples:</P
+><DIV
+CLASS="INFORMALTABLE"
+><P
+></P
+><A
+NAME="AEN4939"
+></A
+><TABLE
+BORDER="1"
+FRAME="border"
+CLASS="CALSTABLE"
+><COL><COL><THEAD
+><TR
+><TH
+>text</TH
+><TH
+>Result</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+>&amp;&amp;</TD
+><TD
+>&amp;</TD
+></TR
+><TR
+><TD
+>&amp;&#38;&amp;&amp;</TD
+><TD
+>&amp;&amp;</TD
+></TR
+><TR
+><TD
+>&amp;&amp;&amp;&amp;&amp;&amp;</TD
+><TD
+>&amp;&amp;&amp;</TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+></DIV
+></DD
+><DT
+>&amp;l</DT
+><DD
+><P
+>When you want to turn off the formatting you use this formatting
+code.  Everything after the '&amp;l' will be shown exactly as you put it
+in the string.</P
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;&amp;l
+*     *
+ *   *
+  * *
+   *
+  * *
+ *   *
+*     *
+                 </PRE
+></DD
+><DT
+>&amp;f</DT
+><DD
+><P
+>The formatted text as we have already said is default.  If you
+want to turn the formatted text back on after some literal text you will
+have to use the '&amp;f' code.  The following is an example of some
+literal text followed by a short bit of formatted text.</P
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;&amp;l
+*     *
+ *   *
+  * *
+   *
+  * *
+ *   *
+*     *
+
+&amp;fThe X marks the spot!  &#13;</PRE
+></DD
+><DT
+>&amp;s&lt;#&gt;</DT
+><DD
+><P
+>If you want to input extra spaces in a sentence with out using the
+'&amp;l' you can	 add them one at a time or multiple by using the
+'&amp;s' code.</P
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;This sentence has 10 spaces&amp;s10before the first word before.&#13;</PRE
+></DD
+><DT
+>&amp;n</DT
+><DD
+><P
+>If you want to input some blank lines with out using the literal
+code you can add a '&amp;n'for each line you want.</P
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;This sentence&amp;n&amp;n&amp;n would look like this:
+
+
+This sentence
+
+
+would look like this:&#13;</PRE
+></DD
+><DT
+>&amp;x</DT
+><DD
+><P
+>The line break is made for use with the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> language.  You will
+not need it to do regular text formatting.  It was added so a
+<ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> could split a string that is loaded from a file.  If you
+don't understand the following example don't worry it is explained more
+in the <ACRONYM
+CLASS="ACRONYM"
+>DIL</ACRONYM
+> reference.</P
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;mystrlist:=split(string,"&amp;");&#13;</PRE
+></DD
+><DT
+>&amp;h</DT
+><DD
+><P
+>On terminals that can handle it the '&amp;h' will clear the
+screen.  If you wanted a sign that would clear the screen before
+displaying when a character looked at it would look like this.</P
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;&amp;h&amp;l
+*     *
+ *   *
+  * *
+   *
+  * *
+ *   *
+*     *
+
+&amp;fThe X marks the spot!  &#13;</PRE
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x4879.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4988.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Formatting codes</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ch08.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Color code descriptions and examples</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
