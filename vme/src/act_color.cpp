@@ -132,7 +132,7 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
 
     sprintf(cbuf, "&c%s&b%s", fore, back);
     color = str_escape_format(cbuf, FALSE);
-    if ((change == TRUE))
+    if (change == TRUE)
     {
         print_str = UPC(ch)->color.change(full_name, color);
         sprintf(cbuf, "Color %s%s changed.<br/>", print_str,
