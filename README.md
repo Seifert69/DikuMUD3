@@ -3,6 +3,8 @@ DikuMUD III using HTML and websockets.
 
 D-Day June 21, 2020
 
+Get in touch if you'd like to contribute. There's a long to-do list. Everything from non-programming to HTML to C(++).
+
 How to build & launch
 
 First build the binaries
