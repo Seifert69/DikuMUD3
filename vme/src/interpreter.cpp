@@ -395,7 +395,7 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
             CHAR_COMBAT(ch)->changeSpeed(cmd_ptr->combat_speed);
     }
 
-    if (cmd)
+    if (*cmd)
     {
         if (cmd_ptr->excmd)
             FREE(cmd_ptr->excmd);
