@@ -44,7 +44,7 @@ struct zone_info_type zone_info = {0, 0, 0, 0};
 
 extern int memory_total_alloc;
 
-struct room_direction_data *create_direction_data(void);
+class room_direction_data *create_direction_data(void);
 
 /* By using this, we can easily sort the list if ever needed */
 void insert_unit_in_zone_list(zone_type *zp, class unit_data *u)
