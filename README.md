@@ -40,8 +40,7 @@ And then telnet localhost 4242. But telnet is best for debugging
 To open the client
 
 cd ../www/
-firefox mudenter.html
+firefox index.html
 
-host = localhost
-port = 4280
+Set the host to your fqdn or localhost and set the port to match mplex (4280 if you used that)
 And you'll see the welcome screen in Firefox
