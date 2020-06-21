@@ -11,7 +11,12 @@
 #include <string.h>
 #include <unistd.h>
 
-#ifdef LINUX
+/* Per https://sourceforge.net/p/predef/wiki/OperatingSystems/, this identifies
+ *  Mac OS X. This is needed since OS X doesn't have crypt.h and instead uses
+ *  unistd.h for these mappings. */
+#if defined __APPLE__ && __MACH__
+#include <unistd.h>
+#elif defined LINUX
 #include <crypt.h>
 #endif
 
