@@ -835,6 +835,12 @@ const char *GetTag(const char *p, char *pTag, int nTagMax)
 */
 void cConHook::StripHTML(char *dest, const char *src)
 {
+    if (arg.g_bModeRawHTML)
+    {
+        strcpy(dest, src);
+        return;
+    }
+
     const char *p;
 
     p = src;

@@ -75,7 +75,7 @@ void alarm_signal(int sig)
 
 void ShowUsage(const char *name)
 {
-    fprintf(stderr, "Usage: %s [-a] [-h] [-c] [-e] [-r] [-t] [-l <filename>] [-p <num>] [-d <path>] [-s <port>] [-a <address>]\n", name);
+    fprintf(stderr, "Usage: %s [-a] [-h] [-c] [-e] [-r] [-t] [-x] [-l <filename>] [-p <num>] [-d <path>] [-s <port>] [-a <address>]\n", name);
     fprintf(stderr, "  -h  This help screen.\n");
     fprintf(stderr, "  -c  ANSI Colour when set, TTY when not.\n");
     fprintf(stderr, "  -e  Echo mode (echo chars locally).\n");
@@ -85,6 +85,7 @@ void ShowUsage(const char *name)
     fprintf(stderr, "  -a  Internet address of server (localhost default).\n");
     fprintf(stderr, "  -s  Internet port of server (4999 default).\n");
     fprintf(stderr, "  -l  Name of the logfile (default: ./mplex.log).\n");
+    fprintf(stderr, "  -x  Output raw HTML on telnet (nice for debugging).\n");
     fprintf(stderr, "  -w  Use Websockets.\n");
     exit(0);
 }
@@ -104,6 +105,7 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
     arg->g_bModeEcho = FALSE;
     arg->g_bModeRedraw = FALSE;
     arg->g_bModeTelnet = FALSE;
+    arg->g_bModeRawHTML = FALSE;
     arg->bWebSockets = FALSE;
     log_name = str_dup("./mplex.log");
 
@@ -120,6 +122,10 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
         case 'h':
         case '?':
             ShowUsage(argv[0]);
+            break;
+
+        case 'x':
+            arg->g_bModeRawHTML = TRUE;
             break;
 
         case 'c':

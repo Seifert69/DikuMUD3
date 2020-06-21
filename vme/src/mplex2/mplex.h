@@ -22,6 +22,7 @@ struct arg_type
     int g_bModeEcho;
     int g_bModeRedraw;
     int g_bModeTelnet;
+    int g_bModeRawHTML;
     int bWebSockets;
 };
 
