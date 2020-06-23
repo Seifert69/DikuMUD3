@@ -1074,12 +1074,12 @@ var
    desc  : string;
 code
 {
-   guilds := {"Udgaard Fighter", "Udgaard Thief", "Udgaard Healer",
-               "Udgaard Conjurer", "Nymgaard Ranger", "Midgaard Paladin", "Midgaard Sorcerer",
-               "Khorsabad Assassin", "Necromancer", "Nymgaard Druid", "Midgaard Dark Knight" };
-   initi := {"F", "T", "H",  
-              "C", "R", "P", "S",
-              "A", "N",  "D", "DK"};
+   guilds := {"Udgaard Fighter", "Midgaard Dark Knight", "Midgaard Paladin", "Nymgaard Ranger",  
+              "Udgaard Thief", "Khorsabad Assassin", "Udgaard Healer", "Nymgaard Druid", 
+               "Necromancer", "Udgaard Conjurer", "Midgaard Sorcerer" };
+   initi := {"F", "DK", "P",  
+              "R", "T", "A", "H",
+              "D", "N",  "C", "S"};
 
    if ((nGuild > length(guilds)-1) or (nIdx > 2) or (nGuild < 0) or (nIdx < 0))
    {
@@ -1205,6 +1205,7 @@ dilend
 dilbegin nanny_guild( arg : string );
 external
    string listselector(sl : stringlist);
+   setguild(nIdx:integer, nGuild : integer);
 
 var
    exdp      : extraptr;
@@ -1270,6 +1271,15 @@ code
       }
 
       self.profession := n-1;
+
+      // Really we shouldn't set the guild here. But I'll do it just
+      // to save new players the hassle of finding their matching guild.
+      // Because right now the guild & teacher system is super rigid.
+      // I imagine that in a different game than Valhalla you'll be able
+      // to find many teachers that are not necessarily in guilds, etc.
+
+      setguild(0, n-1);
+
 
       // Now let's move Nanny to the next step
       substring(exdp.names, "login guilds");
