@@ -3,7 +3,7 @@ DikuMUD III using HTML and websockets.
 
 D-Day June 21, 2020
 
-Get in touch if you'd like to contribute. There's a long to-do list. Everything from non-programming to HTML to C(++).
+Get in touch if you'd like to contribute. There's a long to-do list. Everything from non-programming to HTML to C(++). Drop a mail to seifert at dikumud.com. Look at the end of this file for a few items.
 
 Documentation goes here:
 
@@ -46,3 +46,22 @@ And then `telnet localhost 4242`. But telnet is best for debugging
 
 Set the host to your fqdn or localhost and set the port to match mplex (4280 if you used that)
 And you'll see the welcome screen in Firefox
+
+---
+
+I would appreciate help with:
+
+   * Mapping: I was considering using cMUD to do mapping. I've already added the DIL snippet
+     to output what I think are the codes. I think I have two young helpers that can assist 
+     me with the actual mapping and turning a boring map into a hand-drawn piece of art :)
+     
+     However, I also noticed for example this project. Maybe that'd better than cMUD for mapping?
+     
+     https://github.com/demonnic/mudlet-map-reader
+
+   * Anyone wanting to improve the client. Keep-alive would be great. Ability to choose multiple 
+     CSS files for color. Ability to script macros for players (how about macro'ing in JS).
+     That annoying Firefox security bar popping up over the text input could probably be 
+     circumvented by asking for the password in a pop-over rather than changing the input field type.
+     Ways to improve the accessible client further. 
+     
