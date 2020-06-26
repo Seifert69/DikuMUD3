@@ -13037,20 +13037,24 @@ $1n tells you, 'I can not teach you any more';
 $1n tells you, 'You must be unaffected by magic, otherwise I can't teach you';
 $1n tells you, 'Remove all equipment, please.';
 
-  0;   35; swimming                      ;   5; 14000;   10;      0;
-  0;   35; fleeing                       ;   5; 14000;   10;      0;
+  0;   35; backstab                      ;   5;  4000;   10;      0;
+  0;   35; bash                          ;   5;  9000;   10;      0;
   0;   35; climb                         ;   5; 14000;   10;      0;
   0;   35; consider                      ;   5;  9000;   10;      0;
   0;   35; diagnostics                   ;   5;  4000;   10;      0;
   0;   35; first aid                     ;   5;  4000;   10;      0;
+  0;   35; fleeing                       ;   5; 14000;   10;      0;
+  0;   35; hide                          ;   5;  4000;   10;      0;
+  0;   35; herbs                         ;   5;  4000;   10;      0;
   0;   35; search                        ;   5;  4000;   10;      0;
   0;   35; shield                        ;   5;  9000;   10;      0;
   0;   35; rescue                        ;   5;  4000;   10;      0;
+  0;   35; scan                          ;   5;  9000;   10;      0;
+  0;   35; search                        ;   5;  9000;   10;      0;
   0;   35; sneak                         ;   5;  9000;   10;      0;
-  0;   35; backstab                      ;   5;  4000;   10;      0;
-  0;   35; hide                          ;   5;  4000;   10;      0;
-  0;   35; bash                          ;   5;  9000;   10;      0;
+  0;   35; skin                          ;   5;  9000;   10;      0;
   0;   35; scroll use                    ;   4;  4000;   10;      0;
+  0;   35; swimming                      ;   5; 14000;   10;      0;
   0;   35; wand use                      ;   4;  4000;   10;      0;"
 end
 
@@ -13072,6 +13076,7 @@ $1n tells you, 'I can not teach you any more.';
 $1n tells you, 'You must be unaffected by magic, otherwise I can't teach you';
 $1n tells you, 'Remove all equipment, please.';
 
+  0;   35; fit                           ;   4;  4000;  10;          0;
   0;   35; dagger                        ;   4;  4000;  10;          0;
   0;   35; sling                         ;   4;  4000;  10;          0;
   0;   35; hand axe                      ;   9;  9000;  10;          0;
@@ -13098,17 +13103,22 @@ $1n tells you, 'I can not teach you any more, find a better teacher!';
 $1n tells you, 'You must be unaffected by magic, otherwise I can't teach you';
 $1n tells you, 'Remove all equipment, please.';
 
-  0;  100; detect magic                  ;   4;  4000;   5; 10;      0;
-  0;  100; raise magic                   ;   9;  9000;   8;          0;
-  0;  100; energy bolt                   ;   9;  9000;   5; 10;      0;
-  0;  100; cure light wounds             ;   4;  4000;   5; 10;      0;
-  0;   80; cause light wounds            ;  14; 14000;  10;          0;
-  0;  100; raise divine                  ;   9;  9000;   8;          0;
-  0;  100; detect undead                 ;   4;  4000;   5; 10;      0;
-  0;  100; fart                          ;   4;  4000;   5; 10;      0;
-  0;   50; detect alignment              ;  14; 14000;  10; 20;      0;
-  0;  100; detect magic                  ;  14; 14000;  10; 20;      0;
-  0;  100; raise magic                   ;   4;  4000;   5; 10;      0;"
+  0;   35; burn                          ;   4;  4000;   5;          0;
+  0;   35; calm                          ;   4;  4000;   5;          0;
+  0;   35; cure light wounds             ;   4;  4000;   5;          0;
+  0;   35; cause light wounds            ;   4;  4000;   5;          0;
+  0;   35; detect undead                 ;   4;  4000;   5;          0;
+  0;   35; detect alignment              ;   4;  4000;   5;          0;
+  0;   35; detect magic                  ;   4;  4000;   5;          0;
+  0;   35; electrical shock              ;   4;  4000;   5;          0;
+  0;   35; energy bolt                   ;   4;  4000;   5;          0;
+  0;   35; fart                          ;   4;  4000;   5;          0;
+  0;   35; mire                          ;   4;  4000;   5;          0;
+  0;   35; protection from good          ;   4;  4000;   8;          0;
+  0;   35; raise divine                  ;   4;  4000;   8;          0;
+  0;   35; raise magic                   ;   4;  4000;   5;          0;
+  0;   35; sense life                    ;   4;  4000;   5;          0;
+  0;   35; thorn strike                  ;   4;  4000;   5;          0;"
 end
 
 %reset

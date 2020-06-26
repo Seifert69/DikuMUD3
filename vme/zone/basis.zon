@@ -5378,7 +5378,7 @@ code
       self.weapons[WPN_FIST]          := self.weapons[WPN_FIST] + 5;
       self.weapons[WPN_LONG_SWORD]    := self.weapons[WPN_LONG_SWORD] + 5;
       
-      self.spells[SPL_MIND]           := self.spells[SPL_MIND] + 5;
+      self.spells[SPL_CALM]           := self.spells[SPL_CALM] + 5;
       self.skills[SKI_RESCUE]      := self.skills[SKI_RESCUE] + 5;
       self.skills[SKI_SKIN]  := 5;
 

@@ -758,7 +758,7 @@ int teach_init(struct spec_arg *sarg)
 {
     const char *c;
     int i, count, n;
-    int realm = -1;
+    //int realm = -1;
     char buf[MAX_STRING_LENGTH];
     struct teach_packet *packet;
     struct skill_teach_type a_skill;
@@ -908,6 +908,8 @@ int teach_init(struct spec_arg *sarg)
 
         if (packet->text == spl_text)
         {
+            /* We have a spell teacher in Udgaard teaching all kinds of magic. 
+               
             if (realm == -1)
             {
                 realm = spell_info[i].realm;
@@ -920,7 +922,7 @@ int teach_init(struct spec_arg *sarg)
                          UNIT_FI_ZONENAME(sarg->owner), spl_text[i]);
                 c = str_line(c, buf);
                 continue;
-            }
+            }*/
         }
 
         /* Get cost in gold */
