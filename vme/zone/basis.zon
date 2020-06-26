@@ -5133,9 +5133,9 @@ code
    self.skill_points:=80;
    self.prompt:= "%mana%m/%e%e/%hp%h> ";
    i:=dildestroy("send_prompt@update",self);
-   dilcopy ("send_prompt@update",self);
+   dilcopy("send_prompt@update",self);
 
-   if (self.level<200)
+   if (self.level < 200)
    {
       dilcopy ("regen_pc@update",self);
       dilcopy ("stomach@update",self);
@@ -5286,7 +5286,7 @@ code
 
    self.skills[SKI_FLEE]        := 50;
    self.skills[SKI_CONSIDER]    := 50;
-   self.skills[SKI_SKIN]  := 5;
+   self.skills[SKI_SKIN]        :=  5;
    self.skills[SKI_DIAGNOSTICS] := 50;
 
    if (self.profession == PROFESSION_FIGHTER)
@@ -5300,12 +5300,11 @@ code
       self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0;
       self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]-2;
 
-
       self.weapons[WPN_FIST]        :=  5;
-      self.weapons[WPN_HAND_AXE]  :=  5;
-      self.weapons[WPN_DAGGER]  :=  5;
-      self.weapons[WPN_BROAD_SWORD] :=  5;
-      self.skills[SKI_SKIN]  := 5;
+      self.weapons[WPN_DAGGER]      :=  5;
+      self.weapons[WPN_HAND_AXE]    :=  5;
+      self.weapons[WPN_LONG_SWORD]  :=  5;
+      self.skills[SKI_SKIN]         :=  5;
 
       exec("alias kd kill deer", self);
       exec("alias kb kill badger", self);
@@ -5330,6 +5329,7 @@ code
 
       self.weapons[WPN_FIST]         :=  5;
       self.weapons[WPN_DAGGER]       :=  5;
+      self.weapons[WPN_SHORT_SWORD]  :=  5;
 
       exec("alias kd kill deer", self);
       exec("alias kb kill badger", self);
@@ -5348,7 +5348,7 @@ code
       self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
       self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+0;
 
-      self.weapons[WPN_FIST]     :=  5;
+      self.weapons[WPN_FIST]          :=  5;
       self.weapons[WPN_MACE]          :=  5;
       self.spells[SPL_CURE_WOUNDS_1]  :=  5;
       self.skills[SKI_FIRST_AID]      :=  5;
@@ -5376,7 +5376,8 @@ code
       self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+0;
 
       self.weapons[WPN_FIST]          := self.weapons[WPN_FIST] + 5;
-      self.weapons[WPN_DAGGER]        := self.weapons[WPN_DAGGER] + 5;
+      self.weapons[WPN_LONG_SWORD]    := self.weapons[WPN_LONG_SWORD] + 5;
+      
       self.spells[SPL_MIND]           := self.spells[SPL_MIND] + 5;
       self.skills[SKI_RESCUE]      := self.skills[SKI_RESCUE] + 5;
       self.skills[SKI_SKIN]  := 5;
@@ -5402,7 +5403,6 @@ code
       self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
       self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2;
 
-      self.weapons[WPN_QUARTERSTAFF]  :=  5;
       self.weapons[WPN_DAGGER]        :=  5;
 
       self.skills[SKI_SCROLL_USE]    :=  5;
@@ -5439,6 +5439,8 @@ code
 
       self.weapons[WPN_FIST]       := self.weapons[WPN_FIST] + 5;
       self.weapons[WPN_SLING]      := self.weapons[WPN_SLING] + 5;
+      self.weapons[WPN_LONG_SWORD] := self.weapons[WPN_LONG_SWORD] + 5;
+
       self.skills[SKI_RESCUE]      := self.skills[SKI_RESCUE] + 5;
       self.skills[SKI_SCAN]        := self.skills[SKI_SCAN] + 5;
       self.skills[SKI_SKIN]  := 5;
@@ -5483,7 +5485,9 @@ code
       self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
       self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2;
 
-      self.weapons[WPN_QUARTERSTAFF] := self.weapons[WPN_QUARTERSTAFF] + 5;
+      self.weapons[WPN_LONG_SWORD] := self.weapons[WPN_LONG_SWORD] + 5;
+      self.weapons[WPN_HAND_AXE] := self.weapons[WPN_HAND_AXE] + 5;
+
       self.spells[SPL_MIRE]    := self.spells[SPL_MIRE] + 5;
       self.spells[SPL_PRO_GOOD]  := self.spells[SPL_PRO_GOOD] + 5;
       self.skills[SKI_BASH]         := self.skills[SKI_BASH] + 5;
@@ -5531,7 +5535,6 @@ code
       self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
       self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2;
 
-      self.weapons[WPN_QUARTERSTAFF]  :=  5;
       self.weapons[WPN_DAGGER]        :=  5;
 
       self.skills[SKI_SCROLL_USE]    :=  5;
@@ -5555,21 +5558,21 @@ code
    }
    else if (self.profession == PROFESSION_ASSASSIN)
    {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+4;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP]+2;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]-2;
-      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]-0;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+0;
+      self.abilities[ABIL_STR] := self.abilities[ABIL_STR]+0;
+      self.abilities[ABIL_DEX] := self.abilities[ABIL_DEX]+4;
+      self.abilities[ABIL_CON] := self.abilities[ABIL_CON]+0;
+      self.abilities[ABIL_HP]  := self.abilities[ABIL_HP]+2;
+      self.abilities[ABIL_DIV] := self.abilities[ABIL_DIV]-2;
+      self.abilities[ABIL_MAG] := self.abilities[ABIL_MAG]-0;
+      self.abilities[ABIL_CHA] := self.abilities[ABIL_CHA]-0;
+      self.abilities[ABIL_BRA] := self.abilities[ABIL_BRA]+0;
 
       self.skills[SKI_BACKSTAB]    := self.skills[SKI_BACKSTAB] + 5;
       self.skills[SKI_CLIMB]       := self.skills[SKI_CLIMB] + 5;
-
       self.weapons[WPN_FIST]         := self.weapons[WPN_FIST] + 5;
       self.weapons[WPN_DAGGER]       := self.weapons[WPN_DAGGER] + 5;
       self.skills[SKI_SKIN]  := 5;
+
       exec("alias kd kk deer", self);
       exec("alias kb kk badger", self);
       exec("alias kf kk fox", self);

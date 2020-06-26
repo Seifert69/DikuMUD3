@@ -843,7 +843,6 @@ dilend
 
 
 
-
 /* Copy onto the jail, maintainer should be unique */
 /* example: jailmaintain("captain@midgaard", "accuse_room@midgaard") */
 
@@ -879,6 +878,7 @@ code
    goto loop;
 }
 dilend
+
 
 
 dilbegin fnpri(FN_PRI_RESCUE-1) jailstay(du : integer);
@@ -982,6 +982,7 @@ code
 dilend
 
 
+
 /* The string office should equal the symbolic reference to where  */
 /* prisoners must be brought.                                      */
 
@@ -1031,6 +1032,8 @@ code
    goto loop;
   }
 dilend
+
+
 
 dilbegin captain(jailname : string);
 external
