@@ -626,10 +626,7 @@ struct unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version,
         if (version >= 70)
             g_nCorrupt += pBuf->Read8(&fptr->priority); //MS2020 added
         else
-        {
-            slog(LOG_ALL, 0, "bread_func() version < 70");
             fptr->priority = 43;
-        }
 
         g_nCorrupt += pBuf->Read16(&fptr->heart_beat);
         g_nCorrupt += pBuf->Read16(&fptr->flags);
