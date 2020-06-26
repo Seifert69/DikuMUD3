@@ -13076,7 +13076,7 @@ $1n tells you, 'I can not teach you any more.';
 $1n tells you, 'You must be unaffected by magic, otherwise I can't teach you';
 $1n tells you, 'Remove all equipment, please.';
 
-  0;   35; fit                           ;   4;  4000;  10;          0;
+  0;   35; fist                          ;   4;  4000;  10;          0;
   0;   35; dagger                        ;   4;  4000;  10;          0;
   0;   35; sling                         ;   4;  4000;  10;          0;
   0;   35; hand axe                      ;   9;  9000;  10;          0;
