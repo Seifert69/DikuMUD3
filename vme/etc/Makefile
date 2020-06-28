@@ -1,37 +1,37 @@
-# Makefile for lib/ files.
+# Makefile for converting def to dat files.
 #
-# To use, write: make
+# To use, write: make all
 
-LIBDIR = ../lib/
+# default is the etc/ directory
+OUTDIR = ../etc/
 
 
-all:	$(LIBDIR)races.dat $(LIBDIR)spells.dat $(LIBDIR) \
-      	$(LIBDIR)weapons.dat $(LIBDIR)abilities.dat $(LIBDIR)color.dat \
-		$(LIBDIR)commands.dat $(LIBDIR)professions.dat 
+all:	$(OUTDIR)races.dat $(OUTDIR)spells.dat $(OUTDIR) \
+      	$(OUTDIR)weapons.dat $(OUTDIR)abilities.dat $(OUTDIR)color.dat \
+		$(OUTDIR)commands.dat $(OUTDIR)professions.dat 
 
-$(LIBDIR)races.dat: races.def
-	perl ../bin/defconvert.perl ./races.def $(LIBDIR)races.dat
+$(OUTDIR)races.dat: races.def
+	perl ../bin/defconvert.perl ./races.def $(OUTDIR)races.dat
 
-$(LIBDIR)spells.dat: spells.def
-	perl ../bin/defconvert.perl ./spells.def $(LIBDIR)spells.dat
+$(OUTDIR)spells.dat: spells.def
+	perl ../bin/defconvert.perl ./spells.def $(OUTDIR)spells.dat
 
-$(LIBDIR)commands.dat: commands.def
-	perl ../bin/defconvert.perl ./commands.def $(LIBDIR)commands.dat
+$(OUTDIR)commands.dat: commands.def
+	perl ../bin/defconvert.perl ./commands.def $(OUTDIR)commands.dat
 
-$(LIBDIR)weapons.dat: weapons.def
-	perl ../bin/defconvert.perl ./weapons.def $(LIBDIR)weapons.dat
+$(OUTDIR)weapons.dat: weapons.def
+	perl ../bin/defconvert.perl ./weapons.def $(OUTDIR)weapons.dat
 
-$(LIBDIR)abilities.dat: abilities.def
-	perl ../bin/defconvert.perl ./abilities.def $(LIBDIR)abilities.dat
+$(OUTDIR)abilities.dat: abilities.def
+	perl ../bin/defconvert.perl ./abilities.def $(OUTDIR)abilities.dat
 
-$(LIBDIR)professions.dat: professions.def
-	perl ../bin/defconvert.perl ./professions.def $(LIBDIR)professions.dat
+$(OUTDIR)professions.dat: professions.def
+	perl ../bin/defconvert.perl ./professions.def $(OUTDIR)professions.dat
 
-$(LIBDIR)color.dat: color.def
+$(OUTDIR)color.dat: color.def
 	../bin/defcomp -c ./color
-	mv color.dat $(LIBDIR)
 
 clean:
-	-rm -f  $(LIBDIR)spells.dat $(LIBDIR)weapons.dat $(LIBDIR)abilities.dat $(LIBDIR)races.dat \
-	        $(LIBDIR)professions.dat $(LIBDIR)color.dat  $(LIBDIR)commands.dat  \
-			$(LIBDIR)tmp.cpp $(LIBDIR)tmp.lin $(LIBDIR)swap.blk
+	-rm -f  $(OUTDIR)spells.dat $(OUTDIR)weapons.dat $(OUTDIR)abilities.dat $(OUTDIR)races.dat \
+	        $(OUTDIR)professions.dat $(OUTDIR)color.dat  $(OUTDIR)commands.dat  \
+			$(OUTDIR)tmp.cpp $(OUTDIR)tmp.lin $(OUTDIR)swap.blk
