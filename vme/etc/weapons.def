@@ -1250,7 +1250,6 @@ attack hleather = {39, 5, 9}
 attack chain    = {43, 4,10}
 attack plate    = {48, 3,11} /* shamshir */
 
-= SW
 index           = WPN_SAPPARA
 name            = sappara
 sphere          = WPN_SWORD
