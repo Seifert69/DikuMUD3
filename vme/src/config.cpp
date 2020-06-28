@@ -451,12 +451,12 @@ void CServerConfiguration::Boot(char *srvcfg)
 
     char *read_info_file(char *name, char *oldstr);
 
-    slog(LOG_OFF, 0, "Reading in colors.");
+    slog(LOG_OFF, 0, "Reading in etc / colors.");
     touch_file(str_cc(m_etcdir, COLOR_FILE));
-    m_pColor = read_info_file(str_cc(m_libdir, COLOR_FILE), m_pColor);
+    m_pColor = read_info_file(str_cc(m_etcdir, COLOR_FILE), m_pColor);
     color.create(m_pColor);
 
-    slog(LOG_OFF, 0, "Reading in logo.");
+    slog(LOG_OFF, 0, "Reading in etc / logo.");
     touch_file(str_cc(m_etcdir, LOGO_FILE));
     m_pLogo = read_info_file(str_cc(m_etcdir, LOGO_FILE), m_pLogo);
 }

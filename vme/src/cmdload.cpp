@@ -141,10 +141,10 @@ void command_read(void)
     struct command_info *cmdptr = NULL, *lastptr = NULL;
     struct cmdload_struct *intcmd;
 
-    touch_file(str_cc(g_cServerConfig.m_libdir, COMMAND_DEFS));
-    if (!(fl = fopen(str_cc(g_cServerConfig.m_libdir, COMMAND_DEFS), "rb")))
+    touch_file(str_cc(g_cServerConfig.m_etcdir, COMMAND_DEFS));
+    if (!(fl = fopen(str_cc(g_cServerConfig.m_etcdir, COMMAND_DEFS), "rb")))
     {
-        slog(LOG_ALL, 0, "FATAL: Unable to open " COMMAND_DEFS);
+        slog(LOG_ALL, 0, "FATAL: Unable to open etc/ " COMMAND_DEFS);
         exit(0);
     }
     slog(LOG_ALL, 0, "Booting Commands from: " COMMAND_DEFS);

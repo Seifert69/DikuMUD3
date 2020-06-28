@@ -529,10 +529,10 @@ static void spell_read(void)
     char *pCh;
     FILE *fl;
 
-    touch_file(str_cc(g_cServerConfig.m_libdir, SPELL_DEFS));
-    if (!(fl = fopen(str_cc(g_cServerConfig.m_libdir, SPELL_DEFS), "rb")))
+    touch_file(str_cc(g_cServerConfig.m_etcdir, SPELL_DEFS));
+    if (!(fl = fopen(str_cc(g_cServerConfig.m_etcdir, SPELL_DEFS), "rb")))
     {
-        slog(LOG_ALL, 0, "unable to create lib file");
+        slog(LOG_ALL, 0, "unable to create etc file " SPELL_DEFS);
         exit(0);
     }
 

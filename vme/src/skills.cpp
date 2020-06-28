@@ -494,10 +494,10 @@ static void profession_read(void)
     char *pCh;
     FILE *fl;
 
-    touch_file(str_cc(g_cServerConfig.m_libdir, PROFESSION_DEFS));
-    if (!(fl = fopen(str_cc(g_cServerConfig.m_libdir, PROFESSION_DEFS), "rb")))
+    touch_file(str_cc(g_cServerConfig.m_etcdir, PROFESSION_DEFS));
+    if (!(fl = fopen(str_cc(g_cServerConfig.m_etcdir, PROFESSION_DEFS), "rb")))
     {
-        slog(LOG_ALL, 0, "unable to read lib/" PROFESSION_DEFS);
+        slog(LOG_ALL, 0, "unable to read etc/" PROFESSION_DEFS);
         exit(0);
     }
 
@@ -563,10 +563,10 @@ static void race_read(void)
     FILE *fl;
     char tmp[256];
 
-    touch_file(str_cc(g_cServerConfig.m_libdir, RACE_DEFS));
-    if (!(fl = fopen(str_cc(g_cServerConfig.m_libdir, RACE_DEFS), "rb")))
+    touch_file(str_cc(g_cServerConfig.m_etcdir, RACE_DEFS));
+    if (!(fl = fopen(str_cc(g_cServerConfig.m_etcdir, RACE_DEFS), "rb")))
     {
-        slog(LOG_ALL, 0, "unable to create lib/" RACE_DEFS);
+        slog(LOG_ALL, 0, "unable to create etc/" RACE_DEFS);
         exit(0);
     }
 
@@ -763,10 +763,10 @@ static void ability_read(void)
     char *pCh;
     FILE *fl;
 
-    touch_file(str_cc(g_cServerConfig.m_libdir, ABILITY_DEFS));
-    if (!(fl = fopen(str_cc(g_cServerConfig.m_libdir, ABILITY_DEFS), "rb")))
+    touch_file(str_cc(g_cServerConfig.m_etcdir, ABILITY_DEFS));
+    if (!(fl = fopen(str_cc(g_cServerConfig.m_etcdir, ABILITY_DEFS), "rb")))
     {
-        slog(LOG_ALL, 0, "unable to create lib/" ABILITY_DEFS);
+        slog(LOG_ALL, 0, "unable to create etc/" ABILITY_DEFS);
         exit(0);
     }
 
@@ -922,10 +922,10 @@ static void weapon_read(void)
     char *pCh;
     FILE *fl;
 
-    touch_file(str_cc(g_cServerConfig.m_libdir, WEAPON_DEFS));
-    if (!(fl = fopen(str_cc(g_cServerConfig.m_libdir, WEAPON_DEFS), "rb")))
+    touch_file(str_cc(g_cServerConfig.m_etcdir, WEAPON_DEFS));
+    if (!(fl = fopen(str_cc(g_cServerConfig.m_etcdir, WEAPON_DEFS), "rb")))
     {
-        slog(LOG_ALL, 0, "unable to create lib file");
+        slog(LOG_ALL, 0, "unable to create etc file");
         exit(0);
     }
 
@@ -937,18 +937,28 @@ static void weapon_read(void)
 
         str_remspc(pTmp);
 
-        if ((pCh = strchr(pTmp, '=')))
+        if (str_is_empty(pTmp))
+            continue;
+    
+        pCh = strchr(pTmp, '=');
+        if (pCh == NULL)
         {
-            *pCh = 0;
-            pCh = skip_blanks(pCh + 1);
-            strip_trailing_blanks(pCh);
+            slog(LOG_ALL, 0, "Weapon boot odd line, no equal sign: %s", pTmp);
+            continue;
         }
+
+        *pCh = 0;
+        pCh = skip_blanks(pCh + 1);
+        strip_trailing_blanks(pCh);
 
         str_lower(pTmp);
         strip_trailing_blanks(pTmp);
 
-        if (pCh == NULL || str_is_empty(pCh))
+        if (str_is_empty(pTmp) || str_is_empty(pCh))
+        {
+            slog(LOG_ALL, 0, "Weapon boot odd line: %s = %s", pTmp, pCh);
             continue;
+        }
 
         if (strncmp(pTmp, "index", 5) == 0)
         {
@@ -1106,7 +1116,7 @@ static void weapon_read(void)
             }
         }
         else
-            slog(LOG_ALL, 0, "Weapon boot unknown string: %s", pTmp);
+            slog(LOG_ALL, 0, "Weapon boot unknown string: [%s]", pTmp);
     }
 
     fclose(fl);
