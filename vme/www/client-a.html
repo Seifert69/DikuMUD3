@@ -456,7 +456,12 @@
                     else
                     {
                         g_nHistoryPos = 0;
-                        InputFocus();
+                        var myfld = document.getElementById("message");
+                        if (myfld != document.activeElement)
+                        {
+                            InputFocus(null);
+                            event.preventDefault();
+                        }
                     }
                 }
             });
@@ -471,8 +476,7 @@
                 {
                     g_nHistoryPos += 1;
                     var s = HistoryGet(g_nHistoryPos);
-                    console.log("history = " + g_nHistoryPos + " " + s);
-                    InputFocusStr(s);
+                    InputFocus(s);
                     event.preventDefault(); // No need to `return false;`.
                 }
                 else if (event.keyCode == 40) // arrow down
@@ -480,10 +484,13 @@
                     if (g_nHistoryPos > 0)
                         g_nHistoryPos -= 1;
                     var s = HistoryGet(g_nHistoryPos);
-                    console.log("history = " + g_nHistoryPos + " " + s);
-                    InputFocusStr(s);
+                    InputFocus(s);
                     event.preventDefault(); // No need to `return false;`.
-                }               
+                } 
+                else if (event.key == "Escape")
+                {
+                    InputFocus("");
+                }
             });
 
             window.onload = function () {
@@ -517,7 +524,7 @@
             document.addEventListener('visibilitychange', function(e) {
                 if (document.hidden == false)
                 {
-                    InputFocus();
+                    InputFocus(null);
                     console.log("Putting input in focus after window got focus.");
                 }
             });

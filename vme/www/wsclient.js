@@ -131,7 +131,7 @@ function modalVisible(){
 
 function modalHide(){
     document.getElementById("myModal").style.display = "none";
-    InputFocus();
+    InputFocus(null);
 }
 
 function pagedSet(item){
@@ -375,7 +375,7 @@ function outputText(str)
             var myscript = str.slice(0, -9).slice(8);
             //console.log(myscript);
             eval(myscript);
-            InputFocus();
+            InputFocus(null);
         }
         return;
     }
@@ -405,7 +405,7 @@ function openWSConnection(protocol, hostname, port, endpoint) {
             outputText("<br/>Connected to <i><b>Valhalla</b> MUD</i><br/>");
             webSocket.send("");
 
-            InputFocus();
+            InputFocus(null);
         };
         webSocket.onclose = function (closeEvent) {
             outputText("WebSocket CLOSE: " + JSON.stringify(closeEvent, null, 4) + "<br/>");
@@ -433,7 +433,7 @@ function openWSConnection(protocol, hostname, port, endpoint) {
 /*
  * If str is null the value is left unchanged, otherwise it's set to str
  */
-function InputFocusStr(str) {
+function InputFocus(str) {
     var myfld = document.getElementById("message");
     if (str != null)
         myfld.value = str;
@@ -441,12 +441,6 @@ function InputFocusStr(str) {
     myfld.select();
 }
 
-function InputFocus() {
-    var myfld = document.getElementById("message");
-    myfld.value = null;
-    myfld.focus();
-    myfld.select();
-}
 
 function sendCommand(str, bEcho)
 {
@@ -463,7 +457,7 @@ function sendCommand(str, bEcho)
     if (bEcho)
         outputText(str + "<br/>"); // ECHO COMMAND
 
-    InputFocus();
+    InputFocus("");
     return true;
 }
 
