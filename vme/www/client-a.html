@@ -444,7 +444,6 @@
 
 
 <script type="text/javascript">
-
             document.addEventListener("keyup", event => {
                 if (event.key == "Escape")
                 {
@@ -455,21 +454,46 @@
                         event.preventDefault();
                     }
                     else
+                    {
+                        g_nHistoryPos = 0;
                         InputFocus();
+                    }
                 }
             });
 
             document.querySelector("#message").addEventListener("keyup", event => {
-                if(event.key !== "Enter") return;
-                
-                document.querySelector("#btnSend").click();
-                event.preventDefault(); // No need to `return false;`.
+                if(event.key == "Enter")
+                {
+                    document.querySelector("#btnSend").click();
+                    event.preventDefault(); // No need to `return false;`.
+                }
+                else if (event.keyCode == 38) // arrow up
+                {
+                    g_nHistoryPos += 1;
+                    var s = HistoryGet(g_nHistoryPos);
+                    console.log("history = " + g_nHistoryPos + " " + s);
+                    InputFocusStr(s);
+                    event.preventDefault(); // No need to `return false;`.
+                }
+                else if (event.keyCode == 40) // arrow down
+                {
+                    if (g_nHistoryPos > 0)
+                        g_nHistoryPos -= 1;
+                    var s = HistoryGet(g_nHistoryPos);
+                    console.log("history = " + g_nHistoryPos + " " + s);
+                    InputFocusStr(s);
+                    event.preventDefault(); // No need to `return false;`.
+                }               
             });
 
             window.onload = function () {
                 const urlParams = new URLSearchParams(window.location.search);
                 var strConn = urlParams.get('protocol') + "://" + urlParams.get('host') + ":" + urlParams.get('port') + urlParams.get('endpoint');
                 outputText("Accessible MUD client<br/>");
+                outputText("ESC - clear input field<br/>");
+                outputText("Up arrow - Scroll back through last commands<br/>");
+                outputText("Down arrow - Scroll forward through commands<br/>");
+
                 openWSConnection(urlParams.get('protocol'), urlParams.get('host'), urlParams.get('port'), urlParams.get('endpoint'));
             
                 if (urlParams.get('reader') != 'true')

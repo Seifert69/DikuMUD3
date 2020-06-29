@@ -11,6 +11,52 @@ var g_nEpMax = 1;
 var g_nMp = 1;
 var g_nMpMax = 1;
 
+var g_aCmdHistory = new Array(50); // History of 50 commands
+var g_nCmdPos     = 0;
+var g_nHistoryPos = 0; 
+
+// Dont store these commands in the history array
+var g_aIgnoreCommands = ['north', 'east', 'south', 'west', 'up', 'down', 'northeast', 'northwest', 'southeast', 'southwest', '!', 'look'];
+
+/*
+ * Add a command string 's' to the history array
+ *
+ */
+function HistoryAdd(s) {
+    if (s.length === 0 || !s.trim())
+        return;
+
+    var i;
+
+    for (i=0; i < g_aIgnoreCommands.length; i++)
+        if (g_aIgnoreCommands[i].indexOf(s) == 0)
+            return;
+
+    g_nCmdPos = g_nCmdPos % g_aCmdHistory.length;
+    g_aCmdHistory[g_nCmdPos] = s;
+    g_nCmdPos += 1;
+}
+
+/*
+ * Get the nPos last command
+ *   If nPos is one it's the last command, 2 the second last, etc.
+ *   If nPos is zero or less it will return the empty string ""
+ */
+function HistoryGet(nPos) {
+    if (nPos <= 0)
+        return "";
+
+    nPos = g_nCmdPos - nPos;
+    while (nPos < 0)
+        nPos += g_aCmdHistory.length;
+
+    nPos = nPos % g_aCmdHistory.length;
+    console.log(nPos + " = " + g_aCmdHistory[nPos]);
+    return g_aCmdHistory[nPos];
+}
+
+
+
 /**
     * Event handler for clicking on button "Disconnect"
     */
@@ -383,6 +429,18 @@ function openWSConnection(protocol, hostname, port, endpoint) {
     }
 }
 
+
+/*
+ * If str is null the value is left unchanged, otherwise it's set to str
+ */
+function InputFocusStr(str) {
+    var myfld = document.getElementById("message");
+    if (str != null)
+        myfld.value = str;
+    myfld.focus();
+    myfld.select();
+}
+
 function InputFocus() {
     var myfld = document.getElementById("message");
     myfld.value = null;
@@ -392,6 +450,9 @@ function InputFocus() {
 
 function sendCommand(str, bEcho)
 {
+    if (bEcho)
+        HistoryAdd(str);
+
     if (webSocket.readyState != WebSocket.OPEN) {
         outputText("webSocket is not open: " + webSocket.readyState);
         return false;
@@ -410,6 +471,7 @@ function sendCommand(str, bEcho)
     * Send a message to the WebSocket server
     */
 function onSendClick() {
+    g_nHistoryPos = 0;
     var myfld = document.getElementById("message");
     sendCommand(myfld.value, myfld.getAttribute('type') != "password");
 }
