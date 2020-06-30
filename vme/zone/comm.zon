@@ -812,71 +812,72 @@ dilend
 
 dilbegin do_emote(arg : string);
 external
-string sex_name(sx : integer);
-string cap_first(nm : string);
+   string sex_name(sx : integer);
+   string cap_first(nm : string);
+
 var
-u: unitptr;
-my_name: string;
-inv_name: string;
+   u: unitptr;
+   my_name: string;
+   inv_name: string;
+
 code
 {
-if(isset(self.charflags, CHAR_MUTE))
-{
-act("But, you're mute?!",
-A_ALWAYS, self, null, null, TO_CHAR);
-quit;
-}
+   if(isset(self.charflags, CHAR_MUTE))
+   {
+      act("But, you're mute?!", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
 
- if(isset(self.flags,UNIT_FL_BURIED))
- {
-act("You are buried alive!",
-A_ALWAYS, self, null, null, TO_CHAR);
-quit;
- }
+   if(isset(self.flags,UNIT_FL_BURIED))
+   {
+      act("You are buried alive!", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
 
- if(arg == "")
- {
-act("What do you want to emote?",
-A_ALWAYS, self, null, null, TO_CHAR);
-quit;
- }
- else
- {
- if(self.level >= IMMORTAL_LEVEL)
-arg:= textformat(arg);
+   if(arg == "")
+   {
+      act("What do you want to emote?", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   else
+   {
+      if(self.level >= IMMORTAL_LEVEL)
+         arg:= textformat(arg);
 
- inv_name := sex_name(self.sex);
- if(self.type == UNIT_ST_NPC)
- {
-my_name:= cap_first(self.title);    /*?*/
-/*my_name:= cap_first(my_name);*/
- }
-else my_name := cap_first(self.name);  /* ?*/
+      inv_name := sex_name(self.sex);
 
-/*
- foreach(UNIT_ST_PC|UNIT_ST_NPC,u)
- {
-if((u != self) and (u.position > POSITION_SLEEPING))
-{
-if(visible(u,self))
-{
-sendtext("<div class='social_other'>"+my_name+" "+arg+"</div>", u);
-        }
-else
-sendtext("<div class='social_other'>"+inv_name+" "+arg+"</div>", u);
- }
-}*/
+      if(self.type == UNIT_ST_NPC)
+      {
+         my_name:= cap_first(self.title);    /*?*/
+         /*my_name:= cap_first(my_name);*/
+      }
+      else
+         my_name := cap_first(self.name);  /* ?*/
 
-  act ("<div class='social_other'>$1n $3t</div>", A_SOMEONE, self, null, arg, TO_ROOM);
+      /*
+      foreach(UNIT_ST_PC|UNIT_ST_NPC,u)
+      {
+      if((u != self) and (u.position > POSITION_SLEEPING))
+      {
+      if(visible(u,self))
+      {
+      sendtext("<div class='social_other'>"+my_name+" "+arg+"</div>", u);
+            }
+      else
+      sendtext("<div class='social_other'>"+inv_name+" "+arg+"</div>", u);
+      }
+      }*/
 
-  if((self.type == UNIT_ST_PC) and (isset(self.pcflags, PC_ECHO)))
-    act("<div class='social_self'>$1n $2t</div>", A_ALWAYS, self, arg, null, TO_CHAR);
-  else
-    sendtext("Ok.<br/>", self);
+   act ("<div class='social_other'>$1n $3t</div>", A_SOMEONE, self, null, arg, TO_ROOM);
 
-}
-send_done("emote", self, null, null, 0, arg, null);
-quit;
+   if((self.type == UNIT_ST_PC) and (isset(self.pcflags, PC_ECHO)))
+      act("<div class='social_self'>$1n $2t</div>", A_ALWAYS, self, arg, null, TO_CHAR);
+   else
+      sendtext("Ok.<br/>", self);
+   }
+   
+   send_done("emote", self, null, null, 0, arg, null);
+   quit;
 }
 dilend
 
