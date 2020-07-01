@@ -28,7 +28,187 @@ help
 #define UNIT_WEAR(OBJ_BIT,MANI_BIT)	\
 ((OBJ_BIT) & (MANI_BIT))
 
+
+
 %dil
+
+
+
+
+/* 
+ * self is the PC
+ * pfx is $alias, $trigger or $var 
+ */
+dilbegin string dlrdump(pfx : string);
+var
+   exd : extraptr;
+   p   : extraptr;
+   buf : string;
+   s : string;
+   t : string;
+   i : integer;
+code
+{
+   if (self.type != UNIT_ST_PC)
+      return("");
+
+   buf := "<data type='"+pfx+"'>";
+   exd := self.info;
+   i := 0;
+   while (exd)
+   {
+      s := exd.names.[0];
+      t := getword(s);
+      if (t $= pfx)
+      {
+         buf := buf + "<li>" + s + " " + exd.names.[1] + "</li>";
+         i := i + 1;
+         if (i > 5)
+         {
+            sendtext(pfx + " limit exceeded, removing " + s + " " + exd.names.[1] + "<br/>", self);
+            s := exd.names.[0];
+            exd := exd.next;
+            subextra(self.info, s);
+            continue;
+         }
+      }
+      exd := exd.next;
+   }
+   buf := buf + "</data>";
+
+   return(buf);
+}
+dilend
+
+
+/*
+ * Used by do_alias, trigger, variable
+ */
+dilbegin dlrmanage(pfx : string, arg : string);
+external
+   string dlrdump@commands(pfx : string);
+
+var
+   s : string;
+   t : string;
+   c : string;
+   sl : stringlist;
+   exd : extraptr;
+
+code
+{
+   c := right(pfx, length(pfx)-1);
+   s := getword(arg);
+
+   if (length(s) < 1)
+   {
+      sendtext("Your current " + c + " list:<br/>", self);
+      exd := self.info;
+      while (exd)
+      {
+         s := exd.names.[0];
+         t := getword(s);
+         if (t $= pfx)
+         {
+            if (length(exd.names) <= 1)
+            {
+               sendtext(exd.names.[0] + " == broken " + c + ", removing<br/>", self);
+               subextra(self.info, exd.names.[0]);
+            }
+            else
+               sendtext(exd.names.[0] + " = " + exd.names.[1] +"<br/>", self);
+         }
+
+         exd := exd.next;
+      }
+
+      return;
+   }
+
+   if (length(s) > 12)
+   {
+      sendtext(c + " keyword too long [" + s + "]<br/>", self);
+      return;
+   }
+
+   // Remove alias
+   if (arg $= "")
+   {
+      t := pfx + " " + s;
+      exd := t in self.info;
+
+      if (exd == null)
+      {
+         sendtext("No such "+c+" found. Maybe you wanted to add one? Usage: "+c+" [keyword] [string]<br/>", self);
+         return;
+      }
+
+      sendtext("Removing " + c + " " + s + " " + exd.names.[1] + "<br/>", self);
+      subextra(self.info, t);
+
+      s := dlrdump@commands(pfx);
+      sendtext(s, self);
+
+      return;
+   }
+
+   sl := null;
+   t := pfx + " " + s;
+   exd := t in self.info;
+
+   if (exd == null)
+   {
+      sendtext("Adding " + c + " [" + s + "] "+arg+"<br/>", self);
+
+      insert(sl, 0, t);
+      insert(sl, 1, arg);
+      addextra(self.info, sl, "");
+
+      s := dlrdump@commands(pfx);
+      sendtext(s, self);
+   }
+   else
+   {
+      sendtext(c + " " + s + " " + exd.names.[1] + "<br/>", self);
+      sendtext(c + " already exists to remove it type <a cmd='#'>alias "+s+"</cmd><br/>", self);
+   }
+
+   return;
+}
+dilend
+
+dilbegin do_alias(arg : string);
+external
+   dlrmanage@commands(pfx : string, arg : string);
+code
+{
+   dlrmanage@commands("$alias", arg);
+   quit;
+}
+dilend
+
+
+dilbegin do_trigger(arg : string);
+external
+   dlrmanage@commands(pfx : string, arg : string);
+code
+{
+   dlrmanage@commands("$trigger", arg);
+   quit;
+}
+dilend
+
+
+dilbegin do_variable(arg : string);
+external
+   dlrmanage@commands(pfx : string, arg : string);
+code
+{
+   dlrmanage@commands("$var", arg);
+   quit;
+}
+dilend
+
 
 
 dilbegin knock(arg : string);

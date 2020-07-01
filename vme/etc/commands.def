@@ -2351,6 +2351,23 @@ minpos = POSITION_RESTING
 minlevel = 0
 type = TYPE_SOCIAL
 
+command  = alias
+func     = do_alias@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+type     = 0
+
+command  = trigger
+func     = do_trigger@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+type     = 0
+
+command  = variable
+func     = do_variable@commands
+minpos   = POSITION_DEAD
+minlevel = 0
+type     = 0
 
 
 /* Enter wizard commands(in alpha order) */
