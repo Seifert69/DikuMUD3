@@ -63,7 +63,7 @@ code
       {
          buf := buf + "<li>" + s + " " + exd.names.[1] + "</li>";
          i := i + 1;
-         if (i > 5)
+         if (i > 25)
          {
             sendtext(pfx + " limit exceeded, removing " + s + " " + exd.names.[1] + "<br/>", self);
             s := exd.names.[0];
