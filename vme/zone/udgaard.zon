@@ -7267,7 +7267,7 @@ code
    statue_load(pc, "midgaard/bread",        "bread",      1);
    statue_load(pc, "swood_shield@midgaard", "shield",     1);
    statue_load(pc, "guild_medallion@guild_paths", "medallion", 1);
-   statue_load(pc, "basis/dictionary",      "dictionary", 0);
+   //statue_load(pc, "basis/dictionary",      "dictionary", 0);
 
    /* expd := "$path" in pc.quests;
    if (expd == null)

@@ -33,8 +33,6 @@ help
 %dil
 
 
-
-
 /* 
  * self is the PC
  * pfx is $alias, $trigger or $var 
@@ -116,7 +114,7 @@ code
                subextra(self.info, exd.names.[0]);
             }
             else
-               sendtext(exd.names.[0] + " = " + exd.names.[1] +"<br/>", self);
+               sendtext(exd.names.[0] + " " + exd.names.[1] +"<br/>", self);
          }
 
          exd := exd.next;
@@ -163,19 +161,21 @@ code
       insert(sl, 0, t);
       insert(sl, 1, arg);
       addextra(self.info, sl, "");
-
-      s := dlrdump@commands(pfx);
-      sendtext(s, self);
    }
    else
    {
-      sendtext(c + " " + s + " " + exd.names.[1] + "<br/>", self);
-      sendtext(c + " already exists to remove it type <a cmd='#'>alias "+s+"</cmd><br/>", self);
+      sendtext("Replacing <a cmd='#'>" + c + " " + s + " " + exd.names.[1] + "</a> (click link to revet to this)<br/>", self);
+      sendtext("New " + c + " " + s + " " + arg + "<br/>", self);
+      exd.names.[1] := arg;
    }
+
+   s := dlrdump@commands(pfx);
+   sendtext(s, self);
 
    return;
 }
 dilend
+
 
 dilbegin do_alias(arg : string);
 external

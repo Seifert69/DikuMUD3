@@ -198,7 +198,8 @@
         #btnConnect    { width: 100px; }
         #btnDisconnect { width: 100px; }
         #btnSend       { width: 100px; }
-        .command     { display: inline; }
+        .command       { display: inline; }
+        .echo          { display: inline; color:gold; font-weight: bold; }
 
         /* Combat */
         .hit_me         { display: inline; color:darkred; font-weight: bold;}
@@ -496,10 +497,10 @@
             window.onload = function () {
                 const urlParams = new URLSearchParams(window.location.search);
                 var strConn = urlParams.get('protocol') + "://" + urlParams.get('host') + ":" + urlParams.get('port') + urlParams.get('endpoint');
-                outputText("Accessible MUD client<br/>");
-                outputText("ESC - clear input field<br/>");
-                outputText("Up arrow - Scroll back through last commands<br/>");
-                outputText("Down arrow - Scroll forward through commands<br/>");
+                outputText("Accessible MUD client<br/>", false);
+                outputText("ESC - clear input field<br/>", false);
+                outputText("Up arrow - Scroll back through last commands<br/>", false);
+                outputText("Down arrow - Scroll forward through commands<br/>", false);
 
                 openWSConnection(urlParams.get('protocol'), urlParams.get('host'), urlParams.get('port'), urlParams.get('endpoint'));
             

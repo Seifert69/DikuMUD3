@@ -303,6 +303,8 @@ dilbegin aware on_connect();
 external
    informer();
    login_modify(tgt : unitptr);
+   string dlrdump@commands(pfx : string);
+
 
 var
    wizlvl : integer;
@@ -311,6 +313,7 @@ var
    motd : string;
    welcome : string;
    goodbye : string;
+   s : string;
 
 code
 {
@@ -338,6 +341,13 @@ code
    }
 
    err := loadstr("welcome",welcome);
+
+   s := dlrdump@commands("$alias");
+   sendtext(s, self);
+   s := dlrdump@commands("$var");
+   sendtext(s, self);
+   s := dlrdump@commands("$trigger");
+   sendtext(s, self);
 
    if (self.level < 200)
    {
@@ -5282,7 +5292,7 @@ code
 
    exec("pray odin", self);
    exec("wear all", self);
-   exec("claim dictionary", self);
+   //exec("claim dictionary", self);
 
    self.skills[SKI_FLEE]        := 50;
    self.skills[SKI_CONSIDER]    := 50;
