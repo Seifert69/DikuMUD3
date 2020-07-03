@@ -61,7 +61,7 @@ function dlrReplace(str, a) {
     var p;
 
     // Skip the first match entry
-    for (i = 1; i < a.length; i++) {
+    for (i = 0; i < a.length; i++) {
         str = str.replaceAll("$" + i, a[i]);
         //console.log("Replaced string = " + str);
         //console.log("match[" + i + "] = " + a[i]);
@@ -83,6 +83,7 @@ function aliasCheck(str)
 
     var cmd = getStrFirstWord(str);
     var a = str.split(" ");
+    a[0] = getStrRemainder(str);
 
     for (var i=0; i < g_aAliasData.length; i++)
     {
