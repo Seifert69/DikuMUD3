@@ -3982,14 +3982,14 @@ end
 
 title "The Udgaard Market"
 descr
-"You are at the Udgaard market just south of the village square. Many 
-small shops are scattered around the market. The village dump is just
-south of here."
+"You are at the Udgaard market just south of the village square. This
+used to be a larger and busier market. Now only a few small merchants
+are scattered around the market. The boat bridge is south of here."
 gmap(1024,0)
 movement SECT_CITY
 north to square;
 south to guild_rd2;
-south to dump;
+south to bridge;
 east to tobacco_shop;
 northeast to field_shop;
 northwest to heal_shop;
@@ -4043,13 +4043,13 @@ end
 names {"dump"}
 title "Village Dump"
 descr
-"The village dump is quite a dirty mess, actually you are convinced, that
-if you drop any items here, you wont be able to find them again. The Guild
-Road is north of here. To the south a large river calmly flows east towards
-the cypress forest."
+"Located just outside the walls and close to the boat bridge the village
+dump is quite a dirty mess. Actually you are convinced, that if you drop
+any items here, you won't be able to find them again. To the south a large
+river calmly flows east towards the cypress forest but you need to head
+over to the boat bridge if you want to jump in."
 movement SECT_CITY
-north to market;
-south to bridge;
+west to bridge;
 ALWAYS_LIGHT
 
 
@@ -4058,10 +4058,11 @@ end
                                  bridge
 title "On the Boat Bridge"
 descr
-"The river gently flows east towards the cypress forest. The village dump
-of Udgaard is just north of here."
+"The river gently flows east towards the cypress forest. The village of 
+Udgaard is just north of here and to the east is the village dump."
 movement SECT_CITY
-north to dump;
+north to market;
+east to dump;
 south to river;
 ALWAYS_LIGHT
 end
