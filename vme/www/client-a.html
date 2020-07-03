@@ -511,6 +511,12 @@
                 console.log("Screen Reader = " + bScreenReader + " " + urlParams.get('reader'));
             };
 
+            window.addEventListener("focus", function(event)
+            {
+                console.log("Window got focus");
+                InputFocus(null);
+            }, false);
+
             function PasswordOn() {
                 document.getElementById("message").setAttribute('type','password');
             }
