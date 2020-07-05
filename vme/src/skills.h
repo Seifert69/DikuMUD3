@@ -125,7 +125,9 @@ struct wpn_info_type
     int hands;			/* 0=N/A, 1 = 1, 2 = 1.5, 3 = 2          */
     int speed;			/* Speed modification by weapon 0..      */
     int type;			/* Is the weapon slashing/piercing...    */
+    ubit8 ability[3]; // Primary abilities, e.g. [0]=ABIL_STR, [1]=ABIL_STR, [2]=ABIL_DEX 
     ubit8 shield;			/* Shield method SHIELD_M_XXX            */
+
 };
 
 
