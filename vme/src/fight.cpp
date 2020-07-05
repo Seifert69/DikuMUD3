@@ -1420,8 +1420,7 @@ int simple_one_hit(class unit_data *att, class unit_data *def)
 }
 
 /* Returns TRUE if ok */
-static int
-check_combat(class unit_data *ch)
+static int check_combat(class unit_data *ch)
 {
    if (is_destructed(DR_UNIT, ch))
    {
