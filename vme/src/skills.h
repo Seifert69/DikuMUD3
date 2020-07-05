@@ -138,7 +138,8 @@ void roll_description (class unit_data * att, const char *text, int roll);
 int open_ended_roll (int size, int end);
 inline int open100 (void)
 {
-    return open_ended_roll (100, 5);
+  // MS2020 reducing open roll chance to 2% on high and 1% low.
+  return open_ended_roll(100, 2);
 }
 
 int skillchecksa(class unit_data *u, int skillidx, int abiidx, int difficulty);
@@ -170,6 +171,7 @@ int char_hand_dam (class unit_data * ch);
 int relative_level (int l1, int l2);
 int weapon_defense_skill (class unit_data * ch, int skill);
 int weapon_attack_skill (class unit_data * ch, int skill);
+int weapon_attack_ability(class unit_data *ch, int skill);
 int hit_location (class unit_data * att, class unit_data * def);
 int effective_dex (class unit_data * ch);
 

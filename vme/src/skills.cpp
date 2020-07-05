@@ -386,6 +386,21 @@ int weapon_attack_skill(class unit_data *ch, int skill)
     }
 }
 
+
+int weapon_attack_ability(class unit_data *ch, int skill)
+{
+    int i;
+
+    i = CHAR_ABILITY(ch, wpn_info[skill].ability[0]) + 
+        CHAR_ABILITY(ch, wpn_info[skill].ability[1]) + 
+        CHAR_ABILITY(ch, wpn_info[skill].ability[2]);
+
+    i = i / 3;
+
+    return i;
+}
+
+
 /* Return the armour position of where one person hits another */
 int hit_location(class unit_data *att, class unit_data *def)
 {
@@ -1008,32 +1023,32 @@ static void weapon_read(void)
                     weapon_prof_table[idx].min_abil[ridx] = dummy;
             }
         }
-        else if (strncmp(pTmp, "ability ", 8) == 0)
+        else if (strncmp(pTmp, "ability", 7) == 0)
         {
             char tmp[256];
             int i1, i2, i3;
 
             pCh = str_next_word(pCh, tmp);
             i1 = atoi(tmp);
-            if (!is_in(i1, ABIL_MAG, ABIL_HP) || !str_is_number(pCh))
+            if (!is_in(i1, ABIL_MAG, ABIL_HP) || !str_is_number(tmp))
             {
-                slog(LOG_ALL, 0, "Weapon init %d: Illegal ability[0] %d (%s).", idx, i1, pCh);
+                slog(LOG_ALL, 0, "Weapon init %d: Illegal ability[0] %d (%s).", idx, i1, tmp);
                 continue;
             }
 
             pCh = str_next_word(pCh, tmp);
             i2 = atoi(tmp);
-            if (!is_in(i2, ABIL_MAG, ABIL_HP) || !str_is_number(pCh))
+            if (!is_in(i2, ABIL_MAG, ABIL_HP) || !str_is_number(tmp))
             {
-                slog(LOG_ALL, 0, "Weapon init %d: Illegal ability[0] %d (%s).", idx, i2, pCh);
+                slog(LOG_ALL, 0, "Weapon init %d: Illegal ability[0] %d (%s).", idx, i2, tmp);
                 continue;
             }
 
             pCh = str_next_word(pCh, tmp);
             i3 = atoi(tmp);
-            if (!is_in(i3, ABIL_MAG, ABIL_HP) || !str_is_number(pCh))
+            if (!is_in(i3, ABIL_MAG, ABIL_HP) || !str_is_number(tmp))
             {
-                slog(LOG_ALL, 0, "Weapon init %d: Illegal ability[0] %d (%s).", idx, i3, pCh);
+                slog(LOG_ALL, 0, "Weapon init %d: Illegal ability[0] %d (%s).", idx, i3, tmp);
                 continue;
             }
 

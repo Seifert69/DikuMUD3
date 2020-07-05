@@ -26,7 +26,6 @@
 int kludge_bonus(int level, int points)
 {
    if (level <= 20)
-
       return 0;
 
    if (level <= 50)
@@ -287,11 +286,13 @@ int melee_bonus(class unit_data *att, class unit_data *def,
    att_wpn_knowledge += kludge_bonus(CHAR_LEVEL(att), att_wpn_knowledge);
    def_wpn_knowledge += kludge_bonus(CHAR_LEVEL(def), def_wpn_knowledge) / 2;
 
+   int att_abil = weapon_attack_ability(att, att_wpn_type);
+
    if (CHAR_AWAKE(def))
-      hm = (5 * (CHAR_STR(att) - def_dex)) / 2 +
+      hm = (5 * (att_abil - def_dex)) / 2 +
            (2 * (att_wpn_knowledge - def_wpn_knowledge)) + att_bonus - def_bonus;
    else
-      hm = (5 * CHAR_STR(att)) / 2 + att_bonus + 2 * att_wpn_knowledge + 50;
+      hm = (5 * att_abil) / 2 + att_bonus + 2 * att_wpn_knowledge + 50;
 
    // This results in a 5% hm increase per "level"
 
