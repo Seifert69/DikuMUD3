@@ -5069,6 +5069,11 @@ dilend /* check_elig2 */
 #define DRUI_BIT 512
 #define KNIG_BIT 1024
 
+
+// WARNING MS2002
+// This should call standard func in basis, the one that sets a char's abilities
+// and more based on race. Code duplication will lead to disaster
+
 dilbegin recall aware nanny_rebirth ();
 external guild_choose ();
 upd_all_comp@competition(u:unitptr);
@@ -5685,7 +5690,7 @@ dilcopy ("rebirth_prompt@update",self);
       self.weapons[WPN_FIST]        := self.weapons[WPN_FIST] + 5;
       self.weapons[WPN_BATTLE_AXE]  := self.weapons[WPN_BATTLE_AXE] + 5;
       self.weapons[WPN_LONG_SWORD]  := self.weapons[WPN_LONG_SWORD] + 5;
-      self.weapons[WPN_BROAD_SWORD] := self.weapons[WPN_BROAD_SWORD] + 5;
+      self.weapons[WPN_SHORT_SWORD] := self.weapons[WPN_SHORT_SWORD] + 5;
    }
 
    else if (self.guild == GUILD_UDG_THIEF)

@@ -2984,7 +2984,7 @@ title "a large broadsword"
 descr "There is a large broadsword lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Pure iron and Decent craft (100% + 5%) */
-WEAPON_DEF(WPN_BROAD_SWORD, 0, 0)
+WEAPON_DEF(WPN_LONG_SWORD, 0, 0)
 weight 18
 cost 15 SILVER_PIECE
 end

@@ -1919,7 +1919,7 @@ extra {}
 "It has some strange runes on the blade. It is made of a beautiful
 black metal. The blade is very broad and two edged."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_BROAD_SWORD, 2, 2)
+WEAPON_DEF(WPN_LONG_SWORD, 2, 2)
 weight 3
 cost 8 GOLD_PIECE
 dilcopy ali_restrict@function(-350,-1000,0,25,"");

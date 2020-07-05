@@ -5054,7 +5054,7 @@ names {"axe"}
 title "an axe"
 descr "A large axe lies on the floor."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_WAR_AXE, 0, 0)
+WEAPON_DEF(WPN_BATTLE_AXE, 0, 0)
 MATERIAL_METAL("oak shaft with iron ")
 weight 12
 cost 20 IRON_PIECE
@@ -5090,7 +5090,7 @@ names {"axe"}
 title "an axe"
 descr "A short hafted axe lies on the floor."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_WAR_AXE, 0, 0)
+WEAPON_DEF(WPN_BATTLE_AXE, 0, 0)
 MATERIAL_METAL("oak shaft with iron ")
 weight 12
 cost 20 IRON_PIECE

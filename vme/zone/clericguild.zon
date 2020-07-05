@@ -1058,7 +1058,7 @@ extra {"$rem_s"}
 extra {"$rem_o"}
 "$1n lets go of $1s $2n, it flickers and fades away..."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_HAND_HAMMER,0,0)   //changed to one handed weapon ETNA
+WEAPON_DEF(WPN_WAR_HAMMER,0,0)   //changed to one handed weapon ETNA
 STR_TRANSFER(+1)
 flags {UNIT_FL_MAGIC}
 romflags {OBJ_NO_DUAL}

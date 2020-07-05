@@ -396,7 +396,7 @@ extra {}
 "  This is a completely normal bastard sword, fitted for a goblin. The only
 thing that are exceptional are the blood line in the middle of the blade."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_BROAD_SWORD, -5, 0)
+WEAPON_DEF(WPN_LONG_SWORD, -5, 0)
 weight 12
 cost 8 SILVER_PIECE
 end

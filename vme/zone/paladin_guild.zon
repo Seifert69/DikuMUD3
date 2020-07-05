@@ -1164,7 +1164,7 @@ sword provides a nice counter-balance, and you think you could swing it with
 only one hand."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 type ITEM_WEAPON
-WEAPON_DEF(WPN_BROAD_SWORD, 0, 0)
+WEAPON_DEF(WPN_LONG_SWORD, 0, 0)
 weight 10
 cost 7 SILVER_PIECE
 rent 20 IRON_PIECE

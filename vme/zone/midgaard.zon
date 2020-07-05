@@ -174,72 +174,72 @@ dilend
 // Ratlin fixed built in bug that allowed bag to be used as a carry
 // around portal
 
-dilbegin janitors(rate: integer);
+dilbegin fnpri(FN_PRI_MISSION) janitors(rate: integer);
 var
-     trash : unitptr;
- s : string;
- sl : stringlist;
- msgs : stringlist;
- songs : stringlist;
- sing1 : stringlist;
- move : stringlist;
- msg : integer;
- msg2 : integer;
- obj : unitptr;
- intg : integer;
-
- inits: integer; // Boolean (added by S)
+   trash : unitptr;
+   s : string;
+   sl : stringlist;
+   msgs : stringlist;
+   songs : stringlist;
+   sing1 : stringlist;
+   move : stringlist;
+   msg : integer;
+   msg2 : integer;
+   obj : unitptr;
+   intg : integer;
+   inits: integer; // Boolean (added by S)
 
 code
 {
-if (inits == FALSE)
-    {
-    obj := load ("tbag@midgaard");
-    link (obj, self);
-    obj := null;
-    inits := TRUE;
-    }
+   if (inits == FALSE)
+   {
+      obj := load ("tbag@midgaard");
+      link (obj, self);
+      obj := null;
+      inits := TRUE;
+   }
 
-heartbeat := PULSE_SEC*rate;
- msgs := {"Ewww, a corpse.",
-   "Geez, people just leave these things lying around these days.",
-   "I wonder who killed that poor sucker.",
-   "I always knew that guy was a pansy.",
-   "He had it coming to him anyhow."};
- songs:={"sing1"};
- sing1:={"I can see a bare-bottomed mandril,",
- "Slyly eyeing his upper nostril,",
- "If he jumps inside there too,",
- "I really won't know what to do,",
- "I'll be a proud possessor of a kind of nasal zoo,",
- "A nasal zoo.",
- "I've got a ferret sticking up my nose,",
- "And what is worse it constantly explodes,",
- "Ferrets don't explode you say,",
- "But it happened nine times yesterday,",
- "And I should know 'cause each time,",
- "I was standing in the way.",
- "I've got a ferret sticking up my nose,",
- "I've got a ferret sticking up my nose,",
- "How it got there I can't tell,",
- "But now it's there it hurts like hell,",
- "And what is more it radically affects my sense of smell."};
- move := {"fear","cringe","cringe"};
-:start:
-:collect:
-pause;
-foreach (UNIT_ST_OBJ, trash)
- {
- secure(trash, collect);
- if (not findsymbolic(self, "tbag@midgaard", FIND_UNIT_IN_ME)) goto
-s_break;
+   heartbeat := PULSE_SEC*rate;
+   msgs := {"Ewww, a corpse.",
+      "Geez, people just leave these things lying around these days.",
+      "I wonder who killed that poor sucker.",
+      "I always knew that guy was a pansy.",
+      "He had it coming to him anyhow."};
+   songs:={"sing1"};
+   sing1:={"I can see a bare-bottomed mandril,",
+      "Slyly eyeing his upper nostril,",
+      "If he jumps inside there too,",
+      "I really won't know what to do,",
+      "I'll be a proud possessor of a kind of nasal zoo,",
+      "A nasal zoo.",
+      "I've got a ferret sticking up my nose,",
+      "And what is worse it constantly explodes,",
+      "Ferrets don't explode you say,",
+      "But it happened nine times yesterday,",
+      "And I should know 'cause each time,",
+      "I was standing in the way.",
+      "I've got a ferret sticking up my nose,",
+      "I've got a ferret sticking up my nose,",
+      "How it got there I can't tell,",
+      "But now it's there it hurts like hell,",
+      "And what is more it radically affects my sense of smell."};
 
- if (self.outside.flags & UNIT_FL_NO_BURY) continue;
- if (trash.flags & UNIT_FL_BURIED) continue;
- if (not isset (trash.manipulate, MANIPULATE_TAKE)) continue;
- if (can_carry (self, trash, 1) == TRUE) continue; // Can't carry
+   move := {"fear","cringe","cringe"};
 
- if (not visible(self,trash)) continue;
+   :start:
+   :collect:
+   pause;
+   foreach (UNIT_ST_OBJ, trash)
+   {
+      secure(trash, collect);
+      if (not findsymbolic(self, "tbag@midgaard", FIND_UNIT_IN_ME)) 
+         goto s_break;
+
+      if (self.outside.flags & UNIT_FL_NO_BURY) continue;
+      if (trash.flags & UNIT_FL_BURIED) continue;
+      if (not isset (trash.manipulate, MANIPULATE_TAKE)) continue;
+      if (can_carry (self, trash, 1) == TRUE) continue; // Can't carry
+      if (not visible(self,trash)) continue;
 
  if ("treasure" == trash.zoneidx) continue;
   if ((trash.objecttype == ITEM_CONTAINER) or( trash.objecttype == ITEM_BOAT))
@@ -6943,6 +6943,7 @@ code
    tf:=walk_room@function("wharf2@midgaard",4);
    tf:=walk_room@function("n_prom2@midgaard",4);
    tf:=walk_room@function("wall_rd11@midgaard",4);
+   tf:=walk_room@function("cth_se_tower@midgaard",4);
    goto start;
 }
 dilend
@@ -8619,7 +8620,7 @@ descr "A katana has been left here."
 extra {}
 "The katana is a light weight finely crafted weapon."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_KATANA, 0, 0)
+WEAPON_DEF(WPN_SCIMITAR, 0, 0)
 weight 7
 cost 25   SILVER_PIECE
 end
