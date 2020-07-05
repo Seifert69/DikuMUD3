@@ -65,7 +65,7 @@ void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
 
     if (OBJ_VALUE(stabber, 0) != WPN_DAGGER &&
         OBJ_VALUE(stabber, 0) != WPN_SHORT_SWORD &&
-        OBJ_VALUE(stabber, 0) != WPN_WAKIZASHI)
+        OBJ_VALUE(stabber, 0) != WPN_STILETTO)
     {
         send_to_char("Only small piercing weapons can be used "
                      "for backstabbing.<br/>",
