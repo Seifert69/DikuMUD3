@@ -1008,6 +1008,39 @@ static void weapon_read(void)
                     weapon_prof_table[idx].min_abil[ridx] = dummy;
             }
         }
+        else if (strncmp(pTmp, "ability ", 8) == 0)
+        {
+            char tmp[256];
+            int i1, i2, i3;
+
+            pCh = str_next_word(pCh, tmp);
+            i1 = atoi(tmp);
+            if (!is_in(i1, ABIL_MAG, ABIL_HP) || !str_is_number(pCh))
+            {
+                slog(LOG_ALL, 0, "Weapon init %d: Illegal ability[0] %d (%s).", idx, i1, pCh);
+                continue;
+            }
+
+            pCh = str_next_word(pCh, tmp);
+            i2 = atoi(tmp);
+            if (!is_in(i2, ABIL_MAG, ABIL_HP) || !str_is_number(pCh))
+            {
+                slog(LOG_ALL, 0, "Weapon init %d: Illegal ability[0] %d (%s).", idx, i2, pCh);
+                continue;
+            }
+
+            pCh = str_next_word(pCh, tmp);
+            i3 = atoi(tmp);
+            if (!is_in(i3, ABIL_MAG, ABIL_HP) || !str_is_number(pCh))
+            {
+                slog(LOG_ALL, 0, "Weapon init %d: Illegal ability[0] %d (%s).", idx, i3, pCh);
+                continue;
+            }
+
+            wpn_info[idx].ability[0] = i1;
+            wpn_info[idx].ability[1] = i2;
+            wpn_info[idx].ability[2] = i3;
+        }
         else if (strncmp(pTmp, "attack ", 7) == 0)
         {
             char tmp[256];
@@ -1039,6 +1072,11 @@ static void weapon_read(void)
                 idx2 = ARM_CHAIN;
             else if (strncmp(pTmp + 7, "plate", 5) == 0)
                 idx2 = ARM_PLATE;
+            else
+            {
+                slog(LOG_ALL, 0, "Weapon init %d: Illegal attack type %s.", idx, pTmp);
+                continue;
+            }
 
             if (idx2 != -1)
             {
@@ -1073,6 +1111,9 @@ static void weapon_init(void)
         wpn_info[i].type = WPNT_SLASH;
         wpn_info[i].speed = 0;
         wpn_info[i].shield = SHIELD_M_BLOCK;
+        wpn_info[i].ability[0] = ABIL_STR;
+        wpn_info[i].ability[1] = ABIL_STR;
+        wpn_info[i].ability[2] = ABIL_DEX;
 
         wpn_tree[i].parent = WPN_ROOT;
 
