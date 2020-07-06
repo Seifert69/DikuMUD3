@@ -6,6 +6,7 @@ var sPaged = "";
 
 
 var g_sImage = "img/logo.gif";
+var g_nLastSend = Math.round(Date.now() / 1000);
 
 var g_nHp = 1;
 var g_nHpMax = 1;
@@ -471,7 +472,7 @@ function setMap(szone, smap) {
 
     if (x == -1) {
         var mye = document.getElementById("mymap");
-        mye.style = "background-image: url('" + s + "'); background-size: contain; width: 100%; height: 100%; background-position: center; background-repeat: no-repeat;";
+        mye.style = "background-image: url('" + g_sImage + "'); background-size: contain; width: 100%; height: 100%; background-position: center; background-repeat: no-repeat;";
         return;
     }
 
@@ -709,6 +710,8 @@ function sendCommand(str, bFocus, bHistory, bEcho)
         return false;
     }
 
+    g_nLastSend = Math.round(Date.now() / 1000);
+
     str = str.trim();
 
     if (aliasCheck(str))
@@ -771,4 +774,16 @@ function onMainClick()
     document.getElementById("modtext").firstChild.replaceWith(item);    
 
     document.getElementById("myModal").style.display = "block";
+}
+
+
+function keepAlive()
+{
+    var sec = Math.round(Date.now() / 1000);
+
+    if (sec-g_nLastSend < 240)
+        return;
+
+    console.log("Keep alive");
+    sendCommand("", false, false, false);
 }

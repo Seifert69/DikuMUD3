@@ -520,6 +520,8 @@
                 InputFocus(null);
             }, false);
 
+            setInterval(keepAlive, 60000);
+
             function PasswordOn() {
                 document.getElementById("message").setAttribute('type','password');
             }
