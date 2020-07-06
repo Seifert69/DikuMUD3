@@ -23,6 +23,15 @@
 #include "common.h"
 #include "fight.h"
 
+
+// MS2020 Trying to decipher the purpose
+//   level 0 - 20 : Changes nothing  
+//   up to lvl 50 : add 5% bonus to points for each level above 20, for points up to 100 max.
+//                  will yield bonus from 0..150
+//   above lvl 50 : 
+//                  will yield bonus from 150..150+5/level
+//
+
 int kludge_bonus(int level, int points)
 {
    if (level <= 20)
@@ -157,8 +166,7 @@ int spell_bonus(class unit_data *att, class unit_data *medium,
    if (CHAR_AWAKE(def))
    {
       hm = (5 * (spell_attack_ability(medium, spell_number) -
-                 spell_ability(def, ABIL_BRA, spell_number))) /
-               2 +
+                 spell_ability(def, ABIL_BRA, spell_number))) / 2 +
            2 * (att_spl_knowledge - def_spl_knowledge) - def_bonus;
    }
    else
@@ -398,6 +406,15 @@ void do_consider(class unit_data *ch, char *arg, const struct command_info *cmd)
    }
 
    rtd = base_consider(vict, ch);
+
+   if (IS_IMMORTAL(ch))
+   {
+      act("Rounds to be killed by $3n = $2d.", A_SOMEONE, ch, rtd, vict, TO_CHAR);
+
+      rtd = base_consider(ch, vict);
+      act("Rounds to kill $3n = $2d.", A_SOMEONE, ch, rtd, vict, TO_CHAR);
+      return;
+   }
 
    if (rtd <= 1)
       send_to_char("RUN AWAY!<br/>", ch);
