@@ -4,6 +4,9 @@ var nRowCount = 0;
 var bPaged = 0;
 var sPaged = "";
 
+
+var g_sImage = "img/logo.gif";
+
 var g_nHp = 1;
 var g_nHpMax = 1;
 var g_nEp = 1;
@@ -456,11 +459,10 @@ function setMap(szone, smap) {
         }
     }
 
-    var s;
     if (szone != "")
-        s = "img/" + szone + ".jpg";
+        g_sImage = "img/" + szone + ".jpg";
     else
-        s = "img/logo.gif";
+        g_sImage = "img/logo.gif";
 
     var mye = document.getElementById("ac_map");
     var xw, yh;
@@ -488,7 +490,7 @@ function setMap(szone, smap) {
     y = -y
 
     var mye = document.getElementById("mymap");
-    mye.style = "background-image: url('" + s + "'); width: " + xw + "px; height: " + yh + "px; background-repeat: no-repeat; background-position: left " + x + "px top " + y + "px;";
+    mye.style = "background-image: url('" + g_sImage + "'); width: " + xw + "px; height: " + yh + "px; background-repeat: no-repeat; background-position: left " + x + "px top " + y + "px;";
     //console.log(mye.style);
     /* mye.style = "position:relative; right:"+x+"px; bottom:"+y+"px;";*/
 }
@@ -733,4 +735,40 @@ function onSendClick() {
     g_nHistoryPos = 0;
     var myfld = document.getElementById("message");
     sendCommand(myfld.value, true, myfld.getAttribute('type') != "password", myfld.getAttribute('type') != "password");
+}
+
+
+function onMapClick()
+{
+    var item = document.createElement("img");
+    item.id = "id";
+    item.src = g_sImage;
+    item.setAttribute("style", "display: inline");
+    item.style.maxHeight = "500px";
+    item.style.maxWidth  = "auto";
+
+    document.getElementById("modtext").firstChild.replaceWith(item);
+
+    document.getElementById("myModal").style.display = "block";
+}
+
+
+function onMainClick()
+{
+    var item, pgd;
+
+    pgd = document.getElementById("al_text");
+
+    // This is terrible. I dont understand why I can't just copy an object :-))
+    // So instead for now I have to build a new one. I cant use innerhtml either
+    // because the assigned data and onclick events dont come back out from innerhtml
+    //
+    var item = document.createElement("div");
+    item.setAttribute("style", "display: inline");
+    item.innerHTML = pgd.innerHTML;
+    TraverseTreeAndFix(item); // Transform links
+
+    document.getElementById("modtext").firstChild.replaceWith(item);
+
+    document.getElementById("myModal").style.display = "block";
 }

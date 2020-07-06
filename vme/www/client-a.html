@@ -328,7 +328,7 @@
     background-color: #444444;
     width: 80%; /* Could be more or less, depending on screen size */
     max-width: 90%;
-    max-height: 80%;
+    max-height: 90%;
     resize: both;
     overflow-y: auto; /* Enable scroll if needed */
     border: 2px solid rgb(177, 177, 177);
@@ -387,7 +387,7 @@
     <!-- ============ CONTENT ============== *-->
     <div class="c_container flex-direction"> <!-- Outer -->
         <div class="c_left">
-            <div id="al_text" role="log" aria-live="polite">
+            <div id="al_text" role="log" aria-live="polite" ondblclick="onMainClick()">
                 <ul id="converse" style="list-style-type: none; display: inline;"></ul>
             </div>
             <div id="al_cmd">
@@ -401,7 +401,7 @@
             </div>
         </div>
         <div class="c_center">
-            <div id="ac_map">
+            <div id="ac_map" onclick="onMapClick()">
                 <div id="mymap"></div>
             </div>
             <div id="ac_paged" aria-live="polite">
@@ -498,9 +498,12 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 var strConn = urlParams.get('protocol') + "://" + urlParams.get('host') + ":" + urlParams.get('port') + urlParams.get('endpoint');
                 outputText("Accessible MUD client<br/>", false);
-                outputText("ESC - clear input field<br/>", false);
+                outputText("ESC - clear/focus input field<br/>", false);
                 outputText("Up arrow - Scroll back through last commands<br/>", false);
                 outputText("Down arrow - Scroll forward through commands<br/>", false);
+                outputText("Click map - Pop up map window<br/>", false);
+                outputText("Double click main - Pop up fixed main (for easy copy & paste)<br/>", false);
+                outputText("Alias, triggers and variables - use commands on MUD server<br/>", false);
 
                 openWSConnection(urlParams.get('protocol'), urlParams.get('host'), urlParams.get('port'), urlParams.get('endpoint'));
             
