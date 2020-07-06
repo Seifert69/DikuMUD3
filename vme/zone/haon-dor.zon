@@ -7,39 +7,6 @@ request     compile
 version     17
 END HEADER*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include <macros.h>
 
 %zone                          haon_dor
@@ -3351,11 +3318,16 @@ names {"rabbit foot", "foot"}
 title "a small rabbits foot"
 descr "A rabbit foot necklace has carelessly been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+flags {UNIT_FL_MAGIC}
 weight 1
 cost 1 SILVER_PIECE
 extra {}
 "It looks like one of those lucky rabbit foots on a leather strap so that
 you can wear it around your neck."
+extra {"$identify"}
+"The rabbit foot will help you flee from combat more easily."
+extra {"$improved identify"}
+"<pre>Flee:            +10%<br/></pre>"
 SKILL_TRANSFER(SKI_FLEE, 10)
 end
 
@@ -3713,6 +3685,10 @@ cost 8 GOLD_PIECE
 rent 8 IRON_PIECE
 extra {}
 "It has a nice sky blue colour and a smell like peppermint."
+extra {"$identify"}
+"If you drink the liquid your wounds will heal."
+extra {"$improved identify"}
+"Quaffing this potion is equivalent to a Cure Light Wounds spell of power 50"
 end
 
                            yellow_potion
@@ -3728,6 +3704,10 @@ cost 4 GOLD_PIECE
 rent 8 IRON_PIECE
 extra {}
 "It has a deep yellow colour and and a strong spicy smell."
+extra {"$identify"}
+"If you drink the liquid you will be cured of poison."
+extra {"$improved identify"}
+"Quaffing this potion is equivalent to a Remove Poison spell of power 50"
 end
 
                            large_shield
@@ -3752,7 +3732,7 @@ descr "An iron crown rests on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 /* Iron 100%, Good craft = 10%, ostrength 20 */
 flags {UNIT_FL_MAGIC}
-ARMOUR_HRD_LEATHER(0, 0)
+ARMOUR_HRD_LEATHER(10, 5)
 weight 10
 cost 12 SILVER_PIECE
 
@@ -3764,8 +3744,8 @@ extra {"$identify"}
 as a chain coif."
 
 extra {"$improved identify"}
-"This iron crown is of good craftsmanship and magically enchanted to
-give a +5 protection."
+"This iron crown is of +10 craftsmanship and magically enchanted to
+give +5 protection."
 end
 
                            iron_sceptre
@@ -3782,6 +3762,11 @@ cost 5 SILVER_PIECE
 rent 5 IRON_PIECE
 extra {}
 "It is a heavy sceptre made from solid iron. It glows with a white light."
+extra {"$identify"}
+"The sceptre emits light."
+
+extra {"$improved identify"}
+"This sceptre shines with a +2 brightness magical enchantment."
 end
 
                            iron_ring
