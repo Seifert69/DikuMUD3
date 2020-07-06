@@ -63,9 +63,9 @@ G             M  |  Y                          Herbalist       E05<br/>
                  |                             Field Equipment E09<br/>
 H                |                             Tobacco Shop    F10<br/>
                  |                             Mage Tailor     G05<br/>
-I                D                             Fence           G09<br/>
+I                |                             Fence           G09<br/>
                  |                             Village Dump    I07<br/>
-J              Bridge                          Town Records    D01<br/>
+J              Bridge --- D                    Town Records    D01<br/>
 <br/>
                                                Teacher         A01<br/>
                                                Teacher         A01<br/>
