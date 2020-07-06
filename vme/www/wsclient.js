@@ -768,7 +768,7 @@ function onMainClick()
     item.innerHTML = pgd.innerHTML;
     TraverseTreeAndFix(item); // Transform links
 
-    document.getElementById("modtext").firstChild.replaceWith(item);
+    document.getElementById("modtext").firstChild.replaceWith(item);    
 
     document.getElementById("myModal").style.display = "block";
 }
