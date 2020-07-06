@@ -781,7 +781,7 @@ function keepAlive()
 {
     var sec = Math.round(Date.now() / 1000);
 
-    if (sec-g_nLastSend < 240)
+    if (sec-g_nLastSend < 250)
         return;
 
     console.log("Keep alive");
