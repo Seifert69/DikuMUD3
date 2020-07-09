@@ -5364,9 +5364,9 @@ code
       self.skills[SKI_FIRST_AID]      :=  5;
       self.skills[SKI_SKIN]  := 5;
 
-      exec("alias cu cast cure light wounds $", self);
-      exec("alias ca cast cause light wounds $", self);
-      exec("alias kk kill $; ca $", self);
+      exec("alias cu cast cure light wounds $0", self);
+      exec("alias ca cast cause light wounds $0", self);
+      exec("alias kk kill $0; ca $0", self);
 
       exec("alias kd kk deer", self);
       exec("alias kb kk badger", self);
@@ -5392,9 +5392,9 @@ code
       self.skills[SKI_RESCUE]      := self.skills[SKI_RESCUE] + 5;
       self.skills[SKI_SKIN]  := 5;
 
-      exec("alias cu cast cure light wounds $", self);
-      exec("alias ca cast cause light wounds $", self);
-      exec("alias kk kill $; ca $", self);
+      exec("alias cu cast cure light wounds $0", self);
+      exec("alias ca cast cause light wounds $0", self);
+      exec("alias kk kill $0; ca $0", self);
 
       exec("alias kd kk deer", self);
       exec("alias kb kk badger", self);
@@ -5423,11 +5423,11 @@ code
       self.spells[SPL_LIGHTNING_1]  :=  5;
       self.spells[SPL_FIREBALL_1]   :=  5;
 
-      exec("alias cb cast burn $", self);
-      exec("alias kk kill $; cb $", self);
+      exec("alias cb cast burn $0", self);
+      exec("alias kk kill $0; cb $0", self);
 
       exec("alias es cast electrical shock $", self);
-      exec("alias kk kill $; es $", self);
+      exec("alias kk kill $0; es $0", self);
 
       exec("alias kd kk deer", self);
       exec("alias kb kk badger", self);
@@ -5525,8 +5525,8 @@ code
       self.spells[SPL_DET_UNDEAD]     := self.spells[SPL_DET_UNDEAD] + 5;
       self.spells[SPL_CAUSE_WOUNDS_1] := self.spells[SPL_CAUSE_WOUNDS_1] + 5;
       self.skills[SKI_SKIN]  := 5;
-      exec("alias ca cast cause light wounds $", self);
-      exec("alias kk kill $; ca $", self);
+      exec("alias ca cast cause light wounds $0", self);
+      exec("alias kk kill $0; ca $0", self);
 
       exec("alias kd kk deer", self);
       exec("alias kb kk badger", self);
@@ -5555,10 +5555,10 @@ code
 
       self.spells[SPL_ENERGY_BOLT]   :=  5;
 
-      exec("alias dm cast detect magic $", self);
+      exec("alias dm cast detect magic $0", self);
 
-      exec("alias eb cast energy bolt $", self);
-      exec("alias kk kill $; eb $", self);
+      exec("alias eb cast energy bolt $0", self);
+      exec("alias kk kill $0; eb $0", self);
 
       exec("alias kd kk deer", self);
       exec("alias kb kk badger", self);
