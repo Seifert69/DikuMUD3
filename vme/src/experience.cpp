@@ -229,12 +229,12 @@ int spell_bonus(class unit_data *att, class unit_data *medium,
    if (CHAR_AWAKE(def))
    {
       hm = 2 * (spell_attack_ability(medium, spell_number) - spell_ability(def, ABIL_BRA, spell_number) +
-               (att_spl_knowledge - def_spl_knowledge/3) + (att_bonus - def_bonus));
+               (att_spl_knowledge - def_spl_knowledge/3) + (att_bonus - def_bonus) + CHAR_LEVEL(att) - CHAR_LEVEL(def));
    }
    else
    {
       hm = 2 * (spell_attack_ability(medium, spell_number) +
-               (att_spl_knowledge) + (att_bonus - def_bonus));
+               (att_spl_knowledge) + (att_bonus - def_bonus) + CHAR_LEVEL(att) - CHAR_LEVEL(def));
    }
 
    return MAX(-50, hm);
@@ -493,9 +493,10 @@ int melee_bonus(class unit_data *att, class unit_data *def,
    int att_abil = weapon_attack_ability(att, att_wpn_type);
 
    if (CHAR_AWAKE(def))
-      hm = 2* ((att_abil - def_dex) + (att_wpn_knowledge - def_wpn_knowledge/3) + att_bonus - def_bonus);
+      hm = 2* ((att_abil - def_dex) + (att_wpn_knowledge - def_wpn_knowledge/3) + 
+                att_bonus - def_bonus + CHAR_LEVEL(att) - CHAR_LEVEL(def));
    else
-      hm = 2* (att_abil + att_wpn_knowledge + att_bonus);
+      hm = 2* (att_abil + att_wpn_knowledge + att_bonus + CHAR_LEVEL(att) - CHAR_LEVEL(def));
 
    return MAX(-50, hm);
 }
