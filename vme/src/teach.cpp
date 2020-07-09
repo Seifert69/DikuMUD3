@@ -92,10 +92,21 @@ static int gold_cost(struct skill_teach_type *s, int level)
 // Otherwise, grows by 2x for each sum mod negative 
 // because half cost = 5, double cost = 20.
 // For each training level after 1, cost increases by 50%.
-int actual_cost(int cost, sbit8 racemodifier, int level)
+int actual_cost(int cost, sbit8 racemodifier, int level, int virtual_level)
 {
     int mod;
     int pct;
+    int avg_skill_cost;
+
+    avg_skill_cost = AVERAGE_SKILL_COST;
+    if (virtual_level > 100)
+    {
+        int i;
+        i = MIN(100, virtual_level-100);
+        avg_skill_cost += (i*AVERAGE_SKILL_COST*(ABILITY_POINT_FACTOR-1))/100;
+        // At level 200 the average skill cost has increased from 1*average_skill_cost
+        // to ABILITY_POINT_FACTOR * average_skill_cost
+    }
 
     pct = 100;
     if (level >= 1)
@@ -104,20 +115,20 @@ int actual_cost(int cost, sbit8 racemodifier, int level)
     mod = cost + racemodifier;
 
     if (mod == 0)
-        return (AVERAGE_SKILL_COST*pct+99)/100;
+        return (avg_skill_cost*pct+99)/100;
     else if (mod > 0)
     {
         if (mod > 5)
             mod = 5; // 10-5 = 5 is the cheapest cost
 
         // SO best possible training progression for any char is: 4, 6, 9, 14
-        return ((AVERAGE_SKILL_COST - mod)*pct+99)/100; 
+        return ((avg_skill_cost - mod)*pct+99)/100; 
     }
     else // mod < 0
     {
         if (mod < -7)
             mod = -7;
-        return ((AVERAGE_SKILL_COST - 3 * mod)*pct+99)/100;
+        return ((avg_skill_cost - 3 * mod)*pct+99)/100;
     }
 }
 
@@ -261,7 +272,7 @@ void info_show_roots(class unit_data *teacher, class unit_data *pupil,
         {
             cost = actual_cost(cost_table[teaches_skills[i].node].profession_cost[PC_PROFESSION(pupil)],
                                pc_cost[teaches_skills[i].node],
-                               pc_lvl[teaches_skills[i].node]);
+                               pc_lvl[teaches_skills[i].node], PC_VIRTUAL_LEVEL(pupil));
 
             info_show_one(teacher, pupil,
                           pc_values[teaches_skills[i].node],
@@ -309,7 +320,7 @@ void info_one_skill(class unit_data *teacher, class unit_data *pupil,
     if (!TREE_ISLEAF(tree, teaches_skills[teach_index].node))
     {
         i = teaches_skills[teach_index].node;
-        cost = actual_cost(cost_table[i].profession_cost[PC_PROFESSION(pupil)], pc_cost[i], pc_lvl[i]);
+        cost = actual_cost(cost_table[i].profession_cost[PC_PROFESSION(pupil)], pc_cost[i], pc_lvl[i], PC_VIRTUAL_LEVEL(pupil));
 
         info_show_one(teacher, pupil, pc_values[i],
                       teaches_skills[teach_index].max_skill,
@@ -329,7 +340,7 @@ void info_one_skill(class unit_data *teacher, class unit_data *pupil,
             {
                 /* It is a child */
                 i = teaches_skills[j].node;
-                cost = actual_cost(cost_table[i].profession_cost[PC_PROFESSION(pupil)], pc_cost[i], pc_lvl[i]);
+                cost = actual_cost(cost_table[i].profession_cost[PC_PROFESSION(pupil)], pc_cost[i], pc_lvl[i], PC_VIRTUAL_LEVEL(pupil));
                 info_show_one(teacher, pupil, pc_values[i],
                               teaches_skills[j].max_skill,
                               cost,
@@ -349,7 +360,7 @@ void info_one_skill(class unit_data *teacher, class unit_data *pupil,
             {
                 /* It is a child */
                 i = teaches_skills[j].node;
-                cost = actual_cost(cost_table[i].profession_cost[PC_PROFESSION(pupil)], pc_cost[i], pc_lvl[i]);
+                cost = actual_cost(cost_table[i].profession_cost[PC_PROFESSION(pupil)], pc_cost[i], pc_lvl[i], PC_VIRTUAL_LEVEL(pupil));
 
                 info_show_one(teacher, pupil, pc_values[i],
                               teaches_skills[j].max_skill,
@@ -463,7 +474,7 @@ int practice(struct spec_arg *sarg, struct teach_packet *pckt,
     }
 
     cost = actual_cost(cost_table[pckt->teaches[teach_index].node].profession_cost[PC_PROFESSION(sarg->activator)],
-                       pc_cost[pckt->teaches[teach_index].node], pc_lvl[pckt->teaches[teach_index].node]);
+                       pc_cost[pckt->teaches[teach_index].node], pc_lvl[pckt->teaches[teach_index].node], PC_VIRTUAL_LEVEL(sarg->activator));
 
     if (cost == 0)
     {
