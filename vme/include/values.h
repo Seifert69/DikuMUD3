@@ -128,36 +128,50 @@ END HEADER*/
 	*
 */
 
-#define WPN_BATTLE_AXE    7  /* Two Handed */
-#define WPN_HAND_AXE      8
-#define WPN_WAR_MATTOCK   9  /* Two Handed */
-#define WPN_WAR_HAMMER   10
+#define WPN_BATTLE_AXE    7  /* Two Handed Axe */
+#define WPN_HAND_AXE      8  /* One Handed Axe */
 
-#define WPN_GREAT_SWORD  11  /* Two Handed */
-#define WPN_SCIMITAR     12
-#define WPN_KATANA       13
-#define WPN_FALCHION     14
-#define WPN_KOPESH       15
-#define WPN_BROAD_SWORD  16
-#define WPN_LONG_SWORD   17
-#define WPN_RAPIER       18
+#define WPN_WAR_MATTOCK   9  /* Two Handed mattock */
+#define WPN_ADZE         76  /* One handed "mattock" */
+
+#define WPN_WAR_MAUL     54  /* Two handed hammer, maul, sledge hammer */
+#define WPN_WAR_HAMMER   10  /* One handed hammer, e.g. Mjolnir */
+
+
+
+#define WPN_BATTLE_CLUB  23  /* Two handed club */
+#define WPN_CLUB         24  /* One Handed club */
+
+#define WPN_BATTLE_MACE  21  /* Two Handed mace (crushing) */
+#define WPN_MACE         22  /* One Handed mace */
+
+#define WPN_FLAIL        26  /* Two handed (ball and chain) */
+#define WPN_MORNING_STAR 25  /* One handed (ball and chain). Fantasy weapon. often called (flail) morning star */
+
+//#define WPN_MORNING_STAR 91  /* One Handed (mace with spikes) */
+                             // Are we missing a two handed morning star (or spiked club)?
+
+
+#define WPN_GREAT_SWORD  11  /* Two Handed Sword */
+#define WPN_LONG_SWORD   17  /* One handed sword */
+#define WPN_SCIMITAR     12  /* One handed, slim curved blade */
+#define WPN_FALCHION     14  /* One handed, broad curved blade */
 #define WPN_SHORT_SWORD  19
+#define WPN_RAPIER       18  // Pointy, piercing
+#define WPN_MAIN_GAUCHE  73
+#define WPN_STILETTO     97
 #define WPN_DAGGER       20
+#define WPN_SICKLE       31  /* One handed, slashing */
 
-#define WPN_BATTLE_MACE  21  /* Two Handed */
-#define WPN_MACE         22
-#define WPN_BATTLE_CLUB  23  /* Two handed */
-#define WPN_CLUB         24
-#define WPN_MORNING_STAR 25
-#define WPN_FLAIL        26
-
-#define WPN_QUARTERSTAFF 27
-#define WPN_SPEAR        28
-#define WPN_HALBERD      29
-#define WPN_BARDICHE     30
-#define WPN_SICKLE       31
-#define WPN_SCYTHE       32  /* Two handed */
+#define WPN_HALBERD      29  /* Two handed polearm club (crush) */
+#define WPN_BARDICHE     30  /* Two handed polearm axe (slash)*/ 
+#define WPN_SCYTHE       32  /* Two handed (grim reaper) */
+#define WPN_QUARTERSTAFF 27  /* Two handed */
+#define WPN_SPEAR        28  /* Two handed Pole arm (pierce) */
+#define WPN_JAVELIN      85  /* Mostly designed to be thrown */
 #define WPN_TRIDENT      33
+#define WPN_LANCE        49
+
 
 #define WPN_FIST         34
 #define WPN_KICK         35
@@ -165,70 +179,127 @@ END HEADER*/
 #define WPN_STING        37
 #define WPN_CLAW         38
 #define WPN_CRUSH        39
+#define WPN_KNEE         55
+#define WPN_ELBOW        56
+#define WPN_KNUCKLES     99  // metal on your knuckles
 
-#define WPN_WHIP         40
-#define WPN_WAKIZASHI    41
 #define WPN_BOW          42 /* Here down to Staff are Rangers Guild Jan 98 */
 #define WPN_CROSSBOW     43
 #define WPN_SLING        44
-#define WPN_FIGHTING_STAFF 45 /* Two handed */
-#define WPN_SABER        46
-#define WPN_CUTLASS      47
-#define WPN_MACHETE      48
-#define WPN_LANCE        49
-#define WPN_SHOCK_LANCE  50
-#define WPN_PIKE         51
-#define WPN_GREAT_AXE    52
-#define WPN_CLAYMORE     53
-#define WPN_WAR_MAUL     54
-#define WPN_KNEE         55
-#define WPN_ELBOW        56
-#define WPN_FAUCHARD     57
-#define WPN_SAPPARA      58
-#define WPN_POLE_CLEAVER 59
-#define WPN_CROWBILL     60
-#define WPN_ESTOC        61
-#define WPN_BILL_GUISARME 62
-#define WPN_GUISARME     63
-#define WPN_NAGINATA     64
-#define WPN_SPETUM       65
-#define WPN_LUCERN_HAMMER 66
-#define WPN_BASTARD_SWORD2 67 /* SPECIAL USE FLAMETONGUE AND AVENGER */
-#define WPN_BASTARD_SWORD1 68   /* DITTO */
-#define WPN_PARTISAN       69
-#define WPN_PILUM          70
-#define WPN_JEDDART_AXE    71
-#define WPN_HAND_HAMMER    72
-#define WPN_MAIN_GAUCHE    73
-#define WPN_COMMON_MAUL    74
-#define WPN_POLE_AXE       75
-#define WPN_ADZE           76
-#define WPN_STAFF          77
-#define WPN_BACULUS        78
-#define WPN_FISH_SPINE     79
-#define WPN_GAFF           80
-#define WPN_FLAMBERGE      81
-#define WPN_BEC_DE_CORBIN  82
-#define WPN_VOULGE         83
-#define WPN_WAR_AXE        84
-#define WPN_JAVELIN        85
-#define WPN_MILITARY_FORK  86
-#define WPN_ICE_PICK       87
-#define WPN_DIRK           88
-#define WPN_SHAMSHIR       89
-#define WPN_FAUCHARD_FORK  90
-#define WPN_BALL_CHAIN     91
-#define WPN_CUDGEL         92
-#define WPN_RANSEUR        93
-#define WPN_FOOT_LANCE     94
-#define WPN_BILL_HOOK      95
-#define WPN_TALWAR         96
-#define WPN_STILETTO       97
-#define WPN_CLEAVER        98
-#define WPN_BRASS_KNUCKLES 99
-#define WPN_LOCHABER_AXE  100
-#define WPN_GLAIVE        101
+#define WPN_WHIP         40
+
+// MISSING WEAPONS ?
+
+// Heavy / light Xbox (we already have one)
+// Short / long / composite bow (we already have one)
+// Shuriken. 
+// Darts. 
+// Blow-dart. 
+// Bola.
+// Iron glove (armored fist)
+
+
+// Map the old surplus weapons to the more generic weapon types.
+// E.g. the broad sword is the same skill category as long sword.
+
+#define WPN_BROAD_SWORD  WPN_LONG_SWORD
+#define WPN_LUCERN_HAMMER WPN_HALBERD
+#define WPN_KATANA WPN_SCIMITAR
+#define WPN_WAKIZASHI WPN_SCIMITAR
+#define WPN_NAGINATA WPN_BARDICHE
+#define WPN_BASTARD_SWORD1 WPN_LONG_SWORD
+#define WPN_BASTARD_SWORD2 WPN_LONG_SWORD
+#define WPN_HAND_HAMMER WPN_WAR_HAMMER
+#define WPN_KOPESH WPN_HAND_AXE
+#define WPN_FLAMBERGE WPN_LONG_SWORD
+#define WPN_MACHETE WPN_SHORT_SWORD
+#define WPN_PIKE WPN_SPEAR
+#define WPN_WAR_AXE WPN_BATTLE_AXE
+#define WPN_GAFF WPN_JAVELIN
+#define WPN_CUTLASS WPN_STILETTO
+#define WPN_GREAT_AXE WPN_BATTLE_AXE
+#define WPN_SABER WPN_SCIMITAR
+#define WPN_LOCHABER_AXE WPN_HALBERD
+#define WPN_BALL_CHAIN WPN_MORNING_STAR
+#define WPN_FOOT_LANCE WPN_LANCE
+#define WPN_POLE_AXE WPN_BARDICHE
+#define WPN_CLAYMORE WPN_LONG_SWORD
+#define WPN_DIRK WPN_DAGGER
+#define WPN_ICE_PICK WPN_HAND_AXE
+#define WPN_RANSEUR WPN_SPEAR
+#define WPN_TALWAR WPN_SCIMITAR
+#define WPN_ESTOC WPN_LONG_SWORD
+#define WPN_VOULGE WPN_BARDICHE
+#define WPN_FISH_SPINE WPN_LONG_SWORD
+#define WPN_SHOCK_LANCE WPN_LANCE
+#define WPN_BILL_GUISARME WPN_HALBERD
+#define WPN_JEDDART_AXE WPN_BARDICHE
+#define WPN_BEC_DE_CORBIN WPN_HALBERD
+#define WPN_FAUCHARD_FORK WPN_BARDICHE
+#define WPN_SHAMSHIR WPN_SCIMITAR
+#define WPN_SAPPARA WPN_LONG_SWORD
+#define WPN_POLE_CLEAVER WPN_BARDICHE
+#define WPN_CROWBILL WPN_HALBERD
+#define WPN_CLEAVER WPN_HAND_AXE
+#define WPN_MILITARY_FORK WPN_TRIDENT
+#define WPN_FIGHTING_STAFF WPN_QUARTERSTAFF
+#define WPN_STAFF WPN_QUARTERSTAFF
+
+
 #define LAST_WEAPON       101
+
+// #define WPN_HAND_HAMMER  72  
+///#define WPN_KATANA       13
+///#define WPN_KOPESH       15
+///#define WPN_BROAD_SWORD  16
+///#define WPN_WAKIZASHI    41
+/// #define WPN_FIGHTING_STAFF 45 /* Two handed */
+/// #define WPN_SABER        46
+/// #define WPN_CUTLASS      47
+/// #define WPN_MACHETE      48
+///#define WPN_SHOCK_LANCE  50
+/// #define WPN_PIKE         51
+///#define WPN_GREAT_AXE    52
+///#define WPN_CLAYMORE     53
+///#define WPN_FAUCHARD     57
+///#define WPN_SAPPARA      58
+///#define WPN_POLE_CLEAVER 59
+///#define WPN_CROWBILL     60
+/// #define WPN_ESTOC        61
+///#define WPN_BILL_GUISARME 62
+///#define WPN_GUISARME     63
+///#define WPN_NAGINATA     64
+///#define WPN_SPETUM       65
+///#define WPN_LUCERN_HAMMER 66
+///#define WPN_BASTARD_SWORD2 67 /* SPECIAL USE FLAMETONGUE AND AVENGER */
+///#define WPN_BASTARD_SWORD1 68   /* DITTO */
+/// #define WPN_PARTISAN       69
+///#define WPN_PILUM          70
+///#define WPN_JEDDART_AXE    71
+///#define WPN_COMMON_MAUL    74
+///#define WPN_POLE_AXE       75
+///#define WPN_ADZE           76
+///#define WPN_STAFF          77
+///#define WPN_BACULUS        78
+///#define WPN_FISH_SPINE     79
+///#define WPN_GAFF           80
+/// #define WPN_FLAMBERGE      81
+/// #define WPN_BEC_DE_CORBIN  82
+/// #define WPN_VOULGE         83
+///#define WPN_WAR_AXE        84
+///#define WPN_MILITARY_FORK  86
+/// #define WPN_ICE_PICK       87
+/// #define WPN_DIRK           88
+/// #define WPN_SHAMSHIR       89
+/// #define WPN_FAUCHARD_FORK  90
+///#define WPN_CUDGEL         92
+///#define WPN_RANSEUR        93
+///#define WPN_FOOT_LANCE     94
+/// #define WPN_BILL_HOOK      95
+///#define WPN_TALWAR         96
+/// #define WPN_CLEAVER        98
+/// #define WPN_LOCHABER_AXE  100
+/// #define WPN_GLAIVE        101
 /*check vme.h for max number of weapons.*/
 /* keep in mind if you need more ask the vme coders.*/
 
