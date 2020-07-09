@@ -334,27 +334,31 @@ class unit_data *cCombat::Opponent(int i)
       return pOpponents[i];
 }
 
-void cCombat::status(const class unit_data *ch)
+
+void cCombat::status(const class unit_data *god)
 {
    char buf[MAX_STRING_LENGTH];
    int i;
+   string str;
 
    sprintf(buf,
            "Combat Status of '%s':<br/>"
            "Combat Speed [%d]  Turn [%d]<br/>"
            "Melee Opponent '%s'<br/>"
-           "Total of %d Opponents:<br/>",
+           "Total of %d Opponents:<br/><br/>",
            STR(UNIT_NAME(pOwner)),
            CHAR_SPEED(pOwner), nWhen,
            CHAR_FIGHTING(pOwner) ? STR(UNIT_NAME(CHAR_FIGHTING(pOwner))) : "NONE", nNoOpponents);
 
-   send_to_char(buf, ch);
+   str.append(buf);
 
    for (i = 0; i < nNoOpponents; i++)
    {
       sprintf(buf, "   %s<br/>", STR(UNIT_NAME(pOpponents[i])));
-      send_to_char(buf, ch);
+      str.append(buf);
    }
+
+   send_to_char(buf, god);
 }
 
 /* ======================================================================= */
@@ -424,18 +428,34 @@ void stop_fighting(class unit_data *ch, class unit_data *victim)
 /*                                                                         */
 /* ======================================================================= */
 
-void stat_combat(const class unit_data *ch, class unit_data *u)
-{
+void stat_combat(const class unit_data *god, class unit_data *u)
+{   
    if (!IS_CHAR(u))
    {
-      act("$2n is not a pc / npc.", A_ALWAYS, ch, u, NULL, TO_CHAR);
+      act("$2n is not a pc / npc.", A_ALWAYS, god, u, NULL, TO_CHAR);
       return;
    }
 
-   CombatList.status(ch);
+   CombatList.status(god);
 
-   if (!CHAR_COMBAT(u))
-      act("No combat structure on '$2n'", A_ALWAYS, ch, u, NULL, TO_CHAR);
+   class unit_data *f;
+   f = CHAR_FIGHTING(u);
+   if (!f)
+      f = u;
+
+  if (!CHAR_COMBAT(u))
+      act("No combat structure on '$2n'", A_ALWAYS, god, u, NULL, TO_CHAR);
    else
-      CHAR_COMBAT(u)->status(ch);
+      CHAR_COMBAT(u)->status(god);
+
+   void stat_melee_bonus(string &str,
+                        class unit_data *att, class unit_data *def,
+                        int hit_loc,
+                        int *pAtt_weapon_type, class unit_data **pAtt_weapon,
+                        int *pDef_armour_type, class unit_data **pDef_armour,
+                        int primary);
+
+   string str;
+   stat_melee_bonus(str, u, f, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE);
+   send_to_char(str.c_str(), god);
 }
