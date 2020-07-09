@@ -1137,7 +1137,7 @@ static void weapon_init(void)
         else
             wpn_tree[i].isleaf = TRUE;
 
-        wpn_text[i] = NULL;
+        wpn_text[i] = strdup(""); // To manage missing weapons
 
         /* Default to zero */
         for (j = 0; j < PC_RACE_MAX; j++)

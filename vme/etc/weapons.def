@@ -655,7 +655,7 @@ attack plate    = {52, 2,12} /*w hammer*/
 
 
 index           = WPN_KNUCKLES
-name            = knuckles
+name            = brass knuckles
 sphere          = WPN_AXE_HAM
 hands           =   1
 type            = WPNT_BLUDGEON
@@ -1101,7 +1101,7 @@ attack plate    = {69, 0,14} /*mace*/
 
 
 index           = WPN_FLAIL
-name            = two-handed flail
+name            = flail
 sphere          = WPN_CLUB_MACE
 hands           =   2
 type            =  WPNT_BLUDGEON
@@ -1137,7 +1137,7 @@ attack plate    = {62, 5, 9} /* flail */
 
 /* Essentially a one handed flail. Never existed but popular in games :) */
 index           = WPN_MORNING_STAR
-name            = morning star flail // A 1H flail with a morning star at the end, aka popular name 
+name            = morning star // A 1H flail with a morning star at the end, aka popular name 
 sphere          = WPN_CLUB_MACE
 hands           =   1
 type            =  WPNT_BLUDGEON
