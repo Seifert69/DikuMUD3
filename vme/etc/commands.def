@@ -1033,9 +1033,11 @@ race half-elf  =   0
 race brownie   =   0
 race groll     =   0
 race darkelf   =  +1
-restrict level          = 10
-profession thief        = +0
+restrict dexterity      = 30
 profession assassin     = +2
+profession thief        = +0
+profession ranger       = +0
+profession fighter      = -1
 
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1058,11 +1060,10 @@ race half-elf  =   0
 race brownie   =  +1
 race groll     =   0
 race darkelf   =  +2
-restrict level          = 5
-restrict divine         = +1
+restrict divine         = 10
+profession priest       = +5
 profession knight       = -3
 profession paladin      = -3
-profession priest       = +5
 
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1085,14 +1086,14 @@ race half-elf  =  +1
 race brownie   =  +1
 race groll     =  -3
 race darkelf   =  +2
-restrict level          = 13
-profession assassin     = -3
-profession priest       = +2
-profession druid        = +5
-profession mystic       = -3
-profession necromancer  = +2
+restrict brain          = 35
 profession conjurer     = +5
 profession sorcerer     = +5
+profession druid        = +2
+profession necromancer  = +2
+profession priest       = +2
+profession assassin     = -3
+profession mystic       = -3
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1114,12 +1115,12 @@ race half-elf  =   0
 race brownie   =  +2
 race groll     =  -2
 race darkelf   =  +1
-restrict brain           = +3
-profession druid        = +5
-profession mystic       = -3
-profession necromancer  = +0
+restrict brain          =  5
 profession conjurer     = +5
 profession sorcerer     = +5
+profession druid        = +3
+profession necromancer  = +0
+profession mystic       = -3
 
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1130,7 +1131,7 @@ command       = diagnose
 minpos        = POSITION_RESTING
 turns         = PULSE_VIOLENCE/2
 func          = diagnose@skills
-type = TYPE_SKILL
+type          = TYPE_SKILL
 race human     =   0
 race elf       =   0
 race dwarf     =   0
@@ -1143,17 +1144,18 @@ race brownie   =   0
 race groll     =   0
 race darkelf   =   0
 turns    = 6
-profession fighter      = +0
+profession priest       = +5
+profession necromancer  = +5
+profession thief        = +4
+profession assassin     = +4
+profession druid        = +4
+profession conjurer     = +3
+profession sorcerer     = +3
 profession knight       = +2
 profession paladin      = +2
 profession ranger       = +2
-profession thief        = +5
-profession assassin     = +5
-profession priest       = +5
-profession druid        = +4
+profession fighter      = +0
 profession mystic       = +0
-profession necromancer  = +5
-profession conjurer     = +5
 
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1178,6 +1180,7 @@ race groll     =   0
 race darkelf   =   0
 profession ranger       = +5
 profession thief        = +5
+profession assassin     = +0
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1219,8 +1222,9 @@ race half-elf  =  +1
 race brownie   =  +1
 race groll     =   0
 race darkelf   =  +1
-restrict level          = 12
-profession sorcerer     = +5
+restrict brain          = 30
+profession druid        = +5
+profession sorcerer     = +3
 
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1243,16 +1247,18 @@ race half-elf  =   0
 race brownie   =  +2
 race groll     =  -2
 race darkelf   =  +2
+profession thief        = +4
+profession assassin     = +4
+profession ranger       = +3
 profession fighter      = +0
-profession ranger       = +4
-profession thief        = +5
-profession assassin     = +5
 profession priest       = +0
 profession druid        = +0
-profession mystic       = -3
 profession necromancer  = +0
 profession conjurer     = +0
 profession sorcerer     = +0
+profession mystic       = -2
+profession knight       = -4
+profession paladin      = -4
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1273,9 +1279,9 @@ race half-elf  =  +1
 race brownie   =  +1
 race groll     =  -1
 race darkelf   =   0
-profession ranger       = +2
 profession thief        = +2
 profession assassin     = +2
+profession ranger       = +0
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1297,9 +1303,9 @@ race half-elf  =   0
 race brownie   =  +1
 race groll     =   0
 race darkelf   =   0
-restrict dexterity       = +3
-profession thief        = +2
+restrict dexterity      = 10
 profession assassin     = +5
+profession thief        = +2
 
 /* - - - - Yet another definition of a skill - - - - */
 index          = SKI_BASH
@@ -1320,7 +1326,7 @@ race half-elf  =   0
 race brownie   =  -2
 race groll     =  +1
 race darkelf   =   0
-restrict level          = 3
+restrict strength       = 10
 profession fighter      = +2
 profession knight       = +2
 profession paladin      = +2
@@ -1353,8 +1359,10 @@ race half-elf  =   0
 race brownie   =  +1
 race groll     =   0
 race darkelf   =   0
-restrict level          = 4
+restrict dexterity      = 15
 profession ranger       = +3
+profession thief        = +0
+profession priest       = +0
 
 
 command  = bury
@@ -1419,7 +1427,7 @@ race half-elf  =   0
 race brownie   =  -1
 race groll     =   0
 race darkelf   =   0
-restrict level          = 6
+restrict brain          = 15
 profession knight       = +2
 profession paladin      = +2
 profession ranger       = +2
@@ -1447,9 +1455,8 @@ race half-elf  =   0
 race brownie   =  +1
 race groll     =  -1
 race darkelf   =   0
-restrict level          = 2
-restrict dexterity       = +10
-profession thief        = +2
+restrict dexterity       = 10
+profession thief         = +2
 
 
 index          = SKI_RESCUE
@@ -1494,19 +1501,18 @@ race half-elf  =  +1
 race brownie   =  +2
 race groll     =   0
 race darkelf   =  +1
-restrict level          = 2
+profession thief        = +5
+profession ranger       = +3
+profession assassin     = +2
+profession druid        = +0
+profession mystic       = -1
+profession necromancer  = -1
+profession conjurer     = -1
+profession sorcerer     = -1
 profession fighter      = -1
 profession knight       = -2
 profession paladin      = -2
-profession ranger       = +3
-profession thief        = +5
-profession assassin     = +2
 profession priest       = -2
-profession druid        = -2
-profession mystic       = -3
-profession necromancer  = -3
-profession conjurer     = -3
-profession sorcerer     = -3
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1525,12 +1531,13 @@ race half-elf  =   0
 race brownie   =   0
 race groll     =  -2
 race darkelf   =  +2
-restrict level          = 12
-profession fighter      = +2
+restrict charisma       = 20
 profession knight       = +5
 profession paladin      = +5
-profession ranger       = +5
+profession fighter      = +2
+profession ranger       = +0
 profession necromancer  = +0
+profession priest       = +0
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1655,14 +1662,14 @@ race half-elf  =   0
 race brownie   =  -1
 race groll     =  -3
 race darkelf   =   0
-profession fighter      = +0
-profession knight       = +0
-profession paladin      = +0
+profession druid        = +2
 profession ranger       = +1
 profession thief        = +1
 profession assassin     = +1
+profession fighter      = +0
+profession knight       = +0
+profession paladin      = +0
 profession priest       = -1
-profession druid        = +2
 profession mystic       = -1
 profession necromancer  = -2
 profession conjurer     = -2
@@ -1687,14 +1694,14 @@ race half-elf  =   0
 race brownie   =  +1
 race groll     =   0
 race darkelf   =   0
-profession fighter      = +0
-profession knight       = -3
-profession paladin      = -3
-profession ranger       = +0
 profession thief        = +2
 profession assassin     = +2
+profession fighter      = +0
+profession ranger       = +0
+profession druid        = -2
+profession knight       = -2
+profession paladin      = -2
 profession priest       = -3
-profession druid        = -3
 profession mystic       = -3
 profession necromancer  = -3
 profession conjurer     = -3
@@ -1721,7 +1728,7 @@ race half-elf  =   +1
 race brownie   =   +4
 race groll     =   -4
 race darkelf   =   +1
-restrict level          = 7
+restrict dexterity      = 20
 profession thief        = +0
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1740,7 +1747,7 @@ race half-elf  =   0
 race brownie   =   0
 race groll     =   0
 race darkelf   =   0
-restrict level          = 3
+restrict strength       = 10
 profession fighter      = +5
 profession knight       = +2
 profession paladin      = +2
@@ -1748,8 +1755,8 @@ profession ranger       = +2
 profession thief        = +0
 profession assassin     = +0
 profession priest       = +0
-profession druid        = -4
 profession mystic       = -3
+profession druid        = -4
 
 
 /* skill def for peek */
@@ -1770,7 +1777,7 @@ race half-elf  = 0
 race brownie   = +1
 race groll     = -1
 race darkelf   = 0
-restrict level          = 8
+restrict brain          = 15
 profession thief        = +0
 
 /* skill def for disarm */
@@ -1814,10 +1821,10 @@ race half-elf  = -1
 race brownie   = -2
 race groll     = +4
 race darkelf   = 0
-restrict level          = 4
+restrict dexterity      = 10
 profession fighter      = +2
-profession thief        = -1
 profession assassin     = +0
+profession thief        = -1
 
 
 /* skill def for filch */
@@ -1862,9 +1869,9 @@ race half-elf  = 0
 race brownie   = +4
 race groll     = -1
 race darkelf   = 0
-restrict level          = 10
-restrict dexterity       = +30
+restrict dexterity      = 30
 profession thief        = +0
+
 
 /* skill def for pickpocket */
 index          = SKI_PICK_POCKETS
@@ -1885,6 +1892,7 @@ race half-elf  = 0
 race brownie   = +4
 race groll     = -1
 race darkelf   = 0
+restrict dexterity      = 20
 profession thief        = +2
 
 
@@ -1905,10 +1913,19 @@ race half-elf  =   0
 race brownie   =  +1
 race groll     =   0
 race darkelf   =   0
-restrict level          = 2
+restrict dexterity      = 10
 profession ranger       = +2
 profession druid        = +0
-
+profession fighter      = -2
+profession knight       = -2
+profession paladin      = -2
+profession thief        = -2
+profession assassin     = -2
+profession priest       = -2
+profession mystic       = -2
+profession necromancer  = -2
+profession conjurer     = -2
+profession sorcerer     = -2
 command  = skills
 func = ski_dil@commands
 minpos   = POSITION_DEAD
@@ -1968,7 +1985,7 @@ race half-elf  =   0
 race brownie   =  +1
 race groll     =   0
 race darkelf   =   0
-restrict level          = 10
+restrict brain          = 10
 profession ranger       = +2
 profession druid        = +0
 
@@ -2669,7 +2686,7 @@ loglevel = 215
 type     = 0
 
 command  = competition
-func = cmd_comp@competition
+// func = cmd_comp@competition
 minpos   = POSITION_DEAD
 minlevel = 215
 loglevel = 215
