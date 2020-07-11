@@ -714,11 +714,11 @@ function sendCommand(str, bFocus, bHistory, bEcho)
 
     str = str.trim();
 
-    if (aliasCheck(str))
-        return;
-
     if (bHistory)
         HistoryAdd(str);
+
+    if (aliasCheck(str))
+        return;
 
     if (bEcho)
         outputText("<div class='echo'>" + str + "</div><br/>", false); // ECHO COMMAND
