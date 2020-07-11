@@ -84,30 +84,52 @@ struct cmdload_struct cmdload[] = {
 
 void skill_dump(void)
 {
-    int i;
+    string str;
+    char buf[MAX_STRING_LENGTH];
 
-    for (i = 0; i < SKI_TREE_MAX; i++)
+    bool pairISCompare(const std::pair<int, string>& firstElem, const std::pair<int, string>& secondElem);
+
+    for (int j = 0; j < PROFESSION_MAX; j++)
     {
-        if (ski_text[i] == NULL)
-            continue;
+        vector< pair <int,string> > vect;
 
-        printf("name                    = %s\n", ski_text[i]);
+        for (int i = 0; i < SKI_TREE_MAX; i++)
+        {
+            if (ski_text[i] == NULL)
+                continue;
 
-        if (skill_prof_table[i].min_level > 0)
-            printf("restrict level          = %d\n", skill_prof_table[i].min_level);
+            str = "";
 
-        for (int j=0; j < ABIL_TREE_MAX; j++)
-            if (skill_prof_table[i].min_abil[j] > 0)
-                printf("restrict %s%s    = %s%d\n", abil_text[j], spc(12-strlen(abil_text[j])),
-                 (skill_prof_table[i].min_abil[j] >= 0) ? "+" : "", skill_prof_table[i].min_abil[j]);
+            sprintf(buf, "%s,%s", ski_text[i], spc(20-strlen(ski_text[i])));
+            str.append(buf);
 
-        for (int j=0; j < PROFESSION_MAX; j++)
-            if (skill_prof_table[i].profession_cost[j] > -5)
-                printf("profession %s%s = %s%d\n", professions[j], spc(12-strlen(professions[j])),
-                 (skill_prof_table[i].profession_cost[j] >= 0) ? "+" : "", skill_prof_table[i].profession_cost[j]);
+            sprintf(buf, ".profession %s%s = %s%d\n", professions[j], spc(12-strlen(professions[j])),
+                (skill_prof_table[i].profession_cost[j] >= 0) ? "+" : "", skill_prof_table[i].profession_cost[j]);
+            str.append(buf);
 
-        printf("\n");
+
+            /*if (skill_prof_table[i].min_level > 0)
+            {
+                sprintf(buf, "restrict level          = %d\n", skill_prof_table[i].min_level);
+                str.append(buf);
+            }
+
+            for (int k=0; k < ABIL_TREE_MAX; k++)
+                if (skill_prof_table[i].min_abil[k] > 0)
+                {
+                    sprintf(buf, "restrict %s%s    = %s%d\n", ski_text[i], spc(12-strlen(ski_text[i])),
+                        (skill_prof_table[i].min_abil[k] >= 0) ? "+" : "", skill_prof_table[i].min_abil[k]);
+                    str.append(buf);
+                }*/
+
+            vect.push_back(std::make_pair(skill_prof_table[i].profession_cost[j], str));
+        }
+
+        std::sort(vect.begin(), vect.end(), pairISCompare);
+        for (auto it = vect.begin(); it != vect.end(); ++it)
+            printf("%s", it->second.c_str());
     }
+        
     exit(0);
 }
 

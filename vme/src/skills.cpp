@@ -829,35 +829,61 @@ static void ability_init(void)
     abil_text[ABIL_TREE_MAX] = NULL;
 }
 
+bool pairISCompare(const std::pair<int, string>& firstElem, const std::pair<int, string>& secondElem)
+{
+    return firstElem.first > secondElem.first;
+}
+
 
 void ability_dump(void)
 {
-    int i;
+    string str;
+    char buf[MAX_STRING_LENGTH];
 
-    for (i = 0; i < ABIL_TREE_MAX; i++)
+    for (int j = 0; j < PROFESSION_MAX; j++)
     {
-        printf("name                    = %s\n", abil_text[i]);
+        vector< pair <int,string> > vect; 
 
-        if (ability_prof_table[i].min_level > 0 )
-            printf("restrict level          = %d\n", ability_prof_table[i].min_level);
+        for (int i = 0; i < ABIL_TREE_MAX; i++)
+        {
+            str = "";
 
-        for (int j=0; j < ABIL_TREE_MAX; j++)
-            if (ability_prof_table[i].min_abil[j] > 0)
-                printf("restrict %s%s    = %s%d\n", abil_text[j], spc(12-strlen(professions[j])),
-                 (ability_prof_table[i].min_abil[j] >= 0) ? "+" : "", ability_prof_table[i].min_abil[j]);
+            sprintf(buf, "%s,%s", abil_text[i], spc(20-strlen(abil_text[i])));
+            str.append(buf);
 
-        for (int j=0; j < PROFESSION_MAX; j++)
-            if (ability_prof_table[i].profession_cost[j] > -7)
-                printf("profession %s%s = %s%d\n", professions[j], spc(12-strlen(professions[j])),
-                 (ability_prof_table[i].profession_cost[j] >= 0) ? "+" : "", ability_prof_table[i].profession_cost[j]);
+            sprintf(buf, ".profession %s%s = %s%d\n", professions[j], spc(12-strlen(professions[j])),
+                (ability_prof_table[i].profession_cost[j] >= 0) ? "+" : "", ability_prof_table[i].profession_cost[j]);
+            str.append(buf);
+
+            vect.push_back(std::make_pair(ability_prof_table[i].profession_cost[j], str));
+
+            if (ability_prof_table[i].min_level > 0 )
+            {
+                sprintf(buf, "restrict level          = %d\n", ability_prof_table[i].min_level);
+                str.append(buf);
+            }
+
+            for (int j=0; j < ABIL_TREE_MAX; j++)
+                if (ability_prof_table[i].min_abil[j] > 0)
+                {
+                    sprintf(buf, "restrict %s%s    = %s%d\n", abil_text[j], spc(12-strlen(professions[j])),
+                       (ability_prof_table[i].min_abil[j] >= 0) ? "+" : "", ability_prof_table[i].min_abil[j]);
+                    str.append(buf);
+
+                }
+        }
+        std::sort(vect.begin(), vect.end(), pairISCompare);
+        for (auto it = vect.begin(); it != vect.end(); ++it)
+            printf("%s", it->second.c_str());
     }
+    exit(0);
 }
 
 void boot_ability(void)
 {
     ability_init();
     ability_read();
-    //ability_dump(); Saved in case someone needs to dump it out to excel or something
+    //ability_dump(); // Saved in case someone needs to dump it out to excel or something
 }
 
 /* ========================================================================= */
@@ -1167,29 +1193,42 @@ static void weapon_init(void)
 
 void weapon_dump(void)
 {
-    int i;
+    string str;
+    char buf[MAX_STRING_LENGTH];
 
-    for (i = 0; i < WPN_TREE_MAX; i++)
+    for (int j = 0; j < PROFESSION_MAX; j++)
     {
-        if (wpn_text[i] == NULL)
-            continue;
+        vector< pair <int,string> > vect; 
 
-        printf("name                    = %s\n", wpn_text[i]);
+        for (int i = WPN_GROUP_MAX; i < WPN_TREE_MAX; i++)
+        {
+            if (str_is_empty(wpn_text[i]))
+                continue;
 
-        if (weapon_prof_table[i].min_level > 0)
-            printf("restrict level          = %d\n", weapon_prof_table[i].min_level);
+            str = "";
 
-        for (int j=0; j < ABIL_TREE_MAX; j++)
-            if (weapon_prof_table[i].min_abil[j] > 0)
-                printf("restrict %s%s    = %s%d\n", abil_text[j], spc(12-strlen(abil_text[j])),
-                 (weapon_prof_table[i].min_abil[j] >= 0) ? "+" : "", weapon_prof_table[i].min_abil[j]);
+            sprintf(buf, "%s,%s", wpn_text[i], spc(20-strlen(wpn_text[i])));
+            str.append(buf);
 
-        for (int j=0; j < PROFESSION_MAX; j++)
-            if (weapon_prof_table[i].profession_cost[j] > -5)
-                printf("profession %s%s = %s%d\n", professions[j], spc(12-strlen(professions[j])),
-                 (weapon_prof_table[i].profession_cost[j] >= 0) ? "+" : "", weapon_prof_table[i].profession_cost[j]);
+            sprintf(buf, ".profession %s%s = %s%d\n", professions[j], spc(12-strlen(professions[j])),
+                (weapon_prof_table[i].profession_cost[j] >= 0) ? "+" : "", weapon_prof_table[i].profession_cost[j]);
+            str.append(buf);
 
-        printf("\n");
+            vect.push_back(std::make_pair(weapon_prof_table[i].profession_cost[j], str));
+
+            /*if (weapon_prof_table[i].min_level > 0)
+                printf("restrict level          = %d\n", weapon_prof_table[i].min_level);
+
+            for (int j=0; j < ABIL_TREE_MAX; j++)
+                if (weapon_prof_table[i].min_abil[j] > 0)
+                    printf("restrict %s%s    = %s%d\n", abil_text[j], spc(12-strlen(abil_text[j])),
+                    (weapon_prof_table[i].min_abil[j] >= 0) ? "+" : "", weapon_prof_table[i].min_abil[j]);*/
+
+        }
+        std::sort(vect.begin(), vect.end(), pairISCompare);
+        for (auto it = vect.begin(); it != vect.end(); ++it) {
+            printf("%s", it->second.c_str());
+        }        
     }
     exit(0);
 }

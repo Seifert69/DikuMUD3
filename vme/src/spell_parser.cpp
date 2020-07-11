@@ -857,30 +857,49 @@ static void spell_init(void)
 
 void spell_dump(void)
 {
-    int i;
+    string str;
+    char buf[MAX_STRING_LENGTH];
 
-    for (i = 0; i < SPL_TREE_MAX; i++)
+    bool pairISCompare(const std::pair<int, string>& firstElem, const std::pair<int, string>& secondElem);
+
+    for (int j = 0; j < PROFESSION_MAX; j++)
     {
-        if (spl_text[i] == NULL)
-            continue;
+        vector< pair <int,string> > vect; 
 
-        printf("name                    = %s\n", spl_text[i]);
+        for (int i = 0; i < SPL_TREE_MAX; i++)
+        {
+            if (spl_text[i] == NULL)
+                continue;
 
-        if (spell_prof_table[i].min_level > 0)
-            printf("restrict level          = %d\n", spell_prof_table[i].min_level);
+            str = "";
 
-        for (int j=0; j < ABIL_TREE_MAX; j++)
-            if (spell_prof_table[i].min_abil[j] > 0)
-                printf("restrict %s%s    = %s%d\n", abil_text[j], spc(12-strlen(abil_text[j])),
-                 (spell_prof_table[i].min_abil[j] >= 0) ? "+" : "", spell_prof_table[i].min_abil[j]);
+            sprintf(buf, "%s,%s", spl_text[i], spc(30-strlen(spl_text[i])));
+            str.append(buf);
 
-        for (int j=0; j < PROFESSION_MAX; j++)
-            if (spell_prof_table[i].profession_cost[j] > -5)
-                printf("profession %s%s = %s%d\n", professions[j], spc(12-strlen(professions[j])),
-                 (spell_prof_table[i].profession_cost[j] >= 0) ? "+" : "", spell_prof_table[i].profession_cost[j]);
+            sprintf(buf, ".profession %s%s = %s%d\n", professions[j], spc(12-strlen(professions[j])),
+                (spell_prof_table[i].profession_cost[j] >= 0) ? "+" : "", spell_prof_table[i].profession_cost[j]);
+            str.append(buf);
 
-        printf("\n");
+            /*if (spell_prof_table[i].min_level > 0)
+            {
+                sprintf(buf, "restrict level          = %d\n", spell_prof_table[i].min_level);
+                str.append(buf);
+            }
+
+            for (int k=0; k < ABIL_TREE_MAX; k++)
+                if (spell_prof_table[i].min_abil[k] > 0)
+                {
+                    sprintf(buf, "restrict %s%s    = %s%d\n", abil_text[k], spc(12-strlen(abil_text[k])),
+                        (spell_prof_table[i].min_abil[k] >= 0) ? "+" : "", spell_prof_table[i].min_abil[k]);
+                    str.append(buf);
+                }*/
+            vect.push_back(std::make_pair(spell_prof_table[i].profession_cost[j], str));
+        }
+        std::sort(vect.begin(), vect.end(), pairISCompare);
+        for (auto it = vect.begin(); it != vect.end(); ++it)
+            printf("%s", it->second.c_str());
     }
+
     exit(0);
 }
 
@@ -889,7 +908,7 @@ void boot_spell(void)
 {
     spell_init();
     spell_read();
-    // spell_dump();
+    //spell_dump();
 
 #define SPELLO(a, b) spell_info[a].spell_pointer = (b)
 
