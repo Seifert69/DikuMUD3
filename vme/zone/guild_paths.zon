@@ -924,10 +924,11 @@ if (pc.level > 15)
        (pc.outside.zoneidx != "necro_guild") and
        (pc.outside.zoneidx != "druid") and
        (pc.outside.zoneidx != "knight") and
-       (pc.outside.zoneidx != "udgaard"))
+       (pc.outside.zoneidx != "udgaard") and
+       (pc.outside.zoneidx != "midgaard"))
    {
 :no_no:
-      act("You must be in a guild or in Udgaard for the medallion to work.",
+      act("You must be in a guild or in Udgaard or Midgaard for the medallion to work.",
           A_ALWAYS, pc, null, null, TO_CHAR);
       goto lost_pc;
    }
@@ -1550,10 +1551,9 @@ extra {}
 "It is quite large, weighing heavily in the hand, but more from its
 power than because of its weight. There is a small copy of the statue
 of Odin in the Temple of Udgaard set in its centre.<br/>
-To use the medallion,
-you must be in Udgaard. Once there, simply wear the medallion and then
-'return <guild>', where <guild> is fighter, thief, healer, conjurer,
-ranger, paladin, sorcerer, assassin, knight or necromancer.<br/>
+To use the medallion, you must be in Udgaard. Once there, simply wear 
+the medallion and then 'return &lt;guild&gt;', where &lt;guild&gt; is fighter,
+thief, healer, conjurer, ranger, paladin, sorcerer, assassin, knight or necromancer.<br/>
 If you are in your guild and wish to return to Udgaard, 'return Udgaard'
 will take you to Udgaard."
 
