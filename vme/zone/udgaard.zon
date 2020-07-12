@@ -4218,7 +4218,7 @@ descr
 "The Chicken's Rest is a cozy bar often used by adventurers returning
 from the dangerous forest of Haon-Dor just west of here. A small <a cmd='read #'>sign</a> has
 been hung on the wall. A rickety staircase leads upstairs and a small
-door leads into the back room."
+door leads west into a back room."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB, UNIT_FL_SACRED}
 movement SECT_INSIDE
 south to village_rd1;
@@ -12999,6 +12999,8 @@ descr "Rune the ability teacher is here."
 M_SHOP_KEEPER(35,SEX_MALE,RACE_HUMAN)
 flags {UNIT_FL_NO_TELEPORT}
 money 3 IRON_PIECE
+extra {} 
+"Rune is here to teach you abilities. Try the <a cmd='#'>info</a> command."
 
 special SFUN_TEACH_INIT
 "abilities;0;
@@ -13027,6 +13029,8 @@ title "Gustav the teacher"
 descr "Gustav the skill teacher is here."
 M_SHOP_KEEPER(35,SEX_MALE,RACE_HUMAN)
 flags {UNIT_FL_NO_TELEPORT}
+extra {} 
+"Gustav is here to teach you skills. Try the <a cmd='#'>info</a> command."
 money 3 IRON_PIECE
 special SFUN_TEACH_INIT
 "skills;0;
@@ -13060,10 +13064,12 @@ end
 
 
                base_weapons
-names {"Tue"}
-title "Tue the teacher"
-descr "Tue the weapons teacher is here."
+names {"Tue Ironside", "Tue"}
+title "Tue Ironside the teacher"
+descr "Tue Ironside the weapons teacher is here."
 M_SHOP_KEEPER(35,SEX_MALE,RACE_HUMAN)
+extra {} 
+"Tue Ironside is here to teach you weapons. Try the <a cmd='#'>info</a> command."
 flags {UNIT_FL_NO_TELEPORT}
 money 3 IRON_PIECE
 special SFUN_TEACH_INIT
@@ -13090,6 +13096,8 @@ end
 names {"Kåre", "Kaare"}
 title "Kaare the teacher"
 descr "Kaare the spells teacher is here."
+extra {} 
+"Kåre is here to teach you spells. Try the <a cmd='#'>info</a> command."
 M_SHOP_KEEPER(35,SEX_MALE,RACE_HUMAN)
 flags {UNIT_FL_NO_TELEPORT}
 money 3 IRON_PIECE
