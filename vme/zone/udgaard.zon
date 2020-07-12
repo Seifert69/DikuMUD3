@@ -13051,7 +13051,6 @@ $1n tells you, 'Remove all equipment, please.';
   0;   35; shield                        ;   5;  9000;   10;      0;
   0;   35; rescue                        ;   5;  4000;   10;      0;
   0;   35; scan                          ;   5;  9000;   10;      0;
-  0;   35; search                        ;   5;  9000;   10;      0;
   0;   35; sneak                         ;   5;  9000;   10;      0;
   0;   35; skin                          ;   5;  9000;   10;      0;
   0;   35; scroll use                    ;   4;  4000;   10;      0;
