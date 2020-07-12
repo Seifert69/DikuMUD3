@@ -1,17 +1,23 @@
 <h1>Info</h1>
-Usage info<br/>
+Usage info [roots | name]<br/>
 <br/>
 Examples:<br/>
 info <br/>
+info roots<br/>
 info category sword<br/>
+info c s<br/>
 info dagger<br/>
 info strength<br/>
 <br/>
 This command is used along with 'practice'at teachers.<br/>
 When at a teacher try to type 'info'. At a weapon teacher you<br/>
-would be displayed all the possible weapon categories to choose from.<br/>
+would be displayed the weapons you can choose from.<br/>
 Select a category for further investigation, for example 'info cat axe'.<br/>
 You could get a reply similar to this:<br/>
+<br/>
+Note that information is sorted so that the least expensive one is at<br/>
+top and the most impossible ones are at the bottom in a grey color.<br/>
+<br/>
 <br/>
 Category axe hammer<br/>
 hand axe             [Now   1%, next  16, 5 ip]<br/>
