@@ -1364,7 +1364,7 @@ race half-elf   = 0
 race brownie    = +2
 race groll      = -1
 race darkelf    = +1
-restrict magic           = +2
+restrict magic           = 5
 profession conjurer     = +2
 profession sorcerer     = +5
 
@@ -2455,7 +2455,7 @@ race half-elf   = 0
 race brownie    = +2
 race groll      = -1
 race darkelf    = +2
-restrict magic           = +2
+restrict magic          =  5
 profession mystic       = +0
 profession conjurer     = +5
 profession sorcerer     = +0
@@ -4948,7 +4948,7 @@ race half-elf   = 0
 race brownie    = +1
 race groll      = -2
 race darkelf    = +1
-restrict magic          = +2
+restrict magic          =  5
 profession conjurer     = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -7075,6 +7075,7 @@ race half-elf   = 0
 race brownie    = +2
 race groll      = -3
 race darkelf    = +1
+restrict magic          =  5
 profession sorcerer     = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -7235,7 +7236,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -1
-restrict divine          = +2
+restrict divine         =  5
 profession knight       = -3
 profession priest       = +0
 profession mystic       = +5
@@ -7404,7 +7405,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
-restrict level          = 1
+restrict divine         =  5
 profession necromancer  = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -8207,7 +8208,7 @@ race half-elf   = 0
 race brownie    = +1
 race groll      = -2
 race darkelf    = +2
-restrict level          = 3
+restrict magic          =  5
 profession sorcerer     = +5
 
 index           = SPL_LIGHTNING_2
