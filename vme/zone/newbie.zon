@@ -810,6 +810,7 @@ act ("$1n says 'If you have played other muds, you can skip this part by saying 
 h:=interrupt (SFB_DONE, command ("say") and
 (pc==activator) and
 (argument =="go on"), hurry);
+
 pause;
 act ("$1n says 'Before we start I would like to mention that most commands "+
         " can be abbreviated. For example 'l' will work for 'look' and "+
@@ -935,19 +936,16 @@ act ("$1n says 'To get a listing of help topics you simply type 'help help'. "+
 
    wait(SFB_CMD | SFB_TICK, command("help") and ("help" in argument));
    pause;
+   act("$1n says 'Very good. Now we will now discuss manipulation of objects.'",
+      A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-act ("$1n says 'Very good. Now we will now discuss manipulation of objects.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-   pause;
-	  u := load("silring@newbie");
-      u.height := pc.height;
+   u := load("silring@newbie");
+   u.height := pc.height;
    exec("give "+u.name+" to "+pc.name, self);
    pause;
-   pause;
-   pause;
-act ("$1n says 'I just gave you a silver ring, to see the ring you must check "+
-        " your 'inventory'. You can do this by typing the word  'inventory', "+
-     "please try this now.'", A_ALWAYS, self,null,pc,TO_VICT);
+   act("$1n says 'I just gave you a silver ring, to see the ring you must check "+
+         " your 'inventory'. You can do this by typing the word  'inventory', "+
+         "please try this now.'", A_ALWAYS, self,null,pc,TO_VICT);
 
    wait(SFB_CMD | SFB_TICK, command("inventory") and (activator == pc));
    pause;
@@ -1011,31 +1009,39 @@ pause;
 qst:=NEWBIE_ONGOING in pc.quests;
 qst.descr:="part 1 done";
 return (TRUE);
-:hurry:
-pause;
-act ("$1n says 'Ah!  So you're some what familiar with muds.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-pause;
-act ("$1n says 'Then all I will tell you in this phase of training is to get a "+
-"list of commands on this mud just type 'commands''",
-  A_ALWAYS, self,null,pc,TO_VICT);
-pause;
-act ("$1n says 'Being the expert you are you know that you can get info on each "+
-"command by typing 'help <command>'.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-pause;
-act ("$1n says 'It would be a good idea to add the newbie "+
-       "comm channel in case you ever need help.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-pause;
-act ("$1n says 'To do this type 'comm add newbie'.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
 
+   :hurry:
+   pause;
+   act ("$1n says 'Ah!  So you're some what familiar with muds.'", A_ALWAYS, self,null,pc,TO_VICT);
+   pause;   
+   u := load("silring@newbie");
+   u.height := pc.height;
+   exec("give "+u.name+" to "+pc.name, self);
+   pause;
+   act("$1n says 'I just gave you a magical silver ring that emits light.'", A_ALWAYS, self,null,pc,TO_VICT);
+   
+   pause;
+   act("$1n says 'Then all I will tell you in this phase of training is to get a "+
+      "list of commands on this mud just type 'commands''",
+      A_ALWAYS, self,null,pc,TO_VICT);
+   
+   pause;
+   act ("$1n says 'Being the expert you are you know that you can get info on each "+
+      "command by typing 'help <command>'.'",
+      A_ALWAYS, self,null,pc,TO_VICT);
+   
+   pause;
+   act ("$1n says 'It would be a good idea to add the newbie "+
+         "comm channel in case you ever need help.'",
+         A_ALWAYS, self,null,pc,TO_VICT);
+   
+   pause;
+   act ("$1n says 'To do this type 'comm add newbie'.'", A_ALWAYS, self,null,pc,TO_VICT);
    addextra (pc.quests,{NEWBIE_ONGOING},"");
-
-qst:=NEWBIE_ONGOING in pc.quests;
-qst.descr:="part 1 done";
+   qst:=NEWBIE_ONGOING in pc.quests;
+   qst.descr:="part 1 done";
    return (TRUE);
+
    :stop:
    return (FALSE);
 }
@@ -1136,7 +1142,7 @@ dilend
 /* newbie guide tour part 3 Udgaard tour */
 dilbegin integer newbie_part3(pc : unitptr);
 external
- integer walk_room@function (s:string,i:integer);
+   integer walk_room@function (s:string,i:integer);
 
 var
 tf:integer;
@@ -1247,6 +1253,9 @@ A_ALWAYS , self, null , pc ,TO_VICT);
 A_ALWAYS , self, null , pc ,TO_VICT);
    act ("$1n says 'To get instruction on how to use a board simply "+
      "look at the board.'",
+A_ALWAYS , self, null , pc ,TO_VICT);
+   pause;
+   act ("$1n says 'There are some teachers in the back room but we'll get back to that later.'",
 A_ALWAYS , self, null , pc ,TO_VICT);
    pause;
    act ("$1n says 'The post office is just a short way off and that is a place "+
@@ -1586,11 +1595,18 @@ qst.descr:="part 4 done";
 }
 dilend
 
+
+
+/* part 5 - info and practice */
 dilbegin integer newbie_temp(pc : unitptr);
+external
+   integer walk_room@function (s:string,i:integer);
+
 var
-     nroom     :    unitptr;
-        i       :       integer;
-        item:unitptr;
+   nroom     :    unitptr;
+   i       :       integer;
+   item:unitptr;
+   tf : integer;
 code
 {
    :init:
@@ -1602,39 +1618,73 @@ code
       goto stop;
    secure(pc, stop);
 
-pause;
-   act ("$1n says ' I would normally show you around your starting guild.'",
-A_ALWAYS,self,null,pc,TO_VICT);
-pause;
-exec ("sigh",self);
+   if (not(pc.position == POSITION_STANDING))
+   {
+      act ("$1n says 'Please stand up now so we may begin.'",A_ALWAYS,self,null,pc,TO_VICT);
+
+      :try_again:
+      wait(SFB_CMD, activator #= pc);
+      if (not command("stand"))
+      {
+         pause;
+         act ("$1n says 'Please Just STAND up.'", A_ALWAYS,self,null,pc,TO_VICT);
+         goto try_again;
+      }
+   }
+   if (not(pc.master.name $= self.name))
+   {
+      act ("$1n says 'Please type 'fol newbie guide' now.'",
+         A_ALWAYS,self,null,pc,TO_VICT);
+
+      :try_again2:
+      wait (SFB_DONE, activator==pc);
+      if (not(command  ("follow")) or (target!=self))
+      {
+         act ("$1n says 'Please follow me now by typing 'fol newbie" +
+         " guide' now.'", A_ALWAYS,self,null,pc,TO_VICT);
+         goto try_again2;
+      }
+   }
    pause;
-   act ("$1n says ' The problem is I have been so busy with all the Newbies I have not been able to keep"+
-   " up on the new guilds that are being added to the game.",
-A_ALWAYS,self,null,pc,TO_VICT);
+
+   act ("$1n says 'Let me show you how to train your skills and abilities.'", A_ALWAYS,self,null,pc,TO_VICT);
    pause;
-   act ("$1n says ' I can still help you out by letting you know how to get "+
-  "in touch with our Newbie Council Members.",
-A_ALWAYS,self,null,pc,TO_VICT);
-   pause;
-   act ("$1n says 'If you type 'who guide' you will be shown a list of the "+
-  "Newbie Council members that are on line.",
-   A_ALWAYS, self, null,pc,TO_VICT);
-   pause;
-   act ("$1n says 'They will be able to help you understand our guild system "+
-  "and answer any questions I have left out.",
+   tf:= walk_room@function("inn_2@udgaard", 4);
+   act("$1n says 'So in this back room of the Chicken's Rest you'll find four newbie teachers.'",
      A_ALWAYS, self, null,pc,TO_VICT);
    pause;
-   act ("$1n says 'If no guide is on don't be afraid to ask other players "+
-  "most of our players are really good at helping you out if you don't get too "+
-  "annoying.",
+   act ("$1n says 'Rune will teach you abilities. Gustav will teach you skills. Tue Ironside will teach "+
+        "you weapons and Kaare will teach you spells.'",
      A_ALWAYS, self, null,pc,TO_VICT);
    pause;
-   act ("$1n says 'I can tell you that doing 'help info' and 'help practice' will"+
-  " help you out in learning how our teachers work. I am sorry I can't be more "+
-  "helpful than that though.",
+   act ("$1n says 'Now try to see what abilties you can train by using the <a cmd='#'>info</a> command.'",
      A_ALWAYS, self, null,pc,TO_VICT);
+   wait(SFB_CMD, activator #= pc);
+   if (not command("info"))
+   {
+      pause;
+      act ("$1n says 'Please just try the info command.'", A_ALWAYS,self,null,pc,TO_VICT);
+      goto try_again;
+   }
+
    pause;
-   act ("$1n says 'Well, I think I have shown you all you need to know to get started.'",A_ALWAYS, self, null,pc,TO_VICT);
+   act ("$1n says 'Now you should try to practice one of your core abilities using the practice command. The top one is the least expensive.'",A_ALWAYS, self, null,pc,TO_VICT);
+   wait(SFB_CMD, activator #= pc);
+   if (not command("practice"))
+   {
+      pause;
+      act ("$1n says 'Please try the practice command.'", A_ALWAYS,self,null,pc,TO_VICT);
+      goto try_again;
+   }
+   
+   pause;
+   act ("$1n says 'Notice that now you've trained an ability once, it's more expensive to train the same ability the second time.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'When you reach a new level, the cost will be reset again. So spend your points wisely on each level.'",A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
+
+   act ("$1n says 'Gustav, Tue and Kaare are in the other rooms here. You should practice until you have spent "+
+        "your ability and skill practice points.'", A_ALWAYS, self, null,pc,TO_VICT);
    pause;
    act ("$1n says 'Now let me give you something for your patience in completing "+
    "this newbie training.'", A_ALWAYS, self, null,pc,TO_VICT);
@@ -1644,15 +1694,18 @@ A_ALWAYS,self,null,pc,TO_VICT);
    act ("$1n says I will give you 2000 experience which should be enough to "+
    "give you a level.'",A_ALWAYS, self, null,pc,TO_VICT);
    pause;
-      if (not("$got exp from newbie guide" in pc.extra))
-          {
-          addextra (pc.extra,{"$got exp from newbie guide"},"whistler");
-    experience (2000,pc);
-   pause;
-   act ("$1n says 'To level just type 'level now', then you can go practice.'",A_ALWAYS, self, null,pc,TO_VICT);
-   pause;
-          }
+   if (not("$got exp from newbie guide" in pc.extra))
+   {
+      addextra (pc.extra,{"$got exp from newbie guide"},"whistler");
+      experience (2000,pc);
+      pause;
+      act ("$1n says 'So spend all your points, and when you're done, to level just type 'level now'. Then you can practice the next level.'",
+         A_ALWAYS, self, null,pc,TO_VICT);
+      pause;
+   }
 
+   act ("$1n says 'One last departing comment. Use your guild medallion to find your guild.'", A_ALWAYS, self, null,pc,TO_VICT);
+   pause;
    exec("bow "+pc.name, self);
    act("A portal opens, the Newbie Guide steps through and disappears.'",
        A_ALWAYS, self, null, null, TO_ALL);
