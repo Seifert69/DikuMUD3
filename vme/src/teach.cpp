@@ -223,16 +223,14 @@ void info_show_one(class unit_data *teacher,
         {
             sprintf(buf, "<div class='ca'><pre>%s     %-20s %s</pre></div>",
                     spc(4 * indent), text, req);
-            //send_to_char(buf, pupil);
             vect.push_back(std::make_pair(1000, buf));
             return;
         }
 
         if (current_points >= max_level)
         {
-            sprintf(buf, "<div class='ca'><pre>%s     %-20s [teacher at max]</pre></div>",
-                    spc(4 * indent), text);
-            //send_to_char(buf, pupil);
+            sprintf(buf, "<div class='ca'><pre>%s%3d%% %-20s [Teacher at max]</pre></div>",
+                    spc(4 * indent), current_points, text);
             vect.push_back(std::make_pair(1002, buf));
             return;
         }
@@ -264,13 +262,9 @@ void info_show_one(class unit_data *teacher,
     }
     else // category, not isleaf
     {
-        sprintf(buf, "<pre>%s     %-20s</pre>", spc(4 * indent), text);
+        sprintf(buf, "<pre>%s     <a cmd='info #'>%s</a></pre>", spc(4 * indent), text);
         vect.push_back(std::make_pair(-1, buf));
     }
-
-    //send_to_char(buf, pupil);
-
-    return;
 }
 
 
@@ -316,6 +310,8 @@ void info_show_roots(class unit_data *teacher, class unit_data *pupil,
     for (auto it = vect.begin(); it != vect.end(); ++it)
         str.append(it->second.c_str());
 
+    if (str.empty())
+        str = "Nothing to show (try <a cmd='#'>info roots</a>)<br/>";
     send_to_char(str.c_str(), pupil);
 }
 
@@ -355,6 +351,10 @@ void info_show_leaves(class unit_data *teacher, class unit_data *pupil,
         if (IS_SET(PC_FLAGS(pupil), PC_EXPERT) || it->first <= 20)  // Limit display
             str.append(it->second.c_str());
     }
+
+    if (str.empty())
+        str = "Nothing to show (try <a cmd='#'>info roots</a>)<br/>";
+
     send_to_char(str.c_str(), pupil);
 }
 
