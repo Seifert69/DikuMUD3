@@ -348,7 +348,7 @@ void info_show_leaves(class unit_data *teacher, class unit_data *pupil,
     string str;
     for (auto it = vect.begin(); it != vect.end(); ++it)
     {
-        if (IS_SET(PC_FLAGS(pupil), PC_EXPERT) || it->first <= 20)  // Limit display
+        if (IS_SET(PC_FLAGS(pupil), PC_EXPERT) || it->first <= 25)  // Limit display
             str.append(it->second.c_str());
     }
 
