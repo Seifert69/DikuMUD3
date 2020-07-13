@@ -1,78 +1,54 @@
+<h1>alias</h1>
+Usage:<br/>
+alias - list your alias<br/>
+alias foo - remove alias foo<br/>
+alias foo cmd1 [; cmd2] - create alias foo<br/>
 <br/>
+The web client has built-in alias handling. If you're on telnet and you're<br/>
+not using a MUD client, then you can buy the dictionary in many stores.<br/>
 <br/>
-<br/>
-<br/>
-Usage<br/><br/>
-alias<br/><br/>
-alias foo<br/><br/>
-alias foo bar [; baz]<br/><br/>
-unalias foo [bar ...]<br/><br/>
-claim (dictionary)<br/><br/>
-<br/>
-To use the alias command you must have one of the special dictionaries in<br/>
-your possession. They will be for sale somewhere.<br/>
-<br/><br/><br/>
 No arguments will list all your defined aliases.<br/>
-One argument will list the alias in question (in this case `foo').<br/>
+One argument will remove the alias in question (in this case `foo').<br/>
 Any other number of arguments will result in the first word of the argument<br/>
 to become an alias for the remainder.<br/>
-<br/><br/><br/>
-Various special control characters are available in aliases:<br/><br/>
-<br/><br/>
-You can combine commands with the semicolon ';'<br/><br/>
-<br/><br/><br/>
+<br/>
+Various special control characters are available in aliases:<br/>
+<br/>
+You can combine commands with the semicolon ';'<br/>
+<br/>
 You can insert various parts of an argument in an alias-text using the<br/>
-dollar sign '$'.  The first occurrence of '$' will get the first word of the<br/>
-argument, the second '$' the second word etc.  The final '$' will be<br/>
-substituted to the remainder of the argument.<br/>
-<br/><br/><br/>
-An optional number (1 - 9) immediately after the '$' will be substituted to<br/>
-the correspondingly numbered word of the argument, but will not affect the<br/>
-argument-count used to calculate the remainder for usage in the last '$',<br/>
-except when the last '$' in the alias-string is followed by a number in<br/>
-which case the remainder of the argument is suppressed.<br/>
-<br/><br/><br/>
-This is apparently easier to use than explain :)<br/>
-<br/><br/>
+dollar sign '$'.  $1 will get the first occurrence of the<br/>
+argument, the '$2' the second word etc. The '$0' can be used to substitute<br/>
+the entire argument string.<br/>
+<br/>
 Examples:<br/><br/>
-alias ge get &amp; from &amp;; eat &amp;n<br/>
-alias gb ge bread bag<br/><br/>
-alias gs ge steak sack<br/><br/>
-<br/><br/><br/>
+alias ge get $0 from $1; eat $0;<br/>
+alias gb ge bread bag<br/>
+alias gs ge steak sack<br/>
+<br/>
 The alias 'gb' will then mean 'get bread from bag; eat bread' and the<br/>
 commands will be carried out in that order.  Alternatively 'gs' will mean<br/>
 'get steak from sack; eat steak'.<br/>
-<br/><br/><br/>
-alias say	emote whispers almost inaudibly '$'<br/>
-Will make the say command have another 'look'<br/>
-for others, ie:<br/>
+<br/>
+alias say	emote whispers almost inaudibly '$0'<br/>
+Will make the say command have another appearance for other players, ie:<br/>
 say Hello, friends<br/>
 Gnort whispers almost inaudibly 'Hello, friends'<br/>
-<br/><br/><br/>
+<br/>
 Notice that 'sa' will still work as the original say-command, as aliases<br/>
 don't check for abbreviations, unlike the command interpreter.<br/>
-<br/><br/><br/>
-Any inconsistency with the few rules new aliases are required to uphold will<br/>
-be checked when trying to add it, and you will receive a `meaningful' error<br/>
-message pointing at what mistake(s) you made.<br/>
-<br/><br/><br/>
-Notice that ANY and all use of ';' and '&amp;' in an alias will be interpreted<br/>
+<br/>
+Notice that ANY and all use of ';' and '$' in an alias will be interpreted<br/>
 as that characters special meaning. Ie:<br/>
-<br/><br/><br/>
-alias greet say Hi Quinn &amp; God !! ;-)<br/>
-<br/><br/><br/>
-will substitute the '&amp;' with whatever argument 'greet' will be given or<br/>
+<br/>
+alias greet say Hi Quinn $0 God !! ;-)<br/>
+<br/>
+will substitute the '$0' with whatever argument 'greet' will be given or<br/>
 simply the empty string.  Thus the alias 'greet' with no arguments will<br/>
 yield the commands: 'say Hi Quinn  God !! ' and '-)', the latter of which<br/>
 will give an error message from the interpreter (Unless aliased of course).<br/>
-<br/><br/><br/>
-If too many &amp;'s are used in an alias and the expanded string gets too large,<br/>
-that entire alias-execution will be aborted, and you will have to make<br/>
-another version of the alias.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Unalias<br/><br/>
-Claim<br/><br/>
-Dictionary<br/><br/>
 <br/>
+<br/>See Also:<br/>
 <br/>
+<a cmd='help #'>Trigger</a><br/>
+<a cmd='help #'>Variable</a><br/>
