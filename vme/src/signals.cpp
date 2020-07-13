@@ -15,6 +15,7 @@
 #include "utility.h"
 #include "pthread.h"
 #include "db.h"
+#include "config.h"
 #include "comm.h"
 
 
@@ -71,7 +72,7 @@ message_request (int signal_no)
     
     slog (LOG_ALL, 0, "Received USR1 - message request");
     
-    msg_file_fd = fopen(MESSAGE_FILE, "r");
+    msg_file_fd = fopen(str_cc(g_cServerConfig.m_libdir, MESSAGE_FILE), "r");
     if (!msg_file_fd)
     {
         fprintf(stderr, "Error in opening the log:  '%s'", MESSAGE_FILE);
