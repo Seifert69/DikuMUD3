@@ -3988,7 +3988,6 @@ are scattered around the market. The boat bridge is south of here."
 gmap(1024,0)
 movement SECT_CITY
 north to square;
-south to guild_rd2;
 south to bridge;
 east to tobacco_shop;
 northeast to field_shop;
@@ -4846,15 +4845,14 @@ end
 
 /* ----------------- MAGESHOP ------------------------------ */
   mageshop
-names {"Mage Shop","tailor booth","booth"}
+names {"tailor booth","booth"}
 title "At a small tailor booth"
 descr
-"This small booth seems filled with random merchandise. Clothes seem the main
-feature here, but a few weapons and other random trinkets complete the
-collection of the absolute must for the well-equipped beginner student of
-the College of Arcane Arts. A <a cmd='read #'>sign</a> hanging over the booth tries
-to explain a few things."
-extra {"sign over the booth","sign"}
+"This small market stand seems filled with random merchandise. Clothes seem the main
+feature here, but a few weapons and other random trinkets complete the collection of
+the absolute must for the well-equipped beginner student of magic. A <a cmd='read #'>sign</a>
+hanging over the booth tries to explain a few things."
+extra {"sign over the booth", "booth sign", "sign"}
 "<pre>The sign says:<br/>
 <br/>
  '<a cmd='#'>list</a>'  - lists the merchandise.<br/>
@@ -4862,7 +4860,7 @@ extra {"sign over the booth","sign"}
  'sell &lt;item&gt;' - lets you sell an item.<br/>
 <br/>
   Warning: As this shop specializes in mage items, some of the items<br/>
-  may be worthless to non-students of the College of Arcane Arts.<br/>
+  may be worthless to non-students.<br/>
 <br/>
 </pre>"
 movement SECT_CITY
@@ -4872,46 +4870,44 @@ end
 
 /* ----------------- THIEVES BACKALLEY --------------------- */
   side_alley
-names {"dark alley","alley"}
-title "A dark side-alley"
+names {"scruffy booth","booth"}
+title "A scruffy booth at the Udgaard Market"
 descr
-"This narrow side-alley continues a short distance to the southeast before
-terminating at a high wall of some less-than-reputable house. A door
-leads into the house east of here, but it seems barred and locked. A few
-old barrels lie in the mud and the stench of old urine and rotting
-vegetables is everywhere."
+"You're at the southeast corner of the Udgaard Market and it is clearly
+the scruffy looking part of the marketplace. An old booth with what looks
+like mostly junk items is here and you're wondering how anyone could possibly
+make a living from this. Some smashed old barrels with vegetables stand next
+to the booth."
+
+northwest to market;
+movement SECT_CITY
 
 extra {"old barrels","barrels","barrel","vegetables"}
 "One of the barrels is smashed, rotting heads of cabbage lying in the
 smelly mud. The other one is half-filled with stinky rain-water."
-
-extra {"high wall","wall","house"}
-"The tall wall to the house provides no handhold and you think you can
-see something glimmer on the top of it. A closer look confirms your
-suspicion - someone has topped this one with broken glass, making it a
-thief's nightmare."
-extra {"barred door","east door","door"}
-"The door is barred shut. Perhaps if you brought a ram..."
-northwest to market;
-movement SECT_CITY
 end
 
 /* ----------------------------- HEAL SHOP ------------------ */
 
   heal_shop
-names {"The Herbalist and Talismongers","store","supplies"}
-title "The Herbalist &amp; Talismonger store"
+names {"The Herbalist and Talismongers", "supplies"}
+title "The Herbalist &amp; Talismonger stand"
 descr
-"A weak tinkle of small bells hanging from the booth fills the air.
-The air smells faintly of herbs, incense and other various healer
-ingredients. The booth is filled with trinkets of all sorts and a <a cmd='read #'>sign</a>
-catches your attention."
+"The air in northwest corner of the Udgaard Market smells faintly of herbs,
+incense and other various healer ingredients.  You hear a  weak tinkle of
+small bells hanging from the small market stand in front of you. The stand is
+filled with trinkets of all sorts and a <a cmd='read #'>sign</a> catches your attention."
+movement SECT_CITY
+southeast to market;
+ALWAYS_LIGHT
+
 /*extra {"bells over the door","bells","bell"}
 "Tiny brass bells hang over the door, tinkling musically."
 extra {"coloured windows","glass","windows","light"}
 "The many-coloured glass makes you think of cathedral windows. Perhaps
 owner of this shop got his glass cheap from the church. Or perhaps he was
 out with a rock himself, collecting whatever fell down."*/
+
 extra {"trinkets","herbs","incense","ingredients"}
 "A lot of talismans, herbs, vials, holy charms and whatever the
 well-supplied superstitious needs to get him through the day."
@@ -4929,21 +4925,22 @@ extra {"sign"}
 [________________________________________________________]<br/>
 <br/>
 <br/></div></pre>"
-southeast to market;
-movement SECT_CITY
-ALWAYS_LIGHT
-//open {EX_OPEN_CLOSE} keyword {"door"};
 end
 
 /* --------------------- OUTDOORS SHOP ----------------- */
 
                 field_shop
-names {"field equipment store","store"}
-title "Field Equipment Store"
+names {"field equipment booth","booth"}
+title "Field Equipment Booth"
 descr
 "This small market booth is filled with all sorts of equipment, useful
 in the outdoors. Perhaps you can browse the many items here and find
 something you might like. A small <a cmd='read #'>sign</a> hangs over the booth."
+
+movement SECT_CITY
+ALWAYS_LIGHT
+southwest to market;
+
 extra {"small sign","sign"}
 "<pre><br/>
  ________________________________________________________<br/>
@@ -4958,9 +4955,6 @@ extra {"small sign","sign"}
 [________________________________________________________]<br/>
 <br/>
 <br/></div></pre>"
-movement SECT_CITY
-ALWAYS_LIGHT
-southwest to market;
 end
 
 /* -------------------- TOBACCO SHOP ------------------- */
@@ -4970,9 +4964,14 @@ names {"tobacco shop","shop"}
 title "At 'Ye Olde Tobacco Shoppe'"
 descr
 "This booth is very small. Even so, the aroma of tobacco permeates the air.
-The shelves are filled with jars and boxes of tobacco, cigars, pipes and
+The table is filled with jars and boxes of tobacco, cigars, pipes and
 other articles for the well-supplied smoker. A small <a cmd='read #'>sign</a> stands 
 amongst the wares."
+
+west to market;
+movement SECT_CITY
+ALWAYS_LIGHT
+
 extra {"shelves","jars","boxes","tobacco","cigars","pipes","articles"}
 "Those shelves keep all your heart would desire if you are a smoker or
 plan to get off to a good start."
@@ -4988,11 +4987,7 @@ extra {"small sign","sign"}
 [   of the item in question; only items sold in this     ]<br/>
 [   store can be examined in this way.                   ]<br/>
 [________________________________________________________]<br/>
-<br/>
-<br/></div></pre>"
-west to market;
-movement SECT_CITY
-ALWAYS_LIGHT
+</div></pre>"
 end
 
 %objects
@@ -5019,8 +5014,7 @@ end
 
 names {"email object", "object", "mail_list_obj"}
 title "the Email List"
-descr "The email list object is here. Please do not touch. Please leave
-wizi."
+descr "The email list object is here. Please do not touch. Please leave wizi."
 manipulate {MANIPULATE_TAKE}
 minv 253
 /* dilcopy email_list@udgaard();*/
