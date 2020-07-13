@@ -41,6 +41,38 @@ int hit_location_table[] = /* Determine by using 2d8 */
     WEAR_FEET
 };
 
+
+int wear_location_prop[WEAR_MAX] = {0,0,0,0,0,0,
+22, // Body  [6]
+3,  // Head  [7]
+18, // Legs  [8]
+3,  // Feet  [9]
+3,  // Hands [10]
+15, // Arms  [11]
+0,0,0,0,0,0,0,0,0,0,0,0};
+
+// HEAD (7), HANDS(10), ARMS(11), BODY(6), LEGS(8), FEET(9)
+
+int hit_probability_table[] = /* Determine by using 2d8 */
+{
+    1, /* 2..3   =>  4.68% for Head  */
+    2,
+    3, /* 4      =>  4.69% for Hands */
+    4,  /* 5..7   => 23.43% for Arms  */
+    5,
+    6,
+    7, /* 8..10  => 34.38% for Body  */
+    8,
+    7,
+    6, /* 11..14 => 28.12% for legs  */
+    5,
+    4,
+    3,
+    2, /* 15..16 => 4.68% for feet   */
+    1
+};  // 64 total
+
+
 const char *professions[PROFESSION_MAX+1] = {PROFESSION_STRINGS, NULL};
 
 struct profession_cost ability_prof_table[ABIL_TREE_MAX + 1];
@@ -139,8 +171,7 @@ void roll_description(class unit_data *att, const char *text, int roll)
 
         default:
             act("Divine $2t!", A_ALWAYS, att, text, 0, TO_CHAR);
-            act("$1n makes a divinely inspired $2t!",
-                A_ALWAYS, att, text, 0, TO_ROOM);
+            act("$1n makes a divinely inspired $2t!", A_ALWAYS, att, text, 0, TO_ROOM);
             break;
         }
     }
@@ -414,7 +445,59 @@ int hit_location(class unit_data *att, class unit_data *def)
 /* what armour you wear                                           */
 int effective_dex(class unit_data *ch)
 {
-    return CHAR_DEX(ch);
+    class unit_data *u;
+    static const int arm_dex_penalty[] = {0, 10, 20, 40, 100};
+
+    int at, b, p , psum = 0;
+
+    for (u = UNIT_CONTAINS(ch); u; u = u->next)
+    {
+        if (IS_OBJ(u) && (OBJ_EQP_POS(u) != 0) && (OBJ_TYPE(u) == ITEM_ARMOR))
+        {
+            if (OBJ_EQP_POS(u) > WEAR_MAX)
+                continue; // slog ?
+
+            at = OBJ_VALUE(u, 0);
+            if (!is_in(at, ARM_CLOTHES, ARM_PLATE))
+                continue; // slog ?
+
+            switch (at)
+            {
+                case ARM_LEATHER:
+                    if (IS_PC(ch))
+                        b = (CHAR_ABILITY(ch, ABIL_STR) + 4*CHAR_ABILITY(ch, ABIL_DEX))/5;
+                    else
+                        b = (CHAR_ABILITY(ch, ABIL_STR) + 4*CHAR_ABILITY(ch, ABIL_DEX))/5;
+                    break;
+                case ARM_HLEATHER:
+                    if (IS_PC(ch))
+                        b = (CHAR_ABILITY(ch, ABIL_STR) + 2*CHAR_ABILITY(ch, ABIL_DEX))/3;
+                    else
+                        b = (CHAR_ABILITY(ch, ABIL_STR) + 2*CHAR_ABILITY(ch, ABIL_DEX))/3;
+                    break;
+                case ARM_CHAIN:
+                    if (IS_PC(ch))
+                        b = (2*CHAR_ABILITY(ch, ABIL_STR) + CHAR_ABILITY(ch, ABIL_DEX))/3;
+                    else
+                        b = (2*CHAR_ABILITY(ch, ABIL_STR) + CHAR_ABILITY(ch, ABIL_DEX))/3;
+                    break;
+                case ARM_PLATE:
+                    if (IS_PC(ch))
+                        b = CHAR_ABILITY(ch, ABIL_STR);
+                    else
+                        b = CHAR_ABILITY(ch, ABIL_STR);
+                    break;
+                default:
+                    continue;
+            } // switch
+
+            b = MIN(100, b);
+            p = arm_dex_penalty[at] - (b * arm_dex_penalty[at]) / 200;
+            psum +=  p * wear_location_prop[OBJ_EQP_POS(u)];
+        }
+    } // for
+
+    return MAX(0,CHAR_DEX(ch) - psum/64);
 }
 
 /* ========================================================================= */
