@@ -34,6 +34,7 @@
 #define SERVER_CONFIG     "server.cfg"
 
 #define EXECUTE_FILE      "execute.dat"
+#define MESSAGE_FILE      "message.dat"
 #define STATISTIC_FILE    "connectionsnew.dat"
 #define COMMAND_FILE      "commands"
 #define ACCOUNT_FILE      "account"

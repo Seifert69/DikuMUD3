@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "$@" > ../lib/message.dat
+kill -10 `ps x|egrep '/vme |/vme$'|grep -v 'grep'|awk '{ print $1; }'`

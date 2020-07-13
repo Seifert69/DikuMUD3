@@ -14,6 +14,11 @@
 #include "utils.h"
 #include "utility.h"
 #include "pthread.h"
+#include "db.h"
+#include "config.h"
+#include "textutil.h"
+#include "comm.h"
+
 
 extern int mud_shutdown;
 
@@ -57,6 +62,30 @@ shutdown_request (int signal_no)
 
     slog (LOG_ALL, 0, "Received USR2 - shutdown request");
     mud_shutdown = 1;
+}
+
+
+void
+message_request (int signal_no)
+{
+    FILE *msg_file_fd;
+    char line[512];
+    
+    slog (LOG_ALL, 0, "Received USR1 - message request");
+    
+    msg_file_fd = fopen(str_cc(g_cServerConfig.m_libdir, MESSAGE_FILE), "r");
+    if (!msg_file_fd)
+    {
+        fprintf(stderr, "Error in opening the log:  '%s'", MESSAGE_FILE);
+        return;
+    }
+    
+    while (fgets(line, 512, msg_file_fd)) {
+        send_to_all (line);
+        slog (LOG_ALL, 0, line);
+    }
+    
+    fclose(msg_file_fd);    
 }
 
 
@@ -135,6 +164,8 @@ signal_setup (void)
     signal (SIGTERM, hupsig);
 
     signal (SIGUSR2, shutdown_request);
+
+    signal (SIGUSR1, message_request);
 
 #ifdef DEBUG_HISTORY
     sigbus_func = signal (SIGBUS, sig_debugdump);
