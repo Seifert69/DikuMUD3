@@ -98,11 +98,9 @@ int shield_bonus(class unit_data *att, class unit_data *def,
 
          /* Let's make a shield check - CAN_SEE does affect this too */
          hm = resistance_skill_check(def_dex + shield_bonus, att_dex,
-                                     IS_PC(def) ? PC_SKI_SKILL(def,
-                                                               SKI_SHIELD)
+                                     IS_PC(def) ? PC_SKI_SKILL(def, SKI_SHIELD)
                                                 : def_dex,
-                                     IS_PC(att) ? PC_SKI_SKILL(att,
-                                                               SKI_SHIELD)
+                                     IS_PC(att) ? PC_SKI_SKILL(att, SKI_SHIELD)
                                                 : att_dex);
 
          if (hm >= 0) /* Successful Shield use */
