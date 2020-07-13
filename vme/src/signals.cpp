@@ -16,6 +16,7 @@
 #include "pthread.h"
 #include "db.h"
 #include "config.h"
+#include "textutil.h"
 #include "comm.h"
 
 
