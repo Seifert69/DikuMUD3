@@ -912,49 +912,53 @@ dilend
 
 
 
-dilbegin death (arg:string);
+dilbegin death(arg:string);
 external
-	raw_kill ();
-	integer lose_exp(u:unitptr);
-	gain_exp(u:unitptr,gain:integer);
+   raw_kill ();
+   integer lose_exp(u:unitptr);
+   gain_exp(u:unitptr,gain:integer);
 var
 	gain:integer;
+
 code
 {
-heartbeat:=3;
-if ((dilfind("death_seq@death",self)) or
-(dilfind ("raw_kill@death",self)))
- return;
+   heartbeat:=3;
+   if ((dilfind("death_seq@death",self)) or (dilfind ("raw_kill@death",self)))
+      return;
 
- if (self.type==UNIT_ST_NPC)
-   if ((self.outside.nameidx=="destroy_room") and (self.outside.zoneidx=="basis"))
-   quit;
+   if (self.type==UNIT_ST_NPC)
+      if ((self.outside.nameidx=="destroy_room") and (self.outside.zoneidx=="basis"))
+         quit;
 
-if (dilfind("pc_arena@arena",self))
+   if (dilfind("pc_arena@arena",self))
    {
-dilcopy ("arena_death@arena()",self);
-quit;
+      dilcopy ("arena_death@arena()",self);
+      quit;
    }
 
-if (self.type==UNIT_ST_PC)
+   if (self.type==UNIT_ST_PC)
 	{
-	while (isaff(self, ID_REWARD))
-		subaff(self, ID_REWARD);
+      while (isaff(self, ID_REWARD))
+         subaff(self, ID_REWARD);
 
-	unset (self.charflags,CHAR_OUTLAW);
+   	unset(self.charflags,CHAR_OUTLAW);
 	}
-if (isset(self.charflags,CHAR_KILL_SELF))
+   if (isset(self.charflags,CHAR_KILL_SELF))
 	{
-	raw_kill();
-	quit;
+      raw_kill();
+      quit;
 	}
-if ((self.type==UNIT_ST_PC) and (self.level<200))
-gain :=lose_exp(self);
-	gain_exp(self, -gain);
-raw_kill();
-quit;
+
+   if ((self.type==UNIT_ST_PC) and (self.level<200))
+      gain := lose_exp(self);
+   gain_exp(self, -gain);
+   raw_kill();
+   quit;
 }
 dilend
+
+
+
 dilbegin death_cry ();
 var
 	dir:integer;
