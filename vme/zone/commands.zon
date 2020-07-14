@@ -9487,7 +9487,7 @@ code
    else
       prof_string := "Your profession is undefined, please visit father Nicholas in the Udgaard temple healer room.<br/>";
 
-   remain:=self.level*40;
+   /* MS2020 ???  remain:=self.level*40;
 
    if (remain >2000)
       remain:=0;
@@ -9498,8 +9498,9 @@ code
       remain_str:="";
    else if (remain==0)
       remain_str:="You have "+itoa(self.ability_points)+" ability points left.<br/>";
-   else
-      remain_str:="You have " +itoa(remain)+" remaining ability points and "+ itoa(self.ability_points) + " available this level.<br/>";
+   else*/
+
+   remain_str:="You have " +itoa(self.skill_points)+" remaining skill points and "+ itoa(self.ability_points) + " ability points available.<br/>";
    
    tf:=FALSE;
    time_str:="You have been playing for";
@@ -9549,7 +9550,9 @@ code
        "Div " + itoa(self.abilities[ABIL_DIV]) + ", " +
        "Hit " + itoa(self.abilities[ABIL_HP]) + " (" +
        itoa(self.hp) + "/" + itoa(self.max_hp) + ")" +
-       "<br/>" +remain_str+
+       "<br/>" +
+       "Your combat Dexterity is " + itoa(getinteger(self, 0)) + " as a result of your armor.<br/>"+
+       remain_str+
        "You have " + itoa(self.skill_points) + " skill practice points.<br/>" +
        "You are in " + wimpy_string + " mode.<br/>"+
        "More: '<a cmd='#'>status skills</a>', '<a cmd='#'>status weapons</a>' and '<a cmd='#'>status spells</a>'."
