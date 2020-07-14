@@ -4298,7 +4298,6 @@ each side of the path."
 movement SECT_FIELD
 east to park1;
 south to park3;
-north to park6;
 ALWAYS_LIGHT
 end
 
@@ -4400,7 +4399,7 @@ many young and healthy-looking trees grow on each side of the path."
 
 movement SECT_FIELD
 south to park_pond;
-west to park8;
+east to park8;
 ALWAYS_LIGHT
 end
 
@@ -4415,7 +4414,7 @@ grow on each side of the path."
 
 movement SECT_FIELD
 south to park9;
-east to park7;
+west to park7;
 ALWAYS_LIGHT
 end
 
@@ -4432,7 +4431,7 @@ many young and healthy-looking trees grow on each side of the path."
 
 movement SECT_FIELD
 north to park8;
-east to park_pond;
+west to park_pond;
 ALWAYS_LIGHT
 end
 
