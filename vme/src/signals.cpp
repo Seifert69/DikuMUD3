@@ -81,6 +81,7 @@ void message_request(int signal_no)
     fclose(msg_file_fd);
 }
 
+
 /* kick out players etc */
 void hupsig(int signal)
 {
