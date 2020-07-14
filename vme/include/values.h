@@ -344,7 +344,7 @@ END HEADER*/
 #define SKI_PICK_POCKETS      31
 #define SKI_FILCH             32
 #define SKI_DISARM            33
-#define SKI_SKIN            34
+#define SKI_SKIN              34
 #define SKI_SHELTER           35
 #define SKI_SOOTHE            36
 #define SKI_AMBUSH            37
@@ -370,7 +370,15 @@ END HEADER*/
 #define SKI_HIT               57
 #define SKI_PUNCH             58
 #define SKI_GLANCE            59
-#define LAST_SKILL            59
+#define SKI_ARM_LEATHER       60
+#define SKI_ARM_HLEATHER      61
+#define SKI_ARM_CHAIN         62
+#define SKI_ARM_PLATE         63
+
+#define LAST_SKILL            75
+
+
+
 /* Insert any new definitions here... */
 /*check values.h for max number of weapons.*/
 /* keep in mind if you need more ask the vme coders.*/
