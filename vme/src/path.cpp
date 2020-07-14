@@ -208,12 +208,26 @@ int path_weight(unit_data *from, unit_data *to, int dir)
     int weight = 0;
 
     if (dir <= DIR_SOUTHWEST)
+    {
         if (IS_SET(ROOM_EXIT(from, dir)->exit_info, EX_OPEN_CLOSE))
             weight += 10;
+
+        if (IS_SET(ROOM_EXIT(from, dir)->exit_info, EX_LOCKED))
+            weight += 50;
+
+        if (IS_SET(ROOM_EXIT(from, dir)->exit_info, EX_HIDDEN))
+            weight += 200;
+    }
 
 
     if ((dir == DIR_EXIT) || (dir == DIR_ENTER))
         weight += 10;
+
+    if ((ROOM_LANDSCAPE(from) == SECT_WATER_SWIM) || (ROOM_LANDSCAPE(to) == SECT_WATER_SWIM))
+        weight += 500;
+
+    if ((ROOM_LANDSCAPE(from) == SECT_WATER_SAIL) || (ROOM_LANDSCAPE(to) == SECT_WATER_SAIL))
+        weight += 5000;
 
     weight += sector_dat.get_path_cost(ROOM_LANDSCAPE(from), ROOM_LANDSCAPE(to));
 
