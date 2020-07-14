@@ -300,7 +300,7 @@ descr
 "The river slowly flows east towards the village of Udgaard. North you see a
 landing spot in the light part of the forest."
 
-movement SECT_WATER_SAIL
+movement SECT_WATER_SWIM
 
 north to rn_6018;
 west to darkriver2 difficulty 20 descr
@@ -325,7 +325,7 @@ extra {"ancient", "tree", "trees", "roof"}
 impossible
 to catch even a glimpse of anything above the lowest branches."
 
-movement SECT_WATER_SAIL
+movement SECT_WATER_SWIM
 IN_ALWAYS_DARK
 
 north to rn_6123;
@@ -354,7 +354,7 @@ extra {"ancient", "tree", "trees", "roof"}
 impossible
 to catch even a glimpse of anything above the lowest branches."
 
-movement SECT_WATER_SAIL
+movement SECT_WATER_SWIM
 IN_ALWAYS_DARK
 
 north to rn_6121;

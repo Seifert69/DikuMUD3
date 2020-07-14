@@ -240,7 +240,7 @@ continue east you will reach the city of Midgaard while the village of
 Udgaard is upstream to the west. A quiet part of the Cypress forest is just
 north of here."
 
-movement SECT_WATER_SAIL
+movement SECT_WATER_SWIM
 
 north to ct_6;
 east to midgaard/river1 difficulty 0;

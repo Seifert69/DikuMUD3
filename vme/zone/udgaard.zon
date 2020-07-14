@@ -4072,7 +4072,7 @@ descr
 "You are on the river flowing past the village of Udgaard with a
 pretty view of the village dump just north of here beyond the boat bridge."
 
-movement SECT_WATER_SAIL
+movement SECT_WATER_SWIM
 
 north to bridge;
 #ifdef EXTENDEDMUD

@@ -457,7 +457,7 @@ emerged from an underground source."
 east to ww1/river_3;
 west to stream2;
 south to river_0@gazha;
-movement SECT_WATER_SAIL
+movement SECT_WATER_SWIM
 end
 
 
@@ -475,7 +475,7 @@ to the east."
 east to stream1;
 west to stream3;
 
-movement SECT_WATER_SAIL
+movement SECT_WATER_SWIM
 end
 
 
@@ -487,7 +487,7 @@ descr
 "	You are on a calm stream.  To the north, a muddy bank gives way to the
 rotting planks of a dock on a small port. The water flows from the east to
 the west."
-movement SECT_WATER_SAIL
+movement SECT_WATER_SWIM
 north to port;
 east to stream2;
 west to stream4;
@@ -500,7 +500,7 @@ descr
 "     You are floating on a deep but calm stream, flowing from the west past
 the small port town of Ratswarf. The water flows around a large old tree as
 it turns into the dark woods."
-movement SECT_WATER_SAIL
+movement SECT_WATER_SWIM
 east to stream3;
 south to torsbay/stream2;
 end

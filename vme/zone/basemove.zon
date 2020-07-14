@@ -631,7 +631,7 @@ code
 
    if (dir > -1)
    {
-      if ((self.outside.movement != SECT_WATER_SAIL) and (self.outside.exit_to[dir].movement != SECT_WATER_SAIL))
+      if ((self.outside.movement != SECT_WATER_SWIM) and (self.outside.exit_to[dir].movement != SECT_WATER_SWIM))
       {
          act("You need water in order to swim.", A_ALWAYS, self, null, null, TO_CHAR);
          return;

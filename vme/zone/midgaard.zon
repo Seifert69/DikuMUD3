@@ -2635,7 +2635,7 @@ Midgaard. Upstream, under the city wall, you can reach the cypress
 forest."
 
 ALWAYS_LIGHT
-movement SECT_WATER_SAIL
+movement SECT_WATER_SWIM
 
 north to boat_bridge difficulty 10;
 west to cypress/river difficulty 10;

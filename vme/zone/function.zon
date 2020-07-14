@@ -1720,8 +1720,8 @@ code
    if (dir>=DIR_IMPOSSIBLE)
       return(FALSE);
 
-   if ((isset (self.outside.exit_info[dir], EX_LOCKED)) or
-       (isset (self.outside.exit_info[dir], EX_CLOSED)))
+   if ((isset(self.outside.exit_info[dir], EX_LOCKED)) or
+       (isset(self.outside.exit_info[dir], EX_CLOSED)))
    {
       mv := oc_move(dir,TRUE);
       if (mv == FALSE)
@@ -1730,6 +1730,17 @@ code
    else
    {
       dir_string := dirstring(dir);
+
+      // SWIM or CLIMB xxxx
+      if ((self.outside.movement == SECT_WATER_SWIM) or (self.outside.exit_to[dir].movement == SECT_WATER_SWIM))
+      {
+         dir_string := "swim " + dir_string;
+      }
+      else if (isset(self.outside.exit_info[dir], EX_CLIMB))
+      {
+         dir_string := "climb " + dir_string;
+      }
+
       if (dir == DIR_ENTER)
          exec(dir_string+" "+self.outside.exit_names[dir].[0],self);
       else
