@@ -442,7 +442,8 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
       return 0;
    }
 
-   if ((ROOM_LANDSCAPE(room_from) == SECT_WATER_SAIL) || (ROOM_LANDSCAPE(room_to) == SECT_WATER_SAIL))
+   if ((ROOM_LANDSCAPE(room_from) == SECT_WATER_SAIL) || (ROOM_LANDSCAPE(room_to) == SECT_WATER_SAIL) ||
+       (ROOM_LANDSCAPE(room_from) == SECT_WATER_SWIM) || (ROOM_LANDSCAPE(room_to) == SECT_WATER_SWIM))
    {
       if (IS_CHAR(mover))
       {
