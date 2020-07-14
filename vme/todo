@@ -1,24 +1,25 @@
+SFUN_TEACH, add parameter so teacher just teachers what can be learned...?
+Get the maps up there.
+Test play
+Add nice constant for getinteger() effective_dex
+Weapons from Thomas
+Test walk room for climb. Janitor with wander_zones will walk into the river now :-)
+Shortest path should weight water and avoid swim areas.
+
+
 I would like the following cleaned up for a distro:
    (It's really there because Valhalla has been growing and spurting for 25 years and 
     trying to support veteran players that are level 65,000 :-)))
 
-	Weapons are a mess IMO. Too many. Clean them up
-		Too many staves for example.
-		Too many swords. Makes sense to have short-sword. Long-sword. 2H sword. One could argue also bastard sword (1½). I.e. 4.
-		Then maybe a scimitar because it's very different. But to further add broad-sword, falchion, sabre, katana, etc. just becomes
-		too scattered from a skill training perspective IMO. And bastard sword 1 & 2? Is one BS not enough :-D
-		And what's a fighting staff (2H) vs a 2H quarter-staff, etc.
-
 	Professions
-		Maybe change "Dark Knight" to Barbarian. DK is really just an evil paladin. Guild determines.
+		Maybe change "Dark Knight" to Barbarian. DK is really just an evil paladin. Guild determines?
 		Maybe change Conjurer to Bard to have a thief / mage prof. Mage and COnjurer are just variants based on guild.
 		Or add the two.
 		Need to go through most Professions and get them steamlined in tune with what players would expect
 		they seem quite messy at the time of writing
 
-Test play
-
-Add code for cMUD mapping ?
+	Revise the guild teachers in guilddef.h so they actually teach what is reasonable.
+	Maybe if the teacher 
 
 Suggests plan to revise data and points and start sequence:
 
@@ -44,15 +45,11 @@ Suggests plan to revise data and points and start sequence:
 		- the ability + based on profession.
 		(will +4 MAG with -5 MOD give -1?)
 
-    Revise starting equipment for all new players (udgaard.zon/ DIL odinstatue())
-	Revise starting skills, weapons, spells in playerinit()
-	Revise the four Udgaard basic teachers to teach those starting skills, abilities, weapons, etc. so it also matches equipment  
 
-    Revise weapons, skills, spells costs in skills.cpp
-	Revise the guild teachers in guilddef.h so they actually teach what is reasonable.
+A few new novel weapon types would be nice. They're listed in weapons.def
 
+Could add frenzy skill (would be a blast)
 
-Maybe tilt experience to hockey more at higher levels. (Vlevel. I'm not a fan)
 
 
 Docs
@@ -63,15 +60,21 @@ Improve documentation on the Wiki
 
 Client
 ------
+Try to get rid of that pesky firefox security alert (because field type changes to hidden and back again)
+
 Keep alive from mud client to server
 	Every 5 minutes send a signal if there has been no actions.
 
+Add alias'es to client
+
+Add triggers to client
+
 Settings button:
-	CSS Style picker.
+	CSS Style picker for different color schemes.
 
-Map out core zones. I'll pay for a cMUD to use as a mapping tool.
-
-If there's an artist anywhere we should have nice maps drawn
+Map out core zones.
+    - I'll pay for a cMUD to use as a mapping tool. Add code for cMUD mapping.
+    - If there's an artist anywhere we should have nice maps drawn
 
 
 maps
