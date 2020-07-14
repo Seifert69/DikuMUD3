@@ -781,7 +781,8 @@ act ("$1n says 'If I am busy, one of the other many newbie guides will come "+
      "and help you.",
   A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-act ("$1n says 'Now, it would probably be best if you turned off " +
+
+/* act ("$1n says 'Now, it would probably be best if you turned off " +
      "your shout and tell.'",
   A_ALWAYS, self,null,pc,TO_VICT);
 act ("$1n says 'Otherwise it may be hard to follow what I say " +
@@ -801,6 +802,8 @@ act ("$1n says 'Remember to turn them back on again after training " +
      "by typing each command again.'",
   A_ALWAYS, self,null,pc,TO_VICT);
      pause;
+*/
+
 act ("$1n says 'The first thing I will talk about are basic mud commands.'",
   A_ALWAYS, self,null,pc,TO_VICT);
 pause;
