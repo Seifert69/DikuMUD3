@@ -299,6 +299,52 @@ code
 dilend
 
 
+// Rescue level 0,1,2 players that are about to die from minor
+// combat. A huge blow is going to kill them though. So save
+// them only from fights their own size.
+//
+dilbegin fnpri(FN_PRI_BODY-2) unique aware odinshand();
+var
+   u : unitptr;
+code
+{
+   heartbeat := PULSE_SEC * 5;
+
+   :loop:
+   wait(SFB_TICK | SFB_CMD,  TRUE);
+
+   if (self.hp < 1)
+   {
+      if (self.level >= 3)
+         quit;
+
+      if (dilfind("death_seq@death",self) or dilfind("raw_kill@death",self))
+         return;
+
+      self.hp := 1;
+
+      act("Just as things are looking bleak for $1n $1e suddenly vanishes in a puff of smoke.", A_ALWAYS, self, null, null, TO_ROOM);
+
+      u := findroom("heal_room@udgaard");
+      if (u == null)
+      {
+         log("Unable to locate heal_room@udgaard in odinshand() DIL");
+         quit;
+      }
+
+      stop_fighting(self, null);
+      link(self, u);
+      self.position := POSITION_RESTING;
+
+      act("The hand of Odin puts $1n on the ground.", A_ALWAYS, self, null, null, TO_ROOM);
+      act("Just when all seems lost you feel Odin's magnificent power aid you.", A_ALWAYS, self, null, null, TO_CHAR);
+      exec("look", self);
+   }
+   goto loop;
+}
+dilend
+
+
 dilbegin aware on_connect();
 external
    informer();
@@ -332,6 +378,11 @@ code
 
       i := dildestroy("stomach@update", self);
       dilcopy("stomach@update",self);
+
+      if (self.level < 3)
+      {
+         dilcopy("odinshand@basis",self);         
+      }
    }
 
    if(err > 0)
