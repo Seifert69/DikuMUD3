@@ -464,28 +464,25 @@ int effective_dex(class unit_data *ch)
             switch (at)
             {
                 case ARM_LEATHER:
+                    b = (CHAR_ABILITY(ch, ABIL_STR) + 4*CHAR_ABILITY(ch, ABIL_DEX))/5;
                     if (IS_PC(ch))
-                        b = (CHAR_ABILITY(ch, ABIL_STR) + 4*CHAR_ABILITY(ch, ABIL_DEX))/5;
-                    else
-                        b = (CHAR_ABILITY(ch, ABIL_STR) + 4*CHAR_ABILITY(ch, ABIL_DEX))/5;
+                        b = (b + PC_SKI_SKILL(ch, SKI_ARM_LEATHER)) / 2;
                     break;
+
                 case ARM_HLEATHER:
+                    b = (CHAR_ABILITY(ch, ABIL_STR) + 2*CHAR_ABILITY(ch, ABIL_DEX))/3;
                     if (IS_PC(ch))
-                        b = (CHAR_ABILITY(ch, ABIL_STR) + 2*CHAR_ABILITY(ch, ABIL_DEX))/3;
-                    else
-                        b = (CHAR_ABILITY(ch, ABIL_STR) + 2*CHAR_ABILITY(ch, ABIL_DEX))/3;
+                        b = (b + PC_SKI_SKILL(ch, SKI_ARM_HLEATHER))/2;
                     break;
                 case ARM_CHAIN:
+                    b = (2*CHAR_ABILITY(ch, ABIL_STR) + CHAR_ABILITY(ch, ABIL_DEX))/3;
                     if (IS_PC(ch))
-                        b = (2*CHAR_ABILITY(ch, ABIL_STR) + CHAR_ABILITY(ch, ABIL_DEX))/3;
-                    else
-                        b = (2*CHAR_ABILITY(ch, ABIL_STR) + CHAR_ABILITY(ch, ABIL_DEX))/3;
+                        b = (b + PC_SKI_SKILL(ch, SKI_ARM_CHAIN))/2;
                     break;
                 case ARM_PLATE:
+                    b = CHAR_ABILITY(ch, ABIL_STR);
                     if (IS_PC(ch))
-                        b = CHAR_ABILITY(ch, ABIL_STR);
-                    else
-                        b = CHAR_ABILITY(ch, ABIL_STR);
+                        b = (b + PC_SKI_SKILL(ch, SKI_ARM_PLATE))/2;
                     break;
                 default:
                     continue;
