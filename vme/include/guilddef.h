@@ -73,6 +73,7 @@ $1n tells you, 'Remove all equipment, please.';
  18;  100; cook                          ;   9;  9000;  10;          0;
  20;  100; curare                        ;   9;  9000;   7;          0;
  23;   50; bash                          ;  19; 19000;  18;          0;
+  0;   35; armor soft leather            ;   4;  4000;   10;         0;
 "
 #elif defined(_WEAPON)
 
@@ -202,6 +203,10 @@ $1n tells you, 'Remove all equipment, please.';
   3;   80; bash                          ;   9;  9000;   8;          0;
   5;   70; turn undead                   ;  18; 18000;  15;          0;
  12;  100; leadership                    ;   4;  4000;   5; 10;      0;
+  0;   35; armor soft leather            ;   4;  4000;   10;      0;
+  0;   35; armor hard leather            ;   4;  4000;   10;      0;
+  0;   35; armor chain                   ;   4;  4000;   10;      0;
+  0;   35; armor plate                   ;   4;  4000;   10;      0;
 "
 #elif defined(_WEAPON)
 
@@ -360,6 +365,9 @@ $1n tells you, 'Remove all equipment, please.';
  28;  100; lay trap                      ;   4;  4000;   6;          0;
  40;  100; curare                        ;   9;  9000;   7;          0;
   6;   50; swimming                      ;  10; 14000;  14;          0;
+  0;   35; armor soft leather            ;   4;  4000;   10;      0;
+  0;   35; armor hard leather            ;   4;  4000;   10;      0;
+  0;   35; armor chain                   ;   4;  4000;   10;      0;
 "
 #elif defined(_WEAPON)
 
@@ -490,6 +498,8 @@ $1n tells you, 'Remove all equipment, please.';
  15;   50; scroll use                    ;  23; 23000;  20;          0;
  19;   70; two weapon style              ;   9;  9000;  10;          0;
  25;  100; plant                         ;  10; 10000;  10;          0;
+  0;   35; armor soft leather            ;   4;  4000;   10;      0;
+  0;   35; armor hard leather            ;   4;  4000;   10;      0;
 "
 #elif defined(_WEAPON)
 
@@ -593,6 +603,10 @@ $1n tells you, 'Remove all equipment, please.';
   1;   70; rescue                        ;  14; 14000;  10;          0;
  10;  100; disarming                     ;   9;  9000;   8;          0;
  15;   50; leadership                    ;   9;  9000;   8;          0;
+  0;   35; armor soft leather            ;   4;  4000;   10;      0;
+  0;   35; armor hard leather            ;   4;  4000;   10;      0;
+  0;   35; armor chain                   ;   4;  4000;   10;      0;
+  0;   35; armor plate                   ;   4;  4000;   10;      0;
 "
 #elif defined(_WEAPON)
 
@@ -692,6 +706,7 @@ $1n tells you, 'Remove all equipment, please.';
   0;  100; scroll use                    ;   4;  4000;   5; 10;      0;
   0;  100; wand use                      ;   4;  4000;   5; 10;      0;
   0;   60; fleeing                       ;  14; 14000;  10;          0;
+  0;   35; armor soft leather            ;   4;  4000;   10;      0;
 "
 #elif defined(_WEAPON)
 
@@ -820,6 +835,10 @@ $1n tells you, 'Remove all equipment, please.';
   3;   80; scroll use                    ;   9;  9000;   8;          0;
   3;   80; consider                      ;   9;  9000;   8;          0;
   3;   80; shield                        ;  14; 14000;  10;          0;
+  0;   35; armor soft leather            ;   4;  4000;   10;      0;
+  0;   35; armor hard leather            ;   4;  4000;   10;      0;
+  0;   35; armor chain                   ;   4;  4000;   10;      0;
+  0;   35; armor plate                   ;   4;  4000;   10;      0;
 "
 #elif defined(_WEAPON)
 
@@ -962,7 +981,7 @@ $1n tells you, 'Remove all equipment, please.';
   2;   80; scroll use                    ;   9;  9000;   8;          0;
   3;   80; leadership                    ;   9;  9000;  10;          0;
   5;   75; diagnostics                   ;   4;  4000;   5;          0;
-
+  0;   35; armor soft leather            ;   4;  4000;   10;      0;
 "
 
 #elif defined(_WEAPON)
@@ -1116,6 +1135,10 @@ $1n tells you, 'Remove all equipment, please.';
   3;   80; bash                          ;   9;  9000;   8;          0;
   5;   70; turn undead                   ;  18; 18000;  15;          0;
  12;  100; leadership                    ;   4;  4000;   5; 10;      0;
+  0;   35; armor soft leather            ;   4;  4000;   10;      0;
+  0;   35; armor hard leather            ;   4;  4000;   10;      0;
+  0;   35; armor chain                   ;   4;  4000;   10;      0;
+  0;   35; armor plate                   ;   4;  4000;   10;      0;
 "
 #elif defined(_WEAPON)
 
@@ -1347,6 +1370,7 @@ $1n tells you, 'Remove all, then we proceed!';
   1;  100; scroll use                    ;   4;  4000;   5; 10;      0;
   3;   60; consider                      ;   9;  9000;  10;          0;
  12;   35; weather watching              ;   4;  4000;   5;          0;
+  0;   35; armor soft leather            ;   4;  4000;   10;      0;
 "
 
 #elif defined(_WEAPON)
@@ -1501,6 +1525,8 @@ $1n tells you, 'Stand before me as you entered the world.';
  10;  100; two weapon style              ;   9;  9000;   8;          0;
  13;   70; scroll use                    ;  18; 18000;  15;          0;
  22;  100; stalk                         ;   9;  9000;   8;          0;
+  0;   35; armor soft leather            ;   4;  4000;   10;      0;
+  0;   35; armor hard leather            ;   4;  4000;   10;      0;
 "
 
 
