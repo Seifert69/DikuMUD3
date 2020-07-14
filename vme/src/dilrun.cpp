@@ -834,7 +834,8 @@ struct dil_func_type dilfe_func[DILI_MAX + 1] = {
     {dilfe_phead},
     {dilfe_fndu2},
     {dilfe_gfol},
-    {dilfe_sact} // 195
+    {dilfe_sact}, // 195
+    {dilfe_gint}
 };
 
 void dil_free_prg(struct dilprg *prg)

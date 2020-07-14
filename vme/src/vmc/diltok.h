@@ -123,6 +123,7 @@ struct symbols
     {"strcmp", DILSE_STRCMP},
     {"strncmp", DILSE_STRNCMP},
     {"sact",DILSE_SACT}, // MS2020
+    {"getinteger",DILSE_GINT}, // MS2020
 
     /* DIL Symbol Inst (procedures) */
 

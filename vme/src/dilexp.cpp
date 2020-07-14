@@ -3202,6 +3202,52 @@ void dilfe_sact(register struct dilprg *p)
     delete v6;
 }
 
+
+/* getinteget */
+void dilfe_gint(register struct dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    switch (dil_getval(v1))
+    {
+    case DILV_FAIL:
+        v->type = DILV_FAIL; /* failed */
+        break;
+
+    case DILV_NULL:
+    case DILV_UP:
+        v->type = DILV_INT;
+        switch (dil_getval(v2))
+        {
+            case DILV_INT:
+                switch (v2->val.num)
+                {
+                    case 0:
+                        v->val.num = 0;
+                        if (v1->val.ptr != NULL)
+                            v->val.num = effective_dex((class unit_data *) v1->val.ptr);                    
+                }
+                break;
+
+            default:
+                v->type = DILV_ERR; /* wrong type */
+                break;
+        }
+        break;
+
+    default:
+        v->type = DILV_ERR; /* wrong type */
+        break;
+    }
+
+    p->stack.push(v);
+
+    delete v1;
+    delete v2;
+}
+
 /* asctime */
 void dilfe_ast(register struct dilprg *p)
 {

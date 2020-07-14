@@ -78,5 +78,6 @@ void dilfi_remlst (struct dilprg *);
 void dilfi_reboot (struct dilprg *);
 void dilfi_kedit (struct dilprg *);
 void dilfe_sact (struct dilprg *);
+void dilfe_gint (struct dilprg *);
 
 #endif
