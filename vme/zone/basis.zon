@@ -1159,7 +1159,7 @@ code
 {
    guilds := {"Udgaard Fighter", "Midgaard Dark Knight", "Midgaard Paladin", "Nymgaard Ranger",  
               "Udgaard Thief", "Khorsabad Assassin", "Udgaard Healer", "Nymgaard Druid", 
-               "Necromancer", "Udgaard Conjurer", "Midgaard Sorcerer" };
+              "Midgaard Mystic", "Necromancer", "Udgaard Conjurer", "Midgaard Sorcerer" };
    initi := {"F", "DK", "P",  
               "R", "T", "A", "H",
               "D", "N",  "C", "S"};
