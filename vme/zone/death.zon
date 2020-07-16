@@ -855,22 +855,9 @@ dilend
 
 
 
-dilbegin integer  required_xp(lvl:integer);
-code
-{
-heartbeat:=3;
-   if (lvl <=50)
-     return ((1500*lvl) + (lvl*lvl*(150)));
-   else
-     return (450000 + (16650 * (lvl - 50)));
-}
-dilend
-
-
 
 dilbegin integer lose_exp(u:unitptr);
 external
-	integer required_xp (lvl:integer);
 	integer max(a:integer,b:integer);
 	integer min(a:integer,b:integer);
 
@@ -885,20 +872,21 @@ code
       return(0);
 
    /* This first line takes care of any xp earned above required level. */
-   i := required_xp(u.vlevel);
-   loss := max(0,(u.exp-i)/2);
+   i := getinteger(DIL_GINT_LEVELXP, null, u.vlevel);
+   loss := max(0, (u.exp-i)/2);
 
    /* This line makes sure, that you lose at most half a level...       */
-   loss := min(loss, (1650+(u.level*300))/2);
+   loss := min(loss, getinteger(DIL_GINT_LEVELXP, null, u.vlevel)/2);
 
    /* This line takes care of the case where you have less or almost    */
    /* equal XP to your required. You thus lose at least 1/5th your      */
    /* level.                                                            */
-   loss := max(loss,(1650+(u.level*300))/5);
+   loss := max(loss, getinteger(DIL_GINT_LEVELXP, null, u.vlevel)/5);
 
    /* This line takes care of newbies, setting the lower bound... */
-   i := required_xp(1);
-   i := max(0, (self.exp-i)/ 2);
+   /* Up to level 3 is sacred experience                          */
+   i := getinteger(DIL_GINT_REQXP, null, 3);
+   i := max(0, (self.exp-i) / 2);
 
    if (loss > i)
       loss := i;
