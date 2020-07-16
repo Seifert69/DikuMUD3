@@ -3203,38 +3203,31 @@ void dilfe_sact(register struct dilprg *p)
 }
 
 
-/* getinteget */
+/* getinteger(idx, p_u, p_i) : index is the kind of int to get.
+ * p_u / p_i are optional unitptr / integer parameters
+ */
 void dilfe_gint(register struct dilprg *p)
 {
     dilval *v = new dilval;
-    dilval *v2 = p->stack.pop();
-    dilval *v1 = p->stack.pop();
+    dilval *v3 = p->stack.pop(); // INT
+    dilval *v2 = p->stack.pop(); // UNIT
+    dilval *v1 = p->stack.pop(); // INT
 
-    switch (dil_getval(v1))
+    class unit_data *p_u = NULL;
+    int p_i = 0;
+    int idx;
+
+    v->type = DILV_INT;
+    v->val.num = 0;
+
+    switch (dil_getval(v3))
     {
     case DILV_FAIL:
         v->type = DILV_FAIL; /* failed */
         break;
 
-    case DILV_NULL:
-    case DILV_UP:
-        v->type = DILV_INT;
-        switch (dil_getval(v2))
-        {
-            case DILV_INT:
-                switch (v2->val.num)
-                {
-                    case 0:
-                        v->val.num = 0;
-                        if (v1->val.ptr != NULL)
-                            v->val.num = effective_dex((class unit_data *) v1->val.ptr);                    
-                }
-                break;
-
-            default:
-                v->type = DILV_ERR; /* wrong type */
-                break;
-        }
+    case DILV_INT:
+        p_i = v3->val.num;
         break;
 
     default:
@@ -3242,10 +3235,69 @@ void dilfe_gint(register struct dilprg *p)
         break;
     }
 
+    switch (dil_getval(v2))
+    {
+    case DILV_FAIL:
+        v->type = DILV_FAIL; /* failed */
+        break;
+
+    case DILV_UP:
+    case DILV_NULL:
+        p_u = (class unit_data *) v2->val.ptr;
+        break;
+
+    default:
+        v->type = DILV_ERR; /* wrong type */
+        break;
+    }
+
+    switch (dil_getval(v1))
+    {
+    case DILV_FAIL:
+        v->type = DILV_FAIL; /* failed */
+        break;
+
+    case DILV_INT:
+        idx = v1->val.num;
+        break;
+
+    default:
+        v->type = DILV_ERR; /* wrong type */
+        break;
+    }
+
+    if (v->type == DILV_INT)
+    {
+        switch (idx)
+        {
+        case DIL_GINT_EFFDEX:
+            if ((p_u != NULL) && IS_CHAR(p_u))
+                v->val.num = effective_dex(p_u);
+            break;
+
+        case DIL_GINT_REQXP:
+            int required_xp(int level);
+            v->val.num = required_xp(p_i);
+            break;
+
+        case DIL_GINT_LEVELXP:
+            int level_xp(int level);
+            v->val.num = level_xp(p_i);
+            break;
+
+        default:
+            v->type = DILV_FAIL; /* failed */
+            slog(LOG_ALL, 0, "getinteger() was given incorrect index %d by DIL %s@%s.",
+                 idx, UNIT_FI_NAME(p->sarg->owner), UNIT_FI_ZONENAME(p->sarg->owner));
+            break;
+        }
+    }
+
     p->stack.push(v);
 
     delete v1;
     delete v2;
+    delete v3;
 }
 
 /* asctime */

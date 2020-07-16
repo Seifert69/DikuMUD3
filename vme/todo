@@ -1,10 +1,9 @@
-SFUN_TEACH, add parameter so teacher just teachers what can be learned...?
+Test XP works as expected.
+SFUN_TEACH, add parameter so teacher just teaches what can be learned...?
 Get the maps up there.
 Test play
 Add nice constant for getinteger() effective_dex
 Weapons from Thomas
-Test walk room for climb. Janitor with wander_zones will walk into the river now :-)
-Shortest path should weight water and avoid swim areas.
 
 
 I would like the following cleaned up for a distro:

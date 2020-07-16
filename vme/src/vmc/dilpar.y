@@ -4285,13 +4285,15 @@ dilfun   :  funcall
             }
             
          }
-         | DILSE_GINT'(' dilexp ',' dilexp ')'
+         | DILSE_GINT'(' dilexp ',' dilexp ',' dilexp ')'
          {
             INITEXP($$);
-            if ($3.typ != DILV_UP)
-               dilfatal("Arg 1 of 'getinteger' not unitptr");
-            else if ($5.typ != DILV_INT)
-               dilfatal("Arg 2 of 'getinteger' not integer");
+            if ($3.typ != DILV_INT)
+               dilfatal("Arg 1 of 'getinteger' not integer");
+            else if (($5.typ != DILV_UP) && ($5.typ != DILV_NULL))
+               dilfatal("Arg 2 of 'getinteger' not unitptr");
+            else if ($7.typ != DILV_INT)
+               dilfatal("Arg 3 of 'getinteger' not integer");
             else {
                /* Type is ok */
                /* Function is not _yet_ static */
@@ -4299,12 +4301,15 @@ dilfun   :  funcall
                $$.typ = DILV_INT;
                make_code(&($3));
                make_code(&($5));
+               make_code(&($7));
                add_code(&($$),&($3));
                add_code(&($$),&($5));
+               add_code(&($$),&($7));
                add_ubit8(&($$),DILE_GINT);
             }
             FREEEXP($3);
             FREEEXP($5);
+            FREEEXP($7);
          }
          | DILSE_AST '(' dilexp ')'
          {
