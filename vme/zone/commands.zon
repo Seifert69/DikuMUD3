@@ -9551,7 +9551,7 @@ code
        "Hit " + itoa(self.abilities[ABIL_HP]) + " (" +
        itoa(self.hp) + "/" + itoa(self.max_hp) + ")" +
        "<br/>" +
-       "Your combat Dexterity is " + itoa(getinteger(self, 0)) + " as a result of your armor.<br/>"+
+       "Your combat Dexterity is " + itoa(getinteger(DIL_GINT_EFFDEX, self, 0)) + " as a result of your armor.<br/>"+
        remain_str+
        "You have " + itoa(self.skill_points) + " skill practice points.<br/>" +
        "You are in " + wimpy_string + " mode.<br/>"+
