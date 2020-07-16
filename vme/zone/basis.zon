@@ -99,130 +99,168 @@ if(command("cast"))
 }
 dilend
 
-dilbegin login_modify(tgt : unitptr);
+// Clean old junk away
+dilbegin login_scrub(tgt : unitptr);
 var
-i : integer;
+   i : integer;
 code
 {
-heartbeat := PULSE_SEC;
+   heartbeat := PULSE_SEC;
 
-
-dilcopy ("got_mail@mail()",tgt);
-dilcopy ("fixwt@basis()",tgt);
-dilcopy ("break_eq@basis()",tgt);
-if (not(dilfind("pk_timer@basis",tgt)))
- dilcopy ("pk_timer@basis()",tgt);
-if ("$PK_EXTRA" in tgt.extra)
- dilcopy ("pk_erase@basis()",tgt);
-
-if ("$horse_owner" in tgt.extra)
-	subextra(tgt.extra,"$horse_owner");
-
-if ("$RES_TIMER" in tgt.extra)
-	subextra(tgt.extra,"$RES_TIMER");
-
-/* Following in from Eirinn to fix status */
+   /* Following in from Eirinn to fix status */
    i := dildestroy("status_dil@guild_paths", tgt);
-      i:=dildestroy("cmd_interpreter@commands", tgt);
+   i:=dildestroy("cmd_interpreter@commands", tgt);
+   i:=dildestroy("cmd_bugs@commands", tgt);
+   i:=dildestroy("cmd_ideas@commands", tgt);
+   i:=dildestroy("cmd_typos@commands", tgt);
+   i:=dildestroy("piset@commands", tgt);
+   subextra (tgt.quests,"$newbie guide is helping");
 
-      i:=dildestroy("cmd_bugs@commands", tgt);
-      i:=dildestroy("cmd_ideas@commands", tgt);
-      i:=dildestroy("cmd_typos@commands", tgt);
-      i:=dildestroy("piset@commands", tgt);
-  subextra (tgt.quests,"$newbie guide is helping");
-/* to fix a bjorni quest mess */
+   /* to fix a bjorni quest mess */
+   if ("Nidhogg's prize given" in tgt.quests)
+   {
+      subextra (tgt.quests,"Nidhogg's prize given");
+      addextra(tgt.quests, {"Replacing the Prize"}, "");
+      log("subed and added");
+   }
+   /* end bjorni quest mess fix */   
 
-if ("Nidhogg's prize given" in tgt.quests)
-{
-  subextra (tgt.quests,"Nidhogg's prize given");
-  addextra(tgt.quests, {"Replacing the Prize"}, "");
-log("subed and added");
+   /* Following mess to fix the mess with night and night1 zones by Ratlin */
+   /*added fix for removing quest flags for heulhous and heul2 quests ZT 080808*/
+                  
+   subextra (tgt.quests,"Saint Steven's Request Ongoing");      //ZT 080808
+   subextra (tgt.quests,"Saint Steven's Request Completed");    //ZT 080808
+   subextra (tgt.quests,"Saint Steven's Request Refused");      //ZT 080808
+   subextra (tgt.quests,"Piers's Request Ongoing");             //ZT 080808
+   subextra (tgt.quests,"Piers's Request Completed");           //ZT 080808
+   subextra (tgt.quests,"Piers's Request Refused");             //ZT 080808
+   subextra (tgt.quests,"Helping a Hamadryad");                 //ZT 080808
+   subextra (tgt.quests,"Hamadryad Helped");                    //ZT 080808
+   subextra (tgt.quests,"Helped prevent a war");
+   subextra (tgt.quests,"The kings wife resurrected");
+   subextra (tgt.quests,"Tower Quest Ongoing");
+   subextra (tgt.quests,"Tower Quest Completed");
+   subextra (tgt.quests,"Markus Lowbie Quest Completed");
+   subextra (tgt.quests,"Markus Quest Complete");
+   subextra (tgt.quests,"Markus Lowbie Quest Ongoing");
+   subextra (tgt.quests,"Markus Quest Ongoing");
+   subextra (tgt.quests,"Markus Quest Finished");
+   subextra (tgt.quests,"Eiyonel's Quest Ongoing");
+   subextra (tgt.quests,"Eiyonel's Quest Complete");
+   subextra (tgt.quests,"Aristol's Quest Ongoing");
+   subextra (tgt.quests,"Aristol's Quest Complete");
+   subextra (tgt.quests,"Drynmyr's Quest Ongoing");
+   subextra (tgt.quests,"Drynmyr's Quest Complete");
+   subextra (tgt.quests,"Kithyrn Tower Traversed");
+   subextra (tgt.quests,"Killed Jewel Djinn");
+   subextra (tgt.quests,"Sabbath Ongoing");
+   subextra (tgt.quests,"Sabbath Complete");
+   subextra (tgt.quests,"Samia Ongoing");
+   subextra (tgt.quests,"Samia Complete");
+   subextra (tgt.quests,"Nobility Ongoing");
+   subextra (tgt.quests,"Nobility Complete");
+   subextra (tgt.quests,"Knight Ongoing");
+   subextra (tgt.quests,"Knight Complete");
+   subextra (tgt.quests,"Reputation Ongoing");
+   subextra (tgt.quests,"Reputation Complete");
+   subextra (tgt.quests,"Sentinel Ongoing");
+   subextra (tgt.quests,"Sentinel Complete");
+   subextra (tgt.quests,"Beren Ongoing");
+   subextra (tgt.quests,"Beren Complete");
+   subextra (tgt.quests,"Lancetorn Ongoing");
+   subextra (tgt.quests,"Lancetorn Complete");
+   subextra (tgt.quests,"Galanor Ongoing");
+   subextra (tgt.quests,"Galanor Complete");
+   subextra (tgt.quests,"Riddler Ongoing");
+   subextra (tgt.quests,"Riddler Complete");
+   subextra (tgt.quests,"Morrion Ongoing");
+   subextra (tgt.quests,"Morrion Complete");
+   subextra (tgt.quests,"Pact Sealed");
+   subextra (tgt.quests,"$revenge");
+   subextra (tgt.quests,"Gather Ongoing");
+   subextra (tgt.quests,"Gather Complete");
+   subextra (tgt.quests,"Ongoing");
+   subextra (tgt.quests,"Book of Vile Darkness Ongoing");
+   subextra (tgt.quests,"Book of Vile Darkness Completed");
+   subextra (tgt.quests,"Blood Quest Ongoing");
+   subextra (tgt.quests,"Book of Vile Darkness Reject");
+   subextra (tgt.quests,"Blood Quest Completed");
+   subextra (tgt.quests,"Homefire Quest Complete");
+   subextra (tgt.quests,"Homefire Quest Ongoing");
+   subextra (tgt.quests,"Darkstar Quest Ongoing");
+   subextra (tgt.quests,"Darkstar Quest Complete");
+   subextra (tgt.quests,"Mornick's Quest Ongoing");
+   subextra (tgt.quests,"Mornick's Quest Complete");
+   subextra (tgt.quests,"Zoat's quest ongoing");
+   subextra (tgt.quests,"Brother Maynard's Quest Ongoing");
+   subextra (tgt.quests,"Brother Maynard's Quest Complete");
+   subextra (tgt.quests,"Sun Quest Ongoing");
+   subextra (tgt.quests,"Golem Quest Ongoing");
+   subextra (tgt.quests,"Golem Quest Complete");
+   subextra (tgt.quests,"Sun Sword Quest Complete");
+   subextra (tgt.extra,"$NO_DEC03");    
+   subextra (tgt.extra,"$NO_DEC2402");
+   subextra (tgt.extra,"$NO_DEC02");
+   subextra (tgt.extra,"$NOXMAS2");
+   subextra (tgt.extra,"$NO_DEC06");
 
-}
-/* end bjorni quest mess fix */   
- /* Following mess to fix the mess with night and night1 zones by Ratlin */
- /*added fix for removing quest flags for heulhous and heul2 quests ZT 080808*/
-                 
-  subextra (tgt.quests,"Saint Steven's Request Ongoing");      //ZT 080808
-  subextra (tgt.quests,"Saint Steven's Request Completed");    //ZT 080808
-  subextra (tgt.quests,"Saint Steven's Request Refused");      //ZT 080808
-  subextra (tgt.quests,"Piers's Request Ongoing");             //ZT 080808
-  subextra (tgt.quests,"Piers's Request Completed");           //ZT 080808
-  subextra (tgt.quests,"Piers's Request Refused");             //ZT 080808
-  subextra (tgt.quests,"Helping a Hamadryad");                 //ZT 080808
-  subextra (tgt.quests,"Hamadryad Helped");                    //ZT 080808
-  subextra (tgt.quests,"Helped prevent a war");
-  subextra (tgt.quests,"The kings wife resurrected");
-  subextra (tgt.quests,"Tower Quest Ongoing");
-  subextra (tgt.quests,"Tower Quest Completed");
-  subextra (tgt.quests,"Markus Lowbie Quest Completed");
-  subextra (tgt.quests,"Markus Quest Complete");
-  subextra (tgt.quests,"Markus Lowbie Quest Ongoing");
-  subextra (tgt.quests,"Markus Quest Ongoing");
-  subextra (tgt.quests,"Markus Quest Finished");
-  subextra (tgt.quests,"Eiyonel's Quest Ongoing");
-  subextra (tgt.quests,"Eiyonel's Quest Complete");
-  subextra (tgt.quests,"Aristol's Quest Ongoing");
-  subextra (tgt.quests,"Aristol's Quest Complete");
-  subextra (tgt.quests,"Drynmyr's Quest Ongoing");
-  subextra (tgt.quests,"Drynmyr's Quest Complete");
-  subextra (tgt.quests,"Kithyrn Tower Traversed");
-  subextra (tgt.quests,"Killed Jewel Djinn");
-  subextra (tgt.quests,"Sabbath Ongoing");
-  subextra (tgt.quests,"Sabbath Complete");
-  subextra (tgt.quests,"Samia Ongoing");
-  subextra (tgt.quests,"Samia Complete");
-  subextra (tgt.quests,"Nobility Ongoing");
-  subextra (tgt.quests,"Nobility Complete");
-  subextra (tgt.quests,"Knight Ongoing");
-  subextra (tgt.quests,"Knight Complete");
-  subextra (tgt.quests,"Reputation Ongoing");
-  subextra (tgt.quests,"Reputation Complete");
-  subextra (tgt.quests,"Sentinel Ongoing");
-  subextra (tgt.quests,"Sentinel Complete");
-  subextra (tgt.quests,"Beren Ongoing");
-  subextra (tgt.quests,"Beren Complete");
-  subextra (tgt.quests,"Lancetorn Ongoing");
-  subextra (tgt.quests,"Lancetorn Complete");
-  subextra (tgt.quests,"Galanor Ongoing");
-  subextra (tgt.quests,"Galanor Complete");
-  subextra (tgt.quests,"Riddler Ongoing");
-  subextra (tgt.quests,"Riddler Complete");
-  subextra (tgt.quests,"Morrion Ongoing");
-  subextra (tgt.quests,"Morrion Complete");
-  subextra (tgt.quests,"Pact Sealed");
-  subextra (tgt.quests,"$revenge");
-  subextra (tgt.quests,"Gather Ongoing");
-  subextra (tgt.quests,"Gather Complete");
-  subextra (tgt.quests,"Ongoing");
-  subextra (tgt.quests,"Book of Vile Darkness Ongoing");
-  subextra (tgt.quests,"Book of Vile Darkness Completed");
-  subextra (tgt.quests,"Blood Quest Ongoing");
-  subextra (tgt.quests,"Book of Vile Darkness Reject");
-  subextra (tgt.quests,"Blood Quest Completed");
-  subextra (tgt.quests,"Homefire Quest Complete");
-  subextra (tgt.quests,"Homefire Quest Ongoing");
-  subextra (tgt.quests,"Darkstar Quest Ongoing");
-  subextra (tgt.quests,"Darkstar Quest Complete");
-  subextra (tgt.quests,"Mornick's Quest Ongoing");
-  subextra (tgt.quests,"Mornick's Quest Complete");
-  subextra (tgt.quests,"Zoat's quest ongoing");
-  subextra (tgt.quests,"Brother Maynard's Quest Ongoing");
-  subextra (tgt.quests,"Brother Maynard's Quest Complete");
-  subextra (tgt.quests,"Sun Quest Ongoing");
-  subextra (tgt.quests,"Golem Quest Ongoing");
-  subextra (tgt.quests,"Golem Quest Complete");
-  subextra (tgt.quests,"Sun Sword Quest Complete");
-  subextra (tgt.extra,"$NO_DEC03");    
-  subextra (tgt.extra,"$NO_DEC2402");
-  subextra (tgt.extra,"$NO_DEC02");
-  subextra (tgt.extra,"$NOXMAS2");
-  subextra (tgt.extra,"$NO_DEC06");
-  
-
-  return;
+   return;
 }
 dilend
+
+
+
+dilbegin login_modify(tgt : unitptr);
+external
+   login_scrub@basis(tgt : unitptr);
+var
+   i : integer;
+code
+{
+   heartbeat := PULSE_SEC;
+
+   //log("login_modify() for "+self.name);
+
+   // Make sure we have a current DIL running
+   i := dildestroy("send_prompt@update", self);
+   dilcopy("send_prompt@update",self);
+
+   if (self.level<200)
+   {   
+      if (self.level < 3)
+      {
+         //log("on_connect() odin's hand for "+self.name);
+         dilcopy("odinshand@basis",self);         
+      }
+
+      i := dildestroy("regen_pc@update", self);
+      dilcopy("regen_pc@update",self);
+
+      i := dildestroy("stomach@update", self);
+      dilcopy("stomach@update",self);
+
+      dilcopy ("got_mail@mail()",tgt);
+      dilcopy ("fixwt@basis()",tgt);
+      dilcopy ("break_eq@basis()",tgt);
+      if (not(dilfind("pk_timer@basis",tgt)))
+         dilcopy ("pk_timer@basis()",tgt);
+      if ("$PK_EXTRA" in tgt.extra)
+         dilcopy ("pk_erase@basis()",tgt);
+
+      if ("$horse_owner" in tgt.extra)
+         subextra(tgt.extra,"$horse_owner");
+
+      if ("$RES_TIMER" in tgt.extra)
+         subextra(tgt.extra,"$RES_TIMER");
+
+      login_scrub(tgt);
+   }
+
+   return;
+}
+dilend
+
+
 
 dilbegin aware link_dead();
 var
@@ -367,24 +405,6 @@ code
 
    err := loadstr("motd",motd);
 
-   // Make sure we have a current DIL running
-   i := dildestroy("send_prompt@update", self);
-   dilcopy("send_prompt@update",self);
-
-   if (self.level<200)
-   {   
-      i := dildestroy("regen_pc@update", self);
-      dilcopy("regen_pc@update",self);
-
-      i := dildestroy("stomach@update", self);
-      dilcopy("stomach@update",self);
-
-      if (self.level < 3)
-      {
-         dilcopy("odinshand@basis",self);         
-      }
-   }
-
    if(err > 0)
    {
       motd := textformat(motd);
@@ -400,10 +420,10 @@ code
    s := dlrdump@commands("$trigger");
    sendtext(s, self);
 
+   login_modify(self);
+
    if (self.level < 200)
    {
-      login_modify(self);
-
       if(err > 0)
          sendtext("<br/>"+welcome+"<br/><br/>", self);
       informer();
@@ -650,34 +670,36 @@ var
  item:unitptr;
 code
 {
-heartbeat := PULSE_SEC;
-if (self.level >=200) quit;
-    item := self.inside;
-      while(item)
-    {
-   if ((item.hp<=-1) and (item.type==ITEM_TRASH))
-    {
-   item.manipulate:=0;
-   item.manipulate:=MANIPULATE_TAKE;
-   }
-if ((item.hp<-1) and (item.objecttype!=ITEM_TRASH)
- and (item.zoneidx!="treasure") and (item.zoneidx!="newbie"))
-     {
-  if (item.equip==0)
-   {
-  act ("Your $2N falls off.",A_ALWAYS,self,item,null,TO_CHAR);
-  act ("$1n's $2N falls off.",A_ALWAYS, self,item,null,TO_REST);
-  }
+   heartbeat := PULSE_SEC;
+   if (self.level >=200)
+       quit;
 
-  addextra (item.extra,item.names,"Whatever this was it looks like broken garbage now.");
-  item.title:=item.title+" Broken";
-   item.objecttype := ITEM_TRASH;
-   item.manipulate:=MANIPULATE_TAKE;
-  unequip (item);
-  }
-     item := item.next;
-    }
-quit;
+   item := self.inside;
+   while(item)
+   {
+      if ((item.hp<=-1) and (item.type==ITEM_TRASH))
+      {
+         item.manipulate:=0;
+         item.manipulate:=MANIPULATE_TAKE;
+      }
+      if ((item.hp<-1) and (item.objecttype!=ITEM_TRASH)
+         and (item.zoneidx!="treasure") and (item.zoneidx!="newbie"))
+      {
+         if (item.equip==0)
+         {
+            act ("Your $2N falls off.",A_ALWAYS,self,item,null,TO_CHAR);
+            act ("$1n's $2N falls off.",A_ALWAYS, self,item,null,TO_REST);
+         }
+
+         addextra (item.extra,item.names,"Whatever this was it looks like broken garbage now.");
+         item.title:=item.title+" Broken";
+         item.objecttype := ITEM_TRASH;
+         item.manipulate:=MANIPULATE_TAKE;
+         unequip (item);
+      }
+      item := item.next;
+   }
+   quit;
 }
 dilend
 
@@ -5170,41 +5192,19 @@ else    if ((s == "1") and (cat != 3))
 }
 dilend
 
-
-dilbegin aware playerinit();
-external
-   informer();
-var
-   expd : extraptr;
-   i:integer;
-   err:integer;
-   new_text:string;
-
+//
+//Set player starting abilities and skills but nothing else.
+//this needs to be callable from both a new player init and
+//a rebirth
+//
+dilbegin pcinitabils();
 code
 {
    heartbeat := 4;
 
-   err := loadstr("welcome",new_text);
-   if (err>0)
-      pagestring(new_text,self);
-
-   informer();
-
-   self.ability_points:=40;
-   self.skill_points:=80;
-   self.prompt:= "%mana%m/%e%e/%hp%h> ";
-   i:=dildestroy("send_prompt@update",self);
-   dilcopy("send_prompt@update",self);
-
-   if (self.level < 200)
-   {
-      dilcopy ("regen_pc@update",self);
-      dilcopy ("stomach@update",self);
-   }
-
-   addextra (self.extra ,{"$NOREROLL"},"whistler");
-   addextra (self.extra ,{"$CLAN_CLEAR"},"whistler");
-   addextra (self.extra ,{"$NO_DEC07"},"No Christmas 2007");
+   // If a player figures out how to train on level 0 let them try once
+   self.ability_points := 10;
+   self.skill_points   := 10;
 
    if (self.race==RACE_HUMAN)
    {
@@ -5330,32 +5330,27 @@ code
    else
    {
       log("ERROR: playerinit() unknown self.race");
+      self.abilities[ABIL_STR] := 4;
+      self.abilities[ABIL_DEX] := 4;
+      self.abilities[ABIL_CON] := 4;
+      self.abilities[ABIL_MAG] := 4;
+      self.abilities[ABIL_DIV] := 4;
+      self.abilities[ABIL_CHA] := 4;
+      self.abilities[ABIL_BRA] := 4;
+      self.abilities[ABIL_HP ] := 4;
    }
-
-   self.hometown := "temple@udgaard";
-
-   if (self.outside != findroom(self.hometown))
-   {
-      act("$1n is taken away to start a new life.", A_HIDEINV, self, null, null, TO_ROOM);
-      link(self, findroom(self.hometown));
-      act("$1n appears from thin air.", A_HIDEINV, self, null, null, TO_ROOM);
-   }
-
-   exec("pray odin", self);
-   exec("wear all", self);
-   //exec("claim dictionary", self);
 
    self.skills[SKI_FLEE]        := 50;
    self.skills[SKI_CONSIDER]    := 50;
-   self.skills[SKI_SKIN]        :=  5;
    self.skills[SKI_DIAGNOSTICS] := 50;
+   self.skills[SKI_SKIN]        :=  5;
 
    if (self.profession == PROFESSION_FIGHTER)
    {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+2;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+2;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +2;
+      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+2+2;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0+2;
+      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+2+1;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +2+1;
       self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]-2;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-2;
       self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0;
@@ -5366,279 +5361,196 @@ code
       self.weapons[WPN_HAND_AXE]    :=  5;
       self.weapons[WPN_LONG_SWORD]  :=  5;
       self.skills[SKI_SKIN]         :=  5;
-
-      exec("alias kd kill deer", self);
-      exec("alias kb kill badger", self);
-      exec("alias kf kill fox", self);
-      exec("alias kr kill rabbit", self);
-      exec("alias ks kill skunk", self);
    }
    else if (self.profession == PROFESSION_THIEF)
    {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+4;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP] :=self.abilities[ABIL_HP]+0;
+      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0+1;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+4+2;
+      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0+1;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0+1;
       self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]-2;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0;
+      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0+1;
       self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]-2;
 
-      self.skills[SKI_SEARCH] := 5;
-      self.skills[SKI_SNEAK]  := 5;
-      self.skills[SKI_SKIN]  := 5;
+      self.skills[SKI_SEARCH]    := 5;
+      self.skills[SKI_SNEAK]     := 5;
+      self.skills[SKI_SKIN]      := 5;
+      self.skills[SKI_BACKSTAB]  := 5+5;
 
       self.weapons[WPN_FIST]         :=  5;
-      self.weapons[WPN_DAGGER]       :=  5;
+      self.weapons[WPN_DAGGER]       :=  5+6;
       self.weapons[WPN_SHORT_SWORD]  :=  5;
-
-      exec("alias kd kill deer", self);
-      exec("alias kb kill badger", self);
-      exec("alias kf kill fox", self);
-      exec("alias kr kill rabbit", self);
-      exec("alias ks kill skunk", self);
    }
    else if (self.profession == PROFESSION_PRIEST)
    {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP]+0;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2;
+      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0+1;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0+1;
+      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0+1;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0+1;
+      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2+2;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-2;
       self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
       self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+0;
 
       self.weapons[WPN_FIST]          :=  5;
-      self.weapons[WPN_MACE]          :=  5;
-      self.spells[SPL_CURE_WOUNDS_1]  :=  5;
-      self.skills[SKI_FIRST_AID]      :=  5;
+      self.weapons[WPN_MACE]          :=  5+5;
+      self.spells[SPL_CURE_WOUNDS_1]  :=  5+5;
+      self.spells[SPL_CAUSE_WOUNDS_1] :=  5+5;
+      self.skills[SKI_FIRST_AID]      :=  5+5;
       self.skills[SKI_SKIN]  := 5;
-
-      exec("alias cu cast cure light wounds $0", self);
-      exec("alias ca cast cause light wounds $0", self);
-      exec("alias kk kill $0; ca $0", self);
-
-      exec("alias kd kk deer", self);
-      exec("alias kb kk badger", self);
-      exec("alias kf kk fox", self);
-      exec("alias kr kk rabbit", self);
-      exec("alias ks kk skunk", self);
    }
    else if (self.profession == PROFESSION_PALADIN)
    {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+2;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP]+2;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+0;
+      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+2+1;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2+1;
+      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0+1;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +2+1;
+      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+0+1;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-2;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
+      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2+1;
       self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+0;
 
-      self.weapons[WPN_FIST]          := self.weapons[WPN_FIST] + 5;
-      self.weapons[WPN_LONG_SWORD]    := self.weapons[WPN_LONG_SWORD] + 5;
+      self.weapons[WPN_FIST]          := 5;
+      self.weapons[WPN_LONG_SWORD]    := 5 + 5;
       
-      self.spells[SPL_CALM]           := self.spells[SPL_CALM] + 5;
-      self.skills[SKI_RESCUE]      := self.skills[SKI_RESCUE] + 5;
-      self.skills[SKI_SKIN]  := 5;
+      self.spells[SPL_CALM]           := 5 + 5;
 
-      exec("alias cu cast cure light wounds $0", self);
-      exec("alias ca cast cause light wounds $0", self);
-      exec("alias kk kill $0; ca $0", self);
-
-      exec("alias kd kk deer", self);
-      exec("alias kb kk badger", self);
-      exec("alias kf kk fox", self);
-      exec("alias kr kk rabbit", self);
-      exec("alias ks kk skunk", self);
+      self.skills[SKI_RESCUE]         := 5;
+      self.skills[SKI_SKIN]           := 5;
    }
    else if (self.profession == PROFESSION_SORCERER)
    {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]-2;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2;
+      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]-2+1;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2+1;
       self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]-2;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP]-2;
-      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]+2;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP]- 2+1;
+      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]+2+1;
       self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]-2;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2;
+      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2+1;
+      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2+1;
 
-      self.weapons[WPN_DAGGER]        :=  5;
+      self.weapons[WPN_DAGGER]       :=  5+10;
 
       self.skills[SKI_SCROLL_USE]    :=  5;
       self.skills[SKI_WAND_USE]      :=  5;
-      self.skills[SKI_SKIN]          := 5;
+      self.skills[SKI_SKIN]          :=  5;
 
-
-      self.spells[SPL_LIGHTNING_1]  :=  5;
-      self.spells[SPL_FIREBALL_1]   :=  5;
-
-      exec("alias cb cast burn $0", self);
-      exec("alias kk kill $0; cb $0", self);
-
-      exec("alias es cast electrical shock $", self);
-      exec("alias kk kill $0; es $0", self);
-
-      exec("alias kd kk deer", self);
-      exec("alias kb kk badger", self);
-      exec("alias kf kk fox", self);
-      exec("alias kr kk rabbit", self);
-      exec("alias ks kk skunk", self);
+      self.spells[SPL_LIGHTNING_1]  :=  5+5;
+      self.spells[SPL_FIREBALL_1]   :=  5+5;
    }
-
    else if (self.profession == PROFESSION_RANGER)
    {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP] :=self.abilities[ABIL_HP]+2;
+      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0+1;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2+1;
+      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0+1;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +2+1;
       self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-2;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2;
+      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0+1;
+      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2+1;
 
-      self.weapons[WPN_FIST]       := self.weapons[WPN_FIST] + 5;
-      self.weapons[WPN_SLING]      := self.weapons[WPN_SLING] + 5;
-      self.weapons[WPN_LONG_SWORD] := self.weapons[WPN_LONG_SWORD] + 5;
+      self.weapons[WPN_FIST]       := 5;
+      self.weapons[WPN_SLING]      := 5+5;
+      self.weapons[WPN_LONG_SWORD] := 5+5;
 
-      self.skills[SKI_RESCUE]      := self.skills[SKI_RESCUE] + 5;
-      self.skills[SKI_SCAN]        := self.skills[SKI_SCAN] + 5;
-      self.skills[SKI_SKIN]  := 5;
-      exec("alias kd kill deer", self);
-      exec("alias kb kill badger", self);
-      exec("alias kf kill fox", self);
-      exec("alias kr kill rabbit", self);
-      exec("alias ks kill skunk", self);
+      self.skills[SKI_RESCUE]      := 5;
+      self.skills[SKI_SCAN]        := 5;
+      self.skills[SKI_SKIN]        := 5;
    }
    else if (self.profession == PROFESSION_DRUID)
    {
       self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0+1;
       self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP] :=self.abilities[ABIL_HP]+0;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0+1;
+      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2+2;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2;
+      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2+1;
+      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2+1;
 
-      self.weapons[WPN_QUARTERSTAFF] := self.weapons[WPN_QUARTERSTAFF] + 5;
+      self.weapons[WPN_FIST]         := 5;
+      self.weapons[WPN_QUARTERSTAFF] := 5 + 5;
 
-      self.spells[SPL_SENSE_LIFE]    := self.spells[SPL_SENSE_LIFE] + 5;
-      self.spells[SPL_THORN_STRIKE]  := self.spells[SPL_THORN_STRIKE] + 5;
+      self.spells[SPL_SENSE_LIFE]    := 5;
+      self.spells[SPL_THORN_STRIKE]  := 5 + 5;
 
-      self.skills[SKI_HERBS]         := self.skills[SKI_HERBS] + 5;
-      self.skills[SKI_SKIN]  := 5;
-      exec("alias kd kill deer", self);
-      exec("alias kb kill badger", self);
-      exec("alias kf kill fox", self);
-      exec("alias kr kill rabbit", self);
-      exec("alias ks kill skunk", self);
+      self.skills[SKI_HERBS]         := 5 + 5;
+      self.skills[SKI_SKIN]          := 5 + 5;
    }
    else if (self.profession == PROFESSION_KNIGHT)
    {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+2;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP] :=self.abilities[ABIL_HP]+0;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2;
+      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+2+1;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0+1;
+      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0+1;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0+1;
+      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2+1;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
+      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2+1;
       self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2;
 
-      self.weapons[WPN_LONG_SWORD] := self.weapons[WPN_LONG_SWORD] + 5;
-      self.weapons[WPN_HAND_AXE] := self.weapons[WPN_HAND_AXE] + 5;
+      self.weapons[WPN_LONG_SWORD] := 5 + 5;
+      self.weapons[WPN_HAND_AXE]   := 5 + 5;
 
-      self.spells[SPL_MIRE]    := self.spells[SPL_MIRE] + 5;
-      self.spells[SPL_PRO_GOOD]  := self.spells[SPL_PRO_GOOD] + 5;
-      self.skills[SKI_BASH]         := self.skills[SKI_BASH] + 5;
-      self.skills[SKI_SKIN]  := 5;
-      exec("alias kd kill deer", self);
-      exec("alias kb kill badger", self);
-      exec("alias kf kill fox", self);
-      exec("alias kr kill rabbit", self);
-      exec("alias ks kill skunk", self);
+      self.spells[SPL_MIRE]        := 5 + 5;
+      self.spells[SPL_PRO_GOOD]    := 5;
+      self.skills[SKI_BASH]        := 5;
+      self.skills[SKI_SKIN]        := 5;
    }
    else if (self.profession == PROFESSION_NECROMANCER)
    {
       self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0+1;
       self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0+1;
+      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2+2;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-2;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2;
+      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0+1;
+      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2+1;
 
-      self.weapons[WPN_DAGGER]        := self.weapons[WPN_DAGGER] + 5;
-      self.weapons[WPN_FIST]          := self.weapons[WPN_FIST] + 5;
+      self.weapons[WPN_DAGGER]        := 5 + 5;
+      self.weapons[WPN_FIST]          := 5;
 
-      self.spells[SPL_DET_UNDEAD]     := self.spells[SPL_DET_UNDEAD] + 5;
-      self.spells[SPL_CAUSE_WOUNDS_1] := self.spells[SPL_CAUSE_WOUNDS_1] + 5;
-      self.skills[SKI_SKIN]  := 5;
-      exec("alias ca cast cause light wounds $0", self);
-      exec("alias kk kill $0; ca $0", self);
-
-      exec("alias kd kk deer", self);
-      exec("alias kb kk badger", self);
-      exec("alias kf kk fox", self);
-      exec("alias kr kk rabbit", self);
-      exec("alias ks kk skunk", self);
+      self.spells[SPL_DET_UNDEAD]     := 5;
+      self.spells[SPL_CAUSE_WOUNDS_1] := 5 + 5;
+      self.skills[SKI_SKIN]           := 5;
    }
    else if (self.profession == PROFESSION_CONJURER)
    {
       self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]-2;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2+1;
       self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]-2;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP]-2;
-      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]+2;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] -2+1;
+      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]+2+2;
       self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]-2;
       self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2;
+      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2+2;
 
-      self.weapons[WPN_DAGGER]        :=  5;
+      self.weapons[WPN_DAGGER]       :=  5 + 5;
 
       self.skills[SKI_SCROLL_USE]    :=  5;
       self.skills[SKI_WAND_USE]      :=  5;
-      self.skills[SKI_SKIN]  := 5;
+      self.skills[SKI_SKIN]          :=  5;
 
       self.spells[SPL_DET_MAGIC]     :=  5;
-
-      self.spells[SPL_ENERGY_BOLT]   :=  5;
-
-      exec("alias dm cast detect magic $0", self);
-
-      exec("alias eb cast energy bolt $0", self);
-      exec("alias kk kill $0; eb $0", self);
-
-      exec("alias kd kk deer", self);
-      exec("alias kb kk badger", self);
-      exec("alias kf kk fox", self);
-      exec("alias kr kk rabbit", self);
-      exec("alias ks kk skunk", self);
+      self.spells[SPL_ENERGY_BOLT]   :=  5+5;
    }
    else if (self.profession == PROFESSION_ASSASSIN)
    {
-      self.abilities[ABIL_STR] := self.abilities[ABIL_STR]+0;
-      self.abilities[ABIL_DEX] := self.abilities[ABIL_DEX]+4;
-      self.abilities[ABIL_CON] := self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP]  := self.abilities[ABIL_HP]+2;
+      self.abilities[ABIL_STR] := self.abilities[ABIL_STR]+0+1;
+      self.abilities[ABIL_DEX] := self.abilities[ABIL_DEX]+4+2;
+      self.abilities[ABIL_CON] := self.abilities[ABIL_CON]+0+1;
+      self.abilities[ABIL_HP]  := self.abilities[ABIL_HP] +2+1;
       self.abilities[ABIL_DIV] := self.abilities[ABIL_DIV]-2;
       self.abilities[ABIL_MAG] := self.abilities[ABIL_MAG]-0;
       self.abilities[ABIL_CHA] := self.abilities[ABIL_CHA]-0;
-      self.abilities[ABIL_BRA] := self.abilities[ABIL_BRA]+0;
+      self.abilities[ABIL_BRA] := self.abilities[ABIL_BRA]+0+1;
 
-      self.skills[SKI_BACKSTAB]    := self.skills[SKI_BACKSTAB] + 5;
-      self.skills[SKI_CLIMB]       := self.skills[SKI_CLIMB] + 5;
-      self.weapons[WPN_FIST]         := self.weapons[WPN_FIST] + 5;
-      self.weapons[WPN_DAGGER]       := self.weapons[WPN_DAGGER] + 5;
-      self.skills[SKI_SKIN]  := 5;
-
-      exec("alias kd kk deer", self);
-      exec("alias kb kk badger", self);
-      exec("alias kf kk fox", self);
-      exec("alias kr kk rabbit", self);
-      exec("alias ks kk skunk", self);
+      self.skills[SKI_BACKSTAB]    := 5+5;
+      self.skills[SKI_CLIMB]       := 5;
+      self.weapons[WPN_FIST]       := 5+5;
+      self.weapons[WPN_DAGGER]     := 5+10;
+      self.skills[SKI_SKIN]        := 5;
    }
    else
    {
@@ -5654,6 +5566,176 @@ code
    if (self.abilities[ABIL_DIV] < 0) self.abilities[ABIL_DIV] := 0;
    if (self.abilities[ABIL_HP] < 0)  self.abilities[ABIL_HP]  := 0;
 
+   return;
+}
+dilend
+
+
+dilbegin aware playerinit();
+external
+   informer();
+   pcinitabils();
+
+var
+   expd : extraptr;
+   i:integer;
+   err:integer;
+   new_text:string;
+
+code
+{
+   heartbeat := 4;
+
+   err := loadstr("welcome",new_text);
+   if (err>0)
+      pagestring(new_text,self);
+
+   informer();
+
+   self.prompt:= "%mana%m/%e%e/%hp%h> ";
+   i:=dildestroy("send_prompt@update",self);
+   dilcopy("send_prompt@update",self);
+
+   if (self.level < 200)
+   {
+      dilcopy ("regen_pc@update",self);
+      dilcopy ("stomach@update",self);
+   }
+
+   addextra (self.extra ,{"$NOREROLL"},"whistler");
+   addextra (self.extra ,{"$CLAN_CLEAR"},"whistler");
+   addextra (self.extra ,{"$NO_DEC07"},"No Christmas 2007");
+
+   pcinitabils();
+
+   self.hometown := "temple@udgaard";
+
+   if (self.outside != findroom(self.hometown))
+   {
+      act("$1n is taken away to start a new life.", A_HIDEINV, self, null, null, TO_ROOM);
+      link(self, findroom(self.hometown));
+      act("$1n appears from thin air.", A_HIDEINV, self, null, null, TO_ROOM);
+   }
+
+   exec("pray odin", self);
+   exec("wear all", self);
+   //exec("claim dictionary", self);
+
+   if (self.profession == PROFESSION_FIGHTER)
+   {
+      exec("alias kd kill deer", self);
+      exec("alias kb kill badger", self);
+      exec("alias kf kill fox", self);
+      exec("alias kr kill rabbit", self);
+      exec("alias ks kill skunk", self);
+   }
+   else if (self.profession == PROFESSION_THIEF)
+   {
+      exec("alias kd backstab deer", self);
+      exec("alias kb backstab badger", self);
+      exec("alias kf backstab fox", self);
+      exec("alias kr backstab rabbit", self);
+      exec("alias ks backstab skunk", self);
+   }
+   else if (self.profession == PROFESSION_PRIEST)
+   {
+      exec("alias cu cast cure light wounds $0", self);
+      exec("alias ca cast cause light wounds $0", self);
+      exec("alias kk kill $0; ca $0", self);
+
+      exec("alias kd kk deer", self);
+      exec("alias kb kk badger", self);
+      exec("alias kf kk fox", self);
+      exec("alias kr kk rabbit", self);
+      exec("alias ks kk skunk", self);
+   }
+   else if (self.profession == PROFESSION_PALADIN)
+   {
+      exec("alias cu cast cure light wounds $0", self);
+      exec("alias kk kill $0", self);
+
+      exec("alias kd kk deer", self);
+      exec("alias kb kk badger", self);
+      exec("alias kf kk fox", self);
+      exec("alias kr kk rabbit", self);
+      exec("alias ks kk skunk", self);
+   }
+   else if (self.profession == PROFESSION_SORCERER)
+   {
+      exec("alias cb cast burn $0", self);
+      exec("alias es cast electrical shock $0", self);
+      exec("alias kk kill $0; es $0", self);
+
+      exec("alias kd kk deer", self);
+      exec("alias kb kk badger", self);
+      exec("alias kf kk fox", self);
+      exec("alias kr kk rabbit", self);
+      exec("alias ks kk skunk", self);
+   }
+   else if (self.profession == PROFESSION_RANGER)
+   {
+      exec("alias kd kill deer", self);
+      exec("alias kb kill badger", self);
+      exec("alias kf kill fox", self);
+      exec("alias kr kill rabbit", self);
+      exec("alias ks kill skunk", self);
+   }
+   else if (self.profession == PROFESSION_DRUID)
+   {
+      exec("alias ts cast thorn strike $0", self);
+      exec("alias kk kill $0; ts $0", self);
+
+      exec("alias kd kk deer", self);
+      exec("alias kb kk badger", self);
+      exec("alias kf kk fox", self);
+      exec("alias kr kk rabbit", self);
+      exec("alias ks kk skunk", self);
+   }
+   else if (self.profession == PROFESSION_KNIGHT)
+   {
+      exec("alias kd kill deer", self);
+      exec("alias kb kill badger", self);
+      exec("alias kf kill fox", self);
+      exec("alias kr kill rabbit", self);
+      exec("alias ks kill skunk", self);
+   }
+   else if (self.profession == PROFESSION_NECROMANCER)
+   {
+      exec("alias ca cast cause light wounds $0", self);
+      exec("alias kk kill $0; ca $0", self);
+
+      exec("alias kd kk deer", self);
+      exec("alias kb kk badger", self);
+      exec("alias kf kk fox", self);
+      exec("alias kr kk rabbit", self);
+      exec("alias ks kk skunk", self);
+   }
+   else if (self.profession == PROFESSION_CONJURER)
+   {
+      exec("alias dm cast detect magic $0", self);
+
+      exec("alias eb cast energy bolt $0", self);
+      exec("alias kk kill $0; eb $0", self);
+
+      exec("alias kd kk deer", self);
+      exec("alias kb kk badger", self);
+      exec("alias kf kk fox", self);
+      exec("alias kr kk rabbit", self);
+      exec("alias ks kk skunk", self);
+   }
+   else if (self.profession == PROFESSION_ASSASSIN)
+   {
+      exec("alias kd backstab deer", self);
+      exec("alias kb backstab badger", self);
+      exec("alias kf backstab fox", self);
+      exec("alias kr backstab rabbit", self);
+      exec("alias ks backstab skunk", self);
+   }
+   else
+   {
+      log("ERROR: playerinit() unknown self.profession");
+   }
+
    sendtext("<br/>", self);
 
    exec("look", self);
@@ -5662,9 +5744,9 @@ code
        "to get to your guild, use the guild medallion in your " +
        "inventory. If you lose it, pray to the statue of Odin for another.",
        A_ALWAYS, self, null, null, TO_CHAR);
-   subextra(self.quests, "$guild");
 
-quit;
+   subextra(self.quests, "$guild");
+   quit;
 }
 dilend
 
@@ -5982,6 +6064,10 @@ dilend
 
 
 dilbegin nanny_newbie( arg : string );
+external
+   on_connect@basis();
+   login_modify@basis(u : unitptr);
+
 var
    exdp   : extraptr;
    texdp  : extraptr;
@@ -6052,7 +6138,10 @@ code
             sendtext ("You must read the newbie information and rules before entering the game<br/><br/>",self);
          }
          else*/ 
-            goto done;
+
+         log("nanny_newbie()");
+         login_modify@basis(self);
+         goto done;
          exdp.descr := "9";
          return ;
       }

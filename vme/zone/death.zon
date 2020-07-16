@@ -510,38 +510,38 @@ dilend
 
 
 
-dilbegin gain_exp (u:unitptr,gain:integer);
+dilbegin gain_exp(u:unitptr, gain:integer);
 var
 	j:integer;
 code
 {
-heartbeat:=3;
-if (u.type!=UNIT_ST_PC)
-	return;
+   heartbeat:=3;
+   if (u.type!=UNIT_ST_PC)
+      return;
 
    if (gain > 0)
    {
-	if (gain>=self.exptol)
-	sendtext("You can now raise a level by using the 'level' command!<br/>",self);
+      if (gain >= self.exptol)
+         sendtext("You can now raise a level by using the 'level' command!<br/>",self);
 
-	experience (gain,self);
+   	experience (gain,self);
 	}
-else  /* gain <= 0 */
+   else  /* gain <= 0 */
 	{
-	if ((self.exp+gain)<1650)
-		{
-		j := 1650-(self.exp +gain);
-		j:=self.exp+gain+j;
-		experience (j,self);
-		}
-	else
-		experience (gain,self);
-}
-return;
+      // Dont lose XP until you're level 3
+      if (self.level >= 3)
+      {
+         // Ignore any loss leaing to less than 1650 XP
+         if ((self.exp+gain) > 1650)
+            experience(gain,self);
+      }
+   }
+   return;
 }
 dilend
 
-dilbegin recall fnpri(FN_PRI_DEATH) death_seq();
+
+dilbegin recall unique fnpri(FN_PRI_DEATH) death_seq();
 var
     room:unitptr;
     i : integer;
@@ -625,7 +625,7 @@ code
     self.position := POSITION_RESTING;
 
     if (self.level<=5)
-      heartbeat:=PULSE_SEC*60;
+      heartbeat:=PULSE_SEC*45;
     else if (self.level<25)
       heartbeat:=PULSE_SEC*120;
     else
@@ -863,10 +863,10 @@ heartbeat:=3;
      return ((1500*lvl) + (lvl*lvl*(150)));
    else
      return (450000 + (16650 * (lvl - 50)));
-
-
 }
 dilend
+
+
 
 dilbegin integer lose_exp(u:unitptr);
 external
@@ -877,14 +877,15 @@ external
 var
 	loss:integer;
 	i:integer;
+
 code
 {
-heartbeat:=3;
-if (self.type!=UNIT_ST_PC)
-	return(0);
+   heartbeat:=3;
+   if (self.type!=UNIT_ST_PC)
+      return(0);
 
    /* This first line takes care of any xp earned above required level. */
-	 i:=required_xp(u.vlevel);
+   i := required_xp(u.vlevel);
    loss := max(0,(u.exp-i)/2);
 
    /* This line makes sure, that you lose at most half a level...       */
@@ -896,15 +897,14 @@ if (self.type!=UNIT_ST_PC)
    loss := max(loss,(1650+(u.level*300))/5);
 
    /* This line takes care of newbies, setting the lower bound... */
-	 i:=required_xp(1);
+   i := required_xp(1);
    i := max(0, (self.exp-i)/ 2);
 
-if (loss > i)
-     loss := i;
+   if (loss > i)
+      loss := i;
 
-if (loss<0)
-	loss:=0;
-
+   if (loss < 0)
+      loss:=0;
 
    return (loss);
 }
@@ -949,9 +949,10 @@ code
       quit;
 	}
 
+   gain := 0;
    if ((self.type==UNIT_ST_PC) and (self.level<200))
       gain := lose_exp(self);
-   gain_exp(self, -gain);
+   gain_exp(self, -gain); // Bug? xxx I saw level 2 char raise a level because he died .... ?
    raw_kill();
    quit;
 }

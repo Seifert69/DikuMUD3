@@ -5073,11 +5073,13 @@ dilend /* check_elig2 */
 // WARNING MS2002
 // This should call standard func in basis, the one that sets a char's abilities
 // and more based on race. Code duplication will lead to disaster
-
+// MS updated to run same player init code as in basis
+//
 dilbegin recall aware nanny_rebirth ();
 external guild_choose ();
-upd_all_comp@competition(u:unitptr);
-upd_rebirth@competition(u:unitptr);
+   upd_all_comp@competition(u:unitptr);
+   upd_rebirth@competition(u:unitptr);
+   pcinitabils@basis();
 
 var
    pc          : unitptr;
@@ -5087,16 +5089,13 @@ var
    link_u      : unitptr;
    t_u         : unitptr;
    temp_u      : unitptr;
-
    i           : integer;
    j           : integer;
    l           : integer;
    picks       : integer;
    my_pcflags  : integer;
-
    s           : string;
    new_guild   : string;
-
    figh_choice : integer;
    heal_choice : integer;
    conj_choice : integer;
@@ -5110,7 +5109,6 @@ var
    dk_choice : integer;
    expd       : extraptr;   /* REBIRTH_DATA in self */
    expd2      : extraptr;
-
    broad      : string;
    slist      : stringlist;
 
@@ -5120,20 +5118,16 @@ code
    pause;
 
 
-/* Unequip all */
-
-weapon:=self.inside;
-while (weapon!=null){
-	if (weapon.equip!=0){
-	unequip(weapon);
+   /* Unequip all */
+   weapon:=self.inside;
+   while (weapon!=null){
+      if (weapon.equip!=0){
+         unequip(weapon);
+      }
+      weapon:=weapon.next;
 	}
-	weapon:=weapon.next;
-	}
 
-
-
-
-/* Remove affects */
+   /* Remove affects */
 
    /* This is almost a copy/paste from basis dispel_magic */
    :loop:
@@ -5539,370 +5533,52 @@ dilcopy ("rebirth_prompt@update",self);
    reset_race(self);   /* Reset my race attributes - age, costs, etc */
    reset_vlevel(self);
 
+   pcinitabils@basis();
+
    if (self.race==RACE_HUMAN)
    {
-      self.abilities[ABIL_STR] := 4;
-      self.abilities[ABIL_CON] := 4;
-      self.abilities[ABIL_HP ] := 4;
-      self.abilities[ABIL_DEX] := 4;
-      self.abilities[ABIL_BRA] := 4;
-      self.abilities[ABIL_CHA] := 4;
-      self.abilities[ABIL_DIV] := 4;
-      self.abilities[ABIL_MAG] := 4;
       self.birth := realtime - (rnd(16, 19) * SECS_PER_MUD_YEAR);
    }
    else if (self.race==RACE_DWARF)
    {
-      self.abilities[ABIL_STR] := 6;
-      self.abilities[ABIL_CON] := 2;
-      self.abilities[ABIL_HP ] := 6;
-      self.abilities[ABIL_DEX] := 2;
-      self.abilities[ABIL_BRA] := 4;
-      self.abilities[ABIL_CHA] := 2;
-      self.abilities[ABIL_DIV] := 4;
-      self.abilities[ABIL_MAG] := 2;
       self.birth := realtime - (rnd(60,85) * SECS_PER_MUD_YEAR);
    }
    else if (self.race==RACE_ELF)
    {
-      self.abilities[ABIL_STR] := 4;
-      self.abilities[ABIL_CON] := 4;
-      self.abilities[ABIL_HP ] := 4;
-      self.abilities[ABIL_DEX] := 4;
-      self.abilities[ABIL_BRA] := 4;
-      self.abilities[ABIL_CHA] := 6;
-      self.abilities[ABIL_DIV] := 6;
-      self.abilities[ABIL_MAG] := 4;
       self.birth := realtime - (rnd(190,215) * SECS_PER_MUD_YEAR);
    }
    else if (self.race==RACE_HALFLING)
    {
-      self.abilities[ABIL_STR] := 4;
-      self.abilities[ABIL_CON] := 6;
-      self.abilities[ABIL_HP ] := 4;
-      self.abilities[ABIL_DEX] := 6;
-      self.abilities[ABIL_BRA] := 4;
-      self.abilities[ABIL_CHA] := 2;
-      self.abilities[ABIL_DIV] := 4;
-      self.abilities[ABIL_MAG] := 2;
       self.birth := realtime - (rnd(39, 48) * SECS_PER_MUD_YEAR);
    }
    else if (self.race==RACE_GNOME)
    {
-      self.abilities[ABIL_STR] := 4;
-      self.abilities[ABIL_CON] := 4;
-      self.abilities[ABIL_HP ] := 4;
-      self.abilities[ABIL_DEX] := 4;
-      self.abilities[ABIL_BRA] := 6;
-      self.abilities[ABIL_CHA] := 4;
-      self.abilities[ABIL_DIV] := 4;
-      self.abilities[ABIL_MAG] := 4;
       self.birth := realtime - (rnd(104, 137) * SECS_PER_MUD_YEAR);
    }
    else if (self.race==RACE_HALF_OGRE)
    {
-      self.abilities[ABIL_STR] := 6;
-      self.abilities[ABIL_CON] := 6;
-      self.abilities[ABIL_HP ] := 6;
-      self.abilities[ABIL_DEX] := 2;
-      self.abilities[ABIL_BRA] := 2;
-      self.abilities[ABIL_CHA] := 2;
-      self.abilities[ABIL_DIV] := 4;
-      self.abilities[ABIL_MAG] := 2;
       self.birth := realtime - (rnd(20, 30) * SECS_PER_MUD_YEAR);
    }
    else if (self.race==RACE_HALF_ORC)
    {
-      self.abilities[ABIL_STR] := 4;
-      self.abilities[ABIL_CON] := 4;
-      self.abilities[ABIL_HP ] := 4;
-      self.abilities[ABIL_DEX] := 4;
-      self.abilities[ABIL_BRA] := 2;
-      self.abilities[ABIL_CHA] := 2;
-      self.abilities[ABIL_DIV] := 4;
-      self.abilities[ABIL_MAG] := 2;
       self.birth := realtime - (rnd(19, 25) * SECS_PER_MUD_YEAR);
    }
    else if (self.race==RACE_BROWNIE)
    {
-      self.abilities[ABIL_STR] := 2;
-      self.abilities[ABIL_CON] := 4;
-      self.abilities[ABIL_HP ] := 4;
-      self.abilities[ABIL_DEX] := 4;
-      self.abilities[ABIL_BRA] := 6;
-      self.abilities[ABIL_CHA] := 4;
-      self.abilities[ABIL_DIV] := 2;
-      self.abilities[ABIL_MAG] := 6;
       self.birth := realtime - (rnd(34, 48) * SECS_PER_MUD_YEAR);
    }
    else if (self.race==RACE_HALF_ELF)
    {
-      self.abilities[ABIL_STR] := 4;
-      self.abilities[ABIL_DEX] := 4;
-      self.abilities[ABIL_CON] := 4;
-      self.abilities[ABIL_MAG] := 4;
-      self.abilities[ABIL_DIV] := 4;
-      self.abilities[ABIL_CHA] := 4;
-      self.abilities[ABIL_BRA] := 4;
-      self.abilities[ABIL_HP ] := 4;
       self.birth := realtime - (rnd(25, 40) * SECS_PER_MUD_YEAR);
    }
    else if (self.race==RACE_GROLL)
    {
-      self.abilities[ABIL_STR] := 6;
-      self.abilities[ABIL_DEX] := 2;
-      self.abilities[ABIL_CON] := 8;
-      self.abilities[ABIL_MAG] := 2;
-      self.abilities[ABIL_DIV] := 2;
-      self.abilities[ABIL_CHA] := 2;
-      self.abilities[ABIL_BRA] := 2;
-      self.abilities[ABIL_HP ] := 8;
       self.birth := realtime - (rnd(9, 12) * SECS_PER_MUD_YEAR);
    }
    else if (self.race==RACE_DARK_ELF)
    {
-      self.abilities[ABIL_STR] := 4;
-      self.abilities[ABIL_DEX] := 4;
-      self.abilities[ABIL_CON] := 4;
-      self.abilities[ABIL_MAG] := 6;
-      self.abilities[ABIL_DIV] := 2;
-      self.abilities[ABIL_CHA] := 4;
-      self.abilities[ABIL_BRA] := 6;
-      self.abilities[ABIL_HP ] := 4;
       self.birth := realtime - (rnd(196, 226) * SECS_PER_MUD_YEAR);
    }
-
-   if (self.guild == GUILD_UDG_FIGHTER)
-   {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+2;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+2;
-      self.abilities[ABIL_HP] :=self.abilities[ABIL_HP]+2;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]-0;
-      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]-0;
-
-      self.weapons[WPN_AXE_HAM] := self.weapons[WPN_AXE_HAM] + 5;
-      self.weapons[WPN_UNARMED] := self.weapons[WPN_UNARMED] + 5;
-      self.weapons[WPN_SWORD]   := self.weapons[WPN_SWORD] + 5;
-
-      self.weapons[WPN_FIST]        := self.weapons[WPN_FIST] + 5;
-      self.weapons[WPN_BATTLE_AXE]  := self.weapons[WPN_BATTLE_AXE] + 5;
-      self.weapons[WPN_LONG_SWORD]  := self.weapons[WPN_LONG_SWORD] + 5;
-      self.weapons[WPN_SHORT_SWORD] := self.weapons[WPN_SHORT_SWORD] + 5;
-   }
-
-   else if (self.guild == GUILD_UDG_THIEF)
-   {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+4;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP] :=self.abilities[ABIL_HP]+0;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]-0;
-      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]-0;
-
-      self.skills[SKI_SHIELD] := self.skills[SKI_SHIELD] + 5;
-      self.skills[SKI_SEARCH] := self.skills[SKI_SEARCH] + 5;
-      self.skills[SKI_HIDE]   := self.skills[SKI_HIDE] + 5;
-      self.skills[SKI_SNEAK]  := self.skills[SKI_SNEAK] + 5;
-
-      self.weapons[WPN_FIST]         := self.weapons[WPN_FIST] + 5;
-      self.weapons[WPN_UNARMED]      := self.weapons[WPN_UNARMED] + 5;
-      self.weapons[WPN_SWORD]        := self.weapons[WPN_SWORD] + 5;
-      self.weapons[WPN_SHORT_SWORD]  := self.weapons[WPN_SHORT_SWORD] + 5;
-      self.weapons[WPN_DAGGER]       := self.weapons[WPN_DAGGER] + 5;
-   }
-
-   else if (self.guild == GUILD_UDG_CLERIC)
-   {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP] :=self.abilities[ABIL_HP]+0;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2;
-      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+0;
-
-      self.weapons[WPN_CLUB_MACE]     := self.weapons[WPN_CLUB_MACE] + 5;
-      self.weapons[WPN_MACE]          := self.weapons[WPN_MACE] + 5;
-
-      self.spells[SPL_DIVINE]         := self.spells[SPL_DIVINE] + 5;
-      self.spells[SPL_MIND]           := self.spells[SPL_MIND] + 5;
-
-      self.spells[SPL_CURE_WOUNDS_1]  := self.spells[SPL_CURE_WOUNDS_1] + 5;
-      self.spells[SPL_CAUSE_WOUNDS_1] := self.spells[SPL_CAUSE_WOUNDS_1] +
-                                         5;
-      self.skills[SKI_FIRST_AID]      := self.skills[SKI_FIRST_AID] + 5;
-   }
-
-   else if ((self.guild == GUILD_UDG_MAGE) or (self.guild == GUILD_SORCERER))
-   {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]-0;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]-0;
-      self.abilities[ABIL_HP] :=self.abilities[ABIL_HP]-0;
-      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]+2;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2;
-
-      self.weapons[WPN_SWORD]        := self.weapons[WPN_SWORD] + 5;
-      self.weapons[WPN_DAGGER]       := self.weapons[WPN_DAGGER] + 5;
-
-      self.skills[SKI_SCROLL_USE]    := self.skills[SKI_SCROLL_USE] + 5;
-      self.skills[SKI_WAND_USE]      := self.skills[SKI_WAND_USE] + 5;
-
-      self.spells[SPL_DETECTION]     := self.spells[SPL_DETECTION] + 5;
-      self.spells[SPL_DET_INVISIBLE] := self.spells[SPL_DET_INVISIBLE] + 5;
-
-      self.spells[SPL_DETECTION]     := self.spells[SPL_DETECTION] + 5;
-      self.spells[SPL_DET_MAGIC]     := self.spells[SPL_DET_MAGIC] + 5;
-
-      self.spells[SPL_SUMMONING]     := self.spells[SPL_SUMMONING] + 5;
-      self.spells[SPL_ENERGY_BOLT]   := self.spells[SPL_ENERGY_BOLT] + 5;
-   }
-
-   else if (self.guild == GUILD_PALADIN)
-   {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+2;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP] :=self.abilities[ABIL_HP]+0;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2;
-      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+0;
-
-      self.weapons[WPN_FIST]          := self.weapons[WPN_FIST] + 5;
-      self.weapons[WPN_DAGGER]        := self.weapons[WPN_DAGGER] + 5;
-
-      self.spells[SPL_DIVINE]         := self.spells[SPL_DIVINE] + 5;
-      self.spells[SPL_MIND]           := self.spells[SPL_MIND] + 5;
-
-      self.skills[SKI_SHIELD]      := self.skills[SKI_SHIELD] + 5;
-      self.skills[SKI_RESCUE]      := self.skills[SKI_RESCUE] + 5;
-   }
-   else if (self.guild == GUILD_KNIGHT)
-   {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+2;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP] :=self.abilities[ABIL_HP]+0;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2;
-      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+0;
-
-      self.weapons[WPN_FIST]          := self.weapons[WPN_FIST] + 5;
-      self.weapons[WPN_DAGGER]        := self.weapons[WPN_DAGGER] + 5;
-
-      self.spells[SPL_DIVINE]         := self.spells[SPL_DIVINE] + 5;
-      self.spells[SPL_MIND]           := self.spells[SPL_MIND] + 5;
-
-      self.skills[SKI_SHIELD]      := self.skills[SKI_SHIELD] + 5;
-      self.skills[SKI_BASH]      := self.skills[SKI_BASH] + 5;
-   }
-
-   else if (self.guild == GUILD_NYM_RANGER)
-   {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP] :=self.abilities[ABIL_HP]+2;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2;
-      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2;
-
-      self.weapons[WPN_FIST]       := self.weapons[WPN_FIST] + 5;
-      self.weapons[WPN_SLING]      := self.weapons[WPN_SLING] + 5;
-
-      self.spells[SPL_HEAL_ANIMAL] := self.spells[SPL_HEAL_ANIMAL] + 5;
-
-      self.skills[SKI_SHIELD]      := self.skills[SKI_SHIELD] + 5;
-      self.skills[SKI_RESCUE]      := self.skills[SKI_RESCUE] + 5;
-      self.skills[SKI_SEARCH]      := self.skills[SKI_SEARCH] + 5;
-      self.skills[SKI_SCAN]        := self.skills[SKI_SCAN] + 5;
-   }
-
-   else if (self.guild == GUILD_NYM_DRUID)
-   {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP] :=self.abilities[ABIL_HP]+0;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2;
-      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2;
-
-      self.weapons[WPN_FIST]         := self.weapons[WPN_FIST] + 5;
-      self.weapons[WPN_QUARTERSTAFF] := self.weapons[WPN_QUARTERSTAFF] + 5;
-
-      self.spells[SPL_THORN_STRIKE] := self.spells[SPL_THORN_STRIKE] + 5;
-
-      self.skills[SKI_WAND_USE]       := self.skills[SKI_WAND_USE] + 5;
-      self.skills[SKI_HERBS]        := self.skills[SKI_HERBS] + 5;
-      self.skills[SKI_FLEE]        := self.skills[SKI_FLEE] + 5;
-   }
-
-   else if (self.guild == GUILD_NECROMANCER)
-   {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP] :=self.abilities[ABIL_HP]+0;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2;
-      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2;
-
-      self.weapons[WPN_DAGGER]        := self.weapons[WPN_DAGGER] + 5;
-      self.weapons[WPN_FIST]          := self.weapons[WPN_FIST] + 5;
-
-      self.spells[SPL_RAISE_DIV]      := self.spells[SPL_RAISE_DIV] + 5;
-      self.spells[SPL_DET_UNDEAD]     := self.spells[SPL_DET_UNDEAD] + 5;
-      self.spells[SPL_CAUSE_WOUNDS_1] := self.spells[SPL_CAUSE_WOUNDS_1] +
-                                         5;
-      self.skills[SKI_WAND_USE]       := self.skills[SKI_WAND_USE] + 5;
-      self.skills[SKI_FLEE]           := self.skills[SKI_FLEE] + 5;
-   }
-
-   else if (self.guild == GUILD_ASSASSIN)
-   {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+4;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP]+2;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]-0;
-      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]-0;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+0;
-
-      self.skills[SKI_DIAGNOSTICS] := self.skills[SKI_DIAGNOSTICS] + 5;
-      self.skills[SKI_CONSIDER]    := self.skills[SKI_CONSIDER] + 5;
-      self.skills[SKI_HIDE]        := self.skills[SKI_HIDE] + 5;
-      self.skills[SKI_SNEAK]       := self.skills[SKI_SNEAK] + 5;
-      self.skills[SKI_FLEE]        := self.skills[SKI_FLEE] + 5;
-      self.skills[SKI_BACKSTAB]    := self.skills[SKI_BACKSTAB] + 5;
-      self.skills[SKI_CLIMB]       := self.skills[SKI_CLIMB] + 5;
-
-      self.weapons[WPN_FIST]         := self.weapons[WPN_FIST] + 5;
-      self.weapons[WPN_DAGGER]       := self.weapons[WPN_DAGGER] + 5;
-   }
-
-   if (self.abilities[ABIL_STR] < 2) self.abilities[ABIL_STR] := 2;
-   if (self.abilities[ABIL_DEX] < 2) self.abilities[ABIL_DEX] := 2;
-   if (self.abilities[ABIL_CON] < 2) self.abilities[ABIL_CON] := 2;
-   if (self.abilities[ABIL_CHA] < 2) self.abilities[ABIL_CHA] := 2;
-   if (self.abilities[ABIL_BRA] < 2) self.abilities[ABIL_BRA] := 2;
-   if (self.abilities[ABIL_MAG] < 2) self.abilities[ABIL_MAG] := 2;
-   if (self.abilities[ABIL_DIV] < 2) self.abilities[ABIL_DIV] := 2;
-   if (self.abilities[ABIL_HP] < 2) self.abilities[ABIL_HP] := 2;
 
    /* Update morph data, etc */
 
