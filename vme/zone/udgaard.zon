@@ -3973,7 +3973,6 @@ descr
 west. The food store is to the north and Harold's is to the south."
 movement SECT_CITY
 gmap(328,584)
-gmap(100, 0)
 north to food_store;
 south to ironmonger;
 east to square;
@@ -5004,7 +5003,7 @@ other articles for the well-supplied smoker. A small <a cmd='read #'>sign</a> st
 amongst the wares."
 
 movement SECT_CITY
-gmap(382,679)
+gmap(466,679)
 west to market;
 ALWAYS_LIGHT
 
