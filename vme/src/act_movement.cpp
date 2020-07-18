@@ -442,14 +442,29 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
       return 0;
    }
 
-   if ((ROOM_LANDSCAPE(room_from) == SECT_WATER_SAIL) || (ROOM_LANDSCAPE(room_to) == SECT_WATER_SAIL) ||
-       (ROOM_LANDSCAPE(room_from) == SECT_WATER_SWIM) || (ROOM_LANDSCAPE(room_to) == SECT_WATER_SWIM))
+   if ((ROOM_LANDSCAPE(room_from) == SECT_WATER_SAIL) || (ROOM_LANDSCAPE(room_to) == SECT_WATER_SAIL))
+   {
+      if (IS_CHAR(mover))
+      {
+         act("You need to get yourself a boat.", A_ALWAYS, ch, NULL, NULL, TO_CHAR);
+         return 0;
+      }
+      else  // Sailing in an object
+      {
+         if (!IS_OBJ(mover) || OBJ_TYPE(mover) != ITEM_BOAT)
+         {
+            act("You must be inside a boat if you want to sail.", A_ALWAYS, ch, 0, 0, TO_CHAR);
+            return 0;
+         }
+      }
+   }
+   else if ((ROOM_LANDSCAPE(room_from) == SECT_WATER_SWIM) || (ROOM_LANDSCAPE(room_to) == SECT_WATER_SWIM))
    {
       if (IS_CHAR(mover))
       {
          if (!UNIT_EXTRA(mover).find_raw(S_SWIM_ON) && (!UNIT_EXTRA(mover).find_raw(S_IS_FISH) || !UNIT_EXTRA(mover).find_raw(S_IS_AMPHIB)))
          {
-            act("You might want to swim or get a boat.", A_ALWAYS, ch, NULL, NULL, TO_CHAR);
+            act("You might want to swim.", A_ALWAYS, ch, NULL, NULL, TO_CHAR);
             return 0;
          }
 
@@ -485,12 +500,11 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
                return 0;
          }
       } // IS_CHAR
-      else  // Sailing in an object
+      else  // Inside an object
       {
-         if (OBJ_TYPE(mover) != ITEM_BOAT)
+         if (!IS_OBJ(mover) || OBJ_TYPE(mover) != ITEM_BOAT)
          {
-            act("You must be inside a boat if you want to sail.",
-               A_ALWAYS, ch, 0, 0, TO_CHAR);
+            act("You must be inside a boat if you want to sail.", A_ALWAYS, ch, 0, 0, TO_CHAR);
             return 0;
          }
       }
@@ -505,7 +519,7 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
 
       if (IS_OBJ(mover) && (OBJ_TYPE(mover) == ITEM_BOAT))
       {
-         act("You can't sail your boat onto land.", A_ALWAYS, ch, 0, 0, TO_CHAR);
+         act("You can't sail your boat on land.", A_ALWAYS, ch, 0, 0, TO_CHAR);
          return 0;
       }
    }
