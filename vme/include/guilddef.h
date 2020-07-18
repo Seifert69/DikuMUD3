@@ -247,13 +247,6 @@ $1n tells you, 'Remove all equipment, please.';
  26;  100; bardiche                      ;  18; 18000;  12;          0;
  28;  100; halberd                       ;  18; 18000;  14;          0;
  40;   90; pike                          ;  18; 18000;  14;          0;
- 10;  100; bastard sword                 ;   9;  9000;  10;          0;
- 40;  100; two handed bastard sword      ;  18; 18000;  16;          0;
- 20;  100; ball and chain mace           ;   9;  9000;  10;          0;
- 130;  100; lochaber axe                  ;  13; 13000;  13;          0;
- 15;  100; crowbill                      ;  11; 11000;  12;          0;
- 10;  100; war axe                       ;  12; 12000;  14;          0;
- 35;  100; bec de corbin                 ;  24; 24000;  18;          0;
  "
 
 #elif defined(_SPELL)
@@ -1179,14 +1172,7 @@ $1n tells you, 'Remove all equipment, please.';
  26;  100; bardiche                      ;  18; 18000;  12;          0;
  28;  100; halberd                       ;  18; 18000;  14;          0;
  40;   90; pike                          ;  18; 18000;  14;          0;
- 10;  100; bastard sword                 ;   9;  9000;  10;          0;
- 40;  100; two handed bastard sword      ;  18; 18000;  16;          0;
- 20;  100; ball and chain mace           ;   9;  9000;  10;          0;
- 130;  100; lochaber axe                  ;  13; 13000;  13;          0;
- 15;  100; crowbill                      ;  11; 11000;  12;          0;
- 10;  100; war axe                       ;  12; 12000;  14;          0;
- 35;  100; bec de corbin                 ;  24; 24000;  18;          0;
-"
+ "
 
 #elif defined(_SPELL)
 
