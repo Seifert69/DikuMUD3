@@ -1731,8 +1731,13 @@ code
    {
       dir_string := dirstring(dir);
 
-      // SWIM or CLIMB xxxx
-      if ((self.outside.movement == SECT_WATER_SWIM) or (self.outside.exit_to[dir].movement == SECT_WATER_SWIM))
+      // SWIM, SAIL or CLIMB xxxx
+      if ((self.outside.movement == SECT_WATER_SAIL) or (self.outside.exit_to[dir].movement == SECT_WATER_SAIL))
+      {
+         log(self.nameidx+"@"+self.zoneidx+" wants to move across _SAIL - load a coffin?");
+         dir_string := "sail " + dir_string;
+      }
+      else if ((self.outside.movement == SECT_WATER_SWIM) or (self.outside.exit_to[dir].movement == SECT_WATER_SWIM))
       {
          dir_string := "swim " + dir_string;
       }
