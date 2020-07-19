@@ -51,16 +51,15 @@ And you'll see the welcome screen in Firefox
 
 I would appreciate help with:
 
-   * Mapping: I was considering using cMUD to do mapping. I've already added the DIL snippet
-     to output what I think are the codes. I think I have two young helpers that can assist 
+   * Mapping: Anyone interested in helping out mapping coordinates or generating maps. 
+     I've been using cMUD to do some test mapping. I think I have two young helpers that can assist 
      me with the actual mapping and turning a boring map into a hand-drawn piece of art :)
      
      However, I also noticed for example this project. Maybe that'd better than cMUD for mapping?
      
      https://github.com/demonnic/mudlet-map-reader
 
-   * Anyone wanting to improve the client. Keep-alive would be great. Ability to choose multiple 
-     CSS files for color. Ability to script macros for players (how about macro'ing in JS).
+   * Anyone wanting to improve the client. Ability to choose multiple CSS files for color.
      That annoying Firefox security bar popping up over the text input could probably be 
      circumvented by asking for the password in a pop-over rather than changing the input field type.
      Ways to improve the accessible client further. 
