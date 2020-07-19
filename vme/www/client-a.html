@@ -403,7 +403,7 @@
         </div>
         <div class="c_center">
             <div id="ac_map" onclick="onMapClick()">
-                <div id="mymap"></div>
+                <div id="mymap"><img id ='crosshairs' src='img/crosshair.png' style='position: relative; top: 50px; left: 50px' hidden><img></div>
             </div>
             <div id="ac_paged" aria-live="polite" ondblclick="modalShow()" >
                 <div id="acp_text">Text that sticks.</div>
@@ -494,6 +494,9 @@
                     InputFocus("");
                 }
             });
+
+            g_crosshairs = new Image;
+            g_crosshairs.src = "img/crosshairs.png";
 
             window.onload = function () {
                 const urlParams = new URLSearchParams(window.location.search);

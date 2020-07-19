@@ -4,6 +4,7 @@ var nRowCount = 0;
 var bPaged = 0;
 var sPaged = "";
 
+var g_crosshairs = new Image;
 
 var g_sImage = "img/logo.gif";
 var g_nLastSend = Math.round(Date.now() / 1000);
@@ -451,7 +452,7 @@ function setMap(szone, smap) {
     var y = -1;
 
     if (smap != null) {
-        console.log(smap);
+        //console.log(smap);
         var fields = smap.split(",");
 
         if (fields.length >= 2) {
@@ -473,6 +474,9 @@ function setMap(szone, smap) {
     if (x == -1) {
         var mye = document.getElementById("mymap");
         mye.style = "background-image: url('" + g_sImage + "'); background-size: contain; width: 100%; height: 100%; background-position: center; background-repeat: no-repeat;";
+
+        mye = document.getElementById("crosshairs");
+        mye.hidden = true;    
         return;
     }
 
@@ -492,6 +496,13 @@ function setMap(szone, smap) {
 
     var mye = document.getElementById("mymap");
     mye.style = "background-image: url('" + g_sImage + "'); width: " + xw + "px; height: " + yh + "px; background-repeat: no-repeat; background-position: left " + x + "px top " + y + "px;";
+
+    x = xw/2-18;
+    y = yh/2-18;
+
+    mye = document.getElementById("crosshairs");
+    mye.style = "position: relative; left: " + x + "px; top: " + y + "px;";
+    mye.hidden = false;
     //console.log(mye.style);
     /* mye.style = "position:relative; right:"+x+"px; bottom:"+y+"px;";*/
 }
