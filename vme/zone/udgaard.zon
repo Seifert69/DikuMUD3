@@ -8740,7 +8740,7 @@ title "a book"
 descr "A small leather covered book."
 extra {}
 "A small book bound in red leather. The title 'Comparative Studies in slime
-in the Udgaard and Midgaard Sewers' is printed on the cover. Perhaps if you READ page
+in the Udgaard and Midgaard Sewers' is printed on the cover. Perhaps if you <a cmd='#'>READ page</a>
 you may learn something."
 
 extra {"page"}
