@@ -231,22 +231,18 @@ $1n tells you, 'Remove all equipment, please.';
   4;  100; scimitar                      ;   4;  4000;   8;          0;
   5;  100; club                          ;   4;  4000;   8;          0;
   6;  100; spear                         ;   9;  9000;  10;          0;
-  8;  100; broad sword                   ;   9;  4000;   8;          0;
   9;  100; whip                          ;   4;  4000;  12;          0;
  10;  100; war hammer                    ;   9;  9000;   8;          0;
- 12;  100; shock lance                   ;   9;  9000;   8;          0;
  14;  100; morning star                  ;  14;  9000;  10;          0;
  15;  100; flail                         ;  14; 14000;  10;          0;
  16;  100; long sword                    ;   9;  9000;   8;          0;
  16;  100; battle club                   ;  14; 14000;  10;          0;
  18;  100; battle mace                   ;  14; 14000;  10;          0;
- 45;  100; claymore                      ;  10; 10000;   9;          0;
  21;  100; lance                         ;  12; 12000;  10;          0;
  24;  100; maul                          ;  12; 12000;  10;          0;
  25;  100; great sword                   ;   9;  9000;  10;          0;
  26;  100; bardiche                      ;  18; 18000;  12;          0;
  28;  100; halberd                       ;  18; 18000;  14;          0;
- 40;   90; pike                          ;  18; 18000;  14;          0;
  "
 
 #elif defined(_SPELL)
@@ -514,21 +510,8 @@ $1n tells you, 'Remove all equipment, please.';
   8;   80; whip                          ;  18; 18000;  15;          0;
  12;   80; scimitar                      ;  14; 14000;  10;          0;
  20;   70; long sword                    ;  18; 18000;  15;          0;
- 40;   80; saber                         ;  14; 14000;  10;          0;
- 50;   80; cutlass                       ;  14; 14000;  12;          0;
- 55;   80; bill guisarme                 ;  14; 14000;  12;          0;
- 58;   80; voulge                        ;  14; 14000;  12;          0;
- 60;   80; war axe                       ;  14; 14000;  12;          0;
- 62;   80; cudgel                        ;  14; 14000;  12;          0;
  65;   80; main gauche                   ;  14; 14000;  12;          0;
- 50;   80; ranseur                       ;  14; 14000;  12;          0;
  32;   80; stiletto                      ;  14; 14000;  12;          0;
- 40;   80; talwar                        ;  14; 14000;  12;          0;
- 35;   80; guisarme                      ;  14; 14000;  12;          0;
- 27;   80; hand hammer                   ;  14; 14000;  12;          0;
- 28;   80; gaff                          ;  14; 14000;  12;          0;
- 10;   80; ice pick                      ;  14; 14000;  12;          0;
- 11;   80; dirk                          ;  14; 14000;  12;          0;
  15;   80; brass knuckles                ;  14; 14000;  12;          0;
 
 "
@@ -626,7 +609,6 @@ $1n tells you, 'Remove all equipment, please.';
   4;  100; mace                          ;   9;  9000;   8;          0;
   4;  100; short sword                   ;   9;  9000;   8;          0;
   8;  100; war hammer                    ;   9;  9000;   8;          0;
-  8;  100; broad sword                   ;   9;  9000;   8;          0;
  12;  100; morning star                  ;  14;  9000;  10;          0;
  14;  100; flail                         ;  14; 14000;  10;          0;
  15;  100; cutlass                       ;   9;  9000;  10;          0;
@@ -639,21 +621,8 @@ $1n tells you, 'Remove all equipment, please.';
  22;  100; battle axe                    ;  14; 14000;  15;          0;
  25;  100; war mattock                   ;  18; 18000;  15;          0;
  30;  100; halberd                       ;  18; 18000;  15;          0;
- 40;  100; claymore                      ;  14; 14000;  10;          0;
- 50;  100; great axe                     ;  20; 20000;  15;          0;
- 50;  100; pike                          ;  15; 15000;  12;          0;
- 38;  100; flamberge                     ;  15; 15000;  12;          0;
- 42;  100; ball and chain mace           ;  15; 15000;  12;          0;
- 130;  100; lochaber axe                  ;  15; 15000;  12;          0;
- 55;  100; fauchard                      ;  15; 15000;  12;          0;
- 33;  100; crowbill                      ;  15; 15000;  12;          0;
- 35;  100; pole axe                      ;  15; 15000;  12;          0;
- 28;  100; ranseur                       ;  15; 15000;  12;          0;
- 25;  100; foot lance                    ;  15; 15000;  12;          0;
- 15;  100; hand hammer                   ;  15; 15000;  12;          0;
  10;  100; brass knuckles                ;  15; 15000;  12;          0;
-100;  100; lucern hammer                 ;  20; 20000;  18;          0;
-"
+1
 #else
 ERROR: NO TYPE FOR FIGHTER GUILD
 #endif
@@ -1156,22 +1125,18 @@ $1n tells you, 'Remove all equipment, please.';
   4;  100; scimitar                      ;   4;  4000;   8;          0;
   5;  100; club                          ;   4;  4000;   8;          0;
   6;  100; spear                         ;   9;  9000;  10;          0;
-  8;  100; broad sword                   ;   9;  4000;   8;          0;
   9;  100; whip                          ;   4;  4000;  12;          0;
  10;  100; war hammer                    ;   9;  9000;   8;          0;
- 12;  100; shock lance                   ;   9;  9000;   8;          0;
  14;  100; morning star                  ;  14;  9000;  10;          0;
  15;  100; flail                         ;  14; 14000;  10;          0;
  16;  100; long sword                    ;   9;  9000;   8;          0;
  16;  100; battle club                   ;  14; 14000;  10;          0;
  18;  100; battle mace                   ;  14; 14000;  10;          0;
- 45;  100; claymore                      ;  10; 10000;   9;          0;
  21;  100; lance                         ;  12; 12000;  10;          0;
  24;  100; maul                          ;  12; 12000;  10;          0;
  25;  100; great sword                   ;   9;  9000;  10;          0;
  26;  100; bardiche                      ;  18; 18000;  12;          0;
  28;  100; halberd                       ;  18; 18000;  14;          0;
- 40;   90; pike                          ;  18; 18000;  14;          0;
  "
 
 #elif defined(_SPELL)
