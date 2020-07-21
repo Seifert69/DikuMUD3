@@ -11,6 +11,13 @@ https://wiki.dikumud.net/wiki/DikuMUD
 
 Will get a copy sync'ed to GitHUB soon, many thanks to @ Damien Davison for help with that. 
 
+Pre-requisites:
+   * gcc/g++
+   * flex/bison (sudo apt-get install bison flex)
+   * boost devel (sudo apt-get install libboost-all-dev)
+
+
+
 How to build & launch
 
 1) First build the binaries:
