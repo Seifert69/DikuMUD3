@@ -7,6 +7,8 @@ SYSPORT =  -DLINUX -DPOSIX  -DDMSERVER
 
 #system flags
 SYSFLAGS = -m64 #-O6 
+SYSFLAGS += -std=c++11
+# SYSFLAGS += -O6 
 
 #debug flags
 DEBUG = -g -Wall
