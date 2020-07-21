@@ -68,7 +68,7 @@ int CServerConfiguration::FromLAN(char *pFromHost)
 #else
     if (inet_aton(pFromHost, &sTmp) == 0)
     {
-        slog(LOG_ALL, 0, "Localhost invalid.");
+        slog(LOG_ALL, 0, "Localhost [%s] invalid.", pFromHost);
         return FALSE;
     }
 #endif
@@ -388,7 +388,7 @@ void CServerConfiguration::Boot(char *srvcfg)
 
     if (inet_aton(d, &m_sLocalhost) == 0)
     {
-        slog(LOG_ALL, 0, "Localhost invalid.");
+        slog(LOG_ALL, 0, "Localhost [%s] invalid.", d);
         exit(0);
     }
 
