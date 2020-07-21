@@ -1764,20 +1764,15 @@ code
          // If we're in the coffin we loaded, get out and destroy it
          if ((self.outside.type == UNIT_ST_OBJ) and (self.outside.objecttype == ITEM_BOAT))
          {
+            u := self.outside;
             exec("exit", self);
-            if (self.outside.type != UNIT_ST_ROOM)
+            if (self.outside == u)
                return(FALSE); // Give up
-            exec("get coffin", self);
-            u := self.inside;
-            while (u)
+
+            if ((u.nameidx == "coffin1") and (u.zoneidx == "midgaard"))
             {
-               if ((u.nameidx == "coffin1") and (u.zoneidx == "midgaard"))
-               {
-                  destroy(u);
-                  exec("lets the coffin sink.", self);
-                  break;
-               }
-               u := u.next;
+               exec("emote pushes the coffin into the water and lets it sink.", self);
+               destroy(u);
             }
             goto start;
          }
