@@ -513,7 +513,6 @@ $1n tells you, 'Remove all equipment, please.';
  65;   80; main gauche                   ;  14; 14000;  12;          0;
  32;   80; stiletto                      ;  14; 14000;  12;          0;
  15;   80; brass knuckles                ;  14; 14000;  12;          0;
-
 "
 #elif defined(_SPELL)
 
@@ -622,7 +621,7 @@ $1n tells you, 'Remove all equipment, please.';
  25;  100; war mattock                   ;  18; 18000;  15;          0;
  30;  100; halberd                       ;  18; 18000;  15;          0;
  10;  100; brass knuckles                ;  15; 15000;  12;          0;
-1
+"
 #else
 ERROR: NO TYPE FOR FIGHTER GUILD
 #endif
@@ -1524,7 +1523,6 @@ $1n hisses, 'What you wear interferes with what I teach.';
  35;   90; estoc                         ;  14; 14000;  10;          0;
  40;   90; bill guisarme                 ;  12; 12000;  10;          0;
  24;   70; naginata                      ;  25; 25000;  20;          0;
-
 "
 
 #elif defined(_SPELL)
