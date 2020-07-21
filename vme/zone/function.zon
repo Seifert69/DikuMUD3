@@ -1547,7 +1547,7 @@ dilend
 
 
 
-dilbegin integer oc_move(dir:integer,unlock_true:integer);
+dilbegin integer oc_move(dir:integer, unlock_true:integer);
 /*open close doors and move
  *if unlock is true it will unlock doors.
  * returns true if moved false if not.
@@ -1567,7 +1567,7 @@ code
 {
    if (dir>=DIR_IMPOSSIBLE) return (FALSE);
 
-   if (not(isset (self.outside.exit_info[dir], EX_OPEN_CLOSE)))
+   if (not (isset(self.outside.exit_info[dir], EX_OPEN_CLOSE)))
       return (FALSE);
 
    heartbeat:=PULSE_SEC;
@@ -1608,7 +1608,7 @@ code
    {
       rm_symbolic:=self.outside.nameidx+"@"+self.outside.zoneidx;
       dir_string:=dirstring (dir);
-      if (isset (self.outside.exit_info[dir], EX_LOCKED))
+      if (isset(self.outside.exit_info[dir], EX_LOCKED))
       {
          unset(self.outside.exit_info[dir], EX_LOCKED);
          lk:=TRUE;
@@ -1616,6 +1616,9 @@ code
 
       if (length(self.outside.exit_names[dir])>=1)
          exec ("open "+dir_string+" "+self.outside.exit_names[dir].[0],self);
+      if (lk)
+         unset(self.outside.exit_info[dir], EX_CLOSED);
+
       pause;
       exec(dir_string,self);
       pause;
@@ -3339,7 +3342,6 @@ dilend
    arguments, the activator and the direction.
 
    Examples:
-
 
 dilcopy guard_dir@function("east", {"rejji"}, null, null);
 dilcopy guard_dir@function("south", {"papi", "whistler"},
