@@ -1616,8 +1616,8 @@ code
 
       if (length(self.outside.exit_names[dir])>=1)
          exec ("open "+dir_string+" "+self.outside.exit_names[dir].[0],self);
-      if (lk)
-         unset(self.outside.exit_info[dir], EX_CLOSED);
+
+      unset(self.outside.exit_info[dir], EX_CLOSED);
 
       pause;
       exec(dir_string,self);
@@ -1636,8 +1636,9 @@ code
          }
          i:=i+1;
       }
+      set(rm.exit_info[dir], EX_CLOSED);
       if (lk==TRUE)
-         set(rm.exit_info[dir], EX_LOCKED|EX_CLOSED);
+         set(rm.exit_info[dir], EX_LOCKED);
       return (TRUE);
    }
 
