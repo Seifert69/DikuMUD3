@@ -1645,11 +1645,11 @@ dilend
 
 
 /*
-function walk_room
-purpose: to allow a mob to walk to a room even if he/she has
-to unlock open and close doors.
-Spd is number of seconds between walk, minimum 5.
-*/
+ * function: walk_room
+ * purpose:  allow a mob to walk to a room even if he/she has to unlock open and close doors.
+ * Spd is number of seconds between walk, minimum 5.
+ * returns: false if not possible, returns true when at destination
+ */
 dilbegin integer walk_room(place:string, spd:integer);
 external
   integer oc_move(dir:integer,unlock_true:integer);
@@ -1660,6 +1660,7 @@ var
   dir : integer;
   heart : integer;
   lstroom:string;
+  u : unitptr;
 
 code
 {
@@ -1731,22 +1732,63 @@ code
    {
       dir_string := dirstring(dir);
 
-      // SWIM, SAIL or CLIMB xxxx
+      // Check if we need to sail to get to the destination 
       if ((self.outside.movement == SECT_WATER_SAIL) or (self.outside.exit_to[dir].movement == SECT_WATER_SAIL))
       {
-         log(self.nameidx+"@"+self.zoneidx+" wants to move across _SAIL - load a coffin?");
+         // If we're not in a boat, cheat and conjure one
+         if ((self.outside.type != UNIT_ST_OBJ) or (self.outside.objecttype != ITEM_BOAT))
+         {
+            // If we're not in a room, let's get into a room first
+            if (self.outside.type != UNIT_ST_ROOM)
+            {
+               exec("exit", self);
+               if (self.outside.type != UNIT_ST_ROOM)
+                  return(FALSE); // Give up
+               goto start;
+            }
+
+            u := load("coffin1@midgaard");
+            link(u, self.outside);
+            exec("emote crawls into a coffin.", self);
+            link(self, u);
+            goto start;
+         }
+         dir_string := "sail " + dir_string;
       }
-      else if ((self.outside.movement == SECT_WATER_SWIM) or (self.outside.exit_to[dir].movement == SECT_WATER_SWIM))
+      else
       {
-         dir_string := "swim " + dir_string;
-      }
-      else if (isset(self.outside.exit_info[dir], EX_CLIMB))
-      {
-         dir_string := "climb " + dir_string;
+         // If we're in the coffin we loaded, get out and destroy it
+         if ((self.outside.type == UNIT_ST_OBJ) and (self.outside.objecttype == ITEM_BOAT))
+         {
+            exec("exit", self);
+            if (self.outside.type != UNIT_ST_ROOM)
+               return(FALSE); // Give up
+            exec("get coffin", self);
+            u := self.inside;
+            while (u)
+            {
+               if ((u.nameidx == "coffin1") and (u.zoneidx == "midgaard"))
+               {
+                  destroy(u);
+                  break;
+               }
+               u := u.next;
+            }
+            goto start;
+         }
+
+         if ((self.outside.movement == SECT_WATER_SWIM) or (self.outside.exit_to[dir].movement == SECT_WATER_SWIM))
+         {
+            dir_string := "swim " + dir_string;
+         }
+         else if (isset(self.outside.exit_info[dir], EX_CLIMB))
+         {
+            dir_string := "climb " + dir_string;
+         }
       }
 
       if (dir == DIR_ENTER)
-         exec(dir_string+" "+self.outside.exit_names[dir].[0],self);
+         exec(dir_string+" "+self.outside.exit_names[dir].[0],self); // MS2020 think this is wrong
       else
          exec(dir_string, self);
    }
@@ -1774,15 +1816,14 @@ dilend
 
 
 /*
-function dirstring
-purpose: use to return the string of a direction when you ahve its number
-value.
-for example if you have  DIR_NORTH you can use this like
-yourstring:=dirstring (DIR_NORTH);
-and it will return "north" in yourstring.
-*/
+ * function: dirstring
+ * purpose:  use to return the string of a direction when you ahve its number value.
+ * for example if you have  DIR_NORTH you can use this like
+ * yourstring:=dirstring (DIR_NORTH);
+ * and it will return "north" in yourstring.
+ */
 
-dilbegin string dirstring (dr:integer);
+dilbegin string dirstring(dr:integer);
 var
    sl : stringlist;
 code
