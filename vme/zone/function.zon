@@ -1652,20 +1652,24 @@ dilend
  */
 dilbegin integer walk_room(place:string, spd:integer);
 external
-  integer oc_move(dir:integer,unlock_true:integer);
-  string dirstring(i:integer);
+   integer oc_move(dir:integer,unlock_true:integer);
+   string dirstring(i:integer);
+
 var
-  mv:integer;
-  dir_string:string;
-  dir : integer;
-  heart : integer;
-  lstroom:string;
-  u : unitptr;
-  room : unitptr;
+   mv:integer;
+   dir_string:string;
+   dir : integer;
+   heart : integer;
+   lstroom:string;
+   u : unitptr;
+   inroom : unitptr;
+   toroom : unitptr;
+   nreps : integer;
 
 code
 {
-   pause; /* prevent endless loops in cases of errors */
+   heartbeat := 4 * PULSE_SEC;
+   pause; /* prevent endless loops in cases of errors from caller */
 
    if (findroom(place) == null)
    {
@@ -1675,7 +1679,8 @@ code
 
    :init:
    on_activation(self.position <= POSITION_SLEEPING, skip);
-   if ((spd * PULSE_SEC) < 5)
+
+   if (spd < 5)
    {
       heartbeat := 5 * PULSE_SEC;
    } else {
@@ -1683,61 +1688,58 @@ code
    }
    heart := heartbeat;
 
-   lstroom := self.outside.nameidx;
+   lstroom := "";
+   nreps := 0;
 
    :start:
-   if (self.outside==findroom(place))
-      return(TRUE);
+   heartbeat := heart;
+   pause;
 
-   /* Lets stand up if for some reason we are sitting */
-   if ((self.position == POSITION_RESTING) or
-       (self.position == POSITION_SITTING))
-   {
-      exec("stand", self);
-      heartbeat := PULSE_SEC * 4;
-      pause;
-      heartbeat := heart;
-   }
-
-   /* if were not standing now then abort! */
+   /* if we're not standing now then abort! */
    if (self.position != POSITION_STANDING)
      return (FALSE);
 
-   heartbeat := heart;
-   heart := heartbeat;
+   inroom := self.outside;
+   while (inroom.type != UNIT_ST_ROOM)
+      inroom := inroom.outside;
 
-   :repeater:
-   if (self.outside.nameidx != lstroom)
-      goto takeabreak;
+   toroom := findroom(place);
+   if (inroom == toroom)
+      return(TRUE);
 
-   heartbeat:=heart;
-   // ?? heartbeat := 3;
-   dir := pathto(self, findroom(place));
-   if (dir==DIR_TRYAGAIN)
+   /* Lets stand up if for some reason we are sitting */
+   if ((self.position == POSITION_RESTING) or (self.position == POSITION_SITTING))
    {
-      pause;
-      goto repeater;
+      nreps := nreps + 1;
+      exec("stand", self);
+      if (nreps >= 20)
+      {
+         log(self.nameidx+"@"+self.zoneidx+" unable to stand in "+inroom.nameidx+"@"+inroom.zoneidx);
+         return(FALSE);
+      }
+      goto start;
    }
 
-   if (dir>=DIR_IMPOSSIBLE)
+   :repeater:
+   dir := pathto(self, toroom);
+   if (dir == DIR_TRYAGAIN)
+      goto start;
+
+   if (dir >= DIR_IMPOSSIBLE)
       return(FALSE);
 
-   if ((isset(self.outside.exit_info[dir], EX_LOCKED)) or
-       (isset(self.outside.exit_info[dir], EX_CLOSED)))
+   if (isset(inroom.exit_info[dir], EX_LOCKED) or isset(inroom.exit_info[dir], EX_CLOSED))
    {
-      mv := oc_move(dir,TRUE);
+      mv := oc_move(dir, TRUE);
       if (mv == FALSE)
          return(FALSE);
    }
    else
    {
       dir_string := dirstring(dir);
-      room := self.outside;
-      while (room.type != UNIT_ST_ROOM)
-         room := room.outside;
 
       // Check if we need to sail to get to the destination 
-      if ((room.movement == SECT_WATER_SAIL) or (room.exit_to[dir].movement == SECT_WATER_SAIL))
+      if ((inroom.movement == SECT_WATER_SAIL) or (inroom.exit_to[dir].movement == SECT_WATER_SAIL))
       {
          // If we're not in a boat, cheat and conjure one
          if ((self.outside.type != UNIT_ST_OBJ) or (self.outside.objecttype != ITEM_BOAT))
@@ -1777,23 +1779,40 @@ code
             goto start;
          }
 
-         if ((room.movement == SECT_WATER_SWIM) or (room.exit_to[dir].movement == SECT_WATER_SWIM))
+         if ((inroom.movement == SECT_WATER_SWIM) or (inroom.exit_to[dir].movement == SECT_WATER_SWIM))
          {
             dir_string := "swim " + dir_string;
          }
-         else if (isset(room.exit_info[dir], EX_CLIMB))
+         else if (isset(inroom.exit_info[dir], EX_CLIMB))
          {
             dir_string := "climb " + dir_string;
          }
       }
 
       if (dir == DIR_ENTER)
-         exec(dir_string+" "+room.exit_names[dir].[0],self); // MS2020 think this is wrong
+         exec(dir_string+" "+inroom.exit_names[dir].[0],self); // MS2020 think this is wrong
       else
          exec(dir_string, self);
    }
-   lstroom := room.nameidx;
-   pause; // By pausing here we increase probability top DIL will prioritize
+
+   inroom := self.outside;
+   while (inroom.type != UNIT_ST_ROOM)
+      inroom := inroom.outside;
+
+   if (inroom.nameidx == lstroom)
+      nreps := nreps + 1;
+   else
+      nreps := 0;
+
+   if (nreps >= 10)
+   {
+      log(self.nameidx+"@"+self.zoneidx+" is stuck in "+inroom.nameidx+"@"+inroom.zoneidx);
+      goto takeabreak;
+      if (nreps >= 20)
+         return(FALSE);
+   }
+
+   lstroom := inroom.nameidx;
    goto start;
 
 
