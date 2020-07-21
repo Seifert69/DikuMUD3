@@ -1565,36 +1565,37 @@ var
 
 code
 {
-   if (dir>=DIR_IMPOSSIBLE) return (FALSE);
+   if (dir >= DIR_IMPOSSIBLE)
+      return (FALSE);
 
-   if (not (isset(self.outside.exit_info[dir], EX_OPEN_CLOSE)))
+   if (not isset(self.outside.exit_info[dir], EX_OPEN_CLOSE))
       return (FALSE);
 
    heartbeat:=PULSE_SEC;
    rm_symbolic:=self.outside.nameidx+"@"+self.outside.zoneidx;
 
-   if (unlock_true==FALSE)
+   if (unlock_true == FALSE)
    {
-      if (isset (self.outside.exit_info[dir], EX_LOCKED))
+      if (isset(self.outside.exit_info[dir], EX_LOCKED))
          return (FALSE);
 
       dir_string:=dirstring (dir);
-      if (length(self.outside.exit_names[dir])>=1)
-         exec ("open "+dir_string+" "+self.outside.exit_names[dir].[0],self);
+      if (length(self.outside.exit_names[dir]) >=1)
+         exec("open "+dir_string+" "+self.outside.exit_names[dir].[0],self);
       pause;
-      exec (dir_string,self);
+      exec(dir_string,self);
       pause;
       rm:=findsymbolic(rm_symbolic);
 
       i:=0;
       ct:=FALSE;
-      while (i<=11)
+      while (i <= 11)
       {
-         if (self.outside.exit_to[i]==rm)
+         if (self.outside.exit_to[i] == rm)
          {
-            dir_string:=dirstring (i);
-            if (length(self.outside.exit_names[i])>=1)
-               exec ("close "+dir_string+" "+self.outside.exit_names[i].[0],self);
+            dir_string:=dirstring(i);
+            if (length(self.outside.exit_names[i]) >= 1)
+               exec("close "+dir_string+" "+self.outside.exit_names[i].[0],self);
             ct:=TRUE;
          }
          i:=i+1;
@@ -1606,8 +1607,7 @@ code
    }
    else
    {
-      rm_symbolic:=self.outside.nameidx+"@"+self.outside.zoneidx;
-      dir_string:=dirstring (dir);
+      dir_string:=dirstring(dir);
       if (isset(self.outside.exit_info[dir], EX_LOCKED))
       {
          unset(self.outside.exit_info[dir], EX_LOCKED);
