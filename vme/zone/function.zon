@@ -1770,6 +1770,7 @@ code
                if ((u.nameidx == "coffin1") and (u.zoneidx == "midgaard"))
                {
                   destroy(u);
+                  exec("lets the coffin sink.", self);
                   break;
                }
                u := u.next;
