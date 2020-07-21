@@ -2188,7 +2188,7 @@ M_HUMAN_WARRIOR_SWORD(38, SEX_MALE)
 alignment 900
 money 10 COPPER_PIECE
 
-dilcopy guard_dir@function("east", null, {"guard"}, "");
+dilcopy guard_dir@function("east", null, {"jack", "guard"}, "");
 dilcopy rescue@function("king / tom");
 dilcopy rescue@function(CASTLE_STAFF);
 special SFUN_WHISTLE
@@ -2209,7 +2209,7 @@ romflags {CHAR_DETECT_INVISIBLE, CHAR_PROTECTED}
 M_HUMAN_WARRIOR_SWORD(42, SEX_MALE)
 alignment 900
 money 10 COPPER_PIECE
-dilcopy guard_dir@function("east", null, {"guard"}, "");
+dilcopy guard_dir@function("east", null, {"jack", "guard"}, "");
 dilcopy rescue@function("king / tim");
 dilcopy rescue@function(CASTLE_STAFF);
 special SFUN_WHISTLE
