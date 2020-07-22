@@ -2255,7 +2255,8 @@ void dilfe_fld(register struct dilprg *p)
             {
                 v->atyp = DILA_NONE;
                 v->ref = &(ROOM_EXIT((class unit_data *)v1->val.ptr,
-                                     v2->val.num)->exit_info);
+                                     v2->val.num)
+                               ->exit_info);
             }
             else
                 v->type = DILV_FAIL;
@@ -2301,7 +2302,8 @@ void dilfe_fld(register struct dilprg *p)
             {
                 v->atyp = DILA_NONE;
                 v->ref = &(ROOM_EXIT((class unit_data *)v1->val.ptr,
-                                     v2->val.num)->difficulty);
+                                     v2->val.num)
+                               ->difficulty);
             }
             else
                 v->type = DILV_FAIL;
@@ -2346,8 +2348,7 @@ void dilfe_fld(register struct dilprg *p)
             {
                 v->atyp = DILA_NORM;
                 v->val.ptr = ROOM_EXIT((class unit_data *)v1->val.ptr,
-                                       v2->val.num)
-                                 ->to_room;
+                                       v2->val.num)->to_room;
             }
             else
                 v->type = DILV_FAIL;
@@ -2735,7 +2736,7 @@ void dilfe_fld(register struct dilprg *p)
             {
                 v->atyp = DILA_NONE;
                 v->type = DILV_INT;
-                v->val.num = get_racial_ability(CHAR_RACE((class unit_data *) v1->val.ptr), v2->val.num);
+                v->val.num = get_racial_ability(CHAR_RACE((class unit_data *)v1->val.ptr), v2->val.num);
 
                 /*if (p->frame[0].tmpl->zone->access == 0)
                 {
@@ -3185,7 +3186,6 @@ void dilfe_fld(register struct dilprg *p)
         }
         break;
 
-
     /* *********************************** */
     /* .level                              */
     case DILF_LVL:
@@ -3230,7 +3230,6 @@ void dilfe_fld(register struct dilprg *p)
             break;
         }
         break;
-
 
     /* *********************************** */
     /* .profession                         */
