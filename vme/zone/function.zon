@@ -1794,7 +1794,23 @@ code
       }
 
       if (dir == DIR_ENTER)
-         exec(dir_string+" "+inroom.exit_names[dir].[0],self); // MS2020 think this is wrong
+      {
+         u := inroom.inside;
+         while (u)
+         {
+            if (u.type == UNIT_ST_ROOM)
+            {
+               if (pathto(u, toroom) != DIR_EXIT)
+                  break;
+            }
+            u := u.next;
+         }
+
+         if (u)
+            exec("enter " + u.name.[0],self);
+         else
+            log(inroom.nameidx+"@"+inroom.zoneidx+" unable to find unit to enter.");
+      }
       else
          exec(dir_string, self);
    }
