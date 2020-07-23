@@ -20,8 +20,7 @@
    exp 125 \
    flags {UNIT_FL_INVISIBLE} \
    romflags {CHAR_DETECT_INVISIBLE, CHAR_SNEAK}\
-   dilcopy poi_resist@function(); \
-   dilcopy regenerate@update (); 
+   dilcopy poi_resist@function();
 
 
 #define M_WATER_SPIRIT_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -74,9 +73,7 @@ flags {UNIT_FL_NO_TELEPORT} \
  dilcopy aggressive@function(0, -1, 0, 0, 3, PULSE_SEC*20, 0, "ANY", \
                             {"$1n attacks $3n!", \
 							   "$1n attacks you!"}); \
-IS_FISH \
-dilcopy regenerate@update ();
-
+IS_FISH
 
 #define M_PIRANHA_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_PIRANHA(MLVL,GENDER,ARM_HLEATHER)
@@ -124,9 +121,7 @@ flags {UNIT_FL_NO_TELEPORT} \
  dilcopy aggressive@function(0, -1, 0, 0, 3, PULSE_SEC*20, 0, "ANY", \
                             {"$1n attacks $3n with $1s deadly jaws!", \
 							   "$1n attacks you with $1s deadly jaws!"}); \
-IS_FISH \
-dilcopy regenerate@update ();
-
+IS_FISH
 
 #define M_BARACUDA_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_BARACUDA(MLVL,GENDER,ARM_HLEATHER)
@@ -171,8 +166,7 @@ MSET_ABILITY(25,35,10,20,10,0,0,0) \
 MSET_WEAPON(10,10,10,10,10,10) \
 MSET_SPELL(4,3,4,4,3,4,4,4,3,3,4) \
 flags {UNIT_FL_NO_TELEPORT} \
-romflags {CHAR_DETECT_INVISIBLE} \
-dilcopy regenerate@update ();
+romflags {CHAR_DETECT_INVISIBLE} 
 
 
 #define M_CRAB_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -218,9 +212,7 @@ SETHEIGHT(MLVL,90,260) \
 MSET_ABILITY(25,35,10,20,10,0,0,0) \
 MSET_WEAPON(10,10,10,10,10,10) \
 MSET_SPELL(4,4,4,4,4,3,4,3,3,3,4) \
-IS_FISH \
-dilcopy regenerate@update ();
-
+IS_FISH
 
 #define M_MANTA_RAY_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_MANTA_RAY (MLVL,GENDER,ARM_LEATHER)
@@ -266,8 +258,7 @@ MSET_ABILITY(25,35,10,20,10,0,0,0) \
 MSET_WEAPON(10,10,10,10,10,10) \
 MSET_SPELL(4,4,4,3,4,3,4,4,3,3,4) \
 IS_AMPHIB \
-SWIM_ON \
-dilcopy regenerate@update ();
+SWIM_ON 
 
 
 #define M_MERMAID_TINY(MLVL) /*level 1 to 25 */ \
@@ -314,8 +305,7 @@ MSET_ABILITY(25,35,10,20,10,0,0,0) \
 MSET_WEAPON(10,10,10,10,10,10) \
 MSET_SPELL(4,4,4,3,4,3,4,4,3,3,4) \
 IS_AMPHIB \
-SWIM_ON \
-dilcopy regenerate@update ();
+SWIM_ON 
 
 
 #define M_MERMAN_TINY(MLVL) /*level 1 to 25 */ \
@@ -361,9 +351,7 @@ SETHEIGHT(MLVL,60,600) \
 MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
 MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-IS_FISH \
-dilcopy regenerate@update ();
-
+IS_FISH 
 
 #define M_SEA_HORSE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_SEA_HORSE (MLVL,GENDER,ARM_LEATHER)
@@ -409,9 +397,7 @@ MSET_ABILITY(10,10,10,20,20,10,20,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
 MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
 flags {UNIT_FL_NO_TELEPORT} \
-IS_FISH \
-dilcopy regenerate@update ();
-
+IS_FISH
 
 
 #define M_EEL_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -457,9 +443,7 @@ MSET_ABILITY(10,10,10,20,20,10,20,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
 MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
 flags {UNIT_FL_NO_TELEPORT} \
-IS_FISH \
-dilcopy regenerate@update ();
-
+IS_FISH
 
 
 #define M_JELLYFISH_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -506,9 +490,7 @@ MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
 MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
 flags {UNIT_FL_NO_TELEPORT} \
-IS_FISH \
-dilcopy regenerate@update ();
-
+IS_FISH
 
 #define M_MINNOW_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_MINNOW (MLVL,GENDER,ARM_HLEATHER)
@@ -553,9 +535,7 @@ MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
 MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
 flags {UNIT_FL_NO_TELEPORT} \
-IS_FISH \
-dilcopy regenerate@update ();
-
+IS_FISH 
 
 #define M_ORCA_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_ORCA (MLVL,GENDER,ARM_HLEATHER)
@@ -601,9 +581,7 @@ MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
 MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
 flags {UNIT_FL_NO_TELEPORT} \
-IS_FISH \
-dilcopy regenerate@update ();
-
+IS_FISH
 
 #define M_GRAY_WHALE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_GRAY_WHALE (MLVL,GENDER,ARM_HLEATHER)
@@ -648,9 +626,7 @@ MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
 MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
 flags {UNIT_FL_NO_TELEPORT} \
-IS_FISH \
-dilcopy regenerate@update ();
-
+IS_FISH
 
 #define M_BLUE_WHALE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_BLUE_WHALE (MLVL,GENDER,ARM_HLEATHER)
@@ -695,9 +671,7 @@ MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
 MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
 flags {UNIT_FL_NO_TELEPORT} \
-IS_FISH \
-dilcopy regenerate@update ();
-
+IS_FISH
 
 #define M_SQUID_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_SQUID (MLVL,GENDER,ARM_HLEATHER)
@@ -743,8 +717,7 @@ MSET_WEAPON(6,6,6,6,15,6) \
 MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
 flags {UNIT_FL_NO_TELEPORT} \
 SWIM_ON \
-IS_AMPHIB \
-dilcopy regenerate@update ();
+IS_AMPHIB 
 
 
 #define M_WALRUS_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -791,8 +764,7 @@ MSET_WEAPON(6,6,6,6,15,6) \
 MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
 flags {UNIT_FL_NO_TELEPORT} \
 SWIM_ON \
-IS_AMPHIB \
-dilcopy regenerate@update ();
+IS_AMPHIB 
 
 
 #define M_SEAL_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -838,8 +810,7 @@ MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
 MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
 flags {UNIT_FL_NO_TELEPORT} \
-IS_FISH \
-dilcopy regenerate@update ();
+IS_FISH 
 
 
 #define M_DOLPHIN_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -888,8 +859,7 @@ flags {UNIT_FL_NO_TELEPORT} \
  dilcopy aggressive@function(0, -1, 0, 0, 3, PULSE_SEC*20, 0, "ANY", \
                             {"$1n attacks $3n with $1s deadly jaws!", \
 							   "$1n attacks you with $1s deadly jaws!"}); \
-IS_FISH \
-dilcopy regenerate@update ();
+IS_FISH 
 
 
 #define M_GWHITE_SHARK_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -940,8 +910,7 @@ exp 125
    dilcopy aggressive@function(0, -1, 0, 0, 3, 40, 0, "ANY", \
                             {"$1n attacks!", "$1n attacks you!"}); \
    exp 105 \
-IS_FISH \
-dilcopy regenerate@update ();
+IS_FISH 
 
 
 

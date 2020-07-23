@@ -1,4 +1,3 @@
-
 #ifndef _MUD_MHUMANOID_H
 #define _MUD_MHUMANOID_H
 
@@ -19,8 +18,7 @@
    alignment 355      /* Good          */ \
    MSET_ABILITY(10,10,10,23,15,22,10,0)   \
    MSET_WEAPON(10,10,10,10,10,10)    /*  Average in everything, any wpn */ \
-   MSET_SPELL(4,2,2,2,2,2,2,6,6,6,6)  /* Resistances       */ \
-dilcopy regenerate@update ();   
+   MSET_SPELL(4,2,2,2,2,2,2,6,6,6,6)  /* Resistances       */    
 
 
 /* ==================================================================== */
@@ -34,8 +32,7 @@ dilcopy regenerate@update ();
    SETWEIGHT(MLVL,180,500)/* pounds       */ \
    SETHEIGHT(MLVL,177,300)/* cm            */ \
    NATURAL_DEF(WPN_FIST, ARM_LEATHER) \
-   flags {UNIT_FL_NO_TELEPORT} \
-dilcopy regenerate@update ();  
+   flags {UNIT_FL_NO_TELEPORT}   
 
 
 
@@ -169,8 +166,7 @@ dilcopy regenerate@update ();
    sex GENDER \
    SETWEIGHT(MLVL,155,400) \
    SETHEIGHT(MLVL,102,225) \
-   NATURAL_DEF(WPN_FIST, ARM_CLOTHES) \
-dilcopy regenerate@update ();  
+   NATURAL_DEF(WPN_FIST, ARM_CLOTHES)   
 
 
 #define BASE_DWARF_WARRIOR(MLVL, GENDER) \
@@ -301,8 +297,7 @@ level MLVL \
 sex GENDER \
 SETWEIGHT(MLVL,135,187) /* pounds       */ \
 SETHEIGHT(MLVL,138,174) /* cm            */ \
-NATURAL_DEF(WPN_FIST, ARM_CLOTHES) \
-dilcopy regenerate@update ();  
+NATURAL_DEF(WPN_FIST, ARM_CLOTHES)   
 
 
 
@@ -435,8 +430,7 @@ dilcopy regenerate@update ();
    sex GENDER \
    SETWEIGHT(MLVL,93,209)/* pounds       */ \
    SETHEIGHT(MLVL,145,170)/* cm            */ \
-   NATURAL_DEF(WPN_FIST, ARM_CLOTHES) \
-dilcopy regenerate@update ();  
+   NATURAL_DEF(WPN_FIST, ARM_CLOTHES)   
 
 
 #define BASE_DARK_ELF_WARRIOR(MLVL, GENDER) \
@@ -568,8 +562,7 @@ dilcopy regenerate@update ();
    sex GENDER \
    SETWEIGHT(MLVL,140,250) /* pounds       */ \
    SETHEIGHT(MLVL,111,171) /* cm            */ \
-   NATURAL_DEF(WPN_FIST, ARM_CLOTHES) \
-dilcopy regenerate@update ();  
+   NATURAL_DEF(WPN_FIST, ARM_CLOTHES)   
 
 
 #define BASE_HALF_ELF_WARRIOR(MLVL, GENDER) \
@@ -700,8 +693,7 @@ dilcopy regenerate@update ();
    sex GENDER \
    SETWEIGHT(MLVL,208,448) /* pounds */ \
    SETHEIGHT(MLVL,160,240) /* cm            */ \
-   NATURAL_DEF(WPN_FIST, ARM_CLOTHES) \
-dilcopy regenerate@update ();  
+   NATURAL_DEF(WPN_FIST, ARM_CLOTHES)   
 
 
 #define BASE_HALF_OGRE_WARRIOR(MLVL, GENDER) \
@@ -834,8 +826,7 @@ dilcopy regenerate@update ();
    sex GENDER \
    SETWEIGHT(MLVL,71,187)/* pounds       */ \
    SETHEIGHT(MLVL,84,104)/* cm            */ \
-   NATURAL_DEF(WPN_FIST, ARM_CLOTHES) \
-dilcopy regenerate@update ();  
+   NATURAL_DEF(WPN_FIST, ARM_CLOTHES)   
 
 
 #define BASE_GNOME_WARRIOR(MLVL, GENDER) \
@@ -965,8 +956,7 @@ dilcopy regenerate@update ();
    sex GENDER \
    SETWEIGHT(MLVL,90,180)/* pounds       */ \
    SETHEIGHT(MLVL,90,180)/* cm            */ \
-   NATURAL_DEF(WPN_FIST, ARM_LEATHER) \
-dilcopy regenerate@update ();  
+   NATURAL_DEF(WPN_FIST, ARM_LEATHER)   
 
 
 #define BASE_GOBLIN_WARRIOR(MLVL, GENDER) \
@@ -1096,8 +1086,7 @@ dilcopy regenerate@update ();
    sex GENDER \
    SETWEIGHT(MLVL,213,493) \
    SETHEIGHT(MLVL,180,250) \
-   NATURAL_DEF(WPN_FIST, ARM_CLOTHES) \
-dilcopy regenerate@update ();  
+   NATURAL_DEF(WPN_FIST, ARM_CLOTHES)   
 
 
 #define BASE_GROLL_WARRIOR(MLVL, GENDER) \
@@ -1228,8 +1217,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,72,106)/* cm            */ \
    level MLVL \
    sex GENDER \
-   NATURAL_DEF(WPN_FIST, ARM_CLOTHES) \
-dilcopy regenerate@update ();  
+   NATURAL_DEF(WPN_FIST, ARM_CLOTHES)   
 
 
 #define BASE_HALFLING_WARRIOR(MLVL, GENDER) \
@@ -1359,8 +1347,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,114,150)/* cm            */ \
    level MLVL \
    sex GENDER \
-   NATURAL_DEF(WPN_FIST, ARM_LEATHER) \
-dilcopy regenerate@update ();  
+   NATURAL_DEF(WPN_FIST, ARM_LEATHER)   
 
 
 #define BASE_HOBGOBLIN_WARRIOR(MLVL, GENDER) \
@@ -1495,8 +1482,7 @@ dilcopy regenerate@update ();
    sex GENDER \
    SETWEIGHT(MLVL,180,350) /* pounds */ \
    SETHEIGHT(MLVL,120,220) /* cm            */ \
-   NATURAL_DEF(WPN_FIST, ARM_CLOTHES) \
-dilcopy regenerate@update ();  
+   NATURAL_DEF(WPN_FIST, ARM_CLOTHES)   
 
 
 #define BASE_HUMAN_WARRIOR(MLVL, GENDER) \
@@ -1633,8 +1619,7 @@ dilcopy regenerate@update ();
    exp 110 \
    dilcopy aggressive@function (0, -1, 0, -30, 2, PULSE_SEC*22, 0, "ANY", \
         {"$1n yodels savagely, attacking $3n!", \
-         "$1n yodels savagely and charges toward you!"}); \
-dilcopy regenerate@update ();
+         "$1n yodels savagely and charges toward you!"}); 
 
 
 
@@ -1770,8 +1755,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,177,300)/* cm            */ \
    NATURAL_DEF(WPN_FIST, ARM_PLATE) \
    flags {UNIT_FL_NO_TELEPORT} \
-   dilcopy die_stone@akaren(); \
-dilcopy regenerate@update ();  
+   dilcopy die_stone@akaren();   
 
 
 #define BASE_LIZARDMAN_WARRIOR(MLVL, GENDER) \
@@ -1907,8 +1891,7 @@ dilcopy regenerate@update ();
    sex GENDER \
    SETWEIGHT(MLVL,235,545) \
    SETHEIGHT(MLVL,200,260) \
-   NATURAL_DEF(WPN_FIST, ARM_CLOTHES) \
-dilcopy regenerate@update ();  
+   NATURAL_DEF(WPN_FIST, ARM_CLOTHES)   
 
 
 #define BASE_OGRE_WARRIOR(MLVL, GENDER) \
@@ -2042,8 +2025,7 @@ dilcopy regenerate@update ();
    NATURAL_DEF(WPN_CLAW, ARM_HLEATHER)  \
    MSET_ABILITY(25,15,25,25,5,5,0,0) \
    MSET_WEAPON(10,30,25,5,25,5)      \
-   MSET_SPELL(0,0,0,0,0,0,0,0,0,0,0) \
-dilcopy regenerate@update ();  
+   MSET_SPELL(0,0,0,0,0,0,0,0,0,0,0)   
 
 
 #define BASE_ORC_WARRIOR(MLVL, GENDER) \
@@ -2177,8 +2159,7 @@ dilcopy regenerate@update ();
    alignment -880 \
    SETWEIGHT(MLVL,190,440) \
    SETHEIGHT(MLVL,160,240) \
-   NATURAL_DEF(WPN_FIST, ARM_HLEATHER) \
-dilcopy regenerate@update ();  
+   NATURAL_DEF(WPN_FIST, ARM_HLEATHER)   
 
 
 #define BASE_TROLL_WARRIOR(MLVL, GENDER) \
@@ -2308,8 +2289,7 @@ dilcopy regenerate@update ();
    sex GENDER \
    SETWEIGHT(MLVL,50,161) \
    SETHEIGHT(MLVL,60,98) \
-   NATURAL_DEF(WPN_FIST, ARM_CLOTHES) \
-dilcopy regenerate@update ();
+   NATURAL_DEF(WPN_FIST, ARM_CLOTHES) 
 
 
 #define BASE_BROWNIE_WARRIOR(MLVL, GENDER) \
@@ -2443,8 +2423,7 @@ dilcopy regenerate@update ();
    alignment -600 \
    NATURAL_DEF(WPN_CLAW, ARM_HLEATHER) \
    dilcopy bitedisease@skaven(); \
-   exp 110 \
-dilcopy regenerate@update ();  
+   exp 110   
 
 
 #define BASE_SKAVEN_WARRIOR(MLVL, GENDER) \
@@ -2576,8 +2555,7 @@ dilcopy regenerate@update ();
    sex GENDER \
    SETWEIGHT(MLVL,120,350) \
    SETHEIGHT(MLVL,90,185) \
-   NATURAL_DEF(WPN_CLAW, ARM_CLOTHES) \
-dilcopy regenerate@update ();  
+   NATURAL_DEF(WPN_CLAW, ARM_CLOTHES)   
 
 
 #define BASE_TANNARI_WARRIOR(MLVL, GENDER) \
@@ -2709,8 +2687,7 @@ dilcopy regenerate@update ();
    alignment -880 \
    SETWEIGHT(MLVL,500,600) \
    SETHEIGHT(MLVL,300,500) \
-   NATURAL_DEF(WPN_FIST, ARM_HLEATHER) \
-dilcopy regenerate@update ();  
+   NATURAL_DEF(WPN_FIST, ARM_HLEATHER)   
 
 
 #define BASE_GIANT_HILL(MLVL, GENDER) \

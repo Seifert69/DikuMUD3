@@ -1,4 +1,3 @@
-
 #ifndef _MUD_PLANT_H
 #define _MUD_PLANT_H
 
@@ -23,8 +22,7 @@ SETWEIGHT(MLVL,1,75) \
 SETHEIGHT(MLVL,20,300) \
 MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_FLOWER_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_FLOWER (MLVL,GENDER,ARM_CLOTHES)
@@ -68,8 +66,7 @@ SETWEIGHT(MLVL,1,40) \
 SETHEIGHT(MLVL,15,120) \
 MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 
 #define M_TUMBLEWEED_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -114,8 +111,7 @@ SETWEIGHT(MLVL,5,100) \
 SETHEIGHT(MLVL,60,600) \
 MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 
 #define M_SEAWEED_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -161,8 +157,7 @@ SETWEIGHT(MLVL,2,140) \
 SETHEIGHT(MLVL,28,200) \
 MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 
 #define M_PEPPER_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -207,8 +202,7 @@ SETWEIGHT(MLVL,4,300) \
 SETHEIGHT(MLVL,55,450) \
 MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 
 #define M_RASPBERRY_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -252,8 +246,7 @@ SETWEIGHT(MLVL,1,140) \
 SETHEIGHT(MLVL,15,300) \
 MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 
 #define M_CARROT_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -298,8 +291,7 @@ SETHEIGHT(MLVL,30,1220) \
 NATURAL_DEF(WPN_CRUSH, ARM) \
 MSET_ABILITY(15,15,15,15,10,15,0,15) \
 MSET_WEAPON(8,10,6,6,6,0)   \
-MSET_SPELL(6,6,4,6,4,10,5,6,5,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(6,6,4,6,4,10,5,6,5,6,6)
 
 #define M_VINE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_VINE (MLVL,GENDER,ARM_CLOTHES)
@@ -342,8 +334,7 @@ SETWEIGHT(MLVL,3,238) \
 SETHEIGHT(MLVL,30,220) \
 MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_BLUEBERRY_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_BLUEBERRY (MLVL,GENDER,ARM_CLOTHES)
@@ -388,8 +379,7 @@ exp 125
    NATURAL_DEF(WPN_CRUSH, ARM) \
    MSET_ABILITY(33,12,27,23,2,3,0,0) \
    MSET_WEAPON(6,6,6,6,26,6)           /* Natural attack */ \
-   MSET_SPELL(4,4,4,4,4,4,4,4,4,4,4) \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,4,4,4,4,4,4,4,4)
 
 
 #define M_TREE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -461,8 +451,7 @@ SETHEIGHT(MLVL,10,645) \
 MSET_ABILITY(10,10,15,15,15,15,0,20) \
 MSET_WEAPON(6,6,6,6,16,6) \
 MSET_SPELL(4,4,4,4,4,14,4,4,4,4,4) \
-dilcopy combat_mag@function("colourbeam","",0,2); \
-dilcopy regenerate@update ();
+dilcopy combat_mag@function("colourbeam","",0,2);
 
 
 #define M_LOSKA_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -508,8 +497,7 @@ SETWEIGHT(MLVL,6,530) \
 SETHEIGHT(MLVL,7,645) \
 MSET_ABILITY(21,12,20,25,12,0,10,0) \
 MSET_WEAPON(6,6,6,6,20,6) \
-MSET_SPELL(2,2,2,2,2,5,8,6,6,8,7) \
-dilcopy regenerate@update ();
+MSET_SPELL(2,2,2,2,2,5,8,6,6,8,7)
 
 
 #define M_CACTUS_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -554,8 +542,7 @@ SETWEIGHT(MLVL,3,238) \
 SETHEIGHT(MLVL,30,220) \
 MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 
 #define M_PUMPKIN_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -599,8 +586,7 @@ SETWEIGHT(MLVL,3,238) \
 SETHEIGHT(MLVL,30,220) \
 MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 
 #define M_BEAN_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -645,8 +631,7 @@ SETWEIGHT(MLVL,2,289) \
 SETHEIGHT(MLVL,22,189) \
 MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 
 #define M_STRAWBERRY_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -691,8 +676,7 @@ SETWEIGHT(MLVL,3,238) \
 SETHEIGHT(MLVL,30,220) \
 MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 
 #define M_POTATO_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -737,8 +721,7 @@ SETWEIGHT(MLVL,1,225) \
 SETHEIGHT(MLVL,20,115) \
 MSET_ABILITY(20,20,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 
 #define M_TOMATO_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -783,8 +766,7 @@ SETWEIGHT(MLVL,1,225) \
 SETHEIGHT(MLVL,35,225) \
 MSET_ABILITY(20,15,25,20,10,5,5,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 
 #define M_CABBAGE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -829,8 +811,7 @@ SETWEIGHT(MLVL,2,118) \
 SETHEIGHT(MLVL,21,185) \
 MSET_ABILITY(20,15,25,20,10,5,5,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 
 #define M_LETTUCE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -875,8 +856,7 @@ SETWEIGHT(MLVL,1,100) \
 SETHEIGHT(MLVL,8,200) \
 MSET_ABILITY(20,15,25,20,10,5,5,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 
 #define M_WHEAT_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -921,8 +901,7 @@ SETWEIGHT(MLVL,1,200) \
 SETHEIGHT(MLVL,15,428) \
 MSET_ABILITY(20,15,25,20,10,5,5,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 
 #define M_CORN_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -969,9 +948,7 @@ MSET_ABILITY(20,15,25,20,10,5,5,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
 MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
 dilcopy combat_mag@function("spray of acid", "", 60, 2); \
-exp 110 \
-dilcopy regenerate@update ();
-
+exp 110
 
 #define M_ACIDPLANT_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_ACIDPLANT(MLVL,GENDER,ARM_CLOTHES)
@@ -1016,8 +993,7 @@ SETWEIGHT(MLVL,1,75) \
 SETHEIGHT(MLVL,20,300) \
 MSET_ABILITY(10,20,10,10,20,10,10,10) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(6,6,4,5,5,5,5,5,6,4,4) \
-dilcopy regenerate@update ();
+MSET_SPELL(6,6,4,5,5,5,5,5,6,4,4)
 
 #define M_BEGONIA_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_BEGONIA (MLVL,GENDER,ARM_CLOTHES)
@@ -1060,8 +1036,7 @@ SETHEIGHT(MLVL,30,1220) \
 NATURAL_DEF(WPN_CRUSH, ARM) \
 MSET_ABILITY(15,10,10,15,10,15,10,10) \
 MSET_WEAPON(8,10,6,6,6,0)   \
-MSET_SPELL(6,6,4,6,4,10,5,6,5,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(6,6,4,6,4,10,5,6,5,6,6)
 
 #define M_IVY_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_IVY (MLVL,GENDER,ARM_CLOTHES)
@@ -1105,8 +1080,7 @@ SETWEIGHT(MLVL,1,75) \
 SETHEIGHT(MLVL,20,300) \
 MSET_ABILITY(10,10,20,20,20,0,10,10) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(6,6,4,5,5,5,5,5,6,4,4) \
-dilcopy regenerate@update ();
+MSET_SPELL(6,6,4,5,5,5,5,5,6,4,4)
 
 #define M_PUFFER_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_PUFFER (MLVL,GENDER,ARM_CLOTHES)
@@ -1148,8 +1122,7 @@ exp 125
    NATURAL_DEF(WPN_CRUSH, ARM) \
    MSET_ABILITY(28,7,22,18,2,3,10,10) \
    MSET_WEAPON(6,6,6,6,26,6)           /* Natural attack */ \
-   MSET_SPELL(4,4,4,4,4,4,4,4,4,4,4) \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,4,4,4,4,4,4,4,4)
 
 
 #define M_MAGNOLIA_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -1218,8 +1191,7 @@ SETWEIGHT(MLVL,4,300) \
 SETHEIGHT(MLVL,55,450) \
 MSET_ABILITY(10,20,20,20,20,0,10,0) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(6,4,4,5,5,5,5,5,6,6,4) \
-dilcopy regenerate@update ();
+MSET_SPELL(6,4,4,5,5,5,5,5,6,6,4)
 
 
 #define M_THORNBUSH_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -1264,8 +1236,7 @@ SETHEIGHT(MLVL,30,1220) \
 NATURAL_DEF(WPN_CRUSH, ARM) \
 MSET_ABILITY(15,15,15,15,10,15,15,0) \
 MSET_WEAPON(8,10,6,6,6,0)   \
-MSET_SPELL(6,6,4,6,4,10,5,6,5,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(6,6,4,6,4,10,5,6,5,6,6)
 
 #define M_ROSEVINE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_ROSEVINE (MLVL,GENDER,ARM_CLOTHES)

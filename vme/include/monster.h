@@ -16,8 +16,8 @@
    MSET_ABILITY(30,25,2,27,10,3,0,3) \
    MSET_WEAPON(22,25,20,0,20,0) \
    MSET_SPELL(1,1,1,0,1,1,1,1,1,2,3) \
-   romflags {CHAR_DETECT_INVISIBLE} \
-dilcopy regenerate@update ();
+   romflags {CHAR_DETECT_INVISIBLE}
+
 #define M_CREEPER_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_CREEPER(MLVL,GENDER,ARM_LEATHER)
 
@@ -69,8 +69,7 @@ SETWEIGHT(MLVL,1,500) \
 SETHEIGHT(MLVL,18,240) \
 MSET_ABILITY(17,17,19,10,12,9,8,8) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_OSTRICH_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_OSTRICH(MLVL,GENDER,ARM_LEATHER)
@@ -116,8 +115,7 @@ SETWEIGHT(MLVL,1,3) \
 SETHEIGHT(MLVL,6,30) \
 MSET_ABILITY(17,17,19,10,12,9,8,8) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_BEE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_BEE(MLVL,GENDER,ARM_LEATHER)
@@ -163,8 +161,7 @@ SETWEIGHT(MLVL,1,30) \
 SETHEIGHT(MLVL,18,60) \
 MSET_ABILITY(17,17,19,10,12,9,8,8) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_BEETLE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_BEETLE(MLVL,GENDER,ARM_LEATHER)
@@ -212,7 +209,6 @@ MSET_WEAPON(10,10,10,10,10,10) \
 MSET_SPELL(4,4,4,4,3,3,4,4,3,3,4) \
 flags {UNIT_FL_NO_TELEPORT} \
 romflags {CHAR_DETECT_INVISIBLE} \
-dilcopy regenerate@update ();  \
 dilcopy aggressive@function(0, -1, 0, 0, 3, 30, 0, "ANY", \
                        {"$1n attacks $3n!", "$1n attacks you!"});
 
@@ -255,8 +251,7 @@ exp 125
    SETHEIGHT(MLVL,30,600) \
    MSET_ABILITY(17,17,19,10,12,9,8,8) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define BASE_DINOSAUR_BITE(MLVL,GENDER,ARM) \
    BASE_DINOSAUR(MLVL,GENDER,ARM)
@@ -355,9 +350,8 @@ dilcopy regenerate@update ();
    alignment 0  \
    MSET_ABILITY(15,25,30,20,10,0,0,0) \
    MSET_WEAPON(10,10,10,10,25,10) \
-   MSET_SPELL(2,3,2,2,3,2,2,2,2,3,2) \
-dilcopy regenerate@update ();
-
+   MSET_SPELL(2,3,2,2,3,2,2,2,2,3,2)
+   
 #define M_LEOPARD_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_LEOPARD(MLVL,GENDER,ARM_HLEATHER)
 
@@ -403,9 +397,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,65,250) \
    MSET_ABILITY(5,5,10,10,15,15,20,20) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
-
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_TRIPHID_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_TRIPHID(MLVL,GENDER,ARM_CLOTHES)
@@ -446,8 +438,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,7,30) \
    MSET_ABILITY(5,5,10,10,15,15,20,20) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 
 #define M_HAMSTER_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -497,9 +488,7 @@ dilcopy regenerate@update ();
    alignment -200 \
    MSET_ABILITY(20,20,20,20,20,0,0,0) \
    MSET_WEAPON( 10, 10, 10, 10, 20, 10 ) \
-   MSET_SPELL( 10, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 ) \
-dilcopy regenerate@update ();
-
+   MSET_SPELL( 10, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 )
 
 #define M_MOOSE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_MOOSE(MLVL,GENDER,ARM_CLOTHES)
@@ -543,8 +532,7 @@ dilcopy regenerate@update ();
    alignment 500  \
    MSET_ABILITY(17,15,15,13,14,12,7,7) \
    MSET_WEAPON(6,7,8,7,7,6) \
-   MSET_SPELL(7,5,6,5,5,6,5,5,5,5,5) \
-dilcopy regenerate@update ();
+   MSET_SPELL(7,5,6,5,5,6,5,5,5,5,5)
 
 #define M_SLOTH_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_SLOTH(MLVL,GENDER,ARM_HLEATHER)
@@ -591,8 +579,7 @@ dilcopy regenerate@update ();
    alignment 0  \
    MSET_ABILITY(25,20,20,25,10,0,0,0) \
    MSET_WEAPON(10,10,10,10,25,10) \
-   MSET_SPELL(2,3,2,2,3,2,2,2,2,3,2)  \
-dilcopy regenerate@update ();
+   MSET_SPELL(2,3,2,2,3,2,2,2,2,3,2)
 
 #define M_LION_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_LION(MLVL,GENDER,ARM_HLEATHER)
@@ -638,8 +625,7 @@ dilcopy regenerate@update ();
    SETWEIGHT(MLVL,1,2) \
    SETHEIGHT(MLVL,2,15) \
    MSET_ABILITY(20,50,10,19,1,0,0,0)  \
-   MSET_WEAPON(20,20,20,20,10,10) \
-dilcopy regenerate@update ();
+   MSET_WEAPON(20,20,20,20,10,10)
 
 #define M_SMALL_INSECT_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_SMALL_INSECT(MLVL,GENDER,ARM_LEATHER)
@@ -683,8 +669,7 @@ exp 125
    SETWEIGHT(MLVL,1,50) \
    SETHEIGHT(MLVL,10,115) \
    MSET_ABILITY(20,50,10,19,1,0,0,0)  \
-   MSET_WEAPON(20,20,20,20,10,10) \
-dilcopy regenerate@update ();
+   MSET_WEAPON(20,20,20,20,10,10)
 
 #define M_DRAGONFLY_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_DRAGONFLY(MLVL,GENDER,ARM_LEATHER)
@@ -708,22 +693,21 @@ dilcopy regenerate@update ();
 
 /* ALLIGATOR   */
 #define BASE_ALLIGATOR(MLVL,GENDER,ARM) \
-race RACE_ALLIGATOR \
-level MLVL \
-sex GENDER \
-NATURAL_DEF(WPN_BITE,ARM) \
-alignment -100 \
-SETWEIGHT(MLVL,15,700) \
-SETHEIGHT(MLVL,30,360) \
-MSET_ABILITY(30,30,20,15,5,0,0,0) \
-MSET_WEAPON(20,20,20,20,10,10)    \
-MSET_SPELL(0,0,0,0,0,0,0,0,0,0,0) \
-flags {UNIT_FL_NO_TELEPORT} \
-romflags {CHAR_DETECT_INVISIBLE} \
-dilcopy aggressive@function(0, -1, 0, 0, 3, 70, 0, "ANY", \
-    {"$1n attacks $3n!", "$1n attacks you!"}); \
-exp 110  \
-dilcopy regenerate@update ();
+   race RACE_ALLIGATOR \
+   level MLVL \
+   sex GENDER \
+   NATURAL_DEF(WPN_BITE,ARM) \
+   alignment -100 \
+   SETWEIGHT(MLVL,15,700) \
+   SETHEIGHT(MLVL,30,360) \
+   MSET_ABILITY(30,30,20,15,5,0,0,0) \
+   MSET_WEAPON(20,20,20,20,10,10)    \
+   MSET_SPELL(0,0,0,0,0,0,0,0,0,0,0) \
+   flags {UNIT_FL_NO_TELEPORT} \
+   romflags {CHAR_DETECT_INVISIBLE} \
+   dilcopy aggressive@function(0, -1, 0, 0, 3, 70, 0, "ANY", \
+      {"$1n attacks $3n!", "$1n attacks you!"}); \
+   exp 110
 
 #define M_ALLIGATOR_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_ALLIGATOR(MLVL,GENDER,ARM_CHAIN)
@@ -770,8 +754,7 @@ flags {UNIT_FL_NO_TELEPORT} \
 romflags {CHAR_DETECT_INVISIBLE} \
 dilcopy aggressive@function(0, -1, 0, 0, 3, 70, 0, "ANY", \
              {"$1n attacks $3n!", "$1n attacks you!"}); \
-exp 110 \
-dilcopy regenerate@update ();
+exp 110
 
 #define M_CROCODILE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_CROCODILE(MLVL,GENDER,ARM_CHAIN)
@@ -813,8 +796,7 @@ exp 125
    SETHEIGHT(MLVL,15,48) \
    MSET_ABILITY(20,20,20,20,20,0,0,0) \
    MSET_WEAPON(5,5,5,5,20,5)      \
-   MSET_SPELL(5,5,5,5,5,5,5,5,5,5,5) \
-dilcopy regenerate@update ();
+   MSET_SPELL(5,5,5,5,5,5,5,5,5,5,5)
 
 #define M_PIGEON_TINY(MLVL,GENDER) /* level 1 to 25 */ \
    BASE_PIGEON(MLVL,GENDER,ARM_CLOTHES)
@@ -858,8 +840,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,30,120) \
    MSET_ABILITY(20,20,20,20,20,0,0,0) \
    MSET_WEAPON(5,5,5,5,20,5)      \
-   MSET_SPELL(5,5,5,5,5,5,5,5,5,5,5) \
-dilcopy regenerate@update ();
+   MSET_SPELL(5,5,5,5,5,5,5,5,5,5,5)
 
 #define M_PEACOCK_TINY(MLVL,GENDER) /* level 1 to 25 */ \
    BASE_PEACOCK(MLVL,GENDER,ARM_CLOTHES)
@@ -905,8 +886,7 @@ MSET_ABILITY(25,35,10,20,10,0,0,0) \
 MSET_WEAPON(10,10,10,10,10,10) \
 MSET_SPELL(4,4,4,4,3,3,4,4,3,3,4) \
 flags {UNIT_FL_NO_TELEPORT} \
-romflags {CHAR_DETECT_INVISIBLE} \
-dilcopy regenerate@update ();
+romflags {CHAR_DETECT_INVISIBLE}
 
 #define M_LEECH_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_LEECH(MLVL,GENDER,ARM_LEATHER)
@@ -952,8 +932,7 @@ MSET_ABILITY(25,35,10,20,10,0,0,0) \
 MSET_WEAPON(10,10,10,10,10,10) \
 MSET_SPELL(4,4,3,4,3,4,4,4,3,3,4) \
 flags {UNIT_FL_NO_TELEPORT} \
-romflags {CHAR_DETECT_INVISIBLE} \
-dilcopy regenerate@update ();
+romflags {CHAR_DETECT_INVISIBLE}
 
 #define M_WEREWOLF_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_WEREWOLF(MLVL,GENDER,ARM_LEATHER)
@@ -997,8 +976,7 @@ SETWEIGHT(MLVL,1,50) \
 SETHEIGHT(MLVL,7,110) \
 MSET_ABILITY(25,35,10,20,10,0,0,0) \
 MSET_WEAPON(10,10,10,10,10,10) \
-MSET_SPELL(4,4,3,4,3,4,4,4,3,3,4) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,3,4,3,4,4,4,3,3,4)
 
 #define M_CHAMELEON_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_CHAMELEON(MLVL,GENDER,ARM_LEATHER)
@@ -1044,8 +1022,7 @@ MSET_ABILITY(25,35,10,20,10,0,0,0) \
 MSET_WEAPON(10,10,10,10,10,10) \
 MSET_SPELL(3,4,3,4,4,4,4,4,3,3,4) \
 dilcopy comb_poison@function("&c+rYou feel fire burning within your veins!&[default]", \
-   "&c+c$1n strikes $3n with $1s stinger!&[default]"); \
-dilcopy regenerate@update ();
+   "&c+c$1n strikes $3n with $1s stinger!&[default]");
 
 #define M_SCORPION_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_SCORPION(MLVL,GENDER,ARM_LEATHER)
@@ -1088,8 +1065,7 @@ exp 125
    MSET_ABILITY(20,20,20,20,20,0,0,0) \
    MSET_WEAPON(5,5,5,5,25,10) \
    MSET_SPELL(3,5,3,4,5,4,4,3,4,7,3) \
-   romflags {CHAR_HIDE, CHAR_SNEAK} \
-dilcopy regenerate@update ();
+   romflags {CHAR_HIDE, CHAR_SNEAK}
 
 #define M_TIGER_TINY(MLVL,GENDER) /* level 1 to 25 */ \
    BASE_TIGER(MLVL,GENDER,ARM_CLOTHES)
@@ -1140,8 +1116,7 @@ dilcopy regenerate@update ();
    dilcopy aggressive@function(0, -1, 0, 1, 3, 48, 2, "ANY", \
    {"$1n screeches loudly and attacks $3n!", \
    "$1n screeches loudly and attacks you!"}); \
-   exp 120 \
-dilcopy regenerate@update ();
+   exp 120
 
 #define M_MANTIS_TINY(MLVL,GENDER) /* level 1 to 25 */ \
    BASE_MANTIS(MLVL,GENDER,ARM_CLOTHES)
@@ -1184,8 +1159,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,30,150) \
    MSET_ABILITY(20,20,20,20,20,0,0,0) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_MONKEY_TINY(MLVL,GENDER) /* level 1 to 25 */ \
    BASE_MONKEY(MLVL,GENDER,ARM_CLOTHES)
@@ -1230,8 +1204,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,98,300) \
    MSET_ABILITY(20,20,20,20,20,0,0,0) \
    MSET_WEAPON(6,6,6,6,15,6)          /* Natural attack */ \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  /* Resistances    */  \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  /* Resistances    */
 
 #define M_LLAMA_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_LLAMA(MLVL,GENDER,ARM_LEATHER)
@@ -1263,8 +1236,7 @@ dilcopy regenerate@update ();
    alignment -300  \
    MSET_ABILITY(20,20,20,20,20,0,0,0) \
    MSET_WEAPON(6,6,6,6,15,6)          \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_BAT_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_BAT(MLVL,GENDER,ARM_HLEATHER)
@@ -1311,8 +1283,7 @@ dilcopy regenerate@update ();
    alignment 750  \
    MSET_ABILITY(20,20,20,20,20,0,0,0) \
    MSET_WEAPON(10,10,10,10,20,5)      \
-   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5)  \
-dilcopy regenerate@update ();
+   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5)
 
 #define M_CHIPMUNK_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_CHIPMUNK(MLVL,GENDER,ARM_HLEATHER)
@@ -1359,8 +1330,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,45,150) \
    MSET_ABILITY(15,20,15,20,10,10,10,0) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_GOOSE_TINY(MLVL,GENDER) /* level 1 to 25 */ \
    BASE_GOOSE(MLVL,GENDER,ARM_CLOTHES)
@@ -1408,10 +1378,7 @@ dilcopy regenerate@update ();
    alignment -750 /* Neutral evil */ \
    MSET_ABILITY(20,20,20,20,20,0,0,0) \
    MSET_WEAPON(10,10,10,10,20,5)      \
-   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5)  \
-dilcopy regenerate@update ();
-
-
+   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5)
 
 #define M_MOLE_TINY(MLVL,GENDER) /*level 1 to 25 */\
    BASE_MOLE(MLVL,GENDER,ARM_CLOTHES)
@@ -1458,9 +1425,7 @@ dilcopy regenerate@update ();
    alignment -750 /* Neutral evil */ \
    MSET_ABILITY(20,25,15,20,10,10,0,0) \
    MSET_WEAPON(10,10,10,10,20,5)      \
-   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5)  \
-dilcopy regenerate@update ();
-
+   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5)
 
 #define M_BEAVER_TINY(MLVL,GENDER) /*level 1 to 25 */\
    BASE_BEAVER(MLVL,GENDER,ARM_CLOTHES)
@@ -1507,8 +1472,7 @@ SETWEIGHT(MLVL,2,500) \
 SETHEIGHT(MLVL,20,180) \
 MSET_ABILITY(30,10,20,20,20,0,0,0) \
 MSET_WEAPON(6,6,6,6,26,6) \
-MSET_SPELL(4,4,4,4,4,4,4,4,4,4,4) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,4,4,4,4,4,4,4,4)
 
 #define M_TURTLE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_TURTLE(MLVL,GENDER,ARM_CLOTHES)
@@ -1554,9 +1518,7 @@ exp 125
    alignment -200 \
    MSET_ABILITY(20,20,20,20,5,15,0,0)  \
    MSET_WEAPON(6,6,6,6,15,6)\
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
-
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_COW_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_COW(MLVL,GENDER,ARM_LEATHER)
@@ -1606,9 +1568,7 @@ dilcopy regenerate@update ();
    alignment -200 \
    MSET_ABILITY(18,25,15,20,22,0,0,0) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
-
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_DEER_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_DEER(MLVL,GENDER,ARM_CLOTHES)
@@ -1656,9 +1616,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,66,180) \
    MSET_ABILITY(25,17,18,20,10,5,5,0) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
-
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_PIG_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_PIG(MLVL,GENDER,ARM_CLOTHES)
@@ -1706,9 +1664,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,7,30) \
    MSET_ABILITY(5,5,10,10,15,15,20,20) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
-
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_MOUSE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_MOUSE(MLVL,GENDER,ARM_CLOTHES)
@@ -1755,8 +1711,7 @@ dilcopy regenerate@update ();
    MSET_ABILITY(6,14,10,10,10,20,15,15)\
    MSET_WEAPON(5,5,5,5,20,5)\
    MSET_SPELL(18,2,2,2,2,2,19,2,2,2,2) \
-   romflags {CHAR_DETECT_INVISIBLE}  \
-dilcopy regenerate@update ();
+   romflags {CHAR_DETECT_INVISIBLE}
 
 
 #define BASE_SNAKE_POISON(MLVL,GENDER,ARM) \
@@ -1825,8 +1780,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,2,90) \
    MSET_ABILITY(15,20,15,20,10,10,10,0) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_BIRD_TINY(MLVL,GENDER) /* level 1 to 25 */ \
    BASE_BIRD(MLVL,GENDER,ARM_CLOTHES)
@@ -1872,8 +1826,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,30,90) \
    MSET_ABILITY(15,20,15,20,10,10,10,0) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_SEAGULL_TINY(MLVL,GENDER) /* level 1 to 25 */ \
    BASE_SEAGULL(MLVL,GENDER,ARM_CLOTHES)
@@ -1918,8 +1871,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,45,120) \
    MSET_ABILITY(15,20,15,20,10,10,10,0) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_VULTURE_TINY(MLVL,GENDER) /* level 1 to 25 */ \
    BASE_VULTURE(MLVL,GENDER,ARM_CLOTHES)
@@ -1966,8 +1918,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,15,120) \
    MSET_ABILITY(15,20,15,20,10,10,10,0) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_DUCK_TINY(MLVL,GENDER) /* level 1 to 25 */ \
    BASE_DUCK(MLVL,GENDER,ARM_CLOTHES)
@@ -2014,8 +1965,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,45,120) \
    MSET_ABILITY(35,30,20,10,5,0,0,0) \
    MSET_WEAPON(5,5,5,5,50,5)      \
-   MSET_SPELL(2,2,2,10,2,2,2,2,1,0,0) \
-dilcopy regenerate@update ();
+   MSET_SPELL(2,2,2,10,2,2,2,2,1,0,0)
 
 #define M_EAGLE_TINY(MLVL,GENDER) /* level 1 to 25 */ \
    BASE_EAGLE(MLVL,GENDER,ARM_CLOTHES)
@@ -2059,8 +2009,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,30,120) \
    MSET_ABILITY(20,20,20,20,20,0,0,0) \
    MSET_WEAPON(5,5,5,5,20,5)      \
-   MSET_SPELL(5,5,5,5,5,5,5,5,5,5,5)  \
-dilcopy regenerate@update ();
+   MSET_SPELL(5,5,5,5,5,5,5,5,5,5,5)
 
 #define M_TURKEY_TINY(MLVL,GENDER) /* level 1 to 25 */ \
    BASE_TURKEY(MLVL,GENDER,ARM_CLOTHES)
@@ -2104,8 +2053,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,45,360) \
    MSET_ABILITY(15,20,15,20,10,10,10,0) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_SWAN_TINY(MLVL,GENDER) /* level 1 to 25 */ \
    BASE_SWAN(MLVL,GENDER,ARM_CLOTHES)
@@ -2156,9 +2104,7 @@ dilcopy regenerate@update ();
    MSET_WEAPON(6,6,6,6,16,6)           \
    MSET_SPELL(4,4,4,4,4,4,6,6,6,6,6)   \
    dilcopy aggressive@function(0, -1, 0, 0, 3, 100, 0, "ANY", \
-                            {"$1n attacks!", "$1n attacks you!"}); \
-dilcopy regenerate@update ();							
-
+                            {"$1n attacks!", "$1n attacks you!"});
 
 #define M_WOLF_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_WOLF(MLVL,GENDER,ARM_LEATHER)
@@ -2207,9 +2153,7 @@ dilcopy regenerate@update ();
    MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  /* Resistances    */ \
    dilcopy aggressive@function(0, -1, 0, 0, 3, 100, 0, "ANY", \
                             {"$1n attacks!", "$1n attacks you!"}); \
-   exp 115 \
-dilcopy regenerate@update ();
-
+   exp 115
 
 #define M_BEAR_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_BEAR(MLVL,GENDER,ARM_LEATHER)
@@ -2257,8 +2201,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,15,360) \
    MSET_ABILITY(15,20,15,20,10,10,10,0) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define M_DOG_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_DOG(MLVL,GENDER,ARM_LEATHER)
@@ -2305,8 +2248,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,15,201) \
    MSET_ABILITY(30, 40, 10, 10, 2, 8, 0, 0) \
    MSET_WEAPON( 6, 6, 7, 5, 60, 6 ) \
-   MSET_SPELL( 0, 0, 0, 0, 0, 0, 4, 3, 3, 0, 0 ) \
-dilcopy regenerate@update ();
+   MSET_SPELL( 0, 0, 0, 0, 0, 0, 4, 3, 3, 0, 0 )
 
 #define M_FOX_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_FOX(MLVL,GENDER,ARM_CLOTHES)
@@ -2353,8 +2295,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,15,185) \
    MSET_ABILITY(20,50,10,10,2,8,0,0)  \
    MSET_WEAPON(6,6,7,5,60,6)          /* 90%, 60% Natural */ \
-   MSET_SPELL(0,0,0,0,0,0,4,3,3,0,0)  /* 10%, resistances */ \
-dilcopy regenerate@update ();
+   MSET_SPELL(0,0,0,0,0,0,4,3,3,0,0)  /* 10%, resistances */
 
 #define M_CAT_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_CAT(MLVL,GENDER,ARM_CLOTHES)
@@ -2401,8 +2342,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,75,390) \
    MSET_ABILITY(25,25,25,25,0,0,0,0) \
    MSET_WEAPON(6,6,6,6,15,6)          /* Natural attack */ \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  /* Resistances    */  \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  /* Resistances    */
 
 #define M_ELEPHANT_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_ELEPHANT(MLVL,GENDER,ARM_LEATHER)
@@ -2434,8 +2374,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,75,360) \
    MSET_ABILITY(22,21,17,25,15,0,0,0) \
    MSET_WEAPON(6,6,6,6,15,6)          /* Natural attack */ \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  /* Resistances    */  \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  /* Resistances    */
 
 #define M_HORSE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_HORSE(MLVL,GENDER,ARM_LEATHER)
@@ -2467,8 +2406,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,75,360) \
    MSET_ABILITY(22,21,17,25,15,0,0,0) \
    MSET_WEAPON(6,6,6,6,15,6)          /* Natural attack */ \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  /* Resistances    */  \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  /* Resistances    */
 
 #define M_RHINO_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_RHINO(MLVL,GENDER,ARM_LEATHER)
@@ -2500,8 +2438,7 @@ dilcopy regenerate@update ();
    MSET_WEAPON(6,6,6,6,6,6)           /* Not a fighter! :) */ \
    MSET_SPELL(4,6,6,6,6,6,6,6,6,6,6)  /* Resistances       */ \
    SETWEIGHT(MLVL,8,45) \
-   SETHEIGHT(MLVL,15,120) \
-dilcopy regenerate@update ();
+   SETHEIGHT(MLVL,15,120)
 
 #define M_RABBIT_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_RABBIT(MLVL,GENDER,ARM_LEATHER)
@@ -2548,8 +2485,7 @@ dilcopy regenerate@update ();
    alignment 200 \
    MSET_ABILITY(5,5,10,10,15,15,15,25)      \
    MSET_WEAPON(8,8,8,8,8,0)          \
-   MSET_SPELL(4,4,4,20,4,4,4,4,4,4,4) \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,20,4,4,4,4,4,4,4)
 
 #define M_BUTTERFLY_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_BUTTERFLY(MLVL,GENDER,ARM_CLOTHES)
@@ -2597,9 +2533,7 @@ dilcopy regenerate@update ();
    MSET_SPELL(4,4,4,6,6,6,6,6,6,6,6)  /* Resistances    */ \
    dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*60, 0, "ANY", \
                    {"$1n beserks and attacks $3n without notice!", \
-				   "$1n beserks and attacks you!"}); \
-dilcopy regenerate@update ();
-
+				   "$1n beserks and attacks you!"});
 
 #define M_BOAR_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_BOAR(MLVL,GENDER,ARM_LEATHER)
@@ -2648,8 +2582,7 @@ dilcopy regenerate@update ();
    MSET_ABILITY(15,15,15,15,10,30,0,0) /* Is that a skunk? */ \
    MSET_WEAPON(6,6,6,6,10,6)          /* Natural attack */ \
    MSET_SPELL(4,4,4,6,6,6,6,6,6,6,6)  /* Resistances    */ \
-   dilcopy smelldil@hobgob(); \
-dilcopy regenerate@update ();
+   dilcopy smelldil@hobgob();
 
 
 #define M_SKUNK_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -2697,8 +2630,7 @@ dilcopy regenerate@update ();
    alignment -750 /* Neutral evil */ \
    MSET_ABILITY(20,25,15,20,10,10,0,0) \
    MSET_WEAPON(10,10,10,10,20,5)      \
-   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5) \
-dilcopy regenerate@update ();
+   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5)
 
 #define M_BADGER_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_BADGER(MLVL,GENDER,ARM_HLEATHER)
@@ -2746,9 +2678,7 @@ dilcopy regenerate@update ();
    MSET_ABILITY(20,25,15,20,10,10,0,0) \
    MSET_WEAPON(10,10,10,10,20,5)      \
    MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5)  \
-   dilcopy combat_mag@function("plague", "", 0, 2); \
-dilcopy regenerate@update ();
-
+   dilcopy combat_mag@function("plague", "", 0, 2);
 
 #define M_RAT_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_RAT(MLVL,GENDER,ARM_CLOTHES)
@@ -2795,8 +2725,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,7,240) \
    MSET_ABILITY(5,5,10,10,15,15,20,20) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)
 
 #define BASE_SPIDER_WEB(MLVL, GENDER, ARM)  \
    BASE_SPIDER(MLVL,GENDER,ARM) \
@@ -2877,9 +2806,7 @@ dilcopy regenerate@update ();
    alignment -100      /* Neutral        */ \
    MSET_ABILITY(15,15,15,15,10,30,0,0) /* Is that a COCKROACH? */ \
    MSET_WEAPON(6,6,6,6,10,6)          /* Natural attack */ \
-   MSET_SPELL(4,4,4,6,6,6,6,6,6,6,6)  /* Resistances    */ \
-dilcopy regenerate@update ();
-
+   MSET_SPELL(4,4,4,6,6,6,6,6,6,6,6)  /* Resistances    */
 
 #define M_COCKROACH_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_COCKROACH(MLVL,GENDER,ARM_CLOTHES)
@@ -2924,8 +2851,7 @@ NATURAL_DEF(WPN_BITE, ARM) \
 alignment 0 \
 MSET_ABILITY(20,18,10,10,15,15,12,0) \
 MSET_WEAPON(8,8,8,8,10,8) \
-MSET_SPELL(4,4,4,10,4,4,4,4,4,4,4) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,10,4,4,4,4,4,4,4)
 
 #define M_WORM_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_WORM(MLVL,GENDER,ARM_CLOTHES)
@@ -2970,8 +2896,7 @@ exp 125
    SETHEIGHT(MLVL,20,60) \
    MSET_ABILITY(10,10,10,10,20,20,10,10) \
    MSET_WEAPON(6,6,6,6,6,6) \
-   MSET_SPELL(4,6,6,6,6,6,6,6,6,6,6) \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,6,6,6,6,6,6,6,6,6,6)
 
 #define M_FERRET_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_FERRET(MLVL,GENDER,ARM_CLOTHES)
@@ -3016,9 +2941,7 @@ dilcopy regenerate@update ();
    alignment 0 \
    MSET_ABILITY(15,20,15,15,20,10,0,5) \
    MSET_WEAPON(5,5,5,5,35,5)  \
-   MSET_SPELL(5,0,0,0,0,5,6,6,6,6,6) \
-dilcopy regenerate@update ();
-
+   MSET_SPELL(5,0,0,0,0,5,6,6,6,6,6)
 
 #define M_WERERAT_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_WERERAT(MLVL,GENDER,ARM_CLOTHES)
@@ -3063,8 +2986,7 @@ SETWEIGHT(MLVL,1,125) \
 SETHEIGHT(MLVL,5,150) \
 MSET_ABILITY(10,20,10,20,15,15,10,0) \
 MSET_WEAPON(6,6,6,6,26,6) \
-MSET_SPELL(4,4,4,4,4,4,4,4,4,4,4) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,4,4,4,4,4,4,4,4)
 
 #define M_FROG_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_FROG(MLVL,GENDER,ARM_CLOTHES)
@@ -3108,8 +3030,7 @@ SETWEIGHT(MLVL,1,200) \
 SETHEIGHT(MLVL,7,60) \
 MSET_ABILITY(5,35,15,10,20,15,0,0) \
 MSET_WEAPON(6,6,6,6,26,6) \
-MSET_SPELL(4,4,4,4,4,4,4,4,4,4,4) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,4,4,4,4,4,4,4,4)
 
 #define M_TOAD_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_TOAD(MLVL,GENDER,ARM_CLOTHES)
@@ -3153,8 +3074,7 @@ exp 125
    SETHEIGHT(MLVL,75,360) \
    MSET_ABILITY(19,15,22,24,12,8,0,0) \
    MSET_WEAPON(6,6,6,6,20,6) \
-   MSET_SPELL(2,2,2,2,2,6,8,6,6,8,6) \
-dilcopy regenerate@update ();
+   MSET_SPELL(2,2,2,2,2,6,8,6,6,8,6)
 
 #define M_CAMEL_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_CAMEL(MLVL,GENDER,ARM_LEATHER)
@@ -3186,8 +3106,7 @@ SETWEIGHT(MLVL,3,500) \
 SETHEIGHT(MLVL,30,360) \
 MSET_ABILITY(5,35,15,20,25,0,0,0) \
 MSET_WEAPON(6,6,6,6,26,6) \
-MSET_SPELL(4,4,4,4,4,4,4,4,4,4,4) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,4,4,4,4,4,4,4,4)
 
 #define M_OWL_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_OWL(MLVL,GENDER,ARM_CLOTHES)
@@ -3233,8 +3152,7 @@ SETWEIGHT(MLVL,3,500) \
 SETHEIGHT(MLVL,30,360) \
 MSET_ABILITY(10,20,10,20,10,10,10,10) \
 MSET_WEAPON(6,6,6,6,26,6) \
-MSET_SPELL(4,4,4,4,4,4,4,4,4,4,4) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,4,4,4,4,4,4,4,4)
 
 #define M_LIZARD_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_LIZARD(MLVL,GENDER,ARM_CHAIN)
@@ -3280,8 +3198,7 @@ exp 125
    SETHEIGHT(MLVL,25,240) \
    MSET_ABILITY(8,27,15,30,10,10,0,0) \
    MSET_WEAPON(6,6,6,6,6,6) \
-   MSET_SPELL(4,6,6,6,6,6,6,6,6,6,6) \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,6,6,6,6,6,6,6,6,6,6)
 
 #define M_WEASLE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_WEASLE(MLVL,GENDER,ARM_CLOTHES)
@@ -3326,8 +3243,7 @@ dilcopy regenerate@update ();
    alignment 0  \
    MSET_ABILITY(20,20,20,20,20,0,0,0) \
    MSET_WEAPON(10,10,10,10,20,5)      \
-   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5) \
-dilcopy regenerate@update ();
+   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5)
 
 #define M_MOUNTAIN_LION_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_MOUNTAIN_LION(MLVL,GENDER,ARM_HLEATHER)
@@ -3374,8 +3290,7 @@ dilcopy regenerate@update ();
    alignment 750  \
    MSET_ABILITY(20,20,20,20,20,0,0,0) \
    MSET_WEAPON(10,10,10,10,20,5)      \
-   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5) \
-dilcopy regenerate@update ();
+   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5)
 
 #define M_SQUIRREL_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_SQUIRREL(MLVL,GENDER,ARM_HLEATHER)
@@ -3422,8 +3337,7 @@ dilcopy regenerate@update ();
    alignment 750 /* there cute little bandits*/ \
    MSET_ABILITY(20,25,15,20,10,10,0,0) \
    MSET_WEAPON(10,10,10,10,20,5)      \
-   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5) \
-dilcopy regenerate@update ();
+   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5)
 
 #define M_RACCOON_TINY(MLVL,GENDER) /*level 1 to 25 */ \
    BASE_RACCOON(MLVL,GENDER,ARM_HLEATHER)
@@ -3472,8 +3386,7 @@ dilcopy regenerate@update ();
    alignment -200 \
    MSET_ABILITY(25,22,20,20,13,0,0,0) \
    MSET_WEAPON( 10, 10, 10, 10, 20, 10 ) \
-   MSET_SPELL( 10, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 ) \
-dilcopy regenerate@update ();
+   MSET_SPELL( 10, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 )
 
 
 #define M_ELK_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -3521,8 +3434,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,15,90) \
    MSET_ABILITY(20,20,20,20,20,0,0,0) \
    MSET_WEAPON(5,5,5,5,20,5)      \
-   MSET_SPELL(5,5,5,5,5,5,5,5,5,5,5) \
-dilcopy regenerate@update ();
+   MSET_SPELL(5,5,5,5,5,5,5,5,5,5,5)
 
 #define M_CHICKEN_TINY(MLVL,GENDER) /* level 1 to 25 */ \
    BASE_CHICKEN(MLVL,GENDER,ARM_CLOTHES)
@@ -3566,8 +3478,7 @@ dilcopy regenerate@update ();
    alignment 0       \
    MSET_ABILITY(20,22,20,20,18,0,0,0) /* Is that a SHEEP? */ \
    MSET_WEAPON(6,6,6,6,10,6)          /* Natural attack */ \
-   MSET_SPELL(4,4,4,6,6,6,6,6,6,6,6)  /* Resistances    */ \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,6,6,6,6,6,6,6,6)  /* Resistances    */
 
 
 #define M_SHEEP_TINY(MLVL,GENDER) /*level 1 to 25 */\
@@ -3615,9 +3526,7 @@ dilcopy regenerate@update ();
    alignment 0       \
    MSET_ABILITY(20,24,20,20,16,0,0,0) /* Is that a GOAT? */ \
    MSET_WEAPON(6,6,6,6,10,6)          /* Natural attack */ \
-   MSET_SPELL(4,4,4,6,6,6,6,6,6,6,6)  /* Resistances    */ \
-dilcopy regenerate@update ();
-
+   MSET_SPELL(4,4,4,6,6,6,6,6,6,6,6)  /* Resistances    */
 
 #define M_GOAT_TINY(MLVL,GENDER) /*level 1 to 25 */\
    BASE_GOAT(MLVL,GENDER,ARM_LEATHER)

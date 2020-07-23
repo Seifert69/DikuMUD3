@@ -632,6 +632,35 @@ int bread_affect(CByteBuffer *pBuf, class unit_data *u, ubit8 nVersion)
 
 class zone_type *unit_error_zone = NULL;
 
+
+/* After a unit has been read, this is an opportunity to do stuff on it
+ *
+ */
+void post_read_unit(class unit_data *u)
+{
+    // Add regenerate to NPCs
+    if (UNIT_TYPE(u) == UNIT_ST_NPC)
+    {
+        static struct diltemplate *regen = NULL;
+
+        if (regen == NULL)
+            regen = find_dil_template("regenerate@update");
+
+        if (regen)
+        {
+            struct dilprg *prg = dil_copy_template(regen, u, NULL);
+            prg->waitcmd = WAITCMD_MAXINST - 1;
+            dil_activate(prg);
+        }
+        else
+        {
+            slog(LOG_ALL, 0, "SERIOUS: Couldn't find NPC regenerate@update DIL.");
+        }
+    }
+
+}
+
+
 extern int memory_pc_alloc;
 extern int memory_npc_alloc;
 extern int memory_obj_alloc;
@@ -644,7 +673,7 @@ extern int memory_room_alloc;
  * whom is an error message to be printed when something goes wrong.
  */
 class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
-                    const char *whom, int stspec)
+                                  const char *whom, int stspec)
 {
     void *ptr;
     class unit_data *u;
@@ -709,17 +738,20 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
     if (pBuf->SkipString(&c))
         g_nCorrupt++;
     UNIT_TITLE(u) = c;
-    if (unit_version < 70) UNIT_TITLE(u) = fix_old_codes_to_html(UNIT_TITLE(u).c_str());
+    if (unit_version < 70)
+        UNIT_TITLE(u) = fix_old_codes_to_html(UNIT_TITLE(u).c_str());
 
     if (pBuf->SkipString(&c))
         g_nCorrupt++;
     UNIT_OUT_DESCR(u) = c;
-    if (unit_version < 70) UNIT_OUT_DESCR(u) = fix_old_codes_to_html(UNIT_OUT_DESCR(u).c_str());
+    if (unit_version < 70)
+        UNIT_OUT_DESCR(u) = fix_old_codes_to_html(UNIT_OUT_DESCR(u).c_str());
 
     if (pBuf->SkipString(&c))
         g_nCorrupt++;
     UNIT_IN_DESCR(u) = c;
-    if (unit_version < 70) UNIT_IN_DESCR(u) = fix_old_codes_to_html(UNIT_IN_DESCR(u).c_str());
+    if (unit_version < 70)
+        UNIT_IN_DESCR(u) = fix_old_codes_to_html(UNIT_IN_DESCR(u).c_str());
 
     g_nCorrupt += bread_extra(pBuf, UNIT_EXTRA(u), unit_version);
 
@@ -897,7 +929,8 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
                 g_nCorrupt += pBuf->Read16(&PC_LIFESPAN(u));
             else
             {
-                CHAR_RACE(u)--; /* spooky */
+                CHAR_RACE(u)
+                --; /* spooky */
 
                 struct base_race_info_type *sex_race;
 
@@ -1057,7 +1090,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
                 else
                     g_nCorrupt += pBuf->Read16(&PC_SPL_SKILL(u, i));
                 g_nCorrupt += pBuf->Read8(&PC_SPL_LVL(u, i));
-                
+
                 if (unit_version < 72)
                     g_nCorrupt += pBuf->Read8(&t8);
 
@@ -1339,6 +1372,8 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
     }
 #endif
 
+    post_read_unit(u);
+
     return u;
 }
 
@@ -1489,8 +1524,7 @@ void normalize_world(void)
 /* For local error purposes */
 static class zone_type *read_zone_error = NULL;
 
-struct zone_reset_cmd *
-read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
+struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
 {
     struct zone_reset_cmd *cmd, *tmp_cmd;
     class file_index_type *fi;
@@ -1635,8 +1669,7 @@ void read_all_zones(void)
     }
 }
 
-char *
-read_info_file(char *name, char *oldstr)
+char *read_info_file(char *name, char *oldstr)
 {
     char tmp[20 * MAX_STRING_LENGTH];
     char buf[20 * MAX_STRING_LENGTH];

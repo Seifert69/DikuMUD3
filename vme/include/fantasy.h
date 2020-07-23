@@ -14,8 +14,7 @@
    SETHEIGHT(MLVL,45,150) \
    MSET_ABILITY(15,20,15,20,10,10,10,0) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) 
 
 
 #define M_SWANMAY_TINY(MLVL,GENDER) /* level 1 to 25 */ \
@@ -66,8 +65,7 @@ dilcopy regenerate@update ();
    NATURAL_DEF(WPN_CLAW,ARM_PLATE) \
    MSET_ABILITY(15,15,25,20,10,10,5,0) \
    MSET_WEAPON(0,0,0,0,20,0) \
-   MSET_SPELL(0,10,10,10,10,0,10,10,0,10,10) \
-dilcopy regenerate@update ();
+   MSET_SPELL(0,10,10,10,10,0,10,10,0,10,10) 
 
 
 #define HOMARID_MAGE(MLVL,GENDER,ATT_SPL,DEF_SPL) \
@@ -89,8 +87,7 @@ dilcopy regenerate@update ();
    NATURAL_DEF(WPN_FIST,ARM_CHAIN) \
    MSET_ABILITY(10,15,15,15,15,15,5,10) \
    MSET_WEAPON(0,10,0,15,15,0) \
-   MSET_SPELL(10,5,0,5,10,10,10,10,0,0,0) \
-dilcopy regenerate@update ();
+   MSET_SPELL(10,5,0,5,10,10,10,10,0,0,0) 
 
 
 #define MERFOLK_WARRIOR(MLVL,GENDER) \
@@ -115,8 +112,7 @@ MSET_ABILITY(20,15,10,10,15,15,15,0) \
 MSET_WEAPON(8,8,8,8,8,0) \
 MSET_SPELL(4,4,4,20,4,4,4,4,4,4,4)  \
 flags {UNIT_FL_NO_TELEPORT} \
-romflags {CHAR_DETECT_INVISIBLE} \
-dilcopy regenerate@update ();
+romflags {CHAR_DETECT_INVISIBLE} 
 
 
 #define M_PIXIE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -165,8 +161,7 @@ MSET_WEAPON ( 10, 10, 10, 10, 10, 10) \
 MSET_SPELL ( 2, 2, 2, 2, 2, 2, 2, 2, 2, 20, 2) \
 dilcopy combat_mag@function("energy drain", "", 50, 2); \
 dilcopy comb_poison@function("$1n bites you.", "$1n bites $3n."); \
-exp 125 \
-dilcopy regenerate@update (); 
+exp 125  
 
 
 #define M_VAMPIRE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -202,8 +197,7 @@ dilcopy regenerate@update ();
    MSET_ABILITY(15,15,15,15,15,10,15,0)  \
    MSET_WEAPON(6,6,6,6,15,6)\
    MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-   romflags CHAR_DETECT_INVISIBLE \
-dilcopy regenerate@update ();
+   romflags CHAR_DETECT_INVISIBLE 
 
 
 #define M_WYRM_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -255,8 +249,7 @@ dilcopy regenerate@update ();
    MSET_ABILITY(15,15,15,15,15,10,15,0)  \
    MSET_WEAPON(6,6,6,6,15,6)\
    MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-   dilcopy combat_mag@function("madness"," ",0,2); \
-dilcopy regenerate@update ();
+   dilcopy combat_mag@function("madness"," ",0,2); 
 
 
 
@@ -311,8 +304,7 @@ dilcopy regenerate@update ();
    MSET_WEAPON(10,10,10,10,15,10) \
    MSET_SPELL(3,3,3,3,3,3,3,3,3,3,5) \
 dilcopy aggressive@function(0, -1, 0, 20, 2, PULSE_SEC*6, 1, "GOOD", \
-                            {"$1n attacks $3n!", "$1n attacks you!"}); \
-dilcopy regenerate@update ();
+                            {"$1n attacks $3n!", "$1n attacks you!"}); 
 
 
 #define BASE_LESSER_DEVIL(MLVL,GENDER,ARM,ATT_SPL,DEF_SPL) \
@@ -390,8 +382,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,75,360) \
    MSET_ABILITY(22,21,17,25,15,0,0,0) \
    MSET_WEAPON(6,6,6,6,15,6)          /* Natural attack */ \
-   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  /* Resistances    */ \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  /* Resistances    */ 
 
 
 #define M_PEGASUS_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -452,8 +443,7 @@ MSET_SPELL ( 2, 2, 2, 2, 2, 2, 2, 2, 2, 20, 2) \
 dilcopy combat_mag@function("madness", "", 25, 2); \
 dilcopy aggressive@function(0, -1, 0, 0, 0, 10, 0, "ANY", \
 {"$1n attacks $3n!", "$1n attacks you!"}); \
-exp 125 \
-dilcopy regenerate@update ();
+exp 125 
 
 
 #define M_BANSHEE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -488,8 +478,7 @@ MSET_ABILITY(25,35,10,20,10,0,0,0) \
 MSET_WEAPON(10,10,10,10,10,10) \
 MSET_SPELL(4,4,3,3,4,4,4,4,3,3,4) \
 flags {UNIT_FL_NO_TELEPORT} \
-romflags {CHAR_DETECT_INVISIBLE} \
-dilcopy regenerate@update ();
+romflags {CHAR_DETECT_INVISIBLE} 
 
 
 #define M_SAND_CRAWLER_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -537,8 +526,7 @@ MSET_ABILITY(5,15,5,15,25,10,2,23) \
 MSET_WEAPON(5,5,5,5,5,5)     \
 MSET_SPELL(5,5,5,5,5,5,5,5,5,20,5) \
 dilcopy combat_mag@function("stinking cloud","cure serious wounds",25,2); \
-exp 120 \
-dilcopy regenerate@update ();
+exp 120 
 
 
 #define M_DRYAD_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -587,8 +575,7 @@ MSET_SPELL(20,3,3,3,3,23,3,3,3,3,3) \
 dilcopy combat_mag@function("colourspray","cure light wounds",25,2); \
 romflags {CHAR_DETECT_INVISIBLE} \
 flags {UNIT_FL_NO_TELEPORT} \
-exp 120 \
-dilcopy regenerate@update ();
+exp 120 
 
 
 #define M_NAIAD_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -633,8 +620,7 @@ exp 125
    NATURAL_DEF(WPN_CRUSH, ARM) \
    MSET_ABILITY(18,14,18,18,18,14,0,0) \
    MSET_WEAPON(10,15,14,15,20,15) \
-   MSET_SPELL(1,1,1,1,1,1,1,1,1,1,1) \
-dilcopy regenerate@update ();
+   MSET_SPELL(1,1,1,1,1,1,1,1,1,1,1) 
 
 
 #define M_STONE_RENDER_TINY(MLVL,GENDER) /* level 1 to 25 */ \
@@ -681,8 +667,7 @@ dilcopy regenerate@update ();
    MSET_WEAPON( 5,5,5,5,15,5) /* 40 */ \
    MSET_SPELL( 5,5,5,5,5,5,5,5,5,5,10) \
    flags{UNIT_FL_NO_TELEPORT} \
-   exp 110 \
-dilcopy regenerate@update (); 
+   exp 110  
 
 
 #define BASE_NORSE_GOD_AIR(MLVL,GENDER,ARM, ATT_SPL) \
@@ -915,8 +900,7 @@ dilcopy regenerate@update ();
    dilcopy poi_resist@function(); \
    MSET_ABILITY(18,7,18,7,25,0,0,25) \
    MSET_WEAPON(6,6,6,6,15,6) \
-   MSET_SPELL(3,3,3,3,3,3,3,3,3,25,3) \
-dilcopy regenerate@update ();
+   MSET_SPELL(3,3,3,3,3,3,3,3,3,25,3) 
 
 
 
@@ -1002,8 +986,7 @@ dilcopy regenerate@update ();
    SETHEIGHT(MLVL,150,221) \
    MSET_ABILITY(20,20,20,20,20,0,0,0) \
    MSET_WEAPON(10,10,10,10,17,10)          /* Natural attack */ \
-   MSET_SPELL(3,3,3,3,3,3,3,3,3,3,3)  /* Resistances    */ \
-dilcopy regenerate@update ();
+   MSET_SPELL(3,3,3,3,3,3,3,3,3,3,3)  /* Resistances    */ 
 
 
 #define M_GARGOYLE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -1050,8 +1033,7 @@ dilcopy regenerate@update ();
    MSET_WEAPON (1,1,2,2,2,2) \
    MSET_SPELL ( 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 40)\
    romflags {CHAR_DETECT_INVISIBLE,CHAR_SNEAK} \
-   dilcopy combat_mag@function("acid ball", "", 25, 2); \
-dilcopy regenerate@update ();
+   dilcopy combat_mag@function("acid ball", "", 25, 2); 
 
 
 #define M_MUTANT_TINY(MLVL,GENDER) /* level 1 to 25 */ \
@@ -1119,8 +1101,7 @@ dilcopy regenerate@update ();
    alignment 0  \
    MSET_ABILITY(20,20,20,20,20,0,0,0) \
    MSET_WEAPON(10,10,10,10,20,5)      \
-   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5) \
-dilcopy regenerate@update ();
+   MSET_SPELL(5,0,0,0,0,5,5,5,5,5,5) 
 
 
 #define M_CAVE_FISHER_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -1174,8 +1155,7 @@ ATTACK_DEFENSE(+100, +100) \
 exp 160  \
 dilcopy command_block@basis("backstab", \
 "You stealthily attempt to backstab $3n but $3e catches you.", \
-"$1n stealthily tries to backstab $3n but $3e catches $1m."); \
-dilcopy regenerate@update ();
+"$1n stealthily tries to backstab $3n but $3e catches $1m."); 
 
 
 
@@ -1457,8 +1437,7 @@ MSET_ABILITY(25,10,10,10,20,10,15,0)  \
  alignment -900 \
  MSET_ABILITY(8,8,8,30,2,20,12,12) \
  MSET_WEAPON(6,6,6,6,15,6) \
- MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+ MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) 
 
 
 #define M_SCARECROW_TINY(MLVL,GENDER) /* level 1 to 25 */ \
@@ -1509,8 +1488,7 @@ dilcopy regenerate@update ();
    alignment 0 \
    MSET_ABILITY(17,28,10,10,10,5,10,10)\
    MSET_WEAPON(5,5,5,5,20,5)\
-   MSET_SPELL(18,2,2,2,2,2,19,2,2,2,2) \
-dilcopy regenerate@update ();
+   MSET_SPELL(18,2,2,2,2,2,19,2,2,2,2) 
 
 
 #define M_SPRITE_TINY(MLVL,GENDER) /* level 1 to 25 */ \
@@ -1580,8 +1558,7 @@ dilcopy regenerate@update ();
     SETWEIGHT(MLVL,334,7500) \
     SETHEIGHT(MLVL,441,2800) \
     alignment 0 \
-    NATURAL_DEF(WPN_CRUSH, ARM) \
-dilcopy regenerate@update (); 
+    NATURAL_DEF(WPN_CRUSH, ARM)  
 
 
 #define M_GOLEM_STEEL(MLVL,GENDER) \
@@ -1666,8 +1643,7 @@ dilcopy regenerate@update ();
    MSET_WEAPON (1,1,2,2,2,2) \
    MSET_SPELL ( 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 40)\
    romflags {CHAR_DETECT_INVISIBLE,CHAR_SNEAK} \
-   dilcopy combat_mag@function("acid ball", "", 25, 2); \
-dilcopy regenerate@update ();
+   dilcopy combat_mag@function("acid ball", "", 25, 2); 
 
 
 #define M_MIST_DWELLER_TINY(MLVL,GENDER) /* level 1 to 25 */ \
@@ -1740,7 +1716,6 @@ dilcopy regenerate@update ();
    flags {UNIT_FL_INVISIBLE} \
    romflags {CHAR_DETECT_INVISIBLE, CHAR_SNEAK}\
    dilcopy poi_resist@function(); \
-   dilcopy regenerate@update (); \
    dilcopy no_disarm@garden(); \
    dilcopy no_ambush@garden();
 
@@ -1795,7 +1770,6 @@ dilcopy regenerate@update ();
    flags {UNIT_FL_INVISIBLE} \
    romflags {CHAR_DETECT_INVISIBLE, CHAR_SNEAK}\
    dilcopy poi_resist@function(); \
-   dilcopy regenerate@update (); \
    dilcopy no_disarm@garden(); \
    dilcopy no_ambush@garden();
 
@@ -1875,7 +1849,6 @@ dilcopy regenerate@update ();
    MSET_ABILITY(18,7,8,17,25,0,0,25) \
    MSET_WEAPON(6,6,6,6,15,6) \
    MSET_SPELL(3,3,3,3,3,3,3,3,3,25,3) \
-   dilcopy regenerate@update (); \
    dilcopy no_disarm@garden(); \
    dilcopy no_ambush@garden();
 
@@ -1967,8 +1940,7 @@ dilcopy regenerate@update ();
    MSET_WEAPON( 5,10,5,10,5,5) \
    MSET_SPELL( 10,0,0,10,0,13,5,6,6,5,5) \
    exp 110 \
-   dilcopy combat_mag@function("colourspray", "heal", 25, 2); \
-dilcopy regenerate@update ();
+   dilcopy combat_mag@function("colourspray", "heal", 25, 2); 
 
 
 #define M_UNICORN_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -2028,8 +2000,7 @@ dilcopy regenerate@update ();
    MSET_ABILITY(25,10,25,30,10,0,0,0) \
    MSET_WEAPON(6,6,6,35,6,6) \
    MSET_SPELL(3,3,3,3,3,5,3,3,3,3,3) \
-   dilcopy wander_zones@function("@loadzone", 60, 0, 0); \
-dilcopy regenerate@update ();
+   dilcopy wander_zones@function("@loadzone", 60, 0, 0); 
 
 
 #define BASE_SLIME_AGGR(MLVL,GENDER,ARM) \
@@ -2113,8 +2084,7 @@ dilcopy aggressive@function(0, -1, 0, 0, 3, 30, 0, "ANY", \
    MSET_WEAPON(8,5,17,5,25,9) /*resist blunt weapons*/ \
    MSET_SPELL(3,0,0,0,0,5,3,3,3,7,7) /*slight resist vs poison/acid*/ \
    dilcopy wander_zones@function("@loadzone", 80, 0, 0); \
-   exp 105 \
-dilcopy regenerate@update ();
+   exp 105 
 
 
 
@@ -2162,8 +2132,7 @@ dilcopy regenerate@update ();
    alignment 0 \
    MSET_ABILITY(25,10,25,30,10,0,0,0) \
    MSET_WEAPON(6,6,6,6,35,6) \
-   MSET_SPELL(3,3,3,3,3,3,3,3,3,3,5) \
-   dilcopy regenerate@update ();
+   MSET_SPELL(3,3,3,3,3,3,3,3,3,3,5)
 
 
 #define BASE_MIMIC_AGGR(MLVL,GENDER,ARM) \
@@ -2241,8 +2210,7 @@ SETWEIGHT(MLVL,122,384) \
 SETHEIGHT(MLVL,130,211) \
 MSET_ABILITY(15,15,15,20,10,15,0,10) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) 
 
 
 #define M_MUMMIE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -2289,8 +2257,7 @@ SETWEIGHT(MLVL,150,400) \
 SETHEIGHT(MLVL,150,230) \
 MSET_ABILITY(15,15,15,10,10,15,10,10) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6)  
 
 
 #define BASE_ZOMBIE_GUARD(MLVL,GENDER,ARM) \
@@ -2303,8 +2270,7 @@ SETWEIGHT(MLVL,180,600) \
 SETHEIGHT(MLVL,150,230) \
 MSET_ABILITY(20,20,12,12,10,0,13,13) \
 MSET_WEAPON(6,6,6,6,15,6) \
-MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) \
-dilcopy regenerate@update ();
+MSET_SPELL(4,4,4,5,5,5,5,5,6,6,6) 
 
 
 /* -------------------------------------------------------------------- */
@@ -2392,8 +2358,7 @@ exp 125
    MSET_WEAPON(6,6,6,6,20,6) \
    MSET_SPELL(2,2,2,2,2,2,2,2,2,21,11) \
    dilcopy combat_mag@function("energy drain", "", 25, 2); \
-   exp 120 \
-dilcopy regenerate@update ();
+   exp 120 
 
 
 #define BASE_GHOUL_INVIS(MLVL, GENDER, ARM)  \
@@ -2477,8 +2442,7 @@ dilcopy regenerate@update ();
    MSET_WEAPON( 5,5,5,5,15,5) /* 40 */ \
    MSET_SPELL( 5,5,5,5,5,5,5,5,5,5,10) \
    flags{UNIT_FL_NO_TELEPORT} \
-   exp 120 \
-dilcopy regenerate@update ();
+   exp 120 
 
 
 #define BASE_LICH_AIR(MLVL,GENDER,ARM, ATT_SPL) \
@@ -2664,8 +2628,7 @@ dilcopy regenerate@update ();
    MSET_WEAPON( 5,5,5,5,15,5) /* 40 */ \
    MSET_SPELL( 5,5,5,5,5,5,5,5,5,5,10) \
    flags{UNIT_FL_NO_TELEPORT} \
-   exp 120 \
-dilcopy regenerate@update ();
+   exp 120 
 
 
 #define BASE_ELEMENTAL_AIR(MLVL,GENDER,ARM,ATT_SPL) \
@@ -2858,8 +2821,7 @@ dilcopy regenerate@update ();
    MSET_WEAPON( 5,10,5,0,15,5) \
    MSET_SPELL( 10,0,0,10,0,13,5,6,6,5,5) \
    dilcopy combat_mag@function("colourspray", "", 25, 2); \
-   exp 120 \
-dilcopy regenerate@update ();
+   exp 120 
 
 
 
@@ -2895,8 +2857,7 @@ dilcopy regenerate@update ();
    MSET_WEAPON(6,21,6,5,21,6) \
    MSET_SPELL(3,3,3,3,3,5,3,3,3,3,3) \
 dilcopy aggressive@function(0, -1, 0, 20, 2, PULSE_SEC*6, 1, "GOOD", \
-                            {"$1n attacks $3n!", "$1n attacks you!"}); \
-dilcopy regenerate@update ();
+                            {"$1n attacks $3n!", "$1n attacks you!"}); 
 
 
 #define BASE_DEMON_LESSER(MLVL,GENDER,ARM) \
@@ -2936,7 +2897,6 @@ dilcopy regenerate@update ();
    romflags {CHAR_DETECT_INVISIBLE}  \
    dilcopy aggressive@function(0, -1, 0, 20, 2, PULSE_SEC*6, 1, "GOOD", \
                             {"$1n attacks $3n!", "$1n attacks you!"}); \
-   dilcopy regenerate@update ();\
    exp 125   
 
 
@@ -3016,8 +2976,7 @@ dilcopy regenerate@update ();
    NATURAL_DEF(WPN_FIST, ARM_CHAIN) \
    MSET_ABILITY(30,20,20,15,5,2,6,2) \
    MSET_WEAPON(5,5,5,5,40,5) /* 65 % */ \
-   MSET_SPELL(0,5,5,0,0,0,0,5,5,10,5) \
-dilcopy regenerate@update ();
+   MSET_SPELL(0,5,5,0,0,0,0,5,5,10,5) 
 
 
 #define M_CAVE_WIGHT_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -3064,8 +3023,7 @@ MSET_ABILITY(18,15,12,20,10,5,15,5) /* 100 % */ \
 MSET_WEAPON(6,6,6,6,40,6) /* 65 % */ \
 MSET_SPELL(5,2,3,0,0,0,0,5,5,5,5) \
 flags {UNIT_FL_NO_TELEPORT} \
-romflags {CHAR_DETECT_INVISIBLE} \
-dilcopy regenerate@update ();
+romflags {CHAR_DETECT_INVISIBLE} 
 
 
 #define M_UR_VILE_TINY(MLVL,GENDER) /*level 1 to 25 */ \
@@ -3114,8 +3072,7 @@ exp 125
    MSET_SPELL(10,10,10,10,10,10,10,5,0,0,0) \
    dilcopy aggressive@function(0, -1, 0, 0, 3, PULSE_SEC*6, 0, "ANY", \
                             {"$1n attacks $3n!", "$1n attacks you!"}); \
-   exp 105 \
-dilcopy regenerate@update ();
+   exp 105 
 
 
 
@@ -3166,8 +3123,7 @@ dilcopy regenerate@update ();
    MSET_SPELL(10,10,10,10,10,10,10,5,0,0,0) \
    dilcopy aggressive@function(0, -1, 0, 0, 3, PULSE_SEC*6, 0, "ANY", \
                             {"$1n attacks $3n!", "$1n attacks you!"}); \
-   exp 105 \
-dilcopy regenerate@update ();
+   exp 105 
 
 
 
@@ -3214,8 +3170,7 @@ dilcopy regenerate@update ();
    alignment -100      /* Neutral        */ \
    MSET_ABILITY(10,10,20,20,20,0,10,10) /* Is that a SKELETON? */ \
    MSET_WEAPON(6,6,6,6,10,6)          /* Natural attack */ \
-   MSET_SPELL(4,4,4,6,6,6,6,6,6,6,6)  /* Resistances    */ \
-dilcopy regenerate@update ();
+   MSET_SPELL(4,4,4,6,6,6,6,6,6,6,6)  /* Resistances    */ 
 
 
 
@@ -3267,8 +3222,7 @@ dilcopy regenerate@update ();
    MSET_WEAPON (1,1,2,2,2,2) \
    MSET_SPELL ( 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 40)\
    romflags {CHAR_DETECT_INVISIBLE,CHAR_SNEAK} \
-   dilcopy combat_mag@function("acid ball", "", 25, 2); \
-dilcopy regenerate@update ();
+   dilcopy combat_mag@function("acid ball", "", 25, 2); 
 
 
 #define M_YETI_TINY(MLVL,GENDER) /* level 1 to 25 */ \
