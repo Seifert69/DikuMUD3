@@ -20,7 +20,9 @@ badnames_list::badnames_list (char *n)
     int len = 0;
     next = NULL;
     len = strlen (n);
-    name = new char[len + 1];
+    //name = new char[len + 1];
+    CREATE(name, char, len + 1);
+
     if (!name)
     {
         slog (LOG_ALL, 0, "Error in allocating name");
@@ -35,19 +37,22 @@ badnames_list::~badnames_list (void)
 
     next = NULL;
     if (name)
-        delete name;
+    {
+        FREE(name);
+        name = NULL;
+    }
     if (l)
         delete l;
 }
 
-char *
-badnames_list::insert (char *n)
+char *badnames_list::insert (char *n)
 {
     badnames_list *l = this->next, *b = this;
     badnames_list *temp;
     if (!n)
         return (NULL);
-    temp = new badnames_list (n);
+    temp = new badnames_list(n);
+
     if (!temp)
         return (NULL);
 
