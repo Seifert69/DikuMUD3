@@ -139,22 +139,22 @@ char *cNamelist::catnames()
     return s;
 }
 
-void cNamelist::Remove (ubit32 idx)
+void cNamelist::Remove(ubit32 idx)
 {
     if (length > idx)
     {
         delete namelist[idx];
         if (idx != length - 1)
             memmove (&namelist[idx], &namelist[idx + 1],
-                     sizeof (string *) * (length - idx));
+                     sizeof(string *) * (length - idx - 1));
         length--;
         if (length == 0)
         {
-            Free ();
+            Free();
         }
         else
         {
-            RECREATE (namelist, string *, length);
+            RECREATE(namelist, string *, length);
         }
     }
 }
