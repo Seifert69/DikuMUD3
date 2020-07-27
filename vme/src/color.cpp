@@ -30,7 +30,9 @@ color_type::color_type (char *key, char *c)
     int len = 0;
     next = NULL;
     len = strlen (c);
-    color = new char[len + 1];
+    //color = new char[len + 1];
+
+    CREATE(color, char, len+1);
     if (!color)
     {
         slog (LOG_ALL, 0, "Error in allocating color");
@@ -39,7 +41,8 @@ color_type::color_type (char *key, char *c)
     strcpy (color, c);
 
     len = strlen (key);
-    keyword = new char[len + 1];
+    //keyword = new char[len + 1];
+    CREATE(keyword, char, len + 1);
     if (!keyword)
     {
         slog (LOG_ALL, 0, "Error in allocating keyword");
@@ -54,9 +57,9 @@ color_type::~color_type (void)
 
     next = NULL;
     if (keyword)
-        delete keyword;
+        FREE(keyword);
     if (color)
-        delete color;
+        FREE(color);
     color = NULL;
     keyword = NULL;
     if (l)
@@ -87,7 +90,7 @@ color_type::insert (char *key, char *c)
     color_type *temp;
     if ((!key) || (!c))
         return (NULL);
-    temp = new color_type (key, c);
+    temp = new color_type(key, c);
     if (!temp)
         return (NULL);
     while (l)
@@ -120,7 +123,8 @@ color_type::insert (char *key, char *c)
         count_plus (key, c);
     }
     char *c_return;
-    c_return = new char[strlen (key) + strlen (c) + 1];
+    //c_return = new char[strlen (key) + strlen (c) + 1];
+    CREATE(c_return, char, strlen (key) + strlen (c) + 1);
     strcpy (c_return, c);
     strcat (c_return, key);
     return (c_return);
@@ -173,7 +177,9 @@ color_type::change (char *key, char *c)
 {
     color_type *l = this->next;
     char *temp = 0;
-    temp = new char[strlen (c) + 1];
+    //temp = new char[strlen (c) + 1];
+    CREATE(temp, char, strlen (c) + 1);
+    
     if (!temp)
     {
         slog (LOG_ALL, 0, "Error in allocating change color.");
@@ -190,7 +196,9 @@ color_type::change (char *key, char *c)
             l->color = temp;
             color_size += (strlen (temp) + 1);
             char *c_return;
-            c_return = new char[strlen (l->keyword) + strlen (l->color) + 1];
+            //c_return = new char[strlen (l->keyword) + strlen (l->color) + 1];
+            CREATE(c_return, char, strlen (l->keyword) + strlen (l->color) + 1);
+            
             strcpy (c_return, l->color);
             strcat (c_return, l->keyword);
             return (c_return);
@@ -307,7 +315,9 @@ void color_type::create (char *input_temp)
         return;
 
 
-    input_str = new char[strlen (input_temp) + 1];
+    //input_str = new char[strlen (input_temp) + 1];
+    CREATE(input_str, char, strlen (input_temp) + 1);
+
     delstr = input_str;
     if (!input_str)
         return;
@@ -330,13 +340,15 @@ void color_type::create (char *input_temp)
 
     if (!key)
     {
-        delete delstr;
+        FREE(delstr);
+        //delete delstr;
         return;
     }
     tok = strtok (0, ":");
     if (!tok)
     {
-        delete delstr;
+        FREE(delstr);
+        //delete delstr;
         return;
     }
 
@@ -352,7 +364,8 @@ void color_type::create (char *input_temp)
         insert (key, tok);
     }
 
-    delete delstr;
+    FREE(delstr);
+    //delete delstr;
 }
 
 char *
@@ -361,7 +374,11 @@ color_type::key_string (void)
     long i = 0;
     int r = 0;
     i = (50 * count) + key_size + color_size;
-    char *buff = new char[i];
+    //char *buff = new char[i];
+    char *buff;
+    
+    CREATE(buff, char, i);
+
     color_type *l = this->next;
     if (!buff)
     {
@@ -415,7 +432,9 @@ color_type::key_string (color_type & dft)
         i += strlen (d) + 1;
     if (t)
         i += strlen (t) + 2;
-    f = new char[i];
+    //f = new char[i];
+    CREATE(f, char, i);
+
     if (!f)
     {
         slog (LOG_ALL, 0,
@@ -441,7 +460,8 @@ color_type::key_string (color_type & dft)
 
     f = temp.key_string ();
     char *ftemp;
-    ftemp = new char[strlen (f) + 1];
+    //ftemp = new char[strlen (f) + 1];
+    CREATE(ftemp, char, strlen (f) + 1);
     strcpy (ftemp, f);
     if (f)
         delete f;
@@ -460,7 +480,9 @@ color_type::save_string (void)
         return (NULL);
     }
 
-    char *buff = new char[key_size + color_size + (count * 2)];
+    //char *buff = new char[key_size + color_size + (count * 2)];
+    char *buff;
+    CREATE(buff, char, key_size + color_size + (count * 2));
 
     if (!buff)
     {
