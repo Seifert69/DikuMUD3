@@ -50,7 +50,7 @@ int str_ccmp(const char *s, const char *d);
 int str_nccmp(const char *s, const char *d, int n);
 char *str_dup(const char *source);
 char *str_str(const char *cs, const char *ct);
-char *str_cstr(const char *cs, const char *ct);
+const char *str_cstr(const char *cs, const char *ct);
 ubit1 str_is_empty(const char *arg);
 ubit1 str_is_number(const char *str);
 ubit1 next_word_is_number(const char *str);

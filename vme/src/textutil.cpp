@@ -220,20 +220,21 @@ char *str_str(register const char *cs, register const char *ct)
  *  Return pointer to first occurence of ct in cs - or NULL
  *  Used to determine ei. "from" and "in"
  */
-char *str_cstr(register const char *cs, register const char *ct)
+const char *str_cstr(const char *cs, const char *ct)
 {
-    register char *si;
-    register char *ti;
+    return strcasestr(cs, ct); // strstr ignores case
+
+/*    const char *si = cs;
+    const char *ti = ct;
 
     do
     {
-        for (si = (char *)cs, ti = (char *)ct;
-             tolower(*si) == tolower(*ti); si++)
+        for (si = cs, ti = ct; tolower(*si) == tolower(*ti); si++)
             if (*++ti == '\0')
-                return (char *)cs;
+                return cs;
     } while (*cs++);
 
-    return NULL;
+    return NULL;*/
 }
 
 /* return string without leading spaces */
