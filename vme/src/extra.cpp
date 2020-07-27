@@ -300,7 +300,10 @@ void extra_list::AppendBuffer(CByteBuffer *pBuf)
 /*                                                            */
 class extra_descr_data *extra_list::find_raw(const char *word)
 {
-    return this->m_pList->find_raw(word);
+    if (this->m_pList)
+        return this->m_pList->find_raw(word);
+    else
+        return NULL;
 }
 
 
