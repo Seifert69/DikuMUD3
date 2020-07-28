@@ -19,12 +19,14 @@
 
 CByteBuffer::CByteBuffer(ubit32 nSize)
 {
+    assert(nSize > 0);
     m_nLength = 0;
     m_nReadPos = 0;
     m_nAllocated = nSize;
-    m_pData = (ubit8 *)calloc(nSize, 1);
+    CREATE(m_pData, ubit8, nSize);
 
     assert(m_pData != NULL);
+    *m_pData = 0;
 }
 
 CByteBuffer::~CByteBuffer(void)
@@ -44,13 +46,16 @@ void CByteBuffer::SetLength(ubit32 nLen)
 
 void CByteBuffer::SetSize(ubit32 nSize)
 {
-    m_pData = (ubit8 *)realloc(m_pData, nSize);
+    assert(nSize > 0);
+    RECREATE(m_pData, ubit8, nSize);
     assert(m_pData);
     m_nAllocated = nSize;
 }
 
 void CByteBuffer::SetData(ubit8 *pData, ubit32 nSize)
 {
+    assert(nSize > 0);
+
     if (m_pData)
         FREE(m_pData);
     Clear();
