@@ -404,7 +404,7 @@ void init_mother(int nPort)
         exit(1);
     }
 
-    int i;
+    int i=0;
     n = setsockopt(fdMother, IPPROTO_TCP, TCP_NODELAY, &i, sizeof(i));
     if (n == -1)
     {
