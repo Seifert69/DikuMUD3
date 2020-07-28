@@ -25,7 +25,7 @@ extern struct unit_function_array_type unit_function_array[];
 extern eventqueue events;
 extern int mudboot;
 
-void SetFptrTimer(class unit_data *u, struct unit_fptr *fptr)
+void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
 {
     ubit32 ticks;
 
@@ -57,7 +57,7 @@ void SetFptrTimer(class unit_data *u, struct unit_fptr *fptr)
     }
 }
 
-void ResetFptrTimer(class unit_data *u, struct unit_fptr *fptr)
+void ResetFptrTimer(class unit_data *u, class unit_fptr *fptr)
 {
     events.remove(special_event, u, fptr);
     SetFptrTimer(u, fptr);
@@ -66,11 +66,11 @@ void ResetFptrTimer(class unit_data *u, struct unit_fptr *fptr)
 void special_event(void *p1, void *p2)
 {
     class unit_data *u = (class unit_data *)p1;
-    register struct unit_fptr *fptr = (struct unit_fptr *)p2;
+    register class unit_fptr *fptr = (class unit_fptr *)p2;
     int priority;
 
     ubit32 ret = SFR_SHARE;
-    struct unit_fptr *ftmp;
+    class unit_fptr *ftmp;
     struct spec_arg sarg;
 
     void add_func_history(class unit_data * u, ubit16, ubit16);
@@ -92,9 +92,9 @@ void special_event(void *p1, void *p2)
         return;
     if (!fptr)
         return;
-    if (is_destructed(DR_UNIT, u))
+    if (u->is_destructed())
         return;
-    if (is_destructed(DR_FUNC, fptr))
+    if (fptr->is_destructed())
         return;
     if (fptr->event)
         fptr->event->func = NULL;
@@ -146,7 +146,7 @@ void special_event(void *p1, void *p2)
         }
     }
 
-    if (is_destructed(DR_FUNC, fptr))
+    if (fptr->is_destructed())
         return;
 
     if (fptr->heart_beat < PULSE_SEC)
@@ -177,12 +177,13 @@ void special_event(void *p1, void *p2)
 }
 
 /* Return TRUE while stopping events */
-void stop_special(class unit_data *u, struct unit_fptr *fptr)
+void stop_special(class unit_data *u, class unit_fptr *fptr)
 {
     events.remove(special_event, u, fptr);
+    events.hulahop(special_event, u, fptr);
 }
 
-void start_special(class unit_data *u, struct unit_fptr *fptr)
+void start_special(class unit_data *u, class unit_fptr *fptr)
 {
     int diltick = 0, i;
     if (fptr->index == SFUN_DIL_INTERNAL)
@@ -229,7 +230,7 @@ void start_special(class unit_data *u, struct unit_fptr *fptr)
 
 void start_all_special(class unit_data *u)
 {
-    struct unit_fptr *fptr;
+    class unit_fptr *fptr;
 
     for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
         start_special(u, fptr);
@@ -237,7 +238,7 @@ void start_all_special(class unit_data *u)
 
 void stop_all_special(class unit_data *u)
 {
-    struct unit_fptr *fptr;
+    class unit_fptr *fptr;
 
     for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
         stop_special(u, fptr);
