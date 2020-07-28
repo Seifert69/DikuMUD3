@@ -31,7 +31,7 @@ extern class unit_data *combat_list;
 extern class descriptor_data *descriptor_list;
 /* External procedures */
 
-void stop_special(class unit_data *u, struct unit_fptr *fptr);
+void stop_special(class unit_data *u, class unit_fptr *fptr);
 
 class descriptor_data *unit_is_edited(class unit_data *u)
 {
@@ -165,9 +165,9 @@ void remove_from_unit_list(class unit_data *unit)
     unit->gnext = unit->gprevious = NULL;
 }
 
-struct unit_fptr *find_fptr(class unit_data *u, ubit16 idx)
+class unit_fptr *find_fptr(class unit_data *u, ubit16 idx)
 {
-    struct unit_fptr *tf;
+    class unit_fptr *tf;
 
     for (tf = UNIT_FUNC(u); tf; tf = tf->next)
         if (tf->index == idx)
@@ -178,7 +178,7 @@ struct unit_fptr *find_fptr(class unit_data *u, ubit16 idx)
 
 
 // 2020: Add it prioritized
-void insert_fptr(class unit_data *u, struct unit_fptr *f)
+void insert_fptr(class unit_data *u, class unit_fptr *f)
 {
     if (f->priority == 0)
     {
@@ -202,7 +202,7 @@ void insert_fptr(class unit_data *u, struct unit_fptr *f)
         return;
     }
 
-    struct unit_fptr *p, *prev;
+    class unit_fptr *p, *prev;
 
     // Find location to insert
     prev = UNIT_FUNC(u);
@@ -224,16 +224,16 @@ void insert_fptr(class unit_data *u, struct unit_fptr *f)
 }
 
 
-struct unit_fptr *create_fptr(class unit_data *u, ubit16 index, ubit16 priority,
+class unit_fptr *create_fptr(class unit_data *u, ubit16 index, ubit16 priority,
                               ubit16 beat, ubit16 flags, void *data)
 {
-    struct unit_fptr *f;
+    class unit_fptr *f;
 
-    void start_special(class unit_data * u, struct unit_fptr * fptr);
+    void start_special(class unit_data * u, class unit_fptr * fptr);
 
-    CREATE(f, struct unit_fptr, 1);
+    f = new class unit_fptr;
     assert(f);
-    assert(!is_destructed(DR_FUNC, f));
+    assert(!f->is_destructed());
 
     f->index = index;
     f->priority = priority;
@@ -241,7 +241,6 @@ struct unit_fptr *create_fptr(class unit_data *u, ubit16 index, ubit16 priority,
     f->flags = flags;
     f->data = data;
     f->event = NULL;
-    f->destructed = FALSE;
 
     insert_fptr(u, f);
 
@@ -251,9 +250,9 @@ struct unit_fptr *create_fptr(class unit_data *u, ubit16 index, ubit16 priority,
 }
 
 /* Does not free 'f' - it is done by clear_destruct by comm.c */
-void destroy_fptr(class unit_data *u, struct unit_fptr *f)
+void destroy_fptr(class unit_data *u, class unit_fptr *f)
 {
-    struct unit_fptr *tf;
+    class unit_fptr *tf;
     struct spec_arg sarg;
 
     extern struct unit_function_array_type unit_function_array[];
@@ -263,18 +262,18 @@ void destroy_fptr(class unit_data *u, struct unit_fptr *f)
     void add_func_history(class unit_data * u, ubit16, ubit16);
 
     assert(f);
-    if (is_destructed(DR_FUNC, f))
+    if (f->is_destructed())
         return;
 
-    assert(!is_destructed(DR_FUNC, f));
+    assert(!f->is_destructed());
 
-    register_destruct(DR_FUNC, f);
+    f->register_destruct();
 
 #ifdef DEBUG_HISTORY
     add_func_history(u, f->index, 0);
 #endif
 
-    sarg.owner = (class unit_data *)u;
+    sarg.owner = u;
     sarg.activator = NULL;
     sarg.medium = NULL;
     sarg.target = NULL;
@@ -288,7 +287,7 @@ void destroy_fptr(class unit_data *u, struct unit_fptr *f)
 
     /* Data is free'ed in destruct() if it is not NULL now */
 
-    stop_special((class unit_data *)u, f);
+    stop_special(u, f);
 
     /* Only unlink function, do not free it! */
     if (UNIT_FUNC(u) == f)
@@ -343,8 +342,8 @@ void start_following(class unit_data *ch, class unit_data *leader)
 
     extern struct command_info *cmd_follow;
 
-    assert(!is_destructed(DR_UNIT, leader));
-    assert(!is_destructed(DR_UNIT, ch));
+    assert(!leader->is_destructed());
+    assert(!ch->is_destructed());
 
     REMOVE_BIT(CHAR_FLAGS(ch), CHAR_GROUP);
     if (CHAR_MASTER(ch))
@@ -501,7 +500,7 @@ class unit_data *equipment_type(class unit_data *ch, int pos, ubit8 type)
 
 void equip_char(class unit_data *ch, class unit_data *obj, ubit8 pos)
 {
-    struct unit_affected_type *af, newaf;
+    class unit_affected_type *af, newaf;
 
     assert(pos > 0 && IS_OBJ(obj) && IS_CHAR(ch));
     assert(!equipment(ch, pos));
@@ -523,7 +522,7 @@ void equip_char(class unit_data *ch, class unit_data *obj, ubit8 pos)
 class unit_data *unequip_object(class unit_data *obj)
 {
     class unit_data *ch;
-    struct unit_affected_type *af, *caf;
+    class unit_affected_type *af, *caf;
 
     ch = UNIT_IN(obj);
 
@@ -766,8 +765,8 @@ void unit_to_unit(class unit_data *unit, class unit_data *to)
 
 void snoop(class unit_data *ch, class unit_data *victim)
 {
-    assert(!is_destructed(DR_UNIT, victim));
-    assert(!is_destructed(DR_UNIT, ch));
+    assert(!victim->is_destructed());
+    assert(!ch->is_destructed());
 
     assert(ch != victim);
     /*   assert(IS_PC(ch) && IS_PC(victim)); */
@@ -814,8 +813,8 @@ void switchbody(class unit_data *ch, class unit_data *vict)
     assert(!CHAR_DESCRIPTOR(vict));
     assert(!CHAR_IS_SNOOPING(ch) || CHAR_DESCRIPTOR(CHAR_IS_SNOOPING(ch)));
     assert(!CHAR_IS_SNOOPED(ch) || CHAR_DESCRIPTOR(CHAR_IS_SNOOPED(ch)));
-    assert(!is_destructed(DR_UNIT, vict));
-    assert(!is_destructed(DR_UNIT, ch));
+    assert(!vict->is_destructed());
+    assert(!ch->is_destructed());
 
     CHAR_DESCRIPTOR(ch)->character = vict;
 
@@ -872,7 +871,7 @@ void extract_unit(class unit_data *unit)
     /* destruct_affect is called inside extract we   */
     /* got a recursive call.                         */
 
-    if (is_destructed(DR_UNIT, unit))
+    if (unit->is_destructed())
         return;
 
     /* We can't extract rooms! Sanity, MS 300595, wierd bug... */
@@ -886,7 +885,7 @@ void extract_unit(class unit_data *unit)
 
     DeactivateDil(unit);
 
-    register_destruct(DR_UNIT, unit);
+    unit->register_destruct();
 
     if (UNIT_IS_EQUIPPED(unit))
         unequip_object(unit);
@@ -897,7 +896,7 @@ void extract_unit(class unit_data *unit)
     while (UNIT_CONTAINS(unit))
         extract_unit(UNIT_CONTAINS(unit));
 
-    /*	void unlink_affect(struct unit_affected_type *af);
+    /*	void unlink_affect(class unit_affected_type *af);
           while (UNIT_FUNC(unit))
     	destroy_fptr(unit, UNIT_FUNC(unit));
 

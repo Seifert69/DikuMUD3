@@ -17,8 +17,8 @@
 extern struct apply_function_type apf[];
 extern struct tick_function_type tif[];
 
-struct unit_affected_type *affected_list = 0;	/* Global list pointer       */
-struct unit_affected_type *next_affected_dude;	/* dirty - very dirty indeed */
+class unit_affected_type *affected_list = 0;	/* Global list pointer       */
+class unit_affected_type *next_affected_dude;	/* dirty - very dirty indeed */
 extern eventqueue events;
 
 void register_destruct (int i, void *ptr);
@@ -29,7 +29,7 @@ void affect_beat (void *, void *);
 
 /* Link an affected structure into the units affected structure */
 void
-link_affect (class unit_data * unit, struct unit_affected_type *af)
+link_affect (class unit_data * unit, class unit_affected_type *af)
 {
     /*if (af->id > ID_TOP_IDX)
        error(HERE, "%s@%s (%s) linked affect ID %d > max value.",
@@ -57,13 +57,12 @@ link_affect (class unit_data * unit, struct unit_affected_type *af)
 
 
 
-struct unit_affected_type *
-link_alloc_affect (class unit_data * unit, struct unit_affected_type *orgaf)
+class unit_affected_type *link_alloc_affect (class unit_data * unit, class unit_affected_type *orgaf)
 {
-    struct unit_affected_type *af;
+    class unit_affected_type *af;
 
-    CREATE (af, struct unit_affected_type, 1);
-    assert (!is_destructed (DR_AFFECT, af));
+    af = new unit_affected_type;
+    assert (!af->is_destructed());
 
     *af = *orgaf;
 
@@ -79,11 +78,10 @@ link_alloc_affect (class unit_data * unit, struct unit_affected_type *orgaf)
 /* is *not* called - but the structure is still alloced and */
 /* linked.                                                  */
 void
-create_affect (class unit_data * unit, struct unit_affected_type *af)
+create_affect (class unit_data * unit, class unit_affected_type *af)
 {
-    if (!is_destructed (DR_UNIT, unit))
+    if (!unit->is_destructed())
     {
-        af->destructed = FALSE;
         af = link_alloc_affect (unit, af);
         af->event = NULL;
         /* If less than zero it is a transfer! */
@@ -115,14 +113,13 @@ create_affect (class unit_data * unit, struct unit_affected_type *af)
 
 /* Unlink  an affect structure from lists        */
 /* It is freed by 'clear_destruct' automatically */
-void
-unlink_affect (struct unit_affected_type *af)
+void unlink_affect(class unit_affected_type *af)
 {
-    struct unit_affected_type *i;
+    class unit_affected_type *i;
 
     /* NB! Mucho importanto!                                    */
     /* Affects may never be removed by lower function than this */
-    register_destruct (DR_AFFECT, af);
+    af->register_destruct();
 
     events.remove (affect_beat, (void *) af, 0);
 
@@ -166,7 +163,7 @@ unlink_affect (struct unit_affected_type *af)
 /* If the apf funtion returns TRUE then the affect will neither be    */
 /* Unliked nor freed nor will the tif funtion be called               */
 void
-destroy_affect (struct unit_affected_type *af)
+destroy_affect (class unit_affected_type *af)
 {
     /* It is assumed that none of these function calls can */
     /* destroy the affect.                                 */
@@ -184,7 +181,7 @@ destroy_affect (struct unit_affected_type *af)
                 return;
             }
 
-        if (af->lastf_i >= 0 && !is_destructed (DR_UNIT, af->owner))
+        if (af->lastf_i >= 0 && !af->owner->is_destructed())
             (*tif[af->lastf_i].func) (af, af->owner);
     }
 
@@ -197,7 +194,7 @@ void
 affect_clear_unit (class unit_data * unit)
 {
     int i;
-    struct unit_affected_type *taf1, *taf2;
+    class unit_affected_type *taf1, *taf2;
 
     /* Some affects may not be destroyed at first attempt if it would */
     /* cause an overflow, therefore do several attemps to destroy     */
@@ -215,10 +212,10 @@ affect_clear_unit (class unit_data * unit)
 }
 
 
-struct unit_affected_type *
+class unit_affected_type *
 affected_by_spell (const class unit_data * unit, sbit16 id)
 {
-    struct unit_affected_type *af;
+    class unit_affected_type *af;
 
     for (af = UNIT_AFFECTED (unit); af; af = af->next)
         if (af->id == id)
@@ -233,7 +230,7 @@ affected_by_spell (const class unit_data * unit, sbit16 id)
 void
 affect_beat (void *p1, void *p2)
 {
-    register struct unit_affected_type *af = (struct unit_affected_type *) p1;
+    register class unit_affected_type *af = (class unit_affected_type *) p1;
     int destroyed;
 
 
@@ -261,7 +258,7 @@ affect_beat (void *p1, void *p2)
             if (af->tickf_i >= 0)
                 (*tif[af->tickf_i].func) (af, af->owner);
 
-            destroyed = is_destructed (DR_AFFECT, af);
+            destroyed = af->is_destructed();
 
             if (!destroyed && (af->duration > 0))
                 af->duration--;
@@ -282,7 +279,7 @@ affect_beat (void *p1, void *p2)
 void
 apply_affect (class unit_data * unit)
 {
-    struct unit_affected_type *af;
+    class unit_affected_type *af;
 
     /* If less than zero it is a transfer, and nothing will be set */
     for (af = UNIT_AFFECTED (unit); af; af = af->next)
@@ -297,7 +294,7 @@ apply_affect (class unit_data * unit)
 void
 start_affect (class unit_data * unit)
 {
-    struct unit_affected_type *af;
+    class unit_affected_type *af;
 
     /* If less than zero it is a transfer, and nothing will be set */
     for (af = UNIT_AFFECTED (unit); af; af = af->next)
@@ -315,7 +312,7 @@ start_affect (class unit_data * unit)
 void
 stop_affect (class unit_data * unit)
 {
-    struct unit_affected_type *af;
+    class unit_affected_type *af;
 
     for (af = UNIT_AFFECTED (unit); af; af = af->next)
         if (af->event != NULL)

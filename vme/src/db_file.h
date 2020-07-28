@@ -16,21 +16,21 @@ extern CByteBuffer g_FileBuffer; /* Defined in db_file.c */
 extern int g_nCorrupt;           /*          "           */
 
 void *bread_dil(CByteBuffer *pBuf, class unit_data *, ubit8 version,
-                struct unit_fptr *fptr, int stspec = TRUE);
+                class unit_fptr *fptr, int stspec = TRUE);
 
 struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version);
 int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version);
 
 int bread_affect(CByteBuffer *pBuf, class unit_data *u, ubit8 nVersion);
 
-struct unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version,
+class unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version,
                              class unit_data *owner, int stspec = TRUE);
 
 void bread_block(FILE *datafile, long file_pos, int length, void *buffer);
 
-void bwrite_affect(CByteBuffer *pBuf, struct unit_affected_type *af,
+void bwrite_affect(CByteBuffer *pBuf, class unit_affected_type *af,
                    ubit8 version);
-void bwrite_func(CByteBuffer *pBuf, struct unit_fptr *fptr);
+void bwrite_func(CByteBuffer *pBuf, class unit_fptr *fptr);
 void bwrite_block(FILE *f, int length, void *buffer);
 void bwrite_dil(CByteBuffer *pBuf, struct dilprg *prg);
 void bwrite_diltemplate(CByteBuffer *pBuf, struct diltemplate *tmpl);

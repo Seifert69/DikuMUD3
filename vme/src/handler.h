@@ -35,10 +35,10 @@ class extra_descr_data *quest_add (class unit_data * ch,
 void insert_in_unit_list (class unit_data * u);
 void remove_from_unit_list (class unit_data * unit);
 
-struct unit_fptr *find_fptr (class unit_data * u, ubit16 index);
-struct unit_fptr *create_fptr(class unit_data *u, ubit16 index, ubit16 priority,
+class unit_fptr *find_fptr (class unit_data * u, ubit16 index);
+class unit_fptr *create_fptr(class unit_data *u, ubit16 index, ubit16 priority,
                               ubit16 beat, ubit16 flags, void *data);
-void destroy_fptr (class unit_data * u, struct unit_fptr *f);
+void destroy_fptr (class unit_data * u, class unit_fptr *f);
 
 void stop_following (class unit_data * ch);
 void start_following (class unit_data * ch, class unit_data * leader);

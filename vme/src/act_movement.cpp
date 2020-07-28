@@ -95,7 +95,7 @@ const char *single_unit_messg(class unit_data *unit,
 int has_found_door(class unit_data *pc, int dir)
 {
    class extra_descr_data *exd;
-   struct unit_affected_type *af;
+   class unit_affected_type *af;
    char buf[MAX_INPUT_LENGTH];
 
    if (!IS_ROOM(UNIT_IN(pc)))
@@ -169,7 +169,7 @@ int room_move(class unit_data *ch, class unit_data *mover, class unit_data *room
       char buf[MAX_INPUT_LENGTH];
       strcpy(buf, "");
       res = send_preprocess(mover, cmd_dirs[direction], buf);
-      if (is_destructed(DR_UNIT, ch))
+      if (ch->is_destructed())
          return -1;
    }
    else
@@ -494,7 +494,7 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
             act("$1n tries to swim, but flounders and takes in water!", A_ALWAYS, mover, NULL, NULL, TO_REST);
             modify_hit(mover, (skilltest / 10));
 
-            if (is_destructed(DR_UNIT, mover) || (CHAR_POS(mover) == POSITION_DEAD))
+            if (mover->is_destructed() || (CHAR_POS(mover) == POSITION_DEAD))
                return -1;
             else
                return 0;
@@ -767,7 +767,7 @@ int do_simple_move(class unit_data *ch, int direction, int following)
    if (following)
    {
       res = send_preprocess(ch, cmd_dirs[direction], buf);
-      if (is_destructed(DR_UNIT, ch))
+      if (ch->is_destructed())
          return -1;
    }
    else
@@ -1075,7 +1075,7 @@ int do_simple_sail(class unit_data *boat, class unit_data *captain, int directio
       if (!pay_point_charlie(u, to))
          return 0;
 
-   if (is_destructed(DR_UNIT, boat))
+   if (boat->is_destructed())
       return -1;
 
    if (res != SFR_SHARE || was_in != UNIT_IN(boat))
@@ -1142,7 +1142,7 @@ int do_simple_ride(class unit_data *beast,
       if (!pay_point_charlie(u, to))
          return 0;
 
-   if (is_destructed(DR_UNIT, beast))
+   if (beast->is_destructed())
       return -1;
 
    if ((res != SFR_SHARE) || (was_in != UNIT_IN(beast)))

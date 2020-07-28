@@ -375,7 +375,7 @@ void set_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
 
    /* No check for awake! If you die, FIGHTING() is set to point to murderer */
 
-   if (is_destructed(DR_UNIT, ch) || is_destructed(DR_UNIT, vict))
+   if (ch->is_destructed() || vict->is_destructed())
       return;
 
    if (CHAR_COMBAT(ch) == NULL)
@@ -394,7 +394,7 @@ void add_fighting(class unit_data *ch, class unit_data *vict, int bMelee)
 
    /* No check for awake! If you die, FIGHTING() is set to point to murderer */
 
-   if (is_destructed(DR_UNIT, ch) || is_destructed(DR_UNIT, vict))
+   if (ch->is_destructed() || vict->is_destructed())
       return;
 
    if (CHAR_COMBAT(ch) == NULL)

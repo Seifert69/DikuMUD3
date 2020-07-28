@@ -663,7 +663,7 @@ static void stat_affect(const class unit_data *ch, class unit_data *u)
     extern struct tick_function_type tif[];
     extern struct apply_function_type apf[];
 
-    struct unit_affected_type *af;
+    class unit_affected_type *af;
     char buf[1024];
 
     if (!UNIT_AFFECTED(u))
@@ -712,7 +712,7 @@ static void stat_func(const class unit_data *ch, class unit_data *u)
     extern struct unit_function_array_type unit_function_array[];
 
     char buf[4096], buf2[512];
-    struct unit_fptr *f;
+    class unit_fptr *f;
 
     if (!UNIT_FUNC(u))
     {

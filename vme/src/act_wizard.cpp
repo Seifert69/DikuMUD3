@@ -226,7 +226,7 @@ void do_at(class unit_data *ch, char *argument, const struct command_info *cmd)
     command_interpreter(ch, argument);
 
     /* check if the guy's still there */
-    if (!is_destructed(DR_UNIT, ch) && !is_destructed(DR_UNIT, original_loc) && !unit_recursive(ch, original_loc))
+    if (!ch->is_destructed() && !original_loc->is_destructed() && !unit_recursive(ch, original_loc))
     {
         unit_from_unit(ch);
         unit_to_unit(ch, original_loc);

@@ -152,7 +152,7 @@ convert_inventory (class unit_data * u, class unit_data * pc,
 
     bla = convert_item (u, pc, bList);
 
-    assert (!is_destructed (DR_UNIT, u));
+    assert (!u->is_destructed());
 
     if (bla != u)
     {
