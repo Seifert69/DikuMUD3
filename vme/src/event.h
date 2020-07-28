@@ -33,6 +33,7 @@ private:
 public:
     eventqueue (void);
     ~eventqueue (void);
+
     inline int Count (void) {
         return count;
     }

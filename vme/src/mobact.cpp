@@ -180,7 +180,7 @@ void special_event(void *p1, void *p2)
 void stop_special(class unit_data *u, class unit_fptr *fptr)
 {
     events.remove(special_event, u, fptr);
-    events.hulahop(special_event, u, fptr);
+    events.remove_relaxed(special_event, u, fptr);
 }
 
 void start_special(class unit_data *u, class unit_fptr *fptr)
