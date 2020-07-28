@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <type_traits>
 
 #include "structs.h"
 #include "utils.h"
@@ -20,7 +21,7 @@
 #include "interpreter.h"
 #include "affect.h"
 #include "utility.h"
-
+#include "destruct.h"
 
 /*
    This method is possible since we know that the only problem occurs when:
@@ -58,12 +59,107 @@
 */
 
 
+/* Registered by affect.c low level destruct affect */
+/* (unlink affect). Used only by affect_beat.       */
+/* Registered by destroy fptr */
+/* Used only by special_event */
+/* Registered by extract_unit */
+/* Used lots of places        */
 
+/* 3 Arrays of registered destructed things     */
+void **destructed[3] = { 0, 0, 0 };
+
+/* 3 Arrays which indicate size of above arrays */
+int destructed_top[3] = { -1, -1, -1 };
+
+/* 3 Arrays which point to first free entry     */
+int destructed_idx[3] = { -1, -1, -1 };
+
+void destruct_resize (int i)
+{
+    if (destructed_top[i] == -1)
+    {
+        CREATE (destructed[i], void *, 1000);
+        destructed_top[i] = 1000;
+        destructed_idx[i] = 0;
+    }
+    else
+    {
+        RECREATE (destructed[i], void *, 1000 + destructed_top[i]);
+        destructed_top[i] += 1000;
+    }
+}
+
+
+
+/* ======= Destruct class ========== */ 
+
+basedestruct::basedestruct(void)
+{
+    m_bDestructed = 0;
+}
+
+basedestruct::~basedestruct(void)
+{  
+    //assert(m_bDestructed);
+}
+
+void basedestruct::register_destruct(void)
+{
+    assert(this);
+    assert(!m_bDestructed);
+    m_bDestructed = 1;
+
+    //if (is_destructed())
+    //    return;
+
+    int i = destruct_classindex();
+
+    if (destructed_idx[i] >= destructed_top[i])
+        destruct_resize(i);
+
+    destructed[i][destructed_idx[i]] = this;
+    destructed_idx[i]++;
+}
+
+int basedestruct::is_destructed(void)
+{
+    return (m_bDestructed != 0);
+}
+
+void basedestruct::undo_destruct(void)
+{
+    m_bDestructed = 0;
+}
+
+int basedestruct::destruct_classindex(void)
+{
+    assert(FALSE);
+    return -1;
+}
+
+int unit_data::destruct_classindex(void)
+{
+    return DR_UNIT;
+}
+
+int unit_fptr::destruct_classindex(void)
+{
+    return DR_FUNC;
+}
+
+int unit_affected_type::destruct_classindex(void)
+{
+    return DR_AFFECT;
+}
+
+
+/* ======================================= */
 
 /* May only be called by clear_destuct! */
-void
-destruct_unit (class unit_data * unit)
+void destruct_unit(class unit_data * unit)
 {
+#ifdef DMSERVER
     class descriptor_data *d;
     int in_menu = FALSE;
     if (!unit)
@@ -77,28 +173,32 @@ destruct_unit (class unit_data * unit)
     void unsnoop (class unit_data * ch, int mode);
     void die_follower (class unit_data * ch);
     void stop_fighting (class unit_data * ch);
-    void unlink_affect (struct unit_affected_type *af);
+    void unlink_affect (class unit_affected_type *af);
     void nanny_menu (class descriptor_data *d, char *arg);
     void nanny_close (class descriptor_data *d, char *arg);
 
     void do_return (class unit_data * ch, char *arg, struct command_info *cmd);
 
-    /* Remove all snooping, snoopers and return from any body */
-    if (IS_CHAR (unit))
+    if (!IS_PC(unit))
     {
-        if (CHAR_DESCRIPTOR (unit))
+        stop_all_special(unit); // MS2020 reactivated, this is imperative to avoid crash from obsoleted event q events
+        stop_affect(unit);      // Reactivated
+    }
+
+    /* Remove all snooping, snoopers and return from any body */
+    if (IS_CHAR(unit))
+    {
+        if (CHAR_DESCRIPTOR(unit))
         {
-            assert (IS_PC (unit));
+            assert (IS_PC(unit));
 
             in_menu = TRUE;
 
-//       stop_all_special(unit);
-//       stop_affect(unit);
             extern int dilmenu;
             if (UNIT_IN (unit) && !dilmenu)
             {
                 set_descriptor_fptr (CHAR_DESCRIPTOR (unit), nanny_menu, TRUE);
-                unit->destructed = FALSE;
+                unit->undo_destruct();
             }
             else
             {
@@ -158,45 +258,12 @@ destruct_unit (class unit_data * unit)
         delete unit;
         unit = NULL;
     }
+#endif
 }
 
 
-/* Registered by affect.c low level destruct affect */
-/* (unlink affect). Used only by affect_beat.       */
-/* Registered by destroy fptr */
-/* Used only by special_event */
-/* Registered by extract_unit */
-/* Used lots of places        */
-
-/* 3 Arrays of registered destructed things     */
-void **destructed[3] = { 0, 0, 0 };
-
-/* 3 Arrays which indicate size of above arrays */
-int destructed_top[3] = { -1, -1, -1 };
-
-/* 3 Arrays which point to first free entry     */
-int destructed_idx[3] = { -1, -1, -1 };
-
-void
-destruct_resize (int i)
-{
-    if (destructed_top[i] == -1)
-    {
-        CREATE (destructed[i], void *, 1000);
-        destructed_top[i] = 1000;
-        destructed_idx[i] = 0;
-    }
-    else
-    {
-        RECREATE (destructed[i], void *, 1000 + destructed_top[i]);
-        destructed_top[i] += 1000;
-    }
-}
-
-
-/* May only be called from extract_unit, destroy_ftpr and unlink_affect */
-void
-register_destruct (int i, void *ptr)
+/* May only be called from extract_unit, destroy_ftpr and unlink_affect 
+void register_destruct (int i, void *ptr)
 {
     assert (ptr);
     if (is_destructed (i, ptr))
@@ -205,13 +272,13 @@ register_destruct (int i, void *ptr)
     switch (i)
     {
     case DR_AFFECT:
-        ((struct unit_affected_type *) ptr)->destructed = TRUE;
+        ((class unit_affected_type *) ptr)->destructed = TRUE;
         break;
     case DR_UNIT:
         ((class unit_data *) ptr)->destructed = TRUE;
         break;
     case DR_FUNC:
-        ((struct unit_fptr *) ptr)->destructed = TRUE;
+        ((class unit_fptr *) ptr)->destructed = TRUE;
         break;
     }
 
@@ -220,65 +287,67 @@ register_destruct (int i, void *ptr)
 
     destructed[i][destructed_idx[i]] = ptr;
     destructed_idx[i]++;
-
-}
+}*/
 
 
 /* May only be called from comm.c event loop */
-void
-clear_destructed (void)
+void clear_destructed (void)
 {
-    struct unit_fptr *f;
+    class unit_fptr *f;
     int i;
 
     for (i = 0; i < destructed_idx[DR_AFFECT]; i++)
-        FREE (destructed[DR_AFFECT][i]);
+        delete (class unit_affected_type *) destructed[DR_AFFECT][i];
 
     destructed_idx[DR_AFFECT] = 0;
 
     for (i = 0; i < destructed_idx[DR_FUNC]; i++)
     {
-        f = (struct unit_fptr *) destructed[DR_FUNC][i];
+        f = (class unit_fptr *) destructed[DR_FUNC][i];
         if (f->data)
             FREE (f->data);
 
-        FREE (f);
+        delete (class unit_fptr *) f;
+        destructed[DR_FUNC][i] = NULL;
     }
     destructed_idx[DR_FUNC] = 0;
 
     for (i = 0; i < destructed_idx[DR_UNIT]; i++)
     {
         if ((class unit_data *) destructed[DR_UNIT][i])
-            destruct_unit ((class unit_data *) destructed[DR_UNIT][i]);
+        {
+            destruct_unit ((class unit_data *) destructed[DR_UNIT][i]);            
+            destructed[DR_UNIT][i] = NULL;
+        }
     }
     destructed_idx[DR_UNIT] = 0;
 }
 
 
-
-int
-is_destructed (int i, void *ptr)
+/*
+int is_destructed (int i, void *ptr)
 {
-
-    assert (ptr);
+    if (ptr == NULL)
+        return TRUE;
 
     switch (i)
     {
     case DR_AFFECT:
-        return ((struct unit_affected_type *) ptr)->destructed;
+        return ((class unit_affected_type *) ptr)->destructed;
         break;
     case DR_UNIT:
         return ((class unit_data *) ptr)->destructed;
         break;
     case DR_FUNC:
-        return ((struct unit_fptr *) ptr)->destructed;
+        return ((class unit_fptr *) ptr)->destructed;
         break;
     }
 
     return TRUE;
-    /*   for (n=0; n < destructed_idx[i]; n++)
+    / *   for (n=0; n < destructed_idx[i]; n++)
           if (destructed[i][n] == ptr)
     	 return TRUE;
 
-       return FALSE;*/
+       return FALSE;* /
 }
+*/
