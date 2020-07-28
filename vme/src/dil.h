@@ -602,9 +602,10 @@ struct dilframe
 
 struct dilprg
 {
-    ubit32 flags;			/* Recall, copy, etc. */
-    ubit16 varcrc;		/* variable crc from compiler (saved) */
-    ubit16 corecrc;		/* core crc from compiler (saved) */
+    ubit32 flags;       // Recall, copy, etc.
+    ubit16 varcrc;		// variable crc from compiler (saved)
+    ubit16 corecrc;		// core crc from compiler (saved)
+    ubit16 nest;        // How many levels is the call nested 
 
     ubit16 framesz;		/* stack size */
     struct dilframe *fp;		/* stack and pointer */
