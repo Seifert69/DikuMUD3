@@ -5248,7 +5248,10 @@ void dilfe_in(register struct dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
-    switch (dil_getval(v2))
+    int t2 = dil_getval(v2); 
+    int t1 = dil_getval(v1); 
+
+    switch (t2)
     {
     case DILV_FAIL:
         v->type = DILV_FAIL;
@@ -5284,7 +5287,7 @@ void dilfe_in(register struct dilprg *p)
         break;
     }
 
-    switch (dil_getval(v1))
+    switch (t1)
     {
     case DILV_FAIL:
         v->type = DILV_FAIL;
@@ -5311,23 +5314,28 @@ void dilfe_in(register struct dilprg *p)
     case DILV_SLP:
         v->atyp = DILA_NONE;
         v->type = DILV_INT;
-        v->val.num =
-            1 + (((cNamelist *)v2->val.ptr)->IsNameIdx((char *)v1->val.ptr));
+        v->val.num = 0;
+        if (v1->val.ptr)
+            v->val.num = 1 + (((cNamelist *)v2->val.ptr)->IsNameIdx((char *)v1->val.ptr));
         break;
 
     case DILV_EDP:
         v->atyp = DILA_NORM;
         v->type = DILV_EDP;
-        if (v2->val.ptr) //MS2020 BUG
+        if (v1->val.ptr && v2->val.ptr) //MS2020 BUG
             v->val.ptr =
                 ((class extra_descr_data *) v2->val.ptr)->find_raw(skip_spaces((char *)v1->val.ptr));
+        else
+            v->val.ptr = NULL;
         break;
 
     case DILV_INT:
         v->atyp = DILA_NONE;
         v->type = DILV_INT;
-        v->val.num =
-            (str_cstr((char *)v2->val.ptr, (char *)v1->val.ptr) != NULL);
+        v->val.num = FALSE;
+        if ((t1 == DILV_SP) && (t2 == DILV_SP) && v1->val.ptr && v2->val.ptr)
+            v->val.num = str_cstr((const char *)v2->val.ptr, (const char *)v1->val.ptr) != NULL;
+        else
         break;
     }
     p->stack.push(v);
