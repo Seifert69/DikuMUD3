@@ -54,13 +54,13 @@
 #include "hookmud.h"
 
 extern struct trie_type *intr_trie;
-void stop_special(class unit_data *u, struct unit_fptr *fptr);
-void start_special(class unit_data *u, struct unit_fptr *fptr);
+void stop_special(class unit_data *u, class unit_fptr *fptr);
+void start_special(class unit_data *u, class unit_fptr *fptr);
 
 /* report error in instruction */
 void dil_stop_special(class unit_data *unt, struct dilprg *aprg)
 {
-    struct unit_fptr *fptr;
+    class unit_fptr *fptr;
     class unit_data *u;
     for (u = unt; u; u = u->next)
     {
@@ -80,7 +80,7 @@ void dil_stop_special(class unit_data *unt, struct dilprg *aprg)
 
 void dil_start_special(class unit_data *unt, struct dilprg *aprg)
 {
-    struct unit_fptr *fptr;
+    class unit_fptr *fptr;
     class unit_data *u;
     for (u = unt; u; u = u->next)
     {
@@ -436,7 +436,7 @@ void dilfi_fon(struct dilprg *p)
             if (!p->fp->secure[i].lab)
             {
                 u = p->fp->secure[i].sup;
-                if (is_destructed(DR_UNIT, u))
+                if (u->is_destructed())
                 {
                     dil_sub_secure(p->fp, u, TRUE);
                     i--;
@@ -1309,11 +1309,17 @@ void dilfi_ass(register struct dilprg *p)
             break;
 
         case DILV_HASHSTR:
-            *((char **)v1->ref) = str_dup(((string *)v2->ref)->c_str());
+            if (v2->ref)
+                *((char **)v1->ref) = str_dup(((string *)v2->ref)->c_str());
+            else
+                *((char **)v1->ref) = str_dup("");
             break;
 
         case DILV_SP:
-            *((char **)v1->ref) = str_dup((char *)v2->val.ptr);
+            if (v2->val.ptr)
+                *((char **)v1->ref) = str_dup((const char *) v2->val.ptr);
+            else
+                *((char **)v1->ref) = str_dup("");
             break;
 
         default:
@@ -2304,7 +2310,7 @@ void dilfi_sua(register struct dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    struct unit_affected_type *af;
+    class unit_affected_type *af;
 
     p->waitcmd--;
 
@@ -2366,7 +2372,7 @@ void dilfi_ada(register struct dilprg *p)
             }
             else
             {
-                struct unit_affected_type af;
+                class unit_affected_type af;
 
                 af.id = v2->val.num;
                 af.duration = v3->val.num;
@@ -2538,7 +2544,7 @@ void dilfi_sntadil(register struct dilprg *p)
 
                     if (tp->fp && tp->fp->tmpl == tmpl && tp != p)
                     {
-                        struct unit_fptr *fptr;
+                        class unit_fptr *fptr;
 
                         /* If it is destructed, then it cant be found because data
                            will be null */
