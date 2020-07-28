@@ -63,11 +63,11 @@ int dil_destroy (const char *name, class unit_data * u);
 /* NULL fptr creates one...  */
 struct dilprg *dil_copy_template (struct diltemplate *tmpl,
                                   class unit_data * u,
-                                  struct unit_fptr **pfptr);
+                                  class unit_fptr **pfptr);
 struct dilprg *dil_copy (char *name, class unit_data * u);
 
 
-struct unit_fptr *dil_find (const char *name, class unit_data * u);
+class unit_fptr *dil_find (const char *name, class unit_data * u);
 
 void dil_typeerr (struct dilprg *p, const  char *where);
 
