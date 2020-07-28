@@ -445,7 +445,6 @@ unit_data::unit_data(ubit8 type)
     next = NULL;
     gnext = NULL;
     gprevious = NULL;
-    destructed = FALSE;
     chars = 0;
     manipulate = 0;
     flags = 0;
@@ -494,7 +493,7 @@ unit_data::~unit_data(void)
     ubit8 type;
 #endif
 
-    void unlink_affect(struct unit_affected_type * af);
+    void unlink_affect(class unit_affected_type * af);
 
     /* Sanity due to wierd bug I saw (MS, 30/05-95) */
 

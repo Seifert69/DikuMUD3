@@ -17,6 +17,7 @@
 #include "system.h"
 #include "fight.h"
 #include "color.h"
+#include "destruct.h"
 using namespace std;
 #include <vector>
 #ifndef MPLEX_COMPILE
@@ -423,8 +424,9 @@ struct unit_dil_affected_type
     struct unit_dil_affected_type *next;
 };
 
-struct unit_affected_type
+class unit_affected_type : public basedestruct
 {
+public:
     sbit16 id;
     ubit16 beat;     /* Beat in 1/4 of secs, 0 = None */
     sbit16 duration; /* How many beats until end      */
@@ -436,28 +438,31 @@ struct unit_affected_type
     sbit16 lastf_i;
     sbit16 applyf_i;
     eventq_elem *event; /*pointer to eventq for quick removing      */
-    int destructed;
     class unit_data *owner;
-    struct unit_affected_type *next, *gnext, *gprevious;
+    class unit_affected_type *next, *gnext, *gprevious;
+
+    int destruct_classindex(void);
 };
 
-struct unit_fptr
+class unit_fptr : public basedestruct
 {
+public:
     ubit16 index;           /* Index to function pointer array             */
     ubit8  priority;        /* Order to insert ftpr on unit (2020)         */
     ubit16 heart_beat;      /* in 1/4 of a sec                             */
     ubit16 flags;           /* When to override next function (boolean)    */
     void *data;             /* Pointer to data local for this unit         */
-    struct unit_fptr *next; /* Next in linked list                         */
+    class unit_fptr *next; /* Next in linked list                         */
     eventq_elem *event;     /* pointer to eventq for quick removing        */
-    int destructed;
+
+    int destruct_classindex(void);
 };
 
-class unit_data
+class unit_data : public basedestruct
 {
 public:
     unit_data(ubit8 type);
-    ~unit_data(void);
+    ~unit_data();
     class unit_data *copy();
 
     class cNamelist names; /* Name Keyword list for get, enter, etc.      */
@@ -468,12 +473,12 @@ public:
         class obj_data *obj;
     } data;
 
-    struct unit_fptr /* Function pointer type                      */
+    class unit_fptr /* Function pointer type                      */
         *func;
 
     struct unit_dil_affected_type *dilaffect;
 
-    struct unit_affected_type *affected;
+    class unit_affected_type *affected;
 
     class file_index_type *fi; /* Unit file-index                               */
 
@@ -521,7 +526,7 @@ public:
 
     class extra_list extra;  /* All the look 'at' stuff                     */
 
-    int destructed;
+    int destruct_classindex(void);
 };
 
 /* ----------------- Destructed decalrations ----------------------- */
