@@ -16,7 +16,7 @@ void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
  * tested: No
  */
 {
-    struct unit_affected_type af, *paf = NULL;
+    class unit_affected_type af, *paf = NULL;
     class unit_data *vict, *stabber;
     int skilla, skillb, hm;
     char *oarg = arg;
