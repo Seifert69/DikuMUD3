@@ -229,7 +229,10 @@ void dil_free_template(struct diltemplate *tmpl, int copy)
     if (tmpl->flags == DILFL_FREEME)
     {
         /* free dummy template */
-        FREE(tmpl->prgname);
+        //FREE(tmpl->prgname); xxx
+        tmpl->zone = NULL;
+        tmpl->argt = NULL;
+        tmpl->xrefs = NULL;
         FREE(tmpl);
     }
     else if (!copy)
@@ -260,6 +263,10 @@ void dil_free_template(struct diltemplate *tmpl, int copy)
 
         if (tmpl->xrefs)
             FREE(tmpl->xrefs);
+
+        tmpl->zone = NULL;
+        tmpl->argt = NULL;
+        tmpl->xrefs = NULL;
 
         FREE(tmpl);
     }
@@ -487,6 +494,12 @@ void dil_clear_non_secured(register struct dilprg *prg)
 {
     register int i, j;
     struct dilframe *frm;
+
+    if (!prg->frame)
+    {
+        slog(LOG_ALL, 0, "tried to clean empty frame");
+        return;
+    }
 
     for (frm = prg->frame; frm <= prg->fp; frm++)
     {
@@ -838,11 +851,16 @@ struct dil_func_type dilfe_func[DILI_MAX + 1] = {
     {dilfe_gint}
 };
 
-void dil_free_prg(struct dilprg *prg)
+// Will only free if nest <= 0 (otherwise it's recursively running and needs to unwrap first)
+//
+void dil_free_prg(struct dilprg *prg, int nest)
 {
     struct diltemplate *tmpl;
     struct dilframe *frm;
     struct dilprg *tp;
+
+    if ((prg->next == NULL) || (nest <= 0))
+        return;
 
     if (dil_list)
     {
@@ -856,6 +874,7 @@ void dil_free_prg(struct dilprg *prg)
         {
             int ok = FALSE;
             for (tp = dil_list; tp->next; tp = tp->next)
+            {
                 if (tp->next == prg)
                 {
                     if (dil_list_nextdude == tp->next)
@@ -864,12 +883,19 @@ void dil_free_prg(struct dilprg *prg)
                     ok = TRUE;
                     break;
                 }
+            }
+            prg->next = NULL;
             if (ok == FALSE)
+            {
+                slog(LOG_ALL, 0, "Not found in dil_list");
                 return;
+            }
         }
-        prg->next = NULL;
     }
+    prg->next = NULL;
+
     tmpl = prg->frame[0].tmpl;
+    assert(tmpl);
 
     for (frm = prg->frame; frm <= (prg->fp); frm++)
         dil_free_frame(frm);
@@ -879,6 +905,10 @@ void dil_free_prg(struct dilprg *prg)
     dil_free_template(tmpl, IS_SET(prg->flags, DILFL_COPY));
 
     prg->stack.destroy();
+    prg->owner = NULL;
+    prg->sarg = NULL;
+    prg->fp = NULL;
+    prg->waitcmd = WAITCMD_DESTROYED;
 
     FREE(prg);
 }
@@ -964,13 +994,17 @@ static int check_interrupt(struct dilprg *prg)
 
 void ActivateDil(class unit_data *pc)
 {
-    struct unit_fptr *fptr;
+    class unit_fptr *fptr;
     struct dilprg *prg;
 
     for (fptr = UNIT_FUNC(pc); fptr; fptr = fptr->next)
     {
-        if (fptr->index == SFUN_DIL_INTERNAL && fptr->data)
+        if (fptr->is_destructed())
         {
+            assert(FALSE);
+        }
+       if (fptr->index == SFUN_DIL_INTERNAL && fptr->data)
+        { 
             prg = (struct dilprg *)fptr->data;
             REMOVE_BIT(prg->flags, DILFL_DEACTIVATED);
         }
@@ -983,7 +1017,7 @@ void ActivateDil(class unit_data *pc)
 */
 void DeactivateDil(class unit_data *pc, struct dilprg *aprg)
 {
-    struct unit_fptr *fptr;
+    class unit_fptr *fptr;
     struct dilprg *prg;
 
     for (fptr = UNIT_FUNC(pc); fptr; fptr = fptr->next)
@@ -998,6 +1032,12 @@ void DeactivateDil(class unit_data *pc, struct dilprg *aprg)
     }
 }
 
+
+// MS2020. Added dilprg.nest (int) which counts how many times run_dil has
+// been called recursively for the same program. nest++ on each entry into run_dil
+// and nest-- before you return (if you call dil_free_prg first be sure to decrease first)
+// dil_free_prg only frees when nest <= 0.
+//
 int run_dil(struct spec_arg *sarg)
 {
     register struct dilprg *prg = (struct dilprg *)sarg->fptr->data;
@@ -1010,35 +1050,61 @@ int run_dil(struct spec_arg *sarg)
     if (prg == NULL)
         return SFR_SHARE;
 
+    if (prg->fp == NULL)
+    {
+        slog(LOG_ALL, 0, "run_dil() has empty frame?! :-(");
+        return SFR_SHARE;
+    }
+
+    prg->nest++; // How many recursive calls does this program have?
+
+    if (prg->nest > 1)
+    {
+        slog(LOG_ALL, 0, "run_dil() %s has nest %d", prg->fp->tmpl->prgname, prg->nest);
+    }
+
     if (sarg->cmd->no == CMD_AUTO_EXTRACT)
     {
+        prg->nest--; // We return below, get to zero before free
         if (IS_SET(prg->flags, DILFL_EXECUTING))
         {
             /* Set so as to notify command loop! Extracted recursively! */
             prg->waitcmd = WAITCMD_DESTROYED;
 
+            sarg->fptr->data = NULL;
+
             /* The very very very dirty static template hack... :-) */
             if (IS_SET(prg->fp->tmpl->flags, DILFL_FREEME))
-                dil_free_prg(prg);
-
-            sarg->fptr->data = NULL;
+                dil_free_prg(prg, prg->nest);
         }
         else
         {
             sarg->fptr->data = NULL;
-            dil_free_prg(prg);
+            dil_free_prg(prg, prg->nest);
         }
+        destroy_fptr(sarg->owner, sarg->fptr);
         return SFR_BLOCK;
     }
 
     if (IS_SET(prg->flags, DILFL_EXECUTING | DILFL_DEACTIVATED))
+    {
+        prg->nest--;
         return SFR_SHARE;
+    }
 
     SET_BIT(prg->flags, DILFL_EXECUTING);
     REMOVE_BIT(prg->flags, DILFL_CMDBLOCK);
 
     /* For evaluating expressions */
     prg->sarg = sarg;
+
+    if (prg->next == NULL)
+    {
+        slog(LOG_ALL, 0, "already destroyed DIL");
+        prg->nest--;
+        return SFR_SHARE;
+    }
+
 
     /* A MEGA HACK! The DIL activated spells will not be tested for
        secures on first call only, to avoid loosing global pointers */
@@ -1052,12 +1118,14 @@ int run_dil(struct spec_arg *sarg)
     {
         REMOVE_BIT(prg->flags, DILFL_EXECUTING);
         sarg->arg = orgarg;
+        prg->nest--;
         return SFR_SHARE;
     }
 
     if (activates + 1 > 5000)
     {
         slog(LOG_ALL, 0, "RECURSIVE DIL ERROR IN %s", prg->fp->tmpl->prgname);
+        prg->nest--;
         return SFR_SHARE;
     }
 
@@ -1095,38 +1163,31 @@ int run_dil(struct spec_arg *sarg)
         sarg->fptr->data = NULL;
 
         destroy_fptr(sarg->owner, sarg->fptr);
+        prg->nest--;
+        dil_free_prg(prg, prg->nest);
 
         if (IS_SET(prg->flags, DILFL_CMDBLOCK))
-        {
-            dil_free_prg(prg);
             return SFR_BLOCK;
-        }
         else
-        {
-            dil_free_prg(prg);
             return SFR_SHARE;
-        }
     }
     else if (prg->waitcmd <= WAITCMD_QUIT)
     {
         sarg->fptr->data = NULL;
         destroy_fptr(sarg->owner, sarg->fptr);
+        prg->nest--;
+        dil_free_prg(prg, prg->nest);
 
         if (IS_SET(prg->flags, DILFL_CMDBLOCK))
-        {
-            dil_free_prg(prg);
             return SFR_BLOCK;
-        }
         else
-        {
-            dil_free_prg(prg);
             return SFR_SHARE;
-        }
     }
     else if (prg->waitcmd <= WAITCMD_STOP)
     {
         /* Just return and let the EXECUTING bit stay turned on, so all
            execution is blocked */
+        prg->nest--;
         return SFR_SHARE;
     }
     else if (prg->waitcmd > WAITCMD_FINISH)
@@ -1136,6 +1197,7 @@ int run_dil(struct spec_arg *sarg)
                  prg->fp->tmpl->prgname,
                  UNIT_FI_NAME(sarg->owner), UNIT_FI_ZONENAME(sarg->owner));
         destroy_fptr(sarg->owner, sarg->fptr);
+        prg->nest--;
         return SFR_SHARE;
     }
 
@@ -1160,7 +1222,7 @@ int run_dil(struct spec_arg *sarg)
 
     if (IS_SET(prg->sarg->fptr->flags, SFB_TICK))
     {
-        void ResetFptrTimer(class unit_data * u, struct unit_fptr * fptr);
+        void ResetFptrTimer(class unit_data * u, class unit_fptr * fptr);
 
         /* Purely for optimization purposes! Enqueue / dequeue are HUGE! */
         if ((OrgHeartBeat != sarg->fptr->heart_beat) &&
@@ -1171,6 +1233,7 @@ int run_dil(struct spec_arg *sarg)
 
     REMOVE_BIT(prg->flags, DILFL_EXECUTING);
 
+    prg->nest--;
     if (IS_SET(prg->flags, DILFL_CMDBLOCK))
         return SFR_BLOCK;
     else
@@ -1308,6 +1371,7 @@ int dil_direct_init(struct spec_arg *sarg)
             }
         }
 
+
         destroy_fptr(sarg->owner, sarg->fptr);
     }
     else
@@ -1320,7 +1384,7 @@ int dil_direct_init(struct spec_arg *sarg)
 
 int dil_destroy(const char *name, class unit_data *u)
 {
-    struct unit_fptr *fptr;
+    class unit_fptr *fptr;
     struct dilprg *prg;
     struct spec_arg sarg;
 
@@ -1342,7 +1406,7 @@ int dil_destroy(const char *name, class unit_data *u)
 
         run_dil(&sarg);
         //  We finished the on_dildestroy part, now lets really destroy it.
-        if (!is_destructed(DR_FUNC, fptr) && fptr && fptr->data)
+        if (!fptr->is_destructed() && fptr && fptr->data)
         {
             prg->waitcmd = WAITCMD_QUIT;
             dil_activate(prg);
@@ -1378,15 +1442,15 @@ void dil_init_vars(int varc, struct dilframe *frm)
 }
 
 struct dilprg *dil_copy_template(struct diltemplate *tmpl,
-                                 class unit_data *u, struct unit_fptr **pfptr)
+                                 class unit_data *u, class unit_fptr **pfptr)
 {
     struct dilprg *prg;
     struct dilframe *frm;
-    struct unit_fptr *fptr;
+    class unit_fptr *fptr;
 
     if (IS_SET(tmpl->flags, DILFL_UNIQUE))
     {
-        struct unit_fptr *f;
+        class unit_fptr *f;
         for (f = UNIT_FUNC(u); f; f = f->next)
         {
             if (f->index == SFUN_DIL_INTERNAL)
@@ -1404,6 +1468,7 @@ struct dilprg *dil_copy_template(struct diltemplate *tmpl,
 
     /* GENERATE PRG STRUCTURE, LINK IN frame; AND TEMPLATE, ETC */
     prg->stack.init(10);
+    prg->nest = 0;
     prg->owner = u;
     prg->next = dil_list;
     dil_list = prg;
@@ -1456,7 +1521,7 @@ struct dilprg *dil_copy_template(struct diltemplate *tmpl,
 void dil_activate(struct dilprg *prg)
 {
     struct spec_arg sarg;
-    struct unit_fptr *fptr;
+    class unit_fptr *fptr;
 
     assert(prg);
 
@@ -1487,7 +1552,7 @@ void dil_activate(struct dilprg *prg)
 void dil_activate_cmd(struct dilprg *prg, struct command_info *cmd_ptr)
 {
     struct spec_arg sarg;
-    struct unit_fptr *fptr;
+    class unit_fptr *fptr;
 
     assert(prg);
 
@@ -1517,7 +1582,7 @@ void dil_activate_cmd(struct dilprg *prg, struct command_info *cmd_ptr)
 
 void dil_loadtime_activate(class unit_data *u)
 {
-    struct unit_fptr *f, *fnext;
+    class unit_fptr *f, *fnext;
     for (f = UNIT_FUNC(u); f; f = fnext)
     {
         fnext = f->next;
@@ -1648,15 +1713,15 @@ struct dilprg *dil_copy(char *name, class unit_data *u)
     return prg;
 }
 
-struct unit_fptr *dil_find(const char *name, class unit_data *u)
+class unit_fptr *dil_find(const char *name, class unit_data *u)
 {
-    struct unit_fptr *fptr;
+    class unit_fptr *fptr;
     struct diltemplate *tmpl;
 
     if ((tmpl = find_dil_template(name)))
     {
         for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
-            if ((!is_destructed(DR_FUNC, fptr)) && (fptr->index == SFUN_DIL_INTERNAL))
+            if ((!fptr->is_destructed()) && (fptr->index == SFUN_DIL_INTERNAL))
                 if ((((struct dilprg *)fptr->data)->frame[0].tmpl == tmpl) && (((struct dilprg *)fptr->data)->waitcmd != WAITCMD_QUIT))
                     return fptr;
     }
