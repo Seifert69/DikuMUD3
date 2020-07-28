@@ -360,8 +360,7 @@ void game_loop()
         if (delay > 0)
         {
             usleep(delay);
-            old.tv_usec += delay; /* This time has passed in usleep.
-				   Overrun is not important. */
+            old.tv_usec += delay; /* This time has passed in usleep. Overrun is not important. */
         }
     }
 
