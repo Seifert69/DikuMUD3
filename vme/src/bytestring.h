@@ -47,6 +47,8 @@ public:
     {
         m_nReadPos = 0;
         m_nLength = 0;
+        assert(m_nAllocated > 0);
+        *m_pData = 0;
     }
 
     // Public
