@@ -259,7 +259,6 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
     struct diltemplate *link_dead;
     void unsnoop(class unit_data * ch, int mode);
     void unswitchbody(class unit_data * npc);
-    int is_destructed(int type, void *ptr);
 
     assert(d->character);
 
@@ -305,7 +304,7 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
              "Closing link and making link dead: %s.",
              UNIT_NAME(d->character));
 
-        if (!is_destructed(DR_UNIT, d->character))
+        if (!d->character->is_destructed())
         {
             void disconnect_game(class unit_data * pc);
 

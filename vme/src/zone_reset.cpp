@@ -146,7 +146,7 @@ zone_load(class unit_data *u, struct zone_reset_cmd *cmd)
     else if (zone_limit(u, cmd->fi[0], cmd))
     {
         loaded = read_unit(cmd->fi[0]);
-        if (!is_destructed(DR_UNIT, loaded))
+        if (!loaded->is_destructed())
         {
             if (IS_MONEY(loaded))
                 set_money(loaded, MONEY_AMOUNT(loaded));

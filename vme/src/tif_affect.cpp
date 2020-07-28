@@ -25,14 +25,11 @@
 #include "vmelimits.h"
 #include "fight.h"
 
-/* Extern Functions */
-int is_destructed (int i, void *ptr);
-
 
 void
-tif_confusion_tick (struct unit_affected_type *af, class unit_data * unit)
+tif_confusion_tick (class unit_affected_type *af, class unit_data * unit)
 {
-    struct unit_fptr *fptr;
+    class unit_fptr *fptr;
 
     if ((fptr = find_fptr (unit, SFUN_HUNTING)))
     {
@@ -42,7 +39,7 @@ tif_confusion_tick (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_confusion_on (struct unit_affected_type *af, class unit_data * unit)
+tif_confusion_on (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You feel confused.<br/>", unit);
     act ("$1n seems confused.", A_HIDEINV, unit, 0, 0, TO_ROOM);
@@ -50,14 +47,14 @@ tif_confusion_on (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_confusion_off (struct unit_affected_type *af, class unit_data * unit)
+tif_confusion_off (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You less confused.<br/>", unit);
     act ("$1n seem less confused.", A_HIDEINV, unit, 0, 0, TO_ROOM);
 }
 
 void
-tif_invisibility_on (struct unit_affected_type *af, class unit_data * unit)
+tif_invisibility_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (!IS_SET (UNIT_FLAGS (unit), UNIT_FL_INVISIBLE))
     {
@@ -67,7 +64,7 @@ tif_invisibility_on (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_invisibility_off (struct unit_affected_type *af, class unit_data * unit)
+tif_invisibility_off (class unit_affected_type *af, class unit_data * unit)
 {
     if (!IS_SET (UNIT_FLAGS (unit), UNIT_FL_INVISIBLE))
     {
@@ -79,7 +76,7 @@ tif_invisibility_off (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_fear_check (struct unit_affected_type *af, class unit_data * unit)
+tif_fear_check (class unit_affected_type *af, class unit_data * unit)
 {
     class unit_data *ch;
 
@@ -145,45 +142,45 @@ tif_fear_check (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_blind_on (struct unit_affected_type *af, class unit_data * unit)
+tif_blind_on (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("A cloak of darkness falls around you.<br/>", unit);
 }
 
 void
-tif_blind_off (struct unit_affected_type *af, class unit_data * unit)
+tif_blind_off (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("The veil of darkness disappears.<br/>", unit);
 }
 
 /* sneak */
 void
-tif_sneak_on (struct unit_affected_type *af, class unit_data * unit)
+tif_sneak_on (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("Ok, you'll try to move silently for a while.<br/>", unit);
 }
 
 void
-tif_sneak_off (struct unit_affected_type *af, class unit_data * unit)
+tif_sneak_off (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You stop sneaking about.<br/>", unit);
 }
 
 void
-tif_sneak_tick (struct unit_affected_type *af, class unit_data * unit)
+tif_sneak_tick (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You sneak about unnoticed.<br/>", unit);
 }
 
 /* hide */
 void
-tif_hide_on (struct unit_affected_type *af, class unit_data * unit)
+tif_hide_on (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You try to hide yourself.<br/>", unit);
 }
 
 void
-tif_hide_off (struct unit_affected_type *af, class unit_data * unit)
+tif_hide_off (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You stop hiding.<br/>", unit);
     if (af->tickf_i == TIF_HIDE_TICK)
@@ -192,7 +189,7 @@ tif_hide_off (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_hide_tick (struct unit_affected_type *af, class unit_data * unit)
+tif_hide_tick (class unit_affected_type *af, class unit_data * unit)
 {
     if (!(af->data[1]))
         return;
@@ -219,7 +216,7 @@ tif_hide_tick (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_nohide_tick (struct unit_affected_type *af, class unit_data * unit)
+tif_nohide_tick (class unit_affected_type *af, class unit_data * unit)
 {
     if (!(af->data[1]))
         return;
@@ -245,19 +242,19 @@ tif_nohide_tick (struct unit_affected_type *af, class unit_data * unit)
 
 /* bless */
 void
-tif_bless_on (struct unit_affected_type *af, class unit_data * unit)
+tif_bless_on (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You feel divine forces helping you.<br/>", unit);
 }
 
 void
-tif_bless_off (struct unit_affected_type *af, class unit_data * unit)
+tif_bless_off (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You feel divine forces abandoning you.<br/>", unit);
 }
 
 void
-tif_bless_tick (struct unit_affected_type *af, class unit_data * unit)
+tif_bless_tick (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->duration == 1)
         send_to_char ("You sense the divine forces about to move away.<br/>",
@@ -266,7 +263,7 @@ tif_bless_tick (struct unit_affected_type *af, class unit_data * unit)
 
 /* curse */
 void
-tif_curse_on (struct unit_affected_type *af, class unit_data * unit)
+tif_curse_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (IS_CHAR (unit))
         send_to_char ("You feel that the gods are against you.<br/>", unit);
@@ -277,7 +274,7 @@ tif_curse_on (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_curse_off (struct unit_affected_type *af, class unit_data * unit)
+tif_curse_off (class unit_affected_type *af, class unit_data * unit)
 {
     if (IS_CHAR (unit))
         send_to_char ("You no longer feel that the gods are against you.<br/>",
@@ -291,7 +288,7 @@ tif_curse_off (struct unit_affected_type *af, class unit_data * unit)
 
 /* sanctuary */
 void
-tif_sanctuary_on (struct unit_affected_type *af, class unit_data * unit)
+tif_sanctuary_on (class unit_affected_type *af, class unit_data * unit)
 {
     act ("$1n momentarily glows in a bright white light.",
          A_HIDEINV, unit, 0, 0, TO_ROOM);
@@ -299,7 +296,7 @@ tif_sanctuary_on (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_sanctuary_off (struct unit_affected_type *af, class unit_data * unit)
+tif_sanctuary_off (class unit_affected_type *af, class unit_data * unit)
 {
     act ("$1n glows in a bright white light. Then it fades away.",
          A_HIDEINV, unit, 0, 0, TO_ROOM);
@@ -308,7 +305,7 @@ tif_sanctuary_off (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_sanctuary_tick (struct unit_affected_type *af, class unit_data * unit)
+tif_sanctuary_tick (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->duration == 1)
     {
@@ -320,14 +317,14 @@ tif_sanctuary_tick (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_eyes_tingle (struct unit_affected_type *af, class unit_data * unit)
+tif_eyes_tingle (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("Your eyes begin to tingle.<br/>", unit);
 }
 
 
 void
-tif_torch_tick (struct unit_affected_type *af, class unit_data * unit)
+tif_torch_tick (class unit_affected_type *af, class unit_data * unit)
 {
     OBJ_VALUE (unit, 0)--;
 
@@ -342,7 +339,7 @@ tif_torch_tick (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_light_add (struct unit_affected_type *af, class unit_data * unit)
+tif_light_add (class unit_affected_type *af, class unit_data * unit)
 {
     if (!UNIT_IN (unit))
         return;
@@ -363,7 +360,7 @@ tif_light_add (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_light_sub (struct unit_affected_type *af, class unit_data * unit)
+tif_light_sub (class unit_affected_type *af, class unit_data * unit)
 {
     if (!UNIT_IN (unit))
         return;
@@ -383,7 +380,7 @@ tif_light_sub (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_sleep_on (struct unit_affected_type *af, class unit_data * unit)
+tif_sleep_on (class unit_affected_type *af, class unit_data * unit)
 {
     act ("You feel very tired.", A_ALWAYS, unit, 0, 0, TO_CHAR);
     if (CHAR_POS (unit) > POSITION_SLEEPING)
@@ -399,7 +396,7 @@ tif_sleep_on (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_sleep_check (struct unit_affected_type *af, class unit_data * unit)
+tif_sleep_check (class unit_affected_type *af, class unit_data * unit)
 {
     int hm;
 
@@ -422,14 +419,14 @@ tif_sleep_check (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_sleep_off (struct unit_affected_type *af, class unit_data * unit)
+tif_sleep_off (class unit_affected_type *af, class unit_data * unit)
 {
     act ("You feel less sleepy.", A_ALWAYS, unit, 0, 0, TO_CHAR);
     /* no no not a 'wake' here, remember he's still affacted */
 }
 
 void
-tif_protect_on (struct unit_affected_type *af, class unit_data * unit)
+tif_protect_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel protected.", A_ALWAYS, unit, 0, 0, TO_CHAR);
@@ -438,7 +435,7 @@ tif_protect_on (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_protect_off (struct unit_affected_type *af, class unit_data * unit)
+tif_protect_off (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel less protected.", A_ALWAYS, unit, 0, 0, TO_CHAR);
@@ -448,7 +445,7 @@ tif_protect_off (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_hit_on (struct unit_affected_type *af, class unit_data * unit)
+tif_hit_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel more healthy.", A_ALWAYS, unit, 0, 0, TO_CHAR);
@@ -458,7 +455,7 @@ tif_hit_on (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_hit_off (struct unit_affected_type *af, class unit_data * unit)
+tif_hit_off (class unit_affected_type *af, class unit_data * unit)
 {
     af->data[1] = -af->data[1];
     tif_hit_on (af, unit);
@@ -467,7 +464,7 @@ tif_hit_off (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_mag_on (struct unit_affected_type *af, class unit_data * unit)
+tif_mag_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel more powerful.", A_ALWAYS, unit, 0, 0, TO_CHAR);
@@ -477,7 +474,7 @@ tif_mag_on (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_mag_off (struct unit_affected_type *af, class unit_data * unit)
+tif_mag_off (class unit_affected_type *af, class unit_data * unit)
 {
     af->data[1] = -af->data[1];
     tif_mag_on (af, unit);
@@ -486,7 +483,7 @@ tif_mag_off (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_div_on (struct unit_affected_type *af, class unit_data * unit)
+tif_div_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel closer to your god.", A_ALWAYS, unit, 0, 0, TO_CHAR);
@@ -496,7 +493,7 @@ tif_div_on (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_div_off (struct unit_affected_type *af, class unit_data * unit)
+tif_div_off (class unit_affected_type *af, class unit_data * unit)
 {
     af->data[1] = -af->data[1];
     tif_div_on (af, unit);
@@ -504,7 +501,7 @@ tif_div_off (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_str_on (struct unit_affected_type *af, class unit_data * unit)
+tif_str_on (class unit_affected_type *af, class unit_data * unit)
 {
 
     /*old stuff
@@ -563,7 +560,7 @@ tif_str_on (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_str_off (struct unit_affected_type *af, class unit_data * unit)
+tif_str_off (class unit_affected_type *af, class unit_data * unit)
 {
     af->data[1] = -af->data[1];
     tif_str_on (af, unit);
@@ -572,7 +569,7 @@ tif_str_off (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_dex_on (struct unit_affected_type *af, class unit_data * unit)
+tif_dex_on (class unit_affected_type *af, class unit_data * unit)
 {
     /* old dex stuff
       if (af->data[1] > 0)
@@ -628,7 +625,7 @@ tif_dex_on (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_dex_off (struct unit_affected_type *af, class unit_data * unit)
+tif_dex_off (class unit_affected_type *af, class unit_data * unit)
 {
     af->data[1] = -af->data[1];
     tif_dex_on (af, unit);
@@ -636,7 +633,7 @@ tif_dex_off (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_con_on (struct unit_affected_type *af, class unit_data * unit)
+tif_con_on (class unit_affected_type *af, class unit_data * unit)
 {
     /* old con stuff
       if (af->data[1] > 0)
@@ -692,7 +689,7 @@ tif_con_on (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_con_off (struct unit_affected_type *af, class unit_data * unit)
+tif_con_off (class unit_affected_type *af, class unit_data * unit)
 {
     af->data[1] = -af->data[1];
     tif_con_on (af, unit);
@@ -701,7 +698,7 @@ tif_con_off (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_cha_on (struct unit_affected_type *af, class unit_data * unit)
+tif_cha_on (class unit_affected_type *af, class unit_data * unit)
 {
     /* old cha stuff
       if (af->data[1] > 0)
@@ -756,7 +753,7 @@ tif_cha_on (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_cha_off (struct unit_affected_type *af, class unit_data * unit)
+tif_cha_off (class unit_affected_type *af, class unit_data * unit)
 {
     af->data[1] = -af->data[1];
     tif_cha_on (af, unit);
@@ -765,7 +762,7 @@ tif_cha_off (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_bra_on (struct unit_affected_type *af, class unit_data * unit)
+tif_bra_on (class unit_affected_type *af, class unit_data * unit)
 {
     /* old bra stuff
       if (af->data[1] > 0)
@@ -821,7 +818,7 @@ tif_bra_on (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_bra_off (struct unit_affected_type *af, class unit_data * unit)
+tif_bra_off (class unit_affected_type *af, class unit_data * unit)
 {
     af->data[1] = -af->data[1];
     tif_bra_on (af, unit);
@@ -830,7 +827,7 @@ tif_bra_off (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_poison_on (struct unit_affected_type *af, class unit_data * unit)
+tif_poison_on (class unit_affected_type *af, class unit_data * unit)
 {
     act ("You feel very ill.", A_ALWAYS, unit, 0, 0, TO_CHAR);
     act ("$1n seems very ill.", A_ALWAYS, unit, 0, 0, TO_ROOM);
@@ -841,7 +838,7 @@ tif_poison_on (struct unit_affected_type *af, class unit_data * unit)
 /* Data[1] The amount of Mana points to loose (>=0)      */
 /* Data[2] The amount of Endurance points to loose (>=0) */
 void
-tif_poison_suffer (struct unit_affected_type *af, class unit_data * unit)
+tif_poison_suffer (class unit_affected_type *af, class unit_data * unit)
 {
     CHAR_MANA (unit) -= af->data[1];
     CHAR_ENDURANCE (unit) -= af->data[2];
@@ -851,44 +848,44 @@ tif_poison_suffer (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_poison_off (struct unit_affected_type *af, class unit_data * unit)
+tif_poison_off (class unit_affected_type *af, class unit_data * unit)
 {
     act ("You feel better.", A_ALWAYS, unit, 0, 0, TO_CHAR);
 }
 
 /* plague */
 void
-tif_plague_on (struct unit_affected_type *af, class unit_data * unit)
+tif_plague_on (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You suddenly feel very sick.<br/>", unit);
 }
 
 void
-tif_plague_tick (struct unit_affected_type *af, class unit_data * unit)
+tif_plague_tick (class unit_affected_type *af, class unit_data * unit)
 {
 }
 
 void
-tif_plague_off (struct unit_affected_type *af, class unit_data * unit)
+tif_plague_off (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You feel much better.<br/>", unit);
 }
 
 /* insanity */
 void
-tif_insanity_on (struct unit_affected_type *af, class unit_data * unit)
+tif_insanity_on (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You feel a battle with your own mind begins.<br/>", unit);
     act ("A mad look appears on $1n's face", A_HIDEINV, unit, 0, 0, TO_ROOM);
 }
 
 void
-tif_insanity_tick (struct unit_affected_type *af, class unit_data * unit)
+tif_insanity_tick (class unit_affected_type *af, class unit_data * unit)
 {
 }
 
 void
-tif_insanity_off (struct unit_affected_type *af, class unit_data * unit)
+tif_insanity_off (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You feel the battle with your own mind is over.<br/>", unit);
     act ("The mad look disappears from $1n's face.", A_HIDEINV, unit, 0, 0,
@@ -896,37 +893,37 @@ tif_insanity_off (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_prot_evil_on (struct unit_affected_type *af, class unit_data * unit)
+tif_prot_evil_on (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You feel protected from the forces of evil.<br/>", unit);
 }
 
 void
-tif_prot_good_on (struct unit_affected_type *af, class unit_data * unit)
+tif_prot_good_on (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You feel protected from the forces of good.<br/>", unit);
 }
 
 void
-tif_prot_evil_off (struct unit_affected_type *af, class unit_data * unit)
+tif_prot_evil_off (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You feel less protected from the forces of evil.<br/>", unit);
 }
 
 void
-tif_prot_good_off (struct unit_affected_type *af, class unit_data * unit)
+tif_prot_good_off (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You feel less protected from the forces of good.<br/>", unit);
 }
 
 void
-tif_sustain_on (struct unit_affected_type *af, class unit_data * unit)
+tif_sustain_on (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You feel sustained.<br/>", unit);
 }
 
 void
-tif_sustain_tick (struct unit_affected_type *af, class unit_data * unit)
+tif_sustain_tick (class unit_affected_type *af, class unit_data * unit)
 {
     if (!IS_PC (unit))
         return;
@@ -936,13 +933,13 @@ tif_sustain_tick (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_sustain_off (struct unit_affected_type *af, class unit_data * unit)
+tif_sustain_off (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You no longer feel sustained.<br/>", unit);
 }
 
 void
-tif_decay_corpse (struct unit_affected_type *af, class unit_data * unit)
+tif_decay_corpse (class unit_affected_type *af, class unit_data * unit)
 {
     /* Make routine to change the description of a corpse instead */
     if (ODD (af->duration) && !IS_SET (UNIT_FLAGS (unit), UNIT_FL_BURIED))
@@ -950,7 +947,7 @@ tif_decay_corpse (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_destroy_corpse (struct unit_affected_type *af, class unit_data * unit)
+tif_destroy_corpse (class unit_affected_type *af, class unit_data * unit)
 {
     if (!IS_SET (UNIT_FLAGS (unit), UNIT_FL_BURIED))
         act ("A quivering horde of maggots consume $1n.",
@@ -959,7 +956,7 @@ tif_destroy_corpse (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_buried_destruct (struct unit_affected_type *af, class unit_data * unit)
+tif_buried_destruct (class unit_affected_type *af, class unit_data * unit)
 {
     if (IS_SET (UNIT_FLAGS (unit), UNIT_FL_BURIED))
     {
@@ -967,7 +964,7 @@ tif_buried_destruct (struct unit_affected_type *af, class unit_data * unit)
 
         while (UNIT_CONTAINS (unit))
         {
-            struct unit_affected_type naf;
+            class unit_affected_type naf;
 
             SET_BIT (UNIT_FLAGS (UNIT_CONTAINS (unit)), UNIT_FL_BURIED);
 
@@ -992,7 +989,7 @@ tif_buried_destruct (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_valhalla_ret (struct unit_affected_type *af, class unit_data * unit)
+tif_valhalla_ret (class unit_affected_type *af, class unit_data * unit)
 {
     if (!IS_PC (unit))
         return;
@@ -1019,7 +1016,7 @@ tif_valhalla_ret (struct unit_affected_type *af, class unit_data * unit)
     CHAR_ENDURANCE (unit) = move_limit (unit);
     UNIT_HIT (unit) = UNIT_MAX_HIT (unit);
 
-    if (!is_destructed (DR_UNIT, unit))
+    if (!unit->is_destructed())
     {
         save_player (unit);
         save_player_contents (unit, TRUE);
@@ -1028,19 +1025,19 @@ tif_valhalla_ret (struct unit_affected_type *af, class unit_data * unit)
 
 
 void
-tif_jail_wait (struct unit_affected_type *af, class unit_data * unit)
+tif_jail_wait (class unit_affected_type *af, class unit_data * unit)
 {
 }
 
 /* Get thrown out of jail */
 void
-tif_jail_release (struct unit_affected_type *af, class unit_data * unit)
+tif_jail_release (class unit_affected_type *af, class unit_data * unit)
 {
 }
 
 
 void
-tif_spl_on (struct unit_affected_type *af, class unit_data * unit)
+tif_spl_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel more skilled at $2t.",
@@ -1051,7 +1048,7 @@ tif_spl_on (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_spl_off (struct unit_affected_type *af, class unit_data * unit)
+tif_spl_off (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel less skilled at $2t.",
@@ -1062,7 +1059,7 @@ tif_spl_off (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_ski_on (struct unit_affected_type *af, class unit_data * unit)
+tif_ski_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel more skilled in $2t.",
@@ -1073,7 +1070,7 @@ tif_ski_on (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_ski_off (struct unit_affected_type *af, class unit_data * unit)
+tif_ski_off (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel less skilled in $2t.",
@@ -1084,7 +1081,7 @@ tif_ski_off (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_wpn_on (struct unit_affected_type *af, class unit_data * unit)
+tif_wpn_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel more skilled at the $2t fighting style.",
@@ -1095,7 +1092,7 @@ tif_wpn_on (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_wpn_off (struct unit_affected_type *af, class unit_data * unit)
+tif_wpn_off (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel less skilled at the $2t fighting style.",
@@ -1106,7 +1103,7 @@ tif_wpn_off (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_armour_on (struct unit_affected_type *af, class unit_data * unit)
+tif_armour_on (class unit_affected_type *af, class unit_data * unit)
 {
     const   char *c = "pale skin like";
 
@@ -1141,20 +1138,20 @@ tif_armour_on (struct unit_affected_type *af, class unit_data * unit)
 }
 
 void
-tif_speed_on (struct unit_affected_type *af, class unit_data * unit)
+tif_speed_on (class unit_affected_type *af, class unit_data * unit)
 {
     act ("You feel faster...", A_ALWAYS, unit, 0, 0, TO_CHAR);
 }
 
 void
-tif_speed_off (struct unit_affected_type *af, class unit_data * unit)
+tif_speed_off (class unit_affected_type *af, class unit_data * unit)
 {
     act ("You feel slower...", A_ALWAYS, unit, 0, 0, TO_CHAR);
 }
 
 /* --------------------------------------------------------------------- */
-void tif_reward_on (struct unit_affected_type *af, class unit_data * unit);
-void tif_reward_off (struct unit_affected_type *af, class unit_data * unit);
+void tif_reward_on (class unit_affected_type *af, class unit_data * unit);
+void tif_reward_off (class unit_affected_type *af, class unit_data * unit);
 
 struct tick_function_type tif[] = {
     {"Decay Corpse", tif_decay_corpse},

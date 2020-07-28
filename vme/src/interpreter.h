@@ -26,7 +26,7 @@ struct spec_arg
     class unit_data *target;    /* Possible target of operation       */
 
     struct command_info *cmd;
-    struct unit_fptr *fptr; /* The fptr is allowed to be modified, destroyed */
+    class unit_fptr *fptr; /* The fptr is allowed to be modified, destroyed */
 
     int *pInt; /* Potential int to modify */
     const char *arg;

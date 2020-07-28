@@ -202,7 +202,7 @@ void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
         slog(LOG_ALL, 0,
              "MAJOR ERROR - enlist a non-NPC or non-OBJ is being saved. Aborted");
     }
-    if (is_destructed(DR_UNIT, unit))
+    if (unit->is_destructed())
     {
         slog(LOG_ALL, 0,
              "MAJOR ERROR - enlist a destructed unit is being saved. Aborted");

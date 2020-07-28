@@ -222,9 +222,9 @@ void save_player_file (class unit_data * pc)
 
     assert (IS_PC (pc));
     assert (strlen (PC_FILENAME (pc)) < PC_MAX_NAME);
-    assert (!is_destructed (DR_UNIT, pc));
+    assert (!pc->is_destructed());
 
-    if (is_destructed (DR_UNIT, pc))
+    if (pc->is_destructed())
         return;
 
     if (locked)

@@ -282,7 +282,7 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
     is_emote = FALSE;
     assert(IS_CHAR(ch));
 
-    if (is_destructed(DR_UNIT, ch))
+    if (ch->is_destructed())
         return;
 
     if (IS_PC(ch) && CHAR_DESCRIPTOR(ch) && CHAR_DESCRIPTOR(ch)->editing)
@@ -419,7 +419,7 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
     			 FREE(cmd_ptr->excmdc);
     	  }
     */
-    if (is_destructed(DR_UNIT, ch))
+    if (ch->is_destructed())
     {
         return;
     }
@@ -551,14 +551,14 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
     int res = SFR_SHARE;
     int priority = 0;
     ubit16 orgflag;
-    struct unit_fptr *next;
+    class unit_fptr *next;
 
     if (g_cServerConfig.m_bNoSpecials)
         return SFR_SHARE;
 
     sarg->owner = u;
 
-    if (is_destructed(DR_UNIT, u))
+    if (u->is_destructed())
         return SFR_SHARE;
 
     //   if (IS_PC(u) && !char_is_playing(u))
@@ -572,7 +572,7 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
 
         if ((orgflag != sarg->fptr->flags) && (sarg->fptr->index == SFUN_DIL_INTERNAL))
         {
-            void SetFptrTimer(class unit_data * u, struct unit_fptr * fptr);
+            void SetFptrTimer(class unit_data * u, class unit_fptr * fptr);
             int diltick, i;
             diltick = FALSE;
             if (IS_SET(sarg->fptr->flags, SFB_TICK))

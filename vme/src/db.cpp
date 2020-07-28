@@ -562,12 +562,12 @@ void generate_zone_indexes(void)
  */
 int bread_affect(CByteBuffer *pBuf, class unit_data *u, ubit8 nVersion)
 {
-    struct unit_affected_type af;
+    class unit_affected_type af;
     int i;
     ubit8 t8;
     ubit16 t16;
 
-    struct unit_affected_type *link_alloc_affect(class unit_data * unit, struct unit_affected_type * orgaf);
+    class unit_affected_type *link_alloc_affect(class unit_data * unit, class unit_affected_type * orgaf);
 
     if (nVersion <= 56)
     {
@@ -622,7 +622,6 @@ int bread_affect(CByteBuffer *pBuf, class unit_data *u, ubit8 nVersion)
             return 1;
 
         /* Don't call, don't apply and don't set up tick for this affect (yet) */
-        af.destructed = FALSE;
         af.event = NULL;
         link_alloc_affect(u, &af);
     }
@@ -1828,7 +1827,6 @@ void db_shutdown(void)
     slog(LOG_OFF, 0, "Destroying unit list.");
 
     void clear_destructed(void);
-    void register_destruct(int i, void *ptr);
 
     while (!IS_ROOM(unit_list))
     {

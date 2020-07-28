@@ -795,7 +795,7 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
       share = 0;
    else /* NPC killed */
    {
-      struct unit_affected_type *paf;
+      class unit_affected_type *paf;
 
       paf = affected_by_spell(victim, ID_MAX_ATTACKER);
 
@@ -938,10 +938,10 @@ void damage(class unit_data *ch, class unit_data *victim,
             int bDisplay)
 {
    int max_hit;
-   struct unit_affected_type *paf;
+   class unit_affected_type *paf;
    class unit_data *sch;
 
-   if (is_destructed(DR_UNIT, ch) || is_destructed(DR_UNIT, victim))
+   if (ch->is_destructed() || victim->is_destructed())
       return;
 
    /* Minimum is 0 damage points [ no maximum! ] */
@@ -1028,7 +1028,7 @@ void damage(class unit_data *ch, class unit_data *victim,
          paf->data[0] = MAX(CHAR_LEVEL(ch), paf->data[0]);
       else
       {
-         struct unit_affected_type af;
+         class unit_affected_type af;
 
          af.id = ID_MAX_ATTACKER;
          af.duration = 4;
@@ -1191,7 +1191,7 @@ void damage(class unit_data *ch, class unit_data *victim,
    if (IS_PC(victim) && !CHAR_DESCRIPTOR(victim) && CHAR_AWAKE(victim))
    {
       command_interpreter(victim, "flee");
-      if (is_destructed(DR_UNIT, victim) || CHAR_POS(victim) == POSITION_DEAD)
+      if (victim->is_destructed() || CHAR_POS(victim) == POSITION_DEAD)
          return;
    }
 }
@@ -1422,7 +1422,7 @@ int simple_one_hit(class unit_data *att, class unit_data *def)
 /* Returns TRUE if ok */
 static int check_combat(class unit_data *ch)
 {
-   if (is_destructed(DR_UNIT, ch))
+   if (ch->is_destructed())
    {
       assert(!CHAR_COMBAT(ch));
       return FALSE;

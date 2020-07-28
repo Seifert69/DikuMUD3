@@ -74,7 +74,7 @@ dil_effect (char *pStr, struct spell_args *sa)
     }
 
     struct dilprg *prg;
-    struct unit_fptr *fptr;
+    class unit_fptr *fptr;
 
     prg = dil_copy_template (tmpl, sa->caster, &fptr);
     prg->waitcmd = WAITCMD_MAXINST - 1;	// The usual hack, see db_file

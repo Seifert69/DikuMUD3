@@ -269,8 +269,8 @@ int new_crime_serial_no(void)
 
 void set_reward_char(class unit_data *ch, int crimes)
 {
-    struct unit_affected_type *paf;
-    struct unit_affected_type af;
+    class unit_affected_type *paf;
+    class unit_affected_type af;
     int xp = 0, gold = 0;
 
     int lose_exp(class unit_data * ch);
@@ -315,7 +315,7 @@ void set_reward_char(class unit_data *ch, int crimes)
 void set_witness(class unit_data *criminal, class unit_data *witness,
                  int no, int type, int show = TRUE)
 {
-    struct unit_affected_type af;
+    class unit_affected_type af;
 
     void activate_accuse(class unit_data * npc, ubit8 crime_type,
                          const char *cname);
@@ -551,7 +551,7 @@ update_criminal(const class unit_data *deputy,
 
 int accuse(struct spec_arg *sarg)
 {
-    struct unit_affected_type *af;
+    class unit_affected_type *af;
     struct char_crime_data *crime;
 
     int crime_type = 0;      /* {CRIME_MURDER,CRIME_STEALING} */
@@ -703,7 +703,7 @@ struct npc_accuse_data
 int npc_accuse(const class unit_data *npc, struct visit_data *vd)
 {
     char str[80];
-    struct unit_affected_type *af;
+    class unit_affected_type *af;
     struct npc_accuse_data *nad;
 
     nad = (struct npc_accuse_data *)vd->data;
@@ -764,7 +764,7 @@ void activate_accuse(class unit_data *npc, ubit8 crime_type, const char *cname)
 {
     struct npc_accuse_data *nad;
     class unit_data *prison;
-    struct unit_fptr *fptr;
+    class unit_fptr *fptr;
     struct visit_data *vd;
 
     /* GEN: get accuse room in here */
@@ -857,7 +857,7 @@ int guard_assist(const class unit_data *npc, struct visit_data *vd)
 void call_guards(class unit_data *guard)
 {
     class zone_type *zone;
-    struct unit_fptr *fptr;
+    class unit_fptr *fptr;
     class unit_data *u;
     int ok;
 
@@ -999,7 +999,7 @@ int reward_give(struct spec_arg *sarg)
     void gain_exp(class unit_data * ch, int gain);
 
     class unit_data *u;
-    struct unit_affected_type *paf;
+    class unit_affected_type *paf;
     string buf;
     currency_t cur;
 
@@ -1041,7 +1041,7 @@ int reward_give(struct spec_arg *sarg)
 int reward_board(struct spec_arg *sarg)
 {
     class unit_data *u;
-    struct unit_affected_type *af = NULL;
+    class unit_affected_type *af = NULL;
     int found = FALSE;
     char buf[256];
     char *c = (char *)sarg->arg;
@@ -1094,7 +1094,7 @@ int reward_board(struct spec_arg *sarg)
     return SFR_BLOCK;
 }
 
-void tif_reward_on(struct unit_affected_type *af, class unit_data *unit)
+void tif_reward_on(class unit_affected_type *af, class unit_data *unit)
 {
     if (IS_CHAR(unit))
     {
@@ -1115,7 +1115,7 @@ void tif_reward_on(struct unit_affected_type *af, class unit_data *unit)
     }
 }
 
-void tif_reward_off(struct unit_affected_type *af, class unit_data *unit)
+void tif_reward_off(class unit_affected_type *af, class unit_data *unit)
 {
     if (IS_CHAR(unit))
         REMOVE_BIT(CHAR_FLAGS(unit), CHAR_OUTLAW);

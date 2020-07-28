@@ -370,7 +370,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
     class file_index_type *untarg = NULL;
     class extra_descr_data *ed;
     class unit_data *unt;
-    struct unit_affected_type *aff;
+    class unit_affected_type *aff;
 
     int required_xp(int level);
 

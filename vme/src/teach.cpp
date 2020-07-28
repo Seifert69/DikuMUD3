@@ -457,7 +457,7 @@ void info_one_skill(class unit_data *teacher, class unit_data *pupil,
 
 int pupil_magic(class unit_data *pupil)
 {
-    struct unit_affected_type *af;
+    class unit_affected_type *af;
 
     for (af = UNIT_AFFECTED(pupil); af; af = af->next)
         switch (af->id)
