@@ -956,6 +956,10 @@ void str_cescape_format(const char *src, char *dest)
                 break;
             case '\\':
                 break;
+            case 0:
+                dest++;       // Save the backslash
+                *dest = 0;    // terminate dest
+                break;
             default:
                 dest++;       // Save the backslash
                 *dest = *src; // Copy the unknown code
