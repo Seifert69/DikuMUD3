@@ -18,7 +18,7 @@ parse_match (const char *pData, const char *pMatch)
 {
     char *pTmp1, *pTmp2;
 
-    pTmp1 = str_cstr (pData, pMatch);
+    pTmp1 = (char *) str_cstr (pData, pMatch);
     if (pTmp1 == NULL)
         return NULL;
 
