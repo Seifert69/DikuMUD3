@@ -11,7 +11,7 @@ SYSFLAGS += -std=c++11
 #SYSFLAGS += -O6 
 
 #debug flags
-DEBUG = -g -Wall -Werror
+DEBUG = -g -Wall
 
 #libs to link in. LCRYPT allows specification of `make LCRYPT=''` for OS X.
 LCRYPT = -lcrypt
