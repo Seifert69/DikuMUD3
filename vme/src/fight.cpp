@@ -236,7 +236,7 @@ void load_messages(void)
    if (!(f1 = fopen(str_cc(g_cServerConfig.m_etcdir, MESS_FILE), "r")))
    {
       slog(LOG_ALL, 0, "Unable to read fight messages.");
-      exit(1);
+      exit(11);
    }
 
    char shit[200];
@@ -261,7 +261,7 @@ void load_messages(void)
       if (i >= COM_MAX_MSGS)
       {
          slog(LOG_OFF, 0, "Too many combat messages.");
-         exit(1);
+         exit(12);
       }
 
       CREATE(messages, struct combat_msg_packet, 1);

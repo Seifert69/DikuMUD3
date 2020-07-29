@@ -787,7 +787,7 @@ boot_money(void)
     if ((fl = fopen(myfile.c_str(), "r")) == NULL)
     {
         perror(str_cc("boot_money: ", myfile.c_str()));
-        exit(1);
+        exit(3);
     }
 
     for (prev_idx = idx = -1;; prev_idx = idx)

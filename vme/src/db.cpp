@@ -1653,7 +1653,7 @@ void read_all_zones(void)
         if ((f = fopen(filename, "rb")) == NULL)
         {
             slog(LOG_OFF, 0, "Could not open zone file: %s", zone->filename);
-            exit(1);
+            exit(10);
         }
 
         if (fread(&(zone->zone_time), sizeof(ubit16), 1, f) != 1)

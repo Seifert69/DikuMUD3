@@ -306,7 +306,7 @@ void cMotherHook::Input(int nFlags)
         if (n == -1)
         {
             error(HERE, "No Setsockopt()");
-            exit(1);
+            exit(21);
         }
 
         for (i = 0; i < MAX_MULTI; i++)
@@ -401,7 +401,7 @@ void init_mother(int nPort)
     {
         close(fdMother);
         slog(LOG_OFF, 0, "Non blocking set error.");
-        exit(1);
+        exit(22);
     }
 
     int i=0;
@@ -410,7 +410,7 @@ void init_mother(int nPort)
     {
         close(fdMother);
         slog(LOG_OFF, 0, "Setsockopt TCP_NODELAY failed.");
-        exit(1);
+        exit(23);
     }
 
     CaptainHook.Hook(fdMother, &MotherHook);

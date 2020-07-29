@@ -150,7 +150,7 @@ int main(int argc, char **argv)
             {
                 slog(LOG_OFF, 0,
                      "Full path and file name for the config file expected.");
-                exit(1);
+                exit(4);
             }
             break;
 
@@ -169,7 +169,7 @@ int main(int argc, char **argv)
             {
                 slog(LOG_OFF, 0,
                      "Full path and file name for the config file expected.");
-                exit(1);
+                exit(5);
             }
             break;
 
@@ -185,7 +185,7 @@ int main(int argc, char **argv)
         if (!isdigit(*argv[pos]))
         {
             ShowUsage(argv[0]);
-            exit(1);
+            exit(6);
         }
 
     log_file_fd = freopen(log_name, "w", stderr);
@@ -193,7 +193,7 @@ int main(int argc, char **argv)
     {
         fprintf(stderr, "Error in opening the log:  '%s'", log_name);
         free(log_name);
-        exit(1);
+        exit(7);
     }
 
     free(log_name);
