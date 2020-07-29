@@ -274,6 +274,7 @@ file     : program
          {
 
             tmpl.coresz = wcore - tmpl.core + 1;
+            tmpl.corecrc = 0; // Prevent 1 valgrind error
 
             CByteBuffer *pBuf = &g_FileBuffer;
             pBuf->Clear();
