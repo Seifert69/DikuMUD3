@@ -905,6 +905,8 @@ dilprg::~dilprg(void)
 
     assert(canfree());
 
+    g_nDilPrg--;
+
     if (dil_list && this->next)
     {
         if (this == dil_list)
@@ -1109,10 +1111,11 @@ int run_dil(struct spec_arg *sarg)
     if (sarg->cmd->no == CMD_AUTO_EXTRACT)
     {
         prg->nest--; // We return below, get to zero before free
+        prg->waitcmd = WAITCMD_DESTROYED;
+
         if (IS_SET(prg->flags, DILFL_EXECUTING))
         {
             /* Set so as to notify command loop! Extracted recursively! */
-            prg->waitcmd = WAITCMD_DESTROYED;
 
             sarg->fptr->data = NULL;
 
