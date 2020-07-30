@@ -81,7 +81,7 @@ int dilistemplate = 1;		/* is this a template program */
 
 /* work structures */
 
-struct dilprg prg;              /* current program building */
+class dilprg prg(0,0);              /* current program building */
 struct diltemplate tmpl;        /* current template building */
 struct dilframe frm;		/* current frame building */
 struct dilref ref;		/* current reference */

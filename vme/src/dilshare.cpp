@@ -8,6 +8,12 @@
 #include "namelist.h"
 #include "intlist.h"
 #include "dil.h"
+#include "dilrun.h"
+
+#ifdef DMSERVER
+extern int g_nDilPrg;
+#endif
+
 /* free generated temporary values */
 dilval::~dilval (void)
 {
@@ -57,5 +63,121 @@ dilval::~dilval (void)
             val.ptr = NULL;
         }
         break;
+
+    default:
+        if (val.ptr && (atyp == DILA_EXP))
+        {
+            slog(LOG_ALL,0,"value not freed of type %d", atyp);
+        }
     }
+}
+
+
+dilprg::dilprg(class unit_data *owner, int bLink)
+{
+#ifdef DMSERVER
+    g_nDilPrg++;
+
+    this->next = NULL; 
+    if (bLink)
+    {
+        this->next = dil_list;
+        dil_list = this;
+    }
+#endif
+
+    this->flags = 0;       // Recall, copy, etc.
+    this->varcrc = 0;		// variable crc from compiler (saved)
+    this->corecrc = 0;		// core crc from compiler (saved)
+    this->nest = 0;        // How many levels is the call nested 
+    this->stack.init(10);
+
+    this->owner = owner;
+    this->sarg = NULL;
+    this->waitcmd = WAITCMD_MAXINST - 1;
+
+    // Setup the base frame
+    CREATE(this->frame, struct dilframe, 1);
+    this->fp = this->frame;
+    this->framesz = 1;
+
+    this->frame->tmpl = NULL;
+    this->frame->vars = NULL;
+    this->frame->intrcount = 0;
+    this->frame->intr = NULL;
+    this->frame->securecount = 0;
+    this->frame->secure = NULL;
+    this->frame->pc = NULL;
+    this->frame->stacklen = this->stack.length();
+}
+
+int dilprg::canfree(void)
+{
+    if (this->nest <= 0)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+dilprg::~dilprg(void)
+{
+    struct diltemplate *tmpl;
+    struct dilframe *frm;
+
+    assert(canfree());
+
+#ifdef DMSERVER
+    g_nDilPrg--;
+
+    if (dil_list && this->next)
+    {
+        if (this == dil_list)
+        {
+            if (dil_list_nextdude == dil_list)
+                dil_list_nextdude = this->next;
+            dil_list = this->next;
+        }
+        else
+        {
+            int ok = FALSE;
+            for (class dilprg *tp = dil_list; tp->next; tp = tp->next)
+            {
+                if (tp->next == this)
+                {
+                    if (dil_list_nextdude == tp->next)
+                        dil_list_nextdude = this->next;
+                    tp->next = this->next;
+                    ok = TRUE;
+                    break;
+                }
+            }
+            this->next = NULL;
+            if (ok == FALSE)
+            {
+                slog(LOG_ALL, 0, "Not found in dil_list");
+                return;
+            }
+        }
+    }
+#endif    
+    this->next = NULL;
+
+    tmpl = this->frame[0].tmpl;
+    assert(tmpl);
+
+    for (frm = this->frame; frm <= (this->fp); frm++)
+        dil_free_frame(frm);
+
+    FREE(this->frame);
+
+#ifdef DMSERVER
+    void dil_free_template(struct diltemplate * tmpl, int copy);
+    dil_free_template(tmpl, IS_SET(this->flags, DILFL_COPY));
+    
+#endif
+
+    this->owner = NULL;
+    this->sarg = NULL;
+    this->fp = NULL;
+    this->waitcmd = WAITCMD_DESTROYED;
 }
