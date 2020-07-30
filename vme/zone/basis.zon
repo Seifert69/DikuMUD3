@@ -50,6 +50,20 @@ Bright White.<br/>
 
 %dil
 
+
+dilbegin worms();
+var
+   u : unitptr;
+code
+{
+   heartbeat := 4*PULSE_SEC;
+   pause;
+   u := load("energyworms@basis");
+   link(u, self);
+   quit;
+}
+dilend
+
 /* MS2020. the command string "s" will be blocked and the two messages in stringlist sl */ 
 /* will be acted. Example: command_block("backstab",                                    */
 /* "You try to disarm $3n, but he dodges your attempt easily.",                         */
@@ -7253,6 +7267,66 @@ end
 
 
 %mobiles
+
+                           energyworms
+
+names {"energy worms", "worms"}
+title "the energy worms"
+descr "A bunch of energy worms are here."
+extra {} "Disgusting and intriguing!"
+M_ZOMBIE_SMALL(4,SEX_NEUTRAL)
+
+dilbegin energyworms();
+var
+   u : unitptr;
+   sl : stringlist;
+   s : string;
+   nCount : integer;
+code
+{
+   heartbeat := PULSE_SEC*4;
+   pause;
+   log("Energy worms checking location " + self.outside.nameidx + "@" + self.outside.zoneidx);
+   pause;
+
+   :init:
+   pause;
+   sl := null;
+   nCount := 0;
+
+   :loop:
+   u := self.outside.inside;
+   while (u)
+   {
+      nCount := nCount + 1;
+      s := u.nameidx+"@"+u.zoneidx;
+
+      // Don't consume players or player's corpses :o)
+      if ((s $= "NO-NAME@NO-ZONE") or (s $= "corpse@death"))
+      {
+         u := u.next;
+         continue;
+      }
+
+      if (s in sl) // more than 1
+      {
+         // if there's anything we cannot eat, skip
+         log("Overpopulation removed " + s + " from the game");
+         act("$1n consumes $2n.", A_SOMEONE, self, u, null, TO_ROOM);
+         destroy(u);
+         goto init;
+      }
+      addstring(sl, s);
+      u := u.next;
+   }
+
+   log("Overpopulation quitting with " + itoa(nCount) + " left in location.");
+   act("$1n dissolve in bright light.", A_SOMEONE, self, null, null, TO_ROOM);
+   destroy(self);
+   quit;
+}
+dilend
+end
 
                            zombie
 
