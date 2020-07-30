@@ -1349,6 +1349,7 @@ free meal."
 
 east to royal_av1@midgaard descr "Royal Avenue lies to the east of this room.";
 movement SECT_CITY
+gmap(452,549)
 flags {UNIT_FL_NO_MOB, UNIT_FL_NO_BURY, UNIT_FL_NO_TELEPORT,
 UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 ALWAYS_LIGHT
@@ -1446,6 +1447,7 @@ of a massive stud."
 flags {UNIT_FL_NO_WEATHER}
 
 movement SECT_CITY
+gmap(682,297)
 south to tack_shop2 descr
 "The Tack Shop";
 east to wall_rd10 descr
@@ -1480,6 +1482,7 @@ extra {"door", "doors", "doorway"}
 flags {UNIT_FL_NO_WEATHER}
 
 movement SECT_CITY
+gmap(682,318)
 north to stable2 descr
 "The Stable";
 end
@@ -1496,6 +1499,7 @@ extra {"doors"}
 flags {UNIT_FL_NO_WEATHER}
 
 movement SECT_CITY
+gmap(682,276)
 south to stable2 descr
 "The Stable";
 end
@@ -1517,6 +1521,7 @@ descr
 city wall.  To your north, the West Bridge of Midgaard spans the river, and
 to your east, the Southern Promenade leads along the river bank."
 movement SECT_CITY
+gmap(165,677)
 north to west_bridge;
 east to s_prom1;
 south to wall_rd2;
@@ -1532,6 +1537,7 @@ descr
 Gladiator Road leads east from here, and at its end you can barely make out
 a large oval building. A manhole can be seen on the ground here."
 movement SECT_CITY
+gmap(165,849)
 north to wall_rd1;
 east to glad_rd1;
 south to wall_rd3;
@@ -1549,6 +1555,7 @@ descr
 leads north and east, and a heavy-looking wooden door leads south into the
 tower."
 movement SECT_CITY
+gmap(165,1094)
 north to wall_rd2;
 east to wall_rd4;
 south to sorcerer/ent_tower open {EX_OPEN_CLOSE, EX_CLOSED}
@@ -1570,6 +1577,7 @@ descr
 The rather wide Colosseum Road leads north from here, and at its end you can
 barely make out a large oval building."
 movement SECT_CITY
+gmap(365,1094)
 north to col_rd5;
 east to in_sgate;
 west to wall_rd3;
@@ -1585,6 +1593,7 @@ descr
 A road flanked by slender beeches leads north from here, and a street sign by
 the neares beech says `Park Road'."
 movement SECT_CITY
+gmap(588,1094)
 north to park_rd5;
 east to wall_rd6;
 west to in_sgate;
@@ -1603,6 +1612,7 @@ descr
 leads north and west, and a heavy-looking oaken door leads south into the
 tower."
 movement SECT_CITY
+gmap(702,1094)
 north to wall_rd7;
 west to wall_rd5;
 south to midwalls/rn_015 open {EX_OPEN_CLOSE, EX_CLOSED}
@@ -1621,6 +1631,7 @@ descr
 "   You are on a long road running north-south along the eastern city wall.
 A rather small street called Elm Street leads west from here."
 movement SECT_CITY
+gmap(702,849)
 north to wall_rd8;
 west to elm_street2;
 south to wall_rd6;
@@ -1637,6 +1648,7 @@ descr
 To your north, the East Bridge of Midgaard spans the river, and to your west,
 the Southern Promenade leads along the river bank."
 movement SECT_CITY
+gmap(702,677)
 north to east_bridge;
 west to s_prom6;
 south to wall_rd7;
@@ -1653,6 +1665,7 @@ descr
 To your south, the East Bridge of Midgaard spans the river, and to your west,
 the Northern Promenade leads along the river bank."
 movement SECT_CITY
+gmap(702,591)
 north to in_egate;
 west to n_prom3;
 south to east_bridge;
@@ -1667,6 +1680,7 @@ descr
 "   You are on a long road running north-south along the eastern city wall.
 There is a stable to the west."
 movement SECT_CITY
+gmap(702,297)
 north to wall_rd11;
 south to in_egate;
 west to stable2;
@@ -1684,6 +1698,7 @@ descr
 leads south and west, and a heavy-looking oaken door leads north into the
 tower. A manhole can be seen on the ground here."
 movement SECT_CITY
+gmap(702,174)
 west to wall_rd12;
 south to wall_rd10;
 north to midwalls/rn_010 open {EX_OPEN_CLOSE, EX_CLOSED}
@@ -1705,6 +1720,7 @@ descr
 A narrow street paved with cobblestones leads south.  A street sign nearby
 says `Tailor Street'."
 movement SECT_CITY
+gmap(624,174)
 west to in_ngate;
 east to wall_rd11;
 south to tailor_st2;
@@ -1721,6 +1737,7 @@ descr
 A narrow street paved with cobblestones leads south.  A street sign nearby
 says `Baker Street'."
 movement SECT_CITY
+gmap(272,174)
 east to in_ngate;
 west to wall_rd14;
 south to baker_st2;
@@ -1737,6 +1754,7 @@ descr
 leads south and east, and a heavy-looking oaken door leads north into the
 tower."
 movement SECT_CITY
+gmap(165,174)
 east to wall_rd13;
 south to wall_rd15;
 north to midwalls/rn_005 open {EX_OPEN_CLOSE, EX_CLOSED}
@@ -1753,6 +1771,7 @@ title "Wall Road"
 descr
 "   You are on a long road running north-south along the western city wall."
 movement SECT_CITY
+gmap(165,305)
 north to wall_rd14;
 south to in_wgate;
 ALWAYS_LIGHT
@@ -1767,6 +1786,7 @@ descr
 The West Bridge of Midgaard spans the river to the south, and a small road
 leads east along the river bank towards the wharves."
 movement SECT_CITY
+gmap(165,591)
 east to wharf1;
 north to in_wgate;
 south to west_bridge;
@@ -1785,6 +1805,7 @@ descr
 north and south.  To your east is a small shop with a large pair of scissors
 hanging outside."
 movement SECT_CITY
+gmap(624,403)
 north to tailor_st2;
 south to main_st5;
 east to tailor_shop;
@@ -1800,6 +1821,7 @@ descr
 "   You are on a narrow street paved with cobblestones.  The street leads
 north and south. To your east is the Magic Shop."
 movement SECT_CITY
+gmap(624,297)
 north to wall_rd12;
 south to tailor_st1;
 east to magic_shop;
@@ -1815,6 +1837,7 @@ descr
 north and south.  To the west is a building with a large coach horn hanging
 outside and a sign saying `Post Office'."
 movement SECT_CITY
+gmap(624,562)
 north to main_st5;
 south to n_prom2;
 east to engraver_shop descr "A small engraver workshop is to the east.";
@@ -1835,6 +1858,7 @@ windows say `The Grubby Inn'.  The tavern door is to the west, and a small
 alley leads east to Cathedral Square.  Baker Street continues north and
 south."
 movement SECT_CITY
+gmap(272,403)
 north to baker_st2;
 south to main_st2;
 east to cth_square8;
@@ -1849,6 +1873,7 @@ title "Baker Street"
 descr
 "   The street continues north and south."
 movement SECT_CITY
+gmap(272,291)
 north to wall_rd13;
 south to baker_st1;
 ALWAYS_LIGHT
@@ -1862,6 +1887,7 @@ descr
 "   You are on a small, paved road leading north towards the city gate and
 south towards Cathedral Square."
 movement SECT_CITY
+gmap(480,203)
 north to in_ngate;
 south to cth_square5;
 ALWAYS_LIGHT
@@ -1879,6 +1905,7 @@ descr
 southern twin towers rise high above you.  You can go east and west around
 the immense church, or south to the Market Square."
 movement SECT_CITY
+gmap(480,403)
 north to cth_entrance;
 /* Her skal være et par "huge bronze doors", der kan �bnes og lukkes. */
 south to market_sq;
@@ -1898,6 +1925,7 @@ tower looms above you.  You can go north and west around the church, and a
 small alley to Tailor Street leads east from here. To the south you see a
 pair of grand gates leading into college arcanum."
 movement SECT_CITY
+gmap(530,403)
 north to cth_square3;
 east to tailor_st1;
 west to cth_square1;
@@ -1916,6 +1944,7 @@ contrasted by the bright colours of numerous tall mosaic windows.  The
 School of Magic is to the east, and you can go north and south along the
 church wall."
 movement SECT_CITY
+gmap(530,340)
 north to cth_square4;
 south to cth_square2;
 east to mag_yard;
@@ -1932,6 +1961,7 @@ descr
 church wall is to the southwest.  You can go south and west around the
 church."
 movement SECT_CITY
+gmap(530,231)
 west to cth_square5;
 south to cth_square3;
 ALWAYS_LIGHT
@@ -1947,6 +1977,7 @@ descr
 tower of the church rises high above you, a large bell hanging near its top.
 Cathedral Road leads north, and you can go east and west around the church."
 movement SECT_CITY
+gmap(480,231)
 north to cth_road;
 east to cth_square4;
 west to cth_square6;
@@ -1962,6 +1993,7 @@ descr
 church wall is to the southeast.  You can go south and east around the
 church."
 movement SECT_CITY
+gmap(430,231)
 south to cth_square7;
 east to cth_square5;
 ALWAYS_LIGHT
@@ -1978,6 +2010,7 @@ contrasted by the bright colours of numerous tall mosaic windows.  The
 monastery gate is to the west, and you can go north and south along the
 church wall."
 movement SECT_CITY
+gmap(530,340)
 north to cth_square6;
 south to cth_square8;
 west to paladin_guild/mon_yard;
@@ -1994,6 +2027,7 @@ descr
 tower looms above you.  You can go north and east around the church, and a
 small alley to Baker Street leads west from here."
 movement SECT_CITY
+gmap(430,403)
 north to cth_square7;
 east to cth_square1;
 west to baker_st1;
@@ -2012,6 +2046,7 @@ descr
 connected with a footbridge across a heavy wooden gate.  Main Street leads
 east into the city and Wall Road leads north and south along the city wall."
 movement SECT_CITY
+gmap(165,504)
 west to rn_002;
 east to main_st1;
 north to wall_rd15;
@@ -2057,6 +2092,7 @@ extra {"path"}
 
 
 movement SECT_CITY
+gmap(108,504)
 west to out_wgate@cypress;
 east to rn_002
 descr "Inside the Western Gate";
@@ -2101,6 +2137,7 @@ extra {"midgaard proper", "midgaard"}
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 
 movement SECT_CITY
+gmap(136,504)
 west to rn_001
 descr "West Bridge";
 east to in_wgate;
@@ -2144,6 +2181,7 @@ extra {"midgaard proper", "midgaard"}
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 
 movement SECT_CITY
+gmap(731,504)
 west to in_egate;
 east to rn_013
 descr "East Bridge";
@@ -2179,6 +2217,7 @@ extra {"kings road", "road"}
 
 
 movement SECT_CITY
+gmap(760,504)
 east to out_egate@ratswarf;
 west to rn_012
 descr "Inside the Eastern Gate";
@@ -2195,6 +2234,7 @@ descr
 connected with a footbridge across a heavy wooden gate.  Main Street leads
 west into the city and Wall Road leads north and south along the city wall."
 movement SECT_CITY
+gmap(702,504)
 east to rn_012;
 west to main_st6;
 north to wall_rd10;
@@ -2255,6 +2295,7 @@ extra {"granite blocks", "granite", "blocks"}
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 
 movement SECT_CITY
+gmap(480,1122)
 west to rn_019@midwalls open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
 east to rn_016@midwalls  open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
 south to rn_018
@@ -2288,6 +2329,7 @@ extra {"path"}
 
 
 movement SECT_CITY
+gmap(480,1151)
 south to etznab/n_incline;
 north to rn_017
 descr "Inside the Southern Gate";
@@ -2304,6 +2346,7 @@ descr
 connected with a footbridge across a heavy wooden gate.  Palace Road leads
 north into the city and Wall Road leads east and west along the city wall."
 movement SECT_CITY
+gmap(480,1094)
 west to wall_rd4;
 east to wall_rd5;
 south to rn_017;
@@ -2349,6 +2392,7 @@ extra {"path"}
 
 
 movement SECT_CITY
+gmap(480,117)
 north to out_ngate@moor;
 south to rn_008
 descr "Inside the Northern Gate";
@@ -2394,6 +2438,7 @@ extra {"midgaard proper", "midgaard"}
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 
 movement SECT_CITY
+gmap(480,145)
 west to rn_006@midwalls open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
 east to rn_009@midwalls open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
 north to rn_007
@@ -2410,6 +2455,7 @@ descr
 connected with a footbridge across a heavy wooden gate.  Cathedral Road leads
 south into the city and Wall Road leads east and west along the city wall."
 movement SECT_CITY
+gmap(480,174)
 west to wall_rd13;
 east to wall_rd12;
 south to cth_road;
@@ -2443,6 +2489,7 @@ The Cathedral Square and the great Cathedral of Midgaard is north of here, and
 the very broad Royal Avenue leads south through the city.  Main Street leads
 east and west."
 movement SECT_CITY
+gmap(480,403)
 north to cth_square1 descr
 "The great Cathedral of Midgaard towers proudly beyond Cathedral Square.  The
 two massive southern towers reach ambitiously for the sky.";
@@ -2463,6 +2510,7 @@ west towards the city gate.  A small cage hangs on the front of a small shop
 to the north indicating that this is the Pet Shop.  To the south is a shop
 with a sign on the front saying `Ironmonger's'."
 movement SECT_CITY
+gmap(215,504)
 north to pet_shop;
 south to ironmon_shop;
 west to in_wgate;
@@ -2480,6 +2528,7 @@ Outside the bakery to the south hangs a large pretzel, and the delicious smell
 of newly baked bread emerges from within.  Baker Street leads north from
 here."
 movement SECT_CITY
+gmap(272,504)
 north to baker_st1;
 south to baker_shop;
 east to main_st3;
@@ -2496,6 +2545,7 @@ To your north is a rather large stone building, the Town Hall of Midgaard, and
 to your south is a shop with a sign reading `Greengrocer's' on the front.
 Main Street leads east to the Market Square."
 movement SECT_CITY
+gmap(373,504)
 north to th_entrance;
 south to greeng_shop;
 east to market_sq;
@@ -2513,6 +2563,7 @@ To your north, a solid building made from many stones of various shapes and
 sizes bear a sign reading Cityguard Office.  To your south, a tall, grey
 tower, with a dark and heavy-looking oak door, rises above your head."
 movement SECT_CITY
+gmap(580,504)
 north to accuse_room;
 south to wiz_entrance open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
       keyword {"oak door", "door"} difficulty 50;
@@ -2532,6 +2583,7 @@ descr
 "   You are by a road cross.  The broad Main Street leads east and west, and
 the much smaller Tailor Street leads north and south."
 movement SECT_CITY
+gmap(624,504)
 north to tailor_st1;
 south to tailor_st3;
 west to main_st4;
@@ -2549,6 +2601,7 @@ On the front of a small, somewhat humble-looking, shop to the north hangs an
 animal hide, indicating that this must be the Leather Worker's, and outside
 the Butcher's shop to the south hangs a miniature ox."
 movement SECT_CITY
+gmap(674,504)
 north to leather_shop;
 south to butcher_shop;
 west to main_st5;
@@ -2569,6 +2622,7 @@ has been reinforced with large rocks to make it less fragile.  The wharf
 continues east, and a small road leads west towards the city wall.  The boat
 shop is to the north."
 movement SECT_CITY
+gmap(237,591)
 north to boat_shop;
 west to wall_rd16;
 east to wharf2;
@@ -2585,6 +2639,7 @@ with large rocks.  A sturdy boat bridge spans the rocks to the south, and the
 wharf continues east and west.  An old and abandoned-looking warehouse lies
 to the north."
 movement SECT_CITY
+gmap(308,591)
 north to warehouse;
 south to boat_bridge;
 west to wharf1;
@@ -2602,6 +2657,7 @@ and has been reinforced with large rocks to make it less fragile.  The
 wharf continues west, and a small road leads east towards Royal Avenue.
 The Fishmonger's is to the north."
 movement SECT_CITY
+gmap(395,591)
 north to fish_shop;
 west to wharf2;
 east to royal_av2;
@@ -2618,6 +2674,7 @@ descr
 solid wooden poles.  To your south across the river, you see the Southern
 Promenade, and to your north is the wharf."
 movement SECT_CITY
+gmap(308,621)
 north to wharf2;
 south to river1 difficulty 0;
 /* Her skal sidde en "old fisherman"
@@ -2636,6 +2693,7 @@ forest."
 
 ALWAYS_LIGHT
 movement SECT_WATER_SWIM
+gmap(308,641)
 
 north to boat_bridge difficulty 10;
 west to cypress/river difficulty 10;
@@ -2660,6 +2718,7 @@ stones, and a block of old, but well-preserved, two-storey houses
 is to the north.  To your south across the river, you see the Southern
 Promenade.  The waterfront leads east, and Royal Avenue is to the west."
 movement SECT_CITY
+gmap(510,591)
 west to royal_av2;
 east to n_prom2;
 ALWAYS_LIGHT
@@ -2676,6 +2735,7 @@ stones, and a narrow street called `Tailor Street' leads north.  To your
 south across the river, you see the Southern Promenade.  The waterfront
 leads east and west."
 movement SECT_CITY
+gmap(624,591)
 north to tailor_st3;
 west to n_prom1;
 east to n_prom3;
@@ -2693,6 +2753,7 @@ stones, and a block of old, but well-preserved, two-storey houses is to the
 north.  To your south across the river, you see the Southern Promenade.  The
 waterfront leads west and a small road leads east towards the city wall."
 movement SECT_CITY
+gmap(667,591)
 west to n_prom2;
 east to wall_rd9;
 ALWAYS_LIGHT
@@ -2711,6 +2772,7 @@ road is paved with many carefully hewn flagstones.  The avenue leads north to
 the market square and south through the city.  The Grunting Boar Inn is to
 the east."
 movement SECT_CITY
+gmap(480,549)
 east to grunting_inn;
 west to jandump;
 north to market_sq;
@@ -2730,6 +2792,7 @@ carefully hewn flagstones.  The Northern Promenade leads east, and a small
 road leads west towards to the wharves.  South, a large stone bridge spans
 the river."
 movement SECT_CITY
+gmap(480,591)
 east to n_prom1;
 west to wharf3;
 north to royal_av1;
@@ -2749,6 +2812,7 @@ flanked by numerous tall chestnut trees, and the road is paved with many
 carefully hewn flagstones.  The Southern Promenade leads east and west.  To
 the north, a large stone bridge spans the river."
 movement SECT_CITY
+gmap(480,677)
 east to s_prom4;
 west to s_prom3;
 north to royal_bridge;
@@ -2766,6 +2830,7 @@ descr
 flanked by numerous tall chestnut trees, and the road is paved with many
 carefully hewn flagstones."
 movement SECT_CITY
+gmap(480,721)
 north to royal_av3;
 south to royal_av5;
 ALWAYS_LIGHT
@@ -2782,6 +2847,7 @@ flanked by numerous tall chestnut trees, and the road is paved with many
 carefully hewn flagstones.  A small street called Penny Lane leads east and
 the larger Gladiator Road leads west."
 movement SECT_CITY
+gmap(480,849)
 north to royal_av4;
 south to royal_av6;
 east to penny_lane1;
@@ -2799,6 +2865,7 @@ descr
 towards Palace Square.  It is flanked by numerous tall chestnut trees, and
 the road is paved with many carefully hewn flagstones."
 movement SECT_CITY
+gmap(480,907)
 north to royal_av5;
 south to palace_sq;
 ALWAYS_LIGHT
@@ -2816,6 +2883,7 @@ north and south, is a natural extension of Royal Avenue.  From here, there is
 a terrific view of the southern and northern waterfronts, and of the river
 itself. It is possible to climb underneath the bridge from here."
 movement SECT_CITY
+gmap(480,634)
 north to royal_av2;
 south to royal_av3;
 down to midsewers/underbridge;
@@ -2832,6 +2900,7 @@ descr
 the western city wall and the river flows west through an opening in the wall
 about ten feet below."
 movement SECT_CITY
+gmap(165,634)
 north to wall_rd16;
 south to wall_rd1;
 /* Her skal det senere v�re muligt at hoppe i floden (exit: down) */
@@ -2847,6 +2916,7 @@ descr
 the eastern city wall and the river flows west through an opening in the wall
 about ten feet below."
 movement SECT_CITY
+gmap(702,634)
 north to wall_rd9;
 south to wall_rd8;
 /* Her skal det senere v�re muligt at hoppe i floden (exit: down) */
@@ -2865,6 +2935,7 @@ descr
 and an impenetrable hedge blocks the way southwards.  The promenade leads
 east, and Wall Road is to the west.  Across the river, you see the wharves."
 movement SECT_CITY
+gmap(338,677)
 west to wall_rd1;
 east to s_prom2;
 ALWAYS_LIGHT
@@ -2880,6 +2951,7 @@ descr
 and Colosseum Road leads south.  The promenade leads east and west, and
 across the river, you see the wharves."
 movement SECT_CITY
+gmap(365,677)
 west to s_prom1;
 east to s_prom3;
 south to col_rd1;
@@ -2897,6 +2969,7 @@ and an impenetrable hedge blocks the way southwards.  The promenade leads
 west, and Royal Avenue is to the east.  Across the river, you see the
 wharves."
 movement SECT_CITY
+gmap(395,677)
 west to s_prom2;
 east to royal_av3;
 ALWAYS_LIGHT
@@ -2912,6 +2985,7 @@ and an impenetrable hedge blocks the way southwards.  The promenade leads
 east, and Royal Avenue is to the west.  Across the river, you see the
 northern waterfront."
 movement SECT_CITY
+gmap(530,677)
 west to royal_av3;
 east to s_prom5;
 ALWAYS_LIGHT
@@ -2927,6 +3001,7 @@ descr
 and Park Road leads south.  The promenade leads east and west, and across
 the river, you see the northern waterfront."
 movement SECT_CITY
+gmap(588,677)
 west to s_prom4;
 east to s_prom6;
 south to park_rd1;
@@ -2943,6 +3018,7 @@ and an impenetrable hedge blocks the way southwards.  The promenade leads
 west, and Wall Road is to the east.  Across the river, you see the northern
 waterfront."
 movement SECT_CITY
+gmap(675,677)
 west to s_prom5;
 east to wall_rd8;
 ALWAYS_LIGHT
@@ -3034,6 +3110,7 @@ descr
 "   You are on a road flanked by slender beeches.  The road leads north to
 the river and south to the city park."
 movement SECT_CITY
+gmap(588,749)  
 north to s_prom5;
 south to park1;
 flags {UNIT_FL_NO_MOB}
@@ -3051,6 +3128,7 @@ to the city park and south through the city.  To your east is a rather large
 building with a sign saying `Bank' on the front, and westwards is a small
 boutique with a pair of scales on a sign saying `Jeweller's'."
 movement SECT_CITY
+gmap(588,957)
 north to park4;
 south to park_rd3;
 east to bank;
@@ -3067,6 +3145,7 @@ descr
 "   You are on a road flanked by slender beeches.  The road leads north and
 south through the city.  A small alley leads west to Palace Road."
 movement SECT_CITY
+gmap(588,993)
 north to park_rd2;
 south to park_rd4;
 west to palace_rd2;
@@ -3082,6 +3161,7 @@ descr
 "   You are on a road flanked by slender beeches.  The road leads north and
 south through the city."
 movement SECT_CITY
+gmap(588,1029)
 north to park_rd3;
 south to park_rd5;
 ALWAYS_LIGHT
@@ -3095,6 +3175,7 @@ descr
 "   You are on a road flanked by slender beeches.  The road leads north
 through the city and south towards Wall Road."
 movement SECT_CITY
+gmap(588,1058)
 north to park_rd4;
 south to wall_rd5;
 ALWAYS_LIGHT
@@ -3116,6 +3197,7 @@ extra {"lion", "lions"} "They are just lions."
 extra {"hedge", "hawthorn"}
 "Its thorns look very pointy and the hedge itself appears quite impenetrable."
 movement SECT_CITY
+gmap(480,957)
 north to royal_av6;
 west to palace_rd7;
 east to palace_rd1;
@@ -3136,6 +3218,7 @@ south along the hedge."
 extra {"hedge", "hawthorn"}
 "Its thorns look very pointy and the hedge itself appears quite impenetrable."
 movement SECT_CITY
+gmap(523,957)
 west to palace_sq;
 south to palace_rd2;
 ALWAYS_LIGHT
@@ -3153,6 +3236,7 @@ leads east to Park Road."
 extra {"hedge", "hawthorn"}
 "Its thorns look very pointy and the hedge itself appears quite impenetrable."
 movement SECT_CITY
+gmap(523,993)
 north to palace_rd1;
 east to park_rd3;
 south to palace_rd3;
@@ -3170,6 +3254,7 @@ hedge to the northwest, and the road leads north and west along the hedge."
 extra {"hedge", "hawthorn"}
 "Its thorns look very pointy and the hedge itself appears quite impenetrable."
 movement SECT_CITY
+gmap(523,1029)
 west to palace_rd4;
 north to palace_rd2;
 ALWAYS_LIGHT
@@ -3186,6 +3271,7 @@ hedge and south, away from the hedge."
 extra {"hedge", "hawthorn"}
 "Its thorns look very pointy and the hedge itself appears quite impenetrable."
 movement SECT_CITY
+gmap(480,1029)
 west to palace_rd5;
 east to palace_rd3;
 south to palace_rd8;
@@ -3202,6 +3288,7 @@ hedge is to the northeast, and the road leads north and east along the hedge."
 extra {"hedge", "hawthorn"}
 "Its thorns look very pointy and the hedge itself appears quite impenetrable."
 movement SECT_CITY
+gmap(430,1029)
 north to palace_rd6;
 east to palace_rd4;
 ALWAYS_LIGHT
@@ -3218,6 +3305,7 @@ leads west to Colosseum Road."
 extra {"hedge", "hawthorn"}
 "Its thorns look very pointy and the hedge itself appears quite impenetrable."
 movement SECT_CITY
+gmap(430,993)
 west to col_rd3;
 south to palace_rd5;
 north to palace_rd7;
@@ -3235,6 +3323,7 @@ south along the hedge."
 extra {"hedge", "hawthorn"}
 "Its thorns look very pointy and the hedge itself appears quite impenetrable."
 movement SECT_CITY
+gmap(430,957)
 east to palace_sq;
 south to palace_rd6;
 ALWAYS_LIGHT
@@ -3249,6 +3338,7 @@ descr
 "   You are on a road paved with reddish brown flagstones.  It leads south
 towards the southern city gate and north towards a thick hawthorn hedge."
 movement SECT_CITY
+gmap(480,1058)
 north to palace_rd4;
 south to in_sgate;
 ALWAYS_LIGHT
@@ -3265,6 +3355,7 @@ descr
 "   You are at the west end of Elm Street.  The gate to the city park is to
 the west and the street continues east.  An old elm tree grows here."
 movement SECT_CITY
+gmap(660,849)
 extra {"elm tree", "tree"}
 "The elm tree looks full of peace and wisdom.  Its leaves move gently in the
 wind."
@@ -3282,6 +3373,7 @@ descr
 "   You are at the east end of Elm Street.  Wall Road is to the east and
 Elm Street continues west."
 movement SECT_CITY
+gmap(681,849)
 west to elm_street1;
 east to wall_rd7;
 ALWAYS_LIGHT
@@ -3297,6 +3389,7 @@ descr
 "   You are at the west end of Penny Lane.  Royal Avenue is to the west and
 Penny Lane continues east."
 movement SECT_CITY
+gmap(509,849)
 east to penny_lane2;
 west to royal_av5;
 ALWAYS_LIGHT
@@ -3311,6 +3404,7 @@ descr
 "   You are at the east end of Penny Lane.  The gate to the city park is to
 the east and Penny Lane continues west."
 movement SECT_CITY
+gmap(531,849)
 east to park3;
 west to penny_lane1;
 flags {UNIT_FL_NO_MOB}
@@ -3843,6 +3937,7 @@ descr
 to the touch.  A heavy steel door is to the east."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
+gmap(559,484)
 extra {"wall","walls"}
 "The walls are marked with lots of scratches.  Some of them spell sentences
 like `JAIL IS BETTER THAN SQL'."
@@ -3868,6 +3963,8 @@ east to guard_yard;
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_SACRED,
 UNIT_FL_NO_TELEPORT}
 ALWAYS_LIGHT
+movement SECT_INSIDE
+gmap(559,462)
 end
 
                             guard_skill
@@ -3882,6 +3979,8 @@ for learning new skills."
 south to guard_yard;
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_SACRED}
 ALWAYS_LIGHT
+movement SECT_INSIDE
+gmap(581,441)
 end
 
                             guard_spell
@@ -3896,6 +3995,8 @@ matters to scholars."
 west to guard_yard;
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_SACRED}
 ALWAYS_LIGHT
+movement SECT_INSIDE
+gmap(602,462)
 end
 
                             guard_yard
@@ -3908,6 +4009,8 @@ lies the gym, the lecture room is to your east and the entrance is south."
 extra {"yard", "walls"}
 "The yard is clean, the closeness of the walls lets in but a little light
 down here."
+movement SECT_INSIDE
+gmap(580,462)
 north to guard_skill;
 east to guard_spell;
 west to guard_dorm;
@@ -3927,6 +4030,7 @@ heavy iron grating through which you can see the jail."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT,
 UNIT_FL_SACRED}
 movement SECT_INSIDE
+gmap(580,484)
 north to guard_yard;
 south to main_st4;
 west to jail  open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED, EX_PICKPROOF}
@@ -3949,6 +4053,7 @@ Hall', another above the east doorway says `Hall of the Citizens', and a
 third above the west doorway says `Town Library'."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(373,475)
 north to th_council;
 east to th_citizen;
 south to main_st3;
@@ -3967,6 +4072,7 @@ by a long table.  Slightly off the centre of the arch is a rostrum, and on
 the wall behind it is a large tapestry depicting the Midgaard coat-of-arms."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(373,445)
 south to th_entrance;
 extra {"tapestry", "coat-of-arms"}
 "It shows a walled city with many towers, surrounded by an enormous serpent."
@@ -3982,6 +4088,7 @@ of the citizens are either out working or getting drunk, maimed, or killed,
 whatever their preference may be."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(394,475)
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}
 west to th_entrance;
 ALWAYS_LIGHT
@@ -4000,6 +4107,7 @@ between the bar and the shelves is a massive desk and a large uncomfortable-
 looking chair."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(351,475)
 east to th_entrance;
 
 
@@ -4042,6 +4150,7 @@ hanging from the beams, cast a warm light on the many well-worn wooden chairs
 and tables.  A staircase leads up to the reception."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(510,549)
 west to royal_av1;
 up to reception;
 ALWAYS_LIGHT
@@ -4056,6 +4165,7 @@ descr
 Grunting Boar Inn.  There is a small <a cmd='read #'>sign</a> on the counter."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(499,539)
 down to grunting_inn;
 extra {"sign"}
 "Reception is closed due to unfair competition. Just quit."
@@ -4077,6 +4187,7 @@ tall pointy towers.  Doorways lead north and south into less impressive
 buildings, and the gate leads west to Cathedral Square.  A sign above the
 south door says `Light Wizardry'."
 movement SECT_FIELD
+gmap(560,340)
 north to mag_refectory;
 south to mag_lecture;
 west to cth_square3 open {EX_OPEN_CLOSE} keyword {"gate"};
@@ -4095,6 +4206,7 @@ benches.  Some of the chairs have been thrown over, and the whole room seems
 to have been left in a great hurry."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(560,319)
 south to mag_yard;
 extra {"table","tables"}
 "Most of the tables bear crude inscriptions like `I WANNA FIREBALL' and
@@ -4112,6 +4224,7 @@ blackboard on the east wall.  Three tall windows are set in the south wall,
 and the magic school yard is to the north."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(560,362)
 north to mag_yard;
 extra {"desk","desks"}
 "Most of the desks bear crude inscriptions like `THE TEECHER IS A JERK' and
@@ -4138,6 +4251,7 @@ A <a cmd='read #'>sign</a> above the south doorway says `Heavy Wizardry' and one
 doorway says `Deep Magic'."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(581,341)
 up to mag_dormitory;
 west to mag_yard open {EX_OPEN_CLOSE} keyword {"door"};
 north to mag_n_stair1;
@@ -4161,6 +4275,7 @@ of the beds are unmade and appear to be left in great hurry.  A spiral
 staircase in the northeast corner of the room leads downwards."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(591,333)
 down to mag_hall;
 ALWAYS_LIGHT
 end
@@ -4175,6 +4290,7 @@ northern tower.  The stone stairs are worn with many years of use.  A doorway
 leads south to the central hall."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(581,320)
 south to mag_hall;
 up to mag_n_stair2;
 ALWAYS_LIGHT
@@ -4191,6 +4307,7 @@ The stone stairs are worn with many years of use.  Further upwards, the
 staircase ends in a room, and you can see a faint light coming from above."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(585,309)
 down to mag_n_stair1;
 up to mag_n_tower;
 ALWAYS_LIGHT
@@ -4211,6 +4328,7 @@ extra {"pentagram"}
 filled almost to the edge with salt."
 flags {UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(592,302)
 down to mag_n_stair2;
 /* Here Merlin teaches high-level spells (deep magic). */
 ALWAYS_LIGHT
@@ -4227,6 +4345,7 @@ southern tower.  The stone stairs are worn with many years of use.  A doorway
 leads north to the central hall."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(582,362)
 north to mag_hall;
 up to mag_s_stair2;
 ALWAYS_LIGHT
@@ -4243,6 +4362,7 @@ The stone stairs are worn with many years of use.  Further upwards, the
 staircase ends in a room, and you can see a faint light coming from above."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(590,367)
 down to mag_s_stair1;
 up to mag_s_tower;
 ALWAYS_LIGHT
@@ -4262,6 +4382,7 @@ extra {"triangle"}
 "It is a large triangle drawn with white chalk inside a circle."
 flags {UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(592,372)
 down to mag_s_stair2;
 /* Here Elvira teaches medium-level spells (heavy wizardry). */
 ALWAYS_LIGHT
@@ -4279,6 +4400,7 @@ descr
 and north towards Park Road.  The grass is fresh and green, and many young and
 healthy-looking trees grow on each side of the path."
 movement SECT_FIELD
+gmap(588,820)
 north to park_rd1;
 east to park_pond;
 west to park2;
@@ -4296,6 +4418,7 @@ descr
 The grass is fresh and green, and many young and healthy-looking trees grow on
 each side of the path."
 movement SECT_FIELD
+gmap(560,820)
 east to park1;
 south to park3;
 ALWAYS_LIGHT
@@ -4312,6 +4435,7 @@ and west towards Penny Lane.  The grass is fresh and green, and many young and
 healthy-looking trees grow on each side of the path.  Eastwards is a peculiar
 stone circle."
 movement SECT_FIELD
+gmap(560,849)
 north to park2;
 east to park_circle;
 west to penny_lane2;
@@ -4328,6 +4452,7 @@ of granite.  The twelve grey rocks are weather-beaten and must have been here
 for centuries.  Within the circle, the grass appears especially tall and
 vigorous.  Paths outside the circle lead off in all directions."
 movement SECT_FIELD
+gmap(588,849)
 flags {UNIT_FL_SACRED}
 /*north to gp_start@mansion;*/
 west to park3;
@@ -4347,6 +4472,7 @@ and south towards Park Road.  The grass is fresh and green, and many young and
 healthy-looking trees grow on each side of the path.  Northwards is a peculiar
 stone circle and westwards is a small cafe."
 movement SECT_FIELD
+gmap(588,879)
 north to park_circle;
 east to park5;
 west to park_cafe;
@@ -4364,6 +4490,7 @@ descr
 The grass is fresh and green, and many young and healthy-looking trees grow on
 each side of the path."
 movement SECT_FIELD
+gmap(617,879)
 north to park6;
 west to park4;
 ALWAYS_LIGHT
@@ -4379,6 +4506,7 @@ descr
 and east towards Elm Street.  The grass is fresh and green, and many young and
 healthy-looking trees grow on each side of the path."
 movement SECT_FIELD
+gmap(617,849)
 north to park_pond;
 east to elm_street1;
 south to park5;
@@ -4398,6 +4526,7 @@ you hear the faint trinkling of water. The grass is fresh and green, and
 many young and healthy-looking trees grow on each side of the path."
 
 movement SECT_FIELD
+gmap(617,792)
 south to park_pond;
 east to park8;
 ALWAYS_LIGHT
@@ -4413,6 +4542,7 @@ The grass is fresh and green, and many young and healthy-looking trees
 grow on each side of the path."
 
 movement SECT_FIELD
+gmap(645,792)
 south to park9;
 west to park7;
 ALWAYS_LIGHT
@@ -4430,6 +4560,7 @@ you hear the faint trickling of water.  The grass is fresh and green, and
 many young and healthy-looking trees grow on each side of the path."
 
 movement SECT_FIELD
+gmap(645,820)
 north to park8;
 west to park_pond;
 ALWAYS_LIGHT
@@ -4448,6 +4579,7 @@ waddle around waiting to be fed. In the center of the pond water sprays
 from a fountain, the tiny droplets forming a spectacular rainbow.  Paths
 lead off in all directions through the peaceful park."
 movement SECT_FIELD
+gmap(617,820)
 west to park1;
 south to park6;
 east to park9;
@@ -4551,6 +4683,7 @@ private-looking door.  A staircase leads up, and a faded  <a cmd='read #'>sign</
 on the wall."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_SACRED}
 movement SECT_INSIDE
+gmap(251,403)
 east to baker_st1;
 up to grub_corr;
 west to grub_smug open {EX_OPEN_CLOSE, EX_LOCKED, EX_CLOSED}
@@ -4569,6 +4702,7 @@ enabling you to see that the room contains a bunk and a small circular
 staircase leading downwards."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(230,403)
 east to grub_inn open {EX_OPEN_CLOSE, EX_LOCKED, EX_CLOSED}
      key grub_key keyword "door" difficulty 90;
 down to grub_cellar2;
@@ -4586,6 +4720,7 @@ stand along the walls, and many empty bottles litter the floor.  To the east
 is a heavy iron fence."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(189,406)
 east to grub_cellar2 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
         key grub_key keyword {"iron fence", "fence"} difficulty 60;
 ALWAYS_LIGHT
@@ -4606,6 +4741,7 @@ extra {"fence"}
 "It has a lock and hinges.  Through it you can see many wine bottles."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(218,406)
 west to grub_cellar1 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
         key grub_key keyword {"iron fence", "fence"} difficulty 60;
 east to grub_cellar3;
@@ -4624,6 +4760,7 @@ extra {"barrel"}
 "It seems empty, judging by the sound it makes when you knock on it."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(242,412)
 west to grub_cellar2;
 /* grub_barrel is placed inside this room */
 south to grub_closet;
@@ -4642,6 +4779,7 @@ flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 manipulate {MANIPULATE_ENTER}       /* You can enter the barrel */
 open {EX_OPEN_CLOSE, EX_CLOSED, EX_INSIDE_OPEN}
 movement SECT_INSIDE
+gmap(244,414)
 in grub_cellar3
 south to entrance@thievesguild;
 ALWAYS_LIGHT
@@ -4677,6 +4815,7 @@ south and are marked from 1-3 respectively.  A small desk stands at the
 plateau above the staircase and a <a cmd='read #'>sign</a> hangs on the wall behind it."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(243,395)
 down to grub_inn;
 north to grub_joy1;
 west to grub_joy2;
@@ -4697,6 +4836,7 @@ The curtains are drawn, leaving the task of lighting the room, to a single
 candle on the bedside table."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(240,371)
 south to grub_corr;
 ALWAYS_LIGHT
 end
@@ -4714,6 +4854,7 @@ The curtains are drawn, leaving the task of lighting the room, to a single
 candle on the bedside table."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(209,397)
 east to grub_corr;
 ALWAYS_LIGHT
 end
@@ -4730,6 +4871,7 @@ The curtains are drawn, leaving the task of lighting the room, to a single
 candle on the bedside table."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(240,429)
 north to grub_corr;
 ALWAYS_LIGHT
 end
@@ -4747,6 +4889,7 @@ flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 manipulate {MANIPULATE_ENTER}       /* You can enter the cupboard */
 open {EX_OPEN_CLOSE, EX_CLOSED, EX_INSIDE_OPEN}
 movement SECT_INSIDE
+gmap(245,424)
 in grub_joy3  /* Place in joy room 3, secret passage to cellar */
 down to grub_cellar3;
 ALWAYS_LIGHT
@@ -4810,6 +4953,7 @@ of light shines in through the boarded up windows above you.  The place is
 very dusty and appears to have been unused for many years."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(308,562)
 south to wharf2;
 ALWAYS_LIGHT
 end
@@ -4868,6 +5012,7 @@ extra {"dwarf and the gnome in the workshop","dwarf","gnome","workshop"}
 "They both appear very busy and hard at work. Better not bother them or
 your job will take even longer.<br/>"
 movement SECT_INSIDE
+gmap(653,562)
 flags {UNIT_FL_NO_WEATHER,UNIT_FL_INDOORS}
 ALWAYS_LIGHT
 west to tailor_st3@midgaard open {EX_OPEN_CLOSE}
@@ -4923,6 +5068,7 @@ extra {"sign"}
         `value &lt;item&gt;' to make the baker evaluate an item.</pre>"
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(272,533)
 north to main_st2;
 ALWAYS_LIGHT
 end
@@ -4958,6 +5104,7 @@ The Sign Says:<br/>
 flags {UNIT_FL_NO_WEATHER}
 ALWAYS_LIGHT
 movement SECT_INSIDE
+gmap(638,957)
 west to bank;
 end
 
@@ -4985,6 +5132,7 @@ extra {"sign"}
         `exchange &lt;amount&gt;' to either split up a big coin or fuse smaller and<br/>
         `exchange &lt;amount&gt; to &lt;money type&gt;' to exchange specifically.</pre>"
 movement SECT_CITY
+gmap(617,957)
 west to park_rd2;
 east to mid_storage;
 flags {UNIT_FL_NO_WEATHER}
@@ -5002,6 +5150,7 @@ single room with well-worn wooden floor filled to the edge with all sorts of
 mariner's tackle.  A <a cmd='read #'>sign</a> hangs on the wall."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(237,562)
 south to wharf1;
 extra {"sign"}
 "It says :-<pre><br/>
@@ -5057,6 +5206,7 @@ on hooks.  The room is split in two by a large wooden counter.  A <a cmd='read #
 on the wall."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(674,534)
 north to main_st6;
 extra {"sign"}
 "It says :-<pre><br/>
@@ -5105,6 +5255,7 @@ A fishing net is suspended below the ceiling to add to the atmosphere, and a
 sign hangs below the net."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(395,562)
 south to wharf3;
 extra {"sign"}
 "It says :-<pre><br/>
@@ -5127,6 +5278,7 @@ Various fruits and vegetables are kept in wooden bins along the walls.
 A pair of scales stands on the counter.  A <a cmd='read #'>sign</a> hangs on the wall."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(373,533)
 north to main_st3;
 extra {"sign"}
 "It says :-<pre><br/>
@@ -5149,6 +5301,7 @@ are filled with miscellaneous hardware.  The door is to the north, and a <a cmd=
 hangs on the wall."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(215,533)
 north to main_st1;
 extra {"sign"}
 "It says :-<pre><br/>
@@ -5172,6 +5325,7 @@ surface of the big mahogany desk that stands in the centre of the room.
 A small <a cmd='read #'>sign</a> with golden letters stands on the desk."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(566,957)
 east to park_rd2;
 extra {"oil","lamps"}
 "They are made from polished gold and looks as if they are securely fastened
@@ -5242,6 +5396,7 @@ bottles of all shapes and sizes.  The scent of foreign herbs and spices
 puzzles your nose.  A <a cmd='read #'>sign</a> stands on a desk in the middle of the room."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(646,297)
 west to tailor_st2;
 extra {"sign"}
 "It says :-<pre><br/>
@@ -5289,6 +5444,7 @@ are all made from white-painted metal shaped in an somewhat fragile-looking
 but very elegant way.  The exit is to the east."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(567,879)
 east to park4;
 extra {"sign"}
 "It says :-<pre><br/>
@@ -5313,6 +5469,7 @@ cages standing on the floor and hanging from the ceiling contain many
 different animals.  A <a cmd='read #'>sign</a> hangs on the wall."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(215,475)
 south to main_st1;
 extra {"sign"}
 "It says :-<pre><br/>
@@ -5336,6 +5493,7 @@ of tall windows in the east wall.  A high wooden counter separates the room
 in t`wo.  A <a cmd='read #'>sign</a> hangs on the wall."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(596,562)
 east to tailor_st3;
 extra {"sign"}
 "   Use<pre><br/>
@@ -5360,6 +5518,7 @@ furniture except for a very large table in the centre of the room.  A <a cmd='re
 hangs on the wall."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(645,403)
 west to tailor_st1;
 extra {"sign"}
 "It says :-<pre><br/>
