@@ -886,7 +886,7 @@ dilprg::dilprg(class unit_data *owner, int bLink)
     this->frame->securecount = 0;
     this->frame->secure = NULL;
     this->frame->pc = NULL;
-    this->frame->stacklen = 0;
+    this->frame->stacklen = this->stack.length();
 }
 
 int dilprg::canfree(void)
@@ -949,7 +949,7 @@ dilprg::~dilprg(void)
 
     dil_free_template(tmpl, IS_SET(this->flags, DILFL_COPY));
 
-    this->stack.destroy();
+    //this->stack.destroy();
     this->owner = NULL;
     this->sarg = NULL;
     this->fp = NULL;
