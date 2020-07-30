@@ -455,7 +455,7 @@ void nanny_motd(class descriptor_data *d, char *arg)
     {
         dilmenu = TRUE;
         enter_game(d->character, TRUE);
-        struct dilprg *prg = dil_copy_template(on_connect, d->character, NULL);
+        class dilprg *prg = dil_copy_template(on_connect, d->character, NULL);
         prg->waitcmd = WAITCMD_MAXINST - 1;
         dil_activate(prg);
     }
@@ -546,7 +546,7 @@ void nanny_dil(class descriptor_data *d, char *arg)
 
     if (nanny_dil_tmpl)
     {
-        struct dilprg *prg;
+        class dilprg *prg;
 
         prg = dil_copy_template(nanny_dil_tmpl, d->character, NULL);
         prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file

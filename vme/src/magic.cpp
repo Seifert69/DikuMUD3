@@ -73,7 +73,7 @@ dil_effect (char *pStr, struct spell_args *sa)
         return FALSE;
     }
 
-    struct dilprg *prg;
+    class dilprg *prg;
     class unit_fptr *fptr;
 
     prg = dil_copy_template (tmpl, sa->caster, &fptr);

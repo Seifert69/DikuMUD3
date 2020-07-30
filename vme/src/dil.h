@@ -600,8 +600,12 @@ struct dilframe
 
 #define DIL_FRAMEINC    8	/* # of stackframes to inc stack with */
 
-struct dilprg
+class dilprg
 {
+public:
+    dilprg(class unit_data *owner, int bLink);
+    ~dilprg(void);
+
     ubit32 flags;       // Recall, copy, etc.
     ubit16 varcrc;		// variable crc from compiler (saved)
     ubit16 corecrc;		// core crc from compiler (saved)
@@ -618,14 +622,12 @@ struct dilprg
 
     sbit16 waitcmd;		/* Command countdown */
 
-    struct dilprg *next;		/* For global dilprg list (sendtoalldil) */
+    class dilprg *next;		/* For global dilprg list (sendtoalldil) */
+
+    int canfree(void);
 };
 
-extern struct dilprg *dil_list;
-extern struct dilprg *dil_list_nextdude;
-
-/* Function prototypes */
-void free_prg (struct dilprg *prg);
-void clear_prg (struct dilprg *prg);
+extern class dilprg *dil_list;
+extern class dilprg *dil_list_nextdude;
 
 #endif /* _MUD_DIL_H */

@@ -453,7 +453,7 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
 
     if (cmd_ptr->tmpl)
     {
-        struct dilprg *prg;
+        class dilprg *prg;
 
         prg = dil_copy_template(cmd_ptr->tmpl, ch, NULL);
         prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
@@ -579,7 +579,7 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
                 diltick = TRUE;
             else if (sarg->fptr->data)
             {
-                register struct dilprg *prg = (struct dilprg *)sarg->fptr->data;
+                register class dilprg *prg = (class dilprg *)sarg->fptr->data;
                 for (i = 0; i < prg->fp->intrcount; i++)
                     if (IS_SET(prg->fp->intr[i].flags, SFB_TICK))
                         diltick = TRUE;

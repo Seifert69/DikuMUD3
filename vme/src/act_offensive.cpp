@@ -104,7 +104,7 @@ void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd
         if (death)
         {
             send_death(ch);
-            struct dilprg *prg = dil_copy_template(death, victim, NULL);
+            class dilprg *prg = dil_copy_template(death, victim, NULL);
             prg->waitcmd = WAITCMD_MAXINST - 1;
             dil_activate(prg);
             return;

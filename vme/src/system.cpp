@@ -320,7 +320,7 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
                     if (link_dead)
                     {
                         CHAR_DESCRIPTOR(d->character) = NULL;
-                        struct dilprg *prg =
+                        class dilprg *prg =
                             dil_copy_template(link_dead, d->character, NULL);
                         prg->waitcmd = WAITCMD_MAXINST - 1;
                         dil_activate(prg);

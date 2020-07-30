@@ -58,7 +58,7 @@ void stop_special(class unit_data *u, class unit_fptr *fptr);
 void start_special(class unit_data *u, class unit_fptr *fptr);
 
 /* report error in instruction */
-void dil_stop_special(class unit_data *unt, struct dilprg *aprg)
+void dil_stop_special(class unit_data *unt, class dilprg *aprg)
 {
     class unit_fptr *fptr;
     class unit_data *u;
@@ -78,7 +78,7 @@ void dil_stop_special(class unit_data *unt, struct dilprg *aprg)
     }
 }
 
-void dil_start_special(class unit_data *unt, struct dilprg *aprg)
+void dil_start_special(class unit_data *unt, class dilprg *aprg)
 {
     class unit_fptr *fptr;
     class unit_data *u;
@@ -98,7 +98,7 @@ void dil_start_special(class unit_data *unt, struct dilprg *aprg)
     }
 }
 
-void dil_insterr(struct dilprg *p, char *where)
+void dil_insterr(class dilprg *p, char *where)
 {
     /* instruction called as an expression! */
     /* This is serous! mess-up in the core.. stop the program */
@@ -113,7 +113,7 @@ void dil_insterr(struct dilprg *p, char *where)
 /* ************************************************************************ */
 /* DIL-instructions							    */
 /* ************************************************************************ */
-void dilfi_edit(register struct dilprg *p)
+void dilfi_edit(register class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
 
@@ -137,7 +137,7 @@ void dilfi_edit(register struct dilprg *p)
     delete v1;
 }
 
-void dilfi_kedit(register struct dilprg *p)
+void dilfi_kedit(register class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
     class descriptor_data *d;
@@ -167,7 +167,7 @@ void dilfi_kedit(register struct dilprg *p)
     delete v1;
 }
 
-void dilfi_gamestate(register struct dilprg *p)
+void dilfi_gamestate(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -227,7 +227,7 @@ void dilfi_gamestate(register struct dilprg *p)
     delete v2;
 }
 
-void dilfi_send_done(register struct dilprg *p)
+void dilfi_send_done(register class dilprg *p)
 {
     struct command_info *cmd_ptr;
     dilval *v7 = p->stack.pop();
@@ -276,7 +276,7 @@ void dilfi_send_done(register struct dilprg *p)
 }
 
 /* pagestring */
-void dilfi_pgstr(register struct dilprg *p)
+void dilfi_pgstr(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -295,7 +295,7 @@ void dilfi_pgstr(register struct dilprg *p)
     delete v1;
 }
 
-void dilfi_setpwd(register struct dilprg *p)
+void dilfi_setpwd(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -323,7 +323,7 @@ void dilfi_setpwd(register struct dilprg *p)
     delete v2;
 }
 
-void dilfi_delpc(register struct dilprg *p)
+void dilfi_delpc(register class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
     class descriptor_data *d;
@@ -364,7 +364,7 @@ void dilfi_delpc(register struct dilprg *p)
     delete v1;
 }
 
-void dilfi_reboot(register struct dilprg *p)
+void dilfi_reboot(register class dilprg *p)
 {
     extern int mud_shutdown, mud_reboot;
     if (p->frame[0].tmpl->zone->access > 0)
@@ -380,7 +380,7 @@ void dilfi_reboot(register struct dilprg *p)
 }
 
 /* foreach - clear / build */
-void dilfi_foe(struct dilprg *p)
+void dilfi_foe(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
     int i;
@@ -415,7 +415,7 @@ void dilfi_foe(struct dilprg *p)
 }
 
 /* foreach - next */
-void dilfi_fon(struct dilprg *p)
+void dilfi_fon(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
     class unit_data *u;
@@ -462,7 +462,7 @@ void dilfi_fon(struct dilprg *p)
 }
 
 /* storeall */
-void dilfi_stora(struct dilprg *p)
+void dilfi_stora(class dilprg *p)
 {
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
@@ -563,7 +563,7 @@ void dilfi_stora(struct dilprg *p)
 }
 
 /* set bright */
-void dilfi_sbt(struct dilprg *p)
+void dilfi_sbt(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -584,7 +584,7 @@ void dilfi_sbt(struct dilprg *p)
 }
 
 /* acc_modify */
-void dilfi_amod(struct dilprg *p)
+void dilfi_amod(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -619,7 +619,7 @@ void dilfi_amod(struct dilprg *p)
 }
 
 /* set weight */
-void dilfi_swt(struct dilprg *p)
+void dilfi_swt(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -644,7 +644,7 @@ void dilfi_swt(struct dilprg *p)
 }
 
 /* change_speed */
-void dilfi_chas(struct dilprg *p)
+void dilfi_chas(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -660,7 +660,7 @@ void dilfi_chas(struct dilprg *p)
 }
 
 /* reset_level */
-void dilfi_rslv(struct dilprg *p)
+void dilfi_rslv(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
 
@@ -684,7 +684,7 @@ void dilfi_rslv(struct dilprg *p)
 }
 
 /* reset_vlevel */
-void dilfi_rsvlv(struct dilprg *p)
+void dilfi_rsvlv(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
 
@@ -708,7 +708,7 @@ void dilfi_rsvlv(struct dilprg *p)
 }
 
 /* reset_race */
-void dilfi_rsrce(struct dilprg *p)
+void dilfi_rsrce(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
     void race_adjust(class unit_data * ch);
@@ -734,7 +734,7 @@ void dilfi_rsrce(struct dilprg *p)
 }
 
 /* stop_fighting */
-void dilfi_stopf(struct dilprg *p)
+void dilfi_stopf(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -759,7 +759,7 @@ void dilfi_stopf(struct dilprg *p)
 }
 
 /* set_fighting */
-void dilfi_setf(struct dilprg *p)
+void dilfi_setf(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -782,7 +782,7 @@ void dilfi_setf(struct dilprg *p)
 }
 
 /* clear interrupt */
-void dilfi_cli(struct dilprg *p)
+void dilfi_cli(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
 
@@ -792,7 +792,7 @@ void dilfi_cli(struct dilprg *p)
 }
 
 /* Return from proc */
-void dilfi_rtf(struct dilprg *p)
+void dilfi_rtf(class dilprg *p)
 {
     struct dilframe *cfrm;
     ubit8 typ;
@@ -914,7 +914,7 @@ void dilfi_rtf(struct dilprg *p)
     dil_free_frame(cfrm);
 }
 
-void dil_pop_frame(struct dilprg *p)
+void dil_pop_frame(class dilprg *p)
 {
     dilfi_rtf(p); /* XXX Is this a potential memory leak rts / rtf? */
 }
@@ -925,7 +925,7 @@ void dil_pop_frame(struct dilprg *p)
    'av' are the arguments which are to be passed to the new frame.
 */
 
-void dil_push_frame(struct dilprg *p, struct diltemplate *rtmpl)
+void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl)
 {
     int i;
     struct dilframe *frm;
@@ -1055,7 +1055,7 @@ void dil_push_frame(struct dilprg *p, struct diltemplate *rtmpl)
 }
 
 /* Remote function call */
-void dilfi_rfunc(register struct dilprg *p)
+void dilfi_rfunc(register class dilprg *p)
 {
     int xrefi;
     struct diltemplate *ctmpl;
@@ -1094,7 +1094,7 @@ void dilfi_rfunc(register struct dilprg *p)
 }
 
 /* Remote symbolic function call */
-void dilfi_rsfunc(register struct dilprg *p)
+void dilfi_rsfunc(register class dilprg *p)
 {
     int i;
     struct diltemplate /* *ctmpl,*/ *ntmpl;
@@ -1189,7 +1189,7 @@ void dilfi_rsfunc(register struct dilprg *p)
 }
 
 /* Assignment of value to reference */
-void dilfi_ass(register struct dilprg *p)
+void dilfi_ass(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1522,7 +1522,7 @@ void dilfi_ass(register struct dilprg *p)
 }
 
 /* Link unit into other unit */
-void dilfi_lnk(register struct dilprg *p)
+void dilfi_lnk(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1553,7 +1553,7 @@ void dilfi_lnk(register struct dilprg *p)
 }
 
 /* dilcopy */
-void dilfi_dlc(register struct dilprg *p)
+void dilfi_dlc(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1570,7 +1570,7 @@ void dilfi_dlc(register struct dilprg *p)
 }
 
 /* sendtext */
-void dilfi_sete(register struct dilprg *p)
+void dilfi_sete(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1604,7 +1604,7 @@ void dilfi_sete(register struct dilprg *p)
 }
 
 /* Set one char to follow another unconditionally */
-void dilfi_folo(register struct dilprg *p)
+void dilfi_folo(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1638,7 +1638,7 @@ void dilfi_folo(register struct dilprg *p)
 }
 
 /* logcrime */
-void dilfi_lcri(register struct dilprg *p)
+void dilfi_lcri(register class dilprg *p)
 {
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
@@ -1664,7 +1664,7 @@ void dilfi_lcri(register struct dilprg *p)
 }
 
 /* Assign EXP to player */
-void dilfi_exp(register struct dilprg *p)
+void dilfi_exp(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1693,7 +1693,7 @@ void dilfi_exp(register struct dilprg *p)
 }
 
 /* Branch on expression */
-void dilfi_if(register struct dilprg *p)
+void dilfi_if(register class dilprg *p)
 {
     ubit32 coreptr;
     dilval *v1 = p->stack.pop();
@@ -1707,7 +1707,7 @@ void dilfi_if(register struct dilprg *p)
 }
 
 /* Set bits in integer */
-void dilfi_set(register struct dilprg *p)
+void dilfi_set(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1747,7 +1747,7 @@ void dilfi_set(register struct dilprg *p)
 }
 
 /* Unset bits in integer */
-void dilfi_uset(register struct dilprg *p)
+void dilfi_uset(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1788,7 +1788,7 @@ void dilfi_uset(register struct dilprg *p)
 }
 
 /* Add element to string list (addstring) */
-void dilfi_adl(register struct dilprg *p)
+void dilfi_adl(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1814,7 +1814,7 @@ void dilfi_adl(register struct dilprg *p)
     delete v2;
 }
 
-void dilfi_inslst(register struct dilprg *p)
+void dilfi_inslst(register class dilprg *p)
 {
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
@@ -1867,7 +1867,7 @@ void dilfi_inslst(register struct dilprg *p)
 }
 
 /* Substract element from a list */
-void dilfi_remlst(register struct dilprg *p)
+void dilfi_remlst(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1907,7 +1907,7 @@ void dilfi_remlst(register struct dilprg *p)
 }
 
 /* Substract element from stringlist */
-void dilfi_sul(register struct dilprg *p)
+void dilfi_sul(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1935,7 +1935,7 @@ void dilfi_sul(register struct dilprg *p)
 }
 
 /* add element to extra description */
-void dilfi_ade2(register struct dilprg *p)
+void dilfi_ade2(register class dilprg *p)
 {
     /* add entry to extradescription */
     dilval *v4 = p->stack.pop();
@@ -1987,7 +1987,7 @@ void dilfi_ade2(register struct dilprg *p)
 }
 
 /* add element to extra description */
-void dilfi_ade(register struct dilprg *p)
+void dilfi_ade(register class dilprg *p)
 {
     /* add entry to extra description */
     dilval *v3 = p->stack.pop();
@@ -2032,7 +2032,7 @@ void dilfi_ade(register struct dilprg *p)
 }
 
 /* Substract elemnt from extra description */
-void dilfi_sue(register struct dilprg *p)
+void dilfi_sue(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -2070,7 +2070,7 @@ void dilfi_sue(register struct dilprg *p)
 }
 
 /* destroy unit */
-void dilfi_dst(register struct dilprg *p)
+void dilfi_dst(register class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
 
@@ -2097,7 +2097,7 @@ void dilfi_dst(register struct dilprg *p)
 }
 
 /* Execute command */
-void dilfi_exec(register struct dilprg *p)
+void dilfi_exec(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -2170,7 +2170,7 @@ void dilfi_exec(register struct dilprg *p)
 }
 
 /* Wait */
-void dilfi_wit(register struct dilprg *p)
+void dilfi_wit(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -2213,7 +2213,7 @@ void dilfi_wit(register struct dilprg *p)
 }
 
 /* Act call */
-void dilfi_act(register struct dilprg *p)
+void dilfi_act(register class dilprg *p)
 {
     /* Act call */
 
@@ -2262,7 +2262,7 @@ void dilfi_act(register struct dilprg *p)
 }
 
 /* Goto new command */
-void dilfi_goto(register struct dilprg *p)
+void dilfi_goto(register class dilprg *p)
 {
     ubit32 adr;
 
@@ -2272,7 +2272,7 @@ void dilfi_goto(register struct dilprg *p)
 }
 
 /* Goto new command */
-void dilfi_on(register struct dilprg *p)
+void dilfi_on(register class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
     ubit32 adr;
@@ -2306,7 +2306,7 @@ void dilfi_on(register struct dilprg *p)
 }
 
 /* Substract affect from unit */
-void dilfi_sua(register struct dilprg *p)
+void dilfi_sua(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -2328,7 +2328,7 @@ void dilfi_sua(register struct dilprg *p)
 }
 
 /* Add affect */
-void dilfi_ada(register struct dilprg *p)
+void dilfi_ada(register class dilprg *p)
 {
     dilval *v11 = p->stack.pop();
     dilval *v10 = p->stack.pop();
@@ -2403,20 +2403,20 @@ void dilfi_ada(register struct dilprg *p)
 }
 
 /* Priority */
-void dilfi_pri(register struct dilprg *p)
+void dilfi_pri(register class dilprg *p)
 {
     p->waitcmd--;
     SET_BIT(p->sarg->fptr->flags, SFB_PRIORITY);
 }
 
 /* No Priority */
-void dilfi_npr(register struct dilprg *p)
+void dilfi_npr(register class dilprg *p)
 {
     REMOVE_BIT(p->sarg->fptr->flags, SFB_PRIORITY);
 }
 
 /* Send message to DIL programs in local environment */
-void dilfi_snd(register struct dilprg *p)
+void dilfi_snd(register class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
 
@@ -2432,7 +2432,7 @@ void dilfi_snd(register struct dilprg *p)
 }
 
 /* Send message to DIL programs in the specified unit */
-void dilfi_snt(register struct dilprg *p)
+void dilfi_snt(register class dilprg *p)
 {
     /* sendto (string, uptr) */
     dilval *v2 = p->stack.pop();
@@ -2466,7 +2466,7 @@ void dilfi_snt(register struct dilprg *p)
     delete v2;
 }
 
-void dilfi_snta(register struct dilprg *p)
+void dilfi_snta(register class dilprg *p)
 {
     /* Send message to DIL programs in all units of type specified */
     /* sendtoall (string, string) */
@@ -2515,7 +2515,7 @@ void dilfi_snta(register struct dilprg *p)
     delete v2;
 }
 
-void dilfi_sntadil(register struct dilprg *p)
+void dilfi_sntadil(register class dilprg *p)
 {
     /* Send message to DIL programs in all units of type specified */
     /* sendtoall (string<message>, string<template> ) */
@@ -2536,7 +2536,7 @@ void dilfi_sntadil(register struct dilprg *p)
 
             if (tmpl)
             {
-                struct dilprg *tp;
+                class dilprg *tp;
 
                 for (tp = dil_list; tp; tp = dil_list_nextdude)
                 {
@@ -2551,7 +2551,7 @@ void dilfi_sntadil(register struct dilprg *p)
 
                         for (fptr = UNIT_FUNC(tp->owner); fptr;
                              fptr = fptr->next)
-                            if (fptr->index == SFUN_DIL_INTERNAL && fptr->data && ((struct dilprg *)fptr->data)->fp && ((struct dilprg *)fptr->data)->fp->tmpl == tmpl)
+                            if (fptr->index == SFUN_DIL_INTERNAL && fptr->data && ((class dilprg *)fptr->data)->fp && ((class dilprg *)fptr->data)->fp->tmpl == tmpl)
                                 break;
 
                         if (!fptr)
@@ -2581,7 +2581,7 @@ void dilfi_sntadil(register struct dilprg *p)
 }
 
 // DIL log string
-void dilfi_log(register struct dilprg *p)
+void dilfi_log(register class dilprg *p)
 {
     /* Log a string to the logs. */
 
@@ -2596,7 +2596,7 @@ void dilfi_log(register struct dilprg *p)
 }
 
 /* Secure */
-void dilfi_sec(register struct dilprg *p)
+void dilfi_sec(register class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
     ubit32 adr; /* address */
@@ -2616,7 +2616,7 @@ void dilfi_sec(register struct dilprg *p)
 }
 
 /* Unsecure */
-void dilfi_use(register struct dilprg *p)
+void dilfi_use(register class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
 
@@ -2628,14 +2628,14 @@ void dilfi_use(register struct dilprg *p)
     delete v1;
 }
 
-void dilfi_popstk(register struct dilprg *p)
+void dilfi_popstk(register class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
     delete v1;
 }
 
 /* Equip unit in inventory of PC/NPC */
-void dilfi_eqp(register struct dilprg *p)
+void dilfi_eqp(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -2659,7 +2659,7 @@ void dilfi_eqp(register struct dilprg *p)
 }
 
 /* Unequip unit in inventory of PC/NPC */
-void dilfi_ueq(register struct dilprg *p)
+void dilfi_ueq(register class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
 
@@ -2672,19 +2672,19 @@ void dilfi_ueq(register struct dilprg *p)
     delete v1;
 }
 
-void dilfi_quit(register struct dilprg *p)
+void dilfi_quit(register class dilprg *p)
 {
     p->waitcmd = WAITCMD_QUIT;
 }
 
 /* Block */
-void dilfi_blk(register struct dilprg *p)
+void dilfi_blk(register class dilprg *p)
 {
     p->waitcmd--;
     SET_BIT(p->flags, DILFL_CMDBLOCK);
 }
 
-void dilfi_pup(register struct dilprg *p)
+void dilfi_pup(register class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
 
@@ -2706,7 +2706,7 @@ void dilfi_pup(register struct dilprg *p)
     delete v1;
 }
 
-void dilfi_cast(register struct dilprg *p)
+void dilfi_cast(register class dilprg *p)
 {
     dilval *v4 = p->stack.pop();
     dilval *v3 = p->stack.pop();

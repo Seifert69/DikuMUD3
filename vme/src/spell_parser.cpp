@@ -207,7 +207,7 @@ int spell_perform(int spell_no, int spell_type,
 
     if (spell_info[spell_no].tmpl)
     {
-        struct dilprg *prg;
+        class dilprg *prg;
 
         prg = dil_copy_template(spell_info[spell_no].tmpl, caster, NULL);
         prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file

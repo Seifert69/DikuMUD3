@@ -647,7 +647,7 @@ void post_read_unit(class unit_data *u)
 
         if (regen)
         {
-            struct dilprg *prg = dil_copy_template(regen, u, NULL);
+            class dilprg *prg = dil_copy_template(regen, u, NULL);
             prg->waitcmd = WAITCMD_MAXINST - 1;
             dil_activate(prg);
         }

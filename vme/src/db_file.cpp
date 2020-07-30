@@ -248,7 +248,7 @@ struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 }
 
 /* Reads DIL interrupt list */
-void bread_dilintr(CByteBuffer *pBuf, struct dilprg *prg, int version)
+void bread_dilintr(CByteBuffer *pBuf, class dilprg *prg, int version)
 {
     int i;
     ubit32 lab;
@@ -276,7 +276,7 @@ void bread_dilintr(CByteBuffer *pBuf, struct dilprg *prg, int version)
         prg->frame[0].intr = NULL;
 }
 
-void bwrite_dilintr(CByteBuffer *pBuf, struct dilprg *prg)
+void bwrite_dilintr(CByteBuffer *pBuf, class dilprg *prg)
 {
     ubit16 i;
     ubit32 lab;
@@ -350,7 +350,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version,
 {
 
 #ifdef DMSERVER
-    struct dilprg *prg;
+    class dilprg *prg;
     struct diltemplate *tmpl = NULL;
     ubit32 recallpc = 0;
     ubit16 t16;
@@ -358,18 +358,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version,
     ubit8 t;
     char name[255];
 
-    CREATE(prg, struct dilprg, 1);
-    CREATE(prg->frame, struct dilframe, 1);
-    prg->fp = prg->frame;
-    prg->framesz = 1;
-    prg->nest = 0;
-    prg->owner = owner;
-    prg->stack.init(10);
-    if (stspec)
-    {
-        prg->next = dil_list;
-        dil_list = prg;
-    }
+    prg = new dilprg(owner, stspec);
 
     /* read new version */
     if (version < 64)
@@ -825,7 +814,7 @@ void bwrite_diltemplate(CByteBuffer *pBuf, struct diltemplate *tmpl)
 /*
  * This function writes a DIL program
  */
-void bwrite_dil(CByteBuffer *pBuf, struct dilprg *prg)
+void bwrite_dil(CByteBuffer *pBuf, class dilprg *prg)
 {
     int i;
     struct diltemplate *tmpl;
@@ -948,7 +937,7 @@ void bwrite_func(CByteBuffer *pBuf, class unit_fptr *fptr)
         if (fptr->index == SFUN_DIL_INTERNAL)
         {
             assert(fptr->data);
-            bwrite_dil(pBuf, (struct dilprg *)fptr->data);
+            bwrite_dil(pBuf, (class dilprg *)fptr->data);
         }
         else if (fptr->index == SFUN_DILCOPY_INTERNAL)
         {

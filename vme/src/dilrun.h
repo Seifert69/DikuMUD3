@@ -9,7 +9,7 @@
 
 struct dil_func_type
 {
-    void (*func) (struct dilprg *);
+    void (*func) (class dilprg *);
 };
 
 extern struct dil_func_type dilfe_func[];
@@ -31,54 +31,54 @@ extern struct dil_func_type dilfe_func[];
      &((prg)->fp->tmpl->core[(prg)->fp->tmpl->coresz])); }
 
 void dil_edit_done (class descriptor_data *d);
-void DeactivateDil (class unit_data * pc, struct dilprg *prg = NULL);
+void DeactivateDil (class unit_data * pc, class dilprg *prg = NULL);
 void ActivateDil (class unit_data * pc);
 void dil_loadtime_activate (class unit_data * u);
 
 int dil_direct_init (struct spec_arg *sarg);
 int dil_init (struct spec_arg *sarg);
 
-void dil_activate (struct dilprg *prg);
-void dil_activate_cmd (struct dilprg *prg, struct command_info *cmd_ptr);
+void dil_activate (class dilprg *prg);
+void dil_activate_cmd (class dilprg *prg, struct command_info *cmd_ptr);
 void dil_init_vars (int varc, struct dilframe *frm);
 void dil_free_var (struct dilvar *var);
 
 void dil_free_frame (struct dilframe *frame);
 
-char dil_getbool (class dilval *v, struct dilprg *prg);
+char dil_getbool (class dilval *v, class dilprg *prg);
 int dil_getval (class dilval *v);
-void dil_add_secure (struct dilprg *prg, class unit_data * sup, ubit8 * lab);
+void dil_add_secure (class dilprg *prg, class unit_data * sup, ubit8 * lab);
 #ifdef __cplusplus
 int dil_sub_secure (struct dilframe *frm, class unit_data * sup,
                     int bForeach = FALSE);
 #endif
-void dil_secure_test (register struct dilprg *prg);
+void dil_secure_test (register class dilprg *prg);
 int same_environment (class unit_data * u1, class unit_data * u2);
 void unhash_str (char **s);
-void dil_clear_non_secured (register struct dilprg *prg);
+void dil_clear_non_secured (register class dilprg *prg);
 void dil_clear_lost_reference (register struct dilframe *frm, void *ptr);
-void dil_test_secure (register struct dilprg *prg, int bForeach = FALSE);
+void dil_test_secure (register class dilprg *prg, int bForeach = FALSE);
 int dil_destroy (const char *name, class unit_data * u);
 
 /* NULL fptr creates one...  */
-struct dilprg *dil_copy_template (struct diltemplate *tmpl,
+class dilprg *dil_copy_template (struct diltemplate *tmpl,
                                   class unit_data * u,
                                   class unit_fptr **pfptr);
-struct dilprg *dil_copy (char *name, class unit_data * u);
+class dilprg *dil_copy (char *name, class unit_data * u);
 
 
 class unit_fptr *dil_find (const char *name, class unit_data * u);
 
-void dil_typeerr (struct dilprg *p, const  char *where);
+void dil_typeerr (class dilprg *p, const  char *where);
 
 #define FAIL_NULL   1
 #define TYPEFAIL_NULL 2
 
-int dil_type_check (const char *f, struct dilprg *p, int tot, ...);
-void dil_free_prg (struct dilprg *prg);
+int dil_type_check (const char *f, class dilprg *p, int tot, ...);
+void dil_free_prg (class dilprg *prg);
 
-void dil_intr_remove (struct dilprg *p, int idx);
-int dil_intr_insert (struct dilprg *p, ubit8 * lab, ubit8 * elab, ubit16 flags);
+void dil_intr_remove (class dilprg *p, int idx);
+int dil_intr_insert (class dilprg *p, ubit8 * lab, ubit8 * elab, ubit16 flags);
 
 
 

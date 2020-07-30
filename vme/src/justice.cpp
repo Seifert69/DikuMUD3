@@ -99,7 +99,7 @@ void npc_walkto(class unit_data *u, class unit_data *toroom)
         return;
     }
 
-    struct dilprg *prg = dil_copy_template(tmpl, u, NULL);
+    class dilprg *prg = dil_copy_template(tmpl, u, NULL);
     prg->waitcmd = WAITCMD_MAXINST - 1;
     prg->fp->vars[0].val.string = str_dup(buf);
     //prg->fp->vars[0].val.unitptr  = toroom; why didn't this work?

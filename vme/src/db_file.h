@@ -32,7 +32,7 @@ void bwrite_affect(CByteBuffer *pBuf, class unit_affected_type *af,
                    ubit8 version);
 void bwrite_func(CByteBuffer *pBuf, class unit_fptr *fptr);
 void bwrite_block(FILE *f, int length, void *buffer);
-void bwrite_dil(CByteBuffer *pBuf, struct dilprg *prg);
+void bwrite_dil(CByteBuffer *pBuf, class dilprg *prg);
 void bwrite_diltemplate(CByteBuffer *pBuf, struct diltemplate *tmpl);
 
 void write_unit(FILE *f, class unit_data *u, char *fname);

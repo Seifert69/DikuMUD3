@@ -908,7 +908,7 @@ void die(class unit_data *ch)
    if (death)
    {
       send_death(ch);
-      struct dilprg *prg = dil_copy_template(death, ch, NULL);
+      class dilprg *prg = dil_copy_template(death, ch, NULL);
       prg->waitcmd = WAITCMD_MAXINST - 1;
       dil_activate(prg);
       return;

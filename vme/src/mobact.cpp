@@ -37,8 +37,8 @@ void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
                      UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), ticks);
             if ((fptr->index == SFUN_DILCOPY_INTERNAL) || (fptr->index == SFUN_DIL_INTERNAL))
             {
-                struct dilprg * p;
-                p = (struct dilprg *) fptr->data;
+                class dilprg * p;
+                p = (class dilprg *) fptr->data;
 
                 if(p)
                 {
@@ -79,7 +79,7 @@ void special_event(void *p1, void *p2)
 
 /*    if (fptr->index == SFUN_DIL_INTERNAL)
         if (fptr && fptr->data)
-                if (strcmp(((struct dilprg *) fptr->data)->fp->tmpl->prgname, "wander_zones")==0)
+                if (strcmp(((class dilprg *) fptr->data)->fp->tmpl->prgname, "wander_zones")==0)
                 {
                     if (strcmp(UNIT_FI_ZONENAME(u), "gnome") == 0)
                         slog(LOG_ALL, 0, "The wanderer!");
@@ -163,7 +163,7 @@ void special_event(void *p1, void *p2)
             diltick = TRUE;
         else if (fptr->data)
         {
-            register struct dilprg *prg = (struct dilprg *)fptr->data;
+            register class dilprg *prg = (class dilprg *)fptr->data;
             for (i = 0; i < prg->fp->intrcount; i++)
                 if
                     IS_SET(prg->fp->intr[i].flags, SFB_TICK)
@@ -192,7 +192,7 @@ void start_special(class unit_data *u, class unit_fptr *fptr)
             diltick = 1;
         else if (fptr->data)
         {
-            register struct dilprg *prg = (struct dilprg *)fptr->data;
+            register class dilprg *prg = (class dilprg *)fptr->data;
             for (i = 0; i < prg->fp->intrcount; i++)
                 if
                     IS_SET(prg->fp->intr[i].flags, SFB_TICK)

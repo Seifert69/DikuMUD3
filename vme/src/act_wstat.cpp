@@ -139,6 +139,7 @@ static void stat_world(class unit_data *ch)
     extern int world_nonpc, world_nopc;
     extern char world_boottime[64];
     extern int tics;
+    extern int g_nDilPrg;
     char buf[MAX_STRING_LENGTH];
     time_t now = time(0);
 
@@ -146,21 +147,22 @@ static void stat_world(class unit_data *ch)
     p[strlen(p) - 1] = '\0';
 
     sprintf(buf, "Server compiled at %s %s<br/>"
-                 "World status (tick %d):<br/>"
+                 "World status (tick %d aka %d hours):<br/>"
                  "#rooms [%4d]  #objects [%4d]  #chars [%4d]  #npcs [%4d] "
                  "  #pcs [%4d]<br/>"
                  "#units [%4d]  #zones   [%4d]<br/>"
                  "#connections [%2d / peak %2d]<br/>"
                  "#players     [%2d / peak %2d]<br/>"
-                 "Boottime: %s<br/>Time now: %s<br/>",
+                 "Boottime: %s<br/>Time now: %s<br/>"
+                 "DIL programs [%d]<br>",
             compile_date, compile_time,
-            tics,
+            tics, tics / (PULSE_SEC * 3600),
             world_norooms, world_noobjects, world_nochars,
             world_nonpc, world_nopc,
             world_norooms + world_noobjects + world_nochars,
             world_nozones,
             no_connections, max_no_connections,
-            no_players, max_no_players, world_boottime, p);
+            no_players, max_no_players, world_boottime, p, g_nDilPrg);
 
     page_string(CHAR_DESCRIPTOR(ch), buf);
 }
@@ -726,9 +728,9 @@ static void stat_func(const class unit_data *ch, class unit_data *u)
     {
         if (f->index == SFUN_DIL_INTERNAL)
         {
-            struct dilprg *prg;
+            class dilprg *prg;
 
-            if ((prg = (struct dilprg *)f->data))
+            if ((prg = (class dilprg *)f->data))
             {
                 sprintf(buf, "DIL Name: %s@%s<br/>",
                         prg->frame[0].tmpl->prgname,

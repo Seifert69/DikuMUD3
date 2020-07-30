@@ -202,7 +202,7 @@ void start_player(class unit_data *ch)
     if (playerinit_tmpl)
     {
         /* Call DIL to see if we should init the player in any other way. */
-        struct dilprg *prg = dil_copy_template(playerinit_tmpl, ch, NULL);
+        class dilprg *prg = dil_copy_template(playerinit_tmpl, ch, NULL);
 
         prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
 

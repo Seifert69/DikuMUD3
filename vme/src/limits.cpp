@@ -532,7 +532,7 @@ void point_update(void)
         {
             // This could be resource intense. Maybe update NPCs in C code... ?
 
-            struct dilprg *prg_npc = dil_copy_template(regen_npc, u, NULL);
+            class dilprg *prg_npc = dil_copy_template(regen_npc, u, NULL);
             if (prg_npc== NULL) 
             {
                 slog(LOG_ALL, 0, "DIL duplicate unique");
@@ -544,7 +544,7 @@ void point_update(void)
         }
         else if (IS_PC(u) && !IS_SET(PC_FLAGS(u), PC_SPIRIT))
         {
-            struct dilprg *prg_pc = dil_copy_template(regen_pc, u, NULL);
+            class dilprg *prg_pc = dil_copy_template(regen_pc, u, NULL);
             if (prg_pc== NULL) 
             {
                 slog(LOG_ALL, 0, "DIL duplicate unique");

@@ -22,7 +22,7 @@
 #include "combat.h"
 #include "skills.h"
 
-void dilfe_fld(register struct dilprg *p)
+void dilfe_fld(register class dilprg *p)
 {
     /* Get a structure field */
     class dilval *v1, *v2;
