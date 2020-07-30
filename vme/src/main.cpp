@@ -25,6 +25,8 @@
 #include "textutil.h"
 #include "files.h"
 #include "hookmud.h"
+#include "dilrun.h"
+
 
 extern ubit32 memory_total_alloc;
 extern void special_event(void *p1, void *p2);
@@ -75,6 +77,7 @@ void perform_violence_event(void *, void *);
 void update_crimes_event(void *, void *);
 void update_crimes();
 void check_reboot_event(void *, void *);
+void check_overpopulation_event(void *p1, void *p2);
 int check_reboot();
 
 /* ******************************************************************* *
@@ -285,6 +288,7 @@ void run_the_game(char *srvcfg)
     //events.add(PULSE_POINTS, point_update_event, 0, 0);
     events.add(PULSE_SEC * SECS_PER_REAL_MIN * 5, update_crimes_event, 0, 0);
     events.add(PULSE_SEC * SECS_PER_REAL_MIN * 10, check_reboot_event, 0, 0);
+    events.add(PULSE_SEC * SECS_PER_REAL_HOUR * 4, check_overpopulation_event, 0, 0);
 
     slog(LOG_OFF, 0, "Entering game loop.");
 
@@ -490,6 +494,53 @@ void update_crimes_event(void *p1, void *p2)
     point_update();
     events.add(PULSE_POINTS, point_update_event, 0, 0);
 }*/
+
+void check_overpopulation_event(void *p1, void *p2)
+{
+    events.add(PULSE_SEC * SECS_PER_REAL_HOUR * 4, check_overpopulation_event, 0, 0);
+
+    int nHours;
+    nHours = (tics / PULSE_SEC) / 3600;
+    slog(LOG_ALL, 0, "Game up for %d tick hours, checking for overpopulation", nHours);
+
+    class unit_data *u, *t;
+    int i;
+    int nUnits = 0;
+
+    for (u = unit_list; u; u = u->gnext)
+    {
+        nUnits++;
+        // Make sure it's not a player
+        t = u;
+        while (t)
+        {
+            if (UNIT_TYPE(t) == UNIT_ST_PC)
+                break;
+            t = UNIT_IN(t);
+        }
+        if (t)
+            continue; // If it's inside a player, skip
+
+        i = 0;
+        for (t = UNIT_CONTAINS(u); t; t = t->next) // count top layer
+            i++;
+
+        if (i >= 50)
+        {
+            slog(LOG_ALL, 0, "Too many items in %s@%s(%s) : %d units", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), UNIT_NAME(u), i);
+
+            struct diltemplate *worms;
+            worms = find_dil_template("worms@basis");
+            if (worms)
+            {
+                struct dilprg *prg = dil_copy_template(worms, u, NULL);
+                prg->waitcmd = WAITCMD_MAXINST - 1;
+                dil_activate(prg);
+            }
+        }
+    }
+    slog(LOG_ALL, 0, "Server has %d units.", nUnits);
+}
 
 
 void check_reboot_event(void *p1, void *p2)
