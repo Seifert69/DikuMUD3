@@ -488,13 +488,7 @@ struct dilvar
 class dilval
 {
 public:
-    dilval (void)
-    {
-        type = DILV_ERR;
-        val.ptr = NULL;
-        ref = NULL;
-        atyp = DILA_NONE;
-    }
+    dilval (void);
     ~dilval (void);
 
     ubit8 type;			/* result type     */
@@ -629,5 +623,7 @@ public:
 
 extern class dilprg *dil_list;
 extern class dilprg *dil_list_nextdude;
+extern int g_nDilPrg;
+extern int g_nDilVal;
 
 #endif /* _MUD_DIL_H */
