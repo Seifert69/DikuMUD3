@@ -139,7 +139,7 @@ static void stat_world(class unit_data *ch)
     extern int world_nonpc, world_nopc;
     extern char world_boottime[64];
     extern int tics;
-    extern int g_nDilPrg;
+    //extern int g_nDilPrg;
     char buf[MAX_STRING_LENGTH];
     time_t now = time(0);
 
@@ -154,7 +154,7 @@ static void stat_world(class unit_data *ch)
                  "#connections [%2d / peak %2d]<br/>"
                  "#players     [%2d / peak %2d]<br/>"
                  "Boottime: %s<br/>Time now: %s<br/>"
-                 "DIL programs [%d]<br>",
+                 "DIL programs [%d]   DIL Vals [%d]<br>",
             compile_date, compile_time,
             tics, tics / (PULSE_SEC * 3600),
             world_norooms, world_noobjects, world_nochars,
@@ -162,7 +162,7 @@ static void stat_world(class unit_data *ch)
             world_norooms + world_noobjects + world_nochars,
             world_nozones,
             no_connections, max_no_connections,
-            no_players, max_no_players, world_boottime, p, g_nDilPrg);
+            no_players, max_no_players, world_boottime, p, g_nDilPrg, g_nDilVal);
 
     page_string(CHAR_DESCRIPTOR(ch), buf);
 }

@@ -10,13 +10,24 @@
 #include "dil.h"
 #include "dilrun.h"
 
-#ifdef DMSERVER
-extern int g_nDilPrg;
-#endif
+int g_nDilPrg = 0;
+int g_nDilVal = 0;
+
+dilval::dilval(void)
+{
+    g_nDilVal++;
+
+    type = DILV_ERR;
+    val.ptr = NULL;
+    ref = NULL;
+    atyp = DILA_NONE;
+}
 
 /* free generated temporary values */
 dilval::~dilval (void)
 {
+    g_nDilVal--;
+
     switch (type)
     {
     case DILV_SP:
@@ -75,9 +86,9 @@ dilval::~dilval (void)
 
 dilprg::dilprg(class unit_data *owner, int bLink)
 {
-#ifdef DMSERVER
     g_nDilPrg++;
 
+#ifdef DMSERVER
     this->next = NULL; 
     if (bLink)
     {
@@ -90,7 +101,7 @@ dilprg::dilprg(class unit_data *owner, int bLink)
     this->varcrc = 0;		// variable crc from compiler (saved)
     this->corecrc = 0;		// core crc from compiler (saved)
     this->nest = 0;        // How many levels is the call nested 
-    this->stack.init(10);
+    // ??? this->stack.init(10);
 
     this->owner = owner;
     this->sarg = NULL;
@@ -123,11 +134,11 @@ dilprg::~dilprg(void)
 {
     assert(canfree());
 
+    g_nDilPrg--;
+
 #ifdef DMSERVER
     struct diltemplate *tmpl;
     struct dilframe *frm;
-
-    g_nDilPrg--;
 
     if (dil_list && this->next)
     {
@@ -172,6 +183,14 @@ dilprg::~dilprg(void)
 
     void dil_free_template(struct diltemplate * tmpl, int copy);
     dil_free_template(tmpl, IS_SET(this->flags, DILFL_COPY));
+
+    dilval *v;
+    
+    while (this->stack.length() > 0)
+    {
+        v = this->stack.pop();        
+        delete v;
+    }
 
 #endif
 
