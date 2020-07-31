@@ -998,7 +998,7 @@ int run_dil(struct spec_arg *sarg)
 
     prg->nest++; // How many recursive calls does this program have?
 
-    if (prg->nest > 1)
+    if (prg->nest > 2)
     {
         slog(LOG_ALL, 0, "run_dil() %s has nest %d", prg->fp->tmpl->prgname, prg->nest);
     }
