@@ -225,6 +225,7 @@ void eventqueue::process(void)
                 bDestructed  = ((dilprg *)((unit_fptr *)tmp_event->arg2)->data)->waitcmd <= WAITCMD_FINISH;
                 bDestructed |= ((unit_data *)tmp_event->arg1)->is_destructed();
                 bDestructed |= ((unit_fptr *)tmp_event->arg2)->is_destructed();
+                bDestructed |= ((dilprg *)((unit_fptr *)tmp_event->arg2)->data)->fp == NULL;
 
                 if (!bDestructed)
                 {
