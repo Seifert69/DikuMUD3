@@ -121,12 +121,12 @@ int dilprg::canfree(void)
 
 dilprg::~dilprg(void)
 {
-    struct diltemplate *tmpl;
-    struct dilframe *frm;
-
     assert(canfree());
 
 #ifdef DMSERVER
+    struct diltemplate *tmpl;
+    struct dilframe *frm;
+
     g_nDilPrg--;
 
     if (dil_list && this->next)
@@ -159,7 +159,7 @@ dilprg::~dilprg(void)
             }
         }
     }
-#endif    
+
     this->next = NULL;
 
     tmpl = this->frame[0].tmpl;
@@ -170,10 +170,9 @@ dilprg::~dilprg(void)
 
     FREE(this->frame);
 
-#ifdef DMSERVER
     void dil_free_template(struct diltemplate * tmpl, int copy);
     dil_free_template(tmpl, IS_SET(this->flags, DILFL_COPY));
-    
+
 #endif
 
     this->owner = NULL;
