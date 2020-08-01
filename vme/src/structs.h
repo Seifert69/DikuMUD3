@@ -447,6 +447,9 @@ public:
 class unit_fptr : public basedestruct
 {
 public:
+    unit_fptr(void);
+    ~unit_fptr();
+
     ubit16 index;           /* Index to function pointer array             */
     ubit8  priority;        /* Order to insert ftpr on unit (2020)         */
     ubit16 heart_beat;      /* in 1/4 of a sec                             */
