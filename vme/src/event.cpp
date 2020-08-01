@@ -88,6 +88,7 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *),
         {
             heapsize = heapsize * 2;
             RECREATE(heap, struct eventq_elem *, heapsize);
+            slog(LOG_DIL, 0, "HEAP expand to %d", heapsize);
         }
     }
     count++;
@@ -99,6 +100,33 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *),
     /* roll event into its proper place in da heap */
     parent_index = count / 2;
     current_index = count;
+
+    // One could add a sanity check to make sure that events for known 
+    if (func == special_event)
+    {
+        struct unit_data *u = (struct unit_data *) arg1;
+        struct unit_fptr *f = (struct unit_fptr *) arg2;
+        membug_verify(u);
+        membug_verify(f);
+        membug_verify(f->data);
+
+        if (u)
+            assert(!u->is_destructed());
+
+        if (f)
+            assert(!f->is_destructed());
+
+        if (f->index == 82)
+        {
+            struct dilprg *prg = (struct dilprg *) f->data;
+            membug_verify(prg);
+
+            assert(prg);
+            assert(prg->owner == u);
+            assert(prg->waitcmd >= WAITCMD_FINISH);
+        }
+    }
+
 
     while (parent_index > 0)
     {
@@ -123,6 +151,7 @@ void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
     {
         ((class unit_fptr *)arg2)->event->func = NULL;
         ((class unit_fptr *)arg2)->event = NULL;
+
     }
     else if ((func == affect_beat) &&
              arg1 && (((class unit_affected_type *)arg1)->event))
@@ -138,6 +167,13 @@ void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
     else if ((func == special_event) &&
              arg2 && (!((class unit_fptr *)arg2)->event))
     {
+        for (i = 1; i <= count; i++)
+        {
+            if (heap[i]->func == func && heap[i]->arg1 == arg1 && heap[i]->arg2 == arg2)
+            {
+                slog(LOG_DIL, 0, "Whoa - whoopsie ... found one");
+            }
+        }
         return;
     }
     else
@@ -222,14 +258,24 @@ void eventqueue::process(void)
             if (tfunc == special_event && ((unit_fptr *)tmp_event->arg2)->data &&
                 (((class unit_fptr *)tmp_event->arg2)->index == SFUN_DIL_INTERNAL))
             {
-                bDestructed  = ((dilprg *)((unit_fptr *)tmp_event->arg2)->data)->waitcmd <= WAITCMD_FINISH;
-                bDestructed |= ((unit_data *)tmp_event->arg1)->is_destructed();
-                bDestructed |= ((unit_fptr *)tmp_event->arg2)->is_destructed();
-                bDestructed |= ((dilprg *)((unit_fptr *)tmp_event->arg2)->data)->fp == NULL;
+                class unit_data *u = (unit_data *)tmp_event->arg1;
+                class unit_fptr *fptr = (unit_fptr *)tmp_event->arg2;
+
+                membug_verify(u);
+                membug_verify(fptr);
+
+                bDestructed = (u->is_destructed() || fptr->is_destructed());
 
                 if (!bDestructed)
                 {
-                    assert(((dilprg *)((unit_fptr *)tmp_event->arg2)->data)->fp);
+                    class dilprg *prg = (class dilprg *) fptr->data;
+
+                    assert(prg);
+                    membug_verify(prg);
+
+                    assert(prg->owner);
+                    assert(prg->fp);
+                    assert(prg->waitcmd > WAITCMD_FINISH);
 
                     /*
                     for (class unit_fptr *fptr = UNIT_FUNC(((dilprg *)((unit_fptr *)tmp_event->arg2)->data)->owner); fptr; fptr=fptr->next)
@@ -237,15 +283,15 @@ void eventqueue::process(void)
                         assert(!is_destructed(DR_FUNC, fptr));
                     }*/
 
-                    if (((dilprg *)((unit_fptr *)tmp_event->arg2)->data)->fp->tmpl->prgname)
+                    if (prg->fp->tmpl->prgname)
                         sprintf(dilname, "%s",
-                                ((dilprg *)((unit_fptr *)tmp_event->arg2)->data)->fp->tmpl->prgname);
+                                prg->fp->tmpl->prgname);
                     else
                         sprintf(dilname, "NO NAME");
-                    if (((dilprg *)((unit_fptr *)tmp_event->arg2)->data)->fp->tmpl->zone)
+                    if (prg->fp->tmpl->zone)
                     {
                         sprintf(dilzname, "%s",
-                                ((dilprg *)((unit_fptr *)tmp_event->arg2)->data)->fp->tmpl->zone->name);
+                                prg->fp->tmpl->zone->name);
                     }
                     else
                     {
