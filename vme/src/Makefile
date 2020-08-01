@@ -3,7 +3,8 @@ YACC		= bison
 YFLAGS		= -y -d -v
 LDLIBS		= -lfl
 #sysport flags
-SYSPORT =  -DLINUX -DPOSIX  -DDMSERVER
+SYSPORT =  -DLINUX -DPOSIX  -DDMSERVER 
+#-DMEMORY_DEBUG
 
 #system flags
 SYSFLAGS = -m64
@@ -40,7 +41,7 @@ VME_SRCS := \
 
 MPLEX_SRCS := \
  $(wildcard ./mplex2/*.cpp) \
-hook.cpp queue.cpp textutil.cpp utility.cpp common.cpp protocol.cpp color.cpp bytestring.cpp
+hook.cpp queue.cpp textutil.cpp utility.cpp common.cpp protocol.cpp color.cpp bytestring.cpp membug.cpp
 
 DC_SRCS := \
  $(wildcard ./defcomp/*.cpp) 
