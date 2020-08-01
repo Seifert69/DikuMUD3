@@ -313,12 +313,31 @@ file_index_type::~file_index_type(void)
         FREE(name);
 }
 
+unit_fptr::unit_fptr(void)
+{
+    index = 0;
+    priority   = FN_PRI_CHORES;
+    heart_beat = PULSE_SEC;
+    flags = 0;
+    data = NULL;
+    next = NULL;
+    event = NULL;
+}
+
+unit_fptr::~unit_fptr()
+{
+    data = NULL;
+}
+
+
 #ifndef VMC_SRC
 unit_data *unit_data::copy()
 {
     unit_data *u;
     int x;
-    u = new (class unit_data)(status);
+
+    u = new EMPLACE(unit_data) unit_data(status);
+
     CByteBuffer abuf, fbuf;
     u->names.CopyList(&names);
     u->chars = chars;
@@ -481,18 +500,6 @@ unit_data::unit_data(ubit8 type)
 
 unit_data::~unit_data(void)
 {
-#ifdef MEMORY_DEBUG
-    extern int memory_pc_alloc;
-    extern int memory_npc_alloc;
-    extern int memory_obj_alloc;
-    extern int memory_room_alloc;
-    extern int memory_total_alloc;
-    int memory_start = memory_total_alloc;
-#endif
-#ifdef MEMORY_DEBUG
-    ubit8 type;
-#endif
-
     void unlink_affect(class unit_affected_type * af);
 
     /* Sanity due to wierd bug I saw (MS, 30/05-95) */
@@ -515,9 +522,6 @@ unit_data::~unit_data(void)
     while (UNIT_AFFECTED(this))
         unlink_affect(UNIT_AFFECTED(this));
 #endif
-#ifdef MEMORY_DEBUG
-    type = UNIT_TYPE(this);
-#endif
 
     /* Call functions of the unit which have any data                     */
     /* that they might want to work on.                                   */
@@ -537,22 +541,4 @@ unit_data::~unit_data(void)
     }
     else
         assert(FALSE);
-
-#ifdef MEMORY_DEBUG
-    switch (type)
-    {
-    case UNIT_ST_PC:
-        memory_pc_alloc -= memory_total_alloc - memory_start;
-        break;
-    case UNIT_ST_NPC:
-        memory_npc_alloc -= memory_total_alloc - memory_start;
-        break;
-    case UNIT_ST_OBJ:
-        memory_obj_alloc -= memory_total_alloc - memory_start;
-        break;
-    case UNIT_ST_ROOM:
-        memory_room_alloc -= memory_total_alloc - memory_start;
-        break;
-    }
-#endif
 }

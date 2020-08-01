@@ -30,6 +30,7 @@
 #include "dilexp.h"
 #include "dilrun.h"
 #include "intlist.h"
+#include "essential.h"
 
 extern struct unit_function_array_type unit_function_array[];
 extern int mudboot;
@@ -119,7 +120,6 @@ extern void special_event(void *p1, void *p2);
 
 class dilprg *dil_list = NULL;
 class dilprg *dil_list_nextdude = NULL;
-int g_nDilPrg = 0;
 
 void dil_edit_done(class descriptor_data *d)
 {
@@ -972,7 +972,6 @@ void DeactivateDil(class unit_data *pc, class dilprg *aprg)
     }
 }
 
-
 // MS2020. Added dilprg.nest (int) which counts how many times run_dil has
 // been called recursively for the same program. nest++ on each entry into run_dil
 // and nest-- before you return (if you call dil_free_prg first be sure to decrease first)
@@ -982,6 +981,7 @@ int run_dil(struct spec_arg *sarg)
 {
     register class dilprg *prg = (class dilprg *)sarg->fptr->data;
     char *orgarg = (char *)sarg->arg; /* Because fndu may mess with it!!! */
+
     int i;
     static int activates = 0;
     struct timeval tbegin, tend;
@@ -989,6 +989,14 @@ int run_dil(struct spec_arg *sarg)
 
     if (prg == NULL)
         return SFR_SHARE;
+
+    membug_verify(prg);
+
+    if (prg->owner == NULL)
+    {
+        slog(LOG_ALL, 0, "run_dil() owner is null :-(");
+        return SFR_SHARE;
+    }
 
     if (prg->fp == NULL)
     {
@@ -1019,26 +1027,31 @@ int run_dil(struct spec_arg *sarg)
             {
                 if (prg->canfree())
                 {
-                    delete prg;
+                    DELETE(dilprg, prg);
                     prg = NULL;
                 }
             }
         }
         else
         {
-            sarg->fptr->data = NULL;
+            sarg->fptr->data = NULL; 
             if (prg->canfree())
             {
-                delete prg;
+                DELETE(dilprg, prg);
                 prg = NULL;
             }
         }
-        destroy_fptr(sarg->owner, sarg->fptr);
+
+        // CMD_AUTO_EXTRACT is only given to run_dil via destroy_fptr
+        assert(sarg->fptr->data == NULL);
+        assert(sarg->fptr->is_destructed());
+        // destroy_fptr(sarg->owner, sarg->fptr);
         return SFR_BLOCK;
     }
 
     if (IS_SET(prg->flags, DILFL_EXECUTING | DILFL_DEACTIVATED))
     {
+        assert(prg->waitcmd > WAITCMD_STOP);
         prg->nest--;
         return SFR_SHARE;
     }
@@ -1098,6 +1111,7 @@ int run_dil(struct spec_arg *sarg)
 
         (dilfe_func[*(prg->fp->pc - 1)].func(prg));
     }
+    membug_verify(prg);
     gettimeofday(&tend, (struct timezone *) 0);
 
     ttime = (tend.tv_sec -  tbegin.tv_sec)  * 1000.0 +
@@ -1111,16 +1125,15 @@ int run_dil(struct spec_arg *sarg)
 
     if (prg->waitcmd <= WAITCMD_DESTROYED)
     { /* Was it destroyed?? */
-        sarg->fptr->data = NULL;
-
-        destroy_fptr(sarg->owner, sarg->fptr);
         prg->nest--;
 
         int bBlock = IS_SET(prg->flags, DILFL_CMDBLOCK);
         if (prg->canfree())
         {
-            delete prg;
+            DELETE(dilprg, prg);
             prg = NULL;
+            sarg->fptr->data = NULL;
+            destroy_fptr(sarg->owner, sarg->fptr);
         }
 
         if (bBlock)
@@ -1130,15 +1143,15 @@ int run_dil(struct spec_arg *sarg)
     }
     else if (prg->waitcmd <= WAITCMD_QUIT)
     {
-        sarg->fptr->data = NULL;
-        destroy_fptr(sarg->owner, sarg->fptr);
         prg->nest--;
 
         int bBlock = IS_SET(prg->flags, DILFL_CMDBLOCK);
         if (prg->canfree())
         {
-            delete prg;
+            DELETE(dilprg, prg);
             prg = NULL;
+            sarg->fptr->data = NULL;
+            destroy_fptr(sarg->owner, sarg->fptr);
         }
 
         if (bBlock)
@@ -1155,12 +1168,19 @@ int run_dil(struct spec_arg *sarg)
     }
     else if (prg->waitcmd > WAITCMD_FINISH)
     {
+        prg->nest--;
+        prg->waitcmd = WAITCMD_DESTROYED;
         szonelog(UNIT_FI_ZONE(sarg->owner), "DIL %s in unit %s@%s had "
                                             "endless loop.",
                  prg->fp->tmpl->prgname,
                  UNIT_FI_NAME(sarg->owner), UNIT_FI_ZONENAME(sarg->owner));
-        destroy_fptr(sarg->owner, sarg->fptr);
-        prg->nest--;
+        if (prg->canfree())
+        {
+            DELETE(dilprg, prg);
+            prg = NULL;
+            sarg->fptr->data = NULL;
+            destroy_fptr(sarg->owner, sarg->fptr);
+        }
         return SFR_SHARE;
     }
 
@@ -1181,22 +1201,29 @@ int run_dil(struct spec_arg *sarg)
        enqueue.
      */
 
-    sarg->fptr->heart_beat = MAX(PULSE_SEC * 1, sarg->fptr->heart_beat);
-
-    if (IS_SET(prg->sarg->fptr->flags, SFB_TICK))
-    {
-        void ResetFptrTimer(class unit_data * u, class unit_fptr * fptr);
-
-        /* Purely for optimization purposes! Enqueue / dequeue are HUGE! */
-        if ((OrgHeartBeat != sarg->fptr->heart_beat) &&
-            (sarg->cmd->no != CMD_AUTO_TICK))
-            ResetFptrTimer(sarg->owner, sarg->fptr);
-    }
-    prg->waitcmd = WAITCMD_MAXINST;
-
-    REMOVE_BIT(prg->flags, DILFL_EXECUTING);
-
     prg->nest--;
+
+    if (prg->nest <= 0)
+    {
+        sarg->fptr->heart_beat = MAX(PULSE_SEC * 1, sarg->fptr->heart_beat);
+
+        if (IS_SET(prg->sarg->fptr->flags, SFB_TICK))
+        {
+            void ResetFptrTimer(class unit_data * u, class unit_fptr * fptr);
+
+            /* Purely for optimization purposes! Enqueue / dequeue are HUGE! */
+            if ((OrgHeartBeat != sarg->fptr->heart_beat) &&
+                (sarg->cmd->no != CMD_AUTO_TICK))
+                ResetFptrTimer(sarg->owner, sarg->fptr);
+        }
+        prg->waitcmd = WAITCMD_MAXINST;
+
+        REMOVE_BIT(prg->flags, DILFL_EXECUTING);
+
+    }
+
+    membug_verify(prg);
+
     if (IS_SET(prg->flags, DILFL_CMDBLOCK))
         return SFR_BLOCK;
     else
@@ -1425,7 +1452,8 @@ class dilprg *dil_copy_template(struct diltemplate *tmpl,
         }
     }
 
-    prg = new dilprg(u,true);
+    prg = new EMPLACE(dilprg) dilprg(u,true);
+    membug_verify(prg);
 
     prg->fp->tmpl = tmpl;
     prg->varcrc = tmpl->varcrc;
@@ -1458,6 +1486,9 @@ class dilprg *dil_copy_template(struct diltemplate *tmpl,
 
     if (pfptr)
         *pfptr = fptr;
+
+    membug_verify(fptr->data);
+    membug_verify(prg);
 
     return prg;
 }
