@@ -98,7 +98,6 @@ void npc_walkto(class unit_data *u, class unit_data *toroom)
         slog(LOG_ALL, 0, "npc_walkto: Unable to locate DIL to_the_rescue@midgaard");
         return;
     }
-
     class dilprg *prg = dil_copy_template(tmpl, u, NULL);
     prg->waitcmd = WAITCMD_MAXINST - 1;
     prg->fp->vars[0].val.string = str_dup(buf);
@@ -868,19 +867,18 @@ void call_guards(class unit_data *guard)
 
     for (u = unit_list; u; u = u->gnext)
     {
+        membug_verify(u);
+        assert(!u->is_destructed());
         if (IS_NPC(u) && IS_ROOM(UNIT_IN(u)) &&
             zone == UNIT_FILE_INDEX(UNIT_IN(u))->zone && u != guard)
         {
             ok = FALSE;
             for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
             {
+                membug_verify(fptr);
+                membug_verify(fptr->data);
                 if (fptr->index == SFUN_PROTECT_LAWFUL)
                     ok = TRUE;
-                else if (fptr->index == SFUN_NPC_VISIT_ROOM)
-                {
-                    ok = FALSE;
-                    break;
-                }
             }
             if (ok && !number(0, 5) && !find_fptr(u, SFUN_ACCUSE))
                 npc_walkto(u, UNIT_IN(guard));
@@ -952,6 +950,8 @@ int protect_lawful(struct spec_arg *sarg)
 /* SFUN_WHISTLE                                                          */
 int whistle(struct spec_arg *sarg)
 {
+    assert(sarg->fptr->data == NULL);
+
     if (sarg->cmd->no == CMD_AUTO_EXTRACT)
     {
         sarg->fptr->data = NULL;
@@ -964,22 +964,11 @@ int whistle(struct spec_arg *sarg)
     if (CHAR_POS(sarg->activator) < POSITION_STUNNED)
         return SFR_SHARE;
 
-    if (sarg->fptr->data)
-    {
-        if (scan4_ref(sarg->owner, (class unit_data *)sarg->fptr->data) ==
-            NULL)
-            sarg->fptr->data = NULL;
-        else
-            return SFR_SHARE;
-    }
-
     if (CHAR_AWAKE(sarg->owner) && CHAR_COMBAT(sarg->activator) &&
         CHAR_CAN_SEE(sarg->owner, sarg->activator))
     {
         if (crime_in_progress(sarg->activator, CHAR_FIGHTING(sarg->activator)))
         {
-            sarg->fptr->data = sarg->activator;
-
             act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",
                 A_SOMEONE, sarg->owner, 0, sarg->activator, TO_ROOM);
             call_guards(sarg->owner);
