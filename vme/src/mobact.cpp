@@ -29,6 +29,9 @@ void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
 {
     ubit32 ticks;
 
+    assert(!u->is_destructed());
+    assert(!fptr->is_destructed());
+
     if ((ticks = fptr->heart_beat) > 0)
     {
         if (ticks < PULSE_SEC)
@@ -54,13 +57,21 @@ void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
             events.remove(special_event, u, fptr);
         fptr->event = events.add(ticks, special_event, u, fptr);
         //      events.add(ticks, special_event, u, fptr);
+        membug_verify(fptr);
+        membug_verify(fptr->data);
     }
 }
 
 void ResetFptrTimer(class unit_data *u, class unit_fptr *fptr)
 {
+    membug_verify(u);
+    membug_verify(fptr);
+    membug_verify(fptr->data);
+
     events.remove(special_event, u, fptr);
     SetFptrTimer(u, fptr);
+
+    membug_verify(fptr->data);
 }
 
 void special_event(void *p1, void *p2)
@@ -173,14 +184,14 @@ void special_event(void *p1, void *p2)
             return;
     }
 
-    SetFptrTimer(u, fptr);
+    if (!u->is_destructed() && !fptr->is_destructed())
+        SetFptrTimer(u, fptr);
 }
 
 /* Return TRUE while stopping events */
 void stop_special(class unit_data *u, class unit_fptr *fptr)
 {
     events.remove(special_event, u, fptr);
-    events.remove_relaxed(special_event, u, fptr);
 }
 
 void start_special(class unit_data *u, class unit_fptr *fptr)
@@ -194,9 +205,8 @@ void start_special(class unit_data *u, class unit_fptr *fptr)
         {
             register class dilprg *prg = (class dilprg *)fptr->data;
             for (i = 0; i < prg->fp->intrcount; i++)
-                if
-                    IS_SET(prg->fp->intr[i].flags, SFB_TICK)
-            diltick = 1;
+                if (IS_SET(prg->fp->intr[i].flags, SFB_TICK))
+                    diltick = 1;
         }
         if (!diltick)
             return;
