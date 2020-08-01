@@ -392,7 +392,7 @@ void clist ()
 
 
     class unit_data *pc;
-    class unit_data *void_char = new (class unit_data) (UNIT_ST_NPC);
+    class unit_data *void_char = new EMPLACE(unit_data) unit_data(UNIT_ST_NPC);
 
 
     if ( !fs::exists( full_path ) )
@@ -678,7 +678,7 @@ void cleanup (void)
 
 
     class unit_data *pc;
-    class unit_data *void_char = new (class unit_data) (UNIT_ST_NPC);
+    class unit_data *void_char = new EMPLACE(unit_data) unit_data(UNIT_ST_NPC);
 
 
     if ( !fs::exists( full_path ) )
@@ -814,8 +814,8 @@ cleanup_playerfile (int c)
 
     memset (ids, 0, top_id);
 
-    entry_room = new (class unit_data) (UNIT_ST_ROOM);
-    destroy_room = new (class unit_data) (UNIT_ST_ROOM);
+    entry_room = new EMPLACE(unit_data) unit_data(UNIT_ST_ROOM);
+    destroy_room = new EMPLACE(unit_data) unit_data(UNIT_ST_ROOM);
     if (c == 1)
         convert_file ();
     else if (c==2)
