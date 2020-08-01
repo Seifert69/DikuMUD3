@@ -61,13 +61,6 @@ enum log_level
   do { if (((res) = (type *) realloc((res), sizeof(type) * (num))) == NULL) \
 	 assert(FALSE); } while(0)*/
 
-#define CREATE(res, type, num) \
- if (((res) = (type *) calloc((num), sizeof(type))) == NULL) \
-	 assert(FALSE);
-
-#define RECREATE(res, type, num) \
-  if (((res) = (type *) realloc((res), sizeof(type) * (num))) == NULL) \
-	 assert(FALSE);
 
 #define IS_SET(flag,bit)  ((flag) & (bit))
 
@@ -106,25 +99,45 @@ typedef ubit8 ubit1;		/* Boolean */
 extern FILE *log_file_fd;
 void slog (enum log_level, ubit8, const char *, ...);
 
+
+
+#ifndef MEMORY_DEBUG
+#define membug_verify(ptr)
+#define DELETE(cls,ptr) delete ptr;
+#define EMPLACE(t)
+#define CREATE(res, type, num) \
+ if (((res) = (type *) calloc((num), sizeof(type))) == NULL) \
+	 assert(FALSE);
+
+#define RECREATE(res, type, num) \
+  if (((res) = (type *) realloc((res), sizeof(type) * (num))) == NULL) \
+	 assert(FALSE);
+
 #define FREE(p) { free(p); p = NULL; }
+#else
+#define DELETE(cls, ptr) { ptr->~cls(); membug_free(ptr); }
+#define EMPLACE(t)  (membug_new(sizeof(t)))
+void membug_verify(void *ptr);
+void *membug_malloc(size_t size);
+void *membug_calloc(size_t nmemb, size_t size);
+void *membug_realloc(void *ptr, size_t size);
+void membug_free(void *ptr);
+void *membug_new(size_t size);
 
-#ifdef MEMORY_DEBUG
-#define strdup  xxx
+#define CREATE(res, type, num) \
+ if (((res) = (type *) membug_calloc((num), sizeof(type))) == NULL) \
+	 assert(FALSE);
 
-void safe_free (void *p);
-void *safe_malloc (size_t size);
-void *safe_calloc (size_t nobj, size_t size);
-void *safe_realloc (void *p, size_t size);
+#define RECREATE(res, type, num) \
+  if (((res) = (type *) membug_realloc((res), sizeof(type) * (num))) == NULL) \
+	 assert(FALSE);
 
-#define FREE(p)             (safe_free((void *) p), (p = NULL))
-#ifdef malloc
-#undef malloc
+#define FREE(p) { membug_free(p); p = NULL; }
+
+#define free membug_free
+#define calloc membug_calloc
+#define malloc membug_malloc
+#define realloc membug_realloc
 #endif
-#define malloc(size)        safe_malloc(size)
-#ifdef calloc
-#undef calloc
-#endif
-#define calloc(nobj, size)  safe_calloc((nobj), (size))
-#define realloc(p, size)    safe_realloc((p), (size))
-#endif
-#endif
+
+#endif // MUD_ESSENTIAL
