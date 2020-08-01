@@ -234,7 +234,9 @@ void start_special(class unit_data *u, class unit_fptr *fptr)
         //      events.add(fptr->heart_beat, special_event, u, fptr);
         if (fptr->event)
             events.remove(special_event, u, fptr);
-        fptr->event = events.add(fptr->heart_beat, special_event, u, fptr);
+        
+        if (!u->is_destructed() && !fptr->is_destructed())
+            fptr->event = events.add(fptr->heart_beat, special_event, u, fptr);
     }
 }
 
