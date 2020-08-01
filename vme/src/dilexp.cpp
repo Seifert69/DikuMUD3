@@ -1110,13 +1110,15 @@ void dilfe_atsp(register class dilprg *p)
                                             if (str_is_empty((char *)v6->val.ptr) || ((char *)v6->val.ptr == NULL))
                                                 sa.pEffect = NULL;
                                             else
-                                                sa.pEffect =
-                                                    str_dup((char *)v6->val.ptr);
+                                                sa.pEffect = str_dup((char *)v6->val.ptr); 
 
                                             /* cast the spell */
                                             v->val.num =
                                                 spell_offensive(&sa, v1->val.num,
                                                                 v5->val.num);
+
+                                            if (sa.pEffect)
+                                                FREE(sa.pEffect);
                                             dil_test_secure(p);
                                         }
                                         break;
@@ -1608,8 +1610,7 @@ void dilfe_flog(class dilprg *p)
                     strcpy(filename, g_cServerConfig.m_logdir);
                     strcat(filename, (char *)v1->val.ptr);
                     sstr = str_dup((char *)v2->val.ptr);
-                    v->val.num =
-                        save_string(filename, &sstr, (char *)v3->val.ptr);
+                    v->val.num = save_string(filename, &sstr, (char *)v3->val.ptr);
                     FREE(sstr);
                 }
                 break;
@@ -2337,10 +2338,7 @@ void dilfe_spli(class dilprg *p)
                                         v->type = DILV_SP;
                                         v->atyp = DILA_EXP;
                                         v->val.ptr =
-                                            str_dup(spl_text[v1->val.num] ==
-                                                            NULL
-                                                        ? ""
-                                                        : spl_text[v1->val.num]);
+                                            str_dup(spl_text[v1->val.num] == NULL ? "": spl_text[v1->val.num]);
                                         break;
 
                                     default:
