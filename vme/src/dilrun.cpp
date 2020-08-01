@@ -1051,7 +1051,6 @@ int run_dil(struct spec_arg *sarg)
 
     if (IS_SET(prg->flags, DILFL_EXECUTING | DILFL_DEACTIVATED))
     {
-        assert(prg->waitcmd > WAITCMD_STOP);
         prg->nest--;
         return SFR_SHARE;
     }

@@ -123,7 +123,6 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *),
 
             assert(prg);
             assert(prg->owner == u);
-            assert(prg->waitcmd >= WAITCMD_FINISH);
         }
     }
 
