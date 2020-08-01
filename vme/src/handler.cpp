@@ -231,7 +231,8 @@ class unit_fptr *create_fptr(class unit_data *u, ubit16 index, ubit16 priority,
 
     void start_special(class unit_data * u, class unit_fptr * fptr);
 
-    f = new class unit_fptr;
+    f = new EMPLACE(unit_fptr) unit_fptr;
+
     assert(f);
     assert(!f->is_destructed());
 
@@ -242,9 +243,13 @@ class unit_fptr *create_fptr(class unit_data *u, ubit16 index, ubit16 priority,
     f->data = data;
     f->event = NULL;
 
+    membug_verify(f->data);
     insert_fptr(u, f);
 
     start_special(u, f);
+
+    membug_verify(f);
+    membug_verify(f->data);
 
     return f;
 }
@@ -287,7 +292,9 @@ void destroy_fptr(class unit_data *u, class unit_fptr *f)
 
     /* Data is free'ed in destruct() if it is not NULL now */
 
+    membug_verify(f);
     stop_special(u, f);
+    membug_verify(f);
 
     /* Only unlink function, do not free it! */
     if (UNIT_FUNC(u) == f)
@@ -302,6 +309,9 @@ void destroy_fptr(class unit_data *u, class unit_fptr *f)
             tf->next = f->next;
         }
     }
+
+    f->next = NULL;
+    assert(f->event == 0);
 }
 
 /* Stop the 'ch' from following his master    */
