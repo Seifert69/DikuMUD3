@@ -166,13 +166,6 @@ void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
     else if ((func == special_event) &&
              arg2 && (!((class unit_fptr *)arg2)->event))
     {
-        for (i = 1; i <= count; i++)
-        {
-            if (heap[i]->func == func && heap[i]->arg1 == arg1 && heap[i]->arg2 == arg2)
-            {
-                slog(LOG_DIL, 0, "Whoa - whoopsie ... found one");
-            }
-        }
         return;
     }
     else
