@@ -1169,6 +1169,8 @@ int teach_init(struct spec_arg *sarg)
 
     sarg->fptr->index = SFUN_TEACHING;
     sarg->fptr->heart_beat = 0;
+
+    assert(sarg->fptr->index != SFUN_DIL_INTERNAL);
     FREE(sarg->fptr->data); /* Free the text string! */
     sarg->fptr->data = packet;
 
