@@ -45,7 +45,7 @@ LINK.c	=	$(LD) $(CFLAGS) $(LDFLAGS)
 
 # SOURCES
 # c-files for VMC
-VMC_SRCS = vmc.cpp vmc_process.cpp utility.cpp  structs.cpp destruct.cpp dilshare.cpp spec_assign.cpp \
+VMC_SRCS = vmc.cpp vmc_process.cpp utility.cpp  structs.cpp destruct.cpp dilshare.cpp membug.cpp spec_assign.cpp \
 money.cpp pp1.cpp pp2.cpp pp3.cpp pp4.cpp pp5.cpp pp6.cpp pp7.cpp pp8.cpp 
 VMC_PSRC = tmp_vmcpar.cpp tmp_vmclex.cpp tmp_dilpar.cpp tmp_dillex.cpp
 # OBJECTS
