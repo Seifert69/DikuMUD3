@@ -348,7 +348,7 @@ void bwrite_dilintr(CByteBuffer *pBuf, class dilprg *prg)
 void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version,
                 class unit_fptr *fptr, int stspec)
 {
-
+    void *membug_new(size_t size);
 #ifdef DMSERVER
     class dilprg *prg;
     struct diltemplate *tmpl = NULL;
@@ -358,7 +358,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version,
     ubit8 t;
     char name[255];
 
-    prg = new dilprg(owner, stspec);
+    prg = new EMPLACE(dilprg) dilprg(owner, stspec);
 
     /* read new version */
     if (version < 64)
@@ -588,22 +588,17 @@ class unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version,
     {
         if (fptr)
         {
-            fptr->next = new class unit_fptr;
+            fptr->next = new EMPLACE(unit_fptr) unit_fptr;
             fptr = fptr->next;
-            fptr->priority = FN_PRI_CHORES;
-            fptr->event = 0;
-            fptr->flags = 0;
         }
         else
         {
-            head = new class unit_fptr;
+            head = new EMPLACE(unit_fptr) class unit_fptr;
             fptr = head;
-            fptr->priority = FN_PRI_CHORES;
-            fptr->event = 0;
-            fptr->flags = 0;
         }
 
         g_nCorrupt += pBuf->Read16(&fptr->index);
+
         if (fptr->index > SFUN_TOP_IDX)
         {
             slog(LOG_ALL, 0,
