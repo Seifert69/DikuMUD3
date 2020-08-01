@@ -22,6 +22,7 @@
 #include "affect.h"
 #include "utility.h"
 #include "destruct.h"
+#include "event.h"
 
 /*
    This method is possible since we know that the only problem occurs when:
@@ -255,39 +256,11 @@ void destruct_unit(class unit_data * unit)
 
     if (!in_menu)
     {
-        delete unit;
+        DELETE(unit_data, unit);
         unit = NULL;
     }
 #endif
 }
-
-
-/* May only be called from extract_unit, destroy_ftpr and unlink_affect 
-void register_destruct (int i, void *ptr)
-{
-    assert (ptr);
-    if (is_destructed (i, ptr))
-        return;
-
-    switch (i)
-    {
-    case DR_AFFECT:
-        ((class unit_affected_type *) ptr)->destructed = TRUE;
-        break;
-    case DR_UNIT:
-        ((class unit_data *) ptr)->destructed = TRUE;
-        break;
-    case DR_FUNC:
-        ((class unit_fptr *) ptr)->destructed = TRUE;
-        break;
-    }
-
-    if (destructed_idx[i] >= destructed_top[i])
-        destruct_resize (i);
-
-    destructed[i][destructed_idx[i]] = ptr;
-    destructed_idx[i]++;
-}*/
 
 
 /* May only be called from comm.c event loop */
@@ -295,6 +268,9 @@ void clear_destructed (void)
 {
     class unit_fptr *f;
     int i;
+
+    extern void special_event(void *p1, void *p2);
+    extern eventqueue events;
 
     for (i = 0; i < destructed_idx[DR_AFFECT]; i++)
         delete (class unit_affected_type *) destructed[DR_AFFECT][i];
@@ -304,10 +280,16 @@ void clear_destructed (void)
     for (i = 0; i < destructed_idx[DR_FUNC]; i++)
     {
         f = (class unit_fptr *) destructed[DR_FUNC][i];
-        if (f->data)
-            FREE (f->data);
 
-        delete (class unit_fptr *) f;
+        if (f->index == 82)
+            assert(f->data == NULL);
+
+        assert(f->event == NULL);
+
+        if (f->data)
+            FREE(f->data);
+
+        DELETE(unit_fptr, f);
         destructed[DR_FUNC][i] = NULL;
     }
     destructed_idx[DR_FUNC] = 0;
@@ -316,7 +298,7 @@ void clear_destructed (void)
     {
         if ((class unit_data *) destructed[DR_UNIT][i])
         {
-            destruct_unit ((class unit_data *) destructed[DR_UNIT][i]);            
+            destruct_unit((class unit_data *) destructed[DR_UNIT][i]);            
             destructed[DR_UNIT][i] = NULL;
         }
     }
