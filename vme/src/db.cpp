@@ -688,17 +688,9 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
 
     char *fix_old_codes_to_html(const char *c);
 
-#ifdef MEMORY_DEBUG
-    int memory_start;
-#endif
-
     void start_all_special(class unit_data * u);
 
     g_nCorrupt = 0;
-
-#ifdef MEMORY_DEBUG
-    memory_start = memory_total_alloc;
-#endif
 
     if (type != UNIT_ST_NPC &&
         type != UNIT_ST_PC && type != UNIT_ST_ROOM && type != UNIT_ST_OBJ)
@@ -707,7 +699,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
         return NULL;
     }
 
-    u = new (class unit_data)(type);
+    u = new EMPLACE(unit_data) unit_data(type);
 
     nStart = pBuf->GetReadPosition();
     g_nCorrupt += pBuf->Read8(&unit_version);
@@ -1353,24 +1345,6 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
             return NULL;
     }
 
-#ifdef MEMORY_DEBUG
-    switch (type)
-    {
-    case UNIT_ST_PC:
-        memory_pc_alloc += memory_total_alloc - memory_start;
-        break;
-    case UNIT_ST_NPC:
-        memory_npc_alloc += memory_total_alloc - memory_start;
-        break;
-    case UNIT_ST_OBJ:
-        memory_obj_alloc += memory_total_alloc - memory_start;
-        break;
-    case UNIT_ST_ROOM:
-        memory_room_alloc += memory_total_alloc - memory_start;
-        break;
-    }
-#endif
-
     post_read_unit(u);
 
     return u;
@@ -1718,13 +1692,8 @@ void boot_db(void)
     slog(LOG_OFF, 0, "Copyright (C) 1994 - 2020 by DikuMUD & Valhalla.");
 
     slog(LOG_OFF, 0, "Generating indexes from list of zone-filenames.");
-#ifdef MEMORY_DEBUG
-    memory_zoneidx_alloc = memory_total_alloc;
-#endif
+
     generate_zone_indexes();
-#ifdef MEMORY_DEBUG
-    memory_zoneidx_alloc = memory_total_alloc - memory_zoneidx_alloc;
-#endif
 
     slog(LOG_OFF, 0, "Generating player index.");
     player_file_index();
@@ -1751,15 +1720,9 @@ void boot_db(void)
     boot_sector();
 
     slog(LOG_OFF, 0, "Reading all rooms into memory.");
-#ifdef MEMORY_DEBUG
-    memory_roomread_alloc = memory_total_alloc;
-#endif
 
     read_all_rooms();
 
-#ifdef MEMORY_DEBUG
-    memory_roomread_alloc = memory_total_alloc - memory_roomread_alloc;
-#endif
     slog(LOG_OFF, 0, "Normalizing file index ref. and replacing rooms.");
     normalize_world();
 
@@ -1803,19 +1766,9 @@ void boot_db(void)
     }
 
     slog(LOG_OFF, 0, "Performing boot time reset.");
-#ifdef MEMORY_DEBUG
-    memory_zonereset_alloc = memory_total_alloc;
-#endif
     reset_all_zones();
-#ifdef MEMORY_DEBUG
-    memory_zonereset_alloc = memory_total_alloc - memory_zonereset_alloc;
-#endif
 
     touch_file(str_cc(g_cServerConfig.m_logdir, STATISTICS_FILE));
-#ifdef MEMORY_DEBUG
-    slog(LOG_OFF, 0, "Boot db -- DONE (%d bytes allocated).",
-         memory_total_alloc);
-#endif
 }
 
 void db_shutdown(void)
