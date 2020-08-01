@@ -229,12 +229,6 @@ void cMotherHook::Input(int nFlags)
         }
         else
         {
-#ifdef MEMORY_DEBUG
-            extern ubit32 memory_total_alloc;
-            slog(LOG_OFF, 0, "Connection from [%s] (%d left) (%d bytes "
-                             "allocated).",
-                 con->m_aHost, connections_left, memory_total_alloc);
-#endif
             con->m_pFptr(con, "");
         }
     }
