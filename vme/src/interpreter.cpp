@@ -560,9 +560,6 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
 
     sarg->owner = u;
 
-    if (u->is_destructed())
-        return SFR_SHARE;
-
     //   if (IS_PC(u) && !char_is_playing(u))
     //     return SFR_SHARE;
 
@@ -571,8 +568,11 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
         next = sarg->fptr->next; /* Next dude trick */
         orgflag = sarg->fptr->flags;
 
-        assert(!sarg->fptr->is_destructed());
-        assert(!u->is_destructed());
+        if (u->is_destructed())
+            return SFR_SHARE;
+
+        if (sarg->fptr->is_destructed())
+            continue;
 
         res = function_activate(u, sarg);
 
@@ -590,8 +590,6 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
                     if (IS_SET(prg->fp->intr[i].flags, SFB_TICK))
                         diltick = TRUE;
             }
-            assert(!sarg->fptr->is_destructed());
-            assert(!u->is_destructed());
             if (diltick)
                 SetFptrTimer(u, sarg->fptr);
         }
