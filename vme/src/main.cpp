@@ -307,16 +307,8 @@ void run_the_game(char *srvcfg)
 #endif
 
     fclose_cache();
-#ifdef MEMORY_DEBUG
-    slog(LOG_OFF, 0, "Memory used when shutting down: %d bytes.",
-         memory_total_alloc);
-#endif
     void db_shutdown(void);
     db_shutdown();
-#ifdef MEMORY_DEBUG
-    slog(LOG_OFF, 0, "Memory used at final checkpoint: %d bytes.",
-         memory_total_alloc);
-#endif
 
     if (mud_reboot)
     {
@@ -363,6 +355,7 @@ void game_loop()
 
         if (delay > 0)
         {
+            //usleep(1);
             usleep(delay);
             old.tv_usec += delay; /* This time has passed in usleep. Overrun is not important. */
         }
@@ -509,6 +502,7 @@ void check_overpopulation_event(void *p1, void *p2)
 
     for (u = unit_list; u; u = u->gnext)
     {
+        membug_verify(u);
         nUnits++;
         // Make sure it's not a player
         t = u;
@@ -594,3 +588,4 @@ void ShowUsage(const char *name)
     fprintf(stderr, "  -p: Persistant containers list\n");
     fprintf(stderr, "Copyright (C) 1994 - 1996 by Valhalla.\n");
 }
+
