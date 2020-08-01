@@ -166,6 +166,7 @@ int guild_master_init(struct spec_arg *sarg)
         }
         else
         {
+            assert(sarg->fptr->index != SFUN_DIL_INTERNAL);
             FREE(sarg->fptr->data);
             sarg->fptr->data = pG;
             sarg->fptr->index = SFUN_GUILD_INTERNAL;
