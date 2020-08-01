@@ -459,7 +459,6 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
         prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
 
         prg->fp->vars[0].val.string = str_dup(argstr);
-
         dil_activate_cmd(prg, cmd_ptr);
     }
     else if (cmd_ptr->cmd_fptr)
@@ -534,6 +533,7 @@ int function_activate(class unit_data *u, struct spec_arg *sarg)
 #ifdef DEBUG_HISTORY
             add_func_history(u, sarg->fptr->index, sarg->mflags);
 #endif
+            assert(!sarg->fptr->is_destructed());
             if (unit_function_array[sarg->fptr->index].func)
                 return (*(unit_function_array[sarg->fptr->index].func))(sarg);
             else
@@ -556,6 +556,8 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
     if (g_cServerConfig.m_bNoSpecials)
         return SFR_SHARE;
 
+    assert(u);
+
     sarg->owner = u;
 
     if (u->is_destructed())
@@ -568,6 +570,10 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
     {
         next = sarg->fptr->next; /* Next dude trick */
         orgflag = sarg->fptr->flags;
+
+        assert(!sarg->fptr->is_destructed());
+        assert(!u->is_destructed());
+
         res = function_activate(u, sarg);
 
         if ((orgflag != sarg->fptr->flags) && (sarg->fptr->index == SFUN_DIL_INTERNAL))
@@ -584,6 +590,8 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
                     if (IS_SET(prg->fp->intr[i].flags, SFB_TICK))
                         diltick = TRUE;
             }
+            assert(!sarg->fptr->is_destructed());
+            assert(!u->is_destructed());
             if (diltick)
                 SetFptrTimer(u, sarg->fptr);
         }
