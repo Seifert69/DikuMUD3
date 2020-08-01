@@ -904,6 +904,10 @@ int lose_exp(class unit_data *ch)
 void die(class unit_data *ch)
 {
    struct diltemplate *death;
+
+   if (ch->is_destructed())
+      return;
+
    death = find_dil_template("death@death");
    if (death)
    {
