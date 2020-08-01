@@ -97,7 +97,7 @@ Zone by Papi and Quifael </pre>"
 //
 // MS2020 Making guards react to whistle again
 //
-dilbegin fnpri(FN_PRI_MISSION) to_the_rescue(sroomto : string);
+dilbegin fnpri(FN_PRI_MISSION) unique to_the_rescue(sroomto : string);
 external
    unitptr unit_room@function(u : unitptr);
    integer walk_room@function (s:string,i:integer);
@@ -134,7 +134,7 @@ code
    pause;
    pause;
    pause;
-   if (self.position != POSITION_STANDING)
+   if (self.position == POSITION_FIGHTING)
       goto nowwhat;
 
    :gohome:
