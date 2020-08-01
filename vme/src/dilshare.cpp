@@ -194,6 +194,11 @@ dilprg::~dilprg(void)
 
 #endif
 
+    this->flags = 0;
+    this->varcrc = 0;
+    this->corecrc = 0;
+    this->next = 0;
+    this->framesz = 0;
     this->owner = NULL;
     this->sarg = NULL;
     this->fp = NULL;
