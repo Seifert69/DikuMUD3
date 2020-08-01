@@ -77,30 +77,6 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *),
         slog(LOG_ALL, 0, "Error: %d EVENT", when);
     }
 
-    if ((count + 10) > heapsize)
-    {
-        if (!heapsize)
-        {
-            heapsize = 5000;
-            CREATE(heap, struct eventq_elem *, heapsize);
-        }
-        else
-        {
-            heapsize = heapsize * 2;
-            RECREATE(heap, struct eventq_elem *, heapsize);
-            slog(LOG_DIL, 0, "HEAP expand to %d", heapsize);
-        }
-    }
-    count++;
-    end = new eventq_elem;
-    end->when = tics + when;
-    end->func = func;
-    end->arg1 = arg1;
-    end->arg2 = arg2;
-    /* roll event into its proper place in da heap */
-    parent_index = count / 2;
-    current_index = count;
-
     // One could add a sanity check to make sure that events for known 
     if (func == special_event)
     {
@@ -126,6 +102,29 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *),
         }
     }
 
+    if ((count + 10) > heapsize)
+    {
+        if (!heapsize)
+        {
+            heapsize = 5000;
+            CREATE(heap, struct eventq_elem *, heapsize);
+        }
+        else
+        {
+            heapsize = heapsize * 2;
+            RECREATE(heap, struct eventq_elem *, heapsize);
+            slog(LOG_DIL, 0, "HEAP expand to %d", heapsize);
+        }
+    }
+    count++;
+    end = new eventq_elem;
+    end->when = tics + when;
+    end->func = func;
+    end->arg1 = arg1;
+    end->arg2 = arg2;
+    /* roll event into its proper place in da heap */
+    parent_index = count / 2;
+    current_index = count;
 
     while (parent_index > 0)
     {

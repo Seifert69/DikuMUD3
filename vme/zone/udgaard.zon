@@ -10784,24 +10784,6 @@ $1n tells you, 'Remove all equipment, please.';
 end
 
 
-
-
-    enver
-names {"Enver Svansen", "Enver", "Svansen"}
-title "Enver Svansen"
-descr "Enver Svansen is standing here."
-extra {}
-"Enver is the slimy type. He gives you the creeps."
-
-M_HUMAN_THIEF_SWORD(5, SEX_MALE)
-alignment -1000
-money 3 IRON_PIECE
-dilcopy rescue@function("jesper/jens");
-dilcopy teamwork@function("jesper/jens");
-
-end
-
-
                              sam
 
 /* For the Checken's Rest Inn */
@@ -13769,13 +13751,6 @@ load jens into market_sq@midgaard max 1
    equip shirt position WEAR_BODY
 
    follow jesper max 1
-   {
-      equip overalls@farm1 position WEAR_LEGS
-      equip boots@farm1 position WEAR_FEET
-      equip shirt position WEAR_BODY
-   }
-
-   follow enver max 1
    {
       equip overalls@farm1 position WEAR_LEGS
       equip boots@farm1 position WEAR_FEET
