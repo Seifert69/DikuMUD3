@@ -818,11 +818,7 @@ void free_namelist(char **list)
 
     while (*list)
     {
-#ifdef MEMORY_DEBUG
-        FREE(*(list));
-#else
         free(*list);
-#endif
         list++;
         /* MS: Well, ugly but we have to do while free macro is in use! */
     }
@@ -1094,7 +1090,7 @@ char *html_encode_utf8(const char *src)
 
     slog(LOG_ALL, 0, sBuffer.c_str());
 
-    return strdup(sBuffer.c_str()); // Oh if only we used strings everywhere :))
+    return str_dup(sBuffer.c_str()); // Oh if only we used strings everywhere :))
 }
 
 // Helper function to wrap javascript into something. This something might change
@@ -1222,5 +1218,5 @@ char *fix_old_codes_to_html(const char *c)
     }
 
     str_nr_brnr(buf, buf2);
-    return strdup(buf2); // Dont worry about memory leaks it's a one time thing
+    return str_dup(buf2); // Dont worry about memory leaks it's a one time thing
 }
