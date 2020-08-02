@@ -233,8 +233,6 @@ code
 {
    heartbeat := PULSE_SEC;
 
-   //log("login_modify() for "+self.name);
-
    // Make sure we have a current DIL running
    i := dildestroy("send_prompt@update", self);
    dilcopy("send_prompt@update",self);
@@ -397,7 +395,7 @@ code
 dilend
 
 
-dilbegin aware on_connect();
+dilbegin aware fnpri(FN_PRI_SYS) on_connect();
 external
    informer();
    login_modify(tgt : unitptr);
