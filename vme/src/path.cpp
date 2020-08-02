@@ -115,7 +115,9 @@ void *create_sc_dijkstra(void *thread)
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
     pthread_cleanup_push(cleanup_sc_dijkstra, NULL);
 
-    for (;;)
+    extern int mud_shutdown;
+
+    while (!mud_shutdown)
     {
         while (dijkstra_queue.size() > 0)
         {
@@ -137,7 +139,9 @@ void *create_sc_dijkstra(void *thread)
     }
     pthread_cleanup_pop(1);
     slog(LOG_ALL, 0, "Exiting Dijkstra Thread");
-    pthread_exit(0);
+
+    //pthread_exit(0);
+    return NULL;
 }
 
 void create_sc_graph(int num_of_sc)

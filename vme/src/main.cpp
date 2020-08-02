@@ -361,10 +361,6 @@ void game_loop()
         }
     }
 
-    extern pthread_t dijkstra_thread;
-    pthread_cancel(dijkstra_thread);
-    pthread_join(dijkstra_thread, NULL);
-
     slog(LOG_ALL, 0, "Saving all players before exiting");
     for (d = descriptor_list; d; d = d->next)
     {
@@ -388,6 +384,11 @@ void game_loop()
         }
     }
     multi_close_all();
+
+    extern pthread_t dijkstra_thread;
+    //pthread_cancel(dijkstra_thread);
+    pthread_join(dijkstra_thread, NULL);
+    sleep(1);
 }
 
 /* Accept new connects, relay commands, and call 'heartbeat-functs' */
