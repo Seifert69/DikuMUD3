@@ -3912,6 +3912,8 @@ void dilfe_plus(register class dilprg *p)
     delete v2;
 }
 
+
+// DIL destroy
 void dilfe_dld(register class dilprg *p)
 {
     dilval *v = new dilval;
