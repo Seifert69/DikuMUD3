@@ -347,6 +347,10 @@ const char *sfb_flags[] = {
     "Activate",
     "PRE",
     "Done",
+    "Edit",
+    "DILDestroy",
+    "Prompt",
+    "Unique",
     NULL
 };
 
