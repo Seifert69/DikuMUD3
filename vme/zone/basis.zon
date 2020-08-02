@@ -7274,9 +7274,9 @@ names {"energy worms", "worms"}
 title "the energy worms"
 descr "A bunch of energy worms are here."
 extra {} "Disgusting and intriguing!"
-M_ZOMBIE_SMALL(4,SEX_NEUTRAL)
+M_ZOMBIE_SMALL(20,SEX_NEUTRAL)
 
-dilbegin energyworms();
+dilbegin aware energyworms();
 var
    u : unitptr;
    sl : stringlist;
@@ -7285,12 +7285,25 @@ var
 code
 {
    heartbeat := PULSE_SEC*4;
-   pause;
    log("Energy worms checking location " + self.outside.nameidx + "@" + self.outside.zoneidx);
-   pause;
 
    :init:
-   pause;
+   wait(SFB_ALL, TRUE);
+
+   if (self.fighting != null)
+   {
+      if (self.fighting.type != UNIT_ST_PC)
+      {
+         self.hp := self.max_hp;
+         stop_fighting(self.fighting, self);
+         stop_fighting(self, self.fighting);
+         goto init;
+      }
+   }
+
+   if (not command(CMD_AUTO_TICK))
+      goto init;
+
    sl := null;
    nCount := 0;
 
