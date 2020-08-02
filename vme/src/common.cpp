@@ -204,7 +204,7 @@ int required_xp(int level)
         return LEVEL_MULT * level + level * level * POWER_MULT;
     else
         return required_xp(MORTAL_MAX_LEVEL) +
-               level_xp(MORTAL_MAX_LEVEL) * (level - MORTAL_MAX_LEVEL);
+               level_xp(MORTAL_MAX_LEVEL-1) * (level - MORTAL_MAX_LEVEL);
 
 #undef LEVEL_MULT
 #undef POWER_MULT
@@ -213,9 +213,12 @@ int required_xp(int level)
 /* Given a level, it returns how much XP is required to reach the  */
 /* next level. For example, given level 1, it returns that it      */
 /* takes level(1+1)-level(1) xp to reach level 2.                    */
-
+/* Level has to be < MORTAL_MAX_LEVEL */
 int level_xp(int level)
 {
+    if (level >= MORTAL_MAX_LEVEL)
+        level = MORTAL_MAX_LEVEL-1;
+
     return required_xp(level+1) - required_xp(level);
 
     /* if (level <= MORTAL_MAX_LEVEL)
