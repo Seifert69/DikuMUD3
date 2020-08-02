@@ -327,6 +327,10 @@ void advance_level(class unit_data *ch)
 #endif
 
     send_to_char("You raise a level!<br/>", ch);
+    if (CHAR_LEVEL(ch) < 5)
+    {
+        send_to_char("You should <b><a cmd='#'>practice</a></b> your skills and abilities now.<br/>", ch);
+    }
     clear_training_level(ch);
 
     advance_guild_level(ch);
