@@ -249,6 +249,11 @@ void eventqueue::process(void)
             if (tfunc == special_event && ((unit_fptr *)tmp_event->arg2)->data &&
                 (((class unit_fptr *)tmp_event->arg2)->index == SFUN_DIL_INTERNAL))
             {
+                sprintf(dilname, "NO NAME");
+                sprintf(dilzname, "NO ZONE");
+                sprintf(diloname, "NO NAME");
+                sprintf(dilozname, "NO ZONE");
+
                 class unit_data *u = (unit_data *)tmp_event->arg1;
                 class unit_fptr *fptr = (unit_fptr *)tmp_event->arg2;
 
@@ -266,28 +271,17 @@ void eventqueue::process(void)
 
                     assert(prg->owner);
                     assert(prg->fp);
-                    assert(prg->waitcmd > WAITCMD_FINISH);
 
-                    /*
-                    for (class unit_fptr *fptr = UNIT_FUNC(((dilprg *)((unit_fptr *)tmp_event->arg2)->data)->owner); fptr; fptr=fptr->next)
-                    {
-                        assert(!is_destructed(DR_FUNC, fptr));
-                    }*/
+                    // One could check here if the DIL (if it is) is supposed to run
+                    // if (prg->waitcmd > WAITCMD_FINISH) bDestructed = 1;
+                    // But rundil checks too.
 
                     if (prg->fp->tmpl->prgname)
                         sprintf(dilname, "%s",
                                 prg->fp->tmpl->prgname);
-                    else
-                        sprintf(dilname, "NO NAME");
                     if (prg->fp->tmpl->zone)
-                    {
                         sprintf(dilzname, "%s",
                                 prg->fp->tmpl->zone->name);
-                    }
-                    else
-                    {
-                        sprintf(dilzname, "NO ZONE");
-                    }
                     sprintf(diloname, "%s", tmp_event->arg1 ? UNIT_FI_NAME((class unit_data *)(tmp_event->arg1)) : "NO NAME");
                     sprintf(dilozname, "%s", tmp_event->arg1 ? UNIT_FI_ZONENAME((class unit_data *)(tmp_event->arg1)) : "NO ZONE");
                 }
