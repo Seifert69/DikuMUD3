@@ -1413,6 +1413,7 @@ extra {"sign"}
 "Wands and Staves recharged!  Simply give the staff or wand to Randall and
 he will take care of it!"
 movement SECT_INSIDE
+gmap(338,1058)
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 east to col_rd5 descr "Colosseum Road";
 end /* randall's shop */
@@ -3035,6 +3036,7 @@ descr
 "   You are on a narrow road leading north towards the river and south
 towards Colosseum Square."
 movement SECT_CITY
+gmap(365,721)
 north to s_prom2;
 south to col_sq2;
 ALWAYS_LIGHT
@@ -3050,6 +3052,7 @@ descr
 through the city. To the west you notice the entrance to a small monastery where
 the healers of the area practice their art."
 movement SECT_CITY
+gmap(365,928)
 north to col_sq6;
 south to col_rd3;
 west to entrance@clericguild;
@@ -3066,6 +3069,7 @@ descr
 "   You are on a narrow road leading north and south through the city.
 A small alley leads east to Palace Road."
 movement SECT_CITY
+gmap(365,993)
 north to col_rd2;
 south to col_rd4;
 east to palace_rd6;
@@ -3080,6 +3084,7 @@ title "Colosseum Road"
 descr
 "   You are on a narrow road leading north and south through the city."
 movement SECT_CITY
+gmap(365,1029)
 north to col_rd3;
 south to col_rd5;
 ALWAYS_LIGHT
@@ -3094,6 +3099,7 @@ descr
 "   You are on a narrow road leading north through the city and south towards
 Wall Road."
 movement SECT_CITY
+gmap(365,1058)
 north to col_rd4;
 south to wall_rd4;
 west to wand_shop;
@@ -3421,6 +3427,7 @@ descr
 "   You are at the west end of Gladiator Road.  Wall Road is to the west and
 Gladiator Road continues east."
 movement SECT_CITY
+gmap(216,849)
 east to glad_rd2;
 west to wall_rd2;
 ALWAYS_LIGHT
@@ -3435,6 +3442,7 @@ descr
 "   You are on a road leading east-west through the city.  To the east is
 Colosseum Square and a rather large oval building."
 movement SECT_CITY
+gmap(266,849)
 east to col_sq8;
 west to glad_rd1;
 ALWAYS_LIGHT
@@ -3449,6 +3457,7 @@ descr
 "   You are on a road leading east-west through the city.  To the west is
 Colosseum Square and a rather large oval building.."
 movement SECT_CITY
+gmap(424,849)
 east to glad_rd4;
 west to col_sq4;
 ALWAYS_LIGHT
@@ -3463,6 +3472,7 @@ descr
 "   You are at the east end of Gladiator Road.  Royal Avenue is to the east
 and Gladiator Road continues west."
 movement SECT_CITY
+gmap(453,849)
 east to royal_av5;
 west to glad_rd3;
 ALWAYS_LIGHT
@@ -3479,6 +3489,7 @@ descr
 your southeast is an enourmous oval building with many arches.  You can go
 south and east around the Colosseum. The armour shop is to the west."
 movement SECT_CITY
+gmap(337,820)
 west to armour_shop;
 east to col_sq2;
 south to col_sq8;
@@ -3495,6 +3506,7 @@ descr
 south is an enourmous oval building with many arches.  You can go east and
 west around the Colosseum.  Colosseum Road leads north from here."
 movement SECT_CITY
+gmap(365,820)
 north to col_rd1;
 east to col_sq3;
 west to col_sq1;
@@ -3511,6 +3523,7 @@ descr
 your southwest is an enourmous oval building with many arches.  You can go
 south and west around the Colosseum.  The fighter's guild is to the east."
 movement SECT_CITY
+gmap(394,820)
 east to entrance@fightersguild;
 west to col_sq2;
 south to col_sq4;
@@ -3527,6 +3540,7 @@ descr
 west is an enourmous oval building with many arches.  You can go north and
 south around the Colosseum.  Gladiator Road leads east from here."
 movement SECT_CITY
+gmap(394,849)
 east to glad_rd3;
 north to col_sq3;
 south to col_sq5;
@@ -3544,6 +3558,7 @@ To your northwest is an enourmous oval building with many arches.  You can go
 north and west around the Colosseum.  A blacksmith's shop is to the east and
 a weaponsmith's shop is to the south."
 movement SECT_CITY
+gmap(394,879)
 north to col_sq4;
 west to col_sq6;
 east to bsmith_shop;
@@ -3562,6 +3577,7 @@ north is the entrance to an enourmous oval building with many arches.  You
 can go east and west around the Colosseum.  Colosseum Road leads south from
 here."
 movement SECT_CITY
+gmap(365,879)
 east to col_sq5;
 west to col_sq7;
 south to col_rd2;
@@ -3580,6 +3596,7 @@ To your northeast is an enourmous oval building with many arches.  You can go
 north and east around the Colosseum.  The Mortician's is to the west and the
 Carpenter's is to the south."
 movement SECT_CITY
+gmap(337,879)
 east to col_sq6;
 north to col_sq8;
 south to carp_shop;
@@ -3597,6 +3614,7 @@ descr
 east is an enourmous oval building with many arches.  You can go north and
 south around the Colosseum.  Gladiator Road leads west from here."
 movement SECT_CITY
+gmap(337,849)
 north to col_sq1;
 south to col_sq7;
 west to glad_rd2;
@@ -5044,6 +5062,7 @@ extra {"sign"}
 
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(317,820)
 east to col_sq1;
 ALWAYS_LIGHT
 end
@@ -5175,6 +5194,7 @@ blows.  A small fire, just large enough to make the smithy cosy, burns in the
 forge.  A <a cmd='read #'>sign</a> hangs on the wall."
 flags {UNIT_FL_INDOORS}  /* Not really, partly outdoors (forge) */
 movement SECT_INSIDE
+gmap(417,879)
 west to col_sq5;
 ALWAYS_LIGHT
 
@@ -5229,6 +5249,7 @@ many wooden shelves with different tools used for carpentry.  The floor is
 littered with sawdust and woodshaving.  A <a cmd='read #'>sign</a> hangs on the wall."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(337,899)
 north to col_sq7;
 extra {"sign"}
 "It says :-<pre><br/>
@@ -5421,6 +5442,7 @@ for the fragile light of a candlestick standing on the dark polished mahogany
 counter.  A small <a cmd='read #'>sign</a> stands beside the candlestick."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(315,878)
 east to col_sq7;
 extra {"sign"}
 "It says :-<pre><br/>
@@ -5546,6 +5568,7 @@ south wall, and the once-white stone walls are blackened with smoke.  Beside
 the forge is a large pair of bellows and an anvil.  A <a cmd='read #'>sign</a> hangs on the wall."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(394,900)
 north to col_sq5;
 extra {"forge"} "The forge looks very hot indeed."
 extra {"anvil"} "The anvils appears very used."
