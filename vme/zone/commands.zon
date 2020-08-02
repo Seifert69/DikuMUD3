@@ -2585,20 +2585,21 @@ quit;
 
 dilbegin do_score(arg:string);
 var
-u : unitptr;
-leader : unitptr;
-slave : unitptr;
-alig : string;
-pos : string;
-deaths:string;
-want : string;
-start: string;
-sav : string;
-bob : string;
-stat : string;
-stat1 : string;
-stat2 : string;
-i : integer;
+   u : unitptr;
+   leader : unitptr;
+   slave : unitptr;
+   alig : string;
+   pos : string;
+   deaths:string;
+   want : string;
+   start: string;
+   sav : string;
+   bob : string;
+   stat : string;
+   stat1 : string;
+   stat2 : string;
+   slvl : string;
+   i : integer;
 code
 {
    /*if(self.type!=UNIT_ST_PC) quit;*/
@@ -2683,11 +2684,18 @@ code
       quit;
 	}
 
+   slvl := "";
+   if (self.exptol <= 0)
+   {
+      slvl := "<b>You can advance a <a cmd='#'>level</a> now - congratulations!</b><br/>";
+   }
+
    if(arg=="")
    {
       act(self.name+" <div class='who_title'>"+self.title+"</div><div class='score'> "+alig+"</div>.<br/>"
          +"<div class='score'>You have "+itoa(self.exp)+" experience points and you need "
-         +itoa(self.exptol) + " to the next level.</div><br/>"
+         +itoa(self.exptol) + " to the next level.</div><br/>"+
+         slvl
          +"<div class='score'>You have "+itoa(self.hp)+"("+itoa(self.max_hp)+") hit, "
          +itoa(self.mana)+"("+itoa(self.max_mana)+") mana, "
          +itoa(self.endurance)+"("+itoa(self.max_endurance)+") endurance points.</div><br/>"
