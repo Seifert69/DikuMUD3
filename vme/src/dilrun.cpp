@@ -1162,6 +1162,8 @@ int run_dil(struct spec_arg *sarg)
     {
         /* Just return and let the EXECUTING bit stay turned on, so all
            execution is blocked */
+        // Not sure when this might happen, logging
+        slog(LOG_ALL, 0, "DIL program %s stopped.");
         prg->nest--;
         return SFR_SHARE;
     }
@@ -1378,11 +1380,12 @@ int dil_destroy(const char *name, class unit_data *u)
     struct spec_arg sarg;
 
     fptr = dil_find(name, u);
-    if (fptr)
+    if (fptr && !fptr->is_destructed())
     {
         assert(fptr->data); /* MUST or ged! */
         prg = ((class dilprg *)fptr->data);
-        //  This is to send the dildestroy SFB,
+
+        //  This is to send the dildestroy SFB to any listening DILs
         sarg.owner = prg->owner;
         sarg.activator = NULL;
         sarg.fptr = fptr;
@@ -1393,12 +1396,13 @@ int dil_destroy(const char *name, class unit_data *u)
         sarg.target = NULL;
         sarg.pInt = NULL;
 
-        REMOVE_BIT(prg->flags, DILFL_DEACTIVATED); // We're going to destroy it
-
         run_dil(&sarg);
-        //  We finished the on_dildestroy part, now lets really destroy it.
+
+
+        //  We finished the signalling, now lets really destroy it.
         if (!fptr->is_destructed() && fptr && fptr->data)
         {
+            REMOVE_BIT(prg->flags, DILFL_DEACTIVATED); // We're going to destroy it
             prg->waitcmd = WAITCMD_QUIT;
             dil_activate(prg);
         }
