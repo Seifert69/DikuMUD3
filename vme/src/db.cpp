@@ -648,8 +648,11 @@ void post_read_unit(class unit_data *u)
         if (regen)
         {
             class dilprg *prg = dil_copy_template(regen, u, NULL);
-            prg->waitcmd = WAITCMD_MAXINST - 1;
-            dil_activate(prg);
+            if (prg)
+            {
+                prg->waitcmd = WAITCMD_MAXINST - 1;
+                dil_activate(prg);
+            }
         }
         else
         {
