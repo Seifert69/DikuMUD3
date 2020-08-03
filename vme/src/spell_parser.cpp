@@ -210,18 +210,22 @@ int spell_perform(int spell_no, int spell_type,
         class dilprg *prg;
 
         prg = dil_copy_template(spell_info[spell_no].tmpl, caster, NULL);
-        prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
 
-        prg->fp->vars[0].val.unitptr = medium;
-        prg->fp->vars[1].val.unitptr = target;
-        prg->fp->vars[2].val.string = str_dup(argument);
-        prg->fp->vars[3].val.integer = hm;
-        prg->fp->vars[4].val.string = str_dup(pEffect);
+        if (prg)
+        {
+            prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
 
-        dil_add_secure(prg, medium, prg->fp->tmpl->core);
-        dil_add_secure(prg, target, prg->fp->tmpl->core);
+            prg->fp->vars[0].val.unitptr = medium;
+            prg->fp->vars[1].val.unitptr = target;
+            prg->fp->vars[2].val.string = str_dup(argument);
+            prg->fp->vars[3].val.integer = hm;
+            prg->fp->vars[4].val.string = str_dup(pEffect);
 
-        dil_activate(prg);
+            dil_add_secure(prg, medium, prg->fp->tmpl->core);
+            dil_add_secure(prg, target, prg->fp->tmpl->core);
+
+            dil_activate(prg);
+        }
     }
     else if (spell_info[spell_no].spell_pointer)
     {
