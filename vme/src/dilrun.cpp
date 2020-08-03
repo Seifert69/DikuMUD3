@@ -1049,7 +1049,7 @@ int run_dil(struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    if (IS_SET(prg->flags, DILFL_EXECUTING | DILFL_DEACTIVATED))
+    if ((prg->waitcmd > 0) && IS_SET(prg->flags, DILFL_EXECUTING | DILFL_DEACTIVATED))
     {
         prg->nest--;
         return SFR_SHARE;
@@ -1702,6 +1702,7 @@ class unit_fptr *dil_find(const char *name, class unit_data *u)
                 {
                     if (((class dilprg *)fptr->data)->waitcmd <= WAITCMD_QUIT)
                     {
+                        // XXX
                         slog(LOG_ALL,0, "dil_find found DIL <= WAITCMD_QUIT %for %s %s@%s", UNIT_NAME(u), UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
                     }
                     return fptr;
