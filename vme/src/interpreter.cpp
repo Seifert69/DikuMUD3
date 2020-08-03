@@ -456,10 +456,12 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
         class dilprg *prg;
 
         prg = dil_copy_template(cmd_ptr->tmpl, ch, NULL);
-        prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
-
-        prg->fp->vars[0].val.string = str_dup(argstr);
-        dil_activate_cmd(prg, cmd_ptr);
+        if (prg)
+        {
+            prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
+            prg->fp->vars[0].val.string = str_dup(argstr);
+            dil_activate_cmd(prg, cmd_ptr);
+        }
     }
     else if (cmd_ptr->cmd_fptr)
         ((*cmd_ptr->cmd_fptr)(ch, argstr, cmd_ptr));
