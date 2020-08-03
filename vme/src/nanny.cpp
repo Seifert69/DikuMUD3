@@ -475,7 +475,7 @@ void nanny_motd(class descriptor_data *d, char *arg)
         }
         else
         {
-            slog(LOG_ALL, "nanny_motd() no on_connect@basis");
+            slog(LOG_ALL, 0, "nanny_motd() no on_connect@basis");
         }
         
     }
