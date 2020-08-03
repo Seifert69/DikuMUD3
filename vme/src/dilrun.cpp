@@ -1698,15 +1698,8 @@ class unit_fptr *dil_find(const char *name, class unit_data *u)
     {
         for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
             if ((!fptr->is_destructed()) && (fptr->index == SFUN_DIL_INTERNAL))
-                if (((class dilprg *)fptr->data)->frame[0].tmpl == tmpl)
-                {
-                    if (((class dilprg *)fptr->data)->waitcmd <= WAITCMD_QUIT)
-                    {
-                        // XXX
-                        slog(LOG_ALL,0, "dil_find found DIL <= WAITCMD_QUIT %for %s %s@%s", UNIT_NAME(u), UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
-                    }
+                if ((((class dilprg *)fptr->data)->frame[0].tmpl == tmpl) &&  ((class dilprg *)fptr->data)->waitcmd <= WAITCMD_QUIT)
                     return fptr;
-                }
     }
     return NULL;
 }
