@@ -322,8 +322,11 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
                         CHAR_DESCRIPTOR(d->character) = NULL;
                         class dilprg *prg =
                             dil_copy_template(link_dead, d->character, NULL);
-                        prg->waitcmd = WAITCMD_MAXINST - 1;
-                        dil_activate(prg);
+                        if (prg)
+                        {
+                            prg->waitcmd = WAITCMD_MAXINST - 1;
+                            dil_activate(prg);
+                        }
                     }
                 }
                 else
