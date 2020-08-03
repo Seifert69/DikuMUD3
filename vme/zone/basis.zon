@@ -274,7 +274,7 @@ dilend
 
 
 
-dilbegin aware link_dead();
+dilbegin aware unique link_dead();
 var
         t:integer;
         c:integer;
