@@ -99,10 +99,13 @@ void npc_walkto(class unit_data *u, class unit_data *toroom)
         return;
     }
     class dilprg *prg = dil_copy_template(tmpl, u, NULL);
-    prg->waitcmd = WAITCMD_MAXINST - 1;
-    prg->fp->vars[0].val.string = str_dup(buf);
-    //prg->fp->vars[0].val.unitptr  = toroom; why didn't this work?
-    dil_activate(prg);
+    if (prg)
+    {
+        prg->waitcmd = WAITCMD_MAXINST - 1;
+        prg->fp->vars[0].val.string = str_dup(buf);
+        //prg->fp->vars[0].val.unitptr  = toroom; why didn't this work?
+        dil_activate(prg);
+    }
 }
 
 /* ---------------------------------------------------------------------- */
