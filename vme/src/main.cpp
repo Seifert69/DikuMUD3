@@ -529,8 +529,11 @@ void check_overpopulation_event(void *p1, void *p2)
             if (worms)
             {
                 class dilprg *prg = dil_copy_template(worms, u, NULL);
-                prg->waitcmd = WAITCMD_MAXINST - 1;
-                dil_activate(prg);
+                if (prg)
+                {
+                    prg->waitcmd = WAITCMD_MAXINST - 1;
+                    dil_activate(prg);
+                }
             }
         }
     }
