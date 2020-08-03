@@ -456,8 +456,16 @@ void nanny_motd(class descriptor_data *d, char *arg)
         dilmenu = TRUE;
         enter_game(d->character, TRUE);
         class dilprg *prg = dil_copy_template(on_connect, d->character, NULL);
-        prg->waitcmd = WAITCMD_MAXINST - 1;
-        dil_activate(prg);
+        if (prg)
+        {
+            prg->waitcmd = WAITCMD_MAXINST - 1;
+            dil_activate(prg);
+        }
+        else
+        {
+            slog(LOG_ALL, "nanny_motd() no on_connect@basis");
+        }
+        
     }
     else
     {
@@ -549,11 +557,14 @@ void nanny_dil(class descriptor_data *d, char *arg)
         class dilprg *prg;
 
         prg = dil_copy_template(nanny_dil_tmpl, d->character, NULL);
-        prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
+        if (prg)
+        {
+            prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
 
-        prg->fp->vars[0].val.string = str_dup(arg);
+            prg->fp->vars[0].val.string = str_dup(arg);
 
-        dil_activate(prg);
+            dil_activate(prg);
+        }
     }
 
     if (d->character && UNIT_EXTRA(d->character).find_raw("$nanny") == NULL)
