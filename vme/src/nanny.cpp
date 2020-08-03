@@ -194,6 +194,9 @@ void connect_game(class unit_data *pc)
 {
     //  assert (CHAR_DESCRIPTOR (pc));
 
+    if (pc->is_destructed() || !CHAR_DESCRIPTOR(pc))
+        return;
+
     PC_TIME(pc).connect = time(0);
     CHAR_DESCRIPTOR(pc)->logon = time(0);
 
@@ -208,15 +211,21 @@ void connect_game(class unit_data *pc)
 
 void disconnect_game(class unit_data *pc)
 {
-    CHAR_DESCRIPTOR(pc)->RemoveBBS();
+    if (CHAR_DESCRIPTOR(pc))
+    {
+        CHAR_DESCRIPTOR(pc)->RemoveBBS();
 
-    no_players--;
+        no_players--;
+    }
 }
 
 void reconnect_game(class descriptor_data *d, class unit_data *ch)
 {
     //char *color;
     //char tbuf[MAX_STRING_LENGTH * 2];
+
+    if (ch->is_destructed() || !d)
+        return;
 
     CHAR_DESCRIPTOR(d->character) = NULL;
     extract_unit(d->character);
@@ -225,7 +234,10 @@ void reconnect_game(class descriptor_data *d, class unit_data *ch)
 
     dil_destroy("link_dead@basis", ch);
 
-    ActivateDil(ch);
+    ActivateDil(ch); // ch could potentially get zapped here.
+
+    if (ch->is_destructed() || !d)
+        return;
 
     connect_game(ch);
     /* MS2020
