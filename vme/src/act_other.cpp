@@ -204,9 +204,11 @@ void start_player(class unit_data *ch)
         /* Call DIL to see if we should init the player in any other way. */
         class dilprg *prg = dil_copy_template(playerinit_tmpl, ch, NULL);
 
-        prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
-
-        dil_activate(prg);
+        if (prg)
+        {
+            prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
+            dil_activate(prg);
+        }
     }
 
     UNIT_MAX_HIT(ch) = UNIT_HIT(ch) = hit_limit(ch);
