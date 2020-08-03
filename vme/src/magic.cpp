@@ -77,31 +77,34 @@ dil_effect (char *pStr, struct spell_args *sa)
     class unit_fptr *fptr;
 
     prg = dil_copy_template (tmpl, sa->caster, &fptr);
-    prg->waitcmd = WAITCMD_MAXINST - 1;	// The usual hack, see db_file
+    if (prg)
+    {
+        prg->waitcmd = WAITCMD_MAXINST - 1;	// The usual hack, see db_file
 
-    prg->fp->vars[0].val.unitptr = sa->medium;
-    prg->fp->vars[1].val.unitptr = sa->target;
-    prg->fp->vars[2].val.integer = sa->hm;
+        prg->fp->vars[0].val.unitptr = sa->medium;
+        prg->fp->vars[1].val.unitptr = sa->target;
+        prg->fp->vars[2].val.integer = sa->hm;
 
-    dil_add_secure (prg, sa->medium, prg->fp->tmpl->core);
-    dil_add_secure (prg, sa->target, prg->fp->tmpl->core);
+        dil_add_secure (prg, sa->medium, prg->fp->tmpl->core);
+        dil_add_secure (prg, sa->target, prg->fp->tmpl->core);
 
-    assert (fptr);
+        assert (fptr);
 
-    struct spec_arg sarg;
+        struct spec_arg sarg;
 
-    sarg.owner = prg->owner;
-    sarg.activator = sa->caster;
-    sarg.medium = NULL;
-    sarg.target = NULL;
-    sarg.pInt = NULL;
-    sarg.fptr = fptr;
-    sarg.cmd = &cmd_auto_tick;
-    sarg.arg = NULL;
-    sarg.mflags = SFB_TICK | SFB_AWARE;
+        sarg.owner = prg->owner;
+        sarg.activator = sa->caster;
+        sarg.medium = NULL;
+        sarg.target = NULL;
+        sarg.pInt = NULL;
+        sarg.fptr = fptr;
+        sarg.cmd = &cmd_auto_tick;
+        sarg.arg = NULL;
+        sarg.mflags = SFB_TICK | SFB_AWARE;
 
-    run_dil (&sarg);
-
+        run_dil (&sarg);
+    }
+    
     return TRUE;
 }
 
