@@ -913,8 +913,11 @@ void die(class unit_data *ch)
    {
       send_death(ch);
       class dilprg *prg = dil_copy_template(death, ch, NULL);
-      prg->waitcmd = WAITCMD_MAXINST - 1;
-      dil_activate(prg);
+      if (prg)
+      {
+         prg->waitcmd = WAITCMD_MAXINST - 1;
+         dil_activate(prg);
+      }
       return;
    }
 }
