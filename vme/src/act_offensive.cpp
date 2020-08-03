@@ -105,8 +105,12 @@ void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd
         {
             send_death(ch);
             class dilprg *prg = dil_copy_template(death, victim, NULL);
-            prg->waitcmd = WAITCMD_MAXINST - 1;
-            dil_activate(prg);
+
+            if (prg)
+            {
+                prg->waitcmd = WAITCMD_MAXINST - 1;
+                dil_activate(prg);
+            }
             return;
         }
         die(victim);
