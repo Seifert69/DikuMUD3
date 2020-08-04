@@ -63,7 +63,7 @@ struct cmdload_struct cmdload[] = {
 
     {"level", do_level, 0, 0},
     {"load", do_load, 0, 0},
-    {"path", do_path, 0, 0},
+    {"timewarp", do_timewarp, 0, 0},
 
     {"rent", do_rent, 0, 0},
     {"reset", do_reset, 0, 0},

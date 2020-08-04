@@ -31,6 +31,8 @@
 extern ubit32 memory_total_alloc;
 extern void special_event(void *p1, void *p2);
 #define OPT_USEC 250000L /* time delay corresponding to 4 passes/sec */
+long g_nTickUsec = OPT_USEC;  // Dont mess with this, it's the game heartbeat. Look at 'timewarp'
+
 #define HEAPSPACE_INCREMENT 500
 /* constants */
 eventqueue events;
@@ -343,19 +345,16 @@ void game_loop()
 
         tics++;
 
-        /* Timer stuff. MUD is always at least OPT_USEC useconds in making
-           one cycle. */
+        /* Timer stuff. MUD is always at least OPT_USEC useconds in making one cycle. */
 
         gettimeofday(&now, (struct timezone *)0);
 
-        delay = OPT_USEC - (1000000L * (now.tv_sec - old.tv_sec) +
-                            (now.tv_usec - old.tv_usec));
+        delay = g_nTickUsec - (1000000L * (now.tv_sec - old.tv_sec) + (now.tv_usec - old.tv_usec));
 
         old = now;
 
         if (delay > 0)
         {
-            //usleep(1);
             usleep(delay);
             old.tv_usec += delay; /* This time has passed in usleep. Overrun is not important. */
         }
@@ -488,6 +487,12 @@ void update_crimes_event(void *p1, void *p2)
     point_update();
     events.add(PULSE_POINTS, point_update_event, 0, 0);
 }*/
+
+void timewarp_end(void *p1, void *p2)
+{
+    g_nTickUsec = OPT_USEC; // End the timewarp
+}
+
 
 void check_overpopulation_event(void *p1, void *p2)
 {
