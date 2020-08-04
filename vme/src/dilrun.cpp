@@ -1500,9 +1500,9 @@ class dilprg *dil_copy_template(struct diltemplate *tmpl,
 
     /* activate on tick SOON! */
     if (IS_SET(tmpl->flags, DILFL_AWARE))
-        fptr = create_fptr(u, SFUN_DIL_INTERNAL, tmpl->priority , 1, SFB_ALL | SFB_AWARE, prg);
+        fptr = create_fptr(u, SFUN_DIL_INTERNAL, tmpl->priority , PULSE_SEC, SFB_ALL | SFB_AWARE, prg);
     else
-        fptr = create_fptr(u, SFUN_DIL_INTERNAL,  tmpl->priority, 1, SFB_ALL, prg);
+        fptr = create_fptr(u, SFUN_DIL_INTERNAL,  tmpl->priority, PULSE_SEC, SFB_ALL, prg);
 
     if (pfptr)
         *pfptr = fptr;
