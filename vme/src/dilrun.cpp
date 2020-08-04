@@ -1163,7 +1163,7 @@ int run_dil(struct spec_arg *sarg)
         /* Just return and let the EXECUTING bit stay turned on, so all
            execution is blocked */
         // Not sure when this might happen, logging
-        slog(LOG_ALL, 0, "DIL program %s stopped.");
+        slog(LOG_ALL, 0, "DIL program stopped.");
         prg->nest--;
         return SFR_SHARE;
     }
