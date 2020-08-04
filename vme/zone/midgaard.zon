@@ -2490,7 +2490,7 @@ The Cathedral Square and the great Cathedral of Midgaard is north of here, and
 the very broad Royal Avenue leads south through the city.  Main Street leads
 east and west."
 movement SECT_CITY
-gmap(480,403)
+gmap(480,505)
 north to cth_square1 descr
 "The great Cathedral of Midgaard towers proudly beyond Cathedral Square.  The
 two massive southern towers reach ambitiously for the sky.";
