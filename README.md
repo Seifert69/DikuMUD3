@@ -9,7 +9,7 @@ Documentation goes here:
 
 https://wiki.dikumud.net/wiki/DikuMUD
 
-Will get a copy sync'ed to GitHUB soon, many thanks to @ Damien Davison for help with that. 
+The Wiki docs are sync'ed into this GitHUB repo daily. Many thanks to @Damien Davison. 
 
 Pre-requisites:
    * gcc/g++
