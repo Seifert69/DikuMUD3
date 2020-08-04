@@ -410,16 +410,16 @@
             </div>
             <div id="ac_progress">
                 <div id="hp-progress">
-                <div id="hp-bar"></div>
+                <div id="hp-bar">HIT POINTS</div>
                 </div>
                 <div id="ep-progress">
-                    <div id="ep-bar"></div>
+                    <div id="ep-bar">ENDURANCE</div>
                 </div>
                 <div id="mp-progress">
-                    <div id="mp-bar"></div>
+                    <div id="mp-bar">MANA</div>
                 </div>
             </div>
-            <div id="ac_exits">
+	    <div id="ac_exits">Obvious Exits:</br>
                 <div id="ace_text">N, S, E, W</div>
             </div>
         </div> <!-- ac_center -->
@@ -428,7 +428,8 @@
                 <a href="#" onclick="cmd('inventory')">In</a><br/>
                 <a href="#" onclick="cmd('equipment')">Eq</a><br/>
                 <a href="#" onclick="cmd('help')">He</a><br/>
-                <a href="#" onclick="modalShow()">MOD</a><br/>
+		<a href="#" onClick="cmd('score')">Sc</a><br/> 
+		<a href="#" onclick="modalShow()">MOD</a><br/>
             </div>
         </div> <!-- ac_right -->
     </div> <!-- outer -->
