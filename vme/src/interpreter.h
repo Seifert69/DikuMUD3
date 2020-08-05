@@ -151,7 +151,7 @@ void do_ban(class unit_data *, char *, const struct command_info *);
 void do_switch(class unit_data *, char *, const struct command_info *);
 void do_change(class unit_data *, char *, const struct command_info *);
 void do_color(class unit_data *, char *, const struct command_info *);
-void do_path(class unit_data *, char *, const struct command_info *);
+void do_timewarp(class unit_data *, char *, const struct command_info *);
 void do_crash(class unit_data *, char *, const struct command_info *);
 void do_wizlock(class unit_data *, char *, const struct command_info *);
 void do_account(class unit_data *, char *, const struct command_info *);

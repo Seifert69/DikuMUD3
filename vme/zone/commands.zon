@@ -2992,8 +2992,8 @@ dilend
 dilbegin do_practice (arg:string);
 code
 {
-sendtext("You can only practice at a teacher.<br/>",self);
-quit;
+   sendtext("You can only practice at a teacher.<br/>",self);
+   quit;
 }
 dilend
 
@@ -3001,8 +3001,8 @@ dilend
 dilbegin do_info(arg:string);
 code
 {
-sendtext("You can't do that here (find a teacher, try 'status' or 'help info'<br/>",self);
-quit;
+   sendtext("You can't do that here (find a teacher, try '<a cmd='#'>status</a>' or '<a cmd='#'>help info</a>')<br/>",self);
+   quit;
 }
 dilend
 
@@ -13180,6 +13180,7 @@ return;
 
 dilend
 
+
 dilbegin ctnwithdraw(arg: string);
 
 var clerk: unitptr;
@@ -13285,14 +13286,13 @@ return;
 dilend
 
 dilbegin ctnstorage(arg: string);
-
-var clerk: unitptr;
-    cont : unitptr;
-    item : unitptr;
-
-    ext  : extraptr;
-    town : string;
-    i    : integer;
+var
+   clerk: unitptr;
+   cont : unitptr;
+   item : unitptr;
+   ext  : extraptr;
+   town : string;
+   i    : integer;
 
 code
 {
@@ -13339,8 +13339,58 @@ while (item != null) {
 return;
 
 }
-
 dilend
+
+// MS2020 xxx
+// do_path: Wiz command to show the result of the shortest path algorithm.
+dilbegin do_wpath(arg: string);
+var
+   dir : integer;
+   u : unitptr;
+   uin : unitptr;
+   sl : stringlist;
+
+code
+{
+   if (arg == "")
+   {
+      sendtext("Please specify an object you'd like a path to.<br/>", self);
+      return;
+   }
+
+   log("1");
+   u := findunit(self, arg, FIND_UNIT_WORLD, null, UNIT_ST_PC|UNIT_ST_NPC|UNIT_ST_OBJ|UNIT_ST_ROOM);
+
+   log("2");
+   if (not u)
+   {
+      u := findsymbolic(arg);
+
+      if (not u)
+      {
+         sendtext("Can't locate a unit named " + arg + "<br/>", self);
+         return;
+      }
+   }
+
+   uin := u;
+   while (uin.type != UNIT_ST_ROOM)
+      uin := uin.outside;
+
+   dir := pathto(self, u);
+
+   log("3b");
+   sl := DIR_SL_LONG;
+
+   log("4");
+   sendtext("Ola<br/>", self);
+   sendtext("Found "+u.nameidx+"@"+u.zoneidx+" which is located in <a cmd='goto #'>" + uin.nameidx + "@" + uin.zoneidx + "</a><br/>", self);
+   sendtext("Direction: " + sl.[dir] + "("+itoa(dir)+")<br/>", self);
+   log("5");
+   quit;
+}
+dilend
+
 
 %rooms
 

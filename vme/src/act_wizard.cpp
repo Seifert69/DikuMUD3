@@ -31,6 +31,7 @@
 #include "movement.h"
 #include "main.h"
 #include "dilrun.h"
+#include "event.h"
 /*   external vars  */
 
 extern struct zone_info_type zone_info;
@@ -48,35 +49,33 @@ class descriptor_data *find_descriptor(const char *,
 int player_exists(const char *pName);
 int delete_player(const char *name);
 
-void do_path(class unit_data *ch, char *argument, const struct command_info *cmd)
+void do_timewarp(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    int i;
-    class unit_data *thing;
-    char buf[MAX_INPUT_LENGTH];
-    char zone[MAX_INPUT_LENGTH];
-
     if (str_is_empty(argument))
     {
-        send_to_char("Path where to? (symbolic / findunit)<br/>", ch);
+        send_to_char("timewrap: How many seconds to you want to wrap time?<br/>", ch);
         return;
     }
 
-    if (!(thing = find_unit(ch, &argument, 0, FIND_UNIT_WORLD)))
-    {
-        str_next_word(argument, argument);
-        split_fi_ref(argument, zone, buf);
+    int i = atoi(argument);
 
-        if (!(thing = find_symbolic(zone, buf)))
-        {
-            send_to_char("No such thing anywhere.<br/>", ch);
-            return;
-        }
+    if (i < 1)
+    {
+        send_to_char("timewrap: You cannot warp for less than a second.<br/>", ch);
+        return;
     }
 
-    i = move_to(unit_room(ch), unit_room(thing));
-
-    sprintf(buf, "Status: %d<br/>", i);
+    char buf[256];
+    sprintf(buf, "Time warping for %d seconds<br/>", i);
     send_to_char(buf, ch);
+
+    void timewarp_end(void *p1, void *p2);
+    extern eventqueue events;
+
+    events.add(PULSE_SEC * i, timewarp_end, 0, 0);
+
+    extern long g_nTickUsec;
+    g_nTickUsec = 0; // Warp the time
 }
 
 void do_users(class unit_data *ch, char *argument,

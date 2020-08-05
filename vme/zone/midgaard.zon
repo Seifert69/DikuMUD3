@@ -2011,7 +2011,7 @@ contrasted by the bright colours of numerous tall mosaic windows.  The
 monastery gate is to the west, and you can go north and south along the
 church wall."
 movement SECT_CITY
-gmap(530,340)
+gmap(430,340)
 north to cth_square6;
 south to cth_square8;
 west to paladin_guild/mon_yard;
@@ -2490,7 +2490,7 @@ The Cathedral Square and the great Cathedral of Midgaard is north of here, and
 the very broad Royal Avenue leads south through the city.  Main Street leads
 east and west."
 movement SECT_CITY
-gmap(480,403)
+gmap(480,505)
 north to cth_square1 descr
 "The great Cathedral of Midgaard towers proudly beyond Cathedral Square.  The
 two massive southern towers reach ambitiously for the sky.";
@@ -3637,6 +3637,7 @@ huge bronze doors lead south to the square outside and an arched doorway
 leads north into the central church."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(480,340)
 north to cth_nave;
 south to cth_square1;
 /* Her skal v�re en afl�st og uflytbar "church box" som man kan komme penge
@@ -3656,6 +3657,7 @@ between the numerous tall mosaic windows and a large number of pews stand on
 the reddish stone floor."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(480,311)
 north to cth_altar;
 east to cth_e_aisle;
 west to cth_w_aisle;
@@ -3677,6 +3679,7 @@ extra {"altar"} "It looks very expensive"
 extra {"candle", "candles"} "There is nothing special about the candles."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_SACRED}
 movement SECT_INSIDE
+gmap(480,282)
 north to cth_sanctum;
 south to cth_nave;
 east to cth_n_stairs1 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
@@ -3697,6 +3700,7 @@ three-legged golden bowl in which a small flame is burning steadily.  A door
 leading to the small humble midgaard donation room is to the west."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_SACRED}
 movement SECT_INSIDE
+gmap(480,254)
 south to cth_altar;
 west to mdonate;
 extra {"bowl", "flame"}
@@ -3719,9 +3723,11 @@ descr
 Midgaard. If you are lucky you might have the good graces
 to have something nice drop into your lap, it has been known
 to happen."
+
 flags {UNIT_FL_NO_MOB, UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER,
 UNIT_FL_NO_TELEPORT}
-
+movement SECT_INSIDE
+gmap(452,254)
 east to cth_sanctum;
 /* Dil to restrict getting all */
 dilcopy all_block@udgaard ();
@@ -3757,6 +3763,7 @@ west to cth_altar open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
         key altar_key keyword {"heavy wooden door", "door"} difficulty 75;
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(509,283)
 ALWAYS_LIGHT
 end
 
@@ -3770,6 +3777,7 @@ descr
 Cathedral.  You can go up and down."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(504,276)
 up to cth_n_stairs3;
 down to cth_n_stairs1;
 ALWAYS_LIGHT
@@ -3785,6 +3793,7 @@ descr
 Cathedral.  You can go up and down."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(501,273)
 up to cth_n_tower;
 down to cth_n_stairs2;
 ALWAYS_LIGHT
@@ -3802,6 +3811,7 @@ Midgaard in all directions.  A flight of narrow stairs leads down and a
 strong bell rope hangs from above."
 flags {UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(497,272)
 down to cth_n_stairs3;
 /* Hvis nogen her skriver "pull rope" skal man over hele Midgaard kunne
    h�re beskeden "The church bell peals."
@@ -3820,6 +3830,7 @@ indicate that the church itself has been used for burials.  In the southern
 wall is a narrow flight of stone stairs leading upwards."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(509,311)
 west to cth_nave;
 up to cth_se_stairs1;
 ALWAYS_LIGHT
@@ -3835,6 +3846,7 @@ descr
 Cathedral.  You can go up and down."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(503,305)
 up to cth_se_stairs2;
 down to cth_e_aisle;
 ALWAYS_LIGHT
@@ -3850,6 +3862,7 @@ descr
 Cathedral.  You can go up and down."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(501,303)
 up to cth_se_tower;
 down to cth_se_stairs1;
 ALWAYS_LIGHT
@@ -3866,6 +3879,7 @@ here, you have a terrific view of the city of Midgaard in all directions.  A
 flight of narrow stairs leads down."
 flags {UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(497,301)
 down to cth_se_stairs2;
 extra {"chimes"}
 "They are hanging out of your reach and do not appear to have any means of
@@ -3891,6 +3905,7 @@ indicate that the church itself has been used for burials.  In the southern
 wall is a narrow flight of stone stairs leading upwards."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(452,311)
 east to cth_nave;
 up to cth_sw_stairs1;
 ALWAYS_LIGHT
@@ -3906,6 +3921,7 @@ descr
 Cathedral.  You can go up and down."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(445,305)
 up to cth_sw_stairs2;
 down to cth_w_aisle;
 ALWAYS_LIGHT
@@ -3921,6 +3937,7 @@ descr
 Cathedral.  You can go up and down."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(446,302)
 up to cth_sw_tower;
 down to cth_sw_stairs1;
 ALWAYS_LIGHT
@@ -3937,6 +3954,7 @@ here, you have a terrific view of the city of Midgaard in all directions.  A
 flight of narrow stairs leads down."
 flags {UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(441,301)
 down to cth_sw_stairs2;
 extra {"chimes"}
 "They are hanging out of your reach and do not appear to have any means of

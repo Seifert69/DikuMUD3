@@ -43,9 +43,9 @@ void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
                 class dilprg * p;
                 p = (class dilprg *) fptr->data;
 
-                if(p)
+                if (p)
                 {
-                    szonelog(boot_zone, "DIL heartbeat was %s", p->fp->tmpl->prgname);
+                    szonelog(boot_zone, "DIL [%s] had heartbeat issue", p->fp->tmpl->prgname);
                 }
             }
             ticks = fptr->heart_beat = PULSE_SEC * 3;

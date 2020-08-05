@@ -2539,8 +2539,15 @@ minpos   = POSITION_RESTING
 minlevel = 254
 loglevel = 254
 
-command  = path
-internal = path
+command  = wtimewarp
+internal = timewarp
+minpos   = POSITION_DEAD
+minlevel = 255
+loglevel = 255
+type     = 0
+
+command  = wpath
+func     = do_wpath@commands
 minpos   = POSITION_DEAD
 minlevel = 230
 loglevel = 230
