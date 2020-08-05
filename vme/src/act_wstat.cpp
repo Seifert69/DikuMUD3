@@ -95,13 +95,14 @@ static void stat_world_extra(const class unit_data *ch)
     int i;
     std::string mystr;
 
-    mystr = "<div class='fourcol'>";
+    mystr = "";
     sprintf(buf, "World zones (%d):<br/>", zone_info.no_of_zones);
     mystr.append(buf);
 
+    mystr = "<div class='fourcol'>";
     for (i = 1, zp = zone_info.zone_list; zp; zp = zp->next, i++)
     {
-        sprintf(buf, "%s<br/>", zp->name);
+        sprintf(buf, "<a cmd='goto #'>%s</a><br/>", zp->name);
         mystr.append(buf);
     }
     mystr.append("</div><br/>");
@@ -414,7 +415,7 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
     std::string mystr;
     int argno;
     class file_index_type *fi;
-    int search_type = 0, i;
+    int search_type = 0;
 
     //  void stat_dijkstraa (class unit_data * ch, class zone_type *z);
 
@@ -510,28 +511,16 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
     }
 
     /* Search for mobs/objs/rooms and line in columns */
-    mystr = "";
-    for (*buf = 0, fi = zone->fi, i = 0; fi; fi = fi->next)
+    mystr = "<div class='threecol'>";
+    for (*buf = 0, fi = zone->fi; fi; fi = fi->next)
         if (fi->type == search_type)
         {
-            sprintf(buf, "%-20s", fi->name);
+            sprintf(buf, "%s<br/>", fi->name);
             mystr.append(buf); //MS2020
-
-            /* Enough to fill a whole line */
-            if (++i == 4)
-            {
-                mystr.append("<br/>"); // MS2020
-                send_to_char(mystr.c_str(), ch);
-                *buf = 0;
-                mystr = "";
-                i = 0;
-            }
         }
-    if (i)
-    {
-        mystr.append("<br/>"); // MS2020 quick hack
-        send_to_char(mystr.c_str(), ch);
-    }
+
+    mystr.append("</div></br>");
+    send_to_char(mystr.c_str(), ch);
 }
 
 static void stat_ability(const class unit_data *ch, class unit_data *u)
