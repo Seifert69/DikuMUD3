@@ -6423,7 +6423,7 @@ code
       else
          j := 20;
  
-      sendtext("Info you skills: <a cmd='info ability'>abilities</a>, <a cmd='info skill'>skills</a>, "+
+      sendtext("Info about your skills: <a cmd='info ability'>abilities</a>, <a cmd='info skill'>skills</a>, "+
                "<a cmd='info weapon'>weapons</a>, <a cmd='info spell'>spells</a>.<br/>", self);
       sendtext("<b>You have unspent points, <a cmd='#'>practice</a> now.</b><br/>", self);
    }
