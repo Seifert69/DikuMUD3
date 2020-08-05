@@ -770,6 +770,15 @@ var item = document.createElement("div");
 
 }
 
+function toggleSettings() {
+  var d = document.getElementById("banner");
+  if (d.style.display == "none") {
+    d.style.display = "block";
+  } else {
+    d.style.display = "none";
+  }
+}
+
 function switchTheme()
         {
           var th = document.getElementById("theme");

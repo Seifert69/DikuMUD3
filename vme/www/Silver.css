@@ -11,12 +11,6 @@
             flex-direction: row;
         }
        
-        .c_banner {
-            width: 70%;
-            height: 100vh;
-            background-color: #ffffff;
-        }
- 	
         .c_left {
             width: 70%;
             height: 100vh;
@@ -36,16 +30,17 @@
         }
         
         /* ============ LEFT AREA ============== */
-        #al_banner {
+        #banner {
 	       width: 100%;
-               height: 40px;
+               height: 20px;
                background-color: white;
 	       color: black;
+	       display: none;
        }
         #al_text {
             width: 100%;
             height: 100%; /* fill up the screen when empty */
-            max-height: calc(100% - 80px);
+            max-height: calc(100% - 60px);
             background-color: silver;
             color: black;
             overflow-y: auto;
@@ -200,11 +195,11 @@
         #btnDisconnect { width: 100px; }
         #btnSend       { width: 100px; }
         .command       { display: inline; }
-        .echo          { display: inline; color:bold; font-weight: bold; }
+        .echo          { display: inline; color:gold; font-weight: bold; }
 
         /* Combat */
         .hit_me         { display: inline; color:darkred; font-weight: bold;}
-        .hit_opponent   { display: inline; color:orange; font-weight: bold;}
+        .hit_opponent   { display: inline; color:black; font-weight: bold;}
         .hit_other      { display: inline; color:darkslategray;}
 
         .nodam_me       { display: inline; color:darkslategray; }
@@ -221,31 +216,31 @@
 
 
         /* Communication */
-        .ask_self      { display: inline; color:aliceblue;}
+        .ask_self      { display: inline; color:blue;}
         .ask_other     { display: inline; color:cadetblue;}
-        .say_self      { display: inline; color:aliceblue;}
+        .say_self      { display: inline; color:blue;}
         .say_other     { display: inline; color:cadetblue;}
-        .shout_self      { display: inline; color:aliceblue;}
+        .shout_self      { display: inline; color:blue;}
         .shout_other     { display: inline; color:cadetblue;}
-        .whisper       { display: inline; color:aliceblue;}
-        .tell_self     { display: inline; color:aliceblue;}
-        .tell_other    { display: inline; color:cadetblue;}
+        .whisper       { display: inline; color:blue;}
+        .tell_self     { display: inline; color:blue;}
+        .tell_other    { display: inline; color:blue;}
 
         .death       { display: inline; color:tomato;}
         .prompt      { display: inline; color:darkred;}
         .npc_title   { display: inline; color:brown; }
         .npc_descr   { display: inline; color:brown; }
-        .obj_descr   { display: inline; color:blue; }
-        .obj_title   { display: inline; color:blue; }
+        .obj_descr   { display: inline; color:green; }
+        .obj_title   { display: inline; color:green; }
         .spells      { display: inline; color:darkorchid; }
         .immort_title    { display: inline; color:brown; }
-        .pc_title    { display: inline; color:darkolivegreen; }
-        .pc_descr    { display: inline; color:darkolivegreen; }
+        .pc_title    { display: inline; color:brown; }
+        .pc_descr    { display: inline; color:brown; }
 
         .room_title  { display: inline; }
         .room_descr  { display: inline; font-style: italic; width: 600px; }
         .score       { display: inline; color:black; }
-        .social_self { display: inline; color:black; }
+        .social_self { display: inline; color:back; }
         .social_other { display: inline; color:black; }
         .score       { display: inline; color:black; }
         .spell       { display: inline; color:brown; }
