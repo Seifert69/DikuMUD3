@@ -1,0 +1,374 @@
+        /* ============ STRUCTURE ============== */
+        .c_container {
+            width: 100vw;
+            display: inline-flex;
+            flex-wrap: wrap;
+            overflow-y: hidden;
+            overflow-x: hidden;
+        }
+        
+        .flex-direction {
+            flex-direction: row;
+        }
+        
+        .c_left {
+            width: 70%;
+            height: 100vh;
+            background-color: #727272;
+        }
+        
+        .c_center {
+            width: 25%;
+            height: 100vh;
+            background-color: #bbb;
+        }
+        
+        .c_right {
+            width: 5%;
+            height: 100vh;
+            background-color: #666;
+        }
+        
+        /* ============ LEFT AREA ============== */
+        
+        #al_text {
+            width: 100%;
+            height: 100%; /* fill up the screen when empty */
+            max-height: calc(100% - 40px);
+            background-color: silver;
+            color: black;
+            overflow-y: auto;
+        }
+        
+        #al_cmd {
+            width: 100%;
+            background-color: darkslategray;
+            height: 40px;
+        }
+        
+        /* ============ CENTER AREA ============== */
+        
+        #ac_map {
+            width:100%;
+            height: 25%;
+            background-color: #111111;
+            color: white;
+            background-image: url('img/logo.gif');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;            
+        }
+        #ac_paged {
+            width:100%;
+            height: 54%;
+            background-color: #333333;
+            color: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        #ac_progress {
+            width:100%;
+            height: 11%;
+            background-color: black;
+            color: white;
+        }
+        #ac_exits {
+            width:100%;
+            height: 10%;
+            background-color: darkolivegreen;
+            color: white;
+        }
+        #hp-progress {
+            width: 97%;
+            background-color: #333333;
+            border: 1px solid dimgray;
+            padding: 1%;
+        }
+        #mp-progress {
+            width: 97%;
+            background-color: #333333;
+            border: 1px solid dimgray;
+            padding: 1%;
+        }
+        #ep-progress {
+            width: 97%;
+            background-color: #333333;
+            border: 1px solid dimgray;
+            padding: 1%;
+        }
+        #hp-bar {
+            width: 10%;
+            height: 15px;
+            background-color: red;
+        }
+        #mp-bar {
+            width: 10%;
+            height: 15px;
+            background-color: blue;
+        }
+        #ep-bar {
+            width: 10%;
+            height: 15px;
+            background-color: green;
+        }
+        
+        /* ============ RIGHT AREA ============== */
+        
+        #ac_right {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background-color:darkslategray;
+            color:white;
+        }
+        
+        
+        /* ============ MEDIA ============== */
+        
+        @media screen and (max-width: 1200px) {
+        /*  .flex-direction {
+            flex-direction: column;
+          }*/
+        
+          .c_left {
+            width: 75%;
+            height: 100vh;
+            background-color: #bbb;
+            overflow: hidden;
+          }
+        
+          .c_center {
+            width: 25%;
+            height: 100vh;
+            background-color: #bbb;
+            overflow: hidden;
+          }
+        
+          .c_right {
+            display: none;
+          }
+        }
+        
+        @media screen and (max-width: 800px) {
+        /*  .flex-direction {
+            flex-direction: column;
+          }*/
+        
+          .c_left {
+            width: 100%;
+            height: 100vh;
+            background-color: #bbb;
+            overflow: hidden;
+          }
+        
+          .c_center {
+            display: none;
+          }
+        
+          .c_right {
+            display: none;
+          }
+        }
+        
+        /* ============ MAIN ============== */
+        html,body {
+            height: 100%; margin: 0px; padding: 0px;
+        }
+        a:link {
+            color:currentColor;
+        }
+        a:visited {
+            color:currentColor;
+        }
+        
+        /* ============ STYLES ============== */
+        h1              { font-size: medium; } /* Used for screen readers, room title */
+
+        #btnConnect    { width: 100px; }
+        #btnDisconnect { width: 100px; }
+        #btnSend       { width: 100px; }
+        .command       { display: inline; }
+        .echo          { display: inline; color:black; font-weight: bold; }
+
+        /* Combat */
+        .hit_me         { display: inline; color:darkred; font-weight: bold;}
+        .hit_opponent   { display: inline; color:orange; font-weight: bold;}
+        .hit_other      { display: inline; color:darkslategray;}
+
+        .nodam_me       { display: inline; color:darkslategray; }
+        .nodam_opponent { display: inline; color:darkslategray; }
+        .nodam_other    { display: inline; color:darkslategray; }
+
+        .miss_me        { display: inline; color:darkslategray; }
+        .miss_opponent  { display: inline; color:darkslategray; }
+        .miss_other     { display: inline; color:darkslategray; }            
+
+        .shield_me       { display: inline; color:darkslategray; }
+        .shield_opponent { display: inline; color:darkslategray; }
+        .shield_other    { display: inline; color:darkslategray; }
+
+
+        /* Communication */
+        .ask_self      { display: inline; color:blue;}
+        .ask_other     { display: inline; color:blue;}
+        .say_self      { display: inline; color:blue;}
+        .say_other     { display: inline; color:blue;}
+        .shout_self      { display: inline; color:blue;}
+        .shout_other     { display: inline; color:blue;}
+        .whisper       { display: inline; color:blue;}
+        .tell_self     { display: inline; color:blue;}
+        .tell_other    { display: inline; color:blue;}
+
+        .death       { display: inline; color:tomato;}
+        .prompt      { display: inline; color:darkred;}
+        .npc_title   { display: inline; color:blue; }
+        .npc_descr   { display: inline; color:blue; }
+        .obj_descr   { display: inline; color:black; }
+        .obj_title   { display: inline; color:black; }
+        .spells      { display: inline; color:darkorchid; }
+        .immort_title    { display: inline; color:brown; }
+        .pc_title    { display: inline; color:brown; }
+        .pc_descr    { display: inline; color:brown; }
+
+        .room_title  { display: inline; }
+        .room_descr  { display: inline; font-style: italic; width: 600px; }
+        .score       { display: inline; color:black; }
+        .social_self { display: inline; color:black; }
+        .social_other { display: inline; color:black; }
+        .score       { display: inline; color:black; }
+        .spell       { display: inline; color:brown; }
+        .worn        { display: inline; color:black; }
+        .who_name    { display: inline; color:darkblue; }
+        .who_title   { display: inline; color:blue; }
+        .who_inv     { display: inline; }
+
+        .xpgain         { display: inline; color:firebrick; font-weight: bold;}
+
+        .converse    { list-style: none; } 
+        .colh2       { border: 0px solid black; margin:0; } /* Table class */
+        .colh3       { border: 0px solid black; margin:0; } /* Table class */
+
+        /* Support for the old MUD colors */
+        .cr     { display: inline; color:darkred; }
+        .cpr    { display: inline; color:red; }
+        .br     { display: inline; background-color:darkred; }
+        .cn     { display: inline; color:black; }
+        .cpn    { display: inline; color:black; }
+        .bn     { display: inline; background-color:black; }
+        .cg     { display: inline; color:darkgreen; }
+        .cpg    { display: inline; color:green; }
+        .bg     { display: inline; background-color:darkgreen; }
+        .cy     { display: inline; color:darkgoldenrod; }
+        .cpy    { display: inline; color:yellow; }
+        .by     { display: inline; background-color:darkgoldenrod; }
+        .cb     { display: inline; color:darkblue; }
+        .cpb    { display: inline; color:blue; }
+        .bb     { display: inline; background-color:darkblue; }
+        .cm     { display: inline; color:darkorchid; }
+        .cpm    { display: inline; color:magenta; }
+        .bm     { display: inline; background-color:darkorchid; }
+        .cc     { display: inline; color:darkcyan; }
+        .cpc    { display: inline; color:cyan; }
+        .bc     { display: inline; background-color:darkcyan; }
+        .cb     { display: inline; color:darkblue; }
+        .cpb    { display: inline; color:blue; }
+        .bb     { display: inline; background-color:darkblue; }
+        .cw     { display: inline; color:#ccc; }
+        .cpw    { display: inline; color:white; }
+        .bw     { display: inline; background-color:#ccc; }
+        .ca     { display: inline; color:grey; }
+
+        .default,.DEFAULT { display: inline; color:#ccc; }
+
+
+        .fourcol
+        {
+            -webkit-column-count: 4;
+            -webkit-column-gap: 20px;
+            column-count:4;
+            column-gap:20px;
+        }
+        .threecol
+        {
+            -webkit-column-count: 3;
+            -webkit-column-gap: 20px;
+            column-count:3;
+            column-gap:20px;
+        }
+        .twocol  {
+            -webkit-column-count: 2;
+            -webkit-column-gap: 20px;
+            column-count:2;
+            column-gap:20px;
+        }
+        .row {
+            /* Clear floats after the columns */
+            clear: both;
+        }
+
+
+/* The Modal (background) */
+.modal 
+{
+    z-index: 1;
+    position: absolute;
+    display:none; /* Hidden by default */
+    top: 100px;
+    left: 100px;
+    background-color: #444444;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 90%;
+    max-height: 90%;
+    resize: both;
+    overflow-y: auto; /* Enable scroll if needed */
+    border: 2px solid rgb(177, 177, 177);
+
+}
+/*
+  position: fixed; // Stay in place
+  z-index: 1; // Sit on top
+  left: 0;
+  top: 0;
+  width: 100%; // Full width
+  height: 100%; / Full height
+  overflow-y: auto; // Enable scroll if needed 
+  background-color: rgb(0,0,0); // Fallback color
+  background-color: rgba(0,0,0,0.4); // Black w/ opacity
+*/
+
+.modal-header {
+  width: 100%;
+  height: 40px;
+  cursor: move;
+  z-index: 3;
+  background-color: darkslateblue;
+  color: #fff;
+}
+
+/* Modal Content/Box */
+.modal-content {
+    width: 100%;
+    height: calc(100% - 40px);
+    z-index: 2;
+    overflow-y: auto; /* Enable scroll if needed */
+    background-color: #222222;
+    color: white;
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+} 
+
+/* ============ END OF STYLES ============== */
