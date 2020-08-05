@@ -2992,8 +2992,8 @@ dilend
 dilbegin do_practice (arg:string);
 code
 {
-sendtext("You can only practice at a teacher.<br/>",self);
-quit;
+   sendtext("You can only practice at a teacher.<br/>",self);
+   quit;
 }
 dilend
 
@@ -3001,8 +3001,8 @@ dilend
 dilbegin do_info(arg:string);
 code
 {
-sendtext("You can't do that here (find a teacher, try 'status' or 'help info'<br/>",self);
-quit;
+   sendtext("You can't do that here (find a teacher, try '<a cmd='#'>status</a>' or '<a cmd='#'>help info</a>')<br/>",self);
+   quit;
 }
 dilend
 
