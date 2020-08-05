@@ -12,12 +12,6 @@
     <!-- ============ CONTENT ============== *-->
     <div class="c_container flex-direction"> <!-- Outer -->
 	    <div class="c_left">
-		    <div id="al_banner"> <table height=100% width=100%><tr><td width=75%>Assessible MUD Client</td><td width=25%><b>Theme: 
-							    <select id="theme" onchange="switchTheme()">
-								    <option value="defaultStyle.css">Default</option>
-								    <option value="Silver.css">Silver</option>
-							    </select></td><tr></table>
-		    </div>
 		<div id="al_text" role="log" aria-live="polite" ondblclick="onMainClick()">
                 <ul id="converse" style="list-style-type: none; display: inline;"></ul>
             </div>
@@ -40,13 +34,13 @@
             </div>
             <div id="ac_progress">
                 <div id="hp-progress">
-                <div id="hp-bar">HIT POINTS</div>
+                <div id="hp-bar">HP</div>
                 </div>
                 <div id="ep-progress">
-                    <div id="ep-bar">ENDURANCE</div>
+                    <div id="ep-bar">E</div>
                 </div>
                 <div id="mp-progress">
-                    <div id="mp-bar">MANA</div>
+                    <div id="mp-bar">M</div>
                 </div>
             </div>
 	    <div id="ac_exits">Obvious Exits:</br>
@@ -54,7 +48,8 @@
             </div>
         </div> <!-- ac_center -->
         <div class="c_right">
-            <div id="ac_right">
+		<div id="ac_right">
+			<a href="#" onclick="shSettings()">Settings</a><br/><br/>
                 <a href="#" onclick="cmd('inventory')">In</a><br/>
                 <a href="#" onclick="cmd('equipment')">Eq</a><br/>
                 <a href="#" onclick="cmd('help')">He</a><br/>

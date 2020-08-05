@@ -389,26 +389,17 @@ function pagedSet(item) {
     //modalShow();
 }
 
-function switchTheme()
-        {
-          var th = document.getElementById("theme");
-	  var newstylesheet = th.options[th.selectedIndex].value;	
-          var stylesheet = document.getElementById("stylesheet");
-             stylesheet.setAttribute('href', newstylesheet);
-		console.log(stylesheet); 
-            }
-
 // str is of the exit format "N E U NW "... 
 function setExits(str) {
     var fields, buff;
-    
+
     buff = "";
-    str.toUpperCase();
     fields = str.split(/ /);
 
     var i;
     for (i = 0; i < fields.length; i++)
         buff = buff + " <a href='#' cmd='#' onclick='cmd(\x22" + fields[i] + "\x22)'>" + fields[i] + "</a>";
+
     document.getElementById("ace_text").innerHTML = buff;
 }
 
@@ -683,7 +674,7 @@ function openWSConnection(protocol, hostname, port, endpoint) {
             //document.getElementById("message").select();
 
             // document.getElementById("incomingMsgOutput").innerHTML = "";
-            outputText("<br/>Connected to <i><b>Undecided</b> MUD</i><br/>", false);
+            outputText("<br/>Connected to <i><b>Valhalla</b> MUD</i><br/>", false);
             webSocket.send("");
 
             InputFocus(null);
@@ -760,6 +751,32 @@ function onSendClick() {
     sendCommand(myfld.value, true, myfld.getAttribute('type') != "password", myfld.getAttribute('type') != "password");
 }
 
+function shSettings() {
+
+
+var str;
+
+str = "<H1>Select Theme:</h1><select id=theme onchange=switchTheme()><option value=defaultStyle.css>Default Theme</option><option value=Silver.css>Silver Theme</option></select><BR><BR>";
+
+var item = document.createElement("div");
+    item.setAttribute("style", "display: inline");
+    item.innerHTML = str;
+
+    document.getElementById("modtext").firstChild.replaceWith(item);
+
+    document.getElementById("myModal").style.display = "block";
+
+
+
+}
+
+function switchTheme()
+        {
+          var th = document.getElementById("theme");
+          var newstylesheet = th.options[th.selectedIndex].value;
+          var stylesheet = document.getElementById("stylesheet");
+             stylesheet.setAttribute('href', newstylesheet);
+            }
 
 function onMapClick()
 {
