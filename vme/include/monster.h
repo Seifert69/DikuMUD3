@@ -2048,7 +2048,7 @@ exp 125
    level MLVL \
    sex GENDER \
    NATURAL_DEF(WPN_CRUSH,ARM) \
-   alignment -350 \
+   alignment -250 \
    SETWEIGHT(MLVL,15,105) \
    SETHEIGHT(MLVL,45,360) \
    MSET_ABILITY(15,20,15,20,10,10,10,0) \
