@@ -751,6 +751,41 @@ function onSendClick() {
     sendCommand(myfld.value, true, myfld.getAttribute('type') != "password", myfld.getAttribute('type') != "password");
 }
 
+function shSettings() {
+
+
+var str;
+
+str = "<H1>Select Theme:</h1><select id=theme onchange=switchTheme()><option value=defaultStyle.css>Default Theme</option><option value=Silver.css>Silver Theme</option></select><BR><BR>";
+
+var item = document.createElement("div");
+    item.setAttribute("style", "display: inline");
+    item.innerHTML = str;
+
+    document.getElementById("modtext").firstChild.replaceWith(item);
+
+    document.getElementById("myModal").style.display = "block";
+
+
+
+}
+
+function toggleSettings() {
+  var d = document.getElementById("banner");
+  if (d.style.display == "none") {
+    d.style.display = "block";
+  } else {
+    d.style.display = "none";
+  }
+}
+
+function switchTheme()
+        {
+          var th = document.getElementById("theme");
+          var newstylesheet = th.options[th.selectedIndex].value;
+          var stylesheet = document.getElementById("stylesheet");
+             stylesheet.setAttribute('href', newstylesheet);
+            }
 
 function onMapClick()
 {
