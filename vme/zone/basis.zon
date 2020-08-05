@@ -239,6 +239,17 @@ code
 
    if (self.level<200)
    {   
+      if (self.level < 10)
+      {
+         dilcopy("remote_train@basis",self);
+         dilcopy("train_nag@basis",self);
+      }
+      else
+      {
+         i := dildestroy("remote_train@update", self);
+         i := dildestroy("train_nag@update", self);
+      }
+
       if (self.level < 3)
       {
          //log("on_connect() odin's hand for "+self.name);
@@ -6364,6 +6375,123 @@ code
 
    :done:
    return;
+}
+dilend
+
+
+dilbegin aware unique train_nag();
+var
+   i : integer;
+   j : integer;
+code
+{
+   heartbeat := PULSE_SEC *60;
+   i := 0;
+
+   :loop:
+   wait(SFB_TICK|SFB_CMD, TRUE);
+   i := i + 1;
+
+   if (command(CMD_AUTO_TICK))
+   {
+      if (i % 5 == 0)
+      {
+         if (self.level == 0)
+            j := 10;
+         else
+            j := 20;
+ 
+         if (self.ability_points >= j)
+         {
+            sendtext("You should practice your abilities: <a cmd='#'>info ability</a> and practice ability &lt;name&gt;<br/>", self);
+            goto loop;
+         }
+
+         if (self.skill_points >= j)
+         {
+            sendtext("You should practice your weapon, spells and skills: <a cmd='#'>info weapon</a> and practice ability &lt;name&gt;<br/>", self);
+            goto loop;
+         }
+      }
+      goto loop;
+   }
+
+   if (command("status"))
+   {
+      if (self.level == 0)
+         j := 10;
+      else
+         j := 20;
+ 
+      sendtext("Info you skills: <a cmd='info ability'>abilities</a>, <a cmd='info skill'>skills</a>, "+
+               "<a cmd='info weapon'>weapons</a>, <a cmd='info spell'>spells</a>.<br/>", self);
+      sendtext("<b>You have unspent points, <a cmd='#'>practice</a> now.</b><br/>", self);
+   }
+   goto loop;
+}
+dilend
+
+dilbegin aware unique remote_train();
+var
+   arg : string;
+   s : string;
+   t : string;
+   u : unitptr;
+   room : unitptr;
+
+code
+{
+   :loop:
+   wait(SFB_CMD, command("info") or command("practice"));
+
+   if ((self.position == POSITION_FIGHTING) or (self.position < POSITION_SLEEPING))
+      goto loop;
+
+   arg := argument;
+   s := getword(arg);
+   if (s == "ability")
+   {
+      t := "base_abils@udgaard";
+   }
+   else if (s == "skill")
+   {
+      t := "base_skills@udgaard";
+   }
+   else if (s == "spell")
+   {
+      t := "base_spells@udgaard";
+   }
+   else if (s == "weapon")
+   {
+      t := "base_weapons@udgaard";
+   }
+   else
+   {
+      sendtext("To train remotely when you're not in front of a teacher type either<br/>"+
+               "ability, skill, spell or weapon after the command. For example, first<br/>"+
+               "figure out which ability you want to improve by writing <a cmd='#'>info ability</a><br/>"+
+               "and then train it using <b>practice ability &lt;name&gt;</b><br/>", self);
+      goto loop;
+   }
+
+   block;
+
+   u := findsymbolic(t);
+   if (not u)
+   {
+      sendtext("The " + s + " teacher is unavailable right now.<br/>", self);
+      goto loop;
+   }
+
+   room := self.outside;
+   link(self, u.outside);
+   if (command("info"))
+      exec("info " + arg, self);
+   else
+      exec("practice " + arg, self);
+
+   link(self, room);
+   goto loop;
 }
 dilend
 
