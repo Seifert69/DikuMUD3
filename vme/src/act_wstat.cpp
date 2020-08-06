@@ -158,7 +158,7 @@ static void stat_world(class unit_data *ch)
                  "Boottime: %s<br/>Time now: %s<br/>"
                  "DIL programs [%d]   DIL Vals [%d]<br>",
             compile_date, compile_time,
-            tics, tics / (PULSE_SEC * 3600), g_nTickUsec < 1 ? "" : "time-warped",
+            tics, tics / (PULSE_SEC * 3600), g_nTickUsec < 1 ? "time-warped" : "",
             world_norooms, world_noobjects, world_nochars,
             world_nonpc, world_nopc,
             world_norooms + world_noobjects + world_nochars,
