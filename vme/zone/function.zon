@@ -499,18 +499,19 @@ code
          goto start;
       }
 
-      if(victim.type & UNIT_ST_NPC)
+      if((victim.type == UNIT_ST_NPC) and (activator.level < IMMORTAL_LEVEL))
       {
          exec("say Sorry "+activator.name+" you should fight your own battles.", self);
          goto start;
       }
 
-      if(victim.level >= IMMORTAL_LEVEL)
+      if ((victim.level >= IMMORTAL_LEVEL) and (victim.type == UNIT_ST_PC))
       {
          exec("say Not even I am crazy enough to try that!", self);
          goto start;
       }
-      if(victim.level <= 20)
+
+      if ((victim.level <= 20) and (victim.type == UNIT_ST_PC))
       {
          exec("say Killing of newbies is not permitted!", self);
          goto start;
@@ -523,7 +524,6 @@ code
       }
 
       if( (isset(victim.pcflags,PC_SPIRIT)) or
-         (victim.outside.type != UNIT_ST_ROOM) or
          (victim.outside.nameidx == "nightmare") )
       {
          exec("say I can't do that right now.", self);
@@ -582,124 +582,118 @@ dilend
 
 dilbegin merc_hunt(victstr : string);
 external
-string dirstring(dr:integer);
-unitptr unit_room(u : unitptr);
+   string dirstring(dr:integer);
+   unitptr unit_room(u : unitptr);
+   integer walk_room(place:string, spd:integer);
+
 var
-dir: integer;
-rm: unitptr;
-s: string;
-vict: unitptr;
-tmp: string;
-heart:integer;
+   dir: integer;
+   rm: unitptr;
+   s: string;
+   vict: unitptr;
+   tmp: string;
+   i : integer;
+   retry : integer;
 code
 {
-heartbeat:= PULSE_SEC * 3;
+   heartbeat:= PULSE_SEC * 4;
 
+   /* Why not try ? :P */
+   if(not (isaff(self,ID_SNEAK)))
+      exec("sneak", self);
+   pause;
 
-/* Why not try ? :P */
-if(not (isaff(self,ID_SNEAK)))
-exec("sneak", self);
+   if(not (isaff(self,ID_HIDE)))
+      exec("hide", self);
+   pause;
 
-if(not (isaff(self,ID_HIDE)))
-exec("hide", self);
+   retry := 0;
 
-:locate:
-tmp:= victstr; /* save it */
-vict:= findunit(self,tmp,FIND_UNIT_GLOBAL,null);
- if (dilfind("death_seq@death",vict ))
- goto dead;
-interrupt(SFB_DEAD, ((activator == self.fighting)
-and (victstr == self.fighting.name)), dead);
+   :locate:
+   tmp:= victstr; /* save it */
+   vict:= findunit(self, tmp, FIND_UNIT_GLOBAL, null);
 
-if(vict != null)
-{
-rm:= unit_room(vict);
-       secure (rm,losttgt);
-	   heart:=heartbeat;
-:repeater:
-heartbeat:=4 * PULSE_SEC;
-   dir := pathto (self,rm);
-if (dir==DIR_TRYAGAIN)
-{
-pause;
-   goto repeater;
-   }
-   heartbeat:=heart;
-   unsecure(rm);
-
-
-
-
- if((dir == DIR_IMPOSSIBLE) or
-   (dir == DIR_ENTER) or
-   (dir == DIR_EXIT))
+   if (vict == null)
    {
-         :losttgt:
-		 heartbeat:=heart;
-		 goto link_me;
-		 }
-
- else if(dir == DIR_HERE) goto found;
- else
- {
- s := dirstring(dir);
- exec(s, self);
-        secure (rm,losttgt2);
-	   heart:=heartbeat;
-:repeater2:
-heartbeat:=3 * PULSE_SEC;
-   dir := pathto (self,rm);
-if (dir==DIR_TRYAGAIN)
-{
-pause;
-   goto repeater2;
+      exec("growl", self);
+      goto return_home;
    }
-   heartbeat:=heart;
-   unsecure(rm);
+
+   rm := unit_room(vict);
+   if (rm == null)
+   {
+      log("merc_hunt() lost room?");
+      goto return_home;
+   }
+
+   i := walk_room(rm.nameidx+"@"+rm.zoneidx, 4);
+
+   if (not i)
+   {
+      retry := retry + 1;
+      if (retry > 5)
+      {
+         log("merc_hunt() giving up on walk_room()");
+         exec("cry", self);  // We could use teleport instead?
+         pause;
+         goto link_me;
+      }
+      log("merc_hunt() unable to walk_room()");
+      goto locate;
+   }
+
+   retry := 0;
+
+   //
+   // Now we are at the destination room, look for victim
+   //
+
+   tmp:= victstr; /* save it */
+   vict:= findunit(self, tmp, FIND_UNIT_GLOBAL, null);
+
+   if (vict == null)
+   {
+      exec("growl", self);
+      goto return_home;
+   }
+
+   if (unit_room(self) != unit_room(vict))
+      goto locate; // Blast it, victim moved
+
+   //
+   // Victim is actually here, yay
+   //
+   if (dilfind("death_seq@death",vict))
+      goto dead;
+
+   interrupt(SFB_DEAD, ((activator == self.fighting) and (victstr == self.fighting.name)), dead);
+   set_fighting(self,vict);
+   pause;
+   exec("grin "+victstr, self);
+   while (self.fighting)
+      pause;
+   goto locate; // Keep hunting until dead
 
 
+   :link_me:
+   log("link_me");
+   rm:= unit_room(vict);
+   link(self,rm);
+   act("$1n appears from within a blue cloud.",   A_SOMEONE, self, null, null, TO_ROOM);
 
 
+   :dead:
+   log("mercenary took care of "+victstr);
+   pause;
+   exec("get all from corpse",self);
+   pause;
+   exec("cackle", self);
+   pause;
 
- if (dir== DIR_HERE)
-goto found;
- pause;
- }
-goto locate;
-}
-else
-{
-:losttgt2:
-heartbeat:=heart;
-  goto return_home;
- }
-
-:link_me:
-rm:= unit_room(vict);
-link(self,rm);
-act("$1n appears from within a blue cloud.",
-A_SOMEONE, self, null, null, TO_ROOM);
-
-:found:
-if (self.fighting == null)
-{
-set_fighting(self,vict);
-exec("grin", self);
-}
-goto locate; /* Keep hunting until they turn up dead! */
-
-:dead:
- pause;
- exec("get all from corpse",self);
- exec("cackle", self);
-
-:return_home:
-act("$1n disappears into a blue cloud.",
-A_SOMEONE, self, null, null, TO_ROOM);
-link(self,findroom(self.extra.["$return_room"].descr));
-
-quit;
-
+   :return_home:
+   act("$1n disappears into a blue cloud.", A_SOMEONE, self, null, null, TO_ROOM);
+   link(self,findroom(self.extra.["$return_room"].descr));
+   quit;
 }
 dilend
 
@@ -1648,6 +1642,190 @@ dilend
 
 
 
+/* The MOB will try to get out of what it is inside and into the nearest room
+ * Presumes the MOB is awake and standing
+ * Return TRUE if success, FALSE if unable to get out
+ */
+dilbegin integer getout();
+var
+   u : unitptr;
+code
+{
+   heartbeat := 4 * PULSE_SEC;   
+
+   if (self.outside.outside == null)
+      return(TRUE);
+
+   if (self.outside.type == UNIT_ST_PC)
+      return(FALSE);
+
+   if (self.outside.type == UNIT_ST_NPC)
+   {
+      u := self.outside;
+      exec("dismount", self);
+
+      if (self.outside.type == UNIT_ST_NPC)
+      {
+         log(self.name + " is unable to dismount "+self.outside.name);
+         return(FALSE);
+      }
+
+      pause;
+      return(TRUE);
+   }
+
+   // We're in a room or an object
+   if (isset(self.outside.flags, UNIT_FL_BURIED))
+   {
+      exec("knock " + self.outside.names.[0], self);
+      log(self.name + " is buried alive in "+self.outside.name);
+      pause;
+      return(FALSE);
+   }
+
+   if (isset(self.outside.openflags, EX_LOCKED))
+   {
+      exec("unlock " + self.outside.names.[0], self);
+      pause;
+
+      if (isset(self.outside.openflags, EX_LOCKED))
+      {
+         exec("knock " + self.outside.names.[0], self);
+         log(self.name + " is locked helplessly into "+self.outside.name);
+         pause;
+         return(FALSE);
+      }
+   }
+
+   if (isset(self.outside.openflags, EX_CLOSED))
+   {
+      exec("open " + self.outside.names.[0], self);
+      pause;
+      if (isset(self.outside.openflags, EX_CLOSED))
+      {
+         exec("knock " + self.outside.names.[0], self);
+         log(self.name + " is helplessly unable to open "+self.outside.name);
+         pause;
+         return(FALSE);
+      }
+      return(TRUE);
+   }
+
+   u := self.outside;
+   exec("exit", self);
+   if (self.outside == u)
+   {
+      log(self.name + " is unable to exit "+self.outside.name);
+      return(FALSE);
+   }
+
+   if ((u.nameidx == "coffin1") and (u.zoneidx == "midgaard") and (not u.inside))
+   {
+      exec("emote pushes the coffin into the water and lets it sink.", self);
+      destroy(u);
+   }
+
+   pause;
+   return(TRUE);
+}
+dilend
+
+
+
+/* Get a MOB ready to walk. Wake it up, make it stand.
+ * If it can use a boat let it stay in the boat
+ * If it can drive in a vehicle, or a mount, let it stay
+ * 
+ * -1 - MOB can't get ready, it's impossible
+ *  0 - try calling this func again, MOB is not yet ready
+ *  1 - ready to walk
+ *  2 - ready to ride
+ *  3 - ready to drive
+ *  4 - ready to sail
+ */
+dilbegin integer readywalk(roomfrom : unitptr, roomto : unitptr);
+external
+   integer getout();
+var
+   u : unitptr;
+   i : integer;
+code
+{
+   heartbeat := PULSE_SEC * 4;
+
+   if (self.position == POSITION_SLEEPING)
+   {
+      exec("wake", self);
+      pause;
+      return(0);
+   } 
+   else if ((self.position == POSITION_RESTING) or (self.position == POSITION_SITTING))
+   {
+      exec("stand", self);
+      pause;
+      return(0);
+   }
+   else if (self.position != POSITION_STANDING)
+   {
+      return(0);
+   }
+
+   if (self.outside.type == UNIT_ST_OBJ)
+   {
+      if (self.outside.objecttype == ITEM_BOAT)
+      {
+         // If we can sail, return 4
+         if ((roomfrom.movement == SECT_WATER_SAIL) or (roomto.movement == SECT_WATER_SAIL) or
+             (roomfrom.movement == SECT_WATER_SWIM) or (roomto.movement == SECT_WATER_SWIM))
+               return(4);
+
+         i := getout();
+         if (i == 0)
+            return(-1);
+
+         return(0); // Try again 
+      }
+   }
+
+   // We are in a room, check if we need a canoe
+   if ((roomfrom.movement == SECT_WATER_SAIL) or (roomto.movement == SECT_WATER_SAIL))
+   {
+      if (self.outside.type == UNIT_ST_ROOM)
+      {
+         // Load and enter a canoe 
+         u := load("coffin1@midgaard");
+         link(u, self.outside);
+         exec("enter coffin", self);
+         return(0); // Call again
+      }
+
+      i := getout();
+      if (not i)
+         return(-1);
+      return(0); // Call again
+   }
+
+   if (self.outside.objecttype == ITEM_VEHICLE)
+   {
+      return(3); // Drive has no command
+   }
+
+   if (self.outside.type == UNIT_ST_NPC)  // On a mount
+   {
+      return(2); // Ride has no command
+   }
+
+   if (self.outside.type != UNIT_ST_ROOM)
+   {
+      i := getout();
+      if (not i)
+         return(-1);
+   }
+   return(1);
+}
+dilend
+
+
 /*
  * function: walk_room
  * purpose:  allow a mob to walk to a room even if he/she has to unlock open and close doors.
@@ -1658,6 +1836,7 @@ dilbegin integer walk_room(place:string, spd:integer);
 external
    integer oc_move(dir:integer,unlock_true:integer);
    string dirstring(i:integer);
+   integer readywalk(roomfrom : unitptr, roomto : unitptr);
 
 var
    mv:integer;
@@ -1668,7 +1847,9 @@ var
    u : unitptr;
    inroom : unitptr;
    toroom : unitptr;
+   nextroom : unitptr;
    nreps : integer;
+   i : integer;
 
 code
 {
@@ -1682,7 +1863,7 @@ code
    }
 
    :init:
-   on_activation(self.position <= POSITION_SLEEPING, skip);
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
 
    if (spd < 5)
    {
@@ -1699,10 +1880,6 @@ code
    heartbeat := heart;
    pause;
 
-   /* if we're not standing now then abort! */
-   if (self.position != POSITION_STANDING)
-     return (FALSE);
-
    inroom := self.outside;
    while (inroom.type != UNIT_ST_ROOM)
       inroom := inroom.outside;
@@ -1711,17 +1888,10 @@ code
    if (inroom == toroom)
       return(TRUE);
 
-   /* Lets stand up if for some reason we are sitting */
-   if ((self.position == POSITION_RESTING) or (self.position == POSITION_SITTING))
+   if (nreps >= 20)
    {
-      nreps := nreps + 1;
-      exec("stand", self);
-      if (nreps >= 20)
-      {
-         log(self.nameidx+"@"+self.zoneidx+" unable to stand in "+inroom.nameidx+"@"+inroom.zoneidx);
-         return(FALSE);
-      }
-      goto start;
+      log(self.nameidx+"@"+self.zoneidx+" in walk_room loop in "+inroom.nameidx+"@"+inroom.zoneidx);
+      return(FALSE);
    }
 
    :repeater:
@@ -1731,6 +1901,52 @@ code
 
    if (dir >= DIR_IMPOSSIBLE)
       return(FALSE);
+
+   if ((dir >= 0) and (dir <= MAX_EXIT))
+   {
+      nextroom := inroom.exit_to[dir];
+   }
+   else if (dir == DIR_ENTER)
+   {
+      nextroom := inroom.inside;
+      while (nextroom)
+      {
+         if (nextroom.type == UNIT_ST_ROOM)
+         {
+            i := pathto(nextroom, toroom);
+            if ((i != DIR_EXIT) and (i != DIR_IMPOSSIBLE))
+               break;
+         }
+         nextroom := nextroom.next;
+      }
+   }
+   else if (dir == DIR_EXIT)
+   {
+      nextroom := inroom.outside;
+   }
+   else
+      nextroom := null;
+
+   if (not(nextroom))
+   {
+      log("walk_room() DIL: it seems oddly impossible to complete this path"); 
+      return(FALSE);
+   }
+
+   i := readywalk(inroom, nextroom);
+
+   if (i == -1)
+   {
+      log("readywalk() giving up");
+      return(FALSE);
+   }
+   else if (i == 0)
+   {
+      nreps := nreps + 1;
+      goto start;
+   }
+
+   // Now we're in a ready position to walk, sail, drive, ride
 
    if (isset(inroom.exit_info[dir], EX_LOCKED) or isset(inroom.exit_info[dir], EX_CLOSED))
    {
@@ -1775,7 +1991,7 @@ code
             if (self.outside == u)
                return(FALSE); // Give up
 
-            if ((u.nameidx == "coffin1") and (u.zoneidx == "midgaard"))
+            if ((u.nameidx == "coffin1") and (u.zoneidx == "midgaard") and (not u.inside))
             {
                exec("emote pushes the coffin into the water and lets it sink.", self);
                destroy(u);
@@ -1806,10 +2022,7 @@ code
             u := u.next;
          }
 
-         if (u)
-            exec("enter " + u.name.[0],self);
-         else
-            log(inroom.nameidx+"@"+inroom.zoneidx+" unable to find unit to enter.");
+         exec("enter " + nextroom.names.[0],self);
       }
       else
          exec(dir_string, self);
