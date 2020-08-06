@@ -58,14 +58,22 @@ And you'll see the welcome screen in Firefox
 
 I would appreciate help with:
 
-   * Mapping: Anyone interested in helping out mapping coordinates or generating maps. 
+   * DOT files & Mapping:
+   
+     In the zone directory after compiling the zones, there's a valid DOT file for each zone. 
+     The DOT file is the graph description language that describes how the rooms are connected
+     in the zone. And also how the zone connects to other zones. 
+     There is an example online tool here https://dreampuf.github.io/GraphvizOnline which
+     can visualize a zone (just paste each .dot file into the digraph {}.
+     Would be fantastic if this could be used to maintain maps of the world, and even more so
+     if these maps could be associated with coordinates so they can be visualized in the client.
+     It's rather cumbersome to do them by hand - I've done three so far. 
+     https://en.wikipedia.org/wiki/DOT_(graph_description_language)
+
+     If Anyone interested in helping out mapping coordinates or generating maps let me know.
      I've been using cMUD to do some test mapping. I think I have two young helpers that can assist 
      me with the actual mapping and turning a boring map into a hand-drawn piece of art :)
      
-     However, I also noticed for example this project. Maybe that'd better than cMUD for mapping?
-     
-     https://github.com/demonnic/mudlet-map-reader
-
    * Anyone wanting to improve the client. Ability to choose multiple CSS files for color.
      That annoying Firefox security bar popping up over the text input could probably be 
      circumvented by asking for the password in a pop-over rather than changing the input field type.
