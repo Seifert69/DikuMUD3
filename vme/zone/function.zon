@@ -594,6 +594,7 @@ var
    tmp: string;
    i : integer;
    retry : integer;
+   victidx : string;
 code
 {
    heartbeat:= PULSE_SEC * 4;
@@ -609,23 +610,27 @@ code
 
    retry := 0;
 
-   :locate:
    tmp:= victstr; /* save it */
    vict:= findunit(self, tmp, FIND_UNIT_GLOBAL, null);
+   victidx := vict.nameidx+"@"+vict.zoneidx;
 
+   :locate:
+   vict:= findsymbolic(self, victidx, FIND_UNIT_GLOBAL);
    if (vict == null)
    {
       exec("growl", self);
+      log("merc_hunt() lost victim " + victidx);
       goto return_home;
    }
 
    rm := unit_room(vict);
    if (rm == null)
    {
-      log("merc_hunt() lost room?");
+      log("merc_hunt() lost room");
       goto return_home;
    }
 
+   log("merc_hunt() moving to "+rm.nameidx+"@"+rm.zoneidx);
    i := walk_room(rm.nameidx+"@"+rm.zoneidx, 4);
 
    if (not i)
@@ -648,17 +653,14 @@ code
    // Now we are at the destination room, look for victim
    //
 
-   tmp:= victstr; /* save it */
-   vict:= findunit(self, tmp, FIND_UNIT_GLOBAL, null);
+   vict:= findsymbolic(self, victidx, FIND_UNIT_SURRO);
 
    if (vict == null)
    {
+      log("merc_hunt() victim no longer here");
       exec("growl", self);
-      goto return_home;
+      goto locate;
    }
-
-   if (unit_room(self) != unit_room(vict))
-      goto locate; // Blast it, victim moved
 
    //
    // Victim is actually here, yay
@@ -666,12 +668,15 @@ code
    if (dilfind("death_seq@death",vict))
       goto dead;
 
+   log("merc_hunt() engage in battle");
    interrupt(SFB_DEAD, ((activator == self.fighting) and (victstr == self.fighting.name)), dead);
    set_fighting(self,vict);
    pause;
    exec("grin "+victstr, self);
    while (self.fighting)
       pause;
+   log("merc_hunt() no longer fighter and victim didn't die");
+   pause;
    goto locate; // Keep hunting until dead
 
 
