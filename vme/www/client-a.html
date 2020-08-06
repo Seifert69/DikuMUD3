@@ -6,19 +6,13 @@
     <meta http-equiv="Content-Security-Policy"  content="connect-src * 'unsafe-inline';">
     <meta name="viewport" content="width=device-width, initial-scale=2">
     <script src="wsclient.js"></script>
-    <link rel="stylesheet"  id="stylesheet" type="text/css" href="defaultStyle.css">
+    <link rel="stylesheet"  id="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
     <!-- ============ CONTENT ============== *-->
     <div class="c_container flex-direction"> <!-- Outer -->
-     <div class="c_left">
-	    <div  id="banner"> <table height=100% width=100%><tr><td width=75%> MUD Client Settings</td><td width=25%><b>Theme:
-                                                            <select id="theme" onchange="switchTheme()">
-                                                                    <option value="defaultStyle.css">Default</option>
-                                                                    <option value="Silver.css">Silver</option>
-                                                            </select></td><tr></table>
-                    </div>
-		    <div id="al_text" role="log" aria-live="polite" ondblclick="onMainClick()">
+	    <div class="c_left">
+		<div id="al_text" role="log" aria-live="polite" ondblclick="onMainClick()">
                 <ul id="converse" style="list-style-type: none; display: inline;"></ul>
             </div>
             <div id="al_cmd">
@@ -55,7 +49,7 @@
         </div> <!-- ac_center -->
         <div class="c_right">
 		<div id="ac_right">
-		<a href="#" onclick="toggleSettings()">Settings<a><br/><br/>
+			<a href="#" onclick="shSettings()">Settings</a><br/><br/>
                 <a href="#" onclick="cmd('inventory')">In</a><br/>
                 <a href="#" onclick="cmd('equipment')">Eq</a><br/>
                 <a href="#" onclick="cmd('help')">He</a><br/>

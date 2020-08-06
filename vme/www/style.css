@@ -10,7 +10,7 @@
         .flex-direction {
             flex-direction: row;
         }
-       
+        
         .c_left {
             width: 70%;
             height: 100vh;
@@ -30,17 +30,11 @@
         }
         
         /* ============ LEFT AREA ============== */
-        #banner {
-	       width: 100%;
-               height: 20px;
-               background-color: white;
-	       color: black;
-	       display: none;
-       }
+        
         #al_text {
             width: 100%;
             height: 100%; /* fill up the screen when empty */
-            max-height: calc(100% - 60px);
+            max-height: calc(100% - 40px);
             background-color: black;
             color:white;
             overflow-y: auto;
@@ -55,14 +49,14 @@
         /* ============ CENTER AREA ============== */
         
         #ac_map {
-            width: 100%;
+            width:100%;
             height: 25%;
-             background-color: #111111; 
+            background-color: #111111;
             color: white;
-            /* background-image: url("img/logo.gif"); */ 
+            background-image: url('img/logo.gif');
             background-repeat: no-repeat;
             background-attachment: fixed;
-	    background-size: 100px 100px;           
+            background-size: cover;            
         }
         #ac_paged {
             width:100%;

@@ -10,7 +10,7 @@
         .flex-direction {
             flex-direction: row;
         }
-       
+        
         .c_left {
             width: 70%;
             height: 100vh;
@@ -30,17 +30,11 @@
         }
         
         /* ============ LEFT AREA ============== */
-        #banner {
-	       width: 100%;
-               height: 20px;
-               background-color: white;
-	       color: black;
-	       display: none;
-       }
+        
         #al_text {
             width: 100%;
             height: 100%; /* fill up the screen when empty */
-            max-height: calc(100% - 60px);
+            max-height: calc(100% - 40px);
             background-color: silver;
             color: black;
             overflow-y: auto;
@@ -55,14 +49,14 @@
         /* ============ CENTER AREA ============== */
         
         #ac_map {
-            width: 100%;
+            width:100%;
             height: 25%;
-             background-color: #111111; 
+            background-color: #111111;
             color: white;
-            /* background-image: url("img/logo.gif"); */ 
+            background-image: url('img/logo.gif');
             background-repeat: no-repeat;
             background-attachment: fixed;
-	    background-size: 100px 100px;           
+            background-size: cover;            
         }
         #ac_paged {
             width:100%;
@@ -195,11 +189,11 @@
         #btnDisconnect { width: 100px; }
         #btnSend       { width: 100px; }
         .command       { display: inline; }
-        .echo          { display: inline; color:gold; font-weight: bold; }
+        .echo          { display: inline; color:black; font-weight: bold; }
 
         /* Combat */
         .hit_me         { display: inline; color:darkred; font-weight: bold;}
-        .hit_opponent   { display: inline; color:black; font-weight: bold;}
+        .hit_opponent   { display: inline; color:orange; font-weight: bold;}
         .hit_other      { display: inline; color:darkslategray;}
 
         .nodam_me       { display: inline; color:darkslategray; }
@@ -217,21 +211,21 @@
 
         /* Communication */
         .ask_self      { display: inline; color:blue;}
-        .ask_other     { display: inline; color:cadetblue;}
+        .ask_other     { display: inline; color:blue;}
         .say_self      { display: inline; color:blue;}
-        .say_other     { display: inline; color:cadetblue;}
+        .say_other     { display: inline; color:blue;}
         .shout_self      { display: inline; color:blue;}
-        .shout_other     { display: inline; color:cadetblue;}
+        .shout_other     { display: inline; color:blue;}
         .whisper       { display: inline; color:blue;}
         .tell_self     { display: inline; color:blue;}
         .tell_other    { display: inline; color:blue;}
 
         .death       { display: inline; color:tomato;}
         .prompt      { display: inline; color:darkred;}
-        .npc_title   { display: inline; color:brown; }
-        .npc_descr   { display: inline; color:brown; }
-        .obj_descr   { display: inline; color:green; }
-        .obj_title   { display: inline; color:green; }
+        .npc_title   { display: inline; color:blue; }
+        .npc_descr   { display: inline; color:blue; }
+        .obj_descr   { display: inline; color:black; }
+        .obj_title   { display: inline; color:black; }
         .spells      { display: inline; color:darkorchid; }
         .immort_title    { display: inline; color:brown; }
         .pc_title    { display: inline; color:brown; }
@@ -240,13 +234,13 @@
         .room_title  { display: inline; }
         .room_descr  { display: inline; font-style: italic; width: 600px; }
         .score       { display: inline; color:black; }
-        .social_self { display: inline; color:back; }
+        .social_self { display: inline; color:black; }
         .social_other { display: inline; color:black; }
         .score       { display: inline; color:black; }
         .spell       { display: inline; color:brown; }
-        .worn        { display: inline; color:bisque; }
-        .who_name    { display: inline; color:black; }
-        .who_title   { display: inline; color:darkorange; }
+        .worn        { display: inline; color:black; }
+        .who_name    { display: inline; color:darkblue; }
+        .who_title   { display: inline; color:blue; }
         .who_inv     { display: inline; }
 
         .xpgain         { display: inline; color:firebrick; font-weight: bold;}
