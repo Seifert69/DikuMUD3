@@ -140,6 +140,7 @@ static void stat_world(class unit_data *ch)
     extern int world_nonpc, world_nopc;
     extern char world_boottime[64];
     extern int tics;
+    extern int g_nTickUsec;
     //extern int g_nDilPrg;
     char buf[MAX_STRING_LENGTH];
     time_t now = time(0);
@@ -148,7 +149,7 @@ static void stat_world(class unit_data *ch)
     p[strlen(p) - 1] = '\0';
 
     sprintf(buf, "Server compiled at %s %s<br/>"
-                 "World status (tick %d aka %d hours):<br/>"
+                 "World status (tick %d aka %d hours): %s<br/>"
                  "#rooms [%4d]  #objects [%4d]  #chars [%4d]  #npcs [%4d] "
                  "  #pcs [%4d]<br/>"
                  "#units [%4d]  #zones   [%4d]<br/>"
@@ -157,7 +158,7 @@ static void stat_world(class unit_data *ch)
                  "Boottime: %s<br/>Time now: %s<br/>"
                  "DIL programs [%d]   DIL Vals [%d]<br>",
             compile_date, compile_time,
-            tics, tics / (PULSE_SEC * 3600),
+            tics, tics / (PULSE_SEC * 3600), g_nTickUsec < 1 ? "time-warped" : "",
             world_norooms, world_noobjects, world_nochars,
             world_nonpc, world_nopc,
             world_norooms + world_noobjects + world_nochars,
