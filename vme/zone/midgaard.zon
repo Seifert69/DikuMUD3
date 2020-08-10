@@ -4808,9 +4808,9 @@ end
                               grub_barrel
 
 names {"beer barrel", "barrel"}
-title "Inside the Barrel"
+title "a barrel"
 descr
-"   You are inside a huge barrel."
+"   You are inside a huge beer barrel."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 manipulate {MANIPULATE_ENTER}       /* You can enter the barrel */
 open {EX_OPEN_CLOSE, EX_CLOSED, EX_INSIDE_OPEN}
@@ -4915,7 +4915,7 @@ end
                            grub_closet
 
 names "closet"
-title "Inside the Closet"
+title "a closet"
 descr
 "You are inside a dark closet."
 outside_descr
