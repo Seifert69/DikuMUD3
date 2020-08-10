@@ -1649,7 +1649,6 @@ dilbegin integer oc_enterunit(unitenter:unitptr, trick : integer, unlock :intege
 var
    lk:integer;
    cl:integer;
-   sym : string;
 
 code
 {
@@ -1691,17 +1690,9 @@ code
       pause;
    }
 
-   sym := unitenter.nameidx + "@" + unitenter.zoneidx;
-   unsecure(unitenter);
    exec("enter "+unitenter.name, self);
+   pause;
 
-   unitenter := findsymbolic(self, sym, FIND_UNIT_HERE);
-
-   if (not (unitenter))
-   {
-      log("oc_enterunit() lost "+sym);
-      return(FALSE);
-   }
 
    if (cl)
    {
@@ -1740,8 +1731,6 @@ dilbegin integer oc_exitunit(unitexit:unitptr, trick : integer, unlock :integer)
 var
    lk:integer;
    cl:integer;
-   u  :unitptr;
-   sym : string;
 
 code
 {
@@ -1785,18 +1774,7 @@ code
    // One could check if self actually moved out. 
    // But it's not trivial self might be on mount
 
-   sym := unitexit.nameidx + "@" + unitexit.zoneidx;
-   unsecure(unitexit);
-
    exec("exit", self);
-   unitexit := findsymbolic(self, sym, FIND_UNIT_HERE);
-   secure(unitexit, lostunit);
-
-   if (not (unitexit))
-   {
-      log("oc_exitunit() lost "+sym);
-      return(FALSE);
-   }
    pause;
 
    if (cl)
@@ -2194,10 +2172,12 @@ code
 
    if (nreps >= 10)
    {
-      log(self.nameidx+"@"+self.zoneidx+" is stuck in "+inroom.nameidx+"@"+inroom.zoneidx);
-      goto takeabreak;
       if (nreps >= 20)
+      {
+         log(self.nameidx+"@"+self.zoneidx+" is stuck in "+inroom.nameidx+"@"+inroom.zoneidx+". Giving up.");
          return(FALSE);
+      }
+      goto takeabreak;
    }
 
    lstroom := inroom.nameidx;
