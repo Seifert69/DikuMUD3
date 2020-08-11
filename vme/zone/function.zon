@@ -1877,7 +1877,7 @@ code
    u := self.outside;
    secure(u, lostcoffin);
    exec("exit", self);
-   unsecure(u);
+   pause;
 
    if (self.outside == u)
    {
