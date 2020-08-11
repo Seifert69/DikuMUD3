@@ -18,6 +18,11 @@ andrew / bertram / jeanette / captain peter / training master / royal herald / \
 butler james / cleaning woman /astrologer / tim / tom / chef / cook / dick / david / \
 jerry / michael / hans / boris / jack / george / joanna"
 
+#define CASTLE_STAFF_SL "king welmar", "jim", "brian", "mick", "matt", "jochem", "anne", \
+"andrew", "bertram", "jeanette", "captain peter", "training master", "royal herald", \
+"butler james", "cleaning woman", "astrologer", "tim", "tom", "chef", "cook", "dick", "david", \
+"jerry", "michael", "hans", "boris", "jack", "george", "joanna"
+
 #define APPEAR_TEXT \
 "With a rumbling sound, a flood of water runs through the room. You manage to remain standing, quite unlike some strange characters who have been flushed here."
 
@@ -1477,10 +1482,8 @@ end
 
 
 %mobiles
-%mobiles
+
 /*    ----- And here are the inhabitants of the King's Castle -----    */
-
-
 
                 king_welmar
 
@@ -2188,7 +2191,7 @@ M_HUMAN_WARRIOR_SWORD(38, SEX_MALE)
 alignment 900
 money 10 COPPER_PIECE
 
-dilcopy guard_dir@function("east", null, {"jack", "guard"}, "");
+dilcopy guard_dir@function("east", null, {CASTLE_STAFF_SL}, "");
 dilcopy rescue@function("king / tom");
 dilcopy rescue@function(CASTLE_STAFF);
 special SFUN_WHISTLE
@@ -2209,7 +2212,7 @@ romflags {CHAR_DETECT_INVISIBLE, CHAR_PROTECTED}
 M_HUMAN_WARRIOR_SWORD(42, SEX_MALE)
 alignment 900
 money 10 COPPER_PIECE
-dilcopy guard_dir@function("east", null, {"jack", "guard"}, "");
+dilcopy guard_dir@function("east", null, {CASTLE_STAFF_SL}, "");
 dilcopy rescue@function("king / tim");
 dilcopy rescue@function(CASTLE_STAFF);
 special SFUN_WHISTLE

@@ -210,12 +210,14 @@ code
 dilend
 
 
-
+// do_knock
 dilbegin knock(arg : string);
 
 external
-      integer is_hidden@basemove(u1 : unitptr, int1 : integer, u2 : unitptr);
-      string  dirstring@function(i2 : integer);
+   integer is_hidden@basemove(u1 : unitptr, int1 : integer, u2 : unitptr);
+   string  dirstring@function(i2 : integer);
+   integer checkdoor@basemove(arg : string);
+   integer rev_dir@function(i : integer);
 
 var
       item       :  unitptr;
@@ -224,219 +226,119 @@ var
       arg2       :  string;
       arg3       :  stringlist;
       dir        :  integer;
-      oppdir     :  intlist;
+      oppdir     :  integer;
       test       :  integer;
       count      :  integer;
       counter    :  integer;
 
-code{
-
-if (self.position < POSITION_RESTING)
-   {act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+code
+{
+   if (self.position < POSITION_RESTING)
+   {
+      act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if (arg == "")
-   {act("knock on what?", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (arg == "")
+   {
+      act("knock on what?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-/* next we see if the player has anything in his inventory or around him that he can knock on */
+   /* next we see if the player has anything in his inventory or around him that he can knock on */
+   arg1 := arg;       // saves the string in case we need it later
 
-arg1 := arg;       /* saves the string in case we need it later */
-
-item := findunit(self, arg1, FIND_UNIT_HERE, null);
+   item := findunit(self, arg1, FIND_UNIT_HERE, null);
 
    /* If there is no item or we cant see it, check the doors in the room */
-if (item == null)
-    goto check_doors;
+   if (item == null)
+      goto check_doors;
 
-if (not visible(self, item))
-    goto check_doors;
-
-if (isset(item.flags, UNIT_FL_BURIED))
-    goto check_doors;
-
-:backinside:
-act("You knock on $2m.",
-A_SOMEONE, self, item, null, TO_CHAR);
-act("$1n knocks on $3n.",
-A_SOMEONE, self, null, item,TO_NOTVICT);
-act("$1n knocks on you.",
-A_SOMEONE, self, null, item, TO_VICT);
-
-if (item.inside!=null)
-{
-if ((not isset(item.flags, UNIT_FL_TRANS)) and
-(item.type!=UNIT_ST_ROOM))
-{
-if (self.outside==item)
-	    act("You hear a loud knocking from $1n.",
-		A_SOMEONE,item,null,null,TO_ALL);
-else
-	    act("You hear a loud knocking from $3n.",
-		A_SOMEONE,item.inside,null,item,TO_ALL);
-
-}
-else if ((isset(item.openflags, EX_CLOSED)) and
-(item.type!=UNIT_ST_ROOM))
-{
-if (self.outside==item)
-	    act("You hear a loud knocking from $1n.",
-		A_SOMEONE,item,null,null,TO_ALL);
-else
-	    act("You hear a loud knocking from $3n.",
-		A_SOMEONE,item.inside,null,item,TO_ALL);
-
-}
-
-
-}
-
-send_done ("knock", self, null, item, 0, "", null);
-
-return;
-
-:check_doors:
-
-/* first we are going to check if the player dictated what direction
-   they want to open */
-
-   /* set up so we can close 'both' doors (room player is in and room the door leads to.) */
-oppdir := {SOUTH, WEST, NORTH, EAST, DOWN, UP, SOUTHWEST, SOUTHEAST, NORTHWEST, NORTHEAST};
-
-arg1 := arg;
-
-arg3 := split(arg1, ".");   /* checking for 2.door, 3.door, etc */
-
-if (length(arg3) > 1)
-   {count := atoi(arg3.[0]);
-    if (count > 0)
-        arg := arg3.[1];
-   }
-
-arg2 := arg;
-arg1 := getword(arg2);
-
-
-item := self.outside;
-
-  /* Find the room the player is in.  If the player is in something that is
-     transparent, we take that objects outside as our item */
-if ((item.type != UNIT_ST_ROOM) and (isset(item.flags, UNIT_FL_TRANS)))
-   item := item.outside;
-
-
-  /* If not a room, no doors */
-if (item.type != UNIT_ST_ROOM)
-goto backinside;
-
-dir := -1;         /* Initialize counter */
-
-if(arg1 in "north") dir := NORTH;
-else if(arg1 in "up") dir := UP;
-else if(arg1 in "south") dir := SOUTH;
-else if(arg1 in "east") dir := EAST;
-else if(arg1 in "west") dir := WEST;
-else if(arg1 in "down") dir := DOWN;
-else if(arg1 in "northeast") dir := NORTHEAST;
-else if(arg1 in "northwest") dir := NORTHWEST;
-else if(arg1 in "southeast") dir := SOUTHEAST;
-else if(arg1 in "southwest") dir := SOUTHWEST;
-else if(arg1 in "sw") dir := SOUTHWEST;
-else if (arg1 in "se") dir := SOUTHEAST;
-else if (arg1 in "ne") dir := NORTHEAST;
-else if (arg1 in "nw") dir := NORTHWEST;
-
-/* initialize counters */
-if (count <= 0)
-    count := 0;
-
-counter := 1;
-
-/* if we didnt put in 'open north door' then we need to find the 'door' we want */
-
-if (dir == -1)
-   {dir := NORTH;
-       /* Try and find the door */
-    while (dir <= MAX_EXIT)
-       {test := is_hidden@basemove(self, dir, item);
-        if ((item.exit_to[dir]) and (arg in item.exit_names[dir]) and (not test))   /* found a door! */
-            {if (counter < count)
-                counter := counter + 1;
-             else
-                break;
-            }
-
-        dir := dir + 1;
-       }
-
-       /* check to make sure the player can see the door */
-    if (dir <= MAX_EXIT)
-        test := is_hidden@basemove(self, dir, item);
-
-       /* we have cycled through all the doors, no such exit */
-    if ((dir > MAX_EXIT) or (test))
-       {act("You see no $2t here.", A_ALWAYS, self, arg, null, TO_CHAR);
-        return;
-       }
-
-    arg2 := arg;
-
-   }
-else
-   {   /* We found a direction, but there is no name supplied for the door. */
-    if ((dir <= MAX_EXIT) and (arg2 == ""))
-       {arg1 := dirstring@function(dir);
-        act("What is the name of the exit to the $2t?", A_ALWAYS, self, arg1, null, TO_CHAR);
-        return;
-       }
-
-       /* check to make sure the player can see the door */
-    test := is_hidden@basemove(self, dir, item);
-
-       /*  That direction has no such door */
-    if ((item.exit_to[dir] == null) or (not (arg2 in item.exit_names[dir])) or (test))
-       {act("You see no such exit in that direction.", A_ALWAYS, self, null, null, TO_CHAR);
-        return;
-       }
-   }
-
-if (not isset(item.exit_info[dir], EX_CLOSED))
+   // First figure out if we are knocking on the item, or from inside the item
+   pc := self.outside;
+   while (pc)
    {
-         act("You knock on the open  $2t.",
-		 A_SOMEONE, self, item.exit_names[dir].[0], null, TO_CHAR);
-act("$1n knocks on the open $2t.",
-A_SOMEONE, self, item.exit_names[dir].[0], null, TO_REST);
-}
-else
-{
-  act("You knock on the $2t.",
- A_SOMEONE, self, item.exit_names[dir].[0], null, TO_CHAR);
- act("$1n knocks on the $2t.",
- A_SOMEONE, self, item.exit_names[dir].[0], null, TO_REST);
-}
+      if (item == pc)
+         break;
+
+      pc := pc.outside;
+   }
+
+   // I decided that if you're inside a container you can always see it
+   // Therefore the off (not pc) statement
+   if ((not visible(self, item)) and (not pc))
+      goto check_doors;
+
+   if (pc)  // Knocking from the inside
+   {
+      if (isset(item.flags, UNIT_FL_BURIED))
+         act("You hear a knocking sound from below.", A_SOMEONE, item, null, null, TO_ALL);
+      else if (isset(item.openflags, EX_CLOSED) or (not isset(item.flags, UNIT_FL_TRANS)))
+         act("You hear a loud knocking from $1n.", A_SOMEONE, item, null, null, TO_ALL);
+   }
+   else // knocking ON the object, we must be able to see it, check its not buried
+   {
+      if (isset(item.flags, UNIT_FL_BURIED))
+         goto check_doors;
+
+      if (isset(item.openflags, EX_CLOSED) or (not isset(item.flags, UNIT_FL_TRANS)))
+         if (item.inside)
+            act("You hear a loud knocking from $2n.", A_SOMEONE, item.inside, item, null, TO_ALL);
+   }
+
+   // message to everyone in the same location
+   act("You knock on $2m.", A_SOMEONE, self, item, null, TO_CHAR);
+   act("$1n knocks on $3n.", A_SOMEONE, self, null, item,TO_NOTVICT);
+   act("$1n knocks on you.", A_SOMEONE, self, null, item, TO_VICT);
+
+   send_done ("knock", self, null, item, 0, "", null);
+   return;
 
 
-pc := item.exit_to[dir].inside;
-if (pc != null)
-{
-if (not isset(item.exit_info[dir], EX_CLOSED))
-{
-act("$3n knocks on the open $2t.",
-A_SOMEONE, pc,item.exit_to[dir].exit_names[oppdir.[dir]].[0] , self, TO_ALL);
-}
-else
-{
-act("You hear a knocking coming from $2t.",
-A_ALWAYS, pc,item.exit_to[dir].exit_names[oppdir.[dir]].[0] , self, TO_ALL);
-}
-}
+   :check_doors:
+   /* first we are going to check if the player dictated what direction they want to open */
+   /* set up so we can close 'both' doors (room player is in and room the door leads to.) */
 
-send_done ("knock", self, null, null, 0, "", null);
+   dir := checkdoor@basemove(arg);
 
-return;
+   if (dir == -1)
+   {
+      act("You see no such exit in that direction.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
 
+   item := self.outside;
+   while (item.type != UNIT_ST_ROOM)
+      item := item.outside;
+
+   if (not isset(item.exit_info[dir], EX_CLOSED))
+   {
+      act("You knock on the open $2t.", A_SOMEONE, self, item.exit_names[dir].[0], null, TO_CHAR);
+      act("$1n knocks on the open $2t.", A_SOMEONE, self, item.exit_names[dir].[0], null, TO_REST);
+   }
+   else
+   {
+      act("You knock on the $2t.", A_SOMEONE, self, item.exit_names[dir].[0], null, TO_CHAR);
+      act("$1n knocks on the $2t.", A_SOMEONE, self, item.exit_names[dir].[0], null, TO_REST);
+   }
+
+   pc := item.exit_to[dir].inside;
+   if (pc != null)
+   {
+      oppdir := rev_dir@function(dir);
+
+      if (not isset(item.exit_info[dir], EX_CLOSED))
+      {
+         act("$3n knocks on the open $2t.", A_SOMEONE, pc, item.exit_to[dir].exit_names[oppdir].[0] , self, TO_ALL);
+      }
+      else
+      {
+         act("You hear a knocking coming from $2t.", A_ALWAYS, pc,item.exit_to[dir].exit_names[oppdir].[0] , self, TO_ALL);
+      }
+   }
+
+   send_done ("knock", self, null, null, 0, "", null);
+   return;
 }
 dilend
 

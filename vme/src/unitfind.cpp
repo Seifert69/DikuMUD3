@@ -985,6 +985,9 @@ static class unit_data *scan4_ref_room(class unit_data *room, class unit_data *f
 {
     class unit_data *u;
 
+    if (room == fu)
+        return fu;
+        
     for (u = UNIT_CONTAINS(room); u; u = u->next)
         if (u == fu)
             return fu;

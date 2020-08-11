@@ -641,7 +641,7 @@ code
          log("merc_hunt() giving up on walk_room()");
          exec("cry", self);  // We could use teleport instead?
          pause;
-         goto link_me;
+         goto return_home;
       }
       log("merc_hunt() unable to walk_room()");
       goto locate;
@@ -679,14 +679,6 @@ code
    pause;
    goto locate; // Keep hunting until dead
 
-
-   :link_me:
-   log("link_me");
-   rm:= unit_room(vict);
-   link(self,rm);
-   act("$1n appears from within a blue cloud.",   A_SOMEONE, self, null, null, TO_ROOM);
-
-
    :dead:
    log("mercenary took care of "+victstr);
    pause;
@@ -698,6 +690,7 @@ code
    :return_home:
    act("$1n disappears into a blue cloud.", A_SOMEONE, self, null, null, TO_ROOM);
    link(self,findroom(self.extra.["$return_room"].descr));
+   act("$1n appears from within a blue cloud.",   A_SOMEONE, self, null, null, TO_ROOM);
    quit;
 }
 dilend
@@ -1646,6 +1639,171 @@ code
 dilend
 
 
+/* Enter a unit (room/container) and open/unlock/close/lock.
+ *   unitenter: the unit to enter (self must be at unit).
+ *   trick: if true, will use dirty bit tricks if normal commands dont work.
+ *   unlock: if true, will also unlock units.
+ * returns true if moved false if not.
+*/
+dilbegin integer oc_enterunit(unitenter:unitptr, trick : integer, unlock :integer);
+var
+   lk:integer;
+   cl:integer;
+
+code
+{
+   secure(unitenter, lostunit);
+
+   if (isset(unitenter.flags, UNIT_FL_BURIED))
+   {
+      exec("dig", self);
+      pause;
+      if (isset(unitenter.flags, UNIT_FL_BURIED))
+         return(FALSE);
+   }
+
+   if (not isset(unitenter.openflags, EX_OPEN_CLOSE))
+      return(FALSE);
+
+   if (unlock == FALSE)
+   {
+      if (isset(unitenter.openflags, EX_LOCKED))
+         return (FALSE);
+   }
+
+   lk := isset(unitenter.openflags, EX_LOCKED);
+
+   if (lk)
+   {
+      exec("unlock "+unitenter.name, self);
+      if (trick)
+         unset(unitenter.openflags, EX_LOCKED);
+      pause;
+   }
+
+   cl := isset(unitenter.openflags, EX_CLOSED);
+   if (cl)
+   {
+      exec("open "+unitenter.name, self);
+      if (trick)
+         unset(unitenter.openflags, EX_CLOSED);
+      pause;
+   }
+
+   exec("enter "+unitenter.name, self);
+   pause;
+
+
+   if (cl)
+   {
+      exec("close "+unitenter.name, self);
+      if (trick)
+         set(unitenter.openflags, EX_CLOSED);
+      pause;
+   }
+
+   if (lk)
+   {
+      exec("lock "+unitenter.name, self);
+      if (trick)
+         set(unitenter.openflags, EX_LOCKED);
+      pause;
+   }
+
+   return (TRUE);
+
+   :lostunit:
+   log("lost unit in oc_enterunit()");
+   return(FALSE);
+}
+dilend
+
+
+
+
+/* Exit a unit (room/container) and open/unlock/close/lock.
+ *   unitenter: the unit to enter (self must be at unit).
+ *   trick: if true, will use dirty bit tricks if normal commands dont work.
+ *   unlock: if true, will also unlock units.
+ * returns true if moved false if not.
+*/
+dilbegin integer oc_exitunit(unitexit:unitptr, trick : integer, unlock :integer);
+var
+   lk:integer;
+   cl:integer;
+
+code
+{
+   secure(unitexit, lostunit);
+
+   if (isset(unitexit.flags, UNIT_FL_BURIED))
+   {
+      exec("knock "+unitexit.name, self);
+      pause;
+      return(FALSE);
+   }
+
+   if (not isset(unitexit.openflags, EX_OPEN_CLOSE))
+      return(FALSE);
+
+   if (unlock == FALSE)
+   {
+      if (isset(unitexit.openflags, EX_LOCKED))
+         return (FALSE);
+   }
+
+   lk := isset(unitexit.openflags, EX_LOCKED);
+
+   if (lk)
+   {
+      exec("unlock "+unitexit.name, self);
+      if (trick)
+         unset(unitexit.openflags, EX_LOCKED);
+      pause;
+   }
+
+   cl := isset(unitexit.openflags, EX_CLOSED);
+   if (cl)
+   {
+      exec("open "+unitexit.name, self);
+      if (trick)
+         unset(unitexit.openflags, EX_CLOSED);
+      pause;
+   }
+
+   // One could check if self actually moved out. 
+   // But it's not trivial self might be on mount
+
+   exec("exit", self);
+   pause;
+
+   if (cl)
+   {
+      exec("close "+unitexit.name, self);
+      if (trick)
+         set(unitexit.openflags, EX_CLOSED);
+      pause;
+   }
+
+   if (lk)
+   {
+      exec("lock "+unitexit.name, self);
+      if (trick)
+         set(unitexit.openflags, EX_LOCKED);
+      pause;
+   }
+
+   return (TRUE);
+
+   :lostunit:
+   log("lost secured unit in oc_exitunit()");
+   return(FALSE);
+}
+dilend
+
+
+
+
 
 /* The MOB will try to get out of what it is inside and into the nearest room
  * Presumes the MOB is awake and standing
@@ -1717,20 +1875,32 @@ code
    }
 
    u := self.outside;
+   secure(u, lostcoffin);
    exec("exit", self);
+   pause;
+
    if (self.outside == u)
    {
       log(self.name + " is unable to exit "+self.outside.name);
       return(FALSE);
    }
 
-   if ((u.nameidx == "coffin1") and (u.zoneidx == "midgaard") and (not u.inside))
+   if ((u.nameidx == "coffin1") and (u.zoneidx == "midgaard"))
    {
-      exec("emote pushes the coffin into the water and lets it sink.", self);
-      destroy(u);
+      if (not u.inside)
+      {
+         exec("emote pushes the coffin into the water and lets it sink.", self);
+         destroy(u);
+      }
+      else
+         log("get_out(): coffin not empty");
    }
 
    pause;
+   return(TRUE);
+
+   :lostcoffin:
+   log("coffin lost while exiting");
    return(TRUE);
 }
 dilend
@@ -1842,6 +2012,8 @@ external
    integer oc_move(dir:integer,unlock_true:integer);
    string dirstring(i:integer);
    integer readywalk(roomfrom : unitptr, roomto : unitptr);
+   integer oc_enterunit(unitenter:unitptr, trick : integer, unlock :integer);
+   integer oc_exitunit(unitexit:unitptr, trick : integer, unlock :integer);
 
 var
    mv:integer;
@@ -1953,85 +2125,41 @@ code
 
    // Now we're in a ready position to walk, sail, drive, ride
 
-   if (isset(inroom.exit_info[dir], EX_LOCKED) or isset(inroom.exit_info[dir], EX_CLOSED))
+   if ((dir >= 0) and (dir <= MAX_EXIT))
    {
-      mv := oc_move(dir, TRUE);
-      if (mv == FALSE)
-         return(FALSE);
-   }
-   else
-   {
+      if (isset(inroom.exit_info[dir], EX_LOCKED) or isset(inroom.exit_info[dir], EX_CLOSED))
+      {
+         mv := oc_move(dir, TRUE);
+         if (mv == FALSE)
+            return(FALSE);
+      }
+
       dir_string := dirstring(dir);
 
       // Check if we need to sail to get to the destination 
-      if ((inroom.movement == SECT_WATER_SAIL) or (inroom.exit_to[dir].movement == SECT_WATER_SAIL))
-      {
-         // If we're not in a boat, cheat and conjure one
-         if ((self.outside.type != UNIT_ST_OBJ) or (self.outside.objecttype != ITEM_BOAT))
-         {
-            // If we're not in a room, let's get into a room first
-            if (self.outside.type != UNIT_ST_ROOM)
-            {
-               exec("exit", self);
-               if (self.outside.type != UNIT_ST_ROOM)
-                  return(FALSE); // Give up
-               goto start;
-            }
-
-            u := load("coffin1@midgaard");
-            link(u, self.outside);
-            exec("emote crawls into a coffin.", self);
-            link(self, u);
-            goto start;
-         }
+      if ((inroom.movement == SECT_WATER_SAIL) or (nextroom.movement == SECT_WATER_SAIL))
          dir_string := "sail " + dir_string;
-      }
-      else
-      {
-         // If we're in the coffin we loaded, get out and destroy it
-         if ((self.outside.type == UNIT_ST_OBJ) and (self.outside.objecttype == ITEM_BOAT))
-         {
-            u := self.outside;
-            exec("exit", self);
-            if (self.outside == u)
-               return(FALSE); // Give up
+      else if ((inroom.movement == SECT_WATER_SWIM) or (nextroom.movement == SECT_WATER_SWIM))
+         dir_string := "swim " + dir_string;
+      else if (isset(inroom.exit_info[dir], EX_CLIMB))
+         dir_string := "climb " + dir_string;
 
-            if ((u.nameidx == "coffin1") and (u.zoneidx == "midgaard") and (not u.inside))
-            {
-               exec("emote pushes the coffin into the water and lets it sink.", self);
-               destroy(u);
-            }
-            goto start;
-         }
-
-         if ((inroom.movement == SECT_WATER_SWIM) or (inroom.exit_to[dir].movement == SECT_WATER_SWIM))
-         {
-            dir_string := "swim " + dir_string;
-         }
-         else if (isset(inroom.exit_info[dir], EX_CLIMB))
-         {
-            dir_string := "climb " + dir_string;
-         }
-      }
-
-      if (dir == DIR_ENTER)
-      {
-         u := inroom.inside;
-         while (u)
-         {
-            if (u.type == UNIT_ST_ROOM)
-            {
-               if (pathto(u, toroom) != DIR_EXIT)
-                  break;
-            }
-            u := u.next;
-         }
-
-         exec("enter " + nextroom.names.[0],self);
-      }
-      else
-         exec(dir_string, self);
+      exec(dir_string, self);
    }
+   else if (dir == DIR_ENTER)
+   {
+      oc_enterunit(nextroom, TRUE, TRUE);
+   }
+   else if (dir == DIR_EXIT)
+   {
+      oc_exitunit(inroom, TRUE, TRUE);
+   }
+   else
+   {
+      log("walk_room: impossible");
+      return(FALSE);
+   }
+
 
    inroom := self.outside;
    while (inroom.type != UNIT_ST_ROOM)
@@ -2044,10 +2172,12 @@ code
 
    if (nreps >= 10)
    {
-      log(self.nameidx+"@"+self.zoneidx+" is stuck in "+inroom.nameidx+"@"+inroom.zoneidx);
-      goto takeabreak;
       if (nreps >= 20)
+      {
+         log(self.nameidx+"@"+self.zoneidx+" is stuck in "+inroom.nameidx+"@"+inroom.zoneidx+". Giving up.");
          return(FALSE);
+      }
+      goto takeabreak;
    }
 
    lstroom := inroom.nameidx;

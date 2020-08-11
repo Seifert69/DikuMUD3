@@ -3047,79 +3047,100 @@ var
 
 code
 {
-
-if (self.position < POSITION_RESTING)
-   {act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (self.position < POSITION_RESTING)
+   {
+      act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if (arg == "")
-   {act("Open what?", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (arg == "")
+   {  
+      act("Open what?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-/* next we see if the player has anything in his inventory or around him that he can open */
+   /* next we see if the player has anything in his inventory or around him that he can open */
 
-arg1 := arg;       /* saves the string in case we need it later */
-
-item := findunit(self, arg1, FIND_UNIT_HERE, null);
+   arg1 := arg;       /* saves the string in case we need it later */
+   item := findunit(self, arg1, FIND_UNIT_HERE, null);
 
    /* If there is no item or we cant see it, check the doors in the room */
-if (item == null)
-    goto check_doors;
+   if (item == null)
+      goto check_doors;
 
-if (not visible(self, item))
-    goto check_doors;
+   // First figure out if we are opening the item from the inside
+   pc := self.outside;
+   while (pc)
+   {
+      if (item == pc)
+         break; // We are knocking from the inside
 
-if (isset(item.flags, UNIT_FL_BURIED))
-    goto check_doors;
+      pc := pc.outside;
+   }
 
+   // I decided that if you're inside a container you can always see it
+   // Therefore the off (not pc) statement
+   if ((not visible(self, item)) and (not pc))
+      goto check_doors;
+
+   if (pc and isset(item.flags, UNIT_FL_BURIED))
+   {
+      act("You've been buried alive!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
 
    /* If it cant be opened, let the player know */
-if (not isset(item.openflags, EX_OPEN_CLOSE))
-   {act("You cannot do that.", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (not isset(item.openflags, EX_OPEN_CLOSE))
+   {
+      act("You cannot do that.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
    /* See if it is already opened */
-if (not isset(item.openflags, EX_CLOSED))
-   {act("$2n is already open!", A_ALWAYS, self, item, null, TO_CHAR);
-    return;
+   if (not isset(item.openflags, EX_CLOSED))
+   {
+      act("$2n is already open!", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
    }
 
    /* Check if it is locked */
-if (isset(item.openflags, EX_LOCKED))
-   {act("$2n is locked.", A_ALWAYS, self, item, null, TO_CHAR);
-    return;
+   if (isset(item.openflags, EX_LOCKED))
+   {
+      act("$2n is locked.", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
    }
 
-act("You open $2n.", A_ALWAYS, self, item, null, TO_CHAR);
-act("$1n opens $2n.", A_ALWAYS, self, item, null, TO_REST);
+   // Messages to the people
 
-unset(item.openflags, EX_CLOSED);
+   if (pc)  // Opening from the inside
+      act("The $1n is opened from the inside by $2n", A_SOMEONE, item,  self, null, TO_ALL);
+   else // opening from the outside
+      act("The $2n is opened from the outside by $3n", A_SOMEONE, item.inside, item, self, TO_ALL);
 
-send_done ("open", self, null, item, 0, "", null);
+   act("You open $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+   act("$1n opens $2n.", A_ALWAYS, self, item, null, TO_REST);
+   unset(item.openflags, EX_CLOSED);
+   send_done ("open", self, null, item, 0, "", null);
+   return;
 
-return;
+   :check_doors:
 
-:check_doors:
+   /* first we are going to check if the player dictated what direction
+      they want to open */
 
-/* first we are going to check if the player dictated what direction
-   they want to open */
+   arg1 := arg;
 
-arg1 := arg;
+   arg3 := split(arg1, ".");   /* checking for 2.door, 3.door, etc */
 
-arg3 := split(arg1, ".");   /* checking for 2.door, 3.door, etc */
-
-if (length(arg3) > 1)
-   {count := atoi(arg3.[0]);
-    if (count > 0)
-        arg := arg3.[1];
+   if (length(arg3) > 1)
+   {
+      count := atoi(arg3.[0]);
+      if (count > 0)
+         arg := arg3.[1];
    }
 
-arg2 := arg;
-arg1 := getword(arg2);
-
+   arg2 := arg;
+   arg1 := getword(arg2);
 
    item := self.outside;
 
@@ -3129,10 +3150,11 @@ arg1 := getword(arg2);
       item := item.outside;
 
 
-  /* If not a room, no doors */
-if (item.type != UNIT_ST_ROOM)
-   {act("You see no $2t here.", A_ALWAYS, self, arg, null, TO_CHAR);
-    return;
+   /* If not a room, no doors */
+   if (item.type != UNIT_ST_ROOM)
+   {
+      act("You see no $2t here.", A_ALWAYS, self, arg, null, TO_CHAR);
+      return;
    }
 
    dir := checkdoor(arg);
@@ -3144,46 +3166,45 @@ if (item.type != UNIT_ST_ROOM)
    }
 
    if (not isset(item.exit_info[dir], EX_CLOSED))
-   {act("But it is already opened!", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   {
+      act("But it is already opened!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
    if (isset(item.exit_info[dir], EX_LOCKED))
-   {act("It seems to be locked.", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   {
+      act("It seems to be locked.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-act("You open the $2t.", A_ALWAYS, self, item.exit_names[dir].[0], null, TO_CHAR);
-act("$1n opens the $2t.", A_HIDEINV, self, item.exit_names[dir].[0], null, TO_REST);
-pc := item.exit_to[dir].inside;
-rm:= item.exit_to[dir];
+   act("You open the $2t.", A_ALWAYS, self, item.exit_names[dir].[0], null, TO_CHAR);
+   act("$1n opens the $2t.", A_HIDEINV, self, item.exit_names[dir].[0], null, TO_REST);
+   pc := item.exit_to[dir].inside;
+   rm:= item.exit_to[dir];
 
+   i:=0;
+   ct:=FALSE;
+   while (i <= MAX_EXIT)
+   {
+      if (rm.exit_to[i]==item)
+      {
+         ct:=TRUE;
+         break;
+      }
+      i:=i+1;
+   }
 
-i:=0;
-ct:=FALSE;
-while (i <= MAX_EXIT)
-{
-if (rm.exit_to[i]==item)
-{
-ct:=TRUE;
-    break;
-	}
-	i:=i+1;
-	}
+   if ((pc != null) and (ct==TRUE))
+      act("The $2t is opened.", A_ALWAYS, pc, rm.exit_names[i].[0], null, TO_ALL);
 
-if ((pc != null)
-and (ct==TRUE))
-    act("The $2t is opened.", A_ALWAYS, pc, rm.exit_names[i].[0], null, TO_ALL);
-	
-unset(item.exit_info[dir], EX_CLOSED);
-if (ct==TRUE)
-unset(item.exit_to[dir].exit_info[i], EX_CLOSED);
+   unset(item.exit_info[dir], EX_CLOSED);
+   if (ct==TRUE)
+      unset(item.exit_to[dir].exit_info[i], EX_CLOSED);
 
-send_done ("open", self, null, null, 0, "", null);
-
-return;
-
-}dilend
+   send_done ("open", self, null, null, 0, "", null);
+   return;
+}
+dilend
 
 
 
@@ -3231,11 +3252,26 @@ code
    if (item == null)
       goto check_doors;
 
-   if (not visible(self, item))
+   // First figure out if we are opening the item from the inside
+   pc := self.outside;
+   while (pc)
+   {
+      if (item == pc)
+         break; // We are knocking from the inside
+
+      pc := pc.outside;
+   }
+
+   // I decided that if you're inside a container you can always see it
+   // Therefore the off (not pc) statement
+   if ((not visible(self, item)) and (not pc))
       goto check_doors;
 
-   if (isset(item.flags, UNIT_FL_BURIED))
-      goto check_doors;
+   if (pc and isset(item.flags, UNIT_FL_BURIED))
+   {
+      act("You've been buried alive!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
 
    /* If it cant be opened, let the player know */
    if (not isset(item.openflags, EX_OPEN_CLOSE))
@@ -3251,11 +3287,16 @@ code
       return;
    }
 
+   // Messages to the people
+   if (pc)  // Closing from the inside
+      act("The $1n is closed from the inside by $2n", A_SOMEONE, item,  self, null, TO_ALL);
+   else // closing from the outside
+      act("The $2n is closed from the outside by $3n", A_SOMEONE, item.inside, item, self, TO_ALL);
+
    act("You close $2n.", A_ALWAYS, self, item, null, TO_CHAR);
    act("$1n closed $2n.", A_ALWAYS, self, item, null, TO_REST);
 
    set(item.openflags, EX_CLOSED);
-
    send_done ("close", self, null,item, 0, "", null);
    return;
 
