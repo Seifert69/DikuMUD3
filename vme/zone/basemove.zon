@@ -3083,7 +3083,7 @@ code
    if ((not visible(self, item)) and (not pc))
       goto check_doors;
 
-   if (isset(item.flags, UNIT_FL_BURIED))
+   if (pc and isset(item.flags, UNIT_FL_BURIED))
    {
       act("You've been buried alive!", A_ALWAYS, self, null, null, TO_CHAR);
       return;
@@ -3252,11 +3252,26 @@ code
    if (item == null)
       goto check_doors;
 
-   if (not visible(self, item))
+   // First figure out if we are opening the item from the inside
+   pc := self.outside;
+   while (pc)
+   {
+      if (item == pc)
+         break; // We are knocking from the inside
+
+      pc := pc.outside;
+   }
+
+   // I decided that if you're inside a container you can always see it
+   // Therefore the off (not pc) statement
+   if ((not visible(self, item)) and (not pc))
       goto check_doors;
 
-   if (isset(item.flags, UNIT_FL_BURIED))
-      goto check_doors;
+   if (pc and isset(item.flags, UNIT_FL_BURIED))
+   {
+      act("You've been buried alive!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
 
    /* If it cant be opened, let the player know */
    if (not isset(item.openflags, EX_OPEN_CLOSE))
@@ -3272,11 +3287,16 @@ code
       return;
    }
 
+   // Messages to the people
+   if (pc)  // Closing from the inside
+      act("The $1n is closed from the inside by $2n", A_SOMEONE, item,  self, null, TO_ALL);
+   else // closing from the outside
+      act("The $2n is closed from the outside by $3n", A_SOMEONE, item.inside, item, self, TO_ALL);
+
    act("You close $2n.", A_ALWAYS, self, item, null, TO_CHAR);
    act("$1n closed $2n.", A_ALWAYS, self, item, null, TO_REST);
 
    set(item.openflags, EX_CLOSED);
-
    send_done ("close", self, null,item, 0, "", null);
    return;
 
