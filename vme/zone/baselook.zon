@@ -1540,6 +1540,7 @@ code
          log("unknown unit.type in room_content for look");
 
       tpbuff := "";
+      temp := "";
       u := u.next;
    }
 
