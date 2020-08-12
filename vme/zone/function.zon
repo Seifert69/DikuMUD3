@@ -1881,16 +1881,20 @@ code
 
    if (self.outside == u)
    {
-      log(self.name + " is unable to exit "+self.outside.name);
+      log("get_out() " + self.name + " is unable to exit "+self.outside.name);
       return(FALSE);
    }
 
    if ((u.nameidx == "coffin1") and (u.zoneidx == "midgaard"))
    {
+      log("get_out(): got out of coffin");
+      
       if (not u.inside)
       {
-         exec("emote pushes the coffin into the water and lets it sink.", self);
+         log("get_out(): destroyed coffin");
+         unsecure(u);
          destroy(u);
+         exec("emote pushes the coffin into the water and lets it sink.", self);
       }
       else
          log("get_out(): coffin not empty");
@@ -1900,7 +1904,7 @@ code
    return(TRUE);
 
    :lostcoffin:
-   log("coffin lost while exiting");
+   log("get_out(): coffin lost while exiting");
    return(TRUE);
 }
 dilend
@@ -1940,9 +1944,23 @@ code
       pause;
       return(0);
    }
-   else if (self.position != POSITION_STANDING)
+   else
    {
-      return(0);
+      // We are fighting or stunned or worse figure it out
+
+      i := 0;
+      while ((self.position == POSITION_FIGHTING) or (self.position < POSITION_SLEEPING))
+      {
+         i := i + 1;
+         if (i > 100)
+         {
+            log("readywalk(): "+self.nameidx+"@"+self.zoneidx+" fighting or about to die forever.");
+            break;
+         }
+         pause;
+      }
+
+      return(-1);
    }
 
    if (self.outside.type == UNIT_ST_OBJ)
