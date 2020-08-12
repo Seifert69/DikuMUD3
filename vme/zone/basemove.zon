@@ -3923,15 +3923,6 @@ code
       return;
    }
 
-   /* if ((not visible(self, item)) or (isset(item.flags, UNIT_FL_BURIED)))
-   {
-      arg := itoa(cnt) + "." + iname;
-      item := findunit(self, arg, FIND_UNIT_SURRO, null);
-      cnt := cnt + 1;
-      goto loop;
-   }*/
-
-
    /* cant drag people unless they are unconcious */
    if (((item.type == UNIT_ST_PC) or (item.type == UNIT_ST_NPC)) and (item.position > POSITION_SLEEPING))
    {
@@ -3968,8 +3959,6 @@ code
       act("Alas, you must climb to go that way.", A_SOMEONE, self, null, null, TO_CHAR);
       return;
    }
-
-   // What about swim?
 
    /* make sure the way is clear */
    if (isset(self.outside.exit_info[dir], EX_CLOSED))
