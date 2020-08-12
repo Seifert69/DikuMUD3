@@ -516,7 +516,10 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
     for (*buf = 0, fi = zone->fi; fi; fi = fi->next)
         if (fi->type == search_type)
         {
-            sprintf(buf, "%s<br/>", fi->name);
+            if ((fi->type == UNIT_ST_OBJ) || (fi->type == UNIT_ST_NPC))
+                sprintf(buf, "<a cmd='load #'>%s</a><br/>", fi->name);
+            else
+                sprintf(buf, "%s<br/>", fi->name);
             mystr.append(buf); //MS2020
         }
 
