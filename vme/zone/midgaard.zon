@@ -4920,8 +4920,7 @@ descr
 "You are inside a dark closet."
 outside_descr
 "A closet has been set against the wall."
-
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_TRANS}
 manipulate {MANIPULATE_ENTER}       /* You can enter the cupboard */
 open {EX_OPEN_CLOSE, EX_CLOSED, EX_INSIDE_OPEN}
 movement SECT_INSIDE
