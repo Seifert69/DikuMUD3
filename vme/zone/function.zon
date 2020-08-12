@@ -1944,7 +1944,7 @@ code
       pause;
       return(0);
    }
-   else
+   else if (self.position == POSITION_STANDING)
    {
       // We are fighting or stunned or worse figure it out
 
@@ -1960,6 +1960,7 @@ code
          pause;
       }
 
+      pause;
       return(0);
    }
 
