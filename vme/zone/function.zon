@@ -1659,16 +1659,19 @@ code
       exec("dig", self);
       pause;
       if (isset(unitenter.flags, UNIT_FL_BURIED))
+      {
+         log(self.nameidx+"@"+self.zoneidx+" seems to be permanently buried");
          return(FALSE);
+      }
    }
-
-   if (not isset(unitenter.openflags, EX_OPEN_CLOSE))
-      return(FALSE);
 
    if (unlock == FALSE)
    {
       if (isset(unitenter.openflags, EX_LOCKED))
+      {
+         log(self.nameidx+"@"+self.zoneidx+" locked and not allowed to unlock.");
          return (FALSE);
+      }
    }
 
    lk := isset(unitenter.openflags, EX_LOCKED);
