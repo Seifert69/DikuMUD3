@@ -1746,9 +1746,6 @@ code
       return(FALSE);
    }
 
-   if (not isset(unitexit.openflags, EX_OPEN_CLOSE))
-      return(FALSE);
-
    if (unlock == FALSE)
    {
       if (isset(unitexit.openflags, EX_LOCKED))
