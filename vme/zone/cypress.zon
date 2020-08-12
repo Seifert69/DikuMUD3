@@ -95,6 +95,7 @@ cave entrance is visible to the south."
 extra {"cave entrance", "entrance", "cave"}
 "The entrance is fairly small being some five feet tall with many small roots
 hanging around the edge of the entrance."
+// By having no outside_descr it's invisible :-)
 
 movement SECT_FOREST
 south to goblin_cave/cave_cross;
