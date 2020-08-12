@@ -1955,12 +1955,12 @@ code
          if (i > 100)
          {
             log("readywalk(): "+self.nameidx+"@"+self.zoneidx+" fighting or about to die forever.");
-            break;
+            return(-1);
          }
          pause;
       }
 
-      return(-1);
+      return(0);
    }
 
    if (self.outside.type == UNIT_ST_OBJ)
