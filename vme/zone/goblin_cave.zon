@@ -1404,10 +1404,11 @@ code
   exec("say Ho Bozz, Esbanovizzz De Psydonom Haz Arrivedd!", self);
   wait(SFB_CMD, (command("ask")) and (activator.nameidx=="cook") and (activator.zoneidx=="goblin_cave"));
   pause;
+  exec("say Esba will findz its.", self);
   item:=findunit(self, "mushroom", FIND_UNIT_INVEN, null);
   if(item==null)
   {
-      tf:=walk_room@function("pt_d_fo@elfdom",4);
+    tf:=walk_room@function("pt_d_fo@elfdom",4);
 
     pause;
     link(self, load("mushroom@goblin_cave"));
@@ -1419,7 +1420,7 @@ code
     pause;
     exec("whistle", self);
     pause;
-     tf:=walk_room@function("fireplac@elfdom",4);
+    tf:=walk_room@function("fireplac@elfdom",4);
 
     pause;
     exec("emote looks at the sky.", self);
