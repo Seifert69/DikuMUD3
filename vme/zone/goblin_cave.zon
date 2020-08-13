@@ -1244,6 +1244,7 @@ code
 
       if (isset(i, 1))
       {
+        unsecure(u2);
         destroy(u2);  // We tend to get too many mushrooms
         exec("say I really need some bread.", self);
         pause;
@@ -1253,7 +1254,9 @@ code
    }
 
    i := u1.value[3] + u1.value[3]; /* Test for poison */
+   unsecure(u1);
    destroy(u1);
+   unsecure(u2);
    destroy(u2);
    exec("emote puts the bread and mushrooms in a bowl.", self);
    pause;
@@ -1329,7 +1332,7 @@ code
   wait(SFB_CMD, (command("say")) and (activator.nameidx=="cook") and (activator.zoneidx=="goblin_cave"));
   pause;
   item:=findunit(self, "bread", FIND_UNIT_INVEN, null);
-  if(item!=null)
+  if(item==null)
   {
     exec("say I'll go ghet it Bozz!", self);
     exec("stand", self);
@@ -1399,7 +1402,7 @@ code
 
   pause;
   exec("say Ho Bozz, Esbanovizzz De Psydonom Haz Arrivedd!", self);
-  wait(SFB_CMD, (command("say")) and (activator.nameidx=="cook") and (activator.zoneidx=="goblin_cave"));
+  wait(SFB_CMD, (command("ask")) and (activator.nameidx=="cook") and (activator.zoneidx=="goblin_cave"));
   item:=findunit(self, "mushroom", FIND_UNIT_INVEN, null);
   if(item==null)
   {
