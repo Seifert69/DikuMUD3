@@ -1811,6 +1811,7 @@ dilend
 dilbegin integer getout();
 var
    u : unitptr;
+   i : integer;
 code
 {
    heartbeat := 4 * PULSE_SEC;   
@@ -1886,17 +1887,30 @@ code
 
    if ((u.nameidx == "coffin1") and (u.zoneidx == "midgaard"))
    {
-      log("get_out(): got out of coffin");
-      
+      unsecure(u);
       if (not u.inside)
       {
-         log("get_out(): destroyed coffin");
-         unsecure(u);
          destroy(u);
          exec("emote pushes the coffin into the water and lets it sink.", self);
       }
       else
-         log("get_out(): coffin not empty");
+      {
+         log("get_out(): coffin not empty, trying other way");
+         pause;
+         u := findsymbolic(self, "coffin1@midgaard", FIND_UNIT_SURRO);
+         if (u)
+         {
+            if (not u.inside)
+            {
+               destroy(u);
+               exec("emote pushes the coffin into the water and lets it sink.", self);
+            }
+            else
+               log("get_out(): coffin still not empty, one coffin added to the game...");
+         }
+         else
+            log("get_out() coffin not found on second try");
+      }
    }
 
    pause;
