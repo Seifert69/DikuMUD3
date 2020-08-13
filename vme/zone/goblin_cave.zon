@@ -1223,24 +1223,30 @@ code
    u1 := findunit(self, "bread", FIND_UNIT_INVEN, null);
    if (u1 #= null)
      set(i, 1);
+    else
+      secure(u1,lostit);
 
    u2 := findunit(self, "mushroom", FIND_UNIT_INVEN, null);
    if (u2 #= null)
      set(i, 2);
+   else
+     secure(u2,lostit);
+
 
    if (i != 0)
    {
       pause;
-      if (isset(i, 1))
-      {
-	 exec("say I really need some bread.", self);
-	 pause;
-      }
-
       if (isset(i, 2))
       {
-	 exec("ask esbanoviz I really need some mushrooms", self);
-	 pause;
+        exec("ask esbanoviz I really need some mushrooms", self);
+        pause;
+      }
+
+      if (isset(i, 1))
+      {
+        destroy(u2);  // We tend to get too many mushrooms
+        exec("say I really need some bread.", self);
+        pause;
       }
 
       goto start;
@@ -1266,8 +1272,7 @@ code
    exec("emote makes some stew.", self);
    pause;
 
-    tf:=walk_room@function("throne2@goblin_cave",4);
-
+   tf:=walk_room@function("throne2@goblin_cave",4);
    pause;
    exec("say Dinnher ish sarved, ma lurd!", self);
    pause;
@@ -1279,9 +1284,13 @@ code
    pause;
    exec("say Mhore is caming raight up, ma lurds!", self);
    pause;
-    tf:=walk_room@function("kitchen@goblin_cave",4);
+   tf:=walk_room@function("kitchen@goblin_cave",4);
 
-    goto start;
+   goto start;
+
+   :lostit:
+   log("cook lost a mushroom or a bread");
+   goto start;
 }
 dilend
 
