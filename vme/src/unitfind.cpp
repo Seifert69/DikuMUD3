@@ -1019,3 +1019,25 @@ class unit_data *scan4_ref(class unit_data *ch, class unit_data *fu)
     else
         return (scan4_ref(UNIT_IN(ch), fu));
 }
+
+/* Possible alternate of the above function. The above doesn't seem to properly 
+   interpret the transparent and closed. But it proabably doesn't matter because
+   it's just a DIL secure question I believe :o)
+class unit_data *alternate_scan4_ref(class unit_data *ch, class unit_data *fu)
+{
+    if (scan4_ref_room(ch, fu))
+        return fu;
+
+    if (UNIT_IN(ch))
+    {
+        if (scan4_ref_room(UNIT_IN(ch), fu))
+            return fu;
+
+        if (UNIT_IN(UNIT_IN(ch)) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)) && !IS_SET(UNIT_OPEN_FLAGS(UNIT_IN(ch)), EX_CLOSED))
+            if (scan4_ref_room(UNIT_IN(UNIT_IN(ch)), fu))
+                return fu;
+    }
+
+    return NULL;
+}
+*/
