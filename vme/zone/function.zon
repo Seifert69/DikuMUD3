@@ -1653,7 +1653,7 @@ var
 code
 {
    secure(unitenter, lostunit);
-   log("oc_enterunit(): " + unitenter.nameidx+"@"+unitenter.zoneidx+" being secured for "+self.nameidx+"@"+self.zoneidx);
+   log("oc_enterunit(): " + SYMNAME(unitenter)+" being secured for "+SYMNAME(self));
 
    if (isset(unitenter.flags, UNIT_FL_BURIED))
    {
@@ -1661,7 +1661,7 @@ code
       pause;
       if (isset(unitenter.flags, UNIT_FL_BURIED))
       {
-         log(self.nameidx+"@"+self.zoneidx+" seems to be permanently buried");
+         log("oc_enterunit(): "+SYMNAME(self)+" seems to be permanently buried");
          return(FALSE);
       }
    }
@@ -1670,7 +1670,7 @@ code
    {
       if (isset(unitenter.openflags, EX_LOCKED))
       {
-         log(self.nameidx+"@"+self.zoneidx+" locked and not allowed to unlock.");
+         log("oc_enterunit(): "+SYMNAME(self)+" locked and not allowed to unlock.");
          return (FALSE);
       }
    }
@@ -1715,7 +1715,7 @@ code
    return (TRUE);
 
    :lostunit:
-   log("lost unit in oc_enterunit()");
+   log("oc_enterunit(): lost unit");
    return(FALSE);
 }
 dilend
@@ -1795,7 +1795,7 @@ code
    return (TRUE);
 
    :lostunit:
-   log("lost secured unit in oc_exitunit()");
+   log("oc_exitunit(): lost secured unit");
    return(FALSE);
 }
 dilend
@@ -1828,7 +1828,7 @@ code
 
       if (self.outside.type == UNIT_ST_NPC)
       {
-         log(self.name + " is unable to dismount "+self.outside.name);
+         log(SYMNAME(self) + " is unable to dismount "+SYMNAME(self.outside));
          return(FALSE);
       }
 
@@ -1840,7 +1840,7 @@ code
    if (isset(self.outside.flags, UNIT_FL_BURIED))
    {
       exec("knock " + self.outside.names.[0], self);
-      log(self.name + " is buried alive in "+self.outside.name);
+      log(SYMNAME(self) + " is buried alive in "+SYMNAME(self.outside));
       pause;
       return(FALSE);
    }
@@ -1853,7 +1853,7 @@ code
       if (isset(self.outside.openflags, EX_LOCKED))
       {
          exec("knock " + self.outside.names.[0], self);
-         log(self.name + " is locked helplessly into "+self.outside.name);
+         log(SYMNAME(self) + " is locked helplessly into " + SYMNAME(self.outside));
          pause;
          return(FALSE);
       }
@@ -1866,7 +1866,7 @@ code
       if (isset(self.outside.openflags, EX_CLOSED))
       {
          exec("knock " + self.outside.names.[0], self);
-         log(self.name + " is helplessly unable to open "+self.outside.name);
+         log(SYMNAME(self) + " is helplessly unable to open " + SYMNAME(self.outside));
          pause;
          return(FALSE);
       }
@@ -1880,7 +1880,7 @@ code
 
    if (self.outside == u)
    {
-      log("get_out() " + self.name + " is unable to exit "+self.outside.name);
+      log("get_out() " + SYMNAME(self) + " is unable to exit " + SYMNAME(self.outside));
       return(FALSE);
    }
 
@@ -1953,7 +1953,7 @@ code
          i := i + 1;
          if (i > 100)
          {
-            log("readywalk(): "+self.nameidx+"@"+self.zoneidx+" fighting or about to die forever.");
+            log("readywalk(): "+SYMNAME(self)+" fighting or about to die forever.");
             return(-1);
          }
          pause;
