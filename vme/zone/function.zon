@@ -1653,26 +1653,29 @@ var
 code
 {
    secure(unitenter, lostunit);
+   log("oc_enterunit(): " + unitenter.nameidx+"@"+unitenter.zoneidx+" being secured for "+self.nameidx+"@"+self.zoneidx);
 
    if (isset(unitenter.flags, UNIT_FL_BURIED))
    {
       exec("dig", self);
       pause;
       if (isset(unitenter.flags, UNIT_FL_BURIED))
+      {
+         log(self.nameidx+"@"+self.zoneidx+" seems to be permanently buried");
          return(FALSE);
+      }
    }
-
-   if (not isset(unitenter.openflags, EX_OPEN_CLOSE))
-      return(FALSE);
 
    if (unlock == FALSE)
    {
       if (isset(unitenter.openflags, EX_LOCKED))
+      {
+         log(self.nameidx+"@"+self.zoneidx+" locked and not allowed to unlock.");
          return (FALSE);
+      }
    }
 
    lk := isset(unitenter.openflags, EX_LOCKED);
-
    if (lk)
    {
       exec("unlock "+unitenter.name, self);
@@ -1692,7 +1695,6 @@ code
 
    exec("enter "+unitenter.name, self);
    pause;
-
 
    if (cl)
    {
@@ -1742,9 +1744,6 @@ code
       pause;
       return(FALSE);
    }
-
-   if (not isset(unitexit.openflags, EX_OPEN_CLOSE))
-      return(FALSE);
 
    if (unlock == FALSE)
    {
@@ -1881,16 +1880,20 @@ code
 
    if (self.outside == u)
    {
-      log(self.name + " is unable to exit "+self.outside.name);
+      log("get_out() " + self.name + " is unable to exit "+self.outside.name);
       return(FALSE);
    }
 
    if ((u.nameidx == "coffin1") and (u.zoneidx == "midgaard"))
    {
+      log("get_out(): got out of coffin");
+      
       if (not u.inside)
       {
-         exec("emote pushes the coffin into the water and lets it sink.", self);
+         log("get_out(): destroyed coffin");
+         unsecure(u);
          destroy(u);
+         exec("emote pushes the coffin into the water and lets it sink.", self);
       }
       else
          log("get_out(): coffin not empty");
@@ -1900,7 +1903,7 @@ code
    return(TRUE);
 
    :lostcoffin:
-   log("coffin lost while exiting");
+   log("get_out(): coffin lost while exiting");
    return(TRUE);
 }
 dilend
@@ -1942,6 +1945,21 @@ code
    }
    else if (self.position != POSITION_STANDING)
    {
+      // We are fighting or stunned or worse figure it out
+
+      i := 0;
+      while ((self.position == POSITION_FIGHTING) or (self.position < POSITION_SLEEPING))
+      {
+         i := i + 1;
+         if (i > 100)
+         {
+            log("readywalk(): "+self.nameidx+"@"+self.zoneidx+" fighting or about to die forever.");
+            return(-1);
+         }
+         pause;
+      }
+
+      pause;
       return(0);
    }
 

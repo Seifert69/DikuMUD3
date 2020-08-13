@@ -3877,79 +3877,77 @@ var
    test      :  integer;
    room      :  unitptr;
    iname     :  string;
-   cnt       :  integer;
 
 code
 {
    if (arg == "")
-   {act("What do you want to drag?", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
-   }
-
-if (self.outside.type != UNIT_ST_ROOM)
-   {act("You cannot drag anything while in $2n.", A_ALWAYS, self, self.outside, null, TO_CHAR);
-    return;
-   }
-
-if (arg == "self")
    {
-     act("You cannot drag yourself, silly.", A_ALWAYS, self, null, null, TO_CHAR);
-     return;
-
+      act("What do you want to drag?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-room := self.outside;
+   if (self.outside.type != UNIT_ST_ROOM)
+   {
+      act("You cannot drag anything while in $2n.", A_ALWAYS, self, self.outside, null, TO_CHAR);
+      return;
+   }
+
+   if (arg == "self")
+   {
+      act("You cannot drag yourself, silly.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
 
    /* Find the item we want to drag */
    /* Didnt use findunit() as it has issues with buried and invisible items */
+   // MS2020 use findunit only, because it doesn't have issues. ANd if it does they need to get fixed :-D
 
-cnt := 2;
-iname := arg;
-item := findunit(self, arg, FIND_UNIT_SURRO, null);
+   room := self.outside;
+
+   // cnt := 2;
+   iname := arg;
+   item := findunit(self, arg, FIND_UNIT_SURRO, null);
 
 
-:loop:
-if (item == null)
-   {act("No such thing here.", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
-   }
-
-if ((not visible(self, item)) or (isset(item.flags, UNIT_FL_BURIED)))
+   :loop:
+   if (item == null)
    {
-     arg := itoa(cnt) + "." + iname;
-     item := findunit(self, arg, FIND_UNIT_SURRO, null);
-     cnt := cnt + 1;
-     goto loop;
+      act("No such thing here.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* if arg is nothing, then we didnt put in a direction to drag it in */
+   if (arg == "")
+   {
+      act("What direction do you wish to drag $2n in?", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
+   }
+
+   /* cant drag people unless they are unconcious */
+   if (((item.type == UNIT_ST_PC) or (item.type == UNIT_ST_NPC)) and (item.position > POSITION_SLEEPING))
+   {
+      act("Maybe $2e would object to that?", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
+   }
+
+   /* or rooms :P */
+   if (item.type == UNIT_ST_ROOM)
+   {
+      act("That would be quite impossible.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
 
-  /* cant drag people unless they are unconcious */
-if (((item.type == UNIT_ST_PC) or (item.type == UNIT_ST_NPC)) and (item.position > POSITION_SLEEPING))
-   {act("Maybe $2e would object to that?", A_ALWAYS, self, item, null, TO_CHAR);
-    return;
-   }
-  /* or rooms :P */
-if (item.type == UNIT_ST_ROOM)
-   {act("That would be quite impossible.", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   /* Also, needs to be manipulate take in order to drag it */
+   if (not isset(item.manipulate, MANIPULATE_TAKE))
+   {
+      act("You cannot move $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
    }
 
 
-  /* Also, needs to be manipulate take in order to drag it */
-if (not isset(item.manipulate, MANIPULATE_TAKE))
-   {act("You cannot move $2n.", A_ALWAYS, self, item, null, TO_CHAR);
-    return;
-   }
-
-
-  /* if arg is nothing, then we didnt put in a direction to drag it in */
-if (arg == "")
-   {act("What direction do you wish to drag $2n in?", A_ALWAYS, self, item, null, TO_CHAR);
-    return;
-   }
-
-  /* remove the whitespace from the direction */
-arg := getword(arg);
+   /* remove the whitespace from the direction */
+   arg := getword(arg);
 
   /*  Now we find the direction the player is dragging the item in.  If at the end,
       dir still is -1, then we know that no valid direction was given */
@@ -3962,8 +3960,6 @@ arg := getword(arg);
       return;
    }
 
-   // What about swim?
-
    /* make sure the way is clear */
    if (isset(self.outside.exit_info[dir], EX_CLOSED))
    {
@@ -3974,41 +3970,41 @@ arg := getword(arg);
    /* make sure the person can move it (has enough endurance) */
    test := movementloss(self.outside.movement);
 
-end_cost := movementloss(self.outside.exit_to[dir].movement);
-end_cost := (end_cost + test) / 2;
+   end_cost := movementloss(self.outside.exit_to[dir].movement);
+   end_cost := (end_cost + test) / 2;
 
-end_cost := (item.weight / 5) + end_cost;
+   end_cost := (item.weight / 5) + end_cost;
 
-if (self.endurance < end_cost)
-   {act("You are too exhausted.", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (self.endurance < end_cost)
+   {
+      act("You are too exhausted.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-    /* the movement dil will take care of the movenet cost  for the walking */
-end_cost := item.weight / 5;
+   /* the movement dil will take care of the movenet cost  for the walking */
+   end_cost := item.weight / 5;
 
   /* start the walking */
-exec(arg, self);
+   exec(arg, self);
 
   /* Couldnt move for some reason */
-if (room == self.outside)
+   if (room == self.outside)
+      return;
+
+   act("$1n is dragged away by $3n.", A_SOMEONE, item, null, self, TO_NOTVICT);
+   link(item, self.outside);
+   act("You drag it along.", A_ALWAYS, self, null, null, TO_CHAR);
+   act("$1n is dragged along by $3n.", A_SOMEONE, item, null, self, TO_NOTVICT);
+
+   if (self.level < IMMORTAL_LEVEL)
+      self.endurance := self.endurance - end_cost;
+
+   position_update(self);
+
+   send_done ("drag", self, null, item, 0, "", null);
    return;
-
-act("$1n is dragged away by $3n.", A_SOMEONE, item, null, self, TO_NOTVICT);
-link(item, self.outside);
-act("You drag it along.", A_ALWAYS, self, null, null, TO_CHAR);
-act("$1n is dragged along by $3n.", A_SOMEONE, item, null, self, TO_NOTVICT);
-
-if (self.level < IMMORTAL_LEVEL)
-    self.endurance := self.endurance - end_cost;
-
-position_update(self);
-
-send_done ("drag", self, null, item, 0, "", null);
-
-return;
-
-}dilend
+}
+dilend
 
 
 /* recharge_fuel : This dil recharges the energy for vehicles once a minute.

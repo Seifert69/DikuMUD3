@@ -491,6 +491,7 @@ void update_crimes_event(void *p1, void *p2)
 void timewarp_end(void *p1, void *p2)
 {
     g_nTickUsec = OPT_USEC; // End the timewarp
+    slog(LOG_ALL, 0, "Ending time warp, back to normal game speed.");
 }
 
 
