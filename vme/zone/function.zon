@@ -1693,6 +1693,13 @@ code
    }
 
    exec("enter "+unitenter.name, self);
+   if (self.outside != unitenter)
+   {
+      if (trick)
+      {
+         link(self, unitenter);
+      }
+   }
    pause;
 
    if (cl)
