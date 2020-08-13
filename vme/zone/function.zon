@@ -1653,7 +1653,6 @@ var
 code
 {
    secure(unitenter, lostunit);
-   log("oc_enterunit(): " + SYMNAME(unitenter)+" being secured for "+SYMNAME(self));
 
    if (isset(unitenter.flags, UNIT_FL_BURIED))
    {
