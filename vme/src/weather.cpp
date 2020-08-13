@@ -23,6 +23,7 @@
 extern eventqueue events;
 int sunlight = SUN_SET;                     /* And how much sun. */
 const time_t beginning_of_time = 650336715; /* Sat Aug 11 01:05:15 1990 */
+time_t g_tBootTime = 0;                     // time(0) when server boots
 
 /* What a coincidence!
  * I actually (REALLY!) converted the time_t on:  11-Aug-94 12:38:58.
@@ -71,6 +72,20 @@ struct time_info_data mud_date(time_t t)
     mdate.year = (p / SECS_PER_MUD_YEAR); /* [0..[ years */
 
     return mdate;
+}
+
+
+struct time_info_data mud_date(void)
+{
+    extern int tics;
+
+    // By doing this, essentially we allow timewarping to also warp the MUD time and date
+    // MUD time can skew a tiny bit this way if ticks generally take longer than 250ms.
+    // Before it simply used time(0).  I like this for debugging complicated zones, e.g. ships.
+
+    time_t t = g_tBootTime + (tics / PULSE_SEC);
+
+    return mud_date(t);
 }
 
 /* Calculate the MUD time passed over the last t2-t1 centuries (secs) */
@@ -266,7 +281,7 @@ void update_time_and_weather(void)
     struct time_info_data time_info;
     class zone_type *z;
 
-    time_info = mud_date(time(0));
+    time_info = mud_date();
 
     another_hour(time_info);
 
@@ -291,8 +306,8 @@ void boot_time_and_weather(void)
     extern char world_boottime[64];
 
     struct time_info_data time_info;
-    time_t now = time(0);
-    char *p = ctime(&now);
+    g_tBootTime = time(0);
+    char *p = ctime(&g_tBootTime);
     p[strlen(p) - 1] = '\0';
 
     sprintf(world_boottime, "%s", p);

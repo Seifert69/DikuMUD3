@@ -68,7 +68,7 @@ namespace fs = boost::filesystem;
 
 using namespace boost;
 
-struct time_info_data mud_date(time_t t);
+struct time_info_data mud_date();
 extern struct trie_type *intr_trie;
 /* ************************************************************************ */
 /* DIL-expressions							    */
@@ -5950,7 +5950,7 @@ void dilfe_tho(register class dilprg *p)
 
     v->type = DILV_INT;
     v->atyp = DILA_NONE;
-    v->val.num = mud_date(time(0)).hours;
+    v->val.num = mud_date().hours;
     p->stack.push(v);
 }
 
@@ -5961,7 +5961,7 @@ void dilfe_tda(register class dilprg *p)
 
     v->type = DILV_INT;
     v->atyp = DILA_NONE;
-    v->val.num = mud_date(time(0)).day;
+    v->val.num = mud_date().day;
     p->stack.push(v);
 }
 
@@ -5972,7 +5972,7 @@ void dilfe_tmd(register class dilprg *p)
 
     v->type = DILV_INT;
     v->atyp = DILA_NONE;
-    v->val.num = mud_date(time(0)).month;
+    v->val.num = mud_date().month;
     p->stack.push(v);
 }
 
@@ -5983,7 +5983,7 @@ void dilfe_tye(register class dilprg *p)
 
     v->type = DILV_INT;
     v->atyp = DILA_NONE;
-    v->val.num = mud_date(time(0)).year;
+    v->val.num = mud_date().year;
     p->stack.push(v);
 }
 
