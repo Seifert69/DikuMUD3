@@ -1653,7 +1653,6 @@ var
 code
 {
    secure(unitenter, lostunit);
-   log("oc_enterunit(): " + unitenter.nameidx+"@"+unitenter.zoneidx+" being secured for "+self.nameidx+"@"+self.zoneidx);
 
    if (isset(unitenter.flags, UNIT_FL_BURIED))
    {
@@ -1661,7 +1660,7 @@ code
       pause;
       if (isset(unitenter.flags, UNIT_FL_BURIED))
       {
-         log(self.nameidx+"@"+self.zoneidx+" seems to be permanently buried");
+         log("oc_enterunit(): "+SYMNAME(self)+" seems to be permanently buried");
          return(FALSE);
       }
    }
@@ -1670,7 +1669,7 @@ code
    {
       if (isset(unitenter.openflags, EX_LOCKED))
       {
-         log(self.nameidx+"@"+self.zoneidx+" locked and not allowed to unlock.");
+         log("oc_enterunit(): "+SYMNAME(self)+" locked and not allowed to unlock.");
          return (FALSE);
       }
    }
@@ -1694,6 +1693,13 @@ code
    }
 
    exec("enter "+unitenter.name, self);
+   if (self.outside != unitenter)
+   {
+      if (trick)
+      {
+         link(self, unitenter);
+      }
+   }
    pause;
 
    if (cl)
@@ -1715,7 +1721,7 @@ code
    return (TRUE);
 
    :lostunit:
-   log("lost unit in oc_enterunit()");
+   log("oc_enterunit(): lost unit");
    return(FALSE);
 }
 dilend
@@ -1795,7 +1801,7 @@ code
    return (TRUE);
 
    :lostunit:
-   log("lost secured unit in oc_exitunit()");
+   log("oc_exitunit(): lost secured unit");
    return(FALSE);
 }
 dilend
@@ -1811,6 +1817,7 @@ dilend
 dilbegin integer getout();
 var
    u : unitptr;
+   i : integer;
 code
 {
    heartbeat := 4 * PULSE_SEC;   
@@ -1828,7 +1835,7 @@ code
 
       if (self.outside.type == UNIT_ST_NPC)
       {
-         log(self.name + " is unable to dismount "+self.outside.name);
+         log(SYMNAME(self) + " is unable to dismount "+SYMNAME(self.outside));
          return(FALSE);
       }
 
@@ -1840,7 +1847,7 @@ code
    if (isset(self.outside.flags, UNIT_FL_BURIED))
    {
       exec("knock " + self.outside.names.[0], self);
-      log(self.name + " is buried alive in "+self.outside.name);
+      log(SYMNAME(self) + " is buried alive in "+SYMNAME(self.outside));
       pause;
       return(FALSE);
    }
@@ -1853,7 +1860,7 @@ code
       if (isset(self.outside.openflags, EX_LOCKED))
       {
          exec("knock " + self.outside.names.[0], self);
-         log(self.name + " is locked helplessly into "+self.outside.name);
+         log(SYMNAME(self) + " is locked helplessly into " + SYMNAME(self.outside));
          pause;
          return(FALSE);
       }
@@ -1866,7 +1873,7 @@ code
       if (isset(self.outside.openflags, EX_CLOSED))
       {
          exec("knock " + self.outside.names.[0], self);
-         log(self.name + " is helplessly unable to open "+self.outside.name);
+         log(SYMNAME(self) + " is helplessly unable to open " + SYMNAME(self.outside));
          pause;
          return(FALSE);
       }
@@ -1880,23 +1887,36 @@ code
 
    if (self.outside == u)
    {
-      log("get_out() " + self.name + " is unable to exit "+self.outside.name);
+      log("get_out() " + SYMNAME(self) + " is unable to exit " + SYMNAME(self.outside));
       return(FALSE);
    }
 
    if ((u.nameidx == "coffin1") and (u.zoneidx == "midgaard"))
    {
-      log("get_out(): got out of coffin");
-      
+      unsecure(u);
       if (not u.inside)
       {
-         log("get_out(): destroyed coffin");
-         unsecure(u);
          destroy(u);
          exec("emote pushes the coffin into the water and lets it sink.", self);
       }
       else
-         log("get_out(): coffin not empty");
+      {
+         log("get_out(): coffin not empty, trying other way");
+         pause;
+         u := findsymbolic(self, "coffin1@midgaard", FIND_UNIT_SURRO);
+         if (u)
+         {
+            if (not u.inside)
+            {
+               destroy(u);
+               exec("emote pushes the coffin into the water and lets it sink.", self);
+            }
+            else
+               log("get_out(): coffin still not empty, one coffin added to the game...");
+         }
+         else
+            log("get_out() coffin not found on second try");
+      }
    }
 
    pause;
@@ -1953,7 +1973,7 @@ code
          i := i + 1;
          if (i > 100)
          {
-            log("readywalk(): "+self.nameidx+"@"+self.zoneidx+" fighting or about to die forever.");
+            log("readywalk(): "+SYMNAME(self)+" fighting or about to die forever.");
             return(-1);
          }
          pause;
@@ -1986,9 +2006,20 @@ code
       if (self.outside.type == UNIT_ST_ROOM)
       {
          // Load and enter a canoe 
+         // debug log("readywalk(): "+SYMNAME(self)+"load a canoe");
          u := load("coffin1@midgaard");
-         link(u, self.outside);
-         exec("enter coffin", self);
+         // debug log("readywalk(): loaded " + SYMNAME(u));
+         secure(u, lostit);
+         link(u, self.outside); // Drop coffin on the ground.
+         // debug log("readywalk(): canoe now in " + SYMNAME(u.outside));
+         link(self, u);  // Put self in coffin, - can't enter in the dark (or will load 20 coffins)
+         // debug log("readywalk(): "+SYMNAME(self)+" now in " + SYMNAME(self.outside));
+         unsecure(u);
+         if (self.outside != u)
+            goto lostit;
+         // exec("enter coffin", self);
+         exec("emote drops an open coffin on the ground and climbs into it.", self);
+         pause;
          return(0); // Call again
       }
 
@@ -2015,6 +2046,10 @@ code
          return(-1);
    }
    return(1);
+
+   :lostit:
+   log("readywalk(): lost coffin.");
+   return(0);
 }
 dilend
 

@@ -1071,6 +1071,17 @@ var
 
 code
 {
+   // We need some kind of argument
+   if (arg == "")
+   {
+      if (bMessage)
+      {
+         act("What do you want to enter?", A_ALWAYS, self, arg, null, TO_CHAR);
+         quit;
+      }
+      return(-1);
+   }
+
    /* first we are going to check if the player dictated what direction they want to open */
    /* set up so we can close 'both' doors (room player is in and room the door leads to.) */
 
@@ -2511,7 +2522,6 @@ return;
 /* enter_dil :  This dil will replace the current enter command.  This is necessary to complete the
    use of movement into dil. do_enter() */
 
-
 dilbegin enter_dil (arg : string);
 external
    unitptr unit_room@function(unit1 : unitptr);
@@ -2534,207 +2544,206 @@ var
 code
 {
    /*  Check positions of player to make sure he can enter */
-
    if (self.position == POSITION_FIGHTING)
-   {act("You are fighting for your life!", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   {
+      act("You are fighting for your life!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
    if (self.position == POSITION_RESTING)
-   {act("You feel too relaxed to do that, perhaps you should stand up?", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   {  act("You feel too relaxed to do that, perhaps you should stand up?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if (self.position == POSITION_SITTING)
-   {act("Perhaps you should get on your feet first?", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (self.position == POSITION_SITTING)
+   {
+      act("Perhaps you should get on your feet first?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if (self.position == POSITION_SLEEPING)
-   {act("In your dreams, or what?", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (self.position == POSITION_SLEEPING)
+   {
+      act("In your dreams, or what?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if (self.position != POSITION_STANDING)
-   {act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
-   }
-/*  MS2020 - copied this onto the char itself rather than messing up global 
-             functions.
-
-if (dilfind("shelter@skills", self))
-   {act("You realize you are busy building a shelter and decide not to leave "
-   +"until it is finnished!", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
-   } */
-
-/* Make sure player told us what to enter */
-
-if (arg == "")
-   {act("Enter what?", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (self.position != POSITION_STANDING)
+   {
+      act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-/* Find what the player wants to enter */
+   /* Make sure player told us what to enter */
+   if (arg == "")
+   {
+      act("Enter what?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
 
-arg1 := arg;
-
-item := findunit(self, arg, FIND_UNIT_SURRO, null);
-
+   /* Find what the player wants to enter */
+   arg1 := arg;
+   item := findunit(self, arg, FIND_UNIT_SURRO, null);
 
    /* If item not there, cant enter it! */
-if ((item == null) or (not visible(self, item)))
-    goto check_door;
+   if ((item == null) or (not visible(self, item)))
+      goto check_door;
 
-
-if (isset(item.flags, UNIT_FL_BURIED))
-   {act("You do not see a $2t here.", A_ALWAYS, self, arg1, null, TO_CHAR);
-    return;
+   if (isset(item.flags, UNIT_FL_BURIED))
+   {
+      act("You do not see a $2t here.", A_ALWAYS, self, arg1, null, TO_CHAR);
+      return;
    }
 
 
    /* If not set to ENTER, cant enter it */
-if (not isset(item.manipulate, MANIPULATE_ENTER))
-   {act("You cannot enter $2m!", A_ALWAYS, self, item, null, TO_CHAR);
-    return;
+   if (not isset(item.manipulate, MANIPULATE_ENTER))
+   {
+      act("You cannot enter $2m!", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
    }
 
    /* IF a pc or npc, cant enter it */
-if ((item.type == UNIT_ST_PC) or (item.type == UNIT_ST_NPC))
-   {act("You cannot enter that!", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if ((item.type == UNIT_ST_PC) or (item.type == UNIT_ST_NPC))
+   {
+      act("You cannot enter that!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
    /* if it is closed, cant enter */
-if (isset(item.openflags, EX_CLOSED))
-   {act("$2n is closed.", A_ALWAYS, self, item, null, TO_CHAR);
-    return;
+   if (isset(item.openflags, EX_CLOSED))
+   {
+      act("$2n is closed.", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
    }
 
-if (item == self.outside)
-   {act("You are already there!", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (item == self.outside)
+   {
+      act("You are already there!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
    /* IF cant fit, cant enter */
-test := item.weight + self.weight - item.baseweight;
+   test := item.weight + self.weight - item.baseweight;
 
-
-if (test > item.capacity)
-   {act("There is no room for you in there.", A_ALWAYS, self, null, null, TO_CHAR);
-    return;
+   if (test > item.capacity)
+   {
+      act("There is no room for you in there.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
    }
 
-if ((self.outside.type == UNIT_ST_OBJ) and (self.outside.objecttype == ITEM_BOAT))
-   {act("You are in a $3N, you must exit first to enter!",
-   A_ALWAYS, self, null,self.outside, TO_CHAR);
-    return;
-    }
+   if ((self.outside.type == UNIT_ST_OBJ) and (self.outside.objecttype == ITEM_BOAT))
+   {
+      act("You are in a $3N, you must exit first to enter!", A_ALWAYS, self, null,self.outside, TO_CHAR);
+      return;
+   }
 
+   /* This following bit allows the pc to enter something and bring his horse or vehicle with
+      him.  This makes horses and vehicles easier to use and more appealing to the players. */
+   
+   if (((((self.outside.type == UNIT_ST_NPC) and (isset(self.outside.flags, UNIT_FL_TRANS))) or
+         ((self.outside.type == UNIT_ST_OBJ) and ((self.outside.objecttype == ITEM_BOAT) or (self.outside.objecttype == ITEM_VEHICLE))))) and
+       (item.outside != self.outside))
+   {
+      if (self.outside.outside == item)
+      {
+         act("You and your $2N are already in it!", A_ALWAYS, self, self.outside, null, TO_CHAR);
+         return;
+      }
 
+      if (self.outside.type == UNIT_ST_NPC)
+      {
+         act("$1n spurs $1s $3N into $2n.", A_SOMEONE, self, item, self.outside, TO_REST);
+         act("You spur your $3N into $2n.", A_ALWAYS, self, item, self.outside, TO_CHAR);
 
-  /* This following bit allows the pc to enter something and bring his horse or vehicle with
-     him.  This makes horses and vehicles easier to use and more appealing to the players. */
-if (((((self.outside.type == UNIT_ST_NPC) and (isset(self.outside.flags, UNIT_FL_TRANS))) or
-    ((self.outside.type == UNIT_ST_OBJ) and ((self.outside.objecttype == ITEM_BOAT) or (self.outside.objecttype == ITEM_VEHICLE))))) and
-    (item.outside != self.outside))
-   {if (self.outside.outside == item)
-       {act("You and your $2N are already in it!", A_ALWAYS, self, self.outside, null, TO_CHAR);
-        return;
-       }
+         link(self.outside, item);
+         look_blank@baselook(self, ":brief:");
 
-    if (self.outside.type == UNIT_ST_NPC)
-       {act("$1n spurs $1s $3N into $2n.", A_SOMEONE, self, item, self.outside, TO_REST);
-        act("You spur your $3N into $2n.", A_ALWAYS, self, item, self.outside, TO_CHAR);
-
-        link(self.outside, item);
-        look_blank@baselook(self, ":brief:");
-
-        pc := self.outside.inside;
-        while (pc != null)
-           {if ((pc != self) and ((pc.type == UNIT_ST_NPC) or (pc.type == UNIT_ST_PC)))
+         pc := self.outside.inside;
+         while (pc != null)
+         {
+            if ((pc != self) and ((pc.type == UNIT_ST_NPC) or (pc.type == UNIT_ST_PC)))
                look_blank@baselook(pc, ":brief:");
 
             pc := pc.next;
-           }
+         }
 
-        if (not isset(item.flags, UNIT_FL_TRANS))
+         if (not isset(item.flags, UNIT_FL_TRANS))
             act("$1n has entered the $2N on $1s $3N.", A_ALWAYS, self, item, self.outside, TO_REST);
-       }
-    else
-       {act("$1n steers $1s $3N into $2n.", A_HIDEINV, self, item, self.outside, TO_REST);
-        act("You steer your $3N into $2n.", A_ALWAYS, self, item, self.outside, TO_CHAR);
+      }
+      else
+      {
+         act("$1n steers $1s $3N into $2n.", A_HIDEINV, self, item, self.outside, TO_REST);
+         act("You steer your $3N into $2n.", A_ALWAYS, self, item, self.outside, TO_CHAR);
 
-        link(self.outside, item);
-        look_blank@baselook(self, ":brief:");
+         link(self.outside, item);
+         look_blank@baselook(self, ":brief:");
 
-
-        pc := self.outside.inside;
-        while (pc != null)
-           {if ((pc != self) and ((pc.type == UNIT_ST_NPC) or (pc.type == UNIT_ST_PC)))
+         pc := self.outside.inside;
+         while (pc != null)
+         {
+            if ((pc != self) and ((pc.type == UNIT_ST_NPC) or (pc.type == UNIT_ST_PC)))
                look_blank@baselook(pc, ":brief:");
 
             pc := pc.next;
-           }
+         }
 
         if (not isset(item.flags, UNIT_FL_TRANS))
             act("$1n has entered the $2N in $1s $3N.", A_ALWAYS, self, item, self.outside, TO_REST);
-       }
+      }
    }
-else    /* Not on a horse or vehicle, so just enter pc */
+   else    /* Not on a horse or vehicle, so just enter pc */
    {
-     if (item.extra.["$enter_s"])
-        act(item.extra.["$enter_s"].descr, A_ALWAYS, self, item, null, TO_CHAR);
-     else
-        act("You enter $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+      if (item.extra.["$enter_s"])
+         act(item.extra.["$enter_s"].descr, A_ALWAYS, self, item, null, TO_CHAR);
+      else
+         act("You enter $2n.", A_ALWAYS, self, item, null, TO_CHAR);
 
-     if (item.extra.["$enter_o"])
-        act(item.extra.["$enter_o"].descr, A_ALWAYS, self, item, null, TO_REST);
-     else
-        act("$1n enters $2n.", A_HIDEINV, self, item, null, TO_REST);
+      if (item.extra.["$enter_o"])
+         act(item.extra.["$enter_o"].descr, A_ALWAYS, self, item, null, TO_REST);
+      else
+         act("$1n enters $2n.", A_HIDEINV, self, item, null, TO_REST);
 
-    link(self, item);
+      link(self, item);
 
-    look_blank@baselook(self, ":brief:");
+      look_blank@baselook(self, ":brief:");
 
-    if (not isset(item.flags, UNIT_FL_TRANS))
-        act("$1n has entered the $2N.", A_HIDEINV, self, item, null, TO_REST);
+      if (not isset(item.flags, UNIT_FL_TRANS))
+         act("$1n has entered the $2N.", A_HIDEINV, self, item, null, TO_REST);
    }
 
-send_done ("enter", self, null, item, 0, "", null);
+   send_done ("enter", self, null, item, 0, "", null);
+   return;
 
-return;
 
-:check_door:
-
-/* first we are going to check if the player dictated what direction
-   they want to enter */
+   :check_door:
+   // first we are going to check if the player dictated what direction
+   // they want to enter
 
    /* set up so we can close 'both' doors (room player is in and room the door leads to.) */
-oppdir := {SOUTH, WEST, NORTH, EAST, DOWN, UP, SOUTHWEST, SOUTHEAST, NORTHWEST, NORTHEAST};
+   oppdir := {SOUTH, WEST, NORTH, EAST, DOWN, UP, SOUTHWEST, SOUTHEAST, NORTHWEST, NORTHEAST};
 
-arg2 := arg;            /* save arg for later use */
-arg1 := getword(arg2);  /* Check arg2 for directions */
+   arg2 := arg1;           /* save arg for later use */
+   arg1 := getword(arg2);  /* Check arg2 for directions */
 
-item := self.outside;
-
+   item := self.outside;
   /* Find the room the player is in.  If the player is in something that is
      transparent, we take that objects outside as our item */
-if ((item.type != UNIT_ST_ROOM) and (isset(item.flags, UNIT_FL_TRANS)))
-   item := item.outside;
+   if ((item.type != UNIT_ST_ROOM) and (isset(item.flags, UNIT_FL_TRANS)))
+      item := item.outside;
 
 
    /* If not a room, no doors */
    if (item.type != UNIT_ST_ROOM)
    {
-      act("You see no $2t here.", A_ALWAYS, self, arg, null, TO_CHAR);
+      act("You see no $2t here.", A_ALWAYS, self, arg1, null, TO_CHAR);
       return;
    }
 
-   dir := checkexit(arg, 1);
+   dir := checkexit(arg1, 1);
 
    /* Execute the move */
-   /* MS2020 start_move(self, dir, arg, FALSE); */
+   /* MS2020 start_move(self, dir, arg1, FALSE); */
+
    exec(dirstring@function(dir), self);
    return;
 }

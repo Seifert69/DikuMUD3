@@ -1,14 +1,13 @@
+/* BASELOOK :  This zone controls the dils that make the look command
+   possible.  The main dil is
+   do_look, which then calls the other dils as they are needed.
 
-/*  BASELOOK :  This zone controls the dils that make the look command
-possible.  The main dil is
-    do_look, which then calls the other dils as they are needed.
-
-    There are several contingencies that must be taken into account, such as
-if the player is just
-    looking at the room, looking at an object/person in the room, an object
-a person is wearing,
-    an extra on an object in the room/inventory.  All of this is taken into
-account.
+   There are several contingencies that must be taken into account, such as
+   if the player is just
+   looking at the room, looking at an object/person in the room, an object
+   a person is wearing,
+   an extra on an object in the room/inventory.  All of this is taken into
+   account.
 */
 
 #define ITEM_VEHICLE  28
@@ -295,100 +294,96 @@ then parses
    the argument, seeing which of the work dils it needs to call. */
 
 dilbegin do_look (arg:string);
-
 external
-
-     string is_dir (s:string);
-            look_blank (l2 : unitptr, arg:string);
-            look_at (l3 : unitptr, s:string);
-            look_in (l4 : unitptr, s:string);
- integer             look_dir(l5 : unitptr, s:string);
+   string is_dir (s:string);
+   look_blank(l2 : unitptr, arg:string);
+   look_at(l3 : unitptr, s:string);
+   look_in(l4 : unitptr, s:string);
+   integer look_dir(l5 : unitptr, s:string);
 
 var
-     arg1    :  string;
-args:stringlist;
-     temp    :  string;
-     dir     :  string;
+   arg1    :  string;
+   args:stringlist;
+   temp    :  string;
+   dir     :  string;
 
 code
 {
-if (self.position < POSITION_SLEEPING)
-     {sendtext("You can't see anything but stars!<br/>", self);
-      quit;
-     }
-else if (self.position == POSITION_SLEEPING)
-     {sendtext("You can not see anything when you are sleeping.<br/>", self);
-      quit;
-     }
-else if ((isaff (self, ID_BLIND_CHAR)) or
-(isset(self.charflags,CHAR_BLIND)))
-     {sendtext("You can't see a damn thing, you are blind!<br/>",self);
-      quit;
-     }
-else if (isset(self.flags, UNIT_FL_BURIED))
-     {sendtext("You are buried alive!<br/>", self);
-      quit;
-     }
-else if (not (islight(self.outside)))
-     {sendtext("It is pitch black.<br/>",self);
-      quit;
-     }
-     else if ((isaff (self, ID_BLIND_CHAR)) or
-     (isset(self.charflags,CHAR_BLIND)))
-     {sendtext("You can't see a damn thing, you are blind!<br/>",self);
-      quit;
-     }
-
-if (arg=="self")
- arg:=self.name;
-if ((arg == "") or (arg == ":brief:"))
-    {look_blank(self, arg);
-     quit;
-    }
-
-temp := arg;
-
-arg1 := getword(temp);
-
-if (arg1 == "at")
-   {if (temp != "")
-       look_at(self, temp);
-    else
-       look_at(self, arg);
-    quit;
-   }
-
-if ((arg1 == "in") or (arg1 == "i"))
-   {if (temp != "")
-       look_in (self, temp);
-    else
-       look_at (self, arg);
-    quit;
-   }
-
-dir := is_dir(arg1);
-
-if (dir != "")
+   if (self.position < POSITION_SLEEPING)
    {
-if (look_dir (self, dir)==FALSE)
-{
-args:=getwords (arg);
-if (length(args)>1)
-look_at(self, arg);
-else
-     sendtext("<div class='exit'>No such direction here?</div>", self);
-}
-    quit;
+      sendtext("You can't see anything but stars!<br/>", self);
+      quit;
    }
-else
-                   look_at(self, arg);
+   else if (self.position == POSITION_SLEEPING)
+   {
+      sendtext("You can not see anything when you are sleeping.<br/>", self);
+      quit;
+   }
+   else if ((isaff(self, ID_BLIND_CHAR)) or (isset(self.charflags,CHAR_BLIND)))
+   {
+      sendtext("You can't see a damn thing, you are blind!<br/>",self);
+      quit;
+   }
+   else if (isset(self.flags, UNIT_FL_BURIED))
+   {
+      sendtext("You are buried alive!<br/>", self);
+      quit;
+   }
+   else if (not (islight(self.outside)))
+   {
+      sendtext("It is pitch black.<br/>",self);
+      quit;
+   }
 
+   if (arg=="self")
+      arg:=self.name;
 
+   if ((arg == "") or (arg == ":brief:"))
+   {
+      look_blank(self, arg);
+      quit;
+   }
 
+   temp := arg;
+   arg1 := getword(temp);
 
-quit;
+   if (arg1 == "at")
+   {
+      if (temp != "")
+         look_at(self, temp);
+      else
+         look_at(self, arg);
+      quit;
+   }
 
-}dilend
+   if ((arg1 == "in") or (arg1 == "i"))
+   {
+      if (temp != "")
+         look_in (self, temp);
+      else
+         look_at (self, arg);
+      quit;
+   }
+
+   dir := is_dir(arg1);
+   if (dir != "")
+   {
+      if (look_dir (self, dir)==FALSE)
+      {
+         args:=getwords(arg);
+         if (length(args)>1)
+            look_at(self, arg);
+         else
+            sendtext("<div class='exit'>No such direction here?</div>", self);
+      }
+      quit;
+   }
+   else
+      look_at(self, arg);
+
+   quit;
+}
+dilend
 
 
 
@@ -540,15 +535,11 @@ dilend
 //
 dilbegin unitptr find_here(looker:unitptr, arg:string);
 var
-   ln:integer;
-   count:integer;
    item:unitptr;
-   item_inside:unitptr;
-   args:stringlist;
 
 code
 {
-   item := findunit(looker, arg, FIND_UNIT_SURRO, null);
+   item := findunit(looker, arg, FIND_UNIT_HERE, null);
    return(item);
 
    // MS2020. This function was broken. E.g. returns Mary when
@@ -561,10 +552,7 @@ dilend
 
 dilbegin unitptr find_equip(looker:unitptr,arg:string);
 var
- ln:integer;
- count:integer;
- item:unitptr;
- args:stringlist;
+   item:unitptr;
 
 code
 {
@@ -727,7 +715,7 @@ code
    if (right(temp, 2) == "'s")     /* Looking at temp's someting, so we need to concentrate on temp */
    {
       temp := left(temp, (length(temp) - 2));  /* Get temp's real name */
-      pc:=find_here(looker,temp);
+      pc := find_here(looker,temp);
 
       if ((pc == null) or (not visible(looker, pc)))
       {
@@ -797,11 +785,11 @@ code
          send_done ("look", looker, item, pc, 1, arg, null);
          quit;
       }
-    }
+   } // if right "'s"
 
    arg1 := arg; /* Ok, now we need to scan the room for arg1 */
 
-   item := find_here(looker,arg1);
+   item := find_here(looker, arg1);
 
    if ((item != null) and (visible(looker, item)))
    /* we found an item with the name of arg1, going to look at it */

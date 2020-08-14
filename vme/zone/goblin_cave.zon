@@ -11,10 +11,6 @@ END HEADER*/
 
 
 
-
-
-
-
 #include <macros.h>
 /*==============================================================*/
 /*                            ZONE                              */
@@ -1227,31 +1223,40 @@ code
    u1 := findunit(self, "bread", FIND_UNIT_INVEN, null);
    if (u1 #= null)
      set(i, 1);
+    else
+      secure(u1,lostit);
 
    u2 := findunit(self, "mushroom", FIND_UNIT_INVEN, null);
    if (u2 #= null)
      set(i, 2);
+   else
+     secure(u2,lostit);
+
 
    if (i != 0)
    {
       pause;
-      if (isset(i, 1))
-      {
-	 exec("say I really need some bread.", self);
-	 pause;
-      }
-
       if (isset(i, 2))
       {
-	 exec("ask esbanoviz I really need some mushrooms", self);
-	 pause;
+        exec("ask esbanoviz I really need some mushrooms", self);
+        pause;
+      }
+
+      if (isset(i, 1))
+      {
+        unsecure(u2);
+        destroy(u2);  // We tend to get too many mushrooms
+        exec("say I really need some bread.", self);
+        pause;
       }
 
       goto start;
    }
 
    i := u1.value[3] + u1.value[3]; /* Test for poison */
+   unsecure(u1);
    destroy(u1);
+   unsecure(u2);
    destroy(u2);
    exec("emote puts the bread and mushrooms in a bowl.", self);
    pause;
@@ -1270,8 +1275,7 @@ code
    exec("emote makes some stew.", self);
    pause;
 
-    tf:=walk_room@function("throne2@goblin_cave",4);
-
+   tf:=walk_room@function("throne2@goblin_cave",4);
    pause;
    exec("say Dinnher ish sarved, ma lurd!", self);
    pause;
@@ -1283,9 +1287,13 @@ code
    pause;
    exec("say Mhore is caming raight up, ma lurds!", self);
    pause;
-    tf:=walk_room@function("kitchen@goblin_cave",4);
+   tf:=walk_room@function("kitchen@goblin_cave",4);
 
-    goto start;
+   goto start;
+
+   :lostit:
+   log("cook lost a mushroom or a bread");
+   goto start;
 }
 dilend
 
@@ -1324,7 +1332,7 @@ code
   wait(SFB_CMD, (command("say")) and (activator.nameidx=="cook") and (activator.zoneidx=="goblin_cave"));
   pause;
   item:=findunit(self, "bread", FIND_UNIT_INVEN, null);
-  if(item!=null)
+  if(item==null)
   {
     exec("say I'll go ghet it Bozz!", self);
     exec("stand", self);
@@ -1394,11 +1402,13 @@ code
 
   pause;
   exec("say Ho Bozz, Esbanovizzz De Psydonom Haz Arrivedd!", self);
-  wait(SFB_CMD, (command("say")) and (activator.nameidx=="cook") and (activator.zoneidx=="goblin_cave"));
+  wait(SFB_CMD, (command("ask")) and (activator.nameidx=="cook") and (activator.zoneidx=="goblin_cave"));
+  pause;
+  exec("say Esba will findz its.", self);
   item:=findunit(self, "mushroom", FIND_UNIT_INVEN, null);
   if(item==null)
   {
-      tf:=walk_room@function("pt_d_fo@elfdom",4);
+    tf:=walk_room@function("pt_d_fo@elfdom",4);
 
     pause;
     link(self, load("mushroom@goblin_cave"));
@@ -1410,7 +1420,7 @@ code
     pause;
     exec("whistle", self);
     pause;
-     tf:=walk_room@function("fireplac@elfdom",4);
+    tf:=walk_room@function("fireplac@elfdom",4);
 
     pause;
     exec("emote looks at the sky.", self);

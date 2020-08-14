@@ -46,6 +46,7 @@ extra{FLEE_LEAVE, directions}  \
 #define dilend dilend^
 #define pause wait(SFB_TICK | SFB_RANTIME, TRUE)
 #define on_activation(e1, e2) interrupt(SFB_ACTIVATE, e1, e2)
+#define SYMNAME(u) u.nameidx+"@"+u.zoneidx
 
 #define IS_GOOD(a)    ((a) >= 350)
 #define IS_EVIL(a)    ((a) <= -350)
