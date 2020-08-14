@@ -2006,9 +2006,17 @@ code
       if (self.outside.type == UNIT_ST_ROOM)
       {
          // Load and enter a canoe 
+         // debug log("readywalk(): "+SYMNAME(self)+"load a canoe");
          u := load("coffin1@midgaard");
+         // debug log("readywalk(): loaded " + SYMNAME(u));
+         secure(u, lostit);
          link(u, self.outside); // Drop coffin on the ground.
-         link(self, u.inside);  // Put self in coffin, - can't enter in the dark (or will load 20 coffins)
+         // debug log("readywalk(): canoe now in " + SYMNAME(u.outside));
+         link(self, u);  // Put self in coffin, - can't enter in the dark (or will load 20 coffins)
+         // debug log("readywalk(): "+SYMNAME(self)+" now in " + SYMNAME(self.outside));
+         unsecure(u);
+         if (self.outside != u)
+            goto lostit;
          // exec("enter coffin", self);
          exec("emote drops an open coffin on the ground and climbs into it.", self);
          pause;
@@ -2038,6 +2046,10 @@ code
          return(-1);
    }
    return(1);
+
+   :lostit:
+   log("readywalk(): lost coffin.");
+   return(0);
 }
 dilend
 
