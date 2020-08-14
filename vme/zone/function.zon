@@ -2007,8 +2007,11 @@ code
       {
          // Load and enter a canoe 
          u := load("coffin1@midgaard");
-         link(u, self.outside);
-         exec("enter coffin", self);
+         link(u, self.outside); // Drop coffin on the ground.
+         link(self, u.inside);  // Put self in coffin, - can't enter in the dark (or will load 20 coffins)
+         // exec("enter coffin", self);
+         exec("emote drops an open coffin on the ground and climbs into it.", self);
+         pause;
          return(0); // Call again
       }
 
