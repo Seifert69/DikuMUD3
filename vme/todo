@@ -1,12 +1,16 @@
-Maybe: newbie guide doesnt seem to realize you already completed part 1
+Maybe: SFUN_TEACH, add parameter so teacher just teaches what can be learned...?
+Maybe: Teachers ignore "ability, ..." prefix for remote training when training locally
+Maybe: Teachers hyperlink what you can train so you can just click it
+Maybe: Colors in mplex (yikes... figure out how to get it running again :())
 
-Test XP works as expected.
-SFUN_TEACH, add parameter so teacher just teaches what can be learned...?
-Test play
+Maybe: Fix ships (it's dark and they all run thier own code)
+
 Weapons from Thomas
 
-Converting justice.cpp to DIL would be amazing. The last terrible bug I found was there (took 1+ week to find).
+Test XP works as expected.
+Test play
 
+Converting justice.cpp to DIL would be amazing. The last terrible bug I found was there (took 1+ week to find).
 
 I would like the following cleaned up for a distro:
    (It's really there because Valhalla has been growing and spurting for 25 years and 
