@@ -274,8 +274,12 @@ function HistoryAdd(s) {
 
     for (i = 0; i < g_aIgnoreCommands.length; i++)
         if (g_aIgnoreCommands[i].indexOf(s) == 0)
-            return;
+        return;
 
+    i = (g_nCmdPos-1) % g_aCmdHistory.length;
+    if (g_aCmdHistory[i] == s)
+        return;
+        
     g_nCmdPos = g_nCmdPos % g_aCmdHistory.length;
     g_aCmdHistory[g_nCmdPos] = s;
     g_nCmdPos += 1;
