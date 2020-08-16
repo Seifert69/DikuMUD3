@@ -9503,11 +9503,7 @@ code
        "You are in " + couragestring() + " mode.<br/>"+
        "More: '<a cmd='#'>status skills</a>', '<a cmd='#'>status weapons</a>' and '<a cmd='#'>status spells</a>'."
        , A_ALWAYS, self, null, null, TO_CHAR);
-
-      
-
    quit;
-
 
 
 :morphed:
