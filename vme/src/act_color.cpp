@@ -31,6 +31,7 @@
 #include "common.h"
 #include "guild.h"
 #include "dilrun.h"
+
 void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
 {
     char fore[MAX_INPUT_LENGTH];
@@ -59,8 +60,7 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
         print_str = UPC(ch)->color.key_string(g_cServerConfig.color);
         page_string(CHAR_DESCRIPTOR(ch), print_str);
         send_to_char("<br/><br/>", ch);
-        send_to_char("Example: color default <forground color> <background color><br/>",
-                     ch);
+        send_to_char("Example: color default <forground color> <background color><br/>", ch);
         delete print_str;
         return;
     }
@@ -135,8 +135,7 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
     if (change == TRUE)
     {
         print_str = UPC(ch)->color.change(full_name, color);
-        sprintf(cbuf, "Color %s%s changed.<br/>", print_str,
-                getcolor("default"));
+        sprintf(cbuf, "Color %s%s changed.<br/>", print_str, getcolor("default"));
         send_to_char(cbuf, ch);
         // sprintf (cbuf, "%s%s:%s%s", CONTROL_COLOR_CHANGE, full_name, color, CONTROL_COLOR_END);
         // send_to_char(cbuf, ch);
@@ -147,8 +146,7 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
     if ((add == TRUE) && (change == FALSE))
     {
         print_str = UPC(ch)->color.insert(full_name, color);
-        sprintf(cbuf, "Color %s%s changed.<br/>", print_str,
-                getcolor("default"));
+        sprintf(cbuf, "Color %s%s changed.<br/>", print_str, getcolor("default"));
         send_to_char(cbuf, ch);
         // sprintf (cbuf, "%s%s:%s%s", CONTROL_COLOR_INSERT, full_name, color, CONTROL_COLOR_END);
         // send_to_char(cbuf, ch);
