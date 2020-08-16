@@ -11810,10 +11810,11 @@ var
    gcolor : string;
 code
 {
-   u:=ghead();
+   u := ghead();
+
    if (arg=="")
    {
-      arg:="<u>Players:</u>";
+      arg:="<u>Players:</u><br/>";
       temp:="";
       temps:="player";
       tempp:="players";
@@ -11823,7 +11824,7 @@ code
    {
       if ("New Player Helper" in self.quests)
       {
-         arg:="<u>Newbies:</u>";
+         arg:="<u>Newbies:</u><br/>";
          temp:="";
          temps:="newbie";
          tempp:="newbies";
@@ -11837,7 +11838,7 @@ code
    }
    else if (arg in "guide")
    {
-      arg:="<u>Newbie Helpers:</u>";
+      arg:="<u>Newbie Helpers:</u><br/>";
       temp:="";
       temps:="helper";
       tempp:="helpers";
@@ -11845,7 +11846,7 @@ code
    }
    else if (arg in "builder")
    {
-      arg:="<u>Valhalla Builders:</u>";
+      arg:="<u>Valhalla Builders:</u><br/>";
       temp:="";
       temps:="builder";
       tempp:="builders";
@@ -11853,7 +11854,7 @@ code
    }
    else if (arg in "clan")
    {
-      arg:="<u>Clan Members:</u>";
+      arg:="<u>Clan Members:</u><br/>";
       temp:="";
       temps:="member";
       tempp:="members";
@@ -11861,7 +11862,7 @@ code
    }
    else if (arg in "friend")
    {
-      arg:="<u>Valhalla Friend:</u>";
+      arg:="<u>Valhalla Friend:</u><br/>";
       temp:="";
       temps:="friend";
       tempp:="friends";
@@ -11869,14 +11870,14 @@ code
    }
    else if (arg in "admin")
    {
-      arg:="<u>Valhalla Admins:</u>";
+      arg:="<u>Valhalla Admins:</u><br/>";
       temp:="";
       temps:="admin";
       tempp:="admins";
       goto who_admin;
    }
 
-   arg:="<u>Players:</u>";
+   arg:="<u>Players:</u><br/>";
    temp:="";
    temps:="player";
    tempp:="players";
