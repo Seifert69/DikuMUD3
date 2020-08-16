@@ -2488,6 +2488,9 @@ quit;
 dilbegin do_score(arg:string);
 external
    string titlestring();
+   string agestring(rce : integer);
+   string playingstring();
+
 var
    u : unitptr;
    leader : unitptr;
@@ -2598,13 +2601,14 @@ code
    if(arg=="")
    {
       act(titlestring()
-         +"<div class='score'>You have "+itoa(self.exp)+" experience points and you need "
+         +"<div class='score'>" + agestring(self.race)
+         +"You have "+itoa(self.exp)+" experience points and you need "
          +itoa(self.exptol) + " to the next level.</div><br/>"+
          slvl
          +"<div class='score'>You have "+itoa(self.hp)+"("+itoa(self.max_hp)+") hit, "
          +itoa(self.mana)+"("+itoa(self.max_mana)+") mana, "
          +itoa(self.endurance)+"("+itoa(self.max_endurance)+") endurance points.</div><br/>"
-         +"<div class='score'>"+bob+""+deaths+""+want+""+pos+""+stat+""+stat1+""+stat2+"</div>"+start
+         +"<div class='score'>"+bob+""+playingstring()+deaths+""+want+" "+pos+""+stat+""+stat1+""+stat2+"</div>"+start
          ,A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
@@ -9297,6 +9301,61 @@ code
 }
 dilend
 
+dilbegin string playingstring();
+var
+   tf:integer;
+   tmp_played:integer;
+   hours_played : integer;
+   days_played  : integer;
+   years_played  : integer;
+   time_str:string;
+
+code
+{
+   tmp_played:=0;
+   tmp_played:= self.playtime / 3600;
+   hours_played:= tmp_played % 24;
+   days_played:=((tmp_played/24)%365);
+   years_played:=((tmp_played/24)/365);
+
+   tf:=FALSE;
+   time_str:="You have been playing for";
+
+   if (years_played >0)
+   {
+      time_str:=time_str+" "+ itoa(years_played)+" years";
+      tf:=TRUE;
+   }
+
+   if ((days_played>0) and (tf==TRUE))
+   {
+      time_str:=time_str+", "+itoa(days_played)+" days";
+   }
+   else if (days_played>0)
+   {
+      time_str:=time_str+" "+itoa(days_played)+" days";
+      tf:=TRUE;
+   }
+
+   if ((hours_played>0) and (tf==TRUE))
+   {
+      time_str:=time_str+", "+itoa(hours_played)+" hours";
+   }
+   else if (hours_played>0)
+   {
+      time_str:=time_str+", and "+itoa(hours_played)+" hours";
+      tf:=TRUE;
+   }
+
+   if (tf!=TRUE)
+      time_str:=time_str+" Less than an hour.<br/>";
+   else
+      time_str:=time_str+".<br/>";
+
+   return(time_str);
+}
+dilend
+
 
 /* do_status */
 dilbegin cmd_stat(arg:string);
@@ -9305,7 +9364,6 @@ external
    string wpn_rating (wpn:integer);
    string ski_rating (ski:integer);
    string sp_rating (sp:integer);
-   string agestring(rce : integer);
    string titlestring();
    string couragestring();
 
@@ -9315,13 +9373,6 @@ var
    skilist:stringlist;
    wpnlist:stringlist;
    total_hours  : integer;
-   tf:integer;
-   time_str:string;
-
-   hours_played : integer;
-   days_played  : integer;
-   years_played  : integer;
-   tmp_played:integer;
 
    last_lev     : integer;
    gl1          : integer;
@@ -9335,9 +9386,7 @@ var
    guild3       : string;
    desc         : string;
 
-   age_string   : string;
    prof_string  : string;
-
    guild_string : string;
 
    expd         : extraptr;
@@ -9413,14 +9462,6 @@ code
    expd.names.[5] + " / " + expd.names.[6] + ".<br/>";
 
    :cont:
-   tmp_played:=0;
-   tmp_played:= self.playtime / 3600;
-   hours_played:= tmp_played % 24;
-   days_played:=((tmp_played/24)%365);
-   years_played:=((tmp_played/24)/365);
-
-   age_string := agestring(self.race);
-
    if ((self.profession >= 0) and (self.profession < PROFESSION_MAX))
    {
       data_list := { PROFESSION_STRINGS };
@@ -9444,44 +9485,8 @@ code
 
    remain_str:="You have " +itoa(self.skill_points)+" remaining skill points and "+ itoa(self.ability_points) + " ability points available.<br/>";
    
-   tf:=FALSE;
-   time_str:="You have been playing for";
-
-   if (years_played >0)
-   {
-      time_str:=time_str+" "+ itoa(years_played)+" years";
-      tf:=TRUE;
-   }
-
-   if ((days_played>0) and (tf==TRUE))
-   {
-      time_str:=time_str+", "+itoa(days_played)+" days";
-   }
-   else if (days_played>0)
-   {
-      time_str:=time_str+" "+itoa(days_played)+" days";
-      tf:=TRUE;
-   }
-
-   if ((hours_played>0) and (tf==TRUE))
-   {
-      time_str:=time_str+", "+itoa(hours_played)+" hours";
-   }
-   else if (hours_played>0)
-   {
-      time_str:=time_str+", and "+itoa(hours_played)+" hours";
-      tf:=TRUE;
-   }
-
-   if (tf!=TRUE)
-      time_str:=time_str+" Less than an hour.<br/>";
-   else
-      time_str:=time_str+".<br/>";
-
   act(titlestring()+
-       age_string +
        guild_string + prof_string +
-       time_str+
        "Str " + itoa(self.abilities[ABIL_STR]) + ", " +
        "Dex " + itoa(self.abilities[ABIL_DEX]) + ", " +
        "Con " + itoa(self.abilities[ABIL_CON]) + ", " +
@@ -9506,10 +9511,7 @@ code
 
 
 :morphed:
-   age_string := agestring(self.race);
-
    act(titlestring()+
-       age_string +
        "Str " + itoa(self.abilities[ABIL_STR]) + ", " +
        "Dex " + itoa(self.abilities[ABIL_DEX]) + ", " +
        "Con " + itoa(self.abilities[ABIL_CON]) + ", " +
