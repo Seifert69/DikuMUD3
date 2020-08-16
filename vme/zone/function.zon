@@ -6154,6 +6154,9 @@ code
 
       if (not ((self.outside.exit_to[x].zoneidx) in zones_lst))
          goto endwhi;
+      // MS2020. THis is an issue. Somehow a guard can e.g. be in the
+      // jewel shop and not get out because of the NO_MOB flag on the street.
+      //
       if ( isset( self.outside.exit_to[x].flags, UNIT_FL_NO_MOB))
          goto endwhi;
       insert(dirlist,0,x);

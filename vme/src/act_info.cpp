@@ -36,21 +36,6 @@
 extern class descriptor_data *descriptor_list;
 extern class unit_data *unit_list;
 
-static void add_to_string(char **buf, int *size, int len, const char *str)
-{
-    if (*buf == NULL)
-    {
-        CREATE(*buf, char, *size);
-        **buf = '\0';
-    }
-    else if (*size < len + 1)
-    {
-        *size *= 2;
-        RECREATE(*buf, char, *size);
-    }
-
-    strcat(*buf, str);
-}
 
 /* also used in "corpses" wizard-command */
 char *in_string(class unit_data *ch, class unit_data *u)
@@ -103,11 +88,12 @@ void player_where(class unit_data *ch, char *arg)
 
 void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
 {
-    char *buf = NULL, buf1[MAX_STRING_LENGTH], buf2[512];
+    char buf1[MAX_STRING_LENGTH], buf2[512];
     register class unit_data *i;
     class descriptor_data *d;
-    int len, cur_size = 2048;
     char *arg = (char *)aaa;
+    string mystr;
+    int nCount = 0;
 
     if (IS_MORTAL(ch))
     {
@@ -117,13 +103,12 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
 
     if (str_is_empty(arg))
     {
-        strcpy(buf1, "<u>Players</u><br/>");
-        len = strlen(buf1);
-        add_to_string(&buf, &cur_size, len, buf1);
+        mystr = "<u>Players</u><br/>";
 
         for (d = descriptor_list; d; d = d->next)
             if (d->character && UNIT_IN(d->character) && descriptor_is_playing(d) && CHAR_LEVEL(ch) >= UNIT_MINV(d->character) && (d->original == NULL || CHAR_LEVEL(ch) >= UNIT_MINV(d->original)))
             {
+                nCount++;
                 if (d->original) /* If switched */
                     sprintf(buf2, " In body of %s", UNIT_NAME(d->character));
                 else
@@ -133,34 +118,40 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
                         UNIT_NAME(CHAR_ORIGINAL(d->character)),
                         UNIT_SEE_TITLE(ch, UNIT_IN(d->character)),
                         in_string(ch, d->character), buf2);
-                len += strlen(buf1);
-                add_to_string(&buf, &cur_size, len, buf1);
+                mystr.append(buf1);
             }
     }
     else /* Arg was not empty */
     {
-        len = 0;
-        add_to_string(&buf, &cur_size, len, "");
+        mystr = "";
 
         for (i = unit_list; i; i = i->gnext)
+        {
             if (UNIT_IN(i) && UNIT_NAMES(i).IsName(arg) && CHAR_LEVEL(ch) >= UNIT_MINV(i))
             {
+                nCount++;
+                if (nCount++ > 100)
+                    continue;
 
                 sprintf(buf1, "%-30s - %s [%s]<br/>",
                         TITLENAME(i),
                         UNIT_SEE_TITLE(ch, UNIT_IN(i)),
                         (!in_string(ch, i) ? "MENU" : in_string(ch, i)));
 
-                len += strlen(buf1);
-
-                add_to_string(&buf, &cur_size, len, buf1);
+                mystr.append(buf1);
             }
+        }
     }
 
-    if (*buf == '\0')
+    if (mystr.length() < 1)
         send_to_char("Couldn't find any such thing.<br/>", ch);
     else
-        page_string(CHAR_DESCRIPTOR(ch), buf);
-
-    FREE(buf);
+    {
+        if (nCount > 100)
+            mystr.append("...<br/>");
+        mystr.append("Found ");
+        mystr.append(itoa(nCount));
+        mystr.append(" matches<br/>");
+        page_string(CHAR_DESCRIPTOR(ch), mystr.c_str());
+    }
 }

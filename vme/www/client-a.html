@@ -19,7 +19,7 @@
                 <table width="100%">
                     <tr>
                         <td style="width:4%; height:34px; color:white;">&nbsp;Cmd</td>
-                        <td style="width:76%;height:34px;"><input style="width:97%;" type="text" id="message"/></td>
+                        <td style="width:76%;height:34px;"><input style="width:97%;" type="text" id="message"/><input style="width:97%;display:none" type="password" id="pwd"/></td>
                         <td style="width:15%;height:34px;"><input id="btnSend" type="button" value=">" disabled="disabled" onclick="onSendClick()"></td>
                     </tr>
                 </table>
@@ -94,6 +94,14 @@
                 }
             });
 
+            document.querySelector("#pwd").addEventListener("keyup", event => {
+                if(event.key == "Enter")
+                {
+                    document.querySelector("#btnSend").click();
+                    event.preventDefault(); // No need to `return false;`.
+                }
+            });
+
             document.querySelector("#message").addEventListener("keyup", event => {
                 if(event.key == "Enter")
                 {
@@ -153,10 +161,12 @@
             setInterval(keepAlive, 60000);
 
             function PasswordOn() {
-                document.getElementById("message").setAttribute('type','password');
+                document.getElementById("message").style.display = "none";
+                document.getElementById("pwd").style.display = "inline"; 
             }
             function PasswordOff() {
-                document.getElementById("message").setAttribute('type','text');
+                document.getElementById("message").style.display = "inline";
+                document.getElementById("pwd").style.display = "none"; 
             }
 
             function alertme(){

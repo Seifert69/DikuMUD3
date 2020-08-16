@@ -2486,6 +2486,11 @@ quit;
 
 
 dilbegin do_score(arg:string);
+external
+   string titlestring();
+   string agestring(rce : integer);
+   string playingstring();
+
 var
    u : unitptr;
    leader : unitptr;
@@ -2577,8 +2582,9 @@ code
    else
       stat2 := "";
 
+   start := "";
    if (self.level <= START_LEVEL)
-      start := "<div class='score'>Try also the '<a cmd='#'>status</a>' command.</div>";
+      start := "<br/><div class='score'>Try also the '<a cmd='#'>status</a>' command.</div>";
     
    if (not isplayer(self.name))
 	{
@@ -2594,14 +2600,15 @@ code
 
    if(arg=="")
    {
-      act(self.name+" <div class='who_title'>"+self.title+"</div><div class='score'> "+alig+"</div>.<br/>"
-         +"<div class='score'>You have "+itoa(self.exp)+" experience points and you need "
+      act(titlestring()
+         +"<div class='score'>" + agestring(self.race)
+         +"You have "+itoa(self.exp)+" experience points and you need "
          +itoa(self.exptol) + " to the next level.</div><br/>"+
          slvl
          +"<div class='score'>You have "+itoa(self.hp)+"("+itoa(self.max_hp)+") hit, "
          +itoa(self.mana)+"("+itoa(self.max_mana)+") mana, "
          +itoa(self.endurance)+"("+itoa(self.max_endurance)+") endurance points.</div><br/>"
-         +"<div class='score'>"+bob+""+deaths+""+want+""+pos+""+stat+""+stat1+""+stat2+"</div>"
+         +"<div class='score'>"+bob+""+playingstring()+deaths+""+want+" "+pos+""+stat+""+stat1+""+stat2+"</div>"+start
          ,A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
@@ -2665,7 +2672,7 @@ code
    sendtext ("You are not in a group silly.<br/>",self);
    }
    else
-   sendtext("Use either 'score' or 'score group'<br/>",self);
+      sendtext("Use either 'score' or 'score group'<br/>",self);
 
    :lead_end:
    unsecure(leader);
@@ -9238,180 +9245,79 @@ if (self.type!=UNIT_ST_PC)
 dilend
 
 
-/* do_status */
-dilbegin cmd_stat(arg:string);
+dilbegin string alignstring();
+code
+{
+   if (self.alignment < -349)
+      return("Evil");
+   else if (self.alignment > 349)
+      return("Good");
+   else
+      return("Neutral");
+}
+dilend
+
+dilbegin string genderstring();
+code
+{
+   if (self.sex == SEX_MALE)
+      return("male");
+   else if (self.sex == SEX_FEMALE)
+      return("female");
+   else
+      return("neuter");
+}
+dilend
+
+dilbegin string couragestring();
+code
+{
+   if (isset(self.charflags, CHAR_WIMPY))
+      return("wimpy");
+   else
+      return("brave");
+}
+dilend
+
+dilbegin string agestring(rce : integer);
 external
-   path_update@guild_paths(u : unitptr);
-   string racestring(i:integer);
-   string wpn_rating (wpn:integer);
-   string ski_rating (ski:integer);
-   string sp_rating (sp:integer);
-
-var
-   remain:integer;
-   remain_str:string;
-   skilist:stringlist;
-   wpnlist:stringlist;
-   total_hours  : integer;
-   tf:integer;
-   time_str:string;
-
-   hours_played : integer;
-   days_played  : integer;
-   years_played  : integer;
-   tmp_played:integer;
-
-   last_lev     : integer;
-   gl1          : integer;
-   gl2          : integer;
-   gl3          : integer;
-
-   data_list    : stringlist;
-
-   guild1       : string;
-   guild2       : string;
-   guild3       : string;
-   desc         : string;
-
-   align_string : string;
-   sex_string   : string;
-   race_string  : string;
-   wimpy_string : string;
-   age_string   : string;
-   prof_string  : string;
-
-   guild_string : string;
-
-   expd         : extraptr;
-
-   ln1:string;
-   ln2:string;
-   temp:string;
-   buff:string;
-   maglist:stringlist;
-   divlist:stringlist;
-   realm:integer;
-   waist:integer;
-   waist1:integer;
-   waist2:integer;
-   waist3:integer;
-   waist4:integer;
-   waist5:integer;
-   waist6:integer;
-   i:integer;
-   ln:integer;
-   len:integer;
-   endcost:integer;
+   string genderstring();
+   string racestring(rce : integer);
 
 code
 {
-   if (self.type!=UNIT_ST_PC)
-      quit;
-   /*if (self.level>50) goto imm;*/
+   return("You are a " + itoa((realtime - self.birth) / SECS_PER_MUD_YEAR) +
+          " years old " + genderstring() + " " + racestring(rce) + " at level " + 
+          itoa(self.vlevel) + ".<br/>");
+}
+dilend
 
-   if (arg=="")
-      goto start;
-   if (arg==left("weapons",length(arg)))
-      goto wpn_stat;
-   if (arg==left("skills",length(arg)))
-      goto ski_stat;
-   if (arg==left("spells",length(arg)))
-      goto sp_stat;
+dilbegin string titlestring();
+external
+   string alignstring();
+code
+{
+   return(self.name + " <div class='who_title'>" + self.title + "</div> <div class='score'>(" + alignstring() + " alignment (" + itoa(self.alignment) + "))</div><br/>");
+}
+dilend
 
-   :start:
-   if((self.type == UNIT_ST_PC) and (self.level < IMMORTAL_LEVEL))
-   {
-      if(self.endurance < endcost)
-      {
-      act("You are too exhausted.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-      }
-      else
-         self.endurance:= self.endurance - endcost;
-      position_update (self);
-   }
+dilbegin string playingstring();
+var
+   tf:integer;
+   tmp_played:integer;
+   hours_played : integer;
+   days_played  : integer;
+   years_played  : integer;
+   time_str:string;
 
-   if ("$morphed" in self.extra)
-      goto morphed;
-
-   expd := "$path" in self.quests;
-
-   if (expd == null)
-   {
-      guild_string := "Contact they Mayor of Midgaard to set your Guild Paths.<br/>";
-      goto cont;
-   }
-
-   if (self.vlevel <= atoi(expd.names.[7]))
-      goto keep_on;
-
-   path_update@guild_paths(self);
-
-   :keep_on:
-   expd := "$path" in self.quests;
-   if (expd == null) quit;
-   guild_string := "Your guild path is: " +
-   expd.names.[1] + " / " + expd.names.[2] + " / " + expd.names.[3] +
-   ".<br/>Your guild path levels are: " + expd.names.[4] + " / " +
-   expd.names.[5] + " / " + expd.names.[6] + ".<br/>";
-
-   :cont:
+code
+{
    tmp_played:=0;
    tmp_played:= self.playtime / 3600;
    hours_played:= tmp_played % 24;
    days_played:=((tmp_played/24)%365);
    years_played:=((tmp_played/24)/365);
-   if (self.alignment < -349)
-      align_string := "Evil";
-   else if (self.alignment > 349)
-      align_string := "Good";
-   else
-      align_string := "Neutral";
 
-   if (self.sex == SEX_MALE)
-      sex_string := "male";
-   else if (self.sex == SEX_FEMALE)
-      sex_string := "female";
-   else
-      sex_string := "neuter";
-
-   race_string:=racestring(self.race);
-
-   if (isset(self.charflags, CHAR_WIMPY))
-      wimpy_string := "wimpy";
-   else
-      wimpy_string := "brave";
-
-   age_string := "You are a " +
-                 itoa((realtime - self.birth) / SECS_PER_MUD_YEAR) +
-                 " year old " + sex_string +
-                 " " + race_string + " at level " + itoa(self.vlevel) + ".<br/>";
-
-   if ((self.profession >= 0) and (self.profession < PROFESSION_MAX))
-   {
-      data_list := { PROFESSION_STRINGS };
-      prof_string := "Your profession is: " + data_list.[self.profession] +  "<br/>";
-
-   }
-   else
-      prof_string := "Your profession is undefined, please visit father Nicholas in the Udgaard temple healer room.<br/>";
-
-   /* MS2020 ???  remain:=self.level*40;
-
-   if (remain >2000)
-      remain:=0;
-   else
-      remain:=2000-remain;
-
-	if ((remain==0) and (self.ability_points==0))
-      remain_str:="";
-   else if (remain==0)
-      remain_str:="You have "+itoa(self.ability_points)+" ability points left.<br/>";
-   else*/
-
-   remain_str:="You have " +itoa(self.skill_points)+" remaining skill points and "+ itoa(self.ability_points) + " ability points available.<br/>";
-   
    tf:=FALSE;
    time_str:="You have been playing for";
 
@@ -9446,11 +9352,141 @@ code
    else
       time_str:=time_str+".<br/>";
 
-  act(self.name + " " + self.title + " (" + align_string +
-       " alignment (" + itoa(self.alignment) + "))<br/>" +
-       age_string +
+   return(time_str);
+}
+dilend
+
+
+/* do_status */
+dilbegin cmd_stat(arg:string);
+external
+   path_update@guild_paths(u : unitptr);
+   string wpn_rating (wpn:integer);
+   string ski_rating (ski:integer);
+   string sp_rating (sp:integer);
+   string titlestring();
+   string couragestring();
+
+var
+   remain:integer;
+   remain_str:string;
+   skilist:stringlist;
+   wpnlist:stringlist;
+   total_hours  : integer;
+
+   last_lev     : integer;
+   gl1          : integer;
+   gl2          : integer;
+   gl3          : integer;
+
+   data_list    : stringlist;
+
+   guild1       : string;
+   guild2       : string;
+   guild3       : string;
+   desc         : string;
+
+   prof_string  : string;
+   guild_string : string;
+
+   expd         : extraptr;
+
+   ln1:string;
+   ln2:string;
+   temp:string;
+   buff:string;
+   maglist:stringlist;
+   divlist:stringlist;
+   realm:integer;
+   waist:integer;
+   waist1:integer;
+   waist2:integer;
+   waist3:integer;
+   waist4:integer;
+   waist5:integer;
+   waist6:integer;
+   i:integer;
+   ln:integer;
+   len:integer;
+   endcost:integer;
+
+code
+{
+   if (self.type!=UNIT_ST_PC)
+      quit;
+
+   if (arg=="")
+      goto start;
+   if (arg==left("weapons",length(arg)))
+      goto wpn_stat;
+   if (arg==left("skills",length(arg)))
+      goto ski_stat;
+   if (arg==left("spells",length(arg)))
+      goto sp_stat;
+
+   :start:
+   if ((self.type == UNIT_ST_PC) and (self.level < IMMORTAL_LEVEL))
+   {
+      if(self.endurance < endcost)
+      {
+         act("You are too exhausted.", A_ALWAYS, self, null, null, TO_CHAR);
+         quit;
+      }
+      else
+         self.endurance:= self.endurance - endcost;
+      position_update (self);
+   }
+
+   if ("$morphed" in self.extra)
+      goto morphed;
+
+   expd := "$path" in self.quests;
+
+   if (expd == null)
+   {
+      guild_string := "Contact they Mayor of Midgaard to set your Guild Paths.<br/>";
+      goto cont;
+   }
+
+   if (self.vlevel <= atoi(expd.names.[7]))
+      goto keep_on;
+
+   path_update@guild_paths(self);
+
+   :keep_on:
+   expd := "$path" in self.quests;
+   if (expd == null) quit;
+   guild_string := "Your guild path is: " +
+   expd.names.[1] + " / " + expd.names.[2] + " / " + expd.names.[3] +
+   ".<br/>Your guild path levels are: " + expd.names.[4] + " / " +
+   expd.names.[5] + " / " + expd.names.[6] + ".<br/>";
+
+   :cont:
+   if ((self.profession >= 0) and (self.profession < PROFESSION_MAX))
+   {
+      data_list := { PROFESSION_STRINGS };
+      prof_string := "Your profession is: " + data_list.[self.profession] +  "<br/>";
+
+   }
+   else
+      prof_string := "Your profession is undefined, please visit father Nicholas in the Udgaard temple healer room.<br/>";
+
+   /* MS2020 ???  remain:=self.level*40;
+   if (remain >2000)
+      remain:=0;
+   else
+      remain:=2000-remain;
+
+	if ((remain==0) and (self.ability_points==0))
+      remain_str:="";
+   else if (remain==0)
+      remain_str:="You have "+itoa(self.ability_points)+" ability points left.<br/>";
+   else*/
+
+   remain_str:="You have " +itoa(self.skill_points)+" remaining skill points and "+ itoa(self.ability_points) + " ability points available.<br/>";
+   
+  act(titlestring()+
        guild_string + prof_string +
-       time_str+
        "Str " + itoa(self.abilities[ABIL_STR]) + ", " +
        "Dex " + itoa(self.abilities[ABIL_DEX]) + ", " +
        "Con " + itoa(self.abilities[ABIL_CON]) + ", " +
@@ -9464,41 +9500,14 @@ code
        "Your combat Dexterity is " + itoa(getinteger(DIL_GINT_EFFDEX, self, 0)) + " as a result of your armor.<br/>"+
        remain_str+
        "You have " + itoa(self.skill_points) + " skill practice points.<br/>" +
-       "You are in " + wimpy_string + " mode.<br/>"+
+       "You are in " + couragestring() + " mode.<br/>"+
        "More: '<a cmd='#'>status skills</a>', '<a cmd='#'>status weapons</a>' and '<a cmd='#'>status spells</a>'."
        , A_ALWAYS, self, null, null, TO_CHAR);
-
-      
-
    quit;
 
 
-
 :morphed:
-   if (self.alignment < -349) align_string := "Evil";
-   else if (self.alignment > 349) align_string := "Good";
-   else align_string := "Neutral";
-
-   if (self.sex == SEX_MALE) sex_string := "male";
-   else if (self.sex == SEX_FEMALE) sex_string := "female";
-   else sex_string := "neuter";
-
-   race_string:=racestring(self.race);
-
-   if (isset(self.charflags, CHAR_WIMPY))
-      wimpy_string := "wimpy";
-   else
-      wimpy_string := "brave";
-
-   age_string := "You are a " +
-                 itoa((realtime - self.birth) / SECS_PER_MUD_YEAR) +
-                 " year old " + sex_string +
-                 " " + race_string + " at level " + itoa(self.level) +
-".<br/>";
-
-   act(self.name + " " + self.title + " (" + align_string +
-       " alignment (" + itoa(self.alignment) + ")<br/>" +
-       age_string +
+   act(titlestring()+
        "Str " + itoa(self.abilities[ABIL_STR]) + ", " +
        "Dex " + itoa(self.abilities[ABIL_DEX]) + ", " +
        "Con " + itoa(self.abilities[ABIL_CON]) + ", " +
@@ -9507,13 +9516,12 @@ code
        "Mag " + itoa(self.abilities[ABIL_MAG]) + ", " +
        "Div " + itoa(self.abilities[ABIL_DIV]) +
        "<br/>" +
-       "You are in " + wimpy_string + " mode.",
+       "You are in " + couragestring() + " mode.",
        A_ALWAYS, self, null, null, TO_CHAR);
 
    quit;
-:imm:
 
-
+   :imm:
    :wpn_stat:
    i:=7;
    buff:="";
@@ -11782,364 +11790,368 @@ quit;
 dilend
 
 
-
+// do_who
 dilbegin who_dil ( arg: string );
 var
-  buff:string;
- gld:string;
-rc:string;
- ln:integer;
- u:unitptr;
- ply_list:stringlist;
- i:integer;
- temp:string;
- temps:string;
- tempp:string;
-        path_guild : string;
- x:extraptr;
- ox:extraptr;
-        gex : extraptr;
- gcolor : string;
+   buff:string;
+   gld:string;
+   rc:string;
+   ln:integer;
+   u:unitptr;
+   ply_list:stringlist;
+   i:integer;
+   temp:string;
+   temps:string;
+   tempp:string;
+   path_guild : string;
+   x:extraptr;
+   ox:extraptr;
+   gex : extraptr;
+   gcolor : string;
 code
 {
-u:=ghead();
-if (arg=="")
- {
- arg:="<u>Players:</u>";
- temp:="";
- temps:="player";
- tempp:="players";
- goto who_all;
- }
-else if (arg in "newbie")
- {
- if ("New Player Helper" in self.quests)
-  {
-  arg:="<u>Newbies:</u>";
-  temp:="";
-  temps:="newbie";
-  tempp:="newbies";
-  goto who_newbie;
-  }
- else
-  {
-  act ("Only the newbie council can check newbies online.",A_ALWAYS,self,null,null,TO_CHAR);
-  quit;
-  }
- }
-else if (arg in "guide")
- {
- arg:="<u>Newbie Helpers:</u>";
- temp:="";
- temps:="helper";
- tempp:="helpers";
- goto who_guide;
- }
-else if (arg in "builder")
- {
- arg:="<u>Valhalla Builders:</u>";
- temp:="";
- temps:="builder";
- tempp:="builders";
- goto who_builder;
- }
-else if (arg in "clan")
- {
- arg:="<u>Clan Members:</u>";
- temp:="";
- temps:="member";
- tempp:="members";
- goto who_clan;
- }
-else if (arg in "friend")
- {
- arg:="<u>Valhalla Friend:</u>";
- temp:="";
- temps:="friend";
- tempp:="friends";
- goto who_friend;
- }
-else if (arg in "admin")
-{
- arg:="<u>Valhalla Admins:</u>";
- temp:="";
-  temps:="admin";
-  tempp:="admins";
- goto who_admin;
- }
+   u := ghead();
 
-arg:="<u>Players:</u>";
-temp:="";
-temps:="player";
-tempp:="players";
+   if (arg=="")
+   {
+      arg:="<u>Players:</u><br/>";
+      temp:="";
+      temps:="player";
+      tempp:="players";
+      goto who_all;
+   }
+   else if (arg in "newbie")
+   {
+      if ("New Player Helper" in self.quests)
+      {
+         arg:="<u>Newbies:</u><br/>";
+         temp:="";
+         temps:="newbie";
+         tempp:="newbies";
+         goto who_newbie;
+      }
+      else
+      {
+         act ("Only the newbie council can check newbies online.",A_ALWAYS,self,null,null,TO_CHAR);
+         quit;
+      }
+   }
+   else if (arg in "guide")
+   {
+      arg:="<u>Newbie Helpers:</u><br/>";
+      temp:="";
+      temps:="helper";
+      tempp:="helpers";
+      goto who_guide;
+   }
+   else if (arg in "builder")
+   {
+      arg:="<u>Valhalla Builders:</u><br/>";
+      temp:="";
+      temps:="builder";
+      tempp:="builders";
+      goto who_builder;
+   }
+   else if (arg in "clan")
+   {
+      arg:="<u>Clan Members:</u><br/>";
+      temp:="";
+      temps:="member";
+      tempp:="members";
+      goto who_clan;
+   }
+   else if (arg in "friend")
+   {
+      arg:="<u>Valhalla Friend:</u><br/>";
+      temp:="";
+      temps:="friend";
+      tempp:="friends";
+      goto who_friend;
+   }
+   else if (arg in "admin")
+   {
+      arg:="<u>Valhalla Admins:</u><br/>";
+      temp:="";
+      temps:="admin";
+      tempp:="admins";
+      goto who_admin;
+   }
 
-:who_all:
-while (u.type==UNIT_ST_PC)
-{
-if (visible(self,u))
- {
- if (u.level >= OVERSEER_LEVEL)
-  gld:="(Admin)";
-  else if (u.level>=CREATOR_LEVEL)
+   arg:="<u>Players:</u><br/>";
+   temp:="";
+   temps:="player";
+   tempp:="players";
+
+   :who_all:
+   while (u.type==UNIT_ST_PC)
+   {
+      if (visible(self,u))
+      {
+         if (u.level >= OVERSEER_LEVEL)
+            gld:="(Admin)";
+         else if (u.level>=CREATOR_LEVEL)
+            gld:="(Creator)";
+         else if (u.level>IMMORTAL_LEVEL)
+            gld:="(Immortal)";
+         else
+            gld:="";
+
+         buff:="<div class='who_name'>"+u.name+"</div><div class='who_title'> "+u.title+" "+gld+"</div> ";
+         if (u.minv>0)
+            buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
+         else if (isaff(u, ID_INVISIBILITY))
+            buff:=buff+"<div class='who_inv'>[ INV ]<div class='who'>";
+         if ("valhalla builder" in u.quests)
+            buff:=buff+" * Builder *</div>";
+         if ("valhalla friend" in u.quests)
+            buff:=buff+" * Friend *</div>";  
+         if ("New Player Helper" in u.quests)
+         {
+            if (u.extra.["$whoguidecolor"] != null)
+            gcolor := textformat(u.extra.["$whoguidecolor"].descr);
+            else gcolor := "";
+            buff:=buff+" *"+gcolor+" Guide "+"</div>*";
+         }
+         buff:=buff+" <br/>";
+         addstring (ply_list,buff);
+      }
+      u:=u.gnext;
+   }
+   goto p_who;
+
+   :who_newbie:
+   while (u.type==UNIT_ST_PC)
+   {
+   if ((visible(self,u)) and
+   (u.level <= 20))
+   {
+   if (u.level >= OVERSEER_LEVEL)
+   gld:="(Admin)";
+   else if (u.level>=CREATOR_LEVEL)
    gld:="(Creator)";
-  else if (u.level>IMMORTAL_LEVEL)
+   else if (u.level>IMMORTAL_LEVEL)
    gld:="(Immortal)";
    else gld:="";
 
- buff:="<div class='who_name'>"+u.name+"</div><div class='who_title'> "+u.title+" "+gld+"</div> ";
- if (u.minv>0)
-  buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
-  else if (isaff(u, ID_INVISIBILITY))
-  buff:=buff+"<div class='who_inv'>[ INV ]<div class='who'>";
-  if ("valhalla builder" in u.quests)
+   buff:="<div class='who_name'>"+u.name+"</div><div class='who_title'> "+u.title+" "+gld+"</div> ";
+   if (u.minv>0)
+   buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
+   else if (isaff(u, ID_INVISIBILITY))
+   buff:=buff+"<div class='who_inv'>[ INV ]</div><div class='who'>";
+   if ("valhalla builder" in u.quests)
    buff:=buff+" * Builder *</div>";
    if ("valhalla friend" in u.quests)
    buff:=buff+" * Friend *</div>";  
-  if ("New Player Helper" in u.quests)
-  {
+   if ("New Player Helper" in u.quests)
+   {
    if (u.extra.["$whoguidecolor"] != null)
    gcolor := textformat(u.extra.["$whoguidecolor"].descr);
    else gcolor := "";
    buff:=buff+" *"+gcolor+" Guide "+"</div>*";
-  }
- buff:=buff+" <br/>";
- addstring (ply_list,buff);
- }
-u:=u.gnext;
-}
-goto p_who;
-:who_newbie:
-while (u.type==UNIT_ST_PC)
-{
-if ((visible(self,u)) and
-(u.level <= 20))
- {
- if (u.level >= OVERSEER_LEVEL)
-  gld:="(Admin)";
-  else if (u.level>=CREATOR_LEVEL)
+   }
+   buff:=buff+" <br/>";
+   addstring (ply_list,buff);
+   }
+   u:=u.gnext;
+   }
+   goto p_who;
+   :who_admin:
+   while (u.type==UNIT_ST_PC)
+   {
+   if ((visible(self,u)) and
+   (u.level >= 253))
+   {
+   if (u.level >= OVERSEER_LEVEL)
+   gld:="(Admin)";
+   else if (u.level>=CREATOR_LEVEL)
    gld:="(Creator)";
-  else if (u.level>IMMORTAL_LEVEL)
+   else if (u.level>IMMORTAL_LEVEL)
    gld:="(Immortal)";
    else gld:="";
 
- buff:="<div class='who_name'>"+u.name+"</div><div class='who_title'> "+u.title+" "+gld+"</div> ";
- if (u.minv>0)
-  buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
-  else if (isaff(u, ID_INVISIBILITY))
-  buff:=buff+"<div class='who_inv'>[ INV ]</div><div class='who'>";
-  if ("valhalla builder" in u.quests)
-   buff:=buff+" * Builder *</div>";
- if ("valhalla friend" in u.quests)
-   buff:=buff+" * Friend *</div>";  
-if ("New Player Helper" in u.quests)
-  {
-   if (u.extra.["$whoguidecolor"] != null)
-   gcolor := textformat(u.extra.["$whoguidecolor"].descr);
-   else gcolor := "";
-   buff:=buff+" *"+gcolor+" Guide "+"</div>*";
-  }
- buff:=buff+" <br/>";
- addstring (ply_list,buff);
- }
-u:=u.gnext;
-}
-goto p_who;
-:who_admin:
-while (u.type==UNIT_ST_PC)
-{
-if ((visible(self,u)) and
-(u.level >= 253))
- {
- if (u.level >= OVERSEER_LEVEL)
-  gld:="(Admin)";
-  else if (u.level>=CREATOR_LEVEL)
-   gld:="(Creator)";
-  else if (u.level>IMMORTAL_LEVEL)
-   gld:="(Immortal)";
-   else gld:="";
-
- buff:="<div class='who_name'>"+u.name+"</div><div class='who_title'> "+u.title+" "+gld+"</div> ";
- if (u.minv>0)
-  buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
-  else if (isaff(u, ID_INVISIBILITY))
-  buff:=buff+"<div class='who_inv'>[ INV ]</div><div class='who'>";
-  if ("valhalla builder" in u.quests)
+   buff:="<div class='who_name'>"+u.name+"</div><div class='who_title'> "+u.title+" "+gld+"</div> ";
+   if (u.minv>0)
+   buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
+   else if (isaff(u, ID_INVISIBILITY))
+   buff:=buff+"<div class='who_inv'>[ INV ]</div><div class='who'>";
+   if ("valhalla builder" in u.quests)
    buff:=buff+" * Builder *</div>";
    if ("valhalla friend" in u.quests)
    buff:=buff+" * Friend *</div>";  
-if ("New Player Helper" in u.quests)
-  {
+   if ("New Player Helper" in u.quests)
+   {
    if (u.extra.["$whoguidecolor"] != null)
    gcolor := textformat(u.extra.["$whoguidecolor"].descr);
    else gcolor := "";
    buff:=buff+" *"+gcolor+" Guide "+"</div>*";
-  }
- buff:=buff+" <br/>";
- addstring (ply_list,buff);
- }
-u:=u.gnext;
-}
-goto p_who;
-:who_guide:
-while (u.type==UNIT_ST_PC)
-{
-if ((visible(self,u)) and
-("New Player Helper" in u.quests))
- {
- if (u.level >= OVERSEER_LEVEL)
-  gld:="(Admin)";
-  else if (u.level>=CREATOR_LEVEL)
+   }
+   buff:=buff+" <br/>";
+   addstring (ply_list,buff);
+   }
+   u:=u.gnext;
+   }
+   goto p_who;
+   :who_guide:
+   while (u.type==UNIT_ST_PC)
+   {
+   if ((visible(self,u)) and
+   ("New Player Helper" in u.quests))
+   {
+   if (u.level >= OVERSEER_LEVEL)
+   gld:="(Admin)";
+   else if (u.level>=CREATOR_LEVEL)
    gld:="(Creator)";
-  else if (u.level>IMMORTAL_LEVEL)
+   else if (u.level>IMMORTAL_LEVEL)
    gld:="(Immortal)";
    else gld:="";
 
- buff:="<div class='who_name'>"+u.name+"</div><div class='who_title'> "+u.title+" "+gld+"</div> ";
- if (u.minv>0)
-  buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
-  else if (isaff(u, ID_INVISIBILITY))
-  buff:=buff+"<div class='who_inv'>[ INV ]</div><div class='who'>";
-if ("New Player Helper" in u.quests)
-  {
+   buff:="<div class='who_name'>"+u.name+"</div><div class='who_title'> "+u.title+" "+gld+"</div> ";
+   if (u.minv>0)
+   buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
+   else if (isaff(u, ID_INVISIBILITY))
+   buff:=buff+"<div class='who_inv'>[ INV ]</div><div class='who'>";
+   if ("New Player Helper" in u.quests)
+   {
    if (u.extra.["$whoguidecolor"] != null)
    gcolor := textformat(u.extra.["$whoguidecolor"].descr);
    else gcolor := "";
    buff:=buff+" *"+gcolor+" Guide "+"</div>*";
-  }
+   }
 
- buff:=buff+" <br/>";
- addstring (ply_list,buff);
- }
-u:=u.gnext;
-}
-:who_friend:
-while (u.type==UNIT_ST_PC)
-{
-if ((visible(self,u)) and
-("valhalla friend" in u.quests))
- {
- if (u.level >= OVERSEER_LEVEL)
-  gld:="(Admin)";
-  else if (u.level>=CREATOR_LEVEL)
+   buff:=buff+" <br/>";
+   addstring (ply_list,buff);
+   }
+   u:=u.gnext;
+   }
+   :who_friend:
+   while (u.type==UNIT_ST_PC)
+   {
+   if ((visible(self,u)) and
+   ("valhalla friend" in u.quests))
+   {
+   if (u.level >= OVERSEER_LEVEL)
+   gld:="(Admin)";
+   else if (u.level>=CREATOR_LEVEL)
    gld:="(Creator)";
-  else if (u.level>IMMORTAL_LEVEL)
+   else if (u.level>IMMORTAL_LEVEL)
    gld:="(Immortal)";
    else gld:="";
 
- buff:="<div class='who_name'>"+u.name+"</div> <div class='who_title'> "+u.title+" "+gld+"</div> ";
- if (u.minv>0)
-  buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
-  else if (isaff(u, ID_INVISIBILITY))
-  buff:=buff+"<div class='who_inv'>[ INV ]<div class='who'>";
+   buff:="<div class='who_name'>"+u.name+"</div> <div class='who_title'> "+u.title+" "+gld+"</div> ";
+   if (u.minv>0)
+   buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
+   else if (isaff(u, ID_INVISIBILITY))
+   buff:=buff+"<div class='who_inv'>[ INV ]<div class='who'>";
    if ("valhalla friend" in u.quests)
    buff:=buff+" * Friend *</div>";  
- buff:=buff+" <br/>";
- addstring (ply_list,buff);
- }
-u:=u.gnext;
-}
-:who_builder:
-while (u.type==UNIT_ST_PC)
-{
-if ((visible(self,u)) and
-("valhalla builder" in u.quests))
- {
- if (u.level >= OVERSEER_LEVEL)
-  gld:="(Admin)";
-  else if (u.level>=CREATOR_LEVEL)
+   buff:=buff+" <br/>";
+   addstring (ply_list,buff);
+   }
+   u:=u.gnext;
+   }
+   :who_builder:
+   while (u.type==UNIT_ST_PC)
+   {
+   if ((visible(self,u)) and
+   ("valhalla builder" in u.quests))
+   {
+   if (u.level >= OVERSEER_LEVEL)
+   gld:="(Admin)";
+   else if (u.level>=CREATOR_LEVEL)
    gld:="(Creator)";
-  else if (u.level>IMMORTAL_LEVEL)
+   else if (u.level>IMMORTAL_LEVEL)
    gld:="(Immortal)";
    else gld:="";
 
- buff:="<div class='who_name'>"+u.name+"</div><div class='who_title'> "+u.title+" "+gld+"</div> ";
- if (u.minv>0)
-  buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
-  else if (isaff(u, ID_INVISIBILITY))
-  buff:=buff+"<div class='who_inv'>[ INV ]</div><div class='who'>";
-  if ("valhalla builder" in u.quests)
+   buff:="<div class='who_name'>"+u.name+"</div><div class='who_title'> "+u.title+" "+gld+"</div> ";
+   if (u.minv>0)
+   buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
+   else if (isaff(u, ID_INVISIBILITY))
+   buff:=buff+"<div class='who_inv'>[ INV ]</div><div class='who'>";
+   if ("valhalla builder" in u.quests)
    buff:=buff+" * Builder *</div>";
 
- buff:=buff+" <br/>";
- addstring (ply_list,buff);
- }
-u:=u.gnext;
-}
-:who_clan:
-while (u.type==UNIT_ST_PC)
-{
-x:=CLAN_NAME in self.extra;
-if (x==null)
- {
- u:=u.gnext;
- continue;
- }
-ox:=CLAN_NAME in u.extra;
-if (ox==null)
- {
- u:=u.gnext;
- continue;
- }
-if (ox.descr!=x.descr)
- {
- u:=u.gnext;
- continue;
- }
-if (visible(self,u))
- {
- if (u.level >= OVERSEER_LEVEL)
-  gld:="(Admin)";
-  else if (u.level>=CREATOR_LEVEL)
+   buff:=buff+" <br/>";
+   addstring (ply_list,buff);
+   }
+   u:=u.gnext;
+   }
+   :who_clan:
+   while (u.type==UNIT_ST_PC)
+   {
+   x:=CLAN_NAME in self.extra;
+   if (x==null)
+   {
+   u:=u.gnext;
+   continue;
+   }
+   ox:=CLAN_NAME in u.extra;
+   if (ox==null)
+   {
+   u:=u.gnext;
+   continue;
+   }
+   if (ox.descr!=x.descr)
+   {
+   u:=u.gnext;
+   continue;
+   }
+   if (visible(self,u))
+   {
+   if (u.level >= OVERSEER_LEVEL)
+   gld:="(Admin)";
+   else if (u.level>=CREATOR_LEVEL)
    gld:="(Creator)";
-  else if (u.level>IMMORTAL_LEVEL)
+   else if (u.level>IMMORTAL_LEVEL)
    gld:="(Immortal)";
    else gld:="";
 
- buff:="<div class='who_name'>"+u.name+"</div> <div class='who_title'>"+u.title+"</div>"+gld+"</div> ";
- if (u.minv>0)
-  buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
-  else if (isaff(u, ID_INVISIBILITY))
-  buff:=buff+"<div class='who_inv'>[ INV ]<div class='who'>";
-  if ("valhalla builder" in u.quests)
+   buff:="<div class='who_name'>"+u.name+"</div> <div class='who_title'>"+u.title+"</div>"+gld+"</div> ";
+   if (u.minv>0)
+   buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
+   else if (isaff(u, ID_INVISIBILITY))
+   buff:=buff+"<div class='who_inv'>[ INV ]<div class='who'>";
+   if ("valhalla builder" in u.quests)
    buff:=buff+" * Builder *</div>";
    if ("valhalla friend" in u.quests)
    buff:=buff+" * Friend *</div>";  
-  if ("New Player Helper" in u.quests)
-  {
+   if ("New Player Helper" in u.quests)
+   {
    if (u.extra.["$whoguidecolor"] != null)
    gcolor := textformat(u.extra.["$whoguidecolor"].descr);
    else gcolor := "";
    buff:=buff+" *"+gcolor+" Guide "+"</div>*";
-  }
- buff:=buff+" <br/>";
- addstring (ply_list,buff);
- }
-u:=u.gnext;
-}
-:p_who:
-buff:="";
-ln:=length(ply_list);
-buff:="<div class='who'>"+arg+"</div>";
-/*buff:=buff+"<div class='who'>"+temp+"</div>";*/
-if (ln<=0)
- buff:=buff+"None<br/>";
-else
- {
-i:=0;
-while (i<ln)
- {
- buff:=buff+ply_list.[i];
- i:=i+1;
- }
-}
-if (ln==1)
- buff:=buff+"<div class='who'>There is " +itoa(ln)+ " "+temps+" visible to you.</div>";
-else
- buff:=buff+"<div class='who'>There are " +itoa(ln)+ " "+tempp+" visible to you.</div>";;
+   }
+   buff:=buff+" <br/>";
+   addstring (ply_list,buff);
+   }
+   u:=u.gnext;
+   }
 
+   :p_who:
+   buff:="";
+   ln:=length(ply_list);
+   buff:="<div class='who'>"+arg+"</div>";
+   /*buff:=buff+"<div class='who'>"+temp+"</div>";*/
 
-pagestring(buff,self);
-quit;
+   if (ln <= 0)
+      buff:=buff+"None<br/>";
+   else
+   {
+      i:=0;
+      while (i<ln)
+      {
+         buff:=buff+ply_list.[i];
+         i:=i+1;
+      }
+   }
+   if (ln==1)
+      buff:=buff+"<div class='who'>There is " +itoa(ln)+ " "+temps+" visible to you.</div><br/>";
+   else
+      buff:=buff+"<div class='who'>There are " +itoa(ln)+ " "+tempp+" visible to you.</div><br/>";
+
+   pagestring(buff,self);
+   quit;
 }
 dilend
 

@@ -591,10 +591,10 @@ char *cConHook::IndentText(const char *source,
     {
         if (*current == CONTROL_CHAR)
         {
-            current++;
-            protocol_translate(this, *current, &newptr);
-            current++;
-            continue;
+            //current++;
+            //protocol_translate(this, *current, &newptr);
+            //current++;
+            //continue;
         }
 
         if (m_bGobble)
@@ -828,6 +828,51 @@ const char *GetTag(const char *p, char *pTag, int nTagMax)
     return c+1; // return char after '>'
 }
 
+
+/* p points to the html contents between < and >
+ * name is the value to get from, e.g. "class" will get you the value for "class='value"
+ * Copies the value into pTag. Copies at most nTagMax bytes (incl \0)
+ * Returns length of value
+ */
+int GetValue(const char *name, const char *p, char *pTag, int nTagMax)
+{
+    const char *c;
+
+    *pTag = 0;
+
+    c = strstr(p, name);
+    if (c == NULL)
+        return 0;
+
+    c += strlen(name);
+    c = skip_blanks(c); // skip any whitespace before equal
+    if (*c != '=')
+        return 0;
+    c++; // skip equal
+    c = skip_blanks(c); // skip any whitespace after equal
+
+    if (*c != '\'')
+        return 0;
+
+    c++; // Skip '
+
+    const char *ce;
+    ce = strchr(c, '\''); // Find the last ' for the value
+    if (ce == NULL)
+        return 0;
+
+    if (ce-c <= 1) // If the string is empty
+        return 0;
+
+    if (ce-c > nTagMax-1) // Not enough space
+        return 0;
+
+    strncpy(pTag, c, ce-c);
+    pTag[ce-c] = 0;
+
+    return ce-c;
+}
+
 /*
     <br/> becomes \n\r except if it is <br/>\n\r then it is ignored. Thus
     <br/><br/>\n\r becomes \n\r\n\r.
@@ -859,7 +904,7 @@ void cConHook::StripHTML(char *dest, const char *src)
             // We got a HTML tag
             if (strcmp(aTag, "br")==0 || strcmp(aTag, "br/")==0)
             {
-                if (*p == '\n' && *(p+1)=='\r') // If the next is \n\r then dont add it
+                if (*p == '\n' || *(p+1)=='\n') // If the next is \n\r then dont add it
                     continue;
 
                 // the <br/> tag was not followed by \n\r so add \n\r
@@ -893,11 +938,159 @@ void cConHook::StripHTML(char *dest, const char *src)
                 // Just do a cheap hack for now
 
                 /* This is not working on my telnet. I dont understand why 
-                     "\033[35;40m" doesn't change telnet ANSI to magenta...
+                     "\033[35;40m" doesn't change telnet ANSI to magenta...*/
 
-                if (strstr(aTag, "class='obj_title'"))
-                    Control_Fg_Magenta(this, &dest, 0);
-                */
+                // p = strstr(aTag, "class='")
+                // if (p && strlen(p)>=11)
+                //   if (p[9]=="'" || p[10]=="'")
+                //      bold := FALSE;
+                //      if (p[7] == 'c')
+                //         if (p[8] == 'p')
+                //           bold := TRUE;
+                //             c = p[9]
+                //            else
+                //             c = p[8]; 
+                //         switch (p[9])
+
+                char buf[256];
+                int l;
+                char cColor;
+
+                l = GetValue("class", aTag, buf, sizeof(buf));
+
+                if (l == 0)
+                    continue;
+
+                // Handling of e.g. 'cg' and 'cpg'
+                if (((l == 2) || (l == 3)) && (buf[0]=='c'))
+                {
+                    int bBold;
+
+                    if (buf[1] == 'p')
+                    {
+                        cColor = buf[2];
+                        bBold = TRUE;
+                    }
+                    else
+                    {
+                        cColor = buf[1];
+                        bBold = FALSE;
+                    }
+                    
+                    switch (cColor)
+                    {
+                        case 'r':
+                            if (bBold)
+                                Control_ANSI_Fg_Red(this, &dest, 0);
+                            else
+                                Control_ANSI_Fgb_Red(this, &dest, 0);
+                            break;
+
+                        case 'n':
+                            if (bBold)
+                                Control_ANSI_Fgb_Black(this, &dest, 0);
+                            else
+                                Control_ANSI_Fg_Black(this, &dest, 0);
+                            break;
+
+                        case 'g':
+                            if (bBold)
+                                Control_ANSI_Fgb_Green(this, &dest, 0);
+                            else
+                                Control_ANSI_Fg_Green(this, &dest, 0);
+                            break;
+
+                        case 'y':
+                            if (bBold)
+                                Control_ANSI_Fgb_Yellow(this, &dest, 0);
+                            else
+                                Control_ANSI_Fg_Yellow(this, &dest, 0);
+                            break;
+
+                        case 'b':
+                            if (bBold)
+                                Control_ANSI_Fgb_Blue(this, &dest, 0);
+                            else
+                                Control_ANSI_Fg_Blue(this, &dest, 0);
+                            break;
+
+                        case 'm':
+                            if (bBold)
+                                Control_ANSI_Fgb_Magenta(this, &dest, 0);
+                            else
+                                Control_ANSI_Fg_Magenta(this, &dest, 0);
+                            break;
+
+                        case 'c':
+                            if (bBold)
+                                Control_ANSI_Fgb_Cyan(this, &dest, 0);
+                            else
+                                Control_ANSI_Fg_Cyan(this, &dest, 0);
+                            break;
+
+                        case 'w':
+                            if (bBold)
+                                Control_ANSI_Fgb_White(this, &dest, 0);
+                            else
+                                Control_ANSI_Fg_White(this, &dest, 0);
+                            break;
+
+                        default:
+                            slog(LOG_ALL, 0, "Illegal fg color code %c", cColor);
+                            break;
+                    }
+                    continue;
+                } // End of foreground color
+
+                // Handling of e.g. 'bg' and 'by'
+                if ((l == 2) && (buf[0]=='b'))
+                {
+                    cColor = buf[1];
+                    
+                    switch (cColor)
+                    {
+                        case 'r':
+                            Control_ANSI_Bg_Red(this, &dest, 0);
+                            break;
+
+                        case 'n':
+                            Control_ANSI_Bg_Black(this, &dest, 0);
+                            break;
+
+                        case 'g':
+                            Control_ANSI_Bg_Green(this, &dest, 0);
+                            break;
+
+                        case 'y':
+                            Control_ANSI_Bg_Yellow(this, &dest, 0);
+                            break;
+
+                        case 'b':
+                            Control_ANSI_Bg_Blue(this, &dest, 0);
+                            break;
+
+                        case 'm':
+                            Control_ANSI_Bg_Magenta(this, &dest, 0);
+                            break;
+
+                        case 'c':
+                            Control_ANSI_Bg_Cyan(this, &dest, 0);
+                            break;
+
+                        case 'w':
+                            Control_ANSI_Bg_White(this, &dest, 0);
+                            break;
+
+                        default:
+                            slog(LOG_ALL, 0, "Illegal bg color code %c", cColor);
+                            break;
+                    }
+                    continue;
+                }  // End of background color
+
+                // Here we can translate colors, e.h. who_title to what the user has chosen.
+                
+
             }
             continue;
         }

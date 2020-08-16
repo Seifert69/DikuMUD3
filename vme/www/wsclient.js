@@ -274,8 +274,12 @@ function HistoryAdd(s) {
 
     for (i = 0; i < g_aIgnoreCommands.length; i++)
         if (g_aIgnoreCommands[i].indexOf(s) == 0)
-            return;
+        return;
 
+    i = (g_nCmdPos-1) % g_aCmdHistory.length;
+    if (g_aCmdHistory[i] == s)
+        return;
+        
     g_nCmdPos = g_nCmdPos % g_aCmdHistory.length;
     g_aCmdHistory[g_nCmdPos] = s;
     g_nCmdPos += 1;
@@ -706,7 +710,13 @@ function openWSConnection(protocol, hostname, port, endpoint) {
  * If str is null the value is left unchanged, otherwise it's set to str
  */
 function InputFocus(str) {
-    var myfld = document.getElementById("message");
+    var myfld;
+    
+    if (isPasswordActive())
+        myfld = document.getElementById("pwd");
+    else
+        myfld = document.getElementById("message");
+
     if (str != null)
         myfld.value = str;
     myfld.focus();
@@ -742,32 +752,38 @@ function sendCommand(str, bFocus, bHistory, bEcho)
     return true;
 }
 
+function isPasswordActive() {
+    return document.getElementById("pwd").style.display != "none";
+}
+
 /**
     * Send a message to the WebSocket server
     */
 function onSendClick() {
     g_nHistoryPos = 0;
-    var myfld = document.getElementById("message");
-    sendCommand(myfld.value, true, myfld.getAttribute('type') != "password", myfld.getAttribute('type') != "password");
+    
+    var myfld;
+    var bPwdActive = isPasswordActive();
+
+    if (bPwdActive)
+        myfld = document.getElementById("pwd");
+    else
+        myfld = document.getElementById("message");
+
+    sendCommand(myfld.value, true, !bPwdActive, !bPwdActive);
 }
 
 function shSettings() {
+    var str;
+    str = "<H1>Select Theme:</h1><select id=theme onchange=switchTheme()><option value=style.css>Default Theme</option><option value=silver.css>Silver Theme</option></select><br/><br/>";
 
-
-var str;
-
-str = "<H1>Select Theme:</h1><select id=theme onchange=switchTheme()><option value=style.css>Default Theme</option><option value=silver.css>Silver Theme</option></select><BR><BR>";
-
-var item = document.createElement("div");
+    var item = document.createElement("div");
     item.setAttribute("style", "display: inline");
     item.innerHTML = str;
 
     document.getElementById("modtext").firstChild.replaceWith(item);
 
     document.getElementById("myModal").style.display = "block";
-
-
-
 }
 
 function toggleSettings() {

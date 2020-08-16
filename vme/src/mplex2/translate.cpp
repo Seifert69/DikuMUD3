@@ -24,47 +24,45 @@
 #include "ttydef.h"
 #include "translate.h"
 
-static ubit8 default_colours[3][24] =
-    {
-        /* Default (no change in table) */
-        {CONTROL_FG_BLACK_CHAR, CONTROL_FG_RED_CHAR, CONTROL_FG_GREEN_CHAR,
-         CONTROL_FG_YELLOW_CHAR, CONTROL_FG_BLUE_CHAR, CONTROL_FG_MAGENTA_CHAR,
-         CONTROL_FG_CYAN_CHAR, CONTROL_FG_WHITE_CHAR,
+static ubit8 default_colours[3][24] = {
+    /* Default (no change in table) */
+    {CONTROL_FG_BLACK_CHAR, CONTROL_FG_RED_CHAR, CONTROL_FG_GREEN_CHAR,
+     CONTROL_FG_YELLOW_CHAR, CONTROL_FG_BLUE_CHAR, CONTROL_FG_MAGENTA_CHAR,
+     CONTROL_FG_CYAN_CHAR, CONTROL_FG_WHITE_CHAR,
 
-         CONTROL_FGB_BLACK_CHAR, CONTROL_FGB_RED_CHAR, CONTROL_FGB_GREEN_CHAR,
-         CONTROL_FGB_YELLOW_CHAR, CONTROL_FGB_BLUE_CHAR, CONTROL_FGB_MAGENTA_CHAR,
-         CONTROL_FGB_CYAN_CHAR, CONTROL_FGB_WHITE_CHAR,
+     CONTROL_FGB_BLACK_CHAR, CONTROL_FGB_RED_CHAR, CONTROL_FGB_GREEN_CHAR,
+     CONTROL_FGB_YELLOW_CHAR, CONTROL_FGB_BLUE_CHAR, CONTROL_FGB_MAGENTA_CHAR,
+     CONTROL_FGB_CYAN_CHAR, CONTROL_FGB_WHITE_CHAR,
 
-         CONTROL_BG_BLACK_CHAR, CONTROL_BG_RED_CHAR, CONTROL_BG_GREEN_CHAR,
-         CONTROL_BG_YELLOW_CHAR, CONTROL_BG_BLUE_CHAR, CONTROL_BG_MAGENTA_CHAR,
-         CONTROL_BG_CYAN_CHAR, CONTROL_BG_WHITE_CHAR},
+     CONTROL_BG_BLACK_CHAR, CONTROL_BG_RED_CHAR, CONTROL_BG_GREEN_CHAR,
+     CONTROL_BG_YELLOW_CHAR, CONTROL_BG_BLUE_CHAR, CONTROL_BG_MAGENTA_CHAR,
+     CONTROL_BG_CYAN_CHAR, CONTROL_BG_WHITE_CHAR},
 
-        {CONTROL_FG_BLACK_CHAR, CONTROL_FG_RED_CHAR, CONTROL_FG_YELLOW_CHAR,
-         CONTROL_FG_YELLOW_CHAR, CONTROL_FG_BLUE_CHAR, CONTROL_FG_MAGENTA_CHAR,
-         CONTROL_FG_BLUE_CHAR, CONTROL_FG_BLACK_CHAR,
+    {CONTROL_FG_BLACK_CHAR, CONTROL_FG_RED_CHAR, CONTROL_FG_YELLOW_CHAR,
+     CONTROL_FG_YELLOW_CHAR, CONTROL_FG_BLUE_CHAR, CONTROL_FG_MAGENTA_CHAR,
+     CONTROL_FG_BLUE_CHAR, CONTROL_FG_BLACK_CHAR,
 
-         CONTROL_FGB_BLACK_CHAR, CONTROL_FGB_RED_CHAR, CONTROL_FGB_YELLOW_CHAR,
-         CONTROL_FGB_YELLOW_CHAR, CONTROL_FGB_BLUE_CHAR, CONTROL_FGB_MAGENTA_CHAR,
-         CONTROL_FGB_BLUE_CHAR, CONTROL_FGB_BLACK_CHAR,
+     CONTROL_FGB_BLACK_CHAR, CONTROL_FGB_RED_CHAR, CONTROL_FGB_YELLOW_CHAR,
+     CONTROL_FGB_YELLOW_CHAR, CONTROL_FGB_BLUE_CHAR, CONTROL_FGB_MAGENTA_CHAR,
+     CONTROL_FGB_BLUE_CHAR, CONTROL_FGB_BLACK_CHAR,
 
-         CONTROL_BG_WHITE_CHAR, CONTROL_BG_RED_CHAR, CONTROL_BG_GREEN_CHAR,
-         CONTROL_BG_YELLOW_CHAR, CONTROL_BG_BLUE_CHAR, CONTROL_BG_MAGENTA_CHAR,
-         CONTROL_BG_CYAN_CHAR, CONTROL_BG_WHITE_CHAR},
+     CONTROL_BG_WHITE_CHAR, CONTROL_BG_RED_CHAR, CONTROL_BG_GREEN_CHAR,
+     CONTROL_BG_YELLOW_CHAR, CONTROL_BG_BLUE_CHAR, CONTROL_BG_MAGENTA_CHAR,
+     CONTROL_BG_CYAN_CHAR, CONTROL_BG_WHITE_CHAR},
 
-        {CONTROL_FG_BLACK_CHAR, CONTROL_FG_MAGENTA_CHAR, CONTROL_FG_GREEN_CHAR,
-         CONTROL_FG_YELLOW_CHAR, CONTROL_FG_BLUE_CHAR, CONTROL_FG_MAGENTA_CHAR,
-         CONTROL_FG_CYAN_CHAR, CONTROL_FG_WHITE_CHAR,
+    {CONTROL_FG_BLACK_CHAR, CONTROL_FG_MAGENTA_CHAR, CONTROL_FG_GREEN_CHAR,
+     CONTROL_FG_YELLOW_CHAR, CONTROL_FG_BLUE_CHAR, CONTROL_FG_MAGENTA_CHAR,
+     CONTROL_FG_CYAN_CHAR, CONTROL_FG_WHITE_CHAR,
 
-         CONTROL_FGB_BLACK_CHAR, CONTROL_FGB_MAGENTA_CHAR, CONTROL_FGB_GREEN_CHAR,
-         CONTROL_FGB_YELLOW_CHAR, CONTROL_FGB_BLUE_CHAR, CONTROL_FGB_MAGENTA_CHAR,
-         CONTROL_FGB_CYAN_CHAR, CONTROL_FGB_WHITE_CHAR,
+     CONTROL_FGB_BLACK_CHAR, CONTROL_FGB_MAGENTA_CHAR, CONTROL_FGB_GREEN_CHAR,
+     CONTROL_FGB_YELLOW_CHAR, CONTROL_FGB_BLUE_CHAR, CONTROL_FGB_MAGENTA_CHAR,
+     CONTROL_FGB_CYAN_CHAR, CONTROL_FGB_WHITE_CHAR,
 
-         CONTROL_BG_BLUE_CHAR, CONTROL_BG_RED_CHAR, CONTROL_BG_GREEN_CHAR,
-         CONTROL_BG_YELLOW_CHAR, CONTROL_BG_BLUE_CHAR, CONTROL_BG_MAGENTA_CHAR,
-         CONTROL_BG_CYAN_CHAR, CONTROL_BG_WHITE_CHAR}};
+     CONTROL_BG_BLUE_CHAR, CONTROL_BG_RED_CHAR, CONTROL_BG_GREEN_CHAR,
+     CONTROL_BG_YELLOW_CHAR, CONTROL_BG_BLUE_CHAR, CONTROL_BG_MAGENTA_CHAR,
+     CONTROL_BG_CYAN_CHAR, CONTROL_BG_WHITE_CHAR}};
 
-static void (*control_code[5][256])(class cConHook *con,
-                                    char **b, ubit8 code);
+void (*control_code[5][256])(class cConHook *con, char **b, ubit8 code);
 
 #define TELNET_SEND_GA(buf) sprintf(buf, "%c%c", IAC, GA)
 #define TELNET_ECHO_OFF(buf) sprintf(buf, "%c%c%c", IAC, WILL, TELOPT_ECHO)
@@ -78,9 +76,6 @@ static void (*control_code[5][256])(class cConHook *con,
 
 void protocol_translate(class cConHook *con, ubit8 code, char **b)
 {
-    return; // MS 2020 XXX
-    assert(b && *b);
-
     if (code >= CONTROL_FG_BLACK_CHAR && code <= CONTROL_BG_WHITE_CHAR)
         code = default_colours[con->m_sSetup.colour_convert]
                               [code - CONTROL_FG_BLACK_CHAR];
@@ -124,26 +119,12 @@ void Control_Echo_On(class cConHook *con, char **b, ubit8 code)
     }
 }
 
-void Control_Fg_Magenta(class cConHook *con, char **b, ubit8 code)
-{
-    if (con->m_sSetup.emulation == TERM_TTY)
-    {
-    }
-    else if (con->m_sSetup.emulation == TERM_ANSI)
-    {
-        strcpy(*b, ANSI_FG_MAGENTA);
-        TAIL(*b);
-    }
-}
-
 /* ======================================================================= */
 /*                             A N S I                                     */
 /* ======================================================================= */
 
-static void Control_ANSI_Fg_Black(class cConHook *con,
-                                  char **b, ubit8 code)
+void Control_ANSI_Fg_Black(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FG_BLACK);
     TAIL(*b);
 
@@ -152,10 +133,8 @@ static void Control_ANSI_Fg_Black(class cConHook *con,
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-static void Control_ANSI_Fg_Red(class cConHook *con,
-                                char **b, ubit8 code)
+void Control_ANSI_Fg_Red(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FG_RED);
     TAIL(*b);
 
@@ -164,10 +143,8 @@ static void Control_ANSI_Fg_Red(class cConHook *con,
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-static void Control_ANSI_Fg_Green(class cConHook *con,
-                                  char **b, ubit8 code)
+void Control_ANSI_Fg_Green(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FG_GREEN);
     TAIL(*b);
 
@@ -176,10 +153,8 @@ static void Control_ANSI_Fg_Green(class cConHook *con,
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-static void Control_ANSI_Fg_Yellow(class cConHook *con,
-                                   char **b, ubit8 code)
+void Control_ANSI_Fg_Yellow(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FG_YELLOW);
     TAIL(*b);
 
@@ -188,10 +163,8 @@ static void Control_ANSI_Fg_Yellow(class cConHook *con,
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-static void Control_ANSI_Fg_Blue(class cConHook *con,
-                                 char **b, ubit8 code)
+void Control_ANSI_Fg_Blue(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FG_BLUE);
     TAIL(*b);
 
@@ -200,10 +173,8 @@ static void Control_ANSI_Fg_Blue(class cConHook *con,
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-static void Control_ANSI_Fg_Magenta(class cConHook *con,
-                                    char **b, ubit8 code)
+void Control_ANSI_Fg_Magenta(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FG_MAGENTA);
     TAIL(*b);
 
@@ -212,10 +183,8 @@ static void Control_ANSI_Fg_Magenta(class cConHook *con,
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-static void Control_ANSI_Fg_Cyan(class cConHook *con,
-                                 char **b, ubit8 code)
+void Control_ANSI_Fg_Cyan(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FG_CYAN);
     TAIL(*b);
 
@@ -224,10 +193,8 @@ static void Control_ANSI_Fg_Cyan(class cConHook *con,
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-static void Control_ANSI_Fg_White(class cConHook *con,
-                                  char **b, ubit8 code)
+void Control_ANSI_Fg_White(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FG_WHITE);
     TAIL(*b);
 
@@ -236,144 +203,111 @@ static void Control_ANSI_Fg_White(class cConHook *con,
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
-static void Control_ANSI_Fgb_Black(class cConHook *con,
-                                   char **b, ubit8 code)
+void Control_ANSI_Fgb_Black(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FGB_BLACK);
     TAIL(*b);
 }
 
-static void Control_ANSI_Fgb_Red(class cConHook *con,
-                                 char **b, ubit8 code)
+void Control_ANSI_Fgb_Red(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FGB_RED);
     TAIL(*b);
 }
 
-static void Control_ANSI_Fgb_Green(class cConHook *con,
-                                   char **b, ubit8 code)
+void Control_ANSI_Fgb_Green(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FGB_GREEN);
     TAIL(*b);
 }
 
-static void Control_ANSI_Fgb_Yellow(class cConHook *con,
-                                    char **b, ubit8 code)
+void Control_ANSI_Fgb_Yellow(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FGB_YELLOW);
     TAIL(*b);
 }
 
-static void Control_ANSI_Fgb_Blue(class cConHook *con,
-                                  char **b, ubit8 code)
+void Control_ANSI_Fgb_Blue(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FGB_BLUE);
     TAIL(*b);
 }
 
-static void Control_ANSI_Fgb_Magenta(class cConHook *con,
-                                     char **b, ubit8 code)
+void Control_ANSI_Fgb_Magenta(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FGB_MAGENTA);
     TAIL(*b);
 }
 
-static void Control_ANSI_Fgb_Cyan(class cConHook *con,
-                                  char **b, ubit8 code)
+void Control_ANSI_Fgb_Cyan(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FGB_CYAN);
     TAIL(*b);
 }
 
-static void Control_ANSI_Fgb_White(class cConHook *con,
-                                   char **b, ubit8 code)
+void Control_ANSI_Fgb_White(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_FGB_WHITE);
     TAIL(*b);
 }
 
-static void Control_ANSI_Bg_Black(class cConHook *con,
-                                  char **b, ubit8 code)
+void Control_ANSI_Bg_Black(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_BG_BLACK);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_BLACK_CHAR;
 }
 
-static void Control_ANSI_Bg_Red(class cConHook *con,
-                                char **b, ubit8 code)
+void Control_ANSI_Bg_Red(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_BG_RED);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_RED_CHAR;
 }
 
-static void Control_ANSI_Bg_Green(class cConHook *con,
-                                  char **b, ubit8 code)
+void Control_ANSI_Bg_Green(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_BG_GREEN);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_GREEN_CHAR;
 }
 
-static void Control_ANSI_Bg_Yellow(class cConHook *con,
-                                   char **b, ubit8 code)
+void Control_ANSI_Bg_Yellow(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_BG_YELLOW);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_YELLOW_CHAR;
 }
 
-static void Control_ANSI_Bg_Blue(class cConHook *con,
-                                 char **b, ubit8 code)
+void Control_ANSI_Bg_Blue(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_BG_BLUE);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_BLUE_CHAR;
 }
 
-static void Control_ANSI_Bg_Magenta(class cConHook *con,
-                                    char **b, ubit8 code)
+void Control_ANSI_Bg_Magenta(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_BG_MAGENTA);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_MAGENTA_CHAR;
 }
 
-static void Control_ANSI_Bg_Cyan(class cConHook *con,
-                                 char **b, ubit8 code)
+void Control_ANSI_Bg_Cyan(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_BG_CYAN);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_CYAN_CHAR;
 }
 
-static void Control_ANSI_Bg_White(class cConHook *con,
-                                  char **b, ubit8 code)
+void Control_ANSI_Bg_White(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_BG_WHITE);
     TAIL(*b);
     con->m_nBgColor = CONTROL_BG_WHITE_CHAR;
 }
 
-void Control_ANSI_Echo_Off(class cConHook *con,
-                           char **b, ubit8 code)
+void Control_ANSI_Echo_Off(class cConHook *con, char **b, ubit8 code)
 {
     if (con->m_sSetup.telnet)
     {
@@ -385,8 +319,7 @@ void Control_ANSI_Echo_Off(class cConHook *con,
     TAIL(*b);
 }
 
-void Control_ANSI_Reset(class cConHook *con,
-                        char **b, ubit8 code)
+void Control_ANSI_Reset(class cConHook *con, char **b, ubit8 code)
 {
     if (con->m_sSetup.telnet)
     {
@@ -400,32 +333,26 @@ void Control_ANSI_Reset(class cConHook *con,
     Control_ANSI_Fg_White(con, b, code);
 }
 
-static void Control_ANSI_Home(class cConHook *con,
-                              char **b, ubit8 code)
+void Control_ANSI_Home(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_HOME);
     TAIL(*b);
     con->m_nPromptLen = 0;
 }
 
-static void Control_ANSI_Bold(class cConHook *con,
-                              char **b, ubit8 code)
+void Control_ANSI_Bold(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_BOLD);
     TAIL(*b);
 }
 
-static void Control_ANSI_Reverse(class cConHook *con,
-                                 char **b, ubit8 code)
+void Control_ANSI_Reverse(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     strcpy(*b, ANSI_REVERSE);
     TAIL(*b);
 }
 
-static void Control_TTY_Echo_Off(class cConHook *con, char **b, ubit8 code)
+void Control_TTY_Echo_Off(class cConHook *con, char **b, ubit8 code)
 {
     if (con->m_sSetup.telnet)
     {
@@ -434,7 +361,7 @@ static void Control_TTY_Echo_Off(class cConHook *con, char **b, ubit8 code)
     }
 }
 
-static void Control_TTY_Echo_On(class cConHook *con, char **b, ubit8 code)
+void Control_TTY_Echo_On(class cConHook *con, char **b, ubit8 code)
 {
     if (con->m_sSetup.telnet)
     {
@@ -443,61 +370,51 @@ static void Control_TTY_Echo_On(class cConHook *con, char **b, ubit8 code)
     }
 }
 
-static void Control_Copy(class cConHook *con, char **b, ubit8 code)
+void Control_Copy(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
-
     **b = CONTROL_CHAR;
     (*b)++;
     **b = code;
     (*b)++;
 }
 
-static void Control_Gobble_On(class cConHook *con, char **b, ubit8 code)
+void Control_Gobble_On(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     con->m_bGobble = true;
 }
 
-static void Control_Gobble_Off(class cConHook *con, char **b, ubit8 code)
+void Control_Gobble_Off(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     con->m_bGobble = false;
 }
 
-static void control_color_change(class cConHook *con, char **b, ubit8 code)
+void control_color_change(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     con->m_bColorChange = true;
 }
 
-static void control_color_insert(class cConHook *con, char **b, ubit8 code)
+void control_color_insert(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     con->m_bColorInsert = true;
 }
 
-static void control_color_create(class cConHook *con, char **b, ubit8 code)
+void control_color_create(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     con->m_bColorCreate = true;
 }
 
-static void control_color_remove(class cConHook *con, char **b, ubit8 code)
+void control_color_remove(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     con->m_bColorRemove = true;
 }
 
-static void control_color_disp(class cConHook *con, char **b, ubit8 code)
+void control_color_disp(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     con->m_bColorDisp = true;
 }
 
-static void control_color_end(class cConHook *con, char **b, ubit8 code)
+void control_color_end(class cConHook *con, char **b, ubit8 code)
 {
-    return; // MS 2020 XXX
     con->m_bColorCreate = false;
     con->m_bColorChange = false;
     con->m_bColorInsert = false;
@@ -508,7 +425,6 @@ static void control_color_end(class cConHook *con, char **b, ubit8 code)
 
 void translate_init(void)
 {
-    return; // MS 2020 XXX
     int i, j;
 
     for (j = 0; j < 4; j++)

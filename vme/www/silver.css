@@ -239,6 +239,7 @@
         .score       { display: inline; color:black; }
         .spell       { display: inline; color:brown; }
         .worn        { display: inline; color:black; }
+        .who         { display: inline; color:darkblue; }
         .who_name    { display: inline; color:darkblue; }
         .who_title   { display: inline; color:blue; }
         .who_inv     { display: inline; }
@@ -271,9 +272,6 @@
         .cc     { display: inline; color:darkcyan; }
         .cpc    { display: inline; color:cyan; }
         .bc     { display: inline; background-color:darkcyan; }
-        .cb     { display: inline; color:darkblue; }
-        .cpb    { display: inline; color:blue; }
-        .bb     { display: inline; background-color:darkblue; }
         .cw     { display: inline; color:#ccc; }
         .cpw    { display: inline; color:white; }
         .bw     { display: inline; background-color:#ccc; }

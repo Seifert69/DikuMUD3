@@ -606,11 +606,15 @@ unsecure(gd);
 goto start;
 }
 dilend
+
+
 /*
-This function asks the pc if he/she has time to continue the
-quest.
-*/
-dilbegin integer stop_test (pc:unitptr,i:integer);
+ * This function asks the pc if he/she has time to continue the
+ * newbie guide quest.
+ */
+dilbegin integer stop_test(pc:unitptr, i:integer);
+var
+   qst : extraptr;
 code
 {
    heartbeat := PULSE_SEC*6;
@@ -620,60 +624,72 @@ code
    if (pc #= null)
       goto stop;
    secure(pc, lost_pc);
- on i goto zero,one,two,three,four;
-:zero:
-:one:
-act ("$1n says 'You have now finished the first phase of your training.'",
-A_ALWAYS,self,null,pc,TO_VICT);
-pause;
-goto there;
-:two:
-act ("$1n says 'You have now finished the second phase of your training.'",
-A_ALWAYS,self,null,pc,TO_VICT);
-pause;
-goto there;
-:three:
-act ("$1n says 'You have now finished the third phase of your training.'",
-A_ALWAYS,self,null,pc,TO_VICT);
-pause;
-goto there;
-:four:
-act ("$1n says 'You have now finished the fourth phase of your training.'",
-A_ALWAYS,self,null,pc,TO_VICT);
-pause;
 
-:there:
-act ("$1n says 'If you don't have time to continue we can stop now and continue later.'",
-A_ALWAYS,self,null,pc,TO_VICT);
-pause;
-:again:
-act ("$1n says 'Just 'nod' if you want to continue or 'shake' otherwise''",
-A_ALWAYS,self,null,pc,TO_VICT);
+   on i goto zero,one,two,three,four;
+   :zero:
+   :one:
+   act ("$1n says 'You have now finished the first phase of your training.'",
+   A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   goto there;
 
-wait (SFB_DONE,TRUE);
-if (cmdstr=="nod")
-  {
-  act ("$1n says 'Very well lets continue.'",
-A_ALWAYS,self,null,pc,TO_VICT);
-  pause;
-   return (TRUE);
+   :two:
+   act ("$1n says 'You have now finished the second phase of your training.'",
+   A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   goto there;
+
+   :three:
+   act ("$1n says 'You have now finished the third phase of your training.'",
+   A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+   goto there;
+
+   :four:
+   act ("$1n says 'You have now finished the fourth phase of your training.'",
+   A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+
+   :there:
+   qst := NEWBIE_ONGOING in pc.quests;
+
+   if (qst)
+      qst.descr := "part "+itoa(i)+" done";
+   else
+      addextra(pc.quests, {NEWBIE_ONGOING},"part "+itoa(i)+" done");
+
+   act ("$1n says 'If you don't have time to continue we can stop now and continue later.'",
+   A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+
+   :again:
+   act ("$1n says 'Just 'nod' if you want to continue or 'shake' otherwise''",
+      A_ALWAYS,self,null,pc,TO_VICT);
+
+   wait (SFB_DONE,TRUE);
+   if (command("nod"))
+   {
+      act ("$1n says 'Very well lets continue.'", A_ALWAYS,self,null,pc,TO_VICT);
+      pause;
+      return (TRUE);
    }
-else if (cmdstr=="shake")
-  {
-  :lost_pc:
-  act ("$1n says 'Very well then I will go help other newbies.'",
-A_ALWAYS,self,null,pc,TO_VICT);
- pause;
- act ("$1n says ' if you ever need me just say 'help me Newbie Guide''",
-A_ALWAYS,self,null,pc,TO_VICT);
- pause;
-  exec ("wave",self);
-  pause;
-  :stop:
+   else if (command("shake"))
+   {
+      :lost_pc:
+      act ("$1n says 'Very well then I will go help other newbies.'",
+      A_ALWAYS,self,null,pc,TO_VICT);
+      pause;
+      act ("$1n says ' if you ever need me just say 'help me Newbie Guide''",
+      A_ALWAYS,self,null,pc,TO_VICT);
+      pause;
+      exec ("wave",self);
+      pause;
+      :stop:
 
-return (FALSE);
-}
-else goto again;
+      return (FALSE);
+   }
+   else
+      goto again;
 }
 dilend
 
@@ -745,9 +761,9 @@ code
    secure(pc, stop);
 
    :quest_accepted:
-act ("$1n says 'Ok now, here we are, this is our Newbie Guide Chat room," +
+   act("$1n says 'Ok now, here we are, this is our Newbie Guide Chat room," +
      " just perfect for this little talk.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
+      A_ALWAYS, self,null,pc,TO_VICT);
    goto stage1;
 
    :no_quest:
@@ -782,7 +798,9 @@ act ("$1n says 'If I am busy, one of the other many newbie guides will come "+
   A_ALWAYS, self,null,pc,TO_VICT);
    pause;
 
-/* act ("$1n says 'Now, it would probably be best if you turned off " +
+/* Players forget to turn it back on.
+
+ act ("$1n says 'Now, it would probably be best if you turned off " +
      "your shout and tell.'",
   A_ALWAYS, self,null,pc,TO_VICT);
 act ("$1n says 'Otherwise it may be hard to follow what I say " +
@@ -801,28 +819,27 @@ pause;
 act ("$1n says 'Remember to turn them back on again after training " +
      "by typing each command again.'",
   A_ALWAYS, self,null,pc,TO_VICT);
-     pause;
-*/
+     pause; */
 
-act ("$1n says 'The first thing I will talk about are basic mud commands.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-pause;
-act ("$1n says 'If you have played other muds, you can skip this part by saying "+
-"'go on' and I will move on to more Valhalla specific topics.'",
-  A_ALWAYS, self,null,pc,TO_VICT);
-h:=interrupt (SFB_DONE, command ("say") and
-(pc==activator) and
-(argument =="go on"), hurry);
-
-pause;
-act ("$1n says 'Before we start I would like to mention that most commands "+
-        " can be abbreviated. For example 'l' will work for 'look' and "+
-        "'inv' will work for 'inventory''",
-  A_ALWAYS, self,null,pc,TO_VICT);
+   act ("$1n says 'The first thing I will talk about are basic mud commands.'",
+   A_ALWAYS, self,null,pc,TO_VICT);
    pause;
-act ("$1n says 'You must first learn the 'look' command - try to type: "+
+   act ("$1n says 'If you have played other muds, you can skip this part by saying "+
+   "'go on' and I will move on to more Valhalla specific topics.'",
+   A_ALWAYS, self,null,pc,TO_VICT);
+   h:=interrupt (SFB_DONE, command ("say") and
+   (pc==activator) and
+   (argument =="go on"), hurry);
+
+   pause;
+   act ("$1n says 'Before we start I would like to mention that most commands "+
+         " can be abbreviated. For example 'l' will work for 'look' and "+
+         "'inv' will work for 'inventory''",
+     A_ALWAYS, self,null,pc,TO_VICT);
+   pause;
+   act ("$1n says 'You must first learn the 'look' command - try to type: "+
      "'look' (do not type the ' around look).'",
-  A_ALWAYS, self,null,pc,TO_VICT);
+      A_ALWAYS, self,null,pc,TO_VICT);
    i := TRUE;
    while (i)
    {
@@ -1009,8 +1026,8 @@ act ("$1n says 'One last command I would like to tell you about before we move "
         "the game.'",
   A_ALWAYS, self,null,pc,TO_VICT);
 pause;
-qst:=NEWBIE_ONGOING in pc.quests;
-qst.descr:="part 1 done";
+//XXX qst:=NEWBIE_ONGOING in pc.quests;
+//XXX qst.descr:="part 1 done";
 return (TRUE);
 
    :hurry:
@@ -1040,9 +1057,9 @@ return (TRUE);
    
    pause;
    act ("$1n says 'To do this type 'comm add newbie'.'", A_ALWAYS, self,null,pc,TO_VICT);
-   addextra (pc.quests,{NEWBIE_ONGOING},"");
-   qst:=NEWBIE_ONGOING in pc.quests;
-   qst.descr:="part 1 done";
+   // XXX addextra (pc.quests,{NEWBIE_ONGOING},"");
+   // XXX qst:=NEWBIE_ONGOING in pc.quests;
+   // XXX qst.descr:="part 1 done";
    return (TRUE);
 
    :stop:
@@ -1133,8 +1150,8 @@ A_ALWAYS,self,null,pc,TO_VICT);
    pause; */
    act ("$1n says 'next we will move onto our tour of Udgaard.'",
 A_ALWAYS,self,null,pc,TO_VICT);
-qst:=NEWBIE_ONGOING in pc.quests;
-qst.descr:="part 2 done";
+// XXX qst:=NEWBIE_ONGOING in pc.quests;
+// XXX qst.descr:="part 2 done";
    return (TRUE);
 
    :stop:
@@ -1392,8 +1409,8 @@ A_ALWAYS , self, null , pc ,TO_VICT);
    act ("$1n says 'Well that about covers Udgaard.'",
 A_ALWAYS , self, null , pc ,TO_VICT);
    pause;
-qst:=NEWBIE_ONGOING in pc.quests;
-qst.descr:="part 3 done";
+// XXX qst:=NEWBIE_ONGOING in pc.quests;
+// XXX qst.descr:="part 3 done";
    return (TRUE);
 
    :stop:
@@ -1588,8 +1605,8 @@ A_ALWAYS,self,null,pc,TO_VICT);
   "correct corpse by typing 'look in corpse'  or 'look in 2.corpse''",
 A_ALWAYS,self,null,pc,TO_VICT);
   pause;
-qst:=NEWBIE_ONGOING in pc.quests;
-qst.descr:="part 4 done";
+// XXX qst:=NEWBIE_ONGOING in pc.quests;
+// XXX qst.descr:="part 4 done";
 
    return (TRUE);
 
@@ -2533,89 +2550,87 @@ A_ALWAYS, self, null,pc,TO_VICT);
 }
 dilend
 
+/*
+ * For the newbie guide this function returns the following values.
+ *
+ *  -1 if the function errors won't happen grin.
+ * 0 if player hasn't started quest
+ * 1 If player is done with part 1
+ * 2 3 4 Like one if the player is done.
+ * 5 if player wants help with corpse or is lost.
+*/
 dilbegin integer quest_parse (pc:unitptr);
 var
-  count:integer;
-  act_str:string;
- qst:extraptr;
- /*
- This function returns the following values.
-
--1 if the function errors won't happen grin.
-0 if player hasn't started quest
-1 If player is done with part 1
-2 3 4 Like one if the player is done.
-5 if player wants help with corpse or is lost.
-*/
+   count:integer;
+   act_str:string;
+   qst:extraptr;
 code
 {
-secure (pc,lostpc);
+   secure (pc,lostpc);
 
-if ((NEWBIE_COMPLETE in pc.quests))
-return (5);
+   if ((NEWBIE_COMPLETE in pc.quests))
+      return (5);
 
-qst:=NEWBIE_ONGOING in pc.quests;
-if (qst==null)
-  {
-act ("$1n says 'I notice that you have not done the newbie guide tour.'",
-A_ALWAYS,self,null,pc,TO_VICT);
-  pause;
-act ("$1n asks 'Would you like to do the tour or do you need more help? "+
-     "Just <a cmd='#'>say tour</a> for the quest and <a cmd='#'>say help</a> for assistance from me.",
-  A_ALWAYS,self,null,pc,TO_VICT);
-  :tick:
-  wait (SFB_DONE|SFB_TICK, command ("say") and
-  (pc==activator) and
-  (("tour" in argument ) or
-  ("help" in argument)));
-  if (command (CMD_AUTO_TICK) and
-  (self.outside.idx==pc.outside.idx)) goto tick;
-  if ("tour" in argument)
-  return (0);
- else
- return (5);
-  }
-else if (qst.descr=="part 1 done")
-  {
-  count:=1;
-  act_str:="four parts";
-  }
-else if (qst.descr=="part 2 done")
-  {
-  count:=2;
-  act_str:="three parts";
-  }
-else if (qst.descr=="part 3 done")
-  {
-  count:=3;
-  act_str:="two parts";
-  }
-else if (qst.descr=="part 4 done")
-  {
-  count:=4;
-  act_str:="one part";
-  }
+   qst:=NEWBIE_ONGOING in pc.quests;
 
-act ("$1n says 'I notice although you have started the newbie guide tour you still have "+
-  act_str+" to complete it.", A_ALWAYS,self,null,pc,TO_VICT);
-  pause;
-act ("$1n asks 'Would you like to complete the tour or do you need more help?  Just say "+
-  "'complete' for the quest or 'help' for assistance from me.'",
-  A_ALWAYS,self,null,pc,TO_VICT);
+   if (qst==null)
+   {
+      act ("$1n says 'I notice that you have not done the newbie guide tour.'",
+         A_ALWAYS,self,null,pc,TO_VICT);
+      pause;
 
-  wait (SFB_DONE, command ("say") and
-  (pc==activator) and
-  (("complete" in argument ) or
-  ("help" in argument)));
-  if ("complete" in argument)
-  return (count);
- else
- return (5);
+      act ("$1n asks 'Would you like to do the tour or do you need more help? "+
+           "Just <a cmd='#'>say tour</a> for the quest and <a cmd='#'>say help</a> for assistance from me.",
+              A_ALWAYS,self,null,pc,TO_VICT);
 
-:lostpc:
-return (-1);
+      :tick:
+      wait(SFB_DONE|SFB_TICK, command ("say") and (pc==activator) and (("tour" in argument ) or ("help" in argument)));
+      if (command (CMD_AUTO_TICK) and (self.outside.idx==pc.outside.idx)) 
+         goto tick;
 
+      if ("tour" in argument)
+         return (0);
+      else
+         return (5);
+   }
+   else if (qst.descr=="part 1 done")
+   {
+      count:=1;
+      act_str:="four parts";
+   }
+   else if (qst.descr=="part 2 done")
+   {
+      count:=2;
+      act_str:="three parts";
+   }
+   else if (qst.descr=="part 3 done")
+   {
+      count:=3;
+      act_str:="two parts";
+   }
+   else if (qst.descr=="part 4 done")
+   {
+      count:=4;
+      act_str:="one part";
+   }
 
+   act ("$1n says 'I notice although you have started the newbie guide tour you still have "+
+      act_str+" to complete it.", A_ALWAYS,self,null,pc,TO_VICT);
+   pause;
+
+   act ("$1n asks 'Would you like to complete the tour or do you need more help?  Just say "+
+      "'complete' for the quest or 'help' for assistance from me.'",
+      A_ALWAYS,self,null,pc,TO_VICT);
+
+   wait (SFB_DONE, command ("say") and (pc==activator) and (("complete" in argument ) or    ("help" in argument)));
+
+   if ("complete" in argument)
+      return (count);
+   else
+      return (5);
+
+   :lostpc:
+   return (-1);
 }
 dilend
 
@@ -2876,7 +2891,7 @@ act("A portal opens, the Newbie Guide steps through and disappears.",
    n := newbie_part1@newbie(pc);
    if (n == FALSE)
      goto stop;
-n:=stop_test (pc,1);
+   n:=stop_test (pc,1);
    if (n == FALSE)
      goto stop;
 
