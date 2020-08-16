@@ -2578,7 +2578,7 @@ code
       stat2 := "";
 
    if (self.level <= START_LEVEL)
-      start := "<div class='score'>Try also the '<a cmd='#'>status</a>' command.</div>";
+      start := "<br/><div class='score'>Try also the '<a cmd='#'>status</a>' command.</div>";
     
    if (not isplayer(self.name))
 	{
@@ -2601,7 +2601,7 @@ code
          +"<div class='score'>You have "+itoa(self.hp)+"("+itoa(self.max_hp)+") hit, "
          +itoa(self.mana)+"("+itoa(self.max_mana)+") mana, "
          +itoa(self.endurance)+"("+itoa(self.max_endurance)+") endurance points.</div><br/>"
-         +"<div class='score'>"+bob+""+deaths+""+want+""+pos+""+stat+""+stat1+""+stat2+"</div>"
+         +"<div class='score'>"+bob+""+deaths+""+want+""+pos+""+stat+""+stat1+""+stat2+"</div>"+start
          ,A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
@@ -2665,7 +2665,7 @@ code
    sendtext ("You are not in a group silly.<br/>",self);
    }
    else
-   sendtext("Use either 'score' or 'score group'<br/>",self);
+      sendtext("Use either 'score' or 'score group'<br/>",self);
 
    :lead_end:
    unsecure(leader);
