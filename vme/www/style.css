@@ -239,6 +239,7 @@
         .score       { display: inline; color:aquamarine; }
         .spell       { display: inline; color:aqua; }
         .worn        { display: inline; color:bisque; }
+        .who         { display: inline; color:coral; }
         .who_name    { display: inline; color:coral; }
         .who_title   { display: inline; color:darkorange; }
         .who_inv     { display: inline; }
