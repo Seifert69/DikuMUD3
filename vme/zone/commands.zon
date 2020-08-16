@@ -2486,6 +2486,8 @@ quit;
 
 
 dilbegin do_score(arg:string);
+external
+   string titlestring();
 var
    u : unitptr;
    leader : unitptr;
@@ -2577,6 +2579,7 @@ code
    else
       stat2 := "";
 
+   start := "";
    if (self.level <= START_LEVEL)
       start := "<br/><div class='score'>Try also the '<a cmd='#'>status</a>' command.</div>";
     
@@ -2594,7 +2597,7 @@ code
 
    if(arg=="")
    {
-      act(self.name+" <div class='who_title'>"+self.title+"</div><div class='score'> "+alig+"</div>.<br/>"
+      act(titlestring()
          +"<div class='score'>You have "+itoa(self.exp)+" experience points and you need "
          +itoa(self.exptol) + " to the next level.</div><br/>"+
          slvl
@@ -9238,14 +9241,73 @@ if (self.type!=UNIT_ST_PC)
 dilend
 
 
+dilbegin string alignstring();
+code
+{
+   if (self.alignment < -349)
+      return("Evil");
+   else if (self.alignment > 349)
+      return("Good");
+   else
+      return("Neutral");
+}
+dilend
+
+dilbegin string genderstring();
+code
+{
+   if (self.sex == SEX_MALE)
+      return("male");
+   else if (self.sex == SEX_FEMALE)
+      return("female");
+   else
+      return("neuter");
+}
+dilend
+
+dilbegin string couragestring();
+code
+{
+   if (isset(self.charflags, CHAR_WIMPY))
+      return("wimpy");
+   else
+      return("brave");
+}
+dilend
+
+dilbegin string agestring(rce : integer);
+external
+   string genderstring();
+   string racestring(rce : integer);
+
+code
+{
+   return("You are a " + itoa((realtime - self.birth) / SECS_PER_MUD_YEAR) +
+          " years old " + genderstring() + " " + racestring(rce) + " at level " + 
+          itoa(self.vlevel) + ".<br/>");
+}
+dilend
+
+dilbegin string titlestring();
+external
+   string alignstring();
+code
+{
+   return(self.name + " <div class='who_title'>" + self.title + "</div> <div class='score'>(" + alignstring() + " alignment (" + itoa(self.alignment) + "))</div><br/>");
+}
+dilend
+
+
 /* do_status */
 dilbegin cmd_stat(arg:string);
 external
    path_update@guild_paths(u : unitptr);
-   string racestring(i:integer);
    string wpn_rating (wpn:integer);
    string ski_rating (ski:integer);
    string sp_rating (sp:integer);
+   string agestring(rce : integer);
+   string titlestring();
+   string couragestring();
 
 var
    remain:integer;
@@ -9273,10 +9335,6 @@ var
    guild3       : string;
    desc         : string;
 
-   align_string : string;
-   sex_string   : string;
-   race_string  : string;
-   wimpy_string : string;
    age_string   : string;
    prof_string  : string;
 
@@ -9307,7 +9365,6 @@ code
 {
    if (self.type!=UNIT_ST_PC)
       quit;
-   /*if (self.level>50) goto imm;*/
 
    if (arg=="")
       goto start;
@@ -9319,13 +9376,12 @@ code
       goto sp_stat;
 
    :start:
-   if((self.type == UNIT_ST_PC) and (self.level < IMMORTAL_LEVEL))
+   if ((self.type == UNIT_ST_PC) and (self.level < IMMORTAL_LEVEL))
    {
       if(self.endurance < endcost)
       {
-      act("You are too exhausted.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
+         act("You are too exhausted.", A_ALWAYS, self, null, null, TO_CHAR);
+         quit;
       }
       else
          self.endurance:= self.endurance - endcost;
@@ -9362,31 +9418,8 @@ code
    hours_played:= tmp_played % 24;
    days_played:=((tmp_played/24)%365);
    years_played:=((tmp_played/24)/365);
-   if (self.alignment < -349)
-      align_string := "Evil";
-   else if (self.alignment > 349)
-      align_string := "Good";
-   else
-      align_string := "Neutral";
 
-   if (self.sex == SEX_MALE)
-      sex_string := "male";
-   else if (self.sex == SEX_FEMALE)
-      sex_string := "female";
-   else
-      sex_string := "neuter";
-
-   race_string:=racestring(self.race);
-
-   if (isset(self.charflags, CHAR_WIMPY))
-      wimpy_string := "wimpy";
-   else
-      wimpy_string := "brave";
-
-   age_string := "You are a " +
-                 itoa((realtime - self.birth) / SECS_PER_MUD_YEAR) +
-                 " year old " + sex_string +
-                 " " + race_string + " at level " + itoa(self.vlevel) + ".<br/>";
+   age_string := agestring(self.race);
 
    if ((self.profession >= 0) and (self.profession < PROFESSION_MAX))
    {
@@ -9398,7 +9431,6 @@ code
       prof_string := "Your profession is undefined, please visit father Nicholas in the Udgaard temple healer room.<br/>";
 
    /* MS2020 ???  remain:=self.level*40;
-
    if (remain >2000)
       remain:=0;
    else
@@ -9446,8 +9478,7 @@ code
    else
       time_str:=time_str+".<br/>";
 
-  act(self.name + " " + self.title + " (" + align_string +
-       " alignment (" + itoa(self.alignment) + "))<br/>" +
+  act(titlestring()+
        age_string +
        guild_string + prof_string +
        time_str+
@@ -9464,7 +9495,7 @@ code
        "Your combat Dexterity is " + itoa(getinteger(DIL_GINT_EFFDEX, self, 0)) + " as a result of your armor.<br/>"+
        remain_str+
        "You have " + itoa(self.skill_points) + " skill practice points.<br/>" +
-       "You are in " + wimpy_string + " mode.<br/>"+
+       "You are in " + couragestring() + " mode.<br/>"+
        "More: '<a cmd='#'>status skills</a>', '<a cmd='#'>status weapons</a>' and '<a cmd='#'>status spells</a>'."
        , A_ALWAYS, self, null, null, TO_CHAR);
 
@@ -9475,29 +9506,9 @@ code
 
 
 :morphed:
-   if (self.alignment < -349) align_string := "Evil";
-   else if (self.alignment > 349) align_string := "Good";
-   else align_string := "Neutral";
+   age_string := agestring(self.race);
 
-   if (self.sex == SEX_MALE) sex_string := "male";
-   else if (self.sex == SEX_FEMALE) sex_string := "female";
-   else sex_string := "neuter";
-
-   race_string:=racestring(self.race);
-
-   if (isset(self.charflags, CHAR_WIMPY))
-      wimpy_string := "wimpy";
-   else
-      wimpy_string := "brave";
-
-   age_string := "You are a " +
-                 itoa((realtime - self.birth) / SECS_PER_MUD_YEAR) +
-                 " year old " + sex_string +
-                 " " + race_string + " at level " + itoa(self.level) +
-".<br/>";
-
-   act(self.name + " " + self.title + " (" + align_string +
-       " alignment (" + itoa(self.alignment) + ")<br/>" +
+   act(titlestring()+
        age_string +
        "Str " + itoa(self.abilities[ABIL_STR]) + ", " +
        "Dex " + itoa(self.abilities[ABIL_DEX]) + ", " +
@@ -9507,13 +9518,12 @@ code
        "Mag " + itoa(self.abilities[ABIL_MAG]) + ", " +
        "Div " + itoa(self.abilities[ABIL_DIV]) +
        "<br/>" +
-       "You are in " + wimpy_string + " mode.",
+       "You are in " + couragestring() + " mode.",
        A_ALWAYS, self, null, null, TO_CHAR);
 
    quit;
-:imm:
 
-
+   :imm:
    :wpn_stat:
    i:=7;
    buff:="";
