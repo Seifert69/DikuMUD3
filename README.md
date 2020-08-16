@@ -62,7 +62,7 @@ I would appreciate help with:
          Create different stylesheets, e.g. monochrome. High contrast. etc.
      Ways to improve the accessible client further. 
 
-   * I would appreciate any world build wanting to create quests to be completed
+   * I would appreciate any world builder wanting to create quests to be completed
      in order to join the various guilds. Right now there are four base teachers 
      and they'll help you out for the first 10-20 levels. So some low level quest
      that e.g. gives access to the thieves guild, the paladin's guild, etc.
@@ -82,7 +82,7 @@ I would appreciate help with:
      It's rather cumbersome to do them by hand - I've done three so far. 
      https://en.wikipedia.org/wiki/DOT_(graph_description_language)
 
-     If Anyone interested in helping out mapping coordinates or generating maps let me know.
+     If anyone is interested in helping out mapping coordinates or generating maps let me know.
      I've been using cMUD to do some test mapping. I think I have two young helpers that can assist 
      me with the actual mapping and turning a boring map into a hand-drawn piece of art :)
      
