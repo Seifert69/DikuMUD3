@@ -79,8 +79,7 @@ void color_type::count_minus(char *key, char *c)
     count--;
 }
 
-char *
-color_type::insert(char *key, char *c)
+char *color_type::insert(char *key, char *c)
 {
     color_type *l = this->next, *b = this;
     color_type *temp;
@@ -164,8 +163,7 @@ void color_type::insert(char *combo)
     delete ret;
 }
 
-char *
-color_type::change(char *key, char *c)
+char *color_type::change(char *key, char *c)
 {
     color_type *l = this->next;
     char *temp = 0;
@@ -202,8 +200,7 @@ color_type::change(char *key, char *c)
     return (NULL);
 }
 
-char *
-color_type::get(char *key)
+char *color_type::get(char *key)
 {
     color_type *l = this->next;
 
@@ -222,8 +219,7 @@ color_type::get(char *key)
         return (NULL);
 }
 
-char *
-color_type::get(char *key, char *full_key)
+char *color_type::get(char *key, char *full_key)
 {
     color_type *l = this->next;
 
@@ -357,8 +353,7 @@ void color_type::create(char *input_temp)
     //delete delstr;
 }
 
-char *
-color_type::key_string(void)
+char *color_type::key_string(void)
 {
     long i = 0;
     int r = 0;
@@ -409,8 +404,7 @@ color_type::key_string(void)
     return (buff);
 }
 
-char *
-color_type::key_string(color_type &dft)
+char *color_type::key_string(color_type &dft)
 {
     char *t = this->save_string();
     char *d = dft.save_string(); //ptr to create string
@@ -457,8 +451,7 @@ color_type::key_string(color_type &dft)
     return (ftemp);
 }
 
-char *
-color_type::save_string(void)
+char *color_type::save_string(void)
 {
 
     color_type *l = this->next;
