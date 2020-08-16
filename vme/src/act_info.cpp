@@ -93,6 +93,7 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
     class descriptor_data *d;
     char *arg = (char *)aaa;
     string mystr;
+    int nCount = 0;
 
     if (IS_MORTAL(ch))
     {
@@ -107,6 +108,7 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
         for (d = descriptor_list; d; d = d->next)
             if (d->character && UNIT_IN(d->character) && descriptor_is_playing(d) && CHAR_LEVEL(ch) >= UNIT_MINV(d->character) && (d->original == NULL || CHAR_LEVEL(ch) >= UNIT_MINV(d->original)))
             {
+                nCount++;
                 if (d->original) /* If switched */
                     sprintf(buf2, " In body of %s", UNIT_NAME(d->character));
                 else
@@ -122,12 +124,14 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
     else /* Arg was not empty */
     {
         mystr = "";
-        int nCount = 0;
 
         for (i = unit_list; i; i = i->gnext)
         {
             if (UNIT_IN(i) && UNIT_NAMES(i).IsName(arg) && CHAR_LEVEL(ch) >= UNIT_MINV(i))
             {
+                nCount++;
+                if (nCount++ > 100)
+                    continue;
 
                 sprintf(buf1, "%-30s - %s [%s]<br/>",
                         TITLENAME(i),
@@ -135,9 +139,6 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
                         (!in_string(ch, i) ? "MENU" : in_string(ch, i)));
 
                 mystr.append(buf1);
-
-                if (nCount++ > 100)
-                    break;
             }
         }
     }
@@ -145,5 +146,12 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
     if (mystr.length() < 1)
         send_to_char("Couldn't find any such thing.<br/>", ch);
     else
+    {
+        if (nCount > 100)
+            mystr.append("...<br/>");
+        mystr.append("Found ");
+        mystr.append(itoa(nCount));
+        mystr.append(" matches<br/>");
         page_string(CHAR_DESCRIPTOR(ch), mystr.c_str());
+    }
 }
