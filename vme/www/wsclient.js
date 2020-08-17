@@ -774,7 +774,7 @@ function onSendClick() {
 
 function shSettings() {
     var str;
-    str = "<H1>Select Theme:</h1><select id=theme onchange=switchTheme()><option value=style.css>Default Theme</option><option value=silver.css>Silver Theme</option></select><br/><br/>";
+    str = "<H1>Select Theme:</h1><select id=theme onchange=switchTheme()><option value=style.css>Default Theme</option><option value=midnight.css>Midnight Theme</option><option value=silver.css>Silver Theme</option></select><br/><br/>";
 
     var item = document.createElement("div");
     item.setAttribute("style", "display: inline");
