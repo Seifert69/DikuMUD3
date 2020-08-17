@@ -40,7 +40,6 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
     char cbuf[MAX_STRING_LENGTH];
     char full_name[21];
     char *print_str;
-    char *color;
     int change = FALSE, add = FALSE;
 
     char *arg = (char *)aaa;
@@ -55,13 +54,13 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
 
     arg = one_argument(arg, buf);
 
-    if (buf[0] == '\0')
+    if (str_is_empty(buf))
     {
         print_str = UPC(ch)->color.key_string(g_cServerConfig.color);
         page_string(CHAR_DESCRIPTOR(ch), print_str);
         send_to_char("<br/><br/>", ch);
         send_to_char("Example: color default <forground color> <background color><br/>", ch);
-        delete print_str;
+        FREE(print_str);
         return;
     }
     if (strcmp(buf, "reset") == 0)
@@ -99,12 +98,12 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
             }
             else
                 sprintf(cbuf,
-                        "Error: Can not reset %s to default color, report to admin.",
+                        "Error: Can not reset %s to default color, report to admin.<br/>",
                         full_name);
         }
         else
         {
-            sprintf(cbuf, "%s is already set to system color.", full_name);
+            sprintf(cbuf, "%s is already set to system color.<br/>", full_name);
         }
         send_to_char(cbuf, ch);
         return;
@@ -130,48 +129,49 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
         return;
     }
 
-    sprintf(cbuf, "&c%s&b%s", fore, back);
-    color = str_escape_format(cbuf, FALSE);
+    sprintf(cbuf, "%s %s", fore, back);
+
     if (change == TRUE)
     {
-        print_str = UPC(ch)->color.change(full_name, color);
-        sprintf(cbuf, "Color %s%s changed.<br/>", print_str, getcolor("default"));
+        string mystr; 
+
+        mystr = UPC(ch)->color.change(full_name, cbuf);
+        sprintf(cbuf, "Color %s changed.<br/>", mystr.c_str());
         send_to_char(cbuf, ch);
-        // sprintf (cbuf, "%s%s:%s%s", CONTROL_COLOR_CHANGE, full_name, color, CONTROL_COLOR_END);
-        // send_to_char(cbuf, ch);
-        delete print_str;
-        FREE(color);
         return;
     }
     if ((add == TRUE) && (change == FALSE))
     {
-        print_str = UPC(ch)->color.insert(full_name, color);
-        sprintf(cbuf, "Color %s%s changed.<br/>", print_str, getcolor("default"));
+        print_str = UPC(ch)->color.insert(full_name, cbuf);
+        sprintf(cbuf, "Color %s changed.<br/>", print_str);
         send_to_char(cbuf, ch);
-        // sprintf (cbuf, "%s%s:%s%s", CONTROL_COLOR_INSERT, full_name, color, CONTROL_COLOR_END);
-        // send_to_char(cbuf, ch);
-        delete print_str;
-        FREE(color);
+        FREE(print_str);
         return;
     }
     return;
 }
 
-/* end of look */
+// Test validity of e.g. cg or cpg
 int is_forground(char *cstr)
 {
-
-    if ((strlen(cstr) > 2) || (strlen(cstr) == 0))
+    if ((strlen(cstr) > 3) || (strlen(cstr) < 2))
         return FALSE;
-    if (strlen(cstr) == 2)
+
+    if (cstr[0] != 'c')
+        return FALSE;
+
+    if (strlen(cstr) == 3)
     {
-        if (*cstr != '+')
+        if (cstr[1] != 'p')
             return (FALSE);
         cstr++;
     }
+
+    cstr++; // skip c (or c and p)
+
     switch (*cstr)
     {
-    case '+':
+    case 'p':
         return FALSE;
     case 'n':
     case 'r':
@@ -191,10 +191,13 @@ int is_forground(char *cstr)
 
 int is_background(char *cstr)
 {
-    if ((strlen(cstr) > 1) || (strlen(cstr) == 0))
+    if (strlen(cstr) != 2)
         return FALSE;
 
-    switch (*cstr)
+    if (cstr[0] != 'b')
+        return FALSE;
+
+    switch (cstr[1])
     {
     case 'n':
     case 'r':

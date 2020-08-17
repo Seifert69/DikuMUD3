@@ -9,6 +9,7 @@
 #define _MUD_TEXTUTIL_H
 
 #include <string>
+#include <cstring>
 
 #define isaspace(c) ((c) == ' ')
 

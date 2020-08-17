@@ -1,5 +1,7 @@
 Colors in mplex (yikes... figure out how to get it running again :())
-	Can I use the original mplex? Maybe that's faster :)
+	Only missing part is to translate <div class='room_title'> to <div class='cpy cn'>
+	on the server. That should be fairly easy. Probably only do so for telnet users.
+
 
 Maybe: SFUN_TEACH, add parameter so teacher just teaches what can be learned...?
 Maybe: Teachers ignore "ability, ..." prefix for remote training when training locally

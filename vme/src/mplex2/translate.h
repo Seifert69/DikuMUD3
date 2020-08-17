@@ -14,6 +14,9 @@ void Control_Echo_Off(class cConHook *con, char **b, ubit8 code);
 void Control_Echo_On(class cConHook *con, char **b, ubit8 code);
 void Control_ANSI_Bold(class cConHook *con, char **b, ubit8 code);
 
+void Control_ANSI_Bg(class cConHook *con, char **b, ubit8 code);
+void Control_ANSI_Fg(class cConHook *con, char **b, ubit8 code, int bBold);
+
 void Control_ANSI_Fg_Black(class cConHook *con, char **b, ubit8 code);
 void Control_ANSI_Fg_Red(class cConHook *con, char **b, ubit8 code);
 void Control_ANSI_Fg_Green(class cConHook *con, char **b, ubit8 code);

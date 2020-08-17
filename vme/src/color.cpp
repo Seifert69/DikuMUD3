@@ -9,10 +9,11 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include <ctype.h>
 #include "color.h"
 #include "protocol.h"
+#include "utility.h"
+#include "textutil.h"
 
 color_type::color_type(void)
 {
@@ -127,8 +128,7 @@ char *color_type::insert(char *key, char *c)
 
 void color_type::change(char *combo)
 {
-
-    char *key, *tok, *ret;
+    char *key, *tok;
 
     key = strtok(combo, ":");
     if (!key)
@@ -140,8 +140,7 @@ void color_type::change(char *combo)
     {
         return;
     }
-    ret = change(key, tok);
-    delete ret;
+    std::string ret = change(key, tok);
 }
 
 void color_type::insert(char *combo)
@@ -160,10 +159,10 @@ void color_type::insert(char *combo)
         return;
     }
     ret = insert(key, tok);
-    delete ret;
+    FREE(ret);
 }
 
-char *color_type::change(char *key, char *c)
+std::string color_type::change(char *key, char *c)
 {
     color_type *l = this->next;
     char *temp = 0;
@@ -181,23 +180,21 @@ char *color_type::change(char *key, char *c)
         if (strncmp(l->keyword, key, strlen(key)) == 0)
         {
             color_size -= (strlen(l->color) + 1);
-            delete (l->color);
+            delete(l->color);
             strcpy(temp, c);
             l->color = temp;
             color_size += (strlen(temp) + 1);
-            char *c_return;
-            //c_return = new char[strlen (l->keyword) + strlen (l->color) + 1];
-            CREATE(c_return, char, strlen(l->keyword) + strlen(l->color) + 1);
 
-            strcpy(c_return, l->color);
-            strcat(c_return, l->keyword);
-            return (c_return);
+            char c_return[512];
+
+            sprintf(c_return, "<div class='%s'>%s = %s</div>", l->color, l->keyword, l->color);
+            return c_return;
         }
         else
             l = l->next;
     }
 
-    return (NULL);
+    return "";
 }
 
 char *color_type::get(char *key)
@@ -278,9 +275,9 @@ void color_type::remove_all()
     next = NULL;
 
     if (keyword)
-        delete keyword;
+        FREE(keyword);
     if (color)
-        delete color;
+        FREE(color);
     color = NULL;
     keyword = NULL;
     if (l)
@@ -309,7 +306,7 @@ void color_type::create(char *input_temp)
 
     while (*input_temp != '\0')
     {
-        if ((*input_temp == '\r') || (*input_temp == ' '))
+        if ((*input_temp == '\r'))
         {
             input_temp++;
             continue;
@@ -326,14 +323,12 @@ void color_type::create(char *input_temp)
     if (!key)
     {
         FREE(delstr);
-        //delete delstr;
         return;
     }
     tok = strtok(0, ":");
     if (!tok)
     {
         FREE(delstr);
-        //delete delstr;
         return;
     }
 
@@ -350,14 +345,13 @@ void color_type::create(char *input_temp)
     }
 
     FREE(delstr);
-    //delete delstr;
 }
 
 char *color_type::key_string(void)
 {
     long i = 0;
     int r = 0;
-    i = (50 * count) + key_size + color_size;
+    i = (200 * count) + key_size + color_size;
     //char *buff = new char[i];
     char *buff;
 
@@ -381,21 +375,10 @@ char *color_type::key_string(void)
     {
         if (r < 3)
         {
-            strcat(buff, l->color);
-            strcat(buff, l->keyword);
-            strcat(buff, getcolor("default"));
-            i = strlen(l->keyword);
-            while (i < 25)
-            {
-                strcat(buff, " ");
-                i++;
-            }
-            r++;
-        }
-        if (r == 3)
-        {
-            strcat(buff, "<br/>");
-            r = 0;
+            char tmp[200];
+            i = MAX(0, 25-strlen(l->keyword));
+            sprintf(tmp, "<div class='%s'>%s%s= %s</div><br/>", l->color, l->keyword, spc(i), l->color);
+            strcat(buff, tmp);
         }
         l = l->next;
     }
@@ -429,17 +412,17 @@ char *color_type::key_string(color_type &dft)
     if (d)
     {
         strcat(f, d);
-        delete d;
+        FREE(d);
     }
     if (t)
     {
         strcat(f, ":");
         strcat(f, t);
-        delete t;
+        FREE(t);
     }
 
     temp.create(f);
-    delete f;
+    FREE(f);
 
     f = temp.key_string();
     char *ftemp;
@@ -447,7 +430,7 @@ char *color_type::key_string(color_type &dft)
     CREATE(ftemp, char, strlen(f) + 1);
     strcpy(ftemp, f);
     if (f)
-        delete f;
+        FREE(f);
     return (ftemp);
 }
 
