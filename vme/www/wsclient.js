@@ -54,7 +54,7 @@ function getStrFirstWord(str) {
 
 function getStrRemainder(str) {
     let spaceIndex = str.indexOf(' ');
-    return spaceIndex === -1 ? str : str.slice(spaceIndex+1);
+    return spaceIndex === -1 ? "" : str.slice(spaceIndex+1);
 }
 
 /* The string str contains $1, $2 ...
@@ -97,7 +97,6 @@ function aliasCheck(str)
             g_nAliasCircular++;
             var t = g_aAliasData[i];
             t = dlrReplace(t, a);
-            console.log(t);
             manycmds(t);
             InputFocus("");
             g_nAliasCircular--;
@@ -112,7 +111,7 @@ function aliasCheck(str)
 function setAlias(item) {
     var s;
 
-    console.log("Alias:");
+    //console.log("SET ALIAS");
 
     g_aAliasName = [];
     g_aAliasData = [];
@@ -121,7 +120,7 @@ function setAlias(item) {
         s = item[i].innerText;
         g_aAliasName[i] = getStrFirstWord(s).trim();
         g_aAliasData[i] = getStrRemainder(s).trim();
-        console.log("Array[" + i + "] = " + g_aAliasName[i] + "=" + g_aAliasData[i]);
+        //console.log("Array[" + i + "] = " + g_aAliasName[i] + "=" + g_aAliasData[i]);
     }
 }
 
