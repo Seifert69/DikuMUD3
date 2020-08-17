@@ -35,6 +35,8 @@ int string_to_file(const char *name,const char *s)
 
 int checkcolor( char *cstr )
 {
+    return TRUE;
+ /* deprecated   
     int bright;
 
     if ( (strlen(cstr) > 7) || (strlen(cstr) == 0 ) )
@@ -123,7 +125,7 @@ int checkcolor( char *cstr )
         return FALSE;
     }
 
-    return TRUE;
+    return TRUE;*/
 }
 
 

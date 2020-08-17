@@ -182,7 +182,7 @@ void cConHook::PressReturn(const char *cmd)
 
     if (*skip_blanks(cmd))
     {
-        SendCon("<div class='return'>*** Read aborted ***</div>");
+        SendCon("<br/><div class='return'>*** Read aborted ***</div>");
 
         m_qPaged.Flush();
         m_pFptr = dumbPlayLoop;
@@ -205,7 +205,7 @@ void cConHook::PressReturn(const char *cmd)
         if (oldmode != m_nPromptMode)
         {
             char buf[1000];
-            strcpy(buf, ParseOutput("<div class='return'>** Read Done **</div>"));
+            strcpy(buf, ParseOutput("<br/><div class='return'>*** Read Done ***</div>"));
             Write((ubit8 *)buf, strlen(buf));
             PlayLoop("");
         }
@@ -873,10 +873,10 @@ int GetValue(const char *name, const char *p, char *pTag, int nTagMax)
     return ce-c;
 }
 
-/*
-    <br/> becomes \n\r except if it is <br/>\n\r then it is ignored. Thus
-    <br/><br/>\n\r becomes \n\r\n\r.
-    That's by design to support both telnet and HTML reasonably. 
+/*  Misleading name. Function changes HTML to TELNET
+ *  <br/> becomes \n\r except if it is <br/>\n\r then it is ignored. Thus
+ *  <br/><br/>\n\r becomes \n\r\n\r.
+ *  That's by design to support both telnet and HTML reasonably. 
 */
 void cConHook::StripHTML(char *dest, const char *src)
 {
@@ -932,165 +932,54 @@ void cConHook::StripHTML(char *dest, const char *src)
                 }
                 continue;
             }
+            else if (strncmp(aTag, "/div", 4)==0)
+            {
+                // Hm, this'll send a lot of code... but telnet's a hack now :)
+                // How on earth will I get the "default color" if someone prefers e.g. yellow... ?
+                Control_ANSI_Fg(this, &dest, 'w', FALSE);
+                Control_ANSI_Bg(this, &dest, 'n');
+            }
             else if (strncmp(aTag, "div ", 4)==0)
             {
-                // See if there is a class='something', extract it and set a color
-                // Just do a cheap hack for now
-
-                /* This is not working on my telnet. I dont understand why 
-                     "\033[35;40m" doesn't change telnet ANSI to magenta...*/
-
-                // p = strstr(aTag, "class='")
-                // if (p && strlen(p)>=11)
-                //   if (p[9]=="'" || p[10]=="'")
-                //      bold := FALSE;
-                //      if (p[7] == 'c')
-                //         if (p[8] == 'p')
-                //           bold := TRUE;
-                //             c = p[9]
-                //            else
-                //             c = p[8]; 
-                //         switch (p[9])
-
                 char buf[256];
                 int l;
-                char cColor;
 
-                l = GetValue("class", aTag, buf, sizeof(buf));
+                l = GetValue("class", aTag, buf, sizeof(buf)-1);
 
                 if (l == 0)
                     continue;
 
-                // Handling of e.g. 'cg' and 'cpg'
-                if (((l == 2) || (l == 3)) && (buf[0]=='c'))
+                // We got a single or double color code on our hands
+                // e.g. cpg, cg bn, cpy bb, etc.
+                if ((l >= 2) && (l <= 6) && ((buf[0]=='b') || (buf[0]=='c')))
                 {
-                    int bBold;
+                    char *p;
+                    char tmp[256];
 
-                    if (buf[1] == 'p')
+                    p = str_next_word(buf, tmp); 
+
+                    while (p)
                     {
-                        cColor = buf[2];
-                        bBold = TRUE;
+                        if (tmp[0] == 'c')
+                        {
+                            if (tmp[1] == 'p')
+                                Control_ANSI_Fg(this, &dest, buf[2], TRUE);
+                            else
+                                Control_ANSI_Fg(this, &dest, buf[1], FALSE);
+                        }
+                        else if (buf[0] == 'b')
+                        {
+                            Control_ANSI_Bg(this, &dest, buf[1]);
+                        }
+                        else
+                        {
+                            slog(LOG_ALL, 0, "Illegal color code %s", buf);
+                            break;
+                        }
+
+                        p = str_next_word(p, tmp);
                     }
-                    else
-                    {
-                        cColor = buf[1];
-                        bBold = FALSE;
-                    }
-                    
-                    switch (cColor)
-                    {
-                        case 'r':
-                            if (bBold)
-                                Control_ANSI_Fg_Red(this, &dest, 0);
-                            else
-                                Control_ANSI_Fgb_Red(this, &dest, 0);
-                            break;
-
-                        case 'n':
-                            if (bBold)
-                                Control_ANSI_Fgb_Black(this, &dest, 0);
-                            else
-                                Control_ANSI_Fg_Black(this, &dest, 0);
-                            break;
-
-                        case 'g':
-                            if (bBold)
-                                Control_ANSI_Fgb_Green(this, &dest, 0);
-                            else
-                                Control_ANSI_Fg_Green(this, &dest, 0);
-                            break;
-
-                        case 'y':
-                            if (bBold)
-                                Control_ANSI_Fgb_Yellow(this, &dest, 0);
-                            else
-                                Control_ANSI_Fg_Yellow(this, &dest, 0);
-                            break;
-
-                        case 'b':
-                            if (bBold)
-                                Control_ANSI_Fgb_Blue(this, &dest, 0);
-                            else
-                                Control_ANSI_Fg_Blue(this, &dest, 0);
-                            break;
-
-                        case 'm':
-                            if (bBold)
-                                Control_ANSI_Fgb_Magenta(this, &dest, 0);
-                            else
-                                Control_ANSI_Fg_Magenta(this, &dest, 0);
-                            break;
-
-                        case 'c':
-                            if (bBold)
-                                Control_ANSI_Fgb_Cyan(this, &dest, 0);
-                            else
-                                Control_ANSI_Fg_Cyan(this, &dest, 0);
-                            break;
-
-                        case 'w':
-                            if (bBold)
-                                Control_ANSI_Fgb_White(this, &dest, 0);
-                            else
-                                Control_ANSI_Fg_White(this, &dest, 0);
-                            break;
-
-                        default:
-                            slog(LOG_ALL, 0, "Illegal fg color code %c", cColor);
-                            break;
-                    }
-                    continue;
-                } // End of foreground color
-
-                // Handling of e.g. 'bg' and 'by'
-                if ((l == 2) && (buf[0]=='b'))
-                {
-                    cColor = buf[1];
-                    
-                    switch (cColor)
-                    {
-                        case 'r':
-                            Control_ANSI_Bg_Red(this, &dest, 0);
-                            break;
-
-                        case 'n':
-                            Control_ANSI_Bg_Black(this, &dest, 0);
-                            break;
-
-                        case 'g':
-                            Control_ANSI_Bg_Green(this, &dest, 0);
-                            break;
-
-                        case 'y':
-                            Control_ANSI_Bg_Yellow(this, &dest, 0);
-                            break;
-
-                        case 'b':
-                            Control_ANSI_Bg_Blue(this, &dest, 0);
-                            break;
-
-                        case 'm':
-                            Control_ANSI_Bg_Magenta(this, &dest, 0);
-                            break;
-
-                        case 'c':
-                            Control_ANSI_Bg_Cyan(this, &dest, 0);
-                            break;
-
-                        case 'w':
-                            Control_ANSI_Bg_White(this, &dest, 0);
-                            break;
-
-                        default:
-                            slog(LOG_ALL, 0, "Illegal bg color code %c", cColor);
-                            break;
-                    }
-                    continue;
-                }  // End of background color
-
-                // Here we can translate colors, e.h. who_title to what the user has chosen.
-                
-
+                }
             }
             continue;
         }
@@ -1421,7 +1310,7 @@ void cConHook::ShowChunk(void)
 
     if (m_nPromptMode == 1)
     {
-        strcat(buffer, ParseOutput("<div class='paged'> *** Return for more *** </div>"));
+        strcat(buffer, ParseOutput("<br/><div class='paged'> *** Return for more *** </div>"));
     }
 
     assert(strlen(buffer) < sizeof(buffer));

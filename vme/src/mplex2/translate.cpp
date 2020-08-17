@@ -123,6 +123,118 @@ void Control_Echo_On(class cConHook *con, char **b, ubit8 code)
 /*                             A N S I                                     */
 /* ======================================================================= */
 
+void Control_ANSI_Fg(class cConHook *con, char **dest, ubit8 code, int bBold)
+{
+    switch (code)
+    {
+    case 'r':
+        if (bBold)
+            Control_ANSI_Fg_Red(con, dest, 0);
+        else
+            Control_ANSI_Fgb_Red(con, dest, 0);
+        break;
+
+    case 'n':
+        if (bBold)
+            Control_ANSI_Fgb_Black(con, dest, 0);
+        else
+            Control_ANSI_Fg_Black(con, dest, 0);
+        break;
+
+    case 'g':
+        if (bBold)
+            Control_ANSI_Fgb_Green(con, dest, 0);
+        else
+            Control_ANSI_Fg_Green(con, dest, 0);
+        break;
+
+    case 'y':
+        if (bBold)
+            Control_ANSI_Fgb_Yellow(con, dest, 0);
+        else
+            Control_ANSI_Fg_Yellow(con, dest, 0);
+        break;
+
+    case 'b':
+        if (bBold)
+            Control_ANSI_Fgb_Blue(con, dest, 0);
+        else
+            Control_ANSI_Fg_Blue(con, dest, 0);
+        break;
+
+    case 'm':
+        if (bBold)
+            Control_ANSI_Fgb_Magenta(con, dest, 0);
+        else
+            Control_ANSI_Fg_Magenta(con, dest, 0);
+        break;
+
+    case 'c':
+        if (bBold)
+            Control_ANSI_Fgb_Cyan(con, dest, 0);
+        else
+            Control_ANSI_Fg_Cyan(con, dest, 0);
+        break;
+
+    case 'w':
+        if (bBold)
+            Control_ANSI_Fgb_White(con, dest, 0);
+        else
+            Control_ANSI_Fg_White(con, dest, 0);
+        break;
+
+    default:
+        slog(LOG_ALL, 0, "Illegal fg color code %c", code);
+        break;
+    }
+
+    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) &&
+        (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+        PROTOCOL_TRANSLATE(con, con->m_nBgColor, dest);
+}
+
+void Control_ANSI_Bg(class cConHook *con, char **dest, ubit8 code)
+{
+    switch (code)
+    {
+    case 'r':
+        Control_ANSI_Bg_Red(con, dest, 0);
+        break;
+
+    case 'n':
+        Control_ANSI_Bg_Black(con, dest, 0);
+        break;
+
+    case 'g':
+        Control_ANSI_Bg_Green(con, dest, 0);
+        break;
+
+    case 'y':
+        Control_ANSI_Bg_Yellow(con, dest, 0);
+        break;
+
+    case 'b':
+        Control_ANSI_Bg_Blue(con, dest, 0);
+        break;
+
+    case 'm':
+        Control_ANSI_Bg_Magenta(con, dest, 0);
+        break;
+
+    case 'c':
+        Control_ANSI_Bg_Cyan(con, dest, 0);
+        break;
+
+    case 'w':
+        Control_ANSI_Bg_White(con, dest, 0);
+        break;
+
+    default:
+        slog(LOG_ALL, 0, "Illegal bg color code %c", code);
+        break;
+    }
+}
+
 void Control_ANSI_Fg_Black(class cConHook *con, char **b, ubit8 code)
 {
     strcpy(*b, ANSI_FG_BLACK);
