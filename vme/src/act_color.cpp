@@ -60,7 +60,7 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
         page_string(CHAR_DESCRIPTOR(ch), print_str);
         send_to_char("<br/><br/>", ch);
         send_to_char("Example: color default <forground color> <background color><br/>", ch);
-        delete print_str;
+        FREE(print_str);
         return;
     }
     if (strcmp(buf, "reset") == 0)
@@ -145,7 +145,7 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
         print_str = UPC(ch)->color.insert(full_name, cbuf);
         sprintf(cbuf, "Color %s changed.<br/>", print_str);
         send_to_char(cbuf, ch);
-        free(print_str);
+        FREE(print_str);
         return;
     }
     return;
