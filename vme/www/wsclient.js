@@ -92,7 +92,7 @@ function aliasCheck(str)
 
     for (var i=0; i < g_aAliasData.length; i++)
     {
-        if (g_aAliasName[i] == cmd)
+        if (g_aAliasName[i].toLowerCase() == cmd.toLowerCase())
         {
             g_nAliasCircular++;
             var t = g_aAliasData[i];
