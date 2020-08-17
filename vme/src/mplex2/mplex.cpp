@@ -58,9 +58,7 @@ void bye_signal(int signal)
     CaptainHook.Close();
 
     slog(LOG_OFF, 0, "Received signal #%d (SIGQUIT, SIGHUP, SIGINT or SIGTERM)."
-                     "  Shutting down",
-         signal);
-
+                     "  Shutting down", signal);
     exit(1);
 }
 
@@ -101,9 +99,9 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
     arg->nMudPort = 4999;    /* Default port */
     arg->nMotherPort = 4242; /* Default port */
     arg->pAddress = str_dup(DEF_SERVER_ADDR);
-    
-    arg->g_bModeANSI = TRUE;    // Beginning of deprecating support for TTY
-    arg->g_bModeTelnet = TRUE;  // Beginning of deprecating support for TTY
+
+    arg->g_bModeANSI = TRUE;   // Beginning of deprecating support for TTY
+    arg->g_bModeTelnet = TRUE; // Beginning of deprecating support for TTY
 
     arg->g_bModeEcho = FALSE;
     arg->g_bModeRedraw = FALSE;
@@ -131,6 +129,7 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
             break;
 
         case 'c':
+            fprintf(stderr, "-c is deprecated, it's always on.\n");
             arg->g_bModeANSI = TRUE;
             break;
 
@@ -143,6 +142,7 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
             break;
 
         case 't':
+            fprintf(stderr, "-t is deprecated, it's always on.\n");
             arg->g_bModeTelnet = TRUE;
             break;
 
