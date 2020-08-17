@@ -182,7 +182,7 @@ void cConHook::PressReturn(const char *cmd)
 
     if (*skip_blanks(cmd))
     {
-        SendCon("<br/><div class='return'>*** Read aborted ***</div>");
+        SendCon("<br/><div class='return'>*** Read aborted ***</div><br/>");
 
         m_qPaged.Flush();
         m_pFptr = dumbPlayLoop;
@@ -205,7 +205,7 @@ void cConHook::PressReturn(const char *cmd)
         if (oldmode != m_nPromptMode)
         {
             char buf[1000];
-            strcpy(buf, ParseOutput("<br/><div class='return'>*** Read Done ***</div>"));
+            strcpy(buf, ParseOutput("<br/><div class='return'>*** Read Done ***</div><br/>"));
             Write((ubit8 *)buf, strlen(buf));
             PlayLoop("");
         }
@@ -402,8 +402,7 @@ void cConHook::AddString(char *str)
         }
         else
         {
-            int x_pos = (m_nPromptLen + strlen(m_aInputBuf)) %
-                        m_sSetup.width;
+            int x_pos = (m_nPromptLen + strlen(m_aInputBuf)) % m_sSetup.width;
             c = AddInputChar(*s);
             if (c)
             {
@@ -591,10 +590,23 @@ char *cConHook::IndentText(const char *source,
     {
         if (*current == CONTROL_CHAR)
         {
-            //current++;
-            //protocol_translate(this, *current, &newptr);
-            //current++;
-            //continue;
+            *newptr++ = *current++; // Copy control char
+
+            for (int j=0; j < 20; j++) // Skip the control sequence which ends with 'm'
+            {
+                *newptr++ = *current; // copy char
+
+                if (*current == 0)
+                    break;
+
+                if (*current == 'm')
+                {
+                    current++;
+                    break;
+                }
+                current++;
+            }
+            continue;
         }
 
         if (m_bGobble)
@@ -1310,7 +1322,7 @@ void cConHook::ShowChunk(void)
 
     if (m_nPromptMode == 1)
     {
-        strcat(buffer, ParseOutput("<br/><div class='paged'> *** Return for more *** </div>"));
+        strcat(buffer, ParseOutput("<br/><div class='paged'> *** Return for more *** </div><br/>"));
     }
 
     assert(strlen(buffer) < sizeof(buffer));
@@ -1409,7 +1421,7 @@ cConHook::cConHook(void)
     unsigned long val = 1;
     x = ioctlsocket(fd, FIONBIO, &val);
 #endif
-    /* We **want** Nagle to work on the individual socket connections
+    /* We *want* Nagle to work on the individual socket connections
        to the outside world, but not between the servers & mplex'ers
        int i;
        j = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &i, sizeof(i));
