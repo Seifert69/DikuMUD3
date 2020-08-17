@@ -159,7 +159,7 @@ void color_type::insert(char *combo)
         return;
     }
     ret = insert(key, tok);
-    delete ret;
+    FREE(ret);
 }
 
 std::string color_type::change(char *key, char *c)
@@ -180,7 +180,7 @@ std::string color_type::change(char *key, char *c)
         if (strncmp(l->keyword, key, strlen(key)) == 0)
         {
             color_size -= (strlen(l->color) + 1);
-            delete (l->color);
+            delete(l->color);
             strcpy(temp, c);
             l->color = temp;
             color_size += (strlen(temp) + 1);
@@ -275,9 +275,9 @@ void color_type::remove_all()
     next = NULL;
 
     if (keyword)
-        delete keyword;
+        FREE(keyword);
     if (color)
-        delete color;
+        FREE(color);
     color = NULL;
     keyword = NULL;
     if (l)
@@ -323,14 +323,12 @@ void color_type::create(char *input_temp)
     if (!key)
     {
         FREE(delstr);
-        //delete delstr;
         return;
     }
     tok = strtok(0, ":");
     if (!tok)
     {
         FREE(delstr);
-        //delete delstr;
         return;
     }
 
@@ -347,7 +345,6 @@ void color_type::create(char *input_temp)
     }
 
     FREE(delstr);
-    //delete delstr;
 }
 
 char *color_type::key_string(void)
@@ -415,17 +412,17 @@ char *color_type::key_string(color_type &dft)
     if (d)
     {
         strcat(f, d);
-        delete d;
+        FREE(d);
     }
     if (t)
     {
         strcat(f, ":");
         strcat(f, t);
-        delete t;
+        FREE(t);
     }
 
     temp.create(f);
-    delete f;
+    FREE(f);
 
     f = temp.key_string();
     char *ftemp;
@@ -433,7 +430,7 @@ char *color_type::key_string(color_type &dft)
     CREATE(ftemp, char, strlen(f) + 1);
     strcpy(ftemp, f);
     if (f)
-        delete f;
+        FREE(f);
     return (ftemp);
 }
 
