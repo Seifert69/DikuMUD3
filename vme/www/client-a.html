@@ -49,7 +49,9 @@
         </div> <!-- ac_center -->
         <div class="c_right">
 		<div id="ac_right">
-			<a href="#" onclick="shSettings()">Settings</a><br/><br/>
+            <br/>
+            <a href="#" onclick="shSettings()"><img src="img/settings.png" alt="Settings" class="center"/></a><br/>
+            <br/>
                 <a href="#" onclick="cmd('inventory')">In</a><br/>
                 <a href="#" onclick="cmd('equipment')">Eq</a><br/>
                 <a href="#" onclick="cmd('help')">He</a><br/>
@@ -134,7 +136,8 @@
 
             window.onload = function () {
                 const urlParams = new URLSearchParams(window.location.search);
-                var strConn = urlParams.get('protocol') + "://" + urlParams.get('host') + ":" + urlParams.get('port') + urlParams.get('endpoint');
+                //var strConn = encodeURI(urlParams.get('protocol')) + "://" + encodeURI(urlParams.get('host')) + ":" +
+                //                encodeURI(urlParams.get('port')) + encodeURI(urlParams.get('endpoint'));
                 outputText("Accessible MUD client<br/>", false);
                 outputText("ESC - clear/focus input field<br/>", false);
                 outputText("Up arrow - Scroll back through last commands<br/>", false);
@@ -143,13 +146,14 @@
                 outputText("Double click main - Pop up fixed main (for easy copy & paste)<br/>", false);
                 outputText("Alias, triggers and variables - use commands on MUD server<br/>", false);
 
-                openWSConnection(urlParams.get('protocol'), urlParams.get('host'), urlParams.get('port'), urlParams.get('endpoint'));
+                openWSConnection(encodeURI(urlParams.get('protocol')), encodeURI(urlParams.get('host')), 
+                                encodeURI(urlParams.get('port')), encodeURI(urlParams.get('endpoint')));
             
-                if (urlParams.get('reader') != 'true')
+                if (encodeURI(urlParams.get('reader')) != 'true')
                 {
                     bScreenReader = false;
                 }
-                console.log("Screen Reader = " + bScreenReader + " " + urlParams.get('reader'));
+                console.log("Screen Reader = " + bScreenReader + " " + encodeURI(urlParams.get('reader')));
             };
 
             window.addEventListener("focus", function(event)

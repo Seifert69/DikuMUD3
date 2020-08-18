@@ -970,18 +970,18 @@ void cConHook::StripHTML(char *dest, const char *src)
 
                     p = str_next_word(buf, tmp); 
 
-                    while (p)
+                    while (tmp[0])
                     {
                         if (tmp[0] == 'c')
                         {
                             if (tmp[1] == 'p')
-                                Control_ANSI_Fg(this, &dest, buf[2], TRUE);
+                                Control_ANSI_Fg(this, &dest, tmp[2], TRUE);
                             else
-                                Control_ANSI_Fg(this, &dest, buf[1], FALSE);
+                                Control_ANSI_Fg(this, &dest, tmp[1], FALSE);
                         }
-                        else if (buf[0] == 'b')
+                        else if (tmp[0] == 'b')
                         {
-                            Control_ANSI_Bg(this, &dest, buf[1]);
+                            Control_ANSI_Bg(this, &dest, tmp[1]);
                         }
                         else
                         {

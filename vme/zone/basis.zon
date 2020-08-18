@@ -5370,10 +5370,10 @@ code
 
    if (self.profession == PROFESSION_FIGHTER)
    {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+2; // +2;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0; // +2;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+2; // +1;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +2; // +1;
+      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+2+2;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0+2;
+      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+2+1;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +2+1;
       self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]-2;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-2;
       self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0;
@@ -5387,95 +5387,95 @@ code
    }
    else if (self.profession == PROFESSION_THIEF)
    {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0; // +1;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+4; // +2;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0; // +1;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0; // +1;
+      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0+1;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+4+2;
+      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0+1;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0+1;
       self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]-2;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0; // +1;
+      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0+1;
       self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]-2;
 
       self.skills[SKI_SEARCH]    := 5;
       self.skills[SKI_SNEAK]     := 5;
       self.skills[SKI_SKIN]      := 5;
-      self.skills[SKI_BACKSTAB]  := 5; // +5;
+      self.skills[SKI_BACKSTAB]  := 5+5;
 
       self.weapons[WPN_FIST]         :=  5;
-      self.weapons[WPN_DAGGER]       :=  5; // +6;
+      self.weapons[WPN_DAGGER]       :=  5+6;
       self.weapons[WPN_SHORT_SWORD]  :=  5;
    }
    else if (self.profession == PROFESSION_PRIEST)
    {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0; // +1;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0; // +1;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0; // +1;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0; // +1;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2; // +2;
+      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0+1;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0+1;
+      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0+1;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0+1;
+      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2+2;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-2;
       self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
       self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+0;
 
       self.weapons[WPN_FIST]          :=  5;
-      self.weapons[WPN_MACE]          :=  5; // +5;
-      self.spells[SPL_CURE_WOUNDS_1]  :=  5; // +5;
-      self.spells[SPL_CAUSE_WOUNDS_1] :=  5; // +5;
-      self.skills[SKI_FIRST_AID]      :=  5; // +5;
+      self.weapons[WPN_MACE]          :=  5+5;
+      self.spells[SPL_CURE_WOUNDS_1]  :=  5+5;
+      self.spells[SPL_CAUSE_WOUNDS_1] :=  5+5;
+      self.skills[SKI_FIRST_AID]      :=  5+5;
       self.skills[SKI_SKIN]  := 5;
    }
    else if (self.profession == PROFESSION_PALADIN)
    {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+2; // +1;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2; // +1;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0; // +1;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +2; // +1;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+0; // +1;
+      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+2+1;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2+1;
+      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0+1;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +2+1;
+      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+0+1;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-2;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2; // +1;
+      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2+1;
       self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+0;
 
       self.weapons[WPN_FIST]          := 5;
-      self.weapons[WPN_LONG_SWORD]    := 5; //  + 5;
+      self.weapons[WPN_LONG_SWORD]    := 5 + 5;
       
-      self.spells[SPL_CALM]           := 5; //  + 5;
+      self.spells[SPL_CALM]           := 5 + 5;
 
       self.skills[SKI_RESCUE]         := 5;
       self.skills[SKI_SKIN]           := 5;
    }
    else if (self.profession == PROFESSION_SORCERER)
    {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]-2; // +1;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2; // +1;
+      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]-2+1;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2+1;
       self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]-2;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP]- 2; // +1;
-      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]+2; // +1;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP]- 2+1;
+      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]+2+1;
       self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]-2;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2; // +1;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2; // +1;
+      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2+1;
+      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2+1;
 
-      self.weapons[WPN_DAGGER]       :=  5; // +10;
+      self.weapons[WPN_DAGGER]       :=  5+10;
 
       self.skills[SKI_SCROLL_USE]    :=  5;
       self.skills[SKI_WAND_USE]      :=  5;
       self.skills[SKI_SKIN]          :=  5;
 
-      self.spells[SPL_LIGHTNING_1]  :=  5; // +5;
-      self.spells[SPL_FIREBALL_1]   :=  5; // +5;
+      self.spells[SPL_LIGHTNING_1]  :=  5+5;
+      self.spells[SPL_FIREBALL_1]   :=  5+5;
    }
    else if (self.profession == PROFESSION_RANGER)
    {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0; // +1;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2; // +1;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0; // +1;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +2; // +1;
+      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0+1;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2+1;
+      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0+1;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +2+1;
       self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-2;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0; // +1;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2; // +1;
+      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0+1;
+      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2+1;
 
       self.weapons[WPN_FIST]       := 5;
-      self.weapons[WPN_SLING]      := 5; // +5;
-      self.weapons[WPN_LONG_SWORD] := 5; // +5;
+      self.weapons[WPN_SLING]      := 5+5;
+      self.weapons[WPN_LONG_SWORD] := 5+5;
 
       self.skills[SKI_RESCUE]      := 5;
       self.skills[SKI_SCAN]        := 5;
@@ -5484,38 +5484,38 @@ code
    else if (self.profession == PROFESSION_DRUID)
    {
       self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0; // +1;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0+1;
       self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0; // +1;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2; // +2;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0+1;
+      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2+2;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2; // +1;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2; // +1;
+      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2+1;
+      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2+1;
 
       self.weapons[WPN_FIST]         := 5;
-      self.weapons[WPN_QUARTERSTAFF] := 5; //  + 5;
+      self.weapons[WPN_QUARTERSTAFF] := 5 + 5;
 
       self.spells[SPL_SENSE_LIFE]    := 5;
-      self.spells[SPL_THORN_STRIKE]  := 5; //  + 5;
+      self.spells[SPL_THORN_STRIKE]  := 5 + 5;
 
-      self.skills[SKI_HERBS]         := 5; //  + 5;
-      self.skills[SKI_SKIN]          := 5; //  + 5;
+      self.skills[SKI_HERBS]         := 5 + 5;
+      self.skills[SKI_SKIN]          := 5 + 5;
    }
    else if (self.profession == PROFESSION_KNIGHT)
    {
-      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+2; // +1;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0; // +1;
-      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0; // +1;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0; // +1;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2; // +1;
+      self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+2+1;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0+1;
+      self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0+1;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0+1;
+      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2+1;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-0;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2; // +1;
+      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2+1;
       self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2;
 
-      self.weapons[WPN_LONG_SWORD] := 5; //  + 5;
-      self.weapons[WPN_HAND_AXE]   := 5; //  + 5;
+      self.weapons[WPN_LONG_SWORD] := 5 + 5;
+      self.weapons[WPN_HAND_AXE]   := 5 + 5;
 
-      self.spells[SPL_MIRE]        := 5; //  + 5;
+      self.spells[SPL_MIRE]        := 5 + 5;
       self.spells[SPL_PRO_GOOD]    := 5;
       self.skills[SKI_BASH]        := 5;
       self.skills[SKI_SKIN]        := 5;
@@ -5523,56 +5523,56 @@ code
    else if (self.profession == PROFESSION_NECROMANCER)
    {
       self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]+0;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0; // +1;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+0+1;
       self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]+0;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0; // +1;
-      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2; // +2;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] +0+1;
+      self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]+2+2;
       self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]-2;
-      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0; // +1;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2; // +1;
+      self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+0+1;
+      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2+1;
 
-      self.weapons[WPN_DAGGER]        := 5; //  + 5;
+      self.weapons[WPN_DAGGER]        := 5 + 5;
       self.weapons[WPN_FIST]          := 5;
 
       self.spells[SPL_DET_UNDEAD]     := 5;
-      self.spells[SPL_CAUSE_WOUNDS_1] := 5; //  + 5;
+      self.spells[SPL_CAUSE_WOUNDS_1] := 5 + 5;
       self.skills[SKI_SKIN]           := 5;
    }
    else if (self.profession == PROFESSION_CONJURER)
    {
       self.abilities[ABIL_STR] :=self.abilities[ABIL_STR]-2;
-      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2; // +1;
+      self.abilities[ABIL_DEX] :=self.abilities[ABIL_DEX]+2+1;
       self.abilities[ABIL_CON] :=self.abilities[ABIL_CON]-2;
-      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] -2; // +1;
-      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]+2; // +2;
+      self.abilities[ABIL_HP]  :=self.abilities[ABIL_HP] -2+1;
+      self.abilities[ABIL_MAG] :=self.abilities[ABIL_MAG]+2+2;
       self.abilities[ABIL_DIV] :=self.abilities[ABIL_DIV]-2;
       self.abilities[ABIL_CHA] :=self.abilities[ABIL_CHA]+2;
-      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2; // +2;
+      self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+2+2;
 
-      self.weapons[WPN_DAGGER]       :=  5; //  + 5;
+      self.weapons[WPN_DAGGER]       :=  5 + 5;
 
       self.skills[SKI_SCROLL_USE]    :=  5;
       self.skills[SKI_WAND_USE]      :=  5;
       self.skills[SKI_SKIN]          :=  5;
 
       self.spells[SPL_DET_MAGIC]     :=  5;
-      self.spells[SPL_ENERGY_BOLT]   :=  5; // +5;
+      self.spells[SPL_ENERGY_BOLT]   :=  5+5;
    }
    else if (self.profession == PROFESSION_ASSASSIN)
    {
-      self.abilities[ABIL_STR] := self.abilities[ABIL_STR]+0; // +1;
-      self.abilities[ABIL_DEX] := self.abilities[ABIL_DEX]+4; // +2;
-      self.abilities[ABIL_CON] := self.abilities[ABIL_CON]+0; // +1;
-      self.abilities[ABIL_HP]  := self.abilities[ABIL_HP] +2; // +1;
+      self.abilities[ABIL_STR] := self.abilities[ABIL_STR]+0+1;
+      self.abilities[ABIL_DEX] := self.abilities[ABIL_DEX]+4+2;
+      self.abilities[ABIL_CON] := self.abilities[ABIL_CON]+0+1;
+      self.abilities[ABIL_HP]  := self.abilities[ABIL_HP] +2+1;
       self.abilities[ABIL_DIV] := self.abilities[ABIL_DIV]-2;
       self.abilities[ABIL_MAG] := self.abilities[ABIL_MAG]-0;
       self.abilities[ABIL_CHA] := self.abilities[ABIL_CHA]-0;
-      self.abilities[ABIL_BRA] := self.abilities[ABIL_BRA]+0; // +1;
+      self.abilities[ABIL_BRA] := self.abilities[ABIL_BRA]+0+1;
 
-      self.skills[SKI_BACKSTAB]    := 5; // +5;
+      self.skills[SKI_BACKSTAB]    := 5+5;
       self.skills[SKI_CLIMB]       := 5;
-      self.weapons[WPN_FIST]       := 5; // +5;
-      self.weapons[WPN_DAGGER]     := 5; // +10;
+      self.weapons[WPN_FIST]       := 5+5;
+      self.weapons[WPN_DAGGER]     := 5+10;
       self.skills[SKI_SKIN]        := 5;
    }
    else
