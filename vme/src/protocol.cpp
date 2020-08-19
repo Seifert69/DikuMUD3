@@ -109,6 +109,32 @@ void protocol_send_request(cHook *Hook)
     Hook->Write(buf, 6);
 }
 
+
+/* Create the standard header and send a connection request to             */
+/* file descriptor 'fd'. If fd is -1 then don't send anything.             */
+/* Return -1 on socket fail, 0 on amount fail, 1 on success                */
+void protocol_send_mplex_info(cHook *Hook, ubit8 bWebsockets)
+{
+    ubit16 id = 0, len = 0;
+    ubit8 buf[10];
+
+    if (!Hook->IsHooked())
+    {
+        //slog(LOG_ALL, 0, "protocol_send_request() was UNHOOKED");
+        return;
+    }
+
+    //slog(LOG_ALL, 0, "protocol_send_request()");
+    len = 1;
+    memcpy(&(buf[0]), MULTI_MPLEX_INFO, 2);
+    memcpy(&(buf[2]), &id, sizeof(id));
+    memcpy(&(buf[4]), &len, sizeof(len));
+    memcpy(&(buf[6]), &bWebsockets, 1);
+
+    Hook->Write(buf, 7);
+}
+
+
 /* Create the standard header and send (from mplex to server) the host     */
 /* name information.     If fd is -1 then don't send anything.             */
 /* Return -1 on socket fail, 0 on amount fail, 1 on success                */
@@ -228,6 +254,8 @@ void protocol_send_setup(cHook *Hook, ubit16 id,
     Hook->Write(buf, 6 + len);
 }
 
+
+// Send the MUD name to the mplex
 void protocol_send_exchange(cHook *Hook, ubit16 id, char *mudname)
 {
     ubit16 len;
@@ -250,6 +278,7 @@ void protocol_send_exchange(cHook *Hook, ubit16 id, char *mudname)
     Hook->Write(buf, 6 + len);
 }
 
+// Send the default colors to the Mplex
 void protocol_send_color(cHook *Hook, ubit16 id, char *colorstr)
 {
     ubit16 len;
@@ -340,13 +369,16 @@ int protocol_parse_incoming(cHook *Hook, ubit16 *pid,
 
     switch (buf[1])
     {
+    case MULTI_MPLEX_INFO_CHAR:
+        break; // Get the data (down below)
+
     case MULTI_PING_CHAR:
         if (id != 0)
         {
             slog(LOG_ALL, 0, "Received none-zero ID on a ping");
             return -2;
         }
-        slog(LOG_ALL, 0, "Ping received");
+        //slog(LOG_ALL, 0, "Ping received");
         return buf[1];
 
     case MULTI_TERMINATE_CHAR:
