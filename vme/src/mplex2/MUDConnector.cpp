@@ -112,6 +112,8 @@ void test_mud_up(void)
     CaptainHook.Hook(fd, &MudHook);
     //assert(MudHook.IsHooked());
 
+    protocol_send_mplex_info(&MudHook, mplex_arg.bWebSockets);
+
     for (con = g_connection_list; con; con = nextcon)
     {
         nextcon = con->m_pNext;

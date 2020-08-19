@@ -95,7 +95,7 @@ class cConHook : public cHook
     std::mutex m_mtx;        // Mutex for websockets threading
 };
 
-char * mplex_getcolor(class cConHook *hook, char *colorstr);
+const char * mplex_getcolor(class cConHook *hook, const char *colorstr);
 
 void dumbPlayLoop (cConHook * con, const char *cmd);
 void dumbPressReturn (class cConHook * con, const char *cmd);
