@@ -580,7 +580,7 @@ void dilfe_clr(class dilprg *p)
     {
     case DILV_SP:
         v->atyp = DILA_EXP;
-        v->val.ptr = str_dup(getcolor((char *)v1->val.ptr));
+        v->val.ptr = str_dup(divcolor((char *)v1->val.ptr));
         break;
     case DILV_FAIL:
     case DILV_UP:
