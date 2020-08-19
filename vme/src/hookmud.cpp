@@ -57,6 +57,7 @@ cMultiMaster::cMultiMaster(void)
 cMultiHook::cMultiHook(void)
 {
     succ_err = 0;
+    bWebsockets = 0;
 }
 
 void cMultiHook::Input(int nFlags)
@@ -157,6 +158,12 @@ int cMultiHook::Read(void)
 
     switch (p)
     {
+    case MULTI_MPLEX_INFO_CHAR:
+        bWebsockets = data[0]; // data[0] is 1 if websockets
+        if (data)
+            FREE(data);
+        break;
+
     case MULTI_PING_CHAR:
         if (data)
             FREE(data);
