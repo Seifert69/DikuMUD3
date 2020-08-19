@@ -181,7 +181,14 @@
         a:visited {
             color:currentColor;
         }
-        
+       
+       .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
+
         /* ============ STYLES ============== */
         h1              { font-size: medium; } /* Used for screen readers, room title */
 
