@@ -79,6 +79,12 @@ char *skip_blanks(const char *string);
 void strip_trailing_spaces(char *str);
 void strip_trailing_blanks(char *str);
 
+const char *divcolor(const char *colorstr);
+int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVal, char *pNewTag, int nTagMax);
+int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax);
+const char *getHTMLTag(const char *p, char *pTag, int nTagMax);
+
+
 #define str_delete(str, nDel, nStrLen) \
    memmove(str, str + nDel, nStrLen - nDel + 1)
 
