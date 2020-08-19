@@ -93,7 +93,7 @@ void do_users(class unit_data *ch, char *argument,
     if (buf == NULL)
         CREATE(buf, char, cur_size);
 
-    strcpy(buf, "Connections:<br/>------------<br/>");
+    strcpy(buf, "<u>Connections:</u><br/>");
     len = strlen(buf);
     /*
        <I%3d/%3d> immort lvl / wizi
@@ -110,7 +110,7 @@ void do_users(class unit_data *ch, char *argument,
             if (IS_IMMORTAL(d->character))
             {
                 /* an immortal character */
-                sprintf(tmp, "<I%3d/%3d> %-16s %-10s [%c %4d %-3s %s]<br/>",
+                sprintf(tmp, "&lt;I%3d/%3d&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
                         CHAR_LEVEL(CHAR_ORIGINAL(d->character)),
                         UNIT_MINV(CHAR_ORIGINAL(d->character)),
                         UNIT_NAME(CHAR_ORIGINAL(d->character)),
@@ -122,7 +122,7 @@ void do_users(class unit_data *ch, char *argument,
             else
             {
                 /* a mortal character */
-                sprintf(tmp, "< %6d%c> %-16s %-10s [%c %4d %-3s %s]<br/>",
+                sprintf(tmp, "&lt; %6d%c&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
                         PC_VIRTUAL_LEVEL(CHAR_ORIGINAL(d->character)),
                         UNIT_MINV(CHAR_ORIGINAL(d->character)) ? '*' : ' ',
                         UNIT_NAME(CHAR_ORIGINAL(d->character)),

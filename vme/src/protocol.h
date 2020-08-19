@@ -19,12 +19,13 @@
 
 struct terminal_setup_type
 {
-    ubit8 redraw;			/* Redraw the users prompt? */
-    ubit8 echo;			/* Echo chars to user?      */
-    ubit8 width, height;		/* The colour of his nose   */
-    ubit8 emulation;		/* TERM_XXX                 */
-    ubit8 telnet;			/* Is telnet used?          */
-    ubit8 colour_convert;		/* Colour conversion (mapping) used */
+    ubit8 redraw;			// Redraw the users prompt?
+    ubit8 echo;			    // Echo chars to user?
+    ubit8 width, height;	// The colour of his nose
+    ubit8 emulation;		// TERM_XXX
+    ubit8 telnet;			// Is telnet used?
+    ubit8 colour_convert;	// Colour conversion (mapping) used
+    ubit8 websockets;       // Using websockets (HTML)?
 };
 
 void protocol_send_ping(cHook *Hook);
@@ -42,6 +43,7 @@ void protocol_send_host (cHook * Hook, ubit16 id, const char *host,
 
 int protocol_parse_incoming (cHook * Hook, ubit16 * pid, ubit16 * plen,
                              char **str, ubit8 * text_type);
+void protocol_send_mplex_info(cHook *Hook, ubit8 bWebsockets);
 
 
 // These definitions are used by the mplex protocol
@@ -59,6 +61,7 @@ int protocol_parse_incoming (cHook * Hook, ubit16 * pid, ubit16 * plen,
 #define MULTI_EXCHANGE_CHAR    'I'
 #define MULTI_COLOR_CHAR       'J'
 #define MULTI_PING_CHAR        'K'
+#define MULTI_MPLEX_INFO_CHAR  'L'
 
 #define MULTI_CONNECT_REQ_STR "A"
 #define MULTI_CONNECT_CON_STR "B"
@@ -71,6 +74,7 @@ int protocol_parse_incoming (cHook * Hook, ubit16 * pid, ubit16 * plen,
 #define MULTI_EXCHANGE_STR    "I"
 #define MULTI_COLOR_STR       "J"
 #define MULTI_PING_STR        "K"
+#define MULTI_MPLEX_INFO_STR  "L"
 
 #define MULTI_EXCHANGE     MULTI_UNIQUE_STR MULTI_EXCHANGE_STR "\0\0\0\0"
 #define MULTI_COLOR        MULTI_UNIQUE_STR MULTI_COLOR_STR "\0\0\0\0"
@@ -80,6 +84,7 @@ int protocol_parse_incoming (cHook * Hook, ubit16 * pid, ubit16 * plen,
 #define MULTI_SETUP        MULTI_UNIQUE_STR MULTI_SETUP_STR
 #define MULTI_HOST         MULTI_UNIQUE_STR MULTI_HOST_STR "\0\0\0\0"
 #define MULTI_PING         MULTI_UNIQUE_STR MULTI_PING_STR "\0\0\0\0"
+#define MULTI_MPLEX_INFO   MULTI_UNIQUE_STR MULTI_MPLEX_INFO_STR "\0\0\0\0"
 
 
 #define MULTI_TEXT         MULTI_UNIQUE_STR MULTI_TXT_STR

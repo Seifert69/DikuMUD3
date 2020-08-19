@@ -22,15 +22,68 @@
 #include "handler.h"
 #include "hookmud.h"
 #include "constants.h"
+#include "config.h"
 
 /* external vars */
 extern class descriptor_data *descriptor_list;
+
+/*  
+ *  Given HTML string src find all <div and all <h1 and replace class='default' with
+ *  user's color preferences.  You probably only want to do this for telnet users.
+ *  web users can rely on the styles defined in the CSS
+*/
+void substHTMLcolor(char *dest, const char *src, class color_type &color)
+{
+    const char *p;
+
+    p = src;
+
+    while (*p)
+    {
+        if ((p[0] == '<') &&
+            ((p[1] == 'd' && p[2] == 'i' && p[3] == 'v' && p[4] == ' ') ||
+             (p[1] == 'h' && p[2] == '1' && p[3] == ' ')))
+        {
+            char aTag[256];
+
+            p = getHTMLTag(p, aTag, sizeof(aTag));
+
+            char buf[256];
+            int l;
+
+            l = getHTMLValue("class", aTag, buf, sizeof(buf) - 1);
+
+            // We got a color code on our hands, let's see if we need to substitute
+            if (l >= 1)
+            {
+                const char *pCol;
+
+                pCol = color.get(buf);
+
+                if (pCol == NULL)
+                    pCol = g_cServerConfig.color.get(buf);
+
+                if (pCol)
+                {
+                    // Substitute the color
+                    char newtag[256];
+                    substHTMLTagClass(aTag, "class", pCol, newtag, sizeof(newtag) - 1);
+                    sprintf(dest, "<%s>", newtag);
+                    TAIL(dest);
+                }
+            }
+            continue;
+        }
+
+        *dest++ = *p++;
+    }
+    *dest = 0;
+}
 
 /*
  *  Public routines for system-to-player communication
  *  Sends directly to multiplexer.
  */
-
 void send_to_descriptor(const char *messg, class descriptor_data *d)
 {
     void multi_close(struct multi_element * pe);
@@ -43,12 +96,26 @@ void send_to_descriptor(const char *messg, class descriptor_data *d)
             send_to_descriptor("<br/>", d);
         }
 
-        protocol_send_text(d->multi, d->id, messg, MULTI_TEXT_CHAR);
+        if (d->multi->bWebsockets)
+            protocol_send_text(d->multi, d->id, messg, MULTI_TEXT_CHAR);
+        else
+        {
+            struct unit_data *u  = d->character;
+
+            if (!u || !IS_PC(u)) // switched or snooped?
+                u = d->original;
+
+            assert(IS_PC(u));
+            char buf[strlen(messg) + 100];
+
+            substHTMLcolor(buf, messg, UPC(u)->color);
+            protocol_send_text(d->multi, d->id, buf, MULTI_TEXT_CHAR);
+        }
+
 
         if (d->snoop.snoop_by)
         {
-            send_to_descriptor(SNOOP_PROMPT,
-                               CHAR_DESCRIPTOR(d->snoop.snoop_by));
+            send_to_descriptor(SNOOP_PROMPT, CHAR_DESCRIPTOR(d->snoop.snoop_by));
             send_to_descriptor(messg, CHAR_DESCRIPTOR(d->snoop.snoop_by));
         }
     }
@@ -274,7 +341,7 @@ void act_generate(char *buf, const char *str, int show_type,
             strcat(buf, "<br/>");
         }
     }
-    
+
     char *cpos;
 
     /* Cap the first letter, but skip all colour and control codes! */
@@ -290,11 +357,10 @@ void act_generate(char *buf, const char *str, int show_type,
     *point = toupper(*point);
 }
 
-
 // Executes exactly like act() for TO_VICT and TO_CHAR. But never adds newline
 // Can't handle other
 // because of variance with each target's ability to e.g. see.
-// Is there a need for sactother which takes a "to" argument? If we add 
+// Is there a need for sactother which takes a "to" argument? If we add
 // to argument here it will be confusing for TO_VICT and TO_CHAR scenarios.
 void sact(char *buf, const char *str, int show_type,
           const void *arg1, const void *arg2, const void *arg3, int type)
@@ -308,7 +374,7 @@ void sact(char *buf, const char *str, int show_type,
         return;
 
     *buf = 0;
-    
+
     if (type == TO_VICT)
     {
         to = (class unit_data *)arg3;
@@ -324,7 +390,7 @@ void sact(char *buf, const char *str, int show_type,
     }
 }
 
-// Always adds <br/> at the end 
+// Always adds <br/> at the end
 void act(const char *str, int show_type,
          const void *arg1, const void *arg2, const void *arg3, int type)
 {
@@ -422,7 +488,7 @@ void cact(const char *str, int show_type,
             act_generate(t, str, show_type, arg1, arg2, arg3, type, to, false);
             if (!str_is_empty(t))
             {
-                strcat(b, getcolor(colortype)); // Adds <div class='colortype'>
+                strcat(b, divcolor(colortype)); // Adds <div class='colortype'>
                 TAIL(b);
                 strcat(b, t);
                 TAIL(b);
@@ -441,7 +507,8 @@ void cact(const char *str, int show_type,
                     {
                         *buf = 0;
                         b = buf;
-                        strcat(b, getcolor(colortype));
+
+                        strcat(b, divcolor(colortype));
                         TAIL(b);
                         act_generate(buf, str, show_type, arg1, arg2, arg3, type, u, false);
                         TAIL(b);
@@ -458,7 +525,7 @@ void cact(const char *str, int show_type,
             {
                 *buf = 0;
                 b = buf;
-                strcat(b, getcolor(colortype));
+                strcat(b, divcolor(colortype));
                 TAIL(b);
                 act_generate(buf, str, show_type, arg1, arg2, arg3, type, to, false);
                 TAIL(b);
@@ -472,9 +539,9 @@ void cact(const char *str, int show_type,
                     {
                         *buf = 0;
                         b = buf;
-                        strcat(b, getcolor(colortype));
+                        strcat(b, divcolor(colortype));
                         TAIL(b);
-                        act_generate(buf, str, show_type, arg1, arg2, arg3, type, u,false);
+                        act_generate(buf, str, show_type, arg1, arg2, arg3, type, u, false);
                         TAIL(b);
                         strcat(b, "</div><br/>");
                         send_to_descriptor(buf, CHAR_DESCRIPTOR(u));

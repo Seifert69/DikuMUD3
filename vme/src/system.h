@@ -32,6 +32,6 @@ int write_to_descriptor(int desc, char *txt);
 int read_from_descriptor(int desc, char *txt);
 class descriptor_data *descriptor_new(class cMultiHook *pe);
 
-#define SNOOP_PROMPT "% " /* probably not very nice to have here, but hey! */
+#define SNOOP_PROMPT "snoop&gt; " /* probably not very nice to have here, but hey! */
 
 #endif /* _MUD_SYSTEM_H */

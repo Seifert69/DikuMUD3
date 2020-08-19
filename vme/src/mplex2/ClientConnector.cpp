@@ -556,9 +556,9 @@ void cConHook::SendCon(const char *text)
 
 /* ======================= TEXT FORMATTING OUTPUT ====================== */
 
-char *mplex_getcolor(class cConHook *hook, char *colorstr)
+const char *mplex_getcolor(class cConHook *hook, const char *colorstr)
 {
-    char *gcolor;
+    const char *gcolor;
 
     gcolor = hook->color.get(colorstr);
 
@@ -577,7 +577,7 @@ char *cConHook::IndentText(const char *source,
     char tmpbuf[MAX_STRING_LENGTH * 2];
     int i;
     unsigned int x, crlen;
-    char *cretbuf;
+    const char *cretbuf;
     char *newptr;
     int column = 0, cutpoint = MIN(30, width / 2);
 
@@ -810,81 +810,6 @@ char *cConHook::IndentText(const char *source,
     return dest;
 }
 
-/* Get the contents between <htmltag> in lowercase */
-/* p must point to first < returns position right after > and returns p if no > */
-/* Copies the tag between <> into pTag. Copies at most nTagMax bytes (incl \0) */
-const char *GetTag(const char *p, char *pTag, int nTagMax)
-{
-    const char *c;
-    int n;
-
-    *pTag = 0;
-
-    assert(p && (*p == '<'));
-
-    p++; // Skip '<'
-
-    c = strchr(p, '>');
-    if (c == NULL)
-        return p;
-
-    n = c - p + 1; // How many chars including \0
-
-    n = min(n, nTagMax);
-
-    for (int i=0; i < n; i++)
-        pTag[i] = tolower(*(p+i));
-
-    pTag[n-1]=0;
-
-    return c+1; // return char after '>'
-}
-
-
-/* p points to the html contents between < and >
- * name is the value to get from, e.g. "class" will get you the value for "class='value"
- * Copies the value into pTag. Copies at most nTagMax bytes (incl \0)
- * Returns length of value
- */
-int GetValue(const char *name, const char *p, char *pTag, int nTagMax)
-{
-    const char *c;
-
-    *pTag = 0;
-
-    c = strstr(p, name);
-    if (c == NULL)
-        return 0;
-
-    c += strlen(name);
-    c = skip_blanks(c); // skip any whitespace before equal
-    if (*c != '=')
-        return 0;
-    c++; // skip equal
-    c = skip_blanks(c); // skip any whitespace after equal
-
-    if (*c != '\'')
-        return 0;
-
-    c++; // Skip '
-
-    const char *ce;
-    ce = strchr(c, '\''); // Find the last ' for the value
-    if (ce == NULL)
-        return 0;
-
-    if (ce-c <= 1) // If the string is empty
-        return 0;
-
-    if (ce-c > nTagMax-1) // Not enough space
-        return 0;
-
-    strncpy(pTag, c, ce-c);
-    pTag[ce-c] = 0;
-
-    return ce-c;
-}
-
 /*  Misleading name. Function changes HTML to TELNET
  *  <br/> becomes \n\r except if it is <br/>\n\r then it is ignored. Thus
  *  <br/><br/>\n\r becomes \n\r\n\r.
@@ -908,7 +833,7 @@ void cConHook::StripHTML(char *dest, const char *src)
         {
             char aTag[256];
 
-            p = GetTag(p, aTag, sizeof(aTag));
+            p = getHTMLTag(p, aTag, sizeof(aTag));
 
             if (aTag[0] == 0)
                 continue;
@@ -951,12 +876,12 @@ void cConHook::StripHTML(char *dest, const char *src)
                 Control_ANSI_Fg(this, &dest, 'w', FALSE);
                 Control_ANSI_Bg(this, &dest, 'n');
             }
-            else if (strncmp(aTag, "div ", 4)==0)
+            else if ((strncmp(aTag, "div ", 4)==0) || (strncmp(aTag, "h1 ", 3)==0))
             {
                 char buf[256];
                 int l;
 
-                l = GetValue("class", aTag, buf, sizeof(buf)-1);
+                l = getHTMLValue("class", aTag, buf, sizeof(buf)-1);
 
                 if (l == 0)
                     continue;
@@ -1032,7 +957,8 @@ void cConHook::StripHTML(char *dest, const char *src)
     *dest = 0;
 }
 
-/* Parse the string 'text' and prepare it for output on 'con' */
+
+// Parse the string 'text' and prepare it for output on 'con'
 // This should only be called for telnet
 char *cConHook::ParseOutput(const char *text)
 {
@@ -1369,6 +1295,7 @@ cConHook::cConHook(void)
     m_sSetup.echo = mplex_arg.g_bModeEcho;
     m_sSetup.redraw = mplex_arg.g_bModeRedraw;
     m_sSetup.telnet = mplex_arg.g_bModeTelnet;
+    m_sSetup.websockets = mplex_arg.bWebSockets;
 
     if (mplex_arg.g_bModeANSI)
         m_sSetup.emulation = TERM_ANSI;

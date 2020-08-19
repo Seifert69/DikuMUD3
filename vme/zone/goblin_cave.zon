@@ -1209,8 +1209,7 @@ tf:integer;
 code
 {
    heartbeat := PULSE_SEC*25;
-   on_activation((self.position <= POSITION_SLEEPING) or
-		 (self.position == POSITION_FIGHTING), skip);
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
 
    :start:
    pause;
@@ -1260,6 +1259,8 @@ code
    destroy(u2);
    exec("emote puts the bread and mushrooms in a bowl.", self);
    pause;
+
+
    u1 := load("goblin_cave/stew");
    u1.value[3] := i;  /* Apply any possible poison from bread/mushroom */
    exec("emote makes some stew.", self);
@@ -1278,13 +1279,26 @@ code
    tf:=walk_room@function("throne2@goblin_cave",4);
    pause;
    exec("say Dinnher ish sarved, ma lurd!", self);
+
    pause;
    exec("give stew to burp", self);
+   u1 := findunit(self, "stew", FIND_UNIT_INVEN, null);
+   if (u1)
+     destroy(u1);
    pause;
+
    exec("give stew to ghopla", self);
+   u1 := findunit(self, "stew", FIND_UNIT_INVEN, null);
+   if (u1)
+     destroy(u1);
    pause;
+
    exec("give stew to mguul", self);
+   u1 := findunit(self, "stew", FIND_UNIT_INVEN, null);
+   if (u1)
+     destroy(u1);
    pause;
+
    exec("say Mhore is caming raight up, ma lurds!", self);
    pause;
    tf:=walk_room@function("kitchen@goblin_cave",4);

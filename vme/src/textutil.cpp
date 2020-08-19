@@ -224,7 +224,7 @@ const char *str_cstr(const char *cs, const char *ct)
 {
     return strcasestr(cs, ct); // strstr ignores case
 
-/*    const char *si = cs;
+    /*    const char *si = cs;
     const char *ti = ct;
 
     do
@@ -537,7 +537,6 @@ void str_insert(char *str, char *itxt)
     memcpy(str, itxt, nlen);
 }
 
-
 /*
    Scan the string 'str' for the string OLD and replace each
    occurence with new. Does not handle memory overrun so str
@@ -588,14 +587,13 @@ void str_substitute(const std::string &search, const std::string &replace, std::
 
     if (search.empty())
         return;
-        
+
     while ((pos = subject.find(search, pos)) != std::string::npos)
     {
         subject.replace(pos, search.length(), replace);
         pos += replace.length();
     }
 }
-
 
 /* Remove all occurences of c in s */
 void str_rem(char *s, char c)
@@ -953,8 +951,8 @@ void str_cescape_format(const char *src, char *dest)
             case '\\':
                 break;
             case 0:
-                dest++;       // Save the backslash
-                *dest = 0;    // terminate dest
+                dest++;    // Save the backslash
+                *dest = 0; // terminate dest
                 break;
             default:
                 dest++;       // Save the backslash
@@ -1219,4 +1217,153 @@ char *fix_old_codes_to_html(const char *c)
 
     str_nr_brnr(buf, buf2);
     return str_dup(buf2); // Dont worry about memory leaks it's a one time thing
+}
+
+/* Get the contents between <htmltag> and convert it to lowercase
+ *    p must point to first <.
+ *    Copies the tag between <> into pTag. 
+ *    Copies at most nTagMax bytes (incl \0) 
+ *    returns position right after > and returns p if no >
+ */
+const char *getHTMLTag(const char *p, char *pTag, int nTagMax)
+{
+    const char *c;
+    int n;
+
+    *pTag = 0;
+
+    assert(p && (*p == '<'));
+
+    p++; // Skip '<'
+
+    c = strchr(p, '>');
+    if (c == NULL)
+        return p;
+
+    n = c - p + 1; // How many chars including \0
+
+    n = min(n, nTagMax);
+
+    for (int i = 0; i < n; i++)
+        pTag[i] = tolower(*(p + i));
+
+    pTag[n - 1] = 0;
+
+    return c + 1; // return char after '>'
+}
+
+/* Gets the value of an atribute from a HTML tag
+ *    p points to the html tag contents found between < and >
+ *    name is the value to get from, e.g. "class" will get you the value for "class='value"
+ *    Copies the value into pTag. Copies at most nTagMax bytes (incl \0)
+ *    Returns length of value.
+ * Not 100% bullet proof
+ */
+int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax)
+{
+    const char *c;
+
+    *pTag = 0;
+
+    c = strstr(p, name);
+    if (c == NULL)
+        return 0;
+
+    c += strlen(name);
+    c = skip_blanks(c); // skip any whitespace before equal
+    if (*c != '=')
+        return 0;
+    c++;                // skip equal
+    c = skip_blanks(c); // skip any whitespace after equal
+
+    if (*c != '\'')
+        return 0;
+
+    c++; // Skip '
+
+    const char *ce;
+    ce = strchr(c, '\''); // Find the last ' for the value
+    if (ce == NULL)
+        return 0;
+
+    if (ce - c <= 1) // If the string is empty
+        return 0;
+
+    if (ce - c > nTagMax - 1) // Not enough space
+        return 0;
+
+    strncpy(pTag, c, ce - c);
+    pTag[ce - c] = 0;
+
+    return ce - c;
+}
+
+/* 
+ * Given an HTML tag pOldTag without <>, change the value of the attribute pAttr to pNewVal 
+ * and put the result in pNewTag
+ * 
+ * pOldTag: the HTML tag, e.g. div class='default'
+ * pATtr    the attribute to change, e.g. class
+ * pNewVal  the new value to put into the class, e.g. hello
+ * pNewTag  result saved in this string
+ * nTagMax  write at most nTagMax chars into pNewTag.
+ * return 0 is failed, 1 if success
+ */
+int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVal, char *pNewTag, int nTagMax)
+{
+    const char *c;
+
+    *pNewTag = 0;
+
+    c = strstr(pOldTag, pAttr);
+    if (c == NULL)
+        return 0;
+
+    c += strlen(pAttr);
+    c = skip_blanks(c); // skip any whitespace before equal
+    if (*c != '=')
+        return 0;
+    c++;                // skip equal
+    c = skip_blanks(c); // skip any whitespace after equal
+
+    if (*c != '\'')
+        return 0;
+
+    c++; // Skip '
+
+    strncpy(pNewTag, pOldTag, c - pOldTag); // Copy up to and including first '
+    pNewTag[c - pOldTag] = 0;
+    strcat(pNewTag, pNewVal); // Copy in the new value
+    strcat(pNewTag, "\'");    // Add the ending '
+
+    const char *ce;
+
+    c = strchr(c, '\''); // Find the last ' for the value
+    if (c == NULL)       // Missing ending '
+        return 0;
+
+    c++; // Skip the '
+
+    ce = c;
+    TAIL(ce); // find the remaineder of the string
+
+    if (ce - c <= 0) // If the string is empty, we are done
+        return 1;
+
+    if (strlen(pNewTag) + strlen(c) >= (size_t)nTagMax - 1) // Not enough space
+        return 0;
+
+    strcat(pNewTag, c);
+
+    return 1;
+}
+
+// given the attribute colorstr return <div class='colorstr'>. Dont make colorstr too insanely long.
+const char *divcolor(const char *colorstr)
+{
+    static char buf[256];
+
+    sprintf(buf, "<div class='%s'>", colorstr);
+
+    return buf;
 }

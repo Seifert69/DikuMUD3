@@ -7422,8 +7422,12 @@ code
       if (self.fighting.type != UNIT_ST_PC)
       {
          self.hp := self.max_hp;
+         u := self.fighting;
+         act("As $2n attacks $1n $2e is dissolved in a bright light.", A_SOMEONE, self, u, null, TO_ROOM);
          stop_fighting(self.fighting, self);
          stop_fighting(self, self.fighting);
+         log("Overpopulation destroyed aggressive NPC " + u.name + " from the game");
+         destroy(u);
          goto init;
       }
    }

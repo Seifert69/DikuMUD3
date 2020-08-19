@@ -17,460 +17,447 @@
 
 color_type::color_type(void)
 {
-    next = NULL;
-    color = NULL;
-    keyword = NULL;
-    key_size = 0;
-    color_size = 0;
-    count = 0;
+   next = NULL;
+   color = NULL;
+   keyword = NULL;
+   key_size = 0;
+   color_size = 0;
+   count = 0;
 }
 
 color_type::color_type(char *key, char *c)
 {
-    int len = 0;
-    next = NULL;
-    len = strlen(c);
-    //color = new char[len + 1];
+   int len = 0;
+   next = NULL;
+   len = strlen(c);
+   //color = new char[len + 1];
 
-    CREATE(color, char, len + 1);
-    if (!color)
-    {
-        slog(LOG_ALL, 0, "Error in allocating color");
-        assert(color);
-    }
-    strcpy(color, c);
+   CREATE(color, char, len + 1);
+   if (!color)
+   {
+      slog(LOG_ALL, 0, "Error in allocating color");
+      assert(color);
+   }
+   strcpy(color, c);
 
-    len = strlen(key);
-    //keyword = new char[len + 1];
-    CREATE(keyword, char, len + 1);
-    if (!keyword)
-    {
-        slog(LOG_ALL, 0, "Error in allocating keyword");
-        assert(keyword);
-    }
-    strcpy(keyword, key);
+   len = strlen(key);
+   //keyword = new char[len + 1];
+   CREATE(keyword, char, len + 1);
+   if (!keyword)
+   {
+      slog(LOG_ALL, 0, "Error in allocating keyword");
+      assert(keyword);
+   }
+   strcpy(keyword, key);
 }
 
 color_type::~color_type(void)
 {
-    color_type *l = this->next;
+   color_type *l = this->next;
 
-    next = NULL;
-    if (keyword)
-        FREE(keyword);
-    if (color)
-        FREE(color);
-    color = NULL;
-    keyword = NULL;
-    if (l)
-        delete l;
+   next = NULL;
+   if (keyword)
+      FREE(keyword);
+   if (color)
+      FREE(color);
+   color = NULL;
+   keyword = NULL;
+   if (l)
+      delete l;
 }
 
 void color_type::count_plus(char *key, char *c)
 {
-    key_size += (strlen(key) + 1);
-    color_size += (strlen(c) + 1);
-    count++;
+   key_size += (strlen(key) + 1);
+   color_size += (strlen(c) + 1);
+   count++;
 }
 
 void color_type::count_minus(char *key, char *c)
 {
-    key_size -= (strlen(key) + 1);
-    color_size -= (strlen(c) + 1);
-    count--;
+   key_size -= (strlen(key) + 1);
+   color_size -= (strlen(c) + 1);
+   count--;
 }
 
 char *color_type::insert(char *key, char *c)
 {
-    color_type *l = this->next, *b = this;
-    color_type *temp;
-    if ((!key) || (!c))
-        return (NULL);
-    temp = new color_type(key, c);
-    if (!temp)
-        return (NULL);
-    while (l)
-    {
-        if (strcmp(l->keyword, key) >= 0)
-            break;
-        else
-        {
-            b = l;
-            l = l->next;
-        }
-    }
+   color_type *l = this->next, *b = this;
+   color_type *temp;
+   if ((!key) || (!c))
+      return (NULL);
+   temp = new color_type(key, c);
+   if (!temp)
+      return (NULL);
+   while (l)
+   {
+      if (strcmp(l->keyword, key) >= 0)
+         break;
+      else
+      {
+         b = l;
+         l = l->next;
+      }
+   }
 
-    if (!l)
-    {
-        b->next = temp;
-        count_plus(key, c);
-    }
-    else if (strcmp(key, l->keyword) == 0)
-    {
-        temp->next = l->next;
-        b->next = temp;
-        l->next = NULL;
-        delete l;
-    }
-    else
-    {
-        temp->next = b->next;
-        b->next = temp;
-        count_plus(key, c);
-    }
-    char *c_return;
-    //c_return = new char[strlen (key) + strlen (c) + 1];
-    CREATE(c_return, char, strlen(key) + strlen(c) + 1);
-    strcpy(c_return, c);
-    strcat(c_return, key);
-    return (c_return);
+   if (!l)
+   {
+      b->next = temp;
+      count_plus(key, c);
+   }
+   else if (strcmp(key, l->keyword) == 0)
+   {
+      temp->next = l->next;
+      b->next = temp;
+      l->next = NULL;
+      delete l;
+   }
+   else
+   {
+      temp->next = b->next;
+      b->next = temp;
+      count_plus(key, c);
+   }
+   char *c_return;
+   //c_return = new char[strlen (key) + strlen (c) + 1];
+   CREATE(c_return, char, strlen(key) + strlen(c) + 1);
+   strcpy(c_return, c);
+   strcat(c_return, key);
+   return (c_return);
 }
 
 void color_type::change(char *combo)
 {
-    char *key, *tok;
+   char *key, *tok;
 
-    key = strtok(combo, ":");
-    if (!key)
-    {
-        return;
-    }
-    tok = strtok(0, ":");
-    if (!tok)
-    {
-        return;
-    }
-    std::string ret = change(key, tok);
+   key = strtok(combo, ":");
+   if (!key)
+   {
+      return;
+   }
+   tok = strtok(0, ":");
+   if (!tok)
+   {
+      return;
+   }
+   std::string ret = change(key, tok);
 }
 
 void color_type::insert(char *combo)
 {
 
-    char *key, *tok, *ret;
+   char *key, *tok, *ret;
 
-    key = strtok(combo, ":");
-    if (!key)
-    {
-        return;
-    }
-    tok = strtok(0, ":");
-    if (!tok)
-    {
-        return;
-    }
-    ret = insert(key, tok);
-    FREE(ret);
+   key = strtok(combo, ":");
+   if (!key)
+   {
+      return;
+   }
+   tok = strtok(0, ":");
+   if (!tok)
+   {
+      return;
+   }
+   ret = insert(key, tok);
+   FREE(ret);
 }
 
 std::string color_type::change(char *key, char *c)
 {
-    color_type *l = this->next;
-    char *temp = 0;
-    //temp = new char[strlen (c) + 1];
-    CREATE(temp, char, strlen(c) + 1);
+   color_type *l = this->next;
+   char *temp = 0;
+   //temp = new char[strlen (c) + 1];
+   CREATE(temp, char, strlen(c) + 1);
 
-    if (!temp)
-    {
-        slog(LOG_ALL, 0, "Error in allocating change color.");
-        assert(temp);
-    }
+   if (!temp)
+   {
+      slog(LOG_ALL, 0, "Error in allocating change color.");
+      assert(temp);
+   }
 
-    while (l)
-    {
-        if (strncmp(l->keyword, key, strlen(key)) == 0)
-        {
-            color_size -= (strlen(l->color) + 1);
-            delete(l->color);
-            strcpy(temp, c);
-            l->color = temp;
-            color_size += (strlen(temp) + 1);
+   while (l)
+   {
+      if (strncmp(l->keyword, key, strlen(key)) == 0)
+      {
+         color_size -= (strlen(l->color) + 1);
+         delete (l->color);
+         strcpy(temp, c);
+         l->color = temp;
+         color_size += (strlen(temp) + 1);
 
-            char c_return[512];
+         char c_return[512];
 
-            sprintf(c_return, "<div class='%s'>%s = %s</div>", l->color, l->keyword, l->color);
-            return c_return;
-        }
-        else
-            l = l->next;
-    }
+         sprintf(c_return, "<div class='%s'>%s = %s</div>", l->color, l->keyword, l->color);
+         return c_return;
+      }
+      else
+         l = l->next;
+   }
 
-    return "";
+   return "";
 }
 
-char *color_type::get(char *key)
+const char *color_type::get(const char *key)
 {
-    color_type *l = this->next;
+   color_type *l = this->next;
 
-    if (!key)
-        return (NULL);
-    while (l)
-    {
-        if (strncmp(key, l->keyword, strlen(key)) == 0)
-            break;
-        l = l->next;
-    }
+   if (!key)
+      return (NULL);
+   while (l)
+   {
+      if (strncmp(key, l->keyword, strlen(key)) == 0)
+         break;
+      l = l->next;
+   }
 
-    if (l)
-        return (l->color);
-    else
-        return (NULL);
+   if (l)
+      return (l->color);
+   else
+      return (NULL);
 }
 
-char *color_type::get(char *key, char *full_key)
+const char *color_type::get(const char *key, char *full_key)
 {
-    color_type *l = this->next;
+   color_type *l = this->next;
 
-    if (!key)
-        return (NULL);
-    while (l)
-    {
-        if (strncmp(key, l->keyword, strlen(key)) == 0)
-            break;
-        l = l->next;
-    }
+   if (!key)
+      return (NULL);
+   while (l)
+   {
+      if (strncmp(key, l->keyword, strlen(key)) == 0)
+         break;
+      l = l->next;
+   }
 
-    if (l)
-    {
-        strcpy(full_key, l->keyword);
-        return (l->color);
-    }
-    else
-        return (NULL);
+   if (l)
+   {
+      strcpy(full_key, l->keyword);
+      return (l->color);
+   }
+   else
+      return (NULL);
 }
 
 int color_type::remove(char *key)
 {
-    color_type *temp = this, *l = this->next;
-    if (!l)
-    {
-        return (0);
-        //If blank list return nothing to remove
-    }
+   color_type *temp = this, *l = this->next;
+   if (!l)
+   {
+      return (0);
+      //If blank list return nothing to remove
+   }
 
-    while (l)
-    {
-        if (strcmp(key, l->keyword) == 0)
-            break;
-        else
-        {
-            temp = l;
-            l = temp->next;
-        }
-    }
+   while (l)
+   {
+      if (strcmp(key, l->keyword) == 0)
+         break;
+      else
+      {
+         temp = l;
+         l = temp->next;
+      }
+   }
 
-    if (!l)
-        return (0);
+   if (!l)
+      return (0);
 
-    temp->next = l->next;
-    l->next = NULL;
-    count_minus(l->keyword, l->color);
-    delete l;
-    return (1);
+   temp->next = l->next;
+   l->next = NULL;
+   count_minus(l->keyword, l->color);
+   delete l;
+   return (1);
 }
 
 void color_type::remove_all()
 {
-    color_type *l = this->next;
+   color_type *l = this->next;
 
-    next = NULL;
+   next = NULL;
 
-    if (keyword)
-        FREE(keyword);
-    if (color)
-        FREE(color);
-    color = NULL;
-    keyword = NULL;
-    if (l)
-        delete l;
+   if (keyword)
+      FREE(keyword);
+   if (color)
+      FREE(color);
+   color = NULL;
+   keyword = NULL;
+   if (l)
+      delete l;
 
-    key_size = 0;
-    color_size = 0;
-    count = 0;
+   key_size = 0;
+   color_size = 0;
+   count = 0;
 }
 
 void color_type::create(char *input_temp)
 {
-    char *delstr;
-    char *tok, *key;
-    char *input_str;
+   char *delstr;
+   char *tok, *key;
+   char *input_str;
 
-    if ((!input_temp) || (input_temp[0] == '\0'))
-        return;
+   if ((!input_temp) || (input_temp[0] == '\0'))
+      return;
 
-    //input_str = new char[strlen (input_temp) + 1];
-    CREATE(input_str, char, strlen(input_temp) + 1);
+   //input_str = new char[strlen (input_temp) + 1];
+   CREATE(input_str, char, strlen(input_temp) + 1);
 
-    delstr = input_str;
-    if (!input_str)
-        return;
+   delstr = input_str;
+   if (!input_str)
+      return;
 
-    while (*input_temp != '\0')
-    {
-        if ((*input_temp == '\r'))
-        {
-            input_temp++;
-            continue;
-        }
-        *input_str = *input_temp;
-        input_str++;
-        input_temp++;
-    }
+   while (*input_temp != '\0')
+   {
+      if ((*input_temp == '\r'))
+      {
+         input_temp++;
+         continue;
+      }
+      *input_str = *input_temp;
+      input_str++;
+      input_temp++;
+   }
 
-    *input_str = '\0';
-    input_str = delstr;
-    key = strtok(input_str, ":");
+   *input_str = '\0';
+   input_str = delstr;
+   key = strtok(input_str, ":");
 
-    if (!key)
-    {
-        FREE(delstr);
-        return;
-    }
-    tok = strtok(0, ":");
-    if (!tok)
-    {
-        FREE(delstr);
-        return;
-    }
+   if (!key)
+   {
+      FREE(delstr);
+      return;
+   }
+   tok = strtok(0, ":");
+   if (!tok)
+   {
+      FREE(delstr);
+      return;
+   }
 
-    insert(key, tok);
+   insert(key, tok);
 
-    while ((key = strtok(0, ":")) != NULL)
-    {
+   while ((key = strtok(0, ":")) != NULL)
+   {
 
-        tok = strtok(0, ":");
-        if (!tok)
-            break;
+      tok = strtok(0, ":");
+      if (!tok)
+         break;
 
-        insert(key, tok);
-    }
+      insert(key, tok);
+   }
 
-    FREE(delstr);
+   FREE(delstr);
 }
 
 char *color_type::key_string(void)
 {
-    long i = 0;
-    int r = 0;
-    i = (200 * count) + key_size + color_size;
-    //char *buff = new char[i];
-    char *buff;
+   long i = 0;
+   i = (200 * count) + key_size + color_size;
+   //char *buff = new char[i];
+   char *buff;
 
-    CREATE(buff, char, i);
+   CREATE(buff, char, i);
 
-    color_type *l = this->next;
-    if (!buff)
-    {
-        slog(LOG_ALL, 0, "Error allocating key string for colors.");
-        assert(buff);
-    }
+   color_type *l = this->next;
+   if (!buff)
+   {
+      slog(LOG_ALL, 0, "Error allocating key string for colors.");
+      assert(buff);
+   }
 
-    buff[0] = '\0';
-    if (!l)
-    {
-        return (NULL);
-    }
-    r = 0;
+   buff[0] = '\0';
+   if (!l)
+      return (NULL);
 
-    while (l)
-    {
-        if (r < 3)
-        {
-            char tmp[200];
-            i = MAX(0, 25-strlen(l->keyword));
-            sprintf(tmp, "<div class='%s'>%s%s= %s</div><br/>", l->color, l->keyword, spc(i), l->color);
-            strcat(buff, tmp);
-        }
-        l = l->next;
-    }
+   while (l)
+   {
+      char tmp[200];
+      i = MAX(0, 25 - strlen(l->keyword));
+      sprintf(tmp, "<div class='%s'>%s%s= %s</div><br/>", l->color, l->keyword, spc(i), l->color);
+      strcat(buff, tmp);
+      l = l->next;
+   }
 
-    strcat(buff, "<br/>");
-    return (buff);
+   strcat(buff, "<br/>");
+   return (buff);
 }
 
 char *color_type::key_string(color_type &dft)
 {
-    char *t = this->save_string();
-    char *d = dft.save_string(); //ptr to create string
-    color_type temp;
-    int i = 0;
-    char *f;
-    if (d)
-        i += strlen(d) + 1;
-    if (t)
-        i += strlen(t) + 2;
-    //f = new char[i];
-    CREATE(f, char, i);
+   char *t = this->save_string();
+   char *d = dft.save_string(); //ptr to create string
+   color_type temp;
+   int i = 0;
+   char *f;
+   if (d)
+      i += strlen(d) + 1;
+   if (t)
+      i += strlen(t) + 2;
+   //f = new char[i];
+   CREATE(f, char, i);
 
-    if (!f)
-    {
-        slog(LOG_ALL, 0,
-             "Problem with the 'final' pointer when doing save_string in key_string");
-        assert(f);
-    }
-    f[0] = '\0';
+   if (!f)
+   {
+      slog(LOG_ALL, 0,
+           "Problem with the 'final' pointer when doing save_string in key_string");
+      assert(f);
+   }
+   f[0] = '\0';
 
-    if (d)
-    {
-        strcat(f, d);
-        FREE(d);
-    }
-    if (t)
-    {
-        strcat(f, ":");
-        strcat(f, t);
-        FREE(t);
-    }
+   if (d)
+   {
+      strcat(f, d);
+      FREE(d);
+   }
+   if (t)
+   {
+      strcat(f, ":");
+      strcat(f, t);
+      FREE(t);
+   }
 
-    temp.create(f);
-    FREE(f);
+   temp.create(f);
+   FREE(f);
 
-    f = temp.key_string();
-    char *ftemp;
-    //ftemp = new char[strlen (f) + 1];
-    CREATE(ftemp, char, strlen(f) + 1);
-    strcpy(ftemp, f);
-    if (f)
-        FREE(f);
-    return (ftemp);
+   f = temp.key_string();
+   char *ftemp;
+   //ftemp = new char[strlen (f) + 1];
+   CREATE(ftemp, char, strlen(f) + 1);
+   strcpy(ftemp, f);
+   if (f)
+      FREE(f);
+   return (ftemp);
 }
 
 char *color_type::save_string(void)
 {
 
-    color_type *l = this->next;
+   color_type *l = this->next;
 
-    if (!l)
-    {
-        return (NULL);
-    }
+   if (!l)
+   {
+      return (NULL);
+   }
 
-    //char *buff = new char[key_size + color_size + (count * 2)];
-    char *buff;
-    CREATE(buff, char, key_size + color_size + (count * 2));
+   //char *buff = new char[key_size + color_size + (count * 2)];
+   char *buff;
+   CREATE(buff, char, key_size + color_size + (count * 2));
 
-    if (!buff)
-    {
-        slog(LOG_ALL, 0, "Error allocating save string for colors.");
-        assert(buff);
-    }
-    buff[0] = '\0';
+   if (!buff)
+   {
+      slog(LOG_ALL, 0, "Error allocating save string for colors.");
+      assert(buff);
+   }
+   buff[0] = '\0';
 
-    while (l)
-    {
-        strcat(buff, l->keyword);
-        strcat(buff, ":");
-        strcat(buff, l->color);
-        strcat(buff, ":");
-        l = l->next;
-    }
+   while (l)
+   {
+      strcat(buff, l->keyword);
+      strcat(buff, ":");
+      strcat(buff, l->color);
+      strcat(buff, ":");
+      l = l->next;
+   }
 
-    buff[(strlen(buff))] = '\0';
-    return (buff);
+   buff[(strlen(buff))] = '\0';
+   return (buff);
 }
 
-char *getcolor(const char *colorstr)
-{
-    static char cstr[1024];
-    sprintf(cstr, "<div class='%s'>", colorstr);
-    return cstr;
-}

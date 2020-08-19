@@ -16,6 +16,7 @@ public:
     void Ping(void);
 
     int succ_err; /* Number of successive errors */
+    ubit8 bWebsockets;
 };
 
 class cMultiMaster
