@@ -149,8 +149,9 @@ void on_message(wsserver* s, websocketpp::connection_hdl hdl, message_ptr msg)
     con = (cConHook *) g_cMapHandler[hdl];
     assert(con);
 
-    slog(LOG_OFF, 0, "on_message called with hdl %p and messsage %s.", 
-            hdl.lock().get(), msg->get_payload().c_str());
+    // Log here to see all commands received (plus passwords :()
+    //slog(LOG_OFF, 0, "on_message called with hdl %p and messsage %s.", 
+    //        hdl.lock().get(), msg->get_payload().c_str());
 
     // check for a special command to instruct the server to stop listening so
     // it can be cleanly exited.
