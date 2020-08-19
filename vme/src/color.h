@@ -35,8 +35,8 @@ public:
   void insert(char *combo);
   std::string change(char *key, char *c);
   void change(char *combo);
-  char *get(char *key);
-  char *get(char *key, char *full_key);
+  const char *get(const char *key);
+  const char *get(const char *key, char *full_key);
   int remove(char *key);
   void remove_all(void);
   void create(char *input_str);
@@ -45,7 +45,6 @@ public:
   char *save_string(void);
 };
 
-char *getcolor(const char *colorstr);
 int is_forground(char *cstr);
 int is_background(char *cstr);
 
