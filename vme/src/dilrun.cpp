@@ -990,7 +990,7 @@ int run_dil(struct spec_arg *sarg)
     if (prg == NULL)
         return SFR_SHARE;
 
-    membug_verify(prg);
+    membug_verify_class(prg);
 
     if (prg->owner == NULL)
     {

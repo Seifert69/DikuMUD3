@@ -870,7 +870,7 @@ void call_guards(class unit_data *guard)
 
     for (u = unit_list; u; u = u->gnext)
     {
-        membug_verify(u);
+        membug_verify_class(u);
         assert(!u->is_destructed());
         if (IS_NPC(u) && IS_ROOM(UNIT_IN(u)) &&
             zone == UNIT_FILE_INDEX(UNIT_IN(u))->zone && u != guard)
@@ -878,7 +878,7 @@ void call_guards(class unit_data *guard)
             ok = FALSE;
             for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
             {
-                membug_verify(fptr);
+                membug_verify_class(fptr);
                 membug_verify(fptr->data);
                 if (fptr->index == SFUN_PROTECT_LAWFUL)
                     ok = TRUE;

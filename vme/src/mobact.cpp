@@ -57,15 +57,15 @@ void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
             events.remove(special_event, u, fptr);
         fptr->event = events.add(ticks, special_event, u, fptr);
         //      events.add(ticks, special_event, u, fptr);
-        membug_verify(fptr);
+        membug_verify_class(fptr);
         membug_verify(fptr->data);
     }
 }
 
 void ResetFptrTimer(class unit_data *u, class unit_fptr *fptr)
 {
-    membug_verify(u);
-    membug_verify(fptr);
+    membug_verify_class(u);
+    membug_verify_class(fptr);
     membug_verify(fptr->data);
 
     events.remove(special_event, u, fptr);

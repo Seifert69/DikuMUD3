@@ -509,7 +509,7 @@ void check_overpopulation_event(void *p1, void *p2)
 
     for (u = unit_list; u; u = u->gnext)
     {
-        membug_verify(u);
+        membug_verify_class(u);
         nUnits++;
         // Make sure it's not a player
         t = u;
