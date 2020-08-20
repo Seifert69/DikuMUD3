@@ -1,0 +1,402 @@
+/* Thanks to these two articles:
+ *    https://superuser.com/questions/361297/what-colour-is-the-dark-green-on-old-fashioned-green-screen-computer-displays
+ *    https://css-tricks.com/old-timey-terminal-styling/
+ *
+ * Chosen Apple III monitor color because that was my original monitor, green = #66FF66, background = #282828 :-)
+ */
+
+/* ============ STRUCTURE ============== */
+
+        .c_container {
+            width: 100vw;
+            display: inline-flex;
+            flex-wrap: wrap;
+            overflow-y: hidden;
+            overflow-x: hidden;
+        }
+        
+        .flex-direction {
+            flex-direction: row;
+        }
+        
+        .c_left {
+            width: 70%;
+            height: 100vh;
+            background-color: #727272;            
+        }
+        
+        .c_center {
+            width: 25%;
+            height: 100vh;
+            background-color: #bbb;
+        }
+        
+        .c_right {
+            width: 5%;
+            height: 100vh;
+            background-color: #666;
+        }
+        
+        /* ============ LEFT AREA ============== */
+        
+        #al_text {
+            width: 100%;
+            height: 100%; /* fill up the screen when empty */
+            max-height: calc(100% - 40px);
+            background-color: black;
+            background-color: black;
+            background-image: radial-gradient(
+              rgba(60, 60, 60, 0.75), black 120%
+            );
+            color:#66FF66;
+            overflow-y: auto;
+        }
+        #al_text::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
+            pointer-events: none;
+        }        
+        #al_cmd {
+            width: 100%;
+            background-color: darkslategray;
+            height: 40px;
+        }
+        
+        /* ============ CENTER AREA ============== */
+        
+        #ac_map {
+            width:100%;
+            height: 25%;
+            background-color: #111111;
+            color: white;
+            background-image: url('img/logo.gif');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;            
+        }
+        #ac_paged {
+            width:100%;
+            height: 54%;
+            background-color: #333333;
+            color: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        #ac_progress {
+            width:100%;
+            height: 11%;
+            background-color: black;
+            color: white;
+        }
+        #ac_exits {
+            width:100%;
+            height: 10%;
+            background-color: darkolivegreen;
+            color: white;
+        }
+        #hp-progress {
+            width: 97%;
+            background-color: #333333;
+            border: 1px solid dimgray;
+            padding: 1%;
+        }
+        #mp-progress {
+            width: 97%;
+            background-color: #333333;
+            border: 1px solid dimgray;
+            padding: 1%;
+        }
+        #ep-progress {
+            width: 97%;
+            background-color: #333333;
+            border: 1px solid dimgray;
+            padding: 1%;
+        }
+        #hp-bar {
+            width: 10%;
+            height: 15px;
+            background-color: red;
+        }
+        #mp-bar {
+            width: 10%;
+            height: 15px;
+            background-color: blue;
+        }
+        #ep-bar {
+            width: 10%;
+            height: 15px;
+            background-color: green;
+        }
+        
+        /* ============ RIGHT AREA ============== */
+        
+        #ac_right {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background-color:darkslategray;
+            color:white;
+        }
+        
+        
+        /* ============ MEDIA ============== */
+        
+        @media screen and (max-width: 1200px) {
+        /*  .flex-direction {
+            flex-direction: column;
+          }*/
+        
+          .c_left {
+            width: 75%;
+            height: 100vh;
+            background-color: #bbb;
+            overflow: hidden;
+          }
+        
+          .c_center {
+            width: 25%;
+            height: 100vh;
+            background-color: #bbb;
+            overflow: hidden;
+          }
+        
+          .c_right {
+            display: none;
+          }
+        }
+        
+        @media screen and (max-width: 800px) {
+        /*  .flex-direction {
+            flex-direction: column;
+          }*/
+        
+          .c_left {
+            width: 100%;
+            height: 100vh;
+            background-color: #bbb;
+            overflow: hidden;
+          }
+        
+          .c_center {
+            display: none;
+          }
+        
+          .c_right {
+            display: none;
+          }
+        }
+        
+        /* ============ MAIN ============== */
+        html,body {
+            height: 100%; margin: 0px; padding: 0px;
+            font-family: 'Courier New', Courier, monospace;
+            text-shadow: 0 0 5px #808080;
+        }
+        a:link {
+            color:currentColor;
+        }
+        a:visited {
+            color:currentColor;
+        }
+        
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
+
+        /* ============ STYLES ============== */
+        h1              { font-weight: bold; font-size: initial;} /* Used for screen readers, room title */
+
+        #btnConnect    { width: 100px; }
+        #btnDisconnect { width: 100px; }
+        #btnSend       { width: 100px; }
+        .command       { display: inline; }
+        .echo          { display: inline; color:#66FF66; font-weight: bold; }
+
+        /* Combat */
+        .hit_me         { display: inline; color:#66FF66; font-weight: bold;}
+        .hit_opponent   { display: inline; color:#66FF66; font-weight: bold;}
+        .hit_other      { display: inline; color:#66FF66;}
+
+        .nodam_me       { display: inline; color:#66FF66; }
+        .nodam_opponent { display: inline; color:#66FF66; }
+        .nodam_other    { display: inline; color:#66FF66; }
+
+        .miss_me        { display: inline; color:#66FF66; }
+        .miss_opponent  { display: inline; color:#66FF66; }
+        .miss_other     { display: inline; color:#66FF66; }            
+
+        .shield_me       { display: inline; color:#66FF66; }
+        .shield_opponent { display: inline; color:#66FF66; }
+        .shield_other    { display: inline; color:#66FF66; }
+
+
+        /* Communication */
+        .ask_self      { display: inline; color:#66FF66;}
+        .ask_other     { display: inline; color:#66FF66;}
+        .say_self      { display: inline; color:#66FF66;}
+        .say_other     { display: inline; color:#66FF66;}
+        .shout_self      { display: inline; color:#66FF66;}
+        .shout_other     { display: inline; color:#66FF66;}
+        .whisper       { display: inline; color:#66FF66;}
+        .tell_self     { display: inline; color:#66FF66;}
+        .tell_other    { display: inline; color:#66FF66;}
+
+        .death       { display: inline; color:#66FF66;}
+        .prompt      { display: inline; color:#66FF66;}
+        .npc_title   { display: inline; color:#66FF66; }
+        .npc_descr   { display: inline; color:#66FF66; }
+        .obj_descr   { display: inline; color:#66FF66; }
+        .obj_title   { display: inline; color:#66FF66; }
+        .spells      { display: inline; color:#66FF66; }
+        .immort_title    { display: inline; color:#66FF66; }
+        .pc_title    { display: inline; color:#66FF66; }
+        .pc_descr    { display: inline; color:#66FF66; }
+
+        .room_title  { display: inline; color: #66FF66; }
+        .room_descr  { display: inline; font-style: italic; width: 600px; color:#66FF66; }
+        .score       { display: inline; color:#66FF66; }
+        .social_self { display: inline; color:#66FF66; }
+        .social_other { display: inline; color:#66FF66; }
+        .score       { display: inline; color:#66FF66; }
+        .spell       { display: inline; color:#66FF66; }
+        .worn        { display: inline; color:#66FF66; }
+        .who         { display: inline; color:#66FF66; }
+        .who_name    { display: inline; color:#66FF66; }
+        .who_title   { display: inline; color:#66FF66; }
+        .who_inv     { display: inline; }
+
+        .xpgain         { display: inline; color:firebrick; font-weight: bold;}
+
+        .converse    { list-style: none; } 
+        .colh2       { border: 0px solid black; margin:0; } /* Table class */
+        .colh3       { border: 0px solid black; margin:0; } /* Table class */
+
+        /* Support for the old MUD colors */
+        .cr     { display: inline; color:darkred; }
+        .cpr    { display: inline; color:red; }
+        .br     { display: inline; background-color:darkred; }
+        .cn     { display: inline; color:black; }
+        .cpn    { display: inline; color:black; }
+        .bn     { display: inline; background-color:black; }
+        .cg     { display: inline; color:darkgreen; }
+        .cpg    { display: inline; color:green; }
+        .bg     { display: inline; background-color:darkgreen; }
+        .cy     { display: inline; color:darkgoldenrod; }
+        .cpy    { display: inline; color:yellow; }
+        .by     { display: inline; background-color:darkgoldenrod; }
+        .cb     { display: inline; color:darkblue; }
+        .cpb    { display: inline; color:blue; }
+        .bb     { display: inline; background-color:darkblue; }
+        .cm     { display: inline; color:darkorchid; }
+        .cpm    { display: inline; color:magenta; }
+        .bm     { display: inline; background-color:darkorchid; }
+        .cc     { display: inline; color:darkcyan; }
+        .cpc    { display: inline; color:cyan; }
+        .bc     { display: inline; background-color:darkcyan; }
+        .cw     { display: inline; color:#66FF66; }
+        .cpw    { display: inline; color:white; }
+        .bw     { display: inline; background-color:#ccc; }
+        .ca     { display: inline; color:grey; }
+
+        .default,.DEFAULT { display: inline; color:#ccc; }
+
+
+        .fourcol
+        {
+            -webkit-column-count: 4;
+            -webkit-column-gap: 20px;
+            column-count:4;
+            column-gap:20px;
+        }
+        .threecol
+        {
+            -webkit-column-count: 3;
+            -webkit-column-gap: 20px;
+            column-count:3;
+            column-gap:20px;
+        }
+        .twocol  {
+            -webkit-column-count: 2;
+            -webkit-column-gap: 20px;
+            column-count:2;
+            column-gap:20px;
+        }
+        .row {
+            /* Clear floats after the columns */
+            clear: both;
+        }
+
+
+/* The Modal (background) */
+.modal 
+{
+    z-index: 1;
+    position: absolute;
+    display:none; /* Hidden by default */
+    top: 100px;
+    left: 100px;
+    background-color: #444444;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 90%;
+    max-height: 90%;
+    resize: both;
+    overflow-y: auto; /* Enable scroll if needed */
+    border: 2px solid rgb(177, 177, 177);
+
+}
+/*
+  position: fixed; // Stay in place
+  z-index: 1; // Sit on top
+  left: 0;
+  top: 0;
+  width: 100%; // Full width
+  height: 100%; / Full height
+  overflow-y: auto; // Enable scroll if needed 
+  background-color: rgb(0,0,0); // Fallback color
+  background-color: rgba(0,0,0,0.4); // Black w/ opacity
+*/
+
+.modal-header {
+  width: 100%;
+  height: 40px;
+  cursor: move;
+  z-index: 3;
+  background-color: darkslateblue;
+  color: #fff;
+}
+
+/* Modal Content/Box */
+.modal-content {
+    width: 100%;
+    height: calc(100% - 40px);
+    z-index: 2;
+    overflow-y: auto; /* Enable scroll if needed */
+    background-color: #222222;
+    color: white;
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+} 
+
+/* ============ END OF STYLES ============== */

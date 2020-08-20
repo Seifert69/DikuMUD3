@@ -1086,8 +1086,6 @@ char *html_encode_utf8(const char *src)
         }
     } // end for
 
-    slog(LOG_ALL, 0, sBuffer.c_str());
-
     return str_dup(sBuffer.c_str()); // Oh if only we used strings everywhere :))
 }
 
