@@ -44,7 +44,6 @@
             height: 100%; /* fill up the screen when empty */
             max-height: calc(100% - 40px);
             background-color: black;
-            background-color: black;
             background-image: radial-gradient(
               rgba(60, 60, 60, 0.75), black 120%
             );
