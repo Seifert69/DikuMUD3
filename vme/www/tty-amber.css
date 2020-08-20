@@ -2,7 +2,7 @@
  *    https://superuser.com/questions/361297/what-colour-is-the-dark-green-on-old-fashioned-green-screen-computer-displays
  *    https://css-tricks.com/old-timey-terminal-styling/
  *
- * Chosen Apple III monitor color because that was my original monitor, green = #66FF66, background = #282828 :-)
+ * Here I'm doing an amber TTY  = #FFBB00, background = #282828 :-)... I turned the background up to #404040
  */
 
 /* ============ STRUCTURE ============== */
@@ -47,7 +47,7 @@
             background-image: radial-gradient(
               rgba(60, 60, 60, 0.75), black 120%
             );
-            color:#66FF66;
+            color:#FFBB00;
             overflow-y: auto;
         }
         #al_text::after {
@@ -194,7 +194,7 @@
         /* ============ MAIN ============== */
         html,body {
             height: 100%; margin: 0px; padding: 0px;
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'VT323'; font-size: larger; 
             text-shadow: 0 0 5px #808080;
         }
         a:link {
@@ -212,65 +212,65 @@
         }
 
         /* ============ STYLES ============== */
-        h1              { font-weight: bold; font-size: initial;} /* Used for screen readers, room title */
+        h1              { font-weight: bold; font-size: larger;} /* Used for screen readers, room title */
 
         #btnConnect    { width: 100px; }
         #btnDisconnect { width: 100px; }
         #btnSend       { width: 100px; }
         .command       { display: inline; }
-        .echo          { display: inline; color:#66FF66; font-weight: bold; }
+        .echo          { display: inline; color:#FFBB00; font-weight: bold; }
 
         /* Combat */
-        .hit_me         { display: inline; color:#66FF66; font-weight: bold;}
-        .hit_opponent   { display: inline; color:#66FF66; font-weight: bold;}
-        .hit_other      { display: inline; color:#66FF66;}
+        .hit_me         { display: inline; color:#FFBB00; font-weight: bold;}
+        .hit_opponent   { display: inline; color:#FFBB00; font-weight: bold;}
+        .hit_other      { display: inline; color:#FFBB00;}
 
-        .nodam_me       { display: inline; color:#66FF66; }
-        .nodam_opponent { display: inline; color:#66FF66; }
-        .nodam_other    { display: inline; color:#66FF66; }
+        .nodam_me       { display: inline; color:#FFBB00; }
+        .nodam_opponent { display: inline; color:#FFBB00; }
+        .nodam_other    { display: inline; color:#FFBB00; }
 
-        .miss_me        { display: inline; color:#66FF66; }
-        .miss_opponent  { display: inline; color:#66FF66; }
-        .miss_other     { display: inline; color:#66FF66; }            
+        .miss_me        { display: inline; color:#FFBB00; }
+        .miss_opponent  { display: inline; color:#FFBB00; }
+        .miss_other     { display: inline; color:#FFBB00; }            
 
-        .shield_me       { display: inline; color:#66FF66; }
-        .shield_opponent { display: inline; color:#66FF66; }
-        .shield_other    { display: inline; color:#66FF66; }
+        .shield_me       { display: inline; color:#FFBB00; }
+        .shield_opponent { display: inline; color:#FFBB00; }
+        .shield_other    { display: inline; color:#FFBB00; }
 
 
         /* Communication */
-        .ask_self      { display: inline; color:#66FF66;}
-        .ask_other     { display: inline; color:#66FF66;}
-        .say_self      { display: inline; color:#66FF66;}
-        .say_other     { display: inline; color:#66FF66;}
-        .shout_self      { display: inline; color:#66FF66;}
-        .shout_other     { display: inline; color:#66FF66;}
-        .whisper       { display: inline; color:#66FF66;}
-        .tell_self     { display: inline; color:#66FF66;}
-        .tell_other    { display: inline; color:#66FF66;}
+        .ask_self      { display: inline; color:#FFBB00;}
+        .ask_other     { display: inline; color:#FFBB00;}
+        .say_self      { display: inline; color:#FFBB00;}
+        .say_other     { display: inline; color:#FFBB00;}
+        .shout_self      { display: inline; color:#FFBB00;}
+        .shout_other     { display: inline; color:#FFBB00;}
+        .whisper       { display: inline; color:#FFBB00;}
+        .tell_self     { display: inline; color:#FFBB00;}
+        .tell_other    { display: inline; color:#FFBB00;}
 
-        .death       { display: inline; color:#66FF66;}
-        .prompt      { display: inline; color:#66FF66;}
-        .npc_title   { display: inline; color:#66FF66; }
-        .npc_descr   { display: inline; color:#66FF66; }
-        .obj_descr   { display: inline; color:#66FF66; }
-        .obj_title   { display: inline; color:#66FF66; }
-        .spells      { display: inline; color:#66FF66; }
-        .immort_title    { display: inline; color:#66FF66; }
-        .pc_title    { display: inline; color:#66FF66; }
-        .pc_descr    { display: inline; color:#66FF66; }
+        .death       { display: inline; color:#FFBB00;}
+        .prompt      { display: inline; color:#FFBB00;}
+        .npc_title   { display: inline; color:#FFBB00; }
+        .npc_descr   { display: inline; color:#FFBB00; }
+        .obj_descr   { display: inline; color:#FFBB00; }
+        .obj_title   { display: inline; color:#FFBB00; }
+        .spells      { display: inline; color:#FFBB00; }
+        .immort_title    { display: inline; color:#FFBB00; }
+        .pc_title    { display: inline; color:#FFBB00; }
+        .pc_descr    { display: inline; color:#FFBB00; }
 
-        .room_title  { display: inline; color: #66FF66; }
-        .room_descr  { display: inline; font-style: italic; width: 600px; color:#66FF66; }
-        .score       { display: inline; color:#66FF66; }
-        .social_self { display: inline; color:#66FF66; }
-        .social_other { display: inline; color:#66FF66; }
-        .score       { display: inline; color:#66FF66; }
-        .spell       { display: inline; color:#66FF66; }
-        .worn        { display: inline; color:#66FF66; }
-        .who         { display: inline; color:#66FF66; }
-        .who_name    { display: inline; color:#66FF66; }
-        .who_title   { display: inline; color:#66FF66; }
+        .room_title  { display: inline; color: #FFBB00; }
+        .room_descr  { display: inline; font-style: italic; width: 600px; color:#FFBB00; }
+        .score       { display: inline; color:#FFBB00; }
+        .social_self { display: inline; color:#FFBB00; }
+        .social_other { display: inline; color:#FFBB00; }
+        .score       { display: inline; color:#FFBB00; }
+        .spell       { display: inline; color:#FFBB00; }
+        .worn        { display: inline; color:#FFBB00; }
+        .who         { display: inline; color:#FFBB00; }
+        .who_name    { display: inline; color:#FFBB00; }
+        .who_title   { display: inline; color:#FFBB00; }
         .who_inv     { display: inline; }
 
         .xpgain         { display: inline; color:firebrick; font-weight: bold;}
@@ -301,7 +301,7 @@
         .cc     { display: inline; color:darkcyan; }
         .cpc    { display: inline; color:cyan; }
         .bc     { display: inline; background-color:darkcyan; }
-        .cw     { display: inline; color:#66FF66; }
+        .cw     { display: inline; color:#FFBB00; }
         .cpw    { display: inline; color:white; }
         .bw     { display: inline; background-color:#ccc; }
         .ca     { display: inline; color:grey; }
