@@ -212,7 +212,7 @@
         }
 
         /* ============ STYLES ============== */
-        h1              { font-weight: bold; font-size: larger;} /* Used for screen readers, room title */
+        h1              { font-weight: bold; font-size: inherit;} /* Used for screen readers, room title */
 
         #btnConnect    { width: 100px; }
         #btnDisconnect { width: 100px; }
