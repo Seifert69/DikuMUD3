@@ -7,29 +7,6 @@ request     compile
 version     29
 END HEADER*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include <macros.h>
 
 #define GWYN_QUEST "Gwyn Quest Complete"
@@ -51,6 +28,7 @@ descr
 from the city of Midgaard. Further west, cypress trees are growing in small
 numbers."
 movement SECT_CITY
+gmap(456,280)
 east to out_wgate;
 west to ct_23;
 end
@@ -64,6 +42,7 @@ descr
 built into the wall and connected with a footbridge across a heavy wooden
 gate. A small dusty trail leads west to the edge of a big cypress forest."
 movement SECT_CITY
+gmap(509,280)
 west to trail1;
 east to rn_001@midgaard;
 extra {"bridge","footbridge"}
@@ -98,6 +77,8 @@ hanging around the edge of the entrance."
 // By having no outside_descr it's invisible :-)
 
 movement SECT_FOREST
+gmap(244,560)
+
 south to goblin_cave/cave_cross;
 in bushes
 end
@@ -121,6 +102,8 @@ extra {"hole", "opening"}
 "Perhaps you would fit?"
 
 movement SECT_FOREST
+gmap(244,544)
+
 north to ct_1;
 end
 
@@ -132,6 +115,7 @@ descr
 going east or the frail trail to the north.."
 
 movement SECT_FOREST
+gmap(244,491)
 north to ct_2;
 east to ct_3;
 south to bushes;
@@ -145,6 +129,8 @@ descr
 To the west the woods seems to become less dense."
 
 movement SECT_FOREST
+gmap(244,439)
+
 south to ct_1;
 west to clearing;
 end
@@ -158,6 +144,8 @@ an almost triangular form. Many stumps are along the edge of the clearing
 and only golden dead grass cover the ground."
 
 movement SECT_FOREST
+gmap(191,439)
+
 east to ct_2;
 north to hut open {EX_OPEN_CLOSE, EX_CLOSED} keyword "door";
 
@@ -174,6 +162,8 @@ northern wall. The exit leads south with small windows on each side of the
 door."
 
 movement SECT_FOREST
+gmap(191,386)
+
 south to clearing open {EX_OPEN_CLOSE, EX_CLOSED} keyword "door";
 end
 
@@ -185,6 +175,8 @@ descr
 dense and vigorous."
 
 movement SECT_FOREST
+gmap(297,491)
+
 west to ct_1;
 north to ct_10;
 south to ct_4;
@@ -199,6 +191,8 @@ possible. An apparently often used path continues north and east through the
 woods."
 
 movement SECT_FOREST
+gmap(297,544)
+
 north to ct_3;
 east to ct_5;
 end
@@ -212,6 +206,8 @@ though the dense woods. A seemingly often used path continues north and
 west through the woods."
 
 movement SECT_FOREST
+gmap(350,544)
+
 north to ct_7;
 west to ct_4;
 east to ct_6;
@@ -227,6 +223,8 @@ glow between the trees to the north. South of here you can see a river
 flowing east through the forest."
 
 movement SECT_FOREST
+gmap(402,544)
+
 north to tree_circle;
 south to river;
 west to ct_5;
@@ -242,6 +240,7 @@ Udgaard is upstream to the west. A quiet part of the Cypress forest is just
 north of here."
 
 movement SECT_WATER_SWIM
+gmap(402,590)
 
 north to ct_6;
 east to midgaard/river1 difficulty 0;
@@ -264,6 +263,8 @@ height. A mystical shimmering green light flows between the treetops.
 You can hear no sounds native to these woods."
 
 movement SECT_FOREST
+gmap(402,491)
+
 flags {UNIT_FL_SACRED}
 light 5
 south to ct_6;
@@ -278,6 +279,8 @@ continues north. The thriving thicket forms a green carpet covering
 the forest floor. Occasional wavering green light appears in the treetops."
 
 movement SECT_FOREST
+gmap(350,491)
+
 north to ct_8;
 south to ct_5;
 end
@@ -292,6 +295,8 @@ used trail continues south. The cypress trees allows further movement
 east as well as west."
 
 movement SECT_FOREST
+gmap(350,439)
+
 east to ct_9;
 west to ct_10;
 south to ct_7;
@@ -312,6 +317,8 @@ a long time."
 /* A "hole" (room) is inside this room */
 
 movement SECT_FOREST
+gmap(402,439)
+
 west to ct_8;
 end
 
@@ -324,6 +331,9 @@ descr
 "   You are miraculously small enough to be inside a badgers burrow!"
 
 movement SECT_INSIDE
+gmap(456, 452)
+
+
 in ct_9
 end
 
@@ -337,6 +347,8 @@ moist brown mold is visible at the path going in a north south direction.
 A frail trail twists its way eastwards through the thicket."
 
 movement SECT_FOREST
+gmap(297,439)
+
 north to ct_11;
 east to ct_8;
 south to ct_3;
@@ -350,6 +362,7 @@ descr
 east to south. Westwards the cypress trees remain fairly closely together."
 
 movement SECT_FOREST
+gmap(297,386)
 south to ct_10;
 east to ct_12;
 west to ct_13;
@@ -362,6 +375,7 @@ descr
 "   Brown dirt covers the small well used path which twists its way north
 and west through the cypress trees."
 movement SECT_FOREST
+gmap(350,386)
 north to ct_19;
 west to ct_11;
 end
@@ -374,6 +388,7 @@ descr
 the sky above. A trail leads from east to north."
 
 movement SECT_FOREST
+gmap(244,386)
 east to ct_11;
 north to ct_14;
 end
@@ -387,6 +402,7 @@ the forest seems much lighter compared to here, where the cypress tree
 crowns almost forms a ceiling of green scale like leaves."
 
 movement SECT_FOREST
+gmap(244,333)
 south to ct_13;
 north to ct_16;
 east to ct_15;
@@ -404,6 +420,8 @@ ground around the oak tree. The nearest cypress tree is three yards from
 the edge of the oak, making the clearing almost ten yards in radius."
 
 movement SECT_FOREST
+gmap(297, 333)
+
 west to ct_14;
 end
 
@@ -416,6 +434,8 @@ only a few cypress trees are in between the beech and oak trees. The edge
 of the forest continues eastwards."
 
 movement SECT_FOREST
+gmap(244,280)
+
 east to ct_17;
 south to ct_14;
 end
@@ -429,6 +449,8 @@ continues west at the edge of the cypress forest.  An old run down shack
 is off to the east."
 
 movement SECT_FOREST
+gmap(297,280)
+
 west to ct_16;
 
 end
@@ -443,6 +465,7 @@ is a smooth green surface. A trail leads east through the cypress trees
 to an intersection."
 
 movement SECT_FOREST
+gmap(191,333)
 east to ct_14;
 north to hill;
 end
@@ -459,6 +482,7 @@ stable is to the north."
 /* XXX If you plant a cone here something shall happen */
 
 movement SECT_FOREST
+gmap(191,280)
 
 west to udgaard/watch_tower descr
 "Half a mile west is the small village of Udgaard, just down the hill and
@@ -503,6 +527,8 @@ of a massive stud."
 flags {UNIT_FL_NO_WEATHER}
 
 movement SECT_CITY
+gmap(191,228)
+
 south to hill descr
 "Top of hill";
 east to tack_shop descr
@@ -537,6 +563,8 @@ extra {"door", "doors", "doorway"}
 flags {UNIT_FL_NO_WEATHER}
 
 movement SECT_CITY
+gmap(244,228)
+
 west to stable1 descr
 "The Stable";
 end
@@ -555,6 +583,8 @@ extra {"doors"}
 flags {UNIT_FL_NO_WEATHER}
 
 movement SECT_CITY
+gmap(191,174)
+
 south to stable1 descr
 "The Stable";
 north to smithy descr
@@ -581,6 +611,8 @@ extra {"anvil"}
 flags {UNIT_FL_NO_WEATHER}
 
 movement SECT_CITY
+gmap(191,121)
+
 south to stall1 descr
 "The Stalls";
 end
@@ -594,6 +626,7 @@ to a mixture of brown mold and lifeless moss twisting its way from north to
 south. A trail leads east to the outskirts of the cypress forest."
 
 movement SECT_FOREST
+gmap(350,333)
 south to ct_12;
 north to ct_20;
 east to ct_21;
@@ -608,6 +641,7 @@ trees mingling in with the darker, taller trees of the northern forest.
 A slight trail leads north and south from here."
 
 movement SECT_FOREST
+gmap(350,280)
 south to ct_19;
 north to att_4@haunted;
 end
@@ -621,6 +655,7 @@ partly on the cypress tree trunks. Trails lead to the north and south.
 The forest seems to become denser to the west."
 
 movement SECT_FOREST
+gmap(402,333)
 north to ct_23;
 south to ct_22;
 west to ct_19;
@@ -636,6 +671,7 @@ only to go north. Soft moss covers the forest floor concealing most sounds
 of walking animals."
 
 movement SECT_FOREST
+gmap(402,386)
 north to ct_21;
 end
 
@@ -649,6 +685,7 @@ to the east, and another trail leads south, deeper into the forest. A close stan
 of trees blocks progress to the north."
 
 movement SECT_FOREST
+gmap(402,280)
 east to trail1;
 south to ct_21;
 end
