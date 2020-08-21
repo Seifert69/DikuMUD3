@@ -1,15 +1,8 @@
-Colors in mplex (yikes... figure out how to get it running again :())
-	Only missing part is to translate <div class='room_title'> to <div class='cpy cn'>
-	on the server. That should be fairly easy. Probably only do so for telnet users.
-
-
+Add map for Cypress and Haon-Dor
 Maybe: SFUN_TEACH, add parameter so teacher just teaches what can be learned...?
 Maybe: Teachers ignore "ability, ..." prefix for remote training when training locally
 Maybe: Teachers hyperlink what you can train so you can just click it
 Maybe: Fix ships (it's dark and they all run thier own code)
-Add map for Cypress and Haon-Dor
-
-Weapons from Thomas
 
 Test XP works as expected.
 Test play

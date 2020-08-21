@@ -4,6 +4,8 @@
 
 #ifndef MEMORY_DEBUG
     #define membug_verify(ptr)  // NIL
+    #define membug_verify_class(ptr)  // NIL
+    #define membug_verify_reg(ptr)  // NIL
 
     #define EMPLACE(t)
     #define DELETE(cls,ptr) delete ptr;

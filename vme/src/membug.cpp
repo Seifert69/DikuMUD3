@@ -152,7 +152,7 @@ void membug_delete(void *ptr)
    membug_setfree_class(ptr);
    char *p = (char *)ptr;
    p -= 12;
-   delete (p);
+   free(p);
 }
 
 // ==============================================================
