@@ -1258,6 +1258,8 @@ impossible
 to catch even a glimpse of anything above the lowest branches."
 
 movement SECT_FOREST
+gmap(474,307)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_MOB}
 IN_ALWAYS_DARK
 end
@@ -1289,6 +1291,8 @@ impossible
 to catch even a glimpse of anything above the lowest branches."
 
 movement SECT_FOREST
+gmap(441,307)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1318,6 +1322,8 @@ impossible
 to catch even a glimpse of anything above the lowest branches."
 
 movement SECT_FOREST
+gmap(408,307)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 end
 
@@ -1346,6 +1352,8 @@ impossible
 to catch even a glimpse of anything above the lowest branches."
 
 movement SECT_FOREST
+gmap(375,307)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1370,6 +1378,7 @@ extra {"path"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(441,340)
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1392,6 +1401,8 @@ extra {"path"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(441,373)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1416,6 +1427,8 @@ extra {"path","paths"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(408,373)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1438,6 +1451,7 @@ extra {"path"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(375,373)
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1468,6 +1482,8 @@ impossible
 to catch even a glimpse of anything above the lowest branches."
 
 movement SECT_FOREST
+gmap(375,340)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1494,6 +1510,8 @@ impossible
 to catch even a glimpse of anything above the lowest branches."
 
 movement SECT_FOREST
+gmap(342,340)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1524,6 +1542,8 @@ extra {"tree","trees","trunk","trunks"}
 substance.  It looks like small threads woven carefully together."
 
 movement SECT_FOREST
+gmap(309,340)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1548,6 +1568,8 @@ impossible
 to catch even a glimpse of anything above the lowest branches."
 
 movement SECT_FOREST
+gmap(309,373)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1578,6 +1600,8 @@ impossible
 to catch even a glimpse of anything above the lowest branches."
 
 movement SECT_FOREST
+gmap(309,406)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1600,6 +1624,8 @@ extra {"path"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(342,406)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1624,6 +1650,8 @@ extra {"path","paths"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(342,439)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1648,6 +1676,8 @@ extra {"path"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(375,439)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1670,6 +1700,8 @@ extra {"path"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(375,406)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1694,6 +1726,8 @@ extra {"path","paths"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(408,406)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1716,6 +1750,8 @@ extra {"path"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(441,406)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1739,6 +1775,8 @@ extra {"path"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(441,439)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1770,6 +1808,8 @@ extra {"path"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(441,472)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1802,6 +1842,8 @@ extra {"path"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(408,472)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1824,6 +1866,8 @@ extra {"path"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(309,439)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1858,6 +1902,8 @@ extra {"path","paths"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(309,472)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1882,6 +1928,8 @@ extra {"path"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(342,472)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1909,6 +1957,8 @@ extra {"path"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(276,472)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1939,6 +1989,8 @@ impossible
 to catch even a glimpse of anything above the lowest branches."
 
 movement SECT_FOREST
+gmap(276,439)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1963,6 +2015,8 @@ impossible
 to catch even a glimpse of anything above the lowest branches."
 
 movement SECT_FOREST
+gmap(276,406)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -1990,6 +2044,8 @@ impossible
 to catch even a glimpse of anything above the lowest branches."
 
 movement SECT_FOREST
+gmap(243,439)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -2016,6 +2072,8 @@ impossible
 to catch even a glimpse of anything above the lowest branches."
 
 movement SECT_FOREST
+gmap(209,439)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -2034,7 +2092,9 @@ east to rn_6144 descr
 west to under_web descr
 "The structure to the west looks most of all like an immense spider web.
 It does not look as if you can go further without getting caught in it.";
-up to rn_6132;
+
+up open {EX_CLIMB} difficulty 25 to rn_6132;
+
 extra {"trail"}
 "The dark and dusty trail seems fragile compared to the massive trunks, and in
 some places, giant grey roots have broken up through its surface."
@@ -2046,6 +2106,8 @@ the path just out of reach.  It might be possible to climb one of the sticky
 trunks."
 
 movement SECT_FOREST
+gmap(276,307)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_MOB}
 IN_ALWAYS_DARK
 end
@@ -2060,6 +2122,8 @@ large cobweb as you advance..."
 east to rn_6130;
 
 movement SECT_FOREST
+gmap(243,307)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 
 OUT_DARK_NON_NOON
@@ -2082,12 +2146,14 @@ substance.  Directly to the west is an immense spider web suspended between
 numerous branches of the giant trees including the one you are hanging on."
 west to on_web descr
 "To the west is the immense spider web.  It seems to move softly.";
-down to rn_6130 descr
-"Downwards is the narrow forest path.";
+down open {EX_CLIMB, EX_FALL_THIS_WAY} difficulty 10 to rn_6130
+   descr "Downwards is the narrow forest path.";
 extra {"web"}
 "The spider web stretches out to the west.  It looks as if it is possible to
 walk on it."
 movement SECT_FOREST
+gmap(262,286)
+
 end
 
 
@@ -2111,6 +2177,8 @@ diameter of
 about 20 feet and is nearly 10 feet tall.  It looks very old."
 
 movement SECT_FOREST
+gmap(230,286)
+
 end
 
 
@@ -2131,6 +2199,8 @@ extra {"cocoon","cocoons"}
 They are at the size of a human head."
 
 movement SECT_FOREST
+gmap(197,286)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 end
 
@@ -2149,6 +2219,8 @@ extra {"tree","trees","trunk","trunks"}
 "The ancient grey giants seem to observe you silently."
 
 movement SECT_FOREST
+gmap(176,439)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -2177,6 +2249,8 @@ extra {"trail"}
 some places, giant grey roots have broken up through its surface."
 
 movement SECT_FOREST
+gmap(176,406)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -2196,6 +2270,8 @@ extra {"tree","trees","trunk","trunks"}
 west to elfdom/pt_d_fo;
 
 movement SECT_FOREST
+gmap(134,406)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -2219,6 +2295,8 @@ extra {"cave","opening"}
 "The disgusting smell of a large reptile emanates from the cave opening."
 
 movement SECT_FOREST
+gmap(209,406)
+
 IN_ALWAYS_DARK
 end
 
@@ -2237,6 +2315,8 @@ extra {"bone","bones","floor"}
 "Most of the bones on the floor appear to be of human origin."
 
 movement SECT_FOREST
+gmap(209,373)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
@@ -2263,6 +2343,8 @@ extra {"path"}
 in a single blow."
 
 movement SECT_FOREST
+gmap(309,307)
+
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 IN_ALWAYS_DARK
 end
