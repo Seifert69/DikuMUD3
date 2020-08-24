@@ -5022,7 +5022,7 @@ code
 
    s := hm_adjective(hm);
    act("Using your $2n you"+s+"skin $3n.", A_SOMEONE, self, wpn, targ, TO_CHAR);
-   act("$1n uses $1s $2n to"+s+"skins $3n .", A_SOMEONE, self, s, targ, TO_REST);
+   act("$1n uses $1s $2n to"+s+"skin $3n .", A_SOMEONE, self, wpn, targ, TO_REST);
 
    race_name := race_name(targ.value[4]);
    targ.title:="a skinned " + targ.names.[0];
