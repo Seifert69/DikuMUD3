@@ -197,10 +197,10 @@ del_ban (class unit_data * ch, char *site)
     {
         kill_entry (entry);
         act ("$2t taken succesfully off ban list.",
-             A_ALWAYS, ch, site, 0, TO_CHAR);
+             A_ALWAYS, ch, site, cActParameter(), TO_CHAR);
     }
     else
-        act ("No entry $2t in ban list.", A_ALWAYS, ch, site, 0, TO_CHAR);
+        act ("No entry $2t in ban list.", A_ALWAYS, ch, site, cActParameter(), TO_CHAR);
 }
 
 

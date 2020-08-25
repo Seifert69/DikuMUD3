@@ -432,7 +432,7 @@ void stat_combat(const class unit_data *god, class unit_data *u)
 {   
    if (!IS_CHAR(u))
    {
-      act("$2n is not a pc / npc.", A_ALWAYS, god, u, NULL, TO_CHAR);
+      act("$2n is not a pc / npc.", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
       return;
    }
 
@@ -444,7 +444,7 @@ void stat_combat(const class unit_data *god, class unit_data *u)
       f = u;
 
   if (!CHAR_COMBAT(u))
-      act("No combat structure on '$2n'", A_ALWAYS, god, u, NULL, TO_CHAR);
+      act("No combat structure on '$2n'", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
    else
       CHAR_COMBAT(u)->status(god);
 

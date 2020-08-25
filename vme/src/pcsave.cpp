@@ -352,13 +352,13 @@ void save_player_contents (class unit_data * pc, int fast)
 
             tdiff = (keep_period - t0) / SECS_PER_REAL_HOUR;
             act ("Inventory expires in $2d hours ($3t daily).", A_ALWAYS,
-                 pc, (int *) &tdiff, money_string (daily_cost, cur, FALSE),
+                 cActParameter(pc), cActParameter((int *) &tdiff), cActParameter(money_string (daily_cost, cur, FALSE)),
                  TO_CHAR);
         }
         else
         {
             act ("You can't afford to keep your inventory (cost is $3t).",
-                 A_ALWAYS, pc, 0, money_string (daily_cost, cur, FALSE),
+                 A_ALWAYS, cActParameter(pc), cActParameter(), cActParameter(money_string(daily_cost, cur, FALSE)),
                  TO_CHAR);
         }
     }

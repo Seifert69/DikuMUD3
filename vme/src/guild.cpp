@@ -198,7 +198,7 @@ void act_to_guild(const char *msg, char *guild,
             IS_PC(d->character) &&
             PC_GUILD(d->character) &&
             strcmp(PC_GUILD(d->character), guild) == 0)
-            act(msg, A_ALWAYS, member, nonmember, d->character, TO_VICT);
+            act(msg, A_ALWAYS, cActParameter(member), cActParameter(nonmember), cActParameter(d->character), TO_VICT);
 }
 
 /* Purpose: To be used as a guild 'block' routine before special commands: */
@@ -233,7 +233,7 @@ int teach_members_only(struct spec_arg *sarg)
 
         if (guild != 0)
         {
-            act(str + 1, A_SOMEONE, sarg->owner, 0, sarg->activator, TO_ROOM);
+            act(str + 1, A_SOMEONE, cActParameter(sarg->owner), cActParameter(), cActParameter(sarg->activator), TO_ROOM);
             return SFR_BLOCK;
         }
     }
@@ -305,8 +305,8 @@ int guard_guild_way(struct spec_arg *sarg)
             return SFR_SHARE;
         }
         *msg2 = '\0';
-        act(msg1 + 1, A_SOMEONE, sarg->owner, 0, sarg->activator, TO_VICT);
-        act(msg2 + 1, A_SOMEONE, sarg->owner, 0, sarg->activator, TO_NOTVICT);
+        act(msg1 + 1, A_SOMEONE, cActParameter(sarg->owner), cActParameter(), cActParameter(sarg->activator), TO_VICT);
+        act(msg2 + 1, A_SOMEONE, cActParameter(sarg->owner), cActParameter(), cActParameter(sarg->activator), TO_NOTVICT);
         *msg1 = '#';
         *msg2 = '#';
         return SFR_BLOCK;
@@ -383,7 +383,7 @@ int can_leave_guild(struct guild_type *pG,
     if (!PC_GUILD(ch) || (strcmp(PC_GUILD(ch), pG->pGuildName) != 0))
     {
         act("$1n says, 'You are not a member here, $3n'",
-            A_SOMEONE, master, 0, ch, TO_ROOM);
+            A_SOMEONE, cActParameter(master), cActParameter(), cActParameter(ch), TO_ROOM);
         return FALSE;
     }
 
@@ -396,7 +396,7 @@ int can_leave_guild(struct guild_type *pG,
                 if (find_quest(*p, ch) == NULL)
                 {
                     act("$1n says, 'You must first complete the $2t quest, $3n'",
-                        A_SOMEONE, master, *p, ch, TO_ROOM);
+                        A_SOMEONE, cActParameter(master), cActParameter(*p), cActParameter(ch), TO_ROOM);
                     return FALSE;
                 }
             }
@@ -405,8 +405,8 @@ int can_leave_guild(struct guild_type *pG,
         if (!char_can_afford(ch, pG->nLeaveCost, currency))
         {
             act("$1n says, 'You can't afford the cost of $2t, $3n.'",
-                A_SOMEONE, master,
-                money_string(pG->nLeaveCost, currency, TRUE), ch, TO_ROOM);
+                A_SOMEONE, cActParameter(master),
+                cActParameter(money_string(pG->nLeaveCost, currency, TRUE)), cActParameter(ch), TO_ROOM);
             return FALSE;
         }
     }
@@ -444,11 +444,11 @@ int can_join_guild(struct guild_type *pG,
     {
         if (strcmp(pG->pGuildName, PC_GUILD(ch)) == 0)
             act("$1n says, 'You are already a member, $3n'",
-                A_SOMEONE, master, 0, ch, TO_ROOM);
+                A_SOMEONE, cActParameter(master), cActParameter(), cActParameter(ch), TO_ROOM);
         else
             act("$1n says, 'You must first break your ties with your current"
                 " guild, $3n'",
-                A_SOMEONE, master, 0, ch, TO_ROOM);
+                A_SOMEONE, cActParameter(master), cActParameter(), cActParameter(ch), TO_ROOM);
         return FALSE;
     }
 
@@ -459,7 +459,7 @@ int can_join_guild(struct guild_type *pG,
             if (**p && find_quest(*p, ch) == NULL)
             {
                 act("$1n says, 'You must first complete the $2t quest, $3n'",
-                    A_SOMEONE, master, *p, ch, TO_ROOM);
+                    A_SOMEONE, cActParameter(master), cActParameter(*p), cActParameter(ch), TO_ROOM);
                 return FALSE;
             }
         }
@@ -468,7 +468,7 @@ int can_join_guild(struct guild_type *pG,
         {
             act("$1n says, 'Don't you think we remeber how you acted last "
                 "time, $3n? ",
-                A_SOMEONE, master, 0, ch, TO_ROOM);
+                A_SOMEONE, cActParameter(master), cActParameter(), cActParameter(ch), TO_ROOM);
             return FALSE;
         }
 
@@ -478,7 +478,7 @@ int can_join_guild(struct guild_type *pG,
             {
                 act("$1n says, 'We will never be able to accept you as a "
                     "member due to the $2t quest, $3n'",
-                    A_SOMEONE, master, *p, ch, TO_ROOM);
+                    A_SOMEONE, cActParameter(master), cActParameter(*p), cActParameter(ch), TO_ROOM);
                 return FALSE;
             }
         }
@@ -486,8 +486,8 @@ int can_join_guild(struct guild_type *pG,
         if (!char_can_afford(ch, pG->nEnterCost, currency))
         {
             act("$1n says, 'You can't afford the entry cost of $2t, $3n.'",
-                A_SOMEONE, master,
-                money_string(pG->nEnterCost, currency, TRUE), ch, TO_ROOM);
+                A_SOMEONE, cActParameter(master),
+                cActParameter(money_string(pG->nEnterCost, currency, TRUE)), cActParameter(ch), TO_ROOM);
             return FALSE;
         }
     }
@@ -528,7 +528,7 @@ int guild_master(struct spec_arg *sarg)
             if (can_join_guild(pG, sarg->owner, sarg->activator))
             {
                 act("$1n says, 'Welcome in our guild, $3n'",
-                    A_SOMEONE, sarg->owner, 0, sarg->activator, TO_ROOM);
+                    A_SOMEONE, cActParameter(sarg->owner), cActParameter(), cActParameter(sarg->activator), TO_ROOM);
 
                 if (CHAR_LEVEL(sarg->activator) > START_LEVEL)
                     money_transfer(sarg->activator, sarg->owner, pG->nEnterCost,
@@ -541,8 +541,7 @@ int guild_master(struct spec_arg *sarg)
         {
             act("$1n says, 'You must first break your ties with your current"
                 " guild, $3n'",
-                A_SOMEONE, sarg->owner,
-                0, sarg->activator, TO_ROOM);
+                A_SOMEONE, cActParameter(sarg->owner), cActParameter(), cActParameter(sarg->activator), TO_ROOM);
         }
         return SFR_BLOCK;
     }
@@ -556,7 +555,7 @@ int guild_master(struct spec_arg *sarg)
         {
             act("$1n says, 'Do that again $3n and I will kick you out of this "
                 "guild.'",
-                A_SOMEONE, sarg->owner, 0, sarg->activator,
+                A_SOMEONE, cActParameter(sarg->owner), cActParameter(), cActParameter(sarg->activator),
                 TO_ROOM);
             pc_pos = PC_ID(sarg->activator);
         }
@@ -565,7 +564,7 @@ int guild_master(struct spec_arg *sarg)
             if (can_leave_guild(pG, sarg->owner, sarg->activator))
             {
                 act("$1n says, 'So be it. Buggar ye off, $3n'",
-                    A_SOMEONE, sarg->owner, 0, sarg->activator, TO_ROOM);
+                    A_SOMEONE, cActParameter(sarg->owner), cActParameter(), cActParameter(sarg->activator), TO_ROOM);
 
                 if (CHAR_LEVEL(sarg->activator) > START_LEVEL)
                     money_transfer(sarg->activator, sarg->owner, pG->nLeaveCost,
@@ -641,7 +640,7 @@ int guild_title(struct spec_arg *sarg)
         (strcmp(PC_GUILD(sarg->activator), buf) != 0))
     {
         act("$1n says, 'Thou art not a member $3n'",
-            A_SOMEONE, sarg->owner, 0, sarg->activator, TO_ROOM);
+            A_SOMEONE, cActParameter(sarg->owner), cActParameter(), cActParameter(sarg->activator), TO_ROOM);
         return SFR_BLOCK;
     }
 
@@ -672,17 +671,17 @@ int guild_title(struct spec_arg *sarg)
     {
         if (c == NULL)
             act("$1n says, 'You have reached the ultimate title, $3n'",
-                A_SOMEONE, sarg->owner, 0, sarg->activator, TO_ROOM);
+                A_SOMEONE, cActParameter(sarg->owner), cActParameter(), cActParameter(sarg->activator), TO_ROOM);
         else
             act("$1n says, 'You must first be an older member $3N'",
-                A_SOMEONE, sarg->owner, 0, sarg->activator, TO_ROOM);
+                A_SOMEONE, cActParameter(sarg->owner), cActParameter(), cActParameter(sarg->activator), TO_ROOM);
         return SFR_BLOCK;
     }
 
     UNIT_TITLE(sarg->activator) = (buf);
 
     act("$1n says, 'Enjoy the new title, $3n!'",
-        A_SOMEONE, sarg->owner, 0, sarg->activator, TO_ROOM);
+        A_SOMEONE, cActParameter(sarg->owner), cActParameter(), cActParameter(sarg->activator), TO_ROOM);
 
     return SFR_BLOCK;
 }

@@ -373,7 +373,7 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
         the_cmd.excmdc = str_dup(excmd);
 
         if (send_preprocess(ch, &the_cmd, argstr) == SFR_SHARE)
-            act("$2t is not a known command.", A_ALWAYS, ch, cmd, NULL, TO_CHAR);
+            act("$2t is not a known command.", A_ALWAYS, ch, cmd, cActParameter(), TO_CHAR);
 
         if (the_cmd.cmd_str)
             FREE(the_cmd.cmd_str);

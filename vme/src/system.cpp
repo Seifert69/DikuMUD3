@@ -299,7 +299,7 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
         assert(!d->snoop.snooping && !d->snoop.snoop_by);
         assert(!d->original);
 
-        act("$1n has lost $1s link.", A_HIDEINV, d->character, 0, 0, TO_ROOM);
+        act("$1n has lost $1s link.", A_HIDEINV, d->character, cActParameter(), cActParameter(), TO_ROOM);
         slog(LOG_BRIEF, UNIT_MINV(d->character),
              "Closing link and making link dead: %s.",
              UNIT_NAME(d->character));

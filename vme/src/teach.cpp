@@ -538,7 +538,7 @@ int practice(struct spec_arg *sarg, struct teach_packet *pckt,
         pc_values[pckt->teaches[teach_index].node])
     {
         act(pckt->msgs.teacher_not_good_enough,
-            A_SOMEONE, sarg->owner, 0, sarg->activator, TO_VICT);
+            A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
         return TRUE;
     }
 
@@ -569,7 +569,7 @@ int practice(struct spec_arg *sarg, struct teach_packet *pckt,
     if (*practice_points < cost)
     {
         sprintf(buf, pckt->msgs.not_enough_points, cost);
-        act(buf, A_SOMEONE, sarg->owner, 0, sarg->activator, TO_VICT);
+        act(buf, A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
         if (CHAR_LEVEL(sarg->activator) == START_LEVEL)
             send_to_char("Beginners note: Go on adventure and gain a level.<br/>"
                          "Then come back and practice afterwards.<br/>",
@@ -579,7 +579,7 @@ int practice(struct spec_arg *sarg, struct teach_packet *pckt,
 
     if (pupil_magic(sarg->activator))
     {
-        act(pckt->msgs.not_pure, A_SOMEONE, sarg->owner, 0, sarg->activator,
+        act(pckt->msgs.not_pure, A_SOMEONE, sarg->owner, cActParameter(), sarg->activator,
             TO_VICT);
         return TRUE;
     }
@@ -594,7 +594,7 @@ int practice(struct spec_arg *sarg, struct teach_packet *pckt,
     {
         sprintf(buf, pckt->msgs.not_enough_gold,
                 money_string(amt, local_currency(sarg->activator), TRUE));
-        act(buf, A_SOMEONE, sarg->owner, 0, sarg->activator, TO_VICT);
+        act(buf, A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
         return TRUE;
     }
 
@@ -663,7 +663,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
     if (!CHAR_IS_READY(sarg->owner))
     {
         act("$1n is not capable of teaching now.",
-            A_SOMEONE, sarg->owner, 0, sarg->activator, TO_VICT);
+            A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
         return SFR_BLOCK;
     }
 
@@ -719,7 +719,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
         else
         {
             act("$1n asks, 'What do you wish to practice, $3n?'",
-                A_SOMEONE, sarg->owner, 0, sarg->activator, TO_VICT);
+                A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
             if (CHAR_LEVEL(sarg->activator) == START_LEVEL)
                 send_to_char("Beginners note: Try the 'info' command NOW.<br/>",
                              sarg->activator);
@@ -746,7 +746,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
     if (index == -1)
     {
         act(pckt->msgs.unknown_skill,
-            A_SOMEONE, sarg->owner, 0, sarg->activator, TO_VICT);
+            A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
         return SFR_BLOCK;
     }
 
@@ -754,7 +754,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
     if (index == -1)
     {
         act(pckt->msgs.no_teaching,
-            A_SOMEONE, sarg->owner, 0, sarg->activator, TO_VICT);
+            A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
         return SFR_BLOCK;
     }
 

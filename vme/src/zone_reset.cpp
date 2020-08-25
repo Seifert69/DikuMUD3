@@ -156,7 +156,7 @@ zone_load(class unit_data *u, struct zone_reset_cmd *cmd)
             dil_loadtime_activate(loaded);
             if (IS_CHAR(loaded))
             {
-                act("$1n has arrived.", A_HIDEINV, loaded, 0, 0, TO_ROOM);
+                act("$1n has arrived.", A_HIDEINV, loaded, cActParameter(), cActParameter(), TO_ROOM);
                 UNIT_SIZE(loaded) +=
                     (UNIT_SIZE(loaded) * (55 - dice(10, 10))) / 300;
             }
@@ -310,7 +310,7 @@ zone_follow(class unit_data *u, struct zone_reset_cmd *cmd)
         start_following(loaded, u);
         zone_loaded_a_unit(loaded);
 
-        act("$1n has arrived.", A_HIDEINV, loaded, 0, 0, TO_ROOM);
+        act("$1n has arrived.", A_HIDEINV, loaded, cActParameter(), cActParameter(), TO_ROOM);
         if (loaded)
             dil_loadtime_activate(loaded);
     }

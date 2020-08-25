@@ -113,7 +113,7 @@ int error_rod(struct spec_arg *sarg)
     }
     fclose(fl);
 
-    act("$1n uses $2n.", A_HIDEINV, sarg->activator, sarg->owner, 0, TO_ROOM);
+    act("$1n uses $2n.", A_HIDEINV, sarg->activator, sarg->owner, cActParameter(), TO_ROOM);
     send_to_char("Error file was erased.<br/>", sarg->activator);
     slog(LOG_ALL, UNIT_MINV(sarg->activator), "%s cleared %s",
          UNIT_NAME(sarg->activator), filename);
@@ -154,7 +154,7 @@ int info_rod(struct spec_arg *sarg)
     }
     fclose(fl);
 
-    act("$1n uses $2n.", A_HIDEINV, sarg->activator, sarg->owner, 0, TO_ROOM);
+    act("$1n uses $2n.", A_HIDEINV, sarg->activator, sarg->owner, cActParameter(), TO_ROOM);
     send_to_char("Zone user information file was erased.<br/>",
                  sarg->activator);
     slog(LOG_ALL, UNIT_MINV(sarg->activator), "%s cleared %s",
@@ -218,7 +218,7 @@ int log_object(struct spec_arg *sarg)
             while (!str_is_empty(log_buf[*ip].str))
             {
                 if (log_buf[*ip].level <= lev && log_buf[*ip].wizinv_level <= CHAR_LEVEL(ch))
-                    cact("(LOG: $2t)", A_ALWAYS, ch, log_buf[*ip].str, 0,
+                    cact("(LOG: $2t)", A_ALWAYS, ch, log_buf[*ip].str, cActParameter(),
                          TO_CHAR, "log");
                 *ip = ((*ip + 1) % MAXLOG);
             }
@@ -242,7 +242,7 @@ int log_object(struct spec_arg *sarg)
                 c = 'b';
             else if (is_abbrev(sarg->arg, "off"))
             {
-                cact("Ok, log is now off.", A_ALWAYS, ch, 0, 0, TO_CHAR,
+                cact("Ok, log is now off.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR,
                      "log");
                 OBJ_VALUE(sarg->owner, 0) = 'o';
                 return SFR_BLOCK;
@@ -250,18 +250,18 @@ int log_object(struct spec_arg *sarg)
             else if (is_abbrev(sarg->arg, "help"))
             {
                 act("Possible settings are:<br/> off, brief, extensive, all, dil.",
-                    A_ALWAYS, ch, 0, 0, TO_CHAR);
+                    A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
                 return SFR_BLOCK;
             }
             else
             {
                 act("Current log level is `$2t'.", A_ALWAYS, ch,
-                    c == 'd' ? "dil" : c == 'o' ? "off" : c == 'b' ? "brief" : c == 'a' ? "all" : "extensive", 0, TO_CHAR);
+                    c == 'd' ? "dil" : c == 'o' ? "off" : c == 'b' ? "brief" : c == 'a' ? "all" : "extensive", cActParameter(), TO_CHAR);
                 return SFR_BLOCK;
             }
 
             act("You will now see the $2t log.", A_ALWAYS, ch,
-                c == 'd' ? "dil" : c == 'b' ? "brief" : c == 'a' ? "entire" : "extensive", 0, TO_CHAR);
+                c == 'd' ? "dil" : c == 'b' ? "brief" : c == 'a' ? "entire" : "extensive", cActParameter(), TO_CHAR);
             OBJ_VALUE(sarg->owner, 0) = c;
             return SFR_BLOCK;
         }
