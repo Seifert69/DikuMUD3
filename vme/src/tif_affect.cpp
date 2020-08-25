@@ -42,7 +42,7 @@ void
 tif_confusion_on (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You feel confused.<br/>", unit);
-    act ("$1n seems confused.", A_HIDEINV, cActParameter(unit), cActParameter(), cActParameter(), TO_ROOM);
+    act ("$1n seems confused.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     tif_confusion_tick (af, unit);
 }
 
@@ -50,7 +50,7 @@ void
 tif_confusion_off (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You less confused.<br/>", unit);
-    act ("$1n seem less confused.", A_HIDEINV, cActParameter(unit), cActParameter(), cActParameter(), TO_ROOM);
+    act ("$1n seem less confused.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
 }
 
 void
@@ -59,7 +59,7 @@ tif_invisibility_on (class unit_affected_type *af, class unit_data * unit)
     if (!IS_SET (UNIT_FLAGS (unit), UNIT_FL_INVISIBLE))
     {
         send_to_char ("Your body appears ghostly.<br/>", unit);
-        act ("$1n vanish into thin air.", A_HIDEINV, cActParameter(unit), cActParameter(), cActParameter(), TO_ROOM);
+        act ("$1n vanish into thin air.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     }
 }
 
@@ -69,7 +69,7 @@ tif_invisibility_off (class unit_affected_type *af, class unit_data * unit)
     if (!IS_SET (UNIT_FLAGS (unit), UNIT_FL_INVISIBLE))
     {
         send_to_char ("Your body is once again visible.<br/>", unit);
-        act ("$1n appears from thin air.", A_HIDEINV, cActParameter(unit), cActParameter(), cActParameter(), TO_ROOM);
+        act ("$1n appears from thin air.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     }
 }
 
@@ -85,17 +85,17 @@ tif_fear_check (class unit_affected_type *af, class unit_data * unit)
         switch (number (0, 2))
         {
         case 0:
-            act ("You are about to die!!!", A_SOMEONE, cActParameter(unit), cActParameter(), cActParameter(), TO_CHAR);
+            act ("You are about to die!!!", A_SOMEONE, unit, cActParameter(), cActParameter(), TO_CHAR);
             command_interpreter(unit, "flee");
             /* He could be dead now! */
             return;
 
         case 1:
-            act ("That really did HURT!", A_ALWAYS, cActParameter(unit), cActParameter(), cActParameter(), TO_CHAR);
+            act ("That really did HURT!", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 2:
             act ("You wish your wounds would stop BLEEDING that much!",
-                 A_ALWAYS, cActParameter(unit), cActParameter(), cActParameter(), TO_CHAR);
+                 A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         }
         return;
@@ -111,17 +111,13 @@ tif_fear_check (class unit_affected_type *af, class unit_data * unit)
             switch (number (0, 1))
             {
             case 0:
-                act ("$3n prepares to kill you.", A_SOMEONE, cActParameter(unit), cActParameter(), cActParameter(ch),
-                     TO_CHAR);
-                act ("$1n looks at you in a strange way.", A_SOMEONE, cActParameter(unit), cActParameter(), cActParameter(ch),
-                     TO_VICT);
-                act ("$1n seems paranoid, looking at $3n.", A_SOMEONE, cActParameter(unit), cActParameter(),
-                     cActParameter(ch), TO_NOTVICT);
+                act ("$3n prepares to kill you.", A_SOMEONE, unit, cActParameter(), ch, TO_CHAR);
+                act ("$1n looks at you in a strange way.", A_SOMEONE, unit, cActParameter(), ch, TO_VICT);
+                act ("$1n seems paranoid, looking at $3n.", A_SOMEONE, unit, cActParameter(), ch, TO_NOTVICT);
                 break;
             case 1:
-                act ("$3n wounds you fatally with $3s sword.",
-                     A_SOMEONE, cActParameter(unit), cActParameter(), cActParameter(ch), TO_CHAR);
-                act ("$1n screams in agony.", A_SOMEONE, cActParameter(unit), cActParameter(), cActParameter(ch), TO_ROOM);
+                act ("$3n wounds you fatally with $3s sword.", A_SOMEONE, unit, cActParameter(), ch, TO_CHAR);
+                act ("$1n screams in agony.", A_SOMEONE, unit, cActParameter(), ch, TO_ROOM);
                 break;
             }
         else
@@ -129,14 +125,14 @@ tif_fear_check (class unit_affected_type *af, class unit_data * unit)
             {
             case 0:
                 act ("Someone tries to steal your weapon!",
-                     A_ALWAYS, cActParameter(unit), cActParameter(), cActParameter(), TO_CHAR);
+                     A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
                 break;
             case 1:
-                act ("Someone grins evilly.", A_ALWAYS, cActParameter(unit), cActParameter(), cActParameter(), TO_CHAR);
+                act ("Someone grins evilly.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
                 break;
             case 2:
                 act ("The huge green dragon appears in a puff of smoke!",
-                     A_ALWAYS, cActParameter(unit), cActParameter(), cActParameter(), TO_CHAR);
+                     A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             }
     }
 }
@@ -185,7 +181,7 @@ tif_hide_off (class unit_affected_type *af, class unit_data * unit)
     send_to_char ("You stop hiding.<br/>", unit);
     if (af->tickf_i == TIF_HIDE_TICK)
         act ("You suddenly notice that $1n is standing here.",
-             A_HIDEINV, cActParameter(unit), cActParameter(), cActParameter(), TO_ROOM);
+             A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
 }
 
 void
@@ -267,10 +263,9 @@ tif_curse_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (IS_CHAR (unit))
         send_to_char ("You feel that the gods are against you.<br/>", unit);
-    act ("A shadow falls upon $1n.", A_HIDEINV, cActParameter(unit), cActParameter(), cActParameter(), TO_ROOM);
+    act ("A shadow falls upon $1n.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     if (UNIT_IN (unit) && IS_CHAR (UNIT_IN (unit)))
-        act ("A shadow falls upon $3n.", A_HIDEINV, cActParameter(UNIT_IN(unit)), cActParameter(), cActParameter(unit),
-             TO_CHAR);
+        act ("A shadow falls upon $3n.", A_HIDEINV, UNIT_IN(unit), cActParameter(), unit, TO_CHAR);
 }
 
 void
@@ -280,10 +275,9 @@ tif_curse_off (class unit_affected_type *af, class unit_data * unit)
         send_to_char ("You no longer feel that the gods are against you.<br/>",
                       unit);
 
-    act ("A shadow lifts from $1n.", A_HIDEINV, cActParameter(unit), cActParameter(), cActParameter(), TO_ROOM);
+    act ("A shadow lifts from $1n.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     if (UNIT_IN (unit) && IS_CHAR (UNIT_IN (unit)))
-        act ("A shadow lifts from $3n.", A_HIDEINV, UNIT_IN (unit), cActParameter(), unit,
-             TO_CHAR);
+        act ("A shadow lifts from $3n.", A_HIDEINV, UNIT_IN (unit), cActParameter(), unit, TO_CHAR);
 }
 
 /* sanctuary */

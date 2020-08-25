@@ -796,17 +796,17 @@ void do_consider(class unit_data *ch, char *arg, const struct command_info *cmd)
    if (CHAR_LEVEL(vict) - 10 >= CHAR_LEVEL(ch))
    {
       act("$3e is probably out of your league.",
-          A_SOMEONE, cActParameter(ch), cActParameter(), cActParameter(vict), TO_CHAR);
+          A_SOMEONE, ch, cActParameter(), vict, TO_CHAR);
    }
 
    rtd = base_consider(vict, ch);
 
    if (IS_IMMORTAL(ch))
    {
-      act("Rounds to be killed by $3n = $2d.", A_SOMEONE, cActParameter(ch), cActParameter(&rtd), cActParameter(vict), TO_CHAR);
+      act("Rounds to be killed by $3n = $2d.", A_SOMEONE, ch, &rtd, vict, TO_CHAR);
 
       rtd = base_consider(ch, vict);
-      act("Rounds to kill $3n = $2d.", A_SOMEONE, cActParameter(ch), cActParameter(&rtd), cActParameter(vict), TO_CHAR);
+      act("Rounds to kill $3n = $2d.", A_SOMEONE, ch, &rtd, vict, TO_CHAR);
       return;
    }
 
