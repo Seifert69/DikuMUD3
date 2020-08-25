@@ -62,16 +62,10 @@ cActParameter::cActParameter(const dilval *v)
     m_i = NULL;
     m_p = NULL;
 
-    if (v->type == DILV_UP)
+    if ((v->type == DILV_UP) || (v->type == DILV_UPR))
         m_u = (struct unit_data *) v->val.ptr;
-    else if (v->type == DILV_SP)
+    else if ((v->type == DILV_SP) || (v->type == DILV_SPR) || (v->type == DILV_HASHSTR))
         m_p = (char *) v->val.ptr;
-    else if (v->type == DILV_UPR)
-        m_u = (struct unit_data *) v->val.ptr;
-    else if (v->type == DILV_SPR)
-        m_p = (char *) v->val.ptr;
-    else
-        m_u = NULL;
 }
 
 int cActParameter::isNull(void)
