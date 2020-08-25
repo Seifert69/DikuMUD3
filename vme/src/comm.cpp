@@ -325,22 +325,32 @@ void act_generate(char *buf, const char *str, int show_type,
                         else
                             i = SOMETON(sub->m_u);
                     }
+                    else
+                        slog(LOG_ALL, 0, "NULL n code to act(): %s", str);
                     break;
                 case 'N':
                     if (sub->m_u != NULL)
                         i = UNIT_SEE_NAME(to, (struct unit_data *) sub->m_u);
+                    else
+                        slog(LOG_ALL, 0, "NULL N code to act(): %s", str);
                     break;
                 case 'm':
                     if (sub->m_u != NULL)
                         i = HMHR(to, sub->m_u);
+                    else
+                        slog(LOG_ALL, 0, "NULL m code to act(): %s", str);
                     break;
                 case 's':
                     if (sub->m_u != NULL)
                         i = HSHR(to, sub->m_u);
+                    else
+                        slog(LOG_ALL, 0, "NULL s code to act(): %s", str);
                     break;
                 case 'e':
                     if (sub->m_u != NULL)
                         i = HESH(to, sub->m_u);
+                    else
+                        slog(LOG_ALL, 0, "NULL e code to act(): %s", str);
                     break;
                 case 'p':
                     if (sub->m_u != NULL)
@@ -350,16 +360,24 @@ void act_generate(char *buf, const char *str, int show_type,
                         else
                             i = "lying";
                     }
+                    else
+                        slog(LOG_ALL, 0, "NULL p code to act(): %s", str);
                     break;
                 case 'a':
                     if (sub->m_u != NULL)
                         i = UNIT_ANA((struct unit_data *) sub->m_u);
+                    else
+                        slog(LOG_ALL, 0, "NULL a code to act(): %s", str);
                     break;
                 case 'd':
                     if (sub->m_i != NULL)
                         i = itoa(*(sub->m_i));
+                    else
+                        slog(LOG_ALL, 0, "NULL i code to act(): %s", str);
                     break;
                 case 't':
+                    if (sub->m_p == NULL)
+                        slog(LOG_ALL, 0, "NULL t code to act(): %s", str);
                     i = sub->m_p;
                     break;
                 default:
