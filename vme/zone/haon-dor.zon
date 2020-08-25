@@ -2144,8 +2144,8 @@ descr
 "You are hanging on the outside of a huge tree trunk covered in a sticky
 substance.  Directly to the west is an immense spider web suspended between
 numerous branches of the giant trees including the one you are hanging on."
-west to on_web descr
-"To the west is the immense spider web.  It seems to move softly.";
+west open {EX_CLIMB} difficulty 10 to on_web descr
+   "To the west is the immense spider web.  It seems to move softly.";
 down open {EX_CLIMB, EX_FALL_THIS_WAY} difficulty 10 to rn_6130
    descr "Downwards is the narrow forest path.";
 extra {"web"}
@@ -2165,9 +2165,9 @@ descr
 web in place..  To the east is a giant tree trunk and to the west is an
 entrance
 to a cave-like structure made from many layers of spider web."
-east to rn_6132 descr
+east open {EX_CLIMB} difficulty 25 to rn_6132 descr
 "To the east is the giant tree trunk.";
-west to spider_den descr
+west open {EX_CLIMB} difficulty 25 to spider_den descr
 "To the west is the entrance to the cave-like structure.";
 extra {"web"}
 "The immense spider web moves softly."
@@ -2190,7 +2190,7 @@ descr
 countless layers of spider web.  Temperature and humidity is very high making
 it hard to breathe the foul air that lingers here.  The walls are covered with
 open cocoons."
-east to on_web descr
+east open {EX_CLIMB} difficulty 25 to on_web descr
 "Compared to this place the east exit looks inviting.";
 extra {"web","wall","walls"}
 "The sticky walls are covered with open cocoons."

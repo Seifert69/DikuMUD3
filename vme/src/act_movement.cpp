@@ -329,9 +329,9 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
             if (IS_CHAR(u) && CHAR_FIGHTING(u))
             {
                act("You can't get away like that in the middle of combat.",
-                  A_ALWAYS, ch, 0, 0, TO_CHAR);
+                  A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
                act("You can't get away like that in the middle of combat.",
-                  A_ALWAYS, mover, 0, 0, TO_CHAR);
+                  A_ALWAYS, mover, cActParameter(), cActParameter(), TO_CHAR);
                return 0;
             }
 
@@ -348,13 +348,13 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
             {
                send_to_char("You are fighting for your life!<br/>", mover);
                if (ch != mover)
-                  act("Your $3n is busy fighting!", A_ALWAYS, ch, NULL, mover, TO_CHAR);
+                  act("Your $3n is busy fighting!", A_ALWAYS, ch, cActParameter(), mover, TO_CHAR);
             }
             else if (CHAR_POS(mover) >= POSITION_RESTING)
             {
                send_to_char("Perhaps you should get on your feet first?<br/>", mover);
                if (ch != mover)
-                  act("Your $3n needs to get up first.", A_ALWAYS, ch, NULL, mover, TO_CHAR);
+                  act("Your $3n needs to get up first.", A_ALWAYS, ch, cActParameter(), mover, TO_CHAR);
             }
 
             return 0;
@@ -393,19 +393,19 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
    
          if (IS_SET(UNIT_FLAGS(mover), UNIT_FL_BURIED))
          {
-            act("Your $2N is buried! It cannot move.", A_ALWAYS, ch, mover, NULL, TO_CHAR);
+            act("Your $2N is buried! It cannot move.", A_ALWAYS, ch, mover, cActParameter(), TO_CHAR);
             return 0;
          }
 
          if (!IS_SET(UNIT_FLAGS(mover), UNIT_FL_TRANS))
          {  
-            act("Alas, you cannot go that way...", A_SOMEONE, mover, NULL, NULL, TO_CHAR);
+            act("Alas, you cannot go that way...", A_SOMEONE, mover, cActParameter(), cActParameter(), TO_CHAR);
             return 0;
          }
 
          if ((OBJ_TYPE(mover) != ITEM_VEHICLE) && (OBJ_TYPE(mover) != ITEM_BOAT))
          {
-            act("This isn't a vehicle!", A_SOMEONE, mover, NULL, NULL, TO_CHAR);
+            act("This isn't a vehicle!", A_SOMEONE, mover, cActParameter(), cActParameter(), TO_CHAR);
             return 0;
          }
          /* Now we need to check if the vehicle has the fuel to move (if not a boat) 
@@ -432,13 +432,13 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
          send_to_char(ALAS_NOWAY, ch);
       else
          act("The $3t seems to be closed.",
-             A_SOMEONE, ch, 0, ROOM_DOOR_NAME(room_from, direction), TO_CHAR);
+             A_SOMEONE, ch, cActParameter(), ROOM_DOOR_NAME(room_from, direction), TO_CHAR);
       return 0;
    }
 
    if (IS_SET(ROOM_EXIT(room_from, direction)->exit_info, EX_CLIMB))
    {
-      act("Alas, you must climb to go that way.", A_SOMEONE, ch, NULL, NULL, TO_CHAR);
+      act("Alas, you must climb to go that way.", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
       return 0;
    }
 
@@ -446,14 +446,14 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
    {
       if (IS_CHAR(mover))
       {
-         act("You need to get yourself a boat.", A_ALWAYS, ch, NULL, NULL, TO_CHAR);
+         act("You need to get yourself a boat.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
          return 0;
       }
       else  // Sailing in an object
       {
          if (!IS_OBJ(mover) || OBJ_TYPE(mover) != ITEM_BOAT)
          {
-            act("You must be inside a boat if you want to sail.", A_ALWAYS, ch, 0, 0, TO_CHAR);
+            act("You must be inside a boat if you want to sail.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
             return 0;
          }
       }
@@ -464,7 +464,7 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
       {
          if (!UNIT_EXTRA(mover).find_raw(S_SWIM_ON) && (!UNIT_EXTRA(mover).find_raw(S_IS_FISH) || !UNIT_EXTRA(mover).find_raw(S_IS_AMPHIB)))
          {
-            act("You might want to swim.", A_ALWAYS, ch, NULL, NULL, TO_CHAR);
+            act("You might want to swim.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
             return 0;
          }
 
@@ -490,8 +490,8 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
 
          if (skilltest < 0)
          {
-            act("As you try to swim, you flounder and take in water!", A_ALWAYS, mover, NULL, NULL, TO_CHAR);
-            act("$1n tries to swim, but flounders and takes in water!", A_ALWAYS, mover, NULL, NULL, TO_REST);
+            act("As you try to swim, you flounder and take in water!", A_ALWAYS, mover, cActParameter(), cActParameter(), TO_CHAR);
+            act("$1n tries to swim, but flounders and takes in water!", A_ALWAYS, mover, cActParameter(), cActParameter(), TO_REST);
             modify_hit(mover, (skilltest / 10));
 
             if (mover->is_destructed() || (CHAR_POS(mover) == POSITION_DEAD))
@@ -504,7 +504,7 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
       {
          if (!IS_OBJ(mover) || OBJ_TYPE(mover) != ITEM_BOAT)
          {
-            act("You must be inside a boat if you want to sail.", A_ALWAYS, ch, 0, 0, TO_CHAR);
+            act("You must be inside a boat if you want to sail.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
             return 0;
          }
       }
@@ -513,13 +513,13 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
    {
       if (UNIT_EXTRA(mover).find_raw(S_IS_FISH))
       {
-         act("No little fishies on land.", A_ALWAYS, ch, 0, 0, TO_CHAR);
+         act("No little fishies on land.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
          return 0; //Fish can't walk on land. 2020 I would think checking for race was equally important as extra?
       }
 
       if (IS_OBJ(mover) && (OBJ_TYPE(mover) == ITEM_BOAT))
       {
-         act("You can't sail your boat on land.", A_ALWAYS, ch, 0, 0, TO_CHAR);
+         act("You can't sail your boat on land.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
          return 0;
       }
    }
@@ -538,7 +538,7 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
             send_to_char("You are too exhausted to keep up.<br/>", mover);
 
          if (ch != mover)
-            act("Your $2n is too exhausted to move.", A_ALWAYS, ch, mover, NULL, TO_CHAR);
+            act("Your $2n is too exhausted to move.", A_ALWAYS, ch, mover, cActParameter(), TO_CHAR);
          return 0;
       }
       if (CHAR_LEVEL(ch) < 200)
@@ -593,7 +593,7 @@ int self_walk(class unit_data *ch, class unit_data *mover, int direction, int fo
             if (room_from == in_room(k->follower) &&
                 CHAR_POS(k->follower) >= POSITION_STANDING)
             {
-               act("You follow $3n.<br/>", A_SOMEONE, k->follower, 0, ch, TO_CHAR);
+               act("You follow $3n.<br/>", A_SOMEONE, k->follower, cActParameter(), ch, TO_CHAR);
                if (IS_ROOM(UNIT_IN(k->follower)))
                   self_walk(k->follower, k->follower, direction, TRUE);
                else
@@ -631,11 +631,11 @@ void move_dir(class unit_data *ch, int dir)
    else
    {
       slog(LOG_ALL, 0, "Unit %s is inside an unexpected unit type %s", UNIT_NAME(ch), UNIT_NAME(UNIT_IN(ch)));
-      act("Hmm. You shouldnt be in here. You're pushed out.", A_SOMEONE, ch, NULL, NULL, TO_CHAR);
+      act("Hmm. You shouldnt be in here. You're pushed out.", A_SOMEONE, ch, cActParameter(), cActParameter(), TO_CHAR);
       if (UNIT_IN(UNIT_IN(ch)))
          UNIT_IN(ch) = UNIT_IN(UNIT_IN(ch));
       command_interpreter(ch, "look");
-      act("$1n appears out of thin air.", A_HIDEINV, ch, NULL, NULL, TO_REST);
+      act("$1n appears out of thin air.", A_HIDEINV, ch, cActParameter(), cActParameter(), TO_REST);
    }
 }
 
@@ -669,14 +669,14 @@ int low_find_door(class unit_data *ch, char *doorstr,
    if (str_is_empty(dir))
    {
       if (err_msg)
-         act("What?", A_ALWAYS, ch, 0, 0, TO_CHAR);
+         act("What?", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
       return -1;
    }
 
    if (!IS_ROOM(UNIT_IN(ch)))
    {
       if (err_msg)
-         act("You see no such exit.", A_ALWAYS, ch, 0, 0, TO_CHAR);
+         act("You see no such exit.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
       return -1;
    }
 
@@ -689,7 +689,7 @@ int low_find_door(class unit_data *ch, char *doorstr,
             return door;
 
          if (err_msg)
-            act("You see no exit in that direction.", A_ALWAYS, ch, dirdoorstr, 0, TO_CHAR);
+            act("You see no exit in that direction.", A_ALWAYS, ch, dirdoorstr, cActParameter(), TO_CHAR);
 
          return -1;
       }      
@@ -702,12 +702,12 @@ int low_find_door(class unit_data *ch, char *doorstr,
 
          if (err_msg)
             act("You see no $2t in that direction.",
-                A_ALWAYS, ch, dirdoorstr, 0, TO_CHAR);
+                A_ALWAYS, ch, dirdoorstr, cActParameter(), TO_CHAR);
          return -1;
       }
 
       if (err_msg)
-         act("You see no exit in that direction.", A_ALWAYS, ch, 0, 0, TO_CHAR);
+         act("You see no exit in that direction.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
       return -1;
    }
 
@@ -725,7 +725,7 @@ int low_find_door(class unit_data *ch, char *doorstr,
    }
 
    if (err_msg)
-      act("You see no $2t here.", A_ALWAYS, ch, doorstr, 0, TO_CHAR);
+      act("You see no $2t here.", A_ALWAYS, ch, doorstr, cActParameter(), TO_CHAR);
 
    return -1;
 }

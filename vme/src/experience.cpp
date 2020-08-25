@@ -796,7 +796,7 @@ void do_consider(class unit_data *ch, char *arg, const struct command_info *cmd)
    if (CHAR_LEVEL(vict) - 10 >= CHAR_LEVEL(ch))
    {
       act("$3e is probably out of your league.",
-          A_SOMEONE, ch, 0, vict, TO_CHAR);
+          A_SOMEONE, ch, cActParameter(), vict, TO_CHAR);
    }
 
    rtd = base_consider(vict, ch);

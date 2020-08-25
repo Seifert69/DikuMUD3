@@ -474,7 +474,7 @@ spell_clear_skies (struct spell_args *sa)
     if ((sa->hm / 20 <= 0) ||
             (IS_SET (UNIT_FLAGS (room), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
     {
-        act ("Nothing happens.", A_ALWAYS, sa->caster, 0, 0, TO_CHAR);
+        act ("Nothing happens.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_CHAR);
         return;
     }
 
@@ -482,7 +482,7 @@ spell_clear_skies (struct spell_args *sa)
     unit_zone (sa->caster)->weather.change =
         MIN (unit_zone (sa->caster)->weather.change, 12);
 
-    act ("You feel a warm breeze.", A_ALWAYS, sa->caster, 0, 0, TO_ALL);
+    act ("You feel a warm breeze.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_ALL);
 }
 
 
@@ -494,7 +494,7 @@ spell_storm_call (struct spell_args *sa)
     if ((sa->hm / 20 <= 0) ||
             (IS_SET (UNIT_FLAGS (room), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
     {
-        act ("Nothing happens.", A_ALWAYS, sa->caster, 0, 0, TO_CHAR);
+        act ("Nothing happens.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_CHAR);
         return;
     }
 
@@ -503,5 +503,5 @@ spell_storm_call (struct spell_args *sa)
         MAX (unit_zone (sa->caster)->weather.change, -12);
 
     act ("A cold wind chills you to the bone.",
-         A_ALWAYS, sa->caster, 0, 0, TO_ALL);
+         A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_ALL);
 }

@@ -2243,15 +2243,13 @@ void dilfi_act(register class dilprg *p)
         case TO_REST:
             /* these require 1st argument */
             if (v3->val.ptr)
-                act((char *)v1->val.ptr, v2->val.num, v3->val.ptr, v4->val.ptr,
-                    v5->val.ptr, v6->val.num);
+                act((char *)v1->val.ptr, v2->val.num, v3,v4,v5,  v6->val.num);
             break;
 
         case TO_VICT:
         case TO_NOTVICT:
             if (v5->val.ptr)
-                act((char *)v1->val.ptr, v2->val.num, v3->val.ptr, v4->val.ptr,
-                    v5->val.ptr, v6->val.num);
+                act((char *)v1->val.ptr, v2->val.num, v3, v4, v5, v6->val.num);
         }
     delete v1;
     delete v2;

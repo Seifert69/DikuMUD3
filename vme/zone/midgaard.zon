@@ -10152,7 +10152,7 @@ end
 
                               pointy_hat
 
-names {"pointy", "hat"}
+names {"pointy hat", "hat"}
 title "a pointy hat"
 descr "A pointy hat is lying on the ground."
 extra {} "It is the sort of hat most wizards fancy."

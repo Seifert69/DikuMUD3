@@ -3,8 +3,7 @@ YACC		= bison
 YFLAGS		= -y -d -v
 LDLIBS		= -lfl
 #sysport flags
-SYSPORT =  -DLINUX -DPOSIX  -DDMSERVER 
-#-DMEMORY_DEBUG
+SYSPORT =  -DLINUX -DPOSIX  -DDMSERVER # -DMUD_DEBUG -DMEMORY_DEBUG
 
 #system flags
 SYSFLAGS = -m64

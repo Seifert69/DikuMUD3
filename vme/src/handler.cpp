@@ -800,7 +800,7 @@ void unsnoop(class unit_data *ch, int mode)
     if (CHAR_IS_SNOOPING(ch))
     {
         act("You no longer snoop $3n.",
-            A_SOMEONE, ch, 0, CHAR_DESCRIPTOR(ch)->snoop.snooping, TO_CHAR);
+            A_SOMEONE, ch, cActParameter(), CHAR_DESCRIPTOR(ch)->snoop.snooping, TO_CHAR);
         CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->snoop.snooping)->snoop.snoop_by =
             0;
         CHAR_DESCRIPTOR(ch)->snoop.snooping = 0;
@@ -809,7 +809,7 @@ void unsnoop(class unit_data *ch, int mode)
     if (CHAR_IS_SNOOPED(ch) && mode)
     {
         act("You no longer snoop $3n, $3e was extracted.",
-            A_SOMEONE, CHAR_DESCRIPTOR(ch)->snoop.snoop_by, 0, ch, TO_CHAR);
+            A_SOMEONE, CHAR_DESCRIPTOR(ch)->snoop.snoop_by, cActParameter(), ch, TO_CHAR);
         CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->snoop.snoop_by)->snoop.snooping =
             0;
         CHAR_DESCRIPTOR(ch)->snoop.snoop_by = 0;

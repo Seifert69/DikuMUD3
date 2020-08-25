@@ -696,7 +696,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
     case 4: /* "add-extra" */
         argument = str_next_word(argument, strarg);
-        act("Searching for $2t.", A_ALWAYS, ch, strarg, 0, TO_CHAR);
+        act("Searching for $2t.", A_ALWAYS, ch, strarg, cActParameter(), TO_CHAR);
 
         if ((ed = unit_find_extra(strarg, unt)) == NULL)
         {
@@ -1176,7 +1176,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
     case 63: /* "add-info" */
         argument = str_next_word(argument, strarg);
-        act("Searching for $2t.", A_ALWAYS, ch, strarg, 0, TO_CHAR);
+        act("Searching for $2t.", A_ALWAYS, ch, strarg, cActParameter(), TO_CHAR);
 
         if ((ed = PC_INFO(unt).find_raw(strarg)) == NULL)
         {

@@ -53,7 +53,7 @@ void do_save(class unit_data *ch, char *arg, const struct command_info *cmd)
         send_to_char("You are no longer a guest on this game.<br/>", ch);
         possible_saves--;
     }
-    act("Saving $1n.", A_ALWAYS, ch, 0, 0, TO_CHAR);
+    act("Saving $1n.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
 
     if (account_is_closed(ch))
     {

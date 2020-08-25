@@ -251,12 +251,12 @@ void reconnect_game(class descriptor_data *d, class unit_data *ch)
     if (CHAR_LAST_ROOM(ch) && (CHAR_LAST_ROOM(ch) != UNIT_IN(ch)))
     {
         act("$1n has reconnected, and is moved to another location.",
-            A_HIDEINV, ch, 0, 0, TO_ROOM);
+            A_HIDEINV, cActParameter(ch), cActParameter(), cActParameter(), TO_ROOM);
         unit_from_unit(ch);
         unit_to_unit(ch, CHAR_LAST_ROOM(ch));
         CHAR_LAST_ROOM(ch) = NULL;
     }
-    act("$1n has reconnected.", A_HIDEINV, ch, 0, 0, TO_ROOM);
+    act("$1n has reconnected.", A_HIDEINV, cActParameter(ch), cActParameter(), cActParameter(), TO_ROOM);
     slog(LOG_BRIEF, UNIT_MINV(ch), "%s[%s] has reconnected.",
          PC_FILENAME(ch), CHAR_DESCRIPTOR(ch)->host);
     CHAR_DESCRIPTOR(ch)->logon = time(0);
@@ -350,7 +350,7 @@ void enter_game(class unit_data *ch, int dilway)
                 !same_surroundings(ch, i->character))
                 send_to_descriptor(buf, i);
 
-        act("$1n has arrived.", A_HIDEINV, ch, 0, 0, TO_ROOM);
+        act("$1n has arrived.", A_HIDEINV, cActParameter(ch), cActParameter(), cActParameter(), TO_ROOM);
     }
 
     /* New player stats. Level can be zero after reroll while ID is not. */

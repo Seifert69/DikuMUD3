@@ -204,7 +204,7 @@ static void alias_to_char(struct alias_t *al, class unit_data *ch)
    char buf[2 * MAX_INPUT_LENGTH + 2];
 
    sprintf(buf, " %-*s%s", MAX_ALIAS_LENGTH + 5, al->key, al->value);
-   act("$2t", A_ALWAYS, ch, buf, 0, TO_CHAR);
+   act("$2t", A_ALWAYS, ch, buf, cActParameter(), TO_CHAR);
 }
 
 /*  Prints all defined aliases in `t' alphabetically to char by
@@ -339,8 +339,8 @@ static bool alias_is_ok(struct alias_head *ah, char *key, char *val,
    {
       count = MAX_ALIAS_LENGTH;
 
-      act("Aliasname too long. Max $2d chars.", A_ALWAYS, ch, &count, 0,
-          TO_CHAR);
+      act("Aliasname too long. Max $2d chars.",
+         A_ALWAYS, ch, &count, cActParameter(), TO_CHAR);
       return FALSE;
    }
 
@@ -526,7 +526,7 @@ static void cmd_alias(class unit_data *ch, char *arg, struct alias_head *alias_h
       /* No further arguments lists this alias, if defined */
       if (alias_h->trie == NULL || (al =
                                         (struct alias_t *)search_trie(comm, alias_h->trie)) == NULL)
-         act("No alias defined for `$2t'.", A_ALWAYS, ch, comm, 0, TO_CHAR);
+         act("No alias defined for `$2t'.", A_ALWAYS, ch, comm, cActParameter(), TO_CHAR);
       else
          alias_to_char(al, ch);
 
@@ -540,15 +540,14 @@ static void cmd_alias(class unit_data *ch, char *arg, struct alias_head *alias_h
    {
       int status = add_alias(alias_h, comm, arg, TRUE);
 
-      act("Alias for `$2t' $3t.", A_ALWAYS, ch, comm,
-          status ? "added" : "changed", TO_CHAR);
+      act("Alias for `$2t' $3t.", A_ALWAYS, ch, comm, status ? "added" : "changed", TO_CHAR);
    }
 }
 
 static void cmd_unalias(class unit_data *ch, char *arg, struct alias_head *alias_h)
 {
    if (str_is_empty(arg))
-      act("Unalias what?", A_ALWAYS, ch, 0, 0, TO_CHAR);
+      act("Unalias what?", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
    else
    {
       char comm[MAX_INPUT_LENGTH + 1];
@@ -559,7 +558,7 @@ static void cmd_unalias(class unit_data *ch, char *arg, struct alias_head *alias
          arg = get_next_word(arg, comm);
 
          act(del_alias(alias_h, comm) ? "Alias `$2t' deleted." : "No alias defined for `$2t'.",
-             A_ALWAYS, ch, comm, 0, TO_CHAR);
+             A_ALWAYS, ch, comm, cActParameter(), TO_CHAR);
       } while (!str_is_empty(arg));
    }
 }
@@ -572,10 +571,10 @@ static void cmd_claim(class unit_data *ch, char *arg, class unit_data *obj,
    one_argument(arg, buf);
 
    if (str_is_empty(buf) || !UNIT_NAMES(obj).IsName(buf))
-      act("You can only claim $2n.", A_ALWAYS, ch, obj, 0, TO_CHAR);
+      act("You can only claim $2n.", A_ALWAYS, ch, obj, cActParameter(), TO_CHAR);
    else
    {
-      act("You claim $2n as your property.", A_ALWAYS, ch, obj, 0, TO_CHAR);
+      act("You claim $2n as your property.", A_ALWAYS, ch, obj, cActParameter(), TO_CHAR);
       set_owner(obj, alias_h, ch);
    }
 }
@@ -638,7 +637,7 @@ static int local_dictionary(struct spec_arg *sarg)
          */
       if (str_ccmp(UNIT_NAME(sarg->activator), alias_h->owner))
          act("You can't use the alias command before you type `claim $3N'.",
-             A_ALWAYS, sarg->activator, 0, sarg->owner, TO_CHAR);
+             A_ALWAYS, sarg->activator, cActParameter(), sarg->owner, TO_CHAR);
       else
          cmd_alias(sarg->activator, (char *)sarg->arg, alias_h);
 
@@ -676,8 +675,7 @@ static int local_dictionary(struct spec_arg *sarg)
    if (str_ccmp(UNIT_NAME(sarg->activator), alias_h->owner))
    {
       act("You can't use the alias `$2t' before you type `claim $3N'.",
-          A_ALWAYS, sarg->activator, sarg->cmd->cmd_str, sarg->owner,
-          TO_CHAR);
+          A_ALWAYS, sarg->activator, sarg->cmd->cmd_str, sarg->owner, TO_CHAR);
       return SFR_BLOCK;
    }
 

@@ -665,7 +665,7 @@ void do_makemoney(class unit_data *ch, char *arg, const struct command_info *cmd
     cur = local_currency(ch);
     money_to_unit(ch, amt, cur);
     act("You just made $2t.",
-        A_ALWAYS, ch, money_string(amt, cur, TRUE), 0, TO_CHAR);
+        A_ALWAYS, ch, money_string(amt, cur, TRUE), cActParameter(), TO_CHAR);
 }
 
 #endif /* VMC_SRC */

@@ -87,19 +87,19 @@ void say_spell(class unit_data *ch, class unit_data *target, int si)
 {
     if (ch != target)
     {
-        cact(spell_info[si].tochar, A_ALWAYS, ch, 0, target, TO_CHAR,
+        cact(spell_info[si].tochar, A_ALWAYS, ch, cActParameter(), target, TO_CHAR,
              "spells");
         cact(spell_info[si].tovict, spell_info[si].acttype,
-             ch, 0, target, TO_VICT, "spells");
+             ch, cActParameter(), target, TO_VICT, "spells");
         cact(spell_info[si].torest, spell_info[si].acttype,
-             ch, 0, target, TO_NOTVICT, "spells");
+             ch, cActParameter(), target, TO_NOTVICT, "spells");
     }
     else
     {
-        cact(spell_info[si].toself, A_ALWAYS, ch, 0, target, TO_CHAR,
+        cact(spell_info[si].toself, A_ALWAYS, ch, cActParameter(), target, TO_CHAR,
              "spells");
         cact(spell_info[si].toselfroom, spell_info[si].acttype,
-             ch, 0, target, TO_ROOM, "spells");
+             ch, cActParameter(), target, TO_ROOM, "spells");
     }
 }
 
@@ -168,7 +168,7 @@ int spell_perform(int spell_no, int spell_type,
     if (!spell_legal_target(spell_no, caster, target))
     {
         cact("The magic disappears when cast on $3n.",
-             A_SOMEONE, caster, NULL, target, TO_CHAR, "spells");
+             A_SOMEONE, caster, cActParameter(), target, TO_CHAR, "spells");
         return -1;
     }
 
@@ -270,13 +270,13 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
     if (spl == -1)
     {
         act("The $2t spell is not known to this realm.",
-            A_ALWAYS, ch, argument, 0, TO_CHAR);
+            A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
         return;
     }
 
     if (spl < SPL_GROUP_MAX)
     {
-        act("$2t is not a spell.", A_ALWAYS, ch, spl_text[spl], 0, TO_CHAR);
+        act("$2t is not a spell.", A_ALWAYS, ch, spl_text[spl], cActParameter(), TO_CHAR);
         return;
     }
 
@@ -391,19 +391,19 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
             {
                 if (IS_SET(spell_info[spl].targets, TAR_CHAR))
                     act("Nobody by the name '$2t' here.",
-                        A_ALWAYS, ch, orgarg, 0, TO_CHAR);
+                        A_ALWAYS, ch, orgarg, cActParameter(), TO_CHAR);
                 else if (IS_SET(spell_info[spl].targets, TAR_OBJ))
                     act("Nothing by the name '' here.",
-                        A_ALWAYS, ch, orgarg, 0, TO_CHAR);
+                        A_ALWAYS, ch, orgarg, cActParameter(), TO_CHAR);
                 else if (IS_SET(spell_info[spl].targets, TAR_ROOM))
                     act("No location by the name '$2t'.",
-                        A_ALWAYS, ch, orgarg, 0, TO_CHAR);
+                        A_ALWAYS, ch, orgarg, cActParameter(), TO_CHAR);
                 else
                     send_to_char("Uhm....?<br/>", ch);
             }
             else /* Nothing was given as argument */
                 act("What should the $2t spell be cast upon?",
-                    A_ALWAYS, ch, spl_text[spl], 0, TO_CHAR);
+                    A_ALWAYS, ch, spl_text[spl], cActParameter(), TO_CHAR);
 
             return;
         }

@@ -54,7 +54,7 @@ subtract_rent(class unit_data *ch, class unit_data *item, ubit32 price)
     {
         if (!char_can_afford(ch, price, DEF_CURRENCY))
         {
-            act("You couldn't afford to keep $2n.", A_ALWAYS, ch, item, 0, TO_CHAR);
+            act("You couldn't afford to keep $2n.", A_ALWAYS, ch, item, cActParameter(), TO_CHAR);
             extract_unit(item);
         }
         else
@@ -146,7 +146,7 @@ void do_rent(class unit_data *ch, char *arg, const struct command_info *cmd)
     else
         act("Your inventory costs $2t per day to rent.",
             A_ALWAYS, ch, money_string(sum, local_currency(ch), FALSE),
-            NULL, TO_CHAR);
+            cActParameter(), TO_CHAR);
 }
 
 /* *************************************************************************

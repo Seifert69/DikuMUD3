@@ -42,7 +42,7 @@ void
 tif_confusion_on (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You feel confused.<br/>", unit);
-    act ("$1n seems confused.", A_HIDEINV, unit, 0, 0, TO_ROOM);
+    act ("$1n seems confused.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     tif_confusion_tick (af, unit);
 }
 
@@ -50,7 +50,7 @@ void
 tif_confusion_off (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You less confused.<br/>", unit);
-    act ("$1n seem less confused.", A_HIDEINV, unit, 0, 0, TO_ROOM);
+    act ("$1n seem less confused.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
 }
 
 void
@@ -59,7 +59,7 @@ tif_invisibility_on (class unit_affected_type *af, class unit_data * unit)
     if (!IS_SET (UNIT_FLAGS (unit), UNIT_FL_INVISIBLE))
     {
         send_to_char ("Your body appears ghostly.<br/>", unit);
-        act ("$1n vanish into thin air.", A_HIDEINV, unit, 0, 0, TO_ROOM);
+        act ("$1n vanish into thin air.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     }
 }
 
@@ -69,7 +69,7 @@ tif_invisibility_off (class unit_affected_type *af, class unit_data * unit)
     if (!IS_SET (UNIT_FLAGS (unit), UNIT_FL_INVISIBLE))
     {
         send_to_char ("Your body is once again visible.<br/>", unit);
-        act ("$1n appears from thin air.", A_HIDEINV, unit, 0, 0, TO_ROOM);
+        act ("$1n appears from thin air.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     }
 }
 
@@ -85,17 +85,17 @@ tif_fear_check (class unit_affected_type *af, class unit_data * unit)
         switch (number (0, 2))
         {
         case 0:
-            act ("You are about to die!!!", A_SOMEONE, unit, 0, 0, TO_CHAR);
+            act ("You are about to die!!!", A_SOMEONE, unit, cActParameter(), cActParameter(), TO_CHAR);
             command_interpreter(unit, "flee");
             /* He could be dead now! */
             return;
 
         case 1:
-            act ("That really did HURT!", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("That really did HURT!", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 2:
             act ("You wish your wounds would stop BLEEDING that much!",
-                 A_ALWAYS, unit, 0, 0, TO_CHAR);
+                 A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         }
         return;
@@ -111,17 +111,13 @@ tif_fear_check (class unit_affected_type *af, class unit_data * unit)
             switch (number (0, 1))
             {
             case 0:
-                act ("$3n prepares to kill you.", A_SOMEONE, unit, 0, ch,
-                     TO_CHAR);
-                act ("$1n looks at you in a strange way.", A_SOMEONE, unit, 0, ch,
-                     TO_VICT);
-                act ("$1n seems paranoid, looking at $3n.", A_SOMEONE, unit, 0,
-                     ch, TO_NOTVICT);
+                act ("$3n prepares to kill you.", A_SOMEONE, unit, cActParameter(), ch, TO_CHAR);
+                act ("$1n looks at you in a strange way.", A_SOMEONE, unit, cActParameter(), ch, TO_VICT);
+                act ("$1n seems paranoid, looking at $3n.", A_SOMEONE, unit, cActParameter(), ch, TO_NOTVICT);
                 break;
             case 1:
-                act ("$3n wounds you fatally with $3s sword.",
-                     A_SOMEONE, unit, 0, ch, TO_CHAR);
-                act ("$1n screams in agony.", A_SOMEONE, unit, 0, ch, TO_ROOM);
+                act ("$3n wounds you fatally with $3s sword.", A_SOMEONE, unit, cActParameter(), ch, TO_CHAR);
+                act ("$1n screams in agony.", A_SOMEONE, unit, cActParameter(), ch, TO_ROOM);
                 break;
             }
         else
@@ -129,14 +125,14 @@ tif_fear_check (class unit_affected_type *af, class unit_data * unit)
             {
             case 0:
                 act ("Someone tries to steal your weapon!",
-                     A_ALWAYS, unit, 0, 0, TO_CHAR);
+                     A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
                 break;
             case 1:
-                act ("Someone grins evilly.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+                act ("Someone grins evilly.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
                 break;
             case 2:
                 act ("The huge green dragon appears in a puff of smoke!",
-                     A_ALWAYS, unit, 0, 0, TO_CHAR);
+                     A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             }
     }
 }
@@ -185,7 +181,7 @@ tif_hide_off (class unit_affected_type *af, class unit_data * unit)
     send_to_char ("You stop hiding.<br/>", unit);
     if (af->tickf_i == TIF_HIDE_TICK)
         act ("You suddenly notice that $1n is standing here.",
-             A_HIDEINV, unit, 0, 0, TO_ROOM);
+             A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
 }
 
 void
@@ -267,10 +263,9 @@ tif_curse_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (IS_CHAR (unit))
         send_to_char ("You feel that the gods are against you.<br/>", unit);
-    act ("A shadow falls upon $1n.", A_HIDEINV, unit, 0, 0, TO_ROOM);
+    act ("A shadow falls upon $1n.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     if (UNIT_IN (unit) && IS_CHAR (UNIT_IN (unit)))
-        act ("A shadow falls upon $3n.", A_HIDEINV, UNIT_IN (unit), 0, unit,
-             TO_CHAR);
+        act ("A shadow falls upon $3n.", A_HIDEINV, UNIT_IN(unit), cActParameter(), unit, TO_CHAR);
 }
 
 void
@@ -280,10 +275,9 @@ tif_curse_off (class unit_affected_type *af, class unit_data * unit)
         send_to_char ("You no longer feel that the gods are against you.<br/>",
                       unit);
 
-    act ("A shadow lifts from $1n.", A_HIDEINV, unit, 0, 0, TO_ROOM);
+    act ("A shadow lifts from $1n.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     if (UNIT_IN (unit) && IS_CHAR (UNIT_IN (unit)))
-        act ("A shadow lifts from $3n.", A_HIDEINV, UNIT_IN (unit), 0, unit,
-             TO_CHAR);
+        act ("A shadow lifts from $3n.", A_HIDEINV, UNIT_IN (unit), cActParameter(), unit, TO_CHAR);
 }
 
 /* sanctuary */
@@ -291,7 +285,7 @@ void
 tif_sanctuary_on (class unit_affected_type *af, class unit_data * unit)
 {
     act ("$1n momentarily glows in a bright white light.",
-         A_HIDEINV, unit, 0, 0, TO_ROOM);
+         A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     send_to_char ("You momentarily glow in a bright white light.<br/>", unit);
 }
 
@@ -299,7 +293,7 @@ void
 tif_sanctuary_off (class unit_affected_type *af, class unit_data * unit)
 {
     act ("$1n glows in a bright white light. Then it fades away.",
-         A_HIDEINV, unit, 0, 0, TO_ROOM);
+         A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
     send_to_char ("You glow in a bright white light. "
                   "Then it fades away.<br/>", unit);
 }
@@ -310,7 +304,7 @@ tif_sanctuary_tick (class unit_affected_type *af, class unit_data * unit)
     if (af->duration == 1)
     {
         act ("$1n glows in a bright white light... The light flickers.",
-             A_HIDEINV, unit, 0, 0, TO_ROOM);
+             A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
         send_to_char ("You glow in a bright white light... "
                       "The light flickers.<br/>", unit);
     }
@@ -332,7 +326,7 @@ tif_torch_tick (class unit_affected_type *af, class unit_data * unit)
     {
         if (IS_CHAR (UNIT_IN (unit)))
             act ("Your $2N is getting dim.", A_HIDEINV,
-                 UNIT_IN (unit), unit, 0, TO_CHAR);
+                 UNIT_IN (unit), unit, cActParameter(), TO_CHAR);
     }
 }
 
@@ -347,14 +341,14 @@ tif_light_add (class unit_affected_type *af, class unit_data * unit)
     /* If the thing is carried by a character */
     if (IS_CHAR (UNIT_IN (unit)))
     {
-        act ("Your $3N starts to glow.", A_HIDEINV, UNIT_IN (unit), 0, unit,
+        act ("Your $3N starts to glow.", A_HIDEINV, UNIT_IN (unit), cActParameter(), unit,
              TO_CHAR);
-        act ("$1n's $3n starts to glow.", A_HIDEINV, UNIT_IN (unit), 0, unit,
+        act ("$1n's $3n starts to glow.", A_HIDEINV, UNIT_IN (unit), cActParameter(), unit,
              TO_ROOM);
     }
     else if (UNIT_CONTAINS (UNIT_IN (unit)))
         act ("The $3N starts to glow.", A_HIDEINV,
-             UNIT_CONTAINS (UNIT_IN (unit)), 0, unit, TO_ALL);
+             UNIT_CONTAINS (UNIT_IN (unit)), cActParameter(), unit, TO_ALL);
 }
 
 
@@ -368,28 +362,28 @@ tif_light_sub (class unit_affected_type *af, class unit_data * unit)
     /* If the thing is carried by a character */
     if (IS_CHAR (UNIT_IN (unit)))
     {
-        act ("Your $3N gets dimmer.", A_HIDEINV, UNIT_IN (unit), 0, unit,
+        act ("Your $3N gets dimmer.", A_HIDEINV, UNIT_IN (unit), cActParameter(), unit,
              TO_CHAR);
-        act ("$1n's $3N gets dimmer.", A_HIDEINV, UNIT_IN (unit), 0, unit,
+        act ("$1n's $3N gets dimmer.", A_HIDEINV, UNIT_IN (unit), cActParameter(), unit,
              TO_ROOM);
     }
     else if (UNIT_CONTAINS (UNIT_IN (unit)))
         act ("The $3N gets dimmer.", A_HIDEINV,
-             UNIT_CONTAINS (UNIT_IN (unit)), 0, unit, TO_ALL);
+             UNIT_CONTAINS (UNIT_IN (unit)), cActParameter(), unit, TO_ALL);
 }
 
 
 void
 tif_sleep_on (class unit_affected_type *af, class unit_data * unit)
 {
-    act ("You feel very tired.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+    act ("You feel very tired.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     if (CHAR_POS (unit) > POSITION_SLEEPING)
     {
         if (CHAR_FIGHTING (unit))
             stop_fighting (unit);
 
-        act ("You fall asleep.", A_ALWAYS, unit, 0, 0, TO_CHAR);
-        act ("$1n falls asleep.", A_ALWAYS, unit, 0, 0, TO_ROOM);
+        act ("You fall asleep.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
+        act ("$1n falls asleep.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_ROOM);
         CHAR_POS (unit) = POSITION_SLEEPING;
     }
 }
@@ -410,8 +404,8 @@ tif_sleep_check (class unit_affected_type *af, class unit_data * unit)
         {
             if (CHAR_FIGHTING (unit))
                 stop_fighting (unit);
-            act ("You fall asleep.", A_ALWAYS, unit, 0, 0, TO_CHAR);
-            act ("$1n falls asleep.", A_HIDEINV, unit, 0, 0, TO_ROOM);
+            act ("You fall asleep.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
+            act ("$1n falls asleep.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
             CHAR_POS (unit) = POSITION_SLEEPING;
         }
     }
@@ -421,7 +415,7 @@ tif_sleep_check (class unit_affected_type *af, class unit_data * unit)
 void
 tif_sleep_off (class unit_affected_type *af, class unit_data * unit)
 {
-    act ("You feel less sleepy.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+    act ("You feel less sleepy.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     /* no no not a 'wake' here, remember he's still affacted */
 }
 
@@ -429,18 +423,18 @@ void
 tif_protect_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
-        act ("You feel protected.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel protected.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     else
-        act ("You feel less protected.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel less protected.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
 }
 
 void
 tif_protect_off (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
-        act ("You feel less protected.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel less protected.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     else
-        act ("You feel protected.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel protected.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
 }
 
 
@@ -448,9 +442,9 @@ void
 tif_hit_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
-        act ("You feel more healthy.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel more healthy.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     else
-        act ("You feel less healthy.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel less healthy.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
 }
 
 
@@ -467,9 +461,9 @@ void
 tif_mag_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
-        act ("You feel more powerful.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel more powerful.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     else
-        act ("You feel less powerful.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel less powerful.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
 }
 
 
@@ -486,9 +480,9 @@ void
 tif_div_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
-        act ("You feel closer to your god.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel closer to your god.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     else
-        act ("You feel parted from your god.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel parted from your god.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
 }
 
 
@@ -506,9 +500,9 @@ tif_str_on (class unit_affected_type *af, class unit_data * unit)
 
     /*old stuff
       if (af->data[1] > 0)
-        act ("You feel stronger.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel stronger.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
       else
-        act ("You feel weaker.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel weaker.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
 
     */
 
@@ -517,19 +511,19 @@ tif_str_on (class unit_affected_type *af, class unit_data * unit)
     {
         switch (1+(int) (5.0*rand()/(RAND_MAX+1.0))) {
         case 1:
-            act ("You feel stronger.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel stronger.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 2:
-            act ("You feel more fit.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel more fit.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 3:
-            act ("You feel more buff.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel more buff.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 4:
-            act ("You feel able to take on the world.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel able to take on the world.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 5:
-            act ("The power of Odin courses through your body!", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("The power of Odin courses through your body!", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         };
     }
@@ -537,19 +531,19 @@ tif_str_on (class unit_affected_type *af, class unit_data * unit)
     {
         switch (1+(int) (2.0*rand()/(RAND_MAX+1.0))) {
         case 1:
-            act ("You feel weaker.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel weaker.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 2:
-            act ("Your arms start to feel heavier.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("Your arms start to feel heavier.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 3:
-            act ("The power of odin leaves you.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("The power of odin leaves you.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 4:
-            act ("You feel like you were just run over with a donkey cart!", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel like you were just run over with a donkey cart!", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 5:
-            act ("You feel a unhealthy.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel a unhealthy.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         };
     }
@@ -573,28 +567,28 @@ tif_dex_on (class unit_affected_type *af, class unit_data * unit)
 {
     /* old dex stuff
       if (af->data[1] > 0)
-        act ("You feel dexterous.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel dexterous.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
       else
-        act ("You feel a little clumsy.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel a little clumsy.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     */
     /*Darg new dex*/
     if (af->data[1] > 0)
     {
         switch (1+(int) (5.0*rand()/(RAND_MAX+1.0))) {
         case 1:
-            act ("You feel dexterous.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel dexterous.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 2:
-            act ("You feel nimble.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel nimble.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 3:
-            act ("You feel a bit more agile.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel a bit more agile.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 4:
-            act ("You feel a bit more coordinated.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel a bit more coordinated.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 5:
-            act ("You feel a bit slick.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel a bit slick.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         };
 
@@ -603,19 +597,19 @@ tif_dex_on (class unit_affected_type *af, class unit_data * unit)
     {
         switch (1+(int) (5.0*rand()/(RAND_MAX+1.0))) {
         case 1:
-            act ("You feel a little clumsy.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel a little clumsy.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 2:
-            act ("You feel awkward.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel awkward.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 3:
-            act ("You feel a tad uncoordinated.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel a tad uncoordinated.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 4:
-            act ("You feel a bit more dim-witted.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel a bit more dim-witted.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 5:
-            act ("You feel a bumble footed.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel a bumble footed.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         };
     }
@@ -637,28 +631,28 @@ tif_con_on (class unit_affected_type *af, class unit_data * unit)
 {
     /* old con stuff
       if (af->data[1] > 0)
-        act ("You feel more robust.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel more robust.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
       else
-        act ("You feel less robust.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel less robust.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     */
     /*Darg new con*/
     if (af->data[1] > 0)
     {
         switch (1+(int) (5.0*rand()/(RAND_MAX+1.0))) {
         case 1:
-            act ("You feel more robust.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel more robust.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 2:
-            act ("You feel a shift for the better in your disposition.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel a shift for the better in your disposition.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 3:
-            act ("You sense an increase in your persona .", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You sense an increase in your persona .", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 4:
-            act ("You gain confidence in your stride.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You gain confidence in your stride.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 5:
-            act ("You feel concentrated on the task at hand.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel concentrated on the task at hand.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         };
     }
@@ -666,19 +660,19 @@ tif_con_on (class unit_affected_type *af, class unit_data * unit)
     {
         switch (1+(int) (5.0*rand()/(RAND_MAX+1.0))) {
         case 1:
-            act ("You feel less robust.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel less robust.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 2:
-            act ("Your attitude slides downward.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("Your attitude slides downward.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 3:
-            act ("You feel winded.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel winded.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 4:
-            act ("You lose confidence in yourself.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You lose confidence in yourself.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 5:
-            act ("You lose focus on the task at hand.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You lose focus on the task at hand.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         };
     }
@@ -702,28 +696,28 @@ tif_cha_on (class unit_affected_type *af, class unit_data * unit)
 {
     /* old cha stuff
       if (af->data[1] > 0)
-        act ("You feel more authoritative.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel more authoritative.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
       else
-        act ("You feel less authoritative.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel less authoritative.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     */
     /*Darg new cha*/
     if (af->data[1] > 0)
     {
         switch (1+(int) (5.0*rand()/(RAND_MAX+1.0))) {
         case 1:
-            act ("You feel more appealing.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel more appealing.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 2:
-            act ("You feel your animal magnetism kick in.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel your animal magnetism kick in.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 3:
-            act ("You feel more seductive.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel more seductive.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 4:
-            act ("You feel more authoritative.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel more authoritative.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 5:
-            act ("Your conjuration feels more in tune with nature.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("Your conjuration feels more in tune with nature.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         };
     }
@@ -731,19 +725,19 @@ tif_cha_on (class unit_affected_type *af, class unit_data * unit)
     {
         switch (1+(int) (5.0*rand()/(RAND_MAX+1.0))) {
         case 1:
-            act ("You suddenly feel hateful.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You suddenly feel hateful.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 2:
-            act ("You feel repulsed.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel repulsed.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 3:
-            act ("You feel disenchanted.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel disenchanted.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 4:
-            act ("A bored, hollow feeling fills you.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("A bored, hollow feeling fills you.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 5:
-            act ("You become disinterested in your well being.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You become disinterested in your well being.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         };
     }
@@ -766,28 +760,28 @@ tif_bra_on (class unit_affected_type *af, class unit_data * unit)
 {
     /* old bra stuff
       if (af->data[1] > 0)
-        act ("You feel smarter.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel smarter.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
       else
-        act ("You feel a little dumb.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+        act ("You feel a little dumb.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
     */
     /*Darg new bra*/
     if (af->data[1] > 0)
     {
         switch (1+(int) (5.0*rand()/(RAND_MAX+1.0))) {
         case 1:
-            act ("You feel more intellectual.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel more intellectual.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 2:
-            act ("You feel smarter.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel smarter.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 3:
-            act ("You feel aggressive.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel aggressive.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 4:
-            act ("You feel a rush of intellect wash over you.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel a rush of intellect wash over you.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 5:
-            act ("You feel witty.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel witty.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         };
     }
@@ -795,19 +789,19 @@ tif_bra_on (class unit_affected_type *af, class unit_data * unit)
     {
         switch (1+(int) (5.0*rand()/(RAND_MAX+1.0))) {
         case 1:
-            act ("You feel dumb.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel dumb.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 2:
-            act ("You feel idiotic.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel idiotic.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 3:
-            act ("You feel like a imbecile.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You feel like a imbecile.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 4:
-            act ("A lesser medulla oblongata fills your grey matter.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("A lesser medulla oblongata fills your grey matter.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         case 5:
-            act ("You suddenly realize your a moron.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+            act ("You suddenly realize your a moron.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
             break;
         };
     }
@@ -829,8 +823,8 @@ tif_bra_off (class unit_affected_type *af, class unit_data * unit)
 void
 tif_poison_on (class unit_affected_type *af, class unit_data * unit)
 {
-    act ("You feel very ill.", A_ALWAYS, unit, 0, 0, TO_CHAR);
-    act ("$1n seems very ill.", A_ALWAYS, unit, 0, 0, TO_ROOM);
+    act ("You feel very ill.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
+    act ("$1n seems very ill.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_ROOM);
 }
 
 
@@ -850,7 +844,7 @@ tif_poison_suffer (class unit_affected_type *af, class unit_data * unit)
 void
 tif_poison_off (class unit_affected_type *af, class unit_data * unit)
 {
-    act ("You feel better.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+    act ("You feel better.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
 }
 
 /* plague */
@@ -876,7 +870,7 @@ void
 tif_insanity_on (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You feel a battle with your own mind begins.<br/>", unit);
-    act ("A mad look appears on $1n's face", A_HIDEINV, unit, 0, 0, TO_ROOM);
+    act ("A mad look appears on $1n's face", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
 }
 
 void
@@ -888,7 +882,7 @@ void
 tif_insanity_off (class unit_affected_type *af, class unit_data * unit)
 {
     send_to_char ("You feel the battle with your own mind is over.<br/>", unit);
-    act ("The mad look disappears from $1n's face.", A_HIDEINV, unit, 0, 0,
+    act ("The mad look disappears from $1n's face.", A_HIDEINV, unit, cActParameter(), cActParameter(),
          TO_ROOM);
 }
 
@@ -943,7 +937,7 @@ tif_decay_corpse (class unit_affected_type *af, class unit_data * unit)
 {
     /* Make routine to change the description of a corpse instead */
     if (ODD (af->duration) && !IS_SET (UNIT_FLAGS (unit), UNIT_FL_BURIED))
-        act ("The rotten stench of $1n is here.", A_SOMEONE, unit, 0, 0, TO_ROOM);
+        act ("The rotten stench of $1n is here.", A_SOMEONE, unit, cActParameter(), cActParameter(), TO_ROOM);
 }
 
 void
@@ -951,7 +945,7 @@ tif_destroy_corpse (class unit_affected_type *af, class unit_data * unit)
 {
     if (!IS_SET (UNIT_FLAGS (unit), UNIT_FL_BURIED))
         act ("A quivering horde of maggots consume $1n.",
-             A_SOMEONE, unit, 0, 0, TO_ROOM);
+             A_SOMEONE, unit, cActParameter(), cActParameter(), TO_ROOM);
     extract_unit (unit);
 }
 
@@ -998,15 +992,15 @@ tif_valhalla_ret (class unit_affected_type *af, class unit_data * unit)
     REMOVE_BIT (PC_FLAGS (unit), PC_SPIRIT);
     REMOVE_BIT (CHAR_FLAGS (unit), CHAR_KILL_SELF);
 
-    act ("You have a strange feeling...", A_ALWAYS, unit, 0, 0,
+    act ("You have a strange feeling...", A_ALWAYS, unit, cActParameter(), cActParameter(),
          TO_CHAR);
-    act ("$1n materializes and vanish.", A_HIDEINV, unit, 0, 0, TO_ROOM);
+    act ("$1n materializes and vanish.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
 
     unit_from_unit (unit);
     unit_to_unit (unit, hometown_unit (PC_HOME (unit)));
 
-    act ("The spirit of $1n materializes.", A_HIDEINV, unit, 0, 0, TO_ROOM);
-    act ("You feel dizzy.", A_ALWAYS, unit, 0, 0, TO_CHAR);
+    act ("The spirit of $1n materializes.", A_HIDEINV, unit, cActParameter(), cActParameter(), TO_ROOM);
+    act ("You feel dizzy.", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
 
     PC_COND (unit, FULL) = 24;
     PC_COND (unit, THIRST) = 24;
@@ -1041,10 +1035,10 @@ tif_spl_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel more skilled at $2t.",
-             A_ALWAYS, unit, spl_text[af->data[0]], 0, TO_CHAR);
+             A_ALWAYS, unit, spl_text[af->data[0]], cActParameter(), TO_CHAR);
     else
         act ("You feel less skilled at $2t.",
-             A_ALWAYS, unit, spl_text[af->data[0]], 0, TO_CHAR);
+             A_ALWAYS, unit, spl_text[af->data[0]], cActParameter(), TO_CHAR);
 }
 
 void
@@ -1052,10 +1046,10 @@ tif_spl_off (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel less skilled at $2t.",
-             A_ALWAYS, unit, spl_text[af->data[0]], 0, TO_CHAR);
+             A_ALWAYS, unit, spl_text[af->data[0]], cActParameter(), TO_CHAR);
     else
         act ("You feel more skilled at $2t.",
-             A_ALWAYS, unit, spl_text[af->data[0]], 0, TO_CHAR);
+             A_ALWAYS, unit, spl_text[af->data[0]], cActParameter(), TO_CHAR);
 }
 
 void
@@ -1063,10 +1057,10 @@ tif_ski_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel more skilled in $2t.",
-             A_ALWAYS, unit, ski_text[af->data[0]], 0, TO_CHAR);
+             A_ALWAYS, unit, ski_text[af->data[0]], cActParameter(), TO_CHAR);
     else
         act ("You feel less skilled in $2t.",
-             A_ALWAYS, unit, ski_text[af->data[0]], 0, TO_CHAR);
+             A_ALWAYS, unit, ski_text[af->data[0]], cActParameter(), TO_CHAR);
 }
 
 void
@@ -1074,10 +1068,10 @@ tif_ski_off (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel less skilled in $2t.",
-             A_ALWAYS, unit, ski_text[af->data[0]], 0, TO_CHAR);
+             A_ALWAYS, unit, ski_text[af->data[0]], cActParameter(), TO_CHAR);
     else
         act ("You feel more skilled in $2t.",
-             A_ALWAYS, unit, ski_text[af->data[0]], 0, TO_CHAR);
+             A_ALWAYS, unit, ski_text[af->data[0]], cActParameter(), TO_CHAR);
 }
 
 void
@@ -1085,10 +1079,10 @@ tif_wpn_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel more skilled at the $2t fighting style.",
-             A_ALWAYS, unit, wpn_text[af->data[0]], 0, TO_CHAR);
+             A_ALWAYS, unit, wpn_text[af->data[0]], cActParameter(), TO_CHAR);
     else
         act ("You feel less skilled at the $2t fighting style.",
-             A_ALWAYS, unit, wpn_text[af->data[0]], 0, TO_CHAR);
+             A_ALWAYS, unit, wpn_text[af->data[0]], cActParameter(), TO_CHAR);
 }
 
 void
@@ -1096,10 +1090,10 @@ tif_wpn_off (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel less skilled at the $2t fighting style.",
-             A_ALWAYS, unit, wpn_text[af->data[0]], 0, TO_CHAR);
+             A_ALWAYS, unit, wpn_text[af->data[0]], cActParameter(), TO_CHAR);
     else
         act ("You feel more skilled at the $2t fighting style.",
-             A_ALWAYS, unit, wpn_text[af->data[0]], 0, TO_CHAR);
+             A_ALWAYS, unit, wpn_text[af->data[0]], cActParameter(), TO_CHAR);
 }
 
 void
@@ -1131,22 +1125,22 @@ tif_armour_on (class unit_affected_type *af, class unit_data * unit)
     }
 
     act ("Your skin transforms into $2t substance.",
-         A_ALWAYS, unit, c, 0, TO_CHAR);
+         A_ALWAYS, unit, c, cActParameter(), TO_CHAR);
 
     act ("$1n's skin transforms into $2t substance.",
-         A_ALWAYS, unit, c, 0, TO_ROOM);
+         A_ALWAYS, unit, c, cActParameter(), TO_ROOM);
 }
 
 void
 tif_speed_on (class unit_affected_type *af, class unit_data * unit)
 {
-    act ("You feel faster...", A_ALWAYS, unit, 0, 0, TO_CHAR);
+    act ("You feel faster...", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
 }
 
 void
 tif_speed_off (class unit_affected_type *af, class unit_data * unit)
 {
-    act ("You feel slower...", A_ALWAYS, unit, 0, 0, TO_CHAR);
+    act ("You feel slower...", A_ALWAYS, unit, cActParameter(), cActParameter(), TO_CHAR);
 }
 
 /* --------------------------------------------------------------------- */

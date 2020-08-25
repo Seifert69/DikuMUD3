@@ -259,7 +259,7 @@ void do_execute(class unit_data *ch, char *argument,
         return;
 
     execute_append(ch, argument);
-    act("Executing $2t.", A_ALWAYS, ch, argument, 0, TO_CHAR);
+    act("Executing $2t.", A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
 }
 
 void do_shutdown(class unit_data *ch, char *argument,
@@ -312,7 +312,7 @@ void do_snoop(class unit_data *ch, char *argument,
 
     if (!CHAR_DESCRIPTOR(victim))
     {
-        act("$3n has no descriptor-link.", A_SOMEONE, ch, 0, victim, TO_CHAR);
+        act("$3n has no descriptor-link.", A_SOMEONE, ch, cActParameter(), victim, TO_CHAR);
         return;
     }
 
@@ -381,7 +381,7 @@ void do_switch(class unit_data *ch, char *argument, const struct command_info *c
     }
 
     if (CHAR_DESCRIPTOR(victim))
-        act("$3n's body is already in use!", A_ALWAYS, ch, 0, victim, TO_CHAR);
+        act("$3n's body is already in use!", A_ALWAYS, ch, cActParameter(), victim, TO_CHAR);
     else
     {
         send_to_char("Ok.<br/>", ch);
@@ -462,7 +462,7 @@ void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
             int i = fi->zone->loadlevel;
 
             act("Level $2d is required to load items from this zone.",
-                A_ALWAYS, ch, &i, 0, TO_CHAR);
+                A_ALWAYS, ch, &i, cActParameter(), TO_CHAR);
             return;
         }
     }
@@ -484,14 +484,14 @@ void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
     if (IS_OBJ(u) && IS_SET(UNIT_MANIPULATE(u), MANIPULATE_TAKE))
     {
         unit_to_unit(u, ch);
-        act("You secretly load $2n.", A_SOMEONE, ch, u, 0, TO_CHAR);
+        act("You secretly load $2n.", A_SOMEONE, ch, u, cActParameter(), TO_CHAR);
     }
     else
     {
         unit_to_unit(u, UNIT_IN(ch));
         act("$1n opens an interdimensional gate and fetches $3n.",
-            A_SOMEONE, ch, 0, u, TO_ROOM);
-        act("$1n says, 'Hello World!'", A_SOMEONE, u, 0, 0, TO_ROOM);
+            A_SOMEONE, ch, cActParameter(), u, TO_ROOM);
+        act("$1n says, 'Hello World!'", A_SOMEONE, u, cActParameter(), cActParameter(), TO_ROOM);
     }
     dil_loadtime_activate(u);
 }

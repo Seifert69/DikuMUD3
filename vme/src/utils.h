@@ -43,7 +43,7 @@ extern const sbit8 time_light[];
 
 #ifdef MUD_DEBUG
 #define DEBUG_HISTORY
-//#define UNIT_TYPE_DEBUG
+#define UNIT_TYPE_DEBUG
 #endif
 
 #ifdef UNIT_TYPE_DEBUG
