@@ -221,7 +221,7 @@ void info_show_one(class unit_data *teacher,
 
         if (*req)
         {
-            sprintf(buf, "<div class='ca'><pre>%s     %-20s %s</pre></div>",
+            sprintf(buf, "<div class='ca'>%s     %-20s %s</div><br/>",
                     spc(4 * indent), text, req);
             vect.push_back(std::make_pair(1000, buf));
             return;
@@ -229,7 +229,7 @@ void info_show_one(class unit_data *teacher,
 
         if (current_points >= max_level)
         {
-            sprintf(buf, "<div class='ca'><pre>%s%3d%% %-20s [Teacher at max]</pre></div>",
+            sprintf(buf, "<div class='ca'>%s%3d%% %-20s [Teacher at max]</div><br/>",
                     spc(4 * indent), current_points, text);
             vect.push_back(std::make_pair(1002, buf));
             return;
@@ -237,7 +237,7 @@ void info_show_one(class unit_data *teacher,
 
         if (next_point == 0)
         {
-            sprintf(buf, "<div class='ca'><pre>%s%3d%% %-20s [Practice next level]</pre></div>",
+            sprintf(buf, "<div class='ca'>%s%3d%% %-20s [Practice next level]</div><br/>",
                     spc(4 * indent), current_points, text);
             vect.push_back(std::make_pair(1001, buf));
         }
@@ -247,13 +247,13 @@ void info_show_one(class unit_data *teacher,
 
             if (IS_SET(PC_FLAGS(pupil), PC_EXPERT))
                 sprintf(buf,
-                        "<pre>%s%s%3d%% %-20s [%3d%% of %3d%%, points %2d, %s]%s</pre>",
+                        "%s%s%3d%% %-20s [%3d%% of %3d%%, points %2d, %s]%s<br/>",
                         next_point >= 20 ? "<div class='ca'>":"", spc(4 * indent),  current_points, text,   current_points, max_level,
                         next_point,
                         money_string(money_round(TRUE, gold, currency, 1), currency, FALSE), 
                         next_point >= 20 ? "</div>":"");
             else
-                sprintf(buf, "<pre>%s%s%3d%% %-20s [practice points %3d]%s</pre>",
+                sprintf(buf, "%s%s%3d%% %-20s [practice points %3d]%s<br/>",
                         next_point >= 20 ? "<div class='ca'>":"", spc(4 * indent), current_points, text, 
                         next_point, next_point >= 20 ? "</div>":"");
 
@@ -262,7 +262,7 @@ void info_show_one(class unit_data *teacher,
     }
     else // category, not isleaf
     {
-        sprintf(buf, "<pre>%s     <a cmd='info #'>%s</a></pre>", spc(4 * indent), text);
+        sprintf(buf, "%s     <a cmd='info #'>%s</a><br/>", spc(4 * indent), text);
         vect.push_back(std::make_pair(-1, buf));
     }
 }
@@ -306,12 +306,16 @@ void info_show_roots(class unit_data *teacher, class unit_data *pupil,
         }
 
     std::sort(vect.begin(), vect.end(), pairISCompareAsc);
+
     string str;
+    str = "<pre>";
     for (auto it = vect.begin(); it != vect.end(); ++it)
         str.append(it->second.c_str());
+    str.append("</pre>");
 
-    if (str.empty())
+    if (str.length() <= 11)
         str = "Nothing to show (try <a cmd='#'>info roots</a>)<br/>";
+    
     send_to_char(str.c_str(), pupil);
 }
 
@@ -346,13 +350,15 @@ void info_show_leaves(class unit_data *teacher, class unit_data *pupil,
 
     std::sort(vect.begin(), vect.end(), pairISCompareAsc);
     string str;
+    str = "<pre>";
     for (auto it = vect.begin(); it != vect.end(); ++it)
     {
         if (IS_SET(PC_FLAGS(pupil), PC_EXPERT) || it->first <= 25)  // Limit display
             str.append(it->second.c_str());
     }
+    str.append("</pre>");
 
-    if (str.empty())
+    if (str.length() <= 11)
         str = "Nothing to show (try <a cmd='#'>info roots</a>)<br/>";
 
     send_to_char(str.c_str(), pupil);
@@ -449,8 +455,10 @@ void info_one_skill(class unit_data *teacher, class unit_data *pupil,
 
     std::sort(vect.begin(), vect.end(), pairISCompareAsc);
     string str;
+    str = "<pre>";
     for (auto it = vect.begin(); it != vect.end(); ++it)
         str.append(it->second.c_str());
+    str.append("</pre>");
     send_to_char(str.c_str(), pupil);
 }
 
