@@ -650,8 +650,8 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
     sbit8 *pc_cost = NULL;
     sbit32 *practice_points = NULL;
     struct profession_cost *cost_table;
-    char buf[MAX_INPUT_LENGTH];
-    char *arg;
+    char buf[MAX_INPUT_LENGTH+10];
+    const char *arg;
 
     if (!is_command(sarg->cmd, "info") && !is_command(sarg->cmd, "practice"))
         return SFR_SHARE;
@@ -674,6 +674,13 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
             A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
         return SFR_BLOCK;
     }
+
+    static const char *remote_train[] = {"ability", "skill", "spell", "weapon", NULL};
+    arg = str_next_word(sarg->arg, buf);
+
+    index = search_block(buf, remote_train, TRUE);
+    if (index < 0)
+        arg = sarg->arg; // Restore the arg because no remote keyword was there.
 
     switch (pckt->type)
     {
@@ -713,7 +720,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
         assert(FALSE);
     }
 
-    if (str_is_empty(sarg->arg))
+    if (str_is_empty(arg))
     {
         if (is_command(sarg->cmd, "info"))
         {
@@ -736,7 +743,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
         return SFR_BLOCK;
     }
 
-    arg = skip_spaces(sarg->arg);
+    arg = skip_spaces(arg);
 
     if (str_ccmp(arg, "roots") == 0)
     {
@@ -939,14 +946,21 @@ int teach_init(struct spec_arg *sarg)
     }
 
     c = get_next_str(c, buf);
-    // It only makes sense to support the guild level type for teachers.
-    // So packet->level_type is obsoleted
-    if (!str_is_number(buf))
+    // This used to be the guild level type for teachers. Obsoleted. So packet->level_type is obsoleted.
+    // 
+    // Now this is used where the empty string means only teach what's in the text.
+    // Otherwise the string must be set to a profession. And in that case, all skills from that profession
+    // are copied onto the teacher.  And additional text after that is used to modify the defaults.
+    //
+    if (!str_is_empty(buf))
     {
-        szonelog(UNIT_FI_ZONE(sarg->owner), "%s@%s: Illegal level-type in "
-                                            "teacher-init.",
-                 UNIT_FI_NAME(sarg->owner),
-                 UNIT_FI_ZONENAME(sarg->owner));
+        extern const char *professions[];
+
+        if ((i = search_block(buf, professions, TRUE)) == -1)
+        {
+            szonelog(UNIT_FI_ZONE(sarg->owner), "%s@%s: Unknown profession %s in teacher-init.",
+                    UNIT_FI_NAME(sarg->owner), UNIT_FI_ZONENAME(sarg->owner), buf);
+        }
     }
 
     c = get_next_str(c, buf);
