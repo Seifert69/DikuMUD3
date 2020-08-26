@@ -9584,9 +9584,9 @@ while (i<=LAST_SPELL)
  temp:=spellinfo(i,realm,waist,waist1,waist2,waist3,waist4,waist5);
  ln1:=ln1+temp;
  if (realm==ABIL_MAG)
-  addstring(maglist,ln1);
+  addstring(maglist, itoa(self.spells[i]) + "% " + ln1);
  else
-  addstring(divlist,ln1);
+  addstring(divlist, itoa(self.spells[i]) + "% " + ln1);
  i:=i+1;
  }
 
@@ -9648,7 +9648,7 @@ quit;
       ln1:=ski_rating(self.skills[i]);
       temp:=skill_name(i);
       ln1:=ln1+temp;
-      addstring (skilist,ln1);
+      addstring (skilist,itoa(self.skills[i]) + "% " + ln1);
       i:=i+1;
    }
    len:=length(skilist);
