@@ -9529,9 +9529,9 @@ code
    ln2:="";
    wpnlist:=null;
 
-   while (weapon_name(i)!="")
+   while (weapon_name(i)!=null)
    {
-      if (self.weapons[i]<=0)
+      if ((self.weapons[i]<=0) or (weapon_name(i) == ""))
       {
          i:=i+1;
          continue;
@@ -9539,8 +9539,9 @@ code
 
       ln1:=wpn_rating(self.weapons[i]);
       temp:=weapon_name(i);
+
       ln1:=ln1+temp;
-      addstring (wpnlist,ln1);
+      addstring (wpnlist, itoa(self.weapons[i]) + "% " + ln1);
       i:=i+1;
    }
 
