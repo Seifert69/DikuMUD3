@@ -13101,7 +13101,6 @@ $1n tells you, 'Remove all equipment, please.';
   0;   35; dagger                        ;   4;  4000;  10;          0;
   0;   35; sling                         ;   4;  4000;  10;          0;
   0;   35; hand axe                      ;   9;  9000;  10;          0;
-  0;   35; mace                          ;   9;  9000;  10;          0;
   0;   35; long sword                    ;   9;  9000;  10;          0;
   0;   35; short sword                   ;   9;  9000;  10;          0;
   0;   35; quarterstaff                  ;   9;  9000;  10;          0;
