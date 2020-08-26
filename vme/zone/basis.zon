@@ -6443,7 +6443,7 @@ var
 code
 {
    :loop:
-   wait(SFB_CMD, command("info") or command("practice"));
+   wait(SFB_CMD, (activator == self) and (command("info") or command("practice")));
 
    if ((self.position == POSITION_FIGHTING) or (self.position < POSITION_SLEEPING))
       goto loop;
