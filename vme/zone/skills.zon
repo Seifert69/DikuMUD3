@@ -5027,13 +5027,13 @@ code
    race_name := race_name(targ.value[4]);
    targ.title:="a skinned " + targ.names.[0];
    targ.outside_descr:="a skinned " + targ.names.[0] + " is laying here.";
-   addstring(targ.names, "skinned "+ targ.names.[0]);
+   addstring(targ.names, "skinned "+ targ.names.[1]);
 
    skin := load("base_skin@skills");
    link(skin, self.outside);
    secure(skin, lostskin);
    // addstring(skin.names,corpse_name);
-   addstring(skin.names,skin_name);
+   addstring(skin.names, skin_name);
    skin.outside_descr := race_name + " " + skin_name + " is laying here.";
    skin.title := race_name + " " + skin_name;
 

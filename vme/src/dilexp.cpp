@@ -3166,7 +3166,7 @@ void dilfe_sact(register class dilprg *p)
             if (v3->val.ptr)
             {
                 char dest[MAX_STRING_LENGTH];
-                sact(dest, (char *)v1->val.ptr, v2->val.num, v3,v4,v5, v6->val.num);
+                sact(dest, (char *)v1->val.ptr, v2->val.num, v3, v4, v5, v6->val.num);
                 v->val.ptr = str_dup(dest);
                 v->atyp = DILA_EXP;
                 v->type = DILV_SP;
