@@ -2914,10 +2914,18 @@ void dilfe_wpntxt(register class dilprg *p)
     case DILV_INT:
         v->type = DILV_SP;
         v->atyp = DILA_EXP;
-        if ((v1->val.num < WPN_TREE_MAX) && (v1->val.num >= 0) && wpn_text[v1->val.num])
-            v->val.ptr = str_dup(wpn_text[v1->val.num]);
+        if ((v1->val.num < WPN_TREE_MAX) && (v1->val.num >= 0))
+        {
+            if (wpn_text[v1->val.num])
+                v->val.ptr = str_dup(wpn_text[v1->val.num]);
+            else
+                v->val.ptr = str_dup("");
+        }
         else
-            v->val.ptr = str_dup("");
+        {
+            v->val.ptr = NULL; // OOB
+            v->type = DILV_NULL;
+        }
         break;
     default:
         v->type = DILV_ERR; /* wrong type */
