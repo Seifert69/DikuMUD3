@@ -208,19 +208,19 @@ int room_move(class unit_data *ch, class unit_data *mover, class unit_data *room
    if (!str_is_empty(pArrSelf))
       act(pArrSelf, A_ALWAYS, ch, room_to, mover, TO_CHAR);
 
-   command_interpreter(ch, "look");
+   command_interpreter(ch, "look :brief:");
 
    if (ch != mover)
    {  
       if (IS_CHAR(mover))
-         command_interpreter(mover, "look");
+         command_interpreter(mover, "look :brief:");
 
       for (u = UNIT_CONTAINS(mover); u; u = u->next)
       {
          if ((u != ch) && IS_CHAR(u))
          {
             act(pPassengersO, A_SOMEONE, u, ch, mover, TO_CHAR);
-            command_interpreter(u, "look");
+            command_interpreter(u, "look :brief:");
          }
       }
    }
