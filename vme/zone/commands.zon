@@ -1585,7 +1585,7 @@ code{
      {
        sname := weapon_name(sdef);
 
-       if (sname == "")
+       if (sname == null)
             break;
 
        scomp := getwords(sname);
