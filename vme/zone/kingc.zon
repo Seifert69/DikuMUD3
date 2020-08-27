@@ -1874,7 +1874,7 @@ dilend
 dilcopy teach_q_block@function(QUEST_WELMAR, "say Thou art not a loyal follow of the King you should talk to the Royal Herald.");
 
 special SFUN_TEACH_INIT
-"weapons;1;
+"weapons;;
 $1n tells you, 'Tell me more, I do not know of such weapons!';
 $1n tells you, 'I will only teach you how to use a rapier.';
 $1n tells you, 'You haven't got %s for me.';
@@ -1884,7 +1884,6 @@ $1n tells you, 'You must be unaffected by magic, otherwise I can't teach you';
 $1n tells you, 'Remove all equipment, please.';
 
  0;   80; category sword;         20; 100; 10; 0;
-
  1; 100; rapier;          50; 100; 10; 0;"
 
 

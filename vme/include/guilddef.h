@@ -27,7 +27,7 @@
 
 #if defined(_ABILITY)
 special SFUN_TEACH_INIT
-"abilities;0;
+"abilities;druid;
 $1n tells you, 'I have never heard of such an ability.';
 $1n tells you, 'I do not know how to teach this ability.';
 $1n tells you, 'You haven't got %s for me.';
@@ -47,7 +47,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SKILL)
 
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;druid;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -78,7 +78,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_WEAPON)
 
 special SFUN_TEACH_INIT
-"weapons;0;
+"weapons;druid;
 $1n tells you, 'I have never heard of such a weapon.';
 $1n tells you, 'I do not know how to teach that weapon.';
 $1n tells you, 'You haven't got %s for me.';
@@ -108,7 +108,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SPELL)
 
 special SFUN_TEACH_INIT
-"spells;0;
+"spells;druid;
 $1n tells you, 'I have never heard of such a way to use magic.';
 $1n tells you, 'I do not know how to teach this sort of magic.';
 $1n tells you, 'You have not got %s for me.';
@@ -164,7 +164,7 @@ NO TYPE FOR THE DRUID GUILD ERROR
 #if defined(_ABILITY)
 
 special SFUN_TEACH_INIT
-"abilities; 0;
+"abilities;knight;
 $1n tells you, 'I have never heard of such an ability.';
 $1n tells you, 'I am not a master on that ability.';
 $1n tells you, 'You do not have %s for the tithe.';
@@ -186,7 +186,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SKILL)
 
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;knight;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for the tithe.';
@@ -211,7 +211,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_WEAPON)
 
 special SFUN_TEACH_INIT
-"weapons;0;
+"weapons;knight;
 $1n tells you, 'I have never heard of such a weapon.';
 $1n tells you, 'I do not know how to teach that weapon.';
 $1n tells you, 'You haven't enough money to tithe for that training.';
@@ -248,7 +248,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SPELL)
 
 special SFUN_TEACH_INIT
-"spells;0;
+"spells;knight;
 $1n tells you, 'I have never heard of such magic.';
 $1n tells you, 'I do not know how to teach this kind of magic.';
 $1n tells you, 'You have not got %s for the tithe.';
@@ -294,7 +294,7 @@ ERROR NO TYPE IN MIDGAARD
 
 #if defined(_ABILITY)
 special SFUN_TEACH_INIT
-"abilities;0;
+"abilities;ranger;
 $1n tells you, 'I have never heard of such an ability.';
 $1n tells you, 'I do not know how to teach this ability.';
 $1n tells you, 'You haven't got %s for me.';
@@ -316,7 +316,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SKILL)
 
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;ranger;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -361,7 +361,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_WEAPON)
 
 special SFUN_TEACH_INIT
-"weapons;0;
+"weapons;ranger;
 $1n tells you, 'I have never heard of such a weapon.';
 $1n tells you, 'I do not know how to teach that weapon.';
 $1n tells you, 'You haven't got %s for me.';
@@ -398,7 +398,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SPELL)
 
 special SFUN_TEACH_INIT
-"spells;0;
+"spells;ranger;
 $1n tells you, 'I have never heard of such a way to use magic.';
 $1n tells you, 'I do not know how to teach this sort of magic.';
 $1n tells you, 'You have not got %s for me.';
@@ -431,7 +431,7 @@ NO TYPE FOR THE RANGER GUILD ERROR
 
 #if defined(_ABILITY)
 special SFUN_TEACH_INIT
-"abilities;0;
+"abilities;thief;
 $1n tells you, 'I have never heard of such an ability.';
 $1n tells you, 'I do not know how to teach this ability.';
 $1n tells you, 'You haven't got %s for me.';
@@ -453,7 +453,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SKILL)
 
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;thief;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -493,7 +493,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_WEAPON)
 
 special SFUN_TEACH_INIT
-"weapons;0;
+"weapons;thief;
 $1n tells you, 'I have never heard of such a weapon.';
 $1n tells you, 'I do not know how to teach that weapon.';
 $1n tells you, 'You haven't got %s for me.';
@@ -517,7 +517,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SPELL)
 
 special SFUN_TEACH_INIT
-"spells;0;
+"spells;thief;
 $1n tells you, 'I have never heard of such a way to use magic.';
 $1n tells you, 'I do not know how to teach this sort of magic.';
 $1n tells you, 'You have not got %s for me.';
@@ -539,7 +539,7 @@ NO TYPE FOR THE THIEF GUILD ERROR
 #if defined(_ABILITY)
 
 special SFUN_TEACH_INIT
-"abilities;0;
+"abilities;fighter;
 $1n tells you, 'I have never heard of such an ability.';
 $1n tells you, 'I do not know how to teach this ability.';
 $1n tells you, 'You haven't got %s for me.';
@@ -547,21 +547,22 @@ $1n tells you, 'You haven't got %d ability points.';
 $1n tells you, 'I can not teach you any more.';
 $1n tells you, 'You must be unaffected by magic, else I can't teach you.';
 $1n tells you, 'Remove all equipment, please.';
-
+"
+/*
   0;  100; Strength                      ;   4;  4000;   8;       0;
   0;   90; Dexterity                     ;  14; 14000;  12;       0;
   0;   90; Constitution                  ;  14; 14000;   9;       0;
   0;  100; Hitpoints                     ;   4;  4000;  11;       0;
-  2;   60; Brain                         ;  23; 23000;  14;       0;
-  4;   80; Charisma                      ;  18; 18000;  14;       0;
-"
+  0;   60; Brain                         ;  23; 23000;  14;       0;
+  0;   80; Charisma                      ;  18; 18000;  14;       0;
+*/
 
 /* Sum (max) 520, Average = 9.3 */
 
 #elif defined(_SKILL)
 
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;fighter;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -586,7 +587,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_WEAPON)
 
 special SFUN_TEACH_INIT
-"weapons;0;
+"weapons;fighter;
 $1n tells you, 'I have never heard of such a weapon.';
 $1n tells you, 'I do not know how to teach that weapon.';
 $1n tells you, 'You haven't got %s for me.';
@@ -610,11 +611,9 @@ $1n tells you, 'Remove all equipment, please.';
   8;  100; war hammer                    ;   9;  9000;   8;          0;
  12;  100; morning star                  ;  14;  9000;  10;          0;
  14;  100; flail                         ;  14; 14000;  10;          0;
- 15;  100; cutlass                       ;   9;  9000;  10;          0;
  16;  100; long sword                    ;   9;  9000;   8;          0;
  16;   80; trident                       ;  18; 18000;  15;          0;
  16;  100; battle club                   ;  14; 14000;  10;          0;
- 17;  100; saber                         ;  12; 12000;   9;          0;
  18;  100; battle mace                   ;  14; 14000;  10;          0;
  18;  100; bardiche                      ;  18; 18000;  15;          0;
  22;  100; battle axe                    ;  14; 14000;  15;          0;
@@ -631,7 +630,7 @@ ERROR: NO TYPE FOR FIGHTER GUILD
 #if defined(_ABILITY)
 
 special SFUN_TEACH_INIT
-"abilities;0;
+"abilities;conjurer;
 $1n tells you, 'I have never heard of such an ability.';
 $1n tells you, 'I do not know how to teach this ability.';
 $1n tells you, 'You haven't got %s for me.';
@@ -653,7 +652,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SKILL)
 
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;conjurer;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -672,7 +671,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_WEAPON)
 
 special SFUN_TEACH_INIT
-"weapons;0;
+"weapons;conjurer;
 $1n tells you, 'I have never heard of such a weapon.';
 $1n tells you, 'I do not know how to teach that weapon.';
 $1n tells you, 'You haven't got %s for me.';
@@ -694,7 +693,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SPELL)
 
 special SFUN_TEACH_INIT
-"spells;0;
+"spells;conjurer;
 $1n tells you, 'I have never heard of such magic.';
 $1n tells you, 'I do not know how to teach this kind of magic.';
 $1n tells you, 'You have not got %s for me.';
@@ -757,7 +756,7 @@ ERROR NO TYPE FOR THE CONJURER GUILD
 #if defined(_ABILITY)
 
 special SFUN_TEACH_INIT
-"abilities;0;
+"abilities;priest;
 $1n tells you, 'I have never heard of such an ability.';
 $1n tells you, 'I do not know how to teach this ability.';
 $1n tells you, 'You haven't got %s for me.';
@@ -780,7 +779,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SKILL)
 
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;priest;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -804,7 +803,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_WEAPON)
 
 special SFUN_TEACH_INIT
-"weapons;0;
+"weapons;priest;
 $1n tells you, 'I have never heard of such a weapon.';
 $1n tells you, 'I do not know how to teach that weapon.';
 $1n tells you, 'You haven't got %s for me.';
@@ -833,7 +832,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SPELL)
 
 special SFUN_TEACH_INIT
-"spells;0;
+"spells;priest;
 $1n tells you, 'I have never heard of such magic.';
 $1n tells you, 'I do not know how to teach this kind of magic.';
 $1n tells you, 'You have not got %s for me.';
@@ -906,7 +905,7 @@ ERROR IN HEALER GUILD, NO TYPE
 #if defined(_ABILITY)
 
 special SFUN_TEACH_INIT
-"abilities;0;
+"abilities;necromancer;
 $1n tells you, 'I have never heard of such an ability.';
 $1n tells you, 'I do not know how to teach this ability.';
 $1n tells you, 'You haven't got %s for me.';
@@ -928,7 +927,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SKILL)
 
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;necromancer;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -948,7 +947,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_WEAPON)
 
 special SFUN_TEACH_INIT
-"weapons;0;
+"weapons;necromancer;
 $1n tells you, 'I have never heard of such a weapon.';
 $1n tells you, 'I do not know how to teach that weapon.';
 $1n tells you, 'You haven't got %s for me.';
@@ -990,7 +989,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SPELL)
 
 special SFUN_TEACH_INIT
-"spells;0;
+"spells;necromancer;
 $1n tells you, 'I have never heard of such magic.';
 $1n tells you, 'I do not know how to teach this kind of magic.';
 $1n tells you, 'You have not got %s for me.';
@@ -1056,7 +1055,7 @@ ERROR NO TYPE IN NECROMANCERS GUILD
 #if defined(_ABILITY)
 
 special SFUN_TEACH_INIT
-"abilities; 0;
+"abilities;paladin;
 $1n tells you, 'I have never heard of such an ability.';
 $1n tells you, 'I am not a master on that ability.';
 $1n tells you, 'You do not have %s for the tithe.';
@@ -1079,7 +1078,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SKILL)
 
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;paladin;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for the tithe.';
@@ -1104,7 +1103,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_WEAPON)
 
 special SFUN_TEACH_INIT
-"weapons;0;
+"weapons;paladin;
 $1n tells you, 'I have never heard of such a weapon.';
 $1n tells you, 'I do not know how to teach that weapon.';
 $1n tells you, 'You haven't enough money to tithe for that training.';
@@ -1141,7 +1140,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SPELL)
 
 special SFUN_TEACH_INIT
-"spells;0;
+"spells;paladin;
 $1n tells you, 'I have never heard of such magic.';
 $1n tells you, 'I do not know how to teach this kind of magic.';
 $1n tells you, 'You have not got %s for the tithe.';
@@ -1283,7 +1282,7 @@ ERROR NO TYPE IN MYSTIC GUILD
 #if defined(_ABILITY)
 
 special SFUN_TEACH_INIT
-"abilities;0;
+"abilities;sorcerer;
 $1n tells you, 'I have never heard of such an ability.';
 $1n tells you, 'I do not know how to teach this ability.';
 $1n tells you, 'You haven't got the %s for me.';
@@ -1306,7 +1305,7 @@ $1n tells you, 'Remove it all, then we proceed!';
 #elif defined(_SKILL)
 
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;sorcerer;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got the %s for me.';
@@ -1326,7 +1325,7 @@ $1n tells you, 'Remove all, then we proceed!';
 #elif defined(_WEAPON)
 
 special SFUN_TEACH_INIT
-"weapons;0;
+"weapons;sorcerer;
 $1n tells you, 'I have never heard of such a weapon.';
 $1n tells you, 'I do not know how to teach that weapon.';
 $1n tells you, 'You haven't got the %s for me.';
@@ -1347,7 +1346,7 @@ $1n tells you, 'Remove it all, then we proceed!';
 #elif defined(_SPELL)
 
 special SFUN_TEACH_INIT
-"spells;0;
+"spells;sorcerer;
 $1n tells you, 'I have never heard of such sorcery.';
 $1n tells you, 'I do not know how to teach this kind of sorcery.';
 $1n tells you, 'You have not got the %s for me.';
@@ -1429,7 +1428,7 @@ ERROR NO TYPE IN SORCERER GUILD
 #if defined(_ABILITY)
 
 special SFUN_TEACH_INIT
-"abilities;0;
+"abilities;assassin;
 $1n tells you, 'I have never heard of such an ability.';
 $1n tells you, 'I am not a master on that ability.';
 $1n tells you, 'You are too poor to afford %s right now.';
@@ -1452,7 +1451,7 @@ $1n tells you, 'Stand before me as you entered the world.';
 #elif defined(_SKILL)
 
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;assassin;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I am not a master on that skill.';
 $1n tells you, 'You are too poor to afford %s right now.';
@@ -1483,7 +1482,7 @@ $1n tells you, 'Stand before me as you entered the world.';
 #elif defined(_WEAPON)
 
 special SFUN_TEACH_INIT
-"weapons;0;
+"weapons;assassin;
 $1n hisses, 'What sort of weapon is that?';
 $1n hisses, 'Bah! What true assassin would want to learn such a weapon.';
 $1n hisses, 'I require cash up front for my services.';
@@ -1528,7 +1527,7 @@ $1n hisses, 'What you wear interferes with what I teach.';
 #elif defined(_SPELL)
 
 special SFUN_TEACH_INIT
-"spells;0;
+"spells;assassin;
 $1n tells you, 'I have never heard of such a way to use magic.';
 $1n tells you, 'I do not know how to teach this sort of magic.';
 $1n tells you, 'You have not got %s for me.';
@@ -1553,7 +1552,7 @@ ERROR NO TYPE IN ASSASSIN GUILD
 
 #if defined(_SPELL)
 special SFUN_TEACH_INIT
-"spells;0;
+"spells;;
 $1n tells you, 'I have never heard of such a way to use magic.';
 $1n tells you, 'I do not know how to teach this sort of magic.';
 $1n tells you, 'You have not got %s for me.';
@@ -1567,7 +1566,7 @@ $1n tells you, 'You must remove all that you wear.';
 "
 #elif defined(_SKILL)
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I am not a master on that skill.';
 $1n tells you, 'You are too poor to afford %s right now.';

@@ -1559,6 +1559,13 @@ race half-elf  =   0
 race brownie   =  -1
 race groll     =  +1
 race darkelf   =   0
+profession mystic       = +3
+profession thief        = +0
+profession assassin     = +0
+profession fighter      = +0
+profession knight       = -1
+profession paladin      = -2
+profession ranger       = -2
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1580,6 +1587,13 @@ race half-elf  =   0
 race brownie   =  -1
 race groll     =  +1
 race darkelf   =   0
+profession mystic       = +3
+profession thief        = +0
+profession assassin     = +0
+profession fighter      = +0
+profession knight       = -1
+profession paladin      = -2
+profession ranger       = -2
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1601,6 +1615,13 @@ race half-elf  =   0
 race brownie   =  -1
 race groll     =  +1
 race darkelf   =   0
+profession mystic       = +3
+profession thief        = +0
+profession assassin     = +0
+profession fighter      = +0
+profession knight       = -1
+profession paladin      = -2
+profession ranger       = -2
 
 /* - - - - Yet another definition of a skill - - - - */
 

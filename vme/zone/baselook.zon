@@ -1279,7 +1279,7 @@ code
 
    if (looker.type == UNIT_ST_PC)
    {
-      if ((not(isset(looker.pcflags,PC_BRIEF))) or (arg != ":brief:"))
+      if (not (isset(looker.pcflags, PC_BRIEF) and (arg == ":brief:")))
          buff := buff + "<div class='room_descr'>" + room.inside_descr + "</div><br/>";
    }
    else

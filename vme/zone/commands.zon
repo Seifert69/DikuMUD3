@@ -1272,6 +1272,7 @@ code{
  if (arg == "")
     {
       sendtext("Syntax: setskill <name> (skill|spell|weapon) <field> <value>.<br/>", self);
+      sendtext("For skills with spaces, use underscore, e.g. armor_soft_leather<br/>", self);
       quit;
     }
 
@@ -1584,7 +1585,7 @@ code{
      {
        sname := weapon_name(sdef);
 
-       if (sname == "")
+       if (sname == null)
             break;
 
        scomp := getwords(sname);
@@ -9529,18 +9530,16 @@ code
    ln2:="";
    wpnlist:=null;
 
-   while (weapon_name(i)!="")
+   while (weapon_name(i)!=null)
    {
-      if (self.weapons[i]<=0)
+      if ((self.weapons[i]<=0) or (weapon_name(i) == ""))
       {
          i:=i+1;
          continue;
       }
 
-      ln1:=wpn_rating(self.weapons[i]);
-      temp:=weapon_name(i);
-      ln1:=ln1+temp;
-      addstring (wpnlist,ln1);
+      ln1 := weapon_name(i) + " (" + wpn_rating(self.weapons[i]) + ")";
+      addstring (wpnlist, itoa(self.weapons[i]) + "% " + ln1);
       i:=i+1;
    }
 
@@ -9579,13 +9578,11 @@ while (i<=LAST_SPELL)
   continue;
   }
 
- ln1:=sp_rating(self.spells[i]);
- temp:=spellinfo(i,realm,waist,waist1,waist2,waist3,waist4,waist5);
- ln1:=ln1+temp;
+ ln1:=spellinfo(i,realm,waist,waist1,waist2,waist3,waist4,waist5) + " (" + sp_rating(self.spells[i]) + ")";
  if (realm==ABIL_MAG)
-  addstring(maglist,ln1);
+  addstring(maglist, itoa(self.spells[i]) + "% " + ln1);
  else
-  addstring(divlist,ln1);
+  addstring(divlist, itoa(self.spells[i]) + "% " + ln1);
  i:=i+1;
  }
 
@@ -9644,10 +9641,8 @@ quit;
          continue;
       }
 
-      ln1:=ski_rating(self.skills[i]);
-      temp:=skill_name(i);
-      ln1:=ln1+temp;
-      addstring (skilist,ln1);
+      ln1:= skill_name(i) + " (" + ski_rating(self.skills[i]) + ")";
+      addstring (skilist,itoa(self.skills[i]) + "% " + ln1);
       i:=i+1;
    }
    len:=length(skilist);
@@ -9730,23 +9725,23 @@ dilbegin string wpn_rating (wpn:integer);
 code
 {
 if (wpn<10)
- return ("You're utterly hopeless with ");
+ return ("utterly hopeless");
 else if (wpn<25)
- return ("You're impossible with ");
+ return ("impossible");
 else if (wpn<40)
- return ("You're poor with ");
+ return ("poor");
 else  if (wpn<50)
- return ("You're good with ");
+ return ("good");
 else if (wpn<70)
- return("You're skilled with ");
+ return("skilled");
 else if (wpn<90)
- return ("You're specialized with ");
+ return ("specialized");
 else if (wpn < 100)
- return ("You're supreme with ");
+ return ("supreme");
 else if (wpn<150)
- return ("You're expert with ");
+ return ("expert");
 else
- return ("You're godly with ");
+ return ("godly");
 
 }
 dilend
@@ -9755,23 +9750,23 @@ dilbegin string ski_rating (ski:integer);
 code
 {
 if (ski<10)
- return("You're utterly hopeless with ");
+ return("utterly hopeless");
 else if (ski<25)
-  return("You're impossible with ");
+  return("impossible");
 else if (ski<40)
-  return("You're poor with ");
+  return("poor");
 else if (ski<50)
-  return("You're good with ");
+  return("good");
 else if (ski<70)
-  return("You're skilled with ");
+  return("skilled");
 else if (ski<90)
-  return("You're specialized with ");
+  return("specialized");
 else if (ski<100)
-  return("You're supreme with ");
+  return("supreme");
 else if (ski<150)
-  return("You're expert with ");
+  return("expert");
 else
-  return("You're godly with ");
+  return("godly");
 
 }
 dilend
@@ -9780,21 +9775,21 @@ dilbegin string sp_rating (sp:integer);
 code
 {
 if (sp<=10)
- return ("You might remember ");
+ return ("might remember");
 else if (sp<=25)
-  return ("You can almost remember ");
+  return ("almost remember");
 else if (sp<=40)
-  return ("You can remember ");
+  return ("remember");
 else if (sp<=50)
-  return ("You have practiced ");
+  return ("practiced");
 else if (sp<=70)
-  return ("You have learned ");
+  return ("learned");
 else  if (sp<=90)
-  return ("You're master of ");
+  return ("master");
 else if (sp<=100)
-  return ("You're expert with ");
+  return ("expert");
 else
-  return ("You're godly with ");
+  return ("godly");
 
 }dilend
 
