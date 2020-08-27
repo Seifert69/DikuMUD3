@@ -643,6 +643,7 @@ race brownie    =  -1
 race groll      =   0
 race darkelf    =   0
 restrict level          = 10
+restrict strength       = 90  // Superbly heavy weapon to use in one hand
 profession paladin      = +2
 profession fighter      = +1
 profession priest       = +0
