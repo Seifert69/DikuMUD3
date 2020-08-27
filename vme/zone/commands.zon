@@ -1272,6 +1272,7 @@ code{
  if (arg == "")
     {
       sendtext("Syntax: setskill <name> (skill|spell|weapon) <field> <value>.<br/>", self);
+      sendtext("For skills with spaces, use underscore, e.g. armor_soft_leather<br/>", self);
       quit;
     }
 
