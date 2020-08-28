@@ -289,42 +289,43 @@ dilend
 
 
 
-dilbegin aware unique link_dead();
+dilbegin aware unique fnpri(FN_PRI_SYS) link_dead();
 var
-        t:integer;
-        c:integer;
+   t:integer;
+   c:integer;
+
 code
 {
-heartbeat := PULSE_SEC;
+   heartbeat := PULSE_SEC;
 
-sendto ("linkdead",self);
+   sendto("linkdead", self);
 
- t:=realtime;
-if(self.level >= IMMORTAL_LEVEL)goto wiz;
-
+   t:=realtime;
+   if(self.level >= IMMORTAL_LEVEL)
+      goto wiz;
  
-if (self.extra.["$PK_TIMER"]==null)
-        {
-        act ("$1n leaves the world for another realm.", A_SOMEONE,self,null,null,TO_REST);
-        destroy (self);
-        }
+   if (self.extra.["$PK_TIMER"]==null)
+   {
+      act ("$1n leaves the world for another realm.", A_SOMEONE,self,null,null,TO_REST);
+      destroy (self);
+   }
 
-:start:
-if (self.fighting!=null)
- goto fgting;
+   :start:
+   if (self.fighting!=null)
+      goto fgting;
 
-c:=realtime-atoi(self.extra.["$PK_TIMER"].descr);
-if (c>300)
-        {
+   c:=realtime-atoi(self.extra.["$PK_TIMER"].descr);
+   if (c>300)
+   {
+      act ("$1n leaves the world for another realm.", A_SOMEONE,self,null,null,TO_REST);
+      destroy (self);
+   }
 
-        act ("$1n leaves the world for another realm.", A_SOMEONE,self,null,null,TO_REST);
-        destroy (self);
-        }
+   heartbeat:=PULSE_SEC*30;
 
-        heartbeat:=PULSE_SEC*30;
-		:fgting:
-wait (SFB_TICK,TRUE);
-goto start;
+   :fgting:
+   wait(SFB_TICK,TRUE);
+   goto start;
 
 :wiz:
 destroy(self);
