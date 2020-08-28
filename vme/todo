@@ -1,8 +1,12 @@
-Add map for Cypress and Haon-Dor
-Maybe: SFUN_TEACH, add parameter so teacher just teaches what can be learned...?
-Maybe: Teachers ignore "ability, ..." prefix for remote training when training locally
+===
+
 Maybe: Teachers hyperlink what you can train so you can just click it
-Maybe: Fix ships (it's dark and they all run thier own code)
+Maybe: Fix ships (it's dark and they all run thier own code) and make them transparent 
+
+Only show grey in expert mode when training?
+
+add to the web client a possibility to write how many times you run a command.
+
 
 Test XP works as expected.
 Test play
