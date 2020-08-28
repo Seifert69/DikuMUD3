@@ -7269,7 +7269,7 @@ code
    act("You kneel before $3n and pray to Odin.",
        A_ALWAYS, activator, null, self, TO_CHAR);
 
-   if (activator.level < 20)
+   if (activator.level > 20)
    {
       act("You feel at ease with yourself after having prayed to Odin.",
           A_ALWAYS, activator, null, null, TO_CHAR);
