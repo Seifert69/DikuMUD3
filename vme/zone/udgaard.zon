@@ -851,7 +851,7 @@ dilend
 
 
 
-dilbegin aware still_newbie();
+dilbegin aware unique still_newbie();
 code
 {
 interrupt (SFB_CMD, ((command ("level")) and
@@ -7241,15 +7241,13 @@ code
 }
 dilend
 
-dilbegin odinstatue();
 
+dilbegin odinstatue();
 external
    statue_load(pc : unitptr, s : string, n : string, i : integer);
 
-
 var
    pc         : unitptr;
-
    expd       : extraptr;
 
 code
@@ -7271,12 +7269,13 @@ code
    act("You kneel before $3n and pray to Odin.",
        A_ALWAYS, activator, null, self, TO_CHAR);
 
-   if (activator.level < 4)
+   if (activator.level < 20)
    {
       act("You feel at ease with yourself after having prayed to Odin.",
           A_ALWAYS, activator, null, null, TO_CHAR);
       goto start;
    }
+
    pc := activator;
    secure(pc, start);
 
@@ -7286,18 +7285,18 @@ code
    act("A voice echoes inside your head 'The Gods like you, receive"+
        " this gift'",A_ALWAYS, pc, null, self, TO_CHAR);
 
-   if ( not (dilfind("channel@function",pc)))
-     dilcopy ("channel@function",pc);
-
-   if (not(dilfind ("still_newbie@udgaard",pc)))
-     dilcopy ("still_newbie@udgaard",pc);
-
    statue_load(pc, "tuborg@udgaard",        "tuborg",     1);
    statue_load(pc, "midgaard/torch",        "torch",      1);
    statue_load(pc, "midgaard/bread",        "bread",      1);
    statue_load(pc, "swood_shield@midgaard", "shield",     1);
    statue_load(pc, "guild_medallion@guild_paths", "medallion", 1);
    //statue_load(pc, "basis/dictionary",      "dictionary", 0);
+
+   expd := "Newbie Quest Complete" in pc.quests;
+   if (expd != null)
+   {
+      statue_load(pc, "newbie/silring",  "silver ring", 1);
+   }
 
    /* expd := "$path" in pc.quests;
    if (expd == null)

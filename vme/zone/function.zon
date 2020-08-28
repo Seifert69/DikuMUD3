@@ -6746,7 +6746,7 @@ dilend
 #define  NOTELL_QUEST   "$notell"
 #define  NOCOMM_QUEST  "$nocomm"
 #define  NO_NEWBIE_QUEST  "$nonewbie"
-dilbegin aware recall channel( );
+dilbegin aware recall unique channel( );
 external
   recieve@function( slActive : stringlist, msg : string, talker : unitptr,
                 jmode:integer, dmode:integer);

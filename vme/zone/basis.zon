@@ -130,6 +130,12 @@ code
    i:=dildestroy("piset@commands", tgt);
    subextra (tgt.quests,"$newbie guide is helping");
 
+   if ("$horse_owner" in self.extra)
+      subextra(tgt.extra,"$horse_owner");
+
+   if ("$RES_TIMER" in self.extra)
+      subextra(self.extra, "$RES_TIMER");
+
    /* to fix a bjorni quest mess */
    if ("Nidhogg's prize given" in tgt.quests)
    {
@@ -250,10 +256,10 @@ code
          i := dildestroy("train_nag@update", self);
       }
 
-      if (self.level < 3)
+      if (self.level <= 5)
       {
-         //log("on_connect() odin's hand for "+self.name);
-         dilcopy("odinshand@basis",self);         
+         dilcopy("still_newbie@udgaard", self);
+         dilcopy("odinshand@basis", self);
       }
 
       i := dildestroy("regen_pc@update", self);
@@ -262,21 +268,19 @@ code
       i := dildestroy("stomach@update", self);
       dilcopy("stomach@update",self);
 
-      dilcopy ("got_mail@mail()",tgt);
-      dilcopy ("fixwt@basis()",tgt);
-      dilcopy ("break_eq@basis()",tgt);
-      if (not(dilfind("pk_timer@basis",tgt)))
-         dilcopy ("pk_timer@basis()",tgt);
-      if ("$PK_EXTRA" in tgt.extra)
-         dilcopy ("pk_erase@basis()",tgt);
+      dilcopy("got_mail@mail()", self);
+      dilcopy("fixwt@basis()", self);
+      dilcopy("break_eq@basis()", self);
+      dilcopy("channel@function", self);
 
-      if ("$horse_owner" in tgt.extra)
-         subextra(tgt.extra,"$horse_owner");
 
-      if ("$RES_TIMER" in tgt.extra)
-         subextra(tgt.extra,"$RES_TIMER");
+      if (not(dilfind("pk_timer@basis", self)))
+         dilcopy("pk_timer@basis()", self);
 
-      login_scrub(tgt);
+      if ("$PK_EXTRA" in self.extra)
+         dilcopy("pk_erase@basis()", self);
+
+      login_scrub(self);
    }
 
    return;
