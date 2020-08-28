@@ -12126,7 +12126,8 @@ code
    :p_who:
    buff:="";
    ln:=length(ply_list);
-   buff:="<div class='who'>"+arg+"</div>";
+   //buff:="<div class='who'>"+arg+"</div>";
+   buff:=arg;
    /*buff:=buff+"<div class='who'>"+temp+"</div>";*/
 
    if (ln <= 0)
@@ -12141,9 +12142,9 @@ code
       }
    }
    if (ln==1)
-      buff:=buff+"<div class='who'>There is " +itoa(ln)+ " "+temps+" visible to you.</div><br/>";
+      buff:=buff+"There is " +itoa(ln)+ " "+temps+" visible to you.<br/>";
    else
-      buff:=buff+"<div class='who'>There are " +itoa(ln)+ " "+tempp+" visible to you.</div><br/>";
+      buff:=buff+"There are " +itoa(ln)+ " "+tempp+" visible to you.<br/>";
 
    pagestring(buff,self);
    quit;
