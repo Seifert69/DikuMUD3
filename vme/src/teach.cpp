@@ -1277,6 +1277,11 @@ int teach_init(struct spec_arg *sarg)
         if (n < count) // Aha, skill was here already
         {
             packet->teaches[n].min_glevel = a_skill.min_glevel;
+            if (a_skill.max_skill < 100)
+                packet->teaches[n].max_skill = MIN(packet->teaches[n].max_skill, a_skill.max_skill);
+            if (a_skill.max_skill > 100)
+                packet->teaches[n].max_skill = MAX(packet->teaches[n].max_skill, a_skill.max_skill);
+
             // Retain the calculated max & min and cost.
             // I'm quite sure they're "more fun & diverse"
             // Than what's been entered by hand.
