@@ -413,6 +413,9 @@ code
     if (isset(self.flags,PC_SPIRIT))
       goto start;
 
+  // We really need to check here if the player has a link.
+  // If no link make sure the player doesn't die from starvation
+
     if (self.position>=POSITION_STUNNED)
     {
         hgain:=hit_gain(self);

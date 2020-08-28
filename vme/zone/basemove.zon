@@ -1263,14 +1263,17 @@ code
 {
    dir := checkexit(arg, 1);
 
-   room := unit_room@function(self);
-
-   if (not isset(room.exit_info[dir], EX_OPEN_CLOSE))
+   if (dir != -1)
    {
-      act("There doesn't seem to be anything to open or close there.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
+      room := unit_room@function(self);
 
+      if (not isset(room.exit_info[dir], EX_OPEN_CLOSE))
+      {
+         act("There doesn't seem to be anything to open or close there.", A_ALWAYS, self, null, null, TO_CHAR);
+         quit;
+      }
+   }
+   
    return(dir);
 }
 dilend

@@ -5962,7 +5962,7 @@ dilcopy resize_func@midgaard (ITEM_ARMOR,ITEM_WORN,ITEM_WORN,
 
 
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -6026,7 +6026,7 @@ dilcopy shopkeepernew@function(
 dilcopy resize_func@midgaard (ITEM_ARMOR, ITEM_WORN, ITEM_WORN,
 ARM_LEATHER,ARM_HLEATHER,3*IRON_MULT,"leather worker");
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -6291,7 +6291,7 @@ dilcopy evaluate@function(64);
 dilcopy resize_func@midgaard (ITEM_ARMOR, ITEM_WEAPON, ITEM_SHIELD,ARM_CHAIN,
                               ARM_PLATE,COPPER_MULT,"smith");
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
