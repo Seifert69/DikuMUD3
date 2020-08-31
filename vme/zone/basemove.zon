@@ -3191,9 +3191,11 @@ code
 
    act("You open the $2t.", A_ALWAYS, self, item.exit_names[dir].[0], null, TO_CHAR);
    act("$1n opens the $2t.", A_HIDEINV, self, item.exit_names[dir].[0], null, TO_REST);
+
    pc := item.exit_to[dir].inside;
    rm:= item.exit_to[dir];
 
+   // Find the reverse direction
    i:=0;
    ct:=FALSE;
    while (i <= MAX_EXIT)
@@ -3206,11 +3208,13 @@ code
       i:=i+1;
    }
 
-   if ((pc != null) and (ct==TRUE))
+   // Reverse message
+   if ((pc != null) and (ct==TRUE) and (i <= MAX_EXIT))
       act("The $2t is opened.", A_ALWAYS, pc, rm.exit_names[i].[0], null, TO_ALL);
 
    unset(item.exit_info[dir], EX_CLOSED);
-   if (ct==TRUE)
+
+   if ((ct==TRUE) and (i <= MAX_EXIT))
       unset(item.exit_to[dir].exit_info[i], EX_CLOSED);
 
    send_done ("open", self, null, null, 0, "", null);
@@ -3378,12 +3382,12 @@ code
       i:=i+1;
    }
 
-   if ((pc != null) and (ct==TRUE))
+   if ((pc != null) and (ct==TRUE) and (i <= MAX_EXIT))
       act("The $2t is closed.", A_ALWAYS, pc, rm.exit_names[i].[0], null, TO_ALL);
 
    set(item.exit_info[dir], EX_CLOSED);
    
-   if (ct==TRUE)
+   if ((ct==TRUE) and (i <= MAX_EXIT))
       set(item.exit_to[dir].exit_info[i], EX_CLOSED);
 
    send_done ("close", self, null, null, 0, "", null);

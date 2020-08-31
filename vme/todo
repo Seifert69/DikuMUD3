@@ -1,14 +1,3 @@
-
-Thu Aug 27 10:03:52 2020 :: blcastle/DIL maid@blcastle open_dil@basemove, index of stringlist out of bounds: 0
-Thu Aug 27 10:07:20 2020 :: wcastle/DIL maid@wcastle open_dil@basemove, index of stringlist out of bounds: 0
-
-Thu Aug 27 13:12:07 2020 :: Tuck gained -1250 experience from unit NO-NAME@NO-ZONE.
-
-Looks like, if you load a player as a wiz. He'll die from starvation. How can I check in DIL 
-
-
-===
-
 Maybe: Teachers hyperlink what you can train so you can just click it
 Maybe: Fix ships (it's dark and they all run thier own code) and make them transparent 
 

@@ -12,6 +12,7 @@
 #include "textutil.h"
 #include "interpreter.h"
 #include "utility.h"
+#include "fight.h"
 
 // The Global Combat List...
 
@@ -448,14 +449,7 @@ void stat_combat(const class unit_data *god, class unit_data *u)
    else
       CHAR_COMBAT(u)->status(god);
 
-   void stat_melee_bonus(string &str,
-                        class unit_data *att, class unit_data *def,
-                        int hit_loc,
-                        int *pAtt_weapon_type, class unit_data **pAtt_weapon,
-                        int *pDef_armour_type, class unit_data **pDef_armour,
-                        int primary);
-
    string str;
-   stat_melee_bonus(str, u, f, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE);
+   melee_bonus(u, f, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
    send_to_char(str.c_str(), god);
 }

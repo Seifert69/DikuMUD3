@@ -150,7 +150,8 @@ code
     else if (pc.race == RACE_HALF_OGRE) bonus :=5;
     else  bonus := 1;
 
-    if (pc.level <= 20 ) bonus := 5;
+    if (pc.level <= 20 ) 
+      bonus := 5;
 
     /* 10 turns to regenerate */
     if (pc.position!=POSITION_FIGHTING)
@@ -169,18 +170,25 @@ code
     u:=pc;
     while (u)
     {
-        if (isset(u.flags,UNIT_FL_SACRED))
+        if (isset(u.flags, UNIT_FL_SACRED))
         {
           gain:=gain*2;
           break;
         }
-        if (u.type==UNIT_ST_ROOM)
+        if (u.type == UNIT_ST_ROOM)
           break;
         u:=u.outside;
     }
 
-    if (pc.type==UNIT_ST_PC)
+    if (pc.type == UNIT_ST_PC)
     {
+        if (getinteger(DIL_GINT_DESCRIPTOR, pc, 0) == 0)
+        {
+            log("No descriptor, no food adjustment");
+            log("No descriptor " + pc.name);
+            return(gain);
+        }
+
         if ((pc.full<0) or (pc.thirst<0))
           if ((3*pc.thirst)<pc.full)
               gain:=gain+9*pc.thirst;

@@ -10766,7 +10766,7 @@ dilcopy shopkeeper@function(
 
 
 special SFUN_TEACH_INIT
-"skills;1;
+"skills;;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -13013,7 +13013,7 @@ extra {}
 "Rune is here to teach you abilities. Try the <a cmd='#'>info</a> command."
 
 special SFUN_TEACH_INIT
-"abilities;0;
+"abilities;;
 $1n tells you, 'I have never heard of such an ability.';
 $1n tells you, 'I do not know how to teach this ability.';
 $1n tells you, 'You haven't got %s for me.';
@@ -13043,7 +13043,7 @@ extra {}
 "Gustav is here to teach you skills. Try the <a cmd='#'>info</a> command."
 money 3 IRON_PIECE
 special SFUN_TEACH_INIT
-"skills;0;
+"skills;;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -13087,7 +13087,7 @@ extra {}
 flags {UNIT_FL_NO_TELEPORT}
 money 3 IRON_PIECE
 special SFUN_TEACH_INIT
-"weapons;0;
+"weapons;;
 $1n tells you, 'I have never heard of such a weapon.';
 $1n tells you, 'I do not know how to teach that weapon.';
 $1n tells you, 'You haven't got %s for me.';
@@ -13116,7 +13116,7 @@ M_SHOP_KEEPER(35,SEX_MALE,RACE_HUMAN)
 flags {UNIT_FL_NO_TELEPORT}
 money 3 IRON_PIECE
 special SFUN_TEACH_INIT
-"spells;0;
+"spells;;
 $1n tells you, 'I have never heard of such magic.';
 $1n tells you, 'I do not know how to teach this kind of magic.';
 $1n tells you, 'You have not got %s for me.';

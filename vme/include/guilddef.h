@@ -381,7 +381,6 @@ $1n tells you, 'Remove all equipment, please.';
   8;   90; kick                          ;  18; 18000;  10;          0;
   9;   70; mace                          ;   9;  9000;  10;          0;
  10;  100; bow                           ;   4;  4000;   8;          0;
- 12;  100; fighting staff                ;   9;  9000;   9;          0;
  14;  100; spear                         ;   9;  9000;   9;          0;
  16;  100; long sword                    ;   9;  9000;   8;          0;
  20;  100; crossbow                      ;   9;  9000;  10;          0;
@@ -823,10 +822,6 @@ $1n tells you, 'Remove all equipment, please.';
  36;   70; battle club                   ;  14; 14000;  18;          0;
  48;   90; battle mace                   ;  14; 14000;  18;          0;
  50;   90; maul                          ;  14; 14000;  16;          0;
- 28;   90; bill guisarme                 ;  16; 16000;  18;          0;
- 55;   90; ball and chain mace           ;  14; 14000;  16;          0;
- 22;   90; war axe                       ;  14; 14000;  16;          0;
- 15;   90; hand hammer                   ;  14; 14000;  16;          0;
 "
 
 #elif defined(_SPELL)
