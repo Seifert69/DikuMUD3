@@ -3119,7 +3119,7 @@ movement SECT_CITY
 gmap(588,749)  
 north to s_prom5;
 south to park1;
-flags {UNIT_FL_NO_MOB}
+// flags {UNIT_FL_NO_MOB}
 ALWAYS_LIGHT
 end
 
@@ -3139,7 +3139,7 @@ north to park4;
 south to park_rd3;
 east to bank;
 west to jewel_shop;
-flags {UNIT_FL_NO_MOB}
+// flags {UNIT_FL_NO_MOB} -- removing flags to avoid MOBs getting stuck. 
 ALWAYS_LIGHT
 end
 
