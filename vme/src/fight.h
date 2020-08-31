@@ -8,6 +8,10 @@
 #ifndef _MUD_FIGHT_H
 #define _MUD_FIGHT_H
 
+#include <string>
+#include <cstring>
+
+
 struct SFightColorSet
 {
     char *pAttacker;
@@ -33,11 +37,11 @@ int one_hit (class unit_data * att, class unit_data * def,
 int simple_one_hit (class unit_data * att, class unit_data * def);
 int char_dual_wield (class unit_data * ch);
 void melee_violence (class unit_data * ch, int primary);
-int melee_bonus (class unit_data * att, class unit_data * def,
-                 int hit_loc,
-                 int *pAtt_weapon_type, class unit_data ** pAtt_weapon,
-                 int *pDef_armour_type, class unit_data ** pDef_armour,
-                 int primary = TRUE);
+int melee_bonus(class unit_data *att, class unit_data *def,
+                int hit_loc,
+                int *pAtt_weapon_type, class unit_data **pAtt_weapon,
+                int *pDef_armour_type, class unit_data **pDef_armour,
+                int primary = TRUE, std::string *pStat = NULL);
 int shield_bonus (class unit_data * att, class unit_data * def,
                   class unit_data ** pDef_shield);
 void modify_hit(class unit_data *ch, int hit);
