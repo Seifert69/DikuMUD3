@@ -1158,9 +1158,10 @@ extra {PLAYER_R, NAME}{DAMAGE,PERCENT} \
 ACTION
 
 
-#define DIL_GINT_EFFDEX  0  // return the CHAR's effective_dex()
-#define DIL_GINT_REQXP   1  // return the required_xp(i) for level i using the INT parameter i
-#define DIL_GINT_LEVELXP 2  // return the level_xp(i) (XP needed for level i->i+1)
+#define DIL_GINT_EFFDEX     0  // return the CHAR's effective_dex()
+#define DIL_GINT_REQXP      1  // return the required_xp(i) for level i using the INT parameter i
+#define DIL_GINT_LEVELXP    2  // return the level_xp(i) (XP needed for level i->i+1)
+#define DIL_GINT_DESCRIPTOR 3  // returns 0 if PC has no descriptor. 1 for all else
 
 
 
