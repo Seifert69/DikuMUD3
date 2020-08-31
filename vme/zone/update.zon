@@ -332,55 +332,55 @@ dilend
 // NPCs only
 dilbegin unique fnpri(FN_PRI_BODY) regenerate();
 external
-    integer hit_gain(u:unitptr);
-    integer mana_gain(u:unitptr);
-    integer move_gain(u:unitptr);
+   integer hit_gain(u:unitptr);
+   integer mana_gain(u:unitptr);
+   integer move_gain(u:unitptr);
+
 var
-    hgain:integer;
-    mgain:integer;
-    egain:integer;
+   hgain:integer;
+   mgain:integer;
+   egain:integer;
+
 code
 {
-    self.hp := self.max_hp;
-    self.endurance := self.max_endurance;
-    self.mana := self.max_mana;
+   self.hp := self.max_hp;
+   self.endurance := self.max_endurance;
+   self.mana := self.max_mana;
 
+   :start:
+   heartbeat := PULSE_POINTS;
+   wait(SFB_TICK, (self.hp<self.max_hp) or (self.mana<self.max_mana) or (self.endurance<self.max_endurance));
 
-  :start:
-    heartbeat := PULSE_POINTS;
-    wait(SFB_TICK,((self.hp<self.max_hp) or (self.mana<self.max_mana) or
-            (self.endurance<self.max_endurance)));
+   if (self.position >= POSITION_STUNNED)
+   {
+      hgain := hit_gain(self);
+      mgain := mana_gain(self);
+      egain := 2 * move_gain(self);
 
-    if (self.position>=POSITION_STUNNED)
-    {
-        hgain:=hit_gain(self);
-        mgain:=mana_gain(self);
-        egain:=(move_gain(self)*2);
+      if ((self.mana+mgain)>self.max_mana)
+         self.mana:=self.max_mana;
+      else
+         self.mana:=self.mana+mgain;
 
-        if ((self.mana+mgain)>self.max_mana)
-          self.mana:=self.max_mana;
-        else
-          self.mana:=self.mana+mgain;
+      if ((self.endurance+egain)>self.max_endurance)
+         self.endurance:=self.max_endurance;
+      else
+         self.endurance:=self.endurance+egain;
 
-        if ((self.endurance+egain)>self.max_endurance)
-          self.endurance:=self.max_endurance;
-        else
-          self.endurance:=self.endurance+egain;
+      if (hgain>=0)
+      {
+         if ((self.hp+hgain)>self.max_hp)
+            self.hp:=self.max_hp;
+         else
+            self.hp:=self.hp+hgain;
+      }
+      else
+         self.hp:=self.hp+hgain;
 
-        if (hgain>=0)
-        {
-            if ((self.hp+hgain)>self.max_hp)
-              self.hp:=self.max_hp;
-            else
-              self.hp:=self.hp+hgain;
-        }
-        else
-          self.hp:=self.hp+hgain;
-
-        if (self.mana<0)
-          self.mana:=0;
-        if (self.endurance<0)
-          self.endurance:=0;
+      if (self.mana<0)
+         self.mana:=0;
+      if (self.endurance<0)
+         self.endurance:=0;
     }
     else if (self.position==POSITION_INCAP)
     {
