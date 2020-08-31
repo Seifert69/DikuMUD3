@@ -3289,6 +3289,13 @@ void dilfe_gint(register class dilprg *p)
             v->val.num = level_xp(p_i);
             break;
 
+        case DIL_GINT_DESCRIPTOR:
+            if ((p_u != NULL) && IS_PC(p_u))
+                v->val.num = (CHAR_DESCRIPTOR(p_u) != NULL);
+            else
+                v->val.num = 1;
+            break;
+
         default:
             v->type = DILV_FAIL; /* failed */
             slog(LOG_ALL, 0, "getinteger() was given incorrect index %d by DIL %s@%s.",
