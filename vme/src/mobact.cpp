@@ -74,6 +74,7 @@ void ResetFptrTimer(class unit_data *u, class unit_fptr *fptr)
     membug_verify(fptr->data);
 }
 
+
 void special_event(void *p1, void *p2)
 {
     class unit_data *u = (class unit_data *)p1;
@@ -109,19 +110,21 @@ void special_event(void *p1, void *p2)
         return;
     if (fptr->event)
         fptr->event->func = NULL;
+
     fptr->event = NULL;
     priority = FALSE;
+
     for (ftmp = UNIT_FUNC(u); ftmp; ftmp = ftmp->next)
     {
-        if (ftmp != fptr)
-        {
-            if (IS_SET(ftmp->flags, SFB_PRIORITY))
-                priority = TRUE;
-        }
+        if (ftmp == fptr)
+            break;
+
+        if (IS_SET(ftmp->flags, SFB_PRIORITY))
+            priority = TRUE;
     }
+
     if (!priority)
-    /* If switched, disable all tick functions, so we can control
-           the mother fucker!
+    /* If switched, disable all tick functions, so we can control the mother fucker!
            if (!IS_CHAR (u) || !CHAR_IS_SWITCHED (u)) */
     {
         if (unit_function_array[fptr->index].func)
