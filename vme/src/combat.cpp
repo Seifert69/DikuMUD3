@@ -452,4 +452,6 @@ void stat_combat(const class unit_data *god, class unit_data *u)
    string str;
    melee_bonus(u, f, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
    send_to_char(str.c_str(), god);
+   melee_bonus(f, u, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
+   send_to_char(str.c_str(), god);
 }
