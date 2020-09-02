@@ -240,6 +240,7 @@
 
         .room_title  { display: inline; }
         .room_descr  { display: inline; font-style: italic; width: 600px; }
+        .exit        { display: inline; }
         .score       { display: inline; color:aquamarine; }
         .social_self { display: inline; color:white; }
         .social_other { display: inline; color:white; }

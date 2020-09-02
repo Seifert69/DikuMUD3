@@ -262,6 +262,7 @@
 
         .room_title  { display: inline; color: #FFBB00; }
         .room_descr  { display: inline; font-style: italic; width: 600px; color:#FFBB00; }
+        .exit        { display: inline; }
         .score       { display: inline; color:#FFBB00; }
         .social_self { display: inline; color:#FFBB00; }
         .social_other { display: inline; color:#FFBB00; }
