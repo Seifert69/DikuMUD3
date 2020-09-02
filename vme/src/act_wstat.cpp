@@ -1365,7 +1365,7 @@ void do_wstat(class unit_data *ch, char *argument,
     else if (!strncmp(buf, "bank", strlen(buf)))
         stat_bank(ch, u);
     else if (!strncmp(buf, "combat", strlen(buf)))
-        stat_combat(ch, u);
+        stat_combat(ch, u, argument);
     else if (!strncmp(buf, "info", strlen(buf)))
         stat_extra_info(ch, u, argument);
     else if (!strncmp(buf, "ip", strlen(buf)))
