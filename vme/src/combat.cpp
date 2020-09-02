@@ -13,6 +13,7 @@
 #include "interpreter.h"
 #include "utility.h"
 #include "fight.h"
+#include "unitfind.h"
 
 // The Global Combat List...
 
@@ -429,29 +430,46 @@ void stop_fighting(class unit_data *ch, class unit_data *victim)
 /*                                                                         */
 /* ======================================================================= */
 
-void stat_combat(const class unit_data *god, class unit_data *u)
+void stat_combat(class unit_data *god, class unit_data *u, const char *pStr)
 {   
+   class unit_data *u2;
+
    if (!IS_CHAR(u))
    {
       act("$2n is not a pc / npc.", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
       return;
    }
 
+   u2 = NULL;
+
+   if (!str_is_empty(pStr))
+   {
+      u2 = find_unit(god, (char **) &pStr, 0, FIND_UNIT_SURRO);
+   }
+
+   if (u2 == NULL)
+      u2 = god;
+
+   if (CHAR_FIGHTING(u))
+      u2 = CHAR_FIGHTING(u);
+
+   if (!IS_CHAR(u2))
+   {
+      act("$2n is not a pc / npc.", A_ALWAYS, god, u2, cActParameter(), TO_CHAR);
+      return;
+   }
+
    CombatList.status(god);
 
-   class unit_data *f;
-   f = CHAR_FIGHTING(u);
-   if (!f)
-      f = u;
-
-  if (!CHAR_COMBAT(u))
+   if (!CHAR_COMBAT(u))
       act("No combat structure on '$2n'", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
    else
       CHAR_COMBAT(u)->status(god);
 
+
    string str;
-   melee_bonus(u, f, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
+   melee_bonus(u, u2, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
    send_to_char(str.c_str(), god);
-   melee_bonus(f, u, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
+   melee_bonus(u2, u, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
    send_to_char(str.c_str(), god);
 }

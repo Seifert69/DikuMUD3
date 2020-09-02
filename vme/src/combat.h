@@ -86,7 +86,7 @@ void add_fighting (class unit_data * ch,
                    class unit_data * vict, int bMelee = FALSE);
 void stop_fighting (class unit_data * ch, class unit_data * victim = NULL);
 
-void stat_combat (const class unit_data * ch, class unit_data * u);
+void stat_combat(class unit_data * ch, class unit_data * u, const char *pStr);
 
 #endif
 
