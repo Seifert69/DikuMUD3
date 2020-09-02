@@ -596,8 +596,8 @@ int melee_bonus(class unit_data *att, class unit_data *def,
 
    if (CHAR_AWAKE(def))
    {
-      hm = 2* ((att_abil - def_dex) + (att_wpn_knowledge - def_wpn_knowledge) + (att_bonus - def_bonus));
-      // hm = 2* ((att_abil - def_dex) + (att_wpn_knowledge - def_wpn_knowledge/3) + att_bonus - def_bonus + CHAR_LEVEL(att) - CHAR_LEVEL(def));
+      hm = 2 * (att_abil - def_dex) + 2 * (att_wpn_knowledge - def_wpn_knowledge) + (att_bonus - def_bonus);
+
       if (pStat)
       {
          sprintf(buf, "Result              :  %4d<br/>", hm);
@@ -606,7 +606,7 @@ int melee_bonus(class unit_data *att, class unit_data *def,
    }
    else
    {
-      hm = 2* (att_abil + att_wpn_knowledge + att_bonus + CHAR_LEVEL(att) - CHAR_LEVEL(def));
+      hm = 2 * att_abil + 2 * att_wpn_knowledge + att_bonus;
       if (pStat)
       {
          sprintf(buf, "Result (sleep def)  :  %4d<br/>", hm);
@@ -616,7 +616,7 @@ int melee_bonus(class unit_data *att, class unit_data *def,
 
    if (pStat)
    {
-      pStat->append("Result = 2*((att_abil-def_dex) + (att_wpn - def_wpn/3) + (att_bonus - def_bonus)) + roll<br/>");
+      pStat->append("Result = 2*(att_abil-def_dex) + 2*(att_wpn - def_wpn) + (att_bonus - def_bonus)) + roll<br/>");
       pStat->append("<br/>");
 
       int dam5  = weapon_damage(5 + hm, att_wpn_type, def_armour_type);
