@@ -406,7 +406,17 @@ int weapon_attack_skill(class unit_data *ch, int skill)
 {
     if (IS_PC(ch))
     {
-        return PC_WPN_SKILL(ch, skill) == 0 ? -50 : PC_WPN_SKILL(ch, skill);
+        int n;
+
+        n = PC_WPN_SKILL(ch, skill);
+
+        if (TREE_ISLEAF(wpn_tree, skill))
+            n = MAX(TREE_PARENT(wpn_tree, skill), n);
+
+        if (n == 0)
+            n = -25;
+
+        return n;
     }
     else
     {

@@ -394,7 +394,6 @@ int melee_bonus(class unit_data *att, class unit_data *def,
 
    int def_armour_type, tmp;
    class unit_data *def_armour;
-
    int hm;
 
    if (pStat)
@@ -580,11 +579,14 @@ int melee_bonus(class unit_data *att, class unit_data *def,
 
    int def_dex = effective_dex(def);
    int att_abil = weapon_attack_ability(att, att_wpn_type);
+
    if (pStat)
    {
+      sprintf(buf, " --- SUMMARY ---<br/>");
+      pStat->append(buf);
       sprintf(buf, "Abil wpn vs def DB  :  %4d    %4d<br/>", att_abil, def_dex);
       pStat->append(buf);
-      sprintf(buf, "Wpn knowledge vs 1/3:  %4d    %4d<br/>", att_wpn_knowledge, def_wpn_knowledge/3);
+      sprintf(buf, "Wpn knowledge       :  %4d    %4d<br/>", att_wpn_knowledge, def_wpn_knowledge);
       pStat->append(buf);
       sprintf(buf, "Att bonus vs Def    :  %4d    %4d<br/>", att_bonus, def_bonus);
       pStat->append(buf);
@@ -594,7 +596,7 @@ int melee_bonus(class unit_data *att, class unit_data *def,
 
    if (CHAR_AWAKE(def))
    {
-      hm = 2* ((att_abil - def_dex) + (att_wpn_knowledge - def_wpn_knowledge/3) + att_bonus - def_bonus);
+      hm = 2* ((att_abil - def_dex) + (att_wpn_knowledge - def_wpn_knowledge) + (att_bonus - def_bonus));
       // hm = 2* ((att_abil - def_dex) + (att_wpn_knowledge - def_wpn_knowledge/3) + att_bonus - def_bonus + CHAR_LEVEL(att) - CHAR_LEVEL(def));
       if (pStat)
       {
