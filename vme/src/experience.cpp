@@ -224,15 +224,16 @@ int spell_bonus(class unit_data *att, class unit_data *medium,
    att_spl_knowledge = spell_attack_skill(medium, spell_number);
    def_spl_knowledge = spell_defense_skill(def, spell_number);
 
+   // MS2020. Maybe the CHAR_LEVEL should not be a part of the final formula.
    if (CHAR_AWAKE(def))
    {
-      hm = 2 * (spell_attack_ability(medium, spell_number) - spell_ability(def, ABIL_BRA, spell_number) +
-               (att_spl_knowledge - def_spl_knowledge/3) + (att_bonus - def_bonus) + CHAR_LEVEL(att) - CHAR_LEVEL(def));
+      hm = 2 * (spell_attack_ability(medium, spell_number) - spell_ability(def, ABIL_BRA, spell_number)) +
+           2 * (att_spl_knowledge - def_spl_knowledge) + (att_bonus - def_bonus) + CHAR_LEVEL(att) - CHAR_LEVEL(def);
    }
    else
    {
-      hm = 2 * (spell_attack_ability(medium, spell_number) +
-               (att_spl_knowledge) + (att_bonus - def_bonus) + CHAR_LEVEL(att) - CHAR_LEVEL(def));
+      hm = 2 * spell_attack_ability(medium, spell_number) +
+           2 * att_spl_knowledge + (att_bonus - def_bonus) + CHAR_LEVEL(att) - CHAR_LEVEL(def);
    }
 
    return MAX(-50, hm);
