@@ -169,8 +169,8 @@ int char_weapon_dam (class unit_data * ch, class unit_data * weapon);
 int char_hand_dam (class unit_data * ch);
 
 int relative_level (int l1, int l2);
-int weapon_defense_skill (class unit_data * ch, int skill);
-int weapon_attack_skill (class unit_data * ch, int skill);
+int weapon_defense_skill(class unit_data * ch, int skill);
+int weapon_attack_skill(class unit_data * ch, int skill);
 int weapon_attack_ability(class unit_data *ch, int skill);
 int hit_location (class unit_data * att, class unit_data * def);
 int effective_dex (class unit_data * ch);

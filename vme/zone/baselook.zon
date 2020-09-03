@@ -1954,7 +1954,7 @@ while(i < length(exit_list))             /* generate the string from the stringl
    i := i + 1;
   }
 
-exit_str := exit_str + "</div>";
+exit_str := exit_str + "</div><br/>";
 
 return (exit_str);
 

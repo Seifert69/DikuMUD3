@@ -224,15 +224,16 @@ int spell_bonus(class unit_data *att, class unit_data *medium,
    att_spl_knowledge = spell_attack_skill(medium, spell_number);
    def_spl_knowledge = spell_defense_skill(def, spell_number);
 
+   // MS2020. Maybe the CHAR_LEVEL should not be a part of the final formula.
    if (CHAR_AWAKE(def))
    {
-      hm = 2 * (spell_attack_ability(medium, spell_number) - spell_ability(def, ABIL_BRA, spell_number) +
-               (att_spl_knowledge - def_spl_knowledge/3) + (att_bonus - def_bonus) + CHAR_LEVEL(att) - CHAR_LEVEL(def));
+      hm = 2 * (spell_attack_ability(medium, spell_number) - spell_ability(def, ABIL_BRA, spell_number)) +
+           2 * (att_spl_knowledge - def_spl_knowledge) + (att_bonus - def_bonus) + CHAR_LEVEL(att) - CHAR_LEVEL(def);
    }
    else
    {
-      hm = 2 * (spell_attack_ability(medium, spell_number) +
-               (att_spl_knowledge) + (att_bonus - def_bonus) + CHAR_LEVEL(att) - CHAR_LEVEL(def));
+      hm = 2 * spell_attack_ability(medium, spell_number) +
+           2 * att_spl_knowledge + (att_bonus - def_bonus) + CHAR_LEVEL(att) - CHAR_LEVEL(def);
    }
 
    return MAX(-50, hm);
@@ -394,7 +395,6 @@ int melee_bonus(class unit_data *att, class unit_data *def,
 
    int def_armour_type, tmp;
    class unit_data *def_armour;
-
    int hm;
 
    if (pStat)
@@ -580,11 +580,14 @@ int melee_bonus(class unit_data *att, class unit_data *def,
 
    int def_dex = effective_dex(def);
    int att_abil = weapon_attack_ability(att, att_wpn_type);
+
    if (pStat)
    {
+      sprintf(buf, " --- SUMMARY ---<br/>");
+      pStat->append(buf);
       sprintf(buf, "Abil wpn vs def DB  :  %4d    %4d<br/>", att_abil, def_dex);
       pStat->append(buf);
-      sprintf(buf, "Wpn knowledge vs 1/3:  %4d    %4d<br/>", att_wpn_knowledge, def_wpn_knowledge/3);
+      sprintf(buf, "Wpn knowledge       :  %4d    %4d<br/>", att_wpn_knowledge, def_wpn_knowledge);
       pStat->append(buf);
       sprintf(buf, "Att bonus vs Def    :  %4d    %4d<br/>", att_bonus, def_bonus);
       pStat->append(buf);
@@ -594,8 +597,8 @@ int melee_bonus(class unit_data *att, class unit_data *def,
 
    if (CHAR_AWAKE(def))
    {
-      hm = 2* ((att_abil - def_dex) + (att_wpn_knowledge - def_wpn_knowledge/3) + att_bonus - def_bonus);
-      // hm = 2* ((att_abil - def_dex) + (att_wpn_knowledge - def_wpn_knowledge/3) + att_bonus - def_bonus + CHAR_LEVEL(att) - CHAR_LEVEL(def));
+      hm = 2 * (att_abil - def_dex) + 2 * (att_wpn_knowledge - def_wpn_knowledge) + (att_bonus - def_bonus);
+
       if (pStat)
       {
          sprintf(buf, "Result              :  %4d<br/>", hm);
@@ -604,7 +607,7 @@ int melee_bonus(class unit_data *att, class unit_data *def,
    }
    else
    {
-      hm = 2* (att_abil + att_wpn_knowledge + att_bonus + CHAR_LEVEL(att) - CHAR_LEVEL(def));
+      hm = 2 * att_abil + 2 * att_wpn_knowledge + att_bonus;
       if (pStat)
       {
          sprintf(buf, "Result (sleep def)  :  %4d<br/>", hm);
@@ -614,7 +617,7 @@ int melee_bonus(class unit_data *att, class unit_data *def,
 
    if (pStat)
    {
-      pStat->append("Result = 2*((att_abil-def_dex) + (att_wpn - def_wpn/3) + (att_bonus - def_bonus)) + roll<br/>");
+      pStat->append("Result = 2*(att_abil-def_dex) + 2*(att_wpn - def_wpn) + (att_bonus - def_bonus)) + roll<br/>");
       pStat->append("<br/>");
 
       int dam5  = weapon_damage(5 + hm, att_wpn_type, def_armour_type);
@@ -672,7 +675,7 @@ int base_consider(class unit_data *att, class unit_data *def, string *pStr)
    att_wpn_type = WPN_ROOT;
 
    bonus = melee_bonus(att, def, WEAR_BODY, &att_wpn_type, NULL, &def_arm_type, NULL, 1, pStr);
-   bonus -= 50; // Compensate for the 2*-25 for def not fighting attacker
+   bonus -= 25; // Compensate for the -25 for def not fighting attacker
 
    CHAR_POS(def) = ocp;
 
