@@ -674,7 +674,7 @@ int base_consider(class unit_data *att, class unit_data *def, string *pStr)
    att_wpn_type = WPN_ROOT;
 
    bonus = melee_bonus(att, def, WEAR_BODY, &att_wpn_type, NULL, &def_arm_type, NULL, 1, pStr);
-   bonus -= 50; // Compensate for the 2*-25 for def not fighting attacker
+   bonus -= 25; // Compensate for the -25 for def not fighting attacker
 
    CHAR_POS(def) = ocp;
 
