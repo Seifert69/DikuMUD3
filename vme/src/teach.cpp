@@ -1083,8 +1083,8 @@ int teach_init(struct spec_arg *sarg)
                a_skill.min_glevel = 0;
                a_skill.max_skill = 100 + max_skill_mod(weapon_prof_table[n].profession_cost[nProfession]);
                a_skill.node = n;
-               a_skill.min_cost_per_point = 10;
-               a_skill.max_cost_per_point = 10000 + -1000 * max_skill_mod(weapon_prof_table[n].profession_cost[nProfession]);
+               a_skill.min_cost_per_point = 1;
+               a_skill.max_cost_per_point = 1000 + -100 * max_skill_mod(weapon_prof_table[n].profession_cost[nProfession]);
                packet->teaches[count - 1] = a_skill;
 
                count++;
