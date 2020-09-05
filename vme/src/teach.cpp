@@ -34,7 +34,7 @@
  * meaning you could have 90 in an ability in 30 levels. Or you can have 90 skill in 15 levels.
  */
 #define PRACTICE_ABILITY_GAIN (1)  // Was 2 in Diku II
-#define PRACTICE_SKILL_GAIN (2)    // Was 5 in Diku II. 
+#define PRACTICE_SKILL_GAIN (5)    // Was 5 in Diku II. I tried 2 but that's too low.
 
 /* Use -1 in node to indicate end of teach_type */
 struct skill_teach_type
@@ -86,6 +86,23 @@ static int gold_cost(struct skill_teach_type *s, int level)
     }
 }
 
+int practice_skill_gain(int skill)
+{
+    // This function was designed on the premise that 5 is the number
+    // and the number is 5.
+    assert(PRACTICE_SKILL_GAIN == 5);
+
+    if (skill < 40)
+        return PRACTICE_SKILL_GAIN;
+    else if (skill < 60)
+        return PRACTICE_SKILL_GAIN - 1;
+    else if (skill < 75)
+        return PRACTICE_SKILL_GAIN - 2;
+    else if (skill < 100)
+        return PRACTICE_SKILL_GAIN - 3;
+    else
+        return 1;
+}
 
 // 0 modifiers returns AVERAGE_SKILL_COST (10)
 // If the sum of mods > 0 it goes down by one per mod to minimum of 3
@@ -616,7 +633,7 @@ int practice(struct spec_arg *sarg, struct teach_packet *pckt,
     if (pckt->type == TEACH_ABILITIES)
         pc_values[pckt->teaches[teach_index].node] += PRACTICE_ABILITY_GAIN;
     else
-        pc_values[pckt->teaches[teach_index].node] += PRACTICE_SKILL_GAIN;
+        pc_values[pckt->teaches[teach_index].node] += practice_skill_gain(pc_values[pckt->teaches[teach_index].node]);
 
     int idx = pckt->teaches[teach_index].node;
 
