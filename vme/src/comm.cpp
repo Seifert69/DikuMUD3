@@ -255,8 +255,11 @@ void act_generate(char *buf, const char *str, int show_type,
 
     *buf = 0;
 
-    if (!IS_CHAR(to) || !CHAR_DESCRIPTOR(to) || arg1.m_u == NULL)
+    if (!IS_CHAR(to) || arg1.m_u == NULL)
         return;
+
+    //if (!IS_CHAR(to) || !CHAR_DESCRIPTOR(to) || arg1.m_u == NULL)
+    //    return;
 
     if (to == arg1.m_u &&
         (type == TO_ROOM || type == TO_NOTVICT || type == TO_REST))
