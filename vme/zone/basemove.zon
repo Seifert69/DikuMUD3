@@ -3281,7 +3281,18 @@ code
 
    // Reverse message
    if ((pc != null) and (ct==TRUE) and (i <= MAX_EXIT))
-      act("The $2t is opened.", A_ALWAYS, pc, rm.exit_names[i].[0], null, TO_ALL);
+   {
+      if (not rm.exit_names[i])
+      {
+         log("From room "+item.nameidx + "@" + item.zoneidx+" exit to room " + rm.nameidx + "@" + rm.zoneidx + " (reverse) ["+itoa(i)+"] has no door name");
+      }
+      else
+      {
+         arg1 := rm.exit_names[i].[0];
+         act("The $2t is opened.", A_ALWAYS, pc, arg1, null, TO_ALL);
+      }
+
+   }
 
    unset(item.exit_info[dir], EX_CLOSED);
 
