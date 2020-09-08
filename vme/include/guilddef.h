@@ -1556,8 +1556,8 @@ $1n tells you, 'I can not teach you any more, you are my equal in this.';
 $1n tells you, 'You must be without magical aura in order to learn.';
 $1n tells you, 'You must remove all that you wear.';
 
-  5;  100; locate wanted          ;  25; 2500;  20;          0;
- 10;  100; find wanted            ;  25; 2500;  20;          0;
+  0;  100; locate wanted          ;  25; 2500;  20;          0;
+  0;  100; find wanted            ;  25; 2500;  20;          0;
 "
 #elif defined(_SKILL)
 special SFUN_TEACH_INIT
@@ -1570,7 +1570,7 @@ $1n tells you, 'We are equals in that now.';
 $1n tells you, 'You must have no traces of magic about you to learn.';
 $1n tells you, 'Stand before me as you entered the world.';
 
-  0;  100; hand cuffing                   ;   5;  5000;   20;          0;
+  0;  100; hand cuffing                   ;   5;  2500;   20;          0;
 "
 #endif
 

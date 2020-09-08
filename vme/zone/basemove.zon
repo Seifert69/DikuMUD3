@@ -1336,53 +1336,94 @@ var
    lv_s    : string;
    lv_o    : string;
    dirlist : stringlist;
+   sdirlist : stringlist;
    clr_code : string;
+   exd : extraptr;
+   s : string;
 
 code
 {
+   if ((direc < 0) or (direc > MAX_EXIT))
+   {
+      log("Illegal direction");
+   }
+
    if (mover.type == UNIT_ST_PC)
       clr_code := "<div class='pc_title'>";
    else
       clr_code := "<div class='npc_title'>";
 
-   dirlist := {"north","east","south","west","up","down",
-               "northeast", "northwest","southeast","southwest"};
+   dirlist := {"north","east","south","west","up","down", "northeast", "northwest","southeast","southwest"};
 
    /* give leaving acts to others in the room */
    /* NOTE: THIS NEEDS MODIFICATION FOR INVISIBILITY, SNEAK, ETC */
 
    /* Check to see if the room has any special exiting extras to use in place of standard movement messages. */
 
-   lv_s := "$leave_" + dirlist.[direc] + "_s";
-   /*lv_s := "$leave_s";*/
+   exd := "$leave_s" in room_in.extra;
 
-   if (room_in.extra.[lv_s])
-      lv_s := room_in.extra.[lv_s].descr;
-   else if ((room_in.exit_to[direc].movement == SECT_WATER_SAIL) or (room_in.movement == SECT_WATER_SAIL))
-      lv_s := "You swim " + dirlist.[direc] + ".";
+   log("aiaiai");
+   if (exd)
+   {
+      log("gagag");
+      lv_s := exd.descr;
+
+      if (exd.names.[1])
+      {
+         log("yay");
+         sdirlist := {"n","e","s","w","u","d", "ne", "nw","se","sw"};
+         if (not (sdirlist.[direc] in exd.names.[1]))
+            lv_s := "";
+      }
+   }
    else
-      lv_s := "";
+   {
+      if ((room_in.exit_to[direc].movement == SECT_WATER_SAIL) or (room_in.movement == SECT_WATER_SAIL))
+         lv_s := "You swim " + dirlist.[direc] + ".";
+      else
+         lv_s := "";
+   }
 
 
    /* Now the leave for others */
-   lv_o := "$leave_" + dirlist.[direc] + "_o";
-   /*lv_o := "$leave_o"; */
+   exd := "$leave_o" in room_in.extra;
 
+   if (exd)
+   {
+      lv_o := clr_code + exd.descr + ".</div>";
 
-   if (room_in.extra.[lv_o])
-      lv_o := clr_code + room_in.extra.[lv_o].descr + ".</div>";
-   else if ((room_in.exit_to[direc].movement == SECT_WATER_SAIL) or (room_in.movement == SECT_WATER_SAIL))
-      lv_o := clr_code + "$1n swims " + dirlist.[direc] + ".</div>";
+      if (exd.names.[1])
+      {
+         log("yay2");
+         sdirlist := {"n","e","s","w","u","d", "ne", "nw","se","sw"};
+         if (not (sdirlist.[direc] in exd.names.[1]))
+            lv_o := "";
+      }
+   }
    else
-      lv_o := "";
+   {
+      if ((room_in.exit_to[direc].movement == SECT_WATER_SAIL) or (room_in.movement == SECT_WATER_SAIL))
+         lv_o := clr_code + "$1n swims " + dirlist.[direc] + ".</div>";
+      else
+         lv_o := "";
+   }
 
 
    /* Now we show the acts */
    if (lv_s != "")
-      act(lv_s + "</div>", A_SOMEONE, mover, dirlist.[direc], null, TO_CHAR);
+   {
+      s := dirlist.[direc];
+
+      if (not s)
+      {
+         log("Empty dirlist for direc " + itoa(direc));
+      }
+
+      act(lv_s, A_SOMEONE, mover, dirlist.[direc], null, TO_CHAR);
+   }
 
    if (lv_o != "")
-      act(clr_code + lv_o + "</div>", A_HIDEINV, mover, dirlist.[direc], null, TO_REST);
+      act(lv_o, A_HIDEINV, mover, dirlist.[direc], null, TO_REST);
    else if (not isset(mover.charflags, CHAR_SNEAK))
       act(clr_code + "$1n leaves $2t.</div>", A_HIDEINV, mover, dirlist.[direc], null, TO_REST);
 
@@ -1395,17 +1436,22 @@ dilend
    if he or she is sneaking and if the room has any movement extras to override the standard
    acts.  */
 dilbegin show_ar_walk(mover : unitptr, direc : integer, room_going : unitptr);
-
 var
-
    ar_s    : string;
    ar_o    : string;
    opplist : stringlist;
    clr_code : string;
    i        : integer;
    variedtext : stringlist;
+   sdirlist : stringlist;
+   exd : extraptr;
 code
 {
+   if ((direc < 0) or (direc > MAX_EXIT))
+   {
+      log("Illegal direction");
+   }
+
    if (mover.type == UNIT_ST_PC)
       clr_code := "<div class='pc_title'>";
    else
@@ -1414,24 +1460,49 @@ code
    opplist := {"south", "west", "north", "east", "down", "up", "southwest", "southeast",
                "northwest", "northeast"};
 
-   ar_s := "$arrive_" + opplist.[direc] + "_s";
+   exd := "$arrive_s" in room_going.extra;
 
-   if (room_going.extra.[ar_s])
-      ar_s := room_going.extra.[ar_s].descr;
+   if (exd)
+   {
+      ar_s := exd.descr;
+
+      if (exd.names.[1])
+      {
+         log("guj");
+         sdirlist := {"n","e","s","w","u","d", "ne", "nw","se","sw"};
+         if (not (sdirlist.[direc] in exd.names.[1]))
+            ar_s := "";
+      }
+   }
    else
+   {
       ar_s := "";
-
-   ar_o := "$arrive_" + opplist.[direc] + "_o";
+   }
 
    opplist := {"the south","the west","the north","the east","below","above",
                "the southwest", "the southeast","the northwest","the northeast"};
 
-   if (room_going.extra.[ar_o])
-      ar_o := room_going.extra.[ar_o].descr;
-   else if (room_going.movement == SECT_WATER_SAIL)
-      ar_o := "$1n swims from " + opplist.[direc] + ".";
+   exd := "$arrive_o" in room_going.extra;
+
+   if (exd)
+   {
+      ar_o := exd.descr;
+
+      if (exd.names.[1])
+      {
+         log("guj2");
+         sdirlist := {"n","e","s","w","u","d", "ne", "nw","se","sw"};
+         if (not (sdirlist.[direc] in exd.names.[1]))
+            ar_s := "";
+      }
+   }
    else
-      ar_o := "";
+   {
+      if (room_going.movement == SECT_WATER_SAIL)
+         ar_o := "$1n swims from " + opplist.[direc] + ".";
+      else
+         ar_o := "";
+   }
 
    if (ar_s != "")
       act(clr_code+ar_s+"</div>", A_HIDEINV, mover, opplist.[direc], null, TO_CHAR);
@@ -3210,7 +3281,18 @@ code
 
    // Reverse message
    if ((pc != null) and (ct==TRUE) and (i <= MAX_EXIT))
-      act("The $2t is opened.", A_ALWAYS, pc, rm.exit_names[i].[0], null, TO_ALL);
+   {
+      if (not rm.exit_names[i])
+      {
+         log("From room "+item.nameidx + "@" + item.zoneidx+" exit to room " + rm.nameidx + "@" + rm.zoneidx + " (reverse) ["+itoa(i)+"] has no door name");
+      }
+      else
+      {
+         arg1 := rm.exit_names[i].[0];
+         act("The $2t is opened.", A_ALWAYS, pc, arg1, null, TO_ALL);
+      }
+
+   }
 
    unset(item.exit_info[dir], EX_CLOSED);
 

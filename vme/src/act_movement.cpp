@@ -63,31 +63,38 @@
 
 extern struct command_info *cmd_dirs[MAX_EXIT + 1];
 
+
+// I had to add a act() kludge here. 
+// The $arrive_ and $leave_ extras depend on $2t for special descriptions.
+// However, many act() in movement require 3 units, so therefore $2t in extras is
+// string substituted in this procedure
+//
 const char *single_unit_messg(class unit_data *unit,
                               const char *type,
-                              const char *pSubStr,
-                              const char *mesg)
+                              int direction,
+                              char *mesg)
 {
    class extra_descr_data *exd = UNIT_EXTRA(unit).m_pList;
 
-   while (exd && (exd = exd->find_raw(type)))
+   exd = exd->find_raw(type);
+
+   if (exd && exd->descr.c_str())
    {
-      if (exd->descr.c_str())
+      if (is_in(direction, 0, MAX_EXIT))
       {
-         if (str_is_empty(pSubStr) || (exd->names.Name(1) == NULL))
-            return exd->descr.c_str();
-
-         if (str_cstr(exd->names.Name(1), pSubStr))
-            return exd->descr.c_str();
+         if ((exd->names.Name(1) == NULL) || str_cstr(exd->names.Name(1), dirs_short[direction]))
+         {
+            strcpy(mesg, exd->descr.c_str());
+            str_substitute("$2t", dirs[direction], mesg);
+         }
       }
-
-      exd = exd->next;
+      else
+      {
+         slog(LOG_ALL, 0, "Illegal direction %d", direction);
+      }
    }
 
-   if (str_is_empty(mesg))
-      return NULL;
-   else
-      return mesg;
+   return mesg;
 }
 
 /* Has 'pc' found the door at 'dir'? If direction exits and it is closed  */
@@ -316,12 +323,12 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
       }
 
       sprintf(aLeaveOther, "$2n leaves %s.", dirs[direction]);
-      ls = single_unit_messg(room_from, "$leave_s", dirs_short[direction], aLeaveSelf);
-      lo = single_unit_messg(room_from, "$leave_o", dirs_short[direction], aLeaveOther);
+      ls = single_unit_messg(room_from, "$leave_s", direction, aLeaveSelf);
+      lo = single_unit_messg(room_from, "$leave_o", direction, aLeaveOther);
 
       sprintf(aArrOther, "$2n has arrived from %s.", enter_dirs[rev_dir[direction]]);
-      as = single_unit_messg(room_to, "$arrive_s", dirs_short[direction], aArrSelf);
-      ao = single_unit_messg(room_to, "$arrive_o", dirs_short[direction], aArrOther);
+      as = single_unit_messg(room_to, "$arrive_s", rev_dir[direction], aArrSelf);
+      ao = single_unit_messg(room_to, "$arrive_o", rev_dir[direction], aArrOther);
    }
    else // Steed or boat code (shares scan for passenger combat)
    {

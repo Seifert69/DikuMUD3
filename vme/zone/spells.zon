@@ -5595,29 +5595,249 @@ code
 }
 dilend
 
+
+
 dilbegin string quality_str(i : integer);
 code
 {
-
-if(i <= -10) return("worthless");
-else if(i <= 0) return("horrible");
-else if(i <= 5) return("poor");
-else if(i <= 10) return("good");
-else if(i <= 15) return("really good");
-else if(i <= 20) return("great");
-else return("godly");
+   if (i <= -10) return("worthless");
+   else if (i < -1) return("poor");
+   else if (i <= 1) return("average");
+   else if (i <= 5) return("good");
+   else if (i <= 10) return("really good");
+   else if (i <= 15) return("superior");
+   else if (i <= 20) return("really superior");
+   else return("godly");
 }
 dilend
 
-dilbegin identify_1(medi : unitptr, tgt : unitptr,
-		    arg : string,
-		    hm : integer, effect : string);
+
+dilbegin string magic_str(i : integer);
+code
+{
+   if (i <= -1) return("detrimental");
+   else if (i == 0) return("no");
+   else if (i <= 5) return("");
+   else if (i <= 10) return("strong");
+   else if (i <= 15) return("superior");
+   else if (i <= 20) return("really superior");
+   else return("godly");
+}
+dilend
+
+
+
+// Learn about an item
+//    tgt : the item to learn about
+//    lvl : Level of insight >= 2 == full insight
+//
+dilbegin string identify_str(tgt : unitptr, lvl : integer);
 external
 	string quality_str(i : integer);
+	string magic_str(i : integer);
+   string race_name@skills(i : integer);
 var
-  exd : extraptr;
-  craft_str : string;
-  mag_str : string;
+   exd : extraptr;
+   craft_str : string;
+   mag_str : string;
+   s : string;
+   s2 : string;
+   sl : stringlist;
+   i : integer;
+
+code
+{
+   if (tgt.objecttype == ITEM_LIGHT)
+   {
+      s := sact("$3n is light source with "+itoa(tgt.value[0])+" hours left, and an illumination of "+itoa(tgt.value[1])+".",
+	            A_SOMEONE, self, null, tgt, TO_CHAR);
+   }
+   else if (tgt.objecttype == ITEM_SCROLL)
+   {
+      s := sact("$3n is a scroll with a magical power of "+itoa(tgt.value[0])+"<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+      if (lvl >= 2)
+      {
+         s2 := spellinfo(tgt.value[1], i, i, i,i ,i ,i ,i);
+         if (s2 != null)
+             s := s + "Spell: " + s2 + "<br/>";
+
+         s2 := spellinfo(tgt.value[2], i, i, i,i ,i ,i ,i);
+         if (s2 != null)
+             s := s + "Spell: " + s2 + "<br/>";
+
+         s2 := spellinfo(tgt.value[3], i, i, i,i ,i ,i ,i);
+         if (s2 != null)
+             s := s + "Spell: " + s2 + "<br/>";
+      }
+   }
+   else if (tgt.objecttype == ITEM_WAND)
+   {
+      s := sact("$3n is a wand with a magical power of "+itoa(tgt.value[0])+" and "+itoa(tgt.value[1])+
+                " charges of " + itoa(tgt.value[4]) + " left.<br/>",
+            	  A_SOMEONE, self, null, tgt, TO_CHAR);
+      if (lvl >= 2)
+      {
+         s2 := spellinfo(tgt.value[2], i, i, i,i ,i ,i ,i);
+         if (s2 != null)
+             s := s + "Spell: " + s2 + "<br/>";
+
+         s2 := spellinfo(tgt.value[3], i, i, i,i ,i ,i ,i);
+         if (s2 != null)
+             s := s + "Spell: " + s2 + "<br/>";
+      }
+   }
+   else if (tgt.objecttype == ITEM_STAFF)
+   {
+      s := sact("$3n is a staff with power "+itoa(tgt.value[0])+" and " + itoa(tgt.value[1])+
+               " charges of " + itoa(tgt.value[4]) + " left.<br/>",
+      	      A_SOMEONE, self, null, tgt, TO_CHAR);
+      if (lvl >= 2)
+      {
+         s2 := spellinfo(tgt.value[2], i, i, i,i ,i ,i ,i);
+         if (s2 != null)
+             s := s + "Spell: " + s2 + "<br/>";
+
+         s2 := spellinfo(tgt.value[3], i, i, i,i ,i ,i ,i);
+         if (s2 != null)
+             s := s + "Spell: " + s2 + "<br/>";
+      }
+   }
+   else if (tgt.objecttype == ITEM_WEAPON)
+   {
+      craft_str := quality_str(tgt.value[1]);
+      mag_str := magic_str(tgt.value[2]);
+
+      s := sact("$3n is a weapon that requires a " + weapon_name(tgt.value[0]) + " fighting style, is of " + craft_str + 
+                " craftsmanship " + " and has a " + mag_str + " magical modifier.<br/>",
+	               A_SOMEONE, self, null, tgt, TO_CHAR);
+
+      if (lvl >= 2)
+      {
+         s := s + "Craftsmanship: " + itoa(tgt.value[1]) + "<br/>";
+         s := s + "Magic: " + itoa(tgt.value[2]) + "<br/>";
+         if (tgt.value[3] != RACE_DO_NOT_USE)
+            s := s + "Slaying: " + race_name@skills(tgt.value[3]) + "<br/>";  // Find race string
+      }
+   }
+   else if (tgt.objecttype == ITEM_ARMOR)
+   {
+      sl := {"clothing", "soft leather", "hard leather", "chain mail", "plate mail"};
+
+      craft_str := quality_str(tgt.value[1]);
+      mag_str := magic_str(tgt.value[2]);
+      s := sact("$3n is a "+sl.[tgt.value[0]]+ " equivalent armor with "+craft_str+" craftsmanship and has a "+mag_str+" magical modifier.<br/>",
+      	  A_SOMEONE, self, null, tgt, TO_CHAR);
+
+      if (lvl >= 2)
+      {
+         s := s + "Craftsmanship: " + itoa(tgt.value[1]) + "<br/>";
+         s := s + "Magic: " + itoa(tgt.value[2]) + "<br/>";
+      }
+   }
+   else if (tgt.objecttype == ITEM_TREASURE)
+   {
+      s := sact("$3n appears to be nothing less than a treasure!",
+	               A_SOMEONE, self, null, tgt, TO_CHAR);
+   }
+   else if (tgt.objecttype == ITEM_POTION)
+   {
+      s := sact("$3n is a potion with power "+itoa(tgt.value[0]), A_SOMEONE, self, null, tgt, TO_CHAR);
+      if (lvl >= 2)
+      {
+         s2 := spellinfo(tgt.value[1], i, i, i,i ,i ,i ,i);
+         if (s2 != null)
+             s := s + "Spell: " + s2 + "<br/>";
+
+         s2 := spellinfo(tgt.value[2], i, i, i,i ,i ,i ,i);
+         if (s2 != null)
+             s := s + "Spell: " + s2 + "<br/>";
+
+         s2 := spellinfo(tgt.value[3], i, i, i,i ,i ,i ,i);
+         if (s2 != null)
+             s := s + "Spell: " + s2 + "<br/>";
+      }
+   }
+   else if (tgt.objecttype == ITEM_SHIELD)
+   {
+      craft_str := quality_str(tgt.value[1]);
+      mag_str := magic_str(tgt.value[2]);
+
+      s := sact("$3n is a shield with "+craft_str+" craftsmanship and has a "+mag_str+" magical modifier.<br/>",
+      	  A_SOMEONE, self, null, tgt, TO_CHAR);
+
+      if (lvl >= 2)
+      {
+         s := s + "Craftsmanship: " + itoa(tgt.value[1]) + "<br/>";
+         s := s + "Magic: " + itoa(tgt.value[2]) + "<br/>";
+      }
+   }
+   else if (tgt.objecttype == ITEM_WORN)
+   {
+      s := sact("$3n appears to be an item designed to be worn.", A_SOMEONE, self, null, tgt, TO_CHAR);
+   }
+   else if (tgt.objecttype == ITEM_NOTE)
+   {
+      s := sact("$3n seems to be of literary value.", A_SOMEONE, self, null, tgt, TO_CHAR);
+   }
+   else if (tgt.objecttype == ITEM_FOOD)
+   {
+      s := sact("$3n is consumable.", A_SOMEONE, self, null, tgt, TO_CHAR);
+      if (tgt.value[3] > 0)
+      	s := s + sact("It is poisoned.", A_SOMEONE, self, null, tgt, TO_CHAR);
+   }
+   else if (tgt.objecttype == ITEM_DRINKCON)
+   {
+      s := sact("$3n is a drink container.", A_SOMEONE, self, null, tgt, TO_CHAR);
+
+      if (tgt.value[3] > 0)
+      	s := s + sact("It is poisoned.", A_SOMEONE, self, null, tgt, TO_CHAR);
+   }
+   else if (tgt.objecttype == ITEM_KEY)
+   {
+      s := sact("$3n is a key.", A_SOMEONE, self, null, tgt, TO_CHAR);
+   }
+   else if (tgt.objecttype == ITEM_MONEY)
+   {
+      s := sact("$3n is money.", A_SOMEONE, self, null, tgt, TO_CHAR);
+   }
+   else if (tgt.objecttype == ITEM_PEN)
+   {
+      s := sact("$3n is a pen.", A_SOMEONE, self, null, tgt, TO_CHAR);
+   }
+   else if (tgt.objecttype == ITEM_BOAT)
+   {
+      s := sact("$3n is a boat which can carry "+itoa(tgt.capacity)+" pounds.", A_SOMEONE, self, null, tgt, TO_CHAR);
+   }
+   else if (tgt.objecttype == ITEM_CONTAINER)
+   {
+      if (dilfind("rot_corpse@death",tgt) or dilfind("rotting@spells",tgt))
+	      s := sact("It is a dead body.", A_SOMEONE, self, null, tgt, TO_CHAR);
+      else
+	      s := sact("It is a container.", A_SOMEONE, self, null, tgt, TO_CHAR);
+   }
+   else
+   {
+      s := sact("You gain no additional insight into this item.", A_SOMEONE, self, null, tgt, TO_CHAR);
+   }
+
+   exd := "$identify" in tgt.extra;
+   if (exd)
+      s := exd.descr + s;
+
+   exd := "$improved identify" in tgt.extra;
+   if (exd)
+      s := exd.descr + s;
+
+   return(s);
+}
+dilend
+
+
+dilbegin identify_1(medi : unitptr, tgt : unitptr, arg : string, hm : integer, effect : string);
+external
+   string identify_str(tgt : unitptr, lvl : integer);
+var
+   s : string;
 code
 {
    if (hm < 0)
@@ -5626,129 +5846,8 @@ code
       quit;
    }
 
-   exd := "$identify" in tgt.extra;
-
-   if (exd)
-   {
-      act(exd.descr, A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-
-   if (tgt.objecttype == ITEM_LIGHT)
-   {
-      act("$3n is light source with "+itoa(tgt.value[0])+" hours left, "+
-             "and an illumination of "+itoa(tgt.value[1])+".",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_SCROLL)
-   {
-      act("$3n is a scroll with a magical power of "+itoa(tgt.value[0]),
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_WAND)
-   {
-      act("$3n is a wand with a magical power of "+itoa(tgt.value[0])+
-	" and "+itoa(tgt.value[1])+" charges left.",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_STAFF)
-   {
-      act("$3n is a staff with power "+itoa(tgt.value[0])+
-	     " and "+itoa(tgt.value[1])+" charges left.",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_WEAPON)
-   {
-      craft_str := quality_str(tgt.value[1]);
-      mag_str := quality_str(tgt.value[2]);
-      act("$3n is a weapon of "+craft_str+" craftsmanship "+
-	" and has a "+mag_str+" magical modifier.",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_TREASURE)
-   {
-      act("$3n appears to be nothing less than a treasure!",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_ARMOR)
-   {
-      craft_str := quality_str(tgt.value[1]);
-      mag_str := quality_str(tgt.value[2]);
-      act("$3n is an armour with "+craft_str+" craftsmanship"+
-	     " and has a "+mag_str+" magical modifier.",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_POTION)
-   {
-      act("$3n is a potion with power "+itoa(tgt.value[0]),
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_WORN)
-   {
-      act("$3n appears to be an item designed to be worn.",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_NOTE)
-   {
-      act("$3n seems to be of literary value.",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_FOOD)
-   {
-      act("$3n is consumable.",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-      if (tgt.value[3] > 0)
-	act("It is poisoned.", A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_DRINKCON)
-   {
-      act("$3n is a drink container.",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-
-      if (tgt.value[3] > 0)
-	act("It is poisoned.", A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_KEY)
-   {
-      act("$3n is a key.",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_MONEY)
-   {
-      act("$3n is money.",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_PEN)
-   {
-      act("$3n is a pen.",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_BOAT)
-   {
-      act("$3n is a boat which can carry "+itoa(tgt.capacity)+" pounds.",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_SHIELD)
-   {
-      craft_str := quality_str(tgt.value[1]);
-      mag_str := quality_str(tgt.value[2]);
-      act("$3n is a shield of "+craft_str+" craftsmanship"+
-	  " and a "+mag_str+" magical bonus.",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else if (tgt.objecttype == ITEM_CONTAINER)
-   {
-  /*    if (isaff(tgt, ID_CORPSE))  */
-     if((dilfind("rot_corpse@death",tgt)) or (dilfind("rotting@spells",tgt)))
-	act("It is a dead body.", A_SOMEONE, self, medi, tgt, TO_CHAR);
-      else
-	act("It is a container.", A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
-   else
-   {
-      act("You gain no additional insight into this item.",
-	  A_SOMEONE, self, medi, tgt, TO_CHAR);
-   }
+   s := identify_str(tgt, 1);
+   sendtext(s, medi);
 
    quit;
 }
@@ -5758,9 +5857,11 @@ dilend
 dilbegin identify_2(medi : unitptr, tgt : unitptr,
 		    arg : string,
 		    hm : integer, effect : string);
+external
+   string identify_str(tgt : unitptr, lvl : integer);
+
 var
-  exd : extraptr;
-  i   : integer;
+  s : string;
 
 code
 {
@@ -5770,32 +5871,12 @@ code
       quit;
    }
 
-   i := 0;
-
-   exd := "$identify" in tgt.extra;
-
-   if (exd)
-   {
-      act(exd.descr, A_ALWAYS, self, null, null, TO_CHAR);
-      i := 1;
-   }
-
-
-   exd := "$improved identify" in tgt.extra;
-
-   if (exd)
-   {
-      act(exd.descr, A_ALWAYS, self, null, null, TO_CHAR);
-      i := 1;
-   }
-
-   if (i == 0)
-     act("There is nothing exceptional to learn about this item.",
-	 A_ALWAYS, self, null, null, TO_CHAR);
-
+   s := identify_str(tgt, 2);
+   sendtext(s, medi);
    quit;
 }
 dilend
+
 
 dilbegin control_undead(medi : unitptr, tgt : unitptr,
 			arg : string,

@@ -410,8 +410,8 @@ goto start;
 }
 dilend
 
-dilbegin item_charge(base_charge:integer);
 
+dilbegin item_charge(base_charge:integer);
 external
   string accept_dil@function (pc:unitptr,s:string);
 
@@ -560,6 +560,91 @@ goto how_much;
 
 :lost_pc:
    die := dildestroy ("busy@function",self);
+   unsecure(pc);
+   unsecure(thing);
+   goto start;
+}
+dilend /* wand_charge */
+
+
+dilbegin identifyhelp();
+external
+   string accept_dil@function (pc:unitptr,s:string);
+   string identify_str@spells(tgt : unitptr, lvl : integer);
+
+var
+   tcost   : integer;
+   state   : integer;
+   magmod  : integer;
+   addmag  : integer;
+   die     : integer;
+   result  : integer;
+   percent : integer;
+   thing   : unitptr;
+   pc      : unitptr;
+   answer  : string;
+   mn      : string;
+
+code
+{
+
+:init:
+   heartbeat := PULSE_SEC*3;
+
+:start:
+   wait(SFB_DONE, command("give") and (self==target));
+
+   pc:=activator;
+   thing:=medium;
+   secure(pc,lost_pc);
+   secure(thing,lost_pc);
+
+   if (not visible(self, pc))
+   {
+      exec("say I only do business with people I can see.", self );
+      exec("drop " + thing.name, self);
+      goto lost_pc;
+   }
+
+   dilcopy ("busy@function(Please wait I am busy with other work right now.", self);
+
+   pause;
+
+   if (thing.type != UNIT_ST_OBJ)
+   {
+      exec ("say How am I supposed to identify that then "+pc.name+"?",self);
+      exec ("bonk " + pc.name,self);
+      goto give_back;
+   }
+
+   tcost := 1*SILVER_MULT;
+
+   if (transfermoney(pc, self, tcost))
+   {
+      exec("emote touches " + thing.name + " softly and begins to chant...", self);
+      heartbeat:=PULSE_SEC*3;
+      mn := identify_str@spells(thing, 2);
+      pause;
+      exec("say There, this is what I could figure out, " + pc.name + ":", self);
+      act(mn, A_ALWAYS, pc, null, null, TO_ALL);
+      heartbeat:=PULSE_SEC*5;
+   }
+   else
+   {
+      exec ("say You can't afford my services right now. Please come back " +
+            "when you have enough money.",self);
+   }
+
+:give_back:
+   act( self.name + " returns your " + thing.name + " to you.",
+       A_ALWAYS,pc,null,null,TO_CHAR);
+   act(self.name + " returns $1n's " + thing.name + " to $1m.",
+       A_SOMEONE,pc,null,null,TO_REST);
+   link(thing,pc);
+   goto lost_pc;
+
+:lost_pc:
+   die := dildestroy("busy@function",self);
    unsecure(pc);
    unsecure(thing);
    goto start;
@@ -5606,6 +5691,26 @@ end
 
 %mobiles
 
+                                arianna
+
+names {"arianna", "mage"}
+title "Arianna the Mage"
+descr "Arianna the mage is here to help you identify items."
+extra {}
+"Arianna is a young halfling mage and she's making a living by
+helping adventurers identify their treasures. For 1 silver piece
+she will identify your items. Just give her an item and she'll do
+her work."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED, CHAR_DETECT_INVISIBLE}
+M_HALFLING_MAGE_FIRE(80,SEX_FEMALE,"acid ball")
+level 80
+alignment 100
+exp -200
+// xxx
+dilcopy identifyhelp@midgaard();
+end
+
 /* -------------------------- SHOP KEEPERS -------------------------- */
 
 randall
@@ -10340,6 +10445,7 @@ door main_st4 SOUTH {EX_CLOSED,EX_LOCKED}
 */
 
 /* ----- SHOP KEEPERS ----- */
+load arianna into mag_yard max 1
 
 load baker into baker_shop max 1
 {
