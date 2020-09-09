@@ -251,251 +251,19 @@ class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
 
 /* As find_unit below, except visibility is relative to
    viewer with respect to CHAR_CAN_SEE */
-
+//
+// type are the UNIT_ST bits to match for, default is FIND_UNIT (all bits)
+//
+// I consolidated almost identical version of this function. The old "dil" variant
+// didn't respect CHAR_CAN_SEE. Which led to odd game behaviour. If for any reason 
+// this also needs to work on units that can't be seen, let's add a boolean  argument if the
+// function only returns units that are visible to the viewer, or not.
+//
 class unit_data *find_unit_general(const class unit_data *viewer,
                                    const class unit_data *ch,
                                    char **arg,
-                                   const class unit_data *list, const ubit32 bitvector)
-{
-    class unit_data *best = NULL;
-    int best_len = 0;
-    ubit32 bitvectorm;
-
-    int i, number, original_number;
-    const char *ct = NULL;
-    char name[MAX_INPUT_LENGTH * 2], *c;
-    ubit1 is_fillword = TRUE;
-    class unit_data *u, *uu;
-
-    /* Eliminate the 'pay' bits */
-    bitvectorm = bitvector & FIND_UNIT_LOCATION_MASK;
-
-    for (c = *arg; isaspace(*c); c++)
-        ;
-
-    /* Eliminate spaces and all "ignore" words */
-    while (is_fillword)
-    {
-        for (i = 0; (name[i] = c[i]) && name[i] != ' '; i++)
-            ;
-        name[i] = 0;
-
-        if (search_block(name, fillwords, TRUE) < 0)
-            is_fillword = FALSE;
-        else
-            c += i;
-
-        for (; *c == ' '; c++)
-            ;
-    }
-
-    if (!*c)
-        return NULL;
-
-    str_remspc(c);
-
-    for (i = 0; isdigit(name[i] = c[i]); i++)
-        ;
-    name[i] = 0;
-
-    if (c[i] == '.')
-    {
-        number = original_number = atoi(name);
-        c += i + 1;
-    }
-    else
-        number = original_number = 1;
-
-    if (IS_CHAR(ch)) /* Only check bitvector if ch IS a char! */
-    {
-        /* Equipment can only be objects. */
-        if (IS_SET(bitvectorm, FIND_UNIT_EQUIP))
-            for (u = UNIT_CONTAINS(ch); u; u = u->next)
-                if (IS_OBJ(u) && OBJ_EQP_POS(u) &&
-                    ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
-                    (CHAR_LEVEL(viewer) >= UNIT_MINV(u)) &&
-                    (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
-                {
-                    if (ct - c > best_len)
-                    {
-                        number = original_number;
-                        best_len = ct - c;
-                    }
-
-                    if (--number == 0)
-                        best = u;
-                }
-
-        if (IS_SET(bitvectorm, FIND_UNIT_INVEN))
-            for (u = UNIT_CONTAINS(ch); u; u = u->next)
-                if ((ct = UNIT_NAMES(u).IsNameRaw(c)) &&
-                    ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
-                    (CHAR_LEVEL(viewer) >= UNIT_MINV(u)) &&
-                    !(IS_OBJ(u) && OBJ_EQP_POS(u)) && (ct - c >= best_len))
-                {
-                    if (ct - c > best_len)
-                    {
-                        number = original_number;
-                        best_len = ct - c;
-                    }
-
-                    if (--number == 0)
-                        best = u;
-                }
-
-        /* This is the ugly one, modified for transparance */
-        if (IS_SET(bitvectorm, FIND_UNIT_SURRO))
-        {
-            const char *tmp_self[] = {"self", NULL};
-
-            if ((ct = is_name_raw(c, tmp_self)))
-            {
-                *arg = (char *)ct;
-                return (class unit_data *)ch;
-            }
-
-            /* MS: Removed !IS_ROOM(UNIT_IN(ch)) because you must be able to
-               open rooms from the inside... */
-            if ((ct = UNIT_NAMES(UNIT_IN(ch)).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, UNIT_IN(ch)) && (ct - c >= best_len))
-            {
-                if (ct - c > best_len)
-                {
-                    number = original_number;
-                    best_len = ct - c;
-                }
-
-                if (--number == 0)
-                    best = UNIT_IN(ch);
-            }
-
-            /* Run through units in local environment */
-            for (u = UNIT_CONTAINS(UNIT_IN(ch)); u; u = u->next)
-            {
-                if (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u)) /* Cansee room in dark */
-                {
-                    if ((ct = UNIT_NAMES(u).IsNameRaw(c)) &&
-                        (ct - c >= best_len))
-                    {
-                        if (ct - c > best_len)
-                        {
-                            number = original_number;
-                            best_len = ct - c;
-                        }
-
-                        if (--number == 0)
-                            best = u;
-                    }
-
-                    /* check tranparancy */
-                    if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
-                        for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
-                            if (IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
-                            {
-                                if (ct - c > best_len)
-                                {
-                                    number = original_number;
-                                    best_len = ct - c;
-                                }
-
-                                if (--number == 0)
-                                    best = uu;
-                            }
-                }
-
-            } /* End for */
-
-            /* Run through units in local environment if upwards transparent */
-            if ((u = UNIT_IN(UNIT_IN(ch))) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)))
-            {
-                for (u = UNIT_CONTAINS(u); u; u = u->next)
-                    if (u != UNIT_IN(ch) && CHAR_CAN_SEE(viewer, u))
-                    {
-                        if ((ct = UNIT_NAMES(u).IsNameRaw(c)) &&
-                            (ct - c >= best_len))
-                        {
-                            if (ct - c > best_len)
-                            {
-                                number = original_number;
-                                best_len = ct - c;
-                            }
-
-                            if (--number == 0)
-                                best = u;
-                        }
-
-                        /* check down into transparent unit */
-                        if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
-                            for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
-                                if (IS_CHAR(uu) &&
-                                    (ct = UNIT_NAMES(uu).IsNameRaw(c)) &&
-                                    CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
-                                {
-                                    if (ct - c > best_len)
-                                    {
-                                        number = original_number;
-                                        best_len = ct - c;
-                                    }
-
-                                    if (--number == 0)
-                                        best = uu;
-                                }
-                    }
-            }
-        }
-
-        if (IS_SET(bitvectorm, FIND_UNIT_ZONE))
-            for (u = unit_list; u; u = u->gnext)
-                if ((ct = UNIT_NAMES(u).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, u) && unit_zone(u) == unit_zone(ch) && (ct - c >= best_len))
-                {
-                    if (ct - c > best_len)
-                    {
-                        number = original_number;
-                        best_len = ct - c;
-                    }
-
-                    if (--number == 0)
-                        best = u;
-                }
-
-        if (IS_SET(bitvectorm, FIND_UNIT_WORLD))
-            for (u = unit_list; u; u = u->gnext)
-                if ((ct = UNIT_NAMES(u).IsNameRaw(c)) &&
-                    CHAR_CAN_SEE(viewer, u) && (ct - c >= best_len))
-                {
-                    if (ct - c > best_len)
-                    {
-                        number = original_number;
-                        best_len = ct - c;
-                    }
-
-                    if (--number == 0)
-                        best = u;
-                }
-    }
-
-    for (; list; list = list->next)
-        if ((ct = UNIT_NAMES((class unit_data *)list).IsNameRaw(c)) && (ct - c >= best_len))
-        {
-            if (ct - c > best_len)
-            {
-                number = original_number;
-                best_len = ct - c;
-            }
-
-            if (--number == 0)
-                best = (class unit_data *)list;
-        }
-
-    *arg = (c + best_len);
-
-    return best;
-}
-
-class unit_data *find_unit_general_dil(const class unit_data *viewer,
-                                       const class unit_data *ch,
-                                       char **arg,
-                                       const class unit_data *list,
-                                       const ubit32 bitvector, ubit8 type)
+                                   const class unit_data *list,
+                                   const ubit32 bitvector, ubit8 type)
 {
     class unit_data *best = NULL;
     int best_len = 0;
@@ -555,6 +323,7 @@ class unit_data *find_unit_general_dil(const class unit_data *viewer,
         if (IS_SET(bitvectorm, FIND_UNIT_EQUIP))
             for (u = UNIT_CONTAINS(ch); u; u = u->next)
                 if (IS_SET(type, UNIT_TYPE(u)) && IS_OBJ(u) && OBJ_EQP_POS(u) &&
+                    ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
                     (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
                 {
                     if (ct - c > best_len)
@@ -569,7 +338,9 @@ class unit_data *find_unit_general_dil(const class unit_data *viewer,
 
         if (IS_SET(bitvectorm, FIND_UNIT_INVEN))
             for (u = UNIT_CONTAINS(ch); u; u = u->next)
-                if ((IS_SET(type, UNIT_TYPE(u))) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && !(IS_OBJ(u) && OBJ_EQP_POS(u)) && (ct - c >= best_len))
+                if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) &&
+                    ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
+                    !(IS_OBJ(u) && OBJ_EQP_POS(u)) && (ct - c >= best_len))
                 {
                     if (ct - c > best_len)
                     {
@@ -589,14 +360,12 @@ class unit_data *find_unit_general_dil(const class unit_data *viewer,
             if ((ct = is_name_raw(c, tmp_self)))
             {
                 *arg = (char *)ct;
-
-                if (IS_SET(type, UNIT_TYPE(ch)))
-                    return (class unit_data *)ch;
+                return (class unit_data *)ch;
             }
 
             /* MS: Removed !IS_ROOM(UNIT_IN(ch)) because you must be able to
                open rooms from the inside... */
-            if ((IS_SET(type, UNIT_TYPE(UNIT_IN(ch)))) && (ct = UNIT_NAMES(UNIT_IN(ch)).IsNameRaw(c)) && (ct - c >= best_len))
+            if (IS_SET(type, UNIT_TYPE(UNIT_IN(ch))) && (ct = UNIT_NAMES(UNIT_IN(ch)).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, UNIT_IN(ch)) && (ct - c >= best_len))
             {
                 if (ct - c > best_len)
                 {
@@ -611,32 +380,36 @@ class unit_data *find_unit_general_dil(const class unit_data *viewer,
             /* Run through units in local environment */
             for (u = UNIT_CONTAINS(UNIT_IN(ch)); u; u = u->next)
             {
-                if ((IS_SET(type, UNIT_TYPE(u))) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
+                if (IS_SET(type, UNIT_TYPE(u)) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
                 {
-                    if (ct - c > best_len)
+                    if ((ct = UNIT_NAMES(u).IsNameRaw(c)) &&
+                        (ct - c >= best_len))
                     {
-                        number = original_number;
-                        best_len = ct - c;
+                        if (ct - c > best_len)
+                        {
+                            number = original_number;
+                            best_len = ct - c;
+                        }
+
+                        if (--number == 0)
+                            best = u;
                     }
 
-                    if (--number == 0)
-                        best = u;
-                }
-
-                /* check tranparancy */
-                if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
-                    for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
-                        if ((IS_SET(type, UNIT_TYPE(uu))) && IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRaw(c)) && (ct - c >= best_len))
-                        {
-                            if (ct - c > best_len)
+                    /* check tranparancy */
+                    if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
+                        for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
+                            if (IS_SET(type, UNIT_TYPE(uu)) && IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
                             {
-                                number = original_number;
-                                best_len = ct - c;
-                            }
+                                if (ct - c > best_len)
+                                {
+                                    number = original_number;
+                                    best_len = ct - c;
+                                }
 
-                            if (--number == 0)
-                                best = uu;
-                        }
+                                if (--number == 0)
+                                    best = uu;
+                            }
+                }
 
             } /* End for */
 
@@ -644,9 +417,9 @@ class unit_data *find_unit_general_dil(const class unit_data *viewer,
             if ((u = UNIT_IN(UNIT_IN(ch))) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)))
             {
                 for (u = UNIT_CONTAINS(u); u; u = u->next)
-                    if (u != UNIT_IN(ch))
+                    if (u != UNIT_IN(ch) && CHAR_CAN_SEE(viewer, u))
                     {
-                        if ((IS_SET(type, UNIT_TYPE(u))) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
+                        if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
                         {
                             if (ct - c > best_len)
                             {
@@ -661,8 +434,9 @@ class unit_data *find_unit_general_dil(const class unit_data *viewer,
                         /* check down into transparent unit */
                         if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
                             for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
-                                if ((IS_SET(type, UNIT_TYPE(uu))) && IS_CHAR(uu) &&
-                                    (ct = UNIT_NAMES(uu).IsNameRaw(c)) && (ct - c >= best_len))
+                                if (IS_SET(type, UNIT_TYPE(uu)) && IS_CHAR(uu) &&
+                                    (ct = UNIT_NAMES(uu).IsNameRaw(c)) &&
+                                    CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
                                 {
                                     if (ct - c > best_len)
                                     {
@@ -679,7 +453,7 @@ class unit_data *find_unit_general_dil(const class unit_data *viewer,
 
         if (IS_SET(bitvectorm, FIND_UNIT_ZONE))
             for (u = unit_list; u; u = u->gnext)
-                if ((IS_SET(type, UNIT_TYPE(u))) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && unit_zone(u) == unit_zone(ch) && (ct - c >= best_len))
+                if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, u) && unit_zone(u) == unit_zone(ch) && (ct - c >= best_len))
                 {
                     if (ct - c > best_len)
                     {
@@ -693,7 +467,8 @@ class unit_data *find_unit_general_dil(const class unit_data *viewer,
 
         if (IS_SET(bitvectorm, FIND_UNIT_WORLD))
             for (u = unit_list; u; u = u->gnext)
-                if ((IS_SET(type, UNIT_TYPE(u))) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
+                if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) &&
+                    CHAR_CAN_SEE(viewer, u) && (ct - c >= best_len))
                 {
                     if (ct - c > best_len)
                     {
@@ -707,7 +482,7 @@ class unit_data *find_unit_general_dil(const class unit_data *viewer,
     }
 
     for (; list; list = list->next)
-        if ((IS_SET(type, UNIT_TYPE((class unit_data *)list))) && (ct = UNIT_NAMES((class unit_data *)list).IsNameRaw(c)) && (ct - c >= best_len))
+        if (IS_SET(type, UNIT_TYPE((class unit_data *) list)) && (ct = UNIT_NAMES((class unit_data *)list).IsNameRaw(c)) && (ct - c >= best_len) && CHAR_CAN_SEE(viewer, list))
         {
             if (ct - c > best_len)
             {
@@ -768,7 +543,7 @@ class unit_data *find_unit_dil(const class unit_data *ch, char **arg,
                                const class unit_data *list, const ubit32 bitvector,
                                ubit8 type)
 {
-    return find_unit_general_dil(ch, ch, arg, list, bitvector, type);
+    return find_unit_general(ch, ch, arg, list, bitvector, type);
 }
 
 class unit_data *find_symbolic_instance_ref(class unit_data *ref,

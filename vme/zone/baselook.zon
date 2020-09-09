@@ -293,7 +293,7 @@ return;
 then parses
    the argument, seeing which of the work dils it needs to call. */
 
-dilbegin do_look (arg:string);
+dilbegin do_look(arg:string);
 external
    string is_dir (s:string);
    look_blank(l2 : unitptr, arg:string);
@@ -359,9 +359,9 @@ code
    if ((arg1 == "in") or (arg1 == "i"))
    {
       if (temp != "")
-         look_in (self, temp);
+         look_in(self, temp);
       else
-         look_at (self, arg);
+         look_at(self, arg);
       quit;
    }
 
@@ -570,7 +570,7 @@ dilend
 
 /* look_in : This allows a player to look inside of a container, a boat, a vehicle or a water container. */
 
-dilbegin look_in (looker : unitptr, arg:string);
+dilbegin look_in(looker : unitptr, arg:string);
 
 external
 	string obj_content (l : unitptr, u:unitptr);
@@ -582,97 +582,100 @@ var
      u         :  unitptr;
      i         :  integer;
 
-code{
+code
+{
+   u := find_here(looker, arg);
 
-u:=find_here(looker,arg);
+   if ((u == null) or (not visible(looker, u)))
+   {
+      act ("No such thing here.", A_ALWAYS, looker, null, null, TO_CHAR);
+      quit;
+   }
 
-if ((u == null) or (not visible(looker, u)))
-    {act ("No such thing here.", A_ALWAYS, looker, null, null, TO_CHAR);
-     quit;
-    }
+   if ((u.type ==UNIT_ST_PC) or (u.type==UNIT_ST_NPC))
+   {
+      act ("Well, if you kill $3m you could look inside of $3m.",
+            A_ALWAYS,looker, null, u, TO_CHAR);
+      quit;
+   }
 
-if ((u.type ==UNIT_ST_PC) or (u.type==UNIT_ST_NPC))
-    {act ("Well, if you kill $3m you could look inside of $3m.",
-	 A_ALWAYS,looker, null, u, TO_CHAR);
-     quit;
-    }
-
-if ((u.nameidx=="portal") and (u.zoneidx=="spells"))
- goto portal;
-
-
-if ((u.nameidx=="moot_buck") and (u.zoneidx=="udgaard"))
- goto gold_bucket;
-
- if ((u.nameidx=="gate") and (u.zoneidx=="spells"))
- goto portal;
-
-if ((u.objecttype != ITEM_CONTAINER) and (u.objecttype != ITEM_BOAT)
-    and (u.objecttype != ITEM_DRINKCON) and (u.objecttype != ITEM_VEHICLE))
-    {act ("It doesn't appear to be able to contain anything.",
-	 A_ALWAYS,looker, null, null, TO_CHAR);
-     quit;
-    }
-
-if (isset (u.openflags, EX_CLOSED))
-    {act ("It is closed.", A_ALWAYS, looker, null, null, TO_CHAR);
-     quit;
-    }
-
-if (u.objecttype == ITEM_DRINKCON)
-   goto drink_cont;
+   if ((u.nameidx=="portal") and (u.zoneidx=="spells"))
+      goto portal;
 
 
-t_object := "<div class='obj_title'>$2n ";
+   //if ((u.nameidx=="moot_buck") and (u.zoneidx=="udgaard"))
+   //   goto gold_bucket;
 
-if ((u.outside == looker) and (u.equip != 0))
+   if ((u.nameidx=="gate") and (u.zoneidx=="spells"))
+      goto portal;
+
+   if ((u.objecttype != ITEM_CONTAINER) and (u.objecttype != ITEM_BOAT)
+      and (u.objecttype != ITEM_DRINKCON) and (u.objecttype != ITEM_VEHICLE))
+   {
+      act ("It doesn't appear to be able to contain anything.",
+            A_ALWAYS,looker, null, null, TO_CHAR);
+      quit;
+   }
+
+   if (isset (u.openflags, EX_CLOSED))
+   {
+      act ("It is closed.", A_ALWAYS, looker, null, null, TO_CHAR);
+      quit;
+   }
+
+   if (u.objecttype == ITEM_DRINKCON)
+      goto drink_cont;
+
+
+   t_object := "<div class='obj_title'>$2n ";
+
+   if ((u.outside == looker) and (u.equip != 0))
       t_object := t_object + "(worn):</div>";
-else if (u.outside == looker)
+   else if (u.outside == looker)
       t_object := t_object + "(carried):</div>";
-else
+   else
       t_object := t_object + "(here):</div>";
 
-act(t_object, A_ALWAYS, looker, u, null, TO_CHAR);
+   act(t_object, A_ALWAYS, looker, u, null, TO_CHAR);
 
-buff := obj_content (looker, u);
+   buff := obj_content (looker, u);
 
-if (looker.type == UNIT_ST_PC)
-    sendtext(buff, looker);
-else
-    sendtext(buff, looker);
-quit;
+   if (looker.type == UNIT_ST_PC)
+      sendtext(buff, looker);
+   else
+      sendtext(buff, looker);
+   quit;
+
 	:portal:
-sendto ("lookin",u);
-quit;
-
+   sendto("lookin",u);
+   quit;
 
 	:Gold_bucket:
-sendto ("lookin",u);
-quit;
+   sendto("lookin",u);
+   quit;
 
-:drink_cont:
+   :drink_cont:
+   if (u.extra.["$drink_color"])
+      buff := u.extra.["$drink_color"].descr;
+   else
+      buff := "";
 
-if (u.extra.["$drink_color"])
-   buff := u.extra.["$drink_color"].descr;
-else
-   buff := "";
+   if (u.value[0] >= u.capacity)
+      act("It is full of a $2t liquid.", A_ALWAYS, self, buff, null, TO_CHAR);
+   else if (u.value[0] > (u.capacity / 2))
+      act("It is more than half full of a $2t liquid.",
+         A_ALWAYS, self, buff,null, TO_CHAR);
+   else if (u.value[0] > 0)
+      act("It is less than half full of a $2t liquid.",
+          A_ALWAYS, self, buff,null, TO_CHAR);
+   else
+      act("It is empty.", A_ALWAYS, self, null, null, TO_CHAR);
 
-if (u.value[0] >= u.capacity)
-   act("It is full of a $2t liquid.", A_ALWAYS, self, buff, null, TO_CHAR);
-else if (u.value[0] > (u.capacity / 2))
-   act("It is more than half full of a $2t liquid.",
-        A_ALWAYS, self, buff,null, TO_CHAR);
-else if (u.value[0] > 0)
-   act("It is less than half full of a $2t liquid.",
-        A_ALWAYS, self, buff,null, TO_CHAR);
-else
-   act("It is empty.", A_ALWAYS, self, null, null, TO_CHAR);
+   send_done ("look", looker, null, u, 0, "", null);
 
-send_done ("look", looker, null, u, 0, "", null);
-
-quit;
-
-}dilend
+   quit;
+}
+dilend
 
 
 

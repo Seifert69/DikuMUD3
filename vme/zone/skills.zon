@@ -347,8 +347,7 @@ code
 
    if (not isset(ch.charflags, CHAR_SELF_DEFENCE))
    {
-      if ((ch.fighting == null) and
-	  (not isset(victim.charflags, CHAR_LEGAL_TARGET)))
+      if ((ch.fighting == null) and (not isset(victim.charflags, CHAR_LEGAL_TARGET)))
         set(victim.charflags, CHAR_SELF_DEFENCE);
    }
 
@@ -3637,8 +3636,8 @@ if (not(isset (targ.pcflags, PC_PK_RELAXED)))
 dilend
 
 
+// do_hit
 dilbegin punch(arg : string); /* works as cmds hit and punch */
-
 external
    provoked_attack (victim : unitptr, ch : unitptr);
 
@@ -3658,8 +3657,8 @@ code
    {
       if (self.fighting)
       {
-	 targ := self.fighting;
-	 goto hit;
+         targ := self.fighting;
+         goto hit;
       }
 
       act("Who do you wish to strike?", A_SOMEONE, self, null, null, TO_CHAR);
@@ -3676,53 +3675,48 @@ code
 
    if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
    {
-      act("You can't hit that, silly!", A_SOMEONE, self, null, null,
-	  TO_CHAR);
+      act("You can't hit that, silly!", A_SOMEONE, self, null, null, TO_CHAR);
       quit;
    }
 
    if (targ == self)
    {
-      act("You hit yourself.", A_HIDEINV, self, null, null,
-	  TO_CHAR);
-      act("$1n hits $1mself.", A_HIDEINV, self, null, null,
-	  TO_ROOM);
+      act("You hit yourself.", A_HIDEINV, self, null, null, TO_CHAR);
+      act("$1n hits $1mself.", A_HIDEINV, self, null, null, TO_ROOM);
       quit;
    }
 
-   if ((targ.type==UNIT_ST_PC) and
-   (self.type==UNIT_ST_PC))
-  {
-if (not(isset (self.pcflags, PC_PK_RELAXED)))
-  {
-  act ("You are not allowed to do this unless you sign the book of blood.",
-  A_ALWAYS,self,null,null,TO_CHAR);
-  quit;
-  }
+   if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
+   {
+      if (not(isset (self.pcflags, PC_PK_RELAXED)))
+      {
+         act ("You are not allowed to do this unless you sign the book of blood.", A_ALWAYS,self,null,null,TO_CHAR);
+         quit;
+      }
 
-if (not(isset (targ.pcflags, PC_PK_RELAXED)))
-  {
-  act ("You are not allowed to do this unless $2e signs the book of blood.",
-  A_ALWAYS,self,targ,null,TO_CHAR);
-  quit;
-  }
-  }
-
+      if (not(isset (targ.pcflags, PC_PK_RELAXED)))
+      {
+         act ("You are not allowed to do this unless $2e signs the book of blood.", A_ALWAYS,self,targ,null,TO_CHAR);
+         quit;
+      }
+   }
 
    :hit:
    if (equipment(self, WEAR_WIELD))
      bonus := 0;
    else
    {
-     bonus := rnd(1,(self.weapons[WPN_FIST] - 70));
-     /* Possibly a +30 bonus if you are 100% in knee */
-     if(bonus <= 0) bonus := 1;
+      bonus := rnd(1,(self.weapons[WPN_FIST] - 70));
+      /* Possibly a +30 bonus if you are 100% in knee */
+      if(bonus <= 0)
+         bonus := 1;
    }
+
    if (self.endurance < 2)
-     act("You are too exhausted to attempt that.", A_ALWAYS, self, null,
-         null, TO_CHAR);
-   else self.endurance := self.endurance - 2;
-   provoked_attack (targ, self);
+      act("You are too exhausted to attempt that.", A_ALWAYS, self, null, null, TO_CHAR);
+   else 
+      self.endurance := self.endurance - 2;
+   provoked_attack(targ, self);
    bonus := meleeattack(self, targ, (bonus+self.level), WPN_FIST);
    quit;
 }

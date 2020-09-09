@@ -1275,6 +1275,31 @@ void damage_object(class unit_data *ch, class unit_data *obj, int dam)
    }
 }
 
+
+/* Returns TRUE if ok */
+static int check_combat(class unit_data *ch)
+{
+   if (ch->is_destructed())
+   {
+      assert(!CHAR_COMBAT(ch));
+      return FALSE;
+   }
+
+   if (!CHAR_AWAKE(ch))
+      stop_fighting(ch);
+   else
+   {
+      while (CHAR_FIGHTING(ch))
+         if (!same_surroundings(ch, CHAR_FIGHTING(ch)))
+            stop_fighting(ch, CHAR_FIGHTING(ch));
+         else
+            break;
+   }
+
+   return CHAR_FIGHTING(ch) != NULL;
+}
+
+
 /* -1 if fails, >= 0 amount of damage */
 
 int one_hit(class unit_data *att, class unit_data *def,
@@ -1344,6 +1369,14 @@ int one_hit(class unit_data *att, class unit_data *def,
 
    if (CHAR_COMBAT(att))
       CHAR_COMBAT(att)->changeSpeed(wpn_info[att_weapon_type].speed);
+
+   if (!check_combat(att))
+      return -1;
+
+   send_combat(att);
+
+   if (!check_combat(att))
+      return -1;
 
    dam = 0;
 
@@ -1423,37 +1456,9 @@ int simple_one_hit(class unit_data *att, class unit_data *def)
    return one_hit(att, def, 0, WPN_ROOT, TRUE, TRUE);
 }
 
-/* Returns TRUE if ok */
-static int check_combat(class unit_data *ch)
-{
-   if (ch->is_destructed())
-   {
-      assert(!CHAR_COMBAT(ch));
-      return FALSE;
-   }
-
-   if (!CHAR_AWAKE(ch))
-      stop_fighting(ch);
-   else
-   {
-      while (CHAR_FIGHTING(ch))
-         if (!same_surroundings(ch, CHAR_FIGHTING(ch)))
-            stop_fighting(ch, CHAR_FIGHTING(ch));
-         else
-            break;
-   }
-
-   return CHAR_FIGHTING(ch) != NULL;
-}
-
 /* control the fights going on */
 void melee_violence(class unit_data *ch, int primary)
 {
-   if (!check_combat(ch))
-      return;
-
-   send_combat(ch);
-
    if (!check_combat(ch))
       return;
 
