@@ -187,9 +187,9 @@ int sanity_check(class unit_data *u)
         return FALSE;
     }
 
-    if (PC_ID(u) >= top_id)
+    if (PC_ID(u) > top_id)
     {
-        printf("Maximum ID exceeded!");
+        printf("Maximum ID exceeded: %d > top id %d", PC_ID(u), top_id);
         return FALSE;
     }
 
@@ -248,8 +248,7 @@ int shall_delete(class unit_data *pc)
     if (PC_ACCOUNT(pc).total_credit > 0)
         return FALSE;
 
-    if ((days > 60) &&
-        (CHAR_LEVEL(pc) <= START_LEVEL + 4))
+    if ((days > 60) && (CHAR_LEVEL(pc) <= START_LEVEL + 4))
     {
         std::cout << "2 month inactivity and less than lvl 5 Will delete ";
         return TRUE;
@@ -293,8 +292,7 @@ int shall_exclude(const char *name)
     return FALSE;
 }
 
-class unit_data *
-convert_load_player(char *name)
+class unit_data *convert_load_player(char *name)
 {
     class unit_data *ch;
     extern class unit_data *destroy_room;
@@ -343,6 +341,16 @@ convert_load_player(char *name)
     return ch;
 }
 
+
+const char *isodate(struct tm *t)
+{
+    static char buf[200];
+
+    sprintf(buf, "%04d-%02d-%02d", t->tm_year+1900, t->tm_mon+1, t->tm_mday);
+
+    return buf;
+}
+
 void clist()
 {
     /* external functs */
@@ -351,8 +359,6 @@ void clist()
 
     string ipath;
     /*
-
-
         std::cout << "\nEnter the full path to the root player directory for example '/home/mud/vme2.0/lib/ply' or \n<enter> for the one listed in the server.cfg file:  ";
     char cpath[1024];
     cpath[0]=0;
@@ -385,6 +391,9 @@ void clist()
                   << full_path << "\n\n";
         fs::directory_iterator end_iter;
         string path_end = "";
+
+        std::cout << "name;id;Level;Admin;days since login;created;birth;" << endl;
+ 
         for (char c = 'a'; c <= 'z'; c++)
         {
             path_end = c;
@@ -397,8 +406,7 @@ void clist()
 
             if (!fs::is_directory(full_path))
                 continue;
-            std::cout << "\nIn directory: "
-                      << full_path << "\n\n";
+            //std::cout << "\nIn directory: " << full_path << "\n\n";
 
             for (fs::directory_iterator dir_itr(full_path);
                  dir_itr != end_iter;
@@ -415,7 +423,7 @@ void clist()
                     {
                         ++file_count;
 
-                        std::cout << dir_itr->path() << "\n";
+                        std::cout << dir_itr->path() << ";";
                         temp = new char[PC_MAX_NAME];
 
                         strcpy(temp, dir_itr->path().filename().c_str());
@@ -427,34 +435,19 @@ void clist()
                             continue;
                         }
 
-                        std::cout << "Id [" << PC_ID(pc) << "]  Lvl " << CHAR_LEVEL(pc) << "]  " << (IS_MORTAL(pc) ? "   " : "ADMIN") << " (" << days_old(PC_TIME(pc).connect) << " days)";
+                        std::cout << PC_ID(pc) << ";" << (int) CHAR_LEVEL(pc) << ";" << (IS_MORTAL(pc) ? " PLY  " : "ADMIN")
+                                  << ";" << days_old(PC_TIME(pc).connect) << ";";
 
-                        time_t secs = (time_t)PC_TIME(pc).played;
-
-                        time_t val = 0;
-                        val = secs / SECS_PER_REAL_HOUR;
-
-                        tid2.hours = val % 24;
-                        tid2.day = val / 24;
-                        tid2.month = -1;
-                        tid2.year = val / (365 * 24);
-
-                        std::cout << endl
-                                  << "Seconds:  " << (PC_TIME(pc).played) << endl;
-                        std::cout << endl
-                                  << "Seconds secs:  " << secs << endl;
-                        std::cout << endl
-                                  << "Hours vals:  " << val << endl;
                         if (ids[PC_ID(pc)])
                             std::cout << "Duplicate ID! (" << (signed long)PC_ID(pc) << ")";
                         else
                             ids[PC_ID(pc)] = 1;
 
                         shall_exclude(UNIT_NAME(pc));
-                        shall_delete(pc);
+                        //shall_delete(pc);
 
                         UNIT_CONTAINS(void_char) = NULL;
-                        load_contents(temp, void_char);
+                        /* load_contents(temp, void_char);
 
                         if (UNIT_CONTAINS(void_char))
                         {
@@ -463,13 +456,27 @@ void clist()
                             free_inventory(UNIT_CONTAINS(void_char));
                         }
 
-                        std::cout << endl;
-
-                        convert_free_unit(pc);
+                        std::cout << endl;*/
 
                         bool tmp = false;
 
-                        std::cout << "Played: ";
+                        struct tm *t = gmtime(&PC_TIME(pc).creation);
+                        std::cout << isodate(t) << ";";
+
+                        t = gmtime(&PC_TIME(pc).birth);
+                        std::cout << isodate(t) << ";";
+
+                        time_t secs = (time_t)PC_TIME(pc).played;
+
+                        convert_free_unit(pc);
+
+                        time_t val = 0;
+                        val = secs / SECS_PER_REAL_HOUR;
+                        tid2.hours = val % 24;
+                        tid2.day = val / 24;
+                        tid2.month = -1;
+                        tid2.year = val / (365 * 24);
+
                         if (tid2.year > 0)
                         {
                             std::cout << " " << (long)tid2.year << " years";
@@ -486,9 +493,11 @@ void clist()
                             tmp = true;
                         }
                         if (tmp)
-                            std::cout << "." << endl;
+                            std::cout << ".";
                         else
-                            std::cout << " Less than an hour" << endl;
+                            std::cout << " Less than an hour";
+
+                        std::cout << "; " << endl;
 
                         delete temp;
                     }
