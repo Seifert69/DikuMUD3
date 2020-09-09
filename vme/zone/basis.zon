@@ -7485,6 +7485,29 @@ descr "A mindless zombie is roaming around here."
 extra {} "Disgusting!"
 M_ZOMBIE_SMALL(4,SEX_NEUTRAL)
 
+
+dilbegin aware comtest();
+var
+   s : string;
+code
+{
+   heartbeat := PULSE_SEC*4;
+
+   :init:
+   wait(SFB_COM, TRUE);
+
+   if (activator.fighting)
+      s := activator.fighting.nameidx;
+   else
+      s := "(null)";
+
+   log("COM message: " + activator.nameidx + " attacking " + s);
+   goto init;
+   
+   quit;
+}
+dilend
+
 end
 
      odin
