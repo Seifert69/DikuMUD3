@@ -35,18 +35,12 @@ class unit_data *find_unit (const class unit_data * ch, char **arg,
 class unit_data *find_unit_dil (const class unit_data * ch, char **arg,
                                     const class unit_data * list,
                                     const ubit32 bitvector, ubit8 type = 15);
-class unit_data *find_unit_general (const class unit_data * viewer,
+class unit_data *find_unit_general(const class unit_data * viewer,
                                         const class unit_data * ch,
                                         char **arg,
                                         const class unit_data * list,
-                                        const ubit32 bitvector);
-class unit_data *find_unit_general_dil (const class unit_data * viewer,
-                                            const class unit_data * ch,
-                                            char **arg,
-                                            const class unit_data * list,
-                                            const ubit32 bitvector,
-                                            ubit8 type = 15);
-
+                                        const ubit32 bitvector,
+                                        ubit8 type = FIND_UNIT);
 class unit_data *find_symbolic_instance (class file_index_type *fi);
 class unit_data *find_symbolic (char *zone, char *name);
 class unit_data *find_symbolic_instance_ref (class unit_data * ref,
