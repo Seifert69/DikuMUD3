@@ -12732,22 +12732,21 @@ null, TO_CHAR);
 }
 dilend
 
-
+// do_evaluate
 dilbegin evaluate(arg : string);
-
 external
    string sizestring@commands(cm : integer);
    string weightstring@commands(cm : integer);
-
 var
    u : unitptr;
    s : string;
    degrade : integer;
+
 code
 {
    if (arg == "")
    {
-      act("What do you wish to evaluate?",A_SOMEONE, self, null,null,TO_CHAR);
+      act("What do you wish to evaluate?", A_SOMEONE, self, null,null,TO_CHAR);
       quit;
    }
 
@@ -12769,52 +12768,46 @@ code
    act("The $3N weighs "+s+".",A_SOMEONE, self, null, u, TO_CHAR);
 
    if ((u.manipulate & (MANIPULATE_WEAR_FINGER | MANIPULATE_WEAR_NECK  |
-   MANIPULATE_WEAR_BODY   | MANIPULATE_WEAR_HEAD  |
-   MANIPULATE_WEAR_LEGS   | MANIPULATE_WEAR_FEET  |
-   MANIPULATE_WEAR_HANDS  | MANIPULATE_WEAR_ARMS  |
-   MANIPULATE_WEAR_SHIELD | MANIPULATE_WEAR_ABOUT |
-   MANIPULATE_WEAR_WAIST  | MANIPULATE_WEAR_WRIST |
-   MANIPULATE_WIELD       | MANIPULATE_WEAR_EAR   |
-   MANIPULATE_WEAR_BACK   | MANIPULATE_WEAR_CHEST |
-   MANIPULATE_WEAR_ANKLE)) or
-       (u.objecttype == ITEM_WEAPON))
+         MANIPULATE_WEAR_BODY   | MANIPULATE_WEAR_HEAD  |
+         MANIPULATE_WEAR_LEGS   | MANIPULATE_WEAR_FEET  |
+         MANIPULATE_WEAR_HANDS  | MANIPULATE_WEAR_ARMS  |
+         MANIPULATE_WEAR_SHIELD | MANIPULATE_WEAR_ABOUT |
+         MANIPULATE_WEAR_WAIST  | MANIPULATE_WEAR_WRIST |
+         MANIPULATE_WIELD       | MANIPULATE_WEAR_EAR   |
+         MANIPULATE_WEAR_BACK   | MANIPULATE_WEAR_CHEST |
+         MANIPULATE_WEAR_ANKLE)) or (u.objecttype == ITEM_WEAPON))
    {
       s := sizestring@commands(u.height);
       act("$3e has been made to fit a person of "+s+".",
-	  A_SOMEONE, self,null, u, TO_CHAR);
+      	  A_SOMEONE, self,null, u, TO_CHAR);
    }
-   if (u.max_hp == -1)
-   {
- act("The $3N appears to be in godly condition.</div>",A_ALWAYS, self, null, u, TO_CHAR);
-   quit;
-   }
+
    if ((u.max_hp > 0) and (u.hp > 0))
    {
       degrade := (100*u.hp) / u.max_hp;
 
       if (degrade >= 90)
- s := "in an excellent condition.";
+         s := "in an excellent condition.";
       else if (degrade >= 75)
- s := "in a good condition.";
+         s := "in a good condition.";
       else if (degrade >= 50)
- s := "worn.";
+         s := "worn.";
       else if (degrade >= 30)
- s := "in a poor condition";
+         s := "in a poor condition";
       else if (degrade >= 10)
- s := "in a horrible condition.";
+         s := "in a horrible condition.";
       else
- s := "nearly broken.";
+         s := "nearly broken.";
    }
    else if (u.max_hp == -1) // indestructible (able?)
      s := "in godly condition.";
    else
      s := "broken.";
 
-   act("The $3N appears to be "+s,
-       A_ALWAYS, self, null, u, TO_CHAR);
+   act("The $3N appears to be "+s, A_ALWAYS, self, null, u, TO_CHAR);
 
-   if (u.objecttype == ITEM_ARMOR)
-     on u.value[0] goto clothes,leather,leather,metal,metal;
+   if (u.objecttype == ITEM_ARMOR) 
+      on u.value[0] goto clothes, leather, leather, metal, metal;
    else if (u.objecttype == ITEM_SHIELD)
      goto metal;
    else if (u.objecttype == ITEM_WEAPON)
@@ -12824,14 +12817,14 @@ code
    else
    {
       if ((u.manipulate & (MANIPULATE_WEAR_FINGER | MANIPULATE_WEAR_NECK  |
-        MANIPULATE_WEAR_BODY   | MANIPULATE_WEAR_HEAD  |
-        MANIPULATE_WEAR_LEGS   | MANIPULATE_WEAR_FEET  |
-        MANIPULATE_WEAR_HANDS  | MANIPULATE_WEAR_ARMS  |
-        MANIPULATE_WEAR_SHIELD | MANIPULATE_WEAR_ABOUT |
-        MANIPULATE_WEAR_WAIST  | MANIPULATE_WEAR_WRIST |
-        MANIPULATE_WIELD       | MANIPULATE_WEAR_EAR   |
-        MANIPULATE_WEAR_BACK   | MANIPULATE_WEAR_CHEST |
-        MANIPULATE_WEAR_ANKLE)) == 0)
+            MANIPULATE_WEAR_BODY   | MANIPULATE_WEAR_HEAD  |
+            MANIPULATE_WEAR_LEGS   | MANIPULATE_WEAR_FEET  |
+            MANIPULATE_WEAR_HANDS  | MANIPULATE_WEAR_ARMS  |
+            MANIPULATE_WEAR_SHIELD | MANIPULATE_WEAR_ABOUT |
+            MANIPULATE_WEAR_WAIST  | MANIPULATE_WEAR_WRIST |
+            MANIPULATE_WIELD       | MANIPULATE_WEAR_EAR   |
+            MANIPULATE_WEAR_BACK   | MANIPULATE_WEAR_CHEST |
+            MANIPULATE_WEAR_ANKLE)) == 0)
       {
          goto nextstep;
       }
@@ -12840,22 +12833,18 @@ code
    goto nextstep;
 
    :clothes:
-   act ("Refitting the size of it, requires tailoring
-skills.",A_ALWAYS,self,null, null,TO_CHAR);
+   act ("Refitting the size of it, requires tailoring skills.",A_ALWAYS,self,null, null,TO_CHAR);
    goto nextstep;
 
    :leather:
-   act ("Refitting the size of it, requires leather working
-skills.",A_ALWAYS,self,null, null,TO_CHAR);
+   act ("Refitting the size of it, requires leather working skills.",A_ALWAYS,self,null, null,TO_CHAR);
    goto nextstep;
 
    :metal:
-   act ("Refitting the size of it, requires metal
-skills.",A_ALWAYS,self,null, null,TO_CHAR);
+   act ("Refitting the size of it, requires metal skills.",A_ALWAYS,self,null, null,TO_CHAR);
    goto nextstep;
 
    :nextstep:
-
    /* Eventually add
 
       Material Lore
