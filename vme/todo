@@ -1,19 +1,13 @@
+auto-training?  But make sure some skills, spells, weapons can be marked as non-auto
+
+TEST troll in canyon_2@korandin only blocks humanoids. what if you're riding?
+
+TEST act() with new descriptor restrictions.in act_generic I removed check for descriptor because of sact(). But maybe add that check to act() and cact()
+
 If stream takes you out to the ocean you're stuck and can't swim back
 
-in act_generic I removed check for descriptor because of sact(). But maybe add that check to act() and cact()
-
-It looks like send_combat in melee_violence should be moved to one_hit or we miss it for first DIL attack
-
-auto-training?
-
 fireweapon and missile - how do they work and how does identify work?
-check out shop keep evaluate too
-check out evaluate skill
-maybe add a wizard in Midgaard that offers identify objects 
-
-Look Trans not when closed
-
-Can see trans & buried & closed trans
+identify robe seems to have boring result. (check item types)
 
 Maybe: Teachers hyperlink what you can train so you can just click it
 Maybe: Fix ships (it's dark and they all run thier own code) and make them transparent 
