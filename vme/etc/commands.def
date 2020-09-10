@@ -4178,6 +4178,12 @@ minpos = POSITION_RESTING
 minlevel = 0
 type = TYPE_SOCIAL
 
+command  = donate
+func     = donate@command
+minpos   = POSITION_SITTING
+minlevel = 0
+loglevel = 0
+type     = 0
 
 
 index          = SKI_ARM_LEATHER
