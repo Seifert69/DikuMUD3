@@ -4179,7 +4179,7 @@ minlevel = 0
 type = TYPE_SOCIAL
 
 command  = donate
-func     = donate@command
+func     = donate@commands
 minpos   = POSITION_SITTING
 minlevel = 0
 loglevel = 0
