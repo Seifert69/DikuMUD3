@@ -13297,9 +13297,6 @@ var
 	room_idx:		string;
 	room    :       unitptr;
 	item    :       unitptr;
-	num     :       integer;
-	i		:		integer;
-	here	:		unitptr;
 	x		:		extraptr;
 	amount	:		integer;
 	check	:		unitptr;
