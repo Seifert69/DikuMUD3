@@ -13374,43 +13374,17 @@ code
 		room := findroom("udonate@udgaard");
 	if (clan!=1)
 	{
-		num := rnd(1, 200);
-		if (num > 195)
-		{
-			if (item.cost >= 75000)
-			{
-				experience(+75, self);
-				act("You are rewarded 75 experience for your act.",
-				A_ALWAYS, self, null, null, TO_CHAR);
-			}else if (item.cost >= 50000)
-			{
-			  experience(+35, self);
-			  act("You are rewarded 35 experience for your act.",
-				A_ALWAYS, self, null, null, TO_CHAR);
-			}
-		}
-		i:=0;
-		here:=room.inside;
-		while ((here!=null) and (i<5))
-		{
-			if (here.idx==item.idx)i:=i+1;
-			here:=here.next;
-		}
-			act("You donate $2n to those in need.",
-			A_ALWAYS, self, item, null, TO_CHAR);
-			act("$1n donates $2n to those in need.",
-			A_SOMEONE, self, item, null, TO_REST);
+		act("You donate $2n to those in need.",
+		A_ALWAYS, self, item, null, TO_CHAR);
+		act("$1n donates $2n to those in need.",
+		A_SOMEONE, self, item, null, TO_REST);
 
-			if (i<5)
-			{
-				item.cost := 0;
-				link(item, room);
-				act("A Glowing red portal appears hovering in the air, $2n"+
-				" emerges from it and drops to the floor.",
-				A_ALWAYS, room.inside, item, null, TO_ALL);
-			}
-			else
-			 destroy (item);
+		item.cost := 0;
+		link(item, room);
+		act("A Glowing red portal appears hovering in the air, $2n"+
+		" emerges from it and drops to the floor.",
+		A_ALWAYS, room.inside, item, null, TO_ALL);
+
 	}
 	else
 	{
