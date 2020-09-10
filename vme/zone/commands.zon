@@ -13384,6 +13384,7 @@ code
 		act("A Glowing red portal appears hovering in the air, $2n"+
 		" emerges from it and drops to the floor.",
 		A_ALWAYS, room.inside, item, null, TO_ALL);
+		quit;
 
 	}
 	else
@@ -13394,6 +13395,7 @@ code
 			A_SOMEONE, self, item, null, TO_REST);
 		link(item, room);
 		store (room,"d_c."+room.zoneidx,TRUE);
+		quit;
 	}
 	 /////quit;
 }
