@@ -1003,7 +1003,7 @@ quit;
 
 if(isset(self.pcflags,PC_NOSHOUTING))
 {
-act("You can't shout, your throath is sore!!",
+act("You can't shout, your throat is sore!!",
 A_ALWAYS, self, null, null, TO_CHAR);
 quit;
 }
