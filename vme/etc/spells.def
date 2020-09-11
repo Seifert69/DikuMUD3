@@ -969,6 +969,7 @@ profession mystic       = +0
 
 index           = SPL_CURE_WOUNDS_1
 name            = cure light wounds
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You lay hands on $3n and pray for a minor healing...
 tovict          = $1n lays hands on you and prays...
@@ -1336,6 +1337,7 @@ profession mystic       = +2
 
 index           = SPL_RAISE_MAG
 name            = raise magic
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You touch $3n and utter the words, 'Risa mystam'...
 tovict          = $1n touches you and utters the words, 'Risa mystam'...
@@ -1372,6 +1374,7 @@ profession sorcerer     = +5
 
 index           = SPL_RAISE_DIV
 name            = raise divine
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You pray to the gods for a boon of divinity...
 tovict          = $1n prays to the gods on your behalf...
@@ -2351,6 +2354,7 @@ profession conjurer     = +0
 
 index           = SPL_DET_ALIGN
 name            = detect alignment
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You pray for the granting of alignment detection to $3n...
 tovict          = $1n prays for the granting of alignment detection to you...
@@ -2427,6 +2431,7 @@ profession sorcerer     = +0
 
 index           = SPL_DET_MAGIC
 name            = detect magic
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You close one eye and utter the words, 'Mystam ocuro'...
 tovict          = $1n closes one eye and utters the words, 'Mystam ocuro'...
@@ -2503,6 +2508,7 @@ profession necromancer  = +5
 
 index           = SPL_DET_UNDEAD
 name            = detect undead
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You pray for the granting of undead detection $3n...
 tovict          = $1n prays for the granting of undead detection to you...
@@ -2578,6 +2584,7 @@ profession necromancer  = +5
 
 index           = SPL_SENSE_LIFE
 name            = sense life
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You pray for the granting of life force detection to $3n...
 tovict          = $1n prays for the granting of life force detection to you...
@@ -3670,6 +3677,7 @@ profession sorcerer     = +2
 
 index           = SPL_CALM
 name            = calm
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You touch $3n lightly and chant softly...
 tovict          = $1n touches you and begins to chant in a calming voice...
@@ -4109,6 +4117,7 @@ profession necromancer  = +5
 
 index           = SPL_PRO_GOOD
 name            = protection from good
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You begin a prayer to protect $3n from the forces of good...
 tovict          = $1n pleads with the gods to grant you protection from the forces of good...
@@ -4916,6 +4925,7 @@ profession conjurer     = +2
 
 index           = SPL_ENERGY_BOLT
 name            = energy bolt
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You utter the word 'sumai mislis' and point your hand at $3n.
 tovict          = $1n utters the word 'sumai mislis' and points at you!
@@ -6608,6 +6618,7 @@ profession druid        = +5
 
 index           = SPL_THORN_STRIKE
 name            = thorn strike
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You make a stabbing gesture towards $3n.
 tovict          = $1n makes a stabbing gesture towards you.
@@ -7043,6 +7054,7 @@ profession conjurer     = +2
 
 index           = SPL_FIREBALL_1
 name            = burn
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You utter the word, 'Inceriti'
 tovict          = $1n utters the word, 'Inceriti'
@@ -7204,6 +7216,7 @@ restrict level          = 150
 
 index           = SPL_CAUSE_WOUNDS_1
 name            = cause light wounds
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You boldly speak the word 'scrazgh'...
 tovict          = $1n boldly speaks the word 'scrazgh'...
@@ -7373,6 +7386,7 @@ restrict level          = 60
 
 index           = SPL_STINKING_CLOUD_1
 name            = fart
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You utter the words, 'Schwepa cumei'...
 tovict          = $1n utters the words, 'Schwepa cumei'...
@@ -8176,6 +8190,7 @@ restrict level          = 160
 /* - - - - Yet another definition of a spell - - - - */
 index           = SPL_LIGHTNING_1
 name            = electrical shock
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = The air crackles at $3n as you snarl, 'Thudas electra!'...
 tovict          = Air crackles as $1n snarls 'Thudas electra!' at you...
@@ -8496,6 +8511,7 @@ profession sorcerer     = +0
 
 index           = SPL_MIRE
 name            = mire
+auto train      = 1
 acttype         = A_SOMEONE
 tochar          = "You call on the forces of darkness to slow $3n..."
 tovict          = $1n calls on the forces of the darkness to slow $3n...

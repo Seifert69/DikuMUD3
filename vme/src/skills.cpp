@@ -88,6 +88,7 @@ struct tree_type spl_tree[SPL_TREE_MAX + 1];
 sbit8 racial_spells[PC_RACE_MAX][SPL_TREE_MAX];
 struct damage_chart_type spell_chart[SPL_TREE_MAX];
 
+
 const char *pc_races[PC_RACE_MAX + 1];
 const char *pc_race_adverbs[PC_RACE_MAX + 1];
 struct race_info_type race_info[PC_RACE_MAX];
@@ -852,6 +853,12 @@ static void ability_read(void)
             }
             abil_text[idx] = str_dup(pCh);
         }
+        else if (strncmp(pTmp, "auto train", 10) == 0)
+        {
+            dummy = atoi(pCh);
+            if (is_in(dummy, 0, 1))
+                abil_tree[idx].bAutoTrain = dummy;
+        }
         else if (strncmp(pTmp, "race ", 5) == 0)
         {
             dummy = atoi(pCh);
@@ -899,6 +906,8 @@ static void ability_init(void)
     {
         abil_tree[i].parent = i;
         abil_tree[i].isleaf = TRUE;
+        abil_tree[i].bAutoTrain = FALSE;
+
         abil_text[i] = NULL;
 
         for (int j = 0; j < PC_RACE_MAX; j++)
@@ -1057,6 +1066,12 @@ static void weapon_read(void)
             dummy = atoi(pCh);
             if (is_in(dummy, WPN_ROOT, WPN_GROUP_MAX - 1))
                 wpn_tree[idx].parent = dummy;
+        }
+        else if (strncmp(pTmp, "auto train", 10) == 0)
+        {
+            dummy = atoi(pCh);
+            if (is_in(dummy, 0, 1))
+                wpn_tree[idx].bAutoTrain = dummy;
         }
         else if (strncmp(pTmp, "race ", 5) == 0)
         {
@@ -1247,6 +1262,7 @@ static void weapon_init(void)
         wpn_info[i].ability[2] = ABIL_DEX;
 
         wpn_tree[i].parent = WPN_ROOT;
+        wpn_tree[i].bAutoTrain = FALSE;
 
         if (i < WPN_GROUP_MAX)
             wpn_tree[i].isleaf = FALSE;
@@ -1342,6 +1358,7 @@ static void skill_init(void)
     {
         ski_tree[i].parent = i;
         ski_tree[i].isleaf = TRUE;
+        ski_tree[i].bAutoTrain = FALSE;
 
         ski_text[i] = NULL;
 

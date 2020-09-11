@@ -496,6 +496,7 @@ attack plate    = {38, 6, 8} /*bat axe*/
 
 index           = WPN_HAND_AXE
 name            = hand axe
+auto train      = 1
 sphere          = WPN_AXE_HAM
 hands           =   1
 type            =  WPNT_SLASH
@@ -561,6 +562,7 @@ attack plate    = {55, 5, 9} /*w matto*/
 
 index           = WPN_ADZE
 name            = adze mattock
+auto train      = 1
 sphere          = WPN_AXE_HAM
 hands           =   1
 type            = WPNT_SLASH
@@ -725,6 +727,7 @@ attack plate    = {38, 5, 9} /*gr sword*/
 
 index           = WPN_LONG_SWORD
 name            = long sword
+auto train      = 1
 sphere          = WPN_SWORD
 hands           =   1
 type            =  WPNT_SLASH
@@ -792,6 +795,7 @@ attack plate    = {68, 1,13} /* rapier */
 
 index           = WPN_SHORT_SWORD
 name            = short sword
+auto train      = 1
 sphere          = WPN_SWORD
 hands           =   1
 type            =  WPNT_PIERCE
@@ -859,6 +863,7 @@ attack plate    = {51, 1,13} /* stiletto */
 
 index           = WPN_DAGGER
 name            = dagger
+auto train      = 1
 sphere          = WPN_SWORD
 hands           =   1
 type            =  WPNT_SLASH
@@ -896,6 +901,7 @@ attack plate    = {100,0,17} /*dagger*/
 
 index           = WPN_SCIMITAR
 name            = scimitar
+auto train      = 1
 sphere          = WPN_SWORD
 hands           =   1
 type            =  WPNT_SLASH
@@ -931,6 +937,7 @@ attack plate    = {51, 1,13} /* scimit */
 
 index           = WPN_FALCHION
 name            = falchion
+auto train      = 1
 sphere          = WPN_SWORD
 hands           =   1
 type            =  WPNT_SLASH
@@ -997,6 +1004,7 @@ attack plate    = {51, 1,13} /* main gauche */
 
 index           = WPN_SICKLE
 name            = sickle
+auto train      = 1
 sphere          = WPN_SWORD // was WPN_POLEARM, wrong
 hands           =   1
 type            =  WPNT_SLASH
@@ -1067,6 +1075,7 @@ attack plate    = {60, 6, 8} /*b mace*/
 
 index           = WPN_MACE
 name            = mace
+auto train      = 1
 sphere          = WPN_CLUB_MACE
 hands           =   1
 type            =  WPNT_BLUDGEON
@@ -1136,6 +1145,7 @@ attack plate    = {62, 5, 9} /* flail */
 /* Essentially a one handed flail. Never existed but popular in games :) */
 index           = WPN_MORNING_STAR
 name            = morning star // A 1H flail with a morning star at the end, aka popular name 
+auto train      = 1
 sphere          = WPN_CLUB_MACE
 hands           =   1
 type            =  WPNT_BLUDGEON
@@ -1202,6 +1212,7 @@ attack plate    = {62, 5, 9} /*b club */
 
 index           = WPN_CLUB
 name            = club
+auto train      = 1
 sphere          = WPN_CLUB_MACE
 hands           =   1
 type            =  WPNT_BLUDGEON
@@ -1239,6 +1250,7 @@ attack plate    = {71, 1,13} /*club*/
 
 index           = WPN_QUARTERSTAFF
 name            = quarterstaff
+auto train      = 1
 sphere          = WPN_POLEARM
 hands           =   2  // Shouldn't that be 2 handed. How good can you be with 1 hand on this?
 type            =  WPNT_BLUDGEON
@@ -1504,6 +1516,7 @@ attack plate    = {100,0,16} /* lance */
 
 index           = WPN_FIST
 name            = fist
+auto train      = 1
 sphere          = WPN_UNARMED
 hands           =   1
 type            =  WPNT_BLUDGEON
@@ -1540,6 +1553,7 @@ attack plate    = {100,0,17} /* fist */
 
 index           = WPN_KICK
 name            = kick
+auto train      = 1
 sphere          = WPN_UNARMED
 hands           =   1
 type            =  WPNT_BLUDGEON
@@ -1854,6 +1868,7 @@ attack plate    = {10, 2,12} /*crossbow*/
 
 index           = WPN_SLING
 name            = sling
+auto train      = 1
 sphere          = WPN_SPECIAL
 hands           =   1
 type            = WPNT_BLUDGEON
