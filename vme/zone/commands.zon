@@ -2585,7 +2585,7 @@ code
 
    start := "";
    if (self.level <= START_LEVEL)
-      start := "<br/><div class='score'>Try also the '<a cmd='#'>status</a>' command.</div>";
+      start := "<br/><div class='score'>Also try the '<a cmd='#'>status</a>' command.</div>";
     
    if (not isplayer(self.name))
 	{
@@ -2596,7 +2596,7 @@ code
    slvl := "";
    if (self.exptol <= 0)
    {
-      slvl := "<b>You can advance a <a cmd='#'>level</a> now - congratulations!</b><br/>";
+      slvl := "<b>You can now advance a <a cmd='#'>level</a> - congratulations!</b><br/>";
    }
 
    if(arg=="")
@@ -3454,9 +3454,9 @@ else if(keyword == WEAR_WIELD)
 {
  hands := hands_used(ch);
  if (obj)
- two := two_handed(obj.value[0]);
+ two := two_handed(obj.value[0]); 
  else
- two:=FALSE;
+ two := FALSE;
 
  if(not (obj.manipulate & MANIPULATE_WIELD))
     errstr := "You can't wield that.";
@@ -9288,7 +9288,7 @@ external
 code
 {
    return("You are a " + itoa((realtime - self.birth) / SECS_PER_MUD_YEAR) +
-          " years old " + genderstring() + " " + racestring(rce) + " at level " + 
+          " year old " + genderstring() + " " + racestring(rce) + " at level " + 
           itoa(self.vlevel) + ".<br/>");
 }
 dilend
@@ -9349,7 +9349,7 @@ code
    }
 
    if (tf!=TRUE)
-      time_str:=time_str+" Less than an hour.<br/>";
+      time_str:=time_str+" less than an hour.<br/>";
    else
       time_str:=time_str+".<br/>";
 
@@ -13290,6 +13290,113 @@ code
 }
 dilend
 
+dilbegin donate(arg:string);
+var
+	clan	:		integer;
+	d_rooms	:		stringlist;
+	room_idx:		string;
+	room    :       unitptr;
+	item    :       unitptr;
+	x		:		extraptr;
+	amount	:		integer;
+	check	:		unitptr;
+code
+{
+	clan:=0;
+
+	:start:
+	d_rooms:={"udonate@udgaard","mdonate@midgaard","ndonate@nymgaard"};
+	room_idx:=self.outside.nameidx+"@"+self.outside.zoneidx;
+	if (room_idx in d_rooms)
+	{
+		act("You may not donate while in a donations room!",
+		A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+
+	item := findunit(self, arg, FIND_UNIT_INVEN, null);
+	if (not(item.type == UNIT_ST_OBJ))
+	{
+		act("You do not have anything like that in your inventory.",
+		A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	if ("midgaard" in arg)
+		room := findroom("mdonate@midgaard");
+	else if ("nymgaard" in arg)
+		room := findroom("ndonate@nymgaard");
+	else if ("clan" in arg)
+	{
+		x:=CLAN_SYMBOLIC in self.extra;
+		if (x==null)
+		{
+			act ("&[clan]You are not a member of a clan.",
+			A_ALWAYS, self,null,null,TO_CHAR);
+			quit;
+		}
+		room:=findsymbolic(x.descr);
+		if (room==null)
+		{
+			act ("&[clan]Clan code error report to Admin.",
+			A_ALWAYS,self,null,null,TO_CHAR);
+			quit;
+		}
+		if (item.objecttype==ITEM_CONTAINER)
+		{
+			if (item.inside!=null)
+			{
+				act ("&[clan]You can not donate a container that contains items, empty it and try again.",
+				A_ALWAYS, self, null, null, TO_CHAR);
+				quit;
+			}
+		}
+		clan:=1;
+		amount:=0;
+		check:=room.inside;
+		while (check!=null)
+		{
+			if (check.minv!=253)
+				amount:=amount+1;
+			check:=check.next;
+		}
+
+		if (amount >=CLAN_MAX_DONATION)
+		{
+			act("&[clan]You can't donate your clan Chest is full.",
+			A_ALWAYS,self,null,null,TO_CHAR);
+			quit;
+		}
+	}
+	else
+		room := findroom("udonate@udgaard");
+	if (clan!=1)
+	{
+		act("You donate $2n to those in need.",
+		A_ALWAYS, self, item, null, TO_CHAR);
+		act("$1n donates $2n to those in need.",
+		A_SOMEONE, self, item, null, TO_REST);
+
+		item.cost := 0;
+		link(item, room);
+		act("A Glowing red portal appears hovering in the air, $2n"+
+		" emerges from it and drops to the floor.",
+		A_ALWAYS, room.inside, item, null, TO_ALL);
+		quit;
+
+	}
+	else
+	{
+		act("&[clan]You donate $2n to your clan.",
+			A_ALWAYS, self, item, null, TO_CHAR);
+		act("&[clan]$1n  donates $2n to $1s clan.",
+			A_SOMEONE, self, item, null, TO_REST);
+		link(item, room);
+		store (room,"d_c."+room.zoneidx,TRUE);
+		quit;
+	}
+	 /////quit;
+}
+dilend
 
 %rooms
 
