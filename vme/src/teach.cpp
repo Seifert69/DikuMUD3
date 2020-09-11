@@ -22,6 +22,7 @@
 #include "vmelimits.h"
 #include "guild.h"
 #include "spells.h"
+#include "vme.h"
 
 #define PRACTICE_COST_LEVEL (START_LEVEL + 5)
 
@@ -66,6 +67,11 @@ struct teach_packet
    struct tree_type *tree;
    const char **text;
 };
+
+struct skill_teach_type abil_auto_train[ABIL_TREE_MAX+1];
+struct skill_teach_type ski_auto_train[SKI_TREE_MAX+1];
+struct skill_teach_type spl_auto_train[SPL_TREE_MAX+1];
+struct skill_teach_type wpn_auto_train[WPN_TREE_MAX+1];
 
 static int gold_cost(struct skill_teach_type *s, int level)
 {
@@ -527,23 +533,30 @@ int pupil_magic(class unit_data *pupil)
 }
 
 
-void practice_base(struct teach_packet *pckt,
+void practice_base(int type,
+                   struct skill_teach_type *teaches,
                    struct tree_type *tree,
                    sbit16 pc_values[], ubit8 pc_lvl[],
                    sbit32 *practice_points, int teach_index, int cost)
 {
+   if (!TREE_ISLEAF(tree, teaches[teach_index].node))
+   {
+      slog(LOG_EXTENSIVE, 0, "ERROR: Practice base: not a leaf!");
+      return;
+   }
+
    *practice_points -= cost;
 
-   pc_lvl[pckt->teaches[teach_index].node]++;
+   pc_lvl[teaches[teach_index].node]++;
 
-   if (pckt->type == TEACH_ABILITIES)
-      pc_values[pckt->teaches[teach_index].node] += PRACTICE_ABILITY_GAIN;
+   if (type == TEACH_ABILITIES)
+      pc_values[teaches[teach_index].node] += PRACTICE_ABILITY_GAIN;
    else
-      pc_values[pckt->teaches[teach_index].node] += practice_skill_gain(pc_values[pckt->teaches[teach_index].node]);
+      pc_values[teaches[teach_index].node] += practice_skill_gain(pc_values[teaches[teach_index].node]);
 
    // Set parent nodes to 1/2 for each level up
 
-   int idx = pckt->teaches[teach_index].node;
+   int idx = teaches[teach_index].node;
 
    while (pc_values[idx] > 2 * pc_values[TREE_PARENT(tree, idx)])
    {
@@ -652,7 +665,7 @@ int practice(struct spec_arg *sarg, struct teach_packet *pckt,
    if (CHAR_LEVEL(sarg->activator) > PRACTICE_COST_LEVEL)
       money_from_unit(sarg->activator, amt, currency);
 
-   practice_base(pckt, tree, pc_values, pc_lvl, practice_points, teach_index, cost);
+   practice_base(pckt->type, pckt->teaches, tree, pc_values, pc_lvl, practice_points, teach_index, cost);
 
    act("You finish training $2t with $1n.", A_ALWAYS,
        sarg->owner,
@@ -661,6 +674,73 @@ int practice(struct spec_arg *sarg, struct teach_packet *pckt,
    return FALSE;
 }
 
+
+// Any skill that costs more than trainlimit will not be trained 
+int auto_train(int type,
+                class unit_data *pupil,
+                struct tree_type *tree,
+                struct skill_teach_type *teaches,
+                const char *text[],
+                sbit16 pc_values[],
+                ubit8 pc_lvl[], sbit8 pc_cost[], struct profession_cost *cost_table,
+                sbit32 *practice_points, int trainlimit)
+{
+   int i, cost;
+   const char *req;
+
+   int nTrained = 0;
+
+   for (i = 0; teaches[i].node != -1; i++)
+   {
+      if (TREE_ISLEAF(tree, teaches[i].node))
+      {
+         if (!tree[teaches[i].node].bAutoTrain)
+            continue;
+
+         // We can only auto train up to 75
+         if (pc_values[teaches[i].node] >= 75)
+            continue;
+
+         req = trainrestricted(pupil, &cost_table[teaches[i].node], teaches[i].min_glevel);
+         if (*req)
+            continue;
+
+         cost = actual_cost(cost_table[teaches[i].node].profession_cost[PC_PROFESSION(pupil)],
+                            pc_cost[teaches[i].node],
+                            pc_lvl[teaches[i].node], PC_VIRTUAL_LEVEL(pupil));
+
+         if (cost < 1)
+            continue;
+
+         if ((type == TEACH_ABILITIES) && (cost > 10) && (CHAR_LEVEL(pupil) > 2))
+         {
+
+            // Special logic to ensure at least a minimum of HPP relative to cost
+            if ((teaches[i].node == ABIL_HP) && ((CHAR_ABILITY(pupil, ABIL_HP)*cost)/10 >= CHAR_LEVEL(pupil)))
+               continue;
+
+            if ((teaches[i].node == ABIL_CON) && (CHAR_ABILITY(pupil, ABIL_CON) >= CHAR_ABILITY(pupil, ABIL_HP)/2))
+               continue;
+         }
+         else
+         {
+            if (cost > trainlimit)
+               continue;
+         }
+         
+         if (*practice_points < cost)
+            continue;
+
+         nTrained++;
+
+         practice_base(type, teaches, tree, pc_values, pc_lvl, practice_points, teaches[i].node, cost);
+
+         act("You train $2t.", A_ALWAYS, pupil, text[teaches[i].node], cActParameter(), TO_CHAR);
+      }
+   }
+
+   return nTrained;
+}
 
 
 
@@ -775,6 +855,54 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
       sprintf(buf, "<br/>You have %lu practice points left.<br/>",
               (unsigned long)*practice_points);
       send_to_char(buf, sarg->activator);
+      return SFR_BLOCK;
+   }
+
+   if (str_ccmp(arg, "auto") == 0)
+   {
+      if (pc_values == NULL)
+      {
+         sprintf(buf, "<br/>Please specify ability, skill, spell, weapon before the auto keyword.<br/>");
+         send_to_char(buf, sarg->activator);
+      }
+      else
+      {
+         int nCount;
+
+         for (int i = 6; i < 16; i+=2)
+         {
+            do
+            {
+               nCount = 0;
+
+               // Abilities
+               nCount += auto_train(TEACH_ABILITIES, sarg->activator, abil_tree, abil_auto_train, abil_text,
+                        &CHAR_ABILITY(sarg->activator, 0), &PC_ABI_LVL(sarg->activator, 0), 
+                        &racial_ability[CHAR_RACE(sarg->activator)][0], ability_prof_table, &PC_ABILITY_POINTS(sarg->activator), i);
+
+               // Weapons
+               nCount += auto_train(TEACH_SKILLS, sarg->activator, wpn_tree, wpn_auto_train, wpn_text,
+                        &PC_WPN_SKILL(sarg->activator, 0), &PC_WPN_LVL(sarg->activator, 0), 
+                        &racial_weapons[CHAR_RACE(sarg->activator)][0], weapon_prof_table, &PC_SKILL_POINTS(sarg->activator), i);
+
+               // Spells
+               nCount += auto_train(TEACH_SKILLS, sarg->activator, spl_tree, spl_auto_train, spl_text,
+                        &PC_SPL_SKILL(sarg->activator, 0), &PC_SPL_LVL(sarg->activator, 0), 
+                        &racial_spells[CHAR_RACE(sarg->activator)][0], spell_prof_table, &PC_SKILL_POINTS(sarg->activator), i);
+
+               // Skills
+               nCount += auto_train(TEACH_SKILLS, sarg->activator, ski_tree, ski_auto_train, ski_text,
+                        &PC_SKI_SKILL(sarg->activator, 0), &PC_SKI_LVL(sarg->activator, 0), 
+                        &racial_skills[CHAR_RACE(sarg->activator)][0], skill_prof_table, &PC_SKILL_POINTS(sarg->activator), i);
+            }
+            while (nCount > 0);
+         }
+
+         sprintf(buf, "<br/>You have %lu practice points left.<br/>",
+               (unsigned long)*practice_points);
+         send_to_char(buf, sarg->activator); 
+      }
+      
       return SFR_BLOCK;
    }
 
@@ -908,6 +1036,8 @@ int max_skill_mod(int nCost)
 
    return nCost * 10; // Will be negative by -10 per point
 }
+
+
 // level, max-train, <skill>, min_cost_per_point (gold), max_cost_per_point (gold), {costs}, 0
 // {costs} is one or more integers
 // I'm a bit puzzled on the {costs}, it seems like for each time you train cost goes up the the
@@ -1353,4 +1483,52 @@ int teach_init(struct spec_arg *sarg)
 
    /* Call teaching in case initialization occurs with first command! */
    return teaching(sarg);
+}
+
+
+void boot_auto_teach(void)
+{
+   int i;
+
+   slog(LOG_EXTENSIVE, 0, "Booting auto-training packets");
+
+   for (i=0; i < ABIL_TREE_MAX+1; i++)
+   {
+      abil_auto_train[i].max_skill = 75;
+      abil_auto_train[i].min_glevel = 0;
+      abil_auto_train[i].node = i;
+      abil_auto_train[i].max_cost_per_point = 0;
+      abil_auto_train[i].min_cost_per_point = 0;
+   }
+   abil_auto_train[ABIL_TREE_MAX].node = -1;
+
+   for (i=0; i < SKI_TREE_MAX+1; i++)
+   {
+      ski_auto_train[i].max_skill = 75;
+      ski_auto_train[i].min_glevel = 0;
+      ski_auto_train[i].node = i;
+      ski_auto_train[i].max_cost_per_point = 0;
+      ski_auto_train[i].min_cost_per_point = 0;
+   }
+   ski_auto_train[SKI_TREE_MAX].node = -1;
+
+   for (i=0; i < WPN_TREE_MAX+1; i++)
+   {
+      wpn_auto_train[i].max_skill = 75;
+      wpn_auto_train[i].min_glevel = 0;
+      wpn_auto_train[i].node = i;
+      wpn_auto_train[i].max_cost_per_point = 0;
+      wpn_auto_train[i].min_cost_per_point = 0;
+   }
+   wpn_auto_train[WPN_TREE_MAX].node = -1;
+
+   for (i=0; i < SPL_TREE_MAX+1; i++)
+   {
+      spl_auto_train[i].max_skill = 75;
+      spl_auto_train[i].min_glevel = 0;
+      spl_auto_train[i].node = i;
+      spl_auto_train[i].max_cost_per_point = 0;
+      spl_auto_train[i].min_cost_per_point = 0;
+   }
+   spl_auto_train[SPL_TREE_MAX].node = -1;
 }
