@@ -712,13 +712,12 @@ int auto_train(int type,
          if (cost < 1)
             continue;
 
-         if ((type == TEACH_ABILITIES) && (cost > 10) && (CHAR_LEVEL(pupil) > 2))
+         if ((type == TEACH_ABILITIES) && (cost > 10) && (CHAR_LEVEL(pupil) > 2) && ((teaches[i].node == ABIL_HP) || (teaches[i].node == ABIL_CON)))
          {
-
             // Special logic to ensure at least a minimum of HPP relative to cost
             if ((teaches[i].node == ABIL_HP) && ((CHAR_ABILITY(pupil, ABIL_HP)*cost)/10 >= CHAR_LEVEL(pupil)))
                continue;
-
+            
             if ((teaches[i].node == ABIL_CON) && (CHAR_ABILITY(pupil, ABIL_CON) >= CHAR_ABILITY(pupil, ABIL_HP)/2))
                continue;
          }
@@ -730,6 +729,11 @@ int auto_train(int type,
          
          if (*practice_points < cost)
             continue;
+
+         if ((type == TEACH_ABILITIES) && (teaches[i].node == ABIL_DIV))
+         {
+            slog(LOG_EXTENSIVE, 0, "Lalala");
+         }
 
          nTrained++;
 
@@ -869,7 +873,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
       {
          int nCount;
 
-         for (int i = 6; i < 16; i+=2)
+         for (int i = 10; i < 16; i+=2)
          {
             do
             {
@@ -1438,12 +1442,12 @@ int teach_init(struct spec_arg *sarg)
          packet->teaches[count - 1] = a_skill;
          count++;
          RECREATE(packet->teaches, struct skill_teach_type, count);
+
+         packet->teaches[count - 1].node = -1;
+         packet->teaches[count - 1].min_cost_per_point = -1;
+         packet->teaches[count - 1].max_cost_per_point = -1;
       }
    }
-
-   packet->teaches[count - 1].node = -1;
-   packet->teaches[count - 1].min_cost_per_point = -1;
-   packet->teaches[count - 1].max_cost_per_point = -1;
 
    for (i = 0; packet->teaches[i].node != -1; i++)
    {
