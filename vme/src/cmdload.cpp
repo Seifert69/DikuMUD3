@@ -285,6 +285,14 @@ void command_read(void)
             continue;
         }
 
+        if (strncmp(pTmp, "auto train", 10) == 0)
+        {
+            dummy = atoi(pCh);
+            if (is_in(dummy, 0, 1))
+                ski_tree[idx].bAutoTrain = dummy;
+            continue;
+        }
+
         if (strncmp(pTmp, "race ", 5) == 0)
         {
             dummy = atoi(pCh);

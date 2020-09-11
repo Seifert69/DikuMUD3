@@ -493,7 +493,7 @@ void act(const char *str, int show_type,
     /* same unit or to person */
     for (; to; to = to->next)
     {
-        if (IS_CHAR(to))
+        if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
         {
             act_generate(buf, str, show_type, arg1, arg2, arg3, type, to);
             send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
@@ -503,19 +503,18 @@ void act(const char *str, int show_type,
             return;
         if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to))
             for (u = UNIT_CONTAINS(to); u; u = u->next)
-                if
-                    IS_CHAR(u)
-                    {
-                        act_generate(buf, str, show_type, arg1, arg2, arg3, type, u);
-                        send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
-                    }
+                if (IS_CHAR(u) && CHAR_DESCRIPTOR(to))
+                {
+                    act_generate(buf, str, show_type, arg1, arg2, arg3, type, u);
+                    send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
+                }
     }
 
     /* other units outside transparent unit */
     if (UNIT_IN(arg1.m_u) && (to = UNIT_IN(UNIT_IN(arg1.m_u))) && UNIT_IS_TRANSPARENT(UNIT_IN(arg1.m_u)))
         for (to = UNIT_CONTAINS(to); to; to = to->next)
         {
-            if (IS_CHAR(to))
+            if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
             {
                 act_generate(buf, str, show_type, arg1, arg2, arg3, type, to);
                 send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
@@ -523,7 +522,7 @@ void act(const char *str, int show_type,
 
             if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to) && to != UNIT_IN(arg1.m_u))
                 for (u = UNIT_CONTAINS(to); u; u = u->next)
-                    if (IS_CHAR(u))
+                    if (IS_CHAR(u) && CHAR_DESCRIPTOR(to))
                     {
                         act_generate(buf, str, show_type, arg1, arg2, arg3, type, u);
                         send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
@@ -557,7 +556,7 @@ void cact(const char *str, int show_type,
     /* same unit or to person */
     for (; to; to = to->next)
     {
-        if (IS_CHAR(to))
+        if (IS_CHAR(to)  && CHAR_DESCRIPTOR(to))
         {
             *buf = 0;
             b = buf;
@@ -580,26 +579,25 @@ void cact(const char *str, int show_type,
 
         if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to))
             for (u = UNIT_CONTAINS(to); u; u = u->next)
-                if
-                    IS_CHAR(u)
-                    {
-                        *buf = 0;
-                        b = buf;
+                if (IS_CHAR(u) && CHAR_DESCRIPTOR(to))
+                {
+                    *buf = 0;
+                    b = buf;
 
-                        strcat(b, divcolor(colortype));
-                        TAIL(b);
-                        act_generate(buf, str, show_type, arg1, arg2, arg3, type, u, false);
-                        TAIL(b);
-                        strcat(b, "</div><br/>");
-                        send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
-                    }
+                    strcat(b, divcolor(colortype));
+                    TAIL(b);
+                    act_generate(buf, str, show_type, arg1, arg2, arg3, type, u, false);
+                    TAIL(b);
+                    strcat(b, "</div><br/>");
+                    send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
+                }
     }
 
     /* other units outside transparent unit */
     if ((to = UNIT_IN(UNIT_IN(arg1.m_u))) && UNIT_IS_TRANSPARENT(UNIT_IN(arg1.m_u)))
         for (to = UNIT_CONTAINS(to); to; to = to->next)
         {
-            if (IS_CHAR(to))
+            if (IS_CHAR(to) && CHAR_DESCRIPTOR(to))
             {
                 *buf = 0;
                 b = buf;
@@ -613,7 +611,7 @@ void cact(const char *str, int show_type,
 
             if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to) && to != UNIT_IN(arg1.m_u))
                 for (u = UNIT_CONTAINS(to); u; u = u->next)
-                    if (IS_CHAR(u))
+                    if (IS_CHAR(u) && CHAR_DESCRIPTOR(to))
                     {
                         *buf = 0;
                         b = buf;

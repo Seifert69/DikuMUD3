@@ -626,6 +626,12 @@ static void spell_read(void)
             if (is_in(dummy, SPL_NONE, SPL_GROUP_MAX - 1))
                 spl_tree[idx].parent = dummy;
         }
+        else if (strncmp(pTmp, "auto train", 10) == 0)
+        {
+            dummy = atoi(pCh);
+            if (is_in(dummy, 0, 1))
+                spl_tree[idx].bAutoTrain = dummy;
+        }
         else if (strncmp(pTmp, "shield", 6) == 0)
         {
             dummy = atoi(pCh);
@@ -812,6 +818,7 @@ static void spell_init(void)
         spell_info[i].acttype = A_SOMEONE;
 
         spl_tree[i].parent = SPL_ALL;
+        spl_tree[i].bAutoTrain = FALSE;
 
         if (i < SPL_GROUP_MAX)
             spl_tree[i].isleaf = FALSE;
