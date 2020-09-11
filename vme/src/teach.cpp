@@ -526,6 +526,39 @@ int pupil_magic(class unit_data *pupil)
    return FALSE;
 }
 
+
+void practice_base(struct teach_packet *pckt,
+                   struct tree_type *tree,
+                   sbit16 pc_values[], ubit8 pc_lvl[],
+                   sbit32 *practice_points, int teach_index, int cost)
+{
+   *practice_points -= cost;
+
+   pc_lvl[pckt->teaches[teach_index].node]++;
+
+   if (pckt->type == TEACH_ABILITIES)
+      pc_values[pckt->teaches[teach_index].node] += PRACTICE_ABILITY_GAIN;
+   else
+      pc_values[pckt->teaches[teach_index].node] += practice_skill_gain(pc_values[pckt->teaches[teach_index].node]);
+
+   // Set parent nodes to 1/2 for each level up
+
+   int idx = pckt->teaches[teach_index].node;
+
+   while (pc_values[idx] > 2 * pc_values[TREE_PARENT(tree, idx)])
+   {
+      int pidx = TREE_PARENT(tree, idx);
+
+      pc_lvl[pidx]++;
+      pc_values[pidx] = pc_values[idx] / 2;
+
+      if (TREE_ISROOT(tree, pidx))
+         break;
+
+      idx = TREE_PARENT(tree, idx);
+   }
+}
+
 int practice(struct spec_arg *sarg, struct teach_packet *pckt,
              struct tree_type *tree,
              const char *text[],
@@ -616,32 +649,10 @@ int practice(struct spec_arg *sarg, struct teach_packet *pckt,
       return TRUE;
    }
 
-   *practice_points -= (int)cost;
-
-   pc_lvl[pckt->teaches[teach_index].node]++;
-
    if (CHAR_LEVEL(sarg->activator) > PRACTICE_COST_LEVEL)
       money_from_unit(sarg->activator, amt, currency);
 
-   if (pckt->type == TEACH_ABILITIES)
-      pc_values[pckt->teaches[teach_index].node] += PRACTICE_ABILITY_GAIN;
-   else
-      pc_values[pckt->teaches[teach_index].node] += practice_skill_gain(pc_values[pckt->teaches[teach_index].node]);
-
-   int idx = pckt->teaches[teach_index].node;
-
-   while (pc_values[idx] > 2 * pc_values[TREE_PARENT(tree, idx)])
-   {
-      int pidx = TREE_PARENT(tree, idx);
-
-      pc_lvl[pidx]++;
-      pc_values[pidx] = pc_values[idx] / 2;
-
-      if (TREE_ISROOT(tree, pidx))
-         break;
-
-      idx = TREE_PARENT(tree, idx);
-   }
+   practice_base(pckt, tree, pc_values, pc_lvl, practice_points, teach_index, cost);
 
    act("You finish training $2t with $1n.", A_ALWAYS,
        sarg->owner,
@@ -649,6 +660,9 @@ int practice(struct spec_arg *sarg, struct teach_packet *pckt,
 
    return FALSE;
 }
+
+
+
 
 int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
 {
