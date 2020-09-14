@@ -365,102 +365,96 @@ var
  i:integer;
 code
 {
-	if (arg=="")
-	{
-		sendtext ("Freeze who?<br/>",self);
-		quit;
-	}
+if (arg=="")
+ {
+    sendtext ("Freeze who?<br/>",self);
+    quit;
+    }
 
-	u:=findunit(self,arg,FIND_UNIT_SURRO|FIND_UNIT_WORLD,null,UNIT_ST_PC);
+u:=findunit(self,arg,FIND_UNIT_SURRO|FIND_UNIT_WORLD,null,UNIT_ST_PC);
 
-	if (u==null)
-	{
-		sendtext ("No such person around.<br/>",self);
-		quit;
-	}
-
-	if (self==u)
-	{
-		sendtext ("Hehe.  Most amusing, Sire. (People have actually DONE this!)<br/>",self);
-		quit;
-	}
-
-	if (self.level <= u.level)
-	{
-		sendtext ("It IS a little cold isn't it?<br/>",self);
-		quit;
-	}
-
-	if (dilfind("frozen@commands",u))
-	{
-		act ("$1n is now unfrozen.",
-		A_SOMEONE, u, null, self, TO_VICT);
-		sendtext ("You unfreeze.<br/>",u);
-		i:=dildestroy ("frozen@commands",u);
-		quit;
-	}
-	else
-	{
-		  act ("$1n is now frozen.",
-		  A_SOMEONE, u, null, self, TO_VICT);
-		  sendtext ("You totally freeze.<br/>",u);
-		  dilcopy ("frozen@commands",u);
-		  quit;
-	}
-
-	quit;
-}
-dilend
-
-dilbegin do_notell (arg:string);
-var
-vict:unitptr;
-
-code
+if (u==null)
 {
+    sendtext ("No such person around.<br/>",self);
+    quit;
+    }
+
+if (self==u)
+{
+    sendtext ("Hehe.  Most amusing, Sire. (People have actually DONE this!)<br/>",self);
+              quit;
+          }
+
+if (self.level <= u.level)
+{
+    sendtext ("It IS a little cold isn't it?<br/>",self);
+    quit;
+    }
+
+if (dilfind("frozen@commands",u))
+{
+       act ("$1n is now unfrozen.",
+       A_SOMEONE, u, null, self, TO_VICT);
+      sendtext ("You unfreeze.<br/>",u);
+      i:=dildestroy ("frozen@commands",u);
+      quit;
+      }
+else
+ {
+      act ("$1n is now frozen.",
+      A_SOMEONE, u, null, self, TO_VICT);
+      sendtext ("You totally freeze.<br/>",u);
+      dilcopy ("frozen@commands",u);
+      quit;
+      }
+
+      quit;
+      }
+      dilend
+
+      dilbegin do_notell (arg:string);
+      var
+       vict:unitptr;
+
+      code
+      {
 if (self.type!=UNIT_ST_PC)
 return;
-
-if ("New Player Helper" in self.quests) goto proceed;
 
 if (self.level<200)
  return;
 
-:proceed:
-	vict := findunit (self, arg, FIND_UNIT_WORLD,null,UNIT_ST_PC);
-	if ((vict == null) or (vict.minv > self.level))
+  vict := findunit (self, arg, FIND_UNIT_WORLD,null,UNIT_ST_PC);
+if (vict==null)
     {
-		sendtext ("No such player around.<br/>",self);
-		return;
-    }
-	if ((self.level < 200) and (vict.level > 20))
-	{
-		sendtext ("That person is not a newbie. This only works for level 20 and below.<br/>",self);
-		return;
-	}
-
-	if ((self.level >= 200) and (vict.level >= self.level))
-    {
-		act ("$3e might object to that... better not.",
-		A_SOMEONE, self, null, vict, TO_CHAR);
-		return;
+      sendtext ("No such player around.<br/>",self);
+            return;
     }
 
-	if (isset (vict.pcflags, PC_NOTELLING))
-	{
-		sendtext ("You regain your telepathic ability.<br/>",vict);
-		sendtext("Notelling removed.<br/>",self);
-		unset (vict.pcflags,PC_NOTELLING);
-	}
-	else
-	{
-		sendtext ("Your telepathic ability fades away!<br/>",vict);
-		sendtext ("NOTELLING set.<br/>",self);
-		set (vict.pcflags,PC_NOTELLING);
-	}
+
+  if (vict.level >= self.level)
+    {
+      act ("$3e might object to that... better not.",
+      A_SOMEONE, self, null, vict, TO_CHAR);
+      return;
+    }
+
+  if (isset (vict.pcflags, PC_NOTELLING))
+    {
+      sendtext ("You regain your telepathic ability.<br/>",vict);
+            sendtext("NOTELLING removed.<br/>",self);
+            unset (vict.pcflags,PC_NOTELLING);
+                }
+  else
+    {
+     sendtext ("Your telepathic ability fades away!<br/>",vict);
+           sendtext ("NOTELLING set.<br/>",self);
+                             set (vict.pcflags,PC_NOTELLING);
+    }
+
 return;
 }
-dilend /* do_notell */
+dilend
 
 
 
@@ -7767,7 +7761,7 @@ quit;
 
 if(self.type != UNIT_ST_PC) quit;
 
-if (self.level>200)
+if ((self.level>200) or (self.name=="ginger"))
 	goto admin_delete;
 
 :char_delete:
@@ -7858,7 +7852,7 @@ send_done("motd",self,null,null,0,arg,null);
 
 quit;
 }
-dilend /* do_delete */
+dilend
 
 
 dilbegin dig(arg : string);
@@ -11414,54 +11408,74 @@ dilend
 dilbegin no_shout (arg : string);
 
 var
-   vict     : unitptr;
+   pc       : unitptr;
+
+   pcname   : string;
    time_str : string;
    type_str : string;
+
    i        : integer;
    ns_time  : integer;
 
 code
 {
-	block;
-	if (self.type!=UNIT_ST_PC)
-	return;
+   block;
+   if ("New Player Helper" in self.quests) goto proceed;
 
-	if ("New Player Helper" in self.quests) goto proceed;
 
-	if (self.level < 200)
-	return;
-	
-:proceed:
-
-	vict := findunit(self, arg, FIND_UNIT_WORLD, null, UNIT_ST_PC);
-	if ((vict == null) or (vict.minv > self.level))
-	{
-		sendtext ("No such player around.<br/>",self);
-		return;
-	}
-	if ((self.level < 200) and (vict.level > 20))
-	{
-		sendtext ("That person is not a newbie. This only works for level 20 and below.<br/>",self);
-		return;
-	}
-
-	if ((self.level >= 200) and (vict.level >= self.level))
-	{
-		act ("$3e might object to that... better not.",
-		A_SOMEONE, self, null, vict, TO_CHAR);
-		return;
-	}
-
-   if (isset(vict.pcflags, PC_NOSHOUTING))
+   if (self.level < 200)
    {
-		sendtext ("Your sore throat suddenly clears up.<br/>",vict);
-		sendtext("Noshouting removed.<br/>",self);
-		subextra(vict.quests, "$noshout");
-		unset(vict.pcflags, PC_NOSHOUTING);
-		i := dildestroy("no_shouted@commands", vict);
-		log("NOSHOUT: " + self.name + " removed the noshout on " +
-          vict.name + ".");
-		quit;
+      act("Arglebargle, glop-glyf!?!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+:proceed:
+   pcname := getword(arg);
+
+   pc := findunit(self, pcname, FIND_UNIT_WORLD, null);
+
+   if ((pc == null) or (pc.type != UNIT_ST_PC) or (pc.minv > self.level))
+   {
+      act("No such PC in the world.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+if (self.name=="ginger")
+ goto gingers;
+
+   if (self.level <= pc.level)
+   {
+      act("I don't think $3e would appreciate that.",A_ALWAYS, self, null,
+pc, TO_CHAR);
+      quit;
+   }
+ if (("New Player Helper" in self.quests) and (pc.level > 20))
+  {
+ act ("that person is not a newbie this only works for level 20 and down.",
+  A_ALWAYS, self, null, null, TO_CHAR);
+ quit;
+ }
+
+:gingers:
+   if ((self.level <200) and (pc.level>=200))
+   {
+      act("I don't think $3e would appreciate that.",A_ALWAYS, self, null,
+pc, TO_CHAR);
+      quit;
+   }
+
+   if (isset(pc.pcflags, PC_NOSHOUTING))
+   {
+      act("Noshouting removed from $3n.",A_ALWAYS, self, null, pc, TO_CHAR);
+      act("Your sore throat suddenly clears up.",A_ALWAYS, pc, null, null,
+TO_CHAR);
+      subextra(pc.quests, "$noshout");
+      unset(pc.pcflags, PC_NOSHOUTING);
+      i := dildestroy("no_shouted@commands", pc);
+      log("NOSHOUT: " + self.name + " removed the noshout on " +
+          pc.name + ".");
+      quit;
    }
 
    time_str := getword(arg);
@@ -11500,12 +11514,12 @@ code
 
 :no_shout:
 
-   set(vict.pcflags, PC_NOSHOUTING);
-   act("Noshouting set on $3n.",A_ALWAYS, self, null, vict, TO_CHAR);
-   act("You suddenly get a sore throat!",A_ALWAYS, vict, null, null, TO_CHAR);
-   dilcopy("no_shouted@commands(" + itoa(ns_time) + ")", vict);
-   addextra(vict.quests, {"$noshout"}, self.name + " " + asctime(realtime));
-   log("NOSHOUT: " + self.name + " noshouted " + vict.name + " for " +
+   set(pc.pcflags, PC_NOSHOUTING);
+   act("Noshouting set on $3n.",A_ALWAYS, self, null, pc, TO_CHAR);
+   act("You suddenly get a sore throat!",A_ALWAYS, pc, null, null, TO_CHAR);
+   dilcopy("no_shouted@commands(" + itoa(ns_time) + ")", pc);
+   addextra(pc.quests, {"$noshout"}, self.name + " " + asctime(realtime));
+   log("NOSHOUT: " + self.name + " noshouted " + pc.name + " for " +
        time_str + " " + type_str + ".");
 
    quit;
@@ -11516,7 +11530,7 @@ code
 null, TO_CHAR);
       quit;
 }
-dilend /* no_shout */
+dilend /* revoke */
 
 dilbegin recall aware no_shouted (ns_time : integer);
 
