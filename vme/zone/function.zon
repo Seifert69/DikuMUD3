@@ -6637,7 +6637,7 @@ code
   secure(talker, lost);
   slKeys := {"@", "#", "1join1", "1left1"};
   sKey := "";
-  sChan := getword(msg); /*Throw away the CHANNEL*/
+  sChan := getword(msg); /*Throw away the text CHANNEL*/
   sChan := getword(msg);
   if(not(sChan in slActive))
       return;
@@ -6680,9 +6680,9 @@ if(sChan=="clan"){
   }
   if (sKey == "@") {
     if (self.level >= talker.minv) {
-      sendtext("<"+sChan+ "> " +talker.name+ " "+msg+"<br/>",self );
+      sendtext("<div class='comm_channel'>&lt;"+sChan+"&gt;" +talker.name+ " "+msg+"</div>",self );
     } else {
-      sendtext("<"+sChan+"> Someone "+msg+"<br/>",self );
+      sendtext("<div class='comm_channel'>&lt;"+sChan+"&gt; Someone "+msg+"</div>",self );
     }
   }
 	else if (sKey == "#"){
@@ -6718,23 +6718,23 @@ sendtext("   "+self.name+" "+self.title+ " (Level "+itoa(self.vlevel) + ")<br/>"
 	} else if (sKey == "1join1" ) {
      if (jmode ==1) {
        if (self.level >= talker.minv ) {
-         sendtext(" <"+sChan+"> " +talker.name + " has entered the " +
-                  "channel.<br/>",self);
+         sendtext("<div class='comm_channel'>&lt;"+sChan+"&gt;" +talker.name + " has entered the " +
+                  "channel.</div>",self);
        }
      }
   } else if (sKey == "1left1" ) {
      if (dmode ==1) {
        if (self.level >= talker.minv ) {
-         sendtext(" <"+sChan+"> " +talker.name + " has left the " +
-                  "channel.<br/>",self);
+         sendtext("<div class='comm_channel'>&lt;"+sChan+"&gt;" +talker.name + " has left the " +
+                  "channel.</div>",self);
        }
      }
   } else {
     if (self.level >= talker.minv) {
-      sendtext(" <"+sChan+"> " +talker.name+" says '"
-+msg+"'<br/>",self);
+      sendtext("<div class='comm_channel'>&lt;"+sChan+"&gt;" +talker.name+" says '"
++msg+"'</div>",self);
     } else {
-      sendtext("  <"+sChan+"> Someone says '" +msg+"'<br/>",self);
+      sendtext("<div class='comm_channel'>&lt;"+sChan+"&gt; Someone says '" +msg+"'</div>",self);
     }
   }
   :lost:
@@ -6768,7 +6768,7 @@ code
   nEcho := 1;
   dmode := 1;
   jmode := 1;
-  if ((self.level>=200) or (self.name=="ginger"))
+  if (self.level>=200)
   interrupt (SFB_CMD, (command ("nocomm") and
   (self==activator)),nochannel);
   interrupt (SFB_CMD, (command ("noshout") and
