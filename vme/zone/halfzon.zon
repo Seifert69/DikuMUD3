@@ -3543,7 +3543,7 @@ extra {}
 
 M_HALFLING_WARRIOR_AXE(15, SEX_FEMALE)
 flags {UNIT_FL_NO_TELEPORT}
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 
 dilbegin spink_request();
 var

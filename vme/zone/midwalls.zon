@@ -2803,7 +2803,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -2830,7 +2830,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
                       23, "rn_036@midwalls",
@@ -2854,7 +2854,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -2879,7 +2879,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -2904,7 +2904,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -2929,7 +2929,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 
 dilcopy guardschedule(12, "rn_041@midwalls",
@@ -2955,7 +2955,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -2981,7 +2981,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3007,7 +3007,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3033,7 +3033,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3059,7 +3059,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3086,7 +3086,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3111,7 +3111,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3135,7 +3135,7 @@ romflags {CHAR_PROTECTED}
 
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3160,7 +3160,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3184,7 +3184,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3209,7 +3209,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3234,7 +3234,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3261,7 +3261,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3287,7 +3287,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3313,7 +3313,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3339,7 +3339,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3365,7 +3365,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3389,7 +3389,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3414,7 +3414,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3438,7 +3438,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3462,7 +3462,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3486,7 +3486,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3511,7 +3511,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 end
 
@@ -3532,7 +3532,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3558,7 +3558,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3582,7 +3582,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3607,7 +3607,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3632,7 +3632,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3656,7 +3656,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3680,7 +3680,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3705,7 +3705,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3730,7 +3730,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3757,7 +3757,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3783,7 +3783,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3808,7 +3808,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3833,7 +3833,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3860,7 +3860,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3885,7 +3885,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3911,7 +3911,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 
 dilcopy guardschedule(1, "rn_041@midwalls",
@@ -3935,7 +3935,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 
 dilcopy guardschedule(2, "rn_041@midwalls",
@@ -3961,7 +3961,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3985,7 +3985,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -4011,7 +4011,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4038,7 +4038,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4063,7 +4063,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 
 dilcopy guardschedule(1, "rn_041@midwalls",
@@ -4089,7 +4089,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4115,7 +4115,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4142,7 +4142,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4169,7 +4169,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4196,7 +4196,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4223,7 +4223,7 @@ alignment 400
 romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4313,7 +4313,7 @@ M_HUMAN_WARRIOR_SWORD(58, SEX_MALE)
 alignment 400
 
 romflags {CHAR_PROTECTED}
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 end
 
