@@ -529,7 +529,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version,
 
     if ((prg->corecrc) != (tmpl->corecrc))
     {
-        slog(LOG_ALL, 0, "Core CRC mismatch. prg:%d, tmpl:%d", prg->corecrc, tmpl->corecrc);
+        // slog(LOG_ALL, 0, "Core CRC mismatch. prg:%d, tmpl:%d", prg->corecrc, tmpl->corecrc);
         recallpc = 0;
         prg->corecrc = tmpl->corecrc;
 
@@ -759,6 +759,8 @@ void bwrite_diltemplate(CByteBuffer *pBuf, struct diltemplate *tmpl)
 
     /* slog(LOG_ALL, 0, "Write Template: Var %d, Core %d.", tmpl->varcrc, tmpl->corecrc); */
 
+    //fprintf(stderr, "bwrite dil template: %s : corecrc=%d   varcrc=%d\n\r", tmpl->prgname, tmpl->corecrc, tmpl->varcrc);
+
     if (tmpl->zone)
     {
         char buf[512];
@@ -838,7 +840,7 @@ void bwrite_dil(CByteBuffer *pBuf, class dilprg *prg)
 
     /* variable crc from compiler */
     pBuf->Append16(prg->varcrc);
-
+    // fprintf(stderr, "bwrite dil: %s : corecrc=%d   varcrc=%d\n\r", prg->frame[0].tmpl->prgname, prg->corecrc, prg->varcrc);
     /* core crc from compiler */
     pBuf->Append16(prg->corecrc);
 
