@@ -635,7 +635,7 @@ class unit_data *find_symbolic_instance(class file_index_type *fi)
     return NULL;
 }
 
-class unit_data *find_symbolic(char *zone, char *name)
+class unit_data *find_symbolic(const char *zone, const char *name)
 {
     return find_symbolic_instance(find_file_index(zone, name));
 }

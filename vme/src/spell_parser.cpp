@@ -264,7 +264,7 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
     }
 
     c = argument;
-    spl = search_block_abbrevs(c, spl_text, (const char **)&argument);
+    spl = search_block_abbrevs(c, g_SplColl.text, (const char **)&argument);
     argument = skip_spaces(argument);
 
     if (spl == -1)
@@ -276,7 +276,7 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
 
     if (spl < SPL_GROUP_MAX)
     {
-        act("$2t is not a spell.", A_ALWAYS, ch, spl_text[spl], cActParameter(), TO_CHAR);
+        act("$2t is not a spell.", A_ALWAYS, ch, g_SplColl.text[spl], cActParameter(), TO_CHAR);
         return;
     }
 
@@ -339,7 +339,7 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
                      "Please report.<br/>",
                      ch);
         slog(LOG_ALL, 0,
-             "do_cast: %s attempted to be used as spell.", spl_text[spl]);
+             "do_cast: %s attempted to be used as spell.", g_SplColl.text[spl]);
         return;
     }
 
@@ -403,7 +403,7 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
             }
             else /* Nothing was given as argument */
                 act("What should the $2t spell be cast upon?",
-                    A_ALWAYS, ch, spl_text[spl], cActParameter(), TO_CHAR);
+                    A_ALWAYS, ch, g_SplColl.text[spl], cActParameter(), TO_CHAR);
 
             return;
         }
@@ -577,12 +577,12 @@ static void spell_read(void)
 
         if (strncmp(pTmp, "name", 4) == 0)
         {
-            if (spl_text[idx])
+            if (g_SplColl.text[idx])
             {
-                free((char *)spl_text[idx]);
-                spl_text[idx] = NULL;
+                free((char *)g_SplColl.text[idx]);
+                g_SplColl.text[idx] = NULL;
             }
-            spl_text[idx] = str_dup(pCh);
+            g_SplColl.text[idx] = str_dup(pCh);
         }
         else if (strncmp(pTmp, "tochar", 6) == 0)
         {
@@ -624,13 +624,13 @@ static void spell_read(void)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, SPL_NONE, SPL_GROUP_MAX - 1))
-                spl_tree[idx].parent = dummy;
+                g_SplColl.tree[idx].parent = dummy;
         }
         else if (strncmp(pTmp, "auto train", 10) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 1))
-                spl_tree[idx].bAutoTrain = dummy;
+                g_SplColl.tree[idx].bAutoTrain = dummy;
         }
         else if (strncmp(pTmp, "shield", 6) == 0)
         {
@@ -702,7 +702,7 @@ static void spell_read(void)
             if (ridx == -1)
                 slog(LOG_ALL, 0, "Spells: Illegal race in: %s", pTmp);
             else
-                racial_spells[ridx][idx] = dummy;
+                g_SplColl.racial[ridx][idx] = dummy;
         }
         else if (strncmp(pTmp, "profession ", 11) == 0)
         {
@@ -718,7 +718,7 @@ static void spell_read(void)
             if (ridx == -1)
                 slog(LOG_ALL, 0, "Spells: Illegal profession %s", pTmp);
             else
-                spell_prof_table[idx].profession_cost[ridx] = dummy;
+                g_SplColl.prof_table[idx].profession_cost[ridx] = dummy;
         }
         else if (strncmp(pTmp, "restrict ", 9) == 0)
         {
@@ -731,16 +731,16 @@ static void spell_read(void)
 
             if (strncmp(pTmp+9, "level", 5) == 0)
             {
-                spell_prof_table[idx].min_level = dummy;
+                g_SplColl.prof_table[idx].min_level = dummy;
             }
             else
             {
-                int ridx = search_block(pTmp + 9, abil_text, TRUE);
+                int ridx = search_block(pTmp + 9, g_AbiColl.text, TRUE);
 
                 if (ridx == -1)
                     slog(LOG_ALL, 0, "Spells: Illegal restrict %s", pTmp);
                 else
-                    spell_prof_table[idx].min_abil[ridx] = dummy;
+                    g_SplColl.prof_table[idx].min_abil[ridx] = dummy;
             }
         }
         else if (strncmp(pTmp, "fumble", 6) == 0)
@@ -817,13 +817,13 @@ static void spell_init(void)
         spell_info[i].toselfroom = NULL;
         spell_info[i].acttype = A_SOMEONE;
 
-        spl_tree[i].parent = SPL_ALL;
-        spl_tree[i].bAutoTrain = FALSE;
+        g_SplColl.tree[i].parent = SPL_ALL;
+        g_SplColl.tree[i].bAutoTrain = TRUE;
 
         if (i < SPL_GROUP_MAX)
-            spl_tree[i].isleaf = FALSE;
+            g_SplColl.tree[i].isleaf = FALSE;
         else
-            spl_tree[i].isleaf = TRUE;
+            g_SplColl.tree[i].isleaf = TRUE;
 
         spell_info[i].spell_pointer = NULL;
         spell_info[i].minimum_position = POSITION_STANDING;
@@ -837,32 +837,32 @@ static void spell_init(void)
         spell_info[i].tmpl = NULL;
         spell_info[i].shield = SHIELD_M_USELESS;
 
-        spl_text[i] = NULL;
+        g_SplColl.text[i] = NULL;
 
         /* Default to zero */
         for (j = 0; j < PC_RACE_MAX; j++)
-            racial_spells[j][i] = 0;
+            g_SplColl.racial[j][i] = 0;
 
         /* Clear the spell_prof table */
-        spell_prof_table[i].sanity = i;
-        spell_prof_table[i].min_level = 0;
+        g_SplColl.prof_table[i].sanity = i;
+        g_SplColl.prof_table[i].min_level = 0;
 
         for (int j=0; j < ABIL_TREE_MAX; j++)
-            spell_prof_table[i].min_abil[j] = 0;
+            g_SplColl.prof_table[i].min_abil[j] = 0;
 
         for (int j=0; j < PROFESSION_MAX; j++)
-            spell_prof_table[i].profession_cost[j] = -7;
+            g_SplColl.prof_table[i].profession_cost[j] = -7;
 
-        if ((i <= LAST_SPELL) && (spell_prof_table[i].sanity != i))
+        if ((i <= LAST_SPELL) && (g_SplColl.prof_table[i].sanity != i))
         {
-            slog(LOG_ALL, 0, "spell_prof_table[%d] has wrong sanity", i);
+            slog(LOG_ALL, 0, "g_SplColl.prof_table[%d] has wrong sanity", i);
             exit(0);
         }
     }
 
-    spl_tree[SPL_TREE_MAX].parent = -1;
-    spl_tree[SPL_TREE_MAX].isleaf = FALSE;
-    spl_text[SPL_TREE_MAX] = NULL;
+    g_SplColl.tree[SPL_TREE_MAX].parent = -1;
+    g_SplColl.tree[SPL_TREE_MAX].isleaf = FALSE;
+    g_SplColl.text[SPL_TREE_MAX] = NULL;
 }
 
 
@@ -879,32 +879,32 @@ void spell_dump(void)
 
         for (int i = 0; i < SPL_TREE_MAX; i++)
         {
-            if (spl_text[i] == NULL)
+            if (g_SplColl.text[i] == NULL)
                 continue;
 
             str = "";
 
-            sprintf(buf, "%s,%s", spl_text[i], spc(30-strlen(spl_text[i])));
+            sprintf(buf, "%s,%s", g_SplColl.text[i], spc(30-strlen(g_SplColl.text[i])));
             str.append(buf);
 
             sprintf(buf, ".profession %s%s = %s%d\n", professions[j], spc(12-strlen(professions[j])),
-                (spell_prof_table[i].profession_cost[j] >= 0) ? "+" : "", spell_prof_table[i].profession_cost[j]);
+                (g_SplColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "", g_SplColl.prof_table[i].profession_cost[j]);
             str.append(buf);
 
-            /*if (spell_prof_table[i].min_level > 0)
+            /*if (g_SplColl.prof_table[i].min_level > 0)
             {
-                sprintf(buf, "restrict level          = %d\n", spell_prof_table[i].min_level);
+                sprintf(buf, "restrict level          = %d\n", g_SplColl.prof_table[i].min_level);
                 str.append(buf);
             }
 
             for (int k=0; k < ABIL_TREE_MAX; k++)
-                if (spell_prof_table[i].min_abil[k] > 0)
+                if (g_SplColl.prof_table[i].min_abil[k] > 0)
                 {
                     sprintf(buf, "restrict %s%s    = %s%d\n", abil_text[k], spc(12-strlen(abil_text[k])),
-                        (spell_prof_table[i].min_abil[k] >= 0) ? "+" : "", spell_prof_table[i].min_abil[k]);
+                        (g_SplColl.prof_table[i].min_abil[k] >= 0) ? "+" : "", g_SplColl.prof_table[i].min_abil[k]);
                     str.append(buf);
                 }*/
-            vect.push_back(std::make_pair(spell_prof_table[i].profession_cost[j], str));
+            vect.push_back(std::make_pair(g_SplColl.prof_table[i].profession_cost[j], str));
         }
         std::sort(vect.begin(), vect.end(), pairISCompare);
         for (auto it = vect.begin(); it != vect.end(); ++it)

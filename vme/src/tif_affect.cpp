@@ -1035,10 +1035,10 @@ tif_spl_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel more skilled at $2t.",
-             A_ALWAYS, unit, spl_text[af->data[0]], cActParameter(), TO_CHAR);
+             A_ALWAYS, unit, g_SplColl.text[af->data[0]], cActParameter(), TO_CHAR);
     else
         act ("You feel less skilled at $2t.",
-             A_ALWAYS, unit, spl_text[af->data[0]], cActParameter(), TO_CHAR);
+             A_ALWAYS, unit, g_SplColl.text[af->data[0]], cActParameter(), TO_CHAR);
 }
 
 void
@@ -1046,10 +1046,10 @@ tif_spl_off (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel less skilled at $2t.",
-             A_ALWAYS, unit, spl_text[af->data[0]], cActParameter(), TO_CHAR);
+             A_ALWAYS, unit, g_SplColl.text[af->data[0]], cActParameter(), TO_CHAR);
     else
         act ("You feel more skilled at $2t.",
-             A_ALWAYS, unit, spl_text[af->data[0]], cActParameter(), TO_CHAR);
+             A_ALWAYS, unit, g_SplColl.text[af->data[0]], cActParameter(), TO_CHAR);
 }
 
 void
@@ -1057,10 +1057,10 @@ tif_ski_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel more skilled in $2t.",
-             A_ALWAYS, unit, ski_text[af->data[0]], cActParameter(), TO_CHAR);
+             A_ALWAYS, unit, g_SkiColl.text[af->data[0]], cActParameter(), TO_CHAR);
     else
         act ("You feel less skilled in $2t.",
-             A_ALWAYS, unit, ski_text[af->data[0]], cActParameter(), TO_CHAR);
+             A_ALWAYS, unit, g_SkiColl.text[af->data[0]], cActParameter(), TO_CHAR);
 }
 
 void
@@ -1068,10 +1068,10 @@ tif_ski_off (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel less skilled in $2t.",
-             A_ALWAYS, unit, ski_text[af->data[0]], cActParameter(), TO_CHAR);
+             A_ALWAYS, unit, g_SkiColl.text[af->data[0]], cActParameter(), TO_CHAR);
     else
         act ("You feel more skilled in $2t.",
-             A_ALWAYS, unit, ski_text[af->data[0]], cActParameter(), TO_CHAR);
+             A_ALWAYS, unit, g_SkiColl.text[af->data[0]], cActParameter(), TO_CHAR);
 }
 
 void
@@ -1079,10 +1079,10 @@ tif_wpn_on (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel more skilled at the $2t fighting style.",
-             A_ALWAYS, unit, wpn_text[af->data[0]], cActParameter(), TO_CHAR);
+             A_ALWAYS, unit, g_WpnColl.text[af->data[0]], cActParameter(), TO_CHAR);
     else
         act ("You feel less skilled at the $2t fighting style.",
-             A_ALWAYS, unit, wpn_text[af->data[0]], cActParameter(), TO_CHAR);
+             A_ALWAYS, unit, g_WpnColl.text[af->data[0]], cActParameter(), TO_CHAR);
 }
 
 void
@@ -1090,10 +1090,10 @@ tif_wpn_off (class unit_affected_type *af, class unit_data * unit)
 {
     if (af->data[1] > 0)
         act ("You feel less skilled at the $2t fighting style.",
-             A_ALWAYS, unit, wpn_text[af->data[0]], cActParameter(), TO_CHAR);
+             A_ALWAYS, unit, g_WpnColl.text[af->data[0]], cActParameter(), TO_CHAR);
     else
         act ("You feel more skilled at the $2t fighting style.",
-             A_ALWAYS, unit, wpn_text[af->data[0]], cActParameter(), TO_CHAR);
+             A_ALWAYS, unit, g_WpnColl.text[af->data[0]], cActParameter(), TO_CHAR);
 }
 
 void

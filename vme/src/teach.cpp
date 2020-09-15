@@ -68,10 +68,12 @@ struct teach_packet
    const char **text;
 };
 
-struct skill_teach_type abil_auto_train[ABIL_TREE_MAX+1];
-struct skill_teach_type ski_auto_train[SKI_TREE_MAX+1];
-struct skill_teach_type spl_auto_train[SPL_TREE_MAX+1];
-struct skill_teach_type wpn_auto_train[WPN_TREE_MAX+1];
+struct pc_train_values
+{
+   sbit16 *values;
+   ubit8 *lvl;
+   sbit32 *practice_points;
+};
 
 static int gold_cost(struct skill_teach_type *s, int level)
 {
@@ -210,7 +212,7 @@ const char *trainrestricted(class unit_data *pupil, struct profession_cost *cost
    {
       if (CHAR_ABILITY(pupil, i) < cost_entry->min_abil[i])
       {
-         sprintf(c, "%s:%d ", abil_text[i], cost_entry->min_abil[i]);
+         sprintf(c, "%s:%d ", g_AbiColl.text[i], cost_entry->min_abil[i]);
          TAIL(c);
       }
    }
@@ -229,6 +231,7 @@ void info_show_one(class unit_data *teacher,
                    ubit8 max_level,
                    int next_point,
                    int gold,
+                   int lvl,
                    const char *text,
                    int indent, ubit8 isleaf, int min_level,
                    struct profession_cost *cost_entry,
@@ -269,15 +272,15 @@ void info_show_one(class unit_data *teacher,
 
          if (IS_SET(PC_FLAGS(pupil), PC_EXPERT))
             sprintf(buf,
-                    "%s%s%3d%% %-20s [%3d%% of %3d%%, points %2d, %s]%s<br/>",
+                    "%s%s%3d%% %-20s [%3d%% of %3d%%, points %2d, %s] %s%s<br/>",
                     next_point >= 20 ? "<div class='ca'>" : "", spc(4 * indent), current_points, text, current_points, max_level,
                     next_point,
                     money_string(money_round(TRUE, gold, currency, 1), currency, FALSE),
-                    next_point >= 20 ? "</div>" : "");
+                    string(lvl, '*').c_str(), next_point >= 20 ? "</div>" : "");
          else
-            sprintf(buf, "%s%s%3d%% %-20s [practice points %3d]%s<br/>",
+            sprintf(buf, "%s%s%3d%% %-20s [practice points %3d] %s%s<br/>",
                     next_point >= 20 ? "<div class='ca'>" : "", spc(4 * indent), current_points, text,
-                    next_point, next_point >= 20 ? "</div>" : "");
+                    next_point, string(lvl, '*').c_str(), next_point >= 20 ? "</div>" : "");
 
          vect.push_back(std::make_pair(next_point, buf));
       }
@@ -295,34 +298,33 @@ bool pairISCompareAsc(const std::pair<int, string> &firstElem, const std::pair<i
 }
 
 void info_show_roots(class unit_data *teacher, class unit_data *pupil,
-                     struct skill_teach_type *teaches_skills,
-                     struct tree_type *tree,
-                     const char *text[],
-                     sbit16 pc_values[],
-                     ubit8 pc_lvl[], sbit8 pc_cost[], struct profession_cost *cost_table)
+                     class skill_collection *pColl,
+                     struct pc_train_values *pTrainValues,
+                     struct skill_teach_type *teaches_skills)
 {
    int i, cost;
    vector<pair<int, string>> vect;
 
    for (i = 0; teaches_skills[i].node != -1; i++)
-      if ((!TREE_ISROOT(tree, teaches_skills[i].node) &&
-           !TREE_ISLEAF(tree, teaches_skills[i].node)) ||
-          ((TREE_ISROOT(tree, teaches_skills[i].node) &&
-            TREE_ISLEAF(tree, teaches_skills[i].node))))
+      if ((!TREE_ISROOT(pColl->tree, teaches_skills[i].node) &&
+           !TREE_ISLEAF(pColl->tree, teaches_skills[i].node)) ||
+          ((TREE_ISROOT(pColl->tree, teaches_skills[i].node) &&
+            TREE_ISLEAF(pColl->tree, teaches_skills[i].node))))
       {
-         cost = actual_cost(cost_table[teaches_skills[i].node].profession_cost[PC_PROFESSION(pupil)],
-                            pc_cost[teaches_skills[i].node],
-                            pc_lvl[teaches_skills[i].node], PC_VIRTUAL_LEVEL(pupil));
+         cost = actual_cost(pColl->prof_table[teaches_skills[i].node].profession_cost[PC_PROFESSION(pupil)],
+                            pColl->racial[CHAR_RACE(pupil)][teaches_skills[i].node],
+                            pTrainValues->lvl[teaches_skills[i].node], PC_VIRTUAL_LEVEL(pupil));
 
          info_show_one(teacher, pupil,
-                       pc_values[teaches_skills[i].node],
+                       pTrainValues->values[teaches_skills[i].node],
                        teaches_skills[i].max_skill,
                        cost,
-                       gold_cost(&teaches_skills[i], pc_values[teaches_skills[i].node]),
-                       text[teaches_skills[i].node], 0,
-                       TREE_ISLEAF(tree, teaches_skills[i].node),
+                       gold_cost(&teaches_skills[i], pTrainValues->values[teaches_skills[i].node]),
+                       pTrainValues->lvl[teaches_skills[i].node],
+                       pColl->text[teaches_skills[i].node], 0,
+                       TREE_ISLEAF(pColl->tree, teaches_skills[i].node),
                        teaches_skills[i].min_glevel,
-                       &cost_table[teaches_skills[i].node], vect);
+                       &pColl->prof_table[teaches_skills[i].node], vect);
       }
 
    std::sort(vect.begin(), vect.end(), pairISCompareAsc);
@@ -340,31 +342,30 @@ void info_show_roots(class unit_data *teacher, class unit_data *pupil,
 }
 
 void info_show_leaves(class unit_data *teacher, class unit_data *pupil,
+                      class skill_collection *pColl,
                       struct skill_teach_type *teaches_skills,
-                      struct tree_type *tree,
-                      const char *text[],
-                      sbit16 pc_values[],
-                      ubit8 pc_lvl[], sbit8 pc_cost[], struct profession_cost *cost_table)
+                      struct pc_train_values *pTrainValues)
 {
    int i, cost;
    vector<pair<int, string>> vect;
 
    for (i = 0; teaches_skills[i].node != -1; i++)
-      if (TREE_ISLEAF(tree, teaches_skills[i].node))
+      if (TREE_ISLEAF(pColl->tree, teaches_skills[i].node))
       {
-         cost = actual_cost(cost_table[teaches_skills[i].node].profession_cost[PC_PROFESSION(pupil)],
-                            pc_cost[teaches_skills[i].node],
-                            pc_lvl[teaches_skills[i].node], PC_VIRTUAL_LEVEL(pupil));
+         cost = actual_cost(pColl->prof_table[teaches_skills[i].node].profession_cost[PC_PROFESSION(pupil)],
+                            pColl->racial[CHAR_RACE(pupil)][teaches_skills[i].node],
+                            pTrainValues->lvl[teaches_skills[i].node], PC_VIRTUAL_LEVEL(pupil));
 
          info_show_one(teacher, pupil,
-                       pc_values[teaches_skills[i].node],
+                       pTrainValues->values[teaches_skills[i].node],
                        teaches_skills[i].max_skill,
                        cost,
-                       gold_cost(&teaches_skills[i], pc_values[teaches_skills[i].node]),
-                       text[teaches_skills[i].node], 0,
-                       TREE_ISLEAF(tree, teaches_skills[i].node),
+                       gold_cost(&teaches_skills[i], pTrainValues->values[teaches_skills[i].node]),
+                       pTrainValues->lvl[teaches_skills[i].node],
+                       pColl->text[teaches_skills[i].node], 0,
+                       TREE_ISLEAF(pColl->tree, teaches_skills[i].node),
                        teaches_skills[i].min_glevel,
-                       &cost_table[teaches_skills[i].node], vect);
+                       &pColl->prof_table[teaches_skills[i].node], vect);
       }
 
    std::sort(vect.begin(), vect.end(), pairISCompareAsc);
@@ -384,11 +385,9 @@ void info_show_leaves(class unit_data *teacher, class unit_data *pupil,
 }
 
 void info_one_skill(class unit_data *teacher, class unit_data *pupil,
+                    class skill_collection *pColl,
+                    struct pc_train_values *pTrainValues,
                     struct skill_teach_type *teaches_skills,
-                    struct tree_type *tree,
-                    const char *text[],
-                    sbit16 pc_values[], ubit8 pc_lvl[], sbit8 pc_cost[],
-                    struct profession_cost *cost_table,
                     int teach_index, struct teacher_msg *msgs)
 {
    int indent, i, j, cost;
@@ -397,10 +396,10 @@ void info_one_skill(class unit_data *teacher, class unit_data *pupil,
 
    /* Find category if index is a leaf with a category parent */
 
-   if (TREE_ISLEAF(tree, teaches_skills[teach_index].node) &&
-       !TREE_ISROOT(tree, teaches_skills[teach_index].node))
+   if (TREE_ISLEAF(pColl->tree, teaches_skills[teach_index].node) &&
+       !TREE_ISROOT(pColl->tree, teaches_skills[teach_index].node))
    {
-      i = TREE_PARENT(tree, teaches_skills[teach_index].node);
+      i = TREE_PARENT(pColl->tree, teaches_skills[teach_index].node);
 
       teach_index = teaches_index(teaches_skills, i);
    }
@@ -414,60 +413,63 @@ void info_one_skill(class unit_data *teacher, class unit_data *pupil,
    }
 
    /* Show teach_index in case it is a category */
-   if (!TREE_ISLEAF(tree, teaches_skills[teach_index].node))
+   if (!TREE_ISLEAF(pColl->tree, teaches_skills[teach_index].node))
    {
       i = teaches_skills[teach_index].node;
-      cost = actual_cost(cost_table[i].profession_cost[PC_PROFESSION(pupil)], pc_cost[i], pc_lvl[i], PC_VIRTUAL_LEVEL(pupil));
+      cost = actual_cost(pColl->prof_table[i].profession_cost[PC_PROFESSION(pupil)], pColl->racial[CHAR_RACE(pupil)][i], pTrainValues->lvl[i], PC_VIRTUAL_LEVEL(pupil));
 
-      info_show_one(teacher, pupil, pc_values[i],
+      info_show_one(teacher, pupil, pTrainValues->values[i],
                     teaches_skills[teach_index].max_skill,
                     cost,
-                    gold_cost(&teaches_skills[teach_index], pc_values[i]),
-                    text[i],
+                    gold_cost(&teaches_skills[teach_index], pTrainValues->values[i]),
+                    pTrainValues->lvl[i],
+                    pColl->text[i],
                     indent++,
-                    TREE_ISLEAF(tree, teaches_skills[teach_index].node),
+                    TREE_ISLEAF(pColl->tree, teaches_skills[teach_index].node),
                     teaches_skills[teach_index].min_glevel,
-                    &cost_table[i], vect);
+                    &pColl->prof_table[i], vect);
 
       /* Show children of teach_index category */
       for (j = 0; teaches_skills[j].node != -1; j++)
-         if (TREE_ISLEAF(tree, teaches_skills[j].node) &&
-             (TREE_PARENT(tree, teaches_skills[j].node) ==
+         if (TREE_ISLEAF(pColl->tree, teaches_skills[j].node) &&
+             (TREE_PARENT(pColl->tree, teaches_skills[j].node) ==
               teaches_skills[teach_index].node))
          {
             /* It is a child */
             i = teaches_skills[j].node;
-            cost = actual_cost(cost_table[i].profession_cost[PC_PROFESSION(pupil)], pc_cost[i], pc_lvl[i], PC_VIRTUAL_LEVEL(pupil));
-            info_show_one(teacher, pupil, pc_values[i],
+            cost = actual_cost(pColl->prof_table[i].profession_cost[PC_PROFESSION(pupil)], pColl->racial[CHAR_RACE(pupil)][i], pTrainValues->lvl[i], PC_VIRTUAL_LEVEL(pupil));
+            info_show_one(teacher, pupil, pTrainValues->values[i],
                           teaches_skills[j].max_skill,
                           cost,
-                          gold_cost(&teaches_skills[j], pc_values[i]),
-                          text[i],
+                          gold_cost(&teaches_skills[j], pTrainValues->values[i]),
+                          pTrainValues->lvl[i],
+                          pColl->text[i],
                           indent,
-                          TREE_ISLEAF(tree, teaches_skills[j].node),
+                          TREE_ISLEAF(pColl->tree, teaches_skills[j].node),
                           teaches_skills[j].min_glevel,
-                          &cost_table[i], vect);
+                          &pColl->prof_table[i], vect);
          }
    }
    else // Leaf
    {
       /* Show all leaves, no category above */
       for (j = 0; teaches_skills[j].node != -1; j++)
-         if (TREE_ISLEAF(tree, teaches_skills[j].node))
+         if (TREE_ISLEAF(pColl->tree, teaches_skills[j].node))
          {
             /* It is a child */
             i = teaches_skills[j].node;
-            cost = actual_cost(cost_table[i].profession_cost[PC_PROFESSION(pupil)], pc_cost[i], pc_lvl[i], PC_VIRTUAL_LEVEL(pupil));
+            cost = actual_cost(pColl->prof_table[i].profession_cost[PC_PROFESSION(pupil)], pColl->racial[CHAR_RACE(pupil)][i], pTrainValues->lvl[i], PC_VIRTUAL_LEVEL(pupil));
 
-            info_show_one(teacher, pupil, pc_values[i],
+            info_show_one(teacher, pupil, pTrainValues->values[i],
                           teaches_skills[j].max_skill,
                           cost,
-                          gold_cost(&teaches_skills[j], pc_values[i]),
-                          text[i],
+                          gold_cost(&teaches_skills[j], pTrainValues->values[i]),
+                          pTrainValues->lvl[i],
+                          pColl->text[i],
                           indent,
-                          TREE_ISLEAF(tree, teaches_skills[j].node),
+                          TREE_ISLEAF(pColl->tree, teaches_skills[j].node),
                           teaches_skills[j].min_glevel,
-                          &cost_table[i], vect);
+                          &pColl->prof_table[i], vect);
          }
    }
 
@@ -532,232 +534,354 @@ int pupil_magic(class unit_data *pupil)
    return FALSE;
 }
 
-
 void practice_base(int type,
-                   struct skill_teach_type *teaches,
-                   struct tree_type *tree,
-                   sbit16 pc_values[], ubit8 pc_lvl[],
-                   sbit32 *practice_points, int teach_index, int cost)
+                   struct teach_packet *pckt,
+                   struct pc_train_values *pTrainValues,
+                   int teach_index, int cost)
 {
-   if (!TREE_ISLEAF(tree, teaches[teach_index].node))
+   if (!TREE_ISLEAF(pckt->tree, pckt->teaches[teach_index].node))
    {
       slog(LOG_EXTENSIVE, 0, "ERROR: Practice base: not a leaf!");
       return;
    }
 
-   *practice_points -= cost;
+   *pTrainValues->practice_points -= cost;
 
-   pc_lvl[teaches[teach_index].node]++;
+   pTrainValues->lvl[pckt->teaches[teach_index].node]++;
 
    if (type == TEACH_ABILITIES)
-      pc_values[teaches[teach_index].node] += PRACTICE_ABILITY_GAIN;
+      pTrainValues->values[pckt->teaches[teach_index].node] += PRACTICE_ABILITY_GAIN;
    else
-      pc_values[teaches[teach_index].node] += practice_skill_gain(pc_values[teaches[teach_index].node]);
+      pTrainValues->values[pckt->teaches[teach_index].node] += practice_skill_gain(pTrainValues->values[pckt->teaches[teach_index].node]);
 
    // Set parent nodes to 1/2 for each level up
 
-   int idx = teaches[teach_index].node;
+   int idx = pckt->teaches[teach_index].node;
 
-   while (pc_values[idx] > 2 * pc_values[TREE_PARENT(tree, idx)])
+   while (pTrainValues->values[idx] > 2 * pTrainValues->values[TREE_PARENT(pckt->tree, idx)])
    {
-      int pidx = TREE_PARENT(tree, idx);
+      int pidx = TREE_PARENT(pckt->tree, idx);
 
-      pc_lvl[pidx]++;
-      pc_values[pidx] = pc_values[idx] / 2;
+      pTrainValues->lvl[pidx]++;
+      pTrainValues->values[pidx] = pTrainValues->values[idx] / 2;
 
-      if (TREE_ISROOT(tree, pidx))
+      if (TREE_ISROOT(pckt->tree, pidx))
          break;
 
-      idx = TREE_PARENT(tree, idx);
+      idx = TREE_PARENT(pckt->tree, idx);
    }
 }
 
-int practice(struct spec_arg *sarg, struct teach_packet *pckt,
-             struct tree_type *tree,
-             const char *text[],
-             sbit16 pc_values[], ubit8 pc_lvl[], sbit8 pc_cost[],
-             struct profession_cost *cost_table,
-             sbit32 *practice_points, int teach_index)
+int practice(class unit_data *teacher, class unit_data *pupil,
+             class skill_collection *pColl,
+             struct pc_train_values *pTrainValues,
+             struct teach_packet *pckt,
+             int teach_index)
 {
    int cost;
    char buf[512];
-   currency_t currency = local_currency(sarg->owner);
+   currency_t currency = local_currency(teacher);
    amount_t amt;
 
    assert(teach_index != -1);
 
-   if (!TREE_ISLEAF(tree, pckt->teaches[teach_index].node))
+   if (!TREE_ISLEAF(pColl->tree, pckt->teaches[teach_index].node))
    {
       sprintf(buf,
               "It is not possible to practice the category '%s'.<br/>"
               "The category is there to prevent you from being flooded with information.<br/>"
               "Try the command: 'info %s' on the category itself,<br/>"
               "to see which skills it contains.<br/>",
-              text[pckt->teaches[teach_index].node],
-              text[pckt->teaches[teach_index].node]);
-      send_to_char(buf, sarg->activator);
+              pColl->text[pckt->teaches[teach_index].node],
+              pColl->text[pckt->teaches[teach_index].node]);
+      send_to_char(buf, pupil);
       return TRUE;
    }
 
    if (pckt->teaches[teach_index].max_skill <=
-       pc_values[pckt->teaches[teach_index].node])
+       pTrainValues->values[pckt->teaches[teach_index].node])
    {
       act(pckt->msgs.teacher_not_good_enough,
-          A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
+          A_SOMEONE, teacher, cActParameter(), pupil, TO_VICT);
       return TRUE;
    }
 
    const char *req;
-   req = trainrestricted(sarg->activator, &cost_table[pckt->teaches[teach_index].node], pckt->teaches[teach_index].min_glevel);
+   req = trainrestricted(pupil, &pColl->prof_table[pckt->teaches[teach_index].node], pckt->teaches[teach_index].min_glevel);
    if (*req)
    {
       sprintf(buf, "To practice %s you need to meet the following requirements %s.<br/>",
-              text[pckt->teaches[teach_index].node], req);
-      send_to_char(buf, sarg->activator);
+              pColl->text[pckt->teaches[teach_index].node], req);
+      send_to_char(buf, pupil);
       return TRUE;
    }
 
-   cost = actual_cost(cost_table[pckt->teaches[teach_index].node].profession_cost[PC_PROFESSION(sarg->activator)],
-                      pc_cost[pckt->teaches[teach_index].node], pc_lvl[pckt->teaches[teach_index].node], PC_VIRTUAL_LEVEL(sarg->activator));
+   cost = actual_cost(pColl->prof_table[pckt->teaches[teach_index].node].profession_cost[PC_PROFESSION(pupil)],
+                      pColl->racial[CHAR_RACE(pupil)][pckt->teaches[teach_index].node], pTrainValues->lvl[pckt->teaches[teach_index].node], PC_VIRTUAL_LEVEL(pupil));
 
    if (cost == 0)
    {
       act("$1n tells you, 'You've learned all you can about $2t at this level.'",
-          A_ALWAYS, sarg->owner,
-          text[pckt->teaches[teach_index].node], sarg->activator, TO_VICT);
+          A_ALWAYS, teacher,
+          pColl->text[pckt->teaches[teach_index].node], pupil, TO_VICT);
       return TRUE;
    }
 
    assert(cost > 0);
 
-   if (*practice_points < cost)
+   if (*pTrainValues->practice_points < cost)
    {
       sprintf(buf, pckt->msgs.not_enough_points, cost);
-      act(buf, A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
-      if (CHAR_LEVEL(sarg->activator) == START_LEVEL)
+      act(buf, A_SOMEONE, teacher, cActParameter(), pupil, TO_VICT);
+      if (CHAR_LEVEL(pupil) == START_LEVEL)
          send_to_char("Beginners note: Go on adventure and gain a level.<br/>"
                       "Then come back and practice afterwards.<br/>",
-                      sarg->activator);
+                      pupil);
       return TRUE;
    }
 
-   if (pupil_magic(sarg->activator))
+   if (pupil_magic(pupil))
    {
-      act(pckt->msgs.not_pure, A_SOMEONE, sarg->owner, cActParameter(), sarg->activator,
+      act(pckt->msgs.not_pure, A_SOMEONE, teacher, cActParameter(), pupil,
           TO_VICT);
       return TRUE;
    }
 
    /* Ok, now we can teach */
 
-   amt = money_round(TRUE, gold_cost(&pckt->teaches[teach_index], pc_values[pckt->teaches[teach_index].node]),
+   amt = money_round(TRUE, gold_cost(&pckt->teaches[teach_index], pTrainValues->values[pckt->teaches[teach_index].node]),
                      currency, 1);
 
-   if (CHAR_LEVEL(sarg->activator) > PRACTICE_COST_LEVEL &&
-       !char_can_afford(sarg->activator, amt, currency))
+   if (CHAR_LEVEL(pupil) > PRACTICE_COST_LEVEL &&
+       !char_can_afford(pupil, amt, currency))
    {
       sprintf(buf, pckt->msgs.not_enough_gold,
-              money_string(amt, local_currency(sarg->activator), TRUE));
-      act(buf, A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_VICT);
+              money_string(amt, local_currency(pupil), TRUE));
+      act(buf, A_SOMEONE, teacher, cActParameter(), pupil, TO_VICT);
       return TRUE;
    }
 
-   if (CHAR_LEVEL(sarg->activator) > PRACTICE_COST_LEVEL)
-      money_from_unit(sarg->activator, amt, currency);
+   if (CHAR_LEVEL(pupil) > PRACTICE_COST_LEVEL)
+      money_from_unit(pupil, amt, currency);
 
-   practice_base(pckt->type, pckt->teaches, tree, pc_values, pc_lvl, practice_points, teach_index, cost);
+   practice_base(pckt->type, pckt, pTrainValues, teach_index, cost);
 
    act("You finish training $2t with $1n.", A_ALWAYS,
-       sarg->owner,
-       text[pckt->teaches[teach_index].node], sarg->activator, TO_VICT);
+       teacher,
+       pColl->text[pckt->teaches[teach_index].node], pupil, TO_VICT);
 
    return FALSE;
 }
 
-
-// Any skill that costs more than trainlimit will not be trained 
-int auto_train(int type,
-                class unit_data *pupil,
-                struct tree_type *tree,
-                struct skill_teach_type *teaches,
-                const char *text[],
-                sbit16 pc_values[],
-                ubit8 pc_lvl[], sbit8 pc_cost[], struct profession_cost *cost_table,
-                sbit32 *practice_points, int trainlimit)
+void shuffle(int *array, size_t n)
 {
-   int i, cost;
+   if (n > 1)
+   {
+      size_t i;
+      for (i = 0; i < n - 1; i++)
+      {
+         size_t j = i + rand() / (RAND_MAX / (n - i) + 1);
+         int t = array[j];
+         array[j] = array[i];
+         array[i] = t;
+      }
+   }
+}
+
+// Any skill that costs more than costlimit will not be trained
+int auto_train(int type,
+               class unit_data *pupil,
+               class skill_collection *pColl,
+               struct pc_train_values *pTrainValues,
+               struct teach_packet *pckt,
+               int costlimit)
+{
+   int teach_index, cost;
    const char *req;
 
    int nTrained = 0;
 
-   for (i = 0; teaches[i].node != -1; i++)
+   int nLen;
+
+   // How many values do we need to train?
+   for (nLen = 0; pckt->teaches[nLen].node != -1; nLen++)
+      ;
+
+   if (nLen < 1)
+      return 0;
+
+   int aTeachIndex[nLen];
+
+   for (int i = 0; i < nLen; i++)
+      aTeachIndex[i] = i;
+
+   // When a char has nearly identical costs, let's shuffe around.
+   shuffle(aTeachIndex, nLen);
+
+   for (int i = 0; i < nLen; i++)
    {
-      if (TREE_ISLEAF(tree, teaches[i].node))
+      teach_index = aTeachIndex[i];
+      int nodeidx = pckt->teaches[teach_index].node;
+
+      if (TREE_ISLEAF(pColl->tree, nodeidx))
       {
-         if (!tree[teaches[i].node].bAutoTrain)
+         if (!pColl->tree[nodeidx].bAutoTrain)
             continue;
 
-         // We can only auto train up to 75
-         if (pc_values[teaches[i].node] >= 75)
+         if (pTrainValues->values[nodeidx] >= pckt->teaches[teach_index].max_skill)
             continue;
 
-         req = trainrestricted(pupil, &cost_table[teaches[i].node], teaches[i].min_glevel);
+         req = trainrestricted(pupil, &pColl->prof_table[nodeidx], pckt->teaches[teach_index].min_glevel);
          if (*req)
             continue;
 
-         cost = actual_cost(cost_table[teaches[i].node].profession_cost[PC_PROFESSION(pupil)],
-                            pc_cost[teaches[i].node],
-                            pc_lvl[teaches[i].node], PC_VIRTUAL_LEVEL(pupil));
+         cost = actual_cost(pColl->prof_table[nodeidx].profession_cost[PC_PROFESSION(pupil)],
+                            pColl->racial[CHAR_RACE(pupil)][nodeidx],
+                            pTrainValues->lvl[nodeidx], PC_VIRTUAL_LEVEL(pupil));
+
+         if (strcmp(pColl->text[nodeidx], "armor plate") == 0)
+         {
+            cost++;
+         }
 
          if (cost < 1)
             continue;
 
-         if ((type == TEACH_ABILITIES) && (cost > 10) && (CHAR_LEVEL(pupil) > 2) && ((teaches[i].node == ABIL_HP) || (teaches[i].node == ABIL_CON)))
+
+         if (strcmp(pColl->text[nodeidx], "armor plate") == 0)
          {
-            // Special logic to ensure at least a minimum of HPP relative to cost
-            if ((teaches[i].node == ABIL_HP) && ((CHAR_ABILITY(pupil, ABIL_HP)*cost)/10 >= CHAR_LEVEL(pupil)))
-               continue;
-            
-            if ((teaches[i].node == ABIL_CON) && (CHAR_ABILITY(pupil, ABIL_CON) >= CHAR_ABILITY(pupil, ABIL_HP)/2))
+            cost--;
+         }
+
+         // Once a skills, weapon or spell reaches 50, reduce likelihood slightly we'll train it again
+         if (type != TEACH_ABILITIES)
+            if (pTrainValues->values[nodeidx] >= 50)
+            {
+               int rnd = number(25, pTrainValues->values[nodeidx]);
+
+               if (rnd > 30)
+                  continue;
+            }
+
+         if ((type == TEACH_ABILITIES) && (cost > 10) && (pTrainValues->lvl[nodeidx] == 0) && (CHAR_LEVEL(pupil) > 2))
+         {
+            // Special logic to ensure at least a minimum of ability points
+
+            if ((nodeidx == ABIL_CON) && (CHAR_ABILITY(pupil, ABIL_CON) < CHAR_ABILITY(pupil, ABIL_HP) / 2))
+               ;
+            else if ((nodeidx == ABIL_BRA) && (CHAR_ABILITY(pupil, ABIL_BRA) < MAX(CHAR_ABILITY(pupil, ABIL_MAG), CHAR_ABILITY(pupil, ABIL_DIV)) / 2))
+               ;
+            else if ((nodeidx == ABIL_CHA) && (CHAR_ABILITY(pupil, ABIL_CHA) < MAX(CHAR_ABILITY(pupil, ABIL_MAG), CHAR_ABILITY(pupil, ABIL_DIV)) / 2))
+               ;
+            else if ((nodeidx == ABIL_HP) && ((CHAR_ABILITY(pupil, ABIL_HP) * cost) / 10 < CHAR_LEVEL(pupil)))
+               ;
+            else if (cost > costlimit)
                continue;
          }
          else
          {
-            if (cost > trainlimit)
+            if (cost > costlimit)
                continue;
          }
-         
-         if (*practice_points < cost)
-            continue;
 
-         if ((type == TEACH_ABILITIES) && (teaches[i].node == ABIL_DIV))
-         {
-            slog(LOG_EXTENSIVE, 0, "Lalala");
-         }
+         if (*pTrainValues->practice_points < cost)
+            continue;
 
          nTrained++;
 
-         practice_base(type, teaches, tree, pc_values, pc_lvl, practice_points, teaches[i].node, cost);
+         practice_base(type, pckt, pTrainValues, teach_index, cost);
 
-         act("You train $2t.", A_ALWAYS, pupil, text[teaches[i].node], cActParameter(), TO_CHAR);
+         act("You train $2t.", A_ALWAYS, pupil, pColl->text[nodeidx], cActParameter(), TO_CHAR);
       }
    }
 
    return nTrained;
 }
 
+struct teach_packet *get_teacher(const char *pName)
+{
+   class unit_data *u;
+   class unit_fptr *f;
+   struct teach_packet *pckt;
 
+   char name[MAX_INPUT_LENGTH];
+   char zone[MAX_INPUT_LENGTH];
+
+   if (str_is_empty(pName))
+      return NULL;
+
+   name[0] = 0;
+   zone[0] = 0;
+
+   split_fi_ref(pName, zone, name);
+
+   u = find_symbolic(zone, name);
+
+   if (!u)
+   {
+      slog(LOG_EXTENSIVE, 0, "ERROR: get_teacher() Teacher %s not found.", pName);
+      return NULL;
+   }
+
+   for (f = UNIT_FUNC(u); f; f = f->next)
+      if (f->index == SFUN_TEACHING)
+         break;
+
+   if (!f)
+   {
+      slog(LOG_EXTENSIVE, 0, "ERROR: get_teacher() FUNC for %s not found.", pName);
+      return NULL;
+   }
+
+   pckt = (struct teach_packet *)f->data;
+   assert(pckt);
+
+   return pckt;
+}
+
+class skill_collection *get_pc_train_values(class unit_data *pupil, int type, struct pc_train_values *pValues)
+{
+   switch (type)
+   {
+   case TEACH_ABILITIES:
+      pValues->values = &CHAR_ABILITY(pupil, 0); // Current ability
+      pValues->lvl = &PC_ABI_LVL(pupil, 0);      // How many times you've trained this level on this ability
+      pValues->practice_points = &PC_ABILITY_POINTS(pupil);
+      return &g_AbiColl;
+
+   case TEACH_SKILLS:
+      pValues->values = &PC_SKI_SKILL(pupil, 0);
+      pValues->lvl = &PC_SKI_LVL(pupil, 0);
+      pValues->practice_points = &PC_SKILL_POINTS(pupil);
+      return &g_SkiColl;
+
+   case TEACH_SPELLS:
+      pValues->values = &PC_SPL_SKILL(pupil, 0);
+      pValues->lvl = &PC_SPL_LVL(pupil, 0);
+      pValues->practice_points = &PC_SKILL_POINTS(pupil);
+      return &g_SplColl;
+      break;
+
+   case TEACH_WEAPONS:
+      pValues->values = &PC_WPN_SKILL(pupil, 0);
+      pValues->lvl = &PC_WPN_LVL(pupil, 0);
+      pValues->practice_points = &PC_SKILL_POINTS(pupil);
+      return &g_WpnColl;
+      break;
+
+   default:
+      assert(FALSE);
+   }
+
+   return NULL; // Can't happen
+}
 
 int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
 {
    int index;
-   sbit16 *pc_values = NULL;
-   ubit8 *pc_lvl = NULL;
-   sbit8 *pc_cost = NULL;
-   sbit32 *practice_points = NULL;
-   struct profession_cost *cost_table;
    char buf[MAX_INPUT_LENGTH + 10];
    const char *arg;
+   class skill_collection *pColl = NULL;
 
    if (!is_command(sarg->cmd, "info") && !is_command(sarg->cmd, "practice"))
       return SFR_SHARE;
@@ -788,53 +912,15 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
    if (index < 0)
       arg = sarg->arg; // Restore the arg because no remote keyword was there.
 
-   switch (pckt->type)
-   {
-   case TEACH_ABILITIES:
-      pc_values = &CHAR_ABILITY(sarg->activator, 0);            // Current ability
-      pc_lvl = &PC_ABI_LVL(sarg->activator, 0);                 // How many times you've trained this level on this ability
-      pc_cost = &racial_ability[CHAR_RACE(sarg->activator)][0]; // MS2020: Oddly racial mods saved on char?
-      cost_table = ability_prof_table;
-      practice_points = &PC_ABILITY_POINTS(sarg->activator);
-      break;
-
-   case TEACH_SKILLS:
-      pc_values = &PC_SKI_SKILL(sarg->activator, 0);
-      pc_lvl = &PC_SKI_LVL(sarg->activator, 0);
-      pc_cost = &racial_skills[CHAR_RACE(sarg->activator)][0];
-      cost_table = skill_prof_table;
-      practice_points = &PC_SKILL_POINTS(sarg->activator);
-      break;
-
-   case TEACH_SPELLS:
-      pc_values = &PC_SPL_SKILL(sarg->activator, 0);
-      pc_lvl = &PC_SPL_LVL(sarg->activator, 0);
-      pc_cost = &racial_spells[CHAR_RACE(sarg->activator)][0];
-      cost_table = spell_prof_table;
-      practice_points = &PC_SKILL_POINTS(sarg->activator);
-      break;
-
-   case TEACH_WEAPONS:
-      pc_values = &PC_WPN_SKILL(sarg->activator, 0);
-      pc_lvl = &PC_WPN_LVL(sarg->activator, 0);
-      pc_cost = &racial_weapons[CHAR_RACE(sarg->activator)][0];
-      cost_table = weapon_prof_table;
-      practice_points = &PC_SKILL_POINTS(sarg->activator);
-      break;
-
-   default:
-      assert(FALSE);
-   }
+   struct pc_train_values TrainValues;
+   pColl = get_pc_train_values(sarg->activator, pckt->type, &TrainValues);
 
    if (str_is_empty(arg))
    {
       if (is_command(sarg->cmd, "info"))
       {
-         info_show_leaves(sarg->owner, sarg->activator, pckt->teaches,
-                          pckt->tree, pckt->text,
-                          pc_values, pc_lvl, pc_cost, cost_table);
-         sprintf(buf, "<br/>You have %lu practice points left.<br/>",
-                 (unsigned long)*practice_points);
+         info_show_leaves(sarg->owner, sarg->activator, pColl, pckt->teaches, &TrainValues);
+         sprintf(buf, "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
          send_to_char(buf, sarg->activator);
       }
       else
@@ -853,18 +939,15 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
 
    if (str_ccmp(arg, "roots") == 0)
    {
-      info_show_roots(sarg->owner, sarg->activator, pckt->teaches,
-                      pckt->tree, pckt->text,
-                      pc_values, pc_lvl, pc_cost, cost_table);
-      sprintf(buf, "<br/>You have %lu practice points left.<br/>",
-              (unsigned long)*practice_points);
+      info_show_roots(sarg->owner, sarg->activator, pColl, &TrainValues, pckt->teaches);
+      sprintf(buf, "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
       send_to_char(buf, sarg->activator);
       return SFR_BLOCK;
    }
 
    if (str_ccmp(arg, "auto") == 0)
    {
-      if (pc_values == NULL)
+      if (TrainValues.values == NULL)
       {
          sprintf(buf, "<br/>Please specify ability, skill, spell, weapon before the auto keyword.<br/>");
          send_to_char(buf, sarg->activator);
@@ -872,41 +955,41 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
       else
       {
          int nCount;
+         struct teach_packet *p[4];
+         class extra_descr_data *exd;
 
-         for (int i = 10; i < 16; i+=2)
+         exd = PC_QUEST(sarg->activator).find_raw("$autotrain");
+
+         if (!exd)
          {
-            do
-            {
-               nCount = 0;
-
-               // Abilities
-               nCount += auto_train(TEACH_ABILITIES, sarg->activator, abil_tree, abil_auto_train, abil_text,
-                        &CHAR_ABILITY(sarg->activator, 0), &PC_ABI_LVL(sarg->activator, 0), 
-                        &racial_ability[CHAR_RACE(sarg->activator)][0], ability_prof_table, &PC_ABILITY_POINTS(sarg->activator), i);
-
-               // Weapons
-               nCount += auto_train(TEACH_SKILLS, sarg->activator, wpn_tree, wpn_auto_train, wpn_text,
-                        &PC_WPN_SKILL(sarg->activator, 0), &PC_WPN_LVL(sarg->activator, 0), 
-                        &racial_weapons[CHAR_RACE(sarg->activator)][0], weapon_prof_table, &PC_SKILL_POINTS(sarg->activator), i);
-
-               // Spells
-               nCount += auto_train(TEACH_SKILLS, sarg->activator, spl_tree, spl_auto_train, spl_text,
-                        &PC_SPL_SKILL(sarg->activator, 0), &PC_SPL_LVL(sarg->activator, 0), 
-                        &racial_spells[CHAR_RACE(sarg->activator)][0], spell_prof_table, &PC_SKILL_POINTS(sarg->activator), i);
-
-               // Skills
-               nCount += auto_train(TEACH_SKILLS, sarg->activator, ski_tree, ski_auto_train, ski_text,
-                        &PC_SKI_SKILL(sarg->activator, 0), &PC_SKI_LVL(sarg->activator, 0), 
-                        &racial_skills[CHAR_RACE(sarg->activator)][0], skill_prof_table, &PC_SKILL_POINTS(sarg->activator), i);
-            }
-            while (nCount > 0);
+            sprintf(buf, "Your guild is not setup properly. If you're already in a guild please contact an administrator.<br/>");
+            send_to_char(buf, sarg->activator);
          }
 
-         sprintf(buf, "<br/>You have %lu practice points left.<br/>",
-               (unsigned long)*practice_points);
-         send_to_char(buf, sarg->activator); 
+         p[0] = get_teacher(exd->names.Name(1));
+         p[1] = get_teacher(exd->names.Name(2));
+         p[2] = get_teacher(exd->names.Name(3));
+         p[3] = get_teacher(exd->names.Name(4));
+
+         for (int i = 8; i < 16; i += 2)
+         {
+            nCount = 0;
+
+            for (int j = 0; j < 4; j++)
+            {
+               if (!p[j])
+                  continue;
+
+               pColl = get_pc_train_values(sarg->activator, p[j]->type, &TrainValues);
+               nCount += auto_train(p[j]->type, sarg->activator, pColl, &TrainValues, p[j], i);
+            }
+         }
+
+         sprintf(buf, "<br/>Done auto practicing. You have %d ability and %d skill points left.<br/>",
+                 PC_ABILITY_POINTS(sarg->activator), PC_SKILL_POINTS(sarg->activator));
+         send_to_char(buf, sarg->activator);
       }
-      
+
       return SFR_BLOCK;
    }
 
@@ -929,34 +1012,22 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
 
    if (is_command(sarg->cmd, "info"))
    {
-      info_one_skill(sarg->owner, sarg->activator,
+      info_one_skill(sarg->owner, sarg->activator, pColl, &TrainValues,
                      pckt->teaches,
-                     pckt->tree,
-                     pckt->text,
-                     pc_values, pc_lvl, pc_cost, cost_table,
                      index, &pckt->msgs);
-      sprintf(buf, "<br/>You have %lu practice points left.<br/>",
-              (unsigned long)*practice_points);
+      sprintf(buf, "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
       send_to_char(buf, sarg->activator);
    }
    else /* Practice! */
    {
-      practice(sarg, pckt,
-               pckt->tree,
-               pckt->text,
-               pc_values, pc_lvl, pc_cost, cost_table, practice_points, index);
+      practice(sarg->owner, sarg->activator, pColl, &TrainValues, pckt, index);
 
       /* If hpp changed, then update no of maximum hitpoints */
       UNIT_MAX_HIT(sarg->activator) = hit_limit(sarg->activator);
 
-      info_one_skill(sarg->owner, sarg->activator,
-                     pckt->teaches,
-                     pckt->tree,
-                     pckt->text,
-                     pc_values, pc_lvl, pc_cost, cost_table,
-                     index, &pckt->msgs);
-      sprintf(buf, "<br/>You have %lu practice points left.<br/>",
-              (unsigned long)*practice_points);
+      info_one_skill(sarg->owner, sarg->activator, pColl,
+                     &TrainValues, pckt->teaches, index, &pckt->msgs);
+      sprintf(buf, "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
       send_to_char(buf, sarg->activator);
    }
 
@@ -1041,7 +1112,6 @@ int max_skill_mod(int nCost)
    return nCost * 10; // Will be negative by -10 per point
 }
 
-
 // level, max-train, <skill>, min_cost_per_point (gold), max_cost_per_point (gold), {costs}, 0
 // {costs} is one or more integers
 // I'm a bit puzzled on the {costs}, it seems like for each time you train cost goes up the the
@@ -1061,9 +1131,6 @@ int teach_init(struct spec_arg *sarg)
        "skills",
        "weapons",
        NULL};
-
-   if (sarg->cmd->no != 0)
-      return SFR_SHARE;
 
    if (!(c = (char *)sarg->fptr->data))
    {
@@ -1134,21 +1201,21 @@ int teach_init(struct spec_arg *sarg)
    switch (packet->type)
    {
    case TEACH_ABILITIES:
-      packet->tree = abil_tree;
-      packet->text = abil_text;
+      packet->tree = g_AbiColl.tree;
+      packet->text = g_AbiColl.text;
 
       if (nProfession > -1)
       {
          // Copy in all abilities for profession
          for (n = 0; packet->text[n] != NULL; n++)
          {
-            if (ability_prof_table[n].profession_cost[nProfession] >= -3)
+            if (g_AbiColl.prof_table[n].profession_cost[nProfession] >= -3)
             {
                a_skill.min_glevel = 0;
-               a_skill.max_skill = 100 + max_skill_mod(ability_prof_table[n].profession_cost[nProfession]);
+               a_skill.max_skill = 100 + max_skill_mod(g_AbiColl.prof_table[n].profession_cost[nProfession]);
                a_skill.node = n;
                a_skill.min_cost_per_point = 10;
-               a_skill.max_cost_per_point = 10000 + -1000 * max_skill_mod(ability_prof_table[n].profession_cost[nProfession]);
+               a_skill.max_cost_per_point = 10000 + -1000 * max_skill_mod(g_AbiColl.prof_table[n].profession_cost[nProfession]);
                packet->teaches[count - 1] = a_skill;
 
                count++;
@@ -1163,20 +1230,20 @@ int teach_init(struct spec_arg *sarg)
       break;
 
    case TEACH_SKILLS:
-      packet->tree = ski_tree;
-      packet->text = ski_text;
+      packet->tree = g_SkiColl.tree;
+      packet->text = g_SkiColl.text;
       if (nProfession > -1)
       {
          // Copy in all abilities for profession
          for (n = 0; packet->text[n] != NULL; n++)
          {
-            if (skill_prof_table[n].profession_cost[nProfession] >= -3)
+            if (g_SkiColl.prof_table[n].profession_cost[nProfession] >= -3)
             {
                a_skill.min_glevel = 0;
-               a_skill.max_skill = 100 + max_skill_mod(skill_prof_table[n].profession_cost[nProfession]);
+               a_skill.max_skill = 100 + max_skill_mod(g_SkiColl.prof_table[n].profession_cost[nProfession]);
                a_skill.node = n;
                a_skill.min_cost_per_point = 10;
-               a_skill.max_cost_per_point = 10000 + -1000 * max_skill_mod(skill_prof_table[n].profession_cost[nProfession]);
+               a_skill.max_cost_per_point = 10000 + -1000 * max_skill_mod(g_SkiColl.prof_table[n].profession_cost[nProfession]);
                packet->teaches[count - 1] = a_skill;
 
                count++;
@@ -1191,20 +1258,20 @@ int teach_init(struct spec_arg *sarg)
       break;
 
    case TEACH_SPELLS:
-      packet->tree = spl_tree;
-      packet->text = spl_text;
+      packet->tree = g_SplColl.tree;
+      packet->text = g_SplColl.text;
       if (nProfession > -1)
       {
          // Copy in all abilities for profession
          for (n = 0; packet->text[n] != NULL; n++)
          {
-            if (spell_prof_table[n].profession_cost[nProfession] >= -3)
+            if (g_SplColl.prof_table[n].profession_cost[nProfession] >= -3)
             {
                a_skill.min_glevel = 0;
-               a_skill.max_skill = 100 + max_skill_mod(spell_prof_table[n].profession_cost[nProfession]);
+               a_skill.max_skill = 100 + max_skill_mod(g_SplColl.prof_table[n].profession_cost[nProfession]);
                a_skill.node = n;
                a_skill.min_cost_per_point = 10;
-               a_skill.max_cost_per_point = 10000 + -1000 * max_skill_mod(spell_prof_table[n].profession_cost[nProfession]);
+               a_skill.max_cost_per_point = 10000 + -1000 * max_skill_mod(g_SplColl.prof_table[n].profession_cost[nProfession]);
                packet->teaches[count - 1] = a_skill;
 
                count++;
@@ -1219,20 +1286,20 @@ int teach_init(struct spec_arg *sarg)
       break;
 
    case TEACH_WEAPONS:
-      packet->tree = wpn_tree;
-      packet->text = wpn_text;
+      packet->tree = g_WpnColl.tree;
+      packet->text = g_WpnColl.text;
       if (nProfession > -1)
       {
          // Copy in all abilities for profession
          for (n = 0; packet->text[n] != NULL; n++)
          {
-            if (weapon_prof_table[n].profession_cost[nProfession] >= -3)
+            if (g_WpnColl.prof_table[n].profession_cost[nProfession] >= -3)
             {
                a_skill.min_glevel = 0;
-               a_skill.max_skill = 100 + max_skill_mod(weapon_prof_table[n].profession_cost[nProfession]);
+               a_skill.max_skill = 100 + max_skill_mod(g_WpnColl.prof_table[n].profession_cost[nProfession]);
                a_skill.node = n;
                a_skill.min_cost_per_point = 1;
-               a_skill.max_cost_per_point = MAX(1, 1000 + -100 * max_skill_mod(weapon_prof_table[n].profession_cost[nProfession]));
+               a_skill.max_cost_per_point = MAX(1, 1000 + -100 * max_skill_mod(g_WpnColl.prof_table[n].profession_cost[nProfession]));
                packet->teaches[count - 1] = a_skill;
 
                count++;
@@ -1304,7 +1371,7 @@ int teach_init(struct spec_arg *sarg)
       }
       a_skill.node = i;
 
-      if (packet->text == spl_text)
+      if (packet->text == g_SplColl.text)
       {
          /* We have a spell teacher in Udgaard teaching all kinds of magic. 
                
@@ -1317,7 +1384,7 @@ int teach_init(struct spec_arg *sarg)
                 szonelog(UNIT_FI_ZONE(sarg->owner),
                          "%s@%s: Differing realms in %s",
                          UNIT_FI_NAME(sarg->owner),
-                         UNIT_FI_ZONENAME(sarg->owner), spl_text[i]);
+                         UNIT_FI_ZONENAME(sarg->owner), g_SplColl.text[i]);
                 c = str_line(c, buf);
                 continue;
             }*/
@@ -1479,7 +1546,8 @@ int teach_init(struct spec_arg *sarg)
    packet->teaches[count - 1].max_cost_per_point = -1;
 
    sarg->fptr->index = SFUN_TEACHING;
-   sarg->fptr->heart_beat = 0;
+   sarg->fptr->flags = SFB_CMD;
+   sarg->fptr->heart_beat = PULSE_SEC;
 
    assert(sarg->fptr->index != SFUN_DIL_INTERNAL);
    FREE(sarg->fptr->data); /* Free the text string! */
@@ -1487,52 +1555,4 @@ int teach_init(struct spec_arg *sarg)
 
    /* Call teaching in case initialization occurs with first command! */
    return teaching(sarg);
-}
-
-
-void boot_auto_teach(void)
-{
-   int i;
-
-   slog(LOG_EXTENSIVE, 0, "Booting auto-training packets");
-
-   for (i=0; i < ABIL_TREE_MAX+1; i++)
-   {
-      abil_auto_train[i].max_skill = 75;
-      abil_auto_train[i].min_glevel = 0;
-      abil_auto_train[i].node = i;
-      abil_auto_train[i].max_cost_per_point = 0;
-      abil_auto_train[i].min_cost_per_point = 0;
-   }
-   abil_auto_train[ABIL_TREE_MAX].node = -1;
-
-   for (i=0; i < SKI_TREE_MAX+1; i++)
-   {
-      ski_auto_train[i].max_skill = 75;
-      ski_auto_train[i].min_glevel = 0;
-      ski_auto_train[i].node = i;
-      ski_auto_train[i].max_cost_per_point = 0;
-      ski_auto_train[i].min_cost_per_point = 0;
-   }
-   ski_auto_train[SKI_TREE_MAX].node = -1;
-
-   for (i=0; i < WPN_TREE_MAX+1; i++)
-   {
-      wpn_auto_train[i].max_skill = 75;
-      wpn_auto_train[i].min_glevel = 0;
-      wpn_auto_train[i].node = i;
-      wpn_auto_train[i].max_cost_per_point = 0;
-      wpn_auto_train[i].min_cost_per_point = 0;
-   }
-   wpn_auto_train[WPN_TREE_MAX].node = -1;
-
-   for (i=0; i < SPL_TREE_MAX+1; i++)
-   {
-      spl_auto_train[i].max_skill = 75;
-      spl_auto_train[i].min_glevel = 0;
-      spl_auto_train[i].node = i;
-      spl_auto_train[i].max_cost_per_point = 0;
-      spl_auto_train[i].min_cost_per_point = 0;
-   }
-   spl_auto_train[SPL_TREE_MAX].node = -1;
 }

@@ -6746,55 +6746,52 @@ dilend
 #define  NOTELL_QUEST   "$notell"
 #define  NOCOMM_QUEST  "$nocomm"
 #define  NO_NEWBIE_QUEST  "$nonewbie"
-dilbegin aware recall unique channel( );
+
+dilbegin aware unique channel( );
 external
   recieve@function( slActive : stringlist, msg : string, talker : unitptr,
                 jmode:integer, dmode:integer);
 var
-time_string:string;
-targ:unitptr;
-  slActive : stringlist;
-  func:string;
-  msg : string;
-  words : stringlist;
-  nChan : integer;
-  nEcho : integer;
-  x : integer;
-  dmode : integer;
-  jmode : integer;
+   time_string:string;
+   targ:unitptr;
+   slActive : stringlist;
+   func:string;
+   msg : string;
+   words : stringlist;
+   nChan : integer;
+   nEcho : integer;
+   x : integer;
+   dmode : integer;
+   jmode : integer;
 code
 {
-  heartbeat := 3;
-  nEcho := 1;
-  dmode := 1;
-  jmode := 1;
-  if (self.level>=200)
-  interrupt (SFB_CMD, (command ("nocomm") and
-  (self==activator)),nochannel);
-  interrupt (SFB_CMD, (command ("noshout") and
-  (self==activator)),noshout);
-  interrupt (SFB_CMD, (command ("notell") and
-  (self==activator)),notell);
+   heartbeat := 3;
+   nEcho := 1;
+   dmode := 1;
+   jmode := 1;
+   if (self.level>=200)
+      interrupt (SFB_CMD, (command ("nocomm") and (self==activator)),nochannel);
 
-interrupt (SFB_DONE,((command ("tell")) and (self==target)),told);
-
-  interrupt (SFB_CMD, (command("comm") and
-                      (("add" in argument) or
-                      ("del" in argument)) and
-							 (activator == self)), add_del);
-  interrupt (SFB_CMD, (command("comm") and
-                      ("echo" in argument) and
-							 (activator == self)), echo_chan);
-  interrupt (SFB_CMD, (command("comm") and
-                      ("help" == argument) and
-							 (activator == self)), help_chan);
-  interrupt (SFB_CMD, (command("comm") and
-                      ("inform" in argument) and
-							 (activator == self)), inform);
-  interrupt (SFB_CMD, (command("comm") and
-                      ("#" == argument) and
-                      (activator == self)), show_chan);
-  interrupt (SFB_MSG, ("CHANNEL" in argument), recieve);
+   interrupt (SFB_CMD, (command ("noshout") and  (self==activator)),noshout);
+   interrupt (SFB_CMD, (command ("notell") and   (self==activator)),notell);
+   interrupt (SFB_DONE,((command ("tell")) and (self==target)),told);
+   interrupt (SFB_CMD, (command("comm") and
+                        (("add" in argument) or
+                        ("del" in argument)) and
+                        (activator == self)), add_del);
+   interrupt (SFB_CMD, (command("comm") and
+                        ("echo" in argument) and
+                        (activator == self)), echo_chan);
+   interrupt (SFB_CMD, (command("comm") and
+                        ("help" == argument) and
+                        (activator == self)), help_chan);
+   interrupt (SFB_CMD, (command("comm") and
+                        ("inform" in argument) and
+                        (activator == self)), inform);
+   interrupt (SFB_CMD, (command("comm") and
+                        ("#" == argument) and
+                        (activator == self)), show_chan);
+   interrupt (SFB_MSG, ("CHANNEL" in argument), recieve);
 
 :start:
   wait (SFB_CMD, (excmdstr in slActive) and (activator == self));

@@ -28,7 +28,6 @@
 
 /* Extern structures */
 extern class unit_data *unit_list;
-extern struct tree_type spl_tree[];
 
 /* Returns TRUE when effect is shown by DIL */
 
@@ -250,14 +249,14 @@ int spell_defense_skill(class unit_data *unit, int spell)
 
    if (IS_PC(unit))
    {
-      if (TREE_ISLEAF(spl_tree, spell))
+      if (TREE_ISLEAF(g_SplColl.tree, spell))
          max = PC_SPL_SKILL(unit, spell) / 2;
       else
          max = PC_SPL_SKILL(unit, spell);
 
-      while (!TREE_ISROOT(spl_tree, spell))
+      while (!TREE_ISROOT(g_SplColl.tree, spell))
       {
-         spell = TREE_PARENT(spl_tree, spell);
+         spell = TREE_PARENT(g_SplColl.tree, spell);
 
          if (PC_SPL_SKILL(unit, spell) > max)
             max = PC_SPL_SKILL(unit, spell);
@@ -271,17 +270,17 @@ int spell_defense_skill(class unit_data *unit, int spell)
 
    if (IS_NPC(unit))
    {
-      if (TREE_ISLEAF(spl_tree, spell))
-         spell = TREE_PARENT(spl_tree, spell);
+      if (TREE_ISLEAF(g_SplColl.tree, spell))
+         spell = TREE_PARENT(g_SplColl.tree, spell);
 
-      if (TREE_ISROOT(spl_tree, spell))
+      if (TREE_ISROOT(g_SplColl.tree, spell))
          max = NPC_SPL_SKILL(unit, spell);
       else
          max = NPC_SPL_SKILL(unit, spell) / 2;
 
-      while (!TREE_ISROOT(spl_tree, spell))
+      while (!TREE_ISROOT(g_SplColl.tree, spell))
       {
-         spell = TREE_PARENT(spl_tree, spell);
+         spell = TREE_PARENT(g_SplColl.tree, spell);
 
          if (NPC_SPL_SKILL(unit, spell) > max)
             max = NPC_SPL_SKILL(unit, spell);
@@ -306,8 +305,8 @@ int spell_attack_skill(class unit_data *unit, int spell)
 
    if (IS_NPC(unit))
    {
-      if (TREE_ISLEAF(spl_tree, spell))
-         spell = TREE_PARENT(spl_tree, spell);
+      if (TREE_ISLEAF(g_SplColl.tree, spell))
+         spell = TREE_PARENT(g_SplColl.tree, spell);
 
       return NPC_SPL_SKILL(unit, spell);
    }
