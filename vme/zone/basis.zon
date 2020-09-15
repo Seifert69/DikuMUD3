@@ -6712,6 +6712,8 @@ rent 1 IRON_PIECE
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE}
 weight 0
+
+
 dilbegin recall unique testbug();
 var
    i : integer;
@@ -6723,7 +6725,7 @@ code
    :loop:
    wait(SFB_TICK, TRUE);
    log("My state is " + itoa(i));
-   log("yay");
+   //log("yay");
    goto loop;
 
    quit;
