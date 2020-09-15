@@ -2593,10 +2593,17 @@ code
       quit;
 	}
 
+
    slvl := "";
    if (self.exptol <= 0)
    {
       slvl := "<b>You can now advance a <a cmd='#'>level</a> - congratulations!</b><br/>";
+   }
+
+   if ((self.ability_points >= 10) or (self.skill_points >= 10))
+   {
+      // Override level now message
+      slvl := "<b>You have unspent practice points, you should <a cmd='#'>practice auto</a> now or go visit a teacher.</b><br/>";
    }
 
    if(arg=="")
@@ -2818,6 +2825,8 @@ if (targ.exptol==0)
 quit;
 }
 dilend
+
+
 dilbegin do_extinguish(arg:string);
 var
 torch : unitptr;
@@ -2899,10 +2908,46 @@ quit;
 dilend
 
 
-dilbegin do_practice (arg:string);
+dilbegin do_practice(arg:string);
+external
+   checkstand@basemove();
+
+var
+   exd : extraptr;
+   s : string;
+   t : string;
+   u : unitptr;
+   room : unitptr;
+
 code
 {
-   sendtext("You can only practice at a teacher.<br/>",self);
+   checkstand@basemove();
+
+   s := getword(arg);
+   if (s == "auto")
+   {
+      exd := "$autotrain" in self.quests;
+
+      u := findsymbolic(exd.names.[1]);
+      if (not u)
+      {
+         sendtext("A teacher is missing so you cannot auto practice right now.<br/>", self);
+      }
+      else
+      {
+         room := self.outside;
+         link(self, u.outside);
+         exec("practice auto", self);
+         link(self, room);
+      }
+   }
+   else
+   {
+      sendtext("To practice your skills, either type <a cmd='#'>practice auto</a> or find a teacher.<br/>"+
+               "You can find a teacher in Udgaard if you're a beginner. Or you can find your guild<br/>"+
+               "teachers. Use your guild medallion that you get from the statue of Odin to easily get to your guild.<br/>", self);
+   }
+
    quit;
 }
 dilend

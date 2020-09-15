@@ -7,23 +7,6 @@ request     compile
 version     43.01
 END HEADER*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 v 43.01 2010.07.21 Changed weapons some to be 
   Sorc only. FIxed imp ids and spelling errors
@@ -31,27 +14,6 @@ v 43.01 2010.07.21 Changed weapons some to be
  reported - ETNA  
  
  02/09/2001 Mesmer upgraded recall scrolls  */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #define _GUILD_MIDGAARD_SORCERER
 

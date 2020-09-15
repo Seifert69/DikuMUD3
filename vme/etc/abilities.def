@@ -2,7 +2,6 @@
 
 index          = ABIL_MAG
 name           = magic
-auto train     = 1
 race human     =   0
 race elf       =  -1
 race dwarf     =  -2
@@ -22,7 +21,6 @@ profession assassin     = -2
 
 index          = ABIL_DIV
 name           = divine
-auto train     = 1
 race human     =   0
 race elf       =  +2
 race dwarf     =   0
@@ -45,7 +43,6 @@ profession ranger       = +0
 
 index          = ABIL_STR
 name           = strength
-auto train     = 1
 race human     =   0
 race elf       =   0
 race dwarf     =  +2
@@ -73,7 +70,6 @@ profession sorcerer     = -3
 
 index          = ABIL_DEX
 name           = dexterity
-auto train     = 1
 race human     =   0
 race elf       =  +2
 race dwarf     =  -1
@@ -101,7 +97,6 @@ profession sorcerer     = -2
 
 index          = ABIL_CON
 name           = constitution
-auto train     = 1
 race human     =   0
 race elf       =  -1
 race dwarf     =  +2
@@ -129,7 +124,6 @@ profession mystic       = -3
 
 index          = ABIL_CHA
 name           = charisma
-auto train     = 1
 race human     =   0
 race elf       =  +2
 race dwarf     =  -1
@@ -157,7 +151,6 @@ profession necromancer  = -2
 
 index          = ABIL_BRA
 name           = brain
-auto train     = 1
 race human     =   0
 race elf       =  +1
 race dwarf     =   0
@@ -185,7 +178,6 @@ profession fighter      = -3
 
 index          = ABIL_HP
 name           = hitpoints
-auto train     = 1
 race human     =   0
 race elf       =  -1
 race dwarf     =  +2

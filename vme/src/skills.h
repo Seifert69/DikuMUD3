@@ -17,6 +17,17 @@ struct skill_interval
 
 extern const char *professions[PROFESSION_MAX+1];
 
+class skill_collection
+{
+   public:
+   skill_collection(int nSize);
+
+   struct profession_cost *prof_table;
+   const char **text;
+   struct tree_type *tree;
+   sbit8 *racial[PC_RACE_MAX];
+};
+
 struct profession_cost
 {
     ubit16 sanity; /* Used for sanity check */
@@ -29,11 +40,6 @@ int get_racial_ability(int nRace, int nAbility);
 int get_racial_weapon(int nRace, int nWeapon);
 int get_racial_skill(int nRace, int nSkill);
 int get_racial_spells(int nRace, int nSpell);
-
-extern struct profession_cost spell_prof_table[SPL_TREE_MAX + 1];
-extern struct profession_cost skill_prof_table[SKI_TREE_MAX + 1];
-extern struct profession_cost weapon_prof_table[WPN_TREE_MAX + 1];
-extern struct profession_cost ability_prof_table[ABIL_TREE_MAX + 1];
 
 
 /* ---------------- COMBAT MESSAGE SYSTEM -------------------- */
@@ -185,23 +191,34 @@ extern struct race_info_type race_info[PC_RACE_MAX];
 extern const char *pc_races[PC_RACE_MAX + 1];
 extern const char *pc_race_adverbs[PC_RACE_MAX + 1];
 
-
+extern struct damage_chart_type weapon_chart[WPN_TREE_MAX];
 extern struct damage_chart_type spell_chart[SPL_TREE_MAX];
-extern sbit8 racial_ability[PC_RACE_MAX][ABIL_TREE_MAX];
-extern sbit8 racial_weapons[PC_RACE_MAX][WPN_TREE_MAX];
-extern sbit8 racial_skills[PC_RACE_MAX][SKI_TREE_MAX];
-extern sbit8 racial_spells[PC_RACE_MAX][SPL_TREE_MAX];
+/*
+extern struct profession_cost spell_prof_table[SPL_TREE_MAX + 1];
+extern struct profession_cost skill_prof_table[SKI_TREE_MAX + 1];
+extern struct profession_cost weapon_prof_table[WPN_TREE_MAX + 1];
+extern struct profession_cost ability_prof_table[ABIL_TREE_MAX + 1];
+
+extern sbit8 racial_ability[PC_RACE_MAX][ABIL_TREE_MAX +1];
+extern sbit8 racial_weapons[PC_RACE_MAX][WPN_TREE_MAX + 1];
+extern sbit8 racial_skills[PC_RACE_MAX][SKI_TREE_MAX + 1];
+extern sbit8 racial_spells[PC_RACE_MAX][SPL_TREE_MAX + 1];
 
 extern struct tree_type wpn_tree[WPN_TREE_MAX + 1];
 extern struct tree_type spl_tree[SPL_TREE_MAX + 1];
 extern struct tree_type ski_tree[SKI_TREE_MAX + 1];
 extern struct tree_type abil_tree[ABIL_TREE_MAX + 1];
-extern struct damage_chart_type weapon_chart[WPN_TREE_MAX];
-extern int hit_location_table[];
 
 extern const char *wpn_text[WPN_TREE_MAX + 1];
 extern const char *spl_text[SPL_TREE_MAX + 1];
 extern const char *ski_text[SKI_TREE_MAX + 1];
 extern const char *abil_text[ABIL_TREE_MAX + 1];
+*/
+extern int hit_location_table[];
+
+extern class skill_collection g_AbiColl;
+extern class skill_collection g_WpnColl;
+extern class skill_collection g_SkiColl;
+extern class skill_collection g_SplColl;
 
 #endif /* _MUD_SKILLS_H */

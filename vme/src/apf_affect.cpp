@@ -129,7 +129,6 @@ ubit1 apf_weapon_adj(class unit_affected_type *af, class unit_data *unit,
                      ubit1 set)
 {
     int modify;
-    extern struct tree_type wpn_tree[WPN_TREE_MAX + 1];
 
     if (!IS_CHAR(unit))
     {
@@ -142,7 +141,7 @@ ubit1 apf_weapon_adj(class unit_affected_type *af, class unit_data *unit,
     if (IS_NPC(unit))
     {
         while (modify > WPN_GROUP_MAX)
-            modify = TREE_PARENT(wpn_tree, modify);
+            modify = TREE_PARENT(g_WpnColl.tree, modify);
     }
 
     if (set)
@@ -212,7 +211,6 @@ ubit1 apf_spell_adj(class unit_affected_type *af, class unit_data *unit,
                     ubit1 set)
 {
     int modify;
-    extern struct tree_type spl_tree[SPL_TREE_MAX + 1];
 
     if (!IS_CHAR(unit))
     {
@@ -225,7 +223,7 @@ ubit1 apf_spell_adj(class unit_affected_type *af, class unit_data *unit,
     if (IS_NPC(unit))
     {
         while (modify > SPL_GROUP_MAX)
-            modify = TREE_PARENT(spl_tree, modify);
+            modify = TREE_PARENT(g_SplColl.tree, modify);
     }
 
     if (set)

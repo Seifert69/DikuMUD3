@@ -57,38 +57,49 @@ END HEADER*/
 
 #define POLICE_ACADEMY    "$Police Member"
 #define POLICE_BANNED     "$Police Banned"
-#define GUILD_UDG_FIGHTER "Udgaard Fighter"
-#define GUILD_UDG_THIEF   "Udgaard Thief"
-#define GUILD_UDG_CLERIC  "Udgaard Healer"
-#define GUILD_UDG_MAGE    "Udgaard Conjurer"
-#define GUILD_PALADIN     "Midgaard Paladin"
-#define GUILD_SORCERER    "Midgaard Sorcerer"
-#define GUILD_ASSASSIN    "Khorsabad Assassin"
-#define GUILD_MYSTIC      "Midgaard Mystic"
-#define GUILD_NECROMANCER "Necromancer"
-#define GUILD_NYM_RANGER  "Nymgaard Ranger"
-#define GUILD_NYM_DRUID   "Nymgaard Druid"
+
+#define GUILD_UDG_FIGHTER     "Udgaard Fighter"
+#define GUILD_UDG_FIGHTER_ATL "jones@fightersguild","lancelot@fightersguild","robin@fightersguild" //  Abi, Wpn, Ski
+
 #define GUILD_KNIGHT      "Midgaard Dark Knight"
+#define GUILD_KNIGHT_ATL  "matthew@knight", "aramand@knight", "hilary@knight", "soroth@knight" //  Abi, Wpn, Spl, Ski
 
-#define QUEST_WW              "Wight warrens quest"
-#define QUEST_WELMAR          "King Welmar Quest"
-#define QUEST_RABBIT_ONGOING  "Rabbit Stew Ongoing"
-#define QUEST_RABBIT_COMPLETE "Rabbit Stew Complete"
-#define QUEST_POT_COMPLETE    "Mary's Pot Retrieved"
+#define GUILD_PALADIN     "Midgaard Paladin"
+#define GUILD_PALADIN_ATL  "joan@paladin_guild", "edmund@paladin_guild", "alex@paladin_guild", "corbin@paladin_guild" //  Abi, Wpn, Spl, Ski
 
-#define MIN_HUMANOID_PC      0
-#define RACE_HUMAN           0     /* PC race */
-#define RACE_ELF             1     /* PC race */
-#define RACE_DWARF           2     /* PC race */
-#define RACE_HALFLING        3     /* PC race */
-#define RACE_GNOME           4     /* PC race */
-#define RACE_HALF_ORC        5
-#define RACE_HALF_OGRE       6
-#define RACE_HALF_ELF        7
-#define RACE_BROWNIE         8
-#define RACE_GROLL           9
-#define RACE_DARK_ELF       10
-#define MAX_HUMANOID_PC     100
+#define GUILD_NYM_RANGER  "Nymgaard Ranger"
+#define GUILD_RANGER_ATL  "mountain_man@ranger", "justifier@ranger", "guardian@ranger", "pathfinder@ranger" //  Abi, Wpn, Spl, Ski
+
+#define GUILD_UDG_THIEF   "Udgaard Thief"
+#define GUILD_THIEF_ATL   "bisse@thievesguild","pirate@thievesguild","gryma@thievesguild" //  Abi, Wpn, Ski
+
+#define GUILD_ASSASSIN     "Khorsabad Assassin"
+#define GUILD_ASSASSIN_ATL "ability_trainer@assassin", "weapon_trainer@assassin", "spell_trainer@assassin", "skill_trainer@assassin" //  Abi, Wpn, Spl, Ski
+
+#define GUILD_UDG_CLERIC  "Udgaard Healer"
+#define GUILD_CLERIC_ATL  "tack@clericguild", "tick@clericguild", "isabella@clericguild", "bartholomew@clericguild" //  Abi, Wpn, Spl, Ski
+
+#define GUILD_NYM_DRUID   "Nymgaard Druid"
+#define GUILD_DRUID_ATL   "oak@druid", "elm@druid", "maple@druid", "willow@druid" //  Abi, Wpn, Spl, Ski
+
+#define GUILD_MYSTIC      "Midgaard Mystic"
+#define GUILD_MYSTIC_ATL  "", "", "", "" //  Abi, Wpn, Spl, Ski
+
+#define GUILD_NECROMANCER "Necromancer"
+#define GUILD_NECROMANCER_ATL  "kadiya@necro_guild", "krain@necro_guild", "murdock@necro_guild", "meclor@necro_guild" //  Abi, Spl, Wpn, Ski
+
+
+#define GUILD_UDG_MAGE    "Udgaard Conjurer"
+#define GUILD_MAGE_ATL    "merlin@mageguild", "zofax@mageguild", "caval@mageguild", "fifiz@mageguild" //  Abi, Spl, Wpn, Ski
+
+#define GUILD_SORCERER     "Midgaard Sorcerer"
+#define GUILD_SORCERER_ATL "calastran@sorcerer", "lasheetah@sorcerer","claudius@sorcerer", "forbin@sorcerer" // Ability, Weapon, Spell, Skill 
+
+
+#define GUILD_SL   {GUILD_UDG_FIGHTER, GUILD_KNIGHT, GUILD_PALADIN, GUILD_NYM_RANGER,   \
+	                GUILD_UDG_THIEF, GUILD_ASSASSIN, GUILD_UDG_CLERIC, GUILD_NYM_DRUID, \
+	                GUILD_MYSTIC, GUILD_NECROMANCER, GUILD_UDG_MAGE, GUILD_SORCERER}
+#define GUILD_INIT_SL  {"F", "DK", "P",  "R", "T", "A", "H", "D", "M", "N",  "C", "S"}
 
 
 //
@@ -114,6 +125,28 @@ END HEADER*/
 
 #define PROFESSION_STRINGS "Fighter", "Knight", "Paladin", "Ranger", "Thief", "Assassin", \
                            "Priest", "Druid", "Mystic","Necromancer", "Conjurer", "Mage"
+
+
+#define QUEST_WW              "Wight warrens quest"
+#define QUEST_WELMAR          "King Welmar Quest"
+#define QUEST_RABBIT_ONGOING  "Rabbit Stew Ongoing"
+#define QUEST_RABBIT_COMPLETE "Rabbit Stew Complete"
+#define QUEST_POT_COMPLETE    "Mary's Pot Retrieved"
+
+#define MIN_HUMANOID_PC      0
+#define RACE_HUMAN           0     /* PC race */
+#define RACE_ELF             1     /* PC race */
+#define RACE_DWARF           2     /* PC race */
+#define RACE_HALFLING        3     /* PC race */
+#define RACE_GNOME           4     /* PC race */
+#define RACE_HALF_ORC        5
+#define RACE_HALF_OGRE       6
+#define RACE_HALF_ELF        7
+#define RACE_BROWNIE         8
+#define RACE_GROLL           9
+#define RACE_DARK_ELF       10
+#define MAX_HUMANOID_PC     100
+
 
 
 /*Insert any new definitions here... */
