@@ -880,7 +880,7 @@ void call_guards(class unit_data *guard)
             {
                 membug_verify_class(fptr);
                 membug_verify(fptr->data);
-                if (fptr->index == SFUN_PROTECT_LAWFUL)
+                if ((fptr->index == SFUN_PROTECT_LAWFUL) ||( dil_find("protect_lawful@justice", u)) )
                     ok = TRUE;
             }
             if (ok && !number(0, 5) && !find_fptr(u, SFUN_ACCUSE))
@@ -954,7 +954,6 @@ int protect_lawful(struct spec_arg *sarg)
 int whistle(struct spec_arg *sarg)
 {
     assert(sarg->fptr->data == NULL);
-
     if (sarg->cmd->no == CMD_AUTO_EXTRACT)
     {
         sarg->fptr->data = NULL;

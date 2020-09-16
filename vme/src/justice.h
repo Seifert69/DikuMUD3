@@ -20,7 +20,7 @@ void offend_legal_state (class unit_data * ch, class unit_data * victim);
 
 void log_crime (class unit_data * criminal, class unit_data * victim,
                 ubit8 crime_type, int active = TRUE);
-
+void call_guards(class unit_data *guard);
 void set_reward_char (class unit_data * ch, int crimes);
 
 #endif /* _MUD_JUSTICE_H */

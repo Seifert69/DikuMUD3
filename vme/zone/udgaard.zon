@@ -10747,7 +10747,7 @@ exp -500
 M_SHOP_KEEPER(10, SEX_MALE, RACE_HUMAN)
 money 20 IRON_PIECE
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 
 dilcopy shopkeeper@function(
 {"base_skin@skills 5 200"},
@@ -10794,7 +10794,7 @@ exp -500
 M_SHOP_KEEPER(15, SEX_MALE, RACE_HUMAN)
 money 20 IRON_PIECE
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 
 dilcopy shopkeeper@function(
 {"tuborg@udgaard 5 20","beer_barrel@midgaard 2 10","beer_bottle@midgaard 10 30"},
@@ -10823,7 +10823,7 @@ exp -500
 M_SHOP_KEEPER(30, SEX_MALE, RACE_HUMAN)
 money 10 IRON_PIECE
 flags {UNIT_FL_NO_TELEPORT}
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy mail@mail();
 
 end
@@ -10915,7 +10915,7 @@ exp -500
 M_SHOP_KEEPER(8, SEX_FEMALE, RACE_HUMAN)
 money 30 IRON_PIECE
 flags {UNIT_FL_NO_TELEPORT}
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 
 dilcopy shopkeeper@function(
 {"honeybun@udgaard 20 30", "pastry@midgaard 10 15", "garlic@midgaard 20 50", "bread@midgaard 20 30"},
@@ -11596,7 +11596,7 @@ flags {UNIT_FL_NO_TELEPORT}
 M_SHOP_KEEPER(6, SEX_MALE, RACE_HUMAN)
 money 50 COPPER_PIECE
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy evaluate@function(74);
 dilcopy shopkeeper@function(
 {"torch@midgaard 5 8","lantern@midgaard 2 6","bag@midgaard 5 8",
@@ -11630,7 +11630,7 @@ position POSITION_SITTING
 default POSITION_SITTING
 exp -500
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 flags {UNIT_FL_NO_TELEPORT}
 
 special SFUN_BANK
@@ -11653,7 +11653,7 @@ position POSITION_SITTING
 default POSITION_SITTING
 exp -500
 flags {UNIT_FL_NO_TELEPORT}
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy evaluate@function(94);
 dilcopy shopkeeper@function(
 {"chain_coif@midgaard 4 20", "chain_sleeves@midgaard 4 20",
@@ -11689,7 +11689,7 @@ money 15 IRON_PIECE
 position POSITION_SITTING
 default POSITION_SITTING
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy shopkeeper@function(
 {"sword_1@udgaard 4 20", "dag0@midgaard 4 20",
  "sword0@midgaard 4 20", "ham0@midgaard 4 20"},
@@ -12142,9 +12142,9 @@ M_HUMAN_WARRIOR_SWORD(70, SEX_MALE)
 alignment 1000
 exp -500
 dilcopy reward_give@function();
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy rescue@function("cityguard / captain / thargarad / kazeem / daf ");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 special SFUN_ACCUSE "udgaard/accuse_room"
 dilcopy guard_dir@function("south", {""}, {""}, "");
 dilcopy guard_door@function(SOUTH,
@@ -12171,9 +12171,9 @@ exp -400
 alignment 400  /* Just above neutral */
 money 3 IRON_PIECE
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy rescue@function("cityguard / captain / thargarad / kazeem / daf");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("accuse_room@udgaard");
 
 end
@@ -12194,9 +12194,9 @@ exp -400
 alignment 400  /* Just above neutral */
 money 3 IRON_PIECE
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy rescue@function("cityguard / captain / mayor / kazeem / daf ");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("accuse_room@udgaard");
 dilcopy wander_zones@function("udgaard", 15, 1, 0);
 
@@ -12216,9 +12216,9 @@ exp -200
 alignment 400  /* Just above neutral */
 money 7 IRON_PIECE
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy rescue@function("guard / captain / thargarad / kazeem / daf / cityguard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("accuse_room@udgaard");
 
 end
@@ -12245,7 +12245,7 @@ M_DWARF_WARRIOR_AXE(120, SEX_MALE)
 exp -300
 alignment 650
 money 6 GOLD_PIECE
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy rescue@function("quenis/ariana/nestor/morgan");
 dilcopy teamwork@function("morgan/quenis/ariana/nestor");
 dilbegin kill_chance0(); /* Stop newbies committing suicide */
@@ -12297,7 +12297,7 @@ M_GNOME_MAGE_ACID(100, SEX_FEMALE, "cast acid ball")
 exp -300
 alignment 650
 money 1 GOLD_PIECE
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy rescue@function("thargarad/nestor/morgan/quenis");
 dilcopy teamwork@function("thargarad/nestor/morgan/quenis");
 dilbegin kill_chance1(); /* Stop newbies committing suicide */
@@ -12348,7 +12348,7 @@ M_ELF_CLERIC_HAMMER(100, SEX_MALE, "cast harm", "cast heal")
 exp -100
 alignment 650
 money 2 GOLD_PIECE
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy rescue@function("thargarad/morgan/ariana/nestor");
 dilcopy teamwork@function("thargarad/morgan/ariana/nestor");
 dilbegin kill_chance2(); /* Stop newbies committing suicide */
@@ -12392,7 +12392,7 @@ duty of protecting Thargarad, the Mayor of Udgaard."
 M_HALFLING_THIEF_SWORD(100, SEX_MALE)
 romflags {CHAR_PROTECTED}
 flags {UNIT_FL_NO_TELEPORT}
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy rescue@function("thargarad/quenis/ariana/nestor");
 dilcopy teamwork@function("thargarad/quenis/ariana/nestor");
 dilbegin kill_chance3(); /* Stop newbies committing suicide */
@@ -12436,7 +12436,7 @@ duty of protecting Thargarad, the Mayor of Udgaard."
 M_HUMAN_WARRIOR_SWORD(100, SEX_MALE)
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy rescue@function("thargarad/quenis/ariana/morgan");
 dilcopy teamwork@function("thargarad/quenis/ariana/morgan");
 dilbegin kill_chance4(); /* Stop newbies committing suicide */
