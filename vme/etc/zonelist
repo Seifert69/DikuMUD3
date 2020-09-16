@@ -17,6 +17,7 @@ mail 1120tw0008          1   0 250 0 ../lib/mail
 newbie 1120tw0008        1   0 250 0 ../lib/newbie
 function 1120tw0008      1   0 250 0
 restrict 1120tw0008      1   0 250 0
+justice 1120tw0008       1   0 250 0
 arena release            1   0 250 0
 guild_paths  release 1 2 0 0
 assassin release 1 2 0 0

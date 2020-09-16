@@ -1592,8 +1592,8 @@ alignment 800
 money 6 COPPER_PIECE
 
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 dilcopy wander_zones@function("kingc", 15, 1, 0);
 
@@ -1612,8 +1612,8 @@ M_HUMAN_WARRIOR_SWORD(16, SEX_MALE)
 alignment 800
 
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 
 end
 
@@ -1631,8 +1631,8 @@ alignment 800
 money 6 COPPER_PIECE
 
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 
 end
 
@@ -1650,8 +1650,8 @@ alignment 800
 money 6 COPPER_PIECE
 
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 dilcopy wander_zones@function("kingc", 15, 1, 0);
 
@@ -1674,8 +1674,8 @@ position POSITION_SITTING
 default POSITION_SITTING
 
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 dilcopy wander_zones@function("kingc", 15, 1, 0);
 
@@ -1695,8 +1695,8 @@ alignment 900
 money 8 COPPER_PIECE
 
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 dilcopy wander_zones@function("kingc", 15, 1, 0);
 
@@ -1716,8 +1716,8 @@ alignment 900
 money 8 COPPER_PIECE
 
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 dilcopy wander_zones@function("kingc", 15, 1, 0);
 
@@ -1737,8 +1737,8 @@ alignment 900
 money 9 COPPER_PIECE
 
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 dilcopy wander_zones@function("kingc", 15, 1, 0);
 
@@ -1759,8 +1759,8 @@ alignment 900
 money 9 COPPER_PIECE
 
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 dilcopy wander_zones@function("kingc", 15, 1, 0);
 
@@ -1785,9 +1785,9 @@ money 15 COPPER_PIECE
 
 dilcopy rescue@function(CASTLE_STAFF);
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 dilcopy captain@midgaard("cell_1@kingc");
 
@@ -1804,9 +1804,9 @@ dilcopy fido@function("$1n slowly devours $2n, crunching the bones.",
 		      "$1n grabs $2n and hungrily munches it.");
 
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 /*
-special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 special SFUN_ACCUSE
 special SFUN_CAPTAIN time WAIT_SEC*20 bits SFB_RANTIME
 */
@@ -2193,8 +2193,8 @@ money 10 COPPER_PIECE
 dilcopy guard_dir@function("east", null, {CASTLE_STAFF_SL}, "");
 dilcopy rescue@function("king / tom");
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 
 end
@@ -2214,8 +2214,8 @@ money 10 COPPER_PIECE
 dilcopy guard_dir@function("east", null, {CASTLE_STAFF_SL}, "");
 dilcopy rescue@function("king / tim");
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 
 end
@@ -2281,8 +2281,8 @@ money 11 COPPER_PIECE
 dilcopy rescue@function(CASTLE_STAFF);
 dilcopy guard_dir@function("east", null, {""}, "");
 
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 
 end
@@ -2302,8 +2302,8 @@ money 11 COPPER_PIECE
 dilcopy rescue@function(CASTLE_STAFF);
 dilcopy guard_dir@function("east", null, {""}, "");
 
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 
 end
@@ -2324,8 +2324,8 @@ position POSITION_RESTING
 default POSITION_RESTING
 
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 dilbegin jerry();
 var
@@ -2389,8 +2389,8 @@ money 4 COPPER_PIECE
 position POSITION_RESTING
 default POSITION_RESTING
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 dilbegin michael();
 var
@@ -2454,8 +2454,8 @@ alignment 900
 money 4 COPPER_PIECE
 
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL  time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 dilcopy wander_zones@function("kingc", 15, 1, 0);
 
@@ -2474,8 +2474,8 @@ M_HUMAN_WARRIOR_SWORD(19, SEX_MALE)
 alignment 900
 
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 dilcopy wander_zones@function("kingc", 15, 1, 0);
 
@@ -2517,7 +2517,7 @@ alignment 900
 money 8 COPPER_PIECE
 
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 
 /* When he starts a 'go' we hope that he doesn't move around randomly.. */
@@ -2624,7 +2624,7 @@ tf:=walk_room@function("kitchen@kingc",4);
 dilend
 
 /* This is blocked by "priority" when at ergan the murderer */
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 
 end
@@ -2644,8 +2644,8 @@ alignment 900
 money 17 IRON_PIECE
 
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 dilcopy wander_zones@function("kingc", 15, 1, 0);
 
@@ -2666,8 +2666,8 @@ alignment 900
 money 27 IRON_PIECE
 
 dilcopy rescue@function(CASTLE_STAFF);
-special SFUN_WHISTLE
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("kingc/accuse_room");
 dilcopy wander_zones@function("kingc", 15, 1, 0);
 

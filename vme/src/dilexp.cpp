@@ -55,6 +55,7 @@ $Revision: 2.18 $
 #include "intlist.h"
 #include "combat.h"
 #include "movement.h"
+#include "justice.h"
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
@@ -3294,6 +3295,16 @@ void dilfe_gint(register class dilprg *p)
                 v->val.num = (CHAR_DESCRIPTOR(p_u) != NULL);
             else
                 v->val.num = 1;
+            break;
+      
+      	case DIL_GINT_CALLGUARDS:
+            if ((p->sarg->owner != NULL) )
+               {
+                call_guards(p->sarg->owner);
+                v->val.num = 1;
+               }
+           else
+               v->val.num = 0;
             break;
 
         default:
