@@ -11,6 +11,11 @@ import urllib2
 # The idea is that we can maintain help files in the Wiki
 # rather than text files on each MUD
 #
+# Example: 
+#   python getwikihelppage.py Help
+#
+# will retrieve wiki.dikumud.net/Help/Help and save it as help.hlp
+#
 
 if len(sys.argv) != 2:
     print('Please provide name of help item to retrieve')
