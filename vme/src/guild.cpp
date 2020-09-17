@@ -103,8 +103,7 @@ void advance_guild_level(class unit_data *ch)
     }
 }
 
-static void
-free_guild_data(struct guild_type *pGt)
+static void free_guild_data(struct guild_type *pGt)
 {
     if (pGt->pGuildName)
         FREE(pGt->pGuildName);

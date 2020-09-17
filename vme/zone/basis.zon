@@ -233,11 +233,16 @@ dilend
 dilbegin login_modify(tgt : unitptr);
 external
    login_scrub@basis(tgt : unitptr);
+   setautotrain(nGuild : integer);
+
 var
    i : integer;
 code
 {
    heartbeat := PULSE_SEC;
+
+   // Needed for old player conversion
+   setautotrain(self.profession);
 
    // Make sure we have a current DIL running
    i := dildestroy("send_prompt@update", self);
@@ -245,15 +250,16 @@ code
 
    if (self.level<200)
    {   
+      i := dildestroy("remote_train@basis", self);
+
       if (self.level < 10)
       {
-         dilcopy("remote_train@basis",self);
+         //dilcopy("remote_train@basis",self);
          dilcopy("train_nag@basis",self);
       }
       else
       {
-         i := dildestroy("remote_train@update", self);
-         i := dildestroy("train_nag@update", self);
+         i := dildestroy("train_nag@basis", self);
       }
 
       if (self.level <= 5)
@@ -1169,6 +1175,48 @@ dilend /* colour_title */
 /* END COLOUR DIL */
 
 
+dilbegin setautotrain(nGuild : integer);
+var
+   sl : stringlist;
+code
+{
+   if (nGuild == PROFESSION_FIGHTER)
+      sl := {"$autotrain", GUILD_UDG_FIGHTER_ATL};
+   else if (nGuild == PROFESSION_KNIGHT)
+      sl := {"$autotrain", GUILD_KNIGHT_ATL};
+   else if (nGuild == PROFESSION_PALADIN)
+      sl := {"$autotrain", GUILD_PALADIN_ATL};
+   else if (nGuild == PROFESSION_RANGER)
+      sl := {"$autotrain", GUILD_RANGER_ATL};
+   else if (nGuild == PROFESSION_THIEF)
+      sl := {"$autotrain", GUILD_THIEF_ATL};
+   else if (nGuild == PROFESSION_ASSASSIN)
+      sl := {"$autotrain", GUILD_ASSASSIN_ATL};
+   else if (nGuild == PROFESSION_PRIEST)
+      sl := {"$autotrain", GUILD_CLERIC_ATL};
+   else if (nGuild == PROFESSION_DRUID)
+      sl := {"$autotrain", GUILD_DRUID_ATL};
+   else if (nGuild == PROFESSION_MYSTIC)
+      sl := {"$autotrain", GUILD_MYSTIC_ATL};
+   else if (nGuild == PROFESSION_NECROMANCER)
+      sl := {"$autotrain", GUILD_NECROMANCER_ATL};
+   else if (nGuild == PROFESSION_CONJURER)
+      sl := {"$autotrain", GUILD_MAGE_ATL};
+   else if (nGuild == PROFESSION_SORCERER)
+      sl := {"$autotrain", GUILD_SORCERER_ATL};
+   else
+   {
+      log("ERROR: setautotrain@basis(): invalid nGuild");
+      return;
+   }
+
+   subextra(self.quests, "$autotrain");
+   addextra(self.quests, sl, "");
+   return;
+}
+dilend
+
+
 
 /* MS2020 Simplifying the old code and login
    Manages a characters guild selection data.
@@ -1177,6 +1225,9 @@ dilend /* colour_title */
    overwrite a selection that has already been made
 */
 dilbegin setguild(nIdx:integer, nGuild : integer);
+external
+   setautotrain(nGuild : integer);
+
 var
    exd    : extraptr;
    guilds : stringlist;
@@ -1185,12 +1236,8 @@ var
    desc  : string;
 code
 {
-   guilds := {"Udgaard Fighter", "Midgaard Dark Knight", "Midgaard Paladin", "Nymgaard Ranger",  
-              "Udgaard Thief", "Khorsabad Assassin", "Udgaard Healer", "Nymgaard Druid", 
-              "Midgaard Mystic", "Necromancer", "Udgaard Conjurer", "Midgaard Sorcerer" };
-   initi := {"F", "DK", "P",  
-              "R", "T", "A", "H",
-              "D", "N",  "C", "S"};
+   guilds := GUILD_SL;
+   initi := GUILD_INIT_SL;
 
    if ((nGuild > length(guilds)-1) or (nIdx > 2) or (nGuild < 0) or (nIdx < 0))
    {
@@ -1279,6 +1326,8 @@ code
 
       // I trust quest is now updated
    }
+
+   setautotrain(nGuild);
    return;
 }
 dilend
@@ -6408,31 +6457,19 @@ code
  
          if (self.ability_points >= j)
          {
-            sendtext("You should practice your abilities: <a cmd='#'>info ability</a> and practice ability &lt;name&gt;<br/>", self);
+            sendtext("You should <a cmd='#'>practice auto</a> or go to your guild to practice.<br/>", self);
             goto loop;
          }
 
          if (self.skill_points >= j)
          {
-            sendtext("You should practice your weapon, spells and skills: <a cmd='#'>info weapon</a> and practice ability &lt;name&gt;<br/>", self);
+            sendtext("You should <a cmd='#'>practice auto</a> or go to your guild to practice.<br/>", self);
             goto loop;
          }
       }
       goto loop;
    }
 
-   if (command("status"))
-   {
-      if (self.level == 0)
-         j := 10;
-      else
-         j := 20;
- 
-      sendtext("Info about your skills: <a cmd='info ability'>abilities</a>, <a cmd='info skill'>skills</a>, "+
-               "<a cmd='info weapon'>weapons</a>, <a cmd='info spell'>spells</a>.<br/>", self);
-      if ((self.ability_points >= j) or (self.skill_points >= j))
-         sendtext("<b>You have unspent points, <a cmd='#'>practice</a> now.</b><br/>", self);
-   }
    goto loop;
 }
 dilend
@@ -6447,36 +6484,25 @@ var
 
 code
 {
+   quit;
+
    :loop:
-   wait(SFB_CMD, (activator == self) and (command("info") or command("practice")));
+   wait(SFB_CMD, (activator == self) and command("practice"));
 
    if ((self.position == POSITION_FIGHTING) or (self.position < POSITION_SLEEPING))
       goto loop;
 
    arg := argument;
    s := getword(arg);
-   if (s == "ability")
+   if (s == "auto")
    {
       t := "base_abils@udgaard";
    }
-   else if (s == "skill")
-   {
-      t := "base_skills@udgaard";
-   }
-   else if (s == "spell")
-   {
-      t := "base_spells@udgaard";
-   }
-   else if (s == "weapon")
-   {
-      t := "base_weapons@udgaard";
-   }
    else
    {
-      sendtext("To train remotely when you're not in front of a teacher type either<br/>"+
-               "ability, skill, spell or weapon after the command. For example, first<br/>"+
-               "figure out which ability you want to improve by writing <a cmd='#'>info ability</a><br/>"+
-               "and then train it using <b>practice ability &lt;name&gt;</b><br/>", self);
+      sendtext("To practice your skills, either type <a cmd='#'>practice auto</a> or find a teacher.<br/>"+
+               "You can find a teacher in Udgaard if you're a beginner. Or you can find your guild<br/>"+
+               "teachers. Use your guild medallion that you get from the statue of Odin to easily get to your guild.<br/>", self);
       goto loop;
    }
 
@@ -6485,17 +6511,13 @@ code
    u := findsymbolic(t);
    if (not u)
    {
-      sendtext("The " + s + " teacher is unavailable right now.<br/>", self);
+      sendtext("A teacher is missing so you cannot auto practice right now.<br/>", self);
       goto loop;
    }
 
    room := self.outside;
    link(self, u.outside);
-   if (command("info"))
-      exec("info " + arg, self);
-   else
-      exec("practice " + arg, self);
-
+   exec("practice auto", self);
    link(self, room);
    goto loop;
 }
@@ -6676,6 +6698,41 @@ end
 
 
 %objects
+
+		bug
+
+names {"dead bug","bug"}
+title "a dead bug"
+descr "A dead bug lies here."
+extra {}
+"The bug kind of looks like a black lady bug - and it's obviously quite dead. Perhaps someone squashed it. 
+You notice the word 'Papi' inscribed with tiny letters on the rim of its shield"
+cost 1 SILVER_PIECE
+rent 1 IRON_PIECE
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE}
+weight 0
+
+
+dilbegin recall unique testbug();
+var
+   i : integer;
+code
+{
+   heartbeat := PULSE_SEC * 4;
+   i := rnd(1,10000);
+
+   :loop:
+   wait(SFB_TICK, TRUE);
+   log("My state is " + itoa(i));
+   //log("yay");
+   goto loop;
+
+   quit;
+}
+dilend
+
+end
 
 
 /* TEST */

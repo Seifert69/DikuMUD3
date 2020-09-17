@@ -2599,10 +2599,17 @@ code
       quit;
 	}
 
+
    slvl := "";
    if (self.exptol <= 0)
    {
       slvl := "<b>You can now advance a <a cmd='#'>level</a> - congratulations!</b><br/>";
+   }
+
+   if ((self.ability_points >= 10) or (self.skill_points >= 10))
+   {
+      // Override level now message
+      slvl := "<b>You have unspent practice points, you should <a cmd='#'>practice auto</a> now or go visit a teacher.</b><br/>";
    }
 
    if(arg=="")
@@ -2824,6 +2831,8 @@ if (targ.exptol==0)
 quit;
 }
 dilend
+
+
 dilbegin do_extinguish(arg:string);
 var
 torch : unitptr;
@@ -2905,10 +2914,46 @@ quit;
 dilend
 
 
-dilbegin do_practice (arg:string);
+dilbegin do_practice(arg:string);
+external
+   checkstand@basemove();
+
+var
+   exd : extraptr;
+   s : string;
+   t : string;
+   u : unitptr;
+   room : unitptr;
+
 code
 {
-   sendtext("You can only practice at a teacher.<br/>",self);
+   checkstand@basemove();
+
+   s := getword(arg);
+   if (s == "auto")
+   {
+      exd := "$autotrain" in self.quests;
+
+      u := findsymbolic(exd.names.[1]);
+      if (not u)
+      {
+         sendtext("A teacher is missing so you cannot auto practice right now.<br/>", self);
+      }
+      else
+      {
+         room := self.outside;
+         link(self, u.outside);
+         exec("practice auto", self);
+         link(self, room);
+      }
+   }
+   else
+   {
+      sendtext("To practice your skills, either type <a cmd='#'>practice auto</a> or find a teacher.<br/>"+
+               "You can find a teacher in Udgaard if you're a beginner. Or you can find your guild<br/>"+
+               "teachers. Use your guild medallion that you get from the statue of Odin to easily get to your guild.<br/>", self);
+   }
+
    quit;
 }
 dilend
@@ -13276,7 +13321,158 @@ code
 }
 dilend
 
+
+// do_donate - (from clans)
 dilbegin donate(arg:string);
+var
+   clan:integer;
+   d_rooms:stringlist;
+   room_idx:string;
+   room:       unitptr;
+   item:       unitptr;
+   num:       integer;
+   i:integer;
+   here:unitptr;
+   x:extraptr;
+   amount:integer;
+   check:unitptr;
+
+code
+{
+   clan:=0;
+
+   :start:
+   d_rooms:={"udonate@udgaard","mdonate@midgaard","ndonate@nymgaard"};
+   room_idx:=self.outside.nameidx+"@"+self.outside.zoneidx;
+   if (room_idx in d_rooms)
+   {
+      act("You may not donate while in a donations room!",A_ALWAYS, self, null,null, TO_CHAR);
+      quit;
+   }
+
+   if (self.fighting != null)
+   {
+      sendtext("<div class='cpy'>Are you nuts! And take your mind off the battle at hand!?</div><div class='default'><br/></div>", self);
+      quit;
+   }
+
+   item:= findunit(self, arg, FIND_UNIT_INVEN, null);
+   if (not(item.type == UNIT_ST_OBJ))
+   {
+      act("You do not have anything like that in your inventory.", A_ALWAYS,self, null, null, TO_CHAR);
+      quit;
+   }
+   
+   if ((item.objecttype == ITEM_TRASH) or (item.objecttype == ITEM_TRAP))
+   {
+      act("You can not donate that! Who would want your junk!",   A_ALWAYS,self, null, null, TO_CHAR);
+      quit;
+   }
+  
+   if ("midgaard" in arg)
+      room := findroom("mdonate@midgaard");
+   else if ("nymgaard" in arg)
+      room := findroom("ndonate@nymgaard");
+   else if ("clan" in arg)
+   {
+      x:=CLAN_SYMBOLIC in self.extra;
+      if (x==null)
+      {
+         act ("<div class='clan'>You are not a member of a clan.</div>",A_ALWAYS,self,null,null,TO_CHAR);
+         quit;
+      }
+
+      room:=findsymbolic("dchest@"+x.descr);
+      if (room==null)
+      {
+         act ("<div class='clan'>Clan code error report to Admin.</div>",A_ALWAYS,self,null,null,TO_CHAR);
+         quit;
+      }
+
+      if (item.objecttype==ITEM_CONTAINER)
+      {
+         if (item.inside!=null)
+         {
+            act ("<div class='clan'>You can not donate a container that contains items, empty it and try again.</div>",
+            A_ALWAYS, self, null, null, TO_CHAR);
+            quit;
+         }
+      }
+
+      clan:=1;
+      amount:=0;
+      check:=room.inside;
+
+      while (check!=null)
+      {
+         if (check.minv!=253)
+            amount:=amount+1;
+         check:=check.next;
+      }
+
+      if (amount >=CLAN_MAX_DONATION)
+      {
+         act("<div class='clan'>You can't donate your clan Chest is full.</div>"
+         ,A_ALWAYS,self,null,null,TO_CHAR);
+         quit;
+      }
+   }
+   else
+      room := findroom("udonate@udgaard");
+   
+   if (clan!=1)
+   {
+      num := rnd(1, 200);
+      if (num > 195)
+      {
+         if (item.cost >= 75000)
+         {
+            experience(+75, self);
+            act("You are rewarded 75 experience for your act.",A_ALWAYS, self,null, null, TO_CHAR);
+         }
+         else if (item.cost >= 50000)
+         {
+            experience(+35, self);
+            act("You are rewarded 35 experience for your act.",A_ALWAYS, self,null, null, TO_CHAR);
+         }
+      }
+
+      i:=0;
+      here:=room.inside;
+
+      while ((here!=null) and (i<5))
+      {
+         if (here.idx==item.idx)
+            i:=i+1;
+         here:=here.next;
+      }
+
+      act("You donate $2n to those in need.",A_ALWAYS, self, item, null, TO_CHAR);
+      act("$1n donates $2n to those in need.",A_SOMEONE, self, item, null, TO_REST);
+
+      if (i < 5)
+      {
+         item.cost := 0;
+         link(item, room);
+         act("A Glowing red portal appears hovering in the air, $2n emerges from it and drops to the floor.",A_ALWAYS, room.inside, item,null, TO_ALL);
+      }
+      else
+         destroy (item);
+   }
+   else
+   {
+      act("<div class='clan'>You donate $2n to your clan.</div>",A_ALWAYS, self, item, null,TO_CHAR);
+      act("<div class='clan'>$1n donates $2n to $1s clan.</div>",A_SOMEONE, self, item, null,TO_REST);
+      link(item, room);
+      store (room,room.zoneidx+".dc",TRUE);
+   }
+   quit;
+}
+dilend
+
+
+
+dilbegin depre_donate(arg:string);
 var
 	clan	:		integer;
 	d_rooms	:		stringlist;
@@ -13383,6 +13579,8 @@ code
 	 /////quit;
 }
 dilend
+
+
 
 %rooms
 

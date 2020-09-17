@@ -55,6 +55,7 @@ $Revision: 2.18 $
 #include "intlist.h"
 #include "combat.h"
 #include "movement.h"
+#include "justice.h"
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
@@ -2246,12 +2247,12 @@ void dilfe_splx(class dilprg *p)
             v->type = DILV_FAIL;
         else
         {
-            char *c = (char *)v1->val.ptr;
+            const char *c = (const char *) v1->val.ptr;
             if (str_is_empty(c))
                 v->val.num = -1;
             else
                 v->val.num =
-                    search_block_abbrevs(c, spl_text, (const char **)&c);
+                    search_block_abbrevs(c, g_SplColl.text, &c);
         }
         break;
     case DILV_FAIL:
@@ -2323,7 +2324,7 @@ void dilfe_spli(class dilprg *p)
                                         *((ubit32 *)v2->ref) =
                                             spell_info[v1->val.num].realm;
                                         *((ubit32 *)v3->ref) =
-                                            spl_tree[v1->val.num].parent;
+                                            g_SplColl.tree[v1->val.num].parent;
                                         *((ubit32 *)v4->ref) =
                                             spell_info[v1->val.num].usesmana;
                                         *((ubit32 *)v5->ref) =
@@ -2338,7 +2339,7 @@ void dilfe_spli(class dilprg *p)
                                         v->type = DILV_SP;
                                         v->atyp = DILA_EXP;
                                         v->val.ptr =
-                                            str_dup(spl_text[v1->val.num] == NULL ? "": spl_text[v1->val.num]);
+                                            str_dup(g_SplColl.text[v1->val.num] == NULL ? "": g_SplColl.text[v1->val.num]);
                                         break;
 
                                     default:
@@ -2887,8 +2888,8 @@ void dilfe_skitxt(register class dilprg *p)
     case DILV_INT:
         v->type = DILV_SP;
         v->atyp = DILA_EXP;
-        if ((v1->val.num < SKI_TREE_MAX) && (v1->val.num >= 0) && ski_text[v1->val.num])
-            v->val.ptr = str_dup(ski_text[v1->val.num]);
+        if ((v1->val.num < SKI_TREE_MAX) && (v1->val.num >= 0) && g_SkiColl.text[v1->val.num])
+            v->val.ptr = str_dup(g_SkiColl.text[v1->val.num]);
         else
             v->val.ptr = str_dup("");
         break;
@@ -2916,8 +2917,8 @@ void dilfe_wpntxt(register class dilprg *p)
         v->atyp = DILA_EXP;
         if ((v1->val.num < WPN_TREE_MAX) && (v1->val.num >= 0))
         {
-            if (wpn_text[v1->val.num])
-                v->val.ptr = str_dup(wpn_text[v1->val.num]);
+            if (g_WpnColl.text[v1->val.num])
+                v->val.ptr = str_dup(g_WpnColl.text[v1->val.num]);
             else
                 v->val.ptr = str_dup("");
         }
@@ -3294,6 +3295,16 @@ void dilfe_gint(register class dilprg *p)
                 v->val.num = (CHAR_DESCRIPTOR(p_u) != NULL);
             else
                 v->val.num = 1;
+            break;
+      
+      	case DIL_GINT_CALLGUARDS:
+            if ((p->sarg->owner != NULL) )
+               {
+                call_guards(p->sarg->owner);
+                v->val.num = 1;
+               }
+           else
+               v->val.num = 0;
             break;
 
         default:
@@ -3710,7 +3721,7 @@ void dilfe_wepinfo(register class dilprg *p)
             ilist->Append(wpn_info[(int)v1->val.num].speed);
             ilist->Append(wpn_info[(int)v1->val.num].type);
             ilist->Append(wpn_info[(int)v1->val.num].shield);
-            ilist->Append(wpn_tree[(int)v1->val.num].parent);
+            ilist->Append(g_WpnColl.tree[(int)v1->val.num].parent);
             for (int idx2 = 0; idx2 < MAX_ARMOUR_TYPES; idx2++)
             {
                 ilist->Append(weapon_chart[(int)v1->val.num].element[idx2].offset);

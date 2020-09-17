@@ -329,19 +329,19 @@ void advance_level(class unit_data *ch)
     send_to_char("You raise a level!<br/>", ch);
     if (CHAR_LEVEL(ch) < 5)
     {
-        send_to_char("You should <b><a cmd='#'>practice</a></b> your skills and abilities now.<br/>", ch);
+        send_to_char("You should <b><a cmd='#'>practice auto</a></b> your skills and abilities now or find a teacher.<br/>", ch);
     }
-    clear_training_level(ch);
 
+    clear_training_level(ch);
     advance_guild_level(ch);
+
     PC_VIRTUAL_LEVEL(ch)++;
+    
     PC_SKILL_POINTS(ch) += skill_point_gain();
+    PC_ABILITY_POINTS(ch) += ability_point_gain();
 
     if (CHAR_LEVEL(ch) < MORTAL_MAX_LEVEL)
-    {
-        PC_ABILITY_POINTS(ch) += ability_point_gain();
         CHAR_LEVEL(ch)++;
-    }
 
 #ifdef NOBLE
     if (IS_NOBLE(ch))

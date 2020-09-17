@@ -1683,7 +1683,6 @@ void boot_db(void)
     void boot_skill(void);
     void boot_weapon(void);
     void boot_ability(void);
-    void boot_auto_teach(void);
     void boot_race(void);
     void boot_profession(void);
     void boot_interpreter(void);
@@ -1719,7 +1718,6 @@ void boot_db(void)
     boot_weapon();
     boot_skill();
     boot_interpreter();
-    boot_auto_teach();
 
     slog(LOG_OFF, 0, "Booting the sectors.:");
     boot_sector();

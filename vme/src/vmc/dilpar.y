@@ -274,7 +274,7 @@ file     : program
          {
 
             tmpl.coresz = wcore - tmpl.core + 1;
-            tmpl.corecrc = 0; // Prevent 1 valgrind error
+            // fprintf(stderr,"corecrc is %d and prg is %d and function says %d", tmpl.corecrc, prg.corecrc, dil_corecrc(tmpl.core, tmpl.coresz));
 
             CByteBuffer *pBuf = &g_FileBuffer;
             pBuf->Clear();
@@ -325,23 +325,26 @@ label_no=0;
          }
          ;
 
-program  : DILSC_BEG dilinit diloptions fundef dilrefs
-                       dildecls DILSC_COD block DILSC_END
+program  : DILSC_BEG dilinit diloptions fundef dilrefs dildecls DILSC_COD block DILSC_END
          {
             /* start at the top again */
             moredilcore(5);
             bwrite_ubit8(&wcore, DILI_GOTO);
             bwrite_ubit32(&wcore, 0);
+
             /* truncate surplus core space */
             tmpl.coresz = wcore - tmpl.core + 1;
             update_labels();
             tmpl.corecrc = dil_corecrc(tmpl.core, tmpl.coresz);
-	    prg.corecrc = tmpl.corecrc;
-	    /* create clean interrupts */
-	    if (frm.intrcount)
-	     { CREATE(frm.intr,struct dilintr,frm.intrcount); }
-	    else
-	      frm.intr = NULL;
+	         prg.corecrc = tmpl.corecrc;
+
+            /* create clean interrupts */
+            if (frm.intrcount)
+            {
+               CREATE(frm.intr,struct dilintr,frm.intrcount); 
+            }
+            else
+               frm.intr = NULL;
          }
          ;
 
@@ -374,7 +377,7 @@ diloptions: DILSC_REC diloptions
 
 dilinit   : /* nothing */
          {
-	    fprintf(stderr, "DIL (line %5d)",dillinenum);
+	         fprintf(stderr, "DIL (line %5d)",dillinenum);
 
             /* Set up template  */
             CREATE(tmpl.argt, ubit8, ARGMAX);
@@ -391,7 +394,7 @@ dilinit   : /* nothing */
             tmpl.extprg = NULL;
             tmpl.varcrc = 0;
             tmpl.corecrc = 0;
-	    tmpl.intrcount = 0;
+	         tmpl.intrcount = 0;
 
             wcore = tmpl.core;
 
@@ -417,12 +420,12 @@ dilinit   : /* nothing */
             frm.pc = tmpl.core;
             frm.securecount = 0;
             frm.secure=NULL;
-	    frm.intrcount = 0;
+	         frm.intrcount = 0;
 
             /* compiler variables */
             var_names = create_namelist();
             ref_names = create_namelist();
-	    refcount=0;
+	         refcount=0;
             ref_usednames = create_namelist();
             /* labels */
             labelgen = 0;
@@ -438,8 +441,7 @@ dilinit   : /* nothing */
             cont_no = 0;
             break_idx = NULL;
             cont_idx = NULL;
-	    *cur_tmplref='\0';
-
+	         *cur_tmplref='\0';
          }
          ;
 

@@ -544,7 +544,7 @@ static void stat_ability(const class unit_data *ch, class unit_data *u)
     for (i = 0; i < ABIL_TREE_MAX; i++)
     {
         sprintf(b, "%20s : %3d%% Lvl %3d Racial %3d<br/>",
-                abil_text[i],
+                g_AbiColl.text[i],
                 CHAR_ABILITY(u, i), PC_ABI_LVL(u, i), get_racial_ability(CHAR_RACE(u), i));
         TAIL(b);
     }
@@ -574,14 +574,14 @@ static void stat_spell(const class unit_data *ch, class unit_data *u)
 
     for (i = 0; i < max; i++)
     {
-        str_next_word(TREE_ISLEAF(spl_tree, i) ? spl_text[TREE_PARENT(spl_tree, i)] : "sphere", tmpbuf1);
+        str_next_word(TREE_ISLEAF(g_SplColl.tree, i) ? g_SplColl.text[TREE_PARENT(g_SplColl.tree, i)] : "sphere", tmpbuf1);
 
-        if (TREE_ISLEAF(spl_tree, i) && strcmp(tmpbuf1, "sphere") == 0)
+        if (TREE_ISLEAF(g_SplColl.tree, i) && strcmp(tmpbuf1, "sphere") == 0)
             if (spell_info[i].tmpl == NULL && spell_info[i].spell_pointer == NULL)
                 strcpy(tmpbuf1, "NOT IMPLEMENTED");
 
         sprintf(tmpbuf2, "%s %s (%s)",
-                spell_info[i].cast_type == SPLCST_CHECK ? "CHECK " : (spell_info[i].cast_type == SPLCST_RESIST ? "RESIST" : "OTHER "), spl_text[i], tmpbuf1);
+                spell_info[i].cast_type == SPLCST_CHECK ? "CHECK " : (spell_info[i].cast_type == SPLCST_RESIST ? "RESIST" : "OTHER "), g_SplColl.text[i], tmpbuf1);
 
         sprintf(b, "%c%c%c%c%c] %3d%%/%d %c %-50s [%3d racial]<br/>",
                 IS_SET(spell_info[i].media, MEDIA_SPELL) ? 'C' : '-',
@@ -617,7 +617,7 @@ static void stat_skill(const class unit_data *ch, class unit_data *u)
         for (i = 0; i < SKI_TREE_MAX; i++)
         {
             sprintf(b, "%20s: %3d%% Lvl %3d Racial %3d<br/>",
-                    ski_text[i], PC_SKI_SKILL(u, i),
+                    g_SkiColl.text[i], PC_SKI_SKILL(u, i),
                     PC_SKI_LVL(u, i), get_racial_skill(CHAR_RACE(u), i));
             TAIL(b);
         }
@@ -644,7 +644,7 @@ static void stat_wskill(const class unit_data *ch, class unit_data *u)
 
     for (i = 0; i < max; i++)
     {
-        sprintf(b, "%20s : %3d%% Lvl %3d Racial %3d<br/>", wpn_text[i],
+        sprintf(b, "%20s : %3d%% Lvl %3d Racial %3d<br/>", g_WpnColl.text[i],
                 IS_NPC(u) ? NPC_WPN_SKILL(u, i) : PC_WPN_SKILL(u, i),
                 IS_NPC(u) ? 0 : PC_WPN_LVL(u, i),
                 get_racial_weapon(CHAR_RACE(u), i));
@@ -920,7 +920,7 @@ static void stat_ip(const class unit_data *ch, class unit_data *u)
 }
 
 #define STR_DATA(num) \
-    (obj_data[idx].v[num] == 0 ? int_str[num] : (obj_data[idx].v[num] == 1 ? (OBJ_VALUE(u, num) ? sprinttype(NULL, OBJ_VALUE(u, num), spl_text) : "None") : (obj_data[idx].v[num] == 2 ? sprinttype(NULL, OBJ_VALUE(u, num), wpn_text) : "")))
+    (obj_data[idx].v[num] == 0 ? int_str[num] : (obj_data[idx].v[num] == 1 ? (OBJ_VALUE(u, num) ? sprinttype(NULL, OBJ_VALUE(u, num), g_SplColl.text) : "None") : (obj_data[idx].v[num] == 2 ? sprinttype(NULL, OBJ_VALUE(u, num), g_WpnColl.text) : "")))
 
 char *stat_obj_data(class unit_data *u, struct obj_type_t *obj_data)
 {
@@ -931,7 +931,7 @@ char *stat_obj_data(class unit_data *u, struct obj_type_t *obj_data)
     switch (idx)
     {
     case ITEM_WEAPON:
-        special_str = sprinttype(NULL, OBJ_VALUE(u, 0), wpn_text);
+        special_str = sprinttype(NULL, OBJ_VALUE(u, 0), g_WpnColl.text);
         break;
 
     case ITEM_CONTAINER:
@@ -1057,7 +1057,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
                 char_carry_w_limit(u), char_carry_n_limit(u),
                 sprintbit(tmpbuf1, CHAR_FLAGS(u), char_flags),
                 (signed long)CHAR_EXP(u), CHAR_OFFENSIVE(u),
-                CHAR_DEFENSIVE(u), sprinttype(NULL, CHAR_ATTACK_TYPE(u), wpn_text), CHAR_SPEED(u),
+                CHAR_DEFENSIVE(u), sprinttype(NULL, CHAR_ATTACK_TYPE(u), g_WpnColl.text), CHAR_SPEED(u),
                 CHAR_NATURAL_ARMOUR(u), (signed long)UNIT_HIT(u),
                 hit_limit(u), hit_gain(u), CHAR_MANA(u), mana_limit(u),
                 mana_gain(u), CHAR_ENDURANCE(u), move_limit(u),

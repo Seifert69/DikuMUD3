@@ -415,6 +415,7 @@ index           = SPL_ALL
 name            = theory
 realm           = ABIL_DIV
 sphere          = SPL_ALL
+auto train      = 0
 minpos          = 0
 mana            = 0
 turns           = 0
@@ -446,6 +447,7 @@ index           = SPL_DIVINE
 name            = divine sphere
 realm           = ABIL_DIV
 sphere          = SPL_ALL
+auto train      = 0
 minpos          = 0
 mana            = 0
 turns           = 0
@@ -477,6 +479,7 @@ index           = SPL_PROTECTION
 name            = protection sphere
 realm           = ABIL_DIV
 sphere          = SPL_ALL
+auto train      = 0
 minpos          = 0
 mana            = 0
 turns           = 0
@@ -508,6 +511,7 @@ index           = SPL_DETECTION
 name            = detection sphere
 realm           = ABIL_DIV
 sphere          = SPL_ALL
+auto train      = 0
 minpos          = 0
 mana            = 0
 turns           = 0
@@ -539,6 +543,7 @@ index           = SPL_SUMMONING
 name            = summoning sphere
 realm           = ABIL_DIV
 sphere          = SPL_ALL
+auto train      = 0
 minpos          = 0
 mana            = 0
 turns           = 0
@@ -570,6 +575,7 @@ index           = SPL_CREATION
 name            = creation sphere
 realm           = ABIL_DIV
 sphere          = SPL_ALL
+auto train      = 0
 minpos          = 0
 mana            = 0
 turns           = 0
@@ -601,6 +607,7 @@ index           = SPL_MIND
 name            = mind sphere
 realm           = ABIL_DIV
 sphere          = SPL_ALL
+auto train      = 0
 minpos          = 0
 mana            = 0
 turns           = 0
@@ -632,6 +639,7 @@ index           = SPL_HEAT
 name            = fire sphere
 realm           = ABIL_DIV
 sphere          = SPL_ALL
+auto train      = 0
 minpos          = 0
 mana            = 0
 turns           = 0
@@ -663,6 +671,7 @@ index           = SPL_COLD
 name            = frost sphere
 realm           = ABIL_DIV
 sphere          = SPL_ALL
+auto train      = 0
 minpos          = 0
 mana            = 0
 turns           = 0
@@ -694,6 +703,7 @@ index           = SPL_CELL
 name            = electricity sphere
 realm           = ABIL_DIV
 sphere          = SPL_ALL
+auto train      = 0
 minpos          = 0
 mana            = 0
 turns           = 0
@@ -725,6 +735,7 @@ index           = SPL_INTERNAL
 name            = poison sphere
 realm           = ABIL_DIV
 sphere          = SPL_ALL
+auto train      = 0
 minpos          = 0
 mana            = 0
 turns           = 0
@@ -756,6 +767,7 @@ index           = SPL_EXTERNAL
 name            = acid sphere
 realm           = ABIL_DIV
 sphere          = SPL_ALL
+auto train      = 0
 minpos          = 0
 mana            = 0
 turns           = 0
@@ -819,7 +831,7 @@ race half-elf   = 0
 race brownie    = +1
 race groll      = -1
 race darkelf    = +1
-restrict level          = 30
+restrict magic          = 60
 profession mystic       = +0
 
 
@@ -852,6 +864,7 @@ race half-elf   = 0
 race brownie    = +1
 race groll      = -3
 race darkelf    = +1
+restrict magic  = 30
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -885,7 +898,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -1
-restrict level          = 12
+restrict divine         = 24
 profession paladin      = +0
 profession priest       = +0
 profession mystic       = +2
@@ -969,7 +982,6 @@ profession mystic       = +0
 
 index           = SPL_CURE_WOUNDS_1
 name            = cure light wounds
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You lay hands on $3n and pray for a minor healing...
 tovict          = $1n lays hands on you and prays...
@@ -998,7 +1010,6 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -1
-restrict level          = 5
 restrict divine         =  5
 profession paladin      = -3
 profession priest       = +5
@@ -1113,7 +1124,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -2
-restrict level          = 45
+restrict divine         = 90
 profession paladin      = +5
 profession priest       = +0
 
@@ -1149,7 +1160,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
-restrict level          = 15
+restrict divine         = 30
 profession knight       = -3
 profession paladin      = -3
 profession necromancer  = +5
@@ -1186,7 +1197,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
-restrict level          = 31
+restrict divine         = 62
 profession necromancer  = +2
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1221,7 +1232,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = 0
 race darkelf    = 0
-restrict level          = 13
+restrict divine         = 26
 profession priest       = +0
 profession mystic       = +0
 profession necromancer  = +2
@@ -1258,7 +1269,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -2
-restrict level          = 10
+restrict divine         = 20
 profession priest       = +0
 profession mystic       = +0
 
@@ -1294,7 +1305,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = 0
-restrict level          = 16
+restrict divine         = 32
 profession priest       = -3
 profession druid        = -3
 profession mystic       = +2
@@ -1330,7 +1341,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
-restrict level          = 14
+restrict divine         = 28
 profession priest       = +0
 profession druid        = -4
 profession mystic       = +2
@@ -1338,7 +1349,6 @@ profession mystic       = +2
 
 index           = SPL_RAISE_MAG
 name            = raise magic
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You touch $3n and utter the words, 'Risa mystam'...
 tovict          = $1n touches you and utters the words, 'Risa mystam'...
@@ -1375,7 +1385,6 @@ profession sorcerer     = +5
 
 index           = SPL_RAISE_DIV
 name            = raise divine
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You pray to the gods for a boon of divinity...
 tovict          = $1n prays to the gods on your behalf...
@@ -1404,7 +1413,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = -1
 race darkelf    = -2
-restrict level          = 15
+restrict divine         = 30
 profession priest       = +5
 profession mystic       = +5
 profession necromancer  = +2
@@ -1441,7 +1450,7 @@ race half-elf   = 0
 race brownie    = +1
 race groll      = -1
 race darkelf    = +1
-restrict level          = 10
+restrict magic          = 20
 profession mystic       = +2
 profession conjurer     = -3
 profession sorcerer     = +0
@@ -1478,7 +1487,7 @@ race half-elf   = 0
 race brownie    = +2
 race groll      = -1
 race darkelf    = +1
-restrict level          = 30
+restrict magic          = 60
 profession assassin     = -3
 profession mystic       = +0
 profession conjurer     = +0
@@ -1516,7 +1525,7 @@ race half-elf   = 0
 race brownie    = +1
 race groll      = -1
 race darkelf    = +1
-restrict level          = 6
+restrict magic          = 12
 profession conjurer     = +0
 profession sorcerer     = +0
 
@@ -1552,7 +1561,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = -1
 race darkelf    = -2
-restrict level          = 6
+restrict divine         = 12
 profession priest       = +5
 profession mystic       = +0
 
@@ -1588,7 +1597,7 @@ race half-elf   = 0
 race brownie    = +2
 race groll      = -1
 race darkelf    = +1
-restrict level          = 2
+restrict magic          =  4
 profession conjurer     = +5
 profession sorcerer     = +0
 
@@ -1630,7 +1639,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = -1
 race darkelf    = -2
-restrict level          = 31
+restrict divine         = 62
 profession priest       = +0
 profession druid        = +0
 
@@ -1666,7 +1675,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = -1
 race darkelf    = -3
-restrict level          = 5
+restrict divine         = 10
 profession priest       = +5
 profession mystic       = +0
 
@@ -1775,6 +1784,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
+restrict divine     = 18
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -1807,7 +1817,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = -1
-restrict level          = 14
+restrict divine         = 28
 profession priest       = +2
 profession mystic       = -3
 
@@ -2058,7 +2068,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -2
-restrict level          = 32
+restrict divine         = 64
 profession paladin      = +0
 profession priest       = +0
 profession mystic       = +0
@@ -2095,7 +2105,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = -1
 race darkelf    = -2
-restrict level          = 9
+restrict divine         = 18
 profession paladin      = -3
 profession priest       = +0
 profession mystic       = +0
@@ -2168,7 +2178,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -2
-restrict level          = 5
+restrict divine         = 10
 profession paladin      = +0
 profession priest       = +2
 profession druid        = +2
@@ -2355,7 +2365,6 @@ profession conjurer     = +0
 
 index           = SPL_DET_ALIGN
 name            = detect alignment
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You pray for the granting of alignment detection to $3n...
 tovict          = $1n prays for the granting of alignment detection to you...
@@ -2384,7 +2393,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = 0
-restrict level          = 7
+restrict divine         = 14
 profession paladin      = +0
 profession priest       = +2
 profession druid        = -1
@@ -2432,7 +2441,6 @@ profession sorcerer     = +0
 
 index           = SPL_DET_MAGIC
 name            = detect magic
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You close one eye and utter the words, 'Mystam ocuro'...
 tovict          = $1n closes one eye and utters the words, 'Mystam ocuro'...
@@ -2498,7 +2506,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
-restrict level          = 5
+restrict divine         = 10
 profession paladin      = +0
 profession priest       = +2
 profession druid        = +2
@@ -2509,7 +2517,6 @@ profession necromancer  = +5
 
 index           = SPL_DET_UNDEAD
 name            = detect undead
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You pray for the granting of undead detection $3n...
 tovict          = $1n prays for the granting of undead detection to you...
@@ -2538,7 +2545,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
-restrict level          = 4
+restrict divine         = 8
 profession paladin      = +0
 profession priest       = +2
 profession mystic       = +0
@@ -2576,7 +2583,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
-restrict level          = 3
+restrict divine         = 6
 profession priest       = +2
 profession mystic       = +0
 profession necromancer  = +5
@@ -2585,7 +2592,6 @@ profession necromancer  = +5
 
 index           = SPL_SENSE_LIFE
 name            = sense life
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You pray for the granting of life force detection to $3n...
 tovict          = $1n prays for the granting of life force detection to you...
@@ -2614,7 +2620,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
-restrict level          = 2
+restrict divine         = 4
 profession knight       = +0
 profession ranger       = +0
 profession priest       = -3
@@ -2757,7 +2763,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = -1
 race darkelf    = -2
-restrict level          = 33
+restrict divine         = 66
 profession priest       = -3
 profession druid        = -3
 
@@ -2826,7 +2832,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = -2
 race darkelf    = -1
-restrict level          = 20
+restrict divine         = 40
 profession priest       = +0
 profession mystic       = -3
 
@@ -2962,7 +2968,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -2
-restrict level          = 5
+restrict divine         = 10
 profession priest       = +0
 profession mystic       = +2
 
@@ -2996,7 +3002,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -2
-restrict level          = 9
+restrict divine         = 18
 profession priest       = +2
 profession mystic       = +2
 
@@ -3032,7 +3038,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -2
-restrict level          = 8
+restrict divine         = 16
 profession paladin      = +0
 profession priest       = +5
 profession mystic       = +2
@@ -3069,7 +3075,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -2
 race darkelf    = -2
-restrict level          = 28
+restrict divine         = 46
 profession priest       = +0
 profession mystic       = +0
 
@@ -3105,7 +3111,7 @@ race half-elf   = 0
 race brownie    = -2
 race groll      = 0
 race darkelf    = +3
-restrict level          = 3
+restrict divine         = 6
 profession knight       = +0
 profession mystic       = +2
 profession necromancer  = +5
@@ -3142,7 +3148,7 @@ race half-elf   = 0
 race brownie    = -2
 race groll      = 0
 race darkelf    = 0
-restrict level          = 26
+restrict divine         = 52
 profession mystic       = +2
 profession necromancer  = +2
 
@@ -3246,7 +3252,7 @@ race half-elf   = 0
 race brownie    = -2
 race groll      = 0
 race darkelf    = 0
-restrict level          = 4
+restrict divine         = 15
 profession necromancer  = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -3281,7 +3287,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
-restrict level          = 8
+restrict divine         = 16
 profession priest       = +2
 profession mystic       = +2
 
@@ -3317,7 +3323,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
-restrict level          = 16
+restrict divine         = 32
 profession priest       = +0
 profession druid        = +0
 profession mystic       = +0
@@ -3354,7 +3360,7 @@ race half-elf   = 0
 race brownie    = -2
 race groll      = 0
 race darkelf    = 0
-restrict level          = 36
+restrict divine         = 72
 profession necromancer  = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -3458,7 +3464,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = -1
 race darkelf    = -2
-restrict level          = 2
+restrict divine         = 4
 profession priest       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -3565,7 +3571,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = 0
 race darkelf    = 0
-restrict level          = 19
+restrict divine         = 38
 profession knight       = -3
 profession necromancer  = +2
 
@@ -3636,7 +3642,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = 0
-restrict level          = 14
+restrict divine         = 28
 profession necromancer  = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -3671,14 +3677,13 @@ race half-elf   = 0
 race brownie    = +2
 race groll      = -1
 race darkelf    = +1
-restrict level          = 17
+restrict divine         = 34
 profession sorcerer     = +2
 
 /* - - - - Yet another definition of a spell - - - - */
 
 index           = SPL_CALM
 name            = calm
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You touch $3n lightly and chant softly...
 tovict          = $1n touches you and begins to chant in a calming voice...
@@ -3707,7 +3712,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -2
 race darkelf    = -2
-restrict level          = 28
+restrict divine         = 56
 profession paladin      = -3
 profession priest       = +0
 profession druid        = -3
@@ -3743,7 +3748,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -2
 race darkelf    = -2
-restrict level          = 4
+restrict divine         =  8
 profession priest       = +0
 profession druid        = +0
 
@@ -3779,7 +3784,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
-restrict level          = 8
+restrict divine         = 16
 profession priest       = +0
 profession mystic       = +5
 profession necromancer  = +2
@@ -3887,7 +3892,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -2
 race darkelf    = -1
-restrict level          = 13
+restrict divine         = 26
 profession priest       = +0
 profession druid        = -3
 
@@ -3923,7 +3928,7 @@ race half-elf   = 0
 race brownie    = -2
 race groll      = 0
 race darkelf    = 0
-restrict level          = 38
+restrict divine         = 76
 profession knight       = +0
 profession necromancer  = +2
 
@@ -3959,7 +3964,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
-restrict level          = 7
+restrict divine         = 14
 profession necromancer  = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -4030,7 +4035,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -2
 race darkelf    = -2
-restrict level          = 25
+restrict divine         = 50
 profession paladin      = -3
 profession priest       = +0
 profession druid        = -3
@@ -4068,7 +4073,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = 0
-restrict level          = 18
+restrict divine         = 38
 profession priest       = +0
 profession druid        = -1
 
@@ -4110,7 +4115,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = 0
 race darkelf    = 0
-restrict level          = 39
+restrict divine         = 78
 profession knight       = +5
 profession necromancer  = +5
 
@@ -4118,7 +4123,6 @@ profession necromancer  = +5
 
 index           = SPL_PRO_GOOD
 name            = protection from good
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You begin a prayer to protect $3n from the forces of good...
 tovict          = $1n pleads with the gods to grant you protection from the forces of good...
@@ -4147,7 +4151,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = 0
 race darkelf    = 0
-restrict level          = 30
+restrict divine         = 60
 profession knight       = +0
 profession mystic       = +2
 profession necromancer  = +2
@@ -4628,7 +4632,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = -1
 race darkelf    = 0
-restrict level          = 14
+restrict divine         = 28
 profession necromancer  = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -4660,7 +4664,7 @@ race half-elf   = 0
 race brownie    = -2
 race groll      = -3
 race darkelf    = -3
-restrict level          = 27
+restrict divine         = 54
 profession priest       = -3
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -4692,7 +4696,7 @@ race half-elf   = 1
 race brownie    = -2
 race groll      = -3
 race darkelf    = -3
-restrict level          = 40
+restrict divine         = 80
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -4726,7 +4730,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = -2
 race darkelf    = -1
-restrict level          = 20
+restrict divine         = 40
 profession priest       = -3
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -4761,7 +4765,7 @@ race half-elf   = 0
 race brownie    = -2
 race groll      = 0
 race darkelf    = 0
-restrict level          = 25
+restrict divine         = 50
 profession necromancer  = -3
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -4796,7 +4800,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -1
-restrict level          = 17
+restrict divine         = 34
 profession priest       = +0
 profession druid        = +1
 
@@ -4837,6 +4841,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -3
 race darkelf    = -2
+restrict divine         = 20 // xxx
 
 
 
@@ -4878,6 +4883,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = -3
 race darkelf    = -2
+restrict divine         = 40 // xxx
 
 
 
@@ -4926,7 +4932,6 @@ profession conjurer     = +2
 
 index           = SPL_ENERGY_BOLT
 name            = energy bolt
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You utter the word 'sumai mislis' and point your hand at $3n.
 tovict          = $1n utters the word 'sumai mislis' and points at you!
@@ -5364,7 +5369,7 @@ mediums         = MEDIA_SPELL + MEDIA_WAND + MEDIA_SCROLL
 check           = SPLCST_RESIST
 offensive       = FALSE
 fumble          = 0
-restrict level          = 10
+restrict divine         = 20
 race human      = 0
 race elf        = 0
 race dwarf      = 0
@@ -5397,7 +5402,7 @@ mediums         = MEDIA_SPELL + MEDIA_SCROLL
 check           = SPLCST_RESIST
 offensive       = FALSE
 fumble          = 0
-restrict level          = 5
+restrict divine         = 10
 race human      = 0
 race elf        = 0
 race dwarf      = 0
@@ -5428,6 +5433,7 @@ mediums         = MEDIA_SPELL + MEDIA_WAND + MEDIA_SCROLL
 check           = SPLCST_CHECK
 offensive       = FALSE
 fumble          = 0
+restrict divine         = 80 // xxx
 race human      = 0
 race elf        = 0
 race dwarf      = -1
@@ -5534,6 +5540,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -2
 race darkelf    = -2
+restrict divine         = 40 // xxx
 
 /* Dispel a summoned creature */
 index           = SPL_BANISH
@@ -5654,7 +5661,7 @@ race elf        = 0
 race dwarf      = 0
 race halfling   = 0
 race gnome      = 0
-restrict level          = 42
+restrict divine         = 84
 profession necromancer  = +3
 
 /* Doubles the amount of hits in a fight if you are fighting with fists */
@@ -5728,7 +5735,7 @@ race elf        = 0
 race dwarf      = 0
 race halfling   = 0
 race gnome      = 0
-restrict level          = 34
+restrict divine         = 68
 profession necromancer  = +5
 
 index           = SPL_BLIZZARD
@@ -5797,7 +5804,7 @@ race half-elf   = +1
 race brownie    = +1
 race groll      = -1
 race darkelf    = -2
-restrict level          = 40
+restrict divine         = 80
 profession ranger       = -2
 
 
@@ -5898,7 +5905,7 @@ race half-elf   = +1
 race brownie    = +1
 race groll      = -1
 race darkelf    = -2
-restrict level          = 25
+restrict divine         = 50
 profession ranger       = -1
 profession druid        = -3
 
@@ -5932,7 +5939,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
-restrict level          = 9
+restrict divine         = 18
 profession ranger       = +0
 profession druid        = -3
 
@@ -5967,7 +5974,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
-restrict level          = 35
+restrict divine         = 70
 profession ranger       = -3
 profession druid        = +0
 
@@ -6002,7 +6009,7 @@ race half-elf   = 0
 race brownie    = +2
 race groll      = -1
 race darkelf    = 0
-restrict level          = 13
+restrict divine         = 26
 profession ranger       = -3
 profession druid        = +0
 
@@ -6034,7 +6041,7 @@ race half-elf   = 0
 race brownie    = +1
 race groll      = -3
 race darkelf    = +2
-restrict level          = 29
+restrict divine         = 58
 profession ranger       = -3
 
 index           = SPL_TIGER_CLAW
@@ -6071,7 +6078,7 @@ race half-elf   = 0
 race brownie    = +3
 race groll      = -1
 race darkelf    = +1
-restrict level          = 21
+restrict divine         = 42
 profession ranger       = +0
 
 
@@ -6102,7 +6109,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -2
-restrict level          = 45
+restrict divine         = 90
 profession druid        = +0
 
 
@@ -6136,7 +6143,7 @@ race half-elf   = 0
 race brownie    = -2
 race groll      = -1
 race darkelf    = -1
-restrict level          = 28
+restrict divine         = 56
 profession knight       = +0
 profession ranger       = -1
 profession druid        = +3
@@ -6205,7 +6212,8 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = -1
 race darkelf    = -2
-restrict level          = 85
+//restrict level          = 85
+restrict divine         = 105
 profession paladin      = +0
 profession priest       = -3
 
@@ -6270,6 +6278,7 @@ race brownie    = -1
 race groll      = -1
 race darkelf    = -2
 restrict level          = 60
+restrict divine         = 100
 profession necromancer  = +2
 
 
@@ -6310,6 +6319,7 @@ race brownie    = 0
 race groll      = -1
 race darkelf    = -1
 restrict level          = 80
+restrict divine         = 100
 profession paladin      = +0
 
 
@@ -6344,6 +6354,7 @@ race brownie    = -2
 race groll      = 0
 race darkelf    = 0
 restrict level          = 50
+restrict divine         = 100
 profession necromancer  = +2
 
 
@@ -6378,6 +6389,7 @@ race brownie    = -2
 race groll      = 0
 race darkelf    = 0
 restrict level          = 75
+restrict divine         = 100
 profession necromancer  = +2
 
 
@@ -6412,6 +6424,7 @@ race brownie    = -2
 race groll      = 0
 race darkelf    = 0
 restrict level          = 150
+restrict divine         = 100
 profession necromancer  = +2
 
 
@@ -6512,6 +6525,7 @@ race brownie    = 0
 race groll      = -1
 race darkelf    = -2
 restrict level          = 52
+restrict divine         = 100
 profession druid        = -3
 
 
@@ -6619,7 +6633,6 @@ profession druid        = +5
 
 index           = SPL_THORN_STRIKE
 name            = thorn strike
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You make a stabbing gesture towards $3n.
 tovict          = $1n makes a stabbing gesture towards you.
@@ -7055,7 +7068,6 @@ profession conjurer     = +2
 
 index           = SPL_FIREBALL_1
 name            = burn
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You utter the word, 'Inceriti'
 tovict          = $1n utters the word, 'Inceriti'
@@ -7217,7 +7229,6 @@ restrict level          = 150
 
 index           = SPL_CAUSE_WOUNDS_1
 name            = cause light wounds
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You boldly speak the word 'scrazgh'...
 tovict          = $1n boldly speaks the word 'scrazgh'...
@@ -7387,7 +7398,6 @@ restrict level          = 60
 
 index           = SPL_STINKING_CLOUD_1
 name            = fart
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = You utter the words, 'Schwepa cumei'...
 tovict          = $1n utters the words, 'Schwepa cumei'...
@@ -8191,7 +8201,6 @@ restrict level          = 160
 /* - - - - Yet another definition of a spell - - - - */
 index           = SPL_LIGHTNING_1
 name            = electrical shock
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = The air crackles at $3n as you snarl, 'Thudas electra!'...
 tovict          = Air crackles as $1n snarls 'Thudas electra!' at you...
@@ -8512,7 +8521,6 @@ profession sorcerer     = +0
 
 index           = SPL_MIRE
 name            = mire
-auto train      = 1
 acttype         = A_SOMEONE
 tochar          = "You call on the forces of darkness to slow $3n..."
 tovict          = $1n calls on the forces of the darkness to slow $3n...

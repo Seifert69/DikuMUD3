@@ -39,6 +39,8 @@ int str_upper(char *s);
 int str_lower(const char *s, char *d, int nBufSize);
 
 char *spc(int n);
+char *str_repeatchar(int n, char c);
+
 char *str_line(const char *, char *);
 #ifdef DOS
 #define itoa(n) itoa_dos(n)

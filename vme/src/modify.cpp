@@ -191,14 +191,14 @@ struct field_type unit_field_data[MAX_SET_FIELDS + 1] = {
     {UT_CHAR, AT_BIT, char_flags, 200, 200, 253},         /* char-flags      */
     {UT_CHAR, AT_VAL, 0, 200, 200, 240},                  /* mana            */
     {UT_CHAR, AT_VAL, 0, 200, 200, 240},                  /* endurance       */
-    {UT_CHAR, AT_TYP, wpn_text, 200, 200, 253},           /* attack-type     */
+    {UT_CHAR, AT_TYP, g_WpnColl.text, 200, 200, 253},           /* attack-type     */
     {UT_CHAR, AT_VAL, 0, 200, 200, 253},                  /* hand-quality    */
     {UT_UNIT, AT_VAL, 0, 200, 200, 230},                  /* height          */
     {UT_CHAR, AT_TYP, pc_races, 200, 200, 253},           /* race            */
     {UT_CHAR, AT_TYP, char_sex, 200, 200, 253},           /* sex             */
     {UT_NPC, AT_VAL, 0, 255, 255, 255},                   /* level           */
     {UT_CHAR, AT_TYP, char_pos, 200, 253, 253},           /* position        */
-    {UT_CHAR, AT_TYPVAL, abil_text, 240, 253, 253},       /* ability         */
+    {UT_CHAR, AT_TYPVAL, g_AbiColl.text, 240, 253, 253},       /* ability         */
     {UT_PC, AT_VAL, 0, 230, 253, 253},                    /* skill-points    */
     {UT_PC, AT_VAL, 0, 230, 253, 253},                    /* ability-points  */
     {UT_UNIT, AT_VAL, 0, 200, 230, 200},                  /* remove affects  */
@@ -1354,10 +1354,10 @@ void do_setskill(class unit_data *ch, char *argument,
             send_to_char("Skills are only for PC's<br/>", ch);
             return;
         }
-        if ((skillarg = get_type(arg, ski_text)) == -1)
+        if ((skillarg = get_type(arg, g_SkiColl.text)) == -1)
         {
             send_to_char("Invalid or missing skill<br/>", ch);
-            show_structure(ski_text, ch);
+            show_structure(g_SkiColl.text, ch);
             return;
         }
         argument = str_next_word(argument, arg);
@@ -1366,10 +1366,10 @@ void do_setskill(class unit_data *ch, char *argument,
         break;
 
     case SET_SPELL:
-        if ((skillarg = get_type(arg, spl_text)) == -1)
+        if ((skillarg = get_type(arg, g_SplColl.text)) == -1)
         {
             send_to_char("Invalid or missing spell<br/>", ch);
-            show_structure(spl_text, ch);
+            show_structure(g_SplColl.text, ch);
             return;
         }
         if (skillarg > SPL_EXTERNAL && IS_NPC(unt))
@@ -1387,10 +1387,10 @@ void do_setskill(class unit_data *ch, char *argument,
         break;
 
     case SET_WEAPON:
-        if ((skillarg = get_type(arg, wpn_text)) == -1)
+        if ((skillarg = get_type(arg, g_WpnColl.text)) == -1)
         {
             send_to_char("Invalid or missing weaponskill<br/>", ch);
-            show_structure(wpn_text, ch);
+            show_structure(g_WpnColl.text, ch);
             return;
         }
         if (skillarg > WPN_SPECIAL && IS_NPC(unt))

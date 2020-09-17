@@ -86,20 +86,29 @@ int str_lower(const char *s, char *d, int nBufSize)
     return l;
 }
 
-/* Return a string consisting of `n' spaces */
-char *spc(int n)
+/* Return a string consisting of `n' chars c */
+char *str_repeatchar(int n, char c)
 {
     static char buf[256];
 
+    if (n > 255)
+        n = 255;
+
+    if (n < 0)
+        n = 0;
+
     buf[n] = '\0';
 
-    if (n > 256)
-        n = 256;
-
     for (; n;)
-        buf[--n] = ' ';
+        buf[--n] = c;
 
     return buf;
+}
+
+/* Return a string consisting of `n' spaces */
+char *spc(int n)
+{
+    return str_repeatchar(n, ' ');
 }
 
 /*  Return a pointer to the string containing the ascii reresentation

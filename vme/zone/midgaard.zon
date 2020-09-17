@@ -5771,8 +5771,7 @@ money 10 IRON_PIECE, 1 COPPER_PIECE
 position POSITION_SITTING
 default POSITION_SITTING
 flags {UNIT_FL_NO_TELEPORT}
-special SFUN_WHISTLE
-
+dilcopy blow_whistle@justice();
 dilcopy opening_hours@function({4,23}, {"list", "buy", "sell", "value", "request"}, 
                                 "say Sorry we're closed", 
                                 {"wake","stand","say We're open for business"},
@@ -5807,9 +5806,9 @@ M_SHOP_KEEPER(44, SEX_FEMALE, RACE_HUMAN)
 money 10 IRON_PIECE, 1 COPPER_PIECE
 position POSITION_SITTING
 default POSITION_SITTING
-special SFUN_WHISTLE
 flags {UNIT_FL_NO_TELEPORT}
 
+dilcopy blow_whistle@justice();
 dilcopy opening_hours@function({2,23}, {"list", "buy", "sell", "value", "request"}, 
                                 "say Sorry we're closed", 
                                 {"wake","stand","say We're open for business"},
@@ -5843,7 +5842,8 @@ M_SHOP_KEEPER(38, SEX_MALE, RACE_HUMAN)
 money 10 IRON_PIECE, 1 COPPER_PIECE
 position POSITION_SITTING
 default POSITION_SITTING
-special SFUN_WHISTLE
+
+dilcopy blow_whistle@justice();
 
 dilcopy opening_hours@function({4,23}, {"list", "buy", "sell", "value", "request"}, 
                                 "say Sorry we're closed", 
@@ -5879,9 +5879,9 @@ money 10 IRON_PIECE, 3 COPPER_PIECE
 position POSITION_SITTING
 default POSITION_SITTING
 flags {UNIT_FL_NO_TELEPORT}
-special SFUN_WHISTLE
-dilcopy evaluate@function(64);
+dilcopy blow_whistle@justice();
 
+dilcopy evaluate@function(64);
 dilcopy opening_hours@function({4,23}, {"list", "buy", "sell", "value", "request"}, 
                                 "say Sorry we're closed", 
                                 {"wake","stand","say We're open for business"},
@@ -5919,8 +5919,7 @@ money 10 IRON_PIECE, 1 COPPER_PIECE
 position POSITION_SITTING
 default POSITION_SITTING
 flags {UNIT_FL_NO_TELEPORT}
-special SFUN_WHISTLE
-
+dilcopy blow_whistle@justice();
 dilcopy opening_hours@function({4,10,12,20}, {"list", "buy", "sell", "value", "request"}, 
                                 "say Sorry we're closed", 
                                 {"wake","stand","say We're open for business"},
@@ -5951,8 +5950,8 @@ money 10 IRON_PIECE, 3 COPPER_PIECE
 position POSITION_SITTING
 default POSITION_SITTING
 flags {UNIT_FL_NO_TELEPORT}
-special SFUN_WHISTLE
 
+dilcopy blow_whistle@justice();
 dilcopy opening_hours@function({4,12,13,23}, {"list", "buy", "sell", "value", "request"}, 
                                 "say Sorry we're closed", 
                                 {"wake","stand","say We're open for business"},
@@ -5997,7 +5996,9 @@ money 10 IRON_PIECE, 3 COPPER_PIECE
 position POSITION_SITTING
 default POSITION_SITTING
 flags {UNIT_FL_NO_TELEPORT}
-special SFUN_WHISTLE
+
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy evaluate@function(64);
 
 dilcopy opening_hours@function({4,12,13,23}, {"list", "buy", "sell", "value", "request"}, 
@@ -6037,8 +6038,9 @@ extra {}
 
 M_SHOP_KEEPER(53, SEX_MALE, RACE_HUMAN)
 money 10 IRON_PIECE, 3 COPPER_PIECE
-special SFUN_WHISTLE
 flags {UNIT_FL_NO_TELEPORT}
+
+dilcopy blow_whistle@justice();
 dilcopy evaluate@function(64);
 
 dilcopy opening_hours@function({4,12,13,23}, {"list", "buy", "sell", "value", "request"}, 
@@ -6095,9 +6097,9 @@ keep herself going."
 M_SHOP_KEEPER(44, SEX_FEMALE, RACE_HUMAN)
 money 10 IRON_PIECE, 2 COPPER_PIECE
 dilcopy evaluate@function(64);
-special SFUN_WHISTLE
 flags {UNIT_FL_NO_TELEPORT}
 
+dilcopy blow_whistle@justice();
 dilcopy opening_hours@function({4,12,13,23}, {"list", "buy", "sell", "value", "request"}, 
                                 "say Sorry we're closed", 
                                 {"wake","stand","say We're open for business"},
@@ -6159,9 +6161,8 @@ money 10 IRON_PIECE, 3 COPPER_PIECE
 position POSITION_SITTING
 default POSITION_SITTING
 flags {UNIT_FL_NO_TELEPORT}
-special SFUN_WHISTLE
 
-
+dilcopy blow_whistle@justice();
 dilcopy opening_hours@function({4,12,13,23}, {"list", "buy", "sell", "value", "request"}, 
                                 "say Sorry we're closed", 
                                 {"wake","stand","say We're open for business"},
@@ -6202,9 +6203,8 @@ money 10 IRON_PIECE, 3 COPPER_PIECE, 1 SILVER_PIECE
 position POSITION_SITTING
 default POSITION_SITTING
 flags {UNIT_FL_NO_TELEPORT}
-special SFUN_WHISTLE
 
-
+dilcopy blow_whistle@justice();
 dilcopy opening_hours@function({4,12,13,23}, {"list", "buy", "sell", "value", "request"}, 
                                 "say Sorry we're closed", 
                                 {"wake","stand","say We're open for business"},
@@ -6247,9 +6247,7 @@ money 10 IRON_PIECE, 2 COPPER_PIECE
 position POSITION_SITTING
 default POSITION_SITTING
 
-special SFUN_WHISTLE
-
-
+dilcopy blow_whistle@justice();
 dilcopy opening_hours@function({4,12,13,23}, {"list", "buy", "sell", "value", "request"}, 
                                 "say Sorry we're closed", 
                                 {"wake","stand","say We're open for business"},
@@ -6293,8 +6291,8 @@ extra {} "He is a pale man dressed in black clothes, fit for funeral."
 flags {UNIT_FL_NO_TELEPORT}
 M_SHOP_KEEPER(57, SEX_MALE, RACE_HUMAN)
 money 10 IRON_PIECE, 2 COPPER_PIECE
-special SFUN_WHISTLE
 
+dilcopy blow_whistle@justice();
 dilcopy opening_hours@function({4,12,13,23}, {"list", "buy", "sell", "value", "request"}, 
                                 "say Sorry we're closed", 
                                 {"wake","stand","say We're open for business"},
@@ -6352,8 +6350,8 @@ extra {} "He has a very serious look on his face."
 flags {UNIT_FL_NO_TELEPORT}
 M_SHOP_KEEPER(51, SEX_MALE, RACE_HUMAN)
 money 10 IRON_PIECE, 2 COPPER_PIECE, 1 GOLD_PIECE
-special SFUN_WHISTLE
 special SFUN_BANK
+dilcopy blow_whistle@justice();
 flags {UNIT_FL_NO_TELEPORT}
 
 exp 0
@@ -6370,7 +6368,7 @@ descr "Jim the Postman is standing here."
 
 M_SHOP_KEEPER(47, SEX_MALE, RACE_HUMAN)
 money 10 IRON_PIECE, 2 COPPER_PIECE
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy mail@mail();
 flags {UNIT_FL_NO_TELEPORT}
 
@@ -6572,9 +6570,9 @@ exp 0
 M_HUMAN_MAGE_ELECTRICITY(85,SEX_FEMALE, "lightning bolt")
 alignment 1000
 flags {UNIT_FL_NO_TELEPORT}
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy rescue@function("guard / mayor");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 special SFUN_ACCUSE
 
 dilcopy deputy_check@function();
@@ -6602,9 +6600,9 @@ flags {UNIT_FL_NO_TELEPORT}
 M_HUMAN_THIEF_POLE(82, SEX_MALE)
 alignment 1000
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy rescue@function("guard / mayor");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 special SFUN_ACCUSE
 
 dilcopy deputy_check@function();
@@ -6632,9 +6630,9 @@ exp 0
 M_HUMAN_WARRIOR_SWORD(87,SEX_MALE)
 alignment 1000
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / mayor");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
 dilcopy reward_give@function();
 special SFUN_ACCUSE
 dilcopy guard_dir@function("west", null, {""}, "");
@@ -6709,10 +6707,10 @@ M_HUMAN_WARRIOR_CLUB(57, SEX_MALE)   /* He shall use a flail */
 alignment 400
 money 2 IRON_PIECE
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
 
 end
 
@@ -6731,10 +6729,10 @@ M_HUMAN_WARRIOR_POLE(62, SEX_MALE)   /* He shall use a polearm */
 alignment 400
 money 5 IRON_PIECE
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
 
 end
 
@@ -6753,10 +6751,10 @@ M_HUMAN_WARRIOR_SWORD(57, SEX_MALE)   /* He shall use a polearm */
 alignment 400  /* Just above neutral */
 money 3 IRON_PIECE
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
 /*                                                                     */
 /* Route for a patroling guard to visit all shops and important places */
 /*                                                                     */
@@ -6820,10 +6818,11 @@ M_HUMAN_WARRIOR_SWORD(55, SEX_MALE)   /* He shall use a polearm */
 alignment 400  /* Just above neutral */
 money 6 IRON_PIECE
 exp 0
-special SFUN_WHISTLE
+
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
 dilcopy wander_zones@function("midgaard", 40, 1, 1);
 
 end
@@ -6842,8 +6841,7 @@ money 8 IRON_PIECE
 exp 0
 position POSITION_SLEEPING
 default POSITION_SITTING
-
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilbegin guard1();
@@ -6924,7 +6922,7 @@ code
   }
 }
 dilend
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
+dilcopy protect_lawful@justice();
 
 end
 
@@ -6943,10 +6941,10 @@ exp 0
 position POSITION_SLEEPING
 default POSITION_SITTING
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
 dilbegin guard2();
 external
  integer walk_room@function (s:string,i:integer);
@@ -7043,10 +7041,11 @@ money 5 IRON_PIECE
 position POSITION_SLEEPING
 default POSITION_SITTING
 exp 0
-special SFUN_WHISTLE
+
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
 dilcopy guard1();
 
 end
@@ -7066,10 +7065,10 @@ exp 0
 position POSITION_SLEEPING
 default POSITION_SITTING
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
 dilcopy guard2();
 
 end
@@ -7088,10 +7087,11 @@ money 5 IRON_PIECE
 position POSITION_SLEEPING
 default POSITION_SITTING
 exp 0
-special SFUN_WHISTLE
+
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
 dilcopy guard1();
 
 end
@@ -7111,10 +7111,10 @@ exp 0
 position POSITION_SLEEPING
 default POSITION_SITTING
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
 dilcopy guard2();
 
 
@@ -7135,10 +7135,10 @@ money 5 IRON_PIECE
 position POSITION_SLEEPING
 default POSITION_SITTING
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
 dilcopy guard1();
 
 end
@@ -7158,10 +7158,10 @@ exp 0
 position POSITION_SLEEPING
 default POSITION_SITTING
 
-special SFUN_WHISTLE
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
 dilcopy guard2();
 
 end
@@ -7525,9 +7525,10 @@ M_HUMAN_WARRIOR_SWORD(52, SEX_MALE)   /* He shall use a polearm */
 alignment 0  /* Just above neutral */
 money 5 IRON_PIECE
 exp 0
-special SFUN_WHISTLE
+
+dilcopy blow_whistle@justice();
+dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-special SFUN_PROTECT_LAWFUL time PULSE_SEC*60 bits SFB_RANTIME
 dilbegin temple_guard();
 external
  integer walk_room@function (s:string,i:integer);
