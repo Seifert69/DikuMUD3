@@ -57,7 +57,6 @@ mystr = data["parse"]["text"]["*"]
 
 # Raw string extracted:
 #print("========================")
-#print(mystr)
 #print("========================")
 
 print("Transforming Wiki data response")
@@ -71,6 +70,48 @@ if len(objs) > 1:
     mystr = objs[0]
     for i in range(1, len(objs)):
         mystr += objs[i].split('-->')[1]
+
+#
+# Remove header junk
+#
+objs = mystr.split('<h1>')
+
+if len(objs) > 1:
+    mystr = objs[0]
+    o2 = objs[1].split('</h1>')
+
+    #
+    # Remove all < >
+    #
+    mystr += "<h1>"
+    o3 = o2[0].split('<')
+
+    if len(o3) > 1:
+        mystr += o3[0]
+        for i in range(1, len(o3)):
+            mystr += o3[i].split('>')[1]
+
+    mystr += "</h1>"+o2[1]
+
+
+#
+# Remove [edit] from <h1>
+#
+objs = mystr.split('<h1>')
+
+if len(objs) > 1:
+    mystr = objs[0]
+    o2 = objs[1].split('</h1>')
+
+    #
+    # Remove all < >
+    #
+    mystr += "<h1>"
+    o3 = o2[0].split('[edit]')
+    mystr += o3[0]
+
+    mystr += "</h1>"+o2[1]
+
 
 #
 # Morph <a href="/index.php?title=Help/Idea&amp;action=edit&amp;redlink=1" class="new" title="Help/Idea (page does not exist)">idea</a>
