@@ -32,7 +32,7 @@ if ((not isset(att.charflags,CHAR_SELF_DEFENCE)) and (isset(def.charflags, CHAR_
     return(FALSE);
 }
 dilend
-dilbegin protect_lawful();
+dilbegin  fnpri(FN_PRI_RESCUE-1) protect_lawful();
 external
     integer crime_check@justice(att:unitptr, def:unitptr);
 
@@ -95,7 +95,7 @@ goto start;
 }
 dilend
 
-dilbegin blow_whistle(); 
+dilbegin  fnpri(FN_PRI_RESCUE) blow_whistle(); 
 external
     integer crime_check@justice(att:unitptr, def:unitptr);
 var

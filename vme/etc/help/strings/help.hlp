@@ -1,40 +1,40 @@
-<h1>Help</h1>
+<div class="mw-parser-output"><h1>Help</h1>
 <p>We try to keep the help files easy to use if you have suggestions on
 what will make them more user friendly please feel free to write
-'admin@valhalla.com' and we will take your <a cmd='help #'>idea</a> into consideration.</p>
-
-<p>To get a list of all topics on the mud, be warned that this list is
-long, just type the following command:</p>
-<br/>
-&gt; <a cmd='#'>help topics</a><br/>
-<br/>
-To get a list of topics by letter then the command is as follows:<br/>
-<br/>
-&gt; help topic &lt;letter&gt;<br/>
-<br/>
-For example:<br/>
-<br/>
-&gt; <a cmd='#'>help topic b</a><br/>
-<br/>
-Will list all the topics that start with the letter 'b'<br/>
-<br/>
-To get help that a creator placed in the zone for his or her entire<br/>
-area type:<br/>
-<br/>
-&gt; <a cmd='#'>help area</a><br/>
-<br/>
+'admin@valhalla.com' and we will take your <a cmd='#'>idea</a> into consideration.
+</p><p>To get a list of all topics on the mud, be warned that this list is
+long, just type the following command <a cmd='#'>help topics</a>
+</p><p>To get a list of topics by letter then the command is as follows:
+</p>
+<pre> &gt; <b>help topic</b> &lt;letter&gt;
+</pre>
+<p>For example:
+</p>
+<pre> <a cmd='#'>help topic b</a>
+</pre>
+<p>Will list all the topics that start with the letter 'b'
+</p><p><br />
+To get help that a creator placed in the zone for his or her entire area type:
+</p>
+<pre>   <a cmd='#'>help area</a>
+</pre>
 <p>Finally after you have found what you want help on just type help and
-the name of the topic and thats all there is to it.  If you use short
+the name of the topic and that's all there is to it.  If you use short
 hand you may or may not get what you are looking for because it matches
-with the first item alphabetically it can.  For example:</p>
-<br/>
-&gt; help mid<br/>
-&gt; help midga<br/>
-&gt; help midgaard<br/>
-<br/>
-All will come up with the same thing but to get help on 'midgaard Paladins' you have to do:<br/>
-<br/>
-&gt; help midgaard p<br/>
-&gt; help midgaard pal<br/>
-&gt; help midgaard paladins<br/>
-<br/>
+with the first item alphabetically it can.  For example:
+</p>
+<pre> &gt; <a cmd='#'>help mid</a>
+ &gt; <a cmd='#'>help midga</a>
+ &gt; <a cmd='#'>help midgaard</a>
+</pre>
+<p>All will come up with the same thing but to get help on 'midgaard Paladins' you have to do:
+</p>
+<pre> &gt; <a cmd='#'>help midgaard p</a>
+ &gt; <a cmd='#'>help midgaard pal</a>
+ &gt; <a cmd='#'>help midgaard paladins</a>
+</pre>
+
+
+
+
+</div>
