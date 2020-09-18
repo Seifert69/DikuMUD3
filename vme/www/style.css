@@ -221,12 +221,15 @@
         .ask_other     { display: inline; color:cadetblue;}
         .say_self      { display: inline; color:aliceblue;}
         .say_other     { display: inline; color:cadetblue;}
-        .shout_self      { display: inline; color:aliceblue;}
-        .shout_other     { display: inline; color:cadetblue;}
+        .shout_self    { display: inline; color:aliceblue;}
+        .shout_other   { display: inline; color:cadetblue;}
         .whisper       { display: inline; color:aliceblue;}
         .tell_self     { display: inline; color:aliceblue;}
         .tell_other    { display: inline; color:cadetblue;}
-		.comm_channel  { display: inline; color:aliceblue;}
+		.comm_say      { display: inline; color:aliceblue;}
+		.comm_emote    { display: inline; color:aliceblue;}
+		.comm_join     { display: inline; color:aliceblue;}
+		.comm_leave    { display: inline; color:aliceblue;}
 
         .death       { display: inline; color:tomato;}
         .prompt      { display: inline; color:darkorange;}

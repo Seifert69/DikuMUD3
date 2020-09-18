@@ -5188,6 +5188,175 @@ dilend
 
 end
 
+/* Newbie Books 
+
+	These can probably be consolodated into the new newbie_book, given the DIKU3 changes
+	to whre and how training works. 
+	
+	This book has been assigned to the Mystic profession already.
+	9/2020 - Sender
+*/
+
+newbie_book
+names {"newbies handbook", "newbie's handbook", "newbie book", "handbook", "book"}
+title "the Newbie's Handbook"
+descr "A small Newbie's Handbook has carelessly been left here."
+manipulate {MANIPULATE_TAKE}
+type ITEM_NOTE
+weight 1
+dilcopy eager_read@udgaard();
+extra {}
+"<pre>                <div class='cpy'>The Newbie's Handbook to Valhalla</div><div class='cw'>
+
+
+                 Chapter 1 ... Introduction
+                 Chapter 2 ... Combat
+                 Chapter 3 ... How to get around
+                 Chapter 4 ... The Automated Tour
+                 Chapter 5 ... Hint &amp; Tips
+                 Chapter 6 ... Help Topics
+
+Here is an example of how to read chapter one:
+
+   &gt; read chapter 1
+</div></pre>"
+
+extra {"chapter 1", "introduction", "chapter one"}
+
+"<pre>                        INTRODUCTION
+
+This handbook describes how to get started playing Valhalla. 
+Read it carefully and you can get started in only a few minutes.
+
+You have just received a lot of equipment which
+has been prepared especially for you. To see the equipment, type:
+
+   &gt; inventory (or the shorthand version: i)
+   &gt; equipment (or the shorthand version: eq)
+
+Your character is now able to store variables, aliases, and triggers.
+
+To see what variables have been defined, write:
+
+   &gt; variable (or the shorthand version: var)
+   See 'Help variables' for more details.
+
+To see what aliases have been defined, write:
+
+   &gt; alias (or the shorthand version: al)
+   See 'Help alias' for more details.
+
+To see what triggers have been defined, write:
+
+   &gt; trigger (or the shorthand version: trig)
+   See 'Help triggers' for more details.
+
+Variables, aliases, and triggers use regular expressions. See 'Help regex' for more details.
+   Now read chapter 2.</pre>"
+
+extra {"chapter 2", "chapter two"}
+"<pre>                           COMBAT
+
+You must always be sure that your opponent is not out of your
+league, you can do this by using the consider command, example:
+
+  &gt; consider rabbit
+
+This will approximately tell you how dangerous your opponent is.
+Right now you can try your strength against rabbits, skunks and badgers,
+and perhaps even risk the more dangerous fox, deer and boar.
+
+Aliases have been defined in your dictionary, they are a shorthand method
+for writing long commands, so when you spot one of the above opponents,
+you can quickly attack it, example:
+
+  &gt; kr  (to execute the kill rabbit alias)
+
+Now read chapter 3 about finding your opponents.</pre>"
+
+
+extra {"chapter 3", "chapter three"}
+"<pre>                         HOW TO GET AROUND
+
+You are just about ready, all you need is to find your way around this
+place. Your life begins in the small village of Udgaard, located between
+the ancient forest of Haon Dor and the younger Cypress Forest.
+While in Udgaard, you can get a map at any time by typing:
+
+   &gt; help
+
+The map shows you how to get to the Haon-Dor Forest as well as the
+Cypress Forest. From the village square simply go east three times to
+get to the Cypress forest, or west three times to get to the Haon Dor
+forest. Both locations are ideal for beginners such as yourself.
+
+Once in either forest, find a rabbit, a skunk, a badger or a fox
+and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,
+kb to kill a badger, etc.)
+
+Now read chapter four.</pre>"
+
+extra {"chapter 4", "chapter four"}
+"<pre>                          THE AUTOMATED TOUR
+
+If you have made it this far, you are well on your way! In Valhalla
+there is a teacher which will explain you the basics of the game. He
+can be quite boring, but if you feel more comfortable getting the
+tour, write:
+
+   &gt; say help me newbie guide
+
+when standing in the Temple of Udgaard. This will start an automated tour
+of the mud commands and the town. Now read chapter 5.</pre>"
+
+
+
+extra {"chapter 5", "chapter five"}
+
+"<pre>                           HINTS &amp; TIPS
+
+Try the following commands:
+
+  &gt; score
+  &gt; status
+  &gt; status weapons
+  &gt; status spells
+  &gt; status skills
+
+There is no need for you to visit your guild until you have earned
+a level. All your skills and abilities are set from the beginning.
+You can earn experience faster by being in a group with other players.
+
+Note that when you are in wimpy mode you only gain HALF xp but you
+significantly reduce the risk of dying. See 'help wimpy' for further
+details.
+
+If you lose your equipment, you can always pray to the statue of Odin
+in the Temple of Udgaard. Odin will grant you new equipment for that which
+is lost or missing, write this:
+
+  &gt; pray odin
+</pre>"
+
+extra {"chapter 6", "chapter six"}
+"<pre>                            HELP TOPICS
+
+The following are good help topics for beginners:
+
+   &gt; help me
+   &gt; help status
+   &gt; help score
+   &gt; help wear
+   &gt; help wimpy
+   &gt; help alias
+   &gt; help abilities
+   &gt; help weapon
+   &gt; help armour
+   &gt; help practice
+   &gt; help info
+   &gt; help index</pre>"
+end // end newbie book
+
                                paladin_book
 
 names {"Paladins Handbook", "Paladin's handbook", "handbook", "book"}
@@ -7318,7 +7487,7 @@ code
    }
    else if (pc.profession == PROFESSION_PRIEST)
    {
-      statue_load(pc, "udgaard/healer_book",  1);
+      statue_load(pc, "udgaard/newbie_book",  1);
       statue_load(pc, "udgaard/newbie_chain", 1);
       statue_load(pc, "udgaard/newbie_boots", 1);
       statue_load(pc, "udgaard/newbie_pants", 1);
@@ -7417,9 +7586,18 @@ code
       statue_load(pc, "udgaard/jerkin",           1);
       statue_load(pc, "knight/berret",            1);
    }
+   else if (pc.profession == PROFESSION_KNIGHT)
+   {
+      statue_load(pc, "udgaard/newbie_book",      1);
+      statue_load(pc, "udgaard/mystic_robes",     1);
+      statue_load(pc, "udgaard/newbie_boots",     1);
+      statue_load(pc, "udgaard/mystic_cloak",     1);
+      statue_load(pc, "udgaard/mystic_item",	  1);
+      statue_load(pc, "udgaard/short_staff",      1);
+   }
    else 
    {
-      sendtext("It's so odd, please report to admin your profession is "+itoa(pc.profession), pc);
+      sendtext("It's so odd, please report to admin your profession is "+itoa(pc.profession)+"&amp;n", pc);
    }
    unsecure(pc);
    goto start;
@@ -7778,7 +7956,49 @@ extra {}
 green."
 dilcopy guild_restrict@function ({GUILD_NYM_DRUID},0,0,"");
 end
+
+/* Mystic stuff for newbies */
+
+mystic_robes
+names {"mystic robe","pale blue robe","blue robe","robe"}
+title "a pale blue robe"
+descr "A pale blue robe lies in in the dirt here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+ARMOUR_LEATHER(0,0)
+weight 1
+extra {}
+"This robe is made from fine threads of pale blue silk."
+dilcopy guild_restrict@function ({GUILD_MID_MYSTIC},0,0,"");
+end
+
+druid_cloak
+names {"pale blue bloak","blue cloak","cloak"}
+title "a pale blue cloak"
+descr "A pale bluecloak lies heaped on the ground here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+ARMOUR_LEATHER(0,0)
+weight 1
+extra {}
+"The cloak is made of the highest quality wool, and has been dyed to a pale blue."
+dilcopy guild_restrict@function ({GUILD_MID_MYSTIC},0,0,"");
+end
+
+druid_item
+names {"sash of wisdom","sash"}
+title "the Sash of Wisdom"
+descr "A pale blue sash lies here."
+weight 1
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_WAIST}
+DIV_TRANSFER(+1)
+extra {}
+"This sash will bestow additional Divine powers to the Mystic wearing it."
+dilcopy guild_restrict@function ({GUILD_MID_MYSTIC},0,0,"");
+end
+
+/* end mystic stuff */
+
 /* knight stuff for newbies */
+
 knight_boots
 names {"suede boots","boots"}
 title "a pair of suede leather boots"
@@ -13439,8 +13659,11 @@ door accuse_room SOUTH {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
 door jail        NORTH {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
 
 
+
+
 /* EXTENDED MUD  */
 load fountain into market_sq@midgaard local 1
+remove trader@udgaard in trading_post@udgaard
 
 load bull_board into inn local 1
 
