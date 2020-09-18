@@ -13663,7 +13663,6 @@ door jail        NORTH {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
 
 /* EXTENDED MUD  */
 load fountain into market_sq@midgaard local 1
-remove trader@udgaard in trading_post@udgaard
 
 load bull_board into inn local 1
 
