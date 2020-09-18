@@ -19,7 +19,7 @@ To get help that a creator placed in the zone for his or her entire area type:
 <pre>   <a cmd='#'>help area</a>
 </pre>
 <p>Finally after you have found what you want help on just type help and
-the name of the topic and thats all there is to it.  If you use short
+the name of the topic and that's all there is to it.  If you use short
 hand you may or may not get what you are looking for because it matches
 with the first item alphabetically it can.  For example:
 </p>
@@ -29,9 +29,9 @@ with the first item alphabetically it can.  For example:
 </pre>
 <p>All will come up with the same thing but to get help on 'midgaard Paladins' you have to do:
 </p>
-<pre> &gt; help <a cmd='#'>midgaard p</a>
- &gt; help <a cmd='#'>midgaard pal</a>
- &gt; help <a cmd='#'>midgaard paladins</a>
+<pre> &gt; <a cmd='#'>help midgaard p</a>
+ &gt; <a cmd='#'>help midgaard pal</a>
+ &gt; <a cmd='#'>help midgaard paladins</a>
 </pre>
 
 
