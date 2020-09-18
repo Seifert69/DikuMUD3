@@ -126,6 +126,7 @@ void runechoserver(void)
         echo_server.set_message_handler(bind(&on_message, &echo_server, ::_1, ::_2));
 
         // Listen on port
+        echo_server.set_reuse_addr(true);
         echo_server.listen(mplex_arg.nMotherPort);
 
         // Start the server accept loop
