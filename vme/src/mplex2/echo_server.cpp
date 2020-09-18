@@ -6,6 +6,7 @@
 
 #include "mplex.h"
 #include "ClientConnector.h"
+#include "textutil.h"
 
 //typedef websocketpp::server<websocketpp::config::asio> wsserver;
 
@@ -53,75 +54,12 @@ void on_close(websocketpp::connection_hdl hdl)
 }
 
 
-// This function removes any invalid characters not permitted on websockets
-void cleanstring(std::string &data) {
-    std::string buffer;
-    buffer.reserve(data.size()*1.1);
-    int m_nEscapeCode = 0;
-
-    for(size_t pos = 0; pos < data.size(); ++pos)
-    {
-        if ((data[pos] & 0x80) == 0) // lead bit is zero, must be a single ascii
-        {
-            // I can soon remove this.
-            if (data[pos] == '\x1B')
-            {
-                m_nEscapeCode = 1;
-                continue;
-            }
-
-            if (m_nEscapeCode > 0)
-            {
-                if (m_nEscapeCode == 1)
-                {
-                    if (data[pos] == '[')
-                    {
-                        m_nEscapeCode++;
-                        continue;
-                    }
-                }
-                else if (m_nEscapeCode == 2)
-                {
-                    if (data[pos] == 'D')
-                    {
-                        m_nEscapeCode = 0;
-                        continue;
-                    }
-                }
-                else
-                    m_nEscapeCode = 0;
-            }
-            if (data[pos] < 32)
-            {
-                // I should soon remove this too.
-                if (data[pos] == '\n') // || (data[pos] == '\r'))
-                    buffer.append(" ", 1);
-                    //buffer.append(&data[pos], 1);
-                continue;
-            }
-        }
-
-        /*
-        switch(data[pos]) {
-            case '&':  buffer.append("&amp;");       break;
-            case '\"': buffer.append("&quot;");      break;
-            case '\'': buffer.append("&apos;");      break;
-            case '<':  buffer.append("&lt;");        break;
-            case '>':  buffer.append("&gt;");        break;
-            default:   buffer.append(&data[pos], 1); break;
-        }*/
-        buffer.append(&data[pos], 1);
-    }
-    data.swap(buffer);
-}
-
-
 // send message back to websocket client: 1 is message sent, 0 if failure
 int ws_send_message(wsserver *s, websocketpp::connection_hdl hdl, const char *txt)
 {
     std::string mystr(txt);
 
-    cleanstring(mystr);
+    str_correct_utf8(mystr);
 
     try {
         s->send(hdl, mystr.c_str(), mystr.length(), websocketpp::frame::opcode::text);
