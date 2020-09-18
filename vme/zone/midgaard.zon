@@ -25,70 +25,70 @@ was replaced by Udgaard.
 from nebwie area to fjord by players.*/ "
 
 help
-"<pre>             North Midgaard<br/>
-<br/>
-                    1 1 1 1 1 1 1 1 1 1 1 1 1<br/>
-  1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2<br/>
-<br/>
-A                     @<br/>
-                      |<br/>
-B     R             R-#-R             R<br/>
-      |               |               |<br/>
-C     W-------W-------W-------W-------D        Cathedral            F11<br/>
-      |       |       |       |       |<br/>
-D     |       |       #       |       |        Shops<br/>
-      |       |       |       |       |          Magic Shop         E16<br/>
-E     |       #     #-#-#     #-S     |          Tailor Shop        G16<br/>
-      |       |     |   |     |       |          Pet Shop           H05<br/>
-F     W       |   G-# C #-G   |       W          Leather Shop       H17<br/>
-      |    G  |     | | |     |       |          Ironmonger's Shop  J05<br/>
-G     |     I-#-----#-#-#-----#-S     |          Baker's Shop       J07<br/>
-      |       |       | |     |       |          Greengrocer's Shop J09<br/>
-H   R |   S   |   O   | G O   |   S   | R        Butcher's Shop     J17<br/>
-    | |   |   |   |   |   |   |   |   | |        Boat Shop          L06<br/>
-I @-#-W---#---#---#---#---#---#---#---W-#-@      Fish Shop          L08<br/>
-    | |   |   |   |   |   |   |   |   | |        Armour's Shop      Q09<br/>
-J   R |   S   S   S   |   T   |   S   | R        Mortican's Shop    S05<br/>
-      |               |       |       |          Blacksmith's Shop  S09<br/>
-K     |               #-I   O-#       |          Carpenter's Shop   T05<br/>
-      |               |       |       |          Weaponsmith's Shop T08<br/>
-L     |     S   S     |       |       |          Jeweller's Shop    T14<br/>
-      |     |   |     |       |       |          Bank               T16<br/>
-M     W-----#-#-#-----#---#---#---#---W          Item Storage       T17<br/>
-      |       |       |               |<br/>
-N     W       #       #               W        Inns<br/>
-      |               |               |          Grunting Boar      K12<br/>
-                                                 Filthy's           G06<br/>
-   South Midgaard.                               Park Cafe          S14<br/>
-                    1 1 1 1 1 1 1 1 1 1 1 1<br/>
-  1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1<br/>
-                                               Guilds<br/>
-      |               |               |          Paladins           F09<br/>
-O     W---#---#---#---#---#---#---#---W          Sorcerors          Y03<br/>
-      |       |       |       |       |          Healers            U06<br/>
-P     |       #       #       #       |          Thieves            G06<br/>
-      |       |       |       |       |          Mage               H12<br/>
-Q     |   S-#-#-#-G   |     #-#-#     |        Connections<br/>  
-      |     |   |     |     |   |     |          Kings Road         I21<br/>
-R     D-#-#-# C #-#-#-#-#-#-#-# #-#-#-W          Etz-Nab Woods      Z11<br/>
-      |     | | |     |       | |     |          Palace             U11<br/>
-S     |   S-#-#-#-S   #     I-#-#     |          Cypress Forest     I01<br/>
-      |     | | |     |       |       |          The Moor           A11<br/>
-T     |     S # S   #-#-#   S-#-O-T   |          <br/>
-      |       |     | | |     |       |          D - sewer manhole<br/>
-U     |     G-#-----# P #-----#       |          R - the rampart walls<br/>
-      |       |     |   |     |       |          of Midgaard<br/>
-V     |       #     #-#-#     #       |<br/>
-      |       |       |       |       |<br/>
-W     |       #       #       #       |<br/>
-      |       |       |       |       |<br/>
-X     W-------W-------G-------W-------W<br/>
-      |               |       <br/>
-Y     G             R-#-R     <br/>
-                      |<br/>
-Z                     @<br/>
-<br/>
-Artist: Tarus the Rabbit Slayer<br/>
+"<pre>             North Midgaard
+
+                    1 1 1 1 1 1 1 1 1 1 1 1 1
+  1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2
+
+A                     @
+                      |
+B     R             R-#-R             R
+      |               |               |
+C     W-------W-------W-------W-------D        Cathedral            F11
+      |       |       |       |       |
+D     |       |       #       |       |        Shops
+      |       |       |       |       |          Magic Shop         E16
+E     |       #     #-#-#     #-S     |          Tailor Shop        G16
+      |       |     |   |     |       |          Pet Shop           H05
+F     W       |   G-# C #-G   |       W          Leather Shop       H17
+      |    G  |     | | |     |       |          Ironmonger's Shop  J05
+G     |     I-#-----#-#-#-----#-S     |          Baker's Shop       J07
+      |       |       | |     |       |          Greengrocer's Shop J09
+H   R |   S   |   O   | G O   |   S   | R        Butcher's Shop     J17
+    | |   |   |   |   |   |   |   |   | |        Boat Shop          L06
+I @-#-W---#---#---#---#---#---#---#---W-#-@      Fish Shop          L08
+    | |   |   |   |   |   |   |   |   | |        Armour's Shop      Q09
+J   R |   S   S   S   |   T   |   S   | R        Mortican's Shop    S05
+      |               |       |       |          Blacksmith's Shop  S09
+K     |               #-I   O-#       |          Carpenter's Shop   T05
+      |               |       |       |          Weaponsmith's Shop T08
+L     |     S   S     |       |       |          Jeweller's Shop    T14
+      |     |   |     |       |       |          Bank               T16
+M     W-----#-#-#-----#---#---#---#---W          Item Storage       T17
+      |       |       |               |
+N     W       #       #               W        Inns
+      |               |               |          Grunting Boar      K12
+                                                 Filthy's           G06
+   South Midgaard.                               Park Cafe          S14
+                    1 1 1 1 1 1 1 1 1 1 1 1
+  1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+                                               Guilds
+      |               |               |          Paladins           F09
+O     W---#---#---#---#---#---#---#---W          Sorcerors          Y03
+      |       |       |       |       |          Healers            U06
+P     |       #       #       #       |          Thieves            G06
+      |       |       |       |       |          Mage               H12
+Q     |   S-#-#-#-G   |     #-#-#     |        Connections  
+      |     |   |     |     |   |     |          Kings Road         I21
+R     D-#-#-# C #-#-#-#-#-#-#-# #-#-#-W          Etz-Nab Woods      Z11
+      |     | | |     |       | |     |          Palace             U11
+S     |   S-#-#-#-S   #     I-#-#     |          Cypress Forest     I01
+      |     | | |     |       |       |          The Moor           A11
+T     |     S # S   #-#-#   S-#-O-T   |          
+      |       |     | | |     |       |          D - sewer manhole
+U     |     G-#-----# P #-----#       |          R - the rampart walls
+      |       |     |   |     |       |          of Midgaard
+V     |       #     #-#-#     #       |
+      |       |       |       |       |
+W     |       #       #       #       |
+      |       |       |       |       |
+X     W-------W-------G-------W-------W
+      |               |       
+Y     G             R-#-R     
+                      |
+Z                     @
+
+Artist: Tarus the Rabbit Slayer
 Zone by Papi and Quifael </pre>"
 
 %dil
@@ -4378,9 +4378,9 @@ west to mag_yard open {EX_OPEN_CLOSE} keyword {"door"};
 north to mag_n_stair1;
 south to mag_s_stair1;
 extra {"plate","words", "sign"}
-"It says :-<pre><br/>
-                        The Midgaard Academy of Magic<br/>
-<br/>
+"It says :-<pre>
+                        The Midgaard Academy of Magic
+
                             In Memorial Rofomagus</pre>"
 ALWAYS_LIGHT
 end
@@ -5092,42 +5092,41 @@ of the store.<br/>
 A <a cmd='read #'>sign</a> hanging in the window offers some info on the workmanship prices.<br/>
 A small note is fastened underneath the sign."
 extra {"sign in the window","sign","window"}
-"<pre>The sign proclaims:<br/>
-<br/>
-		------------------------------------------<br/>
-			Veejays Engraving Services<br/>
-<br/>
-<div class='cpr'> 	Engraving (max.10 letters)	:	min. 5 GP</div><div class='cw'><br/>
-<br/>
-   Note that the engraving cost increases sharply for magical items.<br/>
-   The engraving is permanent and cannot be removed or remade.<br/>
-   The engraving will be easily visible on the item (title as well<br/>
-   as description).<br/>
-<br/>
-   Give the item in question to Veejay to engrave it with the text<br/>
-   of your choice. Please note that some items cannot be engraved.<br/>
-		------------------------------------------<br/>
-<br/>
-A small note at the bottom of the sign demands your immediate attention.<br/>
-<br/>
+"<pre>The sign proclaims:
+
+		------------------------------------------
+			Veejays Engraving Services
+
+<div class='cpr'> 	Engraving (max.10 letters)	:	min. 5 GP</div><div class='cw'>
+
+   Note that the engraving cost increases sharply for magical items.
+   The engraving is permanent and cannot be removed or remade.
+   The engraving will be easily visible on the item (title as well
+   as description).
+
+   Give the item in question to Veejay to engrave it with the text
+   of your choice. Please note that some items cannot be engraved.
+		------------------------------------------
+
+A small note at the bottom of the sign demands your immediate attention.
+
 &f</div></pre>"
 extra {"note fastened to the sign","note"}
-"<pre>The note reads:<br/>
-<br/>
-<div class='cpr'>				Warning!</div><div class='cw'><br/>
-<br/>
-	In some cases, the engraving can cause problems in<br/>
-	highly magical or Quest-related items (mainly if the<br/>
-	creator of the item uses its title or description in<br/>
-	DIL programs). If you encounter a problem using an<br/>
-	engraved item, report the problem through the God<br/>
-	Assistance Board and replace your item for a new one.<br/>
-<br/>
-				Thank you.<br/>
-<br/>
-		Sk(r)ay the Speaker for the Artisans.<br/>
-<br/>
-&f</div></pre>"
+"<pre>The note reads:
+
+<div class='cpr'>				Warning!</div><div class='cw'>
+
+	In some cases, the engraving can cause problems in
+	highly magical or Quest-related items (mainly if the
+	creator of the item uses its title or description in
+	DIL programs). If you encounter a problem using an
+	engraved item, report the problem through the God
+	Assistance Board and replace your item for a new one.
+
+				Thank you.
+
+		Sk(r)ay the Speaker for the Artisans.
+</div></pre>"
 extra {"dwarf and the gnome in the workshop","dwarf","gnome","workshop"}
 "They both appear very busy and hard at work. Better not bother them or
 your job will take even longer.<br/>"
@@ -5154,12 +5153,12 @@ extra {"tool", "tools", "shelf", "shelves"}
 "The tools on the shelves are of all shapes and sizes, from needles to
 sledgehammers."
 extra {"sign"}
-"It says :-<pre><br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;item&gt;' to buy an item,<br/>
-        `sell &lt;item&gt;' to sell an item,<br/>
-        `request &lt;item&gt;' to ask the price of an item and<br/>
+"It says :-<pre>
+
+    Use `list' to see what is in store,
+        `buy &lt;item&gt;' to buy an item,
+        `sell &lt;item&gt;' to sell an item,
+        `request &lt;item&gt;' to ask the price of an item and
         `value &lt;item&gt;' to make the armourer evaluate an item.</pre>"
 
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -5180,12 +5179,12 @@ are built into the south wall.  A simple, but very large, desk stands in the
 middle of the room and on the other side are numerous baskets containing bread
 and pastry.  A <a cmd='read #'>sign</a> stands on the desk."
 extra {"sign"}
-"It says :-<pre><br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;item&gt;' to buy an item,<br/>
-        `sell &lt;item&gt;' to sell an item,<br/>
-        `request &lt;item&gt;' to ask the price of an item and<br/>
+"It says :-<pre>
+
+    Use `list' to see what is in store,
+        `buy &lt;item&gt;' to buy an item,
+        `sell &lt;item&gt;' to sell an item,
+        `request &lt;item&gt;' to ask the price of an item and
         `value &lt;item&gt;' to make the baker evaluate an item.</pre>"
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -5213,13 +5212,13 @@ doesn't seem to be any way possible to pry one open."
 extra {"floors"}
 "Yup it's a well polished marble floor. Neat, eh?"
 extra {"sign"}
-"<pre><br/>
-The Sign Says:<br/>
-<br/>
--rent [container]<br/>
--store &lt;ITEM&gt;<br/>
--unstore &lt;ITEM&gt;<br/>
--storage [list]<br/>
+"<pre>
+The Sign Says:
+
+-rent [container]
+-store &lt;ITEM&gt;
+-unstore &lt;ITEM&gt;
+-storage [list]
 </pre>"
 
 flags {UNIT_FL_NO_WEATHER}
@@ -5242,15 +5241,15 @@ leads around the tellers to the east.  The door is to the
 west, and a <a cmd='read #'>sign</a> hangs on the wall between the windows."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 extra {"sign"}
-"It says :-<pre><br/>
-                         The Bank of Midgaard<br/>
-<br/>
-                We stash your cash and hold your gold<br/>
-<br/>
-    Use `deposit &lt;amount&gt;' to deposit,<br/>
-        `withdraw &lt;amount&gt;' to withdraw,<br/>
-        `balance' to get a statement of your account,<br/>
-        `exchange &lt;amount&gt;' to either split up a big coin or fuse smaller and<br/>
+"It says :-<pre>
+                         The Bank of Midgaard
+
+                We stash your cash and hold your gold
+
+    Use `deposit &lt;amount&gt;' to deposit,
+        `withdraw &lt;amount&gt;' to withdraw,
+        `balance' to get a statement of your account,
+        `exchange &lt;amount&gt;' to either split up a big coin or fuse smaller and
         `exchange &lt;amount&gt; to &lt;money type&gt;' to exchange specifically.</pre>"
 movement SECT_CITY
 gmap(617,957)
@@ -5274,12 +5273,12 @@ movement SECT_INSIDE
 gmap(237,562)
 south to wharf1;
 extra {"sign"}
-"It says :-<pre><br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;item&gt;' to buy an item,<br/>
-        `sell &lt;item&gt;' to sell an item,<br/>
-        `request &lt;item&gt;' to ask the price of an item and<br/>
+"It says :-<pre>
+
+    Use `list' to see what is in store,
+        `buy &lt;item&gt;' to buy an item,
+        `sell &lt;item&gt;' to sell an item,
+        `request &lt;item&gt;' to ask the price of an item and
         `value &lt;item&gt;' to make the captain evaluate an item.</pre>"
 ALWAYS_LIGHT
 end
@@ -5301,14 +5300,14 @@ west to col_sq5;
 ALWAYS_LIGHT
 
 extra {"sign", "wall"}
-"It says :-<pre><br/>
-<br/>
-    The smith has retired from active work but will estimate the quality<br/>
-    of your equipment for a very reasonable price.<br/>
-<br/>
-    Use `evaluate &lt;item&gt;' to make the smith evaluate the quality of a<br/>
-    weapon, armour or shield.<br/>
-<br/>
+"It says :-<pre>
+
+    The smith has retired from active work but will estimate the quality
+    of your equipment for a very reasonable price.
+
+    Use `evaluate &lt;item&gt;' to make the smith evaluate the quality of a
+    weapon, armour or shield.
+
     Use  `give &lt;item&gt; Sam to have an item resized.</pre>"
 
 extra {"$metal room"}
@@ -5331,11 +5330,11 @@ movement SECT_INSIDE
 gmap(674,534)
 north to main_st6;
 extra {"sign"}
-"It says :-<pre><br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;item&gt;' to buy something,<br/>
-        `sell &lt;item&gt;' to sell something and<br/>
+"It says :-<pre>
+
+    Use `list' to see what is in store,
+        `buy &lt;item&gt;' to buy something,
+        `sell &lt;item&gt;' to sell something and
         `value &lt;item&gt;' to make the butcher evaluate something.</pre>"
 ALWAYS_LIGHT
 end
@@ -5354,14 +5353,14 @@ movement SECT_INSIDE
 gmap(337,899)
 north to col_sq7;
 extra {"sign"}
-"It says :-<pre><br/>
-<br/>
-                  OUT OF ORDER<br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;item&gt;' to buy an item,<br/>
-        `sell &lt;item&gt;' to sell an item,<br/>
-        `request &lt;item&gt;' to ask the price of an item and<br/>
+"It says :-<pre>
+
+                  OUT OF ORDER
+
+    Use `list' to see what is in store,
+        `buy &lt;item&gt;' to buy an item,
+        `sell &lt;item&gt;' to sell an item,
+        `request &lt;item&gt;' to ask the price of an item and
         `value &lt;item&gt;' to make the carpenter evaluate an item.</pre>"
 ALWAYS_LIGHT
 end
@@ -5381,11 +5380,11 @@ movement SECT_INSIDE
 gmap(395,562)
 south to wharf3;
 extra {"sign"}
-"It says :-<pre><br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;item&gt;' to buy something,<br/>
-        `sell &lt;item&gt;' to sell something and<br/>
+"It says :-<pre>
+
+    Use `list' to see what is in store,
+        `buy &lt;item&gt;' to buy something,
+        `sell &lt;item&gt;' to sell something and
         `value &lt;item&gt;' to make the fishmonger evaluate something.</pre>"
 ALWAYS_LIGHT
 end
@@ -5404,11 +5403,11 @@ movement SECT_INSIDE
 gmap(373,533)
 north to main_st3;
 extra {"sign"}
-"It says :-<pre><br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;item&gt;' to buy something,<br/>
-        `sell &lt;item&gt;' to sell something and<br/>
+"It says :-<pre>
+
+    Use `list' to see what is in store,
+        `buy &lt;item&gt;' to buy something,
+        `sell &lt;item&gt;' to sell something and
         `value &lt;item&gt;' to make the greengrocer evaluate something.</pre>"
 ALWAYS_LIGHT
 end
@@ -5427,11 +5426,11 @@ movement SECT_INSIDE
 gmap(215,533)
 north to main_st1;
 extra {"sign"}
-"It says :-<pre><br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;item&gt;' to buy something,<br/>
-        `sell &lt;item&gt;' to sell something and<br/>
+"It says :-<pre>
+
+    Use `list' to see what is in store,
+        `buy &lt;item&gt;' to buy something,
+        `sell &lt;item&gt;' to sell something and
         `value &lt;item&gt;' to make the ironmonger evaluate something.</pre>"
 ALWAYS_LIGHT
 end
@@ -5456,13 +5455,13 @@ to the smooth stone walls."
 extra {"desk"}
 "Your face is reflected in its surface."
 extra {"sign"}
-"The golden letters say :-<pre><br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;item&gt;' to buy an item,<br/>
-        `sell &lt;item&gt;' to sell an item,<br/>
-        `request &lt;item&gt;' to ask the price of an item and<br/>
-        `value &lt;item&gt;' to make the jeweller evaluate an item.<br/>
+"The golden letters say :-<pre>
+
+    Use `list' to see what is in store,
+        `buy &lt;item&gt;' to buy an item,
+        `sell &lt;item&gt;' to sell an item,
+        `request &lt;item&gt;' to ask the price of an item and
+        `value &lt;item&gt;' to make the jeweller evaluate an item.
         `give &lt;item&gt; Janet to have an item resized.</pre>"
 
 ALWAYS_LIGHT
@@ -5495,13 +5494,13 @@ the table surface, tallow flowing down its sides."
 extra {"pot"}
 "Several large pieces of leather hide are boiling in the iron pot."
 extra {"sign"}
-"The wooden sign says :-<pre><br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;item&gt;' to buy an item,<br/>
-        `sell &lt;item&gt;' to sell an item,<br/>
-        `request &lt;item&gt;' to ask the price of an item<br/>
-        `value &lt;item&gt;' to make the leather worker evaluate an item and<br/>
+"The wooden sign says :-<pre>
+
+    Use `list' to see what is in store,
+        `buy &lt;item&gt;' to buy an item,
+        `sell &lt;item&gt;' to sell an item,
+        `request &lt;item&gt;' to ask the price of an item
+        `value &lt;item&gt;' to make the leather worker evaluate an item and
         `give &lt;item&gt; Myrna to have an item resized.</pre>"
 ALWAYS_LIGHT
 
@@ -5522,12 +5521,12 @@ movement SECT_INSIDE
 gmap(646,297)
 west to tailor_st2;
 extra {"sign"}
-"It says :-<pre><br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;item&gt;' to buy an item,<br/>
-        `sell &lt;item&gt;' to sell an item,<br/>
-        `request &lt;item&gt;' to ask the price of an item and<br/>
+"It says :-<pre>
+
+    Use `list' to see what is in store,
+        `buy &lt;item&gt;' to buy an item,
+        `sell &lt;item&gt;' to sell an item,
+        `request &lt;item&gt;' to ask the price of an item and
         `value &lt;item&gt;' to make Esmerelda evaluate an item.</pre>"
 ALWAYS_LIGHT
 end
@@ -5547,12 +5546,12 @@ movement SECT_INSIDE
 gmap(315,878)
 east to col_sq7;
 extra {"sign"}
-"It says :-<pre><br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;item&gt;' to buy something,<br/>
-        `sell &lt;item&gt;' to sell something,<br/>
-        `request &lt;item&gt;' to ask the price of something and<br/>
+"It says :-<pre>
+
+    Use `list' to see what is in store,
+        `buy &lt;item&gt;' to buy something,
+        `sell &lt;item&gt;' to sell something,
+        `request &lt;item&gt;' to ask the price of something and
         `value &lt;item&gt;' to make the mortician evaluate something.</pre>"
 ALWAYS_LIGHT
 end
@@ -5571,12 +5570,12 @@ movement SECT_INSIDE
 gmap(567,879)
 east to park4;
 extra {"sign"}
-"It says :-<pre><br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;item&gt;' to buy something,<br/>
-        `sell &lt;item&gt;' to sell something,<br/>
-        `request &lt;item&gt;' to ask the price of something and<br/>
+"It says :-<pre>
+
+    Use `list' to see what is in store,
+        `buy &lt;item&gt;' to buy something,
+        `sell &lt;item&gt;' to sell something,
+        `request &lt;item&gt;' to ask the price of something and
         `value &lt;item&gt;' to make the maid evaluate something.</pre>"
 ALWAYS_LIGHT
 end
@@ -5596,12 +5595,12 @@ movement SECT_INSIDE
 gmap(215,475)
 south to main_st1;
 extra {"sign"}
-"It says :-<pre><br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;pet&gt;' to buy a pet,<br/>
-        `sell &lt;pet&gt;' to sell a pet,<br/>
-        `request &lt;item&gt;' to ask the price of a pet and<br/>
+"It says :-<pre>
+
+    Use `list' to see what is in store,
+        `buy &lt;pet&gt;' to buy a pet,
+        `sell &lt;pet&gt;' to sell a pet,
+        `request &lt;item&gt;' to ask the price of a pet and
         `value &lt;pet&gt;' to make the pet shop boy evaluate a pet.</pre>"
 ALWAYS_LIGHT
 end
@@ -5620,8 +5619,8 @@ movement SECT_INSIDE
 gmap(596,562)
 east to tailor_st3;
 extra {"sign"}
-"   Use<pre><br/>
-      `mail &lt;letter&gt; &lt;person&gt;' to send a letter to somebody.<br/>
+"   Use<pre>
+      `mail &lt;letter&gt; &lt;person&gt;' to send a letter to somebody.
       `request' to get your mail. </pre>"
      // `eat <letter>' to erase the letter permanently."
 ALWAYS_LIGHT
@@ -5645,13 +5644,13 @@ movement SECT_INSIDE
 gmap(645,403)
 west to tailor_st1;
 extra {"sign"}
-"It says :-<pre><br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;item&gt;' to buy something,<br/>
-        `sell &lt;item&gt;' to sell something,<br/>
-        `request &lt;item&gt;' to ask the price of something,<br/>
-        `value &lt;item&gt;' to make the tailor evaluate something and<br/>
+"It says :-<pre>
+
+    Use `list' to see what is in store,
+        `buy &lt;item&gt;' to buy something,
+        `sell &lt;item&gt;' to sell something,
+        `request &lt;item&gt;' to ask the price of something,
+        `value &lt;item&gt;' to make the tailor evaluate something and
         `give &lt;item&gt; Tom to have your item resized.</pre>"
 ALWAYS_LIGHT
 
@@ -5677,12 +5676,12 @@ extra {"anvil"} "The anvils appears very used."
 extra {"bellows"}
 "The bellows are used for heating the forge by blowing air into the fire."
 extra {"sign"}
-"It says :-<pre><br/>
-<br/>
-    Use `list' to see what is in store,<br/>
-        `buy &lt;item&gt;' to buy something,<br/>
-        `sell &lt;item&gt;' to sell something,<br/>
-        `request &lt;item&gt;' to ask the price of something and<br/>
+"It says :-<pre>
+
+    Use `list' to see what is in store,
+        `buy &lt;item&gt;' to buy something,
+        `sell &lt;item&gt;' to sell something,
+        `request &lt;item&gt;' to ask the price of something and
         `value &lt;item&gt;' to make the weaponsmith evaluate something.</pre>"
 ALWAYS_LIGHT
 end
@@ -8247,11 +8246,11 @@ names{"trash bag","bag"}
 title "a trash bag"
 descr "a large trash bag has been dropped here."
 extra {}
- "<pre>This large black bag is commonly used for trash.<br/>
+ "<pre>This large black bag is commonly used for trash.
 There is some writing printed on it.</pre>"
 extra {"writing"}
-"<pre>           <div class='cpw'>/-------------------\</div><div class='cw'><br/>
-           </div><div class='cpw'>|</div><div class='cw'> </div><div class='cpr'>M</div><div class='cr'>idgaard</div><div class='cw'> </div><div class='cpr'>D</div><div class='cr'>isposal </div><div class='cpw'>|</div><div class='cw'><br/>
+"<pre>           <div class='cpw'>/-------------------\</div><div class='cw'>
+           </div><div class='cpw'>|</div><div class='cw'> </div><div class='cpr'>M</div><div class='cr'>idgaard</div><div class='cw'> </div><div class='cpr'>D</div><div class='cr'>isposal </div><div class='cpw'>|</div><div class='cw'>
            </div><div class='cpw'>\-------------------/</div><div class='cw'></div></pre>"
 CONTAINER_DEF(5000)
 type ITEM_CONTAINER
@@ -8315,17 +8314,17 @@ names {"large sign","sign"}
 title "a large sign"
 descr "A large sign sways gently in front of the engraving shop to the east."
 extra {}
-"<pre>The sign proclaims:<div class='cpw'><br/>
-			_	  _<br/>
- 	 ______________(_))______(_))_____________<br/>
-	[					  ]]<br/>
-	[   	Veejay's Engraving Services.	  ]]<br/>
-	[  ------------------------------------&gt;  ]]<br/>
-	[	  Personalize your outfit!	  ]]<br/>
-	[	    Dazzle your friends!	  ]]<br/>
-	[	   Suprise your loved one!	  ]]<br/>
-	[_________________________________________]]</div><div class='cw'><br/>
-<br/>
+"<pre>The sign proclaims:<div class='cpw'>
+			_	  _
+ 	 ______________(_))______(_))_____________
+	[					  ]]
+	[   	Veejay's Engraving Services.	  ]]
+	[  ------------------------------------&gt;  ]]
+	[	  Personalize your outfit!	  ]]
+	[	    Dazzle your friends!	  ]]
+	[	   Suprise your loved one!	  ]]
+	[_________________________________________]]</div><div class='cw'>
+
 &f</div></pre>"
 weight 20
 
@@ -8581,10 +8580,10 @@ weight 1
 cost 20 GOLD_PIECE
 SCROLL_DEF(50, SPL_LIGHT_2, SPL_NONE, SPL_NONE)
 extra {}
-"The scroll has a magic formula drawn upon it:<pre><br/>
-<br/>
-                     \|/<br/>
-                     -:-<br/>
+"The scroll has a magic formula drawn upon it:<pre>
+
+                     \|/
+                     -:-
                      /|\ </pre>"
 end
 
@@ -9918,7 +9917,7 @@ extra {"pedestal"}
 extra {"signatures", "signature", "blood", "pages", "page"}
 "The recognize many of the names written on the book's pages.
 In fact, many ring out in your memory, these are the names of
-outlaws!<br/>
+outlaws!
 _____________________________________________________________<br/>"
 
 type ITEM_BOOK
@@ -10080,69 +10079,69 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 weight 1
 cost 18   IRON_PIECE
 extra {}
-"<pre>             North Midgaard<br/>
-<br/>
-                    1 1 1 1 1 1 1 1 1 1 1 1 1<br/>
-  1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2<br/>
-<br/>
-A                     @<br/>
-                      |<br/>
-B     R             R-#-R             R<br/>
-      |               |               |<br/>
-C     W-------W-------W-------W-------D        Cathedral            F11<br/>
-      |       |       |       |       |<br/>
-D     |       |       #       |       |        Shops<br/>
-      |       |       |       |       |          Magic Shop         E16<br/>
-E     |       #     #-#-#     #-S     |          Tailor Shop        G16<br/>
-      |       |     |   |     |       |          Pet Shop           H05<br/>
-F     W       |   G-# C #-G   |       W          Leather Shop       H17<br/>
-      |       |     | | |     |       |          Ironmonger's Shop  J05<br/>
-G     |     I-#-----#-#-#-----#-S     |          Baker's Shop       J07<br/>
-      |       |       |       |       |          Greengrocer's Shop J09<br/>
-H   R |   S   |   O   |   O   |   S   | R        Butcher's Shop     J17<br/>
-    | |   |   |   |   |   |   |   |   | |        Boat Shop          L06<br/>
-I @-#-W---#---#---#---#---#---#---#---W-#-@      Fish Shop          L08<br/>
-    | |   |   |   |   |   |   |   |   | |        Armour's Shop      Q09<br/>
-J   R |   S   S   S   |   T   |   S   | R        Mortican's Shop    S05<br/>
-      |               |       |       |          Blacksmith's Shop  S09<br/>
-K     |               #-I   O-#       |          Carpenter's Shop   T05<br/>
-      |               |       |       |          Weaponsmith's Shop T08<br/>
-L     |     S   S     |       |       |          Jeweller's Shop    T14<br/>
-      |     |   |     |       |       |<br/>
-M     W-----#-#-#-----#---#---#---#---W        Inns<br/>
-      |       |       |               |          Grunting Boar      K12<br/>
-N     W       #       #               W          Filthy's           G06<br/>
-      |               |               |          Park Cafe          S14<br/>
-<br/>
-   South Midgaard.                             Guilds<br/>
-                    1 1 1 1 1 1 1 1 1 1 1 1      Paladins           F09<br/>
-  1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1      Sorcerors          Y03<br/>
-<br/>
-      |               |               |        Connections<br/>
-O     W---#---#---#---#---#---#---#---W          Cypress Forest     I01<br/>
-      |       |       |       |       |          The Moor           A11<br/>
-P     |       #       #       #       |          Kings Road         I21<br/>
-      |       |       |       |       |          Etz-Nab Woods      Z11<br/>
-Q     |     #-#-#-S   |     #-#-#     |          Palace             U11<br/>
-      |     |   |     |     |   |     |<br/>
-R     D-#-#-# C #-#-#-#-#-#-#-# #-#-#-W          D - manhole to the<br/>
-      |     | | |     |       | |     |          sewers<br/>
-S     |   S-#-#-#-S   #     I-#-#     |<br/>
-      |     | | |     |       |       |          R - the rampart walls<br/>
-T     |     S # S   #-#-#   S-#-O     |          of Midgaard<br/>
-      |       |     | | |     |       |<br/>
-U     |       #-----# P #-----#       |<br/>
-      |       |     |   |     |       |<br/>
-V     |       #     #-#-#     #       |<br/>
-      |       |       |       |       |<br/>
-W     |       #       #       #       |<br/>
-      |       |       |       |       |<br/>
-X     W-------W-------G-------W-------W<br/>
-      |               |<br/>
-Y     G             R-#-R<br/>
-                      |<br/>
-Z                     @<br/>
-<br/>
+"<pre>             North Midgaard
+
+                    1 1 1 1 1 1 1 1 1 1 1 1 1
+  1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2
+
+A                     @
+                      |
+B     R             R-#-R             R
+      |               |               |
+C     W-------W-------W-------W-------D        Cathedral            F11
+      |       |       |       |       |
+D     |       |       #       |       |        Shops
+      |       |       |       |       |          Magic Shop         E16
+E     |       #     #-#-#     #-S     |          Tailor Shop        G16
+      |       |     |   |     |       |          Pet Shop           H05
+F     W       |   G-# C #-G   |       W          Leather Shop       H17
+      |       |     | | |     |       |          Ironmonger's Shop  J05
+G     |     I-#-----#-#-#-----#-S     |          Baker's Shop       J07
+      |       |       |       |       |          Greengrocer's Shop J09
+H   R |   S   |   O   |   O   |   S   | R        Butcher's Shop     J17
+    | |   |   |   |   |   |   |   |   | |        Boat Shop          L06
+I @-#-W---#---#---#---#---#---#---#---W-#-@      Fish Shop          L08
+    | |   |   |   |   |   |   |   |   | |        Armour's Shop      Q09
+J   R |   S   S   S   |   T   |   S   | R        Mortican's Shop    S05
+      |               |       |       |          Blacksmith's Shop  S09
+K     |               #-I   O-#       |          Carpenter's Shop   T05
+      |               |       |       |          Weaponsmith's Shop T08
+L     |     S   S     |       |       |          Jeweller's Shop    T14
+      |     |   |     |       |       |
+M     W-----#-#-#-----#---#---#---#---W        Inns
+      |       |       |               |          Grunting Boar      K12
+N     W       #       #               W          Filthy's           G06
+      |               |               |          Park Cafe          S14
+
+   South Midgaard.                             Guilds
+                    1 1 1 1 1 1 1 1 1 1 1 1      Paladins           F09
+  1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1      Sorcerors          Y03
+
+      |               |               |        Connections
+O     W---#---#---#---#---#---#---#---W          Cypress Forest     I01
+      |       |       |       |       |          The Moor           A11
+P     |       #       #       #       |          Kings Road         I21
+      |       |       |       |       |          Etz-Nab Woods      Z11
+Q     |     #-#-#-S   |     #-#-#     |          Palace             U11
+      |     |   |     |     |   |     |
+R     D-#-#-# C #-#-#-#-#-#-#-# #-#-#-W          D - manhole to the
+      |     | | |     |       | |     |          sewers
+S     |   S-#-#-#-S   #     I-#-#     |
+      |     | | |     |       |       |          R - the rampart walls
+T     |     S # S   #-#-#   S-#-O     |          of Midgaard
+      |       |     | | |     |       |
+U     |       #-----# P #-----#       |
+      |       |     |   |     |       |
+V     |       #     #-#-#     #       |
+      |       |       |       |       |
+W     |       #       #       #       |
+      |       |       |       |       |
+X     W-------W-------G-------W-------W
+      |               |
+Y     G             R-#-R
+                      |
+Z                     @
+
 Artist: Tarus the Rabbit Slayer</pre>"
 end
 
