@@ -1,21 +1,25 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage peaceful<br/><br/>
-<br/>
-The command peaceful is used to switch between peaceful and aggressive mode.<br/>
-When you are aggressive you will automatically attack anyone who performs<br/>
-an offensive act like unsuccessfully stealing, commanding, and even<br/>
-summoning you. If you do not wish to attack a<br/>
-player who has summoned you, you must first enter peaceful mode, and then<br/>
-after you have been summoned, turn it back to aggressive mode.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Attack<br/><br/>
-Wimpy<br/><br/>
-Peaceful<br/><br/>
-Stealing<br/><br/>
-Commanding<br/><br/>
-Summoning<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Aggressive</h1>
+<p>The command <a cmd='#'>change peaceful</a> is used to switch between peaceful and aggressive mode.
+When you are aggressive you will automatically attack anyone who performs
+an offensive act like unsuccessfully stealing, commanding, and even
+summoning you. If you do not wish to attack a
+player who has summoned you, you must first enter peaceful mode, and then
+after you have been summoned, turn it back to aggressive mode.
+</p>
+<pre> Usage: <a cmd='#'>change peaceful</a>
+</pre>
+<p><br />
+</p><p>See Also:
+</p>
+<pre> <a cmd='#'>Help Attack</a>
+ <a cmd='#'>Help Wimpy</a>
+ <a cmd='#'>Help Peaceful</a>
+ <a cmd='#'>Help Stealing</a>
+ <a cmd='#'>Help Commanding</a>
+ <a cmd='#'>Help Summoning</a>
+</pre>
+
+
+
+
+</div>

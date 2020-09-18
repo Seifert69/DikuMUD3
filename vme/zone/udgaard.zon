@@ -44,53 +44,53 @@ a path to the farming hamlet north of udgaard.
 Dec 2005 Moot hall added"
 
 help
-"<pre>                   The Village of Udgaard<br/>
-                       1 1 1 1 1 1 1 1 1 1<br/>
-   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9<br/>
-A                C   T                         Temple          B07<br/>
-      *          |   |<br/>
-B      I-I   S   C   B   S 3                   Item Storage    A09<br/>
-         |   |   |   |   | |                   Food Store      B05<br/>
-C  1-W---#---#---#---#---#-#-W-2               Armourer        B11<br/>
-         |   |   |   |   |                     Ironmonger      D05<br/>
-D    R---P   S   |   O   S                     Weaponsmith     D11<br/>
-                 |                             Inn             B03<br/>
-E             H  |  F                          Post Office     D03<br/>
-               \ | /                           Guard's Office  D09<br/>
-F                # -- T                        Haon-Dor        C00<br/>
-               / | \                           Bank            B09<br/>
-G             M  |  Y                          Herbalist       E05<br/>
-                 |                             Field Equipment E09<br/>
-H                |                             Tobacco Shop    F10<br/>
-                 |                             Mage Tailor     G05<br/>
-I                |                             Fence           G09<br/>
-                 |                             Village Dump    I07<br/>
-J              Bridge --- D                    Town Records    D01<br/>
-<br/>
-                                               Teacher         A01<br/>
-                                               Teacher         A01<br/>
-&gt;From C13 you reach the city of Midgaard    Teacher         A01<br/>
-by going 'eseseenenee'                         Teacher         A01<br/>
-<br/>
-                                               Cypress Forest  C14<br/>
-The Udgaard Town Hall is situated at G13.      To Hamlet  B12<br/>
-That's is where the Mayor is to be found.      W - Watchtowers<br/>
-<br/>
-<br/>
-Udgaard is the starting Village for new players. It contains all the basic<br/>
-elements needed: A temple, armory, weapon smith, banker, sheriff, food<br/>
-store,<br/>
-ironmonger, post office and an Inn. All of the four starting guilds are<br/>
-reachable through the guild streets, also containing several<br/>
-guild-dedicated shops.<br/><br/><br/>
-<br/>
-Udgaard is connected to the Haon-Dor forest, Cypress forest and Hamlet - all<br/>
-are ideal zones for beginners as long as you are a little cautious.<br/><br/><br/>
-<br/>
-The only native monster in here is the ever-famous 'beastly fido'. A map of<br/>
-Udgaard is available at the Ironmonger store and also has directions for<br/>
-reaching the city of Midgaard.<br/>
-<br/>
+"<pre>                   The Village of Udgaard
+                       1 1 1 1 1 1 1 1 1 1
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9
+A                C   T                         Temple          B07
+      *          |   |
+B      I-I   S   C   B   S 3                   Item Storage    A09
+         |   |   |   |   | |                   Food Store      B05
+C  1-W---#---#---#---#---#-#-W-2               Armourer        B11
+         |   |   |   |   |                     Ironmonger      D05
+D    R---P   S   |   O   S                     Weaponsmith     D11
+                 |                             Inn             B03
+E             H  |  F                          Post Office     D03
+               \ | /                           Guard's Office  D09
+F                # -- T                        Haon-Dor        C00
+               / | \                           Bank            B09
+G             M  |  Y                          Herbalist       E05
+                 |                             Field Equipment E09
+H                |                             Tobacco Shop    F10
+                 |                             Mage Tailor     G05
+I                |                             Fence           G09
+                 |                             Village Dump    I07
+J              Bridge --- D                    Town Records    D01
+
+                                               Teacher         A01
+                                               Teacher         A01
+&gt;From C13 you reach the city of Midgaard    Teacher         A01
+by going 'eseseenenee'                         Teacher         A01
+
+                                               Cypress Forest  C14
+The Udgaard Town Hall is situated at G13.      To Hamlet  B12
+That's is where the Mayor is to be found.      W - Watchtowers
+
+
+Udgaard is the starting Village for new players. It contains all the basic
+elements needed: A temple, armory, weapon smith, banker, sheriff, food
+store,
+ironmonger, post office and an Inn. All of the four starting guilds are
+reachable through the guild streets, also containing several
+guild-dedicated shops.
+
+Udgaard is connected to the Haon-Dor forest, Cypress forest and Hamlet - all
+are ideal zones for beginners as long as you are a little cautious.
+
+The only native monster in here is the ever-famous 'beastly fido'. A map of
+Udgaard is available at the Ironmonger store and also has directions for
+reaching the city of Midgaard.
+
 Beginners: Try 'help me' to get beginners help.</pre>"
 
 #define CIGAR(price,smoketime)   \
@@ -2113,11 +2113,11 @@ pike through one of the giant's eyes and into his brain killing him.
 The giant cursed Tablen who died one year later to the day."
 
 extra {"sign"}
-"<pre><br/>
-   * To see the competition type look board. <br/><br/>
-   * To see the requirements for the competition type <br/><br/>
-     look &lt;competition number&gt; ex: 'look 1'<br/><br/>
-   * To see standings in the competition type <br/><br/>
+"<pre>
+   * To see the competition type look board. 
+   * To see the requirements for the competition type 
+     look &lt;competition number&gt; ex: 'look 1'
+   * To see standings in the competition type 
      list &lt;competition number&gt; ex: 'list 1'</pre>"
 
 extra {"$smell"}
@@ -2645,13 +2645,13 @@ harp trying to protect it from harm."
 
 
 extra {"sign"}
-"<pre><br/>
-   * No spitting contests with board, skald, food or mead barrels<br/>
-     as target permitted.<br/>
-   * All fight winners must clean up blood and entrails<br/>
-     themselves.<br/>
-   * Do NOT annoy the wait staff, good help is hard to find.<br/>
-   * Do NOT kill the entertainers. Maim only the<br/>
+"<pre>
+   * No spitting contests with board, skald, food or mead barrels
+     as target permitted.
+   * All fight winners must clean up blood and entrails
+     themselves.
+   * Do NOT annoy the wait staff, good help is hard to find.
+   * Do NOT kill the entertainers. Maim only the
      bad ones.</pre>"
 
 extra {"fire"}
@@ -2801,13 +2801,13 @@ procedure."
 /* this is just a filler for now perhaps something
 similar to casino here?*/
 extra {"sign"}
-"Select the contest on which you wish to bet.<br/>
-Exp monthly<br/>
-Exp yearly<br/>
-Ghoul Pool<br/>
-PK monthly<br/>
+"<pre>Select the contest on which you wish to bet.
+Exp monthly
+Exp yearly
+Ghoul Pool
+PK monthly
 Give amount you wish to bet to agent (minimum 2 silver)
-state the player you wish to bet on."
+state the player you wish to bet on.</pre>"
 
 extra {"wall","windows"}
 "A thick wall with barred windows is here. It looks like
@@ -3854,13 +3854,13 @@ extra {"small cupboards", "cupboards", "boxes", "crates", "large shelves",
 extra {"room"}
 "This room is absolutely monstrous."
 extra {"sign"}
-"<pre><br/>
-The Sign Says:<br/>
-<br/>
--rent [container]<br/>
--store &lt;ITEM&gt;<br/>
--unstore &lt;ITEM&gt;<br/>
--storage [list]<br/>
+"<pre>
+The Sign Says:
+
+-rent [container]
+-store &lt;ITEM&gt;
+-unstore &lt;ITEM&gt;
+-storage [list]
 </pre>"
 
 flags {UNIT_FL_NO_WEATHER}
@@ -4131,8 +4131,8 @@ symbols. Perhaps the symbols are worth examining."
 
 extra {"symbols", "stone carvings", "carvings"}
 "Some of the symbols clearly represents various Gods while other appear
-to be normal text. The symbols you do understand looks like this:<pre><br/>
-<br/>
+to be normal text. The symbols you do understand looks like this:<pre>
+
       Pray to odin if you are new and helpless.</pre>"
 end
 
@@ -4251,14 +4251,14 @@ extra {"rickety staircase", "staircase"}
 extra {"sign", "small sign", "wall"}
 "From whence cometh the name 'The Chicken's Rest' is forgotten in the
 mists of time. But it has been said, that a blessing rests in this inn
-which make wounds heal faster.<pre><br/>
-<br/>
-    Use `<a cmd='#'>list</a>'           to see available drinks.<br/>
-        `request &lt;item&gt;' to ask the price of a drink.<br/>
-        `buy &lt;drink&gt;'    to buy a drink.<br/>
-        `value &lt;item&gt;'   to get a price for a drink you are selling.<br/>
-        `sell &lt;drink&gt;'   to sell a drink.<br/>
-<br/>
+which make wounds heal faster.<pre>
+
+    Use `<a cmd='#'>list</a>'           to see available drinks.
+        `request &lt;item&gt;' to ask the price of a drink.
+        `buy &lt;drink&gt;'    to buy a drink.
+        `value &lt;item&gt;'   to get a price for a drink you are selling.
+        `sell &lt;drink&gt;'   to sell a drink.
+
                          - Sam the Keeper</pre>"
 flags {UNIT_FL_NO_TELEPORT}
 end
@@ -4271,10 +4271,10 @@ a letter before departing on your next adventure this would be a good time
 to do so. There is a <a cmd='read #'>sign</a> with instructions mounted on the wall. The
 Records office is just west of here."
 extra {"sign", "instructions", "wall"}
-"Use:<pre><br/>
-      `write letter' to begin writing a letter.<br/>
-      `mail &lt;letter&gt; &lt;person&gt;' to send a letter to somebody.<br/>
-      `request' to get your mail.<br/>
+"Use:<pre>
+      `write letter' to begin writing a letter.
+      `mail &lt;letter&gt; &lt;person&gt;' to send a letter to somebody.
+      `request' to get your mail.
       `put &lt;letter&gt; in shredder' to erase the letter permanently.</pre>"
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
 movement SECT_INSIDE
@@ -4310,38 +4310,38 @@ extra {"desk"}
 important."
 
 extra {"sign", "instructions", "wall"}
-"<pre><div class='cpc'>Personal File Information</div><div class='cw'><br/>
--------------------------<br/>
-      `</div><div class='cpw'>see file</div><div class='cw'>' to see your current file information.<br/>
-<br/>
-      `</div><div class='cpw'>maiden &lt;newname&gt;</div><div class='cw'>' to change your Mother's Maiden name to<br/>
-       something new. This is used to verify your identity should<br/>
-       you lose your password. You can use any word or name as<br/>
-       long as you remember it. (e.g. maiden gates)<br/>
-<br/>
-      `</div><div class='cpw'>mail &lt;email address&gt;</div><div class='cw'>' to change your email address to<br/>
-something<br/>
-       new (e.g. mail joe@valhalla.com).<br/>
-<br/>
-</div><div class='cpc'>Player Email List (</div><div class='cr'>Not the mud mailing list - Just a list of<br/>
-emails</div><div class='cw'>)<br/>
------------------<br/>
-      `</div><div class='cpw'>update</div><div class='cw'>' will update your entry on the email list (or create<br/>
-       an entry if you don't already have an entry on the list).<br/>
-<br/>
-      `</div><div class='cpw'>public</div><div class='cw'>' to allow others to see your email address. This is<br/>
-       by default set off so only you see your address. Typing public<br/>
-       again will deny people from seeing your email address. Your current<br/>
-       email address on this list may not be the same as that of your<br/>
-       character unless you have used the </div><div class='cpw'>update</div><div class='cw'> command mentioned<br/>
-       above.<br/>
-<br/>
-      `</div><div class='cpw'>show &lt;charactername&gt;</div><div class='cw'>' will show you the email address of<br/>
-       player &lt;charactername&gt;, if they have entered one and it is publicly<br/>
-       visible.<br/>
-<br/>
-Only you, the player, and higher level administrators (254+) can see your<br/>
-maiden name setting, and unless you set your email to public, the same<br/>
+"<pre><div class='cpc'>Personal File Information</div><div class='cw'>
+-------------------------
+      `</div><div class='cpw'>see file</div><div class='cw'>' to see your current file information.
+
+      `</div><div class='cpw'>maiden &lt;newname&gt;</div><div class='cw'>' to change your Mother's Maiden name to
+       something new. This is used to verify your identity should
+       you lose your password. You can use any word or name as
+       long as you remember it. (e.g. maiden gates)
+
+      `</div><div class='cpw'>mail &lt;email address&gt;</div><div class='cw'>' to change your email address to
+something
+       new (e.g. mail joe@valhalla.com).
+
+</div><div class='cpc'>Player Email List (</div><div class='cr'>Not the mud mailing list - Just a list of
+emails</div><div class='cw'>)
+-----------------
+      `</div><div class='cpw'>update</div><div class='cw'>' will update your entry on the email list (or create
+       an entry if you don't already have an entry on the list).
+
+      `</div><div class='cpw'>public</div><div class='cw'>' to allow others to see your email address. This is
+       by default set off so only you see your address. Typing public
+       again will deny people from seeing your email address. Your current
+       email address on this list may not be the same as that of your
+       character unless you have used the </div><div class='cpw'>update</div><div class='cw'> command mentioned
+       above.
+
+      `</div><div class='cpw'>show &lt;charactername&gt;</div><div class='cw'>' will show you the email address of
+       player &lt;charactername&gt;, if they have entered one and it is publicly
+       visible.
+
+Only you, the player, and higher level administrators (254+) can see your
+maiden name setting, and unless you set your email to public, the same
 restriction will reply to your email address.</div></pre>"
 
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
@@ -4364,12 +4364,12 @@ gmap(328,528)
 south to village_rd2;
 ALWAYS_LIGHT
 extra {"sign", "wall"}
-"The sign says:<pre><br/>
-<br/>
-    Use `<a cmd='#'>list</a>' to see what is in store.<br/>
-        `buy &lt;item&gt;' to buy an item.<br/>
-        `sell &lt;item&gt;' to sell an item.<br/>
-        `request &lt;item&gt;' to ask the price of an item.<br/>
+"The sign says:<pre>
+
+    Use `<a cmd='#'>list</a>' to see what is in store.
+        `buy &lt;item&gt;' to buy an item.
+        `sell &lt;item&gt;' to sell an item.
+        `request &lt;item&gt;' to ask the price of an item.
         `value &lt;item&gt;' to make the shopkeeper evaluate your item.</pre>"
 end
 
@@ -4386,12 +4386,12 @@ gmap(328,636)
 north to village_rd2;
 ALWAYS_LIGHT
 extra {"sign", "wall"}
-"The sign says:<pre><br/>
-<br/>
-    Use `<a cmd='#'>list</a>' to see what is in store.<br/>
-        `buy &lt;item&gt;' to buy an item.<br/>
-        `sell &lt;item&gt;' to sell an item.<br/>
-        `request &lt;item&gt;' to ask the price of an item.<br/>
+"The sign says:<pre>
+
+    Use `<a cmd='#'>list</a>' to see what is in store.
+        `buy &lt;item&gt;' to buy an item.
+        `sell &lt;item&gt;' to sell an item.
+        `request &lt;item&gt;' to ask the price of an item.
         `value &lt;item&gt;' to make the shopkeeper evaluate your item.</pre>"
 end
 
@@ -4410,15 +4410,15 @@ north to ud_storage;
 south to village_rd3;
 ALWAYS_LIGHT
 extra {"white marble sign", "marble sign", "sign", "wall"}
-"It says :-<pre><br/>
-                         The Bank of Udgaard<br/>
-<br/>
-                  We stash your cash and hold your<br/>
-                    gold for a mere 5% interest.<br/>
-<br/>
-    Use `deposit &lt;amount&gt;' to deposit,<br/>
-        `withdraw &lt;amount&gt;' to withdraw, and<br/>
-        `exchange' &lt;amount&gt; to change into coins of more wealth.<br/>
+"It says :-<pre>
+                         The Bank of Udgaard
+
+                  We stash your cash and hold your
+                    gold for a mere 5% interest.
+
+    Use `deposit &lt;amount&gt;' to deposit,
+        `withdraw &lt;amount&gt;' to withdraw, and
+        `exchange' &lt;amount&gt; to change into coins of more wealth.
         `balance' to get a statement of your account.</pre>"
 end
 
@@ -4439,12 +4439,12 @@ south to jail open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED, EX_PICKPROOF}
       difficulty 35;
 ALWAYS_LIGHT
 extra {"sign", "wall"}
-"The sign says:<pre><br/>
-<br/>
-    In order to accuse another player of a crime, you must accuse him<br/>
-    to the captain. Use the command:<br/>
-<br/>
-       accuse &lt;player&gt; murder   - for a murder accusation.<br/>
+"The sign says:<pre>
+
+    In order to accuse another player of a crime, you must accuse him
+    to the captain. Use the command:
+
+       accuse &lt;player&gt; murder   - for a murder accusation.
        accuse &lt;player&gt; stealing - for a stealing accusation.</pre>"
 end
 
@@ -4485,12 +4485,12 @@ gmap(588,529)
 south to village_rd4;
 ALWAYS_LIGHT
 extra {"sign", "wall"}
-"The sign says:<pre><br/>
-<br/>
-    Use `<a cmd='#'>list</a>' to see what is in store.<br/>
-        `buy &lt;item&gt;' to buy an item.<br/>
-        `sell &lt;item&gt;' to sell an item.<br/>
-        `request &lt;item&gt;' to ask the price of an item.<br/>
+"The sign says:<pre>
+
+    Use `<a cmd='#'>list</a>' to see what is in store.
+        `buy &lt;item&gt;' to buy an item.
+        `sell &lt;item&gt;' to sell an item.
+        `request &lt;item&gt;' to ask the price of an item.
         `value &lt;item&gt;' to make the shopkeeper evaluate your item.</pre>"
 end
 
@@ -4508,12 +4508,12 @@ gmap(588,637)
 north to village_rd4;
 ALWAYS_LIGHT
 extra {"sign", "wall"}
-"The sign says:<pre><br/>
-<br/>
-    Use `<a cmd='#'>list</a>' to see what is in store.<br/>
-        `buy &lt;item&gt;' to buy an item.<br/>
-        `sell &lt;item&gt;' to sell an item.<br/>
-        `request &lt;item&gt;' to ask the price of an item.<br/>
+"The sign says:<pre>
+
+    Use `<a cmd='#'>list</a>' to see what is in store.
+        `buy &lt;item&gt;' to buy an item.
+        `sell &lt;item&gt;' to sell an item.
+        `request &lt;item&gt;' to ask the price of an item.
         `value &lt;item&gt;' to make the shopkeeper evaluate your item.</pre>"
 end
 
@@ -4883,15 +4883,15 @@ feature here, but a few weapons and other random trinkets complete the collectio
 the absolute must for the well-equipped beginner student of magic. A <a cmd='read #'>sign</a>
 hanging over the booth tries to explain a few things."
 extra {"sign over the booth", "booth sign", "sign"}
-"<pre>The sign says:<br/>
-<br/>
- '<a cmd='#'>list</a>'  - lists the merchandise.<br/>
- 'buy &lt;item&gt;' - lets you acquire an item.<br/>
- 'sell &lt;item&gt;' - lets you sell an item.<br/>
-<br/>
-  Warning: As this shop specializes in mage items, some of the items<br/>
-  may be worthless to non-students.<br/>
-<br/>
+"<pre>The sign says:
+
+ '<a cmd='#'>list</a>'  - lists the merchandise.
+ 'buy &lt;item&gt;' - lets you acquire an item.
+ 'sell &lt;item&gt;' - lets you sell an item.
+
+  Warning: As this shop specializes in mage items, some of the items
+  may be worthless to non-students.
+
 </pre>"
 movement SECT_CITY
 gmap(382,720)
@@ -4945,18 +4945,18 @@ extra {"trinkets","herbs","incense","ingredients"}
 "A lot of talismans, herbs, vials, holy charms and whatever the
 well-supplied superstitious needs to get him through the day."
 extra {"sign"}
-"<pre><br/>
- ________________________________________________________<br/>
-[                                                        ]<br/>
-[   <div class='cpc'>'list'</div><div class='cw'>         - to view items currently in stock    ]<br/>
-[   </div><div class='cpc'>'buy &lt;item&gt;'</div><div class='cw'>   - to buy an item from the talismonger ]<br/>
-[   </div><div class='cpc'>'sell &lt;item&gt;'</div><div class='cw'>  - to sell an item from your inventory ]<br/>
-[                                                        ]<br/>
-[   </div><div class='cpc'>'ask talismonger &lt;item&gt;'</div><div class='cw'> will give you a description ]<br/>
-[   of the item in question; only items sold in this     ]<br/>
-[   store can be examined in this way.                   ]<br/>
-[________________________________________________________]<br/>
-<br/>
+"<pre>
+ ________________________________________________________
+[                                                        ]
+[   <div class='cpc'>'list'</div><div class='cw'>         - to view items currently in stock    ]
+[   </div><div class='cpc'>'buy &lt;item&gt;'</div><div class='cw'>   - to buy an item from the talismonger ]
+[   </div><div class='cpc'>'sell &lt;item&gt;'</div><div class='cw'>  - to sell an item from your inventory ]
+[                                                        ]
+[   </div><div class='cpc'>'ask talismonger &lt;item&gt;'</div><div class='cw'> will give you a description ]
+[   of the item in question; only items sold in this     ]
+[   store can be examined in this way.                   ]
+[________________________________________________________]
+
 <br/></div></pre>"
 end
 
@@ -4976,18 +4976,18 @@ ALWAYS_LIGHT
 southwest to market;
 
 extra {"small sign","sign"}
-"<pre><br/>
- ________________________________________________________<br/>
-[                                                        ]<br/>
-[   <div class='cpc'>'list'</div><div class='cw'>         - to view items currently in stock    ]<br/>
-[   </div><div class='cpc'>'buy &lt;item&gt;'</div><div class='cw'>   - to buy an item from the shopkeeper  ]<br/>
-[   </div><div class='cpc'>'sell &lt;item&gt;'</div><div class='cw'>  - to sell an item from your inventory ]<br/>
-[                                                        ]<br/>
-[   </div><div class='cpc'>'ask shopkeeper &lt;item&gt;'</div><div class='cw'> will give you a description  ]<br/>
-[   of the item in question; only items sold in this     ]<br/>
-[   store can be examined in this way.                   ]<br/>
-[________________________________________________________]<br/>
-<br/>
+"<pre>
+ ________________________________________________________
+[                                                        ]
+[   <div class='cpc'>'list'</div><div class='cw'>         - to view items currently in stock    ]
+[   </div><div class='cpc'>'buy &lt;item&gt;'</div><div class='cw'>   - to buy an item from the shopkeeper  ]
+[   </div><div class='cpc'>'sell &lt;item&gt;'</div><div class='cw'>  - to sell an item from your inventory ]
+[                                                        ]
+[   </div><div class='cpc'>'ask shopkeeper &lt;item&gt;'</div><div class='cw'> will give you a description  ]
+[   of the item in question; only items sold in this     ]
+[   store can be examined in this way.                   ]
+[________________________________________________________]
+
 <br/></div></pre>"
 end
 
@@ -5011,17 +5011,17 @@ extra {"shelves","jars","boxes","tobacco","cigars","pipes","articles"}
 "Those shelves keep all your heart would desire if you are a smoker or
 plan to get off to a good start."
 extra {"small sign","sign"}
-"<pre><br/>
- ________________________________________________________<br/>
-[                                                        ]<br/>
-[   <div class='cpc'>'list'</div><div class='cw'>         - to view items currently in stock    ]<br/>
-[   </div><div class='cpc'>'buy &lt;item&gt;'</div><div class='cw'>   - to buy an item from the seller      ]<br/>
-[   </div><div class='cpc'>'sell &lt;item&gt;'</div><div class='cw'>  - to sell an item from your inventory ]<br/>
-[                                                        ]<br/>
-[   </div><div class='cpc'>'ask seller &lt;item&gt;'</div><div class='cw'> will give you a description      ]<br/>
-[   of the item in question; only items sold in this     ]<br/>
-[   store can be examined in this way.                   ]<br/>
-[________________________________________________________]<br/>
+"<pre>
+ ________________________________________________________
+[                                                        ]
+[   <div class='cpc'>'list'</div><div class='cw'>         - to view items currently in stock    ]
+[   </div><div class='cpc'>'buy &lt;item&gt;'</div><div class='cw'>   - to buy an item from the seller      ]
+[   </div><div class='cpc'>'sell &lt;item&gt;'</div><div class='cw'>  - to sell an item from your inventory ]
+[                                                        ]
+[   </div><div class='cpc'>'ask seller &lt;item&gt;'</div><div class='cw'> will give you a description      ]
+[   of the item in question; only items sold in this     ]
+[   store can be examined in this way.                   ]
+[________________________________________________________]
 </div></pre>"
 end
 
@@ -5200,140 +5200,140 @@ weight 1
 dilcopy eager_read@udgaard();
 
 extra {}
-"<pre>                <div class='cpy'>The Paladin's Handbook to Valhalla</div><div class='cw'><br/>
-<br/>
-<br/>
-                 Chapter 1 ... Introduction<br/>
-                 Chapter 2 ... Combat<br/>
-                 Chapter 3 ... How to get around<br/>
-                 Chapter 4 ... The Automated Tour<br/>
-                 Chapter 5 ... Hint &amp; Tips<br/>
-                 Chapter 6 ... Help Topics<br/>
-<br/>
-Here is an example of how to read chapter one:<br/>
-<br/>
-   &gt; read chapter 1<br/>
+"<pre>                <div class='cpy'>The Paladin's Handbook to Valhalla</div><div class='cw'>
+
+
+                 Chapter 1 ... Introduction
+                 Chapter 2 ... Combat
+                 Chapter 3 ... How to get around
+                 Chapter 4 ... The Automated Tour
+                 Chapter 5 ... Hint &amp; Tips
+                 Chapter 6 ... Help Topics
+
+Here is an example of how to read chapter one:
+
+   &gt; read chapter 1
 </div></pre>"
 
 extra {"chapter 1", "introduction", "chapter one"}
 
-"<pre>                        INTRODUCTION<br/>
-<br/>
-This handbook describes how to get started playing Valhalla as a<br/>
-Midgaard Paladin. Read it carefully and you can get started in only<br/>
-a few minutes.<br/><br/><br/>
-<br/>
-You have just received a lot of equipment and a dictionary which<br/>
-has been prepared especially for you. To see the equipment, type:<br/>
-<br/>
-   &gt; inventory (or the shorthand version: i)<br/>
-   &gt; equipment (or the shorthand version: eq)<br/>
-<br/>
-To see what aliases have been defined in your dictionary, write:<br/>
-<br/>
-   &gt; alias (or the shorthand version: al)<br/>
-<br/>
+"<pre>                        INTRODUCTION
+
+This handbook describes how to get started playing Valhalla as a
+Midgaard Paladin. Read it carefully and you can get started in only
+a few minutes.
+
+You have just received a lot of equipment and a dictionary which
+has been prepared especially for you. To see the equipment, type:
+
+   &gt; inventory (or the shorthand version: i)
+   &gt; equipment (or the shorthand version: eq)
+
+To see what aliases have been defined in your dictionary, write:
+
+   &gt; alias (or the shorthand version: al)
+
 Now read chapter 2.</pre>"
 
 extra {"chapter 2", "chapter two"}
-"<pre>                           COMBAT<br/>
-<br/>
-You must always be sure that your opponent is not out of your<br/>
-league, you can do this by using the consider command, example:<br/>
-<br/>
-  &gt; consider rabbit<br/>
-<br/>
-This will approximately tell you how dangerous your opponent is.<br/>
-Right now you can try your strength against rabbits, skunks and badgers,<br/>
-and perhaps even risk the more dangerous fox, deer and boar.<br/><br/><br/>
-<br/>
-Aliases have been defined in your dictionary, they are a shorthand method<br/>
-for writing long commands, so when you spot one of the above opponents,<br/>
-you can quickly attack it, example:<br/>
-<br/>
-  &gt; kr  (to execute the kill rabbit alias)<br/>
-<br/>
+"<pre>                           COMBAT
+
+You must always be sure that your opponent is not out of your
+league, you can do this by using the consider command, example:
+
+  &gt; consider rabbit
+
+This will approximately tell you how dangerous your opponent is.
+Right now you can try your strength against rabbits, skunks and badgers,
+and perhaps even risk the more dangerous fox, deer and boar.
+
+Aliases have been defined in your dictionary, they are a shorthand method
+for writing long commands, so when you spot one of the above opponents,
+you can quickly attack it, example:
+
+  &gt; kr  (to execute the kill rabbit alias)
+
 Now read chapter 3 about finding your opponents.</pre>"
 
 
 extra {"chapter 3", "chapter three"}
-"<pre>                         HOW TO GET AROUND<br/>
-<br/>
-You are just about ready, all you need is to find your way around this<br/>
-place. Your life begins in the small village of Udgaard, located between<br/>
-the ancient forest of Haon Dor and the younger Cypress Forest.<br/>
-While in Udgaard, you can get a map at any time by typing:<br/>
-<br/>
-   &gt; help<br/>
-<br/>
-The map shows you how to get to the Haon-Dor Forest as well as the<br/>
-Cypress Forest. From the village square simply go east three times to<br/>
-get to the Cypress forest, or west three times to get to the Haon Dor<br/>
-forest. Both locations are ideal for beginners such as yourself.<br/><br/><br/>
-<br/>
-Once in either forest, find a rabbit, a skunk, a badger or a fox<br/>
-and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,<br/>
-kb to kill a badger, etc.)<br/><br/><br/>
-<br/>
+"<pre>                         HOW TO GET AROUND
+
+You are just about ready, all you need is to find your way around this
+place. Your life begins in the small village of Udgaard, located between
+the ancient forest of Haon Dor and the younger Cypress Forest.
+While in Udgaard, you can get a map at any time by typing:
+
+   &gt; help
+
+The map shows you how to get to the Haon-Dor Forest as well as the
+Cypress Forest. From the village square simply go east three times to
+get to the Cypress forest, or west three times to get to the Haon Dor
+forest. Both locations are ideal for beginners such as yourself.
+
+Once in either forest, find a rabbit, a skunk, a badger or a fox
+and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,
+kb to kill a badger, etc.)
+
 Now read chapter four.</pre>"
 
 extra {"chapter 4", "chapter four"}
-"<pre>                          THE AUTOMATED TOUR<br/>
-<br/>
-If you have made it this far, you are well on your way! In Valhalla<br/>
-there is a teacher which will explain you the basics of the game. He<br/>
-can be quite boring, but if you feel more comfortable getting the<br/>
-tour, write:<br/>
-<br/>
-   &gt; say help me newbie guide<br/>
-<br/>
-when standing in the Temple of Udgaard. This will start an automated tour<br/>
+"<pre>                          THE AUTOMATED TOUR
+
+If you have made it this far, you are well on your way! In Valhalla
+there is a teacher which will explain you the basics of the game. He
+can be quite boring, but if you feel more comfortable getting the
+tour, write:
+
+   &gt; say help me newbie guide
+
+when standing in the Temple of Udgaard. This will start an automated tour
 of the mud commands and the town. Now read chapter 5.</pre>"
 
 
 extra {"chapter 5", "chapter five"}
 
-"<pre>                           HINTS &amp; TIPS<br/>
-<br/>
-Try the following commands:<br/>
-<br/>
-  &gt; score<br/>
-  &gt; status<br/>
-  &gt; status weapons<br/>
-  &gt; status spells<br/>
-  &gt; status skills<br/>
-<br/>
-There is no need for you to visit your guild until you have earned<br/>
-a level. All your skills and abilities are set from the beginning.<br/>
-You can earn experience faster by being in a group with other players.<br/><br/><br/>
-<br/>
-Note that when you are in wimpy mode you only gain HALF xp but you<br/>
-significantly reduce the risk of dying. See 'help wimpy' for further<br/>
-details.<br/><br/><br/>
-<br/>
-If you lose your equipment, you can always pray to the statue of Odin<br/>
-in the Temple of Udgaard. Odin will grant you new equipment for that which<br/>
-is lost or missing, write this:<br/>
-<br/>
-  &gt; pray odin<br/>
+"<pre>                           HINTS &amp; TIPS
+
+Try the following commands:
+
+  &gt; score
+  &gt; status
+  &gt; status weapons
+  &gt; status spells
+  &gt; status skills
+
+There is no need for you to visit your guild until you have earned
+a level. All your skills and abilities are set from the beginning.
+You can earn experience faster by being in a group with other players.
+
+Note that when you are in wimpy mode you only gain HALF xp but you
+significantly reduce the risk of dying. See 'help wimpy' for further
+details.
+
+If you lose your equipment, you can always pray to the statue of Odin
+in the Temple of Udgaard. Odin will grant you new equipment for that which
+is lost or missing, write this:
+
+  &gt; pray odin
 </pre>"
 
 extra {"chapter 6", "chapter six"}
-"<pre>                            HELP TOPICS<br/>
-<br/>
-The following are good help topics for beginners:<br/>
-<br/>
-   &gt; help me<br/>
-   &gt; help status<br/>
-   &gt; help score<br/>
-   &gt; help wear<br/>
-   &gt; help wimpy<br/>
-   &gt; help alias<br/>
-   &gt; help abilities<br/>
-   &gt; help weapon<br/>
-   &gt; help armour<br/>
-   &gt; help practice<br/>
-   &gt; help info<br/>
+"<pre>                            HELP TOPICS
+
+The following are good help topics for beginners:
+
+   &gt; help me
+   &gt; help status
+   &gt; help score
+   &gt; help wear
+   &gt; help wimpy
+   &gt; help alias
+   &gt; help abilities
+   &gt; help weapon
+   &gt; help armour
+   &gt; help practice
+   &gt; help info
    &gt; help index</pre>"
 end
 
@@ -5349,140 +5349,140 @@ weight 1
 dilcopy eager_read@udgaard();
 
 extra {}
-"<pre>                <div class='cpy'>The Dark Knight's Handbook to Valhalla</div><div class='cw'><br/>
-<br/>
-<br/>
-                 Chapter 1 ... Introduction<br/>
-                 Chapter 2 ... Combat<br/>
-                 Chapter 3 ... How to get around<br/>
-                 Chapter 4 ... The Automated Tour<br/>
-                 Chapter 5 ... Hint &amp; Tips<br/>
-                 Chapter 6 ... Help Topics<br/>
-<br/>
-Here is an example of how to read chapter one:<br/>
-<br/>
-   &gt; read chapter 1<br/>
+"<pre>                <div class='cpy'>The Dark Knight's Handbook to Valhalla</div><div class='cw'>
+
+
+                 Chapter 1 ... Introduction
+                 Chapter 2 ... Combat
+                 Chapter 3 ... How to get around
+                 Chapter 4 ... The Automated Tour
+                 Chapter 5 ... Hint &amp; Tips
+                 Chapter 6 ... Help Topics
+
+Here is an example of how to read chapter one:
+
+   &gt; read chapter 1
 </div></pre>"
 
 extra {"chapter 1", "introduction", "chapter one"}
 
-"<pre>                        INTRODUCTION<br/>
-<br/>
-This handbook describes how to get started playing Valhalla as a<br/>
-Midgaard Dark Knight. Read it carefully and you can get started in only<br/>
-a few minutes.<br/><br/><br/>
-<br/>
-You have just received a lot of equipment and a dictionary which<br/>
-has been prepared especially for you. To see the equipment, type:<br/>
-<br/>
-   &gt; inventory (or the shorthand version: i)<br/>
-   &gt; equipment (or the shorthand version: eq)<br/>
-<br/>
-To see what aliases have been defined in your dictionary, write:<br/>
-<br/>
-   &gt; alias (or the shorthand version: al)<br/>
-<br/>
+"<pre>                        INTRODUCTION
+
+This handbook describes how to get started playing Valhalla as a
+Midgaard Dark Knight. Read it carefully and you can get started in only
+a few minutes.
+
+You have just received a lot of equipment and a dictionary which
+has been prepared especially for you. To see the equipment, type:
+
+   &gt; inventory (or the shorthand version: i)
+   &gt; equipment (or the shorthand version: eq)
+
+To see what aliases have been defined in your dictionary, write:
+
+   &gt; alias (or the shorthand version: al)
+
 Now read chapter 2.</pre>"
 
 extra {"chapter 2", "chapter two"}
-"<pre>                           COMBAT<br/>
-<br/>
-You must always be sure that your opponent is not out of your<br/>
-league, you can do this by using the consider command, example:<br/>
-<br/>
-  &gt; consider rabbit<br/>
-<br/>
-This will approximately tell you how dangerous your opponent is.<br/>
-Right now you can try your strength against rabbits, skunks and badgers,<br/>
-and perhaps even risk the more dangerous fox, deer and boar.<br/><br/><br/>
-<br/>
-Aliases have been defined in your dictionary, they are a shorthand method<br/>
-for writing long commands, so when you spot one of the above opponents,<br/>
-you can quickly attack it, example:<br/>
-<br/>
-  &gt; kr  (to execute the kill rabbit alias)<br/>
-<br/>
+"<pre>                           COMBAT
+
+You must always be sure that your opponent is not out of your
+league, you can do this by using the consider command, example:
+
+  &gt; consider rabbit
+
+This will approximately tell you how dangerous your opponent is.
+Right now you can try your strength against rabbits, skunks and badgers,
+and perhaps even risk the more dangerous fox, deer and boar.
+
+Aliases have been defined in your dictionary, they are a shorthand method
+for writing long commands, so when you spot one of the above opponents,
+you can quickly attack it, example:
+
+  &gt; kr  (to execute the kill rabbit alias)
+
 Now read chapter 3 about finding your opponents.</pre>"
 
 
 extra {"chapter 3", "chapter three"}
-"<pre>                         HOW TO GET AROUND<br/>
-<br/>
-You are just about ready, all you need is to find your way around this<br/>
-place. Your life begins in the small village of Udgaard, located between<br/>
-the ancient forest of Haon Dor and the younger Cypress Forest.<br/>
-While in Udgaard, you can get a map at any time by typing:<br/>
-<br/>
-   &gt; help<br/>
-<br/>
-The map shows you how to get to the Haon-Dor Forest as well as the<br/>
-Cypress Forest. From the village square simply go east three times to<br/>
-get to the Cypress forest, or west three times to get to the Haon Dor<br/>
-forest. Both locations are ideal for beginners such as yourself.<br/><br/><br/>
-<br/>
-Once in either forest, find a rabbit, a skunk, a badger or a fox<br/>
-and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,<br/>
-kb to kill a badger, etc.)<br/><br/><br/>
-<br/>
+"<pre>                         HOW TO GET AROUND
+
+You are just about ready, all you need is to find your way around this
+place. Your life begins in the small village of Udgaard, located between
+the ancient forest of Haon Dor and the younger Cypress Forest.
+While in Udgaard, you can get a map at any time by typing:
+
+   &gt; help
+
+The map shows you how to get to the Haon-Dor Forest as well as the
+Cypress Forest. From the village square simply go east three times to
+get to the Cypress forest, or west three times to get to the Haon Dor
+forest. Both locations are ideal for beginners such as yourself.
+
+Once in either forest, find a rabbit, a skunk, a badger or a fox
+and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,
+kb to kill a badger, etc.)
+
 Now read chapter four.</pre>"
 
 extra {"chapter 4", "chapter four"}
-"<pre>                          THE AUTOMATED TOUR<br/>
-<br/>
-If you have made it this far, you are well on your way! In Valhalla<br/>
-there is a teacher which will explain you the basics of the game. He<br/>
-can be quite boring, but if you feel more comfortable getting the<br/>
-tour, write:<br/>
-<br/>
-   &gt; say help me newbie guide<br/>
-<br/>
-when standing in the Temple of Udgaard. This will start an automated tour<br/>
+"<pre>                          THE AUTOMATED TOUR
+
+If you have made it this far, you are well on your way! In Valhalla
+there is a teacher which will explain you the basics of the game. He
+can be quite boring, but if you feel more comfortable getting the
+tour, write:
+
+   &gt; say help me newbie guide
+
+when standing in the Temple of Udgaard. This will start an automated tour
 of the mud commands and the town. Now read chapter 5.</pre>"
 
 
 extra {"chapter 5", "chapter five"}
 
-"<pre>                           HINTS &amp; TIPS<br/>
-<br/>
-Try the following commands:<br/>
-<br/>
-  &gt; score<br/>
-  &gt; status<br/>
-  &gt; status weapons<br/>
-  &gt; status spells<br/>
-  &gt; status skills<br/>
-<br/>
-There is no need for you to visit your guild until you have earned<br/>
-a level. All your skills and abilities are set from the beginning.<br/>
-You can earn experience faster by being in a group with other players.<br/><br/><br/>
-<br/>
-Note that when you are in wimpy mode you only gain HALF xp but you<br/>
-significantly reduce the risk of dying. See 'help wimpy' for further<br/>
-details.<br/><br/><br/>
-<br/>
-If you lose your equipment, you can always pray to the statue of Odin<br/>
-in the Temple of Udgaard. Odin will grant you new equipment for that which<br/>
-is lost or missing, write this:<br/>
-<br/>
-  &gt; pray odin<br/>
+"<pre>                           HINTS &amp; TIPS
+
+Try the following commands:
+
+  &gt; score
+  &gt; status
+  &gt; status weapons
+  &gt; status spells
+  &gt; status skills
+
+There is no need for you to visit your guild until you have earned
+a level. All your skills and abilities are set from the beginning.
+You can earn experience faster by being in a group with other players.
+
+Note that when you are in wimpy mode you only gain HALF xp but you
+significantly reduce the risk of dying. See 'help wimpy' for further
+details.
+
+If you lose your equipment, you can always pray to the statue of Odin
+in the Temple of Udgaard. Odin will grant you new equipment for that which
+is lost or missing, write this:
+
+  &gt; pray odin
 </pre>"
 
 extra {"chapter 6", "chapter six"}
-"<pre>                            HELP TOPICS<br/>
-<br/>
-The following are good help topics for beginners:<br/>
-<br/>
-   &gt; help me<br/>
-   &gt; help status<br/>
-   &gt; help score<br/>
-   &gt; help wear<br/>
-   &gt; help wimpy<br/>
-   &gt; help alias<br/>
-   &gt; help abilities<br/>
-   &gt; help weapon<br/>
-   &gt; help armour<br/>
-   &gt; help practice<br/>
-   &gt; help info<br/>
+"<pre>                            HELP TOPICS
+
+The following are good help topics for beginners:
+
+   &gt; help me
+   &gt; help status
+   &gt; help score
+   &gt; help wear
+   &gt; help wimpy
+   &gt; help alias
+   &gt; help abilities
+   &gt; help weapon
+   &gt; help armour
+   &gt; help practice
+   &gt; help info
    &gt; help index</pre>"
 end
 
@@ -5501,141 +5501,141 @@ weight 1
 dilcopy eager_read@udgaard();
 
 extra {}
-"<pre>                <div class='cpy'>The Fighter's Handbook to Valhalla</div><div class='cw'><br/>
-<br/>
-<br/>
-                 Chapter 1 ... Introduction<br/>
-                 Chapter 2 ... Combat<br/>
-                 Chapter 3 ... How to get around<br/>
-                 Chapter 4 ... The Automated Tour<br/>
-                 Chapter 5 ... Hint &amp; Tips<br/>
-                 Chapter 6 ... Help Topics<br/>
-<br/>
-Here is an example of how to read chapter one:<br/>
-<br/>
-   &gt; read chapter 1<br/>
+"<pre>                <div class='cpy'>The Fighter's Handbook to Valhalla</div><div class='cw'>
+
+
+                 Chapter 1 ... Introduction
+                 Chapter 2 ... Combat
+                 Chapter 3 ... How to get around
+                 Chapter 4 ... The Automated Tour
+                 Chapter 5 ... Hint &amp; Tips
+                 Chapter 6 ... Help Topics
+
+Here is an example of how to read chapter one:
+
+   &gt; read chapter 1
 </div></pre>"
 
 extra {"chapter 1", "introduction", "chapter one"}
 
-"<pre>                        INTRODUCTION<br/>
-<br/>
-This handbook describes how to get started playing Valhalla as an<br/>
-Udgaard Fighter. Read it carefully and you can get started in only<br/>
-a few minutes.<br/><br/><br/>
-<br/>
-You have just received a lot of equipment and a dictionary which<br/>
-has been prepared especially for you. To see the equipment, type:<br/>
-<br/>
-   &gt; inventory (or the shorthand version: i)<br/>
-   &gt; equipment (or the shorthand version: eq)<br/>
-<br/>
-To see what aliases have been defined in your dictionary, write:<br/>
-<br/>
-   &gt; alias (or the shorthand version: al)<br/>
-<br/>
+"<pre>                        INTRODUCTION
+
+This handbook describes how to get started playing Valhalla as an
+Udgaard Fighter. Read it carefully and you can get started in only
+a few minutes.
+
+You have just received a lot of equipment and a dictionary which
+has been prepared especially for you. To see the equipment, type:
+
+   &gt; inventory (or the shorthand version: i)
+   &gt; equipment (or the shorthand version: eq)
+
+To see what aliases have been defined in your dictionary, write:
+
+   &gt; alias (or the shorthand version: al)
+
 Now read chapter 2.</pre>"
 
 extra {"chapter 2", "chapter two"}
-"<pre>                           COMBAT<br/>
-<br/>
-You must always be sure that your opponent is not out of your<br/>
-league, you can do this by using the consider command, example:<br/>
-<br/>
-  &gt; consider rabbit<br/>
-<br/>
-This will approximately tell you how dangerous your opponent is.<br/>
-Right now you can try your strength against rabbits, skunks and badgers,<br/>
-and perhaps even risk the more dangerous fox, deer and boar.<br/><br/><br/>
-<br/>
-Aliases have been defined in your dictionary, they are a shorthand method<br/>
-for writing long commands, so when you spot one of the above opponents,<br/>
-you can quickly attack it, example:<br/>
-<br/>
-  &gt; kr  (to execute the kill rabbit alias)<br/>
-<br/>
+"<pre>                           COMBAT
+
+You must always be sure that your opponent is not out of your
+league, you can do this by using the consider command, example:
+
+  &gt; consider rabbit
+
+This will approximately tell you how dangerous your opponent is.
+Right now you can try your strength against rabbits, skunks and badgers,
+and perhaps even risk the more dangerous fox, deer and boar.
+
+Aliases have been defined in your dictionary, they are a shorthand method
+for writing long commands, so when you spot one of the above opponents,
+you can quickly attack it, example:
+
+  &gt; kr  (to execute the kill rabbit alias)
+
 Now read chapter 3 about finding your opponents.</pre>"
 
 
 extra {"chapter 3", "chapter three"}
-"<pre>                         HOW TO GET AROUND<br/>
-<br/>
-You are just about ready, all you need is to find your way around this<br/>
-place. Your life begins in the small village of Udgaard, located between<br/>
-the ancient forest of Haon Dor and the younger Cypress Forest.<br/>
-While in Udgaard, you can get a map at any time by typing:<br/>
-<br/>
-   &gt; help<br/>
-<br/>
-The map shows you how to get to the Haon-Dor Forest as well as the<br/>
-Cypress Forest. From the village square simply go east three times to<br/>
-get to the Cypress forest, or west three times to get to the Haon Dor<br/>
-forest. Both locations are ideal for beginners such as yourself.<br/><br/><br/>
-<br/>
-Once in either forest, find a rabbit, a skunk, a badger or a fox<br/>
-and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,<br/>
-kb to kill a badger, etc.)<br/><br/><br/>
-<br/>
+"<pre>                         HOW TO GET AROUND
+
+You are just about ready, all you need is to find your way around this
+place. Your life begins in the small village of Udgaard, located between
+the ancient forest of Haon Dor and the younger Cypress Forest.
+While in Udgaard, you can get a map at any time by typing:
+
+   &gt; help
+
+The map shows you how to get to the Haon-Dor Forest as well as the
+Cypress Forest. From the village square simply go east three times to
+get to the Cypress forest, or west three times to get to the Haon Dor
+forest. Both locations are ideal for beginners such as yourself.
+
+Once in either forest, find a rabbit, a skunk, a badger or a fox
+and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,
+kb to kill a badger, etc.)
+
 Now read chapter four.</pre>"
 
 extra {"chapter 4", "chapter four"}
-"<pre>                          THE AUTOMATED TOUR<br/>
-<br/>
-If you have made it this far, you are well on your way! In Valhalla<br/>
-there is a teacher which will explain you the basics of the game. He<br/>
-can be quite boring, but if you feel more comfortable getting the<br/>
-tour, write:<br/>
-<br/>
-   &gt; say help me newbie guide<br/>
-<br/>
-when standing in the Temple of Udgaard. This will start an automated tour<br/>
+"<pre>                          THE AUTOMATED TOUR
+
+If you have made it this far, you are well on your way! In Valhalla
+there is a teacher which will explain you the basics of the game. He
+can be quite boring, but if you feel more comfortable getting the
+tour, write:
+
+   &gt; say help me newbie guide
+
+when standing in the Temple of Udgaard. This will start an automated tour
 of the mud commands and the town. Now read chapter 5.</pre>"
 
 
 
 extra {"chapter 5", "chapter five"}
 
-"<pre>                           HINTS &amp; TIPS<br/>
-<br/>
-Try the following commands:<br/>
-<br/>
-  &gt; score<br/>
-  &gt; status<br/>
-  &gt; status weapons<br/>
-  &gt; status spells<br/>
-  &gt; status skills<br/>
-<br/>
-There is no need for you to visit your guild until you have earned<br/>
-a level. All your skills and abilities are set from the beginning.<br/>
-You can earn experience faster by being in a group with other players.<br/><br/><br/>
-<br/>
-Note that when you are in wimpy mode you only gain HALF xp but you<br/>
-significantly reduce the risk of dying. See 'help wimpy' for further<br/>
-details.<br/><br/><br/>
-<br/>
-If you lose your equipment, you can always pray to the statue of Odin<br/>
-in the Temple of Udgaard. Odin will grant you new equipment for that which<br/>
-is lost or missing, write this:<br/>
-<br/>
-  &gt; pray odin<br/>
+"<pre>                           HINTS &amp; TIPS
+
+Try the following commands:
+
+  &gt; score
+  &gt; status
+  &gt; status weapons
+  &gt; status spells
+  &gt; status skills
+
+There is no need for you to visit your guild until you have earned
+a level. All your skills and abilities are set from the beginning.
+You can earn experience faster by being in a group with other players.
+
+Note that when you are in wimpy mode you only gain HALF xp but you
+significantly reduce the risk of dying. See 'help wimpy' for further
+details.
+
+If you lose your equipment, you can always pray to the statue of Odin
+in the Temple of Udgaard. Odin will grant you new equipment for that which
+is lost or missing, write this:
+
+  &gt; pray odin
 </pre>"
 
 extra {"chapter 6", "chapter six"}
-"<pre>                            HELP TOPICS<br/>
-<br/>
-The following are good help topics for beginners:<br/>
-<br/>
-   &gt; help me<br/>
-   &gt; help status<br/>
-   &gt; help score<br/>
-   &gt; help wear<br/>
-   &gt; help wimpy<br/>
-   &gt; help alias<br/>
-   &gt; help abilities<br/>
-   &gt; help weapon<br/>
-   &gt; help armour<br/>
-   &gt; help practice<br/>
-   &gt; help info<br/>
+"<pre>                            HELP TOPICS
+
+The following are good help topics for beginners:
+
+   &gt; help me
+   &gt; help status
+   &gt; help score
+   &gt; help wear
+   &gt; help wimpy
+   &gt; help alias
+   &gt; help abilities
+   &gt; help weapon
+   &gt; help armour
+   &gt; help practice
+   &gt; help info
    &gt; help index</pre>"
 end
 
@@ -5651,141 +5651,141 @@ weight 1
 dilcopy eager_read@udgaard();
 
 extra {}
-"<pre>                <div class='cpy'>The Ranger's Handbook to Valhalla</div><div class='cw'><br/>
-<br/>
-<br/>
-                 Chapter 1 ... Introduction<br/>
-                 Chapter 2 ... Combat<br/>
-                 Chapter 3 ... How to get around<br/>
-                 Chapter 4 ... The Automated Tour<br/>
-                 Chapter 5 ... Hint &amp; Tips<br/>
-                 Chapter 6 ... Help Topics<br/>
-<br/>
-Here is an example of how to read chapter one:<br/>
-<br/>
-   &gt; read chapter 1<br/>
+"<pre>                <div class='cpy'>The Ranger's Handbook to Valhalla</div><div class='cw'>
+
+
+                 Chapter 1 ... Introduction
+                 Chapter 2 ... Combat
+                 Chapter 3 ... How to get around
+                 Chapter 4 ... The Automated Tour
+                 Chapter 5 ... Hint &amp; Tips
+                 Chapter 6 ... Help Topics
+
+Here is an example of how to read chapter one:
+
+   &gt; read chapter 1
 </div></pre>"
 
 extra {"chapter 1", "introduction", "chapter one"}
 
-"<pre>                        INTRODUCTION<br/>
-<br/>
-This handbook describes how to get started playing Valhalla as an<br/>
-Nymgaard Ranger. Read it carefully and you can get started in only<br/>
-a few minutes.<br/><br/><br/>
-<br/>
-You have just received a lot of equipment and a dictionary which<br/>
-has been prepared especially for you. To see the equipment, type:<br/>
-<br/>
-   &gt; inventory (or the shorthand version: i)<br/>
-   &gt; equipment (or the shorthand version: eq)<br/>
-<br/>
-To see what aliases have been defined in your dictionary, write:<br/>
-<br/>
-   &gt; alias (or the shorthand version: al)<br/>
-<br/>
+"<pre>                        INTRODUCTION
+
+This handbook describes how to get started playing Valhalla as an
+Nymgaard Ranger. Read it carefully and you can get started in only
+a few minutes.
+
+You have just received a lot of equipment and a dictionary which
+has been prepared especially for you. To see the equipment, type:
+
+   &gt; inventory (or the shorthand version: i)
+   &gt; equipment (or the shorthand version: eq)
+
+To see what aliases have been defined in your dictionary, write:
+
+   &gt; alias (or the shorthand version: al)
+
 Now read chapter 2.</pre>"
 
 extra {"chapter 2", "chapter two"}
-"<pre>                           COMBAT<br/>
-<br/>
-You must always be sure that your opponent is not out of your<br/>
-league, you can do this by using the consider command, example:<br/>
-<br/>
-  &gt; consider rabbit<br/>
-<br/>
-This will approximately tell you how dangerous your opponent is.<br/>
-Right now you can try your strength against rabbits, skunks and badgers,<br/>
-and perhaps even risk the more dangerous fox, deer and boar.<br/><br/><br/>
-<br/>
-Aliases have been defined in your dictionary, they are a shorthand method<br/>
-for writing long commands, so when you spot one of the above opponents,<br/>
-you can quickly attack it, example:<br/>
-<br/>
-  &gt; kr  (to execute the kill rabbit alias)<br/>
-<br/>
+"<pre>                           COMBAT
+
+You must always be sure that your opponent is not out of your
+league, you can do this by using the consider command, example:
+
+  &gt; consider rabbit
+
+This will approximately tell you how dangerous your opponent is.
+Right now you can try your strength against rabbits, skunks and badgers,
+and perhaps even risk the more dangerous fox, deer and boar.
+
+Aliases have been defined in your dictionary, they are a shorthand method
+for writing long commands, so when you spot one of the above opponents,
+you can quickly attack it, example:
+
+  &gt; kr  (to execute the kill rabbit alias)
+
 Now read chapter 3 about finding your opponents.</pre>"
 
 
 extra {"chapter 3", "chapter three"}
-"<pre>                         HOW TO GET AROUND<br/>
-<br/>
-You are just about ready, all you need is to find your way around this<br/>
-place. Your life begins in the small village of Udgaard, located between<br/>
-the ancient forest of Haon Dor and the younger Cypress Forest.<br/>
-While in Udgaard, you can get a map at any time by typing:<br/>
-<br/>
-   &gt; help<br/>
-<br/>
-The map shows you how to get to the Haon-Dor Forest as well as the<br/>
-Cypress Forest. From the village square simply go east three times to<br/>
-get to the Cypress forest, or west three times to get to the Haon Dor<br/>
-forest. Both locations are ideal for beginners such as yourself.<br/><br/><br/>
-<br/>
-Once in either forest, find a rabbit, a skunk, a badger or a fox<br/>
-and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,<br/>
-kb to kill a badger, etc.)<br/><br/><br/>
-<br/>
+"<pre>                         HOW TO GET AROUND
+
+You are just about ready, all you need is to find your way around this
+place. Your life begins in the small village of Udgaard, located between
+the ancient forest of Haon Dor and the younger Cypress Forest.
+While in Udgaard, you can get a map at any time by typing:
+
+   &gt; help
+
+The map shows you how to get to the Haon-Dor Forest as well as the
+Cypress Forest. From the village square simply go east three times to
+get to the Cypress forest, or west three times to get to the Haon Dor
+forest. Both locations are ideal for beginners such as yourself.
+
+Once in either forest, find a rabbit, a skunk, a badger or a fox
+and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,
+kb to kill a badger, etc.)
+
 Now read chapter four.</pre>"
 
 extra {"chapter 4", "chapter four"}
-"<pre>                          THE AUTOMATED TOUR<br/>
-<br/>
-If you have made it this far, you are well on your way! In Valhalla<br/>
-there is a teacher which will explain you the basics of the game. He<br/>
-can be quite boring, but if you feel more comfortable getting the<br/>
-tour, write:<br/>
-<br/>
-   &gt; say help me newbie guide<br/>
-<br/>
-when standing in the Temple of Udgaard. This will start an automated tour<br/>
+"<pre>                          THE AUTOMATED TOUR
+
+If you have made it this far, you are well on your way! In Valhalla
+there is a teacher which will explain you the basics of the game. He
+can be quite boring, but if you feel more comfortable getting the
+tour, write:
+
+   &gt; say help me newbie guide
+
+when standing in the Temple of Udgaard. This will start an automated tour
 of the mud commands and the town. Now read chapter 5.</pre>"
 
 
 
 extra {"chapter 5", "chapter five"}
 
-"<pre>                           HINTS &amp; TIPS<br/>
-<br/>
-Try the following commands:<br/>
-<br/>
-  &gt; score<br/>
-  &gt; status<br/>
-  &gt; status weapons<br/>
-  &gt; status spells<br/>
-  &gt; status skills<br/>
-<br/>
-There is no need for you to visit your guild until you have earned<br/>
-a level. All your skills and abilities are set from the beginning.<br/>
-You can earn experience faster by being in a group with other players.<br/><br/><br/>
-<br/>
-Note that when you are in wimpy mode you only gain HALF xp but you<br/>
-significantly reduce the risk of dying. See 'help wimpy' for further<br/>
-details.<br/><br/><br/>
-<br/>
-If you lose your equipment, you can always pray to the statue of Odin<br/>
-in the Temple of Udgaard. Odin will grant you new equipment for that which<br/>
-is lost or missing, write this:<br/>
-<br/>
-  &gt; pray odin<br/>
+"<pre>                           HINTS &amp; TIPS
+
+Try the following commands:
+
+  &gt; score
+  &gt; status
+  &gt; status weapons
+  &gt; status spells
+  &gt; status skills
+
+There is no need for you to visit your guild until you have earned
+a level. All your skills and abilities are set from the beginning.
+You can earn experience faster by being in a group with other players.
+
+Note that when you are in wimpy mode you only gain HALF xp but you
+significantly reduce the risk of dying. See 'help wimpy' for further
+details.
+
+If you lose your equipment, you can always pray to the statue of Odin
+in the Temple of Udgaard. Odin will grant you new equipment for that which
+is lost or missing, write this:
+
+  &gt; pray odin
 </pre>"
 
 extra {"chapter 6", "chapter six"}
-"<pre>                            HELP TOPICS<br/>
-<br/>
-The following are good help topics for beginners:<br/>
-<br/>
-   &gt; help me<br/>
-   &gt; help status<br/>
-   &gt; help score<br/>
-   &gt; help wear<br/>
-   &gt; help wimpy<br/>
-   &gt; help alias<br/>
-   &gt; help abilities<br/>
-   &gt; help weapon<br/>
-   &gt; help armour<br/>
-   &gt; help practice<br/>
-   &gt; help info<br/>
+"<pre>                            HELP TOPICS
+
+The following are good help topics for beginners:
+
+   &gt; help me
+   &gt; help status
+   &gt; help score
+   &gt; help wear
+   &gt; help wimpy
+   &gt; help alias
+   &gt; help abilities
+   &gt; help weapon
+   &gt; help armour
+   &gt; help practice
+   &gt; help info
    &gt; help index</pre>"
 end
 
@@ -5802,140 +5802,140 @@ weight 1
 dilcopy eager_read@udgaard();
 
 extra {}
-"<pre>                <div class='cpy'>The Thief's Handbook to Valhalla</div><div class='cw'><br/>
-<br/>
-<br/>
-                 Chapter 1 ... Introduction<br/>
-                 Chapter 2 ... Combat<br/>
-                 Chapter 3 ... How to get around<br/>
-                 Chapter 4 ... The Automated Tour<br/>
-                 Chapter 5 ... Hint &amp; Tips<br/>
-                 Chapter 6 ... Help Topics<br/>
-<br/>
-Here is an example of how to read chapter one:<br/>
-<br/>
-   &gt; read chapter 1<br/>
+"<pre>                <div class='cpy'>The Thief's Handbook to Valhalla</div><div class='cw'>
+
+
+                 Chapter 1 ... Introduction
+                 Chapter 2 ... Combat
+                 Chapter 3 ... How to get around
+                 Chapter 4 ... The Automated Tour
+                 Chapter 5 ... Hint &amp; Tips
+                 Chapter 6 ... Help Topics
+
+Here is an example of how to read chapter one:
+
+   &gt; read chapter 1
 </div></pre>"
 
 extra {"chapter 1", "introduction", "chapter one"}
 
-"<pre>                        INTRODUCTION<br/>
-<br/>
-This handbook describes how to get started playing Valhalla as an<br/>
-Udgaard Thief. Read it carefully and you can get started in only<br/>
-a few minutes.<br/><br/><br/>
-<br/>
-You have just received a lot of equipment and a dictionary which<br/>
-has been prepared especially for you. To see the equipment, type:<br/>
-<br/>
-   &gt; inventory (or the shorthand version: i)<br/>
-   &gt; equipment (or the shorthand version: eq)<br/>
-<br/>
-To see what aliases have been defined in your dictionary, write:<br/>
-<br/>
-   &gt; alias (or the shorthand version: al)<br/>
-<br/>
+"<pre>                        INTRODUCTION
+
+This handbook describes how to get started playing Valhalla as an
+Udgaard Thief. Read it carefully and you can get started in only
+a few minutes.
+
+You have just received a lot of equipment and a dictionary which
+has been prepared especially for you. To see the equipment, type:
+
+   &gt; inventory (or the shorthand version: i)
+   &gt; equipment (or the shorthand version: eq)
+
+To see what aliases have been defined in your dictionary, write:
+
+   &gt; alias (or the shorthand version: al)
+
 Now read chapter 2.</pre>"
 
 extra {"chapter 2", "chapter two"}
-"<pre>                           COMBAT<br/>
-<br/>
-You must always be sure that your opponent is not out of your<br/>
-league, you can do this by using the consider command, example:<br/>
-<br/>
-  &gt; consider rabbit<br/>
-<br/>
-This will approximately tell you how dangerous your opponent is.<br/>
-Right now you can try your strength against rabbits, skunks and badgers,<br/>
-and perhaps even risk the more dangerous fox, deer and boar.<br/><br/><br/>
-<br/>
-Aliases have been defined in your dictionary, they are a shorthand method<br/>
-for writing long commands, so when you spot one of the above opponents,<br/>
-you can quickly attack it, example:<br/>
-<br/>
-  &gt; kr  (to execute the kill rabbit alias)<br/>
-<br/>
+"<pre>                           COMBAT
+
+You must always be sure that your opponent is not out of your
+league, you can do this by using the consider command, example:
+
+  &gt; consider rabbit
+
+This will approximately tell you how dangerous your opponent is.
+Right now you can try your strength against rabbits, skunks and badgers,
+and perhaps even risk the more dangerous fox, deer and boar.
+
+Aliases have been defined in your dictionary, they are a shorthand method
+for writing long commands, so when you spot one of the above opponents,
+you can quickly attack it, example:
+
+  &gt; kr  (to execute the kill rabbit alias)
+
 Now read chapter 3 about finding your opponents.</pre>"
 
 
 extra {"chapter 3", "chapter three"}
-"<pre>                         HOW TO GET AROUND<br/>
-<br/>
-You are just about ready, all you need is to find your way around this<br/>
-place. Your life begins in the small village of Udgaard, located between<br/>
-the ancient forest of Haon Dor and the younger Cypress Forest.<br/>
-While in Udgaard, you can get a map at any time by typing:<br/>
-<br/>
-   &gt; help<br/>
-<br/>
-The map shows you how to get to the Haon-Dor Forest as well as the<br/>
-Cypress Forest. From the village square simply go east three times to<br/>
-get to the Cypress forest, or west three times to get to the Haon Dor<br/>
-forest. Both locations are ideal for beginners such as yourself.<br/><br/><br/>
-<br/>
-Once in either forest, find a rabbit, a skunk, a badger or a fox<br/>
-and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,<br/>
-kb to kill a badger, etc.)<br/><br/><br/>
-<br/>
+"<pre>                         HOW TO GET AROUND
+
+You are just about ready, all you need is to find your way around this
+place. Your life begins in the small village of Udgaard, located between
+the ancient forest of Haon Dor and the younger Cypress Forest.
+While in Udgaard, you can get a map at any time by typing:
+
+   &gt; help
+
+The map shows you how to get to the Haon-Dor Forest as well as the
+Cypress Forest. From the village square simply go east three times to
+get to the Cypress forest, or west three times to get to the Haon Dor
+forest. Both locations are ideal for beginners such as yourself.
+
+Once in either forest, find a rabbit, a skunk, a badger or a fox
+and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,
+kb to kill a badger, etc.)
+
 Now read chapter four.</pre>"
 
 extra {"chapter 4", "chapter four"}
-"<pre>                          THE AUTOMATED TOUR<br/>
-<br/>
-If you have made it this far, you are well on your way! In Valhalla<br/>
-there is a teacher which will explain you the basics of the game. He<br/>
-can be quite boring, but if you feel more comfortable getting the<br/>
-tour, write:<br/>
-<br/>
-   &gt; say help me newbie guide<br/>
-<br/>
-when standing in the Temple of Udgaard. This will start an automated tour<br/>
+"<pre>                          THE AUTOMATED TOUR
+
+If you have made it this far, you are well on your way! In Valhalla
+there is a teacher which will explain you the basics of the game. He
+can be quite boring, but if you feel more comfortable getting the
+tour, write:
+
+   &gt; say help me newbie guide
+
+when standing in the Temple of Udgaard. This will start an automated tour
 of the mud commands and the town. Now read chapter 5.</pre>"
 
 
 extra {"chapter 5", "chapter five"}
 
-"<pre>                           HINTS &amp; TIPS<br/>
-<br/>
-Try the following commands:<br/>
-<br/>
-  &gt; score<br/>
-  &gt; status<br/>
-  &gt; status weapons<br/>
-  &gt; status spells<br/>
-  &gt; status skills<br/>
-<br/>
-There is no need for you to visit your guild until you have earned<br/>
-a level. All your skills and abilities are set from the beginning.<br/>
-You can earn experience faster by being in a group with other players.<br/><br/><br/>
-<br/>
-Note that when you are in wimpy mode you only gain HALF xp but you<br/>
-significantly reduce the risk of dying. See 'help wimpy' for further<br/>
-details.<br/><br/><br/>
-<br/>
-If you lose your equipment, you can always pray to the statue of Odin<br/>
-in the Temple of Udgaard. Odin will grant you new equipment for that which<br/>
-is lost or missing, write this:<br/>
-<br/>
-  &gt; pray odin<br/>
+"<pre>                           HINTS &amp; TIPS
+
+Try the following commands:
+
+  &gt; score
+  &gt; status
+  &gt; status weapons
+  &gt; status spells
+  &gt; status skills
+
+There is no need for you to visit your guild until you have earned
+a level. All your skills and abilities are set from the beginning.
+You can earn experience faster by being in a group with other players.
+
+Note that when you are in wimpy mode you only gain HALF xp but you
+significantly reduce the risk of dying. See 'help wimpy' for further
+details.
+
+If you lose your equipment, you can always pray to the statue of Odin
+in the Temple of Udgaard. Odin will grant you new equipment for that which
+is lost or missing, write this:
+
+  &gt; pray odin
 </pre>"
 
 extra {"chapter 6", "chapter six"}
-"<pre>                            HELP TOPICS<br/>
-<br/>
-The following are good help topics for beginners:<br/>
-<br/>
-   &gt; help me<br/>
-   &gt; help status<br/>
-   &gt; help score<br/>
-   &gt; help wear<br/>
-   &gt; help wimpy<br/>
-   &gt; help alias<br/>
-   &gt; help abilities<br/>
-   &gt; help weapon<br/>
-   &gt; help armour<br/>
-   &gt; help practice<br/>
-   &gt; help info<br/>
+"<pre>                            HELP TOPICS
+
+The following are good help topics for beginners:
+
+   &gt; help me
+   &gt; help status
+   &gt; help score
+   &gt; help wear
+   &gt; help wimpy
+   &gt; help alias
+   &gt; help abilities
+   &gt; help weapon
+   &gt; help armour
+   &gt; help practice
+   &gt; help info
    &gt; help index</pre>"
 end
 
@@ -5951,140 +5951,140 @@ weight 1
 dilcopy eager_read@udgaard();
 
 extra {}
-"<pre>                <div class='cpy'>The Assassin's Handbook to Valhalla</div><div class='cw'><br/>
-<br/>
-<br/>
-                 Chapter 1 ... Introduction<br/>
-                 Chapter 2 ... Combat<br/>
-                 Chapter 3 ... How to get around<br/>
-                 Chapter 4 ... The Automated Tour<br/>
-                 Chapter 5 ... Hint &amp; Tips<br/>
-                 Chapter 6 ... Help Topics<br/>
-<br/>
-Here is an example of how to read chapter one:<br/>
-<br/>
-   &gt; read chapter 1<br/>
+"<pre>                <div class='cpy'>The Assassin's Handbook to Valhalla</div><div class='cw'>
+
+
+                 Chapter 1 ... Introduction
+                 Chapter 2 ... Combat
+                 Chapter 3 ... How to get around
+                 Chapter 4 ... The Automated Tour
+                 Chapter 5 ... Hint &amp; Tips
+                 Chapter 6 ... Help Topics
+
+Here is an example of how to read chapter one:
+
+   &gt; read chapter 1
 </div></pre>"
 
 extra {"chapter 1", "introduction", "chapter one"}
 
-"<pre>                        INTRODUCTION<br/>
-<br/>
-This handbook describes how to get started playing Valhalla as an<br/>
-Khorsabad Assassin. Read it carefully and you can get started in only<br/>
-a few minutes.<br/><br/><br/>
-<br/>
-You have just received a lot of equipment and a dictionary which<br/>
-has been prepared especially for you. To see the equipment, type:<br/>
-<br/>
-   &gt; inventory (or the shorthand version: i)<br/>
-   &gt; equipment (or the shorthand version: eq)<br/>
-<br/>
-To see what aliases have been defined in your dictionary, write:<br/>
-<br/>
-   &gt; alias (or the shorthand version: al)<br/>
-<br/>
+"<pre>                        INTRODUCTION
+
+This handbook describes how to get started playing Valhalla as an
+Khorsabad Assassin. Read it carefully and you can get started in only
+a few minutes.
+
+You have just received a lot of equipment and a dictionary which
+has been prepared especially for you. To see the equipment, type:
+
+   &gt; inventory (or the shorthand version: i)
+   &gt; equipment (or the shorthand version: eq)
+
+To see what aliases have been defined in your dictionary, write:
+
+   &gt; alias (or the shorthand version: al)
+
 Now read chapter 2.</pre>"
 
 extra {"chapter 2", "chapter two"}
-"<pre>                           COMBAT<br/>
-<br/>
-You must always be sure that your opponent is not out of your<br/>
-league, you can do this by using the consider command, example:<br/>
-<br/>
-  &gt; consider rabbit<br/>
-<br/>
-This will approximately tell you how dangerous your opponent is.<br/>
-Right now you can try your strength against rabbits, skunks and badgers,<br/>
-and perhaps even risk the more dangerous fox, deer and boar.<br/><br/><br/>
-<br/>
-Aliases have been defined in your dictionary, they are a shorthand method<br/>
-for writing long commands, so when you spot one of the above opponents,<br/>
-you can quickly attack it, example:<br/>
-<br/>
-  &gt; kr  (to execute the kill rabbit alias)<br/>
-<br/>
+"<pre>                           COMBAT
+
+You must always be sure that your opponent is not out of your
+league, you can do this by using the consider command, example:
+
+  &gt; consider rabbit
+
+This will approximately tell you how dangerous your opponent is.
+Right now you can try your strength against rabbits, skunks and badgers,
+and perhaps even risk the more dangerous fox, deer and boar.
+
+Aliases have been defined in your dictionary, they are a shorthand method
+for writing long commands, so when you spot one of the above opponents,
+you can quickly attack it, example:
+
+  &gt; kr  (to execute the kill rabbit alias)
+
 Now read chapter 3 about finding your opponents.</pre>"
 
 
 extra {"chapter 3", "chapter three"}
-"<pre>                         HOW TO GET AROUND<br/>
-<br/>
-You are just about ready, all you need is to find your way around this<br/>
-place. Your life begins in the small village of Udgaard, located between<br/>
-the ancient forest of Haon Dor and the younger Cypress Forest.<br/>
-While in Udgaard, you can get a map at any time by typing:<br/>
-<br/>
-   &gt; help<br/>
-<br/>
-The map shows you how to get to the Haon-Dor Forest as well as the<br/>
-Cypress Forest. From the village square simply go east three times to<br/>
-get to the Cypress forest, or west three times to get to the Haon Dor<br/>
-forest. Both locations are ideal for beginners such as yourself.<br/><br/><br/>
-<br/>
-Once in either forest, find a rabbit, a skunk, a badger or a fox<br/>
-and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,<br/>
-kb to kill a badger, etc.)<br/><br/><br/>
-<br/>
+"<pre>                         HOW TO GET AROUND
+
+You are just about ready, all you need is to find your way around this
+place. Your life begins in the small village of Udgaard, located between
+the ancient forest of Haon Dor and the younger Cypress Forest.
+While in Udgaard, you can get a map at any time by typing:
+
+   &gt; help
+
+The map shows you how to get to the Haon-Dor Forest as well as the
+Cypress Forest. From the village square simply go east three times to
+get to the Cypress forest, or west three times to get to the Haon Dor
+forest. Both locations are ideal for beginners such as yourself.
+
+Once in either forest, find a rabbit, a skunk, a badger or a fox
+and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,
+kb to kill a badger, etc.)
+
 Now read chapter four.</pre>"
 
 extra {"chapter 4", "chapter four"}
-"<pre>                          THE AUTOMATED TOUR<br/>
-<br/>
-If you have made it this far, you are well on your way! In Valhalla<br/>
-there is a teacher which will explain you the basics of the game. He<br/>
-can be quite boring, but if you feel more comfortable getting the<br/>
-tour, write:<br/>
-<br/>
-   &gt; say help me newbie guide<br/>
-<br/>
-when standing in the Temple of Udgaard. This will start an automated tour<br/>
+"<pre>                          THE AUTOMATED TOUR
+
+If you have made it this far, you are well on your way! In Valhalla
+there is a teacher which will explain you the basics of the game. He
+can be quite boring, but if you feel more comfortable getting the
+tour, write:
+
+   &gt; say help me newbie guide
+
+when standing in the Temple of Udgaard. This will start an automated tour
 of the mud commands and the town. Now read chapter 5.</pre>"
 
 
 extra {"chapter 5", "chapter five"}
 
-"<pre>                           HINTS &amp; TIPS<br/>
-<br/>
-Try the following commands:<br/>
-<br/>
-  &gt; score<br/>
-  &gt; status<br/>
-  &gt; status weapons<br/>
-  &gt; status spells<br/>
-  &gt; status skills<br/>
-<br/>
-There is no need for you to visit your guild until you have earned<br/>
-a level. All your skills and abilities are set from the beginning.<br/>
-You can earn experience faster by being in a group with other players.<br/><br/><br/>
-<br/>
-Note that when you are in wimpy mode you only gain HALF xp but you<br/>
-significantly reduce the risk of dying. See 'help wimpy' for further<br/>
-details.<br/><br/><br/>
-<br/>
-If you lose your equipment, you can always pray to the statue of Odin<br/>
-in the Temple of Udgaard. Odin will grant you new equipment for that which<br/>
-is lost or missing, write this:<br/>
-<br/>
-  &gt; pray odin<br/>
+"<pre>                           HINTS &amp; TIPS
+
+Try the following commands:
+
+  &gt; score
+  &gt; status
+  &gt; status weapons
+  &gt; status spells
+  &gt; status skills
+
+There is no need for you to visit your guild until you have earned
+a level. All your skills and abilities are set from the beginning.
+You can earn experience faster by being in a group with other players.
+
+Note that when you are in wimpy mode you only gain HALF xp but you
+significantly reduce the risk of dying. See 'help wimpy' for further
+details.
+
+If you lose your equipment, you can always pray to the statue of Odin
+in the Temple of Udgaard. Odin will grant you new equipment for that which
+is lost or missing, write this:
+
+  &gt; pray odin
 </pre>"
 
 extra {"chapter 6", "chapter six"}
-"<pre>                            HELP TOPICS<br/>
-<br/>
-The following are good help topics for beginners:<br/>
-<br/>
-   &gt; help me<br/>
-   &gt; help status<br/>
-   &gt; help score<br/>
-   &gt; help wear<br/>
-   &gt; help wimpy<br/>
-   &gt; help alias<br/>
-   &gt; help abilities<br/>
-   &gt; help weapon<br/>
-   &gt; help armour<br/>
-   &gt; help practice<br/>
-   &gt; help info<br/>
+"<pre>                            HELP TOPICS
+
+The following are good help topics for beginners:
+
+   &gt; help me
+   &gt; help status
+   &gt; help score
+   &gt; help wear
+   &gt; help wimpy
+   &gt; help alias
+   &gt; help abilities
+   &gt; help weapon
+   &gt; help armour
+   &gt; help practice
+   &gt; help info
    &gt; help index</pre>"
 end
 
@@ -6100,141 +6100,141 @@ weight 1
 dilcopy eager_read@udgaard();
 
 extra {}
-"<pre>                <div class='cpy'>The Healer's Handbook to Valhalla</div><div class='cw'><br/>
-<br/>
-<br/>
-                 Chapter 1 ... Introduction<br/>
-                 Chapter 2 ... Combat<br/>
-                 Chapter 3 ... How to get around<br/>
-                 Chapter 4 ... The Automated Tour<br/>
-                 Chapter 5 ... Hint &amp; Tips<br/>
-                 Chapter 6 ... Help Topics<br/>
-<br/>
-Here is an example of how to read chapter one:<br/>
-<br/>
-   &gt; read chapter 1<br/>
+"<pre>                <div class='cpy'>The Healer's Handbook to Valhalla</div><div class='cw'>
+
+
+                 Chapter 1 ... Introduction
+                 Chapter 2 ... Combat
+                 Chapter 3 ... How to get around
+                 Chapter 4 ... The Automated Tour
+                 Chapter 5 ... Hint &amp; Tips
+                 Chapter 6 ... Help Topics
+
+Here is an example of how to read chapter one:
+
+   &gt; read chapter 1
 </div></pre>"
 
 extra {"chapter 1", "introduction", "chapter one"}
 
-"<pre>                        INTRODUCTION<br/>
-<br/>
-This handbook describes how to get started playing Valhalla as an<br/>
-Udgaard Healer. Read it carefully and you can get started in only<br/>
-a few minutes.<br/><br/><br/>
-<br/>
-You have just received a lot of equipment and a dictionary which<br/>
-has been prepared especially for you. To see the equipment, type:<br/>
-<br/>
-   &gt; inventory (or the shorthand version: i)<br/>
-   &gt; equipment (or the shorthand version: eq)<br/>
-<br/>
-To see what aliases have been defined in your dictionary, write:<br/>
-<br/>
-   &gt; alias (or the shorthand version: al)<br/>
-<br/>
+"<pre>                        INTRODUCTION
+
+This handbook describes how to get started playing Valhalla as an
+Udgaard Healer. Read it carefully and you can get started in only
+a few minutes.
+
+You have just received a lot of equipment and a dictionary which
+has been prepared especially for you. To see the equipment, type:
+
+   &gt; inventory (or the shorthand version: i)
+   &gt; equipment (or the shorthand version: eq)
+
+To see what aliases have been defined in your dictionary, write:
+
+   &gt; alias (or the shorthand version: al)
+
 Now read chapter 2.</pre>"
 
 extra {"chapter 2", "chapter two"}
-"<pre>                           COMBAT<br/>
-<br/>
-You must always be sure that your opponent is not out of your<br/>
-league, you can do this by using the consider command, example:<br/>
-<br/>
-  &gt; consider rabbit<br/>
-<br/>
-This will approximately tell you how dangerous your opponent is.<br/>
-Right now you can try your strength against rabbits, skunks and badgers,<br/>
-and perhaps even risk the more dangerous fox, deer and boar.<br/><br/><br/>
-<br/>
-Aliases have been defined in your dictionary, they are a shorthand method<br/>
-for writing long commands, so when you spot one of the above opponents,<br/>
-you can quickly attack it, example:<br/>
-<br/>
-  &gt; kr  (to execute the kill rabbit alias)<br/>
-<br/>
+"<pre>                           COMBAT
+
+You must always be sure that your opponent is not out of your
+league, you can do this by using the consider command, example:
+
+  &gt; consider rabbit
+
+This will approximately tell you how dangerous your opponent is.
+Right now you can try your strength against rabbits, skunks and badgers,
+and perhaps even risk the more dangerous fox, deer and boar.
+
+Aliases have been defined in your dictionary, they are a shorthand method
+for writing long commands, so when you spot one of the above opponents,
+you can quickly attack it, example:
+
+  &gt; kr  (to execute the kill rabbit alias)
+
 Now read chapter 3 about finding your opponents.</pre>"
 
 
 extra {"chapter 3", "chapter three"}
-"<pre>                         HOW TO GET AROUND<br/>
-<br/>
-You are just about ready, all you need is to find your way around this<br/>
-place. Your life begins in the small village of Udgaard, located between<br/>
-the ancient forest of Haon Dor and the younger Cypress Forest.<br/>
-While in Udgaard, you can get a map at any time by typing:<br/>
-<br/>
-   &gt; help<br/>
-<br/>
-The map shows you how to get to the Haon-Dor Forest as well as the<br/>
-Cypress Forest. From the village square simply go east three times to<br/>
-get to the Cypress forest, or west three times to get to the Haon Dor<br/>
-forest. Both locations are ideal for beginners such as yourself.<br/><br/><br/>
-<br/>
-Once in either forest, find a rabbit, a skunk, a badger or a fox<br/>
-and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,<br/>
-kb to kill a badger, etc.)<br/><br/><br/>
-<br/>
+"<pre>                         HOW TO GET AROUND
+
+You are just about ready, all you need is to find your way around this
+place. Your life begins in the small village of Udgaard, located between
+the ancient forest of Haon Dor and the younger Cypress Forest.
+While in Udgaard, you can get a map at any time by typing:
+
+   &gt; help
+
+The map shows you how to get to the Haon-Dor Forest as well as the
+Cypress Forest. From the village square simply go east three times to
+get to the Cypress forest, or west three times to get to the Haon Dor
+forest. Both locations are ideal for beginners such as yourself.
+
+Once in either forest, find a rabbit, a skunk, a badger or a fox
+and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,
+kb to kill a badger, etc.)
+
 Now read chapter four.</pre>"
 
 extra {"chapter 4", "chapter four"}
-"<pre>                          THE AUTOMATED TOUR<br/>
-<br/>
-If you have made it this far, you are well on your way! In Valhalla<br/>
-there is a teacher which will explain you the basics of the game. He<br/>
-can be quite boring, but if you feel more comfortable getting the<br/>
-tour, write:<br/>
-<br/>
-   &gt; say help me newbie guide<br/>
-<br/>
-when standing in the Temple of Udgaard. This will start an automated tour<br/>
+"<pre>                          THE AUTOMATED TOUR
+
+If you have made it this far, you are well on your way! In Valhalla
+there is a teacher which will explain you the basics of the game. He
+can be quite boring, but if you feel more comfortable getting the
+tour, write:
+
+   &gt; say help me newbie guide
+
+when standing in the Temple of Udgaard. This will start an automated tour
 of the mud commands and the town. Now read chapter 5.</pre>"
 
 
 
 extra {"chapter 5", "chapter five"}
 
-"<pre>                           HINTS &amp; TIPS<br/>
-<br/>
-Try the following commands:<br/>
-<br/>
-  &gt; score<br/>
-  &gt; status<br/>
-  &gt; status weapons<br/>
-  &gt; status spells<br/>
-  &gt; status skills<br/>
-<br/>
-There is no need for you to visit your guild until you have earned<br/>
-a level. All your skills and abilities are set from the beginning.<br/>
-You can earn experience faster by being in a group with other players.<br/><br/><br/>
-<br/>
-Note that when you are in wimpy mode you only gain HALF xp but you<br/>
-significantly reduce the risk of dying. See 'help wimpy' for further<br/>
-details.<br/><br/><br/>
-<br/>
-If you lose your equipment, you can always pray to the statue of Odin<br/>
-in the Temple of Udgaard. Odin will grant you new equipment for that which<br/>
-is lost or missing, write this:<br/>
-<br/>
-  &gt; pray odin<br/>
+"<pre>                           HINTS &amp; TIPS
+
+Try the following commands:
+
+  &gt; score
+  &gt; status
+  &gt; status weapons
+  &gt; status spells
+  &gt; status skills
+
+There is no need for you to visit your guild until you have earned
+a level. All your skills and abilities are set from the beginning.
+You can earn experience faster by being in a group with other players.
+
+Note that when you are in wimpy mode you only gain HALF xp but you
+significantly reduce the risk of dying. See 'help wimpy' for further
+details.
+
+If you lose your equipment, you can always pray to the statue of Odin
+in the Temple of Udgaard. Odin will grant you new equipment for that which
+is lost or missing, write this:
+
+  &gt; pray odin
 </pre>"
 
 extra {"chapter 6", "chapter six"}
-"<pre>                            HELP TOPICS<br/>
-<br/>
-The following are good help topics for beginners:<br/>
-<br/>
-   &gt; help me<br/>
-   &gt; help status<br/>
-   &gt; help score<br/>
-   &gt; help wear<br/>
-   &gt; help wimpy<br/>
-   &gt; help alias<br/>
-   &gt; help abilities<br/>
-   &gt; help weapon<br/>
-   &gt; help armour<br/>
-   &gt; help practice<br/>
-   &gt; help info<br/>
+"<pre>                            HELP TOPICS
+
+The following are good help topics for beginners:
+
+   &gt; help me
+   &gt; help status
+   &gt; help score
+   &gt; help wear
+   &gt; help wimpy
+   &gt; help alias
+   &gt; help abilities
+   &gt; help weapon
+   &gt; help armour
+   &gt; help practice
+   &gt; help info
    &gt; help index</pre>"
 end
 
@@ -6250,141 +6250,141 @@ weight 1
 dilcopy eager_read@udgaard();
 
 extra {}
-"<pre>                <div class='cpy'>The Healer's Handbook to Valhalla</div><div class='cw'><br/>
-<br/>
-<br/>
-                 Chapter 1 ... Introduction<br/>
-                 Chapter 2 ... Combat<br/>
-                 Chapter 3 ... How to get around<br/>
-                 Chapter 4 ... The Automated Tour<br/>
-                 Chapter 5 ... Hint &amp; Tips<br/>
-                 Chapter 6 ... Help Topics<br/>
-<br/>
-Here is an example of how to read chapter one:<br/>
-<br/>
-   &gt; read chapter 1<br/>
+"<pre>                <div class='cpy'>The Healer's Handbook to Valhalla</div><div class='cw'>
+
+
+                 Chapter 1 ... Introduction
+                 Chapter 2 ... Combat
+                 Chapter 3 ... How to get around
+                 Chapter 4 ... The Automated Tour
+                 Chapter 5 ... Hint &amp; Tips
+                 Chapter 6 ... Help Topics
+
+Here is an example of how to read chapter one:
+
+   &gt; read chapter 1
 </div></pre>"
 
 extra {"chapter 1", "introduction", "chapter one"}
 
-"<pre>                        INTRODUCTION<br/>
-<br/>
-This handbook describes how to get started playing Valhalla as an<br/>
-Necromancer. Read it carefully and you can get started in only<br/>
-a few minutes.<br/><br/><br/>
-<br/>
-You have just received a lot of equipment and a dictionary which<br/>
-has been prepared especially for you. To see the equipment, type:<br/>
-<br/>
-   &gt; inventory (or the shorthand version: i)<br/>
-   &gt; equipment (or the shorthand version: eq)<br/>
-<br/>
-To see what aliases have been defined in your dictionary, write:<br/>
-<br/>
-   &gt; alias (or the shorthand version: al)<br/>
-<br/>
+"<pre>                        INTRODUCTION
+
+This handbook describes how to get started playing Valhalla as an
+Necromancer. Read it carefully and you can get started in only
+a few minutes.
+
+You have just received a lot of equipment and a dictionary which
+has been prepared especially for you. To see the equipment, type:
+
+   &gt; inventory (or the shorthand version: i)
+   &gt; equipment (or the shorthand version: eq)
+
+To see what aliases have been defined in your dictionary, write:
+
+   &gt; alias (or the shorthand version: al)
+
 Now read chapter 2.</pre>"
 
 extra {"chapter 2", "chapter two"}
-"<pre>                           COMBAT<br/>
-<br/>
-You must always be sure that your opponent is not out of your<br/>
-league, you can do this by using the consider command, example:<br/>
-<br/>
-  &gt; consider rabbit<br/>
-<br/>
-This will approximately tell you how dangerous your opponent is.<br/>
-Right now you can try your strength against rabbits, skunks and badgers,<br/>
-and perhaps even risk the more dangerous fox, deer and boar.<br/><br/><br/>
-<br/>
-Aliases have been defined in your dictionary, they are a shorthand method<br/>
-for writing long commands, so when you spot one of the above opponents,<br/>
-you can quickly attack it, example:<br/>
-<br/>
-  &gt; kr  (to execute the kill rabbit alias)<br/>
-<br/>
+"<pre>                           COMBAT
+
+You must always be sure that your opponent is not out of your
+league, you can do this by using the consider command, example:
+
+  &gt; consider rabbit
+
+This will approximately tell you how dangerous your opponent is.
+Right now you can try your strength against rabbits, skunks and badgers,
+and perhaps even risk the more dangerous fox, deer and boar.
+
+Aliases have been defined in your dictionary, they are a shorthand method
+for writing long commands, so when you spot one of the above opponents,
+you can quickly attack it, example:
+
+  &gt; kr  (to execute the kill rabbit alias)
+
 Now read chapter 3 about finding your opponents.</pre>"
 
 
 extra {"chapter 3", "chapter three"}
-"<pre>                         HOW TO GET AROUND<br/>
-<br/>
-You are just about ready, all you need is to find your way around this<br/>
-place. Your life begins in the small village of Udgaard, located between<br/>
-the ancient forest of Haon Dor and the younger Cypress Forest.<br/>
-While in Udgaard, you can get a map at any time by typing:<br/>
-<br/>
-   &gt; help<br/>
-<br/>
-The map shows you how to get to the Haon-Dor Forest as well as the<br/>
-Cypress Forest. From the village square simply go east three times to<br/>
-get to the Cypress forest, or west three times to get to the Haon Dor<br/>
-forest. Both locations are ideal for beginners such as yourself.<br/><br/><br/>
-<br/>
-Once in either forest, find a rabbit, a skunk, a badger or a fox<br/>
-and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,<br/>
-kb to kill a badger, etc.)<br/><br/><br/>
-<br/>
+"<pre>                         HOW TO GET AROUND
+
+You are just about ready, all you need is to find your way around this
+place. Your life begins in the small village of Udgaard, located between
+the ancient forest of Haon Dor and the younger Cypress Forest.
+While in Udgaard, you can get a map at any time by typing:
+
+   &gt; help
+
+The map shows you how to get to the Haon-Dor Forest as well as the
+Cypress Forest. From the village square simply go east three times to
+get to the Cypress forest, or west three times to get to the Haon Dor
+forest. Both locations are ideal for beginners such as yourself.
+
+Once in either forest, find a rabbit, a skunk, a badger or a fox
+and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,
+kb to kill a badger, etc.)
+
 Now read chapter four.</pre>"
 
 extra {"chapter 4", "chapter four"}
-"<pre>                          THE AUTOMATED TOUR<br/>
-<br/>
-If you have made it this far, you are well on your way! In Valhalla<br/>
-there is a teacher which will explain you the basics of the game. He<br/>
-can be quite boring, but if you feel more comfortable getting the<br/>
-tour, write:<br/>
-<br/>
-   &gt; say help me newbie guide<br/>
-<br/>
-when standing in the Temple of Udgaard. This will start an automated tour<br/>
+"<pre>                          THE AUTOMATED TOUR
+
+If you have made it this far, you are well on your way! In Valhalla
+there is a teacher which will explain you the basics of the game. He
+can be quite boring, but if you feel more comfortable getting the
+tour, write:
+
+   &gt; say help me newbie guide
+
+when standing in the Temple of Udgaard. This will start an automated tour
 of the mud commands and the town. Now read chapter 5.</pre>"
 
 
 
 extra {"chapter 5", "chapter five"}
 
-"<pre>                           HINTS &amp; TIPS<br/>
-<br/>
-Try the following commands:<br/>
-<br/>
-  &gt; score<br/>
-  &gt; status<br/>
-  &gt; status weapons<br/>
-  &gt; status spells<br/>
-  &gt; status skills<br/>
-<br/>
-There is no need for you to visit your guild until you have earned<br/>
-a level. All your skills and abilities are set from the beginning.<br/>
-You can earn experience faster by being in a group with other players.<br/><br/><br/>
-<br/>
-Note that when you are in wimpy mode you only gain HALF xp but you<br/>
-significantly reduce the risk of dying. See 'help wimpy' for further<br/>
-details.<br/><br/><br/>
-<br/>
-If you lose your equipment, you can always pray to the statue of Odin<br/>
-in the Temple of Udgaard. Odin will grant you new equipment for that which<br/>
-is lost or missing, write this:<br/>
-<br/>
-  &gt; pray odin<br/>
+"<pre>                           HINTS &amp; TIPS
+
+Try the following commands:
+
+  &gt; score
+  &gt; status
+  &gt; status weapons
+  &gt; status spells
+  &gt; status skills
+
+There is no need for you to visit your guild until you have earned
+a level. All your skills and abilities are set from the beginning.
+You can earn experience faster by being in a group with other players.
+
+Note that when you are in wimpy mode you only gain HALF xp but you
+significantly reduce the risk of dying. See 'help wimpy' for further
+details.
+
+If you lose your equipment, you can always pray to the statue of Odin
+in the Temple of Udgaard. Odin will grant you new equipment for that which
+is lost or missing, write this:
+
+  &gt; pray odin
 </pre>"
 
 extra {"chapter 6", "chapter six"}
-"<pre>                            HELP TOPICS<br/>
-<br/>
-The following are good help topics for beginners:<br/>
-<br/>
-   &gt; help me<br/>
-   &gt; help status<br/>
-   &gt; help score<br/>
-   &gt; help wear<br/>
-   &gt; help wimpy<br/>
-   &gt; help alias<br/>
-   &gt; help abilities<br/>
-   &gt; help weapon<br/>
-   &gt; help armour<br/>
-   &gt; help practice<br/>
-   &gt; help info<br/>
+"<pre>                            HELP TOPICS
+
+The following are good help topics for beginners:
+
+   &gt; help me
+   &gt; help status
+   &gt; help score
+   &gt; help wear
+   &gt; help wimpy
+   &gt; help alias
+   &gt; help abilities
+   &gt; help weapon
+   &gt; help armour
+   &gt; help practice
+   &gt; help info
    &gt; help index</pre>"
 end
 
@@ -6400,141 +6400,141 @@ weight 1
 dilcopy eager_read@udgaard();
 
 extra {}
-"<pre>                <div class='cpy'>The Conjurer's Handbook to Valhalla</div><div class='cw'><br/>
-<br/>
-<br/>
-                 Chapter 1 ... Introduction<br/>
-                 Chapter 2 ... Combat<br/>
-                 Chapter 3 ... How to get around<br/>
-                 Chapter 4 ... The Automated Tour<br/>
-                 Chapter 5 ... Hint &amp; Tips<br/>
-                 Chapter 6 ... Help Topics<br/>
-<br/>
-Here is an example of how to read chapter one:<br/>
-<br/>
-   &gt; read chapter 1<br/>
+"<pre>                <div class='cpy'>The Conjurer's Handbook to Valhalla</div><div class='cw'>
+
+
+                 Chapter 1 ... Introduction
+                 Chapter 2 ... Combat
+                 Chapter 3 ... How to get around
+                 Chapter 4 ... The Automated Tour
+                 Chapter 5 ... Hint &amp; Tips
+                 Chapter 6 ... Help Topics
+
+Here is an example of how to read chapter one:
+
+   &gt; read chapter 1
 </div></pre>"
 
 extra {"chapter 1", "introduction", "chapter one"}
 
-"<pre>                        INTRODUCTION<br/>
-<br/>
-This handbook describes how to get started playing Valhalla as an<br/>
-Udgaard Conjurer. Read it carefully and you can get started in only<br/>
-a few minutes.<br/><br/><br/>
-<br/>
-You have just received a lot of equipment and a dictionary which<br/>
-has been prepared especially for you. To see the equipment, type:<br/>
-<br/>
-   &gt; inventory (or the shorthand version: i)<br/>
-   &gt; equipment (or the shorthand version: eq)<br/>
-<br/>
-To see what aliases have been defined in your dictionary, write:<br/>
-<br/>
-   &gt; alias (or the shorthand version: al)<br/>
-<br/>
+"<pre>                        INTRODUCTION
+
+This handbook describes how to get started playing Valhalla as an
+Udgaard Conjurer. Read it carefully and you can get started in only
+a few minutes.
+
+You have just received a lot of equipment and a dictionary which
+has been prepared especially for you. To see the equipment, type:
+
+   &gt; inventory (or the shorthand version: i)
+   &gt; equipment (or the shorthand version: eq)
+
+To see what aliases have been defined in your dictionary, write:
+
+   &gt; alias (or the shorthand version: al)
+
 Now read chapter 2.</pre>"
 
 extra {"chapter 2", "chapter two"}
-"<pre>                           COMBAT<br/>
-<br/>
-You must always be sure that your opponent is not out of your<br/>
-league, you can do this by using the consider command, example:<br/>
-<br/>
-  &gt; consider rabbit<br/>
-<br/>
-This will approximately tell you how dangerous your opponent is.<br/>
-Right now you can try your strength against rabbits, skunks and badgers,<br/>
-and perhaps even risk the more dangerous fox, deer and boar.<br/><br/><br/>
-<br/>
-Aliases have been defined in your dictionary, they are a shorthand method<br/>
-for writing long commands, so when you spot one of the above opponents,<br/>
-you can quickly attack it, example:<br/>
-<br/>
-  &gt; kr  (to execute the kill rabbit alias)<br/>
-<br/>
+"<pre>                           COMBAT
+
+You must always be sure that your opponent is not out of your
+league, you can do this by using the consider command, example:
+
+  &gt; consider rabbit
+
+This will approximately tell you how dangerous your opponent is.
+Right now you can try your strength against rabbits, skunks and badgers,
+and perhaps even risk the more dangerous fox, deer and boar.
+
+Aliases have been defined in your dictionary, they are a shorthand method
+for writing long commands, so when you spot one of the above opponents,
+you can quickly attack it, example:
+
+  &gt; kr  (to execute the kill rabbit alias)
+
 Now read chapter 3 about finding your opponents.</pre>"
 
 
 extra {"chapter 3", "chapter three"}
-"<pre>                         HOW TO GET AROUND<br/>
-<br/>
-You are just about ready, all you need is to find your way around this<br/>
-place. Your life begins in the small village of Udgaard, located between<br/>
-the ancient forest of Haon Dor and the younger Cypress Forest.<br/>
-While in Udgaard, you can get a map at any time by typing:<br/>
-<br/>
-   &gt; help<br/>
-<br/>
-The map shows you how to get to the Haon-Dor Forest as well as the<br/>
-Cypress Forest. From the village square simply go east three times to<br/>
-get to the Cypress forest, or west three times to get to the Haon Dor<br/>
-forest. Both locations are ideal for beginners such as yourself.<br/><br/><br/>
-<br/>
-Once in either forest, find a rabbit, a skunk, a badger or a fox<br/>
-and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,<br/>
-kb to kill a badger, etc.)<br/><br/><br/>
-<br/>
+"<pre>                         HOW TO GET AROUND
+
+You are just about ready, all you need is to find your way around this
+place. Your life begins in the small village of Udgaard, located between
+the ancient forest of Haon Dor and the younger Cypress Forest.
+While in Udgaard, you can get a map at any time by typing:
+
+   &gt; help
+
+The map shows you how to get to the Haon-Dor Forest as well as the
+Cypress Forest. From the village square simply go east three times to
+get to the Cypress forest, or west three times to get to the Haon Dor
+forest. Both locations are ideal for beginners such as yourself.
+
+Once in either forest, find a rabbit, a skunk, a badger or a fox
+and use the shorthand aliases (kr to kill a rabbit, kf to kill a fox,
+kb to kill a badger, etc.)
+
 Now read chapter four.</pre>"
 
 extra {"chapter 4", "chapter four"}
-"<pre>                          THE AUTOMATED TOUR<br/>
-<br/>
-If you have made it this far, you are well on your way! In Valhalla<br/>
-there is a teacher which will explain you the basics of the game. He<br/>
-can be quite boring, but if you feel more comfortable getting the<br/>
-tour, write:<br/>
-<br/>
-   &gt; say help me newbie guide<br/>
-<br/>
-when standing in the Temple of Udgaard. This will start an automated tour<br/>
+"<pre>                          THE AUTOMATED TOUR
+
+If you have made it this far, you are well on your way! In Valhalla
+there is a teacher which will explain you the basics of the game. He
+can be quite boring, but if you feel more comfortable getting the
+tour, write:
+
+   &gt; say help me newbie guide
+
+when standing in the Temple of Udgaard. This will start an automated tour
 of the mud commands and the town. Now read chapter 5.</pre>"
 
 
 
 extra {"chapter 5", "chapter five"}
 
-"<pre>                           HINTS &amp; TIPS<br/>
-<br/>
-Try the following commands:<br/>
-<br/>
-  &gt; score<br/>
-  &gt; status<br/>
-  &gt; status weapons<br/>
-  &gt; status spells<br/>
-  &gt; status skills<br/>
-<br/>
-There is no need for you to visit your guild until you have earned<br/>
-a level. All your skills and abilities are set from the beginning.<br/>
-You can earn experience faster by being in a group with other players.<br/><br/><br/>
-<br/>
-Note that when you are in wimpy mode you only gain HALF xp but you<br/>
-significantly reduce the risk of dying. See 'help wimpy' for further<br/>
-details.<br/><br/><br/>
-<br/>
-If you lose your equipment, you can always pray to the statue of Odin<br/>
-in the Temple of Udgaard. Odin will grant you new equipment for that which<br/>
-is lost or missing, write this:<br/>
-<br/>
-  &gt; pray odin<br/>
+"<pre>                           HINTS &amp; TIPS
+
+Try the following commands:
+
+  &gt; score
+  &gt; status
+  &gt; status weapons
+  &gt; status spells
+  &gt; status skills
+
+There is no need for you to visit your guild until you have earned
+a level. All your skills and abilities are set from the beginning.
+You can earn experience faster by being in a group with other players.
+
+Note that when you are in wimpy mode you only gain HALF xp but you
+significantly reduce the risk of dying. See 'help wimpy' for further
+details.
+
+If you lose your equipment, you can always pray to the statue of Odin
+in the Temple of Udgaard. Odin will grant you new equipment for that which
+is lost or missing, write this:
+
+  &gt; pray odin
 </pre>"
 
 extra {"chapter 6", "chapter six"}
-"<pre>                            HELP TOPICS<br/>
-<br/>
-The following are good help topics for beginners:<br/>
-<br/>
-   &gt; help me<br/>
-   &gt; help status<br/>
-   &gt; help score<br/>
-   &gt; help wear<br/>
-   &gt; help wimpy<br/>
-   &gt; help alias<br/>
-   &gt; help abilities<br/>
-   &gt; help weapon<br/>
-   &gt; help armour<br/>
-   &gt; help practice<br/>
-   &gt; help info<br/>
+"<pre>                            HELP TOPICS
+
+The following are good help topics for beginners:
+
+   &gt; help me
+   &gt; help status
+   &gt; help score
+   &gt; help wear
+   &gt; help wimpy
+   &gt; help alias
+   &gt; help abilities
+   &gt; help weapon
+   &gt; help armour
+   &gt; help practice
+   &gt; help info
    &gt; help index</pre>"
 end
 
@@ -6550,24 +6550,24 @@ weight 0
 bright 1
 extra {}
 "<pre>
-                                 ####<br/>
-                                ######<br/>
-                               ########<br/>
-                  #############################<br/>
-              ################  ######  ############<br/>
-            ###########                        #########<br/>
-          ########                                  ######<br/>
-         ######                                         ####<br/>
-         ###                                             ####<br/>
-         ###                                             ####<br/>
-         ###                                            #####<br/>
-          ####                                       #######<br/>
-            ######                              ##########<br/>
-              #########                  ###############<br/>
-                  ############          #############<br/>
-                       #########################<br/>
-                              ###########<br/>
-</pre><br/>
+                                 ####
+                                ######
+                               ########
+                  #############################
+              ################  ######  ############
+            ###########                        #########
+          ########                                  ######
+         ######                                         ####
+         ###                                             ####
+         ###                                             ####
+         ###                                            #####
+          ####                                       #######
+            ######                              ##########
+              #########                  ###############
+                  ############          #############
+                       #########################
+                              ###########
+</pre>
 This wedding ring is of supreme craftsmanship. It is made from pure
 mithril and a small diamond is set in the middle of the ring. You notice
 an inscription on the inner side of the ring."
@@ -6873,10 +6873,10 @@ extra {"$identify"}
 adding to your brain and divinity.
 It will weaken your constitution slightly."
 extra {"$improved identify"}
-"<pre><br/>
-Heal:            +10%<br/>
-Divine:          +2<br/>
-Brain:           +1<br/>
+"<pre>
+Heal:            +10%
+Divine:          +2
+Brain:           +1
 Constitution:    -1</pre>"
 WEAPON_DEF(WPN_WAR_HAMMER, 8, 8)
 SPELL_TRANSFER(SPL_CURE_WOUNDS_1, +10)
@@ -6907,9 +6907,9 @@ extra {"$identify"}
 adding to your strength and dexterity.  It will weaken your magical
 and cognizant abilities slightly."
 extra {"$improved identify"}
-"<pre><br/>
-Battle axe: +10%<br/>
-Strength: +1    Dexterity: +2<br/>
+"<pre>
+Battle axe: +10%
+Strength: +1    Dexterity: +2
 Brain:    -1    Magic:     -1</pre>"
 WEAPON_DEF(WPN_BATTLE_AXE, 9, 9)
 WEAPON_TRANSFER(WPN_BATTLE_AXE, +10)
@@ -6937,9 +6937,9 @@ extra {"$identify"}
 "Castor like its twin will improve your short sword skill, while
 adding to your dexterity.  It will weaken your constitution slightly."
 extra {"$improved identify"}
-"<pre><br/>
-Short Sword:     +5%<br/>
-Dexterity:       +2<br/>
+"<pre>
+Short Sword:     +5%
+Dexterity:       +2
 Constitution:    -1</pre>"
 
 WEAPON_DEF(WPN_SHORT_SWORD, 4, 4)
@@ -6966,9 +6966,9 @@ extra {"$identify"}
 "Pollux like its twin will improve your short sword skill, while
 adding to your dexterity.  It will weaken your constitution slightly."
 extra {"$improved identify"}
-"<pre><br/>
-Short Sword:     +5%<br/>
-Dexterity:       +2<br/>
+"<pre>
+Short Sword:     +5%
+Dexterity:       +2
 Constitution:    -1</pre>"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 
@@ -6997,10 +6997,10 @@ extra {"$identify"}
 adding to your dexterity and strength.
 It will weaken your magic ability."
 extra {"$improved identify"}
-"<pre><br/>
-Disarm:          +10%<br/>
-Strength:        +2<br/>
-Dexterity:       +1<br/>
+"<pre>
+Disarm:          +10%
+Strength:        +2
+Dexterity:       +1
 Magic:           -2</pre>"
 weight 22
 STR_TRANSFER(+2)
@@ -7063,17 +7063,17 @@ names {"pleiades", "crown", "diadem"}
 title "Pleiades"
 descr "A crown with seven brilliant gems lies here sparkling."
 extra {}
-"This crown is inlaid with seven bright gemstones:<pre><br/>
-<br/>
-<div class='cpw'>Diamond</div><div class='cw'> for Purity.<br/>
-</div><div class='cpb'>Sapphire</div><div class='cw'> for Bravery.<br/>
-</div><div class='cm'>Amethyst</div><div class='cw'> for Honour.<br/>
-</div><div class='cg'>Emerald</div><div class='cw'> for Strength.<br/>
-</div><div class='cpr'>Ruby</div><div class='cw'> for Valour.<br/>
-</div><div class='cpy'>Amber</div><div class='cw'> for Perseverance.<br/>
-</div><div class='cpn'>Obsidian</div><div class='cw'> for Character.<br/>
-<br/>
-They are set within a diadem of the purest platinum. The wearer must be<br/>
+"This crown is inlaid with seven bright gemstones:<pre>
+
+<div class='cpw'>Diamond</div><div class='cw'> for Purity.
+</div><div class='cpb'>Sapphire</div><div class='cw'> for Bravery.
+</div><div class='cm'>Amethyst</div><div class='cw'> for Honour.
+</div><div class='cg'>Emerald</div><div class='cw'> for Strength.
+</div><div class='cpr'>Ruby</div><div class='cw'> for Valour.
+</div><div class='cpy'>Amber</div><div class='cw'> for Perseverance.
+</div><div class='cpn'>Obsidian</div><div class='cw'> for Character.
+
+They are set within a diadem of the purest platinum. The wearer must be
 a special healer.</div></pre>"
 extra {"$identify"}
 "This crown will allow the wearer to be more proficient in harm and heal,
@@ -8653,78 +8653,78 @@ you may learn something."
 
 extra {"chapter1"}
 
-"<pre>                   Chapter 1 - Survival Rules<br/>
-<br/><br/>
-      1. When in doubt, flee.<br/>
-         Just flee, maybe it will work.<br/>
-      2. Consider every opponent.<br/>
-         Use your consider skill to determine whether you should<br/>
-         attack or not.<br/>
-      3. Stay away from Nikolai the Ancient.<br/>
-         If you don't know why count yourself lucky.<br/>
-      4. Do not attack the mayor, his guards, the Phoenix,<br/>
-         or Hanson.<br/>
-         The cityguards are a bunch of finks. They will rat you<br/>
-         out to Adolph then kill you.<br/>
-      5. If you become wanted by the Cityguard, make them kill you<br/>
-         and do NOT get arrested in Midgaard.<br/>
-      6. There is safety in numbers. <br/>
-         Form a group with other people that are withing 5 levels of you.<br/>
-         See Help Groups on how to do this.<br/>
-<br/>
-NOW READ CHAPTER2<br/>
+"<pre>                   Chapter 1 - Survival Rules
+
+      1. When in doubt, flee.
+         Just flee, maybe it will work.
+      2. Consider every opponent.
+         Use your consider skill to determine whether you should
+         attack or not.
+      3. Stay away from Nikolai the Ancient.
+         If you don't know why count yourself lucky.
+      4. Do not attack the mayor, his guards, the Phoenix,
+         or Hanson.
+         The cityguards are a bunch of finks. They will rat you
+         out to Adolph then kill you.
+      5. If you become wanted by the Cityguard, make them kill you
+         and do NOT get arrested in Midgaard.
+      6. There is safety in numbers. 
+         Form a group with other people that are withing 5 levels of you.
+         See Help Groups on how to do this.
+
+NOW READ CHAPTER2
 </pre>"
 
 extra {"chapter2"}
 
-"<pre>                   Chapter 2 - Places to Go <br/>
-<br/><br/>
-      1.To get to Midgaard from the obelisk, <br/>
-         go e,e,e,e,e,s,e,s,e,e,n,e,n,e,e <br/>
-      2. See Mary in the woods, she may have something for you to do.<br/>
-         From the obelisk go w,w,w,w,w,w,s,s,e,n.<br/>
-      3. Thieves make good targets for those of the 3rd level of learning in most guilds.<br/>
-         From the obelisk go s,s,e But do not try Ratling or the guild guards.<br/>
-      4. In Midgaard, there is a big tree in Market Square <br/>
-         From the obelisk go all east,s,e,s,e,e,n,e,n,e,e,e,e,e,e,e,e,e. <br/>
-      6. The leather worker can teach you to resize leather, other<br/>
-         craftsmen in Midgaard teach metal and clothing skills. TO get to the <br/>
-         leatherworker from MARKET SQUARE in MIDGAARD go <br/>
-         go e,e,e,n. Typing info will show you what she teaches.<br/>
-      6.To get to Nymgaard from the obelisk,FIRST get a canoe or a Kayak,<br/>
-         go all south to the boat bridge, drop canoe, enter canoe, s, wait and <br/>
-%slet the current carry you east then sail s, s,s,s,s,w, exit canoe.<br/>
-READ CHAPTER3<br/>
+"<pre>                   Chapter 2 - Places to Go 
+
+      1.To get to Midgaard from the obelisk, 
+         go e,e,e,e,e,s,e,s,e,e,n,e,n,e,e 
+      2. See Mary in the woods, she may have something for you to do.
+         From the obelisk go w,w,w,w,w,w,s,s,e,n.
+      3. Thieves make good targets for those of the 3rd level of learning in most guilds.
+         From the obelisk go s,s,e But do not try Ratling or the guild guards.
+      4. In Midgaard, there is a big tree in Market Square 
+         From the obelisk go all east,s,e,s,e,e,n,e,n,e,e,e,e,e,e,e,e,e. 
+      6. The leather worker can teach you to resize leather, other
+         craftsmen in Midgaard teach metal and clothing skills. TO get to the 
+         leatherworker from MARKET SQUARE in MIDGAARD go 
+         go e,e,e,n. Typing info will show you what she teaches.
+      6.To get to Nymgaard from the obelisk,FIRST get a canoe or a Kayak,
+         go all south to the boat bridge, drop canoe, enter canoe, s, wait and 
+%slet the current carry you east then sail s, s,s,s,s,w, exit canoe.
+READ CHAPTER3
 </pre>"
 
 extra {"chapter3"}
 
-"<pre>                   Chapter 3 - GUILDS <br/>
-<br/><br/>
-Look medallion and follow instructions this will work until level <br/>
-15, then you will have to walk. If you want to start out <br/>
-learning the route here are the basic ones.<br/>
-      1.To get to Fighters from the obelisk, <br/>
-         go s,e,e,e,e,e.<br/>
-      2.To get to Healers from the obelisk, <br/>
-         go s,w,w,w,w,w.<br/>
-      3. To get to Thieves from the obelisk,<br/>
-         go s,s,e,e,e,s,d,n.<br/>
-      4. To get to Conjurers from the obelisk,<br/>
-         go s,s,w,w,w,s,e. <br/>
-      5. To get to Sorcerers from the obelisk,<br/>
-         go all east,s,e,s,e,e,n,e,n,e,e,e,e,e,s,s,s,s,s,open door,s,s,s,w. <br/>
-      6. To get to Dark Knights from the obelisk,<br/>
-         go e,e,e,e,e,s,e,s,e,e,n,e,n,e,e,e,e,e,s,s,s,s,open manhole,d,d,n,n,n,n,e. <br/>
-      7. To get to Paladins from the Market Square in Midgaard,<br/>
-         go n,w,n,w,w.<br/>
-      8.To get to Necromancer from the Market Square in Midgaard,<br/>
-         go e,e,e,e,e,e,e,e,e,e,e,e,e,e,n,nod.<br/>
-      8.To get to ranger from the Western pier in Nymgaard,<br/>
-         go w,s,s,w,w,w,w,w,s,w,s,s,s,w <br/>
-      8.To get to druid from the Western pier in Nymgaard,<br/>
-         go w,s,s,e,e,e,e,n,n,n,e,e,e,e,e,e,e,s,e,s,e, all north. <br/>
-See Our Other Great Titles!<br/>
+"<pre>                   Chapter 3 - GUILDS 
+
+Look medallion and follow instructions this will work until level 
+15, then you will have to walk. If you want to start out 
+learning the route here are the basic ones.
+      1.To get to Fighters from the obelisk, 
+         go s,e,e,e,e,e.
+      2.To get to Healers from the obelisk, 
+         go s,w,w,w,w,w.
+      3. To get to Thieves from the obelisk,
+         go s,s,e,e,e,s,d,n.
+      4. To get to Conjurers from the obelisk,
+         go s,s,w,w,w,s,e. 
+      5. To get to Sorcerers from the obelisk,
+         go all east,s,e,s,e,e,n,e,n,e,e,e,e,e,s,s,s,s,s,open door,s,s,s,w. 
+      6. To get to Dark Knights from the obelisk,
+         go e,e,e,e,e,s,e,s,e,e,n,e,n,e,e,e,e,e,s,s,s,s,open manhole,d,d,n,n,n,n,e. 
+      7. To get to Paladins from the Market Square in Midgaard,
+         go n,w,n,w,w.
+      8.To get to Necromancer from the Market Square in Midgaard,
+         go e,e,e,e,e,e,e,e,e,e,e,e,e,e,n,nod.
+      8.To get to ranger from the Western pier in Nymgaard,
+         go w,s,s,w,w,w,w,w,s,w,s,s,s,w 
+      8.To get to druid from the Western pier in Nymgaard,
+         go w,s,s,e,e,e,e,n,n,n,e,e,e,e,e,e,e,s,e,s,e, all north. 
+See Our Other Great Titles!
 </pre>"
 weight 1
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -8744,25 +8744,25 @@ you may learn something."
 
 extra {"page"}
 
-"<pre>                   Chapter 1 - Basics<br/>
-<br/><br/>
-The sewers of the major cities on this<br/>
-continent have developed a life of their own.<br/>
-Several theories have been promoted as to the cause<br/>
-including a mad alchemist, vampiric contamination,<br/>
-armies being built by skavens and other unscientific hypothesis.<br/>
-<br/>
-Obviously the sewers of these cities have spawned life due<br/>
-to the intelligent design of the gods of Valhalla. This can be<br/>
-seen through the variety of the slime found in the sewers and<br/>
-even within the stone husk of the dragon Ancalador.<br/>
-<br/>
-      1. Grey-Green Variety. (Udgaard Sewers)<br/>
-      2. Green Variety (Stone Dragon Cave, Midgaard Sewers)<br/>
-      3. Black Variety (Midgaard Sewers)<br/>
-      4. Red Variety (Midgaard Sewers)<br/>
-      5. Purple Variety (Midgaard Sewers)<br/>
-<br/>
+"<pre>                   Chapter 1 - Basics
+
+The sewers of the major cities on this
+continent have developed a life of their own.
+Several theories have been promoted as to the cause
+including a mad alchemist, vampiric contamination,
+armies being built by skavens and other unscientific hypothesis.
+
+Obviously the sewers of these cities have spawned life due
+to the intelligent design of the gods of Valhalla. This can be
+seen through the variety of the slime found in the sewers and
+even within the stone husk of the dragon Ancalador.
+
+      1. Grey-Green Variety. (Udgaard Sewers)
+      2. Green Variety (Stone Dragon Cave, Midgaard Sewers)
+      3. Black Variety (Midgaard Sewers)
+      4. Red Variety (Midgaard Sewers)
+      5. Purple Variety (Midgaard Sewers)
+
 You yawn and close the book.</pre>"
 weight 1
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -8781,52 +8781,52 @@ is printed on the cover. Perhaps if you READ page 1
 you may learn something."
 
 extra {"page 1","page one"}
-"<pre>                   Poetic Edda<br/>
-<br/><br/>
-Speak now, Eldir,<br/>
-for not one step<br/>
-Farther shalt thou fare;<br/>
-What ale-talk here<br/>
-do they have within,<br/>
-The sons of the glorious gods?<br/>
-<br/><br/>
-Eldir spake:<br/>
-Of their weapons they talk,<br/>
-and their might in war,<br/>
-The sons of the glorious gods;<br/>
-From the gods and elves<br/>
-who are gathered here<br/>
-No friend in words shalt thou find.<br/>
-<br/><br/>
+"<pre>                   Poetic Edda
+
+Speak now, Eldir,
+for not one step
+Farther shalt thou fare;
+What ale-talk here
+do they have within,
+The sons of the glorious gods?
+
+Eldir spake:
+Of their weapons they talk,
+and their might in war,
+The sons of the glorious gods;
+From the gods and elves
+who are gathered here
+No friend in words shalt thou find.
+
 Now read page 2</pre>"
 extra {"page 2", "page two"}
-"<pre>Loki spake:<br/>
-In shall I go<br/>
-into Aegir's hall,<br/>
-For the feast I fain would see;<br/>
-Bale and hatred<br/>
-I bring to the gods,<br/>
-And their mead with venom I mix.<br/>
-<br/><br/>
-Eldir spake:<br/>
-If in thou goest<br/>
-to Aegir's hall,<br/>
-And fain the feast wouldst see,<br/>
-And with slander and spite<br/>
-wouldst sprinkle the gods,<br/>
-Think well lest they wipe it on thee.<br/>
-<br/><br/>
+"<pre>Loki spake:
+In shall I go
+into Aegir's hall,
+For the feast I fain would see;
+Bale and hatred
+I bring to the gods,
+And their mead with venom I mix.
+
+Eldir spake:
+If in thou goest
+to Aegir's hall,
+And fain the feast wouldst see,
+And with slander and spite
+wouldst sprinkle the gods,
+Think well lest they wipe it on thee.
+
 Now read page 3</pre>"
 extra {"page 3","page three"}
-"<pre>Loki spake:<br/>
-Bethink thee, Eldir,<br/>
-if thou and I<br/>
-Shall strive with spiteful speech;<br/>
-Richer I grow<br/>
-in ready words<br/>
-If thou speakest too much to me.<br/>
-<br/><br/>
-Then Loki went into the hall, but when they who were there<br/>
+"<pre>Loki spake:
+Bethink thee, Eldir,
+if thou and I
+Shall strive with spiteful speech;
+Richer I grow
+in ready words
+If thou speakest too much to me.
+
+Then Loki went into the hall, but when they who were there
 saw who had entered, they were all silent. </pre>"
 
 weight 1
@@ -9285,19 +9285,19 @@ descr "A small pole with the American Flag attached to it is here."
 weight 1
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 extra {}
-"<pre><br/>
-<div class='cw'>=======================()<br/>
-                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>&bb::::::</div><div class='default'><br/>
-                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>&bb::::::</div><div class='default'><br/>
-                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>&bb::::::</div><div class='default'><br/>
-                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>&bb::::::</div><div class='default'><br/>
-                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#<br/>
-                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#<br/>
-                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#<br/>
-                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#<br/>
-                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#<br/>
-                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#<br/>
-                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#<br/>
+"<pre>
+<div class='cw'>=======================()
+                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>&bb::::::</div><div class='default'>
+                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>&bb::::::</div><div class='default'>
+                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>&bb::::::</div><div class='default'>
+                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>&bb::::::</div><div class='default'>
+                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#
+                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#
+                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#
+                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#
+                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#
+                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#
+                       </div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#</div><div class='cpw'>#</div><div class='cpr'>#
 </div></pre>"
 cost 1 GOLD_PIECE
 end
@@ -9338,18 +9338,18 @@ who are forever friends of Udgaard and the world of Valhalla. To look at
 them
 you should look names."
 extra {"names", "name", "sides", "side", "engraving", "engravings"}
-"<div class='cpr'>Cinnamon Buns<br/>
-</div><div class='cpb'>Kuros Master of The Inner Circle of Truth, and King of Valhalla<br/>
-</div><div class='cpm'>Volklod Lord of the Shadows<br/>
-</div><div class='cpg'>LightLord husband to Rejji<br/>
-</div><div class='cpr'>Tigika Lord of the Tigers<br/>
-</div><div class='cpm'>Jem ?<br/>
-</div><div class='cpy'>Pookey the first friend of Valhalla<br/>
-</div><div class='cpg'>Zahra the Grand Master Wizard<br/>
-</div><div class='cpr'>Rikuo </div><div class='cpw'>Coldfire Knight of the Apocalypse<br/>
-</div><div class='cpw'>Nitemare </div><div class='cpb'>Dreamweaver of the Legendary Midgaard Bums<br/>
-</div><div class='cpy'>Copper</div><div class='cpw'> Pieces<br/>
-</div><div class='cpb'>Corvin Prince of Amber - Valhalla Artist<br/>
+"<div class='cpr'>Cinnamon Buns
+</div><div class='cpb'>Kuros Master of The Inner Circle of Truth, and King of Valhalla
+</div><div class='cpm'>Volklod Lord of the Shadows
+</div><div class='cpg'>LightLord husband to Rejji
+</div><div class='cpr'>Tigika Lord of the Tigers
+</div><div class='cpm'>Jem ?
+</div><div class='cpy'>Pookey the first friend of Valhalla
+</div><div class='cpg'>Zahra the Grand Master Wizard
+</div><div class='cpr'>Rikuo </div><div class='cpw'>Coldfire Knight of the Apocalypse
+</div><div class='cpw'>Nitemare </div><div class='cpb'>Dreamweaver of the Legendary Midgaard Bums
+</div><div class='cpy'>Copper</div><div class='cpw'> Pieces
+</div><div class='cpb'>Corvin Prince of Amber - Valhalla Artist
 </div><div class='cw'></div>"
 
 extra{"heart","carving"}
@@ -9486,24 +9486,24 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 weight 1
 cost 10 IRON_PIECE
 extra {}
-"<pre>                   The Village of Udgaard<br/>
-                       1 1 1 1 1 1 1 1 1 1<br/>
-   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9<br/>
-A                C                             Temple          A07<br/>
-                 |                             Shops<br/>
-B        I   S   |   B   S                     Food Store      B05<br/>
-         |   |   |   |   |                     Armourer        B11<br/>
-C    1---#---#---#---#---#---2                 Ironmonger      D05<br/>
-         |   |   |   |   |                     Weaponsmith     D11<br/>
-D        P   S   |   O   S                     Inn             B03<br/>
-                 |                             Post Office     D03<br/>
-E  G-#---#---#---#---#---#---#-G               Guard's Office  D09<br/>
-                 |                             Haon-Dor        C01<br/>
-F  G-#---#---#---#---#---#---#-G               Bank            B09<br/>
-                                               Cleric's Guild  E00<br/>
-                                               Warrior's Guild E14<br/>
-&gt;From C13 you reach the city of Midgaard       Thieve's Guild  H14<br/>
-by going 'eseseenenee'                         Mage's Guild    H00<br/>
+"<pre>                   The Village of Udgaard
+                       1 1 1 1 1 1 1 1 1 1
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9
+A                C                             Temple          A07
+                 |                             Shops
+B        I   S   |   B   S                     Food Store      B05
+         |   |   |   |   |                     Armourer        B11
+C    1---#---#---#---#---#---2                 Ironmonger      D05
+         |   |   |   |   |                     Weaponsmith     D11
+D        P   S   |   O   S                     Inn             B03
+                 |                             Post Office     D03
+E  G-#---#---#---#---#---#---#-G               Guard's Office  D09
+                 |                             Haon-Dor        C01
+F  G-#---#---#---#---#---#---#-G               Bank            B09
+                                               Cleric's Guild  E00
+                                               Warrior's Guild E14
+&gt;From C13 you reach the city of Midgaard       Thieve's Guild  H14
+by going 'eseseenenee'                         Mage's Guild    H00
                                                Cypress Forest  C13</pre>"
 
 end
@@ -9848,12 +9848,12 @@ extra {}
 You've seen those before, they protect you against the evil eye and
 the various mischievous forces."
 extra {"$wear_s"}
-"You wear $2n around your neck.<br/>
-You feel protected from evil eye.<br/>
+"You wear $2n around your neck.
+You feel protected from evil eye.
 You feel protected from various mischievous forces."
 extra {"$rem_s"}
-"You remove $2n.<br/>
-You gasp, as you realize that you are now wounded to evil eye.<br/>
+"You remove $2n.
+You gasp, as you realize that you are now wounded to evil eye.
 With horror you realize that evil forces can now have free play with you."
 extra {"$identify"}
 "Rocks with natural holes in them are generally regarded as great protection
@@ -9872,7 +9872,7 @@ extra {}
 "This tiny item is a small token of all pious people. It is made of a
 shiny metal, although hoping for silver would be aiming far too high."
 extra {"$wear_s"}
-"You wear $2n around your neck.<br/>
+"You wear $2n around your neck.
 Your feel more confident under the protection of the gods."
 type ITEM_WORN
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
@@ -10159,7 +10159,7 @@ extra {}
 "A large and warm sleeping blanket, clearly designed for outdoors use.
 This will keep you warm on the long nights under the stars."
 extra {"$wear_s"}
-"You wrap $2n about your body.<br/>
+"You wrap $2n about your body.
 You feel nice and warm."
 ARMOUR_CLOTHES(0,0)
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
@@ -10204,22 +10204,22 @@ title "a small smoking pipe"
 descr "A small smoking pipe of white clay lies here."
 extra {}
 "A small smoking pipe of white pipe-clay. If you have some tobacco and
-feel like having a smoke, just 'fill pipe' and light it while holding it.<br/>
+feel like having a smoke, just 'fill pipe' and light it while holding it.
 When holding it, you can use the command 'smoke' to enjoy the pipe."
 extra {"$identify"}
-"<pre><br/>
-For those who did not understand the instructions in the description:<br/>
-<br/>
-  <div class='cpw'>fill pipe</div><div class='cw'>     - will fill the pipe from your tobacco pouch<br/>
-                  (if you have one)<br/>
-  </div><div class='cpw'>light pipe</div><div class='cw'>    - will light the pipe - you need to hold it<br/>
-                  in order to smoke it<br/>
-  </div><div class='cpw'>smoke</div><div class='cw'>         - a social command of smoking<br/>
-                  ('smoke pipe', 'smoke &lt;name&gt;', 'smoke pipe/cigar')<br/>
-<br/>
-        The pipe can be extinguished with </div><div class='cpw'>extinguish pipe</div><div class='cw'><br/>
-        or </div><div class='cpw'>remove pipe</div><div class='cw'>.<br/>
-<br/>
+"<pre>
+For those who did not understand the instructions in the description:
+
+  <div class='cpw'>fill pipe</div><div class='cw'>     - will fill the pipe from your tobacco pouch
+                  (if you have one)
+  </div><div class='cpw'>light pipe</div><div class='cw'>    - will light the pipe - you need to hold it
+                  in order to smoke it
+  </div><div class='cpw'>smoke</div><div class='cw'>         - a social command of smoking
+                  ('smoke pipe', 'smoke &lt;name&gt;', 'smoke pipe/cigar')
+
+        The pipe can be extinguished with </div><div class='cpw'>extinguish pipe</div><div class='cw'>
+        or </div><div class='cpw'>remove pipe</div><div class='cw'>.
+
 <br/></div></pre>"
 PIPE(30,0,360)
 end
@@ -10229,27 +10229,27 @@ title "a large smoking pipe"
 descr "A large smoking pipe lies here."
 extra {}
 "A large smoking pipe carved in wood. If you got some tobacco and feel
-like having a smoke, just 'fill pipe' and light it while holding it.<br/>
+like having a smoke, just 'fill pipe' and light it while holding it.
 When holding it, you can use the command 'smoke' to enjoy the pipe."
 extra {"$identify"}
-"<pre><br/>
-For those who did not understand the instructions in the<br/>
-description:<br/>
-<br/>
-  <div class='cpw'>fill pipe</div><div class='cw'>     - will fill the pipe from your<br/>
-tobacco pouch<br/>
-                  (if you have one)<br/>
-  </div><div class='cpw'>light pipe</div><div class='cw'>    - will light the pipe - you need to<br/>
-hold it<br/>
-                  in order to smoke it<br/>
-  </div><div class='cpw'>smoke</div><div class='cw'>         - a social command of smoking<br/>
-                  ('smoke pipe', 'smoke &lt;name&gt;', 'smoke<br/>
-pipe/cigar')<br/>
-<br/>
-        The pipe can be extinguished with </div><div class='cpw'>extinguish<br/>
-pipe</div><div class='cw'><br/>
-        or </div><div class='cpw'>remove pipe</div><div class='cw'>.<br/>
-<br/>
+"<pre>
+For those who did not understand the instructions in the
+description:
+
+  <div class='cpw'>fill pipe</div><div class='cw'>     - will fill the pipe from your
+tobacco pouch
+                  (if you have one)
+  </div><div class='cpw'>light pipe</div><div class='cw'>    - will light the pipe - you need to
+hold it
+                  in order to smoke it
+  </div><div class='cpw'>smoke</div><div class='cw'>         - a social command of smoking
+                  ('smoke pipe', 'smoke &lt;name&gt;', 'smoke
+pipe/cigar')
+
+        The pipe can be extinguished with </div><div class='cpw'>extinguish
+pipe</div><div class='cw'>
+        or </div><div class='cpw'>remove pipe</div><div class='cw'>.
+
 <br/></div></pre>"
 PIPE(50,1,480)
 end
@@ -10260,29 +10260,29 @@ title "a beautiful meerschaum pipe"
 descr "A beautifully carved pipe of white meerschaum lies here."
 extra {}
 "A small piece of art, this pipe is crafted in white meerschaum and the
-head is carved in the shape of a small, mischievous devil.<br/>
+head is carved in the shape of a small, mischievous devil.
 If you got some tobacco and feel like having a smoke, just 'fill pipe'
-and light it while holding it.<br/>
+and light it while holding it.
 When holding it, you can use the command 'smoke' to enjoy the pipe."
 extra {"$identify"}
-"<pre><br/>
-For those who did not understand the instructions in the<br/>
-description:<br/>
-<br/>
-  <div class='cpw'>fill pipe</div><div class='cw'>     - will fill the pipe from your<br/>
-tobacco pouch<br/>
-                  (if you have one)<br/>
-  </div><div class='cpw'>light pipe</div><div class='cw'>    - will light the pipe - you need to<br/>
-hold it<br/>
-                  in order to smoke it<br/>
-  </div><div class='cpw'>smoke</div><div class='cw'>         - a social command of smoking<br/>
-                  ('smoke pipe', 'smoke &lt;name&gt;', 'smoke<br/>
-pipe/cigar')<br/>
-<br/>
-        The pipe can be extinguished with </div><div class='cpw'>extinguish<br/>
-pipe</div><div class='cw'><br/>
-        or </div><div class='cpw'>remove pipe</div><div class='cw'>.<br/>
-<br/>
+"<pre>
+For those who did not understand the instructions in the
+description:
+
+  <div class='cpw'>fill pipe</div><div class='cw'>     - will fill the pipe from your
+tobacco pouch
+                  (if you have one)
+  </div><div class='cpw'>light pipe</div><div class='cw'>    - will light the pipe - you need to
+hold it
+                  in order to smoke it
+  </div><div class='cpw'>smoke</div><div class='cw'>         - a social command of smoking
+                  ('smoke pipe', 'smoke &lt;name&gt;', 'smoke
+pipe/cigar')
+
+        The pipe can be extinguished with </div><div class='cpw'>extinguish
+pipe</div><div class='cw'>
+        or </div><div class='cpw'>remove pipe</div><div class='cw'>.
+
 <br/></div></pre>"
 PIPE(200,0,400)
 end
@@ -10325,7 +10325,7 @@ title "a huge, fat cigar"
 descr "A huge and fat cigar lies here."
 extra {}
 "A huge and fat cigar, the sort you would deal out to celebrate a birth
-of your kid. Just hold it and light it if you want a smoke.<br/>
+of your kid. Just hold it and light it if you want a smoke.
 When smoking a cigar, you can use the command 'smoke' if you wish to bother
 others with your smoke."
 CIGAR(8,420)
@@ -10338,7 +10338,7 @@ title "a large, cheap cigar"
 descr "A large cigar of the cheaper kind lies here."
 extra {}
 "A large cigar, perhaps not the best quality but it will do for a
-desperate chain-smoker. Just hold it and light it if you want a smoke.<br/>
+desperate chain-smoker. Just hold it and light it if you want a smoke.
 If smoking a cigar, you can use the command 'smoke' if you wish to bother
 others with your smoke."
 CIGAR(5,300)
@@ -10350,7 +10350,7 @@ title "a fine, long cigar"
 descr "A slick, long cigar lies here, tempting you."
 extra {}
 "A long, fine cigar if you happen to like smoking. Just hold it and light
-it if you want a smoke.<br/>
+it if you want a smoke.
 If smoking a cigar, you can use the command 'smoke' if you wish to bother
 others with your smoke."
 CIGAR(15,420)
@@ -10362,7 +10362,7 @@ title "a slick, long cigar"
 descr "A slick, long cigar lies here, ready to be smoked."
 extra {}
 "A thin and long, slick cigar of high quality and elegance. Just hold it and
-light it if you want a smoke.<br/>
+light it if you want a smoke.
 When smoking a cigar, you can use the command 'smoke' if you wish to bother
 others with your smoke."
 CIGAR(16,420)
@@ -10390,12 +10390,12 @@ extra {"$identify"}
 "Unless you are EXTREMELY nearsighted, those glasses will only worsen
 your vision."
 extra {"$wear_s"}
-"You put on the $2n.<br/>
+"You put on the $2n.
 Everything gets blurred."
 extra {"$wear_o"}
 "$1n puts on some $2n, $1s eyes looks like huge fishes in a pair of bowls."
 extra {"$rem_s"}
-"You remove the $2n and rub your aching eyes.<br/>
+"You remove the $2n and rub your aching eyes.
 Everything returns to normal shape."
 extra {"$rem_o"}
 "$1n removes $1s $2n and rubs $1s aching eyes."

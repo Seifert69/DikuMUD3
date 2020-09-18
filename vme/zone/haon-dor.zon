@@ -3665,11 +3665,11 @@ extra {"pole"}
 "Not the most interesting pole in the world.
 Better leave it here, though, as it holds the sign in place."
 extra {}
-"It says :-<pre><br/>
-                         Haon-Dor<br/>
-                         --------<br/>
-<br/>
- This is the Forest of Haon-Dor.  Enter at your own risk.<br/>
+"It says :-<pre>
+                         Haon-Dor
+                         --------
+
+ This is the Forest of Haon-Dor.  Enter at your own risk.
      Please report any strange occurrences to Quifael.</pre>"
 end
 
@@ -3696,13 +3696,13 @@ extra {"skull"}
 "The skull is old and weather-worn, and many of its teeth are missing.
 It still looks like a human skull, though."
 extra {}
-"It is of very bad craftmanship, but it still says :-<pre><br/>
-              _<br/>
-       ______|_|______<br/>
-      /               \<br/>
-      \ ORKZ RULE ERE /<br/>
-      /   KEEP OUT!   \<br/>
-      \_______________/<br/>
+"It is of very bad craftmanship, but it still says :-<pre>
+              _
+       ______|_|______
+      /               \
+      \ ORKZ RULE ERE /
+      /   KEEP OUT!   \
+      \_______________/
              | |</pre>"
 end
 

@@ -1,25 +1,15 @@
-MS: Odd bug, merl test player when loading crashed the game with channel() DIL 
-    which is a recall DIL. I suspect the recall somehow could store in a state
-	that becomes invalid when loaded. It crashed in an interrupt & "and" and "equal" statement (varying).
-
-	Did a small test with bug@basis. WHen DIL program changes, the state doesn't change. Could this be the source?
-
-	Either it's an odd save situation. Try to add several interrupts like in channel.
-	Or maybe it's the recall flag. The interrupt and the recall might not go well together. 
-
 Anyone: I really need someone dilligent that loves spells to go through all the spells and make 
         sure they have reasonable restrictions. Personally, I like MAG / DIV restrictions better
-		than level. 
+		than level.
 
 Fizz: Working on converting justice.cpp to DIL
 
-
-If stream takes you out to the ocean you're stuck and can't swim back
+If stream takes you out to the ocean you're stuck and can't swim back.
+    Maybe you should be allowed to swim from Ocean -> Swim sector
 
 fireweapon and missile - how do they work and how does identify work?
 identify robe seems to have boring result. (check item types)
 
-Maybe: Teachers hyperlink what you can train so you can just click it
 Maybe: Fix ships (it's dark and they all run their own code) and make them transparent 
 
 Only show grey in expert mode when training?
@@ -31,7 +21,11 @@ add to the web client a possibility to write how many times you run a command.
 Test XP works as expected.
 Test play
 
+--
+
 Converting justice.cpp to DIL would be amazing. The last terrible bug I found was there (took 1+ week to find).
+
+--
 
 I would like the following cleaned up for a distro:
    (It's really there because Valhalla has been growing and spurting for 25 years and 

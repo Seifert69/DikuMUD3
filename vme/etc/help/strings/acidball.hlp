@@ -1,19 +1,28 @@
-<br/>
-Sphere: acid sphere<br/><br/>
-Spell level: 3<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 145<br/> <br/>
-<br/><br/>
-Usage cast acid ball (target)<br/><br/>
-<br/><br/>
-This spell causes a compact ball of acid to form before the caster. It is then<br/>
-hurled toward the named target or present target in battle to inflict damage <br/>
-by acid on any living target. The spell requires the caster to have one hand<br/>
-free. <br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-acid sphere<br/><br/>
-acid resistance<br/><br/>
-acid drop<br/><br/>
-spray of acid<br/><br/>
-acid swirl<br/><br/>
+<div class="mw-parser-output"><h1>Acid Ball</h1>
+<p>Sphere: acid sphere
+</p><p>Spell level: 3
+</p><p>Class: Sorcerer
+</p><p>Guild Level: 145
+</p><p><br />
+</p>
+<pre> Usage: cast acid ball (target)
+</pre>
+<p><br />
+</p><p>This spell causes a compact ball of acid to form before the caster. It is then
+hurled toward the named target or present target in battle to inflict damage
+by acid on any living target. The spell requires the caster to have one hand
+free.
+</p><p><br />
+</p><p>See Also:
+</p>
+<pre> <a cmd='#'>help acid sphere</a>
+ <a cmd='#'>help acid resistance</a>
+ <a cmd='#'>help acid drop</a>
+ <a cmd='#'>help spray of acid</a>
+ <a cmd='#'>help acid swirl</a>
+</pre>
+
+
+
+
+</div>

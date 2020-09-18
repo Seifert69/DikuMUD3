@@ -998,6 +998,56 @@ char *str_escape_format(const char *src, int formatting)
     return str_dup(dest);
 }
 
+
+// This validates a string to be UTF-8 cool
+// Illegal characters become question marks
+//
+void str_correct_utf8(std::string &src)
+{
+    int nLen = src.length();
+    
+    for (int pos = 0; pos < nLen; ++pos)
+    {
+        if ((src[pos] & 0x80) == 0) // lead bit is zero, must be a single ascii
+        {
+             // ignore all odd/control ascii characters.
+            if ((src[pos] < 32) && (src[pos] != '\n') && (src[pos] != '\r'))
+                src[pos] = '?';
+            continue;
+        }
+        else if ((src[pos] & 0xE0) == 0xC0) // 110x xxxx
+        {
+            if (pos + 1 < nLen)
+            {
+                pos += 1;
+                continue;
+            }
+            src[pos] = '?'; // Must be a UTF8 error of sorts
+        }
+        else if ((src[pos] & 0xF0) == 0xE0) // 1110 xxxx
+        {
+            if (pos + 2 < nLen)
+            {
+                pos += 2;
+                continue;
+            }
+            src[pos] = '?'; // Must be a UTF8 error of sorts
+        }
+        else if ((src[pos] & 0xF8) == 0xF0) // 1111 0xxx
+        {
+            if (pos + 3 < nLen)
+            {
+                pos += 3;
+                continue;
+            }
+            src[pos] = '?'; // Must be a UTF8 error of sorts
+        }
+        else
+            src[pos] = '?'; // Must be a UTF8 error of sorts
+    } // end for
+}
+
+
 // This both encodes and prepares string for interpreter.
 // Removes all leading and trailing whitespace.
 // Ensures only one whitespace between each word.

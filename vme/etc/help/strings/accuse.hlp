@@ -1,21 +1,23 @@
-<br/>
-accuse<br/>
-When you see a player commit a crime the following text should be <br/>
-displayed:<br/>
-<br/>
-You have just witnessed a crime committed by &lt;playername&gt;<br/>
-<br/>
-At this point you may chose to ignore it or be an upstanding citizen<br/>
-and go to the local cityguard office. Here you can accuse a player of any <br/>
-crime you may have witnessed him committing.  There you would for example <br/>
-use:<br/>
-<br/><br/>
-accuse Quinn of murder<br/><br/>
-<br/><br/>
-accuse Zadran stealing<br/><br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Law<br/><br/>
-PK<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Accuse</h1>
+<p>When you see a player commit a crime the following text should bedisplayed:
+</p>
+<pre> You have just witnessed a crime committed by &lt;playername&gt;
+</pre>
+<p>At this point you may chose to ignore it or be an upstanding citizen
+and go to the local city guard office. Here you can accuse a player of any
+crime you may have witnessed him committing. There you would for example
+use:
+</p>
+<pre> accuse Quinn of murder
+ accuse Zadran stealing
+</pre>
+<p>See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Law</a>
+&gt; <a cmd='#'>Help PK</a>
+</pre>
+
+
+
+
+</div>
