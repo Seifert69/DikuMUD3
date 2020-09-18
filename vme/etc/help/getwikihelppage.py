@@ -117,7 +117,7 @@ if len(objs) > 1:
 # Morph <a href="/index.php?title=Help/Idea&amp;action=edit&amp;redlink=1" class="new" title="Help/Idea (page does not exist)">idea</a>
 # to {idea}
 #
-objs = mystr.split('<a href="/index.php?')
+objs = mystr.split('<a href="/index.php?title=Help/')
 
 if len(objs) > 1:
     #pdb.set_trace()
