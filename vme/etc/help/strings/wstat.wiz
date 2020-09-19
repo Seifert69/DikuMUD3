@@ -33,6 +33,6 @@ anyone (several screens of info per unit), so we had to split it up. The<br/>
 optional [group] determines which info you want. <br/>
 <br/>
 See also:<br/>
-   &gt;help set<br/>
-   &gt;help setskill<br/>
+   &gt;wizhelp set<br/>
+   &gt;wizhelp setskill<br/>
 <br/>

@@ -6,5 +6,5 @@ This wiz-command is just like echo, but only the character mentioned sees the<br
 string, as opposed to the entire room.<br/>
 <br/>
 See also:<br/>
-   &gt;help echo<br/>
+   &gt;wizhelp echo<br/>
 <br/>
