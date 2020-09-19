@@ -191,14 +191,14 @@ struct field_type unit_field_data[MAX_SET_FIELDS + 1] = {
     {UT_CHAR, AT_BIT, char_flags, 200, 200, 253},         /* char-flags      */
     {UT_CHAR, AT_VAL, 0, 200, 200, 240},                  /* mana            */
     {UT_CHAR, AT_VAL, 0, 200, 200, 240},                  /* endurance       */
-    {UT_CHAR, AT_TYP, g_WpnColl.text, 200, 200, 253},           /* attack-type     */
+    {UT_CHAR, AT_TYP, g_WpnColl.text, 200, 200, 253},     /* attack-type     */
     {UT_CHAR, AT_VAL, 0, 200, 200, 253},                  /* hand-quality    */
     {UT_UNIT, AT_VAL, 0, 200, 200, 230},                  /* height          */
     {UT_CHAR, AT_TYP, pc_races, 200, 200, 253},           /* race            */
     {UT_CHAR, AT_TYP, char_sex, 200, 200, 253},           /* sex             */
     {UT_NPC, AT_VAL, 0, 255, 255, 255},                   /* level           */
     {UT_CHAR, AT_TYP, char_pos, 200, 253, 253},           /* position        */
-    {UT_CHAR, AT_TYPVAL, g_AbiColl.text, 240, 253, 253},       /* ability         */
+    {UT_CHAR, AT_TYPVAL, g_AbiColl.text, 240, 253, 253},  /* ability         */
     {UT_PC, AT_VAL, 0, 230, 253, 253},                    /* skill-points    */
     {UT_PC, AT_VAL, 0, 230, 253, 253},                    /* ability-points  */
     {UT_UNIT, AT_VAL, 0, 200, 230, 200},                  /* remove affects  */
@@ -324,8 +324,7 @@ void show_structure(const char *structure[], class unit_data *ch)
     send_to_char(buf, ch);
 }
 
-long int
-get_bit(char *bitlst, const char *structure[])
+long int get_bit(char *bitlst, const char *structure[])
 {
     char *l, *s, bit[MAX_STRING_LENGTH];
     long int bitval = 0, tmpval;
@@ -1022,9 +1021,9 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         }
         else
         {
-            slog(LOG_ALL, 0, "PASSWORD: %s changed %s's password.",
-                 UNIT_NAME(ch), UNIT_NAME(unt));
+            slog(LOG_ALL, 0, "PASSWORD: %s changed %s's password.", UNIT_NAME(ch), UNIT_NAME(unt));
             strncpy(PC_PWD(unt), crypt(strarg, UNIT_NAME(unt)), 10);
+            send_to_char("The password has been set.<br/>", ch);
         }
         return;
 
@@ -1269,7 +1268,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         return;
 
     case 69: /* "profession" */
-        if (is_in(valarg, 0, PROFESSION_MAX-1))
+        if (is_in(valarg, 0, PROFESSION_MAX - 1))
         {
             slog(LOG_BRIEF, CHAR_LEVEL(ch),
                  "SET %s set %s's profession from %d to %d",
