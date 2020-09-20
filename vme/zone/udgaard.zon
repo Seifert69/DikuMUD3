@@ -7968,7 +7968,7 @@ ARMOUR_LEATHER(0,0)
 weight 1
 extra {}
 "This robe is made from fine threads of pale blue silk."
-dilcopy guild_restrict@function ({GUILD_MID_MYSTIC},0,0,"");
+dilcopy guild_restrict@function ({GUILD_MYSTIC},0,0,"");
 end
 
 druid_cloak
@@ -7980,7 +7980,7 @@ ARMOUR_LEATHER(0,0)
 weight 1
 extra {}
 "The cloak is made of the highest quality wool, and has been dyed to a pale blue."
-dilcopy guild_restrict@function ({GUILD_MID_MYSTIC},0,0,"");
+dilcopy guild_restrict@function ({GUILD_MYSTIC},0,0,"");
 end
 
 druid_item
@@ -7992,7 +7992,7 @@ manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_WAIST}
 DIV_TRANSFER(+1)
 extra {}
 "This sash will bestow additional Divine powers to the Mystic wearing it."
-dilcopy guild_restrict@function ({GUILD_MID_MYSTIC},0,0,"");
+dilcopy guild_restrict@function ({GUILD_MYSTIC},0,0,"");
 end
 
 /* end mystic stuff */
