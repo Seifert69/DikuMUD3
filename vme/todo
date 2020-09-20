@@ -9,59 +9,6 @@ Maybe: Fix ships (it's dark and they all run their own code) and make them trans
 Test XP works as expected.
 Test play
 
---
-
-Fizz: Working on converting justice.cpp to DIL. IN progress.
-Converting justice.cpp to DIL would be amazing. The last terrible bug I found was there (took 1+ week to find).
-
---
-I would like the following cleaned up for a distro:
-   (It's really there because Valhalla has been growing and spurting for 25 years and 
-    trying to support veteran players that are level 65,000 :-)))
-
-	Professions
-		Maybe change "Dark Knight" to Barbarian. DK is really just an evil paladin. Guild determines?
-		Maybe change Conjurer to Bard to have a thief / mage prof. Mage and COnjurer are just variants based on guild.
-		Or add the two.
-		Need to go through most Professions and get them steamlined in tune with what players would expect
-		they seem quite messy at the time of writing
-
-	Revise the guild teachers in guilddef.h so they actually teach what is reasonable.
-	Maybe if the teacher 
-
-Suggests plan to revise data and points and start sequence:
-
-   0) It would be good with a brief summary of each profession
-        Is a fighter generally good with almost all melee weapons ?
-		Is a Paladin mostly good with Swords & 2H swords? The they use battle axes?
-		Are Knights also using huge battle axes?
-	  Just so there is a basic consensus. For example, right now I think
-	  it is incredibly odd that the fighter was unable to practice most
-	  weapons. I think it might be fine that a whip, rapier, stiletto is
-	  less for a fighter and more for someone more dexterous and less strong,
-	  e.g. thieves and assassins, maybe rangers.
-
-	I suggest we add these to the Wiki and get it described at least at a core
-	level. Not too long :)
-
-   1) Revise the ability costs:
-   		- profession practice costs in skills.cpp
-        - Revise etc/ability.def racial modifiers
-
-   2) Revise basis.zon playerinit() DIL
-        - the assigned abilities based on race 
-		- the ability + based on profession.
-		(will +4 MAG with -5 MOD give -1?)
-
-Could add frenzy skill (would be a blast)
-
-
-server
-------
-MS: Ken mentioned light issues. Check value overrun. It's a known bug.
-MS: Performance of DIL. wander_zones would benefit from being ported to C :o)
-
-
 ---
 Current bugs
 
