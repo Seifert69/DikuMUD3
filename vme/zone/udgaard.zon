@@ -7586,7 +7586,7 @@ code
       statue_load(pc, "udgaard/jerkin",           1);
       statue_load(pc, "knight/berret",            1);
    }
-   else if (pc.profession == PROFESSION_KNIGHT)
+   else if (pc.profession == PROFESSION_MYSTIC)
    {
       statue_load(pc, "udgaard/newbie_book",      1);
       statue_load(pc, "udgaard/mystic_robes",     1);
