@@ -1,0 +1,641 @@
+/*
+filename    druid
+password    realworld
+changedby   Stormtamer
+EmailAdd     Morgan Schafer <saor@maestro.com>
+request     compile
+version     2
+END HEADER*/
+
+#include <macros.h>
+
+#define _GUILD_NYM_DRUID
+#define GUILD_NYM_DRUID "Nymgaard Druid"
+#define GROVE_FLAGS \
+{UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_SACRED,UNIT_FL_NO_TELEPORT}
+
+%zone druid
+title "Druid Guild@Alquenburg"
+lifespan 60
+reset RESET_ANYHOW
+creators {"saor", "dominerick"}
+
+notes
+"Druid Guild completed January 5, 1999.  Guild rooms, mobs, etc by Saor,
+new spell dils by Saor and Dominerick.  Koo koo kachoo."
+
+%dil
+
+dilbegin nokill();
+var
+   pc   : unitptr;
+   room : unitptr;
+   i    : integer;
+code
+{
+   heartbeat := 3 * PULSE_SEC;
+
+   :start:
+   wait(SFB_COM,  self.position == POSITION_FIGHTING);
+   pc := self.fighting;
+   if (pc.level > 200) goto start;
+   secure(pc,gone);
+   if (command("flee")) block;
+
+   self.hp := self.max_hp;
+   act("The sounds of combat attract the attention of nearby brownies.",
+       A_ALWAYS, pc, self, null, TO_ALL);
+   act("<div class='cpr'>Several of them charge into the room, grabbing you and </div>"+
+       "repeatedly smashing your head into the wall!<div class='cw'></div>", A_ALWAYS, pc,
+       self, null, TO_CHAR);
+   act("Several of them charge into the room, grabbing $1n and "+
+       "repeatedly smashing $1s head into the wall!",A_SOMEONE, pc, self,
+       null, TO_REST);
+   pc.hp := 0;
+   pc.endurance := 0;
+   act("Your face a bloody mess, you are dragged away to the waterfall "+
+       "pool.", A_ALWAYS, pc, self, null, TO_CHAR);
+   position_update(pc);
+   act("Two of them grab $1n and drag $1m out of the cavern, dumping "+
+       "$1m in the water.",A_ALWAYS, pc, self, null, TO_REST);
+   room := findroom("waterfall@trees");
+   link(pc,room);
+   act("Two powerful brownies emerge from the cavern, dragging $1n"+
+       "between them and dump $1m unceremoniously in the water.",
+       A_SOMEONE,pc,self,null,TO_REST);
+   :gone:
+   unsecure(pc);
+   goto start;
+}
+dilend
+
+%rooms
+
+entrance
+names {"druid entrance"}
+title "Arched Cavern Behind the Waterfall"
+descr
+"A soft patter of water from outside is the only sound to be heard. The
+shimmering light from that direction also serves to promote a mood of
+tranquility. Further into the cave, it is apparent that magic of the
+most elegantly powerful sort is at work, for there is a gentle green
+glow emanating from within."
+extra {"shimmering light", "light"}
+"This light is caused by sunlight passing through the waterfall outside.
+It is quite beautiful to watch, the formless, shifting patterns."
+extra {"gentle green glow", "gentle glow", "green glow", "within", "glow"}
+"The green glow is not a strong light, but it is enough to see by. It
+makes you feel very healthy and vigorous. Powerful magic indeed!"
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_MOB}
+ALWAYS_LIGHT
+north to arbor1 descr "Down Arboreal Hall.";
+south to waterfall@trees descr "Underneath a waterfall.";
+end
+
+arbor1
+title "Arboreal Hall"
+descr
+"A diffuse green phosphorescent light permeates this immense cavernous
+hall. The south is dominated by a shimmering bluish glow, which does not
+overpower the surroundings, but merely adds to them. On both sides of the
+central path of the hallway are large trees, apparently thriving on the
+ambient lighting. The path itself is made of soft moss, and ringing the
+base of the trees is a carpet of lush grass. The hall leads on to the
+north."
+extra {"diffuse green phosphorescent light", "green phosphorescent light",
+"diffuse phosphorescent light", "phosphorescent light", "green light",
+"diffuse light", "ambient lighting", "lighting", "light"}
+"The light appears to be coming from nowhere yet everywhere at once. On
+closer inspection, you discover the walls of the cavern are coated with
+a glowing lichen. This appears to be enough light for the plants in here
+to thrive."
+extra {"immense cavernous hall", "cavernous hall", "immense hall", "hall"}
+"Rising about four dozen feet to the ceiling, the walls are impressive.
+It yields quite enough room for the trees growing here."
+extra {"shimmering bluish glow", "shimmering glow", "bluish glow", "glow"}
+"This glow is from the effect of sunlight passing through the waterfall
+at the entrance to the cavern."
+extra {"large trees", "trees"}
+"These trees are magnificent! They are of many varieties, and all about
+the same size, just barely reaching the ceiling. They appear to be the
+healthiest trees you've ever seen in your life."
+extra {"central path", "path", "soft moss", "moss"}
+"The path is completely covered in a dark green moss with amazing
+resilience. A normal footstep does not appear to damage it in any way."
+extra {"lush grass", "grass", "carpet"}
+"The grass is rather short, but surprisingly lush. A dark green colour
+similar to the moss, it seems to provide companionship to the trees it
+surrounds."
+flags GROVE_FLAGS
+ALWAYS_LIGHT
+north to arbor2 descr "Down Arboreal Hall.";
+south to entrance descr "A cavern behind the waterfall.";
+end
+
+arbor2
+title "Arboreal Hall"
+descr
+"A diffuse green phosphorescent light permeates this immense cavernous
+hall. On both sides of the central path of the hallway are large trees,
+apparently thriving on the ambient lighting. The path itself is made of
+soft moss, and ringing the base of the trees is a carpet of lush grass.
+The main difference from the entrance is the warm breeze wafting in from
+the north. The hall leads on to the north and south."
+extra {"diffuse green phosphorescent light", "green phosphorescent light",
+"diffuse phosphorescent light", "phosphorescent light", "green light",
+"diffuse light", "ambient lighting", "lighting", "light"}
+"The light appears to be coming from nowhere yet everywhere at once. On
+closer inspection, you discover the walls of the cavern are coated with
+a glowing lichen. This appears to be enough light for the plants in here
+to thrive."
+extra {"immense cavernous hall", "cavernous hall", "immense hall", "hall"}
+"Rising about four dozen feet to the ceiling, the walls are impressive.
+It yields quite enough room for the trees growing here."
+extra {"large trees", "trees"}
+"These trees are magnificent! They are of many varieties, and all about
+the same size, just barely reaching the ceiling. They appear to be the
+healthiest trees you've ever seen in your life."
+extra {"central path", "path", "soft moss", "moss"}
+"The path is completely covered in a dark green moss with amazing
+resilience. A normal footstep does not appear to damage it in any way."
+extra {"lush grass", "grass", "carpet"}
+"The grass is rather short, but surprisingly lush. A dark green colour
+similar to the moss, it seems to provide companionship to the trees it
+surrounds."
+flags GROVE_FLAGS
+ALWAYS_LIGHT
+north to arbor3 descr "Down Arboreal Hall.";
+south to arbor1 descr "Down Arboreal Hall.";
+end
+
+arbor3
+title "Arboreal Hall"
+descr
+"A diffuse green phosphorescent light permeates this immense cavernous
+hall. On both sides of the central path of the hallway are large trees,
+apparently thriving on the ambient lighting. The path itself is made of
+soft moss, and ringing the base of the trees is a carpet of lush grass.
+There is a warm breeze blowing in from the north. The hall leads on to the
+south, while the cavern widens into a cathedral-like room to the north."
+extra {"diffuse green phosphorescent light", "green phosphorescent light",
+"diffuse phosphorescent light", "phosphorescent light", "green light",
+"diffuse light", "ambient lighting", "lighting", "light"}
+"The light appears to be coming from nowhere yet everywhere at once. On
+closer inspection, you discover the walls of the cavern are coated with
+a glowing lichen. This appears to be enough light for the plants in here
+to thrive."
+extra {"immense cavernous hall", "cavernous hall", "immense hall", "hall"}
+"Rising about four dozen feet to the ceiling, the walls are impressive.
+It yields quite enough room for the trees growing here."
+extra {"large trees", "trees"}
+"These trees are magnificent! They are of many varieties, and all about
+the same size, just barely reaching the ceiling. They appear to be the
+healthiest trees you've ever seen in your life."
+extra {"central path", "path", "soft moss", "moss"}
+"The path is completely covered in a dark green moss with amazing
+resilience. A normal footstep does not appear to damage it in any way."
+extra {"lush grass", "grass", "carpet"}
+"The grass is rather short, but surprisingly lush. A dark green colour
+similar to the moss, it seems to provide companionship to the trees it
+surrounds."
+extra {"cathedral-like room", "cathedral room", "cathedral", "room"}
+"A glimpse of a gigantic stone structure can be seen through the trees
+and shrubbery to the north."
+flags GROVE_FLAGS
+ALWAYS_LIGHT
+north to henge descr "The Stone Circlet Temple.";
+south to arbor2 descr "Down Arboreal Hall.";
+end
+
+henge
+title "The Stone Circlet"
+descr
+"This is a huge circular cavern with a ceiling reminiscent of a cathedral.
+The greenish glow is slightly superseded by what appears to be light
+filtering down through the treetops from an unknown source. Around the
+perimeter of the cavern is a ring of tall trees. Within the ring of trees
+is a circlet of upright stone monoliths. They seem to form some kind of
+temple, and the magic in the air is tangible. One of the stones catches
+your eye -- there are glowing runes engraved deeply into the rock."
+extra {"ceiling"}
+"The ceiling is far overhead, and can barely be seen via the light
+passing through a light mist in the treetops."
+extra {"greenish glow", "glow"}
+"This is the ever-present phosphorescent glow from lichens on the walls
+of the cavern."
+extra {"light", "treetops", "treetop", "unknown source", "source"}
+"This is light of the purest white diluted only by the thin mist pervading
+the treetops. You cannot tell where it comes from."
+extra {"perimeter", "trees", "ring"}
+"These trees all appear to be oak trees of various kinds. They seem to
+be watching your every move..."
+extra {"stone circlet", "circlet", "stone monoliths", "monoliths",
+"monolith", "stones", "stone"}
+"Truly magnificent, these stones exemplify the power that nature holds.
+Seeming to focus magical power, they are positioned in exact locations
+according to the compass directions. Each stones looks like it weighs
+many tons. You don't think you could move them even if you tried!"
+extra {"glowing runes", "runes", "sign", "rune", "rock"}
+"<pre>                            The Druid Guild<br/>
+<br/>
+   'title'      - to get a new title (if you deserve it!).<br/>
+<br/>
+Members, remember to show respect to you master by bowing or worshipping<br/>
+him. The Druid Guild is wealthy and can aid you with minor items, should<br/>
+you be deemed worthy.</pre>"
+flags GROVE_FLAGS
+ALWAYS_LIGHT
+north to maple1 descr "Down Maple Hall.";
+west to elm1 descr "Down Elm Hall.";
+east to willow1 descr "Down Willow Hall.";
+south to arbor3 descr "Down Arboreal Hall.";
+end
+
+maple1
+title "The Maple Hall"
+descr
+"The main features of this cavernous tunnel are the maple trees to either
+side of the path. A warm breeze blows from the south, making the leaves
+on the trees appear to shimmer. Soft grass covers the ground, and the
+way is lit by glowing lichen on the walls."
+extra {"maple trees", "main features", "features", "side", "trees", "tree"}
+"Of many different kinds and sizes, these trees are almost like an honour
+guard of some kind. Their branches rise majestically towards the vaulted
+ceiling."
+extra {"leaves", "leaf"}
+"The leaves are the deepest, fullest green that you've ever seen in your
+entire life!"
+extra {"soft grass", "grass", "path"}
+"The path is basically not a path at all, but a green lawn between the
+trees on the sides of the tunnel. You don't doubt this would make a
+perfect spot for a picnic."
+extra {"glowing lichen", "lichen", "walls", "wall"}
+"The lichen seems to be quite common in this cave. The magical quality
+of its light is amazing to one such as yourself."
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+ALWAYS_LIGHT
+north to maple2 descr "The Maple Grove.";
+south to henge descr "The Stone Circlet Temple.";
+end
+
+maple2
+title "The Maple Grove"
+descr
+"This is a small clearing within a grove of maple trees inside an
+irregularly-shaped cave. There is a single small stone bench here, as
+well as a table made of the same rock on the left side. The floor of the
+clearing is mainly free of grass or moss. The atmosphere is peaceful here."
+extra {"maple trees", "trees", "tree", "grove"}
+"These trees seem to watch your every movement, yet they do not seem
+hostile in the least."
+extra {"small stone bench", "small bench", "stone bench", "bench"}
+"It is made of grey stone, and it is not very comfortable, but it's
+better than sitting on dirt, you suppose..."
+extra {"table", "left side", "side"}
+"This table is made of the same grey stone that the bench is. It is about
+four feet by five feet, and seems to be perfect for placing your
+belongings upon while you are here."
+extra {"grey stone", "stone", "rock"}
+"A cool grey stone, not too smooth, but not too rough, either. It emanates
+a restful aura that soothes your weary bones."
+extra {"floor", "ground", "dirt"}
+"This seems to be due to the people who frequent this cavern. Their feet
+trample the grass, and despite the magic of the place, it cannot grow
+under such conditions."
+flags GROVE_FLAGS
+ALWAYS_LIGHT
+south to maple1 descr "Down Maple Hall.";
+end
+
+elm1
+title "The Elm Hall"
+descr
+"The main features of this cavernous tunnel are the elm trees to either
+side of the path. A warm breeze blows from the east, making the leaves
+on the trees appear to shimmer. Soft grass covers the ground, and the
+way is lit by glowing lichen on the walls."
+extra {"elm trees", "main features", "features", "side", "trees", "tree"}
+"Of many different kinds and sizes, these trees are almost like an honour
+guard of some kind. Their branches rise majestically towards the vaulted
+ceiling."
+extra {"leaves", "leaf"}
+"The leaves are the deepest, fullest green that you've ever seen in your
+entire life!"
+extra {"soft grass", "grass", "path"}
+"The path is basically not a path at all, but a green lawn between the
+trees on the sides of the tunnel. You don't doubt this would make a
+perfect spot for a picnic."
+extra {"glowing lichen", "lichen", "walls", "wall"}
+"The lichen seems to be quite common in this cave. The magical quality
+of its light is amazing to one such as yourself."
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+ALWAYS_LIGHT
+west to elm2 descr "The Elm Grove.";
+east to henge descr "The Stone Circlet Temple.";
+end
+
+elm2
+title "The Elm Grove"
+descr
+"This is a small clearing within a grove of elm trees inside an
+irregularly-shaped cave. There is a single small stone bench here, as
+well as a table made of the same rock on the left side. The floor of the
+clearing is mainly free of grass or moss. The atmosphere is peaceful here."
+extra {"elm trees", "trees", "tree", "grove"}
+"These trees seem to watch your every movement, yet they do not seem
+hostile in the least."
+extra {"small stone bench", "small bench", "stone bench", "bench"}
+"It is made of grey stone, and it is not very comfortable, but it's
+better than sitting on dirt, you suppose..."
+extra {"table", "left side", "side"}
+"This table is made of the same grey stone that the bench is. It is about
+four feet by five feet, and seems to be perfect for placing your
+belongings upon while you are here."
+extra {"grey stone", "stone", "rock"}
+"A cool grey stone, not too smooth, but not too rough, either. It emanates
+a restful aura that soothes your weary bones."
+extra {"floor", "ground", "dirt"}
+"This seems to be due to the people who frequent this cavern. Their feet
+trample the grass, and despite the magic of the place, it cannot grow
+under such conditions."
+flags GROVE_FLAGS
+ALWAYS_LIGHT
+east to elm1 descr "Down Elm Hall.";
+end
+
+willow1
+title "The Willow Hall"
+descr
+"The main features of this cavernous tunnel are the willow trees to either
+side of the path. A warm breeze blows from the west, making the leaves
+on the trees appear to shimmer. Soft grass covers the ground, and the
+way is lit by glowing lichen on the walls."
+extra {"willow trees", "main features", "features", "side", "trees", "tree"}
+"Of many different kinds and sizes, these trees are almost like an honour
+guard of some kind. Their branches rise majestically towards the vaulted
+ceiling."
+extra {"leaves", "leaf"}
+"The leaves are the deepest, fullest green that you've ever seen in your
+entire life!"
+extra {"soft grass", "grass", "path"}
+"The path is basically not a path at all, but a green lawn between the
+trees on the sides of the tunnel. You don't doubt this would make a
+perfect spot for a picnic."
+extra {"glowing lichen", "lichen", "walls", "wall"}
+"The lichen seems to be quite common in this cave. The magical quality
+of its light is amazing to one such as yourself."
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+ALWAYS_LIGHT
+west to henge descr "The Stone Circlet Temple.";
+east to willow2 descr "The Willow Grove.";
+end
+
+willow2
+title "The Willow Grove"
+descr
+"This is a small clearing within a grove of willow trees inside an
+irregularly-shaped cave. There is a single small stone bench here, as
+well as a table made of the same rock on the left side. The floor of the
+clearing is mainly free of grass or moss. The atmosphere is peaceful here."
+extra {"willow trees", "trees", "tree", "grove"}
+"These trees seem to watch your every movement, yet they do not seem
+hostile in the least."
+extra {"small stone bench", "small bench", "stone bench", "bench"}
+"It is made of grey stone, and it is not very comfortable, but it's
+better than sitting on dirt, you suppose..."
+extra {"table", "left side", "side"}
+"This table is made of the same grey stone that the bench is. It is about
+four feet by five feet, and seems to be perfect for placing your
+belongings upon while you are here."
+extra {"grey stone", "stone", "rock"}
+"A cool grey stone, not too smooth, but not too rough, either. It emanates
+a restful aura that soothes your weary bones."
+extra {"floor", "ground", "dirt"}
+"This seems to be due to the people who frequent this cavern. Their feet
+trample the grass, and despite the magic of the place, it cannot grow
+under such conditions."
+flags GROVE_FLAGS
+ALWAYS_LIGHT
+west to willow1 descr "Down Willow Hall.";
+end
+
+%mobiles
+
+/* Guild teachers should be trees -- for the reason that Druids are
+traditionally worshippers of trees, and as such they hold trees to be
+the wisest of all plant life.
+
+Guild Master/Abilities : Oak
+Weapons                : Maple
+Spells                 : Elm
+Skills                 : Willow */
+
+oak
+names {"oak tree", "tree", "oak", "master"}
+title "an oak tree"
+descr "A majestic oak tree grows here."
+extra {}
+"This is a gigantic white oak tree. The Druidic tradition holds that these
+are the wisest of all the trees in the forests. This particular grand oak
+happens to be the guildmaster as well as the teacher for abilities."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+M_TREE_LARGE(100,SEX_NEUTRAL)
+dilbegin worship_me();
+var
+ gift : unitptr;
+ pc   : unitptr;
+ gs   : extraptr;
+code
+{
+heartbeat := PULSE_SEC * 10;
+:start:
+/* log("druid worship started");*/
+wait(SFB_DONE, ((command("worship")) and (self == target)));
+pc := activator;
+secure(pc, gone);
+gs := "$path" in pc.quests;
+if (gs == null)
+{
+log("not a druid! quiting");
+goto gone;
+}
+
+if ((GUILD_NYM_DRUID in gs.names))
+{
+exec("say Greetings, Druid.  I welcome you to our home.", self);
+pause;
+exec("say I have been alive in this world for many years, and I know "+
+     "that you face great peril beyond the borders of this sanctuary.", self);
+pause;
+exec("say As a token of friendship and goodwill towards a true Druid, I "+
+     "wish to give you this helpful tool.", self);
+pause;
+gift := load("herb_staff@druid");
+gift.height := pc.height;
+
+dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",gift);
+link(gift, pc);
+act("$1n gives you $2n.", A_ALWAYS, self, gift, pc, TO_VICT);
+act("$1n gives $2n to $3n.", A_SOMEONE, self, gift, pc, TO_NOTVICT);
+log("<div class='cpy'>a real druid he got a staff!</div>");
+pause;
+exec("say I hope this will serve you well in your travels.  Return when "+
+     "you are ready to continue your education with us.", self);
+goto start;
+}
+pause;
+pause;
+:gone:
+unsecure(pc);
+goto start;
+}
+dilend
+dilcopy teacher_prac@guild_paths(GUILD_NYM_DRUID);
+dilcopy nokill@druid();
+special SFUN_GUILD_BASIS GUILD_NYM_DRUID
+
+dilcopy guild_titles@guild_paths(GUILD_NYM_DRUID, {"Novice Druid",
+"Novice Druidess", "Nature Student", "Nature Student", "Scholar of Nature",
+"Scholar of Nature", "Master of Fungi", "Mistress of Fungi",
+"Learner of Trees", "Learner of Trees", "Forest Speaker", "Forest Speaker",
+"Arboreal Master", "Arboreal Mistress", "Novice Rainmaker",
+"Novice Rainmaker", "Storm Student", "Storm Student", "Master of the Deluge",
+"Mistress of the Deluge", "Earth Channeler", "Earth Channeler",
+"Nature Wizard", "Nature Witch", "Lord of Nature", "Lady of Nature",
+"Dreamer of Nature", "Dreamer of Nature", "Supreme Naturalist",
+"Supreme Naturalist", "Arch-Naturalist", "Arch-Naturalist",
+"Forest Avatar", "Forest Avatar", "Protector of the Forest",
+"Protector of the Forest", "Druid Lord", "Druid Lady", "Archdruid",
+"Archdruidess"});
+
+#define _ABILITY
+#include "guilddef.h"
+#undef _ABILITY
+
+
+end
+
+maple
+names {"maple tree", "tree", "maple", "teacher"}
+title "a maple tree"
+descr "A sturdy maple tree grows here."
+extra {}
+"Maple trees are probably the most useful of the trees of the forest. They
+can provide food from it's sap, shelter and weaponry from it's wood, and
+shade from it's boughs. This magnificent example can teach you weapon
+skills."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+M_TREE_LARGE(100,SEX_NEUTRAL)
+alignment 0
+dilcopy teacher_prac@guild_paths(GUILD_NYM_DRUID);
+dilcopy nokill@druid();
+special SFUN_GUILD_BASIS GUILD_NYM_DRUID
+
+#define _WEAPON
+#include "guilddef.h"
+#undef _WEAPON
+
+
+end
+
+elm
+names {"elm tree", "tree", "elm", "teacher"}
+title "an elm tree"
+descr "A wizened elm tree grows here."
+extra {}
+"Elm trees are magical. They provide the best materials for wands and
+other thaumaturgical implements. This wise old elm can teach you spells."
+M_TREE_LARGE(90,SEX_NEUTRAL)
+dilcopy teacher_prac@guild_paths(GUILD_NYM_DRUID);
+dilcopy nokill@druid();
+special SFUN_GUILD_BASIS GUILD_NYM_DRUID
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+#define _SPELL
+#include "guilddef.h"
+#undef _SPELL
+
+
+end
+
+willow
+names {"willow tree", "tree", "willow", "teacher"}
+title "a willow tree"
+descr "A tall willow tree grows here."
+extra {}
+"Known for their flexible branches, willow trees can survive hardships
+most others trees cannot, such as violent windstorms. This hardy tree
+can teach you survival skills."
+M_TREE_LARGE(94,SEX_NEUTRAL)
+alignment 0
+dilcopy teacher_prac@guild_paths(GUILD_NYM_DRUID);
+dilcopy nokill@druid();
+special SFUN_GUILD_BASIS GUILD_NYM_DRUID
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+#define _SKILL
+#include "guilddef.h"
+#undef _SKILL
+
+
+end
+
+guard
+names {"black locust tree", "black tree", "locust tree", "tree", "guard"}
+title "a black locust tree"
+descr "A thorny black locust tree grows here."
+extra {}
+"Black locust trees have one interesting trait among trees. They have
+extremely sharp thorny spines at branch junctions, which make them very
+difficult to climb..."
+M_TREE_LARGE(120,SEX_NEUTRAL)
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+alignment 0
+special SFUN_GUILD_BASIS GUILD_NYM_DRUID
+dilcopy rescue@function("black locust tree");
+dilcopy teamwork@function("black locust tree");
+dilcopy guild_guard@guild_paths(GUILD_NYM_DRUID, "north");
+dilcopy nokill@druid();
+
+end
+
+%objects
+
+herb_staff
+names {"staff of herbs","staff"}
+title "the Staff of Herbs"
+descr "A glowing wooden quarterstaff lies on the ground."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_QUARTERSTAFF, 0, 0)
+SKILL_TRANSFER(SKI_HERBS, +5)
+weight 5
+cost 1 IRON_PIECE
+extra {}
+"This appears to be a regular quarterstaff, save for a slight magical
+glow which surrounds it.  This staff must be more than it seems."
+extra {"$identify"}
+"The Staff of Herbs is a Druidic artifact which some believe gives them
+an uncanny knack for finding medicinal plants."
+extra {"$improved identify"}
+"When wielded or held, this staff will increase a Druid's proficiency in
+the herbs skill by 5%."
+dilcopy guild_restrict@function({GUILD_NYM_DRUID}, 0, 0, "");
+end
+
+%reset
+
+load guard into entrance zonemax 2
+load guard into entrance zonemax 2
+load oak into henge zonemax 1
+load maple into maple2 zonemax 1
+load elm into elm2 zonemax 1
+load willow into willow2 zonemax 1
+
+%end
+

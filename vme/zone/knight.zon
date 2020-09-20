@@ -1,0 +1,850 @@
+/*
+filename    knight
+password    rlscrew
+changedby   Darg
+EmailAdd
+request     compile
+version     2
+END HEADER*/
+
+
+#define _GUILD_MIDGAARD_KNIGHT
+#include <macros.h>
+%zone knight
+title "Midgaard Dark Knights@Mainland"
+lifespan 20
+reset RESET_ANYHOW
+creators {"Darg","Whistler"}
+
+notes
+"This is the Dark Knights Guild."
+
+#define AVENGER_GIVEN "$Avenger given"
+
+
+
+%dil
+
+/* Nokill dill for Guild Staff - ejects the sinner out with 0 hp and
+endurance + incapacitated */
+
+dilbegin nokill();
+var
+        pc      : unitptr;
+        room    : unitptr;
+        i       : integer;
+code
+{
+        heartbeat := 3 * PULSE_SEC;
+
+        :start:
+        wait(SFB_COM,  self.position == POSITION_FIGHTING);
+        pc := self.fighting;
+        if (pc.level > 200) goto start;
+        secure(pc,gone);
+        if (command("flee"))
+                block;
+
+self.hp := self.max_hp;
+act("The sounds of battle attract attention of the training Dark Knights.",
+A_ALWAYS, pc, self, null, TO_ALL);
+act("<div class='cpr'>Several of them charge into the room, grabbing you and repeatedly </div>"+
+"smashing your head into the wall!<div class='cw'></div>", A_ALWAYS, pc, self, null, TO_CHAR);
+act("Several of them charge into the room, grabbing $1n and repeatedly "+
+"smashing $1s head into the wall!",A_SOMEONE, pc, self, null, TO_REST);
+pc.hp := 0;
+pc.endurance := 0;
+act("Your face a bloody mess, you are dragged away."
+,A_ALWAYS, pc, self, null, TO_CHAR);
+position_update(pc);
+act("Two of them grab $1n and drag $1m out of the Guild, dumping "+
+"$1m outside the guild.",A_ALWAYS, pc, self, null, TO_REST);
+room := findroom("sth1@sewers");
+link(pc,room);
+act("Two large Dark Knights emerge from the Guild, dragging $1n"+
+"between them and dump $1m unceremoniously in the sewer."
+,A_SOMEONE,pc,self,null,TO_REST);
+        :gone:
+unsecure(pc);
+goto start;
+}
+dilend /*nokill*/
+
+%rooms
+room_1
+title "The Entrance to Dark Knights"
+descr
+" Here lies the entrance to the ancient order of the Dark Knights. This
+chamber is small and judging by the drainage on the floors is used as
+a 'mud' room for those entering from the sewer.  A door on the east wall
+leads into another large chamber and the one on the south wall leads to
+the Midgaard Sewers."
+extra {"chamber"}
+"The whole structure is made of cut stone and is clean considering its
+location and the fact it has been here since before the Great War ripped
+Midgaard apart."
+extra {"$exit_descr"} "The Entrance to the Dark Knights of Midgaard."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT,UNIT_FL_NO_MOB}
+movement SECT_FIELD
+ALWAYS_LIGHT
+east to room_2;
+south to sth1@midsewers;
+end
+
+room_2
+title "A Large Passageway"
+descr
+" This passageway leads east to the main hall or west to the entrance of
+the Dark Knights sanctum. On either side of the stone walls are rows of
+torches which strangely seem to shed very little light."
+extra {"torch","torches"}
+"These are black obsidian torches secured onto the walls. You suspect that they
+are causing your light source to be dimmer than usual."
+extra {"$exit_descr"} "A Large Passageway leading East and West"
+east to room_3;
+west to room_1;
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+ALWAYS_LIGHT
+end
+
+room_3
+title "The Main Hall"
+descr
+"You are inside the main hall, here the Dark Knights gather to talk over what
+goodness they have purged from the land and other battles they have had. This
+hall is very spacious, with its ceiling towering into the darkness, several
+large tables are placed here and there. It's very well ventilated and the
+air is fresh, not like the sewers leading into this dark sanctum. The hall
+continues in all direction except to south where a large tapestry hangs."
+extra {"ceiling"}
+"You can vaguely make out some glowing symbols traced on the ceiling. Although
+the symbols are unreadable, you feel the dark forces at work just from looking
+at them."
+extra {"symbols","markings"}
+"The symbols are glowing and magical. That is all you can tell."
+extra {"dining table","table"}
+"The tables are large and made from solid oak."
+extra {"tapestry"}
+"It shows an Dark Knight riding on a demon horse and slaying a Holy Paladin.
+This battle happened shortly before the Great War that tore Midgaard to
+shreds, and at the same time divided the Paladins into two Orders, The
+Dark Knights and the lesser Order that of the Holy Paladins of Midgaard."
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+
+extra {"$exit_descr"}"The Main Hall of the Dark Knights Sanctum"
+north to room_4;
+south to room_5;
+east to room_6;
+west to room_2;
+end
+
+room_4
+title "The Dark Knights Dormitory"
+descr
+"This room is huge with rows of beds lining the walls. A foot locker stands
+at the foot of each bed and a special rack to hold their armour stand to the
+right at the head of each bed.  The only exit leads south to the main hall."
+extra {"bed","beds"}
+"They are made of sturdy oak and lined with a feather filled mattress."
+extra {"foot locker", "locker"}
+"They are made of cedar and each is carved by the owner with different
+details of battles and sights they have scenes of there travels from
+throughout the realms of Valhalla."
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+
+ALWAYS_LIGHT
+extra {"$exit_descr"} "The Dark Knights Dormitory"
+south to room_3;
+end
+
+room_5
+title "The Masters Chambers"
+descr
+"This is the chamber of Shirilan, Master of the Dark Knights Of Midgaard.  A
+stone statue of a him dressed in full plate armor stands in the center of the
+chamber as a tribute to him. The shield, the statue is holding, bears the
+insignia of the dark forces, while he wields a replica of the sword known as
+'Avenger'.  It is this sword that history tells how he divided from the Holy
+Paladins and struck out on his own to form this guild to worship all that is
+evil and destroy all that is good.  A door opens to the Main Hall on the
+north wall."
+extra {"stone statue","statue","knight"}
+"You are already looking at it."
+extra {"wall"} "There is nothing on the walls."
+extra {"shield"}
+"The shield is a replica of the one Master Shirilan used to slay a Holy
+Paladin."
+extra {"insignia"} "The insignia shows a volcano spitting fire."
+extra {"$exit_descr"} "The Master Shirilan's Chambers"
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+
+north to room_3;
+end
+
+room_6
+names {"The Armory"}
+title "The Dark Knights Armory"
+descr
+"     You have entered the massive armory of the Dark Knights.  The east
+wall is made of huge steel rods forming a cage where the armour is kept.
+There seems to be more then enough room here for several knights to practise
+there skills as well. A door on the west wall leads to the Main Hall."
+extra {"rods", "steel rods"}
+"The rods are massive steel with no noticeable lifting apparatus. Through
+the bars you can catch a glimpse of the armor and weapons."
+extra {"armour", "weapons"}
+"Beyond the bars you can see massive suits of full plate armor and one sword
+in particular stands out."
+extra {"sword"}
+"It looks like the fabled 'Avenger' sword, if you could just get your
+hands on one of those!"
+extra {"$exit_descr"} "The Dark Knights Armory"
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+
+west to room_3;
+end
+
+%mobiles
+%mobiles
+/* ---------------------------- TEACHERS ---------------------------- */
+
+gawaine
+names {"Gawaine", "guild master", "master"}
+title "Lord Gawaine"
+descr
+"Lord Gawaine, the master of the Order of Dark Knights, stands here
+contemplating the past and future."
+extra {}
+"Lord Gawaine, the current Master Order of the Dark Knights, looks to
+be a formidable opponent should the need arise.  His years of experience
+on and off the battle fields, hardly show."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+M_HUMAN_MAGE_FIRE(130, SEX_MALE, "magma")
+alignment -1000
+exp -300
+dilcopy nokill@knight();
+special SFUN_GUILD_BASIS GUILD_KNIGHT
+
+dilcopy guild_titles@guild_paths(GUILD_KNIGHT, { "Initiate", "Initiate",
+"Learner of the Dark Forces", "Learner of the Dark Forces",
+"Journeyman of Evil", "Journey Woman of Evil", "Dark Charge", "Dark Charge",
+"Disciple of the Dark Forces", "Disciple of the Dark Forces",
+"Apprentice Knight of the Dark", "Apprentice Lady of the Dark",
+"Grey Knight", "Grey Lady", "Dark Knight", "Dark Lady",
+"Champion Disciple of Darkness", "Champion Disciple of Darkness",
+"Champion Dark Knight", "Champion Dark Lady", "Lord Of Darkness",
+"Lady of Darkness", "Duke of the Dark Knights", "Dutchess of the Dark Knights",
+"Councilor of the Dark Knights", "Councilor of the Dark Knights",
+"Master of the Dark Forces", "Mistress of the Dark Forces",
+"Baron Of The Dark Knights", "Baroness of The Dark Knights",
+"Follower of Hel", "Follower of Hel", "Champion of Hades",
+"Champion of Hades", "Count of The Dark Knights",
+"Countess Of The Dark Knights"});
+
+dilbegin knight_dil ();
+var
+expd: extraptr;
+	pc : unitptr;
+	item : unitptr;
+	item2 : unitptr;
+code
+{
+	heartbeat := PULSE_SEC * 4;
+
+	:start:
+
+ wait (SFB_DONE, (command("bow") or command("worship"))
+                 and (self == target));
+
+pc:= activator;
+secure(pc, lost);
+        expd := "$path" in pc.quests;
+        if (expd == null) goto lost;
+        if (AVENGER_GIVEN in pc.quests) goto start;
+		if ((GUILD_KNIGHT in expd.names)  and (pc.alignment < -349))
+{
+	exec ("say Hello there "+pc.name+" I see you have decided to follow "+
+	"the path or a Dark Knight and vanquish good from the land.",self);
+	pause;
+	exec ("say Since the realm is so full of purists, especially those " +
+        "Holy Paladins, we must protect ourselves as only " +
+        "Dark Knights can.", self);
+	pause;
+	exec ("say Before Master Shirilan departed this realm he left with me "+
+	"the knowledge of a mighty item I could bestow on promising " +
+        "young followers of the dark forces.", self);
+	pause;
+	exec ("say I will give it to you in the hopes that it will "+
+        "aid you in your need.", self);
+        item := load("avenger@knight");
+ dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
+        item.height := pc.height;
+		link(item, self);
+exec("give sword "+pc.name, self);
+	pause;
+exec ("say Protect that sword well as the powers of good prevent us from "
++	"making more.",self);
+pause;
+exec ("say Also this token should aid you in your quests against good.", self);
+pause;
+exec ("smile "+pc.name,self);
+        item2 := load("night_cross@knight");
+dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item2);
+        item2.height := pc.height;
+        link(item2,pc);
+exec("give pendant "+pc.name, self);
+	pause;
+exec("say I hope to see you again soon, our guild's strength is returning.",self);
+pause;
+exec("say Our worship has strengthened the dark forces.", self);
+pause;
+exec("say They will serve you as long as you serve them.", self);
+pause;
+exec("say Go now, train well and I ready myself for the next pupil.", self);
+	pause;
+    unsecure(pc);
+	goto start;
+	}
+else
+   {
+block;
+ unsecure(pc);
+exec ("say You are not a Dark Knight leave before I feed your scrawny butt "
+	+"to the demons in hades!", self);
+ goto start;
+   }
+unsecure(pc);
+goto start;
+
+:lost:
+destroy(item);
+unsecure(pc);
+exec("say Just wait until they decide to talk to be and i now ignore them!", self);
+goto start;
+
+}
+dilend/* knight_dil */
+
+end
+
+
+ /*Weapon Master*/
+aramand
+names {"Sir Aramand","aramand","sir","keeper"}
+title "Sir Aramand"
+descr
+"Sir Aramand, the keeper of the Armory, stands guard here."
+extra {}
+"You have heard that only the bravest and strongest warrior of the Dark Knights
+are ever selected to guard the Armory. Looking at Aramand, you have no doubt
+that rumor to be true. You wonder if you could pick up some pointers on sword
+technique from this great hero."
+flags {UNIT_FL_NO_TELEPORT}
+M_HUMAN_CLERIC_SWORD(140, SEX_MALE,"cause serious","cure serious")
+alignment -1000
+dilcopy nokill@knight();
+special SFUN_GUILD_BASIS GUILD_KNIGHT
+romflags {CHAR_PROTECTED}
+dilcopy teacher_prac@guild_paths( GUILD_KNIGHT );
+
+#define _WEAPON
+#include "guilddef.h"
+#undef _WEAPON
+
+
+end
+hilary
+names {"Lady Hilary","hilary","lady","teacher"}
+title "Maid Hilary"
+descr
+"Lady Hilary, teacher of the magic's of the dark forces awaits her next pupil here."
+extra {}
+"Looking at Lady Hilary's physique, you would not want to try any quick or
+sudden movements around her. She looks quite young for her age, and its hard to
+believe she fought in the Great War itself."
+flags {UNIT_FL_NO_TELEPORT}
+NATURAL_DEF(WPN_FIST, ARM_PLATE)
+M_HUMAN_MAGE_FIRE(130, SEX_FEMALE, "cast lava flow")
+alignment -1000
+dilcopy nokill@knight();
+romflags {CHAR_PROTECTED}
+special SFUN_GUILD_BASIS GUILD_KNIGHT
+/*
+special SFUN_MEMBERS_ONLY GUILD_KNIGHT+"#$1n says, 'I only teach warriors
+of the holy path. Begone!'"
+*/
+dilcopy teacher_prac@guild_paths( GUILD_KNIGHT );
+
+
+#define _SPELL
+#include "guilddef.h"
+#undef _SPELL
+
+
+end
+
+matthew
+names {"Matthew the Brilliant","matthew"}
+title "Matthew"
+descr
+"Matthew the Brilliant sits here, pondering your dark side and how you will do."
+extra {}
+"Matthew is a scrawny dude with a impish grin, how he manages to gain a station
+in the Dark Knights remains a mystery."
+flags {UNIT_FL_NO_TELEPORT}
+M_HUMAN_CLERIC_SWORD(130, SEX_MALE, "harm", "heal")
+alignment -1000
+dilcopy nokill@knight();
+romflags {CHAR_PROTECTED}
+special SFUN_GUILD_BASIS GUILD_KNIGHT
+/*
+special SFUN_MEMBERS_ONLY GUILD_KNIGHT+"#$1n exclaims, 'You are not a
+warrior of the faith!'"
+*/
+dilcopy teacher_prac@guild_paths( GUILD_KNIGHT );
+
+#define _ABILITY
+#include "guilddef.h"
+#undef _ABILITY
+
+
+end
+
+soroth
+names {"Lady Soroth","soroth","lady"}
+title "Lady Soroth"
+descr
+"The mighty Lady Soroth sits here waiting to teach you new skills."
+extra {}
+"Lady Soroth looks like a very skilled warrior, and she carries herself with an
+air of confidence and purpose. She looks back at you and nods, smiling with a
+knowing but friendly grin. You wonder what secrets she knows that makes her
+look so confident."
+flags {UNIT_FL_NO_TELEPORT}
+M_HUMAN_MAGE_FIRE(120, SEX_FEMALE, "hellfire")
+alignment -1000
+dilcopy nokill@knight();
+romflags {CHAR_PROTECTED}
+special SFUN_GUILD_BASIS GUILD_KNIGHT
+/*
+special SFUN_MEMBERS_ONLY GUILD_KNIGHT+"#$1n says, 'Begone $3n!'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_KNIGHT );
+
+#define _SKILL
+#include "guilddef.h"
+#undef _SKILL
+
+end
+
+%objects
+
+boots
+names {"suede boots","boots"}
+title "a pair of suede leather boots"
+descr "A pair of suede leather boots lies here."
+extra {}
+"They are made from thick leather and have a heavy inner
+cushion."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+ARMOUR_LEATHER(0, 0)
+weight 5
+cost 14   COPPER_PIECE
+end
+
+pants
+names {"leather pants", "pants"}
+title "a pair of leather pants"
+descr "A pair of leather pants is lying on the ground."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+ARMOUR_LEATHER(0, 0) /* 10 default str, Leather Quality, Average Craft */
+weight 5
+cost 8   COPPER_PIECE
+extra "$wear_s"
+"You slip into the $2N and feel rather smart."
+extra "$wear_o"
+"$1n slips into the $2N."
+
+extra "$rem_s"
+"You get out of the $2N and feel a little naked."
+extra "$rem_o"
+"$1n gets out of $1s $2N."
+end
+
+sleeves
+names {"studded leather sleeves","sleeves"}
+title "a pair of studded leather sleeves"
+descr "A pair of studded leather sleeves is lying on the ground."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
+ARMOUR_LEATHER(0, 0)
+weight 4
+cost 8   COPPER_PIECE
+end
+
+jerkin
+names {"studded leather jerkin","jerkin"}
+title "a studded leather jerkin"
+descr "A studded leather jerkin is lying on the ground."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+ARMOUR_LEATHER(0, 0)
+weight 5
+cost 12   COPPER_PIECE
+end
+
+
+
+avenger
+names {"avenger","sword","longsword"}
+title "<div class='cpn'>Avenger of Darkness</div><div class='cw'></div>"
+descr "A dark colored sword lies at your feet."
+extra {}
+"This sword is of exquisite craftsmanship. The handle is shaped in
+the image of a dark demon and it seems to eminate a darkness. You
+notice that the handle is long enough for both single and
+two-handed use. The word <div class='cpn'>'Avenge!'</div><div class='cw'> is carved into the blade.</div>"
+extra {"handle of the Avenger","handle","demon","hand guard"}
+"The handle is crafted from fine black obsidian. The body of a demon
+flows up the forges blade, spewing forth hell fire and brimstone. You
+can grip the handle with both hands, by typing 'wield sword two'.<br/>"
+extra {"$identify"}
+"You concentrate on the <div class='cpn'>Avenger</div><div class='cw'> and reveal that this weapon is
+strictly reserved for the Order of the Dark Knights. You can wield
+it two-handedly as a claymore by typing 'wield Avenger two'. By calling
+on the dark forces and incant the word </div><div class='cpn'>'Avenge!'</div><div class='cw'> you can call
+upon the hidden powers of the sword.<br/></div>"
+extra {"$improved identify"}
+"Your strength will raise by one if using this weapon. The sword can offer
+you a displacement of magic you are evil enough.<br/>
+The blade is of fine craftsmanship and bears a good magic bonus.<br/>"
+extra {"$wear_s"}
+"Your $2n starts to fade as you wrap your hands around its hilt."
+extra {"$wear_o"}
+"$1n's $2n starts to fade as $1e wraps $1s hands around its hilt."
+extra {"$rem_s"}
+"You sheath your $2n... The dimness from the blade brightens."
+extra {"$rem_o"}
+"As $1n sheaths $1s $2n, the dimness from its blade brightens."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
+WEAPON_DEF(WPN_BASTARD_SWORD1,0,2)
+MATERIAL_METAL("This item is made of forged metal.")
+dilcopy guild_restrict@function ({GUILD_KNIGHT},0,25,"");
+dilcopy level_restrict@function (10,0,0,"");
+dilcopy abi_restrict@function (ABIL_STR,25,0,0,"");
+dilcopy ali_restrict@function (-1000,-350,0,25,"");
+dilcopy twohand@skaven(68,67);
+weight 7
+rent 90 IRON_PIECE
+spell 40
+
+dilbegin flamechat();
+
+var
+        enemy : unitptr;
+        random : integer;
+code
+{
+        :init:
+on_activation(self.outside.position != POSITION_FIGHTING, skip);
+        :start:
+wait(SFB_COM,(self.equip == WEAR_WIELD));
+enemy := self.outside.fighting;
+random := rnd(1,100);
+if ((enemy.hp < 10)and(enemy.alignment < 0))
+{
+act("Your $2n engulfs $3n in darkness!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$3n screams in agony as $3s body is engulfed in a fury of brimstone!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$1n's $2n engulfs $3n in darkness!"
+, A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
+act("$3n screams in agony as $3s body is engulfed in a fury of brimstone!"
+, A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
+act("$1n's $2n darkens violently, brimstone engulfs your body!"
+,A_ALWAYS,self.outside,self,null,TO_VICT);
+act("The forces of darkness engulfs you in unbearable pain!"
+,A_ALWAYS,self.outside,self,null,TO_VICT);
+enemy.hp := -7;
+position_update(enemy);
+goto start;
+}
+if (random < 10)
+{
+act("Your slash leaves a fiery trail of hellfire through the air!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$1n's slash leaves a fiery trail of hellfire through the air!"
+, A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
+act("$1n's slash leaves a fiery trail of hellfire through the air!"
+,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
+}
+if (random < 20)
+{
+act("Your $2n darkens and erupts into hellfire, burning $3n!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$3n howls in pain!", A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$1n's $2n darkens and erupts into hellfire, burning $3n!"
+, A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
+act("$3n howls in pain!", A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
+act("$1n's $2N darkens and erupts into hellfire, burning you!"
+,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
+}
+else if (random < 30)
+{
+act("Your $2n surges with the powers of darkness!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$1n's $2n surges with the powers of darkness!"
+, A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
+act("$1n's $2n surges with the powers of darkness!"
+,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
+}
+else if (random < 40)
+{
+act("The blade of your $2n erupts in brimstone!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$3n screams and averts $3s eyes!",
+A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("The blade of $1n's $2n erupts in brimstone!"
+, A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
+act("$3n screams and averts $3s eyes!",
+A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
+act("A blinding flash of brimstone from $1n's $2n causes you to avert your
+eyes in pain!" ,A_ALWAYS,self.outside,self,null,TO_VICT);
+ goto start;
+}
+if (random < 50)
+{
+act("The hilt of your $2n darkens, the demon withing seems to grim in satisfaction!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$3n suddenly clutches $3s chest and screams in agony!",
+A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("The demon engraved on $1n's $2n seems to grin in satisfaction!"
+, A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
+act("$3n suddenly clutches $3s chest and screams in agony!",
+A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
+act("The demon engraved on $1n's $2n seems to grim in satisfaction!"
+,A_ALWAYS,self.outside,self,null,TO_VICT);
+act("You feel the wrath of Hades flood through your body!"
+,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
+}
+if (random < 60)
+{
+act("Hellfire sprays from your $2n, engulfing $3n!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("$3n screams in agony!"
+, A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+act("Hellfire sprays from $1n's $2n, engulfing $3n!"
+, A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
+act("$3n screams in agony!"
+, A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
+act("Hellfire sprays from $1n's $2n, engulfing you!"
+,A_ALWAYS,self.outside,self,null,TO_VICT);
+act("That REALLY hurt!"
+,A_ALWAYS,self.outside,self,null,TO_VICT);
+goto start;
+}
+goto start;
+}
+dilend
+
+dilbegin recall chargeflame();
+code
+{
+:start:
+heartbeat:=PULSE_SEC*SECS_PER_MUD_DAY/6;
+wait (SFB_TICK,(self.equip==WEAR_WIELD));
+heartbeat:=PULSE_SEC*5;
+act ("A darkness emanates from your <div class='cpn'>Avenger</div><div class='cw'>...</div>",
+A_ALWAYS,self.outside,self,null,TO_CHAR);
+act ("A darkness emanates from $1n's <div class='cpn'>Avenger</div><div class='cw'>...</div>",
+A_ALWAYS,self.outside,self,null,TO_REST);
+sendto ("add charge",self);
+goto start;
+}
+dilend
+
+dilbegin recall aware flamespell();
+var
+        i : integer;
+        enemy :unitptr;
+        n : integer;
+        charge:integer;
+        pwr : integer;
+code
+{
+pwr:=3;
+:init:
+        heartbeat := PULSE_SEC*1;
+charge:=interrupt (SFB_MSG,((self==activator) and
+        (argument=="add charge")), charge);
+:start:
+  wait (SFB_CMD,(command ("say")) and
+  ("Avenge!" in argument)and(self.equip==WEAR_WIELD));
+        block;
+act ("You raise your hand and shout to the dark forces <div class='cpr'>'Avenge!'</div><div class='cw'></div>",
+A_SOMEONE,self.outside,null,null,TO_CHAR);
+act ("$1n raises $1s hand and shouts to the dark forces <div class='cpr'>'Avenge!'</div><div class='cw'></div>",
+A_SOMEONE,self.outside,null,null,TO_REST);
+        if (pwr<=0) goto fail;
+        pwr:=pwr-1;
+        i := rnd (1,40);
+if (i < self.outside.abilities[ABIL_DIV])
+{
+   act("Your $2n darkens in response to your prayer!",
+   A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+   act("$1N's $2n darkens in response to $1n's prayer!",
+   A_ALWAYS,self.outside,self,enemy,TO_REST);
+n:=cast_spell(SPL_DISPLACE_MAGIC,self.outside,self,self.outside,"");
+pause;
+}
+else
+{
+act ("The dark forces deny your call..."
+, A_SOMEONE,self.outside,null,self,TO_CHAR);
+act ("You grin as only dark silence greets $1n's call..."
+, A_SOMEONE,self.outside,null,self,TO_REST);
+}
+goto start;
+
+        :fail:
+block;
+act ("Your <div class='cpn'>Avenger</div><div class='cw'> darkens slightly, but then returns to normal.</div>"
+, A_SOMEONE,self.outside,self,self,TO_CHAR);
+act ("$1n's <div class='cpn'>Avenger</div><div class='cw'> darkens slightly, but then returns to normal.</div>"
+, A_SOMEONE,self.outside,self,self,TO_REST);
+                goto start;
+ :charge:
+clear (charge);
+if (pwr<3)
+  pwr:=pwr+1;
+  goto init;
+  goto start;
+
+}
+dilend
+end
+
+night_cross
+names {"symbol","pendant"}
+title "<div class='cpn'>Pendant of Darkness</div><div class='cw'></div>"
+descr "A small, dark pendant lays here pulsating in the dust."
+extra {}
+"This is a small dark pendant, with a demon guardian engraved on it. The
+pendant is the symbol of membership in the Order of the Dark Knights and
+is said to protect the wearers from the perils durning their crusades
+against good."
+extra {"engraving","symbol","runes","sign"}
+"The engraving shows a demon winning in a struggle against good.<br/>"
+extra {"$identify"}
+"The Pendent of Darkness can only be used by the Dark Knights and protects
+them from good during their travels. Beware, as the symbol has no mercy
+for those weak in their dedication. The Amulet will increase your
+Constitution to better withstand the perils of the road.<br/>"
+extra {"$improved identify"}
+"The dark forces prevent your feeble mind from gaining any more information.<br/>"
+extra {"$wear_s"}
+"You slip your $2n around your neck and feel coldness enter your heart."
+extra {"$wear_o"}
+"$1n slips $1s $2n around $1s neck and you feel the darkness surround them."
+extra {"$rem_s"}
+"You carefully remove the $2n."
+extra {"$rem_o"}
+"$1n carefully removes the $2n."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
+MATERIAL_METAL("This item is made of silvery metal.")
+PROTECTION_FROM_GOOD
+dilcopy guild_restrict@function ({GUILD_KNIGHT},0,25,"");
+rent 25 IRON_PIECE
+end
+
+
+trench_coat
+names {"black trench coat","coat","trench coat"}
+title "a black trench coat"
+descr "A black trench coat lies here in a heap."
+extra {}
+"The trench coat is thick and made of fine leather."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_BODY}
+ARMOUR_LEATHER(0,0)
+weight 7
+cost 5 SILVER_PIECE
+dilcopy guild_restrict@function ({GUILD_KNIGHT},0,25,"");
+end
+
+berret
+names {"black beret","beret","hat"}
+title "a black beret"
+descr "A black beret bearing the insignia of the Dark Knights lies here."
+extra {}
+"The black beret is made of sturdy hide, those that see you wearing this
+will know you hail from the Dark Knights of Midgaard."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HEAD}
+ARMOUR_HRD_LEATHER(0,0)
+weight 4
+cost 4 GOLD_PIECE
+rent 20 IRON_PIECE
+dilcopy guild_restrict@function ({GUILD_KNIGHT},0,25,"");
+end
+
+%reset
+
+load gawaine into room_5 max 1
+  {
+	    equip boots WEAR_FEET
+        equip berret WEAR_HEAD
+	    equip trench_coat WEAR_ABOUT
+        equip pants WEAR_LEGS
+		equip sleeves WEAR_ARMS
+		equip jerkin WEAR_BODY
+  }
+
+load aramand into room_6 max 1
+  {
+	    equip boots WEAR_FEET
+        equip berret WEAR_HEAD
+	    equip trench_coat WEAR_ABOUT
+        equip pants WEAR_LEGS
+		equip sleeves WEAR_ARMS
+		equip jerkin WEAR_BODY
+  }
+
+load hilary into room_3 max 1
+  {
+	    equip boots WEAR_FEET
+        equip berret WEAR_HEAD
+	    equip trench_coat WEAR_ABOUT
+        equip pants WEAR_LEGS
+		equip sleeves WEAR_ARMS
+		equip jerkin WEAR_BODY
+  }
+
+load matthew into room_2 max 1
+  {
+	    equip boots WEAR_FEET
+        equip berret WEAR_HEAD
+	    equip trench_coat WEAR_ABOUT
+        equip pants WEAR_LEGS
+		equip sleeves WEAR_ARMS
+		equip jerkin WEAR_BODY
+  }
+
+load soroth into room_4 max 1
+  {
+	    equip boots WEAR_FEET
+        equip berret WEAR_HEAD
+	    equip trench_coat WEAR_ABOUT
+        equip pants WEAR_LEGS
+		equip sleeves WEAR_ARMS
+		equip jerkin WEAR_BODY
+  }
+
+
+
+%end

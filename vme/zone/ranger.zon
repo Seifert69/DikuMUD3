@@ -1,0 +1,714 @@
+/*
+filename    ranger
+password    newworld
+changedby   Eirinn
+EmailAdd     John <clarej@tcd.ie>
+request     compile
+version     3
+END HEADER*/
+
+#define _GUILD_NYM_RANGER
+
+#include <macros.h>
+
+%zone ranger
+title "Ranger Guild@Alquenburg"
+lifespan 20
+reset RESET_ANYHOW
+creators {"eirinn","palio"}
+
+notes
+"This is the ranger guild."
+
+%dil
+
+/* Nokill dill for Guild Staff - ejects the sinner out with 0 hp and
+endurance + incapacitated */
+
+dilbegin nokill();
+var
+        pc      : unitptr;
+        room    : unitptr;
+        i       : integer;
+code
+{
+        heartbeat := 3 * PULSE_SEC;
+
+        :start:
+        wait(SFB_COM,  self.position == POSITION_FIGHTING);
+        pc := self.fighting;
+        if (pc.level > 200) goto start;
+        secure(pc,gone);
+        if (command("flee"))
+                block;
+
+self.hp := self.max_hp;
+act("The sounds of battle attract attention of the training rangers.",
+A_ALWAYS, pc, self, null, TO_ALL);
+act("<div class='cpr'>Several of them charge into the room, grabbing you and repeatedly </div>"+
+"smashing your head into the wall!<div class='cw'></div>", A_ALWAYS, pc, self, null, TO_CHAR);
+act("Several of them charge into the room, grabbing $1n and repeatedly "+
+"smashing $1s head into the wall!",A_SOMEONE, pc, self, null, TO_REST);
+pc.hp := 0;
+pc.endurance := 0;
+act("Your face a bloody mess, you are dragged away."
+,A_ALWAYS, pc, self, null, TO_CHAR);
+position_update(pc);
+act("Two of them grab $1n and drag $1m out of the Guild, dumping "+
+"$1m outside the guild.",A_ALWAYS, pc, self, null, TO_REST);
+room := findroom("for_gath1@ranger");
+link(pc,room);
+act("Two large rangers emerge from the Guild, dragging $1n"+
+"between them and dump $1m unceremoniously on the ground."
+,A_SOMEONE,pc,self,null,TO_REST);
+        :gone:
+unsecure(pc);
+goto start;
+}
+dilend /*nokill*/
+
+
+%rooms
+/*----- Rangers Guild-----*/
+
+for_gath1
+title "A Well-Hidden Path"
+descr
+"As you walk along a well hidden path you see signs of an encampment of
+sorts to the southwest. Huge trees make traveling this way difficult but
+not impossible. There is thick foliage all around you that seems to grab
+at your feet as you walk, making you wonder if you should continue on or
+turn back now while you can. The forest seems to get lighter to the east
+although it is difficult to tell for sure."
+movement SECT_FOREST
+extra {"trees","tree"}
+"The trees are huge, some reaching heights of 100 feet in the air.
+The trunks are so large that it makes you think you could hollow one
+out as a home."
+extra {"foliage"}
+"The plant life growing here is thick and lush. Long vines trail out
+from everywhere and quickly entangle your feet."
+extra {"trail","path"}
+"The path is nothing more then a few animal prints through the thick
+brush."
+south to for_gath2 descr "The brush is too thick for you to see much to
+the south but you can just make out an encampment of sorts.";
+north to trail_6@talen descr "Although it is difficult to see it looks
+like the forest gets lighter to the east." ;
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+for_gath2
+title "A Well-Hidden Path"
+descr
+"The path is barely visible as you walk along. The animals of the area,
+hidden away in the thick brush, call out your presence, sometimes with
+loud cries of warning, other times their very silence calls out louder
+than any scream could. As you look westward you can see, through the
+trees, an encampment of sorts with people milling about in it."
+extra {"trees","tree"}
+"The trees are huge, some reaching heights of 100 feet in the air.
+The trunks are so large that it makes you think you could hollow one
+out as a home."
+extra {"foliage"}
+"The plant life growing here is thick and lush, Long vines trail out
+from everywhere and quickly entangle your feet."
+extra {"trail","path"}
+"The path is nothing more then a few animal prints through the thick
+brush."
+north to for_gath1 descr "To the north you can almost make out a trail.";
+west to field_gath1 descr "Through the trees to the west you can just make
+out an encampment.";
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+field_gath1
+title "An Open Field"
+descr
+"The field is very large and a group of rangers has set up an encampment
+here for the great Equinox Festival. The rangers have set up separate
+little booths selling there wares, a large area to the south has the
+cooking fires and eating area. A large bonfire crackles to the west and
+the sleeping area with tents to house the rangers is to the north end of
+the field."
+extra {"camp fire", "bonfire", "fire"}
+"There are a number of cooking fires around the encampment, most emitting
+a wonderful smell of something being cooked."
+extra {"tent"}
+"Around the encampment Rangers have set up tents to stay in while at the
+Forgathering."
+east to for_gath2 descr "You see what might be a trail off into the woods
+to the east.";
+north to tent_1 descr "To the north you see a small tent.";
+south to field_gath2 descr "You see the field stretching out to the south.";
+west to camp_fire descr "To the west you see a large central campfire.";
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+tent_1
+title "A Small Tent in the Field"
+descr
+"You open the flaps and enter a small tent. It is meticulously clean,
+there is a small cot along one slanted wall of the tent and a back pack
+full of neatly folded clothing along the other. The flap blows lazily in
+the wind offering a nice refreshing breeze. There is a large sign mounted
+on a board which rests against the side of the tent."
+
+extra {"board"}
+"It's thick and wooden. It rests against the east side of the tent and
+there is a canvas sign on it. Perhaps you should read the sign?"
+
+extra {"large sign", "canvas sign", "canvas", "sign"}
+"<pre>                            The Nymgaard Rangers Guild<br/>
+<br/>
+   'title'      - grants you a new title if you deserve it.<br/>
+<br/>
+Bowing to or worshipping the master may grant you his favour.</pre>"
+
+extra {"cot"}
+"The cot is a simple small fold up type that packs away neatly when you
+are on the move. It is made simply with canvas and wooden legs."
+extra {"back pack","pack"}
+"The back pack is made from canvas on a wooden frame. It holds neatly
+folded clothes."
+south to field_gath1 descr "Through the flap of the tent you see the field.";
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+ALWAYS_LIGHT
+end
+
+camp_fire
+names {"camp fire"}
+title "A Large Crackling Camp Fire"
+descr
+"A large bonfire crackles merrily. Its main purpose is a gathering
+place to roast meat and swap stories. There is a follower of one of the
+rangers sitting beside the fire tending to it, assuring that it never goes
+out. A few rangers can be seen sitting around the fire chatting with each
+other or simply deep into their own thoughts. The field is off to the east
+and a wall of stones around the camp fire to protect the surrounding forest
+block all other directions."
+extra {"bonfire", "fire"}
+"A large fire burning brightly."
+extra {"stone wall","stone","wall"}
+"The wall is made out of stones found around the field and has been
+erected to protect the neighboring forests."
+east to field_gath1 descr "To the east you can see the field.";
+flags {UNIT_FL_NO_TELEPORT}
+ALWAYS_LIGHT
+end
+
+/*
+field_gath2
+title "A Lush Green Field"
+descr
+"The field stretches off in all directions. In the far distance to the
+south you can see mountains, their snowy caps visible over the tree tops
+to offer a divine view. There are two small wooden buildings here, to the
+west is the barn and to the south is the chapel. An open area to the
+east is where the rangers can challenge others to competitions of skill
+and talent. The dining, sleeping area is to the north. A tall, yet small
+tent stands in the centre of the field. Perhaps you should ENTER it?"
+extra {"field"}
+"A large grassy area in the middle of the forest."
+east to chal_area descr "To the east you see rangers showing off their
+prowess at different skills.";
+west to barn descr "To the west you see and smell a barn used to house
+the rangers non-human followers during their stay.";
+north to field_gath1 descr "To the north you see the dining and sleeping
+area.";
+south to chapel descr "To the south you see a small building used as a
+chapel.";
+end
+*/
+
+field_gath2
+title "A Lush Green Field"
+descr
+"The field stretches off in all directions. In the far distance to the
+south you can see mountains, their snowy caps visible over the tree tops
+to offer a divine view. There is a barn to the west of here.
+An open area to the east is where the rangers can challenge others to
+competitions of skill and talent. The dining and sleeping area is to the north.
+A tall, yet small tent stands in the centre of the field here. Perhaps you
+should ENTER it?"
+extra {"field"}
+"A large grassy area in the middle of the forest."
+east to chal_area descr "To the east you see rangers showing off their
+prowess at different skills.";
+west to barn descr "To the west you see and smell a barn used to house
+the rangers non-human followers during their stay.";
+north to field_gath1 descr "To the north you see the dining and sleeping
+area.";
+flags {UNIT_FL_NO_TELEPORT}
+end
+
+sholdin_tent
+title "Sholdin's Mystical Tent"
+names {"tent","tall tent","sholdin_tent","the tent"}
+descr
+"This tent seems strangely larger on the inside than on the outside. The
+owner keeps a neat abode - though it is a tent, it looks not to have been
+lifted from the ground in many a year, but despite its age, you have to
+work hard to find a spec of dust. The walls are covered in charts, wall
+hangings, and tapestries. They all look decidely mystical. A tall chair
+stands beside a foldable table at the back of the tent.<br/>To get out you
+must exit the tent."
+
+extra {"chair","wooden chair", "large chair"}
+"Probably carved from an oak tree, it stands in perfect proportion to
+Sholdin beside his table."
+
+extra {"table", "foldable table", "canvas table"}
+"It has a covering of green felt. A large tome lies open on it written in a
+tongue unfamiliar to you, though some words look familiar, you just can't
+place them."
+
+extra {"charts", "wall hanging", "hangings", "tapestries", "tapestry",
+       "hanging", "chart", "walls", "wall"}
+"An array of tapestries and charts have been neatly arranged on the walls of
+the tent so as to allow no bare patch of wall to be seen. They range from
+charts of what appear to be stars to tables of ingredients for potions."
+
+movement SECT_INSIDE
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+ALWAYS_LIGHT
+
+in field_gath2
+end
+
+/*
+chapel
+names {"chapel"}
+title "A Small Wooden Chapel"
+descr
+"The chapel is plain. There is a wooden podium at the front of the room
+and the rest of the area is taken up with rows of plain wooden benches
+that do not look very comfortable at all. Windows look out into the field
+to the north and the forest to the south."
+extra {"south window"}
+"The forest is visible through the south window. It is very thick and
+looks like it would be hard to move through."
+extra {"north window"}
+"The north window looks out into a large field."
+north to field_gath2 descr "You see the field to the north.";
+end
+*/
+
+chal_area
+names {"challenge area"}
+title "A Large Open Field"
+descr
+"This part of the field is full of such things as targets. Its sole
+purpose is for the challenges and contests of the Forgathering. Here you
+will always find a skilled ranger testing his skills with weapons against
+those of other rangers. There is one great warrior 'Justin' that many come
+to see to learn weapon skills."
+extra {"targets"}
+"Someone has set up bow and arrow targets on the three trees that are
+growing here."
+west to field_gath2 descr "To the west you see a large field.";
+flags {UNIT_FL_NO_TELEPORT}
+
+end
+
+barn
+title "A Large Barn"
+descr
+"You enter a well lit, clean barn area used to house the animal followers
+of the rangers. Outside you can see a number of large pens used to help
+house the large number of animals at the festival. As you look around you
+notice the stalls are full of all types of animals, both wild and domestic
+and amazingly enough, all the animals get along well with no natural
+aggression amongst themselves."
+extra {"stall"}
+"Each stall holds a different animal follower, everything from bears to
+horses."
+movement SECT_INSIDE
+east  to field_gath2  descr "To the east you see a field";
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+
+end
+
+%mobiles
+%mobiles
+
+#define RANGER_FALLEN "Ranger, Fallen From Grace"
+
+#define HUMAN_RANGER_ABIL \
+MSET_ABILITY (20,15,15,20,10,10,0,10)
+
+#define RANGER_WPN70_SWORD \
+  MSET_WEAPON (10,20,10,10,10,10) /* 70% Weapon, Sword Dominant */
+
+#define RANGER_WPN70_FLAIL \
+  MSET_WEAPON (10,10,10,20,10,10) /* 70% Weapon, Flail Dominant */
+
+#define RANGER_WPN90_SWORD \
+  MSET_WEAPON (14,20,14,14,14,14) /* 90% Weapon, Sword Dominant */
+
+#define RANGER_WPN90_FLAIL \
+  MSET_WEAPON (14,14,14,20,14,14) /* 90% Weapon, Flail Dominant */
+
+#define RANGER_SPL30 \
+  MSET_SPELL(5,5,2,3,2,3,2,2,2,2,2) /* 30% Spells, Resistances */
+
+#define RANGER_SPL10 \
+  MSET_SPELL(2,0,0,2,0,1,1,1,1,1,1) /* 10% Spells, Resistances */
+
+master
+names {"barthalamul", "master", "ranger"}
+title "Barthalamul"
+descr "Ranger Barthalamul, Master of the Rangers Guild, is standing here."
+extra {}
+"Ranger Barthalmul is a huge man. He is a Guardian Ranger and as such,
+looks out for the whole forest and its creatures. Barthalamul Is a very
+large man with a scruffy beard and moustache that meets his longish hair
+to cover most of his face."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+M_HUMAN_CLERIC_SWORD(90, SEX_MALE, "", "heal")
+
+alignment 1000
+money 2 IRON_PIECE
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_NYM_RANGER
+/*
+special SFUN_GUILD_MASTER
+"&lGuild               = ~"+GUILD_NYM_RANGER+"~
+Guild Enter Quest    = ~~
+Guild Enter Cost     = "+(1*GOLD_MULT)+"&n
+Guild Leave Quest    = ~~
+Guild Leave Cost     = "+(5*GOLD_MULT)+"&n
+Guild Exclude Quest  = ~Nymgaard Ranger Quitter~"
+*/
+
+dilcopy guild_titles@guild_paths(GUILD_NYM_RANGER, {"Master of the Hunt",
+"Mistress of the Hunt", "Scout", "Scout", "Guide", "Guide", "Beastmaster",
+"Beastmistress", "Explorer", "Explorer", "Tracker", "Tracker", "Feralan",
+"Feralan", "Forest Runner", "Forest Runner", "Woodsman", "Woodswoman",
+"Wanderer", "Wanderer", "Mountain Man", "Mountain Woman", "Pathfinder",
+"Pathfinder", "Strider", "Strider", "Seeker", "Seeker", "Stalker", "Stalker",
+"Warden", "Lady Warden", "Justifier", "Justifier", "Protector Of The Lands",
+"Protector Of The Lands", "Guardian", "Guardian", "Ranger", "Lady Ranger"});
+
+/*
+special SFUN_MEMBERS_ONLY GUILD_NYM_RANGER+"#$1n says, 'You are not a Ranger'"
+*/
+/*
+dilbegin master_dil();
+
+code
+{
+  heartbeat := PULSE_SEC*5;
+
+  :start:
+  wait (SFB_CMD, (command("join") and (activator.type == UNIT_ST_PC)));
+  self.position := POSITION_STANDING;
+
+    if ((not("Ranger Entry Quest Complete" in activator.quests)))
+    {
+      block;
+      exec ("say You must talk to the gods before you will be allowed to " +
+            "join this guild!",
+            self);
+      pause;
+      goto start;
+    }
+
+    if (RANGER_FALLEN in activator.quests)
+    { block;
+      exec ("say Why do you stand before me? you have been "+
+      "told to leave our midst!", self);
+      exec ("spit " + activator.name, self);
+      pause;
+      goto start;
+    }
+
+    if (activator.guild $= "Nymgaard Ranger")
+      { block;
+       exec ("sigh " + activator.name, self);
+	pause;
+	exec ("say I have told you about eating those magic " +
+	"mushrooms. You don't even know  who " +
+	"you are now " + activator.name+ ". You already hold the position "+
+	"of mighty ranger!" , self);
+	pause;
+	goto start;
+      }
+    if (activator.guild == "")
+    exec ("say The vitality of the forest, and the strength of the tree " +
+          "flows through your spirit.", self);
+
+  goto start;
+}
+dilend
+*/
+
+dilbegin ranger_dil ();
+var
+expd: extraptr;
+	pc : unitptr;
+	item : unitptr;
+code
+{
+	heartbeat := PULSE_SEC * 4;
+
+	:start:
+
+ wait (SFB_DONE, (command("bow") or command("worship"))
+                 and (self == target));
+        pc := activator;
+        secure(pc, lost);
+        expd := "$path" in pc.quests;
+        if (expd == null) goto start;
+        if ((GUILD_NYM_RANGER in expd.names) )
+	{
+	exec ("say I thank you for your service in protecting "+
+	"land and animals from those that wish to destroy "+
+	"them ",self);
+	pause;
+	exec ("say Since the realm is so dangerous and filled with " +
+        "dangerous creatures, we must protect ourselves as only " +
+        "rangers can.", self);
+	pause;
+	exec ("say In my wanderings of the area I have found "+
+	"this special long bow, made by the ancient Talen " +
+        "Rangers when we were at our best.", self);
+	pause;
+	exec ("say I give it to you in the hopes that it will "+
+        "aid you in your need.", self);
+        item := load("ranger_bow@ranger");
+	link(item, self);
+	exec ("give trinket "+pc.name, self);
+        if (item.outside == self) link(item, pc);
+	pause;
+        exec ("say Peace Be with you, go now and protect the lands",self);
+        unsecure(pc);
+	goto start;
+	}
+    else
+      {
+	block;
+		unsecure(pc);
+	exec ("say You are not a member here, leave now", self);
+      }
+
+unsecure(pc);
+goto start;
+
+:lost:
+
+unsecure(pc);
+exec("say Who dares to leave my presence while i am talking? I "+
+"should banish them!", self);
+goto start;
+
+}
+dilend /* ranger_dil */
+
+dilcopy nokill@ranger();
+
+
+end
+
+justifier
+names {"justin", "justifier"}
+title "Justin the Justifier"
+descr "Justin the Justifier is here showing off his huge knowledge of
+weapons."
+extra {}
+"Justin is a dangerous looking man with ripping muscles, he stands proud
+in the knowledge that he can beat almost any man or beast alive."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+M_HUMAN_CLERIC_SWORD(90, SEX_MALE, "", "heal")
+
+dilcopy nokill@ranger();
+alignment 500
+
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_NYM_RANGER
+/*
+special SFUN_MEMBERS_ONLY GUILD_NYM_RANGER+"#$1n says, 'You are not a Ranger'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_NYM_RANGER );
+
+#define _WEAPON
+#include "guilddef.h"
+#undef _WEAPON
+
+
+end
+
+/*
+seeker
+names {"maliki","seeker"}
+title "Maliki the Seeker"
+descr "Maliki, teacher of the divine magics of the forest, is standing at the
+podium."
+extra {}
+"Maliki is a small man with a soft spoken voice. word amongst the rangers
+is that if there is a spell Maliki does not know then it is not a spell
+worth having."
+flags {UNIT_FL_NO_TELEPORT}
+M_HUMAN_CLERIC_SWORD(90, SEX_MALE, "", "cast heal")
+alignment 1000
+
+exp -100
+
+dilcopy nokill@ranger();
+
+special SFUN_GUILD_BASIS GUILD_NYM_RANGER
+special SFUN_MEMBERS_ONLY GUILD_NYM_RANGER+"#$1n says, 'You are not a Ranger'"
+
+dilcopy teacher_prac@guild_paths( GUILD_NYM_RANGER );
+
+#define _SPELL_DIV
+#include "guilddef.h"
+#undef _SPELL_DIV
+
+
+end
+*/
+
+guardian
+names {"Sholdin","guardian","ranger"}
+title "Sholdin the Guardian"
+descr "Sholdin the Guardian Ranger, teacher of magical knowledge, stands here."
+extra {}
+"Sholdin stands tall before you, not in pride, but in readiness. Ever alert to
+the woodland call, Sholdin teaches those rangers who answer the calling of
+the divine magics of nature."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+M_HUMAN_MAGE_ELECTRICITY(90, SEX_MALE, "lightning bolt")
+alignment 1000
+
+exp -100
+
+dilcopy nokill@ranger();
+
+special SFUN_GUILD_BASIS GUILD_NYM_RANGER
+/*
+special SFUN_MEMBERS_ONLY GUILD_NYM_RANGER+"#$1n says, 'You are not a Ranger'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_NYM_RANGER );
+
+#define _SPELL
+#include "guilddef.h"
+#undef _SPELL
+
+
+end
+
+mountain_man
+names {"dwayn", "mountain man", "man"}
+title "Dwayn The Mountain Man"
+descr "Dwayn is sitting here testing his strength."
+extra {}
+"Dwayn is a large burly man who looks like he could be the strongest man
+you have ever seen."
+flags {UNIT_FL_NO_TELEPORT}
+M_HUMAN_CLERIC_SWORD(90, SEX_MALE, "", "heal")
+romflags {CHAR_PROTECTED}
+exp -100
+alignment 500
+
+dilcopy nokill@ranger();
+
+special SFUN_GUILD_BASIS GUILD_NYM_RANGER
+/*
+special SFUN_MEMBERS_ONLY GUILD_NYM_RANGER+"#$1n says, 'You are not a Ranger'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_NYM_RANGER );
+
+#define _ABILITY
+#include "guilddef.h"
+#undef _ABILITY
+
+
+end
+
+pathfinder
+names {"dreanna", "pathfinder"}
+title "Dreanna the Pathfinder"
+descr
+"Dreanna is sitting in front of the the camp fire, deep in her own
+thoughts."
+extra {}
+"Dreanna is very knowledgable in many areas. She sits in meditation beside
+the warm campfire."
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+M_HUMAN_CLERIC_SWORD(90, SEX_FEMALE, "", "heal")
+alignment 500
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_NYM_RANGER
+/*
+special SFUN_MEMBERS_ONLY GUILD_NYM_RANGER+"#$1n says, 'You are not a Ranger'"
+*/
+
+dilcopy teacher_prac@guild_paths( GUILD_NYM_RANGER );
+
+#define _SKILL
+#include "guilddef.h"
+#undef _SKILL
+
+dilcopy nokill@ranger();
+
+
+end
+
+%objects
+
+ranger_bow
+names {"Milvamer", "long bow", "bow"}
+title "the long bow named, <div class='cpy'>Milivamar</div><div class='cw'></div>"
+descr "A great long bow crafted by the Rangers of yore lies on the ground here."
+MATERIAL_WOOD("Yew branch")
+MATERIAL_METAL("Grip")
+
+RANGED_DEF(0, 6, 3, RACE_FOX, WPN_BOW, 0)
+
+cost 400 IRON_PIECE
+rent 75 IRON_PIECE
+
+weight 8
+
+extra {}
+"This magnificient hand-crafted bow is made from prime yew is almost five
+feet long. It has a metal grip and a slot for knocking arrows."
+
+extra {"$wear_s"}
+"You take the long bow in your hand, ready for battle."
+
+extra {"$wear_o"}
+"$1n takes $1s long bow in $1s hand, ready for battle."
+
+extra {"$rem_s"}
+"You let go of the long bow."
+
+extra {"$rem_o"}
+"$1n lets go of $1s long bow."
+
+dilcopy guild_restrict@function ({GUILD_NYM_RANGER},0,25,"");
+
+end /* ranger_bow */
+
+%reset
+
+load master into tent_1 max 1
+load pathfinder into camp_fire max 1
+load mountain_man into barn max 1
+load justifier into chal_area max 1
+/*load seeker into chapel max 1*/
+load guardian into sholdin_tent max 1
+
+%end
+
