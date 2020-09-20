@@ -243,11 +243,15 @@
         .ask_other     { display: inline; color:#FFBB00;}
         .say_self      { display: inline; color:#FFBB00;}
         .say_other     { display: inline; color:#FFBB00;}
-        .shout_self      { display: inline; color:#FFBB00;}
-        .shout_other     { display: inline; color:#FFBB00;}
+        .shout_self    { display: inline; color:#FFBB00;}
+        .shout_other   { display: inline; color:#FFBB00;}
         .whisper       { display: inline; color:#FFBB00;}
         .tell_self     { display: inline; color:#FFBB00;}
         .tell_other    { display: inline; color:#FFBB00;}
+		.comm_say      { display: inline; color:#FFBB00;}
+		.comm_emote    { display: inline; color:#FFBB00;}
+		.comm_join     { display: inline; color:#FFBB00;}
+		.comm_leave    { display: inline; color:#FFBB00;}
 
         .death       { display: inline; color:#FFBB00;}
         .prompt      { display: inline; color:#FFBB00;}

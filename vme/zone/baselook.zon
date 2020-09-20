@@ -550,13 +550,13 @@ dilend
 
 
 
-dilbegin unitptr find_equip(looker:unitptr,arg:string);
+dilbegin unitptr find_equip(looker:unitptr, arg:string);
 var
    item:unitptr;
 
 code
 {
-   item := findunit(looker, arg, FIND_UNIT_INVEN, null);
+   item := findunit(looker, arg, FIND_UNIT_EQUIP, null);
    return(item);
 
    // MS2020 we really have to use the standard functions to avoid code mismatch
@@ -696,7 +696,7 @@ as we will have to scan all items in this order :
      11) extra on looker
 */
 
-dilbegin look_at (looker : unitptr, arg:string);
+dilbegin look_at(looker : unitptr, arg:string);
 external
    unitptr find_here(u:unitptr,s:string);
    unitptr find_equip(u:unitptr,s:string);
@@ -718,7 +718,7 @@ code
    if (right(temp, 2) == "'s")     /* Looking at temp's someting, so we need to concentrate on temp */
    {
       temp := left(temp, (length(temp) - 2));  /* Get temp's real name */
-      pc := find_here(looker,temp);
+      pc := find_here(looker, temp);
 
       if ((pc == null) or (not visible(looker, pc)))
       {
@@ -732,7 +732,7 @@ code
          quit;
       }
 
-      item := find_equip (pc,arg1);
+      item := findunit(pc, arg1, FIND_UNIT_EQUIP, null);
 
 	   /* See if temp has something named arg1 */
       if (item == null) /* If not, search for an extra on temp */
@@ -749,7 +749,7 @@ code
          else
          {
 		      act("$3n does not seem to have a $2t.", A_ALWAYS, looker, arg1,pc, TO_CHAR);   /* doesnt have anything name arg1 */
-            send_done ("look", looker, item, pc, 1, arg, null);
+            send_done("look", looker, item, pc, 1, arg, null);
             quit;
          }
       }
@@ -757,14 +757,13 @@ code
       {
          if (pc == looker)
             act("You look at your $2n.", A_ALWAYS, looker, item, pc, TO_CHAR);
-         else if (item.equip!=0)
+         else if (item.equip)
             act("You look at $3n's $2n.", A_ALWAYS, looker, item, pc,TO_CHAR);
 		   else
 		   {
             act("$3n does not seem to have a $2t.", A_ALWAYS, looker, arg1,pc, TO_CHAR);   /* doesnt have anything name arg1 */
             quit;
          }
-
 
          if (item.extra.[""]) /* this is for the extra{} on the item */
             temp := "<div class='obj_descr'>" + item.extra.[""].descr;
@@ -773,13 +772,14 @@ code
          else
             temp := "<div class='obj_descr'>You see nothing special.";   /* NOthing to describe for item */
 
-         temp := temp + "</div>";
+         temp := temp + "</div><br/>";
 
          if (item.objecttype == ITEM_WEAPON)
          {
             temp1 := weapon_name(item.value[0]);
-            temp := temp + "The " + item.name + " clearly requires a " +temp1 + " fighting style.</div>";
+            temp := temp + "The " + item.name + " requires a " +temp1 + " fighting style.<br/>";
          }
+
          sendtext(temp,looker);
 
          act("$1n looks at $3n's $2N.", A_ALWAYS, looker, item, pc,TO_NOTVICT);

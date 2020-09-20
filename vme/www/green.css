@@ -221,11 +221,15 @@
         .ask_other     { display: inline; color:lime;}
         .say_self      { display: inline; color:lime;}
         .say_other     { display: inline; color:lime;}
-        .shout_self      { display: inline; color:lime;}
-        .shout_other     { display: inline; color:lime;}
+        .shout_self    { display: inline; color:lime;}
+        .shout_other   { display: inline; color:lime;}
         .whisper       { display: inline; color:lime;}
         .tell_self     { display: inline; color:lime;}
         .tell_other    { display: inline; color:lime;}
+		.comm_say      { display: inline; color:lime;}
+		.comm_emote    { display: inline; color:lime;}
+		.comm_join     { display: inline; color:lime;}
+		.comm_leave    { display: inline; color:lime;}
 
         .death       { display: inline; color:lime;}
         .prompt      { display: inline; color:lime;}

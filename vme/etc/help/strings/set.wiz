@@ -2,8 +2,8 @@
 Usage:<br/>
    &gt;set &lt;unit&gt; &lt;field&gt; &lt;arguments&gt;<br/>
 <br/>
-This is the command you use, if you want ti fiddle with individual fields in a<br/>
-unit. As there is a LOT of fields to set, i will not list them here. The<br/>
+This is the command you use, if you want to fiddle with individual fields in a<br/>
+unit. As there are a LOT of fields to set, i will not list them here. The<br/>
 command will list them, if you just give a unit name. However it is essential,<br/>
 that you understand the argument types.<br/>
 <br/>
@@ -21,6 +21,7 @@ that you understand the argument types.<br/>
 Combinations of the above occur.<br/>
 <br/>
 See also:<br/>
-   &gt;help setskill<br/>
-   &gt;help stat<br/>
+   &gt;wizhelp setskill<br/>
+   &gt;wizhelp wstat<br/>
+   &gt;wizhelp wstat<br/>
 <br/>
