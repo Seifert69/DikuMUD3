@@ -7971,7 +7971,7 @@ extra {}
 dilcopy guild_restrict@function ({GUILD_MYSTIC},0,0,"");
 end
 
-druid_cloak
+mystic_cloak
 names {"pale blue bloak","blue cloak","cloak"}
 title "a pale blue cloak"
 descr "A pale bluecloak lies heaped on the ground here."
@@ -7983,7 +7983,7 @@ extra {}
 dilcopy guild_restrict@function ({GUILD_MYSTIC},0,0,"");
 end
 
-druid_item
+mystic_item
 names {"sash of wisdom","sash"}
 title "the Sash of Wisdom"
 descr "A pale blue sash lies here."
