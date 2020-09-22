@@ -1,13 +1,21 @@
-<br/>
- <br/>
-Usage: attackswitch 'name of attack type'<br/>
-<br/>
-Ex. attackswitch kick<br/>
- <br/>
-This command will allow you to change your natural attack type. The natural<br/>
-attack is what you fight with when you are not wielding a weapon.<br/>
-<br/>
-See Also:<br/> <br/>
-Elbow <br/>
-Knee<br/>
-<br/>
+<div class="mw-parser-output"><h1>Attack Switch</h1>
+<p>Usage:
+</p>
+<pre> attackswitch 'name of attack type'
+</pre>
+<p>Example:
+</p>
+<pre> attackswitch kick
+</pre>
+<p>This command will allow you to change your natural attack type. The natural
+attack is what you fight with when you are not wielding a weapon.
+</p><p>See Also:
+</p>
+<pre> <a cmd='#'>Help Elbow</a>
+ <a cmd='#'>Help Knee</a>
+</pre>
+
+
+
+
+</div>

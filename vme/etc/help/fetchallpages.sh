@@ -737,6 +737,7 @@ python getwikihelppage.py Train
 python getwikihelppage.py Transport
 python getwikihelppage.py Travel
 python getwikihelppage.py Trident
+python getwikihelppage.py Trigger
 python getwikihelppage.py Tripping
 python getwikihelppage.py Tsunami
 python getwikihelppage.py Tuborg
@@ -757,6 +758,7 @@ python getwikihelppage.py Up
 python getwikihelppage.py Use
 python getwikihelppage.py Valhalla
 python getwikihelppage.py Value
+python getwikihelppage.py Variable
 python getwikihelppage.py Ventriloquate
 python getwikihelppage.py Voulge
 python getwikihelppage.py Wake

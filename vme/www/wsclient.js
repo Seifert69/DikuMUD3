@@ -188,13 +188,15 @@ function testTrigger(s, regexp, mycmd)
 
 function variableReplace(str)
 {
-    console.log("==========================");
+    console.log("variableReplace()");
+    console.log("REPLACE string: [" + str +"]");
     for (var i = 0; i < g_aVariableName.length; i++)
     {
         str = str.replaceAll("@" + g_aVariableName[i], g_aVariableData[i]);
-        console.log("REPLACE @" + g_aVariableName[i] + "="+ g_aVariableData[i] + "|" + str);
+        console.log("REPLACE @" + g_aVariableName[i] + "="+ g_aVariableData[i]);
     }
 
+    console.log("REPLACE newstr: [" + str +"]");
     return str;
 }
 
@@ -202,7 +204,9 @@ function variableReplace(str)
 function setVariable(item) {
     var s;
 
-    console.log("Variable:");
+    console.log("setVariable()");
+    //console.log(item);
+    //console.log(item[0].innerText);
 
     g_aVariableName = [];
     g_aVariableData = [];
@@ -211,7 +215,7 @@ function setVariable(item) {
         s = item[i].innerText;
         g_aVariableName[i] = getStrFirstWord(s).trim();
         g_aVariableData[i] = getStrRemainder(s).trim();
-        console.log("Variable[" + i + "] = " + g_aVariableName[i] + "=" + g_aVariableData[i]);
+        console.log("Variable[" + i + "] " + g_aVariableName[i] + " = {" + g_aVariableData[i] + "}");
     }
 }
 
@@ -221,7 +225,7 @@ function setTrigger(item)
     var s, t, u;
     var j;
 
-    console.log("Trigger:");
+    console.log("setTrigger()");
 
     g_aTriggerRegExp = [];
     g_aTriggerCmd = [];
@@ -557,7 +561,7 @@ function outputItem(item) {
 
 // bParse parameter. If false then it skips all
 function outputText(str, bParse) {
-    console.log("WS[" + str + "]");
+    //console.log("WS[" + str + "]");
 
     if (bParse)
     {

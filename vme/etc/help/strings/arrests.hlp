@@ -1,31 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-An entire law system is built into Valhalla. All players and all monsters<br/>
-belonging to any major cities, castles and villages are protected by the<br/>
-law. You are not allowed to kill or steal from people which are<br/>
-protected unless they are caught in the act of stealing or killing<br/>
-PROTECTED characters.<br/>
-<br/><br/><br/>
-If you have committed a certain number of crimes the guards may attempt to<br/>
-arrest you. Once they handcuff you it is possible to attempt an escape by<br/>
-typing 'break' to attempt breaking the handcuffs.<br/>
-<br/><br/><br/>
-Once in jail you have to wait for some pretty strong friends to free<br/>
-you or for a long time to pass.<br/>
-<br/><br/><br/>
-Your misdeeds are forgotten if you get killed or when you have served<br/>
-your jail sentence. But beware *any* crime reported after being cleared<br/>
-will make you a criminal instantly.<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-Police Guild<br/><br/>
-Accuse<br/><br/>
-PK<br/><br/>
-Contract<br/><br/>
-Offer<br/><br/>
-Break<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Arrests</h1>
+<p>An entire law system is built into Valhalla. All players and all monsters
+belonging to any major cities, castles and villages are protected by the
+law. You are not allowed to kill or steal from people which are
+protected unless they are caught in the act of stealing or killing
+PROTECTED characters.
+</p><p>If you have committed a certain number of crimes the guards may attempt to
+arrest you. Once they handcuff you it is possible to attempt an escape by
+typing 'break' to attempt breaking the handcuffs.
+</p><p>Once in jail you have to wait for some pretty strong friends to free
+you or for a long time to pass.
+</p><p>Your misdeeds are forgotten if you get killed or when you have served
+your jail sentence. But beware *any* crime reported after being cleared
+will make you a criminal instantly.
+</p><p><br />
+See Also:
+</p>
+<pre> <a cmd='#'>Help Police Guild</a>
+ <a cmd='#'>Help Accuse</a>
+ <a cmd='#'>Help PK</a>
+ <a cmd='#'>Help Contract</a>
+ <a cmd='#'>Help Offer</a>
+ <a cmd='#'>Help Break</a>
+</pre>
+
+
+
+
+</div>

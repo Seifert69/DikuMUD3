@@ -1,0 +1,25 @@
+<div class="mw-parser-output"><h1>Variable</h1>
+<p>Variables are basically string lists that can be used in <a href="/wiki/Help/Trigger" title="Help/Trigger">triggers</a> and can be defined as such: 
+</p>
+<pre> <a cmd='#'>variable friends papi|john|aja|bruce|cityguard|the janitor</a>
+</pre>
+<p>To list current variables:
+</p>
+<pre> <a cmd='#'>variable</a>
+</pre>
+<p>To remove variable:
+</p>
+<pre> <a cmd='#'>variable friends</a>
+</pre>
+<p>To recall a variable for use in a trigger, you will notate it as (@variablename) or in this example (@friends). 
+See the trigger page for more help.
+</p><p>See also:
+</p>
+<pre> <a cmd='#'>Help Trigger</a>
+ <a cmd='#'>Help Alias</a>
+</pre>
+
+
+
+
+</div>

@@ -137,7 +137,11 @@ if len(objs) > 1:
     mystr = objs[0]
     for i in range(1, len(objs)):
         o2 = objs[i].split('}')
-        mystr += "<a cmd='#'>" + o2[0] + "</a>" + o2[1]
+        if len(o2) > 1:
+            mystr += "<a cmd='#'>" + o2[0] + "</a>" + o2[1]
+        else:
+            print "error: missing end curly bracket on string {"+objs[i]
+            mystr += objs[i]
 
 myfile = sys.argv[1].lower() + ".hlp"
 print("Saving result to " + myfile)

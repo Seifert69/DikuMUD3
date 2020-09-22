@@ -3,7 +3,7 @@ DikuMUD III using HTML and websockets.
 
 D-Day June 21, 2020
 
-Get in touch if you'd like to contribute. There's a long to-do list. Everything from non-programming to HTML to C(++). Drop a mail to seifert at dikumud.com. Look at the end of this file for a few items.
+Get in touch if you'd like to contribute. Check out the issues on Git. There are a few broader issues at the bottom of this file. Everything from non-programming to HTML to C(++). Drop a mail to seifert at dikumud.com. Look at the end of this file for a few items.
 
 Documentation goes here:
 
@@ -57,10 +57,6 @@ And you'll see the welcome screen in Firefox
 ---
 
 I would appreciate help with:
-
-   * Anyone wanting to improve the client:
-         Create different stylesheets, e.g. monochrome. High contrast. etc.
-     Ways to improve the accessible client further. 
 
    * I would appreciate any world builder wanting to create quests to be completed
      in order to join the various guilds. Right now there are four base teachers 
