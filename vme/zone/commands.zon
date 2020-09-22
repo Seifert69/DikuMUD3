@@ -80,7 +80,7 @@ dilend
 
 
 /*
- * Used by do_alias, trigger, variable
+ * Used by do_alias, do_trigger, do_variable
  */
 dilbegin dlrmanage(pfx : string, arg : string);
 external
@@ -202,9 +202,17 @@ dilend
 dilbegin do_variable(arg : string);
 external
    dlrmanage@commands(pfx : string, arg : string);
+   string dlrdump@commands(pfx : string);
 code
 {
    dlrmanage@commands("$var", arg);
+
+   // We need to also resend triggers for variable substitution to the client
+
+   if (arg != "")
+   {
+      sendtext(dlrdump@commands("$trigger"), self);
+   }
    quit;
 }
 dilend
