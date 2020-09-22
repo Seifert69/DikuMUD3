@@ -1,54 +1,62 @@
-<h1>alias</h1>
-Usage:<br/>
-alias - list your alias<br/>
-alias foo - remove alias foo<br/>
-alias foo cmd1 [; cmd2] - create alias foo<br/>
-<br/>
-The web client has built-in alias handling. If you're on telnet and you're<br/>
-not using a MUD client, then you can buy the dictionary in many stores.<br/>
-<br/>
-No arguments will list all your defined aliases.<br/>
-One argument will remove the alias in question (in this case `foo').<br/>
-Any other number of arguments will result in the first word of the argument<br/>
-to become an alias for the remainder.<br/>
-<br/>
-Various special control characters are available in aliases:<br/>
-<br/>
-You can combine commands with the semicolon ';'<br/>
-<br/>
-You can insert various parts of an argument in an alias-text using the<br/>
-dollar sign '$'.  $1 will get the first occurrence of the<br/>
-argument, the '$2' the second word etc. The '$0' can be used to substitute<br/>
-the entire argument string.<br/>
-<br/>
-Examples:<br/><br/>
-alias ge get $0 from $1; eat $0;<br/>
-alias gb ge bread bag<br/>
-alias gs ge steak sack<br/>
-<br/>
-The alias 'gb' will then mean 'get bread from bag; eat bread' and the<br/>
-commands will be carried out in that order.  Alternatively 'gs' will mean<br/>
-'get steak from sack; eat steak'.<br/>
-<br/>
-alias say	emote whispers almost inaudibly '$0'<br/>
-Will make the say command have another appearance for other players, ie:<br/>
-say Hello, friends<br/>
-Gnort whispers almost inaudibly 'Hello, friends'<br/>
-<br/>
-Notice that 'sa' will still work as the original say-command, as aliases<br/>
-don't check for abbreviations, unlike the command interpreter.<br/>
-<br/>
-Notice that ANY and all use of ';' and '$' in an alias will be interpreted<br/>
-as that characters special meaning. Ie:<br/>
-<br/>
-alias greet say Hi Quinn $0 God !! ;-)<br/>
-<br/>
-will substitute the '$0' with whatever argument 'greet' will be given or<br/>
-simply the empty string.  Thus the alias 'greet' with no arguments will<br/>
-yield the commands: 'say Hi Quinn  God !! ' and '-)', the latter of which<br/>
-will give an error message from the interpreter (Unless aliased of course).<br/>
-<br/>
-<br/>See Also:<br/>
-<br/>
-<a cmd='help #'>Trigger</a><br/>
-<a cmd='help #'>Variable</a><br/>
+<div class="mw-parser-output"><h1>Alias</h1>
+<p>There are two alias systems in DikuMUD. The original alias system is built into the 
+dictionary which you can buy in Udgaard and in Midgaard. Look at the dictionary
+for help. The old system is for you if you're using telnet only.
+</p><p>This help section is about alias in the web client which built-in alias handling. 
+</p><p><br />
+Usage:
+</p>
+<pre> alias                   // list your alias
+ alias foo               // remove alias foo
+ alias foo cmd1 [; cmd2] // create alias foo
+</pre>
+<p>No arguments will list all your defined aliases.
+One argument will remove the alias in question (in this case `foo').
+Any other number of arguments will result in the first word of the argument
+to become an alias for the remainder.
+</p><p>Various special control characters are available in aliases:
+</p><p>You can combine several commands with the semicolon ';'
+</p><p>You can insert various parts of an argument in an alias-text using the
+dollar sign '$'. $1 will get the first occurrence of the
+argument, the '$2' the second word etc. The '$0' can be used to substitute
+the entire argument string.
+</p><p>Examples:
+</p>
+<pre> alias ge get $0 from $1; eat $0;
+ alias gb ge bread bag
+ alias gs ge steak sack
+</pre>
+<p>The alias 'gb' will then mean 'get bread from bag; eat bread' and the
+commands will be carried out in that order. Alternatively 'gs' will mean
+'get steak from sack; eat steak'.
+</p>
+<pre> alias say emote whispers almost inaudibly '$0'
+</pre>
+<p>Will make the say command have another appearance for other players, ie:
+say Hello, friends becomes:
+</p>
+<pre> Gnort whispers almost inaudibly 'Hello, friends'
+</pre>
+<p>Notice that 'sa' will still work as the original say-command, as aliases
+don't check for abbreviations, unlike the command interpreter.
+</p><p>Notice that ANY and all use of ';' and '$' in an alias will be interpreted
+as that characters special meaning. I.e.:
+</p>
+<pre> alias greet say Hi Quinn $0 God&#160;!!&#160;;-)
+</pre>
+<p>will substitute the '$0' with whatever argument 'greet' will be given or
+simply the empty string. Thus the alias 'greet' with no arguments will
+yield the commands: 'say Hi Quinn God&#160;!! ' and because the special character
+semicolon was used the second command will be '-)',  which will give an error
+message from the interpreter (Unless aliased of course).
+</p><p><br />
+See Also:
+</p>
+<pre> <a cmd='#'>Help Trigger</a>
+ <a cmd='#'>Help Variable</a>
+</pre>
+
+
+
+
+</div>
