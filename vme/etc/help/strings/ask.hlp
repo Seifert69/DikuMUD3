@@ -1,15 +1,20 @@
-<br/>
-<br/>
-Usage<br/><br/>
-ask (character)(word asking for something?)<br/><br/>
-<br/>
-Ask is mostly same as say, except this is directed as a character<br/>
-question. Only the character you're asking will hear the question.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Tell<br/><br/>
-Shout<br/><br/>
-Say<br/><br/>
-Whisper<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Ask</h1>
+<p>Usage:
+</p>
+<pre> ask &lt;character&gt; (sentence asking for something?)
+</pre>
+<p>Ask is mostly same as say, except this is directed as a character
+question. Only the character you're asking will hear the question.
+</p><p><br />
+See Also:
+</p>
+<pre> <a cmd='#'>Help Tell</a>
+ <a cmd='#'>Help Shout</a>
+ <a cmd='#'>Help Say</a>
+ <a cmd='#'>Help Whisper</a>
+</pre>
+
+
+
+
+</div>

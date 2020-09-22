@@ -1,16 +1,16 @@
-<br/>
-<br/>
-affect<br/>
-<br/>
-Type this to see what magic affects you. The spells listed<br/>
-could be spells place upon you by another player (like str or curse)<br/>
-or boosts or detriments caused by equipment.  If you are trying to train<br/>
-remove all equipment first then tryp affect again. If spells are still listed <br/>
-you will have to wait for them to wear off or if you have signed the Book of <br/>
-Blood another player may be able to remove them.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-dispel magic<br/><br/>
-<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Affect</h1>
+<p>Type this to see what magic affects you. The spells listed
+could be spells place upon you by another player (like strength or curse)
+or boosts or detriments caused by equipment. If you are trying to train
+remove all equipment first then try affect again. If spells are still listed
+you will have to wait for them to wear off or if you have signed the Book of
+Blood another player may be able to remove them.
+</p><p>See Also:
+</p>
+<pre> <a cmd='#'>Help dispel magic</a>
+</pre>
+
+
+
+
+</div>
