@@ -256,7 +256,6 @@ external
    string selecttopic(s:stringlist,t:string);
    string spinsearch (s:stringlist,t:string);
 
-
 var
 	txt:string;
 	i:integer;
@@ -270,11 +269,11 @@ var
 	ref:stringlist;
 	temp:stringlist;
 	tlist:stringlist;
-    pay : string;
+   pay : string;
 code
 {
-   	if (s=="")
-		s:="help";
+   if (s=="")
+      s:="help";
 
 	if (s==left("topics",length(s)))
 	{
@@ -288,71 +287,70 @@ code
 
 	if (s==left("area",length(s)))
 	{
-	zptr:=zhead();
-	rm:=self.outside;
-    while (rm.type!=UNIT_ST_ROOM)
-	rm:=rm.outside;
-    while (zptr.name!=rm.zoneidx)
-    while (left(zptr.name,length(rm.zoneidx)) != rm.zoneidx)
+      zptr:=zhead();
 
-	zptr:=zptr.next;
+      rm:=self.outside;
+      while (rm.type!=UNIT_ST_ROOM)
+         rm:=rm.outside;
 
-    /*log("checking pay"); */
-    if (not(zptr.payonly))
-    pay := "This area is not restricted.";
-	if (zptr.payonly)
-    pay := "This area is restricted to people with donation status.";
+      while (zptr.name!=rm.zoneidx)
+         while (left(zptr.name,length(rm.zoneidx)) != rm.zoneidx)
+            zptr:=zptr.next;
 
+      /*log("checking pay"); */
+      if (not(zptr.payonly))
+         pay := "This area is not restricted.";
 
+      if (zptr.payonly)
+         pay := "This area is restricted to people with donation status.";
 
-	if (length(zptr.help)>1)
-	{
-    tlist := split(zptr.title,"@");
-    sendtext ("You are in the area known as: "+tlist.[0]+".<br/>",self);
-	sendtext (pay+".<br/>",self);
-    pagestring (zptr.help,self);
-	quit;
+      if (length(zptr.help)>1)
+      {
+         tlist := split(zptr.title,"@");
+         sendtext ("You are in the area known as: "+tlist.[0]+".<br/>",self);
+         sendtext (pay+".<br/>",self);
+         pagestring (zptr.help,self);
+         quit;
+      }
+      else
+      {
+         sendtext ("There is no help on this area written by the creators. You're on your own<br/>",self);
+         quit;
+      }
 	}
-	else
-	{
-	sendtext ("There is no help on this area written by the creators. You're on your own<br/>",self);
-	quit;
-	}
-	}
-
-
 
 
 	if  ("topic"==left(s,5))
 	{
-	ind:=getwords(s);
-	fileindex:=readindex("help.index",ind.[1].[0]);
-	buf:=selecttopic(fileindex,ind.[1]);
-	pagestring(buf,self);
-	quit;
+      ind:=getwords(s);
+      fileindex:=readindex("help.index",ind.[1].[0]);
+      buf:=selecttopic(fileindex,ind.[1]);
+      pagestring(buf,self);
+      quit;
 	}
 
 
-                                   fileindex:=readindex("help.index",s.[0]);
+   fileindex:=readindex("help.index",s.[0]);
+   txt := spinsearch(fileindex,s);
 
-txt:=spinsearch(fileindex,s);
-
-if (txt=="")
+   if (txt=="")
 	{
-	sendtext ("There is no help available on the subject '"+s+"'<br/>",self);
-	quit;
+      sendtext("There is no help available on the subject '"+s+"'<br/>",self);
+      quit;
 	}
 
-err:=loadstr (txt,buf);
-if (err<1)
+   //sendtext(txt, self);
+   
+   err := loadstr(txt, buf);
+   if (err < 1)
 	{
-	sendtext ("There is no help available on the subject '"+s+"'<br/>",self);
-	quit;
+      sendtext("There is no help available on the subject '"+s+"'<br/>",self);
+      quit;
 	}
 
-buf:=textformat (buf);
-pagestring (buf,self);
-quit;
+   pagestring(buf, self);
+
+   quit;
 }
 dilend
 

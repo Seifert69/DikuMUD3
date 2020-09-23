@@ -230,6 +230,7 @@
 		.comm_emote    { display: inline; color:floralwhite;}
 		.comm_join     { display: inline; color:floralwhite;}
 		.comm_leave    { display: inline; color:floralwhite;}
+		.log           { display: inline; color:white;}
 
         .death       { display: inline; color:crimson;}
         .prompt      { display: inline; color:gold;}
