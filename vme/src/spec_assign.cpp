@@ -63,7 +63,7 @@ struct unit_function_array_type unit_function_array[] = {
     {"5 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
     {"6 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
     {"7 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
-    {"accuse", VMCIT(accuse), FN_PRI_MISSION - 1, SD_NULL,SFB_CMD, 0},
+    {"accuse", VMCIT(accuse), FN_PRI_MISSION - 1, SD_NULL, SFB_CMD, 0},
     {"protect lawful", VMCIT(protect_lawful), FN_PRI_RESCUE, SD_NEVER, SFB_COM | SFB_DEAD | SFB_TICK, PULSE_SEC * 15},
     {"10 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
     {"11 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
