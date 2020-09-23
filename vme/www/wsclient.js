@@ -331,25 +331,32 @@ function TraverseTreeAndFix(myelem) {
         if (!nodes[i])
             continue;
 
-        if (nodes[i].nodeName == 'A') {
-            nodes[i].href = '#';
+        if (nodes[i].nodeName == 'A')
+        {
+            if (nodes[i].attributes.getNamedItem('cmd'))
+            {
+                nodes[i].href = '#';
 
-            var s = String(nodes[i].attributes.getNamedItem('cmd').value);
+                var s = String(nodes[i].attributes.getNamedItem('cmd').value);
 
-            // I would have liked to do the split / join neato but didn't work.
-            var n = s.indexOf("#");
-            if (n > -1)
-                s = s.slice(0, n) + nodes[i].innerText + s.slice(n + 1);
+                // I would have liked to do the split / join neato but didn't work.
+                var n = s.indexOf("#");
+                if (n > -1)
+                    s = s.slice(0, n) + nodes[i].innerText + s.slice(n + 1);
 
-            nodes[i].data = s;
-            nodes[i].onclick = function (e) { cmd(this.data); };
+                nodes[i].data = s;
+                nodes[i].onclick = function (e) { cmd(this.data); };
+            }
+            else
+            {
+                nodes[i].target = '_blank';
+            }
         }
 
         if (nodes[i].childNodes.length > 0)
             TraverseTreeAndFix(nodes[i]);
     }
     return;
-
 }
 
 // Show the popover modal & copy content from paged.
