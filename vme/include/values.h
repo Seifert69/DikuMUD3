@@ -653,7 +653,7 @@ END HEADER*/
 #define SPL_LAVA_4           233
 #define SPL_MIRE             234
 #define SPL_WEB              235
-#define SPL_SUN_GLOBE        236
+#define SPL_NIGHT_GLOBE        236
 #define LAST_SPELL           236
 /* Just insert any new spells here... just keep incrementing by one */
 
