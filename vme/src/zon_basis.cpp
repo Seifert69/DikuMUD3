@@ -218,8 +218,7 @@ int log_object(struct spec_arg *sarg)
          while (!str_is_empty(log_buf[*ip].str))
          {
             if (log_buf[*ip].level <= lev && log_buf[*ip].wizinv_level <= CHAR_LEVEL(ch))
-               cact("(LOG: $2t)", A_ALWAYS, ch, log_buf[*ip].str, cActParameter(),
-                    TO_CHAR, "log");
+               cact("(LOG: $2t)", A_ALWAYS, ch, log_buf[*ip].str, cActParameter(), TO_CHAR, "log");
             *ip = ((*ip + 1) % MAXLOG);
          }
          return SFR_BLOCK;
@@ -242,8 +241,7 @@ int log_object(struct spec_arg *sarg)
             c = 'b';
          else if (is_abbrev(sarg->arg, "off"))
          {
-            cact("Ok, log is now off.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR,
-                 "log");
+            cact("Ok, log is now off.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR, "log");
             OBJ_VALUE(sarg->owner, 0) = 'o';
             return SFR_BLOCK;
          }
