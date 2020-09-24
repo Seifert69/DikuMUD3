@@ -449,7 +449,10 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
       return 0;
    }
 
-   if ((ROOM_LANDSCAPE(room_from) == SECT_WATER_SAIL) || (ROOM_LANDSCAPE(room_to) == SECT_WATER_SAIL))
+   // If you go washed into the ocean
+   int bOceanEscape= (ROOM_LANDSCAPE(room_from) == SECT_WATER_SAIL) && (ROOM_LANDSCAPE(room_to) != SECT_WATER_SAIL);
+
+   if (((ROOM_LANDSCAPE(room_from) == SECT_WATER_SAIL) || (ROOM_LANDSCAPE(room_to) == SECT_WATER_SAIL)) && !bOceanEscape)
    {
       if (IS_CHAR(mover))
       {
@@ -465,7 +468,7 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
          }
       }
    }
-   else if ((ROOM_LANDSCAPE(room_from) == SECT_WATER_SWIM) || (ROOM_LANDSCAPE(room_to) == SECT_WATER_SWIM))
+   else if ((ROOM_LANDSCAPE(room_from) == SECT_WATER_SWIM) || (ROOM_LANDSCAPE(room_to) == SECT_WATER_SWIM) || bOceanEscape)
    {
       if (IS_CHAR(mover))
       {
@@ -491,6 +494,16 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
          }
 
          int diff = ROOM_EXIT(room_from, direction)->difficulty;
+
+         if (bOceanEscape)
+         {
+            slog(LOG_ALL, 0, "Ocean escape from %s@%s direction %d adding 150 to difficulty.", 
+                  UNIT_FI_NAME(room_from), UNIT_FI_ZONENAME(room_from), direction);
+            diff += 150;
+            act("You really should have been in a boat here, swimming is incredible difficult.", 
+                  A_ALWAYS, mover, cActParameter(), cActParameter(), TO_CHAR);
+         }
+
          diff -= skillbonus; // Make it less difficult if it's kind of fishy
 
          int skilltest = skillchecksa(mover, SKI_SWIMMING, ABIL_CON, diff);
