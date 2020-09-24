@@ -10277,6 +10277,27 @@ code
 }
 dilend
 
+dilbegin night_globe(medi:unitptr, tgt : unitptr, arg : string,
+		     hm : integer, effect : string);
+/* by Sender */
+var
+   orb : unitptr;
+code
+{
+   if (hm < 0)
+   {
+      act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   else
+   {
+      orb := load("night_orb@spells");
+      act("You create $2n.", A_SOMEONE, self, orb, null, TO_CHAR);
+      act("$1n creates $2n.", A_SOMEONE, self, orb, null, TO_ROOM);
+   }
+   quit;
+}
+dilend
+
 dilbegin recall zombie_summoned(pwr : integer);
 var
   d : integer;
@@ -14712,6 +14733,13 @@ bright 3
 manipulate {MANIPULATE_HOLD, MANIPULATE_TAKE}
 end
 
+night_orb
+names {"night globe","night orb", "globe", "orb"}
+title "an orb of darkness"
+descr "A dark orb is here, sucking light into itself."
+bright -6
+manipulate {MANIPULATE_HOLD, MANIPULATE_TAKE}
+end
 
                              magic_food
 
