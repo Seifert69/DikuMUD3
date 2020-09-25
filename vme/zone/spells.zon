@@ -7075,7 +7075,7 @@ interrupt (SFB_MSG , "inc despel counter" == argument,inc_count);
    else if (isaff(tgt, ID_DETECT_ALIGN))
      subaff(tgt, ID_DETECT_ALIGN);
    else if (isaff(tgt, ID_RAGE))
-     subaff(tgt, ID_DETECT_RAGE);
+     subaff(tgt, ID_RAGE);
    else if (isaff(tgt, ID_BERSERK))
      subaff(tgt, ID_BERSERK);
    else if (isaff(tgt, ID_DETECT_INVISIBLE))
