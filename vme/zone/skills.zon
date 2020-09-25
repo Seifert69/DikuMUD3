@@ -12008,7 +12008,6 @@ var
    skid : integer;
    hm   : integer;
    tgt  : unitptr;
-   shield : unitptr;
    skilla   : integer;
    skillb   : integer;
    skillc   : integer;
@@ -12041,14 +12040,14 @@ code
 
 	if ((tgt == null) or (not visible(self,tgt)))
 	{
-      act("Bash who?", A_ALWAYS, self, null, null, TO_CHAR);
+      act("Taunt who?", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
 	}
 
 	if (tgt == self)
 	{
-      act("You bash yourself in the head!", A_ALWAYS, self, null, null, TO_CHAR);
-      act("$1n bashes $1mself in the head!", A_SOMEONE, self, null, null, TO_REST);
+      act("You mercilessly taunt yourself !", A_ALWAYS, self, null, null, TO_CHAR);
+      act("$1n mercilessly taunts $1mself!", A_SOMEONE, self, null, null, TO_REST);
       quit;
 	}
 
@@ -12071,23 +12070,16 @@ code
 
    if ((tgt.weight - self.weight) > 125)
    {
-      act("$3n is too large to be bashed!", A_SOMEONE, self, null, tgt, TO_CHAR);
+      act("Perhaps you shouldn't taunt someone as large as $3n!", A_SOMEONE, self, null, tgt, TO_CHAR);
       quit;
    }
 
-   if (tgt.position < POSITION_FIGHTING)
+   :taunt:
+   if (dilfind("taunted@skills",tgt))
    {
-      act("$3n isn't even standing!", A_SOMEONE, self, null, tgt, TO_CHAR);
-      quit;
-   }
-
-   :bash:
-   if (dilfind("bashed@skills",tgt))
-   {
-      // This is the wierdest message...
-      act("$3n skillfully dodges your bash.", A_SOMEONE, self, null, tgt, TO_CHAR);
-      act("$3n skillfully dodges $1n's bash.", A_SOMEONE, self, null, tgt, TO_NOTVICT);
-      act("$1n attempts to bash you, but you skillfully avoid it.", A_SOMEONE, self, null, tgt, TO_VICT);
+      act("$3n quietly ignores your taunt.", A_SOMEONE, self, null, tgt, TO_CHAR);
+      act("$3n quietly ignores $1n's taunt.", A_SOMEONE, self, null, tgt, TO_NOTVICT);
+      act("$1n attempts to taunt you, but you quietly ignore it.", A_SOMEONE, self, null, tgt, TO_VICT);
       quit;
    }
 
@@ -12097,25 +12089,21 @@ code
       quit;
    }
    else
-      self.endurance := self.endurance - 10;
 
-   hm := skillchecksaopp(SKI_BASH, ABIL_STR, ABIL_STR, tgt, ABIL_DEX, ABIL_DEX);
+   hm := skillchecksaopp(SKI_TAUNT, ABIL_CON, ABIL_DEX, tgt, ABIL_BRA, ABIL_DEX);
 
    if (hm < -25)
    {
       change_speed(self,PULSE_VIOLENCE);
 
-      act("<div class='hit_opponent'>You attempt to bash $3n but your $2t slips "+
-         "from your hands!</div>",
-      A_SOMEONE, self, shield.name, tgt, TO_CHAR);
-      act("<div class='hit_other'>$1n attempts to bash $3n but $1s $2t slips from "+
-         "$1s hands!</div>",
-            A_SOMEONE, self, shield.name, tgt, TO_NOTVICT);
-      act("<div class='hit_me'>$1n attempts to bash you, but $1s $2t slips from "+
-         "$1s hands!</div>",
-            A_SOMEONE, self, shield.name, tgt, TO_VICT);
+      act("<div class='hit_opponent'>You exhaust yourself attempting to taunt $3n!</div>",
+      A_SOMEONE, self, null, tgt, TO_CHAR);
+      act("<div class='hit_other'>$1n seems to exhaust themself attempting to taunt $3n!</div>",
+            A_SOMEONE, self, null, tgt, TO_NOTVICT);
+      act("<div class='hit_me'>$1n exhausts themself attempting to taunt you!</div>",
+            A_SOMEONE, self, null, tgt, TO_VICT);
       provoked_attack(tgt,self);
-      unequip(shield);
+      self.endurance := self.endurance - 40;
       quit;
    }
 
@@ -12123,11 +12111,11 @@ code
    {
       change_speed(self,PULSE_VIOLENCE / 2);
 
-      act("<div class='hit_opponent'>You bash the passing wind.</div>",
-      A_ALWAYS, self, null, null, TO_CHAR);
-      act("<div class='hit_other'>$1n bashes the passing wind.</div>",
+      act("<div class='hit_opponent'>Your taunting of $3n falls on deaf ears.</div>",
+      A_ALWAYS, self, null, tgt, TO_CHAR);
+      act("<div class='hit_other'>$1n pitifully attempt to taunt $3n.</div>",
       A_SOMEONE, self, null, tgt, TO_NOTVICT);
-      act("<div class='hit_me'>$1n bashes the passing wind.</div>",
+      act("<div class='hit_me'>$1n fails their effort to taunt you.</div>",
       A_SOMEONE, self, null, tgt, TO_VICT);
       provoked_attack(tgt,self);
       quit;
@@ -12142,7 +12130,7 @@ code
    act("<div class='hit_me'>$1n mercilessly taunts you!</div>", A_SOMEONE, self, shield.name, tgt, TO_VICT);
 
    provoked_attack(tgt, self);
-   send_done("taunt",self,shield,tgt,hm,arg,null);
+   send_done("taunt",self,null,tgt,hm,arg,null);
    quit;
 }
 dilend
