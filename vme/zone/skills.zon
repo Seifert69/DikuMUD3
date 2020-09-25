@@ -12165,7 +12165,7 @@ code
 	  
     hm := 1 + hm / 10;
     if (hm > 20) hm := 20;
-	heal := hm * 3;
+	heal := tgt.hp + (hm * 3);
 	end := tgt.endurance + (hm * 6);
 	
 	addaff(self, ID_BERSERK, 20, WAIT_SEC*30,
@@ -12173,7 +12173,7 @@ code
 	  APF_ABILITY);
 	
 	tgt.endurance := end;
-	add_hitpoints(tgt, heal)
+	tgt.hp := heal;
     quit;
 }
 dilend
