@@ -433,6 +433,10 @@ gsub(/CMD_WORSHIP/,"\"worship\"",$0);
 gsub(/CMD_AFFECT/,"\"affect\"",$0);
 gsub(/CMD_REPORT/,"\"report\"",$0);
 gsub(/CMD_RESPOND/,"\"respond\"",$0);
+gsub(/CMD_BERSERK/,"\"berserk\"",$0);
+gsub(/CMD_FRENZY/,"\"frenzy\"",$0);
+gsub(/CMD_RAGE/,"\"rage\"",$0);
+gsub(/CMD_TAUNT/,"\"taunt\"",$0);
 
 print $0;
 }

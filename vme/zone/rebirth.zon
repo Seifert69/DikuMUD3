@@ -4023,6 +4023,10 @@ Removed by Eirinn - this was never supposed to be in morph code, fool.
 
    if (isaff(self, ID_BLESS))
      subaff(self, ID_BLESS);
+   if (isaff(self, ID_RAGE))
+     subaff(self, ID_RAGE);
+   if (isaff(self, ID_BERSERK))
+     subaff(self, ID_BERSERK);
    if (isaff(self, ID_DETECT_ALIGN))
      subaff(self, ID_DETECT_ALIGN);
    if (isaff(self, ID_DETECT_INVISIBLE))
@@ -5135,6 +5139,10 @@ code
      subaff(self, ID_BLESS);
    else if (isaff(self, ID_NBLESS))
      subaff(self, ID_NBLESS);
+   else if (isaff(self, ID_RAGE))
+     subaff(self, ID_RAGE);
+   else if (isaff(self, ID_BERSERK))
+     subaff(self, ID_BERSERK);
    else if (isaff(self, ID_DETECT_ALIGN))
      subaff(self, ID_DETECT_ALIGN);
    else if (isaff(self, ID_DETECT_INVISIBLE))

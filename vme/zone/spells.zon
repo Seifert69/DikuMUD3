@@ -130,6 +130,10 @@ interrupt (SFB_MSG , "inc displace counter" == argument,inc_count);
      subaff(tgt, ID_BLESS);
    else if (isaff(tgt, ID_CONDEMN))
      subaff(tgt, ID_CONDEMN);
+   else if (isaff(tgt, ID_BERSERK))
+     subaff(tgt, ID_BERSERK);
+   else if (isaff(tgt, ID_RAGE))
+     subaff(tgt, ID_RAGE);
    else if (isaff(tgt, ID_FOCUS))
      subaff(tgt, ID_FOCUS);
    else if (isaff(tgt, ID_DETECT_ALIGN))
@@ -7070,6 +7074,10 @@ interrupt (SFB_MSG , "inc despel counter" == argument,inc_count);
      subaff(tgt, ID_BLESS);
    else if (isaff(tgt, ID_DETECT_ALIGN))
      subaff(tgt, ID_DETECT_ALIGN);
+   else if (isaff(tgt, ID_RAGE))
+     subaff(tgt, ID_DETECT_RAGE);
+   else if (isaff(tgt, ID_BERSERK))
+     subaff(tgt, ID_BERSERK);
    else if (isaff(tgt, ID_DETECT_INVISIBLE))
      subaff(tgt, ID_DETECT_INVISIBLE);
    else if (isaff(tgt, ID_DETECT_MAGIC))

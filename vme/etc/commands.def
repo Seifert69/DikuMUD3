@@ -2381,6 +2381,103 @@ race darkelf   =   0
 restrict level          = 22
 profession assassin     = +2
 
+/* Barbarian Skills */
+/* Original concepts and implementation by Sender */
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_FRENZY
+name           = frenzy
+command        = frenzy
+minpos         = POSITION_FIGHTING
+turns          = 1
+func           = frenzy@skills
+type           = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =   0
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =   0
+restrict strength       = 100
+restrict constitution   = 80
+profession barbarian      = +5
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_BERSERK
+name           = berserk
+command        = berserk
+minpos         = POSITION_STANDING
+func           = berserk@skills
+type           = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =   0
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =   0
+restrict constitution   = 50
+profession barbarian      = +5
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_TAUNT
+name           = taunt
+command        = taunt
+minpos         = POSITION_FIGHTING
+turns          = 1
+func           = taunt@skills
+type           = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =   0
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =   0
+restrict strength       = 10
+restrict constitution   = 50
+profession barbarian      = +5
+
+/* - - - - Yet another definition of a skill - - - - */
+
+index          = SKI_RAGE
+name           = rage
+command        = rage
+minpos         = POSITION_STANDING
+func           = rage@skills
+type           = TYPE_SKILL
+race human     =   0
+race elf       =   0
+race dwarf     =   0
+race halfling  =   0
+race gnome     =   0
+race half-orc  =   0
+race half-ogre =   0
+race half-elf  =   0
+race brownie   =   0
+race groll     =   0
+race darkelf   =   0
+restrict strength       = 30
+restrict constitution   = 30
+profession barbarian      = +5
+
+/* END Barbarian Skills */
 
 
 command = pat
