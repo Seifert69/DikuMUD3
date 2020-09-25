@@ -12002,16 +12002,8 @@ external
                            opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
 
 var
-   skia : integer;
-   skib : integer;
-   skic : integer;
-   skid : integer;
    hm   : integer;
    tgt  : unitptr;
-   skilla   : integer;
-   skillb   : integer;
-   skillc   : integer;
-   skilld   : integer;
 
 code
 {
@@ -12077,9 +12069,9 @@ code
    :taunt:
    if (dilfind("taunted@skills",tgt))
    {
-      act("$3n quietly ignores your taunt.", A_SOMEONE, self, null, tgt, TO_CHAR);
-      act("$3n quietly ignores $1n's taunt.", A_SOMEONE, self, null, tgt, TO_NOTVICT);
-      act("$1n attempts to taunt you, but you quietly ignore it.", A_SOMEONE, self, null, tgt, TO_VICT);
+      act("$3n quietly ignores your continued taunting.", A_SOMEONE, self, null, tgt, TO_CHAR);
+      act("$3n quietly ignores $1n's continued taunting.", A_SOMEONE, self, null, tgt, TO_NOTVICT);
+      act("$1n attempts to taunt you again, but you quietly ignore it.", A_SOMEONE, self, null, tgt, TO_VICT);
       quit;
    }
 
@@ -12145,7 +12137,7 @@ code
 }
 dilend
 
-dilbegin ski_berserk(medi:unitptr, arg : string,
+dilbegin ski_berserk(medi:unitptr, tgt : unitptr, arg : string,
 	       hm : integer, effect : string);
 var
 	heal : integer;
