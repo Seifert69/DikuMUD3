@@ -12351,6 +12351,8 @@ if (isaff(self, ID_MIRE))
         addstring(spl_aff,"Mired<br/>");
 if (isaff(self, ID_CONDEMN))
         addstring(spl_aff,"Condemned<br/>");
+if (isset(self.outside.flags, UNIT_FL_SACRED))
+        addstring(spl_aff,"Sacred Room<br/>");
 
 ln:=length (spl_aff);
 
@@ -13587,8 +13589,6 @@ code
 	 /////quit;
 }
 dilend
-
-
 
 %rooms
 
