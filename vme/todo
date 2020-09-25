@@ -1,7 +1,3 @@
-Anyone: I really need someone dilligent that loves spells to go through all the spells and make 
-        sure they have reasonable restrictions. Personally, I like MAG / DIV restrictions better
-		than level.
-
 fireweapon and missile - how do they work and how does identify work?
 
 Maybe: Fix ships (it's dark and they all run their own code) and make them transparent 
@@ -13,6 +9,3 @@ Test play
 Current bugs
 
 fix MAX_STR_LEN problem in szonelog and log.
-  - reboot (means remove autoreboot from base)
-player convert & checking utility to either dil or other external utility
-
