@@ -6727,7 +6727,26 @@ type ITEM_OTHER
 manipulate {MANIPULATE_TAKE}
 weight 0
 
+dilbegin aware unique issue42();
+external
+   integer skillchecksa@skills(skillidx : integer, abiidx : integer, difficulty : integer);
 
+var
+   i : integer;
+   ext : extraptr;
+code
+{
+   heartbeat := PULSE_SEC;
+   :loop:
+   wait(SFB_CMD, TRUE);
+   ext := self.extra;
+   i := skillchecksa@skills(SKI_SEARCH, ABIL_BRA, ext.vals.[1]);
+   log(itoa(i));
+   goto loop;
+}
+dilend
+
+/* Program to test if a changed in compiled DIL will reset the recall counter
 dilbegin recall unique testbug();
 var
    i : integer;
@@ -6744,7 +6763,7 @@ code
 
    quit;
 }
-dilend
+dilend*/
 
 end
 
