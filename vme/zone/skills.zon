@@ -12125,9 +12125,9 @@ code
 
    change_speed(tgt,PULSE_VIOLENCE);
 
-   act("<div class='hit_opponent'>You mercilessly taunt $3n.</div>", A_SOMEONE, self, shield.name, tgt, TO_CHAR);
-   act("<div class='hit_other'>$1n mercilessly taunts $3n.</div>", A_SOMEONE, self, shield.name, tgt, TO_NOTVICT);
-   act("<div class='hit_me'>$1n mercilessly taunts you!</div>", A_SOMEONE, self, shield.name, tgt, TO_VICT);
+   act("<div class='hit_opponent'>You mercilessly taunt $3n.</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
+   act("<div class='hit_other'>$1n mercilessly taunts $3n.</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
+   act("<div class='hit_me'>$1n mercilessly taunts you!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
 
    provoked_attack(tgt, self);
    send_done("taunt",self,null,tgt,hm,arg,null);
