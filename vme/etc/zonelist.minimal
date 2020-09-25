@@ -1,0 +1,18 @@
+basis 1120tw0008         1   0 250 0 ../etc
+death 1120tw0008         1   0 250 0 ../lib/death
+spells 1120tw0008        1   0 250 0 ../lib/dilfiles/spells
+skills 1120tw0008        1   0 250 0
+commands 1120tw0008      1   0 250 0 ../etc
+baseget  1120tw0008      1   0 250 0
+basemove 1120tw0008      1   1   0 0
+wiz 1120tw0008           1   0 250 0
+baselook 1120tw0008      1   1   0 0
+update 1120tw0008        1   0 250 0
+help 1120tw0008          1   0 250 0 ../etc/help
+boards 1120tw0008        1   0 250 0 ../lib/boards
+comm 1120tw0008          1   0 250 0
+socials 1120tw0008       1   0 250 0
+set 1120tw0008           1   0 250 0
+mail 1120tw0008          1   0 250 0 ../lib/mail
+function 1120tw0008      1   0 250 0
+restrict 1120tw0008      1   0 250 0
