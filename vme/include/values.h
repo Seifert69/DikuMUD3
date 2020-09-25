@@ -121,7 +121,8 @@ END HEADER*/
 #define PROFESSION_NECROMANCER  9
 #define PROFESSION_CONJURER    10
 #define PROFESSION_SORCERER    11
-#define PROFESSION_MAX         12 /* 11+1 */
+#define PROFESSION_BARBARIAN   12
+#define PROFESSION_MAX         13 /* 11+1 */
 
 #define PROFESSION_STRINGS "Fighter", "Knight", "Paladin", "Ranger", "Thief", "Assassin", \
                            "Priest", "Druid", "Mystic","Necromancer", "Conjurer", "Mage"
