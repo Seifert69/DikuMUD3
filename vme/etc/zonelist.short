@@ -1,3 +1,19 @@
+# Format:
+#   <zone> <pwd> <pri1> <pri2> <load> <pay> <path>
+#
+#   zone: name of the zonefile (on disk) not including .zon
+#   pwd : not used by vme, used for FTP scripts if you have any
+#   pri1: not used by vme (Probably used by a script)
+#   pri2: access level of the zone. [0..255]
+#         For certain DIL fields, e.g. PC_LIFESPAN if this value
+#         is high enough then the field can be modified, otherwise
+#         it can only be read. Generally it looks like the value
+#         used is 1..10. 
+#   load: Load level [200..255]. This field sets the level a wiz 
+#         needs in order to load items from the zone.
+#   pay : Pay only. [0..1]. Used if you have pay zones in the game.
+#   path: This is the path to where data from this zone will be loaded / saved (DIL)
+#
 basis 1120tw0008         1   0 250 0 ../etc
 death 1120tw0008         1   0 250 0 ../lib/death
 spells 1120tw0008        1   0 250 0 ../lib/dilfiles/spells
@@ -14,14 +30,15 @@ comm 1120tw0008          1   0 250 0
 socials 1120tw0008       1   0 250 0
 set 1120tw0008           1   0 250 0
 mail 1120tw0008          1   0 250 0 ../lib/mail
-newbie 1120tw0008        1   0 250 0 ../lib/newbie
 function 1120tw0008      1   0 250 0
 restrict 1120tw0008      1   0 250 0
+#
+newbie 1120tw0008        1   0 250 0 ../lib/newbie
 justice 1120tw0008       1   0 250 0
 arena release            1   0 250 0
 clan 1120tw0008          1   0 250 0 ../lib/clan
 competition 1120tw0008   1   0 250 0 ../lib/competition
-
+#
 guild_paths  release 1 2 0 0
 assassin release 1 2 0 0
 clericguild release 1 2 0 0
