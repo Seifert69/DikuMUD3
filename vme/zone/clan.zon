@@ -1314,7 +1314,7 @@ while (i<ln)
 	while (ii < 40-length(clist.[i+2]))
 	{
 		spaces := " " + spaces;
-		ii = ii + 1;
+		ii := ii + 1;
 	}
 	if (i==0)
 		buf:="  " + clist.[i+2]+""+spaces+clist.[i+1]+"<br/>";
