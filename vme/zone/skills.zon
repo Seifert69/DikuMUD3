@@ -12004,6 +12004,7 @@ external
 var
    hm   : integer;
    tgt  : unitptr;
+   end  : integer;
 
 code
 {
@@ -12088,26 +12089,29 @@ code
    {
       change_speed(self,PULSE_VIOLENCE);
 
-      act("<div class='hit_opponent'>You exhaust yourself attempting to taunt $3n!</div>",
+      act("<div class='nodam_me'>You foolishly exhaust yourself attempting to taunt $3n!</div>",
       A_SOMEONE, self, null, tgt, TO_CHAR);
-      act("<div class='hit_other'>$1n seems to exhaust themself attempting to taunt $3n!</div>",
+      act("<div class='nodam_other'>$1n seems to foolishly exhaust themself attempting to taunt $3n!</div>",
             A_SOMEONE, self, null, tgt, TO_NOTVICT);
-      act("<div class='hit_me'>$1n exhausts themself attempting to taunt you!</div>",
+      act("<div class='nodam_opponent'>$1n foolishly exhausts themself attempting to taunt you!</div>",
             A_SOMEONE, self, null, tgt, TO_VICT);
       provoked_attack(tgt,self);
-      self.endurance := self.endurance - 40;
+      
+	  end := self.endurance - 40;
+	  if(end < 0){end := 0}
+	  self.endurance := end;
       quit;
    }
 
    if (hm < 0)
    {
-      change_speed(self,PULSE_VIOLENCE / 2);
+      change_speed(self,PULSE_ROUND);
 
-      act("<div class='hit_opponent'>Your taunting of $3n falls on deaf ears.</div>",
+      act("<div class='miss_me'>Your taunting of $3n falls on deaf ears.</div>",
       A_ALWAYS, self, null, tgt, TO_CHAR);
-      act("<div class='hit_other'>$1n pitifully attempt to taunt $3n.</div>",
+      act("<div class='miss_other'>$1n pitifully attempt to taunt $3n.</div>",
       A_SOMEONE, self, null, tgt, TO_NOTVICT);
-      act("<div class='hit_me'>$1n fails their effort to taunt you.</div>",
+      act("<div class='hit_opponent'>$1n fails their effort to taunt you.</div>",
       A_SOMEONE, self, null, tgt, TO_VICT);
       provoked_attack(tgt,self);
       quit;
@@ -12115,11 +12119,14 @@ code
 
    dilcopy("taunted@skills",tgt);
 
-   change_speed(tgt,PULSE_VIOLENCE);
+   change_speed(tgt,PULSE_VIOLENCE*3);
 
-   act("<div class='hit_opponent'>You mercilessly taunt $3n.</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
-   act("<div class='hit_other'>$1n mercilessly taunts $3n.</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
-   act("<div class='hit_me'>$1n mercilessly taunts you!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
+   act("<div class='shield_me'>You mercilessly taunt $3n.</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
+   act("<div class='shield_other'>$1n mercilessly taunts $3n.</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
+   act("<div class='shield_opponent'>$1n mercilessly taunts you!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
+   act("<div class='miss_me'>Your taunting causes $3n to swing wildly.</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
+   act("<div class='miss_other'>$3n swings wildly after $1n's taunts.</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
+   act("<div class='miss_opponent'>$1n's taunting causes you to swing wildly!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
 
    provoked_attack(tgt, self);
    send_done("taunt",self,null,tgt,hm,arg,null);

@@ -1275,7 +1275,9 @@ dilend
 dilbegin clist (arg:string);
 	var
 		i:integer;
+		ii:integer;
 		err:integer;
+		spaces:string;
 		buf:string;
 		ln:integer;
 		clist:stringlist;
@@ -1303,17 +1305,21 @@ quit;
 
 i:=0;
 buf:="";
-sendtext("                                 Valhalla Clans<br/><br/>",self);
+sendtext("                   Valhalla Clans<br/><br/>",self);
 sendtext("          Clan Name                          Master<br/><br/>",self);
 
 while (i<ln)
 {
+	ii := 0;
+	while (ii < 40-length(clist.[i+2]))
+	{
+		spaces := " " + spaces;
+		ii = ii + 1;
+	}
 	if (i==0)
-	buf:="  " + clist.[i+2]+"&amp;s"+itoa(40-length(clist.[i+2]))+
-	clist.[i+1]+"<br/>";
+		buf:="  " + clist.[i+2]+""+spaces+clist.[i+1]+"<br/>";
 	else
-		buf:=buf+"  " + clist.[i+2]+"&amp;s"+itoa(40-length(clist.[i+2]))+
-	clist.[i+1]+"<br/>";
+		buf:=buf+"  " + clist.[i+2]+spaces+clist.[i+1]+"<br/>";
 	i:=i+5;
 	}
 
