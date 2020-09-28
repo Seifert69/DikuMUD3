@@ -1313,7 +1313,7 @@ code
 		ii := 0;
 		while (ii < 40-length(clist.[i+2]))
 		{
-			spaces := space + " ";
+			spaces := spaces + " ";
 			ii := ii + 1;
 		}
 		if (i==0)
