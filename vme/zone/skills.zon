@@ -11989,7 +11989,7 @@ else
 send_done("stalk",self,null,tgt,res,arg,null);
 quit;
 }
-dilend
+dilend // ski_stalk
 
 /* Barbarian Skills */
 /* Original concept and implementation by Sender */
@@ -12098,7 +12098,10 @@ code
       provoked_attack(tgt,self);
       
 	  end := self.endurance - 40;
-	  if(end < 0){end := 0}
+	  if(end < 0)
+	  {
+			end := 0;
+	  }
 	  self.endurance := end;
       quit;
    }

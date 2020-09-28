@@ -1283,49 +1283,49 @@ dilbegin clist (arg:string);
 		clist:stringlist;
 	mlist:stringlist;
 
-	code
-	{
-err:=loadstr ("clanlist.data",buf);
-if (err<1)
-	{
-log ("01:  Error in clanlist.data");
-sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
-quit;
-}
-
-clist:=split(buf,"\n");
-ln:=length (clist);
-ln:=ln-1;
-if (ln<1)
-	{
-log ("02:  Error in clanlist.data");
-sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
-quit;
-}
-
-i:=0;
-buf:="";
-sendtext("                   Valhalla Clans<br/><br/>",self);
-sendtext("          Clan Name                          Master<br/><br/>",self);
-
-while (i<ln)
+code
 {
-	ii := 0;
-	while (ii < 40-length(clist.[i+2]))
-	{
-		spaces := " " + spaces;
-		ii := ii + 1;
-	}
-	if (i==0)
-		buf:="  " + clist.[i+2]+""+spaces+clist.[i+1]+"<br/>";
-	else
-		buf:=buf+"  " + clist.[i+2]+spaces+clist.[i+1]+"<br/>";
-	i:=i+5;
+	err:=loadstr ("clanlist.data",buf);
+	if (err<1)
+		{
+	log ("01:  Error in clanlist.data");
+	sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+	quit;
 	}
 
-buf:=textformat(buf);
-pagestring(buf,self);
-quit;
+	clist:=split(buf,"\n");
+	ln:=length (clist);
+	ln:=ln-1;
+	if (ln<1)
+		{
+	log ("02:  Error in clanlist.data");
+	sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+	quit;
+	}
+
+	i:=0;
+	buf:="";
+	sendtext("                   Valhalla Clans<br/><br/>",self);
+	sendtext("          Clan Name                          Master<br/><br/>",self);
+
+	while (i<ln)
+	{
+		ii := 0;
+		while (ii < 40-length(clist.[i+2]))
+		{
+			spaces := space + " ";
+			ii := ii + 1;
+		}
+		if (i==0)
+			buf:="  " + clist.[i+2]+spaces+clist.[i+1]+"<br/>";
+		else
+			buf:=buf+"  " + clist.[i+2]+spaces+clist.[i+1]+"<br/>";
+		i:=i+5;
+	}
+
+	buf:=textformat(buf);
+	pagestring(buf,self);
+	quit;
 }
 dilend
 
