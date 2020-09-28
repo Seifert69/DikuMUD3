@@ -964,6 +964,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
          {
             sprintf(buf, "Your guild is not setup properly. If you're already in a guild please contact an administrator.<br/>");
             send_to_char(buf, sarg->activator);
+            return SFR_BLOCK;
          }
 
          p[0] = get_teacher(exd->names.Name(1));

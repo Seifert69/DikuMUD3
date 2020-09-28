@@ -989,12 +989,11 @@ void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl)
             if (tmp != DILV_NULL)
             {
                 szonelog(UNIT_FI_ZONE(p->sarg->owner),
-                         "DIL %s@%s, dil %s Error in remote call var assign error\n",
+                         "DIL %s@%s Error in %s in remote call to %s where parameter %d has incorrect type. Stopping program.",
                          UNIT_FI_NAME(p->sarg->owner),
                          UNIT_FI_ZONENAME(p->sarg->owner),
-                         p->fp->tmpl->prgname);
-
-                dil_pop_frame(p);
+                         p->frame[0].tmpl->prgname,
+                         p->fp->tmpl->prgname, i+1);
                 p->waitcmd = WAITCMD_QUIT;
                 break;
             }

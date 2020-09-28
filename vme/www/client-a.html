@@ -97,7 +97,17 @@
                 }
             });
 
-            document.querySelector("#pwd").addEventListener("keyup", event => {
+            document.querySelector("#pwd").addEventListener("keydown", event => {
+                if(event.key == "Enter")
+                {
+                    document.querySelector("#btnSend").click();
+                    event.preventDefault(); // No need to `return false;`.
+                }
+            });
+
+            // We need keydown otherwise super quick typing will cause the next lette entered
+            // after RETURN to become part of the message.
+            document.querySelector("#message").addEventListener("keydown", event => {
                 if(event.key == "Enter")
                 {
                     document.querySelector("#btnSend").click();
@@ -106,12 +116,7 @@
             });
 
             document.querySelector("#message").addEventListener("keyup", event => {
-                if(event.key == "Enter")
-                {
-                    document.querySelector("#btnSend").click();
-                    event.preventDefault(); // No need to `return false;`.
-                }
-                else if (event.keyCode == 38) // arrow up
+                if (event.keyCode == 38) // arrow up
                 {
                     g_nHistoryPos += 1;
                     var s = HistoryGet(g_nHistoryPos);

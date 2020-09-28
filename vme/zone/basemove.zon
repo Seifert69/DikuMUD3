@@ -529,7 +529,7 @@ code
                {
                   i := 100;
                }
-               log("exit diff: " + itoa(self.exit_diff[dir]));
+               //log("exit diff: " + itoa(self.exit_diff[dir]));
                i := skillchecksau@skills(u, SKI_SWIMMING, ABIL_CON, self.exit_diff[dir] - i);
                if (i < 0)
                {
@@ -567,6 +567,7 @@ var
 
     arg1   :   string;
     dir    :   integer;
+    bOceanEscape  :   integer;
 
 code
 {
@@ -631,16 +632,21 @@ code
 
    if (dir > -1)
    {
-      if ((self.outside.movement == SECT_WATER_SAIL) or (self.outside.exit_to[dir].movement == SECT_WATER_SAIL))
-      {
-         act("You'll need a boat to get there, swimming will be impossible.", A_ALWAYS, self, null, null, TO_CHAR);
-         return;
-      }
+      bOceanEscape := (self.outside.movement == SECT_WATER_SAIL) and (self.outside.exit_to[dir].movement != SECT_WATER_SAIL);
 
-      if ((self.outside.movement != SECT_WATER_SWIM) and (self.outside.exit_to[dir].movement != SECT_WATER_SWIM))
+      if (not bOceanEscape)
       {
-         act("You need water in order to swim.", A_ALWAYS, self, null, null, TO_CHAR);
-         return;
+         if ((self.outside.movement == SECT_WATER_SAIL) or (self.outside.exit_to[dir].movement == SECT_WATER_SAIL))
+         {
+            act("You'll need a boat to get there, swimming will be impossible.", A_ALWAYS, self, null, null, TO_CHAR);
+            return;
+         }
+
+         if ((self.outside.movement != SECT_WATER_SWIM) and (self.outside.exit_to[dir].movement != SECT_WATER_SWIM))
+         {
+            act("You need water in order to swim.", A_ALWAYS, self, null, null, TO_CHAR);
+            return;
+         }
       }
 
       addextra(self.extra, {SWIM_ON}, "");

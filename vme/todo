@@ -1,18 +1,6 @@
-Anyone: I really need someone dilligent that loves spells to go through all the spells and make 
-        sure they have reasonable restrictions. Personally, I like MAG / DIV restrictions better
-		than level.
+For todo look at https://github.com/Seifert69/DikuMUD3/issues
 
-fireweapon and missile - how do they work and how does identify work?
+==
+For MS only
 
 Maybe: Fix ships (it's dark and they all run their own code) and make them transparent 
-
-Test XP works as expected.
-Test play
-
----
-Current bugs
-
-fix MAX_STR_LEN problem in szonelog and log.
-  - reboot (means remove autoreboot from base)
-player convert & checking utility to either dil or other external utility
-

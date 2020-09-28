@@ -33,33 +33,33 @@ mail 1120tw0008          1   0 250 0 ../lib/mail
 function 1120tw0008      1   0 250 0
 restrict 1120tw0008      1   0 250 0
 #
-newbie 1120tw0008        1   0 250 0 ../lib/newbie
-justice 1120tw0008       1   0 250 0
-arena release            1   0 250 0
-clan 1120tw0008          1   0 250 0 ../lib/clan
-competition 1120tw0008   1   0 250 0 ../lib/competition
+#newbie 1120tw0008        1   0 250 0 ../lib/newbie
+#justice 1120tw0008       1   0 250 0
+#arena release            1   0 250 0
+#clan 1120tw0008          1   0 250 0 ../lib/clan
+#competition 1120tw0008   1   0 250 0 ../lib/competition
 #
-guild_paths  release 1 2 0 0
-assassin release 1 2 0 0
-clericguild release 1 2 0 0
-cypress release 1 3 0 0
-fightersguild release 1 2 0 0
-goblin_cave release 1 255 0 0
-halfzon release 1 255 0 0
-haon-dor release 1 3 0 0
-hobgob release 1 255 0 0
-kingc release 1 255 0 0
-mageguild release 1 2 0 0
-midgaard release 1 1 0 0
-midwalls release 1 1 0 0
-necro_guild release 1 2 0 0
-offices release 1 255 0 0
-paladin_guild release 1 2 0 0
-ratswarf release 1 255 0 0
-sorcerer release 1 2 0 0
-thievesguild release 1 2 0 0
-udgaard release 1 1 0 0
-druid 1120tw0008 1 255 0 0 
-knight   1120tw0008      1 2 0 0
-ranger 1120tw0008        1 2 0 0   
-rebirth 1120tw0008       1 0 250 0     
+#guild_paths  release 1 2 0 0
+#assassin release 1 2 0 0
+#clericguild release 1 2 0 0
+#cypress release 1 3 0 0
+#fightersguild release 1 2 0 0
+#goblin_cave release 1 255 0 0
+#halfzon release 1 255 0 0
+#haon-dor release 1 3 0 0
+#hobgob release 1 255 0 0
+#kingc release 1 255 0 0
+#mageguild release 1 2 0 0
+#midgaard release 1 1 0 0
+#midwalls release 1 1 0 0
+#necro_guild release 1 2 0 0
+#offices release 1 255 0 0
+#paladin_guild release 1 2 0 0
+#ratswarf release 1 255 0 0
+#sorcerer release 1 2 0 0
+#thievesguild release 1 2 0 0
+#udgaard release 1 1 0 0
+#druid 1120tw0008 1 255 0 0 
+#knight   1120tw0008      1 2 0 0
+#ranger 1120tw0008        1 2 0 0   
+#rebirth 1120tw0008       1 0 250 0     

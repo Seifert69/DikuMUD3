@@ -187,8 +187,7 @@ log ("01:  Error in clanlist.data");
 quit;
 }
 
-clist:=split(buf,"
-x");
+clist:=split(buf,"\n");
 ln:=length (clist);
 ln:=ln-1;
 if (ln<1)
@@ -242,8 +241,7 @@ quit;
 }
 
 clist:=null;
-clist:=split(buf,"
-x");
+clist:=split(buf,"\n");
 ln:=length(clist);
 ln:=ln-1;
 i:=0;
@@ -535,13 +533,11 @@ log ("01:  Error in cinfo");
 quit;
 }
 
-mlist:=split(buf,"
-x");
+mlist:=split(buf,"\n");
 err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
 if (err<1)
 err:=loadstr ("default.rank",buf);
-rlist:=split(buf,"
-x");
+rlist:=split(buf,"\n");
 if (arg=="")
 	goto cinfo_who;
 else if (arg==left("master",length(arg)))
@@ -743,8 +739,7 @@ err:=loadstr("clan.delete",buf);
 if (err<1)
 	return;
 
-	list:=split(buf,"
-x");
+	list:=split(buf,"\n");
 
 	ln:=length(list);
     ln:=ln-1;
@@ -1008,8 +1003,7 @@ err:=loadstr (pc.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
 if (err<1)
  err:=loadstr ("default.rank",buf);
 
-rlist:=split(buf,"
-x");
+rlist:=split(buf,"\n");
 
 if (rlist.[atoi(pc.extra.[CLAN_RANK].descr)]=="blank")
  {
@@ -1048,8 +1042,7 @@ err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
 if (err<1)
  err:=loadstr ("default.rank",buf);
 
-rlist:=split(buf,"
-x");
+rlist:=split(buf,"\n");
 
 act ("<div class='clan'>Your clan ranks are set as follows:</div><div class='default'></div>",
  A_ALWAYS,self,null,null,TO_CHAR);
@@ -1148,8 +1141,7 @@ err:=loadstr (pc.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
 if (err<1)
  err:=loadstr ("default.rank",buf);
 
-rlist:=split(buf,"
-x");
+rlist:=split(buf,"\n");
 if (rlist.[atoi(rank)]=="blank")
 {
 sendtext ("<div class='clan'>That rank has no label yet you can't set it till it has a label</div><div class='default'><br/></div>",self);
@@ -1183,8 +1175,7 @@ if (err<1)
  err:=loadstr ("default.rank",buf);
 
 
-rlist:=split(buf,"
-x");
+rlist:=split(buf,"\n");
 act ("<div class='clan'></div>"+rank+":  "+rlist.[atoi(rank)],A_ALWAYS,self,null,null,TO_CHAR);
 quit;
 
@@ -1193,8 +1184,7 @@ err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
 if (err<1)
  err:=loadstr ("default.rank",buf);
 
-rlist:=split(buf,"
-x");
+rlist:=split(buf,"\n");
 rlist.[atoi(rank)]:=textformat(arg);
 act ("<div class='clan'></div>"+rank+" is now set to:  "+rlist.[atoi(rank)],
 A_ALWAYS,self,null,null,TO_CHAR);
@@ -1222,8 +1212,7 @@ err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
 if (err<1)
  err:=loadstr ("default.rank",buf);
 
-rlist:=split(buf,"
-x");
+rlist:=split(buf,"\n");
 
 act ("<div class='clan'>Your clan ranks are set as follows:</div><div class='default'></div>",
  A_ALWAYS,self,null,null,TO_CHAR);
@@ -1262,8 +1251,7 @@ if (err<1)
 return;
 }
 
-clist:=split(buf,"
-x");
+clist:=split(buf,"\n");
 ln:=length (clist);
 ln:=ln-1;
 if (ln<1)
@@ -1303,8 +1291,7 @@ sendtext ("There is something wrong with clans talk with an admin about how you 
 quit;
 }
 
-clist:=split(buf,"
-x");
+clist:=split(buf,"\n");
 ln:=length (clist);
 ln:=ln-1;
 if (ln<1)
@@ -1362,8 +1349,7 @@ sendtext ("There is something wrong with clans talk with an admin about how you 
 quit;
 }
 
-clist:=split(buf,"
-x");
+clist:=split(buf,"\n");
 ln:=length (clist);
 ln:=ln-1;
 if (ln<1)
@@ -1411,8 +1397,7 @@ log ("01:  Error in chmaster clanlist.data");
 quit;
 }
 
-clist:=split(buf,"
-x");
+clist:=split(buf,"\n");
 ln:=length (clist);
 ln:=ln-1;
 
@@ -1470,8 +1455,7 @@ sendtext ("There is something wrong with clans talk with an admin about how you 
 quit;
 }
 
-clist:=split(buf,"
-x");
+clist:=split(buf,"\n");
 ln:=length (clist);
 ln:=ln-1;
 if (ln<4)
@@ -1608,8 +1592,7 @@ sendtext ("There is something wrong with clans talk with an admin about how you 
 quit;
 }
 
-clist:=split(buf,"
-x");
+clist:=split(buf,"\n");
 ln:=length (clist);
 ln:=ln-1;
 if (ln<1)
@@ -1765,8 +1748,7 @@ log ("01:  Error in addmember");
 quit;
 }
 pos2:=pos.[0]+"/"+pos.[1]+"/"+pos.[2];
-list:=split(buf,"
-x");
+list:=split(buf,"\n");
 ln:=length(list);
 while (i<ln)
 {
@@ -1830,8 +1812,7 @@ log ("01:  Error in submember");
 return (-1);
 }
 
-mlist:=split(buf,"
-x");
+mlist:=split(buf,"\n");
 
 ln:=length(mlist);
 ln:=ln-1;
@@ -1884,8 +1865,7 @@ quit;
 }
                    pos2:=pos.[0]+"/"+pos.[1]+"/"+pos.[2];
 
-mlist:=split(buf,"
-x");
+mlist:=split(buf,"\n");
 ln:=length(mlist);
 ln:=ln-1;
 pname:=pname+":";
@@ -2007,8 +1987,7 @@ sendtext ("There is something wrong with clans talk with an admin about how you 
 quit;
 }
 
-clist:=split(buf,"
-x");
+clist:=split(buf,"\n");
 ln:=length (clist);
 ln:=ln-1;
 if (ln<1)
