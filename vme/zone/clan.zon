@@ -200,118 +200,108 @@ quit;
 i:=0;
 buf:="";
 found:="nope";
-buf:="";
 while (i<ln)
 {
-if (arg==clist.[i])
+	if (arg==clist.[i])
 	{
-	found:="yes";
+		found:="yes";
 
-	cname:=clist.[i+2];
-	i:=i+5;
-	continue;
+		cname:=clist.[i+2];
+		i:=i+5;
+		continue;
 	}
-	buf:=buf+clist.[i]+"
-x"+clist.[i+1]+"
-x"+clist.[i+2]+"
-x"+
-	clist.[i+3]+"
-x"+clist.[i+4]+"
-x";
+	buf:=buf+clist.[i]+"\n"+clist.[i+1]+"\n"+clist.[i+2]+"\n"+clist.[i+3]+"\n"+clist.[i+4]+"\n";
 	i:=i+5;
-	}
+}
 
 	if (found=="yes")
-		{
+	{
 		i:=delstr("clanlist.data");
 		i:=savestr("clanlist.data",buf,"w");
-		}
-else
-{
-sendtext ("No such clan found<br/>",self);
-quit;
-}
-
-		buf:="";
-		err:=loadstr(arg,buf);
-		if (err<1)
-			{
-log ("01:  Error in"+arg);
-quit;
-}
-
-clist:=null;
-clist:=split(buf,"\n");
-ln:=length(clist);
-ln:=ln-1;
-i:=0;
-while (i<ln)
-{
-line:=split(clist.[i],":");
-if (length(line)<2)
-{
-i:=i+1;
-continue;
-}
-
-if (length(line.[0])<1)
-{
-i:=i+1;
-continue;
-}
-
-pc:=ghead();
-while (pc.type==UNIT_ST_PC)
-{
- if (pc.name==line.[0])
- break;
- pc:=pc.gnext;
- }
-log ("Deleting:  ");
- log (line.[0]);
- if ((pc==null) or
-(pc.type!=UNIT_ST_PC))
- 	goto pc_null;
-
-log(" online<br/>");
-err:=submember(arg,line.[0]);
-pc.title:= "<div class='cpr'></div><div class='bw'>Banished from </div>"+cname+" clan<div class='default'></div>";
-subextra (pc.extra,CLAN_NAME);
-subextra (pc.extra,CLAN_RANK);
-subextra (pc.extra,CLAN_SYMBOLIC);
-subextra (pc.extra,"tattoo");
-
-   pc.hometown := "temple@udgaard";
-act ("<div class='clan'>$3n has been removed from the clan.</div>",
-A_ALWAYS,self,null,pc,TO_CHAR);
-act ("<div class='clan'>You have been removed from the </div>"+cname+" clan.",
-A_ALWAYS,pc,null,null,TO_CHAR);
-i:=i+1;
-continue;
-
-:pc_null:
-log (" off line<br/>");
-err:=submember(arg,line.[0]);
-if (err==-1)
+	}
+	else
 	{
-	  act ("<div class='clan'>No such person found.</div>",
-  A_ALWAYS,self,null,null,TO_CHAR);
-  }
-else
-{
-act ("<div class='clan'></div>"+line.[0]+" has been removed from the clan."
-,A_ALWAYS,self,null,pc,TO_CHAR);
-err:=savestr("clan.delete",line.[0]+"
-x","a");
-}
-i:=i+1;
+		sendtext ("No such clan found<br/>",self);
+		quit;
+	}
+
+	buf:="";
+	err:=loadstr(arg,buf);
+	if (err<1)
+	{
+		log ("01:  Error in"+arg);
+		quit;
+	}
+	clist:=null;
+	clist:=split(buf,"\n");
+	ln:=length(clist);
+	ln:=ln-1;
+	i:=0;
+	while (i<ln)
+	{
+		line:=split(clist.[i],":");
+		if (length(line)<2)
+		{
+			i:=i+1;
+			continue;
+		}
+
+		if (length(line.[0])<1)
+		{
+			i:=i+1;
+			continue;
+		}
+
+		pc:=ghead();
+		while (pc.type==UNIT_ST_PC)
+		{		
+			if (pc.name==line.[0])
+			break;
+			pc:=pc.gnext;
+		}
+		log ("Deleting:  ");
+		log (line.[0]);
+		if ((pc==null) or (pc.type!=UNIT_ST_PC))
+		goto pc_null;
+
+		log(" online<br/>");
+		err:=submember(arg,line.[0]);
+		pc.title:= "<div class='cpr'></div><div class='bw'>Banished from </div>"+cname+" clan<div class='default'></div>";
+		subextra (pc.extra,CLAN_NAME);
+		subextra (pc.extra,CLAN_RANK);
+		subextra (pc.extra,CLAN_SYMBOLIC);
+		subextra (pc.extra,"tattoo");
+
+		   pc.hometown := "temple@udgaard";
+		act ("<div class='clan'>$3n has been removed from the clan.</div>",
+		A_ALWAYS,self,null,pc,TO_CHAR);
+		act ("<div class='clan'>You have been removed from the </div>"+cname+" clan.",
+		A_ALWAYS,pc,null,null,TO_CHAR);
+		i:=i+1;
+		continue;
+
+		:pc_null:
+		log (" off line<br/>");
+		err:=submember(arg,line.[0]);
+		if (err==-1)
+		{
+			act ("<div class='clan'>No such person found.</div>",
+			A_ALWAYS,self,null,null,TO_CHAR);
+		}
+		else
+		{
+			act ("<div class='clan'></div>"+line.[0]+" has been removed from the clan."
+			,A_ALWAYS,self,null,pc,TO_CHAR);
+			err:=savestr("clan.delete",line.[0]+"\n","a");
+		}
+		i:=i+1;
 }
 
  err:=delstr(arg+".rank");
   err:=delstr(arg+".money");
    err:=delstr(arg);
    err:=delunit(arg+".dc");
-sendtext("The "+arg+" has been deleted.<br/>",self);
+sendtext("The "+arg+" clan has been deleted.<br/>",self);
 quit;
 }
 dilend
@@ -774,8 +764,7 @@ i:=i+1;
 continue;
 }
 
-buf:=buf+list.[i]+"
-x";
+buf:=buf+list.[i]+"\n";
 i:=i+1;
 }
 err:=delstr("clan.delete");
@@ -1018,14 +1007,12 @@ if (rlist.[atoi(pc.extra.[CLAN_RANK].descr)]=="blank")
 
 if (pc!=self)
 act ("<div class='clan'>$3n holds the rank of </div>"+
-rlist.[atoi(pc.extra.[CLAN_RANK].descr)]+
-" in the "+
+rlist.[atoi(pc.extra.[CLAN_RANK].descr)]+" in the "+
 pc.extra.[CLAN_NAME].descr+
 " clan.<div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
 else
 act ("<div class='clan'>You hold the rank of </div>"+
-rlist.[atoi(pc.extra.[CLAN_RANK].descr)]+
-" in the "+
+rlist.[atoi(pc.extra.[CLAN_RANK].descr)]+" in the "+
 pc.extra.[CLAN_NAME].descr+
 " clan.<div class='default'></div>",A_ALWAYS,self,null,null,TO_CHAR);
 quit;
@@ -1195,11 +1182,9 @@ buf:="";
 while (i<ln)
 {
 if (i<0)
-buf:=rlist.[i]+"
-x";
+buf:=rlist.[i]+"\n";
 else
-buf:=buf+rlist.[i]+"
-x";
+buf:=buf+rlist.[i]+"\n";
 i:=i+1;
 }
 
@@ -1306,7 +1291,7 @@ code
 	i:=0;
 	buf:="";
 	sendtext("                   Valhalla Clans<br/><br/>",self);
-	sendtext("          Clan Name                          Master<br/><br/>",self);
+	sendtext("       Clan Name                          Master<br/><br/>",self);
 
 	while (i<ln)
 	{
@@ -1429,11 +1414,9 @@ buf:="";
 while(i<ln)
 {
 if (i==0)
-buf:=clist.[i]+"
-x";
+buf:=clist.[i]+"\n";
 	else
-	buf:=buf+clist.[i]+"
-x";
+	buf:=buf+clist.[i]+"\n";
 	i:=i+1;
 	}
 	err:=delstr("clanlist.data");
@@ -1486,8 +1469,7 @@ mlist:=null;
 	addstring (mlist,clist.[i+1]+":0:$master/$none/$none");
 	}
 else
-mlist:=split(temp,"
-x");
+mlist:=split(temp,"\n");
 
 	if (i==0)
 	buf:=clist.[i+2]+"  "+
@@ -1524,8 +1506,7 @@ addstring (tmp,"tattoo");
 addextra (self.extra,tmp ,clan_tattoo);
 
    self.hometown :="htown@"+self.extra.[CLAN_SYMBOLIC].descr;
-err:=savestr(file,textformat(self.name+":0:$master/$none/$none
-x"),"w");
+err:=savestr(file,textformat(self.name+":0:$master/$none/$none\n"),"w");
 return;
 }
 dilend
@@ -1770,25 +1751,21 @@ while ((i<ln) and (left(list.[i],length(pname))<pname))
 i:=i+1;
 
 if (pname==left(list.[i],length(pname)))
-     	  list.[i]:=pname+":0:$member/$none/$none
-x";
+     	  list.[i]:=pname+":0:$member/$none/$none\n";
 		  else if (i<ln)
-	          insert(list,i,pname+":0:$member/$none/$none
-x");
+	          insert(list,i,pname+":0:$member/$none/$none\n");
 			  else
-	  addstring (list,pname+":0:$member/$none/$none
-x");
+	  addstring (list,pname+":0:$member/$none/$none\n");
 
 i:=0;
-						  ln:=length(list);
+	ln:=length(list);
 
-buf:="";
-						  while (i<ln)
-						  {
-						   buf := buf +list.[i]+"
-x";
-						   i:=i+1;
-						   }
+	buf:="";
+	while (i<ln)
+	{
+		buf := buf +list.[i]+"\n";
+		i:=i+1;
+	}
 
 err:=delstr(file);
 err:=savestr(file,buf,"w");
@@ -1834,8 +1811,7 @@ while (i<ln)
 if (pname!=left(mlist.[i],length(pname)))
 {
 if (mlist.[i]!="")
-buf:=buf+mlist.[i]+"
-x";
+buf:=buf+mlist.[i]+"\n";
 }
 else if (pname==left(mlist.[i],length(pname)))
 found:=1;
@@ -1882,12 +1858,10 @@ while (i<ln)
 if (pname!=left(mlist.[i],length(pname)))
 {
  if (mlist.[i]!="")
-buf:=buf+mlist.[i]+"
-x";
+buf:=buf+mlist.[i]+"\n";
 }
 else
-buf:=buf+pname+""+rank+":"+pos2+"
-x";
+buf:=buf+pname+""+rank+":"+pos2+"\n";
 i:=i+1;
 }
 
@@ -2027,8 +2001,7 @@ else
 {
 act ("<div class='clan'></div>"+pname+" has been removed from the clan."
 ,A_ALWAYS,self,null,pc,TO_CHAR);
-i:=savestr("clan.delete",pname+"
-x","a");
+i:=savestr("clan.delete",pname+"\n","a");
 }
   quit;
 }
