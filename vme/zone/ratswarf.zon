@@ -26,7 +26,7 @@ help
 the tensions between the Orcs and the Elves threaten to explode into
 a full scale war any moment now. 
 Zone created by Mercutio and Telegrim
-"	
+"
 
 
 %rooms
@@ -59,7 +59,7 @@ end
 names {"kings road"}
 title "Kings Road"
 descr
-"	Here begins the Road commissioned by King Welmar.  It runs east,
+"Here begins the Road commissioned by King Welmar.  It runs east,
 straight as an arrow.  To the west is the turning point near Midgaard."
 west to turning_point;
 east to kingroad2;
@@ -115,7 +115,7 @@ end
 names {"kings road"}
 title "Kings Road"
 descr
-"	You continue along Kings Road, realizing this highway is a military
+"You continue along Kings Road, realizing this highway is a military
 tool, just as much as a sword is a tool for storm troopers.  By connecting
 his provinces with this fine road, the King insures his armies can reach and
 squash and insurrection that arises."
@@ -129,7 +129,7 @@ end
 names {"kings road"}
 title "Kings Road"
 descr
-"	This well-made road of packed earth continues east and west for
+"This well-made road of packed earth continues east and west for
 miles on end, a symbol of King Welmar's rule. A small comfortable
 cottage with a straw roof is just north of here."
 west to kingroad2;
@@ -156,7 +156,7 @@ end
 names {"kings road"}
 title "Kings Road"
 descr
-"	The road leads to a small town by a river to the east. Rocky hills
+"The road leads to a small town by a river to the east. Rocky hills
 border the road to the north and south.  Atop the hills, figures watch you."
 movement SECT_CITY
 north to elf_camp;
@@ -172,7 +172,7 @@ end
 names {"elf camp"}
 title "Elf Camp atop a Hill"
 descr
-"	You climb to the highest hill and find tents and equipment set up in
+"You climb to the highest hill and find tents and equipment set up in
 an orderly fashion.  A small campfire burns in the center, ringed by stones."
 movement SECT_HILLS
 north to darkwood;
@@ -185,7 +185,7 @@ end
 names {"darkwood"}
 title "Darkwood"
 descr
-"	You are in a dark and foreboding forest.  The trees seem to reach out
+"You are in a dark and foreboding forest.  The trees seem to reach out
 to scratch your face.  The terrain turns to rocky hills to the south.
 While the forest continues to the east."
  movement SECT_FOREST
@@ -201,7 +201,7 @@ end
 names {"hobgoblin camp"}
 title "Hobgoblin Encampment on a Hilltop"
 descr
-"	After a strenuous hike you arrive to a messy encampment.  Equipment and
+"After a strenuous hike you arrive to a messy encampment.  Equipment and
 bedrolls are strewn about and a large bonfire burns foul foodstuffs in the
 center.  To the north you can oversee Kings Road.  To the south a narrow
 pass extends through snow capped mountains."
@@ -216,7 +216,7 @@ end
 names {"mountain pass"}
 title "Mountain Pass"
 descr
-"	Movement is slow through this treacherous path between the mountains.
+"Movement is slow through this treacherous path between the mountains.
 High above, small features line the mountain walls in what might be caves.  You
 notice an almost hidden passage up towards the caves.  To the north the land
 becomes hilly, while to the east it softens. "
@@ -233,7 +233,7 @@ end
 names {"kings street"}
 title "Kings Street"
 descr
-"	Welcome to Ratswharf, a rough port town that grew around where the
+"Welcome to Ratswharf, a rough port town that grew around where the
 Kings Road touches the river.  A collection of hovels stand before you,
 scattered in a pattern as lawless as its inhabitants. "
 movement SECT_CITY
@@ -249,7 +249,7 @@ end
 names {"a decrepit shack"}
 title "An Old Shack"
 descr
-"	You are in an old decrepit shack.  Bits of the sky show through the
+"You are in an old decrepit shack.  Bits of the sky show through the
 roof and rat holes abound elsewhere.  A ragged curtain covers the doorway
 south to Kings Street."
 flags {UNIT_FL_INDOORS}
@@ -263,7 +263,7 @@ end
 names {"low dive"}
 title "The Brazen Strumpet"
 descr
-"	You are in a rowdy bar.  Roaches and ruffians alike ignore your 
+"You are in a rowdy bar.  Roaches and ruffians alike ignore your 
 entrance. A worn bar counter lies behind splintered stools and tables."
 flags {UNIT_FL_INDOORS,UNIT_FL_NO_WEATHER}
 movement SECT_INSIDE
@@ -276,7 +276,7 @@ end
 names {"kings street"}
 title "Kings Street"
 descr
-"	You are on Ratswharf's main street and although traffic continues east
+"You are on Ratswharf's main street and although traffic continues east
 and west to Kings Road, to the south can be seen a bustle of activity: the
 Slave Market.  A small shrine adorned with a skull is to the north."
 movement SECT_CITY
@@ -292,7 +292,7 @@ end
 names {"a shrine"}
 title "Evil Shrine"
 descr
-"	Icons of foul deeds and wanton vices adorn the walls.  Malice emanates
+"Icons of foul deeds and wanton vices adorn the walls.  Malice emanates
 from a blood stained altar set against the north wall."
 extra {"altar"}
 "Sacrificial daggers and dark red bowls lie atop this marble slab."
@@ -307,7 +307,7 @@ end
 names {"too dark to tell"}
 title "Snake Pit"
 descr
-"	You are in a poorly lit alcove beneath the alter.  Darkness and
+"You are in a poorly lit alcove beneath the alter.  Darkness and
 something else slither out to meet you."
 flags {UNIT_FL_INDOORS,UNIT_FL_NO_WEATHER}
 light -1
@@ -321,7 +321,7 @@ end
 names {"kings street"}
 title "Kings Street"
 descr
-"	You are on the wide road in this city of averice.  A sign to the north
+"You are on the wide road in this city of averice.  A sign to the north
 reads 'General Store'.  To the south is a hovel."
 movement SECT_CITY
 north to gen_store;
@@ -336,7 +336,7 @@ end
 names {"general store"}
 title "Ratswharf General Store"
 descr
-"	This rude establishment sells all manner of food and equipment. Rats
+"This rude establishment sells all manner of food and equipment. Rats
 and roaches hide beneath sacks of floor, while rusty weapons and armors
 sit in open barrels.  To the south can be heard the busy Kings Street."
 flags {UNIT_FL_INDOORS,UNIT_FL_NO_WEATHER}
@@ -350,7 +350,7 @@ end
 names {"a weatherbeaten shack"}
 title "Weatherbeaten Shack"
 descr
-"	The huge rent in the south wall affords the occupants a rather
+"The huge rent in the south wall affords the occupants a rather
 nice view of a swift river and a small pier.  It also brings a chill
 draft."
 flags {UNIT_FL_INDOORS}
@@ -364,7 +364,7 @@ end
 names {"kings road"}
 title "Kings Road"
 descr
-"	The Kings Road continues east for miles, to the kingdom of Urland.  To
+"The Kings Road continues east for miles, to the kingdom of Urland.  To
 the west it passes through the small town of Ratswharf."
 movement SECT_CITY
 west to kingstreet3;
@@ -377,7 +377,7 @@ end
 names {"slave market"}
 title "Slave Market"
 descr
-"	You enter a bustling square amid the ramshackle houses of Ratswharf.
+"You enter a bustling square amid the ramshackle houses of Ratswharf.
 A raised platform is in the center where chained slaves are sold to the
 highest bidder.  To the west is a small tower of stone.  To the north is
 Kings Street and the south leads to an old port."
@@ -393,7 +393,7 @@ end
 names {"slavers tower"}
 title "Ground Floor of the Slavers Tower"
 descr
-"	You are in the ground floor of a mean and dirty tower.  This appears to
+"You are in the ground floor of a mean and dirty tower.  This appears to
 be the nexus of the slave trade in Ratswharf, for cries from poor souls come
 from beneath an iron grate in the floor.  A wooden ladder also leads up."
 flags {UNIT_FL_INDOORS,UNIT_FL_NO_WEATHER}
@@ -410,7 +410,7 @@ end
 names {"slave pen"}
 title "Slave Pen"
 descr
-"	Straw is scattered about the hard stone floors of this chamber.  The
+"Straw is scattered about the hard stone floors of this chamber.  The
 sense of filth is compounded by the smell of urine.  The only light is that
 which trickles from above."
 flags {UNIT_FL_INDOORS,UNIT_FL_NO_WEATHER}
@@ -426,7 +426,7 @@ end
 names {"apartment"}
 title "Luxurious Apartment"
 descr
-"	Fine furniture surrounds a large bed in a manner not typical in
+"Fine furniture surrounds a large bed in a manner not typical in
 Ratswharf.  From the window, of glass no less, can be seen the Slave Market.
 There is a funny looking fixture on the ceiling."
 flags {UNIT_FL_INDOORS,UNIT_FL_NO_WEATHER}
@@ -440,7 +440,7 @@ end
 names {"old port"}
 title "Ratswharf Port"
 descr
-"	Sacks of rotting leather and pillaged crates line this rickety pier.
+"Sacks of rotting leather and pillaged crates line this rickety pier.
 Old ropes and lie on weather beaten planks here.  A breeze comes from the
 river to the south, to the north is the busy Slave Market."
 movement SECT_CITY
@@ -484,7 +484,7 @@ end
 names {"stream"}
 title "The Deep Stream"
 descr
-"	You are on a calm stream.  To the north, a muddy bank gives way to the
+"You are on a calm stream.  To the north, a muddy bank gives way to the
 rotting planks of a dock on a small port. The water flows from the east to
 the west."
 movement SECT_WATER_SWIM
@@ -514,7 +514,7 @@ end
 names {"valley entrance"}
 title "Valley Entrance"
 descr
-"	A verdant valley stretches before you to the east.  To the west, a
+"A verdant valley stretches before you to the east.  To the west, a
 narrow pass winds through snow capped mountains."
 movement SECT_MOUNTAIN
 west to mnt_pass;
@@ -528,7 +528,7 @@ end
 names {"wild valley"}
 title "Wild Valley"
 descr
-"	You move slowly through the green vines and thick undergrowth that
+"You move slowly through the green vines and thick undergrowth that
 cover the valley floor.  It would appear not many have come here in ages.
 To the east, the land rises to leave the valley.  To the west the vegetation
 clears to give way to a strange uprising of stone."
@@ -543,7 +543,7 @@ end
 names {"before dragon"}
 title "Before the Dragon"
 descr
-"	You stand before the Dragon Ancalador.  You can still make out its
+"You stand before the Dragon Ancalador.  You can still make out its
 petrified form despite the earth that has filled in the crevices between its
 limbs and the huge oaks, dwarfed by the dragon itself, which have grown
 therein.  A vague evil emanates from the stone that once terrorized nations.
@@ -562,7 +562,7 @@ end
 names {"dragon mouth","dragon","the dragon","ancalador"}
 title "In the Dragon's Mouth"
 descr
-"	Rows of stone teeth as large as a troll line the walls here.  A tongue
+"Rows of stone teeth as large as a troll line the walls here.  A tongue
 of pitted stone leads east, behind a stone molars as large as an iron shields."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -576,7 +576,7 @@ end
 names {"stone tonsils"}
 title "By Stone Tonsils"
 descr
-"	You are in the back of the dragon's mouth.  The throat continues down
+"You are in the back of the dragon's mouth.  The throat continues down
 and something oozes from petrified sinuses above."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -590,7 +590,7 @@ end
 names {"stone throat"}
 title "Throat of Stone"
 descr
-"	The floor is uneven, with the middle of the passage of lower than the
+"The floor is uneven, with the middle of the passage of lower than the
 sides, which rise up to meet the walls.  The whole passage is slightly graded,
 moving east and downward."
 bright -1
@@ -605,7 +605,7 @@ end
 names {"dragon's throat"}
 title "Further Down the Dragon's Throat"
 descr
-"	The tunnel begins to lose its steepness and merely runs eastward now.
+"The tunnel begins to lose its steepness and merely runs eastward now.
 The shapes of what might be petrified muscles line the walls."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -619,7 +619,7 @@ end
 names {"junction"}
 title "Junction"
 descr
-"	You are in a four way junction.  The dragon's throat continues east and
+"You are in a four way junction.  The dragon's throat continues east and
 west, but by squeezing under stone flaps you can make out tunnels leading north
 and south."
 bright -1
@@ -638,7 +638,7 @@ end
 names {"stone tunnel"}
 title "Stone Tunnel"
 descr
-"	This circular passage of stone gradually curves up to a place of great
+"This circular passage of stone gradually curves up to a place of great
 light and heat."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -652,7 +652,7 @@ end
 names {"dragon lung"}
 title "Dragon Lung"
 descr
-"	Ancient fires burn here, awaiting the rebirth of their master."
+"Ancient fires burn here, awaiting the rebirth of their master."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
 down to tunnel1;
@@ -665,7 +665,7 @@ end
 names {"dragon heart"}
 title "Heart of the Dragon"
 descr
-"	Runes which glow with a blue light are carved into the stone walls of
+"Runes which glow with a blue light are carved into the stone walls of
 Ancalador's heart chamber.  Their magical purity counters his evil and makes
 for a holy balance that is Neutrality.  It seems some music lover has set up
 residence here, judging by all the instruments and sheet music floating here."
@@ -682,7 +682,7 @@ end
 names {"stone tunnel"}
 title "Stone Tunnel"
 descr
-"	This stone passage is lit by a great light and fierce heat from its far
+"This stone passage is lit by a great light and fierce heat from its far
 end, which lies above."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -697,7 +697,7 @@ end
 names {"dragon lung"}
 title "Dragon Lung"
 descr
-"	The nuclear fires that empower a dragon with its frightful breath are
+"The nuclear fires that empower a dragon with its frightful breath are
 here, though since they have been smouldering for so long, they merely scorch
 you and make you rue the choice wearing of metal armor."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -710,7 +710,7 @@ end
 names {"stone tunnel"}
 title "Stone Tunnel"
 descr
-"	The dragon's throat continues east and west on a path which neither 
+"The dragon's throat continues east and west on a path which neither 
 rises nor falls.  On the south wall, to the dragon's left, a warmth can be felt, followed by a feeling of pure evil."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -725,7 +725,7 @@ end
 names {"dragon stomach"}
 title "Ancalagor's Stomach"
 descr
-"	The dragon's throat ends to reveal a huge cavern lit from below by
+"The dragon's throat ends to reveal a huge cavern lit from below by
 erie and diffuse lights of yellow and green.  Even more amazingly, a wooden
 bridge spans the stalactite-roofed cavern!  A steep grade leads down to the
 cavern floor safely enough and the bridge leads east."
@@ -741,7 +741,7 @@ end
 names {"wooden bridge"}
 title "Wooden Bridge"
 descr
-"	You cannot imagine who would want to build a bridge in this fantasist
+"You cannot imagine who would want to build a bridge in this fantasist
 cavern.  Large stalactites sit and rise up while the erie lights seem to move
 in the mists below.  The bridge continues to the east. You could of course
 try to go down onto the stalagmites, but that would probably be pure suicide!"
@@ -758,7 +758,7 @@ end
 names {"wooden bridge"}
 title "Wooden Bridge"
 descr
-"	You are in the middle of this wooden bridge. Large stalactites arise
+"You are in the middle of this wooden bridge. Large stalactites arise
 all around you and the erie lights continue to dance in the mists below.
 The bridge continues to the east.  You could of course
 try to go down onto the stalagmites, but that would probably be pure suicide!"
@@ -775,7 +775,7 @@ end
 names {"wooden bridge"}
 title "Wooden Bridge"
 descr
-"	The wood here, as in the rest of the bridge is old and acid eaten.
+"The wood here, as in the rest of the bridge is old and acid eaten.
 The deadly stalactites jut up from below and more of the green and yellow light
 can be seen to move in the mists below.  The bridge ends at a small plateau to
 the east. You could of course try to go down onto the stalagmites, but that
@@ -806,7 +806,7 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"	Sharp stalactites reach up wards, created by the mineral ichor
+"Sharp stalactites reach up wards, created by the mineral ichor
 dripping off stalagmites far above.  Pools of acid fill every crevice on the
 craggy cavern floor.  The cavern continues to the south and east."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -821,7 +821,7 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"	The stalagmites here are large and rainbow-hued, like giants jester's
+"The stalagmites here are large and rainbow-hued, like giants jester's
 garb.  Puddles of weak stomach acid abound.  The cavern stretches in all
 directions but north."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -837,7 +837,7 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"	Sharp stalactites reach up wards, created by the mineral ichor
+"Sharp stalactites reach up wards, created by the mineral ichor
 dripping off stalagmites far above.  Pools of acid fill every crevice on the
 craggy cavern floor."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -852,7 +852,7 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"	You stand before an amazing sight.  Wrapped within the mists here on the
+"You stand before an amazing sight.  Wrapped within the mists here on the
 cavern floor is a forest of oddly shaped stalactites surrounded everywhere by
 puddles of what must be the remnants of the dragon's stomach acid."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -869,7 +869,7 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"	You are in the center of the dragons stomach cavern.  A wooden bridge
+"You are in the center of the dragons stomach cavern.  A wooden bridge
 passes far overhead.  Sharp stalactites poise here to meet those who would drop
 from it."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -886,7 +886,7 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"	The stalagmites here are large and rainbow-hued, like giants jester's
+"The stalagmites here are large and rainbow-hued, like giants jester's
 garb.  Puddles of weak stomach acid abound.  A steep climb up leads to a
 large plateau at the end of the cavern."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
@@ -903,7 +903,7 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"	Mists swirl about here, around strange crystal egg shells.  The cavern
+"Mists swirl about here, around strange crystal egg shells.  The cavern
 continues to the north and to the south."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -917,7 +917,7 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"	Sharp stalactites reach upwards, created by the mineral ichor
+"Sharp stalactites reach upwards, created by the mineral ichor
 dripping off stalagmites far above.  Pools of acid fill every crevice on the
 craggy cavern floor."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -933,7 +933,7 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"	The stalagmites here are large and rainbow-hued, like giants jester's
+"The stalagmites here are large and rainbow-hued, like giants jester's
 garb.  Puddles of weak stomach acid abound.  The cavern stretches to the north
 and east. "
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -947,7 +947,7 @@ end
 names {"stomach's end"}
 title "End of the Stomach"
 descr
-"	The wooden bridge ends here, onto a large plateau above the cavern
+"The wooden bridge ends here, onto a large plateau above the cavern
 floor. The plateau overlooks the entire forest of acid and stone below. A
 small, steep, path leads to it and a tunnel leading east is set in the cavern
 wall."
@@ -963,7 +963,7 @@ end
 names {"stone corridor"}
 title "Stone Corridor"
 descr
-"	You are in a circular tunnel of stone.  The walls are irregular and
+"You are in a circular tunnel of stone.  The walls are irregular and
 pocked-marked.  The tunnel continues east and west."
 extra {"walls"}
 "A small fissure appears to be set in the south wall."
@@ -981,7 +981,7 @@ end
 names {"pancreas"}
 title "The Dragons Pancreas"
 descr
-"	You are in an oddly shaped chamber, what might have been some foul
+"You are in an oddly shaped chamber, what might have been some foul
 organ of Ancalador.  A yellowish light fills the room from nowhere, as if only
 by the dragon's will alone.  The feeling of malignant evil is great here."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -994,7 +994,7 @@ end
 names {"small intestine"}
 title "Small Intestine"
 descr
-"	You enter a featureless tunnel of what must be the beginning of the
+"You enter a featureless tunnel of what must be the beginning of the
 dragon's small intestine.  Small piles of human bones and armor bits have been
 left here.  The tunnel continues west and to the north a rougher tunnel can be
 seen."
@@ -1011,7 +1011,7 @@ end
 names {"small intestine"}
 title "Small Intestine"
 descr
-"	The tunnel twists to the south and to the east."
+"The tunnel twists to the south and to the east."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -1025,7 +1025,7 @@ end
 names {"small intestine"}
 title "Small Intestine"
 descr
-"	The smooth tunnel curves to the west and to the south."
+"The smooth tunnel curves to the west and to the south."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -1039,7 +1039,7 @@ end
 names {"small intestine"}
 title "Small Intestine"
 descr
-"	The blank walls of the tunnel run north and south."
+"The blank walls of the tunnel run north and south."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -1053,7 +1053,7 @@ end
 names {"small intestine"}
 title "Small Intestine"
 descr
-"	The tunnel comes from the north and dips sharply downward here."
+"The tunnel comes from the north and dips sharply downward here."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -1067,7 +1067,7 @@ end
 names {"small intestine"}
 title "Small Intestine"
 descr
-"	The featureless tunnel leads up and north."
+"The featureless tunnel leads up and north."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -1081,7 +1081,7 @@ end
 names {"small intestine"}
 title "Small Intestine"
 descr
-"	Bits of broken equipment from long dead adventurers have been collected
+"Bits of broken equipment from long dead adventurers have been collected
 here.  The tunnel runs north and south."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -1096,7 +1096,7 @@ end
 names {"small intestine"}
 title "Small Intestine"
 descr
-"	The tunnel bends from the south to the east."
+"The tunnel bends from the south to the east."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -1110,7 +1110,7 @@ end
 names {"small intestine"}
 title "Small Intestine"
 descr
-"	The blank walls of the tunnel lead west and south."
+"The blank walls of the tunnel lead west and south."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -1124,7 +1124,7 @@ end
 names {"small intestine"}
 title "Small Intestine"
 descr
-"	The smooth tunnel constricts to the south of here into a new tunnel."
+"The smooth tunnel constricts to the south of here into a new tunnel."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -1137,7 +1137,7 @@ end
 names {"large intestine"}
 title "Large Intestine"
 descr
-"	Unlike the small intestine, the walls here have a nook and cranny
+"Unlike the small intestine, the walls here have a nook and cranny
 quality about them.  They are quite rough and dust fills many of the spaces."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -1152,7 +1152,7 @@ end
 names {"large intestine"}
 title "Large Intestine"
 descr
-"	The smell of dust is thick in this section of the tunnel that runs to
+"The smell of dust is thick in this section of the tunnel that runs to
 the west and to the north."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -1167,7 +1167,7 @@ end
 names {"large intestine"}
 title "Large Intestine"
 descr
-"	The rough walls of the tunnel scrape your armor and cuts your exposed
+"The rough walls of the tunnel scrape your armor and cuts your exposed
 skin as you travel north or south."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -1182,7 +1182,7 @@ end
 names {"large intestine"}
 title "Large Intestine"
 descr
-"	The tunnel drops to the south but you find many hand holds among the
+"The tunnel drops to the south but you find many hand holds among the
 nooks and crannies."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -1197,7 +1197,7 @@ end
 names {"large intestine"}
 title "Large Intestine"
 descr
-"	The roughly hewn tunnel constricts to the south."
+"The roughly hewn tunnel constricts to the south."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -1211,7 +1211,7 @@ end
 names {"stoney sphincter"}
 title "Stoney Sphincter"
 descr
-"	You are in a narrow tunnel, barely able to walk upright without
+"You are in a narrow tunnel, barely able to walk upright without
 knocking your head.  A breeze from the south swirls the dust here and you
 begin to believe that safety is not far off."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -1225,7 +1225,7 @@ end
 names {"dragons tail"}
 title "Dragon's Tail"
 descr
-"	You have never been so happy to see the light of day!  You are by the
+"You have never been so happy to see the light of day!  You are by the
 dragon's stone tail, which is covered with green, growing vines and small,
 violet flowers.  The birds sing and you can make out a faint path to the west,
 leading back around the dragon-hill."

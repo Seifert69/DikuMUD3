@@ -1,11 +1,6 @@
-fireweapon and missile - how do they work and how does identify work?
+For todo look at https://github.com/Seifert69/DikuMUD3/issues
+
+==
+For MS only
 
 Maybe: Fix ships (it's dark and they all run their own code) and make them transparent 
-
-Test XP works as expected.
-Test play
-
----
-Current bugs
-
-fix MAX_STR_LEN problem in szonelog and log.
