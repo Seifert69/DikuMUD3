@@ -1311,6 +1311,7 @@ code
 	while (i<ln)
 	{
 		ii := 0;
+		spaces := "";
 		while (ii < 40-length(clist.[i+2]))
 		{
 			spaces := spaces + " ";
