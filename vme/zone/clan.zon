@@ -1453,7 +1453,7 @@ code
 			mlist:=split(temp,"\n");
 
 		if (i==0)
-		buf:=clist.[i+2]+"  "+.[i+1]+"  "+itoa(length(mlist))+"<br/>";
+			buf:=clist.[i+2]+"  "+clist.[i+1]+"  "+itoa(length(mlist))+"<br/>";
 		else
 			buf:=buf+ clist.[i+2]+"  "+clist.[i+1]+"  "+itoa(length(mlist))+"<br/>";
 		i:=i+5;
