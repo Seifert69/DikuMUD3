@@ -11989,9 +11989,220 @@ else
 send_done("stalk",self,null,tgt,res,arg,null);
 quit;
 }
+dilend // ski_stalk
+
+/* Barbarian Skills */
+/* Original concept and implementation by Sender */
+
+dilbegin ski_taunt(arg : string);
+external
+   integer skillresist (aa : integer, ad : integer, sa : integer, sd : integer);
+   provoked_attack(victim : unitptr, ch : unitptr);
+   integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+                           opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+
+var
+   hm   : integer;
+   tgt  : unitptr;
+   end  : integer;
+
+code
+{
+	if ((self.type == UNIT_ST_PC) and (self.skills[SKI_TAUNT] <= 0))
+	{
+      act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+	}
+
+	if (arg == "")
+	{
+      if (self.fighting)
+      {
+         tgt := self.fighting;
+      }
+      else
+      {
+         act("Taunt who?", A_ALWAYS, self, null, null, TO_CHAR);
+         quit;
+      }
+	}
+   else
+   {
+   	tgt := findunit(self,arg,FIND_UNIT_SURRO,null);
+   }
+
+	if ((tgt == null) or (not visible(self,tgt)))
+	{
+      act("Taunt who?", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+	}
+
+	if (tgt == self)
+	{
+      act("You mercilessly taunt yourself !", A_ALWAYS, self, null, null, TO_CHAR);
+      act("$1n mercilessly taunts $1mself!", A_SOMEONE, self, null, null, TO_REST);
+      quit;
+	}
+
+	if ((tgt.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
+	{
+      if (not(isset (self.pcflags, PC_PK_RELAXED)))
+      {
+         act ("You are not allowed to do this unless you sign the book of blood.",
+         A_ALWAYS,self,null,null,TO_CHAR);
+         quit;
+      }
+
+      if (not(isset (tgt.pcflags, PC_PK_RELAXED)))
+      {
+         act ("You are not allowed to do this unless $2e signs the book of blood.",
+         A_SOMEONE,self,tgt,null,TO_CHAR);
+         quit;
+      }
+   }
+
+   if ((tgt.weight - self.weight) > 125)
+   {
+      act("Perhaps you shouldn't taunt someone as large as $3n!", A_SOMEONE, self, null, tgt, TO_CHAR);
+      quit;
+   }
+
+   :taunt:
+   if (dilfind("taunted@skills",tgt))
+   {
+      act("$3n quietly ignores your continued taunting.", A_SOMEONE, self, null, tgt, TO_CHAR);
+      act("$3n quietly ignores $1n's continued taunting.", A_SOMEONE, self, null, tgt, TO_NOTVICT);
+      act("$1n attempts to taunt you again, but you quietly ignore it.", A_SOMEONE, self, null, tgt, TO_VICT);
+      quit;
+   }
+
+   if (self.endurance < 10)
+   {
+      act("You are too exhausted to try that!", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   else
+
+   hm := skillchecksaopp(SKI_TAUNT, ABIL_CON, ABIL_DEX, tgt, ABIL_BRA, ABIL_DEX);
+
+   if (hm < -25)
+   {
+      change_speed(self,PULSE_VIOLENCE);
+
+      act("<div class='nodam_me'>You foolishly exhaust yourself attempting to taunt $3n!</div>",
+      A_SOMEONE, self, null, tgt, TO_CHAR);
+      act("<div class='nodam_other'>$1n seems to foolishly exhaust themself attempting to taunt $3n!</div>",
+            A_SOMEONE, self, null, tgt, TO_NOTVICT);
+      act("<div class='nodam_opponent'>$1n foolishly exhausts themself attempting to taunt you!</div>",
+            A_SOMEONE, self, null, tgt, TO_VICT);
+      provoked_attack(tgt,self);
+      
+	  end := self.endurance - 40;
+	  if(end < 0)
+	  {
+			end := 0;
+	  }
+	  self.endurance := end;
+      quit;
+   }
+
+   if (hm < 0)
+   {
+      change_speed(self,PULSE_ROUND);
+
+      act("<div class='miss_me'>Your taunting of $3n falls on deaf ears.</div>",
+      A_ALWAYS, self, null, tgt, TO_CHAR);
+      act("<div class='miss_other'>$1n pitifully attempt to taunt $3n.</div>",
+      A_SOMEONE, self, null, tgt, TO_NOTVICT);
+      act("<div class='hit_opponent'>$1n fails their effort to taunt you.</div>",
+      A_SOMEONE, self, null, tgt, TO_VICT);
+      provoked_attack(tgt,self);
+      quit;
+   }
+
+   dilcopy("taunted@skills",tgt);
+
+   change_speed(tgt,PULSE_VIOLENCE*3);
+
+   act("<div class='shield_me'>You mercilessly taunt $3n.</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
+   act("<div class='shield_other'>$1n mercilessly taunts $3n.</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
+   act("<div class='shield_opponent'>$1n mercilessly taunts you!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
+   act("<div class='miss_me'>Your taunting causes $3n to swing wildly.</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
+   act("<div class='miss_other'>$3n swings wildly after $1n's taunts.</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
+   act("<div class='miss_opponent'>$1n's taunting causes you to swing wildly!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
+
+   provoked_attack(tgt, self);
+   send_done("taunt",self,null,tgt,hm,arg,null);
+   quit;
+}
 dilend
 
+dilbegin taunted();
+code
+{
+   heartbeat := PULSE_VIOLENCE * 3;
 
+   wait(SFB_TICK, TRUE);
+   quit;
+}
+dilend
+
+dilbegin ski_berserk(medi:unitptr, tgt : unitptr, arg : string,
+	       hm : integer, effect : string);
+var
+	heal : integer;
+	end : integer;
+code
+{
+   /*
+      Skill Berserk:
+      This skill sends a character berserk.
+      As a result the character's HP, END, and CON are increased temporarily.
+      */
+
+    if (isaff(tgt, ID_BERSERK))
+    {
+      act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+    }
+
+    hm := 1 + hm / 10;
+    if (hm > 10) hm := 10;
+	
+	addaff(self, ID_BERSERK, 10, WAIT_SEC*30,
+	  ABIL_CON, hm, 0, TIF_BERSERK_ON, TIF_BERSERK_TICK, TIF_BERSERK_OFF,
+	  APF_ABILITY);
+	  
+    hm := 1 + hm / 10;
+    if (hm > 20) hm := 20;
+	heal := tgt.hp + (hm * 3);
+	end := tgt.endurance + (hm * 6);
+	
+	addaff(self, ID_BERSERK, 20, WAIT_SEC*30,
+	  ABIL_HP, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
+	  APF_ABILITY);
+	
+	tgt.endurance := end;
+	tgt.hp := heal;
+    quit;
+}
+dilend
+
+dilbegin ski_frenzy(arg : string);
+code
+{
+	quit;
+}
+dilend
+
+dilbegin ski_rage(arg : string);
+code
+{
+	quit;
+}
+dilend
+
+/* END Barbarian Skills */
 %rooms
                                    skill_room
 title "The Skill Room"
