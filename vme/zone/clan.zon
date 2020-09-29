@@ -701,7 +701,7 @@ dilend // cinfo
 dilbegin clan_delete ();
 var
 	i:integer;
-	:integer;
+	err:integer;
 	buf:string;
 	list:stringlist;
 	ln:integer;
