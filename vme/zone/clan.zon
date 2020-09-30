@@ -1486,13 +1486,14 @@ var
 	err:integer;
 	buf:string;
 	i:integer;
+	set:integer;
 	ln:integer;
 	clist:stringlist;
 	balance:integer;
 
 code
 {
-	if (self.level >IMMORTAL_LEVEL) goto adminctitle;
+	if (self.level >IMMORTAL_LEVEL) goto admin_title;
 	if (self.extra.[CLAN_RANK]==null)
 	{
 		act ("<div class='clan'>You must be a clan Master or Lord to use ctitle.</div>",
@@ -1507,8 +1508,6 @@ code
 		quit;
 	}
 	
-:adminctitle:
-
 	pname:=getword(arg);
 	pc:=ghead();
 	while (pc.type==UNIT_ST_PC)
@@ -1574,15 +1573,56 @@ code
 			err:=delstr(self.extra.[CLAN_SYMBOLIC].descr+".money");
 			err:=savestr(self.extra.[CLAN_SYMBOLIC].descr+".money",itoa(balance),"w");
 
-			arg:=arg + clist.[i+4];
+			arg:=arg + " " + clist.[i+4];
 			arg:=textformat(arg);
 			pc.title:=arg;
 			sendtext ("<div class=clan>You set "+pc.name+"'s title to '"+arg+"'</div>",self);
-			log ("&lt;clan_title&gt; "+self.name+" set "+pc.name+" title to "+arg);
+			log ("&lt;clan_title&gt; "+self.name+" set "+pc.name+" title to " +arg);
 			quit;
 		}
 		i:=i+5;
 	}
+	quit;
+
+:admin_title:
+
+	err:=loadstr ("clanlist.data",buf);
+	if (err<1)
+	{
+		log ("01:  Error in clanlist.data");
+		sendtext ("Unable to find clanlist.data.<br/>",self);
+		quit;
+	}
+
+	clist:=split(buf,"\n");
+	ln:=length (clist);
+	ln:=ln-1;
+	if (ln<1)
+	{
+		log ("02:  Error in clanlist.data");
+		sendtext ("Unable to load results from clanlist.data.<br/>",self);
+		quit;
+	}
+
+	i:=0;
+	set := 0;
+	buf:="";
+	while (i<ln)
+	{
+		if (pc.extra.[CLAN_NAME].descr==clist.[i+2])
+		{
+			arg:=arg + " " + clist.[i+4];
+			arg:=textformat(arg);
+			pc.title:=arg;
+			sendtext ("<div class=clan>You set "+pc.name+"'s title to '"+arg+"'</div>",self);
+			log ("&lt;clan_title&gt; "+self.name+" set "+pc.name+" title to " +arg);
+			set := 1;
+			quit;
+		}
+		i:=i+5;
+	}
+	if (set == 0)
+		sendtext ("<div class=clan>"+pc.name+" does not appear to have an extra "+CLAN_NAME+" matching available clans.</div>",self);
 	quit;
 }
 dilend // ctitle
