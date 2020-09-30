@@ -13630,37 +13630,35 @@ str:= "";
 tmp_i:= length(obj_list);
 i:= 0;
 
- while(i < tmp_i)
-  {
-   if (atoi(n_obj.[i])>1)
-      str:=str+"<div class='obj_title'>[x"+n_obj.[i]+"] "+obj_list.[i]+"<br/>";
-   else
-      str:=str+obj_list.[i]+"<br/>";
-
-   i := i+1;
-   }
+	while(i < tmp_i)
+	{
+		if (atoi(n_obj.[i])>1)
+			str:=str+"<div class='obj_title'>[x"+n_obj.[i]+"] "+obj_list.[i]+"</div>";
+		else
+			str:=str+"<div class='obj_title'>"+obj_list.[i]+"</div>";
+		i := i+1;
+	}
 
 tmp_i:= length(npc_list);
 i:= 0;
 
- while(i < tmp_i)
-  {
-    if(atoi(n_npc.[i]) > 1)
-     str:=str+"<div class='npc_descr'>[x"+n_npc.[i]+"] "+npc_list.[i]+"<br/>";
-      else
-       str:=str+npc_list.[i]+"<br/>";
-
-    i := i + 1;
-  }
+	while(i < tmp_i)
+	{
+		if(atoi(n_npc.[i]) > 1)
+			str:=str+"<div class='npc_descr'>[x"+n_npc.[i]+"] "+npc_list.[i]+"</div>";
+		else
+			str:=str+"<div class='npc_descr'>"+npc_list.[i]+"</div>";
+		i := i + 1;
+	}
 
 tmp_i:= length(pc_list);
 i:= 0;
 
- while(i < tmp_i)
-  {
-   str:=str+pc_list.[i]+"<br/>";
-   i := i + 1;
-   }
+	while(i < tmp_i)
+	{
+		str:=str+pc_list.[i]+"<br/>";
+		i := i + 1;
+	}
 
 return(str);
 }
