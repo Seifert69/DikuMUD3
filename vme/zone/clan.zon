@@ -1493,6 +1493,15 @@ var
 
 code
 {
+	pname:=getword(arg);
+	pc:=ghead();
+	while (pc.type==UNIT_ST_PC)
+	{
+		if (pc.name==pname)
+		break;
+		pc:=pc.gnext;
+	}
+	
 	if (self.level >IMMORTAL_LEVEL) goto admin_title;
 	if (self.extra.[CLAN_RANK]==null)
 	{
@@ -1508,14 +1517,6 @@ code
 		quit;
 	}
 	
-	pname:=getword(arg);
-	pc:=ghead();
-	while (pc.type==UNIT_ST_PC)
-	{
-		if (pc.name==pname)
-		break;
-		pc:=pc.gnext;
-	}
 	if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
 	{
 		act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
@@ -1622,7 +1623,7 @@ code
 		i:=i+5;
 	}
 	if (iSet == 0)
-		sendtext ("<div class=clan>"+pc.name+" does not appear to have an extra "+CLAN_NAME+" matching available clans.</div>",self);
+		sendtext ("<div class=clan>"+pc.name+" does not appear to have an extra for $clan_name matching available clans.</div>",self);
 	quit;
 }
 dilend // ctitle
