@@ -2433,6 +2433,7 @@ dilbegin prof_restrict
 (prof:stringlist,damage:integer,percent:integer,action:string);
 var
 	amount:integer;
+	profession:integer;
 code
 {
 	if (damage < 0)
@@ -2460,7 +2461,8 @@ code
 	if (self.outside.level>=IMMORTAL_LEVEL)
 		goto start;
 
-	if(PC_PROFESSION(self.outside) in prof)
+	profession := PC_PROFESSION(self.outside);
+	if(profession in prof)
 		goto start;
 
 	if ((not( command ("wear"))) and
