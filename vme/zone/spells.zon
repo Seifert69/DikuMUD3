@@ -13740,7 +13740,7 @@ code
    if(out.type == UNIT_ST_ROOM)
    {
     sendtext("An image forms in your mind:<br/>", self);
-    see := room_inside(out);
+    see := room_inside(out) + "<br>";
     goto show_it;
    }
 
