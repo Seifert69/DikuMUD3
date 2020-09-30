@@ -1016,15 +1016,15 @@ END HEADER*/
 /* keep in mind if you need more ask the vme coders.*/
 #define CLAN_MASTER    "$clan_master"
 #define  CLAN_MEMBER  "$clan_member"
-#define  CLAN_TATOO  "clan tatoo"
+#define  CLAN_TATTOO  "clan_taTtoo"
 #define CLAN_NAME "$clan_name"
-#define CLAN_LIST "$clan-_list"
-#define CLAN_SYMBOLIC "$clan-_symbolic"
-#define CLAN_TREASURY "$clan-_treasury"
-#define CLAN_QUARTERMASTER "$clan-_quartermaster"
-#define CLAN_MONEY "$clan-_money"
-#define CLAN_STORAGE "$clan-_storage"
-#define CLAN_DONATION "$clan-_donation"
+#define CLAN_LIST "$clan_list"
+#define CLAN_SYMBOLIC "$clan_symbolic"
+#define CLAN_TREASURY "$clan_treasury"
+#define CLAN_QUARTERMASTER "$clan_quartermaster"
+#define CLAN_MONEY "$clan_money"
+#define CLAN_STORAGE "$clan_storage"
+#define CLAN_DONATION "$clan_donation"
 #define CLAN_MAX_STORAGE  25
 #define CLAN_MAX_DONATION  50
 #define CLAN_RANK   "$clan_rank"

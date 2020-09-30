@@ -311,21 +311,21 @@ code
 		subextra (self.extra,CLAN_NAME);
 		subextra (self.extra,CLAN_RANK);
 		subextra (self.extra,CLAN_SYMBOLIC);
-		subextra (self.extra,"$clan-_symbolic");
+		subextra (self.extra,"$clan_symbolic");
 		subextra (self.extra,"tatoo" );
 		subextra (self.extra,"tattoo" );
 		subextra (self.extra,"tattoos" );
 		subextra (self.extra,CLAN_NAME);
 		subextra (self.extra,CLAN_RANK);
 		subextra (self.extra,CLAN_SYMBOLIC);
-		subextra (self.extra,"$clan-_symbolic");
+		subextra (self.extra,"$clan_symbolic");
 		subextra (self.extra,"tatoo" );
 		subextra (self.extra,"tattoo" );
 		subextra (self.extra,"tattoos" );
 		subextra (self.extra,CLAN_NAME);
 		subextra (self.extra,CLAN_RANK);
 		subextra (self.extra,CLAN_SYMBOLIC);
-		subextra (self.extra,"$clan-_symbolic");
+		subextra (self.extra,"$clan_symbolic");
 		subextra (self.extra,"tatoo" );
 		subextra (self.extra,"tattoo" );
 		subextra (self.extra,"tattoos" );
@@ -1534,8 +1534,6 @@ code
 	}
 
 :set_title:
-	
-	log ("&lt;clan_title&gt; "+self.name+" set "+pc.name+" title to "+arg);
 
 	err:=loadstr ("clanlist.data",buf);
 	if (err<1)
@@ -1561,9 +1559,6 @@ code
 	{
 		if (self.extra.[CLAN_NAME].descr==clist.[i+2])
 		{
-		
-:money_title:
-
 			err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".money",buf);
 			if (err<1)
 				buf:="0";
@@ -1583,6 +1578,7 @@ code
 			arg:=textformat(arg);
 			pc.title:=arg;
 			sendtext ("<div class=clan>You set "+pc.name+"'s title to '"+arg+"'</div>",self);
+			log ("&lt;clan_title&gt; "+self.name+" set "+pc.name+" title to "+arg);
 			quit;
 		}
 		i:=i+5;
@@ -2542,8 +2538,7 @@ code
 		quit;
 	}
 
-	act ("<div class='clan'></div>"+moneystring(tmp,TRUE)+" falls into your hands from the chest
-	withdraw slot.<div class='default'></div>",
+	act ("<div class='clan'></div>"+moneystring(tmp,TRUE)+" falls into your hands from the chest withdraw slot.<div class='default'></div>",
 	A_ALWAYS,self, null,null,TO_CHAR);
 	act ("<div class='clan'>$1n gets some money from the withdraw slot on the clan chest.</div><div class='default'></div>",
 	A_SOMEONE,self,null,null,TO_REST);
