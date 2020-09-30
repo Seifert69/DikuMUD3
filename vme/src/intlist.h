@@ -11,6 +11,9 @@
 #include "essential.h"
 #include "bytestring.h"
 
+using namespace std;
+#include <string>
+
 class cintlist
 {
 public:
@@ -22,6 +25,7 @@ public:
     cintlist *Duplicate (void);
     void Replace (int idx, int val);
     char *catnames ();
+    std::string json(void);
     int Value (int idx);
     sbit32 *ValuePtr (int idx);
     void Remove (int idx);

@@ -139,6 +139,24 @@ char *cNamelist::catnames()
     return s;
 }
 
+std::string cNamelist::json(void)
+{
+    string s;
+
+    s = "\"namelist\": [";
+
+    for (ubit32 i = 0; i < Length(); i++)
+    {
+        s.append(str_json_encode_quote(Name(i)));
+        if (i < Length () - 1)
+            s.append(",");
+    }
+
+    s.append("]");
+
+    return s;
+}
+
 void cNamelist::Remove(ubit32 idx)
 {
     if (length > idx)

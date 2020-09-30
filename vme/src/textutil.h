@@ -88,7 +88,10 @@ int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax);
 const char *getHTMLTag(const char *p, char *pTag, int nTagMax);
 
 
-#define str_delete(str, nDel, nStrLen) \
-   memmove(str, str + nDel, nStrLen - nDel + 1)
+std::string str_json(const char *lbl, ubit64 nInt);
+std::string str_json(const char *lbl, const char *str);
+std::string str_json(const char *lbl, const std::string &str);
+std::string str_jsonencode(const char *str);
+std::string str_json_encode_quote(const char *str);
 
 #endif /* _MUD_TEXTUTIL_H */

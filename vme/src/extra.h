@@ -26,6 +26,7 @@ class extra_list
     void copyfrom(class extra_list &listToBeCopied);
     int isempty(void);
     int count(void);
+    std::string json(void);
 
     void push_front(class extra_descr_data *ex);
     void push_tail(class extra_descr_data *ex);
