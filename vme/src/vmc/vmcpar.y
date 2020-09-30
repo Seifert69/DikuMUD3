@@ -1460,6 +1460,7 @@ czonename	: SYMBOL
 			  if (strlen($1) > FI_MAX_ZONENAME)
 			  {
 			    warning("Zone name too long. truncated.");
+			    warning($1);
 			    $1[FI_MAX_ZONENAME] = '\0';
 			  }
 			  strcpy($$, $1);
@@ -1476,6 +1477,7 @@ cunitname	: SYMBOL
 			  if (strlen($1) > FI_MAX_UNITNAME)
 			  {
 			    warning("Unit name too long. truncated.");
+			    warning($1);
 			    $1[FI_MAX_UNITNAME] = '\0';
 			  }
 			  strcpy($$, $1);
