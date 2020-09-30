@@ -1424,3 +1424,62 @@ const char *divcolor(const char *colorstr)
 
     return buf;
 }
+
+
+// Encode str to JSON encoding (format X)
+std::string str_json_encode(const char *str)
+{
+    string s;
+
+    s = str;
+
+    return s;
+}
+
+// As str_json_encode but wraps string in quotes
+std::string str_json_encode_quote(const char *str)
+{
+    string s;
+
+    s = "\"";
+    s.append(str);
+    s.append("\"");
+
+    return s;
+}
+
+std::string str_json(const char *lbl, ubit64 nInt)
+{
+    string s;
+
+    s.append("\"");
+    s.append(str_json_encode(lbl));
+    s.append("\"");
+    s.append(": ");
+    s.append(ltoa(nInt));
+
+    return s;
+}
+
+std::string str_json(const char *lbl, const char *str)
+{
+    string s;
+
+    s.append("\"");
+    s.append(lbl);
+    s.append("\"");
+    s.append(": ");
+    s.append("\"");
+    if (str)
+        s.append(str);
+    s.append("\"");
+
+    return s;
+}
+
+std::string str_json(const char *lbl, const std::string &str)
+{
+    return str_json(lbl, str.c_str());
+}
+
+

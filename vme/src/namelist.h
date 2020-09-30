@@ -29,8 +29,9 @@ public:
     void bread (ubit8 ** b);
     void bwrite (ubit8 ** b);
 
-    char *catnames ();
-
+    char *catnames();
+    std::string json(void);
+    
     void Remove (ubit32 idx);
     void RemoveName (const char *name);
 

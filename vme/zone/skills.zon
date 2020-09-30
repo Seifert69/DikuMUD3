@@ -2860,6 +2860,11 @@ code
       quit;
    }
 
+   if (tgt_pc.height > tgt.height)
+     size := "enlarges"
+   else
+     size := "shrinks";
+
    if (self.type == UNIT_ST_PC)
      skilla  :=  self.skills[SKI_RESIZE_LEATHER];
    else
@@ -2888,12 +2893,6 @@ code
      diff := 100 - amount;
    if (self.endurance<diff) goto fail_endurance;
 
-   if (tgt_pc.height>tgt.height)
-     size := "enlarges"
-   else
-     size := "shrinks";
-
-
    tgt.max_hp := tgt.max_hp-diff;
    tgt.hp := tgt.hp-diff;
    tgt.height := tgt_pc.height;
@@ -2911,15 +2910,13 @@ code
    }
    else
    {
-      act("You skillfully work on $2n till it $3t enough to fit
-"+tgt_pc.name+".",
+      act("You skillfully work on $2n till it $3t enough to fit "+tgt_pc.name+".",
 	  A_SOMEONE, self, tgt, size, TO_CHAR);
-      act("$1n skillfully works on "+tgt.title+" till it $3t enough to fit
-$2n",
+      act("$1n skillfully works on "+tgt.title+" till it $3t enough to fit $2n",
 	  A_SOMEONE, self, tgt_pc, size, TO_REST);
    }
-
    quit;
+
    :fail:
    tgt.hp := tgt.hp-diff;
    if (tgt.hp<1) goto major_fail;
@@ -2930,9 +2927,7 @@ $2n",
    quit;
 
    :major_fail:
-
-   act("You try to $3t $2n but the job is to much for you and you destroy
-it.",
+   act("You try to $3t $2n but the job is to much for you and you destroy it.",
        A_ALWAYS, self, tgt, size, TO_CHAR);
    act ("$1n tries to $3t but the job is to much for $1m and he destroys it.",
 	A_SOMEONE, self, tgt, size, TO_REST);
@@ -2948,8 +2943,7 @@ position_update(tgt);
    :fail_endurance:
    act("You begin to work on $2n but realize you are much to tired to finish.",
        A_ALWAYS, self, tgt,null, TO_CHAR);
-   act ("$1n Begins working on $2n but realizes $1e is to tired and slumps
-back exausted.",
+   act ("$1n Begins working on $2n but realizes $1e is to tired and slumps back exausted.",
 	A_SOMEONE, self, tgt, size, TO_REST);
    quit;
 

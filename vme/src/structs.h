@@ -218,7 +218,7 @@ public:
     room_data(void);
     ~room_data(void);
 
-    class room_direction_data *dir_option[11]; /* Her?? */
+    class room_direction_data *dir_option[MAX_EXIT+1]; // Why 11? Why not MAX_EXIT+1? 
 
     ubit8 flags;         /* Room flags                              */
     ubit8 movement_type; /* The type of movement (city, hills etc.) */
@@ -530,6 +530,7 @@ public:
     class extra_list extra;  /* All the look 'at' stuff                     */
 
     int destruct_classindex(void);
+    std::string json(void);
 };
 
 /* ----------------- Destructed decalrations ----------------------- */

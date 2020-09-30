@@ -56,7 +56,6 @@ extra_descr_data::~extra_descr_data(void)
     this->next = NULL;
 }
 
-
 // SIGH. Due to DIL I need to make this function on the extra_descr_data
 // when really I only wanted it on the list
 class extra_descr_data *extra_descr_data::find_raw(const char *word)
@@ -165,6 +164,36 @@ int extra_list::count(void)
 
     return i;
 }
+
+std::string extra_list::json(void)
+{
+    string s;
+
+    s = "\"extralist\": [ ";
+
+    class extra_descr_data *e;
+
+    // Count no of elements in list
+    for (e = this->m_pList; e; e = e->next)
+    {
+        s.append("{");
+        s.append(e->names.json());
+        s.append(",");
+        s.append(str_json("descr", e->descr));
+        s.append(",");
+        s.append(e->vals.json());
+        s.append("}");
+
+        if (e->next)
+            s.append(",\n");
+
+    }
+
+    s.append(" ]");
+
+    return s;
+}
+
 
 // Insert ex as the first element in front of the list
 void extra_list::push_front(class extra_descr_data *ex)

@@ -92,6 +92,24 @@ char *cintlist::catnames()
     return s;
 }
 
+std::string cintlist::json(void)
+{
+    string s;
+
+    s = "\"intlist\": [";
+
+    for (sbit32 i = 0; i < Length(); i++)
+    {
+        s.append(itoa(Value(i)));
+        if (i < Length() - 1)
+            s.append(",");
+    }
+
+    s.append("]");
+
+    return s;
+}
+
 void cintlist::Remove(int idx)
 {
     if ((idx >= 0) && (idx < length))
