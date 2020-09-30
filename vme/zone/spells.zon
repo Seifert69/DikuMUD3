@@ -13519,11 +13519,11 @@ code
 
  if(self.level >= IMMORTAL_LEVEL)
    r_title := "<div class='room_title'>"+room.title+" ["+room.nameidx+
-              "@"+room.zoneidx+"]</div>";
+              "@"+room.zoneidx+"]</div><br/>";
      else
-      r_title := "<div class='room_title'>"+room.title+"</div>";
+      r_title := "<div class='room_title'>"+room.title+"</div><br/>";
 
- r_descr := "<div class='room_descr'>"+room.inside_descr+"</div>";
+ r_descr := "<div class='room_descr'>"+room.inside_descr+"</div><br/>";
 
  sendtext(r_title,self);
 
@@ -13532,7 +13532,7 @@ code
 
  if(isset(self.pcflags,PC_EXITS))
    {
-   exits := display_exits(room);
+   exits := display_exits(room) + "<br/>";
    sendtext(exits,self);
    }
 
@@ -13557,10 +13557,10 @@ if(u.type == UNIT_ST_PC)
 
      if(u.level >= IMMORTAL_LEVEL)
       addstring(pc_list,"<div class='immort_descr'>"+u.name+" "+u.title+
-                        pos+"</div>");
+                        pos+"</div><br/>");
        else
         addstring(pc_list,"<div class='pc_descr'>"+u.name+" "+u.title+
-                        pos+"</div>");
+                        pos+"</div><br/>");
      }
    else if((isset(self.flags,ID_DETECT_LIFE)) and (u.level <IMMORTAL_LEVEL))
     addstring(pc_list,"You sense a hidden life form in the room.<br/>");
@@ -13575,10 +13575,10 @@ else if(u.type == UNIT_ST_NPC)
      if(u.position != POSITION_STANDING)
      {
      pos := get_pos(u);
-     tmp := "<div class='npc_descr'>"+u.title+pos+"</div>";
+     tmp := "<div class='npc_descr'>"+u.title+pos+"</div><br/>";
      }
       else
-        tmp := "<div class='npc_descr'>"+u.outside_descr+"</div>";
+        tmp := "<div class='npc_descr'>"+u.outside_descr+"</div><br/>";
 
      tmp_i := tmp in npc_list;
 
@@ -13605,7 +13605,7 @@ else if(u.type == UNIT_ST_OBJ)
    {
      if (visible(self,u))
       {
-       tmp := "<div class='obj_title'>"+u.outside_descr+"</div>";
+       tmp := "<div class='obj_title'>"+u.outside_descr+"</div><br/>";
        tmp_i := tmp in obj_list;
 
        if(tmp_i > 0)
@@ -13633,9 +13633,9 @@ i:= 0;
  while(i < tmp_i)
   {
    if (atoi(n_obj.[i])>1)
-      str:=str+"<div class='obj_title'>[x"+n_obj.[i]+"] "+obj_list.[i];
+      str:=str+"<div class='obj_title'>[x"+n_obj.[i]+"] "+obj_list.[i]+"<br/>";
    else
-      str:=str+obj_list.[i];
+      str:=str+obj_list.[i]+"<br/>";
 
    i := i+1;
    }
@@ -13646,9 +13646,9 @@ i:= 0;
  while(i < tmp_i)
   {
     if(atoi(n_npc.[i]) > 1)
-     str:=str+"<div class='npc_descr'>[x"+n_npc.[i]+"] "+npc_list.[i];
+     str:=str+"<div class='npc_descr'>[x"+n_npc.[i]+"] "+npc_list.[i]+"<br/>";
       else
-       str:=str+npc_list.[i];
+       str:=str+npc_list.[i]+"<br/>";
 
     i := i + 1;
   }
@@ -13658,7 +13658,7 @@ i:= 0;
 
  while(i < tmp_i)
   {
-   str:=str+pc_list.[i];
+   str:=str+pc_list.[i]+"<br/>";
    i := i + 1;
    }
 
@@ -13740,7 +13740,7 @@ code
    if(out.type == UNIT_ST_ROOM)
    {
     sendtext("An image forms in your mind:<br/>", self);
-    see := room_inside(out) + "<br>";
+    see := room_inside(out);
     goto show_it;
    }
 
