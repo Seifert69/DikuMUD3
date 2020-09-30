@@ -1243,9 +1243,7 @@ Available to all players. */
 dilbegin clist (arg:string);
 var
 	i:integer;
-	ii:integer;
 	err:integer;
-	spaces:string;
 	buf:string;
 	ln:integer;
 	clist:stringlist;
@@ -1272,22 +1270,15 @@ code
 
 	i:=0;
 	buf:="";
-	sendtext("                   Valhalla Clans<br/><br/>",self);
-	sendtext("       Clan Name                          Master<br/><br/>",self);
+	sendtext("Valhalla Clans<br/><br/>",self);
+	sendtext("Clan Name - Master<br/><br/>",self);
 
 	while (i<ln)
 	{
-		ii := 0;
-		spaces := "";
-		while (ii < 40-length(clist.[i+2]))
-		{
-			spaces := spaces + " ";
-			ii := ii + 1;
-		}
 		if (i==0)
-			buf:="  " + clist.[i+2]+spaces+clist.[i+1]+"<br/>";
+			buf:=clist.[i+2]+" - "+clist.[i+1]+"<br/>";
 		else
-			buf:=buf+"  " + clist.[i+2]+spaces+clist.[i+1]+"<br/>";
+			buf:=buf+clist.[i+2]+" - "+clist.[i+1]+"<br/>";
 		i:=i+5;
 	}
 
@@ -1588,7 +1579,7 @@ code
 			err:=delstr(self.extra.[CLAN_SYMBOLIC].descr+".money");
 			err:=savestr(self.extra.[CLAN_SYMBOLIC].descr+".money",itoa(balance),"w");
 
-			arg:=arg+" <div class='clan'>"+clist.[i+4] +"</div>";
+			arg:=arg + clist.[i+4];
 			arg:=textformat(arg);
 			pc.title:=arg;
 			sendtext ("<div class=clan>You set "+pc.name+"'s title to '"+arg+"'</div>",self);
