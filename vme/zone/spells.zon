@@ -13338,9 +13338,9 @@ code
       if(visible(self,u))
        {
          if(u.level >= IMMORTAL_LEVEL)
-          addstring(pc_list,"<div class='immort_descr'>"+u.name+"</div>");
+          addstring(pc_list,"<div class='immort_descr'>"+u.name+"</div><br/>");
             else
-              addstring(pc_list,"<div class='pc_descr'>"+u.name+"</div>");
+              addstring(pc_list,"<div class='pc_descr'>"+u.name+"</div><br/>");
         }
    }
 
@@ -13348,7 +13348,7 @@ code
        {
         if(visible(self,u))
          {
-          tmp := "<div class='npc_descr'>"+u.title+"</div>";
+          tmp := "<div class='npc_descr'>"+u.title+"</div><br/>";
           tmp_i := tmp in npc_list;
 
           if(tmp_i > 0)
@@ -13368,7 +13368,7 @@ code
         {
          if(visible(self,u))
           {
-           tmp := "<div class='obj_title'>"+u.title+"</div>";
+           tmp := "<div class='obj_title'>"+u.title+"</div><br/>";
            tmp_i := tmp in obj_list;
 
            if(tmp_i > 0)
