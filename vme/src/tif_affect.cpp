@@ -257,6 +257,48 @@ tif_bless_tick (class unit_affected_type *af, class unit_data * unit)
                       unit);
 }
 
+/* berserk */
+void
+tif_berserk_on (class unit_affected_type *af, class unit_data * unit)
+{
+    send_to_char ("You suddenly go berserk!<br/>", unit);
+}
+
+void
+tif_berserk_off (class unit_affected_type *af, class unit_data * unit)
+{
+    send_to_char ("You no longer feel berserk.<br/>", unit);
+}
+
+void
+tif_berserk_tick (class unit_affected_type *af, class unit_data * unit)
+{
+    if (af->duration == 1)
+        send_to_char ("Your sense of being berserk is ebbing.<br/>",
+                      unit);
+}
+
+/* rage */
+void
+tif_rage_on (class unit_affected_type *af, class unit_data * unit)
+{
+    send_to_char ("You feel enraged!<br/>", unit);
+}
+
+void
+tif_rage_off (class unit_affected_type *af, class unit_data * unit)
+{
+    send_to_char ("You feel your rage subsiding.<br/>", unit);
+}
+
+void
+tif_rage_tick (class unit_affected_type *af, class unit_data * unit)
+{
+    if (af->duration == 1)
+        send_to_char ("You sense your rage starting to ebb.<br/>",
+                      unit);
+}
+
 /* curse */
 void
 tif_curse_on (class unit_affected_type *af, class unit_data * unit)

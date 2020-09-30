@@ -6766,6 +6766,10 @@ while (item!=null){
      subaff(self, ID_BLESS);
    else   if (isaff(self, ID_NBLESS))
      subaff(self, ID_NBLESS);
+   else   if (isaff(self, ID_RAGE))
+     subaff(self, ID_RAGE);
+   else   if (isaff(self, ID_BERSERK))
+     subaff(self, ID_BERSERK);
    else if (isaff(self, ID_DETECT_ALIGN))
      subaff(self, ID_DETECT_ALIGN);
    else if (isaff(self, ID_DETECT_INVISIBLE))
@@ -12259,6 +12263,10 @@ code
 {
    if (isaff(self, ID_BLESS))
  addstring(spl_aff,"Bless<br/>");
+   if (isaff(self, ID_BERSERK))
+ addstring(spl_aff,"Berserk<br/>");
+   if (isaff(self, ID_RAGE))
+ addstring(spl_aff,"Enraged<br/>");
 if (isaff(self, ID_DETECT_ALIGN))
  addstring(spl_aff,"Detect Alignment<br/>");
 if (isaff(self, ID_DETECT_INVISIBLE))

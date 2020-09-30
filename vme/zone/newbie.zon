@@ -72,6 +72,10 @@ if (tgt.level > 20)
      subaff(tgt, ID_BLESS);
    else if (isaff(tgt, ID_NBLESS))
      subaff(tgt, ID_NBLESS);
+   else if (isaff(tgt, ID_BERSERK))
+     subaff(tgt, ID_BERSERK);
+   else if (isaff(tgt, ID_RAGE))
+     subaff(tgt, ID_RAGE);
    else if (isaff(tgt, ID_CONDEMN))
      subaff(tgt, ID_CONDEMN);
    else if (isaff(tgt, ID_FOCUS))

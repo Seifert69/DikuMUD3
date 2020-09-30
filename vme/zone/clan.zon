@@ -1,19 +1,11 @@
 /*
 filename    clan
 password    rlscrew
-changedby   Whistler
+changedby   Sender
 EmailAdd
 request     compile
 version     3
 END HEADER*/
-
-
-
-
-
-
-
-
 
 #include <macros.h>
 
@@ -30,138 +22,140 @@ creators {"whistler"}
 
 %dil
 
+/* used by clan guards to block dragging of corpses or other objects */
+
 dilbegin block_drag(dir:string);
 var
-  word:string;
-  args:stringlist;
+	word:string;
+	args:stringlist;
 code
 {
-   :start:
-   wait(SFB_CMD, (command("drag")));
-   word:=getword (argument);
+	:start:
+	wait(SFB_CMD, (command("drag")));
+	word:=getword (argument);
 
-   if (word== dir)
-   {
-      block;
-act ("<div class='clan'>$3n stops you and says, 'Clan Members only!'</div>",
-    A_ALWAYS,activator,null,self,TO_CHAR);
-act ("<div class='clan'>$3n stops $1n, and says, 'Clan Members only!'</div>",
-    A_SOMEONE,activator,null,self,TO_REST);
-   }
-   args:=split(word,".");
-   if (length(args)>1)
-   if (args.[0]== dir)
-   {
-         block;
-act ("<div class='clan'>$3n stops you and says, 'Clan Members only!'</div>",
-    A_ALWAYS,activator,null,self,TO_CHAR);
-act ("<div class='clan'>$3n stops $1n, and says, 'Clan Members only!'</div>",
-    A_SOMEONE,activator,null,self,TO_REST);
-   }
-         goto start;
+	if (word== dir)
+	{
+		block;
+		act ("<div class='clan'>$3n stops you and says, 'Clan Members only!'</div>",
+		A_ALWAYS,activator,null,self,TO_CHAR);
+		act ("<div class='clan'>$3n stops $1n, and says, 'Clan Members only!'</div>",
+		A_SOMEONE,activator,null,self,TO_REST);
+	}
+	args:=split(word,".");
+	if (length(args)>1)
+	if (args.[0]== dir)
+	{
+		block;
+		act ("<div class='clan'>$3n stops you and says, 'Clan Members only!'</div>",
+		A_ALWAYS,activator,null,self,TO_CHAR);
+		act ("<div class='clan'>$3n stops $1n, and says, 'Clan Members only!'</div>",
+		A_SOMEONE,activator,null,self,TO_REST);
+	}
+	goto start;
 }
-dilend
+dilend // block_drag
 
+/* Used by clan guards to be aggressive to non-members */
 
 dilbegin clan_aggro(home:string);
 var
  u : unitptr;
 code
 {
- heartbeat := PULSE_SEC*10;
+	heartbeat := PULSE_SEC*10;
 
- :start:
- foreach(UNIT_ST_PC,u)
-   {
-    if ((u == self) or (u.level > 200)) continue;
-    if ((u.vlevel < 20) and (u.hometown != home))
-    {
-     act("$1n magically transfers $3n out of harms way....",
-          A_ALWAYS, self, null, u, TO_NOTVICT);
-     act("$1n magically transfers you out of harms way....",
-          A_SOMEONE, self, null, u, TO_VICT);
-      link(u, findroom("temple@udgaard"));
-      u.hp:= 5;
-      position_update(u);
+	:start:
+	foreach(UNIT_ST_PC,u)
+	{
+		if ((u == self) or (u.level > 200)) continue;
+		if ((u.vlevel < 20) and (u.hometown != home))
+		{
+			act("$1n magically transfers $3n out of harms way....",
+			  A_ALWAYS, self, null, u, TO_NOTVICT);
+			act("$1n magically transfers you out of harms way....",
+			  A_SOMEONE, self, null, u, TO_VICT);
+			link(u, findroom("temple@udgaard"));
+			u.hp:= 5;
+			position_update(u);
 
-    heartbeat := PULSE_SEC *4;
-    goto start;
-    }
-    else
-    {
-	 heartbeat := PULSE_SEC *15;
-     if (self.position <= POSITION_SLEEPING) goto sleep;
-	 if ((u.type == UNIT_ST_PC) and (u.hometown != home))
-     if (self.position != POSITION_FIGHTING)
-	  {
-       act(" $3n, you are not a member of this clan! Leave NOW!",
-	   A_SOMEONE,self,null,u,TO_NOTVICT);
-	   act("$1n attacks $3n!",A_SOMEONE,self,null,u,TO_NOTVICT);
-	   act("The $1n attacks you!", A_SOMEONE,self,null,u,TO_VICT);
-	   set_fighting(self,u);
-	  }
-	  if (u.hp < 10)
-	   {
-act("$1n drives his spear through you killing you instantly.",
-		 A_ALWAYS,self,null,u,TO_VICT);
-act("$1n drives his spear through $3n killing $3s instantly.",
-		 A_ALWAYS,self,null,u,TO_NOTVICT);
-	    u.hp := -10;
-	    position_update(u);
-	   }
-	 }
-     }
-pause;
-goto start;
+			heartbeat := PULSE_SEC *4;
+			goto start;
+		}
+		else
+		{
+			heartbeat := PULSE_SEC *15;
+			if (self.position <= POSITION_SLEEPING) goto sleep;
+			if ((u.type == UNIT_ST_PC) and (u.hometown != home))
+			if (self.position != POSITION_FIGHTING)
+			{
+				act(" $3n, you are not a member of this clan! Leave NOW!",
+				A_SOMEONE,self,null,u,TO_NOTVICT);
+				act("$1n attacks $3n!",A_SOMEONE,self,null,u,TO_NOTVICT);
+				act("The $1n attacks you!", A_SOMEONE,self,null,u,TO_VICT);
+				set_fighting(self,u);
+			}
+			if (u.hp < 10)
+			{
+				act("$1n drives his spear through you killing you instantly.",
+				A_ALWAYS,self,null,u,TO_VICT);
+				act("$1n drives his spear through $3n killing $3s instantly.",
+				A_ALWAYS,self,null,u,TO_NOTVICT);
+				u.hp := -10;
+				position_update(u);
+			}
+		}
+	}
+	pause;
+	goto start;
 
-:sleep:
-heartbeat:= 20;
-pause;
-self.position:= POSITION_STANDING;
-exec("yawn", self);
-heartbeat:= 3;
-goto start;
+	:sleep:
+	heartbeat:= 20;
+	pause;
+	self.position:= POSITION_STANDING;
+	exec("yawn", self);
+	heartbeat:= 3;
+	goto start;
 }
-dilend
+dilend // clan_aggro
 
-
-
-
-
+/* posts to a clan board */
 
 dilbegin string clan_post (u:unitptr,v:unitptr);
 code
 {
-if (u.level>250)
-return ("");
-if (u.extra.[CLAN_SYMBOLIC]==null)
- return ("You must be a clan member to post to this board.");
+	if (u.level>250)
+		return ("");
+	if (u.extra.[CLAN_SYMBOLIC]==null)
+		return ("You must be a clan member to post to this board.");
+	if (u.extra.[CLAN_SYMBOLIC].descr!=v.zoneidx)
+		return ("You must be a clan member to post to this board.");
+	return ("");
+}
+dilend // clan_post
 
-if (u.extra.[CLAN_SYMBOLIC].descr!=v.zoneidx)
- return ("You must be a clan member to post to this board.");
+/* used to remove posts from a clan board */
 
- return ("");
- }
- dilend
+dilbegin string clan_rem(u:unitptr,v:unitptr);
+code
+{
+	if (u.level>250)
+		return("");
+	if (u.extra.[CLAN_SYMBOLIC].descr!=v.zoneidx)
+		return ("You must be a clan member to remove from this board.");
 
- dilbegin string clan_rem(u:unitptr,v:unitptr);
- code
- {
- if (u.level>250)
- return("");
-if (u.extra.[CLAN_SYMBOLIC].descr!=v.zoneidx)
- return ("You must be a clan member to remove from this board.");
+	if (u.extra.[CLAN_RANK]==null)
+		return ("You must be a clan master or lord to remove from the board.");
 
-if (u.extra.[CLAN_RANK]==null)
+	if ((u.extra.[CLAN_RANK].names.[1]!="$master") and
+	(u.extra.[CLAN_RANK].names.[1]!="$lord"))
 	return ("You must be a clan master or lord to remove from the board.");
 
-if ((u.extra.[CLAN_RANK].names.[1]!="$master") and
-(u.extra.[CLAN_RANK].names.[1]!="$lord"))
-return ("You must be a clan master or lord to remove from the board.");
-
-return ("");
+	return ("");
 }
-dilend
+dilend // clan_rem
+
+/* deletes a clan */
 
 dilbegin cdelete(arg:string);
 external
@@ -172,212 +166,201 @@ external
 		err:integer;
 		buf:string;
 		ln:integer;
-	cname:string;
-	line:stringlist;
+		cname:string;
+		line:stringlist;
 		clist:stringlist;
 		found:string;
 		strfile:stringlist;
 
 code
 {
-err:=loadstr ("clanlist.data",buf);
-if (err<1)
+	err:=loadstr ("clanlist.data",buf);
+	if (err<1)
 	{
-log ("01:  Error in clanlist.data");
-quit;
-}
-
-clist:=split(buf,"\n");
-ln:=length (clist);
-ln:=ln-1;
-if (ln<1)
-	{
-log ("02:  Error in clanlist.data");
-sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
-quit;
-}
-
-i:=0;
-buf:="";
-found:="nope";
-buf:="";
-while (i<ln)
-{
-if (arg==clist.[i])
-	{
-	found:="yes";
-
-	cname:=clist.[i+2];
-	i:=i+5;
-	continue;
+		log ("01:  Error in clanlist.data");
+		quit;
 	}
-	buf:=buf+clist.[i]+"
-x"+clist.[i+1]+"
-x"+clist.[i+2]+"
-x"+
-	clist.[i+3]+"
-x"+clist.[i+4]+"
-x";
-	i:=i+5;
+
+	clist:=split(buf,"\n");
+	ln:=length (clist);
+	ln:=ln-1;
+	if (ln<1)
+	{
+		log ("02:  Error in clanlist.data");
+		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		quit;
+	}
+
+	i:=0;
+	buf:="";
+	found:="nope";
+	while (i<ln)
+	{
+		if (arg==clist.[i])
+		{
+			found:="yes";
+
+			cname:=clist.[i+2];
+			i:=i+5;
+			continue;
+		}
+		buf:=buf+clist.[i]+"\n"+clist.[i+1]+"\n"+clist.[i+2]+"\n"+clist.[i+3]+"\n"+clist.[i+4]+"\n";
+		i:=i+5;
 	}
 
 	if (found=="yes")
-		{
+	{
 		i:=delstr("clanlist.data");
 		i:=savestr("clanlist.data",buf,"w");
-		}
-else
-{
-sendtext ("No such clan found<br/>",self);
-quit;
-}
-
-		buf:="";
-		err:=loadstr(arg,buf);
-		if (err<1)
-			{
-log ("01:  Error in"+arg);
-quit;
-}
-
-clist:=null;
-clist:=split(buf,"\n");
-ln:=length(clist);
-ln:=ln-1;
-i:=0;
-while (i<ln)
-{
-line:=split(clist.[i],":");
-if (length(line)<2)
-{
-i:=i+1;
-continue;
-}
-
-if (length(line.[0])<1)
-{
-i:=i+1;
-continue;
-}
-
-pc:=ghead();
-while (pc.type==UNIT_ST_PC)
-{
- if (pc.name==line.[0])
- break;
- pc:=pc.gnext;
- }
-log ("Deleting:  ");
- log (line.[0]);
- if ((pc==null) or
-(pc.type!=UNIT_ST_PC))
- 	goto pc_null;
-
-log(" online<br/>");
-err:=submember(arg,line.[0]);
-pc.title:= "<div class='cpr'></div><div class='bw'>Banished from </div>"+cname+" clan<div class='default'></div>";
-subextra (pc.extra,CLAN_NAME);
-subextra (pc.extra,CLAN_RANK);
-subextra (pc.extra,CLAN_SYMBOLIC);
-subextra (pc.extra,"tattoo");
-
-   pc.hometown := "temple@udgaard";
-act ("<div class='clan'>$3n has been removed from the clan.</div>",
-A_ALWAYS,self,null,pc,TO_CHAR);
-act ("<div class='clan'>You have been removed from the </div>"+cname+" clan.",
-A_ALWAYS,pc,null,null,TO_CHAR);
-i:=i+1;
-continue;
-
-:pc_null:
-log (" off line<br/>");
-err:=submember(arg,line.[0]);
-if (err==-1)
+	}
+	else
 	{
-	  act ("<div class='clan'>No such person found.</div>",
-  A_ALWAYS,self,null,null,TO_CHAR);
-  }
-else
-{
-act ("<div class='clan'></div>"+line.[0]+" has been removed from the clan."
-,A_ALWAYS,self,null,pc,TO_CHAR);
-err:=savestr("clan.delete",line.[0]+"
-x","a");
-}
-i:=i+1;
-}
+		sendtext ("No such clan found<br/>",self);
+		quit;
+	}
 
- err:=delstr(arg+".rank");
-  err:=delstr(arg+".money");
-   err:=delstr(arg);
-   err:=delunit(arg+".dc");
-sendtext("The "+arg+" has been deleted.<br/>",self);
-quit;
+	buf:="";
+	err:=loadstr(arg,buf);
+	if (err<1)
+	{
+		log ("01:  Error in"+arg);
+		quit;
+	}
+	clist:=null;
+	clist:=split(buf,"\n");
+	ln:=length(clist);
+	ln:=ln-1;
+	i:=0;
+	while (i<ln)
+	{
+		line:=split(clist.[i],":");
+		if (length(line)<2)
+		{
+			i:=i+1;
+			continue;
+		}
+
+		if (length(line.[0])<1)
+		{
+			i:=i+1;
+			continue;
+		}
+
+		pc:=ghead();
+		while (pc.type==UNIT_ST_PC)
+		{		
+			if (pc.name==line.[0])
+			break;
+			pc:=pc.gnext;
+		}
+		log ("Deleting:  ");
+		log (line.[0]);
+		if ((pc==null) or (pc.type!=UNIT_ST_PC))
+		goto pc_null;
+
+		log(" online<br/>");
+		err:=submember(arg,line.[0]);
+		pc.title:= "<div class='cpr'></div><div class='bw'>Banished from </div>"+cname+" clan<div class='default'></div>";
+		subextra (pc.extra,CLAN_NAME);
+		subextra (pc.extra,CLAN_RANK);
+		subextra (pc.extra,CLAN_SYMBOLIC);
+
+		pc.hometown := "temple@udgaard";
+		act ("<div class='clan'>$3n has been removed from the clan.</div>",
+		A_ALWAYS,self,null,pc,TO_CHAR);
+		act ("<div class='clan'>You have been removed from the </div>"+cname+" clan.",
+		A_ALWAYS,pc,null,null,TO_CHAR);
+		i:=i+1;
+		continue;
+
+		:pc_null:
+		log (" off line<br/>");
+		err:=submember(arg,line.[0]);
+		if (err==-1)
+		{
+			act ("<div class='clan'>No such person found.</div>",
+			A_ALWAYS,self,null,null,TO_CHAR);
+		}
+		else
+		{
+			act ("<div class='clan'></div>"+line.[0]+" has been removed from the clan."
+			,A_ALWAYS,self,null,pc,TO_CHAR);
+			err:=savestr("clan.delete",line.[0]+"\n","a");
+		}
+		i:=i+1;
+	}
+	err:=delstr(arg+".rank");
+	err:=delstr(arg+".money");
+	err:=delstr(arg);
+	err:=delunit(arg+".dc");
+	sendtext("The "+arg+" clan has been deleted.<br/>",self);
+	quit;
 }
-dilend
+dilend // cdelete
+
+/* clears past clan extras on a PC */
 
 dilbegin clan_clear();
 code
 {
-if (self.extra.["$CLAN_CLEAR"]==null)
-{
-if (self.extra.[CLAN_SYMBOLIC]!=null)
-self.title:="is waiting for his or her clan to start";
+	if (self.extra.["$CLAN_CLEAR"]==null)
+	{
+		if (self.extra.[CLAN_SYMBOLIC]!=null)
+			self.title:="is waiting for his or her clan to start";
 
-subextra (self.extra,CLAN_NAME);
-subextra (self.extra,CLAN_RANK);
-subextra (self.extra,CLAN_SYMBOLIC);
-subextra (self.extra,"$clan-_symbolic");
-subextra (self.extra,"tatoo" );
-subextra (self.extra,"tattoo" );
-subextra (self.extra,"tattoos" );
-subextra (self.extra,CLAN_NAME);
-subextra (self.extra,CLAN_RANK);
-subextra (self.extra,CLAN_SYMBOLIC);
-subextra (self.extra,"$clan-_symbolic");
-subextra (self.extra,"tatoo" );
-subextra (self.extra,"tattoo" );
-subextra (self.extra,"tattoos" );
-subextra (self.extra,CLAN_NAME);
-subextra (self.extra,CLAN_RANK);
-subextra (self.extra,CLAN_SYMBOLIC);
-subextra (self.extra,"$clan-_symbolic");
-subextra (self.extra,"tatoo" );
-subextra (self.extra,"tattoo" );
-subextra (self.extra,"tattoos" );
-self.hometown:="temple@udgaard";
-addextra(self.extra,{"$CLAN_CLEAR"},itoa(realtime));
+		subextra (self.extra,CLAN_NAME);
+		subextra (self.extra,CLAN_RANK);
+		subextra (self.extra,CLAN_SYMBOLIC);
+		subextra (self.extra,"$clan-_symbolic");
+		subextra (self.extra,"tatoo" );
+		subextra (self.extra,"tattoo" );
+		subextra (self.extra,"tattoos" );
+		subextra (self.extra,CLAN_NAME);
+		subextra (self.extra,CLAN_RANK);
+		subextra (self.extra,CLAN_SYMBOLIC);
+		subextra (self.extra,"$clan-_symbolic");
+		subextra (self.extra,"tatoo" );
+		subextra (self.extra,"tattoo" );
+		subextra (self.extra,"tattoos" );
+		subextra (self.extra,CLAN_NAME);
+		subextra (self.extra,CLAN_RANK);
+		subextra (self.extra,CLAN_SYMBOLIC);
+		subextra (self.extra,"$clan-_symbolic");
+		subextra (self.extra,"tatoo" );
+		subextra (self.extra,"tattoo" );
+		subextra (self.extra,"tattoos" );
+		self.hometown:="temple@udgaard";
+		addextra(self.extra,{"$CLAN_CLEAR"},itoa(realtime));
+	}
+	quit;
 }
-quit;
-}
-dilend
+dilend // clan_clear
+
+/* used by clan guards to kill hedges. Hedges are used by attackers to gain entry. */
 
 dilbegin hedge_kill();
 var
 nme : string;
 code
 {
-
-heartbeat := PULSE_SEC*2;
+	heartbeat := PULSE_SEC*2;
 
 :start:
 
-wait(SFB_MSG,(argument == "guard_block"));
+	wait(SFB_MSG,(argument == "guard_block"));
 
-/*
-  strange you can't continue using activator.name...
-  a.k.a VME oddity
-*/
-nme := activator.name;
-
-exec("growl "+nme, self);
-exec("kill "+nme, self);
-
-goto start;
-
+	/*
+	  strange you can't continue using activator.name...
+	  a.k.a VME oddity
+	*/
+	nme := activator.name;
+	exec("growl "+nme, self);
+	exec("kill "+nme, self);
+	goto start;
 }
-dilend
+dilend // hedge_kill
 
+/* Allows clan guards to load and equip a new weapon when equipped */
 
 dilbegin re_equip();
 var
@@ -385,75 +368,77 @@ var
       pc      : unitptr;
 code
 {
-heartbeat:=PULSE_SEC*1;
+	heartbeat:=PULSE_SEC*1;
+	
 :start:
-if(self.position == POSITION_FIGHTING)
-    wait(SFB_CMD,command("disarm"));
-    pc := activator;
-    secure(pc,start);
- if (findunit(activator,argument,FIND_UNIT_SURRO,null)==self)
- {
 
-item:=load("spear0@midgaard");
-link(item,self);
-item.height:=self.height;           
-
-addequip(item,WEAR_WIELD);
-sendtext ("The guard retrieves a spear from a fellow comrade and wields it!<br/>",self);
-set_fighting(self,pc);
+	if(self.position == POSITION_FIGHTING)
+		wait(SFB_CMD,command("disarm"));
+		pc := activator;
+		secure(pc,start);
+	if (findunit(activator,argument,FIND_UNIT_SURRO,null)==self)
+	{
+		item:=load("spear0@midgaard");
+		link(item,self);
+		item.height:=self.height;           
+		addequip(item,WEAR_WIELD);
+		sendtext ("The guard retrieves a spear from a fellow comrade and wields it!<br/>",self);
+		set_fighting(self,pc);
+	}
+	quit;
 }
-quit;
-}
-dilend
+dilend // re_equip
 
+/* Used by clan guards to prevent fleeing */
 
- dilbegin block_flee();
+dilbegin block_flee();
 var
-      pc      : unitptr;
+      pc : unitptr;
 code
 {
- :start:
-wait(SFB_CMD,command("flee") and (activator.type == UNIT_ST_PC));
-pc:=activator;
-secure(pc,start);
-block;
-act("You panic and try to flee, but something prevents you from escaping!",
-A_SOMEONE,pc,null,self,TO_CHAR);
-act("$1n panics and tries to flee, but can not!",
-A_SOMEONE,pc,null,self,TO_REST);
-unsecure(pc);
-goto start;
+
+:start:
+
+	wait(SFB_CMD,command("flee") and (activator.type == UNIT_ST_PC));
+	pc:=activator;
+	secure(pc,start);
+	block;
+	act("You panic and try to flee, but something prevents you from escaping!",
+	A_SOMEONE,pc,null,self,TO_CHAR);
+	act("$1n panics and tries to flee, but can not!",
+	A_SOMEONE,pc,null,self,TO_REST);
+	unsecure(pc);
+	goto start;
 }
-dilend
+dilend // block_flee
 
-
-
-
+/* allows clan guards to walk home. Such as after killing a hedge blocking their return. */
 
 dilbegin walk_home(r:string,z:string);
 external
- integer walk_room@function (s:string,i:integer);
+	integer walk_room@function (s:string,i:integer);
 
 var
-tf:integer;
+	tf : integer;
 code
 {
- :start:
 
- wait(SFB_TICK, TRUE);
-if (( r == self.outside.nameidx ) and
-   ( z ==self.outside.zoneidx))
-  {
- goto start;
- }
- else
- {
-tf:=     walk_room@function (r+"@"+z,4);
- }
-goto start;
+:start:
+
+	wait(SFB_TICK, TRUE);
+	if (( r == self.outside.nameidx ) and ( z ==self.outside.zoneidx))
+	{
+		goto start;
+	}
+	else
+	{
+		tf := walk_room@function (r+"@"+z,4);
+	}
+	goto start;
 }
-dilend
+dilend // walk_home
 
+/* Blocks access to storing additional items when clan chest is full */
 
 dilbegin store_blk ();
 var
@@ -462,43 +447,43 @@ var
  amount:integer;
 code
 {
-:start:
+	:start:
 
-amount:=0;
-interrupt (SFB_DONE,command("put"),do_put);
-interrupt (SFB_DONE,command("drop"),do_put);
-:do_put:
-check:=self.inside;
-while (check!=null)
- {
- if (check.minv!=253)
-  amount:=amount+1;
- if ((amount >=CLAN_MAX_DONATION) and (check.minv!=253))
-  {
-  act ("$3N falls out of the  overloaded clan chest onto the floor.",
-   A_SOMEONE,self,null,check,TO_REST);
-   temp:=check.next;
-  link (check, self.outside);
-  }
- check:=temp;
- }
+	amount:=0;
+	interrupt (SFB_DONE,command("put"),do_put);
+	interrupt (SFB_DONE,command("drop"),do_put);
+	:do_put:
+	check:=self.inside;
+	while (check!=null)
+	{
+		if (check.minv!=253)
+			amount:=amount+1;
+		if ((amount >=CLAN_MAX_DONATION) and (check.minv!=253))
+		{
+			act ("$3N falls out of the  overloaded clan chest onto the floor.",
+			A_SOMEONE,self,null,check,TO_REST);
+			temp:=check.next;
+			link (check, self.outside);
+		}
+		check:=temp;
+	}
 
-amount:=0;
-wait (SFB_DONE, command ("get"));
-store (self,self.zoneidx+".dc",TRUE);
-goto start;
+	amount:=0;
+	wait (SFB_DONE, command ("get"));
+	store (self,self.zoneidx+".dc",TRUE);
+	goto start;
 
 }
-dilend
+dilend //store_blk
 
+// lists the members of your clan, showing clan positions and titles.
 
 dilbegin cinfo (arg:string);
 var
-ln:integer;
- count:integer;
- buf:string;
-
- pc:unitptr;
+	ln:integer;
+	count:integer;
+	buf:string;
+	pc:unitptr;
     mlist:stringlist;
 	line:stringlist;
 	list:stringlist;
@@ -507,445 +492,431 @@ ln:integer;
 	i:integer;
 	err:integer;
 	rlist:stringlist;
-
 code
 {
-if (self.extra.[CLAN_SYMBOLIC]==null)
- {
- act ("<div class='clan'>You are not a member of a clan.</div>",
- A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
-
-pc:=ghead();
-while (pc.type==UNIT_ST_PC)
-{
- if ((pc.extra.[CLAN_NAME].descr==self.extra.[CLAN_NAME].descr) and
- (visible(self,pc)))
- 	addstring(list,pc.name);
- pc:=pc.gnext;
- }
-
-err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr,buf);
-if (err<1)
+	if (self.extra.[CLAN_SYMBOLIC]==null)
 	{
-log ("01:  Error in cinfo");
-quit;
-}
-
-mlist:=split(buf,"\n");
-err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
-if (err<1)
-err:=loadstr ("default.rank",buf);
-rlist:=split(buf,"\n");
-if (arg=="")
-	goto cinfo_who;
-else if (arg==left("master",length(arg)))
-	goto cinfo_mast;
-else if (arg==left("lord",length(arg)))
-goto cinfo_lord;
-else if (arg==left("treasurer",length(arg)))
-goto cinfo_treas
-else if (arg==left("quartermaster",length(arg)))
-goto cinfo_quar;
-
-
-:cinfo_who:
-buf:="<div class='clan'>Clan members (* denotes on line):<br/><br/></div>";
-i:=0;
-ln:=length(mlist);
-
-while (i<ln)
-{
-line:=split(mlist.[i],":");
-if (length(line)<3)
-{
-i:=i+1;
-continue;
-}
-pos:=split(line.[2],"/");
-ps:="";
-if (pos.[0]=="$master")
-ps:="*Master* ";
-else if (pos.[0]=="$lord")
-ps:="&lt;Lord&gt; ";
-
-if (pos.[1]=="$treasure")
-ps:=ps+"[Treasurer] ";
-
-
-if (pos.[2]=="$quartermaster")
-ps:=ps+"[Quartermaster] ";
-	if (line.[0] in list)
-{
-if (line.[1]=="0")
-buf:=buf+"* "+line.[0]+" "+ps+"<br/>";
-else
-buf:=buf+"* "+line.[0]+" - "+rlist.[atoi(line.[1])]+" "+ps+"<br/>";
-}
-else
-{
-if (line.[1]=="0")
-buf:=buf+"  "+line.[0]+" "+ps+"<br/>";
-else
-buf:=buf+"  "+line.[0]+" - "+rlist.[atoi(line.[1])]+" "+ps +"<br/>";
-}
-i:=i+1;
-}
-goto cinfo_list;
-
-:cinfo_mast:
-if (self.extra.[CLAN_RANK].names.[1]=="$master")
-{
-	sendtext (textformat("You are the master daaa!<br/>"),self);
-	quit;
+		act ("<div class='clan'>You are not a member of a clan.</div>",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
 	}
+	pc:=ghead();
+	while (pc.type==UNIT_ST_PC)
+	{
+		if ((pc.extra.[CLAN_NAME].descr==self.extra.[CLAN_NAME].descr) and
+		(visible(self,pc)))
+		addstring(list,pc.name);
+		pc:=pc.gnext;
+	}
+	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr,buf);
+	if (err<1)
+	{
+		log ("01:  Error in cinfo");
+		quit;
+	}
+	mlist:=split(buf,"\n");
+	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
+	if (err<1)
+		err:=loadstr ("default.rank",buf);
+	rlist:=split(buf,"\n");
+	if (arg=="")
+		goto cinfo_who;
+	else if (arg==left("master",length(arg)))
+		goto cinfo_mast;
+	else if (arg==left("lord",length(arg)))
+		goto cinfo_lord;
+	else if (arg==left("treasurer",length(arg)))
+		goto cinfo_treas
+	else if (arg==left("quartermaster",length(arg)))
+		goto cinfo_quar;
+		
+:cinfo_who:
 
-sendtext (textformat("<div class='clan'>The </div>"+self.extra.[CLAN_NAME].descr+" clan master is "),self);
+	buf:="<div class='clan'>Clan members (* denotes on line):<br/><br/></div>";
 	i:=0;
 	ln:=length(mlist);
-
 	while (i<ln)
 	{
 		line:=split(mlist.[i],":");
-        if (length(line)<3)
-        {
-        i:=i+1;
-        continue;
-        }
+		if (length(line)<3)
+		{
+			i:=i+1;
+			continue;
+		}
+		pos:=split(line.[2],"/");
+		ps:="";
+		if (pos.[0]=="$master")
+			ps:="*Master* ";
+		else if (pos.[0]=="$lord")
+			ps:="&lt;Lord&gt; ";
+		if (pos.[1]=="$treasure")
+			ps:=ps+"[Treasurer] ";
+		if (pos.[2]=="$quartermaster")
+			ps:=ps+"[Quartermaster] ";
+		if (line.[0] in list)
+		{
+			if (line.[1]=="0")
+				buf:=buf+"* "+line.[0]+" "+ps+"<br/>";
+			else
+				buf:=buf+"* "+line.[0]+" - "+rlist.[atoi(line.[1])]+" "+ps+"<br/>";
+		}
+		else
+		{
+			if (line.[1]=="0")
+				buf:=buf+"  "+line.[0]+" "+ps+"<br/>";
+			else
+				buf:=buf+"  "+line.[0]+" - "+rlist.[atoi(line.[1])]+" "+ps +"<br/>";
+		}
+		i:=i+1;
+	}
+	goto cinfo_list;
+
+:cinfo_mast:
+	
+	if (self.extra.[CLAN_RANK].names.[1]=="$master")
+	{
+		sendtext (textformat("You are the master daaa!<br/>"),self);
+		quit;
+	}
+	sendtext (textformat("<div class='clan'>The </div>"+self.extra.[CLAN_NAME].descr+" clan master is "),self);
+	i:=0;
+	ln:=length(mlist);
+	while (i<ln)
+	{
+		line:=split(mlist.[i],":");
+		if (length(line)<3)
+		{
+			i:=i+1;
+			continue;
+		}
 		pos:=split (line.[2],"/");
 		if (pos.[0]=="$master")
 		{
-		sendtext (textformat(line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>"),self);
-		quit;
+			sendtext (textformat(line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>"),self);
+			quit;
 		}
 		i:=i+1;
-		}
-
-quit;
+	}
+	quit;
 
 :cinfo_lord:
-ln:=length(mlist);
-
-i:=0;
-buf:="<div class='clan'>Clan lords (* denotes on line):<br/><br/></div>";
-count:=0;
-while (i<ln)
-{
+	
+	ln:=length(mlist);
+	i:=0;
+	buf:="<div class='clan'>Clan lords (* denotes on line):<br/><br/></div>";
+	count:=0;
+	while (i<ln)
+	{
 		line:=split(mlist.[i],":");
-                if (length(line)<3)
-        {
-        i:=i+1;
-        continue;
-        }
-
+		if (length(line)<3)
+		{
+			i:=i+1;
+			continue;
+		}
 		pos:=split (line.[2],"/");
-                                 		if (pos.[0]=="$lord")
-										{
-										count:=count+1;
-        if (line.[0] in list)
-buf:="* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
-else
-buf:="  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
-i:=i+1;
-
-										}
-										i:=i+1;
-}
-if (count<=0)
-buf:="This clan has no lords yet see the master.<br/>";
-
-
-                goto cinfo_list;
+		if (pos.[0]=="$lord")
+		{
+			count:=count+1;
+			if (line.[0] in list)
+				buf:="* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			else
+				buf:="  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			i:=i+1;
+		}
+		i:=i+1;
+	}
+	if (count<=0)
+		buf:="This clan has no lords yet see the master.<br/>";
+	goto cinfo_list;
+	
 :cinfo_treas:
-ln:=length(mlist);
+	
+	ln:=length(mlist);
 
-i:=0;
-buf:="<div class='clan'>Clan treasurers (* denotes on line):<br/><br/></div>";
-count:=0;
-while (i<ln)
-{
+	i:=0;
+	buf:="<div class='clan'>Clan treasurers (* denotes on line):<br/><br/></div>";
+	count:=0;
+	while (i<ln)
+	{
 		line:=split(mlist.[i],":");
-                if (length(line)<3)
-        {
-        i:=i+1;
-        continue;
-        }
+		if (length(line)<3)
+		{
+			i:=i+1;
+			continue;
+		}
 		pos:=split (line.[2],"/");
-                                 		if (pos.[1]=="$treasure")
-										{
-										count:=count+1;
-        if (line.[0] in list)
-buf:="* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
-else
-buf:="  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
-}
-										i:=i+1;
-}
+		if (pos.[1]=="$treasure")
+		{
+			count:=count+1;
+			if (line.[0] in list)
+				buf:="* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			else
+				buf:="  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+		}
+		i:=i+1;
+	}
 
-if (count<=0)
-buf:="This clan has no treasurers yet see the master.<br/>";
-
-                goto cinfo_list;
+	if (count<=0)
+		buf:="This clan has no treasurers yet see the master.<br/>";
+	goto cinfo_list;
 
 :cinfo_quar:
-ln:=length(mlist);
-
-i:=0;
-buf:="<div class='clan'>Clan Quartermasters (* denotes on line):<br/><br/></div>";
-count:=count+1;
-while (i<ln)
-{
+	
+	ln:=length(mlist);
+	i:=0;
+	buf:="<div class='clan'>Clan Quartermasters (* denotes on line):<br/><br/></div>";
+	count:=count+1;
+	while (i<ln)
+	{
 		line:=split(mlist.[i],":");
-                if (length(line)<3)
-        {
-        i:=i+1;
-        continue;
-        }
-
+		if (length(line)<3)
+		{
+			i:=i+1;
+			continue;
+		}
 		pos:=split (line.[2],"/");
-                                 		if (pos.[2]=="$quartermaster")
-										{
-										count:=count+1;
-        if (line.[0] in list)
-buf:="* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
-else
-buf:="  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
-}
-										i:=i+1;
-}
-if (count<=0)
-buf:="This clan has no quartermaster yet see the master.<br/>";
-                goto cinfo_list;
+		if (pos.[2]=="$quartermaster")
+		{
+			count:=count+1;
+			if (line.[0] in list)
+				buf:="* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			else
+				buf:="  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+		}
+		i:=i+1;
+	}
+	if (count<=0)
+		buf:="This clan has no quartermaster yet see the master.<br/>";
+	goto cinfo_list;
 
 :cinfo_list:
-pagestring(textformat(buf+"<div class='default'></div>")+"<br/>",self);
-quit;
+	
+	pagestring(textformat(buf+"<div class='default'></div>")+"<br/>",self);
+	quit;
 }
-dilend
+dilend // cinfo
+
+/* used to delete a clan */
 
 dilbegin clan_delete ();
 var
-i:integer;
-err:integer;
-buf:string;
-list:stringlist;
-ln:integer;
-
+	i:integer;
+	err:integer;
+	buf:string;
+	list:stringlist;
+	ln:integer;
 code
 {
-
-err:=loadstr("clan.delete",buf);
-if (err<1)
-	return;
-
+	err:=loadstr("clan.delete",buf);
+	if (err<1)
+		return;
 	list:=split(buf,"\n");
-
 	ln:=length(list);
-    ln:=ln-1;
+	ln:=ln-1;
 	if (ln<1)
-	 return;
-
+		return;
 	 if (self.name in list)
 	 {
-
 		substring (list,self.name);
 		self.title:= "<div class='cpr'></div><div class='bw'>Banished from </div>"+self.extra.[CLAN_NAME].descr+" clan<div class='default'></div>";
-act ("<div class='clan'>You have been removed from the </div>"+self.extra.[CLAN_NAME].descr+" clan.",
-A_ALWAYS,self,null,null,TO_CHAR);
-subextra (self.extra,CLAN_NAME);
-subextra (self.extra,CLAN_RANK);
-subextra (self.extra,CLAN_SYMBOLIC);
-subextra (self.extra,"tattoo" );
-subextra (self.extra,CLAN_TAG );
-   self.hometown := "temple@udgaard";
-i:=0;
-buf:="";
-while (i<(ln-1))
-{
-if (list.[i]=="")
-{
-i:=i+1;
-continue;
-}
-if (list.[i]==self.name)
-{
-i:=i+1;
-continue;
-}
+		act ("<div class='clan'>You have been removed from the </div>"+self.extra.[CLAN_NAME].descr+" clan.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		subextra (self.extra,CLAN_NAME);
+		subextra (self.extra,CLAN_RANK);
+		subextra (self.extra,CLAN_SYMBOLIC);
+		subextra (self.extra,"tattoo" );
+		subextra (self.extra,CLAN_TAG );
+		self.hometown := "temple@udgaard";
+		i:=0;
+		buf:="";
+		while (i<(ln-1))
+		{
+			if (list.[i]=="")
+			{
+				i:=i+1;
+				continue;
+			}
+			if (list.[i]==self.name)
+			{
+				i:=i+1;
+				continue;
+			}
 
-buf:=buf+list.[i]+"
-x";
-i:=i+1;
-}
-err:=delstr("clan.delete");
-if (i>0)
-err:=savestr("clan.delete",buf,"w");
-	return;
+			buf:=buf+list.[i]+"\n";
+			i:=i+1;
+		}
+		err:=delstr("clan.delete");
+		if (i>0)
+			err:=savestr("clan.delete",buf,"w");
+		return;
 	}
-
 	return;
+}
+dilend //clan_delete
 
-	}
-dilend
+/* Supports donating to clan chests. */
 
 dilbegin donate(arg:string);
 var
- clan:integer;
-d_rooms:stringlist;
-room_idx:string;
-room:       unitptr;
-item:       unitptr;
-num:       integer;
-i:integer;
-here:unitptr;
-x:extraptr;
-amount:integer;
-check:unitptr;
+	clan:integer;
+	d_rooms:stringlist;
+	room_idx:string;
+	room:unitptr;
+	item:unitptr;
+	num:integer;
+	i:integer;
+	here:unitptr;
+	x:extraptr;
+	amount:integer;
+	check:unitptr;
 code
 {
-clan:=0;
+	clan:=0;
 
 :start:
-d_rooms:={"udonate@udgaard","mdonate@midgaard","ndonate@nymgaard"};
-room_idx:=self.outside.nameidx+"@"+self.outside.zoneidx;
-if (room_idx in d_rooms)
-  {
-  act("You may not donate while in a donations room!",A_ALWAYS, self, null,null, TO_CHAR);
-    quit;
-  }
-if (self.fighting != null)
-   {sendtext("<div class='cpy'>Are you nuts! And take your mind off the battle at hand!?</div><div class='default'><br/></div>", self);
-    quit;
-    }
-item:= findunit(self, arg, FIND_UNIT_INVEN, null);
-if (not(item.type == UNIT_ST_OBJ))
-  {
-  act("You do not have anything like that in your inventory.",
-  A_ALWAYS,self, null, null, TO_CHAR);
-    quit;
-  }
-if ((item.objecttype == ITEM_TRASH) or (item.objecttype == ITEM_TRAP))
-  {
-  act("You can not donate that! Who would want your junk!",
-  A_ALWAYS,self, null, null, TO_CHAR);
-    quit;
-  }
-  if ("midgaard" in arg)
-  room := findroom("mdonate@midgaard");
-  else if ("nymgaard" in arg)
-  room := findroom("ndonate@nymgaard");
-else if ("clan" in arg)
- {
- x:=CLAN_SYMBOLIC in self.extra;
- if (x==null)
-  {
-  act ("<div class='clan'>You are not a member of a clan.</div>",A_ALWAYS,self,null,null,TO_CHAR);
-   quit;
-   }
-  room:=findsymbolic("dchest@"+x.descr);
-  if (room==null)
-  {
-act ("<div class='clan'>Clan code error report to Admin.</div>",A_ALWAYS,self,null,null,TO_CHAR);
-  quit;
-  }
-if (item.objecttype==ITEM_CONTAINER)
- {
- if (item.inside!=null)
-  {
- act ("<div class='clan'>You can not donate a container that contains items, empty it
-and try again.</div>",
-    A_ALWAYS, self, null, null, TO_CHAR);
-    quit;
-  }
- }
-  clan:=1;
-amount:=0;
-check:=room.inside;
-while (check!=null)
- {
- if (check.minv!=253)
-  amount:=amount+1;
- check:=check.next;
- }
 
- if (amount >=CLAN_MAX_DONATION)
-  {
-  act("<div class='clan'>You can't donate your clan Chest is full.</div>"
-  ,A_ALWAYS,self,null,null,TO_CHAR);
-   quit;
-   }
- }
-else
-  room := findroom("udonate@udgaard");
-if (clan!=1)
- {
- num := rnd(1, 200);
- if (num > 195)
-   {
-   if (item.cost >= 75000)
-     {
-     experience(+75, self);
-act("You are rewarded 75 experience for your act.",A_ALWAYS, self,null, null, TO_CHAR);
-     }else if (item.cost >= 50000)
-       {
-       experience(+35, self);
-act("You are rewarded 35 experience for your act.",A_ALWAYS, self,null, null, TO_CHAR);
-       }
-     }
+	d_rooms:={"udonate@udgaard","mdonate@midgaard","ndonate@nymgaard"};
+	room_idx:=self.outside.nameidx+"@"+self.outside.zoneidx;
+	if (room_idx in d_rooms)
+	{
+		act("You may not donate while in a donations room!",A_ALWAYS, self, null,null, TO_CHAR);
+		quit;
+	}
+	if (self.fighting != null)
+	{
+		sendtext("<div class='cpy'>Are you nuts! And take your mind off the battle at hand!?</div><div class='default'><br/></div>", self);
+		quit;
+	}
+	item:= findunit(self, arg, FIND_UNIT_INVEN, null);
+	if (not(item.type == UNIT_ST_OBJ))
+	{
+		act("You do not have anything like that in your inventory.",
+		A_ALWAYS,self, null, null, TO_CHAR);
+		quit;
+	}
+	if ((item.objecttype == ITEM_TRASH) or (item.objecttype == ITEM_TRAP))
+	{
+		act("You can not donate that! Who would want your junk!",
+		A_ALWAYS,self, null, null, TO_CHAR);
+		quit;
+	}
+	if ("midgaard" in arg)
+		room := findroom("mdonate@midgaard");
+	else if ("nymgaard" in arg)
+		room := findroom("ndonate@nymgaard");
+	else if ("clan" in arg)
+	{
+		x:=CLAN_SYMBOLIC in self.extra;
+		if (x==null)
+		{
+			act ("<div class='clan'>You are not a member of a clan.</div>",A_ALWAYS,self,null,null,TO_CHAR);
+			quit;
+		}
+		room:=findsymbolic("dchest@"+x.descr);
+		if (room==null)
+		{
+			act ("<div class='clan'>Clan code error report to Admin.</div>",A_ALWAYS,self,null,null,TO_CHAR);
+			quit;
+		}
+		if (item.objecttype==ITEM_CONTAINER)
+		{
+			if (item.inside!=null)
+			{
+				act ("<div class='clan'>You can not donate a container that contains items, empty it
+				and try again.</div>",
+				A_ALWAYS, self, null, null, TO_CHAR);
+				quit;
+			}
+		}
+		clan:=1;
+		amount:=0;
+		check:=room.inside;
+		while (check!=null)
+		{
+			if (check.minv!=253)
+				amount:=amount+1;
+			check:=check.next;
+		}
 
- i:=0;
- here:=room.inside;
- while ((here!=null) and (i<5))
-   {
-   if (here.idx==item.idx)i:=i+1;
-   here:=here.next;
-   }
+		if (amount >=CLAN_MAX_DONATION)
+		{
+			act("<div class='clan'>You can't donate your clan Chest is full.</div>"
+			,A_ALWAYS,self,null,null,TO_CHAR);
+			quit;
+		}
+	}
+	else
+		room := findroom("udonate@udgaard");
+	if (clan!=1)
+	{
+		num := rnd(1, 200);
+		if (num > 195)
+		{
+			if (item.cost >= 75000)
+			{
+				experience(+75, self);
+				act("You are rewarded 75 experience for your act.",A_ALWAYS, self,null, null, TO_CHAR);
+			}
+			else if (item.cost >= 50000)
+			{
+				experience(+35, self);
+				act("You are rewarded 35 experience for your act.",A_ALWAYS, self,null, null, TO_CHAR);
+			}
+		}
+		i:=0;
+		here:=room.inside;
+		while ((here!=null) and (i<5))
+		{
+			if (here.idx==item.idx)i:=i+1;
+			here:=here.next;
+		}
 
-   act("You donate $2n to those in need.",A_ALWAYS, self, item, null,
-TO_CHAR);
-   act("$1n donates $2n to those in need.",A_SOMEONE, self, item, null,
-TO_REST);
+		act("You donate $2n to those in need.",A_ALWAYS, self, item, null,
+		TO_CHAR);
+		act("$1n donates $2n to those in need.",A_SOMEONE, self, item, null,
+		TO_REST);
 
-   if (i<5)
-     {
-   item.cost := 0;
-   link(item, room);
-   act("A Glowing red portal appears hovering in the air, $2n emerges"+
-" from it and drops to the floor.",A_ALWAYS, room.inside, item,null, TO_ALL);
-     }
-     else
-      destroy (item);
-    }
-   else
-    {
-   act("<div class='clan'>You donate $2n to your clan.</div>",A_ALWAYS, self, item, null,TO_CHAR);
-   act("<div class='clan'>$1n donates $2n to $1s clan.</div>",A_SOMEONE, self, item, null,TO_REST);
-   link(item, room);
-store (room,room.zoneidx+".dc",TRUE);
-  }
-  quit;
+		if (i<5)
+		{
+			item.cost := 0;
+			link(item, room);
+			act("A Glowing red portal appears hovering in the air, $2n emerges"+
+			" from it and drops to the floor.",A_ALWAYS, room.inside, item,null, TO_ALL);
+		}
+		else
+			destroy (item);
+	}
+	else
+	{
+		act("<div class='clan'>You donate $2n to your clan.</div>",A_ALWAYS, self, item, null,TO_CHAR);
+		act("<div class='clan'>$1n donates $2n to $1s clan.</div>",A_SOMEONE, self, item, null,TO_REST);
+		link(item, room);
+		store (room,room.zoneidx+".dc",TRUE);
+	}
+	quit;
 }
-dilend
+dilend //donate
+
+/* Loads clan chest items from secret storage (clan_idx.dc file) */
 
 dilbegin chest_load ();
 var
- waist:unitptr;
- chest:unitptr;
+	waist:unitptr;
+	chest:unitptr;
 code
 {
-chest:=restore(self.zoneidx+".dc",null);
+	chest:=restore(self.zoneidx+".dc",null);
 
-if (chest== null)
- {
-chest:=load("dchest@"+self.zoneidx);
+	if (chest== null)
+	{
+		chest:=load("dchest@"+self.zoneidx);
+	}
+	link (chest, self);
+	quit;
 }
-link (chest, self);
-quit;
-}
-dilend
+dilend // chest_load
 
-
+/* Lists a clans ranks. Also displays the rank of an individual within their clan */
 
 dilbegin crank (arg:string);
 var
@@ -958,279 +929,275 @@ var
 	pname:string;
 code
 {
-if (arg=="")
-goto list_rank;
-else
- {
- pname:=getword(arg);
-pc:=ghead();
-while (pc.type==UNIT_ST_PC)
-{
- if (pc.name==pname)
- break;
- pc:=pc.gnext;
- }
+	if (arg=="")
+		goto list_rank;
+	else
+	{
+		pname:=getword(arg);
+		pc:=ghead();
+		while (pc.type==UNIT_ST_PC)
+		{
+			if (pc.name==pname)
+				break;
+			pc:=pc.gnext;
+		}
 
-if ((pc.type!=UNIT_ST_PC) or
-(not(visible(self,pc))))
-  {
-  act ("<div class='clan'>No such person found.</div>",A_ALWAYS,self,null,null,TO_CHAR);
-  quit;
-  }
- }
-
-if (pc.extra.[CLAN_NAME]==null)
- {
- if (self==pc)
- act ("<div class='clan'>You are not a member of a clan</div><div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
- else
- act ("<div class='clan'>$3n is not a member of a clan</div><div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
- quit;
- }
-
-if (pc.extra.[CLAN_RANK].descr=="0")
- {
-  if (self==pc)
- act("<div class='clan'>You don't hold a rank in your clan.</div><div class='default'></div>",
- A_ALWAYS,self,null,pc,TO_CHAR);
-  else
- act("<div class='clan'>$3n Doesn't hold a rank in a clan.</div><div class='default'></div>",
- A_ALWAYS,self,null,pc,TO_CHAR);
- quit;
- }
-
-err:=loadstr (pc.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
-if (err<1)
- err:=loadstr ("default.rank",buf);
-
-rlist:=split(buf,"\n");
-
-if (rlist.[atoi(pc.extra.[CLAN_RANK].descr)]=="blank")
- {
- if (self==pc)
-  act("<div class='clan'>You don't hold a Labeled rank in $3s clan.</div><div class='default'></div>",
- A_ALWAYS,self,null,pc,TO_CHAR);
- else
- act("<div class='clan'>$3n Doesn't hold a Labeled rank in $3s clan.</div><div class='default'></div>",
- A_ALWAYS,self,null,pc,TO_CHAR);
- quit;
- }
-
-if (pc!=self)
-act ("<div class='clan'>$3n holds the rank of </div>"+
-rlist.[atoi(pc.extra.[CLAN_RANK].descr)]+
-" in the "+
-pc.extra.[CLAN_NAME].descr+
-" clan.<div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
-else
-act ("<div class='clan'>You hold the rank of </div>"+
-rlist.[atoi(pc.extra.[CLAN_RANK].descr)]+
-" in the "+
-pc.extra.[CLAN_NAME].descr+
-" clan.<div class='default'></div>",A_ALWAYS,self,null,null,TO_CHAR);
-quit;
-:list_rank:
-if (self.extra.[CLAN_NAME]==null)
-{
-	sendtext ("You are not a member of a clan.<br/>",self);
-	quit;
+		if ((pc.type!=UNIT_ST_PC) or
+		(not(visible(self,pc))))
+		{
+			act ("<div class='clan'>No such person found.</div>",A_ALWAYS,self,null,null,TO_CHAR);
+			quit;
+		}
 	}
 
+	if (pc.extra.[CLAN_NAME]==null)
+	{
+		if (self==pc)
+			act ("<div class='clan'>You are not a member of a clan</div><div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
+		else
+			act ("<div class='clan'>$3n is not a member of a clan</div><div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
+		quit;
+	}
 
+	if (pc.extra.[CLAN_RANK].descr=="0")
+	{
+		if (self==pc)
+			act("<div class='clan'>You don't hold a rank in your clan.</div><div class='default'></div>",
+			A_ALWAYS,self,null,pc,TO_CHAR);
+		else
+			act("<div class='clan'>$3n Doesn't hold a rank in a clan.</div><div class='default'></div>",
+			A_ALWAYS,self,null,pc,TO_CHAR);
+		quit;
+	}
 
-err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
-if (err<1)
- err:=loadstr ("default.rank",buf);
+	err:=loadstr (pc.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
+	if (err<1)
+		err:=loadstr ("default.rank",buf);
 
-rlist:=split(buf,"\n");
+	rlist:=split(buf,"\n");
 
-act ("<div class='clan'>Your clan ranks are set as follows:</div><div class='default'></div>",
- A_ALWAYS,self,null,null,TO_CHAR);
+	if (rlist.[atoi(pc.extra.[CLAN_RANK].descr)]=="blank")
+	{
+		if (self==pc)
+			act("<div class='clan'>You don't hold a Labeled rank in $3s clan.</div><div class='default'></div>",
+			A_ALWAYS,self,null,pc,TO_CHAR);
+		else
+			act("<div class='clan'>$3n Doesn't hold a Labeled rank in $3s clan.</div><div class='default'></div>",
+			A_ALWAYS,self,null,pc,TO_CHAR);
+		quit;
+	 }
 
-i:=1;
-ln:=length(rlist);
-ln:=ln-1;
-buf:="";
-while (i<ln)
- {
- buf:=buf+itoa(i)+" - "+rlist.[i]+"<br/>";
- i:=i+1;
+	if (pc!=self)
+		act ("<div class='clan'>$3n holds the rank of </div>"+
+		rlist.[atoi(pc.extra.[CLAN_RANK].descr)]+" in the "+
+		pc.extra.[CLAN_NAME].descr+
+		" clan.<div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
+	else
+		act ("<div class='clan'>You hold the rank of </div>"+
+		rlist.[atoi(pc.extra.[CLAN_RANK].descr)]+" in the "+
+		pc.extra.[CLAN_NAME].descr+
+		" clan.<div class='default'></div>",A_ALWAYS,self,null,null,TO_CHAR);
+	quit;
+	:list_rank:
+	if (self.extra.[CLAN_NAME]==null)
+	{
+		sendtext ("You are not a member of a clan.<br/>",self);
+		quit;
+	}
+	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
+	if (err<1)
+		err:=loadstr ("default.rank",buf);
+
+	rlist:=split(buf,"\n");
+
+	act ("<div class='clan'>Your clan ranks are set as follows:</div><div class='default'></div>",
+	 A_ALWAYS,self,null,null,TO_CHAR);
+
+	i:=1;
+	ln:=length(rlist);
+	ln:=ln-1;
+	buf:="";
+	while (i<ln)
+	{
+		buf:=buf+itoa(i)+" - "+rlist.[i]+"<br/>";
+		i:=i+1;
+	}
+	pagestring (textformat(buf),self);
+	quit;
 }
+dilend // crank
 
-pagestring (textformat(buf),self);
-quit;
+/* Configures, displays, and sets clan ranks. 
 
-}
-dilend
+May only be used by clan master or lord.
+*/
 
 dilbegin csrank (arg:string);
 external
- modmember  (file:string,pname:string,rank:string,pos:stringlist);
+	modmember  (file:string,pname:string,rank:string,pos:stringlist);
 var
- i:integer;
-temp:string;
- rank:string;
- err:integer;
- buf:string;
- rlist:stringlist;
- pc:unitptr;
- tlist:stringlist;
- ln:integer;
+	i:integer;
+	temp:string;
+	rank:string;
+	err:integer;
+	buf:string;
+	rlist:stringlist;
+	pc:unitptr;
+	tlist:stringlist;
+	ln:integer;
 code
 {
-if (self.extra.[CLAN_RANK]==null)
-{
-  act ("<div class='clan'>You must be a clan Master or Lord to use csrank.</div>",
-   A_ALWAYS, self, null,null,TO_CHAR);
-  quit;
-  }
+	if (self.extra.[CLAN_RANK]==null)
+	{
+		act ("<div class='clan'>You must be a clan Master or Lord to use csrank.</div>",
+		A_ALWAYS, self, null,null,TO_CHAR);
+		quit;
+	}
+	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and
+	(self.extra.[CLAN_RANK].names.[1]!="$lord"))
+	{
+		act ("<div class='clan'>You must be a clan Master or Lord to use csrank.</div>",
+		A_ALWAYS, self, null,null,TO_CHAR);
+		quit;
+	}
+	if (arg=="")
+		goto list_rank;
+	/* if (arg=="reset")
+		goto reset_rank;*/
 
-if ((self.extra.[CLAN_RANK].names.[1]!="$master") and
-(self.extra.[CLAN_RANK].names.[1]!="$lord"))
-{
-  act ("<div class='clan'>You must be a clan Master or Lord to use csrank.</div>",
-   A_ALWAYS, self, null,null,TO_CHAR);
-  quit;
-  }
+	rank:=getword(arg);
+	if ((atoi(rank)>0) and (atoi(rank)<26))
+	if (arg=="")
+		goto c_r_title;
+	else
+		goto s_r_title;
 
+	pc:=ghead();
+	while (pc.type==UNIT_ST_PC)
+	{
+		if (pc.name==rank)
+		break;
+		pc:=pc.gnext;
+	}
 
-if (arg=="")
- goto list_rank;
-/* if (arg=="reset")
- 	goto reset_rank;*/
+	if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
+	{
+		act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
+	if (pc.extra.[CLAN_NAME]==null)
+	{
+		act("<div class='clan'>$3n is not a member of a clan.</div><div class='default'></div>",
+		A_ALWAYS,self,null,pc,TO_CHAR);
+		quit;
+	}
 
-rank:=getword(arg);
-if ((atoi(rank)>0) and (atoi(rank)<26))
-if (arg=="")
- goto c_r_title;
-else
- goto s_r_title;
+	if (self.extra.[CLAN_NAME].descr!=pc.extra.[CLAN_NAME].descr)
+	{
+		act ("<div class='clan'>$3n is not a member of your clan.</div><div class='default'></div>",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
-pc:=ghead();
-while (pc.type==UNIT_ST_PC)
-{
- if (pc.name==rank)
- break;
- pc:=pc.gnext;
- }
+	rank:=getword (arg);
+	if ((atoi(rank)>=1) or (atoi(rank)<=25))
+	{
+		err:=loadstr (pc.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
+		if (err<1)
+			err:=loadstr ("default.rank",buf);
 
-if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
-  {
-  act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
-  quit;
-  }
+		rlist:=split(buf,"\n");
+		if (rlist.[atoi(rank)]=="blank")
+		{
+			sendtext ("<div class='clan'>That rank has no label yet you can't set it till it has a label</div><div class='default'><br/></div>",self);
+			quit;
+		}
+		pc.extra.[CLAN_RANK].descr:=rank;
+		act ("<div class='clan'>Setting $3ns Clan rank to </div>"+rank+
+		":  "+rlist.[atoi(rank)]+
+		".<div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
+		act ("<div class='clan'>Your clan rank is now </div>"+
+		rlist.[atoi(rank)]+
+		"<div class='default'></div>", A_ALWAYS,pc,null,null,TO_CHAR);
+	}
+	else
+	{
+		sendtext ("<div class='clan'>You can only set ranks 1 - 25<br/></div>",self);
+	}
 
-if (pc.extra.[CLAN_NAME]==null)
- {
- act("<div class='clan'>$3n is not a member of a clan.</div><div class='default'></div>",
-  A_ALWAYS,self,null,pc,TO_CHAR);
- quit;
- }
+	addstring(tlist,pc.extra.[CLAN_RANK].names.[1]);
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[3]);
 
-if (self.extra.[CLAN_NAME].descr!=pc.extra.[CLAN_NAME].descr)
- {
- act ("<div class='clan'>$3n is not a member of your clan.</div><div class='default'></div>",
- A_ALWAYS,self,null,null,TO_CHAR);
-  quit;
- }
-
-rank:=getword (arg);
-if ((atoi(rank)>=1) or (atoi(rank)<=25))
-{
-err:=loadstr (pc.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
-if (err<1)
- err:=loadstr ("default.rank",buf);
-
-rlist:=split(buf,"\n");
-if (rlist.[atoi(rank)]=="blank")
-{
-sendtext ("<div class='clan'>That rank has no label yet you can't set it till it has a label</div><div class='default'><br/></div>",self);
-quit;
-}
-pc.extra.[CLAN_RANK].descr:=rank;
-act ("<div class='clan'>Setting $3ns Clan rank to </div>"+rank+
-":  "+rlist.[atoi(rank)]+
-".<div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
-act ("<div class='clan'>Your clan rank is now </div>"+
-rlist.[atoi(rank)]+
-"<div class='default'></div>", A_ALWAYS,pc,null,null,TO_CHAR);
-}
-else
-{
-sendtext ("<div class='clan'>You can only set ranks 1 - 25<br/></div>",self);
-}
-
-addstring(tlist,pc.extra.[CLAN_RANK].names.[1]);
-addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
-addstring(tlist, pc.extra.[CLAN_RANK].names.[3]);
-
- modmember(self.extra.[CLAN_SYMBOLIC].descr,
- pc.name,
-  pc.extra.[CLAN_RANK].descr,tlist);
-quit;
+	modmember(self.extra.[CLAN_SYMBOLIC].descr,
+	pc.name,
+	pc.extra.[CLAN_RANK].descr,tlist);
+	quit;
 
 :c_r_title:
-err:=loadstr (pc.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
-if (err<1)
- err:=loadstr ("default.rank",buf);
 
+	err:=loadstr (pc.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
+	if (err<1)
+		err:=loadstr ("default.rank",buf);
 
-rlist:=split(buf,"\n");
-act ("<div class='clan'></div>"+rank+":  "+rlist.[atoi(rank)],A_ALWAYS,self,null,null,TO_CHAR);
-quit;
+	rlist:=split(buf,"\n");
+	act ("<div class='clan'></div>"+rank+":  "+rlist.[atoi(rank)],A_ALWAYS,self,null,null,TO_CHAR);
+	quit;
 
 :s_r_title:
-err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
-if (err<1)
- err:=loadstr ("default.rank",buf);
 
-rlist:=split(buf,"\n");
-rlist.[atoi(rank)]:=textformat(arg);
-act ("<div class='clan'></div>"+rank+" is now set to:  "+rlist.[atoi(rank)],
-A_ALWAYS,self,null,null,TO_CHAR);
-i:=0;
-ln:=length(rlist);
-ln:=ln-1;
-buf:="";
-while (i<ln)
-{
-if (i<0)
-buf:=rlist.[i]+"
-x";
-else
-buf:=buf+rlist.[i]+"
-x";
-i:=i+1;
-}
+	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
+	if (err<1)
+		err:=loadstr ("default.rank",buf);
 
-err:=delstr(self.extra.[CLAN_SYMBOLIC].descr+".rank");
-err:=savestr(self.extra.[CLAN_SYMBOLIC].descr+".rank",buf,"w");
-quit;
+	rlist:=split(buf,"\n");
+	rlist.[atoi(rank)]:=textformat(arg);
+	act ("<div class='clan'></div>"+rank+" is now set to:  "+rlist.[atoi(rank)],
+	A_ALWAYS,self,null,null,TO_CHAR);
+	i:=0;
+	ln:=length(rlist);
+	ln:=ln-1;
+	buf:="";
+	while (i<ln)
+	{
+		if (i<0)
+			buf:=rlist.[i]+"\n";
+		else
+			buf:=buf+rlist.[i]+"\n";
+		i:=i+1;
+	}
+
+	err:=delstr(self.extra.[CLAN_SYMBOLIC].descr+".rank");
+	err:=savestr(self.extra.[CLAN_SYMBOLIC].descr+".rank",buf,"w");
+	quit;
 
 :list_rank:
-err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
-if (err<1)
- err:=loadstr ("default.rank",buf);
 
-rlist:=split(buf,"\n");
+	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
+	if (err<1)
+		err:=loadstr ("default.rank",buf);
 
-act ("<div class='clan'>Your clan ranks are set as follows:</div><div class='default'></div>",
- A_ALWAYS,self,null,null,TO_CHAR);
+	rlist:=split(buf,"\n");
 
-i:=1;
-ln:=length(rlist);
-ln:=ln-1;
-buf:="";
-while (i<ln)
- {
- buf:=buf+itoa(i)+" - "+rlist.[i]+"<br/>";
- i:=i+1;
+	act ("<div class='clan'>Your clan ranks are set as follows:</div><div class='default'></div>",
+	 A_ALWAYS,self,null,null,TO_CHAR);
+
+	i:=1;
+	ln:=length(rlist);
+	ln:=ln-1;
+	buf:="";
+	while (i<ln)
+	{
+		buf:=buf+itoa(i)+" - "+rlist.[i]+"<br/>";
+		i:=i+1;
+	}
+
+	pagestring (textformat(buf),self);
+	quit;
 }
+dilend // csrank
 
-pagestring (textformat(buf),self);
-quit;
-}
-dilend
+/* Used to delete a player who may be a clan master. */
 
 dilbegin god_delete(pname:string);
 external
@@ -1244,84 +1211,95 @@ external
 		clist:stringlist;
 code
 {
-err:=loadstr ("clanlist.data",buf);
-if (err<1)
+	err:=loadstr ("clanlist.data",buf);
+	if (err<1)
 	{
-	delete_player(pname);
-return;
-}
-
-clist:=split(buf,"\n");
-ln:=length (clist);
-ln:=ln-1;
-if (ln<1)
-	{
-	delete_player(pname);
-return;
-}
-
-i:=0;
-while (i<ln)
-{
-err:=submember(clist.[i],pname);
-i:=i+1;
-}
-
-	delete_player(pname);
-return;
-}
-dilend
-
-dilbegin clist (arg:string);
-	var
-		i:integer;
-		err:integer;
-		buf:string;
-		ln:integer;
-		clist:stringlist;
-	mlist:stringlist;
-
-	code
-	{
-err:=loadstr ("clanlist.data",buf);
-if (err<1)
-	{
-log ("01:  Error in clanlist.data");
-sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
-quit;
-}
-
-clist:=split(buf,"\n");
-ln:=length (clist);
-ln:=ln-1;
-if (ln<1)
-	{
-log ("02:  Error in clanlist.data");
-sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
-quit;
-}
-
-i:=0;
-buf:="";
-sendtext("                                 Valhalla Clans<br/><br/>",self);
-sendtext("          Clan Name                          Master<br/><br/>",self);
-
-while (i<ln)
-{
-	if (i==0)
-	buf:="  " + clist.[i+2]+"&amp;s"+itoa(40-length(clist.[i+2]))+
-	clist.[i+1]+"<br/>";
-	else
-		buf:=buf+"  " + clist.[i+2]+"&amp;s"+itoa(40-length(clist.[i+2]))+
-	clist.[i+1]+"<br/>";
-	i:=i+5;
+		delete_player(pname);
+		return;
 	}
 
-buf:=textformat(buf);
-pagestring(buf,self);
-quit;
+	clist:=split(buf,"\n");
+	ln:=length (clist);
+	ln:=ln-1;
+	if (ln<1)
+	{
+		delete_player(pname);
+		return;
+	}
+	i:=0;
+	while (i<ln)
+	{
+		err:=submember(clist.[i],pname);
+		i:=i+1;
+	}
+	delete_player(pname);
+	return;
 }
-dilend
+dilend //god_delete
+
+/* Lists currently loaded clans and their masters. 
+Available to all players. */
+
+dilbegin clist (arg:string);
+var
+	i:integer;
+	ii:integer;
+	err:integer;
+	spaces:string;
+	buf:string;
+	ln:integer;
+	clist:stringlist;
+	mlist:stringlist;
+code
+{
+	err:=loadstr ("clanlist.data",buf);
+	if (err<1)
+		{
+	log ("01:  Error in clanlist.data");
+	sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+	quit;
+	}
+
+	clist:=split(buf,"\n");
+	ln:=length (clist);
+	ln:=ln-1;
+	if (ln<1)
+		{
+	log ("02:  Error in clanlist.data");
+	sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+	quit;
+	}
+
+	i:=0;
+	buf:="";
+	sendtext("                   Valhalla Clans<br/><br/>",self);
+	sendtext("       Clan Name                          Master<br/><br/>",self);
+
+	while (i<ln)
+	{
+		ii := 0;
+		spaces := "";
+		while (ii < 40-length(clist.[i+2]))
+		{
+			spaces := spaces + " ";
+			ii := ii + 1;
+		}
+		if (i==0)
+			buf:="  " + clist.[i+2]+spaces+clist.[i+1]+"<br/>";
+		else
+			buf:=buf+"  " + clist.[i+2]+spaces+clist.[i+1]+"<br/>";
+		i:=i+5;
+	}
+
+	buf:=textformat(buf);
+	pagestring(buf,self);
+	quit;
+}
+dilend // clist
+
+/* Starts a new clan. Prior to execution, update clanlist.data with an
+appropriate set of strings to match the new clan. 
+Command must be run by named Master in clanlist.data */
 
 dilbegin cstart (arg:string);
 external
@@ -1332,52 +1310,51 @@ external
 		buf:string;
 		ln:integer;
 		clist:stringlist;
-	mlist:stringlist;
-
-	code
-	{
+		mlist:stringlist;
+code
+{
 	if (self.extra.[CLAN_NAME]!=null)
 	{
-	sendtext ("<div class='clan'>You already belong to a clan why would you try to start another?<br/></div>",self);
+		sendtext ("<div class='clan'>You already belong to a clan why would you try to start another?<br/></div>",self);
+		quit;
+	}
+	err:=loadstr ("clanlist.data",buf);
+	if (err<1)
+	{
+		log ("01:  Error in clanlist.data");
+		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		quit;
+	}
+
+	clist:=split(buf,"\n");
+	ln:=length (clist);
+	ln:=ln-1;
+	if (ln<1)
+	{
+		log ("02:  Error in clanlist.data");
+		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		quit;
+	}
+
+	i:=0;
+	buf:="nope";
+
+	while (i<ln)
+	{
+		if (clist.[i+1]==self.name)
+		{
+			init_master(clist.[i+2],clist.[i+3],clist.[i],clist.[i+4]);
+			sendtext ("Clan initialized<br/>",self);
+			quit;
+		}
+		i:=i+5;
+	}
+	sendtext ("You are not a master of a new clan.<br/>",self);
 	quit;
-	}
-err:=loadstr ("clanlist.data",buf);
-if (err<1)
-	{
-log ("01:  Error in clanlist.data");
-sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
-quit;
 }
+dilend //cstart
 
-clist:=split(buf,"\n");
-ln:=length (clist);
-ln:=ln-1;
-if (ln<1)
-	{
-log ("02:  Error in clanlist.data");
-sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
-quit;
-}
-
-i:=0;
-buf:="nope";
-
-while (i<ln)
-{
-if (clist.[i+1]==self.name)
-{
-init_master(clist.[i+2],clist.[i+3],clist.[i],clist.[i+4]);
-sendtext ("Clan initialized<br/>",self);
-
-quit;
-}
-	i:=i+5;
-	}
-
-sendtext ("You are not a master of a new clan.<br/>",self);
-quit;
-}
-dilend
+/* command allows for the promotion of a new master to replace an old */
 
 dilbegin chmaster (oldmast:string,newmast:string);
 	var
@@ -1386,54 +1363,49 @@ dilbegin chmaster (oldmast:string,newmast:string);
 		buf:string;
 		ln:integer;
 		clist:stringlist;
-	mlist:stringlist;
+		mlist:stringlist;
 
-	code
-	{
-err:=loadstr ("clanlist.data",buf);
-if (err<1)
-	{
-log ("01:  Error in chmaster clanlist.data");
-quit;
-}
-
-clist:=split(buf,"\n");
-ln:=length (clist);
-ln:=ln-1;
-
-if (ln<1)
-	{
-log ("02:  Error in chmaster clanlist.data");
-quit;
-}
-
-i:=0;
-while (i<ln)
+code
 {
-if (clist.[i+1]==oldmast)
-{
-clist.[i+1]:=newmast;
-break;
-}
-	i:=i+5;
+	err:=loadstr ("clanlist.data",buf);
+	if (err<1)
+	{
+		log ("01:  Error in chmaster clanlist.data");
+		quit;
 	}
-i:=0;
-buf:="";
-while(i<ln)
-{
-if (i==0)
-buf:=clist.[i]+"
-x";
-	else
-	buf:=buf+clist.[i]+"
-x";
-	i:=i+1;
+	clist:=split(buf,"\n");
+	ln:=length (clist);
+	ln:=ln-1;
+	if (ln<1)
+	{
+		log ("02:  Error in chmaster clanlist.data");
+		quit;
+	}
+	i:=0;
+	while (i<ln)
+	{
+		if (clist.[i+1]==oldmast)
+		{
+			clist.[i+1]:=newmast;
+			break;
+		}
+		i:=i+5;
+	}
+	i:=0;
+	buf:="";
+	while(i<ln)
+	{
+		if (i==0)
+			buf:=clist.[i]+"\n";
+		else
+			buf:=buf+clist.[i]+"\n";
+		i:=i+1;
 	}
 	err:=delstr("clanlist.data");
 	err:=savestr("clanlist.data",buf,"w");
-return;
+	return;
 }
-dilend
+dilend //chmaster
 
 dilbegin cstat (arg:string);
 	var
@@ -1442,289 +1414,272 @@ dilbegin cstat (arg:string);
 		buf:string;
 		ln:integer;
 		clist:stringlist;
-	mlist:stringlist;
-	temp:string;
+		mlist:stringlist;
+		temp:string;
 
-	code
-	{
-err:=loadstr ("clanlist.data",buf);
-if (err<1)
-	{
-log ("01:  Error in clanlist.data");
-sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
-quit;
-}
-
-clist:=split(buf,"\n");
-ln:=length (clist);
-ln:=ln-1;
-if (ln<4)
-	{
-log ("02:  Error in clanlist.data");
-sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
-quit;
-}
-
-i:=0;
-buf:="";
-sendtext("                                 Valhalla Clans<br/><br/>",self);
-
-while (i<ln)
-{
-
-err:=loadstr (clist.[i],temp);
-if (err<1)
-{
-mlist:=null;
-	addstring (mlist,clist.[i+1]+":0:$master/$none/$none");
-	}
-else
-mlist:=split(temp,"
-x");
-
-	if (i==0)
-	buf:=clist.[i+2]+"  "+
-	 clist.[i+1]+"  "+
-		itoa(length(mlist))+"<br/>";
-	else
-	   	buf:=buf+ clist.[i+2]+"  "+
-		clist.[i+1]+"  "+
-			itoa(length(mlist))+"<br/>";
-
-	i:=i+5;
-	}
-
-buf:=textformat(buf);
-pagestring(buf,self);
-quit;
-}
-
-dilend
-
-dilbegin init_master (clan_name:string, clan_tattoo:string,file:string,tag:string);
-var
- tmp:stringlist;
- err:integer;
 code
 {
-addextra (self.extra,{CLAN_NAME},clan_name);
-addextra (self.extra,{CLAN_SYMBOLIC},file);
-addextra (self.extra,{CLAN_RANK,"$master","$none","$none"},"0");
+	err:=loadstr ("clanlist.data",buf);
+	if (err<1)
+	{
+		log ("01:  Error in clanlist.data");
+		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		quit;
+	}
 
+	clist:=split(buf,"\n");
+	ln:=length (clist);
+	ln:=ln-1;
+	if (ln<4)
+	{
+		log ("02:  Error in clanlist.data");
+		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		quit;
+	}
 
-addstring (tmp,"tattoos");
-addstring (tmp,"tattoo");
-addextra (self.extra,tmp ,clan_tattoo);
+	i:=0;
+	buf:="";
+	sendtext("                                 Valhalla Clans<br/><br/>",self);
 
-   self.hometown :="htown@"+self.extra.[CLAN_SYMBOLIC].descr;
-err:=savestr(file,textformat(self.name+":0:$master/$none/$none
-x"),"w");
-return;
+	while (i<ln)
+	{
+		err:=loadstr (clist.[i],temp);
+		if (err<1)
+		{
+			mlist:=null;
+			addstring (mlist,clist.[i+1]+":0:$master/$none/$none");
+		}
+		else
+			mlist:=split(temp,"\n");
+
+		if (i==0)
+			buf:=clist.[i+2]+"  "+clist.[i+1]+"  "+itoa(length(mlist))+"<br/>";
+		else
+			buf:=buf+ clist.[i+2]+"  "+clist.[i+1]+"  "+itoa(length(mlist))+"<br/>";
+		i:=i+5;
+	}
+	buf:=textformat(buf);
+	pagestring(buf,self);
+	quit;
 }
 dilend
+
+/* dil used by cstart to initialize the master with extras */
+
+dilbegin init_master (clan_name:string, clan_tattoo:string, file:string, tag:string);
+var
+	tmp:stringlist;
+	err:integer;
+code
+{
+	addextra (self.extra,{CLAN_NAME},clan_name);
+	addextra (self.extra,{CLAN_SYMBOLIC},file);
+	addextra (self.extra,{CLAN_RANK,"$master","$none","$none"},"0");
+
+	addstring (tmp,"tattoos");
+	addstring (tmp,"tattoo");
+	addextra (self.extra,tmp ,clan_tattoo);
+
+	self.hometown :="htown@"+self.extra.[CLAN_SYMBOLIC].descr;
+	err:=savestr(file,textformat(self.name+":0:$master/$none/$none\n"),"w");
+	return;
+}
+dilend // init_master
+
+/* Command allows master/lord to set titles for clan members. Auto-appends clan tag. */
 
 dilbegin ctitle (arg:string);
 var
- pname:string;
- pc:unitptr;
- err:integer;
- buf:string;
- i:integer;
- ln:integer;
- clist:stringlist;
-balance:integer;
+	pname:string;
+	pc:unitptr;
+	err:integer;
+	buf:string;
+	i:integer;
+	ln:integer;
+	clist:stringlist;
+	balance:integer;
 
 code
 {
-
-if (self.level >IMMORTAL_LEVEL) goto adminctitle;
-if (self.extra.[CLAN_RANK]==null)
-{
-  act ("<div class='clan'>You must be a clan Master or Lord to use ctitle.</div>",
-   A_ALWAYS, self, null,null,TO_CHAR);
-  quit;
-  }
-
-if ((self.extra.[CLAN_RANK].names.[1]!="$master") and
-(self.extra.[CLAN_RANK].names.[1]!="$lord"))
-{
-  act ("<div class='clan'>You must be a clan Master or Lord to use ctitle.</div>",
-   A_ALWAYS, self, null,null,TO_CHAR);
-  quit;
-  }
-:adminctitle:
-pname:=getword(arg);
-pc:=ghead();
-while (pc.type==UNIT_ST_PC)
-{
- if (pc.name==pname)
- break;
- pc:=pc.gnext;
- }
-
-if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
- {
- act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
-
-if (pc.extra.[CLAN_NAME]==null)
- {
-act ("<div class='clan'>$3n is not a member of your clan.</div>",A_ALWAYS,self,null,pc,TO_CHAR);
- quit;
- }
-
-if (self.extra.[CLAN_NAME].descr!=pc.extra.[CLAN_NAME].descr)
- {
-act ("<div class='clan'>$3n is not a member of your clan.</div>", A_ALWAYS,self,null,pc,TO_CHAR);
- quit;
- }
-
-
-:set_title:
-log ("&lt;clan_title&gt; "+self.name+" set "+pc.name+" title to "+arg);
-
-err:=loadstr ("clanlist.data",buf);
-if (err<1)
+	if (self.level >IMMORTAL_LEVEL) goto adminctitle;
+	if (self.extra.[CLAN_RANK]==null)
 	{
-log ("01:  Error in clanlist.data");
-sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
-quit;
-}
-
-clist:=split(buf,"\n");
-ln:=length (clist);
-ln:=ln-1;
-if (ln<1)
-	{
-log ("02:  Error in clanlist.data");
-sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
-quit;
-}
-
-i:=0;
-buf:="";
-while (i<ln)
-{
-if (self.extra.[CLAN_NAME].descr==clist.[i+2])
-{
-:money_title:
-err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".money",buf);
-if (err<1)
-	buf:="0";
-balance:=atoi(buf);
-if (CTITLE_COST>balance)
- {
- sendtext("<div class='clan'>The deposit box doesn't contain enough to set a title.</div><div class='default'><br/></div>",self);
- quit;
- }
-
-balance:=balance-CTITLE_COST;
- {
- sendtext("<div class='clan'>Your clan chest has been charged 10 platinum pieces.</div><div class='default'><br/></div>",self);
-  }
-
-
-err:=delstr(self.extra.[CLAN_SYMBOLIC].descr+".money");
-err:=savestr(self.extra.[CLAN_SYMBOLIC].descr+".money",itoa(balance),"w");
-
-
-
-arg:=arg+" <div class='default'></div>"+clist.[i+4] +"<div class='default'></div>";
-arg:=textformat(arg);
-pc.title:=arg;
-sendtext ("You set "+pc.name+"'s title to '"+arg+"'",self);
-quit;
-
-}
-	i:=i+5;
+		act ("<div class='clan'>You must be a clan Master or Lord to use ctitle.</div>",
+		A_ALWAYS, self, null,null,TO_CHAR);
+		quit;
 	}
 
-quit;
+	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and (self.extra.[CLAN_RANK].names.[1]!="$lord"))
+	{
+		act ("<div class='clan'>You must be a clan Master or Lord to use ctitle.</div>",
+		A_ALWAYS, self, null,null,TO_CHAR);
+		quit;
+	}
+	
+:adminctitle:
+
+	pname:=getword(arg);
+	pc:=ghead();
+	while (pc.type==UNIT_ST_PC)
+	{
+		if (pc.name==pname)
+		break;
+		pc:=pc.gnext;
+	}
+	if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
+	{
+		act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
+	if (pc.extra.[CLAN_NAME]==null)
+	{
+		act ("<div class='clan'>$3n is not a member of your clan.</div>",A_ALWAYS,self,null,pc,TO_CHAR);
+		quit;
+	}
+	if (self.extra.[CLAN_NAME].descr!=pc.extra.[CLAN_NAME].descr)
+	{
+		act ("<div class='clan'>$3n is not a member of your clan.</div>", A_ALWAYS,self,null,pc,TO_CHAR);
+		quit;
+	}
+
+:set_title:
+	
+	log ("&lt;clan_title&gt; "+self.name+" set "+pc.name+" title to "+arg);
+
+	err:=loadstr ("clanlist.data",buf);
+	if (err<1)
+	{
+		log ("01:  Error in clanlist.data");
+		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		quit;
+	}
+
+	clist:=split(buf,"\n");
+	ln:=length (clist);
+	ln:=ln-1;
+	if (ln<1)
+	{
+		log ("02:  Error in clanlist.data");
+		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		quit;
+	}
+
+	i:=0;
+	buf:="";
+	while (i<ln)
+	{
+		if (self.extra.[CLAN_NAME].descr==clist.[i+2])
+		{
+		
+:money_title:
+
+			err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".money",buf);
+			if (err<1)
+				buf:="0";
+			balance:=atoi(buf);
+			if (CTITLE_COST>balance)
+			{
+				sendtext("<div class='clan'>The deposit box doesn't contain enough to set a title.</div><br/>",self);
+				quit;
+			}
+
+			balance:=balance-CTITLE_COST;
+			sendtext("<div class='clan'>Your clan chest has been charged 10 platinum pieces.</div><br/>",self);
+			err:=delstr(self.extra.[CLAN_SYMBOLIC].descr+".money");
+			err:=savestr(self.extra.[CLAN_SYMBOLIC].descr+".money",itoa(balance),"w");
+
+			arg:=arg+" <div class='clan'>"+clist.[i+4] +"</div>";
+			arg:=textformat(arg);
+			pc.title:=arg;
+			sendtext ("<div class=clan>You set "+pc.name+"'s title to '"+arg+"'</div>",self);
+			quit;
+		}
+		i:=i+5;
+	}
+	quit;
 }
-dilend
+dilend // ctitle
+
+/* Command allows a master or lord to accept new members into the clan */
 
 dilbegin caccept (arg:string);
 external
- addmember (file:string,pname:string,rank:string,pos:stringlist);
+	addmember (file:string,pname:string,rank:string,pos:stringlist);
 var
-err:integer;
- temp:string;
-clist:stringlist;
- pc:unitptr;
- pname:string;
+	err:integer;
+	temp:string;
+	clist:stringlist;
+	pc:unitptr;
+	pname:string;
 
 code
 {
-if (self.extra.[CLAN_RANK]==null)
-{
-  act ("<div class='clan'>You must be a clan Master or Lord to use caccept.</div>",
-   A_ALWAYS, self, null,null,TO_CHAR);
-  quit;
-  }
+	if (self.extra.[CLAN_RANK]==null)
+	{
+		act ("<div class='clan'>You must be a clan Master or Lord to use caccept.</div>",
+		A_ALWAYS, self, null,null,TO_CHAR);
+		quit;
+	}
 
-if ((self.extra.[CLAN_RANK].names.[1]!="$master") and
-(self.extra.[CLAN_RANK].names.[1]!="$lord"))
-{
-  act ("<div class='clan'>You must be a clan Master or Lord to use caccept.</div>",
-   A_ALWAYS, self, null,null,TO_CHAR);
-  quit;
-  }
-pname:=getword(arg);
-pc:=ghead();
-while (pc.type==UNIT_ST_PC)
-{
- if (pc.name==pname)
- break;
- pc:=pc.gnext;
- }
+	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and (self.extra.[CLAN_RANK].names.[1]!="$lord"))
+	{
+		act ("<div class='clan'>You must be a clan Master or Lord to use caccept.</div>",
+		A_ALWAYS, self, null,null,TO_CHAR);
+		quit;
+	}
+	pname:=getword(arg);
+	pc:=ghead();
+	while (pc.type==UNIT_ST_PC)
+	{
+		if (pc.name==pname)
+		break;
+		pc:=pc.gnext;
+	}
 
-if (pc==self)
- {
- act ("<div class='clan'>You feel so lonely you decide to accept yourself into your own clan.</div>",
- A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	if (pc==self)
+	{
+		act ("<div class='clan'>You feel so lonely you decide to accept yourself into your own clan.</div>",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
-if ((pc.level >=200) and
-(visible(self,pc)))
- {
- act ("<div class='clan'>Gods can not be in clans.</div>",
- A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	if ((pc.level >=200) and (visible(self,pc)))
+	{
+		act ("<div class='clan'>Gods can not be in clans.</div>",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
-if ((pc.type!=UNIT_ST_PC) or
-(not(visible(self,pc))))
- {
- act ("<div class='clan'>No such person found.</div>",
- A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
+	{
+		act ("<div class='clan'>No such person found.</div>",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
+	if (pc.extra.[CLAN_NAME]!=null)
+	{
+		act ("<div class='clan'>$3n is already a member of a clan.</div>", A_ALWAYS,self,null,pc,TO_CHAR);
+		quit;
+	}
 
+	addextra (pc.extra,{CLAN_NAME},self.extra.[CLAN_NAME].descr);
+	addextra(pc.extra,self.extra.[CLAN_SYMBOLIC].names,self.extra.[CLAN_SYMBOLIC].descr);
+	addextra (pc.extra,{CLAN_RANK,"$member","$none","$none"},"0");
+	addextra (pc.extra,self.extra.["tattoo"].names,self.extra.["tattoo"].descr);
 
-if (pc.extra.[CLAN_NAME]!=null)
- {
-act ("<div class='clan'>$3n is already a member of a clan.</div>", A_ALWAYS,self,null,pc,TO_CHAR);
- quit;
- }
+	pc.hometown :="htown@"+self.extra.[CLAN_SYMBOLIC].descr;
+	addmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
+	"0",{"$member","$none","$none"});
 
-addextra (pc.extra,{CLAN_NAME},self.extra.[CLAN_NAME].descr);
-addextra(pc.extra,self.extra.[CLAN_SYMBOLIC].names,self.extra.[CLAN_SYMBOLIC].descr);
-addextra (pc.extra,{CLAN_RANK,"$member","$none","$none"},"0");
-addextra (pc.extra,self.extra.["tattoo"].names,self.extra.["tattoo"].descr);
-
-pc.hometown :="htown@"+self.extra.[CLAN_SYMBOLIC].descr;
-addmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
-"0",{"$member","$none","$none"});
-
-  act ("<div class='clan'>$3n has been accepted into the clan.</div>",
-   A_ALWAYS,self,null,pc,TO_CHAR); act ("<div class='clan'>You have been accepted
-into the </div>"+self.extra.[CLAN_NAME].descr+" clan.",
-A_ALWAYS,pc,null,null,TO_CHAR);
-quit;
+	act ("<div class='clan'>$3n has been accepted into the clan.</div>",
+	A_ALWAYS,self,null,pc,TO_CHAR); act ("<div class='clan'>You have been accepted
+	into the </div>"+self.extra.[CLAN_NAME].descr+" clan.",
+	A_ALWAYS,pc,null,null,TO_CHAR);
+	quit;
 }
-dilend
+dilend // caccept
+
+/* dil used by caccept to add members to clan */
 
 dilbegin addmember (file:string,pname:string,rank:string,pos:stringlist);
 	var
@@ -1733,62 +1688,57 @@ dilbegin addmember (file:string,pname:string,rank:string,pos:stringlist);
 		buf:string;
 		ln:integer;
 		clist:stringlist;
-	list:stringlist;
-	pos2:string;
-
-	code
-	{
-
-i:=0;
-buf:="";
-err:=loadstr (file,buf);
-if (err<1)
-	{
-log ("01:  Error in addmember");
-quit;
-}
-pos2:=pos.[0]+"/"+pos.[1]+"/"+pos.[2];
-list:=split(buf,"\n");
-ln:=length(list);
-while (i<ln)
+		list:stringlist;
+		pos2:string;
+code
 {
- if (list.[i]=="")
- remove (list,i);
- i:=i+1;
- ln:=length(list);
- }
 
-i:=0;
-while ((i<ln) and (left(list.[i],length(pname))<pname))
-i:=i+1;
+	i:=0;
+	buf:="";
+	err:=loadstr (file,buf);
+	if (err<1)
+	{
+		log ("01:  Error in addmember");
+		quit;
+	}
+	pos2:=pos.[0]+"/"+pos.[1]+"/"+pos.[2];
+	list:=split(buf,"\n");
+	ln:=length(list);
+	while (i<ln)
+	{
+		if (list.[i]=="")
+		remove (list,i);
+		i:=i+1;
+		ln:=length(list);
+	}
 
-if (pname==left(list.[i],length(pname)))
-     	  list.[i]:=pname+":0:$member/$none/$none
-x";
-		  else if (i<ln)
-	          insert(list,i,pname+":0:$member/$none/$none
-x");
-			  else
-	  addstring (list,pname+":0:$member/$none/$none
-x");
+	i:=0;
+	while ((i<ln) and (left(list.[i],length(pname))<pname))
+		i:=i+1;
 
-i:=0;
-						  ln:=length(list);
+	if (pname==left(list.[i],length(pname)))
+		list.[i]:=pname+":0:$member/$none/$none\n";
+	else if (i<ln)
+		insert(list,i,pname+":0:$member/$none/$none\n");
+	else
+		addstring (list,pname+":0:$member/$none/$none\n");
 
-buf:="";
-						  while (i<ln)
-						  {
-						   buf := buf +list.[i]+"
-x";
-						   i:=i+1;
-						   }
+	i:=0;
+	ln:=length(list);
 
-err:=delstr(file);
-err:=savestr(file,buf,"w");
-return;
-
+	buf:="";
+	while (i<ln)
+	{
+		buf := buf +list.[i]+"\n";
+		i:=i+1;
+	}
+	err:=delstr(file);
+	err:=savestr(file,buf,"w");
+	return;
 }
-dilend
+dilend // addmember
+
+/* writes to the clan.delete file, so removed clan members who are offline can be attended to. */
 
 dilbegin integer submember (file:string,pname:string);
 	var
@@ -1797,50 +1747,49 @@ dilbegin integer submember (file:string,pname:string);
 		buf:string;
 		ln:integer;
 		clist:stringlist;
-	mlist:stringlist;
-	found:integer;
+		mlist:stringlist;
+		found:integer;
 
-	code
-	{
-
-i:=0;
-buf:="";
-err:=loadstr (file,buf);
-if (err<1)
-	{
-log ("01:  Error in submember");
-return (-1);
-}
-
-mlist:=split(buf,"\n");
-
-ln:=length(mlist);
-ln:=ln-1;
-buf:="";
-found:=-1;
-pname:=pname+":";
-
-
-while (i<ln)
+code
 {
 
-if (pname!=left(mlist.[i],length(pname)))
-{
-if (mlist.[i]!="")
-buf:=buf+mlist.[i]+"
-x";
-}
-else if (pname==left(mlist.[i],length(pname)))
-found:=1;
+	i:=0;
+	buf:="";
+	err:=loadstr (file,buf);
+	if (err<1)
+	{
+		log ("01:  Error in submember");
+		return (-1);
+	}
 
-i:=i+1;
-}
+	mlist:=split(buf,"\n");
 
-i:=delstr(file);
-err:=savestr(file,buf,"w");
-return (found);
+	ln:=length(mlist);
+	ln:=ln-1;
+	buf:="";
+	found:=-1;
+	pname:=pname+":";
+
+
+	while (i<ln)
+	{
+		if (pname!=left(mlist.[i],length(pname)))
+		{
+			if (mlist.[i]!="")
+				buf:=buf+mlist.[i]+"\n";
+		}
+		else if (pname==left(mlist.[i],length(pname)))
+			found:=1;
+		i:=i+1;
+	}
+
+	i:=delstr(file);
+	err:=savestr(file,buf,"w");
+	return (found);
 }
-dilend
+dilend // submember
+
+/* Dil used to modify members status in clan */
 
 dilbegin modmember  (file:string,pname:string,rank:string,pos:stringlist);
 	var
@@ -1849,1169 +1798,1135 @@ dilbegin modmember  (file:string,pname:string,rank:string,pos:stringlist);
 		buf:string;
 		ln:integer;
 		clist:stringlist;
-	mlist:stringlist;
-	pos2:string;
+		mlist:stringlist;
+		pos2:string;
 
-	code
-	{
-
-i:=0;
-buf:="";
-err:=loadstr (file,buf);
-if (err<1)
-	{
-log ("01:  Error in addmember");
-quit;
-}
-                   pos2:=pos.[0]+"/"+pos.[1]+"/"+pos.[2];
-
-mlist:=split(buf,"\n");
-ln:=length(mlist);
-ln:=ln-1;
-pname:=pname+":";
-buf:="";
-while (i<ln)
+code
 {
-if (pname!=left(mlist.[i],length(pname)))
-{
- if (mlist.[i]!="")
-buf:=buf+mlist.[i]+"
-x";
-}
-else
-buf:=buf+pname+""+rank+":"+pos2+"
-x";
-i:=i+1;
-}
 
-err:=delstr(file);
-err:=savestr(file,buf,"w");
-return;
+	i:=0;
+	buf:="";
+	err:=loadstr (file,buf);
+	if (err<1)
+	{
+		log ("01:  Error in addmember");
+		quit;
+	}
+	pos2:=pos.[0]+"/"+pos.[1]+"/"+pos.[2];
+
+	mlist:=split(buf,"\n");
+	ln:=length(mlist);
+	ln:=ln-1;
+	pname:=pname+":";
+	buf:="";
+	while (i<ln)
+	{
+		if (pname!=left(mlist.[i],length(pname)))
+		{
+			if (mlist.[i]!="")
+				buf:=buf+mlist.[i]+"\n";
+		}
+		else
+			buf:=buf+pname+""+rank+":"+pos2+"\n";
+		i:=i+1;
+	}
+
+	err:=delstr(file);
+	err:=savestr(file,buf,"w");
+	return;
 }
-dilend
+dilend // modmember
+
+/* allows a master or lord to forcibly remove clan members */
 
 dilbegin cremove (arg:string);
 external
-  integer submember (file:string,pname:string);
+	integer submember (file:string,pname:string);
 var
- temp:string;
- pname:string;
- pc:unitptr;
- i:integer;
- ln:integer;
- clist:stringlist;
- err:integer;
- buf:string;
+	temp:string;
+	pname:string;
+	pc:unitptr;
+	i:integer;
+	ln:integer;
+	clist:stringlist;
+	err:integer;
+	buf:string;
 
 code
 {
-if (self.extra.[CLAN_RANK]==null)
-{
-  act ("<div class='clan'>You must be a clan Master or Lord to use cremove.</div>",
-   A_ALWAYS, self, null,null,TO_CHAR);
-  quit;
-  }
+	if (self.extra.[CLAN_RANK]==null)
+	{
+		act ("<div class='clan'>You must be a clan Master or Lord to use cremove.</div>",
+		A_ALWAYS, self, null,null,TO_CHAR);
+		quit;
+	}
 
-if ((self.extra.[CLAN_RANK].names.[1]!="$master") and
-(self.extra.[CLAN_RANK].names.[1]!="$lord"))
-{
-  act ("<div class='clan'>You must be a clan Master or Lord to use cremove.</div>",
-   A_ALWAYS, self, null,null,TO_CHAR);
-  quit;
-  }
+	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and
+	(self.extra.[CLAN_RANK].names.[1]!="$lord"))
+	{
+		act ("<div class='clan'>You must be a clan Master or Lord to use cremove.</div>",
+		A_ALWAYS, self, null,null,TO_CHAR);
+		quit;
+	}
 
-pname:=getword(arg);
+	pname:=getword(arg);
 
-pc:=ghead();
-while (pc.type==UNIT_ST_PC)
-{
- if (pc.name==pname)
- break;
- pc:=pc.gnext;
- }
+	pc:=ghead();
+	while (pc.type==UNIT_ST_PC)
+	{
+		if (pc.name==pname)
+		break;
+		pc:=pc.gnext;
+	}
 
-if (pc==self)
- {
- act ("<div class='clan'>You can not use cremove to remove yourself use cdefect.</div>",
- A_ALWAYS,self, null,null,TO_CHAR);
- quit;
- }
+	if (pc==self)
+	{
+		act ("<div class='clan'>You can not use cremove to remove yourself use cdefect.</div>",
+		A_ALWAYS,self, null,null,TO_CHAR);
+		quit;
+	}
 
- if (pc.type!=UNIT_ST_PC)
- 	goto pc_null;
+	if (pc.type!=UNIT_ST_PC)
+		goto pc_null;
 
-if (pc.extra.[CLAN_NAME]==null)
- {
- act ("<div class='clan'>$3n is not a member of your clan.</div>",
- A_ALWAYS,self,null,pc,TO_CHAR);
- quit;
- }
+	if (pc.extra.[CLAN_NAME]==null)
+	{
+		act ("<div class='clan'>$3n is not a member of your clan.</div>",
+		A_ALWAYS,self,null,pc,TO_CHAR);
+		quit;
+	}
 
-if (pc.extra.[CLAN_NAME].descr!=self.extra.[CLAN_NAME].descr)
- {
- act ("<div class='clan'>$3n is not a member of your clan.</div>",
- A_ALWAYS,self,null,pc,TO_CHAR);
- quit;
- }
+	if (pc.extra.[CLAN_NAME].descr!=self.extra.[CLAN_NAME].descr)
+	{
+		act ("<div class='clan'>$3n is not a member of your clan.</div>",
+		A_ALWAYS,self,null,pc,TO_CHAR);
+		quit;
+	}
 
-if (pc.extra.[CLAN_RANK].names.[1]=="$master")
-  {
- act ("<div class='clan'>$3n is a clan master you can not do that.</div>",
+	if (pc.extra.[CLAN_RANK].names.[1]=="$master")
+	{
+		act ("<div class='clan'>$3n is a clan master you can not do that.</div>",
+		A_ALWAYS,self,null,pc,TO_CHAR);
+		quit;
+	}
 
- A_ALWAYS,self,null,pc,TO_CHAR);
- quit;
- }
+	i:=submember(self.extra.[CLAN_SYMBOLIC].descr,pname);
+	pc.title:= "<div class='cpr'></div><div class='bw'>Banished from </div>"+self.extra.[CLAN_NAME].descr+" clan<div class='default'></div>";
+	subextra (pc.extra,CLAN_NAME);
+	subextra (pc.extra,CLAN_RANK);
+	subextra (pc.extra,CLAN_SYMBOLIC);
 
-i:=submember(self.extra.[CLAN_SYMBOLIC].descr,pname);
-pc.title:= "<div class='cpr'></div><div class='bw'>Banished from </div>"+self.extra.[CLAN_NAME].descr+" clan<div class='default'></div>";
-subextra (pc.extra,CLAN_NAME);
-subextra (pc.extra,CLAN_RANK);
-subextra (pc.extra,CLAN_SYMBOLIC);
-subextra (pc.extra,"tattoo");
+	pc.hometown := "temple@udgaard";
+	act ("<div class='clan'>$3n has been removed from the clan.</div>",
+	A_ALWAYS,self,null,pc,TO_CHAR);
+	act ("<div class='clan'>You have been removed from the </div>"+self.extra.[CLAN_NAME].descr+" clan.",
+	A_ALWAYS,pc,null,null,TO_CHAR);
 
-   pc.hometown := "temple@udgaard";
-act ("<div class='clan'>$3n has been removed from the clan.</div>",
-A_ALWAYS,self,null,pc,TO_CHAR);
-act ("<div class='clan'>You have been removed from the </div>"+self.extra.[CLAN_NAME].descr+" clan.",
-A_ALWAYS,pc,null,null,TO_CHAR);
-
-quit;
+	quit;
 
 :pc_null:
 
-err:=loadstr ("clanlist.data",buf);
-if (err<1)
+	err:=loadstr ("clanlist.data",buf);
+	if (err<1)
 	{
-log ("01:  Error in clanlist.data");
-sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
-quit;
-}
-
-clist:=split(buf,"\n");
-ln:=length (clist);
-ln:=ln-1;
-if (ln<1)
-	{
-log ("02:  Error in clanlist.data");
-sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
-quit;
-}
-
-i:=0;
-buf:="";
-while (i<ln)
-{
-if (pname==clist.[i+1])
-{
-act ("<div class='clan'>You can not cremove the master.  The master must step down first.</div>",
-A_ALWAYS,pc,null,null,TO_CHAR);
-quit;
-}
-	i:=i+5;
+		log ("01:  Error in clanlist.data");
+		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		quit;
 	}
 
-i:=submember(self.extra.[CLAN_SYMBOLIC].descr,pname);
-if (i==-1)
+	clist:=split(buf,"\n");
+	ln:=length (clist);
+	ln:=ln-1;
+	if (ln<1)
 	{
-	  act ("<div class='clan'>No such person found.</div>",
-  A_ALWAYS,self,null,null,TO_CHAR);
-  }
-else
-{
-act ("<div class='clan'></div>"+pname+" has been removed from the clan."
-,A_ALWAYS,self,null,pc,TO_CHAR);
-i:=savestr("clan.delete",pname+"
-x","a");
-}
-  quit;
-}
-dilend
+		log ("02:  Error in clanlist.data");
+		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		quit;
+	}
 
+	i:=0;
+	buf:="";
+	while (i<ln)
+	{
+		if (pname==clist.[i+1])
+		{
+			act ("<div class='clan'>You can not cremove the master.  The master must step down first.</div>",
+			A_ALWAYS,pc,null,null,TO_CHAR);
+			quit;
+		}
+		i:=i+5;
+	}
+
+	i:=submember(self.extra.[CLAN_SYMBOLIC].descr,pname);
+	if (i==-1)
+	{
+		act ("<div class='clan'>No such person found.</div>",
+		A_ALWAYS,self,null,null,TO_CHAR);
+	}
+	else
+	{
+		act ("<div class='clan'></div>"+pname+" has been removed from the clan."
+		,A_ALWAYS,self,null,pc,TO_CHAR);
+		i:=savestr("clan.delete",pname+"\n","a");
+	}
+	quit;
+}
+dilend // cremove
+
+
+/* Allows a player to leave a clan */
 
 dilbegin cdefect (arg:string);
 external
- integer submember (file:string,pname:string);
-
+	integer submember (file:string,pname:string);
 var
- temp:string;
- pname:string;
- i:integer;
+	temp:string;
+	pname:string;
+	i:integer;
 code
 {
 
-if (self.extra.[CLAN_NAME]==null)
- {
- act ("<div class='clan'>You are not a member of a clan.</div>",
- A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	if (self.extra.[CLAN_NAME]==null)
+	{
+		act ("<div class='clan'>You are not a member of a clan.</div>",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
+	if (self.extra.[CLAN_RANK].names.[1]=="$master")
+	{
+		act ("<div class='clan'>You must first step down as clan master see help clan master.</div>",
+		A_ALWAYS, self,null,null,TO_CHAR);
+		quit;
+	}
+	if (arg!="now")
+	{
+		sendtext ("<div class='clan'>You must type 'cdefect now' to defect from your clan.</div>",self);
+		quit;
+	}
+	subextra (self.extra,CLAN_NAME);
+	subextra (self.extra,CLAN_RANK);
+	i:=submember(self.extra.[CLAN_SYMBOLIC].descr,self.name);
+	subextra (self.extra,CLAN_SYMBOLIC);
+	self.title:="<div class='cpr'></div><div class='bw'>Clan Defector</div><div class='default'></div>";
+	self.hometown := "temple@udgaard";
 
-if (self.extra.[CLAN_RANK].names.[1]=="$master")
- {
-act ("<div class='clan'>You must first step down as clan master see help clan master.</div>",
- A_ALWAYS, self,null,null,TO_CHAR);
- quit;
- }
-
-if (arg!="now")
- {
- sendtext ("<div class='clan'>You must type 'cdefect now' to defect from your clan.</div>",self);
- quit;
- }
-
-subextra (self.extra,CLAN_NAME);
-subextra (self.extra,CLAN_RANK);
-i:=submember(self.extra.[CLAN_SYMBOLIC].descr,self.name);
-subextra (self.extra,CLAN_SYMBOLIC);
-subextra (self.extra, "tattoo");
-
-self.title:="<div class='cpr'></div><div class='bw'>Clan Defector</div><div class='default'></div>";
-   self.hometown := "temple@udgaard";
-
-act ("<div class='clan'>You have removed yourself from the clan.</div>",
-A_ALWAYS,self,null,null,TO_CHAR);
-quit;
+	act ("<div class='clan'>You have removed yourself from the clan.</div>",
+	A_ALWAYS,self,null,null,TO_CHAR);
+	quit;
 }
-dilend
+dilend // cdefect
+
+/* command that allows a clan master to appoint lords */
 
 dilbegin cappoint (arg:string);
 external
-modmember  (file:string,pname:string,rank:string,pos:stringlist);
-chmaster(oldmast:string,newmast:string);
+	modmember  (file:string,pname:string,rank:string,pos:stringlist);
+	chmaster(oldmast:string,newmast:string);
 
 var
- tlist:stringlist;
-temp:string;
- pname:string;
- pc:unitptr;
+	tlist:stringlist;
+	temp:string;
+	pname:string;
+	pc:unitptr;
 
 code
 {
-if (self.extra.[CLAN_RANK]==null)
-{
-  act ("<div class='clan'>You must be a clan Master to use cappoint.</div>",
-   A_ALWAYS, self, null,null,TO_CHAR);
-  quit;
-  }
+	if (self.extra.[CLAN_RANK]==null)
+	{
+		act ("<div class='clan'>You must be a clan Master to use cappoint.</div>",
+		A_ALWAYS, self, null,null,TO_CHAR);
+		quit;
+	}
 
-if (self.extra.[CLAN_RANK].names.[1]!="$master")
-{
-  act ("<div class='clan'>You must be a clan Master to use cappoint.</div>",
-   A_ALWAYS, self, null,null,TO_CHAR);
-  quit;
-  }
+	if (self.extra.[CLAN_RANK].names.[1]!="$master")
+	{
+		act ("<div class='clan'>You must be a clan Master to use cappoint.</div>",
+		A_ALWAYS, self, null,null,TO_CHAR);
+		quit;
+	}
 
-pname:=getword(arg);
+	pname:=getword(arg);
 
-pc:=ghead();
-while (pc.type==UNIT_ST_PC)
-{
- if (pc.name==pname)
- break;
- pc:=pc.gnext;
- }
+	pc:=ghead();
+	while (pc.type==UNIT_ST_PC)
+	{
+		if (pc.name==pname)
+		break;
+		pc:=pc.gnext;
+	}
 
-if (pc==self)
- {
- act ("<div class='clan'>How you going to do that eh?</div>", A_ALWAYS,self, null,null,TO_CHAR);
- quit;
- }
+	if (pc==self)
+	{
+		act ("<div class='clan'>How you going to do that eh?</div>", A_ALWAYS,self, null,null,TO_CHAR);
+		quit;
+	}
 
-if (pc==null)
- {
- act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	if (pc==null)
+	{
+		act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
-if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
- {
- act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
+	{
+		act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
+	if (pc.extra.[CLAN_NAME]==null)
+	{
+		act ("<div class='clan'>$3n is not a member of your clan.</div>",
+		A_ALWAYS,self,null,pc,TO_CHAR);
+		quit;
+	}
 
-if (pc.extra.[CLAN_NAME]==null)
- {
- act ("<div class='clan'>$3n is not a member of your clan.</div>",
- A_ALWAYS,self,null,pc,TO_CHAR);
- quit;
- }
+	if (self.extra.[CLAN_NAME].descr!=pc.extra.[CLAN_NAME].descr)
+	{
+		act ("<div class='clan'>$3n is not a member of your clan.</div>",
+		A_ALWAYS,self,null,pc,TO_CHAR);
+		quit;
+	}
+	if (length(arg)<1)
+	{
+		act ("<div class='clan'>No such position to appoint to.</div>",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
-if (self.extra.[CLAN_NAME].descr!=pc.extra.[CLAN_NAME].descr)
- {
- act ("<div class='clan'>$3n is not a member of your clan.</div>",
- A_ALWAYS,self,null,pc,TO_CHAR);
- quit;
- }
-if (length(arg)<1)
-  {
- act ("<div class='clan'>No such position to appoint to.</div>",
- A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
-
-
- if (arg==left("master",length(arg)))
-                  goto app_master;
-else if (arg==left("lord",length(arg)))
-                  goto app_lord;
-else if (arg==left("treasurer",length(arg)))
-                       goto app_treasurer;
-else if (arg==left("quartermaster",length(arg)))
-                           goto app_quartermaster;
-else
- {
- act ("<div class='clan'>No such position to appoint to.</div>",
- A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	if (arg==left("master",length(arg)))
+		goto app_master;
+	else if (arg==left("lord",length(arg)))
+		goto app_lord;
+	else if (arg==left("treasurer",length(arg)))
+		goto app_treasurer;
+	else if (arg==left("quartermaster",length(arg)))
+		goto app_quartermaster;
+	else
+	{
+		act ("<div class='clan'>No such position to appoint to.</div>",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
 :app_master:
-self.extra.[CLAN_RANK].names.[1]:="$member";
-PC.extra.[CLAN_RANK].names.[1]:="$master";
- modmember(self.extra.[CLAN_SYMBOLIC].descr,
- pc.name,
- pc.extra.[CLAN_RANK].descr,
- {"$master","$none","$none"});
- modmember(self.extra.[CLAN_SYMBOLIC].descr,self.name,
- self.extra.[CLAN_RANK].descr,
- {"$member","$none","$none"});
- chmaster(self.name,pc.name);
-act ("<div class='clan'>Leadership of the clan has been transferred to $3n</div>",
-A_ALWAYS,self,null,pc,TO_CHAR);
-act ("<div class='clan'>Leadership of the clan has been transferred to you.</div>",
-A_ALWAYS,pc,null,null,TO_CHAR);
-quit;
+	
+	self.extra.[CLAN_RANK].names.[1]:="$member";
+	PC.extra.[CLAN_RANK].names.[1]:="$master";
+	modmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,pc.extra.[CLAN_RANK].descr,
+	{"$master","$none","$none"});
+	modmember(self.extra.[CLAN_SYMBOLIC].descr,self.name,self.extra.[CLAN_RANK].descr,
+	{"$member","$none","$none"});
+
+	chmaster(self.name,pc.name);
+	act ("<div class='clan'>Leadership of the clan has been transferred to $3n</div>",
+	A_ALWAYS,self,null,pc,TO_CHAR);
+	act ("<div class='clan'>Leadership of the clan has been transferred to you.</div>",
+	A_ALWAYS,pc,null,null,TO_CHAR);
+	quit;
 
 :app_lord:
-if (self==pc)
- {
- act ("<div class='clan'>You are the master you don't need to be a lord.</div>",
- A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
-pc.extra.[CLAN_RANK].names.[1]:="$lord";
- modmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
- pc.extra.[CLAN_RANK].descr,{"$lord","$none","$none"});
-act ("<div class='clan'>$3n is now Lord of the clan.</div><div class='default'></div>",
-A_ALWAYS,self,null,pc,TO_CHAR);
-act("<div class='clam'>You are now a Lord of the clan.</div><div class='default'></div>",
-A_ALWAYS,pc,null,null,TO_CHAR);
-quit;
+	
+	if (self==pc)
+	{
+		act ("<div class='clan'>You are the master you don't need to be a lord.</div>",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
+	pc.extra.[CLAN_RANK].names.[1]:="$lord";
+	modmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
+	pc.extra.[CLAN_RANK].descr,{"$lord","$none","$none"});
+	act ("<div class='clan'>$3n is now Lord of the clan.</div><div class='default'></div>",
+	A_ALWAYS,self,null,pc,TO_CHAR);
+	act("<div class='clam'>You are now a Lord of the clan.</div><div class='default'></div>",
+	A_ALWAYS,pc,null,null,TO_CHAR);
+	quit;
 
 
 :app_treasurer:
-pc.extra.[CLAN_RANK].names.[2]:="$treasure";
-addstring(tlist,pc.extra.[CLAN_RANK].names.[1]);
-addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
-addstring(tlist, pc.extra.[CLAN_RANK].names.[3]);
+	
+	pc.extra.[CLAN_RANK].names.[2]:="$treasure";
+	addstring(tlist,pc.extra.[CLAN_RANK].names.[1]);
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[3]);
 
- modmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
- pc.extra.[CLAN_RANK].descr,tlist);
+	modmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
+	pc.extra.[CLAN_RANK].descr,tlist);
 
-act ("<div class='clan'>$3n now has access to the treasury.</div>",
-A_ALWAYS,self,null,pc,TO_CHAR);
-act ("<div class='clan'>You now have access to the treasury.</div>",
-A_ALWAYS,pc,null,null,TO_CHAR);
-quit;
+	act ("<div class='clan'>$3n now has access to the treasury.</div>",
+	A_ALWAYS,self,null,pc,TO_CHAR);
+	act ("<div class='clan'>You now have access to the treasury.</div>",
+	A_ALWAYS,pc,null,null,TO_CHAR);
+	quit;
 
 :app_quartermaster:
-pc.extra.[CLAN_RANK].names.[3]:="$quartermaster";
-addstring(tlist,pc.extra.[CLAN_RANK].names.[1]);
-addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
-addstring(tlist, pc.extra.[CLAN_RANK].names.[3]);
- modmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
- pc.extra.[CLAN_RANK].descr,tlist);
-act ("<div class='clan'>$3n now has access to the equipment.</div>",
-A_ALWAYS,self,null,pc,TO_CHAR);
-act ("<div class='clan'>You now have access to the equipment.</div>",
-A_ALWAYS,pc,null,null,TO_CHAR);
-quit;
-
+	
+	pc.extra.[CLAN_RANK].names.[3]:="$quartermaster";
+	addstring(tlist,pc.extra.[CLAN_RANK].names.[1]);
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[3]);
+	modmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
+	pc.extra.[CLAN_RANK].descr,tlist);
+	act ("<div class='clan'>$3n now has access to the equipment.</div>",
+	A_ALWAYS,self,null,pc,TO_CHAR);
+	act ("<div class='clan'>You now have access to the equipment.</div>",
+	A_ALWAYS,pc,null,null,TO_CHAR);
+	quit;
 }
-dilend
+dilend // cappoint
+
+/* command removes a member from lords positions */
 
 dilbegin cdemote (arg:string);
 external
-modmember  (file:string,pname:string,rank:string,pos:stringlist);
+	modmember  (file:string,pname:string,rank:string,pos:stringlist);
 
 var
-temp:string;
- pname:string;
- pc:unitptr;
- tlist:stringlist;
+	temp:string;
+	pname:string;
+	pc:unitptr;
+	tlist:stringlist;
 
 code
 {
-if (self.extra.[CLAN_RANK]==null)
-{
-  act ("<div class='clan'>You must be a clan Master to use cdemote.</div>",
-   A_ALWAYS, self, null,null,TO_CHAR);
-  quit;
-  }
+	if (self.extra.[CLAN_RANK]==null)
+	{
+		act ("<div class='clan'>You must be a clan Master to use cdemote.</div>",
+		A_ALWAYS, self, null,null,TO_CHAR);
+		quit;
+	}
+	if (self.extra.[CLAN_RANK].names.[1]!="$master")
+	{
+		act ("<div class='clan'>You must be a clan Master to use cdemote.</div>",
+		A_ALWAYS, self, null,null,TO_CHAR);
+		quit;
+	}
+	pname:=getword(arg);
+	pc:=ghead();
+	while (pc.type==UNIT_ST_PC)
+	{
+		if (pc.name==pname)
+		break;
+		pc:=pc.gnext;
+	}
+	if (pc==self)
+	{
+		act ("<div class='clan'>How you going to do that eh?</div>", A_ALWAYS,self, null,null,TO_CHAR);
+		quit;
+	}
+	if (pc==null)
+	{
+		act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
+	if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
+	{
+		act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
+	if (pc.extra.[CLAN_NAME]==null)
+	{
+		act ("<div class='clan'>$3n is not a member of your clan.</div>", A_ALWAYS,self,null,pc,TO_CHAR);
+		quit;
+	}
+	if (self.extra.[CLAN_NAME].descr!=pc.extra.[CLAN_NAME].descr)
+	{
+		act ("<div class='clan'>$3n is not a member of your clan.</div>",A_ALWAYS,self,null,pc,TO_CHAR);
+		quit;
+	}
 
-if (self.extra.[CLAN_RANK].names.[1]!="$master")
-{
-  act ("<div class='clan'>You must be a clan Master to use cdemote.</div>",
-   A_ALWAYS, self, null,null,TO_CHAR);
-  quit;
-  }
+	if (length(arg)<1)
+	{
+		act ("<div class='clan'>That is not a demotable position.</div>",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
-pname:=getword(arg);
-                pc:=ghead();
-while (pc.type==UNIT_ST_PC)
-{
- if (pc.name==pname)
- break;
- pc:=pc.gnext;
- }
-
-if (pc==self)
- {
- act ("<div class='clan'>How you going to do that eh?</div>", A_ALWAYS,self, null,null,TO_CHAR);
- quit;
- }
-
-if (pc==null)
- {
- act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
-
-if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
- {
- act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
-
-
-if (pc.extra.[CLAN_NAME]==null)
- {
-act ("<div class='clan'>$3n is not a member of your clan.</div>", A_ALWAYS,self,null,pc,TO_CHAR);
- quit;
- }
-
-if (self.extra.[CLAN_NAME].descr!=pc.extra.[CLAN_NAME].descr)
- {
-act ("<div class='clan'>$3n is not a member of your clan.</div>",A_ALWAYS,self,null,pc,TO_CHAR);
- quit;
- }
-
-if (length(arg)<1)
- {
- act ("<div class='clan'>That is not a demotable position.</div>",
-	 A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
-
-if (arg==left("lord",length(arg)))
-  goto dem_lord;
-else if (arg==left("treasurer",length(arg)))
-                       goto dem_treasurer;
-else if (arg==left("quartermaster",length(arg)))
-  goto dem_quartermaster;
-else
- {
- act ("<div class='clan'>That is not a demotable position.</div>",
-
-
-	 A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	if (arg==left("lord",length(arg)))
+		goto dem_lord;
+	else if (arg==left("treasurer",length(arg)))
+		goto dem_treasurer;
+	else if (arg==left("quartermaster",length(arg)))
+		goto dem_quartermaster;
+	else
+	{
+		act ("<div class='clan'>That is not a demotable position.</div>",
+		 A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
+	
 :dem_lord:
-if (pc.extra.[CLAN_RANK].names.[1]!="$lord")
- {
- act ("<div class='clan'>$3e is not a Clan Lord.</div><div class='default'></div>",
- A_ALWAYS, self, null,pc,TO_CHAR);
- quit;
- }
- pc.extra.[CLAN_RANK].names.[1]:="$none";
-act ("<div class='clan'>$3n is no longer a clan lord.</div><div class='default'></div>",
-A_ALWAYS,self,null,pc,TO_CHAR);
-act("<div class='clam'>You are no longer a clan lord.</div><div class='default'></div>",
-A_ALWAYS,pc,null,null,TO_CHAR);
- addstring(tlist,pc.extra.[CLAN_RANK].names.[1]);
-addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
-addstring(tlist, pc.extra.[CLAN_RANK].names.[3]);
+	
+	if (pc.extra.[CLAN_RANK].names.[1]!="$lord")
+	{
+		act ("<div class='clan'>$3e is not a Clan Lord.</div><div class='default'></div>",
+		A_ALWAYS, self, null,pc,TO_CHAR);
+		quit;
+	}
+	pc.extra.[CLAN_RANK].names.[1]:="$none";
+	act ("<div class='clan'>$3n is no longer a clan lord.</div><div class='default'></div>",
+	A_ALWAYS,self,null,pc,TO_CHAR);
+	act("<div class='clam'>You are no longer a clan lord.</div><div class='default'></div>",
+	A_ALWAYS,pc,null,null,TO_CHAR);
+	addstring(tlist,pc.extra.[CLAN_RANK].names.[1]);
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[3]);
 
- modmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
- pc.extra.[CLAN_RANK].descr,tlist);
-quit;
+	modmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
+	pc.extra.[CLAN_RANK].descr,tlist);
+	quit;
 
 :dem_treasurer:
-if (pc.extra.[CLAN_RANK].names.[2]!="$treasure")
- {
- act ("<div class='clan'>$3e is not a treasurer.</div><div class='default'></div>",
- A_ALWAYS, self, null,pc,TO_CHAR);
- quit;
- }
- pc.extra.[CLAN_RANK].names.[2]:="$none";
-act ("<div class='clan'>$3n's  access to the treasury has been removed.</div>",
-A_ALWAYS,self,null,pc,TO_CHAR);
-act ("<div class='clan'>Your access to the treasury has been removed.</div>",
-A_ALWAYS,pc,null,null,TO_CHAR);
-addstring(tlist,pc.extra.[CLAN_RANK].names.[1]);
-addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
-addstring(tlist, pc.extra.[CLAN_RANK].names.[3]);
+	
+	if (pc.extra.[CLAN_RANK].names.[2]!="$treasure")
+	{
+		act ("<div class='clan'>$3e is not a treasurer.</div><div class='default'></div>",
+		A_ALWAYS, self, null,pc,TO_CHAR);
+		quit;
+	}
+	pc.extra.[CLAN_RANK].names.[2]:="$none";
+	act ("<div class='clan'>$3n's  access to the treasury has been removed.</div>",
+	A_ALWAYS,self,null,pc,TO_CHAR);
+	act ("<div class='clan'>Your access to the treasury has been removed.</div>",
+	A_ALWAYS,pc,null,null,TO_CHAR);
+	addstring(tlist,pc.extra.[CLAN_RANK].names.[1]);
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[3]);
 
- modmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
- pc.extra.[CLAN_RANK].descr,tlist);
- quit;
+	modmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
+	pc.extra.[CLAN_RANK].descr,tlist);
+	quit;
 
 :dem_quartermaster:
-if (pc.extra.[CLAN_RANK].names.[3]!="$quartermaster")
- {
- act ("<div class='clan'>$3e is not a quartermaster.</div><div class='default'></div>",
- A_ALWAYS, self, null,pc,TO_CHAR);
- quit;
- }
- pc.extra.[CLAN_RANK].names.[3]:="$none";
-act ("<div class='clan'>$3n's  access to the equipment has been removed.</div>",
-A_ALWAYS,self,null,pc,TO_CHAR);
-act ("<div class='clan'>Your access to the equipment has been removed.</div>",
-A_ALWAYS,pc,null,null,TO_CHAR);
-addstring(tlist,pc.extra.[CLAN_RANK].names.[1]);
-addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
-addstring(tlist, pc.extra.[CLAN_RANK].names.[3]);
 
- modmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
- pc.extra.[CLAN_RANK].descr,tlist);
+	if (pc.extra.[CLAN_RANK].names.[3]!="$quartermaster")
+	{
+		act ("<div class='clan'>$3e is not a quartermaster.</div><div class='default'></div>",
+		A_ALWAYS, self, null,pc,TO_CHAR);
+		quit;
+	}
+	pc.extra.[CLAN_RANK].names.[3]:="$none";
+	act ("<div class='clan'>$3n's  access to the equipment has been removed.</div>",
+	A_ALWAYS,self,null,pc,TO_CHAR);
+	act ("<div class='clan'>Your access to the equipment has been removed.</div>",
+	A_ALWAYS,pc,null,null,TO_CHAR);
+	addstring(tlist,pc.extra.[CLAN_RANK].names.[1]);
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
+	addstring(tlist, pc.extra.[CLAN_RANK].names.[3]);
 
+	modmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
+	pc.extra.[CLAN_RANK].descr,tlist);
 }
-dilend
+dilend // cdemote
+
+/* command allows for money deposits into clan bank */
 
 dilbegin cdeposit (arg:string);
 var
-
 	err:integer;
 	buf:string;
- balance:integer;
-amount:integer;
- args:stringlist;
- tmp:integer;
- chest:unitptr;
- i:integer;
-
+	balance:integer;
+	amount:integer;
+	args:stringlist;
+	tmp:integer;
+	chest:unitptr;
+	i:integer;
 code
 {
 
 
-if (self.extra.[CLAN_NAME]==null)
- {
-act ("<div class='clan'>You are not a member of a clan.</div>",A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	if (self.extra.[CLAN_NAME]==null)
+	{
+		act ("<div class='clan'>You are not a member of a clan.</div>",A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
 
-chest:=findsymbolic("dchest@"+self.extra.[CLAN_SYMBOLIC].descr);
-if( (chest==null) or
-(chest.outside!=self.outside))
- {
- act("<div class='clan'>You don't see your clan chest here.</div>",
- A_ALWAYS, self,null,null,TO_CHAR);
- quit;
- }
+	chest:=findsymbolic("dchest@"+self.extra.[CLAN_SYMBOLIC].descr);
+	if( (chest==null) or (chest.outside!=self.outside))
+	{
+		act("<div class='clan'>You don't see your clan chest here.</div>",
+		A_ALWAYS, self,null,null,TO_CHAR);
+		quit;
+	}
+	args:=getwords(arg);
+	if (length(args) < 2)
+	{
+		sendtext("You may either type 'deposit all [money type]' or "
+		+"'deposit amount [money type]'<br/>",self);
+		sendtext("Example deposit 10 of your 20 iron pieces type 'deposit 10 iron pieces'<br/>",self);
+		sendtext("Or to deposit all of your 20 iron pieces type 'deposit all iron pieces'<br/>",self);
+		quit;
+	}
+	if (args.[0]=="all")
+	{
+		if((args.[1]=="iron") or (args.[1]=="ip"))
+			amount:=purse(self, IRON_PIECE)*IRON_MULT;
+		else if((args.[1]=="copper") or (args.[1]=="cp"))
+			amount:=purse(self, COPPER_PIECE)*COPPER_MULT;
+		else if((args.[1]=="silver") or (args.[1]=="sp"))
+			amount:=purse(self, SILVER_PIECE)*SILVER_MULT;
+		else if((args.[1]=="gold") or (args.[1]=="gp"))
+			amount:=purse(self, GOLD_PIECE)*GOLD_MULT;
+		else if((args.[1]=="platinum") or (args.[1]=="pp"))
+			amount:=purse(self, PLATINUM_PIECE)*PLATINUM_MULT;
+	}
+	else
+	{
+		amount:=atoi (args.[0]);
+		if((args.[1]=="iron") or (args.[1]=="ip"))
+			amount:=amount*IRON_MULT;
+		else if((args.[1]=="copper") or (args.[1]=="cp"))
+			amount:=amount*COPPER_MULT;
+		else if((args.[1]=="silver") or (args.[1]=="sp"))
+			amount:=amount*SILVER_MULT;
+		else if((args.[1]=="gold") or (args.[1]=="gp"))
+			amount:=amount*GOLD_MULT;
+		else if((args.[1]=="platinum") or (args.[1]=="pp"))
+			amount:=amount*PLATINUM_MULT;
+	}
+	if (amount<=0)
+	{
+		sendtext ("<div class='clan'>How do you deposit no money?</div><div class='default'><br/></div>",self);
+		quit;
+	}
 
+	if (FALSE==transfermoney (self,null,amount))
+	{
+		sendtext ("<div class='clan'>You don't have that much money</div><div class='default'><br/></div>",self);
+		quit;
+	}
 
-args:=getwords(arg);
-if (length(args) < 2)
-{
-sendtext("You may either type 'deposit all [money type]' or "
-+"'deposit amount [money type]'<br/>",self);
-sendtext("Example deposit 10 of your 20 iron pieces type 'deposit 10 iron pieces'<br/>",self);
-sendtext("Or to deposit all of your 20 iron pieces type 'deposit all iron pieces'<br/>",self);
-quit;
-}
-if (args.[0]=="all")
- {
- if((args.[1]=="iron") or
-  (args.[1]=="ip"))
-  amount:=purse(self, IRON_PIECE)*IRON_MULT;
- else if((args.[1]=="copper") or
-  (args.[1]=="cp"))
-  amount:=purse(self, COPPER_PIECE)*COPPER_MULT;
- else if((args.[1]=="silver") or
-  (args.[1]=="sp"))
-  amount:=purse(self, SILVER_PIECE)*SILVER_MULT;
- else if((args.[1]=="gold") or
-  (args.[1]=="gp"))
-   amount:=purse(self, GOLD_PIECE)*GOLD_MULT;
- else if((args.[1]=="platinum") or
-  (args.[1]=="pp"))
-  amount:=purse(self, PLATINUM_PIECE)*PLATINUM_MULT;
- }
-else
- {
- amount:=atoi (args.[0]);
- if((args.[1]=="iron") or
-  (args.[1]=="ip"))
-  amount:=amount*IRON_MULT;
- else if((args.[1]=="copper") or
-  (args.[1]=="cp"))
-  amount:=amount*COPPER_MULT;
- else if((args.[1]=="silver") or
-  (args.[1]=="sp"))
-  amount:=amount*SILVER_MULT;
- else if((args.[1]=="gold") or
-  (args.[1]=="gp"))
- amount:=amount*GOLD_MULT;
- else if((args.[1]=="platinum") or
-  (args.[1]=="pp"))
-    amount:=amount*PLATINUM_MULT;
- }
+	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".money",buf);
+	if (err<1)
+		buf:="0";
+	balance:=atoi(buf);
+	tmp:=amount;
+	amount:=amount+balance;
+	if (amount<balance)
+	{
+		sendtext("<div class='clan'>The deposit box can't contain that much.</div><div class='default'><br/></div>",self);
+		quit;
+	}
+	act ("<div class='clan'>You slip </div>"+moneystring(tmp,TRUE)+" into the deposit slot on the
+	chest<div class='default'></div>",
+	A_ALWAYS,self, null,null,TO_CHAR);
+	act ("<div class='clan'>$1n slips some money in the deposit slot on the clan chest.</div><div class='default'></div>",
+	A_SOMEONE,self,null,null,TO_REST);
+	err:=delstr(self.extra.[CLAN_SYMBOLIC].descr+".money");
+	err:=savestr(self.extra.[CLAN_SYMBOLIC].descr+".money",itoa(amount),"w");
+	quit;
+} 
+dilend // cdeposit
 
-if (amount<=0)
- {
- sendtext ("<div class='clan'>How do you deposit no money?</div><div class='default'><br/></div>",self);
- quit;
- }
-
-if (FALSE==transfermoney (self,null,amount))
- {
- sendtext ("<div class='clan'>You don't have that much money</div><div class='default'><br/></div>",self);
- quit;
- }
-
-err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".money",buf);
-if (err<1)
-	buf:="0";
-balance:=atoi(buf);
-tmp:=amount;
-amount:=amount+balance;
-if (amount<balance)
- {
- sendtext("<div class='clan'>The deposit box can't contain that much.</div><div class='default'><br/></div>",self);
- quit;
- }
-
-
-act ("<div class='clan'>You slip </div>"+moneystring(tmp,TRUE)+" into the deposit slot on the
-chest<div class='default'></div>",
-A_ALWAYS,self, null,null,TO_CHAR);
-act ("<div class='clan'>$1n slips some money in the deposit slot on the clan chest.</div><div class='default'></div>",
-A_SOMEONE,self,null,null,TO_REST);
-err:=delstr(self.extra.[CLAN_SYMBOLIC].descr+".money");
-err:=savestr(self.extra.[CLAN_SYMBOLIC].descr+".money",itoa(amount),"w");
-   quit;
-}
-dilend
+/* command used to check the balance of clan bank */
 
 dilbegin cbalance (arg:string);
 var
- balance:integer;
-amount:integer;
- args:stringlist;
- tmp:integer;
- err:integer;
- buf:string;
- chest:unitptr;
-
-
+	balance:integer;
+	amount:integer;
+	args:stringlist;
+	tmp:integer;
+	err:integer;
+	buf:string;
+	chest:unitptr;
 code
 {
 
-if (self.extra.[CLAN_NAME]==null)
- {
- act ("<div class='clan'>You are not a member of a clan.</div>", A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	if (self.extra.[CLAN_NAME]==null)
+	{
+		act ("<div class='clan'>You are not a member of a clan.</div>", A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
- chest:=findsymbolic("dchest@"+self.extra.[CLAN_SYMBOLIC].descr);
-if( (chest==null) or (chest.outside!=self.outside))
- {
- act("<div class='clan'>You don't see your clan chest here.</div>",
- A_ALWAYS, self,null,null,TO_CHAR);
- quit;
- }
+	chest:=findsymbolic("dchest@"+self.extra.[CLAN_SYMBOLIC].descr);
+	if( (chest==null) or (chest.outside!=self.outside))
+	{
+		act("<div class='clan'>You don't see your clan chest here.</div>",
+		A_ALWAYS, self,null,null,TO_CHAR);
+		quit;
+	}
 
-err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".money",buf);
-if (err<1)
-	buf:="0";
+	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".money",buf);
+	if (err<1)
+		buf:="0";
 
-balance:=atoi(buf);
-if (balance==0)
- {
-act ("<div class='clan'>Your clan chest has a balance of nothing.</div>",
-A_ALWAYS,self, null,null,TO_CHAR);
-   quit;
-   }
+	balance:=atoi(buf);
+	if (balance==0)
+	{
+		act ("<div class='clan'>Your clan chest has a balance of nothing.</div>",
+		A_ALWAYS,self, null,null,TO_CHAR);
+		quit;
+	}
 
-act ("<div class='clan'>Your clan chest has a balance of </div>"+moneystring(balance,TRUE)+".",
-A_ALWAYS,self, null,null,TO_CHAR);
-   quit;
+	act ("<div class='clan'>Your clan chest has a balance of </div>"+moneystring(balance,TRUE)+".",
+	A_ALWAYS,self, null,null,TO_CHAR);
+	quit;
 }
-dilend
+dilend // cbalance
+
+/* Allows for withdrawal of clan money */
 
 dilbegin cwithdraw (arg:string);
 var
- balance:integer;
- err:integer;
- buf:string;
-amount:integer;
- args:stringlist;
- tmp:integer;
- chest:unitptr;
-
- found:integer;
+	balance:integer;
+	err:integer;
+	buf:string;
+	amount:integer;
+	args:stringlist;
+	tmp:integer;
+	chest:unitptr;
+	found:integer;
 code
 {
-if (self.extra.[CLAN_NAME]==null)
- {
-act ("<div class='clan'>You are not a member of a clan.</div>", A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
-chest:=findsymbolic("dchest@"+self.extra.[CLAN_SYMBOLIC].descr);
-if( (chest==null) or
-(chest.outside!=self.outside))
- {
-act("<div class='clan'>You don't see your clan chest here.</div>",A_ALWAYS, self,null,null,TO_CHAR);
- quit;
- }
+	if (self.extra.[CLAN_NAME]==null)
+	{
+		act ("<div class='clan'>You are not a member of a clan.</div>", A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
+	chest:=findsymbolic("dchest@"+self.extra.[CLAN_SYMBOLIC].descr);
+	if( (chest==null) or (chest.outside!=self.outside))
+	{
+		act("<div class='clan'>You don't see your clan chest here.</div>",A_ALWAYS, self,null,null,TO_CHAR);
+		quit;
+	}
 
- if ((self.extra.[CLAN_RANK].names.[1]!="$master") and
- (self.extra.[CLAN_RANK].names.[2]!="$treasure"))
- {
- sendtext ("<div class='clan'>You do not have access to withdraw from the clan treasury.</div><div class='default'><br/></div>",self);
- quit;
- }
+	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and (self.extra.[CLAN_RANK].names.[2]!="$treasure"))
+	{
+		sendtext ("<div class='clan'>You do not have access to withdraw from the clan treasury.</div><div class='default'><br/></div>",self);
+		quit;
+	}
+	args:=getwords(arg);
+	if (args.[0]=="all")
+	{
+		if((args.[1]=="iron") or (args.[1]=="ip"))
+			amount:=purse(self, IRON_PIECE)*IRON_MULT;
+		else if((args.[1]=="copper") or (args.[1]=="cp"))
+			amount:=purse(self, COPPER_PIECE)*COPPER_MULT;
+		else if((args.[1]=="silver") or (args.[1]=="sp"))
+			amount:=purse(self, SILVER_PIECE)*SILVER_MULT;
+		else if((args.[1]=="gold") or (args.[1]=="gp"))
+			amount:=purse(self, GOLD_PIECE)*GOLD_MULT;
+		else if((args.[1]=="platinum") or (args.[1]=="pp"))
+			amount:=purse(self, PLATINUM_PIECE)*PLATINUM_MULT;
+	}
+	else
+	{
+		amount:=atoi (args.[0]);
+		if((args.[1]=="iron") or (args.[1]=="ip"))
+			amount:=amount*IRON_MULT;
+		else if((args.[1]=="copper") or (args.[1]=="cp"))
+			amount:=amount*COPPER_MULT;
+		else if((args.[1]=="silver") or (args.[1]=="sp"))
+			amount:=amount*SILVER_MULT;
+		else if((args.[1]=="gold") or (args.[1]=="gp"))
+			amount:=amount*GOLD_MULT;
+		else if((args.[1]=="platinum") or (args.[1]=="pp"))
+			amount:=amount*PLATINUM_MULT;
+	}
 
-args:=getwords(arg);
-if (args.[0]=="all")
- {
- if((args.[1]=="iron") or
-  (args.[1]=="ip"))
-  amount:=purse(self, IRON_PIECE)*IRON_MULT;
- else if((args.[1]=="copper") or
-  (args.[1]=="cp"))
-  amount:=purse(self, COPPER_PIECE)*COPPER_MULT;
- else if((args.[1]=="silver") or
-  (args.[1]=="sp"))
-  amount:=purse(self, SILVER_PIECE)*SILVER_MULT;
- else if((args.[1]=="gold") or
-  (args.[1]=="gp"))
-   amount:=purse(self, GOLD_PIECE)*GOLD_MULT;
- else if((args.[1]=="platinum") or
-  (args.[1]=="pp"))
-  amount:=purse(self, PLATINUM_PIECE)*PLATINUM_MULT;
- }
-else
- {
- amount:=atoi (args.[0]);
- if((args.[1]=="iron") or
-  (args.[1]=="ip"))
-  amount:=amount*IRON_MULT;
- else if((args.[1]=="copper") or
-  (args.[1]=="cp"))
-  amount:=amount*COPPER_MULT;
- else if((args.[1]=="silver") or
-  (args.[1]=="sp"))
-  amount:=amount*SILVER_MULT;
- else if((args.[1]=="gold") or
-  (args.[1]=="gp"))
- amount:=amount*GOLD_MULT;
- else if((args.[1]=="platinum") or
-  (args.[1]=="pp"))
-    amount:=amount*PLATINUM_MULT;
- }
+	if (amount<=0)
+	{
+		sendtext ("<div class='clan'>How do you withdraw no money?</div><div class='default'><br/></div>",self);
+		quit;
+	}
 
-if (amount<=0)
- {
- sendtext ("<div class='clan'>How do you withdraw no money?</div><div class='default'><br/></div>",self);
- quit;
- }
+	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".money",buf);
+	if (err<1)
+		buf:="0";
+	balance:=atoi(buf);
+	if (amount>balance)
+	{
+		sendtext("<div class='clan'>The deposit box doesn't contain that much.</div><div class='default'><br/></div>",self);
+		quit;
+	}
+	tmp:=amount;
+	amount:=balance-amount;
+	err:=delstr(self.extra.[CLAN_SYMBOLIC].descr+".money");
+	err:=savestr(self.extra.[CLAN_SYMBOLIC].descr+".money",itoa(amount),"w");
 
-err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".money",buf);
-if (err<1)
-	buf:="0";
-balance:=atoi(buf);
-if (amount>balance)
- {
- sendtext("<div class='clan'>The deposit box doesn't contain that much.</div><div class='default'><br/></div>",self);
- quit;
- }
-tmp:=amount;
-amount:=balance-amount;
-err:=delstr(self.extra.[CLAN_SYMBOLIC].descr+".money");
-err:=savestr(self.extra.[CLAN_SYMBOLIC].descr+".money",itoa(amount),"w");
+	if (FALSE==transfermoney (null,self,tmp))
+	{
+		sendtext ("<div class='clan'>Error in the transfer contact an admin.</div><div class='default'><br/></div>",self);
+		log ("Transfer money error:  "+itoa(tmp));
+		quit;
+	}
 
-if (FALSE==transfermoney (null,self,tmp))
- {
- sendtext ("<div class='clan'>Error in the transfer contact an admin.</div><div class='default'><br/></div>",self);
- log ("Transfer money error:  "+itoa(tmp));
- quit;
- }
-
-act ("<div class='clan'></div>"+moneystring(tmp,TRUE)+" falls into your hands from the chest
-withdraw slot.<div class='default'></div>",
-A_ALWAYS,self, null,null,TO_CHAR);
-act ("<div class='clan'>$1n gets some money from the withdraw slot on the clan chest.</div><div class='default'></div>",
-A_SOMEONE,self,null,null,TO_REST);
-log("HMM! "+self.name+" withdrew "+moneystring(tmp,TRUE)+" from "+self.extra.[CLAN_SYMBOLIC].descr);
+	act ("<div class='clan'></div>"+moneystring(tmp,TRUE)+" falls into your hands from the chest
+	withdraw slot.<div class='default'></div>",
+	A_ALWAYS,self, null,null,TO_CHAR);
+	act ("<div class='clan'>$1n gets some money from the withdraw slot on the clan chest.</div><div class='default'></div>",
+	A_SOMEONE,self,null,null,TO_REST);
+	log("HMM! "+self.name+" withdrew "+moneystring(tmp,TRUE)+" from "+self.extra.[CLAN_SYMBOLIC].descr);
    quit;
 }
-dilend
+dilend // cbalance
 
+/* Allows removing of items from secret clan storage
+leverages clan_symbolic.dc file */
 
-dilbegin   cunstore (arg:string);
+dilbegin cunstore (arg:string);
 var
- ti:integer;
- args:stringlist;
- clist:stringlist;
- found:integer;
-item:unitptr;
-amount:integer;
- x:extraptr;
- cx:extraptr;
- chest:unitptr;
- temp:string;
- i:integer;
+	ti:integer;
+	args:stringlist;
+	clist:stringlist;
+	found:integer;
+	item:unitptr;
+	amount:integer;
+	x:extraptr;
+	cx:extraptr;
+	chest:unitptr;
+	temp:string;
+	i:integer;
 code
 {
-if (self.extra.[CLAN_NAME]==null)
- {
- act ("<div class='clan'>You are not a member of a clan.</div>", A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	if (self.extra.[CLAN_NAME]==null)
+	{
+		act ("<div class='clan'>You are not a member of a clan.</div>", A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
-cx:=CLAN_SYMBOLIC in self.extra;
-temp:=cx.descr;
-chest:=findsymbolic("dchest@"+temp);
-if( (chest==null) or
-(chest.outside!=self.outside))
- {
- act("<div class='clan'>You don't see your clan chest here.</div>",
- A_ALWAYS, self,null,null,TO_CHAR);
- quit;
- }
+	cx:=CLAN_SYMBOLIC in self.extra;
+	temp:=cx.descr;
+	chest:=findsymbolic("dchest@"+temp);
+	if( (chest==null) or (chest.outside!=self.outside))
+	{
+		act("<div class='clan'>You don't see your clan chest here.</div>",
+		A_ALWAYS, self,null,null,TO_CHAR);
+		quit;
+	}
 
-secure (chest,chestlock);
+	secure (chest,chestlock);
 
-if ((self.extra.[CLAN_RANK].names.[1]!="$master") and
-(self.extra.[CLAN_RANK].names.[3]!="$quartermaster"))
- {
- sendtext ("<div class='clan'>You do not have access to take from the secret clan
-storage.</div><div class='default'><br/></div>",self);
- quit;
- }
+	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and (self.extra.[CLAN_RANK].names.[3]!="$quartermaster"))
+	{
+		sendtext ("<div class='clan'>You do not have access to take from the secret clan
+		storage.</div><div class='default'><br/></div>",self);
+		quit;
+	}
+	if (chest.inside==null)
+	{
+		act ("<div class='clan'>Your secret clan storage has nothing in it.</div>",
+		A_ALWAYS,self, null,null,TO_CHAR);
+		quit;
+	}
+	if (arg=="")
+	{
+		act ("<div class='clan'>Unstore what?</div>",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
-if (chest.inside==null)
- {
-act ("<div class='clan'>Your secret clan storage has nothing in it.</div>",
-A_ALWAYS,self, null,null,TO_CHAR);
-   quit;
-   }
+	args:=split (arg,".");
+	if (length(args)==1)
+		amount:=1;
+	else
+	{
+		amount :=atoi (args.[0]);
+		arg:=args.[1];
+	}
 
+	if (amount==0)
+	{
+		act ("<div class='clan'>What do you want to Unstore</div>", A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
-if (arg=="")
- {
- act ("<div class='clan'>Unstore what?</div>",
- A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	item:=chest.inside;
+	i:=1;
+	while (item!=null)
+	{
+		if (item.minv!=253)
+		{
+			item:=item.next;
+			continue;
+		}
+		if (arg in item.names)
+		{
+			if (amount==i)
+				break;
+			else
+				i:=i+1;
+		}
+		item:=item.next;
+	}
 
-args:=split (arg,".");
-if (length(args)==1)
- amount:=1;
-else
- {
- amount :=atoi (args.[0]);
- arg:=args.[1];
- }
+	if (item==null)
+	{
+		act("<div class='clan'>You can not find anything like that in your secret clan
+		storage.</div><div class='clan'></div>",
+		A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	if (item.type != UNIT_ST_OBJ)
+	{
+		act("<div class='clan'>You can not find anything like that in your secret clan
+		storage.</div><div class='clan'></div>",
+		A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
 
-if (amount==0)
- {
- act ("<div class='clan'>What do you want to Unstore</div>", A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	ti:=can_carry(self,item,1);
+	if (ti==1)
+	{
+		act ("You can't seem to lift that.",A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
-item:=chest.inside;
-i:=1;
-while (item!=null)
- {
- if (item.minv!=253)
-  {
-  item:=item.next;
-  continue;
-  }
- if (arg in item.names)
-  {
-  if (amount==i)
-   break;
-  else
-   i:=i+1;
-   }
-  item:=item.next;
-  }
+	secure(item,chestlock);
+	if (can_carry(self,item,1)==1)
+	{
+		sendtext ("<div class='clan'>You can't carry that your hands are full.</div><div class='default'><br/></div>",self);
+		quit;
+	}
 
-if (item==null)
-  {
-  act("<div class='clan'>You can not find anything like that in your secret clan
-storage.</div><div class='clan'></div>",
-    A_ALWAYS, self, null, null, TO_CHAR);
-    quit;
-  }
-if (item.type != UNIT_ST_OBJ)
-  {
-  act("<div class='clan'>You can not find anything like that in your secret clan
-storage.</div><div class='clan'></div>",
-    A_ALWAYS, self, null, null, TO_CHAR);
-    quit;
-  }
+	item.minv:=0;
+	act ("<div class='clan'>You remove the $2N from the false bottom of the clan chest.</div>",
+	A_ALWAYS,self, item,null,TO_CHAR);
+	link (item,self);
+	act ("<div class='clan'>$1n digs around in the chest.</div>",
+	A_SOMEONE,self,null,null,TO_REST);
+	store (chest,chest.zoneidx+".dc",TRUE);
+	quit;
+	
+:chestlock:
 
-ti:=can_carry(self,item,1);
-if (ti==1)
- {
- act ("You can't seem to lift that.",A_ALWAYS,self,null,null,TO_CHAR);
-  quit;
-  }
-
-secure(item,chestlock);
-if (can_carry(self,item,1)==1)
- {
- sendtext ("<div class='clan'>You can't carry that your hands are full.</div><div class='default'><br/></div>",self);
- quit;
- }
-
-item.minv:=0;
-act ("<div class='clan'>You remove the $2N from the false bottom of the clan chest.</div>",
-A_ALWAYS,self, item,null,TO_CHAR);
-link (item,self);
-act ("<div class='clan'>$1n digs around in the chest.</div>",
-A_SOMEONE,self,null,null,TO_REST);
-store (chest,chest.zoneidx+".dc",TRUE);
-   quit;
- :chestlock:
- act ("<div class='clan'>No such item</div>",
- A_ALWAYS,self,null,null,TO_CHAR);
-store (chest,chest.zoneidx+".dc",TRUE);
- quit;
+	act ("<div class='clan'>No such item</div>", A_ALWAYS,self,null,null,TO_CHAR);
+	store (chest,chest.zoneidx+".dc",TRUE);
+	quit;
 }
-dilend
+dilend // cunstore
+
+/* command lists contents of secret clan storage
+indirectly leverages clan_symbolic.dc file */
 
 dilbegin cequipment (arg:string);
 var
-cx:extraptr;
- temp:string;
- buff:string;
- chest:unitptr;
- amount:integer;
- item:unitptr;
+	cx:extraptr;
+	temp:string;
+	buff:string;
+	chest:unitptr;
+	amount:integer;
+	item:unitptr;
 code
 {
-if (self.extra.[CLAN_NAME]==null)
- {
- act ("<div class='clan'>You are not a member of a clan.</div>",A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	if (self.extra.[CLAN_NAME]==null)
+	{
+		act ("<div class='clan'>You are not a member of a clan.</div>",A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
-cx:=CLAN_SYMBOLIC in self.extra;
-temp:=cx.descr;
+	cx:=CLAN_SYMBOLIC in self.extra;
+	temp:=cx.descr;
 
-chest:=findsymbolic("dchest@"+temp);
-if( (chest==null) or
-(chest.outside!=self.outside))
- {
-act("<div class='clan'>You don't see your clan chest here.</div>",A_ALWAYS, self,null,null,TO_CHAR);
- quit;
- }
-
-secure (chest,chestlock);
-
-if (chest.inside==null)
- {
-act ("<div class='clan'>Your secret clan storage has nothing in it.</div>",
-A_ALWAYS,self, null,null,TO_CHAR);
-   quit;
-   }
-
-item:=chest.inside;
-buff:="";
-amount:=0;
-while (item!=null)
- {
- if (item.minv==253)
-  {
-  buff:=buff+item.title+"<br/>";
-  amount:=amount+1;
-  }
- item:=item.next;
- }
-buff:="<div class='clan'>Your secret clan storage contains:</div><div class='default'><br/></div>"+buff;
-buff:=buff+"<div class='clan'></div>"+itoa(amount)+" items total.<div class='default'><br/></div>";
-pagestring (buff,self);
-buff:="";
+	chest:=findsymbolic("dchest@"+temp);
+	if( (chest==null) or (chest.outside!=self.outside))
+	{
+		act("<div class='clan'>You don't see your clan chest here.</div>",A_ALWAYS, self,null,null,TO_CHAR);
+		quit;
+	}
+	secure (chest,chestlock);
+	if (chest.inside==null)
+	{
+		act ("<div class='clan'>Your secret clan storage has nothing in it.</div>",
+		A_ALWAYS,self, null,null,TO_CHAR);
+		quit;
+	}
+	item:=chest.inside;
+	buff:="";
+	amount:=0;
+	while (item!=null)
+	{
+		if (item.minv==253)
+		{
+			buff:=buff+item.title+"<br/>";
+			amount:=amount+1;
+		}
+		item:=item.next;
+	}
+	buff:="<div class='clan'>Your secret clan storage contains:</div><div class='default'><br/></div>"+buff;
+	buff:=buff+"<div class='clan'></div>"+itoa(amount)+" items total.<div class='default'><br/></div>";
+	pagestring (buff,self);
+	buff:="";
+	
 :chestlock:
-   quit;
-}
-dilend
 
- dilbegin cstore (arg:string);
+	   quit;
+}
+dilend // cequipment
+
+/* Command allows players to store items in secret clan storage 
+leverages clan_symbolic.dc file */
+
+dilbegin cstore (arg:string);
 var
-item:unitptr;
-check:unitptr;
-amount:integer;
- x:extraptr;
- cx:extraptr;
- temp:string;
- chest:unitptr;
+	item:unitptr;
+	check:unitptr;
+	amount:integer;
+	x:extraptr;
+	cx:extraptr;
+	temp:string;
+	chest:unitptr;
 code
 {
-if (self.extra.[CLAN_NAME]==null)
- {
- act ("<div class='clan'>You are not a member of a clan.</div>",A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	if (self.extra.[CLAN_NAME]==null)
+	{
+		act ("<div class='clan'>You are not a member of a clan.</div>",A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
-cx:=CLAN_SYMBOLIC in self.extra;
-temp:=cx.descr;
+	cx:=CLAN_SYMBOLIC in self.extra;
+	temp:=cx.descr;
 
-chest:=findsymbolic("dchest@"+temp);
-if( (chest==null) or
-(chest.outside!=self.outside))
- {
-act("<div class='clan'>You don't see your clan chest here.</div>",A_ALWAYS, self,null,null,TO_CHAR);
- quit;
- }
+	chest:=findsymbolic("dchest@"+temp);
+	if( (chest==null) or (chest.outside!=self.outside))
+	{
+		act("<div class='clan'>You don't see your clan chest here.</div>",A_ALWAYS, self,null,null,TO_CHAR);
+		quit;
+	}
 
- secure (chest,chestlock);
-if (arg=="")
- {
- act ("<div class='clan'>Store what?</div>", A_ALWAYS,self,null,null,TO_CHAR);
- quit;
- }
+	secure (chest,chestlock);
+	if (arg=="")
+	{
+		act ("<div class='clan'>Store what?</div>", A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
-item:= findunit(self, arg, FIND_UNIT_INVEN, null);
-if (item==null)
-  {
-  act("<div class='clan'>You do not have anything like that in your inventory.</div><div class='clan'></div>",
-    A_ALWAYS, self, null, null, TO_CHAR);
-    quit;
-  }
+	item:= findunit(self, arg, FIND_UNIT_INVEN, null);
+	if (item==null)
+	{
+		act("<div class='clan'>You do not have anything like that in your inventory.</div><div class='clan'></div>",
+		A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
 
-secure (item,chestlock);
-if (item.type != UNIT_ST_OBJ)
-  {
-  act("<div class='clan'>You do not have anything like that in your inventory.</div><div class='clan'></div>",
-    A_ALWAYS, self, null, null, TO_CHAR);
-    quit;
-  }
+	secure (item,chestlock);
+	if (item.type != UNIT_ST_OBJ)
+	{
+		act("<div class='clan'>You do not have anything like that in your inventory.</div><div class='clan'></div>",
+		A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
 
-if (item.objecttype==ITEM_CONTAINER)
- {
- if (item.inside!=null)
-  {
- act ("<div class='clan'>You can not store a container that contains items, empty it
-and try again.</div>",A_ALWAYS, self, null, null, TO_CHAR);
-    quit;
-  }
-  }
+	if (item.objecttype==ITEM_CONTAINER)
+	{
+		if (item.inside!=null)
+		{
+			act ("<div class='clan'>You can not store a container that contains items, empty it
+			and try again.</div>",A_ALWAYS, self, null, null, TO_CHAR);
+			quit;
+		}
+	}
 
+	amount:=0;
+	check:=chest.inside;
+	while (check!=null)
+	{
+		if (check.minv==253)
+			amount:=amount+1;
+		check:=check.next;
+	}
 
-amount:=0;
-check:=chest.inside;
-while (check!=null)
- {
- if (check.minv==253)
-  amount:=amount+1;
- check:=check.next;
- }
+	if (amount>=CLAN_MAX_STORAGE)
+	{
+		sendtext("<div class='clan'>The storage chest is full.</div><div class='default'><br/></div>",self);
+		quit;
+	}
 
-if (amount>=CLAN_MAX_STORAGE)
- {
- sendtext("<div class='clan'>The storage chest is full.</div><div class='default'><br/></div>",self);
- quit;
- }
+	act ("<div class='clan'>You place the $2N under the false bottom of the clan chest.</div>",
+	A_ALWAYS,self, item,null,TO_CHAR);
+	act ("<div class='clan'>$1n digs around in the chest.</div>",
+	A_SOMEONE,self,null,null,TO_REST);
+	item.minv:=253;
+	link (item,chest);
 
-act ("<div class='clan'>You place the $2N under the false bottom of the clan chest.</div>",
-A_ALWAYS,self, item,null,TO_CHAR);
-act ("<div class='clan'>$1n digs around in the chest.</div>",
-A_SOMEONE,self,null,null,TO_REST);
-item.minv:=253;
-link (item,chest);
+	store (chest,chest.zoneidx+".dc",TRUE);
 
-store (chest,chest.zoneidx+".dc",TRUE);
-:chestlock:
+	:chestlock:
+
    quit;
 }
-dilend
+dilend // cstore
+
+/* program prevents non-members from walking past guards */
 
 dilbegin guard_dir(direction : string);
 external
- integer walk_room@function (s:string,i:integer);
+	integer walk_room@function (s:string,i:integer);
 
 var
-tf:integer;
-place : integer;
-placename:string;
+	tf:integer;
+	place : integer;
+	placename:string;
 code
 {
-   on_activation(self.position <= POSITION_SLEEPING, sleep);
-place:= self.outside.idx;
-placename:=self.outside.nameidx+"@"+self.outside.zoneidx;
+	on_activation(self.position <= POSITION_SLEEPING, sleep);
+	place:= self.outside.idx;
+	placename:=self.outside.nameidx+"@"+self.outside.zoneidx;
 
-   :start:
+:start:
 
    wait(SFB_CMD, ((command(direction)) or command("enter")));
 
-if (self.outside.idx != place)
- goto start;
-if (activator.extra.[CLAN_SYMBOLIC]==null)
- goto stopit;
-
-if (self.zoneidx==activator.extra.[CLAN_SYMBOLIC].descr)
- goto start;
+	if (self.outside.idx != place)
+		goto start;
+	if (activator.extra.[CLAN_SYMBOLIC]==null)
+		goto stopit;
+	if (self.zoneidx==activator.extra.[CLAN_SYMBOLIC].descr)
+		goto start;
 
 :stopit:
-block;
+	
+	block;
 
-act ("<div class='clan'>$3n stops you and says, 'Clan Members only!'</div>",
-    A_ALWAYS,activator,null,self,TO_CHAR);
-act ("<div class='clan'>$3n stops $1n, and says, 'Clan Members only!'</div>",
-    A_SOMEONE,activator,null,self,TO_REST);
-goto start;
-
+	act ("<div class='clan'>$3n stops you and says, 'Clan Members only!'</div>",
+		A_ALWAYS,activator,null,self,TO_CHAR);
+	act ("<div class='clan'>$3n stops $1n, and says, 'Clan Members only!'</div>",
+		A_SOMEONE,activator,null,self,TO_REST);
+	goto start;
 
 :sleep:
-heartbeat:= 240;
-pause;
-self.position:= POSITION_STANDING;
-exec("yawn", self);
-heartbeat:= 3;
-tf:= walk_room@function (placename,2);
-goto start;
+
+	heartbeat:= 240;
+	pause;
+	self.position:= POSITION_STANDING;
+	exec("yawn", self);
+	heartbeat:= 3;
+	tf:= walk_room@function (placename,2);
+	goto start;
 }
-dilend
+dilend // guard_dir
+
+/* Dil protects doors to clan homes, leveraging clan_move dil */
 
 dilbegin clan_door(c:string,s:string,dir:integer);
 code
 {
+
 :start:
-wait (SFB_CMD, command (s));
-if (activator.extra.[CLAN_SYMBOLIC].descr==self.zoneidx)
- {
- block;
-dilcopy ("clan_move@clans("+itoa(dir)+")",activator);
+
+	wait (SFB_CMD, command (s));
+	if (activator.extra.[CLAN_SYMBOLIC].descr==self.zoneidx)
+	{
+		block;
+		dilcopy ("clan_move@clans("+itoa(dir)+")",activator);
+	}
+	goto start;
 }
-goto start;
-}
-dilend
+dilend // clan_door
+
+/* dil is used by center command to enter clan home */
 
 dilbegin clan_move(i:integer);
 code
 {
-
-   act("<div class='clan'>$1n vanishes.</div>",A_HIDEINV,self, null, null, TO_ROOM);
-   act("<div class='clan'>You are teleported.</div>", A_SOMEONE,self, null, null, TO_CHAR);
-
-   link(self, self.outside.exit_to[i]);
-
- act("<div class='clan'>$1n appears from thin air.</div>",A_HIDEINV, self, null, null, TO_ROOM);
-
-   exec("look", self);
-
-   quit;
+	act("<div class='clan'>$1n vanishes.</div>",A_HIDEINV,self, null, null, TO_ROOM);
+	act("<div class='clan'>You are teleported.</div>", A_SOMEONE,self, null, null, TO_CHAR);
+	link(self, self.outside.exit_to[i]);
+	act("<div class='clan'>$1n appears from thin air.</div>",A_HIDEINV, self, null, null, TO_ROOM);
+	exec("look", self);
+	quit;
 }
-dilend
+dilend // clan_move
 
 %rooms
 

@@ -490,6 +490,8 @@ int pupil_magic(class unit_data *pupil)
       switch (af->id)
       {
       case ID_BLESS:
+      case ID_BERSERK:
+      case ID_RAGE:
       case ID_CURSE:
       case ID_ENERGY_DRAIN:
       case ID_SPL_RAISE_MAG:
