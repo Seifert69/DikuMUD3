@@ -1486,7 +1486,7 @@ var
 	err:integer;
 	buf:string;
 	i:integer;
-	set:integer;
+	iSet:integer;
 	ln:integer;
 	clist:stringlist;
 	balance:integer;
@@ -1605,7 +1605,7 @@ code
 	}
 
 	i:=0;
-	set := 0;
+	iSet := 0;
 	buf:="";
 	while (i<ln)
 	{
@@ -1616,12 +1616,12 @@ code
 			pc.title:=arg;
 			sendtext ("<div class=clan>You set "+pc.name+"'s title to '"+arg+"'</div>",self);
 			log ("&lt;clan_title&gt; "+self.name+" set "+pc.name+" title to " +arg);
-			set := 1;
+			iSet := 1;
 			quit;
 		}
 		i:=i+5;
 	}
-	if (set == 0)
+	if (iSet == 0)
 		sendtext ("<div class=clan>"+pc.name+" does not appear to have an extra "+CLAN_NAME+" matching available clans.</div>",self);
 	quit;
 }
