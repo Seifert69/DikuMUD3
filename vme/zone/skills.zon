@@ -12105,11 +12105,11 @@ code
       change_speed(self,PULSE_ROUND);
 
       act("<div class='miss_me'>Your taunting of $3n falls on deaf ears.</div>",
-      A_ALWAYS, self, null, tgt, TO_CHAR);
+		A_ALWAYS, self, null, tgt, TO_CHAR);
       act("<div class='miss_other'>$1n pitifully attempt to taunt $3n.</div>",
-      A_SOMEONE, self, null, tgt, TO_NOTVICT);
+		A_SOMEONE, self, null, tgt, TO_NOTVICT);
       act("<div class='hit_opponent'>$1n fails their effort to taunt you.</div>",
-      A_SOMEONE, self, null, tgt, TO_VICT);
+		A_SOMEONE, self, null, tgt, TO_VICT);
       provoked_attack(tgt,self);
       quit;
    }
@@ -12129,7 +12129,7 @@ code
    send_done("taunt",self,null,tgt,hm,arg,null);
    quit;
 }
-dilend
+dilend // ski_taunt
 
 dilbegin taunted();
 code
@@ -12139,10 +12139,9 @@ code
    wait(SFB_TICK, TRUE);
    quit;
 }
-dilend
+dilend // taunted
 
-dilbegin ski_berserk(medi:unitptr, tgt : unitptr, arg : string,
-	       hm : integer, effect : string);
+dilbegin ski_berserk(medi:unitptr, tgt : unitptr, arg : string, hm : integer, effect : string);
 var
 	heal : integer;
 	end : integer;
@@ -12163,10 +12162,12 @@ code
     hm := 1 + hm / 10;
     if (hm > 10) hm := 10;
 	
-	addaff(self, ID_BERSERK, 10, WAIT_SEC*30,
-	  ABIL_CON, hm, 0, TIF_BERSERK_ON, TIF_BERSERK_TICK, TIF_BERSERK_OFF,
-	  APF_ABILITY);
-	  
+	act("<div class='spell'>You channel your energy, and go berserk!</div>",
+		A_ALWAYS, self, null, tgt, TO_CHAR);
+	act("<div class='spell'>$1n channels their energy, and goes berserk!</div>",
+		A_SOMEONE, self, null, tgt, TO_REST);
+	
+	addaff(self, ID_BERSERK, 10, WAIT_SEC*30, ABIL_CON, hm, 0, TIF_BERSERK_ON, TIF_BERSERK_TICK, TIF_BERSERK_OFF, APF_ABILITY);
     hm := 1 + hm / 10;
     if (hm > 20) hm := 20;
 	heal := tgt.hp + (hm * 3);
@@ -12180,7 +12181,7 @@ code
 	tgt.hp := heal;
     quit;
 }
-dilend
+dilend // ski_berserk
 
 dilbegin ski_frenzy(arg : string);
 code
