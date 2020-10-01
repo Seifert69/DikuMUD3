@@ -125,7 +125,7 @@ END HEADER*/
 #define PROFESSION_MAX         13 /* 11+1 */
 
 #define PROFESSION_STRINGS "Fighter", "Knight", "Paladin", "Ranger", "Thief", "Assassin", \
-                           "Priest", "Druid", "Mystic","Necromancer", "Conjurer", "Mage"
+                           "Priest", "Druid", "Mystic","Necromancer", "Conjurer", "Mage", "Barbarian"
 
 
 #define QUEST_WW              "Wight warrens quest"

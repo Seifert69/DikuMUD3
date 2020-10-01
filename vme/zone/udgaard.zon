@@ -9504,7 +9504,7 @@ extra {}
 "This arm band will transport you to udgaard upon the command 'home' and while worn."
 
 dilcopy home@udgaard();
-dilcopy prof_restrict@function({PROFESSION_BARBARIAN},0,0,"");
+dilcopy prof_restrict@function(PROFESSION_BARBARIAN,0,0,"");
 end
 
 fighter_item

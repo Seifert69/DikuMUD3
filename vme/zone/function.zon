@@ -2429,7 +2429,7 @@ dilend
 
 /* prof_restrict added to enable restriction to professions. fun! */
 
-dilbegin prof_restrict (prof:stringlist,damage:integer,percent:integer,action:string);
+dilbegin prof_restrict (prof:integer,damage:integer,percent:integer,action:string);
 var
 	amount:integer;
 code
@@ -2459,34 +2459,31 @@ code
 	if (self.outside.level>=IMMORTAL_LEVEL)
 		goto start;
 
-	if(itoa(self.outside.profession) in prof)
+	if(self.outside.profession == prof)
 		goto start;
 
-	if ((not( command ("wear"))) and
-	(not(command ("wield"))) and
-	(not(command ("hold")))) goto start;
+	if ((not( command ("wear"))) and (not(command ("wield"))) and (not(command ("hold")))) goto start;
 
 	if (action=="")
-	  {
-	act ("Your $2n burns you and you drop it to the ground.",
-	A_ALWAYS,self.outside,self,null,TO_CHAR);
-	act ("$1n's $2n burns $1m and $1e drops it to the ground.",
-	A_SOMEONE,self.outside,self,null,TO_REST);
-	act ("Being of the right profession would help.",
-	A_ALWAYS,self.outside,null,null,TO_CHAR);
+	{
+		act ("Your $2n burns you and you drop it to the ground.",
+			A_ALWAYS,self.outside,self,null,TO_CHAR);
+		act ("$1n's $2n burns $1m and $1e drops it to the ground.",
+			A_SOMEONE,self.outside,self,null,TO_REST);
+		act ("Being of the right profession would help.",
+			A_ALWAYS,self.outside,null,null,TO_CHAR);
 	}
 	else action ();
 
 	if (percent!=0)
-	  amount:=(self.outside.hp*percent)/100;
+		amount:=(self.outside.hp*percent)/100;
 	if (damage==-1)
-	  damage:=openroll (100,5);
+		damage:=openroll (100,5);
 	if (percent!=0)
-	  if (damage>amount)
-		damage:=amount;
-	  else if (damage==0)
-	  damage:=amount;
-
+		if (damage>amount)
+			damage:=amount;
+		else if (damage==0)
+			damage:=amount;
 
 	self.outside.hp:=self.outside.hp-damage;
 	position_update (self.outside);
