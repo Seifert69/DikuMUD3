@@ -2459,7 +2459,7 @@ code
 	if (self.outside.level>=IMMORTAL_LEVEL)
 		goto start;
 
-	if(self.outside.profession in prof)
+	if(itoa(self.outside.profession) in prof)
 		goto start;
 
 	if ((not( command ("wear"))) and
