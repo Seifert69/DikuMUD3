@@ -2429,11 +2429,10 @@ dilend
 
 /* prof_restrict added to enable restriction to professions. fun! */
 
-dilbegin prof_restrict
-(prof:stringlist,damage:integer,percent:integer,action:string);
+dilbegin prof_restrict (prof:stringlist,damage:integer,percent:integer,action:string);
 var
 	amount:integer;
-	profession:string;
+	profession:integer;
 code
 {
 	if (damage < 0)
@@ -2461,9 +2460,9 @@ code
 	if (self.outside.level>=IMMORTAL_LEVEL)
 		goto start;
 
-	profession := atoi(PC_PROFESSION(self.outside));
-	if(profession in prof)
-		goto start;
+	//profession := atoi(PC_PROFESSION(self.outside));
+	//if(profession in prof)
+	//	goto start;
 
 	if ((not( command ("wear"))) and
 	(not(command ("wield"))) and
