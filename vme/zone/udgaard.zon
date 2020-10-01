@@ -7595,6 +7595,17 @@ code
       statue_load(pc, "udgaard/mystic_item",	  1);
       statue_load(pc, "udgaard/short_staff",      1);
    }
+   else if (pc.profession == PROFESSION_BARBARIAN)
+   {
+      statue_load(pc, "udgaard/newbie_book",      1);
+      statue_load(pc, "udgaard/newbie_plate",     1);
+      statue_load(pc, "udgaard/newbie_psleeves",  1);
+      statue_load(pc, "udgaard/newbie_boots",     1);
+      statue_load(pc, "udgaard/plegg",            1);
+      statue_load(pc, "udgaard/barbarian_item",     1);
+      statue_load(pc, "udgaard/axe0",             1);
+      statue_load(pc, "udgaard/axe0",             1);
+   }
    else 
    {
       sendtext("It's so odd, please report to admin your profession is "+itoa(pc.profession)+"&amp;n", pc);
@@ -9482,8 +9493,21 @@ dilcopy guild_restrict@function ({GUILD_UDG_THIEF},0,0,"");
 
 end
 
+barbarian_item
 
-    fighter_item
+names {"arm band","band"}
+title "an Iron Arm Band"
+descr "A sturdy iron arm band lies here."
+weight 1
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_WEAR_WRIST}
+extra {}
+"This arm band will transport you to udgaard upon the command 'home' and while worn."
+
+dilcopy home@udgaard();
+dilcopy prof_restrict@function(PROFESSION_BARBARIAN,0,0,"");
+end
+
+fighter_item
 
 names {"earring"}
 title "the Earring of Battle"

@@ -5642,6 +5642,21 @@ code
 
       self.weapons[WPN_FIST]         := 5;
       self.weapons[WPN_QUARTERSTAFF] := 5 + 5;
+   }   
+   else if (self.profession == PROFESSION_BARBARIAN)
+   {
+      self.abilities[ABIL_STR] := self.abilities[ABIL_STR]+3;
+      self.abilities[ABIL_DEX] := self.abilities[ABIL_DEX]+1;
+      self.abilities[ABIL_CON] := self.abilities[ABIL_CON]+3;
+      self.abilities[ABIL_HP]  := self.abilities[ABIL_HP] +2;
+      self.abilities[ABIL_DIV] := self.abilities[ABIL_DIV]-2;
+      self.abilities[ABIL_MAG] := self.abilities[ABIL_MAG]-2;
+      self.abilities[ABIL_BRA] := self.abilities[ABIL_BRA]-1;
+
+      self.weapons[WPN_FIST]         := 5;
+      self.weapons[WPN_HAND_AXE]     := 5 + 5;
+      self.skills[SKI_FRENZY]        := 10;
+      self.skills[SKI_RAGE]          := 5;
    }
    else
    {

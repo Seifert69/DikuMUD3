@@ -10255,7 +10255,7 @@ A_HIDEINV,self,null,null,TO_REST);
 quit;
 }
 dilend
-
+/* removed to make way for Taunt Barbarian skill.
 dilbegin taunt(arg:string);
 external
   socialact(act_s:string,act_i:integer,act_1:unitptr,act_2:unitptr,act_3:unitptr,act_to:integer);
@@ -10315,7 +10315,7 @@ A_HIDEINV,self,null,null,TO_REST);
   send_done ("taunt",self,null,null,0,"",null);
 quit;
 }
-dilend
+dilend */
 
 dilbegin think(arg:string);
 external

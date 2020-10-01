@@ -16,14 +16,14 @@
 #undef MAX
 #endif
 
-int MIN (int a, int b);
-int MAX (int a, int b);
+int MIN(int a, int b);
+int MAX(int a, int b);
 
-int number (int from, int to);
-int dice (int number, int size);
+int number(int from, int to);
+int dice(int number, int size);
 
-char *sprintbit (char *buf, ubit32 vektor, const char *names[]);
-char *sprinttype (char *buf, int type, const char *names[]);
+char *sprintbit(char *buf, ubit32 vektor, const char *names[]);
+char *sprinttype(char *buf, int type, const char *names[]);
 
 /* in game log stuff below */
 
@@ -32,14 +32,14 @@ char *sprinttype (char *buf, int type, const char *names[]);
 #define HERE __FILE__, __LINE__
 
 /* Use like this:  error(HERE, "Something went wrong: %s", buf); */
-void error (const char *file, int line, const char *fmt, ...);
+void error(const char *file, int line, const char *fmt, ...);
 
-class unit_data *hometown_unit (char *str);
+class unit_data *hometown_unit(char *str);
 
 class log_buffer
 {
 public:
-    log_buffer (void)
+    log_buffer(void)
     {
         str[0] = 0;
     }
@@ -54,11 +54,10 @@ public:
  */
 struct obj_type_t
 {
-    const   char *fmt;
+    const char *fmt;
     ubit8 v[5];
 };
 
-char *stat_obj_data (class unit_data * u, struct obj_type_t *obj_data);
-
+char *stat_obj_data(class unit_data *u, struct obj_type_t *obj_data);
 
 #endif

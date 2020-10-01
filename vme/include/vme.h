@@ -1170,6 +1170,8 @@ SFUN_ARREST_CHECK
 
 #define ID_WEAPON_DEFENSE        87
 #define ID_SPELL_DEFENSE         88
+#define ID_BERSERK			     89
+#define ID_RAGE                  90
 #define ID_TOP_IDX              4096
 
 #define ID_TRANSFER_MAG        (-ID_RAISE_MAG)
@@ -1288,8 +1290,14 @@ SFUN_ARREST_CHECK
 #define TIF_ARMOUR_OFF         81
 #define TIF_SPEED_BETTER       82
 #define TIF_SPEED_WORSE        83
+#define TIF_BERSERK_ON         84
+#define TIF_BERSERK_TICK       85
+#define TIF_BERSERK_OFF        86
+#define TIF_RAGE_ON            87
+#define TIF_RAGE_TICK          88
+#define TIF_RAGE_OFF           89
 
-#define TIF_MAX                83
+#define TIF_MAX                89
 
 #define CMD_AUTO_EDIT    -13	/* Used when any pc leaves the game            */
 #define CMD_AUTO_LEAVE   -12	/* Used when any pc leaves the game            */

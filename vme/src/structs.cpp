@@ -98,7 +98,7 @@ room_data::~room_data(void)
 {
     world_norooms--;
 
-    for (int i = 0; i <= MAX_EXIT; i++)
+    for (int i = 0; i < MAX_EXIT+1; i++)
         if (dir_option[i])
             delete dir_option[i];
 }
@@ -373,7 +373,7 @@ unit_data *unit_data::copy()
         u->data.room->resistance = data.room->resistance;
         u->data.room->movement_type = data.room->movement_type;
         u->data.room->flags = data.room->flags;
-        for (x = 0; x < MAX_EXIT; x++)
+        for (x = 0; x < MAX_EXIT+1; x++)
         {
             u->data.room->dir_option[x]->open_name =
                 data.room->dir_option[x]->open_name;
@@ -541,4 +541,78 @@ unit_data::~unit_data(void)
     }
     else
         assert(FALSE);
+}
+
+
+std::string unit_data::json(void)
+{
+    string s;
+    string t;
+
+    t = UNIT_FI_NAME(this);
+    t.append("@");
+    t.append(UNIT_FI_ZONENAME(this));
+
+    s = "{";
+    s.append(str_json("idx", t)); s.append(",\n");
+    s.append(this->names.json()); s.append(",\n");
+    s.append(str_json("title", this->title)); s.append(",\n");
+    s.append(str_json("inside_descr", this->in_descr)); s.append(",\n");
+    s.append(str_json("outside_descr", this->out_descr)); s.append(",\n");
+    s.append(this->extra.json());  s.append(",\n");
+
+    s.append(str_json("manipulate", this->manipulate)); s.append(",\n");
+    s.append(str_json("flags", this->flags)); s.append(",\n");
+    s.append(str_json("baseweight", this->base_weight)); s.append(",\n");
+    s.append(str_json("capacity", this->capacity)); s.append(",\n");
+    s.append(str_json("size", this->size)); s.append(",\n");
+
+    s.append(str_json("key", this->key)); s.append(",\n");
+    s.append(str_json("openflags", this->open_flags)); s.append(",\n");
+    s.append(str_json("opendiff", this->open_diff)); s.append(",\n");
+
+    s.append(str_json("bright", this->bright)); s.append(",\n");
+    s.append(str_json("minv", this->minv)); s.append(",\n");
+    s.append(str_json("maxhp", this->max_hp)); s.append(",\n");
+    s.append(str_json("hp", this->hp)); s.append(",\n");
+    s.append(str_json("alignment", this->alignment)); s.append(",\n");
+
+    if (UNIT_TYPE(this) == UNIT_ST_ROOM)
+    {
+        s.append("\"room\": {\n");
+        s.append(str_json("roomflags", UROOM(this)->flags)); s.append(",\n");
+        s.append(str_json("movementtype", UROOM(this)->movement_type)); s.append(",\n");
+        s.append(str_json("resistance", UROOM(this)->resistance)); s.append(",\n");
+        s.append(str_json("mapx", UROOM(this)->mapx)); s.append(",\n");
+        s.append(str_json("mapy", UROOM(this)->mapy));
+
+        for (int i=0; i < MAX_EXIT+1; i++)
+        {
+            if (UROOM(this)->dir_option[i])
+            {
+                s.append(",\n");
+                s.append(str_json_encode_quote(dirs[i]));
+                s.append(": {\n");
+                if (UROOM(this)->dir_option[i]->to_room)
+                {
+                    t = UNIT_FI_NAME(ROOM_EXIT(this, i)->to_room);
+                    t.append("@");
+                    t.append(UNIT_FI_ZONENAME(UROOM(this)->dir_option[i]->to_room));
+                    s.append(str_json("toroom", t)); s.append(",\n");
+                }
+                s.append(UROOM(this)->dir_option[i]->open_name.json()); s.append(",\n");
+                s.append(str_json("difficulty", UROOM(this)->dir_option[i]->difficulty)); s.append(",\n");
+                s.append(str_json("exitflags", UROOM(this)->dir_option[i]->exit_info)); s.append(",\n");
+                s.append(str_json("key", UROOM(this)->dir_option[i]->key)); s.append("\n");
+                s.append("}\n");                
+            }
+        }
+
+        s.append("}\n");
+    }
+
+
+    s.append("\n}\n");
+
+    return s;
 }

@@ -40,6 +40,9 @@ name            = druid
 index           = PROFESSION_MYSTIC
 name            = mystic
 
+index           = PROFESSION_BARBARIAN
+name            = barbarian
+
 index           = PROFESSION_NECROMANCER
 name            = necromancer
 

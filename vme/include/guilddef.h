@@ -170,7 +170,7 @@ $1n tells you, 'Remove all equipment, please.';
   0;  100; Hitpoints                     ;   9;  9000;   8;       0;
   0;   70; Charisma                      ;  14; 14000;  13;       0;
   0;   50; Brain                         ;  23; 23000;  14;       0;
-  0;   70; Divine                        ;  14; 14000;  10;       0;"
+  0;   70; Divine                        ;  14; 14000;  10;       0;
 
 /* Sum (max) 520, Average = 10.86 */
 
@@ -1240,6 +1240,71 @@ ERROR NO TYPE IN MIDGAARD PALADIN
 ERROR NO TYPE IN MYSTIC GUILD
 
 #endif
+
+#elif defined(_GUILD_BARBARIAN)
+
+#if defined(_ABILITY)
+
+  0;  100; Strength                      ;   5; 15000;  10; 20;      0;
+  0;  100; Dexterity                     ;   5; 15000;  10; 20;      0;
+  0;   90; Constitution                  ;   10; 15000;  10; 20;      0;
+  0;  100; Hitpoints                     ;   9; 15000;  10; 20;      0;
+  0;   60; Charisma                      ;  15;  5000;   5; 10;      0;
+  0;   60; Brain                         ;  15; 10000;   8; 16;      0;
+ 
+#elif defined(_SKILL)
+
+  0;  100; consider                      ;  14; 14000;  10; 20;      0;
+  0;  100; diagnostics                   ;  14; 14000;  10; 20;      0;
+  0;   70; fleeing                       ;  14; 14000;  10;          0;
+  0;  100; bash                          ;   9;  9000;   8;          0;
+  0;  100; shield                        ;   4;  4000;   5; 10;      0;
+  1;  100; rescue                        ;  14; 14000;  10;          0;
+  5;   50; swimming                      ;  14; 14000;  10;          0;
+ 10;  100; two weapon style              ;   9;  9000;   8;          0;
+ 10;  100; disarming                     ;   9;  9000;   8;          0;
+ 15;   70; leadership                    ;   9;  9000;   8;          0;
+  0;  100; armor soft leather            ;   4;  4000;   10;      0;
+  7;  100; armor hard leather            ;   4;  4000;   10;      0;
+ 15;  100; armor chain                   ;   4;  4000;   10;      0;
+ 20;  100; armor plate                   ;   4;  4000;   10;      0;
+
+#elif defined(_WEAPON)
+
+  0;  100; fist                          ;   9;  9000;   8;          0;
+  0;  100; club                          ;   4;  4000;   5;          0;
+  0;  100; hand axe                      ;   9;  9000;   8;          0;
+  1;  100; rapier                        ;   9;  9000;   8;          0;
+  2;  100; spear                         ;   9;  9000;   8;          0;
+  4;   80; kick                          ;   4;  4000;  12;          0;
+  4;  100; mace                          ;   9;  9000;   8;          0;
+  4;  100; short sword                   ;   9;  9000;   8;          0;
+  5;   80; brass knuckles                ;  25; 25000;  10;          0;
+  5;   80; knee                          ;  25; 25000;  20; 40;      0;
+  8;  100; war hammer                    ;   9;  9000;   8;          0;
+  8;  100; elbow                         ;  25; 25000;  12;          0;
+ 10;  100; brass knuckles                ;  15; 15000;  12;          0;
+ 12;  100; morning star                  ;  14;  9000;  10;          0;
+ 14;  100; flail                         ;  14; 14000;  10;          0;
+ 14;   70; kick                          ;  25; 25000;  20;          0;
+ 16;  100; long sword                    ;   9;  9000;   8;          0;
+ 16;   80; trident                       ;  18; 18000;  15;          0;
+ 16;  100; battle club                   ;  14; 14000;  10;          0;
+ 18;  100; battle mace                   ;  14; 14000;  10;          0;
+ 18;  100; bardiche                      ;  18; 18000;  15;          0;
+ 22;  100; battle axe                    ;  14; 14000;  15;          0;
+ 25;  100; war mattock                   ;  18; 18000;  15;          0;
+ 24;  100; maul                          ;  12; 12000;  10;          0;
+ 25;  100; great sword                   ;   9;  9000;  10;          0;
+ 30;  100; halberd                       ;  18; 18000;  15;          0;
+ 
+ 
+#else
+
+ERROR NO TYPE IN BARBARIAN GUILD
+
+#endif // barbarian
+
 
 #elif defined(_GUILD_MIDGAARD_SORCERER)
 
