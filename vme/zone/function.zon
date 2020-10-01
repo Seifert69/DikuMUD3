@@ -2460,7 +2460,7 @@ code
 	if (self.outside.level>=IMMORTAL_LEVEL)
 		goto start;
 
-	profession := PC_PROFESSION(self.outside);
+	pcprof := PC_PROFESSION(self.outside);
 	if(pcprof in prof)
 		goto start;
 
