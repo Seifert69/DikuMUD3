@@ -311,21 +311,21 @@ code
 		subextra (self.extra,CLAN_NAME);
 		subextra (self.extra,CLAN_RANK);
 		subextra (self.extra,CLAN_SYMBOLIC);
-		subextra (self.extra,"$clan-_symbolic");
+		subextra (self.extra,"$clan_symbolic");
 		subextra (self.extra,"tatoo" );
 		subextra (self.extra,"tattoo" );
 		subextra (self.extra,"tattoos" );
 		subextra (self.extra,CLAN_NAME);
 		subextra (self.extra,CLAN_RANK);
 		subextra (self.extra,CLAN_SYMBOLIC);
-		subextra (self.extra,"$clan-_symbolic");
+		subextra (self.extra,"$clan_symbolic");
 		subextra (self.extra,"tatoo" );
 		subextra (self.extra,"tattoo" );
 		subextra (self.extra,"tattoos" );
 		subextra (self.extra,CLAN_NAME);
 		subextra (self.extra,CLAN_RANK);
 		subextra (self.extra,CLAN_SYMBOLIC);
-		subextra (self.extra,"$clan-_symbolic");
+		subextra (self.extra,"$clan_symbolic");
 		subextra (self.extra,"tatoo" );
 		subextra (self.extra,"tattoo" );
 		subextra (self.extra,"tattoos" );
@@ -1243,9 +1243,7 @@ Available to all players. */
 dilbegin clist (arg:string);
 var
 	i:integer;
-	ii:integer;
 	err:integer;
-	spaces:string;
 	buf:string;
 	ln:integer;
 	clist:stringlist;
@@ -1272,22 +1270,15 @@ code
 
 	i:=0;
 	buf:="";
-	sendtext("                   Valhalla Clans<br/><br/>",self);
-	sendtext("       Clan Name                          Master<br/><br/>",self);
+	sendtext("Valhalla Clans<br/><br/>",self);
+	sendtext("Clan Name - Master<br/><br/>",self);
 
 	while (i<ln)
 	{
-		ii := 0;
-		spaces := "";
-		while (ii < 40-length(clist.[i+2]))
-		{
-			spaces := spaces + " ";
-			ii := ii + 1;
-		}
 		if (i==0)
-			buf:="  " + clist.[i+2]+spaces+clist.[i+1]+"<br/>";
+			buf:=clist.[i+2]+" - "+clist.[i+1]+"<br/>";
 		else
-			buf:=buf+"  " + clist.[i+2]+spaces+clist.[i+1]+"<br/>";
+			buf:=buf+clist.[i+2]+" - "+clist.[i+1]+"<br/>";
 		i:=i+5;
 	}
 
@@ -1495,13 +1486,23 @@ var
 	err:integer;
 	buf:string;
 	i:integer;
+	iSet:integer;
 	ln:integer;
 	clist:stringlist;
 	balance:integer;
 
 code
 {
-	if (self.level >IMMORTAL_LEVEL) goto adminctitle;
+	pname:=getword(arg);
+	pc:=ghead();
+	while (pc.type==UNIT_ST_PC)
+	{
+		if (pc.name==pname)
+		break;
+		pc:=pc.gnext;
+	}
+	
+	if (self.level >IMMORTAL_LEVEL) goto admin_title;
 	if (self.extra.[CLAN_RANK]==null)
 	{
 		act ("<div class='clan'>You must be a clan Master or Lord to use ctitle.</div>",
@@ -1516,16 +1517,6 @@ code
 		quit;
 	}
 	
-:adminctitle:
-
-	pname:=getword(arg);
-	pc:=ghead();
-	while (pc.type==UNIT_ST_PC)
-	{
-		if (pc.name==pname)
-		break;
-		pc:=pc.gnext;
-	}
 	if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
 	{
 		act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
@@ -1543,8 +1534,6 @@ code
 	}
 
 :set_title:
-	
-	log ("&lt;clan_title&gt; "+self.name+" set "+pc.name+" title to "+arg);
 
 	err:=loadstr ("clanlist.data",buf);
 	if (err<1)
@@ -1570,9 +1559,6 @@ code
 	{
 		if (self.extra.[CLAN_NAME].descr==clist.[i+2])
 		{
-		
-:money_title:
-
 			err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".money",buf);
 			if (err<1)
 				buf:="0";
@@ -1588,14 +1574,56 @@ code
 			err:=delstr(self.extra.[CLAN_SYMBOLIC].descr+".money");
 			err:=savestr(self.extra.[CLAN_SYMBOLIC].descr+".money",itoa(balance),"w");
 
-			arg:=arg+" <div class='clan'>"+clist.[i+4] +"</div>";
+			arg:=arg + " " + clist.[i+4];
 			arg:=textformat(arg);
 			pc.title:=arg;
 			sendtext ("<div class=clan>You set "+pc.name+"'s title to '"+arg+"'</div>",self);
+			log ("&lt;clan_title&gt; "+self.name+" set "+pc.name+" title to " +arg);
 			quit;
 		}
 		i:=i+5;
 	}
+	quit;
+
+:admin_title:
+
+	err:=loadstr ("clanlist.data",buf);
+	if (err<1)
+	{
+		log ("01:  Error in clanlist.data");
+		sendtext ("Unable to find clanlist.data.<br/>",self);
+		quit;
+	}
+
+	clist:=split(buf,"\n");
+	ln:=length (clist);
+	ln:=ln-1;
+	if (ln<1)
+	{
+		log ("02:  Error in clanlist.data");
+		sendtext ("Unable to load results from clanlist.data.<br/>",self);
+		quit;
+	}
+
+	i:=0;
+	iSet := 0;
+	buf:="";
+	while (i<ln)
+	{
+		if (pc.extra.[CLAN_NAME].descr==clist.[i+2])
+		{
+			arg:=arg + " " + clist.[i+4];
+			arg:=textformat(arg);
+			pc.title:=arg;
+			sendtext ("<div class=clan>You set "+pc.name+"'s title to '"+arg+"'</div>",self);
+			log ("&lt;clan_title&gt; "+self.name+" set "+pc.name+" title to " +arg);
+			iSet := 1;
+			quit;
+		}
+		i:=i+5;
+	}
+	if (iSet == 0)
+		sendtext ("<div class=clan>"+pc.name+" does not appear to have an extra for $clan_name matching available clans.</div>",self);
 	quit;
 }
 dilend // ctitle
@@ -2551,8 +2579,7 @@ code
 		quit;
 	}
 
-	act ("<div class='clan'></div>"+moneystring(tmp,TRUE)+" falls into your hands from the chest
-	withdraw slot.<div class='default'></div>",
+	act ("<div class='clan'></div>"+moneystring(tmp,TRUE)+" falls into your hands from the chest withdraw slot.<div class='default'></div>",
 	A_ALWAYS,self, null,null,TO_CHAR);
 	act ("<div class='clan'>$1n gets some money from the withdraw slot on the clan chest.</div><div class='default'></div>",
 	A_SOMEONE,self,null,null,TO_REST);
