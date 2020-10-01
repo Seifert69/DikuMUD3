@@ -268,7 +268,7 @@
         .cpr    { display: inline; color:red; }
         .br     { display: inline; background-color:darkred; }
         .cn     { display: inline; color:black; }
-        .cpn    { display: inline; color:black; }
+        .cpn    { display: inline; color:dimgray; }
         .bn     { display: inline; background-color:black; }
         .cg     { display: inline; color:darkgreen; }
         .cpg    { display: inline; color:green; }
