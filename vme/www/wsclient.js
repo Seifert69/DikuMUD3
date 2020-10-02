@@ -265,6 +265,13 @@ function setTrigger(item)
 }
 
 
+function setJson(item)
+{
+    console.log("setJson()");
+    console.log(item.innerHTML);
+}
+
+
 /*
  * Add a command string 's' to the history array
  *
@@ -639,6 +646,13 @@ function outputText(str, bParse) {
             }
 
             var mytype = item.firstChild.getAttribute("type");
+
+            if (mytype == "$json")
+            {
+                setJson(item.firstChild);
+                return;
+            }
+
             var myitem = item.getElementsByTagName("li");
 
             if (mytype == "$alias")

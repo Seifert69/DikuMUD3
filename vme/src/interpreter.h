@@ -139,6 +139,7 @@ void do_hit(class unit_data *, char *, const struct command_info *);
 void do_set(class unit_data *, char *, const struct command_info *);
 void do_setskill(class unit_data *, char *, const struct command_info *);
 void do_wstat(class unit_data *, char *, const struct command_info *);
+void do_wedit(class unit_data *, char *, const struct command_info *);
 void do_load(class unit_data *, char *, const struct command_info *);
 void do_cast(class unit_data *, char *, const struct command_info *);
 void do_at(class unit_data *, char *, const struct command_info *);
