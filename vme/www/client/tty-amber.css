@@ -73,7 +73,7 @@
             height: 25%;
             background-color: #111111;
             color: white;
-            background-image: url('img/logo.gif');
+            background-image: url('../img/logo.gif');
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-size: cover;            

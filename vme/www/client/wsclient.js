@@ -6,7 +6,7 @@ var sPaged = "";
 
 var g_crosshairs = new Image;
 
-var g_sImage = "img/logo.gif";
+var g_sImage = "../img/logo.gif";
 var g_nLastSend = Math.round(Date.now() / 1000);
 
 var g_nHp = 1;
@@ -483,9 +483,9 @@ function setMap(szone, smap) {
     }
 
     if (szone != "")
-        g_sImage = "img/" + szone + ".jpg";
+        g_sImage = "../img/" + szone + ".jpg";
     else
-        g_sImage = "img/logo.gif";
+        g_sImage = "../img/logo.gif";
 
     var mye = document.getElementById("ac_map");
     var xw, yh;
