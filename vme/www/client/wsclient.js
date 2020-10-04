@@ -535,12 +535,12 @@ function outputReader(item) {
     list.appendChild(item);
 
     var chatContent = document.getElementById("converse");
-    chatContent.appendChild(list);
     if (nRowCount > 200)  // Max 200 list items
     {
         chatContent.removeChild(chatContent.childNodes[0]);
         nRowCount -= 1;
     }
+    chatContent.appendChild(list);
 }
 
 function outputNormal(item) {
