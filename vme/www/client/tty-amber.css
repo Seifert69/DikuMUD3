@@ -1,4 +1,12 @@
-        /* ============ STRUCTURE ============== */
+/* Thanks to these two articles:
+ *    https://superuser.com/questions/361297/what-colour-is-the-dark-green-on-old-fashioned-green-screen-computer-displays
+ *    https://css-tricks.com/old-timey-terminal-styling/
+ *
+ * Here I'm doing an amber TTY  = #FFBB00, background = #282828 :-)... I turned the background up to #404040
+ */
+
+/* ============ STRUCTURE ============== */
+
         .c_container {
             width: 100vw;
             display: inline-flex;
@@ -14,7 +22,7 @@
         .c_left {
             width: 70%;
             height: 100vh;
-            background-color: #727272;
+            background-color: #727272;            
         }
         
         .c_center {
@@ -36,10 +44,22 @@
             height: 100%; /* fill up the screen when empty */
             max-height: calc(100% - 40px);
             background-color: black;
-            color:lime;
+            background-image: radial-gradient(
+              rgba(60, 60, 60, 0.75), black 120%
+            );
+            color:#FFBB00;
             overflow-y: auto;
         }
-        
+        #al_text::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
+            pointer-events: none;
+        }        
         #al_cmd {
             width: 100%;
             background-color: darkslategray;
@@ -53,7 +73,7 @@
             height: 25%;
             background-color: #111111;
             color: white;
-            background-image: url('img/logo.gif');
+            background-image: url('../img/logo.gif');
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-size: cover;            
@@ -174,6 +194,8 @@
         /* ============ MAIN ============== */
         html,body {
             height: 100%; margin: 0px; padding: 0px;
+            font-family: 'VT323'; font-size: larger; 
+            text-shadow: 0 0 5px #808080;
         }
         a:link {
             color:currentColor;
@@ -190,74 +212,74 @@
         }
 
         /* ============ STYLES ============== */
-        h1              { font-size: medium; } /* Used for screen readers, room title */
+        h1              { font-weight: bold; font-size: inherit;} /* Used for screen readers, room title */
 
         #btnConnect    { width: 100px; }
         #btnDisconnect { width: 100px; }
         #btnSend       { width: 100px; }
         .command       { display: inline; }
-        .echo          { display: inline; color:lime; font-weight: bold; }
+        .echo          { display: inline; color:#FFBB00; font-weight: bold; }
 
         /* Combat */
-        .hit_me         { display: inline; color:lime; font-weight: bold;}
-        .hit_opponent   { display: inline; color:lime; font-weight: bold;}
-        .hit_other      { display: inline; color:lime;}
+        .hit_me         { display: inline; color:#FFBB00; font-weight: bold;}
+        .hit_opponent   { display: inline; color:#FFBB00; font-weight: bold;}
+        .hit_other      { display: inline; color:#FFBB00;}
 
-        .nodam_me       { display: inline; color:lime; }
-        .nodam_opponent { display: inline; color:lime; }
-        .nodam_other    { display: inline; color:lime; }
+        .nodam_me       { display: inline; color:#FFBB00; }
+        .nodam_opponent { display: inline; color:#FFBB00; }
+        .nodam_other    { display: inline; color:#FFBB00; }
 
-        .miss_me        { display: inline; color:lime; }
-        .miss_opponent  { display: inline; color:lime; }
-        .miss_other     { display: inline; color:lime; }            
+        .miss_me        { display: inline; color:#FFBB00; }
+        .miss_opponent  { display: inline; color:#FFBB00; }
+        .miss_other     { display: inline; color:#FFBB00; }            
 
-        .shield_me       { display: inline; color:lime; }
-        .shield_opponent { display: inline; color:lime; }
-        .shield_other    { display: inline; color:lime; }
+        .shield_me       { display: inline; color:#FFBB00; }
+        .shield_opponent { display: inline; color:#FFBB00; }
+        .shield_other    { display: inline; color:#FFBB00; }
 
 
         /* Communication */
-        .ask_self      { display: inline; color:lime;}
-        .ask_other     { display: inline; color:lime;}
-        .say_self      { display: inline; color:lime;}
-        .say_other     { display: inline; color:lime;}
-        .shout_self    { display: inline; color:lime;}
-        .shout_other   { display: inline; color:lime;}
-        .whisper       { display: inline; color:lime;}
-        .tell_self     { display: inline; color:lime;}
-        .tell_other    { display: inline; color:lime;}
-		.comm_say      { display: inline; color:lime;}
-		.comm_emote    { display: inline; color:lime;}
-		.comm_join     { display: inline; color:lime;}
-		.comm_leave    { display: inline; color:lime;}
-		.log           { display: inline; color:lime;}
+        .ask_self      { display: inline; color:#FFBB00;}
+        .ask_other     { display: inline; color:#FFBB00;}
+        .say_self      { display: inline; color:#FFBB00;}
+        .say_other     { display: inline; color:#FFBB00;}
+        .shout_self    { display: inline; color:#FFBB00;}
+        .shout_other   { display: inline; color:#FFBB00;}
+        .whisper       { display: inline; color:#FFBB00;}
+        .tell_self     { display: inline; color:#FFBB00;}
+        .tell_other    { display: inline; color:#FFBB00;}
+		.comm_say      { display: inline; color:#FFBB00;}
+		.comm_emote    { display: inline; color:#FFBB00;}
+		.comm_join     { display: inline; color:#FFBB00;}
+		.comm_leave    { display: inline; color:#FFBB00;}
+		.log           { display: inline; color:#FFBB00;}
 
-        .death       { display: inline; color:lime;}
-        .prompt      { display: inline; color:lime;}
-        .npc_title   { display: inline; color:lime; }
-        .npc_descr   { display: inline; color:lime; }
-        .obj_descr   { display: inline; color:lime; }
-        .obj_title   { display: inline; color:lime; }
-        .spells      { display: inline; color:lime; }
-        .immort_title    { display: inline; color:lime; }
-        .pc_title    { display: inline; color:lime; }
-        .pc_descr    { display: inline; color:lime; }
+        .death       { display: inline; color:#FFBB00;}
+        .prompt      { display: inline; color:#FFBB00;}
+        .npc_title   { display: inline; color:#FFBB00; }
+        .npc_descr   { display: inline; color:#FFBB00; }
+        .obj_descr   { display: inline; color:#FFBB00; }
+        .obj_title   { display: inline; color:#FFBB00; }
+        .spells      { display: inline; color:#FFBB00; }
+        .immort_title    { display: inline; color:#FFBB00; }
+        .pc_title    { display: inline; color:#FFBB00; }
+        .pc_descr    { display: inline; color:#FFBB00; }
 
-        .room_title  { display: inline; }
-        .room_descr  { display: inline; font-style: italic; width: 600px; }
+        .room_title  { display: inline; color: #FFBB00; }
+        .room_descr  { display: inline; font-style: italic; width: 600px; color:#FFBB00; }
         .exit        { display: inline; }
-        .score       { display: inline; color:lime; }
-        .social_self { display: inline; color:lime; }
-        .social_other { display: inline; color:lime; }
-        .score       { display: inline; color:lime; }
-        .spell       { display: inline; color:lime; }
-        .worn        { display: inline; color:lime; }
-        .who         { display: inline; color:lime; }
-        .who_name    { display: inline; color:lime; }
-        .who_title   { display: inline; color:lime; }
+        .score       { display: inline; color:#FFBB00; }
+        .social_self { display: inline; color:#FFBB00; }
+        .social_other { display: inline; color:#FFBB00; }
+        .score       { display: inline; color:#FFBB00; }
+        .spell       { display: inline; color:#FFBB00; }
+        .worn        { display: inline; color:#FFBB00; }
+        .who         { display: inline; color:#FFBB00; }
+        .who_name    { display: inline; color:#FFBB00; }
+        .who_title   { display: inline; color:#FFBB00; }
         .who_inv     { display: inline; }
 
-        .xpgain         { display: inline; color:lime; font-weight: bold;}
+        .xpgain         { display: inline; color:firebrick; font-weight: bold;}
 
         .converse    { list-style: none; } 
         .colh2       { border: 0px solid black; margin:0; } /* Table class */
@@ -285,7 +307,7 @@
         .cc     { display: inline; color:darkcyan; }
         .cpc    { display: inline; color:cyan; }
         .bc     { display: inline; background-color:darkcyan; }
-        .cw     { display: inline; color:#ccc; }
+        .cw     { display: inline; color:#FFBB00; }
         .cpw    { display: inline; color:white; }
         .bw     { display: inline; background-color:#ccc; }
         .ca     { display: inline; color:grey; }
