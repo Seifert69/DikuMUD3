@@ -37,7 +37,6 @@ END HEADER*/
  #define IS_CORPSE(ITEM) \
    ((ITEM.nameidx=="corpse") and (ITEM.zoneidx=="death"))
 
-
  #define IS_HEAD(ITEM) \
    ((ITEM.nameidx=="head") and (ITEM.zoneidx=="death"))
 
@@ -1015,22 +1014,22 @@ END HEADER*/
 #define ID_BLANK11              100
 /*check values.h for max number of id values*/
 /* keep in mind if you need more ask the vme coders.*/
-#define CLAN_MASTER    "$clan_master"
-#define  CLAN_MEMBER  "$clan_member"
-#define  CLAN_TATTOO  "clan_taTtoo"
-#define CLAN_NAME "$clan_name"
-#define CLAN_LIST "$clan_list"
-#define CLAN_SYMBOLIC "$clan_symbolic"
-#define CLAN_TREASURY "$clan_treasury"
-#define CLAN_QUARTERMASTER "$clan_quartermaster"
-#define CLAN_MONEY "$clan_money"
-#define CLAN_STORAGE "$clan_storage"
-#define CLAN_DONATION "$clan_donation"
-#define CLAN_MAX_STORAGE  25
-#define CLAN_MAX_DONATION  50
-#define CLAN_RANK   "$clan_rank"
-#define CLAN_ROST   "$clan_rost"
-#define CLAN_LORD   "$clan_LORD"
+#define CLAN_MASTER    			"$clan_master"
+#define CLAN_MEMBER  			"$clan_member"
+#define CLAN_TATTOO  			"clan_tattoo"
+#define CLAN_NAME 				"$clan_name"
+#define CLAN_LIST 				"$clan_list"
+#define CLAN_SYMBOLIC 			"$clan_symbolic"
+#define CLAN_TREASURY 			"$clan_treasury"
+#define CLAN_QUARTERMASTER 		"$clan_quartermaster"
+#define CLAN_MONEY 				"$clan_money"
+#define CLAN_STORAGE 			"$clan_storage"
+#define CLAN_DONATION 			"$clan_donation"
+#define CLAN_MAX_STORAGE  		25
+#define CLAN_MAX_DONATION  		50
+#define CLAN_RANK   			"$clan_rank"
+#define CLAN_ROST   			"$clan_rost"
+#define CLAN_LORD   			"$clan_LORD"
 
 /* added for new look move */
 

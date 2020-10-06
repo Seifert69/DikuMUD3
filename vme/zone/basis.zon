@@ -117,6 +117,7 @@ dilend
 dilbegin login_scrub(tgt : unitptr);
 var
    i : integer;
+   s : string;
 code
 {
    heartbeat := PULSE_SEC;
@@ -136,6 +137,8 @@ code
    if ("$RES_TIMER" in self.extra)
       subextra(self.extra, "$RES_TIMER");
 
+  
+  
    /* to fix a bjorni quest mess */
    if ("Nidhogg's prize given" in tgt.quests)
    {
@@ -145,6 +148,15 @@ code
    }
    /* end bjorni quest mess fix */   
 
+   /* clan fix */
+    if ("$clan-_symbolic" in self.extra)
+	{
+		s := self.extra.$clan-_symbolic.names.[1];
+		addextra(self.extra, {"$clan_symbolic"}, "s");
+		subextra (self.extra,"$clan-_symbolic");
+	}
+   /* end clan fix */
+   
    /* Following mess to fix the mess with night and night1 zones by Ratlin */
    /*added fix for removing quest flags for heulhous and heul2 quests ZT 080808*/
                   

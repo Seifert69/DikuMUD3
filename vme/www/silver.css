@@ -258,6 +258,7 @@
         .who_inv     { display: inline; }
 
         .xpgain         { display: inline; color:firebrick; font-weight: bold;}
+		.hint		 { display: inline; color:lime; }
 
         .converse    { list-style: none; } 
         .colh2       { border: 0px solid black; margin:0; } /* Table class */
