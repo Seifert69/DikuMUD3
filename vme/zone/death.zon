@@ -368,18 +368,25 @@ dilbegin recall rot_corpse();
 var
 	n : integer; /*amount of hours since created*/
    i : integer;
+   s : string;
 code
 {
    heartbeat:=PULSE_SEC;
    pause; // IMPORTANT. OTHERWISE THE VALUES WONT GET SET because the code will run on load()
+   pause;
 
    if (self.value[2] == 1)
-      i := 143200;
+   {
+      i := 143200; // ~40 hours
+      if (self.inside == null) 
+         s := " empty ";
+      else
+         s := " has inventory ";
+      log("Player: " + self.name + s + " time " + self.extra.[CORPSE_TIME].descr);
+   }
    else
-      i := 900;
+      i := 900; // 15 minutes
 
-   //log("corpse time " + self.extra.[CORPSE_TIME].descr);
-	
    n := atoi(self.extra.[CORPSE_TIME].descr);
 
    heartbeat := PULSE_SEC * 300;
@@ -392,6 +399,15 @@ code
    if ((realtime-n) > i)
 	{
       :quickmag:
+      if (self.value[2] == 1)
+      {
+         if (self.inside == null) 
+            s := " empty ";
+         else
+            s := " has inventory ";
+         log("Player: " + self.name + s + " begins to rot extra: " + self.extra.[CORPSE_TIME].descr + " realtime="+itoa(realtime));
+      }
+
       if (not (isset(self.flags, UNIT_FL_BURIED)))
          act("$1n begins to rot.", A_SOMEONE,self,null,null,TO_ALL);
       pause;
