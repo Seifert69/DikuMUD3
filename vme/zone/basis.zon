@@ -277,6 +277,8 @@ code
       dilcopy("got_mail@mail()", self);
       dilcopy("fixwt@basis()", self);
       dilcopy("break_eq@basis()", self);
+
+      i := dildestroy("channel@function", self);
       dilcopy("channel@function", self);
 
 
