@@ -676,12 +676,14 @@ code
 dilend
 
 
-dilbegin noaction();
+dilbegin unique fnpri(FN_PRI_DEATH+1) noaction();
 code
 {
-heartbeat:=3;
+   heartbeat:=3;
    :loop:
    wait(SFB_CMD, activator == self);
+   if (command("tell"))  // Allow the tell command
+      goto loop;
 
    if (activator.level < IMMORTAL_LEVEL)
    {
