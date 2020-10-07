@@ -79,9 +79,17 @@ void on_message(wsserver* s, websocketpp::connection_hdl hdl, message_ptr msg)
 
     if (g_cMapHandler.find(hdl) == g_cMapHandler.end()) 
     {
+        // Crete the con hook
         con = new cConHook();
         con->SetWebsocket(s, hdl);
         g_cMapHandler[hdl] = con;
+
+        // Get the IP address
+        const auto theip = s->get_con_from_hdl(hdl);
+        boost::asio::ip::address theadr = theip->get_raw_socket().remote_endpoint().address();
+        strncpy(con->m_aHost, theadr.to_string().c_str(), sizeof(con->m_aHost)-1);
+        *(con->m_aHost + sizeof(con->m_aHost) - 1) = '\0';
+        slog(LOG_OFF, 0, "IP connection from: %s", con->m_aHost);
     }
 
     con = (cConHook *) g_cMapHandler[hdl];
