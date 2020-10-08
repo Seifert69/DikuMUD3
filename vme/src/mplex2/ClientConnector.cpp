@@ -1316,7 +1316,9 @@ cConHook::cConHook(void)
     strcpy(m_aHost, "");
 
     if (mplex_arg.bWebSockets)
+    {
         return; // Hack for making websockets work
+    }
 
     int fd;
 #ifdef _WINDOWS

@@ -6,7 +6,7 @@ var sPaged = "";
 
 var g_crosshairs = new Image;
 
-var g_sImage = "img/logo.gif";
+var g_sImage = "../img/logo.gif";
 var g_nLastSend = Math.round(Date.now() / 1000);
 
 var g_nHp = 1;
@@ -265,6 +265,13 @@ function setTrigger(item)
 }
 
 
+function setJson(item)
+{
+    console.log("setJson()");
+    console.log(item.innerHTML);
+}
+
+
 /*
  * Add a command string 's' to the history array
  *
@@ -476,9 +483,9 @@ function setMap(szone, smap) {
     }
 
     if (szone != "")
-        g_sImage = "img/" + szone + ".jpg";
+        g_sImage = "../img/" + szone + ".jpg";
     else
-        g_sImage = "img/logo.gif";
+        g_sImage = "../img/logo.gif";
 
     var mye = document.getElementById("ac_map");
     var xw, yh;
@@ -528,12 +535,12 @@ function outputReader(item) {
     list.appendChild(item);
 
     var chatContent = document.getElementById("converse");
-    chatContent.appendChild(list);
     if (nRowCount > 200)  // Max 200 list items
     {
         chatContent.removeChild(chatContent.childNodes[0]);
         nRowCount -= 1;
     }
+    chatContent.appendChild(list);
 }
 
 function outputNormal(item) {
@@ -639,6 +646,13 @@ function outputText(str, bParse) {
             }
 
             var mytype = item.firstChild.getAttribute("type");
+
+            if (mytype == "$json")
+            {
+                setJson(item.firstChild);
+                return;
+            }
+
             var myitem = item.getElementsByTagName("li");
 
             if (mytype == "$alias")

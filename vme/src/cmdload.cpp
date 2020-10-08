@@ -79,6 +79,7 @@ struct cmdload_struct cmdload[] = {
 
     {"wizlock", do_wizlock, 0, 0},
     {"wstat", do_wstat, 0, 0},
+    {"wedit", do_wedit, 0, 0},
     {"", NULL, 0, 0}};
 
 

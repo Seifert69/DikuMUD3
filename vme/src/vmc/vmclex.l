@@ -14,10 +14,13 @@
 #include "vmctok.h"
 #include "textutil.h"
 #include "db_file.h"
+
 extern char* sOutput;
 extern int sOutput_len;
 extern int sOutput_mlen;
 void dilmain(int tplate, char *zname, int lnum, char* dilp );
+extern int yylex(); // Testing fix for issue #70
+
 
 #ifdef YYLMAX
 #undef YYLMAX

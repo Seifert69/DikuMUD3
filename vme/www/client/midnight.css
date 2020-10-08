@@ -35,8 +35,8 @@
             width: 100%;
             height: 100%; /* fill up the screen when empty */
             max-height: calc(100% - 40px);
-            background-color: silver;
-            color: black;
+            background-color: midnightblue;
+            color: lightsteelblue;
             overflow-y: auto;
         }
         
@@ -53,7 +53,7 @@
             height: 25%;
             background-color: #111111;
             color: white;
-            background-image: url('img/logo.gif');
+            background-image: url('../img/logo.gif');
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-size: cover;            
@@ -181,8 +181,8 @@
         a:visited {
             color:currentColor;
         }
-
-        .center {
+       
+       .center {
             display: block;
             margin-left: auto;
             margin-right: auto;
@@ -196,65 +196,65 @@
         #btnDisconnect { width: 100px; }
         #btnSend       { width: 100px; }
         .command       { display: inline; }
-        .echo          { display: inline; color:black; font-weight: bold; }
+        .echo          { display: inline; color:floralwhite; font-weight: bold; }
 
         /* Combat */
-        .hit_me         { display: inline; color:darkred; font-weight: bold;}
-        .hit_opponent   { display: inline; color:orange; font-weight: bold;}
-        .hit_other      { display: inline; color:darkslategray;}
+        .hit_me         { display: inline; color:darkorange; font-weight: bold;}
+        .hit_opponent   { display: inline; color:goldenrod; font-weight: bold;}
+        .hit_other      { display: inline; color:goldenrod;}
 
-        .nodam_me       { display: inline; color:darkslategray; }
-        .nodam_opponent { display: inline; color:darkslategray; }
-        .nodam_other    { display: inline; color:darkslategray; }
+        .nodam_me       { display: inline; color:tomato; }
+        .nodam_opponent { display: inline; color:rosybrown; }
+        .nodam_other    { display: inline; color:lightsalmon; }
 
-        .miss_me        { display: inline; color:darkslategray; }
-        .miss_opponent  { display: inline; color:darkslategray; }
-        .miss_other     { display: inline; color:darkslategray; }            
+        .miss_me        { display: inline; color:salmon; }
+        .miss_opponent  { display: inline; color:tan; }
+        .miss_other     { display: inline; color:sienna; }            
 
-        .shield_me       { display: inline; color:darkslategray; }
-        .shield_opponent { display: inline; color:darkslategray; }
-        .shield_other    { display: inline; color:darkslategray; }
+        .shield_me       { display: inline; color:roseybrown; }
+        .shield_opponent { display: inline; color:roseybrown; }
+        .shield_other    { display: inline; color:roseybrown; }
 
 
         /* Communication */
-        .ask_self      { display: inline; color:blue;}
-        .ask_other     { display: inline; color:blue;}
-        .say_self      { display: inline; color:blue;}
-        .say_other     { display: inline; color:blue;}
-        .shout_self    { display: inline; color:blue;}
-        .shout_other   { display: inline; color:blue;}
-        .whisper       { display: inline; color:blue;}
-        .tell_self     { display: inline; color:blue;}
-        .tell_other    { display: inline; color:blue;}
-		.comm_say      { display: inline; color:blue;}
-		.comm_emote    { display: inline; color:blue;}
-		.comm_join     { display: inline; color:blue;}
-		.comm_leave    { display: inline; color:blue;}
+        .ask_self      { display: inline; color:floralwhite;}
+        .ask_other     { display: inline; color:tan;}
+        .say_self      { display: inline; color:floralwhite;}
+        .say_other     { display: inline; color:tan;}
+        .shout_self    { display: inline; color:floralwhite;}
+        .shout_other   { display: inline; color:tan;}
+        .whisper       { display: inline; color:floralwhite;}
+        .tell_self     { display: inline; color:floralwhite;}
+        .tell_other    { display: inline; color:tan;}
+		.comm_say      { display: inline; color:floralwhite;}
+		.comm_emote    { display: inline; color:floralwhite;}
+		.comm_join     { display: inline; color:floralwhite;}
+		.comm_leave    { display: inline; color:floralwhite;}
 		.log           { display: inline; color:white;}
 
-        .death       { display: inline; color:tomato;}
-        .prompt      { display: inline; color:darkred;}
-        .npc_title   { display: inline; color:blue; }
-        .npc_descr   { display: inline; color:blue; }
-        .obj_descr   { display: inline; color:black; }
-        .obj_title   { display: inline; color:black; }
-        .spells      { display: inline; color:darkorchid; }
-        .immort_title    { display: inline; color:brown; }
-        .pc_title    { display: inline; color:brown; }
-        .pc_descr    { display: inline; color:brown; }
+        .death       { display: inline; color:crimson;}
+        .prompt      { display: inline; color:gold;}
+        .npc_title   { display: inline; color:indianred; }
+        .npc_descr   { display: inline; color:indianred; }
+        .obj_descr   { display: inline; color:lightgreen; }
+        .obj_title   { display: inline; color:lightgreen; }
+        .spells      { display: inline; color:plum; }
+        .immort_title    { display: inline; color:gold; }
+        .pc_title    { display: inline; color:chocolate; }
+        .pc_descr    { display: inline; color:chocolate; }
 
-        .room_title  { display: inline; }
-        .room_descr  { display: inline; font-style: italic; width: 600px; }
+        .room_title  { display: inline; color:skyblue; }
+        .room_descr  { display: inline; color:lightsteelblue; font-style: italic; width: 600px; }
         .exit        { display: inline; }
-        .score       { display: inline; color:black; }
-        .social_self { display: inline; color:black; }
-        .social_other { display: inline; color:black; }
-        .score       { display: inline; color:black; }
-        .spell       { display: inline; color:brown; }
-        .worn        { display: inline; color:black; }
-        .who         { display: inline; color:darkblue; }
-        .who_name    { display: inline; color:darkblue; }
-        .who_title   { display: inline; color:blue; }
+        .score       { display: inline; color:floralwhite; }
+        .social_self { display: inline; color:floralwhite; }
+        .social_other { display: inline; color:floralwhite; }
+        .score       { display: inline; color:lemonchiffon; }
+        .spell       { display: inline; color:#D1E8E2; }
+        .worn        { display: inline; color:salmon; }
+        .who         { display: inline; color:bisque; }
+	.who_name    { display: inline; color:bisque; }
+        .who_title   { display: inline; color:#FFCB9A; }
         .who_inv     { display: inline; }
 
         .xpgain         { display: inline; color:firebrick; font-weight: bold;}

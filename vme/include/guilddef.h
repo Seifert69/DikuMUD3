@@ -171,6 +171,7 @@ $1n tells you, 'Remove all equipment, please.';
   0;   70; Charisma                      ;  14; 14000;  13;       0;
   0;   50; Brain                         ;  23; 23000;  14;       0;
   0;   70; Divine                        ;  14; 14000;  10;       0;
+"
 
 /* Sum (max) 520, Average = 10.86 */
 

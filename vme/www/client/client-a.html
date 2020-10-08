@@ -27,13 +27,13 @@
             </div>
         </div>
         <div class="c_center">
-            <div id="ac_map" onclick="onMapClick()">
+            <div id="ac_map" role="navigation" aria-label="Graphical Map" onclick="onMapClick()">
 		     <div id="mymap"><img id ='crosshairs' src='img/crosshair.png' style='position: relative; top: 50px; left: 50px' hidden><img></div>
             </div>
-            <div id="ac_paged" aria-live="polite" ondblclick="modalShow()" >
+            <div id="ac_paged" aria-live="polite" role="navigation" aria-label="Static Text Snapshot" ondblclick="modalShow()" >
                 <div id="acp_text">Text that sticks.</div>
             </div>
-            <div id="ac_progress">
+            <div id="ac_progress" role="navigation" aria-label="Visual Progress Bars">
                 <div id="hp-progress">
                 <div id="hp-bar">HP</div>
                 </div>
@@ -44,20 +44,20 @@
                     <div id="mp-bar">M</div>
                 </div>
             </div>
-	    <div id="ac_exits">Obvious Exits:</br>
+	    <div id="ac_exits" role="navigation" aria-label="Exits">Obvious Exits:</br>
                 <div id="ace_text">N, S, E, W</div>
             </div>
         </div> <!-- ac_center -->
         <div class="c_right">
-		<div id="ac_right">
+		<div id="ac_right" role="navigation" aria-label="Right Menu">
             <br/>
-            <a href="#" onclick="shSettings()"><img src="img/settings.png" alt="Settings" class="center"/></a><br/>
+            <a href="#" aria-label="Settings" role="presentation" aria-haspopup="settings dialog" onclick="shSettings()"><img src="img/settings.png" alt="Settings" class="center"/></a><br/>
             <br/>
-                <a href="#" onclick="cmd('inventory')">In</a><br/>
-                <a href="#" onclick="cmd('equipment')">Eq</a><br/>
-                <a href="#" onclick="cmd('help')">He</a><br/>
-		<a href="#" onClick="cmd('score')">Sc</a><br/> 
-		<a href="#" onclick="modalShow()">MOD</a><br/>
+                <a href="#" role="presentation" aria-label="Inventory" onclick="cmd('inventory')">In</a><br/>
+                <a href="#" role="presentation" aria-label="Equipment" onclick="cmd('equipment')">Eq</a><br/>
+                <a href="#" role="presentation" aria-label="Help" onclick="cmd('help')">He</a><br/>
+        		<a href="#" role="presentation" aria-label="Score" onClick="cmd('score')">Sc</a><br/> 
+		        <a href="#" role="presentation" aria-label="Show static text snapshot" aria-haspopup="Static Text Popup" onclick="modalShow()">MOD</a><br/>
             </div>
         </div> <!-- ac_right -->
     </div> <!-- outer -->

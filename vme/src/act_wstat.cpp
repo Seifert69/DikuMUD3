@@ -747,6 +747,7 @@ static void stat_normal(class unit_data *ch, class unit_data *u)
 {
     char buf[MAX_STRING_LENGTH], tmpbuf1[512], tmpbuf2[256];
     char *cname;
+
     /* Stat on the unit */
 
     cname = UNIT_NAMES(u).catnames(); /* Get names into tmpbuf1 */
@@ -1223,8 +1224,52 @@ static void stat_descriptor(const class unit_data *ch, class unit_data *u)
     send_to_char("Is yet to be programmed.<br/>", ch);
 }
 
-void do_wstat(class unit_data *ch, char *argument,
-              const struct command_info *cmd)
+void do_wedit(class unit_data *ch, char *argument, const struct command_info *cmd)
+{
+    class unit_data *u = NULL;
+
+    if (CHAR_DESCRIPTOR(ch) == NULL)
+        return;
+
+    if (str_ccmp("room", argument) == 0)
+    {
+        u = UNIT_IN(ch);
+    }
+    else
+    {
+        u = find_unit(ch, &argument, 0, FIND_UNIT_GLOBAL);
+
+        if (u == NULL)
+        {
+            char name[MAX_INPUT_LENGTH + 1], zone[MAX_INPUT_LENGTH + 1];
+
+            split_fi_ref(argument, zone, name);
+
+            if (*name && !*zone)
+                strcpy(zone, unit_zone(ch)->name);
+
+            u = find_symbolic(zone, name);
+
+            if (!u)
+            {
+                send_to_char("No such thing anywhere.<br/>", ch);
+                return;                
+            }
+        }
+    }
+
+    string t;
+
+    t = "<data type='$json'>";
+    t.append(u->json());
+    t.append("</data>");
+    send_to_char(t.c_str(), ch);
+    
+    send_to_char("Sending json edit info to your browser.<br/>", ch);
+}
+
+
+void do_wstat(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
     char buf[4 * MAX_STRING_LENGTH];
     class unit_data *u = NULL;

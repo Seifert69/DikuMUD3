@@ -261,6 +261,10 @@ code
    i := dildestroy("send_prompt@update", self);
    dilcopy("send_prompt@update",self);
 
+   // Also set channel for immortals
+   i := dildestroy("channel@function", self);
+   dilcopy("channel@function", self);
+
    if (self.level<200)
    {   
       i := dildestroy("remote_train@basis", self);
@@ -290,7 +294,6 @@ code
       dilcopy("got_mail@mail()", self);
       dilcopy("fixwt@basis()", self);
       dilcopy("break_eq@basis()", self);
-      dilcopy("channel@function", self);
 
 
       if (not(dilfind("pk_timer@basis", self)))

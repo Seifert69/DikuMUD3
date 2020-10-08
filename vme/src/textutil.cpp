@@ -590,6 +590,7 @@ void str_substitute(const char *old, const char *newstr, char *str)
     }
 }
 
+// Search is the string to search for in subject and replace with replace
 void str_substitute(const std::string &search, const std::string &replace, std::string &subject)
 {
     size_t pos = 0;
@@ -1433,6 +1434,9 @@ std::string str_json_encode(const char *str)
 
     s = str;
 
+    str_substitute("\n", "\\n", s);
+    str_substitute("\"", "&quot;", s);
+
     return s;
 }
 
@@ -1442,11 +1446,11 @@ std::string str_json_encode_quote(const char *str)
     string s;
 
     s = "\"";
-    s.append(str);
+    s.append(str_json_encode(str));
     s.append("\"");
 
     return s;
-}
+} 
 
 std::string str_json(const char *lbl, ubit64 nInt)
 {
@@ -1471,7 +1475,7 @@ std::string str_json(const char *lbl, const char *str)
     s.append(": ");
     s.append("\"");
     if (str)
-        s.append(str);
+        s.append(str_json_encode(str));
     s.append("\"");
 
     return s;
