@@ -3447,7 +3447,8 @@ code
 		goto explore_ongoing;
 	
 	pause;
-	exec("say Ahoy there traveller!", self);
+	exec("say This quest doesnt yet exist! Be patient, we're working on it!", self);
+/*
     pause;
     exec("say you look to be somewhat new around here.", self);
     pause;
@@ -3460,6 +3461,7 @@ code
 	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>Nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	pause;
+*/
 	goto accept_explore;
 	
 :accept_explore:
@@ -3482,7 +3484,7 @@ code
 	goto start;
 
 :explore_accepted:
-
+/*
 	exec("say Excellent!", self);
 	pause;
 	
@@ -3499,12 +3501,12 @@ code
 	addextra(pc.quests, {BOLDIN_BREAD_ONGOING}, "");
 	addextra(pc.quests, {BOLDIN_ONGOING}, "");
 	pause;
-	
+*/	
 	unsecure(pc);
 	goto start;
 	
 :explore_ongoing:
-
+/*
 	exdp := EXPLORE_ONGOING in pc.quests;
 	if ("bread" in exdp.names)
 	{
@@ -3520,9 +3522,9 @@ code
 		act("Boldin the wise quietly slips you some coins.",A_SOMEONE, pc, null, null, TO_CHAR); 
 		exec("whisper " + pc.name + " I suspect you'll need that sooner than later.", self);
 	}
+*/
 	unsecure(pc);
-	goto start;
-	
+	goto start;	
 :lostpc:
 
 	exec("sigh", self);
