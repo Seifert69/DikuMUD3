@@ -2700,10 +2700,10 @@ loglevel = 230
 type     = 0
 
 command  = restore
-func = do_restore@commands
+func     = do_restore@commands
 minpos   = POSITION_DEAD
-minlevel = 239
-loglevel = 239
+minlevel = 210
+loglevel = 210
 type     = 0
 
 command  = set
@@ -2714,7 +2714,7 @@ loglevel = 230
 type     = 0
 
 command  = setskill
-func =do_setskill@commands
+func     = do_setskill@commands
 minpos   = POSITION_SLEEPING
 minlevel = 239
 loglevel = 239
