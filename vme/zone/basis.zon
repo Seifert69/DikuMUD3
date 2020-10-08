@@ -117,7 +117,7 @@ dilend
 dilbegin login_scrub(tgt : unitptr);
 var
    i : integer;
-   s : string;
+   ext : extraptr;
 code
 {
    heartbeat := PULSE_SEC;
@@ -151,9 +151,10 @@ code
    /* clan fix */
     if ("$clan-_symbolic" in self.extra)
 	{
-		s := self.extra.$clan-_symbolic.names.[1];
-		addextra(self.extra, {"$clan_symbolic"}, "s");
+		ext := "$clan-_symbolic" in self.extra;
+		addextra(self.extra, {"$clan_symbolic"}, ext.descr);
 		subextra (self.extra,"$clan-_symbolic");
+		log("Clan: " + self.name + " extra updated from $clan-_symbolic to $clan_symbolic. Descr is: " + ext.descr);
 	}
    /* end clan fix */
    
