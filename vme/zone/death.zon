@@ -266,20 +266,20 @@ dilend /* decapitate */
 dilbegin gcrps (arg:string);
 code
 {
-heartbeat:=3;
+   heartbeat:=3;
    if (self.level < 200)
    {
-      act("Arglebargle, glop-glyf!?!",
-          A_ALWAYS, self, null, null, TO_CHAR);
+      act("Arglebargle, glop-glyf!?!", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
 
-act ("The following corpses were found:",
-	A_ALWAYS,self,null,null,TO_CHAR);
-sendtoalldil ("reportgod","report_corpse@death");
-quit;
+   act("The following corpses were found:", A_ALWAYS,self,null,null,TO_CHAR);
+   sendtoalldil("reportgod","report_corpse@death");
+   quit;
 }
 dilend
+
+
 
 dilbegin bob_code ();
 var
@@ -368,18 +368,25 @@ dilbegin recall rot_corpse();
 var
 	n : integer; /*amount of hours since created*/
    i : integer;
+   s : string;
 code
 {
    heartbeat:=PULSE_SEC;
    pause; // IMPORTANT. OTHERWISE THE VALUES WONT GET SET because the code will run on load()
+   pause;
 
    if (self.value[2] == 1)
-      i := 143200;
+   {
+      i := 143200; // ~40 hours
+      if (self.inside == null) 
+         s := " empty ";
+      else
+         s := " has inventory ";
+      log("Player: " + self.name + s + " time " + self.extra.[CORPSE_TIME].descr);
+   }
    else
-      i := 900;
+      i := 900; // 15 minutes
 
-   //log("corpse time " + self.extra.[CORPSE_TIME].descr);
-	
    n := atoi(self.extra.[CORPSE_TIME].descr);
 
    heartbeat := PULSE_SEC * 300;
@@ -392,6 +399,15 @@ code
    if ((realtime-n) > i)
 	{
       :quickmag:
+      if (self.value[2] == 1)
+      {
+         if (self.inside == null) 
+            s := " empty ";
+         else
+            s := " has inventory ";
+         log("Player: " + self.name + s + " begins to rot extra: " + self.extra.[CORPSE_TIME].descr + " realtime="+itoa(realtime));
+      }
+
       if (not (isset(self.flags, UNIT_FL_BURIED)))
          act("$1n begins to rot.", A_SOMEONE,self,null,null,TO_ALL);
       pause;
@@ -660,12 +676,14 @@ code
 dilend
 
 
-dilbegin noaction();
+dilbegin unique fnpri(FN_PRI_DEATH+1) noaction();
 code
 {
-heartbeat:=3;
+   heartbeat:=3;
    :loop:
    wait(SFB_CMD, activator == self);
+   if (command("tell"))  // Allow the tell command
+      goto loop;
 
    if (activator.level < IMMORTAL_LEVEL)
    {
@@ -989,43 +1007,54 @@ dilend
 
 
 
-dilbegin report_corpse ();
+dilbegin report_corpse();
 var
 	act_str:string;
 	empty:string;
-    symb: string;
+   symb: string;
+
 code
 {
-heartbeat:=4;
-if (self.value[2]!=1) quit;
-:start:
-symb := "";
-wait (SFB_MSG,TRUE);
-if ((argument!="report") and (argument!="reportgod"))
-	goto start;
-	if ((argument =="report") and (self.value[3]>20))
-		goto start;
+   heartbeat:=PULSE_SEC;
+   pause; // IMPORTANT. OTHERWISE THE VALUES WONT GET SET because the code will run on load()
+   pause;
 
-	if (self.outside.type==UNIT_ST_PC)
-		act_str:=self.outside.name;
-	else
-		act_str:=self.outside.title;
+   if (self.value[2]!=1)
+      quit;
 
-	if (self.inside==null)
-		empty:="[Empty]";
-    else
-		empty:="[Not Empty]";
+   :start:
+   symb := "";
+   wait(SFB_MSG,TRUE);
 
-    if ((argument=="reportgod") and (self.outside.type==UNIT_ST_ROOM))
-        symb := "("+self.outside.nameidx+"@"+self.outside.zoneidx+") ";
+   log("report corpse");
+   if ((argument!="report") and (argument!="reportgod"))
+      goto start;
 
-    if (self.flags & UNIT_FL_BURIED)
-        symb := symb + "[Buried] ";
+   if ((argument =="report") and (self.value[3]>20))
+      goto start;
 
-	sendtext (self.name+" in "+act_str+" "+symb+empty+"<br/>", activator);
-	goto start;
+   if (self.outside.type==UNIT_ST_PC)
+      act_str:=self.outside.name;
+   else
+      act_str:=self.outside.title;
+
+   if (self.inside==null)
+      empty:="[Empty]";
+   else
+      empty:="[Not Empty]";
+
+   if ((argument=="reportgod") and (self.outside.type==UNIT_ST_ROOM))
+      symb := "("+self.outside.nameidx+"@"+self.outside.zoneidx+") ";
+
+   if (self.flags & UNIT_FL_BURIED)
+      symb := symb + "[Buried] ";
+
+   sendtext (self.name+" in "+act_str+" "+symb+empty+"<br/>", activator);
+   goto start;
 }
 dilend
+
+
 
 %objects
 
@@ -1036,8 +1065,6 @@ descr "The decapitated head of is here"
 type ITEM_TRASH
 manipulate {MANIPULATE_TAKE}
 weight 1
-
-
 end
 
 
@@ -1048,12 +1075,10 @@ descr "a corpse is laying here smelling up the place."
 type ITEM_CONTAINER
 manipulate {MANIPULATE_TAKE, MANIPULATE_ENTER}
 /* Rest of values are inserted at runtime */
-                                     weight 0
+weight 0
 dilcopy rot_corpse();
 dilcopy report_corpse();
-
 end
 
 %end
-
 

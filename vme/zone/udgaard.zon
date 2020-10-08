@@ -4131,7 +4131,9 @@ symbols. Perhaps the symbols are worth examining."
 
 extra {"symbols", "stone carvings", "carvings"}
 "Some of the symbols clearly represents various Gods while other appear
-to be normal text. The symbols you do understand looks like this:<pre>
+to be normal text. You notice some of the largest symbols have been
+laid in gold and they read ᚡᚨᛚᚺᚯᛚᛚ  The symbols you do understand looks
+like this:<pre>
 
       Pray to odin if you are new and helpless.</pre>"
 end

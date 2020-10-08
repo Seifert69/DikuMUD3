@@ -6746,9 +6746,9 @@ if(sChan=="clan"){
   }
   if (sKey == "@") {
     if (self.level >= talker.minv) {
-      sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " +talker.name+ " "+msg+"</div>",self );
+      sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " +talker.name+ " "+msg+"</div><br/>",self );
     } else {
-      sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; Someone "+msg+"</div>",self );
+      sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; Someone "+msg+"</div><br/>",self );
     }
   }
 	else if (sKey == "#"){
@@ -6761,17 +6761,15 @@ if(sChan=="clan"){
     ") (alignment/"+itoa(self.alignment)+ ") (guild/"+self.guild+")<br/>", talker);
     else if (self.level < 251)
     sendtext("   "+self.name+" "+self.title+ " (Immortal [Level " +
-    itoa(self.level) +"]" +
-    ") (alignment/"+itoa(self.alignment)+ ") (guild/"+self.guild+")<br/>", talker);
+    itoa(self.level) +"]" + ") (alignment/"+itoa(self.alignment)+ ") (guild/"+self.guild+")<br/>", talker);
     else
     sendtext("   "+self.name+" "+self.title+ " (Admin [Level " +
-    itoa(self.level) +"]" +
-    ") (alignment/"+itoa(self.alignment)+ ") (guild/"+self.guild+")<br/>", talker);
+    itoa(self.level) +"]" + ") (alignment/"+itoa(self.alignment)+ ") (guild/"+self.guild+")<br/>", talker);
  }
 else
 {
  if (self.level <200)
-sendtext("   "+self.name+" "+self.title+ " (Level "+itoa(self.vlevel) + ")<br/>", talker);
+    sendtext("   "+self.name+" "+self.title+ " (Level "+itoa(self.vlevel) + ")<br/>", talker);
     else if (self.level < 251)
     sendtext("   "+self.name+" "+self.title+ " (Immortal [Level " +itoa(self.level) +"]" + ")<br/>", talker);
     else
@@ -6785,22 +6783,21 @@ sendtext("   "+self.name+" "+self.title+ " (Level "+itoa(self.vlevel) + ")<br/>"
      if (jmode ==1) {
        if (self.level >= talker.minv ) {
          sendtext("<div class='comm_join'>&lt;"+sChan+"&gt; " +talker.name + " has entered the " +
-                  "channel.</div>",self);
+                  "channel.</div><br/>",self);
        }
      }
   } else if (sKey == "1left1" ) {
      if (dmode ==1) {
        if (self.level >= talker.minv ) {
          sendtext("<div class='comm_leave'>&lt;"+sChan+"&gt; " +talker.name + " has left the " +
-                  "channel.</div>",self);
+                  "channel.</div><br/>",self);
        }
      }
   } else {
     if (self.level >= talker.minv) {
-      sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; " +talker.name+" says '"
-+msg+"'</div>",self);
+      sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; " +talker.name+" says '"+msg+"'</div><br/>",self);
     } else {
-      sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; Someone says '" +msg+"'</div>",self);
+      sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; Someone says '" +msg+"'</div><br/>",self);
     }
   }
   :lost:
@@ -6813,7 +6810,7 @@ dilend
 #define  NOCOMM_QUEST  "$nocomm"
 #define  NO_NEWBIE_QUEST  "$nonewbie"
 
-dilbegin aware unique channel( );
+dilbegin aware unique fnpri(FN_PRI_SYS) channel();
 external
   recieve@function( slActive : stringlist, msg : string, talker : unitptr,
                 jmode:integer, dmode:integer);

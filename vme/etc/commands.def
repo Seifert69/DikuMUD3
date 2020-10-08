@@ -2811,6 +2811,13 @@ minlevel = 215
 loglevel = 215
 type     = 0
 
+command  = wedit
+internal = wedit
+minpos   = POSITION_DEAD
+minlevel = 200
+loglevel = 200
+type     = 0
+
 command  = competition
 // func = cmd_comp@competition
 minpos   = POSITION_DEAD
