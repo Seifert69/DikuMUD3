@@ -25,10 +25,7 @@ help
 "This zone is not intended for players."
 #define  CLAN_NAME   "$clan_name"
 
-#define UNIT_WEAR(OBJ_BIT,MANI_BIT)	\
-((OBJ_BIT) & (MANI_BIT))
-
-
+#define UNIT_WEAR(OBJ_BIT,MANI_BIT)	((OBJ_BIT) & (MANI_BIT))
 
 %dil
 
@@ -2805,6 +2802,8 @@ else
   quit;
   }
 targ.exp:=0;
+targ.full:=115;
+targ.thirst:=115;
 targ.level:=lvl;
 
 quit;
@@ -10576,87 +10575,87 @@ dilend
 
 dilbegin do_eat (arg:string);
 external
-unitptr find_here (s:string);
-apply_poison (pc:unitptr,pois:integer,amount:integer);
- gain_cond(pc:unitptr,cond:string,i:integer);
+	unitptr find_here (s:string);
+	apply_poison (pc:unitptr,pois:integer,amount:integer);
+	 gain_cond(pc:unitptr,cond:string,i:integer);
 var
- food:unitptr;
- pois:integer;
- amount:integer;
- eat_str:string;
+	 food:unitptr;
+	 pois:integer;
+	 amount:integer;
+	 eat_str:string;
 code
 {
-if (eat_str=="logging on")
-quit;
-if (arg=="")
- {
- sendtext("What do you want to eat?<br/>",self);
- quit;
- }
+	if (eat_str=="logging on")
+		quit;
+	if (arg=="")
+	{
+		sendtext("What do you want to eat?<br/>",self);
+		quit;
+	}
 
-food:=find_here(arg);
+	food:=find_here(arg);
 
-if (food==null)
- {
- act("You've got no such food.", A_SOMEONE, self, null, null, TO_CHAR);
- quit;
- }
-else if ((food.type==UNIT_ST_OBJ) and (food.objecttype==ITEM_FOOD) and
-(self.level<200))
- {
- if ((self.type==UNIT_ST_PC) and (self.level<200) and (self.full>=24))
-  {
-  act("You are too full to eat more!",A_SOMEONE, self, null, null, TO_CHAR);
-  quit;
-  }
- if (food.value[0]<=0)
-  {
-  act("There is nothing left to eat.", A_SOMEONE, self, food, null,
-TO_CHAR);
-  quit;
-  }
+	if (food==null)
+	{
+		act("You've got no such food.", A_SOMEONE, self, null, null, TO_CHAR);
+		quit;
+	}
+	else if ((food.type==UNIT_ST_OBJ) and (food.objecttype==ITEM_FOOD) and
+	(self.level<200))
+	{
+		if ((self.type==UNIT_ST_PC) and (self.level<200) and (self.full>=24))
+		{
+			act("You are too full to eat more!",A_SOMEONE, self, null, null, TO_CHAR);
+			quit;
+		}
+		if (food.value[0]<=0)
+		{
+			act("There is nothing left to eat.", A_SOMEONE, self, food, null,
+				TO_CHAR);
+			quit;
+		}
+		amount:=food.value[0];
+		act("$1n eats $2n.",
+		A_HIDEINV, self,   food, null, TO_REST);
+		act("You eat $2n.",   A_SOMEONE, self, food, null, TO_CHAR);
+		gain_cond(self, "full", amount);
+		pois:=food.value[3];
+		apply_poison(self,pois,amount);
+		food.value[0]:=food.value[0]-amount;
+	}
+	else if ((self.level<200) or (food.type==UNIT_ST_ROOM))
+	{
+		act("Your stomach refuses to eat that!?!",
+			A_SOMEONE, self, null, null, TO_CHAR);
+		quit;
+	}
+	else
+	{
+		act("$1n eats $2n.",  A_HIDEINV, self, food, null, TO_REST);
+		act("You eat $2n.",   A_HIDEINV, self, food, null, TO_CHAR);
+	}
+	if (self.level<200)
+	{
 
-  amount:=food.value[0];
+		if (self.drunk>10)
+		 act("You feel drunk.", A_ALWAYS, self, null, null, TO_CHAR);
 
- act("$1n eats $2n.",
- A_HIDEINV, self,   food, null, TO_REST);
- act("You eat $2n.",   A_SOMEONE, self, food, null, TO_CHAR);
+		if (self.thirst<15)
+		 act("You still feel thirsty.",  A_ALWAYS, self, null, null, TO_CHAR);
 
-gain_cond(self, "full", amount);
-
-pois:=food.value[3];
-apply_poison(self,pois,amount);
-
- food.value[0]:=food.value[0]-amount;
- }
-else if ((self.level<200) or (food.type==UNIT_ST_ROOM))
- {
- act("Your stomach refuses to eat that!?!",
-  A_SOMEONE, self, null, null, TO_CHAR);
-  quit;
-  }
-else
- {
- act("$1n eats $2n.",  A_HIDEINV, self, food, null, TO_REST);
- act("You eat $2n.",   A_HIDEINV, self, food, null, TO_CHAR);
- }
-
-if (self.level<200)
- {
-
-if (self.drunk>10)
- act("You feel drunk.", A_ALWAYS, self, null, null, TO_CHAR);
-
-if (self.thirst<15)
- act("You still feel thirsty.",  A_ALWAYS, self, null, null, TO_CHAR);
-
-if (self.full<15)
- act("You still feel hungry.",   A_ALWAYS, self, null, null, TO_CHAR);
-  }
-send_done ("eat",self,food,null,pois,"",null);
-eat_str:="logging on";
- destroy (food);
-quit;
+		if (self.full<15)
+		 act("You still feel hungry.",   A_ALWAYS, self, null, null, TO_CHAR);
+	}
+	else if (self.level >= 200)
+	{
+		self.full := 115;
+		self.thirst := 115;
+	}
+	
+	send_done ("eat",self,food,null,pois,"",null);
+	eat_str:="logging on";
+	destroy (food);
+	quit;
 }
 dilend
 

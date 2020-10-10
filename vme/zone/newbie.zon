@@ -16,6 +16,15 @@ END HEADER*/
 #define NEWBIE_COMPLETE "Newbie Quest Complete"
 #define GUIDE           "New Player Helper"
 
+#define BOLDIN_ONGOING  "Boldin's Request Ongoing"
+#define BOLDIN_COMPLETE  "Boldin's Request Complete"
+#define BOLDIN_BREAD_ONGOING "$Find Boldin Bread"
+#define BOLDIN_WATER_ONGOING "$Find Boldin Water"
+#define BOLDIN_BREAD_COMPLETE "$Found Boldin Bread"
+#define BOLDIN_WATER_COMPLETE "$Found Boldin Water"
+#define BOLDIN_HANDOFF  "$Boldin Handoff"
+#define EXPLORE_ONGOING  "Exploring Valhalla Quest Ongoing"
+#define EXPLORE_COMPLETE "Exploring Valhalla Complete"
 
 %zone newbie
 
@@ -3090,6 +3099,491 @@ pc:=findunit (self,pc_name,FIND_UNIT_WORLD, null);
 }
 dilend
 
+/* The new newbie experience - 2020 edition.
+
+The idea here is to introduce the player to how they will adventure
+in a more interactive way than the traditional guide. By initiating a 
+series of quests, we can provide the newbie with needed early items
+such as food, basic armor, and money. Through the process they will
+also learn the basics of communication, navigation, and practicing.
+Finally, they will learn how to interface with NPC's to futher their
+ability to succeed outside of the supported newbie process.
+
+-Sender
+*/
+
+
+dilbegin boldin_request();
+var
+  item: unitptr;
+  pc: unitptr;
+  exdp: extraptr;
+
+code
+{
+	heartbeat:= PULSE_SEC*3;
+
+:start:
+	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(BOLDIN_COMPLETE in activator.quests)) and (activator.level <= 10));
+
+	pc := activator;
+	secure(pc, lostpc);
+
+	if (BOLDIN_BREAD_ONGOING in pc.quests)
+		goto bread_ongoing;
+	if ((BOLDIN_BREAD_COMPLETE in pc.quests) and (not(BOLDIN_WATER_ONGOING in pc.quests)) and (not(BOLDIN_WATER_COMPLETE in pc.quests)))
+		goto water;
+	if (BOLDIN_WATER_ONGOING in pc.quests)
+		goto water_ongoing;
+	if ((BOLDIN_BREAD_COMPLETE in pc.quests) and (BOLDIN_WATER_COMPLETE in pc.quests) and (not(BOLDIN_HANDOFF in pc.quests)))
+		goto handoff;
+	if (BOLDIN_HANDOFF in pc.quests)
+		goto start;
+	
+	pause;
+	exec("say Ahoy there traveller!", self);
+    pause;
+    exec("say you look to be somewhat new around here.", self);
+    pause;
+	exec("whisper "+pc.name+" I could use some help. And I'm guessing you could as well!", self);
+	pause;
+	exec("whisper "+pc.name+" You see, the older I get, the harder it seems it is to get around.", self);
+	pause;
+	exec("whisper "+pc.name+" Would you be so kind as to help me out?", self);
+	pause;
+	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>Nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	pause;
+	goto accept_bread;
+	
+:water:
+	
+	pause;
+	act("Boldin the wise quietly chews a chunk of bread.",A_SOMEONE, pc, null, null, TO_ROOM); 
+	pause;
+	exec("say Thank you again for that bread, traveller!", self);
+    pause;
+    exec("say Now, could I ask one more favor?", self);
+    pause;
+	exec("whisper "+pc.name+" You see, I'm feeling rather parched.", self);
+	pause;
+	exec("whisper "+pc.name+" A dash of water would do me well!", self);
+	pause;
+	exec("whisper "+pc.name+" Would you be so kind as to help me out?", self);
+	pause;
+	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>Nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	pause;
+	goto accept_water;
+
+:handoff:
+
+	pause;
+	exec("say It's good to see you again " + pc.name + "!", self);
+    pause;
+    exec("say A dark rumour has been spreading, and I think you're up to helping with it.", self);
+    pause;
+	exec("whisper "+pc.name+" There is word that gremlins have invaded a nearby farmstead!", self);
+	pause;
+	exec("whisper "+pc.name+" What do you think, do you have it in you to help?", self);
+	pause;
+	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>Nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	pause;
+	goto accept_handoff;
+	
+:accept_bread:
+
+	wait(SFB_CMD, activator #= pc);
+	if (command("nod"))
+		goto bread_accepted; 
+	else if (command("shake"))
+		goto no_quest;
+	else
+	{
+		act("<div class='whisper'>Boldin the wise whispers to you, '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+		goto accept_bread;
+	}
+
+:accept_water:
+
+	wait(SFB_CMD, activator #= pc);
+	if (command("nod"))
+		goto water_accepted; 
+	else if (command("shake"))
+		goto no_quest;
+	else
+	{
+		act("<div class='whisper'>Boldin the wise whispers to you, '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+		goto accept_water;
+	}
+	
+:accept_handoff:
+
+	wait(SFB_CMD, activator #= pc);
+	if (command("nod"))
+		goto handoff_accepted; 
+	else if (command("shake"))
+		goto no_quest;
+	else
+	{
+		act("<div class='whisper'>Boldin the wise whispers to you, '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+		goto accept_water;
+	}
+:no_quest:
+
+	exec("say So be it!", self);
+	unsecure(pc);
+	goto start;
+
+:bread_accepted:
+
+	exec("say Excellent!", self);
+	pause;
+	
+	exec("say A man gets hungry in his age.", self);
+	pause;
+	
+	act("<div class='whisper'>Boldin the wise whispers to you, 'If you could find a store and <div class='hint'>buy bread</div> for me, it would be well appreciated.",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("<div class='whisper'>Boldin the wise whispers something to " + pc.name + ".",A_SOMEONE, pc, null, null, TO_REST); 
+	exec("whisper "+pc.name+" Take this money, and you can keep anything thats left after your purchase.", self);
+	
+	item := load("coins@newbie");
+	link(item, pc);
+	act("<br>Boldin the wise quietly slips you some coins.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("<div class='whisper'>Boldin the wise whispers to you, 'Use the <div class='hint'>purse</div> command to check how much money you are carrying.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("<div class='hint'>HINT: A food store can be found west and north of here.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	addextra(pc.quests, {BOLDIN_BREAD_ONGOING}, "");
+	addextra(pc.quests, {BOLDIN_ONGOING}, "");
+	pause;
+	
+	unsecure(pc);
+	goto start;
+
+:water_accepted:
+
+	exec("say Excellent!", self);
+	pause;
+	
+	exec("say I've got the thirst of a man twice my size and with three times my vigor.", self);
+	pause;
+	
+	exec("whisper "+pc.name+" Take this barrel, and map.", self);
+	pause;
+	
+	act("<div class='whisper'>Boldin the wise whispers to you, 'Simply <div class='hint'>look</div> at this <div class='hint'>map</div> and it will guide you to the nearby city of Midgaard.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	pause;
+	
+	act("<div class='whisper'>Boldin the wise whispers to you, 'At the Midgaard Market Square you will find an obelisk full of water! Simply <div class='hint'>pour obelisk in barrel</div> to fill it up.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	pause;
+	item := load("water_barrel@newbie");
+	link(item, pc);
+	act("Boldin hands you an empty barrel.<br>",A_SOMEONE, pc, null, null, TO_CHAR);
+	item := load("midgaard_map@newbie");
+	link(item, pc);
+	act("Boldin hands you a crumpled map.",A_SOMEONE, pc, null, null, TO_CHAR);
+	act("<div class='hint'>HINT: Type 'look map' to find directions to Midgaard.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	addextra(pc.quests, {BOLDIN_WATER_ONGOING}, "");
+	pause;
+	
+	unsecure(pc);
+	goto start;
+	
+:handoff_accepted:
+
+	exec("say Your help will be well appreciated " + pc.name +"!", self);
+	pause;
+	
+	exec("whisper "+pc.name+" North of Midgaard, lies an area known as The Moors.", self);
+	pause;
+	
+	exec("whisper "+pc.name+" A small farmstead lies along the western edge of The Moors.", self);
+	pause;
+	
+	exec("whisper "+pc.name+" Barnham is the master of this farm, and also a distant cousin of mine.", self);
+	pause;
+	
+	exec("whisper "+pc.name+" Please go find Barnham, he will warmly welcome you.", self);
+	pause;
+	addextra(pc.quests, {BOLDIN_HANDOFF}, "");
+	pause;
+	
+	unsecure(pc);
+	goto start;
+	
+:bread_ongoing:
+
+	exdp := BOLDIN_ONGOING in pc.quests;
+	if ("bread" in exdp.names)
+	{
+		pause;
+		exec("smile " + pc.name, self);
+		subextra(pc.quests, BOLDIN_BREAD_ONGOING);
+		addextra(pc.quests, {BOLDIN_BREAD_COMPLETE}, "");
+		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+		act("<br><div class='xpgain'>You recieve 500 experience.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+		experience(500, pc);
+		item := load("coins@newbie");
+		link(item, pc);
+		act("Boldin the wise quietly slips you some coins.",A_SOMEONE, pc, null, null, TO_CHAR); 
+		exec("whisper " + pc.name + " I suspect you'll need that sooner than later.", self);
+	}
+	unsecure(pc);
+	goto start;
+	
+:water_ongoing:
+
+	exdp := BOLDIN_ONGOING in pc.quests;
+	if ("water" in exdp.names)
+	{
+		pause;
+		exec("smile " + pc.name, self);
+		pause;
+		act("<br>Boldin takes a long drink from the barrel, completely emptying it!",A_SOMEONE, pc, null, null, TO_CHAR);
+		subextra(pc.quests, BOLDIN_WATER_ONGOING);
+		addextra(pc.quests, {BOLDIN_WATER_COMPLETE}, "");
+		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR);
+		act("<br><div class='xpgain'>You recieve 500 experience.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+		experience(500, pc);
+		item := load("coins@newbie");
+		link(item, pc);	
+		item := load("water_barrel@newbie");
+		link(item, pc);
+		act("Boldin the wise quietly slips you some coins.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
+		exec("whisper " + pc.name + " I suspect you'll need that sooner than later.", self);
+		act("<br>Boldin the wise hands you an empty barrel.",A_SOMEONE, pc, null, null, TO_CHAR); 
+		exec("whisper " + pc.name + " Why dont you keep that, it may be useful.", self);
+	}
+	unsecure(pc);
+	goto start;
+
+:lostpc:
+
+	exec("sigh", self);
+	goto start;
+}
+dilend // END boldin_request
+
+/* Boldin Give */
+
+dilbegin boldin_give();
+var
+	pc: unitptr;
+	item: unitptr;
+	exdp: extraptr;
+
+code
+{
+	heartbeat:= PULSE_SEC*3;
+
+:start:
+
+	wait(SFB_DONE, (command("give")) and (target == self) and (activator.type == UNIT_ST_PC) and
+		(BOLDIN_ONGOING in activator.quests));
+
+:give:
+
+	pc:= activator;
+	item:= medium;
+	secure(pc, lostpc);
+	exdp:= BOLDIN_ONGOING in pc.quests;
+
+	if (("bread@midgaard" == (self.inside.nameidx + "@" + self.inside.zoneidx)) and (not(BOLDIN_BREAD_COMPLETE in activator.quests)))
+	{
+		addstring(exdp.names, "bread");
+		exec("say Ahh, delicious!", self);
+		destroy(self.inside);
+	}
+	else if (("water_barrel@newbie" == (self.inside.nameidx + "@" + self.inside.zoneidx)) and 
+		(not(BOLDIN_WATER_COMPLETE in activator.quests)) and (BOLDIN_BREAD_COMPLETE in activator.quests))
+	{
+		if(self.inside.weight < 28)
+		{
+			exec("say Why "+pc.name +", this isnt full!", self);
+			act("<div class='whisper'>Boldin the wise whispers to you, 'Find the Market Square and <div class='hint'>pour obelisk in barrel</div> then bring it back to me.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+			link(self.inside, pc);
+			goto rejected;
+		}
+		addstring(exdp.names, "water");
+		exec("say Ahh, my water!", self);
+		destroy(self.inside);
+	}
+	else
+	{
+		exec("say Did I ask for this, "+pc.name +"?", self);
+		pause;
+		exec("say I think not.", self);
+		link(self.inside, pc);
+	}
+
+:rejected:	
+	
+	unsecure(pc);
+	goto start;
+
+:lostpc:
+
+	exec("say bah!", self);
+	goto start;
+}
+dilend // END boldin_give
+
+dilbegin barnham_request();
+var
+  item: unitptr;
+  pc: unitptr;
+  exdp: extraptr;
+
+code
+{
+	heartbeat:= PULSE_SEC*3;
+
+:start:
+	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(EXPLORE_COMPLETE in activator.quests)) and (activator.level <= 20) and (BOLDIN_HANDOFF in activator.quests));
+
+	pc := activator;
+	secure(pc, lostpc);
+
+	if (EXPLORE_ONGOING in pc.quests)
+		goto explore_ongoing;
+	
+	pause;
+	exec("say This quest doesnt yet exist! Be patient, we're working on it!", self);
+/*
+    pause;
+    exec("say you look to be somewhat new around here.", self);
+    pause;
+	exec("whisper "+pc.name+" I could use some help. And I'm guessing you could as well!", self);
+	pause;
+	exec("whisper "+pc.name+" You see, the older I get, the harder it seems it is to get around.", self);
+	pause;
+	exec("whisper "+pc.name+" Would you be so kind as to help me out?", self);
+	pause;
+	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>Nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	pause;
+*/
+	goto accept_explore;
+	
+:accept_explore:
+
+	wait(SFB_CMD, activator #= pc);
+	if (command("nod"))
+		goto explore_accepted; 
+	else if (command("shake"))
+		goto no_quest;
+	else
+	{
+		act("<div class='whisper'>Boldin the wise whispers to you, '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+		goto accept_explore;
+	}
+
+:no_quest:
+
+	exec("say So be it!", self);
+	unsecure(pc);
+	goto start;
+
+:explore_accepted:
+/*
+	exec("say Excellent!", self);
+	pause;
+	
+	exec("say A man gets hungry in his age. If you could find a store and <div class='hint'>buy bread</div> for me, it would be well appreciated.", self);
+	pause;
+	
+	exec("whisper "+pc.name+" Take this money, and you can keep anything thats left after your purchase.<br>", self);
+	
+	item := load("coins@newbie");
+	link(item, pc);
+	act("<br>Boldin the wise quietly slips you some coins.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("<div class='whisper'>Boldin the wise whispers to you, 'Use the <div class='hint'>purse</div> command to check how much money you are carrying.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("<div class='hint'>HINT: A food store can be found west and north of here.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	addextra(pc.quests, {BOLDIN_BREAD_ONGOING}, "");
+	addextra(pc.quests, {BOLDIN_ONGOING}, "");
+	pause;
+*/	
+	unsecure(pc);
+	goto start;
+	
+:explore_ongoing:
+/*
+	exdp := EXPLORE_ONGOING in pc.quests;
+	if ("bread" in exdp.names)
+	{
+		pause;
+		exec("smile " + pc.name, self);
+		subextra(pc.quests, BOLDIN_BREAD_ONGOING);
+		addextra(pc.quests, {BOLDIN_BREAD_COMPLETE}, "");
+		experience(500, pc);
+		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+		act("<br><div class='xpgain'>You recieve 500 experience.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+		item := load("coins@newbie");
+		link(item, pc);
+		act("Boldin the wise quietly slips you some coins.",A_SOMEONE, pc, null, null, TO_CHAR); 
+		exec("whisper " + pc.name + " I suspect you'll need that sooner than later.", self);
+	}
+*/
+	unsecure(pc);
+	goto start;	
+:lostpc:
+
+	exec("sigh", self);
+	goto start;
+}
+dilend // END barnham_request
+
+/* Barnham Give */
+
+dilbegin barnham_give();
+var
+	pc: unitptr;
+	item: unitptr;
+	exdp: extraptr;
+
+code
+{
+	heartbeat:= PULSE_SEC*3;
+
+:start:
+
+	wait(SFB_DONE, (command("give")) and (target == self) and (activator.type == UNIT_ST_PC) and
+		(EXPLORE_ONGOING in activator.quests));
+
+:give:
+
+	pc:= activator;
+	item:= medium;
+	secure(pc, lostpc);
+	exdp:= EXPLORE_ONGOING in pc.quests;
+
+	if (("bread@midgaard" == (self.inside.nameidx + "@" + self.inside.zoneidx)) and (not(BOLDIN_BREAD_COMPLETE in activator.quests)))
+	{
+		addstring(exdp.names, "bread");
+		exec("say Ahh, delicious!", self);
+		destroy(self.inside);
+	}
+	else
+	{
+		exec("say Did I ask for this, "+pc.name +"?", self);
+		pause;
+		exec("say I think not.", self);
+		link(self.inside, pc);
+	}
+
+:rejected:	
+	
+	unsecure(pc);
+	goto start;
+
+:lostpc:
+
+	exec("say bah!", self);
+	goto start;
+}
+dilend // END barnham_give
+
+/* END New Newbie Dils */
+
 %rooms
 
 hall
@@ -3242,9 +3736,6 @@ keyword{"door"}
 open {EX_OPEN_CLOSE,EX_CLOSED};
 end
 
-
-
-
 newbie_hangout
 names {"newbie room", "hangout"}
 title "The Newbie Guide Hangout"
@@ -3258,43 +3749,109 @@ ALWAYS_LIGHT
 flags{UNIT_FL_NO_TELEPORT}
 dilbegin control();
 external
-  string newbie_names (i:integer);
+	string newbie_names (i:integer);
 var
-  pc : unitptr;
-  npc:unitptr;
-  i:integer;
-  name_str:string;
-  count:integer;
-  code
-  {
-  i:=0;
+	pc : unitptr;
+	npc:unitptr;
+	i:integer;
+	name_str:string;
+	count:integer;
+code
+{
+	i:=0;
+  
 :start:
-wait(SFB_MSG,argument =="stillnewbie");
-if ("$newbie guide is helping" in activator.quests) goto start;
-if (i==AMOUNT_NAMES) i:=0;
-pc:=activator;
-addextra (pc.quests,{"$newbie guide is helping"},"");
-npc:=load ("newbie_guide@newbie");
-name_str:=newbie_names(i);
-substring (npc.names,"newbie guide");
-addstring (npc.names,name_str);
-addstring (npc.names,name_str+" the newbie guide");
-addstring (npc.names,"newbie guide");
-addstring (npc.names,"guide");
-npc.title:=name_str;
-name_str:=name_str+" the Newbie Guide is here helping "+pc.name;
-npc.outside_descr:=name_str;
 
-dilcopy ("newbie_brain@newbie("+pc.name+")" , npc);
-I:=i+1;
-goto start;
+	wait(SFB_MSG,argument =="stillnewbie");
+	if ("$newbie guide is helping" in activator.quests) goto start;
+	if (i==AMOUNT_NAMES) i:=0;
+	pc:=activator;
+	addextra (pc.quests,{"$newbie guide is helping"},"");
+	npc:=load ("newbie_guide@newbie");
+	name_str:=newbie_names(i);
+	substring (npc.names,"newbie guide");
+	addstring (npc.names,name_str);
+	addstring (npc.names,name_str+" the newbie guide");
+	addstring (npc.names,"newbie guide");
+	addstring (npc.names,"guide");
+	npc.title:=name_str;
+	name_str:=name_str+" the Newbie Guide is here helping "+pc.name;
+	npc.outside_descr:=name_str;
+
+	dilcopy ("newbie_brain@newbie("+pc.name+")" , npc);
+	I:=i+1;
+	goto start;
 }
-dilend
+dilend // END control
 
 end
 
+/* NEW NEWBIE EXPERIENCE - Rooms Below */
 
-%mobiles
+farm_house
+names {"farm house", "house"}
+title "Barnham's Farm House"
+descr
+"A simple decor furnishes an otherwise relatively non-descript farm house. 
+A table with two chairs sit along one side, opposite a stone fireplace.
+A wooden ladder leads up to a door, through which it seems there is an attic."
+
+movement SECT_INSIDE
+ALWAYS_LIGHT
+flags {UNIT_FL_INDOORS}
+
+east to temple@udgaard descr "The main hall is to the northeast";
+
+up to farm_attic descr "Barnham's Attic"
+keyword{"door"}
+open {EX_OPEN_CLOSE,EX_CLOSED};
+
+west to farm_01 descr "Outside Barnham's Farm"
+keyword{"door"}
+open {EX_OPEN_CLOSE,EX_CLOSED};
+
+east to outside_farm descr "Outside Barnham's Farm";
+end
+
+
+farm_attic
+names {"farm attic", "attic"}
+title "Barnham's Attic"
+descr
+"A small non-descript attic. A door leads back down."
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS}
+
+down to farm_house
+keyword{"door"}
+open {EX_OPEN_CLOSE,EX_CLOSED};
+end
+
+
+farm_01
+names {"farm yard", "farm"}
+title "Outside Barnham's Farm"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+east to farm_house descr "Barnham's Farm House"
+keyword{"door"}
+open {EX_OPEN_CLOSE,EX_CLOSED};
+end
+
+outside_farm
+names {"farm yard", "farm"}
+title "Outside Barnham's Farm"
+descr
+"Outside a farm. It smells farmy."
+movement SECT_FIELD
+
+west to farm_house descr "Barnham's Farm House";
+end
+
+/* END NEW NEWBIE EXPERIENCE ROOMS */
+
 %mobiles
                     ferret
 names {"ferret"}
@@ -3329,6 +3886,76 @@ dilcopy newbie_nospl@newbie();
 
 end
 
+/* NEW NEWBIE EXPERIENCE - Mobiles Below */
+
+boldin
+names {"Boldin","man"}
+title "Boldin the wise"
+descr "Boldin the wise is here."
+extra {}
+"Boldin The Wise as he is known. A slim elderly man, Boldin definitely didnt make it through
+life by blade or hammer. The look of one well studied, and with a deep smile, you can appreciate 
+the clear evidence that his alternative path through life has been effective."
+M_AVG_HUMAN(199, SEX_MALE)
+alignment 1000
+bright 4
+ATTACK_DEFENSE(+500, +500)
+position POSITION_STANDING
+default POSITION_STANDING
+dilcopy newbie_nokill@newbie();
+dilcopy newbie_nospl@newbie();
+dilcopy boldin_request@newbie();
+dilcopy boldin_give@newbie();
+
+end
+
+barnham
+names {"barnham","man"}
+title "Farmer Barnham"
+descr "Farmer Barnham is here."
+extra {}
+"Farmer Barnham strides about, clearly agitated. Despite his immediate frustration, deep smile lines surround his eyes."
+M_AVG_HUMAN(30, SEX_MALE)
+alignment 1000
+bright 4
+dilcopy barnham_request@newbie();
+dilcopy barnham_give@newbie();
+end
+
+gremlin_small
+names {"troublesome gremlin", "gremlin"}
+title "a troublesome gremlin"
+descr "A troublesome gremlin smirks at you."
+extra {}
+"This tiny creature looks to be particularly problematic. You immediately want nothing more than to kill it."
+M_AVG_GOBLIN(5,SEX_MALE)
+//exp 160
+money 1 COPPER_PIECE
+end
+
+gremlin_medium
+names {"vicious gremlin", "gremlin"}
+title "a vicious gremlin"
+descr "A vicious gremlin snarls at you."
+extra {}
+"This gremlin is vicious! You immediately want nothing more than to kill it."
+M_AVG_GOBLIN(7,SEX_MALE)
+//exp 160
+money 2 COPPER_PIECE
+end
+
+gremlin_large
+names {"large gremlin", "gremlin"}
+title "a large gremlin"
+descr "A large gremlin glares at you."
+extra {}
+"This is the biggest gremlin you've ever seen! You immediately want nothing more than to kill it."
+M_AVG_GOBLIN(9,SEX_MALE)
+//exp 160
+money 1 SILVER_PIECE
+end
+
+/* END NEW NEWBIE EXPERIENCE - Mobiles */
 
 %objects
 bull_board
@@ -3779,33 +4406,157 @@ weight 5000
 dilcopy getem@newbie();
 dilbegin feedme();
 var
-
-pc:unitptr;
+	pc:unitptr;
 code
 {
-heartbeat:=PULSE_SEC*340;
+	heartbeat:=PULSE_SEC*340;
+	
 :start:
-wait(SFB_CMD, ( (activator.type == UNIT_ST_PC) and
-                                (command("feast"))
-                       and (activator.level < 20) )) ;
+	
+	wait(SFB_CMD, ( (activator.type == UNIT_ST_PC) and (command("feast")) and (activator.level < 20) )) ;
 
-pc:= activator;
-              block;
-                   {
-                    pc.full:=24;
-                    pc.thirst:=24;
-                    act("You are no longer hungry or thirsty.",
-                    A_SOMEONE, pc, null, null, TO_CHAR);
-
-
-                    }
+	pc:= activator;
+	block;
+	{
+		pc.full:=24;
+		pc.thirst:=24;
+		act("You are no longer hungry or thirsty.",A_SOMEONE, pc, null, null, TO_CHAR);
+	}
 }
-
 dilend
 end
+
+/* NEW NEWBIE EXPERIENCE - Items Below */
+
+coins
+MONEY(GOLD_PIECE,2)
+end
+
+water_barrel
+names {"barrel"}
+title "a barrel"
+descr "A barrel has been left here."
+extra {}
+"This is an excellent barrel for carrying water. If you were to find a source of water, you could pour it in!<br>
+<br><div class='hint'>HINT: At the Obelisk in the Midgaard Market Square, 'pour obelisk in barrel'.</div>"
+manipulate {MANIPULATE_TAKE}
+LIQ_DEF("clear",4,24,0,10,1,0,0)
+cost 2 IRON_PIECE
+end
+
+midgaard_map
+names {"midgaard map", "map"}
+title "a map to Midgaard"
+descr "A crumpled map has been left here."
+extra {}
+"This map tells how to travel from the Square in Udgaard, to the city of Midgaard.<br><br>
+Step 1: Start at the Udgaard Square. <br>
+Step 2: Travel as far as you can to the east (five rooms) and you will arrive at the Top of Hill.<br>
+<div class='hint'>HINT: Try typing 'help area' here. You will find that you have arrived in an area known as Cypress Forest.</div><br>
+Step 3: From Top of Hill, travel along the path through the Cypress Forest to it's edge. The directions will be as follows.<br>
+south, east, south, east, east, north, east, north<br>
+Step 4: Get your bearings! You should find that to the east lies a Dustry Trail west of Midgaard.<br>
+<div class='hint'>HINT: Try typing 'directions' here -- you can shorten it to 'dir'. </div><br>
+Step 5: Continue to the east, and you will find yourself on the Main Street of Midgaard itself!"
+manipulate {MANIPULATE_TAKE}
+cost 1 IRON_PIECE
+end
+
+barnham_axe
+names {"hand axe", "axe"}
+title "a simple hand axe"
+descr
+"A simple hand axe is here."
+extra {}
+"This is a simple hand axe.  It appears to be equally well suited for chopping wood and self defense."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_HAND_AXE, 2, 0)
+dilcopy level_restrict@function(20,5,0,"");
+end
+
+barnham_dagger
+names {"gleaming dagger", "dagger"}
+title "a gleaming dagger"
+descr
+"A gleaming dagger lies here."
+extra {}
+"This dagger gleams with a magical glow. It appears to be better suited for self defense than carving wood.<br>"
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_DAGGER, 10, 10)
+WEAPON_SLAYER(RACE_GOBLIN)
+WEAPON_TRANSFER(WPN_DAGGER,+5)
+STR_TRANSFER(+1)
+DEX_TRANSFER(+1)
+end
+
+barnham_jerkin
+names {"leather jerkin", "jerkin"}
+title "a leather jerkin"
+descr "A simple leather jerkin has been left here."
+extra {}
+"A simple leather jerkin, it appears to provide some warmth as well as protection from the world."
+ARMOUR_LEATHER(0,0)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+weight 4
+cost 1 COPPER_PIECE
+end
+
+barnham_legs
+names {"leather leggings","leggings"}
+title "a pair of leather leggings"
+descr "A pair of leather leggings have been left here."
+extra {}
+"Some simple leather leggings, they appear to provide some warmth as well as protection from the world."
+ARMOUR_LEATHER(0,0)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+weight 2
+cost 1 COPPER_PIECE
+end
+
+barnham_boots
+names {"leather boots","boots"}
+title "a pair of leather boots"
+descr "A pair of leather boots have been left here."
+extra {}
+"Some simple leather boots, they appear to provide some warmth as well as protection from the world."
+ARMOUR_LEATHER(0,0)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+weight 1
+cost 1 COPPER_PIECE
+end
+
+
+/* END NEW NEWBIE EXPERIENCE ITEMS */
+
 %reset
+
 
 load newbie_sign into udgaard/temple max 1
 load pillar into hall max 1
 load bull_board into newbie_hangout max 1
+
+/* NEW NEWBIE EXPERIENCE RESETS BELOW*/
+
+load boldin into outside_farm max 1
+
+load barnham into farm_house max 1
+{
+   equip barnham_axe position WEAR_WIELD
+   equip barnham_jerkin position WEAR_BODY
+   equip barnham_legs position WEAR_LEGS
+   equip barnham_boots position WEAR_FEET
+}
+load gremlin_small into farm_01 local 4 max 20
+load gremlin_large into farm_01 local 4 max 20
+load gremlin_medium into farm_01 local 4 max 20
+load barnham_dagger into farm_attic max 1
+
+
+door farm_house WEST {EX_OPEN_CLOSE, EX_CLOSED}
+door farm_house UP {EX_OPEN_CLOSE, EX_CLOSED}
+door farm_attic DOWN {EX_OPEN_CLOSE, EX_CLOSED}
+door farm_01 EAST {EX_OPEN_CLOSE, EX_CLOSED}
+
+/* END NEW NEWBIE EXPERIENCE RESETS */
+
 %end
