@@ -233,7 +233,7 @@
 		.log           { display: inline; color:white;}
 
         .death       { display: inline; color:tomato;}
-        .prompt      { display: inline; color:magenta;}
+        .prompt      { display: inline; color:cyan;}
         .npc_title   { display: inline; color:darkcyan; }
         .npc_descr   { display: inline; color:darkcyan; }
         .obj_descr   { display: inline; color:lightgray; }
@@ -257,7 +257,8 @@
         .who_title   { display: inline; color:lightgray; }
         .who_inv     { display: inline; }
 
-        .xpgain         { display: inline; color:firebrick; font-weight: bold;}
+        .xpgain      { display: inline; color:firebrick; font-weight: bold;}
+		.hint		 { display: inline; color:lime; }
 
         .converse    { list-style: none; } 
         .colh2       { border: 0px solid black; margin:0; } /* Table class */

@@ -117,6 +117,7 @@ dilend
 dilbegin login_scrub(tgt : unitptr);
 var
    i : integer;
+   ext : extraptr;
 code
 {
    heartbeat := PULSE_SEC;
@@ -136,6 +137,8 @@ code
    if ("$RES_TIMER" in self.extra)
       subextra(self.extra, "$RES_TIMER");
 
+  
+  
    /* to fix a bjorni quest mess */
    if ("Nidhogg's prize given" in tgt.quests)
    {
@@ -145,6 +148,16 @@ code
    }
    /* end bjorni quest mess fix */   
 
+   /* clan fix */
+    if ("$clan-_symbolic" in self.extra)
+	{
+		ext := "$clan-_symbolic" in self.extra;
+		addextra(self.extra, {"$clan_symbolic"}, ext.descr);
+		subextra (self.extra,"$clan-_symbolic");
+		log("Clan: " + self.name + " extra updated from $clan-_symbolic to $clan_symbolic. Descr is: " + ext.descr);
+	}
+   /* end clan fix */
+   
    /* Following mess to fix the mess with night and night1 zones by Ratlin */
    /*added fix for removing quest flags for heulhous and heul2 quests ZT 080808*/
                   
@@ -1207,6 +1220,8 @@ code
       sl := {"$autotrain", GUILD_MAGE_ATL};
    else if (nGuild == PROFESSION_SORCERER)
       sl := {"$autotrain", GUILD_SORCERER_ATL};
+   else if (nGuild == PROFESSION_BARBARIAN)
+      sl := {"$autotrain", GUILD_BARBARIAN_ATL};
    else
    {
       log("ERROR: setautotrain@basis(): invalid nGuild");

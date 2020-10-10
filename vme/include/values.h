@@ -37,7 +37,6 @@ END HEADER*/
  #define IS_CORPSE(ITEM) \
    ((ITEM.nameidx=="corpse") and (ITEM.zoneidx=="death"))
 
-
  #define IS_HEAD(ITEM) \
    ((ITEM.nameidx=="head") and (ITEM.zoneidx=="death"))
 
@@ -88,18 +87,23 @@ END HEADER*/
 #define GUILD_NECROMANCER "Necromancer"
 #define GUILD_NECROMANCER_ATL  "kadiya@necro_guild", "krain@necro_guild", "murdock@necro_guild", "meclor@necro_guild" //  Abi, Spl, Wpn, Ski
 
-
 #define GUILD_UDG_MAGE    "Udgaard Conjurer"
 #define GUILD_MAGE_ATL    "merlin@mageguild", "zofax@mageguild", "caval@mageguild", "fifiz@mageguild" //  Abi, Spl, Wpn, Ski
 
 #define GUILD_SORCERER     "Midgaard Sorcerer"
 #define GUILD_SORCERER_ATL "calastran@sorcerer", "lasheetah@sorcerer","claudius@sorcerer", "forbin@sorcerer" // Ability, Weapon, Spell, Skill 
 
+#define GUILD_SORCERER     "Midgaard Sorcerer"
+#define GUILD_SORCERER_ATL "calastran@sorcerer", "lasheetah@sorcerer","claudius@sorcerer", "forbin@sorcerer" // Ability, Weapon, Spell, Skill 
+
+#define GUILD_BARBARIAN     "Barbarian"
+#define GUILD_BARBARIAN_ATL "ethror@barbarian","faeld@barbarian","monn@barbarian" // Ability, Weapon, Skill 
+
 
 #define GUILD_SL   {GUILD_UDG_FIGHTER, GUILD_KNIGHT, GUILD_PALADIN, GUILD_NYM_RANGER,   \
 	                GUILD_UDG_THIEF, GUILD_ASSASSIN, GUILD_UDG_CLERIC, GUILD_NYM_DRUID, \
-	                GUILD_MYSTIC, GUILD_NECROMANCER, GUILD_UDG_MAGE, GUILD_SORCERER}
-#define GUILD_INIT_SL  {"F", "DK", "P",  "R", "T", "A", "H", "D", "M", "N",  "C", "S"}
+	                GUILD_MYSTIC, GUILD_NECROMANCER, GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_BARBARIAN}
+#define GUILD_INIT_SL  {"F", "DK", "P",  "R", "T", "A", "H", "D", "M", "N", "C", "S", "B"}
 
 
 //
@@ -122,10 +126,11 @@ END HEADER*/
 #define PROFESSION_CONJURER    10
 #define PROFESSION_SORCERER    11
 #define PROFESSION_BARBARIAN   12
-#define PROFESSION_MAX         13 /* 11+1 */
+#define PROFESSION_MAX         13 /* 12+1 */
 
 #define PROFESSION_STRINGS "Fighter", "Knight", "Paladin", "Ranger", "Thief", "Assassin", \
-                           "Priest", "Druid", "Mystic","Necromancer", "Conjurer", "Mage", "Barbarian"
+                           "Priest", "Druid", "Mystic","Necromancer", "Conjurer", "Mage", \
+						   "Barbarian"
 
 
 #define QUEST_WW              "Wight warrens quest"
@@ -1014,22 +1019,22 @@ END HEADER*/
 #define ID_BLANK11              100
 /*check values.h for max number of id values*/
 /* keep in mind if you need more ask the vme coders.*/
-#define CLAN_MASTER    "$clan_master"
-#define  CLAN_MEMBER  "$clan_member"
-#define  CLAN_TATTOO  "clan_taTtoo"
-#define CLAN_NAME "$clan_name"
-#define CLAN_LIST "$clan_list"
-#define CLAN_SYMBOLIC "$clan_symbolic"
-#define CLAN_TREASURY "$clan_treasury"
-#define CLAN_QUARTERMASTER "$clan_quartermaster"
-#define CLAN_MONEY "$clan_money"
-#define CLAN_STORAGE "$clan_storage"
-#define CLAN_DONATION "$clan_donation"
-#define CLAN_MAX_STORAGE  25
-#define CLAN_MAX_DONATION  50
-#define CLAN_RANK   "$clan_rank"
-#define CLAN_ROST   "$clan_rost"
-#define CLAN_LORD   "$clan_LORD"
+#define CLAN_MASTER    			"$clan_master"
+#define CLAN_MEMBER  			"$clan_member"
+#define CLAN_TATTOO  			"clan_tattoo"
+#define CLAN_NAME 				"$clan_name"
+#define CLAN_LIST 				"$clan_list"
+#define CLAN_SYMBOLIC 			"$clan_symbolic"
+#define CLAN_TREASURY 			"$clan_treasury"
+#define CLAN_QUARTERMASTER 		"$clan_quartermaster"
+#define CLAN_MONEY 				"$clan_money"
+#define CLAN_STORAGE 			"$clan_storage"
+#define CLAN_DONATION 			"$clan_donation"
+#define CLAN_MAX_STORAGE  		25
+#define CLAN_MAX_DONATION  		50
+#define CLAN_RANK   			"$clan_rank"
+#define CLAN_ROST   			"$clan_rost"
+#define CLAN_LORD   			"$clan_LORD"
 
 /* added for new look move */
 
