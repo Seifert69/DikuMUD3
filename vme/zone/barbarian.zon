@@ -154,7 +154,7 @@ movement SECT_CITY
 **    NOTE - EXIT NEEDS TO BE ADDED TO  REFLECT APPROPRIATE LINKED ROOM   **
 ***************************************************************************/
 
-east to hall_01 desc "description<br>";
+east to hall_01 descr "description<br>";
 ALWAYS_LIGHT
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 end
@@ -464,7 +464,7 @@ dilcopy guild_titles@guild_paths(GUILD_BARBARIAN, {"Young Blood",
 
 /* Barbarian Master DIL - gives out the Bloody Gauntlets. */
 
-dilbegin barbarian_give();
+dilbegin barb_give();
 var
 	pc : unitptr;
 	item : unitptr;
@@ -566,7 +566,7 @@ code
 }
 dilend
 
-dilbegin barbarian_quest2();
+dilbegin barb_quest2();
 var
 	pc : unitptr;
 	item : unitptr;
@@ -1007,33 +1007,15 @@ end
 
 %reset
 load hilka into hall_04 max 1
-{
-	
-}
 
 load ethror into loft_01 max 1
-{
-	
-}
 
 load faeld into hall_n max 1
-{
-	
-}
 
 load monn into train_01 max 1
-{
-	
-}
 
 load raz into hall_s max 1
-{
-	
-}
 
 load gate_guard into entrance max 2
-{
-	
-}
 
 %end

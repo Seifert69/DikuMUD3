@@ -1246,14 +1246,35 @@ ERROR NO TYPE IN MYSTIC GUILD
 
 #if defined(_ABILITY)
 
+special SFUN_TEACH_INIT
+"abilities;barbarian;
+$1n tells you, 'I have never heard of such an ability.';
+$1n tells you, 'I am not a master on that ability.';
+$1n tells you, 'You do not have %s for the tithe.';
+$1n tells you, 'You are not ready to learn more. You lack %d points.';
+$1n tells you, 'I cannot teach you more than I have.';
+$1n tells you, 'You must have no traces of magic about you to learn.';
+$1n tells you, 'Remove all equipment, please.';
+
   0;  100; Strength                      ;   5; 15000;  10; 20;      0;
   0;  100; Dexterity                     ;   5; 15000;  10; 20;      0;
   0;   90; Constitution                  ;   10; 15000;  10; 20;      0;
   0;  100; Hitpoints                     ;   9; 15000;  10; 20;      0;
   0;   60; Charisma                      ;  15;  5000;   5; 10;      0;
   0;   60; Brain                         ;  15; 10000;   8; 16;      0;
+ "
  
 #elif defined(_SKILL)
+
+special SFUN_TEACH_INIT
+"skills;barbarian;
+$1n tells you, 'I have never heard of such a skill.';
+$1n tells you, 'I do not know how to teach this skill.';
+$1n tells you, 'You haven't got %s for the tithe.';
+$1n tells you, 'You haven't got %d skill points.';
+$1n tells you, 'I can not teach you any more';
+$1n tells you, 'You must be unaffected by magic, else I can't teach you';
+$1n tells you, 'Remove all equipment, please.';
 
   0;  100; consider                      ;  14; 14000;  10; 20;      0;
   0;  100; diagnostics                   ;  14; 14000;  10; 20;      0;
@@ -1269,8 +1290,19 @@ ERROR NO TYPE IN MYSTIC GUILD
   7;  100; armor hard leather            ;   4;  4000;   10;      0;
  15;  100; armor chain                   ;   4;  4000;   10;      0;
  20;  100; armor plate                   ;   4;  4000;   10;      0;
+"
 
 #elif defined(_WEAPON)
+
+special SFUN_TEACH_INIT
+"weapons;barbarian;
+$1n tells you, 'I have never heard of such a weapon.';
+$1n tells you, 'I do not know how to teach that weapon.';
+$1n tells you, 'You haven't enough money to tithe for that training.';
+$1n tells you, 'You haven't got %d skill points.';
+$1n tells you, 'I can not teach you any more.';
+$1n tells you, 'You must be unaffected by magic, else I can't teach you';
+$1n tells you, 'Remove all equipment, please.';
 
   0;  100; fist                          ;   9;  9000;   8;          0;
   0;  100; club                          ;   4;  4000;   5;          0;
@@ -1298,7 +1330,7 @@ ERROR NO TYPE IN MYSTIC GUILD
  24;  100; maul                          ;  12; 12000;  10;          0;
  25;  100; great sword                   ;   9;  9000;  10;          0;
  30;  100; halberd                       ;  18; 18000;  15;          0;
- 
+ "
  
 #else
 
