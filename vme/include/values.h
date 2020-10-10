@@ -87,18 +87,23 @@ END HEADER*/
 #define GUILD_NECROMANCER "Necromancer"
 #define GUILD_NECROMANCER_ATL  "kadiya@necro_guild", "krain@necro_guild", "murdock@necro_guild", "meclor@necro_guild" //  Abi, Spl, Wpn, Ski
 
-
 #define GUILD_UDG_MAGE    "Udgaard Conjurer"
 #define GUILD_MAGE_ATL    "merlin@mageguild", "zofax@mageguild", "caval@mageguild", "fifiz@mageguild" //  Abi, Spl, Wpn, Ski
 
 #define GUILD_SORCERER     "Midgaard Sorcerer"
 #define GUILD_SORCERER_ATL "calastran@sorcerer", "lasheetah@sorcerer","claudius@sorcerer", "forbin@sorcerer" // Ability, Weapon, Spell, Skill 
 
+#define GUILD_SORCERER     "Midgaard Sorcerer"
+#define GUILD_SORCERER_ATL "calastran@sorcerer", "lasheetah@sorcerer","claudius@sorcerer", "forbin@sorcerer" // Ability, Weapon, Spell, Skill 
+
+#define GUILD_BARBARIAN     "Barbarian"
+#define GUILD_BARBARIAN_ATL "ethror@barbarian","faeld@barbarian","monn@barbarian" // Ability, Weapon, Skill 
+
 
 #define GUILD_SL   {GUILD_UDG_FIGHTER, GUILD_KNIGHT, GUILD_PALADIN, GUILD_NYM_RANGER,   \
 	                GUILD_UDG_THIEF, GUILD_ASSASSIN, GUILD_UDG_CLERIC, GUILD_NYM_DRUID, \
-	                GUILD_MYSTIC, GUILD_NECROMANCER, GUILD_UDG_MAGE, GUILD_SORCERER}
-#define GUILD_INIT_SL  {"F", "DK", "P",  "R", "T", "A", "H", "D", "M", "N",  "C", "S"}
+	                GUILD_MYSTIC, GUILD_NECROMANCER, GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_BARBARIAN}
+#define GUILD_INIT_SL  {"F", "DK", "P",  "R", "T", "A", "H", "D", "M", "N", "C", "S", "B"}
 
 
 //
