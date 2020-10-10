@@ -1220,6 +1220,8 @@ code
       sl := {"$autotrain", GUILD_MAGE_ATL};
    else if (nGuild == PROFESSION_SORCERER)
       sl := {"$autotrain", GUILD_SORCERER_ATL};
+   else if (nGuild == PROFESSION_BARBARIAN)
+      sl := {"$autotrain", GUILD_BARBARIAN_ATL};
    else
    {
       log("ERROR: setautotrain@basis(): invalid nGuild");

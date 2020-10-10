@@ -525,7 +525,7 @@ code
 			item := load("bloody_gauntlet@barbarian");
 			item.height := pc.height;
 			link(item, pc);
-			sendtext(self.name+" hands you a small charm.<br/>",pc);
+			sendtext(self.name+" hands you some Bloody Gauntlets.<br/>",pc);
 			act("$3n hands $1n a small charm.",A_SOMEONE,pc,null,self,TO_REST);
 			pause;
 			exec("say This charm summons a creature to stand by your side in combat."

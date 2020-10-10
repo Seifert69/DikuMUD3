@@ -1250,7 +1250,7 @@ special SFUN_TEACH_INIT
 "abilities;barbarian;
 $1n tells you, 'I have never heard of such an ability.';
 $1n tells you, 'I am not a master on that ability.';
-$1n tells you, 'You do not have %s for the tithe.';
+$1n tells you, 'You do not have %s for the payment.';
 $1n tells you, 'You are not ready to learn more. You lack %d points.';
 $1n tells you, 'I cannot teach you more than I have.';
 $1n tells you, 'You must have no traces of magic about you to learn.';
@@ -1270,7 +1270,7 @@ special SFUN_TEACH_INIT
 "skills;barbarian;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
-$1n tells you, 'You haven't got %s for the tithe.';
+$1n tells you, 'You haven't got %s for the payment.';
 $1n tells you, 'You haven't got %d skill points.';
 $1n tells you, 'I can not teach you any more';
 $1n tells you, 'You must be unaffected by magic, else I can't teach you';
@@ -1298,7 +1298,7 @@ special SFUN_TEACH_INIT
 "weapons;barbarian;
 $1n tells you, 'I have never heard of such a weapon.';
 $1n tells you, 'I do not know how to teach that weapon.';
-$1n tells you, 'You haven't enough money to tithe for that training.';
+$1n tells you, 'You haven't enough money to pay for that training.';
 $1n tells you, 'You haven't got %d skill points.';
 $1n tells you, 'I can not teach you any more.';
 $1n tells you, 'You must be unaffected by magic, else I can't teach you';
