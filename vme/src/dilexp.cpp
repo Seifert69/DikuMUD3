@@ -3025,6 +3025,38 @@ void dilfe_isplayer(register class dilprg *p)
     delete v1;
 }
 
+void dilfe_playerid(register class dilprg *p)
+{
+    dilval *v = new dilval;
+    /* Get the ID number of a player. */
+    dilval *v1 = p->stack.pop();
+
+    switch (dil_getval(v1))
+    {
+    case DILV_NULL:
+    case DILV_FAIL:
+        v->type = DILV_FAIL; /* failed */
+        break;
+    case DILV_SP:
+        if (v1->val.ptr)
+        {
+            v->type = DILV_INT;
+            v->atyp = DILA_NONE;
+            int find_player_id(char *pName);
+            v->val.num = find_player_id((char *)v1->val.ptr); 
+        }
+        else
+            v->type = DILV_FAIL; /* failed */
+        break;
+    default:
+        v->type = DILV_ERR; /* Wrong type */
+        break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+}
+
 void dilfe_len(register class dilprg *p)
 {
     dilval *v = new dilval;

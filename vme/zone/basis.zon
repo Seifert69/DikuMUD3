@@ -7661,7 +7661,7 @@ code
    u := findrndunit(self, FIND_UNIT_SURRO, UNIT_ST_PC);
    if (u and (u != ou))
    {
-      if (isaff(u, ID_WITNESS))
+      if ("$witness" in u.extra)
       {
          exec("tell "+u.name+" I see you have been the victim of a "+
               "horrible crime, if you wish to accuse anyone, I can help you.",

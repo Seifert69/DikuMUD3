@@ -270,8 +270,8 @@ struct dilargstype
 #define DILE_GFOL      195
 #define DILE_SACT	   196	/* sact (#,#,#,#,#,#) */
 #define DILE_GINT	   197	/* getinteger(unit, idx) */
-
-#define DILI_MAX       197	/* The maximum node number */
+#define DILE_PLAYERID    198
+#define DILI_MAX       198	/* The maximum node number */
 
 /* DIL Field references */
 #define DILF_NMS	0	/* .names */

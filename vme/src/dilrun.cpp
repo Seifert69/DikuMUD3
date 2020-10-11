@@ -849,8 +849,9 @@ struct dil_func_type dilfe_func[DILI_MAX + 1] = {
     {dilfe_fndu2},
     {dilfe_gfol},
     {dilfe_sact}, // 195
-    {dilfe_gint}
-};
+    {dilfe_gint},
+    {dilfe_playerid}
+ };
 
 
 static int check_interrupt(class dilprg *prg)

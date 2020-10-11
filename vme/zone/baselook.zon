@@ -120,7 +120,7 @@ code
 
    if ((item.type == UNIT_ST_PC) or (item.type == UNIT_ST_NPC))
    {
-      if (isaff(item, ID_REWARD))
+      if ("$reward" in item.extra)  
          act("There is a reward on $2s head.", A_ALWAYS, self, item, null,TO_CHAR);
 
       if ((isset(item.charflags, CHAR_PROTECTED)) and
@@ -851,7 +851,7 @@ code
 
       if ((item.type == UNIT_ST_PC) or (item.type == UNIT_ST_NPC))
       {
-         if (isaff(item, ID_REWARD))
+         if ("$reward" in item.extra)   
             act("There is a reward on $2s head.", A_ALWAYS, looker, item,null, TO_CHAR);
 
          if ((isset(item.charflags, CHAR_PROTECTED))
