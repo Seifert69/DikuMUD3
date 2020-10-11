@@ -2566,7 +2566,7 @@ code
       want := "<div class='score'>You are a protected citizen, but people may kill you now!</div>";
    else if (isset(self.charflags, CHAR_OUTLAW))
       want := "<div class='score'>You are wanted dead or alive by the law.</div>";
-   else if (isaff(self, ID_REWARD))
+   else if ("$reward" in self.extra )
       want := "<div class='score'>There is a reward on your head.</div>";
    else
       want :="";

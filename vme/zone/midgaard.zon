@@ -6572,7 +6572,7 @@ flags {UNIT_FL_NO_TELEPORT}
 dilcopy blow_whistle@justice();
 dilcopy rescue@function("guard / mayor");
 dilcopy protect_lawful@justice();
-special SFUN_ACCUSE
+dilcopy accuse@justice();
 
 dilcopy deputy_check@function();
 dilcopy teach_q_block@function(POLICE_ACADEMY, "say Deputies only!");

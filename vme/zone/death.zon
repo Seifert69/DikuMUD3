@@ -961,8 +961,7 @@ code
 
    if (self.type==UNIT_ST_PC)
 	{
-      while (isaff(self, ID_REWARD))
-         subaff(self, ID_REWARD);
+         subextra(self.extra, "$reward");
 
    	unset(self.charflags,CHAR_OUTLAW);
 	}

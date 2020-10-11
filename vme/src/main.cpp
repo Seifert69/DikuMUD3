@@ -76,8 +76,8 @@ void ping_multiplexers_event(void *, void *);
 void check_idle_event(void *, void *);
 void perform_violence_event(void *, void *);
 //void point_update_event(void *, void *);
-void update_crimes_event(void *, void *);
-void update_crimes();
+//void update_crimes_event(void *, void *);
+//void update_crimes();
 void check_reboot_event(void *, void *);
 void check_overpopulation_event(void *p1, void *p2);
 int check_reboot();
@@ -288,7 +288,7 @@ void run_the_game(char *srvcfg)
     events.add(PULSE_SEC * 5, ping_multiplexers_event, 0, 0);
     events.add(PULSE_VIOLENCE, perform_violence_event, 0, 0);
     //events.add(PULSE_POINTS, point_update_event, 0, 0);
-    events.add(PULSE_SEC * SECS_PER_REAL_MIN * 5, update_crimes_event, 0, 0);
+    //events.add(PULSE_SEC * SECS_PER_REAL_MIN * 5, update_crimes_event, 0, 0);
     events.add(PULSE_SEC * SECS_PER_REAL_MIN * 10, check_reboot_event, 0, 0);
     events.add(PULSE_SEC * SECS_PER_REAL_HOUR * 4, check_overpopulation_event, 0, 0);
 
@@ -473,11 +473,11 @@ void perform_violence_event(void *p1, void *p2)
     events.add(PULSE_VIOLENCE, perform_violence_event, 0, 0);
 }
 
-void update_crimes_event(void *p1, void *p2)
-{
-    update_crimes();
-    events.add(1200, update_crimes_event, 0, 0);
-}
+//void update_crimes_event(void *p1, void *p2)
+//{
+//    update_crimes();
+//    events.add(1200, update_crimes_event, 0, 0);
+//}
 
 /*void point_update_event(void *p1, void *p2)
 {

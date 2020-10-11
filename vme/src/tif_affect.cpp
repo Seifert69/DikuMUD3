@@ -1186,8 +1186,6 @@ tif_speed_off (class unit_affected_type *af, class unit_data * unit)
 }
 
 /* --------------------------------------------------------------------- */
-void tif_reward_on (class unit_affected_type *af, class unit_data * unit);
-void tif_reward_off (class unit_affected_type *af, class unit_data * unit);
 
 struct tick_function_type tif[] = {
     {"Decay Corpse", tif_decay_corpse},
@@ -1256,8 +1254,6 @@ struct tick_function_type tif[] = {
     {"plague on", tif_plague_on},
     {"plague tick", tif_plague_tick},
     {"plague off", tif_plague_off},
-    {"reward on", tif_reward_on},
-    {"reward off", tif_reward_off},
     {"spell on", tif_spl_on},
     {"spell off", tif_spl_off},
     {"skill on", tif_ski_on},

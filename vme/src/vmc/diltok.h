@@ -124,7 +124,8 @@ struct symbols
     {"strncmp", DILSE_STRNCMP},
     {"sact",DILSE_SACT}, // MS2020
     {"getinteger",DILSE_GINT}, // MS2020
-
+    {"playerid",DILSE_PLAYERID},
+    
     /* DIL Symbol Inst (procedures) */
 
     {"follow",DILSI_FOLO},

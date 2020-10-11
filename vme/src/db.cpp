@@ -1673,7 +1673,6 @@ void boot_db(void)
     void assign_command_pointers(void);
     void assign_spell_pointers(void);
     void reset_all_zones(void);
-    void boot_justice(void);
     void load_ban(void);
     void boot_money(void);
     void boot_sector(void);
@@ -1753,8 +1752,6 @@ void boot_db(void)
     slog(LOG_OFF, 0, "Calling boot-sequences of all zones.");
     basis_boot();
 
-    slog(LOG_OFF, 0, "Booting Justice Routines.");
-    boot_justice();
 
     slog(LOG_OFF, 0, "Booting ban-file.");
     load_ban();

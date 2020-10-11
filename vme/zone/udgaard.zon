@@ -7359,7 +7359,8 @@ names {"bulletin board", "board"}
 title "the board"
 descr "A large board with wanted persons is mounted on a wall here."
 type ITEM_OTHER
-special SFUN_REWARD_BOARD
+dilcopy wanted_poster@justice();
+dilcopy crime_stopper();
 end
 
                            bull_board
@@ -12391,7 +12392,7 @@ dilcopy reward_give@function();
 dilcopy blow_whistle@justice();
 dilcopy rescue@function("cityguard / captain / thargarad / kazeem / daf ");
 dilcopy protect_lawful@justice();
-special SFUN_ACCUSE "udgaard/accuse_room"
+dilcopy accuse@justice();
 dilcopy guard_dir@function("south", {""}, {""}, "");
 dilcopy guard_door@function(SOUTH,
 "$1n stops you.",
