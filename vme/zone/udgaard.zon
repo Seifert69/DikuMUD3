@@ -7360,7 +7360,7 @@ title "the board"
 descr "A large board with wanted persons is mounted on a wall here."
 type ITEM_OTHER
 dilcopy wanted_poster@justice();
-dilcopy crime_stopper();
+dilcopy crime_stopper@justice();
 end
 
                            bull_board
