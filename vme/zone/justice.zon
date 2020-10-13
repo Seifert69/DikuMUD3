@@ -6,18 +6,18 @@ EmailAdd
 request     compile
 version     1.00
 END HEADER*/
+
 #include <macros.h>
-
-
 
 /* 
    Justice works like this:
 
-   A zone where law and order is enforced has a reward_board@zone and a captain@zone.
-   The reward_board has DIL xxx on it.
-   The captain has DIL yyy on him.
-   Guard / law enforcers have DIL xxx on them
-   Is there any DIL needed for e.g. a bar tender  wanting to report a crime?
+   A zone where law and order is enforced needs the following:
+
+      The reward_board has DIL xxx on it.
+      The captain has DIL yyy on him.
+      Guard / law enforcers have DIL xxx on them
+      Is there any DIL needed for e.g. a bar tender  wanting to report a crime?
 
    Each time a crime is committed the following happens:
 
@@ -64,42 +64,45 @@ END HEADER*/
 */
 
 %zone justice 
-title ""
+
+title "The justice zone"
 lifespan 20
 reset RESET_NOT
 
 %dil
 
 
-
+// Used for ?
+//
+//
 dilbegin crime_stopper();
-
 var
-c_info : stringlist;
-suspects : extraptr;
-time_left : integer;
+   c_info : stringlist;
+   suspects : extraptr;
+   time_left : integer;
 code
 {
-:start:
-heartbeat := WAIT_SEC * 5 * 60;
-wait(SFB_TICK, TRUE);
+   :start:
+   heartbeat := WAIT_SEC * 5 * 60;
+   wait(SFB_TICK, TRUE);
 
-suspects :=self.extra;
- while(suspects)
-  {
-   if ("$SUSPECT" in suspects.names)
-    {
-     c_info := split(suspects.names.[1],"_");
-     time_left := atoi(c_info.[5]);
-     time_left := time_left - 1;
-     if (time_left <= 0)
-        subextra(self.extra, suspects.names.[0]);
-        else
-        suspects.names.[1] := c_info.[0]+"_"+c_info.[1]+"_"+c_info.[2]+"_"+c_info.[3]+"_"+c_info.[4]+"_"+itoa(time_left)+"_"+c_info.[6];
-    }
-    suspects := suspects.next;
-  }
-goto start;
+   suspects := self.extra;
+
+   while (suspects)
+   {
+      if ("$SUSPECT" in suspects.names)
+      {
+         c_info := split(suspects.names.[1],"_");
+         time_left := atoi(c_info.[5]);
+         time_left := time_left - 1;
+         if (time_left <= 0)
+            subextra(self.extra, suspects.names.[0]);
+         else
+            suspects.names.[1] := c_info.[0]+"_"+c_info.[1]+"_"+c_info.[2]+"_"+c_info.[3]+"_"+c_info.[4]+"_"+itoa(time_left)+"_"+c_info.[6];
+      }
+      suspects := suspects.next;
+   }
+   goto start;
 }
 dilend
 
@@ -113,6 +116,7 @@ var
    k : string;
    ex_string : stringlist;
    tmp : integer;
+
 code
 {
    gold := 0;
@@ -147,6 +151,7 @@ code
    return;    
 } 
 dilend
+
 
 
 dilbegin crime_counter(criminal : unitptr, incr : integer, first_accuse : integer);
