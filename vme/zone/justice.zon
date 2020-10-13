@@ -6,46 +6,46 @@ EmailAdd
 request     compile
 version     1.00
 END HEADER*/
-
 #include <macros.h>
 
-/*
-   Committed crimes are stored on the reward_board@udgaard in the extras. Each crim looks like this:
 
-   Names: {"$suspect_160","$crime_Moe_7_janitor_8_5_1","$SUSPECT"}
 
-   There are three names in each entry. The important one is the second name, It is $crime__<crime_type>t<expiration ticks?>
+/* Committed crimes are stored on the reward_board@udgaard in the extras. Each crim looks like this:
+Names
+{"$suspect_160","$crime_Moe_7_janitor_8_5_1","$SUSPECT"}
 
-   "
-   Moe has been accused in the murder of janitor. This crime was witnessed by: Mr Catherfield.
-   This crime was also confirmed by Fizban.
-   "
-   The descr for each crime is what is displayed on the reward_board under "Suspects" heading.
+There are three names in each entry. The important one is the second name, It isi:
+ $crime_<name of criminal>_<pid of criminal>_<name of victim>_<crime_type>_<expiration ticks>_<reported>
 
-   Witnesses are also stored in character extras. THey look like this:
+"
+Moe has been accused in the murder of janitor. This crime was witnessed by: Mr Catherfield.
+This crime was also confirmed by Fizban.
+"
+The descr for each crime is what is displayed on the reward_board under "Suspects" heading.
 
-   Names: {"$witness","$witness_161_8_5_1"}
+Witnesses are also stored in character extras. They look like this:
+Names
+{"$witness","$witness_161_8_5_1"i, "$witness_7"}
 
-   The important name is the second name: $witness_<crime_number><crime_type>_
-   "
-   Larry committed a crime.
-   "
-   The descr filed for witness is not used at the moment.
+The important name is the second name: $witness_<crime_number>_<crime_type>_<pid>_<ticks until witness extra expires>
+"
+Larry committed a crime.
+"
+The descr filed for witness is not used at the moment.
 
-   Rewards are also stored as an extra on the criminal. Here is what they look like:
+Rewards are also stored as an extra on the criminal. Here is what they look like:
 
-   Names
-   {"$reward","$reward_250000_1050_1"}
+Names
+{"$reward","$reward_250000_1050_1"}
 
-   The second name is the important one: "$reward_
+The second name is the important one: $reward_<gold reward>_<xp reward>_<reward increment>
 
-   "
-   A reward of 250000 gold has been offered for the head of Tank
-   "
-   the descr of a reward is displayed on the Reward Board under Wanted Dead
-   
+"
+A reward of 250000 gold has been offered for the head of Tank
+"
+the descr of a reward is displayed on the Reward Board under Wanted Dead
+
 */
-
 
 %zone justice 
 title ""
@@ -62,10 +62,8 @@ suspects : extraptr;
 time_left : integer;
 code
 {
-
-heartbeat := WAIT_SEC * 5 * 60;
-
 :start:
+heartbeat := WAIT_SEC * 5 * 60;
 wait(SFB_TICK, TRUE);
 
 suspects :=self.extra;
@@ -335,8 +333,9 @@ act("You just witnessed a crime committed by $1n.", A_ALWAYS, criminal, null, se
 pid := criminal.idx;
 addstring(ex_string,"$witness" );
 addstring(ex_string, "$witness_"+itoa(crime_no)+"_"+itoa(crime_type)+"_"+itoa(pid)+"_"+itoa(12));
+addstring(ex_string, "$witness_"+itoa(pid));
 
-addextra(self.extra,ex_string ,criminal.name+" commited a crime.");
+addextra(self.extra,ex_string ,criminal.name+" committed a crime.");
 if (not(dilfind("witness_timer@justice", self)))
    dilcopy("witness_timer@justice()",self);
 if ((self.type == UNIT_ST_NPC) and (show))
@@ -446,6 +445,7 @@ crime_type : integer;
 pid : integer;
 wp : unitptr;
 k : string;
+wk : string;
 w_data :stringlist;
 crime_info : stringlist;
 i : integer;
@@ -514,9 +514,11 @@ crime := argument;
 
 
  pid := playerid(criminal);
-if (not("$witness" in activator.extra))
+wk := "$witness_"+itoa(pid);
+
+if (not(wk in activator.extra))
     goto end;
- w_data := split(activator.extra.["$witness"].names.[1],"_");
+ w_data := split(activator.extra.[wk].names.[1],"_");
  k := "$suspect_"+w_data.[1]; 
 if (not(pid ==  atoi(w_data.[3])))
 
@@ -555,7 +557,7 @@ if ( k in wp.extra)
                         A_SOMEONE, self, criminal, activator, TO_ROOM);
        if (activator.alignment > -1000)
            activator.alignment := activator.alignment +100;
-      subextra(activator.extra,"$witness");
+      subextra(activator.extra,wk);
         if (not("$witness" in activator.extra))
             i := dildestroy("witness_timer@justice", activator); 
         if (atoi(crime_info.[6]) == 0)
