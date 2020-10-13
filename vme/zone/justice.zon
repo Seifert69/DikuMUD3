@@ -10,40 +10,56 @@ END HEADER*/
 
 
 
-/* Committed crimes are stored on the reward_board@udgaard in the extras. Each crim looks like this:
-Names
-{"$suspect_160","$crime_Moe_7_janitor_8_5_1","$SUSPECT"}
+/* 
+   Justice works like this:
 
-There are three names in each entry. The important one is the second name, It isi:
- $crime_<name of criminal>_<pid of criminal>_<name of victim>_<crime_type>_<expiration ticks>_<reported>
+   A zone where law and order is enforced has a reward_board@zone and a captain@zone.
+   The reward_board has DIL xxx on it.
+   The captain has DIL yyy on him.
+   Guard / law enforcers have DIL xxx on them
+   Is there any DIL needed for e.g. a bar tender  wanting to report a crime?
 
-"
-Moe has been accused in the murder of janitor. This crime was witnessed by: Mr Catherfield.
-This crime was also confirmed by Fizban.
-"
-The descr for each crime is what is displayed on the reward_board under "Suspects" heading.
+   Each time a crime is committed the following happens:
 
-Witnesses are also stored in character extras. They look like this:
-Names
-{"$witness","$witness_161_8_5_1"i, "$witness_7"}
+   The criminal gets the CHAR_OUTLAW flag set.
+   The criminal gets the following extras added:
+      - $ ?
+      - $ ?
+   The reward_board gets the following extras added:
+      - $ ?
+   Any witnesses get the following extras added:
+      - $ ? 
 
-The important name is the second name: $witness_<crime_number>_<crime_type>_<pid>_<ticks until witness extra expires>
-"
-Larry committed a crime.
-"
-The descr filed for witness is not used at the moment.
+   Details on the extras above:
 
-Rewards are also stored as an extra on the criminal. Here is what they look like:
+   reward_board@zone extras:
+      Names {"$suspect_160","$crime_Moe_7_janitor_8_5_1","$SUSPECT"}
+      "
+      Moe has been accused in the murder of janitor. This crime was witnessed by: Mr Catherfield.
+      This crime was also confirmed by Fizban.
+      "
 
-Names
-{"$reward","$reward_250000_1050_1"}
+      There are three names in each entry. The important one is the second name, It isi:
+      $crime_<name of criminal>_<pid of criminal>_<name of victim>_<crime_type>_<expiration ticks>_<reported>
+      The descr for each crime is what is displayed on the reward_board under "Suspects" heading.
 
-The second name is the important one: $reward_<gold reward>_<xp reward>_<reward increment>
+   Witnesses extras:
+      Names {"$witness","$witness_161_8_5_1"i, "$witness_7"}
+      "
+      Larry committed a crime.
+      "
 
-"
-A reward of 250000 gold has been offered for the head of Tank
-"
-the descr of a reward is displayed on the Reward Board under Wanted Dead
+      The important name is the second name: $witness_<crime_number>_<crime_type>_<pid>_<ticks until witness extra expires>
+      The descr filed for witness is not used at the moment.
+
+   Criminal extras:
+      Names {"$reward","$reward_250000_1050_1"}
+      "
+      A reward of 250000 gold has been offered for the head of Tank
+      "
+
+      The second name is the important one: $reward_<gold reward>_<xp reward>_<reward increment>
+      the descr of a reward is displayed on the Reward Board under Wanted Dead
 
 */
 
@@ -53,6 +69,8 @@ lifespan 20
 reset RESET_NOT
 
 %dil
+
+
 
 dilbegin crime_stopper();
 
@@ -84,187 +102,206 @@ suspects :=self.extra;
 goto start;
 }
 dilend
+
+
+
 dilbegin set_reward_char(criminal : unitptr, incr : integer);
-
 var
-
-gold : integer;
-xp : integer;
-r_data : stringlist;
-k : string;
-ex_string : stringlist;
-tmp : integer;
+   gold : integer;
+   xp : integer;
+   r_data : stringlist;
+   k : string;
+   ex_string : stringlist;
+   tmp : integer;
 code
 {
-gold := 0;
-xp := 0;
+   gold := 0;
+   xp := 0;
 
-unset(criminal.charflags, CHAR_PROTECTED);
-set(criminal.charflags, CHAR_OUTLAW);
+   unset(criminal.charflags, CHAR_PROTECTED);
+   set(criminal.charflags, CHAR_OUTLAW);
 
-if ("$reward" in criminal.extra)
-     {
+   if ("$reward" in criminal.extra)
+   {
       r_data := split(criminal.extra.["$reward"].names.[1],"_");
-       tmp := atoi(r_data.[3]) +1;
-       k := r_data.[0]+"_"+r_data.[1]+"_"+r_data.[2]+"_"+itoa(tmp);
-       criminal.extra.["$reward"].names.[1] := k;
+      tmp := atoi(r_data.[3]) +1;
+      k := r_data.[0]+"_"+r_data.[1]+"_"+r_data.[2]+"_"+itoa(tmp);
+      criminal.extra.["$reward"].names.[1] := k;
       return;
-     }
+   }
 
-  gold := criminal.level * criminal.level * 100;
+   gold := criminal.level * criminal.level * 100;
 
-    xp :=  criminal.level * 20 + 50;
+   xp :=  criminal.level * 20 + 50;
 
-    if (criminal.type == UNIT_ST_PC)
-    {
-        criminal.crimes := criminal.crimes + incr;
-        // xp = MIN(lose_exp(ch) / 2, xp);
-    }
- addstring(ex_string,"$reward" );
- addstring(ex_string, "$reward_"+itoa(gold)+"_"+itoa(xp)+"_"+itoa(1));
- addextra(criminal.extra, ex_string, "A reward of "+itoa(gold)+" gold has been offered for the head of "+criminal.name);  
+   if (criminal.type == UNIT_ST_PC)
+   {
+      criminal.crimes := criminal.crimes + incr;
+      // xp = MIN(lose_exp(ch) / 2, xp);
+   }
 
-return;    
+   addstring(ex_string,"$reward" );
+   addstring(ex_string, "$reward_"+itoa(gold)+"_"+itoa(xp)+"_"+itoa(1));
+   addextra(criminal.extra, ex_string, "A reward of "+itoa(gold)+" gold has been offered for the head of "+criminal.name);  
+
+   return;    
 } 
-
 dilend
-dilbegin crime_counter(criminal : unitptr, incr : integer, first_accuse : integer);
 
-external 
-set_reward_char@justice(criminal : unitptr, incr : integer);
-var 
+
+dilbegin crime_counter(criminal : unitptr, incr : integer, first_accuse : integer);
+external
+   set_reward_char@justice(criminal : unitptr, incr : integer);
 
 code
-
 {
    
-  if ((criminal.crimes + incr) / 8 >
-        criminal.crimes / 8)
-    {
-        if (not(isset(criminal.charflags, CHAR_OUTLAW)))
-            unset(criminal.charflags, CHAR_PROTECTED);
-    }
-
-    if ((criminal.crimes + incr) / 31 >
-        criminal.crimes / 32)
-        set(criminal.charflags, CHAR_OUTLAW | CHAR_PROTECTED);
-
-    if (((criminal.crimes + incr) / 64 >
-         criminal.crimes / 64))
-    {
-        set_reward_char@justice(criminal, incr);
-    }
-    else
-    {
-        criminal.crimes := criminal.crimes + incr;
-    }
-return;
-}
-
-dilend
-dilbegin update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  first_accuse : integer);
-
-external  crime_counter@justice(criminal : unitptr, incr : integer, first_accuse : integer);
-var
-criminal : unitptr;
-incr : integer;
-
-code {
-criminal := findunit(deputy, cr_name, FIND_UNIT_GLOBAL, null);
-
-if (criminal.idx == pidx)
+   if ((criminal.crimes + incr) / 8 > criminal.crimes / 8)
    {
-     act("$1n tells you, 'You are in trouble, you good-for-nothing ...'",
-                A_SOMEONE, deputy,null, criminal, TO_VICT);
-   if (first_accuse)
-        incr := crime_type;
-     else
-        incr := CRIME_EXTRA;
-     crime_counter@justice(criminal, incr, first_accuse);
-
+      if (not(isset(criminal.charflags, CHAR_OUTLAW)))
+         unset(criminal.charflags, CHAR_PROTECTED);
    }
 
-return;
+   if ((criminal.crimes + incr) / 31 > criminal.crimes / 32)
+      set(criminal.charflags, CHAR_OUTLAW | CHAR_PROTECTED);
+
+   if (((criminal.crimes + incr) / 64 > criminal.crimes / 64))
+   {
+      set_reward_char@justice(criminal, incr);
+   }
+   else
+   {
+      criminal.crimes := criminal.crimes + incr;
+   }
+   return;
 }
+
 dilend
 
-dilbegin add_crime(vict : unitptr, crime_type: integer, crime_no : integer, crime_clear : integer);
 
+
+dilbegin update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  first_accuse : integer);
+external
+   crime_counter@justice(criminal : unitptr, incr : integer, first_accuse : integer);
 var
-pre : stringlist;
-i : integer;
-wp : unitptr;
-desc : string;
-cr_string :string;
-cr_string_2 : string;
+   criminal : unitptr;
+   incr : integer;
 
 code
 {
+   criminal := findunit(deputy, cr_name, FIND_UNIT_GLOBAL, null);
 
- cr_string := "$suspect_"+itoa(crime_no);
-
-if (crime_type == CRIME_MURDER)
+   if (criminal.idx == pidx)
    {
-    cr_string_2 := "$crime_"+self.name+"_"+itoa(self.idx)+"_"+vict.name+"_"+itoa(CRIME_MURDER)+"_"+itoa(crime_clear)+"_"+itoa(0);
-    desc := self.name+" is suspected of the murder of "+vict.name+". Anyone with information should report it to the Guard's Office.";
+      act("$1n tells you, 'You are in trouble, you good-for-nothing ...'", A_SOMEONE, deputy,null, criminal, TO_VICT);
+      if (first_accuse)
+         incr := crime_type;
+      else
+         incr := CRIME_EXTRA;
+      crime_counter@justice(criminal, incr, first_accuse);
    }
-if (crime_type == CRIME_STEALING)
-   {
-    cr_string_2 := "$crime_"+itoa(self.idx)+"_"+vict.name+"_"+itoa(CRIME_STEALING)+"_"+itoa(crime_clear)+"_"+itoa(0);
-    desc := self.name+" is suspected of stealing from "+vict.name+". Anyone with information should report it to the Guard's Office.";
-   }
-
-wp := findsymbolic("reward_board@udgaard");  //+self.outside.zoneidx); 
- addstring(pre, cr_string);
- addstring(pre, cr_string_2); 
- addstring(pre, "$SUSPECT"); 
- addextra(wp.extra, pre, desc  ); 
-
-
-i := dildestroy("add_crime@justice", self);
-
+   return;
 }
 dilend
+
+
+
+// Called from ?
+// Call this function to add a $crime to a reward board. The reward_board in zone xxx
+// will be chosen based on what zone 'self' is in when the crime is committed. (??)
+//
+// self       : The char that is committing the crime.
+// vict       : The char that a crime was committed against.
+// crime_type : either CRIME_MURDER or CRIME_STEALING
+// crime_no   : Do we really need that? Why?
+// crime_clear: ? 
+//
+dilbegin add_crime(vict : unitptr, crime_type: integer, crime_no : integer, crime_clear : integer);
+var
+   pre : stringlist;
+   i : integer;
+   wp : unitptr;
+   desc : string;
+   cr_string :string;
+   cr_string_2 : string;
+
+code
+{
+   cr_string := "$suspect_"+itoa(crime_no);
+
+   if (crime_type == CRIME_MURDER)
+   {
+      cr_string_2 := "$crime_"+self.name+"_"+itoa(self.idx)+"_"+vict.name+"_"+itoa(CRIME_MURDER)+"_"+itoa(crime_clear)+"_"+itoa(0);
+      desc := self.name+" is suspected of the murder of "+vict.name+". Anyone with information should report it to the Guard's Office.";
+   }
+   else if (crime_type == CRIME_STEALING)
+   {
+      cr_string_2 := "$crime_"+itoa(self.idx)+"_"+vict.name+"_"+itoa(CRIME_STEALING)+"_"+itoa(crime_clear)+"_"+itoa(0);
+      desc := self.name+" is suspected of stealing from "+vict.name+". Anyone with information should report it to the Guard's Office.";
+   }
+   else
+   {
+      log("Unknown crime type in add_crime()");
+   }
+
+   // xxx - something needs to be done so it's the udgaard or midgaard or other board
+
+   wp := findsymbolic("reward_board@udgaard");  //+self.outside.zoneidx); 
+   addstring(pre, cr_string);
+   addstring(pre, cr_string_2); 
+   addstring(pre, "$SUSPECT"); 
+   addextra(wp.extra, pre, desc  ); 
+
+
+   // xxx - Isn't quit; better?
+   i := dildestroy("add_crime@justice", self);
+}
+dilend
+
+
+
 
 dilbegin witness_timer();
-
 var
-tm : integer;
-d : integer;
-witness : extraptr;
-w_info : stringlist;
+   tm : integer;
+   d : integer;
+   witness : extraptr;
+   w_info : stringlist;
+
 code
 {
+   heartbeat := WAIT_SEC * 5 * 60;
 
-heartbeat := WAIT_SEC * 5 * 60;
-:start:
-wait(SFB_TICK, TRUE);
+   :start:
+   wait(SFB_TICK, TRUE);
 
-witness :=self.extra;
-while(witness)
-  {
-    if ("$witness" in witness.names)
-        {
-          w_info := split(witness.names.[1], "_");
-          tm := atoi(w_info.[4]);
-          tm := tm - 1;
-          if (tm <= 0)
-              subextra(self.extra, witness.names.[0]);
-           else
-              witness.names.[1] := w_info.[0]+"_"+w_info.[1]+"_"+w_info.[2]+"_"+w_info.[3]+"_"+itoa(tm);
-        }
-     witness := witness.next;
+   witness :=self.extra;
+   while(witness)
+   {
+      if ("$witness" in witness.names)
+      {
+         w_info := split(witness.names.[1], "_");
+         tm := atoi(w_info.[4]);
+         tm := tm - 1;
+         if (tm <= 0)
+            subextra(self.extra, witness.names.[0]);
+         else
+            witness.names.[1] := w_info.[0]+"_"+w_info.[1]+"_"+w_info.[2]+"_"+w_info.[3]+"_"+itoa(tm);
+      }
+      witness := witness.next;
    }
-if (not("$witness" in self.extra))
-   quit;
-else
-    goto start; 
+   if (not("$witness" in self.extra))
+      quit;
+   else
+      goto start; 
 }
 dilend
-dilbegin fnpri(FN_PRI_MISSION+1) activate_accuse(crime_type : integer, criminal_name : string);
 
+
+
+dilbegin fnpri(FN_PRI_MISSION+1) activate_accuse(crime_type : integer, criminal_name : string);
 external
-integer walk_room@function (s:string,i:integer);
+   integer walk_room@function (s:string,i:integer);
 
 var
    i : integer;
@@ -273,169 +310,181 @@ var
    wr      : integer;
    crime_name : string;
    acc_cmd : string;
+
 code
 {
-if (not(self.type == UNIT_ST_NPC))
-goto cleanup;
+   if (not(self.type == UNIT_ST_NPC))
+      goto cleanup;
 
-if (dilfind ("accuse@justice",self))
-goto cleanup;
+   if (dilfind ("accuse@justice",self))
+      goto cleanup;
 
-if (crime_type == CRIME_MURDER)
-    crime_name := "murder";
-if (crime_type == CRIME_STEALING)
-    crime_name := "stealing";
-startroom := self.outside.nameidx + "@" + self.outside.zoneidx;
-accuse_room  := "accuse_room@"+self.outside.zoneidx;
+   if (crime_type == CRIME_MURDER)
+      crime_name := "murder";
+   else if (crime_type == CRIME_STEALING)
+      crime_name := "stealing";
+   else
+      log("activate_accuse() illegal crime_type");
 
-wr:=walk_room@function (accuse_room,5);
+   startroom := self.outside.nameidx + "@" + self.outside.zoneidx;
+   accuse_room  := "accuse_room@"+self.outside.zoneidx;
 
-heartbeat := PULSE_SEC*4;
+   wr:=walk_room@function (accuse_room,5);
 
-pause;
-pause;
-act("$1n says, I would like to report a crime!",
-            A_HIDEINV, self, null, null, TO_ROOM);
-acc_cmd := "accuse "+criminal_name+" "+crime_name;
+   heartbeat := PULSE_SEC*4;
+   pause;
+   pause;
+   act("$1n says, I would like to report a crime!",
+               A_HIDEINV, self, null, null, TO_ROOM);
+   acc_cmd := "accuse "+criminal_name+" "+crime_name;
 
-exec(acc_cmd, self);
+   exec(acc_cmd, self);
 
-pause;
-pause;
-wr := walk_room@function(startroom, 5);
+   pause;
+   pause;
+   wr := walk_room@function(startroom, 5);
 
-:cleanup:
-i := dildestroy("activate_accuse@justice", self);
-return;
+   :cleanup:
+   // quit?
+   i := dildestroy("activate_accuse@justice", self);
+   return;
 }
 dilend
 
 dilbegin set_witness(criminal : unitptr, crime_no : integer, crime_type : integer, show : integer);
- external
- activate_accuse(witness : unitptr, crime_type : integer, criminal_name : string);
+external
+   activate_accuse(witness : unitptr, crime_type : integer, criminal_name : string);
 var
-i : integer;
-pid: integer;
-acc_cmd : string;
-ex_string : stringlist;
+   i : integer;
+   pid: integer;
+   acc_cmd : string;
+   ex_string : stringlist;
 
 code
-{
- 
-if (criminal == self)
-    goto cleanup;
-if ((self.type == UNIT_ST_NPC) and (not(isset(self.charflags , CHAR_PROTECTED))))
-        goto cleanup;
-if (show)
-{
-act("You just witnessed a crime committed by $1n.", A_ALWAYS, criminal, null, self, TO_VICT);
-}
-pid := criminal.idx;
-addstring(ex_string,"$witness" );
-addstring(ex_string, "$witness_"+itoa(crime_no)+"_"+itoa(crime_type)+"_"+itoa(pid)+"_"+itoa(12));
-addstring(ex_string, "$witness_"+itoa(pid));
+{ 
+   if (criminal == self)
+      goto cleanup;
 
-addextra(self.extra,ex_string ,criminal.name+" committed a crime.");
-if (not(dilfind("witness_timer@justice", self)))
-   dilcopy("witness_timer@justice()",self);
-if ((self.type == UNIT_ST_NPC) and (show))
-   dilcopy("activate_accuse@justice("+itoa(crime_type)+","+criminal.name+")",self); 
+   if ((self.type == UNIT_ST_NPC) and (not(isset(self.charflags , CHAR_PROTECTED))))
+      goto cleanup;
 
-:cleanup:
-i := dildestroy("set_witness@justice", self);
-quit;
+   if (show)
+   {
+      act("You just witnessed a crime committed by $1n.", A_ALWAYS, criminal, null, self, TO_VICT);
+   }
+
+   pid := criminal.idx;
+   addstring(ex_string,"$witness" );
+   addstring(ex_string, "$witness_"+itoa(crime_no)+"_"+itoa(crime_type)+"_"+itoa(pid)+"_"+itoa(12));
+   addstring(ex_string, "$witness_"+itoa(pid));
+
+   addextra(self.extra,ex_string ,criminal.name+" committed a crime.");
+   if (not(dilfind("witness_timer@justice", self)))
+      dilcopy("witness_timer@justice()",self);
+   if ((self.type == UNIT_ST_NPC) and (show))
+      dilcopy("activate_accuse@justice("+itoa(crime_type)+","+criminal.name+")",self); 
+
+   :cleanup:
+   i := dildestroy("set_witness@justice", self);
+   quit;
 }
 dilend
+
 
 dilbegin wanted_poster();
-
 var
-found : integer;
-msg : string;
-wp : unitptr;
-suspects : extraptr;
-u : unitptr;
-wanted_dead : string;
-wanted_alive : string;
-wanted_either : string;
-local_suspects : string;
+   found : integer;
+   msg : string;
+   wp : unitptr;
+   suspects : extraptr;
+   u : unitptr;
+   wanted_dead : string;
+   wanted_alive : string;
+   wanted_either : string;
+   local_suspects : string;
+
 code
 {
+   :start:
 
-:start:
+   wanted_dead := "";
+   wanted_alive := "";
+   wanted_either := "";
+   local_suspects :="";
 
-wanted_dead := "";
-wanted_alive := "";
-wanted_either := "";
-local_suspects :="";
+   heartbeat := PULSE_SEC * 1;
+   wait (SFB_CMD, ((command ("look"))) and (argument=="board"));
+   act("$1n looks at the wanted posters.", A_ALWAYS, activator, null, null, TO_ROOM);
+   //sendtext(msg,activator);
 
-heartbeat := PULSE_SEC * 1;
-wait (SFB_CMD, ((command ("look"))) and (argument=="board"));
- act("$1n looks at the wanted posters.",
-        A_ALWAYS, activator, null, null, TO_ROOM);
-      //sendtext(msg,activator);
-      wp := findsymbolic("reward_board@udgaard"); //"+self.outside.zoneidx);
+   wp := findsymbolic("reward_board@udgaard"); //"+self.outside.zoneidx);
+   //xxx is wp not == self?
 
-    suspects := wp.extra;
-     u:=ghead();
-     while (u.type==UNIT_ST_PC)
+   suspects := wp.extra;
+
+   // xxx isn't it better to loop through the extras rather than the player list?
+   // also looks like this wont show NPCs? Essentially you just want to show all
+   // the $reward extras stored on the board right? 
+   //
+   u:=ghead();
+   while (u.type==UNIT_ST_PC)
+   {
+      if ("$reward" in u.extra)
       {
-        if ("$reward" in u.extra)
-            {
-             wanted_dead := wanted_dead + u.extra.["$reward"].descr+ "<BR>";
-            }
-        else if (isset(u.charflags, CHAR_PROTECTED) and (isset(u.charflags, CHAR_OUTLAW)))
-         
-          wanted_alive := wanted_alive +u.name+" is wanted alive for imprisonment<br>";
-        else if (isset(u.charflags, CHAR_OUTLAW))
-                wanted_either := wanted_either + u.name+" is wanted dead or alive.<br>";
- 
-          u:=u.gnext;
-
+         wanted_dead := wanted_dead + u.extra.["$reward"].descr+ "<BR>";
       }
-      while(suspects)
-         {
-           if ("$SUSPECT" in suspects.names) 
-                local_suspects := local_suspects + suspects.descr+"<BR>";
+      else if (isset(u.charflags, CHAR_PROTECTED) and (isset(u.charflags, CHAR_OUTLAW)))      
+         wanted_alive := wanted_alive +u.name+" is wanted alive for imprisonment<br>";
+      else if (isset(u.charflags, CHAR_OUTLAW))
+         wanted_either := wanted_either + u.name+" is wanted dead or alive.<br>";
 
-           suspects := suspects.next;
-         }
-sendtext("<font color=red>W A N T E D</font><br><br>", activator);
-sendtext("<b><font color=gold>Wanted Dead - Reward Offered</font></b><br><br>", activator);
+      u:=u.gnext;
+   }
 
-if (length(wanted_dead) > 0)
-    sendtext(wanted_dead+"<br>", activator);
-else
-    sendtext("None at this time.<br>", activator);
+   while(suspects)
+   {
+      if ("$SUSPECT" in suspects.names) 
+         local_suspects := local_suspects + suspects.descr+"<BR>";
 
-sendtext("<br><b><font color=gold>Wanted Alive</b></font></b><br><br>",activator);
-if (length(wanted_alive) > 0)
-    sendtext(wanted_alive+"<br>", activator);
-else
-    sendtext("None at this time.<br>", activator);
+      suspects := suspects.next;
+   }
 
-sendtext("<br><b><font color=gold>Wanted Dead or Alive</b></font><br><br>", activator);
+   sendtext("<font color=red>W A N T E D</font><br><br>", activator);
+   sendtext("<b><font color=gold>Wanted Dead - Reward Offered</font></b><br><br>", activator);
 
-if (length(wanted_either) > 0)
-    sendtext(wanted_either+"<br>", activator);
-else
-    sendtext("None at this time.<br>", activator);
+   if (length(wanted_dead) > 0)
+      sendtext(wanted_dead+"<br>", activator);
+   else
+      sendtext("None at this time.<br>", activator);
 
-sendtext("<br><b><font color=gold>Suspects</b></font><br><br>",activator);
+   sendtext("<br><b><font color=gold>Wanted Alive</b></font></b><br><br>",activator);
 
-if (length(local_suspects) > 0)
-    sendtext(local_suspects+"<br>", activator);
-else
-    sendtext("None at this time.", activator);
+   if (length(wanted_alive) > 0)
+      sendtext(wanted_alive+"<br>", activator);
+   else
+      sendtext("None at this time.<br>", activator);
 
-block;
-goto start;
+   sendtext("<br><b><font color=gold>Wanted Dead or Alive</b></font><br><br>", activator);
 
+   if (length(wanted_either) > 0)
+      sendtext(wanted_either+"<br>", activator);
+   else
+      sendtext("None at this time.<br>", activator);
+
+   sendtext("<br><b><font color=gold>Suspects</b></font><br><br>",activator);
+
+   if (length(local_suspects) > 0)
+      sendtext(local_suspects+"<br>", activator);
+   else
+      sendtext("None at this time.", activator);
+
+   block;
+   goto start;
 }
-
 dilend
-dilbegin  fnpri(FN_PRI_MISSION-1) accuse();
 
+
+dilbegin  fnpri(FN_PRI_MISSION-1) accuse();
 external
 update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  reported : integer);
 var
