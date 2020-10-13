@@ -1079,8 +1079,13 @@ void tif_speed_off(class unit_affected_type *af, class unit_data *unit)
 
 /* --------------------------------------------------------------------- */
 
-void tif_reward_on(class unit_affected_type *af, class unit_data *unit);
-void tif_reward_off(class unit_affected_type *af, class unit_data *unit);
+void tif_naught(class unit_affected_type *af, class unit_data *unit)
+{
+   slog(LOG_ALL, 0, "Obsoleted affect called with ID %d on %s@%s.",
+        af->applyf_i, UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
+}
+
+
 struct tick_function_type tif[] = {
     {"Decay Corpse", tif_decay_corpse},
     {"Destroy Corpse", tif_destroy_corpse},
@@ -1148,8 +1153,8 @@ struct tick_function_type tif[] = {
     {"plague on", tif_plague_on},
     {"plague tick", tif_plague_tick},
     {"plague off", tif_plague_off},
-    {"reward on", tif_reward_on},
-    {"reward off", tif_reward_off},
+    {"obsoleted reward on", tif_naught},
+    {"obsoleted reward off", tif_naught},
     {"spell on", tif_spl_on},
     {"spell off", tif_spl_off},
     {"skill on", tif_ski_on},
