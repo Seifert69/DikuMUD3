@@ -1169,7 +1169,7 @@ int reward_give(struct spec_arg *sarg)
 
     return SFR_BLOCK;
 }
-*/
+
 void tif_reward_on(class unit_affected_type *af, class unit_data *unit)
 {
     if (IS_CHAR(unit))
@@ -1196,6 +1196,7 @@ void tif_reward_off(class unit_affected_type *af, class unit_data *unit)
     if (IS_CHAR(unit))
         REMOVE_BIT(CHAR_FLAGS(unit), CHAR_OUTLAW);
 }
+*/
 
 // -------------------------------------------------------------- */
 
