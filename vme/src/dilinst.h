@@ -79,5 +79,6 @@ void dilfi_reboot (class dilprg *);
 void dilfi_kedit (class dilprg *);
 void dilfe_sact (class dilprg *);
 void dilfe_gint (class dilprg *);
+void dilfe_playerid (class dilprg *);
 
 #endif

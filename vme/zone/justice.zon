@@ -6,7 +6,47 @@ EmailAdd
 request     compile
 version     1.00
 END HEADER*/
+
 #include <macros.h>
+
+/*
+   Committed crimes are stored on the reward_board@udgaard in the extras. Each crim looks like this:
+
+   Names: {"$suspect_160","$crime_Moe_7_janitor_8_5_1","$SUSPECT"}
+
+   There are three names in each entry. The important one is the second name, It is $crime__<crime_type>t<expiration ticks?>
+
+   "
+   Moe has been accused in the murder of janitor. This crime was witnessed by: Mr Catherfield.
+   This crime was also confirmed by Fizban.
+   "
+   The descr for each crime is what is displayed on the reward_board under "Suspects" heading.
+
+   Witnesses are also stored in character extras. THey look like this:
+
+   Names: {"$witness","$witness_161_8_5_1"}
+
+   The important name is the second name: $witness_<crime_number><crime_type>_
+   "
+   Larry committed a crime.
+   "
+   The descr filed for witness is not used at the moment.
+
+   Rewards are also stored as an extra on the criminal. Here is what they look like:
+
+   Names
+   {"$reward","$reward_250000_1050_1"}
+
+   The second name is the important one: "$reward_
+
+   "
+   A reward of 250000 gold has been offered for the head of Tank
+   "
+   the descr of a reward is displayed on the Reward Board under Wanted Dead
+   
+*/
+
+
 %zone justice 
 title ""
 lifespan 20
