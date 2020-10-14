@@ -491,287 +491,299 @@ dilend
 
 dilbegin  fnpri(FN_PRI_MISSION-1) accuse();
 external
-update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  reported : integer);
+   update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  reported : integer);
+
 var
-criminal : string;
-crime : string;
-crime_type : integer;
-pid : integer;
-wp : unitptr;
-k : string;
-wk : string;
-w_data :stringlist;
-crime_info : stringlist;
-i : integer;
-found : integer;
+   criminal : string;
+   crime : string;
+   crime_type : integer;
+   pid : integer;
+   wp : unitptr;
+   k : string;
+   wk : string;
+   w_data :stringlist;
+   crime_info : stringlist;
+   i : integer;
+   found : integer;
 
 code
 {
-:start:
-found := 0;
-heartbeat := PULSE_SEC * 1;
-wait (SFB_CMD, command ("accuse") );
+   :start:
+   found := 0;
+   heartbeat := PULSE_SEC * 1;
+   wait (SFB_CMD, command ("accuse") );
 
-criminal := getword(argument);
-crime := argument;
+   criminal := getword(argument);
+   crime := argument;
 
- if ((activator.type == UNIT_ST_NPC) and  (self.position  == POSITION_SLEEPING))
-       exec("wake "+ self.name,activator);  /* command_interpreter(sarg->activator, "wake"); */
+   if ((activator.type == UNIT_ST_NPC) and  (self.position  == POSITION_SLEEPING))
+      exec("wake "+ self.name,activator);  /* command_interpreter(sarg->activator, "wake"); */
 
- if ((self.position <  POSITION_SLEEPING) or
-        (self.position  == POSITION_FIGHTING))
-    {
-        act("$1n seems busy right now.", A_SOMEONE, self,
-            activator, null, TO_ROOM);
-        block;
-        goto start;
-    }
+   if ((self.position <  POSITION_SLEEPING) or (self.position  == POSITION_FIGHTING))
+   {
+      act("$1n seems busy right now.", A_SOMEONE, self,
+         activator, null, TO_ROOM);
+      block;
+      goto start;
+   }
 
- if (criminal == "")
-    {
-        act("$1n says, 'Yes... who?'", A_SOMEONE, self, null,
-            null, TO_ROOM);
-        block;
-        goto start;
-    }
-    else
-    {
-        if (crime == "")
-        {
-            act("$1n says, 'What do you wish to accuse $3t of?'",
-                A_SOMEONE, self, activator, criminal, TO_ROOM);
-            block;
-           goto start;
-        }
-    }
+   if (criminal == "")
+   {
+      act("$1n says, 'Yes... who?'", A_SOMEONE, self, null,
+         null, TO_ROOM);
+      block;
+      goto start;
+   }
+   else
+   {
+      if (crime == "")
+      {
+         act("$1n says, 'What do you wish to accuse $3t of?'",
+               A_SOMEONE, self, activator, criminal, TO_ROOM);
+         block;
+         goto start;
+      }
+   }
 
-  if (not(strcmp(crime, "murder")))
-    {
-        crime_type := CRIME_MURDER;
-        act("$1n says, 'Murder... lets see', and looks through his files.",
-            A_SOMEONE, self, activator, null, TO_ROOM);
-    
-    }
-    else if (not(strcmp(crime, "stealing")))
-    {
-        crime_type := CRIME_STEALING;
-        act("$1n says, 'Stealing... lets see', and looks through his files.",
-            A_SOMEONE, self, activator, null, TO_ROOM);
-    }
-    else
-    {
-        act("$1n says, 'Are you accusing of murder or stealing?'",
-            A_SOMEONE, self, activator, null, TO_ROOM);
-        block;
-        goto start;
-    }
+   if (not(strcmp(crime, "murder")))
+   {
+      crime_type := CRIME_MURDER;
+      act("$1n says, 'Murder... lets see', and looks through his files.",
+         A_SOMEONE, self, activator, null, TO_ROOM);
+   }
+   else if (not(strcmp(crime, "stealing")))
+   {
+      crime_type := CRIME_STEALING;
+      act("$1n says, 'Stealing... lets see', and looks through his files.",
+         A_SOMEONE, self, activator, null, TO_ROOM);
+   }
+   else
+   {
+      act("$1n says, 'Are you accusing of murder or stealing?'",
+         A_SOMEONE, self, activator, null, TO_ROOM);
+      block;
+      goto start;
+   }
 
 
- pid := playerid(criminal);
-wk := "$witness_"+itoa(pid);
+   pid := playerid(criminal);
+   wk := "$witness_"+itoa(pid);
 
-if (not(wk in activator.extra))
-    goto end;
- w_data := split(activator.extra.[wk].names.[1],"_");
- k := "$suspect_"+w_data.[1]; 
-if (not(pid ==  atoi(w_data.[3])))
+   if (not(wk in activator.extra))
+      goto end;
 
-    {
-        act("$1n says, 'I have never heard of this so called $2t.'",
-            A_SOMEONE,self , criminal, activator, TO_ROOM);
-        block;
-        goto start;
-    }
-wp := findsymbolic("reward_board@udgaard"); //+self.outside.zoneidx);
-if ( k in wp.extra)
+   w_data := split(activator.extra.[wk].names.[1],"_");
+   k := "$suspect_"+w_data.[1]; 
+
+   if (not(pid ==  atoi(w_data.[3])))
+   {
+      act("$1n says, 'I have never heard of this so called $2t.'",
+         A_SOMEONE,self , criminal, activator, TO_ROOM);
+      block;
+      goto start;
+   }
+
+   wp := findsymbolic("reward_board@udgaard"); //+self.outside.zoneidx);
+
+   if (k in wp.extra)
    {
     
-    crime_info := split(wp.extra.[k].names.[1],"_");
-   /*crime_info:  self.name self.idx vict.name CRIME_TYPE crime_clear reported; */
-   /* w_data: crime_no crime_type pid expire_ticks */ 
+      crime_info := split(wp.extra.[k].names.[1],"_");
+      /*crime_info:  self.name self.idx vict.name CRIME_TYPE crime_clear reported; */
+      /* w_data: crime_no crime_type pid expire_ticks */ 
 
- if ((crime_type == CRIME_MURDER) and 
-                (atoi(crime_info.[4]) != CRIME_MURDER) and 
-                (atoi(crime_info.[4]) != CRIME_PK))
-                goto end;
+      if ((crime_type == CRIME_MURDER) and 
+          (atoi(crime_info.[4]) != CRIME_MURDER) and 
+          (atoi(crime_info.[4]) != CRIME_PK))
+         goto end;
 
-            if ((crime_type == CRIME_STEALING) and
-                (atoi(crime_info.[4]) != CRIME_STEALING))
-                goto end;
+      if ((crime_type == CRIME_STEALING) and
+            (atoi(crime_info.[4]) != CRIME_STEALING))
+         goto end;
 
 
-   if (atoi(crime_info.[4]) == atoi(w_data.[2]))
+      if (atoi(crime_info.[4]) == atoi(w_data.[2]))
       {
-       found := 1;
-        act("$1n accuses $3t of $2t.", A_SOMEONE, activator, crime, criminal,
-        TO_ROOM);
-        act("$1n says, 'Ah yes... $2t'", A_SOMEONE, self, crime,
-        null, TO_ROOM);
-        act("$1n says, 'Thank you very much $3N, I will stop $2t.'",
+         found := 1;
+         act("$1n accuses $3t of $2t.", A_SOMEONE, activator, crime, criminal, TO_ROOM);
+         act("$1n says, 'Ah yes... $2t'", A_SOMEONE, self, crime, null, TO_ROOM);
+         act("$1n says, 'Thank you very much $3N, I will stop $2t.'",
                         A_SOMEONE, self, criminal, activator, TO_ROOM);
-       if (activator.alignment > -1000)
+         if (activator.alignment > -1000)
            activator.alignment := activator.alignment +100;
-      subextra(activator.extra,wk);
-        if (not("$witness" in activator.extra))
+         subextra(activator.extra,wk);
+         if (not("$witness" in activator.extra))
             i := dildestroy("witness_timer@justice", activator); 
-        if (atoi(crime_info.[6]) == 0)
-            {
+      
+         if (atoi(crime_info.[6]) == 0)
+         {
             update_criminal@justice(self, crime_info.[1], crime_type,pid, TRUE);
             wp.extra.[k].names.[1] := "$crime_"+crime_info.[1]+"_"+crime_info.[2]+"_"+crime_info.[3]+"_"+crime_info.[4]+"_"+crime_info.[5]+"_"+itoa(1);
-            if (atoi(crime_info.[4]) == CRIME_MURDER)
-              wp.extra.[k].descr := crime_info.[1]+" has been accused in the "+crime+" of "+crime_info.[3]+". This crime was witnessed  by: "+activator.name+"."; 
-             else
-               wp.extra.[k].descr := crime_info.[1]+" has been accused of steeling from  "+crime_info.[3]+". This crime was witnessed  by: "+activator.name+".";
-             } 
-             else 
-              {
-               update_criminal(self, crime_info.[1], crime_type,pid, FALSE);
-               wp.extra.[k].descr := wp.extra.[k].descr +"<br>This crime was also confirmed by "+activator.name+".";
-              }  
-         }
-       }
- :end: 
- if (found == 0)
-   act("$1n says, 'Sorry $3n, but I don't find your evidence convincing.'",
-        A_SOMEONE, self, null, activator, TO_ROOM);
-crime_info := null;
-w_data := null;  
-k := null;
-block;
-goto start;
 
+            if (atoi(crime_info.[4]) == CRIME_MURDER)
+               wp.extra.[k].descr := crime_info.[1]+" has been accused in the "+crime+" of "+crime_info.[3]+". This crime was witnessed  by: "+activator.name+"."; 
+            else
+               wp.extra.[k].descr := crime_info.[1]+" has been accused of steeling from  "+crime_info.[3]+". This crime was witnessed  by: "+activator.name+".";
+         } 
+         else 
+         {
+            update_criminal(self, crime_info.[1], crime_type,pid, FALSE);
+            wp.extra.[k].descr := wp.extra.[k].descr +"<br>This crime was also confirmed by "+activator.name+".";
+         }  
+      }
+   }
+
+   :end: 
+   if (found == 0)
+      act("$1n says, 'Sorry $3n, but I don't find your evidence convincing.'", A_SOMEONE, self, null, activator, TO_ROOM);
+
+   crime_info := null;
+   w_data := null;  
+   k := null;
+   block;
+   goto start;
 }
 dilend
-dilbegin integer crime_check(att:unitptr, def:unitptr);
 
+
+
+dilbegin integer crime_check(att:unitptr, def:unitptr);
 code
 {
-  if (att == null) return(FALSE);
-  if (def == null) return(FALSE);
-  if ((att.type!=UNIT_ST_PC) and (att.type!=UNIT_ST_NPC)) return(FALSE);
-  if ((def.type!=UNIT_ST_PC) and (def.type!=UNIT_ST_NPC)) return(FALSE);
-        /* If the attacker is attacking someone protected, or if the
-           attacker is protected and is attacking someone non-protected
-           then go in action */
-if ((not isset(att.charflags,CHAR_SELF_DEFENCE)) and (isset(def.charflags, CHAR_PROTECTED)) and (not isset(def.charflags,CHAR_LEGAL_TARGET))
- or (not isset(att.charflags,CHAR_PROTECTED)) and (isset(def.charflags,CHAR_PROTECTED))) return(TRUE);
+   if (att == null) return(FALSE);
+   if (def == null) return(FALSE);
+   if ((att.type!=UNIT_ST_PC) and (att.type!=UNIT_ST_NPC)) return(FALSE);
+   if ((def.type!=UNIT_ST_PC) and (def.type!=UNIT_ST_NPC)) return(FALSE);
 
+   /* If the attacker is attacking someone protected, or if the
+      attacker is protected and is attacking someone non-protected
+      then go in action */
 
-    return(FALSE);
+   if ((not isset(att.charflags,CHAR_SELF_DEFENCE)) and (isset(def.charflags, CHAR_PROTECTED)) and (not isset(def.charflags,CHAR_LEGAL_TARGET))
+      or (not isset(att.charflags,CHAR_PROTECTED)) and (isset(def.charflags,CHAR_PROTECTED)))
+      return(TRUE);
+
+   return(FALSE);
 }
 dilend
-dilbegin  fnpri(FN_PRI_RESCUE-1) protect_lawful();
+
+
+
+dilbegin fnpri(FN_PRI_RESCUE-1) protect_lawful();
 external
     integer crime_check@justice(att:unitptr, def:unitptr);
 
 var
-u : unitptr;
-bad : unitptr;
-vict : unitptr;
-i    : integer;
+   u : unitptr;
+   bad : unitptr;
+   vict : unitptr;
+   i    : integer;
+
 code
 {
-:start:
-heartbeat:=PULSE_SEC*rnd(40,60); 
-wait(SFB_TICK|SFB_COM|SFB_DEAD,TRUE);
+   :start:
+   heartbeat:=PULSE_SEC*rnd(40,60); 
+   wait(SFB_TICK|SFB_COM|SFB_DEAD,TRUE);
 
-if (command(CMD_AUTO_TICK))
-{
-foreach (UNIT_ST_NPC,u)
-{
- if ((visible(self, u)) and (u.alignment  <= -350))
-    {
-     set(u.charflags, CHAR_LEGAL_TARGET);
-     act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",
-     A_SOMEONE, self, null, null, TO_ROOM);
-     i := getinteger(DIL_GINT_CALLGUARDS, self, 0);
-     set_fighting(self, u);
-     unset(u.charflags, CHAR_SELF_DEFENCE);
-     goto start;
-    }
+   if (command(CMD_AUTO_TICK))
+   {
+      foreach (UNIT_ST_NPC,u)
+      {
+         if ((visible(self, u)) and (u.alignment  <= -350))
+         {
+            set(u.charflags, CHAR_LEGAL_TARGET);
+            act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",
+            A_SOMEONE, self, null, null, TO_ROOM);
+            i := getinteger(DIL_GINT_CALLGUARDS, self, 0);
+            set_fighting(self, u);
+            unset(u.charflags, CHAR_SELF_DEFENCE);
+            goto start;
+         }
+      }
+   }
+   else
+   {
+      if (command(CMD_AUTO_DEATH))
+      {
+         bad := activator.fighting;
+               
+         if (crime_check@justice(bad, activator))
+         {
+               set_fighting(self, bad);
+               unset(bad.charflags, CHAR_SELF_DEFENCE);
+               goto start;
+         }
+      }
+   }
 
-}
-}
-
-else
-{
-if (command(CMD_AUTO_DEATH))
-{
-bad := activator.fighting;
-            
-      if (crime_check@justice(bad, activator))
-            {
-                set_fighting(self, bad);
-                unset(bad.charflags, CHAR_SELF_DEFENCE);
-                goto start;
-            }
-}
-}
-if (command(CMD_AUTO_COMBAT))
-{
-vict := activator.fighting;
-if (self.position == POSITION_SLEEPING) goto start;
+   if (command(CMD_AUTO_COMBAT))
+   {
+      vict := activator.fighting;
+      if (self.position == POSITION_SLEEPING) goto start;
  
-if (crime_check(activator,vict))
-            {
-                set_fighting(self, activator);
-                unset(activator.charflags, CHAR_SELF_DEFENCE);
-                goto start;
-            }
-}
-goto start;
+      if (crime_check(activator,vict))
+      {
+         set_fighting(self, activator);
+         unset(activator.charflags, CHAR_SELF_DEFENCE);
+         goto start;
+      }
+   }
+   goto start;
 }
 dilend
+
+
 
 dilbegin  fnpri(FN_PRI_RESCUE) blow_whistle(); 
 external
     integer crime_check@justice(att:unitptr, def:unitptr);
+
 var
     vict     : unitptr;
     i        : integer;
     wake     : integer;
+
 code
 {
-:start:
-
+   :start:
    wait(SFB_COM, command(CMD_AUTO_COMBAT));
    heartbeat := PULSE_VIOLENCE;
    vict := activator.fighting;
-      secure(vict,nope);
-        if (vict==null)goto nope; 
-        if ((activator.type!=UNIT_ST_PC) and (activator.type!=UNIT_ST_NPC)) goto nope;     
-        if (activator.position < POSITION_STUNNED) goto nope;
-        if (self.position == POSITION_SLEEPING)
-           {
-            /* In the event that a guard is sleeping there is a chance that the whistle will wake him up */
-            wake := rnd(1,100);
-            if (wake >=25)
-               {
-                 act("$1n wakes with a start and gets to his feet.",A_SOMEONE,self,null,null,TO_ROOM);
-                 self.position := POSITION_STANDING;
-                 goto nope;
-               }
-           }
+   secure(vict,nope);
+
+   if (vict==null)goto nope; 
+   if ((activator.type!=UNIT_ST_PC) and (activator.type!=UNIT_ST_NPC)) goto nope;     
+   if (activator.position < POSITION_STUNNED) goto nope;
+
+   if (self.position == POSITION_SLEEPING)
+   {
+      /* In the event that a guard is sleeping there is a chance that the whistle will wake him up */
+      wake := rnd(1,100);
+      if (wake >=25)
+      {
+         act("$1n wakes with a start and gets to his feet.",A_SOMEONE,self,null,null,TO_ROOM);
+         self.position := POSITION_STANDING;
+         goto nope;
+      }
+   }
             
-        if ((self.position > POSITION_SLEEPING) and (activator.position == POSITION_FIGHTING) and (visible(self,activator)))
-           {
+   if ((self.position > POSITION_SLEEPING) and (activator.position == POSITION_FIGHTING) and (visible(self,activator)))
+   {
  
-           if(crime_check@justice(activator, vict))
-             {
-               act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",A_SOMEONE,self,null,null,TO_ROOM);    
-               i:= getinteger(DIL_GINT_CALLGUARDS, self, 0); 
-               set_fighting(self, activator);
-               unset(vict.charflags, CHAR_SELF_DEFENCE);
-               unsecure(vict);
-               goto start;
- 
-               } 
-           }
-:nope:
+      if(crime_check@justice(activator, vict))
+      {
+         act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",A_SOMEONE,self,null,null,TO_ROOM);    
+         i:= getinteger(DIL_GINT_CALLGUARDS, self, 0); 
+         set_fighting(self, activator);
+         unset(vict.charflags, CHAR_SELF_DEFENCE);
+         unsecure(vict);
+         goto start;
+      } 
+   }
 
-unsecure(vict);
-goto start;
-
+   :nope:
+   unsecure(vict);
+   goto start;
 }
 dilend /* End blow_whistle */
 
