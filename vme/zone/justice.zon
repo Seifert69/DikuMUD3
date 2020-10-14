@@ -15,9 +15,16 @@ END HEADER*/
    A zone where law and order is enforced needs the following:
 
       The reward_board has DIL "wanted_poster()" on it.
-      The captain has DIL yyy on him.
-      Guard / law enforcers have DIL "protect_lawful()" on them.
-      Bar tenders, shop keepers, janitors, etc. should have the "blow_whistle()" DIL to call for guards.
+
+      The captain has DIL:
+         "accuse()" - to receive accusations and give rewards
+
+      Guard / law enforcers have DIL:
+         "protect_lawful()" - intervene in illegal activities
+         "blow_whistle()" - to call for guards
+
+      Bar tenders, shop keepers, janitors, etc. should have the DIL:
+         "blow_whistle()" - to call for guards.
 
       Is there any DIL needed for e.g. a bar tender  wanting to report a crime?
 
@@ -79,8 +86,8 @@ reset RESET_NOT
 %dil
 
 
-// Used for ?
-//
+// Copied onto ??? with a $SUSPECT extra. Decreases times until extra can be deleted.
+// Quits when self has no more $SUSPECT extras
 //
 dilbegin crime_stopper();
 var
@@ -504,6 +511,9 @@ code
 dilend
 
 
+// To be placed on the captain
+//
+//
 dilbegin  fnpri(FN_PRI_MISSION-1) accuse();
 external
    update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  reported : integer);
