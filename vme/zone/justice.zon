@@ -14,9 +14,11 @@ END HEADER*/
 
    A zone where law and order is enforced needs the following:
 
-      The reward_board has DIL xxx on it.
+      The reward_board has DIL "wanted_poster()" on it.
       The captain has DIL yyy on him.
-      Guard / law enforcers have DIL xxx on them
+      Guard / law enforcers have DIL "protect_lawful()" on them
+      Bar tenders, shop keepers, janitors, etc. should have the "blow_whistle()" DIL to call for guards.
+
       Is there any DIL needed for e.g. a bar tender  wanting to report a crime?
 
    Each time a crime is committed the following happens:
@@ -356,11 +358,16 @@ code
 }
 dilend
 
+// This function is activated from variour places and also C code combat routines when someone witnesses a crime.
+//
+//
+//
 dilbegin set_witness(criminal : unitptr, crime_no : integer, crime_type : integer, show : integer);
 external
    activate_accuse(witness : unitptr, crime_type : integer, criminal_name : string);
+
 var
-   i : integer;
+   //i : integer;
    pid: integer;
    acc_cmd : string;
    ex_string : stringlist;
@@ -386,16 +393,19 @@ code
    addextra(self.extra,ex_string ,criminal.name+" committed a crime.");
    if (not(dilfind("witness_timer@justice", self)))
       dilcopy("witness_timer@justice()",self);
+
    if ((self.type == UNIT_ST_NPC) and (show))
       dilcopy("activate_accuse@justice("+itoa(crime_type)+","+criminal.name+")",self); 
 
    :cleanup:
-   i := dildestroy("set_witness@justice", self);
+   // shouldn't be necessary i := dildestroy("set_witness@justice", self);
    quit;
 }
 dilend
 
-
+// To be copied on posters and reward boards :-)
+//
+//
 dilbegin wanted_poster();
 var
    found : integer;
@@ -668,7 +678,11 @@ code
 dilend
 
 
-
+// This is copy on e.g. city guards to have them intervene in any illegal activities.
+//
+// A possible enhancement is to remove the check for NPCs < -350 and move that into
+// its own function. In Hades for example (mirror of Midgaard) that wouldn't make sense
+//
 dilbegin fnpri(FN_PRI_RESCUE-1) protect_lawful();
 external
     integer crime_check@justice(att:unitptr, def:unitptr);
@@ -683,14 +697,18 @@ code
 {
    :start:
    heartbeat:=PULSE_SEC*rnd(40,60); 
-   wait(SFB_TICK|SFB_COM|SFB_DEAD,TRUE);
+   wait(SFB_TICK|SFB_COM|SFB_DEAD, self.position >= POSITION_RESTING);
 
    if (command(CMD_AUTO_TICK))
    {
+      if (self.position == POSITION_FIGHTING)
+         goto start;
+
       foreach (UNIT_ST_NPC,u)
       {
          if ((visible(self, u)) and (u.alignment  <= -350))
          {
+            // Not sure why we should whistle here? ANd not the two places below?
             set(u.charflags, CHAR_LEGAL_TARGET);
             act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",
             A_SOMEONE, self, null, null, TO_ROOM);
@@ -701,25 +719,20 @@ code
          }
       }
    }
-   else
+   else if (command(CMD_AUTO_DEATH))
    {
-      if (command(CMD_AUTO_DEATH))
+      bad := activator.fighting;
+            
+      if (crime_check@justice(bad, activator))
       {
-         bad := activator.fighting;
-               
-         if (crime_check@justice(bad, activator))
-         {
-               set_fighting(self, bad);
-               unset(bad.charflags, CHAR_SELF_DEFENCE);
-               goto start;
-         }
+         set_fighting(self, bad);
+         unset(bad.charflags, CHAR_SELF_DEFENCE);
+         goto start;
       }
    }
-
-   if (command(CMD_AUTO_COMBAT))
+   else if (command(CMD_AUTO_COMBAT))
    {
       vict := activator.fighting;
-      if (self.position == POSITION_SLEEPING) goto start;
  
       if (crime_check(activator,vict))
       {
@@ -733,8 +746,17 @@ code
 dilend
 
 
-
-dilbegin  fnpri(FN_PRI_RESCUE) blow_whistle(); 
+// blow_whistle is to be placed e.g. on guards and shopkeepers and will allow them
+// to call for help. Any char in the zone which has a protect_lawful has a chance
+// to come running to the rescue.
+//
+// A possible future enhancement would be to use the DIL function sendtoalldil()
+// rather than a call into C.
+//
+// A possible enhancement might be that the 'whistler' doesn't attack but that
+// is instead left to protect_lawful()
+//
+dilbegin fnpri(FN_PRI_RESCUE) blow_whistle(); 
 external
     integer crime_check@justice(att:unitptr, def:unitptr);
 
@@ -751,7 +773,7 @@ code
    vict := activator.fighting;
    secure(vict,nope);
 
-   if (vict==null)goto nope; 
+   if (vict==null) goto nope; 
    if ((activator.type!=UNIT_ST_PC) and (activator.type!=UNIT_ST_NPC)) goto nope;     
    if (activator.position < POSITION_STUNNED) goto nope;
 
@@ -761,8 +783,9 @@ code
       wake := rnd(1,100);
       if (wake >=25)
       {
-         act("$1n wakes with a start and gets to his feet.",A_SOMEONE,self,null,null,TO_ROOM);
-         self.position := POSITION_STANDING;
+         //act("$1n wakes with a start and gets to his feet.",A_SOMEONE,self,null,null,TO_ROOM);
+         //self.position := POSITION_STANDING;
+         exec("wake", self); // This is a better way to wake up ;)
          goto nope;
       }
    }
