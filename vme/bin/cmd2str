@@ -239,3 +239,7 @@ CMD_PETRIFY petrify
 CMD_DESCRIBE describe
 CMD_NSET nset
 CMD_TGD tgd
+CMD_BERSERK berserk
+CMD_TAUNT taunt
+CMD_RAGE rage
+CMD_FRENZY frenzy
