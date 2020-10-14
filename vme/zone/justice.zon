@@ -16,10 +16,15 @@ END HEADER*/
 
       The reward_board has DIL "wanted_poster()" on it.
       The captain has DIL yyy on him.
-      Guard / law enforcers have DIL "protect_lawful()" on them
+      Guard / law enforcers have DIL "protect_lawful()" on them.
       Bar tenders, shop keepers, janitors, etc. should have the "blow_whistle()" DIL to call for guards.
 
       Is there any DIL needed for e.g. a bar tender  wanting to report a crime?
+
+   Logic detecting a crime being committed can happen both from the core combat engine and from e.g.
+   the steal command. This happens via the C function log_crime (which is also accessilble via DIL log_crime).
+   log_crime in turn calls add_crime@justice to register the offense and also copies the set_witness@justice 
+   DIL onto all characters that witnessed the crime.
 
    Each time a crime is committed the following happens:
 
