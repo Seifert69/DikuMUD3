@@ -786,50 +786,48 @@ dilbegin hand_hold(); /* Take people to their guilds and Udgaard */
 var
    the_room   : string;
    dest       : string;
-
    pc         : unitptr;
-
    dest_list  : stringlist;
    g_list     : stringlist;
-
    expd       : extraptr;
-
-   nope       : integer;
-
+   i          : integer;
 code
 {
    heartbeat := PULSE_SEC * 3;
 
    dest_list := null;
-   addstring(dest_list, "fighter");
-   addstring(dest_list, "thief");
-   addstring(dest_list, "healer");
-   addstring(dest_list, "conjurer");
-   addstring(dest_list, "ranger");
-   addstring(dest_list, "paladin");
-   addstring(dest_list, "sorcerer");
-   addstring(dest_list, "assassin");
-   addstring(dest_list, "necromancer");
-   addstring(dest_list, "druid");
-   addstring(dest_list, "knight");
-   addstring(dest_list, "udgaard");
+   addstring(dest_list, "fighter"); 	// 0
+   addstring(dest_list, "thief"); 		// 1
+   addstring(dest_list, "healer"); 		// 2
+   addstring(dest_list, "mage"); 		// 3
+   addstring(dest_list, "ranger"); 		// 4
+   addstring(dest_list, "paladin"); 	// 5
+   addstring(dest_list, "sorcerer"); 	// 6
+   addstring(dest_list, "assassin"); 	// 7
+   addstring(dest_list, "necromancer"); // 8
+   addstring(dest_list, "druid"); 		// 9
+   addstring(dest_list, "knight"); 		// 10
+   addstring(dest_list, "barbarian"); 	// 11
+   addstring(dest_list, "mystic"); 		// 12
+   addstring(dest_list, "udgaard"); 	// 13
 
    g_list := null;
-   addstring(g_list, GUILD_UDG_FIGHTER);
-   addstring(g_list, GUILD_UDG_THIEF);
-   addstring(g_list, GUILD_UDG_CLERIC);
-   addstring(g_list, GUILD_UDG_MAGE);
-   addstring(g_list, GUILD_NYM_RANGER);
-   addstring(g_list, GUILD_PALADIN);
-   addstring(g_list, GUILD_SORCERER);
-   addstring(g_list, GUILD_ASSASSIN);
-   addstring(g_list, GUILD_NECROMANCER);
-   addstring(g_list, GUILD_NYM_DRUID);
-   addstring(g_list, GUILD_KNIGHT);
+   addstring(g_list, GUILD_UDG_FIGHTER); 	// 0
+   addstring(g_list, GUILD_UDG_THIEF); 		// 1
+   addstring(g_list, GUILD_UDG_CLERIC); 	// 2
+   addstring(g_list, GUILD_UDG_MAGE); 		// 3
+   addstring(g_list, GUILD_NYM_RANGER); 	// 4
+   addstring(g_list, GUILD_PALADIN); 		// 5
+   addstring(g_list, GUILD_SORCERER); 		// 6
+   addstring(g_list, GUILD_ASSASSIN); 		// 7 
+   addstring(g_list, GUILD_NECROMANCER); 	// 8
+   addstring(g_list, GUILD_NYM_DRUID); 		// 9
+   addstring(g_list, GUILD_KNIGHT); 		// 10
+   addstring(g_list, GUILD_BARBARIAN); 		// 11
+   addstring(g_list, GUILD_MYSTIC); 		// 12
 
 
 :start:
-   nope := 0;
    wait(SFB_CMD, command("return") and (activator == self.outside)
    and (self.equip != 0));
    block;
@@ -860,43 +858,21 @@ code
           A_ALWAYS, pc, null, null, TO_CHAR);
       goto lost_pc;
    }
-
-   nope := 1;
-
-   if ((dest in dest_list.[0]) and (g_list.[0] in expd.names))
-      nope := 0;
-   else if ((dest in dest_list.[1]) and (g_list.[1] in expd.names))
-      nope := 0;
-   else if ((dest in dest_list.[2]) and (g_list.[2] in expd.names))
-      nope := 0;
-   else if ((dest in dest_list.[3]) and (g_list.[3] in expd.names))
-      nope := 0;
-   else if ((dest in dest_list.[4]) and (g_list.[4] in expd.names))
-      nope := 0;
-   else if ((dest in dest_list.[5]) and (g_list.[5] in expd.names))
-      nope := 0;
-   else if ((dest in dest_list.[6]) and (g_list.[6] in expd.names))
-      nope := 0;
-   else if ((dest in dest_list.[7]) and (g_list.[7] in expd.names))
-      nope := 0;
-   else if ((dest in dest_list.[8]) and (g_list.[8] in expd.names))
-      nope := 0;
-   else if ((dest in dest_list.[9]) and (g_list.[9] in expd.names))
-      nope := 0;
-   else if ((dest in dest_list.[10]) and (g_list.[10] in expd.names))
-      nope := 0;
-
-   else if (dest in dest_list.[11])
-      nope := 0;
-
-   if (nope > 0)
-   {
-:no2:
-      act("That guild is not in your guild path. You cannot go there.",
-          A_ALWAYS, pc, null, null, TO_CHAR);
-      goto lost_pc;
-   }
-
+	
+	i := 0;
+	while (i < 13)
+	{
+		i := i+1;
+		if (((dest in dest_list.[i]) and (g_list.[i] in expd.names)) or (dest in dest_list.[13]))
+			i := 777;
+	}
+	if (i != 777)
+	{
+		:no2:
+		act("That guild is not in your guild path. You cannot go there.",
+			A_ALWAYS, pc, null, null, TO_CHAR);
+		goto lost_pc;
+	}
    if (pc.outside.type != UNIT_ST_ROOM)
    {
       act("You must be in the open for the medallion's powers to work. If " +
@@ -908,9 +884,9 @@ code
 if (pc.level > 15)
 	{
 	act("This only works for players less than or equal to level 15.",
-	A_ALWAYS,pc,null,null,TO_CHAR);
+		A_ALWAYS,pc,null,null,TO_CHAR);
 	act ("Your medallion to work.",
-	A_ALWAYS,pc,null,null,TO_CHAR);
+		A_ALWAYS,pc,null,null,TO_CHAR);
 	destroy (self);
 	}
    if ((pc.outside.zoneidx != "fightersguild") and
@@ -924,6 +900,8 @@ if (pc.level > 15)
        (pc.outside.zoneidx != "necro_guild") and
        (pc.outside.zoneidx != "druid") and
        (pc.outside.zoneidx != "knight") and
+       (pc.outside.zoneidx != "mystic") and
+       (pc.outside.zoneidx != "barbarian") and
        (pc.outside.zoneidx != "udgaard") and
        (pc.outside.zoneidx != "midgaard"))
    {
@@ -948,54 +926,33 @@ if (pc.level > 15)
 :cont:
 
    if (dest in dest_list.[0])
-   {
       the_room := "outlook@fightersguild";
-   }
    else if (dest in dest_list.[1])
-   {
       the_room := "study@thievesguild";
-   }
    else if (dest in dest_list.[2])
-   {
       the_room := "sanctuary@clericguild";
-   }
    else if (dest in dest_list.[3])
-   {
       the_room := "chan_office@mageguild";
-   }
    else if (dest in dest_list.[4])
-   {
       the_room := "tent_1@ranger";
-   }
    else if (dest in dest_list.[5])
-   {
       the_room := "meditat@paladin_guild";
-   }
    else if (dest in dest_list.[6])
-   {
       the_room := "grotto@sorcerer";
-   }
    else if (dest in dest_list.[7])
-   {
       the_room := "master_room@assassin";
-   }
    else if (dest in dest_list.[8])
-   {
       the_room := "up_damp_crypt@necro_guild";
-   }
    else if (dest in dest_list.[9])
-   {
       the_room := "henge@druid";
-   }
    else if (dest in dest_list.[10])
-   {
       the_room := "room_5@knight";
-   }
    else if (dest in dest_list.[11])
-   {
+      the_room := "hall_01@barbarian";
+   else if (dest in dest_list.[12])
+      the_room := "hall_01@mystic";
+   else if (dest in dest_list.[13])
       the_room := "temple@udgaard";
-   }
-
    else goto no2;
 
 :trans_me:
@@ -1553,13 +1510,15 @@ power than because of its weight. There is a small copy of the statue
 of Odin in the Temple of Udgaard set in its centre.<br/>
 To use the medallion, you must be in Udgaard. Once there, simply wear 
 the medallion and then 'return &lt;guild&gt;', where &lt;guild&gt; is fighter,
-thief, healer, conjurer, ranger, paladin, sorcerer, assassin, knight or necromancer.<br/>
+thief, cleric, mage, ranger, paladin, sorcerer, assassin, knight, mystic, 
+barbarian, or necromancer.<br/>
 If you are in your guild and wish to return to Udgaard, 'return Udgaard'
 will take you to Udgaard."
 
 dilcopy hand_hold@guild_paths();
 
 weight 1
+bright 5
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 
