@@ -2700,142 +2700,130 @@ code
 dilend
 
 
-dilbegin do_advance (arg:string);
+dilbegin do_advance(arg:string);
 var
   targ:unitptr;
   lvl:integer;
   pname:string;
   args:stringlist;
 
-
 code
 {
-if (self.type!=UNIT_ST_PC)
-  quit;
+   if (self.type!=UNIT_ST_PC)
+      quit;
 
-if (arg=="")
-  {
-  sendtext("Who do you want to advance and how high.<br/>",self);
-  quit;
-  }
-args:=getwords(arg);
-if (length(args)<3)
- {
- sendtext ("You must specify (Admin or Ply), name, and level.<br/>",self);
- quit;
- }
+   if (arg=="")
+   {
+      sendtext("Who do you want to advance and how high.<br/>",self);
+      quit;
+   }
 
-pname:=args.[1];
-targ:=findunit(self,pname,FIND_UNIT_WORLD,null,UNIT_ST_PC);
-if (targ==null)
-  {
-  sendtext ("That character is not here.<br/>",self);
-  quit;
-  }
+   args:=getwords(arg);
+   if (length(args)<3)
+   {
+      sendtext ("You must specify (Admin | Ply) name level.<br/>",self);
+      quit;
+   }
 
-if (not(visible(self,targ)))
- {
-  sendtext ("That character is not here.<br/>",self);
-  quit;
-  }
+   pname:=args.[1];
+   targ:=findunit(self,pname,FIND_UNIT_WORLD,null,UNIT_ST_PC);
+   if (targ==null)
+   {
+      sendtext ("That character is not here.<br/>",self);
+      quit;
+   }
 
-lvl:=atoi(args.[2]);
-if (lvl<1)
-  {
-  sendtext("You must supply a positive number.<br/>",self);
-  quit;
-  }
+   if (not(visible(self,targ)))
+   {
+      sendtext ("That character is not here.<br/>",self);
+      quit;
+   }
 
-  if (args.[0]=="admin")
-  goto admin_level;
+   lvl:=atoi(args.[2]);
+   if (lvl<1)
+   {
+      sendtext("You must supply a positive number.<br/>",self);
+      quit;
+   }
 
-	if (args.[0]=="ply")
-	 goto ply_level;
+   if (args.[0]=="admin")
+      goto admin_level;
 
-sendtext("You must choose Admin or Player levels.",self);
-quit;
+   if (args.[0]=="ply")
+      goto ply_level;
+
+   sendtext("You must choose Admin or Player levels.",self);
+   quit;
 
 
 :admin_level:
-if ((lvl<200) or (lvl>255))
-  {
-  sendtext("Level must be in between 200 and 255 for Admin levels.<br/>",self);
-  quit;
-  }
-
-  if (self.level<targ.level)
+   if ((lvl<200) or (lvl>255))
    {
-   act ("$3n would not be pleased if you did that.",
-   A_ALWAYS,self,null,targ,TO_VICT);
-   quit;
+      sendtext("Level must be in between 200 and 255 for Admin levels.<br/>",self);
+      quit;
+   }
+
+   if (self.level<targ.level)
+   {
+      act ("$3n would not be pleased if you did that.", A_ALWAYS,self,null,targ,TO_VICT);
+      quit;
    }
 
    if (lvl<targ.level)
    {
-   act ("You demote $3n.",
-   A_ALWAYS,self,null,targ,TO_CHAR);
-      act ("$3n makes some strange gestures. "+
-	   "A horrible feeling comes upon you, like a giant hand, darkness"+
-	   "comes down from above, grabbing your body, which begin to ache "+
-	   "with striking pain from inside. Your head seems to be filled with "+
-	   "daemons from another plane as your body dissolves into the "+
-	   "elements of time and space itself. You feel less powerful.",
-	   A_ALWAYS, targ, null, self, TO_CHAR);
+      act ("You demote $3n.", A_ALWAYS,self,null,targ,TO_CHAR);
+         act ("$3n makes some strange gestures. "+
+         "A horrible feeling comes upon you, like a giant hand, darkness"+
+         "comes down from above, grabbing your body, which begin to ache "+
+         "with striking pain from inside. Your head seems to be filled with "+
+         "daemons from another plane as your body dissolves into the "+
+         "elements of time and space itself. You feel less powerful.",
+         A_ALWAYS, targ, null, self, TO_CHAR);
    }
-else    if (lvl>targ.level)
+   else    if (lvl>targ.level)
    {
-      act ("You promote $3n.",
-   A_ALWAYS,self,null,targ,TO_CHAR);
-  act ("$3n makes some strange gestures. "+
-       "A strange feeling comes upon you, like a giant hand, light comes "+
-       "down from above, grabbing your body, which begins to pulse with "+
-       "coloured lights from inside. Your head seems to be filled with "+
-       "daemons from another plane as your body dissolves into the elements "+
-       "of time and space itself. Suddenly a silent explosion of light snaps "+
-       "you back to reality. You feel slightly different.",
-       A_ALWAYS, targ, null, self, TO_CHAR);
+      act ("You promote $3n.", A_ALWAYS,self,null,targ,TO_CHAR);
+      act ("$3n makes some strange gestures. "+
+            "A strange feeling comes upon you, like a giant hand, light comes "+
+            "down from above, grabbing your body, which begins to pulse with "+
+            "coloured lights from inside. Your head seems to be filled with "+
+            "daemons from another plane as your body dissolves into the elements "+
+            "of time and space itself. Suddenly a silent explosion of light snaps "+
+            "you back to reality. You feel slightly different.",
+            A_ALWAYS, targ, null, self, TO_CHAR);
    }
-else
-  {
-  act("$3n is already that level.",
-  A_ALWAYS,self,null,targ,TO_CHAR);
-  quit;
-  }
-targ.exp:=0;
-targ.full:=115;
-targ.thirst:=115;
-targ.level:=lvl;
+   else
+   {
+      act("$3n is already that level.", A_ALWAYS,self,null,targ,TO_CHAR);
+      quit;
+   }
+   targ.exp:=0;
+   targ.full:=115;
+   targ.thirst:=115;
+   targ.level:=lvl;
 
-quit;
+   quit;
 
 :ply_level:
 
+   if (targ.level>=200)
+   {
+      sendtext("You can't diminish that Admin status to a player you need to delete and start that character again.<br/>",self);
+      quit;
+   }
 
-if (targ.level>=200)
- {
- sendtext("You can't diminish that Admin status to a player you need to delete and start that character again.<br/>",self);
- quit;
- }
+   sendtext("Characters Experience before you advanced = "+itoa(targ.exp)+"<br/>", self);
 
+   targ.exp := getinteger(DIL_GINT_LEVELXP, null, lvl);
+   targ.vlevel := lvl;
+   targ.level := lvl;
 
-sendtext ("Characters Experience before you advanced = "+itoa(targ.exp),self);
-if (lvl<=50)
-{
-targ.exp:=1500 * lvl + lvl * lvl * (300 / 2);
-targ.vlevel:=lvl;
-                targ.level:=lvl;
-}
-else
-{
-targ.exp:=(1500 * 50 + 50 * 50 * (300 / 2))+((1650+50*300)*(lvl-50));
-targ.vlevel:=lvl;
-                targ.level:=lvl;
- }
-sendtext ("Characters Experience after you advanced = "+itoa(targ.exp),self);
-sendtext ("Character needs "+itoa(targ.exptol)+" to level.",self);
-if (targ.exptol==0)
-  sendtext ("You have been advanced in levels you may raise levels using the 'level' command<br/>",targ);
-quit;
+   sendtext("Characters Experience after you advanced = "+itoa(targ.exp)+"<br/>", self);
+   sendtext("Character needs "+itoa(targ.exptol)+" to level.", self);
+
+   if (targ.exptol == 0)
+      sendtext("You have been advanced in levels you may raise levels using the 'level' command<br/>",targ);
+   quit;
 }
 dilend
 
