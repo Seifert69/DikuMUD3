@@ -7541,7 +7541,7 @@ var
 code
 {
    heartbeat := PULSE_SEC*4;
-   log("Energy worms checking location " + SYMNAME(self));
+   log("Energy worms checking location " + SYMNAME(self.outside));
 
    :init:
    wait(SFB_ALL, TRUE);
