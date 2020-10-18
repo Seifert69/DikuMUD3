@@ -7718,81 +7718,88 @@ quit;
 }
 dilend
 
-dilbegin aware do_password (arg:string);
-var
-	prmt:string;
- firstpwd:string;
 
- i:integer;
- tlist:stringlist;
+
+dilbegin aware do_password(arg:string);
+var
+   prmt:string;
+   firstpwd:string;
+   i:integer;
+   tlist:stringlist;
 
 code
 {
+   if (excmdstr != "password")
+   {
+      sendtext ("You must type 'password', no less to be able to set your password!<br/>",self);
+      quit;
+   }
 
-if (excmdstr!="password"){
-sendtext ("You must type 'password', no less to be able to set your password!<br/>",self);
-quit;
-}
+   if (self.type != UNIT_ST_PC)
+      quit;
 
+   arg:="";
+   prmt:=self.prompt;
+   self.prompt:="Enter new password:  ";
+   i:=dildestroy("send_prompt@update",self);
+   dilcopy("send_prompt@update",self);
 
-if(self.type != UNIT_ST_PC) quit;
-arg:="";
-prmt:=self.prompt;
-self.prompt:="Enter new password:  ";
-i:=dildestroy("send_prompt@update",self);
-dilcopy ("send_prompt@update",self);
+   wait(SFB_CMD, self==activator);
+   block;
+   tlist := getwords (excmdstr_case);
 
-wait (SFB_CMD,self==activator);
-block;
-tlist:=getwords (excmdstr_case);
-if (length(tlist)>1){
-sendtext ("Password must be only one word.  Try again.<br/>",self);
-self.prompt:=prmt;
-i:=dildestroy("send_prompt@update",self);
-dilcopy ("send_prompt@update",self);
+   if (length(tlist) > 1)
+   {
+      sendtext ("Password must be only one word.  Try again.<br/>",self);
+      self.prompt:=prmt;
+      i:=dildestroy("send_prompt@update",self);
+      dilcopy("send_prompt@update",self);
+      quit;
+   }
 
-quit;
-}
-if (length(excmdstr_case)<5){
-	sendtext ("Password to short. Password must be 5 characters or longer.  Try again.<br/>",self);
-	self.prompt:=prmt;
-i:=dildestroy("send_prompt@update",self);
-dilcopy ("send_prompt@update",self);
+   if (length(excmdstr_case) < 5)
+   {
+      sendtext ("Password to short. Password must be 5 characters or longer.  Try again.<br/>",self);
+      self.prompt:=prmt;
+      i:=dildestroy("send_prompt@update",self);
+      dilcopy("send_prompt@update",self);
+      quit;
+   }
 
-	quit;
-	}
-
-if (length(excmdstr_case)>16){
-	sendtext ("Password to long. Try again.<br/>",self);
-	self.prompt:=prmt;
-    i:=dildestroy("send_prompt@update",self);
-dilcopy ("send_prompt@update",self);
-
-	quit;
-	}
+   if (length(excmdstr_case) > 16)
+   {
+      sendtext ("Password to long. Try again.<br/>",self);
+      self.prompt:=prmt;
+      i:=dildestroy("send_prompt@update",self);
+      dilcopy ("send_prompt@update",self);
+      quit;
+   }
 
 	firstpwd:=excmdstr_case;
 	self.prompt:="Enter password again:  ";
 
-wait (SFB_CMD,self==activator);
-block;
-if (strcmp(excmdstr_case,firstpwd)!=0){
-sendtext ("Passwords do not match try again.<br/>",self);
-self.prompt:=prmt;
-i:=dildestroy("send_prompt@update",self);
-dilcopy ("send_prompt@update",self);
+   wait (SFB_CMD,self==activator);
+   block;
 
-quit;
-}
-set_password(self,excmdstr_case);
-sendtext ("Password Changed.<br/>",self);
-self.prompt:=prmt;
-i:=dildestroy("send_prompt@update",self);
-dilcopy ("send_prompt@update",self);
+   if (strcmp(excmdstr_case,firstpwd)!=0)
+   {
+      sendtext ("Passwords do not match try again.<br/>",self);
+      self.prompt:=prmt;
+      i:=dildestroy("send_prompt@update",self);
+      dilcopy ("send_prompt@update",self);
+      quit;
+   }
 
-quit;
+   set_password(self,excmdstr_case);
+   sendtext ("Password Changed.<br/>",self);
+   self.prompt:=prmt;
+   i:=dildestroy("send_prompt@update",self);
+   dilcopy("send_prompt@update",self);
+   quit;
 }
 dilend
+
+
 
 dilbegin aware do_delete (arg:string);
 var

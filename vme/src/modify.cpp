@@ -1022,7 +1022,8 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         else
         {
             slog(LOG_ALL, 0, "PASSWORD: %s changed %s's password.", UNIT_NAME(ch), UNIT_NAME(unt));
-            strncpy(PC_PWD(unt), crypt(strarg, UNIT_NAME(unt)), 10);
+            strncpy(PC_PWD(unt), crypt(strarg, PC_FILENAME(unt)), PC_MAX_PASSWORD);
+            PC_PWD(unt)[PC_MAX_PASSWORD-1] = 0;
             send_to_char("The password has been set.<br/>", ch);
         }
         return;

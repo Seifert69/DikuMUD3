@@ -1029,9 +1029,9 @@ void dilfe_ckpwd(class dilprg *p)
             }
 
             v->type = DILV_INT;
-            if (strncmp(crypt((char *)v2->val.ptr,
+            if (pwdcompare(crypt((char *)v2->val.ptr,
                               PC_FILENAME((class unit_data *)v1->val.ptr)),
-                        PC_PWD((class unit_data *)v1->val.ptr), 10))
+                        PC_PWD((class unit_data *)v1->val.ptr), PC_MAX_PASSWORD))
                 v->val.num = FALSE;
             else
                 v->val.num = TRUE;

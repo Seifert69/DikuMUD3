@@ -1487,3 +1487,27 @@ std::string str_json(const char *lbl, const std::string &str)
 }
 
 
+// Kind of like strncmp except it returns true if the string matches 
+// up to the first \0 character. Necessary hack as a bridge between
+// old and new password system to both rectify incorrect salt in 
+// set pwd <player> and to handle increase in stored password length
+//
+int pwdcompare(const char *p1, const char *p2, int nMax)
+{
+    int i;
+
+    for (i=0; i < nMax; i++)
+        if (p1[i] != p2[i])
+        {
+            if ((p1[i] == 0) || (p2[i] == 0))
+            {
+                if (i < 10)
+                    return 1;
+                else
+                    return 0;                
+            }
+            else
+                return 1;
+        }
+    return 0;
+}
