@@ -599,7 +599,7 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
 
     send_to_descriptor(scriptwrap("PasswordOff()").c_str(), d);
 
-    if (strncmp(crypt(arg, PC_FILENAME(d->character)), PC_PWD(d->character), PC_MAX_PASSWORD))
+    if (pwdcompare(crypt(arg, PC_FILENAME(d->character)), PC_PWD(d->character), PC_MAX_PASSWORD))
     {
         send_to_descriptor("Passwords don't match.<br/>", d);
         set_descriptor_fptr(d, nanny_new_pwd, TRUE);
