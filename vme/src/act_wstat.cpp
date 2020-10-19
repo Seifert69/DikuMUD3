@@ -800,6 +800,9 @@ static void stat_extra(const class unit_data *ch, class extra_list &elist, char 
     /* MS: We used to do a TAIL here... bad idea as newspaper is VERY HUGE */
     /* This isn't nice either, but it works... */
     char *cname;
+    string str;
+
+    str = "";
 
     if (!elist.isempty())
     {
@@ -812,57 +815,61 @@ static void stat_extra(const class unit_data *ch, class extra_list &elist, char 
             {
                 if (!found)
                 {
-                    send_to_char("Extra descriptions:<br/>-------------------<br/>", ch);
+                    str.append("Extra descriptions:<br/>-------------------<br/>");
                     found = true;
                 }
+                str.append("Names ");
                 cname = ed->names.catnames();
-                send_to_char("Names ", ch);
-                send_to_char(cname, ch);
+                str.append(ed->names.catnames());
                 FREE(cname);
-                send_to_char("<br/>", ch);
+                str.append("<br/>");
                 if (ed->vals.Length() > 0)
                 {
+                    str.append("Values ");
                     cname = ed->vals.catnames();
-                    send_to_char("Values ", ch);
-                    send_to_char(cname, ch);
-                    send_to_char("<br/>\"", ch);
+                    str.append(cname);
                     FREE(cname);
+                    str.append("<br/>\"");
                 }
                 else
-                    send_to_char("\"", ch);
-                send_to_char(ed->descr.c_str(), ch);
-                send_to_char("\"<br/>-------------------<br/>", ch);
+                    str.append("\"");
+                str.append(ed->descr.c_str());
+                str.append("\"<br/>-------------------<br/>");
             }
             else if (!(*buf))
             {
                 if (!found)
                 {
-                    send_to_char("Extra descriptions:<br/>-------------------<br/>", ch);
+                    str.append("Extra descriptions:<br/>-------------------<br/>");
                     found = true;
                 }
+
+                str.append("Names ");
                 cname = ed->names.catnames();
-                send_to_char("Names ", ch);
-                send_to_char(cname, ch);
+                str.append(cname);
                 FREE(cname);
-                send_to_char("<br/>", ch);
+                str.append("<br/>");
+
                 if (ed->vals.Length() > 0)
                 {
+                    str.append("Values ");
                     cname = ed->vals.catnames();
-                    send_to_char("Values ", ch);
-                    send_to_char(cname, ch);
-                    send_to_char("<br/>\"", ch);
+                    str.append(cname);
                     FREE(cname);
+                    str.append("<br/>\"");
                 }
                 else
-                    send_to_char("\"", ch);
-                send_to_char(ed->descr.c_str(), ch);
-                send_to_char("\"<br/>-------------------<br/>", ch);
+                    str.append("\"");
+                str.append(ed->descr.c_str());
+                str.append("\"<br/>-------------------<br/>");
             }
         }
     }
 
     if (!found)
         send_to_char("None.<br/>", ch);
+    else
+        send_to_char(str.c_str(), ch);
 }
 
 static void stat_extra_descr(const class unit_data *ch, class unit_data *u, char *grp)

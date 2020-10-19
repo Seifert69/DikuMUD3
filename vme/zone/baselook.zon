@@ -112,7 +112,7 @@ code
       if ((item.type == UNIT_ST_OBJ) and (item.objecttype == ITEM_WEAPON))
       {
          buff := weapon_name(item.value[0]);
-         temp := temp +  "The " + item.name + " clearly requires a "	+ buff + " fighting style.";
+         temp := temp +  "<br>The " + item.name + " clearly requires a "	+ buff + " fighting style.";
       }
    }
 
@@ -839,7 +839,7 @@ code
       if ((item.type == UNIT_ST_OBJ) and (item.objecttype == ITEM_WEAPON))
       {
          temp1 := weapon_name(item.value[0]);
-         temp := temp + "The " + item.name + " clearly requires a " + temp1 + " fighting style.";
+         temp := temp + "<br>The " + item.name + " clearly requires a " + temp1 + " fighting style.";
       }
 
       temp := temp + "</div><br/>";

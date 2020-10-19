@@ -208,7 +208,9 @@ int room_move(class unit_data *ch, class unit_data *mover, class unit_data *room
       if ((mover != ch) ||  !CHAR_HAS_FLAG(ch, CHAR_SNEAK))
          act(pArrOther, A_HIDEINV, UNIT_CONTAINS(room_to), ch, mover, TO_ALL);
    }
-   // REMOVE_BIT(CHAR_FLAGS(ch), CHAR_LEGAL_TARGET | CHAR_SELF_DEFENCE); // ? wooot ? MS2020
+
+   // These two volatile flags are removed when you move.
+   REMOVE_BIT(CHAR_FLAGS(ch), CHAR_LEGAL_TARGET | CHAR_SELF_DEFENCE);
 
    unit_to_unit(mover, room_to);
 
@@ -859,7 +861,7 @@ int do_simple_move(class unit_data *ch, int direction, int following)
 
    unit_from_unit(ch);
 
-   REMOVE_BIT(CHAR_FLAGS(ch), CHAR_LEGAL_TARGET | CHAR_SELF_DEFENCE); // ?
+   REMOVE_BIT(CHAR_FLAGS(ch), CHAR_LEGAL_TARGET | CHAR_SELF_DEFENCE);
 
    unit_to_unit(ch, to);
 

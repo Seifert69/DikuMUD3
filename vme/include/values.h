@@ -1009,8 +1009,8 @@ END HEADER*/
 #define ID_FOCUS                 90
 #define ID_MIRE                  91
 #define ID_CONDEMN               92
-#define ID_BLANK4                93
-#define ID_BLANK5                94
+#define ID_BERSERK			     93
+#define ID_RAGE                  94
 #define ID_BLANK6                95
 #define ID_BLANK7                96
 #define ID_BLANK8                97

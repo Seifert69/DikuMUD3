@@ -4471,7 +4471,6 @@ extra {}
 "This is a simple hand axe.  It appears to be equally well suited for chopping wood and self defense."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_HAND_AXE, 2, 0)
-dilcopy level_restrict@function(20,5,0,"");
 end
 
 barnham_dagger
@@ -4484,7 +4483,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_DAGGER, 10, 10)
 WEAPON_SLAYER(RACE_GOBLIN)
-WEAPON_TRANSFER(WPN_DAGGER,+5)
+WEAPON_TRANSFER(WPN_DAGGER,+10)
 STR_TRANSFER(+1)
 DEX_TRANSFER(+1)
 end

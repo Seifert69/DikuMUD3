@@ -262,7 +262,8 @@ code
    dilcopy("send_prompt@update",self);
 
    // Also set channel for immortals
-   i := dildestroy("channel@function", self);
+   // Dont destroy because it will mess up the recall functionality which the function depends on. 
+   // i := dildestroy("channel@function", self);
    dilcopy("channel@function", self);
 
    if (self.level<200)
@@ -7540,7 +7541,7 @@ var
 code
 {
    heartbeat := PULSE_SEC*4;
-   log("Energy worms checking location " + SYMNAME(self));
+   log("Energy worms checking location " + SYMNAME(self.outside));
 
    :init:
    wait(SFB_ALL, TRUE);

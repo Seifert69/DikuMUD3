@@ -6810,7 +6810,7 @@ dilend
 #define  NOCOMM_QUEST  "$nocomm"
 #define  NO_NEWBIE_QUEST  "$nonewbie"
 
-dilbegin aware unique fnpri(FN_PRI_SYS) channel();
+dilbegin aware unique recall fnpri(FN_PRI_SYS) channel();
 external
   recieve@function( slActive : stringlist, msg : string, talker : unitptr,
                 jmode:integer, dmode:integer);
@@ -6914,13 +6914,15 @@ if (not (NOCOMM_QUEST in self.quests))
   goto start;
 
 :add_del:
-func:=argument;
-words:=getwords(func);
-if ("add" in words.[0])
-  goto add_chan;
-  else if ("del" in words.[0])
-    goto del_chan;
-    else goto start;
+   func:=argument;
+   words:=getwords(func);
+
+   if ("add" in words.[0])
+      goto add_chan;
+   else if ("del" in words.[0])
+      goto del_chan;
+   else
+      goto start;
 
 :add_chan:
    block;
@@ -6942,49 +6944,52 @@ if ("add" in words.[0])
          goto start;
       }
       addstring(slActive, words.[1]);
-      act("Channel "+words.[1]+" activated.",
-         A_SOMEONE, self, null, null, TO_CHAR);
+      act("Channel "+words.[1]+" activated.", A_SOMEONE, self, null, null, TO_CHAR);
       msg := "CHANNEL " + words.[1] + " 1join1";
       sendtoalldil(msg, "channel@function");
       if (nEcho == 1)
          recieve@function(slActive, msg, self,jmode,dmode);
-   } else {
+   }
+   else
+   {
       act("Unknown channel command or incorrect options.",
          A_SOMEONE, self, null, null, TO_CHAR);
    }
    goto start;
 
 :del_chan:
-  block;
-  words := getwords(argument);
-  if (length(words)<2)
+   block;
+   words := getwords(argument);
+
+   if (length(words)<2)
    {
-        act("Unknown channel command or incorrect options.",
-	      A_SOMEONE, self, null, null, TO_CHAR);
-          goto start;
+      act("Unknown channel command or incorrect options.", A_SOMEONE, self, null, null, TO_CHAR);
+      goto start;
    }
-  if (("del" in words.[0]) and
-  (words.[1]!="")
-  and (words.[1] in slActive))
-  {
-      if (not(words.[1] in slActive) ) {
+
+   if (("del" in words.[0]) and (words.[1]!="") and (words.[1] in slActive))
+   {
+      if (not(words.[1] in slActive) )
+      {
 		   act("Channel "+words.[1] + " is not on!",
 	      A_SOMEONE, self, null, null, TO_CHAR);
 			goto start;
 		}
-	  act("Channel "+words.[1]+" deactivated.",
-	      A_SOMEONE, self, null, null, TO_CHAR);
-     msg := "CHANNEL " + words.[1] + " 1left1";
-     sendtoalldil(msg, "channel@function");
-     if (nEcho == 1) {
-       recieve@function(slActive, msg, self,jmode,dmode);
-     }
-	  substring(slActive, words.[1]);
-  } else {
-     act("Unknown channel command or incorrect options.",
-	      A_SOMEONE, self, null, null, TO_CHAR);
+      act("Channel "+words.[1]+" deactivated.", A_SOMEONE, self, null, null, TO_CHAR);
+      msg := "CHANNEL " + words.[1] + " 1left1";
+      sendtoalldil(msg, "channel@function");
+      if (nEcho == 1)
+      {
+         recieve@function(slActive, msg, self,jmode,dmode);
       }
-  goto start;
+      substring(slActive, words.[1]);
+   }
+   else
+   {
+     act("Unknown channel command or incorrect options.",
+         A_SOMEONE, self, null, null, TO_CHAR);
+   }
+   goto start;
 
 :show_chan:
   block;
