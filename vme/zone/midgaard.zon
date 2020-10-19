@@ -6633,7 +6633,7 @@ dilcopy blow_whistle@justice();
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / mayor");
 dilcopy reward_give@function();
-special SFUN_ACCUSE
+dilcopy accuse@justice();
 dilcopy guard_dir@function("west", null, {""}, "");
 dilcopy guard_door@function(WEST,
 "$1n stops you.",
@@ -7525,6 +7525,7 @@ alignment 0  /* Just above neutral */
 money 5 IRON_PIECE
 exp 0
 
+dilcopy attack_evil@justice();
 dilcopy blow_whistle@justice();
 dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
