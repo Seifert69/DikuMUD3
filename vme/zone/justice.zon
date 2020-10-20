@@ -812,14 +812,13 @@ code
    {
       foreach (UNIT_ST_NPC,u)
       {
-         if ((visible(self, u)) and (u.alignment  <= -350))
+         if (visible(self, u) and (u.alignment  <= -350))
          {
             set(u.charflags, CHAR_LEGAL_TARGET);
             act("$1n says, 'Begone you evil cretin!'", A_SOMEONE, self, null, null, TO_ROOM);
             //i := getinteger(DIL_GINT_CALLGUARDS, self, 0);
             set_fighting(self, u);
             unset(u.charflags, CHAR_SELF_DEFENCE);
-            goto start;
          }
       }
    }
