@@ -5997,7 +5997,6 @@ default POSITION_SITTING
 flags {UNIT_FL_NO_TELEPORT}
 
 dilcopy blow_whistle@justice();
-dilcopy protect_lawful@justice();
 dilcopy evaluate@function(64);
 
 dilcopy opening_hours@function({4,12,13,23}, {"list", "buy", "sell", "value", "request"}, 
@@ -6570,8 +6569,6 @@ M_HUMAN_MAGE_ELECTRICITY(85,SEX_FEMALE, "lightning bolt")
 alignment 1000
 flags {UNIT_FL_NO_TELEPORT}
 dilcopy blow_whistle@justice();
-dilcopy rescue@function("guard / mayor");
-dilcopy protect_lawful@justice();
 dilcopy accuse@justice();
 
 dilcopy deputy_check@function();
@@ -6600,8 +6597,6 @@ M_HUMAN_THIEF_POLE(82, SEX_MALE)
 alignment 1000
 
 dilcopy blow_whistle@justice();
-dilcopy rescue@function("guard / mayor");
-dilcopy protect_lawful@justice();
 special SFUN_ACCUSE
 
 dilcopy deputy_check@function();
