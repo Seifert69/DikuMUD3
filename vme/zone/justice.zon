@@ -14,7 +14,7 @@ END HEADER*/
 
    A zone where law and order is enforced needs the following:
 
-      The reward_board has DIL "wanted_poster()" on it.
+      The reward_board has DIL "wanted_poster()" and "crime_stopper()" on it.
 
       The captain has DIL:
          "accuse()" - to receive accusations and give rewards
@@ -37,12 +37,11 @@ END HEADER*/
 
    The criminal gets the CHAR_OUTLAW flag set.
    The criminal gets the following extras added:
-      - $ ?
-      - $ ?
+      - $reward is set if the player becomes wanted dead
    The reward_board gets the following extras added:
-      - $ ?
+      - $suspect/$crime is added to the reward board
    Any witnesses get the following extras added:
-      - $ ? 
+      - $witness
 
    Details on the extras above:
 
@@ -58,7 +57,7 @@ END HEADER*/
       The descr for each crime is what is displayed on the reward_board under "Suspects" heading.
 
    Witnesses extras:
-      Names {"$witness","$witness_161_8_5_1"i, "$witness_7"}
+      Names {"$witness","$witness_161_8_5_1", "$witness_7"}
       "
       Larry committed a crime.
       "
@@ -75,6 +74,71 @@ END HEADER*/
       The second name is the important one: $reward_<gold reward>_<xp reward>_<reward increment>
       the descr of a reward is displayed on the Reward Board under Wanted Dead
 
+Crime progression goes like this which is handled in DIL crime_counter()
+    - If your crime counter is >= CRIME_NONPRO  (8) then your PROTECTED flag is removed.
+    - If your crime counter is >= CRIME_OUTLAW (32) then your PROTECTED and OUTLAW flags are SET .
+    - If your crime counter is >= CRIME_REWARD (64) then a reward is set on your character.
+      This will remove your PROTECTED and set your OUTLAW flags.
+
+    I suppose this means, if you commit a crime that sets your crime counter in:
+
+     - [8..31]  You'll lose the benefit of being protected by the law and order system (see below).
+     - [32..63] You're wanted alive by the guards. They'll try to arrest you.
+     - [64..]   You're wanted dead or alive.
+
+
+    When the flags are restored / set:
+
+      - For all new players PROTECTED is set (CHECK)
+      - After you have served your jail time CHAR_PROTECTED is restored and CHAR_OUTLAW is removed
+        and your crime counter is cut in half (VERIFIED)
+      - When you're thrown in jail your _PROTECTED status is removed and your OUTLAW is set (just
+        in case you escape). (VERIFIED)
+      - When you die OUTLAW is removed (death.zon). (VERIFIED)
+        And also $reward is removed (Dave that prolly needs an update)
+
+    When the flags are removed:
+
+      - If a reward is set then the PROTECTED flag is removed and OUTLAW is set. (Verified)
+      - If your crime counter exceeds 8 (CRIME_NONPRO) the PROTECTED flag is removed.
+      - If your crime counter exceeds 32 the OUTLAW flag is set.
+      - If your crime counter exceeds 64 the PROTECTED flag is removed.
+      - any other ways?
+
+
+
+CHAR_PROTECTED flag
+    A charcter with this flag is protected by the law. This means law encforcers will
+    come to your rescue. By default all new players have this flag set. Most citizens
+    should also have this flag set, especially guards, mayors, shopkeepers, captains,
+    janitors and more.
+
+    The damage() function in C checks for this flag when someone is killed. If the person
+    killed is protected, it will log a crime. (VERIFIED)
+
+CHAR_OUTLAW
+    A character with this flag is wanted by the law. If the char is PROTECTED they're still
+    wanted alive. Otherwise dead. (VERIFIED)
+
+CHAR_SELF_DEFENCE
+    This flag is volatile and is used to figure out if you've committed a crime in self defense.
+    In which case you won't get in trouble. I.e. if you got attacked by someone protected, then
+    you're acting in self defense.
+
+    In the C damage() routine, we call offend_legal_state in justice.cpp. This will set the
+    CHAR_SELF_DEFENCE and CHAR_LEGAL_TARGET flags (VERIFIED)
+
+    Flag is removed as soon as you move to a new room or stop fighting (VERIFIED)
+
+CHAR_LEGAL_TARGET
+    This flag is volatile and is used to figure out if you're a legal target even if you're protected. If you're
+    a legal target then others won't get in trouble when they attack you.
+
+    In the C damage() routine, we call offend_legal_state in justice.cpp. This will set the
+    CHAR_SELF_DEFENCE and CHAR_LEGAL_TARGET flags (VERIFIED)
+
+    Flag is removed as soon as you move to a new room (VERIFIED).
+
 */
 
 %zone justice 
@@ -85,9 +149,8 @@ reset RESET_NOT
 
 %dil
 
-
-// Copied onto ??? with a $SUSPECT extra. Decreases times until extra can be deleted.
-// Quits when self has no more $SUSPECT extras
+// crime_stopper() is a timer that will clear the $suspect crimes off the reward_board
+// This DIL should be copied to the reward_board.
 //
 dilbegin crime_stopper();
 var
@@ -120,7 +183,8 @@ code
 }
 dilend
 
-
+// set_reward_char() sets the reward and applies the $reward extra to the criminal.
+// it is called by crime_counter();
 
 dilbegin set_reward_char(criminal : unitptr, incr : integer);
 var
@@ -166,7 +230,9 @@ code
 } 
 dilend
 
-
+// crime_counter() applies the incr to the criminals crimes score and then determines
+// which CHAR_FLAGS should be set.  If a reward is indicated it calls set_reward_char();
+// It is called by update_criminal.
 
 dilbegin crime_counter(criminal : unitptr, incr : integer, first_accuse : integer);
 external
@@ -198,6 +264,8 @@ code
 dilend
 
 
+// update_criminal() is called by accuse.  The Captain sends the accused a warning and it then calls crime_counter()
+// to update the crime stats of the criminal
 
 dilbegin update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  first_accuse : integer);
 external
@@ -224,17 +292,16 @@ code
 dilend
 
 
-
-// Called from ?
+// add_crime() is called from log_crime()
 // Call this function to add a $crime to a reward board. The reward_board in zone xxx
 // will be chosen based on what zone 'self' is in when the crime is committed. (??)
 //
 // self       : The char that is committing the crime.
 // vict       : The char that a crime was committed against.
 // crime_type : either CRIME_MURDER or CRIME_STEALING
-// crime_no   : Do we really need that? Why?
-// crime_clear: ? 
-//
+// crime_no   : unique identifier assigned  to the crime by log_crime.
+// crime_clear: The number of heartbeat ticks before this crime will be removed form the reward_board
+
 dilbegin add_crime(vict : unitptr, crime_type: integer, crime_no : integer, crime_clear : integer);
 var
    pre : stringlist;
@@ -264,21 +331,21 @@ code
    }
 
    // xxx - something needs to be done so it's the udgaard or midgaard or other board
-
+   // Currently there is only one reward_board.  It exists in both mirgaard and udgaard
+ 
    wp := findsymbolic("reward_board@udgaard");  //+self.outside.zoneidx); 
    addstring(pre, cr_string);
    addstring(pre, cr_string_2); 
    addstring(pre, "$SUSPECT"); 
    addextra(wp.extra, pre, desc  ); 
 
-
-   // xxx - Isn't quit; better?
-   i := dildestroy("add_crime@justice", self);
+   quit;
 }
 dilend
 
 
-
+// witness_timer() is copied to a witness when the observe a crime. Its purpose is to remove
+// the $witness extra after about an hour.  Called by set_witness();
 
 dilbegin witness_timer();
 var
@@ -317,8 +384,11 @@ code
 dilend
 
 
+// activate_accuse() will casue an NPC who witnesses a crime to go to the accuse_room and
+// accuse the criminal.  It is copied to the NPC by set_witness() if the witness is an NPC.
+//
 
-dilbegin fnpri(FN_PRI_MISSION+1) activate_accuse(crime_type : integer, criminal_name : string);
+dilbegin fnpri(FN_PRI_MISSION+1) activate_accuse(crime_type : integer, criminal_name : string, jurisdiction : string);
 external
    integer walk_room@function (s:string,i:integer);
 
@@ -346,7 +416,7 @@ code
       log("activate_accuse() illegal crime_type");
 
    startroom := self.outside.nameidx + "@" + self.outside.zoneidx;
-   accuse_room  := "accuse_room@"+self.outside.zoneidx;
+   accuse_room  := "accuse_room@"+jurisdiction;   //+self.outside.zoneidx;
 
    wr:=walk_room@function (accuse_room,5);
 
@@ -364,33 +434,29 @@ code
    wr := walk_room@function(startroom, 5);
 
    :cleanup:
-   // quit?
-   i := dildestroy("activate_accuse@justice", self);
-   return;
+    quit;
 }
 dilend
 
-// This function is activated from variour places and also C code combat routines when someone witnesses a crime.
-//
-//
-//
+// This function is called by log_crime in C and will set a $witness extra on any person who witnesses
+// a crime.  If the witness is an NPC it will copy the activate_accuse() DIL to the witness.
+
 dilbegin set_witness(criminal : unitptr, crime_no : integer, crime_type : integer, show : integer);
 external
    activate_accuse(witness : unitptr, crime_type : integer, criminal_name : string);
 
 var
-   //i : integer;
    pid: integer;
    acc_cmd : string;
    ex_string : stringlist;
-
+   jurisdiction : string;
 code
 { 
    if (criminal == self)
-      goto cleanup;
+      quit;
 
    if ((self.type == UNIT_ST_NPC) and (not(isset(self.charflags , CHAR_PROTECTED))))
-      goto cleanup;
+      quit;
 
    if (show)
    {
@@ -407,17 +473,26 @@ code
       dilcopy("witness_timer@justice()",self);
 
    if ((self.type == UNIT_ST_NPC) and (show))
-      dilcopy("activate_accuse@justice("+itoa(crime_type)+","+criminal.name+")",self); 
+   {
+     if (self.zoneidx == "udgaard")
+        jurisdiction := "udgaard";
+     else
+        jurisdiction := "midgaard";
 
-   :cleanup:
-   // shouldn't be necessary i := dildestroy("set_witness@justice", self);
+    dilcopy("activate_accuse@justice("+itoa(crime_type)+","+criminal.name+","+jurisdiction+")",self);
+   }
+
    quit;
 }
 dilend
 
-// To be copied on posters and reward boards :-)
+// wanted_poster() This DIL is copied to the reward_board.  It will display a list of Wanted criminals as
+// well as a list of recent crimes.  It will also show information about accusers when
+// accusations are made.
 //
-//
+// Curently, there is a reward_board in udgaard and midgaard.  They both display the same
+// informationn as the crime system is global at the moement.
+
 dilbegin wanted_poster();
 var
    found : integer;
@@ -442,19 +517,17 @@ code
    heartbeat := PULSE_SEC * 1;
    wait (SFB_CMD, ((command ("look"))) and (argument=="board"));
    act("$1n looks at the wanted posters.", A_ALWAYS, activator, null, null, TO_ROOM);
-   //sendtext(msg,activator);
 
-   wp := findsymbolic("reward_board@udgaard"); //"+self.outside.zoneidx);
-   //xxx is wp not == self?
 
-   suspects := wp.extra;
-
-   // xxx isn't it better to loop through the extras rather than the player list?
-   // also looks like this wont show NPCs? Essentially you just want to show all
-   // the $reward extras stored on the board right? 
+   suspects := self.extra;
+  
+   // this loops through the players connected to the game and displays anyone with
+   // $reward estras.   It will also display characters with the OUTLAW flag set.
    //
+   // $reward extras as stored on the criminal not on the board.
+  
    u:=ghead();
-   while (u.type==UNIT_ST_PC)
+   while ((u.type==UNIT_ST_PC) or (u.type==UNIT_ST_NPC)) 
    {
       if ("$reward" in u.extra)
       {
@@ -468,6 +541,8 @@ code
       u:=u.gnext;
    }
 
+   //loop trhought reward_board extras
+
    while(suspects)
    {
       if ("$SUSPECT" in suspects.names) 
@@ -476,29 +551,32 @@ code
       suspects := suspects.next;
    }
 
-   sendtext("<font color=red>W A N T E D</font><br><br>", activator);
-   sendtext("<b><font color=gold>Wanted Dead - Reward Offered</font></b><br><br>", activator);
+ // Diplay Wanted Poster
+
+
+   sendtext("<DIV class=cpr>W A N T E D</div><br><br>", activator);
+   sendtext("<b><div class=cpy>Wanted Dead - Reward Offered</div></b><br><br>", activator);
 
    if (length(wanted_dead) > 0)
       sendtext(wanted_dead+"<br>", activator);
    else
       sendtext("None at this time.<br>", activator);
 
-   sendtext("<br><b><font color=gold>Wanted Alive</b></font></b><br><br>",activator);
+   sendtext("<br><b><div class=cpy>Wanted Alive</b></div></b><br><br>",activator);
 
    if (length(wanted_alive) > 0)
       sendtext(wanted_alive+"<br>", activator);
    else
       sendtext("None at this time.<br>", activator);
 
-   sendtext("<br><b><font color=gold>Wanted Dead or Alive</b></font><br><br>", activator);
+   sendtext("<br><b><div class=cpy>Wanted Dead or Alive</b></div><br><br>", activator);
 
    if (length(wanted_either) > 0)
       sendtext(wanted_either+"<br>", activator);
    else
       sendtext("None at this time.<br>", activator);
 
-   sendtext("<br><b><font color=gold>Suspects</b></font><br><br>",activator);
+   sendtext("<br><b><div class=cpy>Suspects</b></div><br><br>",activator);
 
    if (length(local_suspects) > 0)
       sendtext(local_suspects+"<br>", activator);
@@ -510,10 +588,12 @@ code
 }
 dilend
 
+// accuse() is a DIL copied to the Captain (or other NPC) who will be receiving accusations.
+// it allows the NPC to accept accusations from PC and NCP characters.  It compares the
+// $witness extra information with the $crime inforation stored on the reward_board and if the
+// data matches it will call update_criminal. It also removes the $witness extra from the accuser
+// once a sucessful accusation is made.
 
-// To be placed on the captain
-//
-//
 dilbegin  fnpri(FN_PRI_MISSION-1) accuse();
 external
    update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  reported : integer);
@@ -692,11 +772,43 @@ code
 }
 dilend
 
+// attack_evil() Copied to guards to allow them to protect the citizens from evil NPCs
+
+dilbegin fnpri(FN_PRI_RESCUE-1) attack_evil();
+
+var
+u : unitptr;
+i : integer;
+code
+{
+
+ :start:
+   heartbeat:=PULSE_SEC*4;
+   wait(SFB_TICK, self.position >= POSITION_RESTING);
+
+   if (command(CMD_AUTO_TICK))
+   {
+      if (self.position == POSITION_FIGHTING)
+         goto start;
+
+      foreach (UNIT_ST_NPC,u)
+      {
+         if ((visible(self, u)) and (u.alignment  <= -350))
+         {
+            set(u.charflags, CHAR_LEGAL_TARGET);
+            act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",
+            A_SOMEONE, self, null, null, TO_ROOM);
+            i := getinteger(DIL_GINT_CALLGUARDS, self, 0);
+            set_fighting(self, u);
+            unset(u.charflags, CHAR_SELF_DEFENCE);
+            goto start;
+         }
+      }
+   }
+}
+dilend
 
 // This is copy on e.g. city guards to have them intervene in any illegal activities.
-//
-// A possible enhancement is to remove the check for NPCs < -350 and move that into
-// its own function. In Hades for example (mirror of Midgaard) that wouldn't make sense
 //
 dilbegin fnpri(FN_PRI_RESCUE-1) protect_lawful();
 external
@@ -712,29 +824,9 @@ code
 {
    :start:
    heartbeat:=PULSE_SEC*rnd(40,60); 
-   wait(SFB_TICK|SFB_COM|SFB_DEAD, self.position >= POSITION_RESTING);
+   wait(SFB_COM|SFB_DEAD, self.position >= POSITION_RESTING);
 
-   if (command(CMD_AUTO_TICK))
-   {
-      if (self.position == POSITION_FIGHTING)
-         goto start;
-
-      foreach (UNIT_ST_NPC,u)
-      {
-         if ((visible(self, u)) and (u.alignment  <= -350))
-         {
-            // Not sure why we should whistle here? ANd not the two places below?
-            set(u.charflags, CHAR_LEGAL_TARGET);
-            act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",
-            A_SOMEONE, self, null, null, TO_ROOM);
-            i := getinteger(DIL_GINT_CALLGUARDS, self, 0);
-            set_fighting(self, u);
-            unset(u.charflags, CHAR_SELF_DEFENCE);
-            goto start;
-         }
-      }
-   }
-   else if (command(CMD_AUTO_DEATH))
+   if (command(CMD_AUTO_DEATH))
    {
       bad := activator.fighting;
             
