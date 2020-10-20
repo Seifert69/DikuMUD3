@@ -800,16 +800,16 @@ var
    //i : integer;
 code
 {
-
- :start:
    heartbeat:=PULSE_SEC*4;
+
+:start:
    wait(SFB_TICK, self.position >= POSITION_RESTING);
+
+   if (self.position == POSITION_FIGHTING)
+      goto start;
 
    if (command(CMD_AUTO_TICK))
    {
-      if (self.position == POSITION_FIGHTING)
-         goto start;
-
       foreach (UNIT_ST_NPC,u)
       {
          if ((visible(self, u)) and (u.alignment  <= -350))
@@ -823,6 +823,8 @@ code
          }
       }
    }
+
+   goto start;
 }
 dilend
 
