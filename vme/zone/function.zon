@@ -115,7 +115,7 @@ heartbeat:=PULSE_SEC*3;
 wait (SFB_DONE, command("give") and (self==target));
 block;
 
-if (not("$reward" in target.extra)) 
+if (not("$reward" in medium.extra)) 
 {
       act ("$1n says, 'Thank you $3n, that is very nice of you.'",
 	   A_SOMEONE, self, null, activator, TO_ROOM);
