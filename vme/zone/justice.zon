@@ -14,14 +14,17 @@ END HEADER*/
 
    A zone where law and order is enforced needs the following:
 
-      The reward_board has DIL "wanted_poster()" and "crime_stopper()" on it.
+      The reward_board has DIL:
+          wanted_poster() - ? 
+          crime_stopper() - ?
 
       The captain has DIL:
          "accuse()" - to receive accusations and give rewards
 
       Guard / law enforcers have DIL:
-         "protect_lawful()" - intervene in illegal activities
-         "blow_whistle()" - to call for guards
+         protect_lawful() - intervene in illegal activities
+         blow_whistle()   - to call for guards
+         attack_evil()    - optional. If an evil NPC is in room, attack it. 
 
       Bar tenders, shop keepers, janitors, etc. should have the DIL:
          "blow_whistle()" - to call for guards.
@@ -772,13 +775,14 @@ code
 }
 dilend
 
+//
 // attack_evil() Copied to guards to allow them to protect the citizens from evil NPCs
-
-dilbegin fnpri(FN_PRI_RESCUE-1) attack_evil();
-
+// MS: Commented out the whistle. That should be handled already in the blow_whistle DIL.
+//
+dilbegin fnpri(FN_PRI_CHORES+1) attack_evil();
 var
-u : unitptr;
-i : integer;
+   u : unitptr;
+   //i : integer;
 code
 {
 
@@ -796,9 +800,8 @@ code
          if ((visible(self, u)) and (u.alignment  <= -350))
          {
             set(u.charflags, CHAR_LEGAL_TARGET);
-            act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",
-            A_SOMEONE, self, null, null, TO_ROOM);
-            i := getinteger(DIL_GINT_CALLGUARDS, self, 0);
+            //act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'", A_SOMEONE, self, null, null, TO_ROOM);
+            //i := getinteger(DIL_GINT_CALLGUARDS, self, 0);
             set_fighting(self, u);
             unset(u.charflags, CHAR_SELF_DEFENCE);
             goto start;
@@ -899,7 +902,6 @@ code
             
    if ((self.position > POSITION_SLEEPING) and (activator.position == POSITION_FIGHTING) and (visible(self,activator)))
    {
- 
       if(crime_check@justice(activator, vict))
       {
          act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",A_SOMEONE,self,null,null,TO_ROOM);    
