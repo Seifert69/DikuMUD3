@@ -855,19 +855,15 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
     }
 
 
-    // MS2020: Not yet clear why the salt here is the PWD?!
-    // I thought it was the (file)name
+    // MS2020: The PC_PWD (the first two letters) contains the salt interpreted by Crypt 
+    // when using the default encryption (only allows 8 chars)
+    // We could switch to 
+    //(gdb) print (char *) crypt(arg, "$1$papi")
+    // "$1$Pa$N7RTSV11rv3qkWzsTFHU5."
+    // Which would allow any pwd length but not work on Macs. Or as Ken suggests we could
+    // have two iterations of the default to support up to 16 chars pwd.
     int nCmp;
-
-    nCmp = pwdcompare(crypt(arg, PC_FILENAME(d->character)), PC_PWD(d->character), PC_MAX_PASSWORD);
-
-    if (nCmp != 0)
-    {
-        nCmp = pwdcompare(crypt(arg, PC_PWD(d->character)), PC_PWD(d->character), PC_MAX_PASSWORD);
-        if (nCmp == 0)
-            slog(LOG_ALL, 0, "%s using old password compare probably result of incorrect modify set pwd command.",
-                 PC_FILENAME(d->character));
-    }
+    nCmp = pwdcompare(crypt(arg, PC_PWD(d->character)), PC_PWD(d->character), PC_MAX_PASSWORD);
 
     if (nCmp != 0)
     {
