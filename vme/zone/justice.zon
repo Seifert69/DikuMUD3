@@ -152,6 +152,7 @@ reset RESET_NOT
 
 %dil
 
+
 // crime_stopper() is a timer that will clear the $suspect crimes off the reward_board
 // This DIL should be copied to the reward_board.
 //
@@ -186,9 +187,11 @@ code
 }
 dilend
 
+
+
 // set_reward_char() sets the reward and applies the $reward extra to the criminal.
 // it is called by crime_counter();
-
+//
 dilbegin set_reward_char(criminal : unitptr, incr : integer);
 var
    gold : integer;
@@ -233,10 +236,12 @@ code
 } 
 dilend
 
+
+
 // crime_counter() applies the incr to the criminals crimes score and then determines
 // which CHAR_FLAGS should be set.  If a reward is indicated it calls set_reward_char();
 // It is called by update_criminal.
-
+//
 dilbegin crime_counter(criminal : unitptr, incr : integer, first_accuse : integer);
 external
    set_reward_char@justice(criminal : unitptr, incr : integer);
@@ -267,9 +272,10 @@ code
 dilend
 
 
+
 // update_criminal() is called by accuse.  The Captain sends the accused a warning and it then calls crime_counter()
 // to update the crime stats of the criminal
-
+//
 dilbegin update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  first_accuse : integer);
 external
    crime_counter@justice(criminal : unitptr, incr : integer, first_accuse : integer);
@@ -295,6 +301,7 @@ code
 dilend
 
 
+
 // add_crime() is called from log_crime()
 // Call this function to add a $crime to a reward board. The reward_board in zone xxx
 // will be chosen based on what zone 'self' is in when the crime is committed. (??)
@@ -304,7 +311,7 @@ dilend
 // crime_type : either CRIME_MURDER or CRIME_STEALING
 // crime_no   : unique identifier assigned  to the crime by log_crime.
 // crime_clear: The number of heartbeat ticks before this crime will be removed form the reward_board
-
+//
 dilbegin add_crime(vict : unitptr, crime_type: integer, crime_no : integer, crime_clear : integer);
 var
    pre : stringlist;
@@ -347,9 +354,10 @@ code
 dilend
 
 
+
 // witness_timer() is copied to a witness when the observe a crime. Its purpose is to remove
 // the $witness extra after about an hour.  Called by set_witness();
-
+//
 dilbegin witness_timer();
 var
    tm : integer;
@@ -387,10 +395,10 @@ code
 dilend
 
 
+
 // activate_accuse() will casue an NPC who witnesses a crime to go to the accuse_room and
 // accuse the criminal.  It is copied to the NPC by set_witness() if the witness is an NPC.
 //
-
 dilbegin fnpri(FN_PRI_MISSION+1) activate_accuse(crime_type : integer, criminal_name : string, jurisdiction : string);
 external
    integer walk_room@function (s:string,i:integer);
@@ -441,9 +449,11 @@ code
 }
 dilend
 
+
+
 // This function is called by log_crime in C and will set a $witness extra on any person who witnesses
 // a crime.  If the witness is an NPC it will copy the activate_accuse() DIL to the witness.
-
+//
 dilbegin set_witness(criminal : unitptr, crime_no : integer, crime_type : integer, show : integer);
 external
    activate_accuse(witness : unitptr, crime_type : integer, criminal_name : string);
@@ -489,13 +499,15 @@ code
 }
 dilend
 
+
+
 // wanted_poster() This DIL is copied to the reward_board.  It will display a list of Wanted criminals as
 // well as a list of recent crimes.  It will also show information about accusers when
 // accusations are made.
 //
 // Curently, there is a reward_board in udgaard and midgaard.  They both display the same
 // informationn as the crime system is global at the moement.
-
+//
 dilbegin wanted_poster();
 var
    found : integer;
@@ -591,12 +603,14 @@ code
 }
 dilend
 
+
+
 // accuse() is a DIL copied to the Captain (or other NPC) who will be receiving accusations.
 // it allows the NPC to accept accusations from PC and NCP characters.  It compares the
 // $witness extra information with the $crime inforation stored on the reward_board and if the
 // data matches it will call update_criminal. It also removes the $witness extra from the accuser
 // once a sucessful accusation is made.
-
+//
 dilbegin  fnpri(FN_PRI_MISSION-1) accuse();
 external
    update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  reported : integer);
@@ -775,7 +789,8 @@ code
 }
 dilend
 
-//
+
+
 // attack_evil() Copied to guards to allow them to protect the citizens from evil NPCs
 // MS: Commented out the whistle. That should be handled already in the blow_whistle DIL.
 //
@@ -800,7 +815,7 @@ code
          if ((visible(self, u)) and (u.alignment  <= -350))
          {
             set(u.charflags, CHAR_LEGAL_TARGET);
-            //act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'", A_SOMEONE, self, null, null, TO_ROOM);
+            act("$1n says, 'Begone you evil cretin!'", A_SOMEONE, self, null, null, TO_ROOM);
             //i := getinteger(DIL_GINT_CALLGUARDS, self, 0);
             set_fighting(self, u);
             unset(u.charflags, CHAR_SELF_DEFENCE);
@@ -810,6 +825,8 @@ code
    }
 }
 dilend
+
+
 
 // This is copy on e.g. city guards to have them intervene in any illegal activities.
 //
@@ -856,6 +873,7 @@ code
 dilend
 
 
+
 // blow_whistle is to be placed e.g. on guards and shopkeepers and will allow them
 // to call for help. Any char in the zone which has a protect_lawful has a chance
 // to come running to the rescue.
@@ -889,12 +907,10 @@ code
 
    if (self.position == POSITION_SLEEPING)
    {
-      /* In the event that a guard is sleeping there is a chance that the whistle will wake him up */
+      /* In the event that a guard is sleeping there is a chance that the combat will wake him up */
       wake := rnd(1,100);
       if (wake >=25)
       {
-         //act("$1n wakes with a start and gets to his feet.",A_SOMEONE,self,null,null,TO_ROOM);
-         //self.position := POSITION_STANDING;
          exec("wake", self); // This is a better way to wake up ;)
          goto nope;
       }
