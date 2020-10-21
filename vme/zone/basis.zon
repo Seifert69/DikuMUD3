@@ -7676,7 +7676,7 @@ code
 }
 dilend
 
-special SFUN_ACCUSE
+dilcopy accuse@justice();
 
 end
 
