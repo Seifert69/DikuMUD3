@@ -6597,8 +6597,6 @@ M_HUMAN_THIEF_POLE(82, SEX_MALE)
 alignment 1000
 
 dilcopy blow_whistle@justice();
-special SFUN_ACCUSE
-
 dilcopy deputy_check@function();
 dilcopy teach_q_block@function(POLICE_ACADEMY, "say Deputies only!");
 
