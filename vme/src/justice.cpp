@@ -964,10 +964,14 @@ void call_guards(class unit_data *guard)
          {
             membug_verify_class(fptr);
             membug_verify(fptr->data);
+
+            // If this NPC has a protect lawful DIL then they may answer the whistle call
             if ((fptr->index == SFUN_PROTECT_LAWFUL) || dil_find("protect_lawful@justice", u))
                ok = TRUE;
          }
-         if (ok && !number(0, 5) && !dil_find("accuse@justice", u))
+
+         // If the NPC is on its way to report a crime, don't answer the call.
+         if (ok && !number(0, 5) && !dil_find("activate_accuse@justice", u))
             npc_walkto(u, UNIT_IN(guard));
       }
    }
