@@ -416,8 +416,9 @@ code
    if (not(self.type == UNIT_ST_NPC))
       goto cleanup;
 
-   if (dilfind ("accuse@justice",self))
-      goto cleanup;
+   // MS: Looks incorrect. The captain has the accuse I believe. Not the guard going to accuse
+   // if (dilfind("accuse@justice",self))
+   //    goto cleanup;
 
    if (crime_type == CRIME_MURDER)
       crime_name := "murder";
@@ -429,7 +430,10 @@ code
    startroom := self.outside.nameidx + "@" + self.outside.zoneidx;
    accuse_room  := "accuse_room@"+jurisdiction;   //+self.outside.zoneidx;
 
-   wr:=walk_room@function (accuse_room,5);
+   // Let this mission critical DIL take priority over lower level chores.
+   priority;
+
+   wr := walk_room@function(accuse_room, 5);
 
    heartbeat := PULSE_SEC*4;
    pause;
