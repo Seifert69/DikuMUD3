@@ -6623,7 +6623,7 @@ M_HUMAN_WARRIOR_SWORD(87,SEX_MALE)
 alignment 1000
 
 dilcopy blow_whistle@justice();
-dilcopy protect_lawful@justice();
+// dilcopy protect_lawful@justice(); By removing this, the captain will not respond to whistles
 dilcopy rescue@function("guard / mayor");
 dilcopy reward_give@function();
 dilcopy accuse@justice();

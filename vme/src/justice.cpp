@@ -943,9 +943,7 @@ int guard_assist(const class unit_data *npc, struct visit_data *vd)
 void call_guards(class unit_data *guard)
 {
    class zone_type *zone;
-   class unit_fptr *fptr;
    class unit_data *u;
-   int ok;
 
    if (!IS_ROOM(UNIT_IN(guard)))
       return;
@@ -956,18 +954,16 @@ void call_guards(class unit_data *guard)
    {
       membug_verify_class(u);
       assert(!u->is_destructed());
+
       if (IS_NPC(u) && IS_ROOM(UNIT_IN(u)) &&
           zone == UNIT_FILE_INDEX(UNIT_IN(u))->zone && u != guard)
       {
-         ok = FALSE;
-         for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
-         {
-            membug_verify_class(fptr);
-            membug_verify(fptr->data);
-            if ((fptr->index == SFUN_PROTECT_LAWFUL) || dil_find("protect_lawful@justice", u))
-               ok = TRUE;
-         }
-         if (ok && !number(0, 5) && !dil_find("accuse@justice", u))
+         // If this NPC has a protect lawful DIL then they may answer the whistle call
+         if (!dil_find("protect_lawful@justice", u))
+            continue;
+
+         // If the NPC is on its way to report a crime, don't answer the call.
+         if (!number(0, 5) && !dil_find("activate_accuse@justice", u))
             npc_walkto(u, UNIT_IN(guard));
       }
    }
