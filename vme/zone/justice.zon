@@ -416,9 +416,9 @@ code
    if (not(self.type == UNIT_ST_NPC))
       goto cleanup;
 
-   // MS: Looks incorrect. The captain has the accuse I believe. Not the guard going to accuse
-   // if (dilfind("accuse@justice",self))
-   //    goto cleanup;
+   // The captain himself shouldn't get an activate_accuse()
+   if (dilfind("accuse@justice",self))
+      goto cleanup;
 
    if (crime_type == CRIME_MURDER)
       crime_name := "murder";
@@ -643,7 +643,7 @@ code
    crime := argument;
 
    if ((activator.type == UNIT_ST_NPC) and  (self.position  == POSITION_SLEEPING))
-      exec("wake "+ self.name,activator);  /* command_interpreter(sarg->activator, "wake"); */
+      exec("wake "+ self.name, activator);  /* command_interpreter(sarg->activator, "wake"); */
 
    if ((self.position <  POSITION_SLEEPING) or (self.position  == POSITION_FIGHTING))
    {
