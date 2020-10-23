@@ -314,10 +314,11 @@ void dilfi_setpwd(register class dilprg *p)
             p->waitcmd = WAITCMD_QUIT;
         }
         else if (v1->val.ptr && v2->val.ptr)
-            strncpy(PC_PWD((class unit_data *)v1->val.ptr),
-                    crypt((char *)v2->val.ptr,
-                          PC_FILENAME((class unit_data *)v1->val.ptr)),
-                    10);
+        {
+            strncpy(PC_PWD((class unit_data *)v1->val.ptr), crypt((char *)v2->val.ptr,
+                          PC_FILENAME((class unit_data *)v1->val.ptr)), PC_MAX_PASSWORD);
+            PC_PWD((class unit_data *)v1->val.ptr)[PC_MAX_PASSWORD-1] = 0;
+        }
     }
     delete v1;
     delete v2;

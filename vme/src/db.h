@@ -12,7 +12,7 @@
 #include "dbfind.h"
 #include "config.h"
 
-#define UNIT_VERSION 72
+#define UNIT_VERSION 73
 #define MUD_NAME "Valhalla"	/* For ease of localization */
 
 #define UNIT_DIR       "units/"	// Directory for DIL store / restore units

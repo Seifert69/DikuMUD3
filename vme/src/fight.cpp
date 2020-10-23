@@ -1157,8 +1157,7 @@ void damage(class unit_data *ch, class unit_data *victim,
             else
             {
                if (IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
-
-                  log_crime(NULL, victim, CRIME_MURDER);
+                  log_crime(ch, victim, CRIME_MURDER);
             }
          }
       }

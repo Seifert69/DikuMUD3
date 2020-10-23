@@ -1791,7 +1791,7 @@ dilcopy protect_lawful@justice();
 
 dilcopy captain@midgaard("cell_1@kingc");
 
-special SFUN_ACCUSE
+dilcopy accuse@justice();
 
 dilcopy guard_dir@function("west", null, {""}, "");
 
@@ -1807,7 +1807,6 @@ dilcopy fido@function("$1n slowly devours $2n, crunching the bones.",
 dilcopy blow_whistle@justice();
 /*
 dilcopy protect_lawful@justice();
-special SFUN_ACCUSE
 special SFUN_CAPTAIN time WAIT_SEC*20 bits SFB_RANTIME
 */
 dilcopy wander_zones@function ("@loadzone", 70, 0,0);

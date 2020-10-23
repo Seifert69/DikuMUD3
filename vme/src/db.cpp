@@ -1010,8 +1010,9 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
             }
 
             g_nCorrupt += pBuf->ReadStringCopy(PC_PWD(u), PC_MAX_PASSWORD);
-            PC_PWD(u)
-            [PC_MAX_PASSWORD - 1] = '\0';
+            PC_PWD(u)[PC_MAX_PASSWORD - 1] = '\0';
+            if (unit_version <= 72)
+                PC_PWD(u)[10] = '\0'; // This will allow me to later extend the password length
 
             if (unit_version >= 54)
             {
@@ -1037,6 +1038,22 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
                 g_nCorrupt += pBuf->Read16(&PC_VIRTUAL_LEVEL(u));
             else
                 PC_VIRTUAL_LEVEL(u) = CHAR_LEVEL(u);
+
+
+            if (unit_version <= 72)
+            {
+                // Catch up XP to new hockey stick
+                int xpl = required_xp(PC_VIRTUAL_LEVEL(u));
+                int xpfloor = xpl + (required_xp(PC_VIRTUAL_LEVEL(u)+1) - xpl) / 2;
+                if (CHAR_EXP(u) < xpfloor)
+                {
+                    slog(LOG_ALL, 0, "ADJUST: Player %s XP increased from %d to %d",
+                         UNIT_NAME(u), CHAR_EXP(u), xpfloor);
+                    CHAR_EXP(u) = xpfloor;
+                    // xxx
+                }
+            }
+
 
             g_nCorrupt += pBuf->Read32(&t32);
             PC_TIME(u).creation = t32;

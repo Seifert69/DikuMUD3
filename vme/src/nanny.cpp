@@ -599,8 +599,7 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
 
     send_to_descriptor(scriptwrap("PasswordOff()").c_str(), d);
 
-    if (strncmp(crypt(arg, PC_FILENAME(d->character)),
-                PC_PWD(d->character), 10))
+    if (pwdcompare(crypt(arg, PC_FILENAME(d->character)), PC_PWD(d->character), PC_MAX_PASSWORD))
     {
         send_to_descriptor("Passwords don't match.<br/>", d);
         set_descriptor_fptr(d, nanny_new_pwd, TRUE);
@@ -633,8 +632,7 @@ int check_pwd(class descriptor_data *d, char *pwd)
         return FALSE;
     }
 
-    if (strlen(pwd) > 10)
-        pwd[10] = 0;
+    pwd[PC_MAX_PASSWORD-1] = 0;
 
     bA = FALSE;
     bNA = FALSE;
@@ -688,9 +686,8 @@ void nanny_new_pwd(class descriptor_data *d, char *arg)
         return;
     }
 
-    strncpy(PC_PWD(d->character), crypt(arg, PC_FILENAME(d->character)),
-            10);
-    *(PC_PWD(d->character) + 10) = '\0';
+    strncpy(PC_PWD(d->character), crypt(arg, PC_FILENAME(d->character)), PC_MAX_PASSWORD);
+    PC_PWD(d->character)[PC_MAX_PASSWORD-1] = 0;
 
     set_descriptor_fptr(d, nanny_pwd_confirm, TRUE);
 }
@@ -818,8 +815,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
     /* PC_ID(d->character) can be -1 when a newbie is in the game and
        someone logins with the same name! */
 
-    STATE(d)
-    ++;
+    STATE(d)++;
 
     if (STATE(d) == 1)
     {
@@ -858,8 +854,18 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
         return;
     }
 
-    if (strncmp(crypt(arg, PC_PWD(d->character)),
-                PC_PWD(d->character), 10) != 0)
+
+    // MS2020: The PC_PWD (the first two letters) contains the salt interpreted by Crypt 
+    // when using the default encryption (only allows 8 chars)
+    // We could switch to 
+    //(gdb) print (char *) crypt(arg, "$1$papi")
+    // "$1$Pa$N7RTSV11rv3qkWzsTFHU5."
+    // Which would allow any pwd length but not work on Macs. Or as Ken suggests we could
+    // have two iterations of the default to support up to 16 chars pwd.
+    int nCmp;
+    nCmp = pwdcompare(crypt(arg, PC_PWD(d->character)), PC_PWD(d->character), PC_MAX_PASSWORD);
+
+    if (nCmp != 0)
     {
         if (!str_is_empty(arg))
         {
