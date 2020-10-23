@@ -15,7 +15,7 @@ END HEADER*/
 #define BOLDIN_WATER_ONGOING "$Find Boldin Water"
 #define BOLDIN_BREAD_COMPLETE "$Found Boldin Bread"
 #define BOLDIN_WATER_COMPLETE "$Found Boldin Water"
-#define BOLDIN_HANDOFF  "$Boldin Handoff"
+#define BOLDIN_HANDOFF  "Feeding Boldin Complete"
 #define EXPLORE_ONGOING  "Exploring Valhalla Quest Ongoing"
 #define EXPLORE_COMPLETE "Exploring Valhalla Complete"
 
@@ -101,7 +101,7 @@ code
 	pause;
 	exec("whisper "+pc.name+" Would you be so kind as to help me out?", self);
 	pause;
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>Nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	pause;
 	goto accept_bread;
@@ -121,7 +121,7 @@ code
 	pause;
 	exec("whisper "+pc.name+" Would you be so kind as to help me out?", self);
 	pause;
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>Nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	pause;
 	goto accept_water;
@@ -137,7 +137,7 @@ code
 	pause;
 	exec("whisper "+pc.name+" What do you think, do you have it in you to help?", self);
 	pause;
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>Nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	pause;
 	goto accept_handoff;
 	
@@ -177,7 +177,7 @@ code
 	else
 	{
 		act("<div class='whisper'>Boldin the wise whispers to you, '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		goto accept_water;
+		goto accept_handoff;
 	}
 :no_quest:
 
@@ -197,7 +197,7 @@ code
 	act("<div class='whisper'>Boldin the wise whispers something to " + pc.name + ".",A_SOMEONE, pc, null, null, TO_REST); 
 	exec("whisper "+pc.name+" Take this money, and you can keep anything thats left after your purchase.", self);
 	
-	item := load("coins@newbie");
+	item := load("coins@gremlin");
 	link(item, pc);
 	act("<br>Boldin the wise quietly slips you some coins.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	act("<div class='whisper'>Boldin the wise whispers to you, 'Use the <div class='hint'>purse</div> command to check how much money you are carrying.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
@@ -225,10 +225,10 @@ code
 	
 	act("<div class='whisper'>Boldin the wise whispers to you, 'At the Midgaard Market Square you will find an obelisk full of water! Simply <div class='hint'>pour obelisk in barrel</div> to fill it up.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	pause;
-	item := load("water_barrel@newbie");
+	item := load("water_barrel@gremlin");
 	link(item, pc);
 	act("Boldin hands you an empty barrel.<br>",A_SOMEONE, pc, null, null, TO_CHAR);
-	item := load("midgaard_map@newbie");
+	item := load("midgaard_map@gremlin");
 	link(item, pc);
 	act("Boldin hands you a crumpled map.",A_SOMEONE, pc, null, null, TO_CHAR);
 	act("<div class='hint'>HINT: Type 'look map' to find directions to Midgaard.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
@@ -243,10 +243,10 @@ code
 	exec("say Your help will be well appreciated " + pc.name +"!", self);
 	pause;
 	
-	exec("whisper "+pc.name+" North of Midgaard, lies an area known as The Moors.", self);
+	exec("whisper "+pc.name+" Between Cypress Forest and the City of Midgaard lies a trail.", self);
 	pause;
 	
-	exec("whisper "+pc.name+" A small farmstead lies along the western edge of The Moors.", self);
+	exec("whisper "+pc.name+" A small farmstead can be found down this trail.", self);
 	pause;
 	
 	exec("whisper "+pc.name+" Barnham is the master of this farm, and also a distant cousin of mine.", self);
@@ -272,7 +272,7 @@ code
 		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 		act("<br><div class='xpgain'>You recieve 500 experience.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 		experience(500, pc);
-		item := load("coins@newbie");
+		item := load("coins@gremlin");
 		link(item, pc);
 		act("Boldin the wise quietly slips you some coins.",A_SOMEONE, pc, null, null, TO_CHAR); 
 		exec("whisper " + pc.name + " I suspect you'll need that sooner than later.", self);
@@ -294,13 +294,13 @@ code
 		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR);
 		act("<br><div class='xpgain'>You recieve 500 experience.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 		experience(500, pc);
-		item := load("coins@newbie");
+		item := load("coins@gremlin");
 		link(item, pc);	
-		item := load("water_barrel@newbie");
+		item := load("water_barrel@gremlin");
 		link(item, pc);
 		act("Boldin the wise quietly slips you some coins.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
 		exec("whisper " + pc.name + " I suspect you'll need that sooner than later.", self);
-		act("<br>Boldin the wise hands you an empty barrel.",A_SOMEONE, pc, null, null, TO_CHAR); 
+		act("<br><br>Boldin the wise hands you an empty barrel.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
 		exec("whisper " + pc.name + " Why dont you keep that, it may be useful.", self);
 	}
 	unsecure(pc);
@@ -343,7 +343,7 @@ code
 		exec("say Ahh, delicious!", self);
 		destroy(self.inside);
 	}
-	else if (("water_barrel@newbie" == (self.inside.nameidx + "@" + self.inside.zoneidx)) and 
+	else if (("water_barrel@gremlin" == (self.inside.nameidx + "@" + self.inside.zoneidx)) and 
 		(not(BOLDIN_WATER_COMPLETE in activator.quests)) and (BOLDIN_BREAD_COMPLETE in activator.quests))
 	{
 		if(self.inside.weight < 28)
@@ -385,7 +385,7 @@ var
 
 code
 {
-	heartbeat:= PULSE_SEC*3;
+	heartbeat:= PULSE_SEC*4;
 
 :start:
 	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(EXPLORE_COMPLETE in activator.quests)) and (activator.level <= 20) and (BOLDIN_HANDOFF in activator.quests));
@@ -396,22 +396,29 @@ code
 	if (EXPLORE_ONGOING in pc.quests)
 		goto explore_ongoing;
 	
-	pause;
-	exec("say This quest doesnt yet exist! Be patient, we're working on it!", self);
-/*
     pause;
-    exec("say you look to be somewhat new around here.", self);
+    exec("say Hello "+pc.name+", Boldin wrote me to say that you'd be coming.", self);
     pause;
-	exec("whisper "+pc.name+" I could use some help. And I'm guessing you could as well!", self);
+	exec("say I'm afraid to say it, but I could use some help!", self);
 	pause;
-	exec("whisper "+pc.name+" You see, the older I get, the harder it seems it is to get around.", self);
+	exec("say My son Bernhard went exploring, and hasnt returned.", self);
 	pause;
-	exec("whisper "+pc.name+" Would you be so kind as to help me out?", self);
+	exec("say Whats more, it appears those nasty gremlins have invaded.", self);
 	pause;
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>Nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	exec("say For generations, we have seen one or two periodically attack from their cave to the west.", self);
+	pause;
+	exec("emote gazes fearfully out the window.", self);
+	pause;
+	exec("say This appears to be entirely different.", self);
+	pause;
+	exec("say I fear for his life!", self);
+	pause;
+	exec("say Do you think you might help?", self);
+	pause;
+	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	pause;
-*/
+	
 	goto accept_explore;
 	
 :accept_explore:
@@ -434,24 +441,37 @@ code
 	goto start;
 
 :explore_accepted:
-/*
-	exec("say Excellent!", self);
+
+	exec("say Thank you!", self);
+	pause;
+	exec("say While I live a humble life, I am descended from great adventurers.", self);
+	pause;
+	exec("say It must be their blood that sent Bernhard off.", self);
+	pause;
+	exec("say Return here with Barnham in tow... or with evidence that he will not return.", self);
+	pause;
+	exec("emote reaches over to the drawers, and with a deft move, opens a false bottom!", self);
+	pause;
+	exec("emote carefully lifts an object from the drawer, and unwraps it's cloth covering.", self);
+	pause;
+	exec("say "+pc.name+", this has been handed down to me, for use fending off invading gremlins.", self);
 	pause;
 	
-	exec("say A man gets hungry in his age. If you could find a store and <div class='hint'>buy bread</div> for me, it would be well appreciated.", self);
-	pause;
-	
-	exec("whisper "+pc.name+" Take this money, and you can keep anything thats left after your purchase.<br>", self);
-	
-	item := load("coins@newbie");
+	item := load("barnham_dagger@gremlin");
+	item.height := pc.height;
+	//dilcopy ("ply_restrict@function("+pc.name+",0,10,"")",item);
 	link(item, pc);
-	act("<br>Boldin the wise quietly slips you some coins.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Use the <div class='hint'>purse</div> command to check how much money you are carrying.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	act("<div class='hint'>HINT: A food store can be found west and north of here.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	addextra(pc.quests, {BOLDIN_BREAD_ONGOING}, "");
-	addextra(pc.quests, {BOLDIN_ONGOING}, "");
+	act("<br>Barnham hands you a gleaming dagger.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	addextra(pc.quests, {EXPLORE_ONGOING}, "");
+	exec("say Through my door here to the west, you will find my fields.", self);
 	pause;
-*/	
+	exec("say Barnham carries that dagger's match. I pray it will protect him!", self);
+	pause;
+	exec("say Beyond the fields a path should lead to the caves.", self);
+	act("<div class='hint'>HINT: Use the command 'open west door' to identify and open the appropriate door.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	pause;
+	pause;
+
 	unsecure(pc);
 	goto start;
 	
@@ -467,7 +487,7 @@ code
 		experience(500, pc);
 		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 		act("<br><div class='xpgain'>You recieve 500 experience.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		item := load("coins@newbie");
+		item := load("coins@gremlin");
 		link(item, pc);
 		act("Boldin the wise quietly slips you some coins.",A_SOMEONE, pc, null, null, TO_CHAR); 
 		exec("whisper " + pc.name + " I suspect you'll need that sooner than later.", self);
@@ -535,36 +555,30 @@ dilend // END barnham_give
 /* END New Newbie Dils */
 
 %rooms
-/*********************************************************************************************
-** NEED TO ADD EXIT oasis@desert EAST TO entrance@barbarian descr "Barbarian Hall Entrance" **
-*********************************************************************************************/
-
 
 farm_house
 names {"farm house", "house"}
 title "Barnham's Farm House"
 descr
 "A simple decor furnishes an otherwise relatively non-descript farm house. 
-A table with two chairs sit along one side, opposite a stone fireplace.
-A wooden ladder leads up to a door, through which it seems there is an attic."
+A table with two chairs sit along one side, opposite a stone fireplace. There 
+is a side-table with drawers, and not too much else. A wooden ladder leads up
+to a door, through which it seems there is an attic. To the west a door
+leads out to the farm yard, and to the east is Barnham's entry."
 
 movement SECT_INSIDE
 ALWAYS_LIGHT
-flags {UNIT_FL_INDOORS}
-
-east to temple@udgaard descr "The main hall is to the northeast";
+flags {UNIT_FL_INDOORS,UNIT_FL_NO_MOB}
 
 up to farm_attic descr "Barnham's Attic"
 keyword{"door"}
 open {EX_OPEN_CLOSE,EX_CLOSED};
-
 west to farm_01 descr "Outside Barnham's Farm"
 keyword{"door"}
 open {EX_OPEN_CLOSE,EX_CLOSED};
-
 east to outside_farm descr "Outside Barnham's Farm";
-end
 
+end
 
 farm_attic
 names {"farm attic", "attic"}
@@ -586,10 +600,211 @@ title "Outside Barnham's Farm"
 descr
 "On a farm. It smells farmy."
 movement SECT_FIELD
+flags {UNIT_FL_NO_MOB}
 
+west to farm_04 descr "Barnham's Farm";
+north to farm_02 descr "Barnham's Farm";
+south to farm_06 descr "Barnham's Farm";
 east to farm_house descr "Barnham's Farm House"
 keyword{"door"}
 open {EX_OPEN_CLOSE,EX_CLOSED};
+end
+
+farm_02
+names {"farm yard", "farm"}
+title "On Barnham's Farm"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+west to farm_03 descr "Barnham's Farm";
+north to fn_02 descr "Barnham's Farm";
+south to farm_01 descr "Outside Barnham's Farm";
+end
+
+farm_03
+names {"farm yard", "farm"}
+title "On Barnham's Farm"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+west to fpath_01 descr "A small path";
+south to farm_04 descr "Barnham's Farm";
+east to farm_02 descr "Barnham's Farm";
+end
+
+farm_04
+names {"farm yard", "farm"}
+title "On Barnham's Farm"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+north to farm_03 descr "Barnham's Farm";
+south to farm_05 descr "Barnham's Farm";
+east to farm_01 descr "Barnham's Farm";
+end
+
+farm_05
+names {"farm yard", "farm"}
+title "On Barnham's Farm"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+north to farm_04 descr "Barnham's Farm";
+south to fs_01 descr "Barnham's Farm";
+east to farm_06 descr "Barnham's Farm";
+end
+
+farm_06
+names {"farm yard", "farm"}
+title "On Barnham's Farm"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+north to farm_01 descr "Outside Barnham's Farm";
+west to farm_05 descr "Barnham's Farm";
+end
+
+fn_01
+names {"farm yard", "farm"}
+title "On Barnham's Farm - north"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+north to fn_03 descr "Barnham's Farm";
+east to fn_04 descr "Barnham's Farm";
+end
+
+fn_02
+names {"farm yard", "farm"}
+title "On Barnham's Farm - north"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+north to fn_04 descr "Barnham's Farm";
+west to fn_01 descr "Barnham's Farm";
+south to farm_02 descr "Barnham's Farm";
+east to fn_06 descr "Barnham's Farm";
+end
+
+fn_03
+names {"farm yard", "farm"}
+title "On Barnham's Farm - north"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+south to fn_01 descr "Barnham's Farm";
+east to fn_04 descr "Barnham's Farm";
+end
+
+fn_04
+names {"farm yard", "farm"}
+title "On Barnham's Farm - north"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+west to fn_03 descr "Barnham's Farm";
+south to fn_02 descr "Barnham's Farm";
+east to fn_05 descr "Barnham's Farm";
+end
+
+fn_05
+names {"farm yard", "farm"}
+title "On Barnham's Farm - north"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+west to fn_04 descr "Barnham's Farm";
+south to fn_06 descr "Barnham's Farm";
+end
+
+fn_06
+names {"farm yard", "farm"}
+title "On Barnham's Farm - north"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+north to fn_05 descr "Barnham's Farm";
+west to fn_02 descr "Barnham's Farm";
+end
+
+fs_01
+names {"farm yard", "farm"}
+title "On Barnham's Farm - south"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+north to farm_05 descr "Barnham's Farm";
+west to fs_05 descr "Barnham's Farm";
+south to fs_03 descr "Barnham's Farm";
+east to fs_02 descr "Barnham's Farm";
+end
+
+fs_02
+names {"farm yard", "farm"}
+title "On Barnham's Farm - south"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+west to fs_01 descr "Barnham's Farm";
+south to fs_04 descr "Barnham's Farm";
+end
+
+fs_03
+names {"farm yard", "farm"}
+title "On Barnham's Farm - south"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+north to fs_01 descr "Barnham's Farm";
+west to fs_06 descr "Barnham's Farm";
+east to fs_04 descr "Barnham's Farm";
+end
+
+fs_04
+names {"farm yard", "farm"}
+title "On Barnham's Farm - south"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+north to fs_02 descr "Barnham's Farm";
+west to fs_03 descr "Barnham's Farm";
+end
+
+fs_05
+names {"farm yard", "farm"}
+title "On Barnham's Farm - south"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+south to fs_06 descr "Barnham's Farm";
+east to fs_01 descr "Barnham's Farm";
+end
+
+fs_06
+names {"farm yard", "farm"}
+title "On Barnham's Farm - south"
+descr
+"On a farm. It smells farmy."
+movement SECT_FIELD
+
+north to fs_05 descr "Barnham's Farm";
+east to fs_03 descr "Barnham's Farm";
 end
 
 outside_farm
@@ -600,6 +815,7 @@ descr
 movement SECT_FIELD
 
 west to farm_house descr "Barnham's Farm House";
+east to trail_02 descr "Outside the Farm House";
 end
 
 trail_01
@@ -609,11 +825,229 @@ descr
 "On a trail. It's made of dirt."
 movement SECT_CITY
 
-east to outside_farm descr "Outside the Farm House";
+north to trail_02 descr "Outside the Farm House";
 south to trail1@cypress descr "Dusty Trail";
 
 end
 
+trail_02
+names {"dusty trail", "trail"}
+title "On a Dusty Trail"
+descr
+"On a trail. It's made of dirt."
+movement SECT_CITY
+
+west to outside_farm descr "Outside the Farm House";
+south to trail_01 descr "Dusty Trail";
+north to cave_00 descr "Inside the Cave";
+end
+
+fpath_01
+names {"smail path", "path"}
+title "On a small path"
+descr
+"On a path. It's made of dirt."
+movement SECT_CITY
+
+east to farm_03 descr "Barnham's Farm";
+west to fpath_02 descr "A small path";
+end
+
+fpath_02
+names {"smail path", "path"}
+title "On a small path"
+descr
+"On a path. It's made of dirt."
+movement SECT_CITY
+
+east to fpath_01 descr "A small path";
+north to fpath_03 descr "A small path";
+end
+
+fpath_03
+names {"smail path", "path"}
+title "On a small path"
+descr
+"On a path. It's made of dirt."
+movement SECT_CITY
+
+north to fcave_01 descr "Before a cave";
+south to fpath_02 descr "A small path";
+end
+
+fcave_01
+names {"before cave"}
+title "Before the Cave"
+descr
+"Before the cave. It's dark inside."
+movement SECT_CITY
+flags {UNIT_FL_NO_MOB}
+
+west to fcave_02 descr "Inside the cave";
+south to fpath_03 descr "A small path";
+end
+
+fcave_02
+names {"inside cave", "cave"}
+title "Inside the Cave"
+descr
+"In a cave. It's dark."
+movement SECT_CITY
+flags {UNIT_FL_INDOORS}
+
+south to fcave_04 descr "Inside the cave";
+east to fcave_01 descr "Before a cave";
+west to fcave_03 descr "A small path";
+end
+
+fcave_03
+names {"inside cave", "cave"}
+title "Inside the Cave"
+descr
+"In a cave. It's dark."
+movement SECT_CITY
+flags {UNIT_FL_INDOORS}
+
+north to fcave_05 descr "Inside the cave";
+east to fcave_02 descr "Inside the cave";
+end
+
+fcave_05
+names {"inside cave", "cave"}
+title "Inside the Cave"
+descr
+"In a cave. It's dark."
+movement SECT_CITY
+flags {UNIT_FL_INDOORS}
+
+north to fcave_06 descr "Inside the cave";
+south to fcave_03 descr "Inside the cave";
+east to fcave_07 descr "Inside the cave";
+end
+
+fcave_06
+names {"inside cave", "cave"}
+title "Inside the Cave"
+descr
+"In a cave. It's dark."
+movement SECT_CITY
+flags {UNIT_FL_INDOORS}
+
+south to fcave_05 descr "Inside the cave";
+end
+
+fcave_07
+names {"inside cave", "cave"}
+title "Inside the Cave"
+descr
+"In a cave. It's dark."
+movement SECT_CITY
+flags {UNIT_FL_INDOORS}
+
+west to fcave_05 descr "Inside the cave";
+east to fcave_08 descr "Inside the cave";
+end
+
+fcave_08
+names {"inside cave", "cave"}
+title "Inside the Cave"
+descr
+"In a cave. It's dark."
+movement SECT_CITY
+flags {UNIT_FL_INDOORS}
+
+north to fcave_09 descr "Inside the cave";
+west to fcave_07 descr "Inside the cave";
+end
+
+fcave_09
+names {"inside cave", "cave"}
+title "Inside the Cave"
+descr
+"In a cave. It's dark."
+movement SECT_CITY
+flags {UNIT_FL_INDOORS}
+
+south to fcave_08 descr "Inside the cave";
+end
+
+fcave_04
+names {"inside cave", "cave"}
+title "Inside the Cave"
+descr
+"In a cave. It's dark."
+movement SECT_CITY
+flags {UNIT_FL_INDOORS}
+
+north to fcave_02 descr "Inside the cave";
+west to fcave_06 descr "Inside the cave";
+end
+
+fcave_10
+names {"inside cave", "cave"}
+title "Inside the Cave"
+descr
+"In a cave. It's dark."
+movement SECT_CITY
+flags {UNIT_FL_INDOORS}
+
+east to fcave_04 descr "Inside the cave";
+west to fcave_11 descr "Inside the cave";
+end
+
+fcave_11
+names {"inside cave", "cave"}
+title "Inside the Cave"
+descr
+"In a cave. It's dark."
+movement SECT_CITY
+flags {UNIT_FL_INDOORS}
+
+south to fcave_12 descr "Inside the cave";
+east to fcave_10 descr "Inside the cave";
+end
+
+fcave_12
+names {"inside cave", "cave"}
+title "Inside the Cave"
+descr
+"In a cave. It's dark."
+movement SECT_CITY
+flags {UNIT_FL_INDOORS}
+
+north to fcave_11 descr "Inside the cave";
+east to cave_01 descr "Inside the cave"
+keyword {"rocks","rock"}
+key nokey
+open {EX_OPEN_CLOSE, EX_CLOSED};
+end
+
+cave_01
+names {"inside cave", "cave"}
+title "Inside the Cave"
+descr
+"In a cave. It's dark."
+movement SECT_CITY
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
+
+south to cave_00 descr "Inside the cave";
+west to fcave_12 descr "Inside the cave"
+keyword {"rocks","rock"}
+key nokey
+open {EX_OPEN_CLOSE, EX_CLOSED};
+end
+
+cave_00
+names {"inside cave", "cave"}
+title "Inside the Cave"
+descr
+"In a cave. It's dark."
+movement SECT_CITY
+flags {UNIT_FL_INDOORS}
+
+south to trail_02 descr "Dusty Trail";
+north to cave_01 descr "Inside the cave";
+end
 
 %mobiles
 
@@ -633,8 +1067,8 @@ position POSITION_STANDING
 default POSITION_STANDING
 dilcopy newbie_nokill@newbie();
 dilcopy newbie_nospl@newbie();
-dilcopy boldin_request@newbie();
-dilcopy boldin_give@newbie();
+dilcopy boldin_request@gremlin();
+dilcopy boldin_give@gremlin();
 
 end
 
@@ -647,8 +1081,8 @@ extra {}
 M_AVG_HUMAN(30, SEX_MALE)
 alignment 1000
 bright 4
-dilcopy barnham_request@newbie();
-dilcopy barnham_give@newbie();
+dilcopy barnham_request@gremlin();
+dilcopy barnham_give@gremlin();
 end
 
 gremlin_small
@@ -656,10 +1090,12 @@ names {"troublesome gremlin", "gremlin"}
 title "a troublesome gremlin"
 descr "A troublesome gremlin smirks at you."
 extra {}
-"This tiny creature looks to be particularly problematic. You immediately want nothing more than to kill it."
+"This tiny gremlin looks to be particularly problematic. You immediately want nothing more than to kill it."
 M_AVG_GOBLIN(5,SEX_MALE)
-//exp 160
+exp 200
 money 1 COPPER_PIECE
+
+dilcopy wander_zones@function ("gremlin", 20, 0,0);
 end
 
 gremlin_medium
@@ -669,8 +1105,10 @@ descr "A vicious gremlin snarls at you."
 extra {}
 "This gremlin is vicious! You immediately want nothing more than to kill it."
 M_AVG_GOBLIN(7,SEX_MALE)
-//exp 160
+exp 200
 money 2 COPPER_PIECE
+
+dilcopy wander_zones@function ("gremlin", 25, 0,0);
 end
 
 gremlin_large
@@ -680,15 +1118,52 @@ descr "A large gremlin glares at you."
 extra {}
 "This is the biggest gremlin you've ever seen! You immediately want nothing more than to kill it."
 M_AVG_GOBLIN(9,SEX_MALE)
-//exp 160
+exp 200
 money 1 SILVER_PIECE
+
+dilcopy wander_zones@function ("gremlin", 30, 0,0);
 end
 
-/* END NEW NEWBIE EXPERIENCE - Mobiles */
+gumpkin_small
+names {"troublesome gumpkin", "gumpkin"}
+title "a troublesome gumpkin"
+descr "A troublesome gumpkin smirks at you."
+extra {}
+"This tiny grumpkin looks to be particularly problematic. You immediately want nothing more than to kill it."
+M_AVG_GOBLIN(9,SEX_MALE)
+exp 200
+money 2 COPPER_PIECE
+
+dilcopy wander_zones@function ("gremlin", 20, 0,0);
+end
+
+gumpkin_medium
+names {"vicious gumpkin", "gumpkin"}
+title "a vicious gumpkin"
+descr "A vicious gumpkin snarls at you."
+extra {}
+"This gumpkin is vicious! You immediately want nothing more than to kill it."
+M_AVG_GOBLIN(11,SEX_MALE)
+exp 200
+money 4 COPPER_PIECE
+
+dilcopy wander_zones@function ("gremlin", 25, 0,0);
+end
+
+grumpkin_large
+names {"large grumpkin", "grumpkin"}
+title "a large grumpkin"
+descr "A large grumpkin glares at you."
+extra {}
+"This is the biggest grumpkin you've ever seen! You immediately want nothing more than to kill it."
+M_AVG_GOBLIN(13,SEX_MALE)
+exp 200
+money 2 SILVER_PIECE
+
+dilcopy wander_zones@function ("gremlin", 30, 0,0);
+end
 
 %objects
-
-/* NEW NEWBIE EXPERIENCE - Items Below */
 
 coins
 MONEY(GOLD_PIECE,2)
@@ -700,7 +1175,7 @@ title "a barrel"
 descr "A barrel has been left here."
 extra {}
 "This is an excellent barrel for carrying water. If you were to find a source of water, you could pour it in!<br>
-<br><div class='hint'>HINT: At the Obelisk in the Midgaard Market Square, 'pour obelisk in barrel'.</div>"
+<br><div class='hint'>HINT: At the Obelisk in the Market Square of Midgaard, 'pour obelisk in barrel'.</div>"
 manipulate {MANIPULATE_TAKE}
 LIQ_DEF("clear",4,24,0,10,1,0,0)
 cost 2 IRON_PIECE
@@ -711,11 +1186,12 @@ names {"midgaard map", "map"}
 title "a map to Midgaard"
 descr "A crumpled map has been left here."
 extra {}
-"This map tells how to travel from the Square in Udgaard, to the city of Midgaard.<br><br>
-Step 1: Start at the Udgaard Square. <br>
+"This map tells how to travel from the Square in Udgaard, to the city of Midgaard.<br>
+<div class='hint'>HINT: The command 'change exits' will toggle the display of available directions to travel. Then simply 'look' for a readout.</div><br><br>
+Step 1: Start at the Village Square of Udgaard. <br>
 Step 2: Travel as far as you can to the east (five rooms) and you will arrive at the Top of Hill.<br>
 <div class='hint'>HINT: Try typing 'help area' here. You will find that you have arrived in an area known as Cypress Forest.</div><br>
-Step 3: From Top of Hill, travel along the path through the Cypress Forest to it's edge. The directions will be as follows.<br>
+Step 3: From Top of Hill, travel along the path through the Cypress Forest to it's edge. The directions will be as follows:<br>
 south, east, south, east, east, north, east, north<br>
 Step 4: Get your bearings! You should find that to the east lies a Dustry Trail west of Midgaard.<br>
 <div class='hint'>HINT: Try typing 'directions' here -- you can shorten it to 'dir'. </div><br>
@@ -748,6 +1224,7 @@ WEAPON_SLAYER(RACE_GOBLIN)
 WEAPON_TRANSFER(WPN_DAGGER,+10)
 STR_TRANSFER(+1)
 DEX_TRANSFER(+1)
+dilcopy quests_restrict@function({EXPLORE_ONGOING,EXPLORE_COMPLETE},0,10,""); 
 end
 
 barnham_jerkin
@@ -786,6 +1263,17 @@ weight 1
 cost 1 COPPER_PIECE
 end
 
+chest
+names {"small chest","chest"}
+title "a small sturdy chest"
+descr "A small but sturdy chest is here."
+extra {}
+"This is a fairly small chest, just large enough to hold a few personal items."
+type ITEM_CONTAINER
+weight 30
+open {EX_OPEN_CLOSE,EX_CLOSED}
+cost 1 COPPER_PIECE
+end
 
 /* END NEW NEWBIE EXPERIENCE ITEMS */
 
@@ -802,16 +1290,59 @@ load barnham into farm_house max 1
    equip barnham_legs position WEAR_LEGS
    equip barnham_boots position WEAR_FEET
 }
-load gremlin_small into farm_01 local 4 max 20
-load gremlin_large into farm_01 local 4 max 20
-load gremlin_medium into farm_01 local 4 max 20
-load barnham_dagger into farm_attic max 1
+
+load gremlin_small into farm_06 local 3 max 15
+load gremlin_medium into farm_04 local 3 max 15
+load gremlin_large into farm_04 local 3 max 15
+
+load gremlin_small into fn01_01 local 3 max 15
+load gremlin_medium into fn_03 local 3 max 15
+load gremlin_large into fn_06 local 3 max 15
+
+load gremlin_small into farm_05 local 3 max 15
+load gremlin_medium into farm_02 local 3 max 15
+load gremlin_large into farm_01 local 3 max 15
+
+load gremlin_small into fpath_01 local 3 max 15
+load gremlin_medium into fpath_02 local 3 max 15
+load gremlin_large into fpath_03 local 3 max 15
+
+load gremlin_small into fs_05 local 3 max 15
+load gremlin_medium into fs_02 local 3 max 15
+load gremlin_large into fs_03 local 3 max 15
+
+load grumpkin_small into fcave_02 local 3 max 15
+load grumpkin_medium into fcave_02 local 3 max 15
+load grumpkin_large into fcave_02 local 3 max 15
+
+load grumpkin_small into fcave_06 local 3 max 15
+load grumpkin_medium into fcave_06 local 3 max 15
+load grumpkin_large into fcave_06 local 3 max 15
+
+load grumpkin_small into fcave_09 local 3 max 15
+load grumpkin_medium into fcave_08 local 3 max 15
+load grumpkin_large into fcave_05 local 3 max 15
+
+load grumpkin_small into fcave_11 local 3 max 15
+load grumpkin_medium into fcave_10 local 3 max 15
+load grumpkin_large into fcave_12 local 3 max 15
+
+load grumpkin_small into fcave_03 local 3 max 15
+load grumpkin_medium into fcave_03 local 3 max 15
+load grumpkin_large into fcave_03 local 3 max 15
+
+load chest into fcave_12 local 1
+{
+	load barnham_dagger local 1
+}
 
 
-door farm_house WEST {EX_OPEN_CLOSE, EX_CLOSED}
 door farm_house UP {EX_OPEN_CLOSE, EX_CLOSED}
+door farm_house WEST {EX_OPEN_CLOSE, EX_CLOSED}
 door farm_attic DOWN {EX_OPEN_CLOSE, EX_CLOSED}
 door farm_01 EAST {EX_OPEN_CLOSE, EX_CLOSED}
+door fcave_12 EAST {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN}
+door cave_01 WEST {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN}
 
 /* END NEW NEWBIE EXPERIENCE RESETS */
 %end
