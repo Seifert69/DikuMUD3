@@ -1,0 +1,914 @@
+/*
+filename    mystic
+password    release
+changedby   Sender
+EmailAdd
+request     compile
+version     1
+END HEADER*/
+
+
+#define _GUILD_MIDGAARD_MYSTIC
+#define MYSTIC_ITEM "$Mystic Item Given"
+
+/* This zone is the Mystic Guild. */
+
+
+#include <macros.h>
+
+/* ================================================================== */
+/*                                ZONE                                */
+/* ================================================================== */
+%zone mystic
+title "Mystic Guild@Mainland"
+creators {"sender"}
+
+notes
+"Mystics" 
+reset RESET_ANYHOW
+lifespan 125
+
+help
+"<pre><br/>
+Help for Mystics<br/>
+/*
+<br/>
+	<div class='cpw'>Training/Education</div><div class='cw'><br/>
+<br/>
+  Skill Practice	- Main Lecture Hall, east and south from the Main Hall.<br/>
+  Weapon Practice	- Tower of Mundane, all north from the Main Hall.<br/>
+  Ability Practice	- The Library, east and north from the Main Hall.<br/>
+<br/>
+	</div><div class='cpw'>Other services</div><div class='cw'><br/>
+<br/>
+  Title change		- At the Archcancellor, type 'title' to gain a new<br/>
+			  and hopefully better title.<br/>
+  Academy items		- Personal magical trinkets of the Conjurers. Those<br/>
+			  are available at the Archcancellor by bowing or<br/>
+			  worshipping him.<br/>
+  Bar and relaxation 	- A small resting area, along with a bar, can be found<br/>
+			  in the College Gardens (north and east or south<br/>
+			  and east from the Main Hall).<br/>
+*/
+<br/>
+</div></pre>"
+
+/* ================================================================== */
+/*                               DIL                                  */
+/* ================================================================== */
+
+%dil
+
+/* Nokill dil for Guild Staff - ejects the sinner out with 0 hp and
+mana + incapacitated */
+
+dilbegin nokill();
+var
+        pc : unitptr;
+        room : unitptr;
+code
+{
+	heartbeat := 3 * PULSE_SEC;
+
+:start:
+
+	wait(SFB_COM,  self.position == POSITION_FIGHTING );
+	if(pc.type == UNIT_ST_NPC) goto start;
+	pc := self.fighting;
+	if(pc.level>200)
+		goto start;
+	if (command("flee"))
+		block;
+
+	self.hp := self.max_hp;
+	act("The sounds of battle attract the attention of the barbarian guards.",
+		A_ALWAYS, pc, self, null, TO_ALL);
+	act("Suddenly several burly guards rush into the room, eyes "+
+		"<div class='c+r'>red</div> with rage. Fists start flying!", A_ALWAYS, pc, self, null, TO_CHAR);
+	act("Several of them charge into the room, their eyes <div class='c+r'>red</div> with rage! "+
+		"$3n is crushed by the ferocity of their attack!",A_SOMEONE, pc, self, null, TO_REST);
+	pc.hp := 0;
+	pc.mana := 0;
+	act("You can feel yourself being dragged away as you slip into the "+
+		"unconsciousness.",A_ALWAYS, pc, self, null, TO_CHAR);
+	position_update(pc);
+	act("Two of the guards grab $1n and drag $1m out of the Guild, dumping "+
+		"$1m in the cold.",A_SOMEONE, pc, self, null, TO_REST);
+	room := findroom("cth_square2@midgaard");
+	
+/***************************************************************************	
+**  NOTE - ROOM ABOVE MUST BE UPDATED TO REFLECT APPROPRIATE LINKED ROOM  **
+***************************************************************************/
+
+	link(pc,room);
+	act("Two guards appear, dragging an unconscious figure between them and "+
+		"dump $1m unceremoniously into the cold." ,A_SOMEONE,pc,self,null,TO_REST);
+
+:gone:
+
+	unsecure(pc);
+	goto start;
+}
+dilend // END DIL nokill
+
+
+%rooms
+/*********************************************************************************************
+** NEED TO ADD EXIT                                                                         **
+*********************************************************************************************/
+
+entrance
+names {"entrance","guild entrance","mystic hall"}
+title "Entrance to the Hall of the Mystics"
+descr
+"Mystics Guild "
+movement SECT_CITY
+
+east to hall_01 descr "Inside the Hall.";
+west to oasis@desert descr "At the Oasis.";
+ALWAYS_LIGHT
+end
+
+hall_01
+names {"inside hall"}
+title "Inside the Mystics Hall"
+descr
+"Mystics"
+
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+ALWAYS_LIGHT
+west to entrance descr "Mystics Entrance.<br/>";
+end
+
+
+%mobiles
+
+gate_guard
+names {"mystic guard","mystic","guard"}
+title "the mystic guard"
+descr
+"A mystic guard is standing here, protecting the hall entrance."
+extra {}
+"This guard is mystical"
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_POLE(160,SEX_MALE)
+alignment 0
+money 1 SILVER_PIECE
+
+special SFUN_GUILD_BASIS GUILD_MYSTIC
+dilcopy rescue@function("guard");
+dilcopy teamwork@function("guard");
+dilcopy guild_guard@guild_paths(GUILD_MYSTIC, "east");
+
+end
+
+///////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+//  need to create appropriate master, and other teachers.
+
+hilka
+names {"hilka","guild master","master","chief","barbarian"}
+title "Hilka"
+descr "Hilka the Bold, Chief of the Barbarians is here."
+extra {}
+"Hilka may be the largest human woman you have ever seen. A deep smouldering 
+look looms from bright red eyes, as if she is unable to let go of the rage her 
+Barbarians are infamous for. A large scar runs through the crown of her head 
+and down between her eyes, terminating in the remains of what was once her nose. "
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_CLUB(160,SEX_FEMALE)
+alignment 0
+money 1 GOLD_PIECE
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_MYSTIC
+
+dilcopy guild_titles@guild_paths(GUILD_MYSTIC, {"Young Blood",
+"Young Blood", "Apprentice Berserker", "Apprentice Berserker", "Journeyman Berserker",
+"Journeywoman Berserker", "Rage Seeker", "Rage Seeker",
+"Blood Seeker", "Blood Seeker", "Whirlwind", "Whirlwind",
+"Enraged One", "Enraged One", "Bloodletter", "Bloodletter", "Barbarian Warrior", "Barbarian Warrior",
+"Charger", "Chargeress", "Way of Blood", "Way of Blood", "Cleaver", "Cleaveress", "The Enraged",
+"The Enraged", "Mark of Blood", "Mark of Blood", "The Blood Eye",
+"The Blood Eye", "Render", "Renderess", "Master Berserker", "Master Berserker", "Barbarian Mistress",
+"Barbarian Master", "Master of Rage", "Mistress of Rage", "Master of the Enraged", "Mistress of the Enraged"});
+
+/* Barbarian Master DIL - gives out the Bloody Gauntlets. */
+
+dilbegin myst_give();
+var
+	pc : unitptr;
+	item : unitptr;
+	expd : extraptr;
+code
+{
+	heartbeat := PULSE_SEC * 5;
+
+:start:
+
+	wait (SFB_DONE, (command("worship")or(command("bow")))and(self==target));
+		pc := activator;
+		secure(pc, lost);
+		expd := "$path" in pc.quests;
+		if (expd == null)
+			goto lost;
+		if ((GUILD_MYSTIC in expd.names))
+		{
+			if(MYSTIC_ITEM in pc.quests)
+			{
+				exec("say Well, if it isnt "+pc.name+", back for more handouts, I presume?",self);pause;
+				exec("sigh",self);
+				pause;
+				exec("say I think you managed to lose your Bloody Gauntlets and are here "+
+					"begging.",self);
+				act("$3n gives you a stern look that makes you feel very small indeed."
+					,A_ALWAYS,pc,null,self,TO_CHAR);
+				act("$3n gives $1n a stern look that makes $1m step uneasily from foot to "+
+					"foot.",A_SOMEONE,pc,null,self,TO_REST);
+				pause;
+				exec("say Now "+pc.name+", these gauntlets come with a price, "+
+					"as I'm sure you can imagine.",self);
+				pause;
+				exec("say If you wish another pair, you'll have to make payment.",self);
+				pause;
+				exec("emote eyes you carefully...",self);
+				pause;
+				exec("say My supplies are dwindling.",self);
+				pause;
+				exec("say I'll need both the raw materials, and the magic to bind them.",self);
+				pause;
+				exec("say Deep in the continent of Amazonia, lie the Lost Lands.",self);
+				pause;
+				exec("say There you will find a tribal priest who should have the... liquid ingredients.",self);
+				pause;
+				exec("say Bring this to me, and we will sort out the rest.",self);
+				pause;
+				exec("say Farewell, "+pc.name+".",self);
+				unsecure(pc);
+				goto start;
+			}
+			exec("say Greetings "+pc.name+", I had heard you were approaching the Barbarians hall.",self);
+			pause;
+			exec("say I know you are learning the ways of the Barbarian",self);
+			pause;
+			exec("say The life we live is perilous... and not without discomfort.",self);
+			pause;
+			exec("say I wont bandy words - it will take sweat and blood to master our profession.",self);
+			pause;
+			exec("say Even the strongest have faltered on this path. ",self);
+			pause;
+			exec("emote takes a long pause.",self);
+			pause;
+			pause;
+			exec("say "+pc.name+", we wish to keep our own alive, "+
+				"thus we will provide you with a powerful item to aid you.",self);
+			pause;
+			exec("say Some may find our path distasteful, though I suspect you will accept this.",self);
+			item := load("bloody_gauntlet@mystic");
+			item.height := pc.height;
+			link(item, pc);
+			sendtext("Hilka hands you some Bloody Gauntlets.<br/>",pc);
+			act("$3n hands $1n a pair of Bloody Gauntlets.",A_SOMEONE,pc,null,self,TO_REST);
+			pause;
+			exec("say These gauntlets are not easy to come by, though they hold a power"+
+				" worth their cost.",self);
+			pause;
+			exec("say Simply 'grip' your weapon tightly to summon their powers.",self);
+			pause;
+			exec("say The value they can bring in combat is unrivaled.",self);
+			pause;
+			exec("say Embrace the Barbarian's way, and you will be rewarded.",self);
+			addextra(pc.quests, {MYSTIC_ITEM}, "");
+			unsecure(pc);
+			goto start;
+		}
+	else
+	{
+        unsecure(pc);
+        pause;
+        exec ("say Well then, lets not overdo this "+
+			"thing, shall we?", self);
+        goto start;
+	}
+
+	unsecure(pc);
+	goto start;
+
+:lost:
+
+	unsecure(pc);
+	exec("shrug", self);
+	goto start;
+}
+dilend
+
+dilbegin barb_quest2();
+var
+	pc : unitptr;
+	item : unitptr;
+	gift : unitptr;
+	expd: extraptr;
+code
+{
+	heartbeat := PULSE_SEC * 4;
+
+:start:
+
+	wait (SFB_DONE, (command("give")and(self ==target)));
+	pc := activator;
+	secure(pc, lost);
+	gift := medium;
+	expd := "$path" in pc.quests;
+	if (expd == null)
+		goto lost;
+	if ((GUILD_MYSTIC in expd.names) and (MYSTIC_ITEM in pc.quests))
+	{
+		if((gift.nameidx $= "blood_bowl")and(gift.zoneidx $= "lostlands"))
+		{
+			heartbeat := PULSE_SEC * 7;
+			exec("say Aaah, yes!",self);
+			exec("say I dont relish this ceremony...",self);
+			pause;
+			exec("emote grabs a pair of gauntlets from the table.",self);
+			pause;
+			exec("emote slowly brings the bowl to head level.",self);
+			exec("drink bowl",self);
+			destroy(gift);
+			exec("grimace",self);
+			act("Hilka's eye lids suddenly flare open!",A_SOMEONE, pc, null, null, TO_ROOM);
+			act("You recoil at the sight of two <div class='cr'>blood-red</div> orbs where her eyes were.",A_SOMEONE, pc, null, null, TO_ROOM);	
+			pause;
+			exec("scream",self);
+			pause;
+			act("Hilka's eyes slowly return to sight, maintaining a subtle red.",A_SOMEONE, pc, null, null, TO_ROOM);
+			exec("say "+pc.name+", here is your reward.",self);
+			item := load("bloody_gauntlet@mystic");
+			item.height := pc.height;
+			link(item, self);
+			exec("give gauntlets "+pc.name, self);
+			pause;
+			exec("emote turns away without another word.",self);
+		}
+		else
+		{
+			exec("say This is not what I asked for..",self);pause;
+			exec("emote tosses "+gift.title+" away onto the table.",self);
+			pause;
+		}
+:lost:
+
+		destroy(gift);
+		unsecure(pc);
+		goto start;
+	}
+	goto start;
+}
+dilend
+
+dilcopy nokill@mystic();
+
+end
+
+ethror
+names {"ethror","training master","trainer","barbarian"}
+title "Ethror"
+descr "Ethror the Training Master is ready to assist you."
+extra {}
+"Ethror maintains knowledge of personal development for the Barbarians. 
+He has mastered the many abilities available to be developed within the guild 
+and is more than willing to share his knowledge with those interested in 
+exploring the way of the enraged. "
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_HUMAN_WARRIOR_SPECIAL(90, SEX_MALE)
+alignment 0
+money 1 GOLD_PIECE
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_MYSTIC
+dilcopy teacher_prac@guild_paths( GUILD_MYSTIC );
+
+//#define _ABILITY
+//#include "guilddef.h"
+//#undef _ABILITY
+dilcopy nokill@mystic();
+
+end
+
+faeld
+names {"faeld","weapon master","master","barbarian"}
+title "Faeld"
+descr "Faeld the Barbarian Weapons Master awaits your training here."
+extra {}
+"A large man, bare from the torso-up, he carries himself with an air 
+of confidence. He appears to be very comfortable with the wide-ranging 
+assortment of weapons that sit in racks lining the room. Perhaps he can 
+give you a few lessons. "
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+
+M_HUMAN_WARRIOR_SWORD(90, SEX_MALE)
+alignment 1000
+money 1 GOLD_PIECE
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_MYSTIC
+
+dilcopy teacher_prac@guild_paths( GUILD_MYSTIC );
+
+//#define _WEAPON
+//#include "guilddef.h"
+//#undef _WEAPON
+dilcopy nokill@mystic();
+
+end
+
+monn
+names {"monn","trainer","barbarian"}
+title "Monn"
+descr "Monn the Deft is here, ready to train young Barbarians."
+extra {}
+"Monn is widely respected among the barbarians for his deep knowledge of 
+the history and lore of the Barbarians. It is this unique knowledge that 
+suits him to train new Barbarians on the skills necessary to survive in battle. "
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_AXE(90, SEX_MALE)
+alignment 0
+money 1 GOLD_PIECE
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_MYSTIC
+
+dilcopy teacher_prac@guild_paths( GUILD_MYSTIC );
+
+//#define _SKILL
+//#include "guilddef.h"
+//#undef _SKILL
+dilcopy nokill@mystic();
+
+end
+
+somemob
+names {"monn","trainer","barbarian"}
+title "Monn"
+descr "Monn the Deft is here, ready to train young Barbarians."
+extra {}
+"Monn is widely respected among the barbarians for his deep knowledge of 
+the history and lore of the Barbarians. It is this unique knowledge that 
+suits him to train new Barbarians on the skills necessary to survive in battle. "
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+M_HUMAN_WARRIOR_AXE(90, SEX_MALE)
+alignment 0
+money 1 GOLD_PIECE
+exp -100
+
+special SFUN_GUILD_BASIS GUILD_MYSTIC
+
+dilcopy teacher_prac@guild_paths( GUILD_MYSTIC );
+
+//#define _SPELL
+//#include "guilddef.h"
+//#undef _SPELL
+dilcopy nokill@mystic();
+
+end
+
+raz
+names {"raz","shopkeeper","trader"}
+title "Raz"
+descr "Raz the trader is here, hawking his wares."
+extra {}
+"A rather small figure, Raz looks to be elven by race, though 
+he appears to be well accepted here among the mostly-human Barbarians. 
+You are perplexed by the assortment of things you've seen Raz pull from 
+his small looking bag."
+M_ELF_WARRIOR_SWORD(45, SEX_MALE)
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_PROTECTED}
+alignment 0
+money 3 SILVER_PIECE
+exp 0
+special SFUN_GUILD_BASIS GUILD_MYSTIC
+dilcopy shopkeeper@function(
+{"coffee@mystic 20 20"
+,"ale@mystic 20 20","tuborg@udgaard 20 50"},
+ { "$1n says, 'Sadly, I am out of those, $3n.'",
+   "$1n says, 'Sell me what, $3n?'",
+   "$1n smiles and says, 'Not here, $3n, not even from you.'",
+   "$1n exclaims, 'No credit here, $3n!'",
+   "$1n exclaims, 'I should have $2N in my bag!'",
+   "$1n says, 'I assume we dont need to sign this deal in blood, $3n.'",
+   "$1n sighs and says, 'Alas, $3n, I can't afford that.'",
+   "$1n asks, 'It will have to be later.'" },
+{},"",100,50,10*PLATINUM_MULT,"",""
+);
+dilcopy nokill@mystic();
+
+end
+
+%objects
+
+/* ------------------- Guild Item: Bloody Gauntlets -------------------- */
+/* This item provides some small bonuses and also causes a special
+damage that is similar to a poison, though it sends endurance to the wearer. */
+
+bloody_gauntlet
+names {"bloody gauntlets","gauntlets"}
+title "Bloody Gauntlets"
+descr "A pair of gauntlets lie in a small pool of blood."
+extra {}
+"A heavy pair of gauntlets, it isnt immediately clear where the blood 
+on them is coming from. An inscription can be seen along the cuff, which 
+appears to glow a deep red. It's not clear what kind of alloy these are 
+made from, though you suspect they could be magical in nature. 
+You recognise the number '10' among the inscripted runes. "
+extra {"inscription","inscriptions","runes"}
+"The inscriptions seem to form an enchantment for the wearer and grant 
+them the ability to draw energy from their opponent in combat.<br/>
+Simply grip your weapon to activate the gauntlets. <br/>"
+extra {"$identify"}
+"The Bloody Gauntlets improve your strength, and as well as your
+health. When your weapon is gripped, it summons the power of the Barbarians to 
+draw energy from your opponent, tainting their blood.<br/>"
+extra {"$improved identify"}
+"It adds 2 to your Str and 3 to your Hit.<br/>"
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HANDS}
+MATERIAL_METAL("This item is made of a strange alloy.")
+STR_TRANSFER(+2)
+HIT_TRANSFER(+3)
+dilcopy guild_restrict@function ({GUILD_MYSTIC},0,0,"");
+
+dilbegin recall charge_gauntlet();
+code
+{
+
+:start:
+
+	heartbeat:=PULSE_SEC*SECS_PER_MUD_DAY/24;
+	wait (SFB_TICK,(self.equip==WEAR_WIELD));
+	heartbeat:=PULSE_SEC*5;
+	act ("The inscription on your $2n flashes blood red!",
+		A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act ("The inscription on $1n's $2n flashes blood red!",
+		A_ALWAYS,self.outside,self,null,TO_REST);
+	sendto ("add charge",self);
+	goto start;
+}
+dilend
+
+dilbegin recall aware gauntlet_blood();
+var
+        i : integer;
+        enemy :unitptr;
+        n:integer;
+        charge:integer;
+        pwr:integer;
+        random:integer;
+        helper:unitptr;
+        pc : unitptr;
+		weap : unitptr;
+		dam : integer;
+		arg : string;
+code
+{
+	pwr:=10;
+
+:init:
+
+	heartbeat := PULSE_SEC*3;
+	charge:=interrupt (SFB_MSG,((self==activator)and(argument=="add charge")), charge);
+
+:start:
+	wait (SFB_CMD,(command ("grip"))and(self.equip==WEAR_HANDS)and(self.outside.type == UNIT_ST_PC));
+	block;
+	arg := getword(argument);	
+	if (arg == "")
+	{
+		act("You must grip your weapon to active the power!",A_ALWAYS, self.outside, null, null, TO_CHAR);
+		goto start;
+	}
+	enemy:=self.outside.fighting;
+	pc:=self.outside;
+	secure (enemy,start);
+	if (pwr<=0)
+		goto fail;
+	weap := findunit(self.outside, arg, FIND_UNIT_EQUIP, null);
+	if ((weap == null) or not visible(self.outside, weap) or
+       (not(weap.manipulate & (MANIPULATE_WIELD | MANIPULATE_HOLD))))
+		{
+			act("You aren't wielding or holding a "+arg+"!",
+				A_ALWAYS, self.outside, null, null, TO_CHAR);
+			goto start;
+		}
+	
+	if (enemy==null)
+		goto no_person;
+	
+	if (dilfind("blood@mystic", weap))
+		{
+			act("The blood has already been activated!",A_ALWAYS, self.outside, null, null, TO_CHAR);
+			goto start;
+		}
+	pwr:=pwr-1;
+	self.extra.descr :=
+		"A heavy pair of gauntlets, it isnt immediately clear where the blood 
+		on them is coming from. An inscription can be seen along the cuff, which 
+		appears to glow a deep red. It's not clear what kind of alloy these are 
+		made from, though you suspect they could be magical in nature. 
+		You recognise the number '"+itoa(pwr)+"' among the inscripted runes. ";
+	act ("You grip your $2n and concentrate on the blood of battle..."
+		, A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act ("Blood gushes out from your gauntlets and bathes your " + weap.name + "!"
+		, A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act ("$1n grips their $2n and concentrates..."
+		, A_HIDEINV,self.outside,self,null,TO_REST);
+	act ("Blood gushes out from $1n's gauntlets and bathes their " + weap.name + "!"
+		, A_HIDEINV,self.outside,self,null,TO_REST);
+	if (pc.mana<5)
+	{
+		act ("You have not enough power to activate the $2n!"
+			,A_ALWAYS,self.outside,self,null,TO_CHAR);
+		unsecure(enemy);
+		goto start;
+	}
+	if (pc.endurance<5)
+	{
+		act ("You are out of breath, you cannot activate $2n's power!"
+			, A_ALWAYS,self.outside,self,null,TO_CHAR);
+		unsecure(enemy);
+		goto start;
+	}
+
+
+	pc.mana := pc.mana - 5;
+	i := rnd (1,50);
+	random := rnd(1,100);
+	if (i <= 10)
+		dam := 10;
+	else if (i <= 20)
+		dam := 20;
+	else if (i <= 30)
+		dam := 30;
+	else if (i <= 40)
+		dam := 40;
+	else
+		dam := 50;
+	
+:blood:
+
+	dilcopy("blood@mystic(" + itoa(dam) + ")", weap);
+	pc.endurance := pc.endurance + dam;
+   	act ("You feel a rush of energy!"
+		, A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act ("$1n suddenly looks energized!"
+		, A_HIDEINV,self.outside,self,null,TO_REST);
+	goto start;
+
+:fail:
+
+	act("Your $2n are drained of power!"
+		, A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act("$1n's $2n flicker briefly but nothing happens."
+		, A_ALWAYS,self.outside,self,null,TO_REST);
+	goto start;
+
+:charge:
+
+	clear (charge);
+	if (pwr<10)
+	{
+		pwr:=pwr+1;
+		self.extra.descr :=
+		"A pair of heavy gauntlets, they seem to seep blood from an unknown 
+			source. An inscription runs along their edges, and you can clearly 
+			recognise the number '"+itoa(pwr)+"'.";
+		goto init;
+		goto start;
+	}
+
+:no_person:
+
+	act("The inscription on your $2n pulses, but it seems to miss combat."
+		, A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act("$1n concentrates and their $2n begin to pulse, but nothing happens."
+		, A_ALWAYS,self.outside,self,null,TO_REST);
+	goto start;
+}
+dilend // END DIL gauntlet_blood
+end
+
+barb_sword
+names {"long sword","sword"}
+title "a barbarian long sword"
+descr
+"A simple yet finely crafted long sword lies here."
+extra {}
+"A barbarian sword, it is finely made, and unadorned. It looks very 
+well-balanced and sharp."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
+WEAPON_DEF(WPN_LONG_SWORD,5,5)
+WEAPON_TRANSFER(WPN_LONG_SWORD,+5)
+weight 6
+cost 3 SILVER_PIECE
+end
+
+barb_axe
+names {"battle axe","axe"}
+title "a barbarian battle axe"
+descr
+"A simple yet finely crafted battle axe lies here."
+extra {}
+"A barbarian axe, it is finely made, and unadorned. It looks very 
+well-balanced and sharp."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
+WEAPON_DEF(WPN_BATTLE_AXE,5,5)
+WEAPON_TRANSFER(WPN_BATTLE_AXE,+5)
+weight 8
+cost 3 SILVER_PIECE
+end
+
+barb_mattock
+names {"war mattock","mattock"}
+title "a barbarian war mattock"
+descr
+"A simple yet finely crafted war mattock lies here."
+extra {}
+"A barbarian war mattock, it is finely made, and unadorned. It looks very 
+well-balanced and heavy."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
+WEAPON_DEF(WPN_WAR_MATTOCK,5,5)
+WEAPON_TRANSFER(WPN_WAR_MATTOCK,+5)
+weight 10
+cost 3 SILVER_PIECE
+end
+
+hilka_mattock
+names {"ancient war mattock","ancient mattock","war mattock","mattock"}
+title "ancient war mattock"
+descr
+"This well-worn war mattock bears the markings of luxury, beneath
+significant wear. Portions of the hammer head show a deeply aged patina,
+as if this weapon had been passed down through generations. Others
+meanwhile, such as the striking surfaces, are brightly polished from
+regular use. Golden etchings can still be made out on places across
+the head."
+extra {}
+"The Barbarian Master's war mattock. Golden etchings can be made out
+beneath generations of wear. It appears to be quite heavy, though it
+holds easily in the hand due to its fine balance."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
+WEAPON_DEF(WPN_WAR_MATTOCK,8,5)
+WEAPON_TRANSFER(WPN_WAR_MATTOCK,+5)
+STR_TRANSFER(+2)
+weight 9
+cost 5 SILVER_PIECE
+end
+
+barb_whip
+names {"whip"}
+title "a barbarian whip"
+descr
+"A simple yet finely made whip lies here."
+extra {}
+"A barbarian whip, it is finely made, and unadorned. It looks very 
+well-balanced and quick."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
+WEAPON_DEF(WPN_WHIP,5,5)
+WEAPON_TRANSFER(WPN_WHIP,+5)
+weight 2
+cost 3 SILVER_PIECE
+end
+
+barb_halberd
+names {"halberd"}
+title "a barbarian halberd"
+descr
+"A simple yet finely crafted halberd lies here."
+extra {}
+"A barbarian halberd, it is finely made, and unadorned. It looks very 
+well-balanced and sharp."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
+WEAPON_DEF(WPN_HALBERD,5,5)
+WEAPON_TRANSFER(WPN_HALBERD,+5)
+weight 6
+cost 3 SILVER_PIECE
+end
+
+coffee
+names {"mug of coffee","mug","coffee"}
+title "a mug of coffee"
+descr "A small, black mug is here."
+extra {}
+"A small black ceramic mug."
+LIQ_DEF("black", 1, 1, 1, 6, 1, 0,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+cost 3 IRON_PIECE
+end
+
+ale
+names {"mug of ale","mug","ale"}
+title "a mug of ale"
+descr "A wooden mug stands here."
+extra {}
+"A large, wooden mug."
+LIQ_DEF("brown", 0,1,1,5,2,5,0)
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+cost 3 IRON_PIECE
+end
+
+barb_bracer
+names {"barbarians bracers", "bracers"}
+title "a barbarian's bracers"
+descr "A pair of hard leather bracers lie here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
+ARMOUR_HRD_LEATHER(2,2)
+weight 6
+extra {}
+"This fine pair of hard leather bracers has a bloodshot eye inscribed each wrist."
+end
+
+barb_cloth
+names {"loin cloth", "cloth"}
+title "a barbarian's loin cloth"
+descr "A soft leather loin cloth lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+ARMOUR_LEATHER(2,2)
+weight 3
+extra {}
+"This soft leather loin cloth has a bloodshot eye inscribed upon it."
+end
+
+barb_jerkin
+names {"leather jerkin", "jerkin"}
+title "a barbarian's jerkin"
+descr "A fine leather jerkin lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+ARMOUR_HRD_LEATHER(2,2)
+weight 10
+extra {}
+"This fine leather jerkin has a bloodshot eye inscribed upon the breast."
+end
+
+hilka_bracer
+names {"hilkas bracers", "bracers"}
+title "fine leather bracers"
+descr "A fine pair of hard leather bracers lie here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
+ARMOUR_HRD_LEATHER(5,5)
+weight 6
+extra {}
+"These bracers show hard wear, and fine craftsmanship. The mistress of the
+Barbarians has clearly earned these well crafted bracers. Tellingly, they bear
+they symbol of a bloodshot eye inscribed on each wrist."
+end
+
+hilka_cloth
+names {"loin cloth", "cloth"}
+title "a master's loin cloth"
+descr "A fine leather loin cloth lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+ARMOUR_LEATHER(5,5)
+weight 3
+extra {}
+"This fine leather loin cloth is carefully crafted to meet the highest
+standards. Tellingly, it has a bloodshot eye inscribed upon it."
+end
+
+hilka_jerkin
+names {"leather jerkin", "jerkin"}
+title "Hilka's jerkin"
+descr "A fine leather jerkin lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+ARMOUR_HRD_LEATHER(5,5)
+weight 10
+extra {}
+"This jerkin represents the best of carefully designed hard leather protection,
+combined with delicate soft leathers for comfort. It certainly appears to cost 
+significantly more than what you see on other Barbarians around. This fine 
+leather jerkin has a bloodshot eye inscribed upon the breast."
+end
+
+%reset
+
+load gate_guard into entrance max 2
+{
+	equip barb_halberd	position WEAR_WIELD
+	equip barb_jerkin 	position WEAR_BODY
+	equip barb_cloth	position WEAR_LEGS
+	equip barb_bracer  position WEAR_ARMS
+}
+load gate_guard into entrance max 2
+{
+	equip barb_halberd	position WEAR_WIELD
+	equip barb_jerkin 	position WEAR_BODY
+	equip barb_cloth	position WEAR_LEGS
+	equip barb_bracer  position WEAR_ARMS
+}
+%end

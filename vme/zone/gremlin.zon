@@ -1275,11 +1275,19 @@ open {EX_OPEN_CLOSE,EX_CLOSED}
 cost 1 COPPER_PIECE
 end
 
-/* END NEW NEWBIE EXPERIENCE ITEMS */
+well
+names {"simple wooden well", "wooden well", "simple well", "well", "water"}
+title "the well"
+descr "A simple wooden well is here."
+LIQ_DEF("clear", 100,-1,5000,10,1,0,0)
+cost 100 PLATINUM_PIECE
+extra {}
+"A simple wooden well, it appears that Barnham uses this heavily in the
+operations of his farm."
+
+end
 
 %reset
-
-/* NEW NEWBIE EXPERIENCE RESETS BELOW*/
 
 load boldin into square@udgaard max 1
 
@@ -1336,6 +1344,9 @@ load chest into fcave_12 local 1
 	load barnham_dagger local 1
 }
 
+load well into farm_06 max 1
+
+// doors
 
 door farm_house UP {EX_OPEN_CLOSE, EX_CLOSED}
 door farm_house WEST {EX_OPEN_CLOSE, EX_CLOSED}
@@ -1344,5 +1355,4 @@ door farm_01 EAST {EX_OPEN_CLOSE, EX_CLOSED}
 door fcave_12 EAST {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN}
 door cave_01 WEST {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN}
 
-/* END NEW NEWBIE EXPERIENCE RESETS */
 %end
