@@ -28,7 +28,7 @@ using namespace boost;
 #define FI_MAX_ZONENAME 30 /* Max length of any zone-name    */
 #define FI_MAX_UNITNAME 15 /* Max length of any unit-name    */
 
-#define PC_MAX_PASSWORD 12 /* Max length of any pc-password  */
+#define PC_MAX_PASSWORD 13 /* Max length of any pc-password  */
 #define PC_MAX_NAME 15     /* 14 Characters + Null           */
 
 #define MESS_ATTACKER 1

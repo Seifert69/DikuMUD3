@@ -174,6 +174,7 @@ var
    test_expt : extraptr;
    headless:string;
    chk : integer;
+   reward_extra : stringlist;
 code
 {
 heartbeat:=3;
@@ -223,6 +224,13 @@ heartbeat:=3;
    item := load("head@death");
    addextra (item.extra,{"$head_time"},itoa(realtime));
    dilcopy ("rot_head@death",item);
+   // If corpse has a reward on it copy it to the head.
+   if ("$reward" in corpse.extra)
+   {
+     addstring(reward_extra, corpse.extra.["$reward"].names.[0]);
+     addstring(reward_extra, corpse.extra.["$reward"].names.[1]);
+     addextra(item.extra, reward_extra, corpse.extra.["$reward"].descr);
+   }    
    item.minv := 200;
    link(item, self.outside);
 
@@ -714,6 +722,7 @@ var
    crp:unitptr;
    item:unitptr;
    temp:unitptr;
+   reward_string : stringlist;
 code
 {
    heartbeat := PULSE_SEC;
@@ -783,6 +792,15 @@ code
       addextra(crp.extra, {CORPSE_TIME}, itoa(rltime));
       store (crp,"corpse_"+self.name+"."+itoa(rltime),TRUE);
       dilcopy("partial_get@death",crp);
+      if("$reward" in self.extra) 
+      {  // if there is a $reward copy it to the corpse 
+        addstring(reward_string, self.extra.["$reward"].names.[0]);
+        addstring(reward_string, self.extra.["$reward"].names.[1]);
+        addextra(crp.extra, reward_string, self.extra.["$reward"].descr);
+        // once copied to corpse remove it from the dead guy. 
+         subextra(self.extra, "$reward");
+      }
+   
    }
    else
       addextra (crp.extra,{CORPSE_TIME}, itoa(rltime));
@@ -961,7 +979,6 @@ code
 
    if (self.type==UNIT_ST_PC)
 	{
-         subextra(self.extra, "$reward");
 
    	unset(self.charflags,CHAR_OUTLAW);
 	}

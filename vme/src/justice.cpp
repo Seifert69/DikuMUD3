@@ -371,12 +371,17 @@ void set_witness(class unit_data *criminal, class unit_data *witness,
       }
 }
 */
+
+
+// Activate the add_crime@justice DIL
+//
+//
 void add_crime(class unit_data *criminal, class unit_data *victim, int type)
 {
-   // struct char_crime_data *crime;
    struct diltemplate *tmpl;
-   assert(IS_PC(criminal));
+   class dilprg *prg;
    int crime_no;
+
    if (str_is_empty(UNIT_NAME(criminal)))
    {
       slog(LOG_ALL, 0, "JUSTICE: NULL name in criminal");
@@ -388,10 +393,10 @@ void add_crime(class unit_data *criminal, class unit_data *victim, int type)
       slog(LOG_ALL, 0, "JUSTICE: NULL name in victim");
       return;
    }
-   crime_no = new_crime_serial_no();
-   tmpl = find_dil_template("add_crime@justice");
-   class dilprg *prg;
 
+   crime_no = new_crime_serial_no();
+
+   tmpl = find_dil_template("add_crime@justice");
    prg = dil_copy_template(tmpl, criminal, NULL);
 
    if (prg)
@@ -405,8 +410,9 @@ void add_crime(class unit_data *criminal, class unit_data *victim, int type)
       dil_add_secure(prg, victim, prg->fp->tmpl->core);
       dil_activate(prg);
    }
+}
 
-   /* add new crime crime_list */
+   /* add new crime crime_list old code: */
    /*   CREATE(crime, struct char_crime_data, 1);
     crime->next = crime_list;
     crime_list = crime;
@@ -419,7 +425,6 @@ void add_crime(class unit_data *criminal, class unit_data *victim, int type)
     crime->ticks_to_neutralize = CRIME_LIFE + 2;
     crime->reported = FALSE;
 */
-}
 
 /* char *crime_victim_name(int crime_no, int id)
 {
@@ -432,6 +437,12 @@ void add_crime(class unit_data *criminal, class unit_data *victim, int type)
     return NULL;
 }
 */
+
+// criminal points to the perpetrating char. Mandatory.
+// victim is the char subjected to a crime. Mandatory.
+// crime_type can be CRIME_EXTRA, CRIME_STEALING, CRIME_MURDER, CRIME_PK
+// active ?
+//
 void log_crime(class unit_data *criminal, class unit_data *victim,
                ubit8 crime_type, int active)
 {
@@ -440,89 +451,102 @@ void log_crime(class unit_data *criminal, class unit_data *victim,
    class dilprg *prg;
    class dilprg *prg2;
    class dilprg *prg3;
-   /* When victim is legal target you can't get accused from it. */
-   if (IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) &&
-       ((crime_type == CRIME_MURDER) || (crime_type == CRIME_PK)))
-      return;
 
-   scan4_unit(victim, UNIT_ST_PC | UNIT_ST_NPC);
-
-   if (criminal)
+   if (criminal == NULL)
    {
-      if (!IS_PC(criminal))
-         return;
-
-      add_crime(criminal, victim, crime_type);
-
-      /* set_witness(criminal, victim, crime_serial_no, crime_type, active); */
-      tmpl = find_dil_template("set_witness@justice");
-
-      prg = dil_copy_template(tmpl, victim, NULL);
-
-      if (prg)
-      {
-         prg->waitcmd = WAITCMD_MAXINST - 1;
-         prg->fp->vars[0].val.unitptr = criminal;
-         prg->fp->vars[1].val.integer = crime_serial_no;
-         prg->fp->vars[2].val.integer = crime_type;
-         prg->fp->vars[3].val.integer = active;
-         dil_add_secure(prg, criminal, prg->fp->tmpl->core);
-         dil_activate(prg);
-      }
-      for (i = 0; i < unit_vector.top; i++)
-         if (CHAR_CAN_SEE(UVI(i), criminal))
-         /* set_witness(criminal, UVI(i), crime_serial_no, crime_type,
-                            active); */
-         {
-            tmpl = find_dil_template("set_witness@justice");
-
-            prg2 = dil_copy_template(tmpl, UVI(i), NULL);
-
-            if (prg2)
-            {
-               prg2->waitcmd = WAITCMD_MAXINST - 1;
-               prg2->fp->vars[0].val.unitptr = criminal;
-               prg2->fp->vars[1].val.integer = crime_serial_no;
-               prg2->fp->vars[2].val.integer = crime_type;
-               prg2->fp->vars[3].val.integer = active;
-               dil_add_secure(prg2, criminal, prg2->fp->tmpl->core);
-
-               dil_activate(prg2);
-            }
-         }
+      slog(LOG_ALL, 0, "log_crime() NULL criminal");
       return;
    }
 
+   if (victim == NULL)
+   {
+      slog(LOG_ALL, 0, "log_crime() NULL victim");
+      return;
+   }
+
+   if (!IS_CHAR(criminal) || !IS_CHAR(victim))
+   {
+      slog(LOG_ALL, 0, "log_crime() criminal or victim not IS_CHAR");
+      return;
+   }
+
+   /* When victim is legal target you can't get accused from it. */
+   if (IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) && ((crime_type == CRIME_MURDER) || (crime_type == CRIME_PK)))
+      return;
+
+   // It's OK to kill NPCs that are not "protected"
+   if (IS_NPC(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
+      return;
+
+   // First let's deal with registering the crime the criminal committed
+   add_crime(criminal, victim, crime_type);
+
+   // prepare the set_witness function
+   tmpl = find_dil_template("set_witness@justice");
+   prg = dil_copy_template(tmpl, victim, NULL);
+
+   if (prg)
+   {
+      prg->waitcmd = WAITCMD_MAXINST - 1;
+      prg->fp->vars[0].val.unitptr = criminal;
+      prg->fp->vars[1].val.integer = crime_serial_no;
+      prg->fp->vars[2].val.integer = crime_type;
+      prg->fp->vars[3].val.integer = active;
+      dil_add_secure(prg, criminal, prg->fp->tmpl->core);
+      dil_activate(prg);
+   }
+
+   // Find any bystanders and register them as witnesses
+   scan4_unit(victim, UNIT_ST_PC | UNIT_ST_NPC);
+
+   for (i = 0; i < unit_vector.top; i++)
+   {
+      if (CHAR_CAN_SEE(UVI(i), criminal))
+      {
+         /* set_witness(criminal, UVI(i), crime_serial_no, crime_type, active); */
+         tmpl = find_dil_template("set_witness@justice");
+         prg2 = dil_copy_template(tmpl, UVI(i), NULL);
+
+         if (prg2)
+         {
+            prg2->waitcmd = WAITCMD_MAXINST - 1;
+            prg2->fp->vars[0].val.unitptr = criminal;
+            prg2->fp->vars[1].val.integer = crime_serial_no;
+            prg2->fp->vars[2].val.integer = crime_type;
+            prg2->fp->vars[3].val.integer = active;
+            dil_add_secure(prg2, criminal, prg2->fp->tmpl->core);
+            dil_activate(prg2);
+         }
+      }
+   }
+
+   // Find any CHAR fighting the victim - they are complicit to the crime
    for (j = 0; j < unit_vector.top; j++)
    {
-      if (IS_PC(UVI(j)))
+      if (CHAR_COMBAT(UVI(j)) && CHAR_COMBAT(UVI(j))->FindOpponent(victim) && UVI(j) != criminal)
       {
-         if (CHAR_COMBAT(UVI(j)) &&
-             CHAR_COMBAT(UVI(j))->FindOpponent(victim))
+         add_crime(UVI(j), victim, crime_type);
+
+         for (i = 0; i < unit_vector.top; i++)
          {
-            add_crime(UVI(j), victim, crime_type);
+            if (CHAR_CAN_SEE(UVI(i), UVI(j)))
+            {
+               tmpl = find_dil_template("set_witness@justice");
+               prg3 = dil_copy_template(tmpl, UVI(i), NULL);
 
-            for (i = 0; i < unit_vector.top; i++)
-               if (CHAR_CAN_SEE(UVI(i), UVI(j)))
+               if (prg3)
                {
-                  tmpl = find_dil_template("set_witness@justice");
-
-                  prg3 = dil_copy_template(tmpl, UVI(i), NULL);
-
-                  if (prg3)
-                  {
-                     prg3->waitcmd = WAITCMD_MAXINST - 1;
-                     prg3->fp->vars[0].val.unitptr = UVI(j);
-                     prg3->fp->vars[1].val.integer = crime_serial_no;
-                     prg3->fp->vars[2].val.integer = crime_type;
-                     prg3->fp->vars[3].val.integer = active;
-                     dil_add_secure(prg3, UVI(j), prg3->fp->tmpl->core);
-                     dil_activate(prg3);
-                  }
+                  prg3->waitcmd = WAITCMD_MAXINST - 1;
+                  prg3->fp->vars[0].val.unitptr = UVI(j);
+                  prg3->fp->vars[1].val.integer = crime_serial_no;
+                  prg3->fp->vars[2].val.integer = crime_type;
+                  prg3->fp->vars[3].val.integer = active;
+                  dil_add_secure(prg3, UVI(j), prg3->fp->tmpl->core);
+                  dil_activate(prg3);
                }
-            /*  set_witness(UVI(j), UVI(i),
-                                    crime_serial_no, crime_type, active); */
+            }
          }
+         /*  set_witness(UVI(j), UVI(i), crime_serial_no, crime_type, active); */
       }
    }
 }
@@ -912,7 +936,7 @@ i*/
 }
 
  Help another friendly guard! :-) */
-/*                                  */
+/*                                  
 int guard_assist(const class unit_data *npc, struct visit_data *vd)
 {
    switch (vd->state++)
@@ -921,7 +945,7 @@ int guard_assist(const class unit_data *npc, struct visit_data *vd)
       command_interpreter((class unit_data *)npc, "peer");
       return SFR_BLOCK;
 
-   case 1: /* Just wait a little while... */
+   case 1: // Just wait a little while...
       return SFR_BLOCK;
 
    case 2:
@@ -934,18 +958,17 @@ int guard_assist(const class unit_data *npc, struct visit_data *vd)
       return SFR_BLOCK;
    }
 
-   /* We are done, kill me! */
+   // We are done, kill me!
    return DESTROY_ME;
-}
+}*/
+
 
 /* 'Guard' needs help. Call his friends... :-)   */
 /*                                               */
 void call_guards(class unit_data *guard)
 {
    class zone_type *zone;
-   class unit_fptr *fptr;
    class unit_data *u;
-   int ok;
 
    if (!IS_ROOM(UNIT_IN(guard)))
       return;
@@ -956,18 +979,16 @@ void call_guards(class unit_data *guard)
    {
       membug_verify_class(u);
       assert(!u->is_destructed());
+
       if (IS_NPC(u) && IS_ROOM(UNIT_IN(u)) &&
           zone == UNIT_FILE_INDEX(UNIT_IN(u))->zone && u != guard)
       {
-         ok = FALSE;
-         for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
-         {
-            membug_verify_class(fptr);
-            membug_verify(fptr->data);
-            if ((fptr->index == SFUN_PROTECT_LAWFUL) || (dil_find("protect_lawful@justice", u)))
-               ok = TRUE;
-         }
-         if (ok && !number(0, 5) && !find_fptr(u, SFUN_ACCUSE))
+         // If this NPC has a protect lawful DIL then they may answer the whistle call
+         if (!dil_find("protect_lawful@justice", u))
+            continue;
+
+         // If the NPC is on its way to report a crime, don't answer the call.
+         if (!number(0, 5) && !dil_find("activate_accuse@justice", u))
             npc_walkto(u, UNIT_IN(guard));
       }
    }

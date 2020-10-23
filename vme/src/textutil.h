@@ -94,4 +94,6 @@ std::string str_json(const char *lbl, const std::string &str);
 std::string str_jsonencode(const char *str);
 std::string str_json_encode_quote(const char *str);
 
+int pwdcompare(const char *p1, const char *p2, int nMax);
+
 #endif /* _MUD_TEXTUTIL_H */

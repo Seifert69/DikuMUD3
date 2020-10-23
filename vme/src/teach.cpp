@@ -117,11 +117,14 @@ int practice_skill_gain(int skill)
 // Otherwise, grows by 2x for each sum mod negative
 // because half cost = 5, double cost = 20.
 // For each training level after 1, cost increases by 50%.
+// 
+// Returning zero means you can't learn more at this level
 int actual_cost(int cost, sbit8 racemodifier, int level, int virtual_level)
 {
    int mod;
    int pct;
    int avg_skill_cost;
+   int calccost;
 
    avg_skill_cost = AVERAGE_SKILL_COST;
    if (virtual_level > 100)
@@ -140,21 +143,26 @@ int actual_cost(int cost, sbit8 racemodifier, int level, int virtual_level)
    mod = cost + racemodifier;
 
    if (mod == 0)
-      return (avg_skill_cost * pct + 99) / 100;
+      calccost = (avg_skill_cost * pct + 99) / 100;
    else if (mod > 0)
    {
       if (mod > 5)
          mod = 5; // 10-5 = 5 is the cheapest cost
 
       // SO best possible training progression for any char is: 4, 6, 9, 14
-      return ((avg_skill_cost - mod) * pct + 99) / 100;
+      calccost = ((avg_skill_cost - mod) * pct + 99) / 100;
    }
    else // mod < 0
    {
       if (mod < -7)
          mod = -7;
-      return ((avg_skill_cost - 3 * mod) * pct + 99) / 100;
+      calccost = ((avg_skill_cost - 3 * mod) * pct + 99) / 100;
    }
+
+   if (calccost > 50)
+      return 0;
+   else
+      return calccost;
 }
 
 void clear_training_level(class unit_data *ch)
