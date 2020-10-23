@@ -646,6 +646,7 @@ code
    else if (action==left("continent",length(action))) goto contlist;
    else if (action==left("donation",length(action))) goto don;
    else if (action==left("non donation",length(action)))  goto nodon;
+   else if (action==left("newbie",length(action)))  goto newbie;
    else goto by_cont;
    quit;
 
@@ -805,7 +806,42 @@ code
       i:=i+1;
    }
    goto end;
+   
+:newbie:
+// this is a hack. We should really add tags to every zonefile reflecting their suggested
+// levels, so that we can auto-populate this list. It seems valuable, however.
 
+   i := 1;
+   ln := length(rm.extra.["$donlist"].names);
+   buffer := "<u>Newbie Areas of Valhalla:</u><br/><table class='colh2'>";
+   buffer := buffer+"<tr><td><u>Area</u></td><td><u>Continent</u></td><td><u>Level</u></td></tr>";
+   buffer := buffer+"<tr><td>Assassins Guild</td><td>Khorsabad</td><td>0</td></tr>";
+   buffer := buffer+"<tr><td>Barbarian Guild</td><td>Mainland</td><td>0</td></tr>";
+   buffer := buffer+"<tr><td>Battle Arena</td><td>Mainland</td><td>0</td></tr>";
+   buffer := buffer+"<tr><td>City Walls of Midgaard</td><td>Mainland</td><td>0</td></tr>";
+   buffer := buffer+"<tr><td>Conjurors Guild</td><td>Mainland</td><td>0</td></tr>";
+   buffer := buffer+"<tr><td>Cypress Forest</td><td>Mainland</td><td>2-8</td></tr>";
+   buffer := buffer+"<tr><td>Druid Guild</td><td>Alquenburg</td><td>0</td></tr>";
+   buffer := buffer+"<tr><td>Fighters Guild</td><td>Mainland</td><td>0</td></tr>";
+   buffer := buffer+"<tr><td>Goblin Caves</td><td>Mainland</td><td>4-8</td></tr>";
+   buffer := buffer+"<tr><td>Gremlin Caves</td><td>Mainland</td><td>0-15</td></tr>";
+   buffer := buffer+"<tr><td>Haon-Dor Forest</td><td>Mainland</td><td>4-10</td></tr>";
+   buffer := buffer+"<tr><td>Healers Guild</td><td>Mainland</td><td>0</td></tr>";
+   buffer := buffer+"<tr><td>Hobgoblin Caves</td><td>Mainland</td><td>10-20</td></tr>";
+   buffer := buffer+"<tr><td>Magic Academy</td><td>Mainland</td><td>15-20</td></tr>";
+   buffer := buffer+"<tr><td>Midgaard City</td><td>Mainland</td><td>0</td></tr>";
+   buffer := buffer+"<tr><td>Midgaard Dark Knights</td><td>Mainland</td><td>0</td></tr>";
+   buffer := buffer+"<tr><td>Moors</td><td>Mainland</td><td>2-5</td></tr>";
+   buffer := buffer+"<tr><td>Necromancer Guild</td><td>Mainland</td><td>0</td></tr>";
+   buffer := buffer+"<tr><td>Paladin Guild</td><td>Mainland</td><td>0</td></tr>";
+   buffer := buffer+"<tr><td>Ranger Guild</td><td>Alquenburg</td><td>0</td></tr>";
+   buffer := buffer+"<tr><td>Ratswarf</td><td>Mainland</td><td>7-12</td></tr>";
+   buffer := buffer+"<tr><td>Sorcerer's Guild</td><td>Mainland</td><td>0</td></tr>";
+   buffer := buffer+"<tr><td>Village of Tassel Grove</td><td>Mainland</td><td>10-20</td></tr>";
+   buffer := buffer+"<tr><td>Village of Udgaard</td><td>Mainland</td><td>0</td></tr>";
+
+   buffer := buffer + "</table>";
+   goto end;
 
    :end:
    pagestring(buffer,self);
@@ -2824,6 +2860,27 @@ code
    if (targ.exptol == 0)
       sendtext("You have been advanced in levels you may raise levels using the 'level' command<br/>",targ);
    quit;
+sendtext ("Characters Experience before you advanced = "+itoa(targ.exp),self);
+if (lvl<=50)
+{
+// targ.exp:=1500 * lvl + lvl * lvl * (300 / 2);
+targ.exp := 300 * lvl + lvl * lvl * 200;
+targ.vlevel:=lvl;
+targ.level:=lvl;
+}
+else
+{
+//targ.exp:=(1500 * 50 + 50 * 50 * (300 / 2))+((1650+50*300)*(lvl-50));
+targ.exp := (300 * 50 + 50 * 50 * 200)+(20500*(lvl-50));
+targ.vlevel:=lvl;
+targ.level:=lvl;
+ }
+sendtext ("Characters Experience after you advanced = "+itoa(targ.exp),self);
+sendtext ("Character needs "+itoa(targ.exptol)+" to level.",self);
+if (targ.exptol==0)
+  sendtext ("You have been advanced in levels you may raise levels using the 'level' command<br/>",targ);
+quit;
+
 }
 dilend
 
