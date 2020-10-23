@@ -944,5 +944,22 @@ dilend /* End blow_whistle */
 %rooms
 
 %mobiles
+                           weakling
+
+names {"weakling"}
+title "a weakling"
+descr "A small weakling is standing here."
+extra {} "It looks incredibly fragile."
+ability[ABIL_STR]  100
+ability[ABIL_DEX]  0
+ability[ABIL_CON]  0
+ability[ABIL_HP]   0
+ability[ABIL_BRA]  0
+ability[ABIL_MAG]  0
+ability[ABIL_DIV]  0
+ability[ABIL_CHA]  0
+
+romflags {CHAR_PROTECTED}
+end
 
 %end
