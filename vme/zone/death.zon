@@ -165,7 +165,7 @@ unitptr find_here@commands (s:string);
 var
    item      : unitptr;
    corpse    : unitptr;
-
+ reward_exp : extraptr;
 
    temp_lst  : stringlist;
 	 temp_str2:string;
@@ -174,7 +174,6 @@ var
    test_expt : extraptr;
    headless:string;
    chk : integer;
-   reward_extra : stringlist;
 code
 {
 heartbeat:=3;
@@ -225,12 +224,12 @@ heartbeat:=3;
    addextra (item.extra,{"$head_time"},itoa(realtime));
    dilcopy ("rot_head@death",item);
    // If corpse has a reward on it copy it to the head.
-   if ("$reward" in corpse.extra)
-   {
-     addstring(reward_extra, corpse.extra.["$reward"].names.[0]);
-     addstring(reward_extra, corpse.extra.["$reward"].names.[1]);
-     addextra(item.extra, reward_extra, corpse.extra.["$reward"].descr);
-   }    
+  
+ reward_exp := "$reward" in corpse.extra;
+ if (reward_exp)
+ {
+   addextra(item.extra, reward_exp.names,reward_exp.descr);
+ }    
    item.minv := 200;
    link(item, self.outside);
 
@@ -722,7 +721,7 @@ var
    crp:unitptr;
    item:unitptr;
    temp:unitptr;
-   reward_string : stringlist;
+   reward_exp : extraptr;
 code
 {
    heartbeat := PULSE_SEC;
@@ -792,14 +791,14 @@ code
       addextra(crp.extra, {CORPSE_TIME}, itoa(rltime));
       store (crp,"corpse_"+self.name+"."+itoa(rltime),TRUE);
       dilcopy("partial_get@death",crp);
-      if("$reward" in self.extra) 
-      {  // if there is a $reward copy it to the corpse 
-        addstring(reward_string, self.extra.["$reward"].names.[0]);
-        addstring(reward_string, self.extra.["$reward"].names.[1]);
-        addextra(crp.extra, reward_string, self.extra.["$reward"].descr);
-        // once copied to corpse remove it from the dead guy. 
-         subextra(self.extra, "$reward");
+      
+      reward_exp := "$reward" in self.extra;
+      if (reward_exp)
+      {
+       addextra(crp.extra, reward_exp.names,reward_exp.descr);
+       subextra(self.extra, "$reward"); 
       }
+
    
    }
    else
@@ -1084,6 +1083,16 @@ weight 1
 end
 
 
+                                     rewardhead
+names {"head"}
+title "a bloody reward test head"
+descr "The decapitated head of CrashTestDummy is here"
+type ITEM_TRASH
+manipulate {MANIPULATE_TAKE}
+weight 1
+extra {"$reward", "$reward_2500_1024_1"}
+"This is a fake head to test rewards."
+end
                                      corpse
 names {"corpse"}
 title "corpse"
