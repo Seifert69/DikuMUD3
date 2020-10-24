@@ -12422,7 +12422,7 @@ exp -500
 dilcopy reward_give@function();
 dilcopy blow_whistle@justice();
 dilcopy rescue@function("cityguard / captain / thargarad / kazeem / daf ");
-dilcopy protect_lawful@justice();
+// dilcopy protect_lawful@justice(); Make the captain stay put in the office, no whistle react
 dilcopy accuse@justice();
 dilcopy guard_dir@function("south", {""}, {""}, "");
 dilcopy guard_door@function(SOUTH,
