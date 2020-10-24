@@ -122,15 +122,14 @@ code
    :torescue:
    priority;
    tf:=walk_room@function(roomto, 5);
-   nopriority;
 
    // Stay a little
-   act("$1n alertly scans $1s surroundings.",
-         A_ALWAYS, self, null, null, TO_ALL);
-
+   act("$1n alertly scans $1s surroundings.",A_ALWAYS, self, null, null, TO_ALL);
    heartbeat := PULSE_SEC*4;
+   nopriority;
 
    :nowwhat:
+   // Let the other DIL programs take control (no priority above)
    pause;
    pause;
    pause;
@@ -141,7 +140,7 @@ code
    priority;
    tf:=walk_room@function(roomorg, 8);
    nopriority;
-   quit;
+   return;
 }
 dilend
 
@@ -6623,7 +6622,7 @@ M_HUMAN_WARRIOR_SWORD(87,SEX_MALE)
 alignment 1000
 
 dilcopy blow_whistle@justice();
-// dilcopy protect_lawful@justice(); By removing this, the captain will not respond to whistles
+dilcopy protect_lawful@justice(); 
 dilcopy rescue@function("guard / mayor");
 dilcopy reward_give@function();
 dilcopy accuse@justice();
@@ -6700,6 +6699,7 @@ alignment 400
 money 2 IRON_PIECE
 
 dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
@@ -6722,6 +6722,7 @@ alignment 400
 money 5 IRON_PIECE
 
 dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
@@ -6744,6 +6745,7 @@ alignment 400  /* Just above neutral */
 money 3 IRON_PIECE
 
 dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
@@ -6812,6 +6814,7 @@ money 6 IRON_PIECE
 exp 0
 
 dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
@@ -6834,6 +6837,7 @@ exp 0
 position POSITION_SLEEPING
 default POSITION_SITTING
 dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midgaard"});
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilbegin guard1();
@@ -6934,6 +6938,7 @@ position POSITION_SLEEPING
 default POSITION_SITTING
 
 dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
@@ -7035,6 +7040,7 @@ default POSITION_SITTING
 exp 0
 
 dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
@@ -7058,6 +7064,7 @@ position POSITION_SLEEPING
 default POSITION_SITTING
 
 dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
@@ -7081,6 +7088,7 @@ default POSITION_SITTING
 exp 0
 
 dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
@@ -7104,6 +7112,7 @@ position POSITION_SLEEPING
 default POSITION_SITTING
 
 dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
@@ -7128,6 +7137,7 @@ position POSITION_SLEEPING
 default POSITION_SITTING
 
 dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
@@ -7151,6 +7161,7 @@ position POSITION_SLEEPING
 default POSITION_SITTING
 
 dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
@@ -7520,6 +7531,7 @@ exp 0
 
 dilcopy attack_evil@justice();
 dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilbegin temple_guard();

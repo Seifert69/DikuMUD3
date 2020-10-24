@@ -2804,6 +2804,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -2831,6 +2833,9 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
+
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
                       23, "rn_036@midwalls",
@@ -2855,6 +2860,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -2880,6 +2887,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -2905,6 +2914,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -2930,6 +2941,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 
 dilcopy guardschedule(12, "rn_041@midwalls",
@@ -2956,6 +2969,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -2982,6 +2997,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3008,6 +3025,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3034,6 +3053,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3060,6 +3081,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3087,6 +3110,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3112,6 +3137,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3136,6 +3163,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3161,6 +3190,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3185,6 +3216,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3210,6 +3243,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3235,6 +3270,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3262,6 +3299,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3288,6 +3327,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3314,6 +3355,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3340,6 +3383,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(12, "rn_041@midwalls",
                       18, "rn_041@midwalls",
@@ -3366,6 +3411,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3390,6 +3437,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3415,6 +3464,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3439,6 +3490,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3463,6 +3516,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3487,6 +3542,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(13, "rn_041@midwalls",
                       19, "rn_041@midwalls",
@@ -3512,6 +3569,7 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
 
 end
 
@@ -3533,6 +3591,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3559,6 +3619,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3583,6 +3645,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3608,6 +3672,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3633,6 +3699,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3657,6 +3725,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3681,6 +3751,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3706,6 +3778,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3731,6 +3805,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3758,6 +3834,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3784,6 +3862,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3809,6 +3889,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3834,6 +3916,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3861,6 +3945,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3886,6 +3972,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -3912,7 +4000,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
-
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3936,6 +4025,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 
 dilcopy guardschedule(2, "rn_041@midwalls",
@@ -3962,6 +4053,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -3986,6 +4079,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(2, "rn_041@midwalls",
                       9, "rn_041@midwalls",
@@ -4012,6 +4107,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4039,6 +4136,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4064,7 +4163,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
-
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4090,6 +4190,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4116,6 +4218,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4143,6 +4247,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4170,6 +4276,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4197,6 +4305,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4224,6 +4334,8 @@ romflags {CHAR_PROTECTED}
 dilcopy rescue@function("guard / captain / mayor");
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
 dilcopy protect_lawful@justice();
+dilcopy blow_whistle@justice();
+dilcopy whistlisten@justice({"midwalls", "midgaard"});
 
 dilcopy guardschedule(1, "rn_041@midwalls",
                       8, "rn_041@midwalls",
@@ -4314,7 +4426,7 @@ alignment 400
 
 romflags {CHAR_PROTECTED}
 dilcopy protect_lawful@justice();
-
+dilcopy blow_whistle@justice();
 end
 
 %objects
