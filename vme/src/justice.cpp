@@ -31,35 +31,54 @@
 
 /* These are constant for all guards.                            */
 
-#define CUFFS_ZONE "basis"
-#define CUFFS_NAME "hand_cuffs"
+// #define CUFFS_ZONE "basis"
+// #define CUFFS_NAME "hand_cuffs"
 
 /* ACCUSELOC_NAME must be the same room name in all zones.       */
 
-#define ACCUSELOC_NAME "accuse_room"
+// #define ACCUSELOC_NAME "accuse_room"
 
 /* The name of the safe where items are stored. The same safe could be
    loaded in different zones. */
 
-#define SAFE_NAME "safe"
+// #define SAFE_NAME "safe"
 
-static int crime_serial_no = 0;
-
-struct char_crime_data
+/* struct char_crime_data
 {
-   ubit32 crime_nr;           /* global unique crime number  */
-   ubit8 ticks_to_neutralize; /* ticks before crime deletes  */
+   ubit32 crime_nr;           // global unique crime number 
+   ubit8 ticks_to_neutralize; // ticks before crime deletes 
 
-   int id;                          /* id of offender PC           */
-   char name_criminal[PC_MAX_NAME]; /* Name of offender            */
+   int id;                          // id of offender PC           
+   char name_criminal[PC_MAX_NAME]; // Name of offender            
 
-   char victim[31];              /* name of victim              */
-   ubit8 crime_type;             /* what crime? (kill, theft..) */
-   ubit8 reported;               /* Has crime been reported?    */
-   struct char_crime_data *next; /* link->                      */
-};
+   char victim[31];              // name of victim              
+   ubit8 crime_type;             // what crime? (kill, theft..) 
+   ubit8 reported;               // Has crime been reported?    
+   struct char_crime_data *next; // link->                      
+};*/
 
 //struct char_crime_data *crime_list = NULL;
+
+static int crime_serial_no = time(0);
+
+int new_crime_serial_no(void)
+{
+   int n;
+
+   n = time(0);
+
+   if (n > crime_serial_no)
+   {
+      crime_serial_no = n;
+   }
+   else
+   {
+      // If there's a race condition, just pick the next second
+      crime_serial_no++;
+   }
+
+   return crime_serial_no;
+}
 
 void offend_legal_state(class unit_data *ch, class unit_data *victim)
 {
@@ -105,6 +124,158 @@ void npc_walkto(class unit_data *u, class unit_data *toroom)
       prg->fp->vars[0].val.string = str_dup(buf);
       //prg->fp->vars[0].val.unitptr  = toroom; why didn't this work?
       dil_activate(prg);
+   }
+}
+
+// Activate the add_crime@justice DIL
+//
+//
+void add_crime(class unit_data *criminal, class unit_data *victim, int type)
+{
+   struct diltemplate *tmpl;
+   class dilprg *prg;
+   int crime_no;
+
+   if (str_is_empty(UNIT_NAME(criminal)))
+   {
+      slog(LOG_ALL, 0, "JUSTICE: NULL name in criminal");
+      return;
+   }
+
+   if (str_is_empty(UNIT_NAME(victim)))
+   {
+      slog(LOG_ALL, 0, "JUSTICE: NULL name in victim");
+      return;
+   }
+
+   crime_no = new_crime_serial_no();
+
+   tmpl = find_dil_template("add_crime@justice");
+   prg = dil_copy_template(tmpl, criminal, NULL);
+
+   if (prg)
+   {
+      prg->waitcmd = WAITCMD_MAXINST - 1;
+
+      prg->fp->vars[0].val.unitptr = victim;
+      prg->fp->vars[1].val.integer = type;
+      prg->fp->vars[2].val.integer = crime_no;
+      prg->fp->vars[3].val.integer = CRIME_LIFE + 2;
+      dil_add_secure(prg, victim, prg->fp->tmpl->core);
+      dil_activate(prg);
+   }
+}
+
+// criminal points to the perpetrating char. Mandatory.
+// victim is the char subjected to a crime. Mandatory.
+// crime_type can be CRIME_EXTRA, CRIME_STEALING, CRIME_MURDER, CRIME_PK
+// active ?
+//
+void log_crime(class unit_data *criminal, class unit_data *victim,
+               ubit8 crime_type, int active)
+{
+   int i, j;
+   struct diltemplate *tmpl;
+   class dilprg *prg;
+   class dilprg *prg2;
+   class dilprg *prg3;
+
+   if (criminal == NULL)
+   {
+      slog(LOG_ALL, 0, "log_crime() NULL criminal");
+      return;
+   }
+
+   if (victim == NULL)
+   {
+      slog(LOG_ALL, 0, "log_crime() NULL victim");
+      return;
+   }
+
+   if (!IS_CHAR(criminal) || !IS_CHAR(victim))
+   {
+      slog(LOG_ALL, 0, "log_crime() criminal or victim not IS_CHAR");
+      return;
+   }
+
+   /* When victim is legal target you can't get accused from it. */
+   if (IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) && ((crime_type == CRIME_MURDER) || (crime_type == CRIME_PK)))
+      return;
+
+   // It's OK to kill NPCs that are not "protected"
+   if (IS_NPC(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
+      return;
+
+   // First let's deal with registering the crime the criminal committed
+   add_crime(criminal, victim, crime_type);
+
+   // prepare the set_witness function
+   tmpl = find_dil_template("set_witness@justice");
+   prg = dil_copy_template(tmpl, victim, NULL);
+
+   if (prg)
+   {
+      prg->waitcmd = WAITCMD_MAXINST - 1;
+      prg->fp->vars[0].val.unitptr = criminal;
+      prg->fp->vars[1].val.integer = crime_serial_no;
+      prg->fp->vars[2].val.integer = crime_type;
+      prg->fp->vars[3].val.integer = active;
+      dil_add_secure(prg, criminal, prg->fp->tmpl->core);
+      dil_activate(prg);
+   }
+
+   // Find any bystanders and register them as witnesses
+   scan4_unit(victim, UNIT_ST_PC | UNIT_ST_NPC);
+
+   for (i = 0; i < unit_vector.top; i++)
+   {
+      if (CHAR_CAN_SEE(UVI(i), criminal))
+      {
+         /* set_witness(criminal, UVI(i), crime_serial_no, crime_type, active); */
+         tmpl = find_dil_template("set_witness@justice");
+         prg2 = dil_copy_template(tmpl, UVI(i), NULL);
+
+         if (prg2)
+         {
+            prg2->waitcmd = WAITCMD_MAXINST - 1;
+            prg2->fp->vars[0].val.unitptr = criminal;
+            prg2->fp->vars[1].val.integer = crime_serial_no;
+            prg2->fp->vars[2].val.integer = crime_type;
+            prg2->fp->vars[3].val.integer = active;
+            dil_add_secure(prg2, criminal, prg2->fp->tmpl->core);
+            dil_activate(prg2);
+         }
+      }
+   }
+
+   // Find any CHAR fighting the victim - they are complicit to the crime
+   for (j = 0; j < unit_vector.top; j++)
+   {
+      if (CHAR_COMBAT(UVI(j)) && CHAR_COMBAT(UVI(j))->FindOpponent(victim) && UVI(j) != criminal)
+      {
+         add_crime(UVI(j), victim, crime_type);
+
+         for (i = 0; i < unit_vector.top; i++)
+         {
+            if (CHAR_CAN_SEE(UVI(i), UVI(j)))
+            {
+               tmpl = find_dil_template("set_witness@justice");
+               prg3 = dil_copy_template(tmpl, UVI(i), NULL);
+
+               if (prg3)
+               {
+                  prg3->waitcmd = WAITCMD_MAXINST - 1;
+                  prg3->fp->vars[0].val.unitptr = UVI(j);
+                  prg3->fp->vars[1].val.integer = crime_serial_no;
+                  prg3->fp->vars[2].val.integer = crime_type;
+                  prg3->fp->vars[3].val.integer = active;
+                  dil_add_secure(prg3, UVI(j), prg3->fp->tmpl->core);
+                  dil_activate(prg3);
+               }
+            }
+         }
+         /*  set_witness(UVI(j), UVI(i), crime_serial_no, crime_type, active); */
+      }
    }
 }
 
@@ -233,42 +404,6 @@ void npc_set_visit (class unit_data * npc, class unit_data * dest_room,
     FREE(crime);
 }
 */
-int new_crime_serial_no(void)
-{
-   FILE *file;
-
-   /* read next serial number to be assigned to crime */
-   if (!(file =
-             fopen_cache(str_cc(g_cServerConfig.m_libdir, CRIME_NUM_FILE), "r+")))
-   {
-      slog(LOG_OFF, 0, "Can't open file 'crime-nr'");
-      assert(FALSE);
-   }
-
-   rewind(file);
-   int mstmp = fscanf(file, "%d", &crime_serial_no);
-   if (mstmp < 0)
-   {
-      slog(LOG_ALL, 0, "%s: Unexpected bytes %d. Resetting crime number to zero", CRIME_NUM_FILE, mstmp);
-      crime_serial_no = 0;
-   }
-
-   crime_serial_no++;
-   rewind(file);
-   mstmp = fprintf(file, "%d", crime_serial_no);
-   if (mstmp < 1)
-   {
-      slog(LOG_ALL, 0, "ERROR: Unexpected bytes in new_crime_serial_no");
-      assert(FALSE);
-   }
-
-   fflush(file);
-
-   /* No fclose(file), using cache */
-
-   return crime_serial_no;
-}
-
 /* void set_reward_char(class unit_data *ch, int crimes)
 {
     class unit_affected_type *paf;
@@ -372,48 +507,8 @@ void set_witness(class unit_data *criminal, class unit_data *witness,
 }
 */
 
-
-// Activate the add_crime@justice DIL
-//
-//
-void add_crime(class unit_data *criminal, class unit_data *victim, int type)
-{
-   struct diltemplate *tmpl;
-   class dilprg *prg;
-   int crime_no;
-
-   if (str_is_empty(UNIT_NAME(criminal)))
-   {
-      slog(LOG_ALL, 0, "JUSTICE: NULL name in criminal");
-      return;
-   }
-
-   if (str_is_empty(UNIT_NAME(victim)))
-   {
-      slog(LOG_ALL, 0, "JUSTICE: NULL name in victim");
-      return;
-   }
-
-   crime_no = new_crime_serial_no();
-
-   tmpl = find_dil_template("add_crime@justice");
-   prg = dil_copy_template(tmpl, criminal, NULL);
-
-   if (prg)
-   {
-      prg->waitcmd = WAITCMD_MAXINST - 1;
-
-      prg->fp->vars[0].val.unitptr = victim;
-      prg->fp->vars[1].val.integer = type;
-      prg->fp->vars[2].val.integer = crime_no;
-      prg->fp->vars[3].val.integer = CRIME_LIFE + 2;
-      dil_add_secure(prg, victim, prg->fp->tmpl->core);
-      dil_activate(prg);
-   }
-}
-
-   /* add new crime crime_list old code: */
-   /*   CREATE(crime, struct char_crime_data, 1);
+/* add new crime crime_list old code: */
+/*   CREATE(crime, struct char_crime_data, 1);
     crime->next = crime_list;
     crime_list = crime;
 
@@ -437,119 +532,6 @@ void add_crime(class unit_data *criminal, class unit_data *victim, int type)
     return NULL;
 }
 */
-
-// criminal points to the perpetrating char. Mandatory.
-// victim is the char subjected to a crime. Mandatory.
-// crime_type can be CRIME_EXTRA, CRIME_STEALING, CRIME_MURDER, CRIME_PK
-// active ?
-//
-void log_crime(class unit_data *criminal, class unit_data *victim,
-               ubit8 crime_type, int active)
-{
-   int i, j;
-   struct diltemplate *tmpl;
-   class dilprg *prg;
-   class dilprg *prg2;
-   class dilprg *prg3;
-
-   if (criminal == NULL)
-   {
-      slog(LOG_ALL, 0, "log_crime() NULL criminal");
-      return;
-   }
-
-   if (victim == NULL)
-   {
-      slog(LOG_ALL, 0, "log_crime() NULL victim");
-      return;
-   }
-
-   if (!IS_CHAR(criminal) || !IS_CHAR(victim))
-   {
-      slog(LOG_ALL, 0, "log_crime() criminal or victim not IS_CHAR");
-      return;
-   }
-
-   /* When victim is legal target you can't get accused from it. */
-   if (IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) && ((crime_type == CRIME_MURDER) || (crime_type == CRIME_PK)))
-      return;
-
-   // It's OK to kill NPCs that are not "protected"
-   if (IS_NPC(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
-      return;
-
-   // First let's deal with registering the crime the criminal committed
-   add_crime(criminal, victim, crime_type);
-
-   // prepare the set_witness function
-   tmpl = find_dil_template("set_witness@justice");
-   prg = dil_copy_template(tmpl, victim, NULL);
-
-   if (prg)
-   {
-      prg->waitcmd = WAITCMD_MAXINST - 1;
-      prg->fp->vars[0].val.unitptr = criminal;
-      prg->fp->vars[1].val.integer = crime_serial_no;
-      prg->fp->vars[2].val.integer = crime_type;
-      prg->fp->vars[3].val.integer = active;
-      dil_add_secure(prg, criminal, prg->fp->tmpl->core);
-      dil_activate(prg);
-   }
-
-   // Find any bystanders and register them as witnesses
-   scan4_unit(victim, UNIT_ST_PC | UNIT_ST_NPC);
-
-   for (i = 0; i < unit_vector.top; i++)
-   {
-      if (CHAR_CAN_SEE(UVI(i), criminal))
-      {
-         /* set_witness(criminal, UVI(i), crime_serial_no, crime_type, active); */
-         tmpl = find_dil_template("set_witness@justice");
-         prg2 = dil_copy_template(tmpl, UVI(i), NULL);
-
-         if (prg2)
-         {
-            prg2->waitcmd = WAITCMD_MAXINST - 1;
-            prg2->fp->vars[0].val.unitptr = criminal;
-            prg2->fp->vars[1].val.integer = crime_serial_no;
-            prg2->fp->vars[2].val.integer = crime_type;
-            prg2->fp->vars[3].val.integer = active;
-            dil_add_secure(prg2, criminal, prg2->fp->tmpl->core);
-            dil_activate(prg2);
-         }
-      }
-   }
-
-   // Find any CHAR fighting the victim - they are complicit to the crime
-   for (j = 0; j < unit_vector.top; j++)
-   {
-      if (CHAR_COMBAT(UVI(j)) && CHAR_COMBAT(UVI(j))->FindOpponent(victim) && UVI(j) != criminal)
-      {
-         add_crime(UVI(j), victim, crime_type);
-
-         for (i = 0; i < unit_vector.top; i++)
-         {
-            if (CHAR_CAN_SEE(UVI(i), UVI(j)))
-            {
-               tmpl = find_dil_template("set_witness@justice");
-               prg3 = dil_copy_template(tmpl, UVI(i), NULL);
-
-               if (prg3)
-               {
-                  prg3->waitcmd = WAITCMD_MAXINST - 1;
-                  prg3->fp->vars[0].val.unitptr = UVI(j);
-                  prg3->fp->vars[1].val.integer = crime_serial_no;
-                  prg3->fp->vars[2].val.integer = crime_type;
-                  prg3->fp->vars[3].val.integer = active;
-                  dil_add_secure(prg3, UVI(j), prg3->fp->tmpl->core);
-                  dil_activate(prg3);
-               }
-            }
-         }
-         /*  set_witness(UVI(j), UVI(i), crime_serial_no, crime_type, active); */
-      }
-   }
-}
 
 /* Got to have this loaded somewhere */
 
@@ -962,7 +944,6 @@ int guard_assist(const class unit_data *npc, struct visit_data *vd)
    return DESTROY_ME;
 }*/
 
-
 /* 'Guard' needs help. Call his friends... :-)   */
 /*                                               */
 void call_guards(class unit_data *guard)
@@ -1217,6 +1198,42 @@ void tif_reward_off(class unit_affected_type *af, class unit_data *unit)
         REMOVE_BIT(CHAR_FLAGS(unit), CHAR_OUTLAW);
 }
 */
+
+/* int new_crime_serial_no(void)
+{
+   FILE *file;
+
+   // read next serial number to be assigned to crime
+   if (!(file =
+             fopen_cache(str_cc(g_cServerConfig.m_libdir, CRIME_NUM_FILE), "r+")))
+   {
+      slog(LOG_OFF, 0, "Can't open file 'crime-nr'");
+      assert(FALSE);
+   }
+
+   rewind(file);
+   int mstmp = fscanf(file, "%d", &crime_serial_no);
+   if (mstmp < 0)
+   {
+      slog(LOG_ALL, 0, "%s: Unexpected bytes %d. Resetting crime number to zero", CRIME_NUM_FILE, mstmp);
+      crime_serial_no = 0;
+   }
+
+   crime_serial_no++;
+   rewind(file);
+   mstmp = fprintf(file, "%d", crime_serial_no);
+   if (mstmp < 1)
+   {
+      slog(LOG_ALL, 0, "ERROR: Unexpected bytes in new_crime_serial_no");
+      assert(FALSE);
+   }
+
+   fflush(file);
+
+   // No fclose(file), using cache
+
+   return crime_serial_no;
+}*/
 
 // -------------------------------------------------------------- */
 

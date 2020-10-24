@@ -101,65 +101,70 @@ dilend
 
 
 
-/*reward give replacement.  */
+// reward give replacement. To be copied onto NPCs that hand out rewards 
+// for wanted criminals or their remains :-)
+//
 dilbegin reward_give();
 var
- u:unitptr;
- item:integer;
- amount:integer;
- buf:string;
- reward : extraptr;
- r_data : stringlist;
- r_gold : integer;
- r_xp : integer;
- i : integer;
+   u:unitptr;
+   item:integer;
+   amount:integer;
+   buf:string;
+   reward : extraptr;
+   r_data : stringlist;
+   r_gold : integer;
+   r_xp : integer;
+   i : integer;
 code
 {
-heartbeat:=PULSE_SEC*3;
+   heartbeat:=PULSE_SEC*3;
+
 :start:
-wait (SFB_DONE, command("give") and (self==target));
-block;
-reward := "$reward" in medium.extra;
+   wait (SFB_DONE, command("give") and (self==target));
+   block;
 
-if (not(reward)) 
-{
- act ("$1n says, 'Thank you $3n, that is very nice of you.'",
-   A_SOMEONE, self, null, activator, TO_ROOM);
- destroy(medium);
- goto start;
+   reward := "$reward" in medium.extra;
+
+   if (not(reward)) 
+   {
+      act ("$1n says, 'Thank you $3n, that is very nice of you.'", A_SOMEONE, self, null, activator, TO_ROOM);
+      destroy(medium);
+      goto start;
+   }
+
+   r_data := split(reward.names.[1], "_");
+   r_gold := atoi(r_data.[1]);
+   if (r_gold > PLATINUM_MULT)
+   {
+      log("reward_give() gold reward of " + itoa(r_gold) + " too high, limiting to 1 PP");
+      r_gold := PLATINUM_MULT;  // Make sure this doesn't become more than 1 PP      
+   }
+
+   r_xp := atoi(r_data.[2]);
+   if (r_xp > 1000)
+   {
+      log("reward_give() XP reward of " + itoa(r_xp) + " too high, limiting to 1,000");
+      r_xp := 1000;  // Make sure some glitch doesn't cause excessive XP
+   }
+
+   act ("$1n examines the bloody head with an approving grin.",
+      A_SOMEONE, self, null, activator, TO_ROOM);
+   act ("$1n says, 'Thank you $3n for ridding us of this scum!'",
+      A_SOMEONE, self, null, activator, TO_ROOM);
+   act ("$1n says, 'Please accept this as a token of our appreciation. '",
+      A_SOMEONE, self, null, activator, TO_ROOM);
+   act ("$1n slides a pile of coins to $3n.",
+      A_SOMEONE, self, null, activator, TO_ROOM);
+
+   if (activator.type == UNIT_ST_PC)
+      experience(r_xp, activator);
+
+   i := transfermoney(null, activator, r_gold);
+   destroy(medium);
+ 
+   goto start;
 }
-r_data := split(reward.names.[1], "_");
-
-r_gold := atoi(r_data.[1]);
-r_xp := atoi(r_data.[2]);
-
-act ("$1n examines the bloody head with an approving grin.",
-   A_SOMEONE, self, null, activator, TO_ROOM);
-act ("$1n says, 'Thank you $3n for ridding us of this scum!'",
-   A_SOMEONE, self, null, activator, TO_ROOM);
-act ("$1n says, 'Please accept this as a token of our appreciation. '",
-   A_SOMEONE, self, null, activator, TO_ROOM);
-act ("$1n slides a pile of coins to $3n.",
-   A_SOMEONE, self, null, activator, TO_ROOM);
-
-
-if (activator.type == UNIT_ST_PC)
-    experience(r_xp, activator);
-
-i := transfermoney(null, activator, r_gold);
-destroy(medium);
- 
-// act ("Sorry but the reward office is not giving rewards at the moment.",
-//  A_SOMEONE,self,null,null,TO_ROOM);
-//  act ("Thanks for removing this criminal anyway.",
-//  A_SOMEONE,self,null,null,TO_ROOM);
- 
- 
-goto start;
-
-  }
-  dilend
-
+dilend
 
 
 
