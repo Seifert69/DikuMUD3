@@ -733,8 +733,9 @@ static void person_gain(class unit_data *ch, class unit_data *dead,
    {
       if (share > 0)
       {
-         if (IS_SET(CHAR_FLAGS(ch), CHAR_WIMPY))
-            share /= 2; /* Only 50% in wimpy */
+         /* No need to reduce XP since flee is now a skill
+            if (IS_SET(CHAR_FLAGS(ch), CHAR_WIMPY))
+            share /= 2; // Only 50% in wimpy */
 
          if (CHAR_LEVEL(ch) < maxlevel - 5)
             share -=
