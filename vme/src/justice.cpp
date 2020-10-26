@@ -95,6 +95,7 @@ void offend_legal_state(class unit_data *ch, class unit_data *victim)
 }
 
 // MS2020: Have the NPC walk to the designated room
+/*
 void npc_walkto(class unit_data *u, class unit_data *toroom)
 {
    struct diltemplate *tmpl;
@@ -126,6 +127,9 @@ void npc_walkto(class unit_data *u, class unit_data *toroom)
       dil_activate(prg);
    }
 }
+*/
+
+
 
 // Activate the add_crime@justice DIL
 //
@@ -946,6 +950,7 @@ int guard_assist(const class unit_data *npc, struct visit_data *vd)
 
 /* 'Guard' needs help. Call his friends... :-)   */
 /*                                               */
+/*
 void call_guards(class unit_data *guard)
 {
    class zone_type *zone;
@@ -974,6 +979,8 @@ void call_guards(class unit_data *guard)
       }
    }
 }
+*/
+
 
 /* This routine protects lawful characters                               */
 /* SFUN_PROTECT_LAWFUL                                                   */

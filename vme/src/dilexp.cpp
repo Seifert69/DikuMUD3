@@ -3329,16 +3329,6 @@ void dilfe_gint(register class dilprg *p)
                 v->val.num = 1;
             break;
       
-      	case DIL_GINT_CALLGUARDS:
-            if ((p->sarg->owner != NULL) )
-               {
-                call_guards(p->sarg->owner);
-                v->val.num = 1;
-               }
-           else
-               v->val.num = 0;
-            break;
-
         default:
             v->type = DILV_FAIL; /* failed */
             slog(LOG_ALL, 0, "getinteger() was given incorrect index %d by DIL %s@%s.",

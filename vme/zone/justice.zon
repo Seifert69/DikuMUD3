@@ -454,6 +454,32 @@ code
 dilend
 
 
+// Find the jurisdiction for 'self'. It's either Udgaard or Midgaard right now. 
+// Expand this function if you have more jurisdictions (zones with justice)
+//
+dilbegin string get_juris();
+var
+   s : string;
+   rm : unitptr;
+
+code
+{
+   s := "midgaard"; // Default
+
+   rm := self.outside;
+
+   while (rm.type != UNIT_ST_ROOM)
+      rm := rm.outside;
+
+   if (rm.zoneidx == "udgaard")
+      s := "udgaard";   
+   else if (self.zoneidx == "udgaard")
+      s := "udgaard";   
+
+   return(s);
+}
+dilend
+
 
 // This function is called by log_crime in C and will set a $witness extra on any person who witnesses
 // a crime.  If the witness is an NPC it will copy the activate_accuse() DIL to the witness.
@@ -461,7 +487,6 @@ dilend
 dilbegin set_witness(criminal : unitptr, crime_no : integer, crime_type : integer, show : integer);
 external
    activate_accuse(witness : unitptr, crime_type : integer, criminal_name : string);
-
 var
    pid: integer;
    acc_cmd : string;
@@ -491,10 +516,10 @@ code
 
    if ((self.type == UNIT_ST_NPC) and (show))
    {
-     if (self.zoneidx == "udgaard")
+      jurisdiction := "midgaard";
+     
+      if (self.zoneidx == "udgaard")
         jurisdiction := "udgaard";
-     else
-        jurisdiction := "midgaard";
 
     dilcopy("activate_accuse@justice("+itoa(crime_type)+","+criminal.name+","+jurisdiction+")",self);
    }
@@ -879,6 +904,49 @@ dilend
 
 
 
+// Listen for a whistle...
+// This DIL gets triggered by any blowwhistle anywhere in the world. Will come
+// aid anyone in the juris list if self is also in jurislist. 
+//
+// juris : work in progress. The list of zones the NPC will assist in. ??[] = all??
+// The message received is "WHISTLE roomzone roomname" and is the destination room
+//
+dilbegin aware unique fnpri(FN_PRI_MISSION) whistlisten(juris : stringlist);
+external
+   to_the_rescue@midgaard(sroomto : string);
+
+var
+   u : unitptr;
+   s : string;
+code
+{
+   :listen:
+   wait(SFB_MSG, ("WHISTLE " in argument)); // Wait for a whistle
+
+   // Only 1/6th chance to react
+   if (rnd(1,6) != 1)
+      goto listen;
+
+   // Only react if self is in one of the available jurisdictions
+   if (not (self.zoneidx in juris))
+      goto listen;
+
+   s := getword(argument); // Skip "WHISTLE "
+   s := getword(argument);
+
+   // If the room is not in my juris, skip
+   if (not (s in juris))
+      goto listen;
+
+   s := argument+"@"+s;
+   to_the_rescue@midgaard(s);
+
+   goto listen;
+}
+dilend
+
+
+
 // blow_whistle is to be placed e.g. on guards and shopkeepers and will allow them
 // to call for help. Any char in the zone which has a protect_lawful has a chance
 // to come running to the rescue.
@@ -897,6 +965,7 @@ var
     vict     : unitptr;
     i        : integer;
     wake     : integer;
+    rm       : unitptr;
 
 code
 {
@@ -923,10 +992,16 @@ code
             
    if ((self.position > POSITION_SLEEPING) and (activator.position == POSITION_FIGHTING) and (visible(self,activator)))
    {
-      if(crime_check@justice(activator, vict))
+      if (crime_check@justice(activator, vict))
       {
          act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",A_SOMEONE,self,null,null,TO_ROOM);    
-         i:= getinteger(DIL_GINT_CALLGUARDS, self, 0); 
+
+         rm := self.outside;
+         while (rm.type != UNIT_ST_ROOM)
+            rm := rm.outside;
+         sendtoalldil("WHISTLE "+rm.zoneidx+" "+rm.nameidx, "whistlisten@justice");
+
+         // i:= getinteger(DIL_GINT_CALLGUARDS, self, 0); 
          set_fighting(self, activator);
          unset(vict.charflags, CHAR_SELF_DEFENCE);
          unsecure(vict);
@@ -939,6 +1014,8 @@ code
    goto start;
 }
 dilend /* End blow_whistle */
+
+
 
 
 %rooms
