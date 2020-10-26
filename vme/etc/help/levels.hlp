@@ -1,0 +1,25 @@
+<div class="mw-parser-output"><h1>Level</h1>
+<p>Syntax: 
+</p>
+<pre> level [now]
+</pre>
+<p>The level command is used to raise a level. This is because the training system keeps track of how many times you practice per level. When you issue the level command you raise a level, gain your ability and skill points, and can start a new (cheap) training session.
+</p><p>Remember that each time you practice a certain skills/spells/abilities on a level it becomes more expensive to practice that same skill again. Until you raise a level. Thus it is to your advantage to only type level once before practicing. The <b>level now</b> command is used to raise a level even if you haven't trained your skills. You probably shouldn't do that.
+</p><p>Experience is usually gained by killing monsters. The experience you gain is relative to your level compared to the monsters level.
+</p><p>You gain no experience when killing players.
+</p><p>If you are good and kill evil you get a bonus. Vice versa but not as large.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Practice</a>
+&gt; <a cmd='#'>Help Abilities</a>
+&gt; <a cmd='#'>Help Spells</a>
+&gt; <a cmd='#'>Help Skills</a>
+&gt; <a cmd='#'>Help Guilds</a>
+&gt; <a cmd='#'>Help Death</a>
+</pre>
+
+
+
+
+</div>

@@ -1,0 +1,23 @@
+<div class="mw-parser-output"><h1>Accuse</h1>
+<p>When you see a player commit a crime the following text should be displayed:
+</p>
+<pre> You have just witnessed a crime committed by &lt;playername&gt;
+</pre>
+<p>At this point you may chose to ignore it or be an upstanding citizen
+and go to the local city guard office. Here you can accuse a player of any
+crime you may have witnessed him committing. There you would for example
+use:
+</p>
+<pre> accuse Quinn of murder
+ accuse Zadran stealing
+</pre>
+<p>See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Law</a>
+&gt; <a cmd='#'>Help PK</a>
+</pre>
+
+
+
+
+</div>

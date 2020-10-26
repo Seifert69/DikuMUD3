@@ -1,0 +1,43 @@
+<div class="mw-parser-output"><h1>Trigger</h1>
+<p>If you're playing DikuMUD with the web-client there is built-in support for 
+triggers. A trigger is useful for sending commands to the MUD when certain
+text appears on your screen.
+</p><p>Triggers in the web-client are based on Java Script Regular Expressions.They're
+super powerful but they can also be a bit tricky to use. 
+Usage:
+</p>
+<pre> trigger &lt;regexp&gt; command
+</pre>
+<p>Best with a few examples. Say you want to do whatever the beastly Fido tells you to do.
+This command will trigger on the tell from beastly Fido, will extract what the dog
+told you and will execute the command (the $ sign, i.e. the whole string between the
+parenthesis):
+</p>
+<pre> <a cmd='#'>trigger obey /^the Beastly Fido tells you '(.+?)'/ $</a>
+</pre>
+<p>Or if maybe, every time one of the city guards leave a room you'd like to say
+"I love the cityguard. Especially when the guard leaves &lt;direction&gt;.". This is
+how to do it:
+</p>
+<pre> <a cmd='#'>trigger loveit /^The Cityguard leaves (.+?)\./ say I love it when the guard leaves. Especially when the guard leaves $1.</a>
+</pre>
+<p>If you want to add to that the use of variables, you can do like this:
+</p>
+<pre> <a cmd='#'>variable friends papi|the cityguard|the beastly fido</a>
+ <a cmd='#'>trigger loveit /^(@friends)\sleaves (.+?)\./ say I love it when $1 leaves. Especially when $1 leaves $2.</a>
+</pre>
+<p>This tool <a rel="nofollow" class="external text" href="https://regexr.com/">RegEx Reference</a> can help you design your triggers. Just 
+copy &amp; paste some text from DikuMUD into the text field and begin to write your regular 
+expression. It's an excellent tool&#160;:-)
+</p><p><br />
+See also:
+</p>
+<pre> <a cmd='#'>Help bot</a>
+ <a cmd='#'>Help variable</a>
+ <a cmd='#'>Help alias</a>
+</pre>
+
+
+
+
+</div>
