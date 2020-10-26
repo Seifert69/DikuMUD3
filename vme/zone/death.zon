@@ -780,6 +780,13 @@ code
       }
    }
 
+   reward_exp := "$reward" in self.extra;
+   if (reward_exp)
+   {
+     addextra(crp.extra, reward_exp.names,reward_exp.descr);
+     subextra(self.extra, "$reward");
+   }
+
    rltime:=realtime;
 
    if (self.type==UNIT_ST_PC)
@@ -792,14 +799,6 @@ code
       store (crp,"corpse_"+self.name+"."+itoa(rltime),TRUE);
       dilcopy("partial_get@death",crp);
       
-      reward_exp := "$reward" in self.extra;
-      if (reward_exp)
-      {
-       addextra(crp.extra, reward_exp.names,reward_exp.descr);
-       subextra(self.extra, "$reward"); 
-      }
-
-   
    }
    else
       addextra (crp.extra,{CORPSE_TIME}, itoa(rltime));
