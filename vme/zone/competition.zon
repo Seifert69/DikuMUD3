@@ -839,7 +839,7 @@ else if (command("5"))
 {
 :race_menu:
       sendtext("&nPlease choose your race:&n"
-	+"  &c+w1&cw) Human&cw            &c+w 7&cw) Dark-Elf (hard)&n"
+	+"  &c+w1&cw) Human&cw            &c+w 7&cw) Dark-Elf&n"
 	+"  &c+w2&cw) Dwarf&cw            &c+w 8&cw) Brownie&n"
 	+"  &c+w3&cw) Halfling&cw         &c+w 9&cw) Groll&n"
 	+"  &c+w4&cw) Gnome&cw            &c+w10&cw) Half-Orc&n"

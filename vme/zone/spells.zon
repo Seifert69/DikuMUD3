@@ -14746,6 +14746,8 @@ title "an orb of darkness"
 descr "A dark orb is here, sucking light into itself."
 bright -6
 manipulate {MANIPULATE_HOLD, MANIPULATE_TAKE}
+dilcopy blowaway@function(300, "The orb of darkness suddenly
+winks out of existance, returning light to the area.");
 end
 
                              magic_food

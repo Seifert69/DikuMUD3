@@ -44,7 +44,7 @@ index           = PROFESSION_NECROMANCER
 name            = necromancer
 
 index           = PROFESSION_CONJURER
-name            = conjurer
+name            = mage
 
 index           = PROFESSION_SORCERER
 name            = sorcerer
