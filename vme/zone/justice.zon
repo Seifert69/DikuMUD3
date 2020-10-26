@@ -42,41 +42,58 @@ END HEADER*/
    The criminal gets the following extras added:
       - $reward is set if the player becomes wanted dead
    The reward_board gets the following extras added:
-      - $suspect/$crime is added to the reward board
+      - $crime is added to the reward board
    Any witnesses get the following extras added:
       - $witness
 
    Details on the extras above:
 
    reward_board@zone extras:
-      Names {"$suspect_160","$crime_Moe_7_janitor_8_5_1","$SUSPECT"}
-      "
-      Moe has been accused in the murder of janitor. This crime was witnessed by: Mr Catherfield.
-      This crime was also confirmed by Fizban.
-      "
+      
+      There are 9 names in each crime extrathree names in each entry. 
+      They are as follows:
+ 
+       Crime Extra Names:
 
-      There are three names in each entry. The important one is the second name, It isi:
-      $crime_<name of criminal>_<pid of criminal>_<name of victim>_<crime_type>_<expiration ticks>_<reported>
+       names.[0] $crime contant
+       names.[1] $crime_CRIME_SERIAL_NO
+       names.[2] $crime_$crime_CRIMINAL_NAME
+       names.[3] $crime_CRIMINAL_PID
+       names.[4] $crime_CRIME_TYPE
+       names.[5] $crime_VICTIM_NAME
+       names.[6] $crime_TICK UNTIL REMOVED FROM LIST
+       names.[7] $crime_is_NPC (Y or N)
+       names.[8] $crime_CRIME_REPORTED 1 or 0
+
       The descr for each crime is what is displayed on the reward_board under "Suspects" heading.
 
    Witnesses extras:
-      Names {"$witness","$witness_161_8_5_1", "$witness_7"}
-      "
-      Larry committed a crime.
-      "
+   
+There are 6 names on each witness extra.  THey are as follows:
+ 
+   Witness Data Elements:
+      
+        names.[0] $witness
+        names.[1] $witness_CRIMINAL NAME
+        names.[2] $witness_CRIME_SERIAL_NO
+        names.[3] $witness_CRIME_TYPE
+        names.[4] $witness_PLAYERID
+        names.[5] $witness_TICKS UNTIL REMOVED
 
-      The important name is the second name: $witness_<crime_number>_<crime_type>_<pid>_<ticks until witness extra expires>
+      The important name is the second name: $witness_<crime_nddumber>_<crime_type>_<pid>_<ticks until witness extra expires>
       The descr filed for witness is not used at the moment.
 
    Criminal extras:
-      Names {"$reward","$reward_250000_1050_1"}
+     
+
+   Names {"$reward","$reward_250000_1050_1"}
       "
       A reward of 250000 gold has been offered for the head of Tank
       "
 
       The second name is the important one: $reward_<gold reward>_<xp reward>_<reward increment>
       the descr of a reward is displayed on the Reward Board under Wanted Dead
-
+      
 Crime progression goes like this which is handled in DIL crime_counter()
     - If your crime counter is >= CRIME_NONPRO  (8) then your PROTECTED flag is removed.
     - If your crime counter is >= CRIME_OUTLAW (32) then your PROTECTED and OUTLAW flags are SET .
@@ -156,6 +173,20 @@ reset RESET_NOT
 // crime_stopper() is a timer that will clear the $suspect crimes off the reward_board
 // This DIL should be copied to the reward_board.
 //
+
+/*
+ Crime Info Data Elements:
+        [0] $crime
+        [1] $crime_CRIME_SERIAL_NO
+        [2] $crime_$crime_CRIMINAL_NAME
+        [3] $crime_CRIMINAL_PID
+        [4] $crime_CRIME_TYPE
+        [5] $crime_VICTIM_NAME
+        [6] $crime_TICK UNTIL REMOVED FROM LIST
+        [7] $crime_is_NPC (Y or N)     
+        [8] $crime_CRIME_REPORTED 1 or 0
+*/
+
 dilbegin crime_stopper();
 var
    c_info : stringlist;
@@ -167,20 +198,17 @@ code
    heartbeat := WAIT_SEC * 5 * 60;
    wait(SFB_TICK, TRUE);
 
-   suspects := self.extra;
+   suspects := "$crime" in self.extra;
 
    while (suspects)
    {
-      if ("$SUSPECT" in suspects.names)
-      {
-         c_info := split(suspects.names.[1],"_");
-         time_left := atoi(c_info.[5]);
+         c_info := split(suspects.names.[6],"_");
+         time_left := atoi(c_info.[1]);
          time_left := time_left - 1;
          if (time_left <= 0)
-            subextra(self.extra, suspects.names.[0]);
+            subextra(self.extra, suspects.names.[1]);
          else
-            suspects.names.[1] := c_info.[0]+"_"+c_info.[1]+"_"+c_info.[2]+"_"+c_info.[3]+"_"+c_info.[4]+"_"+itoa(time_left)+"_"+c_info.[6];
-      }
+            suspects.names.[6] := "$crime_"+itoa(time_left);
       suspects := suspects.next;
    }
    goto start;
@@ -249,7 +277,7 @@ external
 code
 {
    
-   if ((criminal.crimes + incr) / 8 > criminal.crimes / 8)
+ if ((criminal.crimes + incr) / 8 > criminal.crimes / 8)
    {
       if (not(isset(criminal.charflags, CHAR_OUTLAW)))
          unset(criminal.charflags, CHAR_PROTECTED);
@@ -279,6 +307,7 @@ dilend
 dilbegin update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  first_accuse : integer);
 external
    crime_counter@justice(criminal : unitptr, incr : integer, first_accuse : integer);
+   set_reward_char(criminal : unitptr, incr : integer);
 var
    criminal : unitptr;
    incr : integer;
@@ -286,8 +315,19 @@ var
 code
 {
    criminal := findunit(deputy, cr_name, FIND_UNIT_GLOBAL, null);
+   if((criminal.type == UNIT_ST_NPC) and (crime_type == CRIME_MURDER))
+   {
+      set_reward_char@justice(criminal, 8); 
+      return;
+   }
+   if(criminal.type == UNIT_ST_NPC)
+   {
+     set(criminal.charflags, CHAR_OUTLAW | CHAR_PROTECTED);
+     return;
+   }
 
-   if (criminal.idx == pidx)
+   
+if(criminal.idx == pidx)
    {
       act("$1n tells you, 'You are in trouble, you good-for-nothing ...'", A_SOMEONE, deputy,null, criminal, TO_VICT);
       if (first_accuse)
@@ -314,25 +354,23 @@ dilend
 //
 dilbegin add_crime(vict : unitptr, crime_type: integer, crime_no : integer, crime_clear : integer);
 var
-   pre : stringlist;
    i : integer;
    wp : unitptr;
    desc : string;
-   cr_string :string;
-   cr_string_2 : string;
-
+   cr_string : string;
+   crime_list : stringlist;
+   is_npc : string;
 code
 {
-   cr_string := "$suspect_"+itoa(crime_no);
+  
+  cr_string := "$crime_"+itoa(crime_no);
 
    if (crime_type == CRIME_MURDER)
    {
-      cr_string_2 := "$crime_"+self.name+"_"+itoa(self.idx)+"_"+vict.name+"_"+itoa(CRIME_MURDER)+"_"+itoa(crime_clear)+"_"+itoa(0);
       desc := self.name+" is suspected of the murder of "+vict.name+". Anyone with information should report it to the Guard's Office.";
    }
    else if (crime_type == CRIME_STEALING)
    {
-      cr_string_2 := "$crime_"+itoa(self.idx)+"_"+vict.name+"_"+itoa(CRIME_STEALING)+"_"+itoa(crime_clear)+"_"+itoa(0);
       desc := self.name+" is suspected of stealing from "+vict.name+". Anyone with information should report it to the Guard's Office.";
    }
    else
@@ -342,12 +380,23 @@ code
 
    // xxx - something needs to be done so it's the udgaard or midgaard or other board
    // Currently there is only one reward_board.  It exists in both mirgaard and udgaard
+   if (self.type == UNIT_ST_NPC)
+      is_npc := "Y";
+   else
+      is_npc := "N";
  
    wp := findsymbolic("reward_board@udgaard");  //+self.outside.zoneidx); 
-   addstring(pre, cr_string);
-   addstring(pre, cr_string_2); 
-   addstring(pre, "$SUSPECT"); 
-   addextra(wp.extra, pre, desc  ); 
+   addstring(crime_list, "$crime");
+   addstring(crime_list, cr_string);
+   addstring(crime_list, "$crime_"+self.name);
+   addstring(crime_list, "$crime_"+itoa(self.idx));
+   addstring(crime_list, "$crime_"+itoa(crime_type));
+   addstring(crime_list, "$crime_"+vict.name);
+   addstring(crime_list, "$crime_"+itoa(crime_clear));
+   addstring(crime_list, "$crime_"+is_npc);
+   addstring(crime_list, "$crime_"+itoa(0));
+    
+   addextra(wp.extra, crime_list, desc); 
 
    quit;
 }
@@ -358,6 +407,15 @@ dilend
 // witness_timer() is copied to a witness when the observe a crime. Its purpose is to remove
 // the $witness extra after about an hour.  Called by set_witness();
 //
+
+/*  Witness Data Elements:
+        [0] $witness
+        [1] $witness_CRIMINAL NAME
+        [2] $witness_CRIME_SERIAL_NO
+        [3] $witness_CRIME_TYPE
+        [4] $witness_PLAYERID
+        [5] $witness_TICKS UNTIL REMOVED
+*/
 dilbegin witness_timer();
 var
    tm : integer;
@@ -372,19 +430,16 @@ code
    :start:
    wait(SFB_TICK, TRUE);
 
-   witness :=self.extra;
+   witness := "$witness" in self.extra;
    while(witness)
    {
-      if ("$witness" in witness.names)
-      {
-         w_info := split(witness.names.[1], "_");
-         tm := atoi(w_info.[4]);
+         w_info := split(witness.names.[5], "_");
+         tm := atoi(w_info.[1]);
          tm := tm - 1;
          if (tm <= 0)
-            subextra(self.extra, witness.names.[0]);
+            subextra(self.extra, witness.names.[2]);
          else
-            witness.names.[1] := w_info.[0]+"_"+w_info.[1]+"_"+w_info.[2]+"_"+w_info.[3]+"_"+itoa(tm);
-      }
+            witness.names.[5] := "$witness_"+itoa(tm);
       witness := witness.next;
    }
    if (not("$witness" in self.extra))
@@ -393,8 +448,6 @@ code
       goto start; 
 }
 dilend
-
-
 
 // activate_accuse() will casue an NPC who witnesses a crime to go to the accuse_room and
 // accuse the criminal.  It is copied to the NPC by set_witness() if the witness is an NPC.
@@ -481,12 +534,14 @@ code
 dilend
 
 
+
 // This function is called by log_crime in C and will set a $witness extra on any person who witnesses
 // a crime.  If the witness is an NPC it will copy the activate_accuse() DIL to the witness.
 //
 dilbegin set_witness(criminal : unitptr, crime_no : integer, crime_type : integer, show : integer);
 external
    activate_accuse(witness : unitptr, crime_type : integer, criminal_name : string);
+   string get_juris@justice();
 var
    pid: integer;
    acc_cmd : string;
@@ -507,8 +562,11 @@ code
 
    pid := criminal.idx;
    addstring(ex_string,"$witness" );
-   addstring(ex_string, "$witness_"+itoa(crime_no)+"_"+itoa(crime_type)+"_"+itoa(pid)+"_"+itoa(12));
-   addstring(ex_string, "$witness_"+itoa(pid));
+   addstring(ex_string,"$witness_"+criminal.name);
+   addstring(ex_string,"$witness_"+itoa(crime_no));
+   addstring(ex_string,"$witness_"+itoa(crime_type));
+   addstring(ex_string,"$witness_"+itoa(pid));
+   addstring(ex_string,"$witness_"+itoa(12));
 
    addextra(self.extra,ex_string ,criminal.name+" committed a crime.");
    if (not(dilfind("witness_timer@justice", self)))
@@ -516,11 +574,7 @@ code
 
    if ((self.type == UNIT_ST_NPC) and (show))
    {
-      jurisdiction := "midgaard";
-     
-      if (self.zoneidx == "udgaard")
-        jurisdiction := "udgaard";
-
+    jurisdiction := get_juris@justice();
     dilcopy("activate_accuse@justice("+itoa(crime_type)+","+criminal.name+","+jurisdiction+")",self);
    }
 
@@ -589,7 +643,7 @@ code
 
    while(suspects)
    {
-      if ("$SUSPECT" in suspects.names) 
+      if ("$crime" in suspects.names) 
          local_suspects := local_suspects + suspects.descr+"<BR>";
 
       suspects := suspects.next;
@@ -640,32 +694,73 @@ dilend
 // data matches it will call update_criminal. It also removes the $witness extra from the accuser
 // once a sucessful accusation is made.
 //
+
+/*
+        Crime Info Data Elements:
+        [0] $crime
+        [1] $crime_CRIME_SERIAL_NO
+        [2] $crime_$crime_CRIMINAL_NAME
+        [3] $crime_CRIMINAL_PID
+        [4] $crime_CRIME_TYPE
+        [5] $crime_VICTIM_NAME
+        [6] $crime_TICK UNTIL REMOVED FROM LIST
+        [7] $crime_is_NPC (Y or N)     i
+        [8] $crime_CRIME_REPORTED 1 or 0
+
+       Witness Data Elements:
+        [0] $witness
+        [1] $witness_CRIMINAL NAME
+        [2] $witness_CRIME_SERIAL_NO
+        [3] $witness_CRIME_TYPE
+        [4] $witness_PLAYERID
+        [5] $witness_TICKS UNTIL REMOVED
+*/
+
 dilbegin  fnpri(FN_PRI_MISSION-1) accuse();
 external
    update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  reported : integer);
 
 var
+   args :stringlist;
+   arg_count : integer;
    criminal : string;
-   crime : string;
    crime_type : integer;
-   pid : integer;
+   crime : string;
    wp : unitptr;
    k : string;
-   wk : string;
+   k2 : string;
    w_data :stringlist;
-   crime_info : stringlist;
    i : integer;
    found : integer;
-
+   wk : string;
+   ck : string;
+   w_ptr : extraptr;
+   c_ptr : extraptr;
+   w_type : stringlist;
+   c_name : stringlist;
+   c_pid : stringlist;
+   c_type : stringlist;
+   c_v_name : stringlist;
+   c_reported : stringlist;
+   c_is_npc   : stringlist;
 code
 {
    :start:
    found := 0;
    heartbeat := PULSE_SEC * 1;
    wait (SFB_CMD, command ("accuse") );
-
-   criminal := getword(argument);
-   crime := argument;
+  
+// this is to deal with NPCs thathave spaces in their names 
+   args := getwords(argument);
+   criminal := args.[0];
+   arg_count := 1;
+   while (arg_count < length(args) -1)
+   {
+    criminal := criminal +" "+ args.[arg_count];
+    arg_count := arg_count +1;
+   }
+  
+   crime := args.[length(args)-1];
 
    if ((activator.type == UNIT_ST_NPC) and  (self.position  == POSITION_SLEEPING))
       exec("wake "+ self.name, activator);  /* command_interpreter(sarg->activator, "wake"); */
@@ -677,7 +772,6 @@ code
       block;
       goto start;
    }
-
    if (criminal == "")
    {
       act("$1n says, 'Yes... who?'", A_SOMEONE, self, null,
@@ -716,44 +810,39 @@ code
       goto start;
    }
 
+   wp := findsymbolic("reward_board@udgaard");
+   wk := "$witness_"+criminal;
+   ck := "$crime_"+criminal;
 
-   pid := playerid(criminal);
-   wk := "$witness_"+itoa(pid);
+   w_ptr := wk in activator.extra;
+   c_ptr := ck in wp.extra;
 
-   if (not(wk in activator.extra))
-      goto end;
-
-   w_data := split(activator.extra.[wk].names.[1],"_");
-   k := "$suspect_"+w_data.[1]; 
-
-   if (not(pid ==  atoi(w_data.[3])))
+     if (not(w_ptr) or not(c_ptr))
+        goto end;
+     
+   w_data := split(w_ptr.names.[2],"_");
+   k := "$crime_"+w_data.[1];
+   k2 := w_ptr.names.[2];
+   if (k in c_ptr)
    {
-      act("$1n says, 'I have never heard of this so called $2t.'",
-         A_SOMEONE,self , criminal, activator, TO_ROOM);
-      block;
-      goto start;
-   }
-
-   wp := findsymbolic("reward_board@udgaard"); //+self.outside.zoneidx);
-
-   if (k in wp.extra)
-   {
-    
-      crime_info := split(wp.extra.[k].names.[1],"_");
-      /*crime_info:  self.name self.idx vict.name CRIME_TYPE crime_clear reported; */
-      /* w_data: crime_no crime_type pid expire_ticks */ 
-
-      if ((crime_type == CRIME_MURDER) and 
-          (atoi(crime_info.[4]) != CRIME_MURDER) and 
-          (atoi(crime_info.[4]) != CRIME_PK))
+      w_type := split(w_ptr.[k2].names.[3], "_");
+      c_name := split(c_ptr.[k].names.[2], "_");
+      c_pid := split(c_ptr.[k].names.[3], "_");
+      c_type := split(c_ptr.[k].names.[4],"_"); 
+      c_v_name := split(c_ptr.[k].names.[5], "_"); 
+      c_is_npc := split(c_ptr.[k].names.[7], "_");
+      c_reported := split(c_ptr.[k].names.[8], "_");
+      
+      if ((crime_type == CRIME_MURDER) and
+          (atoi(c_type.[1]) != CRIME_MURDER) and
+          (atoi(c_type.[1]) != CRIME_PK))
          goto end;
 
-      if ((crime_type == CRIME_STEALING) and
-            (atoi(crime_info.[4]) != CRIME_STEALING))
+       if ((crime_type == CRIME_STEALING) and
+            (atoi(c_type.[1]) != CRIME_STEALING))
          goto end;
-
-
-      if (atoi(crime_info.[4]) == atoi(w_data.[2]))
+     
+       if (atoi(c_type.[1]) == atoi(w_type.[1]))
       {
          found := 1;
          act("$1n accuses $3t of $2t.", A_SOMEONE, activator, crime, criminal, TO_ROOM);
@@ -762,35 +851,33 @@ code
                         A_SOMEONE, self, criminal, activator, TO_ROOM);
          if (activator.alignment > -1000)
            activator.alignment := activator.alignment +100;
-         subextra(activator.extra,wk);
+         subextra(activator.extra,k2);
          if (not("$witness" in activator.extra))
-            i := dildestroy("witness_timer@justice", activator); 
-      
-         if (atoi(crime_info.[6]) == 0)
-         {
-            update_criminal@justice(self, crime_info.[1], crime_type,pid, TRUE);
-            wp.extra.[k].names.[1] := "$crime_"+crime_info.[1]+"_"+crime_info.[2]+"_"+crime_info.[3]+"_"+crime_info.[4]+"_"+crime_info.[5]+"_"+itoa(1);
+            i := dildestroy("witness_timer@justice", activator);
 
-            if (atoi(crime_info.[4]) == CRIME_MURDER)
-               wp.extra.[k].descr := crime_info.[1]+" has been accused in the "+crime+" of "+crime_info.[3]+". This crime was witnessed  by: "+activator.name+"."; 
-            else
-               wp.extra.[k].descr := crime_info.[1]+" has been accused of steeling from  "+crime_info.[3]+". This crime was witnessed  by: "+activator.name+".";
-         } 
-         else 
+         if (atoi(c_reported.[1]) == 0)
          {
-            update_criminal(self, crime_info.[1], crime_type,pid, FALSE);
-            wp.extra.[k].descr := wp.extra.[k].descr +"<br>This crime was also confirmed by "+activator.name+".";
-         }  
+            update_criminal@justice(self, c_name.[1], crime_type, atoi(c_pid.[1]), TRUE);
+             c_ptr.[k].names.[8] := itoa(1);
+            if (atoi(c_type.[1]) == CRIME_MURDER)
+               c_ptr.[k].descr := c_name.[1]+" has been accused in the "+crime+" of "+c_v_name.[1]+". This crime was witnessed  by: "+activator.name+".";
+            else
+                c_ptr.[k].descr := c_name.[1]+" has been accused of "+crime+" from "+c_v_name.[1]+". This crime was witnessed  by: "+activator.name+".";
+         }
+         else
+         {
+            update_criminal(self, c_name.[1], crime_type, atoi(c_pid.[1]), FALSE);
+            c_ptr.[k].descr := wp.extra.[k].descr +"<br>This crime was also confirmed by "+activator.name+".";
+         }
       }
-   }
+
+
+     }
 
    :end: 
    if (found == 0)
       act("$1n says, 'Sorry $3n, but I don't find your evidence convincing.'", A_SOMEONE, self, null, activator, TO_ROOM);
 
-   crime_info := null;
-   w_data := null;  
-   k := null;
    block;
    goto start;
 }
@@ -903,7 +990,6 @@ code
 dilend
 
 
-
 // Listen for a whistle...
 // This DIL gets triggered by any blowwhistle anywhere in the world. Will come
 // aid anyone in the juris list if self is also in jurislist. 
@@ -966,7 +1052,6 @@ var
     i        : integer;
     wake     : integer;
     rm       : unitptr;
-
 code
 {
    :start:
@@ -992,10 +1077,10 @@ code
             
    if ((self.position > POSITION_SLEEPING) and (activator.position == POSITION_FIGHTING) and (visible(self,activator)))
    {
-      if (crime_check@justice(activator, vict))
+      if(crime_check@justice(activator, vict))
       {
          act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",A_SOMEONE,self,null,null,TO_ROOM);    
-
+         
          rm := self.outside;
          while (rm.type != UNIT_ST_ROOM)
             rm := rm.outside;
@@ -1014,8 +1099,6 @@ code
    goto start;
 }
 dilend /* End blow_whistle */
-
-
 
 
 %rooms
