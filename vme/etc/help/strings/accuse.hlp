@@ -1,5 +1,5 @@
 <div class="mw-parser-output"><h1>Accuse</h1>
-<p>When you see a player commit a crime the following text should bedisplayed:
+<p>When you see a player commit a crime the following text should be displayed:
 </p>
 <pre> You have just witnessed a crime committed by &lt;playername&gt;
 </pre>

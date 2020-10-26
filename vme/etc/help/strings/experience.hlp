@@ -1,18 +1,16 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Experience is usually gained by killing monsters. The experience you gain is<br/>
-relative to your level compared to the monsters level.<br/>
-<br/><br/>
-You gain no experience when killing players.<br/><br/>
-If you are in wimpy mode you'll only gain 50%<br/><br/>
-If you are good and kill evil you get a bonus. Vice versa but not as large.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-kill<br/><br/>
-Guilds<br/><br/>
-Guilds<br/><br/>
-Levels<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Experience (XP)</h1>
+<p>Experience is usually gained by killing monsters. The experience you gain is relative to your level compared to the monsters level.
+</p><p>You gain no experience when killing players.
+</p><p>If you are good and kill evil you get a bonus. Vice versa but not quite as large.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>kill</a>
+&gt; <a cmd='#'>Guilds</a>
+&gt; <a cmd='#'>Levels</a>
+</pre>
+
+
+
+
+</div>

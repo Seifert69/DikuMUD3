@@ -1,32 +1,19 @@
-<br/>
-<br/>
-<br/>
-<br/>
-When you die you loose some of your experience<br/>
-points. How many you loose depends largely on your current level, how much<br/>
-you need for the next level, etc. If your exp is -exp to level you will<br/>
-lose all that exp. It is a good idea to level as soon as you can.<br/>
-<br/><br/><br/>
-After you die you will be transported to Valhalla, and upon release<br/>
-from Valhalla you will need to go back to the location where you died to<br/>
-retrieve your equipment.<br/>
-<br/><br/><br/>
-If you have died an alternate way out of 'Valhalla' is to have someone<br/>
-cast ressurect or raise dead on you. You still<br/>
-lose the experience points but it shortens your stay and you are returned<br/>
-to the game where you died with all your items.<br/>
-<br/><br/>
-If you want to see how many times you have died<br/>
-since January 1, 2006 type score.  If you have<br/>
-died it will give you the amount of times.  If you<br/>
-started playing after January 1 2006 then it will<br/>
-show the amount of deaths since you started.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Equipment<br/><br/>
-Valhalla<br/><br/>
-Raise Dead<br/><br/>
-Ressurect<br/><br/>
-Level<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Death</h1>
+<p>When you die you loose some of your experience points. How many you loose depends largely on your current level, how much you need for the next level, etc. The amount you lose is proportional to have much XP you have above your current level. So it is a good idea to level as soon as you can.
+</p><p>After you die you will be transported to Valhalla, and upon release from Valhalla you will need to go back to the temple of Udgaard.
+</p><p>If you have died and find an alternate way out of 'Valhalla', e.g. someone might have cast resurrect or raise dead on you. You still lose the experience points but it shortens your stay and you are returned to the game where you died with all your items.
+</p><p>If you want to see how many times you have died since January 1, 2006 type score. If you have died it will give you the amount of times. If you started playing after January 1 2006 then it will show the amount of deaths since you started.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Equipment</a>
+&gt; <a cmd='#'>Help Valhalla</a>
+&gt; <a cmd='#'>Help Raise Dead</a>
+&gt; <a cmd='#'>Help Resurrect</a>
+&gt; <a cmd='#'>Help Level</a>
+</pre>
+
+
+
+
+</div>

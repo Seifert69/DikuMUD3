@@ -1,12 +1,19 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Abilities points are only gained to level 50 for a total of 1960 points.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-HPP    Str<br/><br/>
-Dex    Con<br/><br/>
-Mag    Div<br/><br/>
-Bra    Cha<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Ability Points</h1>
+<p>Each time you raise a level you gain ability points.  Ability points are used to train your abilities.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help HPP</a>
+&gt; <a cmd='#'>Help Str</a>
+&gt; <a cmd='#'>Help Dex</a>
+&gt; <a cmd='#'>Help Con</a>
+&gt; <a cmd='#'>Help Mag</a>
+&gt; <a cmd='#'>Help Div</a>
+&gt; <a cmd='#'>Help Bra</a>
+&gt; <a cmd='#'>Help Cha</a>
+</pre>
+
+
+
+
+</div>

@@ -1,11 +1,12 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage appraise (item)<br/><br/>
-<br/>
-Used to figure out how much an item is worth. Beware that you might make a<br/>
-wrong guess depending on how skilled you are<br/>
-(brain  and<br/>
-skill used). <br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Appraise</h1>
+<p>Usage:
+</p>
+<pre>appraise &lt;item&gt;
+</pre>
+<p>Used to figure out how much an item is worth. Beware that you might make a wrong guess depending on how skilled you are (brain and skill used).
+</p>
+
+
+
+
+</div>

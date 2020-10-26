@@ -1,17 +1,20 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage contract (character)<br/><br/>
-<br/><br/>
-Example: contract mayor<br/><br/>
-<br/>
-This command is used to hire one of the  NPC<br/>
-assassins to murder other characters.<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Offer<br/><br/>
- Khorsabad Assassin<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Contract</h1>
+<p>Usage:
+</p>
+<pre>contract &lt;character&gt;
+</pre>
+<p>Example:
+</p>
+<pre>contract mayor
+</pre>
+<p>This command is used to hire one of the NPC assassins to murder other characters.
+</p><p>See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Offer</a>
+&gt; <a cmd='#'>Help Khorsabad Assassin</a>
+</pre>
+
+
+
+
+</div>

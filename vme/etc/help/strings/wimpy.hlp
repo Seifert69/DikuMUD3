@@ -1,15 +1,19 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage wimpy<br/><br/>
-<br/>
-The command wimpy is used to switch between brave and wimpy mode. When you<br/>
-are wimpy you will flee whenever death is near. The penalty for being<br/>
-wimpy is that you will only get half the experience for your kills.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Experience<br/><br/>
-Peaceful<br/><br/>
-Change<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Change wimpy</h1>
+<p>Usage:
+</p>
+<pre> <a cmd='#'>change wimpy</a>
+</pre>
+<p>The command change wimpy is used to switch between brave and wimpy mode. When you are wimpy you will flee whenever death is near. There is no XP penalty for being wimpy because fleeing is a skill you can practice. 
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>help flee</a>
+ &gt; <a cmd='#'>help Experience</a>
+ &gt; <a cmd='#'>help Peaceful</a>
+ &gt; <a cmd='#'>help Change</a>
+</pre>
+
+
+
+
+</div>
