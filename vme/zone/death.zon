@@ -915,38 +915,37 @@ external
 
 var
 	loss:integer;
-	i:integer;
+	l0:integer; // XP required to your current level
+	l1:integer; // XP required to your current level+1
 
 code
 {
    heartbeat:=3;
-   if (self.type!=UNIT_ST_PC)
+   if (self.type != UNIT_ST_PC)
+      return(0);
+
+   /* Up to level 3 is sacred experience                          */
+   if (self.vlevel <= 3)
       return(0);
 
    /* This first line takes care of any xp earned above required level. */
-   i := getinteger(DIL_GINT_LEVELXP, null, u.vlevel);
-   loss := max(0, (u.exp-i)/2);
+   l0 := getinteger(DIL_GINT_LEVELXP, null, u.vlevel);
+   l1 := getinteger(DIL_GINT_LEVELXP, null, u.vlevel+1);
+
+   loss := max(0, (u.exp-l0)/2);
 
    /* This line makes sure, that you lose at most half a level...       */
-   loss := min(loss, getinteger(DIL_GINT_LEVELXP, null, u.vlevel)/2);
+   loss := min(loss, (l1-l0)/2);
 
    /* This line takes care of the case where you have less or almost    */
    /* equal XP to your required. You thus lose at least 1/5th your      */
    /* level.                                                            */
-   loss := max(loss, getinteger(DIL_GINT_LEVELXP, null, u.vlevel)/5);
-
-   /* This line takes care of newbies, setting the lower bound... */
-   /* Up to level 3 is sacred experience                          */
-   i := getinteger(DIL_GINT_REQXP, null, 3);
-   i := max(0, (self.exp-i) / 2);
-
-   if (loss > i)
-      loss := i;
+   loss := max(loss, (l1-l0)/5);
 
    if (loss < 0)
       loss:=0;
 
-   return (loss);
+   return(loss);
 }
 dilend
 
