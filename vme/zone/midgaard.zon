@@ -1110,7 +1110,9 @@ code
    else
    {
       unset(activator.charflags, CHAR_SELF_DEFENCE);
-      exec("kill "+activator.name, self);
+      // If we have several chars with the same name, this causes havoc
+      // exec("kill "+activator.name, self);
+      set_fighting(self, activator);
    }
 
    goto loop;
