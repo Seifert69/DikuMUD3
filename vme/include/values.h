@@ -81,9 +81,6 @@ END HEADER*/
 #define GUILD_NYM_DRUID   "Nymgaard Druid"
 #define GUILD_DRUID_ATL   "oak@druid", "elm@druid", "maple@druid", "willow@druid" //  Abi, Wpn, Spl, Ski
 
-#define GUILD_MYSTIC      "Midgaard Mystic"
-#define GUILD_MYSTIC_ATL  "", "", "", "" //  Abi, Wpn, Spl, Ski
-
 #define GUILD_NECROMANCER "Necromancer"
 #define GUILD_NECROMANCER_ATL  "kadiya@necro_guild", "krain@necro_guild", "murdock@necro_guild", "meclor@necro_guild" //  Abi, Spl, Wpn, Ski
 
@@ -102,8 +99,8 @@ END HEADER*/
 
 #define GUILD_SL   {GUILD_UDG_FIGHTER, GUILD_KNIGHT, GUILD_PALADIN, GUILD_NYM_RANGER,   \
 	                GUILD_UDG_THIEF, GUILD_ASSASSIN, GUILD_UDG_CLERIC, GUILD_NYM_DRUID, \
-	                GUILD_MYSTIC, GUILD_NECROMANCER, GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_BARBARIAN}
-#define GUILD_INIT_SL  {"F", "DK", "P",  "R", "T", "A", "H", "D", "M", "N", "C", "S", "B"}
+	                GUILD_NECROMANCER, GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_BARBARIAN}
+#define GUILD_INIT_SL  {"F", "DK", "P",  "R", "T", "A", "H", "D", "N", "C", "S", "B"}
 
 
 //
@@ -121,15 +118,14 @@ END HEADER*/
 #define PROFESSION_ASSASSIN     5
 #define PROFESSION_PRIEST       6
 #define PROFESSION_DRUID        7
-#define PROFESSION_MYSTIC       8 
-#define PROFESSION_NECROMANCER  9
-#define PROFESSION_CONJURER    10
-#define PROFESSION_SORCERER    11
-#define PROFESSION_BARBARIAN   12
-#define PROFESSION_MAX         13 /* 12+1 */
+#define PROFESSION_NECROMANCER  8
+#define PROFESSION_CONJURER     9
+#define PROFESSION_SORCERER    10
+#define PROFESSION_BARBARIAN   11
+#define PROFESSION_MAX         12 /* 11+1 */
 
 #define PROFESSION_STRINGS "Fighter", "Knight", "Paladin", "Ranger", "Thief", "Assassin", \
-                           "Priest", "Druid", "Mystic","Necromancer", "Mage", "Sorcerer", \
+                           "Priest", "Druid", "Necromancer", "Mage", "Sorcerer", \
 						   "Barbarian"
 
 

@@ -37,9 +37,6 @@ name            = priest
 index           = PROFESSION_DRUID
 name            = druid
 
-index           = PROFESSION_MYSTIC
-name            = mystic
-
 index           = PROFESSION_NECROMANCER
 name            = necromancer
 

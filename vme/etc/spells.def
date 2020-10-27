@@ -832,7 +832,6 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +1
 restrict magic          = 60
-profession mystic       = +0
 
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -901,7 +900,6 @@ race darkelf    = -1
 restrict divine         = 24
 profession paladin      = +0
 profession priest       = +0
-profession mystic       = +2
 
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -938,7 +936,6 @@ race groll      = -1
 race darkelf    = -1
 restrict divine         = 50
 profession knight       = +0
-profession mystic       = +0
 profession necromancer  = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -976,7 +973,6 @@ race darkelf    = -1
 restrict divine         = 40
 profession paladin      = +0
 profession priest       = +2
-profession mystic       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -1013,7 +1009,6 @@ race darkelf    = -1
 restrict divine         =  5
 profession paladin      = -3
 profession priest       = +5
-profession mystic       = +5
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -1234,7 +1229,6 @@ race groll      = 0
 race darkelf    = 0
 restrict divine         = 26
 profession priest       = +0
-profession mystic       = +0
 profession necromancer  = +2
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1271,7 +1265,6 @@ race groll      = -1
 race darkelf    = -2
 restrict divine         = 20
 profession priest       = +0
-profession mystic       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -1308,7 +1301,6 @@ race darkelf    = 0
 restrict divine         = 32
 profession priest       = -3
 profession druid        = -3
-profession mystic       = +2
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -1344,7 +1336,6 @@ race darkelf    = 0
 restrict divine         = 28
 profession priest       = +0
 profession druid        = -4
-profession mystic       = +2
 
 
 index           = SPL_RAISE_MAG
@@ -1415,7 +1406,6 @@ race groll      = -1
 race darkelf    = -2
 restrict divine         = 30
 profession priest       = +5
-profession mystic       = +5
 profession necromancer  = +2
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1451,7 +1441,6 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +1
 restrict magic          = 20
-profession mystic       = +2
 profession conjurer     = -3
 profession sorcerer     = +0
 
@@ -1489,7 +1478,6 @@ race groll      = -1
 race darkelf    = +1
 restrict magic          = 60
 profession assassin     = -3
-profession mystic       = +0
 profession conjurer     = +0
 profession sorcerer     = +0
 
@@ -1563,7 +1551,6 @@ race groll      = -1
 race darkelf    = -2
 restrict divine         = 12
 profession priest       = +5
-profession mystic       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -1677,7 +1664,6 @@ race groll      = -1
 race darkelf    = -3
 restrict divine         = 10
 profession priest       = +5
-profession mystic       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -1712,7 +1698,6 @@ race brownie    = +2
 race groll      = -1
 race darkelf    = +1
 restrict level          = 35
-profession mystic       = +0
 profession conjurer     = +0
 profession sorcerer     = +0
 
@@ -1819,7 +1804,6 @@ race groll      = 0
 race darkelf    = -1
 restrict divine         = 28
 profession priest       = +2
-profession mystic       = -3
 
 /* - - - - Yet another definition of a spell - - - - */
 index           = SPL_MIND_SHIELD
@@ -2071,7 +2055,6 @@ race darkelf    = -2
 restrict divine         = 64
 profession paladin      = +0
 profession priest       = +0
-profession mystic       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -2108,7 +2091,6 @@ race darkelf    = -2
 restrict divine         = 18
 profession paladin      = -3
 profession priest       = +0
-profession mystic       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -2182,7 +2164,6 @@ restrict divine         = 10
 profession paladin      = +0
 profession priest       = +2
 profession druid        = +2
-profession mystic       = +0
 profession necromancer  = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2397,7 +2378,6 @@ restrict divine         = 14
 profession paladin      = +0
 profession priest       = +2
 profession druid        = -1
-profession mystic       = +0
 profession necromancer  = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2433,7 +2413,6 @@ race brownie    = +2
 race groll      = -1
 race darkelf    = +1
 restrict level          = 15
-profession mystic       = +0
 profession conjurer     = +0
 profession sorcerer     = +0
 
@@ -2470,7 +2449,6 @@ race brownie    = +2
 race groll      = -1
 race darkelf    = +2
 restrict magic          =  5
-profession mystic       = +0
 profession conjurer     = +5
 profession sorcerer     = +0
 
@@ -2510,7 +2488,6 @@ restrict divine         = 10
 profession paladin      = +0
 profession priest       = +2
 profession druid        = +2
-profession mystic       = +0
 profession necromancer  = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2548,7 +2525,6 @@ race darkelf    = 0
 restrict divine         = 8
 profession paladin      = +0
 profession priest       = +2
-profession mystic       = +0
 profession necromancer  = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2585,7 +2561,6 @@ race groll      = 0
 race darkelf    = 0
 restrict divine         = 6
 profession priest       = +2
-profession mystic       = +0
 profession necromancer  = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2625,7 +2600,6 @@ profession knight       = +0
 profession ranger       = +0
 profession priest       = -3
 profession druid        = +2
-profession mystic       = +0
 profession necromancer  = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2797,7 +2771,6 @@ race brownie    = +1
 race groll      = -2
 race darkelf    = +1
 restrict level          = 18
-profession mystic       = +0
 profession conjurer     = +2
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2834,7 +2807,6 @@ race groll      = -2
 race darkelf    = -1
 restrict divine         = 40
 profession priest       = +0
-profession mystic       = -3
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -2970,7 +2942,6 @@ race groll      = -1
 race darkelf    = -2
 restrict divine         = 10
 profession priest       = +0
-profession mystic       = +2
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -3004,7 +2975,6 @@ race groll      = -1
 race darkelf    = -2
 restrict divine         = 18
 profession priest       = +2
-profession mystic       = +2
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -3041,7 +3011,6 @@ race darkelf    = -2
 restrict divine         = 16
 profession paladin      = +0
 profession priest       = +5
-profession mystic       = +2
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -3077,7 +3046,6 @@ race groll      = -2
 race darkelf    = -2
 restrict divine         = 46
 profession priest       = +0
-profession mystic       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -3113,7 +3081,6 @@ race groll      = 0
 race darkelf    = +3
 restrict divine         = 6
 profession knight       = +0
-profession mystic       = +2
 profession necromancer  = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -3149,7 +3116,6 @@ race brownie    = -2
 race groll      = 0
 race darkelf    = 0
 restrict divine         = 52
-profession mystic       = +2
 profession necromancer  = +2
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -3289,7 +3255,6 @@ race groll      = 0
 race darkelf    = 0
 restrict divine         = 16
 profession priest       = +2
-profession mystic       = +2
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -3326,7 +3291,6 @@ race darkelf    = 0
 restrict divine         = 32
 profession priest       = +0
 profession druid        = +0
-profession mystic       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -3396,7 +3360,6 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +1
 restrict level          = 24
-profession mystic       = -3
 profession sorcerer     = -3
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -3786,7 +3749,6 @@ race groll      = 0
 race darkelf    = 0
 restrict divine         = 16
 profession priest       = +0
-profession mystic       = +5
 profession necromancer  = +2
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -4039,7 +4001,6 @@ restrict divine         = 50
 profession paladin      = -3
 profession priest       = +0
 profession druid        = -3
-profession mystic       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -4153,7 +4114,6 @@ race groll      = 0
 race darkelf    = 0
 restrict divine         = 60
 profession knight       = +0
-profession mystic       = +2
 profession necromancer  = +2
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -7296,7 +7256,6 @@ race darkelf    = -1
 restrict divine         =  5
 profession knight       = -3
 profession priest       = +0
-profession mystic       = +5
 profession necromancer  = +2
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -7340,7 +7299,6 @@ race darkelf    = -1
 restrict level          = 13
 profession knight       = -3
 profession priest       = -3
-profession mystic       = +2
 profession necromancer  = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -7382,7 +7340,6 @@ race brownie    = 0
 race groll      = -1
 race darkelf    = -1
 restrict level          = 25
-profession mystic       = +0
 profession necromancer  = -3
 
 
@@ -7624,7 +7581,6 @@ race brownie    = -1
 race groll      = -2
 race darkelf    = -2
 profession priest       = -3
-profession mystic       = +5
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -7665,7 +7621,6 @@ race brownie    = -1
 race groll      = -2
 race darkelf    = -2
 restrict level          = 20
-profession mystic       = +2
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -7706,7 +7661,6 @@ race brownie    = -1
 race groll      = -2
 race darkelf    = -2
 restrict level          = 40
-profession mystic       = +0
 
 index           = SPL_COLOURSPRAY_4
 name            = flashing grip
