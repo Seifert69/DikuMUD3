@@ -5,7 +5,7 @@ changedby   Ratlin
 EmailAdd
 request     compile
 version     34
-END HEADER*/
+END HEADER */
 
 #include <macros.h>
 
