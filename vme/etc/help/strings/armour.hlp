@@ -1,13 +1,15 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Armors are used to protect yourself against damage.<br/>
-Shields are an addition to armors which makes it possible to<br/>
-completely block certain types of attacks and spells like for<br/>
-example long sword attack and energy bolt. Some attacks are<br/>
-partially reduced by shields, such as the morning star, and<br/>
-fire storm. Finally, some attacks are unaffected by shields<br/>
-such as a whip and poisonous gas attacks.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Armor</h1>
+<p>Armors are used to protect yourself against damage. The basic kinds of armor are clothes, soft leather, hard leather, chain mail and plate armor. Armor tougher than clothes will hamper your dexterity, however if you practice your skill in moving in such armor, the penalty to dexterity will be reduced.  
+</p><p>Shields are an addition to armors which makes it possible to completely block certain types of attacks and spells like for example long sword attack and energy bolt. Some attacks are partially reduced by shields, such as the morning star, and fire storm. Finally, some attacks are unaffected by shields such as a whip and poisonous gas attacks.
+</p><p>See also:
+</p>
+<pre>&gt; <a cmd='#'>Help armor soft leather</a>
+&gt; <a cmd='#'>Help armor hard leather</a>
+&gt; <a cmd='#'>Help armor chain mail</a>
+&gt; <a cmd='#'>Help armor plate</a>
+</pre>
+
+
+
+
+</div>
