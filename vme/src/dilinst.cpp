@@ -462,7 +462,7 @@ void dilfi_fon(class dilprg *p)
     delete v1;
 }
 
-/* storeall */
+/* DIL store() */
 void dilfi_stora(class dilprg *p)
 {
     dilval *v3 = p->stack.pop();

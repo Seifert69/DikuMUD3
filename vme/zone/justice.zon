@@ -1101,8 +1101,110 @@ code
 }
 dilend /* End blow_whistle */
 
+%objects
+                           database
+
+names {"crime database", "database"}
+title "the crime database"
+descr  "A global crime database is standing on the floor."
+
+extra {}
+"This is a global crime database. Do not zap this board unless you need a justice reset.
+Do a 'wstat board extra' to see the crime data on this board"
+
+type ITEM_OTHER
+
+// Make a DIL to save
+// Make a DIL to zap obsoleted extras on this board
+
+dilbegin aware save_board();
+code
+{
+   heartbeat := PULSE_SEC * 60;
+
+:loop:
+   // Replace this save test with a send_to_dil message.
+   // Once a message is received, the board is saved.
+   // Possibly pause for 10 seconds before saving so we don't
+   // save on every modify. Adding extras tend to happen in chunks.
+   pause;  
+   store(self, "database", TRUE);
+   log("JUSTICE: database saved.");
+   goto loop;
+}
+dilend
+
+end
+
 
 %rooms
+                                       legal
+
+names "legal"
+title "The legal archives"
+descr
+"This room contains the global justice board which uses DIL to 
+load and save itself upon reboots. If you zap the board here 
+then you zap all the data from the justice system."
+flags {UNIT_FL_NO_WEATHER}
+light 5
+
+
+// This code only executes once when the game server boots.
+// Loads justice boards
+dilbegin aware reload_justice();
+var
+	u : unitptr;
+
+	ln:integer;
+	i:integer;
+   x:extraptr;
+code
+{
+   heartbeat:=PULSE_SEC;
+   pause;
+   pause; // Allow the game to boot
+
+   // Make sure no-one has loaded this database globally. There should be only one
+   //
+   u := findsymbolic(self, "database@justice", FIND_UNIT_GLOBAL);
+   if (u)
+   {
+      log("ERROR JUSTICE: database@justice already exists");
+      quit;
+   }
+
+   // Load the justice database (if any)
+   //
+   u := restore("database", null);
+
+   if (u)  // If we loaded a database make sure there isn't
+   {
+      log("JUSTICE: Successfully loaded the global justice database");
+      quit;
+   }
+
+
+   // Nothing was found, load the default database
+   //
+   u := load("database@justice");
+   if (not u)
+   {
+      log("ERROR IN JUSTICE: Unable to load the global justice database");
+      quit;
+   }
+
+   log("JUSTICE: Blank justice database loaded");
+   quit;
+}
+dilend
+
+
+
+
+end
+
+
 
 %mobiles
                            weakling
