@@ -247,14 +247,15 @@ code
    }
 
    gold := criminal.level * criminal.level * 100;
+    if (gold > PLATINUM_MULT)
+       gold := PLATINUM_MULT;  // Make sure this doesn't become more than 1 PP
 
    xp :=  criminal.level * 20 + 50;
+   if (xp > 1000)
+       xp := 1000;  // Make sure some glitch doesn't cause excessive XP
 
    if (criminal.type == UNIT_ST_PC)
-   {
       criminal.crimes := criminal.crimes + incr;
-      // xp = MIN(lose_exp(ch) / 2, xp);
-   }
 
    addstring(ex_string,"$reward" );
    addstring(ex_string, "$reward_"+itoa(gold)+"_"+itoa(xp)+"_"+itoa(1));
