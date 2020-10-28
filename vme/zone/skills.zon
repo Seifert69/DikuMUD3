@@ -3538,7 +3538,9 @@ if (not(isset (targ.pcflags, PC_PK_RELAXED)))
 }
 dilend
 
-dilbegin knee(arg : string); /* Just like kick */
+
+
+dilbegin knee(arg : string); /* do_knee. Just like kick */
 
 external
    provoked_attack (victim : unitptr, ch : unitptr);
@@ -3643,7 +3645,7 @@ code
 {
    if ((self.type == UNIT_ST_PC) and (self.weapons[WPN_FIST] <= 0))
    {
-      act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+      act("You must practice fist fighting first.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
 
