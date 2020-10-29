@@ -1114,20 +1114,28 @@ Do a 'wstat board extra' to see the crime data on this board"
 
 type ITEM_OTHER
 
-// Make a DIL to save
-// Make a DIL to zap obsoleted extras on this board
+// There should be a DIL here which deletes obsoleted $crimes and others
+// from the board. I do suggest a long time for players and a shorter time
+// for NPCs.
+//
 
+
+// Use sendto("save", u); where u is a unitptr pointing to the board.
+// The message will cause the board to save itself.
+//
 dilbegin aware save_board();
 code
 {
    heartbeat := PULSE_SEC * 60;
 
 :loop:
-   // Replace this save test with a send_to_dil message.
+   wait(SFB_MSG, argument == "save");
+   //
    // Once a message is received, the board is saved.
-   // Possibly pause for 10 seconds before saving so we don't
-   // save on every modify. Adding extras tend to happen in chunks.
-   pause;  
+   // Pause for a minute  so we act like a cache. Crimes tend to
+   // occur in waves. 
+   //
+   pause; 
    store(self, "database", TRUE);
    log("JUSTICE: database saved.");
    goto loop;

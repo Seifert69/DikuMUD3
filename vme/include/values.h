@@ -81,7 +81,7 @@ END HEADER*/
 #define GUILD_NYM_DRUID   "Nymgaard Druid"
 #define GUILD_DRUID_ATL   "oak@druid", "elm@druid", "maple@druid", "willow@druid" //  Abi, Wpn, Spl, Ski
 
-#define GUILD_MYSTIC      "Midgaard Mystic"
+#define GUILD_MYSTIC      "obsolete"
 #define GUILD_MYSTIC_ATL  "", "", "", "" //  Abi, Wpn, Spl, Ski
 
 #define GUILD_NECROMANCER "Necromancer"
@@ -129,7 +129,7 @@ END HEADER*/
 #define PROFESSION_MAX         13 /* 12+1 */
 
 #define PROFESSION_STRINGS "Fighter", "Knight", "Paladin", "Ranger", "Thief", "Assassin", \
-                           "Priest", "Druid", "Mystic","Necromancer", "Mage", "Sorcerer", \
+                           "Priest", "Druid", "Obsolete","Necromancer", "Mage", "Sorcerer", \
 						   "Barbarian"
 
 

@@ -559,6 +559,8 @@ north to rn_6005 descr
 "The small path leads north through the trees.";
 east to rn_6007 descr
 "The small path leads east through the trees.";
+west to clan_guard@clan_bus descr
+"Hall of Heroes.";
 end
 
 

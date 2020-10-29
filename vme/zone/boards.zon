@@ -468,7 +468,7 @@ while (i<ln)
 		timestr:=asctime(atoi(timelist.[0]));
 		}
 	timelist:=getwords(timestr);
-	timestr:=timelist.[0]+" "+timelist.[1]+" "+timelist.[2];
+	timestr:=timelist.[2]+" "+timelist.[1]+" "+timelist.[4];
 	if (i<9)
 	buflist:=buflist+"  "+ itoa(i+1)+" - "+timestr+" "+temp+"<br/>";
 	else if (i<99)

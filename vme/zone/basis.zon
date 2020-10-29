@@ -1042,8 +1042,6 @@ code
       sl := {"$autotrain", GUILD_CLERIC_ATL};
    else if (nGuild == PROFESSION_DRUID)
       sl := {"$autotrain", GUILD_DRUID_ATL};
-   else if (nGuild == PROFESSION_MYSTIC)
-      sl := {"$autotrain", GUILD_MYSTIC_ATL};
    else if (nGuild == PROFESSION_NECROMANCER)
       sl := {"$autotrain", GUILD_NECROMANCER_ATL};
    else if (nGuild == PROFESSION_CONJURER)
@@ -5476,21 +5474,7 @@ code
       self.weapons[WPN_FIST]       := 5+5;
       self.weapons[WPN_DAGGER]     := 5+10;
       self.skills[SKI_SKIN]        := 5;
-   }
-   else if (self.profession == PROFESSION_MYSTIC)
-   {
-      self.abilities[ABIL_STR] := self.abilities[ABIL_STR];
-      self.abilities[ABIL_DEX] := self.abilities[ABIL_DEX];
-      self.abilities[ABIL_CON] := self.abilities[ABIL_CON];
-      self.abilities[ABIL_HP]  := self.abilities[ABIL_HP];
-      self.abilities[ABIL_DIV] := self.abilities[ABIL_DIV]+4;
-      self.abilities[ABIL_MAG] := self.abilities[ABIL_MAG]-2;
-      self.abilities[ABIL_CHA] := self.abilities[ABIL_CHA]+2;
-      self.abilities[ABIL_BRA] := self.abilities[ABIL_BRA]+4;
-
-      self.weapons[WPN_FIST]         := 5;
-      self.weapons[WPN_QUARTERSTAFF] := 5 + 5;
-   }   
+   } 
    else if (self.profession == PROFESSION_BARBARIAN)
    {
       self.abilities[ABIL_STR] := self.abilities[ABIL_STR]+6;
@@ -5678,14 +5662,6 @@ code
       exec("alias ks kk skunk", self);
    }
    else if (self.profession == PROFESSION_ASSASSIN)
-   {
-      exec("alias kd backstab deer", self);
-      exec("alias kb backstab badger", self);
-      exec("alias kf backstab fox", self);
-      exec("alias kr backstab rabbit", self);
-      exec("alias ks backstab skunk", self);
-   }
-   else if (self.profession == PROFESSION_MYSTIC)
    {
       exec("alias kd backstab deer", self);
       exec("alias kb backstab badger", self);
@@ -6758,58 +6734,59 @@ end
 
 color_object
 names {"color object", "color", "object"}
-title "a color object"
-descr "A colorful object lies on the ground here."
+title "a <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> object"
+descr "A <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div><div class='cpc'>f</div><div class='cpr'>u</div><div class='cpb'>l</div> object lies on the ground here."
 
 extra {}
-"This object is for adding color titles and names to objects, and color <br>
+"This object is for adding <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> titles and names to objects, and <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> <br>
 titles, and names to players. With it, you can also execute any command (except wiz commands)<br>
-in color. Please use restraint in your color schemes - we wish to avoid<br>
+in <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div>. Please use restraint in your color schemes - we wish to avoid<br>
 gawdy titles/names. The syntax for its use follows HTML &ltdiv&gt tags, and<br>
 the CSS classes we've published. Static color codes are included in the CSS files<br>
 similar to previously avaialble ANSI colors. For example, the legacy &amp;c+r code<br>
-for the color bright red, would now look like &ltdiv class='cpr'&gt color red &lt/div&gt.<br>
+for the color <div class='cpr'>bright red</div>, would now look like &ltdiv class='cpr'&gtcolor red&lt/div&gt.<br>
 <br><br>
 
-   To add a color title to an object:<br>
+To add a <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> title to an object:<br>
 
-                      ctitle objectname title<br>
-                  eg: ctitle enforcer &ltdiv class='cpb'&gtMy&lt/div&gt &ltdiv class='cg'&gtgreen&lt/div&gt &ltdiv class='cr'&gtaxe&lt/div&gt
-<br>
-result: <div class='cpb'>My</div> <div class='cg'>green</div> <div class='cr'>axe</div>
-				  <br><br>
-   To add a color name to an object:<br>
+<br>ctitle objectname title
 
-                      cname objectname newname<br>
-                  eg: cname enforcer &ltdiv class='cpb'&gtMy&lt/div&gt &ltdiv class='cg'&gtgreen&lt/div&gt &ltdiv class='cr'&gtaxe&lt/div&gt
-<br><br>
-   To give a player a color title or guild-name, the procedure is identical
+<br><br><div class='cpw'>eg:</div> ctitle enforcer &ltdiv class='cpb'&gtMy&lt/div&gt &ltdiv class='cg'&gtgreen&lt/div&gt &ltdiv class='cr'&gtaxe&lt/div&gt
+<br><div class='cpw'>result:</div> <div class='cpb'>My</div> <div class='cg'>green</div> <div class='cr'>axe</div>
+
+<br><br>To add a <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> name to an object:
+
+<br><br>cname objectname newname
+<br><br><div class='cpw'>eg:</div> cname enforcer &ltdiv class='cpb'&gtMy&lt/div&gt &ltdiv class='cg'&gtgreen&lt/div&gt &ltdiv class='cr'&gtaxe&lt/div&gt
+
+<br><br>To give a player a <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> title or guild-name, the procedure is identical
    to giving (except only gods can have non-guild guild-names)
-   an object a color title, except use the person's name instead of the
-   objectname.<br>
-<br>
-   To execute a command in color, do the following:<br>
+   an object a <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> title, except use the person's name instead of the
+   objectname.
 
-                      carg command arguments<br>
-                  eg: carg shout &ltdiv class='cr'&gtred shout&lt/div&gt&amp;c+rRed Shout!&amp;cw
+<br><br>To execute a command in <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div>, do the following:
+
+<br><br>carg command arguments
+
+<br><br><div class='cpw'>eg:</div> carg shout &ltdiv class='cr'&gtred shout&lt/div&gt
+
 <br><br>
-   Only level 240+ gods may use the color object for naming and titling<br>
+   Only level 240+ gods may use the <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> object for naming and titling<br>
    because its facilities are variants of the set command. The object<br>
    may however be used by 235+ gods to execute normal commands (eg shout,<br>
-   tell, etc), but not wiz commands.<br>
+   tell, etc), but not wiz commands.
 
-   For level 242+ gods, it is possible to color broadcast. To use this<br>
-   capability, do the following:<br>
-<br>
-                     cb &ltdiv class='cpr'&gtValhalla will be rebooting in 2 minutes.,&ltdiv&gt<br>
-<br>
-   This would broadcast the message <div class='cpr'>Valhalla will be rebooting in 2 minutes</div><br>
-   in <div class='cpr'>bright red</div>.<br><br>
+<br><br>For level 242+ gods, it is possible to <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> broadcast.
+<br><div class='cpw'>To use this capability, do the following:</div><br>
+<br>cb &ltdiv class='cpr'&gtValhalla will be rebooting in 2 minutes.,&ltdiv&gt<br>
+<br>This would broadcast the message...
+<br><div class='cpr'>Valhalla will be rebooting in 2 minutes</div>
+<br>...in <div class='cpr'>bright red</div>.<br><br>
 
-   The command cech works like echo except it accepts color codes.<br>
-   The command cmes works like message except it accepts color codes.<br>
-<br>
-	For a full list of color codes examine the CSS docs<br>"
+   The command <div class='cpw'>cech</div> works like echo except it accepts <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> codes.<br>
+   The command <div class='cpw'>cmes</div> works like message except it accepts <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> codes.
+   
+   <br><br>For a full list of <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> codes examine the CSS docs."
 
 dilcopy color_title@basis();
 dilcopy color_bc@basis();
