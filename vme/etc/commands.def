@@ -1093,7 +1093,6 @@ profession druid        = +2
 profession necromancer  = +2
 profession priest       = +2
 profession assassin     = -3
-profession mystic       = -3
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1120,7 +1119,6 @@ profession conjurer     = +5
 profession sorcerer     = +5
 profession druid        = +3
 profession necromancer  = +0
-profession mystic       = -3
 
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1155,7 +1153,6 @@ profession knight       = +2
 profession paladin      = +2
 profession ranger       = +2
 profession fighter      = +0
-profession mystic       = +0
 
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1256,7 +1253,6 @@ profession druid        = +0
 profession necromancer  = +0
 profession conjurer     = +0
 profession sorcerer     = +0
-profession mystic       = -2
 profession knight       = -4
 profession paladin      = -4
 
@@ -1434,7 +1430,6 @@ profession ranger       = +2
 profession thief        = +0
 profession priest       = +5
 profession druid        = +2
-profession mystic       = +0
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1505,7 +1500,6 @@ profession thief        = +5
 profession ranger       = +3
 profession assassin     = +2
 profession druid        = +0
-profession mystic       = -1
 profession necromancer  = -1
 profession conjurer     = -1
 profession sorcerer     = -1
@@ -1559,7 +1553,6 @@ race half-elf  =   0
 race brownie   =  -1
 race groll     =  +1
 race darkelf   =   0
-profession mystic       = +3
 profession thief        = +0
 profession assassin     = +0
 profession fighter      = +0
@@ -1587,7 +1580,6 @@ race half-elf  =   0
 race brownie   =  -1
 race groll     =  +1
 race darkelf   =   0
-profession mystic       = +3
 profession thief        = +0
 profession assassin     = +0
 profession fighter      = +0
@@ -1615,7 +1607,6 @@ race half-elf  =   0
 race brownie   =  -1
 race groll     =  +1
 race darkelf   =   0
-profession mystic       = +3
 profession thief        = +0
 profession assassin     = +0
 profession fighter      = +0
@@ -1691,7 +1682,6 @@ profession fighter      = +0
 profession knight       = +0
 profession paladin      = +0
 profession priest       = -1
-profession mystic       = -1
 profession necromancer  = -2
 profession conjurer     = -2
 profession sorcerer     = -2
@@ -1723,7 +1713,6 @@ profession druid        = -2
 profession knight       = -2
 profession paladin      = -2
 profession priest       = -3
-profession mystic       = -3
 profession necromancer  = -3
 profession conjurer     = -3
 profession sorcerer     = -3
@@ -1776,7 +1765,6 @@ profession ranger       = +2
 profession thief        = +0
 profession assassin     = +0
 profession priest       = +0
-profession mystic       = -3
 profession druid        = -4
 
 
@@ -1943,7 +1931,6 @@ profession paladin      = -2
 profession thief        = -2
 profession assassin     = -2
 profession priest       = -2
-profession mystic       = -2
 profession necromancer  = -2
 profession conjurer     = -2
 profession sorcerer     = -2
@@ -4308,7 +4295,6 @@ profession thief        = +2
 profession assassin     = +2
 profession priest       = +1
 profession druid        = +1
-profession mystic       = +1
 profession necromancer  = +0
 profession conjurer     = +0
 profession sorcerer     = +0
@@ -4336,7 +4322,6 @@ profession thief        =  0
 profession assassin     =  0
 profession priest       =  0
 profession druid        = -1
-profession mystic       = -2
 profession necromancer  = -2
 profession conjurer     = -2
 profession sorcerer     = -2
@@ -4365,7 +4350,6 @@ profession thief        = -2
 profession assassin     = -2
 profession priest       =  0
 profession druid        = -2
-profession mystic       = -2
 profession necromancer  = -2
 profession conjurer     = -2
 profession sorcerer     = -2
@@ -4394,7 +4378,6 @@ profession thief        = -7
 profession assassin     = -7
 profession priest       = -3
 profession druid        = -7
-profession mystic       = -7
 profession necromancer  = -7
 profession conjurer     = -7
 profession sorcerer     = -7

@@ -585,8 +585,8 @@ extra {"sign"}
 "The sign reads:
 
 	Attention: The Sorcerers of Midgaard are proud in their
-		   numbers. If you know the ways of a Paladin,
-		   Mystic or Fighter then do not bother us, for
+		   numbers. If you know the ways of a Paladin 
+		   or Fighter then do not bother us, for
 		   it has been decided that we will not accept
 		   you!"
 flags {UNIT_FL_NO_WEATHER,UNIT_FL_NO_MOB, UNIT_FL_NO_TELEPORT}
@@ -1527,8 +1527,7 @@ Guild Enter Cost     = "+(1*PLATINUM_MULT)+"<br/>
 Guild Leave Quest    = ~~
 Guild Leave Cost     = "+(2*PLATINUM_MULT)+"<br/>
 Guild Exclude Quest  = ~Midgaard Sorcerer Quitter~"*/
-/* Guild Exclude Quest  = ~Midgaard Paladin Quitter~ ~Midgaard Mystic
-Quitter~ ~Udgaard Fighter Quitter~ ~Necromancer Quitter~  */
+/* Guild Exclude Quest  = ~Midgaard Paladin Quitter~ ~Udgaard Fighter Quitter~ ~Necromancer Quitter~  */
 /*  special SFUN_GUILD_MASTER SORCERER_GUILD   Now format changed */
 
 dilcopy guild_titles@guild_paths(GUILD_SORCERER, {"Third Order Mesmerist",

@@ -808,8 +808,7 @@ code
    addstring(dest_list, "druid"); 		// 9
    addstring(dest_list, "knight"); 		// 10
    addstring(dest_list, "barbarian"); 	// 11
-   addstring(dest_list, "mystic"); 		// 12
-   addstring(dest_list, "udgaard"); 	// 13
+   addstring(dest_list, "udgaard"); 	// 12
 
    g_list := null;
    addstring(g_list, GUILD_UDG_FIGHTER); 	// 0
@@ -824,7 +823,6 @@ code
    addstring(g_list, GUILD_NYM_DRUID); 		// 9
    addstring(g_list, GUILD_KNIGHT); 		// 10
    addstring(g_list, GUILD_BARBARIAN); 		// 11
-   addstring(g_list, GUILD_MYSTIC); 		// 12
 
 
 :start:
@@ -900,7 +898,6 @@ if (pc.level > 15)
        (pc.outside.zoneidx != "necro_guild") and
        (pc.outside.zoneidx != "druid") and
        (pc.outside.zoneidx != "knight") and
-       (pc.outside.zoneidx != "mystic") and
        (pc.outside.zoneidx != "barbarian") and
        (pc.outside.zoneidx != "udgaard") and
        (pc.outside.zoneidx != "midgaard"))
@@ -950,8 +947,6 @@ if (pc.level > 15)
    else if (dest in dest_list.[11])
       the_room := "hall_01@barbarian";
    else if (dest in dest_list.[12])
-      the_room := "hall_01@mystic";
-   else if (dest in dest_list.[13])
       the_room := "temple@udgaard";
    else goto no2;
 
@@ -1510,7 +1505,7 @@ power than because of its weight. There is a small copy of the statue
 of Odin in the Temple of Udgaard set in its centre.<br/>
 To use the medallion, you must be in Udgaard. Once there, simply wear 
 the medallion and then 'return &lt;guild&gt;', where &lt;guild&gt; is fighter,
-thief, cleric, mage, ranger, paladin, sorcerer, assassin, knight, mystic, 
+thief, cleric, mage, ranger, paladin, sorcerer, assassin, knight, 
 barbarian, or necromancer.<br/>
 If you are in your guild and wish to return to Udgaard, 'return Udgaard'
 will take you to Udgaard."
