@@ -722,6 +722,10 @@ var
    item:unitptr;
    temp:unitptr;
    reward_exp : extraptr;
+   r_id : stringlist;
+   jd: unitptr;
+   r_key : string;
+   jd_ptr : extraptr;
 code
 {
    heartbeat := PULSE_SEC;
@@ -778,12 +782,24 @@ code
          item.minv:=200;
          item:=item.next;
       }
-   }
-
+   } 
+   
+//transfer reward infor to corpse if found. 
    reward_exp := "$reward" in self.extra;
    if (reward_exp)
    {
-     addextra(crp.extra, reward_exp.names,reward_exp.descr);
+     r_id := split(reward_exp.names.[1], "_");
+     jd := findsymbolic("database@justice");
+     r_key := "$reward_"+r_id.[1];
+     jd_ptr := r_key in jd.extra;
+     if(jd_ptr)
+      {
+        addextra(crp.extra, jd_ptr.names,jd_ptr.descr);
+        subextra(jd.extra, r_key);
+      }
+    else
+     log("Justice: Unmatched reward extra found on "+self.name);
+
      subextra(self.extra, "$reward");
    }
 
@@ -1088,7 +1104,7 @@ descr "The decapitated head of CrashTestDummy is here"
 type ITEM_TRASH
 manipulate {MANIPULATE_TAKE}
 weight 1
-extra {"$reward", "$reward_2500_1024_1"}
+extra {"$reward", "$reward_2500", "$reward__1024", "$reward_udgaard"}
 "This is a fake head to test rewards."
 end
                                      corpse
