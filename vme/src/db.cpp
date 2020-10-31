@@ -376,7 +376,7 @@ void generate_zone_indexes(void)
     for (;;)
     {
         /* Get name of next zone-file */
-        if (fgets(buf, 80, zone_file) == NULL)
+        if (fgets(buf, 200, zone_file) == NULL)
             break;
 
         if (*skip_blanks(buf) == '#')
