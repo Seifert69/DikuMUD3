@@ -1288,9 +1288,8 @@ code
    else
       buff := buff + "<div class='room_descr'>" + room.inside_descr + "</div><br/>";
 
-   temp := display_exits(looker, room);
-
-   buff := buff + temp;
+   temp := "";
+   buff := buff + display_exits(looker, room);
 
    u := room.inside;
    while (u != null)
