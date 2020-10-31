@@ -7193,6 +7193,7 @@ dilbegin aware fnpri(FN_PRI_RESCUE) teamwork(lst: string);
 
 var
    u     : unitptr;
+   u2    : unitptr;
 	sl    : stringlist;
 	i     : integer;
 	gotcha: integer;
@@ -7220,10 +7221,13 @@ code
    heartbeat:= PULSE_VIOLENCE;
 
    wait(SFB_TICK, TRUE);
-   wait(SFB_COM, ((self.position > POSITION_SLEEPING) and (self.position != POSITION_FIGHTING)) );
+   wait(SFB_COM, ((self.position > POSITION_SLEEPING) and (self.position != POSITION_FIGHTING)));
 
-   if (self.position < POSITION_STANDING) exec ("stand", self);
-   if (self.position < POSITION_STANDING) goto init;
+   if (self.position < POSITION_STANDING)
+   {
+      exec("stand", self);
+      goto init;
+   }
 
    gotcha:= FALSE;
 
@@ -7255,13 +7259,18 @@ code
 
    	if (gotcha == TRUE)
       {
+         u2 := u.fighting;
+         secure(u2, init);
+         secure(u, init);
+         heartbeat := 4 * PULSE_SEC;
+         pause;
+         set_fighting(self, u2);
          act("$1n bravely comes to your assistance.",
                A_ALWAYS, self, null, u, TO_VICT);
          act("$1n bravely comes to $3n's assistance.",
                A_ALWAYS, self, null, u, TO_NOTVICT);
-
-        set_fighting(self,u.fighting);
-        break;
+         unsecure(u);
+         break;
 		}
 	}
 
