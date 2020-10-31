@@ -1927,40 +1927,51 @@ code
       quit;
    }
 
-if ((looker.type == UNIT_ST_PC) and (not (isset(looker.pcflags, PC_EXITS))))
    /* Check if player has show exits turned on */
-    return ("");
+   if ((looker.type == UNIT_ST_PC) and (not (isset(looker.pcflags, PC_EXITS))))
+      return ("");
 
-exit_str := "<div class='exit'>Exits:  ";
+   exit_str := "<div class='exit'>Exits:  ";
 
-i := NORTH;
+   i := NORTH;
 
-while (i <= MAX_EXIT)    /* Cycle through all exit possiblities */
-  {if (u.exit_to[i])
-     {text := dirstring@function(i);
-      if (((not (is_hidden@basemove(looker, i, u))) or (not isset(u.exit_info[i], EX_CLOSED)))  /* if it is open, everyone can see it */  )
-          addstring(exit_list, text);
-     }
-   i := i + 1;
-  }
+   while (i <= MAX_EXIT)    /* Cycle through all exit possiblities */
+   {
+      if (u.exit_to[i])
+      {
+         text := dirstring@function(i);
+         if (((not (is_hidden@basemove(looker, i, u))) or (not isset(u.exit_info[i], EX_CLOSED)))  /* if it is open, everyone can see it */  )
+            addstring(exit_list, text);
+      }
 
-if (length(exit_list) == 0)     /* no exits, so give the players a big ole 'none' */
-  addstring(exit_list, "none");
+      i := i + 1;
+   }
 
-exit_str := exit_str + exit_list.[0];
+   // If you're in a room in a room
+   if (u.outside)
+   {
+      if (not isset(u.openflags, EX_CLOSED))
+         addstring(exit_list, "exit");
+   }
 
-i := 1;
+   if (length(exit_list) == 0)     // no exits, so give the players a big ole 'none'
+      addstring(exit_list, "none");
 
-while(i < length(exit_list))             /* generate the string from the stringlist */
-  {exit_str := exit_str + ", " + exit_list.[i];
-   i := i + 1;
-  }
+   exit_str := exit_str + exit_list.[0];
 
-exit_str := exit_str + "</div><br/>";
+   i := 1;
 
-return (exit_str);
+   while (i < length(exit_list))             // generate the string from the stringlist
+   {
+      exit_str := exit_str + ", " + exit_list.[i];
+      i := i + 1;
+   }
 
-}dilend
+   exit_str := exit_str + "</div><br/>";
+
+   return(exit_str);
+}
+dilend
 
 
 
