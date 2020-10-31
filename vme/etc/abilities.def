@@ -14,7 +14,7 @@ race brownie   =  +3
 race groll     =  -2
 race darkelf   =  +3
 profession barbarian    = -2
-profession conjurer     = +3
+profession mage         = +3
 profession sorcerer     = +3
 profession thief        = -2
 profession assassin     = -2
@@ -65,7 +65,7 @@ profession assassin     =  0
 profession priest       =  0
 profession druid        =  0
 profession necromancer  = -3
-profession conjurer     = -3
+profession mage         = -3
 profession sorcerer     = -3
 
 
@@ -92,7 +92,7 @@ profession fighter      =  0
 profession knight       =  0
 profession paladin      =  0
 profession necromancer  = -2
-profession conjurer     = -2
+profession mage         = -2
 profession sorcerer     = -2
 
 
@@ -119,7 +119,7 @@ profession assassin     = +0
 profession druid        =  0
 profession priest       = -1
 profession necromancer  = -2
-profession conjurer     = -2
+profession mage         = -2
 profession sorcerer     = -2
 
 
@@ -139,7 +139,7 @@ race darkelf   =  -1
 profession barbarian    = +0
 profession priest       = +3
 profession druid        = +2
-profession conjurer     = +1
+profession mage         = +1
 profession sorcerer     = +1
 profession paladin      = +1
 profession ranger       = +0
@@ -166,7 +166,7 @@ race darkelf   =  +1
 profession barbarian    = -1
 profession druid        = +3
 profession necromancer  = +3
-profession conjurer     = +3
+profession mage         = +3
 profession sorcerer     = +3
 profession thief        = +1
 profession priest       = +1
@@ -200,5 +200,5 @@ profession thief        = -1
 profession druid        = -1
 profession necromancer  = -1
 profession priest       = -2
-profession conjurer     = -3
+profession mage         = -3
 profession sorcerer     = -3

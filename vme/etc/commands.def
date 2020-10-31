@@ -638,7 +638,7 @@ profession thief        = +5
 profession assassin     = +5
 profession priest       = +2
 profession druid        = +4
-profession conjurer     = +5
+profession mage         = +5
 profession sorcerer     = +0
 
 
@@ -1087,7 +1087,7 @@ race brownie   =  +1
 race groll     =  -3
 race darkelf   =  +2
 restrict brain          = 35
-profession conjurer     = +5
+profession mage         = +5
 profession sorcerer     = +5
 profession druid        = +2
 profession necromancer  = +2
@@ -1115,7 +1115,7 @@ race brownie   =  +2
 race groll     =  -2
 race darkelf   =  +1
 restrict brain          =  5
-profession conjurer     = +5
+profession mage         = +5
 profession sorcerer     = +5
 profession druid        = +3
 profession necromancer  = +0
@@ -1147,7 +1147,7 @@ profession necromancer  = +5
 profession thief        = +4
 profession assassin     = +4
 profession druid        = +4
-profession conjurer     = +3
+profession mage         = +3
 profession sorcerer     = +3
 profession knight       = +2
 profession paladin      = +2
@@ -1251,7 +1251,7 @@ profession fighter      = +0
 profession priest       = +0
 profession druid        = +0
 profession necromancer  = +0
-profession conjurer     = +0
+profession mage         = +0
 profession sorcerer     = +0
 profession knight       = -4
 profession paladin      = -4
@@ -1501,7 +1501,7 @@ profession ranger       = +3
 profession assassin     = +2
 profession druid        = +0
 profession necromancer  = -1
-profession conjurer     = -1
+profession mage         = -1
 profession sorcerer     = -1
 profession fighter      = -1
 profession knight       = -2
@@ -1683,7 +1683,7 @@ profession knight       = +0
 profession paladin      = +0
 profession priest       = -1
 profession necromancer  = -2
-profession conjurer     = -2
+profession mage         = -2
 profession sorcerer     = -2
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1714,7 +1714,7 @@ profession knight       = -2
 profession paladin      = -2
 profession priest       = -3
 profession necromancer  = -3
-profession conjurer     = -3
+profession mage         = -3
 profession sorcerer     = -3
 
 
@@ -1932,7 +1932,7 @@ profession thief        = -2
 profession assassin     = -2
 profession priest       = -2
 profession necromancer  = -2
-profession conjurer     = -2
+profession mage         = -2
 profession sorcerer     = -2
 command  = skills
 func = ski_dil@commands
@@ -4296,7 +4296,7 @@ profession assassin     = +2
 profession priest       = +1
 profession druid        = +1
 profession necromancer  = +0
-profession conjurer     = +0
+profession mage         = +0
 profession sorcerer     = +0
 
 index          = SKI_ARM_HLEATHER
@@ -4323,7 +4323,7 @@ profession assassin     =  0
 profession priest       =  0
 profession druid        = -1
 profession necromancer  = -2
-profession conjurer     = -2
+profession mage         = -2
 profession sorcerer     = -2
 
 
@@ -4351,7 +4351,7 @@ profession assassin     = -2
 profession priest       =  0
 profession druid        = -2
 profession necromancer  = -2
-profession conjurer     = -2
+profession mage         = -2
 profession sorcerer     = -2
 
 
@@ -4379,7 +4379,7 @@ profession assassin     = -7
 profession priest       = -3
 profession druid        = -7
 profession necromancer  = -7
-profession conjurer     = -7
+profession mage         = -7
 profession sorcerer     = -7
 
 
