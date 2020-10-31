@@ -7270,6 +7270,7 @@ code
          act("$1n bravely comes to $3n's assistance.",
                A_ALWAYS, self, null, u, TO_NOTVICT);
          unsecure(u);
+         unsecure(u2);
          break;
 		}
 	}
