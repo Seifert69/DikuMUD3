@@ -302,6 +302,7 @@ int chart_damage(int roll, struct damage_chart_element_type *element)
         return element->basedam + ((roll - element->offset) / element->alpha);
 }
 
+
 /* Size is for natural attacks to limit max damage for such */
 int chart_size_damage(int roll, struct damage_chart_element_type *element,
                       int lbs)
@@ -319,19 +320,23 @@ int chart_size_damage(int roll, struct damage_chart_element_type *element,
         switch (weight_size(lbs))
         {
         case SIZ_TINY:
-            roll = MIN(100, roll);
+            //roll = MIN(100, roll);
+            roll *= 0.5;
             break;
 
         case SIZ_SMALL:
-            roll = MIN(110, roll);
+            //roll = MIN(110, roll);
+            roll *= 0.6;
             break;
 
         case SIZ_MEDIUM:
-            roll = MIN(130, roll);
+            //roll = MIN(130, roll);
+            roll *= 0.7;
             break;
 
         case SIZ_LARGE:
-            roll = MIN(150, roll);
+            //roll = MIN(150, roll);
+            roll *= 0.8;
             break;
         }
 
