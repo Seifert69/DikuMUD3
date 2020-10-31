@@ -1572,14 +1572,15 @@ dilcopy hideaway@function(120);
 
 dilbegin goblin1prg();
 var
-  pc : unitptr;
   s : string;
 code
 {
   heartbeat:=PULSE_SEC*2;
+
   :start:
-  secure (pc,lostpc);
   wait(SFB_CMD, activator.type==UNIT_ST_PC);
+  if (self.position < POSITION_STANDING)
+    goto start;
   s := activator.name;
   pause;
   act("<div class='whisper'>$1n whispers 'ready?'", A_SOMEONE, self, null, null, TO_ALL);
@@ -1590,8 +1591,6 @@ code
   while (self.position == POSITION_FIGHTING)
     pause;
 
-  :lostpc:
-  unsecure(pc);
   goto start;
 }
 dilend
