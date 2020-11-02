@@ -966,20 +966,34 @@ dilend
 
 
 dilbegin fnpri(FN_PRI_RESCUE-1) jailstay(du : integer);
+external
+   jailbreak@justice(criminal : unitptr);
+   rem_db_entry@justice(criminal : unitptr, extra_type : string);
 var
    i : integer;
-
+  jd : unitptr;
+  id : string;
+  
 code
 {
    heartbeat := PULSE_SEC * SECS_PER_MUD_HOUR;
    i := self.outside.idx;
+   
+// Change player arrest descr to reflect that the char is in jail.
 
+   jd := findsymbolic("database@justice");
+   id := self.extra.["$arrest"].names.[1];
+   jd.extra.[id].descr := self.name+" is currently serving time in jail.";
+ 
    :loop:
    pause;
 
    if (i != self.outside.idx)
-     quit;
-
+   {  
+      //player has escaped from jail
+      jailbreak@justice(self);
+      quit;
+   }
    if ((du % 4) == 0)
      send("jailfood");
 
@@ -1014,6 +1028,7 @@ code
        A_ALWAYS, self, null, null, TO_CHAR);
    link(self, findroom(self.hometown));
    self.crimes := self.crimes / 2;
+   rem_db_entry@justice(self, "$arrest");
    set(self.charflags, CHAR_PROTECTED);
    unset(self.charflags, CHAR_OUTLAW);
    quit;
