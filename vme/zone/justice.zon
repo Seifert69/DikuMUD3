@@ -232,6 +232,8 @@ code
 }
 dilend
 
+
+
 // set_arrest() sets the arrest extras to the criminali and database.
 // it is called by crime_counter();
 //
@@ -1305,12 +1307,13 @@ code
    heartbeat := PULSE_SEC * 60;
 
 :loop:
+   wait(SFB_MSG, argument == "save");
+   //
    // Once a message is received, the board is saved.
    // Pause for a minute  so we act like a cache. Crimes tend to
-   // save on every modify. Adding extras tend to happen in chunks.
    // occur in waves. 
    //
-   pause;  
+   wait(SFB_TICK, TRUE);
    store(self, "database", TRUE);
    log("JUSTICE: database saved.");
    goto loop;
