@@ -1572,25 +1572,26 @@ dilcopy hideaway@function(120);
 
 dilbegin goblin1prg();
 var
-pc : unitptr;
+  s : string;
 code
 {
   heartbeat:=PULSE_SEC*2;
+
   :start:
-  secure (pc,lostpc);
   wait(SFB_CMD, activator.type==UNIT_ST_PC);
+  if (self.position < POSITION_STANDING)
+    goto start;
+  s := activator.name;
+  pause;
   act("<div class='whisper'>$1n whispers 'ready?'", A_SOMEONE, self, null, null, TO_ALL);
-  sendto(activator.name, findsymbolic("goblin2@goblin_cave"));
-  exec("kill "+activator.name, self);
-  while(self.position==POSITION_FIGHTING)
-  {
+  sendto(s, findsymbolic("goblin2@goblin_cave"));
+  pause;
+  pause;
+  exec("kill "+s, self);
+  while (self.position == POSITION_FIGHTING)
     pause;
-  }
-:lostpc:
-unsecure(pc);
-   goto start;
 
-
+  goto start;
 }
 dilend
 
@@ -1613,10 +1614,12 @@ dilcopy hideaway@function(120);
 dilbegin goblin2prg();
 code
 {
-  heartbeat:=PULSE_SEC*8;
+  heartbeat := PULSE_SEC*2;
   :start:
   wait(SFB_MSG, (activator.nameidx=="goblin1") and (activator.zoneidx=="goblin_cave"));
+  pause;
   act("$1n whispers 'yes... kill... KILL!", A_SOMEONE, self, null, null, TO_ALL);
+  pause;
   pause;
   exec("kill "+argument, self);
   pause;

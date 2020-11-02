@@ -612,7 +612,7 @@ ERROR: NO TYPE FOR FIGHTER GUILD
 #if defined(_ABILITY)
 
 special SFUN_TEACH_INIT
-"abilities;conjurer;
+"abilities;mage;
 $1n tells you, 'I have never heard of such an ability.';
 $1n tells you, 'I do not know how to teach this ability.';
 $1n tells you, 'You haven't got %s for me.';
@@ -634,7 +634,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SKILL)
 
 special SFUN_TEACH_INIT
-"skills;conjurer;
+"skills;mage;
 $1n tells you, 'I have never heard of such a skill.';
 $1n tells you, 'I do not know how to teach this skill.';
 $1n tells you, 'You haven't got %s for me.';
@@ -653,7 +653,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_WEAPON)
 
 special SFUN_TEACH_INIT
-"weapons;conjurer;
+"weapons;mage;
 $1n tells you, 'I have never heard of such a weapon.';
 $1n tells you, 'I do not know how to teach that weapon.';
 $1n tells you, 'You haven't got %s for me.';
@@ -672,7 +672,7 @@ $1n tells you, 'Remove all equipment, please.';
 #elif defined(_SPELL)
 
 special SFUN_TEACH_INIT
-"spells;conjurer;
+"spells;mage;
 $1n tells you, 'I have never heard of such magic.';
 $1n tells you, 'I do not know how to teach this kind of magic.';
 $1n tells you, 'You have not got %s for me.';

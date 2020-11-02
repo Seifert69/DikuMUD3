@@ -1369,7 +1369,7 @@ race brownie    = +2
 race groll      = -1
 race darkelf    = +1
 restrict magic           = 5
-profession conjurer     = +2
+profession mage         = +2
 profession sorcerer     = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1441,7 +1441,7 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +1
 restrict magic          = 20
-profession conjurer     = -3
+profession mage         = -3
 profession sorcerer     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1478,7 +1478,7 @@ race groll      = -1
 race darkelf    = +1
 restrict magic          = 60
 profession assassin     = -3
-profession conjurer     = +0
+profession mage         = +0
 profession sorcerer     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1514,7 +1514,7 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +1
 restrict magic          = 12
-profession conjurer     = +0
+profession mage         = +0
 profession sorcerer     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1585,7 +1585,7 @@ race brownie    = +2
 race groll      = -1
 race darkelf    = +1
 restrict magic          =  4
-profession conjurer     = +5
+profession mage         = +5
 profession sorcerer     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1698,7 +1698,7 @@ race brownie    = +2
 race groll      = -1
 race darkelf    = +1
 restrict level          = 35
-profession conjurer     = +0
+profession mage         = +0
 profession sorcerer     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1734,7 +1734,7 @@ race brownie    = +2
 race groll      = -1
 race darkelf    = +1
 restrict level          = 29
-profession conjurer     = -3
+profession mage         = -3
 profession sorcerer     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1837,7 +1837,7 @@ race brownie    = +2
 race groll      = -2
 race darkelf    = +1
 restrict level          = 5
-profession conjurer     = +0
+profession mage         = +0
 profession sorcerer     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1873,7 +1873,7 @@ race brownie    = +1
 race groll      = -2
 race darkelf    = +1
 restrict level          = 6
-profession conjurer     = +5
+profession mage         = +5
 profession sorcerer     = +5
 
 
@@ -1910,7 +1910,7 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +1
 restrict level          = 7
-profession conjurer     = +0
+profession mage         = +0
 profession sorcerer     = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1946,7 +1946,7 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +1
 restrict level          = 8
-profession conjurer     = +0
+profession mage         = +0
 profession sorcerer     = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1982,7 +1982,7 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +1
 restrict level          = 9
-profession conjurer     = +0
+profession mage         = +0
 profession sorcerer     = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2018,7 +2018,7 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +1
 restrict level          = 10
-profession conjurer     = +0
+profession mage         = +0
 profession sorcerer     = +5
 
 
@@ -2125,7 +2125,7 @@ race brownie    = +2
 race groll      = -1
 race darkelf    = +1
 restrict level          = 17
-profession conjurer     = -3
+profession mage         = -3
 profession sorcerer     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2199,7 +2199,7 @@ race brownie    = +2
 race groll      = -1
 race darkelf    = +1
 restrict level          = 16
-profession conjurer     = +0
+profession mage         = +0
 profession sorcerer     = -3
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2236,7 +2236,7 @@ race groll      = -1
 race darkelf    = +1
 restrict level          = 18
 profession thief        = -3
-profession conjurer     = +0
+profession mage         = +0
 profession sorcerer     = -3
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2307,7 +2307,7 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +1
 restrict level          = 9
-profession conjurer     = -3
+profession mage         = -3
 profession sorcerer     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2340,7 +2340,7 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +2
 restrict level          = 9
-profession conjurer     = +0
+profession mage         = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -2413,7 +2413,7 @@ race brownie    = +2
 race groll      = -1
 race darkelf    = +1
 restrict level          = 15
-profession conjurer     = +0
+profession mage         = +0
 profession sorcerer     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2449,7 +2449,7 @@ race brownie    = +2
 race groll      = -1
 race darkelf    = +2
 restrict magic          =  5
-profession conjurer     = +5
+profession mage         = +5
 profession sorcerer     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2635,7 +2635,7 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +1
 restrict level          = 12
-profession conjurer     = +2
+profession mage         = +2
 profession sorcerer     = -3
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2671,7 +2671,7 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +1
 restrict level          = 28
-profession conjurer     = +0
+profession mage         = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -2706,7 +2706,7 @@ race brownie    = +2
 race groll      = -2
 race darkelf    = +1
 restrict level          = 22
-profession conjurer     = +0
+profession mage         = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -2771,7 +2771,7 @@ race brownie    = +1
 race groll      = -2
 race darkelf    = +1
 restrict level          = 18
-profession conjurer     = +2
+profession mage         = +2
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -2840,7 +2840,7 @@ race brownie    = +2
 race groll      = -2
 race darkelf    = +1
 restrict level          = 35
-profession conjurer     = +0
+profession mage         = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -2874,7 +2874,7 @@ race brownie    = +1
 race groll      = -2
 race darkelf    = +2
 restrict level          = 30
-profession conjurer     = +2
+profession mage         = +2
 profession sorcerer     = -3
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -2909,7 +2909,7 @@ race brownie    = +1
 race groll      = -2
 race darkelf    = +2
 restrict level          = 35
-profession conjurer     = +0
+profession mage         = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -3466,7 +3466,7 @@ race groll      = -1
 race darkelf    = +1
 restrict level          = 25
 profession assassin     = -3
-profession conjurer     = +2
+profession mage         = +2
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -3500,7 +3500,7 @@ race brownie    = +2
 race groll      = -2
 race darkelf    = +1
 restrict level          = 23
-profession conjurer     = +2
+profession mage         = +2
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -3784,7 +3784,7 @@ race brownie    = +2
 race groll      = -2
 race darkelf    = +1
 restrict level          = 8
-profession conjurer     = +0
+profession mage         = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -4148,7 +4148,7 @@ race brownie    = +2
 race groll      = -3
 race darkelf    = +1
 restrict level          = 32
-profession conjurer     = +2
+profession mage         = +2
 profession sorcerer     = -3
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -4489,7 +4489,7 @@ race brownie    = 0
 race groll      = -1
 race darkelf    = 0
 restrict level          = 32
-profession conjurer     = +0
+profession mage         = +0
 
 index           = SPL_METEOR_SHOWER
 name            = meteor shower
@@ -4886,7 +4886,7 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +1
 restrict level          = 13
-profession conjurer     = +2
+profession mage         = +2
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -4925,7 +4925,7 @@ race brownie    = +1
 race groll      = -2
 race darkelf    = +1
 restrict magic          =  5
-profession conjurer     = +5
+profession mage         = +5
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -4957,7 +4957,7 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +2
 restrict level          = 50
-profession conjurer     = +0
+profession mage         = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -4989,7 +4989,7 @@ race brownie    = +1
 race groll      = -2
 race darkelf    = +2
 restrict level          = 40
-profession conjurer     = +0
+profession mage         = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -5021,7 +5021,7 @@ race brownie    = +1
 race groll      = -3
 race darkelf    = +2
 restrict level          = 30
-profession conjurer     = +0
+profession mage         = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -5053,7 +5053,7 @@ race brownie    = +1
 race groll      = -2
 race darkelf    = +2
 restrict level          = 24
-profession conjurer     = +0
+profession mage         = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -5085,7 +5085,7 @@ race brownie    = +1
 race groll      = -2
 race darkelf    = +2
 restrict level          = 18
-profession conjurer     = +0
+profession mage         = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -5117,7 +5117,7 @@ race brownie    = +1
 race groll      = -2
 race darkelf    = +2
 restrict level          = 14
-profession conjurer     = +0
+profession mage         = +0
 
 index           = SPL_CHARGE_WAND
 name            = charge wand
@@ -5434,7 +5434,7 @@ race brownie    = 0
 race groll      = -1
 race darkelf    = -2
 restrict level          = 7
-profession conjurer     = +5
+profession mage         = +5
 profession sorcerer     = +0
 
 
@@ -5466,7 +5466,7 @@ race brownie    = 0
 race groll      = -1
 race darkelf    = -2
 restrict level          = 25
-profession conjurer     = +0
+profession mage         = +0
 profession sorcerer     = -3
 
 index           = SPL_NIGHT_GLOBE
@@ -5497,7 +5497,7 @@ race brownie    = 0
 race groll      = -1
 race darkelf    = -2
 restrict level          = 25
-profession conjurer     = +0
+profession mage         = +0
 profession sorcerer     = -3
 
 index           = SPL_SACRED
@@ -6169,7 +6169,7 @@ race brownie    = +2
 race groll      = -2
 race darkelf    = +1
 restrict level          = 130
-profession conjurer     = +0
+profession mage         = +0
 
 
 index           = SPL_RAISE_HPP
@@ -7052,7 +7052,7 @@ race gnome      = 0
 race half-orc   = -1
 race half-ogre  = -1
 restrict level          = 12
-profession conjurer     = +2
+profession mage         = +2
 
 /* darg changes start here */
 
