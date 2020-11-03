@@ -216,17 +216,19 @@ code
 
    suspects := self.extra;
 
-   while ("$crime" in suspects)
+   while (suspects)
    {
-         c_info := split(suspects.names.[6],"_");
+     if (suspects.name == "$crime")
+     {   c_info := split(suspects.names.[6],"_");
          time_left := atoi(c_info.[1]);
          time_left := time_left - 1;
          if (time_left <= 0)
-             subextra(self.extra, suspects.names.[1]);
-         else
-            suspects.names.[6] := "$crime_"+itoa(time_left);
-      sendto("save", self);
-      suspects := suspects.next;
+           subextra(self.extra, suspects.names.[1]);
+        else
+           suspects.names.[6] := "$crime_"+itoa(time_left);
+       sendto("save", self);
+     }
+    suspects := suspects.next;
    }
    goto start;
 }
@@ -580,16 +582,18 @@ code
    :start:
    wait(SFB_TICK, TRUE);
    witness := self.extra;
-   while("$witness" in witness)
+   while(witness)
    {
-         w_info := split(witness.names.[5], "_");
+     if (witness.name == "$witness")
+     {   w_info := split(witness.names.[5], "_");
          tm := atoi(w_info.[1]);
          tm := tm - 1;
          if (tm <= 0)
             subextra(self.extra, witness.names.[2]);
          else
             witness.names.[5] := "$witness_"+itoa(tm);
-      witness := witness.next;
+      }
+       witness := witness.next;
    }
    if (not("$witness" in self.extra))
       quit;
@@ -1002,7 +1006,7 @@ code
          if (atoi(c_reported.[1]) == 0)
          {
             update_criminal@justice(self, update_name, crime_type, atoi(c_pid.[1]), TRUE);
-             c_ptr.[k].names.[9] := itoa(1);
+             c_ptr.[k].names.[9] := "$crime_"+itoa(1);
             if (atoi(c_type.[1]) == CRIME_MURDER)
                c_ptr.[k].descr := c_name.[1]+" has been accused in the "+crime+" of "+c_v_name.[1]+". This crime was witnessed  by: "+activator.name+".";
             else
