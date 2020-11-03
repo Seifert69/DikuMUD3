@@ -57,15 +57,15 @@ END HEADER*/
        Crime Extra Names:
 
        names.[0] $crime contant
-       names.[1] $crime_CRIME_SERIAL_NO
-       names.[2] $crime_$crime_CRIMINAL_NAME
-       names.[3] $crime_CRIMINAL_PID
-       names.[4] $crime_CRIME_TYPE
-       names.[5] $crime_VICTIM_NAME
-       names.[6] $crime_TICK UNTIL REMOVED FROM LIST
-       names.[7] $crime_is_NPC (Y or N)
-       names.[8] $CRIME_JURISDICTION
-       names.[9] $crime_CRIME_REPORTED 1 or 0
+       names.[1] CRIME_SERIAL_NO
+       names.[2] CRIMINAL_NAME
+       names.[3] CRIMINAL_PID
+       names.[4] CRIME_TYPE
+       names.[5] VICTIM_NAME
+       names.[6] TICK UNTIL REMOVED FROM LIST
+       names.[7] is_NPC (Y or N)
+       names.[8] JURISDICTION
+       names.[9] CRIME_REPORTED 1 or 0
 
       The descr for each crime is what is displayed on the reward_board under "Suspects" heading.
       
@@ -74,10 +74,10 @@ END HEADER*/
       Reward Extra Names
       
       names.[0] $reward
-      names.[1] $reward_UNIQUE_ID       
-      names.[2] $reward_GOLD_TO_BE_REWARED
-      names.[3] $reward_XP_REWARED
-      names.[4] $reward_JURISDICTION
+      names.[1] UNIQUE_ID       
+      names.[2] GOLD_TO_BE_REWARED
+      names.[3] XP_REWARED
+      names.[4] JURISDICTION
     
       The extra.descr will be displayed on the reward_board.
        "
@@ -93,12 +93,12 @@ END HEADER*/
       Witness Data Elements:
          
       names.[0] $witness
-      names.[1] $witness_CRIMINAL NAME
-      names.[2] $witness_CRIME_SERIAL_NO
-      names.[3] $witness_CRIME_TYPE
-      names.[4] $witness_PLAYERID
-      names.[5] $witness_TICKS UNTIL REMOVED
-      names.[6] $witness_JURISDICTION
+      names.[1] $CRIMINAL NAME
+      names.[2] CRIME_SERIAL_NO
+      names.[3] CRIME_TYPE
+      names.[4] PLAYERID
+      names.[5] TICKS UNTIL REMOVED
+      names.[6] JURISDICTION
       
       The descr filed for witness is not used at the moment.
 
@@ -108,7 +108,7 @@ END HEADER*/
      Reward Data Elements (for characters)
 
       names.[0] $reward 
-      names.[1] $reward_UNIQUE_ID       
+      names.[1] _UNIQUE_ID       
 
 Crime progression goes like this which is handled in DIL crime_counter()
     - If your crime counter is >= CRIME_NONPRO  (8) then your PROTECTED flag is removed.
@@ -193,19 +193,19 @@ reset RESET_NOT
 /*
  Crime Info Data Elements:
         [0] $crime
-        [1] $crime_CRIME_SERIAL_NO
-        [2] $crime_$crime_CRIMINAL_NAME
-        [3] $crime_CRIMINAL_PID
-        [4] $crime_CRIME_TYPE
-        [5] $crime_VICTIM_NAME
-        [6] $crime_TICK UNTIL REMOVED FROM LIST
-        [7] $crime_is_NPC (Y or N)     
-        [9] $crime_CRIME_REPORTED 1 or 0
+        [1] CRIME_SERIAL_NO
+        [2] CRIMINAL_NAME
+        [3] CRIMINAL_PID
+        [4] CRIME_TYPE
+        [5] VICTIM_NAME
+        [6] TICK UNTIL REMOVED FROM LIST
+        [7] is_NPC (Y or N)     
+        [9] CRIME_REPORTED 1 or 0
 */
 
 dilbegin crime_stopper();
 var
-   c_info : stringlist;
+   c_info : string;
    suspects : extraptr;
    time_left : integer;
 code
@@ -219,13 +219,13 @@ code
    while (suspects)
    {
      if (suspects.name == "$crime")
-     {   c_info := split(suspects.names.[6],"_");
-         time_left := atoi(c_info.[1]);
+     {   c_info := suspects.names.[6];
+         time_left := atoi(c_info);
          time_left := time_left - 1;
          if (time_left <= 0)
            subextra(self.extra, suspects.names.[1]);
         else
-           suspects.names.[6] := "$crime_"+itoa(time_left);
+           suspects.names.[6] := itoa(time_left);
        sendto("save", self);
      }
     suspects := suspects.next;
@@ -270,14 +270,14 @@ code
        is_npc := "Y";
 
    addstring(ex_string,"$arrest" );
-   addstring(ex_string,"$arrest_"+itoa(r_time));
+   addstring(ex_string,itoa(r_time));
 
    //add extra to criminal using realtime as a unique ID
 
    addextra(criminal.extra, ex_string, " ");
 
-   addstring(ex_string, "$arrest_"+juris);
-   addstring(ex_string, "$arrest_"+is_NPC);
+   addstring(ex_string, juris);
+   addstring(ex_string, is_NPC);
    // add extra to justice database with matching ID containing more reward details
 
    jd := findsymbolic("database@justice");
@@ -382,16 +382,16 @@ code
      is_npc := "Y";
 
    addstring(ex_string,"$reward" );
-   addstring(ex_string,"$reward_"+itoa(r_time));
+   addstring(ex_string,itoa(r_time));
   
    //add extra to criminal using realtime as a unique ID
    
    addextra(criminal.extra, ex_string, " "); 
    
-   addstring(ex_string, "$reward_"+itoa(gold));
-   addstring(ex_string, "$reward_"+itoa(xp));
-   addstring(ex_string, "$reward_"+juris);
-   addstring(ex_string, "$reward_"+is_NPC); 
+   addstring(ex_string, itoa(gold));
+   addstring(ex_string, itoa(xp));
+   addstring(ex_string, juris);
+   addstring(ex_string, is_NPC); 
    // add extra to justice database with matching ID containing more reward details
   
    jd := findsymbolic("database@justice");
@@ -508,7 +508,7 @@ var
 code
 {
   
-  cr_string := "$crime_"+itoa(crime_no);
+  cr_string := itoa(crime_no);
 
    if (crime_type == CRIME_MURDER)
    {
@@ -523,8 +523,6 @@ code
       log("Unknown crime type in add_crime()");
    }
 
-   // xxx - something needs to be done so it's the udgaard or midgaard or other board
-   // Currently there is only one reward_board.  It exists in both mirgaard and udgaard
 
   juris := get_juris@justice();
 
@@ -539,14 +537,14 @@ code
    wp := findsymbolic("database@justice");  //+self.outside.zoneidx); 
    addstring(crime_list, "$crime");
    addstring(crime_list, cr_string);
-   addstring(crime_list, "$crime_"+self.name);
-   addstring(crime_list, "$crime_"+itoa(self.idx));
-   addstring(crime_list, "$crime_"+itoa(crime_type));
-   addstring(crime_list, "$crime_"+vict.name);
-   addstring(crime_list, "$crime_"+itoa(crime_clear));
-   addstring(crime_list, "$crime_"+is_npc);
-   addstring(crime_list, "$crime_"+juris);
-   addstring(crime_list, "$crime_"+itoa(0));
+   addstring(crime_list, self.name);
+   addstring(crime_list, itoa(self.idx));
+   addstring(crime_list, itoa(crime_type));
+   addstring(crime_list, vict.name);
+   addstring(crime_list, itoa(crime_clear));
+   addstring(crime_list, is_npc);
+   addstring(crime_list, juris);
+   addstring(crime_list, itoa(0));
     
    addextra(wp.extra, crime_list, desc); 
    sendto("save", wp);
@@ -573,7 +571,7 @@ var
    tm : integer;
    d : integer;
    witness : extraptr;
-   w_info : stringlist;
+   w_info : string;
 
 code
 {
@@ -585,13 +583,13 @@ code
    while(witness)
    {
      if (witness.name == "$witness")
-     {   w_info := split(witness.names.[5], "_");
-         tm := atoi(w_info.[1]);
+     {   w_info := witness.names.[5];
+         tm := atoi(w_info);
          tm := tm - 1;
          if (tm <= 0)
             subextra(self.extra, witness.names.[2]);
          else
-            witness.names.[5] := "$witness_"+itoa(tm);
+            witness.names.[5] := itoa(tm);
       }
        witness := witness.next;
    }
@@ -716,12 +714,12 @@ code
 
    pid := criminal.idx;
    addstring(ex_string,"$witness" );
-   addstring(ex_string,"$witness_"+criminal.name);
-   addstring(ex_string,"$witness_"+itoa(crime_no));
-   addstring(ex_string,"$witness_"+itoa(crime_type));
-   addstring(ex_string,"$witness_"+itoa(pid));
-   addstring(ex_string,"$witness_"+itoa(12));
-   addstring(ex_string,"$witness_"+jurisdiction);
+   addstring(ex_string,criminal.name);
+   addstring(ex_string,itoa(crime_no));
+   addstring(ex_string,itoa(crime_type));
+   addstring(ex_string,itoa(pid));
+   addstring(ex_string,itoa(12));
+   addstring(ex_string,jurisdiction);
    addextra(self.extra,ex_string ,criminal.name+" committed a crime.");
    if (not(dilfind("witness_timer@justice", self)))
       dilcopy("witness_timer@justice()",self);
@@ -868,24 +866,22 @@ var
    criminal : string;
    crime_type : integer;
    crime : string;
-   wp : unitptr;
-   k : string;
-   k2 : string;
-   w_data :stringlist;
+   jd : unitptr;
+   w_data :string;
    i : integer;
    found : integer;
    wk : string;
    ck : string;
    w_ptr : extraptr;
    c_ptr : extraptr;
-   w_type : stringlist;
-   c_name : stringlist;
-   c_pid : stringlist;
-   c_type : stringlist;
-   c_v_name : stringlist;
-   c_reported : stringlist;
-   c_is_npc   : stringlist;
-   c_juris : stringlist;
+   w_type : string;
+   c_name : string;
+   c_pid : string;
+   c_type : string;
+   c_v_name : string;
+   c_reported : string;
+   c_is_npc   : string;
+   c_juris : string;
    update_name :string;
 code
 {
@@ -954,43 +950,49 @@ code
       goto start;
    }
 
-   wp := findsymbolic("database@justice");
-   wk := "$witness_"+criminal;
-   ck := "$crime_"+criminal;
+   jd := findsymbolic("database@justice");
+   
+   w_ptr := activator.extra;
+     while ("$witness" in w_ptr)
+      {
+        if (w_ptr.names.[1] == criminal)
+        {
+          c_ptr := w_ptr.names.[2] in jd.extra;
+              if (c_ptr)
+                goto doaccuse;
+        }
+        w_ptr := w_ptr.next;
+     }
 
-   w_ptr := wk in activator.extra;
-   c_ptr := ck in wp.extra;
+goto end;
 
-     if (not(w_ptr) or not(c_ptr))
-        goto end;
-     
-   w_data := split(w_ptr.names.[2],"_");
-   k := "$crime_"+w_data.[1];
-   k2 := w_ptr.names.[2];
-   if (k in c_ptr)
-   {
-      w_type := split(w_ptr.[k2].names.[3], "_");
-      c_name := split(c_ptr.[k].names.[2], "_");
-      c_pid := split(c_ptr.[k].names.[3], "_");
-      c_type := split(c_ptr.[k].names.[4],"_"); 
-      c_v_name := split(c_ptr.[k].names.[5], "_"); 
-      c_is_npc := split(c_ptr.[k].names.[7], "_");
-      c_juris := split(c_ptr.[k].names.[8], "_");
-      c_reported := split(c_ptr.[k].names.[9], "_"); 
+:doaccuse:
+
+log("accuse: debug "+c_name);
+ 
+      w_type := w_ptr.names.[3];
+      c_name := c_ptr.names.[2];
+      c_pid := c_ptr.names.[3];
+      c_type := c_ptr.names.[4]; 
+      c_v_name := c_ptr.names.[5]; 
+      c_is_npc := c_ptr.names.[7];
+      c_juris := c_ptr.names.[8];
+      c_reported := c_ptr.names.[9]; 
+log("accuse: debug "+c_name);
       
       if ((crime_type == CRIME_MURDER) and
-          (atoi(c_type.[1]) != CRIME_MURDER) and
-          (atoi(c_type.[1]) != CRIME_PK))
+          (atoi(c_type) != CRIME_MURDER) and
+          (atoi(c_type) != CRIME_PK))
          goto end;
 
        if ((crime_type == CRIME_STEALING) and
-            (atoi(c_type.[1]) != CRIME_STEALING))
+            (atoi(c_type) != CRIME_STEALING))
          goto end;
-       if (c_is_npc.[1] == "Y")
-          update_name := c_name.[1]+w_data.[1];
+       if (c_is_npc == "Y")
+          update_name := c_name+w_ptr.names.[2];
        else
-          update_name := c_name.[1];  
-       if (atoi(c_type.[1]) == atoi(w_type.[1]))
+          update_name := c_name;  
+       if (atoi(c_type) == atoi(w_type))
       {
          found := 1;
          act("$1n accuses $3t of $2t.", A_SOMEONE, activator, crime, criminal, TO_ROOM);
@@ -999,29 +1001,29 @@ code
                         A_SOMEONE, self, criminal, activator, TO_ROOM);
          if (activator.alignment > -1000)
            activator.alignment := activator.alignment +100;
-         subextra(activator.extra,k2);
+         subextra(activator.extra,w_ptr.names.[2]);
          if (not("$witness" in activator.extra))
             i := dildestroy("witness_timer@justice", activator);
 
-         if (atoi(c_reported.[1]) == 0)
+         if (atoi(c_reported) == 0)
          {
-            update_criminal@justice(self, update_name, crime_type, atoi(c_pid.[1]), TRUE);
-             c_ptr.[k].names.[9] := "$crime_"+itoa(1);
-            if (atoi(c_type.[1]) == CRIME_MURDER)
-               c_ptr.[k].descr := c_name.[1]+" has been accused in the "+crime+" of "+c_v_name.[1]+". This crime was witnessed  by: "+activator.name+".";
+            update_criminal@justice(self, update_name, crime_type, atoi(c_pid), TRUE);
+             c_ptr.names.[9] := itoa(1);
+            if (atoi(c_type) == CRIME_MURDER)
+               c_ptr.descr := c_name+" has been accused in the "+crime+" of "+c_v_name+". This crime was witnessed  by: "+activator.name+".";
             else
-                c_ptr.[k].descr := c_name.[1]+" has been accused of "+crime+" from "+c_v_name.[1]+". This crime was witnessed  by: "+activator.name+".";
-                sendto("save", wp);
+                c_ptr.descr := c_name+" has been accused of "+crime+" from "+c_v_name+". This crime was witnessed  by: "+activator.name+".";
+                sendto("save", jd);
           }
          else
          {
-            update_criminal(self, update_name, crime_type, atoi(c_pid.[1]), FALSE);
-            c_ptr.[k].descr := wp.extra.[k].descr +"<br>This crime was also confirmed by "+activator.name+".";
-            sendto("save", wp);
+            update_criminal(self, update_name, crime_type, atoi(c_pid), FALSE);
+            c_ptr.descr := c_ptr.descr +"<br>This crime was also confirmed by "+activator.name+".";
+            sendto("save", jd);
          }
       }
 
-   }
+   
 
    :end: 
    if (found == 0)
@@ -1183,32 +1185,36 @@ dilbegin dbclear_npc(u : unitptr);
 var
   r_extra : extraptr;
   c_extra : extraptr;
-
+  a_extra : extraptr;
 code
 {
 
-/* r_extra := "$reward_Y" in u.extra;
-c_extra := "$crime_Y" in u.extra;
-
-
-while (r_extra)
- {
-   subextra(u.extra, r_extra.names.[1]);
-   r_extra := r_extra.next;
- }
+c_extra := "$crime" in u.extra;
 
 while (c_extra)
 {
-   subextra(u.extra, c_extra.names.[1]);
-   c_extra := c_extra.next;
+   if (c_extra.names.[7] == "Y")
+      subextra(u.extra, c_extra.names.[1]);
+ c_extra := c_extra.next;
 }
-*/
-if ("$crime_Y" in u.extra)
-    subextra(u.extra, "$crime_Y");
-if ("$arrest_Y" in u.extra)
-   subextra(u.extra, "$arrest_Y");
-if ("$reward_Y" in u.extra)
-   subextra(u.extra, "$reward_Y");
+a_extra := "$arrest" in u.extra;
+
+while (a_extra)
+{
+   if (a_extra.names.[4] == "Y")
+      subextra(u.extra, c_extra.names.[1]);
+ a_extra := c_extra.next;
+}
+
+r_extra := "$reward" in u.extra;
+
+while (r_extra)
+{
+   if (r_extra.names.[5] == "Y")
+      subextra(u.extra, r_extra.names.[1]);
+ r_extra := c_extra.next;
+}
+
 return;
 }
 dilend
