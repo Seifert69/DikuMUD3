@@ -209,7 +209,7 @@ struct field_type unit_field_data[MAX_SET_FIELDS + 1] = {
     {UT_PC, AT_STR, 0, 255, 254, 254},                    /* del-info        */
     {UT_PC, AT_VAL, 0, 255, 254, 254},                    /* access          */
     {UT_PC, AT_STR, 0, 200, 200, 200},                    /* promptstr       */
-    {UT_PC, AT_VAL, 0, 254, 255, 255},                    /* age             */
+    {UT_PC, AT_VAL, 0, 230, 230, 230},                    /* age             */
     {UT_PC, AT_VAL, 0, 254, 255, 255},                    /* lifespan        */
     {UT_PC, AT_VAL, 0, 254, 255, 255},                    /* profession      */
 };
