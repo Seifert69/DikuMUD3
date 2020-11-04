@@ -64,6 +64,7 @@ ability to succeed outside of the supported newbie process.
 */
 
 dilbegin fix();
+var
 item	:	unitptr;
 pc		:	unitptr;
 expd	:	extraptr;
