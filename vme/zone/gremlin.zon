@@ -18,6 +18,7 @@ END HEADER*/
 #define BOLDIN_HANDOFF  "Feeding Boldin Complete"
 #define EXPLORE_ONGOING  "Exploring Valhalla Quest Ongoing"
 #define EXPLORE_COMPLETE "Exploring Valhalla Complete"
+#define FIXED_ITEM "$fixed"
 
 /* ================================================================== */
 /*                                ZONE                                */
@@ -62,6 +63,50 @@ ability to succeed outside of the supported newbie process.
 -Sender
 */
 
+dilbegin fix();
+item	:	unitptr;
+pc		:	unitptr;
+expd	:	extraptr;
+namex	: 	string;
+zonex	: 	string;
+title	: 	string;
+
+code
+{
+	heartbeat:= PULSE_SEC*3;
+
+	wait(SFB_DONE, (command("give")) and (target == self) and (activator.type == UNIT_ST_PC));
+
+:give:
+
+	pc := activator;
+	secure(pc, lostpc);
+	exdp := FIXED_ITEM in self.extra;
+	namex := self.inside.nameidx;
+	zonex := self.inside.zoneidx;
+	title := self.inside.title;
+	
+	item := load(namex + "@" + zonex);
+	if (item.title == title)
+	{
+		// item doesnt need to be fixed
+		// return item
+		log("FIX: item '"+namex+"@"+zonex"' with title '"+title+"' does not need to be fixed.");
+	}
+	if (FIXED_ITEM in self.inside.extra)
+	{
+		// item has already been fixed
+		// return item
+		log("FIX: item '"+namex+"@"+zonex"' with title '"+title+"' has been fixed to '" + item.title +"'.");
+	}
+	
+	addextra(item.extra, {FIXED_ITEM}, "");
+	// add personalization dil to item
+	link(item, pc);
+	destroy(self.inside);
+
+}
+dilend // END DIL FIX
 
 dilbegin boldin_request();
 var
@@ -1161,6 +1206,18 @@ exp 200
 money 2 SILVER_PIECE
 
 dilcopy wander_zones@function ("gremlin", 30, 0,0);
+end
+
+fixer
+names {"the fixer", "fixer"}
+title "the fixer"
+descr "The fixer glares at you."
+extra {}
+"This is the fixer. He fixes things"
+M_AVG_HUMAN(100,SEX_MALE)
+money 2 SILVER_PIECE
+
+dilcopy fix@gremlin();
 end
 
 %objects
