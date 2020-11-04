@@ -111,7 +111,7 @@ var
    amount:integer;
    buf:string;
    reward : extraptr;
-   r_data : stringlist;
+   r_data : string;
    r_gold : integer;
    r_xp : integer;
    i : integer;
@@ -132,15 +132,15 @@ code
       goto start;
    }
 
-   r_data := split(reward.names.[2], "_");
-   r_gold := atoi(r_data.[1]);
+   r_data := reward.names.[2];
+   r_gold := atoi(r_data);
    if (r_gold > PLATINUM_MULT)
    {
       log("reward_give() gold reward of " + itoa(r_gold) + " too high, limiting to 1 PP");
       r_gold := PLATINUM_MULT;  // Make sure this doesn't become more than 1 PP      
    }
-   r_data := split(reward.names.[3], "_");
-   r_xp := atoi(r_data.[1]);
+   r_data := reward.names.[3];
+   r_xp := atoi(r_data);
    if (r_xp > 1000)
    {
       log("reward_give() XP reward of " + itoa(r_xp) + " too high, limiting to 1,000");

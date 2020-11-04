@@ -722,7 +722,7 @@ var
    item:unitptr;
    temp:unitptr;
    reward_exp : extraptr;
-   r_id : stringlist;
+   r_id : string;
    jd: unitptr;
    r_key : string;
    jd_ptr : extraptr;
@@ -788,9 +788,9 @@ code
    reward_exp := "$reward" in self.extra;
    if (reward_exp)
    {
-     r_id := split(reward_exp.names.[1], "_");
+     r_id := reward_exp.names.[1];
      jd := findsymbolic("database@justice");
-     r_key := "$reward_"+r_id.[1];
+     r_key := r_id;
      jd_ptr := r_key in jd.extra;
      if(jd_ptr)
       {
@@ -1104,7 +1104,7 @@ descr "The decapitated head of CrashTestDummy is here"
 type ITEM_TRASH
 manipulate {MANIPULATE_TAKE}
 weight 1
-extra {"$reward", "$reward_2500", "$reward__1024", "$reward_udgaard"}
+extra {"$reward", "2500", "1024", "$udgaard"}
 "This is a fake head to test rewards."
 end
                                      corpse
