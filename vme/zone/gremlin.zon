@@ -70,7 +70,7 @@ pc		:	unitptr;
 expd	:	extraptr;
 namex	: 	string;
 zonex	: 	string;
-title	: 	string;
+titlex	: 	string;
 
 code
 {
@@ -85,10 +85,10 @@ code
 	exdp := FIXED_ITEM in self.extra;
 	namex := self.inside.nameidx;
 	zonex := self.inside.zoneidx;
-	title := self.inside.title;
+	titlex := self.inside.title;
 	
 	item := load(namex + "@" + zonex);
-	if (item.title == title)
+	if (item.title == titlex)
 	{
 		// item doesnt need to be fixed
 		// return item
