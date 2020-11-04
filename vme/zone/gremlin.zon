@@ -67,7 +67,6 @@ dilbegin fix();
 var
 item	:	unitptr;
 pc		:	unitptr;
-expd	:	extraptr;
 namex	: 	string;
 zonex	: 	string;
 titlex	: 	string;
@@ -82,7 +81,6 @@ code
 
 	pc := activator;
 	secure(pc, lostpc);
-	exdp := FIXED_ITEM in self.extra;
 	namex := self.inside.nameidx;
 	zonex := self.inside.zoneidx;
 	titlex := self.inside.title;
