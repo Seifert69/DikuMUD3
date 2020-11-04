@@ -73,11 +73,12 @@ titlex	: 	string;
 
 code
 {
+
 	heartbeat:= PULSE_SEC*3;
+	
+:start:
 
 	wait(SFB_DONE, (command("give")) and (target == self) and (activator.type == UNIT_ST_PC));
-
-:give:
 
 	pc := activator;
 	secure(pc, lostpc);
@@ -103,7 +104,13 @@ code
 	// add personalization dil to item
 	link(item, pc);
 	destroy(self.inside);
+	unsecure(pc);
+	goto start;
 
+:lostpc:
+	exec("sigh", self);
+	goto start;
+	
 }
 dilend // END DIL FIX
 
