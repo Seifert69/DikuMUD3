@@ -90,13 +90,13 @@ code
 	{
 		// item doesnt need to be fixed
 		// return item
-		log("FIX: item '"+namex+"@"+zonex"' with title '"+title+"' does not need to be fixed.");
+		log("FIX: item - "+namex+"@"+zonex" - with title - "+title+" - does not need to be fixed.");
 	}
 	if (FIXED_ITEM in self.inside.extra)
 	{
 		// item has already been fixed
 		// return item
-		log("FIX: item '"+namex+"@"+zonex"' with title '"+title+"' has been fixed to '" + item.title +"'.");
+		log("FIX: item - "+namex+"@"+zonex" - with title - "+title+" - has been fixed to - " + item.title +" -.");
 	}
 	
 	addextra(item.extra, {FIXED_ITEM}, "");
