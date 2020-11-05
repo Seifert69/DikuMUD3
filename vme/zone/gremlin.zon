@@ -72,6 +72,7 @@ namex	: 	string;
 zonex	: 	string;
 titlex	: 	string;
 exdp	: 	extraptr;
+burn	:	string;
 
 code
 {
@@ -110,7 +111,8 @@ code
 		// item is  personalized
 		if(pc.name == exdp.descr)
 		{
-			dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
+			burn := "Your "+item.title+" burns you, and drops to the ground.<br>The "+item.title+" does not belong to you!"
+			dilcopy ("ply_restrict@function("+pc.name+",0,25,"+burn+")",item);
 			log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - personalized for "+pc.name+".");
 		}
 		else
