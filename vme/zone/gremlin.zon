@@ -72,7 +72,7 @@ namex	: 	string;
 zonex	: 	string;
 titlex	: 	string;
 exdp	: 	extraptr;
-burn	:	string;
+
 
 code
 {
@@ -90,7 +90,7 @@ code
 	zonex := olditem.zoneidx;
 	titlex := olditem.title;
 	exdp := "$ply_restrict" in olditem.extra;
-	
+
 	item := load(namex + "@" + zonex);
 	if (FIXED_ITEM in olditem.extra)
 	{
@@ -111,8 +111,7 @@ code
 		// item is  personalized
 		if(pc.name == exdp.descr)
 		{
-			burn := "Your "+item.title+" burns you and you drop it to the ground.<br>This does not belong to you!";
-			dilcopy ("ply_restrict@function("+pc.name+",0,25,"+burn+")",item);
+			dilcopy ("ply_restrict@function("+pc.name+",0,25,burn_ply@function)",item);
 			log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - personalized for "+pc.name+".");
 		}
 		else
