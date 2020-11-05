@@ -449,6 +449,34 @@ code
 }
 dilend
 
+
+dilbegin awareness_check(thief : unitptr, victim : unitptr, observer : unitptr, skill : integer, msg : string);
+external
+   integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
+                       def : unitptr, defskiidx : integer, defabiidx : integer);
+   //set_witness(criminal : unitptr, crime_no : integer, crime_type : integer, show : integer);
+
+var
+   hm : integer;
+
+code
+{
+   hm := skillbattle(thief, skill, ABIL_DEX, observer, skill, ABIL_BRA);
+
+   if (not visible(observer, thief))
+      hm := hm - 100;
+
+   if (hm >= 0)
+   {
+      act(msg, A_SOMEONE, observer, thief, victim, TO_CHAR);
+      //if (visible(observer, thief) and visible(observer, victim))
+      //   set_witness(thief, )
+   }
+
+   return;
+}
+dilend
+
 /* ============== SKILLS BEGIN HERE ===================== */
 
 /* do_steal */
@@ -460,7 +488,7 @@ external
    provoked_attack (victim : unitptr, ch : unitptr);
    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
-
+   awareness_check(thief : unitptr, victim : unitptr, observer : unitptr, skill : integer, msg : string);
 
 var
    skilla  :  integer;
@@ -470,6 +498,7 @@ var
    hm      :  integer;
    vict    :  unitptr;
    targ    :  unitptr;
+   u       :  unitptr;
    t       :  string;
    temp    : string;
    ti      : integer;
@@ -597,6 +626,19 @@ code
 
    act("You stealthily steal $3n's $2n and quickly tuck it out of sight!", A_SOMEONE, self, targ, vict, TO_CHAR);
    link(targ, self);
+
+   // Here we might want to loop through any chars in the room, do a skill check with
+   // each of them to see if they notice the burglar. Same with pickpocket and filch
+   // so a standard routine would be in order
+   //
+   // awareness_check(thief, victim, SKI_STEAL)
+   //
+   foreach (UNIT_ST_PC | UNIT_ST_NPC, u)
+   {
+      if ((u != self) and (u != targ))
+         awareness_check(self, targ, u, SKI_STEAL, "You notice $2n stealing something from $3n");
+   }
+
    send_done("steal",self,targ,vict,hm,arg,null);
    quit;
 }

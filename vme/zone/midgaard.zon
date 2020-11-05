@@ -94,6 +94,34 @@ Zone by Papi and Quifael </pre>"
 %dil
 
 
+// Call this function for CHAR 'self' to cuff targ
+//  cuffs must be the unitptr to the handcuffs to be used.
+//
+dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+var
+   depname: string;
+
+code
+{
+   act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
+   act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
+   act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);
+
+   follow(targ, deputy);
+   depname := deputy.name;
+   link(cuffs, targ);
+   unequip(equipment(targ, WEAR_WRIST_R));
+   addequip(cuffs, WEAR_WRIST_R);
+   dilcopy("cuffed@midgaard("+depname+")", targ);
+   dilcopy("cuffed2@midgaard("+depname+")", targ);
+
+   exec("sigh", targ); /* Do this to activate the DILs */
+   return;
+}
+dilend
+
+
+
 //
 // MS2020 Making guards react to whistle again
 //
@@ -1039,14 +1067,12 @@ dilend
 dilbegin fnpri(FN_PRI_RESCUE-1) guard_arrest(office : string, prisoner : unitptr);
 external
    unitptr unit_room@function(u : unitptr);
-
-integer walk_room@function (s:string,i:integer);
-
+   integer walk_room@function (s:string,i:integer);
 var
-tf:integer;
-  u : unitptr;
-  i : integer;
-  wasin : string;
+   tf:integer;
+   u : unitptr;
+   i : integer;
+   wasin : string;
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or
@@ -1087,7 +1113,8 @@ dilend
 
 dilbegin fnpri(FN_PRI_RESCUE-1) arrest_check(office : string);
 external
-  guard_arrest(office : string, prisoner : unitptr);
+   guard_arrest(office : string, prisoner : unitptr);
+   cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
 var
   u : unitptr;
 code
@@ -1106,19 +1133,9 @@ code
 
    if (activator.charflags & CHAR_PROTECTED)
    {
-      unequip(u);
-
-      act("$3n arrests $1n and cuffs $1m.",
-	  A_SOMEONE, activator, null, self, TO_ROOM);
-
-      act("You are handcuffed and arrested by $3n.",
-	  A_SOMEONE, activator, null, self, TO_CHAR);
-
-      follow(activator, self);
-
       u := load("cuffs@midgaard");
-      link(u, activator);
-      addequip(u, WEAR_WRIST_R);
+
+      cuff_target(self, activator, u);
 
       guard_arrest@midgaard(office, activator);
    }
@@ -1126,7 +1143,7 @@ code
    {
       unset(activator.charflags, CHAR_SELF_DEFENCE);
       // If we have several chars with the same name, this causes havoc
-      // exec("kill "+activator.name, self);
+      //     exec("kill "+activator.name, self);
       set_fighting(self, activator);
    }
 
@@ -1138,16 +1155,16 @@ dilend
 
 dilbegin captain(jailname : string);
 external
- integer walk_room@function (s:string,i:integer);
+   integer walk_room@function (s:string,i:integer);
 
 var
-tf:integer;
-  prisoner : unitptr;
-  u : unitptr;
-  nextu : unitptr;
-  safe : unitptr;
-  cuffs : unitptr;
-  c : string;
+   tf:integer;
+   prisoner : unitptr;
+   u : unitptr;
+   nextu : unitptr;
+   safe : unitptr;
+   cuffs : unitptr;
+   c : string;
 
 code
 {
@@ -1227,7 +1244,10 @@ code
 dilend
 
 
-dilbegin aware cuffed(depname : string);
+// Make sure the handcuffs blocks execution of other DILs.
+// So it's one worse priority than "cuffed2"
+//
+dilbegin fnpri(FN_PRI_RESCUE) aware unique cuffed(depname : string);
 var
    cuffs  : unitptr;
    deputy : unitptr;
@@ -1263,17 +1283,18 @@ dilend
 
 
 
-dilbegin aware cuffed2(depname : string);
+dilbegin fnpri(FN_PRI_RESCUE-1) aware unique cuffed2(depname : string);
 var
    i      : integer;
    u      : unitptr;
 code
 {
    interrupt(SFB_COM, activator == self, broken);
+
    :loop:
    wait(SFB_CMD, TRUE);
-   :postloop:
 
+   :postloop:
    if (activator == self.master)
    {
       if (activator.position < POSITION_STANDING)
@@ -1282,32 +1303,32 @@ code
       /* Do this trickery to allow the cuffed person to follow! */
 
       if (command("north") or command("east") or command("south") or
-	  command("west") or command("up") or command("down"))
+          command("west") or command("up") or command("down"))
       {
-	 wait(SFB_CMD, TRUE);
+         wait(SFB_CMD, TRUE);
          if (activator == self)
-	 {
-	    if (command("north") or command("east") or
-		command("south") or command("west") or
-		command("up") or command("down"))
-	    {
-	       goto loop;
-	    }
-	 }
-	 goto postloop;
+         {
+            if (command("north") or command("east") or
+               command("south") or command("west") or
+               command("up") or command("down"))
+            {
+               goto loop;
+            }
+         }
+         goto postloop;
       }
       goto loop;
    }
    else if (activator == self)
    {
       if (command("look") or command("say") or
-	  command("ask") or command("tell"))
+          command("ask") or command("tell"))
         goto loop;
       else
       {
-	 block;
-	 act(depname + " prevents you from removing the hand cuffs.",
-	     A_ALWAYS, self, null, null, TO_CHAR);
+         block;
+         act(depname + " prevents you from removing the hand cuffs.",
+            A_ALWAYS, self, null, null, TO_CHAR);
       }
    }
    goto loop;
@@ -8395,14 +8416,15 @@ dilbegin cuffs();
 external
    integer skillresist@function(aa : integer, ad : integer,
                              sa : integer, sd : integer);
+   cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
 
 var
-  deputy : unitptr;
-  targ   : unitptr;
-  skilla : integer;
-  skilld : integer;
-  hm     : integer;
-  depname: string;
+   deputy : unitptr;
+   targ   : unitptr;
+   skilla : integer;
+   skilld : integer;
+   hm     : integer;
+   depname: string;
 code
 {
    :loop:
@@ -8489,27 +8511,13 @@ code
       goto loop;
    }
 
-   act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
-   act("$1n surprises you and put $2n around your wrists.",
-       A_SOMEONE, deputy, self, targ, TO_VICT);
-   act("$1n puts $2n around $3N's wrists.",
-       A_SOMEONE, deputy, self, targ, TO_NOTVICT);
-
-   follow(targ, deputy);
-   depname := deputy.name;
-   unsecure(deputy);
-   link(self, targ);
-   unequip(equipment(self.outside, WEAR_WRIST_R));
-   addequip(self, WEAR_WRIST_R);
-   dilcopy("cuffed@midgaard("+depname+")", self.outside);
-   dilcopy("cuffed2@midgaard("+depname+")", self.outside);
-
-   exec("sigh", self.outside); /* Do this to activate the DILs */
-
+   cuff_target(activator, targ, self);
    /* targ is secured, when broken we reset to loop */
+
    :cuffed:
    wait(SFB_CMD, self.equip != WEAR_WRIST_R);
-   goto cuffed;
+   // Cuffs are no longer on the wrist, start over
+   goto loop;
 }
 dilend
 
