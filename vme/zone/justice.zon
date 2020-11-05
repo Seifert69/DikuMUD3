@@ -489,13 +489,13 @@ dilend
 // Call this function to add a $crime to a reward board. The reward_board in zone xxx
 // will be chosen based on what zone 'self' is in when the crime is committed. (??)
 //
-// self       : The char that is committing the crime.
+// criminal   : The char that is committing the crime.
 // vict       : The char that a crime was committed against.
 // crime_type : either CRIME_MURDER or CRIME_STEALING
 // crime_no   : unique identifier assigned  to the crime by log_crime.
 // crime_clear: The number of heartbeat ticks before this crime will be removed form the reward_board
 //
-dilbegin add_crime(vict : unitptr, crime_type: integer, crime_no : integer, crime_clear : integer);
+dilbegin add_crime(criminal : unitptr, vict : unitptr, crime_type: integer, crime_no : integer, crime_clear : integer);
 external
   string get_juris@justice();
 var
@@ -509,16 +509,15 @@ var
 
 code
 {
-  
-  cr_string := itoa(crime_no);
+   cr_string := itoa(crime_no);
 
    if (crime_type == CRIME_MURDER)
    {
-      desc := self.name+" is suspected of the murder of "+vict.name+". Anyone with information should report it to the Guard's Office.";
+      desc := criminal.name+" is suspected of the murder of "+vict.name+". Anyone with information should report it to the Guard's Office.";
    }
    else if (crime_type == CRIME_STEALING)
    {
-      desc := self.name+" is suspected of stealing from "+vict.name+". Anyone with information should report it to the Guard's Office.";
+      desc := criminal.name+" is suspected of stealing from "+vict.name+". Anyone with information should report it to the Guard's Office.";
    }
    else
    {
@@ -528,19 +527,24 @@ code
 
   juris := get_juris@justice();
 
-  if (self.type == UNIT_ST_NPC)
+  if (criminal.type == UNIT_ST_NPC)
   {
-     addstring(self.names,self.name+itoa(crime_no));
+     addstring(criminal.names,criminal.name+itoa(crime_no));
      is_npc := "Y";
   } 
    else
       is_npc := "N";
  
-   wp := findsymbolic("database@justice");  //+self.outside.zoneidx); 
+   wp := findsymbolic("database@justice");
+   if (not wp)
+   {
+      log("database@justice not found");
+   }
+
    addstring(crime_list, "$crime");
    addstring(crime_list, cr_string);
-   addstring(crime_list, self.name);
-   addstring(crime_list, itoa(self.idx));
+   addstring(crime_list, criminal.name);
+   addstring(crime_list, itoa(criminal.idx));
    addstring(crime_list, itoa(crime_type));
    addstring(crime_list, vict.name);
    addstring(crime_list, itoa(crime_clear));
@@ -691,7 +695,7 @@ dilend
 // This function is called by log_crime in C and will set a $witness extra on any person who witnesses
 // a crime.  If the witness is an NPC it will copy the activate_accuse() DIL to the witness.
 //
-dilbegin set_witness(criminal : unitptr, crime_no : integer, crime_type : integer, show : integer);
+dilbegin set_witness(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer);
 external
    activate_accuse(witness : unitptr, crime_type : integer, criminal_name : string);
    string get_juris@justice();
@@ -702,15 +706,15 @@ var
    jurisdiction : string;
 code
 { 
-   if (criminal == self)
+   if (criminal == witness)
       quit;
 
-   if ((self.type == UNIT_ST_NPC) and (not(isset(self.charflags , CHAR_PROTECTED))))
+   if ((witness.type == UNIT_ST_NPC) and (not isset(witness.charflags , CHAR_PROTECTED)))
       quit;
 
    if (show)
    {
-      act("You just witnessed a crime committed by $1n.", A_ALWAYS, criminal, null, self, TO_VICT);
+      act("You just witnessed a crime committed by $1n.", A_ALWAYS, criminal, null, witness, TO_VICT);
    }
    jurisdiction := get_juris@justice();
 
@@ -722,12 +726,12 @@ code
    addstring(ex_string,itoa(pid));
    addstring(ex_string,itoa(12));
    addstring(ex_string,jurisdiction);
-   addextra(self.extra,ex_string ,criminal.name+" committed a crime.");
-   if (not(dilfind("witness_timer@justice", self)))
-      dilcopy("witness_timer@justice()",self);
+   addextra(witness.extra,ex_string ,criminal.name+" committed a crime.");
+   if (not(dilfind("witness_timer@justice", witness)))
+      dilcopy("witness_timer@justice()", witness);
 
-   if ((self.type == UNIT_ST_NPC) and (show))
-      dilcopy("activate_accuse@justice("+itoa(crime_type)+","+criminal.name+","+jurisdiction+")",self);
+   if ((witness.type == UNIT_ST_NPC) and (show))
+      dilcopy("activate_accuse@justice("+itoa(crime_type)+","+criminal.name+","+jurisdiction+")", witness);
 
    quit;
 }
@@ -1367,8 +1371,7 @@ var
    x:extraptr;
 code
 {
-   heartbeat:=PULSE_SEC;
-   pause;
+   heartbeat := PULSE_SEC;
    pause; // Allow the game to boot
 
    // Make sure no-one has loaded this database globally. There should be only one
