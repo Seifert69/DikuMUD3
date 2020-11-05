@@ -16,8 +16,8 @@ END HEADER*/
 
       The reward_board has DIL:
           wanted_poster() - ? 
-          crime_stopper() - ?
-
+      The Global database has
+          crime_stopper();
       The captain has DIL:
          "accuse()" - to receive accusations and give rewards
 
@@ -41,14 +41,15 @@ END HEADER*/
    The criminal gets the CHAR_OUTLAW flag set.
    The criminal gets the following extras added:
       - $reward is set if the player becomes wanted dead
-   The reward_board gets the following extras added:
+   The database  gets the following extras added:
       - $crime is added to the reward board
+      - $reward is also set on the database
    Any witnesses get the following extras added:
       - $witness
 
    Details on the extras above:
 
-   reward_board@zone extras:
+     database@justice extras:
       
       There are 9 names in each crime extrathree names in each entry. 
       They are as follows:
@@ -56,44 +57,59 @@ END HEADER*/
        Crime Extra Names:
 
        names.[0] $crime contant
-       names.[1] $crime_CRIME_SERIAL_NO
-       names.[2] $crime_$crime_CRIMINAL_NAME
-       names.[3] $crime_CRIMINAL_PID
-       names.[4] $crime_CRIME_TYPE
-       names.[5] $crime_VICTIM_NAME
-       names.[6] $crime_TICK UNTIL REMOVED FROM LIST
-       names.[7] $crime_is_NPC (Y or N)
-       names.[8] $crime_CRIME_REPORTED 1 or 0
+       names.[1] CRIME_SERIAL_NO
+       names.[2] CRIMINAL_NAME
+       names.[3] CRIMINAL_PID
+       names.[4] CRIME_TYPE
+       names.[5] VICTIM_NAME
+       names.[6] TICK UNTIL REMOVED FROM LIST
+       names.[7] is_NPC (Y or N)
+       names.[8] JURISDICTION
+       names.[9] CRIME_REPORTED 1 or 0
 
       The descr for each crime is what is displayed on the reward_board under "Suspects" heading.
-
-   Witnesses extras:
-   
-There are 6 names on each witness extra.  THey are as follows:
- 
-   Witness Data Elements:
       
-        names.[0] $witness
-        names.[1] $witness_CRIMINAL NAME
-        names.[2] $witness_CRIME_SERIAL_NO
-        names.[3] $witness_CRIME_TYPE
-        names.[4] $witness_PLAYERID
-        names.[5] $witness_TICKS UNTIL REMOVED
+      The database also holds $reward extras
 
-      The important name is the second name: $witness_<crime_nddumber>_<crime_type>_<pid>_<ticks until witness extra expires>
-      The descr filed for witness is not used at the moment.
-
-   Criminal extras:
-     
-
-   Names {"$reward","$reward_250000_1050_1"}
-      "
+      Reward Extra Names
+      
+      names.[0] $reward
+      names.[1] UNIQUE_ID       
+      names.[2] GOLD_TO_BE_REWARED
+      names.[3] XP_REWARED
+      names.[4] JURISDICTION
+      named.[5] IS NPC (Y or N) 
+      The extra.descr will be displayed on the reward_board.
+       "
       A reward of 250000 gold has been offered for the head of Tank
       "
+      When a character with a $reward extra dies their reward data is copied from the database
+      to their corpse and removed from the dataase.
 
-      The second name is the important one: $reward_<gold reward>_<xp reward>_<reward increment>
-      the descr of a reward is displayed on the Reward Board under Wanted Dead
+      Witnesses extras:
+      Witness Extras are copied to any character that witnesses a crime.   
+      There are 6 names on each witness extra.  THey are as follows:
+ 
+      Witness Data Elements:
+         
+      names.[0] $witness
+      names.[1] $CRIMINAL NAME
+      names.[2] CRIME_SERIAL_NO
+      names.[3] CRIME_TYPE
+      names.[4] PLAYERID
+      names.[5] TICKS UNTIL REMOVED
+      names.[6] JURISDICTION
       
+      The descr filed for witness is not used at the moment.
+
+     Criminal extras:
+     A criminal will receive a $reward extra when a reward has been set for their death.
+
+     Reward Data Elements (for characters)
+
+      names.[0] $reward 
+      names.[1] _UNIQUE_ID       
+
 Crime progression goes like this which is handled in DIL crime_counter()
     - If your crime counter is >= CRIME_NONPRO  (8) then your PROTECTED flag is removed.
     - If your crime counter is >= CRIME_OUTLAW (32) then your PROTECTED and OUTLAW flags are SET .
@@ -177,19 +193,19 @@ reset RESET_NOT
 /*
  Crime Info Data Elements:
         [0] $crime
-        [1] $crime_CRIME_SERIAL_NO
-        [2] $crime_$crime_CRIMINAL_NAME
-        [3] $crime_CRIMINAL_PID
-        [4] $crime_CRIME_TYPE
-        [5] $crime_VICTIM_NAME
-        [6] $crime_TICK UNTIL REMOVED FROM LIST
-        [7] $crime_is_NPC (Y or N)     
-        [8] $crime_CRIME_REPORTED 1 or 0
+        [1] CRIME_SERIAL_NO
+        [2] CRIMINAL_NAME
+        [3] CRIMINAL_PID
+        [4] CRIME_TYPE
+        [5] VICTIM_NAME
+        [6] TICK UNTIL REMOVED FROM LIST
+        [7] is_NPC (Y or N)     
+        [9] CRIME_REPORTED 1 or 0
 */
 
 dilbegin crime_stopper();
 var
-   c_info : stringlist;
+   c_info : string;
    suspects : extraptr;
    time_left : integer;
 code
@@ -198,18 +214,21 @@ code
    heartbeat := WAIT_SEC * 5 * 60;
    wait(SFB_TICK, TRUE);
 
-   suspects := "$crime" in self.extra;
+   suspects := self.extra;
 
    while (suspects)
    {
-         c_info := split(suspects.names.[6],"_");
-         time_left := atoi(c_info.[1]);
+     if (suspects.name == "$crime")
+     {   c_info := suspects.names.[6];
+         time_left := atoi(c_info);
          time_left := time_left - 1;
          if (time_left <= 0)
-            subextra(self.extra, suspects.names.[1]);
-         else
-            suspects.names.[6] := "$crime_"+itoa(time_left);
-      suspects := suspects.next;
+           subextra(self.extra, suspects.names.[1]);
+        else
+           suspects.names.[6] := itoa(time_left);
+       sendto("save", self);
+     }
+    suspects := suspects.next;
    }
    goto start;
 }
@@ -217,32 +236,132 @@ dilend
 
 
 
+// set_arrest() sets the arrest extras to the criminali and database.
+// it is called by crime_counter();
+//
+dilbegin set_arrest(criminal : unitptr, incr : integer);
+external
+   string get_juris@justice();
+var
+   jd : unitptr;
+   k : string;
+   ex_string : stringlist;
+   r_time : integer;
+   juris : string;
+   is_npc : string;
+code
+{
+   r_time := realtime;
+   juris := get_juris@justice();
+   ex_string := null;
+
+
+   if ("$arrest" in criminal.extra)
+   {
+      return;
+   }
+
+   if (criminal.type == UNIT_ST_PC)
+   {
+       criminal.crimes := criminal.crimes + incr;
+       is_npc := "N";
+   }
+   else
+       is_npc := "Y";
+
+   addstring(ex_string,"$arrest" );
+   addstring(ex_string,itoa(r_time));
+
+   //add extra to criminal using realtime as a unique ID
+
+   addextra(criminal.extra, ex_string, " ");
+
+   addstring(ex_string, juris);
+   addstring(ex_string, is_NPC);
+   // add extra to justice database with matching ID containing more reward details
+
+   jd := findsymbolic("database@justice");
+   addextra(jd.extra, ex_string, criminal.name+" is wanted for imprisonment.");
+   sendto("save", jd);
+   return;
+}
+dilend
+
+//This function removes database extras
+//
+dilbegin rem_db_entry(criminal : unitptr, extra_type : string);
+
+var
+jd : unitptr;
+ch_ptr : extraptr;
+
+code 
+{
+  jd := findsymbolic("database@justice");
+  
+  ch_ptr := extra_type in criminal.extra;
+  if (ch_ptr)
+  { 
+    subextra(jd.extra, ch_ptr.names.[1]);  
+    subextra(criminal.extra, ch_ptr.names.[1]);
+    log("rem_db_entry: "+criminal.name+" "+extra_type+"was sucessfully removed from the Justice DB");
+    sendto("save", jd);
+    return;
+  }
+   
+  log("rem_db_entry: No extras of "+extra_type+ "found for "+criminal.name);
+
+return;
+}
+dilend
+
+// jailbreak() - this DIL will be called if someone ends their jailtime early
+// it will set a reward on their heads for escape.
+//
+dilbegin jailbreak(criminal : unitptr);
+external 
+  rem_db_entry(criminal : unitptr, extra_type : string);
+  set_reward_char(criminal : unitptr, incr : integer);
+var
+ 
+code
+{
+  log("Criminal "+criminal.name+" has escaped jail.  A reward is now offered.");
+  rem_db_entry(criminal, "$arrest");
+  set_reward_char(criminal, 0);
+  return;
+}
+dilend
+
 // set_reward_char() sets the reward and applies the $reward extra to the criminal.
 // it is called by crime_counter();
 //
 dilbegin set_reward_char(criminal : unitptr, incr : integer);
+external
+   string get_juris@justice();
+   rem_db_entry(criminal : unitptr, extra_type : string);
 var
+   jd : unitptr;
    gold : integer;
    xp : integer;
-   r_data : stringlist;
    k : string;
    ex_string : stringlist;
-   tmp : integer;
-
+   r_time : integer;
+   juris : string;
+   is_npc : string;
 code
 {
    gold := 0;
    xp := 0;
+   r_time := realtime;
+   juris := get_juris@justice();
+   ex_string := null;
 
    unset(criminal.charflags, CHAR_PROTECTED);
    set(criminal.charflags, CHAR_OUTLAW);
-
+   rem_db_entry@justice(criminal, "$arrest");
    if ("$reward" in criminal.extra)
    {
-      r_data := split(criminal.extra.["$reward"].names.[1],"_");
-      tmp := atoi(r_data.[3]) +1;
-      k := r_data.[0]+"_"+r_data.[1]+"_"+r_data.[2]+"_"+itoa(tmp);
-      criminal.extra.["$reward"].names.[1] := k;
       return;
    }
 
@@ -255,12 +374,32 @@ code
        xp := 1000;  // Make sure some glitch doesn't cause excessive XP
 
    if (criminal.type == UNIT_ST_PC)
-      criminal.crimes := criminal.crimes + incr;
+   {
+       criminal.crimes := criminal.crimes + incr;
+       is_npc := "N";
+   }
+   else
+     is_npc := "Y";
 
    addstring(ex_string,"$reward" );
-   addstring(ex_string, "$reward_"+itoa(gold)+"_"+itoa(xp)+"_"+itoa(1));
-   addextra(criminal.extra, ex_string, "A reward of "+itoa(gold)+" gold has been offered for the head of "+criminal.name);  
-
+   addstring(ex_string,itoa(r_time));
+  
+   //add extra to criminal using realtime as a unique ID
+   
+   addextra(criminal.extra, ex_string, " "); 
+   
+   addstring(ex_string, itoa(gold));
+   addstring(ex_string, itoa(xp));
+   addstring(ex_string, juris);
+   addstring(ex_string, is_NPC); 
+   // add extra to justice database with matching ID containing more reward details
+  
+   jd := findsymbolic("database@justice");
+   if (incr == 0)
+      addextra(jd.extra, ex_string, "JAILBREAK!! A reward of "+itoa(gold)+" gold has been offered for the head of "+criminal.name);    
+    else
+      addextra(jd.extra, ex_string, "A reward of "+itoa(gold)+" gold has been offered for the head of "+criminal.name);  
+   sendto("save", jd);
    return;    
 } 
 dilend
@@ -274,7 +413,7 @@ dilend
 dilbegin crime_counter(criminal : unitptr, incr : integer, first_accuse : integer);
 external
    set_reward_char@justice(criminal : unitptr, incr : integer);
-
+   set_arrest@justice(criminal : unitptr, incr : integer);
 code
 {
    
@@ -285,8 +424,10 @@ code
    }
 
    if ((criminal.crimes + incr) / 31 > criminal.crimes / 32)
+   {
       set(criminal.charflags, CHAR_OUTLAW | CHAR_PROTECTED);
-
+      set_arrest(criminal, incr);
+   }
    if (((criminal.crimes + incr) / 64 > criminal.crimes / 64))
    {
       set_reward_char@justice(criminal, incr);
@@ -301,7 +442,6 @@ code
 dilend
 
 
-
 // update_criminal() is called by accuse.  The Captain sends the accused a warning and it then calls crime_counter()
 // to update the crime stats of the criminal
 //
@@ -309,6 +449,7 @@ dilbegin update_criminal(deputy : unitptr, cr_name : string, crime_type : intege
 external
    crime_counter@justice(criminal : unitptr, incr : integer, first_accuse : integer);
    set_reward_char(criminal : unitptr, incr : integer);
+   set_arrest(criminal : unitptr, incr : integer);
 var
    criminal : unitptr;
    incr : integer;
@@ -324,6 +465,7 @@ code
    if(criminal.type == UNIT_ST_NPC)
    {
      set(criminal.charflags, CHAR_OUTLAW | CHAR_PROTECTED);
+      set_arrest(criminal, CRIME_STEALING);
      return;
    }
 
@@ -354,6 +496,8 @@ dilend
 // crime_clear: The number of heartbeat ticks before this crime will be removed form the reward_board
 //
 dilbegin add_crime(vict : unitptr, crime_type: integer, crime_no : integer, crime_clear : integer);
+external
+  string get_juris@justice();
 var
    i : integer;
    wp : unitptr;
@@ -361,10 +505,12 @@ var
    cr_string : string;
    crime_list : stringlist;
    is_npc : string;
+   juris : string;
+
 code
 {
   
-  cr_string := "$crime_"+itoa(crime_no);
+  cr_string := itoa(crime_no);
 
    if (crime_type == CRIME_MURDER)
    {
@@ -379,26 +525,31 @@ code
       log("Unknown crime type in add_crime()");
    }
 
-   // xxx - something needs to be done so it's the udgaard or midgaard or other board
-   // Currently there is only one reward_board.  It exists in both mirgaard and udgaard
-   if (self.type == UNIT_ST_NPC)
-      is_npc := "Y";
+
+  juris := get_juris@justice();
+
+  if (self.type == UNIT_ST_NPC)
+  {
+     addstring(self.names,self.name+itoa(crime_no));
+     is_npc := "Y";
+  } 
    else
       is_npc := "N";
  
-   wp := findsymbolic("reward_board@udgaard");  //+self.outside.zoneidx); 
+   wp := findsymbolic("database@justice");  //+self.outside.zoneidx); 
    addstring(crime_list, "$crime");
    addstring(crime_list, cr_string);
-   addstring(crime_list, "$crime_"+self.name);
-   addstring(crime_list, "$crime_"+itoa(self.idx));
-   addstring(crime_list, "$crime_"+itoa(crime_type));
-   addstring(crime_list, "$crime_"+vict.name);
-   addstring(crime_list, "$crime_"+itoa(crime_clear));
-   addstring(crime_list, "$crime_"+is_npc);
-   addstring(crime_list, "$crime_"+itoa(0));
+   addstring(crime_list, self.name);
+   addstring(crime_list, itoa(self.idx));
+   addstring(crime_list, itoa(crime_type));
+   addstring(crime_list, vict.name);
+   addstring(crime_list, itoa(crime_clear));
+   addstring(crime_list, is_npc);
+   addstring(crime_list, juris);
+   addstring(crime_list, itoa(0));
     
    addextra(wp.extra, crime_list, desc); 
-
+   sendto("save", wp);
    quit;
 }
 dilend
@@ -422,7 +573,7 @@ var
    tm : integer;
    d : integer;
    witness : extraptr;
-   w_info : stringlist;
+   w_info : string;
 
 code
 {
@@ -430,18 +581,19 @@ code
 
    :start:
    wait(SFB_TICK, TRUE);
-
-   witness := "$witness" in self.extra;
+   witness := self.extra;
    while(witness)
    {
-         w_info := split(witness.names.[5], "_");
-         tm := atoi(w_info.[1]);
+     if (witness.name == "$witness")
+     {   w_info := witness.names.[5];
+         tm := atoi(w_info);
          tm := tm - 1;
          if (tm <= 0)
             subextra(self.extra, witness.names.[2]);
          else
-            witness.names.[5] := "$witness_"+itoa(tm);
-      witness := witness.next;
+            witness.names.[5] := itoa(tm);
+      }
+       witness := witness.next;
    }
    if (not("$witness" in self.extra))
       quit;
@@ -560,24 +712,22 @@ code
    {
       act("You just witnessed a crime committed by $1n.", A_ALWAYS, criminal, null, self, TO_VICT);
    }
+   jurisdiction := get_juris@justice();
 
    pid := criminal.idx;
    addstring(ex_string,"$witness" );
-   addstring(ex_string,"$witness_"+criminal.name);
-   addstring(ex_string,"$witness_"+itoa(crime_no));
-   addstring(ex_string,"$witness_"+itoa(crime_type));
-   addstring(ex_string,"$witness_"+itoa(pid));
-   addstring(ex_string,"$witness_"+itoa(12));
-
+   addstring(ex_string,criminal.name);
+   addstring(ex_string,itoa(crime_no));
+   addstring(ex_string,itoa(crime_type));
+   addstring(ex_string,itoa(pid));
+   addstring(ex_string,itoa(12));
+   addstring(ex_string,jurisdiction);
    addextra(self.extra,ex_string ,criminal.name+" committed a crime.");
    if (not(dilfind("witness_timer@justice", self)))
       dilcopy("witness_timer@justice()",self);
 
    if ((self.type == UNIT_ST_NPC) and (show))
-   {
-    jurisdiction := get_juris@justice();
-    dilcopy("activate_accuse@justice("+itoa(crime_type)+","+criminal.name+","+jurisdiction+")",self);
-   }
+      dilcopy("activate_accuse@justice("+itoa(crime_type)+","+criminal.name+","+jurisdiction+")",self);
 
    quit;
 }
@@ -596,14 +746,13 @@ dilbegin wanted_poster();
 var
    found : integer;
    msg : string;
-   wp : unitptr;
+   jd : unitptr;
    suspects : extraptr;
    u : unitptr;
    wanted_dead : string;
    wanted_alive : string;
    wanted_either : string;
    local_suspects : string;
-
 code
 {
    :start:
@@ -617,36 +766,26 @@ code
    wait (SFB_CMD, ((command ("look"))) and (argument=="board"));
    act("$1n looks at the wanted posters.", A_ALWAYS, activator, null, null, TO_ROOM);
 
+   jd := findsymbolic("database@justice");
 
-   suspects := self.extra;
-  
+   suspects := jd.extra;
+ 
    // this loops through the players connected to the game and displays anyone with
    // $reward estras.   It will also display characters with the OUTLAW flag set.
    //
    // $reward extras as stored on the criminal not on the board.
   
-   u:=ghead();
-   while ((u.type==UNIT_ST_PC) or (u.type==UNIT_ST_NPC)) 
-   {
-      if ("$reward" in u.extra)
-      {
-         wanted_dead := wanted_dead + u.extra.["$reward"].descr+ "<BR>";
-      }
-      else if (isset(u.charflags, CHAR_PROTECTED) and (isset(u.charflags, CHAR_OUTLAW)))      
-         wanted_alive := wanted_alive +u.name+" is wanted alive for imprisonment<br>";
-      else if (isset(u.charflags, CHAR_OUTLAW))
-         wanted_either := wanted_either + u.name+" is wanted dead or alive.<br>";
 
-      u:=u.gnext;
-   }
-
-   //loop trhought reward_board extras
+   //loop trhough reward_board extras
 
    while(suspects)
    {
       if ("$crime" in suspects.names) 
          local_suspects := local_suspects + suspects.descr+"<BR>";
-
+       else if ("$arrest" in suspects.names)
+         wanted_alive := wanted_alive + suspects.descr+ "<br>"; 
+       else if ("$reward" in suspects.names)
+         wanted_dead := wanted_dead + suspects.descr+ "<BR>"; 
       suspects := suspects.next;
    }
 
@@ -668,12 +807,12 @@ code
    else
       sendtext("None at this time.<br>", activator);
 
-   sendtext("<br><b><div class=cpy>Wanted Dead or Alive</b></div><br><br>", activator);
-
-   if (length(wanted_either) > 0)
-      sendtext(wanted_either+"<br>", activator);
-   else
-      sendtext("None at this time.<br>", activator);
+//   sendtext("<br><b><div class=cpy>Wanted Dead or Alive</b></div><br><br>", activator);
+//
+//   if (length(wanted_either) > 0)
+//      sendtext(wanted_either+"<br>", activator);
+//   else
+//      sendtext("None at this time.<br>", activator);
 
    sendtext("<br><b><div class=cpy>Suspects</b></div><br><br>",activator);
 
@@ -706,7 +845,8 @@ dilend
         [5] $crime_VICTIM_NAME
         [6] $crime_TICK UNTIL REMOVED FROM LIST
         [7] $crime_is_NPC (Y or N)     i
-        [8] $crime_CRIME_REPORTED 1 or 0
+        [8] $crime_Jurisdiction 
+        [9] $crime_CRIME_REPORTED 1 or 0
 
        Witness Data Elements:
         [0] $witness
@@ -715,6 +855,7 @@ dilend
         [3] $witness_CRIME_TYPE
         [4] $witness_PLAYERID
         [5] $witness_TICKS UNTIL REMOVED
+        [6] $witness_JURISDICTION
 */
 
 dilbegin  fnpri(FN_PRI_MISSION-1) accuse();
@@ -727,23 +868,23 @@ var
    criminal : string;
    crime_type : integer;
    crime : string;
-   wp : unitptr;
-   k : string;
-   k2 : string;
-   w_data :stringlist;
+   jd : unitptr;
+   w_data :string;
    i : integer;
    found : integer;
    wk : string;
    ck : string;
    w_ptr : extraptr;
    c_ptr : extraptr;
-   w_type : stringlist;
-   c_name : stringlist;
-   c_pid : stringlist;
-   c_type : stringlist;
-   c_v_name : stringlist;
-   c_reported : stringlist;
-   c_is_npc   : stringlist;
+   w_type : string;
+   c_name : string;
+   c_pid : string;
+   c_type : string;
+   c_v_name : string;
+   c_reported : string;
+   c_is_npc   : string;
+   c_juris : string;
+   update_name :string;
 code
 {
    :start:
@@ -811,39 +952,49 @@ code
       goto start;
    }
 
-   wp := findsymbolic("reward_board@udgaard");
-   wk := "$witness_"+criminal;
-   ck := "$crime_"+criminal;
+   jd := findsymbolic("database@justice");
+   
+   w_ptr := activator.extra;
+     while ("$witness" in w_ptr)
+      {
+        if (w_ptr.names.[1] == criminal)
+        {
+          c_ptr := w_ptr.names.[2] in jd.extra;
+              if (c_ptr)
+                goto doaccuse;
+        }
+        w_ptr := w_ptr.next;
+     }
 
-   w_ptr := wk in activator.extra;
-   c_ptr := ck in wp.extra;
+goto end;
 
-     if (not(w_ptr) or not(c_ptr))
-        goto end;
-     
-   w_data := split(w_ptr.names.[2],"_");
-   k := "$crime_"+w_data.[1];
-   k2 := w_ptr.names.[2];
-   if (k in c_ptr)
-   {
-      w_type := split(w_ptr.[k2].names.[3], "_");
-      c_name := split(c_ptr.[k].names.[2], "_");
-      c_pid := split(c_ptr.[k].names.[3], "_");
-      c_type := split(c_ptr.[k].names.[4],"_"); 
-      c_v_name := split(c_ptr.[k].names.[5], "_"); 
-      c_is_npc := split(c_ptr.[k].names.[7], "_");
-      c_reported := split(c_ptr.[k].names.[8], "_");
+:doaccuse:
+
+log("accuse: debug "+c_name);
+ 
+      w_type := w_ptr.names.[3];
+      c_name := c_ptr.names.[2];
+      c_pid := c_ptr.names.[3];
+      c_type := c_ptr.names.[4]; 
+      c_v_name := c_ptr.names.[5]; 
+      c_is_npc := c_ptr.names.[7];
+      c_juris := c_ptr.names.[8];
+      c_reported := c_ptr.names.[9]; 
+log("accuse: debug "+c_name);
       
       if ((crime_type == CRIME_MURDER) and
-          (atoi(c_type.[1]) != CRIME_MURDER) and
-          (atoi(c_type.[1]) != CRIME_PK))
+          (atoi(c_type) != CRIME_MURDER) and
+          (atoi(c_type) != CRIME_PK))
          goto end;
 
        if ((crime_type == CRIME_STEALING) and
-            (atoi(c_type.[1]) != CRIME_STEALING))
+            (atoi(c_type) != CRIME_STEALING))
          goto end;
-     
-       if (atoi(c_type.[1]) == atoi(w_type.[1]))
+       if (c_is_npc == "Y")
+          update_name := c_name+w_ptr.names.[2];
+       else
+          update_name := c_name;  
+       if (atoi(c_type) == atoi(w_type))
       {
          found := 1;
          act("$1n accuses $3t of $2t.", A_SOMEONE, activator, crime, criminal, TO_ROOM);
@@ -852,28 +1003,29 @@ code
                         A_SOMEONE, self, criminal, activator, TO_ROOM);
          if (activator.alignment > -1000)
            activator.alignment := activator.alignment +100;
-         subextra(activator.extra,k2);
+         subextra(activator.extra,w_ptr.names.[2]);
          if (not("$witness" in activator.extra))
             i := dildestroy("witness_timer@justice", activator);
 
-         if (atoi(c_reported.[1]) == 0)
+         if (atoi(c_reported) == 0)
          {
-            update_criminal@justice(self, c_name.[1], crime_type, atoi(c_pid.[1]), TRUE);
-             c_ptr.[k].names.[8] := itoa(1);
-            if (atoi(c_type.[1]) == CRIME_MURDER)
-               c_ptr.[k].descr := c_name.[1]+" has been accused in the "+crime+" of "+c_v_name.[1]+". This crime was witnessed  by: "+activator.name+".";
+            update_criminal@justice(self, update_name, crime_type, atoi(c_pid), TRUE);
+             c_ptr.names.[9] := itoa(1);
+            if (atoi(c_type) == CRIME_MURDER)
+               c_ptr.descr := c_name+" has been accused in the "+crime+" of "+c_v_name+". This crime was witnessed  by: "+activator.name+".";
             else
-                c_ptr.[k].descr := c_name.[1]+" has been accused of "+crime+" from "+c_v_name.[1]+". This crime was witnessed  by: "+activator.name+".";
-         }
+                c_ptr.descr := c_name+" has been accused of "+crime+" from "+c_v_name+". This crime was witnessed  by: "+activator.name+".";
+                sendto("save", jd);
+          }
          else
          {
-            update_criminal(self, c_name.[1], crime_type, atoi(c_pid.[1]), FALSE);
-            c_ptr.[k].descr := wp.extra.[k].descr +"<br>This crime was also confirmed by "+activator.name+".";
+            update_criminal(self, update_name, crime_type, atoi(c_pid), FALSE);
+            c_ptr.descr := c_ptr.descr +"<br>This crime was also confirmed by "+activator.name+".";
+            sendto("save", jd);
          }
       }
 
-
-     }
+   
 
    :end: 
    if (found == 0)
@@ -883,7 +1035,6 @@ code
    goto start;
 }
 dilend
-
 
 
 dilbegin integer crime_check(att:unitptr, def:unitptr);
@@ -1032,7 +1183,45 @@ code
 }
 dilend
 
+dilbegin dbclear_npc(u : unitptr);
+var
+  r_extra : extraptr;
+  c_extra : extraptr;
+  a_extra : extraptr;
+code
+{
 
+c_extra := "$crime" in u.extra;
+
+while (c_extra)
+{
+   if (c_extra.names.[7] == "Y")
+      subextra(u.extra, c_extra.names.[1]);
+ c_extra := c_extra.next;
+}
+a_extra := "$arrest" in u.extra;
+
+while (a_extra)
+{
+   if (a_extra.names.[3] == "Y")
+      subextra(u.extra, a_extra.names.[1]);
+ a_extra := a_extra.next;
+}
+
+r_extra := "$reward" in u.extra;
+
+while (r_extra)
+{
+  if (length(r_extra.names) > 1)
+  { if (r_extra.names.[5] == "Y")
+      subextra(u.extra, r_extra.names.[1]);
+  }
+   r_extra := r_extra.next;
+}
+
+return;
+}
+dilend
 
 // blow_whistle is to be placed e.g. on guards and shopkeepers and will allow them
 // to call for help. Any char in the zone which has a protect_lawful has a chance
@@ -1114,26 +1303,38 @@ Do a 'wstat board extra' to see the crime data on this board"
 
 type ITEM_OTHER
 
-// Make a DIL to save
-// Make a DIL to zap obsoleted extras on this board
 
+// Make a DIL to save
+// There should be a DIL here which deletes obsoleted $crimes and others
+// Make a DIL to zap obsoleted extras on this board
+// from the board. I do suggest a long time for players and a shorter time
+// for NPCs.
+//
+
+
+// Use sendto("save", u); where u is a unitptr pointing to the board.
+// The message will cause the board to save itself.
+//
 dilbegin aware save_board();
 code
 {
    heartbeat := PULSE_SEC * 60;
 
 :loop:
-   // Replace this save test with a send_to_dil message.
+   wait(SFB_MSG, argument == "save");
+   //
    // Once a message is received, the board is saved.
-   // Possibly pause for 10 seconds before saving so we don't
-   // save on every modify. Adding extras tend to happen in chunks.
-   pause;  
+   // Pause for a minute  so we act like a cache. Crimes tend to
+   // occur in waves. 
+   //
+   wait(SFB_TICK, TRUE);
    store(self, "database", TRUE);
    log("JUSTICE: database saved.");
    goto loop;
 }
 dilend
 
+dilcopy crime_stopper@justice();
 end
 
 
@@ -1153,6 +1354,9 @@ light 5
 // This code only executes once when the game server boots.
 // Loads justice boards
 dilbegin aware reload_justice();
+external
+        dbclear_npc@justice(u : unitptr);
+
 var
 	u : unitptr;
 
@@ -1181,6 +1385,7 @@ code
    if (u)  // If we loaded a database make sure there isn't
    {
       log("JUSTICE: Successfully loaded the global justice database");
+      dbclear_npc@justice(u);
       quit;
    }
 
@@ -1198,8 +1403,6 @@ code
    quit;
 }
 dilend
-
-
 
 
 end

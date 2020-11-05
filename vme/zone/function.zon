@@ -111,7 +111,7 @@ var
    amount:integer;
    buf:string;
    reward : extraptr;
-   r_data : stringlist;
+   r_data : string;
    r_gold : integer;
    r_xp : integer;
    i : integer;
@@ -132,15 +132,15 @@ code
       goto start;
    }
 
-   r_data := split(reward.names.[1], "_");
-   r_gold := atoi(r_data.[1]);
+   r_data := reward.names.[2];
+   r_gold := atoi(r_data);
    if (r_gold > PLATINUM_MULT)
    {
       log("reward_give() gold reward of " + itoa(r_gold) + " too high, limiting to 1 PP");
       r_gold := PLATINUM_MULT;  // Make sure this doesn't become more than 1 PP      
    }
-
-   r_xp := atoi(r_data.[2]);
+   r_data := reward.names.[3];
+   r_xp := atoi(r_data);
    if (r_xp > 1000)
    {
       log("reward_give() XP reward of " + itoa(r_xp) + " too high, limiting to 1,000");
@@ -7193,6 +7193,7 @@ dilbegin aware fnpri(FN_PRI_RESCUE) teamwork(lst: string);
 
 var
    u     : unitptr;
+   u2    : unitptr;
 	sl    : stringlist;
 	i     : integer;
 	gotcha: integer;
@@ -7220,10 +7221,13 @@ code
    heartbeat:= PULSE_VIOLENCE;
 
    wait(SFB_TICK, TRUE);
-   wait(SFB_COM, ((self.position > POSITION_SLEEPING) and (self.position != POSITION_FIGHTING)) );
+   wait(SFB_COM, ((self.position > POSITION_SLEEPING) and (self.position != POSITION_FIGHTING)));
 
-   if (self.position < POSITION_STANDING) exec ("stand", self);
-   if (self.position < POSITION_STANDING) goto init;
+   if (self.position < POSITION_STANDING)
+   {
+      exec("stand", self);
+      goto init;
+   }
 
    gotcha:= FALSE;
 
@@ -7255,13 +7259,19 @@ code
 
    	if (gotcha == TRUE)
       {
+         u2 := u.fighting;
+         secure(u2, init);
+         secure(u, init);
+         heartbeat := 4 * PULSE_SEC;
+         pause;
+         set_fighting(self, u2);
          act("$1n bravely comes to your assistance.",
                A_ALWAYS, self, null, u, TO_VICT);
          act("$1n bravely comes to $3n's assistance.",
                A_ALWAYS, self, null, u, TO_NOTVICT);
-
-        set_fighting(self,u.fighting);
-        break;
+         unsecure(u);
+         unsecure(u2);
+         break;
 		}
 	}
 

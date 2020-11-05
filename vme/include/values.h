@@ -193,6 +193,8 @@ END HEADER*/
 
 #define WPN_GREAT_SWORD  11  /* Two Handed Sword */
 #define WPN_LONG_SWORD   17  /* One handed sword */
+#define WPN_BROAD_SWORD  16  // 1H
+#define WPN_CLAYMORE     53  // 1H
 #define WPN_SCIMITAR     12  /* One handed, slim curved blade */
 #define WPN_FALCHION     14  /* One handed, broad curved blade */
 #define WPN_SHORT_SWORD  19
@@ -241,7 +243,6 @@ END HEADER*/
 // Map the old surplus weapons to the more generic weapon types.
 // E.g. the broad sword is the same skill category as long sword.
 
-#define WPN_BROAD_SWORD  WPN_LONG_SWORD
 #define WPN_LUCERN_HAMMER WPN_HALBERD
 #define WPN_KATANA WPN_SCIMITAR
 #define WPN_WAKIZASHI WPN_SCIMITAR
@@ -262,7 +263,6 @@ END HEADER*/
 #define WPN_BALL_CHAIN WPN_MORNING_STAR
 #define WPN_FOOT_LANCE WPN_LANCE
 #define WPN_POLE_AXE WPN_BARDICHE
-#define WPN_CLAYMORE WPN_LONG_SWORD
 #define WPN_DIRK WPN_DAGGER
 #define WPN_ICE_PICK WPN_HAND_AXE
 #define WPN_RANSEUR WPN_SPEAR
@@ -290,7 +290,6 @@ END HEADER*/
 // #define WPN_HAND_HAMMER  72  
 ///#define WPN_KATANA       13
 ///#define WPN_KOPESH       15
-///#define WPN_BROAD_SWORD  16
 ///#define WPN_WAKIZASHI    41
 /// #define WPN_FIGHTING_STAFF 45 /* Two handed */
 /// #define WPN_SABER        46
@@ -299,7 +298,6 @@ END HEADER*/
 ///#define WPN_SHOCK_LANCE  50
 /// #define WPN_PIKE         51
 ///#define WPN_GREAT_AXE    52
-///#define WPN_CLAYMORE     53
 ///#define WPN_FAUCHARD     57
 ///#define WPN_SAPPARA      58
 ///#define WPN_POLE_CLEAVER 59

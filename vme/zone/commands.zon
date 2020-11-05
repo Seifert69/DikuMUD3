@@ -12760,20 +12760,19 @@ dilend
 
 
 
-/* The cuff skill.
-
-   The skill is implemented on the hand cuffs themselves.
-
-*/
-
+// do_cuff The cuff skill.
+//
+//   The skill is implemented on the hand cuffs themselves.
+//
 dilbegin cuff(arg : string);
 code
 {
-   act("You seem to be missing a pair of hand cuffs.",A_ALWAYS, self, null,
-null, TO_CHAR);
+   act("You seem to be missing a pair of hand cuffs.",A_ALWAYS, self, null, null, TO_CHAR);
    quit;
 }
 dilend
+
+
 
 // do_evaluate
 dilbegin evaluate(arg : string);

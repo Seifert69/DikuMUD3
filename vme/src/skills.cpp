@@ -89,28 +89,6 @@ class skill_collection g_SplColl(SPL_TREE_MAX + 1);
 struct damage_chart_type weapon_chart[WPN_TREE_MAX];
 struct wpn_info_type wpn_info[WPN_TREE_MAX];
 
-/*
-struct profession_cost spell_prof_table[SPL_TREE_MAX + 1];
-const char *spl_text[SPL_TREE_MAX + 1];
-struct tree_type spl_tree[SPL_TREE_MAX + 1];
-sbit8 racial_spells[PC_RACE_MAX][SPL_TREE_MAX + 1];
-
-struct profession_cost skill_prof_table[SKI_TREE_MAX + 1];
-const char *ski_text[SKI_TREE_MAX + 1];
-struct tree_type ski_tree[SKI_TREE_MAX + 1];
-sbit8 racial_skills[PC_RACE_MAX][SKI_TREE_MAX + 1];
-
-struct profession_cost ability_prof_table[ABIL_TREE_MAX + 1];
-const char *abil_text[ABIL_TREE_MAX + 1];
-struct tree_type abil_tree[ABIL_TREE_MAX + 1];
-sbit8 racial_ability[PC_RACE_MAX][ABIL_TREE_MAX + 1];
-
-struct profession_cost weapon_prof_table[WPN_TREE_MAX + 1];
-const char *wpn_text[WPN_TREE_MAX + 1];
-struct tree_type wpn_tree[WPN_TREE_MAX + 1];
-sbit8 racial_weapons[PC_RACE_MAX][WPN_TREE_MAX + 1];
-*/
-
 /* ===================================================================== */
 
 skill_collection::skill_collection(int nSize)
@@ -302,6 +280,7 @@ int chart_damage(int roll, struct damage_chart_element_type *element)
         return element->basedam + ((roll - element->offset) / element->alpha);
 }
 
+
 /* Size is for natural attacks to limit max damage for such */
 int chart_size_damage(int roll, struct damage_chart_element_type *element,
                       int lbs)
@@ -319,19 +298,23 @@ int chart_size_damage(int roll, struct damage_chart_element_type *element,
         switch (weight_size(lbs))
         {
         case SIZ_TINY:
-            roll = MIN(100, roll);
+            //roll = MIN(100, roll);
+            roll *= 0.5;
             break;
 
         case SIZ_SMALL:
-            roll = MIN(110, roll);
+            //roll = MIN(110, roll);
+            roll *= 0.6;
             break;
 
         case SIZ_MEDIUM:
-            roll = MIN(130, roll);
+            //roll = MIN(130, roll);
+            roll *= 0.7;
             break;
 
         case SIZ_LARGE:
-            roll = MIN(150, roll);
+            //roll = MIN(150, roll);
+            roll *= 0.8;
             break;
         }
 
@@ -1068,6 +1051,8 @@ static void weapon_read(void)
         {
             if (g_WpnColl.text[idx])
             {
+                if (g_WpnColl.text[idx] && g_WpnColl.text[idx][0])
+                    slog(LOG_ALL, 0, "Weapon boot error: Weapon name alreay assigned as %s and replaced as %s", g_WpnColl.text[idx], pCh);
                 free((char *)g_WpnColl.text[idx]);
                 g_WpnColl.text[idx] = NULL;
             }
