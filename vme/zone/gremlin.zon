@@ -73,7 +73,6 @@ zonex	: 	string;
 titlex	: 	string;
 exdp	: 	extraptr;
 burn	:	string;
-burn2	:
 
 code
 {
@@ -114,7 +113,6 @@ code
 		{
 			burn := "Your "+item.title+" burns you and you drop it to the ground.<br>This does not belong to you!";
 			dilcopy ("ply_restrict@function("+pc.name+",0,25,"+burn+")",item);
-			dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
 			log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - personalized for "+pc.name+".");
 		}
 		else
