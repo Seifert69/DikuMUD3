@@ -111,7 +111,7 @@ code
 		// item is  personalized
 		if(pc.name == exdp.descr)
 		{
-			burn := "Your "+item.title+" burns you, and drops to the ground.<br>The "+item.title+" does not belong to you!";
+			burn := "Your "+item.title+" burns you, and drops to the ground. The "+item.title+" does not belong to you!";
 			dilcopy ("ply_restrict@function("+pc.name+",0,25,"+burn+")",item);
 			log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - personalized for "+pc.name+".");
 		}
@@ -127,6 +127,7 @@ code
 	unsecure(olditem);
 	link(item, pc);
 	destroy(olditem);
+	exec("say All fixed up, "+pc.name+"!", self);
 	act("The fixer hands you "+item.title+".",A_SOMEONE, pc, null, null, TO_CHAR); 
 	act("The fixer hands "+pc.name +" "+ item.title+".",A_SOMEONE, pc, null, null, TO_REST); 
 	log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - has been fixed.");
@@ -136,8 +137,8 @@ code
 :return_old:
 	
 	destroy(item);
-	act("The fixer returns your "+item.title+".",A_SOMEONE, pc, null, null, TO_CHAR); 
-	act("The fixer returns "+pc.name+" their "+item.title+".",A_SOMEONE, pc, null, null, TO_REST); 
+	act("The fixer returns "+item.title+".",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("The fixer returns "+pc.name+"'s "+item.title+".",A_SOMEONE, pc, null, null, TO_REST); 
 	log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - has been fixed.");
 	unsecure(olditem);
 	unsecure(pc);
