@@ -75,7 +75,6 @@ exdp	: 	extraptr;
 
 code
 {
-
 	heartbeat:= PULSE_SEC*3;
 	
 :start:
@@ -85,7 +84,7 @@ code
 	pc := activator;
 	secure(pc, lostpc);
 	olditem := medium;
-	secure(olditem, lostpc)
+	secure(olditem, lostpc);
 	namex := olditem.nameidx;
 	zonex := olditem.zoneidx;
 	titlex := olditem.title;
@@ -132,7 +131,7 @@ code
 		}
 	}
 	addextra(item.extra, {FIXED_ITEM}, "");
-	unsecure(olditem)
+	unsecure(olditem);
 	link(item, pc);
 	destroy(olditem);
 	log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - has been fixed.");
