@@ -543,7 +543,7 @@ code
 	
 	item := load("barnham_dagger@gremlin");
 	item.height := pc.height;
-	dilcopy ("ply_restrict@function("+pc.name+",0,10,"")",item);
+	dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
 	link(item, pc);
 	act("<br>Barnham hands you a gleaming dagger.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	addextra(pc.quests, {EXPLORE_ONGOING}, "");
