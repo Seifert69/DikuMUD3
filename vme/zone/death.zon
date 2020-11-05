@@ -783,13 +783,14 @@ code
          item:=item.next;
       }
    } 
-   
+//load Justice Database 
+ jd := findsymbolic("database@justice");
+  
 //transfer reward infor to corpse if found. 
    reward_exp := "$reward" in self.extra;
    if (reward_exp)
    {
      r_id := reward_exp.names.[1];
-     jd := findsymbolic("database@justice");
      r_key := r_id;
      jd_ptr := r_key in jd.extra;
      if(jd_ptr)
@@ -815,6 +816,8 @@ code
       store (crp,"corpse_"+self.name+"."+itoa(rltime),TRUE);
       dilcopy("partial_get@death",crp);
       
+      //remove all entreis from the justice database
+      subextra(jd.extra, self.name);
    }
    else
       addextra (crp.extra,{CORPSE_TIME}, itoa(rltime));

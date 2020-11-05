@@ -78,7 +78,7 @@ END HEADER*/
       names.[2] GOLD_TO_BE_REWARED
       names.[3] XP_REWARED
       names.[4] JURISDICTION
-    
+      named.[5] IS NPC (Y or N) 
       The extra.descr will be displayed on the reward_board.
        "
       A reward of 250000 gold has been offered for the head of Tank
@@ -449,6 +449,7 @@ dilbegin update_criminal(deputy : unitptr, cr_name : string, crime_type : intege
 external
    crime_counter@justice(criminal : unitptr, incr : integer, first_accuse : integer);
    set_reward_char(criminal : unitptr, incr : integer);
+   set_arrest(criminal : unitptr, incr : integer);
 var
    criminal : unitptr;
    incr : integer;
@@ -464,6 +465,7 @@ code
    if(criminal.type == UNIT_ST_NPC)
    {
      set(criminal.charflags, CHAR_OUTLAW | CHAR_PROTECTED);
+      set_arrest(criminal, CRIME_STEALING);
      return;
    }
 
@@ -1201,18 +1203,20 @@ a_extra := "$arrest" in u.extra;
 
 while (a_extra)
 {
-   if (a_extra.names.[4] == "Y")
-      subextra(u.extra, c_extra.names.[1]);
- a_extra := c_extra.next;
+   if (a_extra.names.[3] == "Y")
+      subextra(u.extra, a_extra.names.[1]);
+ a_extra := a_extra.next;
 }
 
 r_extra := "$reward" in u.extra;
 
 while (r_extra)
 {
-   if (r_extra.names.[5] == "Y")
+  if (length(r_extra.names) > 1)
+  { if (r_extra.names.[5] == "Y")
       subextra(u.extra, r_extra.names.[1]);
- r_extra := c_extra.next;
+  }
+   r_extra := r_extra.next;
 }
 
 return;
