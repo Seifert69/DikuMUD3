@@ -1009,10 +1009,13 @@ code
    
 // Change player arrest descr to reflect that the char is in jail.
 
+if ("$arrest" in self.extra)
+{
    jd := findsymbolic("database@justice");
    id := self.extra.["$arrest"].names.[1];
    jd.extra.[id].descr := self.name+" is currently serving time in jail.";
- 
+} 
+
    :loop:
    pause;
 

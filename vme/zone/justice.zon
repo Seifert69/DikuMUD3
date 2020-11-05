@@ -781,8 +781,10 @@ code
    while(suspects)
    {
       if ("$crime" in suspects.names) 
-         local_suspects := local_suspects + suspects.descr+"<BR>";
-       else if ("$arrest" in suspects.names)
+      {  if(suspects.names.[9] == "0")
+           local_suspects := local_suspects + suspects.descr+"<BR>";
+      }
+      else if ("$arrest" in suspects.names)
          wanted_alive := wanted_alive + suspects.descr+ "<br>"; 
        else if ("$reward" in suspects.names)
          wanted_dead := wanted_dead + suspects.descr+ "<BR>"; 
