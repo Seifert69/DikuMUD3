@@ -1133,18 +1133,7 @@ code
 
    if (activator.charflags & CHAR_PROTECTED)
    {
-      //unequip(u);
-
-      //act("$3n arrests $1n and cuffs $1m.", A_SOMEONE, activator, null, self, TO_ROOM);
-      //act("You are handcuffed and arrested by $3n.", A_SOMEONE, activator, null, self, TO_CHAR);
-
-      //follow(activator, self);
-
       u := load("cuffs@midgaard");
-
-      //link(u, activator);
-      //addequip(u, WEAR_WRIST_R);
-
 
       cuff_target(self, activator, u);
 
@@ -1154,7 +1143,7 @@ code
    {
       unset(activator.charflags, CHAR_SELF_DEFENCE);
       // If we have several chars with the same name, this causes havoc
-      // exec("kill "+activator.name, self);
+      //     exec("kill "+activator.name, self);
       set_fighting(self, activator);
    }
 
