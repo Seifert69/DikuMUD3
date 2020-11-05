@@ -114,7 +114,7 @@ code
 	if (exdp)
 	{
 		// item is  personalized
-		if(pc.name in exdp.names)
+		if(pc.name == exdp.names[0])
 		{
 			dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
 			log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - personalized for "+pc.name+".");
