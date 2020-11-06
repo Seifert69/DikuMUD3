@@ -10781,7 +10781,6 @@ end
 
 %mobiles
 
-                               janitor2
 
 fixer
 names {"the fixer", "fixer", "man"}
@@ -10798,7 +10797,8 @@ money 2 SILVER_PIECE
 
 dilcopy fix@udgaard();
 end
-							   
+						
+                           janitor2	   
 names {"janitor"}
 title "the janitor"
 descr "A janitor is walking around, cleaning up."
