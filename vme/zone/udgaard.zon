@@ -164,8 +164,24 @@ code
 	titlex := olditem.title;
 	exdp := "$ply_restrict" in olditem.extra;
 
+	if (olditem.zoneidx == treasure)
+	{
+		// do not fix PI. See admin individually.
+		log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - is a PI. Do not fix.");
+		exec("say I'm afraid I can fix an item with this kind of power, "+pc.name+"!", self);
+		goto no_pi;
+	}
+	
 	item := load(namex + "@" + zonex);
+	
 	if (FIXED_ITEM in olditem.extra)
+	{
+		// item has already been fixed
+		log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - was previously fixed.");
+		exec("say This has already been fixed, "+pc.name+"!", self);
+		goto return_old;
+	}
+	if (olditem.extra)
 	{
 		// item has already been fixed
 		log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - was previously fixed.");
@@ -209,9 +225,12 @@ code
 :return_old:
 	
 	destroy(item);
+
+:no_pi:
+
 	act("The fixer returns "+item.title+".",A_SOMEONE, pc, null, null, TO_CHAR); 
 	act("The fixer returns "+pc.name+"'s "+item.title+".",A_SOMEONE, pc, null, null, TO_REST); 
-	log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - has been fixed.");
+	log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - has been returned to player.");
 	unsecure(olditem);
 	unsecure(pc);
 	link(olditem, pc);
