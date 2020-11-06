@@ -3425,7 +3425,20 @@ link (self,self.outside.outside);
 goto start;
 }
 dilend
-/* dilcopy ("ply_restrict@function("+pc.name+",0,25,\""\ ",item); */
+dilbegin burn_ply();
+code
+{
+  act ("Your $2n burns you and you drop it to the ground.",
+  A_ALWAYS,self.outside,self,null,TO_CHAR);
+  act ("$1n's $2n burns $1m and $1e drops it to the ground.",
+  A_SOMEONE,self.outside,self,null,TO_REST);
+  act ("You really shouldn't try to use someone else's personal item.",
+  A_ALWAYS,self.outside,null,null,TO_CHAR);
+   return;
+}
+dilend
+
+/* dilcopy ("ply_restrict@function("+pc.name+",0,25,burn_ply@function",item); */
 dilbegin ply_restrict
 (person:string,damage:integer,percent:integer,action:string);
 var
