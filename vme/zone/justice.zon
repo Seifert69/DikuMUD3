@@ -1252,12 +1252,13 @@ var
 code
 {
    :start:
-   wait(SFB_COM, command(CMD_AUTO_COMBAT));
    heartbeat := PULSE_VIOLENCE;
+   wait(SFB_COM, command(CMD_AUTO_COMBAT));
+
    vict := activator.fighting;
    secure(vict,nope);
 
-   if (vict==null) goto nope; 
+   if (vict == null) goto nope; 
    if ((activator.type!=UNIT_ST_PC) and (activator.type!=UNIT_ST_NPC)) goto nope;     
    if (activator.position < POSITION_STUNNED) goto nope;
 
@@ -1274,7 +1275,7 @@ code
             
    if ((self.position > POSITION_SLEEPING) and (activator.position == POSITION_FIGHTING) and (visible(self,activator)))
    {
-      if(crime_check@justice(activator, vict))
+      if (crime_check@justice(activator, vict))
       {
          act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",A_SOMEONE,self,null,null,TO_ROOM);    
          
@@ -1282,10 +1283,15 @@ code
          while (rm.type != UNIT_ST_ROOM)
             rm := rm.outside;
          sendtoalldil("WHISTLE "+rm.zoneidx+" "+rm.nameidx, "whistlisten@justice");
-
-         // i:= getinteger(DIL_GINT_CALLGUARDS, self, 0); 
          set_fighting(self, activator);
          unset(vict.charflags, CHAR_SELF_DEFENCE);
+
+         heartbeat := PULSE_SEC * 5 * 60;
+
+         :waitloop:
+         // Don't whistle for 5 minutes unless vict is lost (secure)
+         pause;
+
          unsecure(vict);
          goto start;
       } 
