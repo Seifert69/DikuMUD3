@@ -857,11 +857,11 @@ code
       goto lost_pc;
    }
 	
-	i := 0;
+	i := -1;
 	while (i < 13)
 	{
 		i := i+1;
-		if (((dest in dest_list.[i]) and (g_list.[i] in expd.names)) or (dest in dest_list.[13]))
+		if (((dest in dest_list.[i]) and (g_list.[i] in expd.names)) or (dest in dest_list.[12]))
 			i := 777;
 	}
 	if (i != 777)
@@ -883,7 +883,7 @@ if (pc.level > 15)
 	{
 	act("This only works for players less than or equal to level 15.",
 		A_ALWAYS,pc,null,null,TO_CHAR);
-	act ("Your medallion to work.",
+	act ("Your medallion explodes in a flash of light!",
 		A_ALWAYS,pc,null,null,TO_CHAR);
 	destroy (self);
 	}
