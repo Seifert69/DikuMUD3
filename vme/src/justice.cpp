@@ -245,12 +245,12 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
                if (prg3)
                {
                   prg3->waitcmd = WAITCMD_MAXINST - 1;
-                  prg2->fp->vars[0].val.unitptr = criminal;
+                  prg3->fp->vars[0].val.unitptr = criminal;
                   prg3->fp->vars[1].val.unitptr = UVI(j);
                   prg3->fp->vars[2].val.integer = crime_serial_no;
                   prg3->fp->vars[3].val.integer = crime_type;
                   prg3->fp->vars[4].val.integer = active;
-                  dil_add_secure(prg3, criminal, prg2->fp->tmpl->core);
+                  dil_add_secure(prg3, criminal, prg3->fp->tmpl->core);
                   dil_add_secure(prg3, UVI(j), prg3->fp->tmpl->core);
                   dil_activate(prg3);
                }
