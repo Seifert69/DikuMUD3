@@ -450,11 +450,15 @@ code
 dilend
 
 
-dilbegin awareness_check(thief : unitptr, victim : unitptr, observer : unitptr, skill : integer, msg : string);
+// count = how many have been triggered. If 0 and someone becomes aware a new crime is added 
+// returns 1 if a witness became aware, 0 otherwise
+//
+dilbegin integer awareness_check(thief : unitptr, victim : unitptr, observer : unitptr, crimeno: integer, count : integer, skill : integer, msg : string);
 external
    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
-   //set_witness(criminal : unitptr, crime_no : integer, crime_type : integer, show : integer);
+   set_witness@justice(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer);
+   add_crime@justice(criminal : unitptr, vict : unitptr, crime_type: integer, crime_no : integer, crime_clear : integer);
 
 var
    hm : integer;
@@ -469,11 +473,22 @@ code
    if (hm >= 0)
    {
       act(msg, A_SOMEONE, observer, thief, victim, TO_CHAR);
-      //if (visible(observer, thief) and visible(observer, victim))
-      //   set_witness(thief, )
+
+      if (visible(observer, thief) and visible(observer, victim))
+      {
+         if ((observer.type == UNIT_ST_NPC) and (not isset(observer.charflags , CHAR_PROTECTED)))
+            return(0);
+            
+         if (count == 0)
+         {
+            add_crime@justice(thief, victim, CRIME_STEALING, crimeno, PULSE_SEC * 60 * 60);
+         }
+         set_witness@justice(thief, observer, crimeno, CRIME_STEALING, TRUE);
+         return(1);
+      }
    }
 
-   return;
+   return(0);
 }
 dilend
 
@@ -488,7 +503,7 @@ external
    provoked_attack (victim : unitptr, ch : unitptr);
    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
-   awareness_check(thief : unitptr, victim : unitptr, observer : unitptr, skill : integer, msg : string);
+   integer awareness_check(thief : unitptr, victim : unitptr, observer : unitptr, crimeno: integer, count : integer, skill : integer, msg : string);
 
 var
    skilla  :  integer;
@@ -502,6 +517,7 @@ var
    t       :  string;
    temp    : string;
    ti      : integer;
+   crimeno : integer;
 
 code
 {
@@ -618,7 +634,7 @@ code
       act("You see $1n steal something from $3n...$3e doesn't seem amused!",
           A_SOMEONE, self, targ, vict, TO_NOTVICT);
       link(targ, self);
-      provoked_attack (vict, self);
+      provoked_attack(vict, self);
       logcrime(self, vict, CRIME_STEALING);
       send_done("steal",self,targ,vict,hm,arg,null);
       quit;
@@ -633,10 +649,20 @@ code
    //
    // awareness_check(thief, victim, SKI_STEAL)
    //
+
+   crimeno := getinteger(DIL_GINT_CRIMENO, null, 0); // May not be used
+   hm := 0;
+
    foreach (UNIT_ST_PC | UNIT_ST_NPC, u)
    {
-      if ((u != self) and (u != targ))
-         awareness_check(self, targ, u, SKI_STEAL, "You notice $2n stealing something from $3n");
+      if ((u != self) and (u != vict))
+      {
+         log("foreach got observer " + u.name);
+         ti := awareness_check(self, vict, u, crimeno, hm, SKI_STEAL, "You notice $2n stealing something from $3n");
+
+         if (ti)
+            hm := hm + 1;
+      }
    }
 
    send_done("steal",self,targ,vict,hm,arg,null);

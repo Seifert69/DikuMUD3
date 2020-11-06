@@ -525,13 +525,13 @@ code
    }
 
 
-  juris := get_juris@justice();
+   juris := get_juris@justice();
 
-  if (criminal.type == UNIT_ST_NPC)
-  {
+   if (criminal.type == UNIT_ST_NPC)
+   {
      addstring(criminal.names,criminal.name+itoa(crime_no));
      is_npc := "Y";
-  } 
+   } 
    else
       is_npc := "N";
  
@@ -554,7 +554,8 @@ code
     
    addextra(wp.extra, crime_list, desc); 
    sendto("save", wp);
-   quit;
+
+   return;
 }
 dilend
 
@@ -707,10 +708,10 @@ var
 code
 { 
    if (criminal == witness)
-      quit;
+      return;
 
    if ((witness.type == UNIT_ST_NPC) and (not isset(witness.charflags , CHAR_PROTECTED)))
-      quit;
+      return;
 
    if (show)
    {
@@ -733,7 +734,7 @@ code
    if ((witness.type == UNIT_ST_NPC) and (show))
       dilcopy("activate_accuse@justice("+itoa(crime_type)+","+criminal.name+","+jurisdiction+")", witness);
 
-   quit;
+   return;
 }
 dilend
 
