@@ -18,6 +18,7 @@ END HEADER*/
 #define BOLDIN_HANDOFF  "Feeding Boldin Complete"
 #define EXPLORE_ONGOING  "Exploring Valhalla Quest Ongoing"
 #define EXPLORE_COMPLETE "Exploring Valhalla Complete"
+#define FIXED_ITEM "$fixed"
 
 /* ================================================================== */
 /*                                ZONE                                */
@@ -61,7 +62,6 @@ ability to succeed outside of the supported newbie process.
 
 -Sender
 */
-
 
 dilbegin boldin_request();
 var
@@ -459,7 +459,7 @@ code
 	
 	item := load("barnham_dagger@gremlin");
 	item.height := pc.height;
-	//dilcopy ("ply_restrict@function("+pc.name+",0,10,"")",item);
+	dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
 	link(item, pc);
 	act("<br>Barnham hands you a gleaming dagger.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	addextra(pc.quests, {EXPLORE_ONGOING}, "");
@@ -1161,6 +1161,18 @@ exp 200
 money 2 SILVER_PIECE
 
 dilcopy wander_zones@function ("gremlin", 30, 0,0);
+end
+
+fixer
+names {"the fixer", "fixer"}
+title "the fixer"
+descr "The fixer glares at you."
+extra {}
+"This is the fixer. He fixes things"
+M_AVG_HUMAN(100,SEX_MALE)
+money 2 SILVER_PIECE
+
+dilcopy fix@gremlin();
 end
 
 %objects
