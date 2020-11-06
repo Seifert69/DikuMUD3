@@ -27,6 +27,8 @@ from moving to fjord and grotto thus depriving newbies access. */
 
 #include <macros.h>
 
+#define FIXED_ITEM "$fixed"
+
 %zone udgaard
 
 title "Village of Udgaard@Mainland"
