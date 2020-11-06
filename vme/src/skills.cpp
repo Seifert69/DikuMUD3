@@ -1,6 +1,6 @@
 /*
  $Author: All $
- $RCSfile: skills.cpp,v $
+ $RCSfile: s.cpp,v $
  $Date: 2003/11/29 03:31:16 $
  $Revision: 2.3 $
  */
@@ -81,13 +81,17 @@ struct race_info_type race_info[PC_RACE_MAX];
 
 struct damage_chart_type spell_chart[SPL_TREE_MAX];
 
-class skill_collection g_AbiColl(ABIL_TREE_MAX + 1);
-class skill_collection g_WpnColl(WPN_TREE_MAX + 1);
-class skill_collection g_SkiColl(SKI_TREE_MAX + 1);
-class skill_collection g_SplColl(SPL_TREE_MAX + 1);
-
 struct damage_chart_type weapon_chart[WPN_TREE_MAX];
 struct wpn_info_type wpn_info[WPN_TREE_MAX];
+
+// I had to move these to modify.cpp of the member function was
+// called before the class constructor ! :-/ Yikes.
+//
+//class skill_collection g_AbiColl(ABIL_TREE_MAX + 1);
+//class skill_collection g_WpnColl(WPN_TREE_MAX + 1);
+//class skill_collection g_SkiColl(SKI_TREE_MAX + 1);
+//class skill_collection g_SplColl(SPL_TREE_MAX + 1);
+
 
 /* ===================================================================== */
 
@@ -95,12 +99,17 @@ skill_collection::skill_collection(int nSize)
 {
    CREATE(prof_table, struct profession_cost, nSize);
    CREATE(text, const char *, nSize);
+   assert(this->text);
    CREATE(tree, tree_type, nSize);
 
    for (int i = 0; i < PC_RACE_MAX; i++)
       CREATE(racial[i], sbit8, nSize);
 }
 
+const char **skill_collection::gettext(void)
+{
+    return this->text;
+}
 
 /* ===================================================================== */
 

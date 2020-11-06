@@ -3329,6 +3329,11 @@ void dilfe_gint(register class dilprg *p)
                 v->val.num = 1;
             break;
       
+        case DIL_GINT_CRIMENO:
+            int new_crime_serial_no(void);
+            v->val.num = new_crime_serial_no();
+            break;
+
         default:
             v->type = DILV_FAIL; /* failed */
             slog(LOG_ALL, 0, "getinteger() was given incorrect index %d by DIL %s@%s.",

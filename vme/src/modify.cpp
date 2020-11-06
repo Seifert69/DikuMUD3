@@ -141,6 +141,12 @@ static const char *unit_field_names[MAX_SET_FIELDS + 1] = {
     "lifespan",
     "profession", NULL};
 
+// These are oddly placed here because they need to initialize before used below
+class skill_collection g_AbiColl(ABIL_TREE_MAX + 1);
+class skill_collection g_WpnColl(WPN_TREE_MAX + 1);
+class skill_collection g_SkiColl(SKI_TREE_MAX + 1);
+class skill_collection g_SplColl(SPL_TREE_MAX + 1);
+
 struct field_type unit_field_data[MAX_SET_FIELDS + 1] = {
     {UT_UNIT, AT_STR, 0, 200, 200, 253},                  /* add-name        */
     {UT_UNIT, AT_STR, 0, 200, 200, 253},                  /* del-name        */
@@ -191,14 +197,14 @@ struct field_type unit_field_data[MAX_SET_FIELDS + 1] = {
     {UT_CHAR, AT_BIT, char_flags, 200, 200, 253},         /* char-flags      */
     {UT_CHAR, AT_VAL, 0, 200, 200, 240},                  /* mana            */
     {UT_CHAR, AT_VAL, 0, 200, 200, 240},                  /* endurance       */
-    {UT_CHAR, AT_TYP, g_WpnColl.text, 200, 200, 253},     /* attack-type     */
+    {UT_CHAR, AT_TYP, g_WpnColl.gettext(), 200, 200, 253},     /* attack-type     */
     {UT_CHAR, AT_VAL, 0, 200, 200, 253},                  /* hand-quality    */
     {UT_UNIT, AT_VAL, 0, 200, 200, 230},                  /* height          */
     {UT_CHAR, AT_TYP, pc_races, 200, 200, 253},           /* race            */
     {UT_CHAR, AT_TYP, char_sex, 200, 200, 253},           /* sex             */
     {UT_NPC, AT_VAL, 0, 255, 255, 255},                   /* level           */
     {UT_CHAR, AT_TYP, char_pos, 200, 253, 253},           /* position        */
-    {UT_CHAR, AT_TYPVAL, g_AbiColl.text, 240, 253, 253},  /* ability         */
+    {UT_CHAR, AT_TYPVAL, g_AbiColl.gettext(), 240, 253, 253},  /* ability         */
     {UT_PC, AT_VAL, 0, 230, 253, 253},                    /* skill-points    */
     {UT_PC, AT_VAL, 0, 230, 253, 253},                    /* ability-points  */
     {UT_UNIT, AT_VAL, 0, 200, 230, 200},                  /* remove affects  */
@@ -253,6 +259,9 @@ void edit_inside_descr(class descriptor_data *d)
 int search_block_set(char *arg, const char **list, bool exact)
 {
     register int i, l;
+
+    if (list == NULL)
+        return -1;
 
     /* Substitute '_' and get length of string */
     for (l = 0; arg[l]; l++)
@@ -313,6 +322,9 @@ void show_fields(class unit_data *ch)
 void show_structure(const char *structure[], class unit_data *ch)
 {
     char **c, *cc, buf[MAX_STRING_LENGTH];
+
+    if (structure == NULL)
+        return;
 
     strcpy(buf, "Not defined yet.<br/>");
 
@@ -537,7 +549,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         break;
 
     case AT_TYPVAL:
-        send_to_char("Arg:&lt;type&gt; <value><br/>", ch);
+        send_to_char("Arg:&lt;type&gt; &lt;value&gt;<br/>", ch);
         argument = str_next_word(argument, arg);
         if ((typarg = get_type(arg, unit_field_data[type].structure)) == -1)
         {

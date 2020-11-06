@@ -525,13 +525,13 @@ code
    }
 
 
-  juris := get_juris@justice();
+   juris := get_juris@justice();
 
-  if (criminal.type == UNIT_ST_NPC)
-  {
+   if (criminal.type == UNIT_ST_NPC)
+   {
      addstring(criminal.names,criminal.name+itoa(crime_no));
      is_npc := "Y";
-  } 
+   } 
    else
       is_npc := "N";
  
@@ -554,7 +554,8 @@ code
     
    addextra(wp.extra, crime_list, desc); 
    sendto("save", wp);
-   quit;
+
+   return;
 }
 dilend
 
@@ -707,10 +708,10 @@ var
 code
 { 
    if (criminal == witness)
-      quit;
+      return;
 
    if ((witness.type == UNIT_ST_NPC) and (not isset(witness.charflags , CHAR_PROTECTED)))
-      quit;
+      return;
 
    if (show)
    {
@@ -733,7 +734,7 @@ code
    if ((witness.type == UNIT_ST_NPC) and (show))
       dilcopy("activate_accuse@justice("+itoa(crime_type)+","+criminal.name+","+jurisdiction+")", witness);
 
-   quit;
+   return;
 }
 dilend
 
@@ -976,7 +977,6 @@ goto end;
 
 :doaccuse:
 
-log("accuse: debug "+c_name);
  
       w_type := w_ptr.names.[3];
       c_name := c_ptr.names.[2];
@@ -986,7 +986,6 @@ log("accuse: debug "+c_name);
       c_is_npc := c_ptr.names.[7];
       c_juris := c_ptr.names.[8];
       c_reported := c_ptr.names.[9]; 
-log("accuse: debug "+c_name);
       
       if ((crime_type == CRIME_MURDER) and
           (atoi(c_type) != CRIME_MURDER) and
@@ -1251,12 +1250,13 @@ var
 code
 {
    :start:
-   wait(SFB_COM, command(CMD_AUTO_COMBAT));
    heartbeat := PULSE_VIOLENCE;
+   wait(SFB_COM, command(CMD_AUTO_COMBAT));
+
    vict := activator.fighting;
    secure(vict,nope);
 
-   if (vict==null) goto nope; 
+   if (vict == null) goto nope; 
    if ((activator.type!=UNIT_ST_PC) and (activator.type!=UNIT_ST_NPC)) goto nope;     
    if (activator.position < POSITION_STUNNED) goto nope;
 
@@ -1273,7 +1273,7 @@ code
             
    if ((self.position > POSITION_SLEEPING) and (activator.position == POSITION_FIGHTING) and (visible(self,activator)))
    {
-      if(crime_check@justice(activator, vict))
+      if (crime_check@justice(activator, vict))
       {
          act("$1n blows in a small whistle!  'UUIIIIIIIHHHHH'",A_SOMEONE,self,null,null,TO_ROOM);    
          
@@ -1281,10 +1281,15 @@ code
          while (rm.type != UNIT_ST_ROOM)
             rm := rm.outside;
          sendtoalldil("WHISTLE "+rm.zoneidx+" "+rm.nameidx, "whistlisten@justice");
-
-         // i:= getinteger(DIL_GINT_CALLGUARDS, self, 0); 
          set_fighting(self, activator);
          unset(vict.charflags, CHAR_SELF_DEFENCE);
+
+         heartbeat := PULSE_SEC * 5 * 60;
+
+         :waitloop:
+         // Don't whistle for 5 minutes unless vict is lost (secure)
+         pause;
+
          unsecure(vict);
          goto start;
       } 

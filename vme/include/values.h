@@ -1205,6 +1205,7 @@ ACTION
 #define DIL_GINT_REQXP      1  // return the required_xp(i) for level i using the INT parameter i
 #define DIL_GINT_LEVELXP    2  // return the level_xp(i) (XP needed for level i->i+1)
 #define DIL_GINT_DESCRIPTOR 3  // returns 0 if PC has no descriptor. 1 for all else
+#define DIL_GINT_CRIMENO    4  // returns the next crime_no
 
 
 #endif /* _MUD_VALUES_H */

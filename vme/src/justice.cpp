@@ -29,35 +29,6 @@
 #include "fight.h"
 #include "dilrun.h"
 
-/* These are constant for all guards.                            */
-
-// #define CUFFS_ZONE "basis"
-// #define CUFFS_NAME "hand_cuffs"
-
-/* ACCUSELOC_NAME must be the same room name in all zones.       */
-
-// #define ACCUSELOC_NAME "accuse_room"
-
-/* The name of the safe where items are stored. The same safe could be
-   loaded in different zones. */
-
-// #define SAFE_NAME "safe"
-
-/* struct char_crime_data
-{
-   ubit32 crime_nr;           // global unique crime number 
-   ubit8 ticks_to_neutralize; // ticks before crime deletes 
-
-   int id;                          // id of offender PC           
-   char name_criminal[PC_MAX_NAME]; // Name of offender            
-
-   char victim[31];              // name of victim              
-   ubit8 crime_type;             // what crime? (kill, theft..) 
-   ubit8 reported;               // Has crime been reported?    
-   struct char_crime_data *next; // link->                      
-};*/
-
-//struct char_crime_data *crime_list = NULL;
 
 static int crime_serial_no = time(0);
 

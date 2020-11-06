@@ -20,6 +20,7 @@ extern const char *professions[PROFESSION_MAX+1];
 class skill_collection
 {
    public:
+   const char **gettext(void);
    skill_collection(int nSize);
 
    struct profession_cost *prof_table;
