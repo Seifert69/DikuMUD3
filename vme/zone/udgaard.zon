@@ -27,7 +27,7 @@ from moving to fjord and grotto thus depriving newbies access. */
 
 #include <macros.h>
 
-#define FIXED_ITEM "$fixed"
+
 
 %zone udgaard
 
@@ -129,6 +129,7 @@ dilcopy smoke_dil@udgaard();
 #define NO_NEWBIE "Newbie Quest Declined"
 #define DRAKAR_COMPLETE "Withstood the Test of Time"
 #define DRAKAR_REPLACED "Replaced Shield"
+#define FIXED_ITEM "$fixed"
 
 %dil
 
@@ -170,26 +171,26 @@ code
 	{
 		// do not fix PI. See admin individually.
 		log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - is a PI. Do not fix.");
-		exec("say I'm afraid I can fix an item with this kind of power, "+pc.name+"!", self);
-		goto no_pi;
+		exec("say I'm afraid I cant fix an item with this kind of power, "+pc.name+"!", self);
+		goto no_load;
 	}
-	
-	item := load(namex + "@" + zonex);
-	
+	if (olditem.type == 15)
+	{
+		// do not destroy containers.
+		log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - is a container. Do not fix.");
+		exec("say I'm afraid I cant fix any containers, "+pc.name+"!", self);
+		goto no_load;
+	}		
 	if (FIXED_ITEM in olditem.extra)
 	{
 		// item has already been fixed
 		log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - was previously fixed.");
 		exec("say This has already been fixed, "+pc.name+"!", self);
 		goto return_old;
-	}
-	if (olditem.extra)
-	{
-		// item has already been fixed
-		log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - was previously fixed.");
-		exec("say This has already been fixed, "+pc.name+"!", self);
-		goto return_old;
-	}
+	}	
+	
+	item := load(namex + "@" + zonex);
+
 	if (item.title == titlex)
 	{
 		// item doesnt need to be fixed
@@ -228,7 +229,7 @@ code
 	
 	destroy(item);
 
-:no_pi:
+:no_load:
 
 	act("The fixer returns "+item.title+".",A_SOMEONE, pc, null, null, TO_CHAR); 
 	act("The fixer returns "+pc.name+"'s "+item.title+".",A_SOMEONE, pc, null, null, TO_REST); 
