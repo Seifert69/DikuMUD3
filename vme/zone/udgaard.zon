@@ -164,7 +164,7 @@ code
 	titlex := olditem.title;
 	exdp := "$ply_restrict" in olditem.extra;
 
-	if (olditem.zoneidx == treasure)
+	if (olditem.zoneidx == "treasure")
 	{
 		// do not fix PI. See admin individually.
 		log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - is a PI. Do not fix.");
