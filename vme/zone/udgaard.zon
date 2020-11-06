@@ -231,8 +231,8 @@ code
 
 :no_load:
 
-	act("The fixer returns "+item.title+".",A_SOMEONE, pc, null, null, TO_CHAR); 
-	act("The fixer returns "+pc.name+"'s "+item.title+".",A_SOMEONE, pc, null, null, TO_REST); 
+	act("The fixer returns "+titlex+".",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("The fixer returns "+pc.name+"'s "+titlex+".",A_SOMEONE, pc, null, null, TO_REST); 
 	log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - has been returned to player.");
 	unsecure(olditem);
 	unsecure(pc);
@@ -244,6 +244,7 @@ code
 	destroy(item);
 	exec("sigh", self);
 	goto start;
+
 	
 }
 dilend // END DIL FIX
