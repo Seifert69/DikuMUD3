@@ -1063,7 +1063,7 @@ code
    :release:
    act("Your term is over! You are thrown out of the jail and sent home.",
        A_ALWAYS, self, null, null, TO_CHAR);
-   link(self, findroom("accuse_room@" + sz);
+   link(self, findroom("accuse_room@" + sz));
    self.crimes := self.crimes / 2;
    rem_db_entry@justice(self, "$arrest");
    set(self.charflags, CHAR_PROTECTED);
