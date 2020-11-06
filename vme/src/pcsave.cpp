@@ -388,7 +388,8 @@ void save_player(class unit_data *pc)
 class unit_data *load_player_file(FILE *pFile)
 {
     class unit_data *pc;
-    int nPlyLen, n;
+    ubit32 nPlyLen;
+    int n;
     sbit32 id;
     CByteBuffer *pBuf;
 

@@ -165,8 +165,8 @@ struct diffhead
     short int end;   /* offset to first similar byte after start */
 };
 
-/* Per-object header */
-struct objheader
+/* Old Pre-object header */
+struct objheaderold
 {
     sbit16 length; /* length of data */
     char zone[FI_MAX_ZONENAME + 1];
@@ -177,6 +177,18 @@ struct objheader
     ubit8 type;       /* NPC or OBJ? */
 };
 
+/* Per-object header */
+struct objheadernew
+{
+    ubit32 length; /* length of data */
+    ubit8 nVersion; // Version number
+    char zone[FI_MAX_ZONENAME + 1];
+    char unit[FI_MAX_UNITNAME + 1];
+    ubit8 level;      /* level of 'containment' (depth) */
+    ubit8 equip;      /* equipment position */
+    ubit8 compressed; /* compressed? */
+    ubit8 type;       /* NPC or OBJ? */
+};
 /* Local global variables */
 
 /*
@@ -190,16 +202,17 @@ class file_index_type *slime_fi = NULL;
 /* save object */
 void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
 {
-    int len;
-    struct objheader h;
+    ubit32 len;
+    struct objheaderold ho;
+    struct objheadernew hn;
     CByteBuffer TmpBuf;
 
     /* On 64 bit Linux at least, the struct is padded and 1 byte larger than its data */
     /* So I memset to zero to avoid valgrind reporting a memory error                 */
-    memset(&h, 0, sizeof(h)); 
+    memset(&ho, 0, sizeof(ho));
+    memset(&hn, 0, sizeof(hn));
 
-    int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif,
-             int diflen, ubit32 crc);
+    int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif, int diflen, ubit32 crc);
 
     if (!IS_SET(UNIT_TYPE(unit), UNIT_ST_NPC | UNIT_ST_OBJ))
     {
@@ -218,27 +231,37 @@ void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
 
     if (fast || !UNIT_FILE_INDEX(unit))
     {
-        h.compressed = 0;
+        hn.compressed = 0;
     }
     else
     {
         assert(FALSE);
     }
 
-    strcpy(h.zone, UNIT_FI_ZONENAME(unit));
-    strcpy(h.unit, UNIT_FI_NAME(unit));
+    strcpy(hn.zone, UNIT_FI_ZONENAME(unit));
+    strcpy(hn.unit, UNIT_FI_NAME(unit));
 
-    h.type = UNIT_TYPE(unit);
-    h.level = level;
+    hn.type = UNIT_TYPE(unit);
+    hn.level = level;
 
     if (IS_OBJ(unit))
-        h.equip = OBJ_EQP_POS(unit);
+        hn.equip = OBJ_EQP_POS(unit);
     else
-        h.equip = 0;
+        hn.equip = 0;
 
-    h.length = len;
+    hn.nVersion = 2;
+    hn.length = len;
 
-    pBuf->Append((ubit8 *)&h, sizeof(h));
+    ho.length = 0;
+    strcpy(ho.zone, "_obsoleted");
+    strcpy(ho.unit, "_obsoleted");
+    ho.level = 0;
+    ho.equip = 0;
+    ho.compressed = 0;
+    ho.type = 0;
+
+    pBuf->Append((ubit8 *)&ho, sizeof(ho)); // This is effectively a marker to read the new header
+    pBuf->Append((ubit8 *)&hn, sizeof(hn));
     pBuf->Append(&TmpBuf);
 }
 
@@ -390,10 +413,10 @@ int save_contents(const char *pFileName, class unit_data *unit,
 /* and place them inside 'unit' by unit_to_unit and possibly equip */
 /* Return the top level unit loaded                                */
 
-class unit_data *
-base_load_contents(const char *pFileName, const class unit_data *unit)
+class unit_data *base_load_contents(const char *pFileName, const class unit_data *unit)
 {
-    struct objheader h;
+    struct objheaderold ho;
+    struct objheadernew hn;
     class file_index_type *fi;
     class unit_data *pnew, *pnew_tmp, *pstack[25];
     int len, init;
@@ -409,8 +432,7 @@ base_load_contents(const char *pFileName, const class unit_data *unit)
     extern class unit_data *void_room;
 
     int is_slimed(class file_index_type * sp);
-    int patch(char *ref, ubit32 reflen, char *dif, int diflen, char *res,
-              int reslen, ubit32 crc);
+    int patch(char *ref, ubit32 reflen, char *dif, int diflen, char *res, int reslen, ubit32 crc);
 
     assert(slime_fi != NULL);
 
@@ -446,23 +468,43 @@ base_load_contents(const char *pFileName, const class unit_data *unit)
 
     for (init = TRUE; InvBuf.GetReadPosition() < InvBuf.GetLength();)
     {
-        if (InvBuf.Read((ubit8 *)&h, sizeof(h)))
+        if (InvBuf.Read((ubit8 *)&ho, sizeof(ho)))
             break;
 
-        fi = find_file_index(h.zone, h.unit);
+        // It's the new version if both are equal to "obsoleted"
+        if ((strcmp(ho.zone, "_obsoleted") == 0) && (strcmp(ho.unit, "_obsoleted") == 0))
+        {
+            // It's a new version
+            if (InvBuf.Read((ubit8 *)&hn, sizeof(hn)))
+                break;
+        }
+        else
+        {
+            // It's the old version, copy it to the new version
+            hn.nVersion = 1; // Old version
+            hn.compressed = ho.compressed;
+            hn.equip = ho.equip;
+            hn.length = ho.length;
+            hn.level = ho.level;
+            hn.type = ho.type;
+            strcpy(hn.unit, ho.unit);
+            strcpy(hn.zone, ho.zone);
+        }
+        
+
+        fi = find_file_index(hn.zone, hn.unit);
 
         pnew = NULL;
 
         equip_ok = TRUE;
 
-        if (h.compressed)
+        if (hn.compressed)
         {
             slog(LOG_ALL, 0, "Corrupted inventory: %s", pFileName);
             if (unit && IS_CHAR(unit))
             {
                 CHAR_DESCRIPTOR(unit) = tmp_descr;
-                send_to_char("Your inventory was corrupt, please contact the Admin.<br/>",
-                             unit);
+                send_to_char("Your inventory was corrupt, please contact the Admin.<br/>", unit);
             }
 
             return topu;
@@ -472,9 +514,7 @@ base_load_contents(const char *pFileName, const class unit_data *unit)
             if ((fi == NULL) || is_slimed(fi))
             {
                 pnew = read_unit(slime_fi);
-                pnew_tmp =
-                    read_unit_string(&InvBuf, h.type, h.length, "preslime",
-                                     FALSE);
+                pnew_tmp = read_unit_string(&InvBuf, hn.type, hn.length, "preslime", FALSE);
                 if (g_nCorrupt)
                 {
                     slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
@@ -484,8 +524,7 @@ base_load_contents(const char *pFileName, const class unit_data *unit)
             else
             {
                 pnew_tmp = NULL;
-                pnew = read_unit_string(&InvBuf, h.type, h.length,
-                                        str_cc(fi->name, fi->zone->name));
+                pnew = read_unit_string(&InvBuf, hn.type, hn.length, str_cc(fi->name, fi->zone->name));
                 if (g_nCorrupt)
                 {
                     slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
@@ -531,21 +570,20 @@ base_load_contents(const char *pFileName, const class unit_data *unit)
         }
         else
         {
-
-            if (h.level > frame)
+            if (hn.level > frame)
             {
                 unit_to_unit(pnew, pstack[frame]);
-                frame = h.level;
+                frame = hn.level;
             }
             else
             {
-                frame = h.level;
+                frame = hn.level;
                 unit_to_unit(pnew, UNIT_IN(pstack[frame]));
             }
 
             /* IS_CHAR() needed, since a potential char may have been slimed! */
-            if (h.equip && equip_ok && IS_CHAR(UNIT_IN(pnew)))
-                equip_char(UNIT_IN(pnew), pnew, h.equip);
+            if (hn.equip && equip_ok && IS_CHAR(UNIT_IN(pnew)))
+                equip_char(UNIT_IN(pnew), pnew, hn.equip);
 
             pstack[frame] = pnew;
         }
