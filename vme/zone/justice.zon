@@ -977,7 +977,6 @@ goto end;
 
 :doaccuse:
 
-log("accuse: debug "+c_name);
  
       w_type := w_ptr.names.[3];
       c_name := c_ptr.names.[2];
@@ -987,7 +986,6 @@ log("accuse: debug "+c_name);
       c_is_npc := c_ptr.names.[7];
       c_juris := c_ptr.names.[8];
       c_reported := c_ptr.names.[9]; 
-log("accuse: debug "+c_name);
       
       if ((crime_type == CRIME_MURDER) and
           (atoi(c_type) != CRIME_MURDER) and
