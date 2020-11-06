@@ -11032,19 +11032,19 @@ code
    exec("say Hello "+pc.name+", do you need some work?", self);
    pause;
 
-   exec("steal money from "+pc.name, self);
+   exec("pickpocket "+pc.name, self);
    pause;
 
    exec("say I got this really nice offer for you.", self);
    pause;
 
-   exec("steal money from "+pc.name, self);
+   exec("pickpocket "+pc.name, self);
    pause;
 
    exec("say You'll earn a lot of money!", self);
    pause;
 
-   exec("steal money from "+pc.name, self);
+   exec("pickpocket "+pc.name, self);
    pause;
 
    exec("say No hard feelings, my friend, bye!", self);
@@ -11081,13 +11081,11 @@ code
    pause;
    exec("emote listens to his brain.", self);
    pause;
-   exec("say My brain tells me, that we could get in trouble for this!",
-self);
+   exec("say My brain tells me, that we could get in trouble for this!", self);
    pause;
    exec("emote talks with his brain.", self);
    pause;
-   exec("say Weird, my brain doesn't say anything, wonder if it is empty?",
- self);
+   exec("say Weird, my brain doesn't say anything, wonder if it is empty?", self);
    pause;
 
 }

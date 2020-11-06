@@ -453,7 +453,7 @@ dilend
 // count = how many have been triggered. If 0 and someone becomes aware a new crime is added 
 // returns 1 if a witness became aware, 0 otherwise
 //
-dilbegin integer awareness_check(thief : unitptr, victim : unitptr, observer : unitptr, crimeno: integer, count : integer, skill : integer, msg : string);
+dilbegin awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 external
    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
@@ -461,34 +461,50 @@ external
    add_crime@justice(criminal : unitptr, vict : unitptr, crime_type: integer, crime_no : integer, crime_clear : integer);
 
 var
-   hm : integer;
+   observer : unitptr;
+   hm       : integer;
+   crimeno  : integer;
+   count    : integer;
 
 code
 {
-   hm := skillbattle(thief, skill, ABIL_DEX, observer, skill, ABIL_BRA);
+   // Here we loop through any chars in the room, do a skill check with
+   // each of them to see if they notice the burglar. Same with pickpocket and filch.
+   //
 
-   if (not visible(observer, thief))
-      hm := hm - 100;
+   crimeno := getinteger(DIL_GINT_CRIMENO, null, 0); // May not be used
+   count := 0;
 
-   if (hm >= 0)
+   foreach (UNIT_ST_PC | UNIT_ST_NPC, observer)
    {
-      act(msg, A_SOMEONE, observer, thief, victim, TO_CHAR);
-
-      if (visible(observer, thief) and visible(observer, victim))
+      if ((observer != thief) and (observer != victim))
       {
-         if ((observer.type == UNIT_ST_NPC) and (not isset(observer.charflags , CHAR_PROTECTED)))
-            return(0);
-            
-         if (count == 0)
+         hm := skillbattle(thief, skill, ABIL_DEX, observer, skill, ABIL_BRA);
+
+         if (not visible(observer, thief))
+            hm := hm - 100;
+
+         if (hm >= 0)
          {
-            add_crime@justice(thief, victim, CRIME_STEALING, crimeno, PULSE_SEC * 60 * 60);
+            act(msg, A_SOMEONE, observer, thief, victim, TO_CHAR);
+
+            if (visible(observer, thief) and visible(observer, victim))
+            {
+               if ((observer.type == UNIT_ST_NPC) and (not isset(observer.charflags , CHAR_PROTECTED)))
+                  continue;
+
+               if (count == 0)
+               {
+                  add_crime@justice(thief, victim, CRIME_STEALING, crimeno, PULSE_SEC * 60 * 60);
+               }
+               set_witness@justice(thief, observer, crimeno, CRIME_STEALING, TRUE);
+               count := count + 1;
+            }
          }
-         set_witness@justice(thief, observer, crimeno, CRIME_STEALING, TRUE);
-         return(1);
       }
    }
 
-   return(0);
+   return;
 }
 dilend
 
@@ -503,7 +519,7 @@ external
    provoked_attack (victim : unitptr, ch : unitptr);
    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
-   integer awareness_check(thief : unitptr, victim : unitptr, observer : unitptr, crimeno: integer, count : integer, skill : integer, msg : string);
+   awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 
 var
    skilla  :  integer;
@@ -513,11 +529,9 @@ var
    hm      :  integer;
    vict    :  unitptr;
    targ    :  unitptr;
-   u       :  unitptr;
    t       :  string;
    temp    : string;
    ti      : integer;
-   crimeno : integer;
 
 code
 {
@@ -642,29 +656,7 @@ code
 
    act("You stealthily steal $3n's $2n and quickly tuck it out of sight!", A_SOMEONE, self, targ, vict, TO_CHAR);
    link(targ, self);
-
-   // Here we might want to loop through any chars in the room, do a skill check with
-   // each of them to see if they notice the burglar. Same with pickpocket and filch
-   // so a standard routine would be in order
-   //
-   // awareness_check(thief, victim, SKI_STEAL)
-   //
-
-   crimeno := getinteger(DIL_GINT_CRIMENO, null, 0); // May not be used
-   hm := 0;
-
-   foreach (UNIT_ST_PC | UNIT_ST_NPC, u)
-   {
-      if ((u != self) and (u != vict))
-      {
-         log("foreach got observer " + u.name);
-         ti := awareness_check(self, vict, u, crimeno, hm, SKI_STEAL, "You notice $2n stealing something from $3n");
-
-         if (ti)
-            hm := hm + 1;
-      }
-   }
-
+   awareness_check(self, vict, SKI_STEAL, "You notice $2n stealing something from $3n");
    send_done("steal",self,targ,vict,hm,arg,null);
    quit;
 }
@@ -680,6 +672,7 @@ external
    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
    provoked_attack (victim : unitptr, ch : unitptr);
+   awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 
 var
    skilla   :  integer;
@@ -799,6 +792,7 @@ code
    position_update(vict);
    act("You stealthily pilfer a handful of coins from $3n's purse and " +
       "quickly deposit them in your own.",A_SOMEONE, self, null, vict, TO_CHAR);
+   awareness_check(self, vict, SKI_PICK_POCKETS, "You notice $2n stealing gold from $3n");
    send_done("pickpocket",self,null,vict,hm,arg,null);
    quit;
 }
@@ -813,6 +807,7 @@ external
    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
    provoked_attack (victim : unitptr, ch : unitptr);
+   awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 
 var
    skilla  :  integer;
@@ -950,6 +945,8 @@ code
    act("You stealthily filch $3n's $2n and quickly tuck it out of " +
          "sight!", A_SOMEONE, self, targ, vict, TO_CHAR);
    link(targ, self);
+   awareness_check(self, vict, SKI_FILCH, "You notice $2n stealing jewelry from $3n.");
+
    send_done("filch",self,targ,vict,hm,arg,null);
    quit;
 }
