@@ -174,7 +174,7 @@ code
 		exec("say I'm afraid I cant fix an item with this kind of power, "+pc.name+"!", self);
 		goto no_load;
 	}
-	if (olditem.type == 15)
+	if (olditem.type == ITEM_CONTAINER)
 	{
 		// do not destroy containers.
 		log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - is a container. Do not fix.");
