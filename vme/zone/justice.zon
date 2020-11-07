@@ -205,8 +205,9 @@ reset RESET_NOT
 
 dilbegin crime_stopper();
 var
-   c_info : string;
-   suspects : extraptr;
+   c_info    : string;
+   suspects  : extraptr;
+   nextdude  : extraptr;
    time_left : integer;
 code
 {
@@ -218,17 +219,21 @@ code
 
    while (suspects)
    {
-     if (suspects.name == "$crime")
-     {   c_info := suspects.names.[6];
+      nextdude := suspects.next;
+
+      if (suspects.name == "$crime")
+      {
+         c_info := suspects.names.[6];
          time_left := atoi(c_info);
          time_left := time_left - 1;
          if (time_left <= 0)
-           subextra(self.extra, suspects.names.[1]);
-        else
-           suspects.names.[6] := itoa(time_left);
-       sendto("save", self);
-     }
-    suspects := suspects.next;
+            subextra(self.extra, suspects.names.[1]);
+         else
+            suspects.names.[6] := itoa(time_left);
+         sendto("save", self);
+      }
+ 
+      suspects := nextdude;
    }
    goto start;
 }
@@ -577,7 +582,8 @@ dilbegin witness_timer();
 var
    tm : integer;
    d : integer;
-   witness : extraptr;
+   witness  : extraptr;
+   nextdude : extraptr;
    w_info : string;
 
 code
@@ -587,10 +593,13 @@ code
    :start:
    wait(SFB_TICK, TRUE);
    witness := self.extra;
-   while(witness)
+
+   while (witness)
    {
-     if (witness.name == "$witness")
-     {   w_info := witness.names.[5];
+      nextdude := witness.next;
+      if (witness.name == "$witness")
+      {
+         w_info := witness.names.[5];
          tm := atoi(w_info);
          tm := tm - 1;
          if (tm <= 0)
@@ -598,8 +607,9 @@ code
          else
             witness.names.[5] := itoa(tm);
       }
-       witness := witness.next;
+      witness := nextdude;
    }
+
    if (not("$witness" in self.extra))
       quit;
    else
@@ -753,6 +763,7 @@ var
    msg : string;
    jd : unitptr;
    suspects : extraptr;
+   nextdude : extraptr;
    u : unitptr;
    wanted_dead : string;
    wanted_alive : string;
@@ -783,17 +794,20 @@ code
 
    //loop trhough reward_board extras
 
-   while(suspects)
+   while (suspects)
    {
+      nextdude := suspects.next;
+
       if ("$crime" in suspects.names) 
-      {  if(suspects.names.[9] == "0")
-           local_suspects := local_suspects + suspects.descr+"<BR>";
+      {
+         if (suspects.names.[9] == "0")
+            local_suspects := local_suspects + suspects.descr+"<BR>";
       }
       else if ("$arrest" in suspects.names)
          wanted_alive := wanted_alive + suspects.descr+ "<br>"; 
        else if ("$reward" in suspects.names)
          wanted_dead := wanted_dead + suspects.descr+ "<BR>"; 
-      suspects := suspects.next;
+      suspects := nextdude;
    }
 
  // Diplay Wanted Poster
@@ -962,16 +976,19 @@ code
    jd := findsymbolic("database@justice");
    
    w_ptr := activator.extra;
-     while ("$witness" in w_ptr)
+   while (w_ptr)
+   {
+      if ("$witness" == w_ptr.name)
       {
-        if (w_ptr.names.[1] == criminal)
-        {
-          c_ptr := w_ptr.names.[2] in jd.extra;
-              if (c_ptr)
-                goto doaccuse;
-        }
-        w_ptr := w_ptr.next;
-     }
+         if (w_ptr.names.[1] == criminal)
+         {
+            c_ptr := w_ptr.names.[2] in jd.extra;
+               if (c_ptr)
+                  goto doaccuse;
+         }
+      }
+      w_ptr := w_ptr.next;
+   }
 
 goto end;
 

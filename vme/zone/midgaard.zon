@@ -997,34 +997,42 @@ dilbegin fnpri(FN_PRI_RESCUE-1) jailstay(du : integer);
 external
    jailbreak@justice(criminal : unitptr);
    rem_db_entry@justice(criminal : unitptr, extra_type : string);
+
 var
-   i : integer;
-  jd : unitptr;
-  id : string;
+   sn : string;
+   sz : string;
+   jd : unitptr;
+   id : string;
   
 code
 {
    heartbeat := PULSE_SEC * SECS_PER_MUD_HOUR;
-   i := self.outside.idx;
+   sn := self.outside.nameidx;
+   sz := self.outside.zoneidx;
    
-// Change player arrest descr to reflect that the char is in jail.
+   // Change player arrest descr to reflect that the char is in jail.
+   //
+   if ("$arrest" in self.extra)
+   {
+      jd := findsymbolic("database@justice");
 
-if ("$arrest" in self.extra)
-{
-   jd := findsymbolic("database@justice");
-   id := self.extra.["$arrest"].names.[1];
-   jd.extra.[id].descr := self.name+" is currently serving time in jail.";
-} 
+      if (jd)
+      {
+         id := self.extra.["$arrest"].names.[1];
+         jd.extra.[id].descr := self.name+" is currently serving time in jail.";
+      }
+   } 
 
    :loop:
    pause;
 
-   if (i != self.outside.idx)
+   if (sn != self.outside.nameidx)
    {  
       //player has escaped from jail
       jailbreak@justice(self);
       quit;
    }
+
    if ((du % 4) == 0)
      send("jailfood");
 
@@ -1042,8 +1050,7 @@ if ("$arrest" in self.extra)
      goto release;
    else
    {
-      act("You make another mark on the wall. Only "+itoa(du)+
-	  " hours till freedom!",
+      act("You make another mark on the wall. Only "+itoa(du)+" hours till freedom!",
           A_ALWAYS, self, null, null, TO_CHAR);
    }
 
@@ -1054,10 +1061,9 @@ if ("$arrest" in self.extra)
 
    /* Get thrown out of jail */
    :release:
-
    act("Your term is over! You are thrown out of the jail and sent home.",
        A_ALWAYS, self, null, null, TO_CHAR);
-   link(self, findroom(self.hometown));
+   link(self, findroom("accuse_room@" + sz));
    self.crimes := self.crimes / 2;
    rem_db_entry@justice(self, "$arrest");
    set(self.charflags, CHAR_PROTECTED);
@@ -6609,7 +6615,6 @@ M_HUMAN_MAGE_ELECTRICITY(85,SEX_FEMALE, "lightning bolt")
 alignment 1000
 flags {UNIT_FL_NO_TELEPORT}
 dilcopy blow_whistle@justice();
-dilcopy accuse@justice();
 
 dilcopy deputy_check@function();
 dilcopy teach_q_block@function(POLICE_ACADEMY, "say Deputies only!");
@@ -6665,6 +6670,7 @@ alignment 1000
 dilcopy blow_whistle@justice();
 dilcopy protect_lawful@justice(); 
 dilcopy rescue@function("guard / mayor");
+
 dilcopy reward_give@function();
 dilcopy accuse@justice();
 dilcopy guard_dir@function("west", null, {""}, "");
