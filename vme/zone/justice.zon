@@ -1207,38 +1207,28 @@ dilend
 
 dilbegin dbclear_npc(u : unitptr);
 var
-  r_extra : extraptr;
-  c_extra : extraptr;
-  a_extra : extraptr;
+  j_extra : extraptr;
+  nextdude : extraptr;
 code
 {
 
-c_extra := "$crime" in u.extra;
+j_extra := u.extra;
 
-while (c_extra)
+while (j_extra)
 {
-   if (c_extra.names.[7] == "Y")
-      subextra(u.extra, c_extra.names.[1]);
- c_extra := c_extra.next;
-}
-a_extra := "$arrest" in u.extra;
-
-while (a_extra)
-{
-   if (a_extra.names.[3] == "Y")
-      subextra(u.extra, a_extra.names.[1]);
- a_extra := a_extra.next;
-}
-
-r_extra := "$reward" in u.extra;
-
-while (r_extra)
-{
-  if (length(r_extra.names) > 1)
-  { if (r_extra.names.[5] == "Y")
-      subextra(u.extra, r_extra.names.[1]);
-  }
-   r_extra := r_extra.next;
+nextdude := j_extra.next;
+ 
+  if(j_extra.name == "$crime")
+    if (j_extra.names.[7] == "Y")
+       subextra(u.extra, j_extra.names.[1]);
+   if(j_extra.name == "$arrest")
+    if (j_extra.names.[3] == "Y")
+       subextra(u.extra, j_extra.names.[1]);
+   if (j_extra.name == "$reward")
+    if (j_extra.names.[5] == "Y")
+       subextra(u.extra, j_extra.names.[1]);
+   
+j_extra := nextdude;      
 }
 
 return;
