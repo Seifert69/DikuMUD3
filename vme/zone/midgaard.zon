@@ -6615,7 +6615,6 @@ M_HUMAN_MAGE_ELECTRICITY(85,SEX_FEMALE, "lightning bolt")
 alignment 1000
 flags {UNIT_FL_NO_TELEPORT}
 dilcopy blow_whistle@justice();
-dilcopy accuse@justice();
 
 dilcopy deputy_check@function();
 dilcopy teach_q_block@function(POLICE_ACADEMY, "say Deputies only!");
@@ -6671,6 +6670,7 @@ alignment 1000
 dilcopy blow_whistle@justice();
 dilcopy protect_lawful@justice(); 
 dilcopy rescue@function("guard / mayor");
+
 dilcopy reward_give@function();
 dilcopy accuse@justice();
 dilcopy guard_dir@function("west", null, {""}, "");
