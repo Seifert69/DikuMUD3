@@ -50,6 +50,12 @@ Bright White.<br/>
 
 %dil
 
+dilbegin string testsymname();
+code
+{
+   return(self.symname);
+}
+dilend
 
 dilbegin worms();
 var
@@ -6568,7 +6574,7 @@ end
 
 %objects
 
-		bug
+		deadbug
 
 names {"dead bug","bug"}
 title "a dead bug"
@@ -6591,6 +6597,7 @@ var
    ext : extraptr;
 code
 {
+   quit;
    heartbeat := PULSE_SEC;
    :loop:
    wait(SFB_CMD, TRUE);
@@ -6607,6 +6614,7 @@ var
    i : integer;
 code
 {
+   quit;
    heartbeat := PULSE_SEC * 4;
    i := rnd(1,10000);
 
@@ -7337,6 +7345,44 @@ end
 
 
 %mobiles
+
+   ladybug
+
+names {"lady bug","bug"}
+title "a lady bug"
+descr "A lady bug is crawling around."
+extra {}
+"The lady bug kind of looks like a black lady bug. It's alive. And it's crawling around.
+You notice the word 'Papi' inscribed with tiny letters on the rim of its shield."
+weight 0
+M_ZOMBIE_SMALL(1,SEX_NEUTRAL)
+
+dilbegin aware unique mytestsymname();
+external
+   string testsymname();
+
+var
+   s1 : string;
+   s2 : string;
+code
+{
+   :loop:
+   wait(SFB_CMD, activator != self);
+
+   s1 := activator.symname;
+   s2 := self.symname;
+   exec("say I am "+s2+" and you are "+s1, self);
+   exec("say I am "+self.symname+" and you are "+activator.symname, self);
+   s1 := "say I am "+self.symname+" and you are "+activator.symname;
+   exec(s1, self);
+   s1 := "say when calling: act, self, self, act " + activator.symname + testsymname() + self.symname + activator.symname;
+   exec(s1, self);
+   goto loop;
+}
+dilend
+end
+
+
 
                            energyworms
 

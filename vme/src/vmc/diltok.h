@@ -209,6 +209,7 @@ struct symbols
     {"follower", DILSF_FOL},
     {"zoneidx",DILSF_ZOI},
     {"nameidx",DILSF_NMI},
+    {"symname", DILSF_SYMNAME},
     {"editing",DILSF_EDT},
     {"switched",DILSF_SWT},
     {"idx",DILSF_IDX},
