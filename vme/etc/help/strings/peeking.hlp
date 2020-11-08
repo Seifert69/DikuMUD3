@@ -1,11 +1,16 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage peek (character)<br/><br/>
-<br/>
-Peeking is used to scan another person's inventory.  Usually a prelude to<br/>
-a theft.<br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Peeking</h1>
+<p>Usage:
+</p>
+<pre> peek &lt;character&gt;
+</pre>
+<p>Peeking is a useful thieving skill used to scan another person's inventory.
+Usually a prelude to a theft.
+</p><p>See also:
+</p>
+<pre> &gt; <a cmd='#'>Help Stealing</a>
+</pre>
+
+
+
+
+</div>

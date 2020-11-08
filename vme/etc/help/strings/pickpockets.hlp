@@ -1,16 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage pickpocket (character)<br/><br/>
-<br/>
-If you're good at picking pockets, this is a fast way to get money, a<br/>
-good time in the jail, and a horde of blood thirsty enemies. picking<br/>
-pockets is considered a crime, and few mudders will help a thief in<br/>
-trouble. Some will not help a thief at all. The pick pocket skill enables<br/>
-you to steal money.  The amount stolen will depend on your skill.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Steal<br/><br/>
-Filching<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Pickpockets</h1>
+<p>Usage:
+</p>
+<pre> pickpocket &lt;target&gt;
+</pre>
+<p>The pickpocket skill enables you to steal money from another living being.
+When you try to pickpocket your pick pocket skill and dexterity and roll is
+compared to the targets pick pocket and brain.  If your pick pocket is 
+successful you still risk that any bystanders see your crime even if the 
+target didn't.
+</p><p>If you're good at picking pockets, this is a fast way to get cash and also a
+way to spend some quality time in jail. Not to mention, a horde of blood thirsty
+enemies. 
+</p><p>Picking pockets is considered a crime, and few MUD'ers will help a thief in
+trouble. Some will not help a thief at all. 
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Stealing</a>
+ &gt; <a cmd='#'>Help Filch</a>
+ &gt; <a cmd='#'>Help Peek</a>
+</pre>
+
+
+
+
+</div>
