@@ -175,6 +175,9 @@
         html,body {
             height: 100%; margin: 0px; padding: 0px;
         }
+
+        pre { white-space: pre-wrap; }
+
         a:link {
             color:currentColor;
         }

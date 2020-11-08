@@ -9,7 +9,9 @@ var g_crosshairs = new Image;
 var g_sImage = "../img/logo.gif";
 var g_nLastSend = Math.round(Date.now() / 1000);
 
+const g_bDebugOutput = false; // Set to true to output HTML to console
 const g_nRowCountMax = 1000;  // Maximum history buffer
+
 var g_nHp = 1;
 var g_nHpMax = 1;
 var g_nEp = 1;
@@ -576,7 +578,8 @@ function outputItem(item) {
 
 // bParse parameter. If false then it skips all
 function outputText(str, bParse) {
-    //console.log("WS[" + str + "]");
+    if (g_bDebugOutput)
+        console.log("WS[" + str + "]");
 
     if (bParse)
     {
