@@ -9,6 +9,7 @@ var g_crosshairs = new Image;
 var g_sImage = "../img/logo.gif";
 var g_nLastSend = Math.round(Date.now() / 1000);
 
+const g_nRowCountMax = 1000;  // Maximum history buffer
 var g_nHp = 1;
 var g_nHpMax = 1;
 var g_nEp = 1;
@@ -535,7 +536,7 @@ function outputReader(item) {
     list.appendChild(item);
 
     var chatContent = document.getElementById("converse");
-    if (nRowCount > 200)  // Max 200 list items
+    if (nRowCount > g_nRowCountMax)  // Max g_nRowCountMax list items
     {
         chatContent.removeChild(chatContent.childNodes[0]);
         nRowCount -= 1;
@@ -546,14 +547,14 @@ function outputReader(item) {
 function outputNormal(item) {
     var msgo = document.getElementById("converse");
 
-    if (nRowCount > 200)  // Max 200 child items 
+    if (nRowCount > g_nRowCountMax)  // Max g_nRowCountMax child items 
     {
         msgo.removeChild(msgo.childNodes[0]);
         nRowCount -= 1;
 
         // When it eventually overruns
-        if (msgo.childNodes.length > 250)
-            while (msgo.childNodes.length > 200)
+        if (msgo.childNodes.length > g_nRowCountMax+50)
+            while (msgo.childNodes.length > g_nRowCountMax)
                 msgo.removeChild(msgo.childNodes[0]);
     }
     //msgo.innerHTML += str;
