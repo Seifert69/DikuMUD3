@@ -349,6 +349,7 @@ var
    jd : unitptr;
    gold : integer;
    xp : integer;
+   m_display : string;
    k : string;
    ex_string : stringlist;
    r_time : integer;
@@ -373,8 +374,8 @@ code
    gold := criminal.level * criminal.level * 100;
     if (gold > PLATINUM_MULT)
        gold := PLATINUM_MULT;  // Make sure this doesn't become more than 1 PP
-
-   xp :=  criminal.level * 20 + 50;
+   m_display := moneystring(gold,1);
+xp :=  criminal.level * 20 + 50;
    if (xp > 1000)
        xp := 1000;  // Make sure some glitch doesn't cause excessive XP
 
@@ -401,9 +402,9 @@ code
   
    jd := findsymbolic("database@justice");
    if (incr == 0)
-      addextra(jd.extra, ex_string, "JAILBREAK!! A reward of "+itoa(gold)+" gold has been offered for the head of "+criminal.name);    
+      addextra(jd.extra, ex_string, "JAILBREAK!! A reward of "+m_display+" has been offered for the head of "+criminal.name);    
     else
-      addextra(jd.extra, ex_string, "A reward of "+itoa(gold)+" gold has been offered for the head of "+criminal.name);  
+      addextra(jd.extra, ex_string, "A reward of "+m_display+" has been offered for the head of "+criminal.name);  
    sendto("save", jd);
    return;    
 } 
