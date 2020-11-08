@@ -7401,7 +7401,7 @@ var
 code
 {
    heartbeat := PULSE_SEC*4;
-   log("Energy worms checking location " + SYMNAME(self.outside));
+   log("Energy worms checking location " + self.outside.symname);
 
    :init:
    wait(SFB_ALL, TRUE);
@@ -7415,7 +7415,7 @@ code
          act("As $2n attacks $1n $2e is dissolved in a bright light.", A_SOMEONE, self, u, null, TO_ROOM);
          stop_fighting(self.fighting, self);
          stop_fighting(self, self.fighting);
-         log("Overpopulation destroyed aggressive NPC " + SYMNAME(u) + " from the game");
+         log("Overpopulation destroyed aggressive NPC " + u.symname + " from the game");
          destroy(u);
          goto init;
       }
@@ -7432,7 +7432,7 @@ code
    while (u)
    {
       nCount := nCount + 1;
-      s := SYMNAME(u);
+      s := u.symname;
 
       // Don't consume players or player's corpses :o)
       if ((s $= "NO-NAME@NO-ZONE") or (s $= "corpse@death"))

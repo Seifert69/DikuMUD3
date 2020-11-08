@@ -439,7 +439,7 @@ void dilfe_fld(register class dilprg *p)
                 if (!IS_PC((class unit_data *) v1->val.ptr))
                     sprintf(buf, "%s@%s", UNIT_FI_NAME((class unit_data *) v1->val.ptr), UNIT_FI_ZONENAME((class unit_data *) v1->val.ptr));
                 else
-                    sprintf(buf, "%s@_player", UNIT_NAME((class unit_data *) v1->val.ptr));
+                    strcpy(buf, "NO-NAME@NO-ZONE");
 
                 v->val.ptr = buf;
             }
