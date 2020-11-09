@@ -1,16 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage steal (item) (character)<br/><br/>
-<br/>
-If you're good at stealing, this is a fast way to get good equipment,<br/>
-a good time in the jail, and a horde of blood thirsty<br/>
-enemies. Stealing is considered a crime, and few mudders will help a thief<br/>
-in trouble. Some will not help a thief at all. The stealskill<br/>
-enables you to take items from the inventory of another living being only.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Filching<br/><br/>
-Pick Pockets<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Stealing</h1>
+<p>Usage:
+</p>
+<pre> steal &lt;item&gt; from &lt;target&gt;
+</pre>
+<p>The steal skill enables you to take items from the inventory of another living
+being. With this skill you can only steal items that are not worn by the target.
+When you try to steal your steal skill and dexterity and roll is compared to
+the targets steal skill and brain.  If your steal is successful you still risk 
+that any bystanders see your crime even if the target didn't.
+</p><p>If you're good at stealing, this is a fast way to get good equipment, and also a
+way to spend some quality time in jail. Not to mention, a horde of blood thirsty
+enemies. 
+</p><p>Stealing is considered a crime, and few MUD'ers will help a thief in trouble.
+Some will not help a thief at all. 
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Filching</a>
+ &gt; <a cmd='#'>Help Pick Pockets</a>
+ &gt; <a cmd='#'>Help Peek</a>
+</pre>
+
+
+
+
+</div>

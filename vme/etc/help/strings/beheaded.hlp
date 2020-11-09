@@ -1,16 +1,19 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage decapitate corpse<br/><br/>
-<br/>
-Use this command to cut the head off of your victims. Very useful if you<br/>
-must bring it back to the captain to collect a reward or if you are rebirthing and collecting heads for sacrifice.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Decapitate<br/><br/>
-Cut <br/><br/>
-Wanted<br/><br/>
-Reward<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Decapitate</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>decapitate corpse</a>
+</pre>
+<p>Use this command to cut the head off of your victims. Very useful if you must bring it back to the captain to collect a reward or if you are rebirthing and collecting heads for sacrifice.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Decapitate</a>
+&gt; <a cmd='#'>Help Cut</a>
+&gt; <a cmd='#'>Help Wanted</a>
+&gt; <a cmd='#'>Help Reward</a>
+</pre>
+
+
+
+
+</div>

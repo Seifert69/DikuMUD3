@@ -270,7 +270,7 @@ struct dilargstype
 #define DILE_GFOL      195
 #define DILE_SACT	   196	/* sact (#,#,#,#,#,#) */
 #define DILE_GINT	   197	/* getinteger(unit, idx) */
-#define DILE_PLAYERID    198
+#define DILE_PLAYERID  198
 #define DILI_MAX       198	/* The maximum node number */
 
 /* DIL Field references */
@@ -404,8 +404,9 @@ struct dilargstype
 #define DILF_XDIFF 124  /*.exit_diff[UP] (room) */
 #define DILF_ODI   125  /*.opendiff (unit) */
 #define DILF_PROF  126	/* .profession */
+#define DILF_SYMNAME  127  // returns string "nameidx @ zoneidx"
 
-#define DILF_MAX 	126	/* The maximum field number */
+#define DILF_MAX 	 127	/* The maximum field number */
 
 /* Legal variable values */
 #define DILV_UP         1	/* unit pointer Rexpr Var */

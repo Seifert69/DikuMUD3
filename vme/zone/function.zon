@@ -57,6 +57,8 @@ xx/xx/99 - Around may-june? Storage broken in real commands and put in commands.
            must be below this to wear-Ratlin/Darg
 2010.05.26 - Etna added comb_acid for mob macros
 2020.09.30 - Sender added prof_restrict to enable profession restrictions
+2020.11.07 - Papi. Rescue & teamwork now only rescues if rescuer and target is from
+             the same zone (e.g. goblin guard attacks midgaard guard. Rescue guard.)
 "
 
 
@@ -92,13 +94,13 @@ poi_resist - removes any poison spells cast on mobs.
 
 %dil
 
+
 dilbegin do_examine(arg : string);
 code
 {
-quit;
+   quit;
 }
 dilend
-
 
 
 // reward give replacement. To be copied onto NPCs that hand out rewards 
@@ -1696,7 +1698,7 @@ code
       pause;
       if (isset(unitenter.flags, UNIT_FL_BURIED))
       {
-         log("oc_enterunit(): "+SYMNAME(self)+" seems to be permanently buried");
+         log("oc_enterunit(): "+self.symname+" seems to be permanently buried");
          return(FALSE);
       }
    }
@@ -1705,7 +1707,7 @@ code
    {
       if (isset(unitenter.openflags, EX_LOCKED))
       {
-         log("oc_enterunit(): "+SYMNAME(self)+" locked and not allowed to unlock.");
+         log("oc_enterunit(): "+self.symname+" locked and not allowed to unlock.");
          return (FALSE);
       }
    }
@@ -1871,7 +1873,7 @@ code
 
       if (self.outside.type == UNIT_ST_NPC)
       {
-         log(SYMNAME(self) + " is unable to dismount "+SYMNAME(self.outside));
+         log(self.symname + " is unable to dismount "+self.outside.symname);
          return(FALSE);
       }
 
@@ -1883,7 +1885,7 @@ code
    if (isset(self.outside.flags, UNIT_FL_BURIED))
    {
       exec("knock " + self.outside.names.[0], self);
-      log(SYMNAME(self) + " is buried alive in "+SYMNAME(self.outside));
+      log(self.symname + " is buried alive in "+self.outside.symname);
       pause;
       return(FALSE);
    }
@@ -1896,7 +1898,7 @@ code
       if (isset(self.outside.openflags, EX_LOCKED))
       {
          exec("knock " + self.outside.names.[0], self);
-         log(SYMNAME(self) + " is locked helplessly into " + SYMNAME(self.outside));
+         log(self.symname + " is locked helplessly into " + self.outside.symname);
          pause;
          return(FALSE);
       }
@@ -1909,7 +1911,7 @@ code
       if (isset(self.outside.openflags, EX_CLOSED))
       {
          exec("knock " + self.outside.names.[0], self);
-         log(SYMNAME(self) + " is helplessly unable to open " + SYMNAME(self.outside));
+         log(self.symname + " is helplessly unable to open " + self.outside.symname);
          pause;
          return(FALSE);
       }
@@ -1923,7 +1925,7 @@ code
 
    if (self.outside == u)
    {
-      log("get_out() " + SYMNAME(self) + " is unable to exit " + SYMNAME(self.outside));
+      log("get_out() " + self.symname + " is unable to exit " + self.outside.symname);
       return(FALSE);
    }
 
@@ -2009,7 +2011,7 @@ code
          i := i + 1;
          if (i > 100)
          {
-            log("readywalk(): "+SYMNAME(self)+" fighting or about to die forever.");
+            log("readywalk(): "+self.symname+" fighting or about to die forever.");
             return(-1);
          }
          pause;
@@ -2042,14 +2044,14 @@ code
       if (self.outside.type == UNIT_ST_ROOM)
       {
          // Load and enter a canoe 
-         // debug log("readywalk(): "+SYMNAME(self)+"load a canoe");
+         // debug log("readywalk(): "+self.symname+"load a canoe");
          u := load("coffin1@midgaard");
-         // debug log("readywalk(): loaded " + SYMNAME(u));
+         // debug log("readywalk(): loaded " + u.symname);
          secure(u, lostit);
          link(u, self.outside); // Drop coffin on the ground.
-         // debug log("readywalk(): canoe now in " + SYMNAME(u.outside));
+         // debug log("readywalk(): canoe now in " + u.outside.symname);
          link(self, u);  // Put self in coffin, - can't enter in the dark (or will load 20 coffins)
-         // debug log("readywalk(): "+SYMNAME(self)+" now in " + SYMNAME(self.outside));
+         // debug log("readywalk(): "+self.symname+" now in " + self.outside.symname);
          unsecure(u);
          if (self.outside != u)
             goto lostit;
@@ -7244,11 +7246,11 @@ code
 
    gotcha:= FALSE;
 
-   foreach (/*UNIT_ST_PC|*/UNIT_ST_NPC, u) /* we'll assume npcs only for now */
+   foreach (UNIT_ST_NPC, u) /* we'll assume npcs only for now */
    {
 	   if (u == self) continue;
-
-	   if (not visible (self, u)) continue;
+	   if (not visible(self, u)) continue;
+	   if (u.zoneidx == self.zoneidx) continue;
 
       if (isset (u.charflags, CHAR_LEGAL_TARGET) and
          isset (u.charflags, CHAR_PROTECTED))
@@ -7308,74 +7310,68 @@ var
 
 code
 {
-if (" / " in lst)
-    sl := split (lst, " / ");
-else
-    sl := split (lst, "/");
+   if (" / " in lst)
+      sl := split (lst, " / ");
+   else
+      sl := split (lst, "/");
 
 :init:
+   heartbeat:= PULSE_VIOLENCE;
+   wait (SFB_TICK, TRUE);
+   wait (SFB_COM, self.position > POSITION_SLEEPING);
 
-heartbeat:= PULSE_VIOLENCE;
+   if (self.position < POSITION_STANDING)
+   {
+      exec ("stand", self);
+      goto init;
+   }
 
-wait (SFB_TICK, TRUE);
+   gotcha:= FALSE;
 
-wait (SFB_COM, (self.position > POSITION_SLEEPING) );
+   foreach (UNIT_ST_NPC, u)
+   {
+	   if (u == self) continue;
+      if (not visible(self, u)) continue;
+	   if (u.zoneidx != self.zoneidx) continue;
 
-if (self.position < POSITION_STANDING) exec ("stand", self);
-if (self.position < POSITION_STANDING) goto init;
+      i := 0;
 
-gotcha:= FALSE;
+      // Don't rescue someone if they're protected and just broke the law
+      if (isset(u.charflags, CHAR_LEGAL_TARGET) and isset(u.charflags, CHAR_PROTECTED))
+         continue;
 
-foreach (/*UNIT_ST_PC|*/UNIT_ST_NPC, u)
-    {
-	if (u == self) continue;
-
-	if (not visible (self, u)) continue;
-	i := 0;
-
-    if (isset (u.charflags, CHAR_LEGAL_TARGET) and
-        isset (u.charflags, CHAR_PROTECTED))
-        continue;
-
-	while (i < length(sl))
-        {
-
-        if (sl.[i] in u.names)
+      while (i < length(sl))
+      {
+         if (sl.[i] in u.names)
+         {
+            if ((u.position == POSITION_FIGHTING) and
+               (u.fighting != self) and (u.hp <= (u.max_hp / 2)) )
             {
+               evil := self.outside.inside;
+               while (evil != null)
+               {
+                  if (evil.fighting == u) // Find if someone is hitting dude
+                  {
+                     gotcha := TRUE;
+                     break;
+                  }
 
-			if ((u.position == POSITION_FIGHTING) and
-			    (u.fighting != self) and (u.hp <= (u.max_hp / 2)) )
-                {
+                  evil := evil.next;
+               }
 
-                evil := self.outside.inside;
-                while (evil != null)
-                    {
-                    if (evil.fighting == u) // Find if someone is hitting dude
-                        {
-                        gotcha := TRUE;
-                        break;
-                        }
-
-                    evil := evil.next;
-                    }
-
-        		if (gotcha == TRUE) break;
-			    }
+           		if (gotcha == TRUE) break;
             }
-
-
-		i := i + 1;
+         }
+   		i := i + 1;
 		}
 
-	if (gotcha == TRUE)
-        {
+   	if (gotcha == TRUE)
+      {
         base_rescue@skills(u);
         break;
 		}
 	}
-
-goto init;
-
+   goto init;
 }
 
 dilend

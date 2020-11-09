@@ -426,13 +426,13 @@ extern int sunlight;
   (!CHAR_HAS_FLAG(ch, CHAR_BLIND))
 
 #define CHAR_CAN_SEE(ch, unit) \
-  (CHAR_VISION(ch) &&					\
+  (!IS_CHAR(ch) || (CHAR_VISION(ch) &&					\
    !IS_SET(UNIT_FLAGS(unit), UNIT_FL_BURIED) &&		\
    (CHAR_LEVEL(ch) >= UNIT_MINV(unit)) &&		\
    (CHAR_LEVEL(ch) >= CREATOR_LEVEL ||			\
     (UNIT_IS_LIGHT(UNIT_IN(ch)) &&			\
      (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INVISIBLE) ||	\
-      CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE)))))
+      CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE))))))
 
 #define CHAR_CAN_GO(ch, door) \
    (ROOM_EXIT(UNIT_IN(ch),door) && (ROOM_EXIT(UNIT_IN(ch),door)->to_room) \

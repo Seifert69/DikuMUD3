@@ -204,7 +204,7 @@ void make_code(struct exptype *dest);
 %token DILSE_AND DILSE_OR DILSE_NOT DILSE_ISPLAYER
 %token DILSE_WPNTXT DILSE_SKITXT DILSE_SENDPRE DILSE_GOPP
 %token DILSE_RHEAD DILSE_NHEAD DILSE_OHEAD DILSE_PHEAD
-%token DILSE_GFOL DILSE_SACT  DILSE_GINT DILSE_PLAYERID
+%token DILSE_GFOL DILSE_SACT  DILSE_GINT DILSE_PLAYERID 
 
 /* DIL built-in variables */
 %token DILTO_EQ DILTO_NEQ DILTO_PEQ DILTO_SEQ DILTO_LEQ DILTO_GEQ
@@ -259,7 +259,7 @@ void make_code(struct exptype *dest);
 %token DILSF_FNAME DILSF_NOTES DILSF_HELP DILSF_CREATORS DILSF_PAYONLY
 %token DILSF_RSTTM DILSF_EDT DILSF_SWT DILSF_LOGLVL
 %token DILSF_VALS DILSF_NARM DILSF_OPPCT DILSF_KEY DILSF_LASTROOM
-%token DILSF_EXITKEY DILSF_FOLCT DILSF_OFFEN DILSF_DEFEN
+%token DILSF_EXITKEY DILSF_FOLCT DILSF_OFFEN DILSF_DEFEN DILSF_SYMNAME
 
 /* DIL types */
 %token DILST_UP DILST_INT DILST_SP DILST_SLP DILST_EDP DILST_ZP DILST_CP
@@ -1085,6 +1085,14 @@ field    : idx
             $$.typ = DILV_SP;
             $$.dsl = DSL_DYN;
             $$.num = DILF_NMI;
+         }
+         | DILSF_SYMNAME       /* .symname */
+         {
+            INITEXP($$);
+            $$.rtyp = DILV_UP;
+            $$.typ = DILV_SP;
+            $$.dsl = DSL_DYN;
+            $$.num = DILF_SYMNAME;
          }
           | DILSF_KEY       /* .key */
          {
@@ -2777,7 +2785,6 @@ dilfun   :  funcall
             }
             FREEEXP($3);
          }
-
          | DILSE_DLD '(' dilexp ',' dilexp ')'
          {
             INITEXP($$);

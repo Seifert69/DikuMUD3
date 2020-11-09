@@ -395,7 +395,7 @@ void dilfe_fld(register class dilprg *p)
         break;
 
     /* *********************************** */
-    /* .nameidx                               */
+    /* .nameidx                            */
     case DILF_NMI:
         switch (dil_getval(v1))
         {
@@ -410,6 +410,38 @@ void dilfe_fld(register class dilprg *p)
                 v->type = DILV_SP;
                 v->val.ptr =
                     (char *)UNIT_FI_NAME((class unit_data *)v1->val.ptr);
+            }
+            else
+                v->type = DILV_FAIL; /* not applicable */
+            break;
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+        }
+        break;
+
+    /* *********************************** */
+    /* .symname                            */
+    case DILF_SYMNAME:
+        switch (dil_getval(v1))
+        {
+        case DILV_NULL:
+        case DILV_FAIL:
+            v->type = DILV_FAIL; /* not applicable */
+            break;
+        case DILV_UP:
+            if (v1->val.ptr)
+            {
+                v->atyp = DILA_NORM;
+                v->type = DILV_SP;
+
+                static char buf[512];
+                if (!IS_PC((class unit_data *) v1->val.ptr))
+                    sprintf(buf, "%s@%s", UNIT_FI_NAME((class unit_data *) v1->val.ptr), UNIT_FI_ZONENAME((class unit_data *) v1->val.ptr));
+                else
+                    strcpy(buf, "NO-NAME@NO-ZONE");
+
+                v->val.ptr = buf;
             }
             else
                 v->type = DILV_FAIL; /* not applicable */

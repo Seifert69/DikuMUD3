@@ -1,16 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage filch (item) (character)<br/><br/>
-<br/>
-If you're good at filching, this is a fast way to get good jewelry,<br/>
-a good time in the jail, and a horde of blood thirsty<br/>
-enemies. filching is considered a crime, and few mudders will help a thief<br/>
-in trouble. Some will not help a thief at all. The filch skill<br/>
-enables you to take jewelry that is being worn only.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Steal<br/><br/>
-Pick Pockets<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Filching</h1>
+<p>Usage:
+</p>
+<pre> filch &lt;item&gt; from &lt;target&gt;
+</pre>
+<p>The filch skill enables you to take worn jewelry from another living being.
+With this skill you can only filch jewelry items that are worn by the target.
+When you try to filch your filch skill and dexterity and roll is compared to
+the targets filch and brain.  If your filch is successful you still risk 
+that any bystanders see your crime even if the target didn't.
+</p><p>If you're good at filching, this is a fast way to get good jewelry, and also a
+way to spend some quality time in jail. Not to mention, a horde of blood thirsty
+enemies. 
+</p><p>Filching is considered a crime, and few MUD'ers will help a thief in trouble.
+Some will not help a thief at all. 
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Stealing</a>
+ &gt; <a cmd='#'>Help Pick Pockets</a>
+ &gt; <a cmd='#'>Help Peek</a>
+</pre>
+
+
+
+
+</div>

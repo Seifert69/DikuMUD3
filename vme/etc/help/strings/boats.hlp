@@ -1,16 +1,16 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage sail (direction)<br/><br/>
-<br/><br/>
-Example: sail east<br/><br/>
-<br/>
-When you are near water and have a boat in your possession, you can drop<br/>
-the boat, enter it, and then sail out on the water (a river for example).<br/>
-This command is thus used when you are inside a boat and want to sail in<br/>
-a given direction.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Sail<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Sail</h1>
+<p>Usage:
+</p>
+<pre>sail &lt;direction&gt;
+</pre>
+<p>Example:
+</p>
+<pre><a cmd='#'>sail east</a>
+</pre>
+<p>When you are near water and have a boat in your possession, you can drop the boat, enter it, and then sail out on the water (a river for example). This command is thus used when you are inside a boat and want to sail in a given direction.
+</p>
+
+
+
+
+</div>

@@ -197,6 +197,9 @@
             font-family: 'Courier New', Courier, monospace;
             text-shadow: 0 0 5px #808080;
         }
+
+        pre { white-space: pre-wrap; }
+
         a:link {
             color:currentColor;
         }

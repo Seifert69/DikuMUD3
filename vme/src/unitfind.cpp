@@ -482,6 +482,7 @@ class unit_data *find_unit_general(const class unit_data *viewer,
     }
 
     for (; list; list = list->next)
+    {
         if (IS_SET(type, UNIT_TYPE((class unit_data *) list)) && (ct = UNIT_NAMES((class unit_data *)list).IsNameRaw(c)) && (ct - c >= best_len) && CHAR_CAN_SEE(viewer, list))
         {
             if (ct - c > best_len)
@@ -493,6 +494,7 @@ class unit_data *find_unit_general(const class unit_data *viewer,
             if (--number == 0)
                 best = (class unit_data *)list;
         }
+    }
 
     *arg = (c + best_len);
 
