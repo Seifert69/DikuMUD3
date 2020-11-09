@@ -519,11 +519,11 @@ code
 
    if (crime_type == CRIME_MURDER)
    {
-      desc := criminal.name+" is suspected of the murder of "+vict.name+". Anyone with information should report it to the Guard's Office.";
+      desc := "<a cmd='accuse # murder'>"+criminal.name+"</a> is suspected of the murder of "+vict.name+". Anyone with information should report it to the Guard's Office.";
    }
    else if (crime_type == CRIME_STEALING)
    {
-      desc := criminal.name+" is suspected of stealing from "+vict.name+". Anyone with information should report it to the Guard's Office.";
+      desc := "<a cmd='accuse # stealing'>"+criminal.name+"<a/> is suspected of stealing from "+vict.name+". Anyone with information should report it to the Guard's Office.";
    }
    else
    {
@@ -811,8 +811,7 @@ code
       suspects := nextdude;
    }
 
- // Diplay Wanted Poster
-
+ // Diplay Wanted Poster 
 
    sendtext("<DIV class=cpr>W A N T E D</div><br><br>", activator);
    sendtext("<b><div class=cpy>Wanted Dead - Reward Offered</div></b><br><br>", activator);
@@ -841,7 +840,7 @@ code
    if (length(local_suspects) > 0)
       sendtext(local_suspects+"<br>", activator);
    else
-      sendtext("None at this time.", activator);
+      sendtext("None at this time.<br>", activator);
 
    block;
    goto start;
@@ -1035,9 +1034,9 @@ goto end;
             update_criminal@justice(self, update_name, crime_type, atoi(c_pid), TRUE);
              c_ptr.names.[9] := itoa(1);
             if (atoi(c_type) == CRIME_MURDER)
-               c_ptr.descr := c_name+" has been accused in the "+crime+" of "+c_v_name+". This crime was witnessed  by: "+activator.name+".";
+               c_ptr.descr := "<a cmd='accuse # "+crime+"'>"+c_name+"</a> has been accused in the "+crime+" of "+c_v_name+". This crime was witnessed  by: "+activator.name+".";
             else
-                c_ptr.descr := c_name+" has been accused of "+crime+" from "+c_v_name+". This crime was witnessed  by: "+activator.name+".";
+                c_ptr.descr := "<a cmd='accuse # "+crime+"'>"+c_name+" </a> has been accused of "+crime+" from "+c_v_name+". This crime was witnessed  by: "+activator.name+".";
                 sendto("save", jd);
           }
          else

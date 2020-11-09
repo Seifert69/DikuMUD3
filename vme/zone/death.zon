@@ -887,6 +887,7 @@ external
   make_corpse ();
   remove_aff();
 	death_cry();
+   rem_db_entry@justice(criminal : unitptr, extra_type : string);
 code
 {
     heartbeat:=3;
@@ -909,7 +910,8 @@ code
 
     stop_fighting(self, null);
     self.position:=POSITION_DEAD;
-
+    if("$arrest" in self.extra)
+       rem_db_entry@justice(self, "$arrest"); //remove $arrest extra upon death
     if (self.type==UNIT_ST_NPC)
     destroy (self);
     else
