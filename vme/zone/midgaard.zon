@@ -1009,21 +1009,19 @@ code
    heartbeat := PULSE_SEC * SECS_PER_MUD_HOUR;
    sn := self.outside.nameidx;
    sz := self.outside.zoneidx;
-   
+   jd := findsymbolic("database@justice");
+ 
    // Change player arrest descr to reflect that the char is in jail.
    //
-   if ("$arrest" in self.extra)
+ if("$arrest" in self.extra)
    {
-      jd := findsymbolic("database@justice");
 
-      if (jd)
-      {
-         id := self.extra.["$arrest"].names.[1];
-         jd.extra.[id].descr := self.name+" is currently serving time in jail.";
-      }
-   } 
+     id := self.extra.["$arrest"].names.[1];
+     jd.extra.[id].descr := self.name+" is currently serving time in jail.";
+   }
 
-   :loop:
+ 
+  :loop:
    pause;
 
    if (sn != self.outside.nameidx)
@@ -1031,6 +1029,14 @@ code
       //player has escaped from jail
       jailbreak@justice(self);
       quit;
+   }
+
+ if("$arrest" in self.extra)
+   {
+        jd := findsymbolic("database@justice"); 
+        id := self.extra.["$arrest"].names.[1];
+      log(id);    
+     jd.extra.[id].descr := self.name+" is currently serving time in jail. "+itoa(du)+" hours remaining";
    }
 
    if ((du % 4) == 0)
@@ -1053,9 +1059,11 @@ code
       act("You make another mark on the wall. Only "+itoa(du)+" hours till freedom!",
           A_ALWAYS, self, null, null, TO_CHAR);
    }
+   
 
    du := du - 1;
 
+   
    goto loop;
 
 
