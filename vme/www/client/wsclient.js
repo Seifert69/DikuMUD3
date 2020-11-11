@@ -6,6 +6,7 @@ var sPaged = "";
 
 var g_crosshairs = new Image;
 
+var g_sPlyName = "";
 var g_sImage = "../img/logo.gif";
 var g_nLastSend = Math.round(Date.now() / 1000);
 
@@ -672,7 +673,7 @@ function outputText(str, bParse) {
             // simply execute when added to the lists.
             if (str.slice(-9) == "</script>") {
                 var myscript = str.slice(0, -9).slice(8);
-                //console.log(myscript);
+                console.log(myscript);
                 eval(myscript);
                 InputFocus(null);
             }

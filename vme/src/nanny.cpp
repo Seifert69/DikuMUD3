@@ -597,14 +597,18 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
         return;
     }
 
-    send_to_descriptor(scriptwrap("PasswordOff()").c_str(), d);
-
+    char buf[512];
     if (pwdcompare(crypt(arg, PC_FILENAME(d->character)), PC_PWD(d->character), PC_MAX_PASSWORD))
     {
+        sprintf(buf, "PasswordOff('', '%s')", g_cServerConfig.m_mudname);
+        send_to_descriptor(scriptwrap(buf).c_str(), d);
         send_to_descriptor("Passwords don't match.<br/>", d);
         set_descriptor_fptr(d, nanny_new_pwd, TRUE);
         return;
     }
+
+    sprintf(buf, "PasswordOff('%s', '%s')", PC_FILENAME(d->character), g_cServerConfig.m_mudname);
+    send_to_descriptor(scriptwrap(buf).c_str(), d);
 
     /* See if guest is in game, if so - a guest was LD       */
     /* Password has now been redefined                       */
@@ -678,7 +682,9 @@ void nanny_new_pwd(class descriptor_data *d, char *arg)
         return;
     }
 
-    send_to_descriptor(scriptwrap("PasswordOff()").c_str(), d);
+    char buf[512];
+    sprintf(buf, "PasswordOff('', '%s')", g_cServerConfig.m_mudname);
+    send_to_descriptor(scriptwrap(buf).c_str(), d);
 
     if (!check_pwd(d, arg))
     {
@@ -830,20 +836,19 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
                 MIN(30, PC_CRACK_ATTEMPTS(d->character)) * 2 * PULSE_SEC;
             return;
         }
-        STATE(d)
-        ++;
+        STATE(d)++;
     }
 
     if (STATE(d) == 2)
     {
-        sprintf(buf, "Welcome back %s, please enter your password: ",
-                UNIT_NAME(d->character));
+        sprintf(buf, "Welcome back %s, please enter your password: ", UNIT_NAME(d->character));
         send_to_descriptor(buf, d);
         send_to_descriptor(scriptwrap("PasswordOn()").c_str(), d);
         return;
     }
 
-    send_to_descriptor(scriptwrap("PasswordOff()").c_str(), d);
+    sprintf(buf, "PasswordOff('%s', '%s')", UNIT_NAME(d->character), g_cServerConfig.m_mudname);
+    send_to_descriptor(scriptwrap(buf).c_str(), d);
 
     if (str_is_empty(arg))
     {

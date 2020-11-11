@@ -172,10 +172,22 @@
             setInterval(keepAlive, 60000);
 
             function PasswordOn() {
+                g_sPlyName = "";
+                window.document.title = "Login Password - DikuMUD";
                 document.getElementById("message").style.display = "none";
                 document.getElementById("pwd").style.display = "inline"; 
             }
-            function PasswordOff() {
+            function PasswordOff(plyname, mudname) {
+                if (plyname == null)
+                    plyname = "Upgrade server"; // Old server version
+
+                g_sPlyName = plyname;
+                console.log(plyname);
+                if (mudname == "")
+                    mudname = "DikuMUD web client";
+                if (plyname == "")
+                    plyname = "Login Name"
+                window.document.title = plyname + " - " + mudname;
                 document.getElementById("message").style.display = "inline";
                 document.getElementById("pwd").style.display = "none"; 
             }
