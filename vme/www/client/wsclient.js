@@ -14,6 +14,7 @@ const g_bDebugOutput = false; // Set to true to output HTML to console
 const g_nRowCountMax = 1000;  // Maximum history buffer
 
 var g_sComms = "<h1>Communications History</h1><br/>";  // Global string of communication
+var g_bCommsChanged = false; // Set to true if there's something to save
 
 var g_nHp = 1;
 var g_nHpMax = 1;
@@ -590,6 +591,10 @@ function outputItem(item) {
     document.getElementById("al_text").scrollTop = document.getElementById("al_text").scrollHeight;
 }
 
+function setCommsText(mystr) {
+    g_sComms += mystr;
+    g_bCommsChanged = true;
+}
 
 // bParse parameter. If false then it skips all
 function outputText(str, bParse) {
@@ -647,25 +652,25 @@ function outputText(str, bParse) {
             setMap(item.firstChild.getAttribute("zone"), item.firstChild.getAttribute("map"));
         }
         else if (str.slice(0, 16) == "<div class='say_") {
-            g_sComms += item.firstChild.innerHTML + "<br/>";
+            setCommsText(item.firstChild.innerHTML + "<br/>");
         }
         else if (str.slice(0, 16) == "<div class='ask_") {
-            g_sComms += item.firstChild.innerHTML + "<br/>";
+            setCommsText(item.firstChild.innerHTML + "<br/>");
         }
         else if (str.slice(0, 16) == "<div class='ask_") {
-            g_sComms += item.firstChild.innerHTML + "<br/>";
+            setCommsText(item.firstChild.innerHTML + "<br/>");
         }
         else if (str.slice(0, 18) == "<div class='shout_") {
-            g_sComms += item.firstChild.innerHTML + "<br/>";
+            setCommsText(item.firstChild.innerHTML + "<br/>");
         }
         else if (str.slice(0, 19) == "<div class='whisper") {
-            g_sComms += item.firstChild.innerHTML + "<br/>";
+            setCommsText(item.firstChild.innerHTML + "<br/>");
         }
         else if (str.slice(0, 16) == "<div class='tell") {
-            g_sComms += item.firstChild.innerHTML + "<br/>";
+            setCommsText(item.firstChild.innerHTML + "<br/>");
         }
         else if (str.slice(0, 17) == "<div class='comm_") {
-            g_sComms += item.firstChild.innerHTML + "<br/>";
+            setCommsText(item.firstChild.innerHTML + "<br/>");
         }
         else if (str.slice(0, 8) == "<script>") {
             // For now I can't figure out a better method
@@ -673,7 +678,7 @@ function outputText(str, bParse) {
             // simply execute when added to the lists.
             if (str.slice(-9) == "</script>") {
                 var myscript = str.slice(0, -9).slice(8);
-                console.log(myscript);
+                //console.log(myscript);
                 eval(myscript);
                 InputFocus(null);
             }
@@ -910,6 +915,16 @@ function onMainClick()
 
 function keepAlive()
 {
+    if (g_bCommsChanged)
+    {
+        if (g_sPlyName != "")
+        {
+            window.localStorage.setItem(g_sPlyName, g_sComms);
+            console.log("Saved local storage for " + g_sPlyName);
+        }
+        g_bCommsChanged = false;
+    }
+
     var sec = Math.round(Date.now() / 1000);
 
     if (sec-g_nLastSend < 250)
