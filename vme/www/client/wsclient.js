@@ -6,11 +6,14 @@ var sPaged = "";
 
 var g_crosshairs = new Image;
 
+var g_sPlyName = "";
 var g_sImage = "../img/logo.gif";
 var g_nLastSend = Math.round(Date.now() / 1000);
 
 const g_bDebugOutput = false; // Set to true to output HTML to console
 const g_nRowCountMax = 1000;  // Maximum history buffer
+
+var g_sComms = "<h1>Communications History</h1><br/>";  // Global string of communication
 
 var g_nHp = 1;
 var g_nHpMax = 1;
@@ -398,6 +401,18 @@ function modalHide() {
     InputFocus(null);
 }
 
+// Fill the paged area (stick text) with text (innerHTML)
+//
+function pagedSetText(mytext) {
+    var item2 = document.createElement("div");
+    item2.setAttribute("style", "display: inline");
+    item2.innerHTML = mytext;
+
+    document.getElementById("acp_text").firstChild.replaceWith(item2);
+}
+
+// Fill the paged area (sticky text) with an item
+//
 function pagedSet(item) {
     outputItem(item);
 
@@ -631,13 +646,34 @@ function outputText(str, bParse) {
             setExits(item.firstChild.getAttribute("exits"));
             setMap(item.firstChild.getAttribute("zone"), item.firstChild.getAttribute("map"));
         }
+        else if (str.slice(0, 16) == "<div class='say_") {
+            g_sComms += item.firstChild.innerHTML + "<br/>";
+        }
+        else if (str.slice(0, 16) == "<div class='ask_") {
+            g_sComms += item.firstChild.innerHTML + "<br/>";
+        }
+        else if (str.slice(0, 16) == "<div class='ask_") {
+            g_sComms += item.firstChild.innerHTML + "<br/>";
+        }
+        else if (str.slice(0, 18) == "<div class='shout_") {
+            g_sComms += item.firstChild.innerHTML + "<br/>";
+        }
+        else if (str.slice(0, 19) == "<div class='whisper") {
+            g_sComms += item.firstChild.innerHTML + "<br/>";
+        }
+        else if (str.slice(0, 16) == "<div class='tell") {
+            g_sComms += item.firstChild.innerHTML + "<br/>";
+        }
+        else if (str.slice(0, 17) == "<div class='comm_") {
+            g_sComms += item.firstChild.innerHTML + "<br/>";
+        }
         else if (str.slice(0, 8) == "<script>") {
             // For now I can't figure out a better method
             // Preferably I would have loved for the script to
             // simply execute when added to the lists.
             if (str.slice(-9) == "</script>") {
                 var myscript = str.slice(0, -9).slice(8);
-                //console.log(myscript);
+                console.log(myscript);
                 eval(myscript);
                 InputFocus(null);
             }
@@ -812,6 +848,11 @@ function shSettings() {
     document.getElementById("modtext").firstChild.replaceWith(item);
 
     document.getElementById("myModal").style.display = "block";
+}
+
+function shHistory() {
+    pagedSetText(g_sComms);
+    modalShow();
 }
 
 function toggleSettings() {
