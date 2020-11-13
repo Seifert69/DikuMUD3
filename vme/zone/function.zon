@@ -4105,7 +4105,7 @@ dilbegin aware shopkeepernew(prod       : stringlist,
                              custom_acts : stringlist,
                              itemtypes  : intlist,
                              sellprofit : integer,    buyprofit   : integer,
-                             maxcash    : integer);
+                             maxcash    : integer, shophome : integer);
 external
    integer isopen( opentimes : stringlist );
    integer carry_n_limit( ch : unitptr );
@@ -4188,8 +4188,9 @@ code
    /* not have full money every time he is killed, only refreshed once  */
    /* per day or after a reboot/crash as it should. (Nexus)             */
 
-   homes := rom.symname;
+
    mys := self.symname;
+   homes := rom.symname;
    home := findroom(homes);
    account := "$Shop Account" in home.extra;
 
@@ -4342,7 +4343,7 @@ code
       goto loop;
 
    // Check if we are in our shop
-   if (self.outside.symname != homes)
+   if (shophome and (self.outside.symname != homes))
    {
       pause;
       exec("say I better get back to my shop.", self);
@@ -4877,7 +4878,7 @@ external
                        custom_acts : stringlist,
                        itemtypes  : intlist,
                        sellprofit : integer,    buyprofit   : integer,
-                       maxcash    : integer);
+                       maxcash    : integer, shophome : integer);
 var
    i:integer;
    ln:integer;
@@ -4984,7 +4985,8 @@ code
       i := i + 1;
    }
 
-   shopkeepernew(prod, acts, il2, sellprofit, buyprofit, maxcash);
+   // Have the store be home by default. Use shopkeepernew@ for wandering shops
+   shopkeepernew(prod, acts, il2, sellprofit, buyprofit, maxcash, 1);
    quit;
 
    /* ======================================================== */

@@ -5839,7 +5839,7 @@ dilcopy shopkeepernew@function(
  "$1n says, 'Here you are, some delicious $2n.'",
  "$1n says, 'I might be able to sell this $2n.'",
  "$1n says, 'I don't have that many right now, maybe of you come back later.'"},
-{ITEM_FOOD}, 110, 10, 2*PLATINUM_MULT);
+{ITEM_FOOD}, 110, 10, 2*PLATINUM_MULT, TRUE);
 dilcopy evaluate@function(64);
 
 
@@ -5877,7 +5877,7 @@ dilcopy shopkeepernew@function(
  "$1n says, 'I might be able to sell this.",
  "$1n says, 'I don't have that many $2n in my stock right now.",
  "$1n says, '."
-}, {ITEM_FOOD}, 130, 10,2*PLATINUM_MULT);
+}, {ITEM_FOOD}, 130, 10,2*PLATINUM_MULT, TRUE);
 end
 
 
@@ -5913,7 +5913,7 @@ dilcopy shopkeepernew@function(
  "$1n says, 'Here you $3n, some $2n'",
  "$1n says, 'Did you kill this yourself, $3n? Cleaned is it? Well, I'll buy it then.'",
  "$1n says, 'Seems like i have to prepare some more meat, i don't have that many right now.'"
-}, {ITEM_FOOD}, 110, 10,2*PLATINUM_MULT);
+}, {ITEM_FOOD}, 110, 10,2*PLATINUM_MULT, TRUE);
 end
 
 
@@ -5953,7 +5953,7 @@ dilcopy shopkeepernew@function(
  "$1n says, 'Here you are.'",
  "$1n says, 'Thank you $3n, this is a nice $2n.'",
  "$1n says, ''"},
- {ITEM_LIGHT, ITEM_OTHER, ITEM_CONTAINER, ITEM_NOTE, ITEM_DRINKCON, ITEM_KEY, ITEM_PEN}, 120, 80,2*PLATINUM_MULT);
+ {ITEM_LIGHT, ITEM_OTHER, ITEM_CONTAINER, ITEM_NOTE, ITEM_DRINKCON, ITEM_KEY, ITEM_PEN}, 120, 80,2*PLATINUM_MULT, TRUE);
 
 end
 
@@ -5987,7 +5987,7 @@ dilcopy shopkeepernew@function(
  "$1n says, 'Here you are.'",
  "$1n says, 'Thank you $3n, this is a nice $2n.'",
  "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
- {ITEM_FOOD}, 110, 10,2*PLATINUM_MULT);
+ {ITEM_FOOD}, 110, 10,2*PLATINUM_MULT, TRUE);
 end
 
 
@@ -6030,7 +6030,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2n.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
-{ITEM_WEAPON, ITEM_FIREWEAPON}, 110,60,286720);
+{ITEM_WEAPON, ITEM_FIREWEAPON}, 110,60,286720, TRUE);
 end
 
 
@@ -6076,7 +6076,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2n.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
-{ITEM_ARMOR, ITEM_SHIELD}, 110,60,286720);
+{ITEM_ARMOR, ITEM_SHIELD}, 110,60,286720, TRUE);
 end
 
 
@@ -6114,7 +6114,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2n.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
- {ITEM_WORN}, 110, 60, 286720);
+ {ITEM_WORN}, 110, 60, 286720, TRUE);
 
 dilcopy resize_func@midgaard (ITEM_ARMOR,ITEM_WORN,ITEM_WORN,
                               ARM_CLOTHES,ARM_CLOTHES,IRON_MULT,"tailor");
@@ -6180,7 +6180,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2n.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
-{ITEM_ARMOR}, 110,60,286720);
+{ITEM_ARMOR}, 110,60,286720, TRUE);
 
 dilcopy resize_func@midgaard (ITEM_ARMOR, ITEM_WORN, ITEM_WORN,
 ARM_LEATHER,ARM_HLEATHER,3*IRON_MULT,"leather worker");
@@ -6237,7 +6237,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2n.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
-{ITEM_SCROLL, ITEM_WAND, ITEM_POTION, ITEM_STAFF}, 110,60,286720);
+{ITEM_SCROLL, ITEM_WAND, ITEM_POTION, ITEM_STAFF}, 110,60,286720, TRUE);
 
 end
 
@@ -6276,7 +6276,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2n.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
-{ITEM_TREASURE}, 110, 60, 286720);
+{ITEM_TREASURE}, 110, 60, 286720, TRUE);
 
 dilcopy resize_func@midgaard (ITEM_TREASURE,ITEM_OTHER,ITEM_WORN,
                               ARM_CLOTHES,ARM_CLOTHES,SILVER_MULT,
@@ -6317,7 +6317,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2n.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
-{ITEM_BOAT}, 110, 60, 286720);
+{ITEM_BOAT}, 110, 60, 286720, TRUE);
 end
 
 
@@ -6361,7 +6361,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2n.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
-{ITEM_CONTAINER}, 110, 60, 286720);
+{ITEM_CONTAINER}, 110, 60, 286720, TRUE);
 
 end
 
@@ -6492,7 +6492,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2n.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
-{ITEM_CONTAINER}, 110, 60, 286720);
+{ITEM_CONTAINER}, 110, 60, 286720, TRUE);
 
 end
 
@@ -6527,7 +6527,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2n.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
-{ITEM_CONTAINER}, 110, 60, 286720);
+{ITEM_CONTAINER}, 110, 60, 286720, TRUE);
 end
 
 
@@ -6573,7 +6573,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2n.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
-{ITEM_CONTAINER}, 110, 60, 286720);
+{ITEM_CONTAINER}, 110, 60, 286720, TRUE);
 end
 
 
@@ -6603,7 +6603,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2n.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
-{ITEM_CONTAINER}, 110, 60, 286720);
+{ITEM_CONTAINER}, 110, 60, 286720, TRUE);
 end
 
 
