@@ -1,10 +1,18 @@
-<br/>
-<br/>
-Usage contract (character)<br/><br/>
-<br/><br/>
-Example: contract mayor<br/><br/>
-<br/><br/>
-This command is used to hire one of the<br/>
-mobs to do your dirty work and kill a<br/>
-fellow player. At a cost of course!<br/>
-<br/>
+<div class="mw-parser-output"><h1>Contract</h1>
+<p>Usage:
+</p>
+<pre> contract &lt;character&gt;
+</pre>
+<p>Example:
+</p>
+<pre> contract mayor
+</pre>
+<p><br />
+This command is used to hire one of the mobs to do your dirty work and kill a
+fellow player. At a cost of course!
+</p>
+
+
+
+
+</div>

@@ -1,15 +1,19 @@
-<br/>
-Usage break<br/><br/>
-<br/>
-<br/>
-<br/>
-You can use this command when captured by a guard if you wish to attempt<br/>
-to break your handcuffs.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Law<br/><br/>
-Wanted <br/><br/>
-Protected<br/><br/>
-Guard Guild<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Break</h1>
+<p>Usage:
+</p>
+<pre> <a cmd='#'>break</a>
+</pre>
+<p>You can use this command when captured by a guard if you wish to attempt
+to break your handcuffs.
+</p><p>See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Law</a>
+ &gt; <a cmd='#'>Help Wanted</a>
+ &gt; <a cmd='#'>Help Protected</a>
+ &gt; <a cmd='#'>Help Police Guild</a>
+</pre>
+
+
+
+
+</div>

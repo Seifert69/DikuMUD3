@@ -1,14 +1,21 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage offer (character)<br/><br/>
-<br/><br/>
-Example: offer Mayor<br/><br/>
-<br/>
-This command is used, at an assassin, to get an offer on the price for<br/>
-assassinating another character.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Contract<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Offer</h1>
+<p>Usage:
+</p>
+<pre> offer &lt;character&gt;
+</pre>
+<p>Example:
+</p>
+<pre> offer Mayor
+</pre>
+<p>This command is used, at an assassin, to get an offer on the price for
+assassinating another character.
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Contract</a>
+</pre>
+
+
+
+
+</div>

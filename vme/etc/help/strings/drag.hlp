@@ -1,27 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage drag (item)|(character) (direction)<br/><br/>
-<br/>
-When dragging something, you can often move more weight than if you carry<br/>
-it. However dragging something big around, is a good way to be exhausted.<br/>
-This command enables you to drag sleeping or unconscious characters in a<br/>
-given direction. To drag another person will take a lot more of your<br/>
-endurance than just walking around. With this command, you can drag<br/>
-group-members out of a fight, If both you and the character, being<br/>
-dragged, are not involved in the fighting. You can also drag item to big<br/>
-for you to carry.<br/>
-<br/><br/>
-See also<br/><br/>
-Sleep<br/>
-Group-members<br/><br/>
-Endurance<br/><br/>
-Movement<br/><br/>
-North<br/><br/>
-West<br/><br/>
-East<br/><br/>
-South<br/><br/>
-Up<br/><br/>
-Position<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Drag</h1>
+<p>Usage:
+</p>
+<pre> drag &lt;item | character&gt; &lt;direction&gt;
+</pre>
+<p>When dragging something, you can often move more weight than if you carry
+it. However dragging something big around, is a good way to be exhausted.
+This command enables you to drag sleeping or unconscious characters in a
+given direction. To drag another person will take a lot more of your
+endurance than just walking around. With this command, you can drag
+group-members out of a fight, If both you and the character, being
+dragged, are not involved in the fighting. You can also drag items too
+big for you to carry.
+</p><p><br />
+See also:
+</p>
+<pre> &gt; <a cmd='#'>Help Sleep</a>
+ &gt; <a cmd='#'>Help Group-members</a>
+ &gt; <a cmd='#'>Help Endurance</a>
+ &gt; <a cmd='#'>Help Movement</a>
+ &gt; <a cmd='#'>Help Position</a>
+</pre>
+
+
+
+
+</div>
