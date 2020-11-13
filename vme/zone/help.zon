@@ -249,7 +249,7 @@ code
 dilend
 
 
-dilbegin do_help (s:string);
+dilbegin do_help(s:string);
 external
    stringlist readindex(s:string,letter:string);
    string gettopic(s:stringlist);
@@ -269,13 +269,14 @@ var
 	ref:stringlist;
 	temp:stringlist;
 	tlist:stringlist;
-   pay : string;
+    pay : string;
+
 code
 {
    if (s=="")
       s:="help";
 
-	if (s==left("topics",length(s)))
+	if (s==left("topics", length(s)))
 	{
 		fileindex := readindex("help.index", "all");
 		sendtext ("This is the full help topic list.  "+
@@ -349,6 +350,10 @@ code
 	}
 
    pagestring(buf, self);
+
+   temp := split(txt, ".");
+   txt := toupper(temp.[0].[0]) + right(temp.[0], length(temp.[0])-1);
+   sendtext("<a href='https://wiki.dikumud.net/wiki/Help/"+txt+"'>View or Contribute on Wiki</a><br/>", self);
 
    quit;
 }
