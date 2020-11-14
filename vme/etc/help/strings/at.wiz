@@ -1,12 +1,15 @@
-<br/>
-Usage:<br/>
-   &gt;at &lt;room-name&gt;|&lt;unit-path&gt; &lt;command&gt;<br/>
-<br/>
-This wiz-command allows you to execute commands, as if you were at the location<br/>
-itself. You must give the location name, or unit-path as to where you want to<br/>
-execute the command. After you have executed the command, you are moved back to<br/>
-the room you came from, thus making 'at board goto temple' make no difference.<br/>
-<br/>
-See also:<br/>
-   &gt;wizhelp goto<br/>
-<br/>
+<div class="mw-parser-output"><h1>At (220)</h1>
+<p>Usage: 
+</p>
+<pre> at &lt;room name|unit path&gt; &lt;command&gt;
+</pre>
+<p>Allows a wizard to execute commands as if they were in another location. Provide the unit-path to where the command should be executed, and the command itself, and it will be so.
+</p><p>See also:
+</p>
+<pre> &gt; <a cmd='#'>wizhelp goto</a>
+</pre>
+
+
+
+
+</div>
