@@ -23,12 +23,18 @@ To say something type 'say' and a space, and then the sentence you wish to say. 
 </p><p>To quit playing, type 'quit'.
 </p><p>See Also:
 </p>
-<pre>&gt; <a cmd='#'>Help Movement Commands</a>
-&gt; <a cmd='#'>Help Communications Position</a>
-&gt; <a cmd='#'>Help Guild Dictionary</a>
-&gt; <a cmd='#'>Help Laws Races</a>
-&gt; <a cmd='#'>Help Classes Skills</a>
-&gt; <a cmd='#'>Help Spells Gain</a>
+<pre>&gt; <a cmd='#'>Help Movement</a>
+&gt; <a cmd='#'>Help Commands</a>
+&gt; <a cmd='#'>Help Communications</a>
+&gt; <a cmd='#'>Help Position</a>
+&gt; <a cmd='#'>Help Guild</a>
+&gt; <a cmd='#'>Help Alias</a>
+&gt; <a cmd='#'>Help Laws</a>
+&gt; <a cmd='#'>Help Races</a>
+&gt; <a cmd='#'>Help Classes</a>
+&gt; <a cmd='#'>Help Skills</a>
+&gt; <a cmd='#'>Help Spells</a>
+&gt; <a cmd='#'>Help Gain</a>
 &gt; <a cmd='#'>Help Experience</a>
 </pre>
 
