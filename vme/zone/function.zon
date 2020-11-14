@@ -4345,6 +4345,7 @@ code
    // Check if we are in our shop
    if (shophome and (self.outside.symname != homes))
    {
+      log(self.symname + " is in "+self.outside.symname + " instead of home shop " + homes);
       pause;
       exec("say I better get back to my shop.", self);
       pause;

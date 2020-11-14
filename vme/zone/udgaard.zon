@@ -14036,11 +14036,24 @@ load midgaard/bread into jail local 1
 load midgaard/water_cup into jail local 1
 
 
-load eliza into haon_dor/rn_6014 max 1
+load eliza into haon_dor/rn_6014 local 1 max 3
 {
  SLTH_ARMOUR
  equip sirius position WEAR_WIELD
 }
+
+load eliza into jail@udgaard local 1
+{
+ SLTH_ARMOUR
+ equip sirius position WEAR_WIELD
+}
+
+load eliza into jail@midgaard local 1
+{
+ SLTH_ARMOUR
+ equip sirius position WEAR_WIELD
+}
+
 load adolf into accuse_room max 1 complete
 {
    load jail_key
