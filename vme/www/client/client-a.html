@@ -136,6 +136,14 @@
                 {
                     InputFocus("");
                 }
+                else if (event.location == 3) // Keypad
+                {
+                    var number = parseInt(event.code.replace('Numpad', ''), 10);
+                    if (number >= 0 && number <= 9) {
+                        const directions = ["d", "sw", "s", "se", "w", "u", "e", "nw", "n", "ne"];
+                        cmd(directions[number], false);
+                    }                    
+                }
             });
 
             g_crosshairs = new Image;
