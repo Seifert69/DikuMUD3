@@ -1005,6 +1005,8 @@ code
 
    if (arg=="default")
       self.prompt:= "%mana%m/%e%e/%hp%h> ";
+   else if (arg=="blank")
+      self.prompt:= "";
    else 
       self.prompt := arg;
 
