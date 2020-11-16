@@ -5294,8 +5294,8 @@ if (t_recall==0)
 }
 dilend
 
-dilbegin loc_want(medi:unitptr, tgt : unitptr, arg : string,
-		  hm : integer, effect : string);
+// locate wanted
+dilbegin loc_want(medi:unitptr, tgt : unitptr, arg : string, hm : integer, effect : string);
 external
   unitptr unit_room (u : unitptr);
 
@@ -5304,40 +5304,37 @@ var
 
 code
 {
-
    if (hm < 0)
    {
       act("You feel confused.", A_ALWAYS, self, null, null, TO_CHAR);
 
       if (hm < -50)
       {
-	 act("You realize that $2n attempted to locate you.",
-	     A_ALWAYS, tgt, self, null, TO_CHAR);
+         act("You realize that $2n attempted to locate you.", A_ALWAYS, tgt, self, null, TO_CHAR);
       }
       quit;
    }
 
-   u := unit_room (tgt);
+   u := unit_room(tgt);
 
-   if (isset (tgt.charflags,CHAR_OUTLAW))
-     act("$2n at $3t", A_SOMEONE, self, tgt, u.title, TO_CHAR);
+   if (isset(tgt.charflags,CHAR_OUTLAW))
+      act("$2n at $3t", A_SOMEONE, self, tgt, u.title, TO_CHAR);
    else
-     act("$2n doesn't seem to be wanted.", A_ALWAYS, self, tgt, null,
-TO_CHAR);
+      act("$2n doesn't seem to be wanted.", A_ALWAYS, self, tgt, null, TO_CHAR);
    quit;
 }
 dilend
 
 
 
-dilbegin find_want(medi:unitptr, tgt : unitptr, arg : string,
-		   hm : integer, effect : string);
+dilbegin find_want(medi:unitptr, tgt : unitptr, arg : string, hm : integer, effect : string);
 external
-  string dirstring   (dr:integer);
+   string dirstring   (dr:integer);
 
 var
-  dir_string:string;
-  i:integer;
+   dir_string:string;
+   i:integer;
+
 code
 {
    if (hm < 0)
@@ -5348,12 +5345,12 @@ code
 
    if (not isset(tgt.charflags,CHAR_OUTLAW))
    {
-      act("$2n doesn't seem to be wanted.",
-	  A_ALWAYS, self, tgt, null, TO_CHAR);
+      act("$2n doesn't seem to be wanted.", A_ALWAYS, self, tgt, null, TO_CHAR);
       quit;
    }
 
    i := pathto (self,tgt);
+
    if (i==DIR_IMPOSSIBLE)
    {
       act ("You get the feeling it is impossible from here.",
@@ -5361,24 +5358,20 @@ code
    }
    else if (i==DIR_HERE)
    {
-      act ("This is the place.",
-	   A_ALWAYS,self,null,null,TO_CHAR);
+      act ("This is the place.", A_ALWAYS,self,null,null,TO_CHAR);
    }
    else if (i == DIR_ENTER)
    {
-      act ("You should enter something here.",
-	   A_ALWAYS,self,null,null,TO_CHAR);
+      act ("You should enter something here.", A_ALWAYS,self,null,null,TO_CHAR);
    }
    else if (i == DIR_EXIT)
    {
-      act ("You should exit this place.",
-	   A_ALWAYS,self,null,null,TO_CHAR);
+      act ("You should exit this place.", A_ALWAYS,self,null,null,TO_CHAR);
    }
    else
    {
       dir_string := dirstring  (i);
-      act ("You should leave $2t.",
-	   A_ALWAYS,self,dir_string,null,TO_CHAR);
+      act ("You should leave $2t.", A_ALWAYS,self,dir_string,null,TO_CHAR);
    }
    quit;
 }

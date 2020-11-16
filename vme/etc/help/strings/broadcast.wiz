@@ -1,10 +1,16 @@
-<br/>
-Usage:<br/>
-   &gt;broadcast &lt;string&gt;<br/>
-<br/>
-This wiz-command is just like echo, except all connected players see the<br/>
-string, as opposed to just the room.<br/>
-<br/>
-See also:<br/>
-   &gt;help echo<br/>
-<br/>
+<div class="mw-parser-output"><h1>Broadcast (240)</h1>
+<p>Usage:
+</p>
+<pre> broadcast &lt;string&gt;
+</pre>
+<p>Displays a string for all connected characters. Similar to the echo command, but with a reach that spans the entire game rather than just a specific room.
+</p><p>See also:
+</p>
+<pre> &gt; <a cmd='#'>wizhelp echo</a>
+ &gt; <a cmd='#'>wizhelp message</a>
+</pre>
+
+
+
+
+</div>

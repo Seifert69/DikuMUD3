@@ -1,6 +1,12 @@
-<br/>
-Usage:<br/>
-   &gt;advance &lt;player&gt; &lt;level&gt;<br/>
-<br/>
-This wiz-command gives you the ability to advance a player to a given level.<br/>
-Note ADVANCE.<br/>
+<div class="mw-parser-output"><h1>Advance (253)</h1>
+<p>Usage:
+</p>
+<pre>advance &lt;admin|ply&gt; &lt;player&gt; &lt;level&gt;
+</pre>
+<p>Advances a player to a specific level. Primarily used to advance wizards through the immortal ranks.
+</p>
+
+
+
+
+</div>

@@ -249,7 +249,7 @@ code
 dilend
 
 
-dilbegin do_help (s:string);
+dilbegin do_help(s:string);
 external
    stringlist readindex(s:string,letter:string);
    string gettopic(s:stringlist);
@@ -269,13 +269,14 @@ var
 	ref:stringlist;
 	temp:stringlist;
 	tlist:stringlist;
-   pay : string;
+    pay : string;
+
 code
 {
    if (s=="")
       s:="help";
 
-	if (s==left("topics",length(s)))
+	if (s==left("topics", length(s)))
 	{
 		fileindex := readindex("help.index", "all");
 		sendtext ("This is the full help topic list.  "+
@@ -350,6 +351,9 @@ code
 
    pagestring(buf, self);
 
+   temp := split(txt, ".");
+   txt := toupper(temp.[0].[0]) + right(temp.[0], length(temp.[0])-1);
+   sendtext("<a href='https://wiki.dikumud.net/wiki/Help/"+txt+"'>View or Contribute on Wiki</a><br/>", self);
    quit;
 }
 dilend
@@ -390,17 +394,17 @@ dilend
 
 dilbegin do_wizhelp (s:string);
 external
- string getwiztopic(s:stringlist);
- 		string spinsearch (s:stringlist,t:string);
+	string getwiztopic(s:stringlist);
+	string spinsearch (s:stringlist,t:string);
+	stringlist readindex(s:string,letter:string);
 
-				stringlist readindex(s:string,letter:string);
 var
-txt:string;
+	txt:string;
 	rm:unitptr;
-zptr:zoneptr;
+	zptr:zoneptr;
 	cmd:cmdptr;
 	i:integer;
-		ln:integer;
+	ln:integer;
 	buf:string;
 	err:integer;
 	fileindex:stringlist;
@@ -410,64 +414,63 @@ zptr:zoneptr;
 
 code
 {
+   if ((s=="") or (s==left("topics",length(s))))
+   {
+      cmd := chead();
+      while (cmd)
+      {
+         if ((cmd.level<=self.level) and (cmd.level>=200))
+            addstring (ind,cmd.name);
+         cmd := cmd.next;
+      }
+      buf:=getwiztopic(ind);
+      pagestring(buf,self);
+      quit;
+   }
 
-if ((s=="") or (s==left("topics",length(s))))
-{
-   cmd := chead();
- while (cmd)
- {
- if ((cmd.level<=self.level) and
- (cmd.level>=200))
-  addstring (ind,cmd.name);
- cmd := cmd.next;
- }
- buf:=getwiztopic(ind);
-pagestring(buf,self);
-quit;
-}
-if (s==left("notes",length(s)))
+   if (s==left("notes",length(s)))
 	{
-	zptr:=zhead();
-	rm:=self.outside;
-	while (rm.type!=UNIT_ST_ROOM)
-	rm:=rm.outside;
-	while (zptr.name!=rm.zoneidx)
-	zptr:=zptr.next;
-	if (length(zptr.notes)>1)
-	{
-	pagestring (zptr.notes,self);
-	quit;
-	}
-	else
-	{
-	sendtext ("There are no notes in this area written by the creators. You're on your own!<br/>",self);
-	quit;
-	}
+      zptr:=zhead();
+      rm:=self.outside;
+      while (rm.type!=UNIT_ST_ROOM)
+      rm:=rm.outside;
+      while (zptr.name!=rm.zoneidx)
+      zptr:=zptr.next;
+
+      if (length(zptr.notes)>1)
+      {
+         pagestring (zptr.notes,self);
+         quit;
+      }
+      else
+      {
+         sendtext ("There are no notes in this area written by the creators. You're on your own!<br/>",self);
+         quit;
+      }
 	}
 
 	fileindex:=readindex("wiz.index",s.[0]);
-
-
-txt:=spinsearch(fileindex,s);
-
-
-
-if (txt=="")
+   txt:=spinsearch(fileindex,s);
+   if (txt=="")
 	{
-	sendtext ("There is no help available on the subject '"+s+"'<br/>",self);
-	quit;
+      sendtext ("There is no help available on the subject '"+s+"'<br/>",self);
+      quit;
 	}
 
-err:=loadstr (txt,buf);
-if (err<1)
+   err:=loadstr (txt,buf);
+   if (err < 1)
 	{
-	sendtext ("There is no help available on the subject '"+s+"'<br/>",self);
-	quit;
+      sendtext ("There is no wizhelp available on the subject '"+s+"'<br/>",self);
+      quit;
 	}
 
-buf:=textformat (buf);
-pagestring (buf,self);
-quit;
+   buf:=textformat (buf);
+   pagestring (buf,self);
+
+   temp := split(txt, ".");
+   txt := toupper(temp.[0].[0]) + right(temp.[0], length(temp.[0])-1);
+   sendtext("<a href='https://wiki.dikumud.net/wiki/Wizhelp/"+txt+"'>View or Contribute on Wiki</a><br/>", self);
+   quit;
 }
 dilend
 

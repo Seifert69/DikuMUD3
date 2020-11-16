@@ -1,14 +1,22 @@
-<br/><br/>
-SKILL<br/><br/>
-Class and level:<br/><br/>
-Ranger      - 8<br/>
-<br/>  <br/>
-<br/>
-Usage ambush (target)<br/><br/>
-<br/><br/>
-Hiding in the shadows waiting for your arch nemesis, an ambush is <br/>
-a surprise attack that lets you take them by surprise and deal the first <br/>
-damage, if you do not miss that is.<br/><br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-hide<br/><br/>
+<div class="mw-parser-output"><h1>Ambush Skill</h1>
+<p>Class and level:
+</p>
+<pre> Ranger Level 8
+</pre>
+<p>Usage:
+</p>
+<pre> ambush &lt;target&gt;
+</pre>
+<p>Hiding in the shadows waiting for your arch nemesis, an ambush is
+a surprise attack that lets you take them by surprise and deal the first
+damage, if you do not miss that is.
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help hide</a>
+</pre>
+
+
+
+
+</div>

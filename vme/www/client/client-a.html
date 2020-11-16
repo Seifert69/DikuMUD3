@@ -13,7 +13,7 @@
     <!-- ============ CONTENT ============== *-->
     <div class="c_container flex-direction"> <!-- Outer -->
 	    <div class="c_left">
-		<div id="al_text" role="log" aria-live="polite" ondblclick="onMainClick()">
+		<div id="al_text" role="tree" aria-live="polite" ondblclick="onMainClick()">
                 <ul id="converse" style="list-style-type: none; display: inline;"></ul>
             </div>
             <div id="al_cmd">
@@ -136,6 +136,14 @@
                 {
                     InputFocus("");
                 }
+                else if (event.location == 3) // Keypad
+                {
+                    var number = parseInt(event.code.replace('Numpad', ''), 10);
+                    if (number >= 0 && number <= 9) {
+                        const directions = ["d", "sw", "s", "se", "w", "u", "e", "nw", "n", "ne"];
+                        cmd(directions[number], false);
+                    }                    
+                }
             });
 
             g_crosshairs = new Image;
@@ -172,17 +180,25 @@
             setInterval(keepAlive, 60000);
 
             function PasswordOn() {
+                g_bCommsChanged = false;
+                g_sComms = "<h1>Communications History</h1><br/>";
                 g_sPlyName = "";
                 window.document.title = "Login Password - DikuMUD";
                 document.getElementById("message").style.display = "none";
                 document.getElementById("pwd").style.display = "inline"; 
             }
+
             function PasswordOff(plyname, mudname) {
+                if ((plyname != null) && (plyname != ""))
+                {
+                    g_sComms = window.localStorage.getItem(plyname);
+                    console.log("Local storage loaded for " + plyname);
+                }
+
                 if (plyname == null)
                     plyname = "Upgrade server"; // Old server version
 
                 g_sPlyName = plyname;
-                console.log(plyname);
                 if (mudname == "")
                     mudname = "DikuMUD web client";
                 if (plyname == "")

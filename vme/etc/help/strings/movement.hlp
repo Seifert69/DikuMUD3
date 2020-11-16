@@ -1,27 +1,31 @@
-<br/>
-<br/>
-<br/>
-<br/>
-To move your character around in the world, you can just write the<br/>
-direction, which is limited to:<br/>
-<br/>
-    north               This will take you to the north if it is possible<br/>
-    south               This will take you to the south if it is possible<br/>
-    east                This will take you to the east if it is possible<br/>
-    west                This will take you to the west if it is possible<br/>
-    up                  This will take you upwards if it is possible<br/>
-    down                This will take you downwards if it is possible<br/>
-    enter (item)        This will take you inside the item if possible<br/>
-    leave (item)        This will take you outside the item if possible<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>See also:<br/><br/>
-South<br/><br/>
-North<br/><br/>
-West<br/><br/>
-East<br/><br/>
-Down<br/><br/>
-Up<br/><br/>
-Drag<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Movement</h1>
+<p>To move your character around in the world, you can just write the
+direction, which is limited to:
+</p><p><a cmd='#'>north</a> This will take you to the north if it is possible
+<a cmd='#'>northwest</a> <a cmd='#'>nw</a> This will take you to the northwest if it is possible
+<a cmd='#'>northeast</a> <a cmd='#'>ne</a> This will take you to the northeast if it is possible
+<a cmd='#'>south</a> This will take you to the south if it is possible
+<a cmd='#'>east</a> This will take you to the east if it is possible
+<a cmd='#'>west</a> This will take you to the west if it is possible
+<a cmd='#'>southwest</a> <a cmd='#'>sw</a> This will take you to the southwest if it is possible
+<a cmd='#'>southeast</a> <a cmd='#'>se</a> This will take you to the southeast if it is possible
+<a cmd='#'>up</a> This will take you upwards if it is possible
+<a cmd='#'>down</a> This will take you downwards if it is possible
+<a cmd='#'>enter</a> (item) This will take you inside the item if possible
+<a cmd='#'>exit</a>  (item) This will take you outside the item if possible
+<a cmd='#'>leave</a> (item) This will take you outside the item if possible
+<a cmd='#'>mount</a> (npc) You'll mount your mount. 
+<a cmd='#'>dismount</a> (npc)  You'll dismount your mount.
+</p><p><br />
+See also:
+</p>
+<pre> &gt; <a cmd='#'>Help Climb</a>
+ &gt; <a cmd='#'>Help Swim</a>
+ &gt; <a cmd='#'>Help Ride</a>
+ &gt; <a cmd='#'>Help Drag</a>
+</pre>
+
+
+
+
+</div>

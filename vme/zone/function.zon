@@ -4098,17 +4098,21 @@ dilend
 #define BUY_PRICE(u) ((u.cost * buyprofit)/100)
 #define SELL_PRICE(u) ((u.cost * sellprofit)/100)
 
+// Shophome (boolean) 1 = shopkeeper will go home and will only sell from his holes
+//                    0 = wandering salesman
+//
 dilbegin aware shopkeepernew(prod       : stringlist,
-                          custom_acts : stringlist,
-                          itemtypes  : intlist,
-                          sellprofit : integer,    buyprofit   : integer,
-                          maxcash    : integer);
+                             custom_acts : stringlist,
+                             itemtypes  : intlist,
+                             sellprofit : integer,    buyprofit   : integer,
+                             maxcash    : integer, shophome : integer);
 external
    integer isopen( opentimes : stringlist );
    integer carry_n_limit( ch : unitptr );
    integer carry_w_limit( ch : unitptr );
    string wpntype( obj : unitptr );
-   shop_sort( );
+   shop_sort();
+   integer walk_room@function (s:string, i:integer);
 
 var
    i:integer;
@@ -4184,8 +4188,9 @@ code
    /* not have full money every time he is killed, only refreshed once  */
    /* per day or after a reboot/crash as it should. (Nexus)             */
 
-   homes := rom.nameidx+"@"+rom.zoneidx;
-   mys := self.nameidx+"@"+self.zoneidx;
+
+   mys := self.symname;
+   homes := rom.symname;
    home := findroom(homes);
    account := "$Shop Account" in home.extra;
 
@@ -4199,7 +4204,7 @@ code
    else /* make account */
    {
       ts := {"$Shop Account"};
-      addstring(ts,mys);
+      addstring(ts, mys);
       addextra(home.extra,ts,"");
       noaccount := 1;
    }
@@ -4308,7 +4313,7 @@ code
       }
       else // if (u)
       {
-         log("Shopkeeper "+self.nameidx + "@" + self.zoneidx+ " unable to load item: " + items);
+         log("Shopkeeper "+self.symname + " unable to load item: " + items);
       }
 
      citem := citem + 1;
@@ -4333,12 +4338,22 @@ code
 :loop:
    wait(SFB_CMD, TRUE);
 
-   if( ( self.position == POSITION_FIGHTING ) or
-       ( self.position < POSITION_RESTING ) )
+   if ((self.position == POSITION_FIGHTING) or
+       (self.position < POSITION_RESTING))
       goto loop;
 
+   // Check if we are in our shop
+   if (shophome and (self.outside.symname != homes))
+   {
+      log(self.symname + " is in "+self.outside.symname + " instead of home shop " + homes);
+      pause;
+      exec("say I better get back to my shop.", self);
+      pause;
+      i := walk_room@function(homes, 4); // incase he was dragged away
+      goto loop;
+   }
 
-   if (command( "list"    ) ) choice := 0;
+   if (command("list")) choice := 0;
    else if( command( "buy"     ) ) choice := 1;
    else if( command( "sell"    ) ) choice := 2;
    else if( command( "value"   ) ) choice := 3;
@@ -4352,7 +4367,7 @@ code
    pc := activator;
    if ((not visible( self, pc ) ) and (pc.level <200))
    {
-      exec( "say I only do business with people i can see.", self );
+      exec("say I only do business with people i can see.", self );
       goto loop;
    }
    arg := argument;
@@ -4367,7 +4382,7 @@ code
 :stock:
    mitem := length( produ );
    citem := 0;
-   items := self.nameidx + "@" + self.zoneidx + " current stock:<br/>";
+   items := self.symname + " current stock:<br/>";
    while( citem < mitem )
    {
       tmps := produ.[citem];
@@ -4386,11 +4401,11 @@ code
       account.descr := itoa(maxcash); /* fill daily account */
    else if (account)
    {
-      log(self.nameidx+"@"+self.nameidx+" Shop Error - The account I found is not mine!");
+      log(self.symname+" Shop Error - The account I found is not mine!");
    }
    else
    {
-      log(self.nameidx+"@"+self.nameidx+" Shop Error - Can't find a shop account!");
+      log(self.symname+" Shop Error - Can't find a shop account!");
    }
 
 :no_credit:   /* Go here if account should not be credited */
@@ -4414,7 +4429,7 @@ code
       }
       else if( not( "$price" in u.extra ) and ( atoi( tmps ) != 0) )
       {
-	 if( ( u.nameidx + "@" + u.zoneidx ) != itmsl.[citem] )
+	 if (u.symname != itmsl.[citem])
 	    u := load( itmsl.[citem] );
 	 tmps := moneystring( ( u.cost * sellprofit ) / 100, 0 );
 	 addextra( u.extra, {"$price"}, tmps );
@@ -4518,17 +4533,17 @@ code
       link( u, self );
 	     	  send_done ("sell",pc,u,self,0,"",null);
 
-      if( ( u.nameidx + "@" + u.zoneidx ) in itmsl )
+      if( ( u.symname ) in itmsl )
       {
 	 mitem := length( itmsl );
 	 citem := 0;
-	 sitem := ( u.nameidx + "@" + u.zoneidx ) in itmsl;
+	 sitem := ( u.symname ) in itmsl;
 
 	 nitml.[sitem - 1] := itoa( atoi( nitml.[sitem - 1] ) + 1 );
 
 	 destroy( u );
       }
-      else if( ( u.nameidx + "@" + u.zoneidx ) in cisl )/* If already in
+      else if( ( u.symname ) in cisl )/* If already in
 store*/
       {                                                 /* destroy new
 item. */
@@ -4539,7 +4554,7 @@ item. */
 	 if( length( cisl ) >= 24 )         /* Allow only 24 items in list */
 	    destroy( u );
 	 else
-	    addstring( cisl, u.nameidx+"@"+u.zoneidx );
+	    addstring( cisl, u.symname );
       }
    }
    unsecure( pc );
@@ -4619,7 +4634,7 @@ item. */
 	   }
 
 	 cc := ((u.cost *sellprofit)/100);                             /* Get item cost */
-	 items := u.nameidx + "@" + u.zoneidx;     /* Get symbolic name */
+	 items := u.symname;     /* Get symbolic name */
 	 sitem := items in itmsl;
 	    tm := transfermoney( pc, null,cc*nitem);
          if ( tm )
@@ -4694,7 +4709,7 @@ tmps, pc, TO_ALL );
 	 }
 
          cc    := (u.cost * sellprofit) / 100;
-	 items := u.nameidx + "@" + u.zoneidx;
+	 items := u.symname;
 	 sitem := items in itmsl;
 	    tm := transfermoney( pc, null, cc );
 
@@ -4864,7 +4879,7 @@ external
                        custom_acts : stringlist,
                        itemtypes  : intlist,
                        sellprofit : integer,    buyprofit   : integer,
-                       maxcash    : integer);
+                       maxcash    : integer, shophome : integer);
 var
    i:integer;
    ln:integer;
@@ -4971,8 +4986,11 @@ code
       i := i + 1;
    }
 
-   shopkeepernew(prod, acts, il2, sellprofit, buyprofit, maxcash);
+   // Have the store be home by default. Use shopkeepernew@ for wandering shops
+   shopkeepernew(prod, acts, il2, sellprofit, buyprofit, maxcash, 1);
    quit;
+
+   /* ======================================================== */
 
 :init:
    /* Everything is handled by a price extra and an item list */

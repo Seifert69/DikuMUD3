@@ -1,21 +1,14 @@
-<br/>
-Usage:<br/>
-   &gt;ban &lt;t|n&gt; &lt;site_name&gt; [&lt;period&gt;]<br/>
-   &gt;ban d &lt;site_name&gt;<br/>
-   &gt;ban<br/>
-<br/>
-With this wiz-command you can exclude a given site or group of sites from<br/>
-accessing the mud. The site_name may contain the wild cards * and ?, allowing<br/>
-sites like b?zier.daimi.*.dk to be banned. The letters t or n indicates<br/>
-whether the ban is a total one (no chars from the site can connect (VERY harsh<br/>
-punishment!)) or a ban for the creation of any new characters from the site.<br/>
-An optional period can be given to allow for temporary bans, and it must<br/>
-consist of a string of the form "2d 3h 4m" indicating 2days 3hours and 4mins<br/>
-ban. Any of these are optional of course. A temporary ban will lift itself<br/>
-when the time is up.<br/><br/>
-Using the d option means you delete a site, if it's present in the list.<br/>
-No options/arguments to the command gives a list of the banned sites.<br/>
-<br/>
-See also:<br/>
-   &gt;help wizlock<br/>
-<br/>
+<div class="mw-parser-output"><h1>Ban (240)</h1>
+<p>Usage:
+</p>
+<pre> ban &lt;t|n&gt; &lt;site_name&gt; [period]
+ ban d &lt;sitename&gt;
+ ban
+</pre>
+<p>With this wiz-command you can exclude a given site or group of sites from accessing the mud. The site_name may contain the wild cards * and&#160;?, allowing sites like b?zier.daimi.*.dk to be banned. The letters t or n indicates whether the ban is a total one (no chars from the site can connect (VERY harsh punishment!)) or a ban for the creation of any new characters from the site. An optional period can be given to allow for temporary bans, and it must consist of a string of the form "2d 3h 4m" indicating 2days 3hours and 4mins ban. Any of these are optional of course. A temporary ban will lift itself when the time is up. Using the d option means you delete a site, if it's present in the list. No options/arguments to the command gives a list of the banned sites.
+</p>
+
+
+
+
+</div>

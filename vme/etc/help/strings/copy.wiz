@@ -1,0 +1,19 @@
+<div class="mw-parser-output"><h1>Copy (253)</h1>
+<p>Usage:
+</p>
+<pre> copy &lt;dil&gt; &lt;unit&gt;
+</pre>
+<p>Copies a DIL program to a unit.
+</p><p>Example
+</p>
+<pre> copy send_prompt@update papi
+</pre>
+<p>See also:
+</p>
+<pre> &gt; <a cmd='#'>wizhelp zap</a>
+</pre>
+
+
+
+
+</div>

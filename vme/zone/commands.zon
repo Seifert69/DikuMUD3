@@ -1005,6 +1005,8 @@ code
 
    if (arg=="default")
       self.prompt:= "%mana%m/%e%e/%hp%h> ";
+   else if (arg=="blank")
+      self.prompt:= "";
    else 
       self.prompt := arg;
 
@@ -2521,9 +2523,28 @@ var
    i : integer;
 code
 {
+   if (arg != "")
+   {
+      if (arg == "hp")
+      {
+         sendtext(itoa(self.hp) + "<br/>", self);
+         quit;
+      }
+      else if (arg == "ep")
+      {
+         sendtext(itoa(self.endurance) + "<br/>", self);
+         quit;
+      }
+      else if (arg == "mp")
+      {
+         sendtext(itoa(self.mana) + "<br/>", self);
+         quit;
+      }
+   }
+
    /*if(self.type!=UNIT_ST_PC) quit;*/
 
-   if(self.position == POSITION_FIGHTING)
+   if (self.position == POSITION_FIGHTING)
    {
       sendtext("Not while fighting!<br/>", self);
       quit;

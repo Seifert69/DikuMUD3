@@ -1,33 +1,31 @@
-<br/>
-<br/>
-<br/>
-<br/>
-If you have committed a certain number of crimes and are turned in you<br/>
-will become 'wanted and the guards may attempt to arrest you. Once they<br/>
-handcuff you it is possible to attempt an escape by typing 'break' to<br/>
-attempt breaking the handcuffs.<br/>
-<br/>
-<br/><br/><br/>
-If you have committed several crimes after having been declared 'wanted'<br/>
-you will be 'wanted dead or alive'. This means that you are no longer<br/>
-protected by the law system. At this point there will be a reward on your<br/>
-head, offering both money and experience for your death. All guards attack<br/>
-on sight. Players are allowed to kill you.<br/>
-<br/>
-<br/><br/><br/>
-Once in jail you have to wait for some pretty strong friends to free<br/>
-you or for a long time to pass.<br/>
-<br/><br/><br/>
-Your misdeeds are forgotten if you get killed or when you have served<br/>
-your jail sentence. But beware *any* crime reported after being cleared<br/>
-will make you a criminal instantly.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-Police Guild<br/><br/>
-Accuse<br/><br/>
-PK<br/><br/>
-Contract<br/><br/>
-Offer<br/><br/>
-Break<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Wanted</h1>
+<p>If you have committed a certain number of crimes and are turned in you
+will become 'wanted and the guards may attempt to arrest you. Once they
+handcuff you it is possible to attempt an escape by typing 'break' to
+attempt breaking the handcuffs.
+</p><p>If you have committed several crimes after having been declared 'wanted'
+you will be 'wanted dead or alive'. This means that you are no longer
+protected by the law system. At this point there will be a reward on your
+head, offering both money and experience for your death. All guards attack
+on sight. Players are allowed to kill you.
+</p><p>Once in jail you have to wait for some pretty strong friends to free
+you or for a long time to pass. If you escape from jail you'll be wanted
+dead or alive
+</p><p>Your misdeeds are forgotten if you get killed or when you have served
+your jail sentence. But beware *any* crime reported after being cleared
+will make you a criminal instantly.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Police Guild</a>
+&gt; <a cmd='#'>Help Accuse</a>
+&gt; <a cmd='#'>Help PK</a>
+&gt; <a cmd='#'>Help Contract</a>
+&gt; <a cmd='#'>Help Offer</a>
+&gt; <a cmd='#'>Help Break</a>
+</pre>
+
+
+
+
+</div>

@@ -1,18 +1,32 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage score<br/><br/>
-<br/>
-When you're playing, you might want to know what your current condition is.<br/>
-For this, you use the command 'score'. Then the game states your current<br/>
-hitpoints, mana points, and endurance points.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Prompt<br/><br/>
-Status<br/><br/>
-Hitpoints<br/>
-Mana<br/>
-Endurance<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Score</h1>
+<p>Usage:
+</p>
+<pre> score [group|hp|ep|mp]
+</pre>
+<p>Example:
+</p>
+<pre> <a cmd='#'>score</a>
+ <a cmd='#'>score hp</a>
+ <a cmd='#'>score group</a>
+</pre>
+<p>When you're playing, you might want to know what your current condition is.
+For this, you use the command 'score'. Then the game states your current
+hitpoints, mana points, and endurance points as well as other useful 
+information.
+</p><p>It is possible to simply get your hp, ep or mp as a single digit by using
+the command e.g. <a cmd='#'>score hp</a>.
+</p><p>The <a cmd='#'>score group</a> command is useful when you're in a group to see how your
+fellow players are doing.
+</p><p>See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Prompt</a>
+ &gt; <a cmd='#'>Help Status</a>
+ &gt; <a cmd='#'>Help Hitpoints</a>
+ &gt; <a cmd='#'>Help Mana</a>
+ &gt; <a cmd='#'>Help Endurance</a>
+</pre>
+
+
+
+
+</div>
