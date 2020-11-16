@@ -411,37 +411,91 @@ xp :=  criminal.level * 20 + 50;
 dilend
 
 
+//DIL to make sure a player justice extra still exits in the database
+//
+dilbegin integer valid_extra(criminal : unitptr, extra_type : string);
 
+var 
+  jd : unitptr;
+  extras : extraptr;
+  id : string;
+
+code
+{
+jd := findsymbolic("database@justice");
+id := criminal.extra.[extra_type].names.[1];
+
+if(not(id))   //If there is no ID for that type then returnn false
+   return(FALSE);
+
+extras := jd.extra;
+
+while (extras)
+{
+  if (extras.name == extra_type)
+     if (extras.names.[1] == id )
+        return(TRUE);  //matching extra on DB found.      
+extras := extras.next;
+}
+//failed to find matching ID on DB so it is stale.....remove it
+subextra(criminal.extra, id);
+return(FALSE);
+
+}
+dilend
 // crime_counter() applies the incr to the criminals crimes score and then determines
 // which CHAR_FLAGS should be set.  If a reward is indicated it calls set_reward_char();
 // It is called by update_criminal.
 //
-dilbegin crime_counter(criminal : unitptr, incr : integer, first_accuse : integer);
+dilbegin crime_counter(deputy: unitptr,criminal : unitptr, incr : integer, first_accuse : integer);
 external
    set_reward_char@justice(criminal : unitptr, incr : integer);
    set_arrest@justice(criminal : unitptr, incr : integer);
+   integer valid_extra@justice(criminal : unitptr, extra_type : string);
+var
+ jd : unitptr;
+ cash : string;
+ id : string;
 code
 {
-   
+ jd := findsymbolic("database@justice");
+ if (((criminal.crimes + incr) / 64 > criminal.crimes / 64))
+   { 
+     if(valid_extra@justice(criminal, "$reward"))
+        return;
+      set_reward_char(criminal, incr);
+      id := criminal.extra.["$reward"].names.[1];
+
+      cash := moneystring(atoi(jd.extra.[id].names.[2]),1);
+      exec("shout A reward of "+cash+" has been offered for the head of "+criminal.name+"!!",deputy);
+      return;
+   }
+ if ((criminal.crimes + incr) / 31 > criminal.crimes / 32)
+   {
+
+      if(valid_extra@justice(criminal, "$reward"))
+        return; 
+      if(not(valid_extra@justice(criminal, "$arrest"))) 
+      {   
+       set(criminal.charflags, CHAR_OUTLAW | CHAR_PROTECTED);
+       set_arrest(criminal, incr);
+       exec("shout that scoundrel "+jd.extra.[criminal.extra.["$arrest"].names.[1]].descr+"!!",deputy);
+       criminal.crimes := criminal.crimes + incr;
+      return;
+      }
+     else
+     { 
+       criminal.crimes := criminal.crimes + incr;
+       return;
+     } 
+    }
  if ((criminal.crimes + incr) / 8 > criminal.crimes / 8)
    {
       if (not(isset(criminal.charflags, CHAR_OUTLAW)))
-         unset(criminal.charflags, CHAR_PROTECTED);
+        unset(criminal.charflags, CHAR_PROTECTED);
    }
+    criminal.crimes := criminal.crimes + incr;
 
-   if ((criminal.crimes + incr) / 31 > criminal.crimes / 32)
-   {
-      set(criminal.charflags, CHAR_OUTLAW | CHAR_PROTECTED);
-      set_arrest(criminal, incr);
-   }
-   if (((criminal.crimes + incr) / 64 > criminal.crimes / 64))
-   {
-      set_reward_char@justice(criminal, incr);
-   }
-   else
-   {
-      criminal.crimes := criminal.crimes + incr;
-   }
    return;
 }
 
@@ -453,26 +507,43 @@ dilend
 //
 dilbegin update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  first_accuse : integer);
 external
-   crime_counter@justice(criminal : unitptr, incr : integer, first_accuse : integer);
+   crime_counter@justice(deputy : unitptr,criminal : unitptr, incr : integer, first_accuse : integer);
    set_reward_char(criminal : unitptr, incr : integer);
    set_arrest(criminal : unitptr, incr : integer);
+   integer valid_extra@justice(criminal : unitptr, extra_type : string);
 var
    criminal : unitptr;
    incr : integer;
-
+   jd : unitptr;
+   id : string;
+   cash : string;
 code
 {
-   criminal := findunit(deputy, cr_name, FIND_UNIT_GLOBAL, null);
+ jd := findsymbolic("database@justice");
+ 
+  criminal := findunit(deputy, cr_name, FIND_UNIT_GLOBAL, null);
    if((criminal.type == UNIT_ST_NPC) and (crime_type == CRIME_MURDER))
    {
-      set_reward_char@justice(criminal, 8); 
-      return;
+      if (not(valid_extra@justice(criminal, "$reward")))
+      {
+       set_reward_char@justice(criminal, 8);
+       id := criminal.extra.["$reward"].names.[1];
+       cash := moneystring(atoi(jd.extra.[id].names.[2]),1);
+       exec("shout A reward of "+cash+" has been offered for that scoundrel "+criminal.name+"!!",deputy);
+      } 
+     return;
    }
    if(criminal.type == UNIT_ST_NPC)
    {
-     set(criminal.charflags, CHAR_OUTLAW | CHAR_PROTECTED);
+     if(valid_extra@justice(criminal, "$reward"))
+       return;
+     if(not(valid_extra@justice(criminal, "$arrest")))
+     {
+      set(criminal.charflags, CHAR_OUTLAW | CHAR_PROTECTED);
       set_arrest(criminal, CRIME_STEALING);
-     return;
+      exec("shout the filthy criminal "+criminal.name+" is wanted for imprisonment!!" ,deputy); 
+     }  
+  return;
    }
 
    
@@ -483,7 +554,7 @@ if(criminal.idx == pidx)
          incr := crime_type;
       else
          incr := CRIME_EXTRA;
-      crime_counter@justice(criminal, incr, first_accuse);
+         crime_counter@justice(deputy,criminal, incr, first_accuse);
    }
    return;
 }
