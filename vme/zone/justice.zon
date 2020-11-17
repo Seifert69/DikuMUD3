@@ -410,7 +410,33 @@ xp :=  criminal.level * 20 + 50;
 } 
 dilend
 
+//DIL to get npc clever name ffrom Justice Database
+//
+dilbegin string npc_name(cr_name : string);
 
+var
+ jd : unitptr;
+ jd_extra : extraptr;
+ cname : string;
+code
+{
+
+jd := findsymbolic("database@justice");
+
+jd_extra := jd.extra;
+
+while (jd_extra)
+{
+ if(jd_extra.name == "$crime")
+   if(jd_extra.names.[2] == cr_name)
+   {
+    cname := jd_extra.names.[2]+jd_extra.names.[1];
+    return(cname);
+   }
+jd_extra := jd_extra.next;
+}
+}
+dilend
 //DIL to make sure a player justice extra still exits in the database
 //
 dilbegin integer valid_extra(criminal : unitptr, extra_type : string);

@@ -5298,12 +5298,20 @@ dilend
 dilbegin loc_want(medi:unitptr, tgt : unitptr, arg : string, hm : integer, effect : string);
 external
   unitptr unit_room (u : unitptr);
-
+  string npc_name@justice(cr_name : string);
 var
   u : unitptr;
+  n_name : string;
 
 code
 {
+   if (tgt.type == UNIT_ST_NPC)
+   {
+     n_name := npc_name@justice(tgt.name);
+      if(n_name)
+       tgt := findunit(self, n_name, FIND_UNIT_GLOBAL, null);
+   }
+
    if (hm < 0)
    {
       act("You feel confused.", A_ALWAYS, self, null, null, TO_CHAR);
@@ -5330,14 +5338,20 @@ dilend
 dilbegin find_want(medi:unitptr, tgt : unitptr, arg : string, hm : integer, effect : string);
 external
    string dirstring   (dr:integer);
-
+   string npc_name@justice(cr_name : string);
 var
    dir_string:string;
    i:integer;
-
+   n_name : string;
 code
 {
-   if (hm < 0)
+  if (tgt.type == UNIT_ST_NPC)
+  {
+     n_name := npc_name@justice(tgt.name);
+      if(n_name)
+       tgt := findunit(self, n_name, FIND_UNIT_GLOBAL, null);
+  }
+  if (hm < 0)
    {
       act("You feel confused.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
