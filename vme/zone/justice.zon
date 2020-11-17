@@ -314,7 +314,7 @@ code
     return;
   }
    
-  log("rem_db_entry: No extras of "+extra_type+ "found for "+criminal.name);
+  log("rem_db_entry: Failed to find extras of type "+extra_type+" on "+criminal.name+"R.");
 
 return;
 }
@@ -345,6 +345,7 @@ dilbegin set_reward_char(criminal : unitptr, incr : integer);
 external
    string get_juris@justice();
    rem_db_entry(criminal : unitptr, extra_type : string);
+   integer valid_extra@justice(criminal : unitptr, extra_type : string);
 var
    jd : unitptr;
    gold : integer;
@@ -365,7 +366,8 @@ code
 
    unset(criminal.charflags, CHAR_PROTECTED);
    set(criminal.charflags, CHAR_OUTLAW);
-   rem_db_entry@justice(criminal, "$arrest");
+   if(valid_extra@justice(criminal, "$arrest"))
+       rem_db_entry@justice(criminal, "$arrest");
    if ("$reward" in criminal.extra)
    {
       return;

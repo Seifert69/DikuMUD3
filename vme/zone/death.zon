@@ -910,8 +910,6 @@ code
 
     stop_fighting(self, null);
     self.position:=POSITION_DEAD;
-    if("$arrest" in self.extra)
-       rem_db_entry@justice(self, "$arrest"); //remove $arrest extra upon death
     if (self.type==UNIT_ST_NPC)
     destroy (self);
     else
@@ -976,9 +974,11 @@ external
    raw_kill ();
    integer lose_exp(u:unitptr);
    gain_exp(u:unitptr,gain:integer);
+   integer  valid_extra@justice(criminal : unitptr, extra_type : string);
+   rem_db_entry@justice(criminal : unitptr, extra_type : string);
 var
 	gain:integer;
-
+        i:integer;
 code
 {
    heartbeat:=3;
@@ -994,12 +994,20 @@ code
       dilcopy ("arena_death@arena()",self);
       quit;
    }
+    // If the character has a $arrest extra...delete it from the justice database
+    if(valid_extra@justice(self,"$arrest"))
+           rem_db_entry@justice(self,"$arrest");
 
    if (self.type==UNIT_ST_PC)
-	{
+   {
+        if(not(isset(self.charflags, CHAR_PROTECTED)))
+           set(self.charflags, CHAR_PROTECTED);
+   	if(isset(self.charflags, CHAR_OUTLAW))
+           unset(self.charflags,CHAR_OUTLAW);
+        if(dilfind("jailstay@midgaard", self))
+          i := dildestroy("jailstay@midgaard", self); //Kill the jalstay DIL if they die in jail.
 
-   	unset(self.charflags,CHAR_OUTLAW);
-	}
+   }
    if (isset(self.charflags,CHAR_KILL_SELF))
 	{
       raw_kill();
