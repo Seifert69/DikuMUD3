@@ -222,27 +222,16 @@ code
    :start:
    wait(SFB_DONE, (activator.type == UNIT_ST_PC) and command("put"));
 
-if ((medium.objecttype == ITEM_NOTE) and (medium.nameidx == "card")and
-(medium.zoneidx == "holidays"))
+if (medium.symname == "card@holiday20")
    {
-	  log("its a card");
-      if (("$"+activator.name) == medium.extra.["card"].names.[1])
-	  experience (medium.extra.["card"].vals.[0], activator);
-    
-    sendtext("The shredder makes a loud grinding noise and you gain "+
-		 "the experience noted...<br/>",activator);
-
-/*
-	  act("$1n makes a loud grinding noise and you gain the experience noted...",
-	   A_ALWAYS, self, null, null,TO_CHAR);
-*/
-      destroy(medium);               
-sendtext("The shredder spits out a bunch of paper ribbons, which are quickly "+
-          "blown away by the wind.<br/>",activator);
-/*
-      act("$1n spits out a bunch of paper ribbons, which are quickly "+
-          "blown away by the wind.", A_ALWAYS, self, null, null, TO_CHAR);
-*/
+		log("its a card");
+		if (("$"+activator.name) == medium.extra.["card"].names.[1])
+		experience (medium.extra.["card"].vals.[0], activator);
+		sendtext("The shredder makes a loud grinding noise and you gain "+
+			"the experience noted...<br/>",activator);
+		destroy(medium);               
+		sendtext("The shredder spits out a bunch of paper ribbons, which are quickly "+
+			"blown away by the wind.<br/>",activator);
       goto start;
     }
  if ((medium.objecttype == ITEM_NOTE) and (target == self))
