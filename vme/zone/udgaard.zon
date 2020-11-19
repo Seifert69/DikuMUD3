@@ -187,7 +187,14 @@ code
 		log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - is a container. Do not fix.");
 		exec("say I'm afraid I cant fix any containers, "+pc.name+"!", self);
 		goto no_load;
-	}		
+	}
+	if (olditem.symname == "rig_fury@seren1")
+	{
+		// do not fix Fury. It's personalization is a problem.
+		log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - is a righteous fury. Do not fix.");
+		exec("say I'm afraid I cant fix this, "+pc.name+"!", self);
+		goto no_load;
+	}			
 	if (FIXED_ITEM in olditem.extra)
 	{
 		// item has already been fixed
