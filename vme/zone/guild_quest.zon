@@ -1,0 +1,2800 @@
+/*
+filename    guild_quest
+password    1120tw0008
+changedby   Sender
+EmailAdd     HTMLCOMPILED
+request     compile
+version     1
+END HEADER*/
+
+/*
+2020 - Sender: Added graffiti.
+2018. Aug. 12 Fams can no longer cast soul spell since players abused this to transfer
+              aggro mobs to newbie zones and to get items and quests from pay-zones.
+              Cricket will exit mob's inventory before starting walking routine. (Adia)
+2016.Jan.25	   no Save on cricket to stop players from abusing to move clan guards and
+               other mobs with walkbacks
+Sept. 25 1997 fixed multiplying extras that caused the mud to crash.
+Jan. 23  2000 Made it so that fams can't shout/tell anymore. That was
+              caused by priority which was probably needed by SFUN_OBEY (Mesmer)
+              but SFUN_OBEY was removed a few versions ago.
+Nov. 11 2000 changes fams from a 5% chance of grumpy to a 50%
+*/
+
+%zone g_q
+
+#include <macros.h>
+
+#define FAMILIAR_ONGOING  "Familiar Quest Ongoing"
+#define FAMILIAR_COMPLETE "Familiar Quest Completed"
+#define FAMILIAR_BONDED   "Familiar Bonded"
+#define FAMILIAR_BAN      "Familiar Quest Banned"
+lifespan 60
+reset RESET_ANYHOW
+creators {"cabal"}
+
+notes
+" This zone contains the additions rooms, monsters and objects
+involved in the guild quests. Initially, a whole bunch of quests
+were going to be in this zone, but so far... it has been dominated
+by FAMILIARS. Since there are no rooms in the zone, reset by a
+god is not possible :) Also contains the CUSTOMIZATION CONTRAPTION
+for demigods...
+
+Dec /95 Familiar weights fixed to try to prevent people from carrying
+&lt;as one player did&gt; 30 of the beasts.
+
+Contact whistler@blinksoft.com
+"
+%dil
+
+// ********************** DIL do_graffiti ************************
+// Program will write graffiti to a room
+
+dilbegin do_graffiti(cc : string, cs : string);
+var
+  exdp 		: extraptr;
+  pc 		: unitptr;
+  roomdesc	: string;
+  startroom : string;
+  sarg		: string;
+
+code
+{
+:init:
+
+	heartbeat := PULSE_SEC*4;
+
+:start:
+
+	wait(SFB_CMD,(command("use")) and (left(argument, 8) == "graffiti"));
+	
+	pc:=activator;
+	secure(pc, lostpc);
+	sarg := right(argument, 4);
+	if(self.equip==WEAR_HOLD)
+	{
+		//if(left(self.outside.outside.zoneidx, 5)=="clan_")
+		//Graffiti can currently be used anywhere, not just clanhome.
+		if(1==1)
+		{
+			block;
+			if("$empty" in self.extra)
+				goto empty;
+			else
+			{
+				heartbeat := PULSE_SEC*3;		
+				startroom := self.outside.outside.inside_descr;
+				
+				if(self.outside.position < POSITION_STANDING)
+					goto badstance;
+					
+				act("You dip a brush in your <div class='"+cc+"'>"+cs+"</div> graffiti paint.", A_ALWAYS,pc,self,pc,TO_CHAR);
+				act("$1n dips a brush in their <div class='"+cc+"'>"+cs+"</div> graffiti paint.", A_ALWAYS,pc,self,pc,TO_REST);
+				pause;
+				
+				if(startroom != self.outside.outside.inside_descr)
+					goto moved;
+				if(self.outside.position == POSITION_FIGHTING)
+					goto fight;
+				if(not(self.equip==WEAR_HOLD))
+					goto rem;
+					
+				act("You begin making your <div class='"+cc+"'>"+cs+"</div> graffiti mark.", A_ALWAYS,pc,self,pc,TO_CHAR);
+				act("$1n begins leaving their mark in <div class='"+cc+"'>"+cs+"</div>.", A_ALWAYS,pc,self,pc,TO_REST);
+				pause;	
+				
+				if(startroom != self.outside.outside.inside_descr)
+					goto moved;
+				if(self.outside.position == POSITION_FIGHTING)
+					goto fight;
+				if(not(self.equip==WEAR_HOLD))
+					goto rem;
+					
+				act("You complete leaving your <div class='"+cc+"'>"+cs+"</div> graffiti mark.", A_ALWAYS,pc,self,pc,TO_CHAR);
+				act("$1n leaves their mark in <div class='"+cc+"'>"+cs+"</div>.", A_ALWAYS,pc,self,pc,TO_REST);
+				roomdesc := self.outside.outside.inside_descr;
+				
+				if(not("$secretgraffitiextra" in self.outside.outside.extra))
+				{
+					addextra(self.outside.outside.extra, {"$secretgraffitiextra"}, roomdesc);	
+					log(self.outside.name+" used graffiti in "+self.outside.outside.nameidx+"@"+self.outside.outside.zoneidx+
+					". Room description was written to extra: $secretgraffitiextra");
+				}
+				if(sarg == "self")
+				{
+					roomdesc := self.outside.outside.inside_descr+" <div class='"+cc+"'>"+self.outside.name+"'s name is painted here in "+cs+" graffiti!</div>";
+					self.outside.outside.inside_descr := roomdesc;
+				}
+				else
+				{
+					roomdesc := self.outside.outside.inside_descr+" <div class='"+cc+"'>"+toupper(left(cs,1))+right(cs,length(cs)-1)+" graffiti is painted all over!</div>";
+					self.outside.outside.inside_descr := roomdesc;
+				}
+			}
+			addextra(self.extra, {"$empty"}, "");	
+			goto start;
+		}
+		else
+			goto wrongzone;
+	}
+	{
+		block;			
+
+		if("$empty" in self.extra)
+			goto empty;
+		else
+			act("You must hold that before you can use it.", A_ALWAYS,pc,self,pc,TO_CHAR);
+	}
+	
+:lostpc:
+	unsecure(pc);
+	goto start;
+	
+:empty:
+	act("Your <div class='"+cc+"'>"+cs+"</div> graffiti paint seems to be empty.",A_ALWAYS,pc,self,null,TO_CHAR);
+	goto start;
+	
+:moved:	
+	act("You abandon your <div class='"+cc+"'>"+cs+"</div> graffiti, leaving the can empty.",A_ALWAYS,pc,self,null,TO_CHAR);	
+	addextra(self.extra, {"$empty"}, "");	
+	goto start;
+	
+:badstance:
+	act("You cannot use your <div class='"+cc+"'>"+cs+"</div> graffiti in this position!",A_ALWAYS,pc,self,null,TO_CHAR);	
+	goto start;
+	
+:fight:
+	act("You abandon your <div class='"+cc+"'>"+cs+"</div> graffiti, focusing on the combat at hand!",A_ALWAYS,pc,self,null,TO_CHAR);	
+	addextra(self.extra, {"$empty"}, "");	
+	goto start;
+	
+:rem:
+	act("You abandon your <div class='"+cc+"'>"+cs+"</div> graffiti, having removed the paint.",A_ALWAYS,pc,self,null,TO_CHAR);	
+	addextra(self.extra, {"$empty"}, "");	
+	goto start;
+	
+:wrongzone:
+	block;
+	act("You cannot use your <div class='"+cc+"'>"+cs+"</div> graffiti paint here.",A_ALWAYS,pc,self,null,TO_CHAR);
+	goto start;	
+}
+dilend // END DIL do_graf
+
+// ********************** DIL GRAF_R ************************
+// Program will remove all graffiti from the room.
+
+dilbegin graf_r();
+var
+  i 		: integer;
+  ret		: integer;
+  exdp 		: extraptr;
+  pc 		: unitptr;
+  roomdesc	: string;
+  clanst	: string;
+  roomex	: extraptr;
+  
+code
+{ // add check to interrupt graffiti in case of combat.
+:init:
+	heartbeat := PULSE_SEC*4;
+	clanst := left(self.outside.outside.zoneidx, 5);
+	
+:start:
+	wait(SFB_CMD,(command("use")) and ("remover" in argument));
+	pc:=activator;
+	secure(pc, lostpc);
+	
+	if(self.equip==WEAR_HOLD)
+	{
+		if(clanst=="clan_")
+		{
+			block;
+			if("$empty" in self.extra)
+				goto empty;
+			else
+			{
+				if("$secretgraffitiextra" in self.outside.outside.extra)
+				{
+					act("You use your <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover and erase the graffiti.", A_ALWAYS,pc,self,pc,TO_CHAR);
+					act("$1n erases the <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div>.", A_ALWAYS,pc,self,pc,TO_REST);
+					roomex := ("$secretgraffitiextra" in self.outside.outside.extra);
+					self.outside.outside.inside_descr := roomex.descr;
+					subextra(self.outside.outside.extra, "$secretgraffitiextra");
+				}
+				else
+				{
+					act("There isnt anything here to use your <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover on.", A_ALWAYS,pc,self,pc,TO_CHAR);
+					goto start;
+				}
+			}
+			addextra(self.extra, {"$empty"}, "");	
+			goto start;
+		}
+		else
+			goto wrongzone;
+	}
+	{
+		block;			
+		if("$empty" in self.extra)
+			goto empty;
+		else
+			act("You must hold that before you can use it.", A_ALWAYS,pc,self,pc,TO_CHAR);
+	}
+	
+:lostpc:
+	unsecure(pc);
+	goto start;
+	
+:empty:
+	act("Your <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover seems to be empty.",A_ALWAYS,pc,self,null,TO_CHAR);
+	goto start;
+		
+:wrongzone:
+	block;
+	act("You cannot use your <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover here.",A_ALWAYS,pc,self,null,TO_CHAR);
+	goto start;
+		
+}
+dilend // END DIL GRAF_R
+
+dilbegin integer create_fam (pc:unitptr);
+var
+  familiar:  unitptr;
+  exdp:      extraptr;
+  i:         integer;
+  in_name:   string;
+  in_title:  string;
+  in_descr:  string;
+  item:      unitptr;
+  junk:      integer;
+code
+{
+
+   heartbeat := PULSE_SEC*6;
+	 secure (pc,hagsecure);
+
+   act ("Hexica grins at $3N with subtle malice.", A_SOMEONE, self, null,
+	 pc, TO_NOTVICT);
+   act ("Hexica grins at you with subtle malice, and you feel a chill run "+
+	"down your spine.", A_SOMEONE, self, null, pc, TO_VICT);
+   act ("$3N shudders as the hag Hexica vexes him with her gaze.", A_SOMEONE,
+	self, null, pc, TO_NOTVICT);
+   pause;
+
+   exec ("say Then I will begin the ritual...", self);
+   pause;
+
+   act ("Hexica becomes quite busy, rushing around the small cottage "+
+	"collecting ingredients for an evil brew in her cauldron.",
+	A_SOMEONE, self, null, null, TO_ALL);
+   pause;
+
+   act ("As the cauldron heats, a strange green vapor begins to rise "+
+	"and fill the cottage, soaking into $3N.", A_SOMEONE, self,
+	null, pc, TO_NOTVICT);
+   act ("As the cauldron heats, a strange green vapor begins to rise "+
+	"and fill the cottage, soaking into your skin and making you "+
+	"feel strangely ill.", A_SOMEONE, self, null, pc, TO_VICT);
+   i := pc.max_hp;
+   pc.hp := (pc.hp - (i/2));    /* SLAM!! The PC just lost half of
+				   their hit points... this is to scare
+				   them more than anything... :) */
+   position_update (pc);
+		pause ;
+   act ("Hexica looks truly evil as she dangles the poor helpless magic "+
+	"cricket over the cauldron. She cackles in pleasure as the cricket "+
+	"tries to kick its way out of her hand.", A_SOMEONE, self, null,
+	null, TO_ALL);
+   pause;
+   act ("The cricket escapes from Hexica's grasp, only to fall into the "+
+	"boiling cauldron of evil sludge. It expires with a small peep.",
+	A_SOMEONE, self, null, null, TO_ALL);
+   act ("You feel imbibed with strange arcane power as the spirits of "+
+	"of the outer planes descend upon this place.", A_SOMEONE, self,
+	null, pc, TO_VICT);
+   pause;
+
+
+   exec ("say And now, you must choose the physical form of your familiar.", self);
+   pause;
+   exec ("say There are two things you can control:  their title and their description.", self);
+   pause;
+   exec ("say I will ask you for each in turn... simply say it exactly how you want it... I will confirm that I have it correctly.", self);
+   heartbeat := PULSE_SEC*5;
+   familiar := load ("familiar2@g_q");
+   secure (familiar,hagsecure);
+   goto titleloop;
+
+
+   :titleloop:
+   exec ("say What would you like the title of your familiar to be (such as the tiny black dragon)?", self);
+   wait (SFB_DONE, (activator ==pc));
+
+   if ( not (command("say")))
+   {
+      exec ("say All your fancy emoting just leaves me confused... please just use say...", self);
+      goto titleloop;
+   }
+   in_title := argument;
+   exec ("say I heard that!", self);
+   exec ("say Nod if you want the familiar's title to be '"+in_title+"'. ",
+	 self);
+   wait (SFB_DONE, (activator #= pc));
+   if ( not (command("nod")))
+   {
+      exec("say Then let's try again...... ", self);
+      goto titleloop;
+   }
+
+   familiar.title := in_title;
+   exec ("say Then let it be so.....", self);
+   goto descrloop;
+
+   :descrloop:
+	 pause;
+   exec ("say What do you want people to see when it is in the room (for example... 'A fat cuddly Poo bear is lazing around looking for honey.')?", self);
+   wait (SFB_DONE, (activator #= pc));
+
+   if ( not (command("say")))
+   {
+      exec ("say All your fancy emoting just leaves me confused... please just use say...", self);
+      goto descrloop;
+   }
+   in_descr := argument;
+   exec ("say I heard that!", self);
+
+   exec ("say Nod if you want the familiar's description to be '"+in_descr+"'. ", self);
+   wait (SFB_DONE, (activator #= pc));
+   if ( not (command("nod")))
+   {
+      exec ("say Then let's try again...... ", self);
+      goto descrloop;
+   }
+
+   familiar.outside_descr := in_descr;
+   exec ("say Then let it be so.....", self);
+   pause;
+
+   :final:
+
+   exec ("say Now, let me give you a few things... first, this owner's manual, describes all the functions.", self);
+   item := load ("magef_manual@g_q");
+   link (item, pc);
+
+   subextra (pc.quests, FAMILIAR_COMPLETE);
+   if (not (FAMILIAR_BONDED in pc.quests))
+     addextra (pc.quests, {FAMILIAR_BONDED}, "");
+   pc.capacity := 100;
+
+   link (familiar, pc.outside);
+   unsecure (familiar);
+   pause;
+
+   exec ("say Simply whisper to your familiar 'Serve me' and it will bond to you.", self);
+   pause;
+   exec ("say When the familiar asks you what you want to call it, give it the name you "+
+	 "would use to command it, 'cause you don't really want to just call it "+
+	 "familiar, do you?", self);
+   pause;
+   exec ("say I hope this familiar serves you well, "+pc.name+".", self);
+   exec ("whisper "+pc.name+" I can replace lost familiars, so "+
+	 "you can always come back for another.... just realize that they "+
+	 "suck mana now to feed.", self);
+   pause;
+   exec("say I guess you could even have more than one now... of course, "+
+        "magic crickets don't grow on trees...", self);
+   unsecure (pc);
+   return (TRUE);
+
+:hagsecure:
+exec ("say lost pointer",self);
+return (0);
+}
+dilend
+
+
+dilbegin act_world (s:string);
+var
+  pc:unitptr;
+  code
+  {
+  heartbeat:=PULSE_SEC*3;
+	pc:=ghead();
+
+     while (pc.type==UNIT_ST_PC)
+      {
+     sendtext(s,pc);
+      pc:=pc.gnext;
+      }
+
+return;
+}
+dilend
+
+dilbegin act_launcher (s:string);
+var
+  pc:unitptr;
+  code
+  {
+  heartbeat:=PULSE_SEC*3;
+	pc:=ghead();
+
+     while (pc.type==UNIT_ST_PC)
+      {
+			if (pc.level >200)
+     sendtext(s+" Launched this firework:<br/>",pc);
+      pc:=pc.gnext;
+      }
+
+return;
+}
+dilend
+
+dilbegin ast_launch();
+var
+	 pc:unitptr;
+	 rm:unitptr;
+	 temp:unitptr;
+code
+{
+pc:=self.inside;
+while (pc)
+	{
+	temp:=pc.next;
+	if (pc.type==UNIT_ST_PC)
+		{
+		sendtext ("The explosion of the rocket throws you clear and you are falling fast.<br/>",pc);
+		pc.hp:=0;
+		pc.mana:=0;
+		pc.endurance:=0;
+		position_update (pc);
+rm:=findrndunit(self,FIND_UNIT_WORLD, UNIT_ST_ROOM);
+		sendtext ("You hit the ground with a splat!  OUch that hurt!<br/>",pc);
+		if (rm!=null)
+		 link (pc,rm);
+		 else
+		  link (pc,findroom("void@basis"));
+			}
+
+pc:=temp;
+			}
+
+return;
+}
+dilend
+
+
+// Stormtamer: The following isn't accurate anymore. Changes have been made.
+
+/* FAMILIAR DIL LOGIC Version 6.0 under construction by Whistler)
+Now will not kill or attack players below level 4.
+   Now exploits that variables are saved! Bugs fixed.
+
+   Familiars basically have three DIL's and one important SFUN to their
+   behavior that sit in a priority tree for behavior modification:
+
+   1) MAIN DIL LOGIC (handles bonding, status report, un bonded status)
+
+   2) FAMILIAR JEALOUSY ROUTINES (handle jealous familiars)
+
+   3) FAMILIAR COMBAT BEHAVIOR (coming soon...)
+
+   4) SFUN_OBEY (handles the majority of command interaction) */
+
+/*
+   Familiar Logic is this:
+
+   First the un bonded program is all that exists on the familiar.
+
+   When it is bonded, the un bonded program is destroyed and g_qd with
+   brains.
+
+
+   There is one VERY good reason to add the owner to the familiar's extra
+   instead of passing it as a parameter. Assume that the call is changed,
+   then the parameter passed values are changed, and hence, the owner is
+   lost. As we do it now, we can actually update the familiar logic, and
+   voila, all familiars in the game act according to the new routines!
+*/
+
+
+dilbegin fam_obey ();
+var
+  pcname:string;
+  extra_ptr:extraptr;
+code
+{
+
+:start:
+extra_ptr:="$owner" in self.extra;
+if (extra_ptr.descr != pcname)
+    {
+    pcname:=extra_ptr.descr;
+    subextra (self.extra,"$pc obey");
+    addextra (self.extra,{"$pc obey"},pcname);
+    }
+// Needs to be done every time in case of $owner change
+
+wait (SFB_CMD,command ("tell") and (argument != "") and
+    ( ((activator == self.master) and
+    (activator.name != pcname)) or (activator.name == pcname)) );
+
+if("enter" in argument)
+        {
+        exec ("say No! NO! NOOOO! I refuse to enter that!!",self);
+        goto start;
+        }
+
+
+// First is to block SFUN_OBEY crap, second is normal fam stuff
+if ((activator == self.master) and (activator.name != pcname))
+    {
+    if (findunit(activator, argument, FIND_UNIT_HERE, null) != self)
+        goto start;
+    block;
+    act ("<div class='tell_other'>You tell $3n '$1n'</div>",
+        A_ALWAYS, activator, null, self, TO_CHAR);
+    goto start;
+    }
+
+heartbeat:=PULSE_SEC*3;
+   extra_ptr:= "$path" in activator.quests;
+
+if ((not(GUILD_UDG_MAGE in extra_ptr.names))  and
+    (not (GUILD_SORCERER in extra_ptr.names)) and
+    (not(GUILD_NECROMANCER in  extra_ptr.names)) and
+	(not(activator.level > IMMORTAL_LEVEL)))
+        {
+        exec ("say You're a mundane.  I will not serve you "+activator.name+"!",self);
+        exec ("kill "+activator.name,self);
+        goto start;
+        }
+
+if (findunit(activator,argument ,FIND_UNIT_HERE,null)!=self) goto start;
+block;
+if (activator.mana>=5)
+  {
+act ("You command $2n to '"+argument+"'",
+A_ALWAYS,activator,self,argument,TO_CHAR);
+exec (argument,self);
+activator.mana:=activator.mana-5;
+goto start;
+}
+else
+  {
+  act ("You try to control $2n but you don't have enough power to do it.",
+  A_ALWAYS,activator,self,null,TO_CHAR);
+  goto start;
+  }
+}
+dilend
+
+dilbegin fam_unbonded();
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+  pcowner: unitptr;
+	expd:extraptr;
+  str : string;
+
+code
+{
+   /* Be inactive when sleeping / wounded */
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   heartbeat := PULSE_SEC*5;
+
+   while (self.outside.type == UNIT_ST_NPC)
+     pause; /* we know Hexica has us.... */
+
+   /*
+      This routine picks a master, making sure that they are
+      an UDGAARD MAGE of ABOVE LEVEL 19 or a MIDGAARD SORCERER
+      and that they have COMPLETED THE FAMILIAR QUEST. Previous
+      FAMILIAR BONDEDs evoke a response, but are allowed, since
+      accidents and crashes do happen.
+   */
+
+   heartbeat := PULSE_SEC*5;
+
+   :unbonded:
+   exec("emote is longing for a master to bond to.", self);
+
+wait (SFB_DONE, (activator.type == UNIT_ST_PC) and command("whisper") and
+	 ("serve" in argument) and
+	 (target==self));
+
+   pcowner := activator;
+
+   if (pcowner.level >= IMMORTAL_LEVEL) // Any admin can get a fam
+      {
+      exec ("say Master!", self);
+      goto second_part;
+      }
+
+   /* MUST BE A MAGIC USER - Mage, Sorcerer or Necromancer */
+   expd := "$path" in pcowner.quests;
+
+   if (expd == null)
+   {
+	 :mund:
+      exec ("say I will not serve you,"+pcowner.name+
+	    ", because you are a mundane.", self);
+      pause;
+      goto rouge;
+   }
+
+
+   if ((expd.names.[1] == null) or (expd.names.[2] == null) or
+       (expd.names.[3] == null) or (expd.names.[4] == null) or
+       (expd.names.[5] == null) or (expd.names.[6] == null) or
+       (expd.names.[7] == null))
+      goto mund;
+
+   if ((not(GUILD_UDG_MAGE in expd.names))  and
+       (not (GUILD_SORCERER in expd.names)) and
+       (not(GUILD_NECROMANCER in  expd.names)))
+			 goto mund;
+   secure(pcowner, rouge);
+
+
+   /* MUST BE ABOVE LEVEL 20 */
+   if (not (pcowner.level > 19) )
+   {
+      exec ("say You lack enough power to be my master, "+
+	    pcowner.name+".", self);
+      pause;
+      goto rouge;
+   }
+
+   /* This routine handles the actual bonding of the familiar
+      to the mage, remove the FAMILIAR QUEST COMPLETED from the
+      PC's Quest, add FAMILIAR BONDED to the PC's Quest, set
+      the master's flags to mark transparent, follow the master,
+      and initiate the brains command structure. It also allows
+      the familiar to reconfigure it's name :)
+   */
+
+   :second_part:
+   exec ("say just whisper to me what you want to call me.  You wouldn't want everyone to know.",self);
+exec ("wink "+pcowner.name,self);
+   wait (SFB_DONE, (command("whisper") and (activator #= pcowner)) and
+   (target==self));
+   addstring(self.names, argument);
+
+   str := self.name;
+
+   /* Move the first name to the last position */
+   substring(self.names, str);
+   addstring(self.names, str);
+							pause;
+   exec ("emote is surrounded by a supernatural glow... it has bonded to " +
+	 pcowner.name+"!", self);
+
+   addextra(self.extra, {"$owner"}, pcowner.name);
+   dilcopy ("catchit@g_q",self);
+   dilcopy("fam_brain@g_q", self);
+   dilcopy("fam_personality@g_q", self);
+   dilcopy ("fam_obey@g_q",self);
+   quit;
+
+
+   :rouge:
+   /* this routine is only called if a familiar is summoned
+      and the activator leaves without creating a bond... no
+      bond means the familiar can do as it wants!! This is
+      a fun bit of chaotic DIL */
+
+   heartbeat := PULSE_SEC*5;
+   exec ("grin", self);
+   exec ("cast invisibility self", self);
+   tf:=     walk_room@function ("market_sq@midgaard",4);
+   wait (SFB_CMD, (activator.type == UNIT_ST_PC));
+   pcowner := activator;
+   secure (pcowner, rouge);
+   exec ("follow "+pcowner.name, self);
+   pause;
+   exec ("cast plague "+pcowner.name, self);
+   pause;
+   exec ("cast madness "+pcowner.name, self);
+   quit;
+}
+dilend
+
+
+
+dilbegin fam_brain();
+
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+  junk:    integer;
+  i:integer;
+  pcowner: unitptr;
+  exd    : extraptr;
+  loader:  unitptr;
+
+  pcname : string;
+  stat1:   string;
+  stat2:   string;
+  stat3:   string;
+
+code
+{
+   exd    := "$owner" in self.extra;
+   pcname := exd.descr;
+
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   heartbeat := PULSE_SEC*5;
+
+   :bond:
+   if ((self.outside.type == UNIT_ST_PC) and (pcname == self.outside.name))
+   {
+      pcowner := self.outside;
+      secure(pcowner, lostowner);
+      exec ("follow "+pcowner.name,self);
+      exec("emote basks in the loving glow of it's master "+
+	   pcowner.name+".", self);
+      goto brains;
+   }
+   pause;
+   goto bond;
+
+   :brains:
+
+   /* Current implementation only supports the status command,
+      which should now work wonderfully... a few new routines
+      have been added as separate DILs for combat and death.
+      The main reason not to have the brains wait statement
+      responded to generic or multiple SFB_CMD is that a few
+      familiars would really eat up the system resources. */
+
+   wait (SFB_CMD, (command("status") or command("tell")) and
+	 (activator #= pcowner) and
+(findunit(activator, argument, FIND_UNIT_SURRO|FIND_UNIT_INVEN, null) == self));
+
+   exd := "$path" in pcowner.quests;
+
+   if (exd == null)
+      goto lostbond;
+
+   if ((not(GUILD_UDG_MAGE in exd.names))  and
+       (not (GUILD_SORCERER in exd.names)) and
+       (not(GUILD_NECROMANCER in  exd.names)))
+     goto lostbond;
+
+   /* MANA FEEDING ROUTINE: it really should drain a small amount of mana
+      each time it is commanded, but right now, it just gets you for the
+      status command for 5 mana points... how to beef this up? are familiars
+      too powerful a possession? */
+
+   /* Notice that now every command issued via TELL will cost the owner
+      some mana. Need to make them a BIT more expensive... */
+
+   pcowner.mana := pcowner.mana - 5;
+   position_update (pcowner);
+   if (command("tell"))
+   {
+      stat1 := getword(argument);
+      goto brains; /* Pass on the tell command to the obey function! */
+   }
+
+   /* IMPLIED: a status command was issued */
+   block;
+
+   act ("**The mental image of your familiar appears to you**", A_SOMEONE,
+	self, null, pcowner, TO_VICT);
+
+   /* STATUS ROUTINE CONSTRUCTION */
+
+   /* Pick a phrase to describe hit point state */
+   if (self.hp > ((self.max_hp / 4) * 3))
+     stat1 := "healthy";
+   if ((self.hp < ((self.max_hp / 4) *3)) and (self.hp > (self.max_hp/2)))
+     stat1 := "battered";
+   if ((self.hp < (self.max_hp/2)) and (self.hp > (self.max_hp/4)))
+     stat1 := "injured";
+   if (self.hp < (self.max_hp/4))
+     stat1 := "devastated";
+
+   /* Pick a phrase to describe mana state */
+   if (self.mana > 75)
+     stat2 := "powerful";
+   if ((self.mana < 75) and (self.mana > 50))
+     stat2 := "stressed";
+   if ((self.mana < 50) and (self.mana > 25))
+     stat2 := "drained";
+   if (self.mana < 25)
+     stat2 := "helpless";
+
+   /* Pick a phrase to describe endurance */
+   if (self.endurance > 140)
+     stat3 := "rested";
+   if ((self.endurance < 140) and (self.endurance > 80))
+     stat3 := "winded";
+   if ((self.endurance < 80) and (self.endurance > 40))
+     stat3 := "fatigued";
+   if (self.endurance < 40)
+     stat3 := "exhausted";
+
+   /* And put it all together as a status line */
+
+   act ("You sense that your familiar is "+stat1+", "+stat2+
+	", "+stat3+".", A_SOMEONE, self, null, pcowner, TO_VICT);
+   goto brains;
+
+
+   :lostbond:    /* This routine is invoked if the familiar's master has
+		    stopped being a Spellcaster and tried to command it.
+		    In this version, lostbond sends the familiar into a very
+		    destructive rampage against their FORMER master. */
+
+   exec ("follow "+self.name, self);
+
+   exec ("say "+pcowner.name+", you no longer control me... by straying from "+
+	 "the paths of magic, you have lost your control over me! "+
+	 "Now, it's pay back time for all those nasty situations you made me "+
+	 "go into!", self);
+   pause;
+
+   subextra (self.extra, "$owner");
+   subextra (self.extra, "$pc obey");
+
+   /* NASTY NEW ROUTINE: familiar removes all owners mana and 75% of points
+      before attacking... they were warned what classes the had to be.... */
+   junk := pcowner.max_hp;
+   pcowner.hp := (pcowner.hp - (3*(junk/4)));
+   pcowner.mana := 0;
+   position_update (pcowner);
+   link(self,self.outside.outside);
+   exec ("kill "+pcowner.name, self);
+   quit;
+
+
+   :lostowner:
+   heartbeat := PULSE_SEC * 5;
+   link (self,self.outside.outside);
+   exec ("say Eeek!", self);
+
+   exec("follow", self);
+   pause;
+
+   :lostloop:
+   link (self,self.outside.outside);
+   exec ("cast controlled teleport "+pcname, self);
+   pause;
+   stat1 := pcname;
+   tf:= walk_room@function(pcname,4);
+
+ /*  walkto(findunit(self, stat1, FIND_UNIT_WORLD, null)); */
+   exec("follow "+pcname, self);
+   if (self.master.name == pcname)
+   {
+      pcowner := self.master;
+      secure(pcowner, lostowner);
+      goto brains;
+   }
+   /* Retry */
+   goto lostloop;
+}
+dilend
+
+/* to prevent fams from shouting before they are bonded */
+
+dilbegin aware catchit();
+var
+  trg:unitptr;
+  extra_ptr:extraptr;
+  pcname:string;
+	s:string;
+	splno:integer;
+code
+{
+extra_ptr:="$owner" in self.extra;
+pcname:=extra_ptr.descr;
+interrupt (SFB_PRE,((( command (CMD_AUTO_DAMAGE)) and
+(self==activator))),damage);
+interrupt (SFB_PRE,((command ("cast")) and
+(self==activator)),nocast);
+
+:there:
+
+wait(SFB_CMD, TRUE and
+(activator==self));
+   if (command("shout"))
+      {
+	 exec ("tell "+self.master.name+" Shout?!? And give away my "+
+	       "presence on the material plane? That's not in my "+
+	       "contract.", self);
+	 block;
+      }
+
+ if  (command ("tell"))
+      {
+	 exec ("tell "+self.master.name+" tell?!? What do I look "+
+	       "like a comm channel?  It will probably be more clear if you do "+
+				 "your own telling.",self);
+	 block;
+      }
+if 	 ((command ("steal")) or
+   (command ("pick")))
+	 {
+	 exec ("tell "+self.master.name+" What?!? What do I look "+
+	 "like a Thief??  I would be laughed out of the Magical realm!! "+
+	 "You Should probably do your own dirty work!!", self);
+     block;
+		 }
+ if  (command ("open"))
+      {
+	 exec ("tell "+self.master.name+" Open?!? What do I look "+
+	       "like a butler?  Why don't you open that yourself!",self);
+	 block;
+      }
+ if  (command ("search"))
+      {
+	 exec ("tell "+self.master.name+" Search me!?!? What do I look "+
+	       "like a butler?  Why don't you search for that yourself!",self);
+	 block;
+      }
+ if  (command ("examine"))
+      {
+	 exec ("tell "+self.master.name+"What do I look "+
+	       "like your private doctor?  Why don't you visit the Phoenix!",self);
+	 block;
+      }
+
+goto there;
+
+:damage:
+if (target.type!=UNIT_ST_PC) goto there;
+trg:=findunit(self,pcname,FIND_UNIT_HERE, null);
+if ((isset (target.pcflags,PC_PK_RELAXED)) and
+ (isset (trg.pcflags,PC_PK_RELAXED))) goto there;
+else
+{
+  power:=-1;
+  block;
+  pause;
+  }
+
+goto there;
+
+:nocast:
+if (target.type!=UNIT_ST_PC) goto there;
+trg:=findunit(self,pcname,FIND_UNIT_HERE, null);
+if ((isset (target.pcflags,PC_PK_RELAXED)) and
+ (isset (trg.pcflags,PC_PK_RELAXED))) goto there;
+else
+	{
+   s := getword(argument);
+   splno := atoi(s);
+
+   if ((splno ==SPL_DISEASE_1) or
+   	(splno ==SPL_DISEASE_2) or
+	  (splno ==SPL_RESURRECTION) or
+   	(splno ==SPL_BLIND) or
+   	(splno ==SPL_SLEEP) or
+   	(splno ==SPL_RAISE_DEAD) or
+   	(splno ==SPL_CAUSE_FLIGHT) or
+   	(splno ==SPL_CAUSE_PANIC) or
+   	(splno ==SPL_UNLOCK) or
+   	(splno ==SPL_HEDGE_WALL) or
+   	(splno ==SPL_POLARITY) or
+   	(splno ==SPL_WIZARD_MARK) or
+   	(splno ==SPL_FEAR) or
+    (splno ==SPL_SOUL_SHIFT))
+{
+  power:=-1;
+  block;
+  pause;
+  	}
+	}
+goto there;
+
+}
+dilend
+
+/* FAMILIAR DIL MODULE ADD-IN: Familiar-On-Familiar jealousy. In a nutshell,
+since players can have multiple familiars, those familiars need to react to
+one another: and these are jealous little buggers. If they sense another
+familiar in the same room with their owner, they might (1) attack the
+other familiar, (2) screw with the other familiar, (3) grow grumpy and
+uncontrollable, or (4) destroy the other spirit. Obviously, since this is the
+second DIL in the chain, an exit from the game (causing a reload), will get
+rid of the grumpiness :) */
+dilbegin recall aware fam_personality();
+
+var
+   jealous:   unitptr;
+   i:         integer;
+   ashes:     unitptr;
+
+code
+{
+   /* We dont need to find pcowner here (yet, maybe next version?) */
+
+   /* Be inactive when sleeping / wounded */
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+   :setup:
+   heartbeat := PULSE_SEC*60;
+
+   subextra (self.extra, "$grumpy");
+
+   wait (SFB_CMD, ((activator.type == UNIT_ST_NPC)
+		   and (activator.idx == self.idx) and (activator.master==self.master)
+		   and (activator!=self)));
+   /* Basically, wait for a familiar, imp or spirit to do anything in the
+      same room, then decide how angry/jealous it is */
+/* jealous:=findunit(self.outside,activator,FIND_UNIT_HERE, null); */
+ jealous := activator;
+   secure (jealous, setup);
+
+   i := rnd (1, 100);
+
+   /* 98% CHANCE: destroy the other */
+   if (i > 2)
+   {
+      act("$3n begins to grow restless and glares jealously at $2t.",
+	  A_ALWAYS, self.outside,jealous.title,self, TO_CHAR);
+      pause;
+      act ("There is a strange puff of smoke, and $2t is gone, "
+	  +" leaving only a small pile of ashes.",
+	  A_ALWAYS, self.outside,jealous.title,self, TO_CHAR);
+      ashes := load ("fam_ashes@g_q");
+      ashes.outside_descr := "The ashes of "+jealous.title+" have settled here.";
+      link (ashes, jealous.outside);
+      act ("$3n cackles evilly.", A_ALWAYS, self.outside, null,self, TO_ALL);
+      unsecure (jealous);
+      destroy (jealous);
+     goto setup;
+   }
+
+   /* 2% CHANCE: becoming grumpy and uncontrollable */
+   if (i < 99)
+   {
+      act ("$3n begins to look grumpy and jealous of $2t.",
+	  A_ALWAYS, self.outside,jealous.title,self, TO_CHAR);
+ log ("someones fam is getting pissed they have two!");
+      pause;
+      addextra (self.extra, {"$grumpy"}, "Block commands");
+            /* NOTE: this turns off the OBEY special and the
+			 combat assistance, making the familiar
+			 useful only for reporting it's own status */
+      :bkloop:    /* Provides a response so user knows it is grumpy
+		     and not just broken!! */
+
+      wait (SFB_CMD, ((activator.type == UNIT_ST_PC) and
+		      (command("tell"))));
+      act ("$3n begins to grow restless and looks about to see if "+
+	   "anyone is watching him watch $2t.",
+	   A_ALWAYS, self.outside, jealous.title,self, TO_ALL);
+      pause;
+
+
+  log("fam bkloop");
+      goto bkloop;
+
+   }
+  log("fam goto setup");
+   goto setup;
+}
+dilend
+
+/*this was before darg tried fixing 11/02*/
+dilbegin oldfam_persona();
+
+var
+   jealous:   unitptr;
+   i:         integer;
+   ashes:     unitptr;
+
+code
+{
+   /* We dont need to find pcowner here (yet, maybe next version?) */
+
+   /* Be inactive when sleeping / wounded */
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   :setup:
+   heartbeat := PULSE_SEC*5;
+
+   subextra (self.extra, "$grumpy");
+
+   wait (SFB_CMD, ((activator.type == UNIT_ST_NPC)
+		   and (activator.idx == self.idx) and
+		   (activator.master==self.master)));
+
+   /* Basically, wait for a familiar, imp or spirit to do anything in the
+      same room, then decide how angry/jealous it is */
+
+   jealous := activator;
+   secure (jealous, setup);
+
+   /* 75% chance of not getting upset */
+   i := rnd (30, 40);
+
+   if (i > 2)
+     goto setup;
+
+   /* Ok, we know it is pissed now... here are the behavior chances:
+
+      60% chance he'll grow grumpy (4 < i <= 10)
+      30% chance he'll mess with the other (1 < i <= 4)
+      10% chance he'll destroy the other ( i = 1 )   */
+
+
+   /* 10% CHANCE: destroy the other */
+   if (i < 2)
+  {
+      act("$1n begins to grow restless and glares jealously at $2t.",
+	   A_SOMEONE, self,jealous.title, null, TO_CHAR);
+      pause;
+      act ("There is a strange puff of smoke, and $2t is gone, "
+	  +" leaving only a small pile of ashes.",
+	   A_SOMEONE, self,jealous.title, null, TO_CHAR);
+      ashes := load ("fam_ashes@g_q");
+      ashes.outside_descr := "The ashes of "+jealous.name+" have settled here.";
+      link (ashes, jealous.outside);
+      act ("$3n cackles evilly.", A_SOMEONE, self.outside, null,jealous, TO_ALL);
+      unsecure (jealous);
+      destroy (jealous);
+
+   }
+
+   /* 30% CHANCE: mess with the other */
+
+   if ((i > 2) and (i < 5))
+   {
+      act ("$3n begins to grow restless and looks about to see if "+
+	   "anyone is watching him watch $2t.",
+	   A_SOMEONE, self.outside, jealous.title,jealous, TO_ALL);
+      pause;
+
+      i := (rnd (1, 10));
+      exec ("cast sleep "+jealous.name, self); /* ALWAYS Sleep */
+
+      if ((i >2) and (i <3)) exec ("cast plague "+jealous.name, self);
+      if ((i >3) and (i <4)) exec ("cast toxicate "+jealous.name, self);
+      if ((i >4) and (i <5)) exec ("cast blind "+jealous.name, self);
+      if ((i >5) and (i <6)) exec ("cast curse "+jealous.name, self);
+      if (i >6) exec ("cast madness "+jealous.name, self); /*Favorite!!*/
+
+      /* realize, although these spells are tough, the familiar has
+	 whimpy spell powers in each of those.... */
+
+      pause;
+   }
+
+   /* 60% CHANCE: becoming grumpy and uncontrollable */
+
+   if (i > 5)
+   {
+      act ("$1n begins to look grumpy and jealous of "+
+	   jealous.title+".", A_SOMEONE, self, null, null, TO_ALL);
+      pause;
+      addextra (self.extra, {"$grumpy"}, "Block commands");
+            /* NOTE: this turns off the OBEY special and the
+			 combat assistance, making the familiar
+			 useful only for reporting it's own status */
+      :bkloop:    /* Provides a response so user knows it is grumpy
+		     and not just broken!! */
+
+      wait (SFB_CMD, ((activator.type == UNIT_ST_PC) and
+		      (command("tell"))));
+      act ("$1n looks grumpy and suspicious of all the secrets being told.",
+	   A_SOMEONE, self, null, null, TO_ALL);
+
+
+      goto bkloop;
+
+   }
+
+   goto setup;
+}
+dilend
+
+%rooms
+room1
+title "An Empty Room"
+names {"qq"}
+descr
+"Its an empty room!"
+flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
+end
+
+
+%mobiles
+healer
+names {"Phoenix","healer"}
+title "the Phoenix"
+descr "The Phoenix is here, aiding those near doom."
+extra {}
+"Born of the Ashes and rising to the sky, Phoenix has always had great
+powers of rejuvenation.  Now in her old age she continues to combat the
+darkness, not with her own strength, but by maintaining that of others
+around her.  The warmth of her love and goodness heals all who come in
+contact with her. A solid gold medallion around her neck catches your eye.
+"
+
+extra {"medallion"}
+"Thanks to Lev for my name and description one of his few believable ideas."
+M_HUMAN_WARRIOR_NATURAL(150, SEX_FEMALE)
+MSET_ABILITY(10,10,10,10,10,10,20,20)
+ /*special spellcaster only*/
+exp -500
+flags  {UNIT_FL_NO_TELEPORT}
+
+dilbegin healer();
+
+var
+   pc: unitptr;
+code
+{
+
+   heartbeat := PULSE_SEC * 65;
+
+
+   :loop:
+
+   wait(SFB_TICK, TRUE);
+   if (self.position < POSITION_SLEEPING)
+  {
+   self.position := POSITION_STANDING;
+  }
+  pc:=findrndunit (self,FIND_UNIT_SURRO,UNIT_ST_PC);
+  if (pc == null) goto loop;
+
+   on rnd(0,42) goto
+     case0, case1, case2, case3, case4, case5, case6, case7, case8,
+     case9, case10, case11, case12, case13, case14, case15, case16,
+     case17, case18, case19, case20, case21, case22, case23, case24,
+     case25, case26, case27, case28, case29, case30, case31, case32,
+     case33, case34, case35, case36, case37, case38, case39, case40,
+     case41, case42;
+
+:case42:
+ :case0:
+{
+exec("cast heal " +pc.name, self);
+goto loop;
+}
+:case41:
+   :case1:
+{
+exec("cast bless " +pc.name, self);
+goto loop;
+}
+:case40:
+   :case2:
+{
+exec("cast stone skin " +pc.name, self);
+goto loop;
+}
+:case25:
+:case39:
+   :case3:
+{
+exec("cast bone skin " +pc.name, self);
+goto loop;
+}
+:case24:
+:case38:
+   :case4:
+{
+exec("cast strength " +pc.name, self);
+goto loop;
+}
+:case23:
+:case5:
+{
+exec("cast dex " +pc.name, self);
+goto loop;
+}
+
+:case22:
+{
+exec("cast det invis " +pc.name, self);
+goto loop;
+}
+
+
+:case37:
+   :case6:
+{
+exec("cast con " +pc.name, self);
+goto loop;
+}
+:case21:
+:case36:
+   :case7:
+{
+exec("cast cha " +pc.name, self);
+goto loop;
+}
+:case20:
+:case35:
+   :case8:
+{
+exec("cast bra " +pc.name, self);
+goto loop;
+}
+:case19:
+:case34:
+   :case9:
+{
+exec("cast raise mag " +pc.name, self);
+goto loop;
+}
+:case18:
+:case33:
+   :case10:
+{
+exec("cast bark skin " +pc.name, self);
+goto loop;
+}
+
+:case32:
+   :case11:
+{
+exec("cast cure serious wounds " +pc.name, self);
+goto loop;
+}
+ :case31:
+   :case12:
+{
+exec("cast raise divine " +pc.name, self);
+goto loop;
+}
+:case30:
+   :case13:
+{
+exec("cast remove curse " +pc.name, self);
+goto loop;
+}
+:case29:
+   :case14:
+{
+exec("cast remove disease " +pc.name, self);
+goto loop;
+}
+:case28:
+   :case15:
+{
+exec("cast remove poison " +pc.name, self);
+goto loop;
+}
+:case27:
+   :case16:
+{
+exec("cast sanctuary " +pc.name, self);
+goto loop;
+}
+:case26:
+   :case17:
+{
+exec("cast protection from evil " +pc.name, self);
+goto loop;
+}
+goto loop;
+}
+dilend
+
+dilbegin dil_zap();
+var
+  u : unitptr;
+  s : string;
+  i : integer;
+  extra_ptr:extraptr;
+code
+{
+   wait(SFB_DONE, command("say") and
+   ("fix me" == argument));
+
+
+   u :=activator;
+
+   if (u)
+   {
+   extra_ptr:="$stone code" in u.extra;
+   if (extra_ptr)
+    {
+    extra_ptr.descr:="space holder";
+    }
+         act("Your code was successfully fixed.",
+           A_ALWAYS, activator, null, null, TO_CHAR);
+           }
+   else
+     act("No such person found to fix.",
+         A_ALWAYS, activator, null, null, TO_CHAR);
+}
+dilend
+
+end
+
+
+
+
+/*--------MOBILES FOR MAGE QUEST #1: FAMILIARS--------*/
+
+		magic_cricket
+names {"magic cricket", "cricket"}
+title "an iridescent cricket"
+descr
+"A shiny, iridescent cricket is hiding here, chirping happily."
+extra {}
+"Although small like any cricket, this one sparkles in the light and has
+a most pleasant song. It looks like it could almost be magical!"
+extra {"$donotstore"}
+"This is to keep people from stocking up their storage with the items for the quest."
+flags {UNIT_FL_NOSAVE}
+weight 1
+level 1
+M_SMALL_INSECT_TINY(1,SEX_FEMALE)
+position POSITION_STANDING
+alignment 0
+manipulate MANIPULATE_TAKE
+romflags {CHAR_DETECT_INVISIBLE}
+
+/* DIL Behavior: This little girl is just meant to be irritating.
+   It routinely tries to go back to the tree circle in Cypress zone,
+   which makes it exit the players inventory in the process. You can
+   only hold it for about 1 minute... unless, of course, you sleep it.*/
+
+dilbegin prg1();
+external
+ integer walk_room@function (s:string,i:integer);
+
+var
+tf:integer;
+code
+{
+   :start:
+   wait (SFB_CMD, (activator.type == UNIT_ST_PC) );
+   if (self.outside.type != UNIT_ST_PC) goto start;
+   if (self.outside.type == UNIT_ST_PC)
+   {
+      heartbeat := PULSE_SEC*60;
+      link (self,self.outside.outside);
+      exec ("emote chirps a little song, homesick for it's forest home.",self);
+      pause;
+      tf:= walk_room@function ("tree_circle@cypress",4);
+   }
+}
+dilend
+
+end
+
+
+familiar2
+names {"familiar"}
+title "a strange magical familiar"
+descr
+"A strange magical familiar has been left here."
+extra {}
+"This beast is obviously magical in nature - the glow surrounding
+it's body and the intelligent gleam in its eyes give it away as a
+mage's familiar. Perhaps you should leave it unmolested."
+extra {"tags", "gold tags"}
+"The tags on this familiar say 'MageFamiliar Version 6.0'"
+level 20
+position POSITION_STANDING
+race RACE_FAMILIAR
+alignment 0
+weight 15
+sex SEX_NEUTRAL
+capacity 1000
+romflags {CHAR_DETECT_INVISIBLE}
+MSET_ABILITY (5,5,10,10,20,20,15,15)
+MSET_WEAPON (2,2,2,2,2,2)
+MSET_SPELL (8,8,8,20,8,6,6,6,6,6,6)
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+dilcopy combat_mag@function("burn","heal",0,2);
+dilcopy fam_unbonded@g_q();
+// special SFUN_OBEY // Stormtamer: Why do we need it at all?
+/* placed after the DIL so that it can be blocked via DIL */
+end
+
+			hexica
+names { "hexica" , "witch" }
+title "Hexica the witch"
+descr "Hexica, the haggish old witch, is cackling to herself."
+extra {}
+"The withered old hag is dressed in smelly rags and is as ugly as
+sin itself. She glares at you with beady black eyes from behind
+her matted hair."
+flags {UNIT_FL_NO_TELEPORT}
+exp -500
+alignment -400     /* quite evil and perverted */
+M_HUMAN_CLERIC_SWORD(199,SEX_FEMALE,"curse","heal")
+position POSITION_STANDING
+default POSITION_STANDING
+romflags {CHAR_DETECT_INVISIBLE}
+
+/* DIL BEHAVIOR: Familiar Quest Part Three - for players with a Familiar
+Quest Completed. This routine loads a familiar, customizes and sets the
+quest status to Familiar Bonded. Placed at the TOP of the DIL level tree
+so that it has priority functions over the rest.*/
+
+
+/* DIL BEHAVIOR: Familiar Quest Part One - handles players with no Familiar
+Quest status and those with Familiar Bonded status */
+
+dilbegin hexica_quest();
+external
+	integer level_guild_chk@guild_paths(u:unitptr,s:string);
+var
+  pc:     unitptr;
+	expd:extraptr;
+	glevel:integer;
+  i:      integer;
+
+code
+{
+
+   :init:
+   interrupt (SFB_COM, (self.position == POSITION_FIGHTING), ohno_combat);
+
+   :start:
+   heartbeat := PULSE_SEC*5;
+   wait (SFB_CMD, (activator.type == UNIT_ST_PC));
+
+
+   pc := activator;
+   secure (pc, lostpc);
+   if (FAMILIAR_BAN in activator.quests)
+   {
+   exec ("say You have been banned from owning a familiar, "+pc.name+"!", self);
+   unsecure (pc);
+   goto start;
+   }
+
+   if (not ((FAMILIAR_ONGOING in pc.quests)
+    or (FAMILIAR_COMPLETE in pc.quests) or (FAMILIAR_BONDED in pc.quests)))
+   {
+      pause;
+
+   expd := "$path" in pc.quests;
+
+   if (expd == null)
+	 	{
+		:mund:
+	 exec ("say I will have nothing to do with a mundane such as you, "+pc.name+"!", self);
+	 unsecure (pc);
+	 goto waitawhile;
+      }
+
+
+   if ((expd.names.[1] == null) or (expd.names.[2] == null) or
+       (expd.names.[3] == null) or (expd.names.[4] == null) or
+       (expd.names.[5] == null) or (expd.names.[6] == null) or
+       (expd.names.[7] == null))
+      goto mund;
+
+
+   if ((not(GUILD_UDG_MAGE in expd.names))  and
+       (not (GUILD_SORCERER in expd.names)) and
+       (not(GUILD_NECROMANCER in  expd.names)))
+			 goto mund;
+glevel:=0;
+glevel:=level_guild_chk@guild_paths(pc,GUILD_UDG_MAGE);
+if (glevel<20)
+glevel:=level_guild_chk@guild_paths(pc,GUILD_SORCERER);
+if (glevel<20)
+glevel:=level_guild_chk@guild_paths(pc,GUILD_NECROMANCER);
+
+if (glevel <20)
+      {
+	 exec ("say You show some promise, "+pc.name+", but need to gain more power.", self);
+	 pause;
+	 exec ("say Come visit me again once you reach level 20. in a magic "+
+	 "guild Perhaps I can assist you.", self);
+	 unsecure (pc);
+	 goto waitawhile;
+      }
+
+      exec ("say Ahhh... so you are interested in familiar, huh? You seem powerful enough to bond one, "+pc.name+".", self);
+
+      pause;
+      exec ("say You just have to fetch me the ingredients to cast the spell... they are listed there in that book.", self);
+      pause;
+      exec ("say Just look at the book if you want to see what you have to get. Interested?", self);
+
+      i := 0;
+      while (i < 5)
+      {
+	 wait (SFB_CMD, (activator #= pc));
+
+	 if (command ("nod"))
+	   goto quest_accepted;
+	 else if (command ("say"))
+	 {
+	    pause;
+	    exec ("say Just nod if you want to, "+pc.name+".", self);
+	 }
+	 else if (command ("shake"))
+	   goto noquest;
+
+	 i := i + 1;
+      }
+
+      :noquest:
+      pause;
+      exec ("say Fine... you'll be back, I'm sure of that...", self);
+      exec ("cackle", self);
+      unsecure (pc);
+      goto waitawhile;
+
+      :quest_accepted:
+      pause;
+      exec ("cackle", self);
+      exec ("say I knew you'd want a familiar... just bring me the ingredients and I'll cast the spell for you.", self);
+      addextra (pc.quests, {FAMILIAR_ONGOING}, "");
+      unsecure (pc);
+      goto start;
+   }
+   :waitawhile:
+   heartbeat := PULSE_SEC*30;
+   pause;
+   goto init;
+
+   :lostpc:
+   exec ("say The little snot... doesn't know it's manners!", self);
+   goto start;
+
+   :ohno_combat:
+   heartbeat := PULSE_SEC*5;
+   exec ("say You nasty, rude little brat!", self);
+   exec ("cast curse "+pc.name, self);
+   pause;
+   interrupt (SFB_COM, (self.position == POSITION_FIGHTING), ohno_combat);
+   goto start;
+}
+dilend
+
+
+
+/* DIL BEHAVIOR: Familiar Quest Part Two - handles the fetching of the quest
+objects for players with status Familiar Quest Ongoing Players need to fetch
+spider silk ("web"), grave moss ("moss") and a live magic cricket ("cricket")
+... special check to make sure if a corpse of cricket it delivered the pc
+is criticised...*/
+
+dilbegin familiar_main();
+external
+	integer create_fam(pc:unitptr);
+var
+
+	tf:integer;
+	expd:extraptr;
+	i:integer;
+ pc:      unitptr;
+ item:    unitptr;
+ exdp:    extraptr;
+
+code
+{
+   heartbeat := PULSE_SEC*5;
+
+   :start:
+wait (SFB_DONE ,activator.type==UNIT_ST_PC);
+
+if (command ("give"))
+	goto give;
+
+   if (FAMILIAR_BAN in activator.quests)
+   {
+   exec ("say You have been banned from owning a familiar, "+pc.name+"!", self);
+   unsecure (pc);
+   goto start;
+   }
+
+if ((not((FAMILIAR_COMPLETE in activator.quests)) and
+	 (not(FAMILIAR_BONDED in activator.quests))) or
+	 ("familiar" in activator.inside.name))
+	 	goto start;
+
+   expd := "$path" in activator.quests;
+
+   if (expd == null)
+	 goto start;
+
+   if ((expd.names.[1] == null) or (expd.names.[2] == null) or
+       (expd.names.[3] == null) or (expd.names.[4] == null) or
+       (expd.names.[5] == null) or (expd.names.[6] == null) or
+       (expd.names.[7] == null))
+      goto start;
+
+
+   if ((not(GUILD_UDG_MAGE in expd.names))  and
+       (not (GUILD_SORCERER in expd.names)) and
+       (not(GUILD_NECROMANCER in  expd.names)))
+     goto start;
+
+:setup:
+   pc := activator;
+   secure (pc, hagsecure);
+
+   exec ("say So, "+pc.name+", you are ready for a familiar? This ritual "+
+	 "can take a little time and is also a little dangerous.", self);
+   pause;
+   exec ("say If you are sure you want me to summon you a familiar now, "+
+	 "nod your ugly head.", self);
+
+   i := 0;
+   while (i < 5)
+   {
+      wait (SFB_DONE, activator #= pc);
+
+      if (command ("nod"))
+	goto ritual;
+      else if (command ("say"))
+      {
+	 exec ("say Just nod if you want me to, "+pc.name+".", self);
+      }
+      else if (command ("shake"))
+	goto no_ritual;
+
+
+      i := i + 1;
+   }
+
+   :no_ritual:
+   exec ("say Then come back later when you have more nerve...", self);
+
+   unsecure (pc);
+   goto start;
+
+
+:give:
+   if (not (FAMILIAR_ONGOING in activator.quests))
+   {
+      exec ("say Trying a bribe, eh, sweetie?", self);
+      pause;
+      exec ("cackle", self);
+      goto start;
+   }
+
+   pc := activator;
+   item := medium;
+   secure (pc, hagsecure);
+   secure (item, hagsecure);
+
+      exdp := FAMILIAR_ONGOING in pc.quests;
+
+      if ("web" in item.name)
+      {
+	 addstring (exdp.names, "web");
+	 exec ("say Ahhh... the web of a giant spider. We'll use this to bond the familiar to you.", self);
+      }
+      else if ("moss" in item.name)
+      {
+	 addstring (exdp.names, "moss");
+	 exec ("say Yes... with this the familiar will be bonded to you, even if you have to visit Valhalla.", self);
+	 exec ("cackle", self);
+      }
+      else if (("corpse" in item.name) and ("cricket" in item.outside_descr))
+      {
+	 exec ("say Now what am I supposed to do with a dead magic cricket. I must have a live one!", self);
+      }
+      else if ("cricket" in item.name)
+      {
+	 addstring (exdp.names, "cricket");
+	 exec ("say Perfect.... this will give your familiar a voice.", self);
+      }
+      else
+      {
+	 exec ("say This is not ingredient for the spell! Why do you waste my time?", self);
+      }
+
+unsecure(item);
+destroy (item);
+
+   if (("web" in exdp.names) and ("moss" in exdp.names) and ("cricket" in exdp.names))
+   {
+      pause;
+      subextra (pc.quests, FAMILIAR_ONGOING);
+      addextra (pc.quests, {FAMILIAR_COMPLETE}, "");
+      exec ("say Ahhh. That is all the ingredients! Now we are ready to summon you a familiar,"+pc.name+".", self);
+			pause;
+			goto ritual;
+   }
+
+goto start;
+:ritual:
+tf:=create_fam(pc);
+if (tf==1) goto start;
+else goto hagsecure;
+
+unsecure (pc);
+goto start;
+   :hagsecure:
+   exec ("say I just hate little mages turning their backs on me!", self);
+	 unsecure (pc);
+   goto start;
+}
+dilend
+end
+
+banksy
+names {"banksy","artist","man"}
+title "an anyonmous man"
+descr
+"An anonymous looking man in a dark cloak is here."
+extra {}
+"It's hard to say just who this man is. He's dressed in dark clothes, and 
+a hooded cloak is pulled deep over his face. You can just make out paint 
+splattered here and there on his clothing and hands."
+exp -500
+flags {UNIT_FL_NO_TELEPORT}
+M_SHOP_KEEPER(50, SEX_MALE, RACE_HUMAN)
+money 5 COPPER_PIECE
+
+dilcopy wander_zones@function("udgaard", 7, 0, 0);
+dilcopy shopkeepernew@function(
+{"graf_br@g_q 500 5",
+ "graf_bm@g_q 500 5",
+ "graf_bc@g_q 500 5",
+ "graf_bb@g_q 500 5",
+ "graf_bg@g_q 500 5",
+ "graf_by@g_q 500 5",
+ "graf_n@g_q 500 5",
+ "graf_w@g_q 500 5",
+ "graf_db@g_q 500 5",
+ "graf_dc@g_q 500 5",
+ "graf_dg@g_q 500 5",
+ "graf_dm@g_q 500 5",
+ "graf_dr@g_q 500 5",
+ "graf_dy@g_q 500 5",
+ "graf_r@g_q 500 5"
+},
+{
+ "$1n says, 'I've got no such item.'",
+ "$1n says, 'Why you haven't even got it, $3n?'",
+ "$1n says, 'I don't trade in such things.'",
+ "$1n says, 'This $2n is too expensive for you, $3n.'",
+ "$1n says, 'Here you are, a $2n.'",
+ "$1n says, 'I might be able to sell this $2n.'",
+ "$1n says, 'I don't have that many right now, maybe of you come back later.'"},
+{ITEM_FOOD}, 110, 10, 2*PLATINUM_MULT, FALSE);
+end
+
+%objects
+
+candy_cane2
+title "a Candy Cane"
+names {"a candy cane","candy cane","candy","staff"}
+descr "A large candy cane is laying here."
+extra {}
+"A huge piece of candy with red and white strips."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(12, 0)
+weight 2
+ end
+
+
+rocket1
+names {"rocket"}
+title "a rocket"
+descr "A big rocket has been set up here.."
+extra {}
+"The rocket has a large cargo area in a hole in the top of it. If you put a paper in the
+hole the message on the paper will be displayed in the explosion. Remember
+no swearing and keep it to a max of 3 lines. Anyone caught abusing this
+will lose the right to use them. The rockets will disappear shortly after
+new years so don't try to save them :)  LIGHT ROCKET to activate it.  Hmm that cargo area
+might even be big enough for people to fit in it."
+type ITEM_CONTAINER
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD, MANIPULATE_ENTER}
+MATERIAL_WOOD("Heavy oak")
+weight 2
+CONTAINER_DEF(1000)
+
+dilbegin rocket ();
+external
+  act_world (s:string);
+	ast_launch();
+	act_launcher(s:string);
+var
+  pc:unitptr;
+  s:string;
+  item:unitptr;
+	pname:string;
+  the_col : string;
+  the_col2 : string;
+  code
+{
+  heartbeat:=PULSE_SEC*3;
+  :start:
+  wait (SFB_CMD, command ("light"));
+  pc:=activator;
+  secure (pc,start);
+  item:=findunit(pc,argument,FIND_UNIT_SURRO,null);
+  if ((item==null) or (item!=self))
+    {
+    unsecure (pc);
+    goto start;
+    }
+    if (item.outside.type!=UNIT_ST_ROOM)
+      {
+      act ("You need to put it on the ground first.",
+        A_ALWAYS,pc,null,null,TO_CHAR);
+        unsecure (pc);
+        unsecure (item);
+        goto start;
+        }
+    secure (item,start);
+    block;
+    pause;
+    act ("$1n bends down and lights $2n.",
+    A_ALWAYS,pc,self,null,TO_REST);
+    act ("You bend down and light $2n.",
+    A_ALWAYS,pc,self,null,TO_CHAR);
+		pname:=pc.name;
+pause;
+    act ("<div class='cr'>ss</div><div class='cpr'>ss</div><div class='cpy'>ss</div><div class='cy'>ss</div><div class='cr'>ss</div><div class='cpr'>ss</div><div class='cy'>ss</div><div class='cpy'>ss</div><div class='cw'></div>",
+    A_ALWAYS,self,null,null,TO_ALL);
+    pause;
+    act ("$1n leaves the ground with blinding speed!",
+    A_ALWAYS,self,null,null,TO_ALL);
+    self.minv:=200;
+    pause;
+
+    on rnd (1,6) goto ired, igreen, iyellow, iblue, imagenta, icyan;
+
+:ired:
+   the_col := "<div class='cpr'>red</div>";
+   the_col2 := "<div class='cpr'></div>";
+   goto conti;
+
+:igreen:
+   the_col := "<div class='cpg'>green</div>";
+   the_col2 := "<div class='cpg'></div>";
+   goto conti;
+
+:iyellow:
+   the_col := "<div class='cpy'>yellow</div>";
+   the_col2 := "<div class='cpy'></div>";
+   goto conti;
+
+:iblue:
+   the_col := "<div class='cpb'>blue</div>";
+   the_col2 := "<div class='cpb'></div>";
+   goto conti;
+
+:imagenta:
+   the_col := "<div class='cpm'>purple</div>";
+   the_col2 := "<div class='cpm'></div>";
+   goto conti;
+
+:icyan:
+   the_col := "<div class='cpc'>cyan</div>";
+   the_col2 := "<div class='cpc'></div>";
+   goto conti;
+
+:iwhite:
+   the_col := "<div class='cpw'>white</div>";
+   the_col2 := "<div class='cpw'></div>";
+   goto conti;
+
+:conti:
+s:="";
+item:=self.inside;
+while (item)
+	{
+	if (item.type!=UNIT_ST_OBJ)
+		{
+		item:=item.next;
+		continue;
+		}
+
+if (item.objecttype!=ITEM_NOTE)
+		{
+		item:=item.next;
+		continue;
+		}
+
+      if (item.extra==null)
+      	goto default;
+      s:=item.extra.descr;
+				break;
+   }
+
+if (s=="")
+	goto default;
+
+act_launcher(pname);
+      act_world ("<div class='cpw'>You hear a loud boom!</div><div class='cw'><br/></div>");
+			ast_launch();
+      act_world ("<div class='cpw'>A burst of </div>" + the_col + " sparkles<div class='cpw'> explodes in </div>" +
+                 "the sky above spelling out <br/><br/>"+ the_col2 + s +"<div class='cw'><br/></div>");
+
+item:=self.inside;
+while (item)
+	{
+	if (item.type==UNIT_ST_PC)
+		{
+        item.minv:=0;
+ act("The rocket you are riding in explodes dumping your guts on your keyboard!",
+    A_ALWAYS,item,null,null,TO_CHAR);
+		}
+		item:=item.next;
+	}
+
+self.minv:=0;
+    	  destroy(self);
+	  quit;
+
+:default:
+    act_world("<div class='cpw'>You hear a loud boom!</div><div class='cw'><br/></div>");
+		ast_launch();
+    act_world("<div class='cpw'>A burst of </div>" + the_col + " sparkles<div class='cpw'> explodes in the </div>" +
+              "sky above and drifts spectacularly down to the ground.<div class='cw'><br/></div>");
+
+item:=self.inside;
+while (item)
+	{
+	if (item.type==UNIT_ST_PC)
+		{
+        item.minv:=0;
+ act("The rocket you are riding in explodes dumping your guts on your keyboard!",
+    A_ALWAYS,item,null,null,TO_CHAR);
+		}
+		item:=item.next;
+	}
+
+
+self.minv:=0;
+    destroy (self);
+    quit;
+
+}
+    dilend
+end
+
+
+
+gift_newbie
+title "a Miniature City Guard"
+names {"city guard","statue","guard"}
+descr "A small statue of a city guard is laying here."
+extra {}
+"A small version of a city guard"
+CHA_TRANSFER (+1)
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+end
+
+
+spec
+title "some wire glasses"
+names {"glasses"}
+descr "A pair of wire glasses."
+extra {}
+"A pair of wire glasses."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+end
+
+diaper
+title "a diaper"
+names {"a diaper","diaper"}
+descr "A white diaper is laying here."
+extra {}
+"A white diaper."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+end
+
+sash_98
+title "a white sash with 1998 printed on it."
+names {"sash"}
+descr "A white sash with 1998 printed on it is laying here."
+extra {}
+"A white sash with 1998 printed on it."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+end
+
+sash_97
+title "a tattered white sash with 1997 printed on it."
+names {"sash"}
+descr "A tattered white sash with 1997 printed on it is laying here."
+extra {}
+"A tattered white sash with 1997 printed on it."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+end
+
+/*--------OBJECTS FOR MAGE QUEST #1: FAMILIARS--------*/
+
+
+		   spider_silk
+names {"web","spider silk", "silk"}
+title "a piece of spider silk"
+descr
+"A small fragment of fine spider silk has been left here."
+type ITEM_OTHER
+weight 1
+manipulate MANIPULATE_TAKE
+extra {}
+"This is obviously part of a spider's web, although what use you could
+possibly have with it escapes you. Perhaps a mage could use it as a
+spell component."
+end
+
+		grave_moss
+names {"grave moss", "moss", "hunk"}
+title "a hunk of grave moss"
+descr
+"A strange kind of moss is thriving in the sunlight."
+type ITEM_OTHER
+manipulate MANIPULATE_TAKE
+weight 1
+extra {}
+"You wonder if grave moss has any strange properties that you don't
+know of, but you cannot think of any. Perhaps a mage could use it as
+a spell component. The moss is bright red and has the texture of a
+man's beard."
+end
+
+		fam_ashes
+names {"ashes"}
+title "a pile of ashes"
+descr
+"A strange pile of grey ashes has been left here."
+type ITEM_OTHER
+manipulate MANIPULATE_TAKE
+weight 1
+end
+
+
+			hexica_tome
+names {"hexica's tome", "tome", "book"}
+title "a large, weather-beaten tome"
+descr
+"A massive, weather-beaten old tome sits on a stand here. You wonder
+what could be written in it."
+extra {}
+"The leather binding of this massive tome looks like it might have
+endured doomsday itself! The pages are old and crackly, but still
+readable. The book is open to beginning of a spell formula for
+familiars. It reads:<pre><br/>
+<br/>
+  ' Ingredients Needed:<br/>
+<br/>
+      Grave moss - the only known site is a strange grave hidden<br/>
+		   in the lands of the elves<br/>
+      Spider silk - the spiders in Haon Dor offer a ready supply<br/>
+      Magic Cricket - heard singing sometimes in the Cypress woods<br/>
+<br/>
+      During the incantations to prepare the Mage for their new<br/>
+      familiar, it will also be required to take a small part of the<br/>
+      Mage's soul ... a bit of their brain and constitution to<br/>
+      inhabit the new body of their familiar. Then, after all the<br/>
+      ingredients have been prepared, you must begin the ritual<br/>
+      incantations... '<br/>
+<br/>
+The page ends there... and you get the feeling that you shouldn't turn<br/>
+to the next.</pre>"
+end
+
+
+
+			magef_manual
+names {"owner's manual", "owner manual", "manual"}
+title "a well-thumbed manual"
+descr
+"A well-thumbed owner's manual has been discarded here."
+extra {}
+" This manual has a large heading title HEXIA'S GUIDE TO FAMILIARS, and
+reads:<pre><br/>
+<br/>
+  ' MageFamiliar Version 5.2:<br/>
+<br/>
+    Updated the jealousy routines so that they look better.<br/>
+    Blocked shout capabilities for familiars.<br/>
+    KNOWN BUGS: lost master routine, combat logic<br/>
+<br/>
+    MageFamiliar Version 5.1:<br/>
+<br/>
+    Familiars are beings bonded to serve magical spell casters<br/>
+    (Mages, Sorcerers and Necromancers). Such spell casters can<br/>
+    have multiple familiars (currently only for the summoning<br/>
+    fee, but soon will require another rare object as well). All<br/>
+    the spell caster need do to complete the ritual performed by<br/>
+    Hexica is to WHISPER to their familiar the phrase SERVE ME.<br/>
+    Then the familiar will ask for their name...<br/>
+<br/>
+    It is known that powerful spell caster have managed to keep<br/>
+    multiple familiars under their command, but the stories of<br/>
+    from most spell casters tell of it's danger: familiars<br/>
+    attacking one another, the group of familiars turning en masse<br/>
+    against their master.<br/>
+<br/>
+    Once a familiar is bonded to a spell caster, that is it's one<br/>
+    master for it's entire existence. Even if the spell caster<br/>
+    leaves the world of Valhalla, as long as he has his familiar<br/>
+    with him, it will recognize him. Some spell casters have<br/>
+    reported losing their familiar while on adventure: although<br/>
+    stressed by the absence of their master, the spell casters<br/>
+    said that picking it up and leaving the world of Valhalla<br/>
+    briefly soothed it back into servitude.<br/>
+<br/>
+    Controlling a familiar is easy. It will respond to either<br/>
+    Familiar or to the name you gave it upon bonding. Simply<br/>
+    TELL the familiar any commands that a player could execute,<br/>
+    and the familiar will try it's best to comply. These can<br/>
+    range from expressive gestures like TELL FAMILIAR SMILE to<br/>
+    useful actions like TELL FAMILIAR GET ALL. The familiar can<br/>
+    use armor, weapons and magic items and gain the effects of<br/>
+    those items. Although you can command a familiar to attack<br/>
+    with TELL FAMILIAR KILL (target), their strongest use is as<br/>
+    a spell casting supporter! The familiar, although weak in<br/>
+    magical power, knows every single spell invented by the<br/>
+    minds of the gods. Every spell caster can appreciate the<br/>
+    benefit of a TELL FAMILIAR CAST HEAL (master), or of a<br/>
+    timely TELL FAMILIAR CAST CREATE WATER.<br/>
+<br/>
+    Spell casters have also been known to use familiars like<br/>
+    a Mana Bank. Since the familiar has a pool of mana of<br/>
+    their own (that regenerates over time), casters can get<br/>
+    a boost in their failing mana with TELL FAMILIAR CAST BOOST<br/>
+    MANA (master)!<br/>
+<br/>
+    If you become separated from your familiar, it will try<br/>
+    to seek you out... first by teleporting to you, then by<br/>
+    walking to you. More then one owner (thinking themselves<br/>
+    clever) has tried to summon their familiar to them, only<br/>
+    to discover that it automatically attacks any spell caster<br/>
+    that would dare summon it without the secret familiar ritual!!<br/>
+<br/>
+    Some clever spell casters are experimenting with the homing<br/>
+    feature of familiars. One clever Sorcerer developed the<br/>
+    FAMILIAR SPY TECHNIQUE. Try the following TELL FAMILIAR<br/>
+    CAST INVISIBILITY FAMILIAR to make it invisible, TELL<br/>
+    FAMILIAR CAST CONTROLLED TELEPORT &lt;TARGET&gt; to send it<br/>
+    somewhere. Now, it is going to make a small noise when it<br/>
+    sees you missing, and try to teleport or walk back to you...<br/>
+    While it does however, you could easily CAST WIZARD EYE<br/>
+    FAMILIAR and see what is going on.... The clever Sorcerer<br/>
+    was also experimenting with sending out the familiar spy,<br/>
+    then teleporting to a new location for the familiar to home<br/>
+    in on, allowing him to WIZARD EYE spy on a specific route.<br/>
+<br/>
+    In addition, if you type STATUS FAMILIAR, your familiar will<br/>
+    report to you some of it's vital statistics.... (and this<br/>
+    should actually be working now). While the familiar is loath<br/>
+    to tell you his actual statistics (for fear that you would<br/>
+    work it harder!), he will report the general quality of his<br/>
+    hit points, mana and endurance.<br/>
+<br/>
+<br/>
+    You should keep your familiar on you or following you are<br/>
+    all times. If you are forced to leave it behind somewhere,<br/>
+    it will not be able to hear your commands (your telepathic<br/>
+    link with the familiar requires you to be in the same room<br/>
+    with you.) Horrible stories have been told about small<br/>
+    familiars killing even their high level masters if they cease<br/>
+    to be a spell caster. Some activities with familiars will<br/>
+    also impact the spell caster negatively... sometimes the<br/>
+    little buggers like to feed on their master's hit points<br/>
+    or endurance or mana.<br/>
+<br/>
+    Coming in revision 5.2 (schedule for Jan 1995): familiars that<br/>
+    gain in power with their masters and the new breeds of familiars<br/>
+    for sorcerers and necromancers.<br/>
+</pre>"
+manipulate {MANIPULATE_TAKE}
+type ITEM_NOTE
+weight 1
+end
+
+//******************************************************
+//**********************GRAFFITI REMOVER*****************
+//******************************************************
+
+graf_r
+title "a can of <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover"
+names {"graffiti remover", "remover"}
+descr "A small can of <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover is here."
+extra {}
+"This small tin of <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover, looks like it could be used
+to clean up some graffiti."
+
+extra {"$identify"}
+"It seems like this could be used to clean up some graffiti."
+
+extra {"$improved identify"}
+"The command 'use remover' while holding this, will remove all graffiti present in the room."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 50 PLATINUM_PIECE
+
+dilcopy graf_r();
+
+end // END GRAF_R
+
+//******************************************************
+//***************BRIGHT YELLOW GRAFFITI*****************
+//******************************************************
+
+graf_by
+title "a <div class='cpy'>bright yellow</div> can of graffiti paint"
+names {"<div class='cpy'>bright yellow</div> graffiti", "bright yellow", "paint", "graffiti"}
+descr "A small can of <div class='cpy'>bright yellow</div> graffiti paint is here."
+extra {}
+"This small can of <div class='cpy'>bright yellow</div> paint, looks like it could be used for
+mischievous purposes."
+
+extra {"$identify"}
+"It seems like a mischievous person could use this can of paint to graffiti 
+a room!"
+
+extra {"$improved identify"}
+"This can of <div class='cpy'>bright yellow</div> paint can be used to graffiti a room. 
+Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
+be made with 'use graffiti self'."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+dilcopy do_graffiti("cpy","bright yellow");
+
+end // END GRAF_BY
+
+//******************************************************
+//******************BRIGHT RED GRAFFITI*****************
+//******************************************************
+
+graf_br
+title "a <div class='cpr'>bright red</div> can of graffiti paint"
+names {"<div class='cpr'>bright red</div> graffiti", "bright red", "paint", "graffiti"}
+descr "A small can of <div class='cpr'>bright red</div> graffiti paint is here."
+extra {}
+"This small can of <div class='cpr'>bright red</div> paint, looks like it could be used for
+mischievous purposes."
+
+extra {"$identify"}
+"It seems like a mischievous person could use this can of paint to graffiti 
+a room!"
+
+extra {"$improved identify"}
+"This can of <div class='cpr'>bright red</div> paint can be used to graffiti a room. 
+Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
+be made with 'use graffiti self'."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+dilcopy do_graffiti("cpr","bright red");
+
+end // END GRAF_BR
+
+
+//******************************************************
+//******************BRIGHT BLUE GRAFFITI****************
+//******************************************************
+
+graf_bb
+title "a <div class='cpb'>bright blue</div> can of graffiti paint"
+names {"<div class='cpb'>bright blue</div> graffiti", "bright blue", "paint", "graffiti"}
+descr "A small can of <div class='cpb'>bright blue</div> graffiti paint is here."
+extra {}
+"This small can of <div class='cpb'>bright blue</div> paint, looks like it could be used for
+mischievous purposes."
+
+extra {"$identify"}
+"It seems like a mischievous person could use this can of paint to graffiti 
+a room!"
+
+extra {"$improved identify"}
+"This can of <div class='cpb'>bright blue</div> paint can be used to graffiti a room. 
+Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
+be made with 'use graffiti self'."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+dilcopy do_graffiti("cpb","bright blue");
+
+end // END GRAF_BB
+
+
+//******************************************************
+//*****************BRIGHT GREEN GRAFFITI****************
+//******************************************************
+
+graf_bg
+title "a <div class='cpg'>bright green</div> can of graffiti paint"
+names {"<div class='cpg'>bright green</div> graffiti", "bright green", "paint", "graffiti"}
+descr "A small can of <div class='cpg'>bright green</div> graffiti paint is here."
+extra {}
+"This small can of <div class='cpg'>bright green</div> paint, looks like it could be used for
+mischievous purposes."
+
+extra {"$identify"}
+"It seems like a mischievous person could use this can of paint to graffiti 
+a room!"
+
+extra {"$improved identify"}
+"This can of <div class='cpg'>bright green</div> paint can be used to graffiti a room. 
+Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
+be made with 'use graffiti self'."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+dilcopy do_graffiti("cpg","bright green");
+
+end // END GRAF_BG
+
+
+//******************************************************
+//***************BRIGHT MAGENTA GRAFFITI****************
+//******************************************************
+
+graf_bm
+title "a <div class='cpm'>bright magenta</div> can of graffiti paint"
+names {"<div class='cpm'>bright magenta</div> graffiti", "bright magenta", "paint", "graffiti"}
+descr "A small can of <div class='cpm'>bright magenta</div> graffiti paint is here."
+extra {}
+"This small can of <div class='cpm'>bright magenta</div> paint, looks like it could be used for
+mischievous purposes."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+extra {"$identify"}
+"It seems like a mischievous person could use this can of paint to graffiti 
+a room!"
+
+extra {"$improved identify"}
+"This can of <div class='cpm'>bright magenta</div> paint can be used to graffiti a room. 
+Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
+be made with 'use graffiti self'."
+
+dilcopy do_graffiti("cpm","bright magenta");
+
+end // END GRAF_BM
+
+
+//******************************************************
+//*****************BRIGHT CYAN GRAFFITI*****************
+//******************************************************
+
+graf_bc
+title "a <div class='cpc'>bright cyan</div> can of graffiti paint"
+names {"<div class='cpc'>bright cyan</div> graffiti", "bright cyan", "paint", "graffiti"}
+descr "A small can of <div class='cpc'>bright cyan</div> graffiti paint is here."
+extra {}
+"This small can of <div class='cpc'>bright cyan</div> paint, looks like it could be used for
+mischievous purposes."
+
+extra {"$identify"}
+"It seems like a mischievous person could use this can of paint to graffiti 
+a room!"
+
+extra {"$improved identify"}
+"This can of <div class='cpc'>bright cyan</div> paint can be used to graffiti a room. 
+Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
+be made with 'use graffiti self'."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+dilcopy do_graffiti("cpc","bright cyan");
+
+end // END GRAF_BC
+
+
+//******************************************************
+//*****************BRIGHT WHITE GRAFFITI*****************
+//******************************************************
+
+graf_bw
+title "a <div class='cpw'>bright white</div> can of graffiti paint"
+names {"<div class='cpw'>bright white</div> graffiti paint", "bright white", "paint", "graffiti"}
+descr "A small can of <div class='cpw'>bright white</div> graffiti paint is here."
+extra {}
+"This small can of <div class='cpw'>bright white</div> paint, looks like it could be used for
+mischievous purposes."
+
+extra {"$identify"}
+"It seems like a mischievous person could use this can of paint to graffiti 
+a room!"
+
+extra {"$improved identify"}
+"This can of <div class='cpw'>bright white</div> paint can be used to graffiti a room. 
+Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
+be made with 'use graffiti self'."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+dilcopy do_graffiti("cpw","bright white");
+
+end // END GRAF_BW
+
+
+//******************************************************
+//*******************DEEP YELLOW GRAFFITI***************
+//******************************************************
+
+graf_dy
+title "a <div class='cy'>deep yellow</div> can of graffiti paint"
+names {"<div class='cy'>deep yellow</div> graffiti", "deep yellow", "paint", "graffiti"}
+descr "A small can of <div class='cy'>deep yellow</div> graffiti paint is here."
+extra {}
+"This small can of <div class='cy'>deep yellow</div> paint, looks like it could be used for
+mischievous purposes."
+
+extra {"$identify"}
+"It seems like a mischievous person could use this can of paint to graffiti 
+a room!"
+
+extra {"$improved identify"}
+"This can of <div class='cy'>deep yellow</div> paint can be used to graffiti a room. 
+Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
+be made with 'use graffiti self'."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+dilcopy do_graffiti("cy","deep yellow");
+
+end // END GRAF_DY
+
+
+//******************************************************
+//******************DEEP RED GRAFFITI*****************
+//******************************************************
+
+graf_dr
+title "a <div class='cr'>deep red</div> can of graffiti paint"
+names {"<div class='cr'>deep red</div> graffiti", "deep red", "paint", "graffiti"}
+descr "A small can of <div class='cpr'>bright red</div> graffiti paint is here."
+extra {}
+"This small can of <div class='cr'>deep red</div> paint, looks like it could be used for
+mischievous purposes."
+
+extra {"$identify"}
+"It seems like a mischievous person could use this can of paint to graffiti 
+a room!"
+
+extra {"$improved identify"}
+"This can of <div class='cr'>deep red</div> paint can be used to graffiti a room. 
+Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
+be made with 'use graffiti self'."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+dilcopy do_graffiti("cr","deep red");
+
+end // END GRAF_DR
+
+
+//******************************************************
+//******************DEEP BLUE GRAFFITI****************
+//******************************************************
+
+graf_db
+title "a <div class='cb'>deep blue</div> can of graffiti paint"
+names {"<div class='cb'>deep blue</div> graffiti", "deep blue", "paint", "graffiti"}
+descr "A small can of <div class='cb'>deep blue</div> graffiti paint is here."
+extra {}
+"This small can of <div class='cb'>deep blue</div> paint, looks like it could be used for
+mischievous purposes."
+
+extra {"$identify"}
+"It seems like a mischievous person could use this can of paint to graffiti 
+a room!"
+
+extra {"$improved identify"}
+"This can of <div class='cb'>deep blue</div> paint can be used to graffiti a room. 
+Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
+be made with 'use graffiti self'."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+dilcopy do_graffiti("cb","deep blue");
+
+end // END GRAF_DB
+
+
+//******************************************************
+//*******************DEEP GREEN GRAFFITI****************
+//******************************************************
+
+graf_dg
+title "a <div class='cg'>deep green</div> can of graffiti paint"
+names {"<div class='cg'>deep green</div> graffiti", "deep green", "paint", "graffiti"}
+descr "A small can of <div class='cg'>deep green</div> graffiti paint is here."
+extra {}
+"This small can of <div class='cg'>deep green</div> paint, looks like it could be used for
+mischievous purposes."
+
+extra {"$identify"}
+"It seems like a mischievous person could use this can of paint to graffiti 
+a room!"
+
+extra {"$improved identify"}
+"This can of <div class='cg'>deep green</div> paint can be used to graffiti a room. 
+Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
+be made with 'use graffiti self'."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+dilcopy do_graffiti("cg","deep green");
+
+end // END GRAF_DG
+
+
+//******************************************************
+//***************DEEP MAGENTA GRAFFITI****************
+//******************************************************
+
+graf_dm
+title "a <div class='cm'>deep magenta</div> can of graffiti paint"
+names {"<div class='cm'>deep magenta</div> graffiti", "deep magenta", "paint", "graffiti"}
+descr "A small can of <div class='cm'>deep magenta</div> graffiti paint is here."
+extra {}
+"This small can of <div class='cm'>deep magenta</div> paint, looks like it could be used for
+mischievous purposes."
+
+extra {"$identify"}
+"It seems like a mischievous person could use this can of paint to graffiti 
+a room!"
+
+extra {"$improved identify"}
+"This can of <div class='cm'>deep magenta</div> paint can be used to graffiti a room. 
+Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
+be made with 'use graffiti self'."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+dilcopy do_graffiti("cm","deep magenta");
+
+end // END GRAF_DM
+
+
+//******************************************************
+//*****************DEEP CYAN GRAFFITI*****************
+//******************************************************
+
+graf_dc
+title "a <div class='cc'>deep cyan</div> can of graffiti paint"
+names {"<div class='cc'>deep cyan</div> graffiti", "deep cyan", "paint", "graffiti"}
+descr "A small can of <div class='cc'>deep cyan</div> graffiti paint is here."
+extra {}
+"This small can of <div class='cc'>deep cyan</div> paint, looks like it could be used for
+mischievous purposes."
+
+extra {"$identify"}
+"It seems like a mischievous person could use this can of paint to graffiti 
+a room!"
+
+extra {"$improved identify"}
+"This can of <div class='cc'>deep cyan</div> paint can be used to graffiti a room. 
+Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
+be made with 'use graffiti self'."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+dilcopy do_graffiti("cc","deep cyan");
+
+end // END GRAF_DC
+
+
+//******************************************************
+//********************WHITE GRAFFITI********************
+//******************************************************
+
+graf_w
+title "a <div class='cw'>white</div> can of graffiti paint"
+names {"<div class='cw'>white</div> graffiti", "white", "paint", "graffiti"}
+descr "A small can of <div class='cw'>white</div> graffiti paint is here."
+extra {}
+"This small can of <div class='cw'>white</div> paint, looks like it could be used for
+mischievous purposes."
+
+extra {"$identify"}
+"It seems like a mischievous person could use this can of paint to graffiti 
+a room!"
+
+extra {"$improved identify"}
+"This can of <div class='cw'>white</div> paint can be used to graffiti a room. 
+Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
+be made with 'use graffiti self'."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+dilcopy do_graffiti("cw","white");
+
+end // END GRAF_W
+
+
+//******************************************************
+//********************BLACK GRAFFITI********************
+//******************************************************
+
+graf_n
+title "a <div class='cpn'>black</div> can of graffiti paint"
+names {"<div class='cpn'>black</div> graffiti", "black", "paint", "graffiti"}
+descr "A small can of <div class='cpn'>black</div> graffiti paint is here."
+extra {}
+"This small can of <div class='cpn'>black</div> paint, looks like it could be used for
+mischievous purposes."
+
+extra {"$identify"}
+"It seems like a mischievous person could use this can of paint to graffiti 
+a room!"
+
+extra {"$improved identify"}
+"This can of <div class='cpn'>black</div> paint can be used to graffiti a room. 
+Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
+be made with 'use graffiti self'."
+
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+dilcopy do_graffiti("cpn","black");
+
+end // END GRAF_N
+
+/*------------ THE CUSTOMIZATION CONTRAPTION ------------*/
+
+/*-------------------------RESET-------------------------*/
+%reset
+
+
+/*--------------MAGE QUEST: FAMILIARS RESET--------------*/
+load hexica into haon_dor/tower_lab max 1
+load hexica_tome into haon_dor/tower_lab max 1
+load magic_cricket into cypress/tree_circle max 1
+load grave_moss into elfdom/grave_st max 1
+load spider_silk into haon_dor/spider_den max 1
+load banksy into watch_tower3@udgaard max 1
+%end

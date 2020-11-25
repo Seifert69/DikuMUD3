@@ -515,6 +515,68 @@ code
 }
 dilend
 
+dilbegin act_world (s:string);
+var
+	pc:unitptr;
+code
+{
+	heartbeat:=PULSE_SEC*3;
+	pc:=ghead();
+	while (pc.type==UNIT_ST_PC)
+	{
+		sendtext(s,pc);
+		pc:=pc.gnext;
+	}
+	return;
+}
+dilend
+
+dilbegin act_launcher (s:string);
+var
+	pc:unitptr;
+code
+{
+	heartbeat:=PULSE_SEC*3;
+	pc:=ghead();
+	while (pc.type==UNIT_ST_PC)
+	{
+		if (pc.level > 200)
+			sendtext("<div class='hint'>"+s+" Launched this firework:</div><br/>",pc);
+		pc:=pc.gnext;
+	}
+	return;
+}
+dilend
+
+dilbegin ast_launch();
+var
+	pc,rm,temp:unitptr;
+code
+{
+	pc:=self.inside;
+	while (pc)
+	{
+		temp:=pc.next;
+		if (pc.type==UNIT_ST_PC)
+		{
+			sendtext ("The explosion of the rocket throws you clear and you are falling fast.<br/>",pc);
+			pc.hp:=0;
+			pc.mana:=0;
+			pc.endurance:=0;
+			position_update (pc);
+			rm:=findrndunit(self,FIND_UNIT_WORLD, UNIT_ST_ROOM);
+			sendtext ("You hit the ground with a splat!  Ouch that hurt!<br/>",pc);
+			if (rm!=null)
+				link (pc,rm);
+			else
+				link (pc,findroom("void@basis"));
+		}
+		pc:=temp;
+	}
+	return;
+}
+dilend
+
 %rooms
 
 study
@@ -2781,6 +2843,180 @@ Type touch pole to visit Santa's Workshop!<br/>
 </pre>"
 weight 5000
 dilcopy touch_pole();
+end
+
+rocket
+names {"rocket"}
+title "a rocket"
+descr "A big rocket has been set up here.."
+extra {}
+"The rocket has a large cargo area in a hole in the top of it. If you put a paper in the
+hole the message on the paper will be displayed in the explosion. Remember
+no swearing and keep it to a max of 3 lines. Anyone caught abusing this
+will lose the right to use them. The rockets will disappear shortly after
+new years so don't try to save them :)  LIGHT ROCKET to activate it.  Hmm that cargo area
+might even be big enough for people to fit in it."
+type ITEM_CONTAINER
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD, MANIPULATE_ENTER}
+MATERIAL_WOOD("Heavy oak")
+weight 2
+CONTAINER_DEF(1000)
+
+dilbegin rocket ();
+external
+	act_world (s:string);
+	ast_launch();
+	act_launcher(s:string);
+var
+	pc,item 	: unitptr;
+	s,pname,col,col2 : string;
+code
+{
+	heartbeat:=PULSE_SEC*3;
+:start:
+	wait (SFB_CMD, (command ("light") and ("rocket" in argument)));
+	block;
+	pc:=activator;
+	secure (pc,start);
+	if(pc.outside.type!=UNIT_ST_ROOM)
+	{
+		act ("You can not light that from here!",
+		A_ALWAYS,pc,null,null,TO_CHAR);
+		unsecure (pc);
+		goto start;
+	}
+	item:=findunit(pc,argument,FIND_UNIT_SURRO,null);
+	if ((item==null) or (item!=self))
+    {
+		unsecure (pc);
+		goto start;
+    }
+    if (item.outside.type!=UNIT_ST_ROOM)
+	{
+		act ("You need to put it on the ground first.",
+		A_ALWAYS,pc,null,null,TO_CHAR);
+		unsecure (pc);
+		unsecure (item);
+		goto start;
+	}
+    secure (item,start);
+    act ("$1n bends down and lights $2n.",A_ALWAYS,pc,self,null,TO_REST);
+    act ("You bend down and light $2n.",A_ALWAYS,pc,self,null,TO_CHAR);
+	pname:=pc.name;
+	pause;
+    act ("<div class='cr'>ss</div><div class='cpr'>ss</div><div class='cpy'>ss</div><div class='cy'>ss</div><div class='cr'>ss</div><div class='cpr'>ss</div><div class='cy'>ss</div><div class='cpy'>ss</div><div class='cw'></div>",
+		A_ALWAYS,self,null,null,TO_ALL);
+    pause;
+    act ("$1n leaves the ground with blinding speed!",A_ALWAYS,self,null,null,TO_ALL);
+    self.minv:=200;
+    pause;
+
+    on rnd (1,6) goto ired, igreen, iyellow, iblue, imagenta, icyan;
+
+	:ired:
+		col := "cpr";
+		col2 := "<div class='"+col+"'>red";
+		goto conti;
+
+	:igreen:
+		col := "cpg";
+		col2 := "<div class='"+col+"'>green";
+		goto conti;
+
+	:iyellow:
+		col := "cpy";
+		col2 := "<div class='"+col+"'>yellow";
+		goto conti;
+
+	:iblue:
+		col := "cpb";
+		col2 := "<div class='"+col+"'>blue";
+		goto conti;
+
+	:imagenta:
+		col := "cpm";
+		col2 := "<div class='"+col+"'>purple";
+		goto conti;
+
+	:icyan:
+		col := "cpc";
+		col2 := "<div class='"+col+"'>cyan";
+		goto conti;
+
+	:iwhite:
+		col := "cpw";
+		col2 := "<div class='"+col+"'>white";
+		goto conti;
+	   
+:conti:
+	
+	s:="";
+	item:=self.inside;
+	while (item)
+	{
+		if (item.type!=UNIT_ST_OBJ)
+		{
+			item:=item.next;
+			continue;
+		}
+		if (item.objecttype!=ITEM_NOTE)
+		{
+			item:=item.next;
+			continue;
+		}
+		if (item.extra==null)
+			goto default;
+		s:=item.extra.descr;
+		break;
+   }
+	if (s=="")
+		goto default;
+
+	act_launcher(pname);
+	act_world ("<div class='cpw'>You hear a loud boom!</div><br/>");
+	ast_launch();
+	act_world ("<div class='cpw'>A burst of " + col2 + " sparkles</div> explodes in " +
+		"the sky above spelling out <br/><br/><div class='"+col+"'>" + s +"<br/></div></div>");
+
+	item:=self.inside;
+	while (item)
+	{
+		if (item.type==UNIT_ST_PC)
+		{
+			item.minv:=0;
+			act("The rocket you are riding in explodes dumping your guts on your keyboard!",
+				A_ALWAYS,item,null,null,TO_CHAR);
+		}
+		item:=item.next;
+	}
+
+	self.minv:=0;
+	destroy(self);
+	quit;
+
+	:default:
+	act_world("<div class='cpw'>You hear a loud boom!</div><div class='cw'><br/></div>");
+	ast_launch();
+	act_world("<div class='cpw'>A burst of </div>" + col2 + " sparkles</div> explodes in the " +
+	"sky above and drifts spectacularly down to the ground.<br/>");
+
+	item:=self.inside;
+	while (item)
+	{
+		if (item.type==UNIT_ST_PC)
+		{
+			item.minv:=0;
+			act("The rocket you are riding in explodes dumping your guts on your keyboard!",
+				A_ALWAYS,item,null,null,TO_CHAR);
+		}
+		item:=item.next;
+	}
+	self.minv:=0;
+	destroy (self);
+	quit;
+
+}
+dilend
 end
 
 %mobiles
