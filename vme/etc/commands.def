@@ -2480,6 +2480,24 @@ minpos   = POSITION_DEAD
 minlevel = 0
 type     = 0
 
+command  = pistore
+func     = pistore@treasure
+minpos   = POSITION_DEAD
+minlevel = 0
+type     = 0
+
+command  = piunstore
+func     = piunstore@treasure
+minpos   = POSITION_DEAD
+minlevel = 0
+type     = 0
+
+command  = pilist
+func     = pilist@treasure
+minpos   = POSITION_DEAD
+minlevel = 0
+type     = 0
+
 command  = trigger
 func     = do_trigger@commands
 minpos   = POSITION_DEAD
