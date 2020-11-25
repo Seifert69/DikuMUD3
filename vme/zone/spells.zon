@@ -5835,9 +5835,12 @@ code
    if (exd)
       s := exd.descr + s;
 
-   exd := "$improved identify" in tgt.extra;
-   if (exd)
-      s := exd.descr + s;
+   if (lvl >= 2)
+   {
+      exd := "$improved identify" in tgt.extra;
+      if (exd)
+         s := exd.descr + s;
+   }
 
    return(s);
 }
