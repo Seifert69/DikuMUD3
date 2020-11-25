@@ -9,9 +9,6 @@ END HEADER*/
 
 
 
-
-
-
 #define _GUILD_MIDGAARD_PALADIN
 
 
@@ -683,76 +680,82 @@ alignment 1000
 exp -300
 dilcopy nokill@paladin_guild();
 
+
+
 /* ------ DIL FOR ENTRANCE TO PALADIN GUILD ----- */
 
 /* Requirements: Player must have an alignment of 500 or above, have
 completed the Wight warren quest and not be a Fallen Paladin.
 More restrictions to come....   */
+
 /*
 dilbegin master_block();
-
 code
 {
-  heartbeat := PULSE_SEC*5;
+   heartbeat := PULSE_SEC*5;
 
-  :start:
-  wait (SFB_CMD, TRUE);
-  if ((self.position <= POSITION_SLEEPING) or (self.position ==
-POSITION_FIGHTING))
-    goto start;
+   :start:
+   wait (SFB_CMD, TRUE);
 
-  if ((activator.type ==  UNIT_ST_PC) and command ("join"))
-  {
-
-    if (activator.level < 0)
-    {
-      block;
-      exec ("say You must fight more battles to prove your worth. Do " +
-            "not bother me again until you are level 0, at least...", self);
-      pause;
+   if ((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING))
       goto start;
-    }
 
-    if (PALADIN_FALLEN in activator.quests)
-    { block;
-      exec ("say You are foolish, Fallen One, to even show your face " +
-            "to me again, let alone lavish false and misleading praise " +
-            "upon me. You like a serpent, and must be taught a lesson.",
-self);
-      exec ("spit " + activator.name, self);
-      pause;
-      goto start;
-    }
-    if (activator.alignment < -349)
-    {  if (activator.alignment < -350)
-       { block;
-         exec ("say You, Evil One, must not be allowed to survive.", self);
-         exec ("spit " + activator.name, self);
+   if ((activator.type ==  UNIT_ST_PC) and command ("join"))
+   {
+      if (activator.level < 0)
+      {
+         block;
+         exec ("say You must fight more battles to prove your worth. Do " +
+               "not bother me again until you are level 0, at least...", self);
+         pause;
          goto start;
-       }
-       block;
-       exec ("say You are not pure enough to join our order.", self);
-       pause;
-       goto start;
-    }
-        expd := "$path" in activator.quests;
-        if (expd == null) goto start;
-        if ((GUILD_PALADIN in expd.names) )
-      { block;
-        exec ("say Me thinks your head has been rattled too many times in
-your "+
-              "helmet, "+activator.name+". You are already a member of the "+
-              "Holy Order!", self);
-        pause;
-        goto start;
       }
 
-    exec ("say Welcome to the Holy Order of Paladins, "+activator.name+
-          ". May you walk paths of honor and be diligent in your protection "+
-          "of Midgaard and it's people.", self);
-  }
+      if (PALADIN_FALLEN in activator.quests)
+      { 
+         block;
+         exec ("say You are foolish, Fallen One, to even show your face " +
+               "to me again, let alone lavish false and misleading praise " +
+               "upon me. You like a serpent, and must be taught a lesson.", self);
+         exec("spit " + activator.name, self);
+         pause;
+         goto start;
+      }
 
-  goto start;
+      if (activator.alignment < -349)
+      {
+         if (activator.alignment < -350)
+         {
+            block;
+            exec("say You, Evil One, must not be allowed to survive.", self);
+            exec("spit " + activator.name, self);
+            goto start;
+         }
+         block;
+         exec("say You are not pure enough to join our order.", self);
+         pause;
+         goto start;
+      }
+
+      expd := "$path" in activator.quests;
+      if (expd == null) goto start;
+
+      if ((GUILD_PALADIN in expd.names) )
+      {
+         block;
+         exec("say Me thinks your head has been rattled too many times in your "+
+              "helmet, "+activator.name+". You are already a member of the "+
+              "Holy Order!", self);
+         pause;
+         goto start;
+      }
+
+      exec ("say Welcome to the Holy Order of Paladins, "+activator.name+
+            ". May you walk paths of honor and be diligent in your protection "+
+            "of Midgaard and it's people.", self);
+   }
+
+   goto start;
 }
 dilend
 */
@@ -969,6 +972,7 @@ dilend
 
 dilcopy combat_mag@function("","heal",25,2);
 special SFUN_GUILD_BASIS GUILD_PALADIN
+
 /*
 special SFUN_GUILD_MASTER
 "Guild                    = ~Midgaard Paladin~
@@ -976,8 +980,7 @@ Guild Enter Quest         = ~~
 Guild Enter Cost          = 5 GOLD_PIECE
 Guild Leave Quest         = ~~
 Guild Leave Cost          = 5 PLATINUM_PIECE
-Guild Exclude Quest       = ~Midgaard Paladin Quitter~ ~Paladin, Fallen
->From Grace~"
+Guild Exclude Quest       = ~Midgaard Paladin Quitter~ ~Paladin, Fallen From Grace~"
 */
 
 dilcopy guild_titles@guild_paths(GUILD_PALADIN, { "Converted", "Converted",
