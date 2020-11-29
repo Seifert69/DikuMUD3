@@ -705,9 +705,8 @@ dilend
 
 
 /* Corpse data is as follows:
- *   corpse.baseweight set to char's weight
+ *   corpse.baseweight and corpse.weight set to self's baseweight
  *   corpse.height set to char's height
- *   corpse.weight set to char's weight
  *   value[2] is 0 if PC 1 if NPC
  *   value[3] is the char's level
  *   value[4] is the char's race
@@ -715,6 +714,7 @@ dilend
 dilbegin make_corpse();
 external
    string findcrproom(u:unitptr);
+
 var
    rltime:integer;
    corpseroom:string;
@@ -726,6 +726,7 @@ var
    jd: unitptr;
    r_key : string;
    jd_ptr : extraptr;
+
 code
 {
    heartbeat := PULSE_SEC;
@@ -747,7 +748,8 @@ code
       crp.title:=self.title+"'s corpse";
   
    set_weight_base(crp, self.baseweight);
-   set_weight(crp, crp.baseweight);
+   set_weight(crp, self.baseweight);
+
    crp.height:=self.height;
   
    if (self.type==UNIT_ST_NPC)
@@ -765,16 +767,16 @@ code
    crp.value[4] := self.race;
    
    if (isset(self.pcflags, PC_PK_RELAXED))
-      addextra (crp.extra,{"$BOB"},"");
+      addextra(crp.extra,{"$BOB"},"");
    
-   item:=self.inside;
-   while (item!=null)
+   item := self.inside;
+   while (item != null)
    {
       unequip(item);
       if ((item.zoneidx!="treasure") and (item.minv<51))
       {
          temp:=item.next;
-         link (item, crp);
+         link(item, crp);
          item:=temp;
       }
       else
@@ -783,10 +785,11 @@ code
          item:=item.next;
       }
    } 
-//load Justice Database 
- jd := findsymbolic("database@justice");
+
+   //load Justice Database 
+   jd := findsymbolic("database@justice");
   
-//transfer reward infor to corpse if found. 
+   //transfer reward infor to corpse if found. 
    reward_exp := "$reward" in self.extra;
    if (reward_exp)
    {
@@ -825,9 +828,9 @@ code
    dilcopy("remove_corpse@death",crp);
 
    link(crp, self.outside);
-   item := self.outside;
 
-   /* while ((item!=null) and (item.type!=UNIT_ST_ROOM))
+   /* item := self.outside;
+    while ((item!=null) and (item.type!=UNIT_ST_ROOM))
    {
       item.weight := item.weight+crp.weight;
       item := item.outside;
@@ -835,6 +838,7 @@ code
    return;
 }
 dilend
+
 
 dilbegin aware partial_get();
 code
@@ -892,42 +896,44 @@ dilend
 
 dilbegin raw_kill ();
 external
-  make_corpse ();
-  remove_aff();
-	death_cry();
+   make_corpse ();
+   remove_aff();
+   death_cry();
    rem_db_entry@justice(criminal : unitptr, extra_type : string);
+
 code
 {
-    heartbeat:=3;
+   heartbeat:=3;
 
-    if (self.type==UNIT_ST_PC)
-    {
-        set(self.pcflags,PC_SPIRIT);
-        dilcopy ("noaction@death",self);
-        // No such room any more... dilcopy ("death_bell@death("+self.name+")",findroom("moot_nowe@udgaard")); 
+   if (self.type==UNIT_ST_PC)
+   {
+      set(self.pcflags,PC_SPIRIT);
+      dilcopy("noaction@death",self);
+      // No such room any more... dilcopy ("death_bell@death("+self.name+")",findroom("moot_nowe@udgaard")); 
 
-        if ("$TOTAL_DEATHS" in self.extra)
-            self.extra.["$TOTAL_DEATHS"].vals.[0]:=self.extra.["$TOTAL_DEATHS"].vals.[0]+1;
-        else
-            addextra(self.extra,{"$TOTAL_DEATHS"},itoa(realtime),{1});
-    }
+      if ("$TOTAL_DEATHS" in self.extra)
+         self.extra.["$TOTAL_DEATHS"].vals.[0]:=self.extra.["$TOTAL_DEATHS"].vals.[0]+1;
+      else
+         addextra(self.extra,{"$TOTAL_DEATHS"},itoa(realtime),{1});
+   }
 
-    sendtext("You are dead. R.I.P.<br/>",self);
-    death_cry();
-    make_corpse();
+   sendtext("You are dead. R.I.P.<br/>",self);
+   death_cry();
+   make_corpse();
 
-    stop_fighting(self, null);
-    self.position:=POSITION_DEAD;
-    if (self.type==UNIT_ST_NPC)
-    destroy (self);
-    else
-    {
-        remove_aff();
-        // self.weight:=self.baseweight;
-        link (self,findroom("deathseq_room@basis"));
-        dilcopy ("death_seq@death",self);
-    }
-    return;
+   stop_fighting(self, null);
+   self.position:=POSITION_DEAD;
+
+   if (self.type==UNIT_ST_NPC)
+      destroy(self);
+   else
+   {
+      remove_aff();
+      // self.weight:=self.baseweight;
+      link(self, findroom("deathseq_room@basis"));
+      dilcopy("death_seq@death", self);
+   }
+   return;
 }
 dilend
 

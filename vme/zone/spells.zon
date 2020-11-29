@@ -11820,6 +11820,8 @@ code
 }
 dilend
 
+
+
 dilbegin petrify(medi : unitptr, tgt : unitptr, arg : string,
                  hm : integer, effect : string);
 var
@@ -11867,7 +11869,7 @@ code
    addstring(tinfo, slist.[0]);
    addstring(tinfo, tgt.title);
    addstring(tinfo, itoa(tgt.type));
-   addstring(tinfo, itoa(tgt.weight));
+   addstring(tinfo, itoa(tgt.baseweight));
    addstring(tinfo, itoa(tgt.position));
    addstring(tinfo, tgt.outside.nameidx);
    addstring(tinfo, tgt.outside.zoneidx);
@@ -11914,7 +11916,7 @@ code
       a := amod.[3];
       p := pmod.[2];
    }
-   
+
    if(atoi(tinfo.[2]) == UNIT_ST_PC)
     {
 	statue.names.[0]:="statue of "+tinfo.[0];
