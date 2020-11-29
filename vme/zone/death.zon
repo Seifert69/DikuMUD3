@@ -847,36 +847,43 @@ goto start;
 }
 dilend
 
+
 dilbegin remove_aff();
 var
- I:integer;
+   i:integer;
 code
 {
-heartbeat:=3;
-i:=0;
-while (i<100)
-  {
-  if (isaff(self,i))
-  {
-     subaff(self,i);
-	 continue;
-	 }
-	 i:=i+1;
-	 }
-while (dilfind("panic@spells",self))
-	I:=dildestroy("panic@spells",self);
-while (dilfind("spl_poison@spells",self))
-	I:=dildestroy("spl_poison@spells",self);
-	while (dilfind("hammer@spells",self))
-  i:=dildestroy("hammer@spells",self);
-while (dilfind("no_flee@spells",self))
-  i:=dildestroy("no_flee@spells",self);
-while (dilfind("spl_madness@spells",self))
-  i:=dildestroy("spl_madness@spells",self);
-while (dilfind("spl_sleep@spells",self))
-  i:=dildestroy("spl_sleep@spells",self);
+   heartbeat:=3;
+   i:=0;
+   while (i<100)
+   {
+      if (isaff(self,i))
+      {
+         subaff(self,i);
+         continue;
+      }
+      i:=i+1;
+   }
 
-return;
+   while (dilfind("panic@spells",self))
+      i:=dildestroy("panic@spells",self);
+
+   while (dilfind("spl_poison@spells",self))
+      i:=dildestroy("spl_poison@spells",self);
+
+   while (dilfind("hammer@spells",self))
+      i:=dildestroy("hammer@spells",self);
+
+   while (dilfind("no_flee@spells",self))
+      i:=dildestroy("no_flee@spells",self);
+
+   while (dilfind("spl_madness@spells",self))
+      i:=dildestroy("spl_madness@spells",self);
+
+   while (dilfind("spl_sleep@spells",self))
+      i:=dildestroy("spl_sleep@spells",self);
+
+   return;
 }
 dilend
 
@@ -1029,22 +1036,23 @@ dilend
 dilbegin death_cry ();
 var
 	dir:integer;
+
 code
 {
-heartbeat:=PULSE_SEC*3;
-act ("<div class='death'>Your blood freezes as you hear $1n's death cry.</div>",
-A_SOMEONE, self,null,null,TO_REST);
+   heartbeat:=PULSE_SEC*3;
+   act("<div class='death'>Your blood freezes as you hear $1n's death cry.</div>",
+      A_SOMEONE, self,null,null,TO_REST);
 
-dir:=0;
-while (dir<=MAX_EXIT)
+   dir:=0;
+   while (dir<=MAX_EXIT)
 	{
-if (self.outside.exit_to[dir])
-act("<div class='death'>Your blood freezes as you hear someones death cry.",
-	A_ALWAYS,self.outside.exit_to[dir].inside,null,null,TO_ROOM);
-	dir:=dir+1;
+      if (self.outside.exit_to[dir])
+      act("<div class='death'>Your blood freezes as you hear someones death cry.",
+         A_ALWAYS,self.outside.exit_to[dir].inside,null,null,TO_ROOM);
+         dir:=dir+1;
 	}
 
-return ;
+   return;
 }
 dilend
 

@@ -627,27 +627,29 @@ unsecure (cheat);
 goto loop;
 }
 dilend
+
+
+
 dilbegin aware recall arena_check ();
 code
 {
-interrupt (SFB_MSG, ((argument=="destroy arena") and
-(self==activator)),dest);
-heartbeat := PULSE_SEC*60;
-:loop:
-wait (SFB_TICK|SFB_COM,TRUE);
-if ((self.zone!="arena") and (self.outside!=findroom("deathseq_room@basis")))
-{
-act ("Some how you left the Arena illegally you are being restored to "+
-"your status before entering the arena.",
-A_SOMEONE,self,null,null,TO_CHAR);
-sendtoall ("emptyout","bag@arena");
-sendto ("destroy arena",self);
-quit;
-}
+   interrupt(SFB_MSG, ((argument=="destroy arena") and (self==activator)), dest);
+   heartbeat := PULSE_SEC*60;
 
-goto loop;
-:dest:
-quit;
+   :loop:
+   wait (SFB_TICK|SFB_COM,TRUE);
+   if ((self.zone!="arena") and (self.outside!=findroom("deathseq_room@basis")))
+   {
+      act ("Some how you left the Arena illegally you are being restored to your status before entering the arena.",
+         A_SOMEONE,self,null,null,TO_CHAR);
+      sendtoall("emptyout", "bag@arena");
+      sendto("destroy arena", self);
+      quit;
+   }
+   goto loop;
+
+   :dest:
+   quit;
 }
 dilend
 
@@ -778,17 +780,18 @@ code
 	act("$1n chants the words of entry and slowly fades from view",
 	    A_ALWAYS, self, null, null, TO_REST);
 
-	bag := load("bag@arena");
-	secure (bag,abort);
-	link (bag,self.outside);
+   bag := load("bag@arena");
+	secure(bag, abort);
+   // link (bag,self.outside);
+
    while (self.inside != null)
 	  link(self.inside,bag);
 
-   set_weight_base(bag, 0);
+   // set_weight_base(bag, 0);
    set_weight(bag, 0);
-	link(bag, self);
+	//link(bag, self);
 
-	unsecure (bag);
+	unsecure(bag);
 
    act("A sullen voice whispers through your being saying, 'Your equipment " +
 	    "has been stored for safe keeping during your transfer into the arena.'",
@@ -796,19 +799,19 @@ code
    pause;
 
 
-dilcopy ("pc_arena@arena",self);
-/*   act("The same sullen voice echos, 'Take these and watch " +
-       "your back.",
-       A_ALWAYS, self, null, null, TO_CHAR);*/
+   dilcopy("pc_arena@arena",self);
+   /*   act("The same sullen voice echos, 'Take these and watch " +
+         "your back.",
+         A_ALWAYS, self, null, null, TO_CHAR);*/
    pause;
-          exec ("comm add arena",self);
+   exec ("comm add arena",self);
 
-/*   item := load("mesh_shirt@arena");
-	link(item, self);
-   item := load("loin_cloth@arena");
-	link(item, self);
-	item := load("sandals@arena");
-	link(item, self);*/
+      /* item := load("mesh_shirt@arena");
+         link(item, self);
+         item := load("loin_cloth@arena");
+         link(item, self);
+         item := load("sandals@arena");
+         link(item, self);*/
 
   if(self.level < BLUE_LEVEL) {
 	   entry_point := BLUE_ROOM;
@@ -829,11 +832,12 @@ dilcopy ("pc_arena@arena",self);
    entry_room := findsymbolic(entry_point);
 	link(self, entry_room);
    self.position := POSITION_STANDING;
-dilcopy ("arena_check@arena",self);
+   dilcopy("arena_check@arena",self);
 
-sendto ("action",self);
-exec ("save",self);
-exec("look",self);
+   sendto("action",self);
+   exec("save",self);
+   exec("look",self);
+
    :abort:
 	 quit;
 }
@@ -1021,7 +1025,7 @@ goto start;
 dilend
 
 
-dilbegin arena_death ();
+dilbegin arena_death();
 external
 	remove_aff@death();
 	death_cry@death();
@@ -1039,30 +1043,33 @@ code
    u:=self.inside;
    while (u)
    {
-      temp:=u.next;
+      temp := u.next;
       if ((u.nameidx=="bag") and (u.zoneidx=="arena"))
       {
          u:=temp;
          continue;
       }
+   
       unequip(u);
-      if (u.minv < 1)
-         link (u,self.outside);
-      u:=temp;
+      if (u.minv < 200)
+         link(u,self.outside);
+      u := temp;
    }
-   act ("Your equipment falls from your dieing body.",
+   // set_weight(self, self.baseweight);
+
+  act ("Your equipment falls from your dying body.",
       A_ALWAYS,self,null,null,TO_CHAR);
-   act ("$1n's equipment falls from $1s dieing body.",
+   act ("$1n's equipment falls from $1s dying body.",
       A_ALWAYS,self,null,null,TO_REST);
+ 
    remove_aff@death();
    death_cry@death();
-   set_weight(self, self.baseweight);
    set(self.pcflags,PC_SPIRIT);
 
    stop_fighting(self, null);
-   self.position:=POSITION_DEAD;
+   self.position := POSITION_DEAD;
 
-   dilcopy ("noaction@arena",self);
+   dilcopy("noaction@arena",self);
    link(self,findroom("deathseq_room@basis"));
 
    act("There is complete silence, you are floating in utter darkness.",
@@ -1102,9 +1109,9 @@ code
    act("$1n enters the  Arena Recovery room.",
        A_ALWAYS, self, null, null, TO_ROOM);
 
-	position_update (self);
-   sendto ("action",self);
-	exec ("save",self);
+	position_update(self);
+   sendto("action",self);
+	exec("save",self);
 
 :dest:
    quit;
@@ -3857,22 +3864,25 @@ weight 0
 capacity 6000
 minv 254
 
-dilbegin recall empty_out ();
-var
- code
- {
-heartbeat := PULSE_SEC*5;
-interrupt (SFB_MSG, (("emptyout"==argument) and
-(self.outside==activator)), dest);
-wait (SFB_MSG, "never one" ==argument);
-:dest:
-while (self.inside!=null) link (self.inside,self.outside);
-destroy (self);
-quit;
+dilbegin recall empty_out();
+code
+{
+   heartbeat := PULSE_SEC*5;
+   interrupt(SFB_MSG, (("emptyout"==argument) and (self.outside==activator)), dest);
+
+   wait(SFB_MSG, "never one" ==argument);
+
+   :dest:
+   while (self.inside!=null)
+      link(self.inside,self.outside);
+
+   destroy(self);
+   quit;
 }
 dilend
-
 end
+
+
 blackhelme1
 
 names {"blackened helmet", "black helmet", "helmet"}
