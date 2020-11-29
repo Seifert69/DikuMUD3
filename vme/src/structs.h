@@ -500,17 +500,17 @@ public:
 
     ubit32 manipulate;  /* WEAR_XXX macros                               */
     ubit16 flags;       /* Invisible, can_bury, burried...               */
-    sbit16 base_weight; /* The "empty" weight of a room/char/obj         */
-    sbit16 weight;      /* Current weight of a room/obj/char             */
+    sbit32 base_weight; /* The "empty" weight of a room/char/obj (lbs)   */
+    sbit32 weight;      /* Current weight of a room/obj/char             */
     sbit16 capacity;    /* Capacity of obj/char/room, -1 => any          */
     ubit16 size;        /* (cm) MOBs height, weapons size, ropes length  */
 
     ubit8 status;     /* IS_ROOM, IS_OBJ, IS_PC, IS_NPC                */
     ubit8 open_flags; /* In general OPEN will mean can "enter"?        */
     ubit8 open_diff;  /* Open dificulty                                */
-    sbit8 light;      /* Number of active light sources in unit        */
-    sbit8 bright;     /* How much the unit shines                      */
-    sbit8 illum;      /* how much bright is by transparency            */
+    sbit16 light;      /* Number of active light sources in unit        */
+    sbit16 bright;     /* How much the unit shines                      */
+    sbit16 illum;      /* how much bright is by transparency            */
     ubit8 chars;      /* How many chars is inside the unit             */
     ubit8 minv;       /* Level of wizard invisible                     */
     sbit32 max_hp;    /* The maximum number of hitpoint                */

@@ -770,8 +770,10 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
         g_nCorrupt += pBuf->Read32(&UNIT_MANIPULATE(u));
 
     g_nCorrupt += pBuf->Read16(&UNIT_FLAGS(u));
-    g_nCorrupt += pBuf->Read16(&UNIT_BASE_WEIGHT(u));
-    g_nCorrupt += pBuf->Read16(&UNIT_WEIGHT(u));
+    g_nCorrupt += pBuf->Read16(&t16);
+    UNIT_BASE_WEIGHT(u) = t16;
+    g_nCorrupt += pBuf->Read16(&t16);
+    UNIT_WEIGHT(u) = t16;
     g_nCorrupt += pBuf->Read16(&UNIT_CAPACITY(u));
 
     g_nCorrupt += pBuf->Read32(&UNIT_MAX_HIT(u));
@@ -788,9 +790,13 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
     g_nCorrupt += pBuf->Read8(&UNIT_OPEN_FLAGS(u));
     if (unit_version >= 71)
         g_nCorrupt += pBuf->Read8(&UNIT_OPEN_DIFF(u));
-    g_nCorrupt += pBuf->Read8(&UNIT_LIGHTS(u));
-    g_nCorrupt += pBuf->Read8(&UNIT_BRIGHT(u));
-    g_nCorrupt += pBuf->Read8(&UNIT_ILLUM(u));
+
+    g_nCorrupt += pBuf->Read8(&t8);
+    UNIT_LIGHTS(u) = t8;
+    g_nCorrupt += pBuf->Read8(&t8);
+    UNIT_BRIGHT(u) = t8;
+    g_nCorrupt += pBuf->Read8(&t8);
+    UNIT_ILLUM(u) = t8;
     g_nCorrupt += pBuf->Read8(&UNIT_CHARS(u));
     g_nCorrupt += pBuf->Read8(&UNIT_MINV(u));
 
