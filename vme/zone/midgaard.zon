@@ -997,6 +997,7 @@ dilbegin fnpri(FN_PRI_RESCUE-1) jailstay(du : integer);
 external
    jailbreak@justice(criminal : unitptr);
    rem_db_entry@justice(criminal : unitptr, extra_type : string);
+   getfrom_safe(prisoner : unitptr);
 
 var
    sn : string;
@@ -1007,17 +1008,17 @@ var
 code
 {
    heartbeat := PULSE_SEC * SECS_PER_MUD_HOUR;
+   
    sn := self.outside.nameidx;
    sz := self.outside.zoneidx;
    jd := findsymbolic("database@justice");
- 
+
    // Change player arrest descr to reflect that the char is in jail.
    //
- if("$arrest" in self.extra)
+   if("$arrest" in self.extra)
    {
-
-     id := self.extra.["$arrest"].names.[1];
-     jd.extra.[id].descr := self.name+" is currently serving time in jail.";
+      id := self.extra.["$arrest"].names.[1];
+      jd.extra.[id].descr := self.name+" is currently serving time in jail.";
    }
 
  
@@ -1031,12 +1032,12 @@ code
       quit;
    }
 
- if("$arrest" in self.extra)
+   if("$arrest" in self.extra)
    {
-        jd := findsymbolic("database@justice"); 
-        id := self.extra.["$arrest"].names.[1];
+      jd := findsymbolic("database@justice"); 
+      id := self.extra.["$arrest"].names.[1];
       log(id);    
-     jd.extra.[id].descr := self.name+" is currently serving time in jail. "+itoa(du)+" hours remaining";
+      jd.extra.[id].descr := self.name+" is currently serving time in jail. "+itoa(du)+" hours remaining";
    }
 
    if ((du % 4) == 0)
@@ -1060,10 +1061,7 @@ code
           A_ALWAYS, self, null, null, TO_CHAR);
    }
    
-
    du := du - 1;
-
-   
    goto loop;
 
 
@@ -1071,6 +1069,7 @@ code
    :release:
    act("Your term is over! You are thrown out of the jail and sent home.",
        A_ALWAYS, self, null, null, TO_CHAR);
+   getfrom_safe(self);
    link(self, findroom("accuse_room@" + sz));
    self.crimes := self.crimes / 2;
    rem_db_entry@justice(self, "$arrest");
@@ -1170,9 +1169,125 @@ dilend
 
 
 
+// self can be different things
+// prisoner is ... the prisoner
+//
+dilbegin getfrom_safe(prisoner : unitptr);
+var
+   vr : unitptr;
+   u : unitptr;
+   nextu : unitptr;
+   safe : unitptr;
+   i : integer;
+
+code
+{
+   safe := findsymbolic(prisoner, "safe@justice", FIND_UNIT_IN_ME);
+   if (safe == null)
+      return; // There was nothing stored
+
+   vr := findsymbolic("void@basis");
+
+   link(safe, vr); // Place in room OK to mess up weight
+
+   i := 0;
+   u := safe.inside;
+
+   while (u)
+   {
+      nextu := u.next;
+
+      link(u, prisoner.inside);
+      i := i + 1;
+
+      u := nextu;
+   }
+
+   act("You get your posessions back.", A_SOMEONE, prisoner, null, null, TO_CHAR);
+
+   if (safe.inside == null)
+      destroy(safe);
+   else
+   {
+      // Shouldn't happen
+      link(safe, prisoner);
+      log("Safe not empty for " + prisoner.name);
+   }
+
+   return;
+}
+dilend
+
+
+
+// self is captain
+// prisoner is ... the prisoner
+//
+dilbegin putin_safe(prisoner : unitptr);
+var
+   vr : unitptr;
+   u : unitptr;
+   nextu : unitptr;
+   safe : unitptr;
+   i : integer;
+
+code
+{
+   vr := findsymbolic("void@basis");
+   safe := load("safe@justice");
+   link(safe, vr); // Place it in a room OK to mess up weight
+
+   i := 0;
+   u := prisoner.inside;
+
+   while (u)
+   {
+      nextu := u.next;
+
+      if (visible(self,u))
+      {
+         link(u, safe);
+         i := i + 1;
+      }
+
+      u := nextu;
+   }
+
+   if (i < 1)
+   {
+      destroy(safe);
+   }
+   else
+   {
+      safe.weight := 0;
+      safe.baseweight := 0;
+      link(safe, prisoner);
+
+      if (safe == null)
+      {
+         act("$1n takes all $3n's possessions.",
+            A_SOMEONE, self, null, prisoner, TO_NOTVICT);
+         act("$1n takes all your possessions.",
+            A_SOMEONE, self, null, prisoner, TO_VICT);
+      }
+      else
+      {
+         act("$1n puts all $3n's possessions in $2n.",
+            A_SOMEONE, self, safe, prisoner, TO_NOTVICT);
+         act("$1n puts all your possessions in $2n.",
+            A_SOMEONE, self, safe, prisoner, TO_VICT);
+      }
+   }
+
+   return;
+}
+dilend
+
+
 dilbegin captain(jailname : string);
 external
    integer walk_room@function (s:string,i:integer);
+   putin_safe(prisoner : unitptr);
 
 var
    tf:integer;
@@ -1216,32 +1331,7 @@ code
    goto loop;
 
    :gotone:
-   u := prisoner.inside;
-
-   while (u)
-   {
-      nextu := u.next;
-
-
-      if (visible (self,u) )
-         link(u, safe);
-      u := nextu;
-   }
-
-   if (safe == null)
-   {
-      act("$1n takes all $3n's possessions.",
-	  A_SOMEONE, self, null, prisoner, TO_NOTVICT);
-      act("$1n takes all your possessions.",
-	  A_SOMEONE, self, null, prisoner, TO_VICT);
-   }
-   else
-   {
-      act("$1n puts all $3n's possessions in $2n.",
-	  A_SOMEONE, self, safe, prisoner, TO_NOTVICT);
-      act("$1n puts all your possessions in $2n.",
-	  A_SOMEONE, self, safe, prisoner, TO_VICT);
-   }
+   putin_safe(prisoner);
 
    act("$3n opens the jail door, and pushes $1n through.",
        A_SOMEONE, prisoner, null, self, TO_NOTVICT);
@@ -5256,9 +5346,8 @@ descr
 hundreds of small drawers line the  walls in neat rows.  The room glitters
 with the polished bronze and steal that make up the Thief proof deposit boxes.
 The marble floors shine like nothing you have ever seen and the profesional
-way
-the room is kept makes you feel safe with putting your most prized possessions
-here for safe keeping."
+way the room is kept makes you feel safe with putting your most prized 
+possessions here for safe keeping."
 
 extra {"drawers","drawer"}
 "These drawers look to have been made by a master blacksmith.  There

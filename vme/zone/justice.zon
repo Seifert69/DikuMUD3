@@ -1408,6 +1408,19 @@ code
 dilend /* End blow_whistle */
 
 %objects
+
+                                 safe
+
+names {"wizi safe", "safe"}
+title "the wizi safe"
+descr "A wizi safe in your inventory."
+manipulate {MANIPULATE_ENTER}
+open {EX_CLOSED, EX_LOCKED} difficulty 150
+CONTAINER_DEF(40000)
+weight 0
+minv 201  // It's wizi
+end
+
                            database
 
 names {"crime database", "database"}

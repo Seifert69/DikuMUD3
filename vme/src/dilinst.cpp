@@ -624,15 +624,14 @@ void dilfi_swt(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    int dif;
 
     if (dil_type_check("setweight", p, 2,
                        v1, TYPEFAIL_NULL, 1, DILV_UP,
                        v2, FAIL_NULL, 1, DILV_INT))
+    {
         if (v1->val.ptr)
         {
-            dif =
-                v2->val.num - UNIT_BASE_WEIGHT((class unit_data *)v1->val.ptr);
+            int dif = v2->val.num - UNIT_BASE_WEIGHT((class unit_data *)v1->val.ptr);
 
             /* set new baseweight */
             UNIT_BASE_WEIGHT((class unit_data *)v1->val.ptr) = v2->val.num;
@@ -640,6 +639,7 @@ void dilfi_swt(class dilprg *p)
             /* update weight */
             weight_change_unit((class unit_data *)v1->val.ptr, dif);
         }
+    }
     delete v1;
     delete v2;
 }
