@@ -702,42 +702,39 @@ code{
 /* make_money : this dil returns an object of money with amount listed */
 
 dilbegin unitptr make_money(mtype : integer, amnt : integer);
-
 external
-
-  integer money_weight(i1 : integer, i2 : integer);
+   integer money_weight(i1 : integer, i2 : integer);
 
 var
+   money   :  unitptr;
+   mlist   :  stringlist;
+   mload   :  stringlist;
+   temp    :  string;
+   mweight :  integer;
 
-  money   :  unitptr;
-  mlist   :  stringlist;
-  mload   :  stringlist;
-  temp    :  string;
-  mweight :  integer;
+code
+{
+   mlist := MONEY_STRING;
+   mload := MONEY_LOAD;
 
-code{
-
- mlist := MONEY_STRING;
- mload := MONEY_LOAD;
-
- if (amnt <= 0)
-    {
+   if (amnt <= 0)
+   {
       log("ILLEGAL MONEY VALUE : " + itoa(amnt));
       money := null;
       return(money);
-    }
+   }
 
- if ((mtype >= 0) and (mtype <= MAX_MONEY))
+   if ((mtype >= 0) and (mtype <= MAX_MONEY))
       money := load(mload.[mtype]);
- else
-    {
+   else
+   {
       log("INVALID MONEY TYPE : " + itoa(mtype));
       money := null;
       return(money);
-    }
+   }
 
- if (amnt > 1)
-    {
+   if (amnt > 1)
+   {
       money.cost := amnt;
 
       temp := mlist.[mtype] + "s";
@@ -752,21 +749,17 @@ code{
       else
            money.outside_descr := "A mountain of " + temp + " has been left here.";
 
-
       mweight := money_weight(mtype, amnt);
 
-      money.weight := mweight;
-      money.outside.weight := money.outside.weight + mweight;   /* stop weight bugs! */
+      set_weight_base(money, mweight);
+   }
 
-    }
-
- return(money);
-
-}dilend
+   return(money);
+}
+dilend
 
 
 /* money_weight : this returns the weight of X number of Y money units */
-
 dilbegin integer money_weight(mtype : integer, amnt : integer);
 
 var

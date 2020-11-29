@@ -7435,15 +7435,16 @@ ini.[g3] + "</div>");
 
    sendtext("Loaded guild transport medallion.<br/>",self);
 
-	self.weight:=self.baseweight;
+/*	set_weight(self, self.baseweight);
 	item:=self.inside;
 	while (item)
 		{
 		self.weight:=self.weight+item.weight;
 		item:=item.next;
 		}
-	sendtext ("Weight fixed.<br/>",self);
-    self.max_hp:=3*self.abilities[ABIL_HP]+20;
+	sendtext ("Weight fixed.<br/>",self);*/
+
+   self.max_hp:=3*self.abilities[ABIL_HP]+20;
    self.hp := self.max_hp;
    self.endurance := self.max_endurance;
    self.mana := self.max_mana;
@@ -10411,7 +10412,7 @@ var
  x:extraptr;
 code
 {
- setweight(d_obj,d_obj.weight+(-(d_obj.value[0])));
+ set_weight_base(d_obj, d_obj.weight+(-(d_obj.value[0])));
  d_obj.value[0]:=0;
  d_obj.value[3]:=0;
  substring (d_obj.names,d_obj.names.[length (d_obj.names)-1]);
@@ -10535,7 +10536,7 @@ code
    {
       /* empty the container, and no longer poison. */
       d_obj.value[0]:=d_obj.value[0]-amount;
-      setweight(d_obj, d_obj.weight-amount); /* Subtract amount */
+      set_weight_base(d_obj, d_obj.weight-amount); /* Subtract amount */
       if (d_obj.value[0]<=0)
       {
          sub_drink_info(d_obj);
@@ -10766,8 +10767,8 @@ TO_CHAR);
   }
  }
 
-if ((d_obj.value[0]>=0) and (amount >=d_obj.value[0]))
- amount:=d_obj.value[0];
+   if ((d_obj.value[0]>=0) and (amount >=d_obj.value[0]))
+      amount:=d_obj.value[0];
 
 act("$1n sips $3t from $2n.",
  A_HIDEINV, self, d_obj,d_obj.names.[length(d_obj.names)-1], TO_REST);
@@ -10788,10 +10789,9 @@ if (d_obj.capacity>0)
  {
   /* empty the container, and no longer poison. */
  d_obj.value[0]:=d_obj.value[0]-amount;
- setweight(d_obj, d_obj.weight-amount); /* Subtract amount */
+ set_weight_base(d_obj, d_obj.weight-amount); /* Subtract amount */
  if (d_obj.value[0]<=0)
   {
-
  sub_drink_info(d_obj);
  }
  }
@@ -10905,10 +10905,10 @@ apply_poison(self,pois,amount);
    {
    /* empty the container, and no longer poison. */
  food.value[0]:=food.value[0]-amount;
- setweight(food, food.weight-amount); /* Subtract amount */
+ set_weight_base(food, food.weight-amount); /* Subtract amount */
  if (food.value[0]<=0)
   {   /* The last bit */
- setweight(food,food.weight+(-(food.value[0])));
+ set_weight_base(food,food.weight+(-(food.value[0])));
  food.value[0]:=0;
   food.value[3]:=0;
   substring (food.names,food.names.[length(food.names)-1]);
@@ -11188,13 +11188,13 @@ else
  if (f_obj.value[0]>=0)
  {
  f_obj.value[0]:=f_obj.value[0]-amount;
- setweight (f_obj, f_obj.weight-amount);
+ set_weight_base (f_obj, f_obj.weight-amount);
  }
 
 if (t_obj.value[0]>=0)
  {
  t_obj.value[0]:=t_obj.value[0]+amount;
- setweight (t_obj,t_obj.weight+amount);
+ set_weight_base (t_obj,t_obj.weight+amount);
  }
 
   /* Then the poison boogie */
@@ -13068,9 +13068,8 @@ sendtext ("You rent some storage space.<br/>", self);
 cont:= load ("container@commands");
 cont.capacity:= 300;
 cont.alignment:=0;
-self.weight:=self.weight-cont.weight;
-cont.weight:=0;
-cont.baseweight:=0;
+set_weight_base(cont, 0);
+set_weight(cont, 0);
 link (cont, self);
 
 
@@ -13163,8 +13162,8 @@ cont.alignment:=cont.alignment+item.weight;
 addextra (item.extra, {"$stored"}, itoa(mudyear) );
 link(cont,self.outside);
 link (item, cont);
-cont.weight:=0;
-cont.baseweight:=0;
+set_weight_base(cont, 0);
+set_weight(cont, 0);
 link(cont,self);
 return;
 
@@ -13262,8 +13261,8 @@ code
    cont.alignment:=cont.alignment-item.weight;
    link(cont,self.outside);
    link (item, self);
-   cont.weight:=0;
-   cont.baseweight:=0;
+   set_weight_base(cont, 0);
+   set_weight(cont, 0);
    link(cont,self);
    return;
 }

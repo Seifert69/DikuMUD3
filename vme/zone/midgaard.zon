@@ -1182,9 +1182,13 @@ var
 
 code
 {
+   log("getfromsafe()");
    safe := findsymbolic(prisoner, "safe@justice", FIND_UNIT_IN_ME);
    if (safe == null)
+   {
+      log("no safe found");
       return; // There was nothing stored
+   }
 
    vr := findsymbolic("void@basis");
 
@@ -1197,7 +1201,7 @@ code
    {
       nextu := u.next;
 
-      link(u, prisoner.inside);
+      link(u, prisoner);
       i := i + 1;
 
       u := nextu;
@@ -1244,7 +1248,7 @@ code
    {
       nextu := u.next;
 
-      if (visible(self,u))
+      if (u.minv < 1)
       {
          link(u, safe);
          i := i + 1;
@@ -1259,8 +1263,8 @@ code
    }
    else
    {
-      safe.weight := 0;
-      safe.baseweight := 0;
+      set_weight_base(safe, 0);
+      set_weight(safe, 0);
       link(safe, prisoner);
 
       if (safe == null)

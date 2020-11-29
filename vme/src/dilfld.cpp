@@ -1645,8 +1645,12 @@ void dilfe_fld(register class dilprg *p)
             if (v1->val.ptr)
             {
                 v->atyp = DILA_NONE;
-                v->type = DILV_SINT2R;
-                v->ref = &UNIT_BASE_WEIGHT((class unit_data *)v1->val.ptr);
+                v->type = DILV_INT;
+                v->val.num = UNIT_BASE_WEIGHT((class unit_data *)v1->val.ptr);
+
+                //v->atyp = DILA_NONE;
+                //v->type = DILV_SINT2R;
+                //v->ref = &UNIT_BASE_WEIGHT((class unit_data *)v1->val.ptr);
             }
             else
                 v->type = DILV_FAIL; /* not applicable */
@@ -1769,8 +1773,12 @@ void dilfe_fld(register class dilprg *p)
             if (v1->val.ptr)
             {
                 v->atyp = DILA_NONE;
-                v->type = DILV_SINT2R;
-                v->ref = &UNIT_WEIGHT((class unit_data *)v1->val.ptr);
+                v->type = DILV_INT;
+                v->val.num = UNIT_WEIGHT((class unit_data *)v1->val.ptr);;
+
+                //v->atyp = DILA_NONE;
+                //v->type = DILV_SINT2R;
+                //v->ref = &UNIT_WEIGHT((class unit_data *)v1->val.ptr);
             }
             else
                 v->type = DILV_FAIL; /* not applicable */

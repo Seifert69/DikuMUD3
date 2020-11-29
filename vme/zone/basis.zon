@@ -694,19 +694,19 @@ code
 heartbeat := PULSE_SEC;
 wgt:=0;
 
-	  if ((u.names.[0]=="storage container") and (u.minv>=200))
-	  {
-	u.baseweight:=0;
-	u.weight:=0;
-	dilcopy ("fixstorage@basis()",u);
-	return(0);
+   if ((u.names.[0]=="storage container") and (u.minv>=200))
+   {
+      set_weight_base(u, 0);
+      set_weight(u, 0);
+      dilcopy ("fixstorage@basis()",u);
+      return(0);
 	}
 
-if (u.inside==null)
-{
-u.weight:=u.baseweight;
- return (u.weight);
- }
+   if (u.inside==null)
+   {
+      set_weight(u, u.baseweight);
+      return(u.weight);
+   }
 
  item:=u.inside;
                        while (item!=null)
@@ -715,9 +715,9 @@ u.weight:=u.baseweight;
  item:=item.next;
  }
 
- u.weight:=u.baseweight+wgt;
+   set_weight(u, u.baseweight+wgt);
 
-return (u.weight);
+   return (u.weight);
 }
 dilend
 

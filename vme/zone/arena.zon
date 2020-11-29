@@ -783,10 +783,10 @@ code
 	link (bag,self.outside);
    while (self.inside != null)
 	  link(self.inside,bag);
-		bag.weight:=0;
-		bag.baseweight:=0;
 
-	link (bag, self);
+   set_weight_base(bag, 0);
+   set_weight(bag, 0);
+	link(bag, self);
 
 	unsecure (bag);
 
@@ -1023,48 +1023,47 @@ dilend
 
 dilbegin arena_death ();
 external
-
 	remove_aff@death();
 	death_cry@death();
 
 var
+   i:integer;
+   u:unitptr;
+   temp:unitptr;
 
-i:integer;
-u:unitptr;
-temp:unitptr;
-				 code
-				 {
-heartbeat := PULSE_SEC*3;
-sendtext("You are dead. R.I.P.<br/>",self);
-
-u:=self.inside;
-while (u)
+code
 {
-temp:=u.next;
-if ((u.nameidx=="bag") and (u.zoneidx=="arena"))
-{
-u:=temp;
-continue;
-}
-unequip(u);
-link (u,self.outside);
-u:=temp;
-}
-act ("Your equipment falls from your dieing body.",
-A_ALWAYS,self,null,null,TO_CHAR);
-act ("$1n's equipment falls from $1s dieing body.",
-A_ALWAYS,self,null,null,TO_REST);
-remove_aff@death();
-death_cry@death();
-self.weight:=self.baseweight;
-        set (self.pcflags,PC_SPIRIT);
+   heartbeat := PULSE_SEC*3;
+   sendtext("You are dead. R.I.P.<br/>",self);
 
+   u:=self.inside;
+   while (u)
+   {
+      temp:=u.next;
+      if ((u.nameidx=="bag") and (u.zoneidx=="arena"))
+      {
+         u:=temp;
+         continue;
+      }
+      unequip(u);
+      if (u.minv < 1)
+         link (u,self.outside);
+      u:=temp;
+   }
+   act ("Your equipment falls from your dieing body.",
+      A_ALWAYS,self,null,null,TO_CHAR);
+   act ("$1n's equipment falls from $1s dieing body.",
+      A_ALWAYS,self,null,null,TO_REST);
+   remove_aff@death();
+   death_cry@death();
+   set_weight(self, self.baseweight);
+   set(self.pcflags,PC_SPIRIT);
 
-stop_fighting(self, null);
-self.position:=POSITION_DEAD;
+   stop_fighting(self, null);
+   self.position:=POSITION_DEAD;
 
-			dilcopy ("noaction@arena",self);
-			link(self,findroom("deathseq_room@basis"));
+   dilcopy ("noaction@arena",self);
+   link(self,findroom("deathseq_room@basis"));
 
    act("There is complete silence, you are floating in utter darkness.",
        A_ALWAYS, self, null, null, TO_CHAR);
@@ -1083,37 +1082,34 @@ self.position:=POSITION_DEAD;
        A_ALWAYS, self, null, null, TO_CHAR);
    pause;
 
-act ("the warrior leads you down a softly lit tunnel of lights.",
+   act ("the warrior leads you down a softly lit tunnel of lights.",
+         A_ALWAYS, self, null, null, TO_CHAR);
+      pause;
+
+   act ("With blinding speed the Warrior grabs you and "+"stuffs you into a dark nothing.",
        A_ALWAYS, self, null, null, TO_CHAR);
    pause;
-										 act ("With blinding speed the Warrior grabs you and "+
-										 "stuffs you into a dark nothing.",
+   act ("You feel spikes of pain shoot through you as you realize you are back "+"In your body.",
        A_ALWAYS, self, null, null, TO_CHAR);
-			 pause;
-	 act ("You feel spikes of pain shoot through you as you realize you are back "+
-	 "In your body.",
-       A_ALWAYS, self, null, null, TO_CHAR);
-										 pause;
-				link (self, findroom ("infirm@arena"));
-				        unset (self.pcflags,PC_SPIRIT);
-unset (self.charflags,CHAR_KILL_SELF);
+   pause;
+   link(self, findroom ("infirm@arena"));
+   unset(self.pcflags,PC_SPIRIT);
+   unset(self.charflags,CHAR_KILL_SELF);
 
-							self.mana:=5;
-			self.hp:=5;
-self.position:=POSITION_RESTING;
+   self.mana:=5;
+   self.hp:=5;
+   self.position:=POSITION_RESTING;
    act("$1n enters the  Arena Recovery room.",
        A_ALWAYS, self, null, null, TO_ROOM);
 
 	position_update (self);
-sendto ("action",self);
+   sendto ("action",self);
 	exec ("save",self);
 
-
-
 :dest:
-				 quit;
-				 }
-				 dilend
+   quit;
+}
+dilend
 
 dilbegin aware recall restore_pc ();
 var

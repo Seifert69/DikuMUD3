@@ -168,7 +168,7 @@ struct dilargstype
 #define DILE_INTR	96	/* interrupt */
 #define DILI_CLI        97	/* clear interrupt */
 #define DILI_SBT	98	/* setbright (#,#) */
-#define DILI_SWT	99	/* setweight (#,#) */
+#define DILI_SET_W_BASE	99	/* set_weight_base (#,#) */
 #define DILE_FNDRU     100	/* findunit(#,#,#) */
 #define DILE_VISI      101	/* visible(#,#)   */
 #define DILE_ATSP      102	/* attack_spell(#,#,#,#,#) */
@@ -271,7 +271,8 @@ struct dilargstype
 #define DILE_SACT	   196	/* sact (#,#,#,#,#,#) */
 #define DILE_GINT	   197	/* getinteger(unit, idx) */
 #define DILE_PLAYERID  198
-#define DILI_MAX       198	/* The maximum node number */
+#define DILI_SET_W	   199	/* set_weight(#,#) */
+#define DILI_MAX       199	/* The maximum node number */
 
 /* DIL Field references */
 #define DILF_NMS	0	/* .names */

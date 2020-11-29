@@ -233,39 +233,39 @@ heartbeat:=3;
    item.minv := 200;
    link(item, self.outside);
 
-  chk := (corpse.value[4]);
- if ((chk > RACE_ARTHROPODA_MIN) and (chk <= RACE_ARTHROPODA_MAX)) 
-  {
-  item.baseweight:= corpse.baseweight/70;
-  }
-  else
+   chk := (corpse.value[4]);
+   if ((chk > RACE_ARTHROPODA_MIN) and (chk <= RACE_ARTHROPODA_MAX)) 
+   {
+      set_weight_base(item, corpse.baseweight/70);
+   }
+   else
+      set_weight_base(item, corpse.baseweight/30);
 
- item.baseweight:= corpse.baseweight/30;
-if (item.baseweight > 100)
-{
-item.baseweight := 100;
-}
+   if (item.baseweight > 100)
+   {
+      set_weight_base(item, 100);
+   }
 
-if (item.baseweight < 1)
-{
-item.baseweight := 1;
-}
+   if (item.baseweight < 1)
+   {
+      set_weight_base(item, 1);
+   }
 
-item.weight:=item.baseweight;
-item.minv := 0;
-  temp_str2 :=corpse.outside_descr;
+   set_weight_base(item, item.baseweight);
+   item.minv := 0;
+   temp_str2 :=corpse.outside_descr;
    temp_str := getword(temp_str2);
    temp_str := getword(temp_str2);
    temp_str := getword(temp_str2);
-	 temp_str:=temp_str2;
+   temp_str:=temp_str2;
    item.outside_descr := "The decapitated head of " + temp_str ;
    headless:=left(corpse.title,length(corpse.title)-6);
-	 corpse.title:=headless+"headless corpse";
+   corpse.title:=headless+"headless corpse";
 
-	 corpse.outside_descr:="The headless corpse of "+temp_str;
+   corpse.outside_descr:="The headless corpse of "+temp_str;
    item.value[2] := corpse.value[2];
    item.value[3] := corpse.value[3];
-					quit;
+   quit;
 }
 dilend /* decapitate */
 
@@ -746,9 +746,9 @@ code
    else
       crp.title:=self.title+"'s corpse";
   
-  crp.baseweight:=self.baseweight;
-  crp.weight:=crp.baseweight;
-  crp.height:=self.height;
+   set_weight_base(crp, self.baseweight);
+   set_weight(crp, crp.baseweight);
+   crp.height:=self.height;
   
    if (self.type==UNIT_ST_NPC)
    {
@@ -826,11 +826,12 @@ code
 
    link(crp, self.outside);
    item := self.outside;
-   while ((item!=null) and (item.type!=UNIT_ST_ROOM))
+
+   /* while ((item!=null) and (item.type!=UNIT_ST_ROOM))
    {
       item.weight := item.weight+crp.weight;
       item := item.outside;
-   }
+   }*/
    return;
 }
 dilend
@@ -915,7 +916,7 @@ code
     else
     {
         remove_aff();
-        self.weight:=self.baseweight;
+        // self.weight:=self.baseweight;
         link (self,findroom("deathseq_room@basis"));
         dilcopy ("death_seq@death",self);
     }
