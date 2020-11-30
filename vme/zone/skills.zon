@@ -565,6 +565,13 @@ code
       quit;
    }
 
+
+   if (vict == self)
+   {
+      act("But you already have it - no need to steal it from yourself.", A_SOMEONE, self, null, null, TO_CHAR);
+      quit;
+   }
+
    if ((vict.type != UNIT_ST_PC) and (vict.type != UNIT_ST_NPC))
    {
       act("Why bother? Just get the darn thing!", A_SOMEONE, self, null, null, TO_CHAR);
