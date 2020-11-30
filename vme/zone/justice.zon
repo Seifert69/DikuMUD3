@@ -1411,7 +1411,7 @@ dilend /* End blow_whistle */
 
                                  safe
 
-names {"wizi safe", "safe"}
+names {"wizi_safe"}
 title "the wizi safe"
 descr "A wizi safe in your inventory."
 manipulate {MANIPULATE_ENTER}
@@ -1419,6 +1419,67 @@ open {EX_CLOSED, EX_LOCKED} difficulty 150
 CONTAINER_DEF(40000)
 weight 0
 minv 201  // It's wizi
+
+dilbegin aware safemanage();
+external
+   getfrom_safe@midgaard(prisoner : unitptr);
+
+var
+   r : unitptr;
+   s : string;
+code
+{
+   :loop:
+   wait(SFB_CMD, activator == self.outside);
+
+   r := activator.outside;
+   while (r.type != UNIT_ST_ROOM)
+      r := r.outside;
+
+   if (r.nameidx != "accuse_room")
+      goto loop;
+
+   if (command("look"))
+   {
+      s := getword(argument);
+
+      if (s != "in")
+         goto loop;
+
+      r := findunit(activator, argument, FIND_UNIT_HERE, null);
+      if (r.nameidx == "safe")
+      {
+         if (not isset(r.openflags, EX_CLOSED))
+         {
+            act("You see your belongings in the safe.", A_SOMEONE, activator, null, null, TO_CHAR);
+            block;
+            goto loop;
+         }
+      }
+   }
+   else if (command("get"))
+   {
+      s := getword(argument);
+      if ((s != "all") and (s != "belongings"))
+         goto loop;
+
+      if (getword(argument) != "from")
+         goto loop;
+
+      r := findunit(activator, argument, FIND_UNIT_HERE, null);
+      if (r.nameidx == "safe")
+      {
+         if (not isset(r.openflags, EX_CLOSED))
+         {
+            block;
+            getfrom_safe@midgaard(activator);
+            goto loop;
+         }
+      }
+   }
+   goto loop;
+}
+dilend
 end
 
                            database
