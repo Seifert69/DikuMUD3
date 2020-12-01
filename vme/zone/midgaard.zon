@@ -1140,6 +1140,8 @@ code
 
    :loop:
    wait(SFB_CMD, activator.charflags & CHAR_OUTLAW);
+   if (activator == self)
+      goto loop;
 
    u := equipment(activator,  WEAR_WRIST_R);
 
@@ -1276,9 +1278,9 @@ code
       }
       else
       {
-         act("$1n puts all $3n's possessions in $2n.",
+         act("$1n puts all $3n's possessions in the safe.",
             A_SOMEONE, self, safe, prisoner, TO_NOTVICT);
-         act("$1n puts all your possessions in $2n.",
+         act("$1n puts all your possessions in the safe.",
             A_SOMEONE, self, safe, prisoner, TO_VICT);
       }
    }

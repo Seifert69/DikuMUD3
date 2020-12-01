@@ -978,7 +978,7 @@ dilend
         [6] $witness_JURISDICTION
 */
 
-dilbegin  fnpri(FN_PRI_MISSION-1) accuse();
+dilbegin fnpri(FN_PRI_MISSION-1) accuse();
 external
    update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  reported : integer);
 
@@ -1199,9 +1199,9 @@ code
 
    if (command(CMD_AUTO_TICK))
    {
-      foreach (UNIT_ST_NPC,u)
+      foreach (UNIT_ST_NPC, u)
       {
-         if (visible(self, u) and (u.alignment  <= -350))
+         if (visible(self, u) and (u.alignment  <= -350) and (u != self))
          {
             set(u.charflags, CHAR_LEGAL_TARGET);
             act("$1n says, 'Begone you evil cretin!'", A_SOMEONE, self, null, null, TO_ROOM);
@@ -1473,10 +1473,27 @@ code
          {
             block;
             getfrom_safe@midgaard(activator);
-            goto loop;
+            // Will self destruct
          }
       }
    }
+   else if (not isset(activator.charflags, CHAR_OUTLAW))
+   {
+      r := findunit(activator, "captain", FIND_UNIT_HERE, null);
+      if (r)
+      {
+         if ((r.position >= POSITION_RESTING) and visible(r, activator))
+         {
+            secure(r, loop);
+            s := activator.name;
+            pause;
+            exec("say You better get your belongings back "+s+". Try to stay out of trouble.", r);
+            getfrom_safe@midgaard(self.outside);
+            // Will self destruct
+         }
+      }
+   }
+
    goto loop;
 }
 dilend
