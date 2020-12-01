@@ -978,7 +978,7 @@ dilend
         [6] $witness_JURISDICTION
 */
 
-dilbegin  fnpri(FN_PRI_MISSION-1) accuse();
+dilbegin fnpri(FN_PRI_MISSION-1) accuse();
 external
    update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  reported : integer);
 
@@ -1473,10 +1473,24 @@ code
          {
             block;
             getfrom_safe@midgaard(activator);
-            goto loop;
+            // Will self destruct
          }
       }
    }
+   else if (not isset(activator.charflags, CHAR_OUTLAW))
+   {
+      r := findunit(activator, "captain", FIND_UNIT_HERE, null);
+      if (r)
+      {
+         secure(r, loop);
+         s := activator.name;
+         pause;
+         exec("say You better get your belongings back "+s+". Try to stay out of trouble.", r);
+         getfrom_safe@midgaard(self.outside);
+         // Will self destruct
+      }
+   }
+
    goto loop;
 }
 dilend
