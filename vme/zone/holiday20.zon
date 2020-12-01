@@ -56,7 +56,18 @@ code
 	return;
 }
 dilend
- 
+dilbegin hq_burn();
+code
+{
+	act ("You $2n sparkles and you drop it to the ground.",
+		A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act ("$1n's $2n sparkles and drops to the ground.",
+		A_SOMEONE,self.outside,self,null,TO_REST);
+	act ("You have been added to Santa's Naughty List. You haven't done the holiday quest!",
+		A_ALWAYS,self.outside,null,null,TO_CHAR);
+	return;
+}
+dilend
 /* Maintains the counts of gift types loaded so that mud 
 does not become flooded with presents in low population hours. */
 dilbegin string gift_name(i:integer);
@@ -439,12 +450,11 @@ code
 	exec("say You can choose just ONE area to wear it!", self);
 	pause;
 	exec("say Make your choice now.", self);
-	pause;
 
 	wait(SFB_DONE, (command("say")) and (activator== pc));
 	sl := {"ankle","belt","ring","wrist","back","chest","cape","neck","ear"};
 	spot := argument;
-	log("SANTA DIL: Spot is "+spot);
+	log("SANTA DIL: ("+pc.name+") Spot is "+spot);
 	if (spot in sl)
 	{
 		exec("say Okay, you have chosen "+spot+".", self);
@@ -474,7 +484,7 @@ code
 	sl := {"STR","DEX","CHA","CON","DIV","BRA","MAG"};
 	stat := argument;
 	
-	log("SANTA DIL: Stat is "+stat);
+	log("SANTA DIL: ("+pc.name+") Stat is "+stat);
 	if (stat in sl)
 	{
 		exec("say Okay, you want to boost "+stat+".", self);
@@ -489,24 +499,26 @@ code
 
 	exec("say Now I will make your gift.", self);
 	pause;
-	exec("say Be patient as this is a busy time of year for us elves!.", self);
+	exec("say Be patient as this is a busy time of year for us elves!", self);
 	pause;
 	exec("emote starts gathering materials to make your gift.",self);
 	pause;
 
 	gift := load(spot+"_"+stat+"@holiday20");
 	dilcopy ("ply_restrict@function("+pc.name+",0,25,holiday_burn@holiday20)",gift);
+	dilcopy ("quest_restrict@function("+XMAS_DONE20+",0,25,hq_burn@holiday20)",gift);
 	gift.height := pc.height;
-	log(pc.name+" received a "+gift.symname);
+	link(gift,pc);
+	log("SANTA DIL: ("+pc.name+") received a "+gift.symname);
 	exec("say Here is your gift.", self);
 	pause;
-	exec("emote hands you your customized gift!", self);
-	link(gift, pc);
 	addextra(pc.quests, {XMAS_DONE20}, "");
 	subextra(pc.quests, XMAS_SANTA20);
 	pause;
-	exec("say <div class='cpr'>Happy Holidays</div> "+pc.name,self);
+	exec("shout <div class='cpr'>Happy Holidays "+pc.name+"</div>",self);
 	link(pc, findroom("square@udgaard"));
+	pause;
+	exec("look",pc);
 
 :lost_pc:
 
@@ -1185,7 +1197,6 @@ extra {"$improved identify"}
 "The sash gives added strength when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
 end
 
 chest_dex
@@ -1210,7 +1221,7 @@ extra {"$improved identify"}
 "The sash gives added dexterity when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 chest_cha
@@ -1235,7 +1246,7 @@ extra {"$improved identify"}
 "The sash gives added charisma when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 
@@ -1261,7 +1272,7 @@ extra {"$improved identify"}
 "The sash gives added constitution when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 chest_div
@@ -1286,7 +1297,7 @@ extra {"$improved identify"}
 "The sash gives added divine aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 chest_bra
@@ -1311,7 +1322,7 @@ extra {"$improved identify"}
 "The sash gives added intelligence when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
  
 
@@ -1337,7 +1348,7 @@ extra {"$improved identify"}
 "The sash gives added magic aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 /*anklet*/
@@ -1364,7 +1375,7 @@ extra {"$improved identify"}
 "The anklet gives added strength when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 ankle_dex
@@ -1389,7 +1400,7 @@ extra {"$improved identify"}
 "The anklet gives added dexterity when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 ankle_cha
@@ -1414,7 +1425,7 @@ extra {"$improved identify"}
 "The anklet gives added charisma when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end   
 
 ankle_con
@@ -1439,7 +1450,7 @@ extra {"$improved identify"}
 "The anklet gives added constitution when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 ankle_div
@@ -1464,7 +1475,7 @@ extra {"$improved identify"}
 "The anklet gives added divine aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 ankle_bra
@@ -1489,7 +1500,7 @@ extra {"$improved identify"}
 "The anklet gives added intelligence when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end    
 
 
@@ -1515,7 +1526,7 @@ extra {"$improved identify"}
 "The anklet gives added magic aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end  
 
 
@@ -1540,7 +1551,7 @@ extra {"$improved identify"}
 "The anklet gives added combat skills when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end 
  
 
@@ -1568,7 +1579,7 @@ extra {"$improved identify"}
 "The belt gives added strength when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 belt_dex
@@ -1593,7 +1604,7 @@ extra {"$improved identify"}
 "The belt gives added dexterity when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 belt_cha
@@ -1618,7 +1629,7 @@ extra {"$improved identify"}
 "The belt gives added charisma when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end      
  
 
@@ -1644,7 +1655,7 @@ extra {"$improved identify"}
 "The belt gives added constitution when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 belt_div
@@ -1669,7 +1680,7 @@ extra {"$improved identify"}
 "The belt gives added divine aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 belt_bra
@@ -1694,7 +1705,7 @@ extra {"$improved identify"}
 "The belt gives added intelligence when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end    
 
 
@@ -1720,7 +1731,7 @@ extra {"$improved identify"}
 "The belt gives added magic aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 
@@ -1747,7 +1758,7 @@ extra {"$improved identify"}
 "The ring gives added strength when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 ring_dex
@@ -1771,7 +1782,7 @@ extra {"$improved identify"}
 "The ring gives added dexterity when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 ring_cha
@@ -1795,7 +1806,7 @@ extra {"$improved identify"}
 "The ring gives added charisma when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 ring_con
@@ -1819,7 +1830,7 @@ extra {"$improved identify"}
 "The ring gives added constitution when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 ring_div
@@ -1843,7 +1854,7 @@ extra {"$improved identify"}
 "The ring gives added divine aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 ring_bra
@@ -1867,7 +1878,7 @@ extra {"$improved identify"}
 "The ring gives added intelligence when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
  
 ring_mag
@@ -1891,7 +1902,7 @@ extra {"$improved identify"}
 "The ring gives added magic aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 
@@ -1920,7 +1931,7 @@ extra {"$improved identify"}
 "The bracer gives added strength when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 wrist_dex
@@ -1945,7 +1956,7 @@ extra {"$improved identify"}
 "The bracer gives added dexterity when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 wrist_cha
@@ -1970,7 +1981,7 @@ extra {"$improved identify"}
 "The bracer gives added charisma when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
   
 wrist_con
@@ -1995,7 +2006,7 @@ extra {"$improved identify"}
 "The bracer gives added constitution when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 wrist_div
@@ -2020,7 +2031,7 @@ extra {"$improved identify"}
 "The bracer gives added divinity when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 wrist_bra
@@ -2045,7 +2056,7 @@ extra {"$improved identify"}
 "The bracer gives added intelligence when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
   
 wrist_mag
@@ -2070,7 +2081,7 @@ extra {"$improved identify"}
 "The bracer gives added magic aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 /*necklace*/
@@ -2097,7 +2108,7 @@ extra {"$improved identify"}
 "The chain gives added strength when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 neck_dex
@@ -2122,7 +2133,7 @@ extra {"$improved identify"}
 "The chain gives added dexterity when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 neck_cha
@@ -2147,7 +2158,7 @@ extra {"$improved identify"}
 "The chain gives added charisma when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
   
 neck_con
@@ -2172,7 +2183,7 @@ extra {"$improved identify"}
 "The chain gives added constitution when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 neck_div
@@ -2197,7 +2208,7 @@ extra {"$improved identify"}
 "The chain gives added divinity when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 neck_bra
@@ -2222,7 +2233,7 @@ extra {"$improved identify"}
 "The chain gives added intelligence when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
   
 neck_mag
@@ -2247,7 +2258,7 @@ extra {"$improved identify"}
 "The chain gives added magic aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 /*cape*/
@@ -2274,7 +2285,7 @@ extra {"$improved identify"}
 "The cloak gives added strength when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 cape_dex
@@ -2299,7 +2310,7 @@ extra {"$improved identify"}
 "The cloak gives added dexterity when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 cape_cha
@@ -2324,7 +2335,7 @@ extra {"$improved identify"}
 "The cloak gives added charisma when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 
@@ -2350,7 +2361,7 @@ extra {"$improved identify"}
 "The cloak gives added constitution when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 cape_div
@@ -2375,7 +2386,7 @@ extra {"$improved identify"}
 "The cape gives added divine aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 cape_bra
@@ -2400,7 +2411,7 @@ extra {"$improved identify"}
 "The cloak gives added intelligence when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
  
 
@@ -2426,7 +2437,7 @@ extra {"$improved identify"}
 "The cloak gives added magic aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 /*backplate*/
@@ -2452,7 +2463,7 @@ extra {"$improved identify"}
 "The backplate gives added strength when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 back_dex
@@ -2476,7 +2487,7 @@ extra {"$improved identify"}
 "The backplate gives added dexterity when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 back_cha
@@ -2500,7 +2511,7 @@ extra {"$improved identify"}
 "The backplate gives added charisma when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 back_con
@@ -2524,7 +2535,7 @@ extra {"$improved identify"}
 "The backplate gives added constitution when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end  
 
 back_div
@@ -2548,7 +2559,7 @@ extra {"$improved identify"}
 "The backplate gives added divine aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 back_bra
@@ -2572,7 +2583,7 @@ extra {"$improved identify"}
 "The backplate gives added intelligence when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end 
 
 back_mag
@@ -2596,7 +2607,7 @@ extra {"$improved identify"}
 "The backplate gives added magic aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 
@@ -2624,7 +2635,7 @@ extra {"$improved identify"}
 "The earring gives added strength when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 ear_dex
@@ -2648,7 +2659,7 @@ extra {"$improved identify"}
 "The earring gives added dexterity when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 ear_cha
@@ -2672,7 +2683,7 @@ extra {"$improved identify"}
 "The earring gives added charisma when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end   
 
 
@@ -2697,7 +2708,7 @@ extra {"$improved identify"}
 "The earring gives added constitution when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 ear_div
@@ -2721,7 +2732,7 @@ extra {"$improved identify"}
 "The earring gives added divine aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 ear_bra
@@ -2745,7 +2756,7 @@ extra {"$improved identify"}
 "The earring gives added intelligence when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end     
  
 
@@ -2769,7 +2780,7 @@ extra {"$improved identify"}
 "The earring gives added magic aura when worn. It can only be possessed
 by one person."
  
-dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
 end
 
 
@@ -3040,13 +3051,9 @@ MSET_SPELL(9,4,0,7,6,5,10,14,6,6,6)
 flags {UNIT_FL_NO_TELEPORT}
 romflags{CHAR_DETECT_INVISIBLE}
 dilcopy santa_shout();
-
 dilcopy look_santa();
-
 dilcopy spirit_nokill();
-
 end
-
 
 elf
 names {"howard","elf"}
@@ -3069,7 +3076,61 @@ dilcopy spirit_nokill();
 dilcopy christmas_2020();
 end      
 
+graf_jan	   
+names {"janitor"}
+title "the janitor"
+descr "A harried janitor is walking around, cleaning graffiti."
+extra {}
+"This janitor appears to be feeling overwhelmed. He was called in 
+to clean up the mess of graffiti that has proliferated around town!"
+romflags {CHAR_PROTECTED}
+M_AVG_HUMAN(6, SEX_MALE)
+alignment 900
+money 5 IRON_PIECE
 
+dilcopy wander_zones@function("udgaard", 20, 1, 1);
+dilbegin clean_graf ();
+var
+	u : unitptr;
+	
+code
+{
+	heartbeat := PULSE_SEC*5;
+:start:
+	if(not("$secretgraffitiextra" in self.outside.extra))
+	{
+		pause;
+		goto start;
+	}
+	pause;
+	addextra (self.extra, {"$block wander"}, "");
+	exec("say Graffiti. Everywhere Graffiti.", self);
+	pause;
+	exec("say Which one of those Gods decided this would be a good idea?", self);
+	pause;
+	exec("emote mumbles something under his breath.", self);
+	pause;
+	u := load("graf_r@g_q");	
+	exec("emote pulls a fresh can of <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover from his bag.", self);
+	pause;
+	exec("hold remover",self);
+	pause;
+	exec("emote appears frustrated, as he begins shaking the can.", self);
+	pause;
+	exec("use remover",self);
+	pause; pause; pause; pause;
+	exec("say Someone is going on Santa's naughty list for this!", self);
+	pause;
+	exec("remove remover",self);
+	destroy(u);
+	pause;
+	exec("emote puts the empty can of <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover in his bag.", self);
+	subextra (self.extra,"$block wander");
+	pause;
+}
+dilend
+
+end
 
 // comment out this entire load section after the holiday season.
 // this will maitain the items for players, but take away some christmas cheer.
@@ -3095,4 +3156,6 @@ load mistletoe into	clan_enter@clan_uch  local 1
 load santa into study max 1
 load elf into workshop max 1
 load northpole into square@udgaard max 1
+load graf_jan into village_rd6@udgaard max 2
+load graf_jan into village_rd2@udgaard max 2
 %end
