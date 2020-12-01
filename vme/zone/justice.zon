@@ -1199,9 +1199,9 @@ code
 
    if (command(CMD_AUTO_TICK))
    {
-      foreach (UNIT_ST_NPC,u)
+      foreach (UNIT_ST_NPC, u)
       {
-         if (visible(self, u) and (u.alignment  <= -350))
+         if (visible(self, u) and (u.alignment  <= -350) and (u != self))
          {
             set(u.charflags, CHAR_LEGAL_TARGET);
             act("$1n says, 'Begone you evil cretin!'", A_SOMEONE, self, null, null, TO_ROOM);
@@ -1482,12 +1482,15 @@ code
       r := findunit(activator, "captain", FIND_UNIT_HERE, null);
       if (r)
       {
-         secure(r, loop);
-         s := activator.name;
-         pause;
-         exec("say You better get your belongings back "+s+". Try to stay out of trouble.", r);
-         getfrom_safe@midgaard(self.outside);
-         // Will self destruct
+         if ((r.position >= POSITION_RESTING) and visible(r, activator))
+         {
+            secure(r, loop);
+            s := activator.name;
+            pause;
+            exec("say You better get your belongings back "+s+". Try to stay out of trouble.", r);
+            getfrom_safe@midgaard(self.outside);
+            // Will self destruct
+         }
       }
    }
 
