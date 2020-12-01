@@ -64,6 +64,8 @@ ability to succeed outside of the supported newbie process.
 
 -Sender
 */
+\
+/*
 dilbegin rogue_request();
 var
   pc: unitptr;
@@ -180,7 +182,7 @@ code
 }
 dilend // END rogue_request
 
-/* Rogue Whisper */
+
 
 dilbegin rogue_whisper();
 var
@@ -275,7 +277,7 @@ code
 	goto start;
 }
 dilend // END rogue_give
-
+*/
 dilbegin boldin_request();
 var
   item: unitptr;
