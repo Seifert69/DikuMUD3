@@ -2414,13 +2414,13 @@ code
 	}
 	if (amount<=0)
 	{
-		sendtext ("<div class='clan'>How do you deposit no money?</div><div class='default'><br/></div>",self);
+		sendtext ("<div class='clan'>How does one deposit no money?</div><br/>",self);
 		quit;
 	}
 
 	if (FALSE==transfermoney (self,null,amount))
 	{
-		sendtext ("<div class='clan'>You don't have that much money</div><div class='default'><br/></div>",self);
+		sendtext ("<div class='clan'>You don't have that much money</div><br/>",self);
 		quit;
 	}
 
@@ -2432,13 +2432,12 @@ code
 	amount:=amount+balance;
 	if (amount<balance)
 	{
-		sendtext("<div class='clan'>The deposit box can't contain that much.</div><div class='default'><br/></div>",self);
+		sendtext("<div class='clan'>The deposit box can't contain that much.</div><br/>",self);
 		quit;
 	}
-	act ("<div class='clan'>You slip </div>"+moneystring(tmp,TRUE)+" into the deposit slot on the
-	chest<div class='default'></div>",
+	act ("<div class='clan'>You slip "+moneystring(tmp,TRUE)+" into the deposit slot on the chest</div>",
 	A_ALWAYS,self, null,null,TO_CHAR);
-	act ("<div class='clan'>$1n slips some money in the deposit slot on the clan chest.</div><div class='default'></div>",
+	act ("<div class='clan'>$1n slips some money in the deposit slot on the clan chest.</div>",
 	A_SOMEONE,self,null,null,TO_REST);
 	err:=delstr(self.extra.[CLAN_SYMBOLIC].descr+".money");
 	err:=savestr(self.extra.[CLAN_SYMBOLIC].descr+".money",itoa(amount),"w");

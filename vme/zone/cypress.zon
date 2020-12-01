@@ -31,7 +31,7 @@ movement SECT_CITY
 gmap(456,280)
 east to out_wgate;
 west to ct_23;
-//north to trail_01@gremlin descr "Dusty Trail";
+north to trail_01@gremlin descr "On a Dusty Trail";
 end
 
                               out_wgate
