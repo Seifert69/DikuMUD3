@@ -694,19 +694,19 @@ code
 heartbeat := PULSE_SEC;
 wgt:=0;
 
-	  if ((u.names.[0]=="storage container") and (u.minv>=200))
-	  {
-	u.baseweight:=0;
-	u.weight:=0;
-	dilcopy ("fixstorage@basis()",u);
-	return(0);
+   if ((u.names.[0]=="storage container") and (u.minv>=200))
+   {
+      set_weight_base(u, 0);
+      set_weight(u, 0);
+      dilcopy ("fixstorage@basis()",u);
+      return(0);
 	}
 
-if (u.inside==null)
-{
-u.weight:=u.baseweight;
- return (u.weight);
- }
+   if (u.inside==null)
+   {
+      set_weight(u, u.baseweight);
+      return(u.weight);
+   }
 
  item:=u.inside;
                        while (item!=null)
@@ -715,9 +715,9 @@ u.weight:=u.baseweight;
  item:=item.next;
  }
 
- u.weight:=u.baseweight+wgt;
+   set_weight(u, u.baseweight+wgt);
 
-return (u.weight);
+   return (u.weight);
 }
 dilend
 
@@ -909,13 +909,13 @@ code
 heartbeat := PULSE_SEC;
 
 :start:
-	wait(SFB_CMD,((command("cname") or command("ctitle"))
+	wait(SFB_CMD,((command("cname") or command("coltitle"))
 		and (activator.level>=240) and (activator==self.outside)));
 
 	pc:=self.outside;
 	secure(pc,lostem);
 	if (cmdstr=="cname") goto change_name;
-	if (cmdstr=="ctitle") goto change_title;
+	if (cmdstr=="coltitle") goto change_title;
 
 :lostem:
 	unsecure(pc);
@@ -6757,9 +6757,9 @@ for the color <div class='cpr'>bright red</div>, would now look like &ltdiv clas
 
 To add a <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> title to an object:<br>
 
-<br>ctitle objectname title
+<br>coltitle objectname title
 
-<br><br><div class='cpw'>eg:</div> ctitle enforcer &ltdiv class='cpb'&gtMy&lt/div&gt &ltdiv class='cg'&gtgreen&lt/div&gt &ltdiv class='cr'&gtaxe&lt/div&gt
+<br><br><div class='cpw'>eg:</div> coltitle enforcer &ltdiv class='cpb'&gtMy&lt/div&gt &ltdiv class='cg'&gtgreen&lt/div&gt &ltdiv class='cr'&gtaxe&lt/div&gt
 <br><div class='cpw'>result:</div> <div class='cpb'>My</div> <div class='cg'>green</div> <div class='cr'>axe</div>
 
 <br><br>To add a <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> name to an object:

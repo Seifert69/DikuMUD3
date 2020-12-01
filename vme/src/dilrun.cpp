@@ -751,7 +751,7 @@ struct dil_func_type dilfe_func[DILI_MAX + 1] = {
     {dilfe_intr},
     {dilfi_cli},
     {dilfi_sbt},
-    {dilfi_swt},
+    {dilfi_set_weight_base},
     {dilfe_fndru}, /* 100 */
     {dilfe_visi},
     {dilfe_atsp},
@@ -850,7 +850,8 @@ struct dil_func_type dilfe_func[DILI_MAX + 1] = {
     {dilfe_gfol},
     {dilfe_sact}, // 195
     {dilfe_gint},
-    {dilfe_playerid}
+    {dilfe_playerid},
+    {dilfi_set_weight}
  };
 
 

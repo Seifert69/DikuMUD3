@@ -565,6 +565,13 @@ code
       quit;
    }
 
+
+   if (vict == self)
+   {
+      act("But you already have it - no need to steal it from yourself.", A_SOMEONE, self, null, null, TO_CHAR);
+      quit;
+   }
+
    if ((vict.type != UNIT_ST_PC) and (vict.type != UNIT_ST_NPC))
    {
       act("Why bother? Just get the darn thing!", A_SOMEONE, self, null, null, TO_CHAR);
@@ -4930,7 +4937,7 @@ code
       i := 50;
    if (i < 1)
       i := 1;
-   setweight(skin, i);
+   set_weight_base(skin, i);
    quit;
 
 :losttarg:
@@ -5710,7 +5717,7 @@ code
      unit1.outside_descr := "Some scraps of meat from " + typec +
                             " have been left here.";
 
-     setweight(targ, targ.weight - bw);
+     set_weight_base(targ, targ.weight - bw);
 
      if (bw > 0)
         self.endurance := self.endurance - (bw * 2);
@@ -5761,7 +5768,7 @@ code
            unit1.title := "the leg of " + typec;
            unit1.outside_descr := "A leg of " + typec + " has been " +
                                   "discarded here.";
-           setweight(unit1, targ.weight / 7);
+           set_weight_base(unit1, targ.weight / 7);
            unit1 := null;
            nleg := nleg - 1;
         }
@@ -5779,7 +5786,7 @@ code
            unit1.title := "the arm of " + typec;
            unit1.outside_descr := "An arm of " + typec + " has been " +
                                   "left here.";
-           setweight(unit1, targ.weight / 8);
+           set_weight_base(unit1, targ.weight / 8);
            unit1 := null;
            narm := narm - 1;
         }
@@ -5838,7 +5845,7 @@ code
         }
      }
 
-     setweight(targ, targ.weight - (5 * bw));
+     set_weight_base(targ, targ.weight - (5 * bw));
 
      if (bw > 0)
         self.endurance := self.endurance - (bw * 2);
@@ -5879,7 +5886,7 @@ code
 
      unit1 := load("scraps_template@skills");
      link(unit1, self.outside);
-     setweight(unit1, targ.weight - bw);
+     set_weight_base(unit1, targ.weight - bw);
 
      if (bw > 0)
         self.endurance := self.endurance - (bw * 2);
@@ -6002,7 +6009,7 @@ code
         }
      }
 
-     setweight(targ, targ.weight - (5 * bw));
+     set_weight_base(targ, targ.weight - (5 * bw));
 
      if (bw > 0)
         self.endurance := self.endurance - (bw * 2);
@@ -6048,7 +6055,7 @@ code
 
      unit1 := load("scraps_template@skills");
      link(unit1, self.outside);
-     setweight(targ, 4);
+     set_weight_base(targ, 4);
 
      if (bw > 0)
         self.endurance := self.endurance - (bw * 2);

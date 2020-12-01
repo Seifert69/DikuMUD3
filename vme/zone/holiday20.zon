@@ -1,0 +1,3161 @@
+/*
+filename    holiday20
+password    h4rr15s0n
+changedby   Sender
+EmailAdd
+request     compile
+version     1.0
+END HEADER*/
+
+#include <macros.h>
+
+%zone	holiday20
+
+lifespan 25
+reset RESET_ANYHOW
+
+creators {"Ratlin"}
+
+notes
+"This zone was installed by Ratlin to contain some of the special items
+given at Christmas. A significant overhaul (codebase reduced by ~2000 lines)
+was implemented by Sender in 2020. Add new defines
+for each year quest - leave the old if keeping old presents
+for presents  change the descrs of presents each year 
+(same way we do comp sashes). If a player
+loses the present or does not get one, it may not be
+replaced or given  as of 2010 gifts are storeable.  Sliming of 
+previous years is admin discretion.  
+
+Comment out loads after the holiday season to disable the holiday experience.
+
+=== REMEMBER ===
+
+Check shredders in the post offices to ensure they read the cards correctly!
+
+Maintained by Sender"
+
+
+help
+"Player should never be in here."
+
+#define XMAS_SANTA20 "Visiting Santa 2020"
+#define XMAS_DONE20 "Holiday Gift 2020 Received"
+
+%dil
+
+dilbegin holiday_burn();
+code
+{
+	act ("You $2n sparkles and you drop it to the ground.",
+		A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act ("$1n's $2n sparkles and drops to the ground.",
+		A_SOMEONE,self.outside,self,null,TO_REST);
+	act ("You have been added to Santa's Naughty List for trying to use someone else's gift!",
+		A_ALWAYS,self.outside,null,null,TO_CHAR);
+	return;
+}
+dilend
+dilbegin hq_burn();
+code
+{
+	act ("You $2n sparkles and you drop it to the ground.",
+		A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act ("$1n's $2n sparkles and drops to the ground.",
+		A_SOMEONE,self.outside,self,null,TO_REST);
+	act ("You have been added to Santa's Naughty List. You haven't done the holiday quest!",
+		A_ALWAYS,self.outside,null,null,TO_CHAR);
+	return;
+}
+dilend
+/* Maintains the counts of gift types loaded so that mud 
+does not become flooded with presents in low population hours. */
+dilbegin string gift_name(i:integer);
+var
+	gifts	:	stringlist;
+code
+{
+	gifts:={"boom_box2","boom_box3","boom_box4","boom_box2",
+		"boom_box4","boom_box3","boom_box2","boom_box3",
+		"boom_box4","boom_box3","boom_box2","boom_box4"};
+	return (gifts.[i]);
+}
+dilend
+
+dilbegin gift_func(count:integer,i:integer);
+external
+	string gift_name (i:integer);
+var
+	item	:	unitptr;
+	namer	:	string;
+	place	:	unitptr;
+	gift	:	unitptr;
+code
+{
+  namer:=gift_name(count);
+  gift:=load (namer+"@holiday20");
+
+	if ((gift.nameidx == "boom_box2") and (gift.loadcount > 250))
+	{
+		destroy(gift);
+		return;
+	}
+	else if ((gift.nameidx == "boom_box3") and (gift.loadcount > 175))
+	{
+		destroy(gift);
+		return;
+	}
+	else if ((gift.nameidx == "boom_box4") and (gift.loadcount > 150))
+	{
+		destroy(gift);
+		return;
+	}
+	
+:loop:
+
+	if (i==0)
+		place:=findrndunit (self,FIND_UNIT_WORLD,UNIT_ST_NPC);
+	else
+		place:=findrndunit (self,FIND_UNIT_WORLD,UNIT_ST_ROOM);
+
+	if ((place==null) or (place==self))
+		goto loop;
+
+	item:=place;
+
+	while (item.type!=UNIT_ST_ROOM)
+	{
+		if (item.type==UNIT_ST_PC)
+			goto loop;
+		item:=item.outside;
+	}
+	link (gift,place);
+	return ;
+}
+dilend   
+
+/*routine to load the gifts */
+dilbegin load_gift();
+external
+	gift_func (count:integer,i:integer);
+var
+	count:integer;
+	exclude:integer;
+code
+{     
+	:start:
+	exclude:=rnd(0,11);
+	count:=-1;
+	heartbeat:=PULSE_SEC*3;
+	while (count <12)
+	{
+		count:=count+1;
+		if (count==12)
+			continue;
+		if (exclude==count)
+		{
+			gift_func(exclude,1);
+			pause;
+			gift_func(exclude,1);
+			pause;
+			gift_func(exclude,1);
+			pause;
+			gift_func(exclude,1);
+			pause;
+		}
+		else
+		{
+			gift_func(count,0);
+			pause;
+			gift_func(count,0);
+			pause;
+			gift_func(count,0);
+			pause;
+			gift_func(count,0);
+			pause;
+		}
+	}
+	heartbeat:=PULSE_SEC*1200; heartbeat:=PULSE_SEC*1200;
+	wait (SFB_TICK,TRUE);
+	goto start;
+}
+dilend  
+
+ /*Heal routine for newbie candy can presents (under level 50) */
+dilbegin candy_heal(medi : unitptr, targ : unitptr, hm : integer);
+code
+{
+	act("Your $2N glows <div class='cpr'>b</div><div class='cpw'>r</div><div class='cpr'>i</div><div class='cpw'>g</div><div class='cpr'>h</div><div class='cpw'>t</div><div class='cpr'>l</div><div class='cpw'>y</div>!", A_ALWAYS, self, medi, targ , TO_CHAR);
+	act("$1n's $2N glows <div class='cpr'>b</div><div class='cpw'>r</div><div class='cpr'>i</div><div class='cpw'>g</div><div class='cpr'>h</div><div class='cpw'>t</div><div class='cpr'>l</div><div class='cpw'>y</div>!",A_SOMEONE, targ, medi, null, TO_REST);
+	return;
+}
+dilend
+
+/*start the quest, touch the pole if char less than level 50 give newbie gift
+otherwise, set the flag, and start the exp tracker */ 
+dilbegin touch_pole();
+var
+	pc 			: unitptr;
+	newbie_gift	: unitptr;
+	item		: unitptr;
+	z 			: integer;
+	i 			: integer;
+
+code
+{
+
+:start:
+	wait(SFB_CMD, (command("touch")) and ("pole" in argument));
+	block;
+
+	pc := activator;
+	secure(pc, lostpc);
+
+	if ("$NO_DEC20" in pc.extra)
+	{
+		act("We are sorry, but you have not played here long enough to get on our gift list.", A_ALWAYS, activator, null, null, TO_CHAR);
+		act("But we still Wish you a Happy Holiday Season!", A_ALWAYS, activator, null, null, TO_CHAR);
+		log(pc.name+"has not played here long enough to receive a gift.");
+		unsecure(pc);
+		goto start;
+	}
+	if (XMAS_DONE20 in pc.quests)
+	{
+		act("Greedy little snot aren't we!", A_ALWAYS, activator, null, null, TO_CHAR);
+		unsecure(pc);
+
+		goto start;
+	}
+    if (pc.level < 49)
+	{
+		act("We are sorry, but you have not played here long enough to get on our regular gift list.", A_ALWAYS, activator, null, null, TO_CHAR);
+		act("But please take this small token and Have a Happy Holiday Season!", A_ALWAYS, activator, null, null, TO_CHAR);
+		newbie_gift:= load("newbgift@holiday20");
+		addextra(pc.quests, {XMAS_DONE20}, "");
+		dilcopy ("ply_restrict@function("+pc.name+",0,25,holiday_burn@holiday20)",newbie_gift);
+		newbie_gift.height:= pc.height;
+		log(pc.name+" received a "+newbie_gift.nameidx);
+		link(newbie_gift, pc);
+		unsecure(pc);
+		goto start;
+	}
+	if (not("$XMASEXP20" in pc.extra))
+	{
+		addextra (pc.extra,{"$XMASEXP20"},itoa(pc.exp)); 
+		act("Come back when you have gained some experience!", A_ALWAYS, activator, null, null, TO_CHAR);
+		goto start;
+	}
+	else if ((pc.exp - atoi(pc.extra.["$XMASEXP20"].descr)) >=300000)
+	{   /* they got it */	
+		act("You touch the pole, and visions of sugar plums start dancing in your head!", A_ALWAYS, activator, null, null, TO_CHAR);
+		act("You suddenly feel like you're floating.", A_ALWAYS, activator, null, null, TO_CHAR);
+		act("$1n starts floating away from the ground.", A_SOMEONE, activator,null, null, TO_REST);
+		act("$1n is surrounded by sparkling lights, then disappears.", A_SOMEONE, activator,null, null, TO_REST);
+		link(pc, findroom("study@holiday20"));
+		act("$1n appears in a flash of light!.", A_SOMEONE, activator, null, null,TO_REST);
+		act("You find yourself mysteriously transferred to the north pole!", A_ALWAYS, activator, null, null, TO_CHAR);
+		pause;
+		pause;
+		exec("look ", pc);
+		unsecure(pc);
+		goto start;
+	}
+	else 
+	{  /*they need */
+		act( "You need "+itoa(300000 - (pc.exp - atoi(pc.extra.["$XMASEXP20"].descr)))
+		+ " more experience to see Santa.", A_ALWAYS, activator, null, null, TO_CHAR);
+		goto start;
+	}
+
+:lostpc:
+
+	unsecure(pc);
+	goto start;
+}
+dilend   
+
+/*these are sant's shouts change as you please to vary periodically*/
+dilbegin santa_shout();
+var
+code
+{
+:start:
+
+	heartbeat := PULSE_SEC * rnd(60,240);
+	wait(SFB_CMD|SFB_TICK, TRUE);
+	pause;
+	on rnd(0,6) goto shout_one, shout_two, shout_three, shout_four, shout_five, shout_six,shout_seven;
+
+:shout_one:
+	pause;
+	exec("shout HAPPY HOLIDAY ONE AND ALL!!!!!!!!!!!!", self);
+	pause;
+	goto start;
+
+:shout_two:
+	pause;
+	exec("shout Kobolds roasting on an open fire!", self);
+	exec ("shout Dark Elves cutting off their toes." , self);
+	pause;
+	goto start;
+
+:shout_three:
+	pause;
+	exec("shout I know if you have been bad or good!", self);
+	pause;
+	goto start;
+
+:shout_four:
+	pause;
+	exec("shout Hey, players leave those elves alone!", self);
+	pause;
+	goto start;
+
+:shout_five:
+	pause;
+	exec("shout Merry Christmas and Happy New Year to everyone!!!", self);
+	pause;
+	goto start;
+
+:shout_six:
+	pause;
+	exec("shout Is that slay bells I hear already!", self);
+	pause;
+	exec("shout Let the Christmas Slaying Begin!!", self);
+	pause;
+	goto start;
+
+:shout_seven:
+	pause;
+	exec("shout On the fourth day of slaying God Odin gave to me,",self);
+	exec("shout Four rods of lightning, three silver flagons,",self);
+	exec("shout Two swords of healing and the ravens Thought and Memory,",self); 
+	pause;
+	goto start;
+}
+dilend 
+
+/* So they can't kill Santa or howard */
+dilbegin spirit_nokill ();
+var
+code
+{
+:start:
+	wait (SFB_PRE, command (CMD_AUTO_DAMAGE) and (self==target));
+	block;
+	act ("Magic guardians knock you unconscious.",A_ALWAYS,self,null,activator,TO_VICT);
+	activator.position:=POSITION_STUNNED;
+	self.position:=POSITION_STANDING;
+	activator.hp:=0;
+	goto start;
+}
+dilend 
+
+/*santa's rountines for once they get exp */
+dilbegin look_santa();
+var
+	pc : unitptr;
+code
+{
+	heartbeat := PULSE_SEC*4;
+
+:start:
+
+	wait(SFB_CMD, (command("look")) and ("santa" in argument));
+    block;
+
+	pc := activator;
+	secure(pc, lostpc);
+
+	if (XMAS_DONE20 in pc.quests)
+	{
+		exec("whisper "+pc.name+ "Don't be greedy or I shall take your gift away!", self);
+		goto start;
+    }
+	else if (XMAS_SANTA20 in pc.quests)
+	{
+		exec("say "+pc.name+ ", I'd love to talk more, but I have a lot to do. " +
+		"My assistant will take care of you. The workshop is over there.", self);
+		exec("point ", self);
+		goto start;
+    }
+	
+	exec("say HO! HO! HO!", self);
+	pause;
+	exec("say Hello there "+pc.name+"!", self);
+	pause;
+	exec("say Let's see I have you on a list here somewhere!", self);
+	pause;
+	exec("say Ahhh! Okay, I see you have been a good person this year!", self);
+	pause;
+	exec("eye "+pc.name, self);
+	pause;
+	exec("say Well, I see you have tried to be at least.",self);
+	pause;
+	exec("say We'll just overlook those four times.",self);
+	pause; 
+	exec("say Go see the elf in the work shop.", self);
+	pause;
+	exec("say He will make a special gift for you "+pc.name+".",self);
+	pause;
+	exec("say I along with the Admin here at Valhalla, wish you a very Happy Holiday!", self);
+	pause;
+	exec("wave "+pc.name,self);
+	addextra(pc.quests, {XMAS_SANTA20}, "");
+
+:lostpc:
+
+	unsecure(pc);
+	goto start;
+}
+dilend   
+
+/*pc picks item */
+dilbegin christmas_2020();
+var
+
+	pc		:  	unitptr;
+	gift	:	unitptr;
+	stat	:	string;
+	spot	:	string;
+	sl		:	stringlist;
+
+code
+{
+	on_activation((self.position < POSITION_SITTING) or (self.position == POSITION_FIGHTING), skip);
+
+:start:
+
+	secure(pc, lost_pc);
+	heartbeat:= PULSE_SEC*4;
+	wait(SFB_DONE, (command("look")) and (activator.type == UNIT_ST_PC) and (target == self));
+
+	if (XMAS_DONE20 in activator.quests)
+		goto start;
+
+	pc := activator;
+	secure(pc, lost_pc);
+
+	exec("say Hello there "+pc.name+", I see you have come for your gift.", self);
+	pause;
+
+:choose:
+
+	exec("say Now listen closely, and wait for me to ask for your choice.", self);
+	pause;
+	exec("say First off, where would you like to wear the gift?", self);
+	pause;
+	exec("say You may choose ankle, belt, ring, wrist, back, chest, cape, neck, ear.", self);
+	pause;
+	exec("say You can choose just ONE area to wear it!", self);
+	pause;
+	exec("say Make your choice now.", self);
+
+	wait(SFB_DONE, (command("say")) and (activator== pc));
+	sl := {"ankle","belt","ring","wrist","back","chest","cape","neck","ear"};
+	spot := argument;
+	log("SANTA DIL: ("+pc.name+") Spot is "+spot);
+	if (spot in sl)
+	{
+		exec("say Okay, you have chosen "+spot+".", self);
+		pause;
+	}
+	else
+	{
+		exec("say I wish you would pick one of the categories I specified.", self);
+		pause;
+		goto choose;
+	}
+	
+	exec("say Now you must choose the ability the gift will give.", self);
+	pause;
+	
+:choose2:	
+
+	exec("say Now listen closely, and again wait for me to ask for your choice.", self);
+	pause;
+	exec("say You may choose STR, DEX, CHA, CON, DIV, BRA, MAG.", self);
+	pause;
+	exec("say You can choose just ONE ability!", self);
+	pause;
+	exec("say Make your choice now.", self);
+	
+	wait(SFB_DONE, (command("say")) and (activator== pc));
+	sl := {"STR","DEX","CHA","CON","DIV","BRA","MAG"};
+	stat := argument;
+	
+	log("SANTA DIL: ("+pc.name+") Stat is "+stat);
+	if (stat in sl)
+	{
+		exec("say Okay, you want to boost "+stat+".", self);
+		pause;
+	}
+	else
+	{
+		exec("say I wish you would pick one of the abilities I specified.", self);
+		pause;
+		goto choose2;
+	}
+
+	exec("say Now I will make your gift.", self);
+	pause;
+	exec("say Be patient as this is a busy time of year for us elves!", self);
+	pause;
+	exec("emote starts gathering materials to make your gift.",self);
+	pause;
+
+	gift := load(spot+"_"+stat+"@holiday20");
+	dilcopy ("ply_restrict@function("+pc.name+",0,25,holiday_burn@holiday20)",gift);
+	dilcopy ("quest_restrict@function("+XMAS_DONE20+",0,25,hq_burn@holiday20)",gift);
+	gift.height := pc.height;
+	link(gift,pc);
+	log("SANTA DIL: ("+pc.name+") received a "+gift.symname);
+	exec("say Here is your gift.", self);
+	pause;
+	addextra(pc.quests, {XMAS_DONE20}, "");
+	subextra(pc.quests, XMAS_SANTA20);
+	pause;
+	exec("shout <div class='cpr'>Happy Holidays "+pc.name+"</div>",self);
+	link(pc, findroom("square@udgaard"));
+	pause;
+	exec("look",pc);
+
+:lost_pc:
+
+	unsecure(pc);
+	goto start;
+}
+dilend
+
+dilbegin act_world (s:string);
+var
+	pc:unitptr;
+code
+{
+	heartbeat:=PULSE_SEC*3;
+	pc:=ghead();
+	while (pc.type==UNIT_ST_PC)
+	{
+		sendtext(s,pc);
+		pc:=pc.gnext;
+	}
+	return;
+}
+dilend
+
+dilbegin act_launcher (s:string);
+var
+	pc:unitptr;
+code
+{
+	heartbeat:=PULSE_SEC*3;
+	pc:=ghead();
+	while (pc.type==UNIT_ST_PC)
+	{
+		if (pc.level > 200)
+			sendtext("<div class='hint'>"+s+" Launched this firework:</div><br/>",pc);
+		pc:=pc.gnext;
+	}
+	return;
+}
+dilend
+
+dilbegin ast_launch();
+var
+	pc,rm,temp:unitptr;
+code
+{
+	pc:=self.inside;
+	while (pc)
+	{
+		temp:=pc.next;
+		if (pc.type==UNIT_ST_PC)
+		{
+			sendtext ("The explosion of the rocket throws you clear and you are falling fast.<br/>",pc);
+			pc.hp:=0;
+			pc.mana:=0;
+			pc.endurance:=0;
+			position_update (pc);
+			rm:=findrndunit(self,FIND_UNIT_WORLD, UNIT_ST_ROOM);
+			sendtext ("You hit the ground with a splat!  Ouch that hurt!<br/>",pc);
+			if (rm!=null)
+				link (pc,rm);
+			else
+				link (pc,findroom("void@basis"));
+		}
+		pc:=temp;
+	}
+	return;
+}
+dilend
+
+%rooms
+
+study
+title "Santa's Study"
+descr
+"You are in Santa's study, a large room with books and list neatly arranged
+in stacks and piles. It seems it is here he makes his list of those that are
+bad or good. You certainly hope he finds your name on the good list!"
+
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+ALWAYS_LIGHT
+east to workshop;
+end
+
+workshop
+title "Santa's Workshop"
+descr
+"You are in Santa's work shop, a huge building that is round in shape. Weird
+contraptions, run by elves, are busy at work making toys and gifts.
+Apparently the treasures are beyond the reach of mere mortals."
+
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+ALWAYS_LIGHT
+west to study;
+end
+
+%objects
+
+card
+names {"card"}
+title "a holiday card"
+descr
+"A holiday card has been left here on the ground."
+type ITEM_NOTE
+weight 1
+manipulate MANIPULATE_TAKE
+end
+
+xmas_box
+names {"Christmas Gift","gift","box"}
+title "a <div class='cpr'>Christmas </div><div class='cpg'>Gift</div>"
+descr "A brightly wrapped <div class='cpr'>Christmas </div><div class='cpg'>gift</div> rests here."
+extra {}
+"This <div class='cpr'>Christmas </div><div class='cpg'>Gift</div> will add a little cheer to the season.
+ It looks like this box could hold quite a bit and keep your gear safe inside."
+weight 10
+CONTAINER_DEF(600)
+open {EX_OPEN_CLOSE, EX_CLOSED}
+manipulate {MANIPULATE_ENTER,MANIPULATE_HOLD,MANIPULATE_TAKE}
+end
+
+mistletoe
+title "a sprig of <div class='cpg'>mistletoe</div>"
+names {"mistletoe","sprig"}
+descr "A sprig of <div class='cpg'>mistletoe</div>hangs here."
+extra {}
+"A sprig of mistletoe with white berries hangs here. Kiss or be kissed."
+
+end
+
+boom_box3
+names {"Christmas Gift","gift","box"}
+title "a <div class='cpr'>Christmas </div><div class='cpg'>Gift</div>"
+descr "A brightly wrapped <div class='cpr'>Christmas </div><div class='cpg'>gift</div> rests here."
+extra {}
+"This <div class='cpr'>Christmas </div><div class='cpg'>Gift</div> will add a little cheer to the season.
+ It looks like this box could hold quite a bit and keep your gear safe inside."
+CONTAINER_DEF(60)
+manipulate {MANIPULATE_ENTER,MANIPULATE_HOLD,MANIPULATE_TAKE}
+flags {UNIT_FL_MAGIC}
+open {EX_OPEN_CLOSE, EX_CLOSED}
+weight 10
+spell 200
+
+/* box goes boom!*/ 
+dilbegin prg3();
+var
+	pc : unitptr;
+code
+{
+	heartbeat := 3;
+
+:start:
+
+	wait(SFB_CMD, (command("open")) and (("box" in argument)or
+		("gift" in argument)or("basket" in argument)));
+	pc := activator;
+	secure(pc, lost);
+	{
+		block;
+		if (self.outside != activator)
+		{
+			act("You must pick me up before opening me.",
+				A_ALWAYS, activator, null, null, TO_CHAR);
+			goto start;
+		}
+		act("You hear a faint click. *click* ",
+			A_ALWAYS, pc, null, null, TO_ALL);	 
+		unset(self.openflags, EX_CLOSED); 
+		pause;
+		goto trap;
+    }
+	
+:lost:
+	act("<div class='cpr'>A possible 500000 experience disappears forever!</div>",
+	A_SOMEONE, self, null, pc, TO_ALL);
+	destroy(self);
+
+:trap:
+      act("*tick*  *tick*  *tick*",
+          A_ALWAYS, pc, null, null, TO_ALL);
+      pause;
+	  act("*tick*  *tick*  *tick*",
+          A_ALWAYS, pc, null, null, TO_ALL);
+      pause;
+      act("*BOOM!* The <div class='cpr'>Christmas </div><div class='cpg'>Gift explodes into a ball of flames.</div>",
+          A_ALWAYS, pc, null, null, TO_ALL);
+      exec("scream", pc);
+      pc.hp := (pc.hp -(pc.hp /3));
+      act("You scream in agony as you are singed from the flames!.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      act("$1n screams in agony as $1e is singed from the flames.",
+          A_ALWAYS, pc, null, null, TO_REST);
+      destroy(self);
+      goto start;
+
+}
+dilend
+end
+
+/*loads coins, food/potions or heal items 1 in 12 chance of exp 
+card */
+boom_box2
+names {"Christmas Gift","gift","box"}
+title "a <div class='cpr'>Christmas </div><div class='cpg'>Gift</div>"
+descr "A brightly wrapped <div class='cpr'>Christmas </div><div class='cpg'>gift</div> rests here."
+extra {}
+"This <div class='cpr'>Christmas </div><div class='cpg'>Gift</div> will add a little cheer to the season.
+ It looks like this box could hold quite a bit and keep your gear safe inside."
+
+CONTAINER_DEF(200)
+manipulate {MANIPULATE_ENTER,MANIPULATE_HOLD,MANIPULATE_TAKE}
+flags {UNIT_FL_MAGIC}
+open {EX_OPEN_CLOSE, EX_CLOSED}
+weight 10
+spell 200
+
+dilbegin prg4();
+var
+	pc : unitptr;
+	gift: unitptr;
+	i  : integer;
+	il : intlist;
+	buf : string;
+	sl  : stringlist;
+	gift1 : string;
+	surprise : stringlist;
+   
+code
+{
+	heartbeat := 3;
+
+	:start:
+
+	wait(SFB_CMD, (command("open")) and (("box" in argument)or
+	("gift" in argument)or("basket" in argument)) );
+	pc := activator;
+	secure(pc, lost);
+	{
+		block;
+		if (self.outside != activator)
+		{
+			act("You must pick me up before opening me. DOH!",
+				A_ALWAYS, activator, null, null, TO_CHAR);
+			goto start;
+		}
+		act("You hear a faint click. *click* ",
+			A_ALWAYS, pc, null, null, TO_ALL);
+		unset(self.openflags, EX_CLOSED);
+		pause;
+		goto trap;
+	}
+:lost:
+	act("<div class='cpr'>A possible 500000 experience disappears forever!",
+		A_SOMEONE, self, null, pc, TO_ALL);
+	destroy(self);
+	quit;
+
+:trap:
+	act("*tick*  *tick*  *tick*",
+		A_ALWAYS, pc, null, null, TO_ALL);
+	pause;
+	act("*tick*  *tick*  *tick*",
+		A_ALWAYS, pc, null, null, TO_ALL);
+	pause;
+	act("It seems this is a real gift box!",
+		A_ALWAYS, pc, null, null, TO_CHAR);	  
+
+	i := rnd(0,11);
+	surprise := {"pcoins","icoins","gcoins","scoins","toy_horse","cookie","gin_cookie","candy_cane","fcake","choco_heart","raisin","card"};
+	gift := load(surprise.[i]+"@holiday20");
+	if(gift.symname == "card@holiday20")
+		goto give_card;	
+	act("Check your inventory and purse!",
+		A_ALWAYS, pc, null, null, TO_CHAR); 
+ 	link(gift,pc);
+	destroy(self);
+	pause;
+	quit;
+
+:give_card:
+	
+	insert(il,0,rnd(500,5500));    //500 to 5500
+
+	buf :="<div class='cpr'>Merry </div><div class='cpg'>Christmas </div><div class='cpr'></div>"+pc.name+"<br/><br/><div class='cpc'>Place this greeting<br/> into the shredder<br/></div>"
+	+"in the post office to<br/> to receive "+itoa(il.[0])+" experience.<br/><br/>"
+	+"<div class='cpr'>Happy Holidays </div><div class='cpw'>from the </div><div class='cpg'>Valhalla Staff</div>" ;
+
+	gift1 := textformat(buf);
+	sendtext(gift1+"<br/><br/>", activator);
+
+	addstring(sl,"card");
+	addstring(sl,"$"+pc.name);
+	addextra(gift.extra,sl,buf,il);
+	log("<div class='cpy'>loaded </div>" +itoa(il.[0])+" card for "+pc.name);
+	link(gift,pc);
+	destroy(self);
+
+	pause;
+	quit;
+}
+dilend
+end
+
+/* loads random cards - rarest box */
+boom_box4
+names {"Christmas Gift","gift","box"}
+title "a <div class='cpr'>Christmas </div><div class='cpg'>Gift</div>"
+descr "A brightly wrapped <div class='cpr'>Christmas </div><div class='cpg'>gift</div> rests here."
+extra {}
+"This <div class='cpr'>Christmas </div><div class='cpg'>Gift</div> will add a little cheer to the season.
+ It looks like this box could hold quite a bit and keep your gear safe inside."
+
+CONTAINER_DEF(200)
+manipulate {MANIPULATE_ENTER,MANIPULATE_HOLD,MANIPULATE_TAKE}
+flags {UNIT_FL_MAGIC}
+open {EX_OPEN_CLOSE, EX_CLOSED}
+weight 10
+spell 200
+
+dilbegin prg5();
+var
+	pc 		: unitptr;
+	gift	: unitptr;
+	i  		: integer;
+	il 		: intlist;
+	buf 	: string;
+	sl  	: stringlist;
+	gift1	: string;
+code
+{
+	heartbeat := 3;
+
+:start:
+
+	wait(SFB_CMD, (command("open"))and(("box" in argument)or("gift" in argument)or("basket" in argument)) );
+	pc := activator;
+	secure(pc, lost_pc);
+	{
+		block;
+		if (self.outside != activator)
+		{
+			act("You must pick me up before opening me. DOH!",
+				A_ALWAYS, activator, null, null, TO_CHAR);
+			goto start;
+		}
+		act("You hear a faint click. *click* ",
+			A_ALWAYS, pc, null, null, TO_ALL);
+		unset(self.openflags, EX_CLOSED);
+		pause;
+		goto trap;
+    }
+	
+:lost_pc:
+
+	act("<div class='cpr'>A possible 500000 experience disappears forever!</div>",
+	A_SOMEONE, self, null, pc, TO_ALL);
+	destroy(self);
+
+:trap:
+	act("*tick*  *tick*  *tick*",
+		A_ALWAYS, pc, null, null, TO_ALL);
+	pause;
+	act("*tick*  *tick*  *tick*",
+		A_ALWAYS, pc, null, null, TO_ALL);
+	pause;
+	act("It's seems this is a real gift box!",
+		A_ALWAYS, pc, null, null, TO_CHAR);
+ 
+	gift := load("card@holiday20");
+	i := rnd(0,13);
+	insert(il,0,rnd(((i)*(i)*(i)*30)+500,((i)*(i)*(i)*40)+700));
+	
+	buf :="<div class='cpr'>Merry </div><div class='cpg'>Christmas </div><div class='cpr'></div>"+pc.name+"<br/><br/><div class='cpc'>Place this greeting<br/> into the shredder<br/></div>"+
+	"in the post office to<br/>receive "+itoa(il.[0])+" experience.<br/><br/>"+
+	"<div class='cpr'>Happy Holidays </div><div class='cpw'>from the </div><div class='cpg'>Valhalla Staff</div>" ;
+        
+	gift1 := textformat(buf);
+	sendtext(gift1+"<br/><br/>", activator);
+
+	addstring(sl,"card");
+	addstring(sl,"$"+pc.name);
+	addextra(gift.extra,sl,buf,il);
+	log("<div class='cpy'>loaded </div>"+itoa(il.[0])+" card");
+	link(gift,pc);
+	destroy(self);
+	pause;
+	quit;
+}
+dilend
+
+end 
+
+toy_horse
+names {"toy horse","horse","toy"}
+title "a <div class='cpr'>Christmas </div><div class='cpg'>toy horse</div>"
+descr "A <div class='cpr'>Christmas </div><div class='cpg'>toy horse</div> lies at your feet."
+extra {}
+" A life like horse head mounted on a wooden pole that children use to play
+horsey!  This small gift brings wishes of joy, happiness and health in the
+coming year to you and your family from the Administration of Valhalla MUD."
+weight 1
+manipulate {MANIPULATE_HOLD,MANIPULATE_TAKE}
+STR_TRANSFER(+2)
+end
+
+cookie
+names {"cookie"}
+title "a raisin cookie"
+descr "A raisin cookie has been left here."
+extra {}
+"This cookie was fresh baked by Santa's elves and looks to be loaded with huge
+juicy raisins."
+manipulate {MANIPULATE_TAKE}
+weight 1
+FOOD_DEF(1, 0)
+cost 3 IRON_PIECE
+end
+
+gin_cookie
+names {"gingerbread cookie","cookie"}
+title "a gingerbread cookie"
+descr "A gingerbread cookie has been left here."
+extra {}
+"
+<pre><br/>
+             _____<br/>
+           .'~ ~ ~`.<br/>
+           |  a a  |<br/>
+           `.  ~  .'<br/>
+       .----'(&gt;o&lt;)`----.<br/>
+      ( S             S )<br/>
+       `---.   o   .---'<br/>
+            :  o   :<br/>
+            :  o   :<br/>
+           '        '<br/>
+          '    /\    '<br/>
+       .-' ~~ /  \ ~~ `-.<br/>
+       `.___.'    `.___.'<br/>
+</pre>"
+manipulate {MANIPULATE_TAKE}
+weight 1
+FOOD_DEF(2, 0)
+cost 3 IRON_PIECE
+end
+
+pcoins
+MONEY(PLATINUM_PIECE, 5)
+end
+
+scoins
+MONEY(SILVER_PIECE, 5)
+end
+
+icoins
+MONEY(IRON_PIECE, 5)
+end
+
+gcoins
+MONEY(GOLD_PIECE, 5)
+end
+
+
+
+candy_cane
+names {"candy cane","cane","candy"}
+title "a <div class='cpr'>c</div><div class='cpw'>a</div><div class='cpr'>n</div><div class='cpw'>d</div><div class='cpr'>y </div><div class='cpw'>c</div><div class='cpr'>a</div><div class='cpw'>n</div><div class='cpr'>e</div>"
+descr "A large <div class='cpr'>c</div><div class='cpw'>a</div><div class='cpr'>n</div><div class='cpw'>d</div><div class='cpr'>y </div><div class='cpw'>c</div><div class='cpr'>a</div><div class='cpw'>n</div><div class='cpr'>e</div> lies here."
+extra {}
+"<pre><br/>
+<div class='bn'></div><div class='cpr'>        .----.      <br/><br/>
+</div><div class='bn'></div><div class='cpw'>      .'`.  .'`.    <br/><br/>
+</div><div class='bn'></div><div class='cpr'>    ,'-._:--:_.-\   <br/><br/>
+</div><div class='bn'></div><div class='cpw'>    |-._'    | _.|  <br/><br/>
+</div><div class='bn'></div><div class='cpr'>    |._ |    |' _|  <br/><br/>
+</div><div class='bn'></div><div class='cpw'>    `---'    |-' |  <br/><br/>
+</div><div class='bn'></div><div class='cpr'>             |.-'|  <br/><br/>
+</div><div class='bn'></div><div class='cpw'>             |_.-|  <br/><br/>
+</div><div class='bn'></div><div class='cpr'>             | _.|  <br/><br/>
+</div><div class='bn'></div><div class='cpw'>             |' _|  <br/><br/>
+</div><div class='bn'></div><div class='cpr'>             |-' |  <br/><br/>
+</div><div class='bn'></div><div class='cpw'>             |.-'|  <br/><br/>
+</div><div class='bn'></div><div class='cpr'>             |_.-|  <br/><br/>
+</div><div class='bn'></div><div class='cpw'>             | _.|  <br/><br/>
+</div><div class='bn'></div><div class='cpr'>             |' _|  <br/><br/>
+</div><div class='bn'></div><div class='cpw'>             |-' |  <br/><br/>
+</div><div class='bn'></div><div class='cpr'>             `---'  <br/><br/>
+</div><div class='default'><br/></div></pre>"
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(12, 0)
+weight 2
+ end
+
+xmas_tree
+title "a Christmas Tree"
+names {"tree"}
+descr "A Christmas Tree grows here filling the city with cheer."
+extra {}
+"<pre><br/>
+<div class='bn'></div><div class='cpy'>             |<br/><br/>
+</div><div class='bn'></div><div class='cpy'>           \ ' /<br/><br/>
+</div><div class='bn'></div><div class='cpy'>         -- (</div><div class='cy'>*</div><div class='cpy'>) --<br/><br/>
+</div><div class='bn'></div><div class='cpg'>            &gt;</div><div class='cpy'>|</div><div class='cpg'>&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>           &gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>          &gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*<br/><br/>
+</div><div class='bn'></div><div class='cpg'>         &gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpm'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>        &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>       &gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>      &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>     </div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>*</div><div class='cpg'>&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>    &gt;</div><div class='cpy'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpc'>@</div><div class='cpg'>&lt;&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>   &gt;&gt;&gt;</div><div class='cpr'>*</div><div class='cpg'>&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>0</div><div class='cpg'>&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>  &gt;&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpw'>0</div><div class='cpg'>&gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'> &gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>@</div><div class='cpg'>&gt;</div><div class='cpc'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;</div><div class='cpc'>0</div><div class='cpg'>&lt;&lt;&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;&lt;<br/><br/>
+</div><div class='bn'></div><div class='cw'>            | |<br/>
+</div><div class='bn'></div><div class='cw'>           |___| </div></pre>"
+end
+
+
+xmas_tree2
+title "a Christmas Tree"
+names {"tree"}
+descr "A large brightly decorated Christmas Tree stands in the corner of the room."
+extra {}
+"<pre><br/>
+<div class='bn'></div><div class='cpy'>             |<br/><br/>
+</div><div class='bn'></div><div class='cpy'>           \ ' /<br/><br/>
+</div><div class='bn'></div><div class='cpy'>         -- (</div><div class='cy'>*</div><div class='cpy'>) --<br/><br/>
+</div><div class='bn'></div><div class='cpg'>            &gt;</div><div class='cpy'>|</div><div class='cpg'>&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>           &gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>          &gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*<br/><br/>
+</div><div class='bn'></div><div class='cpg'>         &gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpm'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>        &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>       &gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>      &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>     </div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>*</div><div class='cpg'>&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>    &gt;</div><div class='cpy'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpc'>@</div><div class='cpg'>&lt;&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>   &gt;&gt;&gt;</div><div class='cpr'>*</div><div class='cpg'>&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>0</div><div class='cpg'>&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>  &gt;&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpw'>0</div><div class='cpg'>&gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'> &gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;<br/><br/>
+</div><div class='bn'></div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>@</div><div class='cpg'>&gt;</div><div class='cpc'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;</div><div class='cpc'>0</div><div class='cpg'>&lt;&lt;&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;&lt;<br/><br/>
+</div><div class='bn'></div><div class='cw'>            | |<br/>
+</div><div class='bn'></div><div class='cw'>           |___| </div></pre>"
+end
+
+newbgift
+names {"candy cane", "cane"}
+title "a <div class='cr'>candy </div><div class='cpw'>cane</div>"
+descr "A simple candy cane lies here. It seems to glow strangely."
+cost 400 PLATINUM_PIECE
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_DAGGER, 3, 3)
+WEAPON_TRANSFER(WPN_DAGGER, +5)
+dilcopy mvlev_restrict@function (49,0,25,"");
+extra {"$donotstore"}
+" This is to prevent excessive storage of items, mainly hard to get ones."
+extra {"$identify"}
+"heals in battle"
+extra {"$improved identify"}
+"<pre><br/>
+Heals in battle.</pre>"
+weight 10
+spell 70
+extra {}
+"You examine the candy cane and realize it may make a good weapon. Made by
+the Admin of Valhalla for New Players, weapons like these are hard to find.
+<pre><br/>
+<div class='bn'></div><div class='cpr'>        .----.      <br/>
+</div><div class='bn'></div><div class='cpw'>      .'`.  .'`.    <br/>
+</div><div class='bn'></div><div class='cpr'>    ,'-._:--:_.-\   <br/>
+</div><div class='bn'></div><div class='cpw'>    |-._'    | _.|  <br/>
+</div><div class='bn'></div><div class='cpr'>    |._ |    |' _|  <br/>
+</div><div class='bn'></div><div class='cpw'>    `---'    |-' |  <br/>
+</div><div class='bn'></div><div class='cpr'>             |.-'|  <br/>
+</div><div class='bn'></div><div class='cpw'>             |_.-|  <br/>
+</div><div class='bn'></div><div class='cpr'>             | _.|  <br/>
+</div><div class='bn'></div><div class='cpw'>             |' _|  <br/>
+</div><div class='bn'></div><div class='cpr'>             |-' |  <br/>
+</div><div class='bn'></div><div class='cpw'>             |.-'|  <br/>
+</div><div class='bn'></div><div class='cpr'>             |_.-|  <br/>
+</div><div class='bn'></div><div class='cpw'>             | _.|  <br/>
+</div><div class='bn'></div><div class='cpr'>             |' _|  <br/>
+</div><div class='bn'></div><div class='cpw'>             |-' |  <br/>
+</div><div class='bn'></div><div class='cpr'>             `---'  <br/>
+</div><div class='default'><br/></div></pre>"
+HIT_TRANSFER(+3)
+dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
+
+dilbegin candyheal();
+var
+	i : integer;
+        enemy :unitptr;
+        n:integer;
+
+code
+{
+	heartbeat := PULSE_SEC*5;
+:start:
+	wait(SFB_COM,(activator.type ==UNIT_ST_PC)and (activator==self.outside) and
+	(command(CMD_AUTO_COMBAT)) and (self.equip == WEAR_WIELD));
+	i := rnd (1,10);
+	enemy := self.outside.fighting;
+
+    if (enemy.level >IMMORTAL_LEVEL)
+      goto start;
+
+	if (i > 2) goto start;
+	n:= cast_spell (SPL_CURE_WOUNDS_2,self.outside,self,self.outside,"candy_heal@holiday20");
+
+	goto start;
+}
+
+dilend
+end
+
+candy_heart
+title "a <div class='cpr'>box of candy hearts</div>"
+names {"candy","box","hearts"}
+descr "A large box of <div class='cpr'>candy hearts</div><div class='default'> lies here.</div>"
+extra {}
+"A large box of candy hearts."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(12, 0)
+weight 2
+ end
+
+
+choco_heart
+title "a huge <div class='cpn'>chocolate </div><div class='cpr'>heart</div>"
+names {"a chocolate heart","candy heart","heart","staff"}
+descr "A large chocolate Reindeer shaped heart is laying here."
+extra {}
+"A large chocolate Reindeer shaped heart."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(12, 0)
+weight 2
+ end
+
+
+raisin
+title "a pile of juicy looking raisins"
+names {"raisins","pile"}
+descr "A rather large pile of raisins(?) lies here." 
+extra {}
+ "They have a distinct reindeer smell to them."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(2, 0)
+weight 2
+end
+
+
+/************************20 XMAS PRESENTS ************************/
+
+/*sash*/
+
+chest_str
+names {"poinsettia sash","sash","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> sash"
+descr "A glittery pile of cloth lies here."
+extra {}
+"The sash is made of a metallic fabric. It looks like a mesh of shimmering
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This sash was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+5)
+BRA_TRANSFER(-1)
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The sash gives added strength when worn. It can only be possessed
+by one person."
+ 
+end
+
+chest_dex
+names {"poinsettia sash","sash","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> sash"
+descr "A glittery pile of cloth lies here."
+extra {}
+"The sash is made of a metallic fabric. It looks like a mesh of shimmering
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This sash was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+5)
+CON_TRANSFER(-1)
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The sash gives added dexterity when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+chest_cha
+names {"poinsettia sash","sash","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> sash"
+descr "A glittery pile of cloth lies here."
+extra {}
+"The sash is made of a metallic fabric. It looks like a mesh of shimmering
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This sash was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+5)
+STR_TRANSFER(-1)
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The sash gives added charisma when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+
+chest_con
+names {"poinsettia sash","sash","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> sash"
+descr "A glittery pile of cloth lies here."
+extra {}
+"The sash is made of a metallic fabric. It looks like a mesh of shimmering
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This sash was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+5)
+DEX_TRANSFER(-1)
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The sash gives added constitution when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+chest_div
+names {"poinsettia sash","sash","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> sash"
+descr "A glittery pile of cloth lies here."
+extra {}
+"The sash is made of a metallic fabric. It looks like a mesh of shimmering
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This sash was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+5)
+MAG_TRANSFER (-1)
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The sash gives added divine aura when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+chest_bra
+names {"poinsettia sash","sash","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> sash"
+descr "A glittery pile of cloth lies here."
+extra {}
+"The sash is made of a metallic fabric. It looks like a mesh of shimmering
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This sash was hand crafted by the Admin of Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+5)
+CHA_TRANSFER (-1)
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The sash gives added intelligence when worn. It can only be possessed
+by one person."
+ 
+
+end
+ 
+
+chest_mag
+names {"poinsettia sash","sash","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> sash"
+descr "A glittery pile of cloth lies here."
+extra {}
+"The sash is made of a metallic fabric. It looks like a mesh of shimmering
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This sash was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+5)
+DIV_TRANSFER (-1)
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The sash gives added magic aura when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+/*anklet*/
+
+ankle_str
+names {"anklet of poinsettiass","anklet","poinsettia"}
+title "the <div class='cg'>anklet of </div><div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "a poinsettia anklet lies on the ground here."
+extra {}
+"The anklet is made of gold that has been fashioned into a circle of
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This anklet was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+5)
+BRA_TRANSFER(-1)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The anklet gives added strength when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+ankle_dex
+names {"anklet of poinsettias","anklet","poinsettias"}
+title "the <div class='cg'>anklet of </div><div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "a poinsettia anklet lies on the ground here."
+extra {}
+"The anklet is made of gold that has been fashioned into a circle of
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This anklet was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+5)
+CON_TRANSFER(-1)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The anklet gives added dexterity when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+ankle_cha
+names {"anklet of poinsettias","anklet","poinsettias"}
+title "the <div class='cg'>anklet of </div><div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "a poinsettia anklet lies on the ground here."
+extra {}
+"The anklet is made of gold that has been fashioned into a circle of
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This anklet was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+5)
+STR_TRANSFER(-1)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The anklet gives added charisma when worn. It can only be possessed
+by one person."
+ 
+
+end   
+
+ankle_con
+names {"anklet of poinsettias","anklet","poinsettias"}
+title "the <div class='cg'>anklet of </div><div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "a poinsettia anklet lies on the ground here."
+extra {}
+"The anklet is made of gold that has been fashioned into a circle of
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This anklet was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+5)
+DEX_TRANSFER(-1)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The anklet gives added constitution when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+ankle_div
+names {"anklet of poinsettias","anklet","poinsettias"}
+title "the <div class='cg'>anklet of </div><div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "a poinsettia anklet lies on the ground here."
+extra {}
+"The anklet is made of gold that has been fashioned into a circle of
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This anklet was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+5)
+MAG_TRANSFER (-1)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The anklet gives added divine aura when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+ankle_bra
+names {"anklet of poinsettias","anklet","poinsettias"}
+title "the <div class='cg'>anklet of </div><div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "a poinsettia anklet lies on the ground here."
+extra {}
+"The anklet is made of gold that has been fashioned into a circle of
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This anklet was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+5)
+CHA_TRANSFER (-1)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The anklet gives added intelligence when worn. It can only be possessed
+by one person."
+ 
+
+end    
+
+
+ankle_mag
+names {"anklet of poinsettias","anklet","poinsettias"}
+title "the <div class='cg'>anklet of </div><div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "a poinsettia anklet lies on the ground here."
+extra {}
+"The anklet is made of gold that has been fashioned into a circle of
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This anklet was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+5)
+DIV_TRANSFER (-1)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The anklet gives added magic aura when worn. It can only be possessed
+by one person."
+ 
+
+end  
+
+
+ankle_hit
+names {"anklet of poinsettias","anklet","poinsettias"}
+title "the <div class='cg'>anklet of </div><div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "a poinsettia anklet lies on the ground here."
+extra {}
+"The anklet is made of gold that has been fashioned into a circle of
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This anklet was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+HIT_TRANSFER(+4)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their combat skills."
+extra {"$improved identify"}
+"The anklet gives added combat skills when worn. It can only be possessed
+by one person."
+ 
+
+end 
+ 
+
+/*belt*/
+
+belt_str
+names {"belt of poinsettias","belt","poinsettias"}
+title "the <div class='cg'>belt of </div><div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "a poinsettia belt lies crumpled on the ground."
+extra {}
+"The belt is made of gold that has been fashioned into a circle of
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This belt was hand crafted by the Admin of Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+5)
+BRA_TRANSFER(-1)
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The belt gives added strength when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+belt_dex
+names {"belt of poinsettias","belt","poinsettias"}
+title "the <div class='cg'>belt of </div><div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "a poinsettia belt lies crumpled on the ground."
+extra {}
+"The belt is made of gold that has been fashioned into a circle of
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This belt was hand crafted by the Admin of Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+5)
+CON_TRANSFER(-1)
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The belt gives added dexterity when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+belt_cha
+names {"belt of poinsettias","belt","poinsettias"}
+title "the <div class='cg'>belt of </div><div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "a poinsettia belt lies crumpled on the ground."
+extra {}
+"The belt is made of gold that has been fashioned into a circle of
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This belt was hand crafted by the Admin of Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+5)
+STR_TRANSFER(-1)
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The belt gives added charisma when worn. It can only be possessed
+by one person."
+ 
+
+end      
+ 
+
+belt_con
+names {"belt of poinsettias","belt","poinsettias"}
+title "the <div class='cg'>belt of </div><div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "a poinsettia belt lies crumpled on the ground."
+extra {}
+"The belt is made of gold that has been fashioned into a circle of
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This belt was hand crafted by the Admin of Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+5)
+DEX_TRANSFER(-1)
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The belt gives added constitution when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+belt_div
+names {"belt of poinsettias","belt","poinsettias"}
+title "the <div class='cg'>belt of </div><div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "a poinsettia belt lies crumpled on the ground."
+extra {}
+"The belt is made of gold that has been fashioned into a circle of
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This belt was hand crafted by the Admin of Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+5)
+MAG_TRANSFER (-1)
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The belt gives added divine aura when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+belt_bra
+names {"belt of poinsettias","belt","poinsettias"}
+title "the <div class='cg'>belt of </div><div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "a poinsettia belt lies crumpled on the ground."
+extra {}
+"The belt is made of gold that has been fashioned into a circle of
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This belt was hand crafted by the Admin of Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+5)
+CHA_TRANSFER (-1)
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The belt gives added intelligence when worn. It can only be possessed
+by one person."
+ 
+
+end    
+
+
+belt_mag
+names {"belt of poinsettias","belt","poinsettias"}
+title "the <div class='cg'>belt of </div><div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "a poinsettia belt lies crumpled on the ground."
+extra {}
+"The belt is made of gold that has been fashioned into a circle of
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This belt was hand crafted by the Admin of Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+5)
+DIV_TRANSFER (-1)
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The belt gives added magic aura when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+
+/*rings*/
+
+ring_str
+names {"poinsettia ring","ring","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> ring"
+descr "A poinsettia ring gleams on the ground."
+extra {}
+"The ring is made of gold with a variegated poinsettia as the center
+point. The petals are creamy green near the gold center and change 
+gradually to a bright pink at the tips. This ring was hand crafted by the 
+Admin of Valhalla and carries a yuletide message from them wishing you 
+a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+5)
+BRA_TRANSFER(-1)
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The ring gives added strength when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+ring_dex
+names {"poinsettia ring","ring","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> ring"
+descr "A poinsettia ring gleams on the ground."
+extra {}
+"The ring is made of gold with a variegated poinsettia as the center
+point. The petals are creamy green near the gold center and change 
+gradually to a bright pink at the tips. This ring was hand crafted by the 
+Admin of Valhalla and carries a yuletide message from them wishing you 
+a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+5)
+CON_TRANSFER(-1)
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The ring gives added dexterity when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+ring_cha
+names {"poinsettia ring","ring","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> ring"
+descr "A poinsettia ring gleams on the ground."
+extra {}
+"The ring is made of gold with a variegated poinsettia as the center
+point. The petals are creamy green near the gold center and change 
+gradually to a bright pink at the tips. This ring was hand crafted by the 
+Admin of Valhalla and carries a yuletide message from them wishing you 
+a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+5)
+STR_TRANSFER(-1)
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The ring gives added charisma when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+ring_con
+names {"poinsettia ring","ring","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> ring"
+descr "A poinsettia ring gleams on the ground."
+extra {}
+"The ring is made of gold with a variegated poinsettia as the center
+point. The petals are creamy green near the gold center and change 
+gradually to a bright pink at the tips. This ring was hand crafted by the 
+Admin of Valhalla and carries a yuletide message from them wishing you 
+a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+5)
+DEX_TRANSFER(-1)
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The ring gives added constitution when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+ring_div
+names {"poinsettia ring","ring","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> ring"
+descr "A poinsettia ring gleams on the ground."
+extra {}
+"The ring is made of gold with a variegated poinsettia as the center
+point. The petals are creamy green near the gold center and change 
+gradually to a bright pink at the tips. This ring was hand crafted by the 
+Admin of Valhalla and carries a yuletide message from them wishing you 
+a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+5)
+MAG_TRANSFER (-1)
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The ring gives added divine aura when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+ring_bra
+names {"poinsettia ring","ring","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> ring"
+descr "A poinsettia ring gleams on the ground."
+extra {}
+"The ring is made of gold with a variegated poinsettia as the center
+point. The petals are creamy green near the gold center and change 
+gradually to a bright pink at the tips. This ring was hand crafted by the 
+Admin of Valhalla and carries a yuletide message from them wishing you 
+a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+5)
+CHA_TRANSFER (-1)
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The ring gives added intelligence when worn. It can only be possessed
+by one person."
+ 
+
+end
+ 
+ring_mag
+names {"poinsettia ring","ring","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> ring"
+descr "A poinsettia ring gleams on the ground."
+extra {}
+"The ring is made of gold with a variegated poinsettia as the center
+point. The petals are creamy green near the gold center and change 
+gradually to a bright pink at the tips. This ring was hand crafted by the 
+Admin of Valhalla and carries a yuletide message from them wishing you 
+a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+5)
+DIV_TRANSFER (-1)
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The ring gives added magic aura when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+
+
+/*bracelets*/
+
+wrist_str
+names {"poinsettia bracer","bracer"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> bracer"
+descr "A bracer made of gold lies on the ground here."
+extra {}
+"The bracer is made of a gold mesh of shimmering variegated poinsettias. 
+The petals are creamy green near the gold center and change gradually to a 
+bright pink at the tips. They meet at each point. This bracer was hand 
+crafted by the Admin of Valhalla and carries a yuletide message from them 
+wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy 
+New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+5)
+BRA_TRANSFER(-1)
+extra {"$identify"}
+"This bracer will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The bracer gives added strength when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+wrist_dex
+names {"poinsettia bracer","bracer"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> bracer"
+descr "A bracer made of gold lies on the ground here."
+extra {}
+"The bracer is made of a gold mesh of shimmering variegated poinsettias. 
+The petals are creamy green near the gold center and change gradually to a 
+bright pink at the tips. They meet at each point. This bracer was hand 
+crafted by the Admin of Valhalla and carries a yuletide message from them 
+wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy 
+New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+5)
+CON_TRANSFER(-1)
+extra {"$identify"}
+"This bracer will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The bracer gives added dexterity when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+wrist_cha
+names {"poinsettia bracer","bracer"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> bracer"
+descr "A bracer made of gold lies on the ground here."
+extra {}
+"The bracer is made of a gold mesh of shimmering variegated poinsettias. 
+The petals are creamy green near the gold center and change gradually to a 
+bright pink at the tips. They meet at each point. This bracer was hand 
+crafted by the Admin of Valhalla and carries a yuletide message from them 
+wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy 
+New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+5)
+STR_TRANSFER(-1)
+extra {"$identify"}
+"This bracer will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The bracer gives added charisma when worn. It can only be possessed
+by one person."
+ 
+
+end
+  
+wrist_con
+names {"poinsettia bracer","bracer"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> bracer"
+descr "A bracer made of gold lies on the ground here."
+extra {}
+"The bracer is made of a gold mesh of shimmering variegated poinsettias. 
+The petals are creamy green near the gold center and change gradually to a 
+bright pink at the tips. They meet at each point. This bracer was hand 
+crafted by the Admin of Valhalla and carries a yuletide message from them 
+wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy 
+New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+5)
+DEX_TRANSFER(-1)
+extra {"$identify"}
+"This bracer will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The bracer gives added constitution when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+wrist_div
+names {"poinsettia bracer","bracer"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> bracer"
+descr "A bracer made of gold lies on the ground here."
+extra {}
+"The bracer is made of a gold mesh of shimmering variegated poinsettias. 
+The petals are creamy green near the gold center and change gradually to a 
+bright pink at the tips. They meet at each point. This bracer was hand 
+crafted by the Admin of Valhalla and carries a yuletide message from them 
+wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy 
+New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+5)
+MAG_TRANSFER (-1)
+extra {"$identify"}
+"This bracer will grant its wearer an added boost to their divinity."
+extra {"$improved identify"}
+"The bracer gives added divinity when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+wrist_bra
+names {"poinsettia bracer","bracer"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> bracer"
+descr "A bracer made of poinsettias lies on the ground here."
+extra {}
+"The bracer is made of a gold mesh of shimmering variegated poinsettias. 
+The petals are creamy green near the gold center and change gradually to a 
+bright pink at the tips. They meet at each point. This bracer was hand 
+crafted by the Admin of Valhalla and carries a yuletide message from them 
+wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy 
+New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+5)
+CHA_TRANSFER (-1)
+extra {"$identify"}
+"This bracer will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The bracer gives added intelligence when worn. It can only be possessed
+by one person."
+ 
+
+end
+  
+wrist_mag
+names {"poinsettia bracer","bracer"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> bracer"
+descr "A bracer made of poinsettias lies on the ground here."
+extra {}
+"The bracer is made of a gold mesh of shimmering variegated poinsettias. 
+The petals are creamy green near the gold center and change gradually to a 
+bright pink at the tips. They meet at each point. This bracer was hand 
+crafted by the Admin of Valhalla and carries a yuletide message from them 
+wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy 
+New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+5)
+DIV_TRANSFER (-1)
+extra {"$identify"}
+"This bracer will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The bracer gives added magic aura when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+/*necklace*/
+
+neck_str
+names {"poinsettia chain","necklace", "chain"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> chain"
+descr "A chain made of poinsettias lies on the ground here."
+extra {}
+"The chain is made of a gold mesh of shimmering variegated poinsettias. 
+The petals are creamy green near the gold center and change gradually to a 
+bright pink at the tips. They meet at each point. This chain was hand 
+crafted by the Admin of Valhalla and carries a yuletide message from them 
+wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy 
+New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+5)
+BRA_TRANSFER(-1)
+extra {"$identify"}
+"This chain will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The chain gives added strength when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+neck_dex
+names {"poinsettia chain","chain","necklace"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> chain"
+descr "A chain made of poinsettias lies on the ground here."
+extra {}
+"The chain is made of a gold mesh of shimmering variegated poinsettias. 
+The petals are creamy green near the gold center and change gradually to a 
+bright pink at the tips. They meet at each point. This chain was hand 
+crafted by the Admin of Valhalla and carries a yuletide message from them 
+wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy 
+New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+5)
+CON_TRANSFER(-1)
+extra {"$identify"}
+"This chain will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The chain gives added dexterity when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+neck_cha
+names {"poinsettia chain","necklace", "chain"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> chain"
+descr "A chain made of poinsettias lies on the ground here."
+extra {}
+"The chain is made of a gold mesh of shimmering variegated poinsettias. 
+The petals are creamy green near the gold center and change gradually to a 
+bright pink at the tips. They meet at each point. This chain was hand 
+crafted by the Admin of Valhalla and carries a yuletide message from them 
+wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy 
+New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+5)
+STR_TRANSFER(-1)
+extra {"$identify"}
+"This chain will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The chain gives added charisma when worn. It can only be possessed
+by one person."
+ 
+
+end
+  
+neck_con
+names {"poinsettia chain","necklace", "chain"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> chain"
+descr "A chain made of poinsettias lies on the ground here."
+extra {}
+"The chain is made of a gold mesh of shimmering variegated poinsettias. 
+The petals are creamy green near the gold center and change gradually to a 
+bright pink at the tips. They meet at each point. This chain was hand 
+crafted by the Admin of Valhalla and carries a yuletide message from them 
+wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy 
+New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+5)
+DEX_TRANSFER(-1)
+extra {"$identify"}
+"This chain will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The chain gives added constitution when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+neck_div
+names {"poinsettia chain","necklace", "chain"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> chain"
+descr "A chain made of poinsettias lies on the ground here."
+extra {}
+"The chain is made of a gold mesh of shimmering variegated poinsettias. 
+The petals are creamy green near the gold center and change gradually to a 
+bright pink at the tips. They meet at each point. This chain was hand 
+crafted by the Admin of Valhalla and carries a yuletide message from them 
+wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy 
+New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+5)
+MAG_TRANSFER (-1)
+extra {"$identify"}
+"This chain will grant its wearer an added boost to their divinity."
+extra {"$improved identify"}
+"The chain gives added divinity when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+neck_bra
+names {"poinsettia chain","necklace", "chain"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> chain"
+descr "A chain made of poinsettias lies on the ground here."
+extra {}
+"The chain is made of a gold mesh of shimmering variegated poinsettias. 
+The petals are creamy green near the gold center and change gradually to a 
+bright pink at the tips. They meet at each point. This chain was hand 
+crafted by the Admin of Valhalla and carries a yuletide message from them 
+wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy 
+New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+5)
+CHA_TRANSFER (-1)
+extra {"$identify"}
+"This chain will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The chain gives added intelligence when worn. It can only be possessed
+by one person."
+ 
+
+end
+  
+neck_mag
+names {"poinsettia chain","necklace", "chain"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> chain"
+descr "A chain made of poinsettias lies on the ground here."
+extra {}
+"The chain is made of a gold mesh of shimmering variegated poinsettias. 
+The petals are creamy green near the gold center and change gradually to a 
+bright pink at the tips. They meet at each point. This chain was hand 
+crafted by the Admin of Valhalla and carries a yuletide message from them 
+wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy 
+New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+5)
+DIV_TRANSFER (-1)
+extra {"$identify"}
+"This chain will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The chain gives added magic aura when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+/*cape*/
+
+cape_str
+names {"poinsettia cloak","cloak","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> cloak"
+descr "Cloth that shimmers in the light lies in a puddle here."
+extra {}
+"The cloak is made of a metallic fabric. It looks like a mesh of shimmering
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This cloak was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+5)
+BRA_TRANSFER(-1)
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The cloak gives added strength when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+cape_dex
+names {"poinsettia cloak","cloak","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> cloak"
+descr "Cloth that shimmers in the light lies in a puddle here."
+extra {}
+"The cloak is made of a metallic fabric. It looks like a mesh of shimmering
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This cloak was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+5)
+CON_TRANSFER(-1)
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The cloak gives added dexterity when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+cape_cha
+names {"poinsettia cloak","cloak","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> cloak"
+descr "cloth that shimmers in the light lies in a puddle here."
+extra {}
+"The cloak is made of a metallic fabric. It looks like a mesh of shimmering
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This cloak was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+5)
+STR_TRANSFER(-1)
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The cloak gives added charisma when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+
+cape_con
+names {"poinsettia cloak","cloak","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> cloak"
+descr "Cloth that shimmers in the light lies in a puddle here."
+extra {}
+"The cloak is made of a metallic fabric. It looks like a mesh of shimmering
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This cloak was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+5)
+DEX_TRANSFER(-1)
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The cloak gives added constitution when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+cape_div
+names {"poinsettia cloak","cloak","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> cloak"
+descr "Cloth that shimmers in the light lies in a puddle here."
+extra {}
+"The cloak is made of a metallic fabric. It looks like a mesh of shimmering
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This cloak was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+5)
+MAG_TRANSFER (-1)
+extra {"$identify"}
+"This cape will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The cape gives added divine aura when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+cape_bra
+names {"poinsettia cloak","cloak","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> cloak"
+descr "Cloth that shimmers in the light lies in a puddle here."
+extra {}
+"The cloak is made of a metallic fabric. It looks like a mesh of shimmering
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This cloak was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+5)
+CHA_TRANSFER (-1)
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The cloak gives added intelligence when worn. It can only be possessed
+by one person."
+ 
+
+end
+ 
+
+cape_mag
+names {"poinsettia cloak","cloak","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> cloak"
+descr "Cloth that shimmers in the light lies in a puddle here."
+extra {}
+"The cloak is made of a metallic fabric. It looks like a mesh of shimmering
+variegated poinsettias. The petals are creamy green near the gold center
+and change gradually to a bright pink at the tips. They meet at each point.  
+This cloak was hand crafted by the Admin of  Valhalla and carries a 
+yuletide message from them wishing you a <div class='cpg'>Merry Holiday Season</div><div class='default'> 
+and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+5)
+DIV_TRANSFER (-1)
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The cloak gives added magic aura when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+/*backplate*/
+
+back_str
+names {"backplate of poinsettias","backplate","poinsettias"}
+title "the backplate of <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "A gold backplate with a poinsettia etched on it lies on the ground here."
+extra {}
+"The backplate is made of unknown material, with a large poinsettia etched
+in its center and painted so that the petals start at green in the center and 
+change to a bright pink at the tips. This backplate was hand crafted by the 
+Admin of Valhalla and carries a yuletide message from them wishing you a 
+<div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+5)
+BRA_TRANSFER(-1)
+extra {"$identify"}
+"This backplate will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The backplate gives added strength when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+back_dex
+names {"backplate of poinsettias","backplate","poinsettias"}
+title "the backplate of <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "A gold backplate with a poinsettia etched on it lies on the ground here."
+extra {}
+"The backplate is made of unknown material, with a large poinsettia etched
+in its center and painted so that the petals start at green in the center and 
+change to a bright pink at the tips. This backplate was hand crafted by the 
+Admin of Valhalla and carries a yuletide message from them wishing you a 
+<div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+5)
+CON_TRANSFER(-1)
+extra {"$identify"}
+"This backplate will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The backplate gives added dexterity when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+back_cha
+names {"backplate of poinsettias","backplate","poinsettias"}
+title "the backplate of <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "A gold backplate with a poinsettia etched on it lies on the ground here."
+extra {}
+"The backplate is made of unknown material, with a large poinsettia etched
+in its center and painted so that the petals start at green in the center and 
+change to a bright pink at the tips. This backplate was hand crafted by the 
+Admin of Valhalla and carries a yuletide message from them wishing you a 
+<div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+5)
+STR_TRANSFER(-1)
+extra {"$identify"}
+"This backplate will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The backplate gives added charisma when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+back_con
+names {"backplate of poinsettias","backplate","poinsettias"}
+title "the backplate of <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "A gold backplate with a poinsettia etched on it lies on the ground here."
+extra {}
+"The backplate is made of unknown material, with a large poinsettia etched
+in its center and painted so that the petals start at green in the center and 
+change to a bright pink at the tips. This backplate was hand crafted by the 
+Admin of Valhalla and carries a yuletide message from them wishing you a 
+<div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+5)
+DEX_TRANSFER(-1)
+extra {"$identify"}
+"This backplate will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The backplate gives added constitution when worn. It can only be possessed
+by one person."
+ 
+
+end  
+
+back_div
+names {"backplate of poinsettias","backplate","poinsettias"}
+title "the backplate of <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "A gold backplate with a poinsettia etched on it lies on the ground here."
+extra {}
+"The backplate is made of unknown material, with a large poinsettia etched
+in its center and painted so that the petals start at green in the center and 
+change to a bright pink at the tips. This backplate was hand crafted by the 
+Admin of Valhalla and carries a yuletide message from them wishing you a 
+<div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+5)
+MAG_TRANSFER (-1)
+extra {"$identify"}
+"This backplate will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The backplate gives added divine aura when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+back_bra
+names {"backplate of poinsettias","backplate","poinsettias"}
+title "the backplate of <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "A gold backplate with a poinsettia etched on it lies on the ground here."
+extra {}
+"The backplate is made of unknown material, with a large poinsettia etched
+in its center and painted so that the petals start at green in the center and 
+change to a bright pink at the tips. This backplate was hand crafted by the 
+Admin of Valhalla and carries a yuletide message from them wishing you a 
+<div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+5)
+CHA_TRANSFER (-1)
+extra {"$identify"}
+"This backplate will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The backplate gives added intelligence when worn. It can only be possessed
+by one person."
+ 
+
+end 
+
+back_mag
+names {"backplate of poinsettias","backplate","poinsettias"}
+title "the backplate of <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tias</div>"
+descr "A bright gold backplate with a poinsettia etched on it lies on the ground here."
+extra {}
+"The backplate is made of unknown material, with a large poinsettia etched
+in its center and painted so that the petals start at green in the center and 
+change to a bright pink at the tips. This backplate was hand crafted by the 
+Admin of Valhalla and carries a yuletide message from them wishing you a 
+<div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+5)
+DIV_TRANSFER (-1)
+extra {"$identify"}
+"This backplate will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The backplate gives added magic aura when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+
+  
+/*earring*/
+
+ear_str
+names {"poinsettia earring","earring","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> earring"
+descr "A post earring in the shape of a poinsettia lies on the ground."
+extra {}
+"The earring is made of fine gold beaten into the shape of a poinsettia.  
+The petals are variegated and start at pale creamy green near the center and 
+end in bright pink.  This earring was hand crafted by the Admin of
+Valhalla and carries a yuletide message from them wishing you a
+<div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+5)
+BRA_TRANSFER(-1)
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The earring gives added strength when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+ear_dex
+names {"poinsettia earring","earring","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> earring"
+descr "A post earring in the shape of a poinsettia lies on the ground."
+extra {}
+"The earring is made of fine gold beaten into the shape of a poinsettia.  
+The petals are variegated and start at pale creamy green near the center and 
+end in bright pink.  This earring was hand crafted by the Admin of
+Valhalla and carries a yuletide message from them wishing you a
+<div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+5)
+CON_TRANSFER(-1)
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The earring gives added dexterity when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+ear_cha
+names {"poinsettia earring","earring","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> earring"
+descr "A post earring in the shape of a poinsettia lies on the ground."
+extra {}
+"The earring is made of fine gold beaten into the shape of a poinsettia.  
+The petals are variegated and start at pale creamy green near the center and 
+end in bright pink.  This earring was hand crafted by the Admin of
+Valhalla and carries a yuletide message from them wishing you a
+<div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+5)
+STR_TRANSFER(-1)
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The earring gives added charisma when worn. It can only be possessed
+by one person."
+ 
+
+end   
+
+
+ear_con
+names {"poinsettia earring","earring","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> earring"
+descr "A post earring in the shape of a poinsettia lies on the ground."
+extra {}
+"The earring is made of fine gold beaten into the shape of a poinsettia.  
+The petals are variegated and start at pale creamy green near the center and 
+end in bright pink.  This earring was hand crafted by the Admin of
+Valhalla and carries a yuletide message from them wishing you a
+<div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+5)
+DEX_TRANSFER(-1)
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The earring gives added constitution when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+ear_div
+names {"poinsettia earring","earring","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> earring"
+descr "A post earring in the shape of a poinsettia lies on the ground."
+extra {}
+"The earring is made of fine gold beaten into the shape of a poinsettia.  
+The petals are variegated and start at pale creamy green near the center and 
+end in bright pink.  This earring was hand crafted by the Admin of
+Valhalla and carries a yuletide message from them wishing you a
+<div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+5)
+MAG_TRANSFER (-1)
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The earring gives added divine aura when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+ear_bra
+names {"poinsettia earring","earring","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> earring"
+descr "A post earring in the shape of a poinsettia lies on the ground."
+extra {}
+"The earring is made of fine gold beaten into the shape of a poinsettia.  
+The petals are variegated and start at pale creamy green near the center and 
+end in bright pink.  This earring was hand crafted by the Admin of
+Valhalla and carries a yuletide message from them wishing you a
+<div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+5)
+CHA_TRANSFER (-1)
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The earring gives added intelligence when worn. It can only be possessed
+by one person."
+ 
+
+end     
+ 
+
+ear_mag
+names {"poinsettia earring","earring","poinsettia"}
+title "a <div class='cpy'>poi</div><div class='cpg'>nset</div><div class='cpm'>tia</div> earring"
+descr "A post earring in the shape of a poinsettia lies on the ground."
+extra {}
+"The earring is made of fine gold and a bright white gem which has been cut in the
+shape of a poinsettia.  This earring is made directly by the Admin of
+Valhalla and carries a yuletide message from them wishing you a
+<div class='cpg'>Merry Holiday Season</div><div class='default'> and a very </div><div class='cpr'>Happy New Year</div>."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+5)
+DIV_TRANSFER (-1)
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The earring gives added magic aura when worn. It can only be possessed
+by one person."
+ 
+
+end
+
+
+
+/***************************** END XMAS PRESENTS ******************/
+
+ppudd
+title "a plum pudding"
+names {"plum pudding","pudding"}
+descr "A pudding lies here flaming.." 
+extra {}
+ "It looks delicious."
+extra {"$identify"}
+"This pudding will raise your dexterity when quaffed."
+
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(60,SPL_RAISE_DEX,SPL_NONE,SPL_NONE)
+weight 1
+end
+
+eggnog
+title "a cup of eggnog"
+names {"eggnog","cup"}
+descr "A cup of thick creamy eggnog lies here." 
+extra {}
+ "This looks so thick that a spoon will stand in it."
+extra {"$identify"}
+"This eggnog will raise your charisma when quaffed."
+
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(60,SPL_RAISE_CHA,SPL_NONE,SPL_NONE)
+weight 1
+end
+
+fcake
+names {"fruitcake","fruit cake", "cake"}
+title "a fruitcake"
+descr "A fruitcake has been left here."
+extra {}
+"This cake was fresh baked by Santa's elves and looks to be loaded with nuts
+currants and candied fruit. It looks dense enough to be a doorstop."
+extra {"$identify"}
+"This fruitcake will raise your strength when quaffed."
+weight 2
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(60,SPL_RAISE_STR,SPL_NONE,SPL_NONE)
+end
+
+mwine
+title "a cup of mulled wine"
+names {"wine","cup"}
+descr "A cup of warm mulled wine lies here." 
+extra {}
+ "Spices float in the red warm wine."
+extra {"$identify"}
+"This wine will raise your constitution when quaffed."
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(60,SPL_RAISE_CON,SPL_NONE,SPL_NONE)
+weight 1
+end
+
+northpole
+names {"pole"}
+title "a magical pole of ice"
+descr "A <div class='cpr'>m</div><div class='cpw'>a</div><div class='cpr'>g</div><div class='cpw'>i</div><div class='cpr'>c</div><div class='cpw'>a</div><div class='cpr'>l </div><div class='cpw'>p</div><div class='cpr'>o</div><div class='cpw'>l</div><div class='cpr'>e </div><div class='cpw'>o</div><div class='cpr'>f </div><div class='cpw'>i</div><div class='cpr'>c</div><div class='cpw'>e</div> stands in the center of the room"
+extra {}
+"It is a huge pole of sparkling ice in with red and white spriraling around it.
+ Printed on the pole is the following:
+<pre><br/>
+Type touch pole to visit Santa's Workshop!<br/>
+</pre>"
+weight 5000
+dilcopy touch_pole();
+end
+
+rocket
+names {"rocket"}
+title "a rocket"
+descr "A big rocket has been set up here.."
+extra {}
+"The rocket has a large cargo area in a hole in the top of it. If you put a paper in the
+hole the message on the paper will be displayed in the explosion. Remember
+no swearing and keep it to a max of 3 lines. Anyone caught abusing this
+will lose the right to use them. The rockets will disappear shortly after
+new years so don't try to save them :)  LIGHT ROCKET to activate it.  Hmm that cargo area
+might even be big enough for people to fit in it."
+type ITEM_CONTAINER
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD, MANIPULATE_ENTER}
+MATERIAL_WOOD("Heavy oak")
+weight 2
+CONTAINER_DEF(1000)
+
+dilbegin rocket ();
+external
+	act_world (s:string);
+	ast_launch();
+	act_launcher(s:string);
+var
+	pc,item 	: unitptr;
+	s,pname,col,col2 : string;
+code
+{
+	heartbeat:=PULSE_SEC*3;
+:start:
+	wait (SFB_CMD, (command ("light") and ("rocket" in argument)));
+	block;
+	pc:=activator;
+	secure (pc,start);
+	if(pc.outside.type!=UNIT_ST_ROOM)
+	{
+		act ("You can not light that from here!",
+		A_ALWAYS,pc,null,null,TO_CHAR);
+		unsecure (pc);
+		goto start;
+	}
+	item:=findunit(pc,argument,FIND_UNIT_SURRO,null);
+	if ((item==null) or (item!=self))
+    {
+		unsecure (pc);
+		goto start;
+    }
+    if (item.outside.type!=UNIT_ST_ROOM)
+	{
+		act ("You need to put it on the ground first.",
+		A_ALWAYS,pc,null,null,TO_CHAR);
+		unsecure (pc);
+		unsecure (item);
+		goto start;
+	}
+    secure (item,start);
+    act ("$1n bends down and lights $2n.",A_ALWAYS,pc,self,null,TO_REST);
+    act ("You bend down and light $2n.",A_ALWAYS,pc,self,null,TO_CHAR);
+	pname:=pc.name;
+	pause;
+    act ("<div class='cr'>ss</div><div class='cpr'>ss</div><div class='cpy'>ss</div><div class='cy'>ss</div><div class='cr'>ss</div><div class='cpr'>ss</div><div class='cy'>ss</div><div class='cpy'>ss</div><div class='cw'></div>",
+		A_ALWAYS,self,null,null,TO_ALL);
+    pause;
+    act ("$1n leaves the ground with blinding speed!",A_ALWAYS,self,null,null,TO_ALL);
+    self.minv:=200;
+    pause;
+
+    on rnd (1,6) goto ired, igreen, iyellow, iblue, imagenta, icyan;
+
+	:ired:
+		col := "cpr";
+		col2 := "<div class='"+col+"'>red";
+		goto conti;
+
+	:igreen:
+		col := "cpg";
+		col2 := "<div class='"+col+"'>green";
+		goto conti;
+
+	:iyellow:
+		col := "cpy";
+		col2 := "<div class='"+col+"'>yellow";
+		goto conti;
+
+	:iblue:
+		col := "cpb";
+		col2 := "<div class='"+col+"'>blue";
+		goto conti;
+
+	:imagenta:
+		col := "cpm";
+		col2 := "<div class='"+col+"'>purple";
+		goto conti;
+
+	:icyan:
+		col := "cpc";
+		col2 := "<div class='"+col+"'>cyan";
+		goto conti;
+
+	:iwhite:
+		col := "cpw";
+		col2 := "<div class='"+col+"'>white";
+		goto conti;
+	   
+:conti:
+	
+	s:="";
+	item:=self.inside;
+	while (item)
+	{
+		if (item.type!=UNIT_ST_OBJ)
+		{
+			item:=item.next;
+			continue;
+		}
+		if (item.objecttype!=ITEM_NOTE)
+		{
+			item:=item.next;
+			continue;
+		}
+		if (item.extra==null)
+			goto default;
+		s:=item.extra.descr;
+		break;
+   }
+	if (s=="")
+		goto default;
+
+	act_launcher(pname);
+	act_world ("<div class='cpw'>You hear a loud boom!</div><br/>");
+	ast_launch();
+	act_world ("<div class='cpw'>A burst of " + col2 + " sparkles</div> explodes in " +
+		"the sky above spelling out <br/><br/><div class='"+col+"'>" + s +"<br/></div></div>");
+
+	item:=self.inside;
+	while (item)
+	{
+		if (item.type==UNIT_ST_PC)
+		{
+			item.minv:=0;
+			act("The rocket you are riding in explodes dumping your guts on your keyboard!",
+				A_ALWAYS,item,null,null,TO_CHAR);
+		}
+		item:=item.next;
+	}
+
+	self.minv:=0;
+	destroy(self);
+	quit;
+
+	:default:
+	act_world("<div class='cpw'>You hear a loud boom!</div><div class='cw'><br/></div>");
+	ast_launch();
+	act_world("<div class='cpw'>A burst of </div>" + col2 + " sparkles</div> explodes in the " +
+	"sky above and drifts spectacularly down to the ground.<br/>");
+
+	item:=self.inside;
+	while (item)
+	{
+		if (item.type==UNIT_ST_PC)
+		{
+			item.minv:=0;
+			act("The rocket you are riding in explodes dumping your guts on your keyboard!",
+				A_ALWAYS,item,null,null,TO_CHAR);
+		}
+		item:=item.next;
+	}
+	self.minv:=0;
+	destroy (self);
+	quit;
+
+}
+dilend
+end
+
+%mobiles
+
+santa
+names {"santa","man"}
+title "Santa Claus"
+descr "Santa sits here checking his list."
+extra {}
+"He's dressed in nothing more then a bright red union suit."
+alignment +1000
+level 199
+sex SEX_MALE
+weight 400
+height 180
+exp 110
+race RACE_SPIRIT
+MSET_ABILITY (20,20,1,20,15,4,15,5)
+MSET_WEAPON(9,4,4,4,3,3)
+MSET_SPELL(9,4,0,7,6,5,10,14,6,6,6)
+flags {UNIT_FL_NO_TELEPORT}
+romflags{CHAR_DETECT_INVISIBLE}
+dilcopy santa_shout();
+dilcopy look_santa();
+dilcopy spirit_nokill();
+end
+
+elf
+names {"howard","elf"}
+title "Howard"
+descr "A busy little elf stands here making last minute gifts."
+extra {}
+"You notice this to be Howard, one of Santa's elves."
+alignment +1000
+level 150
+sex SEX_MALE
+weight 100
+height 107
+race RACE_SPIRIT
+MSET_ABILITY (20,20,1,20,15,4,15,5)
+MSET_WEAPON(9,4,4,4,3,3)
+MSET_SPELL(9,4,0,7,6,5,10,14,6,6,6)
+flags {UNIT_FL_NO_TELEPORT}
+romflags{CHAR_DETECT_INVISIBLE}
+dilcopy spirit_nokill();
+dilcopy christmas_2020();
+end      
+
+graf_jan	   
+names {"janitor"}
+title "the janitor"
+descr "A harried janitor is walking around, cleaning graffiti."
+extra {}
+"This janitor appears to be feeling overwhelmed. He was called in 
+to clean up the mess of graffiti that has proliferated around town!"
+romflags {CHAR_PROTECTED}
+M_AVG_HUMAN(6, SEX_MALE)
+alignment 900
+money 5 IRON_PIECE
+
+dilcopy wander_zones@function("udgaard", 20, 1, 1);
+dilbegin clean_graf ();
+var
+	u : unitptr;
+	
+code
+{
+	heartbeat := PULSE_SEC*5;
+:start:
+	if(not("$secretgraffitiextra" in self.outside.extra))
+	{
+		pause;
+		goto start;
+	}
+	pause;
+	addextra (self.extra, {"$block wander"}, "");
+	exec("say Graffiti. Everywhere Graffiti.", self);
+	pause;
+	exec("say Which one of those Gods decided this would be a good idea?", self);
+	pause;
+	exec("emote mumbles something under his breath.", self);
+	pause;
+	u := load("graf_r@g_q");	
+	exec("emote pulls a fresh can of <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover from his bag.", self);
+	pause;
+	exec("hold remover",self);
+	pause;
+	exec("emote appears frustrated, as he begins shaking the can.", self);
+	pause;
+	exec("use remover",self);
+	pause; pause; pause; pause;
+	exec("say Someone is going on Santa's naughty list for this!", self);
+	pause;
+	exec("remove remover",self);
+	destroy(u);
+	pause;
+	exec("emote puts the empty can of <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover in his bag.", self);
+	subextra (self.extra,"$block wander");
+	pause;
+}
+dilend
+
+end
+
+// comment out this entire load section after the holiday season.
+// this will maitain the items for players, but take away some christmas cheer.
+
+%reset 
+load xmas_tree2 into hall@newbie         local 1
+load xmas_tree into square@udgaard       local 1
+load xmas_tree2 into postoffice@udgaard  local 1
+load xmas_tree into market_sq@midgaard   local 1
+load xmas_tree2 into city_2@nymgaard     local 1
+load xmas_tree into city_sq1@xiyang      local 1
+load xmas_tree into city2@volcano        local 1
+load mistletoe into city_1@nymgaard      local 1
+load mistletoe into moot_cen@udgaard     local 1
+load xmas_tree into cave15@galgachus     local 1
+load mistletoe into info_cen@galgachus   local 1
+load mistletoe into inn@udgaard          local 1
+load mistletoe into clan_enter@clan_aoh  local 1
+load mistletoe into clan_enter@clan_bus  local 1
+load mistletoe into clan_enter@clan_dra  local 1
+load mistletoe into	clan_enter@clan_kin  local 1
+load mistletoe into	clan_enter@clan_uch  local 1
+load santa into study max 1
+load elf into workshop max 1
+load northpole into square@udgaard max 1
+load graf_jan into village_rd6@udgaard max 2
+load graf_jan into village_rd2@udgaard max 2
+%end

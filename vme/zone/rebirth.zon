@@ -5802,26 +5802,26 @@ self.max_hp:=3*self.abilities[ABIL_HP]+20;
 :end:
    sendto("rebirth_done", self);
 
-/* cycle through wearable equipment and resize */
-self.weight:=self.baseweight;
+   /* cycle through wearable equipment and resize */
+   set_weight(self, self.baseweight);
 
    tempu := self.inside;
    while(tempu)
-    {
- if ((tempu.names.[0]=="storage container") and (tempu.minv>200))
-  {
-  tempu.baseweight:=0;
-  tempu.weight:=0;
-  }
+   {
+      if ((tempu.names.[0]=="storage container") and (tempu.minv>200))
+      {
+         set_weight_base(tempu, 0);
+         set_weight(tempu, 0);
+      }
 
-   if (tempu.weight<0)
-    {
-	if (tempu.minv>=200)
-	tempu.weight:=0;
-	else
-	tempu.weight:=tempu.baseweight;
-	}
-  self.weight:=self.weight+tempu.weight;
+      if (tempu.weight<0)
+      {
+         if (tempu.minv>=200)
+            set_weight(tempu, 0);
+         else
+            set_weight(tempu, tempu.baseweight);
+	   }
+      set_weight(self, self.weight+tempu.weight);
 
 
      if((tempu.manipulate & (MANIPULATE_WEAR_FINGER | MANIPULATE_WEAR_NECK  |

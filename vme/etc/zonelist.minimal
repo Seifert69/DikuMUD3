@@ -34,10 +34,12 @@ function 1120tw0008      1   0 250 0
 restrict 1120tw0008      1   0 250 0
 #
 #newbie 1120tw0008        1   0 250 0 ../lib/newbie
-#justice 1120tw0008       1   0 250 0
+#justice 1120tw0008       1   0 250 0 ../lib/justice
 #arena release            1   0 250 0
 #clan 1120tw0008          1   0 250 0 ../lib/clan
 #competition 1120tw0008   1   0 250 0 ../lib/competition
+#holiday20 release		  1   0 250 0 
+#guild_quest release	  1	  0 250 0 
 #
 #guild_paths  release 1 2 0 0
 #assassin release 1 2 0 0
@@ -63,3 +65,5 @@ restrict 1120tw0008      1   0 250 0
 #knight   1120tw0008      1 2 0 0
 #ranger 1120tw0008        1 2 0 0   
 #rebirth 1120tw0008       1 0 250 0     
+#barbarian release 1 2 0 0 
+#gremlin release 1 2 0 0 

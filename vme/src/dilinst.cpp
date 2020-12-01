@@ -619,20 +619,80 @@ void dilfi_amod(class dilprg *p)
     delete v2;
 }
 
+
+
+// set_weight_base
+// Set unitptr param 1 base weight to param 2 int value
+// Sets a unit's base weight and adjustes the weight of the unit and everything it is in.
+// 
+void dilfi_set_weight_base(class dilprg *p)
+{
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("set_weight_base", p, 2,
+                       v1, TYPEFAIL_NULL, 1, DILV_UP,
+                       v2, FAIL_NULL, 1, DILV_INT))
+    {
+        if (v1->val.ptr)
+        {
+            int dif = v2->val.num - UNIT_BASE_WEIGHT((class unit_data *) v1->val.ptr);
+
+            /* set new baseweight */
+            UNIT_BASE_WEIGHT((class unit_data *) v1->val.ptr) = v2->val.num;
+
+            /* update weight */
+            weight_change_unit((class unit_data *) v1->val.ptr, dif);
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+
+// set_weight
+// Set unitptr param 1 weight to param 2 int value
+// Sets a unit's weight and the weight of everything it is in.
+//
+void dilfi_set_weight(class dilprg *p)
+{
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("set_weight", p, 2,
+                       v1, TYPEFAIL_NULL, 1, DILV_UP,
+                       v2, FAIL_NULL, 1, DILV_INT))
+    {
+        if (v1->val.ptr)
+        {
+            if (v2->val.num < UNIT_BASE_WEIGHT((class unit_data *) v1->val.ptr))
+                szonelog(p->frame->tmpl->zone, "DIL '%s' setting unit %s weight to less than base weight.",
+                        p->frame->tmpl->prgname, UNIT_FI_NAME((class unit_data *) v1->val.ptr));
+
+            int dif = v2->val.num - UNIT_WEIGHT((class unit_data *) v1->val.ptr);
+
+            /* update weight */
+            weight_change_unit((class unit_data *) v1->val.ptr, dif);
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+
 /* set weight */
 void dilfi_swt(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    int dif;
 
     if (dil_type_check("setweight", p, 2,
                        v1, TYPEFAIL_NULL, 1, DILV_UP,
                        v2, FAIL_NULL, 1, DILV_INT))
+    {
         if (v1->val.ptr)
         {
-            dif =
-                v2->val.num - UNIT_BASE_WEIGHT((class unit_data *)v1->val.ptr);
+            int dif = v2->val.num - UNIT_BASE_WEIGHT((class unit_data *)v1->val.ptr);
 
             /* set new baseweight */
             UNIT_BASE_WEIGHT((class unit_data *)v1->val.ptr) = v2->val.num;
@@ -640,6 +700,7 @@ void dilfi_swt(class dilprg *p)
             /* update weight */
             weight_change_unit((class unit_data *)v1->val.ptr, dif);
         }
+    }
     delete v1;
     delete v2;
 }

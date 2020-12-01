@@ -1488,7 +1488,7 @@ if (field == 7)         /* unit-flags */
 
 if (field == 8)         /* weight */
     {
-    setweight(targ, valarg);
+    set_weight_base(targ, valarg);
     goto end_set;
     }
 

@@ -228,7 +228,7 @@ void make_code(struct exptype *dest);
 %token DILSI_SEC  DILSI_USE DILSI_ADA DILSI_SETF DILSI_CHAS
 %token DILSI_SUA  DILSI_EQP DILSI_UEQ DILSI_SETE
 %token DILSI_QUIT DILSI_LOG DILSI_SNTA DILSI_SNTADIL DILSI_DLC DILSE_INTR
-%token DILSI_CLI  DILSI_SWT DILSI_SBT DILSE_ATSP DILSI_FOLO DILSI_LCRI
+%token DILSI_CLI  DILSI_SET_W_BASE DILSI_SET_W DILSI_SBT DILSE_ATSP DILSI_FOLO DILSI_LCRI
 %token DILSI_PGSTR DILSI_STORA DILSI_STOPF DILSI_EDIT DILSI_KEDIT
 %token DILSI_SNDDONE DILSI_GMSTATE DILSI_INSLST DILSI_REMLST
 
@@ -1460,7 +1460,8 @@ field    : idx
             INITEXP($$);
             $$.rtyp = DILV_UP;
             $$.typ = DILV_INT;
-            $$.dsl = DSL_LFT;
+            $$.dsl = DSL_DYN;
+            //$$.dsl = DSL_LFT;
             $$.num = DILF_BWT;
          }
          | DILSF_WGT       /* .weight */
@@ -1468,7 +1469,8 @@ field    : idx
             INITEXP($$);
             $$.rtyp = DILV_UP;
             $$.typ = DILV_INT;
-            $$.dsl = DSL_LFT;
+            $$.dsl = DSL_DYN;
+            //$$.dsl = DSL_LFT;
             $$.num = DILF_WGT;
          }
          | DILSF_EDT       /* .editing */
@@ -4884,9 +4886,9 @@ dilproc  : corefuncall
                bwrite_ubit8(&wtmp,DILI_SBT);
             }
          }
-         | DILSI_SWT '(' coreexp ',' coreexp ')' ihold
+         | DILSI_SET_W_BASE '(' coreexp ',' coreexp ')' ihold
          {
-	    checkbool("argument 2 of setweight",$5.boolean);
+	         checkbool("argument 2 of set_weight_base", $5.boolean);
             if ($3.typ != DILV_UP)
                dilfatal("Arg 1 of 'setweight' not an unitptr");
             else if ($5.typ != DILV_INT)
@@ -4895,7 +4897,21 @@ dilproc  : corefuncall
                $$.fst = $3.fst;
                $$.lst = $7+1;
                wtmp = &tmpl.core[$7];
-               bwrite_ubit8(&wtmp,DILI_SWT);
+               bwrite_ubit8(&wtmp, DILI_SET_W_BASE);
+            }
+         }
+         | DILSI_SET_W '(' coreexp ',' coreexp ')' ihold
+         {
+	         checkbool("argument 2 of set_weight",$5.boolean);
+            if ($3.typ != DILV_UP)
+               dilfatal("Arg 1 of 'set_weight' not an unitptr");
+            else if ($5.typ != DILV_INT)
+               dilfatal("Arg 2 of 'set_weight' not an integer");
+            else {
+               $$.fst = $3.fst;
+               $$.lst = $7+1;
+               wtmp = &tmpl.core[$7];
+               bwrite_ubit8(&wtmp, DILI_SET_W);
             }
          }
          | DILSI_SET '(' coreexp ',' coreexp ')' ihold
