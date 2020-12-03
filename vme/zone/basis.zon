@@ -673,16 +673,22 @@ code
    heartbeat := PULSE_SEC;
    fixweight(self);
 
+   /*
+
+   This is commented out and replaced with a move check that
+   alerts a player. Allows you to carry more than you can but
+   at a movement EP penalty.
+
    wgt := self.baseweight + carry_w_limit@function(self);
    if (self.weight > wgt)
    {
       wgt := self.weight - wgt;
-      sendtext ("WARNING!!</div>  Your characters weight has been fixed.<br/>",self);
-      /* sendtext ("You are "+itoa(wgt)+" pounds</div> over weight<br/>",self);*/
+      sendtext ("WARNING!! Your characters weight has been fixed.<br/>",self);
+      // sendtext ("You are "+itoa(wgt)+" pounds over weight<br/>",self);
       log (self.name +" was over weight by "+itoa(wgt));
       sendtext("Weight bugs make it so that combat is not always good for you as a player.<br/>",self);
       sendtext("So we suggest you drop all in a safe location and get all and make sure you can carry everything.<br/>",self);
-   }
+   }*/
    quit;
 }
 dilend
