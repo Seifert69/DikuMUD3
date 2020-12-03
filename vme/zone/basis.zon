@@ -709,7 +709,6 @@ code
       //log(u.symname + " base = " + itoa(u.baseweight) + " weight= " + itoa(u.weight)+ " pre-set");
       set_weight_base(u, 0);
       set_weight(u, 0);
-      //log(u.symname + " base = " + itoa(u.baseweight) + " weight= " + itoa(u.weight)+ " post-set");
       dilcopy("fixstorage@basis()",u);
       return(0);
 	}
@@ -720,9 +719,13 @@ code
       return(u.weight);
    }
 
-   if (u.inside==null)
+   if (u.inside == null)
    {
-      set_weight(u, u.baseweight);
+      if (u.weight != u.baseweight)
+      {
+         log(u.symname + " weight " + itoa(u.weight) + " !=  baseweight of " + itoa(u.baseweight) + ". Resetting.");
+         set_weight(u, u.baseweight);
+      }
       return(u.weight);
    }
 
@@ -735,7 +738,11 @@ code
    }
 
    //log("Setting " + u.symname + " to base + weight= " + itoa(wgt));
-   set_weight(u, u.baseweight+wgt);
+   if (u.weight != u.baseweight + wgt)
+   {
+      log("container " + u.symname + " weight " + itoa(u.weight) + " !=  baseweight of " + itoa(u.baseweight) + ". Resetting.");
+      set_weight(u, u.baseweight+wgt);
+   }
 
    return (u.weight);
 }
