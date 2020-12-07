@@ -53,7 +53,7 @@
 #include "affect.h"
 #include "movement.h"
 #include "constants.h"
-#include "limits.h"
+#include "vmelimits.h"
 #include "main.h"
 #include "account.h"
 #include "common.h"
@@ -551,6 +551,14 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
       int need_movement =
           (movement_loss[ROOM_LANDSCAPE(room_from)] +
            movement_loss[ROOM_LANDSCAPE(room_to)]) / 2;
+
+      int overweight = UNIT_CONTAINING_W(ch) - char_carry_w_limit(mover);
+
+      if (overweight > 0)
+      {
+         send_to_char("You're carrying more than you can and it is exhausting.<br/>", mover);
+         need_movement += 1 + (overweight / 10);
+      }
 
       if (CHAR_ENDURANCE(mover) < need_movement)
       {

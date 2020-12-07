@@ -641,81 +641,108 @@ dilend
 
 dilbegin fixstorage();
 var
- u:unitptr;
+   u:unitptr;
 code
 {
-heartbeat := PULSE_SEC;
-self.capacity:=300;
-self.alignment:=0;
-u:=self.inside;
-while (u)
- {
- self.alignment:=self.alignment+u.weight;
- u:=u.next;
- }
-quit;
+   heartbeat := PULSE_SEC;
+   self.capacity := 300;
+   self.alignment := 0;
+
+   u:=self.inside;
+   while (u)
+   {
+      self.alignment:=self.alignment+u.weight;
+      u := u.next;
+   }
+   quit;
 }
 dilend
 
 
-dilbegin fixwt ();
+dilbegin fixwt();
 external
- integer fixweight(u:unitptr);
- integer carry_w_limit@function(u:unitptr);
+   integer fixweight(u:unitptr);
+   integer carry_w_limit@function(u:unitptr);
+
 var
- item:unitptr;
- wgt:integer;
+   item:unitptr;
+   wgt:integer;
 
 code
 {
-heartbeat := PULSE_SEC;
-fixweight(self);
-wgt:=self.baseweight+carry_w_limit@function(self);
-if (self.weight>wgt)
-  {
-  wgt:=self.weight-wgt;
-     sendtext ("WARNING!!</div>  Your characters weight has been fixed.<br/>",self);
-/* sendtext ("You are "+itoa(wgt)+" pounds</div> over weight<br/>",self);*/
- log (self.name +" was over weight by "+itoa(wgt));
-  sendtext("Weight bugs make it so that combat is not always good for you as a player.<br/>",self);
-  sendtext("So we suggest you drop all in a safe location and get all and make sure you can carry everything.<br/>",self);
-  }
-quit;
+   heartbeat := PULSE_SEC;
+   fixweight(self);
+
+   /*
+
+   This is commented out and replaced with a move check that
+   alerts a player. Allows you to carry more than you can but
+   at a movement EP penalty.
+
+   wgt := self.baseweight + carry_w_limit@function(self);
+   if (self.weight > wgt)
+   {
+      wgt := self.weight - wgt;
+      sendtext ("WARNING!! Your characters weight has been fixed.<br/>",self);
+      // sendtext ("You are "+itoa(wgt)+" pounds over weight<br/>",self);
+      log (self.name +" was over weight by "+itoa(wgt));
+      sendtext("Weight bugs make it so that combat is not always good for you as a player.<br/>",self);
+      sendtext("So we suggest you drop all in a safe location and get all and make sure you can carry everything.<br/>",self);
+   }*/
+   quit;
 }
 dilend
 
 
 dilbegin integer fixweight(u:unitptr);
 var
- wgt:integer;
- item:unitptr;
+   wgt:integer;
+   item:unitptr;
+
 code
 {
-heartbeat := PULSE_SEC;
-wgt:=0;
+   heartbeat := PULSE_SEC;
+   wgt:=0;
 
    if ((u.names.[0]=="storage container") and (u.minv>=200))
    {
+      //log(u.symname + " base = " + itoa(u.baseweight) + " weight= " + itoa(u.weight)+ " pre-set");
       set_weight_base(u, 0);
       set_weight(u, 0);
-      dilcopy ("fixstorage@basis()",u);
+      dilcopy("fixstorage@basis()",u);
       return(0);
 	}
 
-   if (u.inside==null)
+   // Presume wizi items are storage containers
+   if (u.minv > 0)
    {
-      set_weight(u, u.baseweight);
       return(u.weight);
    }
 
- item:=u.inside;
-                       while (item!=null)
-					   {
- wgt:=wgt+fixweight(item);
- item:=item.next;
- }
+   if (u.inside == null)
+   {
+      if (u.weight != u.baseweight)
+      {
+         log(u.symname + " weight " + itoa(u.weight) + " !=  baseweight of " + itoa(u.baseweight) + ". Resetting.");
+         set_weight(u, u.baseweight);
+      }
+      return(u.weight);
+   }
 
-   set_weight(u, u.baseweight+wgt);
+   item := u.inside;
+
+   while (item != null)
+   {
+      wgt:=wgt+fixweight(item);
+      item:=item.next;
+   }
+
+   //log("Setting " + u.symname + " to base + weight= " + itoa(wgt));
+   if (u.weight != u.baseweight + wgt)
+   {
+      log("container " + u.symname + " weight " + itoa(u.weight) + " !=  baseweight of " + itoa(u.baseweight) + ". Resetting.");
+      set_weight(u, u.baseweight+wgt);
+   }
 
    return (u.weight);
 }
