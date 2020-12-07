@@ -772,6 +772,11 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
     case 8: /* "weight" */
         {
+            if (UNIT_CONTAINS(unt))
+            {
+                send_to_char("The unit isn't empty. Setting weight is supposed to happen on empty units only. Setting anyway<br/>", ch);
+            }
+
             int dif = valarg - UNIT_BASE_WEIGHT(unt);
 
             /* set new baseweight */
