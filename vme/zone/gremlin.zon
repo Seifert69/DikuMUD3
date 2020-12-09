@@ -54,6 +54,8 @@ of these terrible vermin once and for all!<br/>
 
 /* The new newbie experience - 2020 edition.
 
+
+
 The idea here is to introduce the player to how they will adventure
 in a more interactive way than the traditional guide. By initiating a 
 series of quests, we can provide the newbie with needed early items
@@ -64,6 +66,26 @@ ability to succeed outside of the supported newbie process.
 
 -Sender
 */
+
+dilbegin resize();
+var
+	pc 	: unitptr;
+	ar 	: string;
+	t : unitptr;
+code
+{
+:start:
+	wait(SFB_CMD,(command("wear") and (activator == self.outside) and (argument in self.names)));
+	pc := activator;
+	ar := argument;
+	block;
+	act("Your "+self.name+" magically resizes to fit you perfectly.",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("$1n's "+self.name+" magically resizes to fit $1m perfectly.",A_SOMEONE, pc, null, null, TO_REST); 
+	self.height := pc.height;
+	exec("wear "+self.name, pc);
+	quit;
+}
+dilend
 
 /*
 dilbegin rogue_request();
@@ -124,6 +146,9 @@ code
 
 :rogue_accepted:
 
+// ********************* GO FIND A BOAT. AND A HEALING BALM
+
+	pause;
 	exec("say Good.", self);
 	pause;
 	exec("say I have need of a capable guide.", self);
@@ -433,6 +458,7 @@ code
 
 :bread_accepted:
 
+	pause;
 	exec("say Excellent!", self);
 	pause;
 	
@@ -459,6 +485,7 @@ code
 
 :water_accepted:
 
+	pause;
 	exec("say Excellent!", self);
 	pause;
 	
@@ -488,6 +515,7 @@ code
 	
 :handoff_accepted:
 
+	pause;
 	exec("say Your help will be well appreciated " + pc.name +"!", self);
 	pause;
 	exec("whisper "+pc.name+" Between Cypress Forest and the City of Midgaard lies a dusty trail.", self);
@@ -506,6 +534,7 @@ code
 
 :finish_accepted:
 
+	pause;
 	exec("say And so another adventure begins " + pc.name +"!", self);
 	pause;
 	exec("whisper "+pc.name+" Away beyond the East gate of Midgaard lies a crossroads.", self);
@@ -701,6 +730,7 @@ code
 
 :explore_accepted:
 
+	pause;
 	exec("say Thank you!", self);
 	pause;
 	exec("say While I live a humble life, I am descended from great adventurers.", self);
@@ -715,20 +745,29 @@ code
 	pause;
 	exec("say "+pc.name+", this has been handed down to me, for use fending off invading gremlins.", self);
 	pause;
-	
-	item := load("barnham_dagger@gremlin");
+	exec("say Along with that old chest of who knows what in the attic, it was my sole inheritance.", self);
+	pause;
+	if((pc.profession == PROFESSION_PALADIN) or (pc.profession == PROFESSION_FIGHTER) or (pc.profession == PROFESSION_RANGER) or (pc.profession == PROFESSION_KNIGHT))
+		item := load("barnham_ls@gremlin");
+	if((pc.profession == PROFESSION_THIEF) or (pc.profession == PROFESSION_SORCERER) or (pc.profession == PROFESSION_CONJURER) or (pc.profession == PROFESSION_ASSASSIN) or (pc.profession == PROFESSION_NECROMANCER) or (pc.profession == PROFESSION_DRUID))
+		item := load("barnham_dagger@gremlin");
+	if((pc.profession == PROFESSION_PRIEST) or (pc.profession == PROFESSION_BARBARIAN))
+		item := load("barnham_mace@gremlin");
 	item.height := pc.height;
 	dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
 	link(item, pc);
-	act("<br>Barnham hands you a gleaming dagger.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("<br>Barnham hands you a "+item.name+".<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	addextra(pc.quests, {EXPLORE_ONGOING}, "");
 	pause;
 	exec("say Through my door here to the west, you will find my fields.", self);
 	pause;
-	exec("say Bernhard carries that dagger's match. I pray it will protect him!", self);
+	exec("say Bernhard carries a dagger that once gleamed as that does. I pray it will protect him!", self);
 	pause;
 	exec("say Beyond the fields a path should lead to the caves.", self);
 	act("<div class='hint'>HINT: Use the command 'open west door' to identify and open the appropriate door.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	pause;
+	exec("say Watch out when you're tangling with those gremlins, by the way. I'd start with the troublesome ones to see how you get on. The vicious ones really are ... well, vicious.", self);
+	act("<div class='hint'>HINT: Use the 'diag' command against your enemies to measure their difficulty.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	pause;
 	pause;
 
@@ -902,7 +941,7 @@ Away to the west a trail leads into the hills."
 movement SECT_FIELD
 
 west to farm_03 descr "Barnham's Farm";
-north to fn_02 descr "Barnham's Cabbage Field";
+north to fn_02 descr "Barnham's Carrot Field";
 south to farm_01 descr "Outside Barnham's Farm";
 end
 
@@ -974,98 +1013,98 @@ end
 
 fn_01
 names {"farm yard", "farm"}
-title "Barnham's Cabbage Field"
+title "Barnham's Carrot Field"
 descr
-"Here in Barnham's north field, cabbages spot the rich dark soil. It is 
+"Here in Barnham's north field, carrots spot the rich dark soil. It is 
 clear that the land has been well maintained, and that it provides well 
 for Barnham, delivering value for his clearly diligent labor. A fence 
 blocks travel to the west, and separates the southern field in that direction. 
 A visibile path sits on the other side of it leading to the western hills. 
-North and east the cabbage field continues."
+North and east the carrot field continues."
 movement SECT_FIELD
 
-north to fn_03 descr "Barnham's Cabbage Field";
-east to fn_04 descr "Barnham's Cabbage Field";
+north to fn_03 descr "Barnham's Carrot Field";
+east to fn_04 descr "Barnham's Carrot Field";
 end
 
 fn_02
 names {"farm yard", "farm"}
-title "Barnham's Cabbage Field"
+title "Barnham's Carrot Field"
 descr
-"Barnham's northern fields are well-kept and dotted with cabbages. It is 
+"Barnham's northern fields are well-kept and dotted with carrots. It is 
 clear that the fields are well kept. A strong fence opens to a wide gate 
-here leading to the south. North, east, and west, cabbages dot the ground. 
+here leading to the south. North, east, and west, carrots dot the ground. 
 Far to the east some hills rise into the distance, and far to the west is 
 Barnham's farmhouse. "
 movement SECT_FIELD
 
-north to fn_04 descr "Barnham's Cabbage Field";
-west to fn_01 descr "Barnham's Cabbage Field";
+north to fn_04 descr "Barnham's Carrot Field";
+west to fn_01 descr "Barnham's Carrot Field";
 south to farm_02 descr "Barnham's Farm";
-east to fn_06 descr "Barnham's Cabbage Field";
+east to fn_06 descr "Barnham's Carrot Field";
 end
 
 fn_03
 names {"farm yard", "farm"}
-title "Barnham's Cabbage Field"
+title "Barnham's Carrot Field"
 descr
-"Barnham's northern fields are well-kept and dotted with cabbages. It is 
+"Barnham's northern fields are well-kept and dotted with carrots. It is 
 clear that the fields are well kept. A strong fence opens to a wide gate 
-here leading to the south. North, east, and west, cabbages dot the ground. 
+here leading to the south. North, east, and west, carrots dot the ground. 
 Far to the east some hills rise into the distance, and far to the west is 
 Barnham's farmhouse."
 movement SECT_FIELD
 
-south to fn_01 descr "Barnham's Cabbage Field";
-east to fn_04 descr "Barnham's Cabbage Field";
+south to fn_01 descr "Barnham's Carrot Field";
+east to fn_04 descr "Barnham's Carrot Field";
 end
 
 fn_04
 names {"farm yard", "farm"}
-title "Barnham's Cabbage Field"
+title "Barnham's Carrot Field"
 descr
-"Barnham's northern fields are well-kept and dotted with cabbages. A 
+"Barnham's northern fields are well-kept and dotted with carrots. A 
 strong earthy smell fills your nostrils, and a light breeze tickles the 
 air. It is clear that the fields are well kept. A strong fence blocks 
-travel to the north. South, east, and west, cabbages dot the ground. 
+travel to the north. South, east, and west, carrots dot the ground. 
 Far to the east some hills rise into the distance, and away to the west is 
 Barnham's farmhouse."
 movement SECT_FIELD
 
-west to fn_03 descr "Barnham's Cabbage Field";
-south to fn_02 descr "Barnham's Cabbage Field";
-east to fn_05 descr "Barnham's Cabbage Field";
+west to fn_03 descr "Barnham's Carrot Field";
+south to fn_02 descr "Barnham's Carrot Field";
+east to fn_05 descr "Barnham's Carrot Field";
 end
 
 fn_05
 names {"farm yard", "farm"}
-title "Barnham's Cabbage Field"
+title "Barnham's Carrot Field"
 descr
-"Barnham's northern fields are well-kept and dotted with cabbages. A 
+"Barnham's northern fields are well-kept and dotted with carrots. A 
 strong earthy smell fills your nostrils, and a light breeze tickles the 
 air. It is clear that the fields are well kept. A strong fence blocks 
-travel to the north and east. South and west of here, cabbages dot the ground. 
+travel to the north and east. South and west of here, carrots dot the ground. 
 Far to the east some hills rise into the distance, and away to the south west 
 is Barnham's farmhouse."
 movement SECT_FIELD
 
-west to fn_04 descr "Barnham's Cabbage Field";
-south to fn_06 descr "Barnham's Cabbage Field";
+west to fn_04 descr "Barnham's Carrot Field";
+south to fn_06 descr "Barnham's Carrot Field";
 end
 
 fn_06
 names {"farm yard", "farm"}
-title "Barnham's Cabbage Field"
+title "Barnham's Carrot Field"
 descr
-"Barnham's northern fields are well-kept and dotted with cabbages. As 
+"Barnham's northern fields are well-kept and dotted with carrots. As 
 you step, deep footprints are left in the loose soil. Travel to the east 
 is blocked by the fence that encloses these fields, which wraps to the south 
-separating the cabbage fields from the work shed. North and west of here, 
-cabbages dot the ground. Far to the east some hills rise into the distance."
+separating the carrot fields from the work shed. North and west of here, 
+carrots dot the ground. Far to the east some hills rise into the distance."
 movement SECT_FIELD
 
-north to fn_05 descr "Barnham's Cabbage Field";
-west to fn_02 descr "Barnham's Cabbage Field";
+north to fn_05 descr "Barnham's Carrot Field";
+west to fn_02 descr "Barnham's Carrot Field";
 end
 
 fs_01
@@ -1238,7 +1277,7 @@ To the north hills connect the landscape, and provide a lovely backdrop for
 the small farm arrayed below you."
 movement SECT_CITY
 
-down open {EX_CLIMB, EX_FALL_THIS_WAY} difficulty 0 to outcropping;
+down open {EX_CLIMB, EX_FALL_THIS_WAY} difficulty 0 to trail_02;
 extra {"$climb_down"} {5} ""
 extra {"rocky outcropping", "rocks", "outcropping"}
 "The rocky outcropping you're on seems to be just possible to climb down.
@@ -1543,7 +1582,8 @@ descr
 appears however that this is a dead end. A small shrine has been placed 
 here along one wall, laying praise to unknown gods. The back cave wall  
 evidently forms the end of the path. A waft of rank air tickles the senses, 
-where did that come from? The hard-packed ground here looks to be a 
+where did that come from? A few pieces of broken pottery are piled in one 
+corner of the cave. The soft-packed ground here looks to be a 
 comfortable and welcoming place to rest a while."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_MOB, UNIT_FL_SACRED}
@@ -1557,6 +1597,10 @@ extra {"cave wall","wall","rocks"}
 "The wall here is made of piled rocks, as if they were placed here 
 intentionally. I wonder what a more careful search of the rock wall 
 would reveal?"
+extra {"broken pottery","pottery"}
+"A few pieces of broken pottery are piled in a corner. Some are half-buried 
+and it seems more yet has been buried just beneath the surface.<br>
+<div class='hint'>HINT: Try the command 'dig' here.</div>"
 end
 
 cave_00
@@ -1754,6 +1798,16 @@ even bother searching. Even if you looked at the wall, you wouldnt
 find any signs of treasure.<br><br>-Gaflaw the Great<br><div class='hint'>HINT: Try 'look wall' here.</div>"
 end
 
+carrot_sign
+names {"wooden sign","sign"}
+title "a wooden sign"
+descr "A wooden <a cmd='read #'>sign</a> is here."
+weight 1
+cost 1 IRON_PIECE
+extra {}
+"Odin's Favorite Carrots!<br><div class='hint'>HINT: Try 'dig' here.</div>"
+end
+
 gaflaw_club
 names {"large club","club"}
 title "a large club"
@@ -1864,17 +1918,49 @@ STR_TRANSFER(+1)
 DEX_TRANSFER(+2)
 end
 
-barnham_dagger
+barnham_dagger // thief, sorcerer, necromancer, assassin, conjurer
 names {"gleaming dagger", "dagger"}
 title "a gleaming dagger"
 descr
 "A gleaming dagger lies here."
 extra {}
-"This dagger gleams with a magical glow. It appears to be better suited for self defense than carving wood.<br>"
+"This dagger gleams with a magical glow. It appears to be well suited for self defense.<br>"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_DAGGER, 7, 7)
 WEAPON_SLAYER(RACE_GOBLIN)
 WEAPON_TRANSFER(WPN_DAGGER,+10)
+STR_TRANSFER(+1)
+DEX_TRANSFER(+1)
+dilcopy quests_restrict@function({EXPLORE_ONGOING,EXPLORE_COMPLETE},0,10,""); 
+end
+
+barnham_mace // priest, barbarian
+names {"gleaming mace", "mace"}
+title "a gleaming mace"
+descr
+"A gleaming dagger lies here."
+extra {}
+"This mace gleams with a magical glow. It appears to be well suited for self defense.<br>"
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_MACE, 7, 7)
+WEAPON_SLAYER(RACE_GOBLIN)
+WEAPON_TRANSFER(WPN_MACE,+10)
+STR_TRANSFER(+1)
+DEX_TRANSFER(+1)
+dilcopy quests_restrict@function({EXPLORE_ONGOING,EXPLORE_COMPLETE},0,10,""); 
+end
+
+barnham_ls // paladin, fighter, ranger, knight
+names {"gleaming long sword", "sword"}
+title "a gleaming mace"
+descr
+"A gleaming long sword lies here."
+extra {}
+"This long sword gleams with a magical glow. It appears to be well suited for self defense.<br>"
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_LONG_SWORD, 7, 7)
+WEAPON_SLAYER(RACE_GOBLIN)
+WEAPON_TRANSFER(WPN_LONG_SWORD,+10)
 STR_TRANSFER(+1)
 DEX_TRANSFER(+1)
 dilcopy quests_restrict@function({EXPLORE_ONGOING,EXPLORE_COMPLETE},0,10,""); 
@@ -1943,6 +2029,7 @@ weight 5
 cost 1 COPPER_PIECE
 DEX_TRANSFER(2)
 dilcopy mvlev_restrict@function(40,0,20,"");
+dilcopy resize();
 end
 
 adv_legs
@@ -1957,6 +2044,7 @@ weight 4
 cost 1 COPPER_PIECE
 STR_TRANSFER(2)
 dilcopy mvlev_restrict@function(40,0,20,"");
+dilcopy resize();
 end
 
 adv_boots
@@ -1971,6 +2059,7 @@ weight 2
 cost 1 COPPER_PIECE
 SPEED_TRANSFER(4)
 dilcopy mvlev_restrict@function(40,0,20,"");
+dilcopy resize();
 end
 
 adv_glove
@@ -1985,6 +2074,7 @@ weight 2
 cost 1 COPPER_PIECE
 WEAPON_TRANSFER(WPN_DAGGER,+5)
 dilcopy mvlev_restrict@function(40,0,20,"");
+dilcopy resize();
 end
 
 adv_helm
@@ -2037,7 +2127,50 @@ operations of his farm."
 
 end
 
+potato
+names {"potato"}
+title "a potato"
+descr "A nice sized potato."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(12, 0)
+weight 2
+cost 1 IRON_PIECE
+end
+
+carrot
+names {"carrot"}
+title "a carrot"
+descr "A good looking carrot."
+manipulate {MANIPULATE_TAKE}
+flags {UNIT_FL_BURIED}
+FOOD_DEF(12, 0)
+weight 2
+cost 1 IRON_PIECE
+end
+
+heal_jug
+names {"healing jug","jug"}
+title "a jug of healing"
+descr "A small white clay jug stands here."
+extra {}
+"The white clay jug is marked with healer's sigil."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+flags {UNIT_FL_BURIED}
+type ITEM_POTION
+POTION_DEF(60,SPL_CURE_WOUNDS_1,SPL_CURE_WOUNDS_1,SPL_NONE)
+weight 1
+cost 2 COPPER_PIECE
+end
+
 %reset
+
+load carrot_sign into fn_02 max 1
+load carrot into fn_01 local 1
+load carrot into fn_02 local 1
+load carrot into fn_03 local 1
+load carrot into fn_04 local 1
+load carrot into fn_05 local 1
+load carrot into fn_06 local 1
 
 load boldin into square@udgaard max 1
 
@@ -2267,7 +2400,7 @@ load adv_chest into farm_attic local 1
 	load adv_boots local 1
 	load adv_glove local 1
 }
-
+load heal_jug into cave_01 local 3
 /*
 load sventer into dock1@torsbay max 1
 {

@@ -44,10 +44,187 @@ help
 
 %dil
 
+dilbegin rocket (holiday : string);
+external
+	act_world (s:string);
+	ast_launch();
+	act_launcher(s:string);
+var
+	pc,item 	: unitptr;
+	s,pname,col,col2,holstr1,holstr2 : string;
+code
+{
+	heartbeat:=PULSE_SEC*3;
+:start:
+	wait (SFB_CMD, (command ("light") and ("rocket" in argument)));
+	block;
+	pc:=activator;
+	secure (pc,start);
+	if(pc.outside.type!=UNIT_ST_ROOM)
+	{
+		act ("You can not light that from here!",
+		A_ALWAYS,pc,null,null,TO_CHAR);
+		unsecure (pc);
+		goto start;
+	}
+	item:=findunit(pc,argument,FIND_UNIT_SURRO,null);
+	if ((item==null) or (item!=self))
+    {
+		unsecure (pc);
+		goto start;
+    }
+    if (item.outside.type!=UNIT_ST_ROOM)
+	{
+		act ("You need to put it on the ground first.",
+		A_ALWAYS,pc,null,null,TO_CHAR);
+		unsecure (pc);
+		unsecure (item);
+		goto start;
+	}
+    secure (item,start);
+	
+
+	
+    act ("$1n bends down and lights $2n.",A_ALWAYS,pc,self,null,TO_REST);
+    act ("You bend down and light $2n.",A_ALWAYS,pc,self,null,TO_CHAR);
+	pname:=pc.name;
+	pause;
+    act ("<div class='cr'>ss</div><div class='cpr'>ss</div><div class='cpy'>ss</div><div class='cy'>ss</div><div class='cr'>ss</div><div class='cpr'>ss</div><div class='cy'>ss</div><div class='cpy'>ss</div><div class='cw'></div>",
+		A_ALWAYS,self,null,null,TO_ALL);
+    pause;
+    act ("$1n leaves the ground with blinding speed!",A_ALWAYS,self,null,null,TO_ALL);
+    self.minv:=200;
+    pause;
+
+    on rnd (1,6) goto ired, igreen, iyellow, iblue, imagenta, icyan;
+
+	:ired:
+		col := "cpr";
+		col2 := "<div class='"+col+"'>red";
+		goto conti;
+
+	:igreen:
+		col := "cpg";
+		col2 := "<div class='"+col+"'>green";
+		goto conti;
+
+	:iyellow:
+		col := "cpy";
+		col2 := "<div class='"+col+"'>yellow";
+		goto conti;
+
+	:iblue:
+		col := "cpb";
+		col2 := "<div class='"+col+"'>blue";
+		goto conti;
+
+	:imagenta:
+		col := "cpm";
+		col2 := "<div class='"+col+"'>purple";
+		goto conti;
+
+	:icyan:
+		col := "cpc";
+		col2 := "<div class='"+col+"'>cyan";
+		goto conti;
+
+	:iwhite:
+		col := "cpw";
+		col2 := "<div class='"+col+"'>white";
+		goto conti;
+	   
+:conti:
+
+	s:="";
+	item:=self.inside;
+	while (item)
+	{
+		if (item.type!=UNIT_ST_OBJ)
+		{
+			item:=item.next;
+			continue;
+		}
+		if (item.objecttype!=ITEM_NOTE)
+		{
+			item:=item.next;
+			continue;
+		}
+		if (item.extra==null)
+			goto default;
+		s:=item.extra.descr;
+		break;
+   }
+   	if (holiday == "NY")
+	{
+		holstr1 := "<div class='cpw'>A burst of " + col2 + " sparkles</div> explodes in the sky above spelling out <br/><br/><div class='"+col+"'>" + s +"<br/></div></div>";
+		holstr2 := "<div class='cpw'>A burst of " + col2 + " sparkles</div> explodes in the sky above and drifts spectacularly down to the ground.<br/>";
+	}
+	if (holiday == "XMAS")
+	{
+		holstr1 := "<div class='cpw'>A flurry of " + col2 + " snowflakes</div> can be seen in the sky above spelling out <br/><br/><div class='"+col+"'>" + s +"<br/></div></div>";
+		holstr2 := "<div class='cpw'>A flurry of " + col2 + " snowflakes</div> can be seen in the sky drifting slowly down to the ground.<br/>";
+	}	
+	if (holiday == "Halloween")
+	{
+		holstr1 := "<div class='cpw'>A massive " + col2 + " skull</div> appears in the sky above. It echoes out <br/><br/><div class='"+col+"'>" + s +"<br/></div></div>";
+		holstr2 := "<div class='cpw'>A massive " + col2 + " skull</div> appears in the sky above. It cackles before fading away.<br/>";
+	}		
+	if (holiday == "VD")
+	{
+		holstr1 := "<div class='cpw'>An explosion of " + col2 + " hearts</div> appear in the sky spelling out <br/><br/><div class='"+col+"'>" + s +"<br/></div></div>";
+		holstr2 := "<div class='cpw'>An explosion of " + col2 + " hearts</div> appear in the sky above. They hang for a period of time, and fade.<br/>";
+	}
+	if (s=="")
+		goto default;
+
+	act_launcher(pname);
+	act_world ("<div class='cpw'>You hear a loud boom!</div><br/>");
+	ast_launch();	
+	act_world (holstr1);
+
+	item:=self.inside;
+	while (item)
+	{
+		if (item.type==UNIT_ST_PC)
+		{
+			item.minv:=0;
+			act("The rocket you are riding in explodes dumping your guts on your keyboard!",
+				A_ALWAYS,item,null,null,TO_CHAR);
+		}
+		item:=item.next;
+	}
+
+	self.minv:=0;
+	destroy(self);
+	quit;
+
+	:default:
+	act_world("<div class='cpw'>You hear a loud boom!</div><div class='cw'><br/></div>");
+	ast_launch();
+	act_world(holstr2);
+
+	item:=self.inside;
+	while (item)
+	{
+		if (item.type==UNIT_ST_PC)
+		{
+			item.minv:=0;
+			act("The rocket you are riding in explodes dumping your guts on your keyboard!",
+				A_ALWAYS,item,null,null,TO_CHAR);
+		}
+		item:=item.next;
+	}
+	self.minv:=0;
+	destroy (self);
+	quit;
+
+}
+dilend
+
 dilbegin holiday_burn();
 code
 {
-	act ("You $2n sparkles and you drop it to the ground.",
+	act ("Your $2n sparkles and you drop it to the ground.",
 		A_ALWAYS,self.outside,self,null,TO_CHAR);
 	act ("$1n's $2n sparkles and drops to the ground.",
 		A_SOMEONE,self.outside,self,null,TO_REST);
@@ -245,7 +422,7 @@ code
 		act("Come back when you have gained some experience!", A_ALWAYS, activator, null, null, TO_CHAR);
 		goto start;
 	}
-	else if ((pc.exp - atoi(pc.extra.["$XMASEXP20"].descr)) >=300000)
+	else if ((pc.exp - atoi(pc.extra.["$XMASEXP20"].descr)) >=200000)
 	{   /* they got it */	
 		act("You touch the pole, and visions of sugar plums start dancing in your head!", A_ALWAYS, activator, null, null, TO_CHAR);
 		act("You suddenly feel like you're floating.", A_ALWAYS, activator, null, null, TO_CHAR);
@@ -704,7 +881,7 @@ code
 	  act("*tick*  *tick*  *tick*",
           A_ALWAYS, pc, null, null, TO_ALL);
       pause;
-      act("*BOOM!* The <div class='cpr'>Christmas </div><div class='cpg'>Gift explodes into a ball of flames.</div>",
+      act("*BOOM!* The <div class='cpr'>Christmas </div><div class='cpg'>Gift</div> explodes into a ball of flames.",
           A_ALWAYS, pc, null, null, TO_ALL);
       exec("scream", pc);
       pc.hp := (pc.hp -(pc.hp /3));
@@ -2859,14 +3036,14 @@ end
 
 rocket
 names {"rocket"}
-title "a rocket"
-descr "A big rocket has been set up here.."
+title "a New Years rocket"
+descr "A big rocket has been set up here."
 extra {}
 "The rocket has a large cargo area in a hole in the top of it. If you put a paper in the
 hole the message on the paper will be displayed in the explosion. Remember
 no swearing and keep it to a max of 3 lines. Anyone caught abusing this
-will lose the right to use them. The rockets will disappear shortly after
-new years so don't try to save them :)  LIGHT ROCKET to activate it.  Hmm that cargo area
+will lose the right to use them. <br>
+LIGHT ROCKET to activate it.  Hmm that cargo area
 might even be big enough for people to fit in it."
 type ITEM_CONTAINER
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD, MANIPULATE_ENTER}
@@ -2874,161 +3051,67 @@ MATERIAL_WOOD("Heavy oak")
 weight 2
 CONTAINER_DEF(1000)
 
-dilbegin rocket ();
-external
-	act_world (s:string);
-	ast_launch();
-	act_launcher(s:string);
-var
-	pc,item 	: unitptr;
-	s,pname,col,col2 : string;
-code
-{
-	heartbeat:=PULSE_SEC*3;
-:start:
-	wait (SFB_CMD, (command ("light") and ("rocket" in argument)));
-	block;
-	pc:=activator;
-	secure (pc,start);
-	if(pc.outside.type!=UNIT_ST_ROOM)
-	{
-		act ("You can not light that from here!",
-		A_ALWAYS,pc,null,null,TO_CHAR);
-		unsecure (pc);
-		goto start;
-	}
-	item:=findunit(pc,argument,FIND_UNIT_SURRO,null);
-	if ((item==null) or (item!=self))
-    {
-		unsecure (pc);
-		goto start;
-    }
-    if (item.outside.type!=UNIT_ST_ROOM)
-	{
-		act ("You need to put it on the ground first.",
-		A_ALWAYS,pc,null,null,TO_CHAR);
-		unsecure (pc);
-		unsecure (item);
-		goto start;
-	}
-    secure (item,start);
-    act ("$1n bends down and lights $2n.",A_ALWAYS,pc,self,null,TO_REST);
-    act ("You bend down and light $2n.",A_ALWAYS,pc,self,null,TO_CHAR);
-	pname:=pc.name;
-	pause;
-    act ("<div class='cr'>ss</div><div class='cpr'>ss</div><div class='cpy'>ss</div><div class='cy'>ss</div><div class='cr'>ss</div><div class='cpr'>ss</div><div class='cy'>ss</div><div class='cpy'>ss</div><div class='cw'></div>",
-		A_ALWAYS,self,null,null,TO_ALL);
-    pause;
-    act ("$1n leaves the ground with blinding speed!",A_ALWAYS,self,null,null,TO_ALL);
-    self.minv:=200;
-    pause;
+dilcopy rocket("NY");
+end
 
-    on rnd (1,6) goto ired, igreen, iyellow, iblue, imagenta, icyan;
+rocket_vd
+names {"rocket"}
+title "a Valentines Day rocket"
+descr "A heart-shaped rocket has been set up here."
+extra {}
+"The rocket has a large cargo area in a hole in the top of it. If you put a paper in the
+hole the message on the paper will be displayed in the explosion. Remember
+no swearing and keep it to a max of 3 lines. Anyone caught abusing this
+will lose the right to use them. <br>
+LIGHT ROCKET to activate it.  Hmm that cargo area
+might even be big enough for people to fit in it."
+type ITEM_CONTAINER
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD, MANIPULATE_ENTER}
+MATERIAL_WOOD("Heavy oak")
+weight 2
+CONTAINER_DEF(1000)
 
-	:ired:
-		col := "cpr";
-		col2 := "<div class='"+col+"'>red";
-		goto conti;
+dilcopy rocket("VD");
+end
 
-	:igreen:
-		col := "cpg";
-		col2 := "<div class='"+col+"'>green";
-		goto conti;
+rocket_xmas
+names {"rocket"}
+title "a Christmas rocket"
+descr "A candy-striped rocket has been set up here."
+extra {}
+"The rocket has a large cargo area in a hole in the top of it. If you put a paper in the
+hole the message on the paper will be displayed in the explosion. Remember
+no swearing and keep it to a max of 3 lines. Anyone caught abusing this
+will lose the right to use them. <br>
+LIGHT ROCKET to activate it.  Hmm that cargo area
+might even be big enough for people to fit in it."
+type ITEM_CONTAINER
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD, MANIPULATE_ENTER}
+MATERIAL_WOOD("Heavy oak")
+weight 2
+CONTAINER_DEF(1000)
 
-	:iyellow:
-		col := "cpy";
-		col2 := "<div class='"+col+"'>yellow";
-		goto conti;
+dilcopy rocket("XMAS");
+end
 
-	:iblue:
-		col := "cpb";
-		col2 := "<div class='"+col+"'>blue";
-		goto conti;
+rocket_hw
+names {"rocket"}
+title "a Halloween rocket"
+descr "A bone-shaped rocket has been set up here."
+extra {}
+"The rocket has a large cargo area in a hole in the top of it. If you put a paper in the
+hole the message on the paper will be displayed in the explosion. Remember
+no swearing and keep it to a max of 3 lines. Anyone caught abusing this
+will lose the right to use them. <br>
+LIGHT ROCKET to activate it.  Hmm that cargo area
+might even be big enough for people to fit in it."
+type ITEM_CONTAINER
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD, MANIPULATE_ENTER}
+MATERIAL_WOOD("Heavy oak")
+weight 2
+CONTAINER_DEF(1000)
 
-	:imagenta:
-		col := "cpm";
-		col2 := "<div class='"+col+"'>purple";
-		goto conti;
-
-	:icyan:
-		col := "cpc";
-		col2 := "<div class='"+col+"'>cyan";
-		goto conti;
-
-	:iwhite:
-		col := "cpw";
-		col2 := "<div class='"+col+"'>white";
-		goto conti;
-	   
-:conti:
-	
-	s:="";
-	item:=self.inside;
-	while (item)
-	{
-		if (item.type!=UNIT_ST_OBJ)
-		{
-			item:=item.next;
-			continue;
-		}
-		if (item.objecttype!=ITEM_NOTE)
-		{
-			item:=item.next;
-			continue;
-		}
-		if (item.extra==null)
-			goto default;
-		s:=item.extra.descr;
-		break;
-   }
-	if (s=="")
-		goto default;
-
-	act_launcher(pname);
-	act_world ("<div class='cpw'>You hear a loud boom!</div><br/>");
-	ast_launch();
-	act_world ("<div class='cpw'>A burst of " + col2 + " sparkles</div> explodes in " +
-		"the sky above spelling out <br/><br/><div class='"+col+"'>" + s +"<br/></div></div>");
-
-	item:=self.inside;
-	while (item)
-	{
-		if (item.type==UNIT_ST_PC)
-		{
-			item.minv:=0;
-			act("The rocket you are riding in explodes dumping your guts on your keyboard!",
-				A_ALWAYS,item,null,null,TO_CHAR);
-		}
-		item:=item.next;
-	}
-
-	self.minv:=0;
-	destroy(self);
-	quit;
-
-	:default:
-	act_world("<div class='cpw'>You hear a loud boom!</div><div class='cw'><br/></div>");
-	ast_launch();
-	act_world("<div class='cpw'>A burst of </div>" + col2 + " sparkles</div> explodes in the " +
-	"sky above and drifts spectacularly down to the ground.<br/>");
-
-	item:=self.inside;
-	while (item)
-	{
-		if (item.type==UNIT_ST_PC)
-		{
-			item.minv:=0;
-			act("The rocket you are riding in explodes dumping your guts on your keyboard!",
-				A_ALWAYS,item,null,null,TO_CHAR);
-		}
-		item:=item.next;
-	}
-	self.minv:=0;
-	destroy (self);
-	quit;
-
-}
-dilend
+dilcopy rocket("Halloween");
 end
 
 %mobiles
