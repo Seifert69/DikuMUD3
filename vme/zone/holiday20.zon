@@ -643,7 +643,7 @@ end
 mistletoe
 title "a sprig of <div class='cpg'>mistletoe</div>"
 names {"mistletoe","sprig"}
-descr "A sprig of <div class='cpg'>mistletoe</div>hangs here."
+descr "A sprig of <div class='cpg'>mistletoe</div> hangs here."
 extra {}
 "A sprig of mistletoe with white berries hangs here. Kiss or be kissed."
 
@@ -2854,6 +2854,7 @@ Type touch pole to visit Santa's Workshop!<br/>
 </pre>"
 weight 5000
 dilcopy touch_pole();
+dilcopy load_gift();
 end
 
 rocket

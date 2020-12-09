@@ -685,6 +685,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
     ubit8 unit_version;
     ubit8 t8;
     ubit16 t16;
+    sbit16 ts16;
     ubit32 t32;
     ubit32 nStart;
     char tmpbuf[2 * MAX_STRING_LENGTH];
@@ -770,10 +771,10 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
         g_nCorrupt += pBuf->Read32(&UNIT_MANIPULATE(u));
 
     g_nCorrupt += pBuf->Read16(&UNIT_FLAGS(u));
-    g_nCorrupt += pBuf->Read16(&t16);
-    UNIT_BASE_WEIGHT(u) = t16;
-    g_nCorrupt += pBuf->Read16(&t16);
-    UNIT_WEIGHT(u) = t16;
+    g_nCorrupt += pBuf->Read16(&ts16);
+    UNIT_BASE_WEIGHT(u) = ts16;
+    g_nCorrupt += pBuf->Read16(&ts16);
+    UNIT_WEIGHT(u) = ts16;
     g_nCorrupt += pBuf->Read16(&UNIT_CAPACITY(u));
 
     g_nCorrupt += pBuf->Read32(&UNIT_MAX_HIT(u));

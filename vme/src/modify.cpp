@@ -771,8 +771,26 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         return;
 
     case 8: /* "weight" */
-        UNIT_BASE_WEIGHT(unt) = UNIT_WEIGHT(unt) = valarg;
-        return;
+        {
+            if (UNIT_CONTAINS(unt))
+            {
+                send_to_char("The unit isn't empty. Setting weight is supposed to happen on empty units only. Setting anyway<br/>", ch);
+            }
+
+            int dif = valarg - UNIT_BASE_WEIGHT(unt);
+
+            /* set new baseweight */
+            UNIT_BASE_WEIGHT(unt) = valarg;
+
+            /* update weight */
+            weight_change_unit(unt, dif);
+
+            // Now make weight and base weight equal            
+            dif = UNIT_BASE_WEIGHT(unt) - UNIT_WEIGHT(unt);
+            weight_change_unit(unt, dif);
+            // UNIT_BASE_WEIGHT(unt) = UNIT_WEIGHT(unt) = valarg;
+            return;
+        }
 
     case 9: /* "capacity" */
         UNIT_CAPACITY(unt) = valarg;
