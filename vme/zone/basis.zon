@@ -5426,6 +5426,7 @@ code
       self.abilities[ABIL_BRA] :=self.abilities[ABIL_BRA]+4;
 
       self.weapons[WPN_FIST]         := 5;
+      self.weapons[WPN_DAGGER]       := 5;
       self.weapons[WPN_QUARTERSTAFF] := 5 + 5;
 
       self.spells[SPL_SENSE_LIFE]    := 5;
@@ -5521,6 +5522,7 @@ code
 
       self.weapons[WPN_FIST]         := 5;
       self.weapons[WPN_HAND_AXE]     := 5 + 5;
+      self.weapons[WPN_MACE]         := 5 + 5;
       self.skills[SKI_FRENZY]        := 10;
       self.skills[SKI_RAGE]          := 5;
    }
