@@ -422,7 +422,7 @@ code
 		act("Come back when you have gained some experience!", A_ALWAYS, activator, null, null, TO_CHAR);
 		goto start;
 	}
-	else if ((pc.exp - atoi(pc.extra.["$XMASEXP20"].descr)) >=300000)
+	else if ((pc.exp - atoi(pc.extra.["$XMASEXP20"].descr)) >=200000)
 	{   /* they got it */	
 		act("You touch the pole, and visions of sugar plums start dancing in your head!", A_ALWAYS, activator, null, null, TO_CHAR);
 		act("You suddenly feel like you're floating.", A_ALWAYS, activator, null, null, TO_CHAR);
