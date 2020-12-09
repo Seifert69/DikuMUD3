@@ -716,11 +716,11 @@ code
 {
    mlist := MONEY_STRING;
    mload := MONEY_LOAD;
+   money := null;
 
    if (amnt <= 0)
    {
       log("ILLEGAL MONEY VALUE : " + itoa(amnt));
-      money := null;
       return(money);
    }
 
@@ -729,7 +729,6 @@ code
    else
    {
       log("INVALID MONEY TYPE : " + itoa(mtype));
-      money := null;
       return(money);
    }
 
@@ -743,16 +742,16 @@ code
       money.title := itoa(amnt) + " " + temp;
 
       if (amnt < 1000)
-           money.outside_descr := "A small pile of " + temp + " has been left here.";
+         money.outside_descr := "A small pile of " + temp + " has been left here.";
       else if (amnt < 50000)
-           money.outside_descr := "A large pile of " + temp + " has been left here.";
+         money.outside_descr := "A large pile of " + temp + " has been left here.";
       else
-           money.outside_descr := "A mountain of " + temp + " has been left here.";
+         money.outside_descr := "A mountain of " + temp + " has been left here.";
 
       mweight := money_weight(mtype, amnt);
 
       set_weight_base(money, mweight);
-   }
+   }  set_weight(money, mweight);
 
    return(money);
 }
