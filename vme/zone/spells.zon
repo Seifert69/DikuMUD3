@@ -10597,7 +10597,7 @@ code
    amount := rnd(((self.spells[SPL_REFRESH] + self.abilities[ABIL_DIV]) / 10),
                   (self.spells[SPL_REFRESH] + self.abilities[ABIL_BRA]));
 
-   amount := amount * 2;			  
+   amount := amount * 3;			  
    targ.endurance := targ.endurance + amount;
    if (targ.endurance > targ.max_endurance)
      targ.endurance := targ.max_endurance;
