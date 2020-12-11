@@ -71,4 +71,6 @@ void weight_change_unit (class unit_data * unit, int weight);
 class unit_data *find_unit_in_list_num (int num, class unit_data * list);
 class unit_data *find_unit_num (int num);
 
+string unit_trace_up(class unit_data *unit);
+
 #endif /* _MUD_HANDLER_H */

@@ -604,6 +604,31 @@ class zone_type *unit_zone(const class unit_data *unit)
     return NULL;
 }
 
+//
+// Returns a symname text string of all the units a unit is in
+//
+string unit_trace_up(class unit_data *unit)
+{
+    class unit_data *u;
+    string s, t;
+
+    s = "";
+    s.append(UNIT_FI_NAME(unit));
+    s.append("@");
+    s.append(UNIT_FI_ZONENAME(unit));
+
+    for (u = UNIT_IN(unit); u; u = UNIT_IN(u))
+    {
+        t = " in ";
+        t.append(UNIT_FI_NAME(u));
+        t.append("@");
+        t.append(UNIT_FI_ZONENAME(u));
+        s.append(t);
+    }
+
+    return s;
+}
+
 class unit_data *unit_room(class unit_data *unit)
 {
     class unit_data *org = unit;
