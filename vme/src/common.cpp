@@ -75,25 +75,21 @@ struct shi_info_type shi_info[] = {
 /* Example: A character is about to raise from level 2 to 3. Add       */
 /*          ability_point_gain(3) to his ability points                */
 
-int ability_point_gain(void)
+int ability_point_gain(int level)
 {
-    return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR;
+    if (level <= 100)
+        return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR;
+    else
+        return 0;
 }
+
 
 int skill_point_gain(void)
 {
     return AVERAGE_SKILL_COST * SKILL_POINT_FACTOR;
 }
 
-/* PS Algorithm 3                                                      */
-/* This algorithm returns the total amount of points gained up to a    */
-/* particular level.                                                   */
-/* The formula is total up to the current level                        */
 
-int ability_point_total(int level)
-{
-    return (1 + level) * ability_point_gain();
-}
 
 /* Algorithm PS 4                                                      */
 /*                                                                     */
@@ -101,6 +97,8 @@ int ability_point_total(int level)
 /* (points). It then calculates how many ability points you could buy  */
 /* for the given amount of points (skill-buy-points)                   */
 /*                                                                     */
+
+
 
 int buy_points(int points, int level, int *error)
 {
