@@ -26,7 +26,7 @@ void set_hits(class unit_data *obj, int craftsmanship);
 
 int skill_point_gain(void);
 int ability_point_gain(int level);
-//int ability_point_total(int level);
+int ability_point_total(int level);
 //double damage_str(int strength);
 
 int distribute_points(sbit16 *skills, int max, int points, int level);

@@ -83,6 +83,16 @@ int ability_point_gain(int level)
         return 0;
 }
 
+/* PS Algorithm 3                                                      */
+/* This algorithm returns the total amount of points gained up to a    */
+/* particular level.                                                   */
+/* The formula is total up to the current level                        */
+// Only used for NPCs and their point distro so we ignore the 100 level cap.
+// 
+int ability_point_total(int level)
+{
+    return (level+1) * ability_point_gain(level);
+}
 
 int skill_point_gain(void)
 {
