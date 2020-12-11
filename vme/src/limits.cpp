@@ -333,12 +333,22 @@ void advance_level(class unit_data *ch)
     }
 
     clear_training_level(ch);
-    advance_guild_level(ch);
-
     PC_VIRTUAL_LEVEL(ch)++;
+
+    struct diltemplate *dt;
+    dt = find_dil_template("advance_level@basis");
+    assert(dt);
+
+    class dilprg *prg = dil_copy_template(dt, ch, NULL);
+    assert(prg);
+
+    prg->waitcmd = WAITCMD_MAXINST - 1;
+    dil_activate(prg);
     
-    PC_SKILL_POINTS(ch) += skill_point_gain();
-    PC_ABILITY_POINTS(ch) += ability_point_gain();
+    // Now in DIL
+    // advance_guild_level(ch);    
+    // PC_SKILL_POINTS(ch) += skill_point_gain();
+    // PC_ABILITY_POINTS(ch) += ability_point_gain();
 
     if (CHAR_LEVEL(ch) < MORTAL_MAX_LEVEL)
         CHAR_LEVEL(ch)++;
