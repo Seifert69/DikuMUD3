@@ -59,15 +59,6 @@ code
 { 
    log(self.name + " advanced to level " + itoa(self.level));
 
-   log("   Skill points was = " + itoa(self.skill_points));
-   log("   Abil  points was = " + itoa(self.ability_points));
-
-   self.skill_points   := self.skill_points   + AVERAGE_SKILL_COST * SKILL_POINT_FACTOR;
-   self.ability_points := self.ability_points + AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR;
-
-   log("   Skill points is = " + itoa(self.skill_points));
-   log("   Abil  points is = " + itoa(self.ability_points));
-
    /*
     advance_guild_level(ch);    
    */

@@ -334,6 +334,11 @@ void advance_level(class unit_data *ch)
 
     clear_training_level(ch);
     PC_VIRTUAL_LEVEL(ch)++;
+    if (CHAR_LEVEL(ch) < MORTAL_MAX_LEVEL)
+        CHAR_LEVEL(ch)++;
+
+    PC_SKILL_POINTS(ch) += skill_point_gain();
+    PC_ABILITY_POINTS(ch) += ability_point_gain();
 
     struct diltemplate *dt;
     dt = find_dil_template("advance_level@basis");
@@ -347,11 +352,6 @@ void advance_level(class unit_data *ch)
     
     // Now in DIL
     // advance_guild_level(ch);    
-    // PC_SKILL_POINTS(ch) += skill_point_gain();
-    // PC_ABILITY_POINTS(ch) += ability_point_gain();
-
-    if (CHAR_LEVEL(ch) < MORTAL_MAX_LEVEL)
-        CHAR_LEVEL(ch)++;
 
 #ifdef NOBLE
     if (IS_NOBLE(ch))
