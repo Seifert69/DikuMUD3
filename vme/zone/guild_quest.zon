@@ -48,6 +48,81 @@ Contact whistler@blinksoft.com
 "
 %dil
 
+
+dilbegin adv_guild_lvl(ch : unitptr);
+var
+	pathp, guildptr : extraptr;
+	guildstr, guilddescr, e : string;
+	guildlvl, i : integer;
+	sl, pl : stringlist;
+code
+{
+:start:
+
+	pathp := ("$path" in ch.quests);
+	if(pathp)
+	{
+		pl := pathp.names;
+		i := 1;
+		while(i <= 3)
+		{
+			:loop:
+			guildstr := pl.[i];
+			e := "$"+guildstr;
+			guildptr := (e in ch.quests);
+			if(guildptr)
+			{
+				guildlvl := atoi(guildptr.names.[1]);
+				guilddescr := guildptr.descr;
+				guildlvl := guildlvl + 1;
+				
+				sl := {""};
+				addstring(sl,e);
+				addstring(sl,itoa(guildlvl));
+				addstring(sl,"$guild");
+				substring(sl,"");
+				
+				guildptr.names := sl;
+				guildptr := (e in ch.quests);
+				guildlvl := atoi(guildptr.names.[1]);
+				if(i == 1)
+					pl.[7] := itoa(guildlvl);
+				pl.[i+3] := itoa(guildlvl);
+			}
+			else
+			{
+				if(guildstr == "")
+					goto update;
+				else
+				{
+					// Guild exists, but doesnt have extra. create it.
+					guildlvl := guildlvl-39;
+					if(guildlvl < 1)
+						guildlvl := 1;
+					sl := {""};
+					addstring(sl,e);
+					addstring(sl,itoa(guildlvl));
+					addstring(sl,"$guild");
+					substring(sl,"");
+					addextra(ch.quests, sl, "");
+					goto loop;
+				}
+			}
+			i := i+1;
+		}
+		:update:
+		i := 0;
+		while(i < length(pl))
+		{
+			i := i+1;
+		}
+		pathp := ("$path" in ch.quests);
+		pathp.names := pl;
+	}
+	quit;
+}
+dilend // advance_guild_level
+
 // ********************** DIL do_graffiti ************************
 // Program will write graffiti to a room
 
@@ -2784,6 +2859,21 @@ cost 5 PLATINUM_PIECE
 dilcopy do_graffiti("cpn","black");
 
 end // END GRAF_N
+
+grail
+title "a holy grail"
+names {"holy grail", "grail"}
+descr "The holy grail is here, being holy."
+extra {}
+"This grail is very holy. To use this, type: Pour grail <player>. It will reduce their age by 20%."
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+cost 5 PLATINUM_PIECE
+
+//dilcopy grail();
+
+end // END GRAIL
+
 
 /*------------ THE CUSTOMIZATION CONTRAPTION ------------*/
 
