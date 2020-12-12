@@ -111,11 +111,6 @@ code
 			i := i+1;
 		}
 		:update:
-		i := 0;
-		while(i < length(pl))
-		{
-			i := i+1;
-		}
 		pathp := ("$path" in ch.quests);
 		pathp.names := pl;
 	}
