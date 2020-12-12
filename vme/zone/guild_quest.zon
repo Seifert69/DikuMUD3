@@ -68,6 +68,8 @@ code
 		{
 			:loop:
 			guildstr := pl.[i];
+			if(guildstr == "")
+				goto update;
 			e := "$"+guildstr;
 			guildptr := (e in ch.quests);
 			if(guildptr)
@@ -91,22 +93,17 @@ code
 			}
 			else
 			{
-				if(guildstr == "")
-					goto update;
-				else
-				{
-					// Guild exists, but doesnt have extra. create it.
-					guildlvl := guildlvl-39;
-					if(guildlvl < 1)
-						guildlvl := 1;
-					sl := {""};
-					addstring(sl,e);
-					addstring(sl,itoa(guildlvl));
-					addstring(sl,"$guild");
-					substring(sl,"");
-					addextra(ch.quests, sl, "");
-					goto loop;
-				}
+				// Guild exists, but doesnt have extra. create it.
+				guildlvl := guildlvl-39;
+				if(guildlvl < 1)
+					guildlvl := 1;
+				sl := {""};
+				addstring(sl,e);
+				addstring(sl,itoa(guildlvl));
+				addstring(sl,"$guild");
+				substring(sl,"");
+				addextra(ch.quests, sl, "");
+				goto loop;
 			}
 			i := i+1;
 		}
