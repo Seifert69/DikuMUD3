@@ -55,13 +55,15 @@ Bright White.<br/>
 #define ABILITY_POINT_FACTOR    (4)
 
 dilbegin advance_level();
+external 
+   adv_guild_lvl@g_q(ch : unitptr);
+
 code
 { 
    log(self.name + " advanced to level " + itoa(self.level));
 
-   /*
-    advance_guild_level(ch);    
-   */
+
+   adv_guild_lvl@g_q(self);
 
    return;
 }
