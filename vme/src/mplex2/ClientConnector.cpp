@@ -824,6 +824,7 @@ void cConHook::StripHTML(char *dest, const char *src)
     }
 
     const char *p;
+    const char *t;
 
     p = src;
 
@@ -862,11 +863,14 @@ void cConHook::StripHTML(char *dest, const char *src)
                     Control_Echo_Off(this, &dest, 0);
                     p += 12;
                 }
-                else if (strncasecmp(p, "PasswordOff()", 13)==0)
+                else if (strncasecmp(p, "PasswordOff(", 12)==0)
                 {
                     Control_Echo_On(this, &dest, 0);
-                    p += 13;
+                    p += 12;
                 }
+                t = strstr(p, "<script/>");
+                if (t)
+                    p = t + 9;
                 continue;
             }
             else if (strncmp(aTag, "/div", 4)==0)
