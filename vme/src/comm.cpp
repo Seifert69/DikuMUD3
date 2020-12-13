@@ -153,7 +153,7 @@ void send_to_descriptor(const char *messg, class descriptor_data *d)
                 u = d->original;
 
             assert(IS_PC(u));
-            char buf[strlen(messg) + 100];
+            char buf[strlen(messg) + 10000];
 
             substHTMLcolor(buf, messg, UPC(u)->color);
             protocol_send_text(d->multi, d->id, buf, MULTI_TEXT_CHAR);
