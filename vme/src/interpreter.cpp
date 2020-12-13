@@ -559,7 +559,7 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
         return SFR_SHARE;
 
     assert(u);
-
+        
     sarg->owner = u;
 
     //   if (IS_PC(u) && !char_is_playing(u))
@@ -577,6 +577,9 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
             continue;
 
         res = function_activate(u, sarg);
+
+        if (u->is_destructed())
+            return SFR_SHARE;
 
         if ((orgflag != sarg->fptr->flags) && (sarg->fptr->index == SFUN_DIL_INTERNAL))
         {
@@ -630,6 +633,15 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt,
     register class unit_data *u, *uu, *next, *nextt, *tou;
     extern class unit_data *unit_list;
     class file_index_type *fi;
+
+    if (ch->is_destructed())
+        return SFR_SHARE;
+    if (extra_target)
+    {
+        if (extra_target->is_destructed())
+            return SFR_SHARE;
+    }
+
 
     if (to)
     {
