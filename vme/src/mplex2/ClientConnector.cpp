@@ -841,7 +841,7 @@ void cConHook::StripHTML(char *dest, const char *src)
             // We got a HTML tag
             if (strcmp(aTag, "br")==0 || strcmp(aTag, "br/")==0)
             {
-                if (*p == '\n' || *(p+1)=='\n') // If the next is \n\r then dont add it
+                if (*p == '\n' || *(p+1)=='\n') // If the next is \n then dont add <br>
                     continue;
 
                 // the <br/> tag was not followed by \n\r so add \n\r
@@ -952,7 +952,15 @@ void cConHook::StripHTML(char *dest, const char *src)
               
             continue;
         }
-        *dest++ = *p++;
+
+        if (*p == '\n' && *(p+1) != '\r')
+        {
+            *dest++ = '\n';
+            *dest++ = '\r';
+            p++;
+        }
+        else
+            *dest++ = *p++;
     }
     *dest = 0;
 }
