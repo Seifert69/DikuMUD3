@@ -1164,24 +1164,24 @@ title "a <div class='cpr'>c</div><div class='cpw'>a</div><div class='cpr'>n</div
 descr "A large <div class='cpr'>c</div><div class='cpw'>a</div><div class='cpr'>n</div><div class='cpw'>d</div><div class='cpr'>y </div><div class='cpw'>c</div><div class='cpr'>a</div><div class='cpw'>n</div><div class='cpr'>e</div> lies here."
 extra {}
 "<pre>
-<div class='bn'></div><div class='cpr'>        .----.      
-</div><div class='bn'></div><div class='cpw'>      .'`.  .'`.    
-</div><div class='bn'></div><div class='cpr'>    ,'-._:--:_.-\   
-</div><div class='bn'></div><div class='cpw'>    |-._'    | _.|  
-</div><div class='bn'></div><div class='cpr'>    |._ |    |' _|  
-</div><div class='bn'></div><div class='cpw'>    `---'    |-' |  
-</div><div class='bn'></div><div class='cpr'>             |.-'|  
-</div><div class='bn'></div><div class='cpw'>             |_.-|  
-</div><div class='bn'></div><div class='cpr'>             | _.|  
-</div><div class='bn'></div><div class='cpw'>             |' _|  
-</div><div class='bn'></div><div class='cpr'>             |-' |  
-</div><div class='bn'></div><div class='cpw'>             |.-'|  
-</div><div class='bn'></div><div class='cpr'>             |_.-|  
-</div><div class='bn'></div><div class='cpw'>             | _.|  
-</div><div class='bn'></div><div class='cpr'>             |' _|  
-</div><div class='bn'></div><div class='cpw'>             |-' |  
-</div><div class='bn'></div><div class='cpr'>             `---'  
-</div><div class='default'></div></pre>"
+<div class='cpr'>        .----.      </div>
+<div class='cpw'>      .'`.  .'`.    </div>
+<div class='cpr'>    ,'-._:--:_.-\   </div>
+<div class='cpw'>    |-._'    | _.|  </div>
+<div class='cpr'>    |._ |    |' _|  </div>
+<div class='cpw'>    `---'    |-' |  </div>
+<div class='cpr'>             |.-'|  </div>
+<div class='cpw'>             |_.-|  </div>
+<div class='cpr'>             | _.|  </div>
+<div class='cpw'>             |' _|  </div>
+<div class='cpr'>             |-' |  </div>
+<div class='cpw'>             |.-'|  </div>
+<div class='cpr'>             |_.-|  </div>
+<div class='cpw'>             | _.|  </div>
+<div class='cpr'>             |' _|  </div>
+<div class='cpw'>             |-' |  </div>
+<div class='cpr'>             `---'  </div>
+<div class='default'></div></pre>"
 manipulate {MANIPULATE_TAKE}
 FOOD_DEF(12, 0)
 weight 2
@@ -1193,24 +1193,24 @@ names {"tree"}
 descr "A Christmas Tree grows here filling the city with cheer."
 extra {}
 "<pre>
-<div class='bn'></div><div class='cpy'>             |
-</div><div class='bn'></div><div class='cpy'>           \ ' /
-</div><div class='bn'></div><div class='cpy'>         -- (</div><div class='cy'>*</div><div class='cpy'>) --
-</div><div class='bn'></div><div class='cpg'>            &gt;</div><div class='cpy'>|</div><div class='cpg'>&lt;
-</div><div class='bn'></div><div class='cpg'>           &gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;
-</div><div class='bn'></div><div class='cpg'>          &gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*
-</div><div class='bn'></div><div class='cpg'>         &gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpm'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;
-</div><div class='bn'></div><div class='cpg'>        &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;
-</div><div class='bn'></div><div class='cpg'>       &gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;
-</div><div class='bn'></div><div class='cpg'>      &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;
-</div><div class='bn'></div><div class='cpg'>     </div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>*</div><div class='cpg'>&lt;
-</div><div class='bn'></div><div class='cpg'>    &gt;</div><div class='cpy'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpc'>@</div><div class='cpg'>&lt;&lt;
-</div><div class='bn'></div><div class='cpg'>   &gt;&gt;&gt;</div><div class='cpr'>*</div><div class='cpg'>&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>0</div><div class='cpg'>&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;
-</div><div class='bn'></div><div class='cpg'>  &gt;&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpw'>0</div><div class='cpg'>&gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;
-</div><div class='bn'></div><div class='cpg'> &gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;
-</div><div class='bn'></div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>@</div><div class='cpg'>&gt;</div><div class='cpc'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;</div><div class='cpc'>0</div><div class='cpg'>&lt;&lt;&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;&lt;
-</div><div class='bn'></div><div class='cw'>            | |
-</div><div class='bn'></div><div class='cw'>           |___| </div></pre>"
+<div class='cpy'>             |</div>
+<div class='cpy'>           \ ' /</div>
+<div class='cpy'>         -- (</div><div class='cy'>*</div><div class='cpy'>) --</div>
+<div class='cpg'>            &gt;</div><div class='cpy'>|</div><div class='cpg'>&lt;</div>
+<div class='cpg'>           &gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>          &gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*</div>
+<div class='cpg'>         &gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpm'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>        &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>       &gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>      &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>     </div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>*</div><div class='cpg'>&lt;</div>
+<div class='cpg'>    &gt;</div><div class='cpy'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpc'>@</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>   &gt;&gt;&gt;</div><div class='cpr'>*</div><div class='cpg'>&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>0</div><div class='cpg'>&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>  &gt;&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpw'>0</div><div class='cpg'>&gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'> &gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>&gt;&gt;&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>@</div><div class='cpg'>&gt;</div><div class='cpc'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;</div><div class='cpc'>0</div><div class='cpg'>&lt;&lt;&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;&lt;</div>
+<div class='cw'>            | |</div>
+<div class='cw'>           |___| </div></pre>"
 end
 
 
@@ -1220,24 +1220,24 @@ names {"tree"}
 descr "A large brightly decorated Christmas Tree stands in the corner of the room."
 extra {}
 "<pre>
-<div class='bn'></div><div class='cpy'>             |
-</div><div class='bn'></div><div class='cpy'>           \ ' /
-</div><div class='bn'></div><div class='cpy'>         -- (</div><div class='cy'>*</div><div class='cpy'>) --
-</div><div class='bn'></div><div class='cpg'>            &gt;</div><div class='cpy'>|</div><div class='cpg'>&lt;
-</div><div class='bn'></div><div class='cpg'>           &gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;
-</div><div class='bn'></div><div class='cpg'>          &gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*
-</div><div class='bn'></div><div class='cpg'>         &gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpm'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;
-</div><div class='bn'></div><div class='cpg'>        &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;
-</div><div class='bn'></div><div class='cpg'>       &gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;
-</div><div class='bn'></div><div class='cpg'>      &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;
-</div><div class='bn'></div><div class='cpg'>     </div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>*</div><div class='cpg'>&lt;
-</div><div class='bn'></div><div class='cpg'>    &gt;</div><div class='cpy'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpc'>@</div><div class='cpg'>&lt;&lt;
-</div><div class='bn'></div><div class='cpg'>   &gt;&gt;&gt;</div><div class='cpr'>*</div><div class='cpg'>&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>0</div><div class='cpg'>&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;
-</div><div class='bn'></div><div class='cpg'>  &gt;&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpw'>0</div><div class='cpg'>&gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;
-</div><div class='bn'></div><div class='cpg'> &gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;
-</div><div class='bn'></div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>@</div><div class='cpg'>&gt;</div><div class='cpc'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;</div><div class='cpc'>0</div><div class='cpg'>&lt;&lt;&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;&lt;
-</div><div class='bn'></div><div class='cw'>            | |
-</div><div class='bn'></div><div class='cw'>           |___| </div></pre>"
+<div class='cpy'>             |</div>
+<div class='cpy'>           \ ' /</div>
+<div class='cpy'>         -- (</div><div class='cy'>*</div><div class='cpy'>) --</div>
+<div class='cpg'>            &gt;</div><div class='cpy'>|</div><div class='cpg'>&lt;</div>
+<div class='cpg'>           &gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>          &gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*</div>
+<div class='cpg'>         &gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpm'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>        &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>       &gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>      &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>     </div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>*</div><div class='cpg'>&lt;</div>
+<div class='cpg'>    &gt;</div><div class='cpy'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpc'>@</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>   &gt;&gt;&gt;</div><div class='cpr'>*</div><div class='cpg'>&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>0</div><div class='cpg'>&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>  &gt;&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpw'>0</div><div class='cpg'>&gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'> &gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>&gt;&gt;&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>@</div><div class='cpg'>&gt;</div><div class='cpc'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;</div><div class='cpc'>0</div><div class='cpg'>&lt;&lt;&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;&lt;</div>
+<div class='cw'>            | |</div>
+<div class='cw'>           |___| </div></pre>"
 end
 
 newbgift
@@ -1262,24 +1262,24 @@ extra {}
 "You examine the candy cane and realize it may make a good weapon. Made by
 the Admin of Valhalla for New Players, weapons like these are hard to find.
 <pre>
-<div class='bn'></div><div class='cpr'>        .----.      
-</div><div class='bn'></div><div class='cpw'>      .'`.  .'`.    
-</div><div class='bn'></div><div class='cpr'>    ,'-._:--:_.-\   
-</div><div class='bn'></div><div class='cpw'>    |-._'    | _.|  
-</div><div class='bn'></div><div class='cpr'>    |._ |    |' _|  
-</div><div class='bn'></div><div class='cpw'>    `---'    |-' |  
-</div><div class='bn'></div><div class='cpr'>             |.-'|  
-</div><div class='bn'></div><div class='cpw'>             |_.-|  
-</div><div class='bn'></div><div class='cpr'>             | _.|  
-</div><div class='bn'></div><div class='cpw'>             |' _|  
-</div><div class='bn'></div><div class='cpr'>             |-' |  
-</div><div class='bn'></div><div class='cpw'>             |.-'|  
-</div><div class='bn'></div><div class='cpr'>             |_.-|  
-</div><div class='bn'></div><div class='cpw'>             | _.|  
-</div><div class='bn'></div><div class='cpr'>             |' _|  
-</div><div class='bn'></div><div class='cpw'>             |-' |  
-</div><div class='bn'></div><div class='cpr'>             `---'  
-</div></pre>"
+<div class='cpr'>        .----.      </div>
+<div class='cpw'>      .'`.  .'`.    </div>
+<div class='cpr'>    ,'-._:--:_.-\   </div>
+<div class='cpw'>    |-._'    | _.|  </div>
+<div class='cpr'>    |._ |    |' _|  </div>
+<div class='cpw'>    `---'    |-' |  </div>
+<div class='cpr'>             |.-'|  </div>
+<div class='cpw'>             |_.-|  </div>
+<div class='cpr'>             | _.|  </div>
+<div class='cpw'>             |' _|  </div>
+<div class='cpr'>             |-' |  </div>
+<div class='cpw'>             |.-'|  </div>
+<div class='cpr'>             |_.-|  </div>
+<div class='cpw'>             | _.|  </div>
+<div class='cpr'>             |' _|  </div>
+<div class='cpw'>             |-' |  </div>
+<div class='cpr'>             `---'  </div>
+</pre>"
 HIT_TRANSFER(+3)
 dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
 
