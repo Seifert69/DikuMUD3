@@ -243,3 +243,5 @@ CMD_BERSERK berserk
 CMD_TAUNT taunt
 CMD_RAGE rage
 CMD_FRENZY frenzy
+CMD_LEAP leap
+CMD_CHARGE charge

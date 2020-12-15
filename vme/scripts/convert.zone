@@ -437,6 +437,8 @@ gsub(/CMD_BERSERK/,"\"berserk\"",$0);
 gsub(/CMD_FRENZY/,"\"frenzy\"",$0);
 gsub(/CMD_RAGE/,"\"rage\"",$0);
 gsub(/CMD_TAUNT/,"\"taunt\"",$0);
+gsub(/CMD_LEAP/,"\"leap\"",$0);
+gsub(/CMD_CHARGE/,"\"charge\"",$0);
 
 print $0;
 }

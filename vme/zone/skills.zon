@@ -12223,6 +12223,8 @@ code
 dilend /* ski_charge */
 
 dilbegin ski_leap(arg : string);
+external
+   integer skillresist (aa : integer, ad : integer, sa : integer, sd : integer);
 var
    u : unitptr;
    tgt : unitptr;
@@ -12244,7 +12246,6 @@ code
 		act("You haven't the energy. Better rest first.",A_ALWAYS, self, null, null, TO_CHAR);
 		quit;
 	}
-	else self.endurance := self.endurance - 20;
 	
 	hm := skillresist(self.abilities[ABIL_CON],30,self.skills[SKI_LEAP],0);
 
@@ -12266,6 +12267,12 @@ code
 
 	arg := getword(arg);
 
+	if(arg == "")
+	{
+		act("You must specify a direction to leap to.", A_SOMEONE, self, null, null, TO_CHAR);
+		quit;
+	}
+	
 	if (arg in "north") {
 		i := DIR_NORTH;
 		d := "north"; }
@@ -12277,7 +12284,7 @@ code
 		d := "south"; }
 	else if (arg in "west") {
 		i := DIR_WEST;
-	d := "west"; }
+		d := "west"; }
 	else if (arg in "up") {
 		i := DIR_UP;
 		d := "up"; }
@@ -12296,11 +12303,6 @@ code
 	else if ((arg in "southwest") or (arg == "sw")) {
 		i := DIR_SOUTHWEST;
 		d := "southwest"; }
-	else
-	{
-		act("You must specify a direction to leap to.", A_SOMEONE, self, null, null, TO_CHAR);
-		quit;
-	}
 
    if ((not u.exit_to[i]) or (u.exit_info[i] & EX_CLOSED) or (u.exit_to[i].movement == SECT_WATER_SAIL))
 	{

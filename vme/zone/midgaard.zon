@@ -8148,9 +8148,9 @@ dilcopy reward_give@function();
 
 #define GUILD_NAMES  {"Udgaard Fighter", "Udgaard Thief", "Udgaard Healer", \
                "Udgaard Conjurer", "Nymgaard Ranger", "Midgaard Paladin", "Midgaard Sorcerer", \
-               "Khorsabad Assassin", "Necromancer", "Nymgaard Druid", "Midgaard Dark Knight" } 
-#define GUILD_LETTERS  {"F", "T", "H",  "C", "R", "P",   "S", "A", "N",  "D", "K"};
-#define GUILD_EXCL     {"",  "P", "N",   "",  "",  "ANK", "",  "P", "PRD", "N", "PD"};
+               "Khorsabad Assassin", "Necromancer", "Nymgaard Druid", "Midgaard Dark Knight", "Barbarian" } 
+#define GUILD_LETTERS  {"F", "T", "H",  "C", "R", "P",   "S", "A", "N",  "D", "K", "B"};
+#define GUILD_EXCL     {"",  "P", "N",   "",  "",  "ANK", "",  "P", "PRD", "N", "PD", ""};
 
 /* Lists the characters current guilds and returns how many they are a member of */
 dilbegin aware integer guild_choose();
