@@ -795,22 +795,20 @@ dilend
 
 
 dilbegin fam_brain();
-
 external
- integer walk_room@function (s:string,i:integer);
+   integer walk_room@function (s:string,i:integer);
 
 var
-tf:integer;
-  junk:    integer;
-  i:integer;
-  pcowner: unitptr;
-  exd    : extraptr;
-  loader:  unitptr;
-
-  pcname : string;
-  stat1:   string;
-  stat2:   string;
-  stat3:   string;
+   tf:integer;
+   junk:    integer;
+   i:integer;
+   pcowner: unitptr;
+   exd    : extraptr;
+   u :  unitptr;
+   pcname : string;
+   stat1:   string;
+   stat2:   string;
+   stat3:   string;
 
 code
 {
@@ -826,7 +824,7 @@ code
    {
       pcowner := self.outside;
       secure(pcowner, lostowner);
-      exec ("follow "+pcowner.name,self);
+      exec("follow "+pcowner.name,self);
       exec("emote basks in the loving glow of it's master "+
 	   pcowner.name+".", self);
       goto brains;
@@ -844,8 +842,7 @@ code
       familiars would really eat up the system resources. */
 
    wait (SFB_CMD, (command("status") or command("tell")) and
-	 (activator #= pcowner) and
-(findunit(activator, argument, FIND_UNIT_SURRO|FIND_UNIT_INVEN, null) == self));
+	 (activator #= pcowner) and (findunit(activator, argument, FIND_UNIT_SURRO|FIND_UNIT_INVEN, null) == self));
 
    exd := "$path" in pcowner.quests;
 
@@ -947,27 +944,38 @@ code
 
    :lostowner:
    heartbeat := PULSE_SEC * 5;
-   link (self,self.outside.outside);
-   exec ("say Eeek!", self);
+   while (self.outside.type != UNIT_ST_ROOM)
+      link(self, self.outside);
 
+   exec("say Eeek!", self);
    exec("follow", self);
    pause;
 
    :lostloop:
-   link (self,self.outside.outside);
-   exec ("cast controlled teleport "+pcname, self);
+   while (self.outside.type != UNIT_ST_ROOM)
+      link(self, self.outside);
+
+   exec("cast controlled teleport "+pcname, self);
    pause;
    stat1 := pcname;
-   tf:= walk_room@function(pcname,4);
+   // tf := walk_room@function(pcname,4);   Makes no sense to walk to "player name" 2020
 
- /*  walkto(findunit(self, stat1, FIND_UNIT_WORLD, null)); */
-   exec("follow "+pcname, self);
-   if (self.master.name == pcname)
+   u := findunit(self, stat1, FIND_UNIT_WORLD, null); // Try to find my master
+
+   if (u)
    {
-      pcowner := self.master;
-      secure(pcowner, lostowner);
-      goto brains;
+      while (u.type != UNIT_ST_ROOM)
+         u := u.outside;
+      tf := walk_room@function(u.symname, 4);
+      exec("follow "+pcname, self);
+      if (self.master.name == pcname)
+      {
+         pcowner := self.master;
+         secure(pcowner, lostowner);
+         goto brains;
+      }
    }
+   pause;
    /* Retry */
    goto lostloop;
 }
