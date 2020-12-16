@@ -25,7 +25,16 @@
  
  Training definitions follow this format:
  
- <Minimum Level>; <Maximum Value>; <Name>; <...> <cost first prac> <cost second prac>
+ <Guild Level>; <Maximum Value>; <Name>; <Cash Cost>; <cash max>; <Point Cost>; <Next Point Cost>; <Close>;
+ 
+ Guild Level: Minimum guild level required to practice.
+ Maximum Value: Highest value this can be practiced to. 1 to 200.
+ Name: Name of the entity being practiced.
+ Cash Cost: Cost in "Old Gold". Each multiple of 10 = 1 iron?
+ Cash Max: Practice cost maximum in "Old Gold". Generally 1000x Cash Cost.
+ Point Cost: Determines cost in points of practicing this entity. 
+ Next Point Cost: This field can be repeated as many times as desired, allowing more practices per level.
+ Close: This is the closing argument, and notifies the compiler the function is complete. Must be 0.
  **************************************************************************/
  
 #if defined(_GUILD_NYM_DRUID)
@@ -1193,6 +1202,7 @@ $1n tells you, 'Remove all equipment, please.';
   0;   70; fleeing                       ;  14; 14000;  10;          0;
   0;  100; leap                          ;  14; 14000;  10;          0;
   0;  100; taunt                         ;  14; 14000;  10;          0;
+  40;  100; defend                       ;  14; 14000;  10; 20;      0;
   0;  100; charge                        ;  14; 14000;  10;          0;
   0;  100; bash                          ;   9;  9000;   8;          0;
   0;  100; shield                        ;   4;  4000;   5; 10;      0;
