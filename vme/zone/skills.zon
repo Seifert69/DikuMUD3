@@ -12065,7 +12065,7 @@ code
 }
 dilend // taunted
 
-dilbegin ski_defend(arg : string);
+dilbegin aware ski_defend(arg : string);
 var 
 	foe : unitptr;
 	dam : integer;
@@ -12073,13 +12073,9 @@ var
 code
 {
 	heartbeat := PULSE_ROUND;
-	wait(SFB_CMD, command("defend"));
-	if(self.fighting)
-	{
-		act("<div class='miss_me'>You cannot defend while fighting!</div>", A_SOMEONE, self, null, null, TO_CHAR);  
-		change_speed(self,12);
+	
+	if((dilfind("def_block@skills", self)) or (dilfind("defending@skills", self)))
 		quit;
-	}
 	if (self.endurance < 100)
     {
 		act("<div class='spell'>You exhaust yourself trying to take up a defensive position!</div>",
@@ -12092,59 +12088,73 @@ code
 	}
 	self.endurance := self.endurance - 100;
 	
-	act("<div class='spell'>You take up a defensive position.</div>",
-		A_ALWAYS, self, null, null, TO_CHAR);
-	act("<div class='spell'>$1n takes up a defensive position.</div>",
-		A_SOMEONE, self, null, null, TO_REST);
-	self.outside_descr := self.outside_descr+" [defending]";
+	act("<div class='spell'>You take up a defensive position.</div>",A_ALWAYS, self, null, null, TO_CHAR);
+	act("<div class='spell'>$1n takes up a defensive position.</div>",A_SOMEONE, self, null, null, TO_REST);
 	
+	dilcopy("def_block@skills",self);
 	dilcopy("defending@skills",self);
-	wait(SFB_PRE, command(CMD_AUTO_COMBAT));
-	foe := activator;
-	power := 0;
-	if(dilfind("defending@skills", self))
-		i := dildestroy("defending@skills", self);
-	if(" [defending]" in self.outside_descr)
-		self.outside_descr := replace(" [defending]","",self.outside_descr);
-	act("<div class='miss_me'>Your defense allows you to counter $3n's attack!</div>", A_SOMEONE, self, null, foe, TO_CHAR);
-	act("<div class='miss_other'>$3n counters from their defensive position after $1n attacks!</div>", A_SOMEONE, self, null, foe, TO_NOTVICT);
-	act("<div class='miss_opponent'>$1n counters your attack from their defensive position!</div>", A_SOMEONE, self, null, foe, TO_VICT);
-	set_fighting(foe,self);
-	foe.hp := foe.hp*(1/3);
-	change_speed(foe,PULSE_ROUND*3);
 	send_done("defend",self,null,null,0,arg,null);
 	quit;
 }
 dilend // ski_defend
 
-dilbegin defending();
+dilbegin aware def_block();
 var
-	allow : stringlist;
 	arg   : string;
        i  : integer;
 code
 {
-	allow := {"defend","look","inventory","who","status","score","equipment","taunt"};
 :start:
 
-	wait(SFB_CMD, TRUE);
+	wait(SFB_CMD, self==activator);
 	arg := cmdstr;
-	if(not(cmdstr in allow))
+	if ((arg == "look") or
+		(arg == "inventory") or
+		(arg == "who") or
+		(arg == "status") or
+		(arg == "score") or
+		(arg == "equipment") or
+		(arg == "affect") or
+		(arg == "taunt"))
 	{
-		block;
-		act("<div class='spell'>You can not do that while defending!.</div>",
-			A_ALWAYS, self, null, null, TO_CHAR);
 		goto start;
 	}
-	if(arg == "defend")
+	else if(arg == "defend")
 		goto end_def;
+	
+	block;
+	act("<div class='cpw'>You can not do that while defending!</div>",
+		A_ALWAYS, self, null, null, TO_CHAR);
 	goto start;
 	
 :end_def:
-	if(dilfind("ski_defend@skills", self))
-		i := dildestroy("ski_defend@skills", self);
-	if(" [defending]" in self.outside_descr)
-		self.outside_descr := replace(" [defending]","",self.outside_descr);
+	block;
+	if(dilfind("defending@skills", self))
+		i := dildestroy("defending@skills", self);
+	act("<div class='cpw'>You stop defending.</div>",A_ALWAYS, self, null, null, TO_CHAR);
+	act("<div class='cpw'>$1n stops defending.</div>",A_SOMEONE, self, null, null, TO_REST);
+	quit;
+}
+dilend // def_block
+
+dilbegin aware defending();
+var
+       i  : integer;
+	   foe : unitptr;
+code
+{
+:start:
+
+	wait(SFB_PRE, ((command(CMD_AUTO_DAMAGE)) and (target == self)));
+	foe := activator;
+	block;
+	if(dilfind("def_block@skills", self))
+		i := dildestroy("def_block@skills", self);
+	act("<div class='miss_me'>$3n is left reeling after you defend their attack!</div>", A_SOMEONE, self, null, foe, TO_CHAR);
+	act("<div class='miss_other'>$3n is left reeling after $1n defends their attack!</div>", A_SOMEONE, self, null, foe, TO_NOTVICT);
+	act("<div class='miss_opponent'>$1n defends your attack, leaving you reeling!</div>", A_SOMEONE, self, null, foe, TO_VICT);
+	set_fighting(foe,self);
+	change_speed(foe,PULSE_VIOLENCE*2);
 	quit;
 }
 dilend // defending
