@@ -439,7 +439,7 @@ code
 	}
 	else 
 	{  /*they need */
-		act( "You need "+itoa(300000 - (pc.exp - atoi(pc.extra.["$XMASEXP20"].descr)))
+		act( "You need "+itoa(200000 - (pc.exp - atoi(pc.extra.["$XMASEXP20"].descr)))
 		+ " more experience to see Santa.", A_ALWAYS, activator, null, null, TO_CHAR);
 		goto start;
 	}

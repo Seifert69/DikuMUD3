@@ -20,6 +20,14 @@
  * reproduced, translated or reduced to any medium without the prior       *
  * written consent of Valhalla.                                            *
  * *********************************************************************** */
+ 
+ /**************************************************************************
+ 
+ Training definitions follow this format:
+ 
+ <Minimum Level>; <Maximum Value>; <Name>; <...> <cost first prac> <cost second prac>
+ **************************************************************************/
+ 
 #if defined(_GUILD_NYM_DRUID)
 
 /* Each guild can have at most 2 stats at 100, it can have 2 cheap stats,
@@ -1144,104 +1152,6 @@ ERROR NO TYPE IN MIDGAARD PALADIN
 
 #endif
 
-#elif defined(_GUILD_MIDGAARD_MYSTIC)
-
-#if defined(_ABILITY)
-
-  0;  100; Strength                      ;  15; 15000;  10; 20;      0;
-  0;   60; Dexterity                     ;  15; 15000;  10; 20;      0;
-  0;   60; Constitution                  ;  15; 15000;  10; 20;      0;
-  0;   60; Hitpoints                     ;  15; 15000;  10; 20;      0;
-  0;   60; Charisma                      ;   5;  5000;   5; 10;      0;
-  0;  100; Brain                         ;  10; 10000;   8; 16;      0;
-  0;  100; Divine                        ;   5;  5000;   5; 10;      0;
-
-#elif defined(_SKILL)
-
-  1;   80; scroll use                    ;  20; 20000;  15;          0;
-  1;   90; wand use                      ;  20; 20000;  15;          0;
-  1;   40; diagnostics                   ;  15; 15000;  10;          0;
-  0;   60; fleeing                       ;  20; 20000;  15;          0;
-  6;   30; first aid                     ;  15; 15000;  10;          0;
-  3;   60; shield                        ;  20; 20000;  15;          0;
-
-#elif defined(_WEAPON)
-
-  1;   70; fist                          ;  20; 20000;   5;          0;
-  5;   80; brass knuckles                ;  25; 25000;  10;          0;
-  8;  100; elbow                         ;  25; 25000;  12;          0;
- 10;   80; staff                         ;  15; 15000;  10;          0;
- 14;   80; adze                          ;  20; 20000;  15;          0;
- 18;   80; javelin                       ;  25; 25000;  20; 40;      0;
- 20;   80; fish spine                    ;  25; 25000;  20;          0;
- 24;   70; naginata                      ;  25; 25000;  20;          0;
- 26;   80; glaive                        ;  15; 15000;  10;          0;
- 28;   80; bill hook                     ;  20; 20000;  15;          0;
- 30;   70; foot lance                    ;  20; 20000;  15;          0;
- 35;   80; knee                          ;  25; 25000;  20; 40;      0;
- 36;   80; sappara                       ;  25; 25000;  20;          0;
- 14;   70; kick                          ;  25; 25000;  20;          0;
- 40;   80; shamshir                      ;  20; 20000;  15;          0;
- 42;   70; pilum                         ;  20; 20000;  15;          0;
- 46;   80; partisan                      ;  25; 25000;  20; 40;      0;
- 50;   70; estoc                         ;  20; 20000;  20;          0;
- 55;   70; morning star                  ;  20; 20000;  25;          0;
-
-#elif defined (_SPELL)
-
- 14;   80; awaken                        ;  20; 20000;  15;          0;
- 12;   50; bless                         ;  10; 10000;   8;          0;
- 13;  100; blind                         ;  15; 15000;  10; 20;      0;
- 30;   80; call lightning                ;  15; 15000;  10;          0;
-  0;  100; cause light wounds            ;   5;  5000;   5; 10;      0;
- 13;  100; cause serious wounds          ;  10; 10000;   8; 16;      0;
- 10;   50; cure blind                    ;  15; 15000;  10;          0;
-  5;   70; cure light wounds             ;   5;  5000;   5;          0;
- 25;   50; curse                         ;  15; 15000;  10;          0;
- 25;  100; harm                          ;  15; 15000;  10;          0;
- 16;   60; locate object                 ;  10; 10000;   8; 16;      0;
- 14;   75; locate person                 ;  10; 10000;   8; 16;      0;
- 20;   50; remove curse                  ;  15; 15000;  10;          0;
- 15;  100; raise divine                  ;   5;  5000;   5; 10;      0;
-  5;   50; strength                      ;  10; 10000;   8;          0;
-  6;  100; dexterity                     ;  15; 15000;  10; 20;      0;
-  6;   80; charisma                      ;  15; 15000;  10;          0;
-  5;  100; divine resistance             ;  15; 15000;  10; 20;      0;
- 30;   80; protection from good          ;  10; 10000;   8; 16;      0;
- 32;  100; protection from evil          ;  15; 15000;  10;          0;
-  9;   60; sanctuary                     ;  15; 15000;  10; 20;      0;
- 22;   75; quicken                       ;  15; 15000;  10;          0;
-  5;   50; sustain                       ;  15; 15000;  10; 20;      0;
-  7;  100; detect alignment              ;  15; 15000;  10; 20;      0;
-  6;  100; detect invisible              ;  15; 15000;  10; 20;      0;
-  8;  100; detect magic                  ;  15; 15000;  10; 20;      0;
-  5;  100; detect poison                 ;  15; 15000;  10; 20;      0;
-  4;  100; detect undead                 ;  15; 15000;  10; 20;      0;
-  3;  100; detect curse                  ;  15; 15000;  10; 20;      0;
-  2;  100; sense life                    ;  15; 15000;  10; 20;      0;
- 18;  100; storm call                    ;  15; 15000;  10;          0;
- 20;   50; word of recall                ;  20; 20000;  15;          0;
-  5;   50; create food                   ;  10; 10000;   8; 16;      0;
-  9;   50; create water                  ;  10; 10000;   8; 16;      0;
-  8;   50; light                         ;  10; 10000;   8; 16;      0;
- 28;   50; continual light               ;  15; 15000;  10;          0;
-  3;   50; darkness                      ;  10; 10000;   8; 16;      0;
- 26;   50; continual darkness            ;  10; 10000;   8; 16;      0;
-  8;  100; leather skin                  ;  10; 10000;   8;          0;
- 16;  100; bark skin                     ;  15; 15000;  10;          0;
- 24;  100; bone skin                     ;  20; 20000;  15;          0;
- 20;   80; colourbeam                    ;  10; 10000;   8; 16;      0;
- 40;   80; colourspray                   ;  15; 15000;  10; 20;      0;
-  8;  100; command                       ;   5;  5000;   5; 10;      0;
-  0;   80; flash                         ;   5;  5000;   5; 10;      0;
- 25;   50; remove disease                ;  15; 15000;  10;          0;
-
-#else
-
-ERROR NO TYPE IN MYSTIC GUILD
-
-#endif
-
 #elif defined(_GUILD_BARBARIAN)
 
 #if defined(_ABILITY)
@@ -1276,9 +1186,14 @@ $1n tells you, 'I can not teach you any more';
 $1n tells you, 'You must be unaffected by magic, else I can't teach you';
 $1n tells you, 'Remove all equipment, please.';
 
+  0;  100; berserk                       ;  14; 14000;  10; 20;      0;
+  0;  100; rage                          ;  14; 14000;  10; 20;      0;
   0;  100; consider                      ;  14; 14000;  10; 20;      0;
   0;  100; diagnostics                   ;  14; 14000;  10; 20;      0;
   0;   70; fleeing                       ;  14; 14000;  10;          0;
+  0;  100; leap                          ;  14; 14000;  10;          0;
+  0;  100; taunt                         ;  14; 14000;  10;          0;
+  0;  100; charge                        ;  14; 14000;  10;          0;
   0;  100; bash                          ;   9;  9000;   8;          0;
   0;  100; shield                        ;   4;  4000;   5; 10;      0;
   1;  100; rescue                        ;  14; 14000;  10;          0;

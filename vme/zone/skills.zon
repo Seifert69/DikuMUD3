@@ -12163,7 +12163,6 @@ code
 		act("You haven't the energy. Better rest first.",A_ALWAYS, self, null, null, TO_CHAR);
 		quit;
 	}
-	else self.endurance := self.endurance - 20;
 
 	if (arg == "")
 	{
@@ -12217,7 +12216,9 @@ code
 	act("You recklessly charge at $3n!", A_ALWAYS, self, null, targ, TO_CHAR);
 	act("$1n recklessly charges at you !", A_ALWAYS, self, null, targ, TO_VICT);
 	act("$1n recklessly charges at $3n!", A_SOMEONE, self, null, targ, TO_NOTVICT);
-	bonus := meleeattack(self, targ, (bonus + self.level), pain);
+	self.hp := self.hp - pain;
+	bonus := meleeattack(self, targ, (bonus + self.level), 0);
+	
 	quit;
 }
 dilend /* ski_charge */
