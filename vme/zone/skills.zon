@@ -12033,9 +12033,9 @@ code
    act("<div class='shield_me'>You mercilessly taunt $3n.</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
    act("<div class='shield_other'>$1n mercilessly taunts $3n.</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
    act("<div class='shield_opponent'>$1n mercilessly taunts you!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
-   act("<div class='miss_me'>Your taunting causes $3n to swing wildly.</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
-   act("<div class='miss_other'>$3n swings wildly after $1n's taunts.</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
-   act("<div class='miss_opponent'>$1n's taunting causes you to swing wildly!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
+   act("<div class='miss_me'>Your taunting causes $3n to lose focus on the battle!</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
+   act("<div class='miss_other'>$3n loses focus on the battle after $1n's taunts!</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
+   act("<div class='miss_opponent'>$1n's taunting causes you to lose focus on the battle!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
 
    provoked_attack(tgt, self);
    send_done("taunt",self,null,tgt,hm,arg,null);
@@ -12053,10 +12053,13 @@ code
 }
 dilend // taunted
 
-dilbegin ski_berserk(medi:unitptr, tgt : unitptr, arg : string, hm : integer, effect : string);
+dilbegin ski_berserk(arg : string);
+external
+   integer skillresist (aa : integer, ad : integer, sa : integer, sd : integer);
 var
 	heal : integer;
-	end : integer;
+	hm : integer;
+	tgt : unitptr;
 code
 {
    /*
@@ -12064,50 +12067,283 @@ code
       This skill sends a character berserk.
       As a result the character's HP, END, and CON are increased temporarily.
       */
-
-    if (isaff(tgt, ID_BERSERK))
+	tgt := self;
+    if (tgt.endurance < 100)
     {
-      act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-    }
-
-    hm := 1 + hm / 10;
-    if (hm > 10) hm := 10;
+		act("<div class='spell'>You attempt to channel your energy, but find yourself exhausted.</div>",
+			A_ALWAYS, self, null, tgt, TO_CHAR);
+		act("<div class='spell'>$1n attemps to channel their energy, but is exhausted.</div>",
+			A_SOMEONE, self, null, tgt, TO_REST);
+		if (tgt.endurance > 20)
+			tgt.endurance := tgt.endurance - 20;
+		else
+			tgt.endurance := 1;
+		quit;
+	}
+	if(isaff(tgt, ID_BERSERK))
+	{
+		act("<div class='spell'>You attempt to channel your energy, but nothing happens.</div>",
+			A_ALWAYS, self, null, tgt, TO_CHAR);
+		act("<div class='spell'>$1n attemps to channel their energy, but nothing happens.</div>",
+			A_SOMEONE, self, null, tgt, TO_REST);
+		tgt.endurance := tgt.endurance - 50;
+		quit;
+	}
+	hm := skillresist(self.abilities[ABIL_CON],30,self.skills[SKI_BERSERK],0);
+	if (hm > 10)
+        hm := 10;	
+	if (hm <= 0)
+	{
+		act("<div class='spell'>You channel your energy, but fail to go berserk.</div>",
+			A_ALWAYS, self, null, tgt, TO_CHAR);
+		act("<div class='spell'>$1n channels their energy, but fails to go berserk.</div>",
+			A_SOMEONE, self, null, tgt, TO_REST);
+		tgt.endurance := tgt.endurance - 50;
+		quit;
+	}
 	
 	act("<div class='spell'>You channel your energy, and go berserk!</div>",
 		A_ALWAYS, self, null, tgt, TO_CHAR);
 	act("<div class='spell'>$1n channels their energy, and goes berserk!</div>",
 		A_SOMEONE, self, null, tgt, TO_REST);
 	
-	addaff(self, ID_BERSERK, 10, WAIT_SEC*30, ABIL_CON, hm, 0, TIF_BERSERK_ON, TIF_BERSERK_TICK, TIF_BERSERK_OFF, APF_ABILITY);
-    hm := 1 + hm / 10;
+	addaff(tgt, ID_BERSERK, 20, WAIT_SEC*30, ABIL_CON, hm, 0, TIF_CON_INC, TIF_NONE, TIF_CON_DEC, APF_ABILITY);
+	addaff(tgt, ID_BERSERK, 20, WAIT_SEC*30, ABIL_HP, hm, 0, TIF_HIT_INC, TIF_NONE, TIF_HIT_DEC, APF_ABILITY);
+	hm := hm * rnd(4,2);
     if (hm > 20) hm := 20;
 	heal := tgt.hp + (hm * 3);
-	end := tgt.endurance + (hm * 6);
-	
-	addaff(self, ID_BERSERK, 20, WAIT_SEC*30,
-	  ABIL_HP, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
-	  APF_ABILITY);
-	
-	tgt.endurance := end;
+	if (heal > tgt.max_hp) heal := tgt.max_hp;
+	tgt.endurance := tgt.endurance - 100;
 	tgt.hp := heal;
+	
+	send_done("berserk",self,null,tgt,hm,arg,null);
     quit;
 }
 dilend // ski_berserk
 
 dilbegin ski_frenzy(arg : string);
+var
+	tgt : unitptr;
+	hm : integer;
 code
 {
+	tgt :=self;
+	send_done("frenzy",self,null,tgt,hm,arg,null);
 	quit;
 }
 dilend
 
 dilbegin ski_rage(arg : string);
+var
+	tgt : unitptr;
+	hm : integer;
 code
 {
+	tgt :=self;
+	send_done("rage",self,null,tgt,hm,arg,null);
 	quit;
 }
 dilend
+
+dilbegin ski_charge(arg : string);
+var
+   targ     : unitptr;
+   bonus    : integer;
+   pain	    : integer;
+code
+{
+	if ((self.type == UNIT_ST_PC) and (self.skills[SKI_CHARGE] <= 0))
+	{
+		act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+
+	if (self.endurance <= 20)
+	{
+		act("You haven't the energy. Better rest first.",A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+
+	if (arg == "")
+	{
+		act("Charge at who?",A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+
+	targ := findunit(self, arg, FIND_UNIT_SURRO, null);
+
+	if ((targ == null) or not visible(self, targ))
+	{
+		act("That person is not here!", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+
+	if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+	{
+		act("You can't charge at that, silly! Sheesh some people.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+
+	if (targ == self)
+	{
+		act("You charge at yourself. Very amusing.", A_ALWAYS, self, null, null, TO_CHAR);
+		act("$1n charges at $1mself. It's rather strange looking, trust me.",
+			A_HIDEINV, self, null, null, TO_REST);
+		quit;
+	}
+
+	if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
+	{
+		if (not(isset (self.pcflags, PC_PK_RELAXED)))
+		{
+			act("You are not allowed to do that unless you sign the book of blood.",
+				A_ALWAYS, self, null, null, TO_CHAR);
+				quit;
+		}
+
+		if (not(isset (targ.pcflags, PC_PK_RELAXED)))
+		{
+			act("You are not allowed to do that unless $2e signs the book of blood.",
+				A_ALWAYS, self, targ, null, TO_CHAR);
+			quit;
+		}
+	}
+
+	bonus := rnd(50,25);
+	pain := rnd(self.hp/10,self.hp/15);
+
+	act("You recklessly charge at $3n!", A_ALWAYS, self, null, targ, TO_CHAR);
+	act("$1n recklessly charges at you !", A_ALWAYS, self, null, targ, TO_VICT);
+	act("$1n recklessly charges at $3n!", A_SOMEONE, self, null, targ, TO_NOTVICT);
+	self.hp := self.hp - pain;
+	bonus := meleeattack(self, targ, (bonus + self.level), 0);
+	
+	quit;
+}
+dilend /* ski_charge */
+
+dilbegin ski_leap(arg : string);
+external
+   integer skillresist (aa : integer, ad : integer, sa : integer, sd : integer);
+var
+   u : unitptr;
+   tgt : unitptr;
+   i : integer;
+   d : string;
+   hm : integer;
+
+code
+{
+	tgt := self;
+	if ((self.type == UNIT_ST_PC) and (self.skills[SKI_LEAP] <= 0))
+	{
+		act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+
+	if (self.endurance <= 50)
+	{
+		act("You haven't the energy. Better rest first.",A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	
+	hm := skillresist(self.abilities[ABIL_CON],30,self.skills[SKI_LEAP],0);
+
+	if (hm <= 0)
+	{
+		act("<div class='spell'>You attempt to leap away, but clumsily fail.</div>",
+			A_ALWAYS, self, null, tgt, TO_CHAR);
+		act("<div class='spell'>$1n attempts to leap away, but clumsily fails.</div>",
+			A_SOMEONE, self, null, tgt, TO_REST);
+		tgt.endurance := tgt.endurance - 50;
+		quit;
+	}
+
+   /* Find the room that the tgt is inside */
+
+	u := self.outside;
+	while (u.type != UNIT_ST_ROOM)
+		u := u.outside;
+
+	arg := getword(arg);
+
+	if(arg == "")
+	{
+		act("You must specify a direction to leap to.", A_SOMEONE, self, null, null, TO_CHAR);
+		quit;
+	}
+	
+	if (arg in "north") {
+		i := DIR_NORTH;
+		d := "north"; }
+	else if ((arg in "east") and (arg != "s")) {
+		i := DIR_EAST;
+		d := "east"; }
+	else if ((arg in "south") and (arg != "u")) {
+		i := DIR_SOUTH;
+		d := "south"; }
+	else if (arg in "west") {
+		i := DIR_WEST;
+		d := "west"; }
+	else if (arg in "up") {
+		i := DIR_UP;
+		d := "up"; }
+	else if (arg in "down") {
+		i := DIR_DOWN;
+		d := "down"; }
+	else if ((arg in "northeast") or (arg == "ne")) {
+		i := DIR_NORTHEAST;
+		d := "northeast"; }
+	else if ((arg in "northwest") or (arg == "nw")) {
+		i := DIR_NORTHWEST;
+		d := "northwest"; }
+	else if ((arg in "southeast") or (arg == "se")) {
+		i := DIR_SOUTHEAST;
+		d := "southeast"; }
+	else if ((arg in "southwest") or (arg == "sw")) {
+		i := DIR_SOUTHWEST;
+		d := "southwest"; }
+
+   if ((not u.exit_to[i]) or (u.exit_info[i] & EX_CLOSED) or (u.exit_to[i].movement == SECT_WATER_SAIL))
+	{
+		act("No such direction.", A_SOMEONE, self, null, null, TO_CHAR);
+		quit;
+	}
+
+	if (self.type==UNIT_ST_PC)
+		if (not(paycheck(self,u.exit_to[i])))
+		{
+			act("You don't have access to that location, type 'help donation'.",
+			   A_ALWAYS, self, null, null, TO_CHAR);
+			quit;
+		}
+
+	if ("$no_leaving_clan" in self.outside.extra)
+	{
+		act ("Magical Clan powers stop you from succeeding in that skill.",
+			A_ALWAYS, self, null,null,TO_CHAR);
+		act ("Magical Clan powers stop $1n from casting the Leaving skill.",
+			A_ALWAYS, self, null,null,TO_REST);
+		quit;
+	}
+
+	tgt.endurance := tgt.endurance - 50;
+	act("$1n leaps out of sight.",
+       A_HIDEINV, self, null, null, TO_ROOM);
+	act("You leap to the "+d+".",
+       A_SOMEONE, self, null, null, TO_CHAR);
+
+	link(self, u.exit_to[i]);
+
+	act("$1n leaps into sight.",
+       A_HIDEINV, self, null, null, TO_ROOM);
+
+	exec("look", self);
+
+	quit;
+}
+dilend // ski_leap
 
 /* END Barbarian Skills */
 %rooms
