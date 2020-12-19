@@ -228,7 +228,7 @@ void reconnect_game(class descriptor_data *d, class unit_data *ch)
       return;
 
    CHAR_DESCRIPTOR(d->character) = NULL;
-   extract_unit(d->character);
+   extract_unit(d->character); // Toss out the temporary unit and take over the new one
    d->character = ch;
    CHAR_DESCRIPTOR(ch) = d;
 
@@ -524,14 +524,16 @@ void nanny_throw(class descriptor_data *d, char *arg)
             //	      assert (UNIT_IN (u));
 
             if (!UNIT_IN(u))
-               slog(LOG_ALL, 0, "nanny_throw() player found but not in any units. Debug.");
+               slog(LOG_ALL, 0, "nanny_throw() player found but not in any units. Debug info - inspect me.");
 
+            /* 
+            // If it's a guest player
             if (PC_IS_UNSAVED(u))
             {
                // descriptor is closed, no msg will arrive : send_to_char("You got purged by someone in the menu.<br/>", u);
                extract_unit(u);
                break; // Break so that the guest gets purged
-            }
+            } */
 
             CHAR_LAST_ROOM(u) = UNIT_IN(u);
             reconnect_game(d, u);
