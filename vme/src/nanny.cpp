@@ -257,8 +257,7 @@ void reconnect_game(class descriptor_data *d, class unit_data *ch)
       CHAR_LAST_ROOM(ch) = NULL;
    }
    act("$1n has reconnected.", A_HIDEINV, cActParameter(ch), cActParameter(), cActParameter(), TO_ROOM);
-   slog(LOG_BRIEF, UNIT_MINV(ch), "%s[%s] has reconnected.",
-        PC_FILENAME(ch), CHAR_DESCRIPTOR(ch)->host);
+   slog(LOG_BRIEF, UNIT_MINV(ch), "%s[%s] has reconnected.", PC_FILENAME(ch), CHAR_DESCRIPTOR(ch)->host);
    CHAR_DESCRIPTOR(ch)->logon = time(0);
    PC_TIME(ch).connect = time(0);
    //      stop_affect(ch);
@@ -357,8 +356,7 @@ void enter_game(class unit_data *ch, int dilway)
    if ((CHAR_LEVEL(ch) == 0) && PC_IS_UNSAVED(ch))
    {
       void start_player(class unit_data * ch);
-      slog(LOG_BRIEF, 0, "%s[%s] (GUEST) has entered the game.",
-           PC_FILENAME(ch), CHAR_DESCRIPTOR(ch)->host);
+      slog(LOG_BRIEF, 0, "%s[%s] (GUEST) has entered the game.", PC_FILENAME(ch), CHAR_DESCRIPTOR(ch)->host);
 
       sbit32 new_player_id(void);
 
@@ -500,11 +498,21 @@ void nanny_throw(class descriptor_data *d, char *arg)
       return;
    }
 
+   assert(d->character);
+
    if (*arg == 'y' || *arg == 'Y')
    {
+      // Close all descriptors except the one that just said YES
       while ((td = find_descriptor(PC_FILENAME(d->character), d)))
+      {
+         send_to_descriptor("You got purged by your alter ego from the menu.<br/>", td);
          descriptor_close(td, TRUE, TRUE);
+      }
 
+      assert(d->character);
+
+      // Scan the game for a unit that is a PCs and hold the same name
+      // they should all be descriptorless now (except for d trying to login)
       for (u = unit_list; u; u = u->gnext)
       {
          if (!IS_PC(u))
@@ -515,25 +523,31 @@ void nanny_throw(class descriptor_data *d, char *arg)
             //	      assert (!CHAR_DESCRIPTOR (u));
             //	      assert (UNIT_IN (u));
 
+            if (!UNIT_IN(u))
+               slog(LOG_ALL, 0, "nanny_throw() player found but not in any units. Debug.");
+
             if (PC_IS_UNSAVED(u))
             {
-               send_to_descriptor("Guest, purging all connections - please retry.<br/>", d);
+               // descriptor is closed, no msg will arrive : send_to_char("You got purged by someone in the menu.<br/>", u);
                extract_unit(u);
-               return;
+               break; // Break so that the guest gets purged
             }
+
             CHAR_LAST_ROOM(u) = UNIT_IN(u);
             reconnect_game(d, u);
             return;
          }
       }
 
+      // Reconnecting character was NOT in the game, in the menu, so for guests, just close
       if (!player_exists(PC_FILENAME(d->character)))
       {
-         send_to_descriptor("Guest, purging all connections - please retry.<br/>", d);
+         send_to_descriptor("Menu Guest, purging all connections - please retry.<br/>", d);
          set_descriptor_fptr(d, nanny_close, TRUE);
          return;
       }
 
+      // Reconnecting character was NOT in the game, so just set to MOTD and move on
       set_descriptor_fptr(d, nanny_motd, TRUE);
       return;
    }
@@ -937,8 +951,7 @@ void nanny_name_confirm(class descriptor_data *d, char *arg)
       char buf[100];
 
       // MS: removed help option since it was not implemented.
-      sprintf(buf, "Did I get that right, %s (Y/N)? ",
-              UNIT_NAME(d->character));
+      sprintf(buf, "Did I get that right, %s (Y/N)? ", UNIT_NAME(d->character));
       send_to_descriptor(buf, d);
       return;
    }
@@ -963,6 +976,8 @@ void nanny_name_confirm(class descriptor_data *d, char *arg)
    }
    else if (*arg == 'n' || *arg == 'N')
    {
+      if (PC_FILENAME(d->character))
+         strcpy(PC_FILENAME(d->character), "");
       UNIT_NAMES(d->character).Free();
       send_to_descriptor("Ok, what IS it, then? ", d);
       set_descriptor_fptr(d, nanny_get_name, FALSE);
@@ -1045,8 +1060,7 @@ void nanny_get_name(class descriptor_data *d, char *arg)
          send_to_descriptor("Sorry, no new players now, the game "
                             "is wizlocked!<br/>",
                             d);
-         slog(LOG_BRIEF, 0, "Wizlock lockout for %s.",
-              PC_FILENAME(d->character));
+         slog(LOG_BRIEF, 0, "Wizlock lockout for %s.", PC_FILENAME(d->character));
          set_descriptor_fptr(d, nanny_close, TRUE);
          return;
       }
