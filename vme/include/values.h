@@ -426,6 +426,7 @@ END HEADER*/
 #define SKI_TAUNT             67
 #define SKI_CHARGE            68
 #define SKI_LEAP              69
+#define SKI_DEFEND            70
 
 #define LAST_SKILL            75
 

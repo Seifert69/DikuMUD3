@@ -11982,7 +11982,7 @@ code
       quit;
    }
 
-   if (self.endurance < 10)
+   if (self.endurance < 40)
    {
       act("You are too exhausted to try that!", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
@@ -11991,53 +11991,66 @@ code
 
    hm := skillchecksaopp(SKI_TAUNT, ABIL_CON, ABIL_DEX, tgt, ABIL_BRA, ABIL_DEX);
 
-   if (hm < -25)
-   {
-      change_speed(self,PULSE_VIOLENCE);
+	if (hm < -25)
+	{
+		change_speed(self,PULSE_VIOLENCE);
 
-      act("<div class='nodam_me'>You foolishly exhaust yourself attempting to taunt $3n!</div>",
-      A_SOMEONE, self, null, tgt, TO_CHAR);
-      act("<div class='nodam_other'>$1n seems to foolishly exhaust themself attempting to taunt $3n!</div>",
-            A_SOMEONE, self, null, tgt, TO_NOTVICT);
-      act("<div class='nodam_opponent'>$1n foolishly exhausts themself attempting to taunt you!</div>",
-            A_SOMEONE, self, null, tgt, TO_VICT);
-      provoked_attack(tgt,self);
-      
-	  end := self.endurance - 40;
-	  if(end < 0)
-	  {
-			end := 0;
-	  }
-	  self.endurance := end;
-      quit;
-   }
+		act("<div class='nodam_me'>You foolishly exhaust yourself attempting to taunt $3n!</div>",
+		A_SOMEONE, self, null, tgt, TO_CHAR);
+		act("<div class='nodam_other'>$1n seems to foolishly exhaust themself attempting to taunt $3n!</div>",
+			A_SOMEONE, self, null, tgt, TO_NOTVICT);
+		act("<div class='nodam_opponent'>$1n foolishly exhausts themself attempting to taunt you!</div>",
+			A_SOMEONE, self, null, tgt, TO_VICT);
+		provoked_attack(tgt,self);
 
-   if (hm < 0)
-   {
-      change_speed(self,PULSE_ROUND);
+		quit;
+	}
 
-      act("<div class='miss_me'>Your taunting of $3n falls on deaf ears.</div>",
+	end := self.endurance - 40;
+	if(end < 1)
+		end := 1;
+	self.endurance := end;
+	if (hm < 0)
+	{
+		change_speed(self,PULSE_ROUND);
+
+		act("<div class='miss_me'>Your taunting of $3n falls on deaf ears.</div>",
 		A_ALWAYS, self, null, tgt, TO_CHAR);
-      act("<div class='miss_other'>$1n pitifully attempt to taunt $3n.</div>",
+		act("<div class='miss_other'>$1n pitifully attempt to taunt $3n.</div>",
 		A_SOMEONE, self, null, tgt, TO_NOTVICT);
-      act("<div class='hit_opponent'>$1n fails their effort to taunt you.</div>",
+		act("<div class='hit_opponent'>$1n fails their effort to taunt you.</div>",
 		A_SOMEONE, self, null, tgt, TO_VICT);
-      provoked_attack(tgt,self);
-      quit;
+		provoked_attack(tgt,self);
+		quit;
+	}
+   
+	act("<div class='shield_me'>You mercilessly taunt $3n.</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
+	act("<div class='shield_other'>$1n mercilessly taunts $3n.</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
+	act("<div class='shield_opponent'>$1n mercilessly taunts you!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
+	   
+   if(self.fighting)
+   {   
+		dilcopy("taunted@skills",tgt);
+		change_speed(tgt,PULSE_VIOLENCE*2);
+		act("<div class='miss_me'>Your taunting causes $3n to lose focus on the battle!</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
+		act("<div class='miss_other'>$3n loses focus on the battle after $1n's taunts!</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
+		act("<div class='miss_opponent'>$1n's taunting causes you to lose focus on the battle!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
    }
-
-   dilcopy("taunted@skills",tgt);
-
-   change_speed(tgt,PULSE_VIOLENCE*3);
-
-   act("<div class='shield_me'>You mercilessly taunt $3n.</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
-   act("<div class='shield_other'>$1n mercilessly taunts $3n.</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
-   act("<div class='shield_opponent'>$1n mercilessly taunts you!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
-   act("<div class='miss_me'>Your taunting causes $3n to lose focus on the battle!</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
-   act("<div class='miss_other'>$3n loses focus on the battle after $1n's taunts!</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
-   act("<div class='miss_opponent'>$1n's taunting causes you to lose focus on the battle!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
-
-   provoked_attack(tgt, self);
+   else
+   {	
+		if((tgt.position == POSITION_SITTING) or (tgt.position == POSITION_RESTING) or (tgt.position == POSITION_INCAP) or 
+			(tgt.position == POSITION_MORTALLYW) or (tgt.position == POSITION_STUNNED))
+		{
+			act("<div class='miss_me'>$3n is not in a position to respond to your taunt.</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
+		}
+		else
+		{
+			act("<div class='miss_me'>Your taunting causes $3n to attack!</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
+			act("<div class='miss_other'>$3n attacks after $1n's taunts!</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
+			act("<div class='miss_opponent'>$1n's taunting causes you to attack!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
+			set_fighting(tgt, self);
+		}
+	}
    send_done("taunt",self,null,tgt,hm,arg,null);
    quit;
 }
@@ -12046,12 +12059,105 @@ dilend // ski_taunt
 dilbegin taunted();
 code
 {
-   heartbeat := PULSE_VIOLENCE * 3;
-
+   heartbeat := PULSE_VIOLENCE*2;
    wait(SFB_TICK, TRUE);
    quit;
 }
 dilend // taunted
+
+dilbegin aware ski_defend(arg : string);
+var 
+	foe : unitptr;
+	dam : integer;
+    i 	: integer;
+code
+{
+	heartbeat := PULSE_ROUND;
+	
+	if((dilfind("def_block@skills", self)) or (dilfind("defending@skills", self)))
+		quit;
+	if (self.endurance < 100)
+    {
+		act("<div class='spell'>You exhaust yourself trying to take up a defensive position!</div>",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		if (self.endurance > 40)
+			self.endurance := self.endurance - 40;
+		else
+			self.endurance := 1;
+		quit;
+	}
+	self.endurance := self.endurance - 100;
+	
+	act("<div class='spell'>You take up a defensive position.</div>",A_ALWAYS, self, null, null, TO_CHAR);
+	act("<div class='spell'>$1n takes up a defensive position.</div>",A_SOMEONE, self, null, null, TO_REST);
+	
+	dilcopy("def_block@skills",self);
+	dilcopy("defending@skills",self);
+	send_done("defend",self,null,null,0,arg,null);
+	quit;
+}
+dilend // ski_defend
+
+dilbegin aware def_block();
+var
+	arg   : string;
+       i  : integer;
+code
+{
+:start:
+
+	wait(SFB_CMD, self==activator);
+	arg := cmdstr;
+	if ((arg == "look") or
+		(arg == "inventory") or
+		(arg == "who") or
+		(arg == "status") or
+		(arg == "score") or
+		(arg == "equipment") or
+		(arg == "affect") or
+		(arg == "taunt"))
+	{
+		goto start;
+	}
+	else if(arg == "defend")
+		goto end_def;
+	
+	block;
+	act("<div class='cpw'>You can not do that while defending!</div>",
+		A_ALWAYS, self, null, null, TO_CHAR);
+	goto start;
+	
+:end_def:
+	block;
+	if(dilfind("defending@skills", self))
+		i := dildestroy("defending@skills", self);
+	act("<div class='cpw'>You stop defending.</div>",A_ALWAYS, self, null, null, TO_CHAR);
+	act("<div class='cpw'>$1n stops defending.</div>",A_SOMEONE, self, null, null, TO_REST);
+	quit;
+}
+dilend // def_block
+
+dilbegin aware defending();
+var
+       i  : integer;
+	   foe : unitptr;
+code
+{
+:start:
+
+	wait(SFB_PRE, ((command(CMD_AUTO_DAMAGE)) and (target == self)));
+	foe := activator;
+	block;
+	if(dilfind("def_block@skills", self))
+		i := dildestroy("def_block@skills", self);
+	act("<div class='miss_me'>$3n is left reeling after you defend their attack!</div>", A_SOMEONE, self, null, foe, TO_CHAR);
+	act("<div class='miss_other'>$3n is left reeling after $1n defends their attack!</div>", A_SOMEONE, self, null, foe, TO_NOTVICT);
+	act("<div class='miss_opponent'>$1n defends your attack, leaving you reeling!</div>", A_SOMEONE, self, null, foe, TO_VICT);
+	set_fighting(foe,self);
+	change_speed(foe,PULSE_VIOLENCE*2);
+	quit;
+}
+dilend // defending
 
 dilbegin ski_berserk(arg : string);
 external

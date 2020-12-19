@@ -439,6 +439,7 @@ gsub(/CMD_RAGE/,"\"rage\"",$0);
 gsub(/CMD_TAUNT/,"\"taunt\"",$0);
 gsub(/CMD_LEAP/,"\"leap\"",$0);
 gsub(/CMD_CHARGE/,"\"charge\"",$0);
+gsub(/CMD_DEFEND/,"\"defend\"",$0);
 
 print $0;
 }

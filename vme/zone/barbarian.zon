@@ -438,7 +438,6 @@ extra {"extra"}
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-west to train_01 descr "North Descr<br/>";
 east to train_03 descr "South Descr<br/>";
 end
 
