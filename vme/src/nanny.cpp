@@ -621,6 +621,13 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
    sprintf(buf, "PasswordOff('%s', '%s')", PC_FILENAME(d->character), g_cServerConfig.m_mudname);
    send_to_descriptor(scriptwrap(buf).c_str(), d);
 
+   class descriptor_data *td;
+   while ((td = find_descriptor(PC_FILENAME(d->character), d)))
+   {
+      send_to_descriptor("You got purged by your alter ego from the menu.<br/>", td);
+      descriptor_close(td, TRUE, TRUE);
+   }
+
    /* See if guest is in game, if so - a guest was LD       */
    /* Password has now been redefined                       */
    for (u = unit_list; u; u = u->gnext)
