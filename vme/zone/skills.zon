@@ -12073,7 +12073,11 @@ var
 code
 {
 	heartbeat := PULSE_ROUND;
-	
+	if ((self.type == UNIT_ST_PC) and (self.skills[SKI_DEFEND] <= 0))
+	{
+      act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+	}
 	if((dilfind("def_block@skills", self)) or (dilfind("defending@skills", self)))
 		quit;
 	if (self.endurance < 100)
@@ -12233,6 +12237,10 @@ var
 	hm : integer;
 code
 {
+	
+	// has some chance of auto-initiating combat on the next mob in the room
+	// gives haste, or some such?
+	// every round the effects become more intense?
 	tgt :=self;
 	send_done("frenzy",self,null,tgt,hm,arg,null);
 	quit;
@@ -12245,6 +12253,10 @@ var
 	hm : integer;
 code
 {
+	// perhaps this should do what berserk does - add hp/con
+	// make it so berserk does this, which is, at cost of END
+	// for every hit, every hit is more powerful.
+	// every round the effects become more intense?
 	tgt :=self;
 	send_done("rage",self,null,tgt,hm,arg,null);
 	quit;
