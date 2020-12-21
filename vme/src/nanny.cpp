@@ -1077,9 +1077,13 @@ void nanny_get_name(class descriptor_data *d, char *arg)
       /* If someone is connected, we borrow his pwd */
       if ((td = find_descriptor(tmp_name, d)))
       {
-         strcpy(PC_PWD(d->character), PC_PWD(td->character));
-         set_descriptor_fptr(d, nanny_existing_pwd, TRUE);
-         return;
+         // Only borrow a password if its already been set
+         if (*PC_PWD(td->character))
+         {
+            strcpy(PC_PWD(d->character), PC_PWD(td->character));
+            set_descriptor_fptr(d, nanny_existing_pwd, TRUE);
+            return;
+         }
       }
 
       /* Check for LD after PWD confirmation, this is due to */
