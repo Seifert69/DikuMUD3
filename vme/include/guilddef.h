@@ -1175,12 +1175,12 @@ $1n tells you, 'I cannot teach you more than I have.';
 $1n tells you, 'You must have no traces of magic about you to learn.';
 $1n tells you, 'Remove all equipment, please.';
 
-  0;  100; Strength                      ;   5; 15000;  10; 20;      0;
-  0;  100; Dexterity                     ;   5; 15000;  10; 20;      0;
-  0;   90; Constitution                  ;   10; 15000;  10; 20;      0;
-  0;  100; Hitpoints                     ;   9; 15000;  10; 20;      0;
-  0;   60; Charisma                      ;  15;  5000;   5; 10;      0;
-  0;   60; Brain                         ;  15; 10000;   8; 16;      0;
+  0;  100; Strength                      ;   5; 15000;  10;    0;
+  0;  100; Dexterity                     ;   5; 15000;  10;    0;
+  0;   90; Constitution                  ;   10; 15000;  10;      0;
+  0;  100; Hitpoints                     ;   9; 15000;  10;     0;
+  0;   60; Charisma                      ;  15;  5000;   5;     0;
+  0;   60; Brain                         ;  15; 10000;   8;      0;
  "
  
 #elif defined(_SKILL)
@@ -1195,15 +1195,15 @@ $1n tells you, 'I can not teach you any more';
 $1n tells you, 'You must be unaffected by magic, else I can't teach you';
 $1n tells you, 'Remove all equipment, please.';
 
-  0;  100; berserk                       ;  14; 14000;  10; 20;      0;
+  5;  100; berserk                       ;  14; 14000;  10; 20;      0;
   0;  100; rage                          ;  14; 14000;  10; 20;      0;
   0;  100; consider                      ;  14; 14000;  10; 20;      0;
   0;  100; diagnostics                   ;  14; 14000;  10; 20;      0;
   0;   70; fleeing                       ;  14; 14000;  10;          0;
-  0;  100; leap                          ;  14; 14000;  10;          0;
-  0;  100; taunt                         ;  14; 14000;  10;          0;
-  40;  100; defend                       ;  14; 14000;  10; 20;      0;
-  0;  100; charge                        ;  14; 14000;  10;          0;
+  15;  100; leap                          ;  14; 14000;  10;          0;
+  30;  100; taunt                         ;  14; 14000;  10;          0;
+  40; 100; defend                       ;  14; 14000;  10; 20;      0;
+  10;  100; charge                        ;  14; 14000;  10;          0;
   0;  100; bash                          ;   9;  9000;   8;          0;
   0;  100; shield                        ;   4;  4000;   5; 10;      0;
   1;  100; rescue                        ;  14; 14000;  10;          0;
@@ -1232,20 +1232,22 @@ $1n tells you, 'Remove all equipment, please.';
   0;  100; fist                          ;   9;  9000;   8;          0;
   0;  100; club                          ;   4;  4000;   5;          0;
   0;  100; hand axe                      ;   9;  9000;   8;          0;
+  2;  100; dagger                        ;   9;  9000;   8;          0;
   1;  100; rapier                        ;   9;  9000;   8;          0;
   2;  100; spear                         ;   9;  9000;   8;          0;
   4;   80; kick                          ;   4;  4000;  12;          0;
-  4;  100; mace                          ;   9;  9000;   8;          0;
   4;  100; short sword                   ;   9;  9000;   8;          0;
+  5;  100; mace                          ;   9;  9000;   8;          0;
   5;   80; brass knuckles                ;  25; 25000;  10;          0;
   5;   80; knee                          ;  25; 25000;  20; 40;      0;
-  8;  100; war hammer                    ;   9;  9000;   8;          0;
+  8;  100; war hammer                    ;   9;  9000;  12;          0;
   8;  100; elbow                         ;  25; 25000;  12;          0;
  10;  100; brass knuckles                ;  15; 15000;  12;          0;
  12;  100; morning star                  ;  14;  9000;  10;          0;
  14;  100; flail                         ;  14; 14000;  10;          0;
  14;   70; kick                          ;  25; 25000;  20;          0;
- 16;  100; long sword                    ;   9;  9000;   8;          0;
+ 16;  100; long sword                    ;   9;  9000;  10;          0;
+ 16;  100; broad sword                   ;   9;  9000;  10;          0;
  16;   80; trident                       ;  18; 18000;  15;          0;
  16;  100; battle club                   ;  14; 14000;  10;          0;
  18;  100; battle mace                   ;  14; 14000;  10;          0;
@@ -1253,7 +1255,8 @@ $1n tells you, 'Remove all equipment, please.';
  22;  100; battle axe                    ;  14; 14000;  15;          0;
  25;  100; war mattock                   ;  18; 18000;  15;          0;
  24;  100; maul                          ;  12; 12000;  10;          0;
- 25;  100; great sword                   ;   9;  9000;  10;          0;
+ 25;  100; great sword                   ;   9;  9000;  15;          0;
+ 25;  100; claymore                      ;   9;  9000;  15;          0;
  30;  100; halberd                       ;  18; 18000;  15;          0;
  "
  
