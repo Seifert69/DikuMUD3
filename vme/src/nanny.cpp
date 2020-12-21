@@ -542,7 +542,7 @@ void nanny_throw(class descriptor_data *d, char *arg)
       }
 
       // Reconnecting character was NOT in the game, in the menu, so for guests, just close
-      if (!player_exists(PC_FILENAME(d->character)))
+      if (PC_IS_UNSAVED(d->character) || !player_exists(PC_FILENAME(d->character)))
       {
          send_to_descriptor("Menu Guest, purging all connections - please retry.<br/>", d);
          set_descriptor_fptr(d, nanny_close, TRUE);
@@ -826,15 +826,14 @@ void nanny_menu(class descriptor_data *d, char *arg)
 
 void nanny_existing_pwd(class descriptor_data *d, char *arg)
 {
-   char buf[200];
+   char buf[400];
    class descriptor_data *td;
    class unit_data *u;
 
    /* PC_ID(d->character) can be -1 when a newbie is in the game and
        someone logins with the same name! */
 
-   STATE(d)
-   ++;
+   STATE(d)++;
 
    if (STATE(d) == 1)
    {
@@ -845,12 +844,10 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
                       " Press [enter] and wait for the password prompt.",
                  PC_CRACK_ATTEMPTS(d->character));
          send_to_descriptor(buf, d);
-         d->wait =
-             MIN(30, PC_CRACK_ATTEMPTS(d->character)) * 2 * PULSE_SEC;
+         d->wait = MIN(30, PC_CRACK_ATTEMPTS(d->character)) * 2 * PULSE_SEC;
          return;
       }
-      STATE(d)
-      ++;
+      STATE(d)++;
    }
 
    if (STATE(d) == 2)
@@ -866,7 +863,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
 
    if (str_is_empty(arg))
    {
-      UNIT_NAMES(d->character).Free();
+      //UNIT_NAMES(d->character).Free();
       send_to_descriptor("<br/>Wrong password, please login again.", d);
       set_descriptor_fptr(d, nanny_close, TRUE);
       // set_descriptor_fptr(d, nanny_get_name, FALSE);
@@ -889,16 +886,13 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
       {
          slog(LOG_ALL, 0, "%s entered a wrong password [%s].",
               PC_FILENAME(d->character), d->host);
-         PC_CRACK_ATTEMPTS(d->character)
-         ++;
+         PC_CRACK_ATTEMPTS(d->character)++;
 
          if ((td = find_descriptor(PC_FILENAME(d->character), d)))
          {
             send_to_descriptor("<br/>Someone just attempted to login under "
-                               "your name using an illegal password.<br/>",
-                               td);
-            PC_CRACK_ATTEMPTS(td->character)
-            ++;
+                               "your name using an illegal password.<br/>", td);
+            PC_CRACK_ATTEMPTS(td->character)++;
             d->wait =
                 PULSE_SEC * 5 + PC_CRACK_ATTEMPTS(td->character) * PULSE_SEC;
          }
@@ -928,7 +922,10 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
    /* Enters game (reconnects) if true                                  */
    for (u = unit_list; u; u = u->gnext)
    {
-      if (IS_PC(u) && str_ccmp(PC_FILENAME(u), PC_FILENAME(d->character)) == 0)
+      if (!IS_PC(u))
+         break;
+
+      if (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->character)) == 0)
       {
          //	  assert (!CHAR_DESCRIPTOR (u));
          //	  assert (UNIT_IN (u));

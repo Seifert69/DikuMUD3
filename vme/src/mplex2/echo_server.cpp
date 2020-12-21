@@ -101,11 +101,13 @@ void on_message(wsserver* s, websocketpp::connection_hdl hdl, message_ptr msg)
 
     // check for a special command to instruct the server to stop listening so
     // it can be cleanly exited.
+
+    /*
     if (msg->get_payload() == "stop-listening") {
         s->stop_listening();
         con->Close( TRUE );
         return;
-    }
+    }*/
 
     con->m_pFptr (con, msg->get_payload().c_str());
 }
