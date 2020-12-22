@@ -1491,12 +1491,16 @@ std::string str_json(const char *lbl, const std::string &str)
 // up to the first \0 character. Necessary hack as a bridge between
 // old and new password system to both rectify incorrect salt in 
 // set pwd <player> and to handle increase in stored password length
-//
+// return 0 = match, 1 = differ
 int pwdcompare(const char *p1, const char *p2, int nMax)
 {
     int i;
 
+    if ((p1 == NULL) || (p2 == NULL))
+        return 1;
+
     for (i=0; i < nMax; i++)
+    {
         if (p1[i] != p2[i])
         {
             if ((p1[i] == 0) || (p2[i] == 0))
@@ -1509,5 +1513,9 @@ int pwdcompare(const char *p1, const char *p2, int nMax)
             else
                 return 1;
         }
+        else if (p1[i] == 0) // They are both zero
+            return 1;
+    }
+
     return 0;
 }

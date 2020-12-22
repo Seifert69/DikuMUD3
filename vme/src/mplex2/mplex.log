@@ -1,8 +1,0 @@
-Thu Mar 19 16:09:20 2020 :: Opening mother connection on port 4243.
-Thu Mar 19 16:09:21 2020 :: Open connection to server on 127.0.0.1 4999.
-Thu Mar 19 16:09:21 2020 :: Stream to server was re-opened!
-Thu Mar 19 16:09:26 2020 :: on_message called with hdl 0 and messsage papi.
-Thu Mar 19 16:09:29 2020 :: on_message called with hdl 0 and messsage papi.
-Thu Mar 19 16:09:32 2020 :: on_message called with hdl 0 and messsage pupu.
-Thu Mar 19 16:09:37 2020 :: on_message called with hdl 0 and messsage look.
-Thu Mar 19 16:09:41 2020 :: on_message called with hdl 0 and messsage look.

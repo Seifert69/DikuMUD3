@@ -79,11 +79,12 @@ int cActParameter::isNull(void)
  *  user's color preferences.  You probably only want to do this for telnet users.
  *  web users can rely on the styles defined in the CSS
 */
-void substHTMLcolor(char *dest, const char *src, class color_type &color)
+void substHTMLcolor(string &dest, const char *src, class color_type &color)
 {
     const char *p;
 
     p = src;
+    dest.clear();
 
     while (*p)
     {
@@ -115,16 +116,19 @@ void substHTMLcolor(char *dest, const char *src, class color_type &color)
                     // Substitute the color
                     char newtag[256];
                     substHTMLTagClass(aTag, "class", pCol, newtag, sizeof(newtag) - 1);
-                    sprintf(dest, "<%s>", newtag);
-                    TAIL(dest);
+                    dest.push_back('<');
+                    dest.append(newtag);
+                    dest.push_back('>');
+                    //sprintf(dest, "<%s>", newtag);
+                    //TAIL(dest);
                 }
             }
             continue;
         }
-
-        *dest++ = *p++;
+        dest.push_back(*p++);
+        //*dest++ = *p++;
     }
-    *dest = 0;
+    //*dest = 0;
 }
 
 /*
@@ -153,10 +157,12 @@ void send_to_descriptor(const char *messg, class descriptor_data *d)
                 u = d->original;
 
             assert(IS_PC(u));
-            char buf[strlen(messg) + 10000];
+            string dest;
+            dest.reserve(strlen(messg)*1.1);
+            //char buf[strlen(messg) + 10000];
 
-            substHTMLcolor(buf, messg, UPC(u)->color);
-            protocol_send_text(d->multi, d->id, buf, MULTI_TEXT_CHAR);
+            substHTMLcolor(dest, messg, UPC(u)->color);
+            protocol_send_text(d->multi, d->id, dest.c_str(), MULTI_TEXT_CHAR);
         }
 
 

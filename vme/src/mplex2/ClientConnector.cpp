@@ -868,7 +868,7 @@ void cConHook::StripHTML(char *dest, const char *src)
                     Control_Echo_On(this, &dest, 0);
                     p += 12;
                 }
-                t = strstr(p, "<script/>");
+                t = strstr(p, "</script>");
                 if (t)
                     p = t + 9;
                 continue;
