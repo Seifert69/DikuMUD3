@@ -67,8 +67,7 @@ currency_t local_currency(class unit_data *unit)
 /*  Print out an optimal representation of currency
  *  e.g.: (1230, DEF_CURRENCY) -> '10 copper coins and 3 iron coins'
  */
-char *
-money_string(amount_t amt, currency_t currency, ubit1 verbose)
+char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
 {
    static char buf[512];
    char tmp[256];
@@ -129,8 +128,7 @@ money_string(amount_t amt, currency_t currency, ubit1 verbose)
 /* Local procedures */
 
 /* Money calculations. Assures we never get negative money */
-static amount_t
-calc_money(amount_t v1, char op, amount_t v2)
+static amount_t calc_money(amount_t v1, char op, amount_t v2)
 {
    register amount_t res = 0;
 
@@ -159,8 +157,7 @@ calc_money(amount_t v1, char op, amount_t v2)
 }
 
 /* Set all the values on money correctly according to amount - return money */
-class unit_data *
-set_money(class unit_data *money, amount_t amt)
+class unit_data *set_money(class unit_data *money, amount_t amt)
 {
    char tmp[256];
    ubit32 i;
@@ -502,8 +499,7 @@ ubit1 char_can_afford(class unit_data *ch, amount_t amt, currency_t currency)
 }
 
 /* Check if there is some money of `type' in unit. (For piling purposes.) */
-class unit_data *
-unit_has_money_type(class unit_data *unit, ubit8 type)
+class unit_data *unit_has_money_type(class unit_data *unit, ubit8 type)
 {
    class unit_data *tmp;
 
@@ -519,8 +515,7 @@ unit_has_money_type(class unit_data *unit, ubit8 type)
  *  (which is why you must ALWAYS make sure the new object is either piled,
  *  or moved!)
  */
-class unit_data *
-split_money(class unit_data *money, amount_t amt)
+class unit_data *split_money(class unit_data *money, amount_t amt)
 {
    assert(IS_MONEY(money));
 
@@ -606,8 +601,7 @@ amount_t money_round(ubit1 up, amount_t amt, currency_t currency, int types)
 }
 
 /* Print out representation of supplied money-object with the amount amt */
-char *
-obj_money_string(class unit_data *obj, amount_t amt)
+char *obj_money_string(class unit_data *obj, amount_t amt)
 {
    static char buf[128];
    struct money_type *money_tmp;
@@ -637,8 +631,7 @@ amount_t char_can_carry_amount(class unit_data *ch, class unit_data *money)
               MONEY_AMOUNT(money));
 }
 
-amount_t
-unit_can_hold_amount(class unit_data *unit, class unit_data *money)
+amount_t unit_can_hold_amount(class unit_data *unit, class unit_data *money)
 {
    int d_wgt = UNIT_CAPACITY(unit) - UNIT_CONTAINING_W(unit);
 
@@ -673,8 +666,7 @@ void do_makemoney(class unit_data *ch, char *arg, const struct command_info *cmd
  *  DB boot routines
  */
 
-static void
-set_money_strings(FILE *fl, int idx)
+static void set_money_strings(FILE *fl, int idx)
 {
    char buf[512], *tmp[32], *c, *s, *sc;
    int i = 0;
@@ -719,8 +711,7 @@ set_money_strings(FILE *fl, int idx)
       money_types[idx].strings[i] = tmp[i];
 }
 
-static void
-set_relval(FILE *fl, int idx)
+static void set_relval(FILE *fl, int idx)
 {
    char buf[128];
    long res;
@@ -741,8 +732,7 @@ set_relval(FILE *fl, int idx)
  *    1: cut of trailing whitespace from line
  *    2: return a copy of read string
  */
-static char *
-get_string(FILE *fl, const char *err, ubit8 flag)
+static char *get_string(FILE *fl, const char *err, ubit8 flag)
 {
    static char buf[256];
 
@@ -759,11 +749,10 @@ get_string(FILE *fl, const char *err, ubit8 flag)
    return flag & 2 ? str_dup(buf) : buf;
 }
 
-void
 #ifdef VMC_SRC
-boot_money(char *moneyfile)
+void boot_money(char *moneyfile)
 #else
-boot_money(void)
+void boot_money(void)
 #endif
 {
    FILE *fl;
