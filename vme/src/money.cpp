@@ -208,8 +208,15 @@ class unit_data *set_money(class unit_data *money, amount_t amt)
 
    OBJ_PRICE(money) = amt;
 
-   weight_change_unit(money,
-                      amt / MONEY_WEIGHT(money) - UNIT_WEIGHT(money));
+   /* set new baseweight */
+   int mwgt = amt / MONEY_WEIGHT(money);
+   int dif = mwgt - UNIT_BASE_WEIGHT(money);
+
+   UNIT_BASE_WEIGHT(money) = mwgt;
+   weight_change_unit(money, dif);
+
+   dif = mwgt - UNIT_WEIGHT(money);
+   weight_change_unit(money, dif);
 
    UNIT_TITLE(money) = (obj_money_string(money, amt));
 
