@@ -109,7 +109,7 @@ $(PLATFORMDIR)/$(PLATFORM)/vmc/tmp_dilpar.cpp: dilpar.y
 	@cp dilpar.tab.h $(PLATFORMDIR)/$(PLATFORM)/vmc/tmp_dilpar.h
 
 $(PLATFORMDIR)/$(PLATFORM)/vmc/tmp_dillex.cpp:	dillex.l
-	$(LEX) -Pdil -t dillex.l  > $(PLATFORMDIR)/$(PLATFORM)/vmc/tmp_dillex.cpp 
+	$(LEX) --prefix=dil -t dillex.l  > $(PLATFORMDIR)/$(PLATFORM)/vmc/tmp_dillex.cpp 
 
 #.include ".depends"		# For `normal' make
 #include .depends		# For gnu-make

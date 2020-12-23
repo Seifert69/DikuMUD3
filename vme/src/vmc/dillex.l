@@ -26,7 +26,7 @@ void dilmain(int tplate, char *zname, int lnum, char* dilp );
 #define YYLMAX 4096
 
 /* #define yywrap() 1 */
-extern int yylex(); // Testing fix for issue #70
+extern int dillex();
 extern char dilcur_filename[];
 extern int dilistemplate;
 extern char *cur_zonename;
