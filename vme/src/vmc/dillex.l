@@ -196,7 +196,8 @@ char diltmpstr[YYLMAX * 2 + 1], *dila, *dilb;
 			}
 %%
 
-
+#undef yylex
+extern int yylex();
 
 void dilmain(int tplate, char *zname, int lnum, char* dilp )
 {
