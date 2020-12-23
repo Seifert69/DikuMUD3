@@ -12066,6 +12066,8 @@ code
 dilend // taunted
 
 dilbegin aware ski_defend(arg : string);
+external
+   integer skillchecksa(skillidx : integer, abiidx : integer, difficulty : integer);
 var 
 	foe : unitptr;
 	dam : integer;
@@ -12073,7 +12075,11 @@ var
 code
 {
 	heartbeat := PULSE_ROUND;
-	
+	if ((self.type == UNIT_ST_PC) and (self.skills[SKI_DEFEND] <= 0))
+	{
+      act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+	}
 	if((dilfind("def_block@skills", self)) or (dilfind("defending@skills", self)))
 		quit;
 	if (self.endurance < 100)
@@ -12086,13 +12092,23 @@ code
 			self.endurance := 1;
 		quit;
 	}
-	self.endurance := self.endurance - 100;
-	
-	act("<div class='spell'>You take up a defensive position.</div>",A_ALWAYS, self, null, null, TO_CHAR);
-	act("<div class='spell'>$1n takes up a defensive position.</div>",A_SOMEONE, self, null, null, TO_REST);
-	
-	dilcopy("def_block@skills",self);
-	dilcopy("defending@skills",self);
+    if(skillchecksa(SKI_DEFEND, ABIL_CON, 15) > 0)
+	{
+		self.endurance := self.endurance - 100;
+		
+		act("<div class='spell'>You take up a defensive position.</div>",A_ALWAYS, self, null, null, TO_CHAR);
+		act("<div class='spell'>$1n takes up a defensive position.</div>",A_SOMEONE, self, null, null, TO_REST);
+		
+		dilcopy("def_block@skills",self);
+		dilcopy("defending@skills",self);
+	}
+	else
+	{
+		self.endurance := self.endurance - 40;
+		act("<div class='spell'>You fall while attempting to take up a defensive position.</div>",A_ALWAYS, self, null, null, TO_CHAR);
+		act("<div class='spell'>$1n falls while attempting to take up a defensive position.</div>",A_SOMEONE, self, null, null, TO_REST);
+		self.position := POSITION_SITTING;
+	}
 	send_done("defend",self,null,null,0,arg,null);
 	quit;
 }
@@ -12233,6 +12249,10 @@ var
 	hm : integer;
 code
 {
+	
+	// has some chance of auto-initiating combat on the next mob in the room
+	// gives haste, or some such?
+	// every round the effects become more intense?
 	tgt :=self;
 	send_done("frenzy",self,null,tgt,hm,arg,null);
 	quit;
@@ -12245,6 +12265,10 @@ var
 	hm : integer;
 code
 {
+	// perhaps this should do what berserk does - add hp/con
+	// make it so berserk does this, which is, at cost of END
+	// for every hit, every hit is more powerful.
+	// every round the effects become more intense?
 	tgt :=self;
 	send_done("rage",self,null,tgt,hm,arg,null);
 	quit;

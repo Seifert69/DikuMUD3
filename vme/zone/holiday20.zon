@@ -41,6 +41,8 @@ help
 
 #define XMAS_SANTA20 "Visiting Santa 2020"
 #define XMAS_DONE20 "Holiday Gift 2020 Received"
+#define XMAS_DAY20 "Holiday Gift 2020 Upgraded"
+#define X_CHARGES "$XMAS 2020 Charges"
 
 %dil
 
@@ -586,6 +588,169 @@ code
 	goto start;
 }
 dilend   
+
+dilbegin xmas_day();
+var
+
+	pc		:  	unitptr;
+	item 	:   unitptr;
+
+code
+{
+	on_activation((self.position < POSITION_SITTING) or (self.position == POSITION_FIGHTING), skip);
+
+:start:
+
+	secure(pc, lost_pc);
+	heartbeat:= PULSE_SEC*4;
+	wait(SFB_DONE, (command("look")) and (activator.type == UNIT_ST_PC) and (target == self));
+
+	pc := activator;
+	
+	if ((not(XMAS_DONE20 in pc.quests)) or (XMAS_DAY20 in pc.quests))
+		goto start;
+
+	secure(pc, lost_pc);
+
+	exec("say Hello "+pc.name+", a very merry Christmas to you my dear!", self);
+	pause;
+
+:choose:
+
+	exec("say I see that Mr. Claus found you on his nice list, thats good.", self);
+	pause;
+	exec("say Now listen here darling, I'm offering a special holiday treat this year.", self);
+	pause;
+	exec("say If you would like to have a little extra holiday magic added to your gift, I can help!", self);
+	pause;
+	exec("say just hand me this year's gift, and I'll work a special charm onto it.", self);
+
+	wait(SFB_DONE, (command("give")) and (activator == pc) and (target == self));
+	
+	item := medium;
+	if ((item.zoneidx == "holiday20") and (not(XMAS_DAY20 in pc.quests)) and (item.type == 8))
+	{
+		addextra(pc.quests, {XMAS_DAY20}, "");
+		dilcopy ("xmas_magic@holiday20()",item);
+		dilcopy ("x_charge@holiday20()",item);
+		item.extra.descr := item.extra.descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
+		exec("Emote grasps the "+item.name+" and gives a little chickle.", self);
+		act ("A magical twinkle surrounds the "+item.name+".",A_ALWAYS,self,null,null,TO_ROOM);
+		link(item,pc);
+		pause;
+		exec("say Simply exclaim 'Merry Christmas!' to call on the magic!", self);
+		
+		log("Mrs Claus DIL: ("+pc.name+") recieved an upgrade!");
+	
+		exec("shout <div class='cg'>Happy Holidays "+pc.name+"!</div>",self);
+	}
+	else
+	{
+		log("XMAS MAGIC: Failed. Item symname = "+item.symname+" Item Type: "+itoa(item.type)); 
+		exec("Say Oh, deary me. "+pc.name+" I can not help you with this.", self);
+		link(item,pc);
+		pause;
+		exec("Say Here, you have this back now.", self);
+	}
+
+:lost_pc:
+
+	unsecure(pc);
+	goto start;
+}
+dilend  // xmas_day
+
+dilbegin xmas_magic();
+var
+	pc		: unitptr;
+	charges : integer;
+	exdp	: extraptr;
+	i 		: integer;
+code
+{
+:start:
+// item will carry 1 charge. recharges once per day. will protect wearer from death.
+	wait(SFB_CMD, (command("say") and (argument == "Merry Christmas!") and (activator == self.outside) and (self.equip > 0)));
+	pc := activator;
+	secure(pc,lostpc);
+	
+	if(not(X_CHARGES in pc.quests))
+	{
+		addextra(pc.quests, {X_CHARGES}, "");
+		exdp := X_CHARGES in pc.quests;
+		addstring(exdp.names,"charged");
+	}
+	else
+	{	
+		exdp := X_CHARGES in pc.quests;
+	}
+	  
+	if(exdp.names.[1] == "empty")   
+		goto start;
+	heartbeat := PULSE_SEC;
+	pause;
+	exdp := X_CHARGES in pc.quests;
+	substring(exdp.names,"charged");
+	addstring(exdp.names,"empty");
+	self.extra.descr := replace(" It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.","",self.extra.descr);
+	
+	act("A burst of holiday magic erupts from your $2n!",A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act("Your $2n has fully restored you!",A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act("A burst of holiday magic erupts from $1n's $2n!",A_ALWAYS,self.outside,self,null,TO_REST);
+	pc.hp := pc.max_hp;
+	pc.endurance := pc.max_endurance;
+	pc.mana := pc.max_mana;
+	position_update(pc);
+	
+	:lostpc:
+	unsecure(pc);
+	goto start;
+}
+dilend
+// *********************** DIL x_charge **************************
+// Program will add charges to the christmas item.
+
+dilbegin recall x_charge();
+var
+  exdp : extraptr;
+  pc : unitptr;
+  charge 	: integer;
+code
+{
+	:start:
+	heartbeat := PULSE_SEC*SECS_PER_MUD_DAY;
+	wait(SFB_TICK, (self.equip > 0));
+	heartbeat := PULSE_SEC*5;
+	
+	pc:=self.outside;
+	secure(pc,lostpc);
+	
+	if(not(X_CHARGES in pc.quests))
+	{
+		addextra(pc.quests, {X_CHARGES}, "");
+		exdp := X_CHARGES in pc.quests;
+		addstring(exdp.names, "charged");
+	}
+	else
+	{	
+		exdp := X_CHARGES in pc.quests;
+	}
+
+	if(exdp.names.[1] == "empty")
+	{
+		act("Your $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_CHAR);
+		act("$1n's $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_REST);
+		self.extra.descr := self.extra.descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
+		substring(exdp.names, "empty");
+		addstring(exdp.names, "charged");
+	}
+	
+	:lostpc:
+	unsecure(pc);
+	goto start;
+	
+}
+dilend // END x_charge
 
 /*pc picks item */
 dilbegin christmas_2020();
@@ -3156,6 +3321,28 @@ flags {UNIT_FL_NO_TELEPORT}
 romflags{CHAR_DETECT_INVISIBLE}
 dilcopy spirit_nokill();
 dilcopy christmas_2020();
+end      
+
+norma
+names {"Mrs. Claus","norma","lady"}
+title "Mrs. Claus"
+descr "A jolly little lady with a heartwarming smile is here."
+extra {}
+"Mrs. Claus is one of the warmest, jolliest souls you have ever laid eyes on."
+alignment +1000
+level 150
+sex SEX_MALE
+weight 100
+height 30
+race RACE_SPIRIT
+MSET_ABILITY (20,20,1,20,15,4,15,5)
+MSET_WEAPON(9,4,4,4,3,3)
+MSET_SPELL(9,4,0,7,6,5,10,14,6,6,6)
+flags {UNIT_FL_NO_TELEPORT}
+romflags{CHAR_DETECT_INVISIBLE}
+dilcopy spirit_nokill();
+dilcopy christmas_2020();
+dilcopy xmas_day();
 end      
 
 graf_jan	   

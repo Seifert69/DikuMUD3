@@ -1460,7 +1460,7 @@ movement SECT_CITY
 flags {UNIT_FL_INDOORS}
 
 north to fcave_02 descr "Inside the cave";
-west to fcave_06 descr "Inside the cave";
+west to fcave_10 descr "Inside the cave";
 end
 
 fcave_10
@@ -1883,7 +1883,7 @@ barnham_mace // priest, barbarian
 names {"gleaming mace", "mace"}
 title "a gleaming mace"
 descr
-"A gleaming dagger lies here."
+"A gleaming mace lies here."
 extra {}
 "This mace gleams with a magical glow. It appears to be well suited for self defense.<br>"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
@@ -1897,7 +1897,7 @@ end
 
 barnham_ls // paladin, fighter, ranger, knight
 names {"gleaming long sword", "sword"}
-title "a gleaming mace"
+title "a gleaming long sword"
 descr
 "A gleaming long sword lies here."
 extra {}
