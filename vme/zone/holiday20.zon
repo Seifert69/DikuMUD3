@@ -3341,7 +3341,6 @@ MSET_SPELL(9,4,0,7,6,5,10,14,6,6,6)
 flags {UNIT_FL_NO_TELEPORT}
 romflags{CHAR_DETECT_INVISIBLE}
 dilcopy spirit_nokill();
-dilcopy christmas_2020();
 dilcopy xmas_day();
 end      
 
