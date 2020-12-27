@@ -338,7 +338,7 @@ void advance_level(class unit_data *ch)
         CHAR_LEVEL(ch)++;
 
     PC_SKILL_POINTS(ch)   += skill_point_gain();
-    PC_ABILITY_POINTS(ch) += ability_point_gain(PC_VIRTUAL_LEVEL(ch));
+    PC_ABILITY_POINTS(ch) += ability_point_gain(ch);
 
     struct diltemplate *dt;
     dt = find_dil_template("advance_level@basis");
@@ -508,7 +508,7 @@ void do_level(class unit_data *ch, char *arg, const struct command_info *cmd)
         return;
     }
 
-    if (!now && PC_ABILITY_POINTS(ch) >= ability_point_gain(PC_VIRTUAL_LEVEL(ch)))
+    if (!now && PC_ABILITY_POINTS(ch) >= ability_point_gain(ch))
     {
         if (PC_VIRTUAL_LEVEL(ch) < 100)
         {

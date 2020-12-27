@@ -26,9 +26,7 @@ void dilmain(int tplate, char *zname, int lnum, char* dilp );
 #define YYLMAX 4096
 
 /* #define yywrap() 1 */
-#undef yylex
-extern "C" int yylex(); // Trying to solve issue #70 for Debian
-#define yylex dillex
+// extern "C" int yylex(); // Trying to solve issue #70 for Debian
 
 extern int dillex();
 extern char dilcur_filename[];

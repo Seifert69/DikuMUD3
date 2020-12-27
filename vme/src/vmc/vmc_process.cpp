@@ -293,7 +293,7 @@ void set_points(class unit_data *u)
     /* It's "*2" because each training session gives the player 2 ability
        points */
 
-    apoints = 2*ability_point_total(CHAR_LEVEL(u));
+    apoints = 2*ability_point_total(u);
     apoints = (12*apoints) / 10;
 
     // apoints = ((100+20-CHAR_LEVEL(u)/10)*apoints) / 100; /* 120% - 100% */
@@ -301,7 +301,7 @@ void set_points(class unit_data *u)
     /* It's "*5" because each training session gives the player 5 skill
        points.
        Remember that monsters do not have nearly as many weapons / spells */
-    spoints = (5*ability_point_total(CHAR_LEVEL(u)))/2;
+    spoints = (5*ability_point_total(u))/2;
     spoints = (12*spoints)/10;
 
     //spoints = ((100+20-CHAR_LEVEL(u)/10)*spoints) / 100; /* 120% - 100% */

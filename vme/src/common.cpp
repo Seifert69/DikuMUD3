@@ -75,13 +75,26 @@ struct shi_info_type shi_info[] = {
 /* Example: A character is about to raise from level 2 to 3. Add       */
 /*          ability_point_gain(3) to his ability points                */
 
-int ability_point_gain(int level)
+int ability_point_gain(class unit_data *ch)
+{
+    if (IS_NPC(ch))
+        return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR;
+    else
+    {
+        if (PC_VIRTUAL_LEVEL(ch) <= 100)
+            return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR;
+        else
+            return 0;
+    }
+}
+
+/*int ability_point_gain(int level)
 {
     if (level <= 100)
         return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR;
     else
         return 0;
-}
+}*/
 
 /* PS Algorithm 3                                                      */
 /* This algorithm returns the total amount of points gained up to a    */
@@ -89,10 +102,14 @@ int ability_point_gain(int level)
 /* The formula is total up to the current level                        */
 // Only used for NPCs and their point distro so we ignore the 100 level cap.
 // 
-int ability_point_total(int level)
+int ability_point_total(class unit_data *ch)
 {
-    return (level+1) * ability_point_gain(level);
+    if (IS_NPC(ch))
+        return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR * CHAR_LEVEL(ch);
+    else
+        return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR * MIN(PC_VIRTUAL_LEVEL(ch), 100);
 }
+
 
 int skill_point_gain(void)
 {
