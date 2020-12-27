@@ -1300,7 +1300,7 @@ static int check_combat(class unit_data *ch)
 }
 
 
-// Above level 50 a e.g. 100 roll becomes:
+// Above level 50 a e.g. 100 roll becomes (with / 18):
 //  L51 -> 117
 //  L60 -> 167
 //  L70 -> 222
@@ -1309,12 +1309,14 @@ static int check_combat(class unit_data *ch)
 //  L200 -> 944
 //  L250 -> 1222
 //
+//  I've started with / 25 to not give everyone on the game a huge chock.
+//
 int roll_boost(int roll, int level)
 {
    if (level <= 50)
       return roll;
    else
-      return roll * (level-30) / 18;
+      return roll * (level-30) / 25;   // / 18;
 }
 
 
