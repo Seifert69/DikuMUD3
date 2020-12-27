@@ -45,5 +45,6 @@ int melee_bonus(class unit_data *att, class unit_data *def,
 int shield_bonus (class unit_data * att, class unit_data * def,
                   class unit_data ** pDef_shield);
 void modify_hit(class unit_data *ch, int hit);
+int roll_boost(int roll, int level);
 
 #endif
