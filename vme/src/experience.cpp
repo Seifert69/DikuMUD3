@@ -331,11 +331,22 @@ int spell_bonus(class unit_data *att, class unit_data *medium,
    /* If attacker can't see the defender, then the defender has a   */
    /* much better effective attack (since attacker can't see him    */
    if (!CHAR_CAN_SEE(att, def))
-      att_bonus -= 12;
+      att_bonus -= 25;
+
+   // Check for free hands
+   // What if there is something on _HANDS, e.g. Gloves - how should that affect bonus?
+   // What if the CHAR is holding something?
+   struct unit_data *wield = equipment(att, WEAR_WIELD);
+   struct unit_data *shield = equipment(att, WEAR_SHIELD);
+   if (shield == NULL)
+   {
+      if (wield == NULL)
+         att_bonus += 50;
+   }
 
    if ((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) ||
        (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
-      def_bonus += 10;
+      def_bonus += 25;
 
    if ((def_armour = equipment_type(def, hit_loc, ITEM_ARMOR)))
    {
