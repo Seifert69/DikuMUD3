@@ -982,7 +982,7 @@ open {EX_OPEN_CLOSE, EX_CLOSED}
 manipulate {MANIPULATE_ENTER,MANIPULATE_HOLD,MANIPULATE_TAKE}
 end
 
-2021_bag
+ny21_bag
 names {"Party Bag","bag"}
 title "a <div class='cpb'>New </div><div class='cpw'>Year </div><div class='cpy'>2021 </div> Party Bag"
 descr "a <div class='cpb'>New </div><div class='cpw'>Year </div><div class='cpy'>2021 </div> Party Bag rests here."
