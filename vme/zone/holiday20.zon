@@ -982,6 +982,18 @@ open {EX_OPEN_CLOSE, EX_CLOSED}
 manipulate {MANIPULATE_ENTER,MANIPULATE_HOLD,MANIPULATE_TAKE}
 end
 
+2021_bag
+names {"Party Bag","bag"}
+title "a <div class='cpb'>New </div><div class='cpw'>Year </div><div class='cpy'>2021 </div> Party Bag"
+descr "a <div class='cpb'>New </div><div class='cpw'>Year </div><div class='cpy'>2021 </div> Party Bag rests here."
+extra {}
+"This party bag was designed to celebrate New Years 2021! It could hold quite a bit and keep your gear safe inside."
+weight 1
+CONTAINER_DEF(1000)
+open {EX_OPEN_CLOSE, EX_CLOSED}
+manipulate {MANIPULATE_ENTER,MANIPULATE_HOLD,MANIPULATE_TAKE}
+end
+
 mistletoe
 title "a sprig of <div class='cpg'>mistletoe</div>"
 names {"mistletoe","sprig"}
@@ -3404,6 +3416,7 @@ end
 // this will maitain the items for players, but take away some christmas cheer.
 
 %reset 
+/*
 load xmas_tree2 into hall@newbie         local 1
 load xmas_tree into square@udgaard       local 1
 load xmas_tree2 into postoffice@udgaard  local 1
@@ -3424,6 +3437,6 @@ load mistletoe into	clan_enter@clan_uch  local 1
 load santa into study max 1
 load elf into workshop max 1
 load northpole into square@udgaard max 1
-load graf_jan into village_rd6@udgaard max 2
-load graf_jan into village_rd2@udgaard max 2
+*/
+load graf_jan into village_rd6@udgaard max 1
 %end
