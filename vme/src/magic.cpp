@@ -400,7 +400,7 @@ int spell_offensive(struct spell_args *sa, int spell_number, int bonus)
 
    roll = open100();
    roll_description(sa->caster, "spell", roll);
-   bonus += roll;
+   bonus += roll_boost(roll, CHAR_LEVEL(sa->caster));
 
    sa->hm = chart_damage(bonus,
                          &(spell_chart[spell_number].element[armour_type]));

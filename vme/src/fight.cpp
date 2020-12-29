@@ -1300,8 +1300,27 @@ static int check_combat(class unit_data *ch)
 }
 
 
-/* -1 if fails, >= 0 amount of damage */
+// Above level 50 a e.g. 100 roll becomes (with / 18):
+//  L51 -> 117
+//  L60 -> 167
+//  L70 -> 222
+//  L100 -> 389
+//  L150 -> 667
+//  L200 -> 944
+//  L250 -> 1222
+//
+//  I've started with / 25 to not give everyone on the game a huge chock.
+//
+int roll_boost(int roll, int level)
+{
+   if (level <= 50)
+      return roll;
+   else
+      return roll * (level-30) / 25;   // / 18;
+}
 
+
+/* -1 if fails, >= 0 amount of damage */
 int one_hit(class unit_data *att, class unit_data *def,
             int bonus, int att_weapon_type, int primary, int attack)
 {
@@ -1364,7 +1383,7 @@ int one_hit(class unit_data *att, class unit_data *def,
    else
    {
       roll_description(att, "hit", roll);
-      hm += roll;
+      hm += roll_boost(roll, CHAR_LEVEL(att));
    }
 
    if (CHAR_COMBAT(att))

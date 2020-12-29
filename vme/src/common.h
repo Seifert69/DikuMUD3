@@ -25,8 +25,8 @@ int is_in(int a, int from, int to);
 void set_hits(class unit_data *obj, int craftsmanship);
 
 int skill_point_gain(void);
-int ability_point_gain(int level);
-int ability_point_total(int level);
+int ability_point_gain(class unit_data *ch);
+int ability_point_total(class unit_data *ch);
 //double damage_str(int strength);
 
 int distribute_points(sbit16 *skills, int max, int points, int level);
