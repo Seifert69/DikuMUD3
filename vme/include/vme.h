@@ -383,18 +383,18 @@
 #define UNIT_FL_INVISIBLE      0x0002
 #define UNIT_FL_NO_BURY        0x0004
 #define UNIT_FL_BURIED         0x0008
-#define UNIT_FL_NO_SUM 0x0010
+#define UNIT_FL_NO_SUM         0x0010
 #define UNIT_FL_SACRED         0x0020
 #define UNIT_FL_NO_MOB         0x0040
 #define UNIT_FL_NO_WEATHER     0x0080
 #define UNIT_FL_INDOORS        0x0100
-#define UNIT_FL_NO_SUM_FROM 0x0200
+#define UNIT_FL_NO_SUM_FROM    0x0200
 #define UNIT_FL_TRANS          0x0400
 #define UNIT_FL_XXXUNUSED2     0x0800
 #define UNIT_FL_NOSAVE         0x1000
 #define UNIT_FL_MAGIC          0x2000
-#define UNIT_FL_NO_TEL 0X4000
-#define UNIT_FL_NO_TEL_TO 0x8000
+#define UNIT_FL_NO_TEL         0X4000
+#define UNIT_FL_NO_TEL_TO      0x8000
 
 
 #define UNIT_FL_NO_TELEPORT ( UNIT_FL_NO_TEL+UNIT_FL_NO_TEL_TO+UNIT_FL_NO_SUM+UNIT_FL_NO_SUM_FROM)

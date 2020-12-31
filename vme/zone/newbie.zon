@@ -34,7 +34,7 @@ code
 {
 :start:
 x:="New Player Helper" in self.quests;
-if (x==null)
+if ((x==null) and (self.level < IMMORTAL_LEVEL))
  {
  act ("You are not a member of the Newbie Council.",
   A_ALWAYS,self,null,null,TO_CHAR);
@@ -197,7 +197,7 @@ var
 code
 {
 x:="New Player Helper" in self.quests;
-if (x==null)
+if ((x==null) and (self.level < IMMORTAL_LEVEL))
  {
  act ("You are not a member of the Newbie Council.",
   A_ALWAYS,self,null,null,TO_CHAR);
@@ -261,6 +261,7 @@ act ("You give your blessing to $3n.",
    quit;
 }
 dilend
+
 dilbegin nheal (arg:string);
 var
  tgt:unitptr;
@@ -268,7 +269,7 @@ var
 code
 {
 x:="New Player Helper" in self.quests;
-if (x==null)
+if ((x==null) and (self.level < IMMORTAL_LEVEL))
  {
  act ("You are not a member of the newbie council.",
   A_ALWAYS,self,null,null,TO_CHAR);
@@ -318,6 +319,7 @@ position_update(tgt);
  quit;
 }
 dilend
+
 dilbegin nsanctuary (arg:string);
 var
  tgt:unitptr;
@@ -325,7 +327,7 @@ var
 code
 {
 x:="New Player Helper" in self.quests;
-if (x==null)
+if ((x==null) and (self.level < IMMORTAL_LEVEL))
  {
  act ("You are not a member of the Newbie Council.",
   A_ALWAYS,self,null,null,TO_CHAR);
@@ -390,7 +392,7 @@ code
     }
 
 x:="New Player Helper" in self.quests;
-if (x==null)
+if ((x==null) and (self.level < IMMORTAL_LEVEL))
  {
  act ("You are not a member of the newbie council.",
   A_ALWAYS,self,null,null,TO_CHAR);
@@ -505,7 +507,7 @@ var
 code
 {
 x:="New Player Helper" in self.quests;
-if (x==null)
+if ((x==null) and (self.level < IMMORTAL_LEVEL))
  {
  act ("You are not a member of the Newbie Council.",  A_ALWAYS,self,null,null,TO_CHAR);
   quit;
@@ -532,7 +534,7 @@ heartbeat:= PULSE_SEC*5;
 
 :start:
 wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and
- (GUIDE in activator.quests) and (command("bring"))));
+ ((GUIDE in activator.quests) or (activator.level > IMMORTAL_LEVEL)) and (command("bring"))));
 block;
 pc:=findunit(activator, argument, FIND_UNIT_GLOBAL, null);
 gd:= activator;

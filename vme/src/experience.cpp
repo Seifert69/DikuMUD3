@@ -22,6 +22,8 @@
 #include "utility.h"
 #include "common.h"
 #include "fight.h"
+#include "skills.h"
+
 
 // MS2020 Trying to decipher the purpose & get rid of this kludge for a more dynamic point system
 //   level 0 - 20 : Changes nothing
@@ -180,67 +182,6 @@ int dikuii_spell_bonus(class unit_data *att, class unit_data *medium,
 
 
 
-int spell_bonus(class unit_data *att, class unit_data *medium,
-                class unit_data *def,
-                int hit_loc, int spell_number,
-                int *pDef_armour_type, class unit_data **pDef_armour)
-{
-   int att_spl_knowledge, def_spl_knowledge;
-   int att_bonus;
-   int def_bonus;
-   int def_armour_type;
-   class unit_data *def_armour;
-   int hm;
-
-   att_bonus = CHAR_OFFENSIVE(att);
-   def_bonus = CHAR_DEFENSIVE(def);
-
-   /* If attacker can't see the defender, then the defender has a   */
-   /* much better effective attack (since attacker can't see him    */
-   if (!CHAR_CAN_SEE(att, def))
-      att_bonus -= 12;
-
-   if ((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) ||
-       (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
-      def_bonus += 10;
-
-   if ((def_armour = equipment_type(def, hit_loc, ITEM_ARMOR)))
-   {
-      def_armour_type = OBJ_VALUE(def_armour, 0);
-      if (is_in(OBJ_VALUE(def_armour, 1), -25, 25))
-         def_bonus += OBJ_VALUE(def_armour, 1) + OBJ_VALUE(def_armour, 2);
-      else
-         slog(LOG_ALL, 0, "Illegal armour bonus.");
-   }
-   else
-      def_armour_type = CHAR_NATURAL_ARMOUR(def);
-
-   if (pDef_armour_type)
-      *pDef_armour_type = def_armour_type;
-
-   if (pDef_armour)
-      *pDef_armour = def_armour;
-
-   att_spl_knowledge = spell_attack_skill(medium, spell_number);
-   def_spl_knowledge = spell_defense_skill(def, spell_number);
-
-   // MS2020. Maybe the CHAR_LEVEL should not be a part of the final formula.
-   if (CHAR_AWAKE(def))
-   {
-      hm = 2 * (spell_attack_ability(medium, spell_number) - spell_ability(def, ABIL_BRA, spell_number)) +
-           2 * (att_spl_knowledge - def_spl_knowledge) + (att_bonus - def_bonus) + CHAR_LEVEL(att) - CHAR_LEVEL(def);
-   }
-   else
-   {
-      hm = 2 * spell_attack_ability(medium, spell_number) +
-           2 * att_spl_knowledge + (att_bonus - def_bonus) + CHAR_LEVEL(att) - CHAR_LEVEL(def);
-   }
-
-   return MAX(-50, hm);
-}
-
-
-
 /* If 'att' hits 'def' on 'hit_loc' then what is his basic attack */
 /* modification? This value should then be added to an open roll  */
 /* and looked up upon the damage_charts. If armour type points    */
@@ -368,6 +309,171 @@ int dikuii_melee_bonus(class unit_data *att, class unit_data *def,
       hm = (5 * att_abil) / 2 + att_bonus + 2 * att_wpn_knowledge + 50;
 
    // This results in a 5% hm increase per "level"
+
+   return MAX(-50, hm);
+}
+
+
+
+int spell_bonus(class unit_data *att, class unit_data *medium,
+                class unit_data *def,
+                int hit_loc, int spell_number,
+                int *pDef_armour_type, class unit_data **pDef_armour,
+                std::string *pStat)
+{
+   int att_spl_knowledge, def_spl_knowledge;
+   int att_bonus;
+   int def_bonus;
+   int def_armour_type;
+   class unit_data *def_armour;
+   int hm;
+   char buf[MAX_STRING_LENGTH];
+
+   if (pStat)
+   {
+      sprintf(buf, "<u>%s spelling %s with %s:</u><br/><pre>", UNIT_NAME(att), UNIT_NAME(def), g_SplColl.text[spell_number]);
+      *pStat = buf;
+      pStat->append("                        ATT     DEF<br/>");
+   }
+
+
+   att_bonus = CHAR_OFFENSIVE(att);
+   def_bonus = CHAR_DEFENSIVE(def);
+   if (pStat)
+   {
+      sprintf(buf, "Off / Def bonus     :  %4d    %4d<br/>", att_bonus, def_bonus);
+      pStat->append(buf);
+   }
+
+   /* If attacker can't see the defender, then the defender has a   */
+   /* much better effective attack (since attacker can't see him    */
+   if (!CHAR_CAN_SEE(att, def))
+   {
+      att_bonus -= 25;
+      if (pStat)
+      {
+         sprintf(buf, "Attacker cant see    :         %4d<br/>", -25);
+         pStat->append(buf);
+      }
+   }
+
+   // Check for free hands
+   // What if there is something on _HANDS, e.g. Gloves - how should that affect bonus?
+   // What if the CHAR is holding something?
+   struct unit_data *wield = equipment(att, WEAR_WIELD);
+   struct unit_data *shield = equipment(att, WEAR_SHIELD);
+   if (shield == NULL)
+   {
+      if (wield == NULL)
+      {
+         att_bonus += 50;
+         if (pStat)
+         {
+            sprintf(buf, "Free wield+shield    :         %4d<br/>", +50);
+            pStat->append(buf);
+         }
+      }
+   }
+
+   if ((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) ||
+       (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
+   {
+      if (pStat)
+      {
+         sprintf(buf, "Evil good protect     :       %4d  <br/>", +25);
+         pStat->append(buf);
+      }
+      def_bonus += 25;
+   }
+
+   if ((def_armour = equipment_type(def, hit_loc, ITEM_ARMOR)))
+   {
+      def_armour_type = OBJ_VALUE(def_armour, 0);
+      if (is_in(OBJ_VALUE(def_armour, 1), -25, 25))
+      {
+
+         int tmp = OBJ_VALUE(def_armour, 1) + OBJ_VALUE(def_armour, 2);
+         def_bonus += tmp;
+
+         if (pStat)
+         {
+            sprintf(buf, "Armor bonus         :       %4d  <br/>", tmp);
+            pStat->append(buf);
+         }
+      }
+      else
+         slog(LOG_ALL, 0, "Illegal armour bonus.");
+   }
+   else
+      def_armour_type = CHAR_NATURAL_ARMOUR(def);
+
+   if (pDef_armour_type)
+      *pDef_armour_type = def_armour_type;
+
+   if (pDef_armour)
+      *pDef_armour = def_armour;
+
+   att_spl_knowledge = spell_attack_skill(medium, spell_number);
+   def_spl_knowledge = spell_defense_skill(def, spell_number);
+
+   int att_spl_ability = spell_attack_ability(medium, spell_number);
+   int def_spl_ability = spell_ability(def, ABIL_BRA, spell_number);
+   
+   if (pStat)
+   {
+      sprintf(buf, " --- SUMMARY ---<br/>");
+      pStat->append(buf);
+      sprintf(buf, "Spl knowledge       :  %4d    %4d<br/>", att_spl_knowledge, def_spl_knowledge);
+      pStat->append(buf);
+      sprintf(buf, "Spl ability         :  %4d    %4d<br/>", att_spl_ability, def_spl_ability);
+      pStat->append(buf);
+      sprintf(buf, "Att bonus vs Def    :  %4d    %4d<br/>", att_bonus, def_bonus);
+      pStat->append(buf);
+   }
+
+   // MS2020. Maybe the CHAR_LEVEL should not be a part of the final formula.
+   if (CHAR_AWAKE(def))
+   {
+      hm = 2 * (att_spl_ability - def_spl_ability) +
+           2 * (att_spl_knowledge - def_spl_knowledge) + (att_bonus - def_bonus); // + CHAR_LEVEL(att) - CHAR_LEVEL(def);
+
+      if (pStat)
+      {
+         sprintf(buf, "Result              :  %4d<br/>", hm);
+         pStat->append(buf);
+      }
+   }
+   else
+   {
+      hm = 2 * att_spl_ability + 2 * att_spl_knowledge + (att_bonus - def_bonus); // + CHAR_LEVEL(att) - CHAR_LEVEL(def);
+
+      if (pStat)
+      {
+         sprintf(buf, "Result (sleep def)  :  %4d<br/>", hm);
+         pStat->append(buf);
+      }
+   }
+
+   if (pStat)
+   {
+      pStat->append("Result = 2*(att_abil-def_abil) + 2*(att_spl - def_spl) + (att_bonus - def_bonus)) + roll<br/>");
+      pStat->append("<br/>");
+
+      int dam5   = chart_damage(hm+roll_boost( 5, CHAR_LEVEL(att)), &(spell_chart[spell_number].element[def_armour_type]));
+      int dam50  = chart_damage(hm+roll_boost(50, CHAR_LEVEL(att)), &(spell_chart[spell_number].element[def_armour_type]));
+      int dam95  = chart_damage(hm+roll_boost(95, CHAR_LEVEL(att)), &(spell_chart[spell_number].element[def_armour_type]));
+
+      char buf[MAX_STRING_LENGTH];
+      sprintf(buf, "Spell  dmg (5/50/95) : %4d %4d %4d<br/>", dam5, dam50, dam95);
+      pStat->append(buf);
+
+      sprintf(buf, "Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def)/MAX(1, (dam5 + dam50 + dam95) / 3));
+      pStat->append(buf);
+
+      pStat->append("Defensive Shield bonus not part of stat<br/>");
+
+      pStat->append("</pre>");
+   }
 
    return MAX(-50, hm);
 }
@@ -620,9 +726,9 @@ int melee_bonus(class unit_data *att, class unit_data *def,
       pStat->append("Result = 2*(att_abil-def_dex) + 2*(att_wpn - def_wpn) + (att_bonus - def_bonus)) + roll<br/>");
       pStat->append("<br/>");
 
-      int dam5  = weapon_damage(5 + hm, att_wpn_type, def_armour_type);
-      int dam50 = weapon_damage(50 + hm, att_wpn_type, def_armour_type);
-      int dam95 = weapon_damage(95 + hm, att_wpn_type, def_armour_type);
+      int dam5  = weapon_damage(roll_boost(5, CHAR_LEVEL(att)) + hm, att_wpn_type, def_armour_type);
+      int dam50 = weapon_damage(roll_boost(50, CHAR_LEVEL(att)) + hm, att_wpn_type, def_armour_type);
+      int dam95 = weapon_damage(roll_boost(95, CHAR_LEVEL(att)) + hm, att_wpn_type, def_armour_type);
 
       sprintf(buf, "Weapon dmg (5/50/95) : %4d %4d %4d<br/>", dam5, dam50, dam95);
       pStat->append(buf);

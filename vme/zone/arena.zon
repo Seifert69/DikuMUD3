@@ -183,41 +183,39 @@ self.height := activator.height;
 goto start;
 }
 dilend
-dilbegin no_quit ();
+
+
+dilbegin no_quit();
 code
 {
-:start:
-wait (SFB_CMD, command ("quit") and
-(activator.level<200));
-block;
-act ("For your safety  you must withdraw from the arena to quit.",
-A_ALWAYS,activator,null,null,TO_CHAR);
-goto start;
+    :start:
+    wait(SFB_CMD, command ("quit") and (activator.level<200));
+    block;
+    act("For your safety  you must withdraw from the arena to quit.", A_ALWAYS,activator,null,null,TO_CHAR);
+    goto start;
 }
 dilend
+
 dilbegin no_save();
 code
 {
-:start:
-wait (SFB_CMD, command ("save") and
-(activator.level<200));
-block;
-act ("For your safety  you must withdraw from the arena to save.",
-A_ALWAYS,activator,null,null,TO_CHAR);
-goto start;
+    :start:
+    wait (SFB_CMD, command ("save") and (activator.level<200));
+    block;
+    act ("For your safety  you must withdraw from the arena to save.", A_ALWAYS,activator,null,null,TO_CHAR);
+    goto start;
 }
 dilend
+
+
 dilbegin no_donate ();
-
-
 code
 {
-:start:
-wait (SFB_CMD, command ("donate"));
-block;
-act ("Donating arena items is not allowed.",
-A_ALWAYS,activator,null,null,TO_CHAR);
-goto start;
+    :start:
+    wait (SFB_CMD, command ("donate"));
+    block;
+    act ("Donating arena items is not allowed.", A_ALWAYS,activator,null,null,TO_CHAR);
+    goto start;
 }
 dilend
 
@@ -363,46 +361,44 @@ code
         A_ALWAYS, self, medi,targ , TO_CHAR);
 
 
-return;
-                                                 }
-                                                 dilend
+    return;
+}
+dilend
 
 
 
 dilbegin flames();
 var
-     i : integer;
-     pc :unitptr;
+    i : integer;
+    pc :unitptr;
 code
 {
-     heartbeat := PULSE_SEC*30;
+    heartbeat := PULSE_SEC*30;
 
-     :start:
-     wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and
-     (command("touch")) and (("flame" in argument) or
-      ("fire" in argument))));
-      block;
-      secure(pc,lost);
-      i := rnd (1,30);
-      if (i < 10)
-      {
-    act("$1n burns $1s hand severely as $1e reaches out to touch the flames.",
-          A_ALWAYS, activator, null, null, TO_REST);
-     act("You burn your self severely as you touch the flames.",
-          A_ALWAYS, activator, null, null, TO_CHAR);
-     activator.hp := activator.hp -75;
-     goto start;
-     }
+    :start:
+    wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and (command("touch")) and (("flame" in argument) or ("fire" in argument))));
+    block;
+    secure(pc,lost);
+    i := rnd (1,30);
+    if (i < 10)
+    {
+        act("$1n burns $1s hand severely as $1e reaches out to touch the flames.",
+                A_ALWAYS, activator, null, null, TO_REST);
+        act("You burn your self severely as you touch the flames.",
+            A_ALWAYS, activator, null, null, TO_CHAR);
+        activator.hp := activator.hp -75;
+        goto start;
+    }
 
-     if (i < 20)
-     {
-      act("$1n burns $1s mildly as $1e reaches out to touch the flames.",
-          A_ALWAYS, activator, null, null, TO_REST);
-      act("You burn your self mildly as you touch the flames.",
-          A_ALWAYS, activator, null, null, TO_CHAR);
-     activator.hp := activator.hp -30;
-     goto start;
-     }
+    if (i < 20)
+    {
+        act("$1n burns $1s mildly as $1e reaches out to touch the flames.",
+            A_ALWAYS, activator, null, null, TO_REST);
+        act("You burn your self mildly as you touch the flames.",
+            A_ALWAYS, activator, null, null, TO_CHAR);
+        activator.hp := activator.hp -30;
+        goto start;
+    }
   if (1 < 30)
     {
     act("$1n passes $1s hand through the  flame with ease and the flame "+
@@ -514,23 +510,17 @@ var
 pc:unitptr;
 code
 {
-:start:
-wait (SFB_CMD,(((command ("transfer")) or
-(command ("load")) or
-(command ("eat")) or
-(command ("purge"))) and
-(activator.level >=200) and
-(activator.level<254)));
-block;
-pc:=activator;
-secure (pc,losthim);
-act ("That command has been disabled for the safety of the players in the arena",
-A_SOMEONE,pc,null,null,TO_CHAR);
-unsecure (pc);
-:losthim:
-goto start;
+    :start:
+    wait (SFB_CMD,(((command ("transfer")) or (command ("load")) or (command ("eat")) or (command ("purge"))) and 
+                   (activator.level >=200) and (activator.level<254)));
+    block;
+    pc:=activator;
+    act("That command has been disabled for the safety of the players in the arena", A_SOMEONE, pc, null, null, TO_CHAR);
+    :losthim:
+    goto start;
 }
 dilend
+
 
 dilbegin aware recall set_pk ();
 code
@@ -741,21 +731,25 @@ dilend
 dilbegin aware recall noaction();
 code
 {
-interrupt (SFB_MSG,argument=="action",action);
+    interrupt (SFB_MSG, argument=="action", action);
 
-:loop:
-wait(SFB_CMD, activator == self);
+    :loop:
+    wait(SFB_CMD, activator == self);
 
-if (activator.level < 253)
-block;
+    if (activator.level < 253)
+        block;
 
-goto loop;
-:action:
-if (activator==self)
-quit;
-else goto loop;
+    goto loop;
+    :action:
+
+    if (activator==self)
+        quit;
+    else
+        goto loop;
 }
 dilend
+
+
 
 dilbegin aware recall arena_enter();
 var

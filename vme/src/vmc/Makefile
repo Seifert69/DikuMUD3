@@ -75,6 +75,8 @@ clean:
 	-rm  $(PLATFORMDIR)/vmc/*
 	-rm  $(BINDIR)/vmc
 	-rm  $(PLATFORMDIR)/$(TSERV_OBJS)
+	-rm  dilpar.tab.c dilpar.tab.h y.tab.c y.tab.h
+
 
 # Need to get the tmp_*.c files into .depends as well
 depend:	

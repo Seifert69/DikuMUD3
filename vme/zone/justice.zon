@@ -626,7 +626,7 @@ code
    }
    else
    {
-      log("Unknown crime type in add_crime()");
+      log("Unknown crime type "+itoa(crime_type)+" in add_crime() for criminal "+criminal.symname+" victim "+vict.symname);
    }
 
 

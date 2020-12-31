@@ -954,6 +954,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
             g_nCorrupt += pBuf->Read8(&PC_SETUP_HEIGHT(u));
             g_nCorrupt += pBuf->Read8(&PC_SETUP_EMULATION(u));
             g_nCorrupt += pBuf->Read8(&PC_SETUP_TELNET(u));
+            PC_SETUP_TELNET(u) = TRUE; // 2020 we shouldn't allow this to change (BBS support)
             g_nCorrupt += pBuf->Read8(&PC_SETUP_COLOUR(u));
 
             if (unit_version > 59)

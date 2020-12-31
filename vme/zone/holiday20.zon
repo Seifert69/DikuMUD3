@@ -41,13 +41,192 @@ help
 
 #define XMAS_SANTA20 "Visiting Santa 2020"
 #define XMAS_DONE20 "Holiday Gift 2020 Received"
+#define XMAS_DAY20 "Holiday Gift 2020 Upgraded"
+#define X_CHARGES "$XMAS 2020 Charges"
 
 %dil
+
+dilbegin rocket (holiday : string);
+external
+	act_world (s:string);
+	ast_launch();
+	act_launcher(s:string);
+var
+	pc,item 	: unitptr;
+	s,pname,col,col2,holstr1,holstr2 : string;
+code
+{
+	heartbeat:=PULSE_SEC*3;
+:start:
+	wait (SFB_CMD, (command ("light") and ("rocket" in argument)));
+	block;
+	pc:=activator;
+	secure (pc,start);
+	if(pc.outside.type!=UNIT_ST_ROOM)
+	{
+		act ("You can not light that from here!",
+		A_ALWAYS,pc,null,null,TO_CHAR);
+		unsecure (pc);
+		goto start;
+	}
+	item:=findunit(pc,argument,FIND_UNIT_SURRO,null);
+	if ((item==null) or (item!=self))
+    {
+		unsecure (pc);
+		goto start;
+    }
+    if (item.outside.type!=UNIT_ST_ROOM)
+	{
+		act ("You need to put it on the ground first.",
+		A_ALWAYS,pc,null,null,TO_CHAR);
+		unsecure (pc);
+		unsecure (item);
+		goto start;
+	}
+    secure (item,start);
+	
+
+	
+    act ("$1n bends down and lights $2n.",A_ALWAYS,pc,self,null,TO_REST);
+    act ("You bend down and light $2n.",A_ALWAYS,pc,self,null,TO_CHAR);
+	pname:=pc.name;
+	pause;
+    act ("<div class='cr'>ss</div><div class='cpr'>ss</div><div class='cpy'>ss</div><div class='cy'>ss</div><div class='cr'>ss</div><div class='cpr'>ss</div><div class='cy'>ss</div><div class='cpy'>ss</div><div class='cw'></div>",
+		A_ALWAYS,self,null,null,TO_ALL);
+    pause;
+    act ("$1n leaves the ground with blinding speed!",A_ALWAYS,self,null,null,TO_ALL);
+    self.minv:=200;
+    pause;
+
+    on rnd (1,6) goto ired, igreen, iyellow, iblue, imagenta, icyan;
+
+	:ired:
+		col := "cpr";
+		col2 := "<div class='"+col+"'>red";
+		goto conti;
+
+	:igreen:
+		col := "cpg";
+		col2 := "<div class='"+col+"'>green";
+		goto conti;
+
+	:iyellow:
+		col := "cpy";
+		col2 := "<div class='"+col+"'>yellow";
+		goto conti;
+
+	:iblue:
+		col := "cpb";
+		col2 := "<div class='"+col+"'>blue";
+		goto conti;
+
+	:imagenta:
+		col := "cpm";
+		col2 := "<div class='"+col+"'>purple";
+		goto conti;
+
+	:icyan:
+		col := "cpc";
+		col2 := "<div class='"+col+"'>cyan";
+		goto conti;
+
+	:iwhite:
+		col := "cpw";
+		col2 := "<div class='"+col+"'>white";
+		goto conti;
+	   
+:conti:
+
+	s:="";
+	item:=self.inside;
+	while (item)
+	{
+		if (item.type!=UNIT_ST_OBJ)
+		{
+			item:=item.next;
+			continue;
+		}
+		if (item.objecttype!=ITEM_NOTE)
+		{
+			item:=item.next;
+			continue;
+		}
+		if (item.extra==null)
+			goto default;
+		s:=item.extra.descr;
+		break;
+   }
+   	if (holiday == "NY")
+	{
+		holstr1 := "<div class='cpw'>A burst of " + col2 + " sparkles</div> explodes in the sky above spelling out <br/><br/><div class='"+col+"'>" + s +"<br/></div></div>";
+		holstr2 := "<div class='cpw'>A burst of " + col2 + " sparkles</div> explodes in the sky above and drifts spectacularly down to the ground.<br/>";
+	}
+	if (holiday == "XMAS")
+	{
+		holstr1 := "<div class='cpw'>A flurry of " + col2 + " snowflakes</div> can be seen in the sky above spelling out <br/><br/><div class='"+col+"'>" + s +"<br/></div></div>";
+		holstr2 := "<div class='cpw'>A flurry of " + col2 + " snowflakes</div> can be seen in the sky drifting slowly down to the ground.<br/>";
+	}	
+	if (holiday == "Halloween")
+	{
+		holstr1 := "<div class='cpw'>A massive " + col2 + " skull</div> appears in the sky above. It echoes out <br/><br/><div class='"+col+"'>" + s +"<br/></div></div>";
+		holstr2 := "<div class='cpw'>A massive " + col2 + " skull</div> appears in the sky above. It cackles before fading away.<br/>";
+	}		
+	if (holiday == "VD")
+	{
+		holstr1 := "<div class='cpw'>An explosion of " + col2 + " hearts</div> appear in the sky spelling out <br/><br/><div class='"+col+"'>" + s +"<br/></div></div>";
+		holstr2 := "<div class='cpw'>An explosion of " + col2 + " hearts</div> appear in the sky above. They hang for a period of time, and fade.<br/>";
+	}
+	if (s=="")
+		goto default;
+
+	act_launcher(pname);
+	act_world ("<div class='cpw'>You hear a loud boom!</div><br/>");
+	ast_launch();	
+	act_world (holstr1);
+
+	item:=self.inside;
+	while (item)
+	{
+		if (item.type==UNIT_ST_PC)
+		{
+			item.minv:=0;
+			act("The rocket you are riding in explodes dumping your guts on your keyboard!",
+				A_ALWAYS,item,null,null,TO_CHAR);
+		}
+		item:=item.next;
+	}
+
+	self.minv:=0;
+	destroy(self);
+	quit;
+
+	:default:
+	act_world("<div class='cpw'>You hear a loud boom!</div><div class='cw'><br/></div>");
+	ast_launch();
+	act_world(holstr2);
+
+	item:=self.inside;
+	while (item)
+	{
+		if (item.type==UNIT_ST_PC)
+		{
+			item.minv:=0;
+			act("The rocket you are riding in explodes dumping your guts on your keyboard!",
+				A_ALWAYS,item,null,null,TO_CHAR);
+		}
+		item:=item.next;
+	}
+	self.minv:=0;
+	destroy (self);
+	quit;
+
+}
+dilend
 
 dilbegin holiday_burn();
 code
 {
-	act ("You $2n sparkles and you drop it to the ground.",
+	act ("Your $2n sparkles and you drop it to the ground.",
 		A_ALWAYS,self.outside,self,null,TO_CHAR);
 	act ("$1n's $2n sparkles and drops to the ground.",
 		A_SOMEONE,self.outside,self,null,TO_REST);
@@ -245,7 +424,7 @@ code
 		act("Come back when you have gained some experience!", A_ALWAYS, activator, null, null, TO_CHAR);
 		goto start;
 	}
-	else if ((pc.exp - atoi(pc.extra.["$XMASEXP20"].descr)) >=300000)
+	else if ((pc.exp - atoi(pc.extra.["$XMASEXP20"].descr)) >=200000)
 	{   /* they got it */	
 		act("You touch the pole, and visions of sugar plums start dancing in your head!", A_ALWAYS, activator, null, null, TO_CHAR);
 		act("You suddenly feel like you're floating.", A_ALWAYS, activator, null, null, TO_CHAR);
@@ -262,7 +441,7 @@ code
 	}
 	else 
 	{  /*they need */
-		act( "You need "+itoa(300000 - (pc.exp - atoi(pc.extra.["$XMASEXP20"].descr)))
+		act( "You need "+itoa(200000 - (pc.exp - atoi(pc.extra.["$XMASEXP20"].descr)))
 		+ " more experience to see Santa.", A_ALWAYS, activator, null, null, TO_CHAR);
 		goto start;
 	}
@@ -409,6 +588,169 @@ code
 	goto start;
 }
 dilend   
+
+dilbegin xmas_day();
+var
+
+	pc		:  	unitptr;
+	item 	:   unitptr;
+
+code
+{
+	on_activation((self.position < POSITION_SITTING) or (self.position == POSITION_FIGHTING), skip);
+
+:start:
+
+	secure(pc, lost_pc);
+	heartbeat:= PULSE_SEC*4;
+	wait(SFB_DONE, (command("look")) and (activator.type == UNIT_ST_PC) and (target == self));
+
+	pc := activator;
+	
+	if ((not(XMAS_DONE20 in pc.quests)) or (XMAS_DAY20 in pc.quests))
+		goto start;
+
+	secure(pc, lost_pc);
+
+	exec("say Hello "+pc.name+", a very merry Christmas to you my dear!", self);
+	pause;
+
+:choose:
+
+	exec("say I see that Mr. Claus found you on his nice list, thats good.", self);
+	pause;
+	exec("say Now listen here darling, I'm offering a special holiday treat this year.", self);
+	pause;
+	exec("say If you would like to have a little extra holiday magic added to your gift, I can help!", self);
+	pause;
+	exec("say just hand me this year's gift, and I'll work a special charm onto it.", self);
+
+	wait(SFB_DONE, (command("give")) and (activator == pc) and (target == self));
+	
+	item := medium;
+	if ((item.zoneidx == "holiday20") and (not(XMAS_DAY20 in pc.quests)) and (item.type == 8))
+	{
+		addextra(pc.quests, {XMAS_DAY20}, "");
+		dilcopy ("xmas_magic@holiday20()",item);
+		dilcopy ("x_charge@holiday20()",item);
+		item.extra.descr := item.extra.descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
+		exec("Emote grasps the "+item.name+" and gives a little chickle.", self);
+		act ("A magical twinkle surrounds the "+item.name+".",A_ALWAYS,self,null,null,TO_ROOM);
+		link(item,pc);
+		pause;
+		exec("say Simply exclaim 'Merry Christmas!' to call on the magic!", self);
+		
+		log("Mrs Claus DIL: ("+pc.name+") recieved an upgrade!");
+	
+		exec("shout <div class='cg'>Happy Holidays "+pc.name+"!</div>",self);
+	}
+	else
+	{
+		log("XMAS MAGIC: Failed. Item symname = "+item.symname+" Item Type: "+itoa(item.type)); 
+		exec("Say Oh, deary me. "+pc.name+" I can not help you with this.", self);
+		link(item,pc);
+		pause;
+		exec("Say Here, you have this back now.", self);
+	}
+
+:lost_pc:
+
+	unsecure(pc);
+	goto start;
+}
+dilend  // xmas_day
+
+dilbegin xmas_magic();
+var
+	pc		: unitptr;
+	charges : integer;
+	exdp	: extraptr;
+	i 		: integer;
+code
+{
+:start:
+// item will carry 1 charge. recharges once per day. will protect wearer from death.
+	wait(SFB_CMD, (command("say") and (argument == "Merry Christmas!") and (activator == self.outside) and (self.equip > 0)));
+	pc := activator;
+	secure(pc,lostpc);
+	
+	if(not(X_CHARGES in pc.quests))
+	{
+		addextra(pc.quests, {X_CHARGES}, "");
+		exdp := X_CHARGES in pc.quests;
+		addstring(exdp.names,"charged");
+	}
+	else
+	{	
+		exdp := X_CHARGES in pc.quests;
+	}
+	  
+	if(exdp.names.[1] == "empty")   
+		goto start;
+	heartbeat := PULSE_SEC;
+	pause;
+	exdp := X_CHARGES in pc.quests;
+	substring(exdp.names,"charged");
+	addstring(exdp.names,"empty");
+	self.extra.descr := replace(" It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.","",self.extra.descr);
+	
+	act("A burst of holiday magic erupts from your $2n!",A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act("Your $2n has fully restored you!",A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act("A burst of holiday magic erupts from $1n's $2n!",A_ALWAYS,self.outside,self,null,TO_REST);
+	pc.hp := pc.max_hp;
+	pc.endurance := pc.max_endurance;
+	pc.mana := pc.max_mana;
+	position_update(pc);
+	
+	:lostpc:
+	unsecure(pc);
+	goto start;
+}
+dilend
+// *********************** DIL x_charge **************************
+// Program will add charges to the christmas item.
+
+dilbegin recall x_charge();
+var
+  exdp : extraptr;
+  pc : unitptr;
+  charge 	: integer;
+code
+{
+	:start:
+	heartbeat := PULSE_SEC*SECS_PER_MUD_DAY;
+	wait(SFB_TICK, (self.equip > 0));
+	heartbeat := PULSE_SEC*5;
+	
+	pc:=self.outside;
+	secure(pc,lostpc);
+	
+	if(not(X_CHARGES in pc.quests))
+	{
+		addextra(pc.quests, {X_CHARGES}, "");
+		exdp := X_CHARGES in pc.quests;
+		addstring(exdp.names, "charged");
+	}
+	else
+	{	
+		exdp := X_CHARGES in pc.quests;
+	}
+
+	if(exdp.names.[1] == "empty")
+	{
+		act("Your $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_CHAR);
+		act("$1n's $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_REST);
+		self.extra.descr := self.extra.descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
+		substring(exdp.names, "empty");
+		addstring(exdp.names, "charged");
+	}
+	
+	:lostpc:
+	unsecure(pc);
+	goto start;
+	
+}
+dilend // END x_charge
 
 /*pc picks item */
 dilbegin christmas_2020();
@@ -640,6 +982,18 @@ open {EX_OPEN_CLOSE, EX_CLOSED}
 manipulate {MANIPULATE_ENTER,MANIPULATE_HOLD,MANIPULATE_TAKE}
 end
 
+ny21_bag
+names {"Party Bag","bag"}
+title "a <div class='cpb'>New </div><div class='cpw'>Year </div><div class='cpy'>2021 </div> Party Bag"
+descr "a <div class='cpb'>New </div><div class='cpw'>Year </div><div class='cpy'>2021 </div> Party Bag rests here."
+extra {}
+"This party bag was designed to celebrate New Years 2021! It could hold quite a bit and keep your gear safe inside."
+weight 1
+CONTAINER_DEF(1000)
+open {EX_OPEN_CLOSE, EX_CLOSED}
+manipulate {MANIPULATE_ENTER,MANIPULATE_HOLD,MANIPULATE_TAKE}
+end
+
 mistletoe
 title "a sprig of <div class='cpg'>mistletoe</div>"
 names {"mistletoe","sprig"}
@@ -704,7 +1058,7 @@ code
 	  act("*tick*  *tick*  *tick*",
           A_ALWAYS, pc, null, null, TO_ALL);
       pause;
-      act("*BOOM!* The <div class='cpr'>Christmas </div><div class='cpg'>Gift explodes into a ball of flames.</div>",
+      act("*BOOM!* The <div class='cpr'>Christmas </div><div class='cpg'>Gift</div> explodes into a ball of flames.",
           A_ALWAYS, pc, null, null, TO_ALL);
       exec("scream", pc);
       pc.hp := (pc.hp -(pc.hp /3));
@@ -943,22 +1297,20 @@ names {"gingerbread cookie","cookie"}
 title "a gingerbread cookie"
 descr "A gingerbread cookie has been left here."
 extra {}
-"
-<pre><br/>
-             _____<br/>
-           .'~ ~ ~`.<br/>
-           |  a a  |<br/>
-           `.  ~  .'<br/>
-       .----'(&gt;o&lt;)`----.<br/>
-      ( S             S )<br/>
-       `---.   o   .---'<br/>
-            :  o   :<br/>
-            :  o   :<br/>
-           '        '<br/>
-          '    /\    '<br/>
-       .-' ~~ /  \ ~~ `-.<br/>
-       `.___.'    `.___.'<br/>
-</pre>"
+"<pre>
+             _____
+           .'~ ~ ~`.
+           |  a a  |
+           `.  ~  .'
+       .----'(&gt;o&lt;)`----.
+      ( S             S )
+       `---.   o   .---'
+            :  o   :
+            :  o   :
+           '        '
+          '    /\    '
+       .-' ~~ /  \ ~~ `-.
+       `.___.'    `.___.'</pre>"
 manipulate {MANIPULATE_TAKE}
 weight 1
 FOOD_DEF(2, 0)
@@ -988,25 +1340,25 @@ names {"candy cane","cane","candy"}
 title "a <div class='cpr'>c</div><div class='cpw'>a</div><div class='cpr'>n</div><div class='cpw'>d</div><div class='cpr'>y </div><div class='cpw'>c</div><div class='cpr'>a</div><div class='cpw'>n</div><div class='cpr'>e</div>"
 descr "A large <div class='cpr'>c</div><div class='cpw'>a</div><div class='cpr'>n</div><div class='cpw'>d</div><div class='cpr'>y </div><div class='cpw'>c</div><div class='cpr'>a</div><div class='cpw'>n</div><div class='cpr'>e</div> lies here."
 extra {}
-"<pre><br/>
-<div class='bn'></div><div class='cpr'>        .----.      <br/><br/>
-</div><div class='bn'></div><div class='cpw'>      .'`.  .'`.    <br/><br/>
-</div><div class='bn'></div><div class='cpr'>    ,'-._:--:_.-\   <br/><br/>
-</div><div class='bn'></div><div class='cpw'>    |-._'    | _.|  <br/><br/>
-</div><div class='bn'></div><div class='cpr'>    |._ |    |' _|  <br/><br/>
-</div><div class='bn'></div><div class='cpw'>    `---'    |-' |  <br/><br/>
-</div><div class='bn'></div><div class='cpr'>             |.-'|  <br/><br/>
-</div><div class='bn'></div><div class='cpw'>             |_.-|  <br/><br/>
-</div><div class='bn'></div><div class='cpr'>             | _.|  <br/><br/>
-</div><div class='bn'></div><div class='cpw'>             |' _|  <br/><br/>
-</div><div class='bn'></div><div class='cpr'>             |-' |  <br/><br/>
-</div><div class='bn'></div><div class='cpw'>             |.-'|  <br/><br/>
-</div><div class='bn'></div><div class='cpr'>             |_.-|  <br/><br/>
-</div><div class='bn'></div><div class='cpw'>             | _.|  <br/><br/>
-</div><div class='bn'></div><div class='cpr'>             |' _|  <br/><br/>
-</div><div class='bn'></div><div class='cpw'>             |-' |  <br/><br/>
-</div><div class='bn'></div><div class='cpr'>             `---'  <br/><br/>
-</div><div class='default'><br/></div></pre>"
+"<pre>
+<div class='cpr'>        .----.      </div>
+<div class='cpw'>      .'`.  .'`.    </div>
+<div class='cpr'>    ,'-._:--:_.-\   </div>
+<div class='cpw'>    |-._'    | _.|  </div>
+<div class='cpr'>    |._ |    |' _|  </div>
+<div class='cpw'>    `---'    |-' |  </div>
+<div class='cpr'>             |.-'|  </div>
+<div class='cpw'>             |_.-|  </div>
+<div class='cpr'>             | _.|  </div>
+<div class='cpw'>             |' _|  </div>
+<div class='cpr'>             |-' |  </div>
+<div class='cpw'>             |.-'|  </div>
+<div class='cpr'>             |_.-|  </div>
+<div class='cpw'>             | _.|  </div>
+<div class='cpr'>             |' _|  </div>
+<div class='cpw'>             |-' |  </div>
+<div class='cpr'>             `---'  </div>
+<div class='default'></div></pre>"
 manipulate {MANIPULATE_TAKE}
 FOOD_DEF(12, 0)
 weight 2
@@ -1017,25 +1369,25 @@ title "a Christmas Tree"
 names {"tree"}
 descr "A Christmas Tree grows here filling the city with cheer."
 extra {}
-"<pre><br/>
-<div class='bn'></div><div class='cpy'>             |<br/><br/>
-</div><div class='bn'></div><div class='cpy'>           \ ' /<br/><br/>
-</div><div class='bn'></div><div class='cpy'>         -- (</div><div class='cy'>*</div><div class='cpy'>) --<br/><br/>
-</div><div class='bn'></div><div class='cpg'>            &gt;</div><div class='cpy'>|</div><div class='cpg'>&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>           &gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>          &gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*<br/><br/>
-</div><div class='bn'></div><div class='cpg'>         &gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpm'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>        &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>       &gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>      &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>     </div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>*</div><div class='cpg'>&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>    &gt;</div><div class='cpy'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpc'>@</div><div class='cpg'>&lt;&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>   &gt;&gt;&gt;</div><div class='cpr'>*</div><div class='cpg'>&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>0</div><div class='cpg'>&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>  &gt;&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpw'>0</div><div class='cpg'>&gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'> &gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>@</div><div class='cpg'>&gt;</div><div class='cpc'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;</div><div class='cpc'>0</div><div class='cpg'>&lt;&lt;&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;&lt;<br/><br/>
-</div><div class='bn'></div><div class='cw'>            | |<br/>
-</div><div class='bn'></div><div class='cw'>           |___| </div></pre>"
+"<pre>
+<div class='cpy'>             |</div>
+<div class='cpy'>           \ ' /</div>
+<div class='cpy'>         -- (</div><div class='cy'>*</div><div class='cpy'>) --</div>
+<div class='cpg'>            &gt;</div><div class='cpy'>|</div><div class='cpg'>&lt;</div>
+<div class='cpg'>           &gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>          &gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*</div>
+<div class='cpg'>         &gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpm'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>        &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>       &gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>      &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>     </div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>*</div><div class='cpg'>&lt;</div>
+<div class='cpg'>    &gt;</div><div class='cpy'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpc'>@</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>   &gt;&gt;&gt;</div><div class='cpr'>*</div><div class='cpg'>&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>0</div><div class='cpg'>&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>  &gt;&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpw'>0</div><div class='cpg'>&gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'> &gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>&gt;&gt;&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>@</div><div class='cpg'>&gt;</div><div class='cpc'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;</div><div class='cpc'>0</div><div class='cpg'>&lt;&lt;&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;&lt;</div>
+<div class='cw'>            | |</div>
+<div class='cw'>           |___| </div></pre>"
 end
 
 
@@ -1044,25 +1396,25 @@ title "a Christmas Tree"
 names {"tree"}
 descr "A large brightly decorated Christmas Tree stands in the corner of the room."
 extra {}
-"<pre><br/>
-<div class='bn'></div><div class='cpy'>             |<br/><br/>
-</div><div class='bn'></div><div class='cpy'>           \ ' /<br/><br/>
-</div><div class='bn'></div><div class='cpy'>         -- (</div><div class='cy'>*</div><div class='cpy'>) --<br/><br/>
-</div><div class='bn'></div><div class='cpg'>            &gt;</div><div class='cpy'>|</div><div class='cpg'>&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>           &gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>          &gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*<br/><br/>
-</div><div class='bn'></div><div class='cpg'>         &gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpm'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>        &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>       &gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>      &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>     </div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>*</div><div class='cpg'>&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>    &gt;</div><div class='cpy'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpc'>@</div><div class='cpg'>&lt;&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>   &gt;&gt;&gt;</div><div class='cpr'>*</div><div class='cpg'>&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>0</div><div class='cpg'>&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>  &gt;&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpw'>0</div><div class='cpg'>&gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'> &gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;<br/><br/>
-</div><div class='bn'></div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>@</div><div class='cpg'>&gt;</div><div class='cpc'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;</div><div class='cpc'>0</div><div class='cpg'>&lt;&lt;&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;&lt;<br/><br/>
-</div><div class='bn'></div><div class='cw'>            | |<br/>
-</div><div class='bn'></div><div class='cw'>           |___| </div></pre>"
+"<pre>
+<div class='cpy'>             |</div>
+<div class='cpy'>           \ ' /</div>
+<div class='cpy'>         -- (</div><div class='cy'>*</div><div class='cpy'>) --</div>
+<div class='cpg'>            &gt;</div><div class='cpy'>|</div><div class='cpg'>&lt;</div>
+<div class='cpg'>           &gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>          &gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*</div>
+<div class='cpg'>         &gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpm'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>        &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>       &gt;&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>      &gt;</div><div class='cpw'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;</div>
+<div class='cpg'>     </div><div class='cpb'>@</div><div class='cpg'>&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpy'>*</div><div class='cpg'>&lt;</div>
+<div class='cpg'>    &gt;</div><div class='cpy'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpc'>@</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>   &gt;&gt;&gt;</div><div class='cpr'>*</div><div class='cpg'>&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>0</div><div class='cpg'>&lt;</div><div class='cpm'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>  &gt;&gt;</div><div class='cpc'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpw'>0</div><div class='cpg'>&gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpb'>0</div><div class='cpg'>&lt;</div><div class='cpm'>@</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpb'>@</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'> &gt;</div><div class='cpy'>*</div><div class='cpg'>&gt;</div><div class='cpr'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpm'>0</div><div class='cpg'>&gt;&gt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div><div class='cpr'>0</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpw'>@</div><div class='cpg'>&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;</div><div class='cpc'>*</div><div class='cpg'>&lt;&lt;</div>
+<div class='cpg'>&gt;&gt;&gt;</div><div class='cpm'>@</div><div class='cpg'>&gt;&gt;</div><div class='cpy'>@</div><div class='cpg'>&gt;</div><div class='cpc'>*</div><div class='cpg'>&gt;&gt;</div><div class='cpb'>@</div><div class='cpg'>&lt;</div><div class='cpw'>*</div><div class='cpg'>&lt;</div><div class='cpy'>@</div><div class='cpg'>&lt;</div><div class='cpc'>0</div><div class='cpg'>&lt;&lt;&lt;&lt;&lt;</div><div class='cpy'>0</div><div class='cpg'>&lt;&lt;&lt;</div>
+<div class='cw'>            | |</div>
+<div class='cw'>           |___| </div></pre>"
 end
 
 newbgift
@@ -1079,32 +1431,32 @@ extra {"$donotstore"}
 extra {"$identify"}
 "heals in battle"
 extra {"$improved identify"}
-"<pre><br/>
+"<pre>
 Heals in battle.</pre>"
 weight 10
 spell 70
 extra {}
 "You examine the candy cane and realize it may make a good weapon. Made by
 the Admin of Valhalla for New Players, weapons like these are hard to find.
-<pre><br/>
-<div class='bn'></div><div class='cpr'>        .----.      <br/>
-</div><div class='bn'></div><div class='cpw'>      .'`.  .'`.    <br/>
-</div><div class='bn'></div><div class='cpr'>    ,'-._:--:_.-\   <br/>
-</div><div class='bn'></div><div class='cpw'>    |-._'    | _.|  <br/>
-</div><div class='bn'></div><div class='cpr'>    |._ |    |' _|  <br/>
-</div><div class='bn'></div><div class='cpw'>    `---'    |-' |  <br/>
-</div><div class='bn'></div><div class='cpr'>             |.-'|  <br/>
-</div><div class='bn'></div><div class='cpw'>             |_.-|  <br/>
-</div><div class='bn'></div><div class='cpr'>             | _.|  <br/>
-</div><div class='bn'></div><div class='cpw'>             |' _|  <br/>
-</div><div class='bn'></div><div class='cpr'>             |-' |  <br/>
-</div><div class='bn'></div><div class='cpw'>             |.-'|  <br/>
-</div><div class='bn'></div><div class='cpr'>             |_.-|  <br/>
-</div><div class='bn'></div><div class='cpw'>             | _.|  <br/>
-</div><div class='bn'></div><div class='cpr'>             |' _|  <br/>
-</div><div class='bn'></div><div class='cpw'>             |-' |  <br/>
-</div><div class='bn'></div><div class='cpr'>             `---'  <br/>
-</div><div class='default'><br/></div></pre>"
+<pre>
+<div class='cpr'>        .----.      </div>
+<div class='cpw'>      .'`.  .'`.    </div>
+<div class='cpr'>    ,'-._:--:_.-\   </div>
+<div class='cpw'>    |-._'    | _.|  </div>
+<div class='cpr'>    |._ |    |' _|  </div>
+<div class='cpw'>    `---'    |-' |  </div>
+<div class='cpr'>             |.-'|  </div>
+<div class='cpw'>             |_.-|  </div>
+<div class='cpr'>             | _.|  </div>
+<div class='cpw'>             |' _|  </div>
+<div class='cpr'>             |-' |  </div>
+<div class='cpw'>             |.-'|  </div>
+<div class='cpr'>             |_.-|  </div>
+<div class='cpw'>             | _.|  </div>
+<div class='cpr'>             |' _|  </div>
+<div class='cpw'>             |-' |  </div>
+<div class='cpr'>             `---'  </div>
+</pre>"
 HIT_TRANSFER(+3)
 dilcopy quest_restrict@function(XMAS_DONE20,0,0,"");
 
@@ -2859,14 +3211,14 @@ end
 
 rocket
 names {"rocket"}
-title "a rocket"
-descr "A big rocket has been set up here.."
+title "a New Years rocket"
+descr "A big rocket has been set up here."
 extra {}
 "The rocket has a large cargo area in a hole in the top of it. If you put a paper in the
 hole the message on the paper will be displayed in the explosion. Remember
 no swearing and keep it to a max of 3 lines. Anyone caught abusing this
-will lose the right to use them. The rockets will disappear shortly after
-new years so don't try to save them :)  LIGHT ROCKET to activate it.  Hmm that cargo area
+will lose the right to use them. <br>
+LIGHT ROCKET to activate it.  Hmm that cargo area
 might even be big enough for people to fit in it."
 type ITEM_CONTAINER
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD, MANIPULATE_ENTER}
@@ -2874,161 +3226,67 @@ MATERIAL_WOOD("Heavy oak")
 weight 2
 CONTAINER_DEF(1000)
 
-dilbegin rocket ();
-external
-	act_world (s:string);
-	ast_launch();
-	act_launcher(s:string);
-var
-	pc,item 	: unitptr;
-	s,pname,col,col2 : string;
-code
-{
-	heartbeat:=PULSE_SEC*3;
-:start:
-	wait (SFB_CMD, (command ("light") and ("rocket" in argument)));
-	block;
-	pc:=activator;
-	secure (pc,start);
-	if(pc.outside.type!=UNIT_ST_ROOM)
-	{
-		act ("You can not light that from here!",
-		A_ALWAYS,pc,null,null,TO_CHAR);
-		unsecure (pc);
-		goto start;
-	}
-	item:=findunit(pc,argument,FIND_UNIT_SURRO,null);
-	if ((item==null) or (item!=self))
-    {
-		unsecure (pc);
-		goto start;
-    }
-    if (item.outside.type!=UNIT_ST_ROOM)
-	{
-		act ("You need to put it on the ground first.",
-		A_ALWAYS,pc,null,null,TO_CHAR);
-		unsecure (pc);
-		unsecure (item);
-		goto start;
-	}
-    secure (item,start);
-    act ("$1n bends down and lights $2n.",A_ALWAYS,pc,self,null,TO_REST);
-    act ("You bend down and light $2n.",A_ALWAYS,pc,self,null,TO_CHAR);
-	pname:=pc.name;
-	pause;
-    act ("<div class='cr'>ss</div><div class='cpr'>ss</div><div class='cpy'>ss</div><div class='cy'>ss</div><div class='cr'>ss</div><div class='cpr'>ss</div><div class='cy'>ss</div><div class='cpy'>ss</div><div class='cw'></div>",
-		A_ALWAYS,self,null,null,TO_ALL);
-    pause;
-    act ("$1n leaves the ground with blinding speed!",A_ALWAYS,self,null,null,TO_ALL);
-    self.minv:=200;
-    pause;
+dilcopy rocket("NY");
+end
 
-    on rnd (1,6) goto ired, igreen, iyellow, iblue, imagenta, icyan;
+rocket_vd
+names {"rocket"}
+title "a Valentines Day rocket"
+descr "A heart-shaped rocket has been set up here."
+extra {}
+"The rocket has a large cargo area in a hole in the top of it. If you put a paper in the
+hole the message on the paper will be displayed in the explosion. Remember
+no swearing and keep it to a max of 3 lines. Anyone caught abusing this
+will lose the right to use them. <br>
+LIGHT ROCKET to activate it.  Hmm that cargo area
+might even be big enough for people to fit in it."
+type ITEM_CONTAINER
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD, MANIPULATE_ENTER}
+MATERIAL_WOOD("Heavy oak")
+weight 2
+CONTAINER_DEF(1000)
 
-	:ired:
-		col := "cpr";
-		col2 := "<div class='"+col+"'>red";
-		goto conti;
+dilcopy rocket("VD");
+end
 
-	:igreen:
-		col := "cpg";
-		col2 := "<div class='"+col+"'>green";
-		goto conti;
+rocket_xmas
+names {"rocket"}
+title "a Christmas rocket"
+descr "A candy-striped rocket has been set up here."
+extra {}
+"The rocket has a large cargo area in a hole in the top of it. If you put a paper in the
+hole the message on the paper will be displayed in the explosion. Remember
+no swearing and keep it to a max of 3 lines. Anyone caught abusing this
+will lose the right to use them. <br>
+LIGHT ROCKET to activate it.  Hmm that cargo area
+might even be big enough for people to fit in it."
+type ITEM_CONTAINER
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD, MANIPULATE_ENTER}
+MATERIAL_WOOD("Heavy oak")
+weight 2
+CONTAINER_DEF(1000)
 
-	:iyellow:
-		col := "cpy";
-		col2 := "<div class='"+col+"'>yellow";
-		goto conti;
+dilcopy rocket("XMAS");
+end
 
-	:iblue:
-		col := "cpb";
-		col2 := "<div class='"+col+"'>blue";
-		goto conti;
+rocket_hw
+names {"rocket"}
+title "a Halloween rocket"
+descr "A bone-shaped rocket has been set up here."
+extra {}
+"The rocket has a large cargo area in a hole in the top of it. If you put a paper in the
+hole the message on the paper will be displayed in the explosion. Remember
+no swearing and keep it to a max of 3 lines. Anyone caught abusing this
+will lose the right to use them. <br>
+LIGHT ROCKET to activate it.  Hmm that cargo area
+might even be big enough for people to fit in it."
+type ITEM_CONTAINER
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD, MANIPULATE_ENTER}
+MATERIAL_WOOD("Heavy oak")
+weight 2
+CONTAINER_DEF(1000)
 
-	:imagenta:
-		col := "cpm";
-		col2 := "<div class='"+col+"'>purple";
-		goto conti;
-
-	:icyan:
-		col := "cpc";
-		col2 := "<div class='"+col+"'>cyan";
-		goto conti;
-
-	:iwhite:
-		col := "cpw";
-		col2 := "<div class='"+col+"'>white";
-		goto conti;
-	   
-:conti:
-	
-	s:="";
-	item:=self.inside;
-	while (item)
-	{
-		if (item.type!=UNIT_ST_OBJ)
-		{
-			item:=item.next;
-			continue;
-		}
-		if (item.objecttype!=ITEM_NOTE)
-		{
-			item:=item.next;
-			continue;
-		}
-		if (item.extra==null)
-			goto default;
-		s:=item.extra.descr;
-		break;
-   }
-	if (s=="")
-		goto default;
-
-	act_launcher(pname);
-	act_world ("<div class='cpw'>You hear a loud boom!</div><br/>");
-	ast_launch();
-	act_world ("<div class='cpw'>A burst of " + col2 + " sparkles</div> explodes in " +
-		"the sky above spelling out <br/><br/><div class='"+col+"'>" + s +"<br/></div></div>");
-
-	item:=self.inside;
-	while (item)
-	{
-		if (item.type==UNIT_ST_PC)
-		{
-			item.minv:=0;
-			act("The rocket you are riding in explodes dumping your guts on your keyboard!",
-				A_ALWAYS,item,null,null,TO_CHAR);
-		}
-		item:=item.next;
-	}
-
-	self.minv:=0;
-	destroy(self);
-	quit;
-
-	:default:
-	act_world("<div class='cpw'>You hear a loud boom!</div><div class='cw'><br/></div>");
-	ast_launch();
-	act_world("<div class='cpw'>A burst of </div>" + col2 + " sparkles</div> explodes in the " +
-	"sky above and drifts spectacularly down to the ground.<br/>");
-
-	item:=self.inside;
-	while (item)
-	{
-		if (item.type==UNIT_ST_PC)
-		{
-			item.minv:=0;
-			act("The rocket you are riding in explodes dumping your guts on your keyboard!",
-				A_ALWAYS,item,null,null,TO_CHAR);
-		}
-		item:=item.next;
-	}
-	self.minv:=0;
-	destroy (self);
-	quit;
-
-}
-dilend
+dilcopy rocket("Halloween");
 end
 
 %mobiles
@@ -3075,6 +3333,27 @@ flags {UNIT_FL_NO_TELEPORT}
 romflags{CHAR_DETECT_INVISIBLE}
 dilcopy spirit_nokill();
 dilcopy christmas_2020();
+end      
+
+norma
+names {"Mrs. Claus","norma","lady"}
+title "Mrs. Claus"
+descr "A jolly little lady with a heartwarming smile is here."
+extra {}
+"Mrs. Claus is one of the warmest, jolliest souls you have ever laid eyes on."
+alignment +1000
+level 150
+sex SEX_MALE
+weight 100
+height 30
+race RACE_SPIRIT
+MSET_ABILITY (20,20,1,20,15,4,15,5)
+MSET_WEAPON(9,4,4,4,3,3)
+MSET_SPELL(9,4,0,7,6,5,10,14,6,6,6)
+flags {UNIT_FL_NO_TELEPORT}
+romflags{CHAR_DETECT_INVISIBLE}
+dilcopy spirit_nokill();
+dilcopy xmas_day();
 end      
 
 graf_jan	   
@@ -3137,6 +3416,7 @@ end
 // this will maitain the items for players, but take away some christmas cheer.
 
 %reset 
+/*
 load xmas_tree2 into hall@newbie         local 1
 load xmas_tree into square@udgaard       local 1
 load xmas_tree2 into postoffice@udgaard  local 1
@@ -3157,6 +3437,6 @@ load mistletoe into	clan_enter@clan_uch  local 1
 load santa into study max 1
 load elf into workshop max 1
 load northpole into square@udgaard max 1
-load graf_jan into village_rd6@udgaard max 2
-load graf_jan into village_rd2@udgaard max 2
+*/
+load graf_jan into village_rd6@udgaard max 1
 %end

@@ -52,7 +52,7 @@ And then `telnet localhost 4242`. But telnet is best for debugging
 
 5) To open the client
 
-       cd ../www/
+       cd ../www/client/
        firefox index.html
 
 Set the host to your fqdn or localhost and set the port to match mplex (4280 if you used that)

@@ -20,7 +20,7 @@ END HEADER*/
 /*                                ZONE                                */
 /* ================================================================== */
 %zone barbarian
-title "Barbarian@Mainland"
+title "Barbarian Guild@Mainland"
 creators {"sender"}
 
 notes
@@ -36,11 +36,10 @@ The Barbarians Hall is the legendary training ground of some of Valhalla's<br/>
 most notable warriors. Known for their ferocity in battle, the Barbarians<br/>
 fight with bloodlust and rage, embracing the raw emotions brought out in<br/>
 the game of life and death.<br/>
-/*
+/* leftovers from the conjuror intro I copied, may or may not keep.
 <br/>
 	<div class='cpw'>Training/Education</div><div class='cw'><br/>
 <br/>
-  Spell Practice	- Tower of Arcane, all south from the Main Hall.<br/>
   Skill Practice	- Main Lecture Hall, east and south from the Main Hall.<br/>
   Weapon Practice	- Tower of Mundane, all north from the Main Hall.<br/>
   Ability Practice	- The Library, east and north from the Main Hall.<br/>
@@ -100,12 +99,8 @@ code
 	position_update(pc);
 	act("Two of the guards grab $1n and drag $1m out of the Guild, dumping "+
 		"$1m in the cold.",A_SOMEONE, pc, self, null, TO_REST);
-	room := findroom("cth_square2@midgaard");
+	room := findroom("outcropping@gremlin");
 	
-/***************************************************************************	
-**  NOTE - ROOM ABOVE MUST BE UPDATED TO REFLECT APPROPRIATE LINKED ROOM  **
-***************************************************************************/
-
 	link(pc,room);
 	act("Two guards appear, dragging an unconscious figure between them and "+
 		"dump $1m unceremoniously into the cold." ,A_SOMEONE,pc,self,null,TO_REST);
@@ -288,12 +283,13 @@ descr
 "You have arrived at the entrance to the hall of the Barbarians. 
 Under their fearsome leader, the Barbarians have emerged as a powerful 
 force driving the ways of the realm. Their hall, however, harkens back 
-to humble beginnings. While large, it is a simple structure. It would be 
-difficult to assail, but certainly favors practicality over beauty. "
+to humble beginnings. While large, it is a simple structure. Here on the
+high pleateau it would certainly be difficult to assail, but clearly its 
+inhabitants favor practicality over beauty. "
 movement SECT_CITY
 
-east to hall_01 descr "Inside the Hall.";
-west to oasis@desert descr "At the Oasis.";
+east to hall_01 descr "Inside the Hall";
+south to outcropping@gremlin descr "On the Rocky Outcropping";
 ALWAYS_LIGHT
 end
 
@@ -313,11 +309,11 @@ extra {"floor","wood","beams"}
 The room is open, and the floor worn from use. Beams overhead seem 
 more than strong enough to support the roof and its heavy seasonal snows. "
 
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-west to entrance descr "Barbarians Entrance.<br/>";
-east to hall_02 descr "Inside the Hall.<br/>";
+west to entrance descr "Barbarians Entrance<br/>";
+east to hall_02 descr "Inside the Hall<br/>";
 end
 
 hall_02
@@ -341,8 +337,8 @@ members are smoking runs the length of the room. "
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-west to hall_01 descr "Inside the Barbarians Hall.<br/>";
-east to hall_03 descr "Inside the Hall.<br/>";
+west to hall_01 descr "Inside the Barbarians Hall<br/>";
+east to hall_03 descr "Inside the Hall<br/>";
 end
 
 hall_03
@@ -364,8 +360,8 @@ extra {"table","food"}
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-west to hall_02 descr "Guildmasters Table.<br/>";
-east to hall_04 descr "Inside the Hall.<br/>";
+west to hall_02 descr "Guildmasters Table<br/>";
+east to hall_04 descr "Inside the Hall<br/>";
 end
 
 hall_04
@@ -387,11 +383,11 @@ extra {"table","food"}
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-west to hall_03 descr "Inside the Hall.<br/>";
-up to loft_04 descr "The Barbarians Loft.<br/>";
-down to train_04 descr "The Training Hall.<br/>";
-north to hall_n descr "Northern Alcove.<br/>";
-south to hall_s descr "Southern Alcove.<br/>";
+west to hall_03 descr "Inside the Hall<br/>";
+up to loft_04 descr "The Barbarians Loft<br/>";
+down to train_04 descr "The Training Hall<br/>";
+north to hall_n descr "Northern Alcove<br/>";
+south to hall_s descr "Southern Alcove<br/>";
 end
 
 hall_s
@@ -399,7 +395,7 @@ names {"south alcove"}
 title "The Southern Alcove"
 descr
 "The southern alcove is filled with smoke, and appears to primarily be a social space.
-Ther are plentiful seating options and many of the comforts expected to support the Barbarians 
+There are plentiful seating options and many of the comforts expected to support the Barbarians 
 returning from their many adventures. The Guildmasters table dominates the space 
 to the north. "
 extra {"extra"}
@@ -407,7 +403,7 @@ extra {"extra"}
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-north to hall_04 descr "Guildmasters Table.<br/>";
+north to hall_04 descr "Guildmasters Table<br/>";
 end
 
 hall_n
@@ -426,7 +422,7 @@ separation between Raz and the Barbarians.<br/>"
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-south to hall_04 descr "Guildmasters Table.<br/>";
+south to hall_04 descr "Guildmasters Table<br/>";
 end
 
 train_02
@@ -434,7 +430,7 @@ names {"skills"}
 title "Skill Masters Room"
 descr
 "The defining feature of this room is a large clay circle lined with stones. 
-A large mural dominates one wall, that of a large bloodshot eye. This must 
+A mural dominates one wall, that of a large bloodshot eye. This must 
 be where the Barbarians train in their infamous skills. The tools of training 
 line the room, and are stacked in corners."
 extra {"extra"}
@@ -442,134 +438,138 @@ extra {"extra"}
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-west to train_01 descr "North Descr.<br/>";
-east to train_03 descr "South Descr.<br/>";
+east to train_03 descr "South Descr<br/>";
 end
 
 train_03
-names {"name"}
-title "Title"
+names {"hallway of legends"}
+title "Hallway of Legends"
 descr
-"Description goes here. "
-extra {"extra"}
-"This is an extra.<br/>"
+"Murals are painted on either side of the hallway, depicting legends of eras 
+gone by. Upon the north wall, the continued imagery of the masters past of 
+this historic guild of barbarians. On the south wall, those adventurers and 
+legends who have earned their positions in the lore of the guild through prowess 
+in battle."
+extra {"legends"}
+"The mural depicts great battles featuring some of the most feared warriors to 
+have stalked these halls. The great warrior Issa is depicted with his mighty 
+hammer, conquering Deresh Karany.<br/>"
+
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-west to train_02 descr "North Descr.<br/>";
-east to train_04 descr "South Descr.<br/>";
+west to train_02 descr "Skill Masters Room<br/>";
+east to train_04 descr "Hallway of Legends<br/>";
 end
 
 train_04
-names {"name"}
-title "Title"
+names {"hallway of legends"}
+title "Hallway of Legends"
 descr
-"Description goes here. "
+"Murals are painted on every available surface, depicting legends of eras 
+gone by. Upon the east wall, ancient imagery of the masters past of 
+this historic guild of barbarians. To the south lies a small alcove, and to 
+the north, the fabled Armory of the Barbarians. "
 extra {"extra"}
 "This is an extra.<br/>"
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-west to train_03 descr "North Descr.<br/>";
-up to hall_04 descr "South Descr.<br/>";
-north to train_n descr "South Descr.<br/>";
-south to train_s descr "South Descr.<br/>";
+west to train_03 descr "Hallway of Legends<br/>";
+up to hall_04 descr "The Guildmaster's Table<br/>";
+north to train_n descr "The Armory<br/>";
+south to train_s descr "South Alcove<br/>";
 end
 
 train_s
-names {"name"}
-title "Title"
+names {"south alcove"}
+title "The Southern Alcove"
 descr
-"Description goes here. "
-extra {"extra"}
-"This is an extra.<br/>"
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+"The southern alcove relatively quiet, and is deeper than first glance indicated. 
+In the shadowed recess at the back of the alcove, a few well-used cots lie neatly  
+made. It appears that the barbarians weary of their training and adventures use this 
+space to rest and recouperate.
+to the north. "
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT, UNIT_FL_SACRED}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-north to train_04 descr "South Descr.<br/>";
+north to train_04 descr "Hallway of Legends<br/>";
 end
 
 train_n
 names {"weapons"}
 title "The Armory"
 descr
-"Description goes here. "
-extra {"extra"}
-"This is an extra.<br/>"
+"The Armory of the Barbarians is very much as you would expect it to be. Weapons 
+ranging from massive cudgels and hammers, to small and sharp stilleto daggers can 
+be found in every visible space. Faeld the long-serving weaponmaster has more than 
+earned the spot here. Countless barbarians have faced their enemies with 
+knowledge shared in this very room, that which helped them survive."
+extra {"weapons"}
+"Weapons of every type, sharp, blunt, magical, and cursed, are represented here.<br/>"
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-south to train_04 descr "South Descr.<br/>";
+south to train_04 descr "Hallway of Legends<br/>";
 end
 
 loft_02
 names {"abilities"}
 title "Hall of Strength"
 descr
-"Description goes here. "
-extra {"extra"}
-"This is an extra.<br/>"
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
+"The loft ends here, in the Hall of Strength. In the center of the room a large 
+brazier burns with an eerily red flame. Despite the large fire, the room feels 
+no warmer than any of the others in the Barbarian's hall. Suspended above the 
+flames, seemingly hanging in mid-air, the bloodshot eye of the guild seems to 
+look directly at you, as you move about the space. The only exit is returning 
+to the East."
+extra {"brazier"}
+"The barzier glows with a large flame, casting an eery red light flickering across 
+the room.<br/>"
+extra {"bloodshot eye","eye"}
+"The eye seems to follow you as you move about the space. It feels as if the eye 
+can see directly into your soul.<br/>"
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-west to loft_01 descr "North Descr.<br/>";
-east to loft_03 descr "South Descr.<br/>";
+east to loft_03 descr "Hall of Strength<br/>";
 end
 
 loft_03
-names {"name"}
-title "Title"
+names {"hall of strength"}
+title "Hall of Strength"
 descr
-"Description goes here. "
-extra {"extra"}
-"This is an extra.<br/>"
+"Thick beams make a heavy and sturdy roof overhead, and the floor below 
+is solid to the step. The walls here carry depictions of moments representing 
+highlights of the long history of the Barbarians. Feats of strength, tales 
+of heroism, and battles aplenty are represented. To the west, the glowing brazier 
+of the Barbarians can be seen, a legendary feature of this hall. To the east the 
+start of the hall, and stairs to the main floor below."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-west to loft_02 descr "North Descr.<br/>";
-east to loft_04 descr "South Descr.<br/>";
+west to loft_02 descr "Hall of Strength<br/>";
+east to loft_04 descr "Hall of Strength<br/>";
 end
 
 loft_04
-names {"name"}
-title "Title"
+names {"hall of strength"}
+title "Hall of Strength"
 descr
-"Description goes here. "
-extra {"extra"}
-"This is an extra.<br/>"
+"Here in the Barbarians loft, the Hall of Strength leads at its far end to 
+the glowing brazier, that even here casts its red glow. Between here and 
+there, the walls are lined with the feats of strength that form the narrative 
+history of the guild. Great warriors past and present are represented. On the 
+back wall, a tribute to the gods represents the acknowledgement of the higher 
+powers that give Barbarians their strength."
+extra {"tribute"}
+"The god Sender is represented amidst his immortal peers. The patron of the 
+Barbarians, Sender is lauded above all other gods by the guild.<br/>"
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-west to loft_03 descr "North Descr.<br/>";
-down to hall_04 descr "South Descr.<br/>";
-north to loft_n descr "South Descr.<br/>";
-south to loft_s descr "South Descr.<br/>";
-end
-
-loft_s
-names {"name"}
-title "Title"
-descr
-"Description goes here. "
-extra {"extra"}
-"This is an extra.<br/>"
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
-movement SECT_INSIDE
-ALWAYS_LIGHT
-north to loft_04 descr "South Descr.<br/>";
-end
-
-loft_n
-names {"name"}
-title "Title"
-descr
-"Description goes here. "
-extra {"extra"}
-"This is an extra.<br/>"
-flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
-movement SECT_INSIDE
-ALWAYS_LIGHT
-south to loft_04 descr "South Descr.<br/>";
+west to loft_03 descr "Hall of Strength<br/>";
+down to hall_04 descr "Guildmasters Table<br/>";
 end
 
 %mobiles

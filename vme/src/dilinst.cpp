@@ -666,8 +666,9 @@ void dilfi_set_weight(class dilprg *p)
         if (v1->val.ptr)
         {
             if (v2->val.num < UNIT_BASE_WEIGHT((class unit_data *) v1->val.ptr))
-                szonelog(p->frame->tmpl->zone, "DIL '%s' setting unit %s weight to less than base weight.",
-                        p->frame->tmpl->prgname, UNIT_FI_NAME((class unit_data *) v1->val.ptr));
+                szonelog(p->frame->tmpl->zone, "DIL '%s' setting unit %s weight to %d less than base weight of %d.",
+                        p->frame->tmpl->prgname, UNIT_FI_NAME((class unit_data *) v1->val.ptr),
+                        v2->val.num, UNIT_BASE_WEIGHT((class unit_data *) v1->val.ptr));
 
             int dif = v2->val.num - UNIT_WEIGHT((class unit_data *) v1->val.ptr);
 

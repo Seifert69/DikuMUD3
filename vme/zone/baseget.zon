@@ -716,11 +716,11 @@ code
 {
    mlist := MONEY_STRING;
    mload := MONEY_LOAD;
+   money := null;
 
    if (amnt <= 0)
    {
       log("ILLEGAL MONEY VALUE : " + itoa(amnt));
-      money := null;
       return(money);
    }
 
@@ -729,7 +729,6 @@ code
    else
    {
       log("INVALID MONEY TYPE : " + itoa(mtype));
-      money := null;
       return(money);
    }
 
@@ -743,15 +742,16 @@ code
       money.title := itoa(amnt) + " " + temp;
 
       if (amnt < 1000)
-           money.outside_descr := "A small pile of " + temp + " has been left here.";
+         money.outside_descr := "A small pile of " + temp + " has been left here.";
       else if (amnt < 50000)
-           money.outside_descr := "A large pile of " + temp + " has been left here.";
+         money.outside_descr := "A large pile of " + temp + " has been left here.";
       else
-           money.outside_descr := "A mountain of " + temp + " has been left here.";
+         money.outside_descr := "A mountain of " + temp + " has been left here.";
 
       mweight := money_weight(mtype, amnt);
 
       set_weight_base(money, mweight);
+      set_weight(money, mweight);
    }
 
    return(money);
@@ -761,25 +761,22 @@ dilend
 
 /* money_weight : this returns the weight of X number of Y money units */
 dilbegin integer money_weight(mtype : integer, amnt : integer);
-
 var
-
    mwt    :  integer;
    mlist  :  intlist;
+code
+{
+   mlist := {IRON_WEIGH, COPPER_WEIGH, SILVER_WEIGH, GOLD_WEIGH, PLAT_WEIGH};
 
+   mwt := (amnt / mlist.[mtype]);
 
-code{
-
- mlist := {IRON_WEIGH, COPPER_WEIGH, SILVER_WEIGH, GOLD_WEIGH, PLAT_WEIGH};
-
- mwt := (amnt / mlist.[mtype]);
-
- if (mwt < 0)
+   if (mwt < 0)
       mwt := 0;
 
- return(mwt);
+   return(mwt);
+}
+dilend
 
-}dilend
 
 
 /* money_amount : This returns the amount of coins of type mtype that can be carried
@@ -1474,14 +1471,11 @@ code{
 /* do_give : this dil allows players to give items to other pcs/npcs */
 
 dilbegin do_give(arg : string);
-
 external
-
   unitptr  find_item(u1 : unitptr, s1 : string, i1 : integer, u2 : unitptr);
   integer  give_item(u1 : unitptr, u2 : unitptr, i1 : integer);
 
 var
-
   item     :  unitptr;
   nitem    :  unitptr;
   wrdlst   :  stringlist;
@@ -1492,118 +1486,118 @@ var
   i        :  integer;
   cnt      :  integer;
 
-code{
-
- if (arg == "")
-    {
+code
+{
+   if (arg == "")
+   {
       sendtext("Give what to whom?<br/>", self);
       quit;
-    }
+   }
 
- temp := arg;
+   temp := arg;
 
- buff := getword(temp);
+   buff := getword(temp);
 
- amnt := atoi(buff);
+   amnt := atoi(buff);
 
- if ((buff == "0") or (amnt < 0))
-    {
+   if ((buff == "0") or (amnt < 0))
+   {
       act("How can you give $2t of something?", A_ALWAYS, self, buff, null, TO_CHAR);
       quit;
-    }
- else if ((amnt > 0) and (not("." in buff)))
+   }
+   else if ((amnt > 0) and (not("." in buff)))
       temp := getword(arg);
- else
+   else
       amnt := 0;
 
- cnt := 1;
- temp := arg;
+   cnt := 1;
+   temp := arg;
 
 :loop:
 
- item := findunit(self, temp, FIND_UNIT_INVEN, null);
+   item := findunit(self, temp, FIND_UNIT_INVEN, null);
 
- if ((item) and (not visible(self, item)))
-    {
+   if ((item) and (not visible(self, item)))
+   {
       cnt := cnt + 1;
       temp := itoa(cnt) + "." + arg;
       goto loop;
-    }
+   }
 
- if (item == null)
-    {
+   if (item == null)
+   {
       sendtext("You have no such item to give.<br/>", self);
       quit;
-    }
+   }
 
- arg := temp;
+   arg := temp;
 
- temp := getword(temp);
+   temp := getword(temp);
 
- if (temp == "to")
+   if (temp == "to")
       temp := getword(arg);
 
- temp := arg;
+   temp := arg;
 
- temp := getword(temp);
+   temp := getword(temp);
 
- if ("." in temp)
-    {
-      wrdlst := split(temp, ".");
+   if ("." in temp)
+   {
+   wrdlst := split(temp, ".");
 
-      cnt := atoi(wrdlst.[0]);
+   cnt := atoi(wrdlst.[0]);
 
-      if ((wrdlst.[0] == "0") or (cnt))
-         {
-           buff := getword(arg);
+   if ((wrdlst.[0] == "0") or (cnt))
+      {
+         buff := getword(arg);
 
-           arg := wrdlst.[1] + " " + arg;
-         }
-      else
-           cnt := 1;
-   }
+         arg := wrdlst.[1] + " " + arg;
+      }
+   else
+         cnt := 1;
+}
 
 
 :loop2:
 
- toitem := findunit(self, temp, FIND_UNIT_SURRO, null);
+   toitem := findunit(self, temp, FIND_UNIT_SURRO, null);
 
- if ((toitem) and (not visible(self, toitem)))
-    {
+   if ((toitem) and (not visible(self, toitem)))
+   {
       cnt := cnt + 1;
       temp := itoa(cnt) + "." + arg;
       goto loop2;
-    }
+   }
 
- if (toitem == null)
-    {
+   if (toitem == null)
+   {
       sendtext("No person named '" + arg + "' here.<br/>", self);
       quit;
-    }
+   }
 
- if (toitem == self)
-    {
+   if (toitem == self)
+   {
       sendtext("You already have it! Duh.<br/>", self);
       quit;
-    }
+   }
 
- if ((toitem.type != UNIT_ST_PC) and (toitem.type != UNIT_ST_NPC))
-    {
+   if ((toitem.type != UNIT_ST_PC) and (toitem.type != UNIT_ST_NPC))
+   {
       sendtext("That is not a person.<br/>", self);
       quit;
-    }
+   }
 
- if ((item.objecttype != ITEM_MONEY) and (amnt))
-    {
+   if ((item.objecttype != ITEM_MONEY) and (amnt))
+   {
       sendtext("You cannot do that.<br/>", self);
       quit;
-    }
- else
+   }
+   else
       i := give_item(item, toitem, amnt);
 
- quit;
-
-}dilend
+   quit;
+}
+dilend
 
 
 /* give_item : This does the actual transfer of the items */
@@ -1611,76 +1605,71 @@ code{
 dilbegin integer give_item(item : unitptr, toitem : unitptr, amnt : integer);
 
 external
-
-  integer money_weight(i1 : integer, i2 : integer);
-  unitptr find_money(u1 : unitptr, i1 : integer);
-  unitptr make_money(i1 : integer, i2 : integer);
-  integer money_amount(i1 : integer, i2 : integer);
-  integer cancarry(u1 : unitptr, u2 : unitptr, i1 : integer);
-  integer avail_weight(u1 : unitptr);
+   integer money_weight(i1 : integer, i2 : integer);
+   unitptr find_money(u1 : unitptr, i1 : integer);
+   unitptr make_money(i1 : integer, i2 : integer);
+   integer money_amount(i1 : integer, i2 : integer);
+   integer cancarry(u1 : unitptr, u2 : unitptr, i1 : integer);
+   integer avail_weight(u1 : unitptr);
 
 
 var
+   omoney  :  unitptr;
+   nmoney  :  unitptr;
+   amnt2   :  integer;
+   cnt     :  integer;
+   mtype   :  integer;
+   buff    :  string;
 
-  omoney  :  unitptr;
-  nmoney  :  unitptr;
-  amnt2   :  integer;
-  cnt     :  integer;
-  mtype   :  integer;
-  buff    :  string;
-
-code{
-
- if (item.objecttype == ITEM_MONEY)
-    {
+code
+{
+   if (item.objecttype == ITEM_MONEY)
+   {
       if (amnt == 0)
-           amnt := item.cost;
+         amnt := item.cost;
 
       if (amnt > item.cost)
-         {
-           act("You haven't got that many $2N!", A_ALWAYS, self, item, null, TO_CHAR);
-           return(2);
-         }
-
+      {
+         act("You haven't got that many $2N!", A_ALWAYS, self, item, null, TO_CHAR);
+         return(2);
+      }
 
       mtype := item.value[0];
-
       cnt := money_weight(mtype, amnt);
-
       amnt2 := avail_weight(toitem);
 
-      if ((amnt2 == 0) or (amnt2 < cnt))
-         {
-           act("$2e cannot carry that much weight.", A_ALWAYS, self, toitem, null, TO_CHAR);
-           return(2);
-         }
+      if ((amnt2 <= 0) or (amnt2 < cnt))
+      {
+         act("$2e cannot carry that much weight.", A_ALWAYS, self, toitem, null, TO_CHAR);
+         return(2);
+      }
       else
-           act("You give " + itoa(amnt) + " $2N to $3n.", A_ALWAYS, self, item, toitem, TO_CHAR);
+         act("You give " + itoa(amnt) + " $2N to $3n.", A_ALWAYS, self, item, toitem, TO_CHAR);
 
       if (amnt < item.cost)
-           amnt2 := item.cost - amnt;
+         amnt2 := item.cost - amnt;
       else
-           amnt2 := 0;
+         amnt2 := 0;
 
       omoney := find_money(toitem, mtype);
 
       if (omoney)
-         {
-           cnt := amnt + omoney.cost;
-           destroy(omoney);
-         }
+      {
+         cnt := amnt + omoney.cost;
+         destroy(omoney); // Destroy target's money
+      }
       else
-           cnt := amnt;
+         cnt := amnt;
 
-      destroy(item);
+      destroy(item); // Destroy giver's money
 
+      // Make some money for the target
       nmoney := make_money(mtype, cnt);
 
-
       if (nmoney.cost == 1)
-           buff := nmoney.name + "s";
+         buff := nmoney.name + "s";
       else
-           buff := nmoney.name;
+         buff := nmoney.name;
 
       buff := "$1n gives some " + buff + " to $3N.";
 
@@ -1695,26 +1684,28 @@ code{
       send_done("give", self, nmoney, toitem, 0, "", null);
 
       if (amnt2)
-           nmoney := make_money(mtype, amnt2);
+      {
+         // Restore some money for the giver
+         nmoney := make_money(mtype, amnt2);
+      }
 
       return(1);
-    }
- else
-    {
+   }
+   else
+   {
       cnt := cancarry(toitem, item, 1);
 
       if (cnt == 1)
-         {
-           act("$2n seems to have $2s hands full.", A_ALWAYS, self, toitem, null, TO_CHAR);
-           return(2);
-         }
+      {
+         act("$2n seems to have $2s hands full.", A_ALWAYS, self, toitem, null, TO_CHAR);
+         return(2);
+      }
 
       if (cnt == 2)
-         {
-           act("$2e cannot carry that much weight.", A_ALWAYS, self, toitem, null, TO_CHAR);
-           return(2);
-         }
-
+      {
+         act("$2e cannot carry that much weight.", A_ALWAYS, self, toitem, null, TO_CHAR);
+         return(2);
+      }
 
       act("You give $2n to $3N.", A_ALWAYS, self, item, toitem, TO_CHAR);
       act("$1n gives $2n to $3N.", A_HIDEINV, self, item, toitem, TO_NOTVICT);
@@ -1725,11 +1716,11 @@ code{
       send_done("give", self, item, toitem, 0, "", null);
 
       return(1);
-    }
+   }
 
- return(0);
-
-}dilend
+   return(0);
+}
+dilend
 
 
 %objects

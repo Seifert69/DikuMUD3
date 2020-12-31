@@ -138,7 +138,7 @@ END HEADER*/
 #define PROFESSION_MAX         13 /* 12+1 */
 
 #define PROFESSION_STRINGS "Fighter", "Knight", "Paladin", "Ranger", "Thief", "Assassin", \
-                           "Priest", "Druid", "Obsolete","Necromancer", "Mage", "Sorcerer", \
+                           "Priest", "Druid", "Obsolete - Do Not Select","Necromancer", "Mage", "Sorcerer", \
 						   "Barbarian"
 
 
@@ -424,6 +424,9 @@ END HEADER*/
 #define SKI_BERSERK		      65
 #define SKI_RAGE              66
 #define SKI_TAUNT             67
+#define SKI_CHARGE            68
+#define SKI_LEAP              69
+#define SKI_DEFEND            70
 
 #define LAST_SKILL            75
 

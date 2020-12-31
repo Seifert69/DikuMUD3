@@ -34,7 +34,6 @@ code
 }
 dilend
 
-/*darg changes start here */
 dilbegin condemn(medi:unitptr, tgt : unitptr, arg : string,
                    hm : integer, effect : string);
 external
@@ -280,6 +279,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
 	  u := equipment(self,WEAR_WIELD);
@@ -303,6 +303,7 @@ code
 	 }
 
 :castit:
+*/
   hm := attack_spell(SPL_LAVA_2, self, medi, tgt, 0, effect);
   quit;
 }
@@ -317,6 +318,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
@@ -339,6 +341,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   hm := attack_spell(SPL_LAVA_3, self, medi, tgt, 0, effect);
   quit;
 }
@@ -353,19 +356,21 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
 	  u2 := equipment(self,WEAR_HOLD);
       u3 := equipment(self,WEAR_SHIELD);
 	  if ((u != null) or (u2 != null) or (u3 != null))
-
-  {
-	  act("You need both hands free to cast this spell.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      return;
-  }
-
+	  
+	if (((u != null) and (u2 != null)) or ((u != null) and (u3 != null)))
+	{
+		act("You must have one hand free to cast this spell.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		return;
+	}
+*/
 :castit:
    hm := attack_spell(SPL_LAVA_4, self, medi, tgt, 0, effect);
   quit;
@@ -445,6 +450,7 @@ code
         A_ALWAYS, self, null, null, TO_CHAR);
     quit;
   }
+  /*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (med.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
@@ -467,6 +473,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   if (targ.alignment >= -350)
     hm := attack_spell(SPL_HOLY_WORD_2, self, med, targ, 0, effect);
   else
@@ -491,6 +498,7 @@ code
         A_ALWAYS, self, null, null, TO_CHAR);
     quit;
   }
+  /*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (med.type == UNIT_ST_OBJ) goto castit;
         u := equipment(self,WEAR_WIELD);
@@ -513,6 +521,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   if (targ.alignment >= -350)
     hm := attack_spell(SPL_HOLY_WORD_3, self, med, targ, 0, effect);
   else
@@ -537,19 +546,21 @@ code
     quit;
     }
 
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (med.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
 	  u2 := equipment(self,WEAR_HOLD);
       u3 := equipment(self,WEAR_SHIELD);
-	  if ((u != null) or (u2 != null) or (u3 != null))
-
-  {
-	  act("You need both hands free to cast this spell.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      return;
-  }
+	  
+	if (((u != null) and (u2 != null)) or ((u != null) and (u3 != null)))
+	{
+		act("You must have one hand free to cast this spell.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		return;
+	}
 :castit:
+*/
   if (targ.alignment >= -350)
     hm := attack_spell(SPL_HOLY_WORD_4, self, med, targ, 0, effect);
   else
@@ -591,6 +602,7 @@ code
         A_ALWAYS, self, null, null, TO_CHAR);
     quit;
   }
+  /*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (med.type == UNIT_ST_OBJ) goto castit;
      u := equipment(self,WEAR_WIELD);
@@ -612,7 +624,7 @@ code
          A_ALWAYS, self, null, null, TO_CHAR);
 	 return;
 	 }
-
+*/
 :castit:
   if (targ.alignment >= +350)
     hm := attack_spell(SPL_UNHOLY_WORD_2, self, med, targ, 0, effect);
@@ -637,6 +649,7 @@ code
         A_ALWAYS, self, null, null, TO_CHAR);
     quit;
   }
+  /*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (med.type == UNIT_ST_OBJ) goto castit;
         u := equipment(self,WEAR_WIELD);
@@ -659,6 +672,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   if (targ.alignment >= +350)
     hm := attack_spell(SPL_UNHOLY_WORD_3, self, med, targ, 0, effect);
   else
@@ -682,20 +696,21 @@ code
         A_ALWAYS, self, null, null, TO_CHAR);
     quit;
   }
-
+/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (med.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
 	  u2 := equipment(self,WEAR_HOLD);
       u3 := equipment(self,WEAR_SHIELD);
-	  if ((u != null) or (u2 != null) or (u3 != null))
-
-  {
-	  act("You need both hands free to cast this spell.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      return;
-  }
+	  
+	if (((u != null) and (u2 != null)) or ((u != null) and (u3 != null)))
+	{
+		act("You must have one hand free to cast this spell.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		return;
+	}
 :castit:
+*/
   if (targ.alignment >= +350)
     hm := attack_spell(SPL_UNHOLY_WORD_4, self, med, targ, 0, effect);
   else
@@ -723,6 +738,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
@@ -745,6 +761,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   hm := attack_spell(SPL_CAUSE_WOUNDS_2, self, medi, tgt, 0, effect);
   quit;
 }
@@ -759,6 +776,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
@@ -781,6 +799,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   hm := attack_spell(SPL_CAUSE_WOUNDS_3, self, medi, tgt, 0, effect);
   quit;
 }
@@ -794,21 +813,22 @@ var
  u2 : unitptr;
  u3 : unitptr;
 code
-
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
 	  u2 := equipment(self,WEAR_HOLD);
       u3 := equipment(self,WEAR_SHIELD);
-	  if ((u != null) or (u2 != null) or (u3 != null))
-
-  {
-	  act("You need both hands free to cast this spell.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      return;
-  }
+	  
+	if (((u != null) and (u2 != null)) or ((u != null) and (u3 != null)))
+	{
+		act("You must have one hand free to cast this spell.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		return;
+	}
 :castit:
+*/
    hm := attack_spell(SPL_CAUSE_WOUNDS_4, self, medi, tgt, 0, effect);
   quit;
 }
@@ -833,6 +853,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
@@ -855,6 +876,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   hm := attack_spell(SPL_STINKING_CLOUD_2, self, medi, tgt, 0, effect);
   quit;
 }
@@ -869,6 +891,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
@@ -891,6 +914,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   hm := attack_spell(SPL_STINKING_CLOUD_3, self, medi, tgt, 0, effect);
   quit;
 }
@@ -905,19 +929,21 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
 	  u2 := equipment(self,WEAR_HOLD);
       u3 := equipment(self,WEAR_SHIELD);
-	  if ((u != null) or (u2 != null) or (u3 != null))
-
-  {
-	  act("You need both hands free to cast this spell.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      return;
-  }
+	  
+	if (((u != null) and (u2 != null)) or ((u != null) and (u3 != null)))
+	{
+		act("You must have one hand free to cast this spell.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		return;
+	}
 :castit:
+*/
    hm := attack_spell(SPL_STINKING_CLOUD_4, self, medi, tgt, 0, effect);
   quit;
 }
@@ -942,6 +968,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
 
@@ -965,6 +992,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   hm := attack_spell(SPL_COLOURSPRAY_2, self, medi, tgt, 0, effect);
   quit;
 }
@@ -979,6 +1007,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
@@ -1001,6 +1030,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   hm := attack_spell(SPL_COLOURSPRAY_3, self, medi, tgt, 0, effect);
   quit;
 }
@@ -1015,19 +1045,21 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
 	  u2 := equipment(self,WEAR_HOLD);
       u3 := equipment(self,WEAR_SHIELD);
-	  if ((u != null) or (u2 != null) or (u3 != null))
-
-  {
-	  act("You need both hands free to cast this spell.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      return;
-  }
+	  
+	if (((u != null) and (u2 != null)) or ((u != null) and (u3 != null)))
+	{
+		act("You must have one hand free to cast this spell.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		return;
+	}
 :castit:
+*/
    hm := attack_spell(SPL_COLOURSPRAY_4, self, medi, tgt, 0, effect);
   quit;
 }
@@ -1052,6 +1084,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
@@ -1074,6 +1107,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   hm := attack_spell(SPL_ACIDBALL_2, self, medi, tgt, 0, effect);
   quit;
 }
@@ -1088,6 +1122,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
@@ -1110,6 +1145,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   hm := attack_spell(SPL_ACIDBALL_3, self, medi, tgt, 0, effect);
   quit;
 }
@@ -1124,19 +1160,21 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
 	  u2 := equipment(self,WEAR_HOLD);
       u3 := equipment(self,WEAR_SHIELD);
-	  if ((u != null) or (u2 != null) or (u3 != null))
-
-  {
-	  act("You need both hands free to cast this spell.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      return;
-  }
+	  
+	if (((u != null) and (u2 != null)) or ((u != null) and (u3 != null)))
+	{
+		act("You must have one hand free to cast this spell.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		return;
+	}
 :castit:
+*/
    hm := attack_spell(SPL_ACIDBALL_4, self, medi, tgt, 0, effect);
   quit;
 }
@@ -1162,6 +1200,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
@@ -1184,6 +1223,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   hm := attack_spell(SPL_LIGHTNING_2, self, medi, tgt, 0, effect);
   quit;
 }
@@ -1198,6 +1238,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
        u := equipment(self,WEAR_WIELD);
@@ -1220,6 +1261,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   hm := attack_spell(SPL_LIGHTNING_3, self, medi, tgt, 0, effect);
   quit;
 }
@@ -1234,19 +1276,21 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
 	  u2 := equipment(self,WEAR_HOLD);
       u3 := equipment(self,WEAR_SHIELD);
-	  if ((u != null) or (u2 != null) or (u3 != null))
-
-  {
-	  act("You need both hands free to cast this spell.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      return;
-  }
+	  
+	if (((u != null) and (u2 != null)) or ((u != null) and (u3 != null)))
+	{
+		act("You must have one hand free to cast this spell.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		return;
+	}
 :castit:
+*/
    hm := attack_spell(SPL_LIGHTNING_4, self, medi, tgt, 0, effect);
   quit;
 }
@@ -1271,6 +1315,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
@@ -1293,6 +1338,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   hm := attack_spell(SPL_FROSTBALL_2, self, medi, tgt, 0, effect);
   quit;
 }
@@ -1307,6 +1353,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
@@ -1329,6 +1376,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   hm := attack_spell(SPL_FROSTBALL_3, self, medi, tgt, 0, effect);
   quit;
 }
@@ -1343,19 +1391,22 @@ var
  u3 : unitptr;
 code
 {
-      if (self.type == UNIT_ST_NPC) goto castit;
-	  if (medi.type == UNIT_ST_OBJ) goto castit;
-      u := equipment(self,WEAR_WIELD);
-	  u2 := equipment(self,WEAR_HOLD);
-      u3 := equipment(self,WEAR_SHIELD);
-	  if ((u != null) or (u2 != null) or (u3 != null))
+	/*
+	if (self.type == UNIT_ST_NPC) goto castit;
+	if (medi.type == UNIT_ST_OBJ) goto castit;
+	u := equipment(self,WEAR_WIELD);
+	u2 := equipment(self,WEAR_HOLD);
+	u3 := equipment(self,WEAR_SHIELD);
+	  
+	if (((u != null) and (u2 != null)) or ((u != null) and (u3 != null)))
+	{
+		act("You must have one hand free to cast this spell.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		return;
+	}
 
-  {
-	  act("You need both hands free to cast this spell.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      return;
-  }
 :castit:
+*/
    hm := attack_spell(SPL_FROSTBALL_4, self, medi, tgt, 0, effect);
   quit;
 }
@@ -1380,6 +1431,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
@@ -1402,6 +1454,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   hm := attack_spell(SPL_FIREBALL_2, self, medi, tgt, 0, effect);
   quit;
 }
@@ -1416,6 +1469,7 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
@@ -1438,6 +1492,7 @@ code
 	 return;
 	 }
 :castit:
+*/
   hm := attack_spell(SPL_FIREBALL_3, self, medi, tgt, 0, effect);
   quit;
 }
@@ -1452,24 +1507,24 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
 	  u2 := equipment(self,WEAR_HOLD);
       u3 := equipment(self,WEAR_SHIELD);
-	  if ((u != null) or (u2 != null) or (u3 != null))
-
-  {
-	  act("You need both hands free to cast this spell.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      return;
-  }
+	if (((u != null) and (u2 != null)) or ((u != null) and (u3 != null)))
+	{
+		act("You must have one hand free to cast this spell.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		return;
+	}
 :castit:
+*/
    hm := attack_spell(SPL_FIREBALL_4, self, medi, tgt, 0, effect);
   quit;
 }
 dilend
-/*end darg changes*/
 
 
 
@@ -7457,20 +7512,21 @@ var
  u3 : unitptr;
 code
 {
+	/*
       if (self.type == UNIT_ST_NPC) goto castit;
 	  if (medi.type == UNIT_ST_OBJ) goto castit;
       u := equipment(self,WEAR_WIELD);
 	  u2 := equipment(self,WEAR_HOLD);
       u3 := equipment(self,WEAR_SHIELD);
-	  if ((u != null) or (u2 != null) or (u3 != null))
-
-  {
-	  act("You need both hands free to cast this spell.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      return;
-  }
+	if (((u != null) and (u2 != null)) or ((u != null) and (u3 != null)))
+	{
+		act("You must have one hand free to cast this spell.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		return;
+	}
 
 :castit:
+*/
    hm := attack_spell(SPL_CONE_SHARD, self, medi, tgt, 0, effect);
    quit;
 }
@@ -10597,7 +10653,7 @@ code
    amount := rnd(((self.spells[SPL_REFRESH] + self.abilities[ABIL_DIV]) / 10),
                   (self.spells[SPL_REFRESH] + self.abilities[ABIL_BRA]));
 
-   amount := amount * 2;			  
+   amount := amount * 3;			  
    targ.endurance := targ.endurance + amount;
    if (targ.endurance > targ.max_endurance)
      targ.endurance := targ.max_endurance;
@@ -11848,21 +11904,23 @@ var
 code
 {
    heartbeat:= PULSE_SEC * 4;
-
+/*
    if ((self.type == UNIT_ST_NPC) or (self.type == UNIT_ST_OBJ)) goto castit;
       u1 := equipment(self,WEAR_WIELD);
    u2 := equipment(self,WEAR_HOLD);
    u3 := equipment(self,WEAR_SHIELD);
 
-   if ((u1 != null) or (u2 != null) or (u3 != null))
-   {
-	  act("You need both hands free to cast this spell.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      return;
-   }
+ 	if (((u != null) and (u2 != null)) or ((u != null) and (u3 != null)))
+	{
+		act("You must have one hand free to cast this spell.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		return;
+	}
 
 :castit:
-   amod := {" natural-looking","n angry-looking"," seemingly agonized",
+*/  
+
+  amod := {" natural-looking","n angry-looking"," seemingly agonized",
             " visibly terrified"};
    pmod := {"standing","sitting","lying"};
    slist := getwords(tgt.names.[0]);
@@ -12099,21 +12157,22 @@ var
 
 code
 {
+	/*
       if ((self.type == UNIT_ST_NPC) or (self.type == UNIT_ST_OBJ) or
 	  (medi.type == UNIT_ST_OBJ)) goto castit;
       u1 := equipment(self,WEAR_WIELD);
 	  u2 := equipment(self,WEAR_HOLD);
       u3 := equipment(self,WEAR_SHIELD);
-	  if ((u1 != null) or (u2 != null) or (u3 != null))
-
-  {
-	  act("You need both hands free to cast this spell.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-      return;
-  }
+	  
+	if (((u != null) and (u2 != null)) or ((u != null) and (u3 != null)))
+	{
+		act("You must have one hand free to cast this spell.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		return;
+	}
 
 :castit:
-
+*/
    mast := self.master;
    if (not(self.master)) mast := self;
 
@@ -12337,8 +12396,10 @@ code
    }
    tgt.alignment := -tgt.alignment;
    self.mana := self.mana - mod;
+   act("You feel a bit disoriented...", A_ALWAYS, tgt, null, null,
+       TO_CHAR);
    act("$1n seems a bit disoriented...", A_ALWAYS, tgt, null, null,
-       TO_ALL);
+       TO_REST);
    quit;
 }
 dilend

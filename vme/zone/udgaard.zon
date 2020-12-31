@@ -10909,10 +10909,10 @@ arabian appearance, perhaps from around Khorsabad. Kazeem looks like a
 battle scared veteran capable of showing no mercy."
 romflags {CHAR_DETECT_INVISIBLE,CHAR_PROTECTED}
 M_HUMAN_WARRIOR_SWORD(150,SEX_MALE)
-ATTACK_DEFENSE(+400, +400)
+ATTACK_DEFENSE(+50, +50)
 exp -500
 alignment 1000
-exp 150 /* hes really hard to kill */
+exp 150 /* he's really hard to kill */
 money 3 SILVER_PIECE
 NATURAL_DEF(WPN_FIST, ARM_CLOTHES)
 

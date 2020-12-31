@@ -5485,6 +5485,8 @@ expd := "$path" in pc.quests;
       link(self.outside, findroom("henge@druid"));
    else if (expd.names.[1] == GUILD_KNIGHT)
       link(self.outside, findroom("room_5@knight"));
+   else if (expd.names.[1] == GUILD_BARBARIAN)
+      link(self.outside, findroom("hall_04@barbarian"));
 
         exec ("look",pc);
      act ("$1n flies in on a pair of dragon wings" , A_SOMEONE, pc, null,null, TO_REST);

@@ -383,10 +383,11 @@ int spell_offensive(struct spell_args *sa, int spell_number, int bonus)
    int bEffect;
    class unit_data *def_shield;
 
-   int spell_bonus(class unit_data * att, class unit_data * medium,
-                   class unit_data * def,
-                   int hit_loc, int spell_number,
-                   int *pDef_armour_type, class unit_data **pDef_armour);
+   int spell_bonus(class unit_data *att, class unit_data *medium,
+                  class unit_data *def,
+                  int hit_loc, int spell_number,
+                  int *pDef_armour_type, class unit_data **pDef_armour,
+                  std::string *pStat);
    void damage_object(class unit_data * ch, class unit_data * obj, int dam);
 
    extern struct damage_chart_type spell_chart[SPL_TREE_MAX];
@@ -396,14 +397,14 @@ int spell_offensive(struct spell_args *sa, int spell_number, int bonus)
    hit_loc = hit_location(sa->caster, sa->target);
 
    bonus += spell_bonus(sa->caster, sa->medium, sa->target, hit_loc,
-                        spell_number, &armour_type, NULL);
+                        spell_number, &armour_type, NULL, NULL);
+
 
    roll = open100();
    roll_description(sa->caster, "spell", roll);
-   bonus += roll;
+   bonus += roll_boost(roll, CHAR_LEVEL(sa->caster));
 
-   sa->hm = chart_damage(bonus,
-                         &(spell_chart[spell_number].element[armour_type]));
+   sa->hm = chart_damage(bonus, &(spell_chart[spell_number].element[armour_type]));
 
    def_shield_bonus = shield_bonus(sa->caster, sa->target, &def_shield);
 

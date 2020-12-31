@@ -333,15 +333,25 @@ void advance_level(class unit_data *ch)
     }
 
     clear_training_level(ch);
-    advance_guild_level(ch);
-
     PC_VIRTUAL_LEVEL(ch)++;
-    
-    PC_SKILL_POINTS(ch) += skill_point_gain();
-    PC_ABILITY_POINTS(ch) += ability_point_gain();
-
     if (CHAR_LEVEL(ch) < MORTAL_MAX_LEVEL)
         CHAR_LEVEL(ch)++;
+
+    PC_SKILL_POINTS(ch)   += skill_point_gain();
+    PC_ABILITY_POINTS(ch) += ability_point_gain(ch);
+
+    struct diltemplate *dt;
+    dt = find_dil_template("advance_level@basis");
+    assert(dt);
+
+    class dilprg *prg = dil_copy_template(dt, ch, NULL);
+    assert(prg);
+
+    prg->waitcmd = WAITCMD_MAXINST - 1;
+    dil_activate(prg);
+    
+    // Now in DIL
+    // advance_guild_level(ch);    
 
 #ifdef NOBLE
     if (IS_NOBLE(ch))
@@ -498,12 +508,14 @@ void do_level(class unit_data *ch, char *arg, const struct command_info *cmd)
         return;
     }
 
-    if (!now && PC_ABILITY_POINTS(ch) >= ability_point_gain())
+    if (!now && PC_ABILITY_POINTS(ch) >= ability_point_gain(ch))
     {
-        send_to_char("You havn't used your ability points at all, if you "
-                     "really want to level now, type 'level now'<br/>",
-                     ch);
-        return;
+        if (PC_VIRTUAL_LEVEL(ch) < 100)
+        {
+            send_to_char("You havn't used your ability points at all, if you "
+                        "really want to level now, type 'level now'<br/>", ch);
+            return;
+        }
     }
 
     advance_level(ch);

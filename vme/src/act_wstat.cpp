@@ -567,7 +567,7 @@ static void stat_spell(const class unit_data *ch, class unit_data *u)
         return;
     }
 
-    strcpy(b, "Char magic skill<br/>");
+    strcpy(b, "Char magic skill<br/><pre>");
     TAIL(b);
 
     max = IS_NPC(u) ? SPL_GROUP_MAX : SPL_TREE_MAX;
@@ -596,6 +596,7 @@ static void stat_spell(const class unit_data *ch, class unit_data *u)
         TAIL(b);
     }
 
+    strcpy(b, "</pre>");
     page_string(CHAR_DESCRIPTOR(ch), buf);
     assert(strlen(buf) < sizeof(buf));
 }
@@ -1418,6 +1419,8 @@ void do_wstat(class unit_data *ch, char *argument, const struct command_info *cm
         stat_bank(ch, u);
     else if (!strncmp(buf, "combat", strlen(buf)))
         stat_combat(ch, u, argument);
+    else if (!strncmp(buf, "splcombat", strlen(buf)))
+        stat_spell(ch, u, argument);
     else if (!strncmp(buf, "info", strlen(buf)))
         stat_extra_info(ch, u, argument);
     else if (!strncmp(buf, "ip", strlen(buf)))
