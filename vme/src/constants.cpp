@@ -398,16 +398,18 @@ const char *unit_flags[] = {
     "invisible",
     "can-be-buried",
     "is-buried",
-    "no-teleport",
+    "no-summon",
     "sacred",
     "no-mobile",
     "no-weather",
     "indoors",
-    "invisible-mortals",
+    "no-summon-from",
     "transparant",
-    "is-edited",
+    "unused",
     "no-save",
     "magic",
+    "no-teleport",
+    "no-teleport-to",
     NULL
 };
 
