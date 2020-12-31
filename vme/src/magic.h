@@ -44,7 +44,7 @@ int spell_attack_ability(class unit_data *medium, int spell);
 int spell_attack_skill(class unit_data *unit, int spell);
 int spell_defense_skill(class unit_data *unit, int spell);
 
-int spell_offensive(struct spell_args *sa, int spell_number, int bonus = 0);
+int spell_offensive(struct spell_args *sa, int spell_number, int bonus);
 
 int variation(int n, int d, int u);
 /*last two internal spells*/
