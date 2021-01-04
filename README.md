@@ -5,9 +5,9 @@ D-Day June 21, 2020
 
 Get in touch if you'd like to contribute. Check out the issues on Git. There are a few broader issues at the bottom of this file. Everything from non-programming to HTML to C(++). Drop a mail to seifert at dikumud.com. Look at the end of this file for a few items.
 
-Join us on Slack:
+Join us on Discord:
 
-https://valhallamud.slack.com/
+https://discord.gg/vmha2rGRA2
 
 Documentation goes here:
 

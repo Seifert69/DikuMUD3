@@ -14,6 +14,7 @@
 #include "utility.h"
 #include "fight.h"
 #include "unitfind.h"
+#include "skills.h"
 
 // The Global Combat List...
 
@@ -471,5 +472,59 @@ void stat_combat(class unit_data *god, class unit_data *u, const char *pStr)
    melee_bonus(u, u2, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
    send_to_char(str.c_str(), god);
    melee_bonus(u2, u, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
+   send_to_char(str.c_str(), god);
+}
+
+
+void stat_spell(class unit_data *god, class unit_data *u, const char *pStr)
+{   
+   class unit_data *u2;
+
+   if (!IS_CHAR(u))
+   {
+      act("$2n is not a pc / npc.", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
+      return;
+   }
+
+   u2 = NULL;
+
+   if (!str_is_empty(pStr))
+   {
+      u2 = find_unit(god, (char **) &pStr, 0, FIND_UNIT_SURRO);
+   }
+
+   if (u2 == NULL)
+      u2 = god;
+
+   if (CHAR_FIGHTING(u))
+      u2 = CHAR_FIGHTING(u);
+
+   if (!IS_CHAR(u2))
+   {
+      act("$2n is not a pc / npc.", A_ALWAYS, god, u2, cActParameter(), TO_CHAR);
+      return;
+   }
+
+   CombatList.status(god);
+
+   if (!CHAR_COMBAT(u))
+      act("No combat structure on '$2n'", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
+   else
+      CHAR_COMBAT(u)->status(god);
+
+   int i = search_block(skip_blanks(pStr), g_SplColl.text, false);
+   if (i == -1)
+      i = SPL_ACID_BREATH;
+
+   int spell_bonus(class unit_data *att, class unit_data *medium,
+                  class unit_data *def,
+                  int hit_loc, int spell_number,
+                  int *pDef_armour_type, class unit_data **pDef_armour,
+                  std::string *pStat);
+
+   string str;
+   spell_bonus(u, u, u2, WEAR_BODY, i, NULL, NULL, &str);
+   send_to_char(str.c_str(), god);
+   spell_bonus(u2, u2, u, WEAR_BODY, i, NULL, NULL, &str);
    send_to_char(str.c_str(), god);
 }

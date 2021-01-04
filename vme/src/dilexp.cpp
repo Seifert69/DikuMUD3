@@ -1114,9 +1114,7 @@ void dilfe_atsp(register class dilprg *p)
                                                 sa.pEffect = str_dup((char *)v6->val.ptr); 
 
                                             /* cast the spell */
-                                            v->val.num =
-                                                spell_offensive(&sa, v1->val.num,
-                                                                v5->val.num);
+                                            v->val.num = spell_offensive(&sa, v1->val.num, v5->val.num);
 
                                             if (sa.pEffect)
                                                 FREE(sa.pEffect);
