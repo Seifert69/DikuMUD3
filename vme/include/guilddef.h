@@ -33,7 +33,8 @@
  Cash Cost: Cost in "Old Gold". Each multiple of 10 = 1 iron?
  Cash Max: Practice cost maximum in "Old Gold". Generally 1000x Cash Cost.
  Point Cost: Determines cost in points of practicing this entity. 
- Next Point Cost: This field can be repeated as many times as desired, allowing more practices per level.
+ **Next Point Cost: This field can be repeated as many times as desired, allowing more practices per level.
+ **NOTE: As of the DIKU3 2020 update, Next Point Cost is no-longer used and will be ignored if included.
  Close: This is the closing argument, and notifies the compiler the function is complete. Must be 0.
  **************************************************************************/
  
@@ -1195,15 +1196,20 @@ $1n tells you, 'I can not teach you any more';
 $1n tells you, 'You must be unaffected by magic, else I can't teach you';
 $1n tells you, 'Remove all equipment, please.';
 
-  5;  100; berserk                       ;  14; 14000;  10; 20;      0;
-  0;  100; rage                          ;  14; 14000;  10; 20;      0;
-  0;  100; consider                      ;  14; 14000;  10; 20;      0;
-  0;  100; diagnostics                   ;  14; 14000;  10; 20;      0;
+  5;  100; berserk                       ;  14; 14000;  9;           0;
+  70; 100; frenzy                        ;  14; 14000;  13;          0;
+  0;  100; rage                          ;  14; 14000;  10;          0;
+  0;  100; consider                      ;  14; 14000;  10;          0;
+  0;  100; diagnostics                   ;  14; 14000;  10;          0;
   0;   70; fleeing                       ;  14; 14000;  10;          0;
-  15;  100; leap                          ;  14; 14000;  10;          0;
-  30;  100; taunt                         ;  14; 14000;  10;          0;
-  40; 100; defend                       ;  14; 14000;  10; 20;      0;
-  10;  100; charge                        ;  14; 14000;  10;          0;
+ 15;  100; leap                          ;  14; 14000;  10;          0;
+ 30;  100; taunt                         ;  14; 14000;  10;          0;
+ 40;  100; defend                        ;  14; 14000;  15;          0;
+ 50;  100; whirlwind                     ;  14; 14000;  12;          0;
+ 35;  100; cleave                        ;  14; 14000;  10; 20;      0;
+ 30;  100; rend                          ;  14; 14000;  10; 20;      0;
+ 90;  100; slam                          ;  14; 14000;  10; 20;      0;
+ 10;  100; charge                        ;  14; 14000;  10;          0;
   0;  100; bash                          ;   9;  9000;   8;          0;
   0;  100; shield                        ;   4;  4000;   5; 10;      0;
   1;  100; rescue                        ;  14; 14000;  10;          0;
@@ -1211,10 +1217,10 @@ $1n tells you, 'Remove all equipment, please.';
  10;  100; two weapon style              ;   9;  9000;   8;          0;
  10;  100; disarming                     ;   9;  9000;   8;          0;
  15;   70; leadership                    ;   9;  9000;   8;          0;
-  0;  100; armor soft leather            ;   4;  4000;   10;      0;
-  7;  100; armor hard leather            ;   4;  4000;   10;      0;
- 15;  100; armor chain                   ;   4;  4000;   10;      0;
- 20;  100; armor plate                   ;   4;  4000;   10;      0;
+  0;  100; armor soft leather            ;   4;  4000;   10;         0;
+  7;  100; armor hard leather            ;   4;  4000;   10;         0;
+ 15;  100; armor chain                   ;   4;  4000;   10;         0;
+ 20;  100; armor plate                   ;   4;  4000;   10;         0;
 "
 
 #elif defined(_WEAPON)
