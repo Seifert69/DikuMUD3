@@ -1,2 +1,2 @@
 <p>Message of Today</p>
-<p>Located in: <b>~/etc/motd</b></p>
+<p>Located in: <b>etc/strings/motd</b></p>
