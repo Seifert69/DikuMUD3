@@ -115,7 +115,7 @@ CXXFLAGS := $(MPLEX_INC) $(DEBUG) $(SYSPORT) $(SYSFLAGS)
  
 
 # linker flags
-LDFLAGS := -pipe -m64
+LDFLAGS := -pipe
 
 # flags required for dependency generation; passed to compilers
 VME_DEPFLAGS = -MT $@ -MD -MP -MF $(VME_DEP_DIR)/$*.Td

@@ -1716,7 +1716,7 @@ void boot_db(void)
     extern int player_convert;
 
     slog(LOG_OFF, 0, "Boot DB -- BEGIN.");
-    slog(LOG_OFF, 0, "Copyright (C) 1994 - 2020 by DikuMUD & Valhalla.");
+    slog(LOG_OFF, 0, "Copyright (C) 1994 - 2021 by DikuMUD & Valhalla.");
 
     slog(LOG_OFF, 0, "Generating indexes from list of zone-filenames.");
 
