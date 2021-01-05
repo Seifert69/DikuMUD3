@@ -31,7 +31,7 @@ void str_remspc(register char *s);
 void str_chraround(char *str, char c);
 
 const char *is_name_raw(const char *arg, char const *const *names); // MS2020 const char *names[])
-const char *is_name(const char *arg, char const *const *names);     // MS2020 const char *names[])
+char *is_name(char *arg, char const *const *names);     // arg will get double spaces zapped
 //const char *is_name_raw(const char *arg, const char *names[]);
 //const char *is_name(const char *arg, const char *names[]);
 
