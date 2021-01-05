@@ -3015,14 +3015,15 @@ dilend
 
 dilbegin do_purge(arg:string);
 var
- u:unitptr;
+   u:unitptr;
 code
 {
+   if (arg=="")
+      goto old_purge;
 
-if (arg=="")
-	goto old_purge;
-
- u:=findunit(self,arg,FIND_UNIT_GLOBAL,null,UNIT_ST_PC);
+/* That's pretty absurd behavior zapping random e.g. keys around the world.
+   I would expect it to purge what I can "see" if it's just a findunit()
+u:=findunit(self,arg,FIND_UNIT_GLOBAL,null,UNIT_ST_PC);
 if (u==null)
  u:=findunit(self,arg,FIND_UNIT_HERE,null,UNIT_ST_NPC);
  if (u==null)
@@ -3036,67 +3037,60 @@ if (u==null)
 if (u==null)
  u:=findunit(self,arg,FIND_UNIT_WORLD,null,UNIT_ST_NPC);
 if (u==null)
- u:=findunit(self,arg,FIND_UNIT_WORLD,null,UNIT_ST_OBJ);
+ u:=findunit(self,arg,FIND_UNIT_WORLD,null,UNIT_ST_OBJ);*/
 
+   u := findunit(self, arg, FIND_UNIT_HERE, null, UNIT_ST_NPC|UNIT_ST_OBJ|UNIT_ST_PC);
 
-if (u==null)
- {
-act ("No such thing '$2t' to purge.",
-A_ALWAYS,self,arg,null,TO_CHAR);
-quit;
-}
+   if (u == null)
+   {
+      act ("No such thing '$2t' to purge.", A_ALWAYS,self,arg,null,TO_CHAR);
+      quit;
+   }
 
-if (not(visible(self,u)))
- {
-act ("No such thing '$2t' to purge.",
-A_ALWAYS,self,arg,null,TO_CHAR);
-quit;
-}
+   if (not(visible(self,u)))
+   {
+      act ("No such thing '$2t' here to purge.", A_ALWAYS,self,arg,null,TO_CHAR);
+      quit;
+   }
 
-if (u.type==UNIT_ST_PC)
-{
-if (u.level>=self.level)
-{
-act("$3n would not like that.",
-A_SOMEONE,self,null,u,TO_CHAR);
-quit;
-}
- }
+   if (u.type == UNIT_ST_PC)
+   {
+      if (u.level>=self.level)
+      {
+         act("$3n would not like that.", A_SOMEONE,self,null,u,TO_CHAR);
+         quit;
+      }
+   }
 
-:purge_one:
-act ("$1n disintegrates $3n.",
-A_SOMEONE,self,null,u,TO_NOTVICT);
-act ("You disintegrate $3n.",
-A_SOMEONE,self,null,u,TO_CHAR);
-if (IS_CORPSE(u))
-dilcopy ("death_clear@death()",u);
-else
-destroy(u);
-quit;
+   :purge_one:
+   act ("$1n disintegrates $3n.", A_SOMEONE,self,null,u,TO_NOTVICT);
+   act ("You disintegrate $3n.", A_SOMEONE,self,null,u,TO_CHAR);
+   if (IS_CORPSE(u))
+      dilcopy ("death_clear@death()",u);
+   else
+      destroy(u);
+   quit;
 
-:old_purge:
-foreach (UNIT_ST_NPC|UNIT_ST_OBJ,u)
-  {
-  if ((u.type==UNIT_ST_PC) or (u.type==UNIT_ST_ROOM))
-    continue;
-	if ((u.type==UNIT_ST_OBJ) and
-	  (not(isset(u.manipulate,MANIPULATE_TAKE))))
-	  continue;
-	  if ((IS_CORPSE(u)) and
-	   (u.value[2]==1))
-  continue;
-	    destroy (u);
-  }
+   :old_purge:
+   foreach (UNIT_ST_NPC|UNIT_ST_OBJ,u)
+   {
+      if ((u.type==UNIT_ST_PC) or (u.type==UNIT_ST_ROOM))
+         continue;
+      if ((u.type==UNIT_ST_OBJ) and (not(isset(u.manipulate,MANIPULATE_TAKE))))
+         continue;
+      if ((IS_CORPSE(u)) and (u.value[2]==1))
+         continue;
+      destroy (u);
+   }
 
-  act ("$1n gestures... You are surrounded by scorching flames.",
-  A_SOMEONE,self,null,null,TO_REST);
-  act ("You are surrounded by scorching flames.",
-  A_SOMEONE,self,null,null,TO_CHAR);
-quit;
+   act("$1n gestures... You are surrounded by scorching flames.", A_SOMEONE,self,null,null,TO_REST);
+   act("You are surrounded by scorching flames.", A_SOMEONE,self,null,null,TO_CHAR);
+   quit;
 }
 dilend
 
-dilbegin force (arg:string);
+
+dilbegin force(arg:string);
 var
  u:unitptr;
  all_arg:string;
