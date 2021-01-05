@@ -259,8 +259,7 @@ struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
 }
 
 /* Generate index's for each unit in the file 'f', zone 'zone' */
-class file_index_type *
-generate_file_indexes(FILE *f, class zone_type *zone)
+class file_index_type *generate_file_indexes(FILE *f, class zone_type *zone)
 {
    class file_index_type *fi, *fi_list, *tfi1, *tfi2;
    class file_index_type *temp_index;
@@ -284,7 +283,7 @@ generate_file_indexes(FILE *f, class zone_type *zone)
       temp_index = new file_index_type();
       temp_index->name = str_dup((char *)cBuf.GetData());
       temp_index->zone = zone;
-      temp_index->unit = NULL;
+      //temp_index->unit = NULL;
       temp_index->crc = 0;
 
       if (fread(&(temp_index->type), sizeof(ubit8), 1, f) != 1)
@@ -674,7 +673,6 @@ extern int memory_room_alloc;
 class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
                                   const char *whom, int stspec)
 {
-   void *ptr;
    class unit_data *u;
    class file_index_type *fi;
    char zone[FI_MAX_ZONENAME + 1], name[FI_MAX_UNITNAME + 1];
@@ -817,9 +815,9 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
          else
          {
             if (IS_PC(u))
-               CHAR_LAST_ROOM(u) = tmpfi->unit;
+               CHAR_LAST_ROOM(u) = tmpfi->fi_unit_list.front();
             else
-               UNIT_IN(u) = tmpfi->unit;
+               UNIT_IN(u) = tmpfi->fi_unit_list.front();
          }
       }
    }
@@ -995,8 +993,10 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
             g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));
             g_nCorrupt += pBuf->ReadStringCopy(name, sizeof(name));
 
-            if ((ptr = find_file_index(zone, name)))
-               CHAR_LAST_ROOM(u) = ((class file_index_type *)ptr)->unit;
+            class file_index_type *fi;
+
+            if ((fi = find_file_index(zone, name)))
+               CHAR_LAST_ROOM(u) = fi->fi_unit_list.front();
          }
 
          if (unit_version >= 42)
@@ -1409,6 +1409,10 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
 
    if (org_fi == NULL)
       return NULL;
+
+   if (org_fi == NULL)
+      return NULL;
+
    if (is_slimed(org_fi))
       org_fi = slime_fi;
 
@@ -1427,8 +1431,8 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
 
    unit_error_zone = NULL;
 
-   if (IS_ROOM(u))
-      org_fi->unit = u;
+   //if (IS_ROOM(u))
+   //   org_fi->unit = u;
 
    if (ins_list)
    {
@@ -1444,6 +1448,7 @@ void read_all_rooms(void)
    // MS2020 int room_num = 0;
    class zone_type *z;
    class file_index_type *fi;
+   class unit_data *u;
 
    extern class zone_type *boot_zone;
 
@@ -1455,13 +1460,13 @@ void read_all_rooms(void)
       {
          if (fi->type == UNIT_ST_ROOM)
          {
-            fi->unit = read_unit(fi);
-            insert_unit_in_zone_list(z, fi->unit);
+            u = read_unit(fi);
+            insert_unit_in_zone_list(z, u);
          }
          else
          {
-            fi->unit = read_unit(fi, FALSE);
-            insert_unit_in_zone_list(z, fi->unit);
+            u = read_unit(fi, FALSE);
+            insert_unit_in_zone_list(z, u);
          }
       }
    }
@@ -1484,16 +1489,22 @@ void normalize_world(void)
          {
             fi = (class file_index_type *)UNIT_IN(u);
 
-            assert(fi->unit);
+            assert(!fi->fi_unit_list.empty());
 
-            UNIT_IN(u) = fi->unit;
+            UNIT_IN(u) = fi->fi_unit_list.front();
          }
 
          /* Change directions into unit_data points from file_index_type */
          for (i = 0; i <= MAX_EXIT; i++)
             if (ROOM_EXIT(u, i))
-               ROOM_EXIT(u, i)->to_room =
-                   ((class file_index_type *)ROOM_EXIT(u, i)->to_room)->unit;
+            {
+               if (((class file_index_type *) ROOM_EXIT(u, i)->to_room)->fi_unit_list.empty())
+                  ROOM_EXIT(u, i)->to_room = NULL;
+               else
+                  ROOM_EXIT(u, i)->to_room =
+                     ((class file_index_type *)ROOM_EXIT(u, i)->to_room)->fi_unit_list.front();
+
+            }
       }
 
    for (u = unit_list; u; u = u->gnext)

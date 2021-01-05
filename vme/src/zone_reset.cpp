@@ -31,8 +31,7 @@ extern eventqueue events;
 class zone_type *boot_zone = NULL; /* Points to the zone currently booted */
 
 /* No Operation */
-class unit_data *
-zone_nop(class unit_data *u, struct zone_reset_cmd *cmd)
+class unit_data *zone_nop(class unit_data *u, struct zone_reset_cmd *cmd)
 {
     /* Return TRUE - NOP always succeedes */
 
@@ -40,8 +39,7 @@ zone_nop(class unit_data *u, struct zone_reset_cmd *cmd)
 }
 
 /* Random */
-class unit_data *
-zone_random(class unit_data *u, struct zone_reset_cmd *cmd)
+class unit_data *zone_random(class unit_data *u, struct zone_reset_cmd *cmd)
 {
     /* Return TRUE if random 0-99 less than given percent  */
     if (number(0, 99) < cmd->num[0])
@@ -126,14 +124,13 @@ bool zone_limit(class unit_data *u, class file_index_type *fi,
 /* fi[1] is room to place loaded unit in or 0 if a PUT command    */
 /* num[0] is the max allowed existing number (0 ignores) in world */
 /* num[1] is the max allowed locally existing number              */
-class unit_data *
-zone_load(class unit_data *u, struct zone_reset_cmd *cmd)
+class unit_data *zone_load(class unit_data *u, struct zone_reset_cmd *cmd)
 {
     class unit_data *loaded = NULL;
 
     /* Destination */
-    if (cmd->fi[1] && cmd->fi[1]->unit && cmd->fi[1]->type == UNIT_ST_ROOM)
-        u = cmd->fi[1]->unit;
+    if (cmd->fi[1] && !cmd->fi[1]->fi_unit_list.empty() && cmd->fi[1]->type == UNIT_ST_ROOM)
+        u = cmd->fi[1]->fi_unit_list.front();
 
     /* Does the destination room exist */
     if (u == NULL)
@@ -234,26 +231,25 @@ class unit_data *zone_door(class unit_data *u, struct zone_reset_cmd *cmd)
 {
     if (!cmd->fi[0] || (cmd->fi[0]->type != UNIT_ST_ROOM))
         szonelog(boot_zone, "Zone Reset Error: Not a room in door reference!");
-    else if (!ROOM_EXIT(cmd->fi[0]->unit, cmd->num[0]))
+    else if (!ROOM_EXIT(cmd->fi[0]->fi_unit_list.front(), cmd->num[0]))
         szonelog(boot_zone,
                  "Zone Reset Error: No %s direction from room %s in door.",
                  dirs[cmd->num[0]], cmd->fi[0]->name);
     else
-        ROOM_EXIT(cmd->fi[0]->unit, cmd->num[0])->exit_info = cmd->num[1];
+        ROOM_EXIT(cmd->fi[0]->fi_unit_list.front(), cmd->num[0])->exit_info = cmd->num[1];
 
     return NULL;
 }
 
 /* fi[0] is the room to be purged.                          */
-class unit_data *
-zone_purge(class unit_data *u, struct zone_reset_cmd *cmd)
+class unit_data *zone_purge(class unit_data *u, struct zone_reset_cmd *cmd)
 {
     class unit_data *next;
 
     if (cmd->fi[0]->type != UNIT_ST_ROOM)
         szonelog(boot_zone, "Reset Error : No room in purge reference!");
     else
-        for (u = UNIT_CONTAINS(cmd->fi[0]->unit); u; u = next)
+        for (u = UNIT_CONTAINS(cmd->fi[0]->fi_unit_list.front()); u; u = next)
         {
             next = u->next;
             if (!IS_PC(u) && !IS_ROOM(u))
@@ -265,15 +261,14 @@ zone_purge(class unit_data *u, struct zone_reset_cmd *cmd)
 
 /* fi[0] is the thing(s) to be removed.                          */
 /* fi[1] is the room to remove from.                             */
-class unit_data *
-zone_remove(class unit_data *u, struct zone_reset_cmd *cmd)
+class unit_data *zone_remove(class unit_data *u, struct zone_reset_cmd *cmd)
 {
     class unit_data *next;
 
     if (cmd->fi[1]->type != UNIT_ST_ROOM)
         szonelog(boot_zone, "Reset Error: No room in remove reference!");
     else
-        for (u = UNIT_CONTAINS(cmd->fi[1]->unit); u; u = next)
+        for (u = UNIT_CONTAINS(cmd->fi[1]->fi_unit_list.front()); u; u = next)
         {
             next = u->next;
             if (UNIT_FILE_INDEX(u) == cmd->fi[0] && !IS_ROOM(u))
@@ -288,8 +283,7 @@ zone_remove(class unit_data *u, struct zone_reset_cmd *cmd)
 /* fi[1] -                                                        */
 /* num[0] is the max allowed existing number (0 ignores) in world */
 /* num[1] is the max allowed locally existing number              */
-class unit_data *
-zone_follow(class unit_data *u, struct zone_reset_cmd *cmd)
+class unit_data *zone_follow(class unit_data *u, struct zone_reset_cmd *cmd)
 {
     class unit_data *loaded = NULL;
 
@@ -318,8 +312,7 @@ zone_follow(class unit_data *u, struct zone_reset_cmd *cmd)
     return loaded;
 }
 
-class unit_data
-    *(*exec_zone_cmd[])(class unit_data *, struct zone_reset_cmd *) =
+class unit_data *(*exec_zone_cmd[])(class unit_data *, struct zone_reset_cmd *) =
         {
             zone_nop,
             zone_load,

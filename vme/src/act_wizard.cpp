@@ -195,9 +195,9 @@ void do_at(class unit_data *ch, char *argument, const struct command_info *cmd)
         return;
     }
 
-    if ((fi = pc_str_to_file_index(ch, argument)) && (fi->unit) && (fi->type == UNIT_ST_ROOM))
+    if ((fi = pc_str_to_file_index(ch, argument)) && (!fi->fi_unit_list.empty()) && (fi->type == UNIT_ST_ROOM))
     {
-        target = fi->unit;
+        target = fi->fi_unit_list.front();
         argument = one_argument(argument, buf);
     }
     else

@@ -2543,9 +2543,6 @@ void dilfi_snta(register class dilprg *p)
                        v2, TYPEFAIL_NULL, 1, DILV_SP))
         if (v1->val.ptr && v2->val.ptr)
         {
-            extern class unit_data *unit_list;
-
-            class unit_data *u;
             class file_index_type *fi;
 
             if ((fi = str_to_file_index((char *)v2->val.ptr)))
@@ -2563,11 +2560,15 @@ void dilfi_snta(register class dilprg *p)
                 sarg.arg = (char *)v1->val.ptr;
                 sarg.mflags = SFB_MSG;
 
-                for (u = unit_list; u; u = u->gnext)
+                std::forward_list<class unit_data *>::iterator it;
+                for (it = fi->fi_unit_list.begin() ; it != fi->fi_unit_list.end(); it++)
+                    unit_function_scan(*it, &sarg);
+
+                /*for (u = unit_list; u; u = u->gnext)
                 {
                     if (UNIT_FILE_INDEX(u) == fi)
                         unit_function_scan(u, &sarg);
-                }
+                }*/
                 dil_test_secure(p);
             }
         }
