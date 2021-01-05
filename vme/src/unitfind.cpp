@@ -548,43 +548,44 @@ class unit_data *find_unit_dil(const class unit_data *ch, char **arg,
     return find_unit_general(ch, ch, arg, list, bitvector, type);
 }
 
-class unit_data *find_symbolic_instance_ref(class unit_data *ref,
-                                            class file_index_type *fi, ubit16 bitvector)
+class unit_data *file_index_type::find_symbolic_instance_ref(class unit_data *ref, ubit16 bitvector)
 {
     register class unit_data *u, *uu;
 
-    if ((fi == NULL) || (ref == NULL))
+    assert(this);
+
+    if (ref == NULL)
         return NULL;
 
     if (IS_SET(bitvector, FIND_UNIT_EQUIP))
     {
         for (u = UNIT_CONTAINS(ref); u; u = u->next)
-            if ((UNIT_FILE_INDEX(u) == fi) && UNIT_IS_EQUIPPED(u))
+            if ((UNIT_FILE_INDEX(u) == this) && UNIT_IS_EQUIPPED(u))
                 return u;
     }
 
     if (IS_SET(bitvector, FIND_UNIT_INVEN))
     {
         for (u = UNIT_CONTAINS(ref); u; u = u->next)
-            if ((UNIT_FILE_INDEX(u) == fi) && !UNIT_IS_EQUIPPED(u))
+            if ((UNIT_FILE_INDEX(u) == this) && !UNIT_IS_EQUIPPED(u))
                 return u;
     }
 
     if (IS_SET(bitvector, FIND_UNIT_SURRO) && UNIT_IN(ref))
     {
-        if (fi == UNIT_FILE_INDEX(UNIT_IN(ref)))
+        if (this == UNIT_FILE_INDEX(UNIT_IN(ref)))
             return UNIT_IN(ref);
 
         /* Run through units in local environment */
         for (u = UNIT_CONTAINS(UNIT_IN(ref)); u; u = u->next)
         {
-            if (UNIT_FILE_INDEX(u) == fi)
+            if (UNIT_FILE_INDEX(u) == this)
                 return u;
 
             /* check tranparancy */
             if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
                 for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
-                    if (UNIT_FILE_INDEX(uu) == fi)
+                    if (UNIT_FILE_INDEX(uu) == this)
                         return uu;
         }
 
@@ -594,13 +595,13 @@ class unit_data *find_symbolic_instance_ref(class unit_data *ref,
             for (u = UNIT_CONTAINS(u); u; u = u->next)
                 if (u != UNIT_IN(ref))
                 {
-                    if (fi == UNIT_FILE_INDEX(u))
+                    if (this == UNIT_FILE_INDEX(u))
                         return u;
 
                     /* check down into transparent unit */
                     if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
                         for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
-                            if (fi == UNIT_FILE_INDEX(uu))
+                            if (this == UNIT_FILE_INDEX(uu))
                                 return uu;
                 }
         }
@@ -609,14 +610,14 @@ class unit_data *find_symbolic_instance_ref(class unit_data *ref,
     if (IS_SET(bitvector, FIND_UNIT_ZONE))
     {
         for (u = unit_list; u; u = u->gnext)
-            if ((unit_zone(u) == fi->zone) && (UNIT_FILE_INDEX(u) == fi))
+            if ((unit_zone(u) == this->zone) && (UNIT_FILE_INDEX(u) == this))
                 return u;
     }
 
     if (IS_SET(bitvector, FIND_UNIT_WORLD))
     {
         for (u = unit_list; u; u = u->gnext)
-            if (UNIT_FILE_INDEX(u) == fi)
+            if (UNIT_FILE_INDEX(u) == this)
                 return u;
     }
 

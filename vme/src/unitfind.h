@@ -42,9 +42,6 @@ class unit_data *find_unit_general(const class unit_data * viewer,
                                         const ubit32 bitvector,
                                         ubit8 type = FIND_UNIT);
 class unit_data *find_symbolic(const char *zone, const char *name);
-class unit_data *find_symbolic_instance_ref (class unit_data * ref,
-            class file_index_type *fi,
-            ubit16 bitvector);
 class unit_data *random_unit (class unit_data * ref, int sflags, int tflags);
 
 
