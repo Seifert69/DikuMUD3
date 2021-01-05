@@ -302,6 +302,16 @@ file_index_type::file_index_type(void)
     zone = NULL;
     next = NULL;
     unit = NULL;
+
+    filepos = 0;
+    length = 0; 
+    crc = 0;    
+
+    no_in_zone = 0;
+    no_in_mem = 0;
+    room_no = 0;  
+    type = 0;     
+
 #ifdef DMSERVER
     no_in_zone = 0;
 #endif

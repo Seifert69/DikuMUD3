@@ -98,14 +98,20 @@ int getrlimit(int, struct rlimit *);
 // Need this to be sure the typedefs are right for 64 bit architecture (MS2020)
 void type_validate_64(void)
 {
-    assert(sizeof(void *) == 8);
+    if (sizeof(void *) == 8)
+        slog(LOG_ALL, 0, "Running 64-bit mode");
+    else
+        slog(LOG_ALL, 0, "Running 32-bit mode");
+
+    // If any of these checks fail, update the type-defs so that they match your
+    // particular architecture.
     assert(sizeof(char) == 1);
     assert(sizeof(ubit1) == 1);
     assert(sizeof(ubit8) == 1);
     assert(sizeof(ubit16) == 2);
     assert(sizeof(ubit32) == 4);
     assert(sizeof(ubit64) == 8);
-    slog(LOG_ALL, 0, "64-bit architecture checked out OK");
+    assert(sizeof(int) == 4); // Hell will probably freeze over if this isn't true
 }
 
 int main(int argc, char **argv)

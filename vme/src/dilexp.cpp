@@ -4433,11 +4433,14 @@ void dilfe_fnds2(register class dilprg *p)
                         *buf1 = '\0';
                         *buf2 = '\0';
                         split_fi_ref((char *)v2->val.ptr, buf1, buf2);
-                        v->val.ptr =
-                            find_symbolic_instance_ref((class unit_data *)v1->val.ptr, find_file_index(buf1, buf2),
-                                                       v3->val.num);
-                        if (v->val.ptr == NULL)
+                        class file_index_type *fi = find_file_index(buf1, buf2);
+                        if (fi)
+                            v->val.ptr = fi->find_symbolic_instance_ref((class unit_data *)v1->val.ptr, v3->val.num);
+                        else
+                        {
+                            v->val.ptr = NULL;
                             v->type = DILV_NULL; /* not found */
+                        }
                     }
                     break;
                     case DILV_FAIL:

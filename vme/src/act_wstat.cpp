@@ -1367,7 +1367,7 @@ void do_wstat(class unit_data *ch, char *argument, const struct command_info *cm
                         else
                             do_load(ch, argument, cmd);
                     }
-                    u = find_symbolic_instance(fi);
+                    u = fi->find_symbolic_instance();
                 }
             }
         }

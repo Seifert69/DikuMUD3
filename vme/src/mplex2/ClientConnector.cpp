@@ -951,6 +951,11 @@ void cConHook::StripHTML(char *dest, const char *src)
                 *dest++ = ' ';
                 p += 6;
             }
+            else if (strncasecmp(p, "&quot;", 6)==0)
+            {
+                *dest++ = '\"';
+                p += 6;
+            }
             else
                 *dest++ = *p++;
               

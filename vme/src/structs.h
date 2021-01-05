@@ -54,7 +54,10 @@ class file_index_type
 {
 public:
     file_index_type(void);
-    ~file_index_type(void);
+    ~file_index_type();
+
+    class unit_data *find_symbolic_instance(void);
+    class unit_data *find_symbolic_instance_ref(class unit_data *ref, ubit16 bitvector);
 
     char *name;                  /* Unique within this list          */
     class zone_type *zone;       /* Pointer to owner of structure    */
