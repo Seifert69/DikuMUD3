@@ -41,7 +41,6 @@ class unit_data *find_unit_general(const class unit_data * viewer,
                                         const class unit_data * list,
                                         const ubit32 bitvector,
                                         ubit8 type = FIND_UNIT);
-class unit_data *find_symbolic_instance (class file_index_type *fi);
 class unit_data *find_symbolic(const char *zone, const char *name);
 class unit_data *find_symbolic_instance_ref (class unit_data * ref,
             class file_index_type *fi,

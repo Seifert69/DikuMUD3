@@ -623,15 +623,14 @@ class unit_data *find_symbolic_instance_ref(class unit_data *ref,
     return NULL;
 }
 
-class unit_data *find_symbolic_instance(class file_index_type *fi)
+class unit_data * file_index_type::find_symbolic_instance(void)
 {
     class unit_data *u;
 
-    if (fi == NULL)
-        return NULL;
+    assert(this);
 
     for (u = unit_list; u; u = u->gnext)
-        if (UNIT_FILE_INDEX(u) == fi)
+        if (UNIT_FILE_INDEX(u) == this)
             return u;
 
     return NULL;
@@ -639,7 +638,12 @@ class unit_data *find_symbolic_instance(class file_index_type *fi)
 
 class unit_data *find_symbolic(const char *zone, const char *name)
 {
-    return find_symbolic_instance(find_file_index(zone, name));
+    class file_index_type *fi = find_file_index(zone, name);
+
+    if (fi)
+        return fi->find_symbolic_instance();
+    else
+        return NULL;
 }
 
 struct unit_vector_data unit_vector;

@@ -56,6 +56,8 @@ public:
     file_index_type(void);
     ~file_index_type(void);
 
+    class unit_data *find_symbolic_instance(void);
+
     char *name;                  /* Unique within this list          */
     class zone_type *zone;       /* Pointer to owner of structure    */
     class file_index_type *next; /* Next File Index                  */
