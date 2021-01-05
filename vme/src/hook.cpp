@@ -12,6 +12,7 @@
 #else
 #include <unistd.h>
 #include <sys/time.h>
+#include <exception>
 
 #endif
 #include <sys/types.h>
@@ -131,11 +132,18 @@ void cHook::PushWrite(void)
                 }
             }
 #else
-            thisround = write(fd, buf + sofar, len - sofar);
+            try {
+                thisround = write(fd, buf + sofar, len - sofar);
+            }
+            catch (const std::exception &ex)
+            {
+                slog(LOG_ALL, 0, "PushWrite exception: [%s]", ex.what());
+                thisround = -7;
+            }
 
             if (thisround == 0)
             {
-                slog(LOG_ALL, 0, "PushWrite (%d): Write to socket EOF", fd);
+                slog(LOG_ALL, 0, "PushWrite (%d): Write to socket EOF", (int) fd);
                 Unhook();
                 return;
             }
@@ -274,7 +282,13 @@ void cCaptainHook::Hook(int nHandle, cHook *hook)
 
     assert(nHandle < (int) sizeof(pfHook)); 
     assert(pfHook[nHandle] == NULL);
-    assert(hook->fd == -1);
+
+    if (hook->fd != -1)
+    {
+        slog(LOG_ALL, 0, "ODD Hook() called with a non -1 fd (fd == %d).", (int) hook->fd);
+    }
+
+    //assert(hook->fd == -1);
 
     pfHook[nHandle] = hook;
     hook->fd = nHandle;
