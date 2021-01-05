@@ -2608,9 +2608,9 @@ restrict constitution   = 50
 restrict level          = 40
 profession barbarian      = +5
 
-index          = SKI_WHIRLWIND
-name           = whirlwind
-command        = whirlwind
+index          = SKI_WHIRL
+name           = whirl
+command        = whirl
 minpos         = POSITION_STANDING
 turns          = PULSE_VIOLENCE
 func           = ski_whirl@skills

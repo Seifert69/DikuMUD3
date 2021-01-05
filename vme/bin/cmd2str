@@ -137,6 +137,7 @@ CMD_COLOR color
 CMD_CONTRIB contrib
 CMD_HOMES homes
 CMD_MOTD motd
+CMD_WHOSTATUS whostatus
 CMD_PEEK peek
 CMD_FILCH filch
 CMD_DISARM disarm
@@ -246,3 +247,8 @@ CMD_RAGE rage
 CMD_FRENZY frenzy
 CMD_LEAP leap
 CMD_CHARGE charge
+CMD_SLAM slam
+CMD_REND rend
+CMD_CLEAVE cleave
+CMD_WHIRLWIND whirlwind
+

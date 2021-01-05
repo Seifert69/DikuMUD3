@@ -7965,17 +7965,14 @@ dilend /* do_delete */
 
 
 dilbegin whostatus(arg : string);
-var
-
 code
 {
-	arg := argument;
 	if (self.extra.["$whostatus"] != null)
-		subextra(self.extra,{"$whostatus"});
-	addextra(self.extra,{"$whostatus"},arg);	
+		subextra(self.extra,"$whostatus");
+	addextra(self.extra,{"$whostatus"},"- "+arg);
+	act ("Your Who Status has been set to: "+arg,A_SOMEONE,self,null,null,TO_CHAR);	
 	send_done("whostatus",self,null,null,0,arg,null);
-
-quit;
+	quit;
 }
 dilend /* do_delete */
 
