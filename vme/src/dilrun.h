@@ -55,6 +55,7 @@ int dil_sub_secure (struct dilframe *frm, class unit_data * sup,
 void dil_secure_test (register class dilprg *prg);
 int same_environment (class unit_data * u1, class unit_data * u2);
 void unhash_str (char **s);
+void dil_clear_extras(register class dilprg *prg, class extra_descr_data *exd);
 void dil_clear_non_secured (register class dilprg *prg);
 void dil_clear_lost_reference (register struct dilframe *frm, void *ptr);
 void dil_test_secure (register class dilprg *prg, int bForeach = FALSE);
