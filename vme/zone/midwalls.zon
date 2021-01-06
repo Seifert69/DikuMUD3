@@ -4595,7 +4595,7 @@ coffe_cup
 
 names {"coffee", "cup"}
 title "a cup of coffee"
-descr "A surprisingly large cup of coffee is here.
+descr "A surprisingly large cup of coffee is here."
 extra {}
 "Ummmm good. This is a big cup of coffee. What odd details it has!"
 extra {"details"}
