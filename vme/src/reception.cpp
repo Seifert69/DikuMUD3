@@ -530,8 +530,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
                     slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
                     break;
                 }
-                UNIT_FILE_INDEX(pnew) = fi;
-                fi->no_in_mem++;
+                pnew->set_fi(fi);
                 insert_in_unit_list(pnew);
             }
 

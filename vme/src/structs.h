@@ -103,9 +103,9 @@ public:
     char *help;               /* User-Help to zone                */
     char *filename;           /* The filename of this file        */
 
-    class unit_data *rooms;   /* unit pointer to the base rooms   */
-    class unit_data *objects; /* unit pointer to the base objects */
-    class unit_data *npcs;    /* unit pointer to the base npcs    */
+    class unit_data *rooms;   // unit pointer to the base rooms, used in vmc really
+    class unit_data *objects; // unit pointer to the base objects, used in vmc really
+    class unit_data *npcs;    // unit pointer to the base npcs, used in vmc really
 
     class file_index_type *fi;  /* Pointer to list of file-index's  */
     struct bin_search_type *ba; /* Pointer to binarray of type      */
@@ -472,6 +472,7 @@ public:
     unit_data(ubit8 type);
     ~unit_data();
     class unit_data *copy();
+    void set_fi(class file_index_type *f);
 
     class cNamelist names; /* Name Keyword list for get, enter, etc.      */
 

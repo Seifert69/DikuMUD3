@@ -46,7 +46,7 @@ extern int memory_total_alloc;
 
 class room_direction_data *create_direction_data(void);
 
-/* By using this, we can easily sort the list if ever needed */
+/* By using this, we can easily sort the list if ever needed 
 void insert_unit_in_zone_list(zone_type *zp, class unit_data *u)
 {
    class unit_data *tmp_u;
@@ -94,7 +94,7 @@ void insert_unit_in_zone_list(zone_type *zp, class unit_data *u)
    }
    else
       return;
-}
+}*/
 
 /*  Generate array of bin_search_type for the zone_list, and for each
  *  zone's file_index's.
@@ -299,10 +299,19 @@ class file_index_type *generate_file_indexes(FILE *f, class zone_type *zone)
       zone->no_of_fi++;
       fi->filepos = ftell(f);
       if (fi->type == UNIT_ST_OBJ)
+      {
+         zone->no_objs++;
          object_num++;
+      }
 
       if (fi->type == UNIT_ST_NPC)
+      {
+         zone->no_npcs++;
          npc_num++;
+      }
+
+      if (fi->type == UNIT_ST_ROOM)
+         zone->no_rooms++;
 
       if (fi->type == UNIT_ST_ROOM)
       {
@@ -1424,7 +1433,7 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
                         str_cc(org_fi->name, org_fi->zone->name),
                         ins_list);
 
-   UNIT_FILE_INDEX(u) = org_fi;
+   u->set_fi(org_fi);
 
    if (!IS_ROOM(u))
       assert(UNIT_IN(u) == NULL);
@@ -1436,10 +1445,15 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
 
    if (ins_list)
    {
-      org_fi->no_in_mem++;
       insert_in_unit_list(u); /* Put unit into the unit_list      */
       apply_affect(u);        /* Set all affects that modify      */
    }
+   else
+   {
+      if (UNIT_TYPE(u) != UNIT_ST_ROOM)
+         slog(LOG_ALL, 0, "Bizarro. This probably shouldn't happen");
+   }
+   
    return u;
 }
 
@@ -1448,7 +1462,6 @@ void read_all_rooms(void)
    // MS2020 int room_num = 0;
    class zone_type *z;
    class file_index_type *fi;
-   class unit_data *u;
 
    extern class zone_type *boot_zone;
 
@@ -1460,13 +1473,7 @@ void read_all_rooms(void)
       {
          if (fi->type == UNIT_ST_ROOM)
          {
-            u = read_unit(fi);
-            insert_unit_in_zone_list(z, u);
-         }
-         else
-         {
-            u = read_unit(fi, FALSE);
-            insert_unit_in_zone_list(z, u);
+            read_unit(fi);
          }
       }
    }

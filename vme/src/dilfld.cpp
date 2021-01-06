@@ -957,7 +957,22 @@ void dilfe_fld(register class dilprg *p)
             {
                 v->atyp = DILA_NORM;
                 v->type = DILV_UP;
-                v->val.ptr = ((class zone_type *)v1->val.ptr)->rooms;
+                class zone_type *z = (class zone_type *)v1->val.ptr;
+                class file_index_type *fi;
+                for (fi = z->fi; fi; fi = fi->next)
+                    if (fi->type == UNIT_ST_ROOM)
+                    {
+                        if (fi->fi_unit_list.empty())
+                        {
+                            v->type = DILV_FAIL;
+                            v->val.ptr = NULL;
+                        }
+                        else
+                        {                    
+                            v->val.ptr = fi->fi_unit_list.front();                        
+                        }
+                        break;
+                    }
             }
             else
                 v->type = DILV_FAIL; /* not applicable */
@@ -982,7 +997,22 @@ void dilfe_fld(register class dilprg *p)
             {
                 v->atyp = DILA_NORM;
                 v->type = DILV_UP;
-                v->val.ptr = ((class zone_type *)v1->val.ptr)->npcs;
+                class zone_type *z = (class zone_type *)v1->val.ptr;
+                class file_index_type *fi;
+                for (fi = z->fi; fi; fi = fi->next)
+                    if (fi->type == UNIT_ST_NPC)
+                    {
+                        if (fi->fi_unit_list.empty())
+                        {
+                            v->type = DILV_FAIL;
+                            v->val.ptr = NULL;
+                        }
+                        else
+                        {                    
+                            v->val.ptr = fi->fi_unit_list.front();                        
+                        }
+                        break;
+                    }
             }
             else
                 v->type = DILV_FAIL; /* not applicable */
@@ -1007,7 +1037,22 @@ void dilfe_fld(register class dilprg *p)
             {
                 v->atyp = DILA_NORM;
                 v->type = DILV_UP;
-                v->val.ptr = ((class zone_type *)v1->val.ptr)->objects;
+                class zone_type *z = (class zone_type *)v1->val.ptr;
+                class file_index_type *fi;
+                for (fi = z->fi; fi; fi = fi->next)
+                    if (fi->type == UNIT_ST_OBJ)
+                    {
+                        if (fi->fi_unit_list.empty())
+                        {
+                            v->type = DILV_FAIL;
+                            v->val.ptr = NULL;
+                        }
+                        else
+                        {                    
+                            v->val.ptr = fi->fi_unit_list.front();                        
+                        }
+                        break;
+                    }
             }
             else
                 v->type = DILV_FAIL; /* not applicable */
