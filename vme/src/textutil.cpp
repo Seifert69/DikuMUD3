@@ -1050,11 +1050,12 @@ void str_correct_utf8(char *src)
             {
                 s--;
                 *s = '?';
-                if (s > src) 
+                if (s >= src) 
                     s--; // end of for means we'll start checking this '?'
-                if (s > src)
+                if (s >= src)
                     s--; // so go back yet another char so we'll check the char before '?'
 
+                // s can become 1 less than src, but for loop above +1 and then it's equal src
                 // MS: Code on the website most definitely seemed wrong
                 // so if prev was not accept, then because I fear it might 
                 // be a 3 character sequence, I go back 
