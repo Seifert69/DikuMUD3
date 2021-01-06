@@ -132,6 +132,21 @@ static void stat_memory(class unit_data *ch)
     //  system_memory (ch);
     //  memory_status (buf);
     //  send_to_char (buf, ch);
+
+    // Also do a unit sanity check here, not memory related, just a hack
+    //
+
+    class unit_data *u;
+
+    for (u = unit_list; u; u = u->next)
+    {
+        if (UNIT_TYPE(u) != UNIT_ST_ROOM)
+            if (UNIT_IN(u) == NULL)
+            {
+                sprintf(buf, "%s@%s is not in a room<br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
+                send_to_char(buf, ch);
+            }
+    }
 }
 
 static void stat_world(class unit_data *ch)
@@ -1356,8 +1371,8 @@ void do_wstat(class unit_data *ch, char *argument, const struct command_info *cm
 
             if (fi)
             {
-                if (fi->unit)
-                    u = fi->unit;
+                if (fi->type == UNIT_ST_ROOM)
+                    u = fi->fi_unit_list.front(); // Shouldn't be empty
                 else
                 {
                     if (fi->no_in_mem == 0)

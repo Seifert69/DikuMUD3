@@ -736,8 +736,10 @@ void str_chraround(char *str, char c)
 /*     names[N] pointer to the last N'th string           */
 /*     names[N+1] NIL pointer                             */
 /*                                                        */
-/*   Assumes nothing that arg is without leading spaces,  */
+/*   Assumes  that arg is without leading spaces,         */
 /*   no double spaces and contains text                   */
+/* Returns NULL if not found, or pointer in arg after     */
+/* the found unit                                         */
 
 const char *is_name_raw(const char *arg, char const *const *names) // MS2020 const char *names[])
 {
@@ -770,20 +772,17 @@ const char *is_name_raw(const char *arg, char const *const *names) // MS2020 con
 /* We need to copy to BUF in order to prevent crash when */
 /* str_remspc might want to change "constant" strings    */
 
-const char *is_name(const char *arg, char const *const *names) // MS2020 const char *names[])
+char *is_name(char *arg, char const *const *names) // MS2020 const char *names[])
 {
-    char buf[MAX_INPUT_LENGTH];
-
     for (; isaspace(*arg); arg++)
         ;
 
     if (!*arg)
         return 0;
 
-    strcpy(buf, arg);
-    str_remspc(buf);
+    str_remspc(arg);
 
-    return is_name_raw(buf, names);
+    return (char *) is_name_raw(arg, names);
 }
 
 /* Create an empty namelist */

@@ -363,63 +363,34 @@ class unit_data *find_unit_general(const class unit_data *viewer,
                 return (class unit_data *)ch;
             }
 
-            /* MS: Removed !IS_ROOM(UNIT_IN(ch)) because you must be able to
-               open rooms from the inside... */
-            if (IS_SET(type, UNIT_TYPE(UNIT_IN(ch))) && (ct = UNIT_NAMES(UNIT_IN(ch)).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, UNIT_IN(ch)) && (ct - c >= best_len))
+            if (UNIT_IN(ch) == NULL)
             {
-                if (ct - c > best_len)
-                {
-                    number = original_number;
-                    best_len = ct - c;
-                }
-
-                if (--number == 0)
-                    best = UNIT_IN(ch);
+                slog(LOG_ALL, 0, "%s@%s is not in a room while in find_unit_general<br/>", UNIT_FI_NAME(ch), UNIT_FI_ZONENAME(ch));
             }
-
-            /* Run through units in local environment */
-            for (u = UNIT_CONTAINS(UNIT_IN(ch)); u; u = u->next)
+            else
             {
-                if (IS_SET(type, UNIT_TYPE(u)) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
+                /* MS: Removed !IS_ROOM(UNIT_IN(ch)) because you must be able to
+                open rooms from the inside... */
+                if (IS_SET(type, UNIT_TYPE(UNIT_IN(ch))) && (ct = UNIT_NAMES(UNIT_IN(ch)).IsNameRaw(c)) &&
+                    CHAR_CAN_SEE(viewer, UNIT_IN(ch)) && (ct - c >= best_len))
                 {
-                    if ((ct = UNIT_NAMES(u).IsNameRaw(c)) &&
-                        (ct - c >= best_len))
+                    if (ct - c > best_len)
                     {
-                        if (ct - c > best_len)
-                        {
-                            number = original_number;
-                            best_len = ct - c;
-                        }
-
-                        if (--number == 0)
-                            best = u;
+                        number = original_number;
+                        best_len = ct - c;
                     }
 
-                    /* check tranparancy */
-                    if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
-                        for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
-                            if (IS_SET(type, UNIT_TYPE(uu)) && IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
-                            {
-                                if (ct - c > best_len)
-                                {
-                                    number = original_number;
-                                    best_len = ct - c;
-                                }
-
-                                if (--number == 0)
-                                    best = uu;
-                            }
+                    if (--number == 0)
+                        best = UNIT_IN(ch);
                 }
 
-            } /* End for */
-
-            /* Run through units in local environment if upwards transparent */
-            if ((u = UNIT_IN(UNIT_IN(ch))) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)))
-            {
-                for (u = UNIT_CONTAINS(u); u; u = u->next)
-                    if (u != UNIT_IN(ch) && CHAR_CAN_SEE(viewer, u))
+                /* Run through units in local environment */
+                for (u = UNIT_CONTAINS(UNIT_IN(ch)); u; u = u->next)
+                {
+                    if (IS_SET(type, UNIT_TYPE(u)) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
                     {
-                        if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
+                        if ((ct = UNIT_NAMES(u).IsNameRaw(c)) &&
+                            (ct - c >= best_len))
                         {
                             if (ct - c > best_len)
                             {
@@ -431,12 +402,10 @@ class unit_data *find_unit_general(const class unit_data *viewer,
                                 best = u;
                         }
 
-                        /* check down into transparent unit */
+                        /* check tranparancy */
                         if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
                             for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
-                                if (IS_SET(type, UNIT_TYPE(uu)) && IS_CHAR(uu) &&
-                                    (ct = UNIT_NAMES(uu).IsNameRaw(c)) &&
-                                    CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
+                                if (IS_SET(type, UNIT_TYPE(uu)) && IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
                                 {
                                     if (ct - c > best_len)
                                     {
@@ -448,6 +417,45 @@ class unit_data *find_unit_general(const class unit_data *viewer,
                                         best = uu;
                                 }
                     }
+
+                } /* End for */
+
+                /* Run through units in local environment if upwards transparent */
+                if ((u = UNIT_IN(UNIT_IN(ch))) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)))
+                {
+                    for (u = UNIT_CONTAINS(u); u; u = u->next)
+                        if (u != UNIT_IN(ch) && CHAR_CAN_SEE(viewer, u))
+                        {
+                            if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
+                            {
+                                if (ct - c > best_len)
+                                {
+                                    number = original_number;
+                                    best_len = ct - c;
+                                }
+
+                                if (--number == 0)
+                                    best = u;
+                            }
+
+                            /* check down into transparent unit */
+                            if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
+                                for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
+                                    if (IS_SET(type, UNIT_TYPE(uu)) && IS_CHAR(uu) &&
+                                        (ct = UNIT_NAMES(uu).IsNameRaw(c)) &&
+                                        CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
+                                    {
+                                        if (ct - c > best_len)
+                                        {
+                                            number = original_number;
+                                            best_len = ct - c;
+                                        }
+
+                                        if (--number == 0)
+                                            best = uu;
+                                    }
+                        }
+                }
             }
         }
 
@@ -609,16 +617,26 @@ class unit_data *file_index_type::find_symbolic_instance_ref(class unit_data *re
 
     if (IS_SET(bitvector, FIND_UNIT_ZONE))
     {
-        for (u = unit_list; u; u = u->gnext)
+        /* for (u = unit_list; u; u = u->gnext)
             if ((unit_zone(u) == this->zone) && (UNIT_FILE_INDEX(u) == this))
-                return u;
+                return u;*/
+
+        if (!this->fi_unit_list.empty())
+        {
+            for (std::forward_list<class unit_data *>::iterator it = this->fi_unit_list.begin() ; it != this->fi_unit_list.end(); it++)
+                if (UNIT_FILE_INDEX(*it) == this)
+                    return u;
+        }
     }
 
     if (IS_SET(bitvector, FIND_UNIT_WORLD))
     {
-        for (u = unit_list; u; u = u->gnext)
+        /* for (u = unit_list; u; u = u->gnext)
             if (UNIT_FILE_INDEX(u) == this)
-                return u;
+                return u;*/
+
+        if (!this->fi_unit_list.empty())
+            return this->fi_unit_list.front();
     }
 
     return NULL;
@@ -626,13 +644,26 @@ class unit_data *file_index_type::find_symbolic_instance_ref(class unit_data *re
 
 class unit_data * file_index_type::find_symbolic_instance(void)
 {
-    class unit_data *u;
+    // class unit_data *u;
 
     assert(this);
 
-    for (u = unit_list; u; u = u->gnext)
+    /*
+    for (class unit_data *u = unit_list; u; u = u->gnext)
+    {
         if (UNIT_FILE_INDEX(u) == this)
+        {
+            if (this->fi_unit_list.front() != u)
+            {
+                slog(LOG_ALL, 0, "Break me here %s@%s is not in a room while in find_unit_general<br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
+            }
+
             return u;
+        }
+    }*/
+
+    if (!this->fi_unit_list.empty())
+        return this->fi_unit_list.front();
 
     return NULL;
 }

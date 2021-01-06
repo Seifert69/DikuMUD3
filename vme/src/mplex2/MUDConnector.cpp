@@ -109,6 +109,9 @@ void test_mud_up(void)
     nRetries = 0;
     slog(LOG_OFF, 0, "Stream to server was re-opened!");
 
+    if (MudHook.tfd() != -1)
+        slog(LOG_ALL, 0, "test mud up called with a non -1 fd.");
+
     CaptainHook.Hook(fd, &MudHook);
     //assert(MudHook.IsHooked());
 

@@ -47,6 +47,9 @@ class descriptor_data *unit_is_edited(class unit_data *u)
 /* By using this, we can easily sort the list if ever needed */
 void insert_in_unit_list(class unit_data *u)
 {
+    if (UNIT_FILE_INDEX(u))
+        UNIT_FILE_INDEX(u)->fi_unit_list.push_front(u);
+
     class unit_data *tmp_u;
 
     if (!unit_list)
@@ -141,12 +144,16 @@ void insert_in_unit_list(class unit_data *u)
         break;
     }
     }
+
 }
 
 /* Remove a unit from the unit_list */
 void remove_from_unit_list(class unit_data *unit)
 {
     assert(unit->gprevious || unit->gnext || (unit_list == unit));
+
+    if (UNIT_FILE_INDEX(unit))
+        UNIT_FILE_INDEX(unit)->fi_unit_list.remove(unit);
 
     if (npc_head == unit)
         npc_head = unit->gnext;

@@ -530,9 +530,9 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
                     slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
                     break;
                 }
-                insert_in_unit_list(pnew);
                 UNIT_FILE_INDEX(pnew) = fi;
                 fi->no_in_mem++;
+                insert_in_unit_list(pnew);
             }
 
             if (pnew_tmp && pnew)
@@ -698,8 +698,7 @@ void store_all_unit(class unit_data *u, char *fname, int svcont)
     basic_save_contents(fname, u, FALSE, svcont);
 }
 
-class unit_data *
-restore_all_unit(char *filename, unit_data *udest)
+class unit_data *restore_all_unit(char *filename, unit_data *udest)
 {
     class unit_data *u;
     u = base_load_contents(filename, udest);

@@ -3785,7 +3785,18 @@ void dilfe_load(register class dilprg *p)
     case DILV_SP:
         if (v1->val.ptr)
         {
-            v->val.ptr = read_unit(str_to_file_index((char *)v1->val.ptr));
+            v->val.ptr = NULL;
+
+            class file_index_type *fi = str_to_file_index((char *) v1->val.ptr);
+
+            if (fi)
+            {
+                if (fi->type == UNIT_ST_ROOM)
+                    slog(LOG_ALL, 0, "DIL trying to load a room %s@%s.", fi->name, fi->zone->name);
+                else
+                    v->val.ptr = read_unit(fi);
+            }
+            
             if (v->val.ptr)
             {
                 if (IS_MONEY((class unit_data *)v->val.ptr))

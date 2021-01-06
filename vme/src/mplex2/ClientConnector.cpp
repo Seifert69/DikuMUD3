@@ -1416,6 +1416,9 @@ cConHook::cConHook(void)
     strncpy(m_aHost, hostname, sizeof(m_aHost) - 1);
     *(m_aHost + sizeof(m_aHost) - 1) = '\0';
 
+    if (this->tfd() != -1)
+        slog(LOG_ALL, 0, "cConHook() called with a non -1 fd.");
+
     CaptainHook.Hook(fd, this);
 
     g_nConnectionsLeft--;

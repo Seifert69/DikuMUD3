@@ -135,8 +135,9 @@ class unit_data *world_room(const char *zone, const char *name)
 {
     class file_index_type *fi;
     fi = find_file_index(zone, name);
-    if (fi && fi->type == UNIT_ST_ROOM)
-        return (fi->unit);
+
+    if (fi && (fi->type == UNIT_ST_ROOM) && (!fi->fi_unit_list.empty()))
+        return (fi->fi_unit_list.front());
 
     return NULL;
 }

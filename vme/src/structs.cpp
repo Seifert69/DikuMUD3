@@ -301,7 +301,7 @@ file_index_type::file_index_type(void)
     name = NULL;
     zone = NULL;
     next = NULL;
-    unit = NULL;
+    //unit = NULL;
 
     filepos = 0;
     length = 0; 

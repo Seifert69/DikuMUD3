@@ -7,6 +7,7 @@
 
 #ifndef _MUD_STRUCTS_H
 #define _MUD_STRUCTS_H
+#include <forward_list> 
 #include "event.h"
 #include "essential.h"
 #include "values.h"
@@ -58,11 +59,12 @@ public:
 
     class unit_data *find_symbolic_instance(void);
     class unit_data *find_symbolic_instance_ref(class unit_data *ref, ubit16 bitvector);
+    std::forward_list<class unit_data *> fi_unit_list;  // This list of units that match this file_index
 
     char *name;                  /* Unique within this list          */
     class zone_type *zone;       /* Pointer to owner of structure    */
     class file_index_type *next; /* Next File Index                  */
-    class unit_data *unit;       /* Pointer to room if is room       */
+    // obsoleted by fi_unit_list. class unit_data *unit; // Pointer to room if is room
 
     long filepos;  /* Byte offset into file            */
     ubit32 length; /* No of bytes to read              */

@@ -76,7 +76,8 @@ const char *single_unit_messg(class unit_data *unit,
 {
    class extra_descr_data *exd = UNIT_EXTRA(unit).m_pList;
 
-   exd = exd->find_raw(type);
+   if (exd)
+      exd = exd->find_raw(type);
 
    if (exd && exd->descr.c_str())
    {
