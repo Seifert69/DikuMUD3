@@ -1037,18 +1037,27 @@ void str_correct_utf8(char *src)
 {
     ubit32 codepoint = 0;
     ubit32 prev = 0, current = 0;
-    
-    for (; *src; prev = current, src++)
+    char *s = src;
+
+    for (; *s; prev = current, s++)
     {
-        if (utf8_decode(&current, &codepoint, *src) == UTF8_REJECT)
+        if (utf8_decode(&current, &codepoint, *s) == UTF8_REJECT)
         {
             // The byte is invalid, replace it and restart.
-            *src = '?';
+            *s = '?';
             current = UTF8_ACCEPT;
             if (prev != UTF8_ACCEPT)
             {
-                src--;
-                *src = '?';
+                s--;
+                *s = '?';
+                if (s > src) 
+                    s--; // end of for means we'll start checking this '?'
+                if (s > src)
+                    s--; // so go back yet another char so we'll check the char before '?'
+
+                // MS: Code on the website most definitely seemed wrong
+                // so if prev was not accept, then because I fear it might 
+                // be a 3 character sequence, I go back 
             }
         }
     }
