@@ -1057,26 +1057,6 @@ void str_correct_utf8(char *src)
 void str_correct_utf8(std::string &src)
 {
     str_correct_utf8((char *) src.c_str());
-    return; 
-
-    ubit32 codepoint = 0;
-    ubit32 prev = 0, current = 0;
-    int nLen = src.length();
-    
-    for (int pos = 0; pos < nLen; prev = current, ++pos)
-    {
-        if (utf8_decode(&current, &codepoint, src[pos]) == UTF8_REJECT)
-        {
-            // The byte is invalid, replace it and restart.
-            src[pos] = '?';
-            current = UTF8_ACCEPT;
-            if (prev != UTF8_ACCEPT)
-            {
-                pos--;
-                src[pos] = '?';
-            }
-        }
-    }    
 }
 
 
