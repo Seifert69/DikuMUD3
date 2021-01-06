@@ -29,6 +29,14 @@ help
 
 %dil
 
+dilbegin do_change(arg : string);
+code
+{
+   sendtext("do_change() DIL. arg = " + arg + "<br/>", self);
+   quit;
+}
+dilend
+
 
 /* 
  * self is the PC
