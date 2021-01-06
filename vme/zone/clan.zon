@@ -24,6 +24,62 @@ creators {"whistler"}
 
 /* used by clan guards to block dragging of corpses or other objects */
 
+dilbegin namepillar();
+var
+	err : integer;
+	buf : string;
+	nlist : stringlist;
+	i	: integer;
+	pc : unitptr;
+	targ : string;
+code
+{
+:start:
+	buf := "";
+	targ := self.outside.zoneidx+"_names.data";
+	err := loadstr (targ,buf);
+	if (err < 1)
+		err := savestr(targ,buf,"w");
+	nlist := split(buf,"\n");
+	i := 0;
+	buf := "";
+	while (i < length(nlist))
+	{
+		
+		buf := buf + nlist.[i] + "<br>";
+		i := i+1;
+	}
+	self.extra.[0].descr := "A jet black pillar, shining silver names of clan legends are inscribed down its length.<br><br>" + buf;
+	
+:start_sign:	
+	wait(SFB_CMD, (command("sign")) and (argument == "pillar"));
+	pc := activator;
+	block;
+	
+	if ((pc.extra.[CLAN_SYMBOLIC] == null) or (pc.extra.[CLAN_SYMBOLIC].descr != self.outside.zoneidx))
+	{
+		act ("<div class='clan'>You must be a clan member to sign this pillar!'</div> ",
+		A_ALWAYS,pc,null,self,TO_CHAR);
+		goto start_sign;
+	}
+	if(pc.name in nlist)
+	{
+		act ("<div class='clan'>You have already signed this pillar!'</div>",
+		A_ALWAYS,pc,null,self,TO_CHAR);
+		goto start_sign;
+	}
+		act ("<div class='clan'>The pillar flashes <div class='cpb'>brightly</div>!</div>",
+			A_ALWAYS,activator,null,self,TO_ALL);
+		act ("<div class='clan'>You magically sign the pillar, adding your name to the list of legends.</div>",
+			A_ALWAYS,activator,null,self,TO_CHAR);
+		act ("<div class='clan'>$1n magically signs the pillar, adding their name to the list of legends.</div>",
+			A_SOMEONE,activator,null,self,TO_REST);
+	
+	err := savestr(targ,pc.name+" "+pc.title+"\n","a");
+	goto start;
+}
+dilend //namepillar
+
 dilbegin block_drag(dir:string);
 var
 	word:string;
@@ -312,23 +368,14 @@ code
 		subextra (self.extra,CLAN_RANK);
 		subextra (self.extra,CLAN_SYMBOLIC);
 		subextra (self.extra,"$clan_symbolic");
-		subextra (self.extra,"tatoo" );
-		subextra (self.extra,"tattoo" );
-		subextra (self.extra,"tattoos" );
 		subextra (self.extra,CLAN_NAME);
 		subextra (self.extra,CLAN_RANK);
 		subextra (self.extra,CLAN_SYMBOLIC);
 		subextra (self.extra,"$clan_symbolic");
-		subextra (self.extra,"tatoo" );
-		subextra (self.extra,"tattoo" );
-		subextra (self.extra,"tattoos" );
 		subextra (self.extra,CLAN_NAME);
 		subextra (self.extra,CLAN_RANK);
 		subextra (self.extra,CLAN_SYMBOLIC);
 		subextra (self.extra,"$clan_symbolic");
-		subextra (self.extra,"tatoo" );
-		subextra (self.extra,"tattoo" );
-		subextra (self.extra,"tattoos" );
 		self.hometown:="temple@udgaard";
 		addextra(self.extra,{"$CLAN_CLEAR"},itoa(realtime));
 	}
@@ -724,7 +771,6 @@ code
 		subextra (self.extra,CLAN_NAME);
 		subextra (self.extra,CLAN_RANK);
 		subextra (self.extra,CLAN_SYMBOLIC);
-		subextra (self.extra,"tattoo" );
 		subextra (self.extra,CLAN_TAG );
 		self.hometown := "temple@udgaard";
 		i:=0;
@@ -3102,6 +3148,21 @@ for","3","three"}
 weight 500
 
 MATERIAL_STONE("Stone")
+end
+
+
+namepillar
+names {"pillar","black pillar"}
+title "pillar"
+descr "A large black pillar stands in the middle of the room."
+extra {}
+""
+
+
+weight 500
+MATERIAL_STONE("Stone")
+
+dilcopy namepillar@clans();
 end
 
 %end

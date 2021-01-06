@@ -427,6 +427,10 @@ END HEADER*/
 #define SKI_CHARGE            68
 #define SKI_LEAP              69
 #define SKI_DEFEND            70
+#define SKI_WHIRL             71
+#define SKI_CLEAVE            72
+#define SKI_REND              73
+#define SKI_SLAM              74
 
 #define LAST_SKILL            75
 

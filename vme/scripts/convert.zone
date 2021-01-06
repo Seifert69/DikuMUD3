@@ -440,6 +440,11 @@ gsub(/CMD_TAUNT/,"\"taunt\"",$0);
 gsub(/CMD_LEAP/,"\"leap\"",$0);
 gsub(/CMD_CHARGE/,"\"charge\"",$0);
 gsub(/CMD_DEFEND/,"\"defend\"",$0);
+gsub(/CMD_WHIRLWIND/,"\"whirlwind\"",$0);
+gsub(/CMD_CLEAVE/,"\"cleave\"",$0);
+gsub(/CMD_REND/,"\"rend\"",$0);
+gsub(/CMD_SLAM/,"\"slam\"",$0);
+gsub(/CMD_WHOSTATUS/,"\"whostatus\"",$0);
 
 print $0;
 }
