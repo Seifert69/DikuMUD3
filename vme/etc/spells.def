@@ -897,9 +897,9 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -1
-restrict divine         = 24
+restrict divine         = 20
 profession paladin      = +0
-profession priest       = +0
+profession priest       = +4
 
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1369,7 +1369,7 @@ race brownie    = +2
 race groll      = -1
 race darkelf    = +1
 restrict magic           = 5
-profession mage         = +2
+profession mage         = +3
 profession sorcerer     = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1441,8 +1441,8 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +1
 restrict magic          = 20
-profession mage         = -3
-profession sorcerer     = +0
+profession mage         = +3
+profession sorcerer     = +3
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -1476,10 +1476,9 @@ race half-elf   = 0
 race brownie    = +2
 race groll      = -1
 race darkelf    = +1
-restrict magic          = 60
-profession assassin     = -3
-profession mage         = +0
-profession sorcerer     = +0
+restrict magic          = 20
+profession mage         = +3
+profession sorcerer     = +3
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -1513,9 +1512,9 @@ race half-elf   = 0
 race brownie    = +1
 race groll      = -1
 race darkelf    = +1
-restrict magic          = 12
-profession mage         = +0
-profession sorcerer     = +0
+restrict magic          = 20
+profession mage         = +3
+profession sorcerer     = +3
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -1584,9 +1583,9 @@ race half-elf   = 0
 race brownie    = +2
 race groll      = -1
 race darkelf    = +1
-restrict magic          =  4
+restrict magic          =  5
 profession mage         = +5
-profession sorcerer     = +0
+profession sorcerer     = +3
 
 /* - - - - Yet another definition of a spell - - - - */
 
