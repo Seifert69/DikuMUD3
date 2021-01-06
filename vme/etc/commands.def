@@ -756,13 +756,6 @@ minlevel = 0
 loglevel = 0
 type     = 0
 
-command  = whostatus
-func = whostatus@commands
-minpos   = POSITION_DEAD
-minlevel = 0
-loglevel = 0
-type     = 0
-
 #include <values.h>
 
 
