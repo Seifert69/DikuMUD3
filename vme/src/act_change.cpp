@@ -12,6 +12,8 @@
 #include "comm.h"
 #include "textutil.h"
 #include "interpreter.h"
+#include "dilrun.h"
+#include "dbfind.h"
 
 static void chg_wimpy(class unit_data *ch)
 {
@@ -327,6 +329,7 @@ void do_change(class unit_data *ch, char *arg, const struct command_info *cmd)
         return;
     }
 
+    char *org_arg = arg;
     arg = one_argument(arg, buf);
 
     switch (search_block(buf, args, 0))
@@ -421,7 +424,18 @@ void do_change(class unit_data *ch, char *arg, const struct command_info *cmd)
 
     */
     default:
-        send_to_char("You can't change that, I'm afraid.<br/>", ch);
+        struct diltemplate *tmpl;
+        class dilprg *prg;
+
+        tmpl = find_dil_template("do_change@commands");
+        prg = dil_copy_template(tmpl, ch, NULL);
+
+        if (prg)
+        {
+            prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
+            prg->fp->vars[0].val.string = str_dup(org_arg);
+            dil_activate(prg);
+        }
         break;
     }
 }
