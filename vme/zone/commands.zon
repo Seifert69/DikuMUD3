@@ -29,6 +29,14 @@ help
 
 %dil
 
+dilbegin do_change(arg : string);
+code
+{
+   sendtext("do_change() DIL. arg = " + arg + "<br/>", self);
+   quit;
+}
+dilend
+
 
 /* 
  * self is the PC
@@ -3015,14 +3023,15 @@ dilend
 
 dilbegin do_purge(arg:string);
 var
- u:unitptr;
+   u:unitptr;
 code
 {
+   if (arg=="")
+      goto old_purge;
 
-if (arg=="")
-	goto old_purge;
-
- u:=findunit(self,arg,FIND_UNIT_GLOBAL,null,UNIT_ST_PC);
+/* That's pretty absurd behavior zapping random e.g. keys around the world.
+   I would expect it to purge what I can "see" if it's just a findunit()
+u:=findunit(self,arg,FIND_UNIT_GLOBAL,null,UNIT_ST_PC);
 if (u==null)
  u:=findunit(self,arg,FIND_UNIT_HERE,null,UNIT_ST_NPC);
  if (u==null)
@@ -3036,67 +3045,60 @@ if (u==null)
 if (u==null)
  u:=findunit(self,arg,FIND_UNIT_WORLD,null,UNIT_ST_NPC);
 if (u==null)
- u:=findunit(self,arg,FIND_UNIT_WORLD,null,UNIT_ST_OBJ);
+ u:=findunit(self,arg,FIND_UNIT_WORLD,null,UNIT_ST_OBJ);*/
 
+   u := findunit(self, arg, FIND_UNIT_HERE, null, UNIT_ST_NPC|UNIT_ST_OBJ|UNIT_ST_PC);
 
-if (u==null)
- {
-act ("No such thing '$2t' to purge.",
-A_ALWAYS,self,arg,null,TO_CHAR);
-quit;
-}
+   if (u == null)
+   {
+      act ("No such thing '$2t' to purge.", A_ALWAYS,self,arg,null,TO_CHAR);
+      quit;
+   }
 
-if (not(visible(self,u)))
- {
-act ("No such thing '$2t' to purge.",
-A_ALWAYS,self,arg,null,TO_CHAR);
-quit;
-}
+   if (not(visible(self,u)))
+   {
+      act ("No such thing '$2t' here to purge.", A_ALWAYS,self,arg,null,TO_CHAR);
+      quit;
+   }
 
-if (u.type==UNIT_ST_PC)
-{
-if (u.level>=self.level)
-{
-act("$3n would not like that.",
-A_SOMEONE,self,null,u,TO_CHAR);
-quit;
-}
- }
+   if (u.type == UNIT_ST_PC)
+   {
+      if (u.level>=self.level)
+      {
+         act("$3n would not like that.", A_SOMEONE,self,null,u,TO_CHAR);
+         quit;
+      }
+   }
 
-:purge_one:
-act ("$1n disintegrates $3n.",
-A_SOMEONE,self,null,u,TO_NOTVICT);
-act ("You disintegrate $3n.",
-A_SOMEONE,self,null,u,TO_CHAR);
-if (IS_CORPSE(u))
-dilcopy ("death_clear@death()",u);
-else
-destroy(u);
-quit;
+   :purge_one:
+   act ("$1n disintegrates $3n.", A_SOMEONE,self,null,u,TO_NOTVICT);
+   act ("You disintegrate $3n.", A_SOMEONE,self,null,u,TO_CHAR);
+   if (IS_CORPSE(u))
+      dilcopy ("death_clear@death()",u);
+   else
+      destroy(u);
+   quit;
 
-:old_purge:
-foreach (UNIT_ST_NPC|UNIT_ST_OBJ,u)
-  {
-  if ((u.type==UNIT_ST_PC) or (u.type==UNIT_ST_ROOM))
-    continue;
-	if ((u.type==UNIT_ST_OBJ) and
-	  (not(isset(u.manipulate,MANIPULATE_TAKE))))
-	  continue;
-	  if ((IS_CORPSE(u)) and
-	   (u.value[2]==1))
-  continue;
-	    destroy (u);
-  }
+   :old_purge:
+   foreach (UNIT_ST_NPC|UNIT_ST_OBJ,u)
+   {
+      if ((u.type==UNIT_ST_PC) or (u.type==UNIT_ST_ROOM))
+         continue;
+      if ((u.type==UNIT_ST_OBJ) and (not(isset(u.manipulate,MANIPULATE_TAKE))))
+         continue;
+      if ((IS_CORPSE(u)) and (u.value[2]==1))
+         continue;
+      destroy (u);
+   }
 
-  act ("$1n gestures... You are surrounded by scorching flames.",
-  A_SOMEONE,self,null,null,TO_REST);
-  act ("You are surrounded by scorching flames.",
-  A_SOMEONE,self,null,null,TO_CHAR);
-quit;
+   act("$1n gestures... You are surrounded by scorching flames.", A_SOMEONE,self,null,null,TO_REST);
+   act("You are surrounded by scorching flames.", A_SOMEONE,self,null,null,TO_CHAR);
+   quit;
 }
 dilend
 
-dilbegin force (arg:string);
+
+dilbegin force(arg:string);
 var
  u:unitptr;
  all_arg:string;
@@ -7964,6 +7966,17 @@ quit;
 dilend /* do_delete */
 
 
+dilbegin whostatus(ch : unitptr, arg : string);
+code
+{
+	if (self.extra.["$whostatus"] != null)
+		subextra(self.extra,"$whostatus");
+	addextra(self.extra,{"$whostatus"},"- "+arg);
+	act ("Your Who Status has been set to: "+arg,A_SOMEONE,self,null,null,TO_CHAR);	
+	quit;
+}
+dilend /* do_delete */
+
 dilbegin dig(arg : string);
 var
 u : unitptr;
@@ -11891,6 +11904,7 @@ var
    ox:extraptr;
    gex : extraptr;
    gcolor : string;
+   status : string;
 code
 {
    u := ghead();
@@ -11950,6 +11964,14 @@ code
       temps:="friend";
       tempp:="friends";
       goto who_friend;
+   }  
+   else if (arg in "status")
+   {
+      arg:="<u>Player Status:</u><br/>";
+      temp:="";
+      temps:="player status";
+      tempp:="player statuses";
+      goto who_status;
    }
    else if (arg in "admin")
    {
@@ -11965,7 +11987,7 @@ code
    temps:="player";
    tempp:="players";
 
-   :who_all:
+:who_all:
    while (u.type==UNIT_ST_PC)
    {
       if (visible(self,u))
@@ -11978,7 +12000,6 @@ code
             gld:="(Immortal)";
          else
             gld:="";
-
          buff:="<div class='who_name'>"+u.name+"</div><div class='who_title'> "+u.title+" "+gld+"</div> ";
          if (u.minv>0)
             buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
@@ -12001,8 +12022,48 @@ code
       u:=u.gnext;
    }
    goto p_who;
+   
+:who_status:
+   while (u.type==UNIT_ST_PC)
+   {
+      if (visible(self,u))
+      {
+         if (u.level >= OVERSEER_LEVEL)
+            gld:="(Admin)";
+         else if (u.level>=CREATOR_LEVEL)
+            gld:="(Creator)";
+         else if (u.level>IMMORTAL_LEVEL)
+            gld:="(Immortal)";
+         else
+            gld:="";
+		if (u.extra.["$whostatus"] != null)
+			status := textformat(u.extra.["$whostatus"].descr);
+         buff:="<div class='who_name'>"+u.name+"</div><div class='who_title'> "+status+" "+gld+"</div> ";
+         if (u.minv>0)
+            buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
+         else if (isaff(u, ID_INVISIBILITY))
+            buff:=buff+"<div class='who_inv'>[ INV ]<div class='who'>";
+         if ("valhalla builder" in u.quests)
+            buff:=buff+" * Builder *</div>";
+         if ("valhalla friend" in u.quests)
+            buff:=buff+" * Friend *</div>";  
+         if ("New Player Helper" in u.quests)
+         {
+            if (u.extra.["$whoguidecolor"] != null)
+            gcolor := textformat(u.extra.["$whoguidecolor"].descr);
+            else gcolor := "";
+            buff:=buff+" *"+gcolor+" Guide "+"</div>*";
+         }
+         buff:=buff+" <br/>";
+         addstring (ply_list,buff);
+      }
+      u:=u.gnext;
+   }
+   goto p_who;
+   
+   
 
-   :who_newbie:
+:who_newbie:
    while (u.type==UNIT_ST_PC)
    {
    if ((visible(self,u)) and
@@ -12038,7 +12099,7 @@ code
    u:=u.gnext;
    }
    goto p_who;
-   :who_admin:
+:who_admin:
    while (u.type==UNIT_ST_PC)
    {
    if ((visible(self,u)) and
@@ -12074,7 +12135,7 @@ code
    u:=u.gnext;
    }
    goto p_who;
-   :who_guide:
+:who_guide:
    while (u.type==UNIT_ST_PC)
    {
    if ((visible(self,u)) and
@@ -12106,7 +12167,7 @@ code
    }
    u:=u.gnext;
    }
-   :who_friend:
+:who_friend:
    while (u.type==UNIT_ST_PC)
    {
    if ((visible(self,u)) and
@@ -12132,7 +12193,7 @@ code
    }
    u:=u.gnext;
    }
-   :who_builder:
+:who_builder:
    while (u.type==UNIT_ST_PC)
    {
    if ((visible(self,u)) and
@@ -12159,7 +12220,7 @@ code
    }
    u:=u.gnext;
    }
-   :who_clan:
+:who_clan:
    while (u.type==UNIT_ST_PC)
    {
    x:=CLAN_NAME in self.extra;
@@ -12211,7 +12272,7 @@ code
    u:=u.gnext;
    }
 
-   :p_who:
+:p_who:
    buff:="";
    ln:=length(ply_list);
    //buff:="<div class='who'>"+arg+"</div>";

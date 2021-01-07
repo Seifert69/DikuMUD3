@@ -736,8 +736,10 @@ void str_chraround(char *str, char c)
 /*     names[N] pointer to the last N'th string           */
 /*     names[N+1] NIL pointer                             */
 /*                                                        */
-/*   Assumes nothing that arg is without leading spaces,  */
+/*   Assumes  that arg is without leading spaces,         */
 /*   no double spaces and contains text                   */
+/* Returns NULL if not found, or pointer in arg after     */
+/* the found unit                                         */
 
 const char *is_name_raw(const char *arg, char const *const *names) // MS2020 const char *names[])
 {
@@ -770,20 +772,17 @@ const char *is_name_raw(const char *arg, char const *const *names) // MS2020 con
 /* We need to copy to BUF in order to prevent crash when */
 /* str_remspc might want to change "constant" strings    */
 
-const char *is_name(const char *arg, char const *const *names) // MS2020 const char *names[])
+char *is_name(char *arg, char const *const *names) // MS2020 const char *names[])
 {
-    char buf[MAX_INPUT_LENGTH];
-
     for (; isaspace(*arg); arg++)
         ;
 
     if (!*arg)
         return 0;
 
-    strcpy(buf, arg);
-    str_remspc(buf);
+    str_remspc(arg);
 
-    return is_name_raw(buf, names);
+    return (char *) is_name_raw(arg, names);
 }
 
 /* Create an empty namelist */
@@ -1000,10 +999,81 @@ char *str_escape_format(const char *src, int formatting)
 }
 
 
+// Adapted from
+// Copyright (c) 2008-2009 Bjoern Hoehrmann <bjoern@hoehrmann.de>
+// See http://bjoern.hoehrmann.de/utf-8/decoder/dfa/ for details.
+#define UTF8_ACCEPT 0
+#define UTF8_REJECT 1
+
+static const uint8_t utf8d[] = {
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // 00..1f
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // 20..3f
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // 40..5f
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // 60..7f
+  1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9, // 80..9f
+  7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7, // a0..bf
+  8,8,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2, // c0..df
+  0xa,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x4,0x3,0x3, // e0..ef
+  0xb,0x6,0x6,0x6,0x5,0x8,0x8,0x8,0x8,0x8,0x8,0x8,0x8,0x8,0x8,0x8, // f0..ff
+  0x0,0x1,0x2,0x3,0x5,0x8,0x7,0x1,0x1,0x1,0x4,0x6,0x1,0x1,0x1,0x1, // s0..s0
+  1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1,1, // s1..s2
+  1,2,1,1,1,1,1,2,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1, // s3..s4
+  1,2,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,3,1,1,1,1,1,1, // s5..s6
+  1,3,1,1,1,1,1,3,1,3,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1, // s7..s8
+};
+
+ubit32 inline utf8_decode(ubit32 *state, ubit32 *codep, ubit8 byte)
+{
+    ubit32 type = utf8d[byte];
+
+    *codep = (*state != UTF8_ACCEPT) ? (byte & 0x3fu) | (*codep << 6) : (0xff >> type) & (byte);
+    *state = utf8d[256 + *state*16 + type];
+
+    return *state;
+}
+
+
+void str_correct_utf8(char *src)
+{
+    ubit32 codepoint = 0;
+    ubit32 prev = 0, current = 0;
+    char *s = src;
+
+    for (; *s; prev = current, s++)
+    {
+        if (utf8_decode(&current, &codepoint, *s) == UTF8_REJECT)
+        {
+            // The byte is invalid, replace it and restart.
+            *s = '?';
+            current = UTF8_ACCEPT;
+            if (prev != UTF8_ACCEPT)
+            {
+                s--;
+                *s = '?';
+                if (s >= src) 
+                    s--; // end of for means we'll start checking this '?'
+                if (s >= src)
+                    s--; // so go back yet another char so we'll check the char before '?'
+
+                // s can become 1 less than src, but for loop above +1 and then it's equal src
+                // MS: Code on the website most definitely seemed wrong
+                // so if prev was not accept, then because I fear it might 
+                // be a 3 character sequence, I go back 
+            }
+        }
+    }
+}
+
+void str_correct_utf8(std::string &src)
+{
+    str_correct_utf8((char *) src.c_str());
+}
+
+
 // This validates a string to be UTF-8 cool
 // Illegal characters become question marks
 //
-void str_correct_utf8(std::string &src)
+void obs_str_correct_utf8(std::string &src)
 {
     int nLen = src.length();
     

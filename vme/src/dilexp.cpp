@@ -3785,7 +3785,18 @@ void dilfe_load(register class dilprg *p)
     case DILV_SP:
         if (v1->val.ptr)
         {
-            v->val.ptr = read_unit(str_to_file_index((char *)v1->val.ptr));
+            v->val.ptr = NULL;
+
+            class file_index_type *fi = str_to_file_index((char *) v1->val.ptr);
+
+            if (fi)
+            {
+                if (fi->type == UNIT_ST_ROOM)
+                    slog(LOG_ALL, 0, "DIL trying to load a room %s@%s.", fi->name, fi->zone->name);
+                else
+                    v->val.ptr = read_unit(fi);
+            }
+            
             if (v->val.ptr)
             {
                 if (IS_MONEY((class unit_data *)v->val.ptr))
@@ -4433,11 +4444,14 @@ void dilfe_fnds2(register class dilprg *p)
                         *buf1 = '\0';
                         *buf2 = '\0';
                         split_fi_ref((char *)v2->val.ptr, buf1, buf2);
-                        v->val.ptr =
-                            find_symbolic_instance_ref((class unit_data *)v1->val.ptr, find_file_index(buf1, buf2),
-                                                       v3->val.num);
-                        if (v->val.ptr == NULL)
+                        class file_index_type *fi = find_file_index(buf1, buf2);
+                        if (fi)
+                            v->val.ptr = fi->find_symbolic_instance_ref((class unit_data *)v1->val.ptr, v3->val.num);
+                        else
+                        {
+                            v->val.ptr = NULL;
                             v->type = DILV_NULL; /* not found */
+                        }
                     }
                     break;
                     case DILV_FAIL:

@@ -1,8 +1,61 @@
-<font style="Courier, monospace">
-<p>Original DikuMUD code by: Hans-Henrik Staerfeldt (god), Sebastian Hammer (quinn), Tom Madsen, Michael Seifert (papi), Katja Nyboe</p>
-<p>DikuMUD II by Michael Seifert, Hans Henrik Staerfeldt, Lars Balker Rasmussen (gnort), Ken Perry, Tim Perry</p>
-<p>DikuMUD III by Ken Perry, Tim Perry</p>
-<p>DikuMUD IV by Ken Perry, Michael Seifert</p>
+<pre>
+                                The Credits
 
-<p>Located in: <b>~/etc/credits</b></p>
-</font>
+                                  DikuMud
+                  Original game idea, concept, and design:
+                                      
+     * Hans Henrik Stærfeldt [God]
+     * Sebastian Hammer [Quinn]
+     * Michael Seifert [Papi]
+     * Lars Balker Rasmussen [Gnort]
+     * Katja Nyboe [Superwoman]
+     * Tom Madsen [Stormbringer]
+       
+                         Valhalla Mud Engine (VME)
+                        Based on DikuMud, design by:
+                                      
+     * Hans Henrik Stærfeldt [God]
+     * Sebastian Hammer [Quinn]
+     * Michael Seifert [Papi]
+     * Lars Balker Rasmussen [Gnort]
+                                      
+       
+                        Valhalla Mud Administrators:
+                                      
+     * Mark Pringle [Darg] Areas Master
+     * Judd Caruso [Mesmer] DIL master
+     * Danny Johnson [Jarin] Guild Master
+       
+                          Past contributions from:
+                                      
+     * Brian Clark [Cabal] - World Administration
+     * Andrew Cowan [Icculus] - Major world contributions and original DIL
+       coding
+     * Michael Curran - The new and improved combat messages.
+     * Mads Haahr - Midgaard (II) and various useful ideas.
+
+                             Special thanks to:
+                                      
+     * Terraneo Marco [Kaio] For supplying money and hardware for the new
+       servers and line.
+     * Zoomba for supplying hardware.
+     * Exel for supplying hardware.
+     * Fata Morgana for supplying hardware.
+     * DJO for buying 16M memory and supplying an internet link
+     * Jasper Koolhaas for many hours of hard labor to help make this mud
+       possible.
+
+                             Further thanks to:
+                                      
+     * Ragnar Loenn, Alf Salte, and Bill Wisner. For help and
+       inspiration.
+                                      
+                                Please note
+                                      
+      Denmark is a country. Danish is a language. Danes are the people
+      living in Denmark. DikuMud was originally made by Danes. 
+                                      
+      DIKU is: The department of computer science at the University of
+                                 Copenhagen
+
+</pre>

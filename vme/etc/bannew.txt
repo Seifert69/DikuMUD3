@@ -2,7 +2,7 @@ Due to uncontrollable behaviour from persons playing from your site,
 we'll have to ask for you to mail a request for a character. This may
 just be a temporary precaution, so you could choose to try again later.&n&n
 
-Mail your request to:&l
+Mail your request to:
 
 your-email@ddress.here, please include the following data:
 

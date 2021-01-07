@@ -250,6 +250,9 @@ int main(int argc, char *argv[])
         fd = OpenMother(mplex_arg.nMotherPort);
         Assert(fd != -1, "NO MOTHER CONNECTION.");
 
+        if (MotherHook.tfd() != -1)
+            slog(LOG_ALL, 0, "Hook() in main called with a non -1 fd.");
+
         CaptainHook.Hook(fd, &MotherHook);
     }
 

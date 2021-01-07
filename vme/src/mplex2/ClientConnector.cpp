@@ -951,6 +951,11 @@ void cConHook::StripHTML(char *dest, const char *src)
                 *dest++ = ' ';
                 p += 6;
             }
+            else if (strncasecmp(p, "&quot;", 6)==0)
+            {
+                *dest++ = '\"';
+                p += 6;
+            }
             else
                 *dest++ = *p++;
               
@@ -1410,6 +1415,9 @@ cConHook::cConHook(void)
 
     strncpy(m_aHost, hostname, sizeof(m_aHost) - 1);
     *(m_aHost + sizeof(m_aHost) - 1) = '\0';
+
+    if (this->tfd() != -1)
+        slog(LOG_ALL, 0, "cConHook() called with a non -1 fd.");
 
     CaptainHook.Hook(fd, this);
 

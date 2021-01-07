@@ -1,7 +1,7 @@
 # MS: CHANGED SYSPORT		=	-DLINUX -DGENERIC_SYSV
 # This is how my Linux works.
 
-SYSPORT		= -DLINUX -DPOSIX -pipe -m64
+SYSPORT		= -DLINUX -DPOSIX -pipe
 # -fpermissive    
 #-DMEMORY_DEBUG
 #SYSPORT	= -DBITCONV

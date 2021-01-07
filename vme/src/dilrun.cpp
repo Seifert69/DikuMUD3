@@ -489,6 +489,47 @@ int dil_sub_secure(struct dilframe *frm, class unit_data *sup, int bForeach)
    exec(), send() and sendto().
    ********************************************************************* */
 
+
+/* Clears all extra pointers equal to a removed extra            */
+void dil_clear_extras(register class dilprg *prg, class extra_descr_data *exd)
+{
+    register int i;
+    struct dilframe *frm;
+
+    if (!prg->frame)
+    {
+        slog(LOG_ALL, 0, "tried to clean empty frame");
+        return;
+    }
+
+    for (frm = prg->frame; frm <= prg->fp; frm++)
+    {
+        for (i = 0; i < frm->tmpl->varc; i++)
+        {
+            if (frm->vars[i].type == DILV_EDP)
+            {
+                if (frm->vars[i].val.extraptr == exd)
+                    frm->vars[i].val.extraptr = NULL;
+            }
+        }
+    }
+
+    // Guess this might be needed when calling remote routines. Not tested... :-/
+    for (i = 0; i < prg->stack.length(); i++)
+    {
+        if (prg->stack[i]->atyp == DILV_EDPR)
+        {
+            if (*((class extra_descr_data **)prg->stack[i]->ref) == exd)
+                prg->stack[i]->ref = NULL;
+        }
+        else if (prg->stack[i]->atyp == DILV_EDP)
+        {
+            if (prg->stack[i]->val.ptr == exd)
+                prg->stack[i]->val.ptr = NULL;
+        }
+    }
+}
+
 /* Clears all variables that are not secured! Called at every activation */
 /* of a DIL program (after secures are tested for!).			 */
 void dil_clear_non_secured(register class dilprg *prg)

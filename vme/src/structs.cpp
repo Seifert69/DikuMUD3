@@ -301,7 +301,17 @@ file_index_type::file_index_type(void)
     name = NULL;
     zone = NULL;
     next = NULL;
-    unit = NULL;
+    //unit = NULL;
+
+    filepos = 0;
+    length = 0; 
+    crc = 0;    
+
+    no_in_zone = 0;
+    no_in_mem = 0;
+    room_no = 0;  
+    type = 0;     
+
 #ifdef DMSERVER
     no_in_zone = 0;
 #endif
@@ -357,7 +367,8 @@ unit_data *unit_data::copy()
     u->hp = hp;
     u->alignment = alignment;
     u->key = str_dup(key);
-    u->fi = fi;
+    u->set_fi(fi);
+
     bwrite_affect(&abuf, UNIT_AFFECTED(this), 61); // WTF 61? 
     bread_affect(&abuf, u, 61);
     bwrite_func(&fbuf, UNIT_FUNC(this));
@@ -439,7 +450,6 @@ unit_data *unit_data::copy()
     }
     else
         assert(FALSE);
-    u->fi->no_in_mem++;
     insert_in_unit_list(u); /* Put unit into the unit_list      */
     apply_affect(u);        /* Set all affects that modify      */
     void start_all_special(class unit_data * u);
@@ -543,6 +553,16 @@ unit_data::~unit_data(void)
         assert(FALSE);
 }
 
+void unit_data::set_fi(class file_index_type *f)
+{
+    assert(f);
+
+    if (this->fi)
+        slog(LOG_ALL, 0, "ERROR: FI was already set. This shouldn't happen");
+    
+    this->fi = f;
+    this->fi->no_in_mem++;
+}
 
 std::string unit_data::json(void)
 {

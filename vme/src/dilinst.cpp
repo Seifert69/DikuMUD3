@@ -2122,7 +2122,23 @@ void dilfi_sue(register class dilprg *p)
                     /* *((class extra_descr_data **)v1->ref) =
                         (*((class extra_descr_data **)v1->ref))->remove((char *)v2->val.ptr); */
 
+                    // Save our friend exd here, because rogue_delete is going to change the ref value
+                    class extra_descr_data *exd = *(class extra_descr_data **) v1->ref;
+
                     rogue_remove((class extra_descr_data **)v1->ref, (char *)v2->val.ptr);
+
+                    // Now reuse exd here to clear out any invalid pointers
+                    dil_clear_extras(p, exd);
+
+                    // So we can get into a really messy situation here.
+                    // If in a DIL program you have two extraptr, e.g. u.extra and myextra := u.extra.
+                    // Then call this sub() and delete the head element from u. Next check myextra.name. 
+                    // It will now reference a deleted memory space. Not sure why this hasn't been an
+                    // issue before.
+                    //
+                    // We could of course now scan for local variables and NULL them out. But what if
+                    // there are other DILs that have saved a reference to it? (and are extras even
+                    // volatile)
                 }
             }
         break;
@@ -2543,9 +2559,6 @@ void dilfi_snta(register class dilprg *p)
                        v2, TYPEFAIL_NULL, 1, DILV_SP))
         if (v1->val.ptr && v2->val.ptr)
         {
-            extern class unit_data *unit_list;
-
-            class unit_data *u;
             class file_index_type *fi;
 
             if ((fi = str_to_file_index((char *)v2->val.ptr)))
@@ -2563,11 +2576,15 @@ void dilfi_snta(register class dilprg *p)
                 sarg.arg = (char *)v1->val.ptr;
                 sarg.mflags = SFB_MSG;
 
-                for (u = unit_list; u; u = u->gnext)
+                std::forward_list<class unit_data *>::iterator it;
+                for (it = fi->fi_unit_list.begin() ; it != fi->fi_unit_list.end(); it++)
+                    unit_function_scan(*it, &sarg);
+
+                /*for (u = unit_list; u; u = u->gnext)
                 {
                     if (UNIT_FILE_INDEX(u) == fi)
                         unit_function_scan(u, &sarg);
-                }
+                }*/
                 dil_test_secure(p);
             }
         }

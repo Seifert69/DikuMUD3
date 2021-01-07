@@ -249,7 +249,9 @@ void destruct_unit(class unit_data * unit)
         unit_from_unit (unit);
 
     if (UNIT_FILE_INDEX (unit))
+    {
         UNIT_FILE_INDEX (unit)->no_in_mem--;
+    }
 
     if ((unit_list == unit) || unit->gnext || unit->gprevious)
         remove_from_unit_list (unit);

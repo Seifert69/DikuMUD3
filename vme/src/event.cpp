@@ -249,10 +249,10 @@ void eventqueue::process(void)
             if (tfunc == special_event && ((unit_fptr *)tmp_event->arg2)->data &&
                 (((class unit_fptr *)tmp_event->arg2)->index == SFUN_DIL_INTERNAL))
             {
-                sprintf(dilname, "NO NAME");
-                sprintf(dilzname, "NO ZONE");
-                sprintf(diloname, "NO NAME");
-                sprintf(dilozname, "NO ZONE");
+                strcpy(dilname, "NO NAME");
+                strcpy(dilzname, "NO ZONE");
+                strcpy(diloname, "NO NAME");
+                strcpy(dilozname, "NO ZONE");
 
                 class unit_data *u = (unit_data *)tmp_event->arg1;
                 class unit_fptr *fptr = (unit_fptr *)tmp_event->arg2;
@@ -277,13 +277,11 @@ void eventqueue::process(void)
                     // But rundil checks too.
 
                     if (prg->fp->tmpl->prgname)
-                        sprintf(dilname, "%s",
-                                prg->fp->tmpl->prgname);
+                        strcpy(dilname, prg->fp->tmpl->prgname);
                     if (prg->fp->tmpl->zone)
-                        sprintf(dilzname, "%s",
-                                prg->fp->tmpl->zone->name);
-                    sprintf(diloname, "%s", tmp_event->arg1 ? UNIT_FI_NAME((class unit_data *)(tmp_event->arg1)) : "NO NAME");
-                    sprintf(dilozname, "%s", tmp_event->arg1 ? UNIT_FI_ZONENAME((class unit_data *)(tmp_event->arg1)) : "NO ZONE");
+                        strcpy(dilzname, prg->fp->tmpl->zone->name);
+                    strcpy(diloname, tmp_event->arg1 ? UNIT_FI_NAME((class unit_data *)(tmp_event->arg1)) : "NO NAME");
+                    strcpy(dilozname, tmp_event->arg1 ? UNIT_FI_ZONENAME((class unit_data *)(tmp_event->arg1)) : "NO ZONE");
                 }
             }
 
