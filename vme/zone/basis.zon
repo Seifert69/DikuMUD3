@@ -7518,6 +7518,19 @@ descr "A mindless zombie is roaming around here."
 extra {} "Disgusting!"
 M_ZOMBIE_SMALL(4,SEX_NEUTRAL)
 
+dilbegin shelltest();
+var 
+  i : integer;
+code
+{
+   :loop:
+   wait(SFB_CMD, command("bow"));
+
+   i := shell("test.sh olle golle");
+   log("shell = " + itoa(i));
+   goto loop;
+}
+dilend
 
 dilbegin aware comtest();
 var

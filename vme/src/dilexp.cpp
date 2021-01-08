@@ -3023,7 +3023,36 @@ void dilfe_isplayer(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_playerid(register class dilprg *p)
+void *threadcallout(void *p)
+{
+    const char *str = (char *) p;
+
+    // Process the string here, to do some basic security.
+    char buf[MAX_STRING_LENGTH];
+    int ok = true;
+
+    str_next_word_copy(str, buf);
+
+    if (strchr(buf, '/') || strchr(buf, ' ') || strchr(buf, ';') || strstr(buf, ".."))
+    {
+        slog(LOG_BRIEF, 0, "bin command %s contains an illegal character (/ ;) or .. ", buf);
+        ok = false;
+    }
+
+    if (ok)
+    {
+        string s;
+        s = "./allow/";  // current dir iswhere vme/bin is located, set to bin/allow/
+        s.append(str);
+        slog(LOG_BRIEF , 0, "system('%s'); ", str, s.c_str());
+        int rc = ::system((const char *) s.c_str());
+        slog(LOG_BRIEF, 0, "done system('%s') return code %d", str, rc);
+    }
+
+    pthread_exit(NULL);
+}
+
+void dilfe_shell(register class dilprg *p)
 {
     dilval *v = new dilval;
     /* Get the ID number of a player. */
@@ -3040,11 +3069,22 @@ void dilfe_playerid(register class dilprg *p)
         {
             v->type = DILV_INT;
             v->atyp = DILA_NONE;
-            int find_player_id(char *pName);
-            v->val.num = find_player_id((char *)v1->val.ptr); 
+            if (p->frame[0].tmpl->zone->access != 0) // 0 is the highest access
+            {
+                szonelog(p->frame->tmpl->zone,
+                        "DIL '%s' attempt run shell() w/o access.", p->frame->tmpl->prgname);
+                p->waitcmd = WAITCMD_QUIT;
+            }
+            else
+            {
+                pthread_t mythread;
+                v->val.num = pthread_create(&mythread, NULL, threadcallout, v1->val.ptr);
+                if (v->val.num) {
+                    slog(LOG_ALL, 0, "DIL shell pthread create error code %d.", v->val.num);
+                }
+                // threadcallout((char *) v1->val.ptr);
+            }
         }
-        else
-            v->type = DILV_FAIL; /* failed */
         break;
     default:
         v->type = DILV_ERR; /* Wrong type */

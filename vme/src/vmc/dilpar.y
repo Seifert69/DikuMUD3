@@ -204,7 +204,7 @@ void make_code(struct exptype *dest);
 %token DILSE_AND DILSE_OR DILSE_NOT DILSE_ISPLAYER
 %token DILSE_WPNTXT DILSE_SKITXT DILSE_SENDPRE DILSE_GOPP
 %token DILSE_RHEAD DILSE_NHEAD DILSE_OHEAD DILSE_PHEAD
-%token DILSE_GFOL DILSE_SACT  DILSE_GINT DILSE_PLAYERID 
+%token DILSE_GFOL DILSE_SACT  DILSE_GINT DILSE_SHELL 
 
 /* DIL built-in variables */
 %token DILTO_EQ DILTO_NEQ DILTO_PEQ DILTO_SEQ DILTO_LEQ DILTO_GEQ
@@ -2771,11 +2771,11 @@ dilfun   :  funcall
             }
             FREEEXP($3);
          }
-          |  DILSE_PLAYERID '(' dilexp ')'
+         |  DILSE_SHELL '(' dilexp ')'
          {
             INITEXP($$);
             if ($3.typ != DILV_SP)
-               dilfatal("Arg 1 of 'playerid' not string");
+               dilfatal("Arg 1 of 'shell' not string");
             else {
                /* Type is ok */
                /* Function is not _yet_ static */
