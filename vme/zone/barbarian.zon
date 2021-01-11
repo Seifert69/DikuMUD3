@@ -954,7 +954,7 @@ code
 :start:
 
 	heartbeat:=PULSE_SEC*SECS_PER_MUD_DAY/24;
-	wait (SFB_TICK,(self.equip==WEAR_WIELD));
+	wait (SFB_TICK,(self.equip==TRUE));
 	heartbeat:=PULSE_SEC*5;
 	act ("The inscription on your $2n flashes blood red!",
 		A_ALWAYS,self.outside,self,null,TO_CHAR);
@@ -1005,7 +1005,7 @@ code
 	if ((weap == null) or not visible(self.outside, weap) or
        (not(weap.manipulate & (MANIPULATE_WIELD | MANIPULATE_HOLD))))
 		{
-			act("You aren't wielding or holding a "+arg+"!",
+			act("You aren't fighting with that!",
 				A_ALWAYS, self.outside, null, null, TO_CHAR);
 			goto start;
 		}
