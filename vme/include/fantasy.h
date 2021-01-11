@@ -916,8 +916,8 @@ exp 125
    MSET_WEAPON(6,6,6,6,20,6) \
    MSET_SPELL(2,2,2,2,2,2,2,2,2,21,11) \
    dilcopy combat_mag@function("energy drain", "", 25, 2); \
-   dilcopy comb_poison@function("&c+rYou feel fire burning within your veins!&[default]", \
-   "&c+c$1n sinks $1s claws deep into $3n!&[default]"); \
+   dilcopy comb_poison@function("<div class='cpr'>You feel fire burning within your veins!</div>", \
+   "<div class='cpc'>$1n sinks $1s claws deep into $3n!</div>"); \
    dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*60, 0, "ANY", \
          {"$1n attacks $3n!", "$1n attacks you!"}); \
    exp 170
@@ -945,8 +945,8 @@ exp 125
 
 #define M_UNDEAD_MAD(MLVL,GENDER) /* level 1 to 199 */ \
    BASE_UNDEAD(MLVL,GENDER,ARM_CLOTHES)  \
-   dilcopy comb_poison@function("&c+rYou feel poison burning your veins!&[default]", \
-   "&c+c$1n sinks $1s claws deep into $3n!&[default]"); \
+   dilcopy comb_poison@function("<div class='cpr'>You feel poison burning your veins!</div>", \
+   "<div class='cpc'>$1n sinks $1s claws deep into $3n!</div>"); \
    dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*25, 0, "ANY", \
          {"$1n attacks $3n!", "$1n attacks you!"}); \
    exp 130
@@ -1868,8 +1868,8 @@ MSET_ABILITY(25,10,10,10,20,10,15,0)  \
    MSET_WEAPON(6,6,6,6,20,6) \
    MSET_SPELL(2,2,2,2,2,2,2,2,2,21,11) \
    dilcopy combat_mag@function("energy drain", "", 25, 2); \
-   dilcopy comb_poison@function("&c+rYou feel fire burning within your veins!&[default]", \
-   "&c+c$1n sinks $1s claws deep into $3n!&[default]"); \
+   dilcopy comb_poison@function("<div class='cpr'>You feel fire burning within your veins!</div>", \
+   "<div class='cpc'>$1n sinks $1s claws deep into $3n!</div>"); \
    dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*60, 0, "ANY", \
          {"$1n attacks $3n!", "$1n attacks you!"}); \
    exp 170
@@ -1897,8 +1897,8 @@ MSET_ABILITY(25,10,10,10,20,10,15,0)  \
 
 #define M_GHOST_MAD(MLVL,GENDER) /* level 1 to 199 */ \
    BASE_GHOST(MLVL,GENDER,ARM_CLOTHES)  \
-   dilcopy comb_poison@function("&c+rYou feel poison burning your veins!&[default]", \
-   "&c+c$1n sinks $1s claws deep into $3n!&[default]"); \
+   dilcopy comb_poison@function("<div class='cpr'>You feel poison burning your veins!</div>", \
+   "<div class='cpc'>$1n sinks $1s claws deep into $3n!</div>"); \
    dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*25, 0, "ANY", \
          {"$1n attacks $3n!", "$1n attacks you!"}); \
    exp 130
@@ -2010,8 +2010,8 @@ MSET_ABILITY(25,10,10,10,20,10,15,0)  \
    MSET_ABILITY(14,16,16,14,12,8,20,0)  \
    MSET_WEAPON(6,6,6,6,16,6)           /* Natural attack */ \
    MSET_SPELL(2,2,2,2,2,2,2,2,2,25,11) /* Attack poison  */ \
-   dilcopy comb_poison@function("&c+rPoison burns in your veins!&[default]", \
-   "&[hit_other]$3n winces as $1n stings $1m!&[default]"); \
+   dilcopy comb_poison@function("<div class='cpr'>Poison burns in your veins!</div>", \
+   "<div class='hit_other'>$3n winces as $1n stings $1m!</div>"); \
    dilcopy wander_zones@function("@loadzone", 80, 0, 0); \
    exp 125
 
@@ -2042,8 +2042,8 @@ MSET_ABILITY(25,10,10,10,20,10,15,0)  \
    MSET_SPELL(4,4,4,6,6,6,6,6,6,6,6)\
 dilcopy aggressive@function(0, -1, 0, 0, 3, 30, 0, "ANY", \
                             {"$1n attacks $3n!", "$1n attacks you!"}); \
-    dilcopy comb_poison@function("&c+rPoison burns in your veins!&[default]", \
-   "&[hit_other]$3n winces as $1n stings $1m!&[default]"); \
+    dilcopy comb_poison@function("<div class='cpr'>Poison burns in your veins!</div>", \
+   "<div class='hit_other'>$3n winces as $1n stings $1m!</div>"); \
    dilcopy wander_zones@function("@loadzone", 80, 0, 0); \
    exp 125
 
@@ -2142,8 +2142,8 @@ dilcopy aggressive@function(0, -1, 0, 0, 3, 30, 0, "ANY", \
    MSET_ABILITY(14,16,16,14,12,8,20,0)  \
    MSET_WEAPON(6,6,6,6,16,6)           /* Natural attack */ \
    MSET_SPELL(4,2,2,2,2,2,0,2,2,11,25) /* Attack acid  */ \
-   dilcopy comb_acid@function("&c+Your skin feels like it is on fire!&[default]", \
-   "&[hit_other]$3n winces as $1n melts $3s skin with acid!&[default]"); \
+   dilcopy comb_acid@function("<div class='cpr'>Your skin feels like it is on fire!</div>", \
+   "<div class='hit_other'>$3n winces as $1n melts $3s skin with acid!</div>"); \
    exp 135
 
 /* non aggro */
@@ -2173,8 +2173,8 @@ dilcopy aggressive@function(0, -1, 0, 0, 3, 30, 0, "ANY", \
    MSET_SPELL(4,4,4,6,6,6,3,6,6,6,15)\
 dilcopy aggressive@function(0, -1, 0, 0, 3, 30, 0, "ANY", \
                             {"$1n attacks $3n!", "$1n attacks you!"}); \
-dilcopy comb_acid@function("&c+Your skin feels like it is on fire!&[default]", \
-   "&[hit_other]$3n winces as $1n melts $3s skin with acid!&[default]"); \
+dilcopy comb_acid@function("<div class='cpr'>Your skin feels like it is on fire!</div>", \
+   "<div class='hit_other'>$3n winces as $1n melts $3s skin with acid!</div>"); \
    exp 135
    
 /* aggro mimic */
@@ -2371,8 +2371,8 @@ exp 125
    MSET_ABILITY (10,30,15,15,5,0,0,25) \
    MSET_WEAPON(6,6,6,6,20,6) \
    MSET_SPELL(2,2,2,2,2,2,2,2,2,21,11) \
-   dilcopy comb_poison@function("&c+rYou feel fire burning within your veins!&[default]", \
-   "&c+c$1n sinks $1s claws deep into $3n!&[default]"); \
+   dilcopy comb_poison@function("<div class='cpr'>You feel fire burning within your veins!</div>", \
+   "<div class='cpc'>$1n sinks $1s claws deep into $3n!</div>"); \
    dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*60, 0, "ANY", \
          {"$1n attacks $3n!", "$1n attacks you!"}); \
    exp 150
@@ -2400,8 +2400,8 @@ exp 125
 
 #define M_GHOUL_MAD(MLVL,GENDER) /* level 1 to 199 */ \
    BASE_GHOUL(MLVL,GENDER,ARM_CLOTHES)  \
-   dilcopy comb_poison@function("&c+rYou feel poison burning your veins!&[default]", \
-   "&c+c$1n sinks $1s claws deep into $3n!&[default]"); \
+   dilcopy comb_poison@function("<div class='cpr'>You feel poison burning your veins!</div>", \
+   "<div class='cpc'>$1n sinks $1s claws deep into $3n!</div>"); \
    dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*25, 0, "ANY", \
          {"$1n attacks $3n!", "$1n attacks you!"}); \
    exp 130
