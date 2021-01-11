@@ -891,7 +891,7 @@ struct dil_func_type dilfe_func[DILI_MAX + 1] = {
     {dilfe_gfol},
     {dilfe_sact}, // 195
     {dilfe_gint},
-    {dilfe_playerid},
+    {dilfe_shell},
     {dilfi_set_weight}
  };
 
