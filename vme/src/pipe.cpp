@@ -54,7 +54,8 @@ int namedpipe_open_wo(void)
     if (g_pipeMUD_WO <= 0)
     {
         slog(LOG_OFF, 0, "Unable to open pipe WO %s, error code %d.", myfifo, errno);
-        exit(42);
+        g_pipeMUD_WO = -1;
+        return -1;
     }
 
     return g_pipeMUD_WO;
@@ -63,6 +64,14 @@ int namedpipe_open_wo(void)
 
 void pipeMUD_write(const char *c)
 {
+    if (g_pipeMUD_WO == -1)
+    {
+        g_pipeMUD_WO = namedpipe_open_wo();
+
+        if (g_pipeMUD_WO == -1)
+            return;
+    }
+
     int n;
     string str;
 
@@ -184,7 +193,7 @@ int pipeMUD_read(std::string &str)
 
 void namedpipe_setup(void)
 {
-    namedpipe_open_wo();
+    //namedpipe_open_wo();
     namedpipe_open_ro();
 }
 
