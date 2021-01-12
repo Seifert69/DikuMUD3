@@ -523,8 +523,8 @@ code
       if(err > 0)
          sendtext("<br/>"+welcome+"<br/><br/>", self);
       informer();
-      exec("comm add discord", self);
       exec("look", self);
+      exec("comm add discord", self);
       quit;
    }
    else if (command("0") )
