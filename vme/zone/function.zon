@@ -6766,112 +6766,124 @@ var
   rclanname:string;
   sclanname:string;
   garbage:string;
+
 code
 {
-  secure(talker, lost);
-  slKeys := {"@", "#", "1join1", "1left1"};
-  sKey := "";
-  sChan := getword(msg); /*Throw away the text CHANNEL*/
-  sChan := getword(msg);
-  if(not(sChan in slActive))
+   secure(talker, lost);
+   slKeys := {"@", "#", "1join1", "1left1"};
+   sKey := "";
+   sChan := getword(msg); /*Throw away the text CHANNEL*/
+   sChan := getword(msg);
+
+   if (not(sChan in slActive))
       return;
-if ((sChan=="gchat") and (not (self.guild==talker.guild)))
-return;
+   if ((sChan=="gchat") and (not (self.guild==talker.guild)))
+      return;
 
-if(sChan=="clan"){
-	if(self.type==UNIT_ST_PC)
-		clan_rec:=CLAN_NAME in self.extra;
+   if(sChan=="clan"){
+      if(self.type==UNIT_ST_PC)
+         clan_rec:=CLAN_NAME in self.extra;
 
-	if(clan_rec==null){
-		return;
-	}
+      if(clan_rec==null){
+         return;
+      }
 
-	if(talker.type==UNIT_ST_PC)
-		clan_send:= CLAN_NAME in talker.extra;
+      if(talker.type==UNIT_ST_PC)
+         clan_send:= CLAN_NAME in talker.extra;
 
-	if(clan_send==null){
-		return;
-	}
+      if(clan_send==null){
+         return;
+      }
 
-	rclanname:=clan_rec.descr;
-	sclanname:=clan_send.descr;
-	if(rclanname!=sclanname){
-		return;
-	}
-}
+      rclanname:=clan_rec.descr;
+      sclanname:=clan_send.descr;
+      if(rclanname!=sclanname){
+         return;
+      }
+   }
 
-
-
-  sFirst := getword(msg);
-  if ( sFirst in slKeys ) {
-    sKey := sFirst;
-  } else {
-    if (length(msg) > 0) {
+   sFirst := getword(msg);
+   if ( sFirst in slKeys ) {
+      sKey := sFirst;
+   } else {
+      if (length(msg) > 0) {
       msg := sFirst + " " + msg;
-	 } else {
-	   msg := Sfirst;
-	 }
-  }
-  if (sKey == "@") {
-    if (self.level >= talker.minv) {
-      sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " +talker.name+ " "+msg+"</div><br/>",self );
-    } else {
-      sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; Someone "+msg+"</div><br/>",self );
-    }
-  }
-	else if (sKey == "#"){
-		if (self.minv <= talker.level ) {
-			if(self.type==UNIT_ST_PC){
-				if ((sChan=="clan") and (talker.extra.["$rank"].names.[1]=="$master"))
- {
-    if (self.level < 200)
-    sendtext("   "+self.name+" "+self.title+ " (Level "+itoa(self.vlevel) +
-    ") (alignment/"+itoa(self.alignment)+ ") (guild/"+self.guild+")<br/>", talker);
-    else if (self.level < 251)
-    sendtext("   "+self.name+" "+self.title+ " (Immortal [Level " +
-    itoa(self.level) +"]" + ") (alignment/"+itoa(self.alignment)+ ") (guild/"+self.guild+")<br/>", talker);
-    else
-    sendtext("   "+self.name+" "+self.title+ " (Admin [Level " +
-    itoa(self.level) +"]" + ") (alignment/"+itoa(self.alignment)+ ") (guild/"+self.guild+")<br/>", talker);
- }
-else
-{
- if (self.level <200)
-    sendtext("   "+self.name+" "+self.title+ " (Level "+itoa(self.vlevel) + ")<br/>", talker);
-    else if (self.level < 251)
-    sendtext("   "+self.name+" "+self.title+ " (Immortal [Level " +itoa(self.level) +"]" + ")<br/>", talker);
-    else
-    sendtext("   "+self.name+" "+self.title+ " (Admin [Level " + itoa(self.level) +"]" + ")<br/>", talker);
-}
-			}
-			else
-				sendtext("   "+self.title+"<br/>",talker);
-		}
-	} else if (sKey == "1join1" ) {
-     if (jmode ==1) {
-       if (self.level >= talker.minv ) {
-         sendtext("<div class='comm_join'>&lt;"+sChan+"&gt; " +talker.name + " has entered the " +
+      } else {
+      msg := Sfirst;
+      }
+   }
+
+   if (sKey == "@") {
+      if (self.level >= talker.minv) {
+         sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " +talker.name+ " "+msg+"</div><br/>",self );
+      } else {
+         sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; Someone "+msg+"</div><br/>",self );
+      }
+   }
+   else if (sKey == "#"){
+      if (self.minv <= talker.level )
+      {
+         if(self.type==UNIT_ST_PC)
+         {
+            if ((sChan=="clan") and (talker.extra.["$rank"].names.[1]=="$master"))
+            {
+               if (self.level < 200)
+               sendtext("   "+self.name+" "+self.title+ " (Level "+itoa(self.vlevel) +
+               ") (alignment/"+itoa(self.alignment)+ ") (guild/"+self.guild+")<br/>", talker);
+               else if (self.level < 251)
+               sendtext("   "+self.name+" "+self.title+ " (Immortal [Level " +
+               itoa(self.level) +"]" + ") (alignment/"+itoa(self.alignment)+ ") (guild/"+self.guild+")<br/>", talker);
+               else
+               sendtext("   "+self.name+" "+self.title+ " (Admin [Level " +
+               itoa(self.level) +"]" + ") (alignment/"+itoa(self.alignment)+ ") (guild/"+self.guild+")<br/>", talker);
+            }
+            else
+            {
+               if (self.level <200)
+                  sendtext("   "+self.name+" "+self.title+ " (Level "+itoa(self.vlevel) + ")<br/>", talker);
+               else if (self.level < 251)
+                  sendtext("   "+self.name+" "+self.title+ " (Immortal [Level " +itoa(self.level) +"]" + ")<br/>", talker);
+               else
+                  sendtext("   "+self.name+" "+self.title+ " (Admin [Level " + itoa(self.level) +"]" + ")<br/>", talker);
+            }
+         }
+         else
+            sendtext("   "+self.title+"<br/>",talker);
+      }
+	}
+   else if (sKey == "1join1" )
+   {
+      if (jmode ==1) {
+         if (self.level >= talker.minv ) {
+            sendtext("<div class='comm_join'>&lt;"+sChan+"&gt; " +talker.name + " has entered the " +
                   "channel.</div><br/>",self);
-       }
-     }
-  } else if (sKey == "1left1" ) {
-     if (dmode ==1) {
-       if (self.level >= talker.minv ) {
-         sendtext("<div class='comm_leave'>&lt;"+sChan+"&gt; " +talker.name + " has left the " +
-                  "channel.</div><br/>",self);
-       }
-     }
-  } else {
-    if (self.level >= talker.minv) {
-      sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; " +talker.name+" says '"+msg+"'</div><br/>",self);
-    } else {
-      sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; Someone says '" +msg+"'</div><br/>",self);
-    }
-  }
-  :lost:
-  return;
+         }
+      }
+   }
+   else if (sKey == "1left1" )
+   {
+      if (dmode ==1) {
+         if (self.level >= talker.minv ) {
+            sendtext("<div class='comm_leave'>&lt;"+sChan+"&gt; " +talker.name + " has left the " +
+                     "channel.</div><br/>",self);
+         }
+      }
+   }
+   else
+   {
+      if (self.level >= talker.minv) {
+         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; " +talker.name+" says '"+msg+"'</div><br/>",self);
+      } else {
+         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; Someone says '" +msg+"'</div><br/>",self);
+      }
+   }
+
+   :lost:
+   return;
 }
 dilend
+
+
 
 #define NOSHOUT_QUEST    "$noshout"
 #define  NOTELL_QUEST   "$notell"
@@ -6880,8 +6892,8 @@ dilend
 
 dilbegin aware unique recall fnpri(FN_PRI_SYS) channel();
 external
-  recieve@function( slActive : stringlist, msg : string, talker : unitptr,
-                jmode:integer, dmode:integer);
+   recieve@function(slActive : stringlist, msg : string, talker : unitptr,
+                    jmode:integer, dmode:integer);
 var
    time_string:string;
    targ:unitptr;
@@ -6894,6 +6906,7 @@ var
    x : integer;
    dmode : integer;
    jmode : integer;
+
 code
 {
    heartbeat := 3;
@@ -6925,61 +6938,61 @@ code
    interrupt (SFB_MSG, ("CHANNEL" in argument), recieve);
 
 :start:
-  wait (SFB_CMD, (excmdstr in slActive) and (activator == self));
-  block;
+   wait (SFB_CMD, (excmdstr in slActive) and (activator == self));
+   block;
 
-if ((NO_NEWBIE_QUEST in self.quests) and
-(excmdstr=="newbie"))
-  {
-  act ("You have lost the privilege to use communication channels.",
-  A_ALWAYS,self,null,null,TO_CHAR);
-  goto start;
-  }
+   if ((NO_NEWBIE_QUEST in self.quests) and (excmdstr=="newbie"))
+   {
+      act("You have lost the privilege to use communication channels.",
+         A_ALWAYS,self,null,null,TO_CHAR);
+      goto start;
+   }
  
-if ((NOCOMM_QUEST in self.quests) or ((self.outside.nameidx == "nightmare")and
+   if ((NOCOMM_QUEST in self.quests) or ((self.outside.nameidx == "nightmare")and
+      (self.outside.zoneidx == "hobgob") and (self.level < IMMORTAL_LEVEL)))
+   {
+      act ("You have lost the privilege to use communication channels.",
+      A_ALWAYS,self,null,null,TO_CHAR);
+      goto start;
+   }
 
-(self.outside.zoneidx == "hobgob") and (self.level < IMMORTAL_LEVEL)))
-  {
-  act ("You have lost the privilege to use communication channels.",
-  A_ALWAYS,self,null,null,TO_CHAR);
-  goto start;
-  }
-if (("$nocomm" in self.outside.extra) and (self.level < IMMORTAL_LEVEL))
-  {
-  act ("The keeper of this room requires utmost silence.",
-  A_ALWAYS,self,null,null,TO_CHAR);
-  goto start;
-  }
+   if (("$nocomm" in self.outside.extra) and (self.level < IMMORTAL_LEVEL))
+   {
+      act ("The keeper of this room requires utmost silence.",
+      A_ALWAYS,self,null,null,TO_CHAR);
+      goto start;
+   }
 
-  /*Channel has been recognized, take argument and send it to rest of dils*/
-  if( isset(self.pcflags, PC_NOTELLING)) {
-    act("Your telepathic ability has been lost.",
-	     A_SOMEONE, self, null, null, TO_CHAR);
-	 goto start;
-  }
+   /*Channel has been recognized, take argument and send it to rest of dils*/
+   if ( isset(self.pcflags, PC_NOTELLING)) {
+      act("Your telepathic ability has been lost.",
+         A_SOMEONE, self, null, null, TO_CHAR);
+      goto start;
+   }
 
-  msg := argument;
-  msg := "CHANNEL " + excmdstr + " " + msg;
-  if (argument=="#")
-    sendtext ("<br/>",self);
+   msg := argument;
+   msg := "CHANNEL " + excmdstr + " " + msg;
+   if (argument=="#")
+      sendtext ("<br/>",self);
 
-  sendtoalldil(msg, "channel@function");
-  if (nEcho == 1) {
-    recieve@function(slActive, msg, self,jmode,dmode);
-  }
-  goto start;
+   sendtoalldil(msg, "channel@function");
+   if (excmdstr == "discord")
+      dispatch("discord @" + self.name + " " + argument); // Send to dispatcher.py via pipeDispatcher
+   if (nEcho == 1) {
+      recieve@function(slActive, msg, self,jmode,dmode);
+   }
+   goto start;
 
 
 :told:
-
-subextra (self.quests,"$reply");
-addextra (self.quests,{"$reply"},activator.name);
-goto start;
+   subextra (self.quests,"$reply");
+   addextra (self.quests,{"$reply"},activator.name);
+   goto start;
 
 :recieve:
-if (not (NOCOMM_QUEST in self.quests))
-  recieve@function(slActive, argument, activator,jmode, dmode);
-  goto start;
+   if (not (NOCOMM_QUEST in self.quests))
+      recieve@function(slActive, argument, activator,jmode, dmode);
+   goto start;
 
 :add_del:
    func:=argument;
@@ -7000,15 +7013,14 @@ if (not (NOCOMM_QUEST in self.quests))
    {
       act("Unknown channel command or incorrect options.",
          A_SOMEONE, self, null, null, TO_CHAR);
-         goto start;
-   }      
+      goto start;
+   }
 
    if (("add" in words.[0]) and (words.[1] !=""))
    {
       if ( words.[1] in slActive )
       {
-         act("Channel "+words.[1] + " Already Active!",
-         A_SOMEONE, self, null, null, TO_CHAR);
+         act("Channel "+words.[1] + " Already Active!", A_SOMEONE, self, null, null, TO_CHAR);
          goto start;
       }
       addstring(slActive, words.[1]);
@@ -7060,163 +7072,155 @@ if (not (NOCOMM_QUEST in self.quests))
    goto start;
 
 :show_chan:
-  block;
-  nChan := length(slActive);
-  x := 0;
-  while (x < nChan)
-  {
-	  sendtext("Channel "+slActive.[x]+" is active.<br/>",self );
-     x:= x+1;
-  }
-goto start;
+   block;
+   nChan := length(slActive);
+   x := 0;
+   while (x < nChan)
+   {
+      sendtext("Channel "+slActive.[x]+" is active.<br/>",self );
+      x:= x+1;
+   }
+   goto start;
 
 :echo_chan:
-block;
-  if( nEcho == 1) {
-    act("Channel echoing is disabled, you will NOT see your own messages.",
-	      A_SOMEONE, self, null, null, TO_CHAR);
-    nEcho := 0;
-  } else {
-    act("Channel echoing is enabled, you will see your own messages.",
-	      A_SOMEONE, self, null, null, TO_CHAR);
-    nEcho := 1;
-  }
-goto start;
+   block;
+   if( nEcho == 1) {
+      act("Channel echoing is disabled, you will NOT see your own messages.",
+         A_SOMEONE, self, null, null, TO_CHAR);
+      nEcho := 0;
+   } else {
+      act("Channel echoing is enabled, you will see your own messages.",
+         A_SOMEONE, self, null, null, TO_CHAR);
+      nEcho := 1;
+   }
+   goto start;
 
 :help_chan:
-block;
-sendtext (" To add a channel type:<br/>"+
-"comm add <channel name><br/><br/>"+
-"  To delete a channel type:<br/>"+
-"comm delete <channel name><br/><br/>"+
-"  To see all your active channels type:<br/>"+
-"comm #<br/><br/>"+
-"  To see who is on a specific channel type:<br/>"+
-"<channel name> #<br/><br/>"+
-"  To see who joins or departs a channel type:<br/>"+
-"comm inform <on|off|depart|join> <br/><br/>"+
-"  To toggle echoing of your message type:<br/>"+
-"comm echo<br/>"+
-"  To do a channel emote type: <br/>"+
-"<channel name> @ <action><br/>"+
-"  The standard guild channel is gchat only members will here you 
-<br/><br/>",self);
+   block;
+   sendtext (" To add a channel type:<br/>"+
+   "comm add <channel name><br/><br/>"+
+   "  To delete a channel type:<br/>"+
+   "comm delete <channel name><br/><br/>"+
+   "  To see all your active channels type:<br/>"+
+   "comm #<br/><br/>"+
+   "  To see who is on a specific channel type:<br/>"+
+   "<channel name> #<br/><br/>"+
+   "  To see who joins or departs a channel type:<br/>"+
+   "comm inform <on|off|depart|join> <br/><br/>"+
+   "  To toggle echoing of your message type:<br/>"+
+   "comm echo<br/>"+
+   "  To do a channel emote type: <br/>"+
+   "<channel name> @ <action><br/>"+
+   "  The standard guild channel is gchat only members will here you 
+   <br/><br/>",self);
 
-goto start;
+   goto start;
 
 :inform:
-block;
-words:= getwords(argument);
-if (words.[1] == "") {
-  act("Not enough arguments for inform command try 'chan help'",
+   block;
+   words:= getwords(argument);
+   if (words.[1] == "") {
+   act("Not enough arguments for inform command try 'chan help'",
+         A_SOMEONE, self, null, null, TO_CHAR);
+   } else if (words.[1] == "on") {
+   act("Channel full inform on.",
+         A_SOMEONE, self, null, null, TO_CHAR);
+   jmode := 1;
+   dmode := 1;
+   } else if (words.[1] == "off") {
+   act("Channel inform turned off.",
       A_SOMEONE, self, null, null, TO_CHAR);
-} else if (words.[1] == "on") {
-  act("Channel full inform on.",
+   jmode := 0;
+   dmode := 0;
+   } else if (words.[1] == "join" ){
+   act ("Channel inform Join Only set.",
       A_SOMEONE, self, null, null, TO_CHAR);
-  jmode := 1;
-  dmode := 1;
-} else if (words.[1] == "off") {
-  act("Channel inform turned off.",
-     A_SOMEONE, self, null, null, TO_CHAR);
-  jmode := 0;
-  dmode := 0;
-} else if (words.[1] == "join" ){
-  act ("Channel inform Join Only set.",
-     A_SOMEONE, self, null, null, TO_CHAR);
-  jmode := 1;
-  dmode := 0;
-} else if (words.[1] == "depart" ){
-  act ("Channel inform Depart Only set.",
-     A_SOMEONE, self, null, null, TO_CHAR);
-  jmode := 1;
-  dmode := 0;
-}
-goto start;
+   jmode := 1;
+   dmode := 0;
+   } else if (words.[1] == "depart" ){
+   act ("Channel inform Depart Only set.",
+      A_SOMEONE, self, null, null, TO_CHAR);
+   jmode := 1;
+   dmode := 0;
+   }
+   goto start;
 
 :noshout:
-targ:=findunit (self,argument,FIND_UNIT_WORLD,null);
-if (targ==null) goto start;
+   targ:=findunit (self,argument,FIND_UNIT_WORLD,null);
+   if (targ==null) goto start;
 
-if (not (NOSHOUT_QUEST in targ.quests))
-  {
-    time_string:=asctime(realtime);
-    time_string:=time_string+" "+self.name;
-  addextra (targ.quests,{NOSHOUT_QUEST},time_string);
-  }
-else
-  subextra (targ.quests,NOSHOUT_QUEST);
-
-goto start;
+   if (not (NOSHOUT_QUEST in targ.quests))
+   {
+      time_string:=asctime(realtime);
+      time_string:=time_string+" "+self.name;
+   addextra (targ.quests,{NOSHOUT_QUEST},time_string);
+   }
+   else
+   subextra (targ.quests,NOSHOUT_QUEST);
+   goto start;
 
 :notell:
-targ:=findunit (self,argument,FIND_UNIT_WORLD,null);
-if (targ==null) goto start;
+   targ:=findunit (self,argument,FIND_UNIT_WORLD,null);
+   if (targ==null) goto start;
 
-if (not (NOTELL_QUEST in targ.quests))
-  {
-    time_string:=asctime(realtime);
-    time_string:=time_string+" "+self.name;
-  addextra (targ.quests,{NOTELL_QUEST},time_string);
-  }
-else
-  subextra (targ.quests,NOTELL_QUEST);
-
-goto start;
-
-
-
+   if (not (NOTELL_QUEST in targ.quests))
+   {
+      time_string:=asctime(realtime);
+      time_string:=time_string+" "+self.name;
+   addextra (targ.quests,{NOTELL_QUEST},time_string);
+   }
+   else
+   subextra (targ.quests,NOTELL_QUEST);
+   goto start;
 
 :nochannel:
-block;
-targ:=findunit (self,argument,FIND_UNIT_WORLD,null);
-if (targ==null)
-  {
-  act ("No such person found.",
-  A_ALWAYS,self,null,null,TO_CHAR);
-  goto start;
-  }
-if (targ.level >=self.level)
-  {
-  if ((self.name=="ginger") and (targ.level >50))
-  {
-  act ("$2n would not like that very much.",
-  A_ALWAYS,self,targ,null,TO_CHAR);
-  goto start;
-  }
+   block;
+   targ:=findunit (self,argument,FIND_UNIT_WORLD,null);
+   if (targ==null)
+   {
+      act("No such person found.", A_ALWAYS,self,null,null,TO_CHAR);
+      goto start;
+   }
+   if (targ.level >=self.level)
+   {
+      if ((self.name=="ginger") and (targ.level >50))
+      {
+         act ("$2n would not like that very much.",
+         A_ALWAYS,self,targ,null,TO_CHAR);
+         goto start;
+      }
 
-    if (self.name!="ginger")
-	  {
-  act ("$2n would not like that very much.",
-  A_ALWAYS,self,targ,null,TO_CHAR);
-  goto start;
-  }
-}
+      if (self.name!="ginger")
+      {
+         act ("$2n would not like that very much.", A_ALWAYS,self,targ,null,TO_CHAR);
+         goto start;
+      }
+   }
 
-  if (not(NOCOMM_QUEST in targ.quests))
-    {
-    time_string:=asctime(realtime);
-    time_string:=time_string+" "+self.name;
-  addextra (targ.quests,{NOCOMM_QUEST},time_string);
-  act ("You have lost the ability to use communication channels.",
-    A_ALWAYS,targ,null,null,TO_CHAR);
-  act ("$2n has lost the ability to use communication channels.",
-    A_ALWAYS,self,targ,null,TO_CHAR);
-  goto start;
-  }
-else
-  {
-  subextra (targ.quests,NOCOMM_QUEST);
-  act ("You have regained the privilege to use the communication channels.",
-    A_ALWAYS,targ,null,null,TO_CHAR);
-  act ("$2n can now use the communication channels again.",
-  A_ALWAYS,self,targ,null,TO_CHAR);
-  goto start;
-  }
-
-goto start;
+   if (not(NOCOMM_QUEST in targ.quests))
+   {
+      time_string:=asctime(realtime);
+      time_string:=time_string+" "+self.name;
+      addextra (targ.quests,{NOCOMM_QUEST},time_string);
+      act ("You have lost the ability to use communication channels.",
+         A_ALWAYS,targ,null,null,TO_CHAR);
+      act ("$2n has lost the ability to use communication channels.",
+         A_ALWAYS,self,targ,null,TO_CHAR);
+      goto start;
+   }
+   else
+   {
+      subextra (targ.quests,NOCOMM_QUEST);
+      act ("You have regained the privilege to use the communication channels.",
+         A_ALWAYS,targ,null,null,TO_CHAR);
+      act ("$2n can now use the communication channels again.",
+         A_ALWAYS,self,targ,null,TO_CHAR);
+      goto start;
+   }
+   goto start;
 
 :leave:
-  quit;
+   quit;
 
 }
 dilend

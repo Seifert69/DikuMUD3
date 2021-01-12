@@ -143,6 +143,7 @@ struct symbols
 //   {"walkto",DILSI_WLK},
     {"set_weight_base",DILSI_SET_W_BASE},
     {"set_weight",DILSI_SET_W},
+    {"dispatch", DILSI_DISPATCH},
     {"setbright",DILSI_SBT},
     {"dilcopy",DILSI_DLC},
     {"pagestring",DILSI_PGSTR},

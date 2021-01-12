@@ -272,7 +272,8 @@ struct dilargstype
 #define DILE_GINT	   197	/* getinteger(unit, idx) */
 #define DILE_PLAYERID  198
 #define DILI_SET_W	   199	/* set_weight(#,#) */
-#define DILI_MAX       199	/* The maximum node number */
+#define DILI_DISPATCH  200  /* dispatch(message) */
+#define DILI_MAX       200	/* The maximum node number */
 
 /* DIL Field references */
 #define DILF_NMS	0	/* .names */

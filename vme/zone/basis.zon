@@ -523,6 +523,7 @@ code
       if(err > 0)
          sendtext("<br/>"+welcome+"<br/><br/>", self);
       informer();
+      exec("comm add discord", self);
       exec("look", self);
       quit;
    }
@@ -6459,6 +6460,15 @@ flags {UNIT_FL_NO_WEATHER}
 light 5
 end
 
+                                       discord
+
+names "Discord"
+title "The Discord Robot"
+descr
+"   This room is the sender of the discord messages."
+flags {UNIT_FL_NO_WEATHER}
+light 5
+end
 
                                        void
 

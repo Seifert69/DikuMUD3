@@ -247,6 +247,7 @@ int main(int argc, char **argv)
     return (0);
 }
 
+
 /* Init sockets, run game, and cleanup sockets */
 void run_the_game(char *srvcfg)
 {
@@ -279,6 +280,10 @@ void run_the_game(char *srvcfg)
 
     slog(LOG_OFF, 0, "Signal trapping.");
     signal_setup();
+
+    slog(LOG_OFF, 0, "Named pipe setup.");
+    void namedpipe_setup(void);
+    namedpipe_setup();
 
     boot_db();
     mudboot = 0;
@@ -336,6 +341,7 @@ void game_loop()
     long delay;
     class descriptor_data *d = NULL;
     void clear_destructed(void);
+    std::string str;
 
     tics = 61;
     gettimeofday(&old, (struct timezone *)0);
@@ -344,6 +350,9 @@ void game_loop()
     {
         /* work */
         game_event();
+
+        int pipeMUD_read(std::string &str);
+        pipeMUD_read(str);
 
         events.process();
 

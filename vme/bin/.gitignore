@@ -6,3 +6,5 @@ defcomp
 mplex.log
 pp
 fixhtml
+discord.token
+__pycache__
