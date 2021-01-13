@@ -8,7 +8,9 @@ import asyncio
 
 # See dispatcher.py for overall architecture
 #
-#
+# https://discordpy.readthedocs.io/en/latest/intro.html
+# 
+# python3 -m pip install -U discord.py
 
 class MyClient(discord.Client):
     pipeMUD = None
@@ -17,9 +19,6 @@ class MyClient(discord.Client):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.pipeMUD = self.OpenPipeWONB('pipeMUD')
-        os.write(self.pipeMUD, "Hallo mester\n".encode() )
-        os.write(self.pipeMUD, "Hvad så\n".encode())
-        quit
         self.pipeDiscord = self.OpenPipeRONB('pipeDiscord')
 
         # This is not a thread, it let's the loop of the library
