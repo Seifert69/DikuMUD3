@@ -469,8 +469,8 @@ BASE_JELLYFISH (MLVL,GENDER,ARM_HLEATHER)  \
 MSET_ABILITY(10,5,5,10,10,20,20,20) \
 MSET_WEAPON(6,6,6,6,10,6)          \
 MSET_SPELL(4,4,4,6,6,6,6,6,6,6,6)\
- dilcopy comb_poison@function( "&c+rYour skin burns like fire!&[default]", \
-                  "&c+c$1n stings $3n with its tentacles!&[default]"); \
+ dilcopy comb_poison@function( "<div class='cpr'>Your skin burns like fire!</div>", \
+                  "<div class='cpc'>$1n stings $3n with its tentacles!</div>"); \
 dilcopy aggressive@function(0, -1, 0, 0, 3, 100, 0, "ANY", \
                        {"$1n attacks $3n!", "$1n attacks you!"}); \
 exp 125
