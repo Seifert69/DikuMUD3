@@ -127,13 +127,17 @@ int actual_cost(int cost, sbit8 racemodifier, int level, int virtual_level)
    int calccost;
 
    avg_skill_cost = AVERAGE_SKILL_COST;
+
    if (virtual_level > 100)
    {
       int i;
       i = MIN(100, virtual_level - 100);
       avg_skill_cost += (i * AVERAGE_SKILL_COST * (ABILITY_POINT_FACTOR - 1)) / 100;
-      // At level 200 the average skill cost has increased from 1*average_skill_cost
-      // to ABILITY_POINT_FACTOR * average_skill_cost
+      // With level > 100, the average skill cost will increase as per these average examples
+      // 100 : 10 + ( 0   * 10 * (4-1))/100 = 10+0
+      // 150 : 10 + ( 50  * 10 * (4-1))/100 = 10+15
+      // 200:  10 + ( 100 * 10 * (4-1))/100 = 10+30
+      //1000:  10 + ( 100 * 10 * (4-1))/100 = 10+30
    }
 
    pct = 100;
@@ -159,7 +163,7 @@ int actual_cost(int cost, sbit8 racemodifier, int level, int virtual_level)
       calccost = ((avg_skill_cost - 3 * mod) * pct + 99) / 100;
    }
 
-   if (calccost > 50)
+   if (calccost > 5*avg_skill_cost) // Too expensive
       return 0;
    else
       return calccost;

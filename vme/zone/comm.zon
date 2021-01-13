@@ -21,6 +21,26 @@ Original base code conversion by Telemachos, revamped by Mesmer."
 
 %dil
 
+dilbegin dispatcher(arg : string);
+var
+   w: string;
+code
+{
+   log("MUD Dispatcher got : " + arg);
+
+   w := getword(arg);
+   if (w == "discord")
+   {
+      arg := "CHANNEL discord @ " + arg;
+      sendtoalldil(arg, "channel@function");
+   }
+   else
+      log("Dispatcher got unidentified message: [" + w + "] " + arg);
+   quit;
+}
+dilend
+
+
 dilbegin integer is_ignored(ch : unitptr,victim : unitptr);
 var
 ex : extraptr;

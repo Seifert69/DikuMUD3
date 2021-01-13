@@ -889,10 +889,11 @@ struct dil_func_type dilfe_func[DILI_MAX + 1] = {
     {dilfe_phead},
     {dilfe_fndu2},
     {dilfe_gfol},
-    {dilfe_sact}, // 195
+    {dilfe_sact}, // 196
     {dilfe_gint},
     {dilfe_shell},
-    {dilfi_set_weight}
+    {dilfi_set_weight},
+    {dilfi_dispatch}
  };
 
 

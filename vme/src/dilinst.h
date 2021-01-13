@@ -81,5 +81,5 @@ void dilfi_kedit (class dilprg *);
 void dilfe_sact (class dilprg *);
 void dilfe_gint (class dilprg *);
 void dilfe_shell (class dilprg *);
-
+void dilfi_dispatch(class dilprg *);
 #endif

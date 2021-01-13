@@ -228,7 +228,7 @@ void make_code(struct exptype *dest);
 %token DILSI_SEC  DILSI_USE DILSI_ADA DILSI_SETF DILSI_CHAS
 %token DILSI_SUA  DILSI_EQP DILSI_UEQ DILSI_SETE
 %token DILSI_QUIT DILSI_LOG DILSI_SNTA DILSI_SNTADIL DILSI_DLC DILSE_INTR
-%token DILSI_CLI  DILSI_SET_W_BASE DILSI_SET_W DILSI_SBT DILSE_ATSP DILSI_FOLO DILSI_LCRI
+%token DILSI_CLI  DILSI_SET_W_BASE DILSI_SET_W DILSI_DISPATCH DILSI_SBT DILSE_ATSP DILSI_FOLO DILSI_LCRI
 %token DILSI_PGSTR DILSI_STORA DILSI_STOPF DILSI_EDIT DILSI_KEDIT
 %token DILSI_SNDDONE DILSI_GMSTATE DILSI_INSLST DILSI_REMLST
 
@@ -4912,6 +4912,17 @@ dilproc  : corefuncall
                $$.lst = $7+1;
                wtmp = &tmpl.core[$7];
                bwrite_ubit8(&wtmp, DILI_SET_W);
+            }
+         }
+         | DILSI_DISPATCH '(' coreexp ')' ihold
+         {
+            if ($3.typ != DILV_SP)
+               dilfatal("Arg 1 of 'dispatch' not a string");
+            else {
+               $$.fst = $3.fst;
+               $$.lst = $5+1;
+               wtmp = &tmpl.core[$5];
+               bwrite_ubit8(&wtmp, DILI_DISPATCH);
             }
          }
          | DILSI_SET '(' coreexp ',' coreexp ')' ihold
