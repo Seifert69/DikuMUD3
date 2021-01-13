@@ -408,7 +408,7 @@ code
       tgt := tgt.gnext;
    }
 
-   if (self.minv >= IMMORTAL_LEVEL)
+   if (self.minv < IMMORTAL_LEVEL)
       dispatch("discord @" + self.name + " has entered Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
 
    return;
