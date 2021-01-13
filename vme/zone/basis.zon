@@ -7528,6 +7528,20 @@ descr "A mindless zombie is roaming around here."
 extra {} "Disgusting!"
 M_ZOMBIE_SMALL(4,SEX_NEUTRAL)
 
+dilbegin dispatchtest();
+var 
+  s : string;
+code
+{
+   :loop:
+   wait(SFB_CMD, command("jump"));
+
+   s := "CHANNEL discord @ " + "<discord> @Papi says, 'Hiya'";
+   sendtoalldil(s, "channel@function");
+   goto loop;
+}
+dilend
+
 dilbegin shelltest();
 var 
   i : integer;

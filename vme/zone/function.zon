@@ -6814,7 +6814,11 @@ code
    }
 
    if (sKey == "@") {
-      if (self.level >= talker.minv) {
+      if (sChan == "discord")
+      {
+         sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " + msg+"</div><br/>",self );
+      }
+      else if (self.level >= talker.minv) {
          sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " +talker.name+ " "+msg+"</div><br/>",self );
       } else {
          sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; Someone "+msg+"</div><br/>",self );
