@@ -6977,7 +6977,7 @@ code
 
    sendtoalldil(msg, "channel@function");
    if (excmdstr == "discord")
-      dispatch(" @" + self.name + " says, '" + argument + "'"); // Send to dispatcher.py via pipeDispatcher
+      dispatch("discord @" + self.name + " says, '" + argument + "'"); // Send to dispatcher.py via pipeDispatcher
    if (nEcho == 1) {
       recieve@function(slActive, msg, self,jmode,dmode);
    }
