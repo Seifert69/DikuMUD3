@@ -71,7 +71,7 @@ class MyDispatcher():
         sDispatch = txt.partition(' ')[0]
         
         if (sDispatch == "discord"):
-            self.DispatchDiscord(txt)
+            self.DispatchDiscord("<discord> " + txt.split(' ', 1)[1])
         else:
             print('Unrecognized destination:' + sDispatch)
 

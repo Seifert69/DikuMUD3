@@ -26,11 +26,10 @@ var
    w: string;
 code
 {
-   log("MUD Dispatcher got : " + arg);
-
    w := getword(arg);
    if (w == "discord")
    {
+      log("Dispatcher for discord got : " + arg);
       arg := "CHANNEL discord @ " + arg;
       sendtoalldil(arg, "channel@function");
    }
