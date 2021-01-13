@@ -499,6 +499,8 @@ code
 
    login_modify(self);
 
+   exec("comm add discord", self);
+
    if (self.level < 200)
    {
       if(err > 0)
@@ -507,6 +509,7 @@ code
       exec("look", self);
       quit;
    }
+
    gamestate(self, GS_MENU);
 
    :wiz_menu:
@@ -524,7 +527,6 @@ code
          sendtext("<br/>"+welcome+"<br/><br/>", self);
       informer();
       exec("look", self);
-      exec("comm add discord", self);
       quit;
    }
    else if (command("0") )
