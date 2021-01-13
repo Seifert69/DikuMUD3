@@ -32,7 +32,8 @@ int namedpipe_open_ro(void)
     if (g_pipeMUD_RO <= 0)
     {
         slog(LOG_OFF, 0, "Unable to open pipe RO %s, error code %d.", myfifo, errno);
-        exit(42);
+        g_pipeMUD_RO = -1;
+        return -1;
     }
 
     return g_pipeMUD_RO;
@@ -133,6 +134,14 @@ int pipeMUD_read(std::string &str)
     char buf[MAX_STRING_LENGTH];
     //fd_set read_fds; 
     //timeval null_time = {0, 0};    
+
+    if (g_pipeMUD_RO == -1)
+    {
+        g_pipeMUD_RO = namedpipe_open_ro();
+
+        if (g_pipeMUD_RO == -1)
+            return -1;
+    }
 
     str = "";
 
