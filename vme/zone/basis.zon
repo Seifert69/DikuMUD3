@@ -394,7 +394,6 @@ code
 
    while (tgt.type == UNIT_ST_PC)
    {
-
       if ((isset(tgt.pcflags,PC_INFORM)) and (tgt != self))
       {
          if(visible(tgt,self))
@@ -408,6 +407,9 @@ code
 
       tgt := tgt.gnext;
    }
+
+   if (self.minv >= IMMORTAL_LEVEL)
+      dispatch("discord @" + self.name + " has entered Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
 
    return;
 }
