@@ -110,7 +110,7 @@ class MyClient(discord.Client):
         # write the message received from Discord to pipeMUD so that
         # the MUD server receives it.
         #
-        str = "discord @" + message.author.name + " #" + message.channel.name + " " + message.content
+        str = "<discord> #" + message.channel.name + " @" + message.author.name + " says, '" + message.content + "'"
         os.write(self.pipeMUD, str.encode())
         #if message.content.startswith('$hello'):
         #    await message.channel.send('da robot replies Hello!')
