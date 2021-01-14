@@ -484,7 +484,7 @@ void cConHook::Input(int nFlags)
         strcpy((char *)buf, b);
 #endif
 #if defined(LINUX)
-        int n = read(this->tfd(), buf, sizeof(buf) - 1);
+        int n = ::read(this->tfd(), buf, sizeof(buf) - 1);
 #endif
 
         if (n == -1)
