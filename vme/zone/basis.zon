@@ -501,7 +501,6 @@ code
 
    login_modify(self);
 
-   exec("comm add discord", self);
 
    if (self.level < 200)
    {
@@ -509,6 +508,7 @@ code
          sendtext("<br/>"+welcome+"<br/><br/>", self);
       informer();
       exec("look", self);
+      exec("comm add discord", self);
       quit;
    }
 
