@@ -21,17 +21,84 @@ Original base code conversion by Telemachos, revamped by Mesmer."
 
 %dil
 
-dilbegin dispatcher(arg : string);
+dilbegin string whostring();
 var
-   w: string;
+  u : unitptr;
+  gld : string;
+  buff : string;
+  final : string;
+code
+{
+   u := ghead();
+   final := "";
+
+   while (u.type==UNIT_ST_PC)
+   {
+      if (u.minv < 1) // Check not wizi
+      {
+         if (u.level >= OVERSEER_LEVEL)
+            gld:="(Admin)";
+         else if (u.level>=CREATOR_LEVEL)
+            gld:="(Creator)";
+         else if (u.level>IMMORTAL_LEVEL)
+            gld:="(Immortal)";
+         else
+            gld:="";
+
+         buff := u.name + " "+u.title+" "+gld;
+
+         if ("valhalla builder" in u.quests)
+            buff:=buff+" * Builder *";
+         if ("valhalla friend" in u.quests)
+            buff:=buff+" * Friend *";  
+         if ("New Player Helper" in u.quests)
+         {
+            buff:=buff+" * Guide *";
+         }
+         buff := buff + "\r";
+
+         final := final + buff;
+      }
+      u:=u.gnext;
+   }
+
+   if (final == "")
+   {
+      final := "No (visible) players online at this time\r";
+   }
+
+   return(final);
+}
+dilend
+
+
+// Gets called with the string 'arg' when the MUD server receives
+// a line via pipeMUD
+//
+dilbegin dispatcher(arg : string);
+external
+   string whostring();
+
+var
+   w : string;
+   o : string;
 code
 {
    w := getword(arg);
    if (w == "discord")
    {
-      log("Dispatcher for discord got : " + arg);
-      arg := "CHANNEL discord @ " + arg;
-      sendtoalldil(arg, "channel@function");
+      if ("'#'" in arg)
+      {
+        log("Dispatcher for discord got who command " + arg);
+        w := whostring();
+        dispatch("discord " + w); // Send to dispatcher.py via pipeDispatcher
+      }
+      else
+      {
+        log("Dispatcher for discord got : " + arg);
+        arg := "CHANNEL discord @ " + arg;
+        sendtoalldil(arg, "channel@function");
+      }
    }
    else
       log("Dispatcher got unidentified message: [" + w + "] " + arg);

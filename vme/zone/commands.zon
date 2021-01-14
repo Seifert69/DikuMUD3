@@ -11887,7 +11887,7 @@ dilend
 
 
 // do_who
-dilbegin who_dil ( arg: string );
+dilbegin who_dil( arg: string );
 var
    buff:string;
    gld:string;
