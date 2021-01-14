@@ -55,7 +55,7 @@ code
          {
             buff:=buff+" * Guide *";
          }
-         buff := buff + "\r";
+         buff := buff + ",";
 
          final := final + buff;
       }
@@ -64,7 +64,7 @@ code
 
    if (final == "")
    {
-      final := "No (visible) players online at this time\r";
+      final := "No (visible) players online at this time,";
    }
 
    return(final);
