@@ -1228,7 +1228,7 @@ movement SECT_CITY
 west to outside_farm descr "Outside the Farm House";
 south to trail_01 descr "Dusty Trail";
 north to cave_00 descr "Inside the Cave";
-up open {EX_CLIMB, EX_FALL_THIS_WAY} difficulty 0 to outcropping;
+up open {EX_CLIMB} difficulty 0 to outcropping;
 extra {"$climb_up"} {5} ""
 extra {"rocky outcropping", "rocks", "outcropping"}
 "A tall rocky outcropping is here. It would take one both extremely skilled, 

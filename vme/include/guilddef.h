@@ -1210,8 +1210,6 @@ $1n tells you, 'Remove all equipment, please.';
  30;  100; rend                          ;  14; 14000;  10; 20;      0;
  90;  100; slam                          ;  14; 14000;  10; 20;      0;
  10;  100; charge                        ;  14; 14000;  10;          0;
-  1;  100; rescue                        ;  14; 14000;  10;          0;
-  5;   50; swimming                      ;  14; 14000;  10;          0;
  10;  100; two weapon style              ;   9;  9000;   8;          0;
  15;   70; leadership                    ;   9;  9000;   8;          0;
   0;  100; armor soft leather            ;   4;  4000;   10;         0;
