@@ -19,7 +19,7 @@ Pre-requisites:
    * gcc/g++
    * flex/bison (sudo apt-get install bison flex)
    * boost devel (sudo apt-get install libboost-all-dev)
-
+   * Debian users look here for flex: https://github.com/Seifert69/DikuMUD3/issues?q=70
 
 
 How to build & launch
