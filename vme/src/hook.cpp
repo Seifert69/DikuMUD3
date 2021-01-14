@@ -253,6 +253,7 @@ cHook::~cHook(void)
 
 void cHook::Unhook(void)
 {
+    cHookNative::Unhook();
 }
 
 int cHook::tfd(void)
@@ -461,15 +462,6 @@ void cCaptainHook::Unhook(cHook *hook)
 
     assert(pfHook[nHandle] == hook);
 
-
-#ifdef _WINDOWS
-    i = closesocket(nHandle);
-#else
-    i = close(nHandle);
-#endif
-    if (i < 0)
-        slog(LOG_ALL, 0, "Captain Hook: Close error %d.", errno);
-
     for (i = 0; i < nTop; i++)
     {
         if (nIdx[i] == nHandle)
@@ -481,7 +473,7 @@ void cCaptainHook::Unhook(cHook *hook)
         }
     }
 
-    pfHook[nHandle]->fd = -1;
+    // pfHook[nHandle]->fd = -1; // This should get unset in Unhook on close()
     pfHook[nHandle]->id = -1;
     pfHook[nHandle]->qTX.Flush();
     pfHook[nHandle]->qRX.Flush();    
@@ -571,12 +563,18 @@ int cCaptainHook::Wait(struct timeval *timeout)
 
                 if ((pfTmpHook == pfHook[tmpfd]) && (pfTmpHook->id == nId[i]))
                 {
+                    if (pfTmpHook->tfd() == -1)
+                        slog(LOG_ALL, 0, "Wait()) SELECT_READ | SELECT_EXCEPT FD is -1");
+
                     if (nFlag & (SELECT_READ | SELECT_EXCEPT))
                         pfTmpHook->Input(nFlag);
                 }
 
                 if ((pfTmpHook == pfHook[tmpfd]) && (pfTmpHook->id == nId[i]))
                 {
+                    if (pfTmpHook->tfd() == -1)
+                        slog(LOG_ALL, 0, "Wait()) SELECT_WRITE FD is -1");
+
                     if (nFlag & SELECT_WRITE)
                         pfTmpHook->PushWrite();
                 }

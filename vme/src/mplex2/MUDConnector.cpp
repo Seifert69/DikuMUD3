@@ -291,8 +291,13 @@ char Outbuf[32768];
 */
 void cMudHook::Unhook(void)
 {
-    slog(LOG_OFF, 0, "Unhooking MUD Hook");
-    CaptainHook.Unhook(this);
+    if (this->IsHooked())
+    {
+        slog(LOG_OFF, 0, "Unhooking MUD Hook");
+        CaptainHook.Unhook(this);
+        assert(this->fd != -1);
+        cHook::Unhook();
+    }
 }
 
 int cMudHook::read_mud(void)

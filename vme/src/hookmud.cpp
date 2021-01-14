@@ -96,15 +96,23 @@ void cMultiHook::Ping(void)
     protocol_send_ping(this);
 }
 
+void cMultiHook::Unhook(void)
+{
+    if (this->IsHooked())
+    {
+        slog(LOG_OFF, 0, "Unhooking MultiHook");
+        CaptainHook.Unhook(this);
+        assert(this->fd != -1);
+        cHook::Unhook();
+    }
+}
 
 void cMultiHook::Close(void)
 {
-    if (!IsHooked())
-        return;
-
     slog(LOG_ALL, 0, "Closing connection to multi host.");
 
-    Unhook();
+    if (this->IsHooked())
+        Unhook();
 
     Multi.nCount--;
 }
@@ -337,12 +345,25 @@ void cMotherHook::Input(int nFlags)
     }
 }
 
+
+void cMotherHook::Unhook(void)
+{
+    if (this->IsHooked())
+    {
+        slog(LOG_OFF, 0, "Unhooking Mother Hook");
+        CaptainHook.Unhook(this);
+        assert(this->fd != -1);
+        cHook::Unhook();
+    }
+}
+
 // If the mother port 4999 is closed then close all mplex connections
 void cMotherHook::Close(void)
 {
-    multi_close_all();
+    if (this->IsHooked())
+        Unhook();
 
-    Unhook();
+    multi_close_all();
 }
 
 void init_mother(int nPort)
