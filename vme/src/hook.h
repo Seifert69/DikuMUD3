@@ -28,6 +28,33 @@ int PipeWrite(int fd, char *buf, size_t count);
 
 class cCaptainHook;
 
+// 2020
+//
+// This is really what the basic Hook class should have looked like in 1998.
+// It's a bit of a mess. Now I'm unsing this "Navtive" variant only
+// for wrapping my named pipe integration. Maybe someday I can inherit
+// the Native hook class to the cHook which then becomes the buffering layer.
+//
+class cHookNative
+{
+public:
+   cHookNative(void);
+   virtual ~cHookNative();
+
+   void Hook(int fd);
+   int IsHooked(void);
+   void Unhook(void);
+
+   int get_fd(void);
+
+   int write(const void *buf, int count);
+   int read(void *buf, int count);
+
+private:
+   int fd;
+};
+
+
 class cHook
 {
   friend class cCaptainHook;

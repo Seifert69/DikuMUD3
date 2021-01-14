@@ -40,6 +40,200 @@ cCaptainHook CaptainHook;
 
 
 /* ------------------------------------------------------------------- */
+/*                                HOOK NATIVE                          */
+/* ------------------------------------------------------------------- */
+//
+// The basic hook class handles read and writing. Uses a queue for handling
+// incoming and outgoing messages. Holds the filedescriptor and knows if it
+// is connected or not.
+//
+
+cHookNative::cHookNative(void)
+{
+    fd = -1;
+}
+
+cHookNative::~cHookNative(void)
+{
+    Unhook();
+}
+
+int cHookNative::get_fd(void)
+{
+    return fd;
+}
+
+void cHookNative::Hook(int f)
+{
+    fd = f;
+}
+
+int cHookNative::IsHooked(void)
+{
+    return fd != -1;
+}
+
+void cHookNative::Unhook(void)
+{
+    if (!IsHooked())
+        return;
+
+    int i;
+    #ifdef _WINDOWS
+        i = closesocket(fd);
+    #else
+        i = close(fd);
+    #endif
+
+    fd = -1;
+
+    if (i == -1)
+    {
+        slog(LOG_ALL, 0, "close(%d): close() socket, error %d", fd, errno);
+    }
+}
+
+/* ------------------------------------------------------------------- */
+/*                     NETWORK READ & WRITE                            */
+/* ------------------------------------------------------------------- */
+
+
+//  > 0 number of bytes written
+// == 0 try again later (EWOULDBLOCK) 
+// -1 : error (it's been unhooked)
+//
+int cHookNative::write(const void *buf, int count)
+{
+    int sofar;
+    int thisround;
+
+    if (!IsHooked())
+        return -1;
+
+    sofar = 0;
+
+    for (;;)
+    {
+#ifdef _WINDOWS
+
+        thisround = send(fd, (char *)buf + sofar, count - sofar, 0);
+
+        if (thisround == 0)
+        {
+            /* This should never happen! */
+            slog(LOG_ALL, 0,
+                    "SYSERR: Huh??  write() returned 0???  Please report this!");
+            Unhook();
+            return -1;
+        }
+
+        if (thisround < 0)
+        {
+            /* Transient error? */
+            if (WSAGetLastError() == WSAEWOULDBLOCK || WSAGetLastError() == WSAEINTR)
+            {
+                return sofar;
+            }
+            else
+            {
+
+                /* Must be a fatal error. */
+                slog(LOG_ALL, 0,
+                        "PushWrite (%d): Write to socket, error %d", fd,
+                        WSAGetLastError());
+                Unhook();
+                return -1;
+            }
+        }
+#else
+        try {
+            thisround = ::write(fd, (char *) buf + sofar, count - sofar);
+        }
+        catch (const std::exception &ex)
+        {
+            slog(LOG_ALL, 0, "cHookNative::write() exception: [%s]", ex.what());
+            Unhook();
+            return -1;
+        }
+
+        if (thisround == 0)
+        {
+            slog(LOG_ALL, 0, "cHookNative (%d): Write to socket EOF", (int) fd);
+            Unhook();
+            return -1;
+        }
+        else if (thisround < 0)
+        {
+            if (errno == EWOULDBLOCK) 
+                return sofar;
+
+            slog(LOG_ALL, 0, "cHookNative (%d): Write to socket, error %d", fd, errno);
+            Unhook();
+            return -1;
+        }
+#endif
+        sofar += thisround;
+
+        if (sofar >= count)
+            break;
+    }
+
+    return sofar;
+}
+
+
+
+//  > 0 number of bytes read to buffer
+// == 0 try again later (EWOULDBLOCK) 
+// -1 : error (and it's been unhooked or was unhooked, fd closed)
+//
+int cHookNative::read(void *buf, int count)
+{
+    int thisround;
+
+    if (!IsHooked())
+        return -1;
+
+    for (;;)
+    {
+#if defined(_WINDOWS)
+        thisround = recv(fd, buf, count - 1, 0);
+#else
+        thisround = ::read(fd, buf, count);
+#endif
+
+        if (thisround > 0)
+        {
+            return thisround;
+        }
+        else if (thisround == 0)
+        {
+            slog(LOG_ALL, 0, "Read to queue: EOF on socket read (eno %d).", errno);
+            Unhook();
+            return -1;
+        }
+        else /* (thisround < 0) */
+        {
+#ifdef _WINDOWS
+            if (WSAGetLastError() == WSAEWOULDBLOCK || WSAGetLastError() == WSAEINTR)
+                return 0;
+#else
+            if (errno == EWOULDBLOCK)
+                return 0;
+#endif
+            slog(LOG_ALL, 0, "Read from socket %d error %d", fd, errno);
+            Unhook();
+            return -1;
+        }
+    }
+
+    return -1;
+}
+
+
+
+
+/* ------------------------------------------------------------------- */
 /*                                HOOK                                 */
 /* ------------------------------------------------------------------- */
 //

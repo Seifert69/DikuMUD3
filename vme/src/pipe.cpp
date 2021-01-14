@@ -13,12 +13,22 @@
 #include "unitfind.h"
 #include "dil.h"
 #include "textutil.h"
+#include "hook.h"
 
-int g_pipeMUD_RO = -1;
-int g_pipeMUD_WO = -1;
+cHookNative g_pipeMUD_RO;
+cHookNative g_pipeMUD_WO;
 
-int namedpipe_open_ro(void)
+
+void namedpipe_open_ro(void)
 {
+    if (g_pipeMUD_RO.IsHooked())
+    {
+        slog(LOG_OFF, 0, "Trying to open already opened pipe_ro.");
+        return;
+    }
+
+    int fd;
+
     // FIFO file path 
     const char *myfifo = "./pipeMUD";
   
@@ -27,49 +37,53 @@ int namedpipe_open_ro(void)
     mkfifo(myfifo, 0666); 
   
     // Open FIFO for write only 
-    g_pipeMUD_RO = open(myfifo, O_RDWR | O_NONBLOCK);
+    fd = open(myfifo, O_RDWR | O_NONBLOCK);
 
-    if (g_pipeMUD_RO <= 0)
+    if (fd <= 0)
     {
         slog(LOG_OFF, 0, "Unable to open pipe RO %s, error code %d.", myfifo, errno);
-        g_pipeMUD_RO = -1;
-        return -1;
+        return;
     }
 
-    return g_pipeMUD_RO;
+    g_pipeMUD_RO.Hook(fd);
 }
 
 
-int namedpipe_open_wo(void)
+void namedpipe_open_wo(void)
 {
+    if (g_pipeMUD_WO.IsHooked())
+    {
+        slog(LOG_OFF, 0, "Trying to open already opened pipe_ro.");
+        return;
+    }
+
     // FIFO file path 
     const char *myfifo = "./pipeDispatcher";
-  
+    
     // Creating the named file(FIFO) 
     // mkfifo(<pathname>, <permission>) 
     mkfifo(myfifo, 0666); 
   
     // Open FIFO for write only 
-    g_pipeMUD_WO = open(myfifo, O_WRONLY | O_NONBLOCK);
+    int fd = open(myfifo, O_WRONLY | O_NONBLOCK);
 
-    if (g_pipeMUD_WO <= 0)
+    if (fd <= 0)
     {
         slog(LOG_OFF, 0, "Unable to open pipe WO %s, error code %d.", myfifo, errno);
-        g_pipeMUD_WO = -1;
-        return -1;
+        return;
     }
 
-    return g_pipeMUD_WO;
+    g_pipeMUD_WO.Hook(fd);
 }
 
 
 void pipeMUD_write(const char *c)
 {
-    if (g_pipeMUD_WO == -1)
+    if (!g_pipeMUD_WO.IsHooked())
     {
-        g_pipeMUD_WO = namedpipe_open_wo();
+        namedpipe_open_wo();
 
-        if (g_pipeMUD_WO == -1)
+        if (!g_pipeMUD_WO.IsHooked())
             return;
     }
 
@@ -79,7 +93,7 @@ void pipeMUD_write(const char *c)
     str = c;
     str.append("\n");
 
-    n = write(g_pipeMUD_WO, str.c_str(), str.length());
+    n = g_pipeMUD_RO.write(str.c_str(), str.length());
 
     if (n == -1)
     {
@@ -135,11 +149,11 @@ int pipeMUD_read(std::string &str)
     //fd_set read_fds; 
     //timeval null_time = {0, 0};    
 
-    if (g_pipeMUD_RO == -1)
+    if (!g_pipeMUD_RO.IsHooked())
     {
-        g_pipeMUD_RO = namedpipe_open_ro();
+        namedpipe_open_ro();
 
-        if (g_pipeMUD_RO == -1)
+        if (!g_pipeMUD_RO.IsHooked())
             return -1;
     }
 
@@ -148,13 +162,13 @@ int pipeMUD_read(std::string &str)
     do
     {
         buf[sizeof(buf)-1] = 0;
-        n = read(g_pipeMUD_RO, buf, sizeof(buf)-1);
+        n = g_pipeMUD_RO.read(buf, sizeof(buf)-1);
         
+        if (n == 0)
+            break;
         if (n == -1)
         {
-            if (errno == EAGAIN)
-                break;
-            slog(LOG_OFF, 0, "Error reading from pipeMUD RO %d, error code %d.", g_pipeMUD_RO, errno);
+            slog(LOG_OFF, 0, "Error reading from pipeMUD RO.");
             break;
         }
         else // n > 0
