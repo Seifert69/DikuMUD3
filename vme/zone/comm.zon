@@ -45,7 +45,7 @@ code
          else
             gld:="";
 
-         buff := u.name + " "+u.title+" "+gld;
+         buff := u.name + " "+gld;
 
          if ("valhalla builder" in u.quests)
             buff:=buff+" * Builder *";
@@ -55,7 +55,7 @@ code
          {
             buff:=buff+" * Guide *";
          }
-         buff := buff + ",";
+         buff := buff + ", ";
 
          final := final + buff;
       }
@@ -64,7 +64,7 @@ code
 
    if (final == "")
    {
-      final := "No (visible) players online at this time,";
+      final := "No (visible) players online at this time.";
    }
 
    return(final);
