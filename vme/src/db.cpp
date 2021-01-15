@@ -32,6 +32,8 @@
 #include "dilrun.h"
 #include "sector.h"
 
+const char *player_zone = "_players";
+
 int room_number;                   /* For counting numbers in rooms */
 class unit_data *unit_list = NULL; /* The global unit_list          */
 class unit_data *npc_head = NULL;
@@ -268,9 +270,9 @@ struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
 }
 
 /* Generate index's for each unit in the file 'f', zone 'zone' */
-class file_index_type *generate_file_indexes(FILE *f, class zone_type *zone)
+void generate_file_indexes(FILE *f, class zone_type *zone)
 {
-   class file_index_type *fi, *fi_list, *tfi1, *tfi2;
+   class file_index_type *fi;
    class file_index_type *temp_index;
    static int object_num = 0;
    static int npc_num = 0;
@@ -279,7 +281,6 @@ class file_index_type *generate_file_indexes(FILE *f, class zone_type *zone)
 
    CByteBuffer cBuf(100);
 
-   fi_list = NULL;
    room_number = 0;
 
    for (;;)
@@ -338,32 +339,7 @@ class file_index_type *generate_file_indexes(FILE *f, class zone_type *zone)
 
       /* Seek forward to next index, so we are ready */
       fseek(f, fi->filepos + fi->length, SEEK_SET);
-
-      /* Link into list of indexes */
-      if (fi_list == NULL)
-         fi_list = fi; /* If list is empty */
-      else
-      {
-         for (tfi2 = NULL, tfi1 = fi_list; tfi1; tfi1 = tfi1->next)
-         {
-            if (strcmp(tfi1->name, fi->name) > 0)
-               break;
-            tfi2 = tfi1;
-         }
-         if (tfi2 == NULL)
-         {
-            fi->next = fi_list;
-            fi_list = fi;
-         }
-         else
-         {
-            fi->next = tfi1;
-            tfi2->next = fi;
-         }
-      }
    }
-
-   return fi_list;
 }
 
 /* Call this routine at boot time, to index all zones */
@@ -536,7 +512,7 @@ void generate_zone_indexes(void)
 
       z->no_of_fi = 0;
       z->zri = 0;
-      z->fi = generate_file_indexes(f, z);
+      generate_file_indexes(f, z);
       z->no_rooms = room_number; /* Number of rooms in the zone */
 
       fflush(f); /* Don't fclose(f); since we are using _cache */
@@ -820,7 +796,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
    else
       UNIT_SIZE(u) = 180;
 
-   if (unit_version >= 51)
+   if (unit_version >= 51) // Get the unit the unit is in
    {
       g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));
       g_nCorrupt += pBuf->ReadStringCopy(name, sizeof(name));
@@ -1470,7 +1446,6 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
 void read_all_rooms(void)
 {
    // MS2020 int room_num = 0;
-   class file_index_type *fi;
 
    extern class zone_type *boot_zone;
 
@@ -1478,11 +1453,11 @@ void read_all_rooms(void)
    {
       boot_zone = z->second;
 
-      for (fi = z->second->fi; fi; fi = fi->next)
+      for (auto fi = z->second->mmp_fi.begin(); fi != z->second->mmp_fi.end(); fi++)
       {
-         if (fi->type == UNIT_ST_ROOM)
+         if (fi->second->type == UNIT_ST_ROOM)
          {
-            read_unit(fi);
+            read_unit(fi->second);
          }
       }
    }

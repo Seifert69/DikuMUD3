@@ -410,9 +410,10 @@ static void stat_global_dil(class unit_data *ch, ubit32 nCount)
     send_to_char(buf, ch);
 
     mystr = "<div class='twocol'>";
-    for (auto it = zone_info.mmp.begin(); it != zone_info.mmp.end(); it++)
+
+    for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.end(); z++)
     {
-        for (*buf = 0, tmpl = it->second->tmpl; tmpl; tmpl = tmpl->next)
+        for (*buf = 0, tmpl = z->second->tmpl; tmpl; tmpl = tmpl->next)
         {
             if (tmpl->fCPU >= nCount){
                 sprintf(buf, "%.2fs %s@%s [%d t / %d i]<br/>", tmpl->fCPU/1000.0, tmpl->prgname, tmpl->zone->name, tmpl->nTriggers, tmpl->nInstructions);
@@ -430,7 +431,6 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
     char buf[MAX_STRING_LENGTH], filename[128];
     std::string mystr;
     int argno;
-    class file_index_type *fi;
     int search_type = 0;
 
     //  void stat_dijkstraa (class unit_data * ch, class zone_type *z);
@@ -528,13 +528,15 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
 
     /* Search for mobs/objs/rooms and line in columns */
     mystr = "<div class='threecol'>";
-    for (*buf = 0, fi = zone->fi; fi; fi = fi->next)
-        if (fi->type == search_type)
+    // for (*buf = 0, fi = zone->fi; fi; fi = fi->next)
+    *buf = 0;
+    for ( auto fi = zone->mmp_fi.begin(); fi != zone->mmp_fi.end(); fi++)
+        if (fi->second->type == search_type)
         {
-            if ((fi->type == UNIT_ST_OBJ) || (fi->type == UNIT_ST_NPC))
-                sprintf(buf, "<a cmd='load #'>%s</a><br/>", fi->name);
+            if ((fi->second->type == UNIT_ST_OBJ) || (fi->second->type == UNIT_ST_NPC))
+                sprintf(buf, "<a cmd='load #'>%s</a><br/>", fi->second->name);
             else
-                sprintf(buf, "%s<br/>", fi->name);
+                sprintf(buf, "%s<br/>", fi->second->name);
             mystr.append(buf); //MS2020
         }
 

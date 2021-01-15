@@ -437,10 +437,7 @@ void dilfe_fld(register class dilprg *p)
                 v->type = DILV_SP;
 
                 static char buf[512];
-                if (!IS_PC((class unit_data *) v1->val.ptr))
-                    sprintf(buf, "%s@%s", UNIT_FI_NAME((class unit_data *) v1->val.ptr), UNIT_FI_ZONENAME((class unit_data *) v1->val.ptr));
-                else
-                    strcpy(buf, "NO-NAME@NO-ZONE");
+                sprintf(buf, "%s@%s", UNIT_FI_NAME((class unit_data *) v1->val.ptr), UNIT_FI_ZONENAME((class unit_data *) v1->val.ptr));
 
                 v->val.ptr = buf;
             }
@@ -972,18 +969,18 @@ void dilfe_fld(register class dilprg *p)
                 v->atyp = DILA_NORM;
                 v->type = DILV_UP;
                 class zone_type *z = (class zone_type *)v1->val.ptr;
-                class file_index_type *fi;
-                for (fi = z->fi; fi; fi = fi->next)
-                    if (fi->type == UNIT_ST_ROOM)
+
+                for (auto fi = z->mmp_fi.begin(); fi != z->mmp_fi.end(); fi++)
+                    if (fi->second->type == UNIT_ST_ROOM)
                     {
-                        if (fi->fi_unit_list.empty())
+                        if (fi->second->fi_unit_list.empty())
                         {
                             v->type = DILV_FAIL;
                             v->val.ptr = NULL;
                         }
                         else
                         {                    
-                            v->val.ptr = fi->fi_unit_list.front();                        
+                            v->val.ptr = fi->second->fi_unit_list.front();                        
                         }
                         break;
                     }
@@ -1012,18 +1009,18 @@ void dilfe_fld(register class dilprg *p)
                 v->atyp = DILA_NORM;
                 v->type = DILV_UP;
                 class zone_type *z = (class zone_type *)v1->val.ptr;
-                class file_index_type *fi;
-                for (fi = z->fi; fi; fi = fi->next)
-                    if (fi->type == UNIT_ST_NPC)
+
+                for (auto fi = z->mmp_fi.begin(); fi != z->mmp_fi.end(); fi++)
+                    if (fi->second->type == UNIT_ST_NPC)
                     {
-                        if (fi->fi_unit_list.empty())
+                        if (fi->second->fi_unit_list.empty())
                         {
                             v->type = DILV_FAIL;
                             v->val.ptr = NULL;
                         }
                         else
                         {                    
-                            v->val.ptr = fi->fi_unit_list.front();                        
+                            v->val.ptr = fi->second->fi_unit_list.front();                        
                         }
                         break;
                     }
@@ -1052,18 +1049,18 @@ void dilfe_fld(register class dilprg *p)
                 v->atyp = DILA_NORM;
                 v->type = DILV_UP;
                 class zone_type *z = (class zone_type *)v1->val.ptr;
-                class file_index_type *fi;
-                for (fi = z->fi; fi; fi = fi->next)
-                    if (fi->type == UNIT_ST_OBJ)
+
+                for (auto fi = z->mmp_fi.begin(); fi != z->mmp_fi.end(); fi++)
+                    if (fi->second->type == UNIT_ST_OBJ)
                     {
-                        if (fi->fi_unit_list.empty())
+                        if (fi->second->fi_unit_list.empty())
                         {
                             v->type = DILV_FAIL;
                             v->val.ptr = NULL;
                         }
                         else
                         {                    
-                            v->val.ptr = fi->fi_unit_list.front();                        
+                            v->val.ptr = fi->second->fi_unit_list.front();                        
                         }
                         break;
                     }

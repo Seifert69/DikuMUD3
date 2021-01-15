@@ -74,7 +74,7 @@ public:
 
     char *name;                  /* Unique within this list          */
     class zone_type *zone;       /* Pointer to owner of structure    */
-    class file_index_type *next; /* Next File Index                  */
+    // class file_index_type *next; // Replaced by zone's mmp_fi list Next file index, (zone_type->fi list)
     // obsoleted by fi_unit_list. class unit_data *unit; // Pointer to room if is room
 
     long filepos;  /* Byte offset into file            */
@@ -118,7 +118,7 @@ public:
     class unit_data *objects; // unit pointer to the base objects, used in vmc really
     class unit_data *npcs;    // unit pointer to the base npcs, used in vmc really
 
-    class file_index_type *fi;  /* Pointer to list of file-index's  */
+    // class file_index_type *fi;  Replaced by mmp_fi, /* Pointer to list of file-index's  */
 
     std::map< const char * , file_index_type *, cmp_str > mmp_fi;
     //struct bin_search_type *ba;  Pointer to binarray of type      */

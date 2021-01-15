@@ -55,12 +55,11 @@ void zone_update_no_in_zone(void)
     extern struct zone_info_type zone_info;
 
     register class unit_data *u;
-    register class file_index_type *fi;
 
     /* Clear ALL ->no_in_zone */
     for (auto tmp_zone = zone_info.mmp.begin(); tmp_zone != zone_info.mmp.begin(); tmp_zone++)
-        for (fi = tmp_zone->second->fi; fi; fi = fi->next)
-            fi->no_in_zone = 0;
+        for (auto fi = tmp_zone->second->mmp_fi.begin(); fi != tmp_zone->second->mmp_fi.end(); fi++)
+            fi->second->no_in_zone = 0;
 
     for (u = unit_list; u; u = u->gnext)
         if (UNIT_FILE_INDEX(u) && (unit_zone(u) == boot_zone))

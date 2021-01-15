@@ -204,7 +204,7 @@ zone_type::zone_type(void)
     objects = NULL;
     npcs = NULL;
 
-    fi = NULL;
+    //fi = NULL;
     //ba = NULL;
 
     zri = NULL;
@@ -255,12 +255,13 @@ zone_type::~zone_type(void)
         delete ut;
     }
 
-    class file_index_type *p, *nextfi;
-
-    for (p = fi; p; p = nextfi)
+    auto nextfi = mmp_fi.begin();
+    for (auto p = mmp_fi.begin(); p != mmp_fi.end(); p = nextfi)
     {
-        nextfi = p->next;
-        delete p;
+        nextfi = p;
+        nextfi++;
+        
+        delete p->second;
     }
 
     struct zone_reset_cmd *pzri, *nextzri;
@@ -299,7 +300,7 @@ file_index_type::file_index_type(void)
 {
     name = NULL;
     zone = NULL;
-    next = NULL;
+    //next = NULL;
     //unit = NULL;
 
     filepos = 0;

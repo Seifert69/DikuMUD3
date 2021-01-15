@@ -103,5 +103,6 @@ extern class unit_data *room_head;
 extern class unit_data *npc_head;
 extern class unit_data *obj_head;
 extern struct zone_info_type zone_info;
+extern const char *player_zone;
 
 #endif /* _MUD_DB_H */
