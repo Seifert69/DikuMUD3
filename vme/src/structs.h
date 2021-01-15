@@ -21,6 +21,7 @@
 #include "destruct.h"
 using namespace std;
 #include <vector>
+#include <map>
 #ifndef MPLEX_COMPILE
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
@@ -42,6 +43,16 @@ using namespace boost;
 #define SD_ASCII 2 /* If pointer, then it's ascii char * */
 
 /* ----------------- DATABASE STRUCTURES ----------------------- */
+
+// Used for std::map in place of the old binary search
+struct cmp_str
+{
+   bool operator()(char const *a, char const *b) const
+   {
+      return std::strcmp(a, b) < 0;
+   }
+};
+
 
 /* This must be maintained as an array for use with binary search methods */
 struct bin_search_type
@@ -108,13 +119,16 @@ public:
     class unit_data *npcs;    // unit pointer to the base npcs, used in vmc really
 
     class file_index_type *fi;  /* Pointer to list of file-index's  */
-    struct bin_search_type *ba; /* Pointer to binarray of type      */
+
+    std::map< const char * , file_index_type *, cmp_str > mmp_fi;
+    //struct bin_search_type *ba;  Pointer to binarray of type      */
 
     struct zone_reset_cmd *zri; /* List of Zone reset commands      */
-    class zone_type *next;     /* Next Zone                        */
+    // class zone_type *next;     replaced by map_fi
 
     struct diltemplate *tmpl;       /* DIL templates in zone            */
-    struct bin_search_type *tmplba; /* Pointer to binarray of type      */
+    std::map< const char * , diltemplate *, cmp_str > mmp_tmpl;
+    //struct bin_search_type *tmplba; /* Pointer to binarray of type      */
 
     ubit8 **spmatrix; /* Shortest Path Matrix             */
 

@@ -205,13 +205,12 @@ zone_type::zone_type(void)
     npcs = NULL;
 
     fi = NULL;
-    ba = NULL;
+    //ba = NULL;
 
     zri = NULL;
-    next = NULL;
 
     tmpl = NULL;
-    tmplba = NULL;
+    //tmplba = NULL;
 
     spmatrix = NULL;
     no_rooms = 0;

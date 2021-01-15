@@ -56,11 +56,10 @@ void zone_update_no_in_zone(void)
 
     register class unit_data *u;
     register class file_index_type *fi;
-    register class zone_type *tmp_zone;
 
     /* Clear ALL ->no_in_zone */
-    for (tmp_zone = zone_info.zone_list; tmp_zone; tmp_zone = tmp_zone->next)
-        for (fi = tmp_zone->fi; fi; fi = fi->next)
+    for (auto tmp_zone = zone_info.mmp.begin(); tmp_zone != zone_info.mmp.begin(); tmp_zone++)
+        for (fi = tmp_zone->second->fi; fi; fi = fi->next)
             fi->no_in_zone = 0;
 
     for (u = unit_list; u; u = u->gnext)
@@ -363,7 +362,6 @@ void zone_reset(class zone_type *zone)
 void reset_all_zones(void)
 {
     int j;
-    class zone_type *zone;
 
     void zone_event(void *, void *);
 
@@ -371,16 +369,16 @@ void reset_all_zones(void)
 
     for (j = 0; j <= 255; j++)
     {
-        for (zone = zone_info.zone_list; zone; zone = zone->next)
+        for (auto zone = zone_info.mmp.begin(); zone != zone_info.mmp.end(); zone++)
         {
             if (j == 0)
                 world_nozones++;
 
-            if (zone->access != j)
+            if (zone->second->access != j)
                 continue;
 
-            if (zone->zone_time > 0)
-                zone_event((void *)zone, (void *)0);
+            if (zone->second->zone_time > 0)
+                zone_event((void *) zone->second, (void *)0);
         }
     }
 }

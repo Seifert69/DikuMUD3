@@ -21,6 +21,7 @@
 #include "config.h"
 #include "combat.h"
 #include "skills.h"
+#include "db.h"
 
 void dilfe_fld(register class dilprg *p)
 {
@@ -519,7 +520,20 @@ void dilfe_fld(register class dilprg *p)
             {
                 v->atyp = DILA_NORM;
                 v->type = DILV_ZP;
-                v->val.ptr = ((class zone_type *)v1->val.ptr)->next;
+                v->val.ptr = NULL;
+
+                class zone_type *z = (class zone_type *) v1->val.ptr;
+
+                if (z)
+                {
+                    auto it = zone_info.mmp.find(z->name);
+                    if (it != zone_info.mmp.end())
+                    {
+                        it++;
+                        if (it != zone_info.mmp.end())
+                            v->val.ptr = it->second;
+                    }
+                }
             }
             else
                 v->type = DILV_FAIL; /* not applicable */
