@@ -106,7 +106,7 @@ void dilprg::unlink(void)
     else
     {
         int ok = FALSE;
-        for (dilprg *tp = tmpl->prg_list; tp->next; tp = tp->next)
+        for (dilprg *tp = tmpl->prg_list; tp; tp = tp->next)
         {
             if (tp->next == this)
             {
