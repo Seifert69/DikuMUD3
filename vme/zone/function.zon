@@ -6980,8 +6980,24 @@ code
       sendtext ("<br/>",self);
 
    sendtoalldil(msg, "channel@function");
+
    if ((excmdstr == "discord") and (argument != "#"))
-      dispatch("discord @" + self.name + " says, '" + argument + "'"); // Send to dispatcher.py via pipeDispatcher
+   {
+      func := argument;
+      words := getwords(func);
+      if (words.[0].[0] == "#")
+      {
+         func := getword(argument); // Skip channel
+         func := words.[0];
+      }
+      else
+         func := "";
+      //log("[0]=" +words.[0]);
+      //log("[1]=" +words.[1]);
+      //log("[1][0]=" +words.[1].[0]);
+      //log("func=" +func);
+      dispatch("discord "+func+" @" + self.name + " says, '" + argument + "'"); // Send to dispatcher.py via pipeDispatcher      
+   }
    if (nEcho == 1) {
       recieve@function(slActive, msg, self,jmode,dmode);
    }
