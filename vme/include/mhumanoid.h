@@ -1754,9 +1754,7 @@ NATURAL_DEF(WPN_FIST, ARM_CLOTHES)
    SETWEIGHT(MLVL,180,500)/* pounds       */ \
    SETHEIGHT(MLVL,177,300)/* cm            */ \
    NATURAL_DEF(WPN_FIST, ARM_PLATE) \
-   flags {UNIT_FL_NO_TELEPORT} \
-   dilcopy die_stone@akaren();   
-
+   flags {UNIT_FL_NO_TELEPORT}
 
 #define BASE_LIZARDMAN_WARRIOR(MLVL, GENDER) \
    BASE_LIZARDMAN(MLVL, GENDER)                  \
