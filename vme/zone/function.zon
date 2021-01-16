@@ -6760,6 +6760,7 @@ var
   sName : string;
   sKey : string;
   sFirst : string;
+  s : string;
   slKeys : stringlist;
   clan_rec:extraptr;
   clan_send:extraptr;
@@ -6875,10 +6876,16 @@ code
    }
    else
    {
+      //log("Recieve else(): sKey="+sKey+" sChan="+sChan+" msg="+msg);
+      s := ""; 
+      if (sChan == "discord")
+         if (msg.[0] == "#")
+            s := getword(msg) + " ";
+
       if (self.level >= talker.minv) {
-         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; " +talker.name+" says '"+msg+"'</div><br/>",self);
+         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; "+s+talker.name+" says '"+msg+"'</div><br/>",self);
       } else {
-         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; Someone says '" +msg+"'</div><br/>",self);
+         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; "+s+"Someone says '" +msg+"'</div><br/>",self);
       }
    }
 
@@ -6904,6 +6911,7 @@ var
    slActive : stringlist;
    func:string;
    msg : string;
+   s : string;
    words : stringlist;
    nChan : integer;
    nEcho : integer;
@@ -6974,30 +6982,28 @@ code
       goto start;
    }
 
-   msg := argument;
-   msg := "CHANNEL " + excmdstr + " " + msg;
+
    if (argument=="#")
       sendtext ("<br/>",self);
 
-   sendtoalldil(msg, "channel@function");
-
+   msg := argument;
    if ((excmdstr == "discord") and (argument != "#"))
    {
-      func := argument;
-      words := getwords(func);
-      if (words.[0].[0] == "#")
-      {
-         func := getword(argument); // Skip channel
-         func := words.[0];
-      }
+      if (msg.[0] == "#")
+         func := getword(msg) + " ";
       else
          func := "";
-      //log("[0]=" +words.[0]);
-      //log("[1]=" +words.[1]);
-      //log("[1][0]=" +words.[1].[0]);
+
       //log("func=" +func);
-      dispatch("discord "+func+" @" + self.name + " says, '" + argument + "'"); // Send to dispatcher.py via pipeDispatcher      
+      s := "discord "+func+"@" + self.name + " says, '" + msg + "'"; 
+      //log("msg to dispatch=" +s);
+      dispatch(s); // Send to dispatcher.py via pipeDispatcher      
    }
+
+   msg := "CHANNEL " + excmdstr + " " + func + msg;
+   //log("msg sendtoalldil=" +msg);
+   sendtoalldil(msg, "channel@function");
+
    if (nEcho == 1) {
       recieve@function(slActive, msg, self,jmode,dmode);
    }
