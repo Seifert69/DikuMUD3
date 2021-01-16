@@ -3,6 +3,7 @@ import os
 import errno
 import time
 import asyncio
+import sys
 
 
 
@@ -125,7 +126,15 @@ class MyClient(discord.Client):
         while not self.is_closed():
             grace = True
             result = []
-            channel = self.get_channel(798026631620067388) # mud channel
+            allchannels = client.get_all_channels()
+
+            mudchannel = discord.utils.get(allchannels, name='mud')
+            if mudchannel == None:
+                print('Cant find the default channel (MUD):')
+                sys.exit(1)
+
+            #await channel2.send("Quick test")
+            #sys.exit(0)
 
             while (True):
                 try:
@@ -153,6 +162,15 @@ class MyClient(discord.Client):
             if (result != []):
                 for line in result:
                     if (line):
+                        words = line.split(" ")
+                        channel = None
+                        #print('Words[1] = ', words[1])
+                        #print('Words[1][0] = ', words[1][0])
+                        if words[1][0] == "#":
+                            #print('Words[1][0] = ', words[1][0])
+                            channel = discord.utils.get(allchannels, name=words[1][1:])
+                        if channel == None:
+                            channel = mudchannel
                         print('Line = ', line)
                         await channel.send(line)
             await asyncio.sleep(1) # task runs every 1 seconds
