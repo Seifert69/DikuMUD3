@@ -558,6 +558,8 @@ struct diltemplate
     ubit32 nTriggers;	        /* Number of triggers of the DIL   */
     double fCPU;	            /* CPU usage (miliseconds)         */
 
+    class dilprg *nextdude;     // For use in DIL sendtoall() with destroyed units
+    class dilprg *prg_list;     // Replacing the global dil_list with a template local one
     struct diltemplate *next;	/* for zone templates              */
 };
 
@@ -600,8 +602,10 @@ struct dilframe
 class dilprg
 {
 public:
-    dilprg(class unit_data *owner, int bLink);
+    dilprg(class unit_data *owner, diltemplate *linktmpl);
     ~dilprg(void);
+    void link(diltemplate *tmpl);
+    void unlink(void);
 
     ubit32 flags;       // Recall, copy, etc.
     ubit16 varcrc;		// variable crc from compiler (saved)
@@ -624,8 +628,8 @@ public:
     int canfree(void);
 };
 
-extern class dilprg *dil_list;
-extern class dilprg *dil_list_nextdude;
+//extern class dilprg *dil_list;   Made local to tmpl
+//extern class dilprg *dil_list_nextdude;   Made local to tmpl
 extern int g_nDilPrg;
 extern int g_nDilVal;
 

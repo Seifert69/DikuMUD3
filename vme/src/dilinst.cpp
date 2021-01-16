@@ -2635,10 +2635,12 @@ void dilfi_sntadil(register class dilprg *p)
             if (tmpl)
             {
                 class dilprg *tp;
+                if (tmpl->nextdude)
+                    slog(LOG_ALL, 0, "INVESTIGATE: DIL sendtoall() we appear to have a nested sendtoall() with nextdude.");
 
-                for (tp = dil_list; tp; tp = dil_list_nextdude)
+                for (tp = tmpl->prg_list; tp; tp = tmpl->nextdude)
                 {
-                    dil_list_nextdude = tp->next;
+                    tmpl->nextdude = tp->next;
 
                     if (tp->fp && tp->fp->tmpl == tmpl && tp != p)
                     {
@@ -2671,6 +2673,7 @@ void dilfi_sntadil(register class dilprg *p)
                         function_activate(tp->owner, &sarg);
                     }
                 } /* for */
+                tmpl->nextdude = NULL;
                 dil_test_secure(p);
             }
         }

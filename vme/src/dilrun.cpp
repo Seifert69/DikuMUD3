@@ -118,8 +118,8 @@ extern void special_event(void *p1, void *p2);
  *
  * *********************************************************************** */
 
-class dilprg *dil_list = NULL;
-class dilprg *dil_list_nextdude = NULL;
+//class dilprg *dil_list = NULL;
+//class dilprg *dil_list_nextdude = NULL;
 
 void dil_edit_done(class descriptor_data *d)
 {
@@ -1105,12 +1105,13 @@ int run_dil(struct spec_arg *sarg)
     /* For evaluating expressions */
     prg->sarg = sarg;
 
+    /* This is not correct. If it's the last element in the list it is also NULL.
     if (prg->next == NULL)
     {
         slog(LOG_ALL, 0, "already destroyed DIL");
         prg->nest--;
         return SFR_SHARE;
-    }
+    }*/
 
 
     /* A MEGA HACK! The DIL activated spells will not be tested for
@@ -1516,7 +1517,7 @@ class dilprg *dil_copy_template(struct diltemplate *tmpl,
         }
     }
 
-    prg = new EMPLACE(dilprg) dilprg(u,true);
+    prg = new EMPLACE(dilprg) dilprg(u, tmpl);
     membug_verify(prg);
 
     prg->fp->tmpl = tmpl;

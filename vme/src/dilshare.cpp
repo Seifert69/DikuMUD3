@@ -84,17 +84,65 @@ dilval::~dilval (void)
 }
 
 
-dilprg::dilprg(class unit_data *owner, int bLink)
+void dilprg::link(diltemplate *tmpl)
+{
+    this->next = tmpl->prg_list;
+    tmpl->prg_list = this;
+}
+
+void dilprg::unlink(void)
+{
+    struct diltemplate *tmpl;
+
+    tmpl = this->frame[0].tmpl;
+    assert(tmpl);
+
+    if (this == tmpl->prg_list) // Are we inserted at the head?
+    {
+        if (tmpl->nextdude == this)
+            tmpl->nextdude = this->next;
+        tmpl->prg_list = this->next;
+    }
+    else
+    {
+        int ok = FALSE;
+        for (dilprg *tp = tmpl->prg_list; tp->next; tp = tp->next)
+        {
+            if (tp->next == this)
+            {
+                // I guess there's a wierdo scenario where two calls to sendtoalldil()
+                // by two different DILs, which both remove an item that affects netdude
+                // would cause the DIL traversing list A to suddenly traverse list B
+                // (a different template). But I guess no real harm done if we remember
+                // to check in DIL. Potentially we could do a glocal nextdude per template
+                // that would at least be a little less shaky and less likely.
+                //
+                if (tmpl->nextdude == this)
+                    tmpl->nextdude = this->next;
+                tp->next = this->next;
+                ok = TRUE;
+                break;
+            }
+        }
+
+        if (ok == FALSE)
+        {
+            slog(LOG_ALL, 0, "Not found in dil_list");
+        }
+    }
+
+    this->next = NULL;
+}
+
+dilprg::dilprg(class unit_data *owner, diltemplate *linktmpl)
 {
     g_nDilPrg++;
 
-#ifdef DMSERVER
     this->next = NULL; 
-    if (bLink)
-    {
-        this->next = dil_list;
-        dil_list = this;
-    }
+
+#ifdef DMSERVER
+    if (linktmpl)
+        this->link(linktmpl);
 #endif
 
     this->flags = 0;       // Recall, copy, etc.
@@ -137,41 +185,11 @@ dilprg::~dilprg(void)
     g_nDilPrg--;
 
 #ifdef DMSERVER
+    
     struct diltemplate *tmpl;
     struct dilframe *frm;
 
-    if (dil_list && this->next)
-    {
-        if (this == dil_list)
-        {
-            if (dil_list_nextdude == dil_list)
-                dil_list_nextdude = this->next;
-            dil_list = this->next;
-        }
-        else
-        {
-            int ok = FALSE;
-            for (class dilprg *tp = dil_list; tp->next; tp = tp->next)
-            {
-                if (tp->next == this)
-                {
-                    if (dil_list_nextdude == tp->next)
-                        dil_list_nextdude = this->next;
-                    tp->next = this->next;
-                    ok = TRUE;
-                    break;
-                }
-            }
-            this->next = NULL;
-            if (ok == FALSE)
-            {
-                slog(LOG_ALL, 0, "Not found in dil_list");
-                return;
-            }
-        }
-    }
-
-    this->next = NULL;
+    this->unlink();
 
     tmpl = this->frame[0].tmpl;
     assert(tmpl);

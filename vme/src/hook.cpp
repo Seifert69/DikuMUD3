@@ -208,7 +208,7 @@ int cHookNative::read(void *buf, int count)
         }
         else if (thisround == 0)
         {
-            slog(LOG_ALL, 0, "Read to queue: EOF on socket read (eno %d).", errno);
+            slog(LOG_ALL, 0, "Read to queue: EOF on socket read.");
             Unhook();
             return -1;
         }
