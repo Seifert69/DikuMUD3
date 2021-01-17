@@ -116,6 +116,22 @@ class MyClient(discord.Client):
         #if message.content.startswith('$hello'):
         #    await message.channel.send('da robot replies Hello!')
 
+    allChannels = {}
+    
+    def resolveChannel(self, channelname):
+        print('Resolving channel name = ', channelname)
+        if channelname in self.allChannels:
+            return self.allChannels[channelname] 
+
+        channel = discord.utils.get(self.get_all_channels(), name=channelname)
+        if channel == None:
+            if "mud" in self.allChannels:
+                channel = self.allChannels['mud']
+        else:
+            self.allChannels[channelname] = channel
+            print('Resolved new channel ', channelname)
+
+        return channel
 
     #
     # Listens to the named pipeDiscord for chat channel from MUD dispatcher
@@ -123,15 +139,21 @@ class MyClient(discord.Client):
     async def pipelistener(self):
         await self.wait_until_ready()
 
+        print('pipeLIstener running')
+
+        if self.resolveChannel('mud') == None:
+            print('Cant find the default channel (MUD).')
+            sys.exit(1)
+
+        if self.resolveChannel('mudstatus') == None:
+            print('Cant find the mudstatus channel.')
+
+        if self.resolveChannel('builder') == None:
+            print('Cant find the builder channel.')
+
         while not self.is_closed():
             grace = True
             result = []
-            allchannels = client.get_all_channels()
-
-            mudchannel = discord.utils.get(allchannels, name='mud')
-            if mudchannel == None:
-                print('Cant find the default channel (MUD):')
-                sys.exit(1)
 
             #await channel2.send("Quick test")
             #sys.exit(0)
@@ -164,13 +186,15 @@ class MyClient(discord.Client):
                     if (line):
                         words = line.split(" ")
                         channel = None
-                        #print('Words[1] = ', words[1])
-                        #print('Words[1][0] = ', words[1][0])
-                        if words[1][0] == "#":
-                            #print('Words[1][0] = ', words[1][0])
-                            channel = discord.utils.get(allchannels, name=words[1][1:])
+                        print("Line = ", line)
+                        print('Words[0][1:] = ', words[0][1:])
+                        if words[0][0] == "#":
+                            channel = self.resolveChannel(words[0][1:])
+                        else:
+                            channel = self.resolveChannel("mud")
+
                         if channel == None:
-                            channel = mudchannel
+                            print('Impossible')
                         print('Line = ', line)
                         await channel.send(line)
             await asyncio.sleep(1) # task runs every 1 seconds
