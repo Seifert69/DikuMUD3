@@ -6876,7 +6876,7 @@ code
    }
    else
    {
-      //log("Recieve else(): sKey="+sKey+" sChan="+sChan+" msg="+msg);
+      log("Recieve else(): sKey="+sKey+" sChan="+sChan+" msg="+msg);
       s := ""; 
       if (sChan == "discord")
          if (msg.[0] == "#")
@@ -6912,6 +6912,7 @@ var
    func:string;
    msg : string;
    s : string;
+   t : string;
    words : stringlist;
    nChan : integer;
    nEcho : integer;
@@ -6987,25 +6988,26 @@ code
       sendtext ("<br/>",self);
 
    msg := argument;
+   //log("argument = "+argument);
+   s := "";
    if ((excmdstr == "discord") and (argument != "#"))
    {
       if (msg.[0] == "#")
-         func := getword(msg) + " ";
-      else
-         func := "";
+         s := getword(msg) + " ";
 
-      //log("func=" +func);
-      s := "discord "+func+"@" + self.name + " says, '" + msg + "'"; 
-      //log("msg to dispatch=" +s);
-      dispatch(s); // Send to dispatcher.py via pipeDispatcher      
+      //log("msg to discord dispatch s=" +s+"  msg="+msg);
+      t := "discord "+s+"@" + self.name + " says, '" + msg + "'"; 
+      log("msg to dispatch=" +t);
+      dispatch(msg); // Send to dispatcher.py via pipeDispatcher      
    }
-
-   msg := "CHANNEL " + excmdstr + " " + func + msg;
-   //log("msg sendtoalldil=" +msg);
+   
+   log("CHANNEL "+excmdstr+ " s="+s+"msg="+msg);
+   msg := "CHANNEL " + excmdstr + " " + s + msg;
+   //log("msg to sendtoalldil(): "+msg);
    sendtoalldil(msg, "channel@function");
 
    if (nEcho == 1) {
-      recieve@function(slActive, msg, self,jmode,dmode);
+      recieve@function(slActive, msg, self, jmode, dmode);
    }
    goto start;
 
