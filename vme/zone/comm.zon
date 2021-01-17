@@ -135,7 +135,7 @@ dilend
 
 dilbegin do_ignore(arg : string);
 external
-	stringlist shell@commands(s:stringlist);
+	stringlist dilshell@commands(s:stringlist);
 var
 ex : extraptr;
 ch : unitptr;
@@ -166,7 +166,7 @@ if(length(ex.names) <= 1)
 
   lst := ex.names;
   substring(lst,"$ignore_list");
-  lst := shell@commands(lst);
+  lst := dilshell@commands(lst);
 
   sendtext("<u>You are ignoring the following people.</u><br/>",self);
   i := 0;
