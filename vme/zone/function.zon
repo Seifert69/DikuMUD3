@@ -6998,7 +6998,7 @@ code
       //log("msg to discord dispatch s=" +s+"  msg="+msg);
       t := "discord "+s+"@" + self.name + " says, '" + msg + "'"; 
       log("msg to dispatch=" +t);
-      dispatch(msg); // Send to dispatcher.py via pipeDispatcher      
+      dispatch(t); // Send to dispatcher.py via pipeDispatcher      
    }
    
    log("CHANNEL "+excmdstr+ " s="+s+"msg="+msg);
