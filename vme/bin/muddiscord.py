@@ -187,9 +187,9 @@ class MyClient(discord.Client):
                         words = line.split(" ")
                         channel = None
                         print("Line = ", line)
-                        print('Words[0][1:] = ', words[0][1:])
-                        if words[0][0] == "#":
-                            channel = self.resolveChannel(words[0][1:])
+                        print('words[1][1:] = ', words[1][1:])
+                        if words[1][0] == "#":
+                            channel = self.resolveChannel(words[1][1:])
                         else:
                             channel = self.resolveChannel("mud")
 
