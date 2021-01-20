@@ -409,7 +409,7 @@ code
    }
 
    if (self.minv < IMMORTAL_LEVEL)
-      dispatch("discord @" + self.name + " has entered Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
+      dispatch("discord #mudstatus @" + self.name + " has entered Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
 
    return;
 }
