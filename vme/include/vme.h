@@ -1170,7 +1170,8 @@ SFUN_ARREST_CHECK
 
 #define ID_WEAPON_DEFENSE        87
 #define ID_SPELL_DEFENSE         88
-// further defines in this number range are found in values.h. Why? No idea. 
+#define ID_UNHOLY_BLESSING		 89
+
 #define ID_TOP_IDX              4096
 
 #define ID_TRANSFER_MAG        (-ID_RAISE_MAG)
