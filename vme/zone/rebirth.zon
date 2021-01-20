@@ -4022,6 +4022,8 @@ Removed by Eirinn - this was never supposed to be in morph code, fool.
 
    if (isaff(self, ID_BLESS))
      subaff(self, ID_BLESS);
+   if (isaff(self, ID_UNHOLY_BLESSING))
+     subaff(self, ID_UNHOLY_BLESSING);
    if (isaff(self, ID_RAGE))
      subaff(self, ID_RAGE);
    if (isaff(self, ID_BERSERK))
@@ -5136,6 +5138,8 @@ code
    :loop:
    if (isaff(self, ID_BLESS))
      subaff(self, ID_BLESS);
+   else if (isaff(self, ID_UNHOLY_BLESSING))
+     subaff(self, ID_UNHOLY_BLESSING);
    else if (isaff(self, ID_NBLESS))
      subaff(self, ID_NBLESS);
    else if (isaff(self, ID_RAGE))
