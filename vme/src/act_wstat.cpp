@@ -384,15 +384,17 @@ static void stat_dil(class unit_data *ch, class zone_type *zone)
 {
     char buf[MAX_STRING_LENGTH];
     std::string mystr;
-    struct diltemplate *tmpl;
+    // struct diltemplate *tmpl;
 
     sprintf(buf, "<u>List of DIL in zone %s (CPU secs, name, #activations, #instructions):</u><br/>", zone->name);
     send_to_char(buf, ch);
 
     mystr = "<div class='twocol'>";
-    for (*buf = 0, tmpl = zone->tmpl; tmpl; tmpl = tmpl->next)
+    *buf = 0;
+
+    for (auto tmpl = zone->mmp_tmpl.begin(); tmpl != zone->mmp_tmpl.end(); tmpl++)
     {
-        sprintf(buf, "%.2fs %s [%d t / %d i]<br/>", tmpl->fCPU/1000.0, tmpl->prgname, tmpl->nTriggers, tmpl->nInstructions);
+        sprintf(buf, "%.2fs %s [%d t / %d i]<br/>", tmpl->second->fCPU/1000.0, tmpl->second->prgname, tmpl->second->nTriggers, tmpl->second->nInstructions);
         mystr.append(buf);
     }
 
@@ -404,7 +406,7 @@ static void stat_global_dil(class unit_data *ch, ubit32 nCount)
 {
     char buf[MAX_STRING_LENGTH];
     std::string mystr;
-    struct diltemplate *tmpl;
+    // struct diltemplate *tmpl;
 
     sprintf(buf, "<u>List of global DIL in all zones running for more than %dms:</u><br/>", nCount);
     send_to_char(buf, ch);
@@ -413,10 +415,11 @@ static void stat_global_dil(class unit_data *ch, ubit32 nCount)
 
     for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.end(); z++)
     {
-        for (*buf = 0, tmpl = z->second->tmpl; tmpl; tmpl = tmpl->next)
+        *buf = 0;
+        for (auto tmpl = z->second->mmp_tmpl.begin(); tmpl != z->second->mmp_tmpl.end(); tmpl++)
         {
-            if (tmpl->fCPU >= nCount){
-                sprintf(buf, "%.2fs %s@%s [%d t / %d i]<br/>", tmpl->fCPU/1000.0, tmpl->prgname, tmpl->zone->name, tmpl->nTriggers, tmpl->nInstructions);
+            if (tmpl->second->fCPU >= nCount){
+                sprintf(buf, "%.2fs %s@%s [%d t / %d i]<br/>", tmpl->second->fCPU/1000.0, tmpl->second->prgname, tmpl->second->zone->name, tmpl->second->nTriggers, tmpl->second->nInstructions);
                 mystr.append(buf);
             }
         }        
