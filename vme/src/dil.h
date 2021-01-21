@@ -266,7 +266,7 @@ struct dilargstype
 #define DILE_RHEAD     191
 #define DILE_OHEAD     192
 #define DILE_PHEAD     193
-#define DILE_FNDU2     194
+#define DILE_FNDU2     194  // Bizarre - missing from diltok I think
 #define DILE_GFOL      195
 #define DILE_SACT	   196	/* sact (#,#,#,#,#,#) */
 #define DILE_GINT	   197	/* getinteger(unit, idx) */

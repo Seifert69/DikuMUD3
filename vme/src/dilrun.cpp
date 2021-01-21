@@ -712,14 +712,14 @@ struct dil_func_type dilfe_func[DILI_MAX + 1] = {
     {dilfe_atoi},
     {dilfe_itoa},
     {dilfe_rnd},
-    {dilfe_fndu},
-    {dilfe_fndr}, /* 25 */
+    {dilfe_fndu},  // findunit
+    {dilfe_fndr},  // 25 findroom
     {dilfe_load},
     {dilfe_iss},
     {dilfe_getw},
     {dilfe_isa},
     {dilfe_cmds}, /* 30 */
-    {dilfe_fnds},
+    {dilfe_fnds}, // findsymbolic
 
     {dilfe_acti},
     {dilfe_argm},
@@ -817,7 +817,7 @@ struct dil_func_type dilfe_func[DILI_MAX + 1] = {
     {dilfi_lcri},
     {dilfe_fits},
     {dilfe_cary},
-    {dilfe_fnds2},
+    {dilfe_fnds2}, // findsymbolic(#,#)
     {dilfe_path}, /* 125  */
     {dilfe_mons},
     {dilfe_splx},
