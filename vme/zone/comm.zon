@@ -55,7 +55,7 @@ code
          {
             buff:=buff+" * Guide *";
          }
-         buff := buff + ", ";
+         buff := buff + "&&";
 
          final := final + buff;
       }
@@ -91,7 +91,7 @@ code
       {
         log("Dispatcher for discord got who command " + arg);
         w := whostring();
-        dispatch("discord " + w); // Send to dispatcher.py via pipeDispatcher
+        dispatch("discord who " + w); // Send to dispatcher.py via pipeDispatcher
       }
       else
       {

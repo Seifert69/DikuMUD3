@@ -19,6 +19,7 @@
 #include "fight.h"
 #include "color.h"
 #include "destruct.h"
+#include "dil.h"
 using namespace std;
 #include <vector>
 #include <map>
@@ -118,17 +119,11 @@ public:
     class unit_data *objects; // unit pointer to the base objects, used in vmc really
     class unit_data *npcs;    // unit pointer to the base npcs, used in vmc really
 
-    // class file_index_type *fi;  Replaced by mmp_fi, /* Pointer to list of file-index's  */
-
     std::map< const char * , file_index_type *, cmp_str > mmp_fi;
-    //struct bin_search_type *ba;  Pointer to binarray of type      */
 
     struct zone_reset_cmd *zri; /* List of Zone reset commands      */
-    // class zone_type *next;     replaced by map_fi
 
-    struct diltemplate *tmpl;       /* DIL templates in zone            */
     std::map< const char * , diltemplate *, cmp_str > mmp_tmpl;
-    //struct bin_search_type *tmplba; /* Pointer to binarray of type      */
 
     ubit8 **spmatrix; /* Shortest Path Matrix             */
 

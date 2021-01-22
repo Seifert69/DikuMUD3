@@ -154,44 +154,43 @@ void generate_bin_arrays(void)
 /* Resolves DIL templates loaded boottime */
 void resolve_templates(void)
 {
-   struct diltemplate *tmpl;
    int i, j, valid;
 
    /* all zones */
    for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.end(); z++)
    {
       /* all templates in zone */
-      for (tmpl = z->second->tmpl; tmpl; tmpl = tmpl->next)
+      for (auto tmpl = z->second->mmp_tmpl.begin(); tmpl != z->second->mmp_tmpl.end(); tmpl++)
       {
          /* all external references */
-         for (i = 0; i < tmpl->xrefcount; i++)
+         for (i = 0; i < tmpl->second->xrefcount; i++)
          {
-            tmpl->extprg[i] = find_dil_template(tmpl->xrefs[i].name);
+            tmpl->second->extprg[i] = find_dil_template(tmpl->second->xrefs[i].name);
             valid = 1;
 
-            if (tmpl->extprg[i])
+            if (tmpl->second->extprg[i])
             {
                /* check argument count and types */
-               if ((tmpl->xrefs[i].rtnt != tmpl->extprg[i]->rtnt) ||
-                   (tmpl->xrefs[i].argc != tmpl->extprg[i]->argc))
+               if ((tmpl->second->xrefs[i].rtnt != tmpl->second->extprg[i]->rtnt) ||
+                   (tmpl->second->xrefs[i].argc != tmpl->second->extprg[i]->argc))
                   valid = 0;
-               for (j = 0; j < tmpl->xrefs[i].argc; j++)
-                  if (tmpl->xrefs[i].argt[j] != tmpl->extprg[i]->argt[j])
+               for (j = 0; j < tmpl->second->xrefs[i].argc; j++)
+                  if (tmpl->second->xrefs[i].argt[j] != tmpl->second->extprg[i]->argt[j])
                      valid = 0;
             }
             else
             {
                /* ERROR MESSAGE HERE */
                szonelog(z->second, "Cannot resolve external reference '%s'",
-                        tmpl->xrefs[i].name);
+                        tmpl->second->xrefs[i].name);
             }
             /* Typecheck error ! */
             if (!valid)
             {
-               tmpl->extprg[i] = NULL;
+               tmpl->second->extprg[i] = NULL;
                /* ERROR MESSAGE HERE */
                szonelog(z->second, "Error typechecking reference to '%s'",
-                        tmpl->xrefs[i].name);
+                        tmpl->second->xrefs[i].name);
             }
          }
       }
@@ -224,8 +223,6 @@ struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
 
       if (tmpl)
       {
-         struct diltemplate *tfi2, *tfi1;
-
          tmpl->zone = zone;
 
          split_fi_ref(tmpl->prgname, zBuf, nBuf);
@@ -236,28 +233,6 @@ struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
          zone->mmp_tmpl.insert(make_pair(tmpl->prgname, tmpl));
 
          /* Link into list of indexes */
-
-         if (tmpllist == NULL)
-            tmpllist = tmpl; /* If list is empty */
-         else
-         {
-            for (tfi2 = NULL, tfi1 = tmpllist; tfi1; tfi1 = tfi1->next)
-            {
-               if (strcmp(tfi1->prgname, tmpl->prgname) > 0)
-                  break;
-               tfi2 = tfi1;
-            }
-            if (tfi2 == NULL)
-            {
-               tmpl->next = tmpllist;
-               tmpllist = tmpl;
-            }
-            else
-            {
-               tmpl->next = tfi1;
-               tfi2->next = tmpl;
-            }
-         }
 
          zone->no_tmpl++;
       }
@@ -508,7 +483,7 @@ void generate_zone_indexes(void)
 
       /* read templates */
       z->no_tmpl = 0;
-      z->tmpl = generate_templates(f, z);
+      generate_templates(f, z);
 
       z->no_of_fi = 0;
       z->zri = 0;

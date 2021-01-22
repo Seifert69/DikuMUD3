@@ -409,7 +409,14 @@ void dilfi_foe(class dilprg *p)
 
             for (i = 0; i < unit_vector.top; i++)
                 dil_add_secure(p, UVI(i), NULL);
-            dil_add_secure(p, p->sarg->owner, NULL);
+            
+            // This statement is incorrect in Yamato when a room uses foreach() this
+            // will cause the room to get added as one of the items to be looped
+            // when it asked only for PCs
+            // dil_add_secure(p, p->sarg->owner, NULL);
+
+            if (IS_SET(UNIT_TYPE(p->sarg->owner), v1->val.num))
+                dil_add_secure(p, p->sarg->owner, NULL);
         }
     }
     delete v1;

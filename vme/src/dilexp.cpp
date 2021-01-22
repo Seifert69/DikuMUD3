@@ -4412,6 +4412,8 @@ void dilfe_rnd(register class dilprg *p)
     delete v2;
 }
 
+
+// findroom(#)
 void dilfe_fndr(register class dilprg *p)
 {
     dilval *v = new dilval;
@@ -4451,6 +4453,8 @@ void dilfe_fndr(register class dilprg *p)
     delete v1;
 }
 
+
+// findsymbolic(#,#,#)
 void dilfe_fnds2(register class dilprg *p)
 {
     dilval *v = new dilval;
@@ -4533,6 +4537,7 @@ void dilfe_fnds2(register class dilprg *p)
     delete v3;
 }
 
+// findsymbolic(#)
 void dilfe_fnds(register class dilprg *p)
 {
     dilval *v = new dilval;
@@ -5832,6 +5837,8 @@ void dilfe_fndu(register class dilprg *p)
     delete v4;
 }
 
+
+// findrndunit(#,#,#)
 void dilfe_fndru(register class dilprg *p)
 {
     dilval *v = new dilval;

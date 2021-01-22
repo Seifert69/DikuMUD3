@@ -155,6 +155,10 @@ static inline int findcheck(class unit_data *u, int pset, int tflags)
     return 0;
 }
 
+
+// 2020. This really needs some rewriting... Plus the number(1,count) looks
+// like it will always return the first unit...
+// 
 class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
 {
     register class unit_data *u, *selected = NULL;
