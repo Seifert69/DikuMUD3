@@ -6876,7 +6876,7 @@ code
    }
    else
    {
-      log("Recieve else(): sKey="+sKey+" sChan="+sChan+" msg="+msg);
+      //log("Recieve else(): sKey="+sKey+" sChan="+sChan+" msg="+msg);
       s := ""; 
       if (sChan == "discord")
          if (msg.[0] == "#")
@@ -7001,7 +7001,7 @@ code
       dispatch(t); // Send to dispatcher.py via pipeDispatcher      
    }
    
-   log("CHANNEL "+excmdstr+ " s="+s+"msg="+msg);
+   //log("CHANNEL "+excmdstr+ " s="+s+"msg="+msg);
    msg := "CHANNEL " + excmdstr + " " + s + msg;
    //log("msg to sendtoalldil(): "+msg);
    sendtoalldil(msg, "channel@function");

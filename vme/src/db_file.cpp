@@ -244,7 +244,7 @@ struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     tmpl->extprg = NULL;
 #endif
     tmpl->prg_list = NULL;
-    tmpl->next = NULL;
+
     return tmpl;
 }
 
@@ -404,7 +404,6 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version,
         tmpl->fCPU = 0.0;
         tmpl->prgname = str_dup(name);
         tmpl->zone = NULL;
-        tmpl->next = NULL;
         tmpl->prg_list = NULL;
         /* Prevent all execution */
         SET_BIT(prg->flags, DILFL_EXECUTING);

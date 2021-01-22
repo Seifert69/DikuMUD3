@@ -183,7 +183,7 @@ class MyClient(discord.Client):
 
             if (result != []):
                 for line in result:
-                    if (line):
+                    if (line) and (line.strip()):
                         words = line.split(" ")
                         channel = None
                         print("Line = ", line)

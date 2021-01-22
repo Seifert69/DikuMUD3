@@ -560,7 +560,7 @@ struct diltemplate
 
     class dilprg *nextdude;     // For use in DIL sendtoall() with destroyed units
     class dilprg *prg_list;     // Replacing the global dil_list with a template local one
-    struct diltemplate *next;	/* for zone templates              */
+    struct diltemplate *vmcnext;	// Only for VMC
 };
 
 struct dilintr
