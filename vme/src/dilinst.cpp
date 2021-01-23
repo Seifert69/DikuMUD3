@@ -121,12 +121,12 @@ void dilfi_edit(register class dilprg *p)
     {
         if (!IS_PC((class unit_data *)v1->val.ptr))
             dil_typeerr(p, "not a pc unit");
+        else if (!CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr))
+            dil_typeerr(p, "PC has no descriptor in edit()");
         else
         {
-            CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr)->postedit =
-                dil_edit_done;
-            CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr)->editing =
-                p->owner;
+            CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr)->postedit = dil_edit_done;
+            CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr)->editing = p->owner;
             CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr)->editref = NULL;
 
             set_descriptor_fptr(CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr),
