@@ -178,7 +178,7 @@ int log_object(struct spec_arg *sarg)
       CREATE(ip, ubit8, 1);
       *ip = 0;
 
-      OBJ_VALUE(sarg->owner, 0) = 'b';
+      OBJ_VALUE(sarg->owner, 0) = 'a';
       sarg->fptr->data = ip;
    }
    else
