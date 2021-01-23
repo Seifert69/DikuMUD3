@@ -8,7 +8,7 @@
 
 LOG_DIR=../log/
 CYCLIC=./cyclic
-SCRIPT=./$0
+SCRIPT=$0
 MOTHERPORT=4999
 TIMENOW=`date +%Y%m%d-%H%M%S`
 LOG_FILE=$LOG_DIR/$1-$TIMENOW.log

@@ -8,12 +8,13 @@
 #
 source runenv.sh dispatcher
 
-echo "[" $$ "]" `date` $0 "starting" >> $LOG_FILE
+echo "[" $$ "]" `date` $SCRIPT "starting" >> $LOG_FILE
 source ./pythonEnv/bin/activate
 python3 -u ./dispatcher.py >> $LOG_FILE
 deactivate
+echo "[" $$ "]" `date` $SCRIPT "terminated" >> $LOG_FILE
 sleep 1
-exec $1 $SCRIPT
+exec $SCRIPT $1
 
 # Don't forget in vme/bin/ to
 #
