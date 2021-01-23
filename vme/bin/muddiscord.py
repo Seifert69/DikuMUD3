@@ -147,9 +147,21 @@ class MyClient(discord.Client):
 
         if self.resolveChannel('mudstatus') == None:
             print('Cant find the mudstatus channel.')
+            sys.exit(1)
 
         if self.resolveChannel('builder') == None:
             print('Cant find the builder channel.')
+
+        print("Getting my whomsg to pin and alter")
+        whomsg = await self.resolveChannel('mudstatus').fetch_message(802048971446157332)
+        if whomsg == None:
+            print('Cant find the mudstatus channel message with ID 802048971446157332. Make one and change the ID')
+            sys.exit(1)
+
+        print("Got whomsg and ready to begin")
+        # WORKS whomsg = discord.utils.get(await self.resolveChannel('mudstatus').history(limit=100).flatten())
+        # print("Message has this content: ", whomsg.content)
+        # WORKS await whomsg.edit(content="I just modified this message content")
 
         while not self.is_closed():
             grace = True
@@ -187,16 +199,29 @@ class MyClient(discord.Client):
                         words = line.split(" ")
                         channel = None
                         print("Line = ", line)
-                        print('words[1][1:] = ', words[1][1:])
-                        if words[1][0] == "#":
-                            channel = self.resolveChannel(words[1][1:])
+
+                        if words[2][0] == "#":
+                            print('words[2][1:] = ', words[2][1:])
+                            channel = self.resolveChannel(words[2][1:])
                         else:
                             channel = self.resolveChannel("mud")
 
                         if channel == None:
-                            print('Impossible')
-                        print('Line = ', line)
-                        await channel.send(line)
+                            print('Impossible channel')
+                            continue
+
+                        if words[1] == "who":
+                            line = line[14:]  # remove "<discord> who " 
+                            line = line.replace('&&', '\n')
+                            print('WHO update:\n', line)
+                            await whomsg.edit(content=line)
+                        elif words[1] == "msg":
+                            print('Msg Line = ', line)
+                            await channel.send(line)
+                        else:
+                            print("Unknown type ", words[1])
+                            continue
+
             await asyncio.sleep(1) # task runs every 1 seconds
 
         print('Pipe listener end')

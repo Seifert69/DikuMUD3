@@ -6996,7 +6996,7 @@ code
          s := getword(msg) + " ";
 
       //log("msg to discord dispatch s=" +s+"  msg="+msg);
-      t := "discord "+s+"@" + self.name + " says, '" + msg + "'"; 
+      t := "discord msg "+s+"@" + self.name + " says, '" + msg + "'"; 
       log("msg to dispatch=" +t);
       dispatch(t); // Send to dispatcher.py via pipeDispatcher      
    }

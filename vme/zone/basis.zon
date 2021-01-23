@@ -384,8 +384,11 @@ dilend
 
 
 dilbegin informer();
+external
+   string whostring@comm();
 var
    tgt : unitptr;
+   w : string;
 code
 {
    heartbeat := PULSE_SEC;
@@ -409,7 +412,12 @@ code
    }
 
    if (self.minv < IMMORTAL_LEVEL)
-      dispatch("discord #mudstatus @" + self.name + " has entered Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
+   {
+      // dispatch("discord ent #mudstatus @" + self.name + " has entered Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
+
+      w := whostring@comm();
+      dispatch("discord who " + w); // Send to dispatcher.py via pipeDispatcher
+   }
 
    return;
 }
@@ -7419,6 +7427,33 @@ extra {}
 You notice the word 'Papi' inscribed with tiny letters on the rim of its shield."
 weight 0
 M_ZOMBIE_SMALL(1,SEX_NEUTRAL)
+
+dilbegin testzonenpcs();
+var
+   z : zoneptr;
+   u : unitptr;
+code
+{
+   z := zhead();
+
+   while (z)
+   {
+      log(z.name + " " + z.title);
+
+      u := z.npcs;
+
+      if (u)
+      {
+         log("got an NPC");
+         log("Its name is: " + u.symname);
+      }
+
+      z := z.next;
+   }
+   quit;
+}
+dilend
+
 
 dilbegin aware unique mytestsymname();
 external
