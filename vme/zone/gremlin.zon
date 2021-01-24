@@ -101,7 +101,7 @@ code
 :start:
 	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (BOLDIN_ONGOING in activator.quests) and (BOLDIN_ROGUE in activator.quests));
 
-	if(activator.level >= 20)
+	if(activator.level >= 40)
 	{
 		goto start;
 		// send them away, perhaps with a token reward?
@@ -284,7 +284,7 @@ code
 	heartbeat:= PULSE_SEC*3;
 
 :start:
-	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(BOLDIN_COMPLETE in activator.quests)) and (activator.level <= 10));
+	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(BOLDIN_COMPLETE in activator.quests)) and (activator.level <= 40));
 
 	pc := activator;
 	secure(pc, lostpc);
@@ -648,7 +648,7 @@ code
 	heartbeat:= PULSE_SEC*4;
 
 :start:
-	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(EXPLORE_COMPLETE in activator.quests)) and (activator.level <= 20) and (BOLDIN_HANDOFF in activator.quests));
+	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(EXPLORE_COMPLETE in activator.quests)) and (activator.level <= 40) and (BOLDIN_HANDOFF in activator.quests));
 
 	pc := activator;
 	secure(pc, lostpc);

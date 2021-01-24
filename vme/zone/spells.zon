@@ -127,6 +127,8 @@ interrupt (SFB_MSG , "inc displace counter" == argument,inc_count);
    count:=count+1;
    if (isaff(tgt, ID_BLESS))
      subaff(tgt, ID_BLESS);
+   else if (isaff(tgt, ID_UNHOLY_BLESSING))
+     subaff(tgt, ID_UNHOLY_BLESSING);
    else if (isaff(tgt, ID_CONDEMN))
      subaff(tgt, ID_CONDEMN);
    else if (isaff(tgt, ID_BERSERK))
@@ -7137,6 +7139,8 @@ interrupt (SFB_MSG , "inc despel counter" == argument,inc_count);
    count:=count+1;
    if (isaff(tgt, ID_BLESS))
      subaff(tgt, ID_BLESS);
+   else if (isaff(tgt, ID_UNHOLY_BLESSING))
+     subaff(tgt, ID_UNHOLY_BLESSING);
    else if (isaff(tgt, ID_DETECT_ALIGN))
      subaff(tgt, ID_DETECT_ALIGN);
    else if (isaff(tgt, ID_RAGE))
@@ -8168,14 +8172,14 @@ code
    /*
       Spell Bless:
       This spell raises the gods good attention to a character.
-      With divine intervention, the characters DIV, MAG, DEX and STR
+      With divine intervention, the characters DIV, BRA, DEX and STR
       is raised temporarily.
       */
 
    if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
      hm := -1;
 
-   if ((hm < 0) or isaff(tgt, ID_BLESS))
+   if ((hm < 0) or isaff(tgt, ID_BLESS) or isaff(tgt, ID_UNHOLY_BLESSING))
    {
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
@@ -8211,6 +8215,55 @@ code
 }
 dilend
 
+dilbegin ubless(medi:unitptr, tgt : unitptr, arg : string,
+	       hm : integer, effect : string);
+code
+{
+   /*
+      Spell Unholy Blessing:
+      This spell raises the gods dark attention to a character.
+      With divine intervention, the characters DIV, BRA, DEX and STR
+      is raised temporarily.
+      */
+
+   if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
+     hm := -1;
+
+   if ((hm < 0) or isaff(tgt, ID_BLESS) or isaff(tgt, ID_UNHOLY_BLESSING))
+   {
+      act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   hm := 1 + hm / 10;
+   if (hm > 10) hm := 10;
+
+   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+	  ABIL_DIV, hm, 0, TIF_BLESS_ON, TIF_BLESS_TICK, TIF_BLESS_OFF,
+	  APF_ABILITY);
+
+   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+	  ABIL_DEX, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
+	  APF_ABILITY);
+
+   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+	  ABIL_STR, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
+	  APF_ABILITY);
+
+   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+	  ABIL_BRA, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
+	  APF_ABILITY);
+
+   /* act("$1n lay hands on $3n and chants softly.",
+      A_SOMEONE, sa->caster, 0, sa->target, TO_NOTVICT);
+      act("You lay hands on $3n and chant softly.",
+      A_SOMEONE, sa->caster, 0, sa->target, TO_CHAR);
+      act("$1n lay hands on you and chant softly.",
+      A_SOMEONE, sa->caster, 0, sa->target, TO_VICT); */
+
+   quit;
+}
+dilend
 
 dilbegin curse(medi:unitptr, tgt : unitptr, arg : string,
 	       hm : integer, effect : string);
