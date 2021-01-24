@@ -2,7 +2,7 @@
 filename    bounty
 password    release
 changedby   Sender
-EmailAdd
+EmailAdd	chris.spanton@gmail.com
 request     compile
 version     1
 END HEADER*/
@@ -15,15 +15,32 @@ END HEADER*/
 %zone bounty
 lifespan 10
 reset RESET_ANYHOW
-title ""
+title "Bounty Hunters Guild@Mainland"
 creators {"sender"}
 
 notes
-""
+"This is the guild of the bounty hunters. In version 1.0 we introduce some 
+early implementations of gamification features taken from modern gaming. 
+There is significant opportunity in the future to expand on this. 
+
+Expanding rewards, new types of bounties, bonuses, loot boxes (game money 
+not IRL money), adding a cost to bounties, teaching
+skills / spells to aid in bounty hunting, etc are all on the table.
+
+Leaderboards are also a significant part of the process, that is not yet 
+implemented as of v1.0. There is some code in the zone to implement that, but
+it seemed a messy and cumbersome implementation. I'll look to leverage existing 
+competition zone infrastructure for future versions.
+
+"
 
 
 help
-""
+"The Guild of the Bounty Hunters is an ancient institution that has survived 
+and indeed thrived on the outskirts of Midgaard. Wealthy patrons who need 
+something handled, a back-door to men of law finding their mark, and any 
+number of other needs have been brought before the bounty hunters."
+
 
 /* ================================================================== */
 /*                               DIL                                  */
