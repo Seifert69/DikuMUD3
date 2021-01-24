@@ -734,6 +734,13 @@ code
    crp := load("corpse@death");
 
    substring(crp.names, crp.names.[0]);
+   
+   if(self.symname == "familiar2@g_q")
+   {
+		act("The familiar's magic unwinds and it fades from this plane of existance.",
+			A_ALWAYS,self,null,null,TO_ALL);
+		return;
+   }
 
    if (self.type==UNIT_ST_NPC)
       addstring (crp.names,"corpse of "+self.title);

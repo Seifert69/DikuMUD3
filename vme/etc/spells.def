@@ -903,6 +903,42 @@ profession priest       = +4
 
 
 /* - - - - Yet another definition of a spell - - - - */
+index           = SPL_UBLESS
+name            = bless
+acttype         = A_SOMEONE
+tochar          = You lay hands on $3n and pray for an unholy blessing.
+tovict          = $1n lays hands on you and prays for an unholy blessing.
+torest          = $1n touches $3n and begins to pray.
+toself          = You beseech the dark gods for a blessing.
+toselfroom      = $1n implores the dark gods for a blessing.
+realm           = ABIL_DIV
+sphere          = SPL_DIVINE
+func            = ubless@spells
+minpos          = POSITION_STANDING
+mana            = 20
+turns           = PULSE_SEC
+targets         = FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF
+mediums         = MEDIA_SCROLL + MEDIA_SPELL + MEDIA_STAFF
+check           = SPLCST_CHECK
+offensive       = FALSE
+fumble          = 0
+race human      = 0
+race elf        = 0
+race dwarf      = 0
+race halfling   = -1
+race gnome      = -1
+race half-orc   = 0
+race half-ogre  = 0
+race half-elf   = 0
+race brownie    = 0
+race groll      = -1
+race darkelf    = 1
+restrict divine         = 20
+profession knight       = +0
+profession necromancer  = +4
+
+
+/* - - - - Yet another definition of a spell - - - - */
 
 index           = SPL_CURSE
 name            = curse

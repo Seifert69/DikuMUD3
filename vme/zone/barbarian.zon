@@ -944,7 +944,8 @@ extra {"$improved identify"}
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HANDS}
 MATERIAL_METAL("This item is made of a strange alloy.")
 STR_TRANSFER(+2)
-HIT_TRANSFER(+3)
+HIT_TRANSFER(+2)
+BRA_TRANSFER(-1)
 dilcopy guild_restrict@function ({GUILD_BARBARIAN},0,0,"");
 
 dilbegin recall charge_gauntlet();

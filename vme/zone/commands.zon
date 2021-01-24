@@ -32,8 +32,12 @@ help
 dilbegin do_change(arg : string);
 code
 {
-   sendtext("do_change() DIL. arg = " + arg + "<br/>", self);
-   quit;
+	if (self.extra.["$whostatus"] != null)
+		subextra(self.extra,"$whostatus");
+	addextra(self.extra,{"$whostatus"},"- "+arg);
+	act ("Your Who Status has been set to: "+arg,A_SOMEONE,self,null,null,TO_CHAR);	
+	sendtext("Your Who Status has been set to: "+arg+"<br/>", self);
+	quit;
 }
 dilend
 
@@ -6804,6 +6808,8 @@ while (item!=null){
 :loop:
    if (isaff(self, ID_BLESS))
      subaff(self, ID_BLESS);
+   else   if (isaff(self, ID_UNHOLY_BLESSING))
+     subaff(self, ID_UNHOLY_BLESSING);
    else   if (isaff(self, ID_NBLESS))
      subaff(self, ID_NBLESS);
    else   if (isaff(self, ID_RAGE))
@@ -7975,8 +7981,7 @@ code
 	act ("Your Who Status has been set to: "+arg,A_SOMEONE,self,null,null,TO_CHAR);	
 	quit;
 }
-dilend /* do_delete */
-
+dilend
 dilbegin dig(arg : string);
 var
 u : unitptr;
@@ -12369,6 +12374,8 @@ code
 {
    if (isaff(self, ID_BLESS))
  addstring(spl_aff,"Bless<br/>");
+   if (isaff(self, ID_UNHOLY_BLESSING))
+ addstring(spl_aff,"Unholy Blessing<br/>");
    if (isaff(self, ID_BERSERK))
  addstring(spl_aff,"Berserk<br/>");
    if (isaff(self, ID_RAGE))

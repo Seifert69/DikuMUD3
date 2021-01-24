@@ -70,6 +70,8 @@ if (tgt.level > 20)
 :loop:
    if (isaff(tgt, ID_BLESS))
      subaff(tgt, ID_BLESS);
+   else if (isaff(tgt, ID_UNHOLY_BLESSING))
+     subaff(tgt, ID_UNHOLY_BLESSING);
    else if (isaff(tgt, ID_NBLESS))
      subaff(tgt, ID_NBLESS);
    else if (isaff(tgt, ID_BERSERK))
