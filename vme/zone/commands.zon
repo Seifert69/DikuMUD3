@@ -1011,6 +1011,8 @@ code{
 
 /* dil do_prompt */
 dilbegin do_prompt(arg : string);
+external
+	string do_color@function(arg : string);
 var
 
    prom     :  string;
@@ -1050,8 +1052,10 @@ code
    else if (arg=="blank")
       self.prompt:= "";
    else 
+   {
+	  arg := do_color@function(arg);
       self.prompt := arg;
-
+   }
    i:=dildestroy("send_prompt@update",self);
    dilcopy("send_prompt@update",self);
    quit;
