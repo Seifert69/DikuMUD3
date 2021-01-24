@@ -126,20 +126,24 @@ void add_crime(class unit_data *criminal, class unit_data *victim, int type)
    crime_no = new_crime_serial_no();
 
    tmpl = find_dil_template("add_crime@justice");
-   prg = dil_copy_template(tmpl, criminal, NULL);
 
-   if (prg)
+   if (tmpl)
    {
-      prg->waitcmd = WAITCMD_MAXINST - 1;
+      prg = dil_copy_template(tmpl, criminal, NULL);
 
-      prg->fp->vars[0].val.unitptr = criminal;
-      prg->fp->vars[1].val.unitptr = victim;
-      prg->fp->vars[2].val.integer = type;
-      prg->fp->vars[3].val.integer = crime_no;
-      prg->fp->vars[4].val.integer = CRIME_LIFE + 2;
-      dil_add_secure(prg, criminal, prg->fp->tmpl->core);
-      dil_add_secure(prg, victim, prg->fp->tmpl->core);
-      dil_activate(prg);
+      if (prg)
+      {
+         prg->waitcmd = WAITCMD_MAXINST - 1;
+
+         prg->fp->vars[0].val.unitptr = criminal;
+         prg->fp->vars[1].val.unitptr = victim;
+         prg->fp->vars[2].val.integer = type;
+         prg->fp->vars[3].val.integer = crime_no;
+         prg->fp->vars[4].val.integer = CRIME_LIFE + 2;
+         dil_add_secure(prg, criminal, prg->fp->tmpl->core);
+         dil_add_secure(prg, victim, prg->fp->tmpl->core);
+         dil_activate(prg);
+      }         
    }
 }
 
