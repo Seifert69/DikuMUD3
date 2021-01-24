@@ -57,7 +57,7 @@ void zone_update_no_in_zone(void)
     register class unit_data *u;
 
     /* Clear ALL ->no_in_zone */
-    for (auto tmp_zone = zone_info.mmp.begin(); tmp_zone != zone_info.mmp.begin(); tmp_zone++)
+    for (auto tmp_zone = zone_info.mmp.begin(); tmp_zone != zone_info.mmp.end(); tmp_zone++)
         for (auto fi = tmp_zone->second->mmp_fi.begin(); fi != tmp_zone->second->mmp_fi.end(); fi++)
             fi->second->no_in_zone = 0;
 
