@@ -62,11 +62,16 @@ code
 		A_ALWAYS,pc,null,self,TO_CHAR);
 		goto start_sign;
 	}
-	if(pc.name in nlist)
+	i := 0;
+	while (i < length(nlist))
 	{
-		act ("<div class='clan'>You have already signed this pillar!'</div>",
-		A_ALWAYS,pc,null,self,TO_CHAR);
-		goto start_sign;
+		if(pc.name in nlist.[i])
+		{
+			act ("<div class='clan'>You have already signed this pillar!'</div>",
+			A_ALWAYS,pc,null,self,TO_CHAR);
+			goto start_sign;
+		}
+		i := i + 1;
 	}
 		act ("<div class='clan'>The pillar flashes <div class='cpb'>brightly</div>!</div>",
 			A_ALWAYS,activator,null,self,TO_ALL);
@@ -1348,6 +1353,7 @@ external
 		ln:integer;
 		clist:stringlist;
 		mlist:stringlist;
+		str:string;
 code
 {
 	if (self.extra.[CLAN_NAME]!=null)
@@ -1376,9 +1382,12 @@ code
 	i:=0;
 	buf:="nope";
 
+	log("21: self.name == "+self.name);
 	while (i<ln)
 	{
-		if (clist.[i+1]==self.name)
+		clist.[i+1] := replace(" ","",clist.[i+1]);
+		log ("21:  clanlist.data line == "+clist.[i+1]);
+		if (self.name == clist.[i+1])
 		{
 			init_master(clist.[i+2],clist.[i+3],clist.[i],clist.[i+4]);
 			sendtext ("Clan initialized<br/>",self);
@@ -1526,6 +1535,8 @@ dilend // init_master
 /* Command allows master/lord to set titles for clan members. Auto-appends clan tag. */
 
 dilbegin ctitle (arg:string);
+external
+	string do_color@function(arg : string);
 var
 	pname:string;
 	pc:unitptr;
@@ -1541,6 +1552,8 @@ code
 {
 	pname:=getword(arg);
 	pc:=ghead();
+	
+	arg := do_color@function(arg);
 	while (pc.type==UNIT_ST_PC)
 	{
 		if (pc.name==pname)
@@ -1603,7 +1616,7 @@ code
 	buf:="";
 	while (i<ln)
 	{
-		if (self.extra.[CLAN_NAME].descr==clist.[i+2])
+		if (self.extra.[CLAN_NAME].descr in clist.[i+2])
 		{
 			err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".money",buf);
 			if (err<1)
@@ -1656,7 +1669,7 @@ code
 	buf:="";
 	while (i<ln)
 	{
-		if (pc.extra.[CLAN_NAME].descr==clist.[i+2])
+		if (pc.extra.[CLAN_NAME].descr in clist.[i+2])
 		{
 			arg:=arg + " " + clist.[i+4];
 			arg:=textformat(arg);
@@ -3157,8 +3170,6 @@ title "pillar"
 descr "A large black pillar stands in the middle of the room."
 extra {}
 ""
-
-
 weight 500
 MATERIAL_STONE("Stone")
 
