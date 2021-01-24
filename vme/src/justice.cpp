@@ -191,19 +191,22 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
 
    // prepare the set_witness function
    tmpl = find_dil_template("set_witness@justice");
-   prg = dil_copy_template(tmpl, victim, NULL);
-
-   if (prg)
+   if (tmpl)
    {
-      prg->waitcmd = WAITCMD_MAXINST - 1;
-      prg->fp->vars[0].val.unitptr = criminal;
-      prg->fp->vars[1].val.unitptr = victim;
-      prg->fp->vars[2].val.integer = crime_serial_no;
-      prg->fp->vars[3].val.integer = crime_type;
-      prg->fp->vars[4].val.integer = active;
-      dil_add_secure(prg, criminal, prg->fp->tmpl->core);
-      dil_add_secure(prg, victim, prg->fp->tmpl->core);
-      dil_activate(prg);
+      prg = dil_copy_template(tmpl, victim, NULL);
+
+      if (prg)
+      {
+         prg->waitcmd = WAITCMD_MAXINST - 1;
+         prg->fp->vars[0].val.unitptr = criminal;
+         prg->fp->vars[1].val.unitptr = victim;
+         prg->fp->vars[2].val.integer = crime_serial_no;
+         prg->fp->vars[3].val.integer = crime_type;
+         prg->fp->vars[4].val.integer = active;
+         dil_add_secure(prg, criminal, prg->fp->tmpl->core);
+         dil_add_secure(prg, victim, prg->fp->tmpl->core);
+         dil_activate(prg);
+      }
    }
 
    // Find any bystanders and register them as witnesses
@@ -215,19 +218,22 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
       {
          /* set_witness(criminal, UVI(i), crime_serial_no, crime_type, active); */
          tmpl = find_dil_template("set_witness@justice");
-         prg2 = dil_copy_template(tmpl, UVI(i), NULL);
-
-         if (prg2)
+         if (tmpl)
          {
-            prg2->waitcmd = WAITCMD_MAXINST - 1;
-            prg2->fp->vars[0].val.unitptr = criminal;
-            prg2->fp->vars[1].val.unitptr = UVI(i);
-            prg2->fp->vars[2].val.integer = crime_serial_no;
-            prg2->fp->vars[3].val.integer = crime_type;
-            prg2->fp->vars[4].val.integer = active;
-            dil_add_secure(prg2, criminal, prg2->fp->tmpl->core);
-            dil_add_secure(prg2, UVI(i), prg2->fp->tmpl->core);
-            dil_activate(prg2);
+            prg2 = dil_copy_template(tmpl, UVI(i), NULL);
+
+            if (prg2)
+            {
+               prg2->waitcmd = WAITCMD_MAXINST - 1;
+               prg2->fp->vars[0].val.unitptr = criminal;
+               prg2->fp->vars[1].val.unitptr = UVI(i);
+               prg2->fp->vars[2].val.integer = crime_serial_no;
+               prg2->fp->vars[3].val.integer = crime_type;
+               prg2->fp->vars[4].val.integer = active;
+               dil_add_secure(prg2, criminal, prg2->fp->tmpl->core);
+               dil_add_secure(prg2, UVI(i), prg2->fp->tmpl->core);
+               dil_activate(prg2);
+            }
          }
       }
    }
