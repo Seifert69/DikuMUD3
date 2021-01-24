@@ -369,6 +369,7 @@ the west it passes through the small town of Ratswharf."
 movement SECT_CITY
 west to kingstreet3;
 east to vil_path22@urland;   /*  thanks to Venger */
+north to entry_room@bounty; /* Thanks Sender! */
 end
 
 
