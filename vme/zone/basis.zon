@@ -956,7 +956,8 @@ dilend /* color_bc */
 
 
 dilbegin color_title(); /* titles and names */
-
+external
+	string do_color@function(arg : string);
 var
   pc          : unitptr;
   victim_name : string;
@@ -990,8 +991,7 @@ heartbeat := PULSE_SEC;
 	block;
 	victim_name := getword(argument);
 	newtitle := argument;
-	newtitle := replace("&lt;","<",newtitle);
-	newtitle := replace("&gt;",">",newtitle);
+	newtitle := do_color@function(newtitle);
    
 	if (victim_name == "")
 	{
@@ -6641,7 +6641,6 @@ light 5
 up to throne_room;
 
 end
-
 
 %objects
 
