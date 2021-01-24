@@ -4,17 +4,9 @@
 
 # Get the general environment variables
 #
-# $1 should be a TAG uniquely identifiable in ps ax | grep TAG
 #
-source runenv.sh dispatcher
-
-echo "[" $$ "]" `date` $SCRIPT "starting" >> $LOG_FILE
-source ./pythonEnv/bin/activate
-python3 -u ./dispatcher.py >> $LOG_FILE
-deactivate
-echo "[" $$ "]" `date` $SCRIPT "terminated" >> $LOG_FILE
-sleep 1
-exec $SCRIPT $1
+exec ./runloop.sh dispatcher.py "" MUDTAG
+exec $0
 
 # Don't forget in vme/bin/ to
 #
