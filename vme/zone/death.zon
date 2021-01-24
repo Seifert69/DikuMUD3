@@ -953,29 +953,36 @@ var
 code
 {
    heartbeat:=3;
-   if (self.type != UNIT_ST_PC)
+   if (u.type != UNIT_ST_PC)
       return(0);
 
    /* Up to level 3 is sacred experience                          */
-   if (self.vlevel <= 3)
+   if (u.vlevel <= 3)
       return(0);
 
    /* This first line takes care of any xp earned above required level. */
-   l0 := getinteger(DIL_GINT_LEVELXP, null, u.vlevel);
-   l1 := getinteger(DIL_GINT_LEVELXP, null, u.vlevel+1);
+   l0 := getinteger(DIL_GINT_REQXP, null, u.vlevel);
+   l1 := getinteger(DIL_GINT_REQXP, null, u.vlevel+1);
+   log("l1 = " + itoa(l1) + "   l0 = " + itoa(l0) + "   l1-l0 = " + itoa(l1-l0));
 
+   // Lose half the XP earned above your current level (you should level up)
    loss := max(0, (u.exp-l0)/2);
+   log("loss 1 = " + itoa(loss));
 
    /* This line makes sure, that you lose at most half a level...       */
    loss := min(loss, (l1-l0)/2);
+   log("loss 2 = " + itoa(loss));
 
    /* This line takes care of the case where you have less or almost    */
    /* equal XP to your required. You thus lose at least 1/5th your      */
    /* level.                                                            */
    loss := max(loss, (l1-l0)/5);
+   log("loss 3 = " + itoa(loss));
 
    if (loss < 0)
       loss:=0;
+
+   log("loss result = " + itoa(loss));
 
    return(loss);
 }
@@ -983,7 +990,7 @@ dilend
 
 
 
-dilbegin death(arg:string);
+dilbegin death();
 external
    raw_kill ();
    integer lose_exp(u:unitptr);
