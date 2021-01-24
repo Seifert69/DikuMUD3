@@ -59,6 +59,7 @@ xx/xx/99 - Around may-june? Storage broken in real commands and put in commands.
 2020.09.30 - Sender added prof_restrict to enable profession restrictions
 2020.11.07 - Papi. Rescue & teamwork now only rescues if rescuer and target is from
              the same zone (e.g. goblin guard attacks midgaard guard. Rescue guard.)
+2021.1.23 - do_color function allows user-generated color (prompts, titles, etc).
 "
 
 
@@ -94,6 +95,40 @@ poi_resist - removes any poison spells cast on mobs.
 
 %dil
 
+
+
+dilbegin string do_color (arg : string);
+code
+{
+	arg := replace("#cr","<div class='cr'>",arg);
+	arg := replace("#c+r","<div class='cpr'>",arg);
+	arg := replace("#br","<div class='br'>",arg);
+	arg := replace("#cn","<div class='cn'>",arg);
+	arg := replace("#c+n","<div class='cpn'>",arg);
+	arg := replace("#bn","<div class='bn'>",arg);
+	arg := replace("#cg","<div class='cg'>",arg);
+	arg := replace("#c+g","<div class='cpg'>",arg);
+	arg := replace("#bg","<div class='bg'>",arg);
+	arg := replace("#cy","<div class='cy'>",arg);
+	arg := replace("#c+y","<div class='cpy'>",arg);
+	arg := replace("#by","<div class='by'>",arg);
+	arg := replace("#cb","<div class='cb'>",arg);
+	arg := replace("#c+b","<div class='cpb'>",arg);
+	arg := replace("#bb","<div class='bb'>",arg);
+	arg := replace("#cm","<div class='cm'>",arg);
+	arg := replace("#c+m","<div class='cpm'>",arg);
+	arg := replace("#bm","<div class='bm'>",arg);
+	arg := replace("#cc","<div class='cc'>",arg);
+	arg := replace("#c+c","<div class='cpc'>",arg);
+	arg := replace("#bc","<div class='bc'>",arg);
+	arg := replace("#cw","<div class='cw'>",arg);
+	arg := replace("#c+w","<div class='cpw'>",arg);
+	arg := replace("#bw","<div class='bw'>",arg);
+	arg := replace("#[default]","</div>",arg);
+	arg := replace("#d","</div>",arg);
+	return(arg);
+}
+dilend
 
 dilbegin do_examine(arg : string);
 code
@@ -8411,7 +8446,7 @@ return (TRUE);
 
 }
 
-dilend
+dilend 
 
 %rooms
 
@@ -8428,7 +8463,6 @@ feel safe with no fear."
 flags {UNIT_FL_NO_TELEPORT}
 end
 
-%mobiles
 %mobiles
 
 moneychanger
