@@ -19,7 +19,7 @@ echo "*** [" $$ "]" `date` $BINARY " starting by $USER ***" >> $LOG_FILE
 echo `uptime` >> $LOG_FILE
 
 source ./pythonEnv/bin/activate
-python3 -u ./$1 $3 >> $LOG_FILE
+python3 -u ./$1 $3 2>&1 >> $LOG_FILE
 deactivate
 echo "*** [" $$ "]" `date` $BINARY " terminated ***" >> $LOG_FILE
 sleep 1
