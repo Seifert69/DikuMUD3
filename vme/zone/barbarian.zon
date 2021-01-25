@@ -944,7 +944,8 @@ extra {"$improved identify"}
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HANDS}
 MATERIAL_METAL("This item is made of a strange alloy.")
 STR_TRANSFER(+2)
-HIT_TRANSFER(+3)
+HIT_TRANSFER(+2)
+BRA_TRANSFER(-1)
 dilcopy guild_restrict@function ({GUILD_BARBARIAN},0,0,"");
 
 dilbegin recall charge_gauntlet();
@@ -954,7 +955,7 @@ code
 :start:
 
 	heartbeat:=PULSE_SEC*SECS_PER_MUD_DAY/24;
-	wait (SFB_TICK,(self.equip==WEAR_WIELD));
+	wait (SFB_TICK,(self.equip==TRUE));
 	heartbeat:=PULSE_SEC*5;
 	act ("The inscription on your $2n flashes blood red!",
 		A_ALWAYS,self.outside,self,null,TO_CHAR);
@@ -1005,7 +1006,7 @@ code
 	if ((weap == null) or not visible(self.outside, weap) or
        (not(weap.manipulate & (MANIPULATE_WIELD | MANIPULATE_HOLD))))
 		{
-			act("You aren't wielding or holding a "+arg+"!",
+			act("You aren't fighting with that!",
 				A_ALWAYS, self.outside, null, null, TO_CHAR);
 			goto start;
 		}

@@ -64,21 +64,27 @@ struct bin_search_type *binary_search(struct bin_search_type *ba, const char *st
 /* Find a named zone */
 class zone_type *find_zone(const char *zonename)
 {
-    struct bin_search_type *ba;
+    // struct bin_search_type *ba;
 
     if ((zonename == NULL) || !*zonename)
         return NULL;
 
-    ba = binary_search(zone_info.ba, zonename, zone_info.no_of_zones);
+    auto it = zone_info.mmp.find(zonename);
+    if (it != zone_info.mmp.end())
+      return it->second;
+    else
+      return NULL;
 
-    return ba ? (class zone_type *)ba->block : NULL;
+/*    ba = binary_search(zone_info.ba, zonename, zone_info.no_of_zones);
+
+    return ba ? (class zone_type *)ba->block : NULL;*/
 }
 
 /* Zonename & name must point to non-empty strings */
 class file_index_type *find_file_index(const char *zonename, const char *name)
 {
     class zone_type *zone;
-    struct bin_search_type *ba;
+    //struct bin_search_type *ba;
 
     if (!*name)
         return NULL;
@@ -86,17 +92,24 @@ class file_index_type *find_file_index(const char *zonename, const char *name)
     if ((zone = find_zone(zonename)) == NULL)
         return NULL;
 
-    if ((ba = binary_search(zone->ba, name, zone->no_of_fi)) == NULL)
+    auto it = zone->mmp_fi.find(name);
+
+    if (it != zone->mmp_fi.end())
+      return it->second;
+    else
+      return NULL;
+
+    /*if ((ba = binary_search(zone->ba, name, zone->no_of_fi)) == NULL)
         return NULL;
 
-    return (class file_index_type *)ba->block;
+    return (class file_index_type *)ba->block;*/
 }
 
 /* Zonename & name must point to non-empty strings */
 struct diltemplate *find_dil_index(char *zonename, char *name)
 {
     class zone_type *zone;
-    struct bin_search_type *ba;
+    //struct bin_search_type *ba;
 
     if (str_is_empty(name))
         return NULL;
@@ -104,10 +117,17 @@ struct diltemplate *find_dil_index(char *zonename, char *name)
     if ((zone = find_zone(zonename)) == NULL)
         return NULL;
 
-    if ((ba = binary_search(zone->tmplba, name, zone->no_tmpl)) == NULL)
+    auto it = zone->mmp_tmpl.find(name);
+
+    if (it != zone->mmp_tmpl.end())
+      return it->second;
+    else
+      return NULL;
+
+/*    if ((ba = binary_search(zone->tmplba, name, zone->no_tmpl)) == NULL)
         return NULL;
 
-    return (struct diltemplate *)ba->block;
+    return (struct diltemplate *)ba->block;*/
 }
 
 /*

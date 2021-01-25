@@ -48,7 +48,6 @@ Contact whistler@blinksoft.com
 "
 %dil
 
-
 dilbegin adv_guild_lvl(ch : unitptr);
 var
 	pathp, guildptr : extraptr;
@@ -691,7 +690,7 @@ code
    :unbonded:
    exec("emote is longing for a master to bond to.", self);
 
-wait (SFB_DONE, (activator.type == UNIT_ST_PC) and command("whisper") and
+	wait (SFB_DONE, (activator.type == UNIT_ST_PC) and command("whisper") and
 	 ("serve" in argument) and
 	 (target==self));
 
@@ -699,8 +698,9 @@ wait (SFB_DONE, (activator.type == UNIT_ST_PC) and command("whisper") and
 
    if (pcowner.level >= IMMORTAL_LEVEL) // Any admin can get a fam
       {
-      exec ("say Master!", self);
-      goto second_part;
+		exec ("say I will serve you, godly master!", self);
+		secure(pcowner, rouge);
+		goto second_part;
       }
 
    /* MUST BE A MAGIC USER - Mage, Sorcerer or Necromancer */
@@ -747,21 +747,23 @@ wait (SFB_DONE, (activator.type == UNIT_ST_PC) and command("whisper") and
    */
 
    :second_part:
+   
+   heartbeat := PULSE_SEC*3;
+   
    exec ("say just whisper to me what you want to call me.  You wouldn't want everyone to know.",self);
-exec ("wink "+pcowner.name,self);
-   wait (SFB_DONE, (command("whisper") and (activator #= pcowner)) and
-   (target==self));
+   exec ("wink "+pcowner.name,self);
+   wait(SFB_DONE, ((command("whisper")) and (activator == pcowner) and (target==self)));
+   
+   pcowner := activator;
    addstring(self.names, argument);
-
    str := self.name;
 
    /* Move the first name to the last position */
    substring(self.names, str);
    addstring(self.names, str);
-							pause;
-   exec ("emote is surrounded by a supernatural glow... it has bonded to " +
-	 pcowner.name+"!", self);
-
+	pause;
+	act("$1n is surrounded by a supernatural glow... it has bonded to $2n!",
+	  A_ALWAYS,self,pcowner,null,TO_ALL);
    addextra(self.extra, {"$owner"}, pcowner.name);
    dilcopy ("catchit@g_q",self);
    dilcopy("fam_brain@g_q", self);
@@ -1643,6 +1645,7 @@ code
 
    pc := activator;
    secure (pc, lostpc);
+   
    if (FAMILIAR_BAN in activator.quests)
    {
    exec ("say You have been banned from owning a familiar, "+pc.name+"!", self);
@@ -1693,7 +1696,6 @@ if (glevel <20)
 	 unsecure (pc);
 	 goto waitawhile;
       }
-
       exec ("say Ahhh... so you are interested in familiar, huh? You seem powerful enough to bond one, "+pc.name+".", self);
 
       pause;

@@ -7453,39 +7453,39 @@ code
                 ((not(visible(self, item))) or (isset(item.charflags,
                                                       CHAR_HIDE)) ) )
             {
-               tmp_str := "" + "You sense a hidden lifeform here.";
+               tmp_str := "<div class='cc'>You sense a hidden lifeform here.</div>";
                addstring(str_list, tmp_str);
             }
             else if (visible(self, item) and (not(isset(item.charflags,
                                                         CHAR_HIDE))) )
             {
                if (item.position == POSITION_STANDING)
-                  tmp_str := "" + item.name + " " + item.title +
-                             " is standing here.";
+                  tmp_str := "<div class='cc'>" + item.name + " " + item.title +
+                             " is standing here.</div>";
                else if (item.position == POSITION_MORTALLYW)
-                  tmp_str := "" + item.name + " " + item.title +
-                             " is lying here, mortally wounded.";
+                  tmp_str := "<div class='cc'>" + item.name + " " + item.title +
+                             " is lying here, mortally wounded.</div>";
                else if (item.position == POSITION_INCAP)
-                  tmp_str := "" + item.name + " " + item.title +
-                             " is lying here, incapacitated.";
+                  tmp_str := "<div class='cc'>" + item.name + " " + item.title +
+                             " is lying here, incapacitated.</div>";
                else if (item.position == POSITION_STUNNED)
-                  tmp_str := "" + item.name + " " + item.title +
-                             " is lying here, stunned.";
+                  tmp_str := "<div class='cc'>" + item.name + " " + item.title +
+                             " is lying here, stunned.</div>";
                else if (item.position == POSITION_SLEEPING)
-                  tmp_str := "" + item.name + " " + item.title +
-                             " is sleeping here.";
+                  tmp_str := "<div class='cc'>" + item.name + " " + item.title +
+                             " is sleeping here.</div>";
                else if (item.position == POSITION_SITTING)
-                  tmp_str := "" + item.name + " " + item.title +
-                             " is sitting here.";
+                  tmp_str := "<div class='cc'>" + item.name + " " + item.title +
+                             " is sitting here.</div>";
                else if (item.position == POSITION_RESTING)
-                  tmp_str := "" + item.name + " " + item.title +
-                             " is resting here.";
+                  tmp_str := "<div class='cc'>" + item.name + " " + item.title +
+                             " is resting here.</div>";
                else if (item.position == POSITION_FIGHTING)
-                  tmp_str := "" + item.name + " " + item.title +
-                             " is fighting someone here.";
+                  tmp_str := "<div class='cc'>" + item.name + " " + item.title +
+                             " is fighting someone here.</div>";
                else
-                  tmp_str := "" + item.name + " " + item.title +
-                             " is here.";
+                  tmp_str := "<div class='cc'>" + item.name + " " + item.title +
+                             " is here.</div>";
 
                addstring(str_list, tmp_str);
             }
@@ -7496,19 +7496,19 @@ code
                 ((not(visible(self, item))) or (isset(item.charflags,
                                                       CHAR_HIDE)) ) )
             {
-               tmp_str := "" + "You sense a hidden lifeform here.";
+               tmp_str := "" + "<div class='cc'>You sense a hidden lifeform here.</div>";
                addstring(str_list, tmp_str);
             }
             else if (visible(self, item) and (not(isset(item.charflags,
                                                         CHAR_HIDE))) )
             {
-            tmp_str := "" + item.outside_descr + "";
+            tmp_str := "<div class='cc'>" + item.outside_descr + "</div>";
             addstring(str_list, tmp_str);
             }
          }
          if ((item.type == UNIT_ST_OBJ) and visible(self, item))
          {
-            tmp_str := "" + item.outside_descr;
+            tmp_str := "<div class='cc'>" + item.outside_descr + "</div>";
             addstring(str_list2, tmp_str);
          }
       }
@@ -12212,7 +12212,7 @@ code
    /*
       Skill Berserk:
       This skill sends a character berserk.
-      As a result the character's HP, END, and CON are increased temporarily.
+      As a result the character's Speed, HP, and CON are increased temporarily.
       */
 	tgt := self;
     if (tgt.endurance < 100)
@@ -12236,7 +12236,7 @@ code
 		tgt.endurance := tgt.endurance - 50;
 		quit;
 	}
-	hm := skillresist(self.abilities[ABIL_CON],30,self.skills[SKI_BERSERK],0);
+	hm := skillresist(self.abilities[ABIL_CON],30,self.skills[SKI_BERSERK],30);
 	if (hm > 10)
         hm := 10;	
 	if (hm <= 0)
@@ -12253,7 +12253,10 @@ code
 		A_ALWAYS, self, null, tgt, TO_CHAR);
 	act("<div class='spell'>$1n channels their energy, and goes berserk!</div>",
 		A_SOMEONE, self, null, tgt, TO_REST);
-	
+	if (isaff(tgt, ID_SPEED))
+		act("<div class='cpw'>Nothing happens.</div>",A_ALWAYS, self, null, tgt, TO_CHAR);
+	else
+	addaff(tgt, ID_BERSERK, 20, WAIT_SEC*30, 6, 0, 0, TIF_SPEED_BETTER, TIF_NONE, TIF_SPEED_WORSE,APF_SPEED);
 	addaff(tgt, ID_BERSERK, 20, WAIT_SEC*30, ABIL_CON, hm, 0, TIF_CON_INC, TIF_NONE, TIF_CON_DEC, APF_ABILITY);
 	addaff(tgt, ID_BERSERK, 20, WAIT_SEC*30, ABIL_HP, hm, 0, TIF_HIT_INC, TIF_NONE, TIF_HIT_DEC, APF_ABILITY);
 	hm := hm * rnd(4,2);
@@ -12375,29 +12378,14 @@ code
 		}
 	}
 
-	bonus := rnd(50,25);
+	bonus := rnd(self.level,self.level*2);
 	pain := rnd(self.hp/10,self.hp/15);
 	
 	act("You recklessly charge at $3n!", A_ALWAYS, self, null, targ, TO_CHAR);
 	act("$1n recklessly charges at you !", A_ALWAYS, self, null, targ, TO_VICT);
 	act("$1n recklessly charges at $3n!", A_SOMEONE, self, null, targ, TO_NOTVICT);
 	provoked_attack(targ, self);
-	// //
-	// //
-	// //
-	// //
-	// //
-	// //
-	// //
 	hm := skillchecksaopp(SKI_CHARGE, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_STR);
-	// THIS IS NEW - TEST IT!!
-	// //
-	// //
-	// //
-	// //
-	// //
-	// //
-	// //
 	self.hp := self.hp - pain;
 	hm := meleeattack(self, targ, (bonus + self.level + hm), 0);
 	
@@ -12503,9 +12491,9 @@ code
 
 	if ("$no_leaving_clan" in self.outside.extra)
 	{
-		act ("Magical Clan powers stop you from succeeding in that skill.",
+		act ("Magical Clan powers stop you from leaping that way.",
 			A_ALWAYS, self, null,null,TO_CHAR);
-		act ("Magical Clan powers stop $1n from casting the Leaving skill.",
+		act ("Magical Clan powers stop $1n from leaping away.",
 			A_ALWAYS, self, null,null,TO_REST);
 		quit;
 	}
@@ -12517,7 +12505,7 @@ code
        A_SOMEONE, self, null, null, TO_CHAR);
 
 	link(self, u.exit_to[i]);
-
+	position_update(u);
 	act("$1n leaps into sight.",
        A_HIDEINV, self, null, null, TO_ROOM);
 
@@ -12528,38 +12516,419 @@ code
 dilend // ski_leap
 
 dilbegin ski_whirl(arg : string);
+external
+	integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+                           opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+var
+	weap : unitptr;
+	held : unitptr;
+	hm   : integer;
+	dam  : integer;
 code
 {
-	act("You do a whirlwind. Deadly!",A_HIDEINV, self, null, null, TO_CHAR);
+	// while using two weapons, do a bunch of hits in one round.
+	if ((self.type == UNIT_ST_PC) and (self.skills[SKI_WHIRL] <= 0))
+	{
+		act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	if (not(self.fighting))
+	{
+		act("You must be in combat to do that.",A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	weap := equipment(self,WEAR_WIELD);
+	held := equipment(self,WEAR_HOLD);
+	if ((weap == null) or (held == null) or (held.objecttype != 5))
+	{
+		
+		act("You must be dual-wielding to whirl.", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	if (self.endurance <= 75)
+	{
+		act("You haven't the energy. Better rest first.",A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	act("You begin whirling your $2n and $3n for a deadly attack!",A_HIDEINV, self, weap, held, TO_CHAR);
+	act("$1n begins whirling their $2n and $3n for a deadly attack!",A_HIDEINV, self, weap, held, TO_ROOM);
+	self.endurance := self.endurance - 75;
+	heartbeat := PULSE_ROUND*4;
+	change_speed(self,PULSE_ROUND*4);
+	pause;
+	hm := skillchecksaopp(SKI_WHIRL, ABIL_STR, ABIL_CON, self.fighting, ABIL_DEX, ABIL_CON);
+	if (hm <= -25)
+	{
+		act("Your get tripped up and stumble in your whirl!",
+			A_SOMEONE, self, null, null, TO_CHAR);
+		act("$1n gets tripped up and stumbles in their whirl!",
+			A_SOMEONE, self, null, null, TO_REST);
+		change_speed(self,PULSE_ROUND*2);
+	}
+	else 
+	{
+		act("You unleash a deadly whirling attack on $3n!",
+			A_SOMEONE, self, null, self.fighting, TO_CHAR);
+		act("$1n unleashes a deadly whirling attack on $3n!",
+			A_SOMEONE, self, null, self.fighting, TO_NOTVICT);
+		act("$1n unleashes a deadly whirling attack on you!",
+			A_SOMEONE, self, null, self.fighting, TO_VICT);
+		if(hm < 31)
+			hm := 31;
+		while(hm > 0)
+		{
+			dam := meleeattack(self, self.fighting, (hm), 0);
+			hm := hm - 15;
+		}
+	}
 	send_done("whirl",self,null,null,0,arg,null);
 	quit;
 }
 dilend
 
 dilbegin ski_cleave(arg : string);
+external
+	provoked_attack(victim : unitptr, ch : unitptr);
+	integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+                           opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+	integer is_cleaver(wpn_type : integer);
+var
+   targ     : unitptr;
+   bonus    : integer;
+   hm		: integer;
+   weap 	: unitptr;
 code
 {
-	act("You do a cleave. Deadly!",A_HIDEINV, self, null, null, TO_CHAR);
+	if ((self.type == UNIT_ST_PC) and (self.skills[SKI_CLEAVE] <= 0))
+	{
+		act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	if (self.endurance <= 50)
+	{
+		act("You haven't the energy. Better rest first.",A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	if (arg == "")
+		targ := self.fighting;
+	else
+		targ := findunit(self, arg, FIND_UNIT_SURRO, null);
+	if ((targ == null) or not visible(self, targ))
+	{
+		act("That person is not here!", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+	{
+		act("You can't cleave that, silly! Sheesh some people.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	if (targ == self)
+	{
+		act("You attempt to cleave yourself. Very amusing.", A_ALWAYS, self, null, null, TO_CHAR);
+		act("$1n attempts to cleave $1mself. It's rather strange looking, trust me.",
+			A_HIDEINV, self, null, null, TO_REST);
+		quit;
+	}
+	if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
+	{
+		if (not(isset (self.pcflags, PC_PK_RELAXED)))
+		{
+			act("You are not allowed to do that unless you sign the book of blood.",
+				A_ALWAYS, self, null, null, TO_CHAR);
+				quit;
+		}
+
+		if (not(isset (targ.pcflags, PC_PK_RELAXED)))
+		{
+			act("You are not allowed to do that unless $2e signs the book of blood.",
+				A_ALWAYS, self, targ, null, TO_CHAR);
+			quit;
+		}
+	}
+	weap := equipment(self,WEAR_WIELD);
+	if (weap == null)
+	{
+		act("You must wield a cleaving weapon to do that.", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	else if (is_cleaver(weap.value[0]) != TRUE)
+	{
+		act("You must wield a cleaving weapon to do that.", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+
+	bonus := rnd(self.level-10,self.level+10);
+	act("You pull back your $2n and cleave $3n!", A_ALWAYS, self, weap, targ, TO_CHAR);
+	act("$1n pulls back their $2n and cleaves you!", A_ALWAYS, self, weap, targ, TO_VICT);
+	act("$1n pulls back their $2n and cleaves $3n!", A_SOMEONE, self, weap, targ, TO_NOTVICT);
+	provoked_attack(targ, self);
+	self.endurance := self.endurance - 50;
+	hm := skillchecksaopp(SKI_CLEAVE, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_DEX);
+	hm := meleeattack(self, targ, (bonus + hm), 0);
+	
 	send_done("cleave",self,null,null,0,arg,null);
 	quit;
 }
 dilend
 
 dilbegin ski_rend(arg : string);
+external
+	provoked_attack(victim : unitptr, ch : unitptr);
+	integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+                           opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+	integer is_cleaver(wpn_type : integer);
+var
+   targ     : unitptr;
+   hm		: integer;
+   weap 	: unitptr;
 code
 {
-	act("You do a rend. Deadly!",A_HIDEINV, self, null, null, TO_CHAR);
+	if ((self.type == UNIT_ST_PC) and (self.skills[SKI_REND] <= 0))
+	{
+		act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	if (self.endurance <= 75)
+	{
+		act("You haven't the energy. Better rest first.",A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	if (arg == "")
+		targ := self.fighting;
+	else
+		targ := findunit(self, arg, FIND_UNIT_SURRO, null);
+	if ((targ == null) or not visible(self, targ))
+	{
+		act("That person is not here!", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+	{
+		act("You can't rend that, silly! Sheesh some people.",
+			A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	if (targ == self)
+	{
+		act("You attempt to rend yourself. Very amusing.", A_ALWAYS, self, null, null, TO_CHAR);
+		act("$1n attempts to rend $1mself. It's rather strange looking, trust me.",
+			A_HIDEINV, self, null, null, TO_REST);
+		quit;
+	}
+	if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
+	{
+		if (not(isset (self.pcflags, PC_PK_RELAXED)))
+		{
+			act("You are not allowed to do that unless you sign the book of blood.",
+				A_ALWAYS, self, null, null, TO_CHAR);
+				quit;
+		}
+
+		if (not(isset (targ.pcflags, PC_PK_RELAXED)))
+		{
+			act("You are not allowed to do that unless $2e signs the book of blood.",
+				A_ALWAYS, self, targ, null, TO_CHAR);
+			quit;
+		}
+	}
+	weap := equipment(self,WEAR_WIELD);
+	if (weap == null)
+	{
+		act("You must wield a heavy bladed weapon to do that.", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	else if (is_cleaver(weap.value[0]) != TRUE)
+	{
+		act("You must wield a heavy bladed to do that.", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+
+	act("You swing your $2n and violently rend $3n!", A_ALWAYS, self, weap, targ, TO_CHAR);
+	act("$1n swings their $2n and violently rends you!", A_ALWAYS, self, weap, targ, TO_VICT);
+	act("$1n swings their $2n and violently rends $3n!", A_SOMEONE, self, weap, targ, TO_NOTVICT);
+	provoked_attack(targ, self);
+	self.endurance := self.endurance - 75;
+	hm := skillchecksaopp(SKI_REND, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_DEX);
+	if (hm >= 0)
+		if (not(dilfind("rend_bleed@skills", targ)))
+			dilcopy("rend_bleed@skills("+itoa(hm)+")", targ);
+	hm := meleeattack(self, targ, hm, 0);
 	send_done("rend",self,null,null,0,arg,null);
 	quit;
 }
 dilend
 
-dilbegin ski_slam(arg : string);
+dilbegin aware recall rend_bleed(pwr : integer);
+var
+   i : integer;
+   j : integer;
+   parse : stringlist;
+
 code
 {
-	act("You do a slam. Deadly!",A_HIDEINV, self, null, null, TO_CHAR);
+	if (not (self.type & (UNIT_ST_PC|UNIT_ST_NPC)))
+		quit;
+	interrupt(SFB_DEAD, activator == self, stop);
+
+	heartbeat := PULSE_POINTS / 2;
+	j := 1 + pwr / 10;
+
+	while (i < j)
+	{
+		wait(SFB_TICK, TRUE);
+
+		i := i + 1;
+		self.hp := self.hp - j;
+		self.mana := self.mana - 2*j;
+		self.endurance := self.endurance - 2*j;
+		if (self.hp >= -10)
+		  position_update(self);
+
+		if (self.hp < -10)
+		{
+			act("$1n dies from their loss of blood.",
+				 A_HIDEINV, self, null, null, TO_ROOM);
+			act("You die from the loss of blood.",
+				A_HIDEINV, self, null, null, TO_CHAR);
+			position_update(self);
+			goto the_end;
+		}
+
+		act("$1n bleeds from their gaping wounds.", A_HIDEINV, self, null, null, TO_ROOM);
+		act("You bleed from your gaping wounds.",
+		A_HIDEINV, self, null, null, TO_CHAR);
+		position_update(self);
+	}
+:the_end:
+   act("Your gaping wounds stop their bleeding.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+:stop:
+   quit;
+}
+dilend
+
+dilbegin integer is_cleaver(wpn_type : integer);
+var
+	ilst : intlist;
+	i : integer;
+code
+{
+
+	/* insert new cleaving weapons here */
+	ilst :=	{WPN_LUCERN_HAMMER,WPN_HALBERD,WPN_BATTLE_AXE,WPN_GREAT_AXE,WPN_WAR_AXE,WPN_LOCHABER_AXE,WPN_BILL_GUISARME,WPN_BEC_DE_CORBIN,WPN_GREAT_SWORD,WPN_CLAYMORE};
+
+	i := 0;
+	while(i < length(ilst))
+	{
+		if(wpn_type == ilst.[i])
+			return(TRUE);
+		i := i + 1;
+	}
+	return(FALSE);
+}
+dilend
+
+dilbegin ski_slam(arg : string);
+external
+	provoked_attack(victim : unitptr, ch : unitptr);
+	integer skillchecksaopp(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
+                           opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+	integer is_blunt(wpn_type : integer);
+var
+   u    : unitptr;
+   mast : unitptr;
+   hm,dam	: integer;
+   weap : unitptr;
+   i    : integer;
+   
+code
+{
+	if ((self.type == UNIT_ST_PC) and (self.skills[SKI_SLAM] <= 0))
+	{
+		act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	weap := equipment(self,WEAR_WIELD);
+	if (weap == null)
+	{
+		act("You must wield a blunt weapon to slam.", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	else if (is_blunt(weap.value[0]) != TRUE)
+	{
+		act("You must wield a blunt weapon to slam.", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+
+	if (self.endurance <= 75)
+	{
+		act("You haven't the energy. Better rest first.",A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
+	
+	mast := self.master;
+	if (not(self.master))
+		mast := self;
+ 
+	act("You swing your $2n and do a violent slam!",A_SOMEONE, self, weap, null, TO_CHAR);
+	act("$1n swings their $2n and does a violent slam!",A_SOMEONE, self, weap, null, TO_ROOM);
+	self.endurance := self.endurance - 75;
+	foreach(UNIT_ST_PC|UNIT_ST_NPC, u)
+	{
+		if (u.minv>=200) continue;
+		if (((u.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC)) and 
+			((not (isset(u.pcflags,PC_PK_RELAXED))) or
+			(not (isset (self.pcflags,PC_PK_RELAXED))))) 
+			continue;
+
+
+		if ((u.master != mast) and (u != mast) and (u != self))
+		{
+			hm := skillchecksaopp(SKI_SLAM, ABIL_STR, ABIL_CON, u, ABIL_DEX, ABIL_CON);
+			if (hm <= -10)
+			{
+				act("<div class='hit_opponent'>Your slam hits $3n to no effect!</div>",
+					A_SOMEONE, self, null, u, TO_CHAR);
+				act("<div class='hit_other'>$1n's slam hits $3n to no effect!</div>",
+					A_SOMEONE, self, null, u, TO_NOTVICT);
+				act("<div class='hit_me'>$1n's slam hits you to no effect!</div>",
+					A_SOMEONE, self, null, u, TO_VICT);
+			}
+			else
+			{
+				dam := meleeattack(self, u, (hm), 0);
+				if(dam > 0)
+					change_speed(u,PULSE_VIOLENCE);
+			}
+			provoked_attack(u,self);
+		}
+	}
+	
 	send_done("slam",self,null,null,0,arg,null);
 	quit;
+}
+dilend
+
+dilbegin integer is_blunt(wpn_type : integer);
+var
+	ilst : intlist;
+	i : integer;
+code
+{
+
+	/* insert new blunt weapons here */
+	ilst :=	{WPN_WAR_MATTOCK,WPN_WAR_HAMMER,WPN_BATTLE_MACE,WPN_MACE,WPN_BATTLE_CLUB,WPN_CLUB,WPN_MORNING_STAR,WPN_FLAIL,WPN_WAR_MAUL,WPN_ADZE};
+
+	i := 0;
+	while(i < length(ilst))
+	{
+		if(wpn_type == ilst.[i])
+			return(TRUE);
+		i := i + 1;
+	}
+	return(FALSE);
 }
 dilend
 

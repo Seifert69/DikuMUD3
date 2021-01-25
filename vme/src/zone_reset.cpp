@@ -55,13 +55,11 @@ void zone_update_no_in_zone(void)
     extern struct zone_info_type zone_info;
 
     register class unit_data *u;
-    register class file_index_type *fi;
-    register class zone_type *tmp_zone;
 
     /* Clear ALL ->no_in_zone */
-    for (tmp_zone = zone_info.zone_list; tmp_zone; tmp_zone = tmp_zone->next)
-        for (fi = tmp_zone->fi; fi; fi = fi->next)
-            fi->no_in_zone = 0;
+    for (auto tmp_zone = zone_info.mmp.begin(); tmp_zone != zone_info.mmp.end(); tmp_zone++)
+        for (auto fi = tmp_zone->second->mmp_fi.begin(); fi != tmp_zone->second->mmp_fi.end(); fi++)
+            fi->second->no_in_zone = 0;
 
     for (u = unit_list; u; u = u->gnext)
         if (UNIT_FILE_INDEX(u) && (unit_zone(u) == boot_zone))
@@ -363,7 +361,6 @@ void zone_reset(class zone_type *zone)
 void reset_all_zones(void)
 {
     int j;
-    class zone_type *zone;
 
     void zone_event(void *, void *);
 
@@ -371,16 +368,16 @@ void reset_all_zones(void)
 
     for (j = 0; j <= 255; j++)
     {
-        for (zone = zone_info.zone_list; zone; zone = zone->next)
+        for (auto zone = zone_info.mmp.begin(); zone != zone_info.mmp.end(); zone++)
         {
             if (j == 0)
                 world_nozones++;
 
-            if (zone->access != j)
+            if (zone->second->access != j)
                 continue;
 
-            if (zone->zone_time > 0)
-                zone_event((void *)zone, (void *)0);
+            if (zone->second->zone_time > 0)
+                zone_event((void *) zone->second, (void *)0);
         }
     }
 }

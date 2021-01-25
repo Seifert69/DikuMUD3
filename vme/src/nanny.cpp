@@ -628,6 +628,9 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
       descriptor_close(td, TRUE, TRUE);
    }
 
+   void assign_player_file_index(unit_data *pc);
+   assign_player_file_index(d->character);
+   
    /* See if guest is in game, if so - a guest was LD       */
    /* Password has now been redefined                       */
    for (u = unit_list; u; u = u->gnext)

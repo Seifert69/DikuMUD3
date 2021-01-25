@@ -124,7 +124,7 @@ struct symbols
     {"strncmp", DILSE_STRNCMP},
     {"sact",DILSE_SACT}, // MS2020
     {"getinteger",DILSE_GINT}, // MS2020
-    {"playerid",DILSE_PLAYERID},
+    {"shell",DILSE_SHELL},
     
     /* DIL Symbol Inst (procedures) */
 
@@ -143,6 +143,7 @@ struct symbols
 //   {"walkto",DILSI_WLK},
     {"set_weight_base",DILSI_SET_W_BASE},
     {"set_weight",DILSI_SET_W},
+    {"dispatch", DILSI_DISPATCH},
     {"setbright",DILSI_SBT},
     {"dilcopy",DILSI_DLC},
     {"pagestring",DILSI_PGSTR},

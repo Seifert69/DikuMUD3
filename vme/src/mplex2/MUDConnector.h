@@ -19,6 +19,7 @@
 class cMotherHook : public cHook
 {
 public:
+   void Unhook(void);
    void Input(int nFlags);
    int IsHooked(void);
 };
@@ -26,6 +27,7 @@ public:
 class cMudHook : public cHook
 {
 public:
+   void Unhook(void);
    int read_mud(void);
    void Input(int nFlags);
 };

@@ -118,8 +118,8 @@ extern void special_event(void *p1, void *p2);
  *
  * *********************************************************************** */
 
-class dilprg *dil_list = NULL;
-class dilprg *dil_list_nextdude = NULL;
+//class dilprg *dil_list = NULL;
+//class dilprg *dil_list_nextdude = NULL;
 
 void dil_edit_done(class descriptor_data *d)
 {
@@ -712,14 +712,14 @@ struct dil_func_type dilfe_func[DILI_MAX + 1] = {
     {dilfe_atoi},
     {dilfe_itoa},
     {dilfe_rnd},
-    {dilfe_fndu},
-    {dilfe_fndr}, /* 25 */
+    {dilfe_fndu},  // findunit
+    {dilfe_fndr},  // 25 findroom
     {dilfe_load},
     {dilfe_iss},
     {dilfe_getw},
     {dilfe_isa},
     {dilfe_cmds}, /* 30 */
-    {dilfe_fnds},
+    {dilfe_fnds}, // findsymbolic
 
     {dilfe_acti},
     {dilfe_argm},
@@ -817,7 +817,7 @@ struct dil_func_type dilfe_func[DILI_MAX + 1] = {
     {dilfi_lcri},
     {dilfe_fits},
     {dilfe_cary},
-    {dilfe_fnds2},
+    {dilfe_fnds2}, // findsymbolic(#,#)
     {dilfe_path}, /* 125  */
     {dilfe_mons},
     {dilfe_splx},
@@ -889,10 +889,11 @@ struct dil_func_type dilfe_func[DILI_MAX + 1] = {
     {dilfe_phead},
     {dilfe_fndu2},
     {dilfe_gfol},
-    {dilfe_sact}, // 195
+    {dilfe_sact}, // 196
     {dilfe_gint},
-    {dilfe_playerid},
-    {dilfi_set_weight}
+    {dilfe_shell},
+    {dilfi_set_weight},
+    {dilfi_dispatch}
  };
 
 
@@ -1104,12 +1105,13 @@ int run_dil(struct spec_arg *sarg)
     /* For evaluating expressions */
     prg->sarg = sarg;
 
+    /* This is not correct. If it's the last element in the list it is also NULL.
     if (prg->next == NULL)
     {
         slog(LOG_ALL, 0, "already destroyed DIL");
         prg->nest--;
         return SFR_SHARE;
-    }
+    }*/
 
 
     /* A MEGA HACK! The DIL activated spells will not be tested for
@@ -1515,7 +1517,7 @@ class dilprg *dil_copy_template(struct diltemplate *tmpl,
         }
     }
 
-    prg = new EMPLACE(dilprg) dilprg(u,true);
+    prg = new EMPLACE(dilprg) dilprg(u, tmpl);
     membug_verify(prg);
 
     prg->fp->tmpl = tmpl;

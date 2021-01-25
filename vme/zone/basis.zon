@@ -384,8 +384,11 @@ dilend
 
 
 dilbegin informer();
+external
+   string whostring@comm();
 var
    tgt : unitptr;
+   w : string;
 code
 {
    heartbeat := PULSE_SEC;
@@ -394,7 +397,6 @@ code
 
    while (tgt.type == UNIT_ST_PC)
    {
-
       if ((isset(tgt.pcflags,PC_INFORM)) and (tgt != self))
       {
          if(visible(tgt,self))
@@ -407,6 +409,14 @@ code
       }
 
       tgt := tgt.gnext;
+   }
+
+   if (self.minv < IMMORTAL_LEVEL)
+   {
+      // dispatch("discord ent #mudstatus @" + self.name + " has entered Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
+
+      w := whostring@comm();
+      dispatch("discord who " + w); // Send to dispatcher.py via pipeDispatcher
    }
 
    return;
@@ -499,14 +509,17 @@ code
 
    login_modify(self);
 
+
    if (self.level < 200)
    {
       if(err > 0)
          sendtext("<br/>"+welcome+"<br/><br/>", self);
       informer();
       exec("look", self);
+      exec("comm add discord", self);
       quit;
    }
+
    gamestate(self, GS_MENU);
 
    :wiz_menu:
@@ -943,7 +956,8 @@ dilend /* color_bc */
 
 
 dilbegin color_title(); /* titles and names */
-
+external
+	string do_color@function(arg : string);
 var
   pc          : unitptr;
   victim_name : string;
@@ -977,8 +991,7 @@ heartbeat := PULSE_SEC;
 	block;
 	victim_name := getword(argument);
 	newtitle := argument;
-	newtitle := replace("&lt;","<",newtitle);
-	newtitle := replace("&gt;",">",newtitle);
+	newtitle := do_color@function(newtitle);
    
 	if (victim_name == "")
 	{
@@ -6459,6 +6472,15 @@ flags {UNIT_FL_NO_WEATHER}
 light 5
 end
 
+                                       discord
+
+names "Discord"
+title "The Discord Robot"
+descr
+"   This room is the sender of the discord messages."
+flags {UNIT_FL_NO_WEATHER}
+light 5
+end
 
                                        void
 
@@ -6619,7 +6641,6 @@ light 5
 up to throne_room;
 
 end
-
 
 %objects
 
@@ -7406,6 +7427,33 @@ You notice the word 'Papi' inscribed with tiny letters on the rim of its shield.
 weight 0
 M_ZOMBIE_SMALL(1,SEX_NEUTRAL)
 
+dilbegin testzonenpcs();
+var
+   z : zoneptr;
+   u : unitptr;
+code
+{
+   z := zhead();
+
+   while (z)
+   {
+      log(z.name + " " + z.title);
+
+      u := z.npcs;
+
+      if (u)
+      {
+         log("got an NPC");
+         log("Its name is: " + u.symname);
+      }
+
+      z := z.next;
+   }
+   quit;
+}
+dilend
+
+
 dilbegin aware unique mytestsymname();
 external
    string testsymname();
@@ -7484,7 +7532,7 @@ code
       s := u.symname;
 
       // Don't consume players or player's corpses :o)
-      if ((s $= "NO-NAME@NO-ZONE") or (s $= "corpse@death"))
+      if ((u.type == UNIT_ST_PC) or (s $= "corpse@death"))
       {
          u := u.next;
          continue;
@@ -7518,6 +7566,33 @@ descr "A mindless zombie is roaming around here."
 extra {} "Disgusting!"
 M_ZOMBIE_SMALL(4,SEX_NEUTRAL)
 
+dilbegin dispatchtest();
+var 
+  s : string;
+code
+{
+   :loop:
+   wait(SFB_CMD, command("jump"));
+
+   s := "CHANNEL discord @ " + "<discord> @Papi says, 'Hiya'";
+   sendtoalldil(s, "channel@function");
+   goto loop;
+}
+dilend
+
+dilbegin shelltest();
+var 
+  i : integer;
+code
+{
+   :loop:
+   wait(SFB_CMD, command("bow"));
+
+   i := shell("test.sh olle golle");
+   log("shell = " + itoa(i));
+   goto loop;
+}
+dilend
 
 dilbegin aware comtest();
 var

@@ -174,10 +174,10 @@ extern const sbit8 time_light[];
 /* ............................FILE INDEX STUFF..................... */
 
 #define FI_ZONENAME(fi)   \
-   ((fi) ? (fi)->zone->name : "NO-ZONE")
+   ((fi)->zone->name)
 
 #define FI_NAME(fi)   \
-   ((fi) ? (fi)->name : "NO-NAME")
+   ((fi)->name)
 
 /* ............................UNIT SUPERSTRUCTURES..................... */
 
@@ -187,7 +187,7 @@ extern const sbit8 time_light[];
    !IS_SET(UNIT_OPEN_FLAGS(u),EX_CLOSED))
 
 #define UNIT_FI_ZONE(unit)   \
-   (UNIT_FILE_INDEX(unit) ? (unit)->fi->zone : (class zone_type *) NULL)
+   ((unit)->fi->zone)
 
 #define UNIT_FI_ZONENAME(unit)   \
    (FI_ZONENAME(UNIT_FILE_INDEX(unit)))

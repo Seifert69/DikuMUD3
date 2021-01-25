@@ -204,7 +204,7 @@ void make_code(struct exptype *dest);
 %token DILSE_AND DILSE_OR DILSE_NOT DILSE_ISPLAYER
 %token DILSE_WPNTXT DILSE_SKITXT DILSE_SENDPRE DILSE_GOPP
 %token DILSE_RHEAD DILSE_NHEAD DILSE_OHEAD DILSE_PHEAD
-%token DILSE_GFOL DILSE_SACT  DILSE_GINT DILSE_PLAYERID 
+%token DILSE_GFOL DILSE_SACT  DILSE_GINT DILSE_SHELL 
 
 /* DIL built-in variables */
 %token DILTO_EQ DILTO_NEQ DILTO_PEQ DILTO_SEQ DILTO_LEQ DILTO_GEQ
@@ -228,7 +228,7 @@ void make_code(struct exptype *dest);
 %token DILSI_SEC  DILSI_USE DILSI_ADA DILSI_SETF DILSI_CHAS
 %token DILSI_SUA  DILSI_EQP DILSI_UEQ DILSI_SETE
 %token DILSI_QUIT DILSI_LOG DILSI_SNTA DILSI_SNTADIL DILSI_DLC DILSE_INTR
-%token DILSI_CLI  DILSI_SET_W_BASE DILSI_SET_W DILSI_SBT DILSE_ATSP DILSI_FOLO DILSI_LCRI
+%token DILSI_CLI  DILSI_SET_W_BASE DILSI_SET_W DILSI_DISPATCH DILSI_SBT DILSE_ATSP DILSI_FOLO DILSI_LCRI
 %token DILSI_PGSTR DILSI_STORA DILSI_STOPF DILSI_EDIT DILSI_KEDIT
 %token DILSI_SNDDONE DILSI_GMSTATE DILSI_INSLST DILSI_REMLST
 
@@ -2771,11 +2771,11 @@ dilfun   :  funcall
             }
             FREEEXP($3);
          }
-          |  DILSE_PLAYERID '(' dilexp ')'
+         |  DILSE_SHELL '(' dilexp ')'
          {
             INITEXP($$);
             if ($3.typ != DILV_SP)
-               dilfatal("Arg 1 of 'playerid' not string");
+               dilfatal("Arg 1 of 'shell' not string");
             else {
                /* Type is ok */
                /* Function is not _yet_ static */
@@ -4912,6 +4912,17 @@ dilproc  : corefuncall
                $$.lst = $7+1;
                wtmp = &tmpl.core[$7];
                bwrite_ubit8(&wtmp, DILI_SET_W);
+            }
+         }
+         | DILSI_DISPATCH '(' coreexp ')' ihold
+         {
+            if ($3.typ != DILV_SP)
+               dilfatal("Arg 1 of 'dispatch' not a string");
+            else {
+               $$.fst = $3.fst;
+               $$.lst = $5+1;
+               wtmp = &tmpl.core[$5];
+               bwrite_ubit8(&wtmp, DILI_DISPATCH);
             }
          }
          | DILSI_SET '(' coreexp ',' coreexp ')' ihold

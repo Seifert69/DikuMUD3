@@ -40,6 +40,200 @@ cCaptainHook CaptainHook;
 
 
 /* ------------------------------------------------------------------- */
+/*                                HOOK NATIVE                          */
+/* ------------------------------------------------------------------- */
+//
+// The basic hook class handles read and writing. Uses a queue for handling
+// incoming and outgoing messages. Holds the filedescriptor and knows if it
+// is connected or not.
+//
+
+cHookNative::cHookNative(void)
+{
+    fd = -1;
+}
+
+cHookNative::~cHookNative(void)
+{
+    Unhook();
+}
+
+int cHookNative::get_fd(void)
+{
+    return fd;
+}
+
+void cHookNative::Hook(int f)
+{
+    fd = f;
+}
+
+int cHookNative::IsHooked(void)
+{
+    return fd != -1;
+}
+
+void cHookNative::Unhook(void)
+{
+    if (!IsHooked())
+        return;
+
+    int i;
+    #ifdef _WINDOWS
+        i = closesocket(fd);
+    #else
+        i = close(fd);
+    #endif
+
+    fd = -1;
+
+    if (i == -1)
+    {
+        slog(LOG_ALL, 0, "close(%d): close() socket, error %d", fd, errno);
+    }
+}
+
+/* ------------------------------------------------------------------- */
+/*                     NETWORK READ & WRITE                            */
+/* ------------------------------------------------------------------- */
+
+
+//  > 0 number of bytes written
+// == 0 try again later (EWOULDBLOCK) 
+// -1 : error (it's been unhooked)
+//
+int cHookNative::write(const void *buf, int count)
+{
+    int sofar;
+    int thisround;
+
+    if (!IsHooked())
+        return -1;
+
+    sofar = 0;
+
+    for (;;)
+    {
+#ifdef _WINDOWS
+
+        thisround = send(fd, (char *)buf + sofar, count - sofar, 0);
+
+        if (thisround == 0)
+        {
+            /* This should never happen! */
+            slog(LOG_ALL, 0,
+                    "SYSERR: Huh??  write() returned 0???  Please report this!");
+            Unhook();
+            return -1;
+        }
+
+        if (thisround < 0)
+        {
+            /* Transient error? */
+            if (WSAGetLastError() == WSAEWOULDBLOCK || WSAGetLastError() == WSAEINTR)
+            {
+                return sofar;
+            }
+            else
+            {
+
+                /* Must be a fatal error. */
+                slog(LOG_ALL, 0,
+                        "PushWrite (%d): Write to socket, error %d", fd,
+                        WSAGetLastError());
+                Unhook();
+                return -1;
+            }
+        }
+#else
+        try {
+            thisround = ::write(fd, (char *) buf + sofar, count - sofar);
+        }
+        catch (const std::exception &ex)
+        {
+            slog(LOG_ALL, 0, "cHookNative::write() exception: [%s]", ex.what());
+            Unhook();
+            return -1;
+        }
+
+        if (thisround == 0)
+        {
+            slog(LOG_ALL, 0, "cHookNative (%d): Write to socket EOF", (int) fd);
+            Unhook();
+            return -1;
+        }
+        else if (thisround < 0)
+        {
+            if (errno == EWOULDBLOCK) 
+                return sofar;
+
+            slog(LOG_ALL, 0, "cHookNative (%d): Write to socket, error %d", fd, errno);
+            Unhook();
+            return -1;
+        }
+#endif
+        sofar += thisround;
+
+        if (sofar >= count)
+            break;
+    }
+
+    return sofar;
+}
+
+
+
+//  > 0 number of bytes read to buffer
+// == 0 try again later (EWOULDBLOCK) 
+// -1 : error (and it's been unhooked or was unhooked, fd closed)
+//
+int cHookNative::read(void *buf, int count)
+{
+    int thisround;
+
+    if (!IsHooked())
+        return -1;
+
+    for (;;)
+    {
+#if defined(_WINDOWS)
+        thisround = recv(fd, buf, count - 1, 0);
+#else
+        thisround = ::read(fd, buf, count);
+#endif
+
+        if (thisround > 0)
+        {
+            return thisround;
+        }
+        else if (thisround == 0)
+        {
+            slog(LOG_ALL, 0, "Read to queue: EOF on socket read.");
+            Unhook();
+            return -1;
+        }
+        else /* (thisround < 0) */
+        {
+#ifdef _WINDOWS
+            if (WSAGetLastError() == WSAEWOULDBLOCK || WSAGetLastError() == WSAEINTR)
+                return 0;
+#else
+            if (errno == EWOULDBLOCK)
+                return 0;
+#endif
+            slog(LOG_ALL, 0, "Read from socket %d error %d", fd, errno);
+            Unhook();
+            return -1;
+        }
+    }
+
+    return -1;
+}
+
+
+
+
+/* ------------------------------------------------------------------- */
 /*                                HOOK                                 */
 /* ------------------------------------------------------------------- */
 //
@@ -50,7 +244,6 @@ cCaptainHook CaptainHook;
 
 cHook::cHook(void)
 {
-    fd = -1;
 }
 
 cHook::~cHook(void)
@@ -58,12 +251,17 @@ cHook::~cHook(void)
     Unhook();
 }
 
-int cHook::tfd(void)
+void cHook::Unhook(void)
 {
-    return fd;
+    cHookNative::Unhook();
 }
 
-int cHook::IsHooked(void)
+int cHook::tfd(void)
+{
+    return get_fd();
+}
+
+/*int cHook::IsHooked(void)
 {
     return fd != -1;
 }
@@ -74,7 +272,7 @@ void cHook::Unhook(void)
         CaptainHook.Unhook(this);
 
     fd = -1;
-}
+}*/
 
 /* ------------------------------------------------------------------- */
 /*                     NETWORK READ & WRITE                            */
@@ -99,74 +297,27 @@ void cHook::PushWrite(void)
 
         for (;;)
         {
-#ifdef _WINDOWS
+            thisround = this->write(buf + sofar, len - sofar);
 
-            thisround = send(fd, (char *)buf + sofar, len - sofar, 0);
-
-            if (thisround == 0)
+            if (thisround == 0) // Try again
             {
-                /* This should never happen! */
-                slog(LOG_ALL, 0,
-                     "SYSERR: Huh??  write() returned 0???  Please report this!");
-                Unhook();
+                qTX.Prepend(new cQueueElem(buf + sofar, len - sofar));
+                return;
+            }
+            else if (thisround < 0) // Error
+            {
+                // will now be closed and error logged
+                if (IsHooked()) 
+                    slog(LOG_ALL, 0, "PushWrite: Still hooked even though error - not possible");
                 return;
             }
 
-            if (thisround < 0)
-            {
-                /* Transient error? */
-                if (WSAGetLastError() == WSAEWOULDBLOCK || WSAGetLastError() == WSAEINTR)
-                {
-                    qTX.Prepend(new cQueueElem(buf + sofar, len - sofar));
-                    return;
-                }
-                else
-                {
-
-                    /* Must be a fatal error. */
-                    slog(LOG_ALL, 0,
-                         "PushWrite (%d): Write to socket, error %d", fd,
-                         WSAGetLastError());
-                    Unhook();
-                    return;
-                }
-            }
-#else
-            try {
-                thisround = write(fd, buf + sofar, len - sofar);
-            }
-            catch (const std::exception &ex)
-            {
-                slog(LOG_ALL, 0, "PushWrite exception: [%s]", ex.what());
-                thisround = -7;
-            }
-
-            if (thisround == 0)
-            {
-                slog(LOG_ALL, 0, "PushWrite (%d): Write to socket EOF", (int) fd);
-                Unhook();
-                return;
-            }
-            else if (thisround < 0)
-            {
-                if (errno == EWOULDBLOCK) /* I'd rather this didn't happen */
-                {
-                    qTX.Prepend(new cQueueElem(buf + sofar, len - sofar));
-                    return;
-                }
-
-                slog(LOG_ALL, 0, "PushWrite (%d): Write to socket, error %d",
-                     fd, errno);
-                Unhook();
-                return;
-            }
-#endif
-            if (thisround < len - sofar)
+            /* if (thisround < len - sofar)
             {
                 sofar += thisround;
                 qTX.Prepend(new cQueueElem(buf + sofar, len - sofar));
                 return;
-            }
+            }*/
 
             sofar += thisround;
 
@@ -175,6 +326,7 @@ void cHook::PushWrite(void)
         }
     }
 }
+
 
 void cHook::Write(ubit8 *pData, ubit32 nLen, int bCopy)
 {
@@ -193,6 +345,7 @@ void cHook::Write(ubit8 *pData, ubit32 nLen, int bCopy)
     PushWrite();
 }
 
+
 // For this hook, read as much as we can from the network
 // into the Hook's Rx queue...
 // -1 on error, 0 on ok.
@@ -204,11 +357,7 @@ int cHook::ReadToQueue(void)
 
     for (;;)
     {
-#if defined(_WINDOWS)
-        thisround = recv(fd, buf, sizeof(buf) - 1, 0);
-#else
-        thisround = read(fd, buf, sizeof(buf));
-#endif
+        thisround = this->read(buf, sizeof(buf));
 
         if (thisround > 0)
         {
@@ -216,20 +365,14 @@ int cHook::ReadToQueue(void)
         }
         else if (thisround == 0)
         {
-            slog(LOG_ALL, 0, "Read to queue: EOF on socket read (eno %d).",
-                 errno);
-            return -1;
+            // try again
+            return 0;
         }
-        else /* (thisround < 0) */
+        else // (thisround < 0)
         {
-#ifdef _WINDOWS
-            if (WSAGetLastError() == WSAEWOULDBLOCK || WSAGetLastError() == WSAEINTR)
-                return 0;
-#else
-            if (errno == EWOULDBLOCK)
-                return 0;
-#endif
-            slog(LOG_ALL, 0, "Read from socket %d error %d", fd, errno);
+            // will now be closed and error logged
+            if (IsHooked()) 
+                slog(LOG_ALL, 0, "ReadToQueue: Still hooked even though error - not possible");
             return -1;
         }
     }
@@ -291,7 +434,8 @@ void cCaptainHook::Hook(int nHandle, cHook *hook)
     //assert(hook->fd == -1);
 
     pfHook[nHandle] = hook;
-    hook->fd = nHandle;
+    hook->Hook(nHandle);
+    //hook->fd = nHandle;
     hook->id = newid++;
 
     hook->qTX.Flush();
@@ -310,18 +454,13 @@ void cCaptainHook::Hook(int nHandle, cHook *hook)
 
 void cCaptainHook::Unhook(cHook *hook)
 {
-    int i;
+    if (!hook->IsHooked())
+        return;
+
     int nHandle = hook->fd;
+    int i;
 
     assert(pfHook[nHandle] == hook);
-
-#ifdef _WINDOWS
-    i = closesocket(nHandle);
-#else
-    i = close(nHandle);
-#endif
-    if (i < 0)
-        slog(LOG_ALL, 0, "Captain Hook: Close error %d.", errno);
 
     for (i = 0; i < nTop; i++)
     {
@@ -334,7 +473,7 @@ void cCaptainHook::Unhook(cHook *hook)
         }
     }
 
-    pfHook[nHandle]->fd = -1;
+    // pfHook[nHandle]->fd = -1; // This should get unset in Unhook on close()
     pfHook[nHandle]->id = -1;
     pfHook[nHandle]->qTX.Flush();
     pfHook[nHandle]->qRX.Flush();    
@@ -424,12 +563,18 @@ int cCaptainHook::Wait(struct timeval *timeout)
 
                 if ((pfTmpHook == pfHook[tmpfd]) && (pfTmpHook->id == nId[i]))
                 {
+                    if (pfTmpHook->tfd() == -1)
+                        slog(LOG_ALL, 0, "Wait()) SELECT_READ | SELECT_EXCEPT FD is -1");
+
                     if (nFlag & (SELECT_READ | SELECT_EXCEPT))
                         pfTmpHook->Input(nFlag);
                 }
 
                 if ((pfTmpHook == pfHook[tmpfd]) && (pfTmpHook->id == nId[i]))
                 {
+                    if (pfTmpHook->tfd() == -1)
+                        slog(LOG_ALL, 0, "Wait()) SELECT_WRITE FD is -1");
+
                     if (nFlag & SELECT_WRITE)
                         pfTmpHook->PushWrite();
                 }

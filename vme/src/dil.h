@@ -266,13 +266,14 @@ struct dilargstype
 #define DILE_RHEAD     191
 #define DILE_OHEAD     192
 #define DILE_PHEAD     193
-#define DILE_FNDU2     194
+#define DILE_FNDU2     194  // Bizarre - missing from diltok I think
 #define DILE_GFOL      195
 #define DILE_SACT	   196	/* sact (#,#,#,#,#,#) */
 #define DILE_GINT	   197	/* getinteger(unit, idx) */
 #define DILE_PLAYERID  198
 #define DILI_SET_W	   199	/* set_weight(#,#) */
-#define DILI_MAX       199	/* The maximum node number */
+#define DILI_DISPATCH  200  /* dispatch(message) */
+#define DILI_MAX       200	/* The maximum node number */
 
 /* DIL Field references */
 #define DILF_NMS	0	/* .names */
@@ -557,7 +558,9 @@ struct diltemplate
     ubit32 nTriggers;	        /* Number of triggers of the DIL   */
     double fCPU;	            /* CPU usage (miliseconds)         */
 
-    struct diltemplate *next;	/* for zone templates              */
+    class dilprg *nextdude;     // For use in DIL sendtoall() with destroyed units
+    class dilprg *prg_list;     // Replacing the global dil_list with a template local one
+    struct diltemplate *vmcnext;	// Only for VMC
 };
 
 struct dilintr
@@ -599,8 +602,10 @@ struct dilframe
 class dilprg
 {
 public:
-    dilprg(class unit_data *owner, int bLink);
+    dilprg(class unit_data *owner, diltemplate *linktmpl);
     ~dilprg(void);
+    void link(diltemplate *tmpl);
+    void unlink(void);
 
     ubit32 flags;       // Recall, copy, etc.
     ubit16 varcrc;		// variable crc from compiler (saved)
@@ -623,8 +628,8 @@ public:
     int canfree(void);
 };
 
-extern class dilprg *dil_list;
-extern class dilprg *dil_list_nextdude;
+//extern class dilprg *dil_list;   Made local to tmpl
+//extern class dilprg *dil_list_nextdude;   Made local to tmpl
 extern int g_nDilPrg;
 extern int g_nDilVal;
 

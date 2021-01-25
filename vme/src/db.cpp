@@ -11,6 +11,7 @@
 #include <ctype.h>
 #include <time.h>
 
+#include "dbfind.h"
 #include "structs.h"
 #include "utils.h"
 #include "db.h"
@@ -31,6 +32,8 @@
 #include "dilrun.h"
 #include "sector.h"
 
+const char *player_zone = "_players";
+
 int room_number;                   /* For counting numbers in rooms */
 class unit_data *unit_list = NULL; /* The global unit_list          */
 class unit_data *npc_head = NULL;
@@ -40,7 +43,7 @@ class unit_data *room_head = NULL;
 cSector sector_dat;
 extern int mudboot;
 /* Global permanent element of zone info */
-struct zone_info_type zone_info = {0, 0, 0, 0};
+struct zone_info_type zone_info = { 0, NULL };
 
 extern int memory_total_alloc;
 
@@ -101,19 +104,27 @@ void insert_unit_in_zone_list(zone_type *zp, class unit_data *u)
  */
 void generate_bin_arrays(void)
 {
-   class file_index_type *fi;
-   class zone_type *z;
-   int i;
+   //class file_index_type *fi;
+   //class zone_type *z;
+   //int i;
 
-   /* Generate array for zones */
+   /* Generate array for zones 
    CREATE(zone_info.ba, struct bin_search_type, zone_info.no_of_zones);
    for (i = 0, z = zone_info.zone_list; z; z = z->next, i++)
    {
       zone_info.ba[i].block = z;
       zone_info.ba[i].compare = z->name;
-   }
+   }*/
 
-   /* Generate array for file indexes for each zone */
+   /* Generate array for zones 
+   for (i = 0, z = zone_info.zone_list; z; z = z->next, i++)
+      zone_info.mmp.insert(make_pair("Barry Bonds", z));
+   {
+      zone_info.ba[i].block = z;
+      zone_info.ba[i].compare = z->name;
+   }*/
+
+   /* Generate array for file indexes for each zone 
    for (z = zone_info.zone_list; z; z = z->next)
    {
       if (z->no_of_fi)
@@ -137,51 +148,49 @@ void generate_bin_arrays(void)
             z->tmplba[i].compare = tmpl->prgname;
          }
       }
-   }
+   }*/
 }
 
 /* Resolves DIL templates loaded boottime */
 void resolve_templates(void)
 {
-   class zone_type *z;
-   struct diltemplate *tmpl;
    int i, j, valid;
 
    /* all zones */
-   for (z = zone_info.zone_list; z; z = z->next)
+   for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.end(); z++)
    {
       /* all templates in zone */
-      for (tmpl = z->tmpl; tmpl; tmpl = tmpl->next)
+      for (auto tmpl = z->second->mmp_tmpl.begin(); tmpl != z->second->mmp_tmpl.end(); tmpl++)
       {
          /* all external references */
-         for (i = 0; i < tmpl->xrefcount; i++)
+         for (i = 0; i < tmpl->second->xrefcount; i++)
          {
-            tmpl->extprg[i] = find_dil_template(tmpl->xrefs[i].name);
+            tmpl->second->extprg[i] = find_dil_template(tmpl->second->xrefs[i].name);
             valid = 1;
 
-            if (tmpl->extprg[i])
+            if (tmpl->second->extprg[i])
             {
                /* check argument count and types */
-               if ((tmpl->xrefs[i].rtnt != tmpl->extprg[i]->rtnt) ||
-                   (tmpl->xrefs[i].argc != tmpl->extprg[i]->argc))
+               if ((tmpl->second->xrefs[i].rtnt != tmpl->second->extprg[i]->rtnt) ||
+                   (tmpl->second->xrefs[i].argc != tmpl->second->extprg[i]->argc))
                   valid = 0;
-               for (j = 0; j < tmpl->xrefs[i].argc; j++)
-                  if (tmpl->xrefs[i].argt[j] != tmpl->extprg[i]->argt[j])
+               for (j = 0; j < tmpl->second->xrefs[i].argc; j++)
+                  if (tmpl->second->xrefs[i].argt[j] != tmpl->second->extprg[i]->argt[j])
                      valid = 0;
             }
             else
             {
                /* ERROR MESSAGE HERE */
-               szonelog(z, "Cannot resolve external reference '%s'",
-                        tmpl->xrefs[i].name);
+               szonelog(z->second, "Cannot resolve external reference '%s'",
+                        tmpl->second->xrefs[i].name);
             }
             /* Typecheck error ! */
             if (!valid)
             {
-               tmpl->extprg[i] = NULL;
+               tmpl->second->extprg[i] = NULL;
                /* ERROR MESSAGE HERE */
-               szonelog(z, "Error typechecking reference to '%s'",
-                        tmpl->xrefs[i].name);
+               szonelog(z->second, "Error typechecking reference to '%s'",
+                        tmpl->second->xrefs[i].name);
             }
          }
       }
@@ -214,8 +223,6 @@ struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
 
       if (tmpl)
       {
-         struct diltemplate *tfi2, *tfi1;
-
          tmpl->zone = zone;
 
          split_fi_ref(tmpl->prgname, zBuf, nBuf);
@@ -223,30 +230,9 @@ struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
          FREE(tmpl->prgname);
 
          tmpl->prgname = str_dup(nBuf);
+         zone->mmp_tmpl.insert(make_pair(tmpl->prgname, tmpl));
 
          /* Link into list of indexes */
-
-         if (tmpllist == NULL)
-            tmpllist = tmpl; /* If list is empty */
-         else
-         {
-            for (tfi2 = NULL, tfi1 = tmpllist; tfi1; tfi1 = tfi1->next)
-            {
-               if (strcmp(tfi1->prgname, tmpl->prgname) > 0)
-                  break;
-               tfi2 = tfi1;
-            }
-            if (tfi2 == NULL)
-            {
-               tmpl->next = tmpllist;
-               tmpllist = tmpl;
-            }
-            else
-            {
-               tmpl->next = tfi1;
-               tfi2->next = tmpl;
-            }
-         }
 
          zone->no_tmpl++;
       }
@@ -259,9 +245,9 @@ struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
 }
 
 /* Generate index's for each unit in the file 'f', zone 'zone' */
-class file_index_type *generate_file_indexes(FILE *f, class zone_type *zone)
+void generate_file_indexes(FILE *f, class zone_type *zone)
 {
-   class file_index_type *fi, *fi_list, *tfi1, *tfi2;
+   class file_index_type *fi;
    class file_index_type *temp_index;
    static int object_num = 0;
    static int npc_num = 0;
@@ -270,7 +256,6 @@ class file_index_type *generate_file_indexes(FILE *f, class zone_type *zone)
 
    CByteBuffer cBuf(100);
 
-   fi_list = NULL;
    room_number = 0;
 
    for (;;)
@@ -282,6 +267,7 @@ class file_index_type *generate_file_indexes(FILE *f, class zone_type *zone)
 
       temp_index = new file_index_type();
       temp_index->name = str_dup((char *)cBuf.GetData());
+
       temp_index->zone = zone;
       //temp_index->unit = NULL;
       temp_index->crc = 0;
@@ -295,6 +281,7 @@ class file_index_type *generate_file_indexes(FILE *f, class zone_type *zone)
       if (fread(&(temp_index->crc), sizeof(ubit32), 1, f) != 1)
          error(HERE, "Failed to fread() temp_index->crc");
 
+      zone->mmp_fi.insert(make_pair(temp_index->name, temp_index));
       fi = temp_index;
       zone->no_of_fi++;
       fi->filepos = ftell(f);
@@ -327,38 +314,13 @@ class file_index_type *generate_file_indexes(FILE *f, class zone_type *zone)
 
       /* Seek forward to next index, so we are ready */
       fseek(f, fi->filepos + fi->length, SEEK_SET);
-
-      /* Link into list of indexes */
-      if (fi_list == NULL)
-         fi_list = fi; /* If list is empty */
-      else
-      {
-         for (tfi2 = NULL, tfi1 = fi_list; tfi1; tfi1 = tfi1->next)
-         {
-            if (strcmp(tfi1->name, fi->name) > 0)
-               break;
-            tfi2 = tfi1;
-         }
-         if (tfi2 == NULL)
-         {
-            fi->next = fi_list;
-            fi_list = fi;
-         }
-         else
-         {
-            fi->next = tfi1;
-            tfi2->next = fi;
-         }
-      }
    }
-
-   return fi_list;
 }
 
 /* Call this routine at boot time, to index all zones */
 void generate_zone_indexes(void)
 {
-   class zone_type *z, *tz1, *tz2;
+   class zone_type *z;
    extern int mud_bootzone;
    char zone[82], tmpbuf[82], filename[82 + 41];
    char buf[MAX_STRING_LENGTH];
@@ -369,7 +331,6 @@ void generate_zone_indexes(void)
    ubit8 access, loadlevel, payonly;
 
    zone_info.no_of_zones = 0;
-   zone_info.zone_list = 0;
 
    if ((zone_file =
             fopen(str_cc(g_cServerConfig.m_etcdir, ZONE_FILE_LIST),
@@ -380,6 +341,20 @@ void generate_zone_indexes(void)
            ZONE_FILE_LIST);
       exit(0);
    }
+
+   // Insert a virtual zone _players
+   z = new (class zone_type);
+   zone_info.no_of_zones++;
+   z->zone_no = zone_info.no_of_zones - 1;
+   z->name = str_dup("_players");
+   z->filename = str_dup("ply");
+   z->title = str_dup("Reserved zone for player file_indexes");
+   z->help = str_dup("");
+   z->notes = str_dup(   "This zone is only here to allow us to use playername@_plaeyrs as with all "
+   "other indexes such as mayor@midgaard. It's not actually a zone, and it's not a represenation "
+   "of player files on disk\n");
+   zone_info.mmp.insert(make_pair(z->name, z));
+   z = NULL;
 
    for (;;)
    {
@@ -462,6 +437,15 @@ void generate_zone_indexes(void)
       fstrcpy(&cBuf, f);
       z->name = str_dup((char *)cBuf.GetData());
 
+      if (find_zone(z->name))
+      {
+         slog(LOG_ALL, 0, "ZONE BOOT: Duplicate zone name [%s] not allowed", z->name);
+         exit(42);
+      }
+
+      // Insert zone into sorted list
+      zone_info.mmp.insert(make_pair(z->name, z));
+
       int mstmp = fread(&z->weather.base, sizeof(int), 1, f);
       if (mstmp < 1)
       {
@@ -499,42 +483,19 @@ void generate_zone_indexes(void)
 
       /* read templates */
       z->no_tmpl = 0;
-      z->tmpl = generate_templates(f, z);
+      generate_templates(f, z);
 
       z->no_of_fi = 0;
       z->zri = 0;
-      z->fi = generate_file_indexes(f, z);
+      generate_file_indexes(f, z);
       z->no_rooms = room_number; /* Number of rooms in the zone */
 
       fflush(f); /* Don't fclose(f); since we are using _cache */
-
-      /* Link Z into zone_info.zone_list */
-
-      if (zone_info.zone_list == NULL)
-         zone_info.zone_list = z; /* If list is empty */
-      else
-      {
-         for (tz2 = NULL, tz1 = zone_info.zone_list; tz1; tz1 = tz1->next)
-         {
-            if (strcmp(tz1->name, z->name) > 0)
-               break;
-            tz2 = tz1;
-         }
-         if (tz2 == NULL)
-         {
-            z->next = zone_info.zone_list;
-            zone_info.zone_list = z;
-         }
-         else
-         {
-            z->next = tz1;
-            tz2->next = z;
-         }
-      }
    }
    fclose(zone_file);
 
-   if (zone_info.zone_list == NULL || zone_info.no_of_zones <= 0)
+   // _players always there, so that plus basis is the minimum
+   if (zone_info.mmp.empty() || zone_info.no_of_zones <= 1)
    {
       slog(LOG_ALL, 0, "Basis zone is minimum reqired environment!");
       exit(0);
@@ -810,7 +771,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
    else
       UNIT_SIZE(u) = 180;
 
-   if (unit_version >= 51)
+   if (unit_version >= 51) // Get the unit the unit is in
    {
       g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));
       g_nCorrupt += pBuf->ReadStringCopy(name, sizeof(name));
@@ -1460,20 +1421,18 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
 void read_all_rooms(void)
 {
    // MS2020 int room_num = 0;
-   class zone_type *z;
-   class file_index_type *fi;
 
    extern class zone_type *boot_zone;
 
-   for (z = zone_info.zone_list; z; z = z->next)
+   for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.end(); z++)
    {
-      boot_zone = z;
+      boot_zone = z->second;
 
-      for (fi = z->fi; fi; fi = fi->next)
+      for (auto fi = z->second->mmp_fi.begin(); fi != z->second->mmp_fi.end(); fi++)
       {
-         if (fi->type == UNIT_ST_ROOM)
+         if (fi->second->type == UNIT_ST_ROOM)
          {
-            read_unit(fi);
+            read_unit(fi->second);
          }
       }
    }
@@ -1656,30 +1615,32 @@ struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
 
 void read_all_zones(void)
 {
-   class zone_type *zone;
    char filename[FI_MAX_ZONENAME + 41];
    FILE *f;
 
-   for (zone = zone_info.zone_list; zone; zone = zone->next)
+   for (auto zone = zone_info.mmp.begin(); zone != zone_info.mmp.end(); zone++)
    {
-      read_zone_error = zone;
+      read_zone_error = zone->second;
+
+      if (strcmp(zone->second->name, "_players") == 0)
+         continue;
 
       sprintf(filename, "%s%s.reset", g_cServerConfig.m_zondir,
-              zone->filename);
+              zone->second->filename);
 
       if ((f = fopen(filename, "rb")) == NULL)
       {
-         slog(LOG_OFF, 0, "Could not open zone file: %s", zone->filename);
+         slog(LOG_OFF, 0, "Could not open zone file: %s", zone->second->filename);
          exit(10);
       }
 
-      if (fread(&(zone->zone_time), sizeof(ubit16), 1, f) != 1)
-         error(HERE, "Failed to fread() zone->zone_time");
+      if (fread(&(zone->second->zone_time), sizeof(ubit16), 1, f) != 1)
+         error(HERE, "Failed to fread() zone->second->zone_time");
 
-      if (fread(&(zone->reset_mode), sizeof(ubit8), 1, f) != 1)
-         error(HERE, "Failed to fread() zone->reset_mode");
+      if (fread(&(zone->second->reset_mode), sizeof(ubit8), 1, f) != 1)
+         error(HERE, "Failed to fread() zone->second->reset_mode");
 
-      zone->zri = read_zone(f, 0);
+      zone->second->zri = read_zone(f, 0);
 
       fclose(f);
    }
@@ -1844,11 +1805,12 @@ void db_shutdown(void)
 
    slog(LOG_OFF, 0, "Destroying zone list.");
 
-   class zone_type *z, *nextz;
 
-   for (z = zone_info.zone_list; z; z = nextz)
+   auto nextz = zone_info.mmp.begin();
+
+   for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.end(); z = nextz)
    {
-      nextz = z->next;
-      delete z;
+      nextz = z++;
+      delete z->second;
    }
 }

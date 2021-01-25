@@ -121,12 +121,12 @@ void dilfi_edit(register class dilprg *p)
     {
         if (!IS_PC((class unit_data *)v1->val.ptr))
             dil_typeerr(p, "not a pc unit");
+        else if (!CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr))
+            dil_typeerr(p, "PC has no descriptor in edit()");
         else
         {
-            CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr)->postedit =
-                dil_edit_done;
-            CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr)->editing =
-                p->owner;
+            CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr)->postedit = dil_edit_done;
+            CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr)->editing = p->owner;
             CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr)->editref = NULL;
 
             set_descriptor_fptr(CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr),
@@ -409,7 +409,14 @@ void dilfi_foe(class dilprg *p)
 
             for (i = 0; i < unit_vector.top; i++)
                 dil_add_secure(p, UVI(i), NULL);
-            dil_add_secure(p, p->sarg->owner, NULL);
+            
+            // This statement is incorrect in Yamato when a room uses foreach() this
+            // will cause the room to get added as one of the items to be looped
+            // when it asked only for PCs
+            // dil_add_secure(p, p->sarg->owner, NULL);
+
+            if (IS_SET(UNIT_TYPE(p->sarg->owner), v1->val.num))
+                dil_add_secure(p, p->sarg->owner, NULL);
         }
     }
     delete v1;
@@ -619,6 +626,27 @@ void dilfi_amod(class dilprg *p)
     delete v2;
 }
 
+
+
+// set_weight_base
+// Set unitptr param 1 base weight to param 2 int value
+// Sets a unit's base weight and adjustes the weight of the unit and everything it is in.
+// 
+void dilfi_dispatch(class dilprg *p)
+{
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("set_weight_base", p, 1,
+                       v1, TYPEFAIL_NULL, 1, DILV_SP))
+    {
+        if (v1->val.ptr)
+        {
+            void pipeMUD_write(const char *str);
+            pipeMUD_write((const char *) v1->val.ptr);
+        }
+    }
+    delete v1;
+}
 
 
 // set_weight_base
@@ -2614,10 +2642,12 @@ void dilfi_sntadil(register class dilprg *p)
             if (tmpl)
             {
                 class dilprg *tp;
+                if (tmpl->nextdude)
+                    slog(LOG_ALL, 0, "INVESTIGATE: DIL sendtoall() we appear to have a nested sendtoall() with nextdude.");
 
-                for (tp = dil_list; tp; tp = dil_list_nextdude)
+                for (tp = tmpl->prg_list; tp; tp = tmpl->nextdude)
                 {
-                    dil_list_nextdude = tp->next;
+                    tmpl->nextdude = tp->next;
 
                     if (tp->fp && tp->fp->tmpl == tmpl && tp != p)
                     {
@@ -2650,6 +2680,7 @@ void dilfi_sntadil(register class dilprg *p)
                         function_activate(tp->owner, &sarg);
                     }
                 } /* for */
+                tmpl->nextdude = NULL;
                 dil_test_secure(p);
             }
         }

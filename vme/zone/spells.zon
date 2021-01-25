@@ -127,6 +127,8 @@ interrupt (SFB_MSG , "inc displace counter" == argument,inc_count);
    count:=count+1;
    if (isaff(tgt, ID_BLESS))
      subaff(tgt, ID_BLESS);
+   else if (isaff(tgt, ID_UNHOLY_BLESSING))
+     subaff(tgt, ID_UNHOLY_BLESSING);
    else if (isaff(tgt, ID_CONDEMN))
      subaff(tgt, ID_CONDEMN);
    else if (isaff(tgt, ID_BERSERK))
@@ -7137,6 +7139,8 @@ interrupt (SFB_MSG , "inc despel counter" == argument,inc_count);
    count:=count+1;
    if (isaff(tgt, ID_BLESS))
      subaff(tgt, ID_BLESS);
+   else if (isaff(tgt, ID_UNHOLY_BLESSING))
+     subaff(tgt, ID_UNHOLY_BLESSING);
    else if (isaff(tgt, ID_DETECT_ALIGN))
      subaff(tgt, ID_DETECT_ALIGN);
    else if (isaff(tgt, ID_RAGE))
@@ -8168,14 +8172,14 @@ code
    /*
       Spell Bless:
       This spell raises the gods good attention to a character.
-      With divine intervention, the characters DIV, MAG, DEX and STR
+      With divine intervention, the characters DIV, BRA, DEX and STR
       is raised temporarily.
       */
 
    if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
      hm := -1;
 
-   if ((hm < 0) or isaff(tgt, ID_BLESS))
+   if ((hm < 0) or isaff(tgt, ID_BLESS) or isaff(tgt, ID_UNHOLY_BLESSING))
    {
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
@@ -8211,6 +8215,55 @@ code
 }
 dilend
 
+dilbegin ubless(medi:unitptr, tgt : unitptr, arg : string,
+	       hm : integer, effect : string);
+code
+{
+   /*
+      Spell Unholy Blessing:
+      This spell raises the gods dark attention to a character.
+      With divine intervention, the characters DIV, BRA, DEX and STR
+      is raised temporarily.
+      */
+
+   if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
+     hm := -1;
+
+   if ((hm < 0) or isaff(tgt, ID_BLESS) or isaff(tgt, ID_UNHOLY_BLESSING))
+   {
+      act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   hm := 1 + hm / 10;
+   if (hm > 10) hm := 10;
+
+   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+	  ABIL_DIV, hm, 0, TIF_BLESS_ON, TIF_BLESS_TICK, TIF_BLESS_OFF,
+	  APF_ABILITY);
+
+   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+	  ABIL_DEX, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
+	  APF_ABILITY);
+
+   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+	  ABIL_STR, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
+	  APF_ABILITY);
+
+   addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
+	  ABIL_BRA, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
+	  APF_ABILITY);
+
+   /* act("$1n lay hands on $3n and chants softly.",
+      A_SOMEONE, sa->caster, 0, sa->target, TO_NOTVICT);
+      act("You lay hands on $3n and chant softly.",
+      A_SOMEONE, sa->caster, 0, sa->target, TO_CHAR);
+      act("$1n lay hands on you and chant softly.",
+      A_SOMEONE, sa->caster, 0, sa->target, TO_VICT); */
+
+   quit;
+}
+dilend
 
 dilbegin curse(medi:unitptr, tgt : unitptr, arg : string,
 	       hm : integer, effect : string);
@@ -14570,7 +14623,7 @@ extra {}
 "Simply an enormous leaf, its purpose is to serve as a shield for
 embattled adventurers. While the nature of the shield may lead one to
 consider the quality to be lacking, appearances are often deceiving."
-SHIELD_DEF(SHIELD_LARGE, -25, -25)
+SHIELD_DEF(SHIELD_LARGE, 0, 0)
 dilcopy blowaway@function(600, "$1n shrinks back into a normal leaf.");
 weight 2
 end
@@ -14648,7 +14701,7 @@ names {"dagger of ice","ice dagger","ice thorn","dagger","thorn","ice"}
 title "a dagger of ice"
 descr "An icicle shaped remarkably like a dagger lies here, melting."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, -25, -25)
+WEAPON_DEF(WPN_DAGGER, 0, 0)
 weight 2
 cost 1 IRON_PIECE
 extra {}
@@ -14845,7 +14898,7 @@ descr "a large, humanoid lightning bolt stands here."
 extra {}
 "The creature is made of pure electricity, and sparkles and crackles
 menacingly."
-M_ELEMENTAL_LIGHT_SMALL(50,SEX_NEUTRAL)
+M_ELEMENTAL_LIGHT_SMALL(90,SEX_NEUTRAL)
 exp 0
 alignment -350
 dilcopy obey_animal@function();
@@ -14907,7 +14960,7 @@ evil."
 extra {}
 "It is quite disgusting to think that this was once a living being. Now
 it is twisted, and evil, mindlessly doing its master's bidding."
-M_SKELETON_TINY(10,SEX_MALE)
+M_SKELETON_TINY(15,SEX_MALE)
 exp 0
 end /* skel_champ */
 
@@ -14918,7 +14971,7 @@ descr "A summoned eagle is here."
 extra {}
 "This is an eagle that has been summoned to perform tasks for it's
 master. It is a stalwart bird, and won't take any mistreatment lightly."
-M_EAGLE_SMALL(30,SEX_MALE)
+M_EAGLE_SMALL(50,SEX_MALE)
 exp 0
 alignment 0
 dilcopy sum_check@spells();
@@ -14932,7 +14985,7 @@ title "an earth elemental"
 descr "a large, humanoid column of rock stands here."
 extra {}
 "The large beast is made of solid rock, with huge diamonds for eyes."
-M_ELEMENTAL_EARTH_SMALL(13,SEX_NEUTRAL)
+M_ELEMENTAL_EARTH_SMALL(17,SEX_NEUTRAL)
 exp 0
 dilcopy obey_animal@function();
 dilcopy sum_check@spells();
@@ -14948,7 +15001,7 @@ descr "a large, swirling mist in humanoid form floats here."
 extra {}
 "This being is nearly translucent, and floats in the air quietly."
 
-M_ELEMENTAL_AIR_SMALL(17,SEX_NEUTRAL)
+M_ELEMENTAL_AIR_SMALL(25,SEX_NEUTRAL)
 exp 0
 dilcopy obey_animal@function();
 dilcopy sum_check@spells();
@@ -14963,7 +15016,7 @@ descr "a large column of water stands here."
 extra {}
 "This column of water seems to be alive!"
 
-M_ELEMENTAL_FROST_SMALL(23,SEX_NEUTRAL)
+M_ELEMENTAL_FROST_SMALL(35,SEX_NEUTRAL)
 exp 0
 dilcopy obey_animal@function();
 dilcopy sum_check@spells();
@@ -14979,7 +15032,7 @@ descr "a large column of flame stands here."
 extra {}
 "Movement from the flames suggest intelligence is present."
 
-M_ELEMENTAL_FIRE_SMALL(28,SEX_NEUTRAL)
+M_ELEMENTAL_FIRE_SMALL(45,SEX_NEUTRAL)
 exp 0
 
 dilcopy obey_animal@function();
@@ -14997,7 +15050,7 @@ extra {}
 "This large beast looks very upset at being pulled from its plane of
 existance."
 
-M_DEMON_LESSER_SMALL(35,SEX_MALE)
+M_DEMON_LESSER_SMALL(60,SEX_MALE)
 exp 0
 
 dilcopy obey_animal@function();
@@ -15014,7 +15067,7 @@ descr "a large devil stands here."
 extra {}
 "This large creature stands with a malevolent grin on his face."
 
-M_DEMON_GREATER_SMALL(45,SEX_MALE)
+M_DEMON_GREATER_SMALL(90,SEX_MALE)
 exp 0
 dilcopy sum_check@spells();
 dilcopy obey_animal@function();
@@ -15029,7 +15082,7 @@ title "a dust devil"
 descr "A small tornado of swirling dust is spinning around."
 extra {}
 "Watch out, you might get the dust in your eyes!"
-M_ELEMENTAL_FIRE_TINY(4,SEX_NEUTRAL)
+M_ELEMENTAL_FIRE_TINY(6,SEX_NEUTRAL)
 exp -400
 
 dilcopy obey_animal@function();

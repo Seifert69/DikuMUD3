@@ -32,6 +32,26 @@ sbit32 player_id = 1; // Looks to me like it needs to begin with 1 (crash on sta
 class descriptor_data *find_descriptor(const char *name,
                                        class descriptor_data *except);
 
+void assign_player_file_index(unit_data *pc)
+{
+    zone_type *z = find_zone(player_zone);
+    auto it = z->mmp_fi.find(PC_FILENAME(pc));
+
+    if (it != z->mmp_fi.end())
+        UNIT_FILE_INDEX(pc) = it->second;
+    else
+    {
+        class file_index_type *fi = new file_index_type();
+
+        fi->name = str_dup(PC_FILENAME(pc));
+        fi->zone = z;
+
+        z->mmp_fi.insert(make_pair(fi->name, fi));
+
+        UNIT_FILE_INDEX(pc) = fi;
+    }
+}
+
 char *PlayerFileName(const char *pName)
 {
     static char Buf[MAX_INPUT_LENGTH + 1 + 512];
@@ -437,6 +457,7 @@ class unit_data *load_player(const char *pName)
         return NULL;
 
     pc = load_player_file(pFile);
+    assign_player_file_index(pc);
 
     fclose(pFile);
 

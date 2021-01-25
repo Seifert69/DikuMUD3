@@ -419,8 +419,8 @@ exp 125
 
 #define M_TRIPHID_MAD(MLVL,GENDER) /* level 1 to 199 */ \
    BASE_TRIPHID(MLVL,GENDER,ARM_CLOTHES)  \
-   dilcopy comb_poison@function("&c+rYou feel poison burning your veins!&[default]", \
-   "&c+c$1n sinks $1s fangs deep into $3n!&[default]"); \
+   dilcopy comb_poison@function("<div class='cpr'>You feel poison burning your veins!</div>", \
+   "<div class='cpc'>$1n sinks $1s fangs deep into $3n!</div>"); \
    dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*25, 0, "ANY", \
          {"$1n attacks $3n!", "$1n attacks you!"}); \
    exp 130
@@ -1021,8 +1021,8 @@ SETHEIGHT(MLVL,7,90) \
 MSET_ABILITY(25,35,10,20,10,0,0,0) \
 MSET_WEAPON(10,10,10,10,10,10) \
 MSET_SPELL(3,4,3,4,4,4,4,4,3,3,4) \
-dilcopy comb_poison@function("&c+rYou feel fire burning within your veins!&[default]", \
-   "&c+c$1n strikes $3n with $1s stinger!&[default]");
+dilcopy comb_poison@function("<div class='cpr>You feel fire burning within your veins!</div>", \
+   "&c+c$1n strikes $3n with $1s stinger!</div>");
 
 #define M_SCORPION_TINY(MLVL,GENDER) /*level 1 to 25 */ \
 BASE_SCORPION(MLVL,GENDER,ARM_LEATHER)
@@ -1722,8 +1722,8 @@ exp 125
    MSET_WEAPON(10,10,10,10,15,10) \
    MSET_SPELL(1,0,0,0,1,5,5,5,5,8,5) \
    romflags {CHAR_DETECT_INVISIBLE} \
-   dilcopy comb_poison@function("&c+r$1n drives $1s fangs deep into $3n!&[default]", \
-   "&c+r$1n grimly bites $3n!&[default]"); \
+   dilcopy comb_poison@function("<div class='cpr'>$1n drives $1s fangs deep into $3n!</div>", \
+   "<div class='cpr'>$1n grimly bites $3n!</div>"); \
    dilcopy aggressive@function(0, -1, 0, -49, 0, PULSE_SEC*11, -1, "ANY", \
    {"$1n shows a sharp set of fangs just before shooting $1s head at $3n!", \
 	"$1n shows a sharp set of fangs and then shoots $1s head at YOU!"});
@@ -2736,8 +2736,8 @@ exp 125
    romflags {CHAR_DETECT_INVISIBLE} \
    dilcopy web@function(); \
    dilcopy poi_resist@function(); \
-   dilcopy comb_poison@function("&c+rYou feel fire burning within your veins!&[default]", \
-   "&c+c$1n sinks $1s fangs deep into $3n!&[default]"); \
+   dilcopy comb_poison@function("<div class='cpr'>You feel fire burning within your veins!</div>", \
+   "&c+c$1n sinks $1s fangs deep into $3n!</div>"); \
    dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*60, 0, "ANY", \
          {"$1n attacks $3n!", "$1n attacks you!"}); \
    exp 160
@@ -2765,8 +2765,8 @@ exp 125
 
 #define M_SPIDER_MAD(MLVL,GENDER) /* level 1 to 199 */ \
    BASE_SPIDER(MLVL,GENDER,ARM_CLOTHES)  \
-   dilcopy comb_poison@function("&c+rYou feel poison burning your veins!&[default]", \
-   "&c+c$1n sinks $1s fangs deep into $3n!&[default]"); \
+   dilcopy comb_poison@function("<div class='cpr'>You feel poison burning your veins!</div>", \
+   "<div class='cpc'>$1n sinks $1s fangs deep into $3n!</div>"); \
    dilcopy aggressive@function(0, -1, 0, 0, 3, WAIT_SEC*25, 0, "ANY", \
          {"$1n attacks $3n!", "$1n attacks you!"}); \
    exp 130

@@ -133,7 +133,6 @@ void test_mud_up(void)
 // Alert all connected clients that the MUD server is unavailable
 void mud_went_down(void)
 {
-
     class cConHook *con;
     char buf[200];
 
@@ -207,6 +206,12 @@ void Control(void)
 }
 
 // ====================== MotherHook (Listening to TCP port)
+
+void cMotherHook::Unhook(void)
+{
+    CaptainHook.Unhook(this);
+}
+
 
 int cMotherHook::IsHooked(void)
 {
@@ -284,6 +289,16 @@ class cConHook *connection_list = NULL;
 
 char Outbuf[32768];
 */
+void cMudHook::Unhook(void)
+{
+    if (this->IsHooked())
+    {
+        slog(LOG_OFF, 0, "Unhooking MUD Hook");
+        CaptainHook.Unhook(this);
+        assert(this->fd != -1);
+        cHook::Unhook();
+    }
+}
 
 int cMudHook::read_mud(void)
 {

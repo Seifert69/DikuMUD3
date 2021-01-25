@@ -8,9 +8,13 @@
 #ifndef _MUD_DB_H
 #define _MUD_DB_H
 
+#include "structs.h"
 #include "bytestring.h"
 #include "dbfind.h"
 #include "config.h"
+#include <map>
+#include <string>
+
 
 #define UNIT_VERSION 73
 #define MUD_NAME "Valhalla"	/* For ease of localization */
@@ -74,9 +78,9 @@
 struct zone_info_type
 {
     int no_of_zones;		/* Total number of zones       */
-    class zone_type *zone_list;	/* The Linked List of Zones    */
-    struct bin_search_type *ba;	/* Array of structs for search */
+    //class zone_type *zone_list;	Replaced by ::map below
     void **spmatrix;		/* Inter zone shortest paths   */
+    std::map< const char * , zone_type *, cmp_str > mmp;
 };
 
 class unit_data *read_unit_string (CByteBuffer * pBuf, int type, int len,
@@ -99,5 +103,6 @@ extern class unit_data *room_head;
 extern class unit_data *npc_head;
 extern class unit_data *obj_head;
 extern struct zone_info_type zone_info;
+extern const char *player_zone;
 
 #endif /* _MUD_DB_H */

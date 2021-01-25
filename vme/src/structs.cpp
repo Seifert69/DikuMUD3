@@ -204,14 +204,7 @@ zone_type::zone_type(void)
     objects = NULL;
     npcs = NULL;
 
-    fi = NULL;
-    ba = NULL;
-
     zri = NULL;
-    next = NULL;
-
-    tmpl = NULL;
-    tmplba = NULL;
 
     spmatrix = NULL;
     no_rooms = 0;
@@ -256,12 +249,13 @@ zone_type::~zone_type(void)
         delete ut;
     }
 
-    class file_index_type *p, *nextfi;
-
-    for (p = fi; p; p = nextfi)
+    auto nextfi = mmp_fi.begin();
+    for (auto p = mmp_fi.begin(); p != mmp_fi.end(); p = nextfi)
     {
-        nextfi = p->next;
-        delete p;
+        nextfi = p;
+        nextfi++;
+        
+        delete p->second;
     }
 
     struct zone_reset_cmd *pzri, *nextzri;
@@ -272,21 +266,23 @@ zone_type::~zone_type(void)
         FREE(pzri);
     }
 
-    struct diltemplate *pt, *nextpt;
+    auto nextpt = mmp_tmpl.begin();
 
-    for (pt = tmpl; pt; pt = nextpt)
+    for (auto pt = mmp_tmpl.begin(); pt != mmp_tmpl.end(); pt = nextpt)
     {
-        nextpt = pt->next;
-        if (pt->prgname)
-            FREE(pt->prgname);
-        if (pt->argt)
-            FREE(pt->argt);
-        if (pt->core)
-            FREE(pt->core);
-        if (pt->vart)
-            FREE(pt->vart);
+        nextpt = pt;
+        nextpt++;
 
-        FREE(pt);
+        if (pt->second->prgname)
+            FREE(pt->second->prgname);
+        if (pt->second->argt)
+            FREE(pt->second->argt);
+        if (pt->second->core)
+            FREE(pt->second->core);
+        if (pt->second->vart)
+            FREE(pt->second->vart);
+
+        FREE(pt->second);
     }
 
     // struct bin_search_type *ba;    /* Pointer to binarray of type      */
@@ -300,7 +296,7 @@ file_index_type::file_index_type(void)
 {
     name = NULL;
     zone = NULL;
-    next = NULL;
+    //next = NULL;
     //unit = NULL;
 
     filepos = 0;

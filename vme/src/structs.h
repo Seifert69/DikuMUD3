@@ -19,8 +19,10 @@
 #include "fight.h"
 #include "color.h"
 #include "destruct.h"
+#include "dil.h"
 using namespace std;
 #include <vector>
+#include <map>
 #ifndef MPLEX_COMPILE
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
@@ -43,6 +45,16 @@ using namespace boost;
 
 /* ----------------- DATABASE STRUCTURES ----------------------- */
 
+// Used for std::map in place of the old binary search
+struct cmp_str
+{
+   bool operator()(char const *a, char const *b) const
+   {
+      return std::strcmp(a, b) < 0;
+   }
+};
+
+
 /* This must be maintained as an array for use with binary search methods */
 struct bin_search_type
 {
@@ -63,7 +75,7 @@ public:
 
     char *name;                  /* Unique within this list          */
     class zone_type *zone;       /* Pointer to owner of structure    */
-    class file_index_type *next; /* Next File Index                  */
+    // class file_index_type *next; // Replaced by zone's mmp_fi list Next file index, (zone_type->fi list)
     // obsoleted by fi_unit_list. class unit_data *unit; // Pointer to room if is room
 
     long filepos;  /* Byte offset into file            */
@@ -107,14 +119,11 @@ public:
     class unit_data *objects; // unit pointer to the base objects, used in vmc really
     class unit_data *npcs;    // unit pointer to the base npcs, used in vmc really
 
-    class file_index_type *fi;  /* Pointer to list of file-index's  */
-    struct bin_search_type *ba; /* Pointer to binarray of type      */
+    std::map< const char * , file_index_type *, cmp_str > mmp_fi;
 
     struct zone_reset_cmd *zri; /* List of Zone reset commands      */
-    class zone_type *next;     /* Next Zone                        */
 
-    struct diltemplate *tmpl;       /* DIL templates in zone            */
-    struct bin_search_type *tmplba; /* Pointer to binarray of type      */
+    std::map< const char * , diltemplate *, cmp_str > mmp_tmpl;
 
     ubit8 **spmatrix; /* Shortest Path Matrix             */
 

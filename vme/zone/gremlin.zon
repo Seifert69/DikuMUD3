@@ -101,7 +101,7 @@ code
 :start:
 	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (BOLDIN_ONGOING in activator.quests) and (BOLDIN_ROGUE in activator.quests));
 
-	if(activator.level >= 20)
+	if(activator.level >= 40)
 	{
 		goto start;
 		// send them away, perhaps with a token reward?
@@ -120,7 +120,7 @@ code
 	pause;
 	exec("say Apart from killing it, of course.", self);
 	pause;
-	exec("say say First thing's first, boats.", self);
+	exec("say First things first, boats.", self);
 	pause;
 	exec("say Running hither and yon on those legs of yours is all well and good but sooner or later you'll need to take to the water.", self);
 	pause;
@@ -180,8 +180,6 @@ code
 	pause;
 	exec("say If you can't afford all of my supplies, try roughing up one of those good-for-nothing fishermen on the eastern beach and selling their rods to Fred at the fishing supply store in the harbour market.", self);
 	pause;
-	exec("say What do you mean 'poor defenseless fishermen'? Perhaps you should consider them more closely next time you pass that way.", self);
-	pause;
 	exec("say Now look lively and fetch me them things, or I'll miss me ship.", self);
 	addextra(pc.quests, {ROGUE_ONGOING}, "");
 
@@ -193,20 +191,21 @@ code
 	exdp := ROGUE_ONGOING in pc.quests;
 	if(("boat" in exdp.names) and ("cutlass" in exdp.names) and ("rope" in exdp.names))
 	{
-		exec("say That's the way, me hearty! And did you have to sell any of those fishing rods to pay for me dunnage?", self);
-		pause;
 		subextra(pc.quests, ROGUE_ONGOING);
 		addextra(pc.quests, {ROGUE_COMPLETE}, "");
-		experience(2000, pc);
+		experience(3000, pc);
 		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		act("<br><div class='xpgain'>You recieve 2000 experience.</div><br>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		
-		// ONGOING DIALOG WORK BEING DONE.
+		act("<br><div class='xpgain'>You recieve 3000 experience.</div><br>",A_SOMEONE, pc, null, null, TO_CHAR); 
+
+		exec("say That's the way, me hearty! And did you have to sell any of those fishing rods to pay for me dunnage?", self);
+		pause;
 		exec("say Even if you didn't this time, you should bear them in mind if you find yourself in a fix in future.", self);
 		pause;
 		exec("say I'd have done the same already, only I'm not so handy without me trusty cutlass.", self);
 		pause;
 		exec("emote turns his attention to provisioning his boat, giving you a dismissive wave.", self);
+		// give a treasure map to find buried treasure. Treasure dil to be applied to map, faking a load in a room. 
+		// small_hill@tower is the treasure room 4gp 32 sp 128 cp. item that is a necklace of mana in some way.
 	}
 
 	unsecure(pc);
@@ -285,7 +284,7 @@ code
 	heartbeat:= PULSE_SEC*3;
 
 :start:
-	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(BOLDIN_COMPLETE in activator.quests)) and (activator.level <= 10));
+	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(BOLDIN_COMPLETE in activator.quests)) and (activator.level <= 40));
 
 	pc := activator;
 	secure(pc, lostpc);
@@ -649,7 +648,7 @@ code
 	heartbeat:= PULSE_SEC*4;
 
 :start:
-	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(EXPLORE_COMPLETE in activator.quests)) and (activator.level <= 20) and (BOLDIN_HANDOFF in activator.quests));
+	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(EXPLORE_COMPLETE in activator.quests)) and (activator.level <= 40) and (BOLDIN_HANDOFF in activator.quests));
 
 	pc := activator;
 	secure(pc, lostpc);
@@ -1229,7 +1228,7 @@ movement SECT_CITY
 west to outside_farm descr "Outside the Farm House";
 south to trail_01 descr "Dusty Trail";
 north to cave_00 descr "Inside the Cave";
-up open {EX_CLIMB, EX_FALL_THIS_WAY} difficulty 0 to outcropping;
+up open {EX_CLIMB} difficulty 0 to outcropping;
 extra {"$climb_up"} {5} ""
 extra {"rocky outcropping", "rocks", "outcropping"}
 "A tall rocky outcropping is here. It would take one both extremely skilled, 
@@ -1736,8 +1735,7 @@ title "Sventer the rogue"
 descr "A tall roguish man is here."
 extra {}
 "Tall, and dashingly handsom, Sventer has a scar down one cheek from an apparent run-in 
-with a blade of one form or another. He is cowled in a dark cloak, and the gleam of an 
-axe blade can be seen hanging from his hip."
+with a blade of one form or another. He is cowled in a dark cloak, and has a gleam in his eye."
 M_HUMAN_THIEF_AXE(30,SEX_MALE)
 money 1 GOLD_PIECE
 
@@ -2347,7 +2345,7 @@ load adv_chest into farm_attic local 1
 }
 load heal_jug into cave_01 local 3
 
-//load sventer into dock1@torsbay max 1
+load sventer into dock1@torsbay max 1
 
 // doors
 

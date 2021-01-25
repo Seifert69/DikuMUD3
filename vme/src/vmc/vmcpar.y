@@ -201,7 +201,7 @@ dil		: DILPRG
 				if (!zone.z_tmpl) {
 			   		zone.z_tmpl = cur_tmpl;
 				} else {
-			   		cur_tmpl->next = zone.z_tmpl;
+			   		cur_tmpl->vmcnext = zone.z_tmpl;
 					zone.z_tmpl = cur_tmpl;
 				}
 				tmplnames = add_name(cur_tmpl->prgname, tmplnames);
@@ -576,7 +576,7 @@ unit_field	: NAMES stringlist
 					if (!zone.z_tmpl) {
 					zone.z_tmpl = cur_tmpl;
 				} else {
-					cur_tmpl->next = zone.z_tmpl;
+					cur_tmpl->vmcnext = zone.z_tmpl;
 					zone.z_tmpl = cur_tmpl;
 				}
 				tmplnames = add_name(cur_tmpl->prgname, tmplnames);

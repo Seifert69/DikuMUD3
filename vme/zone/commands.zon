@@ -32,8 +32,12 @@ help
 dilbegin do_change(arg : string);
 code
 {
-   sendtext("do_change() DIL. arg = " + arg + "<br/>", self);
-   quit;
+	if (self.extra.["$whostatus"] != null)
+		subextra(self.extra,"$whostatus");
+	addextra(self.extra,{"$whostatus"},"- "+arg);
+	act ("Your Who Status has been set to: "+arg,A_SOMEONE,self,null,null,TO_CHAR);	
+	sendtext("Your Who Status has been set to: "+arg+"<br/>", self);
+	quit;
 }
 dilend
 
@@ -1007,6 +1011,8 @@ code{
 
 /* dil do_prompt */
 dilbegin do_prompt(arg : string);
+external
+	string do_color@function(arg : string);
 var
 
    prom     :  string;
@@ -1046,8 +1052,10 @@ code
    else if (arg=="blank")
       self.prompt:= "";
    else 
+   {
+	  arg := do_color@function(arg);
       self.prompt := arg;
-
+   }
    i:=dildestroy("send_prompt@update",self);
    dilcopy("send_prompt@update",self);
    quit;
@@ -6804,6 +6812,8 @@ while (item!=null){
 :loop:
    if (isaff(self, ID_BLESS))
      subaff(self, ID_BLESS);
+   else   if (isaff(self, ID_UNHOLY_BLESSING))
+     subaff(self, ID_UNHOLY_BLESSING);
    else   if (isaff(self, ID_NBLESS))
      subaff(self, ID_NBLESS);
    else   if (isaff(self, ID_RAGE))
@@ -7975,8 +7985,7 @@ code
 	act ("Your Who Status has been set to: "+arg,A_SOMEONE,self,null,null,TO_CHAR);	
 	quit;
 }
-dilend /* do_delete */
-
+dilend
 dilbegin dig(arg : string);
 var
 u : unitptr;
@@ -9017,7 +9026,7 @@ return ;
 dilend
 
 
-dilbegin stringlist shell(s:stringlist);
+dilbegin stringlist dilshell(s:stringlist);
 var
    ln:integer;
    imax:integer;
@@ -9063,7 +9072,7 @@ dilend
 
 dilbegin comm_dil(arg : string);
 external
- stringlist shell (s:stringlist);
+ stringlist dilshell (s:stringlist);
 var
  newlist:stringlist;
  istart:integer;
@@ -9087,7 +9096,7 @@ code
       cmd := cmd.next;
    }
 
-   newlist:=shell(cmdlist);
+   newlist:=dilshell(cmdlist);
    i:=0;
    buff:="<u>The following commands are available:</u><br/>";
    iMax:=length(newlist);
@@ -9109,7 +9118,7 @@ dilend
 
 dilbegin soc_dil(arg : string);
 external
- stringlist shell (s:stringlist);
+ stringlist dilshell (s:stringlist);
 var
  buff:string;
 newlist:stringlist;
@@ -9129,7 +9138,7 @@ code
  cmd := cmd.next;
  }
 
-   newlist:=shell(cmdlist);
+   newlist:=dilshell(cmdlist);
    i:=0;
    buff:="<u>The following socials are available:</u><br/><div class='fourcol'>";
    iMax:=length (newlist);
@@ -9147,7 +9156,7 @@ dilend
 
 dilbegin ski_dil(arg : string);
 external
-   stringlist shell(s:stringlist);
+   stringlist dilshell(s:stringlist);
 var
    buff:string;
    newlist:stringlist;
@@ -9172,7 +9181,7 @@ code
    addstring(cmdlist,"climb");
    addstring(cmdlist,"leadership");
 
-   newlist:=shell(cmdlist);
+   newlist:=dilshell(cmdlist);
 
    i:=0;
    buff:="<u>The following skills are available:</u><br/><div class='fourcol'>";
@@ -9191,7 +9200,7 @@ dilend
 
 dilbegin wizhelp(arg : string);
 external
- stringlist shell (s:stringlist);
+ stringlist dilshell (s:stringlist);
 var
  buff:string;
 newlist:stringlist;
@@ -9212,7 +9221,7 @@ code
  cmd := cmd.next;
  }
 
-   newlist:=shell(cmdlist);
+   newlist:=dilshell(cmdlist);
    i:=0;
    buff:="<u>The following Admin commands are available:</u><br/><div class='fourcol'>";
    iMax:=length (newlist);
@@ -9231,7 +9240,7 @@ dilend
 
 dilbegin wizsoc(arg : string);
 external
- stringlist shell (s:stringlist);
+ stringlist dilshell (s:stringlist);
 var
  buff:string;
 newlist:stringlist;
@@ -9252,7 +9261,7 @@ code
  cmd := cmd.next;
  }
 
-   newlist:=shell(cmdlist);
+   newlist:=dilshell(cmdlist);
    i:=0;
    buff:="<u>The following Admin socials are available:</u><br/><div class='fourcol'>";
    iMax:=length (newlist);
@@ -11887,7 +11896,7 @@ dilend
 
 
 // do_who
-dilbegin who_dil ( arg: string );
+dilbegin who_dil( arg: string );
 var
    buff:string;
    gld:string;
@@ -12369,6 +12378,8 @@ code
 {
    if (isaff(self, ID_BLESS))
  addstring(spl_aff,"Bless<br/>");
+   if (isaff(self, ID_UNHOLY_BLESSING))
+ addstring(spl_aff,"Unholy Blessing<br/>");
    if (isaff(self, ID_BERSERK))
  addstring(spl_aff,"Berserk<br/>");
    if (isaff(self, ID_RAGE))

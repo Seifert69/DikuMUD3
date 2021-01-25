@@ -21,6 +21,92 @@ Original base code conversion by Telemachos, revamped by Mesmer."
 
 %dil
 
+dilbegin string whostring();
+var
+  u : unitptr;
+  gld : string;
+  buff : string;
+  final : string;
+code
+{
+   u := ghead();
+   final := "";
+
+   while (u.type==UNIT_ST_PC)
+   {
+      if (u.minv < 1) // Check not wizi
+      {
+         if (u.level >= OVERSEER_LEVEL)
+            gld:="(Admin)";
+         else if (u.level>=CREATOR_LEVEL)
+            gld:="(Creator)";
+         else if (u.level>IMMORTAL_LEVEL)
+            gld:="(Immortal)";
+         else
+            gld:="";
+
+         buff := u.name + " "+gld;
+
+         if ("valhalla builder" in u.quests)
+            buff:=buff+" * Builder *";
+         if ("valhalla friend" in u.quests)
+            buff:=buff+" * Friend *";  
+         if ("New Player Helper" in u.quests)
+         {
+            buff:=buff+" * Guide *";
+         }
+         buff := buff + "&&";
+
+         final := final + buff;
+      }
+      u:=u.gnext;
+   }
+
+   if (final == "")
+   {
+      final := "No (visible) players online at this time.";
+   }
+
+   return(final);
+}
+dilend
+
+
+// Gets called with the string 'arg' when the MUD server receives
+// a line via pipeMUD
+//
+dilbegin dispatcher(arg : string);
+external
+   string whostring();
+
+var
+   w : string;
+   o : string;
+code
+{
+   w := getword(arg);
+   if (w == "discord")
+   {
+      if ("'#'" in arg)
+      {
+        log("Dispatcher for discord got who command " + arg);
+        w := whostring();
+        dispatch("discord who " + w); // Send to dispatcher.py via pipeDispatcher
+      }
+      else
+      {
+        log("Dispatcher for discord got : " + arg);
+        arg := "CHANNEL discord @ " + arg;
+        sendtoalldil(arg, "channel@function");
+      }
+   }
+   else
+      log("Dispatcher got unidentified message: [" + w + "] " + arg);
+   quit;
+}
+dilend
+
+
 dilbegin integer is_ignored(ch : unitptr,victim : unitptr);
 var
 ex : extraptr;
@@ -49,7 +135,7 @@ dilend
 
 dilbegin do_ignore(arg : string);
 external
-	stringlist shell@commands(s:stringlist);
+	stringlist dilshell@commands(s:stringlist);
 var
 ex : extraptr;
 ch : unitptr;
@@ -80,7 +166,7 @@ if(length(ex.names) <= 1)
 
   lst := ex.names;
   substring(lst,"$ignore_list");
-  lst := shell@commands(lst);
+  lst := dilshell@commands(lst);
 
   sendtext("<u>You are ignoring the following people.</u><br/>",self);
   i := 0;

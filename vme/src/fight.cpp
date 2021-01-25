@@ -868,27 +868,28 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
    }
 }
 
+/*
 int lose_exp(class unit_data *ch)
 {
    int loss, i;
 
    assert(IS_PC(ch));
 
-   /* This first line takes care of any xp earned above required level. */
+   // This first line takes care of any xp earned above required level.
 
    loss = MAX(0, (CHAR_EXP(ch) - required_xp(PC_VIRTUAL_LEVEL(ch))) / 2);
 
-   /* This line makes sure, that you lose at most half a level...       */
+   // This line makes sure, that you lose at most half a level...      
 
    loss = MIN(loss, level_xp(PC_VIRTUAL_LEVEL(ch)) / 2);
 
-   /* This line takes care of the case where you have less or almost    */
-   /* equal XP to your required. You thus lose at least 1/5th your      */
-   /* level.                                                            */
+   // This line takes care of the case where you have less or almost  
+   // equal XP to your required. You thus lose at least 1/5th your    
+   // level.                                                          
 
    loss = MAX(loss, level_xp(PC_VIRTUAL_LEVEL(ch)) / 5);
 
-   /* This line takes care of newbies, setting the lower bound... */
+   // This line takes care of newbies, setting the lower bound..
    i = MAX(0, (CHAR_EXP(ch) - required_xp(START_LEVEL)) / 2);
 
    if (loss > i)
@@ -898,6 +899,7 @@ int lose_exp(class unit_data *ch)
 
    return loss;
 }
+*/
 
 /* Die is only called when a PC or NPC is killed for real, causing XP loss
    and transfer of rewards */

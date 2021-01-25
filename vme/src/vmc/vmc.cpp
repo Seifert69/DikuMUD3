@@ -564,7 +564,7 @@ void dump_zone (char *prefix)
         fwrite ("", sizeof (char), 1, fl);
 
     /* write DIL templates */
-    for (tmpl = zone.z_tmpl; tmpl; tmpl = tmpl->next)
+    for (tmpl = zone.z_tmpl; tmpl; tmpl = tmpl->vmcnext)
         write_diltemplate (fl, tmpl);
 
 
@@ -612,7 +612,7 @@ void dump_zone (char *prefix)
     tmpl = zone.z_tmpl;
     while (tmpl)
     {
-        ut = tmpl->next;
+        ut = tmpl->vmcnext;
         dil_free_template (tmpl, 0);
         tmpl = ut;
     }

@@ -10,6 +10,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include <map>
 
 #ifdef _WINDOWS
 #include <winsock2.h>
@@ -91,7 +92,6 @@ static void stat_world_count(const class unit_data *ch, char *arg)
 static void stat_world_extra(const class unit_data *ch)
 {
     char buf[MAX_STRING_LENGTH];
-    class zone_type *zp;
     int i;
     std::string mystr;
 
@@ -100,9 +100,11 @@ static void stat_world_extra(const class unit_data *ch)
     mystr.append(buf);
 
     mystr = "<div class='fourcol'>";
-    for (i = 1, zp = zone_info.zone_list; zp; zp = zp->next, i++)
+
+    auto zp = zone_info.mmp.begin();
+    for (i = 1; zp != zone_info.mmp.end(); zp++, i++)
     {
-        sprintf(buf, "<a cmd='goto #'>%s</a><br/>", zp->name);
+        sprintf(buf, "<a cmd='goto #'>%s</a><br/>", zp->second->name);
         mystr.append(buf);
     }
     mystr.append("</div><br/>");
@@ -324,9 +326,8 @@ static void stat_creators(class unit_data *ch, char *arg)
     char tmp[1024];
     int found;
     char *cname;
-    class zone_type *z;
-    if (str_is_empty(arg))
 
+    if (str_is_empty(arg))
     {
         send_to_char("Requires name of creator.<br/>", ch);
         return;
@@ -343,11 +344,11 @@ static void stat_creators(class unit_data *ch, char *arg)
 
         found = FALSE;
 
-        for (z = zone_info.zone_list; z; z = z->next)
+        for (auto it = zone_info.mmp.begin(); it != zone_info.mmp.end(); it++)
         {
-            cname = z->creators.catnames();
+            cname = it->second->creators.catnames();
 
-            sprintf(b, "%-15s   %s<br/>", z->name, cname);
+            sprintf(b, "%-15s   %s<br/>", it->second->name, cname);
             FREE(cname);
             TAIL(b);
             found = TRUE;
@@ -361,11 +362,11 @@ static void stat_creators(class unit_data *ch, char *arg)
     TAIL(b);
 
     found = FALSE;
-    for (z = zone_info.zone_list; z; z = z->next)
+    for (auto it = zone_info.mmp.begin(); it != zone_info.mmp.end(); it++)
     {
-        if (z->creators.IsName(tmp))
+        if (it->second->creators.IsName(tmp))
         {
-            sprintf(b, "%-15s   File: %s.zon<br/>", z->name, z->filename);
+            sprintf(b, "%-15s   File: %s.zon<br/>", it->second->name, it->second->filename);
             TAIL(b);
             found = TRUE;
         }
@@ -383,15 +384,17 @@ static void stat_dil(class unit_data *ch, class zone_type *zone)
 {
     char buf[MAX_STRING_LENGTH];
     std::string mystr;
-    struct diltemplate *tmpl;
+    // struct diltemplate *tmpl;
 
     sprintf(buf, "<u>List of DIL in zone %s (CPU secs, name, #activations, #instructions):</u><br/>", zone->name);
     send_to_char(buf, ch);
 
     mystr = "<div class='twocol'>";
-    for (*buf = 0, tmpl = zone->tmpl; tmpl; tmpl = tmpl->next)
+    *buf = 0;
+
+    for (auto tmpl = zone->mmp_tmpl.begin(); tmpl != zone->mmp_tmpl.end(); tmpl++)
     {
-        sprintf(buf, "%.2fs %s [%d t / %d i]<br/>", tmpl->fCPU/1000.0, tmpl->prgname, tmpl->nTriggers, tmpl->nInstructions);
+        sprintf(buf, "%.2fs %s [%d t / %d i]<br/>", tmpl->second->fCPU/1000.0, tmpl->second->prgname, tmpl->second->nTriggers, tmpl->second->nInstructions);
         mystr.append(buf);
     }
 
@@ -403,19 +406,20 @@ static void stat_global_dil(class unit_data *ch, ubit32 nCount)
 {
     char buf[MAX_STRING_LENGTH];
     std::string mystr;
-    struct diltemplate *tmpl;
-    class zone_type *z;
+    // struct diltemplate *tmpl;
 
     sprintf(buf, "<u>List of global DIL in all zones running for more than %dms:</u><br/>", nCount);
     send_to_char(buf, ch);
 
     mystr = "<div class='twocol'>";
-    for (z = zone_info.zone_list; z; z = z->next)
+
+    for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.end(); z++)
     {
-        for (*buf = 0, tmpl = z->tmpl; tmpl; tmpl = tmpl->next)
+        *buf = 0;
+        for (auto tmpl = z->second->mmp_tmpl.begin(); tmpl != z->second->mmp_tmpl.end(); tmpl++)
         {
-            if (tmpl->fCPU >= nCount){
-                sprintf(buf, "%.2fs %s@%s [%d t / %d i]<br/>", tmpl->fCPU/1000.0, tmpl->prgname, tmpl->zone->name, tmpl->nTriggers, tmpl->nInstructions);
+            if (tmpl->second->fCPU >= nCount){
+                sprintf(buf, "%.2fs %s@%s [%d t / %d i]<br/>", tmpl->second->fCPU/1000.0, tmpl->second->prgname, tmpl->second->zone->name, tmpl->second->nTriggers, tmpl->second->nInstructions);
                 mystr.append(buf);
             }
         }        
@@ -430,7 +434,6 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
     char buf[MAX_STRING_LENGTH], filename[128];
     std::string mystr;
     int argno;
-    class file_index_type *fi;
     int search_type = 0;
 
     //  void stat_dijkstraa (class unit_data * ch, class zone_type *z);
@@ -528,13 +531,15 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
 
     /* Search for mobs/objs/rooms and line in columns */
     mystr = "<div class='threecol'>";
-    for (*buf = 0, fi = zone->fi; fi; fi = fi->next)
-        if (fi->type == search_type)
+    // for (*buf = 0, fi = zone->fi; fi; fi = fi->next)
+    *buf = 0;
+    for ( auto fi = zone->mmp_fi.begin(); fi != zone->mmp_fi.end(); fi++)
+        if (fi->second->type == search_type)
         {
-            if ((fi->type == UNIT_ST_OBJ) || (fi->type == UNIT_ST_NPC))
-                sprintf(buf, "<a cmd='load #'>%s</a><br/>", fi->name);
+            if ((fi->second->type == UNIT_ST_OBJ) || (fi->second->type == UNIT_ST_NPC))
+                sprintf(buf, "<a cmd='load #'>%s</a><br/>", fi->second->name);
             else
-                sprintf(buf, "%s<br/>", fi->name);
+                sprintf(buf, "%s<br/>", fi->second->name);
             mystr.append(buf); //MS2020
         }
 

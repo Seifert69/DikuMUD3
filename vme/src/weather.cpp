@@ -279,14 +279,13 @@ static void weather_change(class zone_type *zone, struct time_info_data time_dat
 void update_time_and_weather(void)
 {
     struct time_info_data time_info;
-    class zone_type *z;
 
     time_info = mud_date();
 
     another_hour(time_info);
 
-    for (z = zone_info.zone_list; z; z = z->next)
-        weather_change(z, time_info);
+    for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.begin(); z++)
+        weather_change(z->second, time_info);
 }
 
 /* Convert 'time' into text, and copy it into str */
@@ -300,7 +299,6 @@ void weather_and_time_event(void *p1, void *p2)
 /* reset the time in the game from file */
 void boot_time_and_weather(void)
 {
-    class zone_type *z;
     struct time_info_data mud_time_passed(time_t t2, time_t t1);
 
     extern char world_boottime[64];
@@ -326,25 +324,25 @@ void boot_time_and_weather(void)
     slog(LOG_OFF, 0, "   Current Gametime: %dH %dD %dM %dY.",
          time_info.hours, time_info.day, time_info.month, time_info.year);
 
-    for (z = zone_info.zone_list; z; z = z->next)
+    for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.begin(); z++)
     {
-        z->weather.pressure = z->weather.base;
+        z->second->weather.pressure = z->second->weather.base;
 
         if (time_info.month >= 7 && time_info.month <= 12)
-            z->weather.pressure += number(-6, 6);
+            z->second->weather.pressure += number(-6, 6);
         else
-            z->weather.pressure += number(-10, 10);
+            z->second->weather.pressure += number(-10, 10);
 
-        z->weather.change = number(-2, 2);
+        z->second->weather.change = number(-2, 2);
 
-        if (z->weather.pressure <= 980)
-            z->weather.sky = SKY_LIGHTNING;
-        else if (z->weather.pressure <= 1000)
-            z->weather.sky = SKY_RAINING;
-        else if (z->weather.pressure <= 1020)
-            z->weather.sky = SKY_CLOUDY;
+        if (z->second->weather.pressure <= 980)
+            z->second->weather.sky = SKY_LIGHTNING;
+        else if (z->second->weather.pressure <= 1000)
+            z->second->weather.sky = SKY_RAINING;
+        else if (z->second->weather.pressure <= 1020)
+            z->second->weather.sky = SKY_CLOUDY;
         else
-            z->weather.sky = SKY_CLOUDLESS;
+            z->second->weather.sky = SKY_CLOUDLESS;
     }
 
     events.add(PULSE_SEC * SECS_PER_MUD_HOUR, weather_and_time_event, 0, 0);

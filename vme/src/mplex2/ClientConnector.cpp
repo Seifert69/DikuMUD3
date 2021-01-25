@@ -243,6 +243,12 @@ int cConHook::IsHooked(void)
 
 void cConHook::Unhook(void)
 {
+    if (IsHooked())
+    {
+        slog(LOG_OFF, 0, "Unhooking player connection");
+        CaptainHook.Unhook(this);
+    }
+
     if (this->m_pWebsServer == 0)
         cHook::Unhook();
 }
@@ -484,7 +490,7 @@ void cConHook::Input(int nFlags)
         strcpy((char *)buf, b);
 #endif
 #if defined(LINUX)
-        int n = read(this->tfd(), buf, sizeof(buf) - 1);
+        int n = ::read(this->tfd(), buf, sizeof(buf) - 1);
 #endif
 
         if (n == -1)

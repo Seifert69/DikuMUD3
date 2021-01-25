@@ -10,6 +10,7 @@ class cMultiHook : public cHook
 public:
     cMultiHook(void);
     void Input(int nFlags);
+    void Unhook(void);
 
     void Close(void);
     int Read(void);
@@ -37,6 +38,7 @@ class cMotherHook : public cHook
 public:
     void Input(int nFlags);
     void Close(void);
+    void Unhook(void);
 };
 
 extern class cMotherHook MotherHook;
