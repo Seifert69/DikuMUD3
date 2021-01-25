@@ -2686,7 +2686,6 @@ race brownie   =  0
 race groll     =  0
 race darkelf   =  0
 restrict constitution   = 50
-restrict level          = 90
 profession barbarian      = +5
 
 /* END Barbarian Skills */
@@ -3048,7 +3047,7 @@ loglevel = 200
 type     = 0
 
 command  = competition
-// func = cmd_comp@competition
+func = cmd_comp@competition
 minpos   = POSITION_DEAD
 minlevel = 215
 loglevel = 215
