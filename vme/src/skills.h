@@ -125,6 +125,7 @@ struct tree_type
     int parent;
     ubit8 isleaf;
     ubit1 bAutoTrain;
+    ubit1 bAutoTeacherNoAdd;
 };
 
 /* Tree has a pointer to parent for each node. 0 pointer from root */

@@ -1227,7 +1227,7 @@ int teach_init(struct spec_arg *sarg)
          // Copy in all abilities for profession
          for (n = 0; packet->text[n] != NULL; n++)
          {
-            if (g_AbiColl.prof_table[n].profession_cost[nProfession] >= -3)
+            if ((g_AbiColl.prof_table[n].profession_cost[nProfession] >= -3) && !g_AbiColl.tree[n].bAutoTeacherNoAdd)
             {
                a_skill.min_glevel = 0;
                a_skill.max_skill = 100 + max_skill_mod(g_AbiColl.prof_table[n].profession_cost[nProfession]);
@@ -1255,7 +1255,7 @@ int teach_init(struct spec_arg *sarg)
          // Copy in all abilities for profession
          for (n = 0; packet->text[n] != NULL; n++)
          {
-            if (g_SkiColl.prof_table[n].profession_cost[nProfession] >= -3)
+            if (g_SkiColl.prof_table[n].profession_cost[nProfession] >= -3 && !g_SkiColl.tree[n].bAutoTeacherNoAdd)
             {
                a_skill.min_glevel = 0;
                a_skill.max_skill = 100 + max_skill_mod(g_SkiColl.prof_table[n].profession_cost[nProfession]);
@@ -1283,7 +1283,7 @@ int teach_init(struct spec_arg *sarg)
          // Copy in all abilities for profession
          for (n = 0; packet->text[n] != NULL; n++)
          {
-            if (g_SplColl.prof_table[n].profession_cost[nProfession] >= -3)
+            if (g_SplColl.prof_table[n].profession_cost[nProfession] >= -3 && !g_SplColl.tree[n].bAutoTeacherNoAdd)
             {
                a_skill.min_glevel = 0;
                a_skill.max_skill = 100 + max_skill_mod(g_SplColl.prof_table[n].profession_cost[nProfession]);
@@ -1311,7 +1311,7 @@ int teach_init(struct spec_arg *sarg)
          // Copy in all abilities for profession
          for (n = 0; packet->text[n] != NULL; n++)
          {
-            if (g_WpnColl.prof_table[n].profession_cost[nProfession] >= -3)
+            if (g_WpnColl.prof_table[n].profession_cost[nProfession] >= -3 && !g_WpnColl.tree[n].bAutoTeacherNoAdd)
             {
                a_skill.min_glevel = 0;
                a_skill.max_skill = 100 + max_skill_mod(g_WpnColl.prof_table[n].profession_cost[nProfession]);
