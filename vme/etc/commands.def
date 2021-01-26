@@ -952,6 +952,7 @@ profession druid        = +0
 profession mage         = +0
 profession sorcerer     = +0
 profession barbarian 	= +0
+auto teacher no add     =  1 // Don't add automatically
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -980,6 +981,7 @@ profession druid        = +0
 profession mage         = +0
 profession sorcerer     = +0
 profession barbarian 	= +0
+auto teacher no add     =  1 // Don't add automatically
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1008,6 +1010,7 @@ profession druid        = +0
 profession mage         = +0
 profession sorcerer     = +0
 profession barbarian 	= +0
+auto teacher no add     =  1 // Don't add automatically
 
 /* - - - - Yet another definition of a skill - - - - */
 index         = SKI_EVALUATE
@@ -1039,6 +1042,7 @@ profession druid        = +0
 profession mage         = +0
 profession sorcerer     = +0
 profession barbarian 	= +0
+auto teacher no add     =  1 // Don't add automatically
 
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1072,6 +1076,7 @@ profession druid        = +0
 profession mage         = +0
 profession sorcerer     = +0
 profession barbarian 	= +0
+auto teacher no add     =  1 // Don't add automatically
 
 /* - - - - Yet another definition of a skill - - - - */
 
