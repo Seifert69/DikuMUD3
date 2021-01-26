@@ -204,11 +204,13 @@ const char *trainrestricted(class unit_data *pupil, struct profession_cost *cost
    static char buf[MAX_STRING_LENGTH];
    char *c;
 
+   assert(IS_PC(pupil));
+
    strcpy(buf, "[REQ: ");
    c = buf;
    TAIL(c);
 
-   if (CHAR_LEVEL(pupil) < cost_entry->min_level)
+   if (PC_VIRTUAL_LEVEL(pupil) < cost_entry->min_level)
    {
       sprintf(c, "Level:%d ", cost_entry->min_level);
       TAIL(c);
