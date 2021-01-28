@@ -359,6 +359,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version,
     int i, novar;
     ubit8 t;
     char name[255];
+    int bNameRead;
 
     //prg = new EMPLACE(dilprg) dilprg(owner, stspec);
     // We will create an NOT link program here, link down below
@@ -387,9 +388,11 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version,
         dil_free_template(tmpl, IS_SET(prg->flags, DILFL_COPY));
         SET_BIT(prg->flags, DILFL_COPY);
         slog(LOG_ALL, 0, "hula hop");
+        bNameRead = 0;
     }
     else
     {
+        bNameRead = 1;
         /* lookup template, only runtime */
         pBuf->ReadStringCopy(name, sizeof(name)); /* prg/template name */
     }
@@ -407,10 +410,8 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version,
         tmpl->prg_list = NULL;
         /* Prevent all execution */
         SET_BIT(prg->flags, DILFL_EXECUTING);
-        /* slog(LOG_ALL,0,"Error resolving copy template '%s'",
-           name); */
         tmpl->flags |= DILFL_FREEME;
-        slog(LOG_ALL, 0, "bread_dil() wassup? Priority?");
+        slog(LOG_ALL, 0, "bread_dil() wassup Unable to resolve copy template [%s] name was read = %d. Old equipment?", name, bNameRead);
     }
 
     prg->waitcmd = WAITCMD_MAXINST - 1; /* Command countdown          */
