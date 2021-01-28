@@ -5,6 +5,7 @@
  $Revision: 1.2 $
  */
 
+#include "structs.h"
 #include "namelist.h"
 #include "intlist.h"
 #include "dil.h"
@@ -127,7 +128,7 @@ void dilprg::unlink(void)
 
         if (ok == FALSE)
         {
-            slog(LOG_ALL, 0, "Not found in dil_list");
+            slog(LOG_ALL, 0, "Not found in dil_list %s@%s", tmpl->prgname, tmpl->zone->name);
         }
     }
 
