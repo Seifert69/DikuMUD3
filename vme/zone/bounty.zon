@@ -34,7 +34,6 @@ competition zone infrastructure for future versions.
 
 "
 
-
 help
 "The Guild of the Bounty Hunters is an ancient institution that has survived 
 and indeed thrived on the outskirts of Midgaard. Wealthy patrons who need 
@@ -86,12 +85,12 @@ code
 
 :start:
 
-	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (command("say")) and ("contract" in argument) );
+	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (command("say")) and 
+		(("contract" == argument) or ("daily contract" == argument) or ("monthly contract" == argument)));
 	
 	arg := argument;
 	pc := activator;
 	secure(pc, start);
-	block;
 	
 	if(pc.level < 50)
 	{
@@ -128,7 +127,11 @@ code
 :which_bounty:
 	
 	exec("Say Would you like the daily or monthly?", self);	
-	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (command("say")) and (("daily" in argument) or ("monthly" in argument)));
+	exec("Say You may also shake your head to decline.", self);
+	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and ((command("say")) and (("daily" in argument) or ("monthly" in argument))) or (command("shake")));
+	
+	if (command ("shake"))
+		goto decline;
 	
 	arg := argument;
 	pause;
@@ -176,7 +179,12 @@ code
 	targ := findrndunit(pc,FIND_UNIT_WORLD,UNIT_ST_NPC);
 	if (targ.zoneidx in blocked)
 		goto new_target;
+	if (((targ.race > RACE_CNIDARIA_MIN) and (targ.race <= RACE_CNIDARIA_MAX)) or
+       ((targ.race > RACE_PLANT_MIN) and (targ.race <= RACE_PLANT_MAX)))
+		goto new_target;
 	addextra (pc.extra,slextra,sdate + "|" + targ.symname + "|" + targ.title);
+	// addextra(pc.quests,{which+" Bounty Ongoing "+$date,"");
+	// maybe do the above? How to help players know whats ongoing etc?
 	exec("Say Here you go "+pc.name+", a "+which+" contract.", self);	
 	bty := load("contract@bounty");
 	if(which == "monthly")
@@ -203,6 +211,10 @@ code
 	exec("say Bugger off! You've already taken a "+which+" contract.",self);
 	goto the_end;
 	
+:decline:
+	heartbeat := PULSE_SEC/4;
+	pause;
+	exec("Say Very well then.", self);
 :the_end:
 	unsecure(pc);
 	goto start;
@@ -527,7 +539,7 @@ end
 %mobiles
 
 hunter
-names {"bounty hunter","hunter"}    
+names {"bounty hunter","hunter","man"}    
 title "the bounty hunter"        
 descr "A tall man with a dark smirk stands in the shadows."
 extra{}

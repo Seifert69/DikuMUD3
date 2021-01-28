@@ -60,7 +60,7 @@ external
 
 code
 { 
-   log(self.name + " advanced to level " + itoa(self.level));
+   log(self.name + " advanced to level " + itoa(self.vlevel));
 
 
    adv_guild_lvl@g_q(self);

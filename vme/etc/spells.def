@@ -1114,7 +1114,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -2
-restrict divine         = 80
+restrict divine         = 25
 profession priest       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -6188,7 +6188,7 @@ minpos          = POSITION_STANDING
 mana            = 25
 turns           = PULSE_SEC
 targets         = FIND_UNIT_ZONE + FIND_UNIT_WORLD + TAR_CHAR + TAR_OBJ+ TAR_ROOM + TAR_SELF_NONO
-mediums         = MEDIA_SPELL + MEDIA_SCROLL
+mediums         = MEDIA_SPELL + MEDIA_SCROLL + MEDIA_STAFF
 check           = SPLCST_RESIST
 offensive       = FALSE
 fumble          = 0
