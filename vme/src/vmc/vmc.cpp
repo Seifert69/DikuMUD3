@@ -356,12 +356,12 @@ mmalloc (int size)
 }
 
 
-class unit_data *
-    mcreate_unit (int type)
+class unit_data *mcreate_unit (int type)
 {
     class unit_data *rslt;
 
-    rslt = new (class unit_data) (type);
+    // rslt = new (class unit_data) (type);
+    rslt = new_unit_data(type);
 
     init_unit (rslt);
     return rslt;

@@ -13,6 +13,8 @@
 
 #define isaspace(c) ((c) == ' ')
 
+extern const char *fillwords[];
+
 int str_escape_format(const char *str, char *dest, int destlen, int format = TRUE);
 char *str_escape_format(const char *src, int formatting = TRUE);
 void str_correct_utf8(std::string &src);

@@ -16,6 +16,21 @@
 #include "textutil.h"
 #include "common.h"
 
+const char *fillwords[] = {
+    "a",
+    "an",
+    "at",
+    "from",
+    "in",
+    "on",
+    "of",
+    "the",
+    "to",
+    "with",
+    "into",
+    NULL};
+
+
 /*  From char * input stream 'str' copy characters into 'buf' until
  *  end of string or newline. Returns position of 'str' after copied
  *  characters.

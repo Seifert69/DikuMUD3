@@ -40,7 +40,7 @@ VME_SRCS := \
 
 MPLEX_SRCS := \
  $(wildcard ./mplex2/*.cpp) \
-hook.cpp queue.cpp textutil.cpp utility.cpp common.cpp protocol.cpp color.cpp bytestring.cpp membug.cpp
+hook.cpp queue.cpp textutil.cpp utility.cpp protocol.cpp color.cpp bytestring.cpp membug.cpp
 
 DC_SRCS := \
  $(wildcard ./defcomp/*.cpp) 

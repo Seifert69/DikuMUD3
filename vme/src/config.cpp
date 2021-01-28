@@ -19,6 +19,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "essential.h"
+#include "utility.h"
 #include "config.h"
 #include "files.h"
 #include "textutil.h"

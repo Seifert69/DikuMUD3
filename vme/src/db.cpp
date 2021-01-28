@@ -668,7 +668,8 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
       return NULL;
    }
 
-   u = new EMPLACE(unit_data) unit_data(type);
+   // u = new EMPLACE(unit_data) unit_data(type);
+   u = new_unit_data(type);
 
    nStart = pBuf->GetReadPosition();
    g_nCorrupt += pBuf->Read8(&unit_version);

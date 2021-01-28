@@ -178,7 +178,7 @@ descriptor_data::descriptor_data(cMultiHook *pe)
     replyid = (ubit32)-1;
 
     /* Make a new PC struct */
-    character = new EMPLACE(unit_data) unit_data(UNIT_ST_PC);
+    character = new EMPLACE(pc_data) pc_data;
     init_char(character);
     CHAR_DESCRIPTOR(character) = this;
 
