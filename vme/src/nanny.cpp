@@ -288,7 +288,7 @@ void update_lasthost(class unit_data *pc, ubit32 s_addr)
 //
 void pc_data::gstate_tomenu(dilprg *pdontstop)
 {
-   void dil_start_special(class unit_data *unt, class dilprg *aprg);
+   void dil_stop_special(class unit_data *unt, class dilprg *aprg);
 
    if (!char_is_playing(this))
       return;
@@ -305,7 +305,7 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
 //
 void pc_data::gstate_togame(dilprg *pdontstart)
 {
-   void dil_stop_special(class unit_data *unt, class dilprg *aprg);
+   void dil_start_special(class unit_data *unt, class dilprg *aprg);
 
    if (char_is_playing(this)) // Are we in the menu?
       return; 
@@ -321,7 +321,7 @@ void pc_data::gstate_togame(dilprg *pdontstart)
 
    insert_in_unit_list(this);
    unit_to_unit(this, load_room);
-   dil_start_special(this, p);
+   dil_start_special(this, pdontstart);
 }
 
 
