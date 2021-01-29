@@ -171,7 +171,6 @@ void dilfi_gamestate(register class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    class unit_data *load_room;
 
     if (dil_type_check("gamestate", p, 2,
                        v1, TYPEFAIL_NULL, 1, DILV_UP,
