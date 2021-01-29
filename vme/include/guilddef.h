@@ -217,6 +217,8 @@ $1n tells you, 'Remove all equipment, please.';
   7;   75; armor hard leather            ;   4;  4000;   10;      0;
  15;  100; armor chain                   ;   4;  4000;   10;      0;
  20;  100; armor plate                   ;   4;  4000;   10;      0;
+ 30;  100; taunt                         ;  14; 14000;  10;          0;
+ 40;  100; defend                        ;  14; 14000;  15;          0;
 "
 #elif defined(_WEAPON)
 
@@ -239,13 +241,13 @@ $1n tells you, 'Remove all equipment, please.';
   2;  100; short sword                   ;   4;  4000;   8;          0;
   3;  100; mace                          ;   9;  9000;   8;          0;
   4;  100; scimitar                      ;   4;  4000;   8;          0;
+  4;  100; long sword                    ;   9;  9000;   8;          0;
   5;  100; club                          ;   4;  4000;   8;          0;
   6;  100; spear                         ;   9;  9000;  10;          0;
   9;  100; whip                          ;   4;  4000;  12;          0;
  10;  100; war hammer                    ;   9;  9000;   8;          0;
  14;  100; morning star                  ;  14;  9000;  10;          0;
  15;  100; flail                         ;  14; 14000;  10;          0;
- 16;  100; long sword                    ;   9;  9000;   8;          0;
  16;  100; battle club                   ;  14; 14000;  10;          0;
  18;  100; battle mace                   ;  14; 14000;  10;          0;
  21;  100; lance                         ;  12; 12000;  10;          0;
@@ -604,14 +606,14 @@ $1n tells you, 'Remove all equipment, please.';
   0;  100; quarterstaff                  ;   9;  9000;   8;          0;
   1;  100; rapier                        ;   9;  9000;   8;          0;
   2;  100; spear                         ;   9;  9000;   8;          0;
+  2;  100; short sword                   ;   9;  9000;   8;          0;
   4;  100; scimitar                      ;   9;  9000;   8;          0;
   4;   80; kick                          ;   4;  4000;  12;          0;
   4;  100; mace                          ;   9;  9000;   8;          0;
-  4;  100; short sword                   ;   9;  9000;   8;          0;
+  4;  100; long sword                    ;   9;  9000;   8;          0;
   8;  100; war hammer                    ;   9;  9000;   8;          0;
  12;  100; morning star                  ;  14;  9000;  10;          0;
  14;  100; flail                         ;  14; 14000;  10;          0;
- 16;  100; long sword                    ;   9;  9000;   8;          0;
  16;   80; trident                       ;  18; 18000;  15;          0;
  16;  100; battle club                   ;  14; 14000;  10;          0;
  18;  100; battle mace                   ;  14; 14000;  10;          0;
@@ -1177,9 +1179,9 @@ $1n tells you, 'You must have no traces of magic about you to learn.';
 $1n tells you, 'Remove all equipment, please.';
 
   0;  100; Strength                      ;   5; 15000;  10;    0;
-  0;  100; Dexterity                     ;   5; 15000;  10;    0;
-  0;   90; Constitution                  ;   10; 15000;  10;      0;
-  0;  100; Hitpoints                     ;   9; 15000;  10;     0;
+  0;   90; Dexterity                     ;   5; 15000;  10;    0;
+  0;  100; Constitution                  ;   10; 15000;  10;      0;
+  0;   90; Hitpoints                     ;   9; 15000;  10;     0;
   0;   60; Charisma                      ;  15;  5000;   5;     0;
   0;   60; Brain                         ;  15; 10000;   8;      0;
  "
