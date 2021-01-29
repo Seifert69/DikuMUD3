@@ -184,37 +184,13 @@ void dilfi_gamestate(register class dilprg *p)
             switch (v2->val.num)
             {
             case GS_PLAY:
-                if (!char_is_playing((class unit_data *)v1->val.ptr))
-                {
-                    insert_in_unit_list((class unit_data *)v1->val.ptr);
-
-                    if (CHAR_LAST_ROOM((class unit_data *)v1->val.ptr))
-                    {
-                        load_room =
-                            CHAR_LAST_ROOM((class unit_data *)v1->val.ptr);
-                        CHAR_LAST_ROOM((class unit_data *)v1->val.ptr) = NULL;
-                    }
-                    else
-                        load_room =
-                            hometown_unit(PC_HOME((class unit_data *)v1->val.ptr));
-
-                    unit_to_unit((class unit_data *)v1->val.ptr, load_room);
-                    dil_start_special((class unit_data *)v1->val.ptr, p);
-                }
+                UPC((class unit_data *)v1->val.ptr)->gstate_togame(p);
                 break;
             case GS_QUIT:
                 extract_unit((class unit_data *)v1->val.ptr);
                 break;
             case GS_MENU:
-                if (char_is_playing((class unit_data *)v1->val.ptr))
-                {
-
-                    CHAR_LAST_ROOM((class unit_data *)v1->val.ptr) =
-                        unit_room((class unit_data *)v1->val.ptr);
-                    unit_from_unit((class unit_data *)v1->val.ptr);
-                    remove_from_unit_list((class unit_data *)v1->val.ptr);
-                    dil_stop_special((class unit_data *)v1->val.ptr, p);
-                }
+                UPC((class unit_data *)v1->val.ptr)->gstate_tomenu(p);
                 break;
             case GS_LINK_DEAD:
                 if (CHAR_DESCRIPTOR((class unit_data *)v1->val.ptr))

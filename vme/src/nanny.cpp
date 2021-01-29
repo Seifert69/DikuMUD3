@@ -282,6 +282,49 @@ void update_lasthost(class unit_data *pc, ubit32 s_addr)
    [4] = s_addr;
 }
 
+
+// Take a player which is in the game and move to the menu
+// Don't stop the DIL program executing as pdontstop
+//
+void pc_data::gstate_tomenu(dilprg *pdontstop)
+{
+   void dil_start_special(class unit_data *unt, class dilprg *aprg);
+
+   if (!char_is_playing(this))
+      return;
+
+   CHAR_LAST_ROOM(this) = unit_room(this);
+   unit_from_unit(this);
+   remove_from_unit_list(this);
+   dil_stop_special(this, pdontstop);
+}
+
+
+// Take a player which is in the menu and move to the game
+// Don't start the DIL program executing as pdontstart
+//
+void pc_data::gstate_togame(dilprg *pdontstart)
+{
+   void dil_stop_special(class unit_data *unt, class dilprg *aprg);
+
+   if (char_is_playing(this)) // Are we in the menu?
+      return; 
+
+   unit_data *load_room;
+   if (CHAR_LAST_ROOM(this))
+   {
+      load_room = CHAR_LAST_ROOM(this);
+      CHAR_LAST_ROOM(this) = NULL;
+   }
+   else
+      load_room = hometown_unit(PC_HOME(this));
+
+   insert_in_unit_list(this);
+   unit_to_unit(this, load_room);
+   dil_start_special(this, p);
+}
+
+
 /* Set 'd' to 'ch' and enter the game.                            */
 /* If ch has UNIT_IN set, then it is because ch must be link dead */
 /*   and thus a reconnect is performed.                           */
@@ -395,6 +438,8 @@ void enter_game(class unit_data *ch, int dilway)
                 "void@basis");
    }
 }
+
+
 void set_descriptor_fptr(class descriptor_data *d,
                          void (*fptr)(class descriptor_data *, char *),
                          ubit1 call)

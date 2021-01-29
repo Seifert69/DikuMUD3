@@ -471,6 +471,9 @@ public:
     pc_data(void);
     ~pc_data();
 
+    void gstate_tomenu(dilprg *pdontstop);
+    void gstate_togame(dilprg *pdontstart);
+
     struct terminal_setup_type setup;
 
     struct pc_time_data time;       /* PCs time info  */
