@@ -87,6 +87,8 @@ dilval::~dilval (void)
 
 void dilprg::link(diltemplate *tmpl)
 {
+    assert(this->next == NULL);
+    
     this->next = tmpl->prg_list;
     tmpl->prg_list = this;
 }
@@ -128,7 +130,7 @@ void dilprg::unlink(void)
 
         if (ok == FALSE)
         {
-            slog(LOG_ALL, 0, "Not found in dil_list %s@%s", tmpl->prgname, tmpl->zone->name);
+            slog(LOG_ALL, 0, "Not found in dil_list [%s]. Zone [%s]", tmpl->prgname, tmpl->zone ? tmpl->zone->name : "NOZONE");
         }
     }
 
