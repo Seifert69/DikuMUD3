@@ -81,7 +81,7 @@ class file_index_type *find_file_index(const char *zonename, const char *name)
 }
 
 /* Zonename & name must point to non-empty strings */
-struct diltemplate *find_dil_index(char *zonename, char *name)
+struct diltemplate *find_dil_index(const char *zonename, const char *name)
 {
     class zone_type *zone;
     //struct bin_search_type *ba;
