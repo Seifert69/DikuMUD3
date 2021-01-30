@@ -411,8 +411,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version,
         /* Prevent all execution */
         SET_BIT(prg->flags, DILFL_EXECUTING);
         tmpl->flags |= DILFL_FREEME;
-        slog(LOG_ALL, 0, "bread_dil() wassup Unable to resolve copy template [%s] name was read = %d. Owner = %s@%s. Old equipment?",
-                 name, bNameRead, UNIT_FI_NAME(owner), UNIT_FI_ZONENAME(owner));
+        slog(LOG_ALL, 0, "bread_dil(): DIL template [%s] no longer exists. bNameRead = %d.", name, bNameRead);
     }
 
     prg->waitcmd = WAITCMD_MAXINST - 1; /* Command countdown          */
