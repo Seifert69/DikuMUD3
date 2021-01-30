@@ -318,7 +318,6 @@ code
       i := dildestroy("stomach@update", self);
       dilcopy("stomach@update",self);
 
-      dilcopy("got_mail@mail()", self);
       dilcopy("fixwt@basis()", self);
       dilcopy("break_eq@basis()", self);
 
@@ -331,6 +330,8 @@ code
 
       login_scrub(self);
    }
+
+   dilcopy("got_mail@mail()", self);
 
    return;
 }
@@ -519,7 +520,6 @@ code
       quit;
    }
 
-   log("yoyo");
    //gamestate(self, GS_MENU);
 
    :wiz_menu:
@@ -529,8 +529,6 @@ code
    sendtext("0) Exit Valhalla<br/><br/>", self);
    sendtext("Make your choice: ", self);
    wait(SFB_CMD, TRUE);
-
-   log("yahoo");
 
    if (command("1"))
    {

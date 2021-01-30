@@ -29,20 +29,23 @@ help
  when a player is in the room."
 
 %dil
-dilbegin got_mail ();
+
+
+dilbegin got_mail();
 var
-	ml:unitptr;
+   ml : unitptr;
 code
 {
-			ml:=restore(tolower(self.name),null);
-			if (ml!=null)
-				{
-     act("<div class='mail'>You have a sudden urge to visit the post office.</div>",
-	       A_ALWAYS, self, null, null, TO_CHAR);
-				 destroy (ml);
-				 }
+   ml := restore(tolower(self.name), null);
 
-quit;
+   if (ml != null)
+   {
+      act("<div class='mail'>You have a sudden urge to visit the post office.</div>",
+         A_ALWAYS, self, null, null, TO_CHAR);
+      destroy (ml);
+   }
+
+   quit;
 }
 dilend
 
