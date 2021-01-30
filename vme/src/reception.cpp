@@ -513,7 +513,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
         {
             if ((fi == NULL) || is_slimed(fi))
             {
-                pnew = read_unit(slime_fi);
+                pnew = read_unit(slime_fi);  // Inserts unit into glist
                 pnew_tmp = read_unit_string(&InvBuf, hn.type, hn.length, "preslime", FALSE);
 
                 if (g_nCorrupt)
@@ -524,7 +524,6 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
 
                 if (pnew->fi == NULL)
                     pnew->set_fi(slime_fi);
-                insert_in_unit_list(pnew);
             }
             else
             {
