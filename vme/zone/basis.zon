@@ -470,7 +470,7 @@ code
 dilend
 
 
-dilbegin aware fnpri(FN_PRI_SYS) on_connect();
+dilbegin aware unique fnpri(FN_PRI_SYS) on_connect();
 external
    informer();
    login_modify(tgt : unitptr);
@@ -492,7 +492,7 @@ code
 
    err := loadstr("motd",motd);
 
-   if(err > 0)
+   if (err > 0)
    {
       motd := textformat(motd);
       sendtext(motd+"<br/>", self);
@@ -507,20 +507,20 @@ code
    s := dlrdump@commands("$trigger");
    sendtext(s, self);
 
-   login_modify(self);
-
-
    if (self.level < 200)
    {
       if(err > 0)
          sendtext("<br/>"+welcome+"<br/><br/>", self);
+      gamestate(self, GS_PLAY);
       informer();
+      login_modify(self);
       exec("look", self);
       exec("comm add discord", self);
       quit;
    }
 
-   gamestate(self, GS_MENU);
+   log("yoyo");
+   //gamestate(self, GS_MENU);
 
    :wiz_menu:
    sendtext("Welcome to Valhalla<br/><br/>", self);
@@ -530,12 +530,15 @@ code
    sendtext("Make your choice: ", self);
    wait(SFB_CMD, TRUE);
 
+   log("yahoo");
+
    if (command("1"))
    {
-      gamestate(self, GS_PLAY);
       if(err > 0)
          sendtext("<br/>"+welcome+"<br/><br/>", self);
+      gamestate(self, GS_PLAY);
       informer();
+      login_modify(self);
       exec("look", self);
       quit;
    }
