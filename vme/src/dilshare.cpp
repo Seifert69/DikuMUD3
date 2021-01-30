@@ -10,6 +10,7 @@
 #include "intlist.h"
 #include "dil.h"
 #include "dilrun.h"
+#include "utils.h"
 
 int g_nDilPrg = 0;
 int g_nDilVal = 0;
@@ -130,7 +131,8 @@ void dilprg::unlink(void)
 
         if (ok == FALSE)
         {
-            slog(LOG_ALL, 0, "Not found in dil_list [%s]. Zone [%s]", tmpl->prgname, tmpl->zone ? tmpl->zone->name : "NOZONE");
+            slog(LOG_ALL, 0, "Not found in dil_list [%s]. Zone [%s]. Owner %s", 
+                tmpl->prgname, tmpl->zone ? tmpl->zone->name : "NOZONE", UNIT_FI_NAME(this->owner));
         }
     }
 
