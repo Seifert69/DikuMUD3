@@ -1648,6 +1648,8 @@ void dilfe_flog(class dilprg *p)
     delete v3;
 }
 
+
+// loadstr()
 void dilfe_ldstr(class dilprg *p)
 {
     dilval *v = new dilval;
