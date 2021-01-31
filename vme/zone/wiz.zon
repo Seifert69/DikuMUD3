@@ -825,6 +825,82 @@ end
 
 %objects
 
+                           universe
+
+names {"parallel universe", "universe"}
+title "a parallel universe"
+descr "A parallel universe is floating mid-air."
+type ITEM_OTHER
+weight 1
+extra {}
+"Looking at the parallel universe is truly an amazing experience. You could swear it is
+almost an exact copy of the world you're inhabiting right now. But then somehow it seems
+like it might just be a bit newer. Perhaps a tad more exciting. You get the feeling that
+you can <a cmd='# universe'>adopt</a> this parallel universe and replace your own universe."
+
+dilbegin aware cadopt();
+var
+   pc : unitptr;
+   i : integer;
+   s : string;
+code
+{
+   heartbeat := PULSE_SEC;
+
+   :start:
+   wait(SFB_CMD, command("adopt"));
+
+   if (argument != "universe")
+      goto start;
+
+   pc := activator;
+   secure(pc, start);
+   block;
+
+   i := shell("adopt.sh");
+   act("You initiate the universe adoption process. *click* ("+itoa(i)+")", A_ALWAYS, pc, null, self, TO_CHAR);
+   act("$3n initiates the universe adoption process.", A_ALWAYS, pc, null, self, TO_ROOM);
+   pause;
+   act("Strange <a cmd='look #'>symbols</a> begin floating around the parallel universe.", A_ALWAYS, pc, null, self, TO_CHAR);
+   unsecure(pc);
+   goto start;
+}
+dilend 
+
+
+dilbegin aware csymbols();
+var
+   pc : unitptr;
+   i : integer;
+   s : string;
+code
+{
+   heartbeat := PULSE_SEC;
+
+   :start:
+   wait(SFB_CMD, command("look"));
+
+   if (argument != "symbols")
+      goto start;
+
+   pc := activator;
+   secure(pc, start);
+   block;
+
+   i := loadstr("adopt.log", s);
+   if (i == FILE_LOADED)
+      pagestring("<pre>"+s+"</pre>", pc);
+   else
+      act("The symbols are illegible right now.", A_ALWAYS, pc, null, self, TO_CHAR);
+
+   unsecure(pc);
+   goto start;
+}
+dilend 
+
+end
+
+
                            compiler
 
 names {"compiler"}
