@@ -3046,7 +3046,7 @@ void *threadcallout(void *p)
         string s;
         s = "./allow/";  // current dir iswhere vme/bin is located, set to bin/allow/
         s.append(str);
-        slog(LOG_BRIEF , 0, "system('%s'); ", str, s.c_str());
+        slog(LOG_BRIEF , 0, "system('%s'); ", s.c_str());
         int rc = ::system((const char *) s.c_str());
 
         if (rc == -1 || WEXITSTATUS(rc) != 0)
