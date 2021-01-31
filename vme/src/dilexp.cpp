@@ -3050,9 +3050,9 @@ void *threadcallout(void *p)
         int rc = ::system((const char *) s.c_str());
 
         if (rc == -1 || WEXITSTATUS(rc) != 0)
-            slog(LOG_BRIEF, 0, "success system('%s').", str, rc);
+            slog(LOG_BRIEF, 0, "success system('%s')  rc=%d exitstatus=%d", str, rc, WEXITSTATUS(rc));
         else
-            slog(LOG_BRIEF, 0, "fail system('%s') return code %d %d", str, rc, WEXITSTATUS(rc));
+            slog(LOG_BRIEF, 0, "fail system('%s') rc=%d exitstatus=%d", str, rc, WEXITSTATUS(rc));
     }
 
     pthread_exit(NULL);
