@@ -3048,12 +3048,17 @@ void *threadcallout(void *p)
         s.append(str);
         slog(LOG_BRIEF , 0, "system('%s'); ", str, s.c_str());
         int rc = ::system((const char *) s.c_str());
-        slog(LOG_BRIEF, 0, "done system('%s') return code %d", str, rc);
+
+        if (rc == -1 || WEXITSTATUS(rc) != 0)
+            slog(LOG_BRIEF, 0, "success system('%s').", str, rc);
+        else
+            slog(LOG_BRIEF, 0, "fail system('%s') return code %d %d", str, rc, WEXITSTATUS(rc));
     }
 
     pthread_exit(NULL);
 }
 
+// DIL shell()
 void dilfe_shell(register class dilprg *p)
 {
     dilval *v = new dilval;
