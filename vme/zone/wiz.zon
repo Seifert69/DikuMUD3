@@ -1089,5 +1089,6 @@ load time_board into history_hall local 1
 load bell into chat local 1
 load odin into chat local 1
 load compiler into papis_cottage local 1
+load universe into papis_cottage local 1
 
 %end
