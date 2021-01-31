@@ -824,6 +824,81 @@ end
 
 
 %objects
+
+                           compiler
+
+names {"compiler"}
+title "a compiler"
+descr "An old compiler is standing on the floor."
+type ITEM_OTHER
+weight 1
+extra {}
+"The compiler looks really complicated. It has a screen which is black. There's a lot of symbols on it
+but there's a button that you could perhaps <a cmd='# button'>press</a>."
+
+dilbegin aware cbutton();
+var
+   pc : unitptr;
+   i : integer;
+   s : string;
+code
+{
+   heartbeat := PULSE_SEC;
+
+   :start:
+   wait(SFB_CMD, command("press"));
+
+   if (argument != "button")
+      goto start;
+
+   pc := activator;
+   secure(pc, start);
+   block;
+
+   i := shell("compile.sh");
+   act("Click ("+itoa(i)+")", A_ALWAYS, pc, null, self, TO_CHAR);
+   act("$3n presses the button on the compiler.", A_ALWAYS, pc, null, self, TO_ROOM);
+   pause;
+   act("The <a cmd='look #'>screen</a> flickers.", A_ALWAYS, pc, null, self, TO_CHAR);
+   unsecure(pc);
+   goto start;
+}
+dilend 
+
+
+dilbegin aware cscreen();
+var
+   pc : unitptr;
+   i : integer;
+   s : string;
+code
+{
+   heartbeat := PULSE_SEC;
+
+   :start:
+   wait(SFB_CMD, command("look"));
+
+   if (argument != "screen")
+      goto start;
+
+   pc := activator;
+   secure(pc, start);
+   block;
+
+   i := loadstr("compile.log", s);
+   if (i == FILE_LOADED)
+      pagestring("<pre>"+s+"</pre>", pc);
+   else
+      act("The screen seems broken right now.", A_ALWAYS, pc, null, self, TO_CHAR);
+
+   unsecure(pc);
+   goto start;
+}
+dilend 
+
+end
+
+
                            sticker
 
 names {"sticker"}
@@ -898,8 +973,8 @@ weight 1
 cost 4 GOLD_PIECE
 extra {}
 "It really is a very small bell. Perhaps it is a toy, lost by a child."
-dilbegin ringbell();
 
+dilbegin ringbell();
 var
     targ : unitptr;
     pc:unitptr;
@@ -929,6 +1004,7 @@ end
 /* ------------ test af vampire club */
 
 %reset
+
 load wiz_board into board_room local 1
 load builder_board into builders_bar local 1
 load dil_board into dil_hall local 1
@@ -936,4 +1012,6 @@ load quest_board into quest_hall local 1
 load time_board into history_hall local 1
 load bell into chat local 1
 load odin into chat local 1
+load compiler into papis_cottage local 1
+
 %end
