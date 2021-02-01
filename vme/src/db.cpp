@@ -1394,7 +1394,6 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
    u = read_unit_string(&g_FileBuffer, org_fi->type, org_fi->length,
                         str_cc(org_fi->name, org_fi->zone->name),
                         ins_list);
-
    u->set_fi(org_fi);
 
    if (!IS_ROOM(u))

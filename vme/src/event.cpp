@@ -260,7 +260,7 @@ void eventqueue::process(void)
                 membug_verify(u);
                 membug_verify(fptr);
 
-                bDestructed = (u->is_destructed() || fptr->is_destructed());
+                bDestructed = (u->is_destructed() || fptr->is_destructed() || (tmp_event->func == NULL));
 
                 if (!bDestructed)
                 {
@@ -287,6 +287,7 @@ void eventqueue::process(void)
 
             if (!bDestructed)
             {
+                assert(tmp_event->func);
                 (tmp_event->func)(tmp_event->arg1, tmp_event->arg2);
                 loop_process++;
                 total_process++;

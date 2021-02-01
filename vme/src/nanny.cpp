@@ -282,6 +282,152 @@ void update_lasthost(class unit_data *pc, ubit32 s_addr)
    [4] = s_addr;
 }
 
+
+
+
+// Take a player which is in the game and move to the menu
+// Don't stop the DIL program executing as pdontstop
+//
+void pc_data::gstate_tomenu(dilprg *pdontstop)
+{
+   void dil_stop_special(class unit_data *unt, class dilprg *aprg);
+   void stop_snoopwrite(unit_data *unit);
+
+   if (!char_is_playing(this))
+      return;
+
+    if (!PC_IS_UNSAVED(this))
+    {
+      save_player(this);
+      save_player_contents(this, TRUE);
+    }
+
+   CHAR_LAST_ROOM(this) = unit_room(this);
+
+   stop_snoopwrite(this);
+
+   descriptor_data *tmp_descr = CHAR_DESCRIPTOR(this);
+   CHAR_DESCRIPTOR(this) = NULL;
+
+   while (UNIT_CONTAINS(this))
+      extract_unit(UNIT_CONTAINS(this));
+
+   CHAR_DESCRIPTOR(this) = tmp_descr;
+
+   unit_from_unit(this);
+   remove_from_unit_list(this);
+   dil_stop_special(this, pdontstop);
+}
+
+#define DILWAY 1
+
+// Take a player which is in the menu and move to the game
+// Don't start the DIL program executing as pdontstart
+//
+void pc_data::gstate_togame(dilprg *pdontstop)
+{
+   class descriptor_data *i;
+   //char tbuf[MAX_STRING_LENGTH * 2];
+   char buf[256];
+   time_t last_connect = PC_TIME(this).connect;
+   //char *color;
+
+   char *ContentsFileName(const char *);
+   void dil_start_special(class unit_data *unt, class dilprg *aprg);
+
+   if (char_is_playing(this)) // Are we in the menu?
+      return; 
+
+   if (CHAR_DESCRIPTOR(this))
+   {
+      update_lasthost(this, inet_addr(CHAR_DESCRIPTOR(this)->host));
+
+      CHAR_DESCRIPTOR(this)->timer = 0;
+      CHAR_DESCRIPTOR(this)->prompt_mode = PROMPT_EXPECT;
+      CHAR_DESCRIPTOR(this)->logon = ::time(0);
+      PC_TIME(this).connect = ::time(0);
+      set_descriptor_fptr(CHAR_DESCRIPTOR(this), descriptor_interpreter, FALSE);
+      dil_destroy("link_dead@basis", this);
+
+      connect_game(this);
+   }
+
+   unit_data *load_room;
+   if (CHAR_LAST_ROOM(this))
+   {
+      load_room = CHAR_LAST_ROOM(this);
+      CHAR_LAST_ROOM(this) = NULL;
+   }
+   else
+      load_room = hometown_unit(PC_HOME(this));
+
+   reset_char(this);
+
+   insert_in_unit_list(this);
+   unit_to_unit(this, load_room);
+
+   if (CHAR_DESCRIPTOR(this) && !DILWAY) /* Only do these things if player is connected */
+   {
+      sprintf(buf, "%s has entered the world.<br/>", UNIT_NAME(this));
+
+      for (i = descriptor_list; i; i = i->next)
+         if (descriptor_is_playing(i) && i->character != this &&
+             CHAR_CAN_SEE(CHAR_ORIGINAL(i->character), this) &&
+             IS_PC(CHAR_ORIGINAL(i->character)) &&
+             IS_SET(PC_FLAGS(CHAR_ORIGINAL(i->character)), PC_INFORM) &&
+             !same_surroundings(this, i->character))
+            send_to_descriptor(buf, i);
+
+      act("$1n has arrived.", A_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), TO_ROOM);
+   }
+
+   /* New player stats. Level can be zero after reroll while ID is not. */
+   if ((CHAR_LEVEL(this) == 0) && PC_IS_UNSAVED(this))
+   {
+      void start_player(class unit_data * ch);
+      slog(LOG_BRIEF, 0, "%s[%s] (GUEST) has entered the game.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->host);
+
+      sbit32 new_player_id(void);
+
+      PC_ID(this) = new_player_id();
+
+      start_player(this);
+   }
+   else
+   {
+      if (!DILWAY)
+         command_interpreter(this, "look");
+   }
+   if (file_exists(ContentsFileName(PC_FILENAME(this))))
+   {
+      ubit32 rent_calc(class unit_data * ch, time_t savetime);
+
+      load_contents(PC_FILENAME(this), this);
+
+      if (!DILWAY)
+         rent_calc(this, last_connect);
+   }
+
+   /*		if (!dilway)*/
+   if (strcmp(g_cServerConfig.m_pImmortName, UNIT_NAME(this)) == 0)
+      CHAR_LEVEL(this) = ULTIMATE_LEVEL;
+
+   if (IS_ULTIMATE(this) && PC_IS_UNSAVED(this))
+      save_player(this);
+
+   start_affect(this);      /* Activate affect ticks */
+   // start_all_special(this); /* Activate fptr ticks   */
+   if (!DILWAY)
+   {
+      send_done(this, NULL, load_room, 0, &cmd_auto_play, "");
+      send_done(this, NULL, load_room, 0, &cmd_auto_play, "", NULL, "void@basis");
+   }
+
+   ActivateDil(this);
+   dil_start_special(this, pdontstop);
+}
+
+
 /* Set 'd' to 'ch' and enter the game.                            */
 /* If ch has UNIT_IN set, then it is because ch must be link dead */
 /*   and thus a reconnect is performed.                           */
@@ -289,112 +435,10 @@ void update_lasthost(class unit_data *pc, ubit32 s_addr)
 /*   game, and his inventory loaded.                              */
 void enter_game(class unit_data *ch, int dilway)
 {
-   class unit_data *load_room;
-   class descriptor_data *i;
-   //char tbuf[MAX_STRING_LENGTH * 2];
-   char buf[256];
-   time_t last_connect = PC_TIME(ch).connect;
-   //char *color;
-
-   char *ContentsFileName(const char *);
-
-   if (CHAR_DESCRIPTOR(ch))
-   {
-
-      update_lasthost(ch, inet_addr(CHAR_DESCRIPTOR(ch)->host));
-
-      CHAR_DESCRIPTOR(ch)->timer = 0;
-      CHAR_DESCRIPTOR(ch)->prompt_mode = PROMPT_EXPECT;
-      CHAR_DESCRIPTOR(ch)->logon = time(0);
-      PC_TIME(ch).connect = time(0);
-      set_descriptor_fptr(CHAR_DESCRIPTOR(ch), descriptor_interpreter,
-                          FALSE);
-      dil_destroy("link_dead@basis", ch);
-      ActivateDil(ch);
-
-      connect_game(ch);
-   }
-
-   reset_char(ch);
-
-   insert_in_unit_list(ch);
-
-   if (CHAR_LAST_ROOM(ch))
-   {
-      load_room = CHAR_LAST_ROOM(ch);
-      CHAR_LAST_ROOM(ch) = NULL;
-   }
-   else
-      load_room = hometown_unit(PC_HOME(ch));
-
-   unit_to_unit(ch, load_room);
-   /* MS2020
-    if (CHAR_DESCRIPTOR (ch))	// Only do these things if player is connected
-    {
-        color = UPC (ch)->color.save_string ();
-        sprintf (tbuf, "%s%s%s", CONTROL_COLOR_CREATE, color,
-                 CONTROL_COLOR_END);
-        send_to_char (tbuf, ch);
-        delete color;
-    }*/
-   if (CHAR_DESCRIPTOR(ch) && !dilway) /* Only do these things if player is connected */
-   {
-      sprintf(buf, "%s has entered the world.<br/>", UNIT_NAME(ch));
-
-      for (i = descriptor_list; i; i = i->next)
-         if (descriptor_is_playing(i) && i->character != ch &&
-             CHAR_CAN_SEE(CHAR_ORIGINAL(i->character), ch) &&
-             IS_PC(CHAR_ORIGINAL(i->character)) &&
-             IS_SET(PC_FLAGS(CHAR_ORIGINAL(i->character)), PC_INFORM) &&
-             !same_surroundings(ch, i->character))
-            send_to_descriptor(buf, i);
-
-      act("$1n has arrived.", A_HIDEINV, cActParameter(ch), cActParameter(), cActParameter(), TO_ROOM);
-   }
-
-   /* New player stats. Level can be zero after reroll while ID is not. */
-   if ((CHAR_LEVEL(ch) == 0) && PC_IS_UNSAVED(ch))
-   {
-      void start_player(class unit_data * ch);
-      slog(LOG_BRIEF, 0, "%s[%s] (GUEST) has entered the game.", PC_FILENAME(ch), CHAR_DESCRIPTOR(ch)->host);
-
-      sbit32 new_player_id(void);
-
-      PC_ID(ch) = new_player_id();
-
-      start_player(ch);
-   }
-   else
-   {
-      if (!dilway)
-         command_interpreter(ch, "look");
-   }
-   if (file_exists(ContentsFileName(PC_FILENAME(ch))))
-   {
-      ubit32 rent_calc(class unit_data * ch, time_t savetime);
-
-      load_contents(PC_FILENAME(ch), ch);
-
-      if (!dilway)
-         rent_calc(ch, last_connect);
-   }
-
-   /*		if (!dilway)*/
-   if (strcmp(g_cServerConfig.m_pImmortName, UNIT_NAME(ch)) == 0)
-      CHAR_LEVEL(ch) = ULTIMATE_LEVEL;
-
-   if (IS_ULTIMATE(ch) && PC_IS_UNSAVED(ch))
-      save_player(ch);
-
-   start_affect(ch);      /* Activate affect ticks */
-   start_all_special(ch); /* Activate fptr ticks   */
-   if (!dilway)
-   {
-      send_done(ch, NULL, load_room, 0, &cmd_auto_play, "");
-      send_done(ch, NULL, load_room, 0, &cmd_auto_play, "", NULL,
-                "void@basis");
-   }
+   UPC(ch)->gstate_togame(NULL);
 }
+
+
 void set_descriptor_fptr(class descriptor_data *d,
                          void (*fptr)(class descriptor_data *, char *),
                          ubit1 call)
@@ -464,10 +508,11 @@ void nanny_motd(class descriptor_data *d, char *arg)
    if (on_connect)
    {
       dilmenu = TRUE;
-      enter_game(d->character, TRUE);
+      // Nono... only enter the game when entering from the menu (DIL) enter_game(d->character, TRUE);
       class dilprg *prg = dil_copy_template(on_connect, d->character, NULL);
       if (prg)
       {
+         set_descriptor_fptr(d, descriptor_interpreter, TRUE);
          prg->waitcmd = WAITCMD_MAXINST - 1;
          dil_activate(prg);
       }

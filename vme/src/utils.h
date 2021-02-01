@@ -190,10 +190,10 @@ extern const sbit8 time_light[];
    ((unit)->fi->zone)
 
 #define UNIT_FI_ZONENAME(unit)   \
-   (FI_ZONENAME(UNIT_FILE_INDEX(unit)))
+   (UNIT_FILE_INDEX(unit) ? FI_ZONENAME(UNIT_FILE_INDEX(unit)) : "NO-ZONE")
 
 #define UNIT_FI_NAME(unit)   \
-   (FI_NAME(UNIT_FILE_INDEX(unit)))
+   (UNIT_FILE_INDEX(unit) ? FI_NAME(UNIT_FILE_INDEX(unit)) : "NO-NAME")
 
 #define UNIT_WEAR(unit, part)    \
    (IS_SET(UNIT_MANIPULATE(unit), part))

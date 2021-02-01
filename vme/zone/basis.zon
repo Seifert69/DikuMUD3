@@ -318,7 +318,6 @@ code
       i := dildestroy("stomach@update", self);
       dilcopy("stomach@update",self);
 
-      dilcopy("got_mail@mail()", self);
       dilcopy("fixwt@basis()", self);
       dilcopy("break_eq@basis()", self);
 
@@ -331,6 +330,8 @@ code
 
       login_scrub(self);
    }
+
+   dilcopy("got_mail@mail()", self);
 
    return;
 }
@@ -470,7 +471,7 @@ code
 dilend
 
 
-dilbegin aware fnpri(FN_PRI_SYS) on_connect();
+dilbegin aware unique fnpri(FN_PRI_SYS) on_connect();
 external
    informer();
    login_modify(tgt : unitptr);
@@ -492,7 +493,7 @@ code
 
    err := loadstr("motd",motd);
 
-   if(err > 0)
+   if (err > 0)
    {
       motd := textformat(motd);
       sendtext(motd+"<br/>", self);
@@ -507,20 +508,19 @@ code
    s := dlrdump@commands("$trigger");
    sendtext(s, self);
 
-   login_modify(self);
-
-
    if (self.level < 200)
    {
       if(err > 0)
          sendtext("<br/>"+welcome+"<br/><br/>", self);
+      gamestate(self, GS_PLAY);
       informer();
+      login_modify(self);
       exec("look", self);
       exec("comm add discord", self);
       quit;
    }
 
-   gamestate(self, GS_MENU);
+   //gamestate(self, GS_MENU);
 
    :wiz_menu:
    sendtext("Welcome to Valhalla<br/><br/>", self);
@@ -532,10 +532,11 @@ code
 
    if (command("1"))
    {
-      gamestate(self, GS_PLAY);
       if(err > 0)
          sendtext("<br/>"+welcome+"<br/><br/>", self);
+      gamestate(self, GS_PLAY);
       informer();
+      login_modify(self);
       exec("look", self);
       quit;
    }
@@ -7565,6 +7566,24 @@ title "the zombie"
 descr "A mindless zombie is roaming around here."
 extra {} "Disgusting!"
 M_ZOMBIE_SMALL(4,SEX_NEUTRAL)
+
+dilbegin zonetest();
+var 
+   z : zoneptr;
+code
+{
+   :loop:
+   wait(SFB_CMD, command("smile"));
+   z := findzone("basis");
+
+   if (z == null)
+      log("no such zone");
+   else
+      log("found zone z = " + z.name);
+   goto loop;
+}
+dilend
+
 
 dilbegin dispatchtest();
 var 

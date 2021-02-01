@@ -1648,6 +1648,8 @@ void dilfe_flog(class dilprg *p)
     delete v3;
 }
 
+
+// loadstr()
 void dilfe_ldstr(class dilprg *p)
 {
     dilval *v = new dilval;
@@ -3044,14 +3046,19 @@ void *threadcallout(void *p)
         string s;
         s = "./allow/";  // current dir iswhere vme/bin is located, set to bin/allow/
         s.append(str);
-        slog(LOG_BRIEF , 0, "system('%s'); ", str, s.c_str());
+        slog(LOG_BRIEF , 0, "system('%s'); ", s.c_str());
         int rc = ::system((const char *) s.c_str());
-        slog(LOG_BRIEF, 0, "done system('%s') return code %d", str, rc);
+
+        if (rc == -1 || WEXITSTATUS(rc) != 0)
+            slog(LOG_BRIEF, 0, "fail system('%s') rc=%d exitstatus=%d", str, rc, WEXITSTATUS(rc));
+        else
+            slog(LOG_BRIEF, 0, "success system('%s') rc=%d exitstatus=%d", str, rc, WEXITSTATUS(rc));
     }
 
     pthread_exit(NULL);
 }
 
+// DIL shell()
 void dilfe_shell(register class dilprg *p)
 {
     dilval *v = new dilval;
@@ -4435,6 +4442,42 @@ void dilfe_fndr(register class dilprg *p)
         {
             split_fi_ref((char *)v1->val.ptr, buf1, buf2);
             v->val.ptr = world_room(buf1, buf2);
+            if (v->val.ptr == NULL)
+                v->type = DILV_NULL; /* not found */
+        }
+        else
+            v->type = DILV_NULL; /* not found */
+
+        break;
+    case DILV_NULL:
+        v->type = DILV_NULL; /* not found */
+        break;
+    default:
+        v->type = DILV_ERR; /* wrong type */
+        break;
+    }
+    p->stack.push(v);
+    delete v1;
+}
+
+
+// findzone(#)
+void dilfe_fndz(register class dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v1 = p->stack.pop();
+
+    switch (dil_getval(v1))
+    {
+    case DILV_FAIL:
+        v->type = DILV_FAIL;
+        break;
+    case DILV_SP:
+        v->atyp = DILA_NORM;
+        v->type = DILV_ZP;
+        if (v1->val.ptr)
+        {
+            v->val.ptr = find_zone((const char *) v1->val.ptr);
             if (v->val.ptr == NULL)
                 v->type = DILV_NULL; /* not found */
         }

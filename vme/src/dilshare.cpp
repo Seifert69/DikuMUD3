@@ -10,6 +10,7 @@
 #include "intlist.h"
 #include "dil.h"
 #include "dilrun.h"
+#include "utils.h"
 
 int g_nDilPrg = 0;
 int g_nDilVal = 0;
@@ -87,6 +88,8 @@ dilval::~dilval (void)
 
 void dilprg::link(diltemplate *tmpl)
 {
+    assert(this->next == NULL);
+    
     this->next = tmpl->prg_list;
     tmpl->prg_list = this;
 }
@@ -128,7 +131,8 @@ void dilprg::unlink(void)
 
         if (ok == FALSE)
         {
-            slog(LOG_ALL, 0, "Not found in dil_list %s@%s", tmpl->prgname, tmpl->zone->name);
+            slog(LOG_ALL, 0, "Not found in dil_list [%s]. Zone [%s]. Owner %s", 
+                tmpl->prgname, tmpl->zone ? tmpl->zone->name : "NOZONE", UNIT_FI_NAME(this->owner));
         }
     }
 

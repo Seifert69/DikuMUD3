@@ -1,0 +1,4 @@
+Papi's old compiler is designed to work only on the Valhalla MUD 
+test server. Pressing the button will pull all the latest from Git,
+compile everything, including zones, and set everything up for  
+a reboot.
