@@ -118,7 +118,6 @@ struct symbols
     {"flog", DILSE_FLOG},
     {"insert", DILSI_INSLST},
     {"remove", DILSI_REMLST},
-    {"flog", DILSE_FLOG},
     {"send_pre", DILSE_SENDPRE},
     {"strcmp", DILSE_STRCMP},
     {"strncmp", DILSE_STRNCMP},
