@@ -306,8 +306,13 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
 
    stop_snoopwrite(this);
 
+   descriptor_data *tmp_descr = CHAR_DESCRIPTOR(this);
+   CHAR_DESCRIPTOR(this) = NULL;
+
    while (UNIT_CONTAINS(this))
       extract_unit(UNIT_CONTAINS(this));
+
+   CHAR_DESCRIPTOR(this) = tmp_descr;
 
    unit_from_unit(this);
    remove_from_unit_list(this);
