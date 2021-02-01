@@ -927,13 +927,6 @@ void stop_snoopwrite(unit_data *unit)
                break;
             }
 
-      if (CHAR_DESCRIPTOR(unit))
-      {
-         void disconnect_game(class unit_data * pc);
-
-         disconnect_game(unit);
-      }
-
       if (CHAR_FOLLOWERS(unit) || CHAR_MASTER(unit))
          die_follower(unit);
 
@@ -992,6 +985,12 @@ void extract_unit(class unit_data *unit)
 
     stop_snoopwrite(unit);
 
+    if (IS_CHAR(unit) && CHAR_DESCRIPTOR(unit))
+    {
+        void disconnect_game(class unit_data * pc);
+
+        disconnect_game(unit);
+    }
 
     /*if (!IS_PC(unit) || UNIT_IN(unit))
     {
