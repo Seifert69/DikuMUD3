@@ -5450,19 +5450,17 @@ dilend
 
 
 
-dilbegin find_path(medi:unitptr, tgt : unitptr, arg : string,
-		   hm : integer, effect : string);
+dilbegin find_path(medi:unitptr, tgt : unitptr, arg : string, hm : integer, effect : string);
 external
-  string dirstring@function   (dr:integer);
+   string dirstring@function   (dr:integer);
 
 var
-  dir_string:string;
-  i : integer;
-  first:integer;
+   dir_string:string;
+   i : integer;
+   first:integer;
   
 code
 {
-
    if (hm < 0)
    {
       act("You feel confused.", A_ALWAYS, self, null, null, TO_CHAR);
@@ -5470,46 +5468,37 @@ code
       quit;
    }
 
+   /* do the actual path to call and display results */
+   heartbeat:=1;
+   first:=0;
 
-/* do the actual path to call and display results */
-
-
-
-heartbeat:=1;
-first:=0;
 :repeater:
-   i := pathto (self,tgt);   
+   i := pathto(self, tgt);   
    
-if (i==DIR_TRYAGAIN)
-{
-   goto repeater;
-   }
-
-   if (i==DIR_IMPOSSIBLE)
+   if (i == DIR_TRYAGAIN)
    {
-      act ("You get the feeling it is impossible from here.",
-	   A_ALWAYS,self,null,null,TO_CHAR);
+      act("The magic is illusive. Maybe you should try again.", A_ALWAYS, self, null, null, TO_CHAR);
    }
-   else if (i==DIR_HERE)
+   else if (i == DIR_IMPOSSIBLE)
    {
-      act ("This is the place.",
-	   A_ALWAYS,self,null,null,TO_CHAR);
+      act ("You get the feeling it is impossible from here.", A_ALWAYS,self,null,null,TO_CHAR);
+   }
+   else if (i == DIR_HERE)
+   {
+      act ("This is the place.", A_ALWAYS,self,null,null,TO_CHAR);
    }
    else if (i == DIR_ENTER)
    {
-      act ("You should enter something here.",
-	   A_ALWAYS,self,null,null,TO_CHAR);
+      act ("You should enter something here.", A_ALWAYS,self,null,null,TO_CHAR);
    }
    else if (i == DIR_EXIT)
    {
-      act ("You should exit this place.",
-	   A_ALWAYS,self,null,null,TO_CHAR);
+      act ("You should exit this place.", A_ALWAYS,self,null,null,TO_CHAR);
    }
    else
    {
-      dir_string := dirstring@function  (i);
-      act ("You should leave $2t.",
-	   A_ALWAYS,self,dir_string,null,TO_CHAR);
+      dir_string := dirstring@function(i);
+      act ("You should leave $2t.", A_ALWAYS,self,dir_string,null,TO_CHAR);
    }
    quit;
 }
