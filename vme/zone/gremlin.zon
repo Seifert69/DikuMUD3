@@ -42,8 +42,10 @@ new newbie experience. May consider moving those to newbie.zon *shrug*.<br>"
 help
 "<pre><br/>
 Gremlins have invaded Barnham's pleasant farmstead. Help him to rid the farm
-of these terrible vermin once and for all!<br/>
-<br/>
+of these terrible vermin once and for all!<br/><br/>
+This zone is intended to provide a soft-launch for new players of all profession. 
+Quests, equipment, and experiences are designed to teach what can be expected playing
+at higher levels. Zone by Sender.
 </div></pre>"
 
 /* ================================================================== */
@@ -68,6 +70,135 @@ Shoutout to Jessamine for building the Rogue character and dialog.
 
 -Sender
 */
+
+dilbegin recall charger();
+code
+{
+:start:
+heartbeat:=PULSE_SEC*SECS_PER_MUD_DAY/4;
+wait (SFB_TICK,(self.equip==WEAR_WIELD));
+heartbeat:=PULSE_SEC*5;
+sendto ("add charge",self);
+goto start;
+}
+dilend
+
+dilbegin recall mana_drain();
+var
+    storenum    :   integer;
+    charge      :   integer;
+	num 		:	integer;
+    pwr         :   integer;
+	num2		:	integer;
+	diff		:	integer;
+	mag_skill	:	integer;
+    fire        :   integer;
+code
+{
+	pwr := 10;
+:init:
+	heartbeat := PULSE_SEC*9;
+	charge := interrupt (SFB_MSG,((self==activator) and (argument=="add charge")), charge);
+:start:
+	heartbeat := PULSE_SEC*9;
+	wait(SFB_COM, ((self.outside.fighting) and
+       (self.equip == WEAR_WIELD)));
+
+	if (self.outside.position != POSITION_FIGHTING)
+		goto start;
+
+	if(pwr <= 0)
+		goto start;
+
+	fire := rnd(1,50);
+	if(fire < 20)
+		goto start;
+
+	num2 := rnd(1, 10);
+	storenum := self.outside.fighting.mana / (2 * num2);
+	mag_skill := self.outside.abilities[ABIL_MAG];
+	num2 := rnd(1,110);
+	if (mag_skill > num2)
+	{
+		self.outside.fighting.mana := self.outside.fighting.mana - storenum;
+		num := rnd(10,130);
+		if (mag_skill > num)
+		{
+			act("Your $2n sends a surge of energy into your body!"
+				,A_ALWAYS, self.outside, self,self.outside.fighting,TO_CHAR);
+			act("$3n pales visibly as $3s mana is drained away!"
+				,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
+			act("$1n's $2n glows, energy crackles along $1n's arm!"
+				,A_ALWAYS, self.outside, self, self.outside.fighting,TO_REST);
+			act("$3n pales visibly as $3s mana is drained away!"
+				,A_ALWAYS, self.outside, self, self.outside.fighting,TO_NOTVICT);
+			act("You can feel your magic essence being siphoned!"
+				,A_ALWAYS, self.outside, self, self.outside.fighting,TO_VICT);
+
+			diff := self.outside.max_mana - self.outside.mana;
+			if (storenum < diff)
+			{
+				self.outside.mana := self.outside.mana + storenum;
+				position_update(self.outside);
+				goto wait_time;
+			}
+			else
+			{
+				self.outside.mana := self.outside.mana + diff;
+				position_update(self.outside);
+				goto wait_time;
+			}
+			goto wait_time;
+		}
+		else
+		{
+			act("Your $2n glows as it drains mana from $3n!"
+				,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
+			act("$1n's $2n glows as it drains mana from $3n!"
+				,A_ALWAYS, self.outside, self, self.outside.fighting,TO_NOTVICT);
+			act("$1n's $2n glows as it drains your mana!"
+				,A_ALWAYS, self.outside, self, self.outside.fighting,TO_VICT);
+			pause;
+			goto wait_time;
+		}
+	}
+	else
+	{
+		act("Your $2n glows slightly as it attempts to battle $3n's will!"
+		   ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
+		act("$1n's $2n glows slightly in an attempt to battle $3n will!"
+		   ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_NOTVICT);
+		act("You feel $1n's $2n intruding on your will, you push the assault back!"
+		   ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_VICT);
+		pause;
+		goto wait_time;
+	}
+	pause;
+
+:wait_time:
+	heartbeat:=PULSE_SEC*SECS_PER_MUD_DAY/48;
+	wait(SFB_TICK, TRUE);
+	pwr := pwr - 1;
+	self.outside.mana := self.outside.mana - 1;
+	position_update(self.outside);
+	act("Your Vorous glows a little as it draws your energy to prepare for battle!"
+		,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
+	act("$1n's grimaces a bit as $1s $2n glows."
+		,A_ALWAYS, self.outside, self, self.outside.fighting,TO_REST);
+	goto start;
+
+:charge:
+	clear (charge);
+	if (pwr<12)
+	pwr:=pwr+6;
+	if (pwr>12) pwr := 12;
+	act("Your Vorous hums as it regenerates itself."
+		,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
+	act("$1n's Vorous hums quietly ."
+		,A_ALWAYS, self.outside, self, self.outside.fighting,TO_REST);
+	goto init;
+}
+dilend
 
 dilbegin resize();
 var
@@ -99,7 +230,7 @@ code
 	heartbeat:= PULSE_SEC*4;
 
 :start:
-	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (BOLDIN_ONGOING in activator.quests) and (BOLDIN_ROGUE in activator.quests));
+	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (BOLDIN_ONGOING in activator.quests) and (BOLDIN_ROGUE in activator.quests) and (activator.position == POSITION_STANDING));
 
 	if(activator.level >= 40)
 	{
@@ -142,7 +273,7 @@ code
 	pause;
 	exec("say Next I need a nice piece of thick hemp rope. They make good rope up in Whesland.", self);
 	pause;
-	exec("say I mustn't forget a drop of something to warm me up after a squall. A cup of hobgoblin whiskey will be just the thing. They sells it in their town in the mountains to the south of the King's Road.", self);
+	exec("say I mustn't forget a drop of something to warm me up after a squall. A mug of hobgoblin whiskey will be just the thing. They sells it in their town in the mountains to the south of the King's Road.", self);
 	pause;
 	exec("emote smacks his lips appreciatively.", self);
 	pause;
@@ -247,6 +378,12 @@ code
 	{
 		addstring(exdp.names, "rope");
 		exec("say Ah-har, matey. A strong one at that!", self);
+		destroy(self.inside);
+	}
+	else if (("whisky@hobgob" == self.inside.symname) and (not(ROGUE_COMPLETE in activator.quests)))
+	{
+		addstring(exdp.names, "whisky");
+		exec("say Ah-har, matey. This smells like it could strip the paint off a hull!", self);
 		destroy(self.inside);
 	}
 	else if ((22 == self.inside.type) and (not(ROGUE_COMPLETE in activator.quests)))
@@ -737,7 +874,7 @@ code
 	act("<div class='hint'>HINT: Use the command 'open west door' to identify and open the appropriate door.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	pause;
 	exec("say Watch out when you're tangling with those gremlins, by the way. I'd start with the troublesome ones to see how you get on. The vicious ones really are ... well, vicious.", self);
-	act("<div class='hint'>HINT: Use the 'diag' command against your enemies to measure their difficulty.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+	act("<div class='hint'>HINT: Use the 'consider' command against your enemies to measure their difficulty.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 	pause;
 	pause;
 
@@ -2016,6 +2153,8 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 2
 cost 1 COPPER_PIECE
 WEAPON_TRANSFER(WPN_DAGGER,+5)
+WEAPON_TRANSFER(WPN_MACE,+5)
+WEAPON_TRANSFER(WPN_LONG_SWORD,+5)
 dilcopy mvlev_restrict@function(40,0,20,"");
 dilcopy resize();
 end
@@ -2103,6 +2242,36 @@ type ITEM_POTION
 POTION_DEF(60,SPL_CURE_WOUNDS_1,SPL_CURE_WOUNDS_1,SPL_NONE)
 weight 1
 cost 2 COPPER_PIECE
+end
+
+pendant
+names {"gwydions amulet","amulet"}
+title "Gwydion's Amulet"
+descr "A small wooden amulet is here."
+extra {}
+"This small amulet is intricately carved of an unknown wood. A rich color, 
+it has been worn smoothe by countless generations of hands clasping at it. 
+While it's not clear why, there seems to be a deep power within."
+extra {"$identify"}
+"Gwydion's Amulet is a powerful tool for both the divine and magically inclined. 
+It brings its wearer closer to the source of their power.<br/>"
+extra {"$wear_s"}
+"You carefully place $2n around your neck. Your power grows."
+extra {"$wear_o"}
+"$1n carefully places $2n around their neck. Their power grows."
+extra {"$rem_s"}
+"You feel your power fade as you remove $2n."
+extra {"$rem_o"}
+"The power in $1n fades as they remove $2n."
+manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
+MATERIAL_WOOD("This item is made of an unidentified ancient wood.")
+CHA_TRANSFER(+2)
+BRA_TRANSFER(+2)
+STR_TRANSFER(-1)
+dilcopy abi_restrict@function (ABIL_BRA,25,0,0,"bra_rest@skaven");
+dilcopy charger@sorcerer();
+dilcopy mana_drain@sorcerer();
+rent 100 IRON_PIECE
 end
 
 %reset
