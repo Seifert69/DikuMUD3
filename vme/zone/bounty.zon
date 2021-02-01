@@ -253,6 +253,7 @@ var
 	targ    : unitptr;
 	rwrd    : integer;
 	arg 	: string;
+	bp		: integer;
 code
 {
 :init:
@@ -318,7 +319,9 @@ code
 	slmt := split(emonth.descr,"|");
 	sdtarg := sldt.[2];
 	smtarg := slmt.[2];
-	sltime := split(asctime(realtime), " ");
+	sltime := split(asctime(realtime), " ");	
+	while ("" in sltime)
+		substring(sltime,"");
 	i := 0;
 	while(i <= 12)
 	{
@@ -503,10 +506,14 @@ leverage the competition boards. Will investigate.
 		else if (i >= 300)
 			rwrd := rwrd * (i * 4);
 		
+		bp := 1;
+		
 		// streak milestone rewards
 		if(i == 14)
 		{
-			exec("Here's a little something for making 14 daily contracts in a row.",self);
+			exec("I've included a little something for making 14 daily contracts in a row.",self);
+			bp := 3;
+			rwrd := rwrd * (3/2);
 		}
 		
 	}
@@ -524,10 +531,13 @@ leverage the competition boards. Will investigate.
 		else if (i >= 20)
 			rwrd := rwrd * (i * 4);
 		
+		bp := 10;
 		// streak milestone rewards
 		if(i == 6)
 		{
-			exec("Here's a little something for making 6 monthly contracts in a row.",self);
+			exec("I've included a little something for making 6 monthly contracts in a row.",self);
+			bp := 15;
+			rwrd := rwrd * (3/2);
 		}
 	}
 	
@@ -536,7 +546,13 @@ leverage the competition boards. Will investigate.
 	experience(rwrd, pc);
 	act("<br><div class='hint'>Contract Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 	act("<div class='xpgain'>You recieve "+itoa(rwrd)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
-	
+	if(not("$bounty_points" in pc.extra))
+		addextra (pc.extra,{"$bounty_points"},"0");	
+	pc.extra.["$bounty_points"].descr := itoa(atoi(pc.extra.["$bounty_points"].descr)+bp);
+	if(bp == 1)
+		act("<div class='xpgain'>You recieve "+itoa(bp)+" bounty point.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+	else
+		act("<div class='xpgain'>You recieve "+itoa(bp)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 	goto labsecure;
 	// End reward section // 
 	
@@ -708,7 +724,7 @@ var
 	buf : string;
 	j : integer;
 	bp : string;
-	item : unitptr;
+	uitem : unitptr;
 code
 {
 :init:
@@ -720,14 +736,10 @@ code
 	buf:=buf+"<table><tr><th>Item #</th><th>Item Name</th><th>Bounty Points</th></tr>";
 	i := 0;
 	j := 1;
-	while(i < (ln-1))
+	while(i < (ln-2))
 	{
-		log("Finding item "+items.[i]+"@bounty");
-		item := findsymbolic(items.[i]+"@bounty");
-		pause;
-		log("Found item "+item.title);
-		//buf:=buf+"<tr><td>"+itoa(j)+"</td><td>"+item.name+"</td><td>"+items.[i+1]+"</td></tr>";
-		i := i+2;
+		buf:=buf+"<tr><td>"+itoa(j)+"</td><td>"+items.[i+1]+"</td><td>"+items.[i+2]+"</td></tr>";
+		i := i+3;
 		j := j+1;
 	}
 
@@ -736,20 +748,74 @@ code
 	wait(SFB_CMD, (command("list")));
 	block;
 	pc := activator;
-	bp := pc.extra.["$Bounty_Points"].descr;
+	if(not("$bounty_points" in pc.extra))
+		addextra (pc.extra,{"$bounty_points"},"0");
+	bp := pc.extra.["$bounty_points"].descr;
 	bp := "</table><br><div class='cpc'>You have "+bp+" Bounty Points available.</div>";
 	sendtext(buf+bp,pc);
 	goto start;
 }
 dilend
 
-dilbegin shopbuy();
+dilbegin shopbuy(items : stringlist);
 var
-	pc : unitptr;
+	pc : unitptr;	
+	i : integer;
+	ln : integer;
+	j : integer;
+	bp : string;
+	ibp : integer;
+	uitem : unitptr;
+	arg : string;
 code
 {
+:init:
+
+	heartbeat := PULSE_SEC;
+	
+	ln:=length(items);
+	i := 0;
+	j := 1;
+	while(i < (ln-2))
+	{
+		i := i+3;
+		j := j+1;
+	}
+	
+:start:
+	
 	wait(SFB_CMD, (command("buy")));
 	block;
+	
+	pc := activator;
+	arg := getword(argument);
+	if(not("$bounty_points" in pc.extra))
+		addextra (pc.extra,{"$bounty_points"},"0");
+	bp := pc.extra.["$bounty_points"].descr;
+	ibp := atoi(bp);
+	i := 0;
+	j := 1;
+	while(i < (ln-2))
+	{
+		if(atoi(arg) == j)
+		{
+			if(atoi(items.[i+2]) <= ibp)
+			{
+				ibp := ibp - atoi(items.[i+2]);
+				pc.extra.["$bounty_points"].descr := itoa(ibp);
+				uitem := load(items.[i]+"@bounty");
+				link(uitem, pc);
+				exec("say Here is your "+uitem.name+" "+pc.name+"!",self);
+			}
+			else
+				exec("say You don't have "+items.[i+2]+" bounty points "+pc.name+"!",self);
+			goto start;
+		}
+		i := i+3;
+		j := j+1;
+	}
+	exec("say Please select an item number from the list.",self);
+	goto start;
 }
 dilend
 
@@ -872,11 +938,40 @@ alignment 0
 M_AVG_HUMAN(100,SEX_MALE)
 position POSITION_STANDING 
 
-dilcopy shoplist@bounty({"full_restore","100","strong_restore","75","half_restore","50","full_mana",
-	"40","strong_mana","30","half_mana","20","full_end","40","strong_end","30","half_end",
-	"20","full_heal","40","strong_heal","30","half_heal","20","mulligan","100",
-	"dz_hint","50","dc_hint","20","mz_hint","50","mc_hint","20"});
-dilcopy shopbuy@bounty();
+dilcopy shoplist@bounty({"full_restore","Potion of Full Restoration","100",
+						"strong_restore","Potent Potion of Restoration","75",
+						"half_restore","Potion of Restoration","50",
+						"full_mana","Potion of Full Mana","40",
+						"strong_mana","Potent Potion of Mana","30",
+						"half_mana","Potion of Mana","20",
+						"full_end","Potion of Full Endurance","40",
+						"strong_end","Potent Potion of Endurance","30",
+						"half_end","Potion of Endurance","20",
+						"full_heal","Potion of Full Healing","40",
+						"strong_heal","Potent Potion of Healing","30",
+						"half_heal","Potion of Healing","20",
+						"mulligan","Contract Breaking Note","100",
+						"dz_hint","Daily Hint - Zone","50",
+						"dc_hint","Daily Hint - Continent","20",
+						"mz_hint","Monthly Hint - Zone","50",
+						"mc_hint","Monthly Hint - Continent","20"});
+dilcopy shopbuy@bounty({"full_restore","Potion of Full Restoration","100",
+						"strong_restore","Potent Potion of Restoration","75",
+						"half_restore","Potion of Restoration","50",
+						"full_mana","Potion of Full Mana","40",
+						"strong_mana","Potent Potion of Mana","30",
+						"half_mana","Potion of Mana","20",
+						"full_end","Potion of Full Endurance","40",
+						"strong_end","Potent Potion of Endurance","30",
+						"half_end","Potion of Endurance","20",
+						"full_heal","Potion of Full Healing","40",
+						"strong_heal","Potent Potion of Healing","30",
+						"half_heal","Potion of Healing","20",
+						"mulligan","Contract Breaking Note","100",
+						"dz_hint","Daily Hint - Zone","50",
+						"dc_hint","Daily Hint - Continent","20",
+						"mz_hint","Monthly Hint - Zone","50",
+						"mc_hint","Monthly Hint - Continent","20"});
 
 end 
 
@@ -1203,6 +1298,6 @@ end
 
 %reset
 load hunter into contracts max 1
-//load shopkeep into shop max 1
+load shopkeep into shop max 1
 
 %end
