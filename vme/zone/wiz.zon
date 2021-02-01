@@ -845,15 +845,21 @@ var
    s : string;
 code
 {
-   heartbeat := PULSE_SEC;
-
    :start:
+   heartbeat := PULSE_SEC;
    wait(SFB_CMD, command("adopt"));
 
    if (argument != "universe")
       goto start;
 
    pc := activator;
+
+   if (pc.level < 254)
+   {
+      act("The universe moves just out of reach as you try to adopt it. You don't seem to have the right divine touch.", A_ALWAYS, pc, null, self, TO_CHAR);
+      goto start;
+   }
+
    secure(pc, start);
    block;
 
@@ -863,6 +869,8 @@ code
    pause;
    act("Strange <a cmd='look #'>symbols</a> begin floating around the parallel universe.", A_ALWAYS, pc, null, self, TO_CHAR);
    unsecure(pc);
+   heartbeat := PULSE_SEC * 60;
+   pause;
    goto start;
 }
 dilend 
@@ -919,15 +927,20 @@ var
    s : string;
 code
 {
-   heartbeat := PULSE_SEC;
-
    :start:
+   heartbeat := PULSE_SEC;
    wait(SFB_CMD, command("press"));
 
    if (argument != "button")
       goto start;
 
    pc := activator;
+   if (pc.level < 254)
+   {
+      act("The button says 'clank' rather than 'click'. You don't seem to have the right divine touch.", A_ALWAYS, pc, null, self, TO_CHAR);
+      goto start;      
+   }
+
    secure(pc, start);
    block;
 
@@ -937,6 +950,8 @@ code
    pause;
    act("The <a cmd='look #'>screen</a> flickers.", A_ALWAYS, pc, null, self, TO_CHAR);
    unsecure(pc);
+   heartbeat := PULSE_SEC * 60;
+   pause;
    goto start;
 }
 dilend 
