@@ -4461,6 +4461,42 @@ void dilfe_fndr(register class dilprg *p)
 }
 
 
+// findzone(#)
+void dilfe_fndz(register class dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v1 = p->stack.pop();
+
+    switch (dil_getval(v1))
+    {
+    case DILV_FAIL:
+        v->type = DILV_FAIL;
+        break;
+    case DILV_SP:
+        v->atyp = DILA_NORM;
+        v->type = DILV_ZP;
+        if (v1->val.ptr)
+        {
+            v->val.ptr = find_zone((const char *) v1->val.ptr);
+            if (v->val.ptr == NULL)
+                v->type = DILV_NULL; /* not found */
+        }
+        else
+            v->type = DILV_NULL; /* not found */
+
+        break;
+    case DILV_NULL:
+        v->type = DILV_NULL; /* not found */
+        break;
+    default:
+        v->type = DILV_ERR; /* wrong type */
+        break;
+    }
+    p->stack.push(v);
+    delete v1;
+}
+
+
 // findsymbolic(#,#,#)
 void dilfe_fnds2(register class dilprg *p)
 {

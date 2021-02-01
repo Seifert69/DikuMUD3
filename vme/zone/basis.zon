@@ -7567,6 +7567,24 @@ descr "A mindless zombie is roaming around here."
 extra {} "Disgusting!"
 M_ZOMBIE_SMALL(4,SEX_NEUTRAL)
 
+dilbegin zonetest();
+var 
+   z : zoneptr;
+code
+{
+   :loop:
+   wait(SFB_CMD, command("smile"));
+   z := findzone("basis");
+
+   if (z == null)
+      log("no such zone");
+   else
+      log("found zone z = " + z.name);
+   goto loop;
+}
+dilend
+
+
 dilbegin dispatchtest();
 var 
   s : string;

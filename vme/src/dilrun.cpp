@@ -893,7 +893,8 @@ struct dil_func_type dilfe_func[DILI_MAX + 1] = {
     {dilfe_gint},
     {dilfe_shell},
     {dilfi_set_weight},
-    {dilfi_dispatch}
+    {dilfi_dispatch},
+    {dilfe_fndz}
  };
 
 

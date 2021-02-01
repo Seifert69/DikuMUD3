@@ -66,6 +66,7 @@ struct symbols
     {"findunit",DILSE_FNDU},
     {"findsymbolic",DILSE_FNDS},
     {"findroom",DILSE_FNDR},
+    {"findzone",DILSE_FNDZ},
     {"findrndunit",DILSE_FNDRU},
     {"load",DILSE_LOAD},
     {"clone",DILSE_CLONE},

@@ -43,6 +43,7 @@ void dilfe_fndu (class dilprg *);
 void dilfe_fndu2 (class dilprg *);
 void dilfe_fndru (class dilprg *);
 void dilfe_fndr (class dilprg *);
+void dilfe_fndz (class dilprg *);
 void dilfe_load (class dilprg *);
 void dilfe_gt (class dilprg *);
 void dilfe_lt (class dilprg *);
