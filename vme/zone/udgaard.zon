@@ -1354,7 +1354,7 @@ code
    }
 
    :gonner:
-   quit;
+   return;
 }
 dilend
 
@@ -1521,10 +1521,10 @@ code
    :find:
    pause;
 
-   s  := pcname;
+   s  := pcname + "@_players";
 
    // pc := findunit(self, s, FIND_UNIT_WORLD, null);
-   pc := findsymbolic(s+"@_players");
+   pc := findsymbolic(s);
 
    if (pc.idx == uid)
    {
@@ -1532,14 +1532,15 @@ code
       while (room.type != UNIT_ST_ROOM)
         room := room.outside;
 
-      s := room.nameidx+"@"+room.zoneidx;
+      s := room.symname;
 
       pause;
-      tf:= walk_room@function ("+s+",4);
+      tf:= walk_room@function(s,4);
 	   goto loop;
    }
    else
    {
+      log(s + " not found");
       heartbeat := PULSE_SEC * 40;
       pause;
       i := i + 1;
