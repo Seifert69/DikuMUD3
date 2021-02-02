@@ -8242,14 +8242,6 @@ code
    addaff(tgt, ID_UNHOLY_BLESSING, 10, WAIT_SEC*30,
 	  ABIL_BRA, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
 	  APF_ABILITY);
-
-   /* act("$1n lay hands on $3n and chants softly.",
-      A_SOMEONE, sa->caster, 0, sa->target, TO_NOTVICT);
-      act("You lay hands on $3n and chant softly.",
-      A_SOMEONE, sa->caster, 0, sa->target, TO_CHAR);
-      act("$1n lay hands on you and chant softly.",
-      A_SOMEONE, sa->caster, 0, sa->target, TO_VICT); */
-
    quit;
 }
 dilend
