@@ -180,10 +180,9 @@ void dilfe_fld(register class dilprg *p)
                 v->atyp = DILA_NORM;
                 v->type = DILV_INT;
                 if (IS_PC((class unit_data *)v1->val.ptr))
-                    v->val.num = (int)PC_ID((class unit_data *)v1->val.ptr);
+                    v->val.num = (int) PC_ID((class unit_data *)v1->val.ptr);
                 else
-                    v->val.ptr = (file_index_type *)UNIT_FILE_INDEX((class unit_data *)
-                                                                        v1->val.ptr);
+                    v->val.ptr = v1->val.ptr; // Since it is a union, the int will be set
             }
             else
                 v->type = DILV_FAIL; /* not applicable */

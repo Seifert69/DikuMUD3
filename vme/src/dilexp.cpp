@@ -4580,6 +4580,70 @@ void dilfe_fnds2(register class dilprg *p)
     delete v3;
 }
 
+
+// findsymbolic(#,#) 
+void dilfe_fndsidx(class dilprg *p)
+{
+    dilval *v = new dilval;
+    /* Find a symbolic unit */
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+    char buf1[MAX_STRING_LENGTH], buf2[MAX_STRING_LENGTH];
+    class file_index_type *fi;
+
+    v->type = DILV_UP;
+    switch (dil_getval(v1))
+    {
+    case DILV_FAIL:
+        v->type = DILV_FAIL;
+        break;
+
+    case DILV_SP:
+        if (v1->val.ptr)
+        {
+            switch (dil_getval(v2))
+            {
+            case DILV_INT:
+                v->atyp = DILA_NORM;
+                *buf1 = '\0';
+                *buf2 = '\0';
+                split_fi_ref((const char *) v1->val.ptr, buf1, buf2);
+                fi = find_file_index(buf1, buf2);
+                if (fi)
+                    v->val.ptr = find_symbolic_idx(buf1, buf2, v2->val.num);
+                else
+                {
+                    v->val.ptr = NULL;
+                    v->type = DILV_NULL; /* not found */
+                }
+                break;
+            case DILV_FAIL:
+                v->type = DILV_FAIL;
+                break;
+            case DILV_NULL:
+                v->type = DILV_NULL; /* not found */
+                break;
+            default:
+                v->type = DILV_ERR; /* wrong type */
+                break;
+            }
+        }
+        else
+            v->type = DILV_FAIL;
+        break;
+    case DILV_NULL:
+        v->type = DILV_NULL; /* not found */
+        break;
+    default:
+        v->type = DILV_ERR; /* wrong type */
+        break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+}
+
 // findsymbolic(#)
 void dilfe_fnds(register class dilprg *p)
 {

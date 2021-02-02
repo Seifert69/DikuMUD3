@@ -1125,7 +1125,7 @@ code
    subextra (self.extra, "$grumpy");
 
    wait (SFB_CMD, ((activator.type == UNIT_ST_NPC)
-		   and (activator.idx == self.idx) and (activator.master==self.master)
+		   and (activator == self) and (activator.master==self.master)
 		   and (activator!=self)));
    /* Basically, wait for a familiar, imp or spirit to do anything in the
       same room, then decide how angry/jealous it is */
@@ -1205,7 +1205,7 @@ code
    subextra (self.extra, "$grumpy");
 
    wait (SFB_CMD, ((activator.type == UNIT_ST_NPC)
-		   and (activator.idx == self.idx) and
+		   and (activator == self) and
 		   (activator.master==self.master)));
 
    /* Basically, wait for a familiar, imp or spirit to do anything in the

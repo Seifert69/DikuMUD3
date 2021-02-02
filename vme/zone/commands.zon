@@ -13592,7 +13592,7 @@ code
 
       while ((here!=null) and (i<5))
       {
-         if (here.idx==item.idx)
+         if (here.symname==item.symname)
             i:=i+1;
          here:=here.next;
       }

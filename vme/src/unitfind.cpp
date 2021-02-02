@@ -672,6 +672,36 @@ class unit_data * file_index_type::find_symbolic_instance(void)
     return NULL;
 }
 
+
+// Will find the unit_data for the file_index_type in question
+// which is matching the idx (ignore for PCs)
+//
+class unit_data *find_symbolic_idx(const char *zone, const char *name, int idx)
+{
+    class file_index_type *fi = find_file_index(zone, name);
+
+    union {
+        int i;
+        void *p;
+    } val;
+    
+    if (fi && !fi->fi_unit_list.empty())
+    {
+        if (fi->type == UNIT_ST_PC)
+            return fi->fi_unit_list.front();
+
+        for (std::forward_list<class unit_data *>::iterator it = fi->fi_unit_list.begin() ; it != fi->fi_unit_list.end(); it++)
+        {
+            val.p = *it;
+            if (val.i == idx)
+                return *it;
+ 
+        }
+    }
+
+    return NULL;
+}
+
 class unit_data *find_symbolic(const char *zone, const char *name)
 {
     class file_index_type *fi = find_file_index(zone, name);

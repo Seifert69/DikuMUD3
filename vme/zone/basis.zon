@@ -7567,6 +7567,36 @@ descr "A mindless zombie is roaming around here."
 extra {} "Disgusting!"
 M_ZOMBIE_SMALL(4,SEX_NEUTRAL)
 
+
+dilbegin findsymtest();
+var 
+   u : unitptr;
+   s : string;
+   i : integer;
+code
+{
+   heartbeat := PULSE_SEC * 10;
+   :loop:
+   wait(SFB_CMD, command("burp"));
+
+   u := findrndunit(self, FIND_UNIT_WORLD, UNIT_ST_NPC);
+   s := u.symname;
+   i := u.idx;
+
+   log("found " + s + " " + itoa(i));
+   pause;
+
+   u := findsymbolic(s, i);
+   s := u.symname;
+   i := u.idx;
+
+   log("found " + s + " " + itoa(i));
+   goto loop;
+}
+dilend
+
+
+
 dilbegin zonetest();
 var 
    z : zoneptr;
@@ -7871,7 +7901,7 @@ code
 
    heartbeat := PULSE_SEC * 5;
    u1 := findrndunit(self, FIND_UNIT_WORLD, UNIT_ST_NPC);
-   if ((u1.idx == self.idx) or (u1 == null))
+   if ((u1 == self) or (u1 == null))
    {
       exec("shrug", self);
       pause;

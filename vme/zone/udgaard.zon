@@ -1497,17 +1497,19 @@ code
 }
 dilend
 
-dilbegin hunt(pcname : string, uid : integer);
 
-external checkaround(s : string, i : integer);
- integer walk_room@function (t:string,i:integer);
+
+dilbegin hunt(pcname : string, uid : integer);
+external
+   checkaround(s : string, i : integer);
+   integer walk_room@function (t:string,i:integer);
 
 var
-tf:integer;
-  s    : string;
-  pc   : unitptr;
-  room : unitptr;
-  i    : integer;
+   tf:integer;
+   s    : string;
+   pc   : unitptr;
+   room : unitptr;
+   i    : integer;
 
 code
 {
@@ -1521,7 +1523,8 @@ code
 
    s  := pcname;
 
-   pc := findunit(self, s, FIND_UNIT_WORLD, null);
+   // pc := findunit(self, s, FIND_UNIT_WORLD, null);
+   pc := findsymbolic(s+"@_players");
 
    if (pc.idx == uid)
    {
@@ -1532,8 +1535,8 @@ code
       s := room.nameidx+"@"+room.zoneidx;
 
       pause;
-      tf:=     walk_room@function ("+s+",4);
-	       goto loop;
+      tf:= walk_room@function ("+s+",4);
+	   goto loop;
    }
    else
    {
@@ -10919,17 +10922,18 @@ NATURAL_DEF(WPN_FIST, ARM_CLOTHES)
 dilcopy no_command@udgaard();
 dilcopy no_sleep@udgaard();
 
+
 dilbegin wait_for_bounty();
 external
- integer walk_room@function (s:string,i:integer);
+   integer walk_room@function (s:string,i:integer);
 
 var
-tf:integer;
-  tgt : unitptr;
+   tf:integer;
+   tgt : unitptr;
 
 code
 {
-tf:=walk_room@function("accuse_room@midgaard",4);
+   tf:=walk_room@function("accuse_room@midgaard", 4);
 
    :search:
    heartbeat := PULSE_SEC * 10;
@@ -10952,6 +10956,7 @@ tf:=walk_room@function("accuse_room@midgaard",4);
       tgt := tgt.gnext;
    }
    goto loop;
+   
    :gotone:
    /* Approximate them to be identical. Is this good or bad? */
    /* clone_attr(tgt, hunter); */

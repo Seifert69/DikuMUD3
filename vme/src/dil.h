@@ -274,8 +274,8 @@ struct dilargstype
 #define DILI_SET_W	   199	/* set_weight(#,#) */
 #define DILI_DISPATCH  200  /* dispatch(message) */
 #define DILE_FNDZ	   201	/* findroom(#,#) */
-
-#define DILI_MAX       201	/* The maximum node number */
+#define DILE_FNDSIDX   202
+#define DILI_MAX       202	/* The maximum node number */
 
 /* DIL Field references */
 #define DILF_NMS	0	/* .names */
