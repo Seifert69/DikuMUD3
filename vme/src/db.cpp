@@ -1234,6 +1234,8 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
          ROOM_EXIT(u, i) = NULL;
          g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));
          g_nCorrupt += pBuf->ReadStringCopy(name, sizeof(name));
+         str_lower(zone);
+         str_lower(name);         
 
          if (*zone && *name)
          {
@@ -1252,6 +1254,8 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
 
                g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));
                g_nCorrupt += pBuf->ReadStringCopy(name, sizeof(name));
+               str_lower(zone);
+               str_lower(name);         
 
                if (!str_is_empty(name))
                {
