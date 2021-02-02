@@ -304,16 +304,7 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
 
    CHAR_LAST_ROOM(this) = unit_room(this);
 
-    if (IS_CHAR(this))
-    {
-      void die_follower(class unit_data *ch);
-      
-      if (CHAR_FOLLOWERS(this) || CHAR_MASTER(this))
-         die_follower(this);
-
-      stop_fighting(this);
-    }
-
+   stop_fightfollow(this);
    stop_snoopwrite(this);
 
    descriptor_data *tmp_descr = CHAR_DESCRIPTOR(this);

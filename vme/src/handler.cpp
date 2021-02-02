@@ -900,6 +900,17 @@ void unswitchbody(class unit_data *npc)
     CHAR_DESCRIPTOR(npc) = NULL;
 }
 
+void stop_fightfollow(unit_data *unit)
+{
+    if (IS_CHAR(unit))
+    {
+      if (CHAR_FOLLOWERS(unit) || CHAR_MASTER(unit))
+         die_follower(unit);
+
+      stop_fighting(unit);
+    }
+}
+
 
 void stop_snoopwrite(unit_data *unit)
 {
@@ -978,14 +989,7 @@ void extract_unit(class unit_data *unit)
     	     unlink_affect(UNIT_AFFECTED(unit));
     */
 
-    if (IS_CHAR(unit))
-    {
-      if (CHAR_FOLLOWERS(unit) || CHAR_MASTER(unit))
-         die_follower(unit);
-
-      stop_fighting(unit);
-    }
-
+    stop_fightfollow(unit);
     stop_snoopwrite(unit);
 
     if (IS_PC(unit) && CHAR_DESCRIPTOR(unit))

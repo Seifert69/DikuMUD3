@@ -291,7 +291,7 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
         d->editing = NULL;
         d->editref = NULL;
 
-        void stop_snoopwrite(unit_data *unit);
+        // Here we don't stop_fightfollow - do we ?
         stop_snoopwrite(d->character);
 
         //if (CHAR_IS_SNOOPING(d->character) || CHAR_IS_SNOOPED(d->character))
