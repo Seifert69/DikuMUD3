@@ -64,8 +64,8 @@ code
 	
 	pc := activator;
 	secure(pc, lostpc);
-	exdp := "$daily_max" in pc.quests;
-	if(atoi(exdp.descr) < 30)
+	exdp := "$daily_max" in pc.extra;
+	if((atoi(exdp.descr) < 30) or (exdp == null))
 		goto start;
 	
     pause;
