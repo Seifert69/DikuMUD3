@@ -1042,7 +1042,6 @@ profession druid        = +0
 profession mage         = +0
 profession sorcerer     = +0
 profession barbarian 	= +0
-auto teacher no add     =  1 // Don't add automatically
 
 
 /* - - - - Yet another definition of a skill - - - - */
@@ -1392,7 +1391,6 @@ profession knight       = +2
 profession paladin      = +2
 profession ranger       = +2
 profession druid        = -4
-profession barbarian 	= +2
 
 
 command  = break
@@ -1566,14 +1564,6 @@ profession thief        = +5
 profession ranger       = +3
 profession assassin     = +2
 profession druid        = +0
-profession necromancer  = -1
-profession mage         = -1
-profession sorcerer     = -1
-profession fighter      = -1
-profession knight       = -2
-profession paladin      = -2
-profession priest       = -2
-profession barbarian 	= -2
 
 /* - - - - Yet another definition of a skill - - - - */
 
@@ -1841,7 +1831,6 @@ profession thief        = +0
 profession assassin     = +0
 profession priest       = +0
 profession druid        = -4
-profession barbarian 	= +4
 
 
 /* skill def for peek */
@@ -1910,7 +1899,6 @@ restrict dexterity      = 10
 profession fighter      = +2
 profession assassin     = +0
 profession thief        = -1
-profession barbarian 	= +2
 
 
 /* skill def for filch */
@@ -1986,7 +1974,7 @@ index          = SKI_SKIN
 name           = skin
 command        = skin
 minpos         = POSITION_STANDING
-func           =  skin@skills
+func           = skin@skills
 type           = TYPE_SKILL
 race human     =  -1
 race elf       =  +1
@@ -2002,16 +1990,6 @@ race darkelf   =   0
 restrict dexterity      = 10
 profession ranger       = +2
 profession druid        = +0
-profession fighter      = -2
-profession knight       = -2
-profession paladin      = -2
-profession thief        = -2
-profession assassin     = -2
-profession priest       = -2
-profession necromancer  = -2
-profession mage         = -2
-profession sorcerer     = -2
-profession barbarian 	= -2
 command  = skills
 func = ski_dil@commands
 minpos   = POSITION_DEAD

@@ -100,6 +100,12 @@ code
 
 	slextra := {""};
 	sltime := split(asctime(realtime), " "); 
+
+	// This is to fix an apparent bug where an extra space in the asctime output can result in
+	// an empty string being populated into the stringlist, fucking up the parsing.
+	while ("" in sltime)
+		substring(sltime,"");
+
 	i := 0;
 	while(i <= 12)
 	{
@@ -246,6 +252,8 @@ var
 	i   	: integer;
 	targ    : unitptr;
 	rwrd    : integer;
+	arg 	: string;
+	bp		: integer;
 code
 {
 :init:
@@ -263,6 +271,40 @@ code
 	
 	slnew := {""};
 	substring (slnew,"");
+	if ((self.inside.symname == "mulligan@bounty") and (self.inside.symname == med.symname))
+	{
+		exec("snicker",self);
+		exec("say So you need to be freed from your contract "+pc.name+"?",self);
+		exec("say It seems your... documentation is in order. Just say 'daily' or 'monthly' and it will be ended.",self);
+		wait(SFB_CMD, (activator.type == UNIT_ST_PC) and ((command("say")) and (("daily" == argument) or ("monthly" == argument))));
+	
+		arg := argument;
+		pause;
+		if (arg == "daily")
+		{			
+			if("DONE" in pc.extra.["$daily_target"].descr)
+			{
+				exec("say Your daily contract is already closed "+pc.name+"!",self);
+				exec("give mulligan "+pc.name, self);
+				goto start;
+			}
+			subextra(pc.extra, "$daily_target");
+		}
+		else if (arg == "monthly")
+		{
+			if("DONE" in pc.extra.["$monthly_target"].descr)
+			{
+				exec("say Your monthly contract is already closed "+pc.name+"!",self);
+				exec("give mulligan "+pc.name, self);
+				goto start;
+			}
+			subextra(pc.extra, "$monthly_target");
+		}
+		
+		destroy(self.inside);
+		exec("say Consider the contract forgotten "+pc.name+".",self);
+		goto start;
+	}
 	
 	if((self.inside.symname != "head@death") and (self.inside.symname == med.symname))
 	{
@@ -277,7 +319,9 @@ code
 	slmt := split(emonth.descr,"|");
 	sdtarg := sldt.[2];
 	smtarg := slmt.[2];
-	sltime := split(asctime(realtime), " ");
+	sltime := split(asctime(realtime), " ");	
+	while ("" in sltime)
+		substring(sltime,"");
 	i := 0;
 	while(i <= 12)
 	{
@@ -353,6 +397,7 @@ code
 		if (slstr.[0] != sdate)
 			goto already_done;
 		
+	destroy(self.inside);	
 	
 	// increment pointers as necessary
 	
@@ -460,6 +505,17 @@ leverage the competition boards. Will investigate.
 			rwrd := rwrd * (i * 3);
 		else if (i >= 300)
 			rwrd := rwrd * (i * 4);
+		
+		bp := 1;
+		
+		// streak milestone rewards
+		if(i == 14)
+		{
+			exec("I've included a little something for making 14 daily contracts in a row.",self);
+			bp := 3;
+			rwrd := rwrd * (3/2);
+		}
+		
 	}
 	else if (sdone == "monthly")
 	{
@@ -474,6 +530,15 @@ leverage the competition boards. Will investigate.
 			rwrd := rwrd * (i * 3);
 		else if (i >= 20)
 			rwrd := rwrd * (i * 4);
+		
+		bp := 10;
+		// streak milestone rewards
+		if(i == 6)
+		{
+			exec("I've included a little something for making 6 monthly contracts in a row.",self);
+			bp := 15;
+			rwrd := rwrd * (3/2);
+		}
 	}
 	
 	act("<br>$2n hands you some coins.",A_SOMEONE, pc, self, null, TO_CHAR);
@@ -481,6 +546,13 @@ leverage the competition boards. Will investigate.
 	experience(rwrd, pc);
 	act("<br><div class='hint'>Contract Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 	act("<div class='xpgain'>You recieve "+itoa(rwrd)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+	if(not("$bounty_points" in pc.extra))
+		addextra (pc.extra,{"$bounty_points"},"0");	
+	pc.extra.["$bounty_points"].descr := itoa(atoi(pc.extra.["$bounty_points"].descr)+bp);
+	if(bp == 1)
+		act("<div class='xpgain'>You recieve "+itoa(bp)+" bounty point.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+	else
+		act("<div class='xpgain'>You recieve "+itoa(bp)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 	goto labsecure;
 	// End reward section // 
 	
@@ -499,18 +571,265 @@ leverage the competition boards. Will investigate.
 }
 dilend		
 
+dilbegin restore_pot(aff : string, strength : string);
+var
+	pc : unitptr;
+code
+{
+	wait(SFB_CMD, command("quaff") and ("potion" in argument));
+	pc := activator;
+
+	if(aff == "restore")
+	{
+		if(strength == "full")
+		{
+			pc.hp := pc.max_hp;
+			pc.endurance := pc.max_endurance;
+			pc.mana := pc.max_mana;
+		}
+		else if(strength == "strong")
+		{
+			if(pc.hp < ((pc.max_hp / 4)*3))
+				pc.hp := ((pc.max_hp / 4)*3);
+			if(pc.endurance < ((pc.max_endurance / 4)*3))
+				pc.endurance := ((pc.max_endurance / 4)*3);
+			if(pc.mana < ((pc.max_mana / 4)*3))
+				pc.mana := ((pc.max_mana / 4)*3);
+		}
+		else if(strength == "half")
+		{
+			if(pc.hp < (pc.max_hp / 2))
+				pc.hp := (pc.max_hp / 2);
+			if(pc.endurance < (pc.max_endurance / 2))
+				pc.endurance := (pc.max_endurance / 2);
+			if(pc.mana < (pc.max_mana / 2))
+				pc.mana := (pc.max_mana / 2);
+		}
+	}
+	else if (aff == "hp")
+	{
+		if(strength == "full")
+			pc.hp := pc.max_hp;
+		else if(strength == "strong")
+		{
+			if(pc.hp < ((pc.max_hp / 4)*3))
+				pc.hp := pc.hp + ((pc.max_hp / 4)*3);
+		}
+		else if(strength == "half")
+		{
+			if(pc.hp < (pc.max_hp / 2))
+				pc.hp := pc.hp + (pc.max_hp / 2);
+		}
+	}
+	else if (aff == "endurance")
+	{
+		if(strength == "full")
+			pc.endurance := pc.max_endurance;
+		else if(strength == "strong")
+		{
+			if(pc.endurance < ((pc.max_endurance / 4)*3))
+				pc.endurance := pc.endurance + ((pc.max_endurance / 4)*3);
+		}
+		else if(strength == "half")
+		{
+			if(pc.endurance < (pc.max_endurance / 2))
+				pc.endurance := pc.endurance + (pc.max_endurance / 2);
+		}
+	}
+	else if (aff == "mana")
+	{
+		if(strength == "full")
+			pc.mana := pc.max_mana;
+		else if(strength == "strong")
+		{
+			if(pc.mana < ((pc.max_mana / 4)*3))
+				pc.mana := pc.mana + ((pc.max_mana / 4)*3);
+		}
+		else if(strength == "half")
+		{
+			if(pc.mana < (pc.max_mana / 2))
+				pc.mana := pc.mana + (pc.max_mana / 2);
+		}
+	}
+	quit;
+}
+dilend
+
+dilbegin hint (which : string, htype : string);
+var
+	pc : unitptr;
+	zn : string;
+	exdp : extraptr;
+	zp : zoneptr;
+	slt : stringlist;
+	uhin : unitptr;
+	sdate : string;
+	targ : unitptr;
+code
+{
+:start:
+	wait(SFB_CMD, (command("look")) and ("hint" in argument));
+	pc := activator;
+	zp := zhead();
+	heartbeat := PULSE_SEC;
+	if(which == "d")
+		exdp :=  pc.extra.["$daily_target"];
+	else if(which == "m")
+		exdp :=  pc.extra.["$monthly_target"];
+	slt := split(exdp.descr,"|");
+	if(slt.[3] == "DONE")
+	{
+		act("You can only use your hint on an open contract!",A_SOMEONE, pc, self, null, TO_CHAR);
+		block;
+		goto start;
+	}
+	sdate := slt.[0];
+	targ := findsymbolic(slt.[1]);
+	zn := targ.zoneidx;
+	self.extra.[0].descr := self.extra.[0].descr + 
+	"<br><div class='cpw'>Contract Date: </div><div class='cpc'>" + sdate +
+	"<br><div class='cpw'>Target Name: </div><div class='cpc'>" + targ.name + 
+	"<br><div class='cpw'>Target Alias: </div><div class='cpc'>" + targ.title + 
+	"<br><div class='cpw'>Target Description: </div><div class='cpc'> " + targ.outside_descr;
+	while (zp)
+	{
+		if(zp.name == zn)
+		{
+			slt := split(zp.title,"@");
+			if(htype == "z" )
+			{
+				self.extra.[0].descr := self.extra.[0].descr + 
+				"<br><div class='cpw'>Zone Name: </div><div class='cpc'>" + slt.[0];
+			}
+			else if(htype == "c")
+			{
+				self.extra.[0].descr := self.extra.[0].descr + 
+				"<br><div class='cpw'>Continent Name: </div><div class='cpc'>" + slt.[1];
+			}
+			pause;
+			quit;
+		}
+		zp := zp.next;
+	}
+	quit;
+}
+dilend
+
+
+dilbegin shoplist(items : stringlist);
+var
+	pc : unitptr;
+	i : integer;
+	ln : integer;
+	buf : string;
+	j : integer;
+	bp : string;
+	uitem : unitptr;
+code
+{
+:init:
+
+	heartbeat := PULSE_SEC;
+	
+	ln:=length(items);
+	buf:="<h1><div class='cpn'Bounty Hunters Guild Shop</div></h1>";
+	buf:=buf+"<table><tr><th>Item #</th><th>Item Name</th><th>Bounty Points</th></tr>";
+	i := 0;
+	j := 1;
+	while(i < (ln-2))
+	{
+		buf:=buf+"<tr><td>"+itoa(j)+"</td><td>"+items.[i+1]+"</td><td>"+items.[i+2]+"</td></tr>";
+		i := i+3;
+		j := j+1;
+	}
+
+:start:
+
+	wait(SFB_CMD, (command("list")));
+	block;
+	pc := activator;
+	if(not("$bounty_points" in pc.extra))
+		addextra (pc.extra,{"$bounty_points"},"0");
+	bp := pc.extra.["$bounty_points"].descr;
+	bp := "</table><br><div class='cpc'>You have "+bp+" Bounty Points available.</div>";
+	sendtext(buf+bp,pc);
+	goto start;
+}
+dilend
+
+dilbegin shopbuy(items : stringlist);
+var
+	pc : unitptr;	
+	i : integer;
+	ln : integer;
+	j : integer;
+	bp : string;
+	ibp : integer;
+	uitem : unitptr;
+	arg : string;
+code
+{
+:init:
+
+	heartbeat := PULSE_SEC;
+	
+	ln:=length(items);
+	i := 0;
+	j := 1;
+	while(i < (ln-2))
+	{
+		i := i+3;
+		j := j+1;
+	}
+	
+:start:
+	
+	wait(SFB_CMD, (command("buy")));
+	block;
+	
+	pc := activator;
+	arg := getword(argument);
+	if(not("$bounty_points" in pc.extra))
+		addextra (pc.extra,{"$bounty_points"},"0");
+	bp := pc.extra.["$bounty_points"].descr;
+	ibp := atoi(bp);
+	i := 0;
+	j := 1;
+	while(i < (ln-2))
+	{
+		if(atoi(arg) == j)
+		{
+			if(atoi(items.[i+2]) <= ibp)
+			{
+				ibp := ibp - atoi(items.[i+2]);
+				pc.extra.["$bounty_points"].descr := itoa(ibp);
+				uitem := load(items.[i]+"@bounty");
+				link(uitem, pc);
+				exec("say Here is your "+uitem.name+" "+pc.name+"!",self);
+			}
+			else
+				exec("say You don't have "+items.[i+2]+" bounty points "+pc.name+"!",self);
+			goto start;
+		}
+		i := i+3;
+		j := j+1;
+	}
+	exec("say Please select an item number from the list.",self);
+	goto start;
+}
+dilend
 
 %rooms
 
 entry_room
-names {"contracts"}
 title "<div class='cpn'>Entrance to Bounty Hunters Guild</div>"
 descr
-"Stepping out from bustle of Kings Road, the entrance to the Bounty Hunters Guild 
-is a distinct change of environment. The large stone building extends high into the air 
-and has a commanding presence. Tall trees provide ample shade during the bright days, 
-and plenty of routes to approach... quietly. It seems that there has been significant wealth brought to 
-the guild over many generations. A large set of double-doors extend into the darkness."
+"Stepping out from bustle of Kings Road, the entrance to the Bounty Hunters 
+Guild is a distinct change of environment. The large stone building extends 
+high into the air and has a commanding presence. Tall trees provide ample 
+shade during the bright days, and plenty of routes to approach... quietly. 
+It seems that there has been significant wealth brought to the guild over 
+many generations. A large set of double-doors extend into the darkness."
 
 movement SECT_CITY
 flags {UNIT_FL_NO_MOB}
@@ -522,17 +841,69 @@ south to kingroad5@ratswarf;
 end
 
 bounty_1
-title "Inside the Guild"
+title "<div class='cpn'>Inside the Guild</div>"
 descr
-"Through the large double-doors the quiet of this space encompasses you. While the building 
-is largely unadorned and simple rough-hewn stone. The sheer size and scale of the place speak 
-to the significant investments that have been made over many years. Back to the south the 
-outdoors and access to Kings Road can be seen in the distance."
+"Through the large double-doors the quiet of this space encompasses you. While 
+the building is largely unadorned and simple rough-hewn stone. The sheer size 
+and scale of the place speak to the significant investments that have been 
+made over many years. To the east and west more rooms expand into the vast hall, 
+and to the south the outdoors and access to Kings Road can be seen in the distance."
 flags {UNIT_FL_INDOORS}
 movement SECT_CITY
 ALWAYS_LIGHT
 
 south to entry_room;
+west to contracts;
+east to shop;
+north to shrine;
+
+end
+
+shop
+title "<div class='cpn'>The Guild Shop</div>"
+descr
+"The many wares which are made available to guild members can be seen adorning 
+nearly every wall and visible surface. From potions and tinctures, to notes and 
+papers, and even jewely and weapons, there is an impressive array available. 
+There is a large counter which has been cleared to make way for transaction"
+flags {UNIT_FL_INDOORS}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+west to bounty_1;
+
+end
+
+contracts
+names {"contracts"}
+title "<div class='cpn'>The Contracts Room</div>"
+descr
+"Here away from the main hall of the guild, a quiet room filled with maps 
+is in front of you. On every wall and table a map of a different part of 
+the world sits. A large desk can be seen in the middle of the room, 
+providing ample space for managing the myriad contracts the guild processes. 
+Behind the desk darkness overcomes what light the torches shed."
+flags {UNIT_FL_INDOORS}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+east to bounty_1;
+
+end
+
+shrine
+names {"contracts"}
+title "<div class='cpn'>The Bounty Hunters Shrine</div>"
+descr
+"In the back of the great hall, a peaceful shrine pays homage to the gods 
+of the hunt. Candles burn at the base of shrine, sending their flickering 
+light into the darkness. Incense burns alongside the candles, and the 
+scent brings visions of both frenzied chase, and gratifying calm."
+flags {UNIT_FL_INDOORS, UNIT_FL_SACRED}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+south to bounty_1;
 
 end
 
@@ -555,6 +926,55 @@ dilcopy claim_bounty();
 
 end 
 
+shopkeep
+names {"shopkeeper","man"}    
+title "the guild shopkeeper"        
+descr "A girthy man with a warm smile stands behind the counter."
+extra{}
+"Girthy, and apparently not unfamiliar with his wine, the shopkeeper nevertheless 
+seems to be rather friendly. Simply ask for his list to select from the guild wares." 
+
+alignment 0
+M_AVG_HUMAN(100,SEX_MALE)
+position POSITION_STANDING 
+
+dilcopy shoplist@bounty({"full_restore","Potion of Full Restoration","100",
+						"strong_restore","Potent Potion of Restoration","75",
+						"half_restore","Potion of Restoration","50",
+						"full_mana","Potion of Full Mana","40",
+						"strong_mana","Potent Potion of Mana","30",
+						"half_mana","Potion of Mana","20",
+						"full_end","Potion of Full Endurance","40",
+						"strong_end","Potent Potion of Endurance","30",
+						"half_end","Potion of Endurance","20",
+						"full_heal","Potion of Full Healing","40",
+						"strong_heal","Potent Potion of Healing","30",
+						"half_heal","Potion of Healing","20",
+						"mulligan","Contract Breaking Note","100",
+						"dz_hint","Daily Hint - Zone","50",
+						"dc_hint","Daily Hint - Continent","20",
+						"mz_hint","Monthly Hint - Zone","50",
+						"mc_hint","Monthly Hint - Continent","20"});
+dilcopy shopbuy@bounty({"full_restore","Potion of Full Restoration","100",
+						"strong_restore","Potent Potion of Restoration","75",
+						"half_restore","Potion of Restoration","50",
+						"full_mana","Potion of Full Mana","40",
+						"strong_mana","Potent Potion of Mana","30",
+						"half_mana","Potion of Mana","20",
+						"full_end","Potion of Full Endurance","40",
+						"strong_end","Potent Potion of Endurance","30",
+						"half_end","Potion of Endurance","20",
+						"full_heal","Potion of Full Healing","40",
+						"strong_heal","Potent Potion of Healing","30",
+						"half_heal","Potion of Healing","20",
+						"mulligan","Contract Breaking Note","100",
+						"dz_hint","Daily Hint - Zone","50",
+						"dc_hint","Daily Hint - Continent","20",
+						"mz_hint","Monthly Hint - Zone","50",
+						"mc_hint","Monthly Hint - Continent","20"});
+
+end 
+
 %objects
 
 contract
@@ -564,6 +984,7 @@ descr "A crisp paper is here."
 extra {}
 "<div class='cr'>REWARD!!</div><br>"
 manipulate {MANIPULATE_TAKE}
+weight 1
 cost 1 IRON_PIECE
 end
 
@@ -619,7 +1040,264 @@ extra {}
 ""
 end
 
+//////////////////////////////////////////////////////////////////
+//          special rewards and items for bounties.             //
+//////////////////////////////////////////////////////////////////
+
+full_restore
+names {"potion of full restoration","full restoration","potion"}
+title "a potion of full restoration"
+descr "A potion of full restoration is here."
+extra {}
+"A clear glass vial contains a glowing multi-colored substance. It 
+appears to be a highly potent potion of restoration."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("restore","full");
+
+end
+
+strong_restore
+names {"potent potion of restoration","potent restoration","potion"}
+title "a potent potion of restoration"
+descr "A potent potion of restoration is here."
+extra {}
+"A clear glass vial contains a glowing multi-colored substance. It 
+appears to be a potent potion of restoration."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("restore","strong");
+
+end
+
+half_restore
+names {"potion of restoration","restoration","potion"}
+title "a potion of restoration"
+descr "A potion of restoration is here."
+extra {}
+"A clear glass vial contains a glowing multi-colored substance. It 
+appears to be a potion of restoration."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("restore","half");
+
+end
+
+full_heal
+names {"potion of full healing","full healing","potion"}
+title "a potion of full healing"
+descr "A potion of full healing is here."
+extra {}
+"A clear glass vial contains a glowing red substance. It appears 
+to be a highly potent potion of healing."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("hp","full");
+
+end
+
+strong_heal
+names {"potent potion of healing","potent healing","potion"}
+title "a potent potion of healing"
+descr "A potent potion of healing is here."
+extra {}
+"A clear glass vial contains a glowing red substance. It appears 
+to be a potent potion of healing."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("hp","strong");
+
+end
+
+half_heal
+names {"potion of healing","healing","potion"}
+title "a potion of healing"
+descr "A potion of healing is here."
+extra {}
+"A clear glass vial contains a glowing red substance. It appears 
+to be a potion of healing."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("hp","half");
+
+end
+
+full_end
+names {"potion of full endurance","full endurance","potion"}
+title "a potion of full endurance"
+descr "A potion of full endurance is here."
+extra {}
+"A clear glass vial contains a glowing green substance. It appears 
+to be a highly potent potion of endurance."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("endurance","full");
+
+end
+
+strong_end
+names {"potent potion of endurance","potent endurance","potion"}
+title "a potent potion of endurance"
+descr "A potent potion of endurance is here."
+extra {}
+"A clear glass vial contains a glowing green substance. It appears 
+to be a potent potion of endurance."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("endurance","strong");
+
+end
+
+half_end
+names {"potion of endurance","endurance","potion"}
+title "a potion of endurance"
+descr "A potion of endurance is here."
+extra {}
+"A clear glass vial contains a glowing green substance. It appears 
+to be a potion of endurance."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("endurance","half");
+
+end
+
+full_mana
+names {"potion of full mana","full mana","potion"}
+title "a potion of full mana"
+descr "A potion of full mana is here."
+extra {}
+"A clear glass vial contains a glowing blue substance. It appears 
+to be a highly potent potion of mana."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("mana","full");
+
+end
+
+strong_mana
+names {"potent potion of mana","potent mana","potion"}
+title "a potent potion of mana"
+descr "A potent potion of mana is here."
+extra {}
+"A clear glass vial contains a glowing blue substance. It appears 
+to be a potent potion of mana."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("mana","strong");
+
+end
+
+half_mana
+names {"potion of mana","mana","potion"}
+title "a potion of mana"
+descr "A potion of mana is here."
+extra {}
+"A clear glass vial contains a glowing blue substance. It appears 
+to be a potion of mana."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("mana","half");
+
+end
+
+
+mulligan
+names {"contract breaker","note","mulligan"}
+title "a contract breaking note"
+descr "A contract breaking note is here."
+extra {}
+"This note, when given to the bounty hunter, allows you to break from a single contract."
+manipulate {MANIPULATE_TAKE}
+weight 1
+cost 1 IRON_PIECE
+end
+
+mc_hint
+names {"monthly continent hint","hint"}
+title "a monthly continent hint"
+descr "A monthly continent hint is here."
+extra {}
+"<div class='cpc'>HINT!!</div><br>"
+manipulate {MANIPULATE_TAKE}
+dilcopy hint@bounty("m","c");
+weight 1
+cost 1 IRON_PIECE
+end
+
+mz_hint
+names {"monthly zone hint","hint"}
+title "a monthly zone hint"
+descr "A monthly zone hint is here."
+extra {}
+"<div class='coc'>HINT!!</div><br>"
+manipulate {MANIPULATE_TAKE}
+dilcopy hint@bounty("m","z");
+weight 1
+cost 1 IRON_PIECE
+end
+
+dc_hint
+names {"daily continent hint","hint"}
+title "a daily continent hint"
+descr "A daily continent hint is here."
+extra {}
+"<div class='cpc'>HINT!!</div><br>"
+manipulate {MANIPULATE_TAKE}
+dilcopy hint@bounty("d","c");
+weight 1
+cost 1 IRON_PIECE
+end
+
+dz_hint
+names {"daily zone hint","hint"}
+title "a daily zone hint"
+descr "A daily zone hint is here."
+extra {}
+"<div class='coc'>HINT!!</div><br>"
+manipulate {MANIPULATE_TAKE}
+dilcopy hint@bounty("d","z");
+weight 1
+cost 1 IRON_PIECE
+end
+
 %reset
-load hunter into bounty_1 max 1
+load hunter into contracts max 1
+load shopkeep into shop max 1
 
 %end

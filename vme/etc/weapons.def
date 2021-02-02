@@ -1,5 +1,59 @@
 /*
-  Reworked by MS 2020. Cleaned up. Adding char abilities to weapons.
+ ~
+ Reworked by Sender 2021. Recognizing state of mud and implementation
+ impacts of Darg's 2001 deployment, we decided to implement a much simpler
+ version of weapon balancing. This may be an interim solution, but addresses
+ a core problem. Relatively low player-base, decades of limiting zones to
+ only having 1-2 VERY good items and the rest garbage, and a clear imbalance 
+ between weapon types resulted in effectively having 3-4 weapons of the hundreds
+ or thousands in the game used. Battle Axe was effectively the only two-handed 
+ weapon worth using, and morning star the only one-handed.
+ 
+ To that end, we've worked to make far fewer and more balanced categories of weapons.
+ There is still a long-term desire to see weapons impacting armor types differently,
+ but the attempt by Darg in 2001 was, in retrospect, either the wrong solution, or the
+ right solution in the wrong context. Either way, it needs to be changed. 
+ 
+ We've taken all weapons and grouped into new circles, and set the balance in the circles
+ to be complete. The result is that a Battle Axe, hits exactly the same as Halberd, a
+ War Mattock, and a Battle-Mace, etc. A long sword hits exactly the same as a broad sword,
+ a war hammer, a morning star, etc. 
+ 
+ Circles are shown here:
+ 
+   1) Two-Handed "heavy" weapons:
+	  Battle Axe, Claymore, Flamberge, Great Sword, Estoc, 
+      Battle Mace, War Maul, Battle Club, Bastard Sword(2 hands),
+	  War Mattock, Great Axe, War Axe, Maul, Trident, Scythe, Sickle
+
+   2) Random Polearms:
+	  Jeddart Axe, Bec De Corbin, Bill Guisarme, Lochaber Axe, Pilum, Halberd,
+	  Pike, Voulge, Fauchard Fork, Partisan, Bardiche, "Lucerne 'Hammer" of Kai',
+	  Gusarme, Foot Lance, Javelin, Ranseur, Lance, Military Fork, Gaff, Baculus.
+	  Staff, Glaive, Pole Cleaver, Shock Lance, Spear, Fighting Staff, Pole Axe,
+	  Shamir, Naginata, Quarter Staff, Fauchard, Spetum, Crowbill, Bill Hook
+      
+   3) One-Handed Normal Weapons:
+	  Broad Sword, War Hammer, Ball and Chain, Morning Star, Cutlass,
+	  hand axe, Kopesh, Flail, Fish Spine, Short Sword, Cudgel, Curved Sword, 
+	  Long Sword, Machette, Bastard Sword(1 hand), Talwar,
+      Cleaver, Wakizashi, Adze, Common Hammer, Katana, Rapier, Scimitar,
+	  Cutlass, Falchion, Sappara, Saber, Mace,
+	  
+   4) One-Handed "light" weapons:
+      Dagger, Dirk, Whip, Brass Knuckles, Fist, Sling, Ice Pick, Claw, Club, 
+	  Main Gauche, Stiletto
+
+   5) Ranged Weapons:
+      Bow, crossbow, sling
+	  
+   6) Natural Weapons:
+      Fist, Kick, Elbow, Knee, Claw, Crush, Bite, Sting
+	  
+ ~
+
+ 
+ Reworked by MS 2020. Cleaned up. Adding char abilities to weapons.
 
   Reworked by Darg april 2001.
 
@@ -50,15 +104,15 @@ Circle Seven   10          11       12       13     14
 Circle Eight   11          12       13       14     15
 Circle Nine    12          13       14       15     16
 Circle Ten     13          14       15       16     17
-*/
 
-/* axe_ham is all axes and hammers.
+
+// axe_ham is all axes and hammers.
    sword is all swords.
    club_mace is all Clubs, Maces, Flails, Morning stars
    Pole is all quarterstaff, spear, halberd, bardiche, sickle scythe trident
    unarmed is all natural attacks (crush, claw, fist, etc)
-   special is whip & unused */
-/*
+   special is whip & unused 
+//
 					NEW	Difficulty Base
              CLOTHES    SLEATHER  HLEATHER  CHAIN  PLATE
 Circle One
@@ -67,7 +121,7 @@ Bludgeon       64          60       52        51     52
 Pierce         66          63       55        55     56
 Club           67          64       57        56     58
 Polearms       68          65       58        58     60
-Special 	      69          66       60        60     66
+Special 	   69          66       60        60     66
 Unarmed        72          70       64        65     68
 
 Circle Two
@@ -151,8 +205,8 @@ Club           45          69       66        96    130
 Polearms       48          72       70       100    134
 Special 	   51          76       74       104    138
 Unarmed        58          83       81       112    147
-*/
-/*
+
+//
 
                             NEW  Base Damage
              CLOTHES    SLEATHER  HLEATHER  CHAIN  PLATE
@@ -167,8 +221,8 @@ Circle Eight    3           2        1         0      0
 Circle Nine     2           2        1         0      0
 Circle Ten      1           1        0         0      0
 
-*/
-/*
+
+//
 Formula for damage:
 
     A number list like this {50,30,5}, where the first number is the
@@ -239,8 +293,8 @@ attack plate    = {10, 1, 9}
 speed           = 1
 fumble          = 1
 
-*/
-/*
+
+
 
 NEW Power organization by Darg these are the alpha numbers only:
    1) Battle Axe, Claymore, Flamberge, Halberd, "Lucerne 'Hammer" of Kai',
@@ -279,13 +333,14 @@ NEW Power organization by Darg these are the alpha numbers only:
 
   10) Fist, Sling
        (13,14,14,15,16)
-*/
 
+*/
 
 #include <values.h>
 #include <spelldef.h>
 
-/* ================= WEAPON CATEGORIES ===================== */
+
+ ================= WEAPON CATEGORIES =====================
 
 index           = WPN_ROOT
 name            = theory
@@ -310,7 +365,7 @@ attack clothes  = {90, 0,50}
 attack sleather = {90, 0,50}
 attack hleather = {90, 0,50}
 attack chain    = {90, 0,50}
-attack plate    = {90, 0,50} /*theory*/
+attack plate    = {90, 0,50} //theory
 
 
 index           = WPN_AXE_HAM
@@ -336,7 +391,7 @@ attack clothes  = {90, 0,50}
 attack sleather = {90, 0,50}
 attack hleather = {90, 0,50}
 attack chain    = {90, 0,50}
-attack plate    = {90, 0,50} /*axe/ham*/
+attack plate    = {90, 0,50} //axe/ham
 
 index           = WPN_SWORD
 name            = category sword
@@ -361,7 +416,7 @@ attack clothes  = {90, 0,50}
 attack sleather = {90, 0,50}
 attack hleather = {90, 0,50}
 attack chain    = {90, 0,50}
-attack plate    = {90, 0,50} /*swords*/
+attack plate    = {90, 0,50} //swords
 
 index           = WPN_CLUB_MACE
 name            = category club mace
@@ -386,7 +441,7 @@ attack clothes  = {90, 0,50}
 attack sleather = {90, 0,50}
 attack hleather = {90, 0,50}
 attack chain    = {90, 0,50}
-attack plate    = {90, 0,50} /*club/mac*/
+attack plate    = {90, 0,50} //club/mac
 
 index           = WPN_POLEARM
 name            = category polearm
@@ -411,7 +466,7 @@ attack clothes  = {90, 0,50}
 attack sleather = {90, 0,50}
 attack hleather = {90, 0,50}
 attack chain    = {90, 0,50}
-attack plate    = {90, 0,50} /*polearm*/
+attack plate    = {90, 0,50} //polearm
 
 index           = WPN_UNARMED
 name            = category natural
@@ -436,7 +491,7 @@ attack clothes  = {90, 0,50}
 attack sleather = {90, 0,50}
 attack hleather = {90, 0,50}
 attack chain    = {90, 0,50}
-attack plate    = {90, 0,50} /*natural*/
+attack plate    = {90, 0,50} //natural
 
 index           = WPN_SPECIAL
 name            = category special
@@ -461,17 +516,17 @@ attack clothes  = {90, 0,50}
 attack sleather = {90, 0,50}
 attack hleather = {90, 0,50}
 attack chain    = {90, 0,50}
-attack plate    = {90, 0,50} /*special*/
+attack plate    = {90, 0,50} //special
 
 
 
-/* ================= AXES & HAMMERS ====================== */
+// ================= AXES & HAMMERS ====================== 
 
 index           = WPN_BATTLE_AXE
 name            = battle axe
 sphere          = WPN_AXE_HAM
 hands           =   2
-type            =  WPNT_SLASH
+type            = WPNT_SLASH
 shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR, ABIL_STR, ABIL_DEX}
 speed           =   8
@@ -485,7 +540,7 @@ race half-orc   =  +1
 race half-ogre  =  +1
 race half-elf   =   0
 race brownie    =  -3
-race groll      =   0
+race groll      =   +2
 race darkelf    =   0
 restrict level          = 22
 restrict strength       = 75
@@ -497,7 +552,7 @@ attack clothes  = {61,10, 4}
 attack sleather = {51, 9, 5}
 attack hleather = {42, 8, 6}
 attack chain    = {39, 7, 7}
-attack plate    = {38, 6, 8} /*bat axe*/
+attack plate    = {38, 6, 8} //bat axe
 
 
 
@@ -508,8 +563,8 @@ hands           =   1
 type            =  WPNT_SLASH
 shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
-speed           =   4
-fumble          =   3
+speed           =   5
+fumble          =   7
 race human      =   0
 race elf        =   0
 race dwarf      =  +2
@@ -527,11 +582,11 @@ profession paladin      = +0
 profession ranger       = -2
 profession assassin     = -3
 profession barbarian    = +3
-attack clothes  = {39, 5, 9}
-attack sleather = {48, 4,10}
-attack hleather = {37, 3,11}
-attack chain    = {43, 2,12}
-attack plate    = {51, 1,13} /*Hand Axe*/
+attack clothes  = {60, 9, 5}
+attack sleather = {58, 8, 6}
+attack hleather = {51, 7, 7}
+attack chain    = {52, 6, 8}
+attack plate    = {55, 5, 9} //Hand Axe
 
 index           = WPN_WAR_MATTOCK // 2H Mattock
 name            = war mattock
@@ -559,11 +614,11 @@ profession fighter      = +0
 profession paladin      = +0
 profession knight       = -1
 profession barbarian    = +2
-attack clothes  = {60, 9, 5}
-attack sleather = {58, 8, 6}
-attack hleather = {51, 7, 7}
-attack chain    = {52, 6, 8}
-attack plate    = {55, 5, 9} /*w matto*/
+attack clothes  = {61,10, 4}
+attack sleather = {51, 9, 5}
+attack hleather = {42, 8, 6}
+attack chain    = {39, 7, 7}
+attack plate    = {38, 6, 8} //w matto
 
 
 index           = WPN_ADZE
@@ -572,7 +627,8 @@ sphere          = WPN_AXE_HAM
 hands           =   1
 type            = WPNT_SLASH
 shield          = SHIELD_M_BLOCK
-speed           =   4
+speed           =   5
+fumble          =   7
 race human      =   0
 race elf        =   0
 race dwarf      =   0
@@ -588,12 +644,11 @@ restrict level          = 14
 profession fighter      = +1
 profession paladin      = +0
 profession knight       = -1
-fumble          =   1
-attack clothes  = {40, 4,10}
-attack sleather = {45, 3,11}
-attack hleather = {40, 2,12}
-attack chain    = {48, 1,13}
-attack plate    = {58, 0,14} /* azde */
+attack clothes  = {60, 9, 5}
+attack sleather = {58, 8, 6}
+attack hleather = {51, 7, 7}
+attack chain    = {52, 6, 8}
+attack plate    = {55, 5, 9} // azde 
 
 
 index           = WPN_WAR_MAUL
@@ -603,6 +658,7 @@ hands           =   2
 type            =  WPNT_BLUDGEON
 shield          = SHIELD_M_BLOCK
 speed           =   8
+fumble          =   5
 race human      =   0
 race elf        =   0
 race dwarf      =  +1
@@ -621,12 +677,11 @@ profession knight       = -1
 profession paladin      = -2
 profession priest       = -2
 profession barbarian    = +2
-fumble          =   4
-attack clothes  = {46, 5, 9}
-attack sleather = {50, 4,10}
-attack hleather = {45, 3,11}
-attack chain    = {52, 2,12}
-attack plate    = {61, 1,13} /* maul */
+attack clothes  = {61,10, 4}
+attack sleather = {51, 9, 5}
+attack hleather = {42, 8, 6}
+attack chain    = {39, 7, 7}
+attack plate    = {38, 6, 8} // maul 
 
 
 
@@ -637,8 +692,8 @@ hands           =   1
 type            =  WPNT_BLUDGEON
 shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
-speed           =   4
-fumble          =   3
+speed           =   5
+fumble          =   7
 race human      =   0
 race elf        =   0
 race dwarf      =  +1
@@ -657,11 +712,11 @@ profession fighter      = +1
 profession priest       = +0
 profession knight       = +0
 profession barbarian    = +2
-attack clothes  = {44, 6, 8}
-attack sleather = {46, 5, 9}
-attack hleather = {40, 4,10}
-attack chain    = {45, 3,11}
-attack plate    = {52, 2,12} /*w hammer*/
+attack clothes  = {60, 9, 5}
+attack sleather = {58, 8, 6}
+attack hleather = {51, 7, 7}
+attack chain    = {52, 6, 8}
+attack plate    = {55, 5, 9} //w hammer
 
 
 
@@ -690,14 +745,14 @@ profession assassin     = +2
 profession fighter      = +0
 profession thief        = -1
 profession barbarian    = +1
-attack clothes  = {40, 2,12}
-attack sleather = {61, 2,13}
-attack hleather = {58, 1,14}
-attack chain    = {70, 0,15}
-attack plate    = {100, 0,16} /* knuckles */
+attack clothes  = {43, 2,13}
+attack sleather = {64, 2,14}
+attack hleather = {61, 1,15}
+attack chain    = {74, 0,16}
+attack plate    = {100,0,17} // knuckles 
 
 
-/* ====================== SWORDS ========================== */
+// ====================== SWORDS ========================== 
 
 index           = WPN_GREAT_SWORD
 name            = great sword
@@ -725,11 +780,11 @@ profession knight       = +2
 profession paladin      = +2
 profession fighter      = +0
 profession barbarian    = +3
-attack clothes  = {50, 9, 5}
-attack sleather = {47, 8, 6}
-attack hleather = {44, 7, 7}
-attack chain    = {40, 6, 8}
-attack plate    = {38, 5, 9} /*gr sword*/
+attack clothes  = {61,10, 4}
+attack sleather = {51, 9, 5}
+attack hleather = {42, 8, 6}
+attack chain    = {39, 7, 7}
+attack plate    = {38, 6, 8} //gr sword
 
 index           = WPN_CLAYMORE
 name            = claymore
@@ -737,7 +792,7 @@ sphere          = WPN_SWORD
 hands           =   2
 type            =  WPNT_SLASH
 shield          = SHIELD_M_BLOCK
-speed           =   6
+speed           =   8
 fumble          =   5
 race human      =   0
 race elf        =   0
@@ -755,11 +810,11 @@ profession fighter      = +2
 profession knight       = +1
 profession paladin      = +1
 profession barbarian    = +3
-attack clothes  = {66,10, 4}
-attack sleather = {63, 9, 5}
-attack hleather = {55, 8, 6}
-attack chain    = {55, 7, 7}
-attack plate    = {56, 6, 8} /*claymore*/
+attack clothes  = {61,10, 4}
+attack sleather = {51, 9, 5}
+attack hleather = {42, 8, 6}
+attack chain    = {39, 7, 7}
+attack plate    = {38, 6, 8}//claymore
 
 index           = WPN_LONG_SWORD
 name            = long sword
@@ -769,7 +824,7 @@ type            =  WPNT_SLASH
 shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   5
-fumble          =   4
+fumble          =   7
 race human      =   0
 race elf        =   0
 race dwarf      =  -1
@@ -788,11 +843,11 @@ profession paladin      = +2
 profession ranger       = +2
 profession mage         = -3
 profession barbarian    = +2
-attack clothes  = {46, 7, 7}
-attack sleather = {46, 6, 8}
-attack hleather = {39, 5, 9}
-attack chain    = {43, 4,10}
-attack plate    = {48, 3,11} /*lo sword*/
+attack clothes  = {60, 9, 5}
+attack sleather = {58, 8, 6}
+attack hleather = {51, 7, 7}
+attack chain    = {52, 6, 8}
+attack plate    = {55, 5, 9} //lo sword
 
 index           = WPN_BROAD_SWORD
 name            = broad sword
@@ -800,8 +855,8 @@ sphere          = WPN_SWORD
 hands           =   1
 type            =  WPNT_SLASH
 shield          = SHIELD_M_BLOCK
-speed           =   6
-fumble          =   4
+speed           =   5
+fumble          =   7
 race human      =   0
 race elf        =   0
 race dwarf      =  -1
@@ -818,11 +873,11 @@ profession fighter      = +3
 profession knight       = +2
 profession paladin      = +2
 profession barbarian    = +2
-attack clothes  = {54, 8, 6}
-attack sleather = {53, 7, 7}
-attack hleather = {46, 6, 8}
-attack chain    = {48, 5, 9}
-attack plate    = {53, 4,10} /*br sword*/
+attack clothes  = {60, 9, 5}
+attack sleather = {58, 8, 6}
+attack hleather = {51, 7, 7}
+attack chain    = {52, 6, 8}
+attack plate    = {55, 5, 9} //br sword
 
 index           = WPN_RAPIER
 name            = rapier
@@ -831,8 +886,8 @@ hands           =   1
 type            =  WPNT_PIERCE
 shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
-speed           =   3
-fumble          =   3
+speed           =   5
+fumble          =   7
 race human      =   0
 race elf        =   0
 race dwarf      =  -1
@@ -850,11 +905,11 @@ profession fighter      = -1
 profession ranger       = -1
 profession assassin     = -2
 profession barbarian    = +0
-attack clothes  = {51, 5, 9}
-attack sleather = {55, 4,10}
-attack hleather = {51, 3,11}
-attack chain    = {58, 2,12}
-attack plate    = {68, 1,13} /* rapier */
+attack clothes  = {60, 9, 5}
+attack sleather = {58, 8, 6}
+attack hleather = {51, 7, 7}
+attack chain    = {52, 6, 8}
+attack plate    = {55, 5, 9} // rapier 
 
 
 
@@ -865,8 +920,8 @@ hands           =   1
 type            =  WPNT_PIERCE
 shield          = SHIELD_M_BLOCK
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
-speed           =   3
-fumble          =   3
+speed           =   5
+fumble          =   7
 race human      =   0
 race elf        =   0
 race dwarf      =   0
@@ -886,11 +941,11 @@ profession knight       = +0
 profession paladin      = +0
 profession assassin     = +1
 profession barbarian    = +2
-attack clothes  = {61, 8, 6}
-attack sleather = {62, 7, 7}
-attack hleather = {56, 6, 8}
-attack chain    = {60, 5, 9}
-attack plate    = {65, 4,10} /*sh sword*/
+attack clothes  = {60, 9, 5}
+attack sleather = {58, 8, 6}
+attack hleather = {51, 7, 7}
+attack chain    = {52, 6, 8}
+attack plate    = {55, 5, 9} //sh sword
 
 
 index           = WPN_STILETTO
@@ -919,11 +974,11 @@ profession assassin     = +0
 profession fighter      = -1
 profession necromancer  = -2
 profession barbarian    = -1
-attack clothes  = {39, 5, 9}
-attack sleather = {48, 4,10}
-attack hleather = {37, 3,11}
-attack chain    = {43, 2,12}
-attack plate    = {51, 1,13} /* stiletto */
+attack clothes  = {43, 2,13}
+attack sleather = {64, 2,14}
+attack hleather = {61, 1,15}
+attack chain    = {74, 0,16}
+attack plate    = {100,0,17} // stiletto 
 
 
 
@@ -961,7 +1016,1703 @@ attack clothes  = {43, 2,13}
 attack sleather = {64, 2,14}
 attack hleather = {61, 1,15}
 attack chain    = {74, 0,16}
-attack plate    = {100,0,17} /*dagger*/
+attack plate    = {100,0,17} //dagger
+
+
+
+index           = WPN_SCIMITAR
+name            = scimitar
+sphere          = WPN_SWORD
+hands           =   1
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   5
+fumble          =   7
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =  -1
+race gnome      =  -1
+race half-orc   =  +3
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =  -1
+race groll      =   0
+race darkelf    =   0
+restrict level          = 16
+profession fighter      = +2
+profession knight       = +2
+profession paladin      = -2
+profession ranger       = +1
+profession thief        = +0
+profession assassin     = +0
+profession barbarian    = +2
+attack clothes  = {60, 9, 5}
+attack sleather = {58, 8, 6}
+attack hleather = {51, 7, 7}
+attack chain    = {52, 6, 8}
+attack plate    = {55, 5, 9} // scimit 
+
+index           = WPN_SICKLE
+name            = sickle
+sphere          = WPN_SWORD
+hands           =   1
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   5
+fumble          =   7
+race human      =   0
+race elf        =   0
+race dwarf      =  -2
+race halfling   =  -2
+race gnome      =  -1
+race half-orc   =  +1
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =  -2
+race groll      =   0
+race darkelf    =   0
+restrict level          = 10
+profession ranger       = +1
+profession druid        = +1
+profession necromancer  = +0
+profession fighter      = -1
+attack clothes  = {60, 9, 5}
+attack sleather = {58, 8, 6}
+attack hleather = {51, 7, 7}
+attack chain    = {52, 6, 8}
+attack plate    = {55, 5, 9} //sickle 
+
+
+
+index           = WPN_FALCHION
+name            = falchion
+sphere          = WPN_SWORD
+hands           =   1
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   5
+fumble          =   7
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =  -1
+race gnome      =  -1
+race half-orc   =  +2
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =  -1
+race groll      =   0
+race darkelf    =   0
+restrict level          = 8
+profession fighter      = +2
+profession ranger       = +1
+profession assassin     = +0
+profession knight       = -2
+profession paladin      = -2
+profession barbarian    = +2
+attack clothes  = {60, 9, 5}
+attack sleather = {58, 8, 6}
+attack hleather = {51, 7, 7}
+attack chain    = {52, 6, 8}
+attack plate    = {55, 5, 9} // falchi 
+
+
+
+index           = WPN_MAIN_GAUCHE
+name            = main gauche
+sphere          = WPN_SWORD
+hands           =   1
+type            = WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   2
+fumble          =   2
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =   0
+race darkelf    =   0
+restrict level          = 14
+profession assassin     = +2
+profession fighter      = +0
+profession thief        = -1
+profession barbarian    = +0
+attack clothes  = {43, 2,13}
+attack sleather = {64, 2,14}
+attack hleather = {61, 1,15}
+attack chain    = {74, 0,16}
+attack plate    = {100,0,17} // main gauche 
+
+
+
+
+
+
+// ================ CLUBS & MACES ======================= 
+
+index           = WPN_BATTLE_MACE
+name            = battle mace
+sphere          = WPN_CLUB_MACE
+hands           =   2
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   8
+fumble          =   5
+race human      =   0
+race elf        =   0
+race dwarf      =  +1
+race halfling   =  -2
+race gnome      =  -2
+race half-orc   =   0
+race half-ogre  =  +2
+race half-elf   =   0
+race brownie    =  -3
+race groll      =   0
+race darkelf    =   0
+restrict level          = 18
+restrict strength       = 75
+profession fighter      = +1
+profession knight       = +0
+profession paladin      = +2
+profession priest       = -2
+profession barbarian    = +2
+attack clothes  = {61,10, 4}
+attack sleather = {51, 9, 5}
+attack hleather = {42, 8, 6}
+attack chain    = {39, 7, 7}
+attack plate    = {38, 6, 8}//b mace
+
+
+
+index           = WPN_MACE
+name            = mace
+sphere          = WPN_CLUB_MACE
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   5
+fumble          =   7
+race human      =   0
+race elf        =   0
+race dwarf      =  +1
+race halfling   =   0
+race gnome      =  -1
+race half-orc   =  +1
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =  -1
+race groll      =   0
+race darkelf    =   0
+restrict level          = 3
+profession fighter      = +2
+profession knight       = +2
+profession paladin      = +2
+profession ranger       = +0
+profession priest       = +0
+profession druid        = -3
+profession barbarian    = +2
+attack clothes  = {60, 9, 5}
+attack sleather = {58, 8, 6}
+attack hleather = {51, 7, 7}
+attack chain    = {52, 6, 8}
+attack plate    = {55, 5, 9} //mace
+
+
+
+index           = WPN_FLAIL
+name            = flail
+sphere          = WPN_CLUB_MACE
+hands           =   2
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_REDUCE // because its chained 
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   8
+fumble          =   5
+race human      =   0
+race elf        =   0
+race dwarf      =  -1
+race halfling   =  -1
+race gnome      =  -2
+race half-orc   =  +1
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =  -2
+race groll      =   0
+race darkelf    =   0
+restrict level          = 15
+restrict strength       = 75
+profession fighter      = +0
+profession knight       = -1
+profession paladin      = +0
+profession barbarian    = +1
+attack clothes  = {61,10, 4}
+attack sleather = {51, 9, 5}
+attack hleather = {42, 8, 6}
+attack chain    = {39, 7, 7}
+attack plate    = {38, 6, 8} // flail 
+
+
+
+// Essentially a one handed flail. Never existed but popular in games :) 
+index           = WPN_MORNING_STAR
+name            = morning star // A 1H flail with a morning star at the end, aka popular name 
+sphere          = WPN_CLUB_MACE
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_REDUCE // because it's chained 
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   5
+fumble          =   7
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =   0
+race darkelf    =   0
+restrict level          = 20
+profession fighter      = +3
+profession knight       = +0
+profession paladin      = +2
+profession barbarian    = +2
+attack clothes  = {60, 9, 5}
+attack sleather = {58, 8, 6}
+attack hleather = {51, 7, 7}
+attack chain    = {52, 6, 8}
+attack plate    = {55, 5, 9} // morning star
+
+
+
+index           = WPN_BATTLE_CLUB
+name            = battle club
+sphere          = WPN_CLUB_MACE
+hands           =   2
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   8
+fumble          =   5
+race human      =   0
+race elf        =   0
+race dwarf      =  +1
+race halfling   =  -2
+race gnome      =  -2
+race half-orc   =   0
+race half-ogre  =  +2
+race half-elf   =   0
+race brownie    =  -3
+race groll      =   0
+race darkelf    =   0
+restrict level          = 16
+restrict strength       = 75
+profession fighter      = +0
+profession knight       = +0
+profession paladin      = -2
+profession priest       = -3
+profession barbarian    = +0
+attack clothes  = {61,10, 4}
+attack sleather = {51, 9, 5}
+attack hleather = {42, 8, 6}
+attack chain    = {39, 7, 7}
+attack plate    = {38, 6, 8} //b club 
+
+
+
+index           = WPN_CLUB
+name            = club
+sphere          = WPN_CLUB_MACE
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   5
+fumble          =   7
+race human      =   0
+race elf        =   0
+race dwarf      =  +1
+race halfling   =   0
+race gnome      =  -1
+race half-orc   =  +2
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =  -1
+race groll      =   0
+race darkelf    =   0
+restrict level          = 5
+profession fighter      = +2
+profession ranger       = +2
+profession thief        = +0
+profession priest       = +0
+profession druid        = -2
+profession knight       = -2
+profession barbarian    = +2
+attack clothes  = {60, 9, 5}
+attack sleather = {58, 8, 6}
+attack hleather = {51, 7, 7}
+attack chain    = {52, 6, 8}
+attack plate    = {55, 5, 9} //club
+
+
+
+// ============================= POLE ARMS ============================ 
+
+
+index           = WPN_QUARTERSTAFF
+name            = quarterstaff
+sphere          = WPN_POLEARM
+hands           =   2  // Shouldn't that be 2 handed. How good can you be with 1 hand on this?
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   6
+fumble          =   5
+race human      =   0
+race elf        =   0
+race dwarf      =  -1
+race halfling   =   0
+race gnome      =  +1
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =  -1
+race groll      =   0
+race darkelf    =   0
+restrict level          = 25
+profession ranger       = +2
+profession assassin     = +2
+profession fighter      = +1
+profession priest       = +0
+profession druid        = +0
+profession necromancer  = +0
+profession mage         = +0
+profession sorcerer     = +0
+profession knight       = -2
+profession paladin      = -4
+profession barbarian    = +1
+attack clothes  = {68,10, 4}
+attack sleather = {65, 9, 5}
+attack hleather = {58, 8, 6}
+attack chain    = {58, 7, 7}
+attack plate    = {60, 6, 8}  // staff 
+
+
+index           = WPN_SPEAR
+name            = spear
+sphere          = WPN_POLEARM
+hands           =   2
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   6
+fumble          =   5
+race human      =   0
+race elf        =   0
+race dwarf      =  -1
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =  +1
+race half-elf   =   0
+race brownie    =  -1
+race groll      =   0
+race darkelf    =   0
+restrict level          = 10
+profession fighter      = +1
+profession knight       = +2
+profession paladin      = +0
+profession ranger       = +1
+profession assassin     = -3
+profession barbarian    = +2
+attack clothes  = {68,10, 4}
+attack sleather = {65, 9, 5}
+attack hleather = {58, 8, 6}
+attack chain    = {58, 7, 7}
+attack plate    = {60, 6, 8}  // spear 
+
+
+
+
+index           = WPN_JAVELIN
+name            = javelin
+sphere          = WPN_POLEARM
+hands           =   1
+type            = WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   6
+fumble          =   5
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =   0
+race darkelf    =   0
+profession fighter      = +0
+profession barbarian    = +0
+attack clothes  = {68,10, 4}
+attack sleather = {65, 9, 5}
+attack hleather = {58, 8, 6}
+attack chain    = {58, 7, 7}
+attack plate    = {60, 6, 8}  // javelin 
+
+
+
+index           = WPN_HALBERD  // Hammer like head
+name            = halberd
+sphere          = WPN_POLEARM
+hands           =   2
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   6
+fumble          =   5
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =  -1
+race gnome      =  -2
+race half-orc   =   0
+race half-ogre  =  +2
+race half-elf   =   0
+race brownie    =  -3
+race groll      =   0
+race darkelf    =   0
+restrict level          = 28
+profession fighter      = +0
+profession knight       = -2
+profession paladin      = -2
+profession barbarian    = +0
+attack clothes  = {68,10, 4}
+attack sleather = {65, 9, 5}
+attack hleather = {58, 8, 6}
+attack chain    = {58, 7, 7}
+attack plate    = {60, 6, 8} //halberd
+
+
+
+index           = WPN_BARDICHE  // Axe like head
+name            = bardiche
+sphere          = WPN_POLEARM
+hands           =   2
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   6
+fumble          =   5
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =  -1
+race gnome      =  -2
+race half-orc   =   0
+race half-ogre  =  +1
+race half-elf   =   0
+race brownie    =  -3
+race groll      =   0
+race darkelf    =   0
+restrict level          = 26
+profession fighter      = +0
+profession knight       = -2
+profession paladin      = -2
+profession barbarian    = +0
+attack clothes  = {68,10, 4}
+attack sleather = {65, 9, 5}
+attack hleather = {58, 8, 6}
+attack chain    = {58, 7, 7}
+attack plate    = {60, 6, 8}  //bardiche
+
+
+
+index           = WPN_SCYTHE
+name            = scythe
+sphere          = WPN_POLEARM
+hands           =   2
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   6
+fumble          =   5
+race human      =   0
+race elf        =   0
+race dwarf      =  -2
+race halfling   =  -2
+race gnome      =  -1
+race half-orc   =   0
+race half-ogre  =  +1
+race half-elf   =   0
+race brownie    =  -2
+race groll      =   0
+race darkelf    =   0
+restrict level          = 20
+profession fighter      = +0
+profession knight       = -2
+profession necromancer  = -4
+profession barbarian    = +0
+attack clothes  = {68,10, 4}
+attack sleather = {65, 9, 5}
+attack hleather = {58, 8, 6}
+attack chain    = {58, 7, 7}
+attack plate    = {60, 6, 8}  //scythe 
+
+
+
+index           = WPN_TRIDENT
+name            = trident
+sphere          = WPN_POLEARM
+hands           =   2
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   6
+fumble          =   5
+race human      =   0
+race elf        =   0
+race dwarf      =  -1
+race halfling   =   0
+race gnome      =  -1
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =  -2
+race groll      =  +3
+race darkelf    =   0
+restrict level          = 16
+profession fighter      = +0
+profession barbarian    = +0
+attack clothes  = {68,10, 4}
+attack sleather = {65, 9, 5}
+attack hleather = {58, 8, 6}
+attack chain    = {58, 7, 7}
+attack plate    = {60, 6, 8} //trident
+
+
+
+index           = WPN_LANCE
+name            = lance
+sphere          = WPN_POLEARM
+hands           =   2
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   6
+fumble          =   5
+race human      =   0
+race elf        =   0
+race dwarf      =  -1
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =  +1
+race half-elf   =   0
+race brownie    =  -1
+race groll      =   0
+race darkelf    =   0
+restrict level          = 21
+profession fighter      = -2
+profession knight       = +2
+profession paladin      = +2
+profession barbarian    = +2
+attack clothes  = {68,10, 4}
+attack sleather = {65, 9, 5}
+attack hleather = {58, 8, 6}
+attack chain    = {58, 7, 7}
+attack plate    = {60, 6, 8}  // lance 
+
+
+
+
+
+// ====================== NATURAL ==================== 
+
+index           = WPN_FIST
+name            = fist
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+race human      =   0
+race elf        =   0
+race dwarf      =  +2
+race halfling   =  +1
+race gnome      =  -1
+race half-orc   =   0
+race half-ogre  =  +2
+race half-elf   =   0
+race brownie    =  -1
+race groll      =  +1
+race darkelf    =   0
+profession fighter      = +0
+profession knight       = +1
+profession paladin      = +0
+profession ranger       = -1
+profession thief        = -2
+profession assassin     = +3
+profession priest       = -3
+profession barbarian    = +0
+attack clothes  = {44, 6, 8}
+attack sleather = {46, 5, 9}
+attack hleather = {40, 4,10}
+attack chain    = {45, 3,11}
+attack plate    = {52, 2,12} // fist 
+
+
+
+index           = WPN_KICK
+name            = kick
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+race human      =   0
+race elf        =   0
+race dwarf      =  -2
+race halfling   =  +1
+race gnome      =  -2
+race half-orc   =   0
+race half-ogre  =  +1
+race half-elf   =   0
+race brownie    =  -2
+race groll      =  +2
+race darkelf    =   0
+restrict level          = 12
+profession fighter      = -1
+profession assassin     = +0
+profession ranger       = +0
+profession thief        = -2
+profession barbarian    = +0
+attack clothes  = {44, 6, 8}
+attack sleather = {46, 5, 9}
+attack hleather = {40, 4,10}
+attack chain    = {45, 3,11}
+attack plate    = {52, 2,12} // kick 
+
+
+
+index           = WPN_ELBOW
+name            = elbow
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+race human      =   0
+race elf        =   0
+race dwarf      =  -2
+race halfling   =  +1
+race gnome      =  -2
+race half-orc   =   0
+race half-ogre  =  +1
+race half-elf   =   0
+race brownie    =  -2
+race groll      =  +2
+race darkelf    =   0
+restrict level          = 8
+profession assassin     = +0
+profession fighter      = -2
+profession thief        = -2
+profession barbarian    = +0
+attack clothes  = {44, 6, 8}
+attack sleather = {46, 5, 9}
+attack hleather = {40, 4,10}
+attack chain    = {45, 3,11}
+attack plate    = {52, 2,12} // elbow 
+
+
+
+index           = WPN_KNEE
+name            = knee
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+race human      =   0
+race elf        =   0
+race dwarf      =  -2
+race halfling   =  +1
+race gnome      =  -2
+race half-orc   =   0
+race half-ogre  =  +1
+race half-elf   =   0
+race brownie    =  -2
+race groll      =  +2
+race darkelf    =   0
+restrict level          = 35
+profession assassin     = +0
+profession fighter      = -2
+profession thief        = -2
+profession barbarian    = +0
+attack clothes  = {44, 6, 8}
+attack sleather = {46, 5, 9}
+attack hleather = {40, 4,10}
+attack chain    = {45, 3,11}
+attack plate    = {52, 2,12} // knee 
+
+
+
+index           = WPN_BITE
+name            = bite
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =  +2
+race darkelf    =   0
+attack clothes  = {44, 6, 8}
+attack sleather = {46, 5, 9}
+attack hleather = {40, 4,10}
+attack chain    = {45, 3,11}
+attack plate    = {52, 2,12} // bite 
+
+
+
+index           = WPN_STING
+name            = sting
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =   0
+race darkelf    =   0
+attack clothes  = {44, 6, 8}
+attack sleather = {46, 5, 9}
+attack hleather = {40, 4,10}
+attack chain    = {45, 3,11}
+attack plate    = {52, 2,12} // sting 
+
+
+
+index           = WPN_CLAW
+name            = claw
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =  +3
+race darkelf    =   0
+attack clothes  = {44, 6, 8}
+attack sleather = {46, 5, 9}
+attack hleather = {40, 4,10}
+attack chain    = {45, 3,11}
+attack plate    = {52, 2,12} // claw 
+
+
+
+index           = WPN_CRUSH
+name            = crush
+sphere          = WPN_UNARMED
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   2
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =  +2
+race half-elf   =   0
+race brownie    =   0
+race groll      =   0
+race darkelf    =   0
+attack clothes  = {44, 6, 8}
+attack sleather = {46, 5, 9}
+attack hleather = {40, 4,10}
+attack chain    = {45, 3,11}
+attack plate    = {52, 2,12} // crush 
+
+
+
+// ====================== SPECIAL ========================= 
+
+index           = WPN_WHIP
+name            = whip
+sphere          = WPN_SPECIAL
+hands           =   1
+type            =  WPNT_SLASH
+shield          = SHIELD_M_USELESS // because its a whip... 
+ability         = {ABIL_DEX,ABIL_DEX,ABIL_STR}
+speed           =   2
+fumble          =   2
+race human      =   0
+race elf        =   0
+race dwarf      =  -1
+race halfling   =   0
+race gnome      =  -2
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =  -1
+race groll      =   0
+race darkelf    =   0
+restrict level          = 9
+restrict dexterity      = +30
+profession fighter      = -2
+profession ranger       = +2
+profession thief        = +2
+profession assassin     = +1
+profession barbarian    = +0
+attack clothes  = {43, 2,13}
+attack sleather = {64, 2,14}
+attack hleather = {61, 1,15}
+attack chain    = {74, 0,16}
+attack plate    = {100,0,17} // whip 
+
+
+
+index           = WPN_BOW
+name            = bow
+sphere          = WPN_SPECIAL
+hands           =   1
+type            = WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_DEX,ABIL_DEX,ABIL_STR}
+speed           =   4
+fumble          =   3
+race human      =   0
+race elf        =  +2
+race dwarf      =  -1
+race halfling   =   0
+race gnome      =  -1
+race half-orc   =   0
+race half-ogre  =  -2
+race half-elf   =  +1
+race brownie    =   0
+race groll      =  -1
+race darkelf    =  +2
+restrict level          = 10
+restrict dexterity      = +30
+profession ranger       = +2
+profession thief        = +0
+profession fighter      = -2
+profession barbarian    = -2
+attack clothes  = {59, 3,11}
+attack sleather = {67, 2,12}
+attack hleather = {64, 1,13}
+attack chain    = {76, 0,14}
+attack plate    = {100,0,15} //bow
+
+
+
+index           = WPN_CROSSBOW
+name            = crossbow
+sphere          = WPN_SPECIAL
+hands           =   1
+type            = WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_DEX,ABIL_DEX,ABIL_STR}
+speed           =   6
+fumble          =   5
+race human      =  +2
+race elf        =  +1
+race dwarf      =   0
+race halfling   =  -1
+race gnome      =  -1
+race half-orc   =  -1
+race half-ogre  =  -2
+race half-elf   =   0
+race brownie    =   0
+race groll      =  -1
+race darkelf    =  +1
+restrict level          = 20
+restrict dexterity      = +30
+profession ranger       = +0
+profession fighter      = -1
+profession barbarian    = -1
+attack clothes  = {50, 3, 8}
+attack sleather = {40, 5, 9}
+attack hleather = {30, 4,10}
+attack chain    = {20, 3,11}
+attack plate    = {10, 2,12} //crossbow
+
+
+
+index           = WPN_SLING
+name            = sling
+sphere          = WPN_SPECIAL
+hands           =   1
+type            = WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_DEX,ABIL_DEX,ABIL_STR}
+speed           =   3
+fumble          =   4
+race human      =   0
+race elf        =   0
+race dwarf      =  +1
+race halfling   =  +2
+race gnome      =  -1
+race half-orc   =  +2
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =  -1
+race groll      =   0
+race darkelf    =   0
+restrict level          = 1
+restrict dexterity      = +10
+profession fighter      = -1
+profession ranger       = +2
+profession thief        = +0
+profession assassin     = +0
+profession druid        = -3
+profession barbarian    = -1
+attack clothes  = {51, 1,13}
+attack sleather = {76, 1,14}
+attack hleather = {74, 0,15}
+attack chain    = {100,0,16}
+attack plate    = {100,0,17} //sling
+
+
+/*
+
+Legacy Values - Sender 2021
+
+ ================= WEAPON CATEGORIES =====================
+
+index           = WPN_ROOT
+name            = theory
+sphere          = WPN_ROOT
+auto train      = 0
+hands           =   1
+type            = WPNT_NONE
+speed           =   0
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =   0
+race darkelf    =   0
+fumble          =   2
+attack clothes  = {90, 0,50}
+attack sleather = {90, 0,50}
+attack hleather = {90, 0,50}
+attack chain    = {90, 0,50}
+attack plate    = {90, 0,50} //theory
+
+
+index           = WPN_AXE_HAM
+name            = category axe hammer
+sphere          = WPN_ROOT
+auto train      = 0
+hands           =   1
+type            =  WPNT_NONE
+speed           =   0
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =   0
+race darkelf    =   0
+fumble          =   2
+attack clothes  = {90, 0,50}
+attack sleather = {90, 0,50}
+attack hleather = {90, 0,50}
+attack chain    = {90, 0,50}
+attack plate    = {90, 0,50} //axe/ham
+
+index           = WPN_SWORD
+name            = category sword
+sphere          = WPN_ROOT
+auto train      = 0
+hands           =   1
+type            =  WPNT_NONE
+speed           =   0
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =   0
+race darkelf    =   0
+fumble          =   2
+attack clothes  = {90, 0,50}
+attack sleather = {90, 0,50}
+attack hleather = {90, 0,50}
+attack chain    = {90, 0,50}
+attack plate    = {90, 0,50} //swords
+
+index           = WPN_CLUB_MACE
+name            = category club mace
+sphere          = WPN_ROOT
+auto train      = 0
+hands           =   1
+type            =  WPNT_NONE
+speed           =   0
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =   0
+race darkelf    =   0
+fumble          =   2
+attack clothes  = {90, 0,50}
+attack sleather = {90, 0,50}
+attack hleather = {90, 0,50}
+attack chain    = {90, 0,50}
+attack plate    = {90, 0,50} //club/mac
+
+index           = WPN_POLEARM
+name            = category polearm
+sphere          = WPN_ROOT
+auto train      = 0
+hands           =   1
+type            =  WPNT_NONE
+speed           =   0
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =   0
+race darkelf    =   0
+fumble          =   2
+attack clothes  = {90, 0,50}
+attack sleather = {90, 0,50}
+attack hleather = {90, 0,50}
+attack chain    = {90, 0,50}
+attack plate    = {90, 0,50} //polearm
+
+index           = WPN_UNARMED
+name            = category natural
+sphere          = WPN_ROOT
+auto train      = 0
+hands           =   1
+type            =  WPNT_NONE
+speed           =   0
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =   0
+race darkelf    =   0
+fumble          =   2
+attack clothes  = {90, 0,50}
+attack sleather = {90, 0,50}
+attack hleather = {90, 0,50}
+attack chain    = {90, 0,50}
+attack plate    = {90, 0,50} //natural
+
+index           = WPN_SPECIAL
+name            = category special
+sphere          = WPN_ROOT
+auto train      = 0
+hands           =   1
+type            =  WPNT_NONE
+speed           =   0
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =   0
+race darkelf    =   0
+fumble          =   2
+attack clothes  = {90, 0,50}
+attack sleather = {90, 0,50}
+attack hleather = {90, 0,50}
+attack chain    = {90, 0,50}
+attack plate    = {90, 0,50} //special
+
+
+
+// ================= AXES & HAMMERS ====================== 
+
+index           = WPN_BATTLE_AXE
+name            = battle axe
+sphere          = WPN_AXE_HAM
+hands           =   2
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR, ABIL_STR, ABIL_DEX}
+speed           =   8
+fumble          =   5
+race human      =   0
+race elf        =   0
+race dwarf      =  +2
+race halfling   =  -2
+race gnome      =  -2
+race half-orc   =  +1
+race half-ogre  =  +1
+race half-elf   =   0
+race brownie    =  -3
+race groll      =   0
+race darkelf    =   0
+restrict level          = 22
+restrict strength       = 75
+profession fighter      = +4
+profession knight       = +0
+profession ranger       = -2
+profession barbarian    = +4
+attack clothes  = {61,10, 4}
+attack sleather = {51, 9, 5}
+attack hleather = {42, 8, 6}
+attack chain    = {39, 7, 7}
+attack plate    = {38, 6, 8} //bat axe
+
+
+
+index           = WPN_HAND_AXE
+name            = hand axe
+sphere          = WPN_AXE_HAM
+hands           =   1
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   4
+fumble          =   3
+race human      =   0
+race elf        =   0
+race dwarf      =  +2
+race halfling   =   0
+race gnome      =  -1
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =  -1
+race groll      =   0
+race darkelf    =   0
+profession fighter      = +2
+profession knight       = +0
+profession paladin      = +0
+profession ranger       = -2
+profession assassin     = -3
+profession barbarian    = +3
+attack clothes  = {39, 5, 9}
+attack sleather = {48, 4,10}
+attack hleather = {37, 3,11}
+attack chain    = {43, 2,12}
+attack plate    = {51, 1,13} //Hand Axe
+
+index           = WPN_WAR_MATTOCK // 2H Mattock
+name            = war mattock
+sphere          = WPN_AXE_HAM
+hands           =   2
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   8
+fumble          =   5
+race human      =   0
+race elf        =   0
+race dwarf      =  +1
+race halfling   =  -2
+race gnome      =  -2
+race half-orc   =   0
+race half-ogre  =  +1
+race half-elf   =   0
+race brownie    =  -3
+race groll      =   0
+race darkelf    =   0
+restrict level          = 25
+restrict strength       = 75
+profession fighter      = +0
+profession paladin      = +0
+profession knight       = -1
+profession barbarian    = +2
+attack clothes  = {60, 9, 5}
+attack sleather = {58, 8, 6}
+attack hleather = {51, 7, 7}
+attack chain    = {52, 6, 8}
+attack plate    = {55, 5, 9} //w matto
+
+
+index           = WPN_ADZE
+name            = adze mattock
+sphere          = WPN_AXE_HAM
+hands           =   1
+type            = WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+speed           =   4
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =   0
+race darkelf    =   0
+restrict level          = 14
+profession fighter      = +1
+profession paladin      = +0
+profession knight       = -1
+fumble          =   1
+attack clothes  = {40, 4,10}
+attack sleather = {45, 3,11}
+attack hleather = {40, 2,12}
+attack chain    = {48, 1,13}
+attack plate    = {58, 0,14} // azde 
+
+
+index           = WPN_WAR_MAUL
+name            = maul
+sphere          = WPN_AXE_HAM
+hands           =   2
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+speed           =   8
+race human      =   0
+race elf        =   0
+race dwarf      =  +1
+race halfling   =  -2
+race gnome      =  -2
+race half-orc   =   0
+race half-ogre  =  +1
+race half-elf   =   0
+race brownie    =  -3
+race groll      =   0
+race darkelf    =   0
+restrict level          = 24
+restrict strength       = 90
+profession fighter      = +0
+profession knight       = -1
+profession paladin      = -2
+profession priest       = -2
+profession barbarian    = +2
+fumble          =   4
+attack clothes  = {46, 5, 9}
+attack sleather = {50, 4,10}
+attack hleather = {45, 3,11}
+attack chain    = {52, 2,12}
+attack plate    = {61, 1,13} // maul 
+
+
+
+index           = WPN_WAR_HAMMER  // 1H Hammer, e.g. Mjolnir
+name            = war hammer
+sphere          = WPN_AXE_HAM
+hands           =   1
+type            =  WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   4
+fumble          =   3
+race human      =   0
+race elf        =   0
+race dwarf      =  +1
+race halfling   =   0
+race gnome      =  -1
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =  -1
+race groll      =   0
+race darkelf    =   0
+restrict level          = 10
+restrict strength       = 90  // Superbly heavy weapon to use in one hand
+profession paladin      = +2
+profession fighter      = +1
+profession priest       = +0
+profession knight       = +0
+profession barbarian    = +2
+attack clothes  = {44, 6, 8}
+attack sleather = {46, 5, 9}
+attack hleather = {40, 4,10}
+attack chain    = {45, 3,11}
+attack plate    = {52, 2,12} //w hammer
+
+
+
+index           = WPN_KNUCKLES
+name            = brass knuckles
+sphere          = WPN_AXE_HAM
+hands           =   1
+type            = WPNT_BLUDGEON
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   1
+fumble          =   1
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =   0
+race darkelf    =   0
+restrict level          = 12
+profession assassin     = +2
+profession fighter      = +0
+profession thief        = -1
+profession barbarian    = +1
+attack clothes  = {40, 2,12}
+attack sleather = {61, 2,13}
+attack hleather = {58, 1,14}
+attack chain    = {70, 0,15}
+attack plate    = {100, 0,16} // knuckles 
+
+
+// ====================== SWORDS ========================== 
+
+index           = WPN_GREAT_SWORD
+name            = great sword
+sphere          = WPN_SWORD
+hands           =   2
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   8
+fumble          =   5
+race human      =   0
+race elf        =   0
+race dwarf      =  -2
+race halfling   =  -2
+race gnome      =  -2
+race half-orc   =   0
+race half-ogre  =  +2
+race half-elf   =   0
+race brownie    =  -3
+race groll      =  +4
+race darkelf    =   0
+restrict level          = 25
+restrict strength       = 75
+profession knight       = +2
+profession paladin      = +2
+profession fighter      = +0
+profession barbarian    = +3
+attack clothes  = {50, 9, 5}
+attack sleather = {47, 8, 6}
+attack hleather = {44, 7, 7}
+attack chain    = {40, 6, 8}
+attack plate    = {38, 5, 9} //gr sword
+
+index           = WPN_CLAYMORE
+name            = claymore
+sphere          = WPN_SWORD
+hands           =   2
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+speed           =   6
+fumble          =   5
+race human      =   0
+race elf        =   0
+race dwarf      =  -2
+race halfling   =  -2
+race gnome      =  -2
+race half-orc   =   0
+race half-ogre  =  +2
+race half-elf   =   0
+race brownie    =  -3
+race groll      =   0
+race darkelf    =   0
+restrict level          = 45
+profession fighter      = +2
+profession knight       = +1
+profession paladin      = +1
+profession barbarian    = +3
+attack clothes  = {66,10, 4}
+attack sleather = {63, 9, 5}
+attack hleather = {55, 8, 6}
+attack chain    = {55, 7, 7}
+attack plate    = {56, 6, 8} //claymore
+
+index           = WPN_LONG_SWORD
+name            = long sword
+sphere          = WPN_SWORD
+hands           =   1
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   5
+fumble          =   4
+race human      =   0
+race elf        =   0
+race dwarf      =  -1
+race halfling   =  -2
+race gnome      =  -1
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =  -2
+race groll      =   0
+race darkelf    =  +1
+restrict level          = 20
+profession fighter      = +2
+profession knight       = +2
+profession paladin      = +2
+profession ranger       = +2
+profession mage         = -3
+profession barbarian    = +2
+attack clothes  = {46, 7, 7}
+attack sleather = {46, 6, 8}
+attack hleather = {39, 5, 9}
+attack chain    = {43, 4,10}
+attack plate    = {48, 3,11} //lo sword
+
+index           = WPN_BROAD_SWORD
+name            = broad sword
+sphere          = WPN_SWORD
+hands           =   1
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+speed           =   6
+fumble          =   4
+race human      =   0
+race elf        =   0
+race dwarf      =  -1
+race halfling   =  -2
+race gnome      =  -1
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =  -1
+race groll      =   0
+race darkelf    =   0
+restrict level          = 8
+profession fighter      = +3
+profession knight       = +2
+profession paladin      = +2
+profession barbarian    = +2
+attack clothes  = {54, 8, 6}
+attack sleather = {53, 7, 7}
+attack hleather = {46, 6, 8}
+attack chain    = {48, 5, 9}
+attack plate    = {53, 4,10} //br sword
+
+index           = WPN_RAPIER
+name            = rapier
+sphere          = WPN_SWORD
+hands           =   1
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   3
+fumble          =   3
+race human      =   0
+race elf        =   0
+race dwarf      =  -1
+race halfling   =  -1
+race gnome      =  -1
+race half-orc   =  -1
+race half-ogre  =  -1
+race half-elf   =   0
+race brownie    =  -1
+race groll      =  -1
+race darkelf    =   0
+restrict level          = 4
+profession thief        = +2
+profession fighter      = -1
+profession ranger       = -1
+profession assassin     = -2
+profession barbarian    = +0
+attack clothes  = {51, 5, 9}
+attack sleather = {55, 4,10}
+attack hleather = {51, 3,11}
+attack chain    = {58, 2,12}
+attack plate    = {68, 1,13} // rapier 
+
+
+
+index           = WPN_SHORT_SWORD
+name            = short sword
+sphere          = WPN_SWORD
+hands           =   1
+type            =  WPNT_PIERCE
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   3
+fumble          =   3
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =  +1
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =  -1
+race half-elf   =   0
+race brownie    =  +1
+race groll      =   0
+race darkelf    =   0
+restrict level          = 1
+profession fighter      = +2
+profession ranger       = +2
+profession thief        = +2
+profession knight       = +0
+profession paladin      = +0
+profession assassin     = +1
+profession barbarian    = +2
+attack clothes  = {61, 8, 6}
+attack sleather = {62, 7, 7}
+attack hleather = {56, 6, 8}
+attack chain    = {60, 5, 9}
+attack plate    = {65, 4,10} //sh sword
+
+
+index           = WPN_STILETTO
+name            = stiletto
+sphere          = WPN_SWORD
+hands           =   1
+type            = WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   2
+fumble          =   2
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =   0
+race gnome      =   0
+race half-orc   =   0
+race half-ogre  =   0
+race half-elf   =   0
+race brownie    =   0
+race groll      =   0
+race darkelf    =   0
+restrict level          = 40
+profession thief        = +2
+profession assassin     = +0
+profession fighter      = -1
+profession necromancer  = -2
+profession barbarian    = -1
+attack clothes  = {39, 5, 9}
+attack sleather = {48, 4,10}
+attack hleather = {37, 3,11}
+attack chain    = {43, 2,12}
+attack plate    = {51, 1,13} // stiletto 
+
+
+
+index           = WPN_DAGGER
+name            = dagger
+sphere          = WPN_SWORD
+hands           =   1
+type            =  WPNT_SLASH
+shield          = SHIELD_M_BLOCK
+ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+speed           =   2
+fumble          =   2
+race human      =   0
+race elf        =   0
+race dwarf      =   0
+race halfling   =  +1
+race gnome      =  +1
+race half-orc   =   0
+race half-ogre  =  -2
+race half-elf   =   0
+race brownie    =  +2
+race groll      =   0
+race darkelf    =   0
+profession ranger       = +2
+profession thief        = +2
+profession assassin     = +2
+profession fighter      = +0
+profession paladin      = +0
+profession knight       = +0
+profession necromancer  = +0
+profession mage         = +0
+profession sorcerer     = +0
+profession barbarian    = +2
+attack clothes  = {43, 2,13}
+attack sleather = {64, 2,14}
+attack hleather = {61, 1,15}
+attack chain    = {74, 0,16}
+attack plate    = {100,0,17} //dagger
 
 
 
@@ -997,7 +2748,7 @@ attack clothes  = {39, 5, 9}
 attack sleather = {48, 5,10}
 attack hleather = {37, 3,11}
 attack chain    = {43, 2,12}
-attack plate    = {51, 1,13} /* scimit */
+attack plate    = {51, 1,13} // scimit 
 
 
 
@@ -1032,7 +2783,7 @@ attack clothes  = {38, 6, 8}
 attack sleather = {39, 5, 9}
 attack hleather = {33, 4,10}
 attack chain    = {37, 3,11}
-attack plate    = {43, 2,12} /* falchi */
+attack plate    = {43, 2,12} // falchi 
 
 
 
@@ -1065,7 +2816,7 @@ attack clothes  = {39, 5, 9}
 attack sleather = {48, 4,10}
 attack hleather = {37, 3,11}
 attack chain    = {43, 2,12}
-attack plate    = {51, 1,13} /* main gauche */
+attack plate    = {51, 1,13} // main gauche 
 
 
 
@@ -1098,12 +2849,12 @@ attack clothes  = {50, 4,10}
 attack sleather = {56, 3,11}
 attack hleather = {52, 2,12}
 attack chain    = {61, 1,13}
-attack plate    = {72, 0,14} /*sickle */
+attack plate    = {72, 0,14} //sickle 
 
 
 
 
-/* ================ CLUBS & MACES ======================= */
+// ================ CLUBS & MACES ======================= 
 
 index           = WPN_BATTLE_MACE
 name            = battle mace
@@ -1136,7 +2887,7 @@ attack clothes  = {67,10, 4}
 attack sleather = {64, 9, 5}
 attack hleather = {58, 8, 6}
 attack chain    = {58, 7, 7}
-attack plate    = {60, 6, 8} /*b mace*/
+attack plate    = {60, 6, 8} //b mace
 
 
 
@@ -1172,7 +2923,7 @@ attack clothes  = {48, 4,10}
 attack sleather = {53, 3,11}
 attack hleather = {49, 2,12}
 attack chain    = {58, 1,13}
-attack plate    = {69, 0,14} /*mace*/
+attack plate    = {69, 0,14} //mace
 
 
 
@@ -1181,7 +2932,7 @@ name            = flail
 sphere          = WPN_CLUB_MACE
 hands           =   2
 type            =  WPNT_BLUDGEON
-shield          = SHIELD_M_REDUCE /* because its chained */
+shield          = SHIELD_M_REDUCE // because its chained 
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   8
 fumble          =   6
@@ -1206,17 +2957,17 @@ attack clothes  = {64, 9, 5}
 attack sleather = {63, 8, 6}
 attack hleather = {56, 7, 7}
 attack chain    = {58, 6, 8}
-attack plate    = {62, 5, 9} /* flail */
+attack plate    = {62, 5, 9} // flail 
 
 
 
-/* Essentially a one handed flail. Never existed but popular in games :) */
+// Essentially a one handed flail. Never existed but popular in games :) 
 index           = WPN_MORNING_STAR
 name            = morning star // A 1H flail with a morning star at the end, aka popular name 
 sphere          = WPN_CLUB_MACE
 hands           =   1
 type            =  WPNT_BLUDGEON
-shield          = SHIELD_M_REDUCE /* because it's chained */
+shield          = SHIELD_M_REDUCE // because it's chained 
 ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
 speed           =   5
 fumble          =   8
@@ -1240,7 +2991,7 @@ attack clothes  = {60, 9, 5}
 attack sleather = {58, 8, 6}
 attack hleather = {51, 7, 7}
 attack chain    = {52, 6, 8}
-attack plate    = {55, 5, 9} /* ball and chain mace */
+attack plate    = {55, 5, 9} // ball and chain mace 
 
 
 
@@ -1275,7 +3026,7 @@ attack clothes  = {64, 9, 5}
 attack sleather = {63, 8, 6}
 attack hleather = {56, 7, 7}
 attack chain    = {58, 6, 8}
-attack plate    = {62, 5, 9} /*b club */
+attack plate    = {62, 5, 9} //b club 
 
 
 
@@ -1311,11 +3062,11 @@ attack clothes  = {53, 5, 9}
 attack sleather = {58, 4,10}
 attack hleather = {53, 3,11}
 attack chain    = {61, 2,12}
-attack plate    = {71, 1,13} /*club*/
+attack plate    = {71, 1,13} //club
 
 
 
-/* ============================= POLE ARMS ============================ */
+// ============================= POLE ARMS ============================ 
 
 index           = WPN_QUARTERSTAFF
 name            = quarterstaff
@@ -1353,7 +3104,7 @@ attack clothes  = {55, 5, 9}
 attack sleather = {60, 4,10}
 attack hleather = {56, 3,11}
 attack chain    = {64, 2,12}
-attack plate    = {74, 1,13} /* staff */
+attack plate    = {74, 1,13} // staff 
 
 
 index           = WPN_SPEAR
@@ -1387,7 +3138,7 @@ attack clothes  = {52, 6, 8}
 attack sleather = {55, 5, 9}
 attack hleather = {50, 4,10}
 attack chain    = {56, 3,11}
-attack plate    = {64, 2,12} /* spear */
+attack plate    = {64, 2,12} // spear 
 
 
 
@@ -1418,7 +3169,7 @@ attack clothes  = {56, 3,11}
 attack sleather = {64, 2,12}
 attack hleather = {61, 1,13}
 attack chain    = {72, 0,14}
-attack plate    = {100, 0,15} /* javelin */
+attack plate    = {100, 0,15} // javelin 
 
 
 
@@ -1451,7 +3202,7 @@ attack clothes  = {68,10, 4}
 attack sleather = {65, 9, 5}
 attack hleather = {58, 8, 6}
 attack chain    = {58, 7, 7}
-attack plate    = {60, 6, 8} /*halberd*/
+attack plate    = {60, 6, 8} //halberd
 
 
 
@@ -1484,7 +3235,7 @@ attack clothes  = {55, 5, 9}
 attack sleather = {60, 4,10}
 attack hleather = {56, 3,11}
 attack chain    = {64, 2,12}
-attack plate    = {74, 1,13} /*bardiche*/
+attack plate    = {74, 1,13} //bardiche
 
 
 
@@ -1517,7 +3268,7 @@ attack clothes  = {52, 6, 8}
 attack sleather = {55, 5, 9}
 attack hleather = {50, 4,10}
 attack chain    = {56, 3,11}
-attack plate    = {64, 2,12} /*scythe */
+attack plate    = {64, 2,12} //scythe 
 
 
 
@@ -1548,7 +3299,7 @@ attack clothes  = {50, 4,10}
 attack sleather = {56, 3,11}
 attack hleather = {52, 2,12}
 attack chain    = {61, 1,13}
-attack plate    = {72, 0,14} /*trident*/
+attack plate    = {72, 0,14} //trident
 
 
 
@@ -1581,13 +3332,13 @@ attack clothes  = {49, 2,12}
 attack sleather = {71, 2,13}
 attack hleather = {69, 1,14}
 attack chain    = {81, 0,15}
-attack plate    = {100,0,16} /* lance */
+attack plate    = {100,0,16} // lance 
 
 
 
 
 
-/* ====================== NATURAL ==================== */
+// ====================== NATURAL ==================== 
 
 index           = WPN_FIST
 name            = fist
@@ -1621,7 +3372,7 @@ attack clothes  = {35, 1,13}
 attack sleather = {58, 1,14}
 attack hleather = {55, 0,15}
 attack chain    = {87, 0,16}
-attack plate    = {100,0,17} /* fist */
+attack plate    = {100,0,17} // fist 
 
 
 
@@ -1655,7 +3406,7 @@ attack clothes  = {44, 6, 8}
 attack sleather = {46, 5, 9}
 attack hleather = {40, 4,10}
 attack chain    = {45, 3,11}
-attack plate    = {52, 2,12} /* kick */
+attack plate    = {52, 2,12} // kick 
 
 
 
@@ -1688,7 +3439,7 @@ attack clothes  = {45, 3,11}
 attack sleather = {52, 2,12}
 attack hleather = {46, 1,13}
 attack chain    = {58, 0,14}
-attack plate    = {86, 0,15} /* elbow */
+attack plate    = {86, 0,15} // elbow 
 
 
 
@@ -1721,7 +3472,7 @@ attack clothes  = {46, 5, 9}
 attack sleather = {50, 4,10}
 attack hleather = {45, 3,11}
 attack chain    = {52, 2,12}
-attack plate    = {61, 1,13} /* knee */
+attack plate    = {61, 1,13} // knee 
 
 
 
@@ -1749,7 +3500,7 @@ attack clothes  = {55, 7, 7}
 attack sleather = {56, 6, 8}
 attack hleather = {51, 5, 9}
 attack chain    = {55, 4,10}
-attack plate    = {62, 3,11} /* bite */
+attack plate    = {62, 3,11} // bite 
 
 
 
@@ -1777,7 +3528,7 @@ attack clothes  = {57, 9, 5}
 attack sleather = {54, 8, 6}
 attack hleather = {46, 7, 7}
 attack chain    = {46, 6, 8}
-attack plate    = {42, 5, 9} /* sting */
+attack plate    = {42, 5, 9} // sting 
 
 
 
@@ -1807,7 +3558,7 @@ attack clothes  = {38, 6, 8}
 attack sleather = {39, 5, 9}
 attack hleather = {33, 4,10}
 attack chain    = {37, 3,11}
-attack plate    = {43, 2,12} /* claw */
+attack plate    = {43, 2,12} // claw 
 
 
 
@@ -1835,18 +3586,18 @@ attack clothes  = {58, 8, 6}
 attack sleather = {58, 7, 7}
 attack hleather = {52, 6, 8}
 attack chain    = {55, 5, 9}
-attack plate    = {60, 4,10} /* crush */
+attack plate    = {60, 4,10} // crush 
 
 
 
-/* ====================== SPECIAL ========================= */
+// ====================== SPECIAL ========================= 
 
 index           = WPN_WHIP
 name            = whip
 sphere          = WPN_SPECIAL
 hands           =   1
 type            =  WPNT_SLASH
-shield          = SHIELD_M_USELESS /* because its a whip... */
+shield          = SHIELD_M_USELESS // because its a whip... 
 ability         = {ABIL_DEX,ABIL_DEX,ABIL_STR}
 speed           =   5
 fumble          =   6
@@ -1872,7 +3623,7 @@ attack clothes  = {59, 3,11}
 attack sleather = {67, 2,12}
 attack hleather = {64, 1,13}
 attack chain    = {76, 0,14}
-attack plate    = {100,0,15} /* whip */
+attack plate    = {100,0,15} // whip 
 
 
 
@@ -1906,7 +3657,7 @@ attack clothes  = {59, 3,11}
 attack sleather = {67, 2,12}
 attack hleather = {64, 1,13}
 attack chain    = {76, 0,14}
-attack plate    = {100,0,15} /*bow*/
+attack plate    = {100,0,15} //bow
 
 
 
@@ -1939,7 +3690,7 @@ attack clothes  = {50, 3, 8}
 attack sleather = {40, 5, 9}
 attack hleather = {30, 4,10}
 attack chain    = {20, 3,11}
-attack plate    = {10, 2,12} /*crossbow*/
+attack plate    = {10, 2,12} //crossbow
 
 
 
@@ -1975,8 +3726,9 @@ attack clothes  = {51, 1,13}
 attack sleather = {76, 1,14}
 attack hleather = {74, 0,15}
 attack chain    = {100,0,16}
-attack plate    = {100,0,17} /*sling*/
+attack plate    = {100,0,17} //sling
 
 // One could add: Shuriken. Darts. Blow-dart. Bola. They'd be nice additions 
 // and special enough they can have their own training skill.
 
+*/

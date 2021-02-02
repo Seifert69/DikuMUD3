@@ -203,7 +203,7 @@ END HEADER*/
 #define WPN_GREAT_SWORD  11  /* Two Handed Sword */
 #define WPN_LONG_SWORD   17  /* One handed sword */
 #define WPN_BROAD_SWORD  16  // 1H
-#define WPN_CLAYMORE     53  // 1H
+#define WPN_CLAYMORE     53  // 2H
 #define WPN_SCIMITAR     12  /* One handed, slim curved blade */
 #define WPN_FALCHION     14  /* One handed, broad curved blade */
 #define WPN_SHORT_SWORD  19
