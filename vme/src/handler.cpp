@@ -927,11 +927,6 @@ void stop_snoopwrite(unit_data *unit)
                break;
             }
 
-      if (CHAR_FOLLOWERS(unit) || CHAR_MASTER(unit))
-         die_follower(unit);
-
-      stop_fighting(unit);
-
       if (CHAR_IS_SNOOPING(unit) || CHAR_IS_SNOOPED(unit))
          unsnoop(unit, 1); /* Remove all snoopers */
    }
@@ -983,13 +978,19 @@ void extract_unit(class unit_data *unit)
     	     unlink_affect(UNIT_AFFECTED(unit));
     */
 
+    if (IS_CHAR(unit))
+    {
+      if (CHAR_FOLLOWERS(unit) || CHAR_MASTER(unit))
+         die_follower(unit);
+
+      stop_fighting(unit);
+    }
+
     stop_snoopwrite(unit);
 
-    if (IS_CHAR(unit) && CHAR_DESCRIPTOR(unit))
+    if (IS_PC(unit) && CHAR_DESCRIPTOR(unit))
     {
-        void disconnect_game(class unit_data * pc);
-
-        disconnect_game(unit);
+        UPC(unit)->disconnect_game();
     }
 
     /*if (!IS_PC(unit) || UNIT_IN(unit))

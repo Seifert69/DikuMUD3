@@ -190,76 +190,76 @@ void reset_char(class unit_data *ch)
    UNIT_MAX_HIT(ch) = hit_limit(ch);
 }
 
-void connect_game(class unit_data *pc)
+void pc_data::connect_game(void)
 {
    //  assert (CHAR_DESCRIPTOR (pc));
 
-   if (pc->is_destructed() || !CHAR_DESCRIPTOR(pc))
+   if (this->is_destructed() || !CHAR_DESCRIPTOR(this))
       return;
 
-   PC_TIME(pc).connect = time(0);
-   CHAR_DESCRIPTOR(pc)->logon = time(0);
+   PC_TIME(this).connect = time(0);
+   CHAR_DESCRIPTOR(this)->logon = time(0);
 
-   CHAR_DESCRIPTOR(pc)->CreateBBS();
+   CHAR_DESCRIPTOR(this)->CreateBBS();
 
-   set_descriptor_fptr(CHAR_DESCRIPTOR(pc), descriptor_interpreter, FALSE);
+   set_descriptor_fptr(CHAR_DESCRIPTOR(this), descriptor_interpreter, FALSE);
 
    no_players++;
    if (no_players > max_no_players)
       max_no_players = no_players;
 }
 
-void disconnect_game(class unit_data *pc)
+void pc_data::disconnect_game(void)
 {
-   if (CHAR_DESCRIPTOR(pc))
+   if (CHAR_DESCRIPTOR(this))
    {
-      CHAR_DESCRIPTOR(pc)->RemoveBBS();
+      CHAR_DESCRIPTOR(this)->RemoveBBS();
 
       no_players--;
    }
 }
 
-void reconnect_game(class descriptor_data *d, class unit_data *ch)
+void pc_data::reconnect_game(class descriptor_data *d)
 {
    //char *color;
    //char tbuf[MAX_STRING_LENGTH * 2];
 
-   if (ch->is_destructed() || !d)
+   if (this->is_destructed() || !d)
       return;
 
    CHAR_DESCRIPTOR(d->character) = NULL;
    extract_unit(d->character); // Toss out the temporary unit and take over the new one
-   d->character = ch;
-   CHAR_DESCRIPTOR(ch) = d;
+   d->character = this;
+   CHAR_DESCRIPTOR(this) = d;
 
-   dil_destroy("link_dead@basis", ch);
+   dil_destroy("link_dead@basis", this);
 
-   ActivateDil(ch); // ch could potentially get zapped here.
+   ActivateDil(this); // ch could potentially get zapped here.
 
-   if (ch->is_destructed() || !d)
+   if (this->is_destructed() || !d)
       return;
 
-   connect_game(ch);
+   this->connect_game();
    /* MS2020
     color = UPC (ch)->color.save_string ();
     sprintf (tbuf, "%s%s%s", CONTROL_COLOR_CREATE, color, CONTROL_COLOR_END);
     send_to_char (tbuf, ch);
     delete color;
 */
-   send_to_char("Reconnecting.<br/>", ch);
+   send_to_char("Reconnecting.<br/>", this);
 
-   if (CHAR_LAST_ROOM(ch) && (CHAR_LAST_ROOM(ch) != UNIT_IN(ch)))
+   if (CHAR_LAST_ROOM(this) && (CHAR_LAST_ROOM(this) != UNIT_IN(this)))
    {
       act("$1n has reconnected, and is moved to another location.",
-          A_HIDEINV, cActParameter(ch), cActParameter(), cActParameter(), TO_ROOM);
-      unit_from_unit(ch);
-      unit_to_unit(ch, CHAR_LAST_ROOM(ch));
-      CHAR_LAST_ROOM(ch) = NULL;
+          A_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), TO_ROOM);
+      unit_from_unit(this);
+      unit_to_unit(this, CHAR_LAST_ROOM(this));
+      CHAR_LAST_ROOM(this) = NULL;
    }
-   act("$1n has reconnected.", A_HIDEINV, cActParameter(ch), cActParameter(), cActParameter(), TO_ROOM);
-   slog(LOG_BRIEF, UNIT_MINV(ch), "%s[%s] has reconnected.", PC_FILENAME(ch), CHAR_DESCRIPTOR(ch)->host);
-   CHAR_DESCRIPTOR(ch)->logon = time(0);
-   PC_TIME(ch).connect = time(0);
+   act("$1n has reconnected.", A_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), TO_ROOM);
+   slog(LOG_BRIEF, UNIT_MINV(this), "%s[%s] has reconnected.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->host);
+   CHAR_DESCRIPTOR(this)->logon = ::time(0);
+   PC_TIME(this).connect = ::time(0);
    //      stop_affect(ch);
    //      stop_all_special(ch);
    //      start_affect(ch);               /* Activate affect ticks */
@@ -303,6 +303,16 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
     }
 
    CHAR_LAST_ROOM(this) = unit_room(this);
+
+    if (IS_CHAR(this))
+    {
+      void die_follower(class unit_data *ch);
+      
+      if (CHAR_FOLLOWERS(this) || CHAR_MASTER(this))
+         die_follower(this);
+
+      stop_fighting(this);
+    }
 
    stop_snoopwrite(this);
 
@@ -349,7 +359,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
       set_descriptor_fptr(CHAR_DESCRIPTOR(this), descriptor_interpreter, FALSE);
       dil_destroy("link_dead@basis", this);
 
-      connect_game(this);
+      this->connect_game();
    }
 
    unit_data *load_room;
@@ -581,7 +591,7 @@ void nanny_throw(class descriptor_data *d, char *arg)
             } */
 
             CHAR_LAST_ROOM(u) = UNIT_IN(u);
-            reconnect_game(d, u);
+            UPC(u)->reconnect_game(d);
             return;
          }
       }
@@ -682,7 +692,7 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
       if (IS_PC(u) && (str_ccmp(PC_FILENAME(u),
                                 PC_FILENAME(d->character)) == 0))
       {
-         reconnect_game(d, u);
+         UPC(u)->reconnect_game(d);
          return;
       }
 
@@ -985,7 +995,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
          //	  assert (!CHAR_DESCRIPTOR (u));
          //	  assert (UNIT_IN (u));
 
-         reconnect_game(d, u);
+         UPC(u)->reconnect_game(d);
          return;
       }
    }
