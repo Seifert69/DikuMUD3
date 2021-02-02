@@ -55,19 +55,27 @@ class zone_type *find_zone(const char *zonename)
     return ba ? (class zone_type *)ba->block : NULL;*/
 }
 
-/* Zonename & name must point to non-empty strings */
+/* Zonename & name must point to non-empty strings. Must be lower case */
 class file_index_type *find_file_index(const char *zonename, const char *name)
 {
     class zone_type *zone;
-    //struct bin_search_type *ba;
 
     if (!*name)
         return NULL;
 
-    if ((zone = find_zone(zonename)) == NULL)
+    char bufzone[MAX_STRING_LENGTH];
+    char bufname[MAX_STRING_LENGTH];
+
+    strcpy(bufzone, zonename);
+    str_lower(bufzone);
+
+    if ((zone = find_zone(bufzone)) == NULL)
         return NULL;
 
-    auto it = zone->mmp_fi.find(name);
+    strcpy(bufname, name);
+    str_lower(bufname);
+
+    auto it = zone->mmp_fi.find(bufname);
 
     if (it != zone->mmp_fi.end())
       return it->second;
