@@ -172,7 +172,7 @@ class MyClient(discord.Client):
 
             while (True):
                 try:
-                    line = os.read(self.pipeDiscord, 200)
+                    line = os.read(self.pipeDiscord, 1000)
                     if not line:
                         break
                     else:
