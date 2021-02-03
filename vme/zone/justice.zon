@@ -70,7 +70,7 @@ END HEADER*/
        names.[0] $crime constant
        names.[1] CRIME_SERIAL_NO
        names.[2] CRIMINAL_NAME
-       names.[3] CRIMINAL_PID
+       names.[3] CRIMINAL_IDX
        names.[4] CRIME_TYPE
        names.[5] VICTIM_NAME
        names.[6] TICK UNTIL REMOVED FROM LIST
@@ -206,7 +206,7 @@ reset RESET_NOT
         [0] $crime
         [1] CRIME_SERIAL_NO
         [2] CRIMINAL_NAME
-        [3] CRIMINAL_PID
+        [3] CRIMINAL_IDX
         [4] CRIME_TYPE
         [5] VICTIM_NAME
         [6] TICK UNTIL REMOVED FROM LIST
@@ -825,7 +825,7 @@ external
    activate_accuse(witness : unitptr, crime_type : integer, criminal_name : string);
    string get_juris@justice();
 var
-   pid: integer;
+   pidx: integer;
    acc_cmd : string;
    ex_string : stringlist;
    jurisdiction : string;
@@ -843,12 +843,12 @@ code
    }
    jurisdiction := get_juris@justice();
 
-   pid := criminal.idx;
+   pidx := criminal.idx;
    addstring(ex_string,"$witness" );
    addstring(ex_string,criminal.name);
    addstring(ex_string,itoa(crime_no));
    addstring(ex_string,itoa(crime_type));
-   addstring(ex_string,itoa(pid));
+   addstring(ex_string,itoa(pidx));
    addstring(ex_string,itoa(12));
    addstring(ex_string,jurisdiction);
    addextra(witness.extra,ex_string ,criminal.name+" committed a crime.");
@@ -974,7 +974,7 @@ dilend
         [0] $crime
         [1] $crime_CRIME_SERIAL_NO
         [2] $crime_$crime_CRIMINAL_NAME
-        [3] $crime_CRIMINAL_PID
+        [3] $crime_CRIMINAL_IDX
         [4] $crime_CRIME_TYPE
         [5] $crime_VICTIM_NAME
         [6] $crime_TICK UNTIL REMOVED FROM LIST
@@ -1012,7 +1012,7 @@ var
    c_ptr : extraptr;
    w_type : string;
    c_name : string;
-   c_pid : string;
+   c_pidx : string;
    c_type : string;
    c_v_name : string;
    c_reported : string;
@@ -1110,7 +1110,7 @@ goto end;
  
       w_type := w_ptr.names.[3];
       c_name := c_ptr.names.[2];
-      c_pid := c_ptr.names.[3];
+      c_pidx := c_ptr.names.[3];
       c_type := c_ptr.names.[4]; 
       c_v_name := c_ptr.names.[5]; 
       c_is_npc := c_ptr.names.[7];
@@ -1144,7 +1144,7 @@ goto end;
 
          if (atoi(c_reported) == 0)
          {
-            update_criminal@justice(self, update_name, crime_type, atoi(c_pid), TRUE);
+            update_criminal@justice(self, update_name, crime_type, atoi(c_pidx), TRUE);
              c_ptr.names.[9] := itoa(1);
             if (atoi(c_type) == CRIME_MURDER)
                c_ptr.descr := "<a cmd='accuse # "+crime+"'>"+c_name+"</a> has been accused in the "+crime+" of "+c_v_name+". This crime was witnessed  by: "+activator.name+".";
@@ -1154,7 +1154,7 @@ goto end;
           }
          else
          {
-            update_criminal(self, update_name, crime_type, atoi(c_pid), FALSE);
+            update_criminal(self, update_name, crime_type, atoi(c_pidx), FALSE);
             c_ptr.descr := c_ptr.descr +"<br>This crime was also confirmed by "+activator.name+".";
             sendto("save", jd);
          }
