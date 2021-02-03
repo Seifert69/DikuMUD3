@@ -6937,11 +6937,16 @@ dilend
 #define  NOCOMM_QUEST  "$nocomm"
 #define  NO_NEWBIE_QUEST  "$nonewbie"
 
+//
+// MS2020: Rewritten to a) keep selected channels persistent on pc.info
+// and b) to hardcode into this function which channels to relay to Discord.
+//
 dilbegin aware unique recall fnpri(FN_PRI_SYS) channel();
 external
    recieve@function(slActive : stringlist, msg : string, talker : unitptr,
                     jmode:integer, dmode:integer);
 var
+   discordchn : stringlist;
    time_string:string;
    targ:unitptr;
    slActive : stringlist;
@@ -6955,6 +6960,7 @@ var
    x : integer;
    dmode : integer;
    jmode : integer;
+   exd : extraptr;
 
 code
 {
@@ -6962,12 +6968,29 @@ code
    nEcho := 1;
    dmode := 1;
    jmode := 1;
-   if (self.level>=200)
-      interrupt (SFB_CMD, (command ("nocomm") and (self==activator)),nochannel);
 
-   interrupt (SFB_CMD, (command ("noshout") and  (self==activator)),noshout);
-   interrupt (SFB_CMD, (command ("notell") and   (self==activator)),notell);
-   interrupt (SFB_DONE,((command ("tell")) and (self==target)),told);
+   // These are the hardcoded Discord channels
+   discordchn := {"newbie", "builder", "mud"};
+
+   // Initialize or get persistent channels
+   exd := "$channels" in self.info;
+   if (exd == null)
+   {
+      addextra(self.info, {"$channels"}, "");
+      exd := "$channels" in self.info;
+   }
+
+   log("Persistent exd.names.[0] = " + exd.names.[0]);
+      
+   slActive := exd.names;
+   substring(slActive, "$channels"); // Remove the extra prefix
+
+   if (self.level>=200)
+      interrupt (SFB_CMD, (command ("nocomm") and (self==activator)), nochannel);
+
+   interrupt (SFB_CMD, (command ("noshout") and  (self==activator)), noshout);
+   interrupt (SFB_CMD, (command ("notell") and   (self==activator)), notell);
+   interrupt (SFB_DONE,((command ("tell")) and (self==target)), told);
    interrupt (SFB_CMD, (command("comm") and
                         (("add" in argument) or
                         ("del" in argument)) and
@@ -7026,13 +7049,10 @@ code
    msg := argument;
    //log("argument = "+argument);
    s := "";
-   if ((excmdstr == "discord") and (argument != "#"))
+   if ((excmdstr in discordchn) and (argument != "#"))
    {
-      if (msg.[0] == "#")
-         s := getword(msg) + " ";
-
-      //log("msg to discord dispatch s=" +s+"  msg="+msg);
-      t := "discord msg "+s+"@" + self.name + " says, '" + msg + "'"; 
+      // Format: discord msg #<channelname> @<speakername> says, '<message>'
+      t := "discord msg #"+excmdstr+" @" + self.name + " says, '" + msg + "'"; 
       log("msg to dispatch=" +t);
       dispatch(t); // Send to dispatcher.py via pipeDispatcher      
    }
@@ -7087,7 +7107,13 @@ code
          act("Channel "+words.[1] + " Already Active!", A_SOMEONE, self, null, null, TO_CHAR);
          goto start;
       }
+
       addstring(slActive, words.[1]);
+
+      // Persist
+      exd := "$channels" in self.info;
+      addstring(exd.names, words.[1]);
+
       act("Channel "+words.[1]+" activated.", A_SOMEONE, self, null, null, TO_CHAR);
       msg := "CHANNEL " + words.[1] + " 1join1";
       sendtoalldil(msg, "channel@function");
@@ -7115,8 +7141,7 @@ code
    {
       if (not(words.[1] in slActive) )
       {
-		   act("Channel "+words.[1] + " is not on!",
-	      A_SOMEONE, self, null, null, TO_CHAR);
+		   act("Channel "+words.[1] + " is not on!", A_SOMEONE, self, null, null, TO_CHAR);
 			goto start;
 		}
       act("Channel "+words.[1]+" deactivated.", A_SOMEONE, self, null, null, TO_CHAR);
@@ -7127,6 +7152,9 @@ code
          recieve@function(slActive, msg, self,jmode,dmode);
       }
       substring(slActive, words.[1]);
+      // UnPersist
+      exd := "$channels" in self.info;
+      substring(exd.names, words.[1]);
    }
    else
    {
