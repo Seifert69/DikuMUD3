@@ -432,13 +432,13 @@ void dilfe_fld(register class dilprg *p)
         case DILV_UP:
             if (v1->val.ptr)
             {
-                v->atyp = DILA_NORM;
+                v->atyp = DILA_EXP;
                 v->type = DILV_SP;
 
                 static char buf[512];
                 sprintf(buf, "%s@%s", UNIT_FI_NAME((class unit_data *) v1->val.ptr), UNIT_FI_ZONENAME((class unit_data *) v1->val.ptr));
 
-                v->val.ptr = buf;
+                v->val.ptr = strdup(buf);
             }
             else
                 v->type = DILV_FAIL; /* not applicable */
