@@ -74,9 +74,11 @@ END HEADER*/
          <gold>
          <xp>
          <crime-severity-counter>
+         <descr>                  // A possible description to show to a char looking at it?
+                                  // Especially for baked quests
 
       $reward on the justice database really is just for purposes of a text display repository.
-      So the board entry would be:
+      Except for the wrinkle (see the end). So the board entry would be:
       
          $reward <symname> <idx>                  // See code examples
          $reward <symname> <idx> <jurisdiction> 
@@ -86,13 +88,13 @@ END HEADER*/
          <Ticks to expire>
          descr   
 
-      and a description to show to anyone looking at the board. 
+      and a description to show to anyone looking at the board.
       
       By adding "$reward symname idx" and "$reward symname idx jurisdiction" you can quite easily find
       or delete or search the $reward when someone turns in a reward, or easily lookup the char with 
       findsymbolc(symname, idx).
 
-      Code example:
+      Code example, someone turns in Papi's head:
 
          delextra("$reward papi 1 midgaard", criminal.extra); // Zaps it from the board
 
@@ -114,7 +116,8 @@ END HEADER*/
       SO if you give a head to the captain, first he might 
          delextra("$reward papi 1 midgaard", criminal.extra); // Zaps it from the board
 
-         and then if ("$reward" in head.extra) then there are more rewards left to claim.
+         and then if ("$reward" in head.extra) then there are more rewards left to claim
+         and he can return the head to the player / npc.
       ==============================
       $witness is placed only on a char. Any char with a $witness can go to the captain and
       accuse chars on its witness list. Captain will accept it as-is (not possible to cheat).
@@ -125,8 +128,10 @@ END HEADER*/
          <severity?>             // How much to add to the criminals crime-rate if reported
          descr                   // A nice text message to display of the crime? (including <a cmd='accuse ...'>)
 
-      When the reward severity is below the "crime" threshold the board would maybe just list
-      the character as being "on notice".
+      Once accused a $reward updated on the justice database (created if there is none) and
+      on the criminal char (see wrinkle).
+      When the reward severity is below the "crime" threshold the board (database) would maybe just list
+      the character as being "on notice"?
 
       If you accuse in the wrong jurisdiction the captain should say so and tell you where to go.
 
@@ -156,16 +161,21 @@ END HEADER*/
       a strong alternative to load & save.
 
       ====================================
+      This should be a LOT simpler and more game - fun too :-)
 
-      $crime in database@justice:
+      No more $crime.
+      $witness only on chars, not on the database
+      $reward on chars and the justice database.
 
-      [0] = "$crime" <symname> <idx>   e.g. "$crime papi@_players 1" or "$crime guard@midgaard 1239213918" 
-      [] = TICKS left until removed from list
-
-      [] = crime counter, integer. Default 0. E.g. 4,8,12,64,77, 128. Sum of reported crimes severity
-
-      Descr = A nice textual description of the crime. While crime counter is zero, you're a suspect only.
-      ============
+      $reward has a tick-remove counter on the board
+      $reward stays indefinitely on chars (until killed)
+      $witness probably doesn't need a tick-remove for NPCs
+      $witness would need a time-remove for PCs (maybe simply when a PC logs in we call a function in justice).
+         Perhaps use real-time for this rather than a tick counter.
+      ====================================
+      ====================================
+      ====================================
+      ====================================
 
       $crime : There are 9 names in each crime extra, three names in each entry. 
       They are as follows:
