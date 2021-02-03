@@ -487,6 +487,7 @@ var
    welcome : string;
    goodbye : string;
    s : string;
+   exd : extraptr;
 
 code
 {
@@ -517,7 +518,13 @@ code
       informer();
       login_modify(self);
       exec("look", self);
-      exec("comm add discord", self);
+
+      exd := "$channels" in self.info;
+      if (exd == null)
+      {
+         // Setup default comm channels
+         addextra(self.info, {"$channels", "newbie", "mud"}, "");
+      }
       quit;
    }
 
