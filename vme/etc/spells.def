@@ -904,7 +904,7 @@ profession priest       = +4
 
 /* - - - - Yet another definition of a spell - - - - */
 index           = SPL_UBLESS
-name            = bless
+name            = unholy blessing
 acttype         = A_SOMEONE
 tochar          = You lay hands on $3n and pray for an unholy blessing.
 tovict          = $1n lays hands on you and prays for an unholy blessing.
