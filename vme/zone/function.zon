@@ -6777,6 +6777,10 @@ code
 }
 dilend
 
+
+
+#define DISCORD_CHANNELS {"newbie", "builder", "mud"}
+
 /*
 function  Channel and recieve to be used together.
 
@@ -6851,14 +6855,15 @@ code
    }
 
    if (sKey == "@") {
-      if (sChan == "discord")
+      /*if xxx (sChan in DISCORD_CHANNELS)
       {
          sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " + msg+"</div><br/>",self );
       }
-      else if (self.level >= talker.minv) {
-         sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " +talker.name+ " "+msg+"</div><br/>",self );
+      else*/
+      if (self.level >= talker.minv) {
+         sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " +talker.name+ " "+msg+"</div><br/>", self );
       } else {
-         sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; Someone "+msg+"</div><br/>",self );
+         sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; Someone "+msg+"</div><br/>", self );
       }
    }
    else if (sKey == "#"){
@@ -6913,15 +6918,11 @@ code
    else
    {
       //log("Recieve else(): sKey="+sKey+" sChan="+sChan+" msg="+msg);
-      s := ""; 
-      if (sChan == "discord")
-         if (msg.[0] == "#")
-            s := getword(msg) + " ";
 
       if (self.level >= talker.minv) {
-         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; "+s+talker.name+" says '"+msg+"'</div><br/>",self);
+         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; "+talker.name+" says '"+msg+"'</div><br/>",self);
       } else {
-         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; "+s+"Someone says '" +msg+"'</div><br/>",self);
+         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; "+"Someone says '" +msg+"'</div><br/>",self);
       }
    }
 
@@ -6970,7 +6971,7 @@ code
    jmode := 1;
 
    // These are the hardcoded Discord channels
-   discordchn := {"newbie", "builder", "mud"};
+   discordchn := DISCORD_CHANNELS;
 
    // Initialize or get persistent channels
    exd := "$channels" in self.info;
