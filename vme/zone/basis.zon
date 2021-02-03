@@ -60,7 +60,7 @@ external
 
 code
 { 
-   log(self.name + " advanced to level " + itoa(self.level));
+   log(self.name + " advanced to level " + itoa(self.vlevel));
 
 
    adv_guild_lvl@g_q(self);
@@ -318,7 +318,6 @@ code
       i := dildestroy("stomach@update", self);
       dilcopy("stomach@update",self);
 
-      dilcopy("got_mail@mail()", self);
       dilcopy("fixwt@basis()", self);
       dilcopy("break_eq@basis()", self);
 
@@ -331,6 +330,8 @@ code
 
       login_scrub(self);
    }
+
+   dilcopy("got_mail@mail()", self);
 
    return;
 }
@@ -345,7 +346,8 @@ var
 
 code
 {
-   heartbeat := PULSE_SEC;
+   heartbeat := PULSE_SEC*30;
+   pause; // Take a 30 second break.
 
    sendto("linkdead", self);
 
@@ -470,7 +472,7 @@ code
 dilend
 
 
-dilbegin aware fnpri(FN_PRI_SYS) on_connect();
+dilbegin aware unique fnpri(FN_PRI_SYS) on_connect();
 external
    informer();
    login_modify(tgt : unitptr);
@@ -492,7 +494,7 @@ code
 
    err := loadstr("motd",motd);
 
-   if(err > 0)
+   if (err > 0)
    {
       motd := textformat(motd);
       sendtext(motd+"<br/>", self);
@@ -507,20 +509,19 @@ code
    s := dlrdump@commands("$trigger");
    sendtext(s, self);
 
-   login_modify(self);
-
-
    if (self.level < 200)
    {
       if(err > 0)
          sendtext("<br/>"+welcome+"<br/><br/>", self);
+      gamestate(self, GS_PLAY);
       informer();
+      login_modify(self);
       exec("look", self);
       exec("comm add discord", self);
       quit;
    }
 
-   gamestate(self, GS_MENU);
+   //gamestate(self, GS_MENU);
 
    :wiz_menu:
    sendtext("Welcome to Valhalla<br/><br/>", self);
@@ -532,10 +533,11 @@ code
 
    if (command("1"))
    {
-      gamestate(self, GS_PLAY);
       if(err > 0)
          sendtext("<br/>"+welcome+"<br/><br/>", self);
+      gamestate(self, GS_PLAY);
       informer();
+      login_modify(self);
       exec("look", self);
       quit;
    }
@@ -7566,6 +7568,63 @@ descr "A mindless zombie is roaming around here."
 extra {} "Disgusting!"
 M_ZOMBIE_SMALL(4,SEX_NEUTRAL)
 
+
+dilbegin findsymtest();
+var 
+   u : unitptr;
+   s : string;
+   i : integer;
+code
+{
+   heartbeat := PULSE_SEC * 10;
+   :loop:
+   wait(SFB_CMD, command("burp"));
+
+   log("activator = " + activator.symname + " idx = " + itoa(activator.idx));
+   log("self      = " + self.symname + " idx = " + itoa(self.idx));
+
+   if (self.symname == activator.symname)
+      log("Symname is identical");
+
+   if (self.idx == activator.idx)
+      log("Idx is identical");
+
+   u := findrndunit(self, FIND_UNIT_WORLD, UNIT_ST_NPC);
+   s := u.symname;
+   i := u.idx;
+
+   log("found " + s + " " + itoa(i));
+   pause;
+
+   u := findsymbolic(s, i);
+   s := u.symname;
+   i := u.idx;
+
+   log("found " + s + " " + itoa(i));
+   goto loop;
+}
+dilend
+
+
+
+dilbegin zonetest();
+var 
+   z : zoneptr;
+code
+{
+   :loop:
+   wait(SFB_CMD, command("smile"));
+   z := findzone("basis");
+
+   if (z == null)
+      log("no such zone");
+   else
+      log("found zone z = " + z.name);
+   goto loop;
+}
+dilend
+
+
 dilbegin dispatchtest();
 var 
   s : string;
@@ -7852,7 +7911,7 @@ code
 
    heartbeat := PULSE_SEC * 5;
    u1 := findrndunit(self, FIND_UNIT_WORLD, UNIT_ST_NPC);
-   if ((u1.idx == self.idx) or (u1 == null))
+   if ((u1 == self) or (u1 == null))
    {
       exec("shrug", self);
       pause;

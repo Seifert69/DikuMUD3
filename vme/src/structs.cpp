@@ -59,7 +59,6 @@ char_data::char_data(void)
 {
     world_nochars++;
 
-    specific.pc = NULL;
     money = NULL;
     descriptor = NULL;
     Combat = NULL;
@@ -86,6 +85,8 @@ char_data::~char_data(void)
 
 room_data::room_data(void)
 {
+    status = UNIT_ST_ROOM;
+
     world_norooms++;
     mapx = -1;
     mapy = -1;
@@ -105,6 +106,8 @@ room_data::~room_data(void)
 
 obj_data::obj_data(void)
 {
+    status = UNIT_ST_OBJ;
+
     world_noobjects++;
 
     memset(value, 0, sizeof(value));
@@ -123,6 +126,8 @@ obj_data::~obj_data(void)
 
 pc_data::pc_data(void)
 {
+    status = UNIT_ST_PC;
+
     world_nopc++;
 
     bank = NULL;
@@ -131,7 +136,7 @@ pc_data::pc_data(void)
     promptstr = NULL;
 
     memset(&setup, 0, sizeof(setup));
-    memset(&time, 0, sizeof(setup));
+    memset(&m_time, 0, sizeof(setup));
     memset(&account, 0, sizeof(setup));
 
     profession = -1;
@@ -181,6 +186,8 @@ pc_data::~pc_data(void)
 
 npc_data::npc_data(void)
 {
+    status = UNIT_ST_NPC;
+
     world_nonpc++;
 
     memset(weapons, 0, sizeof(weapons));
@@ -342,7 +349,7 @@ unit_data *unit_data::copy()
     unit_data *u;
     int x;
 
-    u = new EMPLACE(unit_data) unit_data(status);
+    u = new_unit_data(status);
 
     CByteBuffer abuf, fbuf;
     u->names.CopyList(&names);
@@ -377,34 +384,40 @@ unit_data *unit_data::copy()
 
     if (IS_ROOM(this))
     {
-        u->data.room->resistance = data.room->resistance;
-        u->data.room->movement_type = data.room->movement_type;
-        u->data.room->flags = data.room->flags;
+        room_data *thisroom = UROOM(this);
+        room_data *uroom = UROOM(u);
+        
+        uroom->resistance = thisroom->resistance;
+        uroom->movement_type = thisroom->movement_type;
+        uroom->flags = thisroom->flags;
         for (x = 0; x < MAX_EXIT+1; x++)
         {
-            u->data.room->dir_option[x]->open_name =
-                data.room->dir_option[x]->open_name;
-            u->data.room->dir_option[x]->key =
-                str_dup(data.room->dir_option[x]->key);
-            u->data.room->dir_option[x]->exit_info =
-                data.room->dir_option[x]->exit_info;
-            u->data.room->dir_option[x]->difficulty =
-                data.room->dir_option[x]->difficulty;
+            uroom->dir_option[x]->open_name =
+                thisroom->dir_option[x]->open_name;
+            uroom->dir_option[x]->key =
+                str_dup(thisroom->dir_option[x]->key);
+            uroom->dir_option[x]->exit_info =
+                thisroom->dir_option[x]->exit_info;
+            uroom->dir_option[x]->difficulty =
+                thisroom->dir_option[x]->difficulty;
         }
     }
     else if (IS_OBJ(this))
     {
+        obj_data *thisobj = UOBJ(this);
+        obj_data *uobj = UOBJ(u);
+
         for (x = 0; x < 5; x++)
         {
-            u->data.obj->value[x] = data.obj->value[x];
+            uobj->value[x] = thisobj->value[x];
         }
 
-        u->data.obj->cost = data.obj->cost;
-        u->data.obj->cost_per_day = data.obj->cost_per_day;
-        u->data.obj->flags = data.obj->flags;
-        u->data.obj->type = data.obj->type;
-        u->data.obj->equip_pos = data.obj->equip_pos;
-        u->data.obj->resistance = data.obj->resistance;
+        uobj->cost = thisobj->cost;
+        uobj->cost_per_day = thisobj->cost_per_day;
+        uobj->flags = thisobj->flags;
+        uobj->type = thisobj->type;
+        uobj->equip_pos = thisobj->equip_pos;
+        uobj->resistance = thisobj->resistance;
     }
     else if (IS_CHAR(this))
     {
@@ -456,11 +469,23 @@ unit_data *unit_data::copy()
 
 #endif
 
-unit_data::unit_data(ubit8 type)
+unit_data *new_unit_data(ubit8 type)
 {
-    status = type;
+   if (type == UNIT_ST_ROOM)
+      return new EMPLACE(room_data) room_data;
+   else if (type == UNIT_ST_OBJ)
+      return new EMPLACE(obj_data) obj_data;
+   else if (type == UNIT_ST_PC)
+      return new EMPLACE(pc_data) pc_data;
+   else if (type == UNIT_ST_NPC)
+      return new EMPLACE(npc_data) npc_data;
+   else
+      assert(FALSE);
+}
 
-    data.ch = NULL;
+
+unit_data::unit_data(void)
+{
     func = NULL;
     affected = NULL;
     fi = NULL;
@@ -486,22 +511,6 @@ unit_data::unit_data(ubit8 type)
     max_hp = 0;
     hp = 0;
     alignment = 0;
-
-    if (IS_ROOM(this))
-        U_ROOM(this) = new (class room_data);
-    else if (IS_OBJ(this))
-        U_OBJ(this) = new (class obj_data);
-    else if (IS_CHAR(this))
-    {
-        U_CHAR(this) = new (class char_data);
-
-        if (IS_PC(this))
-            U_PC(this) = new (class pc_data);
-        else
-            U_NPC(this) = new (class npc_data);
-    }
-    else
-        assert(FALSE);
 }
 
 unit_data::~unit_data(void)

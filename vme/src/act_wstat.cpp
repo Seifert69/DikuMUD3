@@ -949,9 +949,9 @@ static void stat_ip(const class unit_data *ch, class unit_data *u)
 }
 
 #define STR_DATA(num) \
-    (obj_data[idx].v[num] == 0 ? int_str[num] : (obj_data[idx].v[num] == 1 ? (OBJ_VALUE(u, num) ? sprinttype(NULL, OBJ_VALUE(u, num), g_SplColl.text) : "None") : (obj_data[idx].v[num] == 2 ? sprinttype(NULL, OBJ_VALUE(u, num), g_WpnColl.text) : "")))
+    (pobjdata[idx].v[num] == 0 ? int_str[num] : (pobjdata[idx].v[num] == 1 ? (OBJ_VALUE(u, num) ? sprinttype(NULL, OBJ_VALUE(u, num), g_SplColl.text) : "None") : (pobjdata[idx].v[num] == 2 ? sprinttype(NULL, OBJ_VALUE(u, num), g_WpnColl.text) : "")))
 
-char *stat_obj_data(class unit_data *u, struct obj_type_t *obj_data)
+char *stat_obj_data(class unit_data *u, struct obj_type_t *pobjdata)
 {
     static char result[512];
     char *special_str = NULL, int_str[5][32];
@@ -982,7 +982,7 @@ char *stat_obj_data(class unit_data *u, struct obj_type_t *obj_data)
     for (i = 0; i < 5; ++i) /* Init obj-value strings */
         sprintf(int_str[i], "%ld", (signed long)OBJ_VALUE(u, i));
 
-    sprintf(result, obj_data[idx].fmt,
+    sprintf(result, pobjdata[idx].fmt,
             STR_DATA(0), STR_DATA(1), STR_DATA(2), STR_DATA(3),
             STR_DATA(4), special_str);
 

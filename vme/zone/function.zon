@@ -217,7 +217,7 @@ var
 
 code
 {
-place:=self.outside.idx;
+   place := self.outside.idx;
 
 :start:
  wait (SFB_CMD, ((command ("close")) or

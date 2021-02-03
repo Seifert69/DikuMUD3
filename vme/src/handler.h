@@ -42,6 +42,8 @@ void destroy_fptr (class unit_data * u, class unit_fptr *f);
 
 void stop_following (class unit_data * ch);
 void start_following (class unit_data * ch, class unit_data * leader);
+void stop_snoopwrite(unit_data *unit);
+void stop_fightfollow(unit_data *unit);
 
 void modify_bright (class unit_data * unit, int bright);
 void trans_set (class unit_data * u);

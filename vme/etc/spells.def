@@ -904,7 +904,7 @@ profession priest       = +4
 
 /* - - - - Yet another definition of a spell - - - - */
 index           = SPL_UBLESS
-name            = bless
+name            = unholy blessing
 acttype         = A_SOMEONE
 tochar          = You lay hands on $3n and pray for an unholy blessing.
 tovict          = $1n lays hands on you and prays for an unholy blessing.
@@ -1114,7 +1114,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -2
-restrict divine         = 80
+restrict divine         = 25
 profession priest       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1440,7 +1440,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = -1
 race darkelf    = -2
-restrict divine         = 30
+restrict divine         = 20
 profession priest       = +5
 profession necromancer  = +2
 
@@ -1584,7 +1584,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = -1
 race darkelf    = -2
-restrict divine         = 12
+restrict divine         = 20
 profession priest       = +5
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -1619,7 +1619,7 @@ race half-elf   = 0
 race brownie    = +2
 race groll      = -1
 race darkelf    = +1
-restrict magic          =  5
+restrict magic          =  20
 profession mage         = +5
 profession sorcerer     = +3
 
@@ -3467,8 +3467,6 @@ profession priest       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
-/* - - - - Yet another definition of a spell - - - - */
-
 index           = SPL_INVISIBILITY
 name            = invisibility
 acttype         = A_SOMEONE
@@ -4560,6 +4558,7 @@ race half-elf   = 0
 race brownie    = +1
 race groll      = -2
 race darkelf    = +2
+auto teacher no add     =  1 // Don't add automatically
 
 
 index           = SPL_HOLD_MONSTER
@@ -4659,7 +4658,7 @@ race half-elf   = 0
 race brownie    = -2
 race groll      = -3
 race darkelf    = -3
-restrict divine         = 54
+restrict divine         = 25
 profession priest       = -3
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -4880,9 +4879,6 @@ race groll      = -3
 race darkelf    = -2
 restrict divine         = 40 // xxx
 
-
-
-/* - - - - Yet another definition of a spell - - - - */
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -5376,6 +5372,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = 0
+auto teacher no add     =  1 // Don't add automatically
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -5409,6 +5406,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
+auto teacher no add     =  1 // Don't add automatically
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -5440,6 +5438,7 @@ race half-elf   = 0
 race brownie    = +1
 race groll      = -3
 race darkelf    = +1
+auto teacher no add     =  1 // Don't add automatically
 
 index           = SPL_MAGIC_CANDLE
 name            = magic candle
@@ -5566,6 +5565,7 @@ race brownie    = 0
 race groll      = -2
 race darkelf    = -2
 restrict divine         = 40 // xxx
+auto teacher no add     =  1 // Don't add automatically
 
 /* Dispel a summoned creature */
 index           = SPL_BANISH
@@ -6188,7 +6188,7 @@ minpos          = POSITION_STANDING
 mana            = 25
 turns           = PULSE_SEC
 targets         = FIND_UNIT_ZONE + FIND_UNIT_WORLD + TAR_CHAR + TAR_OBJ+ TAR_ROOM + TAR_SELF_NONO
-mediums         = MEDIA_SPELL + MEDIA_SCROLL
+mediums         = MEDIA_SPELL + MEDIA_SCROLL + MEDIA_STAFF
 check           = SPLCST_RESIST
 offensive       = FALSE
 fumble          = 0
@@ -6238,7 +6238,7 @@ race brownie    = -1
 race groll      = -1
 race darkelf    = -2
 //restrict level          = 85
-restrict divine         = 105
+restrict divine         = 20
 profession paladin      = +0
 profession priest       = -3
 

@@ -17,21 +17,6 @@
 #include "db.h"
 
 int possible_saves = 0;
-FILE *log_file_fd = stderr;
-
-const char *fillwords[] = {
-    "a",
-    "an",
-    "at",
-    "from",
-    "in",
-    "on",
-    "of",
-    "the",
-    "to",
-    "with",
-    "into",
-    NULL};
 
 /* Used for converting general direction in dmc! */
 const char *dirs[] = {
@@ -267,13 +252,6 @@ void set_hits(class unit_data *obj, int craftsmanship)
 
         UNIT_HIT(obj) = UNIT_MAX_HIT(obj);
     }
-}
-
-/* ----------------------------------------------------------------- */
-
-int is_in(int a, int from, int to)
-{
-    return ((a >= from) && (a <= to));
 }
 
 /* WEAPONS                               */

@@ -20,6 +20,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include "interpreter.h"
 #include "structs.h"
 #include "utils.h"
 #include "system.h"
@@ -178,7 +179,7 @@ descriptor_data::descriptor_data(cMultiHook *pe)
     replyid = (ubit32)-1;
 
     /* Make a new PC struct */
-    character = new EMPLACE(unit_data) unit_data(UNIT_ST_PC);
+    character = new EMPLACE(pc_data) pc_data;
     init_char(character);
     CHAR_DESCRIPTOR(character) = this;
 
@@ -265,7 +266,7 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
     /* Descriptor must be either in the game (UNIT_IN) or in menu.  */
     /* If unit has been extracted, then all his data is half erased */
     /* (affects, etc) and he shall not be saved!                    */
-    if (!UNIT_IN(d->character)) /* In menu - extract completely */
+    if (!char_is_playing(d->character)) /* In menu - extract completely */
     {
         assert(!UNIT_IN(d->character));
         assert(!d->character->gnext);
@@ -290,11 +291,14 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
         d->editing = NULL;
         d->editref = NULL;
 
-        if (CHAR_IS_SNOOPING(d->character) || CHAR_IS_SNOOPED(d->character))
-            unsnoop(d->character, 1);
+        // Here we don't stop_fightfollow - do we ?
+        stop_snoopwrite(d->character);
 
-        if (CHAR_IS_SWITCHED(d->character))
-            unswitchbody(d->character);
+        //if (CHAR_IS_SNOOPING(d->character) || CHAR_IS_SNOOPED(d->character))
+        //    unsnoop(d->character, 1);
+
+        //if (CHAR_IS_SWITCHED(d->character))
+        //    unswitchbody(d->character);
 
         assert(!d->snoop.snooping && !d->snoop.snoop_by);
         assert(!d->original);
@@ -306,9 +310,8 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
 
         if (!d->character->is_destructed())
         {
-            void disconnect_game(class unit_data * pc);
-
-            disconnect_game(d->character);
+            if (IS_PC(d->character))
+                UPC(d->character)->disconnect_game();
             if (!bReconnect)
             {
                 if (!PC_IS_UNSAVED(d->character))
@@ -331,6 +334,7 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
                 }
                 else
                 {
+                    CHAR_DESCRIPTOR(d->character) = NULL; // Prevent counting down players, we did above
                     extract_unit(d->character); /* We extract guests */
                     possible_saves--;
                 }

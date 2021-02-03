@@ -918,7 +918,7 @@ code
 		here:=room.inside;
 		while ((here!=null) and (i<5))
 		{
-			if (here.idx==item.idx)i:=i+1;
+			if (here.symname == item.symname) i:=i+1;
 			here:=here.next;
 		}
 

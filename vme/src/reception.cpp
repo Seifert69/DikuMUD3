@@ -513,13 +513,18 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
         {
             if ((fi == NULL) || is_slimed(fi))
             {
-                pnew = read_unit(slime_fi);
+                slog(LOG_ALL, 0, "Sliming %s@%s for %s@%s", hn.unit, hn.zone, UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));                
+                pnew = read_unit(slime_fi);  // Inserts unit into glist
                 pnew_tmp = read_unit_string(&InvBuf, hn.type, hn.length, "preslime", FALSE);
+
                 if (g_nCorrupt)
                 {
                     slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
                     break;
                 }
+
+                if (pnew->fi == NULL)
+                    pnew->set_fi(slime_fi);
             }
             else
             {
@@ -540,8 +545,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
                 sprintf(buf, "The slimy remains of %s", TITLENAME(pnew_tmp));
                 UNIT_OUT_DESCR(pnew) = (buf);
                 UNIT_TITLE(pnew) = (buf);
-                UNIT_NAMES(pnew).PrependName(str_cc("slime of ",
-                                                    UNIT_NAME(pnew_tmp)));
+                UNIT_NAMES(pnew).PrependName(str_cc("slime of ", UNIT_NAME(pnew_tmp)));
                 delete pnew_tmp;
             }
         }

@@ -235,7 +235,7 @@ wait (SFB_DONE, (((self.outside==activator) and (self.equip!=0)) and
 item:=activator.inside;
 while (item!=null)
       {
-if ((item!=self) and (item.idx==self.idx))
+if ((item!=self) and (item.symname==self.symname))
     {
        if (item.equip!=0) unequip(item);
 act("The hand of an angry God takes the extra torcs from you.",

@@ -8,8 +8,6 @@
 #ifndef _MUD_COMMON_H
 #define _MUD_COMMON_H
 
-extern const char *fillwords[];
-
 extern struct wpn_info_type wpn_info[];
 
 extern const char *drinks[];
@@ -21,7 +19,6 @@ extern char libdir[64];
 int required_xp(int level);
 int level_xp(int level);
 
-int is_in(int a, int from, int to);
 void set_hits(class unit_data *obj, int craftsmanship);
 
 int skill_point_gain(void);
@@ -37,9 +34,9 @@ int buy_points(int points, int level, int *error);
 
 int hitpoint_total(int hpp);
 
-void set_weapon(class unit_data *);
-void set_shield(class unit_data *);
-void set_armour(class unit_data *);
+void set_weapon(class unit_data *o);
+void set_shield(class unit_data *o);
+void set_armour(class unit_data *o);
 
 /* ..................................................................... */
 /*                           A B I L I T I E S                           */

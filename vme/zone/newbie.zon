@@ -2593,7 +2593,7 @@ code
 
       :tick:
       wait(SFB_DONE|SFB_TICK, command ("say") and (pc==activator) and (("tour" in argument ) or ("help" in argument)));
-      if (command (CMD_AUTO_TICK) and (self.outside.idx==pc.outside.idx)) 
+      if (command (CMD_AUTO_TICK) and (self.outside == pc.outside)) 
          goto tick;
 
       if ("tour" in argument)

@@ -47,6 +47,8 @@ class descriptor_data *unit_is_edited(class unit_data *u)
 /* By using this, we can easily sort the list if ever needed */
 void insert_in_unit_list(class unit_data *u)
 {
+    assert(u->gnext == NULL && u->gprevious == NULL && unit_list != u);
+
     if (UNIT_FILE_INDEX(u))
         UNIT_FILE_INDEX(u)->fi_unit_list.push_front(u);
 
@@ -638,15 +640,18 @@ string unit_trace_up(class unit_data *unit)
 
 class unit_data *unit_room(class unit_data *unit)
 {
-    class unit_data *org = unit;
+   if (unit == NULL)
+      return NULL;
 
-    for (; unit; unit = UNIT_IN(unit))
-        if (IS_ROOM(unit))
-            return unit;
+   class unit_data *org = unit;
 
-    slog(LOG_ALL, 0, "ROOM: FATAL(3): %s@%s IN NO ROOMS WHILE NOT A ROOM!!",
-         UNIT_FI_NAME(org), UNIT_FI_ZONENAME(org));
-    return 0;
+   for (; unit; unit = UNIT_IN(unit))
+      if (IS_ROOM(unit))
+         return unit;
+
+   slog(LOG_ALL, 0, "ROOM: FATAL(3): %s@%s IN NO ROOMS WHILE NOT A ROOM!!",
+      UNIT_FI_NAME(org), UNIT_FI_ZONENAME(org));
+   return 0;
 }
 
 void intern_unit_up(class unit_data *unit, ubit1 pile)
@@ -895,13 +900,54 @@ void unswitchbody(class unit_data *npc)
     CHAR_DESCRIPTOR(npc) = NULL;
 }
 
+void stop_fightfollow(unit_data *unit)
+{
+    if (IS_CHAR(unit))
+    {
+      if (CHAR_FOLLOWERS(unit) || CHAR_MASTER(unit))
+         die_follower(unit);
+
+      stop_fighting(unit);
+    }
+}
+
+
+void stop_snoopwrite(unit_data *unit)
+{
+   // removed this statement: if (!IS_PC(unit) || UNIT_IN(unit))
+   //
+
+   class descriptor_data *d;
+   while ((d = unit_is_edited(unit)))
+   {
+      send_to_char("<br/>Unit was extracted, sorry.<br/>", d->character);
+      set_descriptor_fptr(d, descriptor_interpreter, FALSE);
+   }
+
+   if (IS_CHAR(unit))
+   {
+      if (CHAR_IS_SWITCHED(unit))
+         unswitchbody(unit);
+
+      /* If the PC which is switched is extracted, then unswitch */
+      if (IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
+         for (d = descriptor_list; d; d = d->next)
+            if (d->original == unit)
+            {
+               unswitchbody(d->character);
+               break;
+            }
+
+      if (CHAR_IS_SNOOPING(unit) || CHAR_IS_SNOOPED(unit))
+         unsnoop(unit, 1); /* Remove all snoopers */
+   }
+}
+
 
 /* Used when a unit is to be extracted from the game */
 /* Extracts recursively                              */
 void extract_unit(class unit_data *unit)
 {
-    class descriptor_data *d;
-
     extern class unit_data *destroy_room;
 
     void register_destruct(int i, void *ptr);
@@ -919,24 +965,21 @@ void extract_unit(class unit_data *unit)
     /* We can't extract rooms! Sanity, MS 300595, wierd bug... */
     assert(!IS_ROOM(unit));
 
-    if (IS_PC(unit) && UNIT_IN(unit) && (!PC_IS_UNSAVED(unit)))
-    {
-        save_player(unit);
-        save_player_contents(unit, TRUE);
-    }
+    if (IS_PC(unit))
+        UPC(unit)->gstate_tomenu(NULL);
 
     DeactivateDil(unit);
 
     unit->register_destruct();
 
-    if (UNIT_IS_EQUIPPED(unit))
-        unequip_object(unit);
+   if (UNIT_IS_EQUIPPED(unit))
+      unequip_object(unit);
 
     stop_all_special(unit);
     stop_affect(unit);
 
-    while (UNIT_CONTAINS(unit))
-        extract_unit(UNIT_CONTAINS(unit));
+   while (UNIT_CONTAINS(unit))
+      extract_unit(UNIT_CONTAINS(unit));
 
     /*	void unlink_affect(class unit_affected_type *af);
           while (UNIT_FUNC(unit))
@@ -946,55 +989,36 @@ void extract_unit(class unit_data *unit)
     	     unlink_affect(UNIT_AFFECTED(unit));
     */
 
-    if (!IS_PC(unit) || UNIT_IN(unit))
+    stop_fightfollow(unit);
+    stop_snoopwrite(unit);
+
+    if (IS_PC(unit) && CHAR_DESCRIPTOR(unit))
     {
-        while ((d = unit_is_edited(unit)))
-        {
-            send_to_char("<br/>Unit was extracted, "
-                         "sorry.<br/>",
-                         d->character);
-
-            set_descriptor_fptr(d, descriptor_interpreter, FALSE);
-        }
-
-        if (IS_CHAR(unit))
-        {
-            if (CHAR_IS_SWITCHED(unit))
-                unswitchbody(unit);
-
-            /* If the PC which is switched is extracted, then unswitch */
-            if (IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
-                for (d = descriptor_list; d; d = d->next)
-                    if (d->original == unit)
-                    {
-                        unswitchbody(d->character);
-                        break;
-                    }
-
-            if (CHAR_DESCRIPTOR(unit))
-            {
-                void disconnect_game(class unit_data * pc);
-
-                disconnect_game(unit);
-            }
-
-            if (CHAR_FOLLOWERS(unit) || CHAR_MASTER(unit))
-                die_follower(unit);
-
-            stop_fighting(unit);
-
-            if (CHAR_IS_SNOOPING(unit) || CHAR_IS_SNOOPED(unit))
-                unsnoop(unit, 1); /* Remove all snoopers */
-        }
-
-        if (UNIT_IN(unit))
-            unit_from_unit(unit);
-
-        unit_to_unit(unit, destroy_room);
-
-        /* Otherwise find_unit will find it AFTER it has been extracted!! */
-        remove_from_unit_list(unit);
+        UPC(unit)->disconnect_game();
     }
+
+    /*if (!IS_PC(unit) || UNIT_IN(unit))
+    {
+      if (UNIT_IN(unit))
+         unit_from_unit(unit);
+
+      unit_to_unit(unit, destroy_room);
+
+      // Otherwise find_unit will find it AFTER it has been extracted!!
+      remove_from_unit_list(unit);
+    }*/
+
+   if (UNIT_IN(unit))
+      unit_from_unit(unit);
+
+   if (!IS_PC(unit))
+   {
+      unit_to_unit(unit, destroy_room);  // Apparently dont place PCs in the destroy room
+
+      // Otherwise find_unit will find it AFTER it has been extracted!!
+      // Players are already removed from the list in gstate_tomenu()
+      remove_from_unit_list(unit);
+   }
 }
 
 /* ***********************************************************************

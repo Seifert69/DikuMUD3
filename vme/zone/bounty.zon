@@ -9,6 +9,9 @@ END HEADER*/
 
 #include <macros.h>
 
+#define JOIN_ONGOING "Becoming a Bounty Hunter"
+#define JOIN_COMPLETE "Bounty Hunters"
+
 /* ================================================================== */
 /*                                ZONE                                */
 /* ================================================================== */
@@ -34,13 +37,11 @@ competition zone infrastructure for future versions.
 
 "
 
-
 help
 "The Guild of the Bounty Hunters is an ancient institution that has survived 
 and indeed thrived on the outskirts of Midgaard. Wealthy patrons who need 
 something handled, a back-door to men of law finding their mark, and any 
 number of other needs have been brought before the bounty hunters."
-
 
 /* ================================================================== */
 /*                               DIL                                  */
@@ -48,12 +49,288 @@ number of other needs have been brought before the bounty hunters."
 
 %dil
 
-// use wtime command on local server to hyperwarp time for testing.
-// wtime 600 will zoom through 600 equivalent seconds, etc.
+dilbegin join();
+var
+  pc: unitptr;
+  exdp: extraptr;
+
+code
+{
+	heartbeat:= PULSE_SEC*4;
+
+:start:
+	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(JOIN_ONGOING in activator.quests)) and (not(JOIN_COMPLETE in activator.quests)) and (activator.position == POSITION_STANDING));
+
+	
+	pc := activator;
+	secure(pc, lostpc);
+	exdp := "$daily_max" in pc.extra;
+	if((atoi(exdp.descr) < 30) or (exdp == null))
+		goto start;
+	
+    pause;
+	exec("hmm",self);
+	pause;
+    exec("say Perhaps, you could be worthy.", self);
+    pause;
+	exec("say It is no small feat to close 30 consecutive daily bounties.", self);
+	pause;
+	exec("say It shows a certain commitment to our way.", self);
+	pause;
+	exec("say For a hundred generations we've filled this role.", self);
+	pause;
+	exec("say There have been times of harship, but the guild has maintained an unbroken line.", self);
+	pause;
+	exec("emote looks at you long and hard.", self);
+	pause;
+	exec("say I wonder.", self);
+	pause;
+	exec("say Do you think yourself up to the task of joining our ranks?", self);
+
+:accept_rogue:
+
+	wait(SFB_CMD, activator #= pc);
+	if (command("nod"))
+		goto rogue_accepted; 
+	else if (command("shake"))
+		goto no_quest;
+	else
+	{
+		exec("say Nod your head if you think yourself up to the challenge.", self);
+		goto accept_rogue;
+	}
+
+:no_quest:
+
+	exec("say So be it!", self);
+	unsecure(pc);
+	goto start;
+
+:rogue_accepted:
+
+	pause;
+	exec("say The journey will be long and challenging.", self);
+	pause;
+	exec("say You will have to prove yourself time and again to the guild.", self);
+	pause;
+	exec("say I can't tell you much more, only that this way of life will change you.", self);
+	pause;
+	exec("say Go now, and pray at the Hunters Shrine.", self);
+	addextra(pc.quests, {JOIN_ONGOING}, "");
+
+	unsecure(pc);
+	goto start;	
+:lostpc:
+
+	exec("sigh", self);
+	goto start;
+}
+dilend // END join
+
+
+dilbegin pray();
+var
+  pc: unitptr;
+  exdp: extraptr;
+
+code
+{
+	heartbeat:= PULSE_SEC*4;
+
+:start:
+	wait(SFB_CMD, command("pray") and ((JOIN_ONGOING in activator.quests) or (JOIN_COMPLETE in activator.quests)));
+	
+	// add a function to block access while PK flag is set.
+	
+	block;
+	pc := activator;
+	
+	act("You kneel and begin to pray.",A_ALWAYS, pc, null, null, TO_CHAR); 
+	act("$1n kneels and begins to pray.",A_SOMEONE, pc, null, null, TO_REST);
+	pause;
+	act("As you pray, a sense of purpose builds within you.",A_ALWAYS, pc, null, null, TO_CHAR); 	
+	pause;
+	act("The light of the candles slowly stops its flickering, and steadies.",A_ALWAYS, pc, null, null, TO_ROOM); 
+	pause;
+	act("The candle light begins to intensify, the formerly dark room is now bright as day.",A_ALWAYS, pc, null, null, TO_ROOM);
+	pause;
+	act("The world around you begins to dissolve.",A_ALWAYS, pc, null, null, TO_CHAR); 
+	pause;
+	act("There is a <div class='cpy'>bright flash</div>!",A_ALWAYS, pc, null, null, TO_ROOM);
+	pause;
+	link(pc,findroom("sanctum@bounty"));
+	act("The candle light returns to its flickering.",A_ALWAYS, pc, null, null, TO_ROOM); 
+	goto start;
+}
+dilend
+
+dilbegin pray2();
+var
+  pc: unitptr;
+  exdp: extraptr;
+
+code
+{
+	heartbeat:= PULSE_SEC*4;
+
+:start:
+	wait(SFB_CMD, command("pray") and ((JOIN_ONGOING in activator.quests) or (JOIN_COMPLETE in activator.quests)));
+	block;
+	pc := activator;
+	
+	act("You kneel and begin to pray.",A_ALWAYS, pc, null, null, TO_CHAR); 
+	act("$1n kneels and begins to pray.",A_SOMEONE, pc, null, null, TO_REST);
+	pause;
+	act("There is a <div class='cpw'>cold draft</div>.",A_ALWAYS, pc, null, null, TO_ROOM);
+	pause;
+	link(pc,findroom("shrine@bounty"));
+	act("The room returns to normal.",A_ALWAYS, pc, null, null, TO_ROOM); 
+	goto start;
+}
+dilend
+
+dilbegin feast();
+var
+	pc : unitptr;
+	u : unitptr;
+code
+{
+	heartbeat:=PULSE_SEC*6;
+	
+:start:
+	
+	wait(SFB_CMD, ( (activator.type == UNIT_ST_PC) and (command("feast")) and ((JOIN_ONGOING in pc.quests) or (JOIN_COMPLETE in pc.quests)))) ;
+
+	pc:= activator;
+	secure(pc,lostpc);
+	block;
+	
+	act("You sit and partake in the hunters feast.",A_ALWAYS, pc, null, null, TO_CHAR);
+	act("$1n sits and partakes in the hunters feast.",A_ALWAYS, pc, null, null, TO_REST);
+	pause;
+	if(not("$feasted" in pc.extra))
+	{
+		act("You have an uneasy feeling that you're being watched.",A_ALWAYS, pc, null, null, TO_CHAR);
+		pause;
+		act("As you continue eating the feeling grows stronger.",A_ALWAYS, pc, null, null, TO_CHAR);
+		pause;
+		act("You suddenly realize, that you are not alone.",A_ALWAYS, pc, null, null, TO_CHAR);
+		u := load("guide@bounty");
+		goto lostpc;
+	}
+	act("You finish eating, and take a moment to rest.",A_ALWAYS, pc, null, null, TO_CHAR);
+	exec("rest",pc);
+	pause;
+	pc.hp := pc.max_hp;
+	pc.endurance := pc.max_endurance;
+	pc.mana := pc.max_mana;
+	pc.full:=24;
+	pc.thirst:=24;
+	act("You feel fully restored.",A_ALWAYS, pc, null, null, TO_CHAR);
+	
+	:lostpc:
+	unsecure(pc);
+	goto start;
+}
+dilend
+
+dilbegin expel();
+var
+	pc:unitptr;
+code
+{
+	heartbeat := PULSE_SEC;
+	
+:start:
+	
+	wait(SFB_PRE, command(CMD_AUTO_DAMAGE) and (target == self));
+
+	pc:= activator;
+	secure(pc,lostpc);
+	
+	exec("say It is a special kind of fool who would attack me here.",self);
+	pause;
+	act("$1n gestures, and the world fades.",A_SOMEONE, self, pc, null, TO_CHAR);
+	act("$1n gestures, and $2n begins to fade.",A_SOMEONE, self, pc, null, TO_CHAR);
+	pc.hp := 0;
+	pc.endurance := 0;
+	pc.mana := 0;
+	subextra(pc.extra, "$daily_streak");
+	position_update(pc);
+	link(pc,findroom("entry_room@bounty"));
+:lostpc:
+	unsecure(pc);
+	goto start;
+}
+dilend
+
+dilbegin guide();
+var
+	pc:unitptr;
+code
+{
+	heartbeat:=PULSE_SEC*4;
+	
+:start:
+	
+	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (JOIN_ONGOING in pc.quests) and (not("$feasted" in pc.extra)));
+
+	pc:= activator;
+	secure(pc,lostpc);
+	
+	exec("say Please, dont let me interrupt you partaking of this feast.", self);
+	pause;
+	exec("say After all, it was prepared just for your arrival.", self);
+	pause;
+	exec("say I do however have... questions for you.", self);
+	pause;
+	exec("say The Bounty Hunters have been here for a period of time which extends beyond our records.", self);
+	pause;
+	exec("say Indeed, The Historian believes this collective has existed since before ANY written records.", self);
+	pause;
+	exec("say You may leave here at any time. Resume your prayers in the Inner Sanctum, and they will return you to the world outside.", self);
+	pc.hp := pc.max_hp;
+	pc.endurance := pc.max_endurance;
+	pc.mana := pc.max_mana;
+	pc.full:=24;
+	pc.thirst:=24;
+	act("You feel fully restored.",A_ALWAYS, pc, null, null, TO_CHAR);
+	addextra(pc.extra,{"$feasted"},"0");
+	position_update(pc);
+	
+:lostpc:
+
+	unsecure(pc);
+	goto start;
+}
+dilend
+
+dilbegin integer dateformat (s : string);
+var
+	i : integer;
+	buf : string;
+	slbuf : stringlist;
+code
+{
+	buf := "";
+	slbuf := split(s,".");
+	i := 0;
+	while (i < length(slbuf))
+	{
+		if (atoi(slbuf.[i]) < 10)
+			slbuf.[i] := "0" + slbuf.[i];
+		buf := buf + slbuf.[i];
+		i := i + 1;
+	}
+	i := atoi(buf);
+	return (i);
+}
+dilend
 
 dilbegin make_bounty();
- 
- var 
+external
+	integer dateformat@bounty (s : string);
+var 
 	item 	: unitptr;
 	pc 		: unitptr;
 	exdp   	: extraptr; 
@@ -71,11 +348,13 @@ dilbegin make_bounty();
 	slextra : stringlist;
 	estreak : extraptr;
 	which   : string;
+	idate	: integer;
+	ibdate	: integer;
+	sltemp  : stringlist;
 code
 {
 :init:
 
-	heartbeat := PULSE_SEC;
 	slmonth := {"Skip","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 	slfmonth := {"Skip","January","February","March","April","May","June","July","August","September","October","November","December"};
 	blocked := {"basis","death","spells","skills","commands","baseget","basemove","wiz","baselook",
@@ -86,12 +365,13 @@ code
 
 :start:
 
-	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (command("say")) and ("contract" in argument) );
+	heartbeat := PULSE_SEC;
+	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (command("say")) and 
+		(("contract" == argument) or ("daily contract" == argument) or ("monthly contract" == argument) or ("bonus contract" == argument)));
 	
 	arg := argument;
 	pc := activator;
 	secure(pc, start);
-	block;
 	
 	if(pc.level < 50)
 	{
@@ -101,6 +381,12 @@ code
 
 	slextra := {""};
 	sltime := split(asctime(realtime), " "); 
+
+	// This is to fix an apparent bug where an extra space in the asctime output can result in
+	// an empty string being populated into the stringlist, fucking up the parsing.
+	while ("" in sltime)
+		substring(sltime,"");
+
 	i := 0;
 	while(i <= 12)
 	{
@@ -121,20 +407,28 @@ code
 		arg := "monthly";
 		goto this_bounty;
 	}
+	if(arg == "bonus contract")
+	{
+		arg := "bonus";
+		goto this_bounty;
+	}
 	
 	exec("Say So "+pc.name+" you'd like to see a contract.", self);	
 	pause;
 	
 :which_bounty:
 	
-	exec("Say Would you like the daily or monthly?", self);	
-	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (command("say")) and (("daily" in argument) or ("monthly" in argument)));
+	exec("Say Would you like the daily, monthly, or a bonus contract?", self);	
+	exec("Say You may also shake your head to decline.", self);
+	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and ((command("say")) and (("daily" in argument) or ("monthly" in argument) or ("bonus" in argument)))  or (command("shake")));
 	
-	arg := argument;
-	pause;
+	if (command ("shake"))
+		goto decline;
+	
+	arg := getword(argument);
 
 :this_bounty:
-	
+	pause;
 	if (arg == "daily")
 	{
 		exdp := pc.extra.["$daily_target"];
@@ -148,6 +442,13 @@ code
 		slextra.[0] := "$monthly_target";
 		which := arg;
 	}
+	else if (arg == "bonus")
+	{
+		sdate := "bonus";
+		exdp := pc.extra.["$bonus_target"];
+		slextra.[0] := "$bonus_target";
+		which := arg;
+	}
 	else
 		goto which_bounty;
 	
@@ -156,9 +457,18 @@ code
 	if(exdp != null)
 	{
 		dspl := split(exdp.descr, "|");
+		ibdate := dateformat(dspl.[0]);
+		idate := dateformat(sdate);
 		if (dspl.[0] == sdate)
+		{
+			if((sdate == "bonus") and ("DONE" in dspl))
+				goto new_target;
+			else if(sdate == "bonus")
+				goto skip_bonus;
 			goto have_bounty;
-		if(not("DONE" in dspl))	
+		}
+		
+		if((not("DONE" in dspl)) or (idate > ibdate+2))	
 		{
 			estreak := pc.extra.["$"+which+"_streak"];
 			if (estreak != null)
@@ -175,6 +485,9 @@ code
 :new_target:
 	targ := findrndunit(pc,FIND_UNIT_WORLD,UNIT_ST_NPC);
 	if (targ.zoneidx in blocked)
+		goto new_target;
+	if (((targ.race > RACE_CNIDARIA_MIN) and (targ.race <= RACE_CNIDARIA_MAX)) or
+       ((targ.race > RACE_PLANT_MIN) and (targ.race <= RACE_PLANT_MAX)))
 		goto new_target;
 	addextra (pc.extra,slextra,sdate + "|" + targ.symname + "|" + targ.title);
 	exec("Say Here you go "+pc.name+", a "+which+" contract.", self);	
@@ -203,6 +516,44 @@ code
 	exec("say Bugger off! You've already taken a "+which+" contract.",self);
 	goto the_end;
 	
+:skip_bonus:
+	
+	exec("say You've already taken a "+which+" contract.",self);
+	exec("say Are you suggesting that you'd like to abandon this one, and get another?",self);
+	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (command("nod") or command("shake")));
+	
+	pc := activator;
+	
+	if (command ("shake"))
+		goto decline;
+	
+	if(command ("nod"))
+	{
+		heartbeat := PULSE_SEC/4;
+		pause;
+		exec("cackle",self);
+		experience(-20000,pc);
+		subextra(pc.extra, "$bonus_target");
+		act("<div class='xpgain'>You have lost 20000 experience points!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		if(not("$bounty_points" in pc.extra))
+			addextra (pc.extra,{"$bounty_points"},"0");	
+		if(atoi(pc.extra.["$bounty_points"].descr) > 5)
+		{
+			act("<div class='xpgain'>You have lost 5 bounty points!</div>",A_ALWAYS, pc, null, null, TO_CHAR);
+			pc.extra.["$bounty_points"].descr := itoa(atoi(pc.extra.["$bounty_points"].descr)-5);
+		}
+		else
+		{
+			act("<div class='xpgain'>You have lost "+pc.extra.["$bounty_points"].descr+" bounty points!</div>",A_ALWAYS, pc, null, null, TO_CHAR);
+			pc.extra.["$bounty_points"].descr := "0"; 
+		}
+		goto the_end;
+	}
+	
+:decline:
+	heartbeat := PULSE_SEC/4;
+	pause;
+	exec("Say Very well then.", self);
 :the_end:
 	unsecure(pc);
 	goto start;
@@ -216,17 +567,20 @@ var
 	med 	: unitptr;
 	edaily 	: extraptr;
 	emonth  : extraptr;
+	ebonus  : extraptr;
 	estreak : extraptr;
 	etotal 	: extraptr;
 	emax    : extraptr;
 	smtarg	: string;
 	sdtarg	: string;
+	sbtarg  : string;
 	sdone	: string;
 	sdate   : string;
 	etarg 	: extraptr;
 	slmonth : stringlist;
 	sldt	: stringlist;
 	slmt	: stringlist;
+	slbt	: stringlist;
 	slstr   : stringlist;
 	sltot   : stringlist;
 	slnew	: stringlist;
@@ -234,6 +588,8 @@ var
 	i   	: integer;
 	targ    : unitptr;
 	rwrd    : integer;
+	arg 	: string;
+	bp		: integer;
 code
 {
 :init:
@@ -251,6 +607,40 @@ code
 	
 	slnew := {""};
 	substring (slnew,"");
+	if ((self.inside.symname == "mulligan@bounty") and (self.inside.symname == med.symname))
+	{
+		exec("snicker",self);
+		exec("say So you need to be freed from your contract "+pc.name+"?",self);
+		exec("say It seems your... documentation is in order. Just say 'daily' or 'monthly' and it will be ended.",self);
+		wait(SFB_CMD, (activator.type == UNIT_ST_PC) and ((command("say")) and (("daily" == argument) or ("monthly" == argument))));
+	
+		arg := argument;
+		pause;
+		if (arg == "daily")
+		{			
+			if("DONE" in pc.extra.["$daily_target"].descr)
+			{
+				exec("say Your daily contract is already closed "+pc.name+"!",self);
+				exec("give mulligan "+pc.name, self);
+				goto start;
+			}
+			subextra(pc.extra, "$daily_target");
+		}
+		else if (arg == "monthly")
+		{
+			if("DONE" in pc.extra.["$monthly_target"].descr)
+			{
+				exec("say Your monthly contract is already closed "+pc.name+"!",self);
+				exec("give mulligan "+pc.name, self);
+				goto start;
+			}
+			subextra(pc.extra, "$monthly_target");
+		}
+		
+		destroy(self.inside);
+		exec("say Consider the contract forgotten "+pc.name+".",self);
+		goto start;
+	}
 	
 	if((self.inside.symname != "head@death") and (self.inside.symname == med.symname))
 	{
@@ -261,11 +651,16 @@ code
 	
 	edaily := pc.extra.["$daily_target"];
 	emonth := pc.extra.["$monthly_target"];
+	ebonus := pc.extra.["$bonus_target"];
 	sldt := split(edaily.descr,"|");
 	slmt := split(emonth.descr,"|");
+	slbt := split(ebonus.descr,"|");
 	sdtarg := sldt.[2];
 	smtarg := slmt.[2];
-	sltime := split(asctime(realtime), " ");
+	sbtarg := slbt.[2];
+	sltime := split(asctime(realtime), " ");	
+	while ("" in sltime)
+		substring(sltime,"");
 	i := 0;
 	while(i <= 12)
 	{
@@ -325,6 +720,31 @@ code
 			emax := pc.extra.["$monthly_max"];
 		}
 	}
+	else if ("The decapitated head of "+sbtarg+" is laying here." == self.inside.outside_descr)
+	{
+		etarg := ebonus;
+		emax := pc.extra.["$bonus_max"];
+		estreak := pc.extra.["$bonus_streak"];
+		etotal := pc.extra.["$bonus_total"];
+		sdone := "bonus";
+		sdate := sltime.[4] + "." + itoa(i) + "." + sltime.[2];
+
+		if (estreak == null)
+		{
+			addextra (pc.extra,{"$bonus_streak"},"0");
+			estreak := pc.extra.["$bonus_streak"];
+		}
+		if (etotal == null)
+		{
+			addextra (pc.extra,{"$bonus_total"},"0");
+			etotal := pc.extra.["$bonus_total"];
+		}
+		if (emax == null)
+		{
+			addextra (pc.extra,{"$bonus_max"},"0");
+			emax := pc.extra.["$bonus_max"];
+		}
+	}
 	else
 	{
 		exec("cackle",self);
@@ -337,17 +757,18 @@ code
 		slstr := split(etarg.descr, "|");
 		if("DONE" in slstr)
 			goto already_done;
+		if(not("bonus" in slstr))
+			if (slstr.[0] != sdate)
+				goto already_done;
 		
-		if (slstr.[0] != sdate)
-			goto already_done;
-		
+	destroy(self.inside);	
 	
 	// increment pointers as necessary
 	
 	estreak.descr := itoa(atoi(estreak.descr) + 1);
 	etotal.descr := itoa(atoi(etotal.descr) + 1);
 	etarg.descr := etarg.descr + "|DONE";
-	if(atoi(estreak.descr) > atoi(emax.descr))
+	if((atoi(estreak.descr) > atoi(emax.descr)) and (sdone != "bonus"))
 		emax.descr := estreak.descr;
 	
 	
@@ -448,6 +869,17 @@ leverage the competition boards. Will investigate.
 			rwrd := rwrd * (i * 3);
 		else if (i >= 300)
 			rwrd := rwrd * (i * 4);
+		
+		bp := 2;
+		
+		// streak milestone rewards
+		if(i == 14)
+		{
+			exec("say I've included a little something for making 14 daily contracts in a row.",self);
+			bp := bp * 2;
+			rwrd := rwrd * (3/2);
+		}
+		
 	}
 	else if (sdone == "monthly")
 	{
@@ -462,6 +894,29 @@ leverage the competition boards. Will investigate.
 			rwrd := rwrd * (i * 3);
 		else if (i >= 20)
 			rwrd := rwrd * (i * 4);
+		
+		bp := 10;
+		// streak milestone rewards
+		if(i == 6)
+		{
+			exec("say I've included a little something for making 6 monthly contracts in a row.",self);
+			bp := bp * 2;
+			rwrd := rwrd * (3/2);
+		}
+	}
+	else if (sdone == "bonus")
+	{
+		// base value in XP.
+		// cash reward will be iron = xp value / 2
+		rwrd := 5000;	
+		bp := 1;
+		// streak milestone rewards
+		if((i == 10) or (i == 20) or (i == 30) or (i == 40) or (i == 50))
+		{
+			exec("say I've included a little something for making "+itoa(i)+" bonus contracts in a row.",self);
+			bp := 2;
+			rwrd := rwrd * (3/2);
+		}
 	}
 	
 	act("<br>$2n hands you some coins.",A_SOMEONE, pc, self, null, TO_CHAR);
@@ -469,6 +924,13 @@ leverage the competition boards. Will investigate.
 	experience(rwrd, pc);
 	act("<br><div class='hint'>Contract Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 	act("<div class='xpgain'>You recieve "+itoa(rwrd)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+	if(not("$bounty_points" in pc.extra))
+		addextra (pc.extra,{"$bounty_points"},"0");	
+	pc.extra.["$bounty_points"].descr := itoa(atoi(pc.extra.["$bounty_points"].descr)+bp);
+	if(bp == 1)
+		act("<div class='xpgain'>You recieve "+itoa(bp)+" bounty point.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+	else
+		act("<div class='xpgain'>You recieve "+itoa(bp)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 	goto labsecure;
 	// End reward section // 
 	
@@ -487,18 +949,265 @@ leverage the competition boards. Will investigate.
 }
 dilend		
 
+dilbegin restore_pot(aff : string, strength : string);
+var
+	pc : unitptr;
+code
+{
+	wait(SFB_CMD, command("quaff") and ("potion" in argument));
+	pc := activator;
+
+	if(aff == "restore")
+	{
+		if(strength == "full")
+		{
+			pc.hp := pc.max_hp;
+			pc.endurance := pc.max_endurance;
+			pc.mana := pc.max_mana;
+		}
+		else if(strength == "strong")
+		{
+			if(pc.hp < ((pc.max_hp / 4)*3))
+				pc.hp := ((pc.max_hp / 4)*3);
+			if(pc.endurance < ((pc.max_endurance / 4)*3))
+				pc.endurance := ((pc.max_endurance / 4)*3);
+			if(pc.mana < ((pc.max_mana / 4)*3))
+				pc.mana := ((pc.max_mana / 4)*3);
+		}
+		else if(strength == "half")
+		{
+			if(pc.hp < (pc.max_hp / 2))
+				pc.hp := (pc.max_hp / 2);
+			if(pc.endurance < (pc.max_endurance / 2))
+				pc.endurance := (pc.max_endurance / 2);
+			if(pc.mana < (pc.max_mana / 2))
+				pc.mana := (pc.max_mana / 2);
+		}
+	}
+	else if (aff == "hp")
+	{
+		if(strength == "full")
+			pc.hp := pc.max_hp;
+		else if(strength == "strong")
+		{
+			if(pc.hp < ((pc.max_hp / 4)*3))
+				pc.hp := pc.hp + ((pc.max_hp / 4)*3);
+		}
+		else if(strength == "half")
+		{
+			if(pc.hp < (pc.max_hp / 2))
+				pc.hp := pc.hp + (pc.max_hp / 2);
+		}
+	}
+	else if (aff == "endurance")
+	{
+		if(strength == "full")
+			pc.endurance := pc.max_endurance;
+		else if(strength == "strong")
+		{
+			if(pc.endurance < ((pc.max_endurance / 4)*3))
+				pc.endurance := pc.endurance + ((pc.max_endurance / 4)*3);
+		}
+		else if(strength == "half")
+		{
+			if(pc.endurance < (pc.max_endurance / 2))
+				pc.endurance := pc.endurance + (pc.max_endurance / 2);
+		}
+	}
+	else if (aff == "mana")
+	{
+		if(strength == "full")
+			pc.mana := pc.max_mana;
+		else if(strength == "strong")
+		{
+			if(pc.mana < ((pc.max_mana / 4)*3))
+				pc.mana := pc.mana + ((pc.max_mana / 4)*3);
+		}
+		else if(strength == "half")
+		{
+			if(pc.mana < (pc.max_mana / 2))
+				pc.mana := pc.mana + (pc.max_mana / 2);
+		}
+	}
+	quit;
+}
+dilend
+
+dilbegin hint (which : string, htype : string);
+var
+	pc : unitptr;
+	zn : string;
+	exdp : extraptr;
+	zp : zoneptr;
+	slt : stringlist;
+	uhin : unitptr;
+	sdate : string;
+	targ : unitptr;
+code
+{
+:start:
+	wait(SFB_CMD, (command("look")) and ("hint" in argument));
+	pc := activator;
+	zp := zhead();
+	heartbeat := PULSE_SEC;
+	if(which == "d")
+		exdp :=  pc.extra.["$daily_target"];
+	else if(which == "m")
+		exdp :=  pc.extra.["$monthly_target"];
+	slt := split(exdp.descr,"|");
+	if(slt.[3] == "DONE")
+	{
+		act("You can only use your hint on an open contract!",A_SOMEONE, pc, self, null, TO_CHAR);
+		block;
+		goto start;
+	}
+	sdate := slt.[0];
+	targ := findsymbolic(slt.[1]);
+	zn := targ.zoneidx;
+	self.extra.[0].descr := self.extra.[0].descr + 
+	"<br><div class='cpw'>Contract Date: </div><div class='cpc'>" + sdate +
+	"<br><div class='cpw'>Target Name: </div><div class='cpc'>" + targ.name + 
+	"<br><div class='cpw'>Target Alias: </div><div class='cpc'>" + targ.title + 
+	"<br><div class='cpw'>Target Description: </div><div class='cpc'> " + targ.outside_descr;
+	while (zp)
+	{
+		if(zp.name == zn)
+		{
+			slt := split(zp.title,"@");
+			if(htype == "z" )
+			{
+				self.extra.[0].descr := self.extra.[0].descr + 
+				"<br><div class='cpw'>Zone Name: </div><div class='cpc'>" + slt.[0];
+			}
+			else if(htype == "c")
+			{
+				self.extra.[0].descr := self.extra.[0].descr + 
+				"<br><div class='cpw'>Continent Name: </div><div class='cpc'>" + slt.[1];
+			}
+			pause;
+			quit;
+		}
+		zp := zp.next;
+	}
+	quit;
+}
+dilend
+
+
+dilbegin shoplist(items : stringlist);
+var
+	pc : unitptr;
+	i : integer;
+	ln : integer;
+	buf : string;
+	j : integer;
+	bp : string;
+	uitem : unitptr;
+code
+{
+:init:
+
+	heartbeat := PULSE_SEC;
+	
+	ln:=length(items);
+	buf:="<h1><div class='cpn'Bounty Hunters Guild Shop</div></h1>";
+	buf:=buf+"<table><tr><th>Item #</th><th>Item Name</th><th>Bounty Points</th></tr>";
+	i := 0;
+	j := 1;
+	while(i < (ln-2))
+	{
+		buf:=buf+"<tr><td>"+itoa(j)+"</td><td>"+items.[i+1]+"</td><td>"+items.[i+2]+"</td></tr>";
+		i := i+3;
+		j := j+1;
+	}
+
+:start:
+
+	wait(SFB_CMD, (command("list")));
+	block;
+	pc := activator;
+	if(not("$bounty_points" in pc.extra))
+		addextra (pc.extra,{"$bounty_points"},"0");
+	bp := pc.extra.["$bounty_points"].descr;
+	bp := "</table><br><div class='cpc'>You have "+bp+" Bounty Points available.</div>";
+	sendtext(buf+bp,pc);
+	goto start;
+}
+dilend
+
+dilbegin shopbuy(items : stringlist);
+var
+	pc : unitptr;	
+	i : integer;
+	ln : integer;
+	j : integer;
+	bp : string;
+	ibp : integer;
+	uitem : unitptr;
+	arg : string;
+code
+{
+:init:
+
+	heartbeat := PULSE_SEC;
+	
+	ln:=length(items);
+	i := 0;
+	j := 1;
+	while(i < (ln-2))
+	{
+		i := i+3;
+		j := j+1;
+	}
+	
+:start:
+	
+	wait(SFB_CMD, (command("buy")));
+	block;
+	
+	pc := activator;
+	arg := getword(argument);
+	if(not("$bounty_points" in pc.extra))
+		addextra (pc.extra,{"$bounty_points"},"0");
+	bp := pc.extra.["$bounty_points"].descr;
+	ibp := atoi(bp);
+	i := 0;
+	j := 1;
+	while(i < (ln-2))
+	{
+		if(atoi(arg) == j)
+		{
+			if(atoi(items.[i+2]) <= ibp)
+			{
+				ibp := ibp - atoi(items.[i+2]);
+				pc.extra.["$bounty_points"].descr := itoa(ibp);
+				uitem := load(items.[i]+"@bounty");
+				link(uitem, pc);
+				exec("say Here is your "+uitem.name+" "+pc.name+"!",self);
+			}
+			else
+				exec("say You don't have "+items.[i+2]+" bounty points "+pc.name+"!",self);
+			goto start;
+		}
+		i := i+3;
+		j := j+1;
+	}
+	exec("say Please select an item number from the list.",self);
+	goto start;
+}
+dilend
 
 %rooms
 
 entry_room
-names {"contracts"}
 title "<div class='cpn'>Entrance to Bounty Hunters Guild</div>"
 descr
-"Stepping out from bustle of Kings Road, the entrance to the Bounty Hunters Guild 
-is a distinct change of environment. The large stone building extends high into the air 
-and has a commanding presence. Tall trees provide ample shade during the bright days, 
-and plenty of routes to approach... quietly. It seems that there has been significant wealth brought to 
-the guild over many generations. A large set of double-doors extend into the darkness."
+"Stepping out from bustle of Kings Road, the entrance to the Bounty Hunters 
+Guild is a distinct change of environment. The large stone building extends 
+high into the air and has a commanding presence. Tall trees provide ample 
+shade during the bright days, and plenty of routes to approach... quietly. 
+It seems that there has been significant wealth brought to the guild over 
+many generations. A large set of double-doors extend into the darkness."
 
 movement SECT_CITY
 flags {UNIT_FL_NO_MOB}
@@ -510,24 +1219,105 @@ south to kingroad5@ratswarf;
 end
 
 bounty_1
-title "Inside the Guild"
+title "<div class='cpn'>Inside the Guild</div>"
 descr
-"Through the large double-doors the quiet of this space encompasses you. While the building 
-is largely unadorned and simple rough-hewn stone. The sheer size and scale of the place speak 
-to the significant investments that have been made over many years. Back to the south the 
-outdoors and access to Kings Road can be seen in the distance."
+"Through the large double-doors the quiet of this space encompasses you. While 
+the building is largely unadorned and simple rough-hewn stone. The sheer size 
+and scale of the place speak to the significant investments that have been 
+made over many years. To the east and west more rooms expand into the vast hall, 
+and to the south the outdoors and access to Kings Road can be seen in the distance."
 flags {UNIT_FL_INDOORS}
 movement SECT_CITY
 ALWAYS_LIGHT
 
 south to entry_room;
+west to contracts;
+east to shop;
+north to shrine;
+
+end
+
+shop
+title "<div class='cpn'>The Guild Shop</div>"
+descr
+"The many wares which are made available to guild members can be seen adorning 
+nearly every wall and visible surface. From potions and tinctures, to notes and 
+papers, and even jewely and weapons, there is an impressive array available. 
+There is a large counter which has been cleared to make way for transaction"
+flags {UNIT_FL_INDOORS}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+west to bounty_1;
+
+end
+
+contracts
+names {"contracts"}
+title "<div class='cpn'>The Contracts Room</div>"
+descr
+"Here away from the main hall of the guild, a quiet room filled with maps 
+is in front of you. On every wall and table a map of a different part of 
+the world sits. A large desk can be seen in the middle of the room, 
+providing ample space for managing the myriad contracts the guild processes. 
+Behind the desk darkness overcomes what light the torches shed."
+flags {UNIT_FL_INDOORS}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+east to bounty_1;
+
+end
+
+shrine
+title "<div class='cpn'>The Bounty Hunters Shrine</div>"
+descr
+"In the back of the great hall, a peaceful shrine pays homage to the gods 
+of the hunt. Candles burn at the base of shrine, sending their flickering 
+light into the darkness. Incense burns alongside the candles, and the 
+scent brings visions of both frenzied chase, and gratifying calm."
+flags {UNIT_FL_INDOORS, UNIT_FL_SACRED}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+south to bounty_1;
+
+dilcopy pray();
+
+end
+
+sanctum
+title "<div class='cpn'>The Inner Sanctum</div>"
+descr
+"This is the Inner Sanctum of the Bounty Hunters."
+flags {UNIT_FL_INDOORS, UNIT_FL_SACRED, UNIT_FL_NO_TELEPORT}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+dilcopy pray2();
+
+north to sanctum_1;
+
+end
+
+sanctum_1
+title "<div class='cpn'>The Inner Sanctum</div>"
+descr
+"This is the Inner Sanctum of the Bounty Hunters."
+flags {UNIT_FL_INDOORS, UNIT_FL_SACRED, UNIT_FL_NO_TELEPORT}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+dilcopy feast();
+
+south to sanctum;
 
 end
 
 %mobiles
 
 hunter
-names {"bounty hunter","hunter"}    
+names {"bounty hunter","hunter","man"}    
 title "the bounty hunter"        
 descr "A tall man with a dark smirk stands in the shadows."
 extra{}
@@ -540,6 +1330,89 @@ position POSITION_STANDING
 
 dilcopy make_bounty@bounty();
 dilcopy claim_bounty();
+dilcopy join();
+
+end 
+
+shopkeep
+names {"shopkeeper","dwarf"}    
+title "the guild shopkeeper"        
+descr "A girthy dwarf with a warm smile stands behind the counter."
+extra{}
+"Girthy, and apparently not unfamiliar with his wine, the shopkeeper nevertheless 
+seems to be rather friendly. Simply ask for his list to select from the guild wares." 
+
+alignment 0
+M_AVG_DWARF(100,SEX_MALE)
+position POSITION_STANDING 
+
+dilcopy shoplist@bounty({"full_restore","Potion of Full Restoration","100",
+						"strong_restore","Potent Potion of Restoration","75",
+						"half_restore","Potion of Restoration","50",
+						"full_mana","Potion of Full Mana","40",
+						"strong_mana","Potent Potion of Mana","30",
+						"half_mana","Potion of Mana","20",
+						"full_end","Potion of Full Endurance","40",
+						"strong_end","Potent Potion of Endurance","30",
+						"half_end","Potion of Endurance","20",
+						"full_heal","Potion of Full Healing","40",
+						"strong_heal","Potent Potion of Healing","30",
+						"half_heal","Potion of Healing","20",
+						"mulligan","Contract Breaking Note","100",
+						"dz_hint","Daily Hint - Zone","50",
+						"dc_hint","Daily Hint - Continent","20",
+						"mz_hint","Monthly Hint - Zone","50",
+						"mc_hint","Monthly Hint - Continent","20"});
+dilcopy shopbuy@bounty({"full_restore","Potion of Full Restoration","100",
+						"strong_restore","Potent Potion of Restoration","75",
+						"half_restore","Potion of Restoration","50",
+						"full_mana","Potion of Full Mana","40",
+						"strong_mana","Potent Potion of Mana","30",
+						"half_mana","Potion of Mana","20",
+						"full_end","Potion of Full Endurance","40",
+						"strong_end","Potent Potion of Endurance","30",
+						"half_end","Potion of Endurance","20",
+						"full_heal","Potion of Full Healing","40",
+						"strong_heal","Potent Potion of Healing","30",
+						"half_heal","Potion of Healing","20",
+						"mulligan","Contract Breaking Note","100",
+						"dz_hint","Daily Hint - Zone","50",
+						"dc_hint","Daily Hint - Continent","20",
+						"mz_hint","Monthly Hint - Zone","50",
+						"mc_hint","Monthly Hint - Continent","20"});
+
+end 
+
+guide
+names {"hunters guide","guide","woman"}    
+title "the hunters guide"        
+descr "A dark-cloaked woman is here, in the shadows."
+extra{}
+"Not much can be seen of the woman under the dark cloak. A strength can be felt 
+as you gaze upon her. It would be wise to choose your words carefully." 
+
+alignment -1000
+M_AVG_ELF(100,SEX_FEMALE)
+position POSITION_STANDING 
+
+dilcopy expel();
+dilcopy guide();
+
+end 
+
+historian
+names {"the historian","historian","centaur"}    
+title "The Historian"        
+descr "An aged centaur stands here with a look of knowing."
+extra{}
+"Tall and powerful despite clearly showing the signs of significant age, 
+The Historian is a somewhat mysterious creature. Not much is known 
+about him, except that he has served the Hunters Guild longer than any
+other living beings." 
+
+alignment 0
+M_UNICORN_XLARGE(100,SEX_MALE)
+position POSITION_STANDING 
 
 end 
 
@@ -552,6 +1425,7 @@ descr "A crisp paper is here."
 extra {}
 "<div class='cr'>REWARD!!</div><br>"
 manipulate {MANIPULATE_TAKE}
+weight 1
 cost 1 IRON_PIECE
 end
 
@@ -607,7 +1481,264 @@ extra {}
 ""
 end
 
+//////////////////////////////////////////////////////////////////
+//          special rewards and items for bounties.             //
+//////////////////////////////////////////////////////////////////
+
+full_restore
+names {"potion of full restoration","full restoration","potion"}
+title "a potion of full restoration"
+descr "A potion of full restoration is here."
+extra {}
+"A clear glass vial contains a glowing multi-colored substance. It 
+appears to be a highly potent potion of restoration."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("restore","full");
+
+end
+
+strong_restore
+names {"potent potion of restoration","potent restoration","potion"}
+title "a potent potion of restoration"
+descr "A potent potion of restoration is here."
+extra {}
+"A clear glass vial contains a glowing multi-colored substance. It 
+appears to be a potent potion of restoration."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("restore","strong");
+
+end
+
+half_restore
+names {"potion of restoration","restoration","potion"}
+title "a potion of restoration"
+descr "A potion of restoration is here."
+extra {}
+"A clear glass vial contains a glowing multi-colored substance. It 
+appears to be a potion of restoration."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("restore","half");
+
+end
+
+full_heal
+names {"potion of full healing","full healing","potion"}
+title "a potion of full healing"
+descr "A potion of full healing is here."
+extra {}
+"A clear glass vial contains a glowing red substance. It appears 
+to be a highly potent potion of healing."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("hp","full");
+
+end
+
+strong_heal
+names {"potent potion of healing","potent healing","potion"}
+title "a potent potion of healing"
+descr "A potent potion of healing is here."
+extra {}
+"A clear glass vial contains a glowing red substance. It appears 
+to be a potent potion of healing."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("hp","strong");
+
+end
+
+half_heal
+names {"potion of healing","healing","potion"}
+title "a potion of healing"
+descr "A potion of healing is here."
+extra {}
+"A clear glass vial contains a glowing red substance. It appears 
+to be a potion of healing."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("hp","half");
+
+end
+
+full_end
+names {"potion of full endurance","full endurance","potion"}
+title "a potion of full endurance"
+descr "A potion of full endurance is here."
+extra {}
+"A clear glass vial contains a glowing green substance. It appears 
+to be a highly potent potion of endurance."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("endurance","full");
+
+end
+
+strong_end
+names {"potent potion of endurance","potent endurance","potion"}
+title "a potent potion of endurance"
+descr "A potent potion of endurance is here."
+extra {}
+"A clear glass vial contains a glowing green substance. It appears 
+to be a potent potion of endurance."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("endurance","strong");
+
+end
+
+half_end
+names {"potion of endurance","endurance","potion"}
+title "a potion of endurance"
+descr "A potion of endurance is here."
+extra {}
+"A clear glass vial contains a glowing green substance. It appears 
+to be a potion of endurance."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("endurance","half");
+
+end
+
+full_mana
+names {"potion of full mana","full mana","potion"}
+title "a potion of full mana"
+descr "A potion of full mana is here."
+extra {}
+"A clear glass vial contains a glowing blue substance. It appears 
+to be a highly potent potion of mana."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("mana","full");
+
+end
+
+strong_mana
+names {"potent potion of mana","potent mana","potion"}
+title "a potent potion of mana"
+descr "A potent potion of mana is here."
+extra {}
+"A clear glass vial contains a glowing blue substance. It appears 
+to be a potent potion of mana."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("mana","strong");
+
+end
+
+half_mana
+names {"potion of mana","mana","potion"}
+title "a potion of mana"
+descr "A potion of mana is here."
+extra {}
+"A clear glass vial contains a glowing blue substance. It appears 
+to be a potion of mana."
+manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
+weight 1
+cost 1 IRON_PIECE
+type ITEM_POTION
+
+dilcopy restore_pot@bounty("mana","half");
+
+end
+
+
+mulligan
+names {"contract breaker","note","mulligan"}
+title "a contract breaking note"
+descr "A contract breaking note is here."
+extra {}
+"This note, when given to the bounty hunter, allows you to break from a single contract."
+manipulate {MANIPULATE_TAKE}
+weight 1
+cost 1 IRON_PIECE
+end
+
+mc_hint
+names {"monthly continent hint","hint"}
+title "a monthly continent hint"
+descr "A monthly continent hint is here."
+extra {}
+"<div class='cpc'>HINT!!</div><br>"
+manipulate {MANIPULATE_TAKE}
+dilcopy hint@bounty("m","c");
+weight 1
+cost 1 IRON_PIECE
+end
+
+mz_hint
+names {"monthly zone hint","hint"}
+title "a monthly zone hint"
+descr "A monthly zone hint is here."
+extra {}
+"<div class='coc'>HINT!!</div><br>"
+manipulate {MANIPULATE_TAKE}
+dilcopy hint@bounty("m","z");
+weight 1
+cost 1 IRON_PIECE
+end
+
+dc_hint
+names {"daily continent hint","hint"}
+title "a daily continent hint"
+descr "A daily continent hint is here."
+extra {}
+"<div class='cpc'>HINT!!</div><br>"
+manipulate {MANIPULATE_TAKE}
+dilcopy hint@bounty("d","c");
+weight 1
+cost 1 IRON_PIECE
+end
+
+dz_hint
+names {"daily zone hint","hint"}
+title "a daily zone hint"
+descr "A daily zone hint is here."
+extra {}
+"<div class='coc'>HINT!!</div><br>"
+manipulate {MANIPULATE_TAKE}
+dilcopy hint@bounty("d","z");
+weight 1
+cost 1 IRON_PIECE
+end
+
 %reset
-load hunter into bounty_1 max 1
+load hunter into contracts max 1
+load shopkeep into shop max 1
 
 %end

@@ -7691,94 +7691,118 @@ dilend
 
 
 
+// Needs to be aware for the external call to on_conect() which will wait for menu input
+//
+dilbegin aware do_quit(arg : string);
+external
+   on_connect@basis();
 
-dilbegin do_quit(arg : string);
 var
-err : integer;
-
-goodbye : string;
- tt:integer;
- minutes:integer;
- seconds:integer;
-u : unitptr;
-quit_str:string;
+   err : integer;
+   goodbye : string;
+   tt:integer;
+   minutes:integer;
+   seconds:integer;
+   u : unitptr;
+   quit_str:string;
 
 code
 {
-         if (quit_str=="logging on")
-          quit;
+   if (quit_str=="logging on")
+      quit;
 
-heartbeat := PULSE_SEC;
+   heartbeat := PULSE_SEC;
 
-if (excmdstr!="quit"){
-	sendtext ("You must type 'quit' no less to quit!<br/>",self);
-	quit;
-	}
+   if (excmdstr != "quit")
+   {
+      // MS2020: This is hard to understand :-) But if you're immortal and you quit to the menu
+      // (look below). Then eventually you char gets saved with this do_quit DIL. When the char 
+      // is loaded the program runs again, e.g. triggered by the on_connect exec("look"). 
+      // Since the DIL doesn't recall (it probably shouldnt because it would recall in the external
+      // funciton). Then I add this little hack to gracefully quit the do_quit without the odd
+      // error message.
+      //
+      if (excmdstr.[0] != "q")
+         quit;
 
-
-if(self.type != UNIT_ST_PC) quit;
-if(self.position == POSITION_FIGHTING)
-{
- sendtext("Not while fighting!<br/>", self);
- quit;
-}
-
-
-tt:=atoi(self.extra.["$PK_TIMER"].descr);
-if(realtime-tt>600)
-goto cont_quit;
-seconds:=0;
-minutes:=0;
-seconds:=realtime-tt;
-seconds:=600-seconds;
-minutes:=seconds/60;
- sendtext("You are not permitted to log off so soon after a PK fight.<br/>",self);
-
-if (minutes<1){
-if (seconds==1)
-sendtext ("You have 1 more second before you can log off.<br/>",self);
-	else
-                 sendtext ("You have "+itoa(seconds)+" more seconds before you can log off.<br/>",self);
-				 quit;
-				 }
-else
- {
- seconds :=seconds-(minutes*60);
-if ((minutes==1) and (seconds==1))
-sendtext ("You have 1 minute and 1 second before you can log off.<br/>",self);
-else if (minutes==1)
-sendtext ("You have 1 minute and "+itoa(seconds)+" seconds before you can log off.<br/>",self);
-else if (seconds==1)
-sendtext ("You have "+itoa(minutes)+" minutes and 1 second before you can log off.<br/>",self);
-else
-sendtext ("You have "+itoa(minutes)+" minutes and "+itoa(seconds)+" seconds before you can log off.<br/>",self);
- quit;
-}
-
-:cont_quit:
-foreach(UNIT_ST_PC,u)
-{
-
- if(u != self)
- {
-  if(visible(u,self))
-   sendtext(self.name+" has left the game.<br/>",u);
- }
-}
+      sendtext ("You can't just type ["+excmdstr+"] you must type 'quit' no less to quit!<br/>",self);
+      quit;
+   }
 
 
-err := loadstr("goodbye",goodbye);
+   if(self.type != UNIT_ST_PC) 
+      quit;
 
-if(err > 0)
-{
-        goodbye := textformat(goodbye);
-        sendtext("<br/><br/>"+goodbye, self);
-}
+   if(self.position == POSITION_FIGHTING)
+   {
+      sendtext("Not while fighting!<br/>", self);
+      quit;
+   }
 
-sendtext("Goodbye, friend.. Come back soon!<br/>", self);
-quit_str:="logging on";
-gamestate(self, GS_QUIT);
-quit;
+   tt:=atoi(self.extra.["$PK_TIMER"].descr);
+   if(realtime-tt>600)
+      goto cont_quit;
+
+   seconds:=0;
+   minutes:=0;
+   seconds:=realtime-tt;
+   seconds:=600-seconds;
+   minutes:=seconds/60;
+
+   sendtext("You are not permitted to log off so soon after a PK fight.<br/>",self);
+
+   if (minutes<1){
+      if (seconds==1)
+         sendtext ("You have 1 more second before you can log off.<br/>",self);
+      else
+         sendtext ("You have "+itoa(seconds)+" more seconds before you can log off.<br/>",self);
+      quit;
+   }
+   else
+   {
+      seconds :=seconds-(minutes*60);
+      if ((minutes==1) and (seconds==1))
+         sendtext ("You have 1 minute and 1 second before you can log off.<br/>",self);
+      else if (minutes==1)
+         sendtext ("You have 1 minute and "+itoa(seconds)+" seconds before you can log off.<br/>",self);
+      else if (seconds==1)
+         sendtext ("You have "+itoa(minutes)+" minutes and 1 second before you can log off.<br/>",self);
+      else
+         sendtext ("You have "+itoa(minutes)+" minutes and "+itoa(seconds)+" seconds before you can log off.<br/>",self);
+      quit;
+   }
+
+   :cont_quit:
+   foreach(UNIT_ST_PC,u)
+   {
+      if(u != self)
+      {
+         if(visible(u,self))
+         sendtext(self.name+" has left the game.<br/>",u);
+      }
+   }
+
+   if (u.level < 200)
+   {
+      err := loadstr("goodbye",goodbye);
+
+      if(err > 0)
+      {
+         goodbye := textformat(goodbye);
+         sendtext("<br/><br/>"+goodbye, self);
+      }
+
+      sendtext("Goodbye, friend.. Come back soon!<br/>", self);
+      quit_str:="logging on";
+      gamestate(self, GS_QUIT);
+   }
+   else
+   {
+      gamestate(self, GS_MENU);
+      //dilcopy("on_connect@basis", self);
+      on_connect@basis();
+   }
+   quit;
 }
 dilend
 
@@ -13568,7 +13592,7 @@ code
 
       while ((here!=null) and (i<5))
       {
-         if (here.idx==item.idx)
+         if (here.symname==item.symname)
             i:=i+1;
          here:=here.next;
       }

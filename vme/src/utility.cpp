@@ -21,6 +21,18 @@
 #include "interpreter.h"
 #include "db_file.h"
 
+
+FILE *log_file_fd = stderr;
+
+
+/* ----------------------------------------------------------------- */
+
+int is_in(int a, int from, int to)
+{
+    return ((a >= from) && (a <= to));
+}
+
+
 #ifndef HPUX
 int MIN(int a, int b)
 {

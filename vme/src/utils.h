@@ -35,11 +35,11 @@ extern const sbit8 time_light[];
 /*  Do NOT use these macros unless you know PRECISELY what you are doing!!!
  *  and only if you have to assign directly to them (as in db_utils.c)
  */
-#define U_CHAR(u)   ((u)->data.ch)
-#define U_NPC(u)    (U_CHAR(u)->specific.npc)
-#define U_PC(u)     (U_CHAR(u)->specific.pc)
-#define U_OBJ(u)    ((u)->data.obj)
-#define U_ROOM(u)   ((u)->data.room)
+#define U_CHAR(u)   ((char_data *) (dynamic_cast<const char_data *>(u)))
+#define U_NPC(u)    ((npc_data *) (dynamic_cast<const npc_data *>(u)))
+#define U_PC(u)     ((pc_data *) (dynamic_cast<const pc_data *>(u)))
+#define U_OBJ(u)    ((obj_data *) (dynamic_cast<const obj_data *>(u)))
+#define U_ROOM(u)   ((room_data *) (dynamic_cast<const room_data *>(u)))
 
 #ifdef MUD_DEBUG
 #define DEBUG_HISTORY
@@ -190,10 +190,10 @@ extern const sbit8 time_light[];
    ((unit)->fi->zone)
 
 #define UNIT_FI_ZONENAME(unit)   \
-   (FI_ZONENAME(UNIT_FILE_INDEX(unit)))
+   (UNIT_FILE_INDEX(unit) ? FI_ZONENAME(UNIT_FILE_INDEX(unit)) : "NO-ZONE")
 
 #define UNIT_FI_NAME(unit)   \
-   (FI_NAME(UNIT_FILE_INDEX(unit)))
+   (UNIT_FILE_INDEX(unit) ? FI_NAME(UNIT_FILE_INDEX(unit)) : "NO-NAME")
 
 #define UNIT_WEAR(unit, part)    \
    (IS_SET(UNIT_MANIPULATE(unit), part))
@@ -554,7 +554,7 @@ extern int sunlight;
   (UPC(unit)->flags)
 
 #define PC_TIME(unit)  \
-   (UPC(unit)->time)
+   (UPC(unit)->m_time)
 
 #define PC_HOME(ch)     \
    (UPC(ch)->hometown)

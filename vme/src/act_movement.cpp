@@ -43,6 +43,7 @@
 
 #include "structs.h"
 #include "utils.h"
+#include "utility.h"
 #include "skills.h"
 #include "textutil.h"
 #include "comm.h"

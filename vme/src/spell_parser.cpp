@@ -632,6 +632,12 @@ static void spell_read(void)
             if (is_in(dummy, 0, 1))
                 g_SplColl.tree[idx].bAutoTrain = dummy;
         }
+        else if (strncmp(pTmp, "auto teacher no add", 19) == 0)
+        {
+            dummy = atoi(pCh);
+            if (is_in(dummy, 0, 1))
+                g_SplColl.tree[idx].bAutoTeacherNoAdd = dummy;
+        }
         else if (strncmp(pTmp, "shield", 6) == 0)
         {
             dummy = atoi(pCh);
@@ -819,6 +825,7 @@ static void spell_init(void)
 
         g_SplColl.tree[i].parent = SPL_ALL;
         g_SplColl.tree[i].bAutoTrain = TRUE;
+        g_SplColl.tree[i].bAutoTeacherNoAdd = FALSE;
 
         if (i < SPL_GROUP_MAX)
             g_SplColl.tree[i].isleaf = FALSE;

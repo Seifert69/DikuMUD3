@@ -35,31 +35,6 @@ class descriptor_data *find_descriptor(const char *name, class descriptor_data *
     return NULL;
 }
 
-/*  Top is the size of the array (minimum 1).
- *  Returns pointer to element of array or null.
- *  Perhaps an index vs. -1 would be better?
- */
-struct bin_search_type *binary_search(struct bin_search_type *ba, const char *str, register int top)
-{
-    register int mid = 0, bot, cmp;
-
-    cmp = 1; /* Assume no compare                        */
-    bot = 0; /* Point to lowest element in array         */
-    top--;   /* Point to top element in array [0..top-1] */
-
-    while (bot <= top)
-    {
-        mid = (bot + top) / 2;
-        if ((cmp = strcmp(str, ba[mid].compare)) < 0)
-            top = mid - 1;
-        else if (cmp > 0)
-            bot = mid + 1;
-        else /* cmp == 0 */
-            break;
-    }
-
-    return (cmp ? 0 : &ba[mid]);
-}
 
 /* Find a named zone */
 class zone_type *find_zone(const char *zonename)
@@ -80,19 +55,27 @@ class zone_type *find_zone(const char *zonename)
     return ba ? (class zone_type *)ba->block : NULL;*/
 }
 
-/* Zonename & name must point to non-empty strings */
+/* Zonename & name must point to non-empty strings. Must be lower case */
 class file_index_type *find_file_index(const char *zonename, const char *name)
 {
     class zone_type *zone;
-    //struct bin_search_type *ba;
 
     if (!*name)
         return NULL;
 
-    if ((zone = find_zone(zonename)) == NULL)
+    char bufzone[MAX_STRING_LENGTH];
+    char bufname[MAX_STRING_LENGTH];
+
+    strcpy(bufzone, zonename);
+    str_lower(bufzone);
+
+    if ((zone = find_zone(bufzone)) == NULL)
         return NULL;
 
-    auto it = zone->mmp_fi.find(name);
+    strcpy(bufname, name);
+    str_lower(bufname);
+
+    auto it = zone->mmp_fi.find(bufname);
 
     if (it != zone->mmp_fi.end())
       return it->second;
@@ -106,7 +89,7 @@ class file_index_type *find_file_index(const char *zonename, const char *name)
 }
 
 /* Zonename & name must point to non-empty strings */
-struct diltemplate *find_dil_index(char *zonename, char *name)
+struct diltemplate *find_dil_index(const char *zonename, const char *name)
 {
     class zone_type *zone;
     //struct bin_search_type *ba;

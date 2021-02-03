@@ -478,14 +478,17 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
       FREE(cmd_ptr->excmdc);
 }
 
-int char_is_playing(class unit_data *u)
-{
-   return UNIT_IN(u) != NULL;
-}
 
 int descriptor_is_playing(class descriptor_data *d)
 {
    return d && d->character && char_is_playing(d->character);
+}
+
+
+// If unit is linked in the global list then it's in the game
+int char_is_playing(class unit_data *u)
+{
+   return (u->gnext || u->gprevious || (unit_list == u));
 }
 
 void descriptor_interpreter(class descriptor_data *d, char *arg)
@@ -633,8 +636,9 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt,
    extern class unit_data *unit_list;
    class file_index_type *fi;
 
-   if (ch->is_destructed())
+   if (ch && ch->is_destructed())
       return SFR_SHARE;
+
    if (extra_target)
    {
       if (extra_target->is_destructed())
@@ -652,6 +656,8 @@ int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt,
       if (ch == NULL)
          return SFR_SHARE;
    }
+   else if (ch == NULL)
+      return SFR_SHARE;
 
    sarg->mflags = mflt;
    if (IS_PC(ch) && !UNIT_IN(ch))

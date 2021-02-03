@@ -509,7 +509,7 @@ void act(const char *str, int show_type,
             return;
         if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to))
             for (u = UNIT_CONTAINS(to); u; u = u->next)
-                if (IS_CHAR(u) && CHAR_DESCRIPTOR(to))
+                if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
                 {
                     act_generate(buf, str, show_type, arg1, arg2, arg3, type, u);
                     send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
@@ -528,7 +528,7 @@ void act(const char *str, int show_type,
 
             if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to) && to != UNIT_IN(arg1.m_u))
                 for (u = UNIT_CONTAINS(to); u; u = u->next)
-                    if (IS_CHAR(u) && CHAR_DESCRIPTOR(to))
+                    if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
                     {
                         act_generate(buf, str, show_type, arg1, arg2, arg3, type, u);
                         send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
@@ -585,7 +585,7 @@ void cact(const char *str, int show_type,
 
         if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to))
             for (u = UNIT_CONTAINS(to); u; u = u->next)
-                if (IS_CHAR(u) && CHAR_DESCRIPTOR(to))
+                if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
                 {
                     *buf = 0;
                     b = buf;
@@ -617,7 +617,7 @@ void cact(const char *str, int show_type,
 
             if (UNIT_CHARS(to) && UNIT_IS_TRANSPARENT(to) && to != UNIT_IN(arg1.m_u))
                 for (u = UNIT_CONTAINS(to); u; u = u->next)
-                    if (IS_CHAR(u) && CHAR_DESCRIPTOR(to))
+                    if (IS_CHAR(u) && CHAR_DESCRIPTOR(u))
                     {
                         *buf = 0;
                         b = buf;

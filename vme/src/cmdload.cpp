@@ -294,6 +294,14 @@ void command_read(void)
             continue;
         }
 
+        if (strncmp(pTmp, "auto teacher no add", 19) == 0)
+        {
+            dummy = atoi(pCh);
+            if (is_in(dummy, 0, 1))
+                g_SkiColl.tree[idx].bAutoTeacherNoAdd = dummy;
+            continue;
+        }
+
         if (strncmp(pTmp, "race ", 5) == 0)
         {
             dummy = atoi(pCh);

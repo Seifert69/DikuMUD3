@@ -377,7 +377,7 @@ void clist()
     struct time_info_data tid2;
 
     class unit_data *pc;
-    class unit_data *void_char = new EMPLACE(unit_data) unit_data(UNIT_ST_NPC);
+    class unit_data *void_char = new EMPLACE(npc_data) npc_data;
 
     if (!fs::exists(full_path))
     {
@@ -643,7 +643,7 @@ void cleanup(void)
     unsigned long err_count = 0;
 
     class unit_data *pc;
-    class unit_data *void_char = new EMPLACE(unit_data) unit_data(UNIT_ST_NPC);
+    class unit_data *void_char = new EMPLACE(npc_data) npc_data;
 
     if (!fs::exists(full_path))
     {
@@ -772,8 +772,8 @@ void cleanup_playerfile(int c)
 
     memset(ids, 0, top_id);
 
-    entry_room = new EMPLACE(unit_data) unit_data(UNIT_ST_ROOM);
-    destroy_room = new EMPLACE(unit_data) unit_data(UNIT_ST_ROOM);
+    entry_room = new EMPLACE(room_data) room_data;
+    destroy_room = new EMPLACE(room_data) room_data;
     if (c == 1)
         convert_file();
     else if (c == 2)

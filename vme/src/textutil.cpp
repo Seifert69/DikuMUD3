@@ -16,6 +16,21 @@
 #include "textutil.h"
 #include "common.h"
 
+const char *fillwords[] = {
+    "a",
+    "an",
+    "at",
+    "from",
+    "in",
+    "on",
+    "of",
+    "the",
+    "to",
+    "with",
+    "into",
+    NULL};
+
+
 /*  From char * input stream 'str' copy characters into 'buf' until
  *  end of string or newline. Returns position of 'str' after copied
  *  characters.
@@ -862,6 +877,9 @@ void split_fi_ref(const char *str, char *zone, char *name)
     char *c, *t;
     int l;
 
+    *zone = 0;
+    *name = 0;
+
     if (!str)
         return;
 
@@ -878,6 +896,8 @@ void split_fi_ref(const char *str, char *zone, char *name)
             l = MIN(l, t - (c + 1));
         strncpy(zone, c + 1, l);
         zone[l] = 0;
+        str_lower(zone);
+        str_lower(name);
     }
     else if ((c = (char *)strchr(str, '/')))
     {
@@ -890,6 +910,8 @@ void split_fi_ref(const char *str, char *zone, char *name)
             l = MIN(l, t - (c + 1));
         strncpy(name, c + 1, l);
         name[l] = 0;
+        str_lower(zone);
+        str_lower(name);
     }
     else
     {
@@ -907,6 +929,8 @@ void split_fi_ref(const char *str, char *zone, char *name)
         }
 
         *zone = '\0';
+        str_lower(zone);
+        str_lower(name);
     }
 }
 

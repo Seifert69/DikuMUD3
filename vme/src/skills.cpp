@@ -869,6 +869,12 @@ static void ability_read(void)
             if (is_in(dummy, 0, 1))
                 g_AbiColl.tree[idx].bAutoTrain = dummy;
         }
+        else if (strncmp(pTmp, "auto teacher no add", 19) == 0)
+        {
+            dummy = atoi(pCh);
+            if (is_in(dummy, 0, 1))
+                g_AbiColl.tree[idx].bAutoTeacherNoAdd = dummy;
+        }
         else if (strncmp(pTmp, "race ", 5) == 0)
         {
             dummy = atoi(pCh);
@@ -917,6 +923,7 @@ static void ability_init(void)
         g_AbiColl.tree[i].parent = i;
         g_AbiColl.tree[i].isleaf = TRUE;
         g_AbiColl.tree[i].bAutoTrain = TRUE;
+        g_AbiColl.tree[i].bAutoTeacherNoAdd = FALSE;
 
         g_AbiColl.text[i] = NULL;
 
@@ -1084,6 +1091,12 @@ static void weapon_read(void)
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 1))
                 g_WpnColl.tree[idx].bAutoTrain = dummy;
+        }
+        else if (strncmp(pTmp, "auto teacher no add", 19) == 0)
+        {
+            dummy = atoi(pCh);
+            if (is_in(dummy, 0, 1))
+                g_WpnColl.tree[idx].bAutoTeacherNoAdd = dummy;
         }
         else if (strncmp(pTmp, "race ", 5) == 0)
         {
@@ -1275,6 +1288,7 @@ static void weapon_init(void)
 
         g_WpnColl.tree[i].parent = WPN_ROOT;
         g_WpnColl.tree[i].bAutoTrain = TRUE;
+        g_WpnColl.tree[i].bAutoTeacherNoAdd = FALSE;
 
         if (i < WPN_GROUP_MAX)
             g_WpnColl.tree[i].isleaf = FALSE;
@@ -1371,6 +1385,7 @@ static void skill_init(void)
         g_SkiColl.tree[i].parent = i;
         g_SkiColl.tree[i].isleaf = TRUE;
         g_SkiColl.tree[i].bAutoTrain = TRUE;
+        g_SkiColl.tree[i].bAutoTeacherNoAdd = FALSE;
 
         g_SkiColl.text[i] = NULL;
 
