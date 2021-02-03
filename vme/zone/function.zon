@@ -6779,7 +6779,7 @@ dilend
 
 
 
-#define DISCORD_CHANNELS {"newbie", "builder", "mud"}
+#define DISCORD_CHANNELS {"newbie", "builder", "mud", "accessibility", "bugs", "diku3", "chat"}
 
 /*
 function  Channel and recieve to be used together.
