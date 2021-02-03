@@ -346,7 +346,8 @@ var
 
 code
 {
-   heartbeat := PULSE_SEC;
+   heartbeat := PULSE_SEC*30;
+   pause; // Take a 30 second break.
 
    sendto("linkdead", self);
 
@@ -7578,6 +7579,15 @@ code
    heartbeat := PULSE_SEC * 10;
    :loop:
    wait(SFB_CMD, command("burp"));
+
+   log("activator = " + activator.symname + " idx = " + itoa(activator.idx));
+   log("self      = " + self.symname + " idx = " + itoa(self.idx));
+
+   if (self.symname == activator.symname)
+      log("Symname is identical");
+
+   if (self.idx == activator.idx)
+      log("Idx is identical");
 
    u := findrndunit(self, FIND_UNIT_WORLD, UNIT_ST_NPC);
    s := u.symname;
