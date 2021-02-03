@@ -29,7 +29,7 @@ END HEADER*/
       Bar tenders, shop keepers, janitors, etc. should have the DIL:
          "blow_whistle()" - to call for guards.
 
-      Is there any DIL needed for e.g. a bar tender  wanting to report a crime?
+      Any NPC which is CHAR_PROTECTED will go report crimes
 
    Logic detecting a crime being committed can happen both from the core combat engine and from e.g.
    the steal command. This happens via the C function log_crime (which is also accessilble via DIL log_crime).
@@ -50,13 +50,24 @@ END HEADER*/
    Details on the extras above:
 
      database@justice extras:
-      
-      There are 9 names in each crime extrathree names in each entry. 
+
+      NEW PROPOSAL
+      $crime in database@justice:
+
+      [0] = "$crime" <symname> <idx>   e.g. "$crime papi@_players 1" or "$crime guard@midgaard 1239213918" 
+      [] = TICKS left until removed from list
+
+      [] = crime counter, integer. Default 0. E.g. 4,8,12,64,77, 128. Sum of reported crimes severity
+
+      Descr = A nice textual description of the crime. While crime counter is zero, you're a suspect only.
+      ============
+
+      $crime : There are 9 names in each crime extra, three names in each entry. 
       They are as follows:
  
        Crime Extra Names:
 
-       names.[0] $crime contant
+       names.[0] $crime constant
        names.[1] CRIME_SERIAL_NO
        names.[2] CRIMINAL_NAME
        names.[3] CRIMINAL_PID
@@ -69,7 +80,7 @@ END HEADER*/
 
       The descr for each crime is what is displayed on the reward_board under "Suspects" heading.
       
-      The database also holds $reward extras
+      $reward : The database also holds $reward extras
 
       Reward Extra Names
       
@@ -90,7 +101,7 @@ END HEADER*/
       Witness Extras are copied to any character that witnesses a crime.   
       There are 6 names on each witness extra.  THey are as follows:
  
-      Witness Data Elements:
+      $witness : Witness Data Elements:
          
       names.[0] $witness
       names.[1] $CRIMINAL NAME
@@ -626,9 +637,12 @@ code
    }
    else
    {
-      log("Unknown crime type "+itoa(crime_type)+" in add_crime() for criminal "+criminal.symname+" victim "+vict.symname);
+      if ((criminal.type == UNIT_ST_PC) and (victim.type == UNIT_ST_PC))
+         desc := "<a cmd='accuse # murder'>"+criminal.name+"</a> is suspected of player killing "+vict.name+". Anyone with information should report it to the Guard's Office.";
+      else
+         desc := "<a cmd='accuse # murder'>"+criminal.name+"</a> is suspected of the murder of "+vict.name+". Anyone with information should report it to the Guard's Office.";
+      // log("Unknown crime type "+itoa(crime_type)+" in add_crime() for criminal "+criminal.symname+" victim "+vict.symname);
    }
-
 
    juris := get_juris@justice();
 
