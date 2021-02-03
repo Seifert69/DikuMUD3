@@ -51,7 +51,112 @@ END HEADER*/
 
      database@justice extras:
 
-      NEW PROPOSAL
+
+      ==============================
+      NEW DRAMATICALLY SIMPLIFIED PROPOSAL TO CONSIDER WHICH INCLUDES JURISDICTION
+      ==============================
+      $reward is placed on a char. If the char dies, goes to the corpse->goes to head.
+      Captain will reward you if you give him an object with a $reward. But of course
+      only if it matches the jurisdiction. (If you give it to the wrong captain, he 
+      should give it back and tell you where to go). Maybe if the head has several
+      rewards, the captain will remove the reward for his own jurisdiction and let you
+      keep the head for more rewards.
+
+      This means you could also pre-bake a quest, so the infamous Orc Leader might be
+      wanted by the Captain in Udgaard and simply by adding a $reward it's part of the
+      justice system and the captain will reward you. (Guards will only attack if the
+      outlaw flag is set, etc.)
+
+      A char should have only one $reward per jurisdiction at most. Rewards don't expire.
+
+         $reward                 // See code example why I have this and $reward jurisdiction below
+         $reward <jurisdiction>  // jurisdiction is the zonename (single word)
+         <gold>
+         <xp>
+         <crime-severity-counter>
+
+      $reward on the justice database really is just for purposes of a text display repository.
+      So the board entry would be:
+      
+         $reward <symname> <idx>                  // See code examples
+         $reward <symname> <idx> <jurisdiction> 
+         <gold>
+         <xp>
+         <crime-severity counter>
+         <Ticks to expire>
+         descr   
+
+      and a description to show to anyone looking at the board. 
+      
+      By adding "$reward symname idx" and "$reward symname idx jurisdiction" you can quite easily find
+      or delete or search the $reward when someone turns in a reward, or easily lookup the char with 
+      findsymbolc(symname, idx).
+
+      Code example:
+
+         delextra("$reward papi 1 midgaard", criminal.extra); // Zaps it from the board
+
+      I think there's also a super neat way to loop effectively through this.
+      if the string s := "$reward " + char.symname + " " + atoi(char.idx) then
+
+         exd := s in char.extra;
+         while (exd)
+         {
+            // A hit. 
+            // Now process the $reward in question for this character (it matches string s)
+
+            exd := exd.next;
+            if (exd)
+               exd := s in exd;  // searches from this point forward in the extra
+                                 // I'm 99,9% sure. I'll test it if you need it
+         }
+
+      SO if you give a head to the captain, first he might 
+         delextra("$reward papi 1 midgaard", criminal.extra); // Zaps it from the board
+
+         and then if ("$reward" in head.extra) then there are more rewards left to claim.
+      ==============================
+      $witness is placed only on a char. Any char with a $witness can go to the captain and
+      accuse chars on its witness list. Captain will accept it as-is (not possible to cheat).
+
+         $witness <jurisdiction> <symname idx>  // The unique char in the world 
+         <display name>          // A nice display name when you need to state its name
+         <ticks>                 // Ticks until removed
+         <severity?>             // How much to add to the criminals crime-rate if reported
+         descr                   // A nice text message to display of the crime? (including <a cmd='accuse ...'>)
+
+      When the reward severity is below the "crime" threshold the board would maybe just list
+      the character as being "on notice".
+
+      If you accuse in the wrong jurisdiction the captain should say so and tell you where to go.
+
+      No $witness data on the justice database
+      ==============================
+      $crime
+
+      So couldn't we potentially just completely ditch $crime? I guess the only real purpose it serves now
+      would be to list "suspects" on the board? But a suspect is really just a char that committed a crime
+      but which hasn't yet been accused (and might never be). If you think it's important to list suspects
+      then I would consider just adding a $reward with 0 gold, 0 xp, 0 severity. and list those as a "suspect".
+
+      ===============================
+      The Wrinkle
+
+      If you search for a NPC with findsymbolic(symname, idx) then you'll only get a hit if the NPC is alive.
+      All goodness (actually, there's a tiny chance that if a new NPC with the same symname gets allocated
+      in memory in exactly the same memory address, then you'll get a false positive. But it's likely never
+      going to happen. And if it does, I don't think we should care).
+
+      findsymbolic(symname, idx) for a PC will return the player if the player is online. No result if the 
+      player is offline (or deleted).
+
+      The wrinkle of course is what to do with $reward for players. We could, as it does today, load a player
+      and update the player. But we could also consider that when the player logs into the game, then I'll
+      call a function in justice, which will transfer the latest $reward data to the player. That's at least
+      a strong alternative to load & save.
+
+      ====================================
+
       $crime in database@justice:
 
       [0] = "$crime" <symname> <idx>   e.g. "$crime papi@_players 1" or "$crime guard@midgaard 1239213918" 
@@ -637,7 +742,7 @@ code
    }
    else
    {
-      if ((criminal.type == UNIT_ST_PC) and (victim.type == UNIT_ST_PC))
+      if ((criminal.type == UNIT_ST_PC) and (vict.type == UNIT_ST_PC))
          desc := "<a cmd='accuse # murder'>"+criminal.name+"</a> is suspected of player killing "+vict.name+". Anyone with information should report it to the Guard's Office.";
       else
          desc := "<a cmd='accuse # murder'>"+criminal.name+"</a> is suspected of the murder of "+vict.name+". Anyone with information should report it to the Guard's Office.";
@@ -1024,19 +1129,10 @@ code
    :start:
    found := 0;
    heartbeat := PULSE_SEC * 1;
+
    wait (SFB_CMD, command ("accuse") );
-  
-// this is to deal with NPCs thathave spaces in their names 
+
    args := getwords(argument);
-   criminal := args.[0];
-   arg_count := 1;
-   while (arg_count < length(args) -1)
-   {
-    criminal := criminal +" "+ args.[arg_count];
-    arg_count := arg_count +1;
-   }
-  
-   crime := args.[length(args)-1];
 
    if ((activator.type == UNIT_ST_NPC) and  (self.position  == POSITION_SLEEPING))
       exec("wake "+ self.name, activator);  /* command_interpreter(sarg->activator, "wake"); */
@@ -1048,6 +1144,48 @@ code
       block;
       goto start;
    }
+
+   if (argument == "")
+   {
+      act("$1n says, 'Who do you wish to accuse?'", A_SOMEONE, self, null, null, TO_ROOM);
+      block;
+
+      // List the crimes you have witnessed
+      act("You recall the following crimes:", A_SOMEONE, activator, null, null, TO_CHAR);
+      i := 0;
+      w_ptr := activator.extra;
+      while (w_ptr)
+      {
+         if ("$witness" == w_ptr.name)
+         {
+            if (atoi(w_ptr.names.[3]) == CRIME_STEALING)
+               crime := "stealing";
+            else 
+               crime := "murder"; 
+
+            act("<a cmd='accuse #'>" + w_ptr.names.[1] + " "+crime, A_SOMEONE, activator, null, null, TO_CHAR);
+            i := i + 1;
+
+         }
+         w_ptr := w_ptr.next;
+      }
+      if (i == 0)
+         act("None.", A_SOMEONE, activator, null, null, TO_CHAR);
+      block;
+      goto start;
+   }   
+
+   // this is to deal with NPCs that have spaces in their names 
+   criminal := args.[0];
+   arg_count := 1;
+   while (arg_count < length(args) -1)
+   {
+    criminal := criminal +" "+ args.[arg_count];
+    arg_count := arg_count +1;
+   }
+  
+   crime := args.[length(args)-1];
+
    if (criminal == "")
    {
       act("$1n says, 'Yes... who?'", A_SOMEONE, self, null,
