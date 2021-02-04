@@ -7579,7 +7579,7 @@ M_ZOMBIE_SMALL(4,SEX_NEUTRAL)
 dilbegin dizzi();
 code
 {
-   sendtoalldil("CHANNEL mud @Papi says, 'Ok I think its there. Sorry for the spam'", "channel@function");
+   sendtoalldil("CHANNEL mud @ @Papi says, 'But I promise this is the last time. I've persisted your channel choices on your characters.'", "channel@function");
    quit;
 }
 dilend
