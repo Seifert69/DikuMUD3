@@ -293,14 +293,19 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
    void dil_stop_special(class unit_data *unt, class dilprg *aprg);
    void stop_snoopwrite(unit_data *unit);
 
+   if (this->is_destructed())
+      return;
+
    if (!char_is_playing(this))
       return;
 
-    if (!PC_IS_UNSAVED(this))
-    {
-      save_player(this);
-      save_player_contents(this, TRUE);
-    }
+   slog(LOG_ALL, 0, "DEBUG: To menu %s", UNIT_NAME(this));
+
+   if (!PC_IS_UNSAVED(this))
+   {
+   save_player(this);
+   save_player_contents(this, TRUE);
+   }
 
    CHAR_LAST_ROOM(this) = unit_room(this);
 
@@ -336,8 +341,13 @@ void pc_data::gstate_togame(dilprg *pdontstop)
    char *ContentsFileName(const char *);
    void dil_start_special(class unit_data *unt, class dilprg *aprg);
 
+   if (this->is_destructed())
+      return;
+
    if (char_is_playing(this)) // Are we in the menu?
       return; 
+
+   slog(LOG_ALL, 0, "DEBUG: To menu %s", UNIT_NAME(this));
 
    if (CHAR_DESCRIPTOR(this))
    {

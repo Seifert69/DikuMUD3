@@ -966,9 +966,17 @@ void extract_unit(class unit_data *unit)
     assert(!IS_ROOM(unit));
 
     if (IS_PC(unit))
+    {
         UPC(unit)->gstate_tomenu(NULL);
+        slog(LOG_ALL, 0, "DEBUG: Extracting player %s", UNIT_NAME(unit));
+    }
 
     DeactivateDil(unit);
+
+    if (IS_PC(unit))
+    {
+        slog(LOG_ALL, 0, "DEBUG: Extracting player step 2: %s", UNIT_NAME(unit));
+    }
 
     unit->register_destruct();
 
