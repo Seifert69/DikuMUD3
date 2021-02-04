@@ -7576,6 +7576,30 @@ extra {} "Disgusting!"
 M_ZOMBIE_SMALL(4,SEX_NEUTRAL)
 
 
+dilbegin justicetest();
+external
+   add_witness@justice(witness : unitptr, criminal : unitptr, victimname : string, crime_type: integer);
+   integer add_reward@justice(criminal_symname : string, criminal_idx : integer, crime_type: integer);
+
+var 
+   u : unitptr;
+   s : string;
+   i : integer;
+code
+{
+   :loop:
+   wait(SFB_CMD, command("clap"));
+
+   log ("add_witness");
+   add_witness@justice(activator, self, self.name, CRIME_STEALING);
+   log ("add_reward");
+   add_reward@justice(self.symname, self.idx, CRIME_STEALING);
+   log ("done");
+   goto loop;
+}
+dilend
+
+
 dilbegin findsymtest();
 var 
    u : unitptr;

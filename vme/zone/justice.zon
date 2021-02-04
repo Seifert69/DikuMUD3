@@ -124,7 +124,6 @@ END HEADER*/
 
          $witness <jurisdiction> <symname idx>  // The unique char in the world 
          <display name>          // A nice display name when you need to state its name
-         <ticks>                 // Ticks until removed
          <real-time>             // For PCs when logging in
          [<crime_type>]+         // One or more crimes committed e.g. 8,8,64 or just 64
          descr                   // A nice text message to display of the crime? (including <a cmd='accuse ...'>)
@@ -314,15 +313,15 @@ reset RESET_NOT
 
 
 // =================================================
-// MS Sample code 
+// MS Sample code BEGIN
 // =================================================
 
-
+//
 // Given a criminal, witness, victimname (string) and crime_type
 // simply adds or updates the witness' $witness extra
 //
 //
-dilbegin add_witness(criminal : unitptr, witness : unitptr, victimname : string, crime_type: integer);
+dilbegin add_witness(witness : unitptr, criminal : unitptr, victimname : string, crime_type: integer);
 external
    string get_juris@justice();
 var
@@ -344,7 +343,6 @@ code
    {
       addstring(namesl, skey);
       addstring(namesl, criminal.name);
-      addstring(namesl, "100");  // Just a placeholder for ticks for now
       addstring(namesl, itoa(realtime));
       addstring(namesl, itoa(crime_type));
 
@@ -355,7 +353,7 @@ code
       else
          s := "You witnessed " + criminal.name + " player killing " + victimname;
 
-      addextra(criminal.extra, namesl, s);
+      addextra(witness.extra, namesl, s);
    }
    else
    {
@@ -366,6 +364,7 @@ code
       else
          s := ", player killing " + victimname;
 
+      exd.names.[2] := itoa(realtime);
       exd.descr := exd.descr + s;
       addstring(exd.names, itoa(crime_type));
    }
@@ -415,6 +414,7 @@ code
 
    if (criminal == null)
    {
+      exd_char_reward := null;
       if ("@_players" in criminal_symname)
       {
          log("debug: PC "+criminal_symname+ " " + itoa(criminal_idx) + " is offline.");         
@@ -424,12 +424,13 @@ code
          log("debug: NPC "+criminal_symname+ " " + itoa(criminal_idx) + " is gone.");
          // The NPC is dead. So no more reward accumulation. 
          // Maybe we could update the board and say the reward is waiting to
-         // be cashed in
+         // be cashed in? I dont think we should go through the trouble and 
+         // update the reard info on a head.
+         //
          return(0);
       }
    }
-
-   if (criminal)
+   else // criminal != null
    {
       s := "$reward "+juris;
       exd_char_reward := s in criminal.extra;
@@ -442,7 +443,6 @@ code
          addstring(namesl, "0"); // XP
          addstring(namesl, "0"); // Crime severity counter
          addextra(criminal.extra, namesl, "");
-
          exd_char_reward := s in criminal.extra;
       }
    }
@@ -455,7 +455,7 @@ code
       // Create blank $reward
       namesl := null;
       addstring(namesl, s);
-      addstring(namesl, s + juris);
+      addstring(namesl, s + " " + juris);
       addstring(namesl, "0");
       addstring(namesl, "0");
       addstring(namesl, "0");
@@ -470,10 +470,25 @@ code
    // Criminal might be offline
 
    cnt := atoi(exd_db_reward.names.[2]); // Crime Counter
-   if (cnt < 1)
-      cnt := crime_type;
+   if ("@_players" in criminal_symname)
+   {
+      if (cnt < 1)
+         cnt := crime_type;
+      else
+         cnt := cnt + CRIME_EXTRA;
+   }
    else
-      cnt := cnt + CRIME_EXTRA;
+   {
+      if (cnt < 32)
+         cnt := 32;
+      cnt := cnt + crime_type;
+   }
+
+   //
+   // Suggest a new DIL function for setting CHAR_FLAGS (outlaw, etc).
+   // because we'll also need to call it if a PC logs in.
+   //
+
    exd_db_reward.names.[2] := itoa(cnt);
 
    if (exd_char_reward)
@@ -481,7 +496,7 @@ code
 
    // 40,960 is one platinum piece, so if a level 50 char => 
    // 1 plat then it's about 16.
-   gold := criminal.level * criminal.level * 16;
+   gold := criminal.level * criminal.level * 16 + 10 * cnt;
    if (gold > PLATINUM_MULT)
       gold := PLATINUM_MULT;  // Make sure this doesn't become more than 1 PP
 
@@ -498,6 +513,8 @@ code
       s := "A reward of " + s + " has been offered for the arrest of "+criminal.name;
    else if (cnt >= 64)
       s := "A reward of " + s + " has been offered for the arrest or head of "+criminal.name;
+   else
+      s := "On notice";
 
    exd_db_reward.descr := s;
    if (exd_char_reward)
@@ -520,7 +537,11 @@ code
 }
 dilend
 
+
 // =================================================
+// MS Sample code END
+// =================================================
+
 
 // crime_stopper() is a timer that will clear the $suspect crimes off the reward_board
 // This DIL should be copied to the reward_board.
