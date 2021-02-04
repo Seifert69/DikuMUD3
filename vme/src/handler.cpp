@@ -967,8 +967,8 @@ void extract_unit(class unit_data *unit)
 
     if (IS_PC(unit))
     {
-        UPC(unit)->gstate_tomenu(NULL);
         slog(LOG_ALL, 0, "DEBUG: Extracting player %s", UNIT_NAME(unit));
+        UPC(unit)->gstate_tomenu(NULL);
     }
 
     DeactivateDil(unit);
