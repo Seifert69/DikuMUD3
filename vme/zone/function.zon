@@ -6813,11 +6813,17 @@ code
    secure(talker, lost);
    slKeys := {"@", "#", "1join1", "1left1"};
    sKey := "";
+
+   //log("RECIEVE()");
+   //log(msg);
    sChan := getword(msg); /*Throw away the text CHANNEL*/
    sChan := getword(msg);
 
+   //log("CHANNEL:" + sChan);
+
    if (not(sChan in slActive))
       return;
+
    if ((sChan=="gchat") and (not (self.guild==talker.guild)))
       return;
 
@@ -6844,6 +6850,7 @@ code
    }
 
    sFirst := getword(msg);
+   //log("sFirst == " + sFirst);
    if ( sFirst in slKeys ) {
       sKey := sFirst;
    } else {
@@ -6853,6 +6860,7 @@ code
       msg := Sfirst;
       }
    }
+   //log("sKey == " + sKey);
 
    if (sKey == "@") {
       /*if xxx (sChan in DISCORD_CHANNELS)
@@ -6867,10 +6875,12 @@ code
       }
    }
    else if (sKey == "#"){
+      //log("Im in normal say");
       if (self.minv <= talker.level )
       {
          if(self.type==UNIT_ST_PC)
          {
+            //log("PC");
             if ((sChan=="clan") and (talker.extra.["$rank"].names.[1]=="$master"))
             {
                if (self.level < 200)
@@ -6885,6 +6895,7 @@ code
             }
             else
             {
+               //log("About to send?");
                if (self.level <200)
                   sendtext("   "+self.name+" "+self.title+ " (Level "+itoa(self.vlevel) + ")<br/>", talker);
                else if (self.level < 251)
@@ -6894,7 +6905,11 @@ code
             }
          }
          else
+         {
+            log("Oddball");
+
             sendtext("   "+self.title+"<br/>",talker);
+         }
       }
 	}
    else if (sKey == "1join1" )
@@ -7075,6 +7090,7 @@ code
    goto start;
 
 :recieve:
+   log(self.name + " received : " + argument);
    if (not (NOCOMM_QUEST in self.quests))
       recieve@function(slActive, argument, activator,jmode, dmode);
    goto start;
