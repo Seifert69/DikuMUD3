@@ -125,7 +125,8 @@ END HEADER*/
          $witness <jurisdiction> <symname idx>  // The unique char in the world 
          <display name>          // A nice display name when you need to state its name
          <ticks>                 // Ticks until removed
-         <severity?>             // How much to add to the criminals crime-rate if reported
+         <real-time>             // For PCs when logging in
+         [<crime_type>]+         // One or more crimes committed e.g. 8,8,64 or just 64
          descr                   // A nice text message to display of the crime? (including <a cmd='accuse ...'>)
 
       Once accused a $reward updated on the justice database (created if there is none) and
@@ -311,6 +312,215 @@ reset RESET_NOT
 
 %dil
 
+
+// =================================================
+// MS Sample code 
+// =================================================
+
+
+// Given a criminal, witness, victimname (string) and crime_type
+// simply adds or updates the witness' $witness extra
+//
+//
+dilbegin add_witness(criminal : unitptr, witness : unitptr, victimname : string, crime_type: integer);
+external
+   string get_juris@justice();
+var
+   skey : string;
+   juris : string;
+   namesl : stringlist;
+   exd : extraptr;
+   s : string;
+
+code
+{
+   juris := get_juris@justice();
+
+   skey := "$witness " + juris + " " + criminal.symname + " " + itoa(criminal.idx);
+
+   exd := skey in witness.extra;
+
+   if (exd == null)
+   {
+      addstring(namesl, skey);
+      addstring(namesl, criminal.name);
+      addstring(namesl, "100");  // Just a placeholder for ticks for now
+      addstring(namesl, itoa(realtime));
+      addstring(namesl, itoa(crime_type));
+
+      if (crime_type == CRIME_MURDER)
+         s := "You witnessed " + criminal.name + " killing " + victimname;
+      else if (crime_type == CRIME_STEALING)
+         s := "You witnessed " + criminal.name + " stealing from " + victimname;
+      else
+         s := "You witnessed " + criminal.name + " player killing " + victimname;
+
+      addextra(criminal.extra, namesl, s);
+   }
+   else
+   {
+      if (crime_type == CRIME_MURDER)
+         s := ", killing " + victimname;
+      else if (crime_type == CRIME_STEALING)
+         s := ", stealing from " + victimname;
+      else
+         s := ", player killing " + victimname;
+
+      exd.descr := exd.descr + s;
+      addstring(exd.names, itoa(crime_type));
+   }
+
+   return;   
+}
+dilend
+
+
+
+// Adds a $reward to a criminal and the database.
+//
+// Criminal is passed as the .symname + " " + .idx (if it's a PC he might be offline)
+// Criminal might be offline (PC) or might be dead (NPC)
+//
+// Return: 0 the char (NPC) is dead
+//         1 updated
+//
+dilbegin integer add_reward(criminal_symname : string, criminal_idx : integer, crime_type: integer);
+external
+   string get_juris@justice();
+var
+   database : unitptr;
+   criminal : unitptr;
+   juris : string;
+   namesl : stringlist;
+   exd_char_reward : extraptr;
+   exd_db_reward : extraptr;
+   s : string;
+   cnt : integer;
+   gold : integer;
+   xp : integer;
+
+code
+{
+   // Lookup the $reward on the justice database and the char
+   juris := get_juris@justice();
+
+   database := findsymbolic("database@justice");
+   if (not database)
+   {
+      log("database@justice not found");
+      return(0);
+   }
+
+   criminal := findsymbolic(criminal_symname, criminal_idx);
+
+   if (criminal == null)
+   {
+      if ("@_players" in criminal_symname)
+      {
+         log("debug: PC "+criminal_symname+ " " + itoa(criminal_idx) + " is offline.");         
+      }
+      else
+      {
+         log("debug: NPC "+criminal_symname+ " " + itoa(criminal_idx) + " is gone.");
+         // The NPC is dead. So no more reward accumulation. 
+         // Maybe we could update the board and say the reward is waiting to
+         // be cashed in
+         return(0);
+      }
+   }
+
+   if (criminal)
+   {
+      s := "$reward "+juris;
+      exd_char_reward := s in criminal.extra;
+      if (exd_char_reward == null)
+      {
+         // Create blank $reward
+         namesl := {"$reward"};
+         addstring(namesl, "$reward " + juris);
+         addstring(namesl, "0"); // Gold
+         addstring(namesl, "0"); // XP
+         addstring(namesl, "0"); // Crime severity counter
+         addextra(criminal.extra, namesl, "");
+
+         exd_char_reward := s in criminal.extra;
+      }
+   }
+
+   s := "$reward "+criminal.name+" "+itoa(criminal.idx);
+   exd_db_reward := s in database.extra;
+
+   if (exd_db_reward == null)
+   {
+      // Create blank $reward
+      namesl := null;
+      addstring(namesl, s);
+      addstring(namesl, s + juris);
+      addstring(namesl, "0");
+      addstring(namesl, "0");
+      addstring(namesl, "0");
+      addstring(namesl, "100"); // Ticks, just a placeholder 
+      addextra(database.extra, namesl, "");
+
+      exd_db_reward := s in database.extra;
+   }
+
+   // Now we got the extraptr for the criminal and the database
+   // so let's update them. We know for sure we have the DB.
+   // Criminal might be offline
+
+   cnt := atoi(exd_db_reward.names.[2]); // Crime Counter
+   if (cnt < 1)
+      cnt := crime_type;
+   else
+      cnt := cnt + CRIME_EXTRA;
+   exd_db_reward.names.[2] := itoa(cnt);
+
+   if (exd_char_reward)
+      exd_char_reward.names.[2] := itoa(cnt);
+
+   // 40,960 is one platinum piece, so if a level 50 char => 
+   // 1 plat then it's about 16.
+   gold := criminal.level * criminal.level * 16;
+   if (gold > PLATINUM_MULT)
+      gold := PLATINUM_MULT;  // Make sure this doesn't become more than 1 PP
+
+   exd_db_reward.names.[3] := itoa(gold);
+   if (exd_char_reward)
+      exd_char_reward.names.[3] := itoa(gold);
+
+   s := moneystring(gold, 1);
+
+   // [8..31]  You'll lose the benefit of being protected by the law and order system (see below).
+   // [32..63] You're wanted alive by the guards. They'll try to arrest you.
+   // [64..]   You're wanted dead or alive.
+   if ((cnt > 31) and (cnt < 64))
+      s := "A reward of " + s + " has been offered for the arrest of "+criminal.name;
+   else if (cnt >= 64)
+      s := "A reward of " + s + " has been offered for the arrest or head of "+criminal.name;
+
+   exd_db_reward.descr := s;
+   if (exd_char_reward)
+      exd_char_reward.descr := s;
+
+   xp :=  criminal.level * 20 + 50;
+   if (xp > 1000)
+       xp := 1000;  // Make sure some glitch doesn't cause excessive XP
+
+   exd_db_reward.names.[4] := itoa(xp);
+   if (exd_char_reward)
+      exd_char_reward.names.[4] := itoa(xp);
+
+   sendto("save", database);
+
+   // This function presumes a PC logging into the game will get a copy of 
+   // all $reward on the board that matches his symname.
+   //
+   return(1);
+}
+dilend
+
+// =================================================
 
 // crime_stopper() is a timer that will clear the $suspect crimes off the reward_board
 // This DIL should be copied to the reward_board.
