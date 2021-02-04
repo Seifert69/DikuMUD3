@@ -173,6 +173,21 @@ END HEADER*/
       $witness would need a time-remove for PCs (maybe simply when a PC logs in we call a function in justice).
          Perhaps use real-time for this rather than a tick counter.
       ====================================
+      If we do this, and we want to support jurisdictions then a new problem that arises is the use of
+      OUTLAW, PROTECTED.
+      
+      CHAR_LEGAL_TARGET can probably stay the way it is, it's simply who picked the fight.
+
+      For the protected flag I've made a sample function. First if a char has a $protected <jurisdiction>
+      in its extra then it's protected. Secondly, any NPC with a PROTECTED flag will be protected in its
+      home zone. Any PC with the PROTECTED flag will be protected in its hometown. This adds new color to
+      the game in that a player's protection changes with choice of hometown. And possibly we can add
+      quests to become protected in a new town.
+
+      As a replacement for the OUTLAW Flag, I've made a sample function. It checks for $reward <jurisdiction>.
+      Perhaps a combo could be used that checks if the OUTLAW flag is set, then they'll check the $reward 
+      <jurisdiction> (very very few chars in the game are outlaw). If we keep it like this, the OUTLAW flag
+      is obsoleted.
       ====================================
       ====================================
       ====================================
@@ -536,6 +551,83 @@ code
    return(1);
 }
 dilend
+
+
+// Check the $reward status of a char in a jurisdiction
+//
+// 0 : no reward
+// 1 : wanted alive
+// 2 : wanted dead or alive
+//
+dilbegin integer check_outlaw(char : unitptr, juris : string);
+var
+   exd : extraptr;
+   i : integer;
+code
+{
+   exd := ("$reward "+juris) in char.extra;
+
+   if (exd == null)
+      return(0);
+   else
+   {
+      i := atoi(exd.names.[2]);
+      if (i >= 64)
+         return(2);
+      else if (i >= 32)
+         return(1);
+      else
+         return(0);
+   }
+}
+dilend
+
+
+// Check if a char is protected in a jurisdiction. Remember that there
+// might still be a reward on the char dead or alive. So being 
+// "protected" doesn't mean the guards will be nice to you (if you
+// have been bad :)
+//
+// 0 : not protected
+// 1 : protected
+//
+dilbegin integer check_protected(char : unitptr, juris : string);
+var
+   exd : extraptr;
+   i : extraptr;
+code
+{
+   exd := ("$protected "+juris) in char.extra;
+
+   if (exd)
+      return(1);
+
+   if (char.type == UNIT_ST_NPC)
+   {
+      if (isset(char.flags, CHAR_PROTECTED))
+      {
+         // NPCs are protected in their home zone
+         if (char.zoneidx == juris)
+            return(1);         
+      }
+
+      // Probably no need to do more for NPCs
+      // Can anyone imagine an NPC 
+   }
+   else // PC
+   {
+      if (isset(char.flags, CHAR_PROTECTED))
+      {
+         // PCs are protected in their home town
+         if (("@"+juris) in char.hometown)
+            return(1);         
+      }
+   }
+
+   return(0);
+}
+dilend
+
 
 
 // =================================================
