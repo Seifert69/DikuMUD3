@@ -217,6 +217,8 @@ class MyClient(discord.Client):
                             await whomsg.edit(content=line)
                         elif words[1] == "msg":
                             print('Msg Line = ', line)
+                            line = line.partition(' ')[4]
+                            print('Skipped 3 first words, sending this [', line, ']')
                             await channel.send(line)
                         else:
                             print("Unknown type ", words[1])
