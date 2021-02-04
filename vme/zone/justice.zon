@@ -597,6 +597,9 @@ var
    i : extraptr;
 code
 {
+   // Will we have NPCs protected in multiple zones?
+   // Or could this suffice as a PC check?
+
    exd := ("$protected "+juris) in char.extra;
 
    if (exd)
@@ -610,9 +613,6 @@ code
          if (char.zoneidx == juris)
             return(1);         
       }
-
-      // Probably no need to do more for NPCs
-      // Can anyone imagine an NPC 
    }
    else // PC
    {
