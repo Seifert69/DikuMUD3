@@ -415,7 +415,9 @@ code
 
    if (self.minv < IMMORTAL_LEVEL)
    {
-      // dispatch("discord ent #mudstatus @" + self.name + " has entered Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
+      // Notify of newbies on the newbie channel
+      if (self.level < 2)
+         dispatch("discord msg #newbie Welcome **@" + self.name + "** has entered Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
 
       w := whostring@comm();
       dispatch("discord who " + w); // Send to dispatcher.py via pipeDispatcher
@@ -487,6 +489,7 @@ var
    welcome : string;
    goodbye : string;
    s : string;
+   exd : extraptr;
 
 code
 {
@@ -517,7 +520,13 @@ code
       informer();
       login_modify(self);
       exec("look", self);
-      exec("comm add discord", self);
+
+      exd := "$channels" in self.info;
+      if (exd == null)
+      {
+         // Setup default comm channels
+         addextra(self.info, {"$channels", "newbie", "mud"}, "");
+      }
       quit;
    }
 
@@ -7567,6 +7576,59 @@ title "the zombie"
 descr "A mindless zombie is roaming around here."
 extra {} "Disgusting!"
 M_ZOMBIE_SMALL(4,SEX_NEUTRAL)
+
+
+dilbegin dizzi();
+code
+{
+   sendtoalldil("CHANNEL mud @ @Papi says, 'But I promise this is the last time. I've persisted your channel choices on your characters.'", "channel@function");
+   quit;
+}
+dilend
+
+dilbegin discordtest();
+external
+   add_witness@justice(witness : unitptr, criminal : unitptr, victimname : string, crime_type: integer);
+   integer add_reward@justice(criminal_symname : string, criminal_idx : integer, crime_type: integer);
+
+var 
+   u : unitptr;
+   s : string;
+   i : integer;
+code
+{
+   :loop:
+   wait(SFB_CMD, command("cry"));
+
+   dilcopy("dizzi@basis()", activator);
+
+   goto loop;
+}
+dilend
+
+
+dilbegin justicetest();
+external
+   add_witness@justice(witness : unitptr, criminal : unitptr, victimname : string, crime_type: integer);
+   integer add_reward@justice(criminal_symname : string, criminal_idx : integer, crime_type: integer);
+
+var 
+   u : unitptr;
+   s : string;
+   i : integer;
+code
+{
+   :loop:
+   wait(SFB_CMD, command("clap"));
+
+   log ("add_witness");
+   add_witness@justice(activator, self, self.name, CRIME_STEALING);
+   log ("add_reward");
+   add_reward@justice(self.symname, self.idx, CRIME_STEALING);
+   log ("done");
+   goto loop;
+}
+dilend
 
 
 dilbegin findsymtest();
