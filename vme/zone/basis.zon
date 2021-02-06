@@ -415,7 +415,9 @@ code
 
    if (self.minv < IMMORTAL_LEVEL)
    {
-      // dispatch("discord ent #mudstatus @" + self.name + " has entered Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
+      // Notify of newbies on the newbie channel
+      if (self.level < 2)
+         dispatch("discord msg #newbie Welcome **@" + self.name + "** has entered Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
 
       w := whostring@comm();
       dispatch("discord who " + w); // Send to dispatcher.py via pipeDispatcher
