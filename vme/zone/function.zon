@@ -7091,7 +7091,7 @@ code
    goto start;
 
 :recieve:
-   log(self.name + " received : " + argument);
+   //log(self.name + " received : " + argument);
    if (not (NOCOMM_QUEST in self.quests))
       recieve@function(slActive, argument, activator,jmode, dmode);
    goto start;
