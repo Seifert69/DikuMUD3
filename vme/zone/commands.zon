@@ -7777,11 +7777,12 @@ code
    {
       if(u != self)
       {
-         if(visible(u,self))
-         sendtext(self.name+" has left the game.<br/>",u);
+         if (visible(u,self))
+            sendtext(self.name+" has left the game.<br/>",u);
       }
    }
 
+   log("QUIT PC " + self.name);
    if (u.level < 200)
    {
       err := loadstr("goodbye",goodbye);
