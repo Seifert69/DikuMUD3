@@ -12773,7 +12773,7 @@ code
 	if (not (self.type & (UNIT_ST_PC|UNIT_ST_NPC)))
 		quit;
 	interrupt(SFB_DEAD, activator == self, stop);
-    interrupt(SFB_MSG, TRUE, check);
+   // XXX MS2020 interrupt(SFB_MSG, TRUE, check);
 
 	heartbeat := PULSE_POINTS / 4;
 	j := 1 + pwr / 10;
@@ -12803,6 +12803,7 @@ code
 		A_HIDEINV, self, null, null, TO_CHAR);
 		position_update(self);
 	}
+   
 :the_end:
    act("Your gaping wounds stop their bleeding.",
        A_ALWAYS, self, null, null, TO_CHAR);

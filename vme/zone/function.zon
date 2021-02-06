@@ -4205,6 +4205,7 @@ var
    mys        : string;     /* Symbolic of the shopkeeper */
    account    : extraptr;   /* Where we store our money */
    noaccount  : integer;    /* Is there a account already? */
+   prev_mudday: integer;
 
 code
 {
@@ -4387,6 +4388,18 @@ code
       pause;
       i := walk_room@function(homes, 4); // incase he was dragged away
       goto loop;
+   }
+
+   // We restock at 4am
+   //
+   if (mudhour == 4)
+   {
+      if (mudday == prev_mudday)
+      {
+         log("Restocking " + self.symname);
+         prev_mudday := mudday;
+         goto newday;
+      }
    }
 
    if (command("list")) choice := 0;
