@@ -554,7 +554,7 @@ extern int sunlight;
   (UPC(unit)->flags)
 
 #define PC_TIME(unit)  \
-   (UPC(unit)->time)
+   (UPC(unit)->m_time)
 
 #define PC_HOME(ch)     \
    (UPC(ch)->hometown)

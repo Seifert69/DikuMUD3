@@ -474,9 +474,13 @@ public:
     void gstate_tomenu(dilprg *pdontstop);
     void gstate_togame(dilprg *pdontstart);
 
+    void disconnect_game(void);
+    void connect_game(void);
+    void reconnect_game(class descriptor_data *d);
+
     struct terminal_setup_type setup;
 
-    struct pc_time_data time;       /* PCs time info  */
+    struct pc_time_data m_time;       /* PCs time info  */
     struct pc_account_data account; /* Accounting     */
 
     char *guild;     /* Which guild is the player a member of?  */

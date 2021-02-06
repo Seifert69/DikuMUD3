@@ -249,7 +249,7 @@ void save_player_file(class unit_data *pc)
         PC_TIME(pc).played++;
 
     /* PRIMITIVE SANITY CHECK */
-    slog(LOG_ALL, 0, "pc id =%d", PC_ID(pc));
+    slog(LOG_ALL, 0, "Saving PC %s id =%d", UNIT_NAME(pc), PC_ID(pc));
     assert(PC_ID(pc) >= 0 && PC_ID(pc) <= 1000000);
 
     if (UNIT_IN(pc) && !IS_SET(UNIT_FLAGS(unit_room(pc)), UNIT_FL_NOSAVE))

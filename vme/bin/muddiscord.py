@@ -111,7 +111,7 @@ class MyClient(discord.Client):
         # write the message received from Discord to pipeMUD so that
         # the MUD server receives it.
         #
-        str = "discord <discord> #" + message.channel.name + " @" + message.author.name + " says, '" + message.content + "'"
+        str = "discord " + message.channel.name + " @ @" + message.author.name + " says, '" + message.content + "'"
         os.write(self.pipeMUD, str.encode())
         #if message.content.startswith('$hello'):
         #    await message.channel.send('da robot replies Hello!')
@@ -172,7 +172,7 @@ class MyClient(discord.Client):
 
             while (True):
                 try:
-                    line = os.read(self.pipeDiscord, 200)
+                    line = os.read(self.pipeDiscord, 1000)
                     if not line:
                         break
                     else:
@@ -217,7 +217,8 @@ class MyClient(discord.Client):
                             await whomsg.edit(content=line)
                         elif words[1] == "msg":
                             print('Msg Line = ', line)
-                            await channel.send(line)
+                            print('Partition = ', line.split(' ', 3)[-1])
+                            await channel.send(line.split(' ', 3)[-1])
                         else:
                             print("Unknown type ", words[1])
                             continue

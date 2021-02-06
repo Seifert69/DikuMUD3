@@ -217,7 +217,7 @@ var
 
 code
 {
-place:=self.outside.idx;
+   place := self.outside.idx;
 
 :start:
  wait (SFB_CMD, ((command ("close")) or
@@ -6777,6 +6777,10 @@ code
 }
 dilend
 
+
+
+#define DISCORD_CHANNELS {"newbie", "builder", "mud", "accessibility", "bugs", "diku3", "chat"}
+
 /*
 function  Channel and recieve to be used together.
 
@@ -6809,11 +6813,17 @@ code
    secure(talker, lost);
    slKeys := {"@", "#", "1join1", "1left1"};
    sKey := "";
+
+   //log("RECIEVE()");
+   //log(msg);
    sChan := getword(msg); /*Throw away the text CHANNEL*/
    sChan := getword(msg);
 
+   //log("CHANNEL:" + sChan);
+
    if (not(sChan in slActive))
       return;
+
    if ((sChan=="gchat") and (not (self.guild==talker.guild)))
       return;
 
@@ -6840,6 +6850,7 @@ code
    }
 
    sFirst := getword(msg);
+   //log("sFirst == " + sFirst);
    if ( sFirst in slKeys ) {
       sKey := sFirst;
    } else {
@@ -6849,23 +6860,28 @@ code
       msg := Sfirst;
       }
    }
+   //log("sKey == " + sKey);
 
-   if (sKey == "@") {
-      if (sChan == "discord")
+   if (sKey == "@")
+   {
+      log("Recieve @ sKey="+sKey+" sChan="+sChan+" msg="+msg);
+      if (sChan in DISCORD_CHANNELS)
       {
          sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " + msg+"</div><br/>",self );
       }
       else if (self.level >= talker.minv) {
-         sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " +talker.name+ " "+msg+"</div><br/>",self );
+         sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " +talker.name+ " "+msg+"</div><br/>", self );
       } else {
-         sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; Someone "+msg+"</div><br/>",self );
+         sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; Someone "+msg+"</div><br/>", self );
       }
    }
    else if (sKey == "#"){
+      //log("Im in normal say");
       if (self.minv <= talker.level )
       {
          if(self.type==UNIT_ST_PC)
          {
+            //log("PC");
             if ((sChan=="clan") and (talker.extra.["$rank"].names.[1]=="$master"))
             {
                if (self.level < 200)
@@ -6880,6 +6896,7 @@ code
             }
             else
             {
+               //log("About to send?");
                if (self.level <200)
                   sendtext("   "+self.name+" "+self.title+ " (Level "+itoa(self.vlevel) + ")<br/>", talker);
                else if (self.level < 251)
@@ -6889,7 +6906,11 @@ code
             }
          }
          else
+         {
+            log("Oddball");
+
             sendtext("   "+self.title+"<br/>",talker);
+         }
       }
 	}
    else if (sKey == "1join1" )
@@ -6913,15 +6934,11 @@ code
    else
    {
       //log("Recieve else(): sKey="+sKey+" sChan="+sChan+" msg="+msg);
-      s := ""; 
-      if (sChan == "discord")
-         if (msg.[0] == "#")
-            s := getword(msg) + " ";
 
       if (self.level >= talker.minv) {
-         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; "+s+talker.name+" says '"+msg+"'</div><br/>",self);
+         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; "+talker.name+" says '"+msg+"'</div><br/>",self);
       } else {
-         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; "+s+"Someone says '" +msg+"'</div><br/>",self);
+         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; "+"Someone says '" +msg+"'</div><br/>",self);
       }
    }
 
@@ -6937,11 +6954,16 @@ dilend
 #define  NOCOMM_QUEST  "$nocomm"
 #define  NO_NEWBIE_QUEST  "$nonewbie"
 
+//
+// MS2020: Rewritten to a) keep selected channels persistent on pc.info
+// and b) to hardcode into this function which channels to relay to Discord.
+//
 dilbegin aware unique recall fnpri(FN_PRI_SYS) channel();
 external
    recieve@function(slActive : stringlist, msg : string, talker : unitptr,
                     jmode:integer, dmode:integer);
 var
+   discordchn : stringlist;
    time_string:string;
    targ:unitptr;
    slActive : stringlist;
@@ -6955,6 +6977,7 @@ var
    x : integer;
    dmode : integer;
    jmode : integer;
+   exd : extraptr;
 
 code
 {
@@ -6962,12 +6985,29 @@ code
    nEcho := 1;
    dmode := 1;
    jmode := 1;
-   if (self.level>=200)
-      interrupt (SFB_CMD, (command ("nocomm") and (self==activator)),nochannel);
 
-   interrupt (SFB_CMD, (command ("noshout") and  (self==activator)),noshout);
-   interrupt (SFB_CMD, (command ("notell") and   (self==activator)),notell);
-   interrupt (SFB_DONE,((command ("tell")) and (self==target)),told);
+   // These are the hardcoded Discord channels
+   discordchn := DISCORD_CHANNELS;
+
+   // Initialize or get persistent channels
+   exd := "$channels" in self.info;
+   if (exd == null)
+   {
+      addextra(self.info, {"$channels"}, "");
+      exd := "$channels" in self.info;
+   }
+
+   log("Persistent exd.names.[0] = " + exd.names.[0]);
+      
+   slActive := exd.names;
+   substring(slActive, "$channels"); // Remove the extra prefix
+
+   if (self.level>=200)
+      interrupt (SFB_CMD, (command ("nocomm") and (self==activator)), nochannel);
+
+   interrupt (SFB_CMD, (command ("noshout") and  (self==activator)), noshout);
+   interrupt (SFB_CMD, (command ("notell") and   (self==activator)), notell);
+   interrupt (SFB_DONE,((command ("tell")) and (self==target)), told);
    interrupt (SFB_CMD, (command("comm") and
                         (("add" in argument) or
                         ("del" in argument)) and
@@ -7026,13 +7066,10 @@ code
    msg := argument;
    //log("argument = "+argument);
    s := "";
-   if ((excmdstr == "discord") and (argument != "#"))
+   if ((excmdstr in discordchn) and (argument != "#"))
    {
-      if (msg.[0] == "#")
-         s := getword(msg) + " ";
-
-      //log("msg to discord dispatch s=" +s+"  msg="+msg);
-      t := "discord msg "+s+"@" + self.name + " says, '" + msg + "'"; 
+      // Format: discord msg #<channelname> @<speakername> says, '<message>'
+      t := "discord msg #"+excmdstr+" @" + self.name + " says, '" + msg + "'"; 
       log("msg to dispatch=" +t);
       dispatch(t); // Send to dispatcher.py via pipeDispatcher      
    }
@@ -7054,6 +7091,7 @@ code
    goto start;
 
 :recieve:
+   //log(self.name + " received : " + argument);
    if (not (NOCOMM_QUEST in self.quests))
       recieve@function(slActive, argument, activator,jmode, dmode);
    goto start;
@@ -7087,7 +7125,13 @@ code
          act("Channel "+words.[1] + " Already Active!", A_SOMEONE, self, null, null, TO_CHAR);
          goto start;
       }
+
       addstring(slActive, words.[1]);
+
+      // Persist
+      exd := "$channels" in self.info;
+      addstring(exd.names, words.[1]);
+
       act("Channel "+words.[1]+" activated.", A_SOMEONE, self, null, null, TO_CHAR);
       msg := "CHANNEL " + words.[1] + " 1join1";
       sendtoalldil(msg, "channel@function");
@@ -7115,8 +7159,7 @@ code
    {
       if (not(words.[1] in slActive) )
       {
-		   act("Channel "+words.[1] + " is not on!",
-	      A_SOMEONE, self, null, null, TO_CHAR);
+		   act("Channel "+words.[1] + " is not on!", A_SOMEONE, self, null, null, TO_CHAR);
 			goto start;
 		}
       act("Channel "+words.[1]+" deactivated.", A_SOMEONE, self, null, null, TO_CHAR);
@@ -7127,6 +7170,9 @@ code
          recieve@function(slActive, msg, self,jmode,dmode);
       }
       substring(slActive, words.[1]);
+      // UnPersist
+      exd := "$channels" in self.info;
+      substring(exd.names, words.[1]);
    }
    else
    {

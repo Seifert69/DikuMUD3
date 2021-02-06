@@ -230,6 +230,7 @@ struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
          FREE(tmpl->prgname);
 
          tmpl->prgname = str_dup(nBuf);
+         str_lower(tmpl->prgname);
          zone->mmp_tmpl.insert(make_pair(tmpl->prgname, tmpl));
 
          /* Link into list of indexes */
@@ -267,6 +268,7 @@ void generate_file_indexes(FILE *f, class zone_type *zone)
 
       temp_index = new file_index_type();
       temp_index->name = str_dup((char *)cBuf.GetData());
+      str_lower(temp_index->name);
 
       temp_index->zone = zone;
       //temp_index->unit = NULL;
@@ -436,6 +438,7 @@ void generate_zone_indexes(void)
 
       fstrcpy(&cBuf, f);
       z->name = str_dup((char *)cBuf.GetData());
+      str_lower(z->name);
 
       if (find_zone(z->name))
       {
@@ -1231,6 +1234,8 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
          ROOM_EXIT(u, i) = NULL;
          g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));
          g_nCorrupt += pBuf->ReadStringCopy(name, sizeof(name));
+         str_lower(zone);
+         str_lower(name);         
 
          if (*zone && *name)
          {
@@ -1249,6 +1254,8 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len,
 
                g_nCorrupt += pBuf->ReadStringCopy(zone, sizeof(zone));
                g_nCorrupt += pBuf->ReadStringCopy(name, sizeof(name));
+               str_lower(zone);
+               str_lower(name);         
 
                if (!str_is_empty(name))
                {

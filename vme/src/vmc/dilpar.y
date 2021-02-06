@@ -196,7 +196,7 @@ void make_code(struct exptype *dest);
 /* DIL functions */
 %token DILSE_ATOI DILSE_RND  DILSE_FNDU DILSE_FNDRU DILSE_FNDR DILSE_FNDZ DILSE_LOAD
 %token DILSE_GETW DILSE_ITOA DILSE_ISS  DILSE_IN   DILSE_ISA DILSE_CLONE
-%token DILSE_CMDS DILSE_FNDS DILSE_GETWS DILSE_LEN DILSE_PURS DILSE_TRMO
+%token DILSE_CMDS DILSE_FNDS DILSE_FNDSI DILSE_GETWS DILSE_LEN DILSE_PURS DILSE_TRMO
 %token DILSE_DLD  DILSE_DLF  DILSE_LAND DILSE_LOR DILSE_VISI DILSE_OPPO
 %token DILSE_RTI  DILSE_PCK  DILSE_ISLT DILSE_GETCLR DILSE_ADDCLR
 %token DILSE_SPLIT DILSE_GHEAD DILSE_REPLACE DILSE_DELCLR DILSE_CHGCLR
@@ -3278,8 +3278,28 @@ dilfun   :  funcall
             }
             FREEEXP($3);
          }
-         | DILSE_FNDS '(' dilexp ',' dilexp ',' dilexp ')'
+         | DILSE_FNDS '(' dilexp ',' dilexp ')'
          {
+            INITEXP($$);
+            if ($3.typ != DILV_SP)
+               dilfatal("Arg 1 of 'findsymbolic' not string");
+            else if ($5.typ != DILV_INT)
+               dilfatal("Arg 2 of 'findsymbolic' not an integer (idx)");
+            else {
+               /* Type is ok */
+               /* Make nodes dynamic */
+               $$.dsl = DSL_DYN;
+               $$.typ = DILV_UP;
+               make_code(&($3));
+               make_code(&($5));
+               add_code(&($$),&($3));
+               add_code(&($$),&($5));
+               add_ubit8(&($$),DILE_FNDSIDX);
+            }
+            FREEEXP($3);
+         }
+         | DILSE_FNDS '(' dilexp ',' dilexp ',' dilexp ')'
+         { 
             INITEXP($$);
             if ($3.typ != DILV_UP)
 	      dilfatal("Arg 1 of 'findsymbolic' not a unitptr");

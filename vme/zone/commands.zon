@@ -7777,12 +7777,13 @@ code
    {
       if(u != self)
       {
-         if(visible(u,self))
-         sendtext(self.name+" has left the game.<br/>",u);
+         if (visible(u,self))
+            sendtext(self.name+" has left the game.<br/>",u);
       }
    }
 
-   if (u.level < 200)
+   //log("QUIT PC " + self.name);
+   if (self.level < 200)
    {
       err := loadstr("goodbye",goodbye);
 
@@ -13592,7 +13593,7 @@ code
 
       while ((here!=null) and (i<5))
       {
-         if (here.idx==item.idx)
+         if (here.symname==item.symname)
             i:=i+1;
          here:=here.next;
       }

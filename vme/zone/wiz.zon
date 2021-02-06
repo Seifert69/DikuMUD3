@@ -929,10 +929,15 @@ code
 {
    :start:
    heartbeat := PULSE_SEC;
-   wait(SFB_CMD, command("press"));
+   wait(SFB_CMD, command("press") or command("push"));
+
+   block;
 
    if (argument != "button")
-      goto start;
+   {
+      act("You can only press the button.", A_ALWAYS, pc, null, self, TO_CHAR);
+      goto start;      
+   }
 
    pc := activator;
    if (pc.level < 254)
@@ -942,7 +947,6 @@ code
    }
 
    secure(pc, start);
-   block;
 
    i := shell("compile.sh");
    act("Click ("+itoa(i)+")", A_ALWAYS, pc, null, self, TO_CHAR);

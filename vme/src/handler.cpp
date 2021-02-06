@@ -900,6 +900,17 @@ void unswitchbody(class unit_data *npc)
     CHAR_DESCRIPTOR(npc) = NULL;
 }
 
+void stop_fightfollow(unit_data *unit)
+{
+    if (IS_CHAR(unit))
+    {
+      if (CHAR_FOLLOWERS(unit) || CHAR_MASTER(unit))
+         die_follower(unit);
+
+      stop_fighting(unit);
+    }
+}
+
 
 void stop_snoopwrite(unit_data *unit)
 {
@@ -926,11 +937,6 @@ void stop_snoopwrite(unit_data *unit)
                unswitchbody(d->character);
                break;
             }
-
-      if (CHAR_FOLLOWERS(unit) || CHAR_MASTER(unit))
-         die_follower(unit);
-
-      stop_fighting(unit);
 
       if (CHAR_IS_SNOOPING(unit) || CHAR_IS_SNOOPED(unit))
          unsnoop(unit, 1); /* Remove all snoopers */
@@ -960,9 +966,17 @@ void extract_unit(class unit_data *unit)
     assert(!IS_ROOM(unit));
 
     if (IS_PC(unit))
+    {
+        slog(LOG_ALL, 0, "DEBUG: Extracting player %s", UNIT_NAME(unit));
         UPC(unit)->gstate_tomenu(NULL);
+    }
 
     DeactivateDil(unit);
+
+    if (IS_PC(unit))
+    {
+        slog(LOG_ALL, 0, "DEBUG: Extracting player step 2: %s", UNIT_NAME(unit));
+    }
 
     unit->register_destruct();
 
@@ -983,13 +997,12 @@ void extract_unit(class unit_data *unit)
     	     unlink_affect(UNIT_AFFECTED(unit));
     */
 
+    stop_fightfollow(unit);
     stop_snoopwrite(unit);
 
-    if (IS_CHAR(unit) && CHAR_DESCRIPTOR(unit))
+    if (IS_PC(unit) && CHAR_DESCRIPTOR(unit))
     {
-        void disconnect_game(class unit_data * pc);
-
-        disconnect_game(unit);
+        UPC(unit)->disconnect_game();
     }
 
     /*if (!IS_PC(unit) || UNIT_IN(unit))
