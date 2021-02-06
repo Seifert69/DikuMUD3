@@ -7782,7 +7782,7 @@ code
       }
    }
 
-   log("QUIT PC " + self.name);
+   //log("QUIT PC " + self.name);
    if (self.level < 200)
    {
       err := loadstr("goodbye",goodbye);
