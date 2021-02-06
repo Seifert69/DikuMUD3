@@ -49,6 +49,160 @@ number of other needs have been brought before the bounty hunters."
 
 %dil
 
+dilbegin reprint(pc:unitptr, buf:string, which:string);
+var
+	slt : stringlist;
+	bty : unitptr;
+	targ : unitptr;
+	sdate : string;
+code
+{
+	log("Reprint called for "+which+" contract: "+buf);
+	slt := split(buf,"|");
+	targ := findsymbolic(slt.[1]);
+	sdate := slt.[0];
+	bty := load("contract@bounty");
+	bty.extra.[0].descr := bty.extra.[0].descr + 
+	"<br><div class='cpw'>Contract Date: </div><div class='cr'>" + sdate +
+	"<br><div class='cpw'>Contract Term: </div><div class='cr'>" + which +
+	"<br><div class='cpw'>Target Name: </div><div class='cr'>" + targ.name + 
+	"<br><div class='cpw'>Target Alias: </div><div class='cr'>" + targ.title + 
+	"<br><div class='cpw'>Target Description: </div><div class='cr'> " + targ.outside_descr;
+	link(bty,pc);
+	return;
+}
+dilend
+
+dilbegin status();
+external
+	reprint@bounty(pc:unitptr, buf:string, which:string);
+var
+	pc 		: unitptr;
+	daily	: extraptr;
+	monthly : extraptr;
+	bonus 	: extraptr;
+	i		: integer;
+	j 		: integer;
+	k 		: integer;
+	arg		: string;
+	bty 	: unitptr;
+	targ 	: unitptr;
+	slt		: stringlist;
+	sm,sd,sb : string;
+code
+{
+	heartbeat:= PULSE_SEC;
+
+:start:
+
+	wait(SFB_CMD,command("say") and ("contract status" == argument));
+
+	pc := activator;
+	secure(pc,donezo);
+	
+	daily := "$daily_target" in pc.extra;
+	monthly := "$monthly_target" in pc.extra;
+	bonus := "$bonus_target" in pc.extra;
+	
+	sm := monthly.descr;
+	sd := daily.descr;
+	sb := bonus.descr;
+	
+	log("daily := "+sd);
+	log("bonus := "+sb);
+	log("monthly := "+sm);
+	
+	i := 0;
+	j := 0;
+	k := 0;
+	
+	if(daily != null)
+	{
+		i := i + 1;
+		if("DONE" in sd)
+			j := j + 1;
+		else
+			k := k + 1;
+	}
+	if(monthly != null)
+	{
+		i := i + 1;
+		if("DONE" in sm)
+			j := j + 1;
+		else
+			k := k + 1;
+	}
+	if(bonus != null)
+	{
+		i := i + 1;
+		if("DONE" in sb)
+			j := j + 1;
+		else
+			k := k + 1;
+	}
+	pause;
+	exec("say You currently have "+itoa(i)+" contracts.",self);
+	if(k > 0)
+		exec("say Of those, you have "+itoa(k)+" open, and "+itoa(j)+" closed.",self);
+	else 
+	{
+		exec("say You have closed all of your contracts.",self);
+		goto start;
+	}
+	
+:try_again:
+	pause;
+	exec("say Would you like details on your open contracts?",self);
+	exec("say Nod for yes, or shake for no.",self);
+
+	wait(SFB_CMD,(pc == activator));
+	if (command("nod"))
+		goto sure_thing; 
+	else if (command("shake"))
+		goto donezo;
+	else
+		goto try_again;
+	
+:sure_thing:
+
+	if(k > 0)
+	{
+		pause;
+		exec("say Here's what you have open, "+pc.name+".",self);
+		if(not("DONE" in sb))
+		{
+			log("reprint == bonus: "+sb);
+			reprint(pc,sb,"bonus");
+		}
+		if(not("DONE" in sd))
+		{
+			log("reprint == daily: "+sd);
+			reprint(pc,sd,"daily");
+		}
+		if(not("DONE" in sm))
+		{
+			log("reprint == monthly: "+sm);
+			reprint(pc,sm,"monthly");
+		}
+		
+		if(k == 1)
+		{
+			act ("$2n quietly slips you a contract.", A_SOMEONE, pc, self, null, TO_CHAR);
+			act ("$2n quietly slips $1n something.", A_SOMEONE, pc, self, null, TO_REST);
+		}
+		else
+		{
+			act ("$2n quietly slips you your contracts.", A_SOMEONE, pc, self, null, TO_CHAR);
+			act ("$2n quietly slips $1n something.", A_SOMEONE, pc, self, null, TO_REST);
+		}
+	}
+
+:donezo:
+	unsecure(pc);
+	goto start;
+}
+dilend
+
 dilbegin join();
 var
   pc: unitptr;
@@ -89,7 +243,7 @@ code
 
 :accept_rogue:
 
-	wait(SFB_CMD, activator #= pc);
+	wait(SFB_CMD, activator == pc);
 	if (command("nod"))
 		goto rogue_accepted; 
 	else if (command("shake"))
@@ -140,14 +294,18 @@ code
 :start:
 	wait(SFB_CMD, command("pray") and ((JOIN_ONGOING in activator.quests) or (JOIN_COMPLETE in activator.quests)));
 	
-	// add a function to block access while PK flag is set.
-	
 	block;
 	pc := activator;
+	secure(pc,lostpc);
 	
 	act("You kneel and begin to pray.",A_ALWAYS, pc, null, null, TO_CHAR); 
 	act("$1n kneels and begins to pray.",A_SOMEONE, pc, null, null, TO_REST);
 	pause;
+	if (dilfind("pk_timer@basis", pc))
+	{
+		act("As you pray, a sense that recent battles prevent focus.",A_ALWAYS, pc, null, null, TO_CHAR);
+		goto lostpc;
+	}
 	act("As you pray, a sense of purpose builds within you.",A_ALWAYS, pc, null, null, TO_CHAR); 	
 	pause;
 	act("The light of the candles slowly stops its flickering, and steadies.",A_ALWAYS, pc, null, null, TO_ROOM); 
@@ -160,6 +318,9 @@ code
 	pause;
 	link(pc,findroom("sanctum@bounty"));
 	act("The candle light returns to its flickering.",A_ALWAYS, pc, null, null, TO_ROOM); 
+	
+:lostpc:
+	unsecure(pc);
 	goto start;
 }
 dilend
@@ -373,6 +534,8 @@ code
 	pc := activator;
 	secure(pc, start);
 	
+	pause;
+	
 	if(pc.level < 50)
 	{
 		exec("Say You need to be at least level 50 to take contracts "+pc.name+"!", self);	
@@ -462,7 +625,11 @@ code
 		if (dspl.[0] == sdate)
 		{
 			if((sdate == "bonus") and ("DONE" in dspl))
+			{
+				while ("$bonus_target" in pc.extra)
+					subextra(pc.extra, "$bonus_target");
 				goto new_target;
+			}
 			else if(sdate == "bonus")
 				goto skip_bonus;
 			goto have_bounty;
@@ -532,9 +699,10 @@ code
 		heartbeat := PULSE_SEC/4;
 		pause;
 		exec("cackle",self);
-		experience(-20000,pc);
+		experience(-25000,pc);
 		subextra(pc.extra, "$bonus_target");
-		act("<div class='xpgain'>You have lost 20000 experience points!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		subextra(pc.extra, "$bonus_streak");
+		act("<div class='xpgain'>You have lost 25000 experience points!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 		if(not("$bounty_points" in pc.extra))
 			addextra (pc.extra,{"$bounty_points"},"0");	
 		if(atoi(pc.extra.["$bounty_points"].descr) > 5)
@@ -843,12 +1011,12 @@ leverage the competition boards. Will investigate.
 	
 	
 	destroy(self.inside);
-	exec("say It appears we can consider your "+sdone+" contract closed.",self);
+	exec("say It appears we can consider your "+sdone+" contract closed, "+pc.name+".",self);
 	exec("grin",self);
 	
 	// The reward section //
 	
-	exec("say Your streak is now at "+estreak.descr+". Here is the commission "+pc.name+".",self);
+	exec("say Your streak is now at "+estreak.descr+". Here is the commission.",self);
 	
 	// set streak length
 	i := atoi(estreak.descr);
@@ -1331,6 +1499,7 @@ position POSITION_STANDING
 dilcopy make_bounty@bounty();
 dilcopy claim_bounty();
 dilcopy join();
+dilcopy status();
 
 end 
 
@@ -1480,6 +1649,21 @@ cost 1 IRON_PIECE
 extra {}
 ""
 end
+
+bty_sign
+names {"bounty sign","sign","instructions"}
+title "some instructions"
+descr "some helpful <a cmd='read #'>instructions</a> are here."
+extra {}
+"Say 'contract' to hear the contract options available.<br><br>
+Say 'contract status' to hear the status of any existing contracts, 
+and for the option to receive a new contract card."
+weight 1
+cost 1 IRON_PIECE
+extra {}
+""
+end
+
 
 //////////////////////////////////////////////////////////////////
 //          special rewards and items for bounties.             //
@@ -1740,5 +1924,6 @@ end
 %reset
 load hunter into contracts max 1
 load shopkeep into shop max 1
+load bty_sign into contracts max 1
 
 %end

@@ -12557,7 +12557,7 @@ code
 	change_speed(self,PULSE_ROUND*4);
 	pause;
 	hm := skillchecksaopp(SKI_WHIRL, ABIL_STR, ABIL_CON, self.fighting, ABIL_DEX, ABIL_CON);
-	if (hm <= -25)
+	if (hm <= -15)
 	{
 		act("Your get tripped up and stumble in your whirl!",
 			A_SOMEONE, self, null, null, TO_CHAR);
@@ -12573,8 +12573,10 @@ code
 			A_SOMEONE, self, null, self.fighting, TO_NOTVICT);
 		act("$1n unleashes a deadly whirling attack on you!",
 			A_SOMEONE, self, null, self.fighting, TO_VICT);
-		if(hm < 31)
-			hm := 31;
+		if(hm < 16)
+			hm := 16;
+		if(hm > 60)
+			hm := 61;
 		while(hm > 0)
 		{
 			dam := meleeattack(self, self.fighting, (hm), 0);
@@ -12771,17 +12773,17 @@ code
 	if (not (self.type & (UNIT_ST_PC|UNIT_ST_NPC)))
 		quit;
 	interrupt(SFB_DEAD, activator == self, stop);
+    interrupt(SFB_MSG, TRUE, check);
 
-	heartbeat := PULSE_POINTS / 2;
+	heartbeat := PULSE_POINTS / 4;
 	j := 1 + pwr / 10;
 
 	while (i < j)
 	{
 		wait(SFB_TICK, TRUE);
 
-		i := i + 1;
+		i := i + 2;
 		self.hp := self.hp - j;
-		self.mana := self.mana - 2*j;
 		self.endurance := self.endurance - 2*j;
 		if (self.hp >= -10)
 		  position_update(self);
