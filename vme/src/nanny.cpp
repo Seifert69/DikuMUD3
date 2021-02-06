@@ -299,12 +299,12 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
    if (!char_is_playing(this))
       return;
 
-   slog(LOG_ALL, 0, "DEBUG: To menu %s", UNIT_NAME(this));
+   //slog(LOG_ALL, 0, "DEBUG: To menu %s", UNIT_NAME(this));
 
    if (!PC_IS_UNSAVED(this))
    {
-   save_player(this);
-   save_player_contents(this, TRUE);
+      save_player(this);
+      save_player_contents(this, TRUE);
    }
 
    CHAR_LAST_ROOM(this) = unit_room(this);
@@ -347,7 +347,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
    if (char_is_playing(this)) // Are we in the menu?
       return; 
 
-   slog(LOG_ALL, 0, "DEBUG: To menu %s", UNIT_NAME(this));
+   //slog(LOG_ALL, 0, "DEBUG: To game %s", UNIT_NAME(this));
 
    if (CHAR_DESCRIPTOR(this))
    {
