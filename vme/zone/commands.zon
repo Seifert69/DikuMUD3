@@ -7783,7 +7783,7 @@ code
    }
 
    log("QUIT PC " + self.name);
-   if (u.level < 200)
+   if (self.level < 200)
    {
       err := loadstr("goodbye",goodbye);
 
