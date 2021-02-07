@@ -7009,7 +7009,7 @@ code
       exd := "$channels" in self.info;
    }
 
-   log("Persistent exd.names.[0] = " + exd.names.[0]);
+   //log("Persistent exd.names.[0] = " + exd.names.[0]);
       
    slActive := exd.names;
    substring(slActive, "$channels"); // Remove the extra prefix
