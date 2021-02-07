@@ -417,7 +417,7 @@ code
    {
       // Notify of newbies on the newbie channel
       if (self.level < 2)
-         dispatch("discord msg #newbie Welcome **@" + self.name + "** has entered Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
+         dispatch("discord msg #newbie Welcome **@" + self.name + "** to Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
 
       w := whostring@comm();
       dispatch("discord who " + w); // Send to dispatcher.py via pipeDispatcher
