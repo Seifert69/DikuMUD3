@@ -4216,6 +4216,7 @@ code
    /* Any item in inv without a pricetag can't be sold! */
 
    heartbeat := PULSE_SEC * 1;
+   prev_mudday := mudday;
    rom := self;
    while(not (rom.type & UNIT_ST_ROOM ))
       rom := rom.outside;
@@ -4392,14 +4393,11 @@ code
 
    // We restock at 4am
    //
-   if (mudhour == 4)
+   if (mudday != prev_mudday)
    {
-      if (mudday != prev_mudday)
-      {
-         log("Restocking " + self.symname);
-         prev_mudday := mudday;
-         goto newday;
-      }
+      log("Restocking " + self.symname);
+      prev_mudday := mudday;
+      goto newday;
    }
 
 :processcmd:
