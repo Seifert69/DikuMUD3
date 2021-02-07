@@ -6878,7 +6878,7 @@ code
 
    if (sKey == "@")
    {
-      log("Recieve @ sKey="+sKey+" sChan="+sChan+" msg="+msg);
+      //log("Recieve @ sKey="+sKey+" sChan="+sChan+" msg="+msg);
       if (sChan in DISCORD_CHANNELS)
       {
          sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " + msg+"</div><br/>",self );

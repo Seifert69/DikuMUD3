@@ -89,7 +89,7 @@ code
    {
       if ("'#'" in arg)
       {
-        log("Dispatcher for discord got who command " + arg);
+        //log("Dispatcher for discord got who command " + arg);
         w := whostring();
         dispatch("discord who " + w); // Send to dispatcher.py via pipeDispatcher
       }
@@ -98,7 +98,7 @@ code
         //log("Dispatcher for discord got : " + arg);
 
         arg := "CHANNEL " + arg;
-        log("Dispatcher for discord seding message : [" + arg +"]");
+        //log("Dispatcher for discord seding message : [" + arg +"]");
         sendtoalldil(arg, "channel@function");
       }
    }
