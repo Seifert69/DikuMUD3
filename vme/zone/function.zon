@@ -7197,12 +7197,31 @@ code
 
 :show_chan:
    block;
+   nChan := length(discordChn);
+   x := 0;
+   while (x < nChan)
+   {
+      nEcho := discordChn.[x] in slActive;
+
+      if (nEcho)
+         s := "<div class='cpy'>Discord "+discordChn.[x]+" is active.</div><br/>";
+      else
+         s := "<div class='cw'>Discord "+discordChn.[x]+" is inactive.</div><br/>";
+
+      sendtext(s, self);
+      x := x+1;
+   }
+
    nChan := length(slActive);
    x := 0;
    while (x < nChan)
    {
-      sendtext("Channel "+slActive.[x]+" is active.<br/>",self );
-      x:= x+1;
+      if (not (slActive.[x] in discordChn))
+      {
+         s := "<div class='cpy'>Channel "+slActive.[x]+" is active</div><br/>";
+         sendtext(s, self);
+      }
+      x := x+1;
    }
    goto start;
 
