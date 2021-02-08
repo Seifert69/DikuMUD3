@@ -296,8 +296,7 @@ code
    }
 
    // Also set channel for immortals
-   // Dont destroy because it will mess up the recall functionality which the function depends on. 
-   // i := dildestroy("channel@function", self);
+   i := dildestroy("channel@function", self);
    dilcopy("channel@function", self);
 
    if (self.level<200)
