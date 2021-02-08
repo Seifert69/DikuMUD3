@@ -4395,7 +4395,7 @@ code
    //
    if (mudday != prev_mudday)
    {
-      log("Restocking " + self.symname);
+      //log("Restocking " + self.symname);
       prev_mudday := mudday;
       goto newday;
    }
