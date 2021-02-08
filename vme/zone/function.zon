@@ -6970,7 +6970,7 @@ dilend
 // MS2020: Rewritten to a) keep selected channels persistent on pc.info
 // and b) to hardcode into this function which channels to relay to Discord.
 //
-dilbegin aware unique recall fnpri(FN_PRI_SYS) channel();
+dilbegin aware unique fnpri(FN_PRI_SYS) channel();
 external
    recieve@function(slActive : stringlist, msg : string, talker : unitptr,
                     jmode:integer, dmode:integer);
