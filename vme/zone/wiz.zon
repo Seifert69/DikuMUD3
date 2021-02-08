@@ -950,7 +950,7 @@ code
 
    i := shell("compile.sh");
    act("Click ("+itoa(i)+")", A_ALWAYS, pc, null, self, TO_CHAR);
-   act("$3n presses the button on the compiler.", A_ALWAYS, pc, null, self, TO_ROOM);
+   act("$1n presses the button on the compiler.", A_ALWAYS, pc, null, self, TO_ROOM);
    pause;
    act("The <a cmd='look #'>screen</a> flickers.", A_ALWAYS, pc, null, self, TO_CHAR);
    unsecure(pc);
