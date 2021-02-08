@@ -582,7 +582,10 @@ function outputNormal(item) {
 function outputItem(item) {
     nRowCount += 1;
 
-    if (bScreenReader) // Test if more accessible in lists. 
+    // Apparently, adding items to lists, makes readers behave erratically
+    // if (bScreenReader) // Test if more accessible in lists. 
+
+    if (false)
         outputReader(item);
     else
         outputNormal(item);
