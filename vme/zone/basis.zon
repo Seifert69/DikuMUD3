@@ -276,6 +276,7 @@ external
 
 var
    i : integer;
+   exd : extraptr;
 code
 {
    heartbeat := PULSE_SEC;
@@ -286,6 +287,13 @@ code
    // Make sure we have a current DIL running
    i := dildestroy("send_prompt@update", self);
    dilcopy("send_prompt@update",self);
+
+   exd := "$channels" in self.info;
+   if (exd == null)
+   {
+      // Setup default comm channels
+      addextra(self.info, {"$channels", "newbie", "mud", "builder"}, "");
+   }
 
    // Also set channel for immortals
    // Dont destroy because it will mess up the recall functionality which the function depends on. 
@@ -520,13 +528,6 @@ code
       informer();
       login_modify(self);
       exec("look", self);
-
-      exd := "$channels" in self.info;
-      if (exd == null)
-      {
-         // Setup default comm channels
-         addextra(self.info, {"$channels", "newbie", "mud"}, "");
-      }
       quit;
    }
 
