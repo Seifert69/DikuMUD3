@@ -876,6 +876,8 @@ code
    }
 
    exec("snicker", self);
+   pause;
+
    log(self.symname + " thinks there are no players on and beings a reboot.");
    rebooting@commands("1");
    goto start;
