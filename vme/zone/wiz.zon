@@ -881,10 +881,13 @@ code
       goto check;
    }
 
+   log(self.symname + " thinks there are no players on and begins a reboot.");
+
+   heartbeat := PULSE_SEC*1;
+   pause;
    exec("snicker", self);
    pause;
 
-   log(self.symname + " thinks there are no players on and beings a reboot.");
    rebooting@commands("1");
    goto start;
 }
