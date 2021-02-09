@@ -808,7 +808,7 @@ flags {UNIT_FL_SACRED}
 flags {UNIT_FL_NO_WEATHER,UNIT_FL_INDOORS,UNIT_FL_PRIVATE,UNIT_FL_NO_TELEPORT}
 end
 
-%mobiles
+
 %mobiles
 
      odin
@@ -821,6 +821,68 @@ descr
 BASE_NORSE_GOD(199,SEX_MALE,ARM_CLOTHES)
 
 end
+
+     reboot_daemon
+
+/* God of death */
+names {"reboot daemon", "daemon"}
+title "a reboot daemon"
+descr "A reboot daemon is playing here"
+extra {}
+"Even though she's a daemon she looks quite harmless. But with daemons you just 
+never really know, do you. You probably shouldn't <a cmd='# daemon'>ruffle</a> its hair."
+BASE_DEMON_LESSER(1, SEX_FEMALE, ARM_CLOTHES)
+
+dilbegin aware rebootdaemon();
+external
+   rebooting@commands(s : string);
+
+var
+   u : unitptr;
+   i : integer;
+code
+{
+
+:start:
+   heartbeat := PULSE_SEC*1;
+   wait(SFB_CMD, command("ruffle"));
+   if (activator.level < 254)
+      goto start;
+
+   if (findunit(activator, argument, FIND_UNIT_SURRO, null) != self)
+      goto start;
+
+   pause;
+   exec("giggle", self);
+   pause;
+
+:check:
+   // Check for reboot
+   i := 0;
+   u := ghead();
+
+   while (u.type == UNIT_ST_PC)
+   {
+      if (u.level < 200)
+         i := i + 1;
+      u := u.next;
+   }
+
+   if (i >= 1)
+   {
+      heartbeat := PULSE_SEC*300;
+      pause;
+      goto check;
+   }
+
+   exec("snicker", self);
+   log(self.symname + " thinks there are no players on and beings a reboot.");
+   rebooting@commands("1");
+   goto start;
+}
+dilend
+end
+
 
 
 %objects
@@ -1109,5 +1171,5 @@ load bell into chat local 1
 load odin into chat local 1
 load compiler into papis_cottage local 1
 load universe into papis_cottage local 1
-
+load reboot_daemon into papis_cottage local 1
 %end
