@@ -847,7 +847,13 @@ code
    heartbeat := PULSE_SEC*1;
    wait(SFB_CMD, command("ruffle"));
    if (activator.level < 254)
+   {
+      act("$3n bites you very hard in your finger.", A_ALWAYS, activator, null, self, TO_CHAR);
+      act("$3n bites $1n  very hard in $1s finger.", A_ALWAYS, activator, null, self, TO_CHAR);
+      if (activator.hp > 1)
+         activator.hp := 1;
       goto start;
+   }
 
    if (findunit(activator, argument, FIND_UNIT_SURRO, null) != self)
       goto start;
