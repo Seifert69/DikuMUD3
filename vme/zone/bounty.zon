@@ -10,7 +10,7 @@ END HEADER*/
 #include <macros.h>
 
 #define JOIN_ONGOING "Becoming a Bounty Hunter"
-#define JOIN_COMPLETE "Bounty Hunters"
+#define JOIN_COMPLETE "Bounty Hunter"
 
 /* ================================================================== */
 /*                                ZONE                                */
@@ -35,6 +35,27 @@ implemented as of v1.0. There is some code in the zone to implement that, but
 it seemed a messy and cumbersome implementation. I'll look to leverage existing 
 competition zone infrastructure for future versions.
 
+///////////////////////////////
+get 30 daily bounty streak
+talk to bounty hunter, accept question
+pray to enter sanctum, feast
+talk to the guide. Get ability to feast.
+talk to the historian. 
+talk to the blacksmith. 
+	do quest?
+	Get ability to list arms/armors.
+talk to the jeweler. 
+	do quest?
+	Get ability to buy list jewely.
+talk to the historian. 
+	Historian will clarify ask for playing spy on Al Kazeem. (maybe captain)?
+Talk to Al Kazeem
+	Either choose to betray the bounty hunters, by alerting targets
+
+// spree - how does it fit in the story?
+// who gives it? Who rewards it?
+
+
 "
 
 help
@@ -48,6 +69,69 @@ number of other needs have been brought before the bounty hunters."
 /* ================================================================== */
 
 %dil
+
+dilbegin tablet();
+var
+	pc : unitptr;
+	slt : stringlist;
+	bty : extraptr;
+	targ : unitptr;
+	sdate : string;
+	buf : string;
+	which : string;
+	slbty : stringlist;
+	i : integer;
+	cstat : string;
+code
+{
+	slbty := {"$daily_target","$monthly_target","$bonus_target"};
+:start:
+	
+	wait(SFB_DONE,command("look") and ((argument == "bounty hunters tablet") or (argument == "tablet")) and (activator == self.outside));
+	
+	pc := activator;
+	secure(pc,lostpc);
+	
+	block;
+	buf := "<div class='cr'>REWARD!!</div><br><br>";
+	i := 0;
+	
+	while (i < length(slbty))
+	{
+		bty := slbty.[i] in pc.extra;
+		if (bty)
+		{
+			slt := split(bty.descr,"|");
+			if("DONE" in slt) 
+				cstat := "Closed";
+			else
+				cstat := "Open";
+			which := replace("$","",slbty.[i]);
+			which := replace("_target","",which);
+			targ := findsymbolic(slt.[1]);
+			sdate := slt.[0];
+			buf := buf + 
+			"<div class='cr'>-------------------------------------------------------</div>" +
+			"<br><div class='cpw'>Contract Date: </div><div class='cr'>" + sdate +
+			"<br><div class='cpw'>Contract Term: </div><div class='cr'>" + which +
+			"<br><div class='cpw'>Target Name: </div><div class='cr'>" + targ.name + 
+			"<br><div class='cpw'>Target Alias: </div><div class='cr'>" + targ.title + 
+			"<br><div class='cpw'>Target Description: </div><div class='cr'> " + targ.outside_descr +
+			"<br><div class='cpw'>Contract Status: </div><div class='cr'> " + cstat +
+			"<br>-------------------------------------------------------</div><br><br>";
+		}
+		i := i + 1;
+	}
+	
+	act (buf, A_ALWAYS, pc, null, null, TO_CHAR);
+	
+:lostpc:
+
+	unsecure(pc);
+	goto start;
+	
+}
+dilend
 
 dilbegin reprint(pc:unitptr, buf:string, which:string);
 var
@@ -104,20 +188,13 @@ code
 	monthly := "$monthly_target" in pc.extra;
 	bonus := "$bonus_target" in pc.extra;
 	
-	sm := monthly.descr;
-	sd := daily.descr;
-	sb := bonus.descr;
-	
-	log("daily := "+sd);
-	log("bonus := "+sb);
-	log("monthly := "+sm);
-	
 	i := 0;
 	j := 0;
 	k := 0;
 	
 	if(daily != null)
 	{
+		sd := daily.descr;
 		i := i + 1;
 		if("DONE" in sd)
 			j := j + 1;
@@ -126,6 +203,7 @@ code
 	}
 	if(monthly != null)
 	{
+		sm := monthly.descr;
 		i := i + 1;
 		if("DONE" in sm)
 			j := j + 1;
@@ -134,6 +212,7 @@ code
 	}
 	if(bonus != null)
 	{
+		sb := bonus.descr;
 		i := i + 1;
 		if("DONE" in sb)
 			j := j + 1;
@@ -169,21 +248,12 @@ code
 	{
 		pause;
 		exec("say Here's what you have open, "+pc.name+".",self);
-		if(not("DONE" in sb))
-		{
-			log("reprint == bonus: "+sb);
+		if((sb != null) and (not("DONE" in sb)))
 			reprint(pc,sb,"bonus");
-		}
-		if(not("DONE" in sd))
-		{
-			log("reprint == daily: "+sd);
+		if((sd != null) and (not("DONE" in sd)))
 			reprint(pc,sd,"daily");
-		}
-		if(not("DONE" in sm))
-		{
-			log("reprint == monthly: "+sm);
+		if((sm != null) and (not("DONE" in sm)))
 			reprint(pc,sm,"monthly");
-		}
 		
 		if(k == 1)
 		{
@@ -227,7 +297,7 @@ code
 	pause;
     exec("say Perhaps, you could be worthy.", self);
     pause;
-	exec("say It is no small feat to close 30 consecutive daily bounties.", self);
+	exec("say It is no small feat to close 30 consecutive daily contracts.", self);
 	pause;
 	exec("say It shows a certain commitment to our way.", self);
 	pause;
@@ -276,7 +346,6 @@ code
 	goto start;	
 :lostpc:
 
-	exec("sigh", self);
 	goto start;
 }
 dilend // END join
@@ -284,8 +353,9 @@ dilend // END join
 
 dilbegin pray();
 var
-  pc: unitptr;
-  exdp: extraptr;
+  pc : unitptr;
+  exdp : extraptr;
+  tt : integer;
 
 code
 {
@@ -301,29 +371,30 @@ code
 	act("You kneel and begin to pray.",A_ALWAYS, pc, null, null, TO_CHAR); 
 	act("$1n kneels and begins to pray.",A_SOMEONE, pc, null, null, TO_REST);
 	pause;
-	if (dilfind("pk_timer@basis", pc))
+   tt:=atoi(self.extra.["$PK_TIMER"].descr);
+	if(not(realtime-tt>600))
 	{
 		act("As you pray, a sense that recent battles prevent focus.",A_ALWAYS, pc, null, null, TO_CHAR);
 		goto lostpc;
 	}
 	act("As you pray, a sense of purpose builds within you.",A_ALWAYS, pc, null, null, TO_CHAR); 	
 	pause;
-	act("The light of the candles slowly stops its flickering, and steadies.",A_ALWAYS, pc, null, null, TO_ROOM); 
+	act("The light of the candles slowly stops its flickering, and steadies.",A_ALWAYS, pc, null, null, TO_ALL); 
 	pause;
-	act("The candle light begins to intensify, the formerly dark room is now bright as day.",A_ALWAYS, pc, null, null, TO_ROOM);
+	act("The light begins to intensify, the formerly dark room is now bright as day.",A_ALWAYS, pc, null, null, TO_ALL);
 	pause;
 	act("The world around you begins to dissolve.",A_ALWAYS, pc, null, null, TO_CHAR); 
 	pause;
-	act("There is a <div class='cpy'>bright flash</div>!",A_ALWAYS, pc, null, null, TO_ROOM);
-	pause;
+	act("There is a <div class='cpy'>bright flash</div>!",A_ALWAYS, pc, null, null, TO_ALL);
 	link(pc,findroom("sanctum@bounty"));
+	exec("look",pc);
 	act("The candle light returns to its flickering.",A_ALWAYS, pc, null, null, TO_ROOM); 
 	
 :lostpc:
 	unsecure(pc);
 	goto start;
 }
-dilend
+dilend // END Pray
 
 dilbegin pray2();
 var
@@ -332,23 +403,27 @@ var
 
 code
 {
-	heartbeat:= PULSE_SEC*4;
+	heartbeat := PULSE_SEC*2;
 
 :start:
 	wait(SFB_CMD, command("pray") and ((JOIN_ONGOING in activator.quests) or (JOIN_COMPLETE in activator.quests)));
 	block;
 	pc := activator;
-	
+	secure(pc,lostpc);
 	act("You kneel and begin to pray.",A_ALWAYS, pc, null, null, TO_CHAR); 
 	act("$1n kneels and begins to pray.",A_SOMEONE, pc, null, null, TO_REST);
 	pause;
-	act("There is a <div class='cpw'>cold draft</div>.",A_ALWAYS, pc, null, null, TO_ROOM);
+	act("There is a <div class='cpw'>cold draft</div>.",A_ALWAYS, pc, null, null, TO_ALL);
 	pause;
+	act("The world around you dissolves.",A_ALWAYS, pc, null, null, TO_CHAR); 
 	link(pc,findroom("shrine@bounty"));
+	exec("look",pc);
 	act("The room returns to normal.",A_ALWAYS, pc, null, null, TO_ROOM); 
+:lostpc:
+	unsecure(pc);
 	goto start;
 }
-dilend
+dilend // END Pray2
 
 dilbegin feast();
 var
@@ -360,11 +435,11 @@ code
 	
 :start:
 	
-	wait(SFB_CMD, ( (activator.type == UNIT_ST_PC) and (command("feast")) and ((JOIN_ONGOING in pc.quests) or (JOIN_COMPLETE in pc.quests)))) ;
+	wait(SFB_CMD, command("feast") and ((JOIN_ONGOING in activator.quests) or (JOIN_COMPLETE in activator.quests)));
 
+	block;
 	pc:= activator;
 	secure(pc,lostpc);
-	block;
 	
 	act("You sit and partake in the hunters feast.",A_ALWAYS, pc, null, null, TO_CHAR);
 	act("$1n sits and partakes in the hunters feast.",A_ALWAYS, pc, null, null, TO_REST);
@@ -375,7 +450,7 @@ code
 		pause;
 		act("As you continue eating the feeling grows stronger.",A_ALWAYS, pc, null, null, TO_CHAR);
 		pause;
-		act("You suddenly realize, that you are not alone.",A_ALWAYS, pc, null, null, TO_CHAR);
+		act("You suddenly realize that you are not alone.",A_ALWAYS, pc, null, null, TO_CHAR);
 		u := load("guide@bounty");
 		goto lostpc;
 	}
@@ -393,7 +468,7 @@ code
 	unsecure(pc);
 	goto start;
 }
-dilend
+dilend // END Feast
 
 dilbegin expel();
 var
@@ -412,18 +487,19 @@ code
 	exec("say It is a special kind of fool who would attack me here.",self);
 	pause;
 	act("$1n gestures, and the world fades.",A_SOMEONE, self, pc, null, TO_CHAR);
-	act("$1n gestures, and $2n begins to fade.",A_SOMEONE, self, pc, null, TO_CHAR);
+	act("$1n gestures, and $2n begins to fade.",A_SOMEONE, self, pc, null, TO_ROOM);
 	pc.hp := 0;
 	pc.endurance := 0;
 	pc.mana := 0;
 	subextra(pc.extra, "$daily_streak");
 	position_update(pc);
 	link(pc,findroom("entry_room@bounty"));
+	act("You feel a searing pain!",A_SOMEONE, self, pc, null, TO_CHAR);
 :lostpc:
 	unsecure(pc);
 	goto start;
 }
-dilend
+dilend // END Expel
 
 dilbegin guide();
 var
@@ -434,35 +510,200 @@ code
 	
 :start:
 	
-	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (JOIN_ONGOING in pc.quests) and (not("$feasted" in pc.extra)));
+	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (JOIN_ONGOING in activator.quests) and (not("$feasted" in activator.extra)));
 
 	pc:= activator;
 	secure(pc,lostpc);
-	
+	pause;
 	exec("say Please, dont let me interrupt you partaking of this feast.", self);
 	pause;
 	exec("say After all, it was prepared just for your arrival.", self);
 	pause;
-	exec("say I do however have... questions for you.", self);
+	exec("say I do however have... a question for you.", self);
 	pause;
 	exec("say The Bounty Hunters have been here for a period of time which extends beyond our records.", self);
 	pause;
 	exec("say Indeed, The Historian believes this collective has existed since before ANY written records.", self);
 	pause;
-	exec("say You may leave here at any time. Resume your prayers in the Inner Sanctum, and they will return you to the world outside.", self);
+	exec("say I'll be frank, "+pc.name+". Our guild is at risk.", self);
+	pause;
+	exec("say Our way of living is at risk.", self);
+	pause;
+	exec("say A great enemy is preparing to unleash its fury upon us.", self);
+	pause;
+	exec("say While we have worked at the services of emperors, kings, demons and angels, a new force" +
+		" which considers itself the face of a just world is rising.", self);
+	pause;
+	exec("say While we have never operated in the shadows, and certainly consider our role one that works" +
+		" to bring balance in the world, some believe we need to be destroyed.", self);
+	pause;
+	exec("ponder",self);
+	pause;
+	exec("say Trust is hard to come by, but I believe you can be relied on.", self);
+	pause;
+	exec("say Go and speak to The Historian. He can give you further guidance.", self);
+	pause;
+	exec("say One final note - you may leave here and return at any time. Resume your prayers in the Inner Sanctum, and you will find yourself returned to the world outside.", self);
 	pc.hp := pc.max_hp;
 	pc.endurance := pc.max_endurance;
 	pc.mana := pc.max_mana;
 	pc.full:=24;
 	pc.thirst:=24;
-	act("You feel fully restored.",A_ALWAYS, pc, null, null, TO_CHAR);
+	act("As you finish the feast, you feel fully restored.",A_ALWAYS, pc, null, null, TO_CHAR);
 	addextra(pc.extra,{"$feasted"},"0");
 	position_update(pc);
+	act("You suddenly notice that The Guide is no longer here.",A_ALWAYS, pc, null, null, TO_ALL);
+	destroy(self);
 	
 :lostpc:
 
 	unsecure(pc);
 	goto start;
+}
+dilend // END Guide
+
+dilbegin historian();
+var
+	pc:unitptr;
+code
+{
+	heartbeat:=PULSE_SEC*4;
+	
+:start:
+	
+	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (JOIN_ONGOING in activator.quests) and ("$feasted" in activator.extra) and (not("$historian_ongoing" in activator.extra)));
+
+	pc:= activator;
+	secure(pc,lostpc);
+	
+	pause;
+	exec("say Welcome "+pc.name+".", self);
+	pause;
+	exec("say I hope The Guide made you feel welcome?", self);
+	pause;
+	exec("say There was considerable preparation put into your arrival.", self);
+	pause;
+	exec("say I'll not look to deceive you, the Guild is in need of your help.", self);
+	pause;
+	exec("say I've been here keeping these timeless records for years beyond count.", self);
+	pause;
+	addextra(pc.extra,{"$historian_ongoing"},"0");
+	
+:lostpc:
+
+	unsecure(pc);
+	goto start;
+
+}
+dilend
+
+
+// duration is number of minutes, amt is amount of xp, kind is "xp","kills","both"
+dilbegin spree(dur : integer, amt : integer, kind : string);
+var
+	st : integer;
+	sc : integer;
+	sx : integer;
+	bx : integer;
+	seconds : integer;
+	minutes : integer;
+code
+{
+:init:
+
+	subextra(self.extra,"$SPREE_TIMER");
+	addextra(self.extra,{"$SPREE_TIMER"},itoa(realtime));
+	subextra(self.extra,"$SPREE_COUNT");
+	addextra(self.extra,{"$SPREE_COUNT"},itoa(0));
+	subextra(self.extra,"$SPREE_XP");
+	addextra(self.extra,{"$SPREE_XP"},itoa(0));
+	bx := self.exp;
+:start:
+	
+
+	
+	wait(SFB_DEAD, command(CMD_AUTO_DEATH) and (activator == self.fighting));
+
+	st := atoi(self.extra.["$SPREE_TIMER"].descr);
+	
+	if(realtime - st > (dur * 60))
+		goto donezo;
+
+	sx := self.exp - bx;	
+	sc := sc + 1;
+	subextra(self.extra,"$SPREE_COUNT");
+	addextra(self.extra,{"$SPREE_COUNT"},itoa(sc));
+	subextra(self.extra,"$SPREE_XP");
+	addextra(self.extra,{"$SPREE_XP"},itoa(sx));
+	sendtext ("You have "+itoa(sc)+" kills and "+itoa(sx)+" experience in your spree.<br/>",self);
+	
+:check_time:
+
+	seconds := 0;
+	minutes := 0;
+	seconds := realtime - st;
+	seconds := 600 - seconds;
+	minutes := seconds / 60;
+	
+	if (minutes<1)
+	{
+		if (seconds==1)
+			sendtext ("You have 1 more second before your spree ends.<br/>",self);
+		else
+			sendtext ("You have "+itoa(seconds)+" more seconds before your spree ends.<br/>",self);
+	}
+	else
+	{
+		seconds :=seconds-(minutes*60);
+		if ((minutes==1) and (seconds==1))
+			sendtext ("You have 1 minute and 1 second before your spree ends.<br/>",self);
+		else if (minutes==1)
+			sendtext ("You have 1 minute and "+itoa(seconds)+" seconds before your spree ends.<br/>",self);
+		else if (seconds==1)
+			sendtext ("You have "+itoa(minutes)+" minutes and 1 second before your spree ends.<br/>",self);
+		else
+			sendtext ("You have "+itoa(minutes)+" minutes and "+itoa(seconds)+" seconds before your spree ends.<br/>",self);
+	}
+	goto start;
+:donezo:
+
+	subextra(self.extra,"$SPREE_COUNT");
+	addextra(self.extra,{"$SPREE_COUNT"},itoa(sc));
+	subextra(self.extra,"$SPREE_XP");
+	addextra(self.extra,{"$SPREE_XP"},itoa(sx));
+	act("Your spree has come to an end! You bagged "+itoa(sc)+" kills and gained "+itoa(sx)+" experience.",A_ALWAYS, self, null, null, TO_CHAR);
+	quit;
+}
+dilend
+
+dilbegin new_spree();
+var
+	pc : unitptr;
+	i : integer;
+	dur : integer;
+	amt : integer;
+	kind : string;
+code
+{
+	heartbeat := PULSE_SEC*4;
+	
+:start:
+	
+	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (command("say")) and (("spree" == argument)));
+
+	pc := activator;
+	secure(pc,donezo);
+	
+	exec("say A new spree huh? OK. It will be a 10 minute spree requiring 30,000 xp",self);
+	dur := 10;
+	amt := 30000;
+	kind := "both";
+	dilcopy ("spree@bounty("+itoa(dur)+","+itoa(amt)+","+kind+")",pc);
+	
+:donezo:
+	
+	unsecure(pc);
+	goto start;	
 }
 dilend
 
@@ -486,7 +727,7 @@ code
 	i := atoi(buf);
 	return (i);
 }
-dilend
+dilend // END dateformat
 
 dilbegin make_bounty();
 external
@@ -512,6 +753,7 @@ var
 	idate	: integer;
 	ibdate	: integer;
 	sltemp  : stringlist;
+	buf 	: string;
 code
 {
 :init:
@@ -535,6 +777,7 @@ code
 	secure(pc, start);
 	
 	pause;
+	buf := "";
 	
 	if(pc.level < 50)
 	{
@@ -657,23 +900,30 @@ code
        ((targ.race > RACE_PLANT_MIN) and (targ.race <= RACE_PLANT_MAX)))
 		goto new_target;
 	addextra (pc.extra,slextra,sdate + "|" + targ.symname + "|" + targ.title);
-	exec("Say Here you go "+pc.name+", a "+which+" contract.", self);	
-	bty := load("contract@bounty");
 	if(which == "monthly")
 		which := slfmonth.[i];
-	bty.extra.[0].descr := bty.extra.[0].descr + 
-		"<br><div class='cpw'>Contract Date: </div><div class='cr'>" + sdate +
+	
+	buf := "<br><div class='cpw'>Contract Date: </div><div class='cr'>" + sdate +
 		"<br><div class='cpw'>Contract Term: </div><div class='cr'>" + which +
 		"<br><div class='cpw'>Target Name: </div><div class='cr'>" + targ.name + 
 		"<br><div class='cpw'>Target Alias: </div><div class='cr'>" + targ.title + 
 		"<br><div class='cpw'>Target Description: </div><div class='cr'> " + targ.outside_descr;
-
-    addextra (bty.extra,{"$symname"},targ.symname);
-    addextra (bty.extra,{"$player"},pc.name);
-    addextra (bty.extra,{"$date"},sdate);
-	link(bty,pc);
-	act ("$2n quietly slips you a contract.", A_SOMEONE, pc, self, null, TO_CHAR);
-	act ("$2n quietly slips $1n something.", A_SOMEONE, pc, self, null, TO_REST);
+	if(not(findsymbolic(pc, "tablet@bounty", FIND_UNIT_INVEN)))
+	{
+		exec("Say Here you go "+pc.name+", a "+which+" contract.", self);	
+		bty := load("contract@bounty");
+		bty.extra.[0].descr := bty.extra.[0].descr + buf;
+		addextra (bty.extra,{"$symname"},targ.symname);
+		addextra (bty.extra,{"$player"},pc.name);
+		addextra (bty.extra,{"$date"},sdate);
+		link(bty,pc);
+		act ("$2n quietly slips you a contract.", A_SOMEONE, pc, self, null, TO_CHAR);
+		act ("$2n quietly slips $1n something.", A_SOMEONE, pc, self, null, TO_REST);
+	}
+	else
+		exec("say I've updated your tablet with the new "+which+" contract, "+pc.name,self);
+	
+	act (buf, A_ALWAYS, pc, null, null, TO_ALL);	
 	goto the_end;
 	
 :have_bounty:
@@ -922,12 +1172,12 @@ code
 	}
 	
 	
-		slstr := split(etarg.descr, "|");
-		if("DONE" in slstr)
+	slstr := split(etarg.descr, "|");
+	if("DONE" in slstr)
+		goto already_done;
+	if(not("bonus" in slstr))
+		if (slstr.[0] != sdate)
 			goto already_done;
-		if(not("bonus" in slstr))
-			if (slstr.[0] != sdate)
-				goto already_done;
 		
 	destroy(self.inside);	
 	
@@ -1011,6 +1261,7 @@ leverage the competition boards. Will investigate.
 	
 	
 	destroy(self.inside);
+	exec("say Yes, "+slstr.[2]+"'s head.",self);
 	exec("say It appears we can consider your "+sdone+" contract closed, "+pc.name+".",self);
 	exec("grin",self);
 	
@@ -1030,22 +1281,22 @@ leverage the competition boards. Will investigate.
 		else if (i < 10)
 			rwrd := 15000;
 		else if (i < 100)
-			rwrd := rwrd * (i * (3/2));
-		else if (i < 200)
-			rwrd := rwrd * (i * 2);
-		else if (i < 300)
 			rwrd := rwrd * (i * 3);
-		else if (i >= 300)
+		else if (i < 200)
 			rwrd := rwrd * (i * 4);
+		else if (i < 300)
+			rwrd := rwrd * (i * 5);
+		else if (i >= 300)
+			rwrd := rwrd * (i * 6);
 		
 		bp := 2;
 		
 		// streak milestone rewards
-		if(i == 14)
+		if(i == 14 or i == 30 or i == 60 or i == 90 or i == 180 or i == 365)
 		{
-			exec("say I've included a little something for making 14 daily contracts in a row.",self);
+			exec("say I've included a little something for making "+itoa(i)+" daily contracts in a row.",self);
 			bp := bp * 2;
-			rwrd := rwrd * (3/2);
+			rwrd := rwrd * 2;
 		}
 		
 	}
@@ -1055,21 +1306,21 @@ leverage the competition boards. Will investigate.
 		// cash reward will be iron = xp value / 2
 		rwrd := 10000;
 		if (i < 3)
-			rwrd := rwrd * (i * (3/2));
-		else if (i < 10)
 			rwrd := rwrd * (i * 2);
-		else if (i < 15)
+		else if (i < 10)
 			rwrd := rwrd * (i * 3);
-		else if (i >= 20)
+		else if (i < 15)
 			rwrd := rwrd * (i * 4);
+		else if (i >= 20)
+			rwrd := rwrd * (i * 5);
 		
 		bp := 10;
 		// streak milestone rewards
-		if(i == 6)
+		if(i == 6 or i == 12 or i == 18 or i == 24)
 		{
-			exec("say I've included a little something for making 6 monthly contracts in a row.",self);
+			exec("say I've included a little something for making "+itoa(i)+" monthly contracts in a row.",self);
 			bp := bp * 2;
-			rwrd := rwrd * (3/2);
+			rwrd := rwrd * 2;
 		}
 	}
 	else if (sdone == "bonus")
@@ -1083,7 +1334,7 @@ leverage the competition boards. Will investigate.
 		{
 			exec("say I've included a little something for making "+itoa(i)+" bonus contracts in a row.",self);
 			bp := 2;
-			rwrd := rwrd * (3/2);
+			rwrd := rwrd * 2;
 		}
 	}
 	
@@ -1278,13 +1529,13 @@ code
 	heartbeat := PULSE_SEC;
 	
 	ln:=length(items);
-	buf:="<h1><div class='cpn'Bounty Hunters Guild Shop</div></h1>";
-	buf:=buf+"<table><tr><th>Item #</th><th>Item Name</th><th>Bounty Points</th></tr>";
+	buf:="<b><div class='cpn'>Bounty Hunters Guild Shop</div></b>";
+	buf:=buf+"<table><tr><th>Item # - </th><th>Item Name</th><th> - Bounty Points</th></tr>";
 	i := 0;
 	j := 1;
 	while(i < (ln-2))
 	{
-		buf:=buf+"<tr><td>"+itoa(j)+"</td><td>"+items.[i+1]+"</td><td>"+items.[i+2]+"</td></tr>";
+		buf:=buf+"<tr><td>"+itoa(j)+" - </td><td>"+items.[i+1]+"</td><td> - "+items.[i+2]+"</td></tr>";
 		i := i+3;
 		j := j+1;
 	}
@@ -1450,7 +1701,7 @@ ALWAYS_LIGHT
 
 south to bounty_1;
 
-dilcopy pray();
+dilcopy pray@bounty();
 
 end
 
@@ -1462,7 +1713,7 @@ flags {UNIT_FL_INDOORS, UNIT_FL_SACRED, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
 
-dilcopy pray2();
+dilcopy pray2@bounty();
 
 north to sanctum_1;
 
@@ -1476,7 +1727,7 @@ flags {UNIT_FL_INDOORS, UNIT_FL_SACRED, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
 
-dilcopy feast();
+dilcopy feast@bounty();
 
 south to sanctum;
 
@@ -1515,7 +1766,8 @@ alignment 0
 M_AVG_DWARF(100,SEX_MALE)
 position POSITION_STANDING 
 
-dilcopy shoplist@bounty({"full_restore","Potion of Full Restoration","100",
+dilcopy shoplist@bounty({"tablet","Bounty Hunters Tablet","150",
+						"full_restore","Potion of Full Restoration","100",
 						"strong_restore","Potent Potion of Restoration","75",
 						"half_restore","Potion of Restoration","50",
 						"full_mana","Potion of Full Mana","40",
@@ -1585,6 +1837,40 @@ position POSITION_STANDING
 
 end 
 
+blacksmith
+names {"the blacksmith","blacksmith","groll"}    
+title "The Blacksmith"        
+descr "A strong groll blacksmith stands at the forge."
+extra{}
+"The Blacksmith is a central figure in the Bounty Hunters guild. 
+With every swing of his hammer, he brings glory and strength to the 
+members. He works to craft the unique weapons, and armors which 
+serve the Hunters." 
+
+alignment 0
+M_UNICORN_XLARGE(100,SEX_MALE)
+position POSITION_STANDING 
+
+dilcopy new_spree@bounty();
+
+end 
+
+jeweler
+names {"the jeweler","jeweler","half-elf"}    
+title "The Jeweler"        
+descr "A half-elven jeweler is here working her craft."
+extra{}
+"The Bounty Hunters have relied on the finely-wrought jewelery 
+produced by The Jeweler to both reward their members, and support 
+the payments which work to lubricate hands and minds in favor 
+of their work." 
+
+alignment 0
+M_UNICORN_XLARGE(100,SEX_MALE)
+position POSITION_STANDING 
+
+end 
+
 %objects
 
 contract
@@ -1596,6 +1882,20 @@ extra {}
 manipulate {MANIPULATE_TAKE}
 weight 1
 cost 1 IRON_PIECE
+end
+
+tablet
+names {"bounty hunters tablet","btyhntrtblt","tablet"}
+title "the bounty hunters tablet"
+descr "A strange stone tablet lies here."
+extra {}
+""
+manipulate {MANIPULATE_TAKE}
+weight 1
+cost 1 IRON_PIECE
+
+dilcopy tablet@bounty();
+
 end
 
 // longest streaks
@@ -1653,7 +1953,7 @@ end
 bty_sign
 names {"bounty sign","sign","instructions"}
 title "some instructions"
-descr "some helpful <a cmd='read #'>instructions</a> are here."
+descr "Some helpful <a cmd='read #'>instructions</a> are here."
 extra {}
 "Say 'contract' to hear the contract options available.<br><br>
 Say 'contract status' to hear the status of any existing contracts, 
