@@ -7584,6 +7584,25 @@ extra {} "Disgusting!"
 M_ZOMBIE_SMALL(4,SEX_NEUTRAL)
 
 
+dilbegin aware mytimer();
+var
+  rt : integer;
+  i : integer;
+code
+{
+   wait(SFB_CMD, command("twiddle"));
+   heartbeat := PULSE_SEC*60;
+   rt := realtime;
+   i := 0;
+:loop:
+   wait(SFB_TICK, TRUE);
+   i := i + 1;
+   log("wait() for " + itoa(i) + " minutes with a wall time of " + itoa(realtime - rt));
+   goto loop;
+
+}
+dilend
+
 dilbegin dizzi();
 code
 {
