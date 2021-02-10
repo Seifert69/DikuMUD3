@@ -15,7 +15,9 @@ END HEADER*/
 /* ================================================================== */
 /*                                ZONE                                */
 /* ================================================================== */
+
 %zone bounty
+
 lifespan 10
 reset RESET_ANYHOW
 title "Bounty Hunters Guild@Mainland"
@@ -69,6 +71,96 @@ number of other needs have been brought before the bounty hunters."
 /* ================================================================== */
 
 %dil
+
+
+// Called when a player logs in.
+//
+//
+dilbegin login_event();
+external
+   login_streak();
+code
+{
+   login_streak();
+
+   //
+   // Add more stuff here if you like, like competitions
+   //
+
+   return;
+}
+dilend
+
+
+// 1 means your first login
+// 2 means you've logged on for two consecutive days
+// 3... etc.
+//
+dilbegin streak_bonus(nCount : integer);
+code
+{
+   log("Awarding " + self.symname + " streak bonus for " + itoa(nCount) + " days.");
+
+   //
+   // @Sender assign a reward here
+   // Either cap at e.g. 7 days, or just keep it going up?
+   //
+   return;
+}
+dilend
+
+
+// Call when a PC logs on or off (self == pc)
+//
+// .[1] == Last day the streak was hit
+// .[2] == streak since this day
+//
+dilbegin login_streak();
+external
+   streak_bonus(nCount : integer);
+
+var
+   exd : extraptr;
+   sl  : stringlist;
+   nToday : integer;
+   nLast  : integer;
+code
+{
+   exd := "$loginstreak" in self.info;
+   if (exd == null)
+   {
+      sl := {"$loginstreak", "0", "0"};
+      addextra(self.info, sl, "");
+      exd := "$loginstreak" in self.info;
+   }
+
+   nToday := realtime / (60*60*24);
+   nLast  := atoi(exd.names.[1]);
+
+   // did we do a login streak?
+   if (nLast+1 == nToday)
+   {
+      act("<div class='cpy'>One more login streak reward.</div>", A_ALWAYS, self, null, null, TO_CHAR);
+      exd.names.[1] := itoa(nToday);  // Move to the next day
+      streak_bonus(nToday - atoi(exd.names.[2]) + 1);
+   }
+   else if (nLast+1 < nToday)    // Did we miss out on the streak?
+   {
+      act("<div class='cpy'>Restarting your login streaks.</div>", A_ALWAYS, self, null, null, TO_CHAR);
+      exd.names.[1] := itoa(nToday);
+      exd.names.[2] := itoa(nToday);  // Set streak since
+      streak_bonus(1);
+   }
+   else
+   {
+      // log("A day hasn't passed yet....");
+      return;
+   }
+
+   return;
+}
+dilend
+
 
 dilbegin tablet();
 var

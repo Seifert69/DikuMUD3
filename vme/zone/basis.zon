@@ -50,6 +50,8 @@ Bright White.<br/>
 
 %dil
 
+
+
 #define AVERAGE_SKILL_COST      10
 #define SKILL_POINT_FACTOR      (8) 
 #define ABILITY_POINT_FACTOR    (4)
@@ -481,11 +483,14 @@ code
 dilend
 
 
+// I believe this is the first DIL to be called when someone logs on
+//
 dilbegin aware unique fnpri(FN_PRI_SYS) on_connect();
 external
    informer();
    login_modify(tgt : unitptr);
    string dlrdump@commands(pfx : string);
+   login_event@bounty();
 
 
 var
@@ -527,6 +532,7 @@ code
       informer();
       login_modify(self);
       exec("look", self);
+      login_event@bounty();
       quit;
    }
 
