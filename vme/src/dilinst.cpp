@@ -2579,9 +2579,16 @@ void dilfi_snta(register class dilprg *p)
                 sarg.arg = (char *)v1->val.ptr;
                 sarg.mflags = SFB_MSG;
 
-                std::forward_list<class unit_data *>::iterator it;
-                for (it = fi->fi_unit_list.begin() ; it != fi->fi_unit_list.end(); it++)
-                    unit_function_scan(*it, &sarg);
+               if (!fi->fi_unit_list.empty())
+               {
+                  std::forward_list<class unit_data *>::iterator it, next_it;
+                  for (it = fi->fi_unit_list.begin() ; it != fi->fi_unit_list.end(); it = next_it)
+                  {
+                     next_it = it;
+                     next_it++;
+                     unit_function_scan(*it, &sarg);
+                  }
+               }
 
                 /*for (u = unit_list; u; u = u->gnext)
                 {
