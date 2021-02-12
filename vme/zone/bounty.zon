@@ -846,33 +846,37 @@ code
 	
 :donezo:
 
-	if((xn == 0) and (kn == 0))
+	kn := n - sc;
+	if(kn < 0)
+		kn := 0;
+	xn := (amt * 1000) - sx;
+	if(xn < 0)
+		xn := 0;
+	
+	if((kn == 0) and (xn == 0))
 		log("Spree Tracker: "+self.name+" lead a successful spree of "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+",000 XP in "+itoa(dur - 1 - minutes)+":"+itoa(60 - seconds)+". Duration was "+itoa(dur)+":00.");
 	else
-		log("Spree Tracker: "+self.name+" failed to lead a spree with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+",000 XP. Duration was "+itoa(dur)+":00.");
+		log("Spree Tracker: "+self.name+" failed to lead a spree with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+"000 XP. Duration was "+itoa(dur)+":00.");
 	
 	foreach(UNIT_ST_PC,u)
 	{
-		sl := split(u.extra.["$DAILY_SPREE"].descr,"|");
-		if((u.master == self) or (u == self) and (sl.[0] == sdate) and (sl.[1] == "ongoing") and (sl.[2] == self.name))
-		{	
-			kn := n - sc;
-			if(kn < 0)
-				kn := 0;
-			xn := amt - sx;
-			if(xn < 0)
-				xn := 0;
-			
-			subextra(u.extra,"$SPREE_XP");
-			addextra(u.extra,{"$SPREE_XP"},itoa(sx));
-			subextra(u.extra,"$SPREE_COUNT");
-			addextra(u.extra,{"$SPREE_COUNT"},itoa(sc));
-			i := dildestroy("spree_f@bounty",u);
-			act("Your spree has come to an end! You bagged "+itoa(sc)+" kills and gained "+itoa(sx)+" experience.",A_ALWAYS, u, null, null, TO_CHAR);
-			if((kn == 0) and (xn == 0))
-				u.extra.["$DAILY_SPREE"].descr := replace("ongoing","SUCCESS",u.extra.["$DAILY_SPREE"].descr); 
-			else
-				u.extra.["$DAILY_SPREE"].descr := replace("ongoing","FAIL",u.extra.["$DAILY_SPREE"].descr); 
+		if("$DAILY_SPREE" in u.extra)
+		{
+			sl := split(u.extra.["$DAILY_SPREE"].descr,"|");
+			if(((u.master == self) or (u == self)) and (sl.[0] == sdate) and (sl.[1] == "ongoing") and (sl.[2] == self.name))
+			{	
+				
+				subextra(u.extra,"$SPREE_XP");
+				addextra(u.extra,{"$SPREE_XP"},itoa(sx));
+				subextra(u.extra,"$SPREE_COUNT");
+				addextra(u.extra,{"$SPREE_COUNT"},itoa(sc));
+				i := dildestroy("spree_f@bounty",u);
+				act("Your spree has come to an end! You bagged "+itoa(sc)+" kills and gained "+itoa(sx)+" experience.",A_ALWAYS, u, null, null, TO_CHAR);
+				if((kn == 0) and (xn == 0))
+					u.extra.["$DAILY_SPREE"].descr := replace("ongoing","SUCCESS",u.extra.["$DAILY_SPREE"].descr); 
+				else
+					u.extra.["$DAILY_SPREE"].descr := replace("ongoing","FAIL",u.extra.["$DAILY_SPREE"].descr); 
+			}
 		}
 	}
 	quit;
@@ -906,7 +910,7 @@ code
 :start:
 	
 	heartbeat := PULSE_SEC;
-	wait(SFB_CMD, (command("say") and (("start spree" == argument) or ("spree" == argument)) and (activator.type == UNIT_ST_PC)));
+	wait(SFB_CMD, (command("say") and (("start spree" == argument) or ("spree" == argument) or ("killing spree" == argument)) and (activator.type == UNIT_ST_PC)));
 		
 	arg := argument;	
 	
@@ -943,11 +947,19 @@ code
 		exec("say Only a group leader can start a new killing spree!",self);
 		goto donezo;
 	}
-	sl := split(pc.extra.["$DAILY_SPREE"].descr,"|");
-	if((sdate == sl.[0]) and (sl.[1] == "SUCCESS"))
+	if("$DAILY_SPREE" in pc.extra)
 	{
-		exec("say You have already closed a killing spree today!",self);
-		goto donezo;	
+		sl := split(pc.extra.["$DAILY_SPREE"].descr,"|");
+		if((sdate == sl.[0]) and (sl.[1] == "SUCCESS"))
+		{
+			exec("say You have already closed a killing spree today!",self);
+			goto donezo;	
+		}		
+		if((sdate == sl.[0]) and (sl.[1] == "ongoing"))
+		{
+			exec("say Finish the spree you are on before starting a new one!",self);
+			goto donezo;	
+		}
 	}
 	if(arg == "start spree")
 		goto killem;
@@ -976,11 +988,9 @@ code
 		goto loop;
 
 :killem:
-	
+
 	i := rnd(0,3);
-	
-	exdp := "$spree_date" in self.outside.extra;
-	if(not(exdp))
+	if(not("$spree_date" in self.outside.extra))
 	{	
 		addextra(self.outside.extra,{"$spree_date"},sdate);
 		addextra(self.outside.extra,{"$spree_type"},itoa(i));
@@ -1004,7 +1014,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	if ((sdate == sl.[0]) and (sl.[1] == "FAIL"))
 	{
-		exec("say Coming back for another try "+pc.name+"?",self);	
+		exec("say Perhaps you'll do a bit better this time, "+pc.name+".",self);	
 	}
 	else
 		exec("say So you're ready to fight for the Guild?",self);
@@ -1012,7 +1022,7 @@ code
 	
 	// these are the different streak types that can be utilized. Each has its own reward structure.
 	if(stype == 0) 
-	{	
+	{
 		dur := rnd(10,15);
 		amt := dur * 4;
 		n := dur * 8;
@@ -1022,7 +1032,7 @@ code
 	{
 		dur := rnd(20,30);
 		amt := dur * 3;
-		n := dur * 6;
+		n := dur * 7;
 		exec("say This will be a "+itoa(dur)+" minute spree requiring "+itoa(n)+" kills and "+itoa(amt)+",000 xp.",self);
 	}
 	if(stype == 2)
@@ -1036,11 +1046,9 @@ code
 	{
 		dur := rnd(10,30);
 		amt := 0;
-		n := dur * 20;
+		n := dur * 12;
 		exec("say This will be a "+itoa(dur)+" minute spree requiring "+itoa(n)+" kills and no xp minimum.",self);
 	}	
-	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	
 	dilcopy ("spree_m@bounty("+itoa(dur)+","+itoa(amt)+","+itoa(n)+","+itoa(stype)+")",pc);
 	
 	
@@ -1050,8 +1058,10 @@ code
 	{		
 		foreach(UNIT_ST_PC,u)
 		{
+			if(not("$DAILY_SPREE" in u.extra))
+				addextra(u.extra,{"$DAILY_SPREE"},sdate+"|blank|blank|blank");
 			sl := split(u.extra.["$DAILY_SPREE"].descr,"|");
-			if(((u.master == pc) or (u == pc)) and (not(dilfind("spree_f@bounty", u))) and (not(sdate in sl)))
+			if(((u.master == pc) or (u == pc)) and (not(dilfind("spree_f@bounty", u))) and (not((sl.[0] == sdate) and ((sl.[1] == "CLOSED") or (sl.[1] == "ongoing")))))
 			{
 				if(i == 0)
 				{	
@@ -1615,6 +1625,12 @@ code
 	if((self.inside.symname != "head@death") and (self.inside.symname == med.symname))
 	{
 		exec("say What would I do with this, "+pc.name+"?",self);
+		exec("give "+self.inside.name+" "+pc.name,self);
+		goto start;
+	}
+	if(dilfind("spree_m@bounty",pc))
+	{
+		exec("say Try again after your spree, "+pc.name+"!",self);
 		exec("give "+self.inside.name+" "+pc.name,self);
 		goto start;
 	}
@@ -2549,6 +2565,25 @@ extra {}
 "Say 'contract' to hear the contract options available.<br><br>
 Say 'contract status' to hear the status of any existing contracts, 
 and for the option to receive a new contract card."
+weight 1
+cost 1 IRON_PIECE
+extra {}
+""
+end
+
+spree_sign
+names {"spree sign","sign","instructions"}
+title "some instructions"
+descr "Some helpful <a cmd='read #'>instructions</a> are here."
+extra {}
+"Say 'spree' to kick off a new killing spree. You would be well <br>
+advised to ensure you have a group with you ready for killing! <br><br>
+Say 'end spree' once the time has run out and you are ready to <br>
+collect your rewards!<br><br>
+You must have completed 40 total bounties of any kind from the <br>
+Bounty Hunter in order to lead a spree. Anyone may participate in <br>
+following a leader on their spree."
+
 weight 1
 cost 1 IRON_PIECE
 extra {}
