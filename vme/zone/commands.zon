@@ -29,6 +29,11 @@ help
 
 %dil
 
+
+//
+// This DIL is activated from C function change() in act_change.cpp
+// When no other arguments are matching, this runs.
+//
 dilbegin do_change(arg : string);
 code
 {
