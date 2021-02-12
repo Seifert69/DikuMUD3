@@ -7650,6 +7650,7 @@ code
    add_witness@justice(activator, self, self.name, CRIME_STEALING);
    log ("add_reward");
    add_reward@justice(self.symname, self.idx, CRIME_STEALING);
+   add_reward@justice(activator.symname, activator.idx, CRIME_STEALING);
    log ("done");
    goto loop;
 }
