@@ -9303,7 +9303,7 @@ dilend
 
 
 
-
+// do_bugs
 dilbegin aware cmd_bugs(st : string);
 var
    t : string;
@@ -9311,8 +9311,8 @@ var
    i : integer;
 code
 {
-if (self.type!=UNIT_ST_PC)
- return;
+   if (self.type!=UNIT_ST_PC)
+      return;
    sendtext("Enter your bug reports. You have approximately 4000 "+
             "characters to work with. Note that if you input only a "+
             "single word or nothing at all, it will abort.<br/>", self);
@@ -9327,11 +9327,12 @@ if (self.type!=UNIT_ST_PC)
    z := self.outside;
    while (z.type != UNIT_ST_ROOM)
       z := z.outside;
-   t := z.nameidx+"@"+z.zoneidx+" ["+self.name+"] "+asctime(realtime)+
-        argument+"<br/><br/>";
+   t := z.symname + " ["+self.name+"] " + asctime(realtime)+ argument;
    t := textformat(t);
    i := flog("bugs", t, "a");
    sendtext("Thank you. They will be corrected.<br/>", self);
+   dispatch("discord msg #bugs @" + self.name + " bug report: " + t); // Send to dispatcher.py via pipeDispatcher
+
    quit;
 }
 dilend

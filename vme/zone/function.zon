@@ -4205,6 +4205,7 @@ var
    mys        : string;     /* Symbolic of the shopkeeper */
    account    : extraptr;   /* Where we store our money */
    noaccount  : integer;    /* Is there a account already? */
+   prev_mudday: integer;
 
 code
 {
@@ -4215,6 +4216,7 @@ code
    /* Any item in inv without a pricetag can't be sold! */
 
    heartbeat := PULSE_SEC * 1;
+   prev_mudday := mudday;
    rom := self;
    while(not (rom.type & UNIT_ST_ROOM ))
       rom := rom.outside;
@@ -4389,6 +4391,16 @@ code
       goto loop;
    }
 
+   // We restock at 4am
+   //
+   if (mudday != prev_mudday)
+   {
+      //log("Restocking " + self.symname);
+      prev_mudday := mudday;
+      goto newday;
+   }
+
+:processcmd:
    if (command("list")) choice := 0;
    else if( command( "buy"     ) ) choice := 1;
    else if( command( "sell"    ) ) choice := 2;
@@ -4472,7 +4484,7 @@ code
       }
       citem := citem + 1;
    }
-   goto loop;
+   goto processcmd;
 
 :request:   /* Price request on item in own inv. */
    u := findunit( self, arg, FIND_UNIT_INVEN, null );
@@ -6864,7 +6876,7 @@ code
 
    if (sKey == "@")
    {
-      log("Recieve @ sKey="+sKey+" sChan="+sChan+" msg="+msg);
+      //log("Recieve @ sKey="+sKey+" sChan="+sChan+" msg="+msg);
       if (sChan in DISCORD_CHANNELS)
       {
          sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " + msg+"</div><br/>",self );
@@ -6958,7 +6970,7 @@ dilend
 // MS2020: Rewritten to a) keep selected channels persistent on pc.info
 // and b) to hardcode into this function which channels to relay to Discord.
 //
-dilbegin aware unique recall fnpri(FN_PRI_SYS) channel();
+dilbegin aware unique fnpri(FN_PRI_SYS) channel();
 external
    recieve@function(slActive : stringlist, msg : string, talker : unitptr,
                     jmode:integer, dmode:integer);
@@ -6997,7 +7009,7 @@ code
       exd := "$channels" in self.info;
    }
 
-   log("Persistent exd.names.[0] = " + exd.names.[0]);
+   //log("Persistent exd.names.[0] = " + exd.names.[0]);
       
    slActive := exd.names;
    substring(slActive, "$channels"); // Remove the extra prefix
@@ -7183,12 +7195,31 @@ code
 
 :show_chan:
    block;
+   nChan := length(discordChn);
+   x := 0;
+   while (x < nChan)
+   {
+      nEcho := discordChn.[x] in slActive;
+
+      if (nEcho)
+         s := "<div class='cpy'>Discord "+discordChn.[x]+" is active.</div><br/>";
+      else
+         s := "<div class='cw'>Discord "+discordChn.[x]+" is inactive.</div><br/>";
+
+      sendtext(s, self);
+      x := x+1;
+   }
+
    nChan := length(slActive);
    x := 0;
    while (x < nChan)
    {
-      sendtext("Channel "+slActive.[x]+" is active.<br/>",self );
-      x:= x+1;
+      if (not (slActive.[x] in discordChn))
+      {
+         s := "<div class='cpy'>Channel "+slActive.[x]+" is active</div><br/>";
+         sendtext(s, self);
+      }
+      x := x+1;
    }
    goto start;
 

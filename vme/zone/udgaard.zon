@@ -1540,13 +1540,13 @@ code
    }
    else
    {
-      log(s + " not found");
       heartbeat := PULSE_SEC * 40;
       pause;
       i := i + 1;
       heartbeat := PULSE_SEC * 5;
       if (i > 20)
       {
+         log("Hunt: " + s + " not found, giving up");
          /* Mission unaccomplished */
          exec("sigh", self);
 

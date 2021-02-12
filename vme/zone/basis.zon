@@ -50,6 +50,8 @@ Bright White.<br/>
 
 %dil
 
+
+
 #define AVERAGE_SKILL_COST      10
 #define SKILL_POINT_FACTOR      (8) 
 #define ABILITY_POINT_FACTOR    (4)
@@ -276,6 +278,7 @@ external
 
 var
    i : integer;
+   exd : extraptr;
 code
 {
    heartbeat := PULSE_SEC;
@@ -287,9 +290,15 @@ code
    i := dildestroy("send_prompt@update", self);
    dilcopy("send_prompt@update",self);
 
+   exd := "$channels" in self.info;
+   if (exd == null)
+   {
+      // Setup default comm channels
+      addextra(self.info, {"$channels", "newbie", "mud", "builder"}, "");
+   }
+
    // Also set channel for immortals
-   // Dont destroy because it will mess up the recall functionality which the function depends on. 
-   // i := dildestroy("channel@function", self);
+   i := dildestroy("channel@function", self);
    dilcopy("channel@function", self);
 
    if (self.level<200)
@@ -417,7 +426,7 @@ code
    {
       // Notify of newbies on the newbie channel
       if (self.level < 2)
-         dispatch("discord msg #newbie Welcome **@" + self.name + "** has entered Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
+         dispatch("discord msg #newbie Welcome **@" + self.name + "** to Valhalla MUD."); // Send to dispatcher.py via pipeDispatcher
 
       w := whostring@comm();
       dispatch("discord who " + w); // Send to dispatcher.py via pipeDispatcher
@@ -474,11 +483,14 @@ code
 dilend
 
 
+// I believe this is the first DIL to be called when someone logs on
+//
 dilbegin aware unique fnpri(FN_PRI_SYS) on_connect();
 external
    informer();
    login_modify(tgt : unitptr);
    string dlrdump@commands(pfx : string);
+   login_event@bounty();
 
 
 var
@@ -520,13 +532,7 @@ code
       informer();
       login_modify(self);
       exec("look", self);
-
-      exd := "$channels" in self.info;
-      if (exd == null)
-      {
-         // Setup default comm channels
-         addextra(self.info, {"$channels", "newbie", "mud"}, "");
-      }
+      login_event@bounty();
       quit;
    }
 
@@ -7578,6 +7584,25 @@ extra {} "Disgusting!"
 M_ZOMBIE_SMALL(4,SEX_NEUTRAL)
 
 
+dilbegin aware mytimer();
+var
+  rt : integer;
+  i : integer;
+code
+{
+   wait(SFB_CMD, command("twiddle"));
+   heartbeat := PULSE_SEC*60;
+   rt := realtime;
+   i := 0;
+:loop:
+   wait(SFB_TICK, TRUE);
+   i := i + 1;
+   log("wait() for " + itoa(i) + " minutes with a wall time of " + itoa(realtime - rt));
+   goto loop;
+
+}
+dilend
+
 dilbegin dizzi();
 code
 {
@@ -7625,6 +7650,7 @@ code
    add_witness@justice(activator, self, self.name, CRIME_STEALING);
    log ("add_reward");
    add_reward@justice(self.symname, self.idx, CRIME_STEALING);
+   add_reward@justice(activator.symname, activator.idx, CRIME_STEALING);
    log ("done");
    goto loop;
 }
