@@ -70,6 +70,29 @@ number of other needs have been brought before the bounty hunters."
 /*                               DIL                                  */
 /* ================================================================== */
 
+/* Bounty System!
+
+There are a few helper functions here to assist with the bounty system.
+
+integer add_bp@bounty(n : integer, u : unitptr);
+
+n - the number of bounty points to add or subtract.
+u - the unitptr to the unit which you want to interact.
+
+Function is useful to safely adding or subtracting bounty points.
+Will return the number of bounty points AFTER the transaction has processed.
+If the value is less than 0, bounty points will be set to 0, 
+and that is waht will return.
+
+To use this as a check in the case of a situation where you dont want to allow
+it to go below 0, such as in a store to use the bp in a transaction, simply 
+pass 0 as the n value, and it will return the current number of bounty points.
+
+
+
+*/
+
+
 %dil
 
 // Called when a player logs in.
@@ -96,14 +119,18 @@ dilend
 // 3... etc.
 //
 dilbegin streak_bonus(nCount : integer);
+external
+	integer add_bp@bounty(n : integer, u : unitptr);
+var
+	bp : integer;
 code
 {
-   log("Awarding " + self.symname + " streak bonus for " + itoa(nCount) + " days.");
+	log("Awarding " + self.symname + " streak bonus for " + itoa(nCount) + " days.");
+	
+	bp := add_bp(nCount,self);
 
-   //
-   // @Sender assign a reward here
    // Either cap at e.g. 7 days, or just keep it going up?
-   //
+   // for now, we'll let it run! :)
    return;
 }
 dilend
