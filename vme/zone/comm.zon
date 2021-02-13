@@ -1283,93 +1283,85 @@ dilend
 
 dilbegin do_whisper(arg : string);
 external
-string drunk_speech(str : string,i : integer);
-string sex_name(sx : integer);
-string cap_first(nm : string);
+   string drunk_speech(str : string,i : integer);
+   string sex_name(sx : integer);
+   string cap_first(nm : string);
 var
-tgt: unitptr;
-tst: string;
-my_name: string;
-inv_name: string;
+   tgt: unitptr;
+   tst: string;
+   my_name: string;
+   inv_name: string;
 code
 {
-
-if(isset(self.charflags, CHAR_MUTE))
-{
-act("But, you're mute?!",
-A_ALWAYS, self, null, null, TO_CHAR);
-quit;
-}
-
-if(isset(self.flags, UNIT_FL_BURIED))
-{
-act("You are buried alive!",
-A_ALWAYS, self, null, null, TO_CHAR);
-quit;
-}
-
-if(arg == "")
-{
-act("Who do you want to whisper to.. and what??",
-A_ALWAYS, self, null, null, TO_CHAR);
-quit;
-}
-
-tgt:= findunit(self,arg,FIND_UNIT_SURRO,null);
-
-if((tgt == null) or (not visible(self,tgt)) or (not tgt.type &
-(UNIT_ST_PC|UNIT_ST_NPC)))
-{
-act("No-one by that name here..",
-A_ALWAYS, self, null, null, TO_CHAR);
-quit;
-}
-
-tst:= getword(arg); /* blank space in findunit, get word/readd it */
-if(arg != "") arg := tst+" "+arg;
-else arg := tst;
-
-if(tgt == self)
-{
-act("$1n whispers quietly to $1mself.",
-A_SOMEONE, self, null, null, TO_REST);
-act("You can't seem to get your mouth close enough to your ear...",
-A_ALWAYS, self, null, null, TO_CHAR);
-}
-else
-{
-if(arg == "")
-act("Whisper what?", A_ALWAYS, self, null, null, TO_CHAR);
-else
-{
-
-if(self.level >= IMMORTAL_LEVEL)
-arg:= textformat(arg);
-
-if((self.type == UNIT_ST_PC) and (isset(self.pcflags,PC_ECHO)))
-act("<div class='whisper'>You whisper to $3n '$2t<div class='whisper'>'</div>", A_ALWAYS,
-self, arg, tgt, TO_CHAR);
-else
-sendtext("Ok.", self);
-
-if(self.drunk)
-arg:= drunk_speech(arg,self.drunk);
-
-if(not visible(tgt, self))
-my_name:= sex_name(self.sex);
-else if(self.type == UNIT_ST_PC)
-my_name:= self.name;
-else
-my_name:=self.title;
-
-sendtext("<div class='whisper'>"+my_name+" whispers to you, '"+arg+"'</div>", tgt);
-act("<div class='whisper'>$1n whispers something to $3n.</div>",
-A_ALWAYS, self, null, tgt, TO_NOTVICT);
-
-send_done("whisper", self, null, tgt, 0, arg, null);
-}
+   if(isset(self.charflags, CHAR_MUTE))
+   {
+      act("But, you're mute?!", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
    }
-quit;
+
+   if(isset(self.flags, UNIT_FL_BURIED))
+   {
+      act("You are buried alive!", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   if(arg == "")
+   {
+      act("Who do you want to whisper to.. and what??", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   tgt:= findunit(self,arg,FIND_UNIT_SURRO,null);
+
+   if ((tgt == null) or (not visible(self,tgt)) or (not tgt.type & (UNIT_ST_PC|UNIT_ST_NPC)))
+   {
+      act("No-one by that name here..",
+      A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   tst:= getword(arg); /* blank space in findunit, get word/readd it */
+   if(arg != "")
+      arg := tst+" "+arg;
+   else
+      arg := tst;
+
+   if(tgt == self)
+   {
+      act("$1n whispers quietly to $1mself.", A_SOMEONE, self, null, null, TO_REST);
+      act("You can't seem to get your mouth close enough to your ear...", A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   else
+   {
+      if (arg == "")
+         act("Whisper what?", A_ALWAYS, self, null, null, TO_CHAR);
+      else
+      {
+         if (self.level >= IMMORTAL_LEVEL)
+            arg:= textformat(arg);
+
+         if ((self.type == UNIT_ST_PC) and (isset(self.pcflags,PC_ECHO)))
+            act("<div class='whisper'>You whisper to $3n '$2t<div class='whisper'>'</div>", A_ALWAYS, self, arg, tgt, TO_CHAR);
+         else
+            sendtext("Ok.<br/>", self);
+
+         if (self.drunk)
+            arg:= drunk_speech(arg,self.drunk);
+
+         if (not visible(tgt, self))
+            my_name:= sex_name(self.sex);
+         else if (self.type == UNIT_ST_PC)
+            my_name:= self.name;
+         else
+            my_name:=self.title;
+
+         sendtext("<div class='whisper'>"+my_name+" whispers to you, '"+arg+"'</div><br/>", tgt);
+         act("<div class='whisper'>$1n whispers something to $3n.</div>", A_ALWAYS, self, null, tgt, TO_NOTVICT);
+
+         send_done("whisper", self, null, tgt, 0, arg, null);
+      }
+   }
+   quit;
 }
 dilend
 

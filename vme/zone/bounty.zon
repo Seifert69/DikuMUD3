@@ -70,6 +70,29 @@ number of other needs have been brought before the bounty hunters."
 /*                               DIL                                  */
 /* ================================================================== */
 
+/* Bounty System!
+
+There are a few helper functions here to assist with the bounty system.
+
+integer add_bp@bounty(n : integer, u : unitptr);
+
+n - the number of bounty points to add or subtract.
+u - the unitptr to the unit which you want to interact.
+
+Function is useful to safely adding or subtracting bounty points.
+Will return the number of bounty points AFTER the transaction has processed.
+If the value is less than 0, bounty points will be set to 0, 
+and that is waht will return.
+
+To use this as a check in the case of a situation where you dont want to allow
+it to go below 0, such as in a store to use the bp in a transaction, simply 
+pass 0 as the n value, and it will return the current number of bounty points.
+
+
+
+*/
+
+
 %dil
 
 // Called when a player logs in.
@@ -96,14 +119,18 @@ dilend
 // 3... etc.
 //
 dilbegin streak_bonus(nCount : integer);
+external
+	integer add_bp@bounty(n : integer, u : unitptr);
+var
+	bp : integer;
 code
 {
-   log("Awarding " + self.symname + " streak bonus for " + itoa(nCount) + " days.");
+	log("Awarding " + self.symname + " streak bonus for " + itoa(nCount) + " days.");
+	
+	bp := add_bp(nCount,self);
 
-   //
-   // @Sender assign a reward here
    // Either cap at e.g. 7 days, or just keep it going up?
-   //
+   // for now, we'll let it run! :)
    return;
 }
 dilend
@@ -853,10 +880,11 @@ code
 	if(xn < 0)
 		xn := 0;
 	
+	sl := split(self.extra.["$DAILY_SPREE"].descr,"|");
 	if((kn == 0) and (xn == 0))
-		log("Spree Tracker: "+self.name+" lead a successful spree of "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+",000 XP in "+itoa(dur - 1 - minutes)+":"+itoa(60 - seconds)+". Duration was "+itoa(dur)+":00.");
+		log("Spree Tracker: "+self.name+" lead a successful spree of type "+sl.[3]+" with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+",000 XP in "+itoa(dur - 1 - minutes)+":"+itoa(60 - seconds)+". Duration was "+itoa(dur)+":00.");
 	else
-		log("Spree Tracker: "+self.name+" failed to lead a spree with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+"000 XP. Duration was "+itoa(dur)+":00.");
+		log("Spree Tracker: "+self.name+" failed to lead a spree of type "+sl.[3]+" with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+"000 XP. Duration was "+itoa(dur)+":00.");
 	
 	foreach(UNIT_ST_PC,u)
 	{
@@ -871,11 +899,15 @@ code
 				subextra(u.extra,"$SPREE_COUNT");
 				addextra(u.extra,{"$SPREE_COUNT"},itoa(sc));
 				i := dildestroy("spree_f@bounty",u);
-				act("Your spree has come to an end! You bagged "+itoa(sc)+" kills and gained "+itoa(sx)+" experience.",A_ALWAYS, u, null, null, TO_CHAR);
+				act("<div class='cpr'>Your spree has come to an end! You bagged "+itoa(sc)+" kills and gained "+itoa(sx)+" experience.</div>",A_ALWAYS, u, null, null, TO_CHAR);
 				if((kn == 0) and (xn == 0))
 					u.extra.["$DAILY_SPREE"].descr := replace("ongoing","SUCCESS",u.extra.["$DAILY_SPREE"].descr); 
 				else
+				{
+					subextra(u.extra,"$spree_streak");
+					addextra(u.extra,{"$spree_streak"},itoa(0));
 					u.extra.["$DAILY_SPREE"].descr := replace("ongoing","FAIL",u.extra.["$DAILY_SPREE"].descr); 
+				}
 			}
 		}
 	}
@@ -1037,7 +1069,7 @@ code
 	}
 	if(stype == 2)
 	{
-		dur := 5;
+		dur := rnd(4,6);
 		amt := 0;
 		n := 0;
 		exec("say This will be a "+itoa(dur)+" minute spree with no kill or xp minimums.",self);
@@ -1089,6 +1121,7 @@ dilend // END new_spree
 dilbegin end_spree();
 external
 	string stringdate@bounty(n : integer);
+	integer add_bp@bounty(n : integer, u : unitptr);
 var
 	pc : unitptr;
 	i : integer;
@@ -1124,8 +1157,6 @@ code
 			if("FAIL" == sl.[1])
 			{
 				exec("say I'm sorry, you failed to meet the conditions in time today "+pc.name,self);
-				subextra(pc.extra,"$spree_streak");
-				addextra(pc.extra,{"$spree_streak"},itoa(0));
 			}
 			else if ("SUCCESS" == sl.[1])
 			{
@@ -1158,11 +1189,11 @@ code
 				}
 				else if(sl.[3] == "2")
 				{
-					rwrd := 1000 * (sc / 2);
+					rwrd := 5 * sx;
 				}
 				else if(sl.[3] == "3")
 				{
-					rwrd := 1000 * (sx / 2);
+					rwrd := 500 * sc;
 				}
 				if(sl.[2] == pc.name)
 				{
@@ -1205,9 +1236,7 @@ code
 				experience(rwrd, pc);
 				act("<br><div class='hint'>Killing Spree Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 				act("<div class='xpgain'>You recieve "+itoa(rwrd)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
-				if(not("$bounty_points" in pc.extra))
-					addextra (pc.extra,{"$bounty_points"},"0");	
-				pc.extra.["$bounty_points"].descr := itoa(atoi(pc.extra.["$bounty_points"].descr)+bp);
+				i := add_bp(bp,pc);
 				if(bp == 1)
 					act("<div class='xpgain'>You recieve "+itoa(bp)+" bounty point.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 				else
@@ -1235,9 +1264,25 @@ code
 }
 dilend // END end_spree
 
+dilbegin integer add_bp(n : integer, u : unitptr);
+var
+	bp : integer;
+code
+{
+	if(not("$bounty_points" in u.extra))
+		addextra (u.extra,{"$bounty_points"},"0");	
+	bp := atoi(u.extra.["$bounty_points"].descr);
+	bp := bp + n;
+	if(bp < 0)
+		bp := 0;
+	u.extra.["$bounty_points"].descr := itoa(bp);
+	return(bp);
+}
+dilend
+
 // n should equal either 2 or 3. Returning date to Month = 2, day = 3
 // ex s := stringdate(2); s == 2021.2
-// ex s := stringdate(2); s == 2021.2.21
+// ex s := stringdate(3); s == 2021.2.21
 dilbegin string stringdate(n : integer);
 var
 	sdate   : string;
@@ -1295,6 +1340,7 @@ dilend // END dateformat
 
 dilbegin make_bounty();
 external
+	integer add_bp@bounty(n : integer, u : unitptr);
 	integer dateformat@bounty (s : string);
 	string stringdate@bounty (n : integer);
 var 
@@ -1518,18 +1564,13 @@ code
 		subextra(pc.extra, "$bonus_target");
 		subextra(pc.extra, "$bonus_streak");
 		act("<div class='xpgain'>You have lost 25000 experience points!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
-		if(not("$bounty_points" in pc.extra))
-			addextra (pc.extra,{"$bounty_points"},"0");	
-		if(atoi(pc.extra.["$bounty_points"].descr) > 5)
-		{
+		
+		i := add_bp(0,pc);
+		if(i >= 5)
 			act("<div class='xpgain'>You have lost 5 bounty points!</div>",A_ALWAYS, pc, null, null, TO_CHAR);
-			pc.extra.["$bounty_points"].descr := itoa(atoi(pc.extra.["$bounty_points"].descr)-5);
-		}
 		else
-		{
-			act("<div class='xpgain'>You have lost "+pc.extra.["$bounty_points"].descr+" bounty points!</div>",A_ALWAYS, pc, null, null, TO_CHAR);
-			pc.extra.["$bounty_points"].descr := "0"; 
-		}
+			act("<div class='xpgain'>You have lost "+itoa(i)+" bounty points!</div>",A_ALWAYS, pc, null, null, TO_CHAR);
+		i := add_bp(-5,pc);
 		goto the_end;
 	}
 	
@@ -1547,6 +1588,7 @@ dilend
 dilbegin claim_bounty();
 external
 	string stringdate@bounty(n : integer);
+	integer add_bp@bounty(n : integer, u : unitptr);
 var 
 	pc 		: unitptr;
 	med 	: unitptr;
@@ -1925,9 +1967,7 @@ leverage the competition boards. Will investigate.
 	experience(rwrd, pc);
 	act("<br><div class='hint'>Contract Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 	act("<div class='xpgain'>You recieve "+itoa(rwrd)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
-	if(not("$bounty_points" in pc.extra))
-		addextra (pc.extra,{"$bounty_points"},"0");	
-	pc.extra.["$bounty_points"].descr := itoa(atoi(pc.extra.["$bounty_points"].descr)+bp);
+	i := add_bp(bp,pc);
 	if(bp == 1)
 		act("<div class='xpgain'>You recieve "+itoa(bp)+" bounty point.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 	else
@@ -2095,6 +2135,8 @@ code
 dilend
 
 dilbegin shop(items : stringlist);
+external
+	integer add_bp@bounty(n : integer, u : unitptr);
 var
 	pc : unitptr;
 	i : integer;
@@ -2128,11 +2170,8 @@ code
 		arg := argument;
 	
 	pc := activator;
-	
-	if(not("$bounty_points" in pc.extra))
-		addextra (pc.extra,{"$bounty_points"},"0");
-	bp := pc.extra.["$bounty_points"].descr;
-	ibp := atoi(bp);
+	ibp := add_bp(0,pc);
+	bp := itoa(ibp);
 	
 	if(command("list"))
 		goto list;
@@ -2161,8 +2200,7 @@ code
 		{
 			if(atoi(items.[i+2]) <= ibp)
 			{
-				ibp := ibp - atoi(items.[i+2]);
-				pc.extra.["$bounty_points"].descr := itoa(ibp);
+				ibp := add_bp((atoi(items.[i+2])* (-1)),pc);
 				uitem := load(items.[i]+"@bounty");
 				link(uitem, pc);
 				exec("say Here is your "+uitem.name+" "+pc.name+"!",self);
@@ -2851,6 +2889,7 @@ end
 load hunter into contracts max 1
 load shopkeep into shop max 1
 load bty_sign into contracts max 1
+load spree_sign into smithy max 1
 load jeweler into jewels max 1
 load blacksmith into smithy max 1
 
