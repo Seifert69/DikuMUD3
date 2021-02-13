@@ -853,10 +853,11 @@ code
 	if(xn < 0)
 		xn := 0;
 	
+	sl := split(self.extra.["$DAILY_SPREE"].descr,"|");
 	if((kn == 0) and (xn == 0))
-		log("Spree Tracker: "+self.name+" lead a successful spree of "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+",000 XP in "+itoa(dur - 1 - minutes)+":"+itoa(60 - seconds)+". Duration was "+itoa(dur)+":00.");
+		log("Spree Tracker: "+self.name+" lead a successful spree of type "+sl.[3]+" with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+",000 XP in "+itoa(dur - 1 - minutes)+":"+itoa(60 - seconds)+". Duration was "+itoa(dur)+":00.");
 	else
-		log("Spree Tracker: "+self.name+" failed to lead a spree with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+"000 XP. Duration was "+itoa(dur)+":00.");
+		log("Spree Tracker: "+self.name+" failed to lead a spree of type "+sl.[3]+" with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+"000 XP. Duration was "+itoa(dur)+":00.");
 	
 	foreach(UNIT_ST_PC,u)
 	{
@@ -871,11 +872,15 @@ code
 				subextra(u.extra,"$SPREE_COUNT");
 				addextra(u.extra,{"$SPREE_COUNT"},itoa(sc));
 				i := dildestroy("spree_f@bounty",u);
-				act("Your spree has come to an end! You bagged "+itoa(sc)+" kills and gained "+itoa(sx)+" experience.",A_ALWAYS, u, null, null, TO_CHAR);
+				act("<div class='cpr'>Your spree has come to an end! You bagged "+itoa(sc)+" kills and gained "+itoa(sx)+" experience.</div>",A_ALWAYS, u, null, null, TO_CHAR);
 				if((kn == 0) and (xn == 0))
 					u.extra.["$DAILY_SPREE"].descr := replace("ongoing","SUCCESS",u.extra.["$DAILY_SPREE"].descr); 
 				else
+				{
+					subextra(pc.extra,"$spree_streak");
+					addextra(pc.extra,{"$spree_streak"},itoa(0));
 					u.extra.["$DAILY_SPREE"].descr := replace("ongoing","FAIL",u.extra.["$DAILY_SPREE"].descr); 
+				}
 			}
 		}
 	}
@@ -1037,7 +1042,7 @@ code
 	}
 	if(stype == 2)
 	{
-		dur := 5;
+		dur := rnd(4,6);
 		amt := 0;
 		n := 0;
 		exec("say This will be a "+itoa(dur)+" minute spree with no kill or xp minimums.",self);
@@ -1124,8 +1129,6 @@ code
 			if("FAIL" == sl.[1])
 			{
 				exec("say I'm sorry, you failed to meet the conditions in time today "+pc.name,self);
-				subextra(pc.extra,"$spree_streak");
-				addextra(pc.extra,{"$spree_streak"},itoa(0));
 			}
 			else if ("SUCCESS" == sl.[1])
 			{
@@ -1158,11 +1161,11 @@ code
 				}
 				else if(sl.[3] == "2")
 				{
-					rwrd := 1000 * (sc / 2);
+					rwrd := 10 * (sx / 2);
 				}
 				else if(sl.[3] == "3")
 				{
-					rwrd := 1000 * (sx / 2);
+					rwrd := 1000 * (sc / 2);
 				}
 				if(sl.[2] == pc.name)
 				{
@@ -1237,7 +1240,7 @@ dilend // END end_spree
 
 // n should equal either 2 or 3. Returning date to Month = 2, day = 3
 // ex s := stringdate(2); s == 2021.2
-// ex s := stringdate(2); s == 2021.2.21
+// ex s := stringdate(3); s == 2021.2.21
 dilbegin string stringdate(n : integer);
 var
 	sdate   : string;
@@ -2851,6 +2854,7 @@ end
 load hunter into contracts max 1
 load shopkeep into shop max 1
 load bty_sign into contracts max 1
+load spree_sign into smithy max 1
 load jeweler into jewels max 1
 load blacksmith into smithy max 1
 
