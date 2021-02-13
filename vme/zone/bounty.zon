@@ -57,6 +57,10 @@ Talk to Al Kazeem
 // spree - how does it fit in the story?
 // who gives it? Who rewards it?
 
+Special thanks to Jager, for unwittingly sharing his package delivery scheme.
+It's a perfect fit for newbies to enjoy bounties! Thanks brother. :)
+
+Special thanks to Papi for creating the login streak bounties. It was a great idea!
 
 "
 
@@ -184,6 +188,171 @@ code
    }
 
    return;
+}
+dilend
+
+dilbegin delivery();
+external
+	integer add_bp@bounty(n : integer, u : unitptr);
+var
+	pc : unitptr;
+	recip : unitptr;
+	package : unitptr;
+	iFight : integer;
+	quest : extraptr;
+	minlev : integer;
+	maxlev : integer;
+	qnames : stringlist;
+	rtitle : string;
+	rdesc : string;
+	rlev : integer;
+	temp : integer;
+	i : integer;
+code
+{
+	heartbeat:=PULSE_SEC * 5;
+	on_activation(self.position == POSITION_FIGHTING, ina_fight);
+	package:=null;
+
+:init:
+	iFight := interrupt(SFB_COM, self.position==POSITION_FIGHTING, ina_fight);
+
+:start:
+	nopriority;
+	wait(SFB_DONE, (activator.type==UNIT_ST_PC) and (activator.outside==self.outside) and (command("say")) and (argument=="i need work"));
+	priority;
+	pc:=activator;
+	secure(pc, lostpc);
+
+	quest:="packagefor" in pc.quests;
+	if(quest!=null)
+	{
+		exec("say You have not yet delivered the package I gave you!", self);
+		exec("say I will clear you of the responsibility (and the quest flag),", self);
+		exec("say but you will be penalized and lose 150 xp and 1 bounty point.", self);
+		exec("say Nod if this is acceptable.", self);
+		wait(SFB_DONE, (pc.outside!=self.outside) or ((activator==pc) and (command("nod"))));
+		if(pc.outside!=self.outside) goto lostpc;
+		temp:=dildestroy("packagefor@bounty", pc);
+		subextra(pc.quests, "packagefor");
+		experience(-150, pc);
+		i := add_bp(-1,pc);
+		act("<div class='xpgain'>You lose 150 xp and 1 bounty point.</div>", A_SOMEONE, pc, null, null, TO_CHAR);
+		unsecure(pc);
+		goto start;
+	}
+
+	minlev:=pc.level+(pc.level/10);
+	if(pc.level==50) maxlev:=199;
+	else maxlev:=pc.level+(pc.level/5);
+
+:loop:
+	recip:=findrndunit(pc, FIND_UNIT_WORLD, UNIT_ST_NPC);
+	secure(recip, loop);
+	rdesc:=recip.outside_descr;
+	rtitle:=recip.title;
+	rlev:=recip.level;
+	unsecure(recip);
+	if(((rlev<minlev) or (rlev>maxlev)) and (pc.level<GOD_LEVEL)) goto loop;
+
+	exec("say Oh you do eh? Fine, "+pc.name+"!", self);
+	exec("say I need you to deliver a package for me.", self);
+	exec("say If you deliver the package successfully you will get 500 xp and 1 bounty point.", self);
+	exec("say Just nod if you will.", self);
+
+	wait(SFB_DONE, (pc.outside!=self.outside) or ((activator==pc) and (command("nod"))));
+	if(pc.outside!=self.outside) goto lostpc;
+
+	package:=load("package@bounty");
+	package.title:="a package for "+rtitle;
+	package.outside_descr:="A package for "+rtitle+" lies here.";
+	addstring(package.names, rtitle);
+	qnames:=null;
+	addstring(qnames, "Package for "+rtitle);
+	addstring(qnames, "packagefor");
+	addstring(qnames, rtitle);
+	addextra(pc.quests, qnames, "");
+	if(not dilfind("packagefor@bounty", pc)) dilcopy("packagefor@bounty", pc);
+	exec("say OK the package is for "+rtitle+".", self);
+	exec("give packagefor "+pc.name, self);
+	exec("drop packagefor", self);
+	exec("say Don't you dare open that, it's not for you!", self);pause;
+	exec("say The recipient you are looking for looks like this:", self);
+	exec("say "+rdesc, self);
+	exec("say And don't worry about giving it to the wrong recipient,", self);
+	exec("say if you get it wrong it will be returned to you.", self);pause;
+	exec("say Now hurry!  That's an important package!", self);
+	unsecure(pc);
+	goto start;
+
+:ina_fight:
+	clear(iFight);
+	while(self.position==POSITION_FIGHTING) pause;
+	goto init;
+
+:lostpc:
+	exec("say Fine! Be that way! Next please?", self);
+	unsecure(pc);
+	goto start;
+}
+dilend
+
+dilbegin package();
+var
+	pc : unitptr;
+code
+{
+	heartbeat:=PULSE_SEC * 4;
+:start:
+wait (SFB_DONE, (command("open")) and
+(self==target));
+	block;
+	pc := activator;
+    secure(pc,lostpc);
+	act("$1N opens $2n and it explodes in $1s face, injuring $1m greatly!",
+    A_SOMEONE, pc, self, null, TO_REST);
+	act("You open $2n and it explodes in your face, injuring you greatly!",
+    A_SOMEONE, pc, self, null, TO_CHAR);
+	if(pc.hp>0) pc.hp := 0;
+	position_update(pc);
+	unsecure(pc);
+:lostpc:
+	destroy(self);
+}
+dilend
+
+dilbegin aware packagefor();
+external
+	integer add_bp@bounty(n : integer, u : unitptr);
+var
+	q1 : extraptr;
+	q2 : extraptr;
+	temp : integer;
+code
+{
+	heartbeat:=PULSE_SEC * 4;
+:start:
+	wait(SFB_DONE, (command("give") and (activator==self) and ("packagefor" in medium.names) and (target.type==UNIT_ST_NPC)));
+	q1:="packagefor" in activator.quests;
+	q2:=target.title in activator.quests;
+	if((q1==q2) and (q1!=null) and (target.title in medium.names))
+	{
+		subextra(activator.quests, "packagefor");
+		experience(500, activator);
+		temp := add_bp(1, activator); 
+		exec("say Thanks, I've been waiting for this, "+activator.name+"!", target);
+		act("<div class='xpgain'>You gain 500 xp and 1 bounty point.</div>", A_SOMEONE, activator, null, null, TO_CHAR);
+		destroy(medium);
+		temp:=dildestroy("packagefor@bounty", self);
+		goto start;
+	}
+	else
+	{
+		exec("say Thanks, but I don't need this.  You keep it.", target);
+		exec("give packagefor "+activator.name, target);
+		exec("drop packagefor", target);
+		goto start;
+	}
 }
 dilend
 
@@ -2427,22 +2596,22 @@ M_AVG_DWARF(100,SEX_MALE)
 position POSITION_STANDING 
 
 dilcopy shop@bounty({"tablet","Bounty Hunters Tablet","150",
-						"full_restore","Potion of Full Restoration","100",
-						"strong_restore","Potent Potion of Restoration","75",
-						"half_restore","Potion of Restoration","50",
-						"full_mana","Potion of Full Mana","40",
-						"strong_mana","Potent Potion of Mana","30",
-						"half_mana","Potion of Mana","20",
-						"full_end","Potion of Full Endurance","40",
-						"strong_end","Potent Potion of Endurance","30",
-						"half_end","Potion of Endurance","20",
-						"full_heal","Potion of Full Healing","40",
-						"strong_heal","Potent Potion of Healing","30",
-						"half_heal","Potion of Healing","20",
-						"mulligan","Contract Breaking Note","100",
-						"dz_hint","Daily Hint - Zone","50",
+						"full_restore","Potion of Full Restoration","80",
+						"strong_restore","Potent Potion of Restoration","50",
+						"half_restore","Potion of Restoration","20",
+						"full_mana","Potion of Full Mana","20",
+						"strong_mana","Potent Potion of Mana","10",
+						"half_mana","Potion of Mana","5",
+						"full_end","Potion of Full Endurance","20",
+						"strong_end","Potent Potion of Endurance","10",
+						"half_end","Potion of Endurance","5",
+						"full_heal","Potion of Full Healing","20",
+						"strong_heal","Potent Potion of Healing","10",
+						"half_heal","Potion of Healing","5",
+						"mulligan","Contract Breaking Note","80",
+						"dz_hint","Daily Hint - Zone","40",
 						"dc_hint","Daily Hint - Continent","20",
-						"mz_hint","Monthly Hint - Zone","50",
+						"mz_hint","Monthly Hint - Zone","40",
 						"mc_hint","Monthly Hint - Continent","20"});
 
 end 
@@ -2514,6 +2683,9 @@ alignment 0
 M_AVG_HALF_ELF(100,SEX_FEMALE)
 position POSITION_STANDING 
 exp 400
+
+dilcopy delivery@bounty();
+
 end 
 
 %objects
@@ -2618,9 +2790,23 @@ extra {}
 advised to ensure you have a group with you ready for killing! <br><br>
 Say 'end spree' once the time has run out and you are ready to <br>
 collect your rewards!<br><br>
-You must have completed 40 total bounties of any kind from the <br>
+You must have completed 20 total bounties of any kind from the <br>
 Bounty Hunter in order to lead a spree. Anyone may participate in <br>
 following a leader on their spree."
+
+weight 1
+cost 1 IRON_PIECE
+extra {}
+""
+end
+
+pkg_sign
+names {"package sign","sign","instructions"}
+title "some instructions"
+descr "Some helpful <a cmd='read #'>instructions</a> are here."
+extra {}
+"Say 'i need work' to kick off a new package delivery for the jeweler!<br>
+Be careful, you dont want to open these packages!"
 
 weight 1
 cost 1 IRON_PIECE
@@ -2854,7 +3040,7 @@ names {"monthly zone hint","hint"}
 title "a monthly zone hint"
 descr "A monthly zone hint is here."
 extra {}
-"<div class='coc'>HINT!!</div><br>"
+"<div class='cpc'>HINT!!</div><br>"
 manipulate {MANIPULATE_TAKE}
 dilcopy hint@bounty("m","z");
 weight 1
@@ -2878,17 +3064,30 @@ names {"daily zone hint","hint"}
 title "a daily zone hint"
 descr "A daily zone hint is here."
 extra {}
-"<div class='coc'>HINT!!</div><br>"
+"<div class='cpc'>HINT!!</div><br>"
 manipulate {MANIPULATE_TAKE}
 dilcopy hint@bounty("d","z");
 weight 1
 cost 1 IRON_PIECE
 end
 
+package
+names {"package", "packagefor"}
+title "a lost package"
+descr "A lost package lies here."
+extra {}
+"The package is nondescript, wrapped in brown paper and tied with string.  
+You dare not open it."
+weight 2
+manipulate {MANIPULATE_TAKE}
+dilcopy package();
+end
+
 %reset
 load hunter into contracts max 1
 load shopkeep into shop max 1
 load bty_sign into contracts max 1
+load pkg_sign into jewels max 1
 load spree_sign into smithy max 1
 load jeweler into jewels max 1
 load blacksmith into smithy max 1
