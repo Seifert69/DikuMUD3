@@ -9403,6 +9403,7 @@ if (self.type!=UNIT_ST_PC)
    t := textformat(t);
    i := flog("typos", t, "a");
    sendtext("Thank you. They will be corrected.<br/>", self);
+   dispatch("discord msg #bugs @" + self.name + " TYPO report: " + t); // Send to dispatcher.py via pipeDispatcher
    quit;
 }
 dilend
