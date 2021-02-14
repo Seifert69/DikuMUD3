@@ -7661,7 +7661,7 @@ code
    {
       if (u.type == UNIT_ST_PC)
       {
-         log("add_reward for: " + u.symname);
+         log("add_reward for: " + u.symname + " with idx " + itoa(u.idx));
          add_reward@justice(u.symname, u.idx, CRIME_STEALING);
       }
       u := u.next;
