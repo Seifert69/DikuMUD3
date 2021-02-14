@@ -7603,6 +7603,7 @@ code
 }
 dilend
 
+/*
 dilbegin dizzi();
 code
 {
@@ -7630,6 +7631,7 @@ code
    goto loop;
 }
 dilend
+*/
 
 
 dilbegin justicetest();
@@ -7646,12 +7648,28 @@ code
    :loop:
    wait(SFB_CMD, command("clap"));
 
-   log ("add_witness");
+   log("add_witness");
    add_witness@justice(activator, self, self.name, CRIME_STEALING);
-   log ("add_reward");
+
+   log("add_reward for zombie");
    add_reward@justice(self.symname, self.idx, CRIME_STEALING);
-   add_reward@justice(activator.symname, activator.idx, CRIME_STEALING);
-   log ("done");
+
+   log("add_reward for any players in here");
+   u := self.outside.inside;
+   
+   while (u)
+   {
+      if (u.type == UNIT_ST_PC)
+      {
+         log("add_reward for: " + u.symname);
+         add_reward@justice(u.symname, u.idx, CRIME_STEALING);
+      }
+      u := u.next;
+   }
+
+   log("done");
+
+
    goto loop;
 }
 dilend
