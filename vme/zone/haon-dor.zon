@@ -9,6 +9,12 @@ END HEADER*/
 
 #include <macros.h>
 
+#define QUEST_RABBIT          "Rabbit Stew"
+#define QUEST_RABBIT_ONGOING  "Rabbit Stew Ongoing"
+#define QUEST_RABBIT_COMPLETE "Rabbit Stew Complete"
+#define QUEST_POT_COMPLETE    "Mary's Pot Retrieved"
+
+
 %zone                          haon_dor
 title "Haon-Dor Forest@Mainland"
 lifespan 10
@@ -2582,124 +2588,40 @@ if (findunit(self, "pot", FIND_UNIT_INVEN | FIND_UNIT_EQUIP, null)== null) goto 
 }
 dilend
 
-/* Part 1 of "The Rabbit Stew" Quest.                                  */
-/* The program aquires new loyal PC subjects for the Rabbit Stew Quest */
-dilbegin stew_quest();
+
+// Part 1 of "The Rabbit Stew" Quest. Find a hero that'll take the quest
+// The program aquires new loyal PC subjects for the Rabbit Stew Quest
+//
+dilbegin assign_stew();
+external
+   unitptr wait_hero@quests(qname : string, pc : unitptr, sl : stringlist);
+   extraptr quest_assign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
 var
-  pcname : string;
-  item   : unitptr;
-  pc     : unitptr;
-  i      : integer;
-  exdp   : extraptr;
+   pc     : unitptr;
+   exdp   : extraptr;
 
 code
 {
-   on_activation(self.position <= POSITION_SLEEPING, skip);
-
    :init:
    heartbeat := PULSE_SEC*5;
 
    :start:
-   wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (not command("give")));
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
 
-   if (QUEST_RABBIT_COMPLETE in activator.quests)
-     goto waitawhile;
+   pc := wait_hero@quests(QUEST_RABBIT, activator, 
+      {"say Hello $3n how are you today?",
+      "say I am trying to make a delicious rabbit stew, but I need some ingredients.",
+      "say I need a dead rabbit, some garlic, some mushrooms and a few berries.",
+      "say Will you please fetch me these ingredients, $3n?"});
 
-   pc := activator;
-   secure(pc, lostpc);
-
-   if (not (QUEST_RABBIT_ONGOING in pc.quests))
-   {
-      pause;
-      exec("say Hello "+pc.name+" how are you today?", self);
-      pause;
-
-      exec("say I am trying to make a delicious rabbit stew, but I " +
-	   "need some ingredients.", self);
-      pause;
-
-      exec("say I need a dead rabbit, some garlic, some mushrooms and " +
-	   "a few berries.", self);
-
-      pause;
-      exec("say Will you please fetch me these ingredients, "+pc.name+"?",
-	   self);
-
-      i := 0;
-      while (i < 5)
-      {
-         wait(SFB_DONE, activator == pc);
-
-	 if (command("nod"))
-	   goto quest_accepted;
-	 else if (command("say"))
-	 {
-	    pause;
-	    exec("say Please nod if you accept or shake if you reject.", self);
-	 }
-	 else if (command("shake"))
-	   goto no_quest;
-
-	 i := i+1;
-      }
-
-      :no_quest:
-      pause;
-      exec("say Very well, I will find someone else.", self);
-      unsecure(pc);
-      goto waitawhile;
-
-      :quest_accepted:
-      pause;
-      exec("say Please bring me all the items at one time!", self);
-      pause;
-	  exec("say That's very kind of you, please hurry!", self);
-      addextra(pc.quests, {QUEST_RABBIT_ONGOING}, "");
-      unsecure(pc);
+   if (pc == null)
       goto start;
 
-   }
-   else /* QUEST_RABBIT_ONGOING in pc.quests! */
-   {
-      exdp := QUEST_RABBIT_ONGOING in pc.quests;
-
-      if (("rabbit" in exdp.names) and ("mushroom" in exdp.names) and
-	  ("berries" in exdp.names) and ("garlic" in exdp.names))
-      {
-	 pause;
-	 subextra(pc.quests, QUEST_RABBIT_ONGOING);
-	 addextra(pc.quests, {QUEST_RABBIT_COMPLETE}, "");
-	 item := load("rabbit_foot@haon_dor");
-         item.height := pc.height;
-	 link(item, pc);
-         experience(800, pc);
-	 exec("say Here, I have made this special rabbit's foot just for you.", self);
-         pause;
-	 exec("thank "+pc.name, self);
-         pause;
-        unsecure(pc);
-	 exec("emote makes some Rabbit Stew.", self);
-	 item := load("stew@haon_dor");
-	 pc := findunit(self, "marys pot", 0, self.inside);
-	 link(item, pc); /* Put the stew in the pot */
-         pause;
-	 heartbeat := PULSE_SEC * 100;
-	 :loop1:
-         item := findsymbolic("orc_chief@haon_dor");
-	 if (item #= null)
-	 {
-	    pause;
-	    goto loop1;
-	 }
-	 sendto("stew", item);
-      }
-   }
-
-   unsecure(pc);
-   goto start;
-
-   :lostpc:
-   exec("say How rude!", self);
+   // Quest accepted
+   exdp := quest_assign@quests(QUEST_RABBIT, pc, 
+      {"say That's very kind of you $3n, please hurry!", 
+      "say $3n, please bring me all four items all at once!"},
+      "Bring Mary in Haon-Dor some mushrooms, some garlic, a few berries, and a dead rabbit");
    goto start;
 
    :waitawhile:
@@ -2710,86 +2632,62 @@ code
 dilend
 
 
-/* Part 2 of "The Rabbit Stew" Quest.                                  */
-/* The program tests if an "Ongoing" PC gives any quest items to Mary. */
-dilbegin stew_give();
+// Mary waits for these four items for the Stew quest
+//
+dilcopy qitems_name@quests(QUEST_RABBIT, {"mushroom", "berries", "garlic", "corpse of the cute rabbit"},
+            {"say Thank you $3n, these are really nice mushrooms.",
+             "say Thank you $3n these are really nice berries.",
+             "say Thank you $3n this is really some nice garlic.",
+             "say Look at all the blood, $3n! Well I thank you anyway."});
 
+
+// Get items to complete Stew quest
+//
+dilbegin compl_stew();
+external
+   unitptr q_wait_done@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer);
 var
-  pc     : unitptr;
+  pcname : string;
   item   : unitptr;
+  pc     : unitptr;
+  i      : integer;
   exdp   : extraptr;
-  u      : unitptr;
+
 code
 {
-   on_activation(self.position <= POSITION_SLEEPING, skip);
-
-   :init:
    :start:
-   wait(SFB_DONE, command("give") and (target == self));
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
 
-   pc := activator;
+   pc := q_wait_done@quests(QUEST_RABBIT, activator, 
+            {"say Here $3N, I have made this special rabbit's foot just for you.",
+            "thank $3N", 
+            "emote makes some Rabbit Stew."}, 800, 2 * COPPER_MULT + 1 * SILVER_MULT);
 
-   if (activator.type != UNIT_ST_PC)
-     goto start;
+   if (pc == null)
+      goto start;
 
-   if (not (QUEST_RABBIT_ONGOING in pc.quests))
-     goto start;
+   item := load("rabbit_foot@haon_dor");
+   item.height := pc.height;
+   link(item, pc);
+   
+   item := load("stew@haon_dor");
+   pc := findunit(self, "marys pot", 0, self.inside);
+   if (pc == null)
+      pc := load("pot@haon_dor");
+   link(item, pc); /* Put the stew in the pot */
 
-   item := medium;
-   secure(pc, labsecure);
-   secure(item, labsecure);
+   heartbeat := PULSE_SEC * 100;
 
-if (findunit(self, "pot", FIND_UNIT_INVEN | FIND_UNIT_EQUIP, null)== null)
-     {
-	  u := load("marys_pot@haon_dor");
-	  exec("hold pot",self);
-	  }
-   if (item.nameidx != "marys_pot")
+   :loop1:
+   item := findsymbolic("orc_chief@haon_dor");
+   if (item == null)
    {
-      unsecure(item);
-      exdp := QUEST_RABBIT_ONGOING in pc.quests;
-
-      if ("mushroom" in item.names)
-      {
-	 addstring(exdp.names, "mushroom");
-	 exec("say Thank you "+pc.name+" these are really nice mushrooms.",
-	      self);
-	 destroy(item);
-      }
-      else if ("berries" in item.names)
-      {
-	 addstring(exdp.names, "berries");
-	 exec("say Thank you "+pc.name+" these are really nice berries.",
-	      self);
-	 destroy(item);
-      }
-      else if ("garlic" in item.names)
-      {
-	 addstring(exdp.names, "garlic");
-	 exec("say Thank you "+pc.name+" this is really some nice garlic.",
-	      self);
-	 destroy(item);
-      }
-      else if (("corpse" in item.names) and
-	       ("rabbit" in item.outside_descr))
-      {
-	 addstring(exdp.names, "rabbit");
-	 exec("say Look at all the blood, "+pc.name+"! Thank you anyway.",self);
-	 destroy(item);
-      }
-      else
-      {
-	 exec("say I can't accept that, "+pc.name, self);
-	 /* Return the item to the player */
-	 link(item, pc);
-      }
+      pause;
+      goto loop1;
    }
-   unsecure(pc);
-
-   goto start;
-
-   :labsecure:
-   exec("say How rude, leaving just like that!", self);
+   log("Send stew message to chief");
+   sendto("stew", item);
    goto start;
 }
 dilend
@@ -2922,7 +2820,7 @@ stature and big flappy feet.  He smells awful."
 alignment -700
 M_ORC_WARRIOR_SWORD(5, SEX_MALE)
 money 8 COPPER_PIECE
-position POSITION_SLEEPING
+position POSITION_STANDING
 default POSITION_STANDING
 
 dilcopy teamwork@function ("orc");
