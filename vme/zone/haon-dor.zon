@@ -2634,7 +2634,7 @@ dilend
 
 // Mary waits for these four items for the Stew quest
 //
-dilcopy qitems_name@quests(QUEST_RABBIT, {"mushroom", "berries", "garlic", "corpse of the cute rabbit"},
+dilcopy qitems_name@quests(QUEST_RABBIT, {"mushroom", "black_berries@haon_dor", "garlic", "corpse of the cute rabbit"},
             {"say Thank you $1N, these are really nice mushrooms.",
              "say Thank you $1N these are really nice berries.",
              "say Thank you $1N this is really some nice garlic.",
