@@ -2662,7 +2662,7 @@ code
    pc := q_wait_done@quests(QUEST_RABBIT, activator, 
             {"say Here $1N, I have made this special rabbit's foot just for you.",
             "thank $1N", 
-            "emote makes some Rabbit Stew."}, 800, 2 * COPPER_MULT + 1 * SILVER_MULT);
+            "emote makes some Rabbit Stew."}, 800, 2 * COPPER_MULT);
 
    if (pc == null)
       goto start;
