@@ -4579,9 +4579,9 @@ code
          if ((left(ex.names.[0],1) != "$") and (arg in ex.names.[0]))
          {
             if (ex.descr == "")
-               str := str+ex.names.[0]+"<br/>";
+               str := str+"<div class='cpy'>"+ex.names.[0]+"</div><br/>";
             else
-               str := str+ex.names.[0]+": "+ex.descr+"<br/>";
+               str := str+"<div class='cpy'>"+ex.names.[0]+"</div>: "+ex.descr+"<br/>";
          }
 
          ex := ex.next;
@@ -4599,9 +4599,9 @@ code
          if (left(ex.names.[0],1) != "$")
          {
             if (ex.descr == "")
-               str := str+ex.names.[0]+"<br/>";
+               str := str+"<div class='cpy'>"+ex.names.[0]+"</div><br/>";
             else
-               str := str+ex.names.[0]+": "+ex.descr+"<br/>";
+               str := str+"<div class='cpy'>"+ex.names.[0]+"</div>: "+ex.descr+"<br/>";
          }
          ex := ex.next;
       }

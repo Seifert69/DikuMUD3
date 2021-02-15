@@ -245,6 +245,8 @@ code
          addstring(exdp.names, itemsl.[i]);
          s := sact(thanksl.[i], A_SOMEONE, pc, item, self, TO_CHAR);
          exec(s, self);
+         s := sact("<br/>You've given $3m $2n", A_SOMEONE, pc, item, self, TO_CHAR);
+         exdp.descr := exdp.descr + s;
          destroy(item);         
          goto checkit;
       }
