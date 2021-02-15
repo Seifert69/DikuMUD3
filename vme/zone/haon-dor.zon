@@ -2609,18 +2609,18 @@ code
    wait(SFB_CMD, (activator.type == UNIT_ST_PC));
 
    pc := wait_hero@quests(QUEST_RABBIT, activator, 
-      {"say Hello $3n how are you today?",
+      {"say Hello $1N how are you today?",
       "say I am trying to make a delicious rabbit stew, but I need some ingredients.",
       "say I need a dead rabbit, some garlic, some mushrooms and a few berries.",
-      "say Will you please fetch me these ingredients, $3n?"});
+      "say Will you please fetch me these ingredients, $1N?"});
 
    if (pc == null)
       goto start;
 
    // Quest accepted
    exdp := quest_assign@quests(QUEST_RABBIT, pc, 
-      {"say That's very kind of you $3n, please hurry!", 
-      "say $3n, please bring me all four items all at once!"},
+      {"say That's very kind of you $1N, please hurry!", 
+      "say $1N, please bring me all four items all at once!"},
       "Bring Mary in Haon-Dor some mushrooms, some garlic, a few berries, and a dead rabbit");
    goto start;
 
@@ -2635,10 +2635,10 @@ dilend
 // Mary waits for these four items for the Stew quest
 //
 dilcopy qitems_name@quests(QUEST_RABBIT, {"mushroom", "berries", "garlic", "corpse of the cute rabbit"},
-            {"say Thank you $3n, these are really nice mushrooms.",
-             "say Thank you $3n these are really nice berries.",
-             "say Thank you $3n this is really some nice garlic.",
-             "say Look at all the blood, $3n! Well I thank you anyway."});
+            {"say Thank you $1N, these are really nice mushrooms.",
+             "say Thank you $1N these are really nice berries.",
+             "say Thank you $1N this is really some nice garlic.",
+             "say Look at all the blood, $1N! Well I thank you anyway."});
 
 
 // Get items to complete Stew quest
@@ -2660,8 +2660,8 @@ code
    wait(SFB_CMD, (activator.type == UNIT_ST_PC));
 
    pc := q_wait_done@quests(QUEST_RABBIT, activator, 
-            {"say Here $3N, I have made this special rabbit's foot just for you.",
-            "thank $3N", 
+            {"say Here $1N, I have made this special rabbit's foot just for you.",
+            "thank $1N", 
             "emote makes some Rabbit Stew."}, 800, 2 * COPPER_MULT + 1 * SILVER_MULT);
 
    if (pc == null)

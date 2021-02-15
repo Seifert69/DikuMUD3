@@ -29,7 +29,7 @@ notes
 //
 // pc : The player that is the target of this quest request
 // expl: list of strings for the NPC to execute to explain the quest.
-//       YOu can use $ variables, e.g. $1n. $1 = self, $3 = player. Strings formatted with "TO_CHAR", "SOMEONE"
+//       YOu can use $ variables, e.g. $1n. $1 = player, $3 = self. Strings formatted with "TO_CHAR", "SOMEONE"
 //       The very last string should be "nod to accept..." as it will be repeated
 //   {"say $1n, do you want this quest?", "jump", "hug $1n", "say <a cmd='"'>nod</a> if you wish to accept"}
 //
@@ -72,7 +72,7 @@ code
    // Give the explanation
    while (i < ln)
    {
-      s := sact(sl.[i], A_SOMEONE, self, null, pc, TO_CHAR);
+      s := sact(sl.[i], A_SOMEONE, pc, null, self, TO_CHAR);
       pause;
       exec(s, self);
       i := i + 1;
@@ -103,7 +103,7 @@ code
 
    if ((i == 2) or (i == 5))
    {
-      s := sact(sl.[ln-1], A_SOMEONE, self, null, pc, TO_CHAR);
+      s := sact(sl.[ln-1], A_SOMEONE, pc, null, self, TO_CHAR);
       exec(s, self);         
    }
 
@@ -173,7 +173,7 @@ code
    // Give the explanation
    while (i < ln)
    {
-      s := sact(sl.[i], A_SOMEONE, self, null, pc, TO_CHAR);
+      s := sact(sl.[i], A_SOMEONE, pc, null, self, TO_CHAR);
       exec(s, self);
       pause;
       i := i + 1;
@@ -191,13 +191,25 @@ code
 dilend
 
 
-// Will test for string names. (Use symname version for symbolic names)
-// itemsl := {"mushroom", "berries", "garlic", "corpse of rabbit"};
-// thanksl := {"say Thank you $3n, these are really nice mushrooms.",
+// Add this to a quest NPC that's waiting to "get items" from a player.
+// The items received will be destroyed, and incorrect items given back.
+//
+// Parameters:
+//   qname: The 'core' name of the quest. E.g. "Stew Quest".
+//          Program will react to any PC which has a "Stew Quest Ongoing".
+//
+//   itemsl: String list of items to accept. Either the symname or a substring. 
+//           E.g. {"mushroom", "black_berries@haon_dor", "garlic", "corpse of rabbit"};
+//           For non-symnames if any name in the given item matches the substrings in 
+//           the list then it's a match.  
+//
+// thanksl : String list of thank you statements / actions, one matching each item above. 
+//             {"say Thank you $3n, these are really nice mushrooms.",
 //             "say Thank you $3n these are really nice berries.",
 //             "say Thank you $3n this is really some nice garlic.",
 //             "say Look at all the blood, $3n! Well I thank you anyway."};
-// thanksl : $1 = self, $2 = item, $3 = pc
+//             
+// thanksl : $1 = pc, $2 = item, $3 = self
 //
 dilbegin integer qitems_name(qname : string, itemsl : stringlist, thanksl : stringlist);
 var
@@ -228,10 +240,10 @@ code
 
    while (i < ln)
    {
-      if (itemsl.[i] in item.names)
+      if ((itemsl.[i] == item.symname) or (itemsl.[i] in item.names))
       {
          addstring(exdp.names, itemsl.[i]);
-         s := sact(thanksl.[i], A_SOMEONE, self, item, pc, TO_CHAR);
+         s := sact(thanksl.[i], A_SOMEONE, pc, item, self, TO_CHAR);
          exec(s, self);
          destroy(item);         
          goto checkit;
@@ -303,7 +315,7 @@ code
    // Give the explanation
    while (i < ln)
    {
-      s := sact(sl.[i], A_SOMEONE, self, null, pc, TO_CHAR);
+      s := sact(sl.[i], A_SOMEONE, pc, null, self, TO_CHAR);
       exec(s, self);
       pause;
       i := i + 1;
