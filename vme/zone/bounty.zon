@@ -2610,8 +2610,6 @@ south to sanctum;
 
 end
 
-end
-
 sanc_h
 title "<div class='cpn'>A Hallway off the Inner Sanctum</div>"
 descr
@@ -2622,7 +2620,7 @@ clear purpose to every stone. The space seems significantly less well
 worn than the outer guild above, and the hallway has seen little traffic 
 over the years. There is a doorway east that opens into a vast library. To the 
 west, the Inner Sanctum can be seen."
-flags {UNIT_FL_INDOORS}
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
 
@@ -2641,7 +2639,7 @@ clear purpose to every stone. The space seems significantly less well
 worn than the outer guild above, and the hallway has seen little traffic 
 over the years. There is a doorway east that opens into a vast library. To the 
 west, the Inner Sanctum can be seen."
-flags {UNIT_FL_INDOORS}
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
 
