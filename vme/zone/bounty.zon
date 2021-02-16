@@ -466,7 +466,6 @@ var
 	bty : unitptr;
 	targ : unitptr;
 	sdate : string;
-	buf : string;
 code
 {
 	log("Reprint called for "+which+" contract: "+buf);
