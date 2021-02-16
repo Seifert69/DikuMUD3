@@ -53,6 +53,10 @@ talk to the historian.
 	Historian will clarify ask for playing spy on Al Kazeem. (maybe captain)?
 Talk to Al Kazeem
 	Either choose to betray the bounty hunters, by alerting targets
+	
+Jewelry, as well as arms/armor use birthstones and... perhaps some other material?
+for crafting. Crafting these items allows creation of a wide range of items, with each
+birthstone representing a unique ability or other boost.
 
 // spree - how does it fit in the story?
 // who gives it? Who rewards it?
@@ -154,6 +158,7 @@ var
    sl  : stringlist;
    nToday : integer;
    nLast  : integer;
+   nCount : integer;
 code
 {
    exd := "$loginstreak" in self.info;
@@ -170,13 +175,16 @@ code
    // did we do a login streak?
    if (nLast+1 == nToday)
    {
-      act("<div class='cpy'>One more login streak reward.</div>", A_ALWAYS, self, null, null, TO_CHAR);
+	  nCount := nToday - atoi(exd.names.[2]) + 1;
+      act("<div class='cpy'>Your login streak is now at "+itoa(nCount)+" days.</div>", A_ALWAYS, self, null, null, TO_CHAR);
+      act("<div class='xpgain'>You gain "+itoa(nCount)+" bounty point(s) as a login streak reward.</div>", A_ALWAYS, self, null, null, TO_CHAR);
       exd.names.[1] := itoa(nToday);  // Move to the next day
-      streak_bonus(nToday - atoi(exd.names.[2]) + 1);
+      streak_bonus(nCount);
    }
    else if (nLast+1 < nToday)    // Did we miss out on the streak?
    {
-      act("<div class='cpy'>Restarting your login streaks.</div>", A_ALWAYS, self, null, null, TO_CHAR);
+      act("<div class='cpy'>Your login streak is now at "+itoa(nCount)+" days.</div>", A_ALWAYS, self, null, null, TO_CHAR);
+      act("<div class='xpgain'>You gain "+itoa(nCount)+" bounty point(s) as a login streak reward.</div>", A_ALWAYS, self, null, null, TO_CHAR);
       exd.names.[1] := itoa(nToday);
       exd.names.[2] := itoa(nToday);  // Set streak since
       streak_bonus(1);
@@ -229,15 +237,15 @@ code
 	{
 		exec("say You have not yet delivered the package I gave you!", self);
 		exec("say I will clear you of the responsibility (and the quest flag),", self);
-		exec("say but you will be penalized and lose 150 xp and 1 bounty point.", self);
+		exec("say but you will be penalized and lose 300 xp and 2 bounty points.", self);
 		exec("say Nod if this is acceptable.", self);
 		wait(SFB_DONE, (pc.outside!=self.outside) or ((activator==pc) and (command("nod"))));
 		if(pc.outside!=self.outside) goto lostpc;
 		temp:=dildestroy("packagefor@bounty", pc);
 		subextra(pc.quests, "packagefor");
-		experience(-150, pc);
-		i := add_bp(-1,pc);
-		act("<div class='xpgain'>You lose 150 xp and 1 bounty point.</div>", A_SOMEONE, pc, null, null, TO_CHAR);
+		experience(-300, pc);
+		i := add_bp(-2,pc);
+		act("<div class='xpgain'>You lose 300 xp and 2 bounty points.</div>", A_SOMEONE, pc, null, null, TO_CHAR);
 		unsecure(pc);
 		goto start;
 	}
@@ -257,7 +265,6 @@ code
 
 	exec("say Oh you do eh? Fine, "+pc.name+"!", self);
 	exec("say I need you to deliver a package for me.", self);
-	exec("say If you deliver the package successfully you will get 500 xp and 1 bounty point.", self);
 	exec("say Just nod if you will.", self);
 
 	wait(SFB_DONE, (pc.outside!=self.outside) or ((activator==pc) and (command("nod"))));
@@ -272,7 +279,7 @@ code
 	addstring(qnames, "packagefor");
 	addstring(qnames, rtitle);
 	addextra(pc.quests, qnames, "");
-	if(not dilfind("packagefor@bounty", pc)) dilcopy("packagefor@bounty", pc);
+	if(not dilfind("packagefor@bounty", pc)) dilcopy("packagefor@bounty("+rlev+")", pc);
 	exec("say OK the package is for "+rtitle+".", self);
 	exec("give packagefor "+pc.name, self);
 	exec("drop packagefor", self);
@@ -281,6 +288,7 @@ code
 	exec("say "+rdesc, self);
 	exec("say And don't worry about giving it to the wrong recipient,", self);
 	exec("say if you get it wrong it will be returned to you.", self);pause;
+	exec("say If you deliver the package successfully you will get "+itoa(50*rlev)+" xp and 1 bounty point.", self);
 	exec("say Now hurry!  That's an important package!", self);
 	unsecure(pc);
 	goto start;
@@ -321,7 +329,7 @@ wait (SFB_DONE, (command("open")) and
 }
 dilend
 
-dilbegin aware packagefor();
+dilbegin aware packagefor(rlev : integer);
 external
 	integer add_bp@bounty(n : integer, u : unitptr);
 var
@@ -338,10 +346,12 @@ code
 	if((q1==q2) and (q1!=null) and (target.title in medium.names))
 	{
 		subextra(activator.quests, "packagefor");
-		experience(500, activator);
+		
+		experience((50*rlev), activator);
 		temp := add_bp(1, activator); 
 		exec("say Thanks, I've been waiting for this, "+activator.name+"!", target);
-		act("<div class='xpgain'>You gain 500 xp and 1 bounty point.</div>", A_SOMEONE, activator, null, null, TO_CHAR);
+		act("<div class='xpgain'>You gain "+itoa(50*rlev)+" xp and 1 bounty point.</div>", A_SOMEONE, activator, null, null, TO_CHAR);
+		i := transfermoney(null,pc,((50*rlev)/2));	
 		destroy(medium);
 		temp:=dildestroy("packagefor@bounty", self);
 		goto start;
@@ -456,6 +466,7 @@ var
 	bty : unitptr;
 	targ : unitptr;
 	sdate : string;
+	buf : string;
 code
 {
 	log("Reprint called for "+which+" contract: "+buf);
@@ -463,12 +474,15 @@ code
 	targ := findsymbolic(slt.[1]);
 	sdate := slt.[0];
 	bty := load("contract@bounty");
-	bty.extra.[0].descr := bty.extra.[0].descr + 
+	buf := bty.extra.[0].descr + 
 	"<br><div class='cpw'>Contract Date: </div><div class='cr'>" + sdate +
 	"<br><div class='cpw'>Contract Term: </div><div class='cr'>" + which +
 	"<br><div class='cpw'>Target Name: </div><div class='cr'>" + targ.name + 
 	"<br><div class='cpw'>Target Alias: </div><div class='cr'>" + targ.title + 
 	"<br><div class='cpw'>Target Description: </div><div class='cr'> " + targ.outside_descr;
+	
+	bty.extra.[0].descr := buf;
+	act (buf, A_ALWAYS, pc, null, null, TO_ALL);	
 	link(bty,pc);
 	return;
 }
@@ -936,6 +950,9 @@ code
 		st := atoi(self.extra.["$SPREE_TIMER"].descr);
 		if(realtime - st > ((dur + 1) * 60))
 		{
+			subextra(self.extra,"$spree_streak");
+			addextra(self.extra,{"$spree_streak"},itoa(0));
+			self.extra.["$DAILY_SPREE"].descr := replace("ongoing","FAIL",self.extra.["$DAILY_SPREE"].descr); 
 			quit;
 		}
 	}
@@ -1051,7 +1068,15 @@ code
 	
 	sl := split(self.extra.["$DAILY_SPREE"].descr,"|");
 	if((kn == 0) and (xn == 0))
-		log("Spree Tracker: "+self.name+" lead a successful spree of type "+sl.[3]+" with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+",000 XP in "+itoa(dur - 1 - minutes)+":"+itoa(60 - seconds)+". Duration was "+itoa(dur)+":00.");
+	{
+		log("Spree Tracker: "+self.name+" has lead a successful spree of type "+sl.[3]+" with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+"000 XP in "+itoa(dur - 1 - minutes)+":"+itoa(60 - seconds)+". Duration was "+itoa(dur)+":00.");
+		u := self;
+		while (u.type==UNIT_ST_PC)
+		{
+			sendtext(self.name+" has just lead a successful spree with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+"000 XP in "+itoa(dur - 1 - minutes)+":"+itoa(60 - seconds)+". Duration was "+itoa(dur)+":00.",u);
+			u := u.gnext;
+		}
+	}
 	else
 		log("Spree Tracker: "+self.name+" failed to lead a spree of type "+sl.[3]+" with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+"000 XP. Duration was "+itoa(dur)+":00.");
 	
@@ -2484,6 +2509,7 @@ dilcopy anvils@bounty();
 end
 
 jewels
+names {"packages"}
 title "<div class='cpn'>The Jeweler's Workshop</div>"
 descr
 "South of the hallway the Jeweler's Workshop is a quiet juxtaposition to the 
@@ -2537,7 +2563,14 @@ end
 sanctum
 title "<div class='cpn'>The Inner Sanctum</div>"
 descr
-"This is the Inner Sanctum of the Bounty Hunters."
+"This is the Inner Sanctum of the Bounty Hunters Guild. Rumors about its existance 
+have spread throughout the land, but to most, its assumed that rumor is all it ever 
+was. The reality of being here, however, puts those rumors to rest. Like the rest 
+of the guild, it is a large, and masterfully wrought stone room. No lack of 
+attention was given to the construction, and a well-made yet simple shrine rests 
+against the southern wall. The space is not entirely free from decor, as frescos 
+have been painted in sections on the walls representing the hunt in a seemingly 
+strange and unknown part of history."
 flags {UNIT_FL_INDOORS, UNIT_FL_SACRED, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -2545,13 +2578,29 @@ ALWAYS_LIGHT
 dilcopy pray2@bounty();
 
 north to sanctum_1;
+east to sanc_h;
 
 end
 
 sanctum_1
 title "<div class='cpn'>The Inner Sanctum</div>"
 descr
-"This is the Inner Sanctum of the Bounty Hunters."
+"Here the Bounty Hunters Guild Inner Sanctum expands, and comes to an apparent 
+end. The frescos continue across the walls here, and an overall sense of well being 
+and peace is here. Despite this, it is with no small sense of apprehension your eyes 
+come to rest on simple though plentiful feast laid out across sturdy tables. Food 
+an drink enough to feed many is arrayed across the tables, and while of fine quality 
+it is simple, and not out of character for what you have noticed of this strange 
+place. The room appears empty, and the only exit is back to the south."
+
+extra {"tables", "table"}
+"The tables are crafted from thick strong timbers, and could support a small army. 
+That, or a very large feast."
+
+extra {"feast"}
+"It is somewhat strange to find a feast of fresh hot food laid out here in this 
+seemingly lonely place. Dare you partake in this feast?"
+
 flags {UNIT_FL_INDOORS, UNIT_FL_SACRED, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -2559,6 +2608,45 @@ ALWAYS_LIGHT
 dilcopy feast@bounty();
 
 south to sanctum;
+
+end
+
+end
+
+sanc_h
+title "<div class='cpn'>A Hallway off the Inner Sanctum</div>"
+descr
+"A hallway leads away from the main rooms of the Inner Sanctum. The air is 
+still and quiet. Despite this respite from the bustle of the world outside, 
+there is a clear sense of life here. As with the hall above, there is a 
+clear purpose to every stone. The space seems significantly less well 
+worn than the outer guild above, and the hallway has seen little traffic 
+over the years. There is a doorway east that opens into a vast library. To the 
+west, the Inner Sanctum can be seen."
+flags {UNIT_FL_INDOORS}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+west to sanctum;
+east to library;
+
+end
+
+library
+title "<div class='cpn'>A Hallway off the Inner Sanctum</div>"
+descr
+"A hallway leads away from the main rooms of the Inner Sanctum. The air is 
+still and quiet. Despite this respite from the bustle of the world outside, 
+there is a clear sense of life here. As with the hall above, there is a 
+clear purpose to every stone. The space seems significantly less well 
+worn than the outer guild above, and the hallway has seen little traffic 
+over the years. There is a doorway east that opens into a vast library. To the 
+west, the Inner Sanctum can be seen."
+flags {UNIT_FL_INDOORS}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+west to sanc_h;
 
 end
 
@@ -2596,9 +2684,9 @@ M_AVG_DWARF(100,SEX_MALE)
 position POSITION_STANDING 
 
 dilcopy shop@bounty({"tablet","Bounty Hunters Tablet","150",
-						"full_restore","Potion of Full Restoration","80",
-						"strong_restore","Potent Potion of Restoration","50",
-						"half_restore","Potion of Restoration","20",
+						"full_restore","Potion of Full Restoration","60",
+						"strong_restore","Potent Potion of Restoration","30",
+						"half_restore","Potion of Restoration","15",
 						"full_mana","Potion of Full Mana","20",
 						"strong_mana","Potent Potion of Mana","10",
 						"half_mana","Potion of Mana","5",
@@ -3080,7 +3168,7 @@ extra {}
 You dare not open it."
 weight 2
 manipulate {MANIPULATE_TAKE}
-dilcopy package();
+dilcopy package@bounty();
 end
 
 %reset
@@ -3091,5 +3179,6 @@ load pkg_sign into jewels max 1
 load spree_sign into smithy max 1
 load jeweler into jewels max 1
 load blacksmith into smithy max 1
+load historian into library max 1
 
 %end
