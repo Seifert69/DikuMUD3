@@ -351,9 +351,9 @@ code
 		temp := add_bp(1, activator); 
 		exec("say Thanks, I've been waiting for this, "+activator.name+"!", target);
 		act("<div class='xpgain'>You gain "+itoa(50*rlev)+" xp and 1 bounty point.</div>", A_SOMEONE, activator, null, null, TO_CHAR);
-		i := transfermoney(null,pc,((50*rlev)/2));	
+		temp := transfermoney(null,activator,((50*rlev)/2));	
 		destroy(medium);
-		temp:=dildestroy("packagefor@bounty", self);
+		temp := dildestroy("packagefor@bounty", self);
 		goto start;
 	}
 	else
