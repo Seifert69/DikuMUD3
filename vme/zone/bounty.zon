@@ -171,11 +171,11 @@ code
 
    nToday := realtime / (60*60*24);
    nLast  := atoi(exd.names.[1]);
+   nCount := nToday - atoi(exd.names.[2]) + 1;
 
    // did we do a login streak?
    if (nLast+1 == nToday)
    {
-	  nCount := nToday - atoi(exd.names.[2]) + 1;
       act("<div class='cpy'>Your login streak is now at "+itoa(nCount)+" days.</div>", A_ALWAYS, self, null, null, TO_CHAR);
       act("<div class='xpgain'>You gain "+itoa(nCount)+" bounty point(s) as a login streak reward.</div>", A_ALWAYS, self, null, null, TO_CHAR);
       exd.names.[1] := itoa(nToday);  // Move to the next day
@@ -279,7 +279,7 @@ code
 	addstring(qnames, "packagefor");
 	addstring(qnames, rtitle);
 	addextra(pc.quests, qnames, "");
-	if(not dilfind("packagefor@bounty", pc)) dilcopy("packagefor@bounty("+rlev+")", pc);
+	if(not dilfind("packagefor@bounty", pc)) dilcopy("packagefor@bounty("+itoa(rlev)+")", pc);
 	exec("say OK the package is for "+rtitle+".", self);
 	exec("give packagefor "+pc.name, self);
 	exec("drop packagefor", self);
