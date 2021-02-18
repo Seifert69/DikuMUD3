@@ -157,7 +157,8 @@ else
 /*
 The following two dils are commands that had to be modified to work for death.
 */
-
+// 2021 - heads now carry an extra "$living_sym" that contains the symname of it's
+// host in life. This is useful for quests, and stuff.
 dilbegin decap(arg : string); /* Decapitating corpses */
 external
 unitptr find_here@commands (s:string);
@@ -174,6 +175,7 @@ var
    test_expt : extraptr;
    headless:string;
    chk : integer;
+   living_sym : string;
 code
 {
 heartbeat:=3;
@@ -216,12 +218,15 @@ heartbeat:=3;
    quit;
   }
 
+	living_sym := corpse.extra.["$living_sym"].descr;
+	
    act("You brutally decapitate a corpse.",
        A_ALWAYS, self, null, null, TO_CHAR);
    act("$1n brutally decapitates a corpse.",
        A_SOMEONE, self, null, null, TO_REST);
    item := load("head@death");
    addextra (item.extra,{"$head_time"},itoa(realtime));
+   addextra (item.extra,{"$living_sym"},living_sym);
    dilcopy ("rot_head@death",item);
    // If corpse has a reward on it copy it to the head.
   
@@ -710,6 +715,7 @@ dilend
  *   value[2] is 0 if PC 1 if NPC
  *   value[3] is the char's level
  *   value[4] is the char's race
+ *   "$living_sym" in corpse.extra == self.symname of pc/npc.
 */
 dilbegin make_corpse();
 external
@@ -734,6 +740,8 @@ code
    crp := load("corpse@death");
 
    substring(crp.names, crp.names.[0]);
+   
+   addextra (crp.extra,{"$living_sym"},self.symname);
    
    if(self.symname == "familiar2@g_q")
    {

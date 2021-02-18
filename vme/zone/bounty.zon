@@ -183,8 +183,8 @@ code
    }
    else if (nLast+1 < nToday)    // Did we miss out on the streak?
    {
-      act("<div class='cpy'>Your login streak is now at "+itoa(nCount)+" days.</div>", A_ALWAYS, self, null, null, TO_CHAR);
-      act("<div class='xpgain'>You gain "+itoa(nCount)+" bounty point(s) as a login streak reward.</div>", A_ALWAYS, self, null, null, TO_CHAR);
+      act("<div class='cpy'>Your login streak is now at "+itoa(1)+" days.</div>", A_ALWAYS, self, null, null, TO_CHAR);
+      act("<div class='xpgain'>You gain "+itoa(1)+" bounty point(s) as a login streak reward.</div>", A_ALWAYS, self, null, null, TO_CHAR);
       exd.names.[1] := itoa(nToday);
       exd.names.[2] := itoa(nToday);  // Set streak since
       streak_bonus(1);
@@ -273,6 +273,9 @@ code
 	package:=load("package@bounty");
 	package.title:="a package for "+rtitle;
 	package.outside_descr:="A package for "+rtitle+" lies here.";
+	package.extra.[0].descr := package.extra.[0].descr + 
+		"A label reads:<br>The recipient looks like this: "+rdesc;
+	addextra(package.extra,{"$recipient"},recip.symname);
 	addstring(package.names, rtitle);
 	qnames:=null;
 	addstring(qnames, "Package for "+rtitle);
@@ -478,7 +481,7 @@ code
 	"<br><div class='cpw'>Contract Term: </div><div class='cr'>" + which +
 	"<br><div class='cpw'>Target Name: </div><div class='cr'>" + targ.name + 
 	"<br><div class='cpw'>Target Alias: </div><div class='cr'>" + targ.title + 
-	"<br><div class='cpw'>Target Description: </div><div class='cr'> " + targ.outside_descr;
+	"<br><div class='cpw'>Target Description: </div><div class='cr'> " + targ.outside_descr +"</div>";
 	
 	bty.extra.[0].descr := buf;
 	act (buf, A_ALWAYS, pc, null, null, TO_ALL);	
@@ -1876,13 +1879,13 @@ code
 	sldt := split(edaily.descr,"|");
 	slmt := split(emonth.descr,"|");
 	slbt := split(ebonus.descr,"|");
-	sdtarg := sldt.[2];
-	smtarg := slmt.[2];
-	sbtarg := slbt.[2];
+	sdtarg := sldt.[1];
+	smtarg := slmt.[1];
+	sbtarg := slbt.[1];
 
 	// if you have turned in a valid bounty
 	
-	if("The decapitated head of "+sdtarg+" is laying here." == self.inside.outside_descr)
+	if(sdtarg == self.inside.extra.["$living_sym"].descr)
 	{
 		etarg := edaily;
 		emax := pc.extra.["$daily_max"];
@@ -1907,7 +1910,7 @@ code
 			emax := pc.extra.["$daily_max"];
 		}
 	}
-	else if ("The decapitated head of "+smtarg+" is laying here." == self.inside.outside_descr)
+	else if (smtarg == self.inside.extra.["$living_sym"].descr)
 	{
 		etarg := emonth;
 		emax := pc.extra.["$monthly_max"];
@@ -1932,7 +1935,7 @@ code
 			emax := pc.extra.["$monthly_max"];
 		}
 	}
-	else if ("The decapitated head of "+sbtarg+" is laying here." == self.inside.outside_descr)
+	else if (sbtarg == self.inside.extra.["$living_sym"].descr)
 	{
 		etarg := ebonus;
 		emax := pc.extra.["$bonus_max"];
@@ -2318,7 +2321,6 @@ code
 				self.extra.[0].descr := self.extra.[0].descr + 
 				"<br><div class='cpw'>Continent Name: </div><div class='cpc'>" + slt.[1];
 			}
-			wait(SFB_TICK,command(CMD_AUTO_TICK));
 			quit;
 		}
 		zp := zp.next;
@@ -2330,6 +2332,8 @@ dilend
 dilbegin shop(items : stringlist);
 external
 	integer add_bp@bounty(n : integer, u : unitptr);
+	integer dateformat@bounty(s : string);
+	string stringdate@bounty(n : integer);
 var
 	pc : unitptr;
 	i : integer;
@@ -2340,6 +2344,13 @@ var
 	uitem : unitptr;
 	ibp : integer;
 	arg : string;
+	day : string;
+	sldate : stringlist;
+	r : integer;
+	sdate : string;
+	ssdate : string;
+	idate : integer;
+	isdate : integer;
 code
 {
 :init:
@@ -2348,17 +2359,56 @@ code
 	
 	ln:=length(items);
 
-
-:start:
+	:start:
 
 	buf:="<b><div class='cpn'>Bounty Hunters Guild Shop</div></b><br>";
 	buf:=buf+"<table><tr><th>Item # - </th><th>Item Name</th><th> - Bounty Points</th></tr>";
 	i := 0;
 	j := 1;
-
+	
 	wait(SFB_CMD, (command("list") or command("buy")));
 	block;
 
+	sldate := split(asctime(realtime)," ");
+	day := sldate.[0];
+	sldate := {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+	sdate := stringdate(3);
+	
+	r := rnd(0,6);
+	if(sldate.[r] == day)
+		r := 1;
+	else
+		r := 0;
+	if(self.outside.symname != "shop@bounty")
+	{
+		exec("say I'm afraid I must return to my shop first.",self);
+		goto start;
+	}
+	if(not("$sale_date" in self.outside.extra))
+	{	
+		addextra(self.outside.extra,{"$sale_date"},sdate);
+		addextra(self.outside.extra,{"$sale_type"},itoa(r));
+	}
+	else 
+	{
+		ssdate := self.outside.extra.["$sale_date"].descr;
+		idate := dateformat@bounty(sdate);
+		isdate := dateformat@bounty(ssdate);
+		if(idate > isdate)
+		{
+			subextra(self.outside.extra,"$sale_date");
+			subextra(self.outside.extra,"$sale_type");
+			addextra(self.outside.extra,{"$sale_date"},sdate);
+			addextra(self.outside.extra,{"$sale_type"},itoa(r));
+		}
+	}
+	
+	// this value becomes a denominator for costs if a sale is on.
+	if (self.outside.extra.["$sale_type"].descr == "1")
+		r := 2;
+	else
+		r := 1;
+	
 	if(argument)
 		arg := argument;
 	
@@ -2376,13 +2426,16 @@ code
 
 	while(i < (ln-2))
 	{
-		buf:=buf+"<tr><td>"+itoa(j)+" - </td><td>"+items.[i+1]+"</td><td> - "+items.[i+2]+"</td></tr>";
+		buf:=buf+"<tr><td>"+itoa(j)+" - </td><td>"+items.[i+1]+"</td><td> - "+itoa(atoi(items.[i+2]) / r)+"</td></tr>";
 		i := i+3;
 		j := j+1;
 	}
 	
 	bp := "</table><br><div class='cpc'>You have "+bp+" Bounty Points available.</div>";
 	sendtext(buf+bp,pc);
+	
+	if(r == 2)
+		exec("say We're having a sale today. It's a great time to buy!",self);
 	goto start;
 	
 :buy:
@@ -2391,15 +2444,15 @@ code
 	{
 		if(atoi(arg) == j)
 		{
-			if(atoi(items.[i+2]) <= ibp)
+			if((atoi(items.[i+2]) / r) <= ibp)
 			{
-				ibp := add_bp((atoi(items.[i+2])* (-1)),pc);
+				ibp := add_bp(((atoi(items.[i+2]) / r) * (-1)),pc);
 				uitem := load(items.[i]+"@bounty");
 				link(uitem, pc);
 				exec("say Here is your "+uitem.name+" "+pc.name+"!",self);
 			}
 			else
-				exec("say You don't have "+items.[i+2]+" bounty points "+pc.name+"!",self);
+				exec("say You don't have "+itoa(atoi(items.[i+2]) / r)+" bounty points "+pc.name+"!",self);
 			goto start;
 		}
 		i := i+3;
