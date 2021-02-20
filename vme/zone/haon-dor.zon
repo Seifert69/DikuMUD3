@@ -2556,13 +2556,13 @@ dilend
 // 
 dilbegin assign_stew();
 external
-   extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
-   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist);
+   extraptr qstAssign@quests(qname : string, p : unitptr, sl : stringlist, qdescr : string);
+   unitptr qstWaitHero@quests(qname : string, p : unitptr, sl : stringlist);
 
 var
-   pc     : unitptr;
    pot    : unitptr;
    exdp   : extraptr;
+   pc     : unitptr;
 
 code
 {
