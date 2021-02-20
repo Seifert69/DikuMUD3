@@ -44,10 +44,15 @@ pray to enter sanctum, feast
 talk to the guide. Get ability to feast.
 talk to the historian. 
 talk to the blacksmith. 
-	do quest?
+	do quest.
+	   500,000 lbs of steel. ** Need to write ability to count, accept, and track.
+	   200,000 lbs of coal. ** See the Summoner. Add area to sanctum. Create summoner and task, etc.
+	Forge unbreakable armor/weapon?
 	Get ability to list arms/armors.
+	
 talk to the jeweler. 
 	do quest?
+	   leverage birthstones.
 	Get ability to buy list jewely.
 talk to the historian. 
 	Historian will clarify ask for playing spy on Al Kazeem. (maybe captain)?
@@ -199,6 +204,144 @@ code
 }
 dilend
 
+dilbegin report();
+var
+	pc : unitptr;
+	s : string;
+	total : string;
+	streak : string;
+	max : string;
+code
+{
+	heartbeat := PULSE_SEC;
+
+:start:
+
+	wait(SFB_CMD, command("say") and (argument == "report"));
+	
+	// for each value of s, dil should generate relevant data based on extras.
+	
+	pc := activator;
+	secure(pc,donezo);
+	
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	if (self.nameidx == "hunter")
+		goto hunter;
+	else if (self.nameidx == "jeweler")
+		goto jeweler;
+	else if (self.nameidx == "blacksmith")
+		goto blacksmith;
+	
+:hunter:
+
+	s := "contract";
+	
+	exec("say Here's your "+s+" report, "+pc.name+".",self);
+	
+	if(not("$monthly_total" in pc.extra))
+		addextra(pc.extra,{"$monthly_total"},"0");
+	if(not("$monthly_streak" in pc.extra))
+		addextra(pc.extra,{"$monthly_streak"},"0");
+	if(not("$monthly_max" in pc.extra))
+		addextra(pc.extra,{"$monthly_max"},"0");
+	
+	total := pc.extra.["$monthly_total"].descr;
+	streak := pc.extra.["$monthly_streak"].descr;
+	max := pc.extra.["$monthly_max"].descr;
+	
+	exec("say You have completed a total of "+total+" monthly contracts.",self);
+	exec("say You are currently on a streak of "+streak+" monthly contracts.",self);
+	exec("say Your longest monthly contract streak is "+max+".",self);
+	
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	
+	if(not("$daily_total" in pc.extra))
+		addextra(pc.extra,{"$daily_total"},"0");
+	if(not("$daily_streak" in pc.extra))
+		addextra(pc.extra,{"$daily_streak"},"0");
+	if(not("$daily_max" in pc.extra))
+		addextra(pc.extra,{"$daily_max"},"0");
+	
+	total := pc.extra.["$daily_total"].descr;
+	streak := pc.extra.["$daily_streak"].descr;
+	max := pc.extra.["$daily_max"].descr;
+	
+	exec("say You have completed a total of "+total+" daily contracts.",self);
+	exec("say You are currently on a streak of "+streak+" daily contracts.",self);
+	exec("say Your longest daily contract streak is "+max+".",self);
+	
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	
+	if(not("$bonus_total" in pc.extra))
+		addextra(pc.extra,{"$bonus_total"},"0");
+	if(not("$bonus_streak" in pc.extra))
+		addextra(pc.extra,{"$bonus_streak"},"0");
+	if(not("$bonus_max" in pc.extra))
+		addextra(pc.extra,{"$bonus_max"},"0");
+	
+	total := pc.extra.["$bonus_total"].descr;
+	streak := pc.extra.["$bonus_streak"].descr;
+	max := pc.extra.["$bonus_max"].descr;
+	
+	exec("say You have completed a total of "+total+" bonus contracts.",self);
+	exec("say You are currently on a streak of "+streak+" bonus contracts.",self);
+	exec("say Your longest bonus contract streak is "+max+".",self);
+	
+	goto donezo;
+
+:jeweler:
+
+	s := "package";
+	
+	exec("say Here's your "+s+" report, "+pc.name+".",self);
+	
+	if(not("$package_total" in pc.extra))
+		addextra(pc.extra,{"$package_total"},"0");
+	if(not("$package_streak" in pc.extra))
+		addextra(pc.extra,{"$package_streak"},"0");
+	if(not("$package_max" in pc.extra))
+		addextra(pc.extra,{"$package_max"},"0");
+	
+	total := pc.extra.["$package_total"].descr;
+	streak := pc.extra.["$package_streak"].descr;
+	max := pc.extra.["$package_max"].descr;
+	
+	exec("say You have completed a total of "+total+" package deliveries.",self);
+	exec("say You are currently on a streak of "+streak+" package deliveries.",self);
+	exec("say Your longest package delivery streak is "+max+".",self);
+	
+	goto donezo;
+		
+:blacksmith:
+
+	s := "killing spree";
+	
+	exec("say Here's your "+s+" report, "+pc.name+".",self);
+	
+	if(not("$spree_total" in pc.extra))
+		addextra(pc.extra,{"$spree_total"},"0");
+	if(not("$spree_streak" in pc.extra))
+		addextra(pc.extra,{"$spree_streak"},"0");
+	if(not("$spree_max" in pc.extra))
+		addextra(pc.extra,{"$spree_max"},"0");
+	
+	total := pc.extra.["$spree_total"].descr;
+	streak := pc.extra.["$spree_streak"].descr;
+	max := pc.extra.["$spree_max"].descr;
+	
+	exec("say You have completed a total of "+total+" killing sprees.",self);
+	exec("say You are currently on a streak of "+streak+" killing sprees.",self);
+	exec("say Your longest killing spree streak is "+max+".",self);
+	
+	goto donezo;
+	
+:donezo:
+
+	unsecure(pc);
+	goto start;
+}
+dilend
+
 dilbegin delivery();
 external
 	integer add_bp@bounty(n : integer, u : unitptr);
@@ -231,6 +374,13 @@ code
 	priority;
 	pc:=activator;
 	secure(pc, lostpc);
+	
+	if(not("$package_streak" in pc.extra))
+		addextra(pc.extra,{"$package_streak"},"0");
+	if(not("$package_total" in pc.extra))
+		addextra(pc.extra,{"$package_total"},"0");
+	if(not("$package_max" in pc.extra))
+		addextra(pc.extra,{"$package_max"},"0");
 
 	quest:="packagefor" in pc.quests;
 	if(quest!=null)
@@ -243,9 +393,10 @@ code
 		if(pc.outside!=self.outside) goto lostpc;
 		temp:=dildestroy("packagefor@bounty", pc);
 		subextra(pc.quests, "packagefor");
-		experience(-300, pc);
+		pc.extra.["$package_streak"].descr := "0";
+		experience(-500, pc);
 		i := add_bp(-2,pc);
-		act("<div class='xpgain'>You lose 300 xp and 2 bounty points.</div>", A_SOMEONE, pc, null, null, TO_CHAR);
+		act("<div class='xpgain'>You lose 500 xp and 2 bounty points.</div>", A_SOMEONE, pc, null, null, TO_CHAR);
 		unsecure(pc);
 		goto start;
 	}
@@ -344,17 +495,21 @@ code
 	heartbeat:=PULSE_SEC * 4;
 :start:
 	wait(SFB_DONE, (command("give") and (activator==self) and ("packagefor" in medium.names) and (target.type==UNIT_ST_NPC)));
-	q1:="packagefor" in activator.quests;
-	q2:=target.title in activator.quests;
+	q1:="packagefor" in self.quests;
+	q2:=target.title in self.quests;
 	if((q1==q2) and (q1!=null) and (target.title in medium.names))
 	{
-		subextra(activator.quests, "packagefor");
-		
-		experience((50*rlev), activator);
-		temp := add_bp(1, activator); 
-		exec("say Thanks, I've been waiting for this, "+activator.name+"!", target);
-		act("<div class='xpgain'>You gain "+itoa(50*rlev)+" xp and 1 bounty point.</div>", A_SOMEONE, activator, null, null, TO_CHAR);
-		temp := transfermoney(null,activator,((50*rlev)/2));	
+		subextra(self.quests, "packagefor");
+		experience((50*rlev), self);
+		temp := add_bp(1, self); 
+		exec("say Thanks, I've been waiting for this, "+self.name+"!", target);
+		self.extra.["$package_streak"].descr := itoa(atoi(self.extra.["$package_streak"].descr)+1);
+		self.extra.["$package_total"].descr := itoa(atoi(self.extra.["$package_total"].descr)+1);
+		if(atoi(self.extra.["$package_streak"].descr) > atoi(self.extra.["$package_max"].descr))
+			self.extra.["$package_max"].descr := self.extra.["$package_streak"].descr;
+			
+		act("<div class='xpgain'>You gain "+itoa(50*rlev)+" xp and 1 bounty point.</div>", A_SOMEONE, self, null, null, TO_CHAR);
+		temp := transfermoney(null,self,((50*rlev)/2));	
 		destroy(medium);
 		temp := dildestroy("packagefor@bounty", self);
 		goto start;
@@ -362,7 +517,7 @@ code
 	else
 	{
 		exec("say Thanks, but I don't need this.  You keep it.", target);
-		exec("give packagefor "+activator.name, target);
+		exec("give packagefor "+self.name, target);
 		exec("drop packagefor", target);
 		goto start;
 	}
@@ -374,8 +529,10 @@ var
 	i : integer;
 	j : integer;
 	sl : stringlist;
+	pc : unitptr;
 code
 {
+	
 	sl := {"The sound of hammers on anvils rings through the smithy.",
 			"A large burp of flames suddenly erupts from the furnace.",
 			"You suddenly notice an apprentice peering your way.",
@@ -388,13 +545,20 @@ code
 			"The din of activity has escalated to a dull roar."};
 
 :start:
-			
+
+	wait(SFB_CMD, TRUE);
+	
+	pc := activator;
+	secure(pc, start);
+
 	i := rnd(0,length(sl)-1);
 	j := rnd(3,5);
 	
 	heartbeat := PULSE_ZONE * j;
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	act (sl.[i], A_SOMEONE, self, null, null, TO_ALL);
+	act (sl.[i], A_SOMEONE, pc, null, null, TO_ALL);
+	
+	unsecure(pc);
 	goto start;
 	
 }
@@ -620,7 +784,7 @@ code
 
 	
 	pc := activator;
-	secure(pc, lostpc);
+	secure(pc, donezo);
 	exdp := "$daily_max" in pc.extra;
 	if((atoi(exdp.descr) < 30) or (exdp == null))
 		goto start;
@@ -648,7 +812,7 @@ code
 
 	wait(SFB_CMD, activator == pc);
 	if (command("nod"))
-		goto rogue_accepted; 
+		goto accepted; 
 	else if (command("shake"))
 		goto no_quest;
 	else
@@ -663,7 +827,7 @@ code
 	unsecure(pc);
 	goto start;
 
-:rogue_accepted:
+:accepted:
 
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say The journey will be long and challenging.", self);
@@ -675,13 +839,409 @@ code
 	exec("say Go now, and pray at the Hunters Shrine.", self);
 	addextra(pc.quests, {JOIN_ONGOING}, "");
 
+:donezo:
+
 	unsecure(pc);
 	goto start;	
-:lostpc:
-
-	goto start;
 }
 dilend // END join
+
+dilbegin qhistorian();
+var
+	pc : unitptr;
+code
+{
+	
+	heartbeat := PULSE_SEC*4;
+:start:
+
+	wait(SFB_CMD, ("$feasted" in activator.extra) and (JOIN_ONGOING in activator.quests) and (not("$historian" in activator.extra)));
+	
+	pc := activator;
+	secure(pc, donezo);
+	
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Welcome, "+pc.name+".",self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+    exec("say So, The Guide has sent you to me.", self);
+    wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say It must be then that she fears it is time.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say The histories tell of a great enemy. One that will nearly destroyed this world.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say It was only through a concerted effort of many great heroes that the enemy was pushed back.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say These heroes came from across the great guilds of Valhalla.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("emote looks at you long and hard.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say The Hunter would not have given you access to the Inner Sanctum had he not seen something great in you..", self);
+    wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Do you think yourself a hero, "+pc.name+"?", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say I must have time to prepare.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Go and speak with The Blacksmith and The Jeweler.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say They will direct you to address some needs. This will help as we prepare for our enemy.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Return to me once you have completed their tasks. We will endeavor to begin our fight.", self);
+	addextra(pc.extra, {"$historian"}, "");
+:donezo:
+
+	unsecure(pc);
+	goto start;
+
+}
+dilend
+
+dilbegin qhistorian2();
+var
+	pc : unitptr;
+code
+{
+	
+	heartbeat := PULSE_SEC*4;
+:start:
+
+	wait(SFB_CMD, ("$feasted" in activator.extra) and (JOIN_ONGOING in activator.quests) and 
+	("$blacksmith_complete" in activator.extra) and ("$summoner_complete" in activator.extra) and
+	("$jewler_complete" in activator.extra));
+	
+	pc := activator;
+	secure(pc, donezo);
+	
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say "+pc.name+", what you have accomplished is a feat in and of itself.",self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+    exec("say Yet, our work has only just begun.", self);
+    wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say You have proven yourself worthy to join our ranks, and call yourself a Bounty Hunter.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say If we are successful in the task that is to follow, the histories will speak of you.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say I hope we all live to see your name in the tome here.", self);
+	
+	// do some more things! :)
+	
+:donezo:
+
+	unsecure(pc);
+	goto start;
+
+}
+dilend
+
+dilbegin qblacksmith();
+var
+	pc : unitptr;
+code
+{
+	heartbeat := PULSE_SEC*4;
+:start:
+
+	// 500,000 lbs of any kind of steel weapon or armor.
+	// 500 lbs each of activated element (4 total) from The Summoner
+	// 10 killing spree streak
+
+	wait(SFB_CMD, ("$historian" in activator.extra) and (JOIN_ONGOING in activator.quests) and (not("$blacksmith" in activator.extra)));
+	
+	pc := activator;
+	secure(pc, donezo);
+	
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say So then "+pc.name+", it is you after all who they've selected.",self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+    exec("say You have a long way to go yet to prove yourself.", self);
+    wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say And then, there's that matter of the enemy.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say The Historian is doing his work, and must have time.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say I'll need some raw supplies, in order to forge the arms and armor.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say This task will not be easy.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("emote takes a deep breath.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say It is only through supplying the armies of Valhalla, and winnowing down the hordes that we can do what is necessary.", self);
+    wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say First, I will need 500,000 lbs of fine steel to fill the smelters.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say I'm not picky about where this comes from - I'll leave it to you to figure that part out.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Next I'll need fuel for my fires, though not just anything will suffice here.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Bring me a further 500 lbs each of activated elemental powder.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say I suspect you'll need to seek The Summoner out in order to gain access to this.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Finally, we'll need to move quickly to keep the enemies at bay while The Historian does his work.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Successfully executing 10 killing sprees in a row should do the trick.", self);
+	addextra(pc.extra, {"$blacksmith"}, "");
+	
+:donezo:
+
+	unsecure(pc);
+	goto start;
+
+}
+dilend
+
+dilbegin qblacksmith2();
+var
+	pc : unitptr;
+	med : unitptr;
+code
+{
+	
+	heartbeat := PULSE_SEC*1;
+:start:
+
+	wait(SFB_DONE, command("give") and ("$blacksmith" in activator.extra) and (target == self));
+	
+	pc := activator;
+	secure(pc, donezo);
+	med := medium;
+	
+	exec("say Thanks for the "+med.title+" "+pc.name+"!", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("give "+med.name+" "+pc.name, self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+
+	
+:donezo:
+
+	unsecure(pc);
+	goto start;
+
+}
+dilend
+
+
+dilbegin qsummoner();
+var
+	pc : unitptr;
+code
+{
+	heartbeat := PULSE_SEC*4;
+:start:
+	// life_crystal1@arma - 50
+	// q_air@faeries2 - 5
+	// q_fire@faeries2 - 5
+	// q_water@faeries2 - 5
+	// q_earth@faeries2 - 5
+	// ball_lightning@akaren - 10
+	// bhelliom_5@elenia - 4
+	
+	
+	wait(SFB_CMD, ("$blacksmith" in activator.extra) and (JOIN_ONGOING in activator.quests) and (not("$summoner" in activator.extra)));
+	
+	pc := activator;
+	secure(pc, donezo);
+	
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say I sensed your arrival within the Inner Sanctum "+pc.name+".",self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+    exec("say The others suggest you will be the one.", self);
+    wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say I am unconvinced.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say However, our hand is forced. The enemy is on the move!", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say My role in our defense will be critical!", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say I haven't the time to perform errands on behalf of The Blacksmith.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("emote pauses, and looks at you.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say I suppose if you can help with my needs, then I can return a favor and summon the materials you need.", self);
+    wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say I'll warn you, this task will be difficult.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say We'll be channeling the chaos in our world. This will require unique items, in large quantities.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say First, in order to do The Blacksmith's work I'll require raw elements.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say There are elemental jewels to be found throughout the world.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say They represent the purest concentrations available.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Five of each, reflecting Fire, Water, Earth, and Air will be necessary.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Next, I will require pure energy to feed the spells.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Lightning in its purest form, I'd think ten will suffice.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Additionally, we'll need to bring life to the magic.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say There is an object which captures the volatility and magic that is life itself.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say They reflect this chaos to mortal eyes with rainbow colors.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say 50 of these objects will be needed.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Finally, there is an object that will activate the elemental powders.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say The Blacksmith will need them in this form for his forges.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say This crystal has a unique shape and appears blue at first glance, though even as you look it changes to red and green.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Four of these will be sufficient, one to activate each batch.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Bring these items to me, and I can both help The Blacksmith, and address my own preparations.", self);
+	addextra(pc.extra, {"$summoner"}, "");
+	
+:donezo:
+
+	unsecure(pc);
+	goto start;
+
+}
+dilend
+
+dilbegin qsummoner2();
+var
+	pc : unitptr;
+	med : unitptr;
+code
+{
+	
+	heartbeat := PULSE_SEC*1;
+:start:
+
+	wait(SFB_DONE, command("give") and ("$summoner" in activator.extra) and (target == self));
+	
+	pc := activator;
+	secure(pc, donezo);
+	med := medium;
+	
+	exec("say Thanks for the "+med.title+" "+pc.name+"!", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("give "+med.name+" "+pc.name, self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+
+	
+:donezo:
+
+	unsecure(pc);
+	goto start;
+
+}
+dilend
+
+dilbegin qjeweler();
+var
+	pc : unitptr;
+code
+{
+	heartbeat := PULSE_SEC*4;
+:start:
+
+	// package deliver streak - 150
+	// 30 each of birthstones
+	
+	// pearl_stone@blcastle (pearl)
+	// red1_stone@blcastle (ruby)
+	// purple_stone@blcastle (moonstone)
+	// red_stone@blcastle (jade)
+	// cless_stone@blcastle (diamond)
+	// lblue_stone@blcastle (bloodstone)
+	// emerald_stone@blcastle (emerald)
+	// green_stone@blcastle (onyx)
+	// blue_stone@blcastle (sapphire)
+	// mblue_stone@blcastle (jasper)
+	// yellow_stone@blcastle (agate)
+	// pink_stone@blcastle (opal)
+	
+
+	wait(SFB_CMD, ("$historian" in activator.extra) and (JOIN_ONGOING in activator.quests) and (not("$jeweler" in activator.extra)));
+	
+	pc := activator;
+	secure(pc, donezo);
+	
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say I've been watching your progress, "+pc.name+".",self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+    exec("say There is much more for you to do, should you choose to follow the way.", self);
+    wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say The enemy is upon us, and we'll need every weapon in our posession.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say The Blacksmith has his arms and armors, however they will only go so far.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say There is a softer and less tangible weapon at our disposal, and we'll need that as well.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say The ask is hurculean, though so is the need.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("emote pauses for ephasis.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say The packages I send out work to build allies across the kingdom.", self);
+    wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say They recruit friends to our cause, and earn us favors to call in.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say This is the other side of The Guild that is less visible in the world than that of The Blacksmith and The Bounty Hunter.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Yet, it provides a powerful incentive.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say For what is to come, we'll need to prepare packages like the world has never seen.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say They'll be sent far and wide, to every corner of this world.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say In order to achieve this, I'll need more supplies than are available to me today.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Precious gemstones. Each with its own unique glow.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say There are twelve varieties to be found across the land.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say I'll require 30 of each.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say In order to distribute these in the limited time we have, it will require great effort.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say You'll need to close a streak of 150 consecutive package deliveries.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say Return to me to deliver the stones, and to recieve packages.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say And hurry! The enemy will not wait for our work.", self);
+	addextra(pc.extra, {"$jeweler"}, "");
+	
+:donezo:
+
+	unsecure(pc);
+	goto start;
+
+}
+dilend
+
+dilbegin qjeweler2();
+var
+	pc : unitptr;
+	med : unitptr;
+code
+{
+	
+	heartbeat := PULSE_SEC*1;
+:start:
+
+	wait(SFB_DONE, command("give") and ("$jeweler" in activator.extra) and (target == self));
+	
+	pc := activator;
+	secure(pc, donezo);
+	med := medium;
+	
+	exec("say Thanks for the "+med.title+" "+pc.name+"!", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("give "+med.name+" "+pc.name, self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+
+	
+:donezo:
+
+	unsecure(pc);
+	goto start;
+
+}
+dilend
 
 
 dilbegin pray();
@@ -834,7 +1394,7 @@ code
 }
 dilend // END Expel
 
-dilbegin guide();
+dilbegin qguide();
 var
 	pc:unitptr;
 code
@@ -895,42 +1455,6 @@ code
 }
 dilend // END Guide
 
-dilbegin historian();
-var
-	pc:unitptr;
-code
-{
-	heartbeat:=PULSE_SEC*4;
-	
-:start:
-	
-	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (JOIN_ONGOING in activator.quests) and ("$feasted" in activator.extra) and (not("$historian_ongoing" in activator.extra)));
-
-	pc:= activator;
-	secure(pc,lostpc);
-	
-	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say Welcome "+pc.name+".", self);
-	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say I hope The Guide made you feel welcome?", self);
-	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say There was considerable preparation put into your arrival.", self);
-	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say I'll not look to deceive you, the Guild is in need of your help.", self);
-	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say I've been here keeping these timeless records for years beyond count.", self);
-	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	addextra(pc.extra,{"$historian_ongoing"},"0");
-	
-:lostpc:
-
-	unsecure(pc);
-	goto start;
-
-}
-dilend // END historian
-
-
 dilbegin recall spree_f(dur : integer);
 var
 	st : integer;
@@ -952,6 +1476,7 @@ code
 		st := atoi(self.extra.["$SPREE_TIMER"].descr);
 		if(realtime - st > ((dur + 1) * 60))
 		{
+			self.extra.["$spree_total"].descr := itoa(atoi(self.extra.["$spree_total"].descr)+1);
 			subextra(self.extra,"$spree_streak");
 			addextra(self.extra,{"$spree_streak"},itoa(0));
 			self.extra.["$DAILY_SPREE"].descr := replace("ongoing","FAIL",self.extra.["$DAILY_SPREE"].descr); 
@@ -1097,7 +1622,13 @@ code
 				i := dildestroy("spree_f@bounty",u);
 				act("<div class='cpr'>Your spree has come to an end! You bagged "+itoa(sc)+" kills and gained "+itoa(sx)+" experience.</div>",A_ALWAYS, u, null, null, TO_CHAR);
 				if((kn == 0) and (xn == 0))
+				{
+					u.extra.["$spree_streak"].descr := itoa(atoi(u.extra.["$spree_streak"].descr)+1);
+					u.extra.["$spree_total"].descr := itoa(atoi(u.extra.["$spree_total"].descr)+1);
 					u.extra.["$DAILY_SPREE"].descr := replace("ongoing","SUCCESS",u.extra.["$DAILY_SPREE"].descr); 
+					if(atoi(u.extra.["$spree_streak"].descr) > atoi(u.extra.["$spree_max"].descr))
+						u.extra.["$spree_max"].descr := u.extra.["$spree_streak"].descr;
+				}
 				else
 				{
 					subextra(u.extra,"$spree_streak");
@@ -1286,6 +1817,12 @@ code
 	{		
 		foreach(UNIT_ST_PC,u)
 		{
+			if(not("$spree_max" in u.extra))
+				addextra(u.extra,{"$spree_max"},"0");
+			if(not("$spree_total" in u.extra))
+				addextra(u.extra,{"$spree_total"},"0");
+			if(not("$spree_streak" in u.extra))
+				addextra(u.extra,{"$spree_streak"},"0");
 			if(not("$DAILY_SPREE" in u.extra))
 				addextra(u.extra,{"$DAILY_SPREE"},sdate+"|blank|blank|blank");
 			sl := split(u.extra.["$DAILY_SPREE"].descr,"|");
@@ -1561,6 +2098,7 @@ var
 	ibdate	: integer;
 	sltemp  : stringlist;
 	buf 	: string;
+	b_npc : stringlist;
 code
 {
 :init:
@@ -1572,6 +2110,7 @@ code
 				"justice","arena","competition","clan","holiday20","guild_quest","guild_paths",
 				"assassin","clericguild","fightersguild","mageguild","necro_guild","offices","paladin_guild",
 				"sorcerer","thievesguild","druid","knight","ranger","rebirth","barbarian","bounty"};
+	b_npc := {"swarm_small@valley2","swarm_med@valley2","swarm_large@valley2"};
 
 :start:
 
@@ -1701,7 +2240,7 @@ code
 	}
 :new_target:
 	targ := findrndunit(pc,FIND_UNIT_WORLD,UNIT_ST_NPC);
-	if (targ.zoneidx in blocked)
+	if ((targ.zoneidx in blocked) or (targ.symname in b_npc))
 		goto new_target;
 	if (((targ.race > RACE_CNIDARIA_MIN) and (targ.race <= RACE_CNIDARIA_MAX)) or
        ((targ.race > RACE_PLANT_MIN) and (targ.race <= RACE_PLANT_MAX)))
@@ -1983,7 +2522,7 @@ code
 	estreak.descr := itoa(atoi(estreak.descr) + 1);
 	etotal.descr := itoa(atoi(etotal.descr) + 1);
 	etarg.descr := etarg.descr + "|DONE";
-	if((atoi(estreak.descr) > atoi(emax.descr)) and (sdone != "bonus"))
+	if(atoi(estreak.descr) > atoi(emax.descr))
 		emax.descr := estreak.descr;
 	
 	
@@ -2541,6 +3080,7 @@ west to bounty_h;
 end
 
 smithy
+names {"sprees"}
 title "<div class='cpn'>The Smithy</div>"
 descr
 "Through the doorway a large working Smithy is unveiled. The design of the room 
@@ -2630,7 +3170,15 @@ ALWAYS_LIGHT
 dilcopy pray2@bounty();
 
 north to sanctum_1;
-east to sanc_h;
+east to sanc_he;
+west to sanc_hw
+keyword {"fresco"}
+key nokey
+open {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN};
+extra {"frescos","fresco","wall"}
+"The frescos show the history of the hunt. Intricate details was painted into the 
+still-wet plasted as the Inner Sanctum was erected, and dried to form a permanent 
+history. Certain details appear strangely worn on the eastern wall."
 
 end
 
@@ -2653,6 +3201,11 @@ extra {"feast"}
 "It is somewhat strange to find a feast of fresh hot food laid out here in this 
 seemingly lonely place. Dare you partake in this feast?"
 
+extra {"frescos","fresco","wall"}
+"The frescos show the history of the hunt. Intricate details was painted into the 
+still-wet plasted as the Inner Sanctum was erected, and dried to form a permanent 
+history."
+
 flags {UNIT_FL_INDOORS, UNIT_FL_SACRED, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -2663,7 +3216,7 @@ south to sanctum;
 
 end
 
-sanc_h
+sanc_he
 title "<div class='cpn'>A Hallway off the Inner Sanctum</div>"
 descr
 "A hallway leads away from the main rooms of the Inner Sanctum. The air is 
@@ -2683,6 +3236,18 @@ east to library;
 end
 
 library
+title "<div class='cpn'>The Guild Library</div>"
+descr
+"This is the Guild Library."
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+west to sanc_he;
+
+end
+
+sanc_hw
 title "<div class='cpn'>A Hallway off the Inner Sanctum</div>"
 descr
 "A hallway leads away from the main rooms of the Inner Sanctum. The air is 
@@ -2690,13 +3255,76 @@ still and quiet. Despite this respite from the bustle of the world outside,
 there is a clear sense of life here. As with the hall above, there is a 
 clear purpose to every stone. The space seems significantly less well 
 worn than the outer guild above, and the hallway has seen little traffic 
-over the years. There is a doorway east that opens into a vast library. To the 
-west, the Inner Sanctum can be seen."
+over the years. There is a doorway west that opens into a stairwell. To the 
+east, the Inner Sanctum can be seen."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
 
-west to sanc_h;
+east to sanctum;
+west to stairwell;
+end
+
+stairwell
+title "<div class='cpn'>Atop the Stairwell</div>"
+descr
+"Atop the Stairwell"
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+east to sanc_hw;
+down to stairs;
+end
+
+stairs
+title "<div class='cpn'>In the Stairwell</div>"
+descr
+"In the Stairwell"
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+up to stairwell;
+down to bottom;
+
+end
+
+bottom
+title "<div class='cpn'>Bottom of the Stairwell</div>"
+descr
+"Bottom of the Stairwell"
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+up to stairs;
+west to cave;
+
+end
+
+cave
+title "<div class='cpn'>Entering the Cave</div>"
+descr
+"Entering the Cave"
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+east to bottom;
+west to circle;
+
+end
+
+circle
+title "<div class='cpn'>The Summoning Circle</div>"
+descr
+"The Summoning Circle"
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
+movement SECT_CITY
+ALWAYS_LIGHT
+
+east to cave;
 
 end
 
@@ -2715,9 +3343,10 @@ M_AVG_HUMAN(100,SEX_MALE)
 position POSITION_STANDING 
 
 dilcopy make_bounty@bounty();
-dilcopy claim_bounty();
-dilcopy join();
-dilcopy status();
+dilcopy claim_bounty@bounty();
+dilcopy join@bounty();
+dilcopy status@bounty();
+dilcopy report@bounty();
 
 end 
 
@@ -2766,8 +3395,8 @@ alignment -1000
 M_AVG_ELF(100,SEX_FEMALE)
 position POSITION_STANDING 
 
-dilcopy expel();
-dilcopy guide();
+dilcopy expel@bounty();
+dilcopy qguide@bounty();
 
 end 
 
@@ -2785,6 +3414,9 @@ alignment 0
 M_UNICORN_XLARGE(100,SEX_MALE)
 position POSITION_STANDING 
 
+dilcopy qhistorian@bounty();
+dilcopy qhistorian2@bounty();
+
 end 
 
 blacksmith
@@ -2799,11 +3431,14 @@ serve the Hunters. Ask about the opportunity to leverage his weapons
 on a spree." 
 
 alignment 0
-M_UNICORN_XLARGE(100,SEX_MALE)
+M_GROLL_WARRIOR_AXE(100,SEX_MALE)
 position POSITION_STANDING 
 
 dilcopy new_spree@bounty();
 dilcopy end_spree@bounty();
+dilcopy qblacksmith@bounty();
+dilcopy qblacksmith2@bounty();
+dilcopy report@bounty();
 
 end 
 
@@ -2823,6 +3458,28 @@ position POSITION_STANDING
 exp 400
 
 dilcopy delivery@bounty();
+dilcopy qjeweler@bounty();
+dilcopy qjeweler2@bounty();
+dilcopy report@bounty();
+
+end 
+
+summoner
+names {"the summoner","summoner","darkelf"}    
+title "The Summoner"        
+descr "A darkelf summoner broods under deeply cowled robes."
+extra{}
+"Not much can be made out of The Summoner from within the depths 
+of her deeply cowled robes. She has immense power, and participates 
+in unknown rituals and summonings on behalf of The Guild." 
+
+alignment 0
+M_DARK_ELF_MAGE_MIND(100, SEX_FEMALE, "cone of shards")
+position POSITION_STANDING 
+exp 400
+
+dilcopy qsummoner@bounty();
+dilcopy qsummoner2@bounty();
 
 end 
 
@@ -2915,8 +3572,7 @@ Say 'contract status' to hear the status of any existing contracts,
 and for the option to receive a new contract card."
 weight 1
 cost 1 IRON_PIECE
-extra {}
-""
+
 end
 
 spree_sign
@@ -2934,8 +3590,7 @@ following a leader on their spree."
 
 weight 1
 cost 1 IRON_PIECE
-extra {}
-""
+
 end
 
 pkg_sign
@@ -2948,8 +3603,19 @@ Be careful, you dont want to open these packages!"
 
 weight 1
 cost 1 IRON_PIECE
+
+end
+
+tome
+names {"large tome","tome"}
+title "the tome of legends"
+descr "A large <a cmd='read #'>tome</a> sits on a marvelously crafted pedestal."
 extra {}
-""
+"Herein are the names of the heroes who have defended The Guild from our enemy.<br><br>"
+
+weight 1
+cost 1 IRON_PIECE
+
 end
 
 
@@ -3230,5 +3896,7 @@ load spree_sign into smithy max 1
 load jeweler into jewels max 1
 load blacksmith into smithy max 1
 load historian into library max 1
+load tome into library max 1
+load summoner into circle max 1
 
 %end
