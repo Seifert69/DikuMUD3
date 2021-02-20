@@ -2576,7 +2576,7 @@ code
 
    if (pot)
    {
-      pc := qstWaitHero@quests(QUEST_RABBIT, activator, 
+      pc := qstWaitHero@quests(QUEST_RABBIT, activator, \
          {"say Hello $1N how are you today?",
          "say I am trying to make a delicious rabbit stew, but I need some ingredients.",
          "say I need a dead rabbit, some garlic, some mushrooms and a few berries.",
