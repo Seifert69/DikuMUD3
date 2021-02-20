@@ -234,7 +234,7 @@ heartbeat:=3;
  while (reward_exp)
  {
    addextra(item.extra, reward_exp.names,reward_exp.descr);
-   reward_exp := reward_exp.next;
+   reward_exp := "$reward" in reward_exp.next;
  }
  
    item.minv := 200;
@@ -812,7 +812,7 @@ code
   while (reward_exp)
        {
           addextra(crp.extra, reward_exp.names,reward_exp.descr);
-          reward_exp := reward_exp.next;
+          reward_exp := "$reward" in reward_exp.next;
        }
 
    rltime:=realtime;

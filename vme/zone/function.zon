@@ -221,7 +221,7 @@ while (reward)
 
    goto start;
 }
-reward := reward.next;
+reward := "$reward" in reward.next;
 }
 }
 dilend

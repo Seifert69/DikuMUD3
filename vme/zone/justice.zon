@@ -17,7 +17,6 @@ END HEADER*/
       The reward_board has DIL:
           wanted_poster() - ? 
       The Global database has
-          crime_stopper();
       The captain has DIL:
          "accuse()" - to receive accusations and give rewards
 
@@ -42,7 +41,6 @@ END HEADER*/
    The criminal gets the following extras added:
       - $reward is set if the player becomes wanted dead
    The database  gets the following extras added:
-      - $crime is added to the reward board
       - $reward is also set on the database
    Any witnesses get the following extras added:
       - $witness
@@ -192,64 +190,6 @@ END HEADER*/
       ====================================
       ====================================
 
-      $crime : There are 9 names in each crime extra, three names in each entry. 
-      They are as follows:
- 
-       Crime Extra Names:
-
-       names.[0] $crime constant
-       names.[1] CRIME_SERIAL_NO
-       names.[2] CRIMINAL_NAME
-       names.[3] CRIMINAL_IDX
-       names.[4] CRIME_TYPE
-       names.[5] VICTIM_NAME
-       names.[6] TICK UNTIL REMOVED FROM LIST
-       names.[7] is_NPC (Y or N)
-       names.[8] JURISDICTION
-       names.[9] CRIME_REPORTED 1 or 0
-
-      The descr for each crime is what is displayed on the reward_board under "Suspects" heading.
-      
-      $reward : The database also holds $reward extras
-
-      Reward Extra Names
-      
-      names.[0] $reward
-      names.[1] UNIQUE_ID       
-      names.[2] GOLD_TO_BE_REWARED
-      names.[3] XP_REWARED
-      names.[4] JURISDICTION
-      named.[5] IS NPC (Y or N) 
-      The extra.descr will be displayed on the reward_board.
-       "
-      A reward of 250000 gold has been offered for the head of Tank
-      "
-      When a character with a $reward extra dies their reward data is copied from the database
-      to their corpse and removed from the dataase.
-
-      Witnesses extras:
-      Witness Extras are copied to any character that witnesses a crime.   
-      There are 6 names on each witness extra.  THey are as follows:
- 
-      $witness : Witness Data Elements:
-         
-      names.[0] $witness
-      names.[1] $CRIMINAL NAME
-      names.[2] CRIME_SERIAL_NO
-      names.[3] CRIME_TYPE
-      names.[4] PLAYERID
-      names.[5] TICKS UNTIL REMOVED
-      names.[6] JURISDICTION
-      
-      The descr filed for witness is not used at the moment.
-
-     Criminal extras:
-     A criminal will receive a $reward extra when a reward has been set for their death.
-
-     Reward Data Elements (for characters)
-
-      names.[0] $reward 
-      names.[1] _UNIQUE_ID       
 
 Crime progression goes like this which is handled in DIL crime_counter()
     - If your crime counter is >= CRIME_NONPRO  (8) then your PROTECTED flag is removed.
@@ -493,10 +433,13 @@ code
        return(0);  //char is in jail.  No crime score updates while in jail..
    if ("@_players" in criminal_symname)
    {
-      if (cnt < 1)
-         cnt := crime_type;
+     //  I changed this becasue now that we only have 1 extra per jurisdiction the score was only
+     //  getting bumped up 2 point every crime.  That would allow the PC a lot of free crimes.
+     //  --Dave 
+     if (cnt < 1)
+         cnt :=  crime_type;
       else
-         cnt := cnt + CRIME_EXTRA;
+         cnt := cnt + crime_type; //CRIME_EXTRA;
    }
    else
    {
@@ -509,6 +452,7 @@ code
    // Suggest a new DIL function for setting CHAR_FLAGS (outlaw, etc).
    // because we'll also need to call it if a PC logs in.
    //
+   //  See set_chat_flags()  --Dave
 
    exd_db_reward.names.[4] := itoa(cnt);
 
@@ -533,9 +477,9 @@ code
    if ((cnt > 31) and (cnt < 64))
       {
         // s := "A reward of " + s + " has been offered for the arrest of "+criminal.name;
-        s := criminal.name + " is wanted for imprisonment."; 
-         //if(not(valid_extra@justice(criminal, "$arrest", juris)))
-        // set_arrest(criminal, juris); //this sets the $arrest extra.
+        // Changed this to fit this into the Arrest and jail time jailstay@midgaard DIL.
+        // --Dave
+         s := criminal.name + " is wanted for imprisonment."; 
         set_char_flags@justice(criminal, "arrest");
       }
 
@@ -546,8 +490,13 @@ code
      }
 else
      {
+       // I think it would be cool if players what have this score would start getting comments
+       // from guards letting them know they are being watched.  Currently this score will not
+       // be displayed on the wanted_poster.
+       // --Dave
+
        s := "On notice";
-       set_char_flags@justice(criminal, "notice");
+       set_char_flags@justice(criminal, "onnotice");
      }
 
    exd_db_reward.descr := s;
@@ -678,7 +627,7 @@ code
 }
 dilend
 
-//DIL to make sure a player justice extra still exits in the database
+//DIL to make sure a player $reward extra still exits in the database
 //
 
 dilbegin integer valid_extra(criminal : unitptr, extra_type : string, juris : string);
@@ -708,6 +657,10 @@ return(FALSE);
 dilend
 
 //DIL to set char flags for criminals
+// "normal" - sets outlaw off and protected on.
+// "arrest" - sets outlaw on and protected on.
+// "wanted" - outlaw is on and protected os off.
+// "onnotice" - sets outlaw off and protected off.
 
 dilbegin set_char_flags(char : unitptr, setting : string);
 
@@ -902,8 +855,8 @@ code
       act("You just witnessed a crime committed by $1n.", A_ALWAYS, criminal, null, witness, TO_VICT);
    }
    
- add_witness(witness, criminal,victimname, crime_type);
- jurisdiction := get_juris@justice();
+     add_witness(witness, criminal,victimname, crime_type);
+     jurisdiction := get_juris@justice();
 
    if ((witness.type == UNIT_ST_NPC) and (show))
       dilcopy("activate_accuse@justice("+itoa(crime_type)+","+criminal.name+","+jurisdiction+")", witness);
@@ -1188,6 +1141,11 @@ dilend
 
 
 dilbegin integer crime_check(att:unitptr, def:unitptr);
+external 
+  integer check_protected@justice(char : unitptr, juris : string);
+  string get_juris();
+var
+  juris : string;
 code
 {
    if (att == null) return(FALSE);
@@ -1198,8 +1156,11 @@ code
    /* If the attacker is attacking someone protected, or if the
       attacker is protected and is attacking someone non-protected
       then go in action */
+   
+ //if ((not isset(att.charflags,CHAR_SELF_DEFENCE)) and (check_protected@justice(def,juris)) and (not isset(def.charflags,CHAR_LEGAL_TARGET))
+ //     or (not( check_protected@justice(att,juris))) and (check_protected@justice(def,juris)))
 
-   if ((not isset(att.charflags,CHAR_SELF_DEFENCE)) and (isset(def.charflags, CHAR_PROTECTED)) and (not isset(def.charflags,CHAR_LEGAL_TARGET))
+if ((not isset(att.charflags,CHAR_SELF_DEFENCE)) and (isset(def.charflags, CHAR_PROTECTED)) and (not isset(def.charflags,CHAR_LEGAL_TARGET))
       or (not isset(att.charflags,CHAR_PROTECTED)) and (isset(def.charflags,CHAR_PROTECTED)))
       return(TRUE);
 
