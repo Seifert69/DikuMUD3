@@ -35,7 +35,7 @@ notes
 //
 // Return unitptr to the hero that wants the quest
 //
-dilbegin unitptr wait_hero(qname : string, pc : unitptr, sl : stringlist);
+dilbegin unitptr qstWaitForHero(qname : string, pc : unitptr, sl : stringlist);
 var
    i : integer;
    ln : integer;
@@ -142,7 +142,7 @@ dilend
 //
 // Return unitptr to the hero that wants the quest
 //
-dilbegin extraptr quest_assign(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+dilbegin extraptr qstAssign(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
 var
    i : integer;
    ln : integer;
@@ -211,7 +211,8 @@ dilend
 //             
 // thanksl : $1 = pc, $2 = item, $3 = self
 //
-dilbegin integer qitems_name(qname : string, itemsl : stringlist, thanksl : stringlist);
+dilbegin fnpri(FN_PRI_MISSION+5) integer qstItemsWanted(qname : string, itemsl : stringlist,
+                                                     thanksl : stringlist, nothanks : string);
 var
   pc     : unitptr;
   item   : unitptr;
@@ -220,8 +221,17 @@ var
   i      : integer;
   ln     : integer;
   s      : string;
+
 code
 {
+   // Must be added 
+   //
+   if (nothanks != "")
+   {
+      s := "qstItemNoThank@quests(" + nothanks + ")";
+      dilcopy(s, self);
+   }
+
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
 
    :start:
@@ -247,17 +257,17 @@ code
          exec(s, self);
          s := sact("<br/>You've given $3m $2n", A_SOMEONE, pc, item, self, TO_CHAR);
          exdp.descr := exdp.descr + s;
-         destroy(item);         
+         destroy(item);
+         block;
          goto checkit;
       }
 
       i := i + 1;
    }
 
-   exec("say I can't accept that, "+pc.name, self);
-
-   // Return the item to the player
-   link(item, pc);
+   // If there is no match, don't give it back. 
+   // If item is to be given back then that's a separate function at the end
+   //
 
    goto start;
 
@@ -279,7 +289,24 @@ dilend
 
 
 
-dilbegin unitptr q_wait_done(qname : string, pc : unitptr,
+dilbegin unique fnpri(FN_PRI_MISSION+6) qstItemNoThank(nothanks : string);
+var
+   s : string;
+code
+{
+:start:
+   wait(SFB_DONE, command("give") and (target == self));
+
+   link(medium, activator);
+   s := sact(nothanks, A_SOMEONE, activator, medium, self, TO_CHAR);
+   exec(s, self);
+
+   goto start;
+}
+dilend
+
+
+dilbegin unitptr qstWaitDone(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer);
 var
    pcname : string;

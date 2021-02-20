@@ -10,9 +10,11 @@ END HEADER*/
 #include <macros.h>
 
 #define QUEST_RABBIT          "Rabbit Stew"
+#define QUEST_POT             "Mary's Pot"
+
 #define QUEST_RABBIT_ONGOING  "Rabbit Stew Ongoing"
 #define QUEST_RABBIT_COMPLETE "Rabbit Stew Complete"
-#define QUEST_POT_COMPLETE    "Mary's Pot Retrieved"
+#define QUEST_POT_COMPLETE    "Mary's Pot Complete"
 
 
 %zone                          haon_dor
@@ -123,7 +125,7 @@ code
       wait(SFB_MSG, activator.nameidx $= "orc_chief");
    }
 
-tf:=walk_room@function("orc_cave_other@haon_dor",4);
+tf:=walk_room@function("orc_cave_chief@haon_dor",4);
 
    exec("sleep", self);
    goto start;
@@ -156,7 +158,7 @@ tf:=walk_room@function("throne@dwarves",4);
    goto loop;
 
    :a_break:
-tf:=walk_room@function("orc_cave_other@haon_dor",4);
+tf:=walk_room@function("orc_cave_chief@haon_dor",4);
    exec("sleep", self);
    goto start;
 }
@@ -2494,6 +2496,22 @@ code
 dilend
 
 
+// Mary waits for these four items for the Stew quest
+//
+dilcopy qstItemsWanted@quests(QUEST_RABBIT, {"mushroom", "black_berries@haon_dor", "garlic", "corpse of the cute rabbit"},
+            {"say Thank you $1N, these are really nice mushrooms.",
+             "say Thank you $1N these are really nice berries.",
+             "say Thank you $1N this is really some nice garlic.",
+             "say Look at all the blood, $1N! Well I thank you anyway."},
+            "say Thank you $1N but I can't accept that.");
+
+
+// Mary waits for the Pot 
+//
+dilcopy qstItemsWanted@quests(QUEST_POT, {"marys_pot@haon_dor"},
+            {"say My cooking pot! Where did you find that? Aren't you just a sweetheart."}, "");
+
+
 /* This DIL program waits for the Orc Chief to signal that he has stolen
    the pot. When activated Mary just weeps. */
 dilbegin orc_stoleit();
@@ -2515,89 +2533,17 @@ code
 }
 dilend
 
-dilbegin pot_quest();
-var
-   u : unitptr;
-   a : unitptr;
-code
-{
-   on_activation(self.position <= POSITION_SLEEPING, skip);
-
-if (findunit(self, "pot", FIND_UNIT_INVEN | FIND_UNIT_EQUIP, null)== null) goto searchloop;
-
-   :start:
-   nopriority;
-   wait(SFB_MSG, argument $= "gotit");
-   priority; /* Deactivate all programs below */
-
-   :searchloop:
-   heartbeat := PULSE_SEC;
-
-   wait(SFB_DONE, command("give") and (target == self));
-   u := medium;
-   a := activator;
-   secure(a, searchloop);
-   secure(u, searchloop);
-
-   heartbeat := PULSE_SEC * 8;
-
-  if (not (QUEST_RABBIT_COMPLETE in a.quests)) goto start;
-
-   if ((u.nameidx == "marys_pot") and (u.zoneidx == "haon_dor"))
-   {
-      if (u.value[4] == 1)
-      {
-	 if ((a.type == UNIT_ST_PC) and
-	     (not (QUEST_POT_COMPLETE in a.quests)))
-	 {
-	    addextra(a.quests, {QUEST_POT_COMPLETE}, "");
-	    experience(800, a);
-	 }
-	 u.value[4] := 0;
-	 exec("say My cooking pot!", self);
-	 pause;
-	 exec("hug "+a.name, self);
-	 unsecure(a);
-	 pause;
-	 exec("hold pot", self);
-	 pause;
-	 exec("sing", self);
-	 pause;
-	 exec("say I know how to perform first aid and diagnostics. I will "+
-	      "be happy to share my knowledge with you. ", self);
-	 goto start;
-      }
-      else
-      {
-	 exec("say How did you get my pot, "+a.name+"?", self);
-	 pause;
-	 exec("hold pot", self);
-	 pause;
-	 exec("shrug", self);
-     }
-   }
-   else
-   {
-      exec("say I really don't need that, all I need is my cooking pot!",
-	   self);
-      link(u, a); /* Return the item */
-   }
-   unsecure(a);
-   unsecure(u);
-   goto searchloop;
-}
-dilend
-
 
 // Part 1 of "The Rabbit Stew" Quest. Find a hero that'll take the quest
 // The program aquires new loyal PC subjects for the Rabbit Stew Quest
 //
 dilbegin assign_stew();
 external
-   unitptr wait_hero@quests(qname : string, pc : unitptr, sl : stringlist);
-   extraptr quest_assign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+   unitptr qstWaitForHero@quests(qname : string, pc : unitptr, sl : stringlist);
+   extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
 var
    pc     : unitptr;
+   pot    : unitptr;
    exdp   : extraptr;
 
 code
@@ -2608,44 +2554,54 @@ code
    :start:
    wait(SFB_CMD, (activator.type == UNIT_ST_PC));
 
-   pc := wait_hero@quests(QUEST_RABBIT, activator, 
-      {"say Hello $1N how are you today?",
-      "say I am trying to make a delicious rabbit stew, but I need some ingredients.",
-      "say I need a dead rabbit, some garlic, some mushrooms and a few berries.",
-      "say Will you please fetch me these ingredients, $1N?"});
+   pot := findunit(self, "pot", FIND_UNIT_INVEN | FIND_UNIT_EQUIP, null);
 
-   if (pc == null)
+   if (pot)
+   {
+      pc := qstWaitForHero@quests(QUEST_RABBIT, activator, 
+         {"say Hello $1N how are you today?",
+         "say I am trying to make a delicious rabbit stew, but I need some ingredients.",
+         "say I need a dead rabbit, some garlic, some mushrooms and a few berries.",
+         "say Will you please fetch me these ingredients, $1N?"});
+
+      if (pc == null)
+         goto start;
+
+      // Quest accepted
+      exdp := qstAssign@quests(QUEST_RABBIT, pc, 
+         {"say That's very kind of you $1N, please hurry!", 
+         "say $1N, please bring me all four items all at once!"},
+         "Bring Mary in Haon-Dor some mushrooms, some garlic, a few berries, and a dead rabbit");
       goto start;
+   }
+   else
+   {
+      pc := qstWaitForHero@quests(QUEST_POT, activator, 
+         {"say $1N can you help me?",
+         "say The hideous orc chief stole my best cooking pot.",
+         "say Will you please retrieve my cooking pot, $1N?"});
 
-   // Quest accepted
-   exdp := quest_assign@quests(QUEST_RABBIT, pc, 
-      {"say That's very kind of you $1N, please hurry!", 
-      "say $1N, please bring me all four items all at once!"},
-      "Bring Mary in Haon-Dor some mushrooms, some garlic, a few berries, and a dead rabbit");
+      if (pc == null)
+         goto start;
+
+      // Quest accepted
+      exdp := qstAssign@quests(QUEST_POT, pc, 
+         {"say Thank you dearly $1N.", 
+         "say The orc live somewhere in a cave in the northern part of the Haon-Dor forest.",
+         "say Please be careful $1N."},
+         "Retrieve Mary's cooking pot from the orc chief in the northern part of Haon-Dor.");
+   }
+
    goto start;
-
-   :waitawhile:
-   heartbeat := PULSE_SEC*60;
-   pause;
-   goto init;
 }
 dilend
 
 
-// Mary waits for these four items for the Stew quest
-//
-dilcopy qitems_name@quests(QUEST_RABBIT, {"mushroom", "black_berries@haon_dor", "garlic", "corpse of the cute rabbit"},
-            {"say Thank you $1N, these are really nice mushrooms.",
-             "say Thank you $1N these are really nice berries.",
-             "say Thank you $1N this is really some nice garlic.",
-             "say Look at all the blood, $1N! Well I thank you anyway."});
-
-
 // Get items to complete Stew quest
 //
-dilbegin compl_stew();
+dilbegin compl_pot();
 external
-   unitptr q_wait_done@quests(qname : string, pc : unitptr,
+   unitptr qstWaitDone@quests(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer);
 var
   pcname : string;
@@ -2659,7 +2615,42 @@ code
    :start:
    wait(SFB_CMD, (activator.type == UNIT_ST_PC));
 
-   pc := q_wait_done@quests(QUEST_RABBIT, activator, 
+   pc := qstWaitDone@quests(QUEST_POT, activator, 
+            {"hug $1N", 
+            "hold pot", 
+            "sing", 
+            "say $1N, I know how to perform first aid and diagnostics. I will be happy to share my knowledge with you. ",
+            "emote makes some Rabbit Stew."}, 800, 2 * COPPER_MULT);
+
+   if (pc == null)
+      goto start;
+
+   // qitems_ deletes items received 
+   item := load("marys_pot@haon_dor");
+   goto start;
+}
+dilend
+
+
+// Get items to complete Stew quest
+//
+dilbegin compl_stew();
+external
+   unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer);
+var
+  pcname : string;
+  item   : unitptr;
+  pc     : unitptr;
+  i      : integer;
+  exdp   : extraptr;
+
+code
+{
+   :start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+
+   pc := qstWaitDone@quests(QUEST_RABBIT, activator, 
             {"say Here $1N, I have made this special rabbit's foot just for you.",
             "thank $1N", 
             "emote makes some Rabbit Stew."}, 800, 2 * COPPER_MULT);
@@ -2672,9 +2663,9 @@ code
    link(item, pc);
    
    item := load("stew@haon_dor");
-   pc := findunit(self, "marys pot", 0, self.inside);
+   pc := findsymbolic(self, "marys_pot@haon_dor", FIND_UNIT_INVEN | FIND_UNIT_EQUIP);
    if (pc == null)
-      pc := load("pot@haon_dor");
+      pc := load("marys_pot@haon_dor");
    link(item, pc); /* Put the stew in the pot */
 
    heartbeat := PULSE_SEC * 100;
@@ -2850,7 +2841,7 @@ code
    intridx := on_activation(self.position <= POSITION_SLEEPING, skip);
    pause;
    exec("emote hisses, 'I smell dinner'", self); pause;
-   tf:=walk_room@function("orc_cave_other@haon_dor",4);
+   tf:=walk_room@function("orc_cave_chief@haon_dor",4);
    exec("emote screams, 'Wake up, morons!'", self); pause;
    send("stew");
    exec("say Hurry up!", self); pause;
@@ -2864,6 +2855,7 @@ code
      goto failure;
 
    :success:
+   //log("found Mary's pot");
    link(u2, self);
    u2.value[4] := 1;
    sendto("gotit", u1);
@@ -2879,8 +2871,9 @@ code
    goto start;
 
    :failure:
+   //log("the pot went missing");
    exec("growl", self);
-   tf:=walk_room@function("orc_cave_other@haon_dor",4);
+   tf:=walk_room@function("orc_cave_chief@haon_dor",4);
    send("sleep");
    goto start;
 }
