@@ -2556,13 +2556,12 @@ dilend
 // 
 dilbegin assign_stew();
 external
-   extraptr qstAssign@quests(qname : string, p : unitptr, sl : stringlist, qdescr : string);
-   unitptr qstwaithero@quests(qname : string, p : unitptr, sl : stringlist);
-
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist);
+   extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
 var
+   pc     : unitptr;
    pot    : unitptr;
    exdp   : extraptr;
-   pc     : unitptr;
 
 code
 {
@@ -2576,10 +2575,10 @@ code
 
    if (pot)
    {
-      pc := qstwaithero@quests(QUEST_RABBIT, activator, \
-         {"say Hello $1N how are you today?", \
-         "say I am trying to make a delicious rabbit stew, but I need some ingredients.", \
-         "say I need a dead rabbit, some garlic, some mushrooms and a few berries.", \
+      pc := qstWaitHero@quests(QUEST_RABBIT, activator, 
+         {"say Hello $1N how are you today?",
+         "say I am trying to make a delicious rabbit stew, but I need some ingredients.",
+         "say I need a dead rabbit, some garlic, some mushrooms and a few berries.",
          "say Will you please fetch me these ingredients, $1N?"});
 
       if (pc == null)
