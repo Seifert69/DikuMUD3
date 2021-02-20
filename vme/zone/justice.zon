@@ -698,7 +698,7 @@ extras := jd.extra;
 while (extras)
 {
   if (extra_type in extras.name)
-     if (extras.names.[0] == id)
+     if (extras.names.[1] == id)
         return(TRUE);  //matching extra on DB found.      
 extras := extras.next;
 
