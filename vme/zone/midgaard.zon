@@ -1024,7 +1024,6 @@ jd := findsymbolic("database@justice");
    
 if( "$reward" in self.extra)
    {
-      log("DEBUG JAIL: " + k + " "+ id);
       jd.extra.[id].names.[4] := "-1";
       self.extra.[k].names.[4] := "-1";
       jd.extra.[id].descr := self.name+" is currently serving time in jail.";
@@ -1044,7 +1043,7 @@ if (sn != self.outside.nameidx)
       g := moneystring(gold,1); 
       jd.extra.[id].descr := "A reward of " + g + " has been offered for the head of "+self.name;
       set_char_flags@justice(self, "wanted");
-      log("Jailbreak: "+self.name+" has escaped from jail. "+ id); 
+      log("Jailbreak: "+self.name+" has escaped from the "+ juris +" jail."); 
       quit;
    }
    if("$reward" in self.extra)
@@ -1156,11 +1155,10 @@ code
 
    :loop:
    wait(SFB_CMD, activator.charflags & CHAR_OUTLAW);
-  juris := get_juris@justice();
+   juris := get_juris@justice();
    if (activator == self)
       goto loop;
    outlaw_status := check_outlaw@justice(activator, juris);
- log("OUTLAW: "+ itoa(outlaw_status)+ " " + juris);
  if (outlaw_status == 0)
       goto loop; 
 
@@ -1367,8 +1365,6 @@ code
 
    dilcopy("jailstay@midgaard(12)", prisoner);
 
-   /* Arrested players are wanted dead while in prison */
-     //add_reward@justice(prisoner.symname, prisoner.idx, 64);
 
    link(prisoner, findroom(jailname));
 

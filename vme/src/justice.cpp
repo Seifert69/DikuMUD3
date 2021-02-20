@@ -187,7 +187,7 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
       return;
 
    // First let's deal with registering the crime the criminal committed
-   add_crime(criminal, victim, crime_type);
+   //add_crime(criminal, victim, crime_type);
 
    // prepare the set_witness function
    tmpl = find_dil_template("set_witness@justice");
@@ -245,7 +245,7 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
    {
       if (CHAR_COMBAT(UVI(j)) && CHAR_COMBAT(UVI(j))->FindOpponent(victim) && UVI(j) != criminal)
       {
-         add_crime(UVI(j), victim, crime_type);
+         //add_crime(UVI(j), victim, crime_type);
 
          for (i = 0; i < unit_vector.top; i++)
          {

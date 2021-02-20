@@ -661,50 +661,20 @@ dilbegin rem_db_entry(criminal : unitptr, extra_type : string, juris : string);
 
 var
 jd : unitptr;
-ch_ptr : extraptr;
 jd_key : string;
 ch_key : string;
-nextdude : extraptr;
+
 code 
 {
   jd := findsymbolic("database@justice");
  
-if (juris == "all")
-{ 
-  ch_ptr := extra_type in criminal.extra;
-  while(ch_ptr)
-  { 
-    nextdude := ch_ptr.next;
-    if (extra_type == "$reward")
-     {
-       jd_key := "$reward "+criminal.symname+ " " + itoa(criminal.idx);
-       subextra(jd.extra, jd_key);
-       subextra(criminal.extra, "$reward");
-       log("rem_db_entry: "+criminal.name+" "+extra_type+" was sucessfully removed from the Justice DB");
-     }
-  ch_ptr := nextdude;
-   }
-    sendto("save", jd);
-
-return;
-  
- }
-else
-{
-   if (extra_type == "$reward")
-       {
-        jd_key := "$reward "+criminal.symname+" "+itoa(criminal.idx)+" "+juris;
-        ch_key := "$reward "+juris;
-       }
-      subextra(jd.extra , jd_key);
-      subextra(criminal.extra, ch_key);
-      log("rem_db_entry: "+criminal.name+" "+extra_type+" removed from "+juris);
-      sendto("save", jd);
-      return;
-}    
-  //log("rem_db_entry: Failed to find extras of type "+extra_type+" on "+criminal.name+"R.");
-
-return;
+  jd_key := "$reward "+criminal.symname+" "+itoa(criminal.idx)+" "+juris;
+  ch_key := "$reward "+juris;
+  subextra(jd.extra , jd_key);
+  subextra(criminal.extra, ch_key);
+  sendto("save", jd);
+  log("Reward extra was removed from Justice database for "+criminal.name+ " in "+juris);
+  return;
 }
 dilend
 
@@ -727,14 +697,13 @@ extras := jd.extra;
 
 while (extras)
 {
-  if (extras.name == extra_type)
-     if (extras.names.[1] == id)
+  if (extra_type in extras.name)
+     if (extras.names.[0] == id)
         return(TRUE);  //matching extra on DB found.      
 extras := extras.next;
 
 }
 return(FALSE);
-
 }
 dilend
 

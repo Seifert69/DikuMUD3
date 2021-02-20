@@ -907,8 +907,8 @@ external
    make_corpse ();
    remove_aff();
    death_cry();
-   rem_db_entry@justice(criminal : unitptr, extra_type : string);
-
+   rem_db_entry@justice(criminal : unitptr, extra_type : string, juris: string);
+   integer  valid_extra@justice(criminal : unitptr, extra_type : string, juris : string);
 code
 {
    heartbeat:=3;
@@ -930,8 +930,10 @@ code
    make_corpse();
 
    //Remove extras just Justice DB
-   rem_db_entry@justice(self,"$reward","midgaard");
-   rem_db_entry@justice(self,"$reward","udgaard");
+  if (valid_extra@justice(self, "$reward", "midgaard"))
+     rem_db_entry@justice(self,"$reward","midgaard");
+  if (valid_extra@justice(self, "$reward", "udgaard"))
+     rem_db_entry@justice(self,"$reward","udgaard");
 
    stop_fighting(self, null);
    self.position:=POSITION_DEAD;
@@ -1008,7 +1010,6 @@ external
    integer lose_exp(u:unitptr);
    gain_exp(u:unitptr,gain:integer);
    integer  valid_extra@justice(criminal : unitptr, extra_type : string);
-   rem_db_entry@justice(criminal : unitptr, extra_type : string);
 var
 	gain:integer;
         i:integer;
@@ -1027,9 +1028,6 @@ code
       dilcopy ("arena_death@arena()",self);
       quit;
    }
-    // If the character has a $arrest extra...delete it from the justice database
-    if(valid_extra@justice(self,"$arrest"))
-           rem_db_entry@justice(self,"$arrest");
 
    if (self.type==UNIT_ST_PC)
    {
