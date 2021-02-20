@@ -203,7 +203,8 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
          prg->fp->vars[2].val.integer = crime_serial_no;
          prg->fp->vars[3].val.integer = crime_type;
          prg->fp->vars[4].val.integer = active;
-         dil_add_secure(prg, criminal, prg->fp->tmpl->core);
+         prg->fp->vars[5].val.string = str_dup(UNIT_NAME(victim));
+	 dil_add_secure(prg, criminal, prg->fp->tmpl->core);
          dil_add_secure(prg, victim, prg->fp->tmpl->core);
          dil_activate(prg);
       }
@@ -230,7 +231,8 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
                prg2->fp->vars[2].val.integer = crime_serial_no;
                prg2->fp->vars[3].val.integer = crime_type;
                prg2->fp->vars[4].val.integer = active;
-               dil_add_secure(prg2, criminal, prg2->fp->tmpl->core);
+               prg2->fp->vars[5].val.string = str_dup(UNIT_NAME(victim)); 
+	       dil_add_secure(prg2, criminal, prg2->fp->tmpl->core);
                dil_add_secure(prg2, UVI(i), prg2->fp->tmpl->core);
                dil_activate(prg2);
             }
@@ -260,7 +262,8 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
                   prg3->fp->vars[2].val.integer = crime_serial_no;
                   prg3->fp->vars[3].val.integer = crime_type;
                   prg3->fp->vars[4].val.integer = active;
-                  dil_add_secure(prg3, criminal, prg3->fp->tmpl->core);
+                  prg3->fp->vars[5].val.string = str_dup(UNIT_NAME(victim));
+		  dil_add_secure(prg3, criminal, prg3->fp->tmpl->core);
                   dil_add_secure(prg3, UVI(j), prg3->fp->tmpl->core);
                   dil_activate(prg3);
                }

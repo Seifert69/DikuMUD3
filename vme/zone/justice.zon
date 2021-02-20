@@ -52,131 +52,6 @@ END HEADER*/
      database@justice extras:
 
 
-      $crime : There are 9 names in each crime extra, three names in each entry. 
-      They are as follows:
- 
-       Crime Extra Names:
-
-       names.[0] $crime constant
-       names.[1] CRIME_SERIAL_NO
-       names.[2] CRIMINAL_NAME
-       names.[3] CRIMINAL_IDX
-       names.[4] CRIME_TYPE
-       names.[5] VICTIM_NAME
-       names.[6] TICK UNTIL REMOVED FROM LIST
-       names.[7] is_NPC (Y or N)
-       names.[8] JURISDICTION
-       names.[9] CRIME_REPORTED 1 or 0
-
-      The descr for each crime is what is displayed on the reward_board under "Suspects" heading.
-      
-      $reward : The database also holds $reward extras
-
-      Reward Extra Names
-      
-      names.[0] $reward
-      names.[1] UNIQUE_ID       
-      names.[2] GOLD_TO_BE_REWARED
-      names.[3] XP_REWARED
-      names.[4] JURISDICTION
-      named.[5] IS NPC (Y or N) 
-      The extra.descr will be displayed on the reward_board.
-       "
-      A reward of 250000 gold has been offered for the head of Tank
-      "
-      When a character with a $reward extra dies their reward data is copied from the database
-      to their corpse and removed from the dataase.
-
-      Witnesses extras:
-      Witness Extras are copied to any character that witnesses a crime.   
-      There are 6 names on each witness extra.  THey are as follows:
- 
-      $witness : Witness Data Elements:
-         
-      names.[0] $witness
-      names.[1] $CRIMINAL NAME
-      names.[2] CRIME_SERIAL_NO
-      names.[3] CRIME_TYPE
-      names.[4] PLAYERID
-      names.[5] TICKS UNTIL REMOVED
-      names.[6] JURISDICTION
-      
-      The descr filed for witness is not used at the moment.
-
-     Criminal extras:
-     A criminal will receive a $reward extra when a reward has been set for their death.
-
-     Reward Data Elements (for characters)
-
-      names.[0] $reward 
-      names.[1] _UNIQUE_ID       
-
-Crime progression goes like this which is handled in DIL crime_counter()
-    - If your crime counter is >= CRIME_NONPRO  (8) then your PROTECTED flag is removed.
-    - If your crime counter is >= CRIME_OUTLAW (32) then your PROTECTED and OUTLAW flags are SET .
-    - If your crime counter is >= CRIME_REWARD (64) then a reward is set on your character.
-      This will remove your PROTECTED and set your OUTLAW flags.
-
-    I suppose this means, if you commit a crime that sets your crime counter in:
-
-     - [8..31]  You'll lose the benefit of being protected by the law and order system (see below).
-     - [32..63] You're wanted alive by the guards. They'll try to arrest you.
-     - [64..]   You're wanted dead or alive.
-
-
-    When the flags are restored / set:
-
-      - For all new players PROTECTED is set (CHECK)
-      - After you have served your jail time CHAR_PROTECTED is restored and CHAR_OUTLAW is removed
-        and your crime counter is cut in half (VERIFIED)
-      - When you're thrown in jail your _PROTECTED status is removed and your OUTLAW is set (just
-        in case you escape). (VERIFIED)
-      - When you die OUTLAW is removed (death.zon). (VERIFIED)
-        And also $reward is removed (Dave that prolly needs an update)
-
-    When the flags are removed:
-
-      - If a reward is set then the PROTECTED flag is removed and OUTLAW is set. (Verified)
-      - If your crime counter exceeds 8 (CRIME_NONPRO) the PROTECTED flag is removed.
-      - If your crime counter exceeds 32 the OUTLAW flag is set.
-      - If your crime counter exceeds 64 the PROTECTED flag is removed.
-      - any other ways?
-
-
-
-CHAR_PROTECTED flag
-    A charcter with this flag is protected by the law. This means law encforcers will
-    come to your rescue. By default all new players have this flag set. Most citizens
-    should also have this flag set, especially guards, mayors, shopkeepers, captains,
-    janitors and more.
-
-    The damage() function in C checks for this flag when someone is killed. If the person
-    killed is protected, it will log a crime. (VERIFIED)
-
-CHAR_OUTLAW
-    A character with this flag is wanted by the law. If the char is PROTECTED they're still
-    wanted alive. Otherwise dead. (VERIFIED)
-
-CHAR_SELF_DEFENCE
-    This flag is volatile and is used to figure out if you've committed a crime in self defense.
-    In which case you won't get in trouble. I.e. if you got attacked by someone protected, then
-    you're acting in self defense.
-
-    In the C damage() routine, we call offend_legal_state in justice.cpp. This will set the
-    CHAR_SELF_DEFENCE and CHAR_LEGAL_TARGET flags (VERIFIED)
-
-    Flag is removed as soon as you move to a new room or stop fighting (VERIFIED)
-
-CHAR_LEGAL_TARGET
-    This flag is volatile and is used to figure out if you're a legal target even if you're protected. If you're
-    a legal target then others won't get in trouble when they attack you.
-
-    In the C damage() routine, we call offend_legal_state in justice.cpp. This will set the
-    CHAR_SELF_DEFENCE and CHAR_LEGAL_TARGET flags (VERIFIED)
-
-    Flag is removed as soon as you move to a new room (VERIFIED).
-
-
       ==============================
       NEW DRAMATICALLY SIMPLIFIED PROPOSAL TO CONSIDER WHICH INCLUDES JURISDICTION
       ==============================
@@ -317,6 +192,130 @@ CHAR_LEGAL_TARGET
       ====================================
       ====================================
 
+      $crime : There are 9 names in each crime extra, three names in each entry. 
+      They are as follows:
+ 
+       Crime Extra Names:
+
+       names.[0] $crime constant
+       names.[1] CRIME_SERIAL_NO
+       names.[2] CRIMINAL_NAME
+       names.[3] CRIMINAL_IDX
+       names.[4] CRIME_TYPE
+       names.[5] VICTIM_NAME
+       names.[6] TICK UNTIL REMOVED FROM LIST
+       names.[7] is_NPC (Y or N)
+       names.[8] JURISDICTION
+       names.[9] CRIME_REPORTED 1 or 0
+
+      The descr for each crime is what is displayed on the reward_board under "Suspects" heading.
+      
+      $reward : The database also holds $reward extras
+
+      Reward Extra Names
+      
+      names.[0] $reward
+      names.[1] UNIQUE_ID       
+      names.[2] GOLD_TO_BE_REWARED
+      names.[3] XP_REWARED
+      names.[4] JURISDICTION
+      named.[5] IS NPC (Y or N) 
+      The extra.descr will be displayed on the reward_board.
+       "
+      A reward of 250000 gold has been offered for the head of Tank
+      "
+      When a character with a $reward extra dies their reward data is copied from the database
+      to their corpse and removed from the dataase.
+
+      Witnesses extras:
+      Witness Extras are copied to any character that witnesses a crime.   
+      There are 6 names on each witness extra.  THey are as follows:
+ 
+      $witness : Witness Data Elements:
+         
+      names.[0] $witness
+      names.[1] $CRIMINAL NAME
+      names.[2] CRIME_SERIAL_NO
+      names.[3] CRIME_TYPE
+      names.[4] PLAYERID
+      names.[5] TICKS UNTIL REMOVED
+      names.[6] JURISDICTION
+      
+      The descr filed for witness is not used at the moment.
+
+     Criminal extras:
+     A criminal will receive a $reward extra when a reward has been set for their death.
+
+     Reward Data Elements (for characters)
+
+      names.[0] $reward 
+      names.[1] _UNIQUE_ID       
+
+Crime progression goes like this which is handled in DIL crime_counter()
+    - If your crime counter is >= CRIME_NONPRO  (8) then your PROTECTED flag is removed.
+    - If your crime counter is >= CRIME_OUTLAW (32) then your PROTECTED and OUTLAW flags are SET .
+    - If your crime counter is >= CRIME_REWARD (64) then a reward is set on your character.
+      This will remove your PROTECTED and set your OUTLAW flags.
+
+    I suppose this means, if you commit a crime that sets your crime counter in:
+
+     - [8..31]  You'll lose the benefit of being protected by the law and order system (see below).
+     - [32..63] You're wanted alive by the guards. They'll try to arrest you.
+     - [64..]   You're wanted dead or alive.
+
+
+    When the flags are restored / set:
+
+      - For all new players PROTECTED is set (CHECK)
+      - After you have served your jail time CHAR_PROTECTED is restored and CHAR_OUTLAW is removed
+        and your crime counter is cut in half (VERIFIED)
+      - When you're thrown in jail your _PROTECTED status is removed and your OUTLAW is set (just
+        in case you escape). (VERIFIED)
+      - When you die OUTLAW is removed (death.zon). (VERIFIED)
+        And also $reward is removed (Dave that prolly needs an update)
+
+    When the flags are removed:
+
+      - If a reward is set then the PROTECTED flag is removed and OUTLAW is set. (Verified)
+      - If your crime counter exceeds 8 (CRIME_NONPRO) the PROTECTED flag is removed.
+      - If your crime counter exceeds 32 the OUTLAW flag is set.
+      - If your crime counter exceeds 64 the PROTECTED flag is removed.
+      - any other ways?
+
+
+
+CHAR_PROTECTED flag
+    A charcter with this flag is protected by the law. This means law encforcers will
+    come to your rescue. By default all new players have this flag set. Most citizens
+    should also have this flag set, especially guards, mayors, shopkeepers, captains,
+    janitors and more.
+
+    The damage() function in C checks for this flag when someone is killed. If the person
+    killed is protected, it will log a crime. (VERIFIED)
+
+CHAR_OUTLAW
+    A character with this flag is wanted by the law. If the char is PROTECTED they're still
+    wanted alive. Otherwise dead. (VERIFIED)
+
+CHAR_SELF_DEFENCE
+    This flag is volatile and is used to figure out if you've committed a crime in self defense.
+    In which case you won't get in trouble. I.e. if you got attacked by someone protected, then
+    you're acting in self defense.
+
+    In the C damage() routine, we call offend_legal_state in justice.cpp. This will set the
+    CHAR_SELF_DEFENCE and CHAR_LEGAL_TARGET flags (VERIFIED)
+
+    Flag is removed as soon as you move to a new room or stop fighting (VERIFIED)
+
+CHAR_LEGAL_TARGET
+    This flag is volatile and is used to figure out if you're a legal target even if you're protected. If you're
+    a legal target then others won't get in trouble when they attack you.
+
+    In the C damage() routine, we call offend_legal_state in justice.cpp. This will set the
+    CHAR_SELF_DEFENCE and CHAR_LEGAL_TARGET flags (VERIFIED)
+
+    Flag is removed as soon as you move to a new room (VERIFIED).
+
 */
 
 %zone justice 
@@ -352,7 +351,6 @@ code
    juris := get_juris@justice();
 
    skey := "$witness " + juris + " " + criminal.symname + " " + itoa(criminal.idx);
-
    exd := skey in witness.extra;
 
    if (exd == null)
@@ -402,6 +400,9 @@ dilend
 dilbegin integer add_reward(criminal_symname : string, criminal_idx : integer, crime_type: integer);
 external
    string get_juris@justice();
+   set_arrest@justice(criminal : unitptr, juris : string);
+   integer valid_extra@justice(criminal : unitptr, extra_type : string, juris : string);
+   set_char_flags@justice(char : unitptr, setting : string);
 var
    database : unitptr;
    criminal : unitptr;
@@ -410,6 +411,7 @@ var
    exd_char_reward : extraptr;
    exd_db_reward : extraptr;
    s : string;
+   sj : string;
    cnt : integer;
    gold : integer;
    xp : integer;
@@ -441,7 +443,7 @@ code
          // The NPC is dead. So no more reward accumulation. 
          // Maybe we could update the board and say the reward is waiting to
          // be cashed in? I dont think we should go through the trouble and 
-         // update the reward info on a head.
+         // update the reard info on a head.
          //
          return(0);
       }
@@ -463,15 +465,16 @@ code
       }
    }
 
-   s := "$reward "+criminal.name+" "+itoa(criminal.idx);
-   exd_db_reward := s in database.extra;
+   s := "$reward "+criminal.symname+" "+itoa(criminal.idx);
+   sj:= s + " "+juris; 
+  exd_db_reward := sj in database.extra;
 
    if (exd_db_reward == null)
    {
       // Create blank $reward
       namesl := null;
       addstring(namesl, s);
-      addstring(namesl, s + " " + juris);
+      addstring(namesl, sj);
       addstring(namesl, "0");
       addstring(namesl, "0");
       addstring(namesl, "0");
@@ -485,7 +488,9 @@ code
    // so let's update them. We know for sure we have the DB.
    // Criminal might be offline
 
-   cnt := atoi(exd_db_reward.names.[2]); // Crime Counter
+  cnt := atoi(exd_db_reward.names.[4]); // Crime Counter
+   if (cnt == -1)
+       return(0);  //char is in jail.  No crime score updates while in jail..
    if ("@_players" in criminal_symname)
    {
       if (cnt < 1)
@@ -505,10 +510,10 @@ code
    // because we'll also need to call it if a PC logs in.
    //
 
-   exd_db_reward.names.[2] := itoa(cnt);
+   exd_db_reward.names.[4] := itoa(cnt);
 
    if (exd_char_reward)
-      exd_char_reward.names.[2] := itoa(cnt);
+      exd_char_reward.names.[4] := itoa(cnt);
 
    // 40,960 is one platinum piece, so if a level 50 char => 
    // 1 plat then it's about 16.
@@ -516,9 +521,9 @@ code
    if (gold > PLATINUM_MULT)
       gold := PLATINUM_MULT;  // Make sure this doesn't become more than 1 PP
 
-   exd_db_reward.names.[3] := itoa(gold);
+   exd_db_reward.names.[2] := itoa(gold);
    if (exd_char_reward)
-      exd_char_reward.names.[3] := itoa(gold);
+      exd_char_reward.names.[2] := itoa(gold);
 
    s := moneystring(gold, 1);
 
@@ -526,11 +531,24 @@ code
    // [32..63] You're wanted alive by the guards. They'll try to arrest you.
    // [64..]   You're wanted dead or alive.
    if ((cnt > 31) and (cnt < 64))
-      s := "A reward of " + s + " has been offered for the arrest of "+criminal.name;
+      {
+        // s := "A reward of " + s + " has been offered for the arrest of "+criminal.name;
+        s := criminal.name + " is wanted for imprisonment."; 
+         //if(not(valid_extra@justice(criminal, "$arrest", juris)))
+        // set_arrest(criminal, juris); //this sets the $arrest extra.
+        set_char_flags@justice(criminal, "arrest");
+      }
+
    else if (cnt >= 64)
-      s := "A reward of " + s + " has been offered for the arrest or head of "+criminal.name;
-   else
-      s := "On notice";
+     {
+       s := "A reward of " + s + " has been offered for the head of "+criminal.name;
+       set_char_flags@justice(criminal, "wanted");
+     }
+else
+     {
+       s := "On notice";
+       set_char_flags@justice(criminal, "notice");
+     }
 
    exd_db_reward.descr := s;
    if (exd_char_reward)
@@ -540,9 +558,9 @@ code
    if (xp > 1000)
        xp := 1000;  // Make sure some glitch doesn't cause excessive XP
 
-   exd_db_reward.names.[4] := itoa(xp);
+   exd_db_reward.names.[3] := itoa(xp);
    if (exd_char_reward)
-      exd_char_reward.names.[4] := itoa(xp);
+      exd_char_reward.names.[3] := itoa(xp);
 
    sendto("save", database);
 
@@ -572,7 +590,7 @@ code
       return(0);
    else
    {
-      i := atoi(exd.names.[2]);
+      i := atoi(exd.names.[4]);
       if (i >= 64)
          return(2);
       else if (i >= 32)
@@ -636,537 +654,173 @@ dilend
 // =================================================
 
 
-// crime_stopper() is a timer that will clear the $suspect crimes off the reward_board
-// This DIL should be copied to the reward_board.
+
+//This function removes all database extras for a criminal.
 //
-
-/*
- Crime Info Data Elements:
-        [0] $crime
-        [1] CRIME_SERIAL_NO
-        [2] CRIMINAL_NAME
-        [3] CRIMINAL_IDX
-        [4] CRIME_TYPE
-        [5] VICTIM_NAME
-        [6] TICK UNTIL REMOVED FROM LIST
-        [7] is_NPC (Y or N)     
-        [9] CRIME_REPORTED 1 or 0
-*/
-
-dilbegin crime_stopper();
-var
-   c_info    : string;
-   suspects  : extraptr;
-   nextdude  : extraptr;
-   time_left : integer;
-code
-{
-   :start:
-   heartbeat := WAIT_SEC * 5 * 60;
-   wait(SFB_TICK, TRUE);
-
-   suspects := self.extra;
-
-   while (suspects)
-   {
-      nextdude := suspects.next;
-
-      if (suspects.name == "$crime")
-      {
-         c_info := suspects.names.[6];
-         time_left := atoi(c_info);
-         time_left := time_left - 1;
-         if (time_left <= 0)
-            subextra(self.extra, suspects.names.[1]);
-         else
-            suspects.names.[6] := itoa(time_left);
-         sendto("save", self);
-      }
- 
-      suspects := nextdude;
-   }
-   goto start;
-}
-dilend
-
-
-
-// set_arrest() sets the arrest extras to the criminali and database.
-// it is called by crime_counter();
-//
-dilbegin set_arrest(criminal : unitptr, incr : integer);
-external
-   string get_juris@justice();
-var
-   jd : unitptr;
-   k : string;
-   ex_string : stringlist;
-   r_time : integer;
-   juris : string;
-   is_npc : string;
-code
-{
-   r_time := realtime;
-   juris := get_juris@justice();
-   ex_string := null;
-
-
-   if ("$arrest" in criminal.extra)
-   {
-      return;
-   }
-
-   if (criminal.type == UNIT_ST_PC)
-   {
-       criminal.crimes := criminal.crimes + incr;
-       is_npc := "N";
-   }
-   else
-       is_npc := "Y";
-
-   addstring(ex_string,"$arrest" );
-   addstring(ex_string,itoa(r_time));
-
-   //add extra to criminal using realtime as a unique ID
-
-   addextra(criminal.extra, ex_string, " ");
-
-   addstring(ex_string, juris);
-   addstring(ex_string, is_NPC);
-   // add extra to justice database with matching ID containing more reward details
-
-   jd := findsymbolic("database@justice");
-   addextra(jd.extra, ex_string, criminal.name+" is wanted for imprisonment.");
-   sendto("save", jd);
-   return;
-}
-dilend
-
-//This function removes database extras
-//
-dilbegin rem_db_entry(criminal : unitptr, extra_type : string);
+dilbegin rem_db_entry(criminal : unitptr, extra_type : string, juris : string);
 
 var
 jd : unitptr;
 ch_ptr : extraptr;
-
+jd_key : string;
+ch_key : string;
+nextdude : extraptr;
 code 
 {
   jd := findsymbolic("database@justice");
-  
+ 
+if (juris == "all")
+{ 
   ch_ptr := extra_type in criminal.extra;
-  if (ch_ptr)
+  while(ch_ptr)
   { 
-    subextra(jd.extra, ch_ptr.names.[1]);  
-    subextra(criminal.extra, ch_ptr.names.[1]);
-    log("rem_db_entry: "+criminal.name+" "+extra_type+"was sucessfully removed from the Justice DB");
+    nextdude := ch_ptr.next;
+    if (extra_type == "$reward")
+     {
+       jd_key := "$reward "+criminal.symname+ " " + itoa(criminal.idx);
+       subextra(jd.extra, jd_key);
+       subextra(criminal.extra, "$reward");
+       log("rem_db_entry: "+criminal.name+" "+extra_type+" was sucessfully removed from the Justice DB");
+     }
+  ch_ptr := nextdude;
+   }
     sendto("save", jd);
-    return;
-  }
-   
-  log("rem_db_entry: Failed to find extras of type "+extra_type+" on "+criminal.name+"R.");
+
+return;
+  
+ }
+else
+{
+   if (extra_type == "$reward")
+       {
+        jd_key := "$reward "+criminal.symname+" "+itoa(criminal.idx)+" "+juris;
+        ch_key := "$reward "+juris;
+       }
+      subextra(jd.extra , jd_key);
+      subextra(criminal.extra, ch_key);
+      log("rem_db_entry: "+criminal.name+" "+extra_type+" removed from "+juris);
+      sendto("save", jd);
+      return;
+}    
+  //log("rem_db_entry: Failed to find extras of type "+extra_type+" on "+criminal.name+"R.");
 
 return;
 }
 dilend
 
-// jailbreak() - this DIL will be called if someone ends their jailtime early
-// it will set a reward on their heads for escape.
-//
-dilbegin jailbreak(criminal : unitptr);
-external 
-  rem_db_entry(criminal : unitptr, extra_type : string);
-  set_reward_char(criminal : unitptr, incr : integer);
-var
- 
-code
-{
-  log("Criminal "+criminal.name+" has escaped jail.  A reward is now offered.");
-  rem_db_entry(criminal, "$arrest");
-  set_reward_char(criminal, 0);
-  return;
-}
-dilend
-
-// set_reward_char() sets the reward and applies the $reward extra to the criminal.
-// it is called by crime_counter();
-//
-dilbegin set_reward_char(criminal : unitptr, incr : integer);
-external
-   string get_juris@justice();
-   rem_db_entry(criminal : unitptr, extra_type : string);
-   integer valid_extra@justice(criminal : unitptr, extra_type : string);
-var
-   jd : unitptr;
-   gold : integer;
-   xp : integer;
-   m_display : string;
-   k : string;
-   ex_string : stringlist;
-   r_time : integer;
-   juris : string;
-   is_npc : string;
-code
-{
-   gold := 0;
-   xp := 0;
-   r_time := realtime;
-   juris := get_juris@justice();
-   ex_string := null;
-
-   unset(criminal.charflags, CHAR_PROTECTED);
-   set(criminal.charflags, CHAR_OUTLAW);
-   if(valid_extra@justice(criminal, "$arrest"))
-       rem_db_entry@justice(criminal, "$arrest");
-   if ("$reward" in criminal.extra)
-   {
-      return;
-   }
-
-   gold := criminal.level * criminal.level * 100;
-    if (gold > PLATINUM_MULT)
-       gold := PLATINUM_MULT;  // Make sure this doesn't become more than 1 PP
-   m_display := moneystring(gold,1);
-xp :=  criminal.level * 20 + 50;
-   if (xp > 1000)
-       xp := 1000;  // Make sure some glitch doesn't cause excessive XP
-
-   if (criminal.type == UNIT_ST_PC)
-   {
-       criminal.crimes := criminal.crimes + incr;
-       is_npc := "N";
-   }
-   else
-     is_npc := "Y";
-
-   addstring(ex_string,"$reward" );
-   addstring(ex_string,itoa(r_time));
-  
-   //add extra to criminal using realtime as a unique ID
-   
-   addextra(criminal.extra, ex_string, " "); 
-   
-   addstring(ex_string, itoa(gold));
-   addstring(ex_string, itoa(xp));
-   addstring(ex_string, juris);
-   addstring(ex_string, is_NPC); 
-   // add extra to justice database with matching ID containing more reward details
-  
-   jd := findsymbolic("database@justice");
-   if (incr == 0)
-      addextra(jd.extra, ex_string, "JAILBREAK!! A reward of "+m_display+" has been offered for the head of "+criminal.name);    
-    else
-      addextra(jd.extra, ex_string, "A reward of "+m_display+" has been offered for the head of "+criminal.name);  
-   sendto("save", jd);
-   return;    
-} 
-dilend
-
-//DIL to get npc clever name ffrom Justice Database
-//
-dilbegin string npc_name(cr_name : string);
-
-var
- jd : unitptr;
- jd_extra : extraptr;
- cname : string;
-code
-{
-
-jd := findsymbolic("database@justice");
-
-jd_extra := jd.extra;
-
-while (jd_extra)
-{
- if(jd_extra.name == "$crime")
-   if(jd_extra.names.[2] == cr_name)
-   {
-    cname := jd_extra.names.[2]+jd_extra.names.[1];
-    return(cname);
-   }
-jd_extra := jd_extra.next;
-}
-}
-dilend
 //DIL to make sure a player justice extra still exits in the database
 //
-dilbegin integer valid_extra(criminal : unitptr, extra_type : string);
+
+dilbegin integer valid_extra(criminal : unitptr, extra_type : string, juris : string);
 
 var 
   jd : unitptr;
   extras : extraptr;
   id : string;
-
 code
 {
 jd := findsymbolic("database@justice");
-id := criminal.extra.[extra_type].names.[1];
 
-if(not(id))   //If there is no ID for that type then returnn false
-   return(FALSE);
+id := "$reward "+criminal.symname+" "+itoa(criminal.idx)+" "+juris;
 
 extras := jd.extra;
 
 while (extras)
 {
   if (extras.name == extra_type)
-     if (extras.names.[1] == id )
+     if (extras.names.[1] == id)
         return(TRUE);  //matching extra on DB found.      
 extras := extras.next;
+
 }
-//failed to find matching ID on DB so it is stale.....remove it
-subextra(criminal.extra, id);
 return(FALSE);
 
 }
 dilend
-// crime_counter() applies the incr to the criminals crimes score and then determines
-// which CHAR_FLAGS should be set.  If a reward is indicated it calls set_reward_char();
-// It is called by update_criminal.
-//
-dilbegin crime_counter(deputy: unitptr,criminal : unitptr, incr : integer, first_accuse : integer);
-external
-   set_reward_char@justice(criminal : unitptr, incr : integer);
-   set_arrest@justice(criminal : unitptr, incr : integer);
-   integer valid_extra@justice(criminal : unitptr, extra_type : string);
-var
- jd : unitptr;
- cash : string;
- id : string;
+
+//DIL to set char flags for criminals
+
+dilbegin set_char_flags(char : unitptr, setting : string);
+
 code
 {
- jd := findsymbolic("database@justice");
- if (((criminal.crimes + incr) / 64 > criminal.crimes / 64))
-   { 
-     if(valid_extra@justice(criminal, "$reward"))
-        return;
-      set_reward_char(criminal, incr);
-      id := criminal.extra.["$reward"].names.[1];
+if (setting == "normal")
+{
+ if(isset(self.charflags, CHAR_OUTLAW))
+    unset(char.charflags, CHAR_OUTLAW);
+ if(not(isset(self.charflags, CHAR_PROTECTED)))
+    set(char.charflags, CHAR_PROTECTED);
+}
+else if (setting == "wanted")
+{
+if(isset(self.charflags, CHAR_PROTECTED))
+   unset(char.charflags, CHAR_PROTECTED);
+if(not(isset(self.charflags, CHAR_OUTLAW)))
+   set(char.charflags, CHAR_OUTLAW);
+}
+else if (setting == "arrest")
+set(char.charflags, CHAR_OUTLAW | CHAR_PROTECTED); //set protection flags
+else if (setting == "onnotice")
+{
+if(isset(self.charflags, CHAR_OUTLAW))
+   unset(char.charflags, CHAR_OUTLAW);
+if(isset(self.charflags, CHAR_PROTECTED))
+   unset(char.charflags, CHAR_PROTECTED);
+}
+else 
+log("ERROR: Unknown char flag setting: "+setting+"  in set_char_flags.");
 
-      cash := moneystring(atoi(jd.extra.[id].names.[2]),1);
-      exec("shout A reward of "+cash+" has been offered for the head of "+criminal.name+"!!",deputy);
-      return;
-   }
- if ((criminal.crimes + incr) / 31 > criminal.crimes / 32)
-   {
-
-      if(valid_extra@justice(criminal, "$reward"))
-        return; 
-      if(not(valid_extra@justice(criminal, "$arrest"))) 
-      {   
-       set(criminal.charflags, CHAR_OUTLAW | CHAR_PROTECTED);
-       set_arrest(criminal, incr);
-       exec("shout that scoundrel "+jd.extra.[criminal.extra.["$arrest"].names.[1]].descr+"!!",deputy);
-       criminal.crimes := criminal.crimes + incr;
-      return;
-      }
-     else
-     { 
-       criminal.crimes := criminal.crimes + incr;
-       return;
-     } 
-    }
- if ((criminal.crimes + incr) / 8 > criminal.crimes / 8)
-   {
-      if (not(isset(criminal.charflags, CHAR_OUTLAW)))
-        unset(criminal.charflags, CHAR_PROTECTED);
-   }
-    criminal.crimes := criminal.crimes + incr;
-
-   return;
+return;
 }
 
 dilend
 
-
-// update_criminal() is called by accuse.  The Captain sends the accused a warning and it then calls crime_counter()
-// to update the crime stats of the criminal
+// Called when a PC logs in
+// Cleans up old justice extras
 //
-dilbegin update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  first_accuse : integer);
-external
-   crime_counter@justice(deputy : unitptr,criminal : unitptr, incr : integer, first_accuse : integer);
-   set_reward_char(criminal : unitptr, incr : integer);
-   set_arrest(criminal : unitptr, incr : integer);
-   integer valid_extra@justice(criminal : unitptr, extra_type : string);
+dilbegin login_clean();
 var
-   criminal : unitptr;
-   incr : integer;
-   jd : unitptr;
-   id : string;
-   cash : string;
-code
-{
- jd := findsymbolic("database@justice");
- 
-  criminal := findunit(deputy, cr_name, FIND_UNIT_GLOBAL, null);
-   if((criminal.type == UNIT_ST_NPC) and (crime_type == CRIME_MURDER))
-   {
-      if (not(valid_extra@justice(criminal, "$reward")))
-      {
-       set_reward_char@justice(criminal, 8);
-       id := criminal.extra.["$reward"].names.[1];
-       cash := moneystring(atoi(jd.extra.[id].names.[2]),1);
-       exec("shout A reward of "+cash+" has been offered for that scoundrel "+criminal.name+"!!",deputy);
-      } 
-     return;
-   }
-   if(criminal.type == UNIT_ST_NPC)
-   {
-     if(valid_extra@justice(criminal, "$reward"))
-       return;
-     if(not(valid_extra@justice(criminal, "$arrest")))
-     {
-      set(criminal.charflags, CHAR_OUTLAW | CHAR_PROTECTED);
-      set_arrest(criminal, CRIME_STEALING);
-      exec("shout the filthy criminal "+criminal.name+" is wanted for imprisonment!!" ,deputy); 
-     }  
-  return;
-   }
-
-   
-if(criminal.idx == pidx)
-   {
-      act("$1n tells you, 'You are in trouble, you good-for-nothing ...'", A_SOMEONE, deputy,null, criminal, TO_VICT);
-      if (first_accuse)
-         incr := crime_type;
-      else
-         incr := CRIME_EXTRA;
-         crime_counter@justice(deputy,criminal, incr, first_accuse);
-   }
-   return;
-}
-dilend
-
-
-
-// add_crime() is called from log_crime()
-// Call this function to add a $crime to a reward board. The reward_board in zone xxx
-// will be chosen based on what zone 'self' is in when the crime is committed. (??)
-//
-// criminal   : The char that is committing the crime.
-// vict       : The char that a crime was committed against.
-// crime_type : either CRIME_MURDER or CRIME_STEALING
-// crime_no   : unique identifier assigned  to the crime by log_crime.
-// crime_clear: The number of heartbeat ticks before this crime will be removed form the reward_board
-//
-dilbegin add_crime(criminal : unitptr, vict : unitptr, crime_type: integer, crime_no : integer, crime_clear : integer);
-external
-  string get_juris@justice();
-var
-   i : integer;
-   wp : unitptr;
-   desc : string;
-   cr_string : string;
-   crime_list : stringlist;
-   is_npc : string;
-   juris : string;
-
-code
-{
-   cr_string := itoa(crime_no);
-
-   if (crime_type == CRIME_MURDER)
-   {
-      desc := "<a cmd='accuse # murder'>"+criminal.name+"</a> is suspected of the murder of "+vict.name+". Anyone with information should report it to the Guard's Office.";
-   }
-   else if (crime_type == CRIME_STEALING)
-   {
-      desc := "<a cmd='accuse # stealing'>"+criminal.name+"<a/> is suspected of stealing from "+vict.name+". Anyone with information should report it to the Guard's Office.";
-   }
-   else
-   {
-      if ((criminal.type == UNIT_ST_PC) and (vict.type == UNIT_ST_PC))
-         desc := "<a cmd='accuse # murder'>"+criminal.name+"</a> is suspected of player killing "+vict.name+". Anyone with information should report it to the Guard's Office.";
-      else
-         desc := "<a cmd='accuse # murder'>"+criminal.name+"</a> is suspected of the murder of "+vict.name+". Anyone with information should report it to the Guard's Office.";
-      // log("Unknown crime type "+itoa(crime_type)+" in add_crime() for criminal "+criminal.symname+" victim "+vict.symname);
-   }
-
-   juris := get_juris@justice();
-
-   if (criminal.type == UNIT_ST_NPC)
-   {
-     addstring(criminal.names,criminal.name+itoa(crime_no));
-     is_npc := "Y";
-   } 
-   else
-      is_npc := "N";
- 
-   wp := findsymbolic("database@justice");
-   if (not wp)
-   {
-      log("database@justice not found");
-   }
-
-   addstring(crime_list, "$crime");
-   addstring(crime_list, cr_string);
-   addstring(crime_list, criminal.name);
-   addstring(crime_list, itoa(criminal.idx));
-   addstring(crime_list, itoa(crime_type));
-   addstring(crime_list, vict.name);
-   addstring(crime_list, itoa(crime_clear));
-   addstring(crime_list, is_npc);
-   addstring(crime_list, juris);
-   addstring(crime_list, itoa(0));
-    
-   addextra(wp.extra, crime_list, desc); 
-   sendto("save", wp);
-
-   return;
-}
-dilend
-
-
-
-// witness_timer() is copied to a witness when the observe a crime. Its purpose is to remove
-// the $witness extra after about an hour.  Called by set_witness();
-//
-
-/*  Witness Data Elements:
-        [0] $witness
-        [1] $witness_CRIMINAL NAME
-        [2] $witness_CRIME_SERIAL_NO
-        [3] $witness_CRIME_TYPE
-        [4] $witness_PLAYERID
-        [5] $witness_TICKS UNTIL REMOVED
-*/
-dilbegin witness_timer();
-var
-   tm : integer;
-   d : integer;
-   witness  : extraptr;
+   exd : extraptr;
    nextdude : extraptr;
-   w_info : string;
-
+   now : integer;
+   i : integer;
+   u : unitptr;
+   sl : stringlist;
+   t : string;
 code
 {
-   heartbeat := WAIT_SEC * 5 * 60;
+   exd := "$witness" in self.info;
+   now := realtime;
 
-   :start:
-   wait(SFB_TICK, TRUE);
-   witness := self.extra;
-
-   while (witness)
+   while (exd)
    {
-      nextdude := witness.next;
-      if (witness.name == "$witness")
-      {
-         w_info := witness.names.[5];
-         tm := atoi(w_info);
-         tm := tm - 1;
-         if (tm <= 0)
-            subextra(self.extra, witness.names.[2]);
-         else
-            witness.names.[5] := itoa(tm);
-      }
-      witness := nextdude;
-   }
+      nextdude := exd.next;
 
-   if (not("$witness" in self.extra))
-      quit;
-   else
-      goto start; 
+      if (left(exd.names.[0], 8) == "$witness")
+      {
+         if ("@_players" in exd.names.[0])
+         {
+            // How many full days is it old?
+            i := (now - atoi(exd.names.[2])) / (3600*24);
+           
+            // Delete witness a player after 14 days
+            if (i > 1)
+               subextra(self.info, exd.names.[0]);
+         }
+         else  // It's a NPC
+         {
+            sl := getwords(exd.names.[0]);
+            // .[1] is jurisdiction, .[2] is symname, .[3] is idx
+            u := findsymbolic(sl.[2], atoi(sl.[3]));
+            if (u == null)
+               subextra(self.info, exd.names.[0]);
+         }
+      }
+
+      exd := nextdude;
+   }
+   
+   return;
 }
 dilend
 
@@ -1259,14 +913,12 @@ dilend
 // This function is called by log_crime in C and will set a $witness extra on any person who witnesses
 // a crime.  If the witness is an NPC it will copy the activate_accuse() DIL to the witness.
 //
-dilbegin set_witness(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer);
+dilbegin set_witness(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer, victimname : string);
 external
    activate_accuse(witness : unitptr, crime_type : integer, criminal_name : string);
    string get_juris@justice();
+   add_witness(witness : unitptr, criminal : unitptr, victimname : string, crime_type: integer);
 var
-   pidx: integer;
-   acc_cmd : string;
-   ex_string : stringlist;
    jurisdiction : string;
 code
 { 
@@ -1280,19 +932,9 @@ code
    {
       act("You just witnessed a crime committed by $1n.", A_ALWAYS, criminal, null, witness, TO_VICT);
    }
-   jurisdiction := get_juris@justice();
-
-   pidx := criminal.idx;
-   addstring(ex_string,"$witness" );
-   addstring(ex_string,criminal.name);
-   addstring(ex_string,itoa(crime_no));
-   addstring(ex_string,itoa(crime_type));
-   addstring(ex_string,itoa(pidx));
-   addstring(ex_string,itoa(12));
-   addstring(ex_string,jurisdiction);
-   addextra(witness.extra,ex_string ,criminal.name+" committed a crime.");
-   if (not(dilfind("witness_timer@justice", witness)))
-      dilcopy("witness_timer@justice()", witness);
+   
+ add_witness(witness, criminal,victimname, crime_type);
+ jurisdiction := get_juris@justice();
 
    if ((witness.type == UNIT_ST_NPC) and (show))
       dilcopy("activate_accuse@justice("+itoa(crime_type)+","+criminal.name+","+jurisdiction+")", witness);
@@ -1302,7 +944,7 @@ code
 dilend
 
 
-
+ 
 // wanted_poster() This DIL is copied to the reward_board.  It will display a list of Wanted criminals as
 // well as a list of recent crimes.  It will also show information about accusers when
 // accusations are made.
@@ -1322,10 +964,12 @@ var
    wanted_alive : string;
    wanted_either : string;
    local_suspects : string;
+   s : string;
+   juris : string;
+   r_juris : stringlist;
 code
 {
    :start:
-
    wanted_dead := "";
    wanted_alive := "";
    wanted_either := "";
@@ -1339,29 +983,28 @@ code
 
    suspects := jd.extra;
  
-   // this loops through the players connected to the game and displays anyone with
-   // $reward estras.   It will also display characters with the OUTLAW flag set.
-   //
-   // $reward extras as stored on the criminal not on the board.
-  
 
-   //loop trhough reward_board extras
+   //loop trhough reward_board extras and display those char who are wanted in a given jurisdiction
 
-   while (suspects)
+   juris := self.outside.zoneidx;
+ while (suspects)
    {
       nextdude := suspects.next;
-
-      if ("$crime" in suspects.names) 
-      {
-         if (suspects.names.[9] == "0")
-            local_suspects := local_suspects + suspects.descr+"<BR>";
-      }
-      else if ("$arrest" in suspects.names)
-         wanted_alive := wanted_alive + suspects.descr+ "<br>"; 
-       else if ("$reward" in suspects.names)
-         wanted_dead := wanted_dead + suspects.descr+ "<BR>"; 
-      suspects := nextdude;
+      if ("$reward" in suspects.name)
+       if (left(suspects.names.[0], 7) == "$reward") 
+         {
+          r_juris := getwords(suspects.names.[1]);
+          if ((atoi(suspects.names.[4]) >= 62) and (juris == r_juris.[3]))
+              wanted_dead := wanted_dead + suspects.descr+ "<BR>";
+          else if ((atoi(suspects.names.[4]) >=32) and (juris == r_juris.[3]))
+              wanted_alive := wanted_alive + suspects.descr+ "<br>";
+          else if ((atoi(suspects.names.[4]) < 0) and (juris == r_juris.[3]))
+              wanted_alive := wanted_alive + suspects.descr+ "<BR>";
+          } 
+       suspects := nextdude;
    }
+
+
 
  // Diplay Wanted Poster 
 
@@ -1387,12 +1030,12 @@ code
 //   else
 //      sendtext("None at this time.<br>", activator);
 
-   sendtext("<br><b><div class=cpy>Suspects</b></div><br><br>",activator);
+//   sendtext("<br><b><div class=cpy>Suspects</b></div><br><br>",activator);
 
-   if (length(local_suspects) > 0)
-      sendtext(local_suspects+"<br>", activator);
-   else
-      sendtext("None at this time.<br>", activator);
+//   if (length(local_suspects) > 0)
+//      sendtext(local_suspects+"<br>", activator);
+//   else
+//      sendtext("None at this time.<br>", activator);
 
    block;
    goto start;
@@ -1408,58 +1051,28 @@ dilend
 // once a sucessful accusation is made.
 //
 
-/*
-        Crime Info Data Elements:
-        [0] $crime
-        [1] $crime_CRIME_SERIAL_NO
-        [2] $crime_$crime_CRIMINAL_NAME
-        [3] $crime_CRIMINAL_IDX
-        [4] $crime_CRIME_TYPE
-        [5] $crime_VICTIM_NAME
-        [6] $crime_TICK UNTIL REMOVED FROM LIST
-        [7] $crime_is_NPC (Y or N)     i
-        [8] $crime_Jurisdiction 
-        [9] $crime_CRIME_REPORTED 1 or 0
-
-       Witness Data Elements:
-        [0] $witness
-        [1] $witness_CRIMINAL NAME
-        [2] $witness_CRIME_SERIAL_NO
-        [3] $witness_CRIME_TYPE
-        [4] $witness_PLAYERID
-        [5] $witness_TICKS UNTIL REMOVED
-        [6] $witness_JURISDICTION
-*/
 
 dilbegin fnpri(FN_PRI_MISSION-1) accuse();
 external
-   update_criminal(deputy : unitptr, cr_name : string, crime_type : integer,pidx : integer,  reported : integer);
-
+ integer add_reward(criminal_symname : string, criminal_idx : integer, crime_type: integer);   
+ string get_juris@justice();
 var
    args :stringlist;
    arg_count : integer;
    criminal : string;
    crime_type : integer;
    crime : string;
-   jd : unitptr;
    w_data :string;
    i : integer;
    found : integer;
-   wk : string;
-   ck : string;
    w_ptr : extraptr;
-   c_ptr : extraptr;
-   w_type : string;
-   c_name : string;
-   c_pidx : string;
-   c_type : string;
-   c_v_name : string;
-   c_reported : string;
-   c_is_npc   : string;
-   c_juris : string;
-   update_name :string;
+   c_data : stringlist;
+   juris : string;
+   accused : unitptr;
+
 code
 {
+
    :start:
    found := 0;
    heartbeat := PULSE_SEC * 1;
@@ -1467,9 +1080,9 @@ code
    wait (SFB_CMD, command ("accuse") );
 
    args := getwords(argument);
-
+   juris := get_juris@justice();
    if ((activator.type == UNIT_ST_NPC) and  (self.position  == POSITION_SLEEPING))
-      exec("wake "+ self.name, activator);  /* command_interpreter(sarg->activator, "wake"); */
+      exec("wake "+ self.name, activator);  
 
    if ((self.position <  POSITION_SLEEPING) or (self.position  == POSITION_FIGHTING))
    {
@@ -1487,10 +1100,11 @@ code
       // List the crimes you have witnessed
       act("You recall the following crimes:", A_SOMEONE, activator, null, null, TO_CHAR);
       i := 0;
+
       w_ptr := activator.extra;
       while (w_ptr)
       {
-         if ("$witness" == w_ptr.name)
+          if (left(w_ptr.names.[0], 8) == "$witness") //if ("$witness" in w_ptr.name)
          {
             if (atoi(w_ptr.names.[3]) == CRIME_STEALING)
                crime := "stealing";
@@ -1558,88 +1172,48 @@ code
       goto start;
    }
 
-   jd := findsymbolic("database@justice");
-   
-   w_ptr := activator.extra;
-   while (w_ptr)
+w_ptr := activator.extra;
+while (w_ptr)
    {
-      if ("$witness" == w_ptr.name)
+ if (left(w_ptr.names.[0], 8) == "$witness") 
       {
          if (w_ptr.names.[1] == criminal)
          {
-            c_ptr := w_ptr.names.[2] in jd.extra;
-               if (c_ptr)
-                  goto doaccuse;
+            c_data := getwords(w_ptr.names.[0]);
+           if (c_data.[1] != juris)
+             goto notmyproblem;
+            accused := findsymbolic(c_data.[2], atoi(c_data.[3]));
+              if (accused)
+                goto doaccuse;
          }
       }
       w_ptr := w_ptr.next;
    }
-
 goto end;
 
 :doaccuse:
-
- 
-      w_type := w_ptr.names.[3];
-      c_name := c_ptr.names.[2];
-      c_pidx := c_ptr.names.[3];
-      c_type := c_ptr.names.[4]; 
-      c_v_name := c_ptr.names.[5]; 
-      c_is_npc := c_ptr.names.[7];
-      c_juris := c_ptr.names.[8];
-      c_reported := c_ptr.names.[9]; 
-      
-      if ((crime_type == CRIME_MURDER) and
-          (atoi(c_type) != CRIME_MURDER) and
-          (atoi(c_type) != CRIME_PK))
-         goto end;
-
-       if ((crime_type == CRIME_STEALING) and
-            (atoi(c_type) != CRIME_STEALING))
-         goto end;
-       if (c_is_npc == "Y")
-          update_name := c_name+w_ptr.names.[2];
-       else
-          update_name := c_name;  
-       if (atoi(c_type) == atoi(w_type))
-      {
          found := 1;
-         act("$1n accuses $3t of $2t.", A_SOMEONE, activator, crime, criminal, TO_ROOM);
-         act("$1n says, 'Ah yes... $2t'", A_SOMEONE, self, crime, null, TO_ROOM);
          act("$1n says, 'Thank you very much $3N, I will stop $2t.'",
                         A_SOMEONE, self, criminal, activator, TO_ROOM);
          if (activator.alignment > -1000)
            activator.alignment := activator.alignment +100;
-         subextra(activator.extra,w_ptr.names.[2]);
-         if (not("$witness" in activator.extra))
-            i := dildestroy("witness_timer@justice", activator);
-
-         if (atoi(c_reported) == 0)
-         {
-            update_criminal@justice(self, update_name, crime_type, atoi(c_pidx), TRUE);
-             c_ptr.names.[9] := itoa(1);
-            if (atoi(c_type) == CRIME_MURDER)
-               c_ptr.descr := "<a cmd='accuse # "+crime+"'>"+c_name+"</a> has been accused in the "+crime+" of "+c_v_name+". This crime was witnessed  by: "+activator.name+".";
-            else
-                c_ptr.descr := "<a cmd='accuse # "+crime+"'>"+c_name+" </a> has been accused of "+crime+" from "+c_v_name+". This crime was witnessed  by: "+activator.name+".";
-                sendto("save", jd);
-          }
-         else
-         {
-            update_criminal(self, update_name, crime_type, atoi(c_pidx), FALSE);
-            c_ptr.descr := c_ptr.descr +"<br>This crime was also confirmed by "+activator.name+".";
-            sendto("save", jd);
-         }
-      }
-
+         subextra(activator.extra,w_ptr.names.[1]);
+        add_reward@justice(accused.symname, accused.idx, crime_type);    
+      block; 
+      goto start;  
    
+   :notmyproblem:
+     act("$1n says, 'Sorry $3n, but this crime is out of my jurisdiction.'", A_SOMEONE, self, null, activator, TO_ROOM);
+     block;
+     goto start; 
 
-   :end: 
+  :end: 
    if (found == 0)
       act("$1n says, 'Sorry $3n, but I don't find your evidence convincing.'", A_SOMEONE, self, null, activator, TO_ROOM);
 
    block;
    goto start;
+
 }
 dilend
 
@@ -1802,16 +1376,12 @@ code
    {
       nextdude := j_extra.next;
 
-      if (j_extra.name == "$crime")
-         if (j_extra.names.[7] == "Y")
-            subextra(u.extra, j_extra.names.[1]);
-      else if (j_extra.name == "$arrest")
-         if (j_extra.names.[3] == "Y")
-            subextra(u.extra, j_extra.names.[1]);
-      else if (j_extra.name == "$reward")
-         if (j_extra.names.[5] == "Y")
-            subextra(u.extra, j_extra.names.[1]);
-
+     if (left(j_extra.names.[0], 7) == "$reward")    
+         if ("@_players" in j_extra.names.[0])
+           goto end; 
+          else
+             subextra(u.extra, j_extra.names.[0]);
+     :end:
       j_extra := nextdude;      
    }
 
@@ -2027,7 +1597,6 @@ code
 }
 dilend
 
-dilcopy crime_stopper@justice();
 end
 
 
@@ -2118,6 +1687,6 @@ ability[ABIL_DIV]  0
 ability[ABIL_CHA]  0
 
 romflags {CHAR_PROTECTED}
+dilcopy justicetest@basis();
 end
-
 %end

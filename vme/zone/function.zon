@@ -143,6 +143,8 @@ dilend
 // for wanted criminals or their remains :-)
 //
 dilbegin reward_give();
+external
+string get_juris@justice();
 var
    u:unitptr;
    item:integer;
@@ -153,6 +155,8 @@ var
    r_gold : integer;
    r_xp : integer;
    i : integer;
+   juris : string;
+   r_juris : string;
 code
 {
    heartbeat:=PULSE_SEC*3;
@@ -160,20 +164,26 @@ code
 :start:
    wait (SFB_DONE, command("give") and (self==target));
    block;
-
+   juris := "$reward "+ get_juris@justice();
    reward := "$reward" in medium.extra;
-
+   
+   
    if (not(reward)) 
    {
       act ("$1n says, 'Thank you $3n, that is very nice of you.'", A_SOMEONE, self, null, activator, TO_ROOM);
       destroy(medium);
       goto start;
    }
-
-   r_data := reward.names.[2];
-   r_gold := atoi(r_data);
-   if (r_gold > PLATINUM_MULT)
-   {
+   
+while (reward)
+{
+   r_juris := reward.names.[1];
+   if (r_juris == juris) 
+   { 
+    r_data := reward.names.[2];
+    r_gold := atoi(r_data);
+    if (r_gold > PLATINUM_MULT)
+     {
       log("reward_give() gold reward of " + itoa(r_gold) + " too high, limiting to 1 PP");
       r_gold := PLATINUM_MULT;  // Make sure this doesn't become more than 1 PP      
    }
@@ -199,8 +209,20 @@ code
 
    i := transfermoney(null, activator, r_gold);
    destroy(medium);
- 
+   goto start; 
+ }
+ else
+ {
+    act ("$1n examines the bloody head with an approving grin.",
+      A_SOMEONE, self, null, activator, TO_ROOM);
+   act ("$1n says, 'This person is not wanted in my jurisdiction.'",
+      A_SOMEONE, self, null, activator, TO_ROOM);
+       exec("give head "+activator.name, self);
+
    goto start;
+}
+reward := reward.next;
+}
 }
 dilend
 
