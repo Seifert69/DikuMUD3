@@ -69,6 +69,7 @@ code
    ln := length(sl);
 	heartbeat := PULSE_SEC * 4;
 
+   priority;
    // Give the explanation
    while (i < ln)
    {
@@ -86,7 +87,10 @@ code
    i := i + 1;
 
 	if (command("nod"))
+   {
+      nopriority;
       return(pc);
+   }
 	else if (command("shake"))
 		goto no_quest;
    else
@@ -95,7 +99,10 @@ code
       {
          s := getword(argument);
          if ((left(s,3)=="yes") or (left(s,3)=="yup") or (left(s,3)=="aye") or (left(s,3)=="yez") or ((left(s,3)=="yea")) or (s=="y"))
+         {
+            nopriority;
       		return(pc);
+         }
          if ((left(s,2)=="no") or (s=="n"))
       		goto no_quest;
       }
@@ -110,12 +117,14 @@ code
    if (i > 7)
    {
       pc := null;
+      nopriority;
       return(pc);
    }
 
    goto loop;
 
 :no_quest:
+   nopriority;
    heartbeat := PULSE_SEC * 1;
    pause;
 	exec("sulk", self);
@@ -124,6 +133,7 @@ code
 	return(pc);
 
 :lostpc:
+   nopriority;
    heartbeat := PULSE_SEC * 1;
    pause;
 	exec("sigh", self);
@@ -170,6 +180,8 @@ code
 	pause;
 	heartbeat := PULSE_SEC * 4;
 
+   priority;
+
    // Give the explanation
    while (i < ln)
    {
@@ -186,6 +198,7 @@ code
    exd := s in pc.quests;
 
 :lostpc:
+   nopriority;
    return(exd);
 }
 dilend
@@ -341,6 +354,8 @@ code
 	pause;
 	heartbeat := PULSE_SEC * 4;
 
+   priority;
+
    // Give the explanation
    while (i < ln)
    {
@@ -365,13 +380,55 @@ code
       i := transfermoney(null, pc, gold);
       sendtext("You received " + moneystring(gold, TRUE) + "<br/>", pc);
    }
+   nopriority;
    return(pc);
 
    :lostpc:
+   nopriority;
    exec("say How rude!", self);
    return(u);
 }
 dilend
+
+
+dilbegin qstSimpleQuest(qname : string,
+                        qstAsk : stringlist,
+                        qstAccepted : stringlist,
+                        qstDescr : string,
+                        qstDone : stringlist,
+                        xp : integer, gold : integer);
+external
+   unitptr qstWaitForHero@quests(qname : string, pc : unitptr, sl : stringlist);
+   extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+   unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer);
+
+var
+   pc     : unitptr;
+   pot    : unitptr;
+   exdp   : extraptr;
+
+code
+{
+   heartbeat := PULSE_SEC *4;
+   
+   :start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+
+   pc := qstWaitForHero@quests(qname, activator, qstAsk);
+
+   if (pc != null)
+   {
+      exdp := qstAssign@quests(qname, pc, qstAccepted, qstDescr);
+      goto start;
+   }
+
+   pc := qstWaitDone@quests(qname, activator, qstDone, xp, gold);
+   goto start;
+}
+dilend
+
+
 
 %mobiles
 

@@ -9,6 +9,8 @@ END HEADER*/
 
 #include <macros.h>
 
+#define QUEST_JOHN            "Lumberjack"
+
 #define QUEST_RABBIT          "Rabbit Stew"
 #define QUEST_POT             "Mary's Pot"
 
@@ -2454,6 +2456,21 @@ code
    goto start;
 }
 dilend
+
+dilcopy qstSimpleQuest@quests(QUEST_JOHN,
+         {"say Hey I could use some help.",
+          "say You wouldn't happen to have a left over axe? I really could use one"},
+         {"say You're a real pal."},
+         "Find an axe for John the Lumberjack in Haon-Dor.",
+         {"thank $1N",
+          "emote wields your axe.",
+          "emote looks around for some trees to chop down."},
+          800, 1 * COPPER_MULT);
+
+dilcopy qstItemsWanted@quests(QUEST_JOHN, {"axe"},
+         {"say Thank you $1N, that's such a nice axe."},
+          "say Thank you $1N but I can't accept that.");
+
 
 dilcopy wander_zones@function ("@loadzone", 15, 0, 0);
 
