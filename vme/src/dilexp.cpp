@@ -2799,8 +2799,7 @@ void dilfe_fits(class dilprg *p)
         break;
     }
 
-    if (v->type == DILV_SP)
-        p->stack.push(v);
+    p->stack.push(v);
     delete v1;
     delete v2;
     delete v3;
