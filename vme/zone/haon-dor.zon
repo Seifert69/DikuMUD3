@@ -2553,7 +2553,7 @@ dilend
 
 // Part 1 of "The Rabbit Stew" Quest. Find a hero that'll take the quest
 // The program aquires new loyal PC subjects for the Rabbit Stew Quest
-//
+// ...
 dilbegin assign_stew();
 external
    unitptr qstWaitForHero@quests(qname : string, pc : unitptr, sl : stringlist);
