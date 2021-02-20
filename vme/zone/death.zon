@@ -229,12 +229,14 @@ heartbeat:=3;
    addextra (item.extra,{"$living_sym"},living_sym);
    dilcopy ("rot_head@death",item);
    // If corpse has a reward on it copy it to the head.
-  
- reward_exp := "$reward" in corpse.extra;
- if (reward_exp)
+ 
+   reward_exp := "$reward" in corpse.extra;
+ while (reward_exp)
  {
    addextra(item.extra, reward_exp.names,reward_exp.descr);
- }    
+   reward_exp := "$reward" in reward_exp.next;
+ }
+ 
    item.minv := 200;
    link(item, self.outside);
 
@@ -804,23 +806,14 @@ code
    //load Justice Database 
    jd := findsymbolic("database@justice");
   
-   //transfer reward infor to corpse if found. 
+ //transfer reward infor to corpse if found.
    reward_exp := "$reward" in self.extra;
-   if (reward_exp)
-   {
-     r_id := reward_exp.names.[1];
-     r_key := r_id;
-     jd_ptr := r_key in jd.extra;
-     if(jd_ptr)
-      {
-        addextra(crp.extra, jd_ptr.names,jd_ptr.descr);
-        subextra(jd.extra, r_key);
-      }
-    else
-     log("Justice: Unmatched reward extra found on "+self.name);
 
-     subextra(self.extra, "$reward");
-   }
+  while (reward_exp)
+       {
+          addextra(crp.extra, reward_exp.names,reward_exp.descr);
+          reward_exp := "$reward" in reward_exp.next;
+       }
 
    rltime:=realtime;
 
@@ -914,8 +907,8 @@ external
    make_corpse ();
    remove_aff();
    death_cry();
-   rem_db_entry@justice(criminal : unitptr, extra_type : string);
-
+   rem_db_entry@justice(criminal : unitptr, extra_type : string, juris: string);
+   integer  valid_extra@justice(criminal : unitptr, extra_type : string, juris : string);
 code
 {
    heartbeat:=3;
@@ -935,6 +928,12 @@ code
    sendtext("You are dead. R.I.P.<br/>",self);
    death_cry();
    make_corpse();
+
+   //Remove extras just Justice DB
+  if (valid_extra@justice(self, "$reward", "midgaard"))
+     rem_db_entry@justice(self,"$reward","midgaard");
+  if (valid_extra@justice(self, "$reward", "udgaard"))
+     rem_db_entry@justice(self,"$reward","udgaard");
 
    stop_fighting(self, null);
    self.position:=POSITION_DEAD;
@@ -1011,7 +1010,6 @@ external
    integer lose_exp(u:unitptr);
    gain_exp(u:unitptr,gain:integer);
    integer  valid_extra@justice(criminal : unitptr, extra_type : string);
-   rem_db_entry@justice(criminal : unitptr, extra_type : string);
 var
 	gain:integer;
         i:integer;
@@ -1030,9 +1028,6 @@ code
       dilcopy ("arena_death@arena()",self);
       quit;
    }
-    // If the character has a $arrest extra...delete it from the justice database
-    if(valid_extra@justice(self,"$arrest"))
-           rem_db_entry@justice(self,"$arrest");
 
    if (self.type==UNIT_ST_PC)
    {

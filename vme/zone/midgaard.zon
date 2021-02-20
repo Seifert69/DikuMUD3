@@ -995,48 +995,61 @@ dilend
 
 dilbegin fnpri(FN_PRI_RESCUE-1) jailstay(du : integer);
 external
-   jailbreak@justice(criminal : unitptr);
-   rem_db_entry@justice(criminal : unitptr, extra_type : string);
+   integer add_reward@justice(criminal_symname : string, criminal_idx : integer, crime_type : integer);
+   rem_db_entry@justice(criminal : unitptr, extra_type : string, juris : string);
    getfrom_safe(prisoner : unitptr);
-
+   set_char_flags@justice(char : unitptr, setting : string);
 var
    sn : string;
    sz : string;
    jd : unitptr;
    id : string;
-  
+   juris : string; 
+   k : string;
+   gold : integer;
+   g : string;
 code
 {
    heartbeat := PULSE_SEC * SECS_PER_MUD_HOUR;
-   
+   juris := self.outside.zoneidx;
    sn := self.outside.nameidx;
    sz := self.outside.zoneidx;
    jd := findsymbolic("database@justice");
-
-   // Change player arrest descr to reflect that the char is in jail.
+   id := "$reward "+ self.symname + " " + itoa(self.idx) + " "+ juris;
+   k := "$reward "+ juris;
+     
+// Change player arrest descr to reflect that the char is in jail.
    //
-   if("$arrest" in self.extra)
+jd := findsymbolic("database@justice");
+   
+if( "$reward" in self.extra)
    {
-      id := self.extra.["$arrest"].names.[1];
+      jd.extra.[id].names.[4] := "-1";
+      self.extra.[k].names.[4] := "-1";
       jd.extra.[id].descr := self.name+" is currently serving time in jail.";
    }
 
  
   :loop:
    pause;
-
-   if (sn != self.outside.nameidx)
+   
+if (sn != self.outside.nameidx)
    {  
       //player has escaped from jail
-      jailbreak@justice(self);
+      jd := findsymbolic("database@justice");
+      jd.extra.[id].names.[4] := "65";
+      self.extra.[k].names.[4] := "65";
+      gold := atoi(jd.extra.[id].names.[2]); 
+      g := moneystring(gold,1); 
+      jd.extra.[id].descr := "A reward of " + g + " has been offered for the head of "+self.name;
+      set_char_flags@justice(self, "wanted");
+      log("Jailbreak: "+self.name+" has escaped from the "+ juris +" jail."); 
       quit;
    }
-
-   if("$arrest" in self.extra)
+   if("$reward" in self.extra)
    {
-      jd := findsymbolic("database@justice"); 
-      id := self.extra.["$arrest"].names.[1];
-      log(id);    
+      jd := findsymbolic("database@justice");
+      jd.extra.[id].names.[4] := "-1";
       jd.extra.[id].descr := self.name+" is currently serving time in jail. "+itoa(du)+" hours remaining";
    }
 
@@ -1071,10 +1084,8 @@ code
        A_ALWAYS, self, null, null, TO_CHAR);
    getfrom_safe(self);
    link(self, findroom("accuse_room@" + sz));
-   self.crimes := self.crimes / 2;
-   rem_db_entry@justice(self, "$arrest");
-   set(self.charflags, CHAR_PROTECTED);
-   unset(self.charflags, CHAR_OUTLAW);
+   rem_db_entry@justice(self, "$reward", juris);
+   set_char_flags@justice(self, "arrest");
    quit;
 }
 dilend
@@ -1131,8 +1142,12 @@ dilbegin fnpri(FN_PRI_RESCUE-1) arrest_check(office : string);
 external
    guard_arrest(office : string, prisoner : unitptr);
    cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+   integer check_outlaw@justice(char : unitptr, juris : string);
+   string get_juris@justice();
 var
   u : unitptr;
+  outlaw_status : integer;
+  juris : string;
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or
@@ -1140,16 +1155,20 @@ code
 
    :loop:
    wait(SFB_CMD, activator.charflags & CHAR_OUTLAW);
+   juris := get_juris@justice();
    if (activator == self)
       goto loop;
+   outlaw_status := check_outlaw@justice(activator, juris);
+ if (outlaw_status == 0)
+      goto loop; 
 
-   u := equipment(activator,  WEAR_WRIST_R);
+  u := equipment(activator,  WEAR_WRIST_R);
 
    if (u)
      if ((u.nameidx == "cuffs") and (u.zoneidx == "midgaard"))
        goto loop;
 
-   if (activator.charflags & CHAR_PROTECTED)
+   if (outlaw_status == 1)  //if (activator.charflags & CHAR_PROTECTED)
    {
       u := load("cuffs@midgaard");
 
@@ -1294,7 +1313,7 @@ dilbegin captain(jailname : string);
 external
    integer walk_room@function (s:string,i:integer);
    putin_safe(prisoner : unitptr);
-
+   integer add_reward@justice(criminal_symname : string, criminal_idx : integer, crime_type: integer);
 var
    tf:integer;
    prisoner : unitptr;
@@ -1346,9 +1365,6 @@ code
 
    dilcopy("jailstay@midgaard(12)", prisoner);
 
-   /* Arrested players are wanted dead while in prison */
-   unset(prisoner.charflags, CHAR_PROTECTED);
-   set(prisoner.charflags, CHAR_OUTLAW);
 
    link(prisoner, findroom(jailname));
 
