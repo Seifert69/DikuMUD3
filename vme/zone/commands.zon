@@ -4562,57 +4562,57 @@ dilend
 
 dilbegin do_quests(arg : string);
 var
-ex : extraptr;
-str : string;
+   ex : extraptr;
+   str : string;
+
 code
 {
+   ex := self.quests;
+   str := "";
 
-ex := self.quests;
-str := "";
+   if(arg != "")
+   {
+      sendtext("Quests containing '"+arg+"'.<br/>", self);
 
-if(arg != "")
-{
+      while(ex != null)
+      {
+         if ((left(ex.names.[0],1) != "$") and (arg in ex.names.[0]))
+         {
+            if (ex.descr == "")
+               str := str+"<div class='cpy'>"+ex.names.[0]+"</div><br/>";
+            else
+               str := str+"<div class='cpy'>"+ex.names.[0]+"</div>: "+ex.descr+"<br/>";
+         }
 
- sendtext("Quests containing '"+arg+"'.<br/>", self);
+         ex := ex.next;
+      }
 
- while(ex != null)
- {
-  if((left(ex.names.[0],1) != "$") and
-     (arg in ex.names.[0]))
-  {
+      if (str == "") str := "None.<br/>";
 
-   str := str+ex.names.[0]+"<br/>";
-  }
+      str := textformat(str);
+      pagestring(str,self);
+   }
+   else
+   {
+      while(ex != null)
+      {
+         if (left(ex.names.[0],1) != "$")
+         {
+            if (ex.descr == "")
+               str := str+"<div class='cpy'>"+ex.names.[0]+"</div><br/>";
+            else
+               str := str+"<div class='cpy'>"+ex.names.[0]+"</div>: "+ex.descr+"<br/>";
+         }
+         ex := ex.next;
+      }
 
-  ex := ex.next;
- }
+      if(str == "") str := "You have not completed any quests.<br/>";
 
- if(str == "") str := "None.<br/>";
-
- str := textformat(str);
- pagestring(str,self);
-}
-else
-{
-
-while(ex != null)
-{
-
- if(left(ex.names.[0],1) != "$")
- {
-  str := str+ex.names.[0]+"<br/>";
- }
- ex := ex.next;
-}
-
-if(str == "") str := "You have not completed any quests.<br/>";
-
-str := textformat(str);
-pagestring(str,self);
-
-}
-send_done("quests",self,null,null,0,arg,null);
-quit;
+      str := textformat(str);
+      pagestring(str,self);
+   }
+   send_done("quests",self,null,null,0,arg,null);
+   quit;
 }
 dilend
 

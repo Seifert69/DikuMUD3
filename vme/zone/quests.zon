@@ -1,0 +1,444 @@
+/*
+filename    quest
+password    
+changedby   Papi
+EmailAdd     HTMLCOMPILED
+request     compile
+version     1
+END HEADER*/
+
+/*
+2021 Helpers for quests
+
+*/
+
+%zone quests
+
+#include <macros.h>
+
+lifespan 60
+reset RESET_ANYHOW
+creators {"Papi"}
+
+notes
+"Helper function for building quests"
+
+%dil
+
+// Try to see if "pc" is willing to take on this quest
+//
+// pc : The player that is the target of this quest request
+// expl: list of strings for the NPC to execute to explain the quest.
+//       YOu can use $ variables, e.g. $1n. $1 = player, $3 = self. Strings formatted with "TO_CHAR", "SOMEONE"
+//       The very last string should be "nod to accept..." as it will be repeated
+//   {"say $1n, do you want this quest?", "jump", "hug $1n", "say <a cmd='"'>nod</a> if you wish to accept"}
+//
+// Return unitptr to the hero that wants the quest
+//
+dilbegin unitptr qstWaitHero(qname : string, pc : unitptr, sl : stringlist);
+var
+   i : integer;
+   ln : integer;
+   s : string;
+
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+   on_activation((pc.position <= POSITION_SLEEPING) or (pc.position == POSITION_FIGHTING), skip);
+
+   if (((qname+" Ongoing") in pc.quests) or ((qname+" Complete") in pc.quests))
+   {
+      pc := null;
+      return(pc);
+   }
+
+	heartbeat := PULSE_SEC * 1;
+
+   // Only deal with visible creatures
+   if (not visible(self, pc))
+   {
+      pause;
+      exec("peer", self);
+      pc := null;
+      return(pc);
+   }
+
+   secure(pc, lostpc);
+
+   i := 0;
+   ln := length(sl);
+	heartbeat := PULSE_SEC * 4;
+
+   priority;
+   // Give the explanation
+   while (i < ln)
+   {
+      s := sact(sl.[i], A_SOMEONE, pc, null, self, TO_CHAR);
+      pause;
+      exec(s, self);
+      i := i + 1;
+   }
+
+   i := 0;
+:loop:
+   // Now wait for an acceptance
+	wait(SFB_CMD, activator == pc);
+
+   i := i + 1;
+
+	if (command("nod"))
+   {
+      nopriority;
+      return(pc);
+   }
+	else if (command("shake"))
+		goto no_quest;
+   else
+   {
+      if (command("say"))
+      {
+         s := getword(argument);
+         if ((left(s,3)=="yes") or (left(s,3)=="yup") or (left(s,3)=="aye") or (left(s,3)=="yez") or ((left(s,3)=="yea")) or (s=="y"))
+         {
+            nopriority;
+      		return(pc);
+         }
+         if ((left(s,2)=="no") or (s=="n"))
+      		goto no_quest;
+      }
+   }
+
+   if ((i == 2) or (i == 5))
+   {
+      s := sact(sl.[ln-1], A_SOMEONE, pc, null, self, TO_CHAR);
+      exec(s, self);         
+   }
+
+   if (i > 7)
+   {
+      pc := null;
+      nopriority;
+      return(pc);
+   }
+
+   goto loop;
+
+:no_quest:
+   nopriority;
+   heartbeat := PULSE_SEC * 1;
+   pause;
+	exec("sulk", self);
+	unsecure(pc);
+   pc := null;
+	return(pc);
+
+:lostpc:
+   nopriority;
+   heartbeat := PULSE_SEC * 1;
+   pause;
+	exec("sigh", self);
+   pc := null;
+	return(pc);
+}
+dilend
+
+
+
+// pc : The player that is the target of this explanation
+// expl: list of strings for the NPC to execute to explain the quest.
+//       YOu can use $ variables, e.g. $1n. $1 = self, $3 = player. Strings formatted with "TO_CHAR", "SOMEONE"
+//       The very last string should be "nod to accept..." as it will be repeated
+//   {"say $1n, do you want this quest?", "jump", "hug $1n", "say <a cmd='"'>nod</a> if you wish to accept"}
+//
+// Return unitptr to the hero that wants the quest
+//
+dilbegin extraptr qstAssign(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+var
+   i : integer;
+   ln : integer;
+   s : string;
+   exd : extraptr;
+
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+   heartbeat := PULSE_SEC * 3;
+   exd := null;
+
+	secure(pc, lostpc);
+
+   // Only deal with visible creatures
+   if (not visible(self, pc))
+   {
+      exec("peer", self);
+      return(exd);
+   }
+
+   i := 0;
+   ln := length(sl);
+	pause;
+	heartbeat := PULSE_SEC * 4;
+
+   priority;
+
+   // Give the explanation
+   while (i < ln)
+   {
+      s := sact(sl.[i], A_SOMEONE, pc, null, self, TO_CHAR);
+      exec(s, self);
+      pause;
+      i := i + 1;
+   }
+
+   s := qname + " Ongoing";
+   sl := null;
+   addstring(sl, s);
+   addextra(pc.quests, sl, qdescr);
+   exd := s in pc.quests;
+
+:lostpc:
+   nopriority;
+   return(exd);
+}
+dilend
+
+
+// Add this to a quest NPC that's waiting to "get items" from a player.
+// The items received will be destroyed, and incorrect items given back.
+//
+// Parameters:
+//   qname: The 'core' name of the quest. E.g. "Stew Quest".
+//          Program will react to any PC which has a "Stew Quest Ongoing".
+//
+//   itemsl: String list of items to accept. Either the symname or a substring. 
+//           E.g. {"mushroom", "black_berries@haon_dor", "garlic", "corpse of rabbit"};
+//           For non-symnames if any name in the given item matches the substrings in 
+//           the list then it's a match.  
+//
+// thanksl : String list of thank you statements / actions, one matching each item above. 
+//             {"say Thank you $3n, these are really nice mushrooms.",
+//             "say Thank you $3n these are really nice berries.",
+//             "say Thank you $3n this is really some nice garlic.",
+//             "say Look at all the blood, $3n! Well I thank you anyway."};
+//             
+// thanksl : $1 = pc, $2 = item, $3 = self
+//
+dilbegin fnpri(FN_PRI_MISSION+5) integer qstItemsWanted(qname : string, itemsl : stringlist,
+                                                     thanksl : stringlist, nothanks : string);
+var
+  pc     : unitptr;
+  item   : unitptr;
+  exdp   : extraptr;
+  u      : unitptr;
+  i      : integer;
+  ln     : integer;
+  s      : string;
+
+code
+{
+   // Must be added 
+   //
+   if (nothanks != "")
+   {
+      s := "qstItemNoThank@quests(" + nothanks + ")";
+      dilcopy(s, self);
+   }
+
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+   :start:
+   wait(SFB_DONE, command("give") and (target == self));
+
+   exdp := (qname + " Ongoing") in activator.quests;
+
+   if (not exdp)
+      goto start;
+
+   pc := activator;
+   item := medium;
+
+   i := 0;
+   ln := length(itemsl);
+
+   while (i < ln)
+   {
+      if ((itemsl.[i] == item.symname) or (itemsl.[i] in item.names))
+      {
+         addstring(exdp.names, itemsl.[i]);
+         s := sact(thanksl.[i], A_SOMEONE, pc, item, self, TO_CHAR);
+         exec(s, self);
+         s := sact("<br/>You've given $3m $2n", A_SOMEONE, pc, item, self, TO_CHAR);
+         exdp.descr := exdp.descr + s;
+         destroy(item);
+         block;
+         goto checkit;
+      }
+
+      i := i + 1;
+   }
+
+   // If there is no match, don't give it back. 
+   // If item is to be given back then that's a separate function at the end
+   //
+
+   goto start;
+
+:checkit:
+   // Check if we have all the items
+   i := 0;
+   ln := length(itemsl);
+
+   while (i < ln)
+   {
+      if (not (itemsl.[i] in exdp.names))
+         goto start;
+      i := i + 1;
+   }
+   if (not ("$done" in exdp.names))
+      addstring(exdp.names, "$done");
+}
+dilend
+
+
+
+dilbegin unique fnpri(FN_PRI_MISSION+6) qstItemNoThank(nothanks : string);
+var
+   s : string;
+code
+{
+:start:
+   wait(SFB_DONE, command("give") and (target == self));
+
+   link(medium, activator);
+   s := sact(nothanks, A_SOMEONE, activator, medium, self, TO_CHAR);
+   exec(s, self);
+
+   goto start;
+}
+dilend
+
+
+dilbegin unitptr qstWaitDone(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer);
+var
+   pcname : string;
+   u      : unitptr;
+   i      : integer;
+   ln     : integer;
+   exdp   : extraptr;
+   s      : string;
+
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+   u := null;
+
+   :start:
+   if ((qname + " Complete") in activator.quests)
+     return(u);
+
+   exdp := (qname + " Ongoing") in activator.quests;
+
+   if (not exdp)
+      return(u);
+
+   if (not ("$done" in exdp.names))
+      return(u);
+
+   // We collected all the items
+   secure(pc, lostpc);
+
+   i := 0;
+   ln := length(sl);
+	pause;
+	heartbeat := PULSE_SEC * 4;
+
+   priority;
+
+   // Give the explanation
+   while (i < ln)
+   {
+      s := sact(sl.[i], A_SOMEONE, pc, null, self, TO_CHAR);
+      exec(s, self);
+      pause;
+      i := i + 1;
+   }
+
+   subextra(pc.quests, qname + " Ongoing");
+   s := qname + " Complete";
+   sl := null;
+   addstring(sl, s);
+   addextra(pc.quests, sl, "");
+   if (xp > 0)
+   {
+      experience(xp, pc);
+      sendtext("You earned " + itoa(xp) + " experience.<br/>", pc);
+   }
+   if (gold > 0)
+   {
+      i := transfermoney(null, pc, gold);
+      sendtext("You received " + moneystring(gold, TRUE) + "<br/>", pc);
+   }
+   nopriority;
+   return(pc);
+
+   :lostpc:
+   nopriority;
+   exec("say How rude!", self);
+   return(u);
+}
+dilend
+
+
+dilbegin qstSimpleQuest(qname : string,
+                        qstAsk : stringlist,
+                        qstAccepted : stringlist,
+                        qstDescr : string,
+                        qstDone : stringlist,
+                        xp : integer, gold : integer);
+external
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist);
+   extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+   unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer);
+
+var
+   pc     : unitptr;
+   pot    : unitptr;
+   exdp   : extraptr;
+
+code
+{
+   heartbeat := PULSE_SEC *4;
+   
+   :start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+
+   pc := qstWaitHero@quests(qname, activator, qstAsk);
+
+   if (pc != null)
+   {
+      exdp := qstAssign@quests(qname, pc, qstAccepted, qstDescr);
+      goto start;
+   }
+
+   pc := qstWaitDone@quests(qname, activator, qstDone, xp, gold);
+   goto start;
+}
+dilend
+
+
+
+%mobiles
+
+zombie
+names {"zombie"}
+title "the zombie"
+descr "A mindless zombie is here."
+
+/* Test scripts */
+end
+
+
+%end

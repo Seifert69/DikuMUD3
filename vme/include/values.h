@@ -144,9 +144,6 @@ END HEADER*/
 
 #define QUEST_WW              "Wight warrens quest"
 #define QUEST_WELMAR          "King Welmar Quest"
-#define QUEST_RABBIT_ONGOING  "Rabbit Stew Ongoing"
-#define QUEST_RABBIT_COMPLETE "Rabbit Stew Complete"
-#define QUEST_POT_COMPLETE    "Mary's Pot Retrieved"
 
 #define MIN_HUMANOID_PC      0
 #define RACE_HUMAN           0     /* PC race */
