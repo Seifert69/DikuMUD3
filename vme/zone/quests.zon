@@ -35,7 +35,7 @@ notes
 //
 // Return unitptr to the hero that wants the quest
 //
-dilbegin unitptr qstWaitForHero(qname : string, pc : unitptr, sl : stringlist);
+dilbegin unitptr qstWaitHero(qname : string, pc : unitptr, sl : stringlist);
 var
    i : integer;
    ln : integer;
@@ -398,7 +398,7 @@ dilbegin qstSimpleQuest(qname : string,
                         qstDone : stringlist,
                         xp : integer, gold : integer);
 external
-   unitptr qstWaitForHero@quests(qname : string, pc : unitptr, sl : stringlist);
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist);
    extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer);
@@ -415,7 +415,7 @@ code
    :start:
    wait(SFB_CMD, (activator.type == UNIT_ST_PC));
 
-   pc := qstWaitForHero@quests(qname, activator, qstAsk);
+   pc := qstWaitHero@quests(qname, activator, qstAsk);
 
    if (pc != null)
    {
