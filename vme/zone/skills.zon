@@ -457,9 +457,8 @@ dilbegin awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg
 external
    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
-   set_witness@justice(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer);
-   add_crime@justice(criminal : unitptr, vict : unitptr, crime_type: integer, crime_no : integer, crime_clear : integer);
-
+   set_witness@justice(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer, victimname : string);
+   integer add_reward@justice(criminal_symname : string, criminal_idx : integer, crime_type: integer); 
 var
    observer : unitptr;
    hm       : integer;
@@ -495,9 +494,9 @@ code
 
                if (count == 0)
                {
-                  add_crime@justice(thief, victim, CRIME_STEALING, crimeno, PULSE_SEC * 60 * 60);
+                  add_reward@justice(thief.symname, thief.idx, CRIME_STEALING);
                }
-               set_witness@justice(thief, observer, crimeno, CRIME_STEALING, TRUE);
+               set_witness@justice(thief, observer, crimeno, CRIME_STEALING, TRUE, observer.name);
                count := count + 1;
             }
          }
