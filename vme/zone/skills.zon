@@ -458,7 +458,6 @@ external
    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
    set_witness@justice(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer, victimname : string);
-   integer add_reward@justice(criminal_symname : string, criminal_idx : integer, crime_type: integer); 
 var
    observer : unitptr;
    hm       : integer;
@@ -492,10 +491,11 @@ code
                if ((observer.type == UNIT_ST_NPC) and (not isset(observer.charflags , CHAR_PROTECTED)))
                   continue;
 
-               if (count == 0)
-               {
-                  add_reward@justice(thief.symname, thief.idx, CRIME_STEALING);
-               }
+              // No longer need to add a crime.  $reward is created after thief is accused.
+              //if (count == 0)
+              // {
+              //    add_reward@justice(thief.symname, thief.idx, CRIME_STEALING);
+              //  }
                set_witness@justice(thief, observer, crimeno, CRIME_STEALING, TRUE, observer.name);
                count := count + 1;
             }
