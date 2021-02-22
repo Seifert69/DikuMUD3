@@ -10,6 +10,7 @@ END HEADER */
 #include <macros.h>
 
 #define _POLICE_SCHOOL /* not a real guild, can have 2 simultaneously */
+#define QUEST_CITIZEN_MIDGAARD "Citizen of Midgaard"
 
 %zone midgaard
 title "Midgaard City@Mainland"
@@ -8160,7 +8161,94 @@ M_AVG_HUMAN(15, SEX_MALE)
 alignment 900
 money 5 IRON_PIECE
 
-dilcopy reward_give@function();
+
+// Mary waits for these four items for the Stew quest
+//
+dilcopy qstItemsWanted@quests(QUEST_CITIZEN_MIDGAARD, {"platinum piece"},
+            {"say Thank you $1N, these citizen taxes will be put to good use."},
+            "say Thank you $1N but I can't accept that. I need 1 platinum piece.");
+
+// Give a chance to grant citizenship
+//
+dilbegin citizenship();
+external
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist);
+   extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+   integer check_protected@justice(char : unitptr, juris : string);
+var
+   pc     : unitptr;
+   pot    : unitptr;
+   exdp   : extraptr;
+
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*4;
+
+   :start:
+   unsecure(pc);
+   wait(SFB_CMD, activator.type == UNIT_ST_PC);
+
+   pc := activator;
+   secure(pc, start);
+
+   if (check_protected@justice(pc, self.zoneidx) == 1)
+      goto start;
+
+   pc := qstWaitHero@quests(QUEST_CITIZEN_MIDGAARD, pc, 
+      {"say Greetings $1N and welcome to the grand city of Midgaard",
+       "say So you'd like to become a protected citizen under the laws of Midgaard?"});
+
+   if (pc == null)
+      goto start;
+
+   // Quest accepted
+   exdp := qstAssign@quests(QUEST_CITIZEN_MIDGAARD, pc, 
+      {"say To become a citizen is not to be taken lightly. It is an honor bestowed on the few.", 
+       "say $1N, you must hereby pledge to become a law abiding citizen,",
+       "say and to prove no one is above the law you must pay me 10 platinum",
+       "cough",
+       "say to be spent solely on the city of Midgaard of course.",
+       "emote puts his hand forward and awaits your payment"},
+      "Bring the Mayor of Midgaard 10 platinum pieces to become a citizen.");
+   goto start;
+}
+dilend
+
+
+// Get items to complete Stew quest
+//
+dilbegin citizenDone();
+external
+   unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer);
+var
+  pcname : string;
+  item   : unitptr;
+  pc     : unitptr;
+  i      : integer;
+  exdp   : extraptr;
+
+code
+{
+   :start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+
+   pc := qstWaitDone@quests(QUEST_CITIZEN_MIDGAARD, activator, 
+            {"say Congratulations, $1N, and welcome to Midgaard.",
+             "smile $1N"}, 0, 0);
+
+   if (pc == null)
+      goto start;
+
+   // qitems_ deletes items received 
+   log(pc.symname + "became a citizen of Midgaard.");
+   addextra(pc.extra, {"$protected midgaard"}, "Paid 1 PP to the Mayor");
+
+   goto start;
+}
+dilend
+
 
 #define GUILD_NAMES  {"Udgaard Fighter", "Udgaard Thief", "Udgaard Healer", \
                "Udgaard Conjurer", "Nymgaard Ranger", "Midgaard Paladin", "Midgaard Sorcerer", \
