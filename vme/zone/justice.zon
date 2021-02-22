@@ -611,19 +611,49 @@ dilbegin rem_db_entry(criminal : unitptr, extra_type : string, juris : string);
 var
 jd : unitptr;
 jd_key : string;
+nextdude : extraptr;;
+jd_exp : extraptr;
+ch_exp : extraptr;
 ch_key : string;
-
 code 
 {
   jd := findsymbolic("database@justice");
- 
-  jd_key := "$reward "+criminal.symname+" "+itoa(criminal.idx)+" "+juris;
+if ( juris == "all")
+ {
+jd_key := "$reward "+criminal.symname+" "+itoa(criminal.idx);
+jd_exp := jd.extra;
+  while (jd_exp)
+  {
+    nextdude := jd_exp.next;
+ if (left(jd_exp.name, 7) == "$reward")  
+   { 
+     if (jd_key == jd_exp.names.[0])
+     subextra(jd.extra, jd_exp.names.[0]); 
+   } 
+    jd_exp := nextdude;
+  }  
+ log("Cleared all entries from the database for "+criminal.name);
+ ch_exp := criminal.extra;
+ while (ch_exp)
+  {
+   nextdude := ch_exp.next;
+   if ("$reward" in ch_exp.name)
+      subextra(criminal.extra, ch_exp.names.[0]);
+   ch_exp := nextdude;
+  }
+log("Cleared all char reward extras from "+criminal.name);
+return;
+}
+else
+{
+jd_key := "$reward "+criminal.symname+" "+itoa(criminal.idx)+" "+juris;
   ch_key := "$reward "+juris;
   subextra(jd.extra , jd_key);
   subextra(criminal.extra, ch_key);
   sendto("save", jd);
   log("Reward extra was removed from Justice database for "+criminal.name+ " in "+juris);
   return;
+}
 }
 dilend
 
@@ -1157,9 +1187,8 @@ code
       attacker is protected and is attacking someone non-protected
       then go in action */
    
- //if ((not isset(att.charflags,CHAR_SELF_DEFENCE)) and (check_protected@justice(def,juris)) and (not isset(def.charflags,CHAR_LEGAL_TARGET))
- //     or (not( check_protected@justice(att,juris))) and (check_protected@justice(def,juris)))
-
+// if ((not isset(att.charflags,CHAR_SELF_DEFENCE)) and (check_protected@justice(def,juris)) and (not isset(def.charflags,CHAR_LEGAL_TARGET))
+//      or (not( check_protected@justice(att,juris))) and (check_protected@justice(def,juris)))
 if ((not isset(att.charflags,CHAR_SELF_DEFENCE)) and (isset(def.charflags, CHAR_PROTECTED)) and (not isset(def.charflags,CHAR_LEGAL_TARGET))
       or (not isset(att.charflags,CHAR_PROTECTED)) and (isset(def.charflags,CHAR_PROTECTED)))
       return(TRUE);
