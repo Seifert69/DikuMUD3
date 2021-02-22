@@ -930,10 +930,7 @@ code
    make_corpse();
 
    //Remove extras just Justice DB
-  if (valid_extra@justice(self, "$reward", "midgaard"))
-     rem_db_entry@justice(self,"$reward","midgaard");
-  if (valid_extra@justice(self, "$reward", "udgaard"))
-     rem_db_entry@justice(self,"$reward","udgaard");
+     rem_db_entry@justice(self,"$reward","all");
 
    stop_fighting(self, null);
    self.position:=POSITION_DEAD;
