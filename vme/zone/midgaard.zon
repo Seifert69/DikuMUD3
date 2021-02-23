@@ -1013,17 +1013,18 @@ code
 {
    heartbeat := PULSE_SEC * SECS_PER_MUD_HOUR;
    juris := self.outside.zoneidx;
-   sn := self.outside.nameidx;
-   sz := self.outside.zoneidx;
+   sn := self.outside.nameidx; // Get the jail symbolic name
+   sz := self.outside.zoneidx; // Get the jail symbolic zone, this is also the jurisdiction
+
    jd := findsymbolic("database@justice");
    id := "$reward "+ self.symname + " " + itoa(self.idx) + " "+ juris;
    k := "$reward "+ juris;
      
-// Change player arrest descr to reflect that the char is in jail.
+   // Change player arrest descr to reflect that the char is in jail.
    //
-jd := findsymbolic("database@justice");
+   jd := findsymbolic("database@justice");
    
-if( "$reward" in self.extra)
+   if( "$reward" in self.extra)
    {
       jd.extra.[id].names.[4] := "-1";
       self.extra.[k].names.[4] := "-1";
@@ -1033,10 +1034,9 @@ if( "$reward" in self.extra)
  
   :loop:
    pause;
-   
-if (sn != self.outside.nameidx)
-   {  
-      //player has escaped from jail
+   if (sn != self.outside.nameidx)
+   {
+      // Player has escaped from jail
       jd := findsymbolic("database@justice");
       jd.extra.[id].names.[4] := "65";
       self.extra.[k].names.[4] := "65";
@@ -1047,6 +1047,7 @@ if (sn != self.outside.nameidx)
       log("Jailbreak: "+self.name+" has escaped from the "+ juris +" jail."); 
       quit;
    }
+
    if("$reward" in self.extra)
    {
       jd := findsymbolic("database@justice");
