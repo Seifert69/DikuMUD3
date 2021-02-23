@@ -10953,7 +10953,7 @@ code
    while (tgt.type == UNIT_ST_PC)
    {
 
-      if (check_outlaw@justice(tgt, "midgaard"))
+      if (check_outlaw@justice(tgt, "midgaard") == 2)
         if (tgt.level < 200)
            goto gotone;
       tgt := tgt.gnext;
