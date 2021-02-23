@@ -1001,8 +1001,7 @@ external
    getfrom_safe(prisoner : unitptr);
    set_char_flags@justice(char : unitptr, setting : string);
 var
-   sn : string;
-   sz : string;
+   sname : string;
    jd : unitptr;
    id : string;
    juris : string; 
@@ -1013,8 +1012,7 @@ code
 {
    heartbeat := PULSE_SEC * SECS_PER_MUD_HOUR;
    juris := self.outside.zoneidx;
-   sn := self.outside.nameidx; // Get the jail symbolic name
-   sz := self.outside.zoneidx; // Get the jail symbolic zone, this is also the jurisdiction
+   sname := self.outside.symname; // Get the jail symname
 
    jd := findsymbolic("database@justice");
    id := "$reward "+ self.symname + " " + itoa(self.idx) + " "+ juris;
@@ -1034,7 +1032,7 @@ code
  
   :loop:
    pause;
-   if (sn != self.outside.nameidx)
+   if (sname != self.outside.symname)
    {
       // Player has escaped from jail
       jd := findsymbolic("database@justice");
@@ -1085,7 +1083,7 @@ code
    act("Your term is over! You are thrown out of the jail and sent home.",
        A_ALWAYS, self, null, null, TO_CHAR);
    getfrom_safe(self);
-   link(self, findroom("accuse_room@" + sz));
+   link(self, findroom("accuse_room@" + juris));
    rem_db_entry@justice(self, "$reward", juris);
    set_char_flags@justice(self, "arrest");
    quit;
