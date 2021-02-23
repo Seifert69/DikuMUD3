@@ -159,71 +159,66 @@ The following two dils are commands that had to be modified to work for death.
 */
 // 2021 - heads now carry an extra "$living_sym" that contains the symname of it's
 // host in life. This is useful for quests, and stuff.
+// do_decapitate
 dilbegin decap(arg : string); /* Decapitating corpses */
 external
-unitptr find_here@commands (s:string);
+   unitptr find_here@commands (s:string);
 
 var
    item      : unitptr;
    corpse    : unitptr;
- reward_exp : extraptr;
-
+   reward_exp : extraptr;
+   nextdude   : extraptr;
    temp_lst  : stringlist;
-	 temp_str2:string;
+   temp_str2:string;
    temp_str  : string;
-
    test_expt : extraptr;
    headless:string;
    chk : integer;
    living_sym : string;
+
 code
 {
-heartbeat:=3;
+   heartbeat:=3;
    if (arg == "")
    {
-      act("What corpse do you wish to decapitate?",
-          A_ALWAYS, self, null, null, TO_CHAR);
-					quit;
+      act("What corpse do you wish to decapitate?", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
    }
 
    corpse := find_here@commands(arg);
 
-
    if ((not(corpse)) or (corpse.type != UNIT_ST_OBJ))
    {
-      act("No such corpse around.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-					quit;
+      act("No such corpse around.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
    }
 
    if ("headless" in corpse.outside_descr)
    {
-      act("Huh? That can't be done.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-					quit;
+      act("Huh? That can't be done.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
    }
 
    if ((corpse.nameidx != "corpse") or (corpse.zoneidx != "death"))
    {
-      act("Huh? That can't be done.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-					quit;
+      act("Huh? That can't be done.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
    }
-  chk := (corpse.value[4]);
-  if ( ((chk > RACE_CNIDARIA_MIN) and (chk <= RACE_CNIDARIA_MAX)) or
-       ((chk > RACE_PLANT_MIN) and (chk <= RACE_PLANT_MAX)) )
-  {
-   act("There is no head on that corpse silly!" ,
-    A_SOMEONE, self, null,null, TO_CHAR);
-   quit;
-  }
+
+   chk := (corpse.value[4]);
+   if ( ((chk > RACE_CNIDARIA_MIN) and (chk <= RACE_CNIDARIA_MAX)) or
+        ((chk > RACE_PLANT_MIN) and (chk <= RACE_PLANT_MAX)) )
+   {
+      act("There is no head on that corpse silly!" ,
+         A_SOMEONE, self, null,null, TO_CHAR);
+      quit;
+   }
 
 	living_sym := corpse.extra.["$living_sym"].descr;
 	
-   act("You brutally decapitate a corpse.",
-       A_ALWAYS, self, null, null, TO_CHAR);
-   act("$1n brutally decapitates a corpse.",
-       A_SOMEONE, self, null, null, TO_REST);
+   act("You brutally decapitate a corpse.", A_ALWAYS, self, null, null, TO_CHAR);
+   act("$1n brutally decapitates a corpse.", A_SOMEONE, self, null, null, TO_REST);
    item := load("head@death");
    addextra (item.extra,{"$head_time"},itoa(realtime));
    addextra (item.extra,{"$living_sym"},living_sym);
@@ -231,11 +226,13 @@ heartbeat:=3;
    // If corpse has a reward on it copy it to the head.
  
    reward_exp := "$reward" in corpse.extra;
- while (reward_exp)
- {
-   addextra(item.extra, reward_exp.names,reward_exp.descr);
-   reward_exp := "$reward" in reward_exp.next;
- }
+   while (reward_exp)
+   {
+      nextdude := "$reward" in reward_exp.next;
+      addextra(item.extra, reward_exp.names,reward_exp.descr);
+      subextra(corpse.extra, "$reward");
+      reward_exp := nextdude;
+   }
  
    item.minv := 200;
    link(item, self.outside);
@@ -266,10 +263,12 @@ heartbeat:=3;
    temp_str := getword(temp_str2);
    temp_str:=temp_str2;
    item.outside_descr := "The decapitated head of " + temp_str ;
+   addextra(item.extra, {""}, "The head has been severed from the body");
    headless:=left(corpse.title,length(corpse.title)-6);
    corpse.title:=headless+"headless corpse";
 
    corpse.outside_descr:="The headless corpse of "+temp_str;
+   addextra(corpse.extra, {""}, "The head has been severed from the body");
    item.value[2] := corpse.value[2];
    item.value[3] := corpse.value[3];
    quit;
