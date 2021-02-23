@@ -1006,8 +1006,8 @@ dilend
 
 dilbegin fnpri(FN_PRI_MISSION-1) accuse();
 external
- integer add_reward(criminal_symname : string, criminal_idx : integer, crime_type: integer);   
- string get_juris@justice();
+   integer add_reward(criminal_symname : string, criminal_idx : integer, crime_type: integer);   
+   string get_juris@justice();
 var
    args :stringlist;
    arg_count : integer;
@@ -1046,7 +1046,7 @@ code
 
    if (argument == "")
    {
-      act("$1n says, 'Who do you wish to accuse?'", A_SOMEONE, self, null, null, TO_ROOM);
+      // act("$1n says, 'Who do you wish to accuse?'", A_SOMEONE, self, null, null, TO_ROOM);
       block;
 
       // List the crimes you have witnessed
@@ -1124,19 +1124,21 @@ code
       goto start;
    }
 
-w_ptr := activator.extra;
-while (w_ptr)
+   w_ptr := activator.extra;
+   while (w_ptr)
    {
- if (left(w_ptr.names.[0], 8) == "$witness") 
+      if (left(w_ptr.names.[0], 8) == "$witness") 
       {
          if (w_ptr.names.[1] == criminal)
          {
             c_data := getwords(w_ptr.names.[0]);
-           if (c_data.[1] != juris)
-             goto notmyproblem;
+            if (c_data.[1] != juris)
+               goto notmyproblem;
             accused := findsymbolic(c_data.[2], atoi(c_data.[3]));
-              if (accused)
-                goto doaccuse;
+            if (accused)
+               goto doaccuse;
+            else
+               goto goneaccuse;
          }
       }
       w_ptr := w_ptr.next;
@@ -1144,22 +1146,39 @@ while (w_ptr)
 goto end;
 
 :doaccuse:
-         found := 1;
-         act("$1n says, 'Thank you very much $3N, I will stop $2t.'",
-                        A_SOMEONE, self, criminal, activator, TO_ROOM);
-         if (activator.alignment > -1000)
-           activator.alignment := activator.alignment +100;
-         subextra(activator.extra,w_ptr.names.[1]);
-        add_reward@justice(accused.symname, accused.idx, crime_type);    
-      block; 
-      goto start;  
-   
-   :notmyproblem:
-     act("$1n says, 'Sorry $3n, but this crime is out of my jurisdiction.'", A_SOMEONE, self, null, activator, TO_ROOM);
-     block;
-     goto start; 
+   found := 1;
+   act("$1n says, 'Thank you very much $3N, I will stop $2t.'", A_SOMEONE, self, criminal, activator, TO_ROOM);
+   if (activator.alignment > -1000)
+      activator.alignment := activator.alignment +100;
+   subextra(activator.extra,w_ptr.names.[0]);
+   add_reward@justice(accused.symname, accused.idx, crime_type);    
+   block; 
+   goto start;  
 
-  :end: 
+:goneaccuse: // Offline player or Dead monster
+   found := 1;
+   if ("@_players" in c_data.[2])
+   {
+      act("$1n says, 'Thank you very much $3N, it seems $2t is in another dimension, but we'll deal with it later.'", A_SOMEONE, self, criminal, activator, TO_ROOM);
+      // XXX Save a transfer reward on the board or load the player... MS TODO
+   }
+   else
+   {
+      act("$1n says, 'Thank you very much $3N, but it seems $2t is no longer amoung us. Perhaps you can bring me the head?'", A_SOMEONE, self, criminal, activator, TO_ROOM);
+   }
+   if (activator.alignment > -1000)
+      activator.alignment := activator.alignment + 100;
+   subextra(activator.extra, w_ptr.names.[0]);
+   add_reward@justice(c_data.[2], atoi(c_data.[3]), crime_type);
+   block; 
+   goto start;  
+
+:notmyproblem:
+   act("$1n says, 'Sorry $3n, but this crime is out of my jurisdiction.'", A_SOMEONE, self, null, activator, TO_ROOM);
+   block;
+   goto start; 
+
+:end:
    if (found == 0)
       act("$1n says, 'Sorry $3n, but I don't find your evidence convincing.'", A_SOMEONE, self, null, activator, TO_ROOM);
 
