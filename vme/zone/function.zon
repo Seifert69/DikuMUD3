@@ -98,8 +98,19 @@ poi_resist - removes any poison spells cast on mobs.
 
 
 dilbegin string do_color (arg : string);
+var
+	colors  : stringlist;
+	endings : stringlist;
+	buf		: string;
 code
 {
+	colors := {"&cr","&c+r","&br","&cn","&c+n","&bn","&cg","&c+g","&bg","&cy","&c+y","&by",
+				"&cb","&c+b","&bb","&cm","&c+m","&bm","&cc","&c+c","&bc","&cw","&c+w","&bw"};
+	endings := {"&d","&[default]"};
+	
+	
+	buf := arg;
+	
 	arg := replace("&amp;","&",arg);
 	arg := replace("&cr","<div class='cr'>",arg);
 	arg := replace("&c+r","<div class='cpr'>",arg);
@@ -127,6 +138,8 @@ code
 	arg := replace("&bw","<div class='bw'>",arg);
 	arg := replace("&[default]","</div>",arg);
 	arg := replace("&d","</div>",arg);
+	arg := replace("&n","<br>",arg);
+	
 	return(arg);
 }
 dilend
@@ -6319,13 +6332,13 @@ code
    heart := heartbeat;
 
    :start:
-   pause;
+   wait(SFB_TICK,command(CMD_AUTO_TICK));
 
    /* Make Sure we are in a legal wander zone.*/
    if (not(self.outside.zoneidx in zones_lst))
    {
       heartbeat := PULSE_SEC*300;
-      pause;
+      wait(SFB_TICK,command(CMD_AUTO_TICK));
       heartbeat:=heart;
       goto start;
    }
@@ -6338,7 +6351,7 @@ code
       {
          heartbeat := 4 * PULSE_SEC;
          exec("stand", self);
-         pause;
+         wait(SFB_TICK,command(CMD_AUTO_TICK));
          heartbeat:=heart;
       }
       goto start;
@@ -6367,7 +6380,7 @@ code
       :endwhi:
       x:=x+1;
    }
-   pause;
+   wait(SFB_TICK,command(CMD_AUTO_TICK));
    x:=length(dirlist);
    if (x<1)
    {
@@ -6381,7 +6394,7 @@ code
    dir:=dirlist.[x];
 
    dir_string:=dirstring (dir);
-   pause;
+   wait(SFB_TICK,command(CMD_AUTO_TICK));
 
    heartbeat := heart;
    if (doors == TRUE)
