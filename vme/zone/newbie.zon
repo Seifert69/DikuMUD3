@@ -3386,10 +3386,24 @@ extra {}
                   Attention Newbies<br/>
                   ---------------------<br/>
 <br/>
-Valhalla offers an automated Newbie Guide Tour to help you on your<br/>
-journeys through the early years! The guide will take you on a tour of<br/>
-Udgaard and show you some places you might find of interest, after which<br/>
-he will reward you with some experience for your progress. At any<br/>
+Valhalla runs the latest release (generally update daily) of the DIKU3 MUD Engine.
+
+We are now integrated with Discord! Many of our comm channels provide real-time 
+two-way dialog between Valhalla and Discord. Please feel free to join the community 
+with the following link: https://discord.gg/cN7B3ZnY9y <br><br>
+
+You have been automatically enrolled in the 'newbie' comm channel. To chat with 
+players both logged into Valhalla and on Discord, simply try typing: <br><br>
+
+newbie hello to Valhalla and Discord!<br><br>
+
+Valhalla offers both an automated Newbie Guide Tour, as well as a <br/>
+quest-based newbie experience to help you get started. <br><br>
+
+The quest-based newbie experience starts one room to the south. Just speak to <br>
+Boldin and he will help you along. The automated guide will take you <br/>
+through Udgaard and show you some places you might find of interest, <br/>
+after which he will reward you with some experience for your progress. At any<br/>
 time while you are level 3, 4 or 5 and have not completed the Newbie<br/>
 Quest, just simply say <a cmd='say #'>help me newbie guide</a> wherever you are.<br/>
 The guide will respond if he is not busy helping others,<br/>
