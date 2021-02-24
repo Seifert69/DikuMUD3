@@ -861,7 +861,7 @@ code
 	while (i < 13)
 	{
 		i := i+1;
-		if (((dest in dest_list.[i]) and (g_list.[i] in expd.names)) or (dest in dest_list.[12]))
+		if (((dest_list.[i] in dest) and (g_list.[i] in expd.names)) or (dest_list.[12] in dest))
 			i := 777;
 	}
 	if (i != 777)
