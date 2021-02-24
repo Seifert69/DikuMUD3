@@ -457,9 +457,7 @@ dilbegin awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg
 external
    integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
-   set_witness@justice(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer);
-   add_crime@justice(criminal : unitptr, vict : unitptr, crime_type: integer, crime_no : integer, crime_clear : integer);
-
+   set_witness@justice(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer, victimname : string);
 var
    observer : unitptr;
    hm       : integer;
@@ -493,11 +491,12 @@ code
                if ((observer.type == UNIT_ST_NPC) and (not isset(observer.charflags , CHAR_PROTECTED)))
                   continue;
 
-               if (count == 0)
-               {
-                  add_crime@justice(thief, victim, CRIME_STEALING, crimeno, PULSE_SEC * 60 * 60);
-               }
-               set_witness@justice(thief, observer, crimeno, CRIME_STEALING, TRUE);
+              // No longer need to add a crime.  $reward is created after thief is accused.
+              //if (count == 0)
+              // {
+              //    add_reward@justice(thief.symname, thief.idx, CRIME_STEALING);
+              //  }
+               set_witness@justice(thief, observer, crimeno, CRIME_STEALING, TRUE, observer.name);
                count := count + 1;
             }
          }

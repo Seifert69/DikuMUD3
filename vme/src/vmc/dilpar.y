@@ -6124,6 +6124,8 @@ ubit32 get_label(char *name, ubit32 adr)
    /* get number of referenced label */
    int i;
 
+   str_lower(name);
+
    if ((i = search_block(name, (const char **) label_names, TRUE)) == -1) {
       /* does not exist, register label */
      /*fprintf(stderr,"GET LABEL UNKNOWN: %s\n", name);*/
@@ -6491,6 +6493,7 @@ void add_ref(struct dilref *ref)
    if (is_name(nbuf, ref_names))
      dilfatal("Redefinition of external reference.");
 
+   str_lower(nbuf);
    ref_names = add_name(nbuf, ref_names);
 
    if (++refcount > REFMAX)

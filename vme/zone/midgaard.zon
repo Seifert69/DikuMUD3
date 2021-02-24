@@ -10,6 +10,7 @@ END HEADER */
 #include <macros.h>
 
 #define _POLICE_SCHOOL /* not a real guild, can have 2 simultaneously */
+#define QUEST_CITIZEN_MIDGAARD "Citizen of Midgaard"
 
 %zone midgaard
 title "Midgaard City@Mainland"
@@ -995,48 +996,60 @@ dilend
 
 dilbegin fnpri(FN_PRI_RESCUE-1) jailstay(du : integer);
 external
-   jailbreak@justice(criminal : unitptr);
-   rem_db_entry@justice(criminal : unitptr, extra_type : string);
+   integer add_reward@justice(criminal_symname : string, criminal_idx : integer, crime_type : integer);
+   rem_db_entry@justice(criminal : unitptr, extra_type : string, juris : string);
    getfrom_safe(prisoner : unitptr);
-
+   set_char_flags@justice(char : unitptr, setting : string);
 var
-   sn : string;
-   sz : string;
+   sname : string;
    jd : unitptr;
    id : string;
-  
+   juris : string; 
+   k : string;
+   gold : integer;
+   g : string;
 code
 {
    heartbeat := PULSE_SEC * SECS_PER_MUD_HOUR;
-   
-   sn := self.outside.nameidx;
-   sz := self.outside.zoneidx;
-   jd := findsymbolic("database@justice");
+   juris := self.outside.zoneidx;
+   sname := self.outside.symname; // Get the jail symname
 
+   jd := findsymbolic("database@justice");
+   id := "$reward "+ self.symname + " " + itoa(self.idx) + " "+ juris;
+   k := "$reward "+ juris;
+     
    // Change player arrest descr to reflect that the char is in jail.
    //
-   if("$arrest" in self.extra)
+   jd := findsymbolic("database@justice");
+   
+   if( "$reward" in self.extra)
    {
-      id := self.extra.["$arrest"].names.[1];
+      jd.extra.[id].names.[4] := "-1";
+      self.extra.[k].names.[4] := "-1";
       jd.extra.[id].descr := self.name+" is currently serving time in jail.";
    }
 
  
   :loop:
    pause;
-
-   if (sn != self.outside.nameidx)
-   {  
-      //player has escaped from jail
-      jailbreak@justice(self);
+   if (sname != self.outside.symname)
+   {
+      // Player has escaped from jail
+      jd := findsymbolic("database@justice");
+      jd.extra.[id].names.[4] := "65";
+      self.extra.[k].names.[4] := "65";
+      gold := atoi(jd.extra.[id].names.[2]); 
+      g := moneystring(gold,1); 
+      jd.extra.[id].descr := "A reward of " + g + " has been offered for the head of "+self.name;
+      set_char_flags@justice(self, "wanted");
+      log("Jailbreak: "+self.name+" has escaped from the "+ juris +" jail."); 
       quit;
    }
 
-   if("$arrest" in self.extra)
+   if("$reward" in self.extra)
    {
-      jd := findsymbolic("database@justice"); 
-      id := self.extra.["$arrest"].names.[1];
-      log(id);    
+      jd := findsymbolic("database@justice");
+      jd.extra.[id].names.[4] := "-1";
       jd.extra.[id].descr := self.name+" is currently serving time in jail. "+itoa(du)+" hours remaining";
    }
 
@@ -1070,11 +1083,9 @@ code
    act("Your term is over! You are thrown out of the jail and sent home.",
        A_ALWAYS, self, null, null, TO_CHAR);
    getfrom_safe(self);
-   link(self, findroom("accuse_room@" + sz));
-   self.crimes := self.crimes / 2;
-   rem_db_entry@justice(self, "$arrest");
-   set(self.charflags, CHAR_PROTECTED);
-   unset(self.charflags, CHAR_OUTLAW);
+   link(self, findroom("accuse_room@" + juris));
+   rem_db_entry@justice(self, "$reward", juris);
+   set_char_flags@justice(self, "arrest");
    quit;
 }
 dilend
@@ -1131,8 +1142,12 @@ dilbegin fnpri(FN_PRI_RESCUE-1) arrest_check(office : string);
 external
    guard_arrest(office : string, prisoner : unitptr);
    cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+   integer check_outlaw@justice(char : unitptr, juris : string);
+   string get_juris@justice();
 var
   u : unitptr;
+  outlaw_status : integer;
+  juris : string;
 code
 {
    on_activation((self.position <= POSITION_SLEEPING) or
@@ -1140,16 +1155,20 @@ code
 
    :loop:
    wait(SFB_CMD, activator.charflags & CHAR_OUTLAW);
+   juris := get_juris@justice();
    if (activator == self)
       goto loop;
+   outlaw_status := check_outlaw@justice(activator, juris);
+ if (outlaw_status == 0)
+      goto loop; 
 
-   u := equipment(activator,  WEAR_WRIST_R);
+  u := equipment(activator,  WEAR_WRIST_R);
 
    if (u)
      if ((u.nameidx == "cuffs") and (u.zoneidx == "midgaard"))
        goto loop;
 
-   if (activator.charflags & CHAR_PROTECTED)
+   if (outlaw_status == 1)  //if (activator.charflags & CHAR_PROTECTED)
    {
       u := load("cuffs@midgaard");
 
@@ -1294,7 +1313,7 @@ dilbegin captain(jailname : string);
 external
    integer walk_room@function (s:string,i:integer);
    putin_safe(prisoner : unitptr);
-
+   integer add_reward@justice(criminal_symname : string, criminal_idx : integer, crime_type: integer);
 var
    tf:integer;
    prisoner : unitptr;
@@ -1346,9 +1365,6 @@ code
 
    dilcopy("jailstay@midgaard(12)", prisoner);
 
-   /* Arrested players are wanted dead while in prison */
-   unset(prisoner.charflags, CHAR_PROTECTED);
-   set(prisoner.charflags, CHAR_OUTLAW);
 
    link(prisoner, findroom(jailname));
 
@@ -8144,7 +8160,94 @@ M_AVG_HUMAN(15, SEX_MALE)
 alignment 900
 money 5 IRON_PIECE
 
-dilcopy reward_give@function();
+
+// Mary waits for these four items for the Stew quest
+//
+dilcopy qstItemsWanted@quests(QUEST_CITIZEN_MIDGAARD, {"platinum piece"},
+            {"say Thank you $1N, these citizen taxes will be put to good use."},
+            "say Thank you $1N but I can't accept that. I need 1 platinum piece.");
+
+// Give a chance to grant citizenship
+//
+dilbegin citizenship();
+external
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist);
+   extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+   integer check_protected@justice(char : unitptr, juris : string);
+var
+   pc     : unitptr;
+   pot    : unitptr;
+   exdp   : extraptr;
+
+code
+{
+   :init:
+   heartbeat := PULSE_SEC*4;
+
+   :start:
+   unsecure(pc);
+   wait(SFB_CMD, activator.type == UNIT_ST_PC);
+
+   pc := activator;
+   secure(pc, start);
+
+   if (check_protected@justice(pc, self.zoneidx) == 1)
+      goto start;
+
+   pc := qstWaitHero@quests(QUEST_CITIZEN_MIDGAARD, pc, 
+      {"say Greetings $1N and welcome to the grand city of Midgaard",
+       "say So you'd like to become a protected citizen under the laws of Midgaard?"});
+
+   if (pc == null)
+      goto start;
+
+   // Quest accepted
+   exdp := qstAssign@quests(QUEST_CITIZEN_MIDGAARD, pc, 
+      {"say To become a citizen is not to be taken lightly. It is an honor bestowed on the few.", 
+       "say $1N, you must hereby pledge to become a law abiding citizen,",
+       "say and to prove no one is above the law you must pay me 10 platinum",
+       "cough",
+       "say to be spent solely on the city of Midgaard of course.",
+       "emote puts his hand forward and awaits your payment"},
+      "Bring the Mayor of Midgaard 10 platinum pieces to become a citizen.");
+   goto start;
+}
+dilend
+
+
+// Get items to complete Stew quest
+//
+dilbegin citizenDone();
+external
+   unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer);
+var
+  pcname : string;
+  item   : unitptr;
+  pc     : unitptr;
+  i      : integer;
+  exdp   : extraptr;
+
+code
+{
+   :start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+
+   pc := qstWaitDone@quests(QUEST_CITIZEN_MIDGAARD, activator, 
+            {"say Congratulations, $1N, and welcome to Midgaard.",
+             "smile $1N"}, 0, 0);
+
+   if (pc == null)
+      goto start;
+
+   // qitems_ deletes items received 
+   log(pc.symname + "became a citizen of Midgaard.");
+   addextra(pc.extra, {"$protected midgaard"}, "Paid 1 PP to the Mayor");
+
+   goto start;
+}
+dilend
+
 
 #define GUILD_NAMES  {"Udgaard Fighter", "Udgaard Thief", "Udgaard Healer", \
                "Udgaard Conjurer", "Nymgaard Ranger", "Midgaard Paladin", "Midgaard Sorcerer", \

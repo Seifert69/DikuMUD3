@@ -10927,6 +10927,7 @@ dilcopy no_sleep@udgaard();
 dilbegin wait_for_bounty();
 external
    integer walk_room@function (s:string,i:integer);
+   integer check_outlaw@justice(char : unitptr, juris : string);
 
 var
    tf:integer;
@@ -10951,7 +10952,8 @@ code
 
    while (tgt.type == UNIT_ST_PC)
    {
-      if (isset(tgt.charflags, CHAR_OUTLAW))
+
+      if (check_outlaw@justice(tgt, "midgaard") == 2)
         if (tgt.level < 200)
            goto gotone;
       tgt := tgt.gnext;

@@ -1679,15 +1679,17 @@ code
 
       act(buff, A_SOMEONE, self, nmoney, toitem, TO_VICT);
 
-      link(nmoney, toitem);
+      link(nmoney, toitem); // This will automatically pile money for recipient
 
-      send_done("give", self, nmoney, toitem, 0, "", null);
+      omoney := nmoney;
 
       if (amnt2)
       {
          // Restore some money for the giver
          nmoney := make_money(mtype, amnt2);
       }
+
+      send_done("give", self, omoney, toitem, amnt, itoa(mtype), null);
 
       return(1);
    }

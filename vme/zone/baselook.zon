@@ -836,6 +836,9 @@ code
              temp := temp + "You see nothing special.";
       }
 
+      if ("$reward" in item.extra)
+         temp:=temp + "<br/>There is a reward on the head.";
+
       if ((item.type == UNIT_ST_OBJ) and (item.objecttype == ITEM_WEAPON))
       {
          temp1 := weapon_name(item.value[0]);
@@ -851,11 +854,10 @@ code
 
       if ((item.type == UNIT_ST_PC) or (item.type == UNIT_ST_NPC))
       {
-         if ("$reward" in item.extra)   
+         if ("$reward" in item.extra)
             act("There is a reward on $2s head.", A_ALWAYS, looker, item,null, TO_CHAR);
 
-         if ((isset(item.charflags, CHAR_PROTECTED))
-		           and (isset(item.charflags, CHAR_OUTLAW)))
+         if ((isset(item.charflags, CHAR_PROTECTED)) and (isset(item.charflags, CHAR_OUTLAW)))
             act("$2n is an outlaw and wanted alive.", A_ALWAYS, looker,item, null, TO_CHAR);
          else if (isset(item.charflags, CHAR_PROTECTED))
             act("$2n is a protected citizen.", A_ALWAYS, looker, item, null,TO_CHAR);

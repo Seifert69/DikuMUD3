@@ -12865,8 +12865,9 @@ dilend
 /*Quaff dil
 Made by Mesmer for the Realms Of The Past MUD
 realms.pdt.net 4242
-*/
 
+*/
+// do_quaff
 dilbegin quaff_dil(arg : string);
 var
 potion: unitptr;

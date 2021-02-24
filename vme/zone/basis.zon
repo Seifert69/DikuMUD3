@@ -143,6 +143,8 @@ dilend
 
 // Clean old junk away
 dilbegin login_scrub(tgt : unitptr);
+external
+login_clean@justice();
 var
    i : integer;
    ext : extraptr;
@@ -265,6 +267,7 @@ code
    subextra (tgt.extra,"$NOXMAS2");
    subextra (tgt.extra,"$NO_DEC06");
 
+   login_clean@justice();
    return;
 }
 dilend

@@ -35,7 +35,7 @@ notes
 //
 // Return unitptr to the hero that wants the quest
 //
-dilbegin unitptr wait_hero(qname : string, pc : unitptr, sl : stringlist);
+dilbegin unitptr qstWaitHero(qname : string, pc : unitptr, sl : stringlist);
 var
    i : integer;
    ln : integer;
@@ -69,6 +69,7 @@ code
    ln := length(sl);
 	heartbeat := PULSE_SEC * 4;
 
+   priority;
    // Give the explanation
    while (i < ln)
    {
@@ -86,7 +87,10 @@ code
    i := i + 1;
 
 	if (command("nod"))
+   {
+      nopriority;
       return(pc);
+   }
 	else if (command("shake"))
 		goto no_quest;
    else
@@ -95,7 +99,10 @@ code
       {
          s := getword(argument);
          if ((left(s,3)=="yes") or (left(s,3)=="yup") or (left(s,3)=="aye") or (left(s,3)=="yez") or ((left(s,3)=="yea")) or (s=="y"))
+         {
+            nopriority;
       		return(pc);
+         }
          if ((left(s,2)=="no") or (s=="n"))
       		goto no_quest;
       }
@@ -110,12 +117,14 @@ code
    if (i > 7)
    {
       pc := null;
+      nopriority;
       return(pc);
    }
 
    goto loop;
 
 :no_quest:
+   nopriority;
    heartbeat := PULSE_SEC * 1;
    pause;
 	exec("sulk", self);
@@ -124,6 +133,7 @@ code
 	return(pc);
 
 :lostpc:
+   nopriority;
    heartbeat := PULSE_SEC * 1;
    pause;
 	exec("sigh", self);
@@ -142,7 +152,7 @@ dilend
 //
 // Return unitptr to the hero that wants the quest
 //
-dilbegin extraptr quest_assign(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+dilbegin extraptr qstAssign(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
 var
    i : integer;
    ln : integer;
@@ -170,6 +180,8 @@ code
 	pause;
 	heartbeat := PULSE_SEC * 4;
 
+   priority;
+
    // Give the explanation
    while (i < ln)
    {
@@ -186,6 +198,7 @@ code
    exd := s in pc.quests;
 
 :lostpc:
+   nopriority;
    return(exd);
 }
 dilend
@@ -211,7 +224,8 @@ dilend
 //             
 // thanksl : $1 = pc, $2 = item, $3 = self
 //
-dilbegin integer qitems_name(qname : string, itemsl : stringlist, thanksl : stringlist);
+dilbegin fnpri(FN_PRI_MISSION+5) integer qstItemsWanted(qname : string, itemsl : stringlist,
+                                                     thanksl : stringlist, nothanks : string);
 var
   pc     : unitptr;
   item   : unitptr;
@@ -220,12 +234,23 @@ var
   i      : integer;
   ln     : integer;
   s      : string;
+
 code
 {
+   // Must be added 
+   //
+   if (nothanks != "")
+   {
+      s := "qstItemNoThank@quests(" + nothanks + ")";
+      dilcopy(s, self);
+   }
+
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
 
    :start:
    wait(SFB_DONE, command("give") and (target == self));
+
+   // log(medium.symname + " : " + medium.name);
 
    exdp := (qname + " Ongoing") in activator.quests;
 
@@ -247,17 +272,17 @@ code
          exec(s, self);
          s := sact("<br/>You've given $3m $2n", A_SOMEONE, pc, item, self, TO_CHAR);
          exdp.descr := exdp.descr + s;
-         destroy(item);         
+         destroy(item);
+         block;
          goto checkit;
       }
 
       i := i + 1;
    }
 
-   exec("say I can't accept that, "+pc.name, self);
-
-   // Return the item to the player
-   link(item, pc);
+   // If there is no match, don't give it back. 
+   // If item is to be given back then that's a separate function at the end
+   //
 
    goto start;
 
@@ -279,7 +304,62 @@ dilend
 
 
 
-dilbegin unitptr q_wait_done(qname : string, pc : unitptr,
+dilbegin unique fnpri(FN_PRI_MISSION+6) qstItemNoThank(nothanks : string);
+external
+   unitptr make_money@baseget(i1 : integer, i2 : integer);
+
+var
+   s : string;
+   i : integer;
+   t : integer;
+   u : unitptr;
+code
+{
+:start:
+   wait(SFB_DONE, command("give") and (target == self));
+
+   if (medium.objecttype == ITEM_MONEY)
+   {
+      // This is tricky because the money is now merged with char's local money
+
+
+      t := medium.value[0];
+      i := medium.cost - power;
+
+      // If the receiving char didn't have any coins of this type, just give the full monty back
+      if (i == 0)
+      {
+         link(medium, activator);
+         goto start;
+      }
+
+      // NPC already had money of this type
+      //
+      destroy(medium);
+
+      u := make_money@baseget(t, power);
+      link(u, activator);
+
+      if (i > 0)
+      {
+         //log("Creating money for self: " + itoa(i) + " pieces  of type " + itoa(t));
+         u := make_money@baseget(t, i);
+      }
+   }
+   else
+   {
+      // Just link the item back
+      link(medium, activator);
+   }
+   s := sact(nothanks, A_SOMEONE, activator, medium, self, TO_CHAR);
+   exec(s, self);
+
+   goto start;
+}
+dilend
+
+
+dilbegin unitptr qstWaitDone(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer);
 var
    pcname : string;
@@ -314,6 +394,8 @@ code
 	pause;
 	heartbeat := PULSE_SEC * 4;
 
+   priority;
+
    // Give the explanation
    while (i < ln)
    {
@@ -338,13 +420,55 @@ code
       i := transfermoney(null, pc, gold);
       sendtext("You received " + moneystring(gold, TRUE) + "<br/>", pc);
    }
+   nopriority;
    return(pc);
 
    :lostpc:
+   nopriority;
    exec("say How rude!", self);
    return(u);
 }
 dilend
+
+
+dilbegin qstSimpleQuest(qname : string,
+                        qstAsk : stringlist,
+                        qstAccepted : stringlist,
+                        qstDescr : string,
+                        qstDone : stringlist,
+                        xp : integer, gold : integer);
+external
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist);
+   extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+   unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer);
+
+var
+   pc     : unitptr;
+   pot    : unitptr;
+   exdp   : extraptr;
+
+code
+{
+   heartbeat := PULSE_SEC *4;
+   
+   :start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+
+   pc := qstWaitHero@quests(qname, activator, qstAsk);
+
+   if (pc != null)
+   {
+      exdp := qstAssign@quests(qname, pc, qstAccepted, qstDescr);
+      goto start;
+   }
+
+   pc := qstWaitDone@quests(qname, activator, qstDone, xp, gold);
+   goto start;
+}
+dilend
+
+
 
 %mobiles
 
