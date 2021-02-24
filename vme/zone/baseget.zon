@@ -1681,7 +1681,7 @@ code
 
       link(nmoney, toitem); // This will automatically pile money for recipient
 
-      send_done("give", self, nmoney, toitem, amnt, "", null);
+      send_done("give", self, nmoney, toitem, amnt, itoa(mtype), null);
 
       if (amnt2)
       {
