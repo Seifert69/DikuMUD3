@@ -250,6 +250,8 @@ code
    :start:
    wait(SFB_DONE, command("give") and (target == self));
 
+   // log(medium.symname + " : " + medium.name);
+
    exdp := (qname + " Ongoing") in activator.quests;
 
    if (not exdp)
@@ -303,14 +305,52 @@ dilend
 
 
 dilbegin unique fnpri(FN_PRI_MISSION+6) qstItemNoThank(nothanks : string);
+external
+   unitptr make_money@baseget(i1 : integer, i2 : integer);
+
 var
    s : string;
+   i : integer;
+   t : integer;
+   u : unitptr;
 code
 {
 :start:
    wait(SFB_DONE, command("give") and (target == self));
 
-   link(medium, activator);
+   if (medium.objecttype == ITEM_MONEY)
+   {
+      // This is tricky because the money is now merged with char's local money
+
+
+      t := medium.value[0];
+      i := medium.cost - power;
+
+      // If the receiving char didn't have any coins of this type, just give the full monty back
+      if (i == 0)
+      {
+         link(medium, activator);
+         goto start;
+      }
+
+      // NPC already had money of this type
+      //
+      destroy(medium);
+
+      u := make_money@baseget(t, power);
+      link(u, activator);
+
+      if (i > 0)
+      {
+         //log("Creating money for self: " + itoa(i) + " pieces  of type " + itoa(t));
+         u := make_money@baseget(t, i);
+      }
+   }
+   else
+   {
+      // Just link the item back
+      link(medium, activator);
+   }
    s := sact(nothanks, A_SOMEONE, activator, medium, self, TO_CHAR);
    exec(s, self);
 
