@@ -1679,9 +1679,9 @@ code
 
       act(buff, A_SOMEONE, self, nmoney, toitem, TO_VICT);
 
-      link(nmoney, toitem);
+      link(nmoney, toitem); // This will automatically pile money for recipient
 
-      send_done("give", self, nmoney, toitem, 0, "", null);
+      send_done("give", self, nmoney, toitem, amnt, "", null);
 
       if (amnt2)
       {
