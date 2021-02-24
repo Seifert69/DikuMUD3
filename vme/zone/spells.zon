@@ -2255,6 +2255,7 @@ if (argument=="lookin")
    goto start;
 
 :disp_check:
+   block;
    pc := activator;
 /*   secure(pc, lost_pc); */
 /*
@@ -2262,7 +2263,6 @@ if (argument=="lookin")
        (marg == ""))
       goto lost_pc;
 */
-   block;
    if (not((ownr in pc.name)))
    {
       act("You are unable to cut off the caster's power.",
@@ -8126,11 +8126,6 @@ var
   i : integer;
 code
 {
-   /*
-      Spell Cure Light Wounds
-      This spell cures minor wounds, or partly heals major wounds
-      of the target character.
-      */
 
    if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
      hm := -1;
@@ -8140,9 +8135,9 @@ code
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
-   i := rnd(2,3);
-   heal := hit_limit(1 + hm);
-   heal := heal / i; /* was 2 */
+   i := rnd(1,2);
+   heal := hit_limit(30 + hm);
+   heal := heal / i;
 
    add_hitpoints(tgt, heal);
 
@@ -8204,8 +8199,7 @@ code
 }
 dilend
 
-dilbegin ubless(medi:unitptr, tgt : unitptr, arg : string,
-	       hm : integer, effect : string);
+dilbegin ubless(medi:unitptr,tgt:unitptr,arg:string,hm:integer,effect:string);
 code
 {
    /*
