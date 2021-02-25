@@ -457,7 +457,7 @@ code
 	if(not("$package_max" in pc.extra))
 		addextra(pc.extra,{"$package_max"},"0");
 
-	if((atoi(pc.extra.["$package_max"].descr) >= 150) and (not("$packages" in pc.quests.[JEWELER_ONGOING].names)))
+	if((atoi(pc.extra.["$package_max"].descr) >= 100) and (not("$packages" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		addstring(pc.quests.[JEWELER_ONGOING].names, "packages");
 		if(("pearl" in pc.quests.[JEWELER_ONGOING].names) and ("ruby" in pc.quests.[JEWELER_ONGOING].names) and 
@@ -733,6 +733,8 @@ var
 	i : integer;
 	cstat : string;
 	sltime : stringlist;
+	col : string;
+	col2 : string;
 code
 {
 	slbty := {"$daily_target","$monthly_target","$bonus_target"};
@@ -749,7 +751,7 @@ code
 	sdate := sdate + " " + sltime.[0] + ":" + sltime.[1];
 	block;
 	buf := "<div class='cr'>REWARD!!</div><br><br>";
-	buf := buf + "<div class='cr'>The current time is: "+sdate+"</div><br><br>";
+	buf := buf + "<div class='cpw'>The current time is: <div class='cpr'>"+sdate+"</div></div><br><br>";
 	i := 0;
 	
 	while (i < length(slbty))
@@ -759,9 +761,17 @@ code
 		{
 			slt := split(bty.descr,"|");
 			if("DONE" in slt) 
-				cstat := "Closed";
+			{
+				col := "cpn";
+				col2 := "cpn";
+				cstat := "<div class='cpr'>Closed</div>";
+			}
 			else
+			{
+				col := "cpr";
+				col2 := "cpw";
 				cstat := "<div class='cpg'>Open</div>";
+			}
 			which := replace("$","",slbty.[i]);
 			which := replace("_target","",which);
 			targ := findsymbolic(slt.[1]);
@@ -769,13 +779,13 @@ code
 			if(targ != null)
 			{
 				buf := buf + 
-				"<div class='cr'>-------------------------------------------------------</div>" +
-				"<br><div class='cpw'>Contract Date: </div><div class='cr'>" + sdate +
-				"<br><div class='cpw'>Contract Term: </div><div class='cr'>" + which +
-				"<br><div class='cpw'>Target Name: </div><div class='cr'>" + targ.name + 
-				"<br><div class='cpw'>Target Alias: </div><div class='cr'>" + targ.title + 
-				"<br><div class='cpw'>Target Description: </div><div class='cr'> " + targ.outside_descr +
-				"<br><div class='cpw'>Contract Status: </div><div class='cr'> " + cstat +
+				"<div class='"+col+"'>-------------------------------------------------------</div>" +
+				"<br><div class='"+col2+"'>Contract Date: </div><div class='"+col+"'>" + sdate +
+				"<br><div class='"+col2+"'>Contract Term: </div><div class='"+col+"'>" + which +
+				"<br><div class='"+col2+"'>Target Name: </div><div class='"+col+"'>" + targ.name + 
+				"<br><div class='"+col2+"'>Target Alias: </div><div class='"+col+"'>" + targ.title + 
+				"<br><div class='"+col2+"'>Target Description: </div><div class='"+col+"'> " + targ.outside_descr +
+				"<br><div class='"+col2+"'>Contract Status: </div><div class='"+col+"'> " + cstat +
 				"<br>-------------------------------------------------------</div><br><br>";
 			}
 			else
@@ -1144,7 +1154,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say It is only through supplying the armies of Valhalla, and winnowing down the hordes that we can do what is necessary.", self);
     wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say First, I will need 500,000 lbs of hardened metal armors to fill the smelters.", self);
+	exec("say First, I will need 100,000 lbs of hardened metal armors to fill the smelters.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say I'm not picky about where it comes from - I'll leave it to you to figure that part out.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -1175,7 +1185,7 @@ var
 	exdp : extraptr;
 code
 {
-	// 500,000 lbs of any kind of steel weapon or armor.
+	// 100,000 lbs of any kind of steel weapon or armor.
 	// 500 lbs each of activated element (4 total) from The Summoner
 	// 10 killing spree streak
 	
@@ -1192,13 +1202,13 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exdp := BLACKSMITH_ONGOING in pc.quests;
 	
-	if((item.type == 8) and (item.value[0] == 4) and (atoi(exdp.descr) < 500000))
+	if((item.type == 8) and ((item.value[0] == 4) or (item.value[0] == 3)) and (atoi(exdp.descr) < 100000))
 	{
 		pc.quests.[BLACKSMITH_ONGOING].descr := itoa(atoi(pc.quests.[BLACKSMITH_ONGOING].descr) + item.weight);
 		exec("say This will count for "+itoa(item.weight)+" lbs of good hardened metal "+pc.name+"!", self);
 		exec("say That brings your total to "+pc.quests.[BLACKSMITH_ONGOING].descr+" lbs collected.", self);
 		exec("emote tosses the "+item.title+" into one of the giant smelters.", self);
-		if(atoi(pc.quests.[BLACKSMITH_ONGOING].descr) >= 500000)
+		if(atoi(pc.quests.[BLACKSMITH_ONGOING].descr) >= 100000)
 		{
 			wait(SFB_TICK,command(CMD_AUTO_TICK));
 			exec("say By the gods, you've done it "+pc.name+"! You collected "+pc.quests.[BLACKSMITH_ONGOING].descr+" lbs of good steel for the smelters.", self);
@@ -1732,8 +1742,8 @@ code
 	heartbeat := PULSE_SEC*4;
 :start:
 
-	// package deliver streak - 150
-	// 30 each of birthstones
+	// package deliver streak - 100
+	// 20 each of birthstones
 	
 	// pearl_stone@blcastle (pearl)
 	// red1_stone@blcastle (ruby)
@@ -1749,7 +1759,7 @@ code
 	// pink_stone@blcastle (opal)
 	
 
-	wait(SFB_CMD, ("$historian" in activator.extra) and (JOIN_ONGOING in activator.quests) and (not("$jeweler" in activator.extra)));
+	wait(SFB_CMD, ("$historian" in activator.extra) and (JOIN_ONGOING in activator.quests) and (not(JEWELER_ONGOING in activator.quests)));
 	
 	pc := activator;
 	secure(pc, donezo);
@@ -1787,16 +1797,16 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say There are twelve varieties to be found across the land.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say I'll require 30 of each.", self);
+	exec("say I'll require 20 of each.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say In order to distribute these in the limited time we have, it will require great effort.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say You'll need to close a streak of 150 consecutive package deliveries.", self);
+	exec("say You'll need to close a streak of 100 consecutive package deliveries.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say Return to me to deliver the stones, and to recieve packages.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say And hurry! The enemy will not wait for our work.", self);
-	addextra(pc.extra, {"$jeweler"}, "");
+	addextra(pc.quests, {JEWELER_ONGOING}, "");
 	
 :donezo:
 
@@ -1812,8 +1822,8 @@ var
 	item : unitptr;
 	qty : integer;
 code
-{	// package deliver streak - 150
-	// 30 each of birthstones
+{	// package deliver streak - 100
+	// 20 each of birthstones
 	
 	// pearl_stone@blcastle (pearl)
 	// red1_stone@blcastle (ruby)
@@ -1842,7 +1852,7 @@ code
 		if(not("$jeweler_pearl" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_pearl"},"0");
 		qty := atoi(pc.quests.["$jeweler_pearl"].descr);
-		if(qty == 30)
+		if(qty == 20)
 		{
 			addstring(pc.quests.[JEWELER_ONGOING].names, "pearl");
 			goto noneed;
@@ -1851,14 +1861,14 @@ code
 		unsecure(item);
 		destroy(item);
 		exec("say A fine specimen of a pearl!", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 30 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
 	}
 	else if((item.symname == "red1_stone@blcastle") and (not ("ruby" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_ruby" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_ruby"},"0");
 		qty := atoi(pc.quests.["$jeweler_ruby"].descr);
-		if(qty == 30)
+		if(qty == 20)
 		{
 			addstring(pc.quests.[JEWELER_ONGOING].names, "ruby");
 			goto noneed;
@@ -1867,14 +1877,14 @@ code
 		unsecure(item);
 		destroy(item);
 		exec("say The red of this ruby is stunning, is it not?", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 30 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
 	}
 	else if((item.symname == "purple_stone@blcastle") and (not ("moonstone" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_moonstone" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_moonstone"},"0");
 		qty := atoi(pc.quests.["$jeweler_moonstone"].descr);
-		if(qty == 30)
+		if(qty == 20)
 		{
 			addstring(pc.quests.[JEWELER_ONGOING].names, "moonstone");
 			goto noneed;
@@ -1883,14 +1893,14 @@ code
 		unsecure(item);
 		destroy(item);
 		exec("say A truly unique stone, the moonstone.", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 30 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
 	}
 	else if((item.symname == "red_stone@blcastle") and (not ("jade" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_jade" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_jade"},"0");
 		qty := atoi(pc.quests.["$jeweler_jade"].descr);
-		if(qty == 30)
+		if(qty == 20)
 		{
 			addstring(pc.quests.[JEWELER_ONGOING].names, "jade");
 			goto noneed;
@@ -1899,14 +1909,14 @@ code
 		unsecure(item);
 		destroy(item);
 		exec("say Marvelous green in this Jade, "+pc.name+".", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 30 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
 	}
 	else if((item.symname == "cless_stone@blcastle") and (not ("diamond" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_diamond" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_diamond"},"0");
 		qty := atoi(pc.quests.["$jeweler_diamond"].descr);
-		if(qty == 30)
+		if(qty == 20)
 		{
 			addstring(pc.quests.[JEWELER_ONGOING].names, "diamond");
 			goto noneed;
@@ -1915,14 +1925,14 @@ code
 		unsecure(item);
 		destroy(item);
 		exec("say There is no other stone like a diamond, "+pc.name+".", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 30 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
 	}
 	else if((item.symname == "lblue_stone@blcastle") and (not ("bloodstone" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_bloodstone" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_bloodstone"},"0");
 		qty := atoi(pc.quests.["$jeweler_bloodstone"].descr);
-		if(qty == 30)
+		if(qty == 20)
 		{
 			addstring(pc.quests.[JEWELER_ONGOING].names, "bloodstone");
 			goto noneed;
@@ -1931,14 +1941,14 @@ code
 		unsecure(item);
 		destroy(item);
 		exec("say The contrast of colors in this bloodstone is catching, is it not "+pc.name+"?", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 30 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
 	}
 	else if((item.symname == "emerald_stone@blcastle") and (not ("emerald" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_emerald" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_emerald"},"0");
 		qty := atoi(pc.quests.["$jeweler_emerald"].descr);
-		if(qty == 30)
+		if(qty == 20)
 		{
 			addstring(pc.quests.[JEWELER_ONGOING].names, "emerald");
 			goto noneed;
@@ -1947,14 +1957,14 @@ code
 		unsecure(item);
 		destroy(item);
 		exec("say A gemstone quality emerald. This will be valued.", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 30 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
 	}
 	else if((item.symname == "green_stone@blcastle") and (not ("onyx" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_onyx" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_onyx"},"0");
 		qty := atoi(pc.quests.["$jeweler_onyx"].descr);
-		if(qty == 30)
+		if(qty == 20)
 		{
 			addstring(pc.quests.[JEWELER_ONGOING].names, "onyx");
 			goto noneed;
@@ -1963,14 +1973,14 @@ code
 		unsecure(item);
 		destroy(item);
 		exec("say Outstanding contrast in the banding on this onyx "+pc.name+".", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 30 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
 	}
 	else if((item.symname == "blue_stone@blcastle") and (not ("sapphire" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_sapphire" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_sapphire"},"0");
 		qty := atoi(pc.quests.["$jeweler_sapphire"].descr);
-		if(qty == 30)
+		if(qty == 20)
 		{
 			addstring(pc.quests.[JEWELER_ONGOING].names, "sapphire");
 			goto noneed;
@@ -1979,14 +1989,14 @@ code
 		unsecure(item);
 		destroy(item);
 		exec("say A sapphire fit for a queen!", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 30 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
 	}
 	else if((item.symname == "mblue_stone@blcastle") and (not ("jasper" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_jasper" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_jasper"},"0");
 		qty := atoi(pc.quests.["$jeweler_jasper"].descr);
-		if(qty == 30)
+		if(qty == 20)
 		{
 			addstring(pc.quests.[JEWELER_ONGOING].names, "jasper");
 			goto noneed;
@@ -1995,14 +2005,14 @@ code
 		unsecure(item);
 		destroy(item);
 		exec("say I've always loved the uniqueness of jasper carvings.", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 30 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
 	}
 	else if((item.symname == "yellow_stone@blcastle") and (not ("agate" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_agate" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_agate"},"0");
 		qty := atoi(pc.quests.["$jeweler_agate"].descr);
-		if(qty == 30)
+		if(qty == 20)
 		{
 			addstring(pc.quests.[JEWELER_ONGOING].names, "agate");
 			goto noneed;
@@ -2011,14 +2021,14 @@ code
 		unsecure(item);
 		destroy(item);
 		exec("say Agate seems as if it could hardly be made by nature, dont you think "+pc.name+"?", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 30 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
 	}
 	else if((item.symname == "pink_stone@blcastle") and (not ("opal" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_opal" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_opal"},"0");
 		qty := atoi(pc.quests.["$jeweler_opal"].descr);
-		if(qty == 30)
+		if(qty == 20)
 		{
 			addstring(pc.quests.[JEWELER_ONGOING].names, "opal");
 			goto noneed;
@@ -2027,7 +2037,7 @@ code
 		unsecure(item);
 		destroy(item);
 		exec("say This opal is an iridescent wonder!", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 30 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
 	}	
 	else
 	{
@@ -2039,7 +2049,7 @@ code
 	}
 	
 :streak:
-	if((atoi(pc.extra.["$package_max"].descr) >= 150) and (not("$packages" in pc.quests.[JEWELER_ONGOING].names)))
+	if((atoi(pc.extra.["$package_max"].descr) >= 100) and (not("$packages" in pc.quests.[JEWELER_ONGOING].names)))
 		addstring(pc.quests.[JEWELER_ONGOING].names, "packages");
 	
 :checkit:
@@ -2075,7 +2085,7 @@ code
 {
 	heartbeat := PULSE_SEC*4;
 :start:
-	// life_crystal1@arma - 20
+	// life_crystal1@arma - 15
 	// fake_sash@mordenkin
 	// maleus@isledead
 	// skin of shadow@soullake
@@ -2144,7 +2154,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say The study of these items is critical to my work.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say I'd think that 20 of them will suffice.", self);
+	exec("say I'd think that 15 of them will suffice.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say I believe you have your work cut out for you. Go now.", self);
 	addextra(pc.quests, {NECRO_ONGOING}, "0");
@@ -2164,7 +2174,7 @@ var
 	qty : integer;
 code
 {
-	// life_crystal1@arma - 20
+	// life_crystal1@arma - 15
 	// fake_sash@mordenkin
 	// maleus@isledead
 	// skin of shadow@soullake
@@ -2188,7 +2198,7 @@ code
 		if(not("$nec_lc" in pc.quests))	
 			addextra(pc.quests,{"$nec_lc"},"0");
 		qty := atoi(pc.quests.["$nec_lc"].descr);
-		if(qty == 20)
+		if(qty == 15)
 		{
 			addstring(pc.quests.[NECRO_ONGOING].names, "crystals");
 			goto noneed;
@@ -2201,7 +2211,7 @@ code
 			exec("emote purposefully tucks "+item.title+" into the pocket of his sash.", self);
 		else
 			exec("emote pats his chest as if looking for a pocket, then dejectedly tucks the "+item.title+" into his robes.", self);
-		exec("say This is "+itoa(qty + 1)+" of the 20 I need.", self);
+		exec("say This is "+itoa(qty + 1)+" of the 15 I need.", self);
 	}	
 	else if((item.symname == "fake_sash@mordenkin") and (not ("sash" in pc.quests.[NECRO_ONGOING].names)))
 	{
@@ -4223,14 +4233,14 @@ end
 sanctum
 title "<div class='cpn'>The Inner Sanctum</div>"
 descr
-"This is the Inner Sanctum of the Bounty Hunters Guild. Rumors about its existance 
-have spread throughout the land, but to most, its assumed that rumor is all it ever 
-was. The reality of being here, however, puts those rumors to rest. Like the rest 
-of the guild, it is a large, and masterfully wrought stone room. No lack of 
-attention was given to the construction, and a well-made yet simple shrine rests 
-against the southern wall. The space is not entirely free from decor, as frescos 
-have been painted in sections on the walls representing the hunt in a seemingly 
-strange and unknown part of history."
+"This is the Inner Sanctum of the Bounty Hunters Guild. Rumors about 
+its existance have spread throughout the land, but to most, its assumed 
+that rumor is all it ever was. The reality of being here, however, puts 
+those rumors to rest. Like the rest of the guild, it is a large, and 
+masterfully wrought stone room. No lack of attention was given to the 
+construction, and a well-made yet simple shrine rests against the southern 
+wall. The space is not entirely free from decor, as frescos have been 
+painted in sections on the walls representing the hunt in a seemingly strange and unknown part of history."
 flags {UNIT_FL_INDOORS, UNIT_FL_SACRED, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -4551,8 +4561,8 @@ dilcopy shop@bounty({"tablet","Bounty Hunters Tablet","150",
 end 
 
 guide
-names {"hunters guide","guide","woman"}    
-title "the hunters guide"        
+names {"the guide","guide","woman"}    
+title "The Guide"        
 descr "A dark-cloaked woman is here, in the shadows."
 extra{}
 "Not much can be seen of the woman under the dark cloak. A strength can be felt 
@@ -4652,7 +4662,7 @@ dilcopy qsummoner3@bounty();
 end 
 
 necromancer
-names {"the necromancer","necromancer","human"}    
+names {"the necromancer","necromancer","kingraith"}    
 title "The Necromancer"        
 descr "The Necromancer is here, reading from a scroll."
 extra{}

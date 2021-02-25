@@ -124,6 +124,7 @@ var
   roomdesc	: string;
   startroom : string;
   sarg		: string;
+  arg		: string;
 
 code
 {
@@ -137,7 +138,8 @@ code
 	
 	pc:=activator;
 	secure(pc, lostpc);
-	sarg := right(argument, 4);
+	arg := argument;
+	sarg := getword(arg);
 	if(self.equip==WEAR_HOLD)
 	{
 		//if(left(self.outside.outside.zoneidx, 5)=="clan_")
@@ -148,8 +150,7 @@ code
 			if("$empty" in self.extra)
 				goto empty;
 			else
-			{
-				heartbeat := PULSE_SEC*3;		
+			{		
 				startroom := self.outside.outside.inside_descr;
 				
 				if(self.outside.position < POSITION_STANDING)
@@ -157,7 +158,7 @@ code
 					
 				act("You dip a brush in your <div class='"+cc+"'>"+cs+"</div> graffiti paint.", A_ALWAYS,pc,self,pc,TO_CHAR);
 				act("$1n dips a brush in their <div class='"+cc+"'>"+cs+"</div> graffiti paint.", A_ALWAYS,pc,self,pc,TO_REST);
-				pause;
+				wait(SFB_TICK, command(CMD_AUTO_TICK));
 				
 				if(startroom != self.outside.outside.inside_descr)
 					goto moved;
@@ -168,7 +169,7 @@ code
 					
 				act("You begin making your <div class='"+cc+"'>"+cs+"</div> graffiti mark.", A_ALWAYS,pc,self,pc,TO_CHAR);
 				act("$1n begins leaving their mark in <div class='"+cc+"'>"+cs+"</div>.", A_ALWAYS,pc,self,pc,TO_REST);
-				pause;	
+				wait(SFB_TICK, command(CMD_AUTO_TICK));	
 				
 				if(startroom != self.outside.outside.inside_descr)
 					goto moved;
@@ -187,15 +188,23 @@ code
 					log(self.outside.name+" used graffiti in "+self.outside.outside.nameidx+"@"+self.outside.outside.zoneidx+
 					". Room description was written to extra: $secretgraffitiextra");
 				}
-				if(sarg == "self")
+				if(arg == "self")
 				{
 					roomdesc := self.outside.outside.inside_descr+" <div class='"+cc+"'>"+self.outside.name+"'s name is painted here in "+cs+" graffiti!</div>";
+					self.outside.outside.inside_descr := roomdesc;
+				}
+				else if (arg == "")
+				{
+					roomdesc := self.outside.outside.inside_descr+" <div class='"+cc+"'>"+toupper(left(cs,1))+right(cs,length(cs)-1)+" graffiti is painted all over!</div>";
 					self.outside.outside.inside_descr := roomdesc;
 				}
 				else
 				{
 					roomdesc := self.outside.outside.inside_descr+" <div class='"+cc+"'>"+toupper(left(cs,1))+right(cs,length(cs)-1)+" graffiti is painted all over!</div>";
 					self.outside.outside.inside_descr := roomdesc;
+					addstring(self.outside.outside.names, arg);
+					addextra(self.outside.outside.extra, {"graffiti"}, "This graffiti has been used to add the name '"+arg+"' to the room.");
+					addextra(self.outside.outside.extra, {"$secretgraffitiextra2"}, arg);
 				}
 			}
 			addextra(self.extra, {"$empty"}, "");	
@@ -259,6 +268,7 @@ var
   roomdesc	: string;
   clanst	: string;
   roomex	: extraptr;
+  stname	: string;
   
 code
 { // add check to interrupt graffiti in case of combat.
@@ -288,6 +298,13 @@ code
 					roomex := ("$secretgraffitiextra" in self.outside.outside.extra);
 					self.outside.outside.inside_descr := roomex.descr;
 					subextra(self.outside.outside.extra, "$secretgraffitiextra");
+					if("$secretgraffitiextra2" in self.outside.outside.extra)
+					{
+						stname := self.outside.outside.extra.["$secretgraffitiextra2"].descr;
+						subextra(self.outside.outside.extra, "$secretgraffitiextra2");
+						subextra(self.outside.outside.extra, "graffiti");
+						substring(self.outside.outside.names, stname);
+					}
 				}
 				else
 				{
@@ -1960,6 +1977,36 @@ dilcopy shopkeepernew@function(
  "$1n says, 'I might be able to sell this $2n.'",
  "$1n says, 'I don't have that many right now, maybe of you come back later.'"},
 {ITEM_FOOD}, 110, 10, 2*PLATINUM_MULT, FALSE);
+
+dilbegin no_steal();
+code
+{
+:start:
+	wait(SFB_CMD, command("steal"));
+	block;
+	exec("whisper "+activator.name+" Be cool, man. Be cool.", self);
+	goto start;
+}
+dilend
+
+dilbegin fnpri(20) no_loot();
+var
+	u : unitptr;
+	un : unitptr;
+code
+{
+:start:
+	wait(SFB_DEAD, (command(CMD_AUTO_DEATH)) and (activator == self));
+	
+	u := self.inside;
+	while(u!=null)
+	{
+		destroy(u);
+		u := self.inside;
+	}
+	quit;
+}
+dilend
 end
 
 %objects
@@ -2408,7 +2455,7 @@ extra {"$improved identify"}
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
-cost 50 PLATINUM_PIECE
+cost 10 PLATINUM_PIECE
 
 dilcopy graf_r();
 
@@ -2433,7 +2480,8 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpy'>bright yellow</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'."
+be made with 'use graffiti self'. A distinct name can be added to a room by with 'use 
+graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2462,7 +2510,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpr'>bright red</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'."
+be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2492,7 +2540,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpb'>bright blue</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'."
+be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2522,7 +2570,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpg'>bright green</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'."
+be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2556,7 +2604,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpm'>bright magenta</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'."
+be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
 
 dilcopy do_graffiti("cpm","bright magenta");
 
@@ -2582,7 +2630,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpc'>bright cyan</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'."
+be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2612,7 +2660,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpw'>bright white</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'."
+be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2642,7 +2690,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cy'>deep yellow</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'."
+be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2672,7 +2720,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cr'>deep red</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'."
+be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2702,7 +2750,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cb'>deep blue</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'."
+be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2732,7 +2780,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cg'>deep green</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'."
+be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2762,7 +2810,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cm'>deep magenta</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'."
+be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2792,7 +2840,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cc'>deep cyan</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'."
+be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2822,7 +2870,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cw'>white</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'."
+be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2852,7 +2900,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpn'>black</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'."
+be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}

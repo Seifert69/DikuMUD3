@@ -2358,7 +2358,7 @@ if (!ret)
         }
 
 sendtext("Chest file deleted[&]n",self);
-quit;/*dil delete routine done
+quit; //dil delete routine done
 }
 dilend
 
@@ -2502,7 +2502,7 @@ FIND_UNIT_IN_ME:
   Anything inside of the object of the first argument.
 
 FIND_UNIT_HERE:
-  Anything `here', i.e. in object or around it (same as IN_ME + SURRO)
+  Anything 'here', i.e. in object or around it (same as IN_ME + SURRO)
 
 FIND_UNIT_GLOBAL:
   ANYTHING, starting close to object and working out.
