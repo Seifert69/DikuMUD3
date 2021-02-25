@@ -1203,7 +1203,6 @@ var
 
 code
 {
-   log("getfromsafe()");
    safe := findsymbolic(prisoner, "safe@justice", FIND_UNIT_IN_ME);
    if (safe == null)
    {
@@ -8160,12 +8159,9 @@ M_AVG_HUMAN(15, SEX_MALE)
 alignment 900
 money 5 IRON_PIECE
 
-
-// Mary waits for these four items for the Stew quest
-//
-dilcopy qstItemsWanted@quests(QUEST_CITIZEN_MIDGAARD, {"platinum piece"},
+dilcopy qstItemsWanted@quests(QUEST_CITIZEN_MIDGAARD, {"platinum piece"}, {"moneycheck@quests 2 4"},
             {"say Thank you $1N, these citizen taxes will be put to good use."},
-            "say Thank you $1N but I can't accept that. I need 1 platinum piece.");
+            "say Thank you $1N but I can't accept that. I need 2 platinum piece.");
 
 // Give a chance to grant citizenship
 //
@@ -8205,11 +8201,11 @@ code
    exdp := qstAssign@quests(QUEST_CITIZEN_MIDGAARD, pc, 
       {"say To become a citizen is not to be taken lightly. It is an honor bestowed on the few.", 
        "say $1N, you must hereby pledge to become a law abiding citizen,",
-       "say and to prove no one is above the law you must pay me 10 platinum",
+       "say and to prove no one is above the law you must pay me 2 platinum",
        "cough",
        "say to be spent solely on the city of Midgaard of course.",
        "emote puts his hand forward and awaits your payment"},
-      "Bring the Mayor of Midgaard 10 platinum pieces to become a citizen.");
+      "Bring the Mayor of Midgaard 2 platinum pieces to become a citizen.");
    goto start;
 }
 dilend
@@ -8241,7 +8237,7 @@ code
       goto start;
 
    // qitems_ deletes items received 
-   log(pc.symname + "became a citizen of Midgaard.");
+   log(pc.symname + " became a citizen of Midgaard.");
    addextra(pc.extra, {"$protected midgaard"}, "Paid 1 PP to the Mayor");
 
    goto start;

@@ -204,6 +204,36 @@ code
 dilend
 
 
+// You'll want to pass on i which is the amount of money and
+// s which is the money type. These will be compared against
+// 'power' (built-in) and argument
+//
+dilbegin integer moneycheck(u : unitptr, i : integer, s : string);
+code
+{
+   if (power < i)
+   {
+      // exec("say That's too little.", self);
+      return(0);
+   }
+
+   if (power > i)
+   {
+      // exec("say That's too much.", self);
+      return(0);
+   }
+
+   if (s != argument)
+   {
+      // exec("say That's not the right kind of money.", self);
+      return(0);
+   }
+
+   return(1);
+}
+dilend
+
+
 // Add this to a quest NPC that's waiting to "get items" from a player.
 // The items received will be destroyed, and incorrect items given back.
 //
@@ -215,6 +245,11 @@ dilend
 //           E.g. {"mushroom", "black_berries@haon_dor", "garlic", "corpse of rabbit"};
 //           For non-symnames if any name in the given item matches the substrings in 
 //           the list then it's a match.  
+//   itemfunc:  String list of DIL functions that can validate something special. 
+//              Must match the itemsl. Not needed for normal items. Needed e.g. for 
+//              money or to check if e.g. a barrel is full of water.
+//              Format is: <function> <int> <string> like this:
+//              {"", "", "", "corpsecheck@quests 0 a string"}
 //
 // thanksl : String list of thank you statements / actions, one matching each item above. 
 //             {"say Thank you $3n, these are really nice mushrooms.",
@@ -224,7 +259,9 @@ dilend
 //             
 // thanksl : $1 = pc, $2 = item, $3 = self
 //
-dilbegin fnpri(FN_PRI_MISSION+5) integer qstItemsWanted(qname : string, itemsl : stringlist,
+dilbegin fnpri(FN_PRI_MISSION+5) integer qstItemsWanted(qname : string, 
+                                                     itemsl : stringlist,
+                                                     itemfunc : stringlist,
                                                      thanksl : stringlist, nothanks : string);
 var
   pc     : unitptr;
@@ -233,10 +270,18 @@ var
   u      : unitptr;
   i      : integer;
   ln     : integer;
+  j      : integer;
   s      : string;
+  t      : string;
 
 code
 {
+   if (length(itemfunc) != length(itemsl))
+   {
+      log(self.symname + " length of itemsl and itemfunc differs." + itoa(length(itemsl)) + " vs func of " + itoa(length(itemfunc)));
+      log(itemsl.[0]);
+   }
+
    // Must be added 
    //
    if (nothanks != "")
@@ -267,14 +312,28 @@ code
    {
       if ((itemsl.[i] == item.symname) or (itemsl.[i] in item.names))
       {
-         addstring(exdp.names, itemsl.[i]);
-         s := sact(thanksl.[i], A_SOMEONE, pc, item, self, TO_CHAR);
-         exec(s, self);
-         s := sact("<br/>You've given $3m $2n", A_SOMEONE, pc, item, self, TO_CHAR);
-         exdp.descr := exdp.descr + s;
-         destroy(item);
-         block;
-         goto checkit;
+         if (itemfunc.[i] != "")
+         {
+            s := itemfunc.[i];
+            t := getword(s); // get the function
+            j := atoi(getword(s));
+            log("dilcall("+t+")(item, "+itoa(j)+", "+t+")");
+            j := dilcall(t)(item, j, s);
+            log("dilcall()()  returned: " + itoa(j));
+         }
+         else 
+            j := 1;
+         if (j == 1)
+         {
+            addstring(exdp.names, itemsl.[i]);
+            s := sact(thanksl.[i], A_SOMEONE, pc, item, self, TO_CHAR);
+            exec(s, self);
+            s := sact("<br/>You've given $3m $2n", A_SOMEONE, pc, item, self, TO_CHAR);
+            exdp.descr := exdp.descr + s;
+            destroy(item);
+            block;
+            goto checkit;
+         }
       }
 
       i := i + 1;
@@ -322,7 +381,6 @@ code
    {
       // This is tricky because the money is now merged with char's local money
 
-
       t := medium.value[0];
       i := medium.cost - power;
 
@@ -330,7 +388,7 @@ code
       if (i == 0)
       {
          link(medium, activator);
-         goto start;
+         goto sayit;
       }
 
       // NPC already had money of this type
@@ -351,6 +409,8 @@ code
       // Just link the item back
       link(medium, activator);
    }
+
+:sayit:
    s := sact(nothanks, A_SOMEONE, activator, medium, self, TO_CHAR);
    exec(s, self);
 

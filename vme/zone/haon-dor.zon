@@ -2467,10 +2467,9 @@ dilcopy qstSimpleQuest@quests(QUEST_JOHN,
           "emote looks around for some trees to chop down."},
           800, 1 * COPPER_MULT);
 
-dilcopy qstItemsWanted@quests(QUEST_JOHN, {"axe"},
+dilcopy qstItemsWanted@quests(QUEST_JOHN, {"axe"}, {""},
          {"say Thank you $1N, that's such a nice axe."},
           "say Thank you $1N but I can't accept that.");
-
 
 dilcopy wander_zones@function ("@loadzone", 15, 0, 0);
 
@@ -2515,7 +2514,9 @@ dilend
 
 // Mary waits for these four items for the Stew quest
 //
-dilcopy qstItemsWanted@quests(QUEST_RABBIT, {"mushroom", "black_berries@haon_dor", "garlic", "corpse of the cute rabbit"},
+dilcopy qstItemsWanted@quests(QUEST_RABBIT,
+            {"mushroom", "black_berries@haon_dor", "garlic", "corpse of the cute rabbit"},
+            {"","","",""},
             {"say Thank you $1N, these are really nice mushrooms.",
              "say Thank you $1N these are really nice berries.",
              "say Thank you $1N this is really some nice garlic.",
@@ -2525,7 +2526,7 @@ dilcopy qstItemsWanted@quests(QUEST_RABBIT, {"mushroom", "black_berries@haon_dor
 
 // Mary waits for the Pot 
 //
-dilcopy qstItemsWanted@quests(QUEST_POT, {"marys_pot@haon_dor"},
+dilcopy qstItemsWanted@quests(QUEST_POT, {"marys_pot@haon_dor"}, {""},
             {"say My cooking pot! Where did you find that? Aren't you just a sweetheart."}, "");
 
 
