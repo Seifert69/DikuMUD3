@@ -956,33 +956,32 @@ dilargs         : /*empty */
 
 dilarg          : hardstringlist
                 {
-		   struct dilargtype *dat;
+					struct dilargtype *dat;
 
-		   dat = (struct dilargtype *)
-		     mmalloc(sizeof(struct dilargtype));
-		   dat->type = DILV_SLP;
-		   dat->data.stringlist = $1;
-		   $$ = dat;
+					dat = (struct dilargtype *) mmalloc(sizeof(struct dilargtype));
+					dat->type = DILV_SLP;
+					dat->data.stringlist = $1;
+					$$ = dat;
                 }
-					 | hardintlist
+				| hardintlist
                 {
-		   struct dilargtype *dat;
+					struct dilargtype *dat;
 
-		   dat = (struct dilargtype *)
-		     mmalloc(sizeof(struct dilargtype));
-		   dat->type = DILV_ILP;
-		   dat->data.intlist = $1;
-		   $$ = dat;
+					dat = (struct dilargtype *)
+						mmalloc(sizeof(struct dilargtype));
+					dat->type = DILV_ILP;
+					dat->data.intlist = $1;
+					$$ = dat;
                 }
                 | stringcomp
                 {
-		   struct dilargtype *dat;
+					struct dilargtype *dat;
 
-		   dat = (struct dilargtype *)
-		     mmalloc(sizeof(struct dilargtype));
-		   dat->type = DILV_SP;
-		   dat->data.string = $1;
-		   $$ = dat;
+					dat = (struct dilargtype *)
+						mmalloc(sizeof(struct dilargtype));
+					dat->type = DILV_SP;
+					dat->data.string = $1;
+					$$ = dat;
                 }
                 | number
                 {
