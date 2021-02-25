@@ -6,6 +6,7 @@ $Date: 2005/06/28 20:17:48 $
 $Revision: 2.18 $
 */
 
+#include "dbfind.h"
 #ifdef _WINDOWS
 #include <direct.h>
 #endif
@@ -4112,6 +4113,90 @@ void dilfe_dlf(register class dilprg *p)
     p->stack.push(v);
     delete v1;
     delete v2;
+}
+
+void dilfe_call(register class dilprg *p)
+{
+    dilval *v = new dilval;
+    /* Detection of DIL programs (TRUE/FALSE) */
+
+    dilval *v4 = p->stack.pop(); // string
+    dilval *v3 = p->stack.pop(); // integer
+    dilval *v2 = p->stack.pop(); // unitptr
+    dilval *v1 = p->stack.pop(); // The DIL to call
+
+    v->type = DILV_ERR; /* wrong type */
+
+    switch (dil_getval(v4))
+    {
+    case DILV_SP:
+    switch (dil_getval(v3))
+    {
+    case DILV_INT:
+    switch (dil_getval(v2))
+    {
+    case DILV_UP:
+        switch (dil_getval(v1))
+        {
+        case DILV_SP:
+            if (v1->val.ptr)
+            {
+                v->type = DILV_INT;
+                v->atyp = DILA_NONE;
+                v->val.num = -1;
+
+                struct diltemplate *tmpl;                
+                tmpl = find_dil_template((char *)v1->val.ptr);
+
+                if (tmpl)
+                {
+                    //
+                    // Push frame
+                    //
+                    void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl);
+
+                    p->stack.push(v2);
+                    p->stack.push(v3);
+                    p->stack.push(v4);
+
+                    delete v1;
+                    // Don't delete v2-v4 they now live on the stack.
+
+                    dil_push_frame(p, tmpl);
+                    return;
+                }
+                else
+                    szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                                "DIL %s@%s, Unable to find template %s",
+                                UNIT_FI_NAME(p->sarg->owner),
+                                UNIT_FI_ZONENAME(p->sarg->owner), (char *) v1->val.ptr);
+            }
+            break;
+        case DILV_NULL:
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+        }
+        break;
+    case DILV_NULL:
+    case DILV_FAIL:
+        v->type = DILV_FAIL;
+        break;
+    default:
+        v->type = DILV_ERR; /* wrong type */
+        break;
+    }
+    }
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+    delete v3;
+    delete v4;
 }
 
 void dilfe_min(register class dilprg *p)

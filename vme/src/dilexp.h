@@ -86,6 +86,7 @@ void dilfe_sne (class dilprg *);
 void dilfe_pne (class dilprg *);
 void dilfe_null (class dilprg *);
 void dilfe_dlf (class dilprg *);
+void dilfe_call (class dilprg *);
 void dilfe_dld (class dilprg *);
 void dilfe_lor (class dilprg *);
 void dilfe_land (class dilprg *);

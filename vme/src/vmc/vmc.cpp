@@ -404,8 +404,7 @@ mcreate_affect (void)
     return rs;
 }
 
-void
-write_resetcom (FILE * fl, struct reset_command *c)
+void write_resetcom (FILE * fl, struct reset_command *c)
 {
     char *t;
     static char nul[] = { 0, 0 };

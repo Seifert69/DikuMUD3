@@ -63,6 +63,7 @@ struct symbols
     {"rnd",DILSE_RND},
     {"dildestroy",DILSE_DLD},
     {"dilfind",DILSE_DLF},
+    {"dilcall",DILSE_CALL},
     {"findunit",DILSE_FNDU},
     {"findsymbolic",DILSE_FNDS},
     {"findroom",DILSE_FNDR},

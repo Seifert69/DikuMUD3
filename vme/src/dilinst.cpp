@@ -988,7 +988,7 @@ void dil_pop_frame(class dilprg *p)
 /*
    'p' is the program in which a new frame should be created.
    'rtmpl' is the template which the frame should be based upon.
-   'av' are the arguments which are to be passed to the new frame.
+    the arguments must be pushed to the stack before the call.
 */
 
 void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl)
