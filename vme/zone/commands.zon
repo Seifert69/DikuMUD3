@@ -2763,7 +2763,7 @@ code
    sendtext ("You are not in a group silly.<br/>",self);
    }
    else
-      sendtext("Use either 'score' or 'score group'<br/>",self);
+      sendtext("Use 'score', 'score group', 'score mp', 'score ep', or 'score hp'.<br/>",self);
 
    :lead_end:
    unsecure(leader);

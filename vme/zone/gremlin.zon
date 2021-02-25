@@ -231,12 +231,6 @@ code
 
 :start:
 	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (BOLDIN_ONGOING in activator.quests) and (BOLDIN_ROGUE in activator.quests) and (activator.position == POSITION_STANDING));
-
-	if(activator.level >= 40)
-	{
-		goto start;
-		// send them away, perhaps with a token reward?
-	}
 	
 	pc := activator;
 	secure(pc, lostpc);

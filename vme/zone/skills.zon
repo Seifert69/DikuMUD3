@@ -4923,6 +4923,7 @@ code
    addstring(skin.names, skin_name);
    skin.outside_descr := race_name + " " + skin_name + " is laying here.";
    skin.title := race_name + " " + skin_name;
+   addextra (skin.extra,{"$living_sym"},targ.extra.["$living_sym"].descr);
 
    s := getword(race_name); // remove "a", "an", ...
    addstring(skin.names, race_name + " " + skin_name);
