@@ -158,7 +158,9 @@ code
 					
 				act("You dip a brush in your <div class='"+cc+"'>"+cs+"</div> graffiti paint.", A_ALWAYS,pc,self,pc,TO_CHAR);
 				act("$1n dips a brush in their <div class='"+cc+"'>"+cs+"</div> graffiti paint.", A_ALWAYS,pc,self,pc,TO_REST);
+
 				wait(SFB_TICK, command(CMD_AUTO_TICK));
+
 				
 				if(startroom != self.outside.outside.inside_descr)
 					goto moved;
@@ -169,7 +171,9 @@ code
 					
 				act("You begin making your <div class='"+cc+"'>"+cs+"</div> graffiti mark.", A_ALWAYS,pc,self,pc,TO_CHAR);
 				act("$1n begins leaving their mark in <div class='"+cc+"'>"+cs+"</div>.", A_ALWAYS,pc,self,pc,TO_REST);
+
 				wait(SFB_TICK, command(CMD_AUTO_TICK));	
+
 				
 				if(startroom != self.outside.outside.inside_descr)
 					goto moved;
@@ -298,7 +302,7 @@ code
 					roomex := ("$secretgraffitiextra" in self.outside.outside.extra);
 					self.outside.outside.inside_descr := roomex.descr;
 					subextra(self.outside.outside.extra, "$secretgraffitiextra");
-					if("$secretgraffitiextra2" in self.outside.outside.extra)
+					while("$secretgraffitiextra2" in self.outside.outside.extra)
 					{
 						stname := self.outside.outside.extra.["$secretgraffitiextra2"].descr;
 						subextra(self.outside.outside.extra, "$secretgraffitiextra2");
