@@ -648,7 +648,7 @@ class unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version,
                 switch (dilargs->dilarg[j].type)
                 {
                 case DILV_SLP:
-                    pBuf->ReadNames(&dilargs->dilarg[j].data.stringlist);
+                    pBuf->ReadNames(&dilargs->dilarg[j].data.stringlist, version <= 73 ? 1 : 0);
                     break;
 
                 case DILV_SP:
@@ -959,7 +959,7 @@ void bwrite_func(CByteBuffer *pBuf, class unit_fptr *fptr)
                 switch (dilargs->dilarg[j].type)
                 {
                 case DILV_SLP:
-                    pBuf->AppendNames((const char **)dilargs->dilarg[j].data.stringlist);
+                    pBuf->AppendNames((const char **)dilargs->dilarg[j].data.stringlist, 0);
                     break;
                 case DILV_ILP:
                     int myi;

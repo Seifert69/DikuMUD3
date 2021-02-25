@@ -72,7 +72,7 @@ public:
     int ReadFloat (float *pFloat);
     int ReadStringAlloc (char **pStr);
     int ReadStringCopy (char *pStr, ubit32 nSize);
-    int ReadNames (char ***pppNames);
+    int ReadNames(char ***pppStr, int bOld);
     int ReadIntList (int **ilist);
 
     int Skip (int n);
@@ -98,7 +98,7 @@ public:
     void AppendFloat (float f);
     void AppendString (const char *pStr);
     void AppendDoubleString (const char *pStr);
-    void AppendNames (const char *pNames[]);
+    void AppendNames(const char **ppNames, int bOld);
 
 protected:
     void SetSize (ubit32 nSize);
@@ -120,7 +120,7 @@ void bwrite_data (ubit8 ** b, ubit8 * data, ubit32 len);
 void bread_strcpy (ubit8 ** b, char *str);
 char *bread_str_alloc (ubit8 ** buf);
 char *bread_str_skip (ubit8 ** b);
-char **bread_nameblock (ubit8 ** b);
+char **bread_nameblock(ubit8 **b, int bOld);
 
 void bwrite_ubit8 (ubit8 ** b, ubit8 i);
 void bwrite_ubit16 (ubit8 ** b, ubit16 i);
@@ -128,7 +128,7 @@ void bwrite_ubit32 (ubit8 ** b, ubit32 i);
 void bwrite_float (ubit8 ** b, float f);
 void bwrite_string (ubit8 ** b, const char *str);
 void bwrite_double_string (ubit8 ** b, char *str);
-void bwrite_nameblock (ubit8 ** b, char **nb);
+void bwrite_nameblock(ubit8 **b, char **nb, int bOld);
 void bwrite_intblock (ubit8 ** b, int *nb);
 
 #endif /* _MUD_BYTESTRING_H */

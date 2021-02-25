@@ -811,6 +811,22 @@ char **create_namelist(void)
     return list;
 }
 
+// Return the length of the namelist (terminated by NULL in the last entry)
+//
+int len_namelist(const char **namelist)
+{
+	if (namelist == NULL)
+		return 0;
+
+	int i;
+
+	for (i=0; namelist[i]; i++)
+		;
+
+	return i;
+}
+
+
 /* Add a new name to the end of an existing namelist */
 char **add_name(const char *name, char **namelist)
 {

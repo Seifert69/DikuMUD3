@@ -196,24 +196,44 @@ int CByteBuffer::ReadStringAlloc(char **ppStr)
     return Read((ubit8 *)*ppStr, nLen);
 }
 
-int CByteBuffer::ReadNames(char ***pppStr)
+int CByteBuffer::ReadNames(char ***pppStr, int bOld)
 {
-    char *c;
-    *pppStr = create_namelist();
-    assert(*pppStr);
+   char *c;
+   *pppStr = create_namelist();
+   assert(*pppStr);
 
-    for (;;)
-    {
-        if (SkipString(&c))
-            return 1;
+   if (bOld)
+   {
+      for (;;)
+      {
+         if (SkipString(&c))
+               return 1;
 
-        if (*c)
-            *pppStr = add_name(c, *pppStr);
-        else
-            break;
-    }
+         if (*c)
+               *pppStr = add_name(c, *pppStr);
+         else
+               break;
+      }
+   }
+   else // New xxx
+   {
+      int l;
+      int Corrupt;
+      char buf[MAX_STRING_LENGTH];
 
-    return 0;
+      Corrupt = Read32(&l);
+
+      int i;
+
+      for (i=0; i < l; i++)
+      {
+         Corrupt += ReadStringCopy(buf, sizeof(buf)-1);
+         *pppStr = add_name(buf, *pppStr);
+      }
+
+      return Corrupt;
+   }
+   return 0;
 }
 
 int CByteBuffer::ReadIntList(int **ilist)
@@ -386,13 +406,25 @@ void CByteBuffer::AppendDoubleString(const char *pStr)
     }
 }
 
-void CByteBuffer::AppendNames(const char **ppNames)
+void CByteBuffer::AppendNames(const char **ppNames, int bOld)
 {
-    if (ppNames)
-        for (; (const char *)*ppNames && **ppNames; ppNames++)
-            AppendString(*ppNames);
+    if (bOld)
+    {
+      if (ppNames)
+         for (; (const char *)*ppNames && **ppNames; ppNames++)
+               AppendString(*ppNames);
+      AppendString("");
+    }
+    else // New xxx
+    {
+       int l = len_namelist(ppNames);
+       
+       Append32(l);
 
-    AppendString("");
+       int i;
+       for (i=0; i < l; i++)
+          AppendString(ppNames[i]);
+    }
 }
 
 /* =================================================================== */
@@ -438,8 +470,7 @@ float bread_float(ubit8 **b)
     return f;
 }
 
-ubit8 *
-bread_data(ubit8 **b, ubit32 *plen)
+ubit8 *bread_data(ubit8 **b, ubit32 *plen)
 {
     ubit32 len;
     ubit8 *data;
@@ -473,8 +504,7 @@ void bread_strcpy(ubit8 **b, char *str)
  *  string is one or more characters, and return
  *  pointer to allocated string (or 0)
  */
-char *
-bread_str_alloc(ubit8 **b)
+char *bread_str_alloc(ubit8 **b)
 {
     if (**b)
     {
@@ -493,8 +523,7 @@ bread_str_alloc(ubit8 **b)
 
 /* Returns pointer to the string and skips past the end to next
    point in buffer */
-char *
-bread_str_skip(ubit8 **b)
+char *bread_str_skip(ubit8 **b)
 {
     char *o = (char *)*b;
 
@@ -509,23 +538,38 @@ bread_str_skip(ubit8 **b)
 /* Returns * to nameblock, nameblock may be     */
 /* but is never null ({""}).                    */
 
-char **
-bread_nameblock(ubit8 **b)
+char **bread_nameblock(ubit8 **b, int bOld)
 {
     char buf[MAX_STRING_LENGTH];
     char **nb;
 
     nb = create_namelist();
 
-    for (;;)
+    if (bOld)
     {
-        bread_strcpy(b, buf);
-        if (*buf)
-            nb = add_name(buf, nb);
-        else
-            break;
+        for (;;)
+        {
+            bread_strcpy(b, buf);
+            if (*buf)
+                nb = add_name(buf, nb);
+            else
+                break;
+        }
     }
+    else // New xxx
+    {
+      int l;
 
+      l = bread_ubit32(b);
+
+      int i;
+
+      for (i=0; i < l; i++)
+      {
+         bread_strcpy(b, buf);
+         nb = add_name(buf, nb);
+      }
+    }
     return nb;
 }
 
@@ -613,14 +657,28 @@ void bwrite_double_string(ubit8 **b, char *str)
 }
 
 /* Stored: As 'N' strings followed by the empty string ("") */
-void bwrite_nameblock(ubit8 **b, char **nb)
+void bwrite_nameblock(ubit8 **b, char **nb, int bOld)
 {
-    if (nb)
-        for (; *nb && **nb; nb++)
-            bwrite_string(b, *nb);
+    if (bOld)
+    {
+        if (nb)
+            for (; *nb && **nb; nb++)
+                bwrite_string(b, *nb);
 
-    bwrite_string(b, "");
+        bwrite_string(b, "");
+    }
+    else // New method xxx
+    {
+        int l;
+
+        l = len_namelist((const char **) nb);
+        bwrite_ubit32(b, l);
+
+        for (int i = 0; i < l; i++)
+            bwrite_string(b, nb[i]);
+    }
 }
+
 
 /* number of ints, followed by ints */
 void bwrite_intblock(ubit8 **b, int *ib)
