@@ -632,7 +632,7 @@ jd_exp := jd.extra;
    } 
     jd_exp := nextdude;
   }  
- log("Cleared all entries from the database for "+criminal.name);
+ //log("Cleared all entries from the database for "+criminal.name);
  ch_exp := criminal.extra;
  while (ch_exp)
   {
@@ -641,7 +641,7 @@ jd_exp := jd.extra;
       subextra(criminal.extra, ch_exp.names.[0]);
    ch_exp := nextdude;
   }
-log("Cleared all char reward extras from "+criminal.name);
+//log("Cleared all char reward extras from "+criminal.name);
 return;
 }
 else
