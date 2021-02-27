@@ -2530,17 +2530,20 @@ dilcopy qstItemsWanted@quests(QUEST_POT, {"marys_pot@haon_dor"}, {""},
             {"say My cooking pot! Where did you find that? Aren't you just a sweetheart."}, "");
 
 
-/* This DIL program waits for the Orc Chief to signal that he has stolen
-   the pot. When activated Mary just weeps. */
-dilbegin orc_stoleit();
+// This DIL program waits for the Orc Chief to signal that he has stolen
+//   the pot. When activated Mary just weeps.
+//
+dilbegin fnpri(FN_PRI_MISSON-5) orc_stoleit();
 code
 {
    heartbeat := WAIT_SEC*3;
    on_activation(self.position <= POSITION_SLEEPING, skip);
 
    :start:
+   nopriority;
    wait(SFB_MSG, argument $= "gotit");
 
+   priority;
    pause; pause;
    exec("cry", self); pause; pause; pause;
    exec("say The Orcs stole my only and best cooking pot!", self); pause;
