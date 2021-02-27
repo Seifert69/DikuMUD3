@@ -9,12 +9,18 @@ END HEADER*/
 
 #include <macros.h>
 
-#define BOLDIN_ONGOING  "Boldin's Request Ongoing"
+#define BOLDIN_QUEST     "Boldin's Request"
+#define BOLDIN_ONGOING   "Boldin's Request Ongoing"
 #define BOLDIN_COMPLETE  "Boldin's Request Complete"
-#define BOLDIN_BREAD_ONGOING "$Find Boldin Bread"
-#define BOLDIN_WATER_ONGOING "$Find Boldin Water"
-#define BOLDIN_BREAD_COMPLETE "$Found Boldin Bread"
-#define BOLDIN_WATER_COMPLETE "$Found Boldin Water"
+
+#define BOLDIN_BREAD          "Find Boldin Bread"
+#define BOLDIN_BREAD_ONGOING  "Find Boldin Bread Ongoing"
+#define BOLDIN_BREAD_COMPLETE "Find Boldin Bread Complete"
+
+#define BOLDIN_WATER          "Find Boldin Water"
+#define BOLDIN_WATER_ONGOING  "Find Boldin Water Ongoing"
+#define BOLDIN_WATER_COMPLETE "Find Boldin Water Complete"
+
 #define BOLDIN_HANDOFF  "Feeding Boldin Complete"
 #define BOLDIN_ROGUE  "$Seeking Rogue"
 #define ROGUE_ONGOING  "Assisting a Rogue"
@@ -231,7 +237,7 @@ code
 
 :start:
 	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (BOLDIN_ONGOING in activator.quests) and (BOLDIN_ROGUE in activator.quests) and (activator.position == POSITION_STANDING));
-	
+
 	pc := activator;
 	secure(pc, lostpc);
 
@@ -404,69 +410,160 @@ code
 }
 dilend // END rogue_give
 
-dilbegin boldin_request();
+
+
+dilbegin aware boldin_request();
+external
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist);
+   extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+   unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer);
 var
   item: unitptr;
   pc: unitptr;
   exdp: extraptr;
+  i : integer;
 
 code
 {
 	heartbeat:= PULSE_SEC*3;
 
 :start:
-	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(BOLDIN_COMPLETE in activator.quests)) and (activator.level <= 40));
+   unsecure(pc);
+	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not (BOLDIN_COMPLETE in activator.quests)));
+
+   if (not (BOLDIN_ONGOING in activator.quests))
+      goto boldingo;
 
 	pc := activator;
 	secure(pc, lostpc);
 
-	if (BOLDIN_BREAD_ONGOING in pc.quests)
-		goto bread_ongoing;
-	if ((BOLDIN_BREAD_COMPLETE in pc.quests) and (not(BOLDIN_WATER_ONGOING in pc.quests)) and (not(BOLDIN_WATER_COMPLETE in pc.quests)))
-		goto water;
-	if (BOLDIN_WATER_ONGOING in pc.quests)
-		goto water_ongoing;
-	if ((BOLDIN_BREAD_COMPLETE in pc.quests) and (BOLDIN_WATER_COMPLETE in pc.quests) and (not(BOLDIN_HANDOFF in pc.quests)))
+   if (not (BOLDIN_BREAD_COMPLETE in pc.quests))
+   {
+      if (not (BOLDIN_BREAD_ONGOING in pc.quests))
+         goto bread;
+      else
+         goto bread_ongoing;
+   }
+   else if (not (BOLDIN_WATER_COMPLETE in pc.quests))
+   {
+      if (not (BOLDIN_WATER_ONGOING in pc.quests))
+         goto water;
+      else
+         goto water_ongoing;
+   }
+
+	if (not (BOLDIN_HANDOFF in pc.quests))
 		goto handoff;
 	if ((EXPLORE_COMPLETE in pc.quests) and (not(BOLDIN_COMPLETE in pc.quests)) and (not(BOLDIN_ROGUE in pc.quests)))
 		goto finish;
 	if ((BOLDIN_HANDOFF in pc.quests) or (BOLDIN_COMPLETE in pc.quests))
 		goto start;
-	pause;
-	exec("say Ahoy there traveller!", self);
-    pause;
-    exec("say you look to be somewhat new around here.", self);
-    pause;
-	exec("whisper "+pc.name+" I could use some help. And I'm guessing you could as well!", self);
-	pause;
-	exec("whisper "+pc.name+" You see, the older I get, the harder it seems it is to get around.", self);
-	pause;
-	exec("whisper "+pc.name+" Would you be so kind as to help me out?", self);
-	pause;
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+
+   goto start;
+
+:boldingo: 
+	pc := qstWaitHero@quests(BOLDIN_QUEST, activator,
+      {"say Ahoy there traveller!",
+      "say you look to be somewhat new around here.",
+      "whisper $1N I could use some help. And I'm guessing you could as well!",
+      "whisper $1N You see, the older I get, the harder it seems it is to get around.",
+      "whisper $1N Would you be so kind as to help me out?",
+      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.' <div class='cpy'>HINT: Simply type 'nod' and hit enter.</div>"
+      }
+   );
+
+   if (pc == null)
+      goto start;
+
+   secure(pc, lostpc);
+
+   // Boldin Quest accepted
+
+   exdp := qstAssign@quests(BOLDIN_QUEST, pc, 
+      {"say Excellent!",
+       "clap"},
+      "Help Boldin in Udgaard with various quests."
+   );
+
+:bread:
+   // Bread Quest accepted
+
+
+   exdp := qstAssign@quests(BOLDIN_BREAD, pc, 
+      {"say A man gets hungry in his age.",
+      "whisper $1N If you could find a store and <div class='hint'>buy bread</div> for me, it would be well appreciated.",
+      "whisper $1N Take this money, and you can keep anything thats left after your purchase.",
+      "whisper $1N Use the <a cmd='#'>purse</a> command to check how much money you are carrying.'",
+      "whisper $1N A food store can be found west and north of here.",
+      "emote gives 2 copper pieces to $1N"},
+      "Buy a bread and give it to Boldin."
+   );
+
+   // Give money to the player
+   i := transfermoney(null, pc, 2 * COPPER_MULT);
+
+	unsecure(pc);
+	goto start;
+
+:bread_ongoing:
+   pc := qstWaitDone@quests(BOLDIN_BREAD, pc, 
+         {"smile $1N",
+          "say Quest complete, brave adventurer!",
+          "whisper $1N I suspect you'll need these coins sooner or later."},
+          500, 2 * COPPER_MULT);
+	unsecure(pc);
+	goto start;
+	
+
+
+:water:	
+   pc  := qstWaitHero@quests(BOLDIN_WATER, pc,
+      {"emote quietly chews a chunk of bread.",
+      "say Thank you again for that bread, traveller!",
+      "say Now, could I ask one more favor?",
+      "whisper $1N You see, I'm feeling rather parched.",
+      "whisper $1N A dash of water would do me well!",
+      "whisper $1N Would you be so kind as to help me out?",
+      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"});
+
 	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 
-	goto accept_bread;
-	
-:water:
-	
-	pause;
-	act("Boldin the wise quietly chews a chunk of bread.",A_SOMEONE, pc, null, null, TO_ROOM); 
-	pause;
-	exec("say Thank you again for that bread, traveller!", self);
-    pause;
-    exec("say Now, could I ask one more favor?", self);
-    pause;
-	exec("whisper "+pc.name+" You see, I'm feeling rather parched.", self);
-	pause;
-	exec("whisper "+pc.name+" A dash of water would do me well!", self);
-	pause;
-	exec("whisper "+pc.name+" Would you be so kind as to help me out?", self);
-	pause;
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+   if (pc == null)
+      goto start;
 
-	goto accept_water;
+   // Find a hero to take the water quest
+   exdp := qstAssign@quests(BOLDIN_WATER, pc, 
+      {"say Excellent!",
+      "say I've got the thirst of a man twice my size and with three times my vigor.",
+      "whisper $1N Take this barrel, and map.",
+      "whisper $1N Simply <a cmd='look map'>look at this map</a> and it will guide you to the nearby city of Midgaard.",
+      "whisper $1N At the Midgaard Market Square you will find an obelisk full of water! Simply <a cmd='#'>pour obelisk in barrel</a> to fill it up.'",
+      "emote hands you an empty barrel and a crumpled map."},
+      "Return to Boldin with his barrel full of water. You can fill up the barrel in Midgaard at the Obelisk."
+   );
+
+	item := load("water_barrel@gremlin");
+	link(item, pc);
+	item := load("midgaard_map@gremlin");
+	link(item, pc);
+	act("<div class='hint'>HINT: Type 'look map' to find directions to Midgaard.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 	
+	unsecure(pc);
+	goto start;
+
+
+:water_ongoing:
+   pc := qstWaitDone@quests(BOLDIN_WATER, pc, 
+         {"smile $1N",
+          "emote takes a long drink from the barrel, completely emptying it!",
+          "say I think you're going to need these sooner or later",
+          "emote quite slips you come coins and gives you an empty barrel."
+          },
+          500, 2 * COPPER_MULT);
+   item := load("water_barrel@gremlin");
+   link(item, pc);
+	unsecure(pc);
+	goto start;
 
 :handoff:
 
@@ -500,31 +597,7 @@ code
 
 	goto accept_finish;
 	
-:accept_bread:
 
-	wait(SFB_CMD, activator #= pc);
-	if (command("nod"))
-		goto bread_accepted; 
-	else if (command("shake"))
-		goto no_quest;
-	else
-	{
-		act("<div class='whisper'>Boldin the wise whispers to you, '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		goto accept_bread;
-	}
-
-:accept_water:
-
-	wait(SFB_CMD, activator #= pc);
-	if (command("nod"))
-		goto water_accepted; 
-	else if (command("shake"))
-		goto no_quest;
-	else
-	{
-		act("<div class='whisper'>Boldin the wise whispers to you, '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		goto accept_water;
-	}
 	
 :accept_handoff:
 
@@ -557,62 +630,6 @@ code
 	unsecure(pc);
 	goto start;
 
-:bread_accepted:
-
-	pause;
-	exec("say Excellent!", self);
-	pause;
-	
-	exec("say A man gets hungry in his age.", self);
-	pause;
-	
-	act("<div class='whisper'>Boldin the wise whispers to you, 'If you could find a store and <div class='hint'>buy bread</div> for me, it would be well appreciated.",A_SOMEONE, pc, null, null, TO_CHAR); 
-	pause;
-	act("<div class='whisper'>Boldin the wise whispers something to " + pc.name + ".",A_SOMEONE, pc, null, null, TO_REST); 
-	pause;
-	exec("whisper "+pc.name+" Take this money, and you can keep anything thats left after your purchase.", self);
-	pause;
-	item := load("coins@gremlin");
-	link(item, pc);
-	act("<br>Boldin the wise quietly slips you some coins.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Use the <div class='hint'>purse</div> command to check how much money you are carrying.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	act("<div class='hint'>HINT: A food store can be found west and north of here.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	addextra(pc.quests, {BOLDIN_BREAD_ONGOING}, "");
-	addextra(pc.quests, {BOLDIN_ONGOING}, "");
-	pause;
-	
-	unsecure(pc);
-	goto start;
-
-:water_accepted:
-
-	pause;
-	exec("say Excellent!", self);
-	pause;
-	
-	exec("say I've got the thirst of a man twice my size and with three times my vigor.", self);
-	pause;
-	
-	exec("whisper "+pc.name+" Take this barrel, and map.", self);
-	pause;
-	
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Simply <div class='hint'>look</div> at this <div class='hint'>map</div> and it will guide you to the nearby city of Midgaard.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	pause;
-	
-	act("<div class='whisper'>Boldin the wise whispers to you, 'At the Midgaard Market Square you will find an obelisk full of water! Simply <div class='hint'>pour obelisk in barrel</div> to fill it up.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	pause;
-	item := load("water_barrel@gremlin");
-	link(item, pc);
-	act("Boldin hands you an empty barrel.<br>",A_SOMEONE, pc, null, null, TO_CHAR);
-	item := load("midgaard_map@gremlin");
-	link(item, pc);
-	act("Boldin hands you a crumpled map.",A_SOMEONE, pc, null, null, TO_CHAR);
-	act("<div class='hint'>HINT: Type 'look map' to find directions to Midgaard.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	addextra(pc.quests, {BOLDIN_WATER_ONGOING}, "");
-	pause;
-	
-	unsecure(pc);
-	goto start;
 	
 :handoff_accepted:
 
@@ -651,122 +668,13 @@ code
 	unsecure(pc);
 	goto start;
 	
-:bread_ongoing:
-
-	exdp := BOLDIN_ONGOING in pc.quests;
-	if ("bread" in exdp.names)
-	{
-		pause;
-		exec("smile " + pc.name, self);
-		subextra(pc.quests, BOLDIN_BREAD_ONGOING);
-		addextra(pc.quests, {BOLDIN_BREAD_COMPLETE}, "");
-		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		act("<br><div class='xpgain'>You recieve 500 experience.</div><br>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		experience(500, pc);
-		item := load("coins@gremlin");
-		link(item, pc);
-		act("Boldin the wise quietly slips you some coins.",A_SOMEONE, pc, null, null, TO_CHAR); 
-		exec("whisper " + pc.name + " I suspect you'll need that sooner than later.", self);
-	}
-	unsecure(pc);
-	goto start;
-	
-:water_ongoing:
-
-	exdp := BOLDIN_ONGOING in pc.quests;
-	if ("water" in exdp.names)
-	{
-		pause;
-		exec("smile " + pc.name, self);
-		pause;
-		act("<br>Boldin takes a long drink from the barrel, completely emptying it!",A_SOMEONE, pc, null, null, TO_CHAR);
-		subextra(pc.quests, BOLDIN_WATER_ONGOING);
-		addextra(pc.quests, {BOLDIN_WATER_COMPLETE}, "");
-		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR);
-		act("<br><div class='xpgain'>You recieve 500 experience.</div><br>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		experience(500, pc);
-		item := load("coins@gremlin");
-		link(item, pc);	
-		item := load("water_barrel@gremlin");
-		link(item, pc);
-		act("Boldin the wise quietly slips you some coins.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		exec("whisper " + pc.name + " I suspect you'll need that sooner than later.", self);
-		act("<br><br>Boldin the wise hands you an empty barrel.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		exec("whisper " + pc.name + " Why dont you keep that, it may be useful.", self);
-	}
-	unsecure(pc);
-	goto start;
 
 :lostpc:
-
-	exec("sigh", self);
-	goto start;
+   exec("sigh", self);
+   goto start;
 }
 dilend // END boldin_request
 
-/* Boldin Give */
-
-dilbegin boldin_give();
-var
-	pc: unitptr;
-	item: unitptr;
-	exdp: extraptr;
-
-code
-{
-	heartbeat:= PULSE_SEC*3;
-
-:start:
-
-	wait(SFB_DONE, (command("give")) and (target == self) and (activator.type == UNIT_ST_PC) and
-		(BOLDIN_ONGOING in activator.quests));
-
-:give:
-
-	pc:= activator;
-	item:= medium;
-	secure(pc, lostpc);
-	exdp:= BOLDIN_ONGOING in pc.quests;
-
-	if (("bread@midgaard" == (self.inside.nameidx + "@" + self.inside.zoneidx)) and (not(BOLDIN_BREAD_COMPLETE in activator.quests)))
-	{
-		addstring(exdp.names, "bread");
-		exec("say Ahh, delicious!", self);
-		destroy(self.inside);
-	}
-	else if (("water_barrel@gremlin" == (self.inside.nameidx + "@" + self.inside.zoneidx)) and 
-		(not(BOLDIN_WATER_COMPLETE in activator.quests)) and (BOLDIN_BREAD_COMPLETE in activator.quests))
-	{
-		if(self.inside.weight < 28)
-		{
-			exec("say Why "+pc.name +", this isnt full!", self);
-			act("<div class='whisper'>Boldin the wise whispers to you, 'Find the Market Square and <div class='hint'>pour obelisk in barrel</div> then bring it back to me.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-			link(self.inside, pc);
-			goto rejected;
-		}
-		addstring(exdp.names, "water");
-		exec("say Ahh, my water!", self);
-		destroy(self.inside);
-	}
-	else
-	{
-		exec("say Did I ask for this, "+pc.name +"?", self);
-		pause;
-		exec("say I think not.", self);
-		link(self.inside, pc);
-	}
-
-:rejected:	
-	
-	unsecure(pc);
-	goto start;
-
-:lostpc:
-
-	exec("say bah!", self);
-	goto start;
-}
-dilend // END boldin_give
 
 dilbegin barnham_request();
 var
@@ -1742,6 +1650,15 @@ default POSITION_STANDING
 dilcopy newbie_nokill@newbie();
 dilcopy newbie_nospl@newbie();
 dilcopy boldin_request@gremlin();
+
+dilcopy qstItemsWanted@quests(BOLDIN_BREAD, {"bread@midgaard"}, {""},
+		{"say Ahh, delicious! Thank you $1N.","emote eats the bread."}, 
+       "say Please bring me a bread from Rosanne's bakery.");
+
+dilcopy qstItemsWanted@quests(BOLDIN_WATER, {"water_barrel@gremlin"}, {"fluidcheck@quests 24"},
+		{"say A barrel full of water. Thank you $1N."},
+      "say Please bring me back my barrel filled with water.");
+
 dilcopy boldin_give@gremlin();
 
 end

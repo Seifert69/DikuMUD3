@@ -25,6 +25,68 @@ notes
 
 %dil
 
+// ============ GENERIC qstItemsWait() Helper function
+
+// For receiving money:
+//
+// You'll want to pass on i which is the amount of money and
+// s which is the money type. These will be compared against
+// 'power' (built-in) and argument
+//
+dilbegin integer moneycheck(u : unitptr, i : integer, s : string);
+code
+{
+   if (power < i)
+   {
+      // exec("say That's too little.", self);
+      return(0);
+   }
+
+   if (power > i)
+   {
+      // exec("say That's too much.", self);
+      return(0);
+   }
+
+   if (s != argument)
+   {
+      // exec("say That's not the right kind of money.", self);
+      return(0);
+   }
+
+   return(1);
+}
+dilend
+
+
+// For checking how much fluid is left:
+//
+// You'll want to pass on i which is the amount of fluid to 
+// at least be in the container
+//
+dilbegin integer fluidcheck(u : unitptr, i : integer, s : string);
+code
+{
+   if (u.objecttype != ITEM_DRINKCON)
+   {
+      exec("say That's not a drink container.", self);
+      return(0);
+   }
+
+   if (u.value[0]< i)
+   {
+      exec("say There's not enough liquid inside.", self);
+      return(0);
+   }
+
+   return(1);
+}
+dilend
+
+
+// ===========================================================
+
+
 // Try to see if "pc" is willing to take on this quest
 //
 // pc : The player that is the target of this quest request
@@ -204,36 +266,6 @@ code
 dilend
 
 
-// You'll want to pass on i which is the amount of money and
-// s which is the money type. These will be compared against
-// 'power' (built-in) and argument
-//
-dilbegin integer moneycheck(u : unitptr, i : integer, s : string);
-code
-{
-   if (power < i)
-   {
-      // exec("say That's too little.", self);
-      return(0);
-   }
-
-   if (power > i)
-   {
-      // exec("say That's too much.", self);
-      return(0);
-   }
-
-   if (s != argument)
-   {
-      // exec("say That's not the right kind of money.", self);
-      return(0);
-   }
-
-   return(1);
-}
-dilend
-
-
 // Add this to a quest NPC that's waiting to "get items" from a player.
 // The items received will be destroyed, and incorrect items given back.
 //
@@ -279,15 +311,18 @@ code
    if (length(itemfunc) != length(itemsl))
    {
       log(self.symname + " length of itemsl and itemfunc differs." + itoa(length(itemsl)) + " vs func of " + itoa(length(itemfunc)));
-      log(itemsl.[0]);
+      log(qname + " " + itemsl.[0]);
    }
 
    // Must be added 
    //
    if (nothanks != "")
    {
-      s := "qstItemNoThank@quests(" + nothanks + ")";
+      s := "qstItemNoThank@quests()";
       dilcopy(s, self);
+      heartbeat := 1;
+      wait(SFB_TICK, TRUE); // Allow dil copied to activate
+      sendto("nothanks "+qname+"//"+nothanks, self);
    }
 
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
@@ -317,9 +352,8 @@ code
             s := itemfunc.[i];
             t := getword(s); // get the function
             j := atoi(getword(s));
-            log("dilcall("+t+")(item, "+itoa(j)+", "+t+")");
             j := dilcall(t)(item, j, s);
-            log("dilcall()()  returned: " + itoa(j));
+            // log("dilcall()()  returned: " + itoa(j));
          }
          else 
             j := 1;
@@ -358,12 +392,14 @@ code
    }
    if (not ("$done" in exdp.names))
       addstring(exdp.names, "$done");
+
+   goto start;
 }
 dilend
 
 
 
-dilbegin unique fnpri(FN_PRI_MISSION+6) qstItemNoThank(nothanks : string);
+dilbegin aware unique fnpri(FN_PRI_MISSION+6) qstItemNoThank();
 external
    unitptr make_money@baseget(i1 : integer, i2 : integer);
 
@@ -372,8 +408,23 @@ var
    i : integer;
    t : integer;
    u : unitptr;
+   nothanksl : stringlist;
+   qstnamesl  : stringlist;
+   sl         : stringlist;
 code
 {
+   interrupt(SFB_MSG, TRUE, getarg);
+   goto start;
+
+:getarg:
+   s := getword(argument);
+   if (s != "nothanks")
+      goto start;
+   
+   sl := split(argument, "//");
+   addstring(qstnamesl, sl.[0]+" Ongoing");
+   addstring(nothanksl, sl.[1]);
+
 :start:
    wait(SFB_DONE, command("give") and (target == self));
 
@@ -411,7 +462,18 @@ code
    }
 
 :sayit:
-   s := sact(nothanks, A_SOMEONE, activator, medium, self, TO_CHAR);
+   i := 0;
+   while (i < length(qstnamesl))
+   {
+      if (qstnamesl.[i] in activator.quests)
+         goto sayit2;
+      i := i + 1;
+   }
+   exec("emote won't accept your item.", self);
+   goto start;
+
+:sayit2:
+   s := sact(nothanksl.[i], A_SOMEONE, activator, medium, self, TO_CHAR);
    exec(s, self);
 
    goto start;
