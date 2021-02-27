@@ -2533,7 +2533,7 @@ dilcopy qstItemsWanted@quests(QUEST_POT, {"marys_pot@haon_dor"}, {""},
 // This DIL program waits for the Orc Chief to signal that he has stolen
 //   the pot. When activated Mary just weeps.
 //
-dilbegin fnpri(FN_PRI_MISSON-5) orc_stoleit();
+dilbegin fnpri(FN_PRI_MISSION-5) orc_stoleit();
 code
 {
    heartbeat := WAIT_SEC*3;
