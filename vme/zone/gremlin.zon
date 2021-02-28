@@ -21,10 +21,18 @@ END HEADER*/
 #define BOLDIN_WATER_ONGOING  "Find Boldin Water Ongoing"
 #define BOLDIN_WATER_COMPLETE "Find Boldin Water Complete"
 
-#define BOLDIN_HANDOFF  "Feeding Boldin Complete"
-#define BOLDIN_ROGUE  "$Seeking Rogue"
-#define ROGUE_ONGOING  "Assisting a Rogue"
-#define ROGUE_COMPLETE  "Rogue Friend"
+#define BOLDIN_HANDOFF          "Boldin's Cousin"
+#define BOLDIN_HANDOFF_ONGOING  "Boldin's Cousin Ongoing"
+#define BOLDIN_HANDOFF_COMPLETE "Boldin's Cousin Complete"
+
+#define BOLDIN_ROGUE           "Boldin Seeking Rogue"
+#define BOLDIN_ROGUE_ONGOING   "Boldin Seeking Rogue Ongoing"
+#define BOLDIN_ROGUE_COMPLETE  "Boldin Seeking Rogue Complete"
+
+#define ROGUE_QUEST        "Rogue Quest"
+#define ROGUE_ONGOING      "Rogue Ongoing"
+#define ROGUE_COMPLETE     "Rogue Complete"
+
 #define EXPLORE_ONGOING  "Seeking Bernhard"
 #define EXPLORE_COMPLETE "Seeking Bernhard Complete"
 
@@ -226,6 +234,8 @@ code
 }
 dilend
 
+
+
 dilbegin rogue_request();
 var
   pc: unitptr;
@@ -236,7 +246,7 @@ code
 	heartbeat:= PULSE_SEC*4;
 
 :start:
-	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (BOLDIN_ONGOING in activator.quests) and (BOLDIN_ROGUE in activator.quests) and (activator.position == POSITION_STANDING));
+	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (BOLDIN_ROGUE_ONGOING in activator.quests) and (activator.position == POSITION_STANDING));
 
 	pc := activator;
 	secure(pc, lostpc);
@@ -452,13 +462,20 @@ code
       else
          goto water_ongoing;
    }
-
-	if (not (BOLDIN_HANDOFF in pc.quests))
-		goto handoff;
-	if ((EXPLORE_COMPLETE in pc.quests) and (not(BOLDIN_COMPLETE in pc.quests)) and (not(BOLDIN_ROGUE in pc.quests)))
-		goto finish;
-	if ((BOLDIN_HANDOFF in pc.quests) or (BOLDIN_COMPLETE in pc.quests))
-		goto start;
+   else if (not (BOLDIN_HANDOFF_COMPLETE in pc.quests))
+   {
+      if (not (BOLDIN_HANDOFF_ONGOING in pc.quests))
+         goto handoff;
+      else
+         goto handoffdone;
+   }
+   else if (not (BOLDIN_ROGUE_COMPLETE in pc.quests))
+   {
+      if (not (BOLDIN_ROGUE_ONGOING in pc.quests))
+         goto rogue;
+      else
+         goto roguedone;
+   }
 
    goto start;
 
@@ -557,7 +574,7 @@ code
          {"smile $1N",
           "emote takes a long drink from the barrel, completely emptying it!",
           "say I think you're going to need these sooner or later",
-          "emote quite slips you come coins and gives you an empty barrel."
+          "emote quite slips you some coins and gives you an empty barrel."
           },
           500, 2 * COPPER_MULT);
    item := load("water_barrel@gremlin");
@@ -565,109 +582,73 @@ code
 	unsecure(pc);
 	goto start;
 
+
 :handoff:
+   pc  := qstWaitHero@quests(BOLDIN_HANDOFF, pc,
+      {"say Now that was refreshing, $1N!",
+      "say A dark rumour has been spreading, and I think you're up to helping with it.",
+      "whisper $1N There is word that gremlins have invaded a nearby farmstead!",
+      "whisper $1N What do you think, do you have it in you to help?",
+      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"});
 
-	pause;
-	exec("say It's good to see you again " + pc.name + "!", self);
-    pause;
-    exec("say A dark rumour has been spreading, and I think you're up to helping with it.", self);
-    pause;
-	exec("whisper "+pc.name+" There is word that gremlins have invaded a nearby farmstead!", self);
-	pause;
-	exec("whisper "+pc.name+" What do you think, do you have it in you to help?", self);
-	pause;
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+   if (pc == null)
+      goto start;
 
-	goto accept_handoff;
-	
-:finish:
+   // Find a hero to take the water quest
+   exdp := qstAssign@quests(BOLDIN_HANDOFF, pc, 
+      {"say Your help will be well appreciated $1N!",
+      "whisper $1N Between Cypress Forest and the City of Midgaard lies a dusty trail.",
+      "whisper $1N A small farmstead can be found by heading north on this trail.",
+      "whisper $1N Barnham is the master of this farm, and also a distant cousin of mine.",
+      "whisper $1N Please go find Barnham, he will warmly welcome you."},
+      "Go see Barnham in the farmstead north of a dusty trail between the Cypress forest and Midgaard."
+   );
 
-	pause;
-	exec("say I see you have returned, " + pc.name + ".", self);
-    pause;
-    exec("say I am truly saddened by the news that has reached me.", self);
-    pause;
-	exec("whisper "+pc.name+" Bernhard will be deeply missed. He was the last of a long line of heroic adventurers.", self);
-	pause;
-	exec("whisper "+pc.name+" Given the state of affairs, I'm afraid I must ask for additional assistance.", self);
-	pause;
-	exec("whisper "+pc.name+" Can I count on you for one more request?", self);
-	pause;
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-
-	goto accept_finish;
-	
+	unsecure(pc);
+	goto start;
 
 	
-:accept_handoff:
+:handoffdone:
+   pc := qstWaitDone@quests(BOLDIN_HANDOFF, pc, 
+         {"say I see you have returned, $1N.",
+          "say I am truly saddened by the news that has reached me.",
+          "whisper $1N Bernhard will be deeply missed. He was the last of a long line of heroic adventurers."},
+          500, 2 * COPPER_MULT);
+	unsecure(pc);
+	goto start;
 
-	wait(SFB_CMD, activator #= pc);
-	if (command("nod"))
-		goto handoff_accepted; 
-	else if (command("shake"))
-		goto no_quest;
-	else
-	{
-		act("<div class='whisper'>Boldin the wise whispers to you, '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		goto accept_handoff;
-	}
+:rogue:
+   pc  := qstWaitHero@quests(BOLDIN_ROGUE, pc,
+      {
+      "whisper $1N Given the state of affairs, I'm afraid I must ask for additional assistance.",
+      "whisper $1N Can I count on you for one more request?"
+      });
 
-:accept_finish:
+   if (pc == null)
+      goto start;
 
-	wait(SFB_CMD, activator #= pc);
-	if (command("nod"))
-		goto finish_accepted; 
-	else if (command("shake"))
-		goto no_quest;
-	else
-	{
-		act("<div class='whisper'>Boldin the wise whispers to you, '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		goto accept_handoff;
-	}
+   // Find a hero to take the water quest
+   exdp := qstAssign@quests(BOLDIN_ROGUE, pc, 
+      {"say And so another adventure begins $1N.",
+   	  "whisper $1N Away beyond the East gate of Midgaard lies a crossroads.",
+        "whisper $1N South from this crossroads, lies the seaside town of Torsbay.",
+        "whisper $1N There in Torsbay, a rogue has landed on the shore.",
+        "whisper $1N Find this rogue, and mention my name. He will know what to do."
+      }, "Find the rogue in Torsbay.");
+	unsecure(pc);
+	goto start;
+
+:roguedone:
+   // Check if BOLDIN_ROGUE is done (qstWaitDone). For now I don't think you've compelted this part?
+   goto start;
+
+
 :no_quest:
 
 	exec("say So be it!", self);
 	unsecure(pc);
 	goto start;
 
-	
-:handoff_accepted:
-
-	pause;
-	exec("say Your help will be well appreciated " + pc.name +"!", self);
-	pause;
-	exec("whisper "+pc.name+" Between Cypress Forest and the City of Midgaard lies a dusty trail.", self);
-	pause;
-	exec("whisper "+pc.name+" A small farmstead can be found by heading north on this trail.", self);
-	pause;
-	exec("whisper "+pc.name+" Barnham is the master of this farm, and also a distant cousin of mine.", self);
-	pause;
-	exec("whisper "+pc.name+" Please go find Barnham, he will warmly welcome you.", self);
-	pause;
-	addextra(pc.quests, {BOLDIN_HANDOFF}, "");
-	pause;
-	
-	unsecure(pc);
-	goto start;
-
-:finish_accepted:
-
-	pause;
-	exec("say And so another adventure begins " + pc.name +"!", self);
-	pause;
-	exec("whisper "+pc.name+" Away beyond the East gate of Midgaard lies a crossroads.", self);
-	pause;
-	exec("whisper "+pc.name+" South from this crossroads, lies the seaside town of Torsbay.", self);
-	pause;
-	exec("whisper "+pc.name+" There in Torsbay, a rogue has landed on the shore.", self);
-	pause;
-	exec("whisper "+pc.name+" Find this rogue, and mention my name. He will know what to do.", self);
-	pause;
-	addextra(pc.quests, {BOLDIN_ROGUE}, "");
-	pause;
-	unsecure(pc);
-	goto start;
-	
 
 :lostpc:
    exec("sigh", self);
@@ -677,6 +658,8 @@ dilend // END boldin_request
 
 
 dilbegin barnham_request();
+external
+   extraptr qstSetDone@quests(qname : string, pc : unitptr);
 var
   item: unitptr;
   pc: unitptr;
@@ -687,7 +670,7 @@ code
 	heartbeat:= PULSE_SEC*4;
 
 :start:
-	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(EXPLORE_COMPLETE in activator.quests)) and (activator.level <= 40) and (BOLDIN_HANDOFF in activator.quests));
+	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(EXPLORE_COMPLETE in activator.quests)) and (BOLDIN_HANDOFF_ONGOING in activator.quests));
 
 	pc := activator;
 	secure(pc, lostpc);
@@ -793,6 +776,7 @@ code
 		exec("emote returns the dagger to you.", self);
 		subextra(pc.quests, EXPLORE_ONGOING);
 		addextra(pc.quests, {EXPLORE_COMPLETE}, "");
+      exdp := qstSetDone@quests(BOLDIN_HANDOFF, pc);
 		experience(1000, pc);
 		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 		act("<br><div class='xpgain'>You recieve 1000 experience.</div><br>",A_SOMEONE, pc, null, null, TO_CHAR); 

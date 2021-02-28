@@ -266,6 +266,22 @@ code
 dilend
 
 
+dilbegin extraptr qstSetDone(qname : string, pc : unitptr);
+var
+   exdp : extraptr;
+code
+{
+   exdp := (qname + " Ongoing") in pc.quests;
+
+   if (not ("$done" in exdp.names))
+      addstring(exdp.names, "$done");
+
+   return(exdp);
+}
+dilend
+
+
+
 // Add this to a quest NPC that's waiting to "get items" from a player.
 // The items received will be destroyed, and incorrect items given back.
 //
