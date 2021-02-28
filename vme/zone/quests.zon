@@ -258,6 +258,7 @@ code
    addstring(sl, s);
    addextra(pc.quests, sl, qdescr);
    exd := s in pc.quests;
+   sendtext("<div class='cpy'>New Quest: " + qname +"</div><br/>", pc);
 
 :lostpc:
    nopriority;
