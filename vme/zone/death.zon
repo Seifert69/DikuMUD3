@@ -805,14 +805,14 @@ code
    //load Justice Database 
    jd := findsymbolic("database@justice");
   
- //transfer reward infor to corpse if found.
+   //transfer reward infor to corpse if found.
    reward_exp := "$reward" in self.extra;
 
-  while (reward_exp)
-       {
-          addextra(crp.extra, reward_exp.names,reward_exp.descr);
-          reward_exp := "$reward" in reward_exp.next;
-       }
+   while (reward_exp)
+   {
+      addextra(crp.extra, reward_exp.names, reward_exp.descr);
+      reward_exp := "$reward" in reward_exp.next;
+   }
 
    rltime:=realtime;
 
