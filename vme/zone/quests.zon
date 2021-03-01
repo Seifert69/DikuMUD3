@@ -499,7 +499,7 @@ dilend
 
 
 dilbegin unitptr qstWaitDone(qname : string, pc : unitptr,
-                             sl : stringlist, xp : integer, gold : integer);
+                             sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
 var
    pcname : string;
    u      : unitptr;
@@ -559,6 +559,24 @@ code
       i := transfermoney(null, pc, gold);
       sendtext("You received " + moneystring(gold, TRUE) + "<br/>", pc);
    }
+
+   i := 0;
+   while (i < length(itemsl))
+   {
+      u := load(itemsl.[i]);
+      if (u == null)
+         log("Quest " + qname + " unable to load item " + itemsl.[i]);
+      else
+      {
+         u.height := pc.height;
+         link(u, pc);
+         act("$3n gives you $2n.", A_SOMEONE, pc, u, self, TO_CHAR);
+         act("$3n gives $2n to $1n.", A_SOMEONE, pc, u, self, TO_REST);
+      }
+
+      i := i + 1;
+   }
+
    nopriority;
    return(pc);
 
@@ -575,12 +593,12 @@ dilbegin qstSimpleQuest(qname : string,
                         qstAccepted : stringlist,
                         qstDescr : string,
                         qstDone : stringlist,
-                        xp : integer, gold : integer);
+                        xp : integer, gold : integer, itemsl : stringlist);
 external
    unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist);
    extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
-                             sl : stringlist, xp : integer, gold : integer);
+                             sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
 
 var
    pc     : unitptr;
@@ -602,7 +620,7 @@ code
       goto start;
    }
 
-   pc := qstWaitDone@quests(qname, activator, qstDone, xp, gold);
+   pc := qstWaitDone@quests(qname, activator, qstDone, xp, gold, itemsl);
    goto start;
 }
 dilend

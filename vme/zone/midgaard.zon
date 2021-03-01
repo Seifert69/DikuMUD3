@@ -8216,7 +8216,7 @@ dilend
 dilbegin citizenDone();
 external
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
-                             sl : stringlist, xp : integer, gold : integer);
+                             sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
 var
   pcname : string;
   item   : unitptr;
@@ -8231,7 +8231,7 @@ code
 
    pc := qstWaitDone@quests(QUEST_CITIZEN_MIDGAARD, activator, 
             {"say Congratulations, $1N, and welcome to Midgaard.",
-             "smile $1N"}, 0, 0);
+             "smile $1N"}, 0, 0, {""});
 
    if (pc == null)
       goto start;

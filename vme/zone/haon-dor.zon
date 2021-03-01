@@ -2465,7 +2465,7 @@ dilcopy qstSimpleQuest@quests(QUEST_JOHN,
          {"thank $1N",
           "emote wields your axe.",
           "emote looks around for some trees to chop down."},
-          800, 1 * COPPER_MULT);
+          800, 1 * COPPER_MULT, {""});
 
 dilcopy qstItemsWanted@quests(QUEST_JOHN, {"axe"}, {""},
          {"say Thank you $1N, that's such a nice axe."},
@@ -2624,7 +2624,7 @@ dilend
 dilbegin compl_pot();
 external
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
-                             sl : stringlist, xp : integer, gold : integer);
+                             sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
 var
   pcname : string;
   item   : unitptr;
@@ -2642,12 +2642,12 @@ code
             "hold pot", 
             "sing", 
             "say $1N, I know how to perform first aid and diagnostics. I will be happy to share my knowledge with you. ",
-            "emote makes some Rabbit Stew."}, 800, 2 * COPPER_MULT);
+            "emote makes some Rabbit Stew."}, 800, 2 * COPPER_MULT, {""});
 
    if (pc == null)
       goto start;
 
-   // qitems_ deletes items received 
+   // qitems_ deletes items received. When Mary has the pot she's ready for quest #1
    item := load("marys_pot@haon_dor");
    goto start;
 }
@@ -2659,7 +2659,7 @@ dilend
 dilbegin compl_stew();
 external
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
-                             sl : stringlist, xp : integer, gold : integer);
+                             sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
 var
   pcname : string;
   item   : unitptr;
@@ -2675,15 +2675,11 @@ code
    pc := qstWaitDone@quests(QUEST_RABBIT, activator, 
             {"say Here $1N, I have made this special rabbit's foot just for you.",
             "thank $1N", 
-            "emote makes some Rabbit Stew."}, 800, 2 * COPPER_MULT);
+            "emote makes some Rabbit Stew."}, 800, 2 * COPPER_MULT, {"rabbit_foot@haon_dor"});
 
    if (pc == null)
       goto start;
 
-   item := load("rabbit_foot@haon_dor");
-   item.height := pc.height;
-   link(item, pc);
-   
    item := load("stew@haon_dor");
    pc := findsymbolic(self, "marys_pot@haon_dor", FIND_UNIT_INVEN | FIND_UNIT_EQUIP);
    if (pc == null)

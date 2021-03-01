@@ -9,7 +9,8 @@ END HEADER*/
 
 #include <macros.h>
 
-#define GWYN_QUEST "Gwyn Quest Complete"
+#define GWYN_QUEST "Gwyn Quest"
+#define GWYN_QUEST_COMPLETE "Gwyn Quest Complete"
 
 %zone				cypress
 title "Cypress Forest@Mainland"
@@ -734,7 +735,7 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_MACE, +2, +3)
 WEAPON_SLAYER(RACE_ORC)
 weight 20
-dilcopy quest_restrict@function (GWYN_QUEST,0,0,"");
+dilcopy quest_restrict@function (GWYN_QUEST_COMPLETE,0,0,"");
 cost 6 COPPER_PIECE
 rent 3 COPPER_PIECE
 extra {}
@@ -815,129 +816,26 @@ money 3 COPPER_PIECE, 5 IRON_PIECE
 
 M_GNOME_WARRIOR_NATURAL(4, SEX_FEMALE)
 
-dilbegin gwyn_quest();
-var
-  pc : unitptr;
-code
-{
-   :init:
-   heartbeat := PULSE_SEC*15;
-   on_activation(self.position <= POSITION_SLEEPING, skip);
-   interrupt(SFB_COM, self.position == POSITION_FIGHTING, iamfighting);
 
-   :start:
-   wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (not command("give"))
-                 and not (GWYN_QUEST in activator.quests));
-   pc := activator;
-   secure(pc, start);
+// Really old quest by Gurglemeyer (Lars Fløe Nielsen) :-D
+//
+dilcopy qstSimpleQuest@quests(GWYN_QUEST,
+         {"emote sings, 'In this ancient wood, hidden in an ugly hood'",
+          "emote sings, 'Lives, not far from here, Burp with his slimy beard'",
+          "emote sings, 'Burp is King, but he can't sing'",
+          "emote sings, 'He is a thief and causes me grief'",          
+          "emote sings, 'It is my hope, that you retrieve my yellow robe'",
+          "emote sings, 'A great reward from space, will be a magical mace...'",
+          "emote looks at you waiting for you to accept the quest."},
+         {"dance"},
+         "Retrieve Gwyn's yellow robe and return it.",
+         {"emote sings, 'The hero $1N is born, please do not yawn'",
+          "emote sings, 'Here is your mace, my lord of space!'"},
+          500, 1 * COPPER_MULT, {"goblin_slayer@cypress"});
 
-   pause;
-   if (GWYN_QUEST in pc.quests) goto end;
-   exec("emote sings, 'In this ancient wood, hidden in an ugly hood'", self);
-
-   pause;
-   if (GWYN_QUEST in pc.quests) goto end;
-   exec("emote sings, 'Lives, not far from here, Burp with his slimy beard'", self);
-
-   pause;
-   if (GWYN_QUEST in pc.quests) goto end;
-   exec("emote sings, 'Burp is King, but he can't sing'", self);
-
-   pause;
-   if (GWYN_QUEST in pc.quests) goto end;
-   exec("emote sings, 'He is a thief and causes me grief'", self);
-
-   pause;
-   if (GWYN_QUEST in pc.quests) goto end;
-   exec("emote sings, 'It is my hope, that you retrieve my yellow robe'", self);
-   pause;
-   if (GWYN_QUEST in pc.quests) goto end;
-   exec("emote sings, 'A great reward from space, will be a magical mace...'", self);
-
-   pause;
-   if (GWYN_QUEST in pc.quests) goto end;
-   exec("wave "+pc.name, self);
-   unsecure(pc);
-   pause;
-   pause;
-   goto start;
-
-   :iamfighting:
-   pause;
-   exec("emote sings, I am hit, by a little shit.", self);
-   while (self.position == POSITION_FIGHTING)
-     pause;
-   goto init;
-
-   :end:
-   exec("emote sings, left it did, that little prick.", self);
-   unsecure(pc);
-   goto start;
-}
-dilend
-
-
-dilbegin gwyn_give();
-var
-  pc     : unitptr;
-  item   : unitptr;
-
-code
-{
-   heartbeat := PULSE_SEC*10;
-   on_activation((self.position <= POSITION_SLEEPING) or
-		 (self.position == POSITION_FIGHTING), skip);
-
-   :start:
-   wait(SFB_CMD, command("give") and (activator.type == UNIT_ST_PC));
-
-   :give:
-   if (GWYN_QUEST in activator.quests)
-     goto start;
-   pc := activator;
-   item := self.inside;
-   secure(pc, labsecure);
-   secure(item, labsecure);
-
-   wait(SFB_CMD | SFB_TICK, TRUE);
-
-   if (not (item #= self.inside))
-   {
-      unsecure(item);
-
-      if ("yellow robe" in self.inside.name)
-      {
-	 destroy(self.inside);
-	 addextra(pc.quests, {GWYN_QUEST}, "");
-	 item := load("goblin_slayer@cypress");
-         item.height := pc.height;
-	 link(item, pc);
-         experience(500, pc);
-	 exec("emote sings, 'The hero "+pc.name+" is born, please do not yawn'", self);
-         pause;
-	 exec("emote sings, 'Here is your mace, my lord of space!'", self);
-	 goto start;
-      }
-      else
-      {
-	 exec("emote sings, 'Of that I am not in need, but the try was good indeed.'", self);
-	 /* Return the item to the player */
-	 link(self.inside, pc);
-      }
-   }
-   unsecure(pc);
-
-   if ((command("give")) and (activator.type == UNIT_ST_PC))
-     goto give;
-   else
-     goto start;
-
-   :labsecure:
-   exec("emote sings, 'How very rude, leaving just like that dude!", self);
-   goto start;
-}
-dilend
-
+dilcopy qstItemsWanted@quests(GWYN_QUEST, {"robe_gwyn@goblin_cave"}, {""},
+         {"emote starts singing again!"},
+          "emote sings, 'Of that I am not in need, but the try was good indeed.'");
 end
 
 %reset

@@ -427,7 +427,7 @@ external
    unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist);
    extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
-                             sl : stringlist, xp : integer, gold : integer);
+                             sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
 var
   item: unitptr;
   pc: unitptr;
@@ -528,7 +528,7 @@ code
          {"smile $1N",
           "say Quest complete, brave adventurer!",
           "whisper $1N I suspect you'll need these coins sooner or later."},
-          500, 2 * COPPER_MULT);
+          500, 2 * COPPER_MULT,{""});
 	unsecure(pc);
 	goto start;
 	
@@ -576,9 +576,7 @@ code
           "say I think you're going to need these sooner or later",
           "emote quite slips you some coins and gives you an empty barrel."
           },
-          500, 2 * COPPER_MULT);
-   item := load("water_barrel@gremlin");
-   link(item, pc);
+          500, 2 * COPPER_MULT, {"water_barrel@gremlin"});
 	unsecure(pc);
 	goto start;
 
@@ -613,7 +611,7 @@ code
          {"say I see you have returned, $1N.",
           "say I am truly saddened by the news that has reached me.",
           "whisper $1N Bernhard will be deeply missed. He was the last of a long line of heroic adventurers."},
-          500, 2 * COPPER_MULT);
+          500, 2 * COPPER_MULT, {""});
 	unsecure(pc);
 	goto start;
 
