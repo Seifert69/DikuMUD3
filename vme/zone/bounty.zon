@@ -261,7 +261,7 @@ dilbegin no_magic();
 code
 {
 :start:
-	wait(SFB_CMD,(activator.type==UNIT_ST_PC) and command("cast"));
+	wait(SFB_CMD, command("cast"));
 	act("This room is a dead magic zone!",A_ALWAYS,activator,null,null,TO_CHAR);
 	block;
 	goto start;
@@ -384,6 +384,35 @@ code
 	exec("say You have completed a total of "+total+" package deliveries.",self);
 	exec("say You are currently on a streak of "+streak+" package deliveries.",self);
 	exec("say Your longest package delivery streak is "+max+".",self);
+
+	if (JEWELER_ONGOING in pc.quests)
+	{
+		if("$jeweler_pearl" in pc.quests)
+			exec("say You have collected "+pc.quests.["$jeweler_pearl"].descr+" of 20 pearls.",self);
+		if("$jeweler_ruby" in pc.quests)
+			exec("say You have collected "+pc.quests.["$jeweler_ruby"].descr+" of 20 rubies.",self);
+		if("$jeweler_moonstone" in pc.quests)
+			exec("say You have collected "+pc.quests.["$jeweler_moonstone"].descr+" of 20 moonstones.",self);
+		if("$jeweler_jade" in pc.quests)
+			exec("say You have collected "+pc.quests.["$jeweler_jade"].descr+" of 20 jades.",self);
+		if("$jeweler_diamond" in pc.quests)
+			exec("say You have collected "+pc.quests.["$jeweler_diamond"].descr+" of 20 diamonds.",self);
+		if("$jeweler_bloodstone" in pc.quests)
+			exec("say You have collected "+pc.quests.["$jeweler_bloodstone"].descr+" of 20 bloodstones.",self);
+		if("$jeweler_emerald" in pc.quests)
+			exec("say You have collected "+pc.quests.["$jeweler_emerald"].descr+" of 20 emeralds.",self);
+		if("$jeweler_onyx" in pc.quests)
+			exec("say You have collected "+pc.quests.["$jeweler_onyx"].descr+" of 20 onyx.",self);
+		if("$jeweler_sapphire" in pc.quests)
+			exec("say You have collected "+pc.quests.["$jeweler_sapphire"].descr+" of 20 sapphires.",self);
+		if("$jeweler_jasper" in pc.quests)
+			exec("say You have collected "+pc.quests.["$jeweler_jasper"].descr+" of 20 jaspers.",self);
+		if("$jeweler_agate" in pc.quests)
+			exec("say You have collected "+pc.quests.["$jeweler_agate"].descr+" of 20 agates.",self);
+		if("$jeweler_opal" in pc.quests)
+			exec("say You have collected "+pc.quests.["$jeweler_opal"].descr+" of 20 opals.",self);
+			
+	}
 	
 	goto donezo;
 		
@@ -483,7 +512,7 @@ code
 	{
 		exec("say You have not yet delivered the package I gave you!", self);
 		exec("say I will clear you of the responsibility (and the quest flag),", self);
-		exec("say but you will be penalized and lose 300 xp and 2 bounty points.", self);
+		exec("say but you will be penalized and lose 500 xp and 2 bounty points.", self);
 		exec("say Nod if this is acceptable.", self);
 		wait(SFB_DONE, (pc.outside!=self.outside) or ((activator==pc) and (command("nod"))));
 		if(pc.outside!=self.outside) goto lostpc;
@@ -785,28 +814,28 @@ code
 			if(targ != null)
 			{
 				buf := buf + 
-				"<div class='"+col+"'>-------------------------------------------------------" +
+				"<div class='"+col+"'>-------------------------------------------------------</div>" +
 				"<br><div class='"+col2+"'>Contract Date: </div><div class='"+col+"'>" + sdate + "</div>" +
 				"<br><div class='"+col2+"'>Contract Term: </div><div class='"+col+"'>" + which + "</div>" +
 				"<br><div class='"+col2+"'>Target Name: </div><div class='"+col+"'>" + targ.name +  "</div>" +
 				"<br><div class='"+col2+"'>Target Alias: </div><div class='"+col+"'>" + targ.title +  "</div>" +
 				"<br><div class='"+col2+"'>Target Description: </div><div class='"+col+"'> " + targ.outside_descr + "</div>" +
 				"<br><div class='"+col2+"'>Contract Status: </div><div class='"+col+"'> " + cstat + "</div>" +
-				"<br>-------------------------------------------------------</div><br><br>";
+				"<br><div class='"+col+"'>-------------------------------------------------------</div><br><br>";
 			}
 			else
 			{
 				log("Error in tablet@bounty - unresolved findsymbolic for bounty: "+bty.descr);
 				col := "cpy";
 				buf := buf + 
-				"<div class='"+col+"'>-------------------------------------------------------" +
+				"<div class='"+col+"'>-------------------------------------------------------</div>" +
 				"<br><div class='"+col2+"'>Contract Date: </div><div class='"+col+"'>" + sdate + "</div>" +
 				"<br><div class='"+col2+"'>Contract Term: </div><div class='"+col+"'>" + which + "</div>" +
 				"<br><div class='"+col2+"'>Target Name: </div><div class='"+col+"'>" + "error in target acquisition" +  "</div>" +
 				"<br><div class='"+col2+"'>Target Alias: </div><div class='"+col+"'>" + "error in target acquisition" +  "</div>" +
 				"<br><div class='"+col2+"'>Target Description: </div><div class='"+col+"'> " + "error in target acquisition" + "</div>" +
 				"<br><div class='"+col2+"'>Contract Status: </div><div class='"+col+"'> " + cstat + "</div>" +
-				"<br>-------------------------------------------------------</div><br><br>";
+				"<br><div class='"+col+"'>-------------------------------------------------------</div><br><br>";
 			}
 		}
 		i := i + 1;
@@ -2109,7 +2138,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
     exec("say You didnt seem to find that locked door a detterant, why then sit here quietly and waste my time?", self);	
 	
-	wait(SFB_CMD, (command("say") and ("summoner" == argument)));
+	wait(SFB_CMD, (command("say") and ("summoner" in argument)));
 	
     wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say I see.", self);
@@ -4309,7 +4338,7 @@ open {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN};
 extra {"frescos","fresco","wall"}
 "The frescos show the history of the hunt. Intricate details was painted into the 
 still-wet plasted as the Inner Sanctum was erected, and dried to form a permanent 
-history. Certain details appear strangely worn on the eastern wall."
+history. Certain details appear strangely worn on the western wall."
 
 end
 
