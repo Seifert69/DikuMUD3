@@ -1025,7 +1025,7 @@ code
       quit;
    }
 
-   if (self.type==UNIT_ST_PC)
+   if (self.type == UNIT_ST_PC)
    {
         if(not(isset(self.charflags, CHAR_PROTECTED)))
            set(self.charflags, CHAR_PROTECTED);
@@ -1052,23 +1052,22 @@ dilend
 
 
 
-dilbegin death_cry ();
+dilbegin death_cry();
 var
 	dir:integer;
 
 code
 {
    heartbeat:=PULSE_SEC*3;
-   act("<div class='death'>Your blood freezes as you hear $1n's death cry.</div>",
-      A_SOMEONE, self,null,null,TO_REST);
+   act("<div class='death'>Your blood freezes as you hear $1n's death cry.</div>", A_SOMEONE, self,null,null,TO_REST);
 
    dir:=0;
-   while (dir<=MAX_EXIT)
+   while (dir <= MAX_EXIT)
 	{
       if (self.outside.exit_to[dir])
-      act("<div class='death'>Your blood freezes as you hear someones death cry.",
-         A_ALWAYS,self.outside.exit_to[dir].inside,null,null,TO_ROOM);
-         dir:=dir+1;
+         act("<div class='death'>Your blood freezes as you hear someones death cry from a distance.",
+            A_ALWAYS,self.outside.exit_to[dir].inside,null,null,TO_ALL);
+      dir:=dir+1;
 	}
 
    return;
