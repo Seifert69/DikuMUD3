@@ -2826,6 +2826,8 @@ hairy, and at their ends are crude hands with long claw-like nails.  On the
 sides of his flat, thick head is a set of pointy ears.  He has a stooping
 stature and big flappy feet.  He smells awful."
 
+extra {"$reward", "$reward udgaard", "715", "0", "128"} ""
+
 alignment -700
 M_ORC_WARRIOR_SWORD(5, SEX_MALE)
 money 8 COPPER_PIECE
