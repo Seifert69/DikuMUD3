@@ -568,7 +568,8 @@ code
          log("Quest " + qname + " unable to load item " + itemsl.[i]);
       else
       {
-         u.height := pc.height;
+         if (u.equip)
+            u.height := pc.height; // For wearable items, make them fit
          link(u, pc);
          act("$3n gives you $2n.", A_SOMEONE, pc, u, self, TO_CHAR);
          act("$3n gives $2n to $1n.", A_SOMEONE, pc, u, self, TO_REST);
