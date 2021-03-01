@@ -420,6 +420,7 @@ dilend
 dilbegin delivery();
 external
 	integer add_bp@bounty(n : integer, u : unitptr);
+	integer is_blocked@bounty(s : string, n : integer);
 var
 	pc : unitptr;
 	recip : unitptr;
@@ -434,6 +435,7 @@ var
 	rlev : integer;
 	temp : integer;
 	i : integer;
+	blocked : integer;
 code
 {
 	heartbeat:=PULSE_SEC * 5;
@@ -506,6 +508,9 @@ code
 	rtitle:=recip.title;
 	rlev:=recip.level;
 	unsecure(recip);
+	blocked := is_blocked(recip.symname, 0);
+	if (blocked == 1)
+		goto loop;
 	if(((rlev<minlev) or (rlev>maxlev)) and (pc.level<GOD_LEVEL)) goto loop;
 
 	exec("say Oh you do eh? Fine, "+pc.name+"!", self);
@@ -747,11 +752,12 @@ code
 	
 	sdate := stringdate(3);
 	sltime := split(asctime(realtime)," ");
+	while ("" in sltime)
+		substring(sltime,"");
 	sltime := split(sltime.[3],":");
 	sdate := sdate + " " + sltime.[0] + ":" + sltime.[1];
 	block;
-	buf := "<div class='cr'>REWARD!!</div><br><br>";
-	buf := buf + "<div class='cpw'>The current time is: <div class='cpr'>"+sdate+"</div></div><br><br>";
+	buf := "<div class='cpw'>The current time is: <div class='cpr'>"+sdate+"</div></div><br><br>";
 	i := 0;
 	
 	while (i < length(slbty))
@@ -779,25 +785,27 @@ code
 			if(targ != null)
 			{
 				buf := buf + 
-				"<div class='"+col+"'>-------------------------------------------------------</div>" +
-				"<br><div class='"+col2+"'>Contract Date: </div><div class='"+col+"'>" + sdate +
-				"<br><div class='"+col2+"'>Contract Term: </div><div class='"+col+"'>" + which +
-				"<br><div class='"+col2+"'>Target Name: </div><div class='"+col+"'>" + targ.name + 
-				"<br><div class='"+col2+"'>Target Alias: </div><div class='"+col+"'>" + targ.title + 
-				"<br><div class='"+col2+"'>Target Description: </div><div class='"+col+"'> " + targ.outside_descr +
-				"<br><div class='"+col2+"'>Contract Status: </div><div class='"+col+"'> " + cstat +
+				"<div class='"+col+"'>-------------------------------------------------------" +
+				"<br><div class='"+col2+"'>Contract Date: </div><div class='"+col+"'>" + sdate + "</div>" +
+				"<br><div class='"+col2+"'>Contract Term: </div><div class='"+col+"'>" + which + "</div>" +
+				"<br><div class='"+col2+"'>Target Name: </div><div class='"+col+"'>" + targ.name +  "</div>" +
+				"<br><div class='"+col2+"'>Target Alias: </div><div class='"+col+"'>" + targ.title +  "</div>" +
+				"<br><div class='"+col2+"'>Target Description: </div><div class='"+col+"'> " + targ.outside_descr + "</div>" +
+				"<br><div class='"+col2+"'>Contract Status: </div><div class='"+col+"'> " + cstat + "</div>" +
 				"<br>-------------------------------------------------------</div><br><br>";
 			}
 			else
 			{
+				log("Error in tablet@bounty - unresolved findsymbolic for bounty: "+bty.descr);
+				col := "cpy";
 				buf := buf + 
-				"<div class='cr'>-------------------------------------------------------</div>" +
-				"<br><div class='cpw'>Contract Date: </div><div class='cr'>" + sdate +
-				"<br><div class='cpw'>Contract Term: </div><div class='cr'>" + which +
-				"<br><div class='cpw'>Target Name: </div><div class='cr'>" + "error in target acquisition" + 
-				"<br><div class='cpw'>Target Alias: </div><div class='cr'>" + "error in target acquisition" + 
-				"<br><div class='cpw'>Target Description: </div><div class='cr'> " + "error in target acquisition" +
-				"<br><div class='cpw'>Contract Status: </div><div class='cr'> " + cstat +
+				"<div class='"+col+"'>-------------------------------------------------------" +
+				"<br><div class='"+col2+"'>Contract Date: </div><div class='"+col+"'>" + sdate + "</div>" +
+				"<br><div class='"+col2+"'>Contract Term: </div><div class='"+col+"'>" + which + "</div>" +
+				"<br><div class='"+col2+"'>Target Name: </div><div class='"+col+"'>" + "error in target acquisition" +  "</div>" +
+				"<br><div class='"+col2+"'>Target Alias: </div><div class='"+col+"'>" + "error in target acquisition" +  "</div>" +
+				"<br><div class='"+col2+"'>Target Description: </div><div class='"+col+"'> " + "error in target acquisition" + "</div>" +
+				"<br><div class='"+col2+"'>Contract Status: </div><div class='"+col+"'> " + cstat + "</div>" +
 				"<br>-------------------------------------------------------</div><br><br>";
 			}
 		}
@@ -973,7 +981,7 @@ code
 	pc := activator;
 	secure(pc, donezo);
 	exdp := "$daily_max" in pc.extra;
-	if((atoi(exdp.descr) < 40) or (exdp == null))
+	if((atoi(exdp.descr) < 30) or (exdp == null))
 		goto start;
 	
     wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -3134,11 +3142,42 @@ code
 }
 dilend // END dateformat
 
+dilbegin integer is_blocked@bounty(s : string, n : integer);
+var
+	slZone : stringlist;
+	slNpc  : stringlist;
+	slSplit : stringlist;
+code
+{	
+	slZone := {"basis","death","spells","skills","commands","baseget","basemove","wiz","baselook",
+				"update","help","boards","comm","socials","set","mail","function","restrict","newbie",
+				"justice","arena","competition","clan","holiday20","guild_quest","guild_paths",
+				"assassin","clericguild","fightersguild","mageguild","necro_guild","offices","paladin_guild",
+				"sorcerer","thievesguild","druid","knight","ranger","rebirth","barbarian","bounty"};
+	if (n == 0) // package deliver
+	{
+		slNpc := {"mob_35@pit","mob_34@pit","mob_33@pit","mob_32@pit","mob_31@pit","mob_30@pit"};
+	}
+	else if (n == 1) // contract
+	{
+		slNpc := {"swarm_small@valley2","swarm_med@valley2","swarm_large@valley2","mob_35@pit","mob_34@pit",
+					"mob_33@pit","mob_32@pit","mob_31@pit","mob_30@pit", "slime_black@midsewers"};
+	}
+	slSplit := split(s,"@");
+	
+	if  ((slSplit.[1] in slZone) or (s in slNpc))
+		return (1);
+	else
+		return (0);
+}
+dilend
+
 dilbegin make_bounty();
 external
 	integer add_bp@bounty(n : integer, u : unitptr);
 	integer dateformat@bounty (s : string);
 	string stringdate@bounty (n : integer);
+	integer is_blocked@bounty (s : string, n : integer);
 var 
 	item 	: unitptr;
 	pc 		: unitptr;
@@ -3153,7 +3192,7 @@ var
 	slmonth : stringlist;
 	slfmonth : stringlist;
 	dspl	: stringlist;
-	blocked : stringlist;
+	blocked : integer;
 	slextra : stringlist;
 	estreak : extraptr;
 	which   : string;
@@ -3161,19 +3200,14 @@ var
 	ibdate	: integer;
 	sltemp  : stringlist;
 	buf 	: string;
-	b_npc : stringlist;
+	bExpired : integer;
+	temp 	: string;
 code
 {
 :init:
 
 	slmonth := {"Skip","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 	slfmonth := {"Skip","January","February","March","April","May","June","July","August","September","October","November","December"};
-	blocked := {"basis","death","spells","skills","commands","baseget","basemove","wiz","baselook",
-				"update","help","boards","comm","socials","set","mail","function","restrict","newbie",
-				"justice","arena","competition","clan","holiday20","guild_quest","guild_paths",
-				"assassin","clericguild","fightersguild","mageguild","necro_guild","offices","paladin_guild",
-				"sorcerer","thievesguild","druid","knight","ranger","rebirth","barbarian","bounty"};
-	b_npc := {"swarm_small@valley2","swarm_med@valley2","swarm_large@valley2"};
 
 :start:
 
@@ -3244,11 +3278,18 @@ code
 
 :this_bounty:
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	
+	bexpired := 0;
 	if (arg == "daily")
 	{
 		exdp := pc.extra.["$daily_target"];
 		slextra.[0] := "$daily_target";
 		which := arg;
+		
+		idate := realtime / (60*60*24);
+		ibdate := atoi(exdp.names.[1]);
+		if(idate >= ibdate+2)
+			bExpired := 1;
 	}
 	else if (arg == "monthly")
 	{
@@ -3256,6 +3297,23 @@ code
 		exdp := pc.extra.["$monthly_target"];
 		slextra.[0] := "$monthly_target";
 		which := arg;
+		if(exdp != null)
+		{
+			dspl := split(exdp.descr, "|");
+			ibdate := dateformat(dspl.[0]);
+			idate := dateformat(sdate);
+			if(idate >= ibdate+2)
+				bExpired := 1;
+			
+			dspl := split(dspl.[0],".");
+			if((i == 1) and (dspl.[1] == "12"))
+			{
+				temp := dspl.[0];
+				dspl := split(sdate,".");
+				if(atoi(temp) == atoi(dspl.[0])-1)
+					bExpired := 0;
+			}
+		}
 	}
 	else if (arg == "bonus")
 	{
@@ -3271,9 +3329,10 @@ code
 
 	if(exdp != null)
 	{
+		// add a condition to appropriately set bExpired for monthly contracts in January.
+		
 		dspl := split(exdp.descr, "|");
-		ibdate := dateformat(dspl.[0]);
-		idate := dateformat(sdate);
+		
 		if (dspl.[0] == sdate)
 		{
 			if((sdate == "bonus") and ("DONE" in dspl))
@@ -3286,8 +3345,7 @@ code
 				goto skip_bonus;
 			goto have_bounty;
 		}
-		
-		if((not("DONE" in dspl)) or (idate > ibdate+2))	
+		if((not("DONE" in dspl)) or (bExpired == 1))	
 		{
 			estreak := pc.extra.["$"+which+"_streak"];
 			if (estreak != null)
@@ -3303,12 +3361,14 @@ code
 	}
 :new_target:
 	targ := findrndunit(pc,FIND_UNIT_WORLD,UNIT_ST_NPC);
-	if ((targ.zoneidx in blocked) or (targ.symname in b_npc))
+	blocked := is_blocked(targ.symname, 1);
+	if (blocked == 1)
 		goto new_target;
 	if (((targ.race > RACE_CNIDARIA_MIN) and (targ.race <= RACE_CNIDARIA_MAX)) or
        ((targ.race > RACE_PLANT_MIN) and (targ.race <= RACE_PLANT_MAX)))
 		goto new_target;
 	addextra (pc.extra,slextra,sdate + "|" + targ.symname + "|" + targ.title);
+	addstring (pc.extra.[slextra.[0]].names,itoa(idate));
 	if(which == "monthly")
 		which := slfmonth.[i];
 	
@@ -3564,6 +3624,7 @@ code
 	}
 	else
 	{
+:already_done:
 		exec("cackle",self);
 		exec("say Kill happy arent we "+pc.name+"? This wasn't your target.",self);
 		exec("say We'll take care of this for you.",self);
@@ -3773,14 +3834,6 @@ leverage the competition boards. Will investigate.
 		act("<div class='xpgain'>You recieve "+itoa(bp)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 	goto labsecure;
 	// End reward section // 
-	
-:already_done:
-
-	if (atoi(estreak.descr) > 1)
-		exec("say This contract has already closed! It seems your streak of "+estreak.descr+" "+sdone+" contracts has come to an end.",self);
-	else
-		exec("say Your first contract in the streak, and it had already closed!",self);
-	subextra(pc.extra, "$"+sdone+"_streak");
 	
 :labsecure:
 
