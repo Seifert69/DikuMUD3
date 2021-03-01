@@ -752,11 +752,12 @@ code
 	
 	sdate := stringdate(3);
 	sltime := split(asctime(realtime)," ");
+	while ("" in sltime)
+		substring(sltime,"");
 	sltime := split(sltime.[3],":");
 	sdate := sdate + " " + sltime.[0] + ":" + sltime.[1];
 	block;
-	buf := "<div class='cr'>REWARD!!</div><br><br>";
-	buf := buf + "<div class='cpw'>The current time is: <div class='cpr'>"+sdate+"</div></div><br><br>";
+	buf := "<div class='cpw'>The current time is: <div class='cpr'>"+sdate+"</div></div><br><br>";
 	i := 0;
 	
 	while (i < length(slbty))
@@ -980,7 +981,7 @@ code
 	pc := activator;
 	secure(pc, donezo);
 	exdp := "$daily_max" in pc.extra;
-	if((atoi(exdp.descr) < 40) or (exdp == null))
+	if((atoi(exdp.descr) < 30) or (exdp == null))
 		goto start;
 	
     wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -3160,7 +3161,7 @@ code
 	else if (n == 1) // contract
 	{
 		slNpc := {"swarm_small@valley2","swarm_med@valley2","swarm_large@valley2","mob_35@pit","mob_34@pit",
-					"mob_33@pit","mob_32@pit","mob_31@pit","mob_30@pit"};
+					"mob_33@pit","mob_32@pit","mob_31@pit","mob_30@pit", "slime_black@midsewers"};
 	}
 	slSplit := split(s,"@");
 	
