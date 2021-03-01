@@ -836,13 +836,17 @@ code
              temp := temp + "You see nothing special.";
       }
 
-      if ("$reward" in item.extra)
-         temp:=temp + "<br/>There is a reward on the head.";
 
-      if ((item.type == UNIT_ST_OBJ) and (item.objecttype == ITEM_WEAPON))
+      if (item.type == UNIT_ST_OBJ)
       {
-         temp1 := weapon_name(item.value[0]);
-         temp := temp + "<br>The " + item.name + " clearly requires a " + temp1 + " fighting style.";
+         if ("$reward" in item.extra)
+            temp:=temp + "<br/>There is a reward on the head.";
+
+         if (item.objecttype == ITEM_WEAPON)
+         {
+            temp1 := weapon_name(item.value[0]);
+            temp := temp + "<br>The " + item.name + " clearly requires a " + temp1 + " fighting style.";
+         }
       }
 
       temp := temp + "</div><br/>";
