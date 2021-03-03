@@ -289,6 +289,7 @@ return;
 
 /* End do_area dils */
 
+
 /* do_look : This is the head dil.  the command "look" calls this dil and it
 then parses
    the argument, seeing which of the work dils it needs to call. */
@@ -336,9 +337,9 @@ code
    }
 
    if (arg=="self")
-      arg:=self.name;
+      arg := self.name;
 
-   if ((arg == "") or (arg == ":brief:"))
+   if ((arg == "") or (arg in {":brief:", ":chars:", ":objects:"}))
    {
       look_blank(self, arg);
       quit;
@@ -1263,8 +1264,30 @@ var
    ipc:integer;
    iobj:integer;
 
+   bObj  : integer;
+   bChar : integer;
+   bRoom : integer;
 code
 {
+   if (arg == ":chars:")
+   {
+      bObj := FALSE;
+      bChar := TRUE;
+      bRoom := FALSE;
+   }
+   else if (arg == ":objects:")
+   {
+      bObj := TRUE;
+      bChar := FALSE;
+      bRoom := FALSE;
+   }
+   else
+   {
+      bObj := TRUE;
+      bChar := TRUE;
+      bRoom := TRUE;
+   }
+
    if (room.type != UNIT_ST_ROOM)
    {
       log("Non-room entered room_content dil in look");
@@ -1273,29 +1296,33 @@ code
 
    temp := "";
    tpbuff := "";
-   
-   temp_pos := "";
-   if (room.mapx != -1)
-      temp_pos := " map='"+itoa(room.mapx) + "," + itoa(room.mapy)+"'";
+   buff := "";
 
-   if (looker.level >= IMMORTAL_LEVEL)
-      temp := " [" + room.nameidx + "@" + room.zoneidx + "]";
-
-   buff := "<h1 class='room_title' zone='"+room.zoneidx+"' exits='" + exits_h(looker) + "'"+ temp_pos + ">" +
-                     room.title + temp + "</h1><br/>";
-   temp_pos := "";
-
-
-   if (looker.type == UNIT_ST_PC)
+   if (bRoom)
    {
-      if (not (isset(looker.pcflags, PC_BRIEF) and (arg == ":brief:")))
-         buff := buff + "<div class='room_descr'>" + room.inside_descr + "</div><br/>";
-   }
-   else
-      buff := buff + "<div class='room_descr'>" + room.inside_descr + "</div><br/>";
+      temp_pos := "";
+      if (room.mapx != -1)
+         temp_pos := " map='"+itoa(room.mapx) + "," + itoa(room.mapy)+"'";
 
-   temp := "";
-   buff := buff + display_exits(looker, room);
+      if (looker.level >= IMMORTAL_LEVEL)
+         temp := " [" + room.nameidx + "@" + room.zoneidx + "]";
+
+      buff := "<h1 class='room_title' zone='"+room.zoneidx+"' exits='" + exits_h(looker) + "'"+ temp_pos + ">" +
+                        room.title + temp + "</h1><br/>";
+      temp_pos := "";
+
+
+      if (looker.type == UNIT_ST_PC)
+      {
+         if (not (isset(looker.pcflags, PC_BRIEF) and (arg == ":brief:")))
+            buff := buff + "<div class='room_descr'>" + room.inside_descr + "</div><br/>";
+      }
+      else
+         buff := buff + "<div class='room_descr'>" + room.inside_descr + "</div><br/>";
+
+      temp := "";
+      buff := buff + display_exits(looker, room);
+   }
 
    u := room.inside;
    while (u != null)
@@ -1306,7 +1333,7 @@ code
          continue;
       }
 
-      if (u.type == UNIT_ST_PC)
+      if ((u.type == UNIT_ST_PC) and (bChar))
       {
          /*if (u.outside!=looker.outside)
            {u := u.next;
@@ -1397,7 +1424,7 @@ code
             }
          }
       }
-      else if (u.type == UNIT_ST_NPC)
+      else if ((u.type == UNIT_ST_NPC) and (bChar))
       {
          /*   if (u.outside!=looker.outside)
                {u := u.next;
@@ -1461,7 +1488,7 @@ code
             }
          }
       }
-      else if (u.type == UNIT_ST_OBJ)
+      else if ((u.type == UNIT_ST_OBJ) and (bObj))
       {
          if (u == looker.outside)
          {
@@ -1507,7 +1534,7 @@ code
             }
          }
       }
-      else if (u.type == UNIT_ST_ROOM)
+      else if ((u.type == UNIT_ST_ROOM) and (bRoom))
       {
          if (visible(looker, u))
          {
@@ -1532,8 +1559,9 @@ code
                buff := buff + temp + "<br/>";
          }
       }
-      else
-         log("unknown unit.type in room_content for look");
+      //Well this really shouldn't happen....
+      //else
+      //   log("unknown unit.type in room_content for look");
 
       tpbuff := "";
       temp := "";
