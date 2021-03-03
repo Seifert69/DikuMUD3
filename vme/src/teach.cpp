@@ -128,6 +128,7 @@ int actual_cost(int cost, sbit8 racemodifier, int level, int virtual_level)
 
    avg_skill_cost = AVERAGE_SKILL_COST;
 
+   /* Add in this section if you want training to be more expensive after vlevel 100.
    if (virtual_level > 100)
    {
       int i;
@@ -138,7 +139,7 @@ int actual_cost(int cost, sbit8 racemodifier, int level, int virtual_level)
       // 150 : 10 + ( 50  * 10 * (4-1))/100 = 10+15
       // 200:  10 + ( 100 * 10 * (4-1))/100 = 10+30
       //1000:  10 + ( 100 * 10 * (4-1))/100 = 10+30
-   }
+   }*/
 
    pct = 100;
    if (level >= 1)
