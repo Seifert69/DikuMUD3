@@ -7025,6 +7025,7 @@ var
    dmode : integer;
    jmode : integer;
    exd : extraptr;
+   i : integer;
 
 code
 {
@@ -7234,9 +7235,9 @@ code
    x := 0;
    while (x < nChan)
    {
-      nEcho := discordChn.[x] in slActive;
+      i := discordChn.[x] in slActive;
 
-      if (nEcho)
+      if (i)
          s := "<div class='cpy'>Discord "+discordChn.[x]+" is active.</div><br/>";
       else
          s := "<div class='cw'>Discord "+discordChn.[x]+" is inactive.</div><br/>";
