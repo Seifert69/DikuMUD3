@@ -12907,6 +12907,7 @@ TO_CHAR);
  n := cast_spell(potion.value[1],self,potion,self,"");
  n := cast_spell(potion.value[2],self,potion,self,"");
  n := cast_spell(potion.value[3],self,potion,self,"");
+ send_done("quaff",self,potion,potion,0,"",null);
  destroy(potion);
  quit;
 
