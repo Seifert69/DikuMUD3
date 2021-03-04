@@ -112,13 +112,21 @@ int practice_skill_gain(int skill)
       return 1;
 }
 
-// 0 modifiers returns AVERAGE_SKILL_COST (10)
+// cost: is the profession cost for this skill/ability, e.g. +2.
+// racemodifier: is the race modifier for this skill/ability, e.g. +3
+// level: 0 = 1st practice this char level, 1 = 2nd practice this char level, etc.
+// virtual_level: is the vlevel of the player
+// 
+// when modifiers sum to zero, it returns AVERAGE_SKILL_COST (10)
+//
 // If the sum of mods > 0 it goes down by one per mod to minimum of 3
 // Otherwise, grows by 2x for each sum mod negative
 // because half cost = 5, double cost = 20.
 // For each training level after 1, cost increases by 50%.
 // 
-// Returning zero means you can't learn more at this level
+// Returning zero means you can't learn more at this level.
+// Otherwise returns the cost of training.
+//
 int actual_cost(int cost, sbit8 racemodifier, int level, int virtual_level)
 {
    int mod;
@@ -142,10 +150,21 @@ int actual_cost(int cost, sbit8 racemodifier, int level, int virtual_level)
    }*/
 
    pct = 100;
-   if (level >= 1)
+   mod = cost + racemodifier;
+
+   if (level >= 1)// 2nd, 3rd ... attempt to train
+   {
       pct = pow(1.5, level) * 100.0;
 
-   mod = cost + racemodifier;
+      if (level == 1) // 2nd training attempt
+         if (mod <= 0)
+            return 0; // You can not train second time per level if your total mod is 0 or worse
+      
+      if (level >= 2) // 3rd training attempt this level 
+         if (mod < 3)
+            return 0; // You can not train three times per level if your total mod is worse than 3
+   }
+
 
    if (mod == 0)
       calccost = (avg_skill_cost * pct + 99) / 100;
