@@ -683,7 +683,8 @@ $1n tells you, 'You must be unaffected by magic, else I can't teach you';
 $1n tells you, 'Remove all equipment, please.';
 
   0;   80; dagger                        ;  18; 18000;  15;          0;
-  8;   60; quarterstaff                  ;  18; 18000;  15;          0;
+  8;   90; quarterstaff                  ;  18; 18000;  15;          0;
+  8;   80; short sword                   ;  20; 20000;  15;          0;
   4;   60; fist                          ;  23; 23000;  18;          0;
  12;   60; main gauche                   ;  23; 23000;  18;          0;
  20;   60; stiletto                      ;  23; 23000;  18;          0;
@@ -1327,9 +1328,9 @@ $1n tells you, 'I can not teach you any more.';
 $1n tells you, 'You must be unaffected by magic, else I can't teach you';
 $1n tells you, 'Remove it all, then we proceed!';
 
-  0;   70; dagger                        ;  15; 15000;  10;          0;
-  0;   50; quarterstaff                  ;  20; 20000;  15;          0;
-  8;   50; short sword                   ;  20; 20000;  15;          0;
+  0;   80; dagger                        ;  15; 15000;  10;          0;
+  0;   100; quarterstaff                  ;  20; 20000;  15;          0;
+  8;   100; short sword                   ;  20; 20000;  15;          0;
 "
 #elif defined(_SPELL)
 

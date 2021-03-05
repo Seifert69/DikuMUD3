@@ -3887,7 +3887,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -2
 race darkelf    = -1
-restrict divine         = 26
+restrict divine         = 10
 profession priest       = +0
 profession druid        = -3
 
@@ -4030,7 +4030,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -2
 race darkelf    = -2
-restrict divine         = 50
+restrict divine         = 15
 profession paladin      = -3
 profession priest       = +0
 profession druid        = -3

@@ -841,7 +841,6 @@ profession fighter      = +2
 profession knight       = +2
 profession paladin      = +2
 profession ranger       = +2
-profession mage         = -3
 profession barbarian    = +2
 attack clothes  = {60, 9, 5}
 attack sleather = {58, 8, 6}

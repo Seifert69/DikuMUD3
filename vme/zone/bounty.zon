@@ -12,9 +12,9 @@ END HEADER*/
 #define JOIN_ONGOING "Becoming a Bounty Hunter"
 #define JOIN_COMPLETE "Bounty Hunter"
 #define BLACKSMITH_ONGOING "Aiding The Blacksmith"
-#define BLACKSMITH_COMPLETE "Blacksmith Aided"
+#define BLACKSMITH_COMPLETE "Blacksmith Complete"
 #define JEWELER_ONGOING "Aiding The Jeweler"
-#define JEWELER_COMPLETE "Jeweler Aided"
+#define JEWELER_COMPLETE "Jeweler Complete"
 #define SUMMONER_ONGOING "Aiding The Summoner"
 #define SUMMONER_COMPLETEISH "Summoner Aided"
 #define SUMMONER_COMPLETE "Summoning Complete"
@@ -61,13 +61,16 @@ talk to the blacksmith.
 	Get ability to list arms/armors.
 	
 talk to the jeweler. 
-	do quest?
-	   leverage birthstones.
-	Get ability to buy list jewely.
+	do quest
+	Get ability to buy jewely.
+talk to summoner
+	do quest
+	get ability to buy mag stuff
+talk to necromancer
+	do quest
+	get ability to buy div stuff
 talk to the historian. 
-	Historian will clarify ask for playing spy on Al Kazeem. (maybe captain)?
-Talk to Al Kazeem
-	Either choose to betray the bounty hunters, by alerting targets
+
 	
 Jewelry, as well as arms/armor use birthstones and... perhaps some other material?
 for crafting. Crafting these items allows creation of a wide range of items, with each
@@ -306,6 +309,10 @@ code
 		goto jeweler;
 	else if (self.nameidx == "blacksmith")
 		goto blacksmith;
+	else if (self.nameidx == "summoner")
+		goto summoner;
+	else if (self.nameidx == "necromancer")
+		goto necromancer;
 	
 :hunter:
 
@@ -436,6 +443,55 @@ code
 	exec("say You have completed a total of "+total+" killing sprees.",self);
 	exec("say You are currently on a streak of "+streak+" killing sprees.",self);
 	exec("say Your longest killing spree streak is "+max+".",self);
+	
+	goto donezo;
+	
+:summoner:
+
+	s := "quest";
+	
+	exec("say Here's your "+s+" report, "+pc.name+".",self);
+	
+	if(not("$sum_air" in pc.quests))
+		addextra(pc.quests,{"$sum_air"},"0");
+	if(not("$sum_water" in pc.quests))
+		addextra(pc.quests,{"$sum_water"},"0");
+	if(not("$sum_fire" in pc.quests))
+		addextra(pc.quests,{"$sum_fire"},"0");
+	if(not("$sum_earth" in pc.quests))
+		addextra(pc.quests,{"$sum_earth"},"0");
+	if(not("$sum_act" in pc.quests))
+		addextra(pc.quests,{"$sum_act"},"0");
+	if(not("$sum_ball" in pc.quests))
+		addextra(pc.quests,{"$sum_ball"},"0");
+	
+	total := pc.quests.["$sum_air"].descr;
+	exec("say You have collected  "+total+" of 5 air elements.",self);
+	total := pc.quests.["$sum_water"].descr;
+	exec("say You have collected  "+total+" of 5 water elements.",self);
+	total := pc.quests.["$sum_fire"].descr;
+	exec("say You have collected  "+total+" of 5 fire elements.",self);
+	total := pc.quests.["$sum_earth"].descr;
+	exec("say You have collected  "+total+" of 5 earth elements.",self);
+	total := pc.quests.["$sum_ball"].descr;
+	exec("say You have collected  "+total+" of 30 lightning balls.",self);
+	total := pc.quests.["$sum_act"].descr;
+	exec("say You have collected  "+itoa(atoi(total)*5)+" of 80 lbs of elemental activator.",self);
+	
+	goto donezo;
+	
+:necromancer:
+
+	s := "quest";
+	
+	exec("say Here's your "+s+" report, "+pc.name+".",self);
+	
+	if(not("$nec_lc" in pc.quests))
+		addextra(pc.quests,{"$nec_lc"},"0");
+	
+	total := pc.quests.["$nec_lc"].descr;
+	
+	exec("say You have collected  "+total+" of 50 rainbow crystals.",self);
 	
 	goto donezo;
 	
@@ -1236,7 +1292,6 @@ code
 	item := medium;
 	secure(item,donezo);
 
-	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exdp := BLACKSMITH_ONGOING in pc.quests;
 	
 	if((item.type == 8) and ((item.value[0] == 4) or (item.value[0] == 3)) and (atoi(exdp.descr) < 100000))
@@ -1418,12 +1473,12 @@ code
 {
 	heartbeat := PULSE_SEC*4;
 :start:
-	// q_air@faeries2 - 5
-	// q_fire@faeries2 - 5
-	// q_water@faeries2 - 5
-	// q_earth@faeries2 - 5
-	// ball_lightning@akaren - 10
-	// activator@bounty - 16
+	// q_air@faeries2 - 3
+	// q_fire@faeries2 - 3
+	// q_water@faeries2 - 3
+	// q_earth@faeries2 - 3
+	// ball_energ@akaren - 30
+	// activator@bounty - 16 (80 lbs)
 	
 	
 	wait(SFB_CMD, (JOIN_ONGOING in activator.quests) and (BLACKSMITH_ONGOING in activator.quests) and (not(SUMMONER_ONGOING in activator.quests)) and (not(SUMMONER_COMPLETE in activator.quests)) and (not(SUMMONER_COMPLETEISH in activator.quests)));
@@ -1462,7 +1517,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say Next, I will require pure energy to feed the spells.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say Lightning in its purest form, I'd think ten will suffice.", self);
+	exec("say Lightning in its purest form, I'd think thirty will suffice.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say Finally, there is an object that will activate the elemental powders.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -1472,8 +1527,11 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say I suspect you will need to seek The Necromancer to assist you with this.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	exec("say I'd think that 20 lbs per element will suffice, for a total of 80 lbs of activator.", self);
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say Bring these items to me, and I can both help The Blacksmith, and address my own preparations.", self);
-	addextra(pc.quests, {SUMMONER_ONGOING}, "0");
+	addextra(pc.quests, {SUMMONER_ONGOING}, "");
+	
 	
 :donezo:
 
@@ -1484,18 +1542,21 @@ code
 dilend
 
 dilbegin qsummoner2();
+external 
+	integer add_bp@bounty(n : integer, u : unitptr);
 var
 	pc : unitptr;
 	item : unitptr;
 	qty : integer;
+	i : integer;
 code
 {
-	// q_air@faeries2 - 5
-	// q_fire@faeries2 - 5
-	// q_water@faeries2 - 5
-	// q_earth@faeries2 - 5
-	// ball_lightning@akaren - 10
-	// activator@bounty - 16
+	// q_air@faeries2 - 3
+	// q_fire@faeries2 - 3
+	// q_water@faeries2 - 3
+	// q_earth@faeries2 - 3
+	// ball_energ@akaren - 30
+	// activator@bounty - 16 (80 lbs)
 	
 	heartbeat := PULSE_SEC*1;
 :start:
@@ -1512,7 +1573,7 @@ code
 	if((item.symname == "activator@bounty"))
 	{
 		if(not("$sum_act" in pc.quests))	
-			addextra(pc.quests,{"$sum_act"},"1");
+			addextra(pc.quests,{"$sum_act"},"0");
 		qty := atoi(pc.quests.["$sum_act"].descr);
 		if(qty == 16)
 			goto noneed;
@@ -1520,17 +1581,17 @@ code
 		unsecure(item);
 		destroy(item);
 		exec("say This has the power to activate the raw elemental crystals!", self);
-		exec("emote tucks the "+item.title+" into her robes.", self);
-		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 16.", self);
+		exec("emote sets the "+item.title+" aside.", self);
+		exec("say You have now given me "+itoa((qty + 1)*5)+" of the requisite 80 lbs.", self);
 	}
 	else if((item.symname == "q_air@faeries2"))
 	{
 		if(not("$sum_air" in pc.quests))	
-			addextra(pc.quests,{"$sum_air"},"1");
+			addextra(pc.quests,{"$sum_air"},"0");
 		qty := atoi(pc.quests.["$sum_air"].descr);
-		if(qty == 5)
+		if(qty == 3)
 			goto noneed;
-		pc.quests.["$sum_earth"].descr := itoa(qty + 1);
+		pc.quests.["$sum_air"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say Crystalized elemental air. It is more beautiful than even the rumors suggest.", self);
@@ -1540,9 +1601,9 @@ code
 	else if((item.symname == "q_fire@faeries2"))
 	{
 		if(not("$sum_fire" in pc.quests))	
-			addextra(pc.quests,{"$sum_fire"},"1");
+			addextra(pc.quests,{"$sum_fire"},"0");
 		qty := atoi(pc.quests.["$sum_fire"].descr);
-		if(qty == 5)
+		if(qty == 3)
 			goto noneed;
 		pc.quests.["$sum_fire"].descr := itoa(qty + 1);
 		unsecure(item);
@@ -1554,9 +1615,9 @@ code
 	else if((item.symname == "q_water@faeries2"))
 	{
 		if(not("$sum_water" in pc.quests))	
-			addextra(pc.quests,{"$sum_water"},"1");
+			addextra(pc.quests,{"$sum_water"},"0");
 		qty := atoi(pc.quests.["$sum_water"].descr);
-		if(qty == 5)
+		if(qty == 3)
 			goto noneed;
 		pc.quests.["$sum_water"].descr := itoa(qty + 1);
 		unsecure(item);
@@ -1568,9 +1629,9 @@ code
 	else if((item.symname == "q_earth@faeries2"))
 	{
 		if(not("$sum_earth" in pc.quests))	
-			addextra(pc.quests,{"$sum_earth"},"1");
+			addextra(pc.quests,{"$sum_earth"},"0");
 		qty := atoi(pc.quests.["$sum_earth"].descr);
-		if(qty == 5)
+		if(qty == 3)
 			goto noneed;
 		pc.quests.["$sum_earth"].descr := itoa(qty + 1);
 		unsecure(item);
@@ -1579,12 +1640,12 @@ code
 		exec("emote tucks the "+item.title+" into her robes.", self);
 		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 5.", self);
 	}
-	else if((item.symname == "ball_lightning@akaren"))
+	else if((item.symname == "ball_energ@akaren"))
 	{
 		if(not("$sum_ball" in pc.quests))	
-			addextra(pc.quests,{"$sum_ball"},"1");
+			addextra(pc.quests,{"$sum_ball"},"0");
 		qty := atoi(pc.quests.["$sum_ball"].descr);
-		if(qty == 10)
+		if(qty == 30)
 			goto noneed;
 		pc.quests.["$sum_ball"].descr := itoa(qty + 1);
 		unsecure(item);
@@ -1596,7 +1657,7 @@ code
 	else
 	{
 :noneed:
-		exec("say Your "+item.title+" is of interest "+pc.name+", but note relevant to the task at hand.", self);
+		exec("say Your "+item.title+" is of interest "+pc.name+", but not relevant to the task at hand.", self);
 		unsecure(item);
 		exec("give "+item.name+" "+pc.name, self);
 		exec("drop "+item.name, self);
@@ -1606,13 +1667,19 @@ code
 	
 :checkit:
 
-	if((atoi(pc.quests.["$sum_earth"].descr) == 5) and (atoi(pc.quests.["$sum_air"].descr) == 5) and 
-		(atoi(pc.quests.["$sum_fire"].descr) == 5) and (atoi(pc.quests.["$sum_water"].descr) == 5) and
+	if((atoi(pc.quests.["$sum_earth"].descr) == 3) and (atoi(pc.quests.["$sum_air"].descr) == 3) and 
+		(atoi(pc.quests.["$sum_fire"].descr) == 3) and (atoi(pc.quests.["$sum_water"].descr) == 3) and
 		(atoi(pc.quests.["$sum_ball"].descr) == 10) and (atoi(pc.quests.["$sum_act"].descr) == 16))
 	{
 		exec("say It has taken an incredible effort to collect these raw ingredients, "+pc.name+"!" ,self);
 		exec("say I can now perform the requested incantations, and create the materials The Blacksmith requires.", self);
-		
+		exec("say Additionally, the Guild has provided some wares I can sell you, for a certain price. You may shop here any time.", self);
+		experience(10000, pc);
+		act("<br><div class='hint'>Quest Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		act("<div class='xpgain'>You recieve "+itoa(10000)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		i := add_bp(200,pc);
+		act("<div class='xpgain'>You recieve "+itoa(200)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+	
 		subextra(pc.quests, SUMMONER_ONGOING);
 		subextra(pc.quests, "$sum_ball");
 		subextra(pc.quests, "$sum_act");
@@ -1762,6 +1829,7 @@ code
 		subextra(pc.quests, "$sum_fire");
 		subextra(pc.quests, SUMMONER_COMPLETEISH);
 		addextra(pc.quests, {SUMMONER_COMPLETE},"");
+		exec("say That's everything then. You may consider your tasks here complete.",self);
 	}
 		
 :donezo:
@@ -1780,7 +1848,7 @@ code
 :start:
 
 	// package deliver streak - 100
-	// 20 each of birthstones
+	// 12 each of birthstones
 	
 	// pearl_stone@blcastle (pearl)
 	// red1_stone@blcastle (ruby)
@@ -1834,7 +1902,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say There are twelve varieties to be found across the land.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say I'll require 20 of each.", self);
+	exec("say I'll require twelve of each.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say In order to distribute these in the limited time we have, it will require great effort.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -1860,7 +1928,7 @@ var
 	qty : integer;
 code
 {	// package deliver streak - 100
-	// 20 each of birthstones
+	// 12 each of birthstones
 	
 	// pearl_stone@blcastle (pearl)
 	// red1_stone@blcastle (ruby)
@@ -1889,192 +1957,180 @@ code
 		if(not("$jeweler_pearl" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_pearl"},"0");
 		qty := atoi(pc.quests.["$jeweler_pearl"].descr);
-		if(qty == 20)
-		{
-			addstring(pc.quests.[JEWELER_ONGOING].names, "pearl");
+		if(qty == 12)
 			goto noneed;
-		}
+		if(qty == 11)
+			addstring(pc.quests.[JEWELER_ONGOING].names, "pearl");
 		pc.quests.["$jeweler_pearl"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say A fine specimen of a pearl!", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
 	}
 	else if((item.symname == "red1_stone@blcastle") and (not ("ruby" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_ruby" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_ruby"},"0");
 		qty := atoi(pc.quests.["$jeweler_ruby"].descr);
-		if(qty == 20)
-		{
-			addstring(pc.quests.[JEWELER_ONGOING].names, "ruby");
+		if(qty == 12)
 			goto noneed;
-		}
+		if(qty == 11)
+			addstring(pc.quests.[JEWELER_ONGOING].names, "ruby");
 		pc.quests.["$jeweler_ruby"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say The red of this ruby is stunning, is it not?", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
 	}
 	else if((item.symname == "purple_stone@blcastle") and (not ("moonstone" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_moonstone" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_moonstone"},"0");
 		qty := atoi(pc.quests.["$jeweler_moonstone"].descr);
-		if(qty == 20)
-		{
-			addstring(pc.quests.[JEWELER_ONGOING].names, "moonstone");
+		if(qty == 12)
 			goto noneed;
-		}
+		if(qty == 11)
+			addstring(pc.quests.[JEWELER_ONGOING].names, "moonstone");
 		pc.quests.["$jeweler_moonstone"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say A truly unique stone, the moonstone.", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
 	}
 	else if((item.symname == "red_stone@blcastle") and (not ("jade" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_jade" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_jade"},"0");
 		qty := atoi(pc.quests.["$jeweler_jade"].descr);
-		if(qty == 20)
-		{
-			addstring(pc.quests.[JEWELER_ONGOING].names, "jade");
+		if(qty == 12)
 			goto noneed;
-		}
+		if(qty == 11)
+			addstring(pc.quests.[JEWELER_ONGOING].names, "jade");
 		pc.quests.["$jeweler_jade"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say Marvelous green in this Jade, "+pc.name+".", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
 	}
 	else if((item.symname == "cless_stone@blcastle") and (not ("diamond" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_diamond" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_diamond"},"0");
 		qty := atoi(pc.quests.["$jeweler_diamond"].descr);
-		if(qty == 20)
-		{
-			addstring(pc.quests.[JEWELER_ONGOING].names, "diamond");
+		if(qty == 12)
 			goto noneed;
-		}
+		if(qty == 11)
+			addstring(pc.quests.[JEWELER_ONGOING].names, "diamond");
 		pc.quests.["$jeweler_diamond"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say There is no other stone like a diamond, "+pc.name+".", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
 	}
 	else if((item.symname == "lblue_stone@blcastle") and (not ("bloodstone" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_bloodstone" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_bloodstone"},"0");
 		qty := atoi(pc.quests.["$jeweler_bloodstone"].descr);
-		if(qty == 20)
-		{
-			addstring(pc.quests.[JEWELER_ONGOING].names, "bloodstone");
+		if(qty == 12)
 			goto noneed;
-		}
+		if(qty == 11)
+			addstring(pc.quests.[JEWELER_ONGOING].names, "bloodstone");
 		pc.quests.["$jeweler_bloodstone"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say The contrast of colors in this bloodstone is catching, is it not "+pc.name+"?", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
 	}
 	else if((item.symname == "emerald_stone@blcastle") and (not ("emerald" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_emerald" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_emerald"},"0");
 		qty := atoi(pc.quests.["$jeweler_emerald"].descr);
-		if(qty == 20)
-		{
-			addstring(pc.quests.[JEWELER_ONGOING].names, "emerald");
+		if(qty == 12)
 			goto noneed;
-		}
+		if(qty == 11)
+			addstring(pc.quests.[JEWELER_ONGOING].names, "emerald");
 		pc.quests.["$jeweler_emerald"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say A gemstone quality emerald. This will be valued.", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
 	}
 	else if((item.symname == "green_stone@blcastle") and (not ("onyx" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_onyx" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_onyx"},"0");
 		qty := atoi(pc.quests.["$jeweler_onyx"].descr);
-		if(qty == 20)
-		{
-			addstring(pc.quests.[JEWELER_ONGOING].names, "onyx");
+		if(qty == 12)
 			goto noneed;
-		}
+		if(qty == 11)
+			addstring(pc.quests.[JEWELER_ONGOING].names, "onyx");
 		pc.quests.["$jeweler_onyx"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say Outstanding contrast in the banding on this onyx "+pc.name+".", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
 	}
 	else if((item.symname == "blue_stone@blcastle") and (not ("sapphire" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_sapphire" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_sapphire"},"0");
 		qty := atoi(pc.quests.["$jeweler_sapphire"].descr);
-		if(qty == 20)
-		{
-			addstring(pc.quests.[JEWELER_ONGOING].names, "sapphire");
+		if(qty == 12)
 			goto noneed;
-		}
+		if(qty == 11)
+			addstring(pc.quests.[JEWELER_ONGOING].names, "sapphire");
 		pc.quests.["$jeweler_sapphire"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say A sapphire fit for a queen!", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
 	}
 	else if((item.symname == "mblue_stone@blcastle") and (not ("jasper" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_jasper" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_jasper"},"0");
 		qty := atoi(pc.quests.["$jeweler_jasper"].descr);
-		if(qty == 20)
-		{
-			addstring(pc.quests.[JEWELER_ONGOING].names, "jasper");
+		if(qty == 12)
 			goto noneed;
-		}
+		if(qty == 11)
+			addstring(pc.quests.[JEWELER_ONGOING].names, "jasper");
 		pc.quests.["$jeweler_jasper"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say I've always loved the uniqueness of jasper carvings.", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
 	}
 	else if((item.symname == "yellow_stone@blcastle") and (not ("agate" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_agate" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_agate"},"0");
 		qty := atoi(pc.quests.["$jeweler_agate"].descr);
-		if(qty == 20)
-		{
-			addstring(pc.quests.[JEWELER_ONGOING].names, "agate");
+		if(qty == 12)
 			goto noneed;
-		}
+		if(qty == 11)
+			addstring(pc.quests.[JEWELER_ONGOING].names, "agate");
 		pc.quests.["$jeweler_agate"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say Agate seems as if it could hardly be made by nature, dont you think "+pc.name+"?", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
 	}
 	else if((item.symname == "pink_stone@blcastle") and (not ("opal" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_opal" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_opal"},"0");
 		qty := atoi(pc.quests.["$jeweler_opal"].descr);
-		if(qty == 20)
-		{
-			addstring(pc.quests.[JEWELER_ONGOING].names, "opal");
+		if(qty == 12)
 			goto noneed;
-		}
+		if(qty == 11)
+			addstring(pc.quests.[JEWELER_ONGOING].names, "opal");
 		pc.quests.["$jeweler_opal"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say This opal is an iridescent wonder!", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 20 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
 	}	
 	else
 	{
@@ -2122,7 +2178,7 @@ code
 {
 	heartbeat := PULSE_SEC*4;
 :start:
-	// life_crystal1@arma - 15
+	// life_crystal1@arma - 50
 	// fake_sash@mordenkin
 	// maleus@isledead
 	// skin of shadow@soullake
@@ -2191,10 +2247,10 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say The study of these items is critical to my work.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say I'd think that 15 of them will suffice.", self);
+	exec("say I'd think that 50 of them will suffice.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say I believe you have your work cut out for you. Go now.", self);
-	addextra(pc.quests, {NECRO_ONGOING}, "0");
+	addextra(pc.quests, {NECRO_ONGOING}, "");
 	
 :donezo:
 
@@ -2205,13 +2261,16 @@ code
 dilend
 
 dilbegin qnecro2();
+external 
+	integer add_bp@bounty(n : integer, u : unitptr);
 var
 	pc : unitptr;
 	item : unitptr;
 	qty : integer;
+	i : integer;
 code
 {
-	// life_crystal1@arma - 15
+	// life_crystal1@arma - 50
 	// fake_sash@mordenkin
 	// maleus@isledead
 	// skin of shadow@soullake
@@ -2235,12 +2294,13 @@ code
 		if(not("$nec_lc" in pc.quests))	
 			addextra(pc.quests,{"$nec_lc"},"0");
 		qty := atoi(pc.quests.["$nec_lc"].descr);
-		if(qty == 15)
+		if(qty == 50)
 		{
 			addstring(pc.quests.[NECRO_ONGOING].names, "crystals");
 			goto noneed;
 		}
 		pc.quests.["$nec_lc"].descr := itoa(qty + 1);
+		pc.quests.[NECRO_ONGOING].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say The very essence of life!", self);
@@ -2304,10 +2364,17 @@ code
 		("crystals" in pc.quests.[NECRO_ONGOING].names) and ("packages" in pc.quests.[NECRO_ONGOING].names))
 	{
 		exec("say This is all that I required from you "+pc.name+". Consider me impressed." ,self);
-		exec("say You may go and let The Historian know that your tasks for me are complete.", self);
-		
+		exec("say Whats more, the Guild has provided some wares I can sell you, for a certain price. You may shop here any time.", self);
+		experience(10000, pc);
+		act("<br><div class='hint'>Quest Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		act("<div class='xpgain'>You recieve "+itoa(10000)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		i := add_bp(200,pc);
+		act("<div class='xpgain'>You recieve "+itoa(200)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 		subextra(pc.quests, NECRO_ONGOING);
-		addextra(pc.quests, {NECRO_COMPLETE},"");
+		addextra(pc.quests, {NECRO_COMPLETEISH},"");		
+		pc.quests.["$nec_lc"].descr := "0";
+		exec("say I can now generate the necessary elemental activator for The Summoner.", self);
+		exec("say When you are ready, simply mention to me your need for activator, and I will complete the process.", self);
 	}
 
 	
@@ -2321,6 +2388,84 @@ code
 }
 dilend
 
+dilbegin qnecro3();
+var
+	pc : unitptr;
+	item : unitptr;
+	qty_act : integer;
+code
+{
+
+	heartbeat := PULSE_SEC*4;
+:start:
+
+	wait(SFB_DONE, command("say") and ("activator" in argument) and (NECRO_COMPLETEISH in activator.quests));
+		
+	pc := activator;
+	secure(pc, donezo);
+	
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	
+	exec("say You have come for the elemental activator then, "+pc.name+"?",self);
+	
+	qty_act := atoi(pc.quests.["$nec_lc"].descr);
+	if(qty_act < 16)
+	{
+		qty_act := qty_act + 4;
+		wait(SFB_TICK,command(CMD_AUTO_TICK));
+		pc.quests.["$nec_lc"].descr := itoa(qty_act);
+		exec("emote pulls a rainbow crystal from the pocket of his sash.",self);
+		wait(SFB_TICK,command(CMD_AUTO_TICK));
+		exec("emote walks to a table and casually grabs a severed head by the hair.",self);
+		wait(SFB_TICK,command(CMD_AUTO_TICK));
+		exec("mooha",self);
+		wait(SFB_TICK,command(CMD_AUTO_TICK));
+		exec("say These crystals can be used for a range of purposes, the essence of life they contain is truly marvelous.",self);
+		wait(SFB_TICK,command(CMD_AUTO_TICK));
+		exec("say My research has shown me a ... method ... whereby I may generate the elemental activator which The Summoner requires.",self);
+		wait(SFB_TICK,command(CMD_AUTO_TICK));
+		exec("emote pulls the stiff jaw of the severed head open, and places the rainbow crystal on its swollen tongue.",self);
+		wait(SFB_TICK,command(CMD_AUTO_TICK));
+		exec("emote turns his back, performs some unseen movements, and begins chanting in a hollow voice.",self);
+		wait(SFB_TICK,command(CMD_AUTO_TICK));
+		exec("emote turns back to face you, and continues chanting.",self);
+		wait(SFB_TICK,command(CMD_AUTO_TICK));
+		act("A <div class='cpg'>garishly green light</div> begins to glow from $1n's eyes.",A_SOMEONE, self, null, null, TO_ALL);
+		wait(SFB_TICK,command(CMD_AUTO_TICK));
+		act("<div class='cpn'>Pure darkness</div> builds in the skull's mouth, and flows out pooling on the floor.",A_SOMEONE, self, null, null, TO_ALL);
+		wait(SFB_TICK,command(CMD_AUTO_TICK));
+		act("As the darkness fades, several piles of <div class='cpy'>elemental activator</div> are left in its place.",A_SOMEONE, self, null, null, TO_ALL);
+		item := load("activator@bounty");
+		link(item,self.outside);		
+		item := load("activator@bounty");
+		link(item,self.outside);		
+		item := load("activator@bounty");
+		link(item,self.outside);		
+		item := load("activator@bounty");
+		link(item,self.outside);
+		wait(SFB_TICK,command(CMD_AUTO_TICK));
+		act("The glow fades from $1n's eyes.",A_SOMEONE, self, null, null, TO_ALL);
+		wait(SFB_TICK,command(CMD_AUTO_TICK));
+	}
+	
+:checkme:
+
+	if(qty_act == 16)
+	{
+		subextra(pc.quests, "$nec_lc");
+		subextra(pc.quests, NECRO_COMPLETEISH);
+		addextra(pc.quests, {NECRO_COMPLETE},"");
+		exec("say We're done here. The Summoner should be grateful for all of that.",self);
+	}
+	else
+		exec("say Take that to The Summoner, and return to me when you need more.",self);
+		
+:donezo:
+
+	unsecure(pc);
+	goto start;
+}
+dilend
 
 dilbegin pray();
 var
@@ -3185,12 +3330,14 @@ code
 				"sorcerer","thievesguild","druid","knight","ranger","rebirth","barbarian","bounty"};
 	if (n == 0) // package deliver
 	{
-		slNpc := {"mob_35@pit","mob_34@pit","mob_33@pit","mob_32@pit","mob_31@pit","mob_30@pit"};
+		slNpc := {"mob_35@pit","mob_34@pit","mob_33@pit","mob_32@pit","mob_31@pit","mob_30@pit","alain_1@timezon",
+					"lizard_1@timezon"};
 	}
 	else if (n == 1) // contract
 	{
 		slNpc := {"swarm_small@valley2","swarm_med@valley2","swarm_large@valley2","mob_35@pit","mob_34@pit",
-					"mob_33@pit","mob_32@pit","mob_31@pit","mob_30@pit", "slime_black@midsewers"};
+					"mob_33@pit","mob_32@pit","mob_31@pit","mob_30@pit", "slime_black@midsewers","alain_1@timezon",
+					"lizard_1@timezon"};
 	}
 	slSplit := split(s,"@");
 	
@@ -4028,7 +4175,12 @@ code
 }
 dilend
 
-dilbegin shop(items : stringlist);
+
+// items is a list containing the nameidx, display name, and cost.
+// ql is a list containing any quests required to execute any shop commands.
+// passing an empty string to quests means that no quests are required.
+// alternatively pass any number of quest flags in the list, any one of which will allow shop access.
+dilbegin shop(items : stringlist, ql : stringlist);
 external
 	integer add_bp@bounty(n : integer, u : unitptr);
 	integer dateformat@bounty(s : string);
@@ -4044,12 +4196,13 @@ var
 	ibp : integer;
 	arg : string;
 	day : string;
-	sldate : stringlist;
+	sale : stringlist;
 	r : integer;
 	sdate : string;
 	ssdate : string;
 	idate : integer;
 	isdate : integer;
+	temp : integer;
 code
 {
 :init:
@@ -4060,28 +4213,79 @@ code
 
 	:start:
 
-	buf:="<b><div class='cpn'>Bounty Hunters Guild Shop</div></b><br>";
+	buf:="<b><div class='cpn'>Bounty Hunters Guild Shop</div></b><br><br>";
 	buf:=buf+"<table><tr><th>Item # - </th><th>Item Name</th><th> - Bounty Points</th></tr>";
 	i := 0;
 	j := 1;
 	
 	wait(SFB_CMD, (command("list") or command("buy")));
 	block;
+	
+		
+	if(argument)
+		arg := argument;
+	
+	pc := activator;
+	secure(pc, donezo);
 
-	sldate := split(asctime(realtime)," ");
-	day := sldate.[0];
-	sldate := {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+	temp := 0;
+	if(ql.[0] == "")
+		goto skipit;
+	while(temp < length(ql))
+	{
+		if(ql.[temp] in pc.quests)
+			goto skipit;
+		temp := temp + 1;
+	}
+	goto donezo;
+:skipit:
+
+	sale := split(asctime(realtime)," ");
+	day := sale.[0];
+	// list of denominators for possible sale values.
+	// 10 is the default cost, great than 10 is a sale less than is overpriced.
+	sale := {"10","10","10","10","10","8","9","12","14","17","20"};
 	sdate := stringdate(3);
 	
-	r := rnd(0,6);
-	if(sldate.[r] == day)
-		r := 1;
-	else
-		r := 0;
-	if(self.outside.symname != "shop@bounty")
+	r := rnd(0,length(sale));
+	r := atoi(sale.[r]);
+	if(self.symname == "shopkeeper@bounty")
 	{
-		exec("say I'm afraid I must return to my shop first.",self);
-		goto start;
+		if(self.outside.symname != "shop@bounty")
+		{
+			exec("say I'm afraid I must return to my shop first.",self);
+			goto donezo;
+		}
+	}
+	else if (self.symname == "summoner@bounty")
+	{
+		if(self.outside.symname != "circle@bounty")
+		{
+			exec("say Patience! I must return to my summoning circle.",self);
+			goto donezo;
+		}
+	}
+	else if (self.symname == "necromancer@bounty")
+	{
+		if(self.outside.symname != "crypt@bounty")
+		{
+			exec("say Leaving my crypt unattended is ill advised. I must return.",self);
+			goto donezo;
+		}
+	}
+	else if (self.symname == "blacksmith@bounty")
+	{
+		if(self.outside.symname != "smithy@bounty")
+		{
+			exec("say I have work to do in the Smithy, "+pc.name+".",self);
+			goto donezo;
+		}
+	}
+	else
+	{
+		exec("say This dil needs to be fixed! There isnt a condition for me.",self);
+		goto donezo;
+		
 	}
 	if(not("$sale_date" in self.outside.extra))
 	{	
@@ -4101,17 +4305,9 @@ code
 			addextra(self.outside.extra,{"$sale_type"},itoa(r));
 		}
 	}
-	
-	// the r value becomes a denominator for costs if a sale is on.
-	if (self.outside.extra.["$sale_type"].descr == "1")
-		r := 2;
-	else
-		r := 1;
-	
-	if(argument)
-		arg := argument;
-	
-	pc := activator;
+	r := atoi(self.outside.extra.["$sale_type"].descr);
+
+	// return the players bounty point total
 	ibp := add_bp(0,pc);
 	bp := itoa(ibp);
 	
@@ -4133,8 +4329,12 @@ code
 	bp := "</table><br><div class='cpc'>You have "+bp+" Bounty Points available.</div><br><br>";
 	sendtext(buf+bp,pc);
 	
-	if(r == 2)
+	if(r == 20)
+		exec("say Today only, a special sale just for you. Half off!",self);
+	else if(r > 10)
 		exec("say We're having a sale today. It's a great time to buy!",self);
+	else if(r < 10)
+		exec("say Demand is high! Prices are a bit steep today.",self);
 	goto start;
 	
 :buy:
@@ -4158,8 +4358,10 @@ code
 		j := j+1;
 	}
 	exec("say Please select an item number from the list.",self);
+:donezo:
+	unsecure(pc);
 	goto start;
-	
+
 }
 dilend
 
@@ -4621,24 +4823,24 @@ alignment 0
 M_AVG_DWARF(100,SEX_MALE)
 position POSITION_STANDING 
 
-dilcopy shop@bounty({"tablet","Bounty Hunters Tablet","150",
-						"full_restore","Potion of Full Restoration","60",
-						"strong_restore","Potent Potion of Restoration","30",
-						"half_restore","Potion of Restoration","15",
-						"full_mana","Potion of Full Mana","20",
-						"strong_mana","Potent Potion of Mana","10",
-						"half_mana","Potion of Mana","5",
-						"full_end","Potion of Full Endurance","20",
-						"strong_end","Potent Potion of Endurance","10",
-						"half_end","Potion of Endurance","5",
-						"full_heal","Potion of Full Healing","20",
-						"strong_heal","Potent Potion of Healing","10",
-						"half_heal","Potion of Healing","5",
-						"mulligan","Contract Breaking Note","80",
-						"dz_hint","Daily Hint - Zone","40",
-						"dc_hint","Daily Hint - Continent","20",
-						"mz_hint","Monthly Hint - Zone","40",
-						"mc_hint","Monthly Hint - Continent","20"});
+dilcopy shop@bounty({"tablet","Bounty Hunters Tablet","1500",
+						"full_restore","Potion of Full Restoration","600",
+						"strong_restore","Potent Potion of Restoration","300",
+						"half_restore","Potion of Restoration","150",
+						"full_mana","Potion of Full Mana","200",
+						"strong_mana","Potent Potion of Mana","100",
+						"half_mana","Potion of Mana","50",
+						"full_end","Potion of Full Endurance","200",
+						"strong_end","Potent Potion of Endurance","100",
+						"half_end","Potion of Endurance","50",
+						"full_heal","Potion of Full Healing","200",
+						"strong_heal","Potent Potion of Healing","100",
+						"half_heal","Potion of Healing","50",
+						"mulligan","Contract Breaking Note","800",
+						"dz_hint","Daily Hint - Zone","400",
+						"dc_hint","Daily Hint - Continent","200",
+						"mz_hint","Monthly Hint - Zone","400",
+						"mc_hint","Monthly Hint - Continent","200"}, {""});
 
 end 
 
@@ -4698,6 +4900,17 @@ dilcopy end_spree@bounty();
 dilcopy qblacksmith@bounty();
 dilcopy qblacksmith2@bounty();
 dilcopy report@bounty();
+dilcopy shop@bounty({"str_helm","Bounty Hunters Helmet","1500",
+						"str_plate","Bounty Hunters Plate","1500",
+						"str_back","Bounty Hunters Back Plate","1500",
+						"str_arms","Bounty Hunters Sleeves","1500",
+						"str_hands","Bounty Hunters Gauntlets","1500",
+						"str_legs","Bounty Hunters Leggings","1500",
+						"str_boots","Bounty Hunters Boots","1500",
+						"str_sword","Bounty Hunters Long Sword","1500",
+						"str_shield","Bounty Hunters Shield","1500",
+						"str_hammer","Bounty Hunters War Mattock","2000"},
+						{JOIN_COMPLETE,BLACKSMITH_COMPLETE});
 
 end 
 
@@ -4740,6 +4953,18 @@ exp 400
 dilcopy qsummoner@bounty();
 dilcopy qsummoner2@bounty();
 dilcopy qsummoner3@bounty();
+dilcopy report@bounty();
+dilcopy shop@bounty({"mag_helm","Bounty Hunters Magical Helmet","1500",
+						"mag_plate","Bounty Hunters Magical Plate","1500",
+						"mag_back","Bounty Hunters Magical Back Plate","1500",
+						"mag_arms","Bounty Hunters Magical Sleeves","1500",
+						"mag_hands","Bounty Hunters Magical Gauntlets","1500",
+						"mag_legs","Bounty Hunters Magical Leggings","1500",
+						"mag_boots","Bounty Hunters Magical Boots","1500",
+						"mag_sword","Bounty Hunters Magical Short Sword","1500",
+						"mag_shield","Bounty Hunters Magical Shield","1500",
+						"mag_staff","Bounty Hunters Quarterstaff","2000"},
+						{JOIN_COMPLETE,SUMMONER_COMPLETE,SUMMONER_COMPLETEISH});
 
 end 
 
@@ -4759,6 +4984,19 @@ exp 400
 
 dilcopy qnecro@bounty();
 dilcopy qnecro2@bounty();
+dilcopy qnecro3@bounty();
+dilcopy report@bounty();
+dilcopy shop@bounty({"div_helm","Bounty Hunters Divine Helmet","1500",
+						"div_plate","Bounty Hunters Divine Plate","1500",
+						"div_back","Bounty Hunters Divine Back Plate","1500",
+						"div_arms","Bounty Hunters Divine Sleeves","1500",
+						"div_hands","Bounty Hunters Divine Gauntlets","1500",
+						"div_legs","Bounty Hunters Divine Leggings","1500",
+						"div_boots","Bounty Hunters Divine Boots","1500",
+						"div_mace","Bounty Hunters Divine Mace","1500",
+						"div_shield","Bounty Hunters Divine Shield","1500",
+						"div_maul","Bounty Hunters War Maul","2000"},
+						{JOIN_COMPLETE,NECRO_COMPLETE,NECRO_COMPLETEISH});
 
 end 
 
@@ -5336,6 +5574,481 @@ weight 1
 cost 1 IRON_PIECE
 end
 
+
+//////////////////////////////////////////////////////////////////
+//                    summoner items.                           //
+//////////////////////////////////////////////////////////////////
+
+mag_plate
+names {"magical plate", "plate"}
+title "a Bounty Hunter's magical plate"
+descr "A Bounty Hunter's magical plate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+weight 10
+dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+mag_legs
+names {"magical leggings","leggings"}
+title "a pair of Bounty Hunter's magical leggings"
+descr "A pair of Bounty Hunter's magical leggings have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+weight 7
+dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+mag_arms
+names {"magical sleeves","sleeves"}
+title "a pair of Bounty Hunter's magical sleeves"
+descr "A pair of Bounty Hunter's magical sleeves have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
+ARMOUR_PLATE(15,10)
+dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+weight 7
+dilcopy level_restrict@function(20,0,25,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+mag_helm
+names {"magical helmet","helmet"}
+title "a Bounty Hunter's magical helmet"
+descr "A Bounty Hunter's magical helmet has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+weight 5
+dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+mag_boots
+names {"magical boots","boots"}
+title "a pair of Bounty Hunter's magical boots"
+descr "A pair of Bounty Hunter's magical boots have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+weight 3
+dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+mag_hands
+names {"magical gauntlets","gauntlets"}
+title "a pair of Bounty Hunter's magical gauntlets"
+descr "A pair of Bounty Hunter's magical gauntlets have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
+weight 3
+dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+mag_back
+names {"magical backplate","backplate"}
+title "a Bounty Hunter's magical backplate"
+descr "A Bounty Hunter's magical backplate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+weight 7
+dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+mag_sword
+names {"magical short sword","short sword","sword"}
+title "a Bounty Hunter's magical short sword"
+descr "A Bounty Hunter's divine short sword has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's short sword."
+WEAPON_DEF(WPN_MACE, +15, +10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 7
+dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+mag_shield
+names{"magical shield","shield"}
+title "a Bounty Hunter's magical shield"
+descr "A Bounty Hunter's magical shield has been left here."
+extra{}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
+SHIELD_DEF(SHIELD_LARGE, 15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
+weight 7
+dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+mag_staff
+names {"magical staff","staff"}
+title "a Bounty Hunter's magical staff"
+descr "A Bounty Hunter's magical staff has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's staff."
+WEAPON_DEF(WPN_QUARTERSTAFF, +15, +10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 7
+dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+//////////////////////////////////////////////////////////////////
+//                  necromancer items.                          //
+//////////////////////////////////////////////////////////////////
+
+div_plate
+names {"divine plate", "plate"}
+title "a Bounty Hunter's divine plate"
+descr "A Bounty Hunter's divine plate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+weight 10
+dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+div_legs
+names {"divine leggings","leggings"}
+title "a pair of Bounty Hunter's divine leggings"
+descr "A pair of Bounty Hunter's divine leggings have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+weight 7
+dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+div_arms
+names {"divine sleeves","sleeves"}
+title "a pair of Bounty Hunter's divine sleeves"
+descr "A pair of Bounty Hunter's divine sleeves have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
+ARMOUR_PLATE(15,10)
+dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+weight 7
+dilcopy level_restrict@function(20,0,25,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+div_helm
+names {"divine helmet","helmet"}
+title "a Bounty Hunter's divine helmet"
+descr "A Bounty Hunter's divine helmet has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+weight 5
+dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+div_boots
+names {"divine boots","boots"}
+title "a pair of Bounty Hunter's divine boots"
+descr "A pair of Bounty Hunter's divine boots have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+weight 3
+dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+div_hands
+names {"divine gauntlets","gauntlets"}
+title "a pair of Bounty Hunter's divine gauntlets"
+descr "A pair of Bounty Hunter's divine gauntlets have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
+weight 3
+dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+div_back
+names {"divine backplate","backplate"}
+title "a Bounty Hunter's divine backplate"
+descr "A Bounty Hunter's divine backplate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+weight 7
+dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+div_mace
+names {"divine mace","mace"}
+title "a Bounty Hunter's divine mace"
+descr "A Bounty Hunter's divine mace has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's mace."
+WEAPON_DEF(WPN_MACE, +15, +10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 8
+dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+div_shield
+names{"divine shield","shield"}
+title "a Bounty Hunter's divine shield"
+descr "A Bounty Hunter's divine shield has been left here."
+extra{}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
+SHIELD_DEF(SHIELD_LARGE, 15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
+weight 7
+dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+2)
+BRA_TRANSFER(+2)
+end
+
+div_maul
+names {"divine maul","maul"}
+title "a Bounty Hunter's divine maul"
+descr "A Bounty Hunter's divine maul has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's maul."
+WEAPON_DEF(WPN_WAR_MAUL, +15, +10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 15
+dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+//////////////////////////////////////////////////////////////////
+//                    blacksmith items.                         //
+//////////////////////////////////////////////////////////////////
+
+str_plate
+names {"plate"}
+title "a Bounty Hunter's plate"
+descr "A Bounty Hunter's plate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+weight 10
+dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+2)
+DEX_TRANSFER(+2)
+end
+
+str_legs
+names {"leggings"}
+title "a pair of Bounty Hunter's leggings"
+descr "A pair of Bounty Hunter's leggings have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+weight 7
+dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+2)
+DEX_TRANSFER(+2)
+end
+
+str_arms
+names {"sleeves"}
+title "a pair of Bounty Hunter's sleeves"
+descr "A pair of Bounty Hunter's sleeves have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
+ARMOUR_PLATE(15,10)
+dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+weight 7
+dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+2)
+DEX_TRANSFER(+2)
+end
+
+str_helm
+names {"helmet"}
+title "a Bounty Hunter's helmet"
+descr "A Bounty Hunter's helmet has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+weight 5
+dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+2)
+DEX_TRANSFER(+2)
+end
+
+str_boots
+names {"boots"}
+title "a pair of Bounty Hunter's boots"
+descr "A pair of Bounty Hunter's boots have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+weight 3
+dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+2)
+DEX_TRANSFER(+2)
+end
+
+str_hands
+names {"gauntlets"}
+title "a pair of Bounty Hunter's gauntlets"
+descr "A pair of Bounty Hunter's gauntlets have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
+weight 3
+dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+2)
+DEX_TRANSFER(+2)
+end
+
+str_back
+names {"backplate"}
+title "a Bounty Hunter's backplate"
+descr "A Bounty Hunter's backplate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
+ARMOUR_PLATE(15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+weight 7
+dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+2)
+DEX_TRANSFER(+2)
+end
+
+str_sword
+names {"long sword","sword"}
+title "a Bounty Hunter's long sword"
+descr "A Bounty Hunter's long sword has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's long sword."
+WEAPON_DEF(WPN_MACE, +15, +10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 8
+dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+2)
+DEX_TRANSFER(+2)
+end
+
+str_shield
+names{"shield"}
+title "a Bounty Hunter's shield"
+descr "A Bounty Hunter's shield has been left here."
+extra{}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
+SHIELD_DEF(SHIELD_LARGE, 15,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
+weight 7
+dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+2)
+DEX_TRANSFER(+2)
+end
+
+str_hammer
+names {"war mattock","mattock","hammer"}
+title "a Bounty Hunter's war mattock"
+descr "A Bounty Hunter's war mattock has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's war mattock."
+WEAPON_DEF(WPN_WAR_MATTOCK, +15, +10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 15
+dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+3)
+DEX_TRANSFER(+3)
+end
+
+
+//////////////////////////////////////////////////////////////////
+//                      jeweler items.                          //
+//////////////////////////////////////////////////////////////////
+
+// use treasure.zon ?
+
+//////////////////////////////////////////////////////////////////
+//                         misc. items.                         //
+//////////////////////////////////////////////////////////////////
+
+
 package
 names {"package", "packagefor"}
 title "a lost package"
@@ -5384,5 +6097,8 @@ door circle EAST {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
 
 door faces2 EAST {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
 door crypt WEST {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+
+door sanctum WEST {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN}
+door sanc_hw EAST {EX_OPEN_CLOSE, EX_CLOSED}
 
 %end
