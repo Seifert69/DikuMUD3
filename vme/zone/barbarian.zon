@@ -373,13 +373,19 @@ A range of armaments adorn the table, as well as gifts of both food
 and armors from across the lands. Alcoves can be seen to both the 
 north and south. A large ladder leading up to the loft rests in one 
 corner, while another heading down to the armory and training grounds 
-can be made out in the other. "
+can be made out in the other. There is a small sign on the table. "
 extra {"floor","wood","beams"}
 "The structure is made of large sturdy beans of rough-hewn oak. 
 The room is open, and the floor worn from use. Beams overhead seem 
 more than strong enough to support the roof and its heavy seasonal snows. "
 extra {"table","food"}
 "Here the guildmaster's table dominates the space. Best approach carefully. "
+extra {"small sign","sign"}
+"This is the great hall of the Barbarians Guild. <br><br>
+'title'		- changes your title to a new and better one.<br><br>
+Members, pay respect to your Chief by worshipping her. 
+The power of our guild may be shared with those who show respect."
+
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
@@ -948,25 +954,39 @@ HIT_TRANSFER(+2)
 BRA_TRANSFER(-1)
 dilcopy guild_restrict@function ({GUILD_BARBARIAN},0,0,"");
 
-dilbegin recall charge_gauntlet();
+dilbegin fnpri(30) recall charge_gauntlet();
+var
+	pwr : integer;
 code
 {
 
 :start:
 
 	heartbeat:=PULSE_SEC*SECS_PER_MUD_DAY/24;
-	wait (SFB_TICK,(self.equip==TRUE));
-	heartbeat:=PULSE_SEC*5;
-	act ("The inscription on your $2n flashes blood red!",
-		A_ALWAYS,self.outside,self,null,TO_CHAR);
-	act ("The inscription on $1n's $2n flashes blood red!",
-		A_ALWAYS,self.outside,self,null,TO_REST);
-	sendto ("add charge",self);
+	wait (SFB_TICK,command(CMD_AUTO_TICK) and (self.equip == WEAR_HANDS));
+	act ("The inscription on your $2n flashes <div class='cr'>blood red</div>!",A_SOMEONE,self.outside,self,null,TO_CHAR);
+	act ("The inscription on $1n's $2n flashes <div class='cr'>blood red</div>!",A_SOMEONE,self.outside,self,null,TO_REST);
+	if("$power" in self.extra)
+		pwr := atoi(self.extra.["$power"].descr);
+	else
+	{
+		addextra(self.extra, {"$power"}, "10");
+		pwr := 10;
+	}
+	if(pwr < 10)
+		pwr := pwr + 1;
+	self.extra.["$power"].descr := itoa(pwr);
+	self.extra.[0].descr :=
+		"A heavy pair of gauntlets, it isnt immediately clear where the blood 
+		on them is coming from. An inscription can be seen along the cuff, which 
+		appears to glow a deep red. It's not clear what kind of alloy these are 
+		made from, though you suspect they could be magical in nature. 
+		You recognise the number '"+itoa(pwr)+"' among the inscripted runes. ";
 	goto start;
 }
 dilend
 
-dilbegin recall aware gauntlet_blood();
+dilbegin gauntlet_blood();
 var
         i : integer;
         enemy :unitptr;
@@ -981,12 +1001,16 @@ var
 		arg : string;
 code
 {
-	pwr:=10;
-
 :init:
 
+	if("$power" in self.extra)
+		pwr := atoi(self.extra.["$power"].descr);
+	else
+	{
+		addextra(self.extra, {"$power"}, "10");
+		pwr := 10;
+	}
 	heartbeat := PULSE_SEC*3;
-	charge:=interrupt (SFB_MSG,((self==activator)and(argument=="add charge")), charge);
 
 :start:
 	wait (SFB_CMD,(command ("grip"))and(self.equip==WEAR_HANDS)and(self.outside.type == UNIT_ST_PC));
@@ -1000,6 +1024,7 @@ code
 	enemy:=self.outside.fighting;
 	pc:=self.outside;
 	secure (enemy,start);
+	pwr := atoi(self.extra.["$power"].descr);
 	if (pwr<=0)
 		goto fail;
 	weap := findunit(self.outside, arg, FIND_UNIT_EQUIP, null);
@@ -1020,7 +1045,8 @@ code
 			goto start;
 		}
 	pwr:=pwr-1;
-	self.extra.descr :=
+	self.extra.["$power"].descr := itoa(pwr);
+	self.extra.[0].descr :=
 		"A heavy pair of gauntlets, it isnt immediately clear where the blood 
 		on them is coming from. An inscription can be seen along the cuff, which 
 		appears to glow a deep red. It's not clear what kind of alloy these are 
@@ -1081,20 +1107,6 @@ code
 	act("$1n's $2n flicker briefly but nothing happens."
 		, A_ALWAYS,self.outside,self,null,TO_REST);
 	goto start;
-
-:charge:
-
-	clear (charge);
-	if (pwr<10)
-	{
-		pwr:=pwr+1;
-		self.extra.descr :=
-		"A pair of heavy gauntlets, they seem to seep blood from an unknown 
-			source. An inscription runs along their edges, and you can clearly 
-			recognise the number '"+itoa(pwr)+"'.";
-		goto init;
-		goto start;
-	}
 
 :no_person:
 
