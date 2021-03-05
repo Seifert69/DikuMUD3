@@ -106,19 +106,20 @@ class MyClient(discord.Client):
         if message.author == self.user:
             return
 
-        message = message.replace("&", "&amp;")
-        message = message.replace("<", "&lt;")
-        message = message.replace(">", "&gt;")
-        message = message.replace('"', "&quot;")
-        message = message.replace("\r", "")
-        message = message.replace("\n", "&&")  // Newline
+        mymsg = message.content
+        mymsg = mymsg.replace("&", "&amp;")
+        mymsg = mymsg.replace("<", "&lt;")
+        mymsg = mymsg.replace(">", "&gt;")
+        mymsg = mymsg.replace('"', "&quot;")
+        mymsg = mymsg.replace("\r", "")
+        mymsg = mymsg.replace("\n", "&&")  // Newline
 
-        print("Message from Discord to the MUD-> ", message.content)
+        print("Message from Discord to the MUD-> ", mymsg)
 
         # write the message received from Discord to pipeMUD so that
         # the MUD server receives it.
         #
-        str = "discord " + message.channel.name + " @ @" + message.author.name + " says, '" + message.content + "'"
+        str = "discord " + message.channel.name + " @ @" + message.author.name + " says, '" + mymsg + "'"
         os.write(self.pipeMUD, str.encode())
         #if message.content.startswith('$hello'):
         #    await message.channel.send('da robot replies Hello!')
