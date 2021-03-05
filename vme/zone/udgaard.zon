@@ -4072,8 +4072,8 @@ names {"udgaard square","udgaard","square"}
 title "Village Square"
 descr
 "You are at the small village square of Udgaard. The temple is located
-just north of here. The Village road continues both east and west, while
-the Guild road is due south."
+just north of here. The Village road continues both east and west. 
+South of here is the small village marketplace."
 gmap(70,70)
 movement SECT_CITY
 gmap(424,584)

@@ -112,7 +112,7 @@ class MyClient(discord.Client):
         mymsg = mymsg.replace(">", "&gt;")
         mymsg = mymsg.replace('"', "&quot;")
         mymsg = mymsg.replace("\r", "")
-        mymsg = mymsg.replace("\n", "&&")  // Newline
+        mymsg = mymsg.replace("\n", "&&")  # Newline
 
         print("Message from Discord to the MUD-> ", mymsg)
 

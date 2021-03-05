@@ -138,7 +138,7 @@ END HEADER*/
 #define PROFESSION_MAX         13 /* 12+1 */
 
 #define PROFESSION_STRINGS "Fighter", "Knight", "Paladin", "Ranger", "Thief", "Assassin", \
-                           "Priest", "Druid", "Obsolete - Do Not Select","Necromancer", "Mage", "Sorcerer", \
+                           "Priest", "Druid", "Obsolete - Do Not Select","Necromancer", "Conjurer", "Sorcerer", \
 						   "Barbarian"
 
 

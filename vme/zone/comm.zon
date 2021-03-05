@@ -96,7 +96,7 @@ code
       else
       {
         //log("Dispatcher for discord got : " + arg);
-         arg := replace("&&", "\n", arg);
+         arg := replace("&&", "<br/>", arg);
         arg := "CHANNEL " + arg;
         //log("Dispatcher for discord seding message : [" + arg +"]");
         sendtoalldil(arg, "channel@function");
