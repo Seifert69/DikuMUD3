@@ -108,6 +108,13 @@ class MyClient(discord.Client):
 
         print("Message from Discord to the MUD-> ", message.content)
 
+        message = message.replace("&", "&amp;")
+        message = message.replace("<", "&lt;")
+        message = message.replace(">", "&gt;")
+        message = message.replace('"', "&quot;")
+        message = message.replace("\r", "")
+        message = message.replace("\n", "&&")  // Newline
+
         # write the message received from Discord to pipeMUD so that
         # the MUD server receives it.
         #
