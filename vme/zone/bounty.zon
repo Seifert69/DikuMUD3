@@ -15,6 +15,7 @@ END HEADER*/
 #define BLACKSMITH_COMPLETE "Blacksmith Complete"
 #define JEWELER_ONGOING "Aiding The Jeweler"
 #define JEWELER_COMPLETE "Jeweler Complete"
+#define JEWELER_CRAFTING "Crafting for the Jeweler"
 #define SUMMONER_ONGOING "Aiding The Summoner"
 #define SUMMONER_COMPLETEISH "Summoner Aided"
 #define SUMMONER_COMPLETE "Summoning Complete"
@@ -417,8 +418,13 @@ code
 		if("$jeweler_agate" in pc.quests)
 			exec("say You have collected "+pc.quests.["$jeweler_agate"].descr+" of 20 agates.",self);
 		if("$jeweler_opal" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_opal"].descr+" of 20 opals.",self);
-			
+			exec("say You have collected "+pc.quests.["$jeweler_opal"].descr+" of 20 opals.",self);		
+	}
+	else if (JEWELER_COMPLETE in pc.quests)
+	{
+		//if(JEWELER_CRAFTING in pc.quests)
+		//	exec("say You currently have "+pc.quests.[JEWELER_CRAFTING].descr+" of 20 "+pc.quests.[JEWELER_CRAFTING].names.[1]+" for your crafting project.",self);
+		exec("say You dont currently have any crafting projects underway.",self);
 	}
 	
 	goto donezo;
@@ -1677,7 +1683,7 @@ code
 		experience(10000, pc);
 		act("<br><div class='hint'>Quest Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 		act("<div class='xpgain'>You recieve "+itoa(10000)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
-		i := add_bp(200,pc);
+		qty := add_bp(200,pc);
 		act("<div class='xpgain'>You recieve "+itoa(200)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 	
 		subextra(pc.quests, SUMMONER_ONGOING);
@@ -1828,7 +1834,7 @@ code
 		subextra(pc.quests, "$sum_water");
 		subextra(pc.quests, "$sum_fire");
 		subextra(pc.quests, SUMMONER_COMPLETEISH);
-		addextra(pc.quests, {SUMMONER_COMPLETE},"");
+		addextra(pc.quests, {SUMMONER_COMPLETE},"");		
 		exec("say That's everything then. You may consider your tasks here complete.",self);
 	}
 		
@@ -1864,7 +1870,7 @@ code
 	// pink_stone@blcastle (opal)
 	
 
-	wait(SFB_CMD, ("$historian" in activator.extra) and (JOIN_ONGOING in activator.quests) and (not(JEWELER_ONGOING in activator.quests)));
+	wait(SFB_CMD, ("$historian" in activator.extra) and (JOIN_ONGOING in activator.quests) and (not(JEWELER_ONGOING in activator.quests)) and (not(JEWELER_COMPLETE in activator.quests)));
 	
 	pc := activator;
 	secure(pc, donezo);
@@ -1922,6 +1928,8 @@ code
 dilend
 
 dilbegin qjeweler2();
+external 
+	integer add_bp@bounty(n : integer, u : unitptr);
 var
 	pc : unitptr;
 	item : unitptr;
@@ -2161,6 +2169,16 @@ code
 		
 		subextra(pc.quests, JEWELER_ONGOING);
 		addextra(pc.quests, {JEWELER_COMPLETE},"");
+		
+		experience(10000, pc);
+		act("<br><div class='hint'>Quest Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		act("<div class='xpgain'>You recieve "+itoa(10000)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		qty := add_bp(200,pc);
+		act("<div class='xpgain'>You recieve "+itoa(200)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+
+		exec("say Given the value you have contributed to my work, I am able to return some value to you.", self);
+		exec("say Just say 'crafting' and we can go from there.", self);
+		
 	}
 	
 :donezo:
@@ -2168,6 +2186,18 @@ code
 	unsecure(pc);
 	goto start;
 
+}
+dilend
+
+dilbegin crafting();
+code
+{
+	heartbeat := PULSE_SEC*1;
+:start:
+	wait(SFB_CMD, command("say") and (argument == "crafting") and (JEWELER_COMPLETE in activator.quests));
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say You'll need to come back later, I've some work yet to do before you can begin crafting.",self);
+	goto start;
 }
 dilend
 
@@ -3337,7 +3367,7 @@ code
 	{
 		slNpc := {"swarm_small@valley2","swarm_med@valley2","swarm_large@valley2","mob_35@pit","mob_34@pit",
 					"mob_33@pit","mob_32@pit","mob_31@pit","mob_30@pit", "slime_black@midsewers","alain_1@timezon",
-					"lizard_1@timezon"};
+					"lizard_1@timezon", "blob1@arma"};
 	}
 	slSplit := split(s,"@");
 	
@@ -4026,8 +4056,6 @@ code
 	wait(SFB_DONE, command("quaff") and (medium == self));
 	pc := activator;
 	secure(pc,donezo);
-
-	log("Secured "+pc.name);
 	
 	if(aff == "restore")
 	{
@@ -4039,21 +4067,15 @@ code
 		}
 		else if(strength == "strong")
 		{
-			if(pc.hp < ((pc.max_hp / 4)*3))
-				pc.hp := pc.hp + ((pc.max_hp / 4)*3);
-			if(pc.endurance < ((pc.max_endurance / 4)*3))
-				pc.endurance := pc.endurance + ((pc.max_endurance / 4)*3);
-			if(pc.mana < ((pc.max_mana / 4)*3))
-				pc.mana := pc.mana + ((pc.max_mana / 4)*3);
+			pc.hp := pc.hp + ((pc.max_hp / 4)*3);
+			pc.endurance := pc.endurance + ((pc.max_endurance / 4)*3);
+			pc.mana := pc.mana + ((pc.max_mana / 4)*3);
 		}
 		else if(strength == "half")
 		{
-			if(pc.hp < (pc.max_hp / 2))
-				pc.hp := pc.hp + (pc.max_hp / 2);
-			if(pc.endurance < (pc.max_endurance / 2))
-				pc.endurance := pc.endurance + (pc.max_endurance / 2);
-			if(pc.mana < (pc.max_mana / 2))
-				pc.mana := pc.mana + (pc.max_mana / 2);
+			pc.hp := pc.hp + (pc.max_hp / 2);
+			pc.endurance := pc.endurance + (pc.max_endurance / 2);
+			pc.mana := pc.mana + (pc.max_mana / 2);
 		}
 	}
 	else if (aff == "hp")
@@ -4061,47 +4083,27 @@ code
 		if(strength == "full")
 			pc.hp := pc.max_hp;
 		else if(strength == "strong")
-		{
-			if(pc.hp < ((pc.max_hp / 4)*3))
-				pc.hp := pc.hp + ((pc.max_hp / 4)*3);
-		}
+			pc.hp := pc.hp + ((pc.max_hp / 4)*3);
 		else if(strength == "half")
-		{
-			if(pc.hp < (pc.max_hp / 2))
-				pc.hp := pc.hp + (pc.max_hp / 2);
-		}
+			pc.hp := pc.hp + (pc.max_hp / 2);
 	}
 	else if (aff == "endurance")
 	{
 		if(strength == "full")
 			pc.endurance := pc.max_endurance;
 		else if(strength == "strong")
-		{
-			if(pc.endurance < ((pc.max_endurance / 4)*3))
-				pc.endurance := pc.endurance + ((pc.max_endurance / 4)*3);
-		}
+			pc.endurance := pc.endurance + ((pc.max_endurance / 4)*3);
 		else if(strength == "half")
-		{
-			if(pc.endurance < (pc.max_endurance / 2))
-				pc.endurance := pc.endurance + (pc.max_endurance / 2);
-		}
+			pc.endurance := pc.endurance + (pc.max_endurance / 2);
 	}
 	else if (aff == "mana")
 	{
-		log(pc.name+" current mana: "+itoa(pc.mana)+"/"+itoa(pc.max_mana));
 		if(strength == "full")
 			pc.mana := pc.max_mana;
 		else if(strength == "strong")
-		{
-			if(pc.mana < ((pc.max_mana / 4)*3))
-				pc.mana := pc.mana + ((pc.max_mana / 4)*3);
-		}
+			pc.mana := pc.mana + ((pc.max_mana / 4)*3);
 		else if(strength == "half")
-		{
-			if(pc.mana < (pc.max_mana / 2))
-				pc.mana := pc.mana + (pc.max_mana / 2);
-		}
-		log(pc.name+" updated mana: "+itoa(pc.mana)+"/"+itoa(pc.max_mana));
+			pc.mana := pc.mana + (pc.max_mana / 2);
 	}
 	if(pc.hp > pc.max_hp)
 		pc.hp := pc.max_hp;
@@ -4671,7 +4673,7 @@ end
 bottom
 title "<div class='cpn'>Bottom of the Stairwell</div>"
 descr
-"Reaching the bottom of the stairwell, a passage opens to either direction. To  both the 
+"Reaching the bottom of the stairwell, a passage opens to either direction. To both the 
 east and west the stones placed to form the structures above give way to the raw bedrock 
 that makes up the surrounds. It is a somewhat peculiar thing, given the clear intent to 
 every stone placed, to decide in this space to leave it seemingly unfinished. To the west, 
@@ -4755,7 +4757,14 @@ end
 cave
 title "<div class='cpn'>Entering the Cave</div>"
 descr
-"Entering the Cave"
+"The cave opens up to a large space, though relatively nondescript. It 
+seems as though this is a natural opening in the bedrock that surrounds 
+it. There is however, something rather unnatural about the space. In 
+addition to the leveled out floor with a path leading east to west, 
+the western side of the cave comes to an abrupt halt in what can only 
+be described as a magical barrier. There is something of a door in the 
+barrier, though it too is clearly magical in nature. The barrier itself 
+provides a glow that leaves a perpetual eerie light cast on the room."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -4774,7 +4783,13 @@ end
 circle
 title "<div class='cpn'>The Summoning Circle</div>"
 descr
-"The Summoning Circle"
+"As you pass through the barrier, the cave opens even more broadly. A
+large circle, what can only be described as a summoning circle, sits in 
+the middle of the room. The workings of the arcane can be seen around the 
+space which is lit by a series of orbs that float in the air, almost 
+dancing about. Piles of materials for potions and the workings of spells 
+are strewn about, though with some form of undecipherable order. The only 
+obvious exit is back to the east through the strange door in the barrier."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -4933,6 +4948,7 @@ dilcopy delivery@bounty();
 dilcopy qjeweler@bounty();
 dilcopy qjeweler2@bounty();
 dilcopy report@bounty();
+dilcopy crafting@bount();
 
 end 
 
