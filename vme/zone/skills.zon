@@ -12362,6 +12362,12 @@ code
       As a result the character's Speed, HP, and CON are increased temporarily.
       */
 	tgt := self;
+	
+	if ((self.type == UNIT_ST_PC) and (self.skills[SKI_BERSERK] <= 0))
+	{
+      act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+	}
     if (tgt.endurance < 100)
     {
 		act("<div class='spell'>You attempt to channel your energy, but find yourself exhausted.</div>",
