@@ -197,8 +197,7 @@ code
 dilend
 
 
-dilbegin integer skillresist(aa : integer, ad : integer,
-			     sa : integer, sd : integer);
+dilbegin integer skillresist(aa : integer, ad : integer, sa : integer, sd : integer);
 code
 {
                                          /* 100 was 50*/
@@ -2492,11 +2491,14 @@ code
 }
 dilend
 
+
+// do_resize
 dilbegin resize(arg:string);
 external
    res_clothes@skills (tgt:unitptr,tgt_pc:unitptr);
    res_lth@skills (tgt:unitptr,tgt_pc:unitptr);
    res_metal@skills (tgt:unitptr,tgt_pc:unitptr);
+   res_obj(tgt:unitptr, tgt_pc:unitptr, skillidx : integer, abilidx : integer);
 var
    item : unitptr;
    tgt_pc : unitptr;
@@ -2512,8 +2514,7 @@ code
 
    if ((item == null) or not visible(self, item))
    {
-      act("No such thing by that name!", A_SOMEONE, self, null, null,
-TO_CHAR);
+      act("No such thing by that name!", A_SOMEONE, self, null, null, TO_CHAR);
       quit;
    }
 
@@ -2524,8 +2525,7 @@ TO_CHAR);
 
    if (not (item.type&UNIT_ST_OBJ))
    {
-      act("You can't resize that!", A_SOMEONE, self, null, null,
-	  TO_CHAR);
+      act("You can't resize that!", A_SOMEONE, self, null, null, TO_CHAR);
       quit;
    }
 
@@ -2534,8 +2534,7 @@ TO_CHAR);
       if ((item.value[0]<ARM_CLOTHES)or
           (item.value[0]>ARM_PLATE))
       {
-         act ("The armor seems to be broken.",
-	      A_ALWAYS,self,null, null,TO_CHAR);
+         act ("The armor seems to be broken.", A_ALWAYS,self,null, null,TO_CHAR);
          quit;
       }
       on item.value[0] goto clothes,leather,leather,metal,metal;
@@ -2567,23 +2566,167 @@ TO_CHAR);
    quit;
 
    :clothes:
-   res_clothes(item,tgt_pc);
+   if ((self.type == UNIT_ST_PC) and (self.skills[SKI_RESIZE_CLOTHES] <= 0))
+   {
+      act("You have no knowledge in tailoring, you must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   res_obj(item, tgt_pc, SKI_RESIZE_CLOTHES, ABIL_DEX);
    quit;
+
    :leather:
-   res_lth (item,tgt_pc);
+   if ((self.type == UNIT_ST_PC) and (self.skills[SKI_RESIZE_LEATHER] <= 0))
+   {
+      act("You have no knowledge in leather, you must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   res_obj(item, tgt_pc, SKI_RESIZE_LEATHER, ABIL_STR);
    quit;
+   
    :metal:
-   res_metal(item,tgt_pc);
+   if ((self.type == UNIT_ST_PC) and (self.skills[SKI_RESIZE_METAL] <= 0))
+   {
+      act("You have no knowledge in smithing, you must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   res_obj(item, tgt_pc, SKI_RESIZE_METAL, ABIL_STR);
    quit;
 }
 dilend
 
 
-dilbegin res_clothes(tgt:unitptr,tgt_pc:unitptr);
+dilbegin res_obj(tgt:unitptr, tgt_pc:unitptr, skillidx : integer, abilidx : integer);
 external
-   integer skillresist (aa : integer, ad : integer,
-			     sa : integer, sd : integer);
-   unitptr unit_room (u:unitptr);
+   integer skillchecksa(skillidx : integer, abiidx : integer, difficulty : integer);
+   unitptr unit_room(u:unitptr);
+
+var
+   endu : integer;   
+   hm:integer;
+   scale:integer;
+   size:string;
+   skilla : integer;
+   rm:unitptr;
+   skilld : integer;
+   hold_eq:unitptr;
+   wield_eq:unitptr;
+
+code
+{
+   :workshop:
+   if ("$resized" in tgt.extra)
+   {
+      act("You see that the $2n has already been resized, you are unable to do more yourself.", A_ALWAYS,self,tgt,null,TO_CHAR);
+      quit;
+   }
+
+   // Find percentage to scale 
+   //  Not a real percentage when scaling down, cut in half so 100->50 = 50%, not 100%
+   //
+   if (tgt_pc.height > tgt.height)
+      scale := (100*tgt_pc.height) / tgt.height - 100;  // Enlarge %
+   else
+      scale := (((100*tgt.height) / tgt_pc.height)-100) / 2; // Shrink %, ½ = easier to shrink
+
+   if (scale > 125)
+      scale := 125; // 125% resize is the most difficult for anyone
+
+   endu := 20;
+   endu := endu + (endu * scale) / 100;
+
+   if (self.endurance < endu)
+      goto fail_endurance;
+
+   // value[1] is craftsmanship
+   // value[2] is magical bonus
+   //
+   skilld := 2*tgt.value[1] + 6*tgt.value[2];
+
+   hm := skillchecksa@skills(skillidx, abilidx, (skilld + scale));
+
+   if (hm <= -100)
+     goto major_fail;
+   if (hm < -50)
+     goto fail;
+
+   if (hm < 0)
+   {
+      act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   if (tgt_pc.height>tgt.height)
+      size:="enlarges"
+   else
+      size:="shrinks";
+
+   //tgt.max_hp := tgt.max_hp-diff;
+   //tgt.hp := tgt.hp-diff;
+   tgt.height := tgt_pc.height;
+
+   addextra(tgt.extra, {"$resized"}, "");
+
+   self.endurance := self.endurance - endu;
+
+   if (tgt_pc==self)
+   {
+      act("You skillfully work on $2n until it $3t enough to fit.",
+	  A_ALWAYS, self, tgt, size, TO_CHAR);
+      act("$1n skillfully works on $2n until it $3t enough to fit $1m",
+	  A_SOMEONE, self, tgt, size, TO_REST);
+   }
+   else
+   {
+      act("You skillfully work on $2n until it $3t enough to fit "+
+	  tgt_pc.name+".", A_SOMEONE, self, tgt, size, TO_CHAR);
+      act("$1n skillfully works on "+tgt.title+
+	  " until it $3t enough to fit $2n",
+	  A_SOMEONE, self, tgt_pc, size, TO_REST);
+   }
+   quit;
+
+   :fail:
+   tgt.hp := tgt.hp + hm;
+   if (tgt.hp < 1)
+      goto major_fail;
+   act("You try to $3t $2n but you make a mistake and damage it instead",
+      A_ALWAYS, self, tgt, size, TO_CHAR);
+   act ("$1n tries to $3t but $1e makes a mistake and damages it instead.",
+	   A_SOMEONE, self, tgt, size, TO_REST);
+   quit;
+
+   :major_fail:
+   act("You try to $3t $2n but the job is too much for you and you destroy it.",
+      A_ALWAYS, self, tgt, size, TO_CHAR);
+   act ("$1n tries to $3t but the job is too much for $1m and $1e destroys it.",
+	   A_SOMEONE, self, tgt, size, TO_REST);
+   addextra(tgt.extra,tgt.names,
+      "Well whatever this was it looks like someone realy screwed up resizing this.");
+   tgt.title := tgt.title+" (broken)";
+   tgt.objecttype := ITEM_TRASH;
+   tgt.manipulate:=MANIPULATE_TAKE;
+   tgt.hp := -1;
+   position_update(tgt);
+   quit;
+
+   :fail_endurance:
+   act("You begin to work on $2n but realize you are much too tired to finish.",
+       A_ALWAYS, self, tgt,null, TO_CHAR);
+   act("$1n Begins working on $2n but realizes $1e is too tired and slumps "+
+       "back exausted.",
+       A_SOMEONE, self, tgt, size, TO_REST);
+   quit;
+}
+dilend
+
+
+
+dilbegin res_clothes(tgt:unitptr, tgt_pc:unitptr);
+external
+   integer skillresist(aa : integer, ad : integer, sa : integer, sd : integer);
+   unitptr unit_room(u:unitptr);
+
 var
   hm:integer;
   amount:integer;
@@ -2599,8 +2742,7 @@ code
 {
    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_RESIZE_CLOTHES] <= 0))
    {
-      act("You have no knowledge in tailoring, you must practice first.",
-	  A_ALWAYS, self, null, null, TO_CHAR);
+      act("You have no knowledge in tailoring, you must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
 
@@ -2622,9 +2764,7 @@ code
    :workshop:
    if ("$resized" in tgt.extra)
    {
-      act("You see that the $2n has already been resized, you are unable "+
-          "to do more yourself.",
-	   A_ALWAYS,self,tgt,null,TO_CHAR);
+      act("You see that the $2n has already been resized, you are unable to do more yourself.", A_ALWAYS,self,tgt,null,TO_CHAR);
       quit;
    }
 
@@ -2633,6 +2773,9 @@ code
    else
      skilla := self.abilities[ABIL_DEX];
 
+   // value[1] is craftsmanship
+   // value[2] is magical bonus
+   //
    skilld := 2*tgt.value[1] + 6*tgt.value[2];
 
    hm := skillresist (self.abilities[ABIL_DEX],
@@ -2654,6 +2797,7 @@ code
      diff := amount - 100;
    else
      diff := 100 - amount;
+
    if (self.endurance<diff) goto fail_endurance;
 
    if (tgt_pc.height>tgt.height)
@@ -2696,8 +2840,7 @@ code
    quit;
 
    :major_fail:
-   act("You try to $3t $2n but the job is too much for you and you destroy
-it.",
+   act("You try to $3t $2n but the job is too much for you and you destroy it.",
        A_ALWAYS, self, tgt, size, TO_CHAR);
    act ("$1n tries to $3t but the job is too much for $1m and $1e destroys it.",
 	A_SOMEONE, self, tgt, size, TO_REST);
@@ -2719,6 +2862,8 @@ position_update(tgt);
    quit;
 }
 dilend
+
+
 
 dilbegin res_lth(tgt:unitptr,tgt_pc:unitptr);
 external
@@ -3002,6 +3147,8 @@ back exausted.",
 
 }
 dilend
+
+
 
 /* The climb skill as a special routine to be connected to ROOMS
 
