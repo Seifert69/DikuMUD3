@@ -5609,7 +5609,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5624,7 +5624,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5637,7 +5637,7 @@ descr "A pair of Bounty Hunter's magical sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
 ARMOUR_PLATE(15,10)
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
 dilcopy level_restrict@function(20,0,25,"");
 cost 1 GOLD_PIECE
@@ -5654,7 +5654,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5669,7 +5669,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5684,7 +5684,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5699,7 +5699,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5714,7 +5714,7 @@ extra {}
 WEAPON_DEF(WPN_MACE, +15, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 7
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5729,7 +5729,7 @@ extra{}
 SHIELD_DEF(SHIELD_LARGE, 15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5744,7 +5744,7 @@ extra {}
 WEAPON_DEF(WPN_QUARTERSTAFF, +15, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 7
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+3)
 BRA_TRANSFER(+3)
@@ -5763,7 +5763,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5778,7 +5778,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5791,7 +5791,7 @@ descr "A pair of Bounty Hunter's divine sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
 ARMOUR_PLATE(15,10)
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
 dilcopy level_restrict@function(20,0,25,"");
 cost 1 GOLD_PIECE
@@ -5808,7 +5808,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5823,7 +5823,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5838,7 +5838,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5853,7 +5853,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5868,7 +5868,7 @@ extra {}
 WEAPON_DEF(WPN_MACE, +15, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 8
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5883,7 +5883,7 @@ extra{}
 SHIELD_DEF(SHIELD_LARGE, 15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5898,7 +5898,7 @@ extra {}
 WEAPON_DEF(WPN_WAR_MAUL, +15, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 15
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+3)
 BRA_TRANSFER(+3)
@@ -5917,7 +5917,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -5932,7 +5932,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -5945,9 +5945,9 @@ descr "A pair of Bounty Hunter's sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
 ARMOUR_PLATE(15,10)
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -5962,7 +5962,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -5977,7 +5977,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -5992,7 +5992,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -6007,7 +6007,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -6022,7 +6022,7 @@ extra {}
 WEAPON_DEF(WPN_MACE, +15, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 8
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -6037,7 +6037,7 @@ extra{}
 SHIELD_DEF(SHIELD_LARGE, 15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -6052,7 +6052,7 @@ extra {}
 WEAPON_DEF(WPN_WAR_MATTOCK, +15, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 15
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+3)
 DEX_TRANSFER(+3)

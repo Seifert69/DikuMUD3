@@ -2732,78 +2732,10 @@ goto start;
 }
 dilend
 
-dilbegin quests_restrict
-(qts:stringlist,damage:integer,percent:integer,action:string);
-var
- amount:integer;
- i:integer;
-code
-{
-if (damage < 0) damage := -damage;
-if (percent < 0) percent := -percent;
-
-interrupt (SFB_MSG,argument=="unstore",start);
-if ((self.equip) and
-(self.outside.zoneidx=="g_q"))
-goto nextstart;
-:start:
-damage := 0;
-percent := 25;
-amount := 0;
-
-wait (SFB_DONE, (((command ("hold")) or
-(command ("wear")) or
-(command ("grab")) or
-(command ("wield"))) and
-(self==medium)));
-:nextstart:
-
-if ((activator.type == UNIT_ST_NPC) and not ("$pc obey" in activator.extra)
-   and (activator.master.type != UNIT_ST_PC) ) goto start;
-
-if (self.outside.level>=IMMORTAL_LEVEL) goto start;
-
-i:=0;
-while (i<length(qts))
-  {
-  if (qts.[i] in activator.quests) goto start;
-  i:=i+1;
-  }
-if (action=="")
-  {
-  act ("Your $2n burns you and you drop it to the ground.",
-  A_ALWAYS,self.outside,self,null,TO_CHAR);
-  act ("$1n's $2n burns $1m and $1e drops it to the ground.",
-  A_SOMEONE,self.outside,self,null,TO_REST);
-  act ("Doing the right Quest might help.",
-  A_ALWAYS,self.outside,null,null,TO_CHAR);
-}
-else action ();
-
-if (percent!=0)
-  amount:=(self.outside.hp*percent)/100;
-if (damage==-1)
-  damage:=openroll (100,5);
-if (percent!=0)
-  if (damage>amount)
-    damage:=amount;
-  else if (damage==0)
-  damage:=amount;
-
-
-self.outside.hp:=self.outside.hp-damage;
-position_update (self.outside);
-
-unequip (self);
-link (self,self.outside.outside);
-goto start;
-}
-dilend
-
-// similar to quest_restrict, though allows a stringlist of quests
+// similar to quest_restrict, though allows a stringlist of N quests
 // any one of which will allow the wearer to enjoy the item.
-dilbegin quests_restrict
-(quests:stringlist,damage:integer,percent:integer,action:string);
+dilbegin nquest_restrict
+(nquest:stringlist,damage:integer,percent:integer,action:string);
 var
  amount:integer;
  i : integer;
@@ -2831,9 +2763,9 @@ wait (SFB_DONE, (((command ("hold")) or
 if ((activator.type == UNIT_ST_NPC) and not ("$pc obey" in activator.extra)
    and (activator.master.type != UNIT_ST_PC) ) goto start;
  i := 0;
- while(i < length(quests))
+ while(i < length(nquest))
  {
-	if(quests.[i] in activator.quests)
+	if(nquest.[i] in activator.quests)
 		goto start;
 	i := i + 1;
  }
