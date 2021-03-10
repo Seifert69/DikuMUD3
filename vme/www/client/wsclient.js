@@ -791,8 +791,15 @@ function InputFocus(str) {
 
     if (str != null)
         myfld.value = str;
-    myfld.focus();
-    myfld.select();
+
+    // I suspect changing the focus might cause readers to repeat text read. 
+    // So therefore test if the element has focus before setting it
+    //
+    if (document.activeElement != myfld)
+    {
+        myfld.focus();
+        myfld.select();
+    }
 }
 
 
