@@ -396,29 +396,29 @@ code
 	if (JEWELER_ONGOING in pc.quests)
 	{
 		if("$jeweler_pearl" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_pearl"].descr+" of 20 pearls.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_pearl"].descr+" of 12 pearls.",self);
 		if("$jeweler_ruby" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_ruby"].descr+" of 20 rubies.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_ruby"].descr+" of 12 rubies.",self);
 		if("$jeweler_moonstone" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_moonstone"].descr+" of 20 moonstones.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_moonstone"].descr+" of 12 moonstones.",self);
 		if("$jeweler_jade" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_jade"].descr+" of 20 jades.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_jade"].descr+" of 12 jades.",self);
 		if("$jeweler_diamond" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_diamond"].descr+" of 20 diamonds.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_diamond"].descr+" of 12 diamonds.",self);
 		if("$jeweler_bloodstone" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_bloodstone"].descr+" of 20 bloodstones.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_bloodstone"].descr+" of 12 bloodstones.",self);
 		if("$jeweler_emerald" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_emerald"].descr+" of 20 emeralds.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_emerald"].descr+" of 12 emeralds.",self);
 		if("$jeweler_onyx" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_onyx"].descr+" of 20 onyx.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_onyx"].descr+" of 12 onyx.",self);
 		if("$jeweler_sapphire" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_sapphire"].descr+" of 20 sapphires.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_sapphire"].descr+" of 12 sapphires.",self);
 		if("$jeweler_jasper" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_jasper"].descr+" of 20 jaspers.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_jasper"].descr+" of 12 jaspers.",self);
 		if("$jeweler_agate" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_agate"].descr+" of 20 agates.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_agate"].descr+" of 12 agates.",self);
 		if("$jeweler_opal" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_opal"].descr+" of 20 opals.",self);		
+			exec("say You have collected "+pc.quests.["$jeweler_opal"].descr+" of 12 opals.",self);		
 	}
 	else if (JEWELER_COMPLETE in pc.quests)
 	{
@@ -449,7 +449,8 @@ code
 	exec("say You have completed a total of "+total+" killing sprees.",self);
 	exec("say You are currently on a streak of "+streak+" killing sprees.",self);
 	exec("say Your longest killing spree streak is "+max+".",self);
-	
+	if (BLACKSMITH_ONGOING in pc.quests)
+		exec("say You have contributed "+pc.quests.[BLACKSMITH_ONGOING].descr+" of 100,000 lbs of armors.",self);
 	goto donezo;
 	
 :summoner:
@@ -472,13 +473,13 @@ code
 		addextra(pc.quests,{"$sum_ball"},"0");
 	
 	total := pc.quests.["$sum_air"].descr;
-	exec("say You have collected  "+total+" of 5 air elements.",self);
+	exec("say You have collected  "+total+" of 3 air elements.",self);
 	total := pc.quests.["$sum_water"].descr;
-	exec("say You have collected  "+total+" of 5 water elements.",self);
+	exec("say You have collected  "+total+" of 3 water elements.",self);
 	total := pc.quests.["$sum_fire"].descr;
-	exec("say You have collected  "+total+" of 5 fire elements.",self);
+	exec("say You have collected  "+total+" of 3 fire elements.",self);
 	total := pc.quests.["$sum_earth"].descr;
-	exec("say You have collected  "+total+" of 5 earth elements.",self);
+	exec("say You have collected  "+total+" of 3 earth elements.",self);
 	total := pc.quests.["$sum_ball"].descr;
 	exec("say You have collected  "+total+" of 30 lightning balls.",self);
 	total := pc.quests.["$sum_act"].descr;
@@ -529,7 +530,7 @@ var
 	blocked : integer;
 code
 {
-	heartbeat:=PULSE_SEC * 5;
+	heartbeat:=PULSE_SEC * 3;
 	on_activation(self.position == POSITION_FIGHTING, ina_fight);
 	package:=null;
 
@@ -576,7 +577,9 @@ code
 		exec("say I will clear you of the responsibility (and the quest flag),", self);
 		exec("say but you will be penalized and lose 500 xp and 2 bounty points.", self);
 		exec("say Nod if this is acceptable.", self);
-		wait(SFB_DONE, (pc.outside!=self.outside) or ((activator==pc) and (command("nod"))));
+		wait(SFB_DONE, (pc.outside!=self.outside) or ((activator==pc) and ((command("nod")) or (command("shake")))));
+		if(command("shake"))
+			goto start;
 		if(pc.outside!=self.outside) goto lostpc;
 		temp:=dildestroy("packagefor@bounty", pc);
 		subextra(pc.quests, "packagefor");
@@ -617,7 +620,7 @@ code
 	package.extra.[0].descr := package.extra.[0].descr + 
 		"A label reads:<br>The recipient looks like this: "+rdesc;
 	addextra(package.extra,{"$recipient"},recip.symname);
-	addstring(package.names, rtitle);
+	addextra(package.extra, {"$rtitle"}, rtitle);
 	qnames:=null;
 	addstring(qnames, "Package for "+rtitle);
 	addstring(qnames, "packagefor");
@@ -627,7 +630,8 @@ code
 	exec("say OK the package is for "+rtitle+".", self);
 	exec("give packagefor "+pc.name, self);
 	exec("drop packagefor", self);
-	exec("say Don't you dare open that, it's not for you!", self);pause;
+	exec("say Don't you dare open that, it's not for you!", self);
+	pause;
 	exec("say The recipient you are looking for looks like this:", self);
 	exec("say "+rdesc, self);
 	exec("say And don't worry about giving it to the wrong recipient,", self);
@@ -686,7 +690,7 @@ code
 	wait(SFB_DONE, (command("give") and (activator==self) and ("packagefor" in medium.names) and (target.type==UNIT_ST_NPC)));
 	q1:="packagefor" in self.quests;
 	q2:=target.title in self.quests;
-	if((q1==q2) and (q1!=null) and (target.title in medium.names))
+	if((q1==q2) and (q1!=null) and (target.title == medium.extra.["$rtitle"].descr))
 	{
 		subextra(self.quests, "packagefor");
 		experience((50*rlev), self);
@@ -1602,7 +1606,7 @@ code
 		destroy(item);
 		exec("say Crystalized elemental air. It is more beautiful than even the rumors suggest.", self);
 		exec("emote tucks the "+item.title+" into her robes.", self);
-		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 5.", self);
+		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 3.", self);
 	}
 	else if((item.symname == "q_fire@faeries2"))
 	{
@@ -1616,7 +1620,7 @@ code
 		destroy(item);
 		exec("say Crystalized elemental fire. I can sense its power.", self);
 		exec("emote tucks the "+item.title+" into her robes.", self);
-		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 5.", self);
+		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 3.", self);
 	}
 	else if((item.symname == "q_water@faeries2"))
 	{
@@ -1630,7 +1634,7 @@ code
 		destroy(item);
 		exec("say Crystalized elemental water. A wonder of nature!", self);
 		exec("emote tucks the "+item.title+" into her robes.", self);
-		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 5.", self);
+		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 3.", self);
 	}
 	else if((item.symname == "q_earth@faeries2"))
 	{
@@ -1644,7 +1648,7 @@ code
 		destroy(item);
 		exec("say Crystalized elemental earth. Marvelous!", self);
 		exec("emote tucks the "+item.title+" into her robes.", self);
-		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 5.", self);
+		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 3.", self);
 	}
 	else if((item.symname == "ball_energ@akaren"))
 	{
@@ -1658,7 +1662,7 @@ code
 		destroy(item);
 		exec("say Energy in its purest form! The raw power is incredible.", self);
 		exec("emote tucks the "+item.title+" into her robes.", self);
-		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 10.", self);
+		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 30.", self);
 	}
 	else
 	{
@@ -2338,7 +2342,7 @@ code
 			exec("emote purposefully tucks "+item.title+" into the pocket of his sash.", self);
 		else
 			exec("emote pats his chest as if looking for a pocket, then dejectedly tucks the "+item.title+" into his robes.", self);
-		exec("say This is "+itoa(qty + 1)+" of the 15 I need.", self);
+		exec("say This is "+itoa(qty + 1)+" of the 50 I need.", self);
 	}	
 	else if((item.symname == "fake_sash@mordenkin") and (not ("sash" in pc.quests.[NECRO_ONGOING].names)))
 	{
@@ -3056,7 +3060,7 @@ code
 	}
 	if(stype == 3)
 	{
-		dur := rnd(10,30);
+		dur := rnd(4,6);
 		amt := 0;
 		n := dur * 12;
 		exec("say This will be a "+itoa(dur)+" minute spree requiring "+itoa(n)+" kills and no xp minimum.",self);
@@ -3166,12 +3170,12 @@ code
 				bp := 5;
 				if(sl.[3] == "0")
 				{
-					rwrd := rwrd * 6;
+					rwrd := rwrd * 10;
 					bp := bp + 3;
 				}
 				else if(sl.[3] == "1")
 				{
-					rwrd := rwrd * 6;
+					rwrd := rwrd * 10;
 					bp := bp + 3;
 				}
 				else if(sl.[3] == "2")
@@ -3361,13 +3365,14 @@ code
 	if (n == 0) // package deliver
 	{
 		slNpc := {"mob_35@pit","mob_34@pit","mob_33@pit","mob_32@pit","mob_31@pit","mob_30@pit","alain_1@timezon",
-					"lizard_1@timezon"};
+					"lizard_1@timezon","robin_frog@torsbay","mcdroog_guard@torsbay","mcdroog_guard2@torsbay"};
 	}
 	else if (n == 1) // contract
 	{
 		slNpc := {"swarm_small@valley2","swarm_med@valley2","swarm_large@valley2","mob_35@pit","mob_34@pit",
 					"mob_33@pit","mob_32@pit","mob_31@pit","mob_30@pit", "slime_black@midsewers","alain_1@timezon",
-					"lizard_1@timezon", "blob1@arma"};
+					"lizard_1@timezon","blob1@arma","robin_frog@torsbay","mcdroog_guard@torsbay",
+					"mcdroog_guard2@torsbay"};
 	}
 	slSplit := split(s,"@");
 	
@@ -5604,7 +5609,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5619,7 +5624,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5632,7 +5637,7 @@ descr "A pair of Bounty Hunter's magical sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
 ARMOUR_PLATE(15,10)
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
 dilcopy level_restrict@function(20,0,25,"");
 cost 1 GOLD_PIECE
@@ -5649,7 +5654,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5664,7 +5669,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5679,7 +5684,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5694,7 +5699,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5709,7 +5714,7 @@ extra {}
 WEAPON_DEF(WPN_MACE, +15, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 7
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5724,7 +5729,7 @@ extra{}
 SHIELD_DEF(SHIELD_LARGE, 15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5739,7 +5744,7 @@ extra {}
 WEAPON_DEF(WPN_QUARTERSTAFF, +15, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 7
-dilcopy quests_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+3)
 BRA_TRANSFER(+3)
@@ -5758,7 +5763,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5773,7 +5778,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5786,7 +5791,7 @@ descr "A pair of Bounty Hunter's divine sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
 ARMOUR_PLATE(15,10)
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
 dilcopy level_restrict@function(20,0,25,"");
 cost 1 GOLD_PIECE
@@ -5803,7 +5808,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5818,7 +5823,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5833,7 +5838,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5848,7 +5853,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5863,7 +5868,7 @@ extra {}
 WEAPON_DEF(WPN_MACE, +15, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 8
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5878,7 +5883,7 @@ extra{}
 SHIELD_DEF(SHIELD_LARGE, 15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -5893,7 +5898,7 @@ extra {}
 WEAPON_DEF(WPN_WAR_MAUL, +15, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 15
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+3)
 BRA_TRANSFER(+3)
@@ -5912,7 +5917,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -5927,7 +5932,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -5940,9 +5945,9 @@ descr "A pair of Bounty Hunter's sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
 ARMOUR_PLATE(15,10)
-dilcopy quests_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -5957,7 +5962,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -5972,7 +5977,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -5987,7 +5992,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -6002,7 +6007,7 @@ extra {}
 ARMOUR_PLATE(15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -6017,7 +6022,7 @@ extra {}
 WEAPON_DEF(WPN_MACE, +15, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 8
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -6032,7 +6037,7 @@ extra{}
 SHIELD_DEF(SHIELD_LARGE, 15,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+2)
 DEX_TRANSFER(+2)
@@ -6047,7 +6052,7 @@ extra {}
 WEAPON_DEF(WPN_WAR_MATTOCK, +15, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 15
-dilcopy quests_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
 STR_TRANSFER(+3)
 DEX_TRANSFER(+3)
