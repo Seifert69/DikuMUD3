@@ -13031,6 +13031,7 @@ code
 	act("You swing your $2n and do a violent slam!",A_SOMEONE, self, weap, null, TO_CHAR);
 	act("$1n swings their $2n and does a violent slam!",A_SOMEONE, self, weap, null, TO_ROOM);
 	self.endurance := self.endurance - 75;
+
 	foreach(UNIT_ST_PC|UNIT_ST_NPC, u)
 	{
 		if (u.minv>=200) continue;
@@ -13041,7 +13042,7 @@ code
 
 
 		if ((u.master != mast) and (u != mast) and (u != self))
-		{
+		{	
 			hm := skillchecksaopp(SKI_SLAM, ABIL_STR, ABIL_CON, u, ABIL_DEX, ABIL_CON);
 			if (hm <= -10)
 			{
@@ -13055,8 +13056,7 @@ code
 			else
 			{
 				dam := meleeattack(self, u, (hm), 0);
-				if(dam > 0)
-					change_speed(u,PULSE_VIOLENCE);
+				change_speed(self,-6);
 			}
 			provoked_attack(u,self);
 		}

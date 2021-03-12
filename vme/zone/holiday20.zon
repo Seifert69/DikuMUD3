@@ -667,8 +667,9 @@ var
 	i 		: integer;
 code
 {
+	heartbeat := PULSE_SEC;
 :start:
-// item will carry 1 charge. recharges once per day. will protect wearer from death.
+// item will carry 1 charge. recharges once per day. will restore wearer to full health.
 	wait(SFB_CMD, (command("say") and (argument == "Merry Christmas!") and (activator == self.outside) and (self.equip > 0)));
 	pc := activator;
 	secure(pc,lostpc);
@@ -678,10 +679,10 @@ code
 
 	if(self.extra.[X_CHARGES].descr == "empty") 
 	{
+		wait(SFB_TICK, command(CMD_AUTO_TICK));
 		act("Your $2n seems to be drained of its holiday magic.",A_ALWAYS,self.outside,self,null,TO_CHAR);
 		goto start;
 	}
-	heartbeat := PULSE_SEC;
 	wait(SFB_TICK, command(CMD_AUTO_TICK));
 	self.extra.[X_CHARGES].descr := "empty";
 	self.extra.[0].descr := replace(" It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.","",self.extra.[0].descr);
