@@ -962,7 +962,7 @@ code
 
 :start:
 
-	heartbeat:=PULSE_SEC*SECS_PER_MUD_DAY/24;
+	heartbeat:=PULSE_SEC*SECS_PER_REAL_DAY/24;
 	wait (SFB_TICK,command(CMD_AUTO_TICK) and (self.equip == WEAR_HANDS));
 	act ("The inscription on your $2n flashes <div class='cr'>blood red</div>!",A_SOMEONE,self.outside,self,null,TO_CHAR);
 	act ("The inscription on $1n's $2n flashes <div class='cr'>blood red</div>!",A_SOMEONE,self.outside,self,null,TO_REST);

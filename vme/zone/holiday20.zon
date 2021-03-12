@@ -674,25 +674,16 @@ code
 	pc := activator;
 	secure(pc,lostpc);
 	
-	if(not(X_CHARGES in pc.quests))
-	{
-		addextra(pc.quests, {X_CHARGES}, "");
-		exdp := X_CHARGES in pc.quests;
-		addstring(exdp.names,"charged");
-	}
-	else
-	{	
-		exdp := X_CHARGES in pc.quests;
-	}
+	if(not(X_CHARGES in self.extra))
+		addextra(self.extra, {X_CHARGES}, "charged");
+	exdp := X_CHARGES in self.extra;
 	  
-	if(exdp.names.[1] == "empty")   
+	if(exdp.descr == "empty")   
 		goto start;
 	heartbeat := PULSE_SEC;
-	pause;
-	exdp := X_CHARGES in pc.quests;
-	substring(exdp.names,"charged");
-	addstring(exdp.names,"empty");
-	self.extra.descr := replace(" It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.","",self.extra.descr);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exdp.descr := "empty";
+	self.extra.[0].descr := replace(" It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.","",self.extra.descr);
 	
 	act("A burst of holiday magic erupts from your $2n!",A_ALWAYS,self.outside,self,null,TO_CHAR);
 	act("Your $2n has fully restored you!",A_ALWAYS,self.outside,self,null,TO_CHAR);
@@ -713,7 +704,6 @@ dilend
 dilbegin recall x_charge();
 var
   exdp : extraptr;
-  pc : unitptr;
   charge 	: integer;
 code
 {
@@ -722,31 +712,18 @@ code
 	wait(SFB_TICK, (self.equip > 0));
 	heartbeat := PULSE_SEC*5;
 	
-	pc:=self.outside;
-	secure(pc,lostpc);
-	
-	if(not(X_CHARGES in pc.quests))
-	{
-		addextra(pc.quests, {X_CHARGES}, "");
-		exdp := X_CHARGES in pc.quests;
-		addstring(exdp.names, "charged");
-	}
-	else
-	{	
-		exdp := X_CHARGES in pc.quests;
-	}
+	if(not(X_CHARGES in self.extra))
+		addextra(self.extra, {X_CHARGES}, "charged");
 
-	if(exdp.names.[1] == "empty")
-	{
-		act("Your $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_CHAR);
-		act("$1n's $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_REST);
-		self.extra.descr := self.extra.descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
-		substring(exdp.names, "empty");
-		addstring(exdp.names, "charged");
-	}
+	exdp := X_CHARGES in self.extra;
 	
-	:lostpc:
-	unsecure(pc);
+	act("Your $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act("$1n's $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_REST);
+	if(exdp.descr == "empty")
+	{
+		self.extra.[0].descr := self.extra.[0].descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
+		exdp.descr := "charged";
+	}
 	goto start;
 	
 }

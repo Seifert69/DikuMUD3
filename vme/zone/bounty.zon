@@ -13,15 +13,22 @@ END HEADER*/
 #define JOIN_COMPLETE "Bounty Hunter"
 #define BLACKSMITH_ONGOING "Aiding The Blacksmith"
 #define BLACKSMITH_COMPLETE "Blacksmith Complete"
+#define BLACKSMITH_CRAFTING "Crafting for the Blacksmith"
+#define BLACKSMITH_CRAFTINGS "$Crafting for the Blacksmith"
 #define JEWELER_ONGOING "Aiding The Jeweler"
 #define JEWELER_COMPLETE "Jeweler Complete"
 #define JEWELER_CRAFTING "Crafting for the Jeweler"
+#define JEWELER_CRAFTINGS "$Crafting for the Jeweler"
 #define SUMMONER_ONGOING "Aiding The Summoner"
 #define SUMMONER_COMPLETEISH "Summoner Aided"
 #define SUMMONER_COMPLETE "Summoning Complete"
+#define SUMMONER_CRAFTING "Crafting for the Summoner"
+#define SUMMONER_CRAFTINGS "$Crafting for the Summoner"
 #define NECRO_ONGOING "Aiding The Necromancer"
 #define NECRO_COMPLETEISH "Necromancer Aided"
 #define NECRO_COMPLETE "Necromancer Complete"
+#define NECRO_CRAFTING "Crafting for the Necromancer"
+#define NECRO_CRAFTINGS "$Crafting for the Necromancer"
 
 /* ================================================================== */
 /*                                ZONE                                */
@@ -140,7 +147,6 @@ code
 }
 dilend
 
-
 // 1 means your first login
 // 2 means you've logged on for two consecutive days
 // 3... etc.
@@ -256,6 +262,461 @@ code
 	
 :donezo:
 	unsecure(wiz);
+	unsecure(pc);
+	goto start;
+}
+dilend
+
+dilbegin crafting();
+var
+	pc : unitptr;
+	spot : string;
+	stat : string;
+	sl : stringlist;
+	buf : string;
+	gift : unitptr;
+	
+code
+{
+:init:
+	heartbeat := PULSE_SEC*2;
+:start:
+	wait(SFB_CMD, command("say") and ("crafting" == argument) and (JEWELER_COMPLETE in activator.quests));
+	
+	pc := activator;
+	secure(pc, donezo);
+	pause;
+	
+	exec("say Well then "+pc.name+", are you ready for some crafting?", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	
+	if(not(JEWELER_CRAFTING in pc.quests))
+	{
+		exec("say I see you have yet to complete any crafting, so I have good news.", self);
+		wait(SFB_TICK, command(CMD_AUTO_TICK));
+		exec("say Your first project will be free, in consideration of all the help you have provided.", self);
+		wait(SFB_TICK, command(CMD_AUTO_TICK));
+		goto begin;
+	}
+	
+	exec("say I haven't the time to do more than your first crafting right now, "+pc.name+"!", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	
+	goto start;
+	exec("say I'll need you to collect some things for me to make this piece.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say And of course, our delivery needs have not abated.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say You will need to deliver some more packages to free my time up for the work.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say And of course, our delivery needs have not abated, you'll have more packages to run.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	
+:begin:
+	
+	exec("say Let us begin then!", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say Crafting such fine jewelry pieces is a lot of work.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say First, let me ask where you would like your piece to go.", self);
+
+:choose:
+
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say You may choose ankle, belt, ring, wrist, back, chest, cape, neck, ear.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say You can choose just ONE area to wear it!", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say Make your choice now.", self);
+
+	wait(SFB_DONE, (command("say")) and (activator == pc));
+	sl := {"ankle","belt","ring","wrist","back","chest","cape","neck","ear"};
+	spot := argument;
+	if (spot in sl)
+	{
+		exec("say Okay, you have chosen "+spot+".", self);
+		wait(SFB_TICK, command(CMD_AUTO_TICK));
+	}
+	else
+	{
+		exec("say I wish you would pick one of the spots I specified.", self);
+		wait(SFB_TICK, command(CMD_AUTO_TICK));
+		goto choose;
+	}
+	
+:choose2:	
+
+	exec("say Now you must choose the ability the piece will give.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say You may choose STR, DEX, CHA, CON, DIV, BRA, MAG, HIT.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say You can choose just ONE ability!", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say Make your choice now.", self);
+	
+	wait(SFB_DONE, (command("say")) and (activator == pc));
+	sl := {"STR","DEX","CHA","CON","DIV","BRA","MAG","HIT"};
+	stat := argument;
+	
+	if (stat in sl)
+	{
+		exec("say Okay, you want to boost "+stat+".", self);
+		wait(SFB_TICK, command(CMD_AUTO_TICK));
+	}
+	else
+	{
+		exec("say I wish you would pick one of the abilities I specified.", self);
+		wait(SFB_TICK, command(CMD_AUTO_TICK));
+		goto choose2;
+	}
+
+	exec("say Now I will make your piece.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("emote starts gathering materials to make your gift.",self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+
+	gift := load(spot+"_"+stat+"@bounty");
+	dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",gift);
+	gift.height := pc.height;
+	if(not(JEWELER_CRAFTING in pc.quests))
+		addextra(pc.quests,{JEWELER_CRAFTING},"");
+	buf := pc.quests.[JEWELER_CRAFTING].descr + stat + "|";
+	pc.quests.[JEWELER_CRAFTING].descr := buf;
+	link(gift,pc);
+	exec("say Here is your piece!", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	
+:donezo:
+	unsecure(pc);
+	goto start;
+}
+dilend
+
+
+dilbegin craft_s();
+var
+	pc : unitptr;
+	sl : stringlist;
+	sl2 : stringlist;
+	buf : string;
+	item : unitptr;
+	item2 : unitptr;
+	sname : string;
+code
+{
+:init:
+	heartbeat := PULSE_SEC*2;
+	sl := {"str_helm@bounty","str_plate@bounty","str_back@bounty","str_arms@bounty","str_hands@bounty","str_legs@bounty",
+			"str_boots@bounty","str_sword@bounty","str_shield@bounty","str_hammer@bounty"};
+	sl2 := {"str_helm2@bounty","str_plate2@bounty","str_back2@bounty","str_arms2@bounty","str_hands2@bounty","str_legs2@bounty",
+			"str_boots2@bounty","str_sword2@bounty","str_shield2@bounty","str_hammer2@bounty"};
+:start:
+	wait(SFB_CMD, command("say") and ("crafting" == argument) and ((JOIN_COMPLETE in activator.quests) or (BLACKSMITH_COMPLETE in activator.quests)));
+	
+	pc := activator;
+	secure(pc, donezo);
+	pause;
+	
+	exec("say Well then "+pc.name+", are you ready for some crafting?", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	
+	if(not(BLACKSMITH_CRAFTINGS in pc.quests))
+	{
+		exec("say As you have not yet done any crafting with me, I have good news.", self);
+		wait(SFB_TICK, command(CMD_AUTO_TICK));
+		exec("say Your first re-forge will be free, in consideration of all the help you have provided.", self);
+		wait(SFB_TICK, command(CMD_AUTO_TICK));
+		goto begin;
+	}
+	
+	// Temporary section below. Design crafting process, then replace this. 
+	// For now, we allow just the freebie.
+	
+	exec("say I haven't the time to do more than your first crafting right now, "+pc.name+"!", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	
+	goto donezo;
+/*	
+	exec("say I'll need you to collect some things for me to make this piece.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say And of course, our delivery needs have not abated.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say You will need to deliver some more packages to free my time up for the work.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say And of course, our delivery needs have not abated, you'll have more packages to run.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+*/	
+:begin:
+	
+	exec("say Crafting these armors is a lot of work.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say Give me the piece you would like to upgrade, and I'll begin.", self);
+
+	wait(SFB_DONE, (command("give")) and (activator == pc) and (target == self));
+	
+	item := medium;
+	buf := item.symname;
+	sname := item.name;
+	if((buf in sl) or (buf in sl2))
+	{
+		exec("say Ah yes, a fine piece. If you would like to re-forge your "+item.title+" please nod. Otherwise shake.", self);
+		wait(SFB_DONE, (command("nod")) or (command("shake")) and (activator == pc));
+		if(command("shake"))
+		{
+			exec("say Well enough, come back when you've made up your mind "+pc.name+"!", self);
+			exec("give "+sname+" "+pc.name, self);
+			exec("drop "+sname, self);
+		}
+		else if(command("nod"))
+		{
+			exec("say Now I will make your piece.", self);
+			wait(SFB_TICK, command(CMD_AUTO_TICK));
+			exec("emote starts gathering materials to re-forge your piece.",self);
+			wait(SFB_TICK, command(CMD_AUTO_TICK));
+			if(buf in sl)
+				buf := replace("@bounty","2@bounty",buf);
+			else if(buf in sl2)
+				buf := replace("2@bounty","3@bounty",buf);
+			item2 := load(buf);
+			dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item2);
+			item2.height := pc.height;
+			if(not(BLACKSMITH_CRAFTINGS in pc.quests))
+				addextra(pc.quests,{BLACKSMITH_CRAFTINGS},"");
+			exec("say I think you'll be pleased with the newly re-forged piece, "+pc.name+"!",self);
+			// apprentice appears with item, attacks!
+			exec("give "+item2.name+" "+pc.name, self);
+			exec("drop "+item2.name, self);
+			destroy(self.inside);
+		}
+	}
+	else
+	{
+		exec("say This isn't something I can help you with, "+pc.name+"!", self);
+		exec("give "+item.name+" "+pc.name, self);
+		exec("drop "+item.name, self);
+	}
+	
+:donezo:
+	unsecure(pc);
+	goto start;
+}
+dilend
+
+
+dilbegin craft_m();
+var
+	pc : unitptr;
+	sl : stringlist;
+	sl2 : stringlist;
+	buf : string;
+	item : unitptr;
+	item2 : unitptr;
+	sname : string;
+code
+{
+:init:
+
+	heartbeat := PULSE_SEC*2;
+	sl := {"mag_helm@bounty","mag_plate@bounty","mag_back@bounty","mag_arms@bounty","mag_hands@bounty","mag_legs@bounty",
+			"mag_boots@bounty","mag_sword@bounty","mag_shield@bounty","mag_staff@bounty"};
+	sl2 := {"mag_helm2@bounty","mag_plate2@bounty","mag_back2@bounty","mag_arms2@bounty","mag_hands2@bounty","mag_legs2@bounty",
+			"mag_boots2@bounty","mag_sword2@bounty","mag_shield2@bounty","mag_staff2@bounty"};
+:start:
+	wait(SFB_CMD, command("say") and ("crafting" == argument) and ((JOIN_COMPLETE in activator.quests) or (SUMMONER_COMPLETE in activator.quests) or (SUMMONER_COMPLETEISH in activator.quests)));
+	
+	pc := activator;
+	secure(pc, donezo);
+	pause;
+	
+	exec("say Well then "+pc.name+", are you ready for some crafting?", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	
+	if(not(SUMMONER_CRAFTINGS in pc.quests))
+	{
+		exec("say I see you have yet to complete any crafting, so I have good news.", self);
+		wait(SFB_TICK, command(CMD_AUTO_TICK));
+		exec("say Your first project will be free, in consideration of all the help you have provided.", self);
+		wait(SFB_TICK, command(CMD_AUTO_TICK));
+		goto begin;
+	}
+	
+	// Temporary section below. Design crafting process, then replace this. 
+	// For now, we allow just the freebie.
+	
+	exec("say I haven't the time to do more than your first crafting right now, "+pc.name+"!", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	
+	goto donezo;
+/*	
+	exec("say I'll need you to collect some things for me to make this piece.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say And of course, our delivery needs have not abated.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say You will need to deliver some more packages to free my time up for the work.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say And of course, our delivery needs have not abated, you'll have more packages to run.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+*/	
+:begin:
+	
+	exec("say Summoning these objects is a lot of work.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say Give me the piece you would like to have upgraded, and I'll begin.", self);
+
+	wait(SFB_DONE, (command("give")) and (activator == pc) and (target == self));
+	
+	item := medium;
+	buf := item.symname;
+	sname := item.name;
+	if((buf in sl) or (buf in sl2))
+	{
+		exec("say Ah yes, a fine piece. If you would like me to summon an upgraded "+item.title+" please nod. Otherwise shake.", self);
+		wait(SFB_DONE, (command("nod")) or (command("shake")) and (activator == pc));
+		if(command("shake"))
+		{
+			exec("say Well enough, come back when you've made up your mind "+pc.name+"!", self);
+			exec("give "+sname+" "+pc.name, self);
+			exec("drop "+sname, self);
+		}
+		else if(command("nod"))
+		{
+			exec("say Now I will make your piece.", self);
+			wait(SFB_TICK, command(CMD_AUTO_TICK));
+			exec("emote starts gathering materials to summon the piece.",self);
+			wait(SFB_TICK, command(CMD_AUTO_TICK));
+			if(buf in sl)
+				buf := replace("@bounty","2@bounty",buf);
+			else if(buf in sl2)
+				buf := replace("2@bounty","3@bounty",buf);
+			item2 := load(buf);
+			dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item2);
+			item2.height := pc.height;
+			if(not(SUMMONER_CRAFTINGS in pc.quests))
+				addextra(pc.quests,{SUMMONER_CRAFTINGS},"");
+			exec("say I think you'll be pleased with what I have summoned for you, "+pc.name+"!",self);
+			// demon appears with item, attacks!
+			exec("give "+item2.name+" "+pc.name, self);
+			exec("drop "+item2.name, self);
+			destroy(self.inside);
+		}
+	}
+	else
+	{
+		exec("say This isn't something I can help you with, "+pc.name+"!", self);
+		exec("give "+item.name+" "+pc.name, self);
+		exec("drop "+item.name, self);
+	}
+	
+:donezo:
+	unsecure(pc);
+	goto start;
+}
+dilend
+
+dilbegin craft_d();
+var
+	pc : unitptr;
+	sl : stringlist;
+	sl2 : stringlist;
+	buf : string;
+	item : unitptr;
+	item2 : unitptr;
+	sname : string;
+code
+{
+:init:
+	heartbeat := PULSE_SEC*2;
+	sl := {"div_helm@bounty","div_plate@bounty","div_back@bounty","div_arms@bounty","div_hands@bounty","div_legs@bounty",
+			"div_boots@bounty","div_mace@bounty","div_shield@bounty","div_maul@bounty"};
+	sl2 := {"div_helm2@bounty","div_plate2@bounty","div_back2@bounty","div_arms2@bounty","div_hands2@bounty","div_legs2@bounty",
+			"div_boots2@bounty","div_mace2@bounty","div_shield2@bounty","div_maul2@bounty"};
+:start:
+	wait(SFB_CMD, command("say") and ("crafting" == argument) and ((JOIN_COMPLETE in activator.quests) or (NECRO_COMPLETE in activator.quests) or (NECRO_COMPLETEISH in activator.quests)));
+	
+	pc := activator;
+	secure(pc, donezo);
+	pause;
+	
+	exec("say Well then "+pc.name+", are you ready for some crafting?", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	
+	if(not(NECRO_CRAFTINGS in pc.quests))
+	{
+		exec("say I see you have yet to complete any crafting, so I have good news.", self);
+		wait(SFB_TICK, command(CMD_AUTO_TICK));
+		exec("say Your first project will be free, in consideration of all the help you have provided.", self);
+		wait(SFB_TICK, command(CMD_AUTO_TICK));
+		goto begin;
+	}
+	
+	// Temporary section below. Design crafting process, then replace this. 
+	// For now, we allow just the freebie.
+	
+	exec("say I haven't the time to do more than your first incantation right now, "+pc.name+"!", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	
+	goto donezo;
+/*	
+	exec("say I'll need you to collect some things for me to make this piece.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say And of course, our delivery needs have not abated.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say You will need to deliver some more packages to free my time up for the work.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say And of course, our delivery needs have not abated, you'll have more packages to run.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+*/	
+:begin:
+	
+	exec("say Incanting these objects is a lot of work.", self);
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	exec("say Give me the piece you would like to upgrade, and I'll begin.", self);
+
+	wait(SFB_DONE, (command("give")) and (activator == pc) and (target == self));
+	
+	item := medium;
+	buf := item.symname;
+	sname := item.name;
+	if((buf in sl) or (buf in sl2))
+	{
+		exec("say Ah yes, a fine piece. If you would like to upgrade your "+item.title+" please nod. Otherwise shake.", self);
+		wait(SFB_DONE, (command("nod")) or (command("shake")) and (activator == pc));
+		if(command("shake"))
+		{
+			exec("say Well enough, come back when you've made up your mind "+pc.name+"!", self);
+			exec("give "+sname+" "+pc.name, self);
+			exec("drop "+sname, self);
+		}
+		else if(command("nod"))
+		{
+			exec("say Now I will call on my powers for your piece.", self);
+			wait(SFB_TICK, command(CMD_AUTO_TICK));
+			exec("emote starts gathering materials to begin the divine magic.",self);
+			wait(SFB_TICK, command(CMD_AUTO_TICK));
+			if(buf in sl)
+				buf := replace("@bounty","2@bounty",buf);
+			else if(buf in sl2)
+				buf := replace("2@bounty","3@bounty",buf);
+			item2 := load(buf);
+			dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item2);
+			item2.height := pc.height;
+			if(not(NECRO_CRAFTINGS in pc.quests))
+				addextra(pc.quests,{NECRO_CRAFTINGS},"");
+			exec("say I think you'll be pleased with what I have done for you, "+pc.name+"!",self);
+			// zombie appears with item, attacks!
+			exec("give "+item2.name+" "+pc.name, self);
+			exec("drop "+item2.name, self);
+			destroy(self.inside);
+		}
+	}
+	else
+	{
+		exec("say This isn't something I can help you with, "+pc.name+"!", self);
+		exec("give "+item.name+" "+pc.name, self);
+		exec("drop "+item.name, self);
+	}
+	
+:donezo:
 	unsecure(pc);
 	goto start;
 }
@@ -450,7 +911,7 @@ code
 	exec("say You are currently on a streak of "+streak+" killing sprees.",self);
 	exec("say Your longest killing spree streak is "+max+".",self);
 	if (BLACKSMITH_ONGOING in pc.quests)
-		exec("say You have contributed "+pc.quests.[BLACKSMITH_ONGOING].descr+" of 100,000 lbs of armors.",self);
+		exec("say You have contributed "+pc.quests.[BLACKSMITH_ONGOING].descr+" of 80,000 lbs of armors.",self);
 	goto donezo;
 	
 :summoner:
@@ -1075,7 +1536,7 @@ code
 	
 	pc := activator;
 	secure(pc, donezo);
-	exdp := "$daily_max" in pc.extra;
+	exdp := "$daily_total" in pc.extra;
 	if((atoi(exdp.descr) < 30) or (exdp == null))
 		goto start;
 	
@@ -1084,7 +1545,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
     exec("say Perhaps, you could be worthy.", self);
     wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say It is no small feat to close 30 consecutive daily contracts.", self);
+	exec("say It is no small feat to close 30 daily contracts.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say It shows a certain commitment to our way.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -1229,7 +1690,7 @@ code
 	heartbeat := PULSE_SEC*4;
 :start:
 
-	// 500,000 lbs of any kind of metal weapon or armor.
+	// 80,000 lbs of any kind of metal armor.
 	// 500 lbs each of activated element (4 total) from The Summoner
 	// 10 killing spree streak
 
@@ -1257,7 +1718,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say It is only through supplying the armies of Valhalla, and winnowing down the hordes that we can do what is necessary.", self);
     wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say First, I will need 100,000 lbs of hardened metal armors to fill the smelters.", self);
+	exec("say First, I will need 80,000 lbs of hardened metal armors to fill the smelters.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say I'm not picky about where it comes from - I'll leave it to you to figure that part out.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -1288,7 +1749,7 @@ var
 	exdp : extraptr;
 code
 {
-	// 100,000 lbs of any kind of steel weapon or armor.
+	// 80,000 lbs of any kind of steel weapon or armor.
 	// 500 lbs each of activated element (4 total) from The Summoner
 	// 10 killing spree streak
 	
@@ -1304,13 +1765,13 @@ code
 
 	exdp := BLACKSMITH_ONGOING in pc.quests;
 	
-	if((item.type == 8) and ((item.value[0] == 4) or (item.value[0] == 3)) and (atoi(exdp.descr) < 100000))
+	if((item.type == 8) and ((item.value[0] == 4) or (item.value[0] == 3)) and (atoi(exdp.descr) < 80000))
 	{
 		pc.quests.[BLACKSMITH_ONGOING].descr := itoa(atoi(pc.quests.[BLACKSMITH_ONGOING].descr) + item.weight);
 		exec("say This will count for "+itoa(item.weight)+" lbs of good hardened metal "+pc.name+"!", self);
 		exec("say That brings your total to "+pc.quests.[BLACKSMITH_ONGOING].descr+" lbs collected.", self);
 		exec("emote tosses the "+item.title+" into one of the giant smelters.", self);
-		if(atoi(pc.quests.[BLACKSMITH_ONGOING].descr) >= 100000)
+		if(atoi(pc.quests.[BLACKSMITH_ONGOING].descr) >= 80000)
 		{
 			wait(SFB_TICK,command(CMD_AUTO_TICK));
 			exec("say By the gods, you've done it "+pc.name+"! You collected "+pc.quests.[BLACKSMITH_ONGOING].descr+" lbs of good steel for the smelters.", self);
@@ -1527,7 +1988,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say Next, I will require pure energy to feed the spells.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say Lightning in its purest form, I'd think thirty will suffice.", self);
+	exec("say Lightning in its purest form, I'd think twenty will suffice.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say Finally, there is an object that will activate the elemental powders.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -1565,7 +2026,7 @@ code
 	// q_fire@faeries2 - 3
 	// q_water@faeries2 - 3
 	// q_earth@faeries2 - 3
-	// ball_energ@akaren - 30
+	// ball_energ@akaren - 20
 	// activator@bounty - 16 (80 lbs)
 	
 	heartbeat := PULSE_SEC*1;
@@ -1655,7 +2116,7 @@ code
 		if(not("$sum_ball" in pc.quests))	
 			addextra(pc.quests,{"$sum_ball"},"0");
 		qty := atoi(pc.quests.["$sum_ball"].descr);
-		if(qty == 30)
+		if(qty == 20)
 			goto noneed;
 		pc.quests.["$sum_ball"].descr := itoa(qty + 1);
 		unsecure(item);
@@ -1677,9 +2138,9 @@ code
 	
 :checkit:
 
-	if((atoi(pc.quests.["$sum_earth"].descr) == 3) and (atoi(pc.quests.["$sum_air"].descr) == 3) and 
-		(atoi(pc.quests.["$sum_fire"].descr) == 3) and (atoi(pc.quests.["$sum_water"].descr) == 3) and
-		(atoi(pc.quests.["$sum_ball"].descr) == 10) and (atoi(pc.quests.["$sum_act"].descr) == 16))
+	if((atoi(pc.quests.["$sum_earth"].descr) >= 3) and (atoi(pc.quests.["$sum_air"].descr) >= 3) and 
+		(atoi(pc.quests.["$sum_fire"].descr) >= 3) and (atoi(pc.quests.["$sum_water"].descr) >= 3) and
+		(atoi(pc.quests.["$sum_ball"].descr) >= 20) and (atoi(pc.quests.["$sum_act"].descr) == 16))
 	{
 		exec("say It has taken an incredible effort to collect these raw ingredients, "+pc.name+"!" ,self);
 		exec("say I can now perform the requested incantations, and create the materials The Blacksmith requires.", self);
@@ -2172,6 +2633,18 @@ code
 		exec("say You may go and let The Historian know that your tasks for me are complete.", self);
 		
 		subextra(pc.quests, JEWELER_ONGOING);
+		subextra(pc.quests, "$jeweler_agate");
+		subextra(pc.quests, "$jeweler_sapphire");
+		subextra(pc.quests, "$jeweler_jade");
+		subextra(pc.quests, "$jeweler_bloodstone");
+		subextra(pc.quests, "$jeweler_diamond");
+		subextra(pc.quests, "$jeweler_jasper");
+		subextra(pc.quests, "$jeweler_opal");
+		subextra(pc.quests, "$jeweler_emerald");
+		subextra(pc.quests, "$jeweler_pearl");
+		subextra(pc.quests, "$jeweler_onyx");
+		subextra(pc.quests, "$jeweler_ruby");
+		subextra(pc.quests, "$jeweler_moonstone");
 		addextra(pc.quests, {JEWELER_COMPLETE},"");
 		
 		experience(10000, pc);
@@ -2193,17 +2666,6 @@ code
 }
 dilend
 
-dilbegin crafting();
-code
-{
-	heartbeat := PULSE_SEC*1;
-:start:
-	wait(SFB_CMD, command("say") and (argument == "crafting") and (JEWELER_COMPLETE in activator.quests));
-	wait(SFB_TICK, command(CMD_AUTO_TICK));
-	exec("say You'll need to come back later, I've some work yet to do before you can begin crafting.",self);
-	goto start;
-}
-dilend
 
 dilbegin qnecro();
 var
@@ -2329,19 +2791,18 @@ code
 			addextra(pc.quests,{"$nec_lc"},"0");
 		qty := atoi(pc.quests.["$nec_lc"].descr);
 		if(qty == 50)
-		{
-			addstring(pc.quests.[NECRO_ONGOING].names, "crystals");
 			goto noneed;
-		}
+		if(qty == 49)
+			addstring(pc.quests.[NECRO_ONGOING].names, "crystals");
 		pc.quests.["$nec_lc"].descr := itoa(qty + 1);
 		pc.quests.[NECRO_ONGOING].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
-		exec("say The very essence of life!", self);
+		exec("say The very essence of life!", self);	
 		if ("skin" in pc.quests.[NECRO_ONGOING].names)
 			exec("emote purposefully tucks "+item.title+" into the pocket of his sash.", self);
 		else
-			exec("emote pats his chest as if looking for a pocket, then dejectedly tucks the "+item.title+" into his robes.", self);
+			exec("emote pats his chest as if looking for a pocket, then dejectedly tucks "+item.title+" into his robes.", self);
 		exec("say This is "+itoa(qty + 1)+" of the 50 I need.", self);
 	}	
 	else if((item.symname == "fake_sash@mordenkin") and (not ("sash" in pc.quests.[NECRO_ONGOING].names)))
@@ -2634,7 +3095,7 @@ code
 	pc:= activator;
 	secure(pc,lostpc);
 	
-	exec("say It is a special stype of fool who would attack me here.",self);
+	exec("say It is a special type of fool who would attack me here.",self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	act("$1n gestures, and the world fades.",A_SOMEONE, self, pc, null, TO_CHAR);
 	act("$1n gestures, and $2n begins to fade.",A_SOMEONE, self, pc, null, TO_ROOM);
@@ -3155,15 +3616,8 @@ code
 				subextra(pc.extra,"$DAILY_SPREE");
 				addextra(pc.extra,{"$DAILY_SPREE"},sdate+"|CLOSED");
 				if("$spree_streak" in pc.extra)
-				{
-					i := atoi(pc.extra.["$spree_streak"].descr) + 1;
-					pc.extra.["$spree_streak"].descr := itoa(i);
-				}
-				else
-				{
-					i := 1;
-					addextra(pc.extra,{"$spree_streak"},itoa(i));
-				}
+					i := atoi(pc.extra.["$spree_streak"].descr);
+
 				sx := atoi(pc.extra.["$SPREE_XP"].descr);
 				sc := atoi(pc.extra.["$SPREE_COUNT"].descr);
 				rwrd := 5000;
@@ -4256,7 +4710,7 @@ code
 	
 	r := rnd(0,length(sale));
 	r := atoi(sale.[r]);
-	if(self.symname == "shopkeeper@bounty")
+	if(self.symname == "shopkeep@bounty")
 	{
 		if(self.outside.symname != "shop@bounty")
 		{
@@ -4342,7 +4796,7 @@ code
 		exec("say We're having a sale today. It's a great time to buy!",self);
 	else if(r < 10)
 		exec("say Demand is high! Prices are a bit steep today.",self);
-	goto start;
+	goto donezo;
 	
 :buy:
 	
@@ -4359,7 +4813,7 @@ code
 			}
 			else
 				exec("say You don't have "+itoa(atoi(items.[i+2]) / r)+" bounty points "+pc.name+"!",self);
-			goto start;
+			goto donezo;
 		}
 		i := i+3;
 		j := j+1;
@@ -4728,7 +5182,7 @@ ALWAYS_LIGHT
 west to faces;
 east to crypt descr
 	"The Necromancer's Crypt."
-	keyword {"door"} difficulty 80
+	keyword {"door"} difficulty 60
 	key nokey
 	open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED};
 
@@ -4920,6 +5374,7 @@ dilcopy end_spree@bounty();
 dilcopy qblacksmith@bounty();
 dilcopy qblacksmith2@bounty();
 dilcopy report@bounty();
+dilcopy craft_s@bounty();
 dilcopy shop@bounty({"str_helm","Bounty Hunters Helmet","1500",
 						"str_plate","Bounty Hunters Plate","1500",
 						"str_back","Bounty Hunters Back Plate","1500",
@@ -4953,7 +5408,7 @@ dilcopy delivery@bounty();
 dilcopy qjeweler@bounty();
 dilcopy qjeweler2@bounty();
 dilcopy report@bounty();
-dilcopy crafting@bount();
+dilcopy crafting@bounty();
 
 end 
 
@@ -4975,16 +5430,17 @@ dilcopy qsummoner@bounty();
 dilcopy qsummoner2@bounty();
 dilcopy qsummoner3@bounty();
 dilcopy report@bounty();
-dilcopy shop@bounty({"mag_helm","Bounty Hunters Magical Helmet","1500",
-						"mag_plate","Bounty Hunters Magical Plate","1500",
-						"mag_back","Bounty Hunters Magical Back Plate","1500",
-						"mag_arms","Bounty Hunters Magical Sleeves","1500",
-						"mag_hands","Bounty Hunters Magical Gauntlets","1500",
-						"mag_legs","Bounty Hunters Magical Leggings","1500",
-						"mag_boots","Bounty Hunters Magical Boots","1500",
-						"mag_sword","Bounty Hunters Magical Short Sword","1500",
-						"mag_shield","Bounty Hunters Magical Shield","1500",
-						"mag_staff","Bounty Hunters Quarterstaff","2000"},
+dilcopy craft_m@bounty();
+dilcopy shop@bounty({"mag_helm","Bounty Hunters Enchanted Helmet","1500",
+						"mag_plate","Bounty Hunters Enchanted Plate","1500",
+						"mag_back","Bounty Hunters Enchanted Back Plate","1500",
+						"mag_arms","Bounty Hunters Enchanted Sleeves","1500",
+						"mag_hands","Bounty Hunters Enchanted Gauntlets","1500",
+						"mag_legs","Bounty Hunters Enchanted Leggings","1500",
+						"mag_boots","Bounty Hunters Enchanted Boots","1500",
+						"mag_sword","Bounty Hunters Enchanted Short Sword","1500",
+						"mag_shield","Bounty Hunters Enchanted Shield","1500",
+						"mag_staff","Bounty Hunters Enchanted Quarterstaff","2000"},
 						{JOIN_COMPLETE,SUMMONER_COMPLETE,SUMMONER_COMPLETEISH});
 
 end 
@@ -5007,6 +5463,7 @@ dilcopy qnecro@bounty();
 dilcopy qnecro2@bounty();
 dilcopy qnecro3@bounty();
 dilcopy report@bounty();
+dilcopy craft_d@bounty();
 dilcopy shop@bounty({"div_helm","Bounty Hunters Divine Helmet","1500",
 						"div_plate","Bounty Hunters Divine Plate","1500",
 						"div_back","Bounty Hunters Divine Back Plate","1500",
@@ -5016,7 +5473,7 @@ dilcopy shop@bounty({"div_helm","Bounty Hunters Divine Helmet","1500",
 						"div_boots","Bounty Hunters Divine Boots","1500",
 						"div_mace","Bounty Hunters Divine Mace","1500",
 						"div_shield","Bounty Hunters Divine Shield","1500",
-						"div_maul","Bounty Hunters War Maul","2000"},
+						"div_maul","Bounty Hunters Divine War Maul","2000"},
 						{JOIN_COMPLETE,NECRO_COMPLETE,NECRO_COMPLETEISH});
 
 end 
@@ -5601,12 +6058,12 @@ end
 //////////////////////////////////////////////////////////////////
 
 mag_plate
-names {"magical plate", "plate"}
-title "a Bounty Hunter's magical plate"
-descr "A Bounty Hunter's magical plate has been left here."
+names {"enchanted plate", "plate"}
+title "a Bounty Hunter's enchanted plate"
+descr "A Bounty Hunter's enchanted plate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5616,12 +6073,12 @@ BRA_TRANSFER(+2)
 end
 
 mag_legs
-names {"magical leggings","leggings"}
-title "a pair of Bounty Hunter's magical leggings"
-descr "A pair of Bounty Hunter's magical leggings have been left here."
+names {"enchanted leggings","leggings"}
+title "a pair of Bounty Hunter's enchanted leggings"
+descr "A pair of Bounty Hunter's enchanted leggings have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5631,12 +6088,12 @@ BRA_TRANSFER(+2)
 end
 
 mag_arms
-names {"magical sleeves","sleeves"}
-title "a pair of Bounty Hunter's magical sleeves"
-descr "A pair of Bounty Hunter's magical sleeves have been left here."
+names {"enchanted sleeves","sleeves"}
+title "a pair of Bounty Hunter's enchanted sleeves"
+descr "A pair of Bounty Hunter's enchanted sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
 dilcopy level_restrict@function(20,0,25,"");
@@ -5646,12 +6103,12 @@ BRA_TRANSFER(+2)
 end
 
 mag_helm
-names {"magical helmet","helmet"}
-title "a Bounty Hunter's magical helmet"
-descr "A Bounty Hunter's magical helmet has been left here."
+names {"enchanted helmet","helmet"}
+title "a Bounty Hunter's enchanted helmet"
+descr "A Bounty Hunter's enchanted helmet has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5661,12 +6118,12 @@ BRA_TRANSFER(+2)
 end
 
 mag_boots
-names {"magical boots","boots"}
-title "a pair of Bounty Hunter's magical boots"
-descr "A pair of Bounty Hunter's magical boots have been left here."
+names {"enchanted boots","boots"}
+title "a pair of Bounty Hunter's enchanted boots"
+descr "A pair of Bounty Hunter's enchanted boots have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5676,12 +6133,12 @@ BRA_TRANSFER(+2)
 end
 
 mag_hands
-names {"magical gauntlets","gauntlets"}
-title "a pair of Bounty Hunter's magical gauntlets"
-descr "A pair of Bounty Hunter's magical gauntlets have been left here."
+names {"enchanted gauntlets","gauntlets"}
+title "a pair of Bounty Hunter's enchanted gauntlets"
+descr "A pair of Bounty Hunter's enchanted gauntlets have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5691,12 +6148,12 @@ BRA_TRANSFER(+2)
 end
 
 mag_back
-names {"magical backplate","backplate"}
-title "a Bounty Hunter's magical backplate"
-descr "A Bounty Hunter's magical backplate has been left here."
+names {"enchanted backplate","backplate"}
+title "a Bounty Hunter's enchanted backplate"
+descr "A Bounty Hunter's enchanted backplate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5706,12 +6163,12 @@ BRA_TRANSFER(+2)
 end
 
 mag_sword
-names {"magical short sword","short sword","sword"}
-title "a Bounty Hunter's magical short sword"
-descr "A Bounty Hunter's divine short sword has been left here."
+names {"enchanted short sword","short sword","sword"}
+title "a Bounty Hunter's enchanted short sword"
+descr "A Bounty Hunter's enchanted short sword has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's short sword."
-WEAPON_DEF(WPN_MACE, +15, +10)
+WEAPON_DEF(WPN_MACE, +10, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5721,12 +6178,12 @@ BRA_TRANSFER(+2)
 end
 
 mag_shield
-names{"magical shield","shield"}
-title "a Bounty Hunter's magical shield"
-descr "A Bounty Hunter's magical shield has been left here."
+names{"enchanted shield","shield"}
+title "a Bounty Hunter's enchanted shield"
+descr "A Bounty Hunter's enchanted shield has been left here."
 extra{}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
-SHIELD_DEF(SHIELD_LARGE, 15,10)
+SHIELD_DEF(SHIELD_LARGE, 10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5736,12 +6193,12 @@ BRA_TRANSFER(+2)
 end
 
 mag_staff
-names {"magical staff","staff"}
-title "a Bounty Hunter's magical staff"
-descr "A Bounty Hunter's magical staff has been left here."
+names {"enchanted staff","staff"}
+title "a Bounty Hunter's enchanted staff"
+descr "A Bounty Hunter's enchanted staff has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's staff."
-WEAPON_DEF(WPN_QUARTERSTAFF, +15, +10)
+WEAPON_DEF(WPN_QUARTERSTAFF, +10, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 7
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5749,6 +6206,313 @@ cost 1 GOLD_PIECE
 MAG_TRANSFER(+3)
 BRA_TRANSFER(+3)
 end
+
+mag_plate2
+names {"magical plate", "plate"}
+title "a Bounty Hunter's magical plate"
+descr "A Bounty Hunter's magical plate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+weight 10
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+mag_legs2
+names {"magical leggings","leggings"}
+title "a pair of Bounty Hunter's magical leggings"
+descr "A pair of Bounty Hunter's magical leggings have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+weight 7
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+mag_arms2
+names {"magical sleeves","sleeves"}
+title "a pair of Bounty Hunter's magical sleeves"
+descr "A pair of Bounty Hunter's magical sleeves have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
+ARMOUR_PLATE(15,15)
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+weight 7
+dilcopy level_restrict@function(20,0,25,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+mag_helm2
+names {"magical helmet","helmet"}
+title "a Bounty Hunter's magical helmet"
+descr "A Bounty Hunter's magical helmet has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+weight 5
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+mag_boots2
+names {"magical boots","boots"}
+title "a pair of Bounty Hunter's magical boots"
+descr "A pair of Bounty Hunter's magical boots have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+weight 3
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+mag_hands2
+names {"magical gauntlets","gauntlets"}
+title "a pair of Bounty Hunter's magical gauntlets"
+descr "A pair of Bounty Hunter's magical gauntlets have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
+weight 3
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+mag_back2
+names {"magical backplate","backplate"}
+title "a Bounty Hunter's magical backplate"
+descr "A Bounty Hunter's magical backplate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+weight 7
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+mag_sword2
+names {"magical short sword","short sword","sword"}
+title "a Bounty Hunter's magical short sword"
+descr "A Bounty Hunter's magical short sword has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's short sword."
+WEAPON_DEF(WPN_MACE, +15, +15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 7
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+3)
+BRA_TRANSFER(+3)
+WEAPON_TRANSFER(WPN_SHORT_SWORD, 5)
+end
+
+mag_shield2
+names{"magical shield","shield"}
+title "a Bounty Hunter's magical shield"
+descr "A Bounty Hunter's magical shield has been left here."
+extra{}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
+SHIELD_DEF(SHIELD_LARGE, 15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
+weight 7
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+3)
+BRA_TRANSFER(+3)
+SKILL_TRANSFER(SKI_SHIELD, 5)
+end
+
+mag_staff2
+names {"magical staff","staff"}
+title "a Bounty Hunter's magical staff"
+descr "A Bounty Hunter's magical staff has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's staff."
+WEAPON_DEF(WPN_QUARTERSTAFF, +15, +15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 7
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+4)
+BRA_TRANSFER(+4)
+WEAPON_TRANSFER(WPN_QUARTERSTAFF, 5)
+end
+
+mag_plate3
+names {"powerful plate", "plate"}
+title "a Bounty Hunter's powerful plate"
+descr "A Bounty Hunter's powerful plate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+weight 10
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+4)
+BRA_TRANSFER(+4)
+end
+
+mag_legs3
+names {"powerful leggings","leggings"}
+title "a pair of Bounty Hunter's powerful leggings"
+descr "A pair of Bounty Hunter's powerful leggings have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+weight 7
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+4)
+BRA_TRANSFER(+4)
+end
+
+mag_arms3
+names {"powerful sleeves","sleeves"}
+title "a pair of Bounty Hunter's powerful sleeves"
+descr "A pair of Bounty Hunter's powerful sleeves have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
+ARMOUR_PLATE(20,20)
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+weight 7
+dilcopy level_restrict@function(20,0,25,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+4)
+BRA_TRANSFER(+4)
+end
+
+mag_helm3
+names {"powerful helmet","helmet"}
+title "a Bounty Hunter's powerful helmet"
+descr "A Bounty Hunter's powerful helmet has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+weight 5
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+4)
+BRA_TRANSFER(+4)
+end
+
+mag_boots3
+names {"powerful boots","boots"}
+title "a pair of Bounty Hunter's powerful boots"
+descr "A pair of Bounty Hunter's powerful boots have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+weight 3
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+4)
+BRA_TRANSFER(+4)
+end
+
+mag_hands3
+names {"powerful gauntlets","gauntlets"}
+title "a pair of Bounty Hunter's powerful gauntlets"
+descr "A pair of Bounty Hunter's powerful gauntlets have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
+weight 3
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+4)
+BRA_TRANSFER(+4)
+end
+
+mag_back3
+names {"powerful backplate","backplate"}
+title "a Bounty Hunter's powerful backplate"
+descr "A Bounty Hunter's powerful backplate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+weight 7
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+4)
+BRA_TRANSFER(+4)
+end
+
+mag_sword3
+names {"powerful short sword","short sword","sword"}
+title "a Bounty Hunter's powerful short sword"
+descr "A Bounty Hunter's powerful short sword has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's short sword."
+WEAPON_DEF(WPN_MACE, +20, +20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 7
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+4)
+BRA_TRANSFER(+4)
+WEAPON_TRANSFER(WPN_SHORT_SWORD, 10)
+end
+
+mag_shield3
+names{"powerful shield","shield"}
+title "a Bounty Hunter's powerful shield"
+descr "A Bounty Hunter's powerful shield has been left here."
+extra{}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
+SHIELD_DEF(SHIELD_LARGE, 20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
+weight 7
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+4)
+BRA_TRANSFER(+4)
+SKILL_TRANSFER(SKI_SHIELD, 10)
+end
+
+mag_staff3
+names {"powerful staff","staff"}
+title "a Bounty Hunter's powerful staff"
+descr "A Bounty Hunter's powerful staff has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's staff."
+WEAPON_DEF(WPN_QUARTERSTAFF, +20, +20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 7
+dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+MAG_TRANSFER(+6)
+BRA_TRANSFER(+6)
+WEAPON_TRANSFER(WPN_QUARTERSTAFF, 10)
+end
+
 
 //////////////////////////////////////////////////////////////////
 //                  necromancer items.                          //
@@ -5760,7 +6524,7 @@ title "a Bounty Hunter's divine plate"
 descr "A Bounty Hunter's divine plate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5775,7 +6539,7 @@ title "a pair of Bounty Hunter's divine leggings"
 descr "A pair of Bounty Hunter's divine leggings have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5790,7 +6554,7 @@ title "a pair of Bounty Hunter's divine sleeves"
 descr "A pair of Bounty Hunter's divine sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
 dilcopy level_restrict@function(20,0,25,"");
@@ -5805,7 +6569,7 @@ title "a Bounty Hunter's divine helmet"
 descr "A Bounty Hunter's divine helmet has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5820,7 +6584,7 @@ title "a pair of Bounty Hunter's divine boots"
 descr "A pair of Bounty Hunter's divine boots have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5835,7 +6599,7 @@ title "a pair of Bounty Hunter's divine gauntlets"
 descr "A pair of Bounty Hunter's divine gauntlets have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5850,7 +6614,7 @@ title "a Bounty Hunter's divine backplate"
 descr "A Bounty Hunter's divine backplate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5865,7 +6629,7 @@ title "a Bounty Hunter's divine mace"
 descr "A Bounty Hunter's divine mace has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's mace."
-WEAPON_DEF(WPN_MACE, +15, +10)
+WEAPON_DEF(WPN_MACE, +10, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 8
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5880,7 +6644,7 @@ title "a Bounty Hunter's divine shield"
 descr "A Bounty Hunter's divine shield has been left here."
 extra{}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
-SHIELD_DEF(SHIELD_LARGE, 15,10)
+SHIELD_DEF(SHIELD_LARGE, 10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5895,7 +6659,7 @@ title "a Bounty Hunter's divine maul"
 descr "A Bounty Hunter's divine maul has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's maul."
-WEAPON_DEF(WPN_WAR_MAUL, +15, +10)
+WEAPON_DEF(WPN_WAR_MAUL, +10, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 15
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
@@ -5904,6 +6668,311 @@ DIV_TRANSFER(+3)
 BRA_TRANSFER(+3)
 end
 
+div_plate2
+names {"holy plate", "plate"}
+title "a Bounty Hunter's holy plate"
+descr "A Bounty Hunter's holy plate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+weight 10
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+div_legs2
+names {"holy leggings","leggings"}
+title "a pair of Bounty Hunter's holy leggings"
+descr "A pair of Bounty Hunter's holy leggings have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+weight 7
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+div_arms2
+names {"holy sleeves","sleeves"}
+title "a pair of Bounty Hunter's holy sleeves"
+descr "A pair of Bounty Hunter's holy sleeves have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
+ARMOUR_PLATE(15,15)
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+weight 7
+dilcopy level_restrict@function(20,0,25,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+div_helm2
+names {"holy helmet","helmet"}
+title "a Bounty Hunter's holy helmet"
+descr "A Bounty Hunter's holy helmet has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+weight 5
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+div_boots2
+names {"holy boots","boots"}
+title "a pair of Bounty Hunter's holy boots"
+descr "A pair of Bounty Hunter's holy boots have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+weight 3
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+div_hands2
+names {"holy gauntlets","gauntlets"}
+title "a pair of Bounty Hunter's holy gauntlets"
+descr "A pair of Bounty Hunter's holy gauntlets have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
+weight 3
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+div_back2
+names {"holy backplate","backplate"}
+title "a Bounty Hunter's holy backplate"
+descr "A Bounty Hunter's holy backplate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+weight 7
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+3)
+BRA_TRANSFER(+3)
+end
+
+div_mace2
+names {"holy mace","mace"}
+title "a Bounty Hunter's holy mace"
+descr "A Bounty Hunter's holy mace has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's mace."
+WEAPON_DEF(WPN_MACE, +15, +15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 8
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+3)
+BRA_TRANSFER(+3)
+WEAPON_TRANSFER(WPN_MACE, 5)
+end
+
+div_shield2
+names{"holy shield","shield"}
+title "a Bounty Hunter's holy shield"
+descr "A Bounty Hunter's holy shield has been left here."
+extra{}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
+SHIELD_DEF(SHIELD_LARGE, 15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
+weight 7
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+3)
+BRA_TRANSFER(+3)
+SKILL_TRANSFER(SKI_SHIELD, 5)
+end
+
+div_maul2
+names {"holy maul","maul"}
+title "a Bounty Hunter's holy maul"
+descr "A Bounty Hunter's holy maul has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's maul."
+WEAPON_DEF(WPN_WAR_MAUL, +15, +15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 15
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+4)
+BRA_TRANSFER(+4)
+WEAPON_TRANSFER(WPN_WAR_MAUL, 5)
+end
+
+div_plate3
+names {"godly plate", "plate"}
+title "a Bounty Hunter's godly plate"
+descr "A Bounty Hunter's godly plate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+weight 10
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+4)
+BRA_TRANSFER(+4)
+end
+
+div_legs3
+names {"godly leggings","leggings"}
+title "a pair of Bounty Hunter's godly leggings"
+descr "A pair of Bounty Hunter's godly leggings have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+weight 7
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+4)
+BRA_TRANSFER(+4)
+end
+
+div_arms3
+names {"godly sleeves","sleeves"}
+title "a pair of Bounty Hunter's godly sleeves"
+descr "A pair of Bounty Hunter's godly sleeves have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
+ARMOUR_PLATE(20,20)
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+weight 7
+dilcopy level_restrict@function(20,0,25,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+4)
+BRA_TRANSFER(+4)
+end
+
+div_helm3
+names {"godly helmet","helmet"}
+title "a Bounty Hunter's godly helmet"
+descr "A Bounty Hunter's godly helmet has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+weight 5
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+4)
+BRA_TRANSFER(+4)
+end
+
+div_boots3
+names {"godly boots","boots"}
+title "a pair of Bounty Hunter's godly boots"
+descr "A pair of Bounty Hunter's godly boots have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+weight 3
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+4)
+BRA_TRANSFER(+4)
+end
+
+div_hands3
+names {"godly gauntlets","gauntlets"}
+title "a pair of Bounty Hunter's godly gauntlets"
+descr "A pair of Bounty Hunter's godly gauntlets have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
+weight 3
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+4)
+BRA_TRANSFER(+4)
+end
+
+div_back3
+names {"godly backplate","backplate"}
+title "a Bounty Hunter's godly backplate"
+descr "A Bounty Hunter's godly backplate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+weight 7
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+4)
+BRA_TRANSFER(+4)
+end
+
+div_mace3
+names {"godly mace","mace"}
+title "a Bounty Hunter's godly mace"
+descr "A Bounty Hunter's godly mace has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's mace."
+WEAPON_DEF(WPN_MACE, +20, +20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 8
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+4)
+BRA_TRANSFER(+4)
+WEAPON_TRANSFER(WPN_MACE, 10)
+end
+
+div_shield3
+names{"godly shield","shield"}
+title "a Bounty Hunter's godly shield"
+descr "A Bounty Hunter's godly shield has been left here."
+extra{}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
+SHIELD_DEF(SHIELD_LARGE, 20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
+weight 7
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+4)
+BRA_TRANSFER(+4)
+SKILL_TRANSFER(SKI_SHIELD, 10)
+end
+
+div_maul3
+names {"godly maul","maul"}
+title "a Bounty Hunter's godly maul"
+descr "A Bounty Hunter's godly maul has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's maul."
+WEAPON_DEF(WPN_WAR_MAUL, +20, +20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 15
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+DIV_TRANSFER(+6)
+BRA_TRANSFER(+6)
+WEAPON_TRANSFER(WPN_WAR_MAUL, 10)
+end
 //////////////////////////////////////////////////////////////////
 //                    blacksmith items.                         //
 //////////////////////////////////////////////////////////////////
@@ -5914,7 +6983,7 @@ title "a Bounty Hunter's plate"
 descr "A Bounty Hunter's plate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 10
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
@@ -5929,7 +6998,7 @@ title "a pair of Bounty Hunter's leggings"
 descr "A pair of Bounty Hunter's leggings have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
@@ -5944,7 +7013,7 @@ title "a pair of Bounty Hunter's sleeves"
 descr "A pair of Bounty Hunter's sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
@@ -5959,7 +7028,7 @@ title "a Bounty Hunter's helmet"
 descr "A Bounty Hunter's helmet has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
@@ -5974,7 +7043,7 @@ title "a pair of Bounty Hunter's boots"
 descr "A pair of Bounty Hunter's boots have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 3
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
@@ -5989,7 +7058,7 @@ title "a pair of Bounty Hunter's gauntlets"
 descr "A pair of Bounty Hunter's gauntlets have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 3
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
@@ -6004,7 +7073,7 @@ title "a Bounty Hunter's backplate"
 descr "A Bounty Hunter's backplate has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
-ARMOUR_PLATE(15,10)
+ARMOUR_PLATE(10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
@@ -6019,7 +7088,7 @@ title "a Bounty Hunter's long sword"
 descr "A Bounty Hunter's long sword has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's long sword."
-WEAPON_DEF(WPN_MACE, +15, +10)
+WEAPON_DEF(WPN_MACE, +10, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 8
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
@@ -6034,7 +7103,7 @@ title "a Bounty Hunter's shield"
 descr "A Bounty Hunter's shield has been left here."
 extra{}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
-SHIELD_DEF(SHIELD_LARGE, 15,10)
+SHIELD_DEF(SHIELD_LARGE, 10,10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
@@ -6049,7 +7118,7 @@ title "a Bounty Hunter's war mattock"
 descr "A Bounty Hunter's war mattock has been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made Bounty Hunter's war mattock."
-WEAPON_DEF(WPN_WAR_MATTOCK, +15, +10)
+WEAPON_DEF(WPN_WAR_MATTOCK, +10, +10)
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 15
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
@@ -6059,11 +7128,1578 @@ DEX_TRANSFER(+3)
 end
 
 
+str_plate2
+names {"strong plate","plate"}
+title "a Bounty Hunter's strong plate"
+descr "A Bounty Hunter's strong plate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+weight 10
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+3)
+DEX_TRANSFER(+3)
+end
+
+str_legs2
+names {"strong plate","leggings"}
+title "a pair of Bounty Hunter's strong leggings"
+descr "A pair of Bounty Hunter's strong leggings have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+weight 7
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+3)
+DEX_TRANSFER(+3)
+end
+
+str_arms2
+names {"strong sleeves","sleeves"}
+title "a pair of Bounty Hunter's strong sleeves"
+descr "A pair of Bounty Hunter's strong sleeves have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
+ARMOUR_PLATE(15,15)
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+weight 7
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+3)
+DEX_TRANSFER(+3)
+end
+
+str_helm2
+names {"strong  helmet","helmet"}
+title "a Bounty Hunter's strong helmet"
+descr "A Bounty Hunter's strong helmet has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+weight 5
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+3)
+DEX_TRANSFER(+3)
+end
+
+str_boots2
+names {"strong boots","boots"}
+title "a pair of Bounty Hunter's strong boots"
+descr "A pair of Bounty Hunter's strong boots have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+weight 3
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+3)
+DEX_TRANSFER(+3)
+end
+
+str_hands2
+names {"strong gauntlets","gauntlets"}
+title "a pair of Bounty Hunter's strong gauntlets"
+descr "A pair of Bounty Hunter's strong gauntlets have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
+weight 3
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+3)
+DEX_TRANSFER(+3)
+end
+
+str_back2
+names {"strong backplate","backplate"}
+title "a Bounty Hunter's strong backplate"
+descr "A Bounty Hunter's strong backplate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
+ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+weight 7
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+3)
+DEX_TRANSFER(+3)
+end
+
+str_sword2
+names {"strong long sword","long sword","sword"}
+title "a Bounty Hunter's strong long sword"
+descr "A Bounty Hunter's strong long sword has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's long sword."
+WEAPON_DEF(WPN_MACE, +15, +15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 8
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+3)
+DEX_TRANSFER(+3)
+WEAPON_TRANSFER(WPN_LONG_SWORD, 5)
+end
+
+str_shield2
+names{"strong shield","shield"}
+title "a Bounty Hunter's strong shield"
+descr "A Bounty Hunter's strong shield has been left here."
+extra{}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
+SHIELD_DEF(SHIELD_LARGE, 15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
+weight 7
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+3)
+DEX_TRANSFER(+3)
+SKILL_TRANSFER(SKI_SHIELD, 5)
+end
+
+str_hammer2
+names {"strong war mattock","war mattock","mattock","hammer"}
+title "a Bounty Hunter's strong war mattock"
+descr "A Bounty Hunter's strong war mattock has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's war mattock."
+WEAPON_DEF(WPN_WAR_MATTOCK, +15, +15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 15
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+4)
+DEX_TRANSFER(+4)
+WEAPON_TRANSFER(WPN_WAR_MATTOCK, 5)
+end
+
+str_plate3
+names {"elite plate","plate"}
+title "a Bounty Hunter's elite plate"
+descr "A Bounty Hunter's elite plate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's plate."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
+weight 10
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+4)
+DEX_TRANSFER(+4)
+end
+
+str_legs3
+names {"elite leggings","leggings"}
+title "a pair of Bounty Hunter's elite leggings"
+descr "A pair of Bounty Hunter's elite leggings have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's leggings."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
+weight 7
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+4)
+DEX_TRANSFER(+4)
+end
+
+str_arms3
+names {"elite sleeves","sleeves"}
+title "a pair of Bounty Hunter's elite sleeves"
+descr "A pair of Bounty Hunter's elite sleeves have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
+ARMOUR_PLATE(20,20)
+dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+weight 7
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+4)
+DEX_TRANSFER(+4)
+end
+
+str_helm3
+names {"elite helmet","helmet"}
+title "a Bounty Hunter's elite helmet"
+descr "A Bounty Hunter's elite helmet has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's helmet."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+weight 5
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+4)
+DEX_TRANSFER(+4)
+end
+
+str_boots3
+names {"elite boots","boots"}
+title "a pair of Bounty Hunter's elite boots"
+descr "A pair of Bounty Hunter's elite boots have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's boots."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+weight 3
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+4)
+DEX_TRANSFER(+4)
+end
+
+str_hands3
+names {"elite gauntlets","gauntlets"}
+title "a pair of Bounty Hunter's elite gauntlets"
+descr "A pair of Bounty Hunter's elite gauntlets have been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made pair of Bounty Hunter's gauntlets."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
+weight 3
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+4)
+DEX_TRANSFER(+4)
+end
+
+str_back3
+names {"elite backplate","backplate"}
+title "a Bounty Hunter's elite backplate"
+descr "A Bounty Hunter's elite backplate has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's backplate."
+ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+weight 7
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+4)
+DEX_TRANSFER(+4)
+end
+
+str_sword3
+names {"elite long sword","long sword","sword"}
+title "a Bounty Hunter's elite long sword"
+descr "A Bounty Hunter's elite long sword has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's long sword."
+WEAPON_DEF(WPN_MACE, +20, +20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 8
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+4)
+DEX_TRANSFER(+4)
+WEAPON_TRANSFER(WPN_LONG_SWORD, 10)
+end
+
+str_shield3
+names{"elite shield","shield"}
+title "a Bounty Hunter's elite shield"
+descr "A Bounty Hunter's elite shield has been left here."
+extra{}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's shield."
+SHIELD_DEF(SHIELD_LARGE, 20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
+weight 7
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+4)
+DEX_TRANSFER(+4)
+SKILL_TRANSFER(SKI_SHIELD, 10)
+end
+
+str_hammer3
+names {"elite war mattock","war mattock","mattock","hammer"}
+title "a Bounty Hunter's elite war mattock"
+descr "A Bounty Hunter's elite war mattock has been left here."
+extra {}
+"Finely crafted, though simple. This is a well-made Bounty Hunter's war mattock."
+WEAPON_DEF(WPN_WAR_MATTOCK, +20, +20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+weight 15
+dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
+cost 1 GOLD_PIECE
+STR_TRANSFER(+6)
+DEX_TRANSFER(+6)
+WEAPON_TRANSFER(WPN_WAR_MATTOCK, 10)
+end
+
+
+
 //////////////////////////////////////////////////////////////////
 //                      jeweler items.                          //
 //////////////////////////////////////////////////////////////////
 
-// use treasure.zon ?
+//ankle, belt, ring, wrist, back, chest, cape, neck, ear
+// STR(diamond), DEX(emerald), CON(bloodstone), CHA(moonstone), MAG(pearl), BRA(jasper), DIV(onyx), HIT(ruby)
+
+/*chest*/
+
+chest_str
+names {"diamond sash","sash"}
+title "a diamond sash"
+descr "An elegant diamond sash lies on the ground."
+extra {}
+"The sash is made of fine gold thread and features masterfully polished diamond."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+10)
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The sash gives added strength when worn. It can only be possessed
+by one person."
+end
+
+chest_dex
+names {"emerald sash","sash"}
+title "a emerald sash"
+descr "An elegant emerald sash lies on the ground."
+extra {}
+"The sash is made of fine gold thread and features masterfully polished emerald."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+10)
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The sash gives added dexterity when worn. It can only be possessed
+by one person."
+end
+
+chest_cha
+names {"moonstone sash","sash"}
+title "a moonstone sash"
+descr "An elegant moonstone sash lies on the ground."
+extra {}
+"The sash is made of fine gold thread and features masterfully polished moonstones."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+10)
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The sash gives added charisma when worn. It can only be possessed
+by one person."
+end
+
+
+chest_con
+names {"bloodstone sash","sash"}
+title "a bloodstone sash"
+descr "An elegant bloodstone sash lies on the ground."
+extra {}
+"The sash is made of fine gold thread and features masterfully polished bloodstones."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+10)
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The sash gives added constitution when worn. It can only be possessed
+by one person."
+end
+
+chest_div
+names {"onyx sash","sash"}
+title "a onyx sash"
+descr "An elegant onyx sash lies on the ground."
+extra {}
+"The sash is made of fine gold thread and features masterfully polished onyx."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+10)
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The sash gives added divine aura when worn. It can only be possessed
+by one person."
+end
+
+chest_bra
+names {"jasper sash","sash"}
+title "a jasper sash"
+descr "An elegant jasper sash lies on the ground."
+extra {}
+"The sash is made of fine gold thread and features masterfully polished jaspers."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+10)
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The sash gives added intelligence when worn. It can only be possessed
+by one person."
+end
+ 
+
+chest_mag
+names {"pearl sash","sash"}
+title "a pearl sash"
+descr "An elegant pearl sash lies on the ground."
+extra {}
+"The sash is made of fine gold thread and features masterfully polished pearls."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+10)
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The sash gives added magic aura when worn. It can only be possessed
+by one person."
+end
+
+chest_hit
+names {"ruby sash","sash"}
+title "a ruby sash"
+descr "An elegant ruby sash lies on the ground."
+extra {}
+"The sash is made of fine gold thread and features masterfully polished rubies."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+HIT_TRANSFER(+10)
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their health."
+extra {"$improved identify"}
+"The sash gives added health when worn. It can only be possessed
+by one person."
+end
+
+/*ankle*/
+
+
+ankle_str
+names {"diamond anklet","anklet"}
+title "a diamond anklet"
+descr "A diamond anklet lies on the ground."
+extra {}
+"The anklet is made of fine gold and is bears a beautiful diamond."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+10)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The anklet gives added strength when worn. It can only be possessed
+by one person."
+end
+
+ankle_dex
+names {"emerald anklet","anklet"}
+title "a emerald anklet"
+descr "A emerald anklet lies on the ground."
+extra {}
+"The anklet is made of fine gold and is bears a beautiful emerald."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+10)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The anklet gives added dexterity when worn. It can only be possessed
+by one person."
+end
+
+ankle_cha
+names {"moonstone anklet","anklet"}
+title "a moonstone anklet"
+descr "A moonstone anklet lies on the ground."
+extra {}
+"The anklet is made of fine gold and is bears a beautiful moonstone."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+10)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The anklet gives added charisma when worn. It can only be possessed
+by one person."
+end   
+
+ankle_con
+names {"bloodstone anklet","anklet"}
+title "a bloodstone anklet"
+descr "A bloodstone anklet lies on the ground."
+extra {}
+"The anklet is made of fine gold and is bears a beautiful bloodstone."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+10)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The anklet gives added constitution when worn. It can only be possessed
+by one person."
+end
+
+ankle_div
+names {"onyx anklet","anklet"}
+title "a onyx anklet"
+descr "A onyx anklet lies on the ground."
+extra {}
+"The anklet is made of fine gold and is bears a beautiful onyx."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+10)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The anklet gives added divine aura when worn. It can only be possessed
+by one person."
+end
+
+ankle_bra
+names {"jasper anklet","anklet"}
+title "a jasper anklet"
+descr "A jasper anklet lies on the ground."
+extra {}
+"The anklet is made of fine gold and is bears a beautiful jasper."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+10)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The anklet gives added intelligence when worn. It can only be possessed
+by one person."
+end    
+
+
+ankle_mag
+names {"pearl anklet","anklet"}
+title "a pearl anklet"
+descr "A pearl anklet lies on the ground."
+extra {}
+"The anklet is made of fine gold and is bears a beautiful pearl."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+10)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The anklet gives added magic aura when worn. It can only be possessed
+by one person."
+end  
+
+
+ankle_hit
+names {"ruby anklet","anklet"}
+title "a ruby anklet"
+descr "A ruby anklet lies on the ground."
+extra {}
+"The anklet is made of fine gold and is bears a beautiful rubies."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+HIT_TRANSFER(+10)
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their combat skills."
+extra {"$improved identify"}
+"The anklet gives added combat skills when worn. It can only be possessed
+by one person."
+end 
+ 
+
+/*belt*/
+
+belt_str
+names {"diamond belt","belt"}
+title "a diamond encrusted belt"
+descr "A diamond encrusted belt lies on the ground."
+extra {}
+"The belt is made of fine gold and is encrusted in diamonds."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+10)
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The belt gives added strength when worn. It can only be possessed
+by one person."
+end
+
+belt_dex
+names {"emerald belt","belt"}
+title "a emerald encrusted belt"
+descr "A emerald encrusted belt lies on the ground."
+extra {}
+"The belt is made of fine gold and is encrusted in emeralds."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+10)
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The belt gives added dexterity when worn. It can only be possessed
+by one person."
+end
+
+belt_cha
+names {"moonstone belt","belt"}
+title "a moonstone encrusted belt"
+descr "A moonstone encrusted belt lies on the ground."
+extra {}
+"The belt is made of fine gold and is encrusted in moonstones."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+10)
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The belt gives added charisma when worn. It can only be possessed
+by one person."
+end      
+ 
+
+belt_con
+names {"bloodstone belt","belt"}
+title "a bloodstone encrusted belt"
+descr "A bloodstone encrusted belt lies on the ground."
+extra {}
+"The belt is made of fine gold and is encrusted in bloodstones."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+10)
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The belt gives added constitution when worn. It can only be possessed
+by one person."
+end
+
+belt_div
+names {"onyx belt","belt"}
+title "a onyx encrusted belt"
+descr "A onyx encrusted belt lies on the ground."
+extra {}
+"The belt is made of fine gold and is encrusted in onyx."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+10)
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The belt gives added divine aura when worn. It can only be possessed
+by one person."
+end
+
+belt_bra
+names {"jasper belt","belt"}
+title "a jasper encrusted belt"
+descr "A jasper encrusted belt lies on the ground."
+extra {}
+"The belt is made of fine gold and is encrusted in jaspers."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+10)
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The belt gives added intelligence when worn. It can only be possessed
+by one person."
+end    
+
+belt_mag
+names {"pearl belt","belt"}
+title "a pearl encrusted belt"
+descr "A pearl encrusted belt lies on the ground."
+extra {}
+"The belt is made of fine gold and is encrusted in pearls."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+10)
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The belt gives added magic aura when worn. It can only be possessed
+by one person."
+end
+
+belt_hit
+names {"ruby belt","belt"}
+title "a ruby encrusted belt"
+descr "A ruby encrusted belt lies on the ground."
+extra {}
+"The belt is made of fine gold and is encrusted in rubies."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+HIT_TRANSFER(+10)
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their health."
+extra {"$improved identify"}
+"The belt gives added health when worn. It can only be possessed
+by one person."
+end
+
+
+/*ring*/
+
+ring_str
+names {"diamond ring","ring"}
+title "a small diamond ring"
+descr "A small diamond ring lies on the ground."
+extra {}
+"The ring is made of fine gold and holds a beautiful diamond."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+10)
+BRA_TRANSFER(-1)
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The ring gives added strength when worn. It can only be possessed
+by one person."
+end
+
+ring_dex
+names {"emerald ring","ring"}
+title "a small emerald ring"
+descr "A small emerald ring lies on the ground."
+extra {}
+"The ring is made of fine gold and holds a beautiful emerald."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+10)
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The ring gives added dexterity when worn. It can only be possessed
+by one person."
+end
+
+ring_cha
+names {"moonstone ring","ring"}
+title "a small moonstone ring"
+descr "A small moonstone ring lies on the ground."
+extra {}
+"The ring is made of fine gold and holds a beautiful moonstone."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+10)
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The ring gives added charisma when worn. It can only be possessed
+by one person."
+end
+
+ring_con
+names {"bloodstone ring","ring"}
+title "a small bloodstone ring"
+descr "A small bloodstone ring lies on the ground."
+extra {}
+"The ring is made of fine gold and holds a beautiful bloodstone."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+10)
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The ring gives added constitution when worn. It can only be possessed
+by one person."
+end
+
+ring_div
+names {"onyx ring","ring"}
+title "a small onyx ring"
+descr "A small onyx ring lies on the ground."
+extra {}
+"The ring is made of fine gold and holds a beautiful onyx."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+10)
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The ring gives added divine aura when worn. It can only be possessed
+by one person."
+end
+
+ring_bra
+names {"jasper ring","ring"}
+title "a small jasper ring"
+descr "A small jasper ring lies on the ground."
+extra {}
+"The ring is made of fine gold and holds a beautiful jasper."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+10)
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The ring gives added intelligence when worn. It can only be possessed
+by one person."
+end
+ 
+ring_mag
+names {"pearl ring","ring"}
+title "a small pearl ring"
+descr "A small pearl ring lies on the ground."
+extra {}
+"The ring is made of fine gold and holds a beautiful pearl."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+10)
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The ring gives added magic aura when worn. It can only be possessed
+by one person."
+end
+ 
+ring_hit
+names {"ruby ring","ring"}
+title "a small ruby ring"
+descr "A small ruby ring lies on the ground."
+extra {}
+"The ring is made of fine gold and holds a beautiful ruby."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+HIT_TRANSFER(+10)
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their health."
+extra {"$improved identify"}
+"The ring gives added health when worn. It can only be possessed
+by one person."
+end
+
+
+
+/*wrist*/
+
+wrist_str
+names {"diamond bracelet","bracelet"}
+title "a marvelous diamond bracelet"
+descr "A marvelous diamond bracelet lies on the ground."
+extra {}
+"The bracelet is made of fine gold and holds a marvelous diamond arrangement."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+10)
+extra {"$identify"}
+"This bracelet will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The bracelet gives added strength when worn. It can only be possessed
+by one person."
+end
+
+wrist_dex
+names {"emerald bracelet","bracelet"}
+title "a marvelous emerald bracelet"
+descr "A marvelous emerald bracelet lies on the ground."
+extra {}
+"The bracelet is made of fine gold and holds a marvelous emerald arrangement."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+10)
+extra {"$identify"}
+"This bracelet will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The bracelet gives added dexterity when worn. It can only be possessed
+by one person."
+end
+
+wrist_cha
+names {"moonstone bracelet","bracelet"}
+title "a marvelous moonstone bracelet"
+descr "A marvelous moonstone bracelet lies on the ground."
+extra {}
+"The bracelet is made of fine gold and holds a marvelous moonstone arrangement."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+10)
+extra {"$identify"}
+"This bracelet will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The bracelet gives added charisma when worn. It can only be possessed
+by one person."
+end
+  
+wrist_con
+names {"bloodstone bracelet","bracelet"}
+title "a marvelous bloodstone bracelet"
+descr "A marvelous bloodstone bracelet lies on the ground."
+extra {}
+"The bracelet is made of fine gold and holds a marvelous bloodstone arrangement."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+10)
+extra {"$identify"}
+"This bracelet will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The bracelet gives added constitution when worn. It can only be possessed
+by one person."
+end
+
+wrist_div
+names {"onyx bracelet","bracelet"}
+title "a marvelous onyx bracelet"
+descr "A marvelous onyx bracelet lies on the ground."
+extra {}
+"The bracelet is made of fine gold and holds a marvelous onyx arrangement."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+10)
+extra {"$identify"}
+"This bracelet will grant its wearer an added boost to their divinity."
+extra {"$improved identify"}
+"The bracelet gives added divinity when worn. It can only be possessed
+by one person."
+end
+
+wrist_bra
+names {"jasper bracelet","bracelet"}
+title "a marvelous jasper bracelet"
+descr "A marvelous jasper bracelet lies on the ground."
+extra {}
+"The bracelet is made of fine gold and holds a marvelous jasper arrangement."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+10)
+extra {"$identify"}
+"This bracelet will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The bracelet gives added intelligence when worn. It can only be possessed
+by one person."
+end
+  
+wrist_mag
+names {"pearl bracelet","bracelet"}
+title "a marvelous pearl bracelet"
+descr "A marvelous pearl bracelet lies on the ground."
+extra {}
+"The bracelet is made of fine gold and holds a marvelous pearl arrangement."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+10)
+extra {"$identify"}
+"This bracelet will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The bracelet gives added magic aura when worn. It can only be possessed
+by one person."
+end
+
+  
+wrist_hit
+names {"ruby bracelet","bracelet"}
+title "a marvelous ruby bracelet"
+descr "A marvelous ruby bracelet lies on the ground."
+extra {}
+"The bracelet is made of fine gold and holds a marvelous ruby arrangement."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+HIT_TRANSFER(+10)
+extra {"$identify"}
+"This bracelet will grant its wearer an added boost to their health."
+extra {"$improved identify"}
+"The bracelet gives added health when worn. It can only be possessed
+by one person."
+end
+
+/*neck*/
+
+neck_str
+names {"diamond necklace","necklace"}
+title "a stunning diamond necklace"
+descr "A stunning diamond necklace lies on the ground."
+extra {}
+"The necklace is made of fine gold and holds a stunning array of diamonds."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+10)
+extra {"$identify"}
+"This necklace will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The necklace gives added strength when worn. It can only be possessed
+by one person."
+end
+
+neck_dex
+names {"emerald necklace","necklace"}
+title "a stunning emerald necklace"
+descr "A stunning emerald necklace lies on the ground."
+extra {}
+"The necklace is made of fine gold and holds a stunning array of emeralds."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+10)
+extra {"$identify"}
+"This necklace will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The necklace gives added dexterity when worn. It can only be possessed
+by one person."
+end
+
+neck_cha
+names {"moonstone necklace","necklace"}
+title "a stunning moonstone necklace"
+descr "A stunning moonstone necklace lies on the ground."
+extra {}
+"The necklace is made of fine gold and holds a stunning array of moonstones."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+10)
+extra {"$identify"}
+"This necklace will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The necklace gives added charisma when worn. It can only be possessed
+by one person."
+end
+  
+neck_con
+names {"bloodstone necklace","necklace"}
+title "a stunning bloodstone necklace"
+descr "A stunning bloodstone necklace lies on the ground."
+extra {}
+"The necklace is made of fine gold and holds a stunning array of bloodstones."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+10)
+extra {"$identify"}
+"This necklace will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The necklace gives added constitution when worn. It can only be possessed
+by one person."
+end
+
+neck_div
+names {"onyx necklace","necklace"}
+title "a stunning onyx necklace"
+descr "A stunning onyx necklace lies on the ground."
+extra {}
+"The necklace is made of fine gold and holds a stunning array of onyx."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+10)
+extra {"$identify"}
+"This necklace will grant its wearer an added boost to their divinity."
+extra {"$improved identify"}
+"The necklace gives added divinity when worn. It can only be possessed
+by one person."
+end
+
+neck_bra
+names {"jasper necklace","necklace"}
+title "a stunning jasper necklace"
+descr "A stunning jasper necklace lies on the ground."
+extra {}
+"The necklace is made of fine gold and holds a stunning array of jaspers."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+10)
+extra {"$identify"}
+"This necklace will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The necklace gives added intelligence when worn. It can only be possessed
+by one person."
+end
+  
+neck_mag
+names {"pearl necklace","necklace"}
+title "a stunning pearl necklace"
+descr "A stunning pearl necklace lies on the ground."
+extra {}
+"The necklace is made of fine gold and holds a stunning array of pearls."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+10)
+extra {"$identify"}
+"This necklace will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The necklace gives added magic aura when worn. It can only be possessed
+by one person."
+end
+  
+neck_hit
+names {"ruby necklace","necklace"}
+title "a stunning ruby necklace"
+descr "A stunning ruby necklace lies on the ground."
+extra {}
+"The necklace is made of fine gold and holds a stunning array of rubies."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+HIT_TRANSFER(+10)
+extra {"$identify"}
+"This necklace will grant its wearer an added boost to their health."
+extra {"$improved identify"}
+"The necklace gives added health when worn. It can only be possessed
+by one person."
+end
+
+/*cape*/
+
+cape_str
+names {"diamond cape","cape"}
+title "a diamond-lined cape"
+descr "A diamond-lined cape lies on the ground."
+extra {}
+"The cape is made of fine gold thread and is lined with diamonds."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+10)
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The cloak gives added strength when worn. It can only be possessed
+by one person."
+end
+
+cape_dex
+names {"emerald cape","cape"}
+title "an emerald-lined cape"
+descr "An emerald-lined cape lies on the ground."
+extra {}
+"The cape is made of fine gold thread and is lined with emeralds."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+10)
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The cloak gives added dexterity when worn. It can only be possessed
+by one person."
+end
+
+cape_cha
+names {"moostone cape","cape"}
+title "a moonstone-lined cape"
+descr "A moonstone-lined cape lies on the ground."
+extra {}
+"The cape is made of fine gold thread and is lined with moonstones."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+10)
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The cloak gives added charisma when worn. It can only be possessed
+by one person."
+end
+
+
+cape_con
+names {"bloodstone cape","cape"}
+title "a bloodstone-lined cape"
+descr "A bloodstone-lined cape lies on the ground."
+extra {}
+"The cape is made of fine gold thread and is lined with bloodstones."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+10)
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The cloak gives added constitution when worn. It can only be possessed
+by one person."
+end
+
+cape_div
+names {"onyx cape","cape"}
+title "an onyx-lined cape"
+descr "An onyx-lined cape lies on the ground."
+extra {}
+"The cape is made of fine gold thread and is lined with onyx."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+10)
+extra {"$identify"}
+"This cape will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The cape gives added divine aura when worn. It can only be possessed
+by one person."
+end
+
+cape_bra
+names {"jasper cape","cape"}
+title "a jasper-lined cape"
+descr "A jasper-lined cape lies on the ground."
+extra {}
+"The cape is made of fine gold thread and is lined with jaspers."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+10)
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The cloak gives added intelligence when worn. It can only be possessed
+by one person."
+end
+ 
+
+cape_mag
+names {"pearl cape","cape"}
+title "a pearl-lined cape"
+descr "A pearl-lined cape lies on the ground."
+extra {}
+"The cape is made of fine gold thread and is lined with pearls."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+10)
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The cloak gives added magic aura when worn. It can only be possessed
+by one person."
+end
+
+ 
+cape_hit
+names {"ruby cape","cape"}
+title "a ruby-lined cape"
+descr "A ruby-lined cape lies on the ground."
+extra {}
+"The cape is made of fine gold thread and is lined with rubies."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+HIT_TRANSFER(+10)
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their health."
+extra {"$improved identify"}
+"The cloak gives added health when worn. It can only be possessed
+by one person."
+end
+/*backplate*/
+
+back_str
+names {"diamond backplate","backplate"}
+title "a diamond-studded backplate"
+descr "A diamond-studded backplate lies on the ground."
+extra {}
+"The backplate is made of fine gold and is studded with diamond."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+10)
+extra {"$identify"}
+"This backplate will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The backplate gives added strength when worn. It can only be possessed
+by one person."
+end
+
+back_dex
+names {"emerlad backplate","backplate"}
+title "an emerald-studded backplate"
+descr "An emerald-studded backplate lies on the ground."
+extra {}
+"The backplate is made of fine gold and is studded with emeralds."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+10)
+extra {"$identify"}
+"This backplate will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The backplate gives added dexterity when worn. It can only be possessed
+by one person."
+end
+
+back_cha
+names {"moonstone backplate","backplate"}
+title "a moonstone-studded backplate"
+descr "A moonstone-studded backplate lies on the ground."
+extra {}
+"The backplate is made of fine gold and is studded with moonstones."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+10)
+extra {"$identify"}
+"This backplate will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The backplate gives added charisma when worn. It can only be possessed
+by one person."
+end
+
+back_con
+names {"bloodstone backplate","backplate"}
+title "a bloodstone-studded backplate"
+descr "A bloodstone-studded backplate lies on the ground."
+extra {}
+"The backplate is made of fine gold and is studded with bloodstones."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+10)
+extra {"$identify"}
+"This backplate will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The backplate gives added constitution when worn. It can only be possessed
+by one person."
+end  
+
+back_div
+names {"onyx backplate","backplate"}
+title "an onyx-studded backplate"
+descr "An onyx-studded backplate lies on the ground."
+extra {}
+"The backplate is made of fine gold and is studded with onyx."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+10)
+extra {"$identify"}
+"This backplate will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The backplate gives added divine aura when worn. It can only be possessed
+by one person."
+end
+
+back_bra
+names {"jasper backplate","backplate"}
+title "a jasper-studded backplate"
+descr "A jasper-studded backplate lies on the ground."
+extra {}
+"The backplate is made of fine gold and is studded with jaspers."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+10)
+extra {"$identify"}
+"This backplate will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The backplate gives added intelligence when worn. It can only be possessed
+by one person."
+end 
+
+back_mag
+names {"pearl backplate","backplate"}
+title "a pearl-studded backplate"
+descr "A pearl-studded backplate lies on the ground."
+extra {}
+"The backplate is made of fine gold and is studded with pearls."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+10)
+extra {"$identify"}
+"This backplate will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The backplate gives added magic aura when worn. It can only be possessed
+by one person."
+end
+
+back_hit
+names {"ruby backplate","backplate"}
+title "a ruby-studded backplate"
+descr "A ruby-studded backplate lies on the ground."
+extra {}
+"The backplate is made of fine gold and is studded with rubies."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+HIT_TRANSFER(+10)
+extra {"$identify"}
+"This backplate will grant its wearer an added boost to their health."
+extra {"$improved identify"}
+"The backplate gives added health when worn. It can only be possessed
+by one person."
+end
+
+  
+/*earring*/
+
+ear_str
+names {"diamond earring","earring"}
+title "a delicate diamond earring"
+descr "A delicate diamond earring lies on the ground."
+extra {}
+"The earring is made of fine gold and holds a shining diamond."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(+10)
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The earring gives added strength when worn. It can only be possessed
+by one person."
+end
+
+ear_dex
+names {"emerald earring","earring"}
+title "a delicate emerald earring"
+descr "A delicate emerald earring lies on the ground."
+extra {}
+"The earring is made of fine gold and holds a vivid emerald."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(+10)
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The earring gives added dexterity when worn. It can only be possessed
+by one person."
+end
+
+ear_cha
+names {"moonstone earring","earring"}
+title "a delicate moonstone earring"
+descr "A delicate moonstone earring lies on the ground."
+extra {}
+"The earring is made of fine gold and holds a moonstone."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(+10)
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The earring gives added charisma when worn. It can only be possessed
+by one person."
+end   
+
+
+ear_con
+names {"bloodstone earring","earring"}
+title "a delicate bloodstone earring"
+descr "A delicate bloodstone earring lies on the ground."
+extra {}
+"The earring is made of fine gold and holds a bold bloodstone."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(+10)
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The earring gives added constitution when worn. It can only be possessed
+by one person."
+end
+
+ear_div
+names {"onyx earring","earring"}
+title "a delicate onyx earring"
+descr "A delicate onyx earring lies on the ground."
+extra {}
+"The earring is made of fine gold and holds a stark onyx."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(+10)
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The earring gives added divine aura when worn. It can only be possessed
+by one person."
+end
+
+ear_bra
+names {"jasper earring","earring"}
+title "a delicate jasper earring"
+descr "A delicate jasper earring lies on the ground."
+extra {}
+"The earring is made of fine gold and holds a beautiful jasper."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(+10)
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The earring gives added intelligence when worn. It can only be possessed
+by one person."
+end     
+
+ear_mag
+names {"pearl earring","earring"}
+title "a delicate pearl earring"
+descr "A delicate pearl earring lies on the ground."
+extra {}
+"The earring is made of fine gold and holds a lusterous pearl."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(+10)
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The earring gives added magic aura when worn. It can only be possessed
+by one person."
+end     
+
+ear_hit
+names {"ruby earring","earring"}
+title "a delicate ruby earring"
+descr "A delicate ruby earring lies on the ground."
+extra {}
+"The earring is made of fine gold and holds a bright red ruby."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+HIT_TRANSFER(+10)
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their health."
+extra {"$improved identify"}
+"The earring gives added health when worn. It can only be possessed
+by one person."
+end
 
 //////////////////////////////////////////////////////////////////
 //                         misc. items.                         //
