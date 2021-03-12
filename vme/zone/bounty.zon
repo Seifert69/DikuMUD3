@@ -6094,9 +6094,9 @@ descr "A pair of Bounty Hunter's enchanted sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
 ARMOUR_PLATE(10,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
-dilcopy level_restrict@function(20,0,25,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -6244,9 +6244,9 @@ descr "A pair of Bounty Hunter's magical sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
 ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
-dilcopy level_restrict@function(20,0,25,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+3)
 BRA_TRANSFER(+3)
@@ -6397,9 +6397,9 @@ descr "A pair of Bounty Hunter's powerful sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
 ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 dilcopy nquest_restrict@function({SUMMONER_COMPLETE,SUMMONER_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
-dilcopy level_restrict@function(20,0,25,"");
 cost 1 GOLD_PIECE
 MAG_TRANSFER(+4)
 BRA_TRANSFER(+4)
@@ -6555,9 +6555,9 @@ descr "A pair of Bounty Hunter's divine sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
 ARMOUR_PLATE(10,10)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
-dilcopy level_restrict@function(20,0,25,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+2)
 BRA_TRANSFER(+2)
@@ -6705,9 +6705,9 @@ descr "A pair of Bounty Hunter's holy sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
 ARMOUR_PLATE(15,15)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
-dilcopy level_restrict@function(20,0,25,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+3)
 BRA_TRANSFER(+3)
@@ -6858,9 +6858,9 @@ descr "A pair of Bounty Hunter's godly sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
 ARMOUR_PLATE(20,20)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
 weight 7
-dilcopy level_restrict@function(20,0,25,"");
 cost 1 GOLD_PIECE
 DIV_TRANSFER(+4)
 BRA_TRANSFER(+4)
@@ -7014,7 +7014,7 @@ descr "A pair of Bounty Hunter's sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
 ARMOUR_PLATE(10,10)
-dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
@@ -7165,7 +7165,7 @@ descr "A pair of Bounty Hunter's strong sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
 ARMOUR_PLATE(15,15)
-dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
@@ -7318,7 +7318,7 @@ descr "A pair of Bounty Hunter's elite sleeves have been left here."
 extra {}
 "Finely crafted, though simple. This is a well-made pair of Bounty Hunter's sleeves."
 ARMOUR_PLATE(20,20)
-dilcopy nquest_restrict@function({NECRO_COMPLETE,NECRO_COMPLETEISH,JOIN_COMPLETE},0,20,"");
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 weight 7
 dilcopy nquest_restrict@function({BLACKSMITH_COMPLETE,JOIN_COMPLETE},0,20,"");
 cost 1 GOLD_PIECE
