@@ -570,8 +570,17 @@ code
             log("Quest " + qname + " unable to load item " + itemsl.[i]);
          else
          {
-            if (u.equip)
+            if ((u.manipulate & (MANIPULATE_WEAR_FINGER | MANIPULATE_WEAR_NECK  |
+                  MANIPULATE_WEAR_BODY   | MANIPULATE_WEAR_HEAD  |
+                  MANIPULATE_WEAR_LEGS   | MANIPULATE_WEAR_FEET  |
+                  MANIPULATE_WEAR_HANDS  | MANIPULATE_WEAR_ARMS  |
+                  MANIPULATE_WEAR_SHIELD | MANIPULATE_WEAR_ABOUT |
+                  MANIPULATE_WEAR_WAIST  | MANIPULATE_WEAR_WRIST |
+                  MANIPULATE_WIELD       | MANIPULATE_WEAR_EAR   |
+                  MANIPULATE_WEAR_BACK   | MANIPULATE_WEAR_CHEST |
+                  MANIPULATE_WEAR_ANKLE)) or (u.objecttype == ITEM_WEAPON))
                u.height := pc.height; // For wearable items, make them fit
+
             link(u, pc);
             act("$3n gives you $2n.", A_SOMEONE, pc, u, self, TO_CHAR);
             act("$3n gives $2n to $1n.", A_SOMEONE, pc, u, self, TO_REST);
