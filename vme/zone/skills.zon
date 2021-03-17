@@ -5018,10 +5018,9 @@ code
    /* self.level then there's a 5 point penalty per level. Ie. it's more demanding to skin a  */
    /* creature relatively higher level than yourself                                          */
 
-   i := targ.value[3];  // The level is the difficulty.
-
-   if (targ.value[3] > self.level)
-      i := i - (self.level - targ.value[3]) / 2; // ½ more difficult per level difference ( - - = + )
+   i := targ.value[3];  // The level is the difficulty up to 100.
+   if (i > 100)
+      i := 100 + (i-100)/2;  // up to 150 difficulty for level 200 corpse
 
    hm := skillchecksa(SKI_SKIN, ABIL_DEX, i);
 
