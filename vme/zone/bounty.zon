@@ -1793,7 +1793,7 @@ code
 :start:
 
 	// 80,000 lbs of any kind of metal armor.
-	// 500 lbs each of activated element (4 total) from The Summoner
+	// 100 lbs each of activated element (4 total) from The Summoner
 	// 10 killing spree streak
 
 	wait(SFB_CMD, ("$historian" in activator.extra) and (JOIN_ONGOING in activator.quests) and (not(BLACKSMITH_ONGOING in activator.quests)) and (not(BLACKSMITH_COMPLETE in activator.quests)));
@@ -1826,7 +1826,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say Next I'll need fuel for my fires, though not just anything will suffice here.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say Bring me a further 500 lbs each of activated elemental powder.", self);
+	exec("say Bring me a further 100 lbs each of activated elemental powder.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say I suspect you'll need to seek The Summoner out in order to gain access to this.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -1845,14 +1845,17 @@ code
 dilend
 
 dilbegin qblacksmith2();
+external 
+	integer add_bp@bounty(n : integer, u : unitptr);
 var
 	pc : unitptr;
 	item : unitptr;
 	exdp : extraptr;
+	qty : integer;
 code
 {
 	// 80,000 lbs of any kind of steel weapon or armor.
-	// 500 lbs each of activated element (4 total) from The Summoner
+	// 100 lbs each of activated element (4 total) from The Summoner
 	// 10 killing spree streak
 	
 	heartbeat := PULSE_SEC;
@@ -1884,127 +1887,31 @@ code
 	}
 	else if((item.symname == "fire1@bounty") and (not("fire1" in exdp.names)))
 	{
-		exec("say 125 lbs of activated elemental fire, this contains eons of power!", self);
+		exec("say 100 lbs of activated elemental fire, this contains eons of power!", self);
 		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "fire1");
-		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
-		unsecure(item);
-		destroy(item);
-	}
-	else if((item.symname == "fire2@bounty") and (not("fire2" in exdp.names)))
-	{
-		exec("say 125 lbs of activated elemental fire, this contains eons of power!", self);
-		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "fire2");
-		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
-		unsecure(item);
-		destroy(item);
-	}
-	else if((item.symname == "fire3@bounty") and (not("fire3" in exdp.names)))
-	{
-		exec("say 125 lbs of activated elemental fire, this contains eons of power!", self);
-		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "fire3");
-		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
-		unsecure(item);
-		destroy(item);
-	}
-	else if((item.symname == "fire4@bounty") and (not("fire4" in exdp.names)))
-	{
-		exec("say 125 lbs of activated elemental fire, this contains eons of power!", self);
-		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "fire4");
 		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
 		unsecure(item);
 		destroy(item);
 	}
 	else if((item.symname == "earth1@bounty") and (not("earth1" in exdp.names)))
 	{
-		exec("say 125 lbs of activated elemental earth, this contains eons of power!", self);
+		exec("say 100 lbs of activated elemental earth, this contains eons of power!", self);
 		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "earth1");
 		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
 		destroy(item);
 	}
-	else if((item.symname == "earth2@bounty") and (not("earth2" in exdp.names)))
-	{
-		exec("say 125 lbs of activated elemental earth, this contains eons of power!", self);
-		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "earth2");
-		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
-		unsecure(item);
-		destroy(item);
-	}
-	else if((item.symname == "earth3@bounty") and (not("earth3" in exdp.names)))
-	{
-		exec("say 125 lbs of activated elemental earth, this contains eons of power!", self);
-		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "earth3");
-		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
-		unsecure(item);
-		destroy(item);
-	}
-	else if((item.symname == "earth4@bounty") and (not("earth4" in exdp.names)))
-	{
-		exec("say 125 lbs of activated elemental earth, this contains eons of power!", self);
-		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "earth4");
-		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
-		unsecure(item);
-		destroy(item);
-	}
 	else if((item.symname == "air1@bounty") and (not("air1" in exdp.names)))
 	{
-		exec("say 125 lbs of activated elemental air, this contains eons of power!", self);
+		exec("say 100 lbs of activated elemental air, this contains eons of power!", self);
 		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "air1");
-		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
-		unsecure(item);
-		destroy(item);
-	}
-	else if((item.symname == "air2@bounty") and (not("air2" in exdp.names)))
-	{
-		exec("say 125 lbs of activated elemental air, this contains eons of power!", self);
-		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "air2");
-		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
-		unsecure(item);
-		destroy(item);
-	}
-	else if((item.symname == "air3@bounty") and (not("air3" in exdp.names)))
-	{
-		exec("say 125 lbs of activated elemental air, this contains eons of power!", self);
-		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "air3");
-		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
-		unsecure(item);
-		destroy(item);
-	}
-	else if((item.symname == "air4@bounty") and (not("air4" in exdp.names)))
-	{
-		exec("say 125 lbs of activated elemental air, this contains eons of power!", self);
-		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "air4");
 		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
 		unsecure(item);
 		destroy(item);
 	}
 	else if((item.symname == "water1@bounty") and (not("water1" in exdp.names)))
 	{
-		exec("say 125 lbs of activated elemental water, this contains eons of power!", self);
+		exec("say 100 lbs of activated elemental water, this contains eons of power!", self);
 		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "water1");
-		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
-		unsecure(item);
-		destroy(item);
-	}
-	else if((item.symname == "water2@bounty") and (not("water2" in exdp.names)))
-	{
-		exec("say 125 lbs of activated elemental water, this contains eons of power!", self);
-		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "water2");
-		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
-		unsecure(item);
-		destroy(item);
-	}
-	else if((item.symname == "water3@bounty") and (not("water3" in exdp.names)))
-	{
-		exec("say 125 lbs of activated elemental water, this contains eons of power!", self);
-		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "water3");
-		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
-		unsecure(item);
-		destroy(item);
-	}
-	else if((item.symname == "water4@bounty") and (not("water4" in exdp.names)))
-	{
-		exec("say 125 lbs of activated elemental water, this contains eons of power!", self);
-		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "water4");
 		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
 		unsecure(item);
 		destroy(item);
@@ -2018,17 +1925,21 @@ code
 	}
 :checkit:
 
-	if(("air1" in exdp.names) and ("air2" in exdp.names) and ("air3" in exdp.names) and ("air4" in exdp.names) and
-		("water1" in exdp.names) and ("water2" in exdp.names) and ("water3" in exdp.names) and ("water4" in exdp.names) and
-		("earth1" in exdp.names) and ("earth2" in exdp.names) and ("earth3" in exdp.names) and ("earth4" in exdp.names) and
-		("fire1" in exdp.names) and ("fire2" in exdp.names) and ("fire3" in exdp.names) and ("fire4" in exdp.names) and
-		("steel" in exdp.names) and ("spree" in exdp.names))
+	if(("air1" in exdp.names) and ("water1" in exdp.names) and ("earth1" in exdp.names) and
+		("fire1" in exdp.names) and ("steel" in exdp.names) and ("spree" in exdp.names))
 	{
 		exec("say What you have done here is unprecedented, "+pc.name+"!" ,self);
 		exec("say You may go and let The Historian know that your tasks for me are complete.", self);
 		
 		subextra(pc.quests, BLACKSMITH_ONGOING);
 		addextra(pc.quests, {BLACKSMITH_COMPLETE},"");
+		
+		experience(10000, pc);
+		act("<br><div class='hint'>Quest Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		act("<div class='xpgain'>You recieve "+itoa(10000)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		qty := add_bp(200,pc);
+		act("<div class='xpgain'>You recieve "+itoa(200)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+	
 	}
 :donezo:
 
@@ -2299,7 +2210,7 @@ code
 	qty_air := atoi(pc.quests.["$sum_air"].descr);
 	qty_water := atoi(pc.quests.["$sum_water"].descr);
 	qty_fire := atoi(pc.quests.["$sum_fire"].descr);
-	if(qty_earth < 4)
+	if(qty_earth < 1)
 	{
 		qty_earth := qty_earth + 1;
 		pc.quests.["$sum_earth"].descr := itoa(qty_earth);
@@ -2321,7 +2232,7 @@ code
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
 		exec("emote slumps down, seemingly exhausted.",self);
 	}
-	else if(qty_air < 4)
+	else if(qty_air < 1)
 	{
 		qty_air := qty_air + 1;
 		pc.quests.["$sum_air"].descr := itoa(qty_air);
@@ -2343,7 +2254,7 @@ code
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
 		exec("emote slumps down, seemingly exhausted.",self);
 	}
-	else if(qty_water < 4)
+	else if(qty_water < 1)
 	{
 		qty_water := qty_water + 1;
 		pc.quests.["$sum_water"].descr := itoa(qty_water);
@@ -2365,7 +2276,7 @@ code
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
 		exec("emote slumps down, seemingly exhausted.",self);
 	}
-	else if(qty_fire < 4)
+	else if(qty_fire < 1)
 	{
 		qty_fire := qty_fire + 1;
 		pc.quests.["$sum_fire"].descr := itoa(qty_fire);
@@ -2390,7 +2301,7 @@ code
 	
 :checkme:
 
-	if((qty_earth == 4) and (qty_air == 4) and (qty_water == 4) and (qty_fire == 4))
+	if((qty_earth == 1) and (qty_air == 1) and (qty_water == 1) and (qty_fire == 1))
 	{
 		subextra(pc.quests, "$sum_earth");
 		subextra(pc.quests, "$sum_air");
@@ -6307,40 +6218,9 @@ title "<div class='cpw'>activated element of air</div>"
 descr "A large heap of a strange <div class='cpw'>white powder</div> powder is here."
 extra {}
 "This is an activated elemental powder, containing eons of power."
-weight 125
+weight 100
 manipulate {MANIPULATE_TAKE}
 end
-
-air2
-names {"activated air", "air powder", "powder", "air"}
-title "<div class='cpw'>activated element of air</div>"
-descr "A large heap of a strange <div class='cpw'>white powder</div> powder is here."
-extra {}
-"This is an activated elemental powder, containing eons of power."
-weight 125
-manipulate {MANIPULATE_TAKE}
-end
-
-air3
-names {"activated air", "air powder", "powder", "air"}
-title "<div class='cpw'>activated element of air</div>"
-descr "A large heap of a strange <div class='cpw'>white powder</div> powder is here."
-extra {}
-"This is an activated elemental powder, containing eons of power."
-weight 125
-manipulate {MANIPULATE_TAKE}
-end
-
-air4
-names {"activated air", "air powder", "powder", "air"}
-title "<div class='cpw'>activated element of air</div>"
-descr "A large heap of a strange <div class='cpw'>white powder</div> powder is here."
-extra {}
-"This is an activated elemental powder, containing eons of power."
-weight 125
-manipulate {MANIPULATE_TAKE}
-end
-
 
 fire1
 names {"activated fire", "fire powder", "powder", "fire"}
@@ -6348,37 +6228,7 @@ title "<div class='cpr'>activated element of fire</div>"
 descr "A large heap of a strange <div class='cpr'>blood red powder</div> powder is here."
 extra {}
 "This is an activated elemental powder, containing eons of power."
-weight 125
-manipulate {MANIPULATE_TAKE}
-end
-
-fire2
-names {"activated fire", "fire powder", "powder", "fire"}
-title "<div class='cpr'>activated element of fire</div>"
-descr "A large heap of a strange <div class='cpr'>blood red powder</div> powder is here."
-extra {}
-"This is an activated elemental powder, containing eons of power."
-weight 125
-manipulate {MANIPULATE_TAKE}
-end
-
-fire3
-names {"activated fire", "fire powder", "powder", "fire"}
-title "<div class='cpr'>activated element of fire</div>"
-descr "A large heap of a strange <div class='cpr'>blood red powder</div> powder is here."
-extra {}
-"This is an activated elemental powder, containing eons of power."
-weight 125
-manipulate {MANIPULATE_TAKE}
-end
-
-fire4
-names {"activated fire", "fire powder", "powder", "fire"}
-title "<div class='cpr'>activated element of fire</div>"
-descr "A large heap of a strange <div class='cpr'>blood red powder</div> powder is here."
-extra {}
-"This is an activated elemental powder, containing eons of power."
-weight 125
+weight 100
 manipulate {MANIPULATE_TAKE}
 end
 
@@ -6388,37 +6238,7 @@ title "<div class='cpn'>activated element of earth</div>"
 descr "A large heap of a strange <div class='cpn'>dark powder</div> powder is here."
 extra {}
 "This is an activated elemental powder, containing eons of power."
-weight 125
-manipulate {MANIPULATE_TAKE}
-end
-
-earth2
-names {"activated earth", "earth powder", "powder", "earth"}
-title "<div class='cpn'>activated element of earth</div>"
-descr "A large heap of a strange <div class='cpn'>dark powder</div> powder is here."
-extra {}
-"This is an activated elemental powder, containing eons of power."
-weight 125
-manipulate {MANIPULATE_TAKE}
-end
-
-earth3
-names {"activated earth", "earth powder", "powder", "earth"}
-title "<div class='cpn'>activated element of earth</div>"
-descr "A large heap of a strange <div class='cpn'>dark powder</div> powder is here."
-extra {}
-"This is an activated elemental powder, containing eons of power."
-weight 125
-manipulate {MANIPULATE_TAKE}
-end
-
-earth4
-names {"activated earth", "earth powder", "powder", "earth"}
-title "<div class='cpn'>activated element of earth</div>"
-descr "A large heap of a strange <div class='cpn'>dark powder</div> powder is here."
-extra {}
-"This is an activated elemental powder, containing eons of power."
-weight 125
+weight 100
 manipulate {MANIPULATE_TAKE}
 end
 
@@ -6428,37 +6248,7 @@ title "<div class='cb'>activated element of water</div>"
 descr "A large heap of a strange <div class='cb'>light blue powder</div> is here."
 extra {}
 "This is an activated elemental powder, containing eons of power."
-weight 125
-manipulate {MANIPULATE_TAKE}
-end
-
-water2
-names {"activated water", "water powder", "powder", "water"}
-title "<div class='cb'>activated element of water</div>"
-descr "A large heap of a strange <div class='cb'>light blue powder</div> is here."
-extra {}
-"This is an activated elemental powder, containing eons of power."
-weight 125
-manipulate {MANIPULATE_TAKE}
-end
-
-water3
-names {"activated water", "water powder", "powder", "water"}
-title "<div class='cb'>activated element of water</div>"
-descr "A large heap of a strange <div class='cb'>light blue powder</div> is here."
-extra {}
-"This is an activated elemental powder, containing eons of power."
-weight 125
-manipulate {MANIPULATE_TAKE}
-end
-
-water4
-names {"activated water", "water powder", "powder", "water"}
-title "<div class='cb'>activated element of water</div>"
-descr "A large heap of a strange <div class='cb'>light blue powder</div> is here."
-extra {}
-"This is an activated elemental powder, containing eons of power."
-weight 125
+weight 100
 manipulate {MANIPULATE_TAKE}
 end
 
