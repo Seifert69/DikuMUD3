@@ -5021,7 +5021,7 @@ code
    i := targ.value[3];  // The level is the difficulty.
 
    if (targ.value[3] > self.level)
-      i := i - (self.level - targ.value[3]) * 5; // 5 more difficult per level difference ( - - = + )
+      i := i - (self.level - targ.value[3]) / 2; // ½ more difficult per level difference ( - - = + )
 
    hm := skillchecksa(SKI_SKIN, ABIL_DEX, i);
 
