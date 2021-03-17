@@ -2316,7 +2316,7 @@ code
 		act("The <div class='cpc'>electric light</div> becomes complete, and culminates in a <div class='cpc'>b</div><div class='cpw'>linding</div> <div class='cpc'>f</div><div class='cpw'>lash</div>.",A_ALWAYS, self, null, null, TO_ALL);
 		item := load("earth"+itoa(qty_earth)+"@bounty");
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
-		act("A large pile of "+item.title+" is left as the light fades.",A_ALWAYS, self, null, null, TO_ALL);
+		act("A large pile of <div class='cpn'>activated element of earth</div> is left as the light fades.",A_ALWAYS, self, null, null, TO_ALL);
 		link(item,self.outside);
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
 		exec("emote slumps down, seemingly exhausted.",self);
@@ -2338,7 +2338,7 @@ code
 		act("The <div class='cpc'>electric light</div> becomes complete, and culminates in a <div class='cpc'>b</div><div class='cpw'>linding</div> <div class='cpc'>f</div><div class='cpw'>lash</div>.",A_ALWAYS, self, null, null, TO_ALL);
 		item := load("air"+itoa(qty_air)+"@bounty");
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
-		act("A large pile of "+item.title+" is left as the light fades.",A_ALWAYS, self, null, null, TO_ALL);
+		act("A large pile of <div class='cpw'>activated element of air</div> is left as the light fades.",A_ALWAYS, self, null, null, TO_ALL);
 		link(item,self.outside);
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
 		exec("emote slumps down, seemingly exhausted.",self);
@@ -2360,7 +2360,7 @@ code
 		act("The <div class='cpc'>electric light</div> becomes complete, and culminates in a <div class='cpc'>b</div><div class='cpw'>linding</div> <div class='cpc'>f</div><div class='cpw'>lash</div>.",A_ALWAYS, self, null, null, TO_ALL);
 		item := load("water"+itoa(qty_water)+"@bounty");
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
-		act("A large pile of "+item.title+" is left as the light fades.",A_ALWAYS, self, null, null, TO_ALL);
+		act("A large pile of <div class='cb'>activated element of water</div> is left as the light fades.",A_ALWAYS, self, null, null, TO_ALL);
 		link(item,self.outside);
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
 		exec("emote slumps down, seemingly exhausted.",self);
@@ -2382,7 +2382,7 @@ code
 		act("The <div class='cpc'>electric light</div> becomes complete, and culminates in a <div class='cpc'>b</div><div class='cpw'>linding</div> <div class='cpc'>f</div><div class='cpw'>lash</div>.",A_ALWAYS, self, null, null, TO_ALL);
 		item := load("fire"+itoa(qty_fire)+"@bounty");
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
-		act("A large pile of "+item.title+" is left as the light fades.",A_ALWAYS, self, null, null, TO_ALL);
+		act("A large pile of <div class='cpr'>activated element of fire</div> is left as the light fades.",A_ALWAYS, self, null, null, TO_ALL);
 		link(item,self.outside);
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
 		exec("emote slumps down, seemingly exhausted.",self);
