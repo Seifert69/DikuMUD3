@@ -262,78 +262,10 @@ code
 dilend
 
 
-dilbegin integer mana_gain (pc:unitptr);
-var
-    gain:integer;
-    u:unitptr;
-    bonus : integer;
-code
-{
-    if      (pc.race == RACE_HUMAN)     bonus := 1;
-    else if (pc.race == RACE_DWARF)     bonus := -2;
-    else if (pc.race == RACE_HALFLING)  bonus := -5;
-    else if (pc.race == RACE_GNOME)     bonus := 2 ;
-    else if (pc.race == RACE_ELF)       bonus := 5 ;
-    else if (pc.race == RACE_HALF_ELF)  bonus := 3 ;
-    else if (pc.race == RACE_DARK_ELF)  bonus := 5 ;
-    else if (pc.race == RACE_BROWNIE)   bonus := 5;
-    else if (pc.race == RACE_GROLL)     bonus := -5;
-    else if (pc.race == RACE_HALF_ORC)  bonus := -5;
-    else if (pc.race == RACE_HALF_OGRE) bonus := -3;
-    else  bonus := 1;
-
-    if (pc.position!=POSITION_FIGHTING)
-    {
-        gain := bonus + pc.max_mana/ 10;
-        if (pc.abilities[ABIL_MAG]>pc.abilities[ABIL_DIV])
-            gain :=gain+ (pc.abilities[ABIL_CHA] -pc.abilities[ABIL_MAG])/3;
-        else
-            gain :=gain+ (pc.abilities[ABIL_CHA] -pc.abilities[ABIL_DIV])/3;
-
-        if ((pc.abilities[ABIL_CHA] > 0) and (gain < 1 ))
-            gain :=1;
-
-    }
-    else
-        gain:=0;
-
-    if ((pc.position==POSITION_SLEEPING) or (pc.position==POSITION_RESTING))
-      gain := gain+ (gain / 2);     /* gain *= 1.5  */
-    else if (pc.position==POSITION_SITTING)
-      gain := gain+ (gain / 4);/*gain = 1.25*/
-
-    u:=pc;
-    while (u)
-    {
-        if (isset(u.flags,UNIT_FL_SACRED))
-        {
-            gain:=gain*2;
-            break;
-        }
-        if (u.type==UNIT_ST_ROOM)
-            break;
-        u:=u.outside;
-    }
-
-    if (pc.type==UNIT_ST_PC)
-    {
-        if ((pc.full<0) or (pc.thirst<0))
-            if ((3*pc.thirst)<pc.full)
-                gain:=gain+9*pc.thirst;
-            else
-                gain:=gain+3*pc.full;
-    }
-
-    return (gain);
-}
-dilend
-
-
 // NPCs only
 dilbegin unique fnpri(FN_PRI_BODY) regenerate();
 external
    integer hit_gain(u:unitptr);
-   integer mana_gain(u:unitptr);
    integer move_gain(u:unitptr);
 
 var
@@ -354,7 +286,7 @@ code
    if (self.position >= POSITION_STUNNED)
    {
       hgain := hit_gain(self);
-      mgain := mana_gain(self);
+      mgain := getinteger(DIL_GINT_MANAREG, self, 0);
       egain := 2 * move_gain(self);
 
       if ((self.mana+mgain)>self.max_mana)
@@ -400,7 +332,6 @@ dilend
 dilbegin unique fnpri(FN_PRI_BODY-1) regen_pc();
 external
     integer hit_gain(u:unitptr);
-    integer mana_gain(u:unitptr);
     integer move_gain(u:unitptr);
     gain_cond (u:unitptr,cond:string,i:integer);
 var
@@ -427,7 +358,7 @@ code
     if (self.position>=POSITION_STUNNED)
     {
         hgain:=hit_gain(self);
-        mgain:=mana_gain(self);
+        mgain:=getinteger(DIL_GINT_MANAREG, self, 0);
         egain:=move_gain(self);
 
         if ((self.mana+mgain)>self.max_mana)
