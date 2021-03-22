@@ -3352,6 +3352,21 @@ void dilfe_gint(register class dilprg *p)
     {
         switch (idx)
         {
+        case DIL_GINT_MANAREG:
+            if ((p_u != NULL) && IS_CHAR(p_u))
+                v->val.num = mana_gain(p_u);
+            break;
+
+        case DIL_GINT_HITREG:
+            if ((p_u != NULL) && IS_CHAR(p_u))
+                v->val.num = hit_gain(p_u);
+            break;
+
+        case DIL_GINT_MOVEREG:
+            if ((p_u != NULL) && IS_CHAR(p_u))
+                v->val.num = move_gain(p_u);
+            break;
+
         case DIL_GINT_EFFDEX:
             if ((p_u != NULL) && IS_CHAR(p_u))
                 v->val.num = effective_dex(p_u);

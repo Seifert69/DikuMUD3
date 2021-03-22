@@ -1221,7 +1221,9 @@ ACTION
 #define DIL_GINT_LEVELXP    2  // return the level_xp(i) (XP needed for level i->i+1)
 #define DIL_GINT_DESCRIPTOR 3  // returns 0 if PC has no descriptor. 1 for all else
 #define DIL_GINT_CRIMENO    4  // returns the next crime_no
-
+#define DIL_GINT_MANAREG    5  // returns the amount of mana PC/NPC should regenerate
+#define DIL_GINT_HITREG     6  // returns the amount of hp PC/NPC should regenerate
+#define DIL_GINT_MOVEREG    7  // returns the amount of endurance PC/NPC should regenerate
 
 #endif /* _MUD_VALUES_H */
 
