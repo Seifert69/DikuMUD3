@@ -2629,8 +2629,8 @@ code
    else
       scale := (((100*tgt.height) / tgt_pc.height)-100) / 2; // Shrink %, ½ = easier to shrink
 
-   if (scale > 125)
-      scale := 125; // 125% resize is the most difficult for anyone
+   if (scale > 50)
+      scale := 50; // 125% resize is the most difficult for anyone
 
    endu := 20;
    endu := endu + (endu * scale) / 100;
@@ -2641,7 +2641,7 @@ code
    // value[1] is craftsmanship
    // value[2] is magical bonus
    //
-   skilld := 2*tgt.value[1] + 6*tgt.value[2];
+   skilld := 2*tgt.value[1] + 3*tgt.value[2];
 
    hm := skillchecksa@skills(skillidx, abilidx, (skilld + scale));
 
