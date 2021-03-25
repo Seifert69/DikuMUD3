@@ -534,7 +534,11 @@ extra {"$rem_s"}
 extra {"$rem_o"}
 "As $1n sheaths $1s $2n, the dimness from its blade brightens."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_BASTARD_SWORD1,0,2)
+WEAPON_DEF(WPN_BASTARD_SWORD1,7,7)
+STR_TRANSFER(+2)
+DIV_TRANSFER(+2)
+CHA_TRANSFER(-1)
+WEAPON_TRANSFER(WPN_LONG_SWORD,+5)
 MATERIAL_METAL("This item is made of forged metal.")
 dilcopy guild_restrict@function ({GUILD_KNIGHT},0,25,"");
 dilcopy level_restrict@function (10,0,0,"");

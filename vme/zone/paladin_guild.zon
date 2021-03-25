@@ -1325,7 +1325,11 @@ extra {"$rem_s"}
 extra {"$rem_o"}
 "As $1n sheats $1s $2n, the glow from its blade subsides."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_LONG_SWORD,0,2)
+WEAPON_DEF(WPN_LONG_SWORD,7,7)
+STR_TRANSFER(+2)
+DIV_TRANSFER(+2)
+CHA_TRANSFER(-1)
+WEAPON_TRANSFER(WPN_LONG_SWORD,+5)
 romflags {OBJ_NO_DUAL}
 MATERIAL_METAL("This item is made of reddish metal.")
 dilcopy guild_restrict@function ({GUILD_PALADIN},0,25,"");

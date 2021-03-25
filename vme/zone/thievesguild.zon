@@ -702,12 +702,12 @@ small sigil on the inside of the small storage space. You can only guess
 its purpose but refreshing the poison would be a qualified shot.<br/>"
 extra {"$identify"}
 "The magic reveals Thieves Dirk to increase your overall Dexterity as
-well as your lock picking skills and your dagger skills.<br/>
+well as Brain and also your dagger skills.<br/>
 By pressing the button, poison stored in the handle is released into the
 tip of the blade.<br/>"
 extra {"$improved identify"}
-"The Dex bonus is +1, Lock picking Skill bonus is +3% and Dagger Skill
-bonus is +2%. The poison has a power of 10 and is restored slowly by the
+"The Dex bonus is +2, Bra bonus is +2, and Dagger Skill
+bonus is +5%. The poison has a power of 10 and is restored slowly by the
 blade itself.<br/>
 The dirk is of craftmanship 4 and magical bonus 3.<br/>"
 extra {"$wear_s"}
@@ -715,7 +715,11 @@ extra {"$wear_s"}
 extra {"$wear_o"}
 "$1n pulls out a $2n and flicks it in $1s hand."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER,0,0)
+WEAPON_DEF(WPN_DAGGER,7,7)
+DEX_TRANSFER(+2)
+BRA_TRANSFER(+2)
+CHA_TRANSFER(-1)
+WEAPON_TRANSFER(WPN_DAGGER,+5)
 dilcopy guild_restrict@function ({GUILD_UDG_THIEF},0,25,"");
 cost 1 IRON_PIECE
 spell 10
