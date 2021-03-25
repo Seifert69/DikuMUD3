@@ -612,8 +612,12 @@ names {"staff of herbs","staff"}
 title "the Staff of Herbs"
 descr "A glowing wooden quarterstaff lies on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_QUARTERSTAFF, 0, 0)
-SKILL_TRANSFER(SKI_HERBS, +5)
+WEAPON_DEF(WPN_QUARTERSTAFF, 7, 7)
+SKILL_TRANSFER(SKI_HERBS, +10)
+DEX_TRANSFER(+2)
+BRA_TRANSFER(+2)
+STR_TRANSFER(-1)
+WEAPON_TRANSFER(WPN_QUARTERSTAFF,+10)
 weight 5
 cost 1 IRON_PIECE
 extra {}
@@ -624,7 +628,7 @@ extra {"$identify"}
 an uncanny knack for finding medicinal plants."
 extra {"$improved identify"}
 "When wielded or held, this staff will increase a Druid's proficiency in
-the herbs skill by 5%."
+the herbs skill by 10%."
 dilcopy guild_restrict@function({GUILD_NYM_DRUID}, 0, 0, "");
 end
 

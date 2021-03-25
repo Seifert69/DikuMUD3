@@ -1864,7 +1864,7 @@ extra {"$identify"}
 protect him from the forces of Good. Furthermore, it slightly increases his
 control of the Undead Forces. However, it also decreases your Charisma.<br/>"
 extra {"$improved identify"}
-"The bonuses are +2 to Brain and +2% to Control Undead. Your
+"The bonuses are +2 to Brain, +2 to Divine, and +5% to Control Undead. Your
 Charisma falls by one.<br/>"
 extra {"$wear_s"}
 "As you near the hand to your wrist, the ghastly fingers grasp it in
@@ -1880,14 +1880,14 @@ The fingers reluctantly open and let go."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_WRIST}
 MATERIAL_ORGANIC("This item is mummified flesh and bone.")
 BRA_TRANSFER(+2)
+DIV_TRANSFER(+2)
 CHA_TRANSFER(-1)
-SPELL_TRANSFER(SPL_CONTROL_UNDEAD,+2)
+SPELL_TRANSFER(SPL_CONTROL_UNDEAD,+5)
 PROTECTION_FROM_GOOD
 dilcopy guild_restrict@function ({GUILD_NECROMANCER},0,25,"");
 dilcopy abi_restrict@function (ABIL_BRA,10,0,0,"");
 dilcopy abi_restrict@function (ABIL_DIV,11,0,0,"");
 dilcopy ali_restrict@function (-350,-1000,0,25,"");
-dilcopy mvlev_restrict@function (100,0,25,"");
 rent 41 IRON_PIECE
 end
 
