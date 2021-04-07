@@ -242,16 +242,16 @@ code
 	if((self.outside.symname == "smithy@bounty") or (self.outside.symname == "smithy2@bounty"))
 	{
 		log("smithy sign");
-		buf := "Say 'spree' to kick off a new killing spree. You would be well <br>
-				advised to ensure you have a group with you ready for killing! <br><br>
-				Say 'end spree' once the time has run out and you are ready to <br>
-				collect your rewards!";
+		buf := "Say 'spree' to kick off a new killing spree. You would be well <br>" +
+				"advised to ensure you have a group with you ready for killing! <br><br>" + 
+				"Say 'end spree' once the time has run out and you are ready to <br>" + 
+				"collect your rewards!";
 		if(not(BLACKSMITH_COMPLETE in pc.quests))
 		{
-			buf := buf + "<br><br>You must have completed 20 total bounties of any kind from the <br>
-						Bounty Hunter in order to lead a spree. Anyone may participate in <br>
-						following a leader on their spree.<br><br>
-						Say 'report' to get a report of your killing sprees to date.";
+			buf := buf + "<br><br>You must have completed 20 total bounties of any kind from the <br>" +
+						"Bounty Hunter in order to lead a spree. Anyone may participate in <br>" +
+						"following a leader on their spree.<br><br>" +
+						"Say 'report' to get a report of your killing sprees to date.";
 		}
 		if(BLACKSMITH_COMPLETE in pc.quests)
 		{
@@ -266,9 +266,9 @@ code
 	if((self.outside.symname == "jewels@bounty") or (self.outside.symname == "jewels2@bounty"))
 	{
 		log("jeweler sign");
-		buf := "Say 'i need work' to kick off a new package delivery for the jeweler!<br>
-				Be careful, you dont want to open these packages!<br><br>
-				Say 'report' to get a report of your package deliveries to date.";
+		buf := "Say 'i need work' to kick off a new package delivery for the jeweler!<br>" +
+				"Be careful, you dont want to open these packages!<br><br>" +
+				"Say 'report' to get a report of your package deliveries to date.";
 		if(JEWELER_COMPLETE in pc.quests)
 		{
 			buf := buf + "<br><br>To craft a unique jewelry item, simply say 'crafting'.";
@@ -280,10 +280,10 @@ code
 	if((self.outside.symname == "contracts@bounty") or (self.outside.symname == "contracts2@bounty"))
 	{
 		log("hunter sign");
-		buf := "Say 'contract' to hear the contract options available.<br><br>
-				Say 'contract status' to hear the status of any existing contracts, 
-				and for the option to receive a new contract card.<br><br>
-				Say 'report' to get a report of your closed contracts to date.";
+		buf := "Say 'contract' to hear the contract options available.<br><br>" +
+				"Say 'contract status' to hear the status of any existing contracts, " +
+				"and for the option to receive a new contract card.<br><br>" +
+				"Say 'report' to get a report of your closed contracts to date.";
 	}	
 	
 	
@@ -343,7 +343,73 @@ code
 }
 dilend
 
+dilbegin cleanup();
+external 
+	stringlist allies@bounty();
+var
+	friends : stringlist;
+	basemobs : stringlist;
+	roomlist : stringlist;
+	i : integer;
+	u : unitptr;
+code
+{
+:init:
+	friends := allies();
+	basemobs := {"historian2","shopkeep2","jeweler2","blacksmith2","hunter2","necromancer2","summoner2","guide2"};
+	roomlist := {"entry_room2","bounty_12","bounty_h2","shop2","smithy2","jewels2","contracts2",
+	"shrine2","sanctum2","sanctum_12","sanc_he2","library2","sanc_hw2","stairwell2",
+	"stairs2","bottom2","faces22","faces222","crypt2","cave2","circle2"};
+:start:
+
+	i := 0;
+	log("Cleanup on Isle 9!");
+	while(i < length(friends))
+	{
+		:loop:
+		u := findsymbolic(friends.[i]+"@bounty");
+		if(u)
+		{
+			log("destroying: "+u.name);
+			destroy(u);
+			goto loop;
+		}
+		i := i + 1;
+	}
+	i := 0;
+	while(i < length(basemobs))
+	{
+		:loop2:
+		u := findsymbolic(basemobs.[i]+"@bounty");
+		if(u)
+		{
+			log("destroying: "+u.name);
+			destroy(u);
+			goto loop2;
+		}
+		i := i + 1;
+	}
+	i := 0;
+	while(i < length(roomlist))
+	{
+		:loop3:
+		u := findsymbolic(roomlist.[i]+"@bounty");
+		if(u.inside)
+		{
+			log("destroying: "+u.inside.name);
+			destroy(u.inside);
+			goto loop3;
+		}
+		i := i + 1;
+	}
+	if(dilfind("qhistorian3@bounty",findsymbolic("library2@bounty")))
+        i := dildestroy("qhistorian3@bounty",findsymbolic("library2@bounty"));
+}
+dilend
+
 dilbegin corpse_move(room_to : string);
+external
+	cleanup@bounty();
 var
 
   room_pt   :  unitptr;
@@ -352,9 +418,10 @@ var
   corpse    :  string;
   temp : unitptr;
 code{
-	
-	heartbeat := 5 * PULSE_SEC;
 
+:init: 
+	heartbeat := 5 * PULSE_SEC;
+	
 :start:
 	wait(SFB_TICK, TRUE);
 	item := self.inside;
@@ -369,6 +436,7 @@ code{
 			act("A giant vortex opens up and sucks $1n into it!", A_SOMEONE, item, null, null, TO_REST);
 			link(item, room_pt);
 			act("A giant vortex opens up, dumping $1n into the room!", A_SOMEONE, item, null, null, TO_REST);
+			cleanup();
 		}
 		item:=temp;
 	}
@@ -385,7 +453,7 @@ code
 {
 :start:
 	heartbeat := PULSE_SEC*4;
-	wait(SFB_DONE, command("say") and ("repair" in argument) and (BLACKSMITH_COMPLETE in activator.quests));
+	wait(SFB_DONE, command("say") and ("repair" in argument) and ((BLACKSMITH_COMPLETE in activator.quests) or (JOIN_COMPLETE in activator.quests)));
 	
 	pc := activator;
 	secure(pc, donezo);
@@ -449,13 +517,20 @@ code
 		wait(SFB_DONE, command("nod") or command("shake") and (activator == pc));
 		if(command("nod"))
 		{
-			exec("emote brings the "+item.name+" to an anvil, and begins hammering.",self);
-			wait(SFB_TICK, command(CMD_AUTO_TICK));
-			exec("emote looks at the "+item.name+", makes a few more careful strikes, and nods approvingly.",self);
-			item.hp := item.max_hp;
-			pc.quests.[BLACKSMITH_COMPLETE].descr := itoa(atoi(pc.quests.[BLACKSMITH_COMPLETE].descr) - i);
-			wait(SFB_TICK, command(CMD_AUTO_TICK));
-			exec("say Here you are, all fixed up.",self);
+			if(item.hp >= 50)
+			{
+				exec("emote brings the "+item.name+" to an anvil, and begins hammering.",self);
+				wait(SFB_TICK, command(CMD_AUTO_TICK));
+				exec("emote looks at the "+item.name+", makes a few more careful strikes, and nods approvingly.",self);
+				item.hp := item.max_hp;
+				pc.quests.[BLACKSMITH_COMPLETE].descr := itoa(atoi(pc.quests.[BLACKSMITH_COMPLETE].descr) - i);
+				wait(SFB_TICK, command(CMD_AUTO_TICK));
+				exec("say Here you are, all fixed up.",self);
+			}
+			else
+			{
+				exec("say I'm sorry "+pc.name+", the damage to your "+item.name+" is too severe even for me.",self);
+			}
 		}
 		else if(command("shake"))
 		{
@@ -483,7 +558,7 @@ var
 code
 {
 :start:
-	wait(SFB_DONE, command("give") and (BLACKSMITH_COMPLETE in activator.quests) and (target == self));
+	wait(SFB_DONE, command("give") and ((BLACKSMITH_COMPLETE in activator.quests) or (JOIN_COMPLETE in activator.quests)) and (target == self));
 	
 	pc := activator;
 	secure(pc, donezo);
@@ -492,7 +567,7 @@ code
 
 	exdp := BLACKSMITH_COMPLETE in pc.quests;
 	
-	if((item.type == 8) and ((item.value[0] == 4) or (item.value[0] == 3)))
+	if((item.objecttype == 9) and ((item.value[0] == 4) or (item.value[0] == 3)))
 	{
 		if(dilfind("quest_restrict@function",item) or dilfind("nquest_restrict@function",item) or dilfind("ply_restrict@function",item))
 		{
@@ -509,6 +584,11 @@ code
 		exec("emote tosses the "+item.title+" into one of the giant smelters.", self);
 		unsecure(item);
 		destroy(item);
+	}
+	else
+	{
+		exec("say Thanks for the "+item.title+" "+pc.name+", but I can't melt this down.", self);
+		goto yikes;
 	}
 :donezo:
 	unsecure(item);
@@ -1113,29 +1193,29 @@ code
 	if (JEWELER_ONGOING in pc.quests)
 	{
 		if("$jeweler_pearl" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_pearl"].descr+" of 12 pearls.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_pearl"].descr+" of 10 pearls.",self);
 		if("$jeweler_ruby" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_ruby"].descr+" of 12 rubies.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_ruby"].descr+" of 10 rubies.",self);
 		if("$jeweler_moonstone" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_moonstone"].descr+" of 12 moonstones.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_moonstone"].descr+" of 10 moonstones.",self);
 		if("$jeweler_jade" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_jade"].descr+" of 12 jades.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_jade"].descr+" of 10 jades.",self);
 		if("$jeweler_diamond" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_diamond"].descr+" of 12 diamonds.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_diamond"].descr+" of 10 diamonds.",self);
 		if("$jeweler_bloodstone" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_bloodstone"].descr+" of 12 bloodstones.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_bloodstone"].descr+" of 10 bloodstones.",self);
 		if("$jeweler_emerald" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_emerald"].descr+" of 12 emeralds.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_emerald"].descr+" of 10 emeralds.",self);
 		if("$jeweler_onyx" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_onyx"].descr+" of 12 onyx.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_onyx"].descr+" of 10 onyx.",self);
 		if("$jeweler_sapphire" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_sapphire"].descr+" of 12 sapphires.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_sapphire"].descr+" of 10 sapphires.",self);
 		if("$jeweler_jasper" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_jasper"].descr+" of 12 jaspers.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_jasper"].descr+" of 10 jaspers.",self);
 		if("$jeweler_agate" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_agate"].descr+" of 12 agates.",self);
+			exec("say You have collected "+pc.quests.["$jeweler_agate"].descr+" of 10 agates.",self);
 		if("$jeweler_opal" in pc.quests)
-			exec("say You have collected "+pc.quests.["$jeweler_opal"].descr+" of 12 opals.",self);		
+			exec("say You have collected "+pc.quests.["$jeweler_opal"].descr+" of 10 opals.",self);		
 	}
 	else if (JEWELER_COMPLETE in pc.quests)
 	{
@@ -1479,7 +1559,7 @@ code
 }
 dilend
 
-dilbegin tome();
+dilbegin tome_dil();
 var
 	err : integer;
 	buf : string;
@@ -1557,6 +1637,7 @@ var
 	sltime : stringlist;
 	col : string;
 	col2 : string;
+	streak : string;
 code
 {
 	slbty := {"$daily_target","$monthly_target","$bonus_target"};
@@ -1597,6 +1678,9 @@ code
 			}
 			which := replace("$","",slbty.[i]);
 			which := replace("_target","",which);
+			streak := pc.extra.["$"+which+"_streak"].descr;
+			if(not(streak))
+				streak := "0";
 			targ := findsymbolic(slt.[1]);
 			sdate := slt.[0];
 			if(targ != null)
@@ -1609,6 +1693,7 @@ code
 				"<br><div class='"+col2+"'>Target Alias: </div><div class='"+col+"'>" + targ.title +  "</div>" +
 				"<br><div class='"+col2+"'>Target Description: </div><div class='"+col+"'> " + targ.outside_descr + "</div>" +
 				"<br><div class='"+col2+"'>Contract Status: </div><div class='"+col+"'> " + cstat + "</div>" +
+				"<br><div class='"+col2+"'>Current Streak: </div><div class='"+col2+"'> " + streak + "</div>" +
 				"<br><div class='"+col+"'>-------------------------------------------------------</div><br><br>";
 			}
 			else
@@ -1623,6 +1708,7 @@ code
 				"<br><div class='"+col2+"'>Target Alias: </div><div class='"+col+"'>" + "error in target acquisition" +  "</div>" +
 				"<br><div class='"+col2+"'>Target Description: </div><div class='"+col+"'> " + "error in target acquisition" + "</div>" +
 				"<br><div class='"+col2+"'>Contract Status: </div><div class='"+col+"'> " + cstat + "</div>" +
+				"<br><div class='"+col2+"'>Current Streak: </div><div class='"+col2+"'> " + streak + "</div>" +
 				"<br><div class='"+col+"'>-------------------------------------------------------</div><br><br>";
 			}
 		}
@@ -1926,7 +2012,7 @@ code
 	
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	
-	if(dilfind("qhistorian3@bounty", findsymbolic("tome@bounty")))
+	if(dilfind("qhistorian3@bounty", self.outside))
 	{
 		exec("say "+pc.name+", what you have accomplished is a feat in and of itself.",self);
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -1947,8 +2033,11 @@ code
 	exec("say I hope we all live to see your name in the tom...", self);
 	
 	exec("say No! It can't be... They're here!!", self);
-	dilcopy("qhistorian3@bounty("+pc.name+")", findsymbolic("tome@bounty"));
 
+	act ("<div class='cpr'>A flaming red portal appears above you head!</div>", A_ALWAYS, pc, null, null, TO_ALL);
+	act ("<div class='cpy'>There is a sudden flash!</div>", A_SOMEONE, pc, null, null, TO_CHAR);
+	act ("<div class='cpy'>$1n disappears in a flash!</div>", A_SOMEONE, pc, null, null, TO_REST);
+	dilcopy("qhistorian3@bounty("+pc.name+")", self.outside);
 	
 :donezo:
 
@@ -1965,10 +2054,10 @@ code
 }
 dilend
 
-dilbegin qhistorian3(pc : unitptr);
+dilbegin qhistorian3(pcname : string);
 var
 	i : integer;
-	u : unitptr;
+	u,pc,item : unitptr;
 	ml1, ml2, ml3 : stringlist;
 	rl1 : stringlist;
 	
@@ -2009,13 +2098,40 @@ code
 	heartbeat := PULSE_SEC * 300;
 :start:
 	
+	log("The final battle is here!");
+	foreach(UNIT_ST_PC,u)
+	{
+		if(u.name == pcname)
+		{
+			pc := u;
+			log("findunit found: "+pc.name);
+		}
+	}
+	link(pc,findsymbolic("library2@bounty"));
+	act ("It suddenly seems as if everything you knew has changed. The sounds of chaos echo down the hallway.", A_SOMEONE, pc, null, null, TO_CHAR);	
 	i := 0;
 	while (i < length(ml1))
 	{
+		log("Loading Enemies! i == "+itoa(i));
 		u := load(ml1.[i]);
 		link(u,findroom(rl1.[i]));
+		if(u.symname == "guard@bounty")
+		{
+		act ("<div class='cpr'>A flaming red portal appears above you head!</div>", A_ALWAYS, u, null, null, TO_ALL);
+		act ("<div class='cpr'>$1n steps through the portal, and looks around for a fight.</div>", A_SOMEONE, u, null, null, TO_ALL);
+			item := load("spear0@midgaard");
+			link(item,u);
+			item := load("lth_pants1@midgaard");
+			link(item,u);
+			item := load("lth_jerkin1@midgaard");
+			link(item,u);
+			item := load("lth_sleeves1@midgaard");
+			link(item,u);
+			exec("wear all",u);
+		}
 		i := i + 1;
 	}
+	log("First round loading complete!");
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	i := 0;
 	while (i < length(ml2))
@@ -2024,7 +2140,19 @@ code
 		link(u,findroom(rl1.[i]));
 		i := i + 1;
 	}
-	
+:donezo:
+	unsecure(pc);
+	quit;
+}
+dilend
+
+dilbegin stringlist allies();
+var
+	friends : stringlist;
+code
+{
+	friends := {"guard@bounty","snake@bounty","nightmare@bounty","guard_d@bounty"};
+	return(friends);
 }
 dilend
 
@@ -2033,34 +2161,38 @@ external
  integer walk_room@function (s:string,i:integer);
 
 var
-tf:integer;
+	tf	:	integer;
+	roomlist : stringlist;
 code
 {
-   on_activation((self.position <= POSITION_SLEEPING) or
-		 (self.position == POSITION_FIGHTING), skip);
+	roomlist := {"shop2@bounty","smithy2@bounty","jewels2@bounty","contracts2@bounty","shrine2@bounty",
+	"sanctum_12@bounty","library2@bounty","circle2@bounty","crypt2@bounty"};
+	heartbeat := PULSE_SEC*10;
 
-   :start:
-   tf:=walk_room@function("shop2@bounty",4);
-   tf:=walk_room@function("smithy2@bounty",4);
-   tf:=walk_room@function("jewels2@bounty",4);
-   tf:=walk_room@function("contracts2@bounty",4);
-   tf:=walk_room@function("shrine2@bounty",4);
-   tf:=walk_room@function("sanctum_12@bounty",4);
-   tf:=walk_room@function("library2@bounty",4);
-   tf:=walk_room@function("circle2@bounty",4);
-   tf:=walk_room@function("crypt2@bounty",4);
-   goto start;
+:start:
+
+	if((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING))
+		goto holdup;
+
+	tf := walk_room@function(roomlist.[rnd(0,length(roomlist)-1)],6);
+	
+:holdup:
+
+	wait(SFB_TICK,command(CMD_AUTO_TICK));
+	goto start;
 }
 dilend
 
 dilbegin guard_agg();
+external
+	stringlist allies@bounty();
 var
 	u : unitptr;
-	allies : stringlist;
+	friends : stringlist;
 code
 {
-	allies := {"guard@bounty","snake@bounty","nightmare@bounty","guard_d@bounty"};
-	heartbeat := PULSE_SEC*5;
+	friends := allies();
+	heartbeat := PULSE_SEC*2;
 :start:
 	wait(SFB_TICK, command(CMD_AUTO_TICK));
 	
@@ -2068,11 +2200,34 @@ code
 	{
 		foreach(UNIT_ST_PC|UNIT_ST_NPC, u)
 		{
-			if(not(u.symname in allies))
+			if(not(u.symname in friends))
 				exec("kill "+u.name,self);
 			goto start;
 		}
 	}
+	goto start;
+}
+dilend
+
+dilbegin assistem();
+code
+{
+	wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+	exec("say Hurry "+activator.name+", the battle is at hand! I'll join you.",self);
+	exec("follow "+activator.name,self);
+}
+dilend
+
+dilbegin helpem();
+var
+	pc : unitptr;
+code
+{
+:start:
+	wait(SFB_COM, command(CMD_AUTO_COMBAT) and (self.position != POSITION_FIGHTING));
+	foreach(UNIT_ST_PC,pc)
+		exec("assist "+pc.name, self);
+	goto start;
 }
 dilend
 
@@ -2162,7 +2317,7 @@ code
 
 	exdp := BLACKSMITH_ONGOING in pc.quests;
 	
-	if((item.type == 8) and ((item.value[0] == 4) or (item.value[0] == 3)) and (atoi(exdp.descr) < 80000))
+	if((item.objecttype == 9) and ((item.value[0] == 4) or (item.value[0] == 3)) and (atoi(exdp.descr) < 80000))
 	{
 		if(dilfind("quest_restrict@function",item) or dilfind("nquest_restrict@function",item) or dilfind("ply_restrict@function",item))
 		{
@@ -2634,7 +2789,7 @@ code
 :start:
 
 	// package deliver streak - 100
-	// 12 each of birthstones
+	// 10 each of birthstones
 	
 	// pearl_stone@blcastle (pearl)
 	// red1_stone@blcastle (ruby)
@@ -2716,7 +2871,7 @@ var
 	qty : integer;
 code
 {	// package deliver streak - 100
-	// 12 each of birthstones
+	// 10 each of birthstones
 	
 	// pearl_stone@blcastle (pearl)
 	// red1_stone@blcastle (ruby)
@@ -2745,180 +2900,180 @@ code
 		if(not("$jeweler_pearl" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_pearl"},"0");
 		qty := atoi(pc.quests.["$jeweler_pearl"].descr);
-		if(qty == 12)
+		if(qty == 10)
 			goto noneed;
-		if(qty == 11)
+		if(qty == 9)
 			addstring(pc.quests.[JEWELER_ONGOING].names, "pearl");
 		pc.quests.["$jeweler_pearl"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say A fine specimen of a pearl!", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}
 	else if((item.symname == "red1_stone@blcastle") and (not ("ruby" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_ruby" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_ruby"},"0");
 		qty := atoi(pc.quests.["$jeweler_ruby"].descr);
-		if(qty == 12)
+		if(qty == 10)
 			goto noneed;
-		if(qty == 11)
+		if(qty == 9)
 			addstring(pc.quests.[JEWELER_ONGOING].names, "ruby");
 		pc.quests.["$jeweler_ruby"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say The red of this ruby is stunning, is it not?", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}
 	else if((item.symname == "purple_stone@blcastle") and (not ("moonstone" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_moonstone" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_moonstone"},"0");
 		qty := atoi(pc.quests.["$jeweler_moonstone"].descr);
-		if(qty == 12)
+		if(qty == 10)
 			goto noneed;
-		if(qty == 11)
+		if(qty == 9)
 			addstring(pc.quests.[JEWELER_ONGOING].names, "moonstone");
 		pc.quests.["$jeweler_moonstone"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say A truly unique stone, the moonstone.", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}
 	else if((item.symname == "red_stone@blcastle") and (not ("jade" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_jade" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_jade"},"0");
 		qty := atoi(pc.quests.["$jeweler_jade"].descr);
-		if(qty == 12)
+		if(qty == 10)
 			goto noneed;
-		if(qty == 11)
+		if(qty == 9)
 			addstring(pc.quests.[JEWELER_ONGOING].names, "jade");
 		pc.quests.["$jeweler_jade"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say Marvelous green in this Jade, "+pc.name+".", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}
 	else if((item.symname == "cless_stone@blcastle") and (not ("diamond" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_diamond" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_diamond"},"0");
 		qty := atoi(pc.quests.["$jeweler_diamond"].descr);
-		if(qty == 12)
+		if(qty == 10)
 			goto noneed;
-		if(qty == 11)
+		if(qty == 9)
 			addstring(pc.quests.[JEWELER_ONGOING].names, "diamond");
 		pc.quests.["$jeweler_diamond"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say There is no other stone like a diamond, "+pc.name+".", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}
 	else if((item.symname == "lblue_stone@blcastle") and (not ("bloodstone" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_bloodstone" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_bloodstone"},"0");
 		qty := atoi(pc.quests.["$jeweler_bloodstone"].descr);
-		if(qty == 12)
+		if(qty == 10)
 			goto noneed;
-		if(qty == 11)
+		if(qty == 9)
 			addstring(pc.quests.[JEWELER_ONGOING].names, "bloodstone");
 		pc.quests.["$jeweler_bloodstone"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say The contrast of colors in this bloodstone is catching, is it not "+pc.name+"?", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}
 	else if((item.symname == "emerald_stone@blcastle") and (not ("emerald" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_emerald" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_emerald"},"0");
 		qty := atoi(pc.quests.["$jeweler_emerald"].descr);
-		if(qty == 12)
+		if(qty == 10)
 			goto noneed;
-		if(qty == 11)
+		if(qty == 9)
 			addstring(pc.quests.[JEWELER_ONGOING].names, "emerald");
 		pc.quests.["$jeweler_emerald"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say A gemstone quality emerald. This will be valued.", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}
 	else if((item.symname == "green_stone@blcastle") and (not ("onyx" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_onyx" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_onyx"},"0");
 		qty := atoi(pc.quests.["$jeweler_onyx"].descr);
-		if(qty == 12)
+		if(qty == 10)
 			goto noneed;
-		if(qty == 11)
+		if(qty == 9)
 			addstring(pc.quests.[JEWELER_ONGOING].names, "onyx");
 		pc.quests.["$jeweler_onyx"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say Outstanding contrast in the banding on this onyx "+pc.name+".", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}
 	else if((item.symname == "blue_stone@blcastle") and (not ("sapphire" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_sapphire" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_sapphire"},"0");
 		qty := atoi(pc.quests.["$jeweler_sapphire"].descr);
-		if(qty == 12)
+		if(qty == 10)
 			goto noneed;
-		if(qty == 11)
+		if(qty == 9)
 			addstring(pc.quests.[JEWELER_ONGOING].names, "sapphire");
 		pc.quests.["$jeweler_sapphire"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say A sapphire fit for a queen!", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}
 	else if((item.symname == "mblue_stone@blcastle") and (not ("jasper" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_jasper" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_jasper"},"0");
 		qty := atoi(pc.quests.["$jeweler_jasper"].descr);
-		if(qty == 12)
+		if(qty == 10)
 			goto noneed;
-		if(qty == 11)
+		if(qty == 9)
 			addstring(pc.quests.[JEWELER_ONGOING].names, "jasper");
 		pc.quests.["$jeweler_jasper"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say I've always loved the uniqueness of jasper carvings.", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}
 	else if((item.symname == "yellow_stone@blcastle") and (not ("agate" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_agate" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_agate"},"0");
 		qty := atoi(pc.quests.["$jeweler_agate"].descr);
-		if(qty == 12)
+		if(qty == 10)
 			goto noneed;
-		if(qty == 11)
+		if(qty == 9)
 			addstring(pc.quests.[JEWELER_ONGOING].names, "agate");
 		pc.quests.["$jeweler_agate"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say Agate seems as if it could hardly be made by nature, dont you think "+pc.name+"?", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}
 	else if((item.symname == "pink_stone@blcastle") and (not ("opal" in pc.quests.[JEWELER_ONGOING].names)))
 	{
 		if(not("$jeweler_opal" in pc.quests))	
 			addextra(pc.quests,{"$jeweler_opal"},"0");
 		qty := atoi(pc.quests.["$jeweler_opal"].descr);
-		if(qty == 12)
+		if(qty == 10)
 			goto noneed;
-		if(qty == 11)
+		if(qty == 9)
 			addstring(pc.quests.[JEWELER_ONGOING].names, "opal");
 		pc.quests.["$jeweler_opal"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
 		exec("say This opal is an iridescent wonder!", self);
-		exec("say That makes "+itoa(qty + 1)+" of the 12 I need.", self);
+		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}	
 	else
 	{
@@ -2989,7 +3144,7 @@ code
 {
 	heartbeat := PULSE_SEC*4;
 :start:
-	// life_crystal1@arma - 50
+	// life_crystal1@arma - 40
 	// fake_sash@mordenkin
 	// maleus@isledead
 	// skin of shadow@soullake
@@ -3003,7 +3158,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say Well then "+pc.name+", speak.",self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-    exec("say You didnt seem to find that locked door a detterant, why then sit here quietly and waste my time?", self);	
+    exec("say You didnt seem to find that locked door a deterrent, why then sit here quietly and waste my time?", self);	
 	
 	wait(SFB_CMD, (command("say") and ("summoner" in argument)));
 	
@@ -3058,7 +3213,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say The study of these items is critical to my work.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say I'd think that 50 of them will suffice.", self);
+	exec("say I'd think that 40 of them will suffice.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say I believe you have your work cut out for you. Go now.", self);
 	addextra(pc.quests, {NECRO_ONGOING}, "");
@@ -3081,7 +3236,7 @@ var
 	i : integer;
 code
 {
-	// life_crystal1@arma - 50
+	// life_crystal1@arma - 40
 	// fake_sash@mordenkin
 	// maleus@isledead
 	// skin of shadow@soullake
@@ -3097,17 +3252,14 @@ code
 	item := medium;
 	secure(item,donezo);
 	
-	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	
-	
 	if((item.symname == "life_crystal1@arma") and (not ("crystals" in pc.quests.[NECRO_ONGOING].names)))
 	{
 		if(not("$nec_lc" in pc.quests))	
 			addextra(pc.quests,{"$nec_lc"},"0");
 		qty := atoi(pc.quests.["$nec_lc"].descr);
-		if(qty == 50)
+		if(qty == 40)
 			goto noneed;
-		if(qty == 49)
+		if(qty == 39)
 			addstring(pc.quests.[NECRO_ONGOING].names, "crystals");
 		pc.quests.["$nec_lc"].descr := itoa(qty + 1);
 		pc.quests.[NECRO_ONGOING].descr := itoa(qty + 1);
@@ -3118,7 +3270,7 @@ code
 			exec("emote purposefully tucks "+item.title+" into the pocket of his sash.", self);
 		else
 			exec("emote pats his chest as if looking for a pocket, then dejectedly tucks "+item.title+" into his robes.", self);
-		exec("say This is "+itoa(qty + 1)+" of the 50 I need.", self);
+		exec("say This is "+itoa(qty + 1)+" of the 40 I need.", self);
 	}	
 	else if((item.symname == "fake_sash@mordenkin") and (not ("sash" in pc.quests.[NECRO_ONGOING].names)))
 	{
@@ -5116,7 +5268,7 @@ code
 			if((atoi(items.[i+2]) / r) <= ibp)
 			{
 				ibp := add_bp(((atoi(items.[i+2]) / r) * (-1)),pc);
-				uitem := load(items.[i]+"@bounty");
+				uitem := load(items.[i]);
 				link(uitem, pc);
 				exec("say Here is your "+uitem.name+" "+pc.name+"!",self);
 			}
@@ -6058,24 +6210,25 @@ alignment 0
 M_AVG_DWARF(100,SEX_MALE)
 position POSITION_STANDING 
 
-dilcopy shop@bounty({"tablet","Bounty Hunters Tablet","1500",
-						"full_restore","Potion of Full Restoration","600",
-						"strong_restore","Potent Potion of Restoration","300",
-						"half_restore","Potion of Restoration","150",
-						"full_mana","Potion of Full Mana","200",
-						"strong_mana","Potent Potion of Mana","100",
-						"half_mana","Potion of Mana","50",
-						"full_end","Potion of Full Endurance","200",
-						"strong_end","Potent Potion of Endurance","100",
-						"half_end","Potion of Endurance","50",
-						"full_heal","Potion of Full Healing","200",
-						"strong_heal","Potent Potion of Healing","100",
-						"half_heal","Potion of Healing","50",
-						"mulligan","Contract Breaking Note","800",
-						"dz_hint","Daily Hint - Zone","400",
-						"dc_hint","Daily Hint - Continent","200",
-						"mz_hint","Monthly Hint - Zone","400",
-						"mc_hint","Monthly Hint - Continent","200"}, {""});
+dilcopy shop@bounty({"tablet@bounty","Bounty Hunters Tablet","1500",
+						"full_restore@bounty","Potion of Full Restoration","600",
+						"strong_restore@bounty","Potent Potion of Restoration","300",
+						"half_restore@bounty","Potion of Restoration","150",
+						"full_mana@bounty","Potion of Full Mana","200",
+						"strong_mana@bounty","Potent Potion of Mana","100",
+						"half_mana@bounty","Potion of Mana","50",
+						"full_end@bounty","Potion of Full Endurance","200",
+						"strong_end@bounty","Potent Potion of Endurance","100",
+						"half_end@bounty","Potion of Endurance","50",
+						"full_heal@bounty","Potion of Full Healing","200",
+						"strong_heal@bounty","Potent Potion of Healing","100",
+						"half_heal@bounty","Potion of Healing","50",
+						"mulligan@bounty","Contract Breaking Note","800",
+						"dz_hint@bounty","Daily Hint - Zone","400",
+						"dc_hint@bounty","Daily Hint - Continent","200",
+						"mz_hint@bounty","Monthly Hint - Zone","400",
+						"mc_hint@bounty","Monthly Hint - Continent","200",
+						"tuborg_refill@treasure","a bottle of Royal Knight's Ale","10000"}, {""});
 
 end 
 
@@ -6138,16 +6291,16 @@ dilcopy report@bounty();
 dilcopy craft_s@bounty();
 dilcopy repair@bounty();
 dilcopy repair2@bounty();
-dilcopy shop@bounty({"str_helm","Bounty Hunters Helmet","1500",
-						"str_plate","Bounty Hunters Plate","1500",
-						"str_back","Bounty Hunters Back Plate","1500",
-						"str_arms","Bounty Hunters Sleeves","1500",
-						"str_hands","Bounty Hunters Gauntlets","1500",
-						"str_legs","Bounty Hunters Leggings","1500",
-						"str_boots","Bounty Hunters Boots","1500",
-						"str_sword","Bounty Hunters Long Sword","1500",
-						"str_shield","Bounty Hunters Shield","1500",
-						"str_hammer","Bounty Hunters War Mattock","2000"},
+dilcopy shop@bounty({"str_helm@bounty","Bounty Hunters Helmet","1500",
+						"str_plate@bounty","Bounty Hunters Plate","1500",
+						"str_back@bounty","Bounty Hunters Back Plate","1500",
+						"str_arms@bounty","Bounty Hunters Sleeves","1500",
+						"str_hands@bounty","Bounty Hunters Gauntlets","1500",
+						"str_legs@bounty","Bounty Hunters Leggings","1500",
+						"str_boots@bounty","Bounty Hunters Boots","1500",
+						"str_sword@bounty","Bounty Hunters Long Sword","1500",
+						"str_shield@bounty","Bounty Hunters Shield","1500",
+						"str_hammer@bounty","Bounty Hunters War Mattock","2000"},
 						{JOIN_COMPLETE,BLACKSMITH_COMPLETE});
 
 end 
@@ -6165,7 +6318,6 @@ of their work."
 alignment 0
 M_AVG_HALF_ELF(100,SEX_FEMALE)
 position POSITION_STANDING 
-exp 400
 
 dilcopy delivery@bounty();
 dilcopy qjeweler@bounty();
@@ -6187,23 +6339,22 @@ in unknown rituals and summonings on behalf of The Guild."
 alignment 0
 M_DARK_ELF_MAGE_MIND(100, SEX_FEMALE, "cone of shards")
 position POSITION_STANDING 
-exp 400
 
 dilcopy qsummoner@bounty();
 dilcopy qsummoner2@bounty();
 dilcopy qsummoner3@bounty();
 dilcopy report@bounty();
 dilcopy craft_m@bounty();
-dilcopy shop@bounty({"mag_helm","Bounty Hunters Enchanted Helmet","1500",
-						"mag_plate","Bounty Hunters Enchanted Plate","1500",
-						"mag_back","Bounty Hunters Enchanted Back Plate","1500",
-						"mag_arms","Bounty Hunters Enchanted Sleeves","1500",
-						"mag_hands","Bounty Hunters Enchanted Gauntlets","1500",
-						"mag_legs","Bounty Hunters Enchanted Leggings","1500",
-						"mag_boots","Bounty Hunters Enchanted Boots","1500",
-						"mag_sword","Bounty Hunters Enchanted Short Sword","1500",
-						"mag_shield","Bounty Hunters Enchanted Shield","1500",
-						"mag_staff","Bounty Hunters Enchanted Quarterstaff","2000"},
+dilcopy shop@bounty({"mag_helm@bounty","Bounty Hunters Enchanted Helmet","1500",
+						"mag_plate@bounty","Bounty Hunters Enchanted Plate","1500",
+						"mag_back@bounty","Bounty Hunters Enchanted Back Plate","1500",
+						"mag_arms@bounty","Bounty Hunters Enchanted Sleeves","1500",
+						"mag_hands@bounty","Bounty Hunters Enchanted Gauntlets","1500",
+						"mag_legs@bounty","Bounty Hunters Enchanted Leggings","1500",
+						"mag_boots@bounty","Bounty Hunters Enchanted Boots","1500",
+						"mag_sword@bounty","Bounty Hunters Enchanted Short Sword","1500",
+						"mag_shield@bounty","Bounty Hunters Enchanted Shield","1500",
+						"mag_staff@bounty","Bounty Hunters Enchanted Quarterstaff","2000"},
 						{JOIN_COMPLETE,SUMMONER_COMPLETE,SUMMONER_COMPLETEISH});
 
 end 
@@ -6220,23 +6371,22 @@ at him, you note that there is a startling hollowness to his eyes."
 alignment 0
 M_KINGRAITH_CLERIC_SWORD(100, SEX_MALE, "deathly grasp","")
 position POSITION_STANDING 
-exp 400
 
 dilcopy qnecro@bounty();
 dilcopy qnecro2@bounty();
 dilcopy qnecro3@bounty();
 dilcopy report@bounty();
 dilcopy craft_d@bounty();
-dilcopy shop@bounty({"div_helm","Bounty Hunters Divine Helmet","1500",
-						"div_plate","Bounty Hunters Divine Plate","1500",
-						"div_back","Bounty Hunters Divine Back Plate","1500",
-						"div_arms","Bounty Hunters Divine Sleeves","1500",
-						"div_hands","Bounty Hunters Divine Gauntlets","1500",
-						"div_legs","Bounty Hunters Divine Leggings","1500",
-						"div_boots","Bounty Hunters Divine Boots","1500",
-						"div_mace","Bounty Hunters Divine Mace","1500",
-						"div_shield","Bounty Hunters Divine Shield","1500",
-						"div_maul","Bounty Hunters Divine War Maul","2000"},
+dilcopy shop@bounty({"div_helm@bounty","Bounty Hunters Divine Helmet","1500",
+						"div_plate@bounty","Bounty Hunters Divine Plate","1500",
+						"div_back@bounty","Bounty Hunters Divine Back Plate","1500",
+						"div_arms@bounty","Bounty Hunters Divine Sleeves","1500",
+						"div_hands@bounty","Bounty Hunters Divine Gauntlets","1500",
+						"div_legs@bounty","Bounty Hunters Divine Leggings","1500",
+						"div_boots@bounty","Bounty Hunters Divine Boots","1500",
+						"div_mace@bounty","Bounty Hunters Divine Mace","1500",
+						"div_shield@bounty","Bounty Hunters Divine Shield","1500",
+						"div_maul@bounty","Bounty Hunters Divine War Maul","2000"},
 						{JOIN_COMPLETE,NECRO_COMPLETE,NECRO_COMPLETEISH});
 
 end 
@@ -6257,8 +6407,10 @@ extra{}
 appears to be the man who may offer a contract if you but ask." 
 
 alignment -1000
-M_AVG_HUMAN(100,SEX_MALE)
+M_AVG_HUMAN(80,SEX_MALE)
 position POSITION_STANDING 
+dilcopy helpem@bounty();
+dilcopy assistem@bounty();
 
 end 
 
@@ -6271,8 +6423,10 @@ extra{}
 seems to be rather friendly. Simply ask for his list to select from the guild wares." 
 
 alignment 0
-M_AVG_DWARF(100,SEX_MALE)
-position POSITION_STANDING 
+M_AVG_DWARF(70,SEX_MALE)
+position POSITION_STANDING  
+dilcopy helpem@bounty();
+dilcopy assistem@bounty();
 
 end 
 
@@ -6285,8 +6439,10 @@ extra{}
 as you gaze upon her. It would be wise to choose your words carefully." 
 
 alignment -1000
-M_AVG_ELF(100,SEX_FEMALE)
+M_AVG_ELF(80,SEX_FEMALE)
 position POSITION_STANDING 
+dilcopy helpem@bounty();
+dilcopy assistem@bounty();
 
 end 
 
@@ -6301,8 +6457,10 @@ about him, except that he has served the Hunters Guild longer than any
 other living beings." 
 
 alignment 0
-M_UNICORN_XLARGE(100,SEX_MALE)
+M_UNICORN_XLARGE(70,SEX_MALE)
 position POSITION_STANDING 
+dilcopy helpem@bounty();
+dilcopy assistem@bounty();
 
 end 
 
@@ -6318,8 +6476,10 @@ serve the Hunters. Ask about the opportunity to leverage his weapons
 on a spree." 
 
 alignment 0
-M_GROLL_WARRIOR_AXE(100,SEX_MALE)
+M_GROLL_WARRIOR_AXE(90,SEX_MALE)
 position POSITION_STANDING 
+dilcopy helpem@bounty();
+dilcopy assistem@bounty();
 
 end 
 
@@ -6334,9 +6494,10 @@ the payments which work to lubricate hands and minds in favor
 of their work." 
 
 alignment 0
-M_AVG_HALF_ELF(100,SEX_FEMALE)
+M_AVG_HALF_ELF(90,SEX_FEMALE)
 position POSITION_STANDING 
-exp 400
+dilcopy helpem@bounty();
+dilcopy assistem@bounty();
 
 end 
 
@@ -6350,9 +6511,10 @@ of her deeply cowled robes. She has immense power, and participates
 in unknown rituals and summonings on behalf of The Guild." 
 
 alignment 0
-M_DARK_ELF_MAGE_MIND(100, SEX_FEMALE, "cone of shards")
+M_DARK_ELF_MAGE_MIND(90, SEX_FEMALE, "cone of shards")
 position POSITION_STANDING 
-exp 400
+dilcopy helpem@bounty();
+dilcopy assistem@bounty();
 
 end 
 
@@ -6366,9 +6528,10 @@ individual who looks at you from behind the scroll he is reading. As you glance
 at him, you note that there is a startling hollowness to his eyes." 
 
 alignment 0
-M_KINGRAITH_CLERIC_SWORD(100, SEX_MALE, "deathly grasp","")
+M_KINGRAITH_CLERIC_SWORD(90, SEX_MALE, "deathly grasp","")
 position POSITION_STANDING 
-exp 400
+dilcopy helpem@bounty();
+dilcopy assistem@bounty();
 
 end 
 
@@ -6380,12 +6543,11 @@ extra {}
 "A big, strong, helpful, trustworthy guard.  He looks as though he's keeping
 an eye on the townsfolk."
 exp 0
-M_HUMAN_WARRIOR_SWORD(57, SEX_MALE)   /* He shall use a polearm */
+M_HUMAN_WARRIOR_SWORD(82, SEX_MALE)   /* He shall use a polearm */
 alignment 400  /* Just above neutral */
 money 3 IRON_PIECE
 
-dilcopy blow_whistle@justice();
-dilcopy whistlisten@justice({"bounty"});
+
 dilcopy rescue@function("guard");
 dilcopy guard_agg@bounty();
 dilcopy patrol1@bounty();
@@ -6400,12 +6562,11 @@ extra {}
 "A twisted demonic version of a big, strong, helpful, trustworthy guard.  He looks as though he's keeping
 an eye on the townsfolk."
 exp 0
-M_HUMAN_WARRIOR_SWORD(87, SEX_MALE)   /* He shall use a polearm */
+M_HUMAN_WARRIOR_SWORD(97, SEX_MALE)   /* He shall use a polearm */
 alignment 400  /* Just above neutral */
 money 3 IRON_PIECE
 
-dilcopy blow_whistle@justice();
-dilcopy whistlisten@justice({"bounty"});
+
 dilcopy rescue@function("guard");
 dilcopy guard_agg@bounty();
 dilcopy patrol1@bounty();
@@ -6421,7 +6582,7 @@ extra{}
 "A massive demonic snake winds its across the ground."
 exp 0
 alignment -1000
-M_SNAKE_DEMON_XLARGE(90,SEX_MALE)
+M_SNAKE_DEMON_XLARGE(102,SEX_MALE)
 
 dilcopy guard_agg@bounty();
 
@@ -6436,7 +6597,7 @@ extra{}
 A beast truly capable of creating mayhem." 
 exp 0
 alignment -1000
-M_DEMON_GREATER_GODLY(120,SEX_MALE)
+M_DEMON_GREATER_GODLY(180,SEX_MALE)
 
 dilcopy guard_agg@bounty();
 
@@ -6542,7 +6703,7 @@ extra {}
 weight 1
 cost 1 IRON_PIECE
 
-dilcopy tome@bounty();
+dilcopy tome_dil@bounty();
 
 end
 
