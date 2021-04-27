@@ -52,7 +52,7 @@ char *str_list[50];
 int int_list[50];
 char empty_ref[] = {'\0', '\0'};
 int istemplate=1;
-char **tmplnames=NULL;
+char **tmplnames = NULL;
 char tzone[30], tname[30];
 
 CByteBuffer *vpBuf = &g_FileBuffer;
@@ -142,7 +142,7 @@ void warning(const char *str);
  * specifications ************************************
  */
 
-file		: { cur = NULL;} sections ENDMARK
+file		: { cur = NULL; tmplnames = create_namelist();  } sections ENDMARK
 		;
 sections	: zone_section uglykludge
 		;

@@ -358,6 +358,9 @@ int search_block(const char *oarg, const char **list, ubit1 exact)
     char arg[4096];
     register int i, l;
 
+    if (list == NULL)
+        return -1;
+
     /* Make into lower case, and get length of string */
     l = str_lower(oarg, arg, sizeof(arg));
 
