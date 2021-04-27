@@ -12122,7 +12122,7 @@ code
    :taunt:
    
 	self.endurance := self.endurance - 40;
-	if(end < 1)
+	if(self.endurance < 1) 
 	{
 		act("<div class='nodam_me'>You foolishly exhaust yourself attempting to taunt $3n!</div>",
 		A_SOMEONE, self, null, tgt, TO_CHAR);
