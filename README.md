@@ -90,6 +90,8 @@ I would appreciate help with:
 
 Prerequisites:
 * Install Docker Desktop
+* Increase the memory available to docker if the build cannot complete 
+  (docker Preferences->Resources->Advanced->Memory)
 
 ### Build the docker image (building the mud from source in the process)
 ```console
