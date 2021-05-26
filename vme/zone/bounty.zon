@@ -1308,8 +1308,25 @@ code
 	
 	total := pc.quests.["$nec_lc"].descr;
 	
-	exec("say You have collected  "+total+" of 50 rainbow crystals.",self);
+	exec("say You have collected  "+total+" of 40 rainbow crystals.",self);
 	
+	if("book" in pc.quests.[NECRO_ONGOING].names)
+		exec("say You have given the most evil book to ever grace the earth.",self);
+	else
+		exec("say I still require the most evil book to ever grace the earth.",self);
+	if("sash" in pc.quests.[NECRO_ONGOING].names)
+		exec("say You have given me a dark sash with a pocket.",self);
+	else
+		exec("say I still require a dark sash with a pocket.",self);
+	if("scythe" in pc.quests.[NECRO_ONGOING].names)
+		exec("say You have given me a weapon of blood and hate.",self);
+	else
+		exec("say I still require a weapon of blood and hate.",self);
+	if("skin" in pc.quests.[NECRO_ONGOING].names)
+		exec("say You have given me the skin of shadow.",self);
+	else
+		exec("say I still require the skin of shadow.",self);
+		
 	goto donezo;
 	
 :donezo:
@@ -2349,7 +2366,7 @@ code
 
 	// 80,000 lbs of any kind of metal armor.
 	// 100 lbs each of activated element (4 total) from The Summoner
-	// 10 killing spree streak
+	// 10 killing sprees
 
 	wait(SFB_CMD, ("$historian" in activator.extra) and (JOIN_ONGOING in activator.quests) and (not(BLACKSMITH_ONGOING in activator.quests)) and (not(BLACKSMITH_COMPLETE in activator.quests)));
 	
@@ -2387,7 +2404,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say Finally, we'll need to move quickly to keep the enemies at bay while The Historian does his work.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say Successfully executing 10 killing sprees in a row should do the trick.", self);	
+	exec("say Successfully executing 10 killing sprees should do the trick.", self);	
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say Go now, there is much to be done.", self);
 	addextra(pc.quests, {BLACKSMITH_ONGOING}, "0");
@@ -2411,7 +2428,7 @@ code
 {
 	// 80,000 lbs of any kind of steel weapon or armor.
 	// 100 lbs each of activated element (4 total) from The Summoner
-	// 10 killing spree streak
+	// 10 killing sprees
 	
 	heartbeat := PULSE_SEC;
 :start:
@@ -2531,7 +2548,7 @@ code
 	// q_water@faeries2 - 3
 	// q_earth@faeries2 - 3
 	// ball_energ@akaren - 20
-	// activator@bounty - 16 (80 lbs)
+	// activator@bounty - 4 (80 lbs)
 	
 	
 	wait(SFB_CMD, (JOIN_ONGOING in activator.quests) and (BLACKSMITH_ONGOING in activator.quests) and (not(SUMMONER_ONGOING in activator.quests)) and (not(SUMMONER_COMPLETE in activator.quests)) and (not(SUMMONER_COMPLETEISH in activator.quests)));
@@ -2951,7 +2968,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say There are twelve varieties to be found across the land.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say I'll require twelve of each.", self);
+	exec("say I'll require ten of each.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say In order to distribute these in the limited time we have, it will require great effort.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -4276,7 +4293,7 @@ code
 				
 				
 				exdp := BLACKSMITH_ONGOING in pc.quests;
-				if((atoi(pc.extra.["$spree_max"].descr) >= 10) and (not("$spree" in exdp.names)))
+				if((atoi(pc.extra.["$spree_total"].descr) >= 10) and (not("$spree" in exdp.names)))
 				{
 					addstring(exdp.names, "spree");
 				
@@ -4413,7 +4430,7 @@ code
 		slNpc := {"swarm_small@valley2","swarm_med@valley2","swarm_large@valley2","mob_35@pit","mob_34@pit",
 					"mob_33@pit","mob_32@pit","mob_31@pit","mob_30@pit", "slime_black@midsewers","alain_1@timezon",
 					"lizard_1@timezon","blob1@arma","robin_frog@torsbay","mcdroog_guard@torsbay",
-					"mcdroog_guard2@torsbay"};
+					"mcdroog_guard2@torsbay","slime_purple@midsewers"};
 	}
 	slSplit := split(s,"@");
 	
@@ -5134,7 +5151,7 @@ code
 			pc.mana := pc.mana + ((pc.max_mana / 4)*3);
 		else if(strength == "half")
 			pc.mana := pc.mana + (pc.max_mana / 2);
-	}
+	} 
 	if(pc.hp > pc.max_hp)
 		pc.hp := pc.max_hp;
 	if(pc.endurance > pc.max_endurance)
