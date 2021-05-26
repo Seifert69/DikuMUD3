@@ -86,3 +86,19 @@ I would appreciate help with:
      I've been using cMUD to do some test mapping. I think I have two young helpers that can assist 
      me with the actual mapping and turning a boring map into a hand-drawn piece of art :)
      
+## Docker build/run/test
+
+Prerequisites:
+* Install Docker Desktop
+* Increase the memory available to docker if the build cannot complete 
+  (docker Preferences->Resources->Advanced->Memory)
+
+### Build the docker image (building the mud from source in the process)
+```console
+DOCKER_BUILDKIT=1 docker build . -t dikumud3
+```
+
+### Run the mud in a new container, binding the port to localhost
+```console
+docker run -d -p 4280:4280 dikumud3
+```
