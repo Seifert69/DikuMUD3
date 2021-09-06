@@ -153,6 +153,9 @@ dilend
 
 
 /* skillbattle
+ *   mch : minimum success chance
+ *   odice : openroll dice sides - every value over 100 increases skill success
+ *   mgn : openroll critsuccess/critfail margin - use caution when adjusting
  *   att : the char attacking
  *   attskiidx : e.g. SKI_STEAL
  *   attabiidx : e.g. ABIL_DEX
@@ -160,27 +163,44 @@ dilend
  *   defskiidx : e.g. 
  * Result > 0 is success
  */
-dilbegin integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
+dilbegin integer skillbattle(mch : integer, odice : integer, mgn : integer,
+                             att : unitptr, attskiidx : integer, attabiidx : integer,
                              def : unitptr, defskiidx : integer, defabiidx : integer);
 var
+  minchance, dice, margin : integer;
   aski, aabi : integer;
   dski, dabi : integer;
-
+ 
 code
 {
+   minchance := mch;
+   margin := mgn;
+   dice := odice;
+   
    aabi := att.abilities[attabiidx];
    if (att.type == UNIT_ST_PC)
       aski := att.skills[attskiidx];
-   else
+   else {
       aski := aabi;
-
+      if (aski > 100) aski := 100; /* Cap NPC @ 100% Skill */
+   }
+                                                         
    dabi := def.abilities[defabiidx];
    if (def.type == UNIT_ST_PC)
       dski := def.skills[defskiidx];
-   else
+   else {
       dski := dabi;
-
-   return (openroll(100, 5) + aabi + aski - dabi - dski - 50);
+      if (dski > 100) dski := 100; /* Cap NPC @ 100% Skill */
+   }
+   
+   /* When the skill user is completely out-classed, we roll minimum chance if provided: */
+   
+   if (100 + aabi + aski - dabi - dski - 50 <= minchance) {
+      /* No openroll total below 100 would give us at least minchance, so roll min chance. */
+      return (openroll(dice, margin) - (100 - minchance));
+   }
+   
+   return (openroll(dice, margin) + aabi + aski - dabi - dski - 50);
 }
 dilend
 
@@ -454,7 +474,8 @@ dilend
 //
 dilbegin awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 external
-   integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
+   integer skillbattle(mch : integer, odice : integer, mgn : integer,
+                       att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
    set_witness@justice(criminal : unitptr, witness : unitptr, crime_no : integer, crime_type : integer, show : integer, victimname : string);
 var
@@ -476,7 +497,7 @@ code
    {
       if ((observer != thief) and (observer != victim))
       {
-         hm := skillbattle(thief, skill, ABIL_DEX, observer, skill, ABIL_BRA);
+         hm := skillbattle(0, 100, 5, thief, skill, ABIL_DEX, observer, skill, ABIL_BRA);
 
          if (not visible(observer, thief))
             hm := hm - 100;
@@ -515,7 +536,8 @@ external
    bobcheck(victim : unitptr);
    integer skillresist (aa : integer, ad : integer, sa : integer, sd : integer);
    provoked_attack (victim : unitptr, ch : unitptr);
-   integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
+   integer skillbattle(mch : integer, odice : integer, mgn : integer,
+                       att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
    awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
 
@@ -616,7 +638,7 @@ code
    }
 
    // I guess one could consider that e.g. an invisible char might get a bonus to the attempt. 
-   hm := skillbattle(self, SKI_STEAL, ABIL_DEX, vict, SKI_STEAL, ABIL_BRA);
+   hm := skillbattle(0, 100, 5, self, SKI_STEAL, ABIL_DEX, vict, SKI_STEAL, ABIL_BRA);
 
    if (hm <= -25)
    {
@@ -674,7 +696,8 @@ dilbegin pickpocket(arg : string);
 external
    onefreehand();
    bobcheck(victim : unitptr);
-   integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
+   integer skillbattle(mch : integer, odice : integer, mgn : integer,
+                       att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
    provoked_attack (victim : unitptr, ch : unitptr);
    awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
@@ -713,7 +736,7 @@ code
 
    bobcheck(vict);
 
-   hm := skillbattle(self, SKI_PICK_POCKETS, ABIL_DEX, vict, SKI_PICK_POCKETS, ABIL_BRA);
+   hm := skillbattle(0, 100, 5, self, SKI_PICK_POCKETS, ABIL_DEX, vict, SKI_PICK_POCKETS, ABIL_BRA);
 
    if (hm <= -25)
    {
@@ -809,7 +832,8 @@ dilbegin filch(arg : string);
 external
    bobcheck(victim : unitptr);
    onefreehand();
-   integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
+   integer skillbattle(mch : integer, odice : integer, mgn : integer,
+                       att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
    provoked_attack (victim : unitptr, ch : unitptr);
    awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
@@ -906,7 +930,7 @@ code
 		quit;
    }
 
-   hm := skillbattle(self, SKI_FILCH, ABIL_DEX, vict, SKI_FILCH, ABIL_BRA);
+   hm := skillbattle(0, 100, 5, self, SKI_FILCH, ABIL_DEX, vict, SKI_FILCH, ABIL_BRA);
 
    if (hm <= -5)
    {
@@ -961,7 +985,8 @@ dilend
 
 dilbegin peek(arg : string);
 external
-   integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
+   integer skillbattle(mch : integer, odice : integer, mgn : integer,
+                       att : unitptr, attskiidx : integer, attabiidx : integer,
                        def : unitptr, defskiidx : integer, defabiidx : integer);
 
 var
@@ -1016,7 +1041,7 @@ code
       goto success;
    }
 
-   hm := skillbattle(self, SKI_PEEK, ABIL_DEX, targ, SKI_PEEK, ABIL_BRA);
+   hm := skillbattle(0, 100, 5, self, SKI_PEEK, ABIL_DEX, targ, SKI_PEEK, ABIL_BRA);
 
    if (hm < -25)
    {
@@ -1292,8 +1317,9 @@ external
    stringlist get_exits@skills(u1 : unitptr);
    unitptr  unit_room@function(u2 : unitptr);
    integer issetclimb@function(d:integer);
-   integer skillbattle(att : unitptr, attskiidx : integer, attabiidx : integer,
-                        def : unitptr, defskiidx : integer, defabiidx : integer);
+   integer skillbattle(mch : integer, odice : integer, mgn : integer,
+                       att : unitptr, attskiidx : integer, attabiidx : integer,
+                       def : unitptr, defskiidx : integer, defabiidx : integer);
 
 var
    i       :  integer;
@@ -1352,7 +1378,7 @@ code
    if (pc == null)
       goto flee;
 
-   hm := skillbattle(self, SKI_FLEE, ABIL_DEX, pc, SKI_FLEE, ABIL_DEX);
+   hm := skillbattle(20, 100, 5, self, SKI_FLEE, ABIL_DEX, pc, SKI_FLEE, ABIL_DEX);
 
    if (hm <= 0)
    {
