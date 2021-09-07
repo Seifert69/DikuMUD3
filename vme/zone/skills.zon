@@ -1354,13 +1354,16 @@ code
 
    hm := skillbattle(self, SKI_FLEE, ABIL_DEX, pc, SKI_FLEE, ABIL_DEX);
 
-   if (hm <= 0)
+   if (hm <= -50)
    {
-      act("You PANIC! but you cannot escape!", A_SOMEONE, self, null, null, TO_CHAR);
-      act("$1n tries to flee, but $1e cannot!", A_SOMEONE, self, null, null, TO_REST);
-      self.endurance := self.endurance - hm/5;
-      position_update(self);
-      quit;
+      if (rnd(1,100) <= 20)
+      {
+         act("You PANIC! but you cannot escape!", A_SOMEONE, self, null, null, TO_CHAR);
+         act("$1n tries to flee, but $1e cannot!", A_SOMEONE, self, null, null, TO_REST);
+         self.endurance := self.endurance - hm/5;
+         position_update(self);
+         quit;
+      }
    }
 
    :flee:
@@ -1376,7 +1379,7 @@ code
       /* made this more random should not be every flee attempt they get an extra hit*/
 
       /* If you make your skill check with more than 50, no extra hit */
-      if (hm <= 50)
+      if (hm <= -35)
       {
          act("As $2n flees, you hit $2m!", A_SOMEONE, pc, self, null, TO_CHAR);
          act("As you flee, $2n hits you!", A_SOMEONE, self, pc, null, TO_CHAR);

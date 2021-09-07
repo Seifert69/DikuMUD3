@@ -3300,7 +3300,7 @@ if (self.zoneidx=="g_q")
   if (not mta)
       {
         act("Something prevents you from teleporting from here.",
-            A_SOMEONE, self, null, null, TO_CHAR);
+            A_ALWAYS, self, null, null, TO_CHAR);
         goto end;
       }
 
@@ -3331,7 +3331,7 @@ if (self.zoneidx=="g_q")
      happen to read this, you should be using A_ALWAYS. */
 
         act("Something prevents you from teleporting to there.",
-            A_SOMEONE, self, null, null, TO_CHAR);
+            A_ALWAYS, self, null, null, TO_CHAR);
         goto end;
       }
 
