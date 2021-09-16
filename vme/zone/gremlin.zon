@@ -334,6 +334,7 @@ code
 	{
 		subextra(pc.quests, ROGUE_ONGOING);
 		addextra(pc.quests, {ROGUE_COMPLETE}, "");
+		exdp := qstSetDone@quests(BOLDIN_ROGUE, pc);
 		experience(3000, pc);
 		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 		act("<br><div class='xpgain'>You recieve 3000 experience.</div><br>",A_SOMEONE, pc, null, null, TO_CHAR); 
