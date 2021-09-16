@@ -396,7 +396,7 @@ code
 		exec("say Ah-har, matey. This smells like it could strip the paint off a hull!", self);
 		destroy(self.inside);
 	}
-	else if ((22 == self.inside.type) and (not(ROGUE_COMPLETE in activator.quests)))
+	else if ((ITEM_BOAT == self.inside.objecttype) and (not(ROGUE_COMPLETE in activator.quests)))
 	{
 		addstring(exdp.names, "boat");
 		exec("say Ah-har, matey. She aint pretty, but she looks to float.", self);
@@ -404,6 +404,7 @@ code
 	}
 	else
 	{
+		destroy(self.inside);
 		exec("say No, "+pc.name +", I dont need this.", self);
 		pause;
 	}
