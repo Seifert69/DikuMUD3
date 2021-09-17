@@ -1770,7 +1770,7 @@ with a blade of one form or another. He is cowled in a dark cloak, and has a gle
 M_HUMAN_THIEF_AXE(30,SEX_MALE)
 money 1 GOLD_PIECE
 
-dilcopy wander_zones@function ("torsbay", 30, 0,0);
+dilcopy wander_zones@function ("torsbay", 180, 0,0);
 dilcopy rogue_request@gremlin();
 dilcopy rogue_give@gremlin();
 end
