@@ -799,7 +799,7 @@ code
    addstring(dest_list, "fighter"); 	// 0
    addstring(dest_list, "thief"); 		// 1
    addstring(dest_list, "healer"); 		// 2
-   addstring(dest_list, "mage"); 		// 3
+   addstring(dest_list, "conjurer"); 		// 3
    addstring(dest_list, "ranger"); 		// 4
    addstring(dest_list, "paladin"); 	// 5
    addstring(dest_list, "sorcerer"); 	// 6
