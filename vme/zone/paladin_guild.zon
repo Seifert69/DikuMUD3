@@ -938,7 +938,7 @@ or ((pc.level < 25)and
 or ((pc.level < 35)and
 (gift.nameidx $= "black_hammer")and(gift.zoneidx $= "citadel"))
 or ((pc.level < 51)and
-(gift.nameidx $= "sword_darkness")and(gift.zoneidx $= "keep")))
+(gift.nameidx $= "sword_dark")and(gift.zoneidx $= "keep")))
         {
 exec("say Ahhh... Excellent. Your courage failed you not.", self);pause;
 exec("say Now take this Flame Tongue, and use it wisely. "+
