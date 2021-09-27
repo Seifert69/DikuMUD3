@@ -237,6 +237,9 @@ dilend
 
 
 dilbegin rogue_request();
+external
+   extraptr qstSetDone@quests(qname : string, pc : unitptr);
+
 var
   pc: unitptr;
   exdp: extraptr;
