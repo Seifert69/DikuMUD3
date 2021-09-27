@@ -8167,7 +8167,7 @@ dilcopy qstItemsWanted@quests(QUEST_CITIZEN_MIDGAARD, {"platinum piece"}, {"mone
 //
 dilbegin citizenship();
 external
-   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist);
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
    extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
    integer check_protected@justice(char : unitptr, juris : string);
 var
@@ -8192,7 +8192,7 @@ code
 
    pc := qstWaitHero@quests(QUEST_CITIZEN_MIDGAARD, pc, 
       {"say Greetings $1N and welcome to the grand city of Midgaard",
-       "say So you'd like to become a protected citizen under the laws of Midgaard?"});
+       "say So you'd like to become a protected citizen under the laws of Midgaard?"}, "");
 
    if (pc == null)
       goto start;
