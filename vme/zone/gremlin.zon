@@ -426,7 +426,7 @@ dilend // END rogue_give
 
 dilbegin aware boldin_request();
 external
-   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist);
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
    extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
@@ -489,7 +489,7 @@ code
       "whisper $1N You see, the older I get, the harder it seems it is to get around.",
       "whisper $1N Would you be so kind as to help me out?",
       "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.' <div class='cpy'>HINT: Simply type 'nod' and hit enter.</div>"
-      }
+      }, ""
    );
 
    if (pc == null)
@@ -544,7 +544,7 @@ code
       "whisper $1N You see, I'm feeling rather parched.",
       "whisper $1N A dash of water would do me well!",
       "whisper $1N Would you be so kind as to help me out?",
-      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"});
+      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "");
 
 	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 
@@ -589,7 +589,7 @@ code
       "say A dark rumour has been spreading, and I think you're up to helping with it.",
       "whisper $1N There is word that gremlins have invaded a nearby farmstead!",
       "whisper $1N What do you think, do you have it in you to help?",
-      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"});
+      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "");
 
    if (pc == null)
       goto start;
@@ -622,7 +622,7 @@ code
       {
       "whisper $1N Given the state of affairs, I'm afraid I must ask for additional assistance.",
       "whisper $1N Can I count on you for one more request?"
-      });
+      },"");
 
    if (pc == null)
       goto start;
