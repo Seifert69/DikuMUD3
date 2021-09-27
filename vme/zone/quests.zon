@@ -102,12 +102,12 @@ code
    secure(pc, lostpc);
 
 :loop:
-   log("Waiting for quest accept command.");
-   log(pc.name);
+   //log("Waiting for quest accept command.");
+   //log(pc.name);
    // Now wait for an acceptance
 	wait(SFB_CMD, activator == pc);
-   log("Got a command.");
-   log(pc.name);
+   //log("Got a command.");
+   //log(pc.name);
 
    i := i + 1;
 
