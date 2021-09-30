@@ -13056,12 +13056,19 @@ code
   teleme := may_tele_away@function(self);
   teletgt := may_tele_away@function(room);
 
- if((teleme == FALSE) or (teletgt == FALSE))
+ if((teleme == FALSE))
+ {
+    act("It seems that you can't teleport from here.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+    quit;
+ }
+  
+ if((teletgt == FALSE))
  {
     act("It seems that you can't teleport there.",
           A_ALWAYS, self, null, null, TO_CHAR);
     quit;
-  }
+ }
 
 if (self.type==UNIT_ST_PC)
 if (not(paycheck(self,room))){
