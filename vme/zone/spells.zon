@@ -13060,6 +13060,9 @@ code
  {
     act("It seems that you can't teleport from here.",
           A_ALWAYS, self, null, null, TO_CHAR);
+    if(self.type==UNIT_ST_PC) {
+       self.mana := self.mana + 15; // Mana Rebate on Fail
+    }
     quit;
  }
   
@@ -13067,6 +13070,9 @@ code
  {
     act("It seems that you can't teleport there.",
           A_ALWAYS, self, null, null, TO_CHAR);
+    if(self.type==UNIT_ST_PC) {
+       self.mana := self.mana + 15; // Mana Rebate on Fail
+    }
     quit;
  }
 
