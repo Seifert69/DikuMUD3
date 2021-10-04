@@ -638,7 +638,8 @@ code
 dilend
 
 
-dilbegin qstSimpleQuest(qname : string,
+dilbegin fnpri(FN_PRI_MISSION+7)
+          qstSimpleQuest(qname : string,
                         qstAsk : stringlist,
                         qstAccepted : stringlist,
                         qstDescr : string,
