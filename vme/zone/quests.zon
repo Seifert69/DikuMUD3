@@ -246,6 +246,7 @@ dilend
 // pc : The player that is the target of this explanation
 // expl: list of strings for the NPC to execute to explain the quest.
 //       YOu can use $ variables, e.g. $1n. $1 = self, $3 = player. Strings formatted with "TO_CHAR", "SOMEONE"
+//       You can use a special code "::string1::string2" to send an act(string1, pc, null, npc, TO_CHAR) and act(string2, pc, null, npc, TO_REST)
 //       The very last string should be "nod to accept..." as it will be repeated
 //   {"say $1n, do you want this quest?", "jump", "hug $1n", "say <a cmd='"'>nod</a> if you wish to accept"}
 //
