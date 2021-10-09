@@ -257,6 +257,7 @@ var
    ln : integer;
    s : string;
    exd : extraptr;
+   tsl : stringlist;
 
 code
 {
@@ -284,9 +285,24 @@ code
    // Give the explanation
    while (i < ln)
    {
-      s := sact(sl.[i], A_SOMEONE, pc, null, self, TO_CHAR);
-      exec(s, self);
-      pause;
+      if ((sl.[i].[0] == ":") and (sl.[i].[1] == ":"))
+      {
+         tsl := split(sl.[i], "::");
+         if (length(tsl) == 3)
+         {
+            act(tsl.[1], A_SOMEONE, pc, null, self, TO_CHAR);
+            act(tsl.[2], A_SOMEONE, pc, null, self, TO_REST);
+            pause;
+         }
+         else
+            log("Found act code :: in qstAssign but not the two expected strings = " + sl.[i]);
+      }
+      else
+      {
+         s := sact(sl.[i], A_SOMEONE, pc, null, self, TO_CHAR);
+         exec(s, self);
+         pause;
+      }
       i := i + 1;
    }
 

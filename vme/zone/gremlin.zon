@@ -561,7 +561,7 @@ code
       "whisper $1N Take this barrel, and map.",
       "whisper $1N Simply <a cmd='look map'>look at this map</a> and it will guide you to the nearby city of Midgaard.",
       "whisper $1N At the Midgaard Market Square you will find an obelisk full of water! Simply <a cmd='#'>pour obelisk in barrel</a> to fill it up.'",
-      "emote hands you an empty barrel and a crumpled map."},
+      "::$3n hands you an empty barrel and a crumpled map.::$3n hands an empty barrel and a crumpled map to $1n."},
       "Return to Boldin with his barrel full of water. You can fill up the barrel in Midgaard at the Obelisk."
    );
 
