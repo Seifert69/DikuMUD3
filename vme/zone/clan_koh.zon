@@ -1,0 +1,577 @@
+/*
+filename    clan_koh
+password    rlscrew
+changedby   Ratlin
+EmailAdd    
+request     compile
+version     22
+END HEADER*/
+
+#include <macros.h>
+
+%zone clan_koh
+title "Knights of Honor Clan"
+lifespan 20
+reset RESET_ANYHOW
+creators {"Sender"}
+
+notes
+"Sender - 2021. This clan is being created to have a new generation 
+of newbie clan in Valhalla. There is significant effort in building 
+community and experience for newer players, and along with that 
+opportunity for more clans. This clan has been started by Advocates of 
+Honor clan, to drive value into the mud, and potentially act as a feeder.
+AoH has placed Snaga, a former member, into the Master's role in KoH. We 
+may look to implement some form of code to allow clans to officially act 
+as feeders, where members of the upper clan are able to enter and interact 
+with the lower clan as if they too were a member. More to come."
+
+
+help
+"Welcome to the Knights of Honor clan. Built to help the weak bring honor 
+to their names, and grow in their power."
+
+%rooms
+
+clan_guard
+title "The Guard Room of the Knights of Honor"
+descr
+"As you look around this room, you see knights staring you down.  You
+shiver uncomfortably as one of the knights begins advancing towards you.
+The knight comes to your side and says 'Boo!'. The knight chuckles, and 
+steps back to his guard post, seemingly unconcerned with your presence."
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+south to tree_circle@cypress;
+dilcopy clan_door@clans("htown@clan_koh","center",NORTH);
+north to clan_fount open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED, EX_PICKPROOF}
+         key clan_koh_key
+         keyword {"door"};
+
+extra {"$no_leaving_clan"}
+""
+
+dilcopy block_flee@clans();
+end
+
+clan_fount
+title "In the Knights Jungle"
+descr
+"Walking into this room you have a feeling like you entered a rain
+forest. The beautiful fountain is surrounded by ivy and flowers. Drinking
+this water could quench any warriors thirst."
+ALWAYS_LIGHT
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+dilcopy clan_door@clans("htown@clan_koh","cexit",SOUTH);
+south to clan_guard
+ open{EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED, EX_PICKPROOF}
+         key clan_koh_key
+         keyword {"door"};
+east to clan_enter;
+west to clan_secret
+      open {EX_OPEN_CLOSE,EX_CLOSED,EX_HIDDEN}
+      descr "You manage to brush aside some of the ivy and flowers, discovering a hidden entrance!"
+      keyword {"ivy","flowers","flower","ivys"} difficulty 100;
+end
+
+clan_enter
+title "The Board Room of the Knights"
+descr
+"The hall comes into form from the Fountain Room to the west, where the 
+feel of an impossibly large rain forest opens up. Large stone walls 
+bring form to the room. The latest clans news, happenings, and updates 
+are posted on a board here, maybe you should check it out. Down the stairs 
+lies the famously wealthy riches of the KoH."
+
+ALWAYS_LIGHT
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}
+movement SECT_INSIDE
+
+down to htown;
+west to clan_fount;
+end
+
+htown
+title "The Knights Hoard"
+descr
+"A solid underground chamber, this room holds the famous wealth of the 
+Knights of Honor. You see a large chest in the corner of this room. Perhaps it is
+filled with treasure. To reach the chest you must walk through the Veil of Truth. 
+You begin to walk towards it but oddly you begin to feel warm..."
+
+
+flags {UNIT_FL_NO_TELEPORT, UNIT_FL_NO_WEATHER}
+movement SECT_INSIDE
+
+up to clan_enter;
+dilcopy chest_load@clans();
+end
+
+clan_secret
+title "Room of Origin"
+descr
+"This is the Room of Origin. You see names etched into the walls. The walls
+say: Issa, Doggy, Alvaneu, Sentrosi, Joff, Wash, Snaga. These people must be 
+very important to the clan! You feel a deep sense of honor for these people."
+
+
+flags {UNIT_FL_NO_TELEPORT, UNIT_FL_NO_WEATHER}
+movement SECT_INSIDE
+
+east to clan_fount
+open {EX_OPEN_CLOSE,EX_CLOSED,EX_HIDDEN}
+descr "You manage to move the wall, discovering a secret exit!"
+keyword {"wall"} difficulty 50;
+end
+
+%objects
+/* bought items */
+
+spice
+names {"firespice", "spice"}
+title "<div class='cr'>firespice</div><div class='default'></div>"
+descr "Some red spice has been dropped here."
+
+extra {}
+"The spice is red and seems hard to swallow."
+
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(20,SPL_MANA_BOOST,SPL_NONE,SPL_NONE)
+cost 5 GOLD_PIECE, 5 SILVER_PIECE
+weight 1
+type ITEM_POTION
+end
+
+stam_pill
+names {"stamina herbs", "stam herbs", "herbs"}
+title "some stamina herbs"
+descr "Some stamina herbs have been forgotten here."
+
+extra {}
+"<div class='obj_descr'>The herbs are bright red and look very tempting. You'll have
+to </div><div class='cpw'>CHEW</div><div class='obj_descr'> them for them to be of any use.</div>"
+manipulate {MANIPULATE_TAKE}
+MATERIAL_ORGANIC ("You should ask Eliana the list of components")
+type ITEM_OTHER
+cost 2 SILVER_PIECE, 7 COPPER_PIECE
+weight 1
+dilcopy pills@korandin("stamina");
+end
+
+dex_pot
+names {"white potion","potion"}
+title "a white potion"
+descr "A white potion has been dropped here."
+extra {}
+"It appears to have dexterity boosting powers."
+
+extra {"$identify"}
+"This potion will raise your dexterity when quaffed."
+
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(60,SPL_RAISE_DEX,SPL_NONE,SPL_NONE)
+type ITEM_POTION
+weight 1
+cost 2 GOLD_PIECE
+
+end
+
+str_pot
+names {"black potion","potion"}
+title "a black potion"
+descr "A black potion has been left here."
+extra {}
+"It appears to have strength boosting powers."
+
+extra {"$identify"}
+"This potion will raise your strength when quaffed."
+
+manipulate {MANIPULATE_TAKE}
+POTION_DEF(60,SPL_RAISE_STR,SPL_NONE,SPL_NONE)
+type ITEM_POTION
+weight 1
+cost 2 GOLD_PIECE
+end
+
+bless_scroll
+names {"blessing scroll","bless scroll","scroll"}
+title "a blessing scroll"
+descr "A scroll of blessing has been dropped here."
+extra {}
+"It appears to be able to boost your powers."
+
+extra {"$identify"}
+"This scroll will raise your powers when recited."
+
+manipulate {MANIPULATE_TAKE}
+SCROLL_DEF(60,SPL_BLESS,SPL_NONE,SPL_NONE)
+type ITEM_SCROLL
+weight 1
+cost 2 GOLD_PIECE
+
+end
+
+
+/* end paid items */
+clan_board
+names {"bulletin board", "board"}
+title "a bulletin board"
+descr "A large bulletin board is mounted on a wall here."
+type ITEM_OTHER
+dilcopy board@boards("clan_koh","","clan_rem@clans","clan_post@clans",100);
+end
+
+
+dchest
+names {"clan chest", "chest"}
+title "Basic Clan Chest"
+descr "A basic wooden chest is on the ground here."
+extra {}
+"It is a typical wooden chest held together with iron nails."
+manipulate {MANIPULATE_ENTER}
+CONTAINER_DEF(30000)
+dilcopy store_blk@clans();
+end
+
+fountain
+names {"fountain", "water"}
+title "a fountain"
+descr "A fountain bubbles and splashes away here."
+extra {}
+"The fountain produces a steady stream of clear, clean water."
+LIQ_DEF("clear", 100,-1,5000,10,1,0,0)
+end
+
+portal
+names {"travel gate","gate"}
+title "a travel gate"
+descr "A travel gate is here."
+extra{}
+ "A travel gate is here, waiting for you to enter"
+flags {UNIT_FL_NO_TELEPORT}
+type ITEM_OTHER
+
+dilbegin portal_midgaard();
+var
+   pc : unitptr;
+code
+{
+     :init:
+     heartbeat := PULSE_SEC*5;
+     on_activation(activator.position <= POSITION_SLEEPING, skip);
+
+     :start:
+     wait(SFB_CMD, command("enter") and (activator.type == UNIT_ST_PC));
+
+        pc := activator;
+        secure(pc, lpc);
+
+        if(pc.hometown == "htown@clan_koh")
+        {
+         goto yes;
+        }
+        else goto start;
+
+        :yes:
+        if ("gate" in argument)
+        {
+           block;
+act("$1n steps into a travel gate.", A_SOMEONE, pc, self, null,TO_REST);
+act("You step into a travel gate.", A_ALWAYS, pc, self, null,TO_CHAR);
+           link(pc, findroom("ct_23@cypress"));
+act("A bright flash of light appears from the sky, and $1n exits a travel gate.",
+           A_SOMEONE, pc, null, null, TO_REST);
+act("You find yourself standing in another room!",A_ALWAYS, pc, null, null, TO_CHAR);
+           exec("look", pc);
+           unsecure(pc);
+           goto start;
+        }
+
+        :lpc:
+        goto init;
+}
+dilend
+end
+
+veil
+names {"travel gate","gate","veil"}
+title "a shimmering veil"
+descr "A shimmering veil is here."
+extra{}
+ "A shimmering veil is here, waiting for you to enter."
+flags {UNIT_FL_NO_TELEPORT}
+type ITEM_OTHER
+
+dilbegin portal_clan();
+var
+   pc : unitptr;
+code
+{
+     :init:
+     heartbeat := PULSE_SEC*5;
+     on_activation(activator.position <= POSITION_SLEEPING, skip);
+
+     :start:
+     wait(SFB_CMD, command("enter") and (activator.type == UNIT_ST_PC));
+
+        pc := activator;
+        secure(pc, lpc);
+
+        if ("veil" in argument)
+        {
+           block;
+act("$1n steps through the shimmering veil.", A_SOMEONE, pc, self, null,TO_REST);
+act("You step through the shimmering veil.", A_ALWAYS, pc, self, null,TO_CHAR);
+           link(pc, findroom("clan_guard@clan_koh"));
+act("A shimmer of light reflects on the veil, and $1n steps through it.",
+           A_SOMEONE, pc, null, null, TO_REST);
+act("You step through the veil into another room!",A_ALWAYS, pc, null, null, TO_CHAR);
+           exec("look", pc);
+           unsecure(pc);
+           goto start;
+        }
+
+        :lpc:
+        goto init;
+}
+dilend
+end
+
+%mobiles
+/* bought shop by doggy */
+aohshopkeeper
+names {"Alaithsil", "shop keeper"}
+title "Alaithsil the Clan Shopkeeper"
+descr "Alaithsil the clan shop owner sits here awaiting your order."
+extra {}
+"He waits patiently for you to buy his wares."
+flags{UNIT_FL_NO_TELEPORT}
+romflags{CHAR_DETECT_INVISIBLE}
+alignment 0
+M_SHOP_KEEPER(150, SEX_MALE,RACE_ELF)
+money 4 SILVER_PIECE
+dilcopy shopkeeper@function(
+{"stam_pill@clan_koh 5 5","spice@clan_koh 5 5"},
+{"$1n says, 'I don't sell those.'",
+"$1n says, '$3n, you don't have that.'",
+"$1n says, 'I don't trade with such things.'",
+"$1n says, '$3n, you can't afford $2n.'",
+"$1n says, 'Thank you %3n. That cost you $2n.'",
+"$1n says, 'Thank you %3n.'",
+"$1n says, 'I don't have that many $2ns.'",
+"$1n mumbles in his sleep, 'Buggar off, I'm sleeping...'",
+"$1n says, 'Why would i want that?'",
+"$1n says, 'Sorry, I can't afford that.'"}
+,{"1","5", "7","18","20","24"}, "2 10 19", 100, 40,2*PLATINUM_MULT,"", "" );
+end
+
+issashopkeep
+names {"Ithicus", "shop keeper"}
+title "Ithicus the Shopkeeper"
+descr "Ithicus the shop owner waits for your request."
+extra {}
+"He waits patiently for you to buy his wares."
+flags{UNIT_FL_NO_TELEPORT}
+romflags{CHAR_DETECT_INVISIBLE}
+alignment 0
+M_SHOP_KEEPER(150, SEX_MALE,RACE_ELF)
+money 4 SILVER_PIECE
+dilcopy shopkeeper@function(
+{"str_pot@clan_koh 5 5","dex_pot@clan_koh 5 5","bless_scroll@clan_koh 1 5"},
+{"$1n says, 'I do not trade in those.'",
+"$1n says, '$3n, you don't have that with you.'",
+"$1n says, 'I don't trade with such things.'",
+"$1n says, '$3n, you can't afford $2n.'",
+"$1n says, 'Thank you %3n. That cost you $2n.'",
+"$1n says, 'Thank you %3n.'",
+"$1n says, 'I have that many $2ns in stock.'",
+"$1n says, 'Please wait until the shop opens.'",
+"$1n says, 'I cannot sell that.'",
+"$1n says, 'Sorry, I can't afford that.'"}
+,{"1","5", "7","18","20","24"}, "2 10 19", 100, 40,2*PLATINUM_MULT,"", "" );
+end
+
+/*stationary */
+guard2
+names {"shimmering figure","figure","guard"}
+title "a shimmering guard"
+descr "A shimmering figure stands here motionless, guarding the path beyond."
+extra {}
+"The figure wears a long cloak which conceals his face in shadow.  He
+doesn't seem to be alive yet somehow seems more than capable of defending
+himself."
+flags {UNIT_FL_NO_TELEPORT}
+race RACE_HUMAN
+sex SEX_MALE
+height 220
+weight 160
+level 150
+exp 100
+money 3 SILVER_PIECE
+NATURAL_DEF(WPN_FIST, ARM_CLOTHES)
+MSET_ABILITY(15,15,10,20,15,0,10,15)
+MSET_WEAPON(5,15,10,15,7,8)
+MSET_SPELL(1,1,1,1,1,15,1,1,1,15,2)
+romflags {CHAR_DETECT_INVISIBLE}
+alignment 1000
+dilcopy guard_dir@clans("up");
+dilcopy walk_home@clans("clan_guard","clan_koh");
+dilcopy hedge_kill@clans();
+dilcopy rescue@function("cloaked figure");
+dilcopy teamwork@function("cloaked figure");
+dilcopy backstab_block@serpents();
+dilcopy block_drag@clans("up");
+end
+
+
+/*internal wandering */
+guard3
+names {"shimmering figure","figure","guard"}
+title "a shimmering guard"
+descr "A shimmering figure wanders the area, looking for intruders."
+extra {}
+"The figure wears a long cloak which conceals his face in shadow.  He
+doesn't seem to be alive yet somehow seems more than capable of defending
+himself."
+flags {UNIT_FL_NO_TELEPORT}
+race RACE_HUMAN
+sex SEX_MALE
+height 220
+weight 160
+level 150
+exp 100
+money 3 SILVER_PIECE
+NATURAL_DEF(WPN_FIST, ARM_CLOTHES)
+MSET_ABILITY(15,15,10,20,15,0,10,15)
+MSET_WEAPON(5,15,10,15,7,8)
+MSET_SPELL(1,1,1,1,1,15,1,1,1,15,2)
+romflags {CHAR_DETECT_INVISIBLE}
+alignment 1000
+dilcopy guard_dir@clans("down");
+dilcopy hedge_kill@clans();
+dilcopy rescue@function("cloaked figure");
+dilcopy teamwork@function("cloaked figure");
+dilcopy backstab_block@serpents();
+dilcopy clan_aggro@clans("htown@clan_koh");
+dilcopy wander_zones@function("@loadzone", 20, 0,0);
+end
+
+/* end doggy and issa purchase mobs */
+
+/*default stationary*/
+guard
+names {"shimmering figure","figure","guard"}
+title "a shimmering guard"
+descr "A shimmering figure stands here motionless, guarding the path beyond."
+extra {}
+"The figure wears a long cloak which conceals his face in shadow.  He
+doesn't seem to be alive yet somehow seems more than capable of defending
+himself."
+flags {UNIT_FL_NO_TELEPORT}
+race RACE_HUMAN
+sex SEX_MALE
+height 220
+weight 160
+level 150
+exp 100
+money 3 SILVER_PIECE
+NATURAL_DEF(WPN_FIST, ARM_CLOTHES)
+MSET_ABILITY(15,15,10,20,15,0,10,15)
+MSET_WEAPON(5,15,10,15,7,8)
+MSET_SPELL(1,1,1,1,1,15,1,1,1,15,2)
+romflags {CHAR_DETECT_INVISIBLE}
+alignment 1000
+dilcopy guard_dir@clans("up");
+dilcopy walk_home@clans("clan_guard","clan_koh");
+dilcopy hedge_kill@clans();
+dilcopy rescue@function("cloaked figure");
+dilcopy teamwork@function("cloaked figure");
+dilcopy backstab_block@serpents();
+dilcopy block_drag@clans("up");
+end
+
+%reset
+
+door clan_guard  NORTH   {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED, EX_PICKPROOF}
+door clan_fount  SOUTH   {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED, EX_PICKPROOF}
+door clan_fount  WEST   {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN}
+door clan_secret EAST  {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN}
+
+load namepillar@clans into htown local 1
+
+load fountain into clan_fount max 1
+load clan_board into clan_enter max 1
+load portal  into clan_enter max 1
+load aohshopkeeper into clan_fount max 1      //paid by doggy
+{
+   equip lth_sleeves1@midgaard position WEAR_ARMS
+   equip lth_jerkin1@midgaard position WEAR_BODY   
+   equip lth_pants1@midgaard position WEAR_LEGS
+   equip spear0@midgaard position WEAR_WIELD
+         }
+load issashopkeep into clan_secret max 1
+{
+   equip lth_sleeves1@midgaard position WEAR_ARMS
+   equip lth_jerkin1@midgaard position WEAR_BODY   
+   equip lth_pants1@midgaard position WEAR_LEGS
+   equip spear0@midgaard position WEAR_WIELD          //paid by issa
+         }
+load guard into clan_guard@clan_koh max 3
+{
+   equip lth_sleeves1@midgaard position WEAR_ARMS
+   equip lth_jerkin1@midgaard position WEAR_BODY    
+   equip lth_pants1@midgaard position WEAR_LEGS
+   equip spear0@midgaard position WEAR_WIELD
+         }
+load guard into clan_guard@clan_koh max 3
+{
+   equip lth_sleeves1@midgaard position WEAR_ARMS
+   equip lth_jerkin1@midgaard position WEAR_BODY    
+   equip lth_pants1@midgaard position WEAR_LEGS
+   equip spear0@midgaard position WEAR_WIELD
+         }
+load guard into clan_guard@clan_koh max 3
+{
+   equip lth_sleeves1@midgaard position WEAR_ARMS
+   equip lth_jerkin1@midgaard position WEAR_BODY   
+   equip lth_pants1@midgaard position WEAR_LEGS
+   equip spear0@midgaard position WEAR_WIELD
+         }
+load guard2 into clan_guard@clan_koh max 3
+{
+   equip lth_sleeves1@midgaard position WEAR_ARMS
+   equip lth_jerkin1@midgaard position WEAR_BODY    
+   equip lth_pants1@midgaard position WEAR_LEGS
+   equip spear0@midgaard position WEAR_WIELD
+         }
+load guard2 into clan_guard@clan_koh max 3
+{
+   equip lth_sleeves1@midgaard position WEAR_ARMS
+   equip lth_jerkin1@midgaard position WEAR_BODY    
+   equip lth_pants1@midgaard position WEAR_LEGS
+   equip spear0@midgaard position WEAR_WIELD
+         }
+load guard2 into clan_guard@clan_koh max 3
+{
+   equip lth_sleeves1@midgaard position WEAR_ARMS
+   equip lth_jerkin1@midgaard position WEAR_BODY    
+   equip lth_pants1@midgaard position WEAR_LEGS
+   equip spear0@midgaard position WEAR_WIELD
+         }
+load guard3 into clan_enter@clan_koh max 1
+{
+   equip lth_sleeves1@midgaard position WEAR_ARMS
+   equip lth_jerkin1@midgaard position WEAR_BODY    
+   equip lth_pants1@midgaard position WEAR_LEGS
+   equip spear0@midgaard position WEAR_WIELD
+         }
+ 
+load veil into tree_circle@cypress max 1
+
+%end
+
+
+
+
+

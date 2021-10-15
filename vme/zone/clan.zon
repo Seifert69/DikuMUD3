@@ -16,6 +16,36 @@ reset RESET_ANYHOW
 
 creators {"whistler"}
 
+notes
+"To implement clans in the vanilla build of DIKU3, place a file called clanlist.data
+in a folder named strings under the referenced folder for the clan zone in zonelist. 
+The default is ../lib/clan. clanlist.data is formatted with one data element per line, 
+with 5 lines representing each clan.
+
+eg ../lib/clan/strings/clanlist.data
+
+clan_id
+clan_master
+clan_name
+tattoo
+title
+
+An example is: 
+
+clan_koh
+Snaga
+Knights of Honor
+A large shield stamped with HONOR
+<div class='cpn'>[</div><div class='cw'>K</div><div class='cpw'>nights</div> <div class='cw'>o</div><div class='cpw'>f</div> <div class='cw'>H</div><div class='cpw'>onor</div><div class='cpn'>]</div>
+
+//clist.data should be a csv formatted text file, where each row represents a clan.
+
+//The format is: clan_ID,clan_master,clan_name,tattoo,title
+
+//An example is: clan_koh,Snaga,Knights of Honor,A large shield stamped with HONOR,<div class='cpn'>[</div><div class='cw'>K</div><div class='cpw'>nights</div> <div class='cw'>o</div><div class='cpw'>f</div> <div class='cw'>H</div><div class='cpw'>onor</div><div class='cpn'>]</div>
+
+//To start a clan after adding them in clanlist.data, have the person namer as clan_master
+"
 
 #define CTITLE_COST (10*PLATINUM_MULT)
 #define CLAN_TAG  "$clan_tag"
@@ -1385,7 +1415,10 @@ code
 	log("21: self.name == "+self.name);
 	while (i<ln)
 	{
+		log("clist.[i+1] == |"+clist.[i+1]+"|");
 		clist.[i+1] := replace(" ","",clist.[i+1]);
+		log("clist.[i+1] == |"+clist.[i+1]+"|");
+		
 		log ("21:  clanlist.data line == "+clist.[i+1]);
 		if (self.name == clist.[i+1])
 		{
