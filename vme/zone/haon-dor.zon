@@ -2561,7 +2561,7 @@ dilend
 // 
 dilbegin assign_stew();
 external
-   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist);
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
    extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
 var
    pc     : unitptr;
@@ -2578,13 +2578,15 @@ code
 
    pot := findunit(self, "pot", FIND_UNIT_INVEN | FIND_UNIT_EQUIP, null);
 
+log ("Before all");
    if (pot)
    {
+log ("Aha wait for a new player");
       pc := qstWaitHero@quests(QUEST_RABBIT, activator, 
          {"say Hello $1N how are you today?",
          "say I am trying to make a delicious rabbit stew, but I need some ingredients.",
          "say I need a dead rabbit, some garlic, some mushrooms and a few berries.",
-         "say Will you please fetch me these ingredients, $1N?"});
+         "say Will you please fetch me these ingredients, $1N?"}, "");
 
       if (pc == null)
          goto start;
@@ -2601,7 +2603,7 @@ code
       pc := qstWaitHero@quests(QUEST_POT, activator, 
          {"say $1N can you help me?",
          "say The hideous orc chief stole my best cooking pot.",
-         "say Will you please retrieve my cooking pot, $1N?"});
+         "say Will you please retrieve my cooking pot, $1N?"}, "");
 
       if (pc == null)
          goto start;

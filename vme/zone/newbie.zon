@@ -1316,11 +1316,11 @@ A_ALWAYS , self, null , pc ,TO_VICT);
 pause;
 act ("$1n says 'type 'write letter' now and write a note saying Hi and "+
 "introducing yourself to the council.  When you are done with your note you can exit the editor by "+
-      "typing '@' on a blank line and hitting <enter>.'",
+      "typing the at-sign '@' on a blank line and hitting <enter>.'",
 A_ALWAYS , self, null , pc ,TO_VICT);
 pause;
 
-act ("$1n says 'When you are done writing just say 'DONE' and I will tell you what to do next.'",
+act ("$1n says 'When you are done writing just type 'say DONE' and I will tell you what to do next.'",
 A_ALWAYS , self, null , pc ,TO_VICT);
 pause;
 act ("$1n says 'I will not respond again until you tell me you are done.'",

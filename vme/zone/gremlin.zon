@@ -237,6 +237,9 @@ dilend
 
 
 dilbegin rogue_request();
+external
+   extraptr qstSetDone@quests(qname : string, pc : unitptr);
+
 var
   pc: unitptr;
   exdp: extraptr;
@@ -334,6 +337,7 @@ code
 	{
 		subextra(pc.quests, ROGUE_ONGOING);
 		addextra(pc.quests, {ROGUE_COMPLETE}, "");
+		exdp := qstSetDone@quests(BOLDIN_ROGUE, pc);
 		experience(3000, pc);
 		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 		act("<br><div class='xpgain'>You recieve 3000 experience.</div><br>",A_SOMEONE, pc, null, null, TO_CHAR); 
@@ -396,7 +400,7 @@ code
 		exec("say Ah-har, matey. This smells like it could strip the paint off a hull!", self);
 		destroy(self.inside);
 	}
-	else if ((22 == self.inside.type) and (not(ROGUE_COMPLETE in activator.quests)))
+	else if ((ITEM_BOAT == self.inside.objecttype) and (not(ROGUE_COMPLETE in activator.quests)))
 	{
 		addstring(exdp.names, "boat");
 		exec("say Ah-har, matey. She aint pretty, but she looks to float.", self);
@@ -404,6 +408,7 @@ code
 	}
 	else
 	{
+		destroy(self.inside);
 		exec("say No, "+pc.name +", I dont need this.", self);
 		pause;
 	}
@@ -424,7 +429,7 @@ dilend // END rogue_give
 
 dilbegin aware boldin_request();
 external
-   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist);
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
    extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
@@ -487,7 +492,7 @@ code
       "whisper $1N You see, the older I get, the harder it seems it is to get around.",
       "whisper $1N Would you be so kind as to help me out?",
       "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.' <div class='cpy'>HINT: Simply type 'nod' and hit enter.</div>"
-      }
+      }, ""
    );
 
    if (pc == null)
@@ -542,7 +547,7 @@ code
       "whisper $1N You see, I'm feeling rather parched.",
       "whisper $1N A dash of water would do me well!",
       "whisper $1N Would you be so kind as to help me out?",
-      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"});
+      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "");
 
 	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 
@@ -556,7 +561,7 @@ code
       "whisper $1N Take this barrel, and map.",
       "whisper $1N Simply <a cmd='look map'>look at this map</a> and it will guide you to the nearby city of Midgaard.",
       "whisper $1N At the Midgaard Market Square you will find an obelisk full of water! Simply <a cmd='#'>pour obelisk in barrel</a> to fill it up.'",
-      "emote hands you an empty barrel and a crumpled map."},
+      "::$3n hands you an empty barrel and a crumpled map.::$3n hands an empty barrel and a crumpled map to $1n."},
       "Return to Boldin with his barrel full of water. You can fill up the barrel in Midgaard at the Obelisk."
    );
 
@@ -587,7 +592,7 @@ code
       "say A dark rumour has been spreading, and I think you're up to helping with it.",
       "whisper $1N There is word that gremlins have invaded a nearby farmstead!",
       "whisper $1N What do you think, do you have it in you to help?",
-      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"});
+      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "");
 
    if (pc == null)
       goto start;
@@ -620,7 +625,7 @@ code
       {
       "whisper $1N Given the state of affairs, I'm afraid I must ask for additional assistance.",
       "whisper $1N Can I count on you for one more request?"
-      });
+      },"");
 
    if (pc == null)
       goto start;
@@ -1769,7 +1774,7 @@ with a blade of one form or another. He is cowled in a dark cloak, and has a gle
 M_HUMAN_THIEF_AXE(30,SEX_MALE)
 money 1 GOLD_PIECE
 
-dilcopy wander_zones@function ("torsbay", 30, 0,0);
+dilcopy wander_zones@function ("torsbay", 180, 0,0);
 dilcopy rogue_request@gremlin();
 dilcopy rogue_give@gremlin();
 end

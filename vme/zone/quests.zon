@@ -87,21 +87,91 @@ dilend
 // ===========================================================
 
 
+// The default function to check if player accepts quest
+//
+// Return 1 if quest accepted, 0 if quest rejected
+// 
+
+dilbegin integer default_accept(pc : unitptr, ip : integer, s : string);
+var
+   i : integer;
+   t : string;
+code
+{
+   i := 0;
+   secure(pc, lostpc);
+
+:loop:
+   //log("Waiting for quest accept command.");
+   //log(pc.name);
+   // Now wait for an acceptance
+	wait(SFB_CMD, activator == pc);
+   //log("Got a command.");
+   //log(pc.name);
+
+   i := i + 1;
+
+	if (command("nod"))
+   {
+      return (1);
+   }
+	else if (command("shake"))
+   {
+		return (0);
+   }
+   else if (command("say"))
+   {
+      s := getword(argument);
+      if ((left(s,3)=="yes") or (left(s,3)=="yup") or (left(s,3)=="aye") or (left(s,3)=="yez") or ((left(s,3)=="yea")) or (s=="y"))
+         return (1);
+
+      if ((left(s,2)=="no") or (s=="n"))
+         return (0);
+   }
+
+   if ((i == 2) or (i == 5))
+   {
+      t := sact(s, A_SOMEONE, pc, null, self, TO_CHAR);
+      exec(t, self);
+   }
+
+   if (i > 7)
+   {
+      return (0);
+   }
+
+   goto loop;
+
+   :lostpc:
+   return(0);
+}
+dilend
+
+
+// ===========================================================
+
+
 // Try to see if "pc" is willing to take on this quest
 //
 // pc : The player that is the target of this quest request
-// expl: list of strings for the NPC to execute to explain the quest.
+// sl:  List of strings for the NPC to execute to explain the quest.
 //       YOu can use $ variables, e.g. $1n. $1 = player, $3 = self. Strings formatted with "TO_CHAR", "SOMEONE"
 //       The very last string should be "nod to accept..." as it will be repeated
 //   {"say $1n, do you want this quest?", "jump", "hug $1n", "say <a cmd='"'>nod</a> if you wish to accept"}
+//  acptfunc: if blank uses default acceptance function, otherwise write your own. Copy default_accept@quests
+//            and make your own code. Use the name of your function in acptfunc, e.g. "myfunc@myzone".
 //
 // Return unitptr to the hero that wants the quest
 //
-dilbegin unitptr qstWaitHero(qname : string, pc : unitptr, sl : stringlist);
+dilbegin unitptr qstWaitHero(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
+external
+   integer default_accept@quests(pc : unitptr, ip : integer, s : string);
+
 var
    i : integer;
    ln : integer;
    s : string;
+
 
 code
 {
@@ -141,52 +211,19 @@ code
       i := i + 1;
    }
 
-   i := 0;
-:loop:
-   // Now wait for an acceptance
-	wait(SFB_CMD, activator == pc);
+   if (acptfunc == "")
+      acptfunc := "default_accept@quests";
 
-   i := i + 1;
+   i := dilcall(acptfunc)(pc, 0, sl.[ln-1]);
 
-	if (command("nod"))
-   {
-      nopriority;
-      return(pc);
-   }
-	else if (command("shake"))
-		goto no_quest;
-   else
-   {
-      if (command("say"))
-      {
-         s := getword(argument);
-         if ((left(s,3)=="yes") or (left(s,3)=="yup") or (left(s,3)=="aye") or (left(s,3)=="yez") or ((left(s,3)=="yea")) or (s=="y"))
-         {
-            nopriority;
-      		return(pc);
-         }
-         if ((left(s,2)=="no") or (s=="n"))
-      		goto no_quest;
-      }
-   }
+   nopriority;
 
-   if ((i == 2) or (i == 5))
-   {
-      s := sact(sl.[ln-1], A_SOMEONE, pc, null, self, TO_CHAR);
-      exec(s, self);         
-   }
+   if (i == 0)
+      goto no_quest;
 
-   if (i > 7)
-   {
-      pc := null;
-      nopriority;
-      return(pc);
-   }
-
-   goto loop;
+   return(pc);
 
 :no_quest:
-   nopriority;
    heartbeat := PULSE_SEC * 1;
    pause;
 	exec("sulk", self);
@@ -209,6 +246,7 @@ dilend
 // pc : The player that is the target of this explanation
 // expl: list of strings for the NPC to execute to explain the quest.
 //       YOu can use $ variables, e.g. $1n. $1 = self, $3 = player. Strings formatted with "TO_CHAR", "SOMEONE"
+//       You can use a special code "::string1::string2" to send an act(string1, pc, null, npc, TO_CHAR) and act(string2, pc, null, npc, TO_REST)
 //       The very last string should be "nod to accept..." as it will be repeated
 //   {"say $1n, do you want this quest?", "jump", "hug $1n", "say <a cmd='"'>nod</a> if you wish to accept"}
 //
@@ -220,6 +258,7 @@ var
    ln : integer;
    s : string;
    exd : extraptr;
+   tsl : stringlist;
 
 code
 {
@@ -247,9 +286,24 @@ code
    // Give the explanation
    while (i < ln)
    {
-      s := sact(sl.[i], A_SOMEONE, pc, null, self, TO_CHAR);
-      exec(s, self);
-      pause;
+      if ((sl.[i].[0] == ":") and (sl.[i].[1] == ":"))
+      {
+         tsl := split(sl.[i], "::");
+         if (length(tsl) == 3)
+         {
+            act(tsl.[1], A_SOMEONE, pc, null, self, TO_CHAR);
+            act(tsl.[2], A_SOMEONE, pc, null, self, TO_REST);
+            pause;
+         }
+         else
+            log("Found act code :: in qstAssign but not the two expected strings = " + sl.[i]);
+      }
+      else
+      {
+         s := sact(sl.[i], A_SOMEONE, pc, null, self, TO_CHAR);
+         exec(s, self);
+         pause;
+      }
       i := i + 1;
    }
 
@@ -595,19 +649,21 @@ code
    :lostpc:
    nopriority;
    exec("say How rude!", self);
+   u := null;
    return(u);
 }
 dilend
 
 
-dilbegin qstSimpleQuest(qname : string,
+dilbegin fnpri(FN_PRI_MISSION+7)
+          qstSimpleQuest(qname : string,
                         qstAsk : stringlist,
                         qstAccepted : stringlist,
                         qstDescr : string,
                         qstDone : stringlist,
                         xp : integer, gold : integer, itemsl : stringlist);
 external
-   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist);
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
    extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
@@ -624,15 +680,21 @@ code
    :start:
    wait(SFB_CMD, (activator.type == UNIT_ST_PC));
 
-   pc := qstWaitHero@quests(qname, activator, qstAsk);
+   log("Debug qstWaitHero begin");
+   pc := qstWaitHero@quests(qname, activator, qstAsk, "");
+   log("Debug qstWaitHero end");
 
    if (pc != null)
    {
+      log("Debug qstAssign begin");
       exdp := qstAssign@quests(qname, pc, qstAccepted, qstDescr);
+      log("Debug qstAssign end");
       goto start;
    }
 
+   log("Debug qstWaitDone begin");
    pc := qstWaitDone@quests(qname, activator, qstDone, xp, gold, itemsl);
+   log("Debug qstWaitDone end");
    goto start;
 }
 dilend
