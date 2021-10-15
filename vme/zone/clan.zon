@@ -1416,11 +1416,11 @@ code
 	while (i<ln)
 	{
 		log("clist.[i+1] == |"+clist.[i+1]+"|");
-		clist.[i+1] := replace(" ","",clist.[i+1]);
+		clist.[i+1] := getword(clist.[i+1]);
 		log("clist.[i+1] == |"+clist.[i+1]+"|");
 		
 		log ("21:  clanlist.data line == "+clist.[i+1]);
-		if (self.name == clist.[i+1])
+		if ((self.name == clist.[i+1]) or (self.name+" " == clist.[i+1]))
 		{
 			init_master(clist.[i+2],clist.[i+3],clist.[i],clist.[i+4]);
 			sendtext ("Clan initialized<br/>",self);
