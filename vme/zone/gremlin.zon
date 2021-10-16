@@ -485,6 +485,7 @@ code
    goto start;
 
 :boldingo: 
+    log("Boldin A1");
 	pc := qstWaitHero@quests(BOLDIN_QUEST, activator,
       {"say Ahoy there traveller!",
       "say you look to be somewhat new around here.",
@@ -495,6 +496,7 @@ code
       }, ""
    );
 
+    log("Boldin A2");
    if (pc == null)
       goto start;
 
@@ -502,16 +504,19 @@ code
 
    // Boldin Quest accepted
 
+    log("Boldin B1");
    exdp := qstAssign@quests(BOLDIN_QUEST, pc, 
       {"say Excellent!",
        "clap"},
       "Help Boldin in Udgaard with various quests."
    );
+    log("Boldin B2");
 
 :bread:
    // Bread Quest accepted
 
 
+    log("Boldin C1");
    exdp := qstAssign@quests(BOLDIN_BREAD, pc, 
       {"say A man gets hungry in his age.",
       "whisper $1N If you could find a store and <div class='hint'>buy bread</div> for me, it would be well appreciated.",
@@ -521,25 +526,31 @@ code
       "emote gives 2 copper pieces to $1N"},
       "Buy a bread and give it to Boldin."
    );
+    log("Boldin C2");
 
+    log("Boldin D1");
    // Give money to the player
    i := transfermoney(null, pc, 2 * COPPER_MULT);
+    log("Boldin D2");
 
 	unsecure(pc);
 	goto start;
 
 :bread_ongoing:
+    log("Boldin E1");
    pc := qstWaitDone@quests(BOLDIN_BREAD, pc, 
          {"smile $1N",
           "say Quest complete, brave adventurer!",
           "whisper $1N I suspect you'll need these coins sooner or later."},
           500, 2 * COPPER_MULT,{""});
+    log("Boldin E2");
 	unsecure(pc);
 	goto start;
 	
 
 
 :water:	
+    log("Boldin F1");
    pc  := qstWaitHero@quests(BOLDIN_WATER, pc,
       {"emote quietly chews a chunk of bread.",
       "say Thank you again for that bread, traveller!",
@@ -548,12 +559,14 @@ code
       "whisper $1N A dash of water would do me well!",
       "whisper $1N Would you be so kind as to help me out?",
       "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "");
+    log("Boldin F2");
 
 	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 
    if (pc == null)
       goto start;
 
+    log("Boldin G1");
    // Find a hero to take the water quest
    exdp := qstAssign@quests(BOLDIN_WATER, pc, 
       {"say Excellent!",
@@ -564,17 +577,22 @@ code
       "::$3n hands you an empty barrel and a crumpled map.::$3n hands an empty barrel and a crumpled map to $1n."},
       "Return to Boldin with his barrel full of water. You can fill up the barrel in Midgaard at the Obelisk."
    );
+    log("Boldin G2");
 
+    log("Boldin H1");
 	item := load("water_barrel@gremlin");
 	link(item, pc);
 	item := load("midgaard_map@gremlin");
 	link(item, pc);
 	act("<div class='hint'>HINT: Type 'look map' to find directions to Midgaard.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 	
+   log("Boldin H2");
+
 	unsecure(pc);
 	goto start;
 
 
 :water_ongoing:
+    log("Boldin I1");
    pc := qstWaitDone@quests(BOLDIN_WATER, pc, 
          {"smile $1N",
           "emote takes a long drink from the barrel, completely emptying it!",
@@ -582,11 +600,13 @@ code
           "emote quite slips you some coins and gives you an empty barrel."
           },
           500, 2 * COPPER_MULT, {"water_barrel@gremlin"});
+    log("Boldin I2");
 	unsecure(pc);
 	goto start;
 
 
 :handoff:
+    log("Boldin J1");
    pc  := qstWaitHero@quests(BOLDIN_HANDOFF, pc,
       {"say Now that was refreshing, $1N!",
       "say A dark rumour has been spreading, and I think you're up to helping with it.",
@@ -594,9 +614,11 @@ code
       "whisper $1N What do you think, do you have it in you to help?",
       "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "");
 
+    log("Boldin J2");
    if (pc == null)
       goto start;
 
+    log("Boldin K1");
    // Find a hero to take the water quest
    exdp := qstAssign@quests(BOLDIN_HANDOFF, pc, 
       {"say Your help will be well appreciated $1N!",
@@ -606,30 +628,36 @@ code
       "whisper $1N Please go find Barnham, he will warmly welcome you."},
       "Go see Barnham in the farmstead north of a dusty trail between the Cypress forest and Midgaard."
    );
+    log("Boldin K2");
 
 	unsecure(pc);
 	goto start;
 
 	
 :handoffdone:
+    log("Boldin L1");
    pc := qstWaitDone@quests(BOLDIN_HANDOFF, pc, 
          {"say I see you have returned, $1N.",
           "say I am truly saddened by the news that has reached me.",
           "whisper $1N Bernhard will be deeply missed. He was the last of a long line of heroic adventurers."},
           500, 2 * COPPER_MULT, {""});
+    log("Boldin L2");
 	unsecure(pc);
 	goto start;
 
 :rogue:
+    log("Boldin M1");
    pc  := qstWaitHero@quests(BOLDIN_ROGUE, pc,
       {
       "whisper $1N Given the state of affairs, I'm afraid I must ask for additional assistance.",
       "whisper $1N Can I count on you for one more request?"
       },"");
+    log("Boldin M2");
 
    if (pc == null)
       goto start;
 
+    log("Boldin N1");
    // Find a hero to take the water quest
    exdp := qstAssign@quests(BOLDIN_ROGUE, pc, 
       {"say And so another adventure begins $1N.",
@@ -638,6 +666,7 @@ code
         "whisper $1N There in Torsbay, a rogue has landed on the shore.",
         "whisper $1N Find this rogue, and mention my name. He will know what to do."
       }, "Find the rogue in Torsbay.");
+    log("Boldin N2");
 	unsecure(pc);
 	goto start;
 
