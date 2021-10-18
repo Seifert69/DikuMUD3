@@ -181,6 +181,7 @@ code
    if (((qname+" Ongoing") in pc.quests) or ((qname+" Complete") in pc.quests))
    {
       pc := null;
+      log("qstWaitHero Ret1");
       return(pc);
    }
 
@@ -192,6 +193,7 @@ code
       pause;
       exec("peer", self);
       pc := null;
+      log("qstWaitHero Ret2");
       return(pc);
    }
 
@@ -214,6 +216,7 @@ code
    if (acptfunc == "")
       acptfunc := "default_accept@quests";
 
+   log("qstWaitHero Ret3");
    i := dilcall(acptfunc)(pc, 0, sl.[ln-1]);
 
    nopriority;
@@ -221,6 +224,7 @@ code
    if (i == 0)
       goto no_quest;
 
+   log("qstWaitHero Ret4");
    return(pc);
 
 :no_quest:
@@ -229,6 +233,7 @@ code
 	exec("sulk", self);
 	unsecure(pc);
    pc := null;
+   log("qstWaitHero Ret5");
 	return(pc);
 
 :lostpc:
@@ -237,6 +242,7 @@ code
    pause;
 	exec("sigh", self);
    pc := null;
+   log("qstWaitHero Ret6");
 	return(pc);
 }
 dilend
