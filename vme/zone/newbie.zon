@@ -1518,7 +1518,7 @@ pause;
      "for the next few levels.'",
 A_ALWAYS,self,null,pc,TO_VICT);
    pause;
-   act ("$1n says 'A word of warning however do not wander to far west until "+
+   act ("$1n says 'A word of warning however do not wander too far west until "+
         "You have gained a few levels. The wolves are very mean.'",
 A_ALWAYS,self,null,pc,TO_VICT);
    pause;
