@@ -56,6 +56,52 @@ Bright White.<br/>
 #define SKILL_POINT_FACTOR      (8) 
 #define ABILITY_POINT_FACTOR    (4)
 
+dilbegin integer buglostint(pc : unitptr, ip : integer, s : string);
+code
+{
+   secure(pc, lostpc);
+
+   :loop:
+   wait(SFB_CMD, 1==1);
+   goto loop;
+
+   :lostpc:
+   log("Lost PC in called function integer.");
+   return(0);
+}
+dilend
+
+
+dilbegin unitptr buglostpc(pc : unitptr);
+external
+   integer buglostint(pc : unitptr, ip : integer, s : string);
+
+
+var
+  i : integer;
+code
+{
+   secure(pc, lostpc);
+
+   :loop:
+   i := buglostint(pc, 42, "42");
+   if (pc == null)
+      log("PC is null");
+   else
+      log(pc.name);
+   wait(SFB_CMD, 1==1);
+   goto loop;
+
+   :lostpc:
+   exec("emote loses its grip.", self);
+   log("Lost PC in called function.");
+   pc := null;
+   return(pc);
+}
+dilend
+
+
+
 dilbegin advance_level();
 external 
    adv_guild_lvl@g_q(ch : unitptr);
@@ -7447,6 +7493,31 @@ You notice the word 'Papi' inscribed with tiny letters on the rim of its shield.
 weight 0
 M_ZOMBIE_SMALL(1,SEX_NEUTRAL)
 
+dilbegin clingontest();
+external
+   unitptr buglostpc(pc : unitptr);
+
+var
+   u : unitptr;
+code
+{
+   :loop:
+   wait(SFB_CMD, activator != self);
+   u := activator;
+   secure(u, lostpc);
+   log("Latched onto " + u.name);
+   //exec("emote climbs onto " + u.name, self);
+   u := buglostpc(u);
+   goto loop;
+
+   :lostpc:
+   exec("emote lost its host.", self);
+   log("Bug lost PC outer loop");
+   goto loop;
+}
+dilend
+
+/*
 dilbegin testzonenpcs();
 var
    z : zoneptr;
@@ -7496,7 +7567,7 @@ code
    exec(s1, self);
    goto loop;
 }
-dilend
+dilend*/
 end
 
 
