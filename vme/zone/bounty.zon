@@ -84,13 +84,16 @@ Jewelry, as well as arms/armor use birthstones and... perhaps some other materia
 for crafting. Crafting these items allows creation of a wide range of items, with each
 birthstone representing a unique ability or other boost.
 
-// spree - how does it fit in the story?
-// who gives it? Who rewards it?
+killing sprees are run by the Blacksmith, as a means to winnow down the hordes 
+of evil facing the eventual hero.
 
 Special thanks to Jager, for unwittingly sharing his package delivery scheme.
 It's a perfect fit for newbies to enjoy bounties! Thanks brother. :)
 
 Special thanks to Papi for creating the login streak bounties. It was a great idea!
+
+Final reward will be a "hero plate" (like friend plate) with a mana palm orb
+as well. Tag for players will be * Hero *
 
 "
 
@@ -5464,8 +5467,9 @@ descr
 "Through the large double-doors the quiet of this space encompasses you. While 
 the building is largely unadorned and simple rough-hewn stone. The sheer size 
 and scale of the place speak to the significant investments that have been 
-made over many years. To the east and west more rooms expand into the vast hall, 
-and to the south the outdoors and access to Kings Road can be seen in the distance."
+made over many years. To the east and west more rooms expand into the vast hall,
+and to the south the outdoors and access to Kings Road can be seen in the 
+distance."
 flags {UNIT_FL_INDOORS}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -5517,12 +5521,12 @@ names {"sprees"}
 title "<div class='cpn'>The Smithy</div>"
 descr
 "Through the doorway a large working Smithy is unveiled. The design of the room 
-allows for air to flow freely in to feed the great bellows that keep the furnace 
-and smelter hot. Large piles of ore are lain out, and amongst them chests of finer 
-metals and precious stones. The Smithy is alive with work as the hands that support 
-The Blacksmith work their art. This appears to be a formidable smithy capable of 
-supplying far greater volumes of arms and armor than it seems like the Hunters 
-would need."
+allows for air to flow freely in to feed the great bellows that keep the 
+furnace and smelter hot. Large piles of ore are lain out, and amongst them 
+chests of finer metals and precious stones. The Smithy is alive with work as 
+the hands that support The Blacksmith work their art. This appears to be a 
+formidable smithy capable of supplying far greater volumes of arms and armor 
+than it seems like the Hunters would need."
 flags {UNIT_FL_INDOORS}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -5539,10 +5543,11 @@ title "<div class='cpn'>The Jeweler's Workshop</div>"
 descr
 "South of the hallway the Jeweler's Workshop is a quiet juxtaposition to the 
 ringing of hammers on anvils that periodically rings out from the Smithy to 
-the north. Chests of fine metals and precious gemstones are arrayed strategically 
-throughout the space. A small-batch smelter appropriate to the task burns in the 
-corner, and a range of benches covered in files and other tools of the trade 
-fill the space. It is clear that the Bounty Hunters produce high quality pieces."
+the north. Chests of fine metals and precious gemstones are arrayed 
+strategically throughout the space. A small-batch smelter appropriate to the 
+task burns in the corner, and a range of benches covered in files and other 
+tools of the trade fill the space. It is clear that the Bounty Hunters produce 
+high quality pieces."
 flags {UNIT_FL_INDOORS}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -5595,7 +5600,8 @@ those rumors to rest. Like the rest of the guild, it is a large, and
 masterfully wrought stone room. No lack of attention was given to the 
 construction, and a well-made yet simple shrine rests against the southern 
 wall. The space is not entirely free from decor, as frescos have been 
-painted in sections on the walls representing the hunt in a seemingly strange and unknown part of history."
+painted in sections on the walls representing the hunt in a seemingly strange 
+and unknown part of history."
 flags {UNIT_FL_INDOORS, UNIT_FL_SACRED, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -5609,9 +5615,9 @@ keyword {"fresco"}
 key nokey
 open {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN};
 extra {"frescos","fresco","wall"}
-"The frescos show the history of the hunt. Intricate details was painted into the 
-still-wet plasted as the Inner Sanctum was erected, and dried to form a permanent 
-history. Certain details appear strangely worn on the western wall."
+"The frescos show the history of the hunt. Intricate details was painted into 
+the still-wet plasted as the Inner Sanctum was erected, and dried to form a 
+permanent history. Certain details appear strangely worn on the western wall."
 
 end
 
@@ -5619,25 +5625,26 @@ sanctum_1
 title "<div class='cpn'>The Inner Sanctum</div>"
 descr
 "Here the Bounty Hunters Guild Inner Sanctum expands, and comes to an apparent 
-end. The frescos continue across the walls here, and an overall sense of well being 
-and peace is here. Despite this, it is with no small sense of apprehension your eyes 
-come to rest on simple though plentiful feast laid out across sturdy tables. Food 
-an drink enough to feed many is arrayed across the tables, and while of fine quality 
-it is simple, and not out of character for what you have noticed of this strange 
-place. The room appears empty, and the only exit is back to the south."
+end. The frescos continue across the walls here, and an overall sense of well 
+being and peace is here. Despite this, it is with no small sense of 
+apprehension your eyes come to rest on simple though plentiful feast laid out 
+across sturdy tables. Food an drink enough to feed many is arrayed across the 
+tables, and while of fine quality it is simple, and not out of character for 
+what you have noticed of this strange place. The room appears empty, and the 
+only exit is back to the south."
 
 extra {"tables", "table"}
-"The tables are crafted from thick strong timbers, and could support a small army. 
-That, or a very large feast."
+"The tables are crafted from thick strong timbers, and could support a small 
+army. That, or a very large feast."
 
 extra {"feast"}
 "It is somewhat strange to find a feast of fresh hot food laid out here in this 
 seemingly lonely place. Dare you partake in this feast?"
 
 extra {"frescos","fresco","wall"}
-"The frescos show the history of the hunt. Intricate details was painted into the 
-still-wet plasted as the Inner Sanctum was erected, and dried to form a permanent 
-history."
+"The frescos show the history of the hunt. Intricate details was painted into 
+the still-wet plasted as the Inner Sanctum was erected, and dried to form a 
+permanent history."
 
 flags {UNIT_FL_INDOORS, UNIT_FL_SACRED, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
@@ -5674,12 +5681,13 @@ descr
 "The Great Library of the Bounty Hunters is somewhat of a wonder. Rumors speak 
 of it as though it may not exist, and its presence hidden away within the Inner 
 Sanctum of the Guild gives substance to those rumors. To many in the world, 
-this place does not exist. Having entered the room, the wonder of it is striking. 
-The room is cavernous, with great bookshelfs stretching high and lining every 
-wall. Volumes covering histories, to tales of heros long past, and to songs of the 
-great bards who have roamed the land are included in every shape and size. In the 
-center of the room a great tome is placed on a pedastal, where a shaft of light 
-from an unknown source falls on its open pages. The only exit is back to the west."
+this place does not exist. Having entered the room, the wonder of it is 
+striking. The room is cavernous, with great bookshelfs stretching high and 
+lining every wall. Volumes covering histories, to tales of heros long past, 
+and to songs of the great bards who have roamed the land are included in every 
+shape and size. In the center of the room a great tome is placed on a pedastal, 
+where a shaft of light from an unknown source falls on its open pages. The only 
+exit is back to the west."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -5730,9 +5738,9 @@ stairs
 title "<div class='cpn'>In the Stairwell</div>"
 descr
 "Large stone blocks make each step in the spiral stairwell, each large enough 
-for two men to stand abrest. The quality is as distinct as the rest of the Guild 
-though to what end these stairs were built it is still unclear. Travel is possible 
-both up and down."
+for two men to stand abrest. The quality is as distinct as the rest of the 
+Guild though to what end these stairs were built it is still unclear. Travel 
+is possible both up and down."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -5745,12 +5753,13 @@ end
 bottom
 title "<div class='cpn'>Bottom of the Stairwell</div>"
 descr
-"Reaching the bottom of the stairwell, a passage opens to either direction. To both the 
-east and west the stones placed to form the structures above give way to the raw bedrock 
-that makes up the surrounds. It is a somewhat peculiar thing, given the clear intent to 
-every stone placed, to decide in this space to leave it seemingly unfinished. To the west, 
-a somewhat larger cave opens up than the passageway that moves along to the east. One may 
-also choose to climb the stairs here heading back up to the Inner Sanctum."
+"Reaching the bottom of the stairwell, a passage opens to either direction. To 
+both the east and west the stones placed to form the structures above give way 
+to the raw bedrock that makes up the surrounds. It is a somewhat peculiar 
+thing, given the clear intent to every stone placed, to decide in this space 
+to leave it seemingly unfinished. To the west, a somewhat larger cave opens up 
+than the passageway that moves along to the east. One may also choose to climb 
+the stairs here heading back up to the Inner Sanctum."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -5764,12 +5773,12 @@ end
 faces
 title "<div class='cpn'>Hallway of Faces</div>"
 descr
-"Stepping into the long hallway, the raw stone appears pocked with strange images. 
-It is with sudden horror that you realize these are not, in fact, images on the 
-stone but faces. Human, animal, demon, and angel. Young, and old, male and female. 
-Faces of every discernable nature line every space along what seems to be an 
-impossibly long hallway. To the west the horrors come to an end at the bottom of 
-the stairway, and the hallway continues to the east."
+"Stepping into the long hallway, the raw stone appears pocked with strange 
+images. It is with sudden horror that you realize these are not, in fact, 
+images on the stone but faces. Human, animal, demon, and angel. Young, and old, 
+male and female. Faces of every discernable nature line every space along what 
+seems to be an impossibly long hallway. To the west the horrors come to an end 
+at the bottom of the stairway, and the hallway continues to the east."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -5783,11 +5792,12 @@ faces2
 title "<div class='cpn'>Hallway of Faces</div>"
 descr
 "With the sense of horror undeminished you note that the faces spread down this 
-ghastly hallway. Human, animal, demon, and angel. Young, and old, male and female. 
-Faces of every discernable nature line every space along what seems to be an 
-impossibly long hallway. To the west the horrors continue in the hallway of faces, 
-and to the east it seems the hallway may come to an end, though it is with no small 
-sense of apprehension that you wonder what lies in that direction."
+ghastly hallway. Human, animal, demon, and angel. Young, and old, male and 
+female. Faces of every discernable nature line every space along what seems to 
+be an impossibly long hallway. To the west the horrors continue in the hallway 
+of faces, and to the east it seems the hallway may come to an end, though it 
+is with no small sense of apprehension that you wonder what lies in that 
+direction."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -5807,11 +5817,11 @@ crypt
 title "<div class='cpn'>The Necromancer's Crypt</div>"
 descr
 "The Hallway of Faces opens here into a cavern, that is now identifiable as The 
-Necromancer's crypt. Ghastly sights sit arrayed on surfaces that would shake the 
-most stalwart individual. Heads in various states of... deconstruction... can be 
-seen on working tables, and spaces for magics of a type that are best left unspoken 
-have clearly been practiced in other areas. The only visible exit is back through 
-the horrors of the Hallway of Faces to the west."
+Necromancer's crypt. Ghastly sights sit arrayed on surfaces that would shake 
+the most stalwart individual. Heads in various states of... deconstruction... 
+can be seen on working tables, and spaces for magics of a type that are best 
+left unspoken have clearly been practiced in other areas. The only visible 
+exit is back through the horrors of the Hallway of Faces to the west."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -5910,8 +5920,9 @@ descr
 "Through the large double-doors the quiet of this space encompasses you. While 
 the building is largely unadorned and simple rough-hewn stone. The sheer size 
 and scale of the place speak to the significant investments that have been 
-made over many years. To the east and west more rooms expand into the vast hall, 
-and to the south the outdoors and access to Kings Road can be seen in the distance."
+made over many years. To the east and west more rooms expand into the vast hall,
+and to the south the outdoors and access to Kings Road can be seen in the 
+distance."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -5968,12 +5979,12 @@ smithy2
 title "<div class='cpn'>The Smithy</div>"
 descr
 "Through the doorway a large working Smithy is unveiled. The design of the room 
-allows for air to flow freely in to feed the great bellows that keep the furnace 
-and smelter hot. Large piles of ore are lain out, and amongst them chests of finer 
-metals and precious stones. The Smithy is alive with work as the hands that support 
-The Blacksmith work their art. This appears to be a formidable smithy capable of 
-supplying far greater volumes of arms and armor than it seems like the Hunters 
-would need."
+allows for air to flow freely in to feed the great bellows that keep the 
+furnace and smelter hot. Large piles of ore are lain out, and amongst them 
+chests of finer metals and precious stones. The Smithy is alive with work as 
+the hands that support The Blacksmith work their art. This appears to be a 
+formidable smithy capable of supplying far greater volumes of arms and armor 
+than it seems like the Hunters would need."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -5989,10 +6000,11 @@ title "<div class='cpn'>The Jeweler's Workshop</div>"
 descr
 "South of the hallway the Jeweler's Workshop is a quiet juxtaposition to the 
 ringing of hammers on anvils that periodically rings out from the Smithy to 
-the north. Chests of fine metals and precious gemstones are arrayed strategically 
-throughout the space. A small-batch smelter appropriate to the task burns in the 
-corner, and a range of benches covered in files and other tools of the trade 
-fill the space. It is clear that the Bounty Hunters produce high quality pieces."
+the north. Chests of fine metals and precious gemstones are arrayed 
+strategically throughout the space. A small-batch smelter appropriate to the 
+task burns in the corner, and a range of benches covered in files and other 
+tools of the trade fill the space. It is clear that the Bounty Hunters produce 
+high quality pieces."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -6049,7 +6061,8 @@ those rumors to rest. Like the rest of the guild, it is a large, and
 masterfully wrought stone room. No lack of attention was given to the 
 construction, and a well-made yet simple shrine rests against the southern 
 wall. The space is not entirely free from decor, as frescos have been 
-painted in sections on the walls representing the hunt in a seemingly strange and unknown part of history."
+painted in sections on the walls representing the hunt in a seemingly strange 
+and unknown part of history."
 flags {UNIT_FL_INDOORS, UNIT_FL_SACRED, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -6068,25 +6081,26 @@ sanctum_12
 title "<div class='cpn'>The Inner Sanctum</div>"
 descr
 "Here the Bounty Hunters Guild Inner Sanctum expands, and comes to an apparent 
-end. The frescos continue across the walls here, and an overall sense of well being 
-and peace is here. Despite this, it is with no small sense of apprehension your eyes 
-come to rest on simple though plentiful feast laid out across sturdy tables. Food 
-an drink enough to feed many is arrayed across the tables, and while of fine quality 
-it is simple, and not out of character for what you have noticed of this strange 
-place. The room appears empty, and the only exit is back to the south."
+end. The frescos continue across the walls here, and an overall sense of well 
+being and peace is here. Despite this, it is with no small sense of 
+apprehension your eyes come to rest on simple though plentiful feast laid out 
+across sturdy tables. Food an drink enough to feed many is arrayed across the 
+tables, and while of fine quality it is simple, and not out of character for 
+what you have noticed of this strange place. The room appears empty, and the 
+only exit is back to the south."
 
 extra {"tables", "table"}
-"The tables are crafted from thick strong timbers, and could support a small army. 
-That, or a very large feast."
+"The tables are crafted from thick strong timbers, and could support a small 
+army. That, or a very large feast."
 
 extra {"feast"}
 "It is somewhat strange to find a feast of fresh hot food laid out here in this 
 seemingly lonely place. Dare you partake in this feast?"
 
 extra {"frescos","fresco","wall"}
-"The frescos show the history of the hunt. Intricate details was painted into the 
-still-wet plasted as the Inner Sanctum was erected, and dried to form a permanent 
-history."
+"The frescos show the history of the hunt. Intricate details was painted into 
+the still-wet plasted as the Inner Sanctum was erected, and dried to form a 
+permanent history."
 
 flags {UNIT_FL_INDOORS, UNIT_FL_SACRED, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
 movement SECT_CITY
@@ -6126,12 +6140,13 @@ descr
 "The Great Library of the Bounty Hunters is somewhat of a wonder. Rumors speak 
 of it as though it may not exist, and its presence hidden away within the Inner 
 Sanctum of the Guild gives substance to those rumors. To many in the world, 
-this place does not exist. Having entered the room, the wonder of it is striking. 
-The room is cavernous, with great bookshelfs stretching high and lining every 
-wall. Volumes covering histories, to tales of heros long past, and to songs of the 
-great bards who have roamed the land are included in every shape and size. In the 
-center of the room a great tome is placed on a pedastal, where a shaft of light 
-from an unknown source falls on its open pages. The only exit is back to the west."
+this place does not exist. Having entered the room, the wonder of it is 
+striking. The room is cavernous, with great bookshelfs stretching high and 
+lining every wall. Volumes covering histories, to tales of heros long past, 
+and to songs of the great bards who have roamed the land are included in every 
+shape and size. In the center of the room a great tome is placed on a pedastal, 
+where a shaft of light from an unknown source falls on its open pages. The 
+only exit is back to the west."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -6187,9 +6202,9 @@ stairs2
 title "<div class='cpn'>In the Stairwell</div>"
 descr
 "Large stone blocks make each step in the spiral stairwell, each large enough 
-for two men to stand abrest. The quality is as distinct as the rest of the Guild 
-though to what end these stairs were built it is still unclear. Travel is possible 
-both up and down."
+for two men to stand abrest. The quality is as distinct as the rest of the 
+Guild though to what end these stairs were built it is still unclear. Travel 
+is possible both up and down."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -6204,12 +6219,13 @@ end
 bottom2
 title "<div class='cpn'>Bottom of the Stairwell</div>"
 descr
-"Reaching the bottom of the stairwell, a passage opens to either direction. To both the 
-east and west the stones placed to form the structures above give way to the raw bedrock 
-that makes up the surrounds. It is a somewhat peculiar thing, given the clear intent to 
-every stone placed, to decide in this space to leave it seemingly unfinished. To the west, 
-a somewhat larger cave opens up than the passageway that moves along to the east. One may 
-also choose to climb the stairs here heading back up to the Inner Sanctum."
+"Reaching the bottom of the stairwell, a passage opens to either direction. To 
+both the east and west the stones placed to form the structures above give way 
+to the raw bedrock that makes up the surrounds. It is a somewhat peculiar 
+thing, given the clear intent to every stone placed, to decide in this space to 
+leave it seemingly unfinished. To the west, a somewhat larger cave opens up 
+than the passageway that moves along to the east. One may also choose to climb 
+the stairs here heading back up to the Inner Sanctum."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -6225,12 +6241,12 @@ end
 faces22
 title "<div class='cpn'>Hallway of Faces</div>"
 descr
-"Stepping into the long hallway, the raw stone appears pocked with strange images. 
-It is with sudden horror that you realize these are not, in fact, images on the 
-stone but faces. Human, animal, demon, and angel. Young, and old, male and female. 
-Faces of every discernable nature line every space along what seems to be an 
-impossibly long hallway. To the west the horrors come to an end at the bottom of 
-the stairway, and the hallway continues to the east."
+"Stepping into the long hallway, the raw stone appears pocked with strange 
+images. It is with sudden horror that you realize these are not, in fact, 
+images on the stone but faces. Human, animal, demon, and angel. Young, and old, 
+male and female. Faces of every discernable nature line every space along what 
+seems to be an impossibly long hallway. To the west the horrors come to an end 
+at the bottom of the stairway, and the hallway continues to the east."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -6246,11 +6262,12 @@ faces222
 title "<div class='cpn'>Hallway of Faces</div>"
 descr
 "With the sense of horror undeminished you note that the faces spread down this 
-ghastly hallway. Human, animal, demon, and angel. Young, and old, male and female. 
-Faces of every discernable nature line every space along what seems to be an 
-impossibly long hallway. To the west the horrors continue in the hallway of faces, 
-and to the east it seems the hallway may come to an end, though it is with no small 
-sense of apprehension that you wonder what lies in that direction."
+ghastly hallway. Human, animal, demon, and angel. Young, and old, male and 
+female. Faces of every discernable nature line every space along what seems to 
+be an impossibly long hallway. To the west the horrors continue in the hallway 
+of faces, and to the east it seems the hallway may come to an end, though it 
+is with no small sense of apprehension that you wonder what lies in that 
+direction."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -6266,11 +6283,11 @@ crypt2
 title "<div class='cpn'>The Necromancer's Crypt</div>"
 descr
 "The Hallway of Faces opens here into a cavern, that is now identifiable as The 
-Necromancer's crypt. Ghastly sights sit arrayed on surfaces that would shake the 
-most stalwart individual. Heads in various states of... deconstruction... can be 
-seen on working tables, and spaces for magics of a type that are best left unspoken 
-have clearly been practiced in other areas. The only visible exit is back through 
-the horrors of the Hallway of Faces to the west."
+Necromancer's crypt. Ghastly sights sit arrayed on surfaces that would shake 
+the most stalwart individual. Heads in various states of... deconstruction... 
+can be seen on working tables, and spaces for magics of a type that are best 
+left unspoken have clearly been practiced in other areas. The only visible 
+exit is back through the horrors of the Hallway of Faces to the west."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -6332,8 +6349,9 @@ names {"bounty hunter","hunter","man"}
 title "the bounty hunter"        
 descr "A tall man with a dark smirk stands in the shadows."
 extra{}
-"Tall and well muscled, he is of unknown origin. An dark smirk seems to permanently rest on his face. This 
-appears to be the man who may offer a contract if you but ask." 
+"Tall and well muscled, he is of unknown origin. An dark smirk seems to 
+permanently rest on his face. This appears to be the man who may offer a 
+contract if you but ask." 
 
 alignment -1000
 M_AVG_HUMAN(100,SEX_MALE)
@@ -6352,8 +6370,9 @@ names {"shopkeeper","dwarf"}
 title "the guild shopkeeper"        
 descr "A girthy dwarf with a warm smile stands behind the counter."
 extra{}
-"Girthy, and apparently not unfamiliar with his wine, the shopkeeper nevertheless 
-seems to be rather friendly. Simply ask for his list to select from the guild wares." 
+"Girthy, and apparently not unfamiliar with his wine, the shopkeeper 
+nevertheless seems to be rather friendly. Simply ask for his list to select 
+from the guild wares." 
 
 alignment 0
 M_AVG_DWARF(100,SEX_MALE)
@@ -6565,8 +6584,9 @@ names {"bounty hunter","hunter","man"}
 title "the bounty hunter"        
 descr "A tall man with a dark smirk stands in the shadows."
 extra{}
-"Tall and well muscled, he is of unknown origin. An dark smirk seems to permanently rest on his face. This 
-appears to be the man who may offer a contract if you but ask." 
+"Tall and well muscled, he is of unknown origin. An dark smirk seems to 
+permanently rest on his face. This appears to be the man who may offer a 
+contract if you but ask." 
 
 alignment -1000
 M_AVG_HUMAN(95,SEX_MALE)
@@ -6581,8 +6601,9 @@ names {"shopkeeper","dwarf"}
 title "the guild shopkeeper"        
 descr "A girthy dwarf with a warm smile stands behind the counter."
 extra{}
-"Girthy, and apparently not unfamiliar with his wine, the shopkeeper nevertheless 
-seems to be rather friendly. Simply ask for his list to select from the guild wares." 
+"Girthy, and apparently not unfamiliar with his wine, the shopkeeper 
+nevertheless seems to be rather friendly. Simply ask for his list to select 
+from the guild wares." 
 
 alignment 0
 M_AVG_DWARF(90,SEX_MALE)
@@ -6721,8 +6742,8 @@ names {"demonic cityguard","cityguard","guard"}
 title "the demonic Cityguard"
 descr "A demonic cityguard is here."
 extra {}
-"A twisted demonic version of a big, strong, helpful, trustworthy guard.  He looks as though he's keeping
-an eye on the townsfolk."
+"A twisted demonic version of a big, strong, helpful, trustworthy guard.  
+He looks as though he's keeping an eye on the townsfolk."
 exp 0
 M_HUMAN_WARRIOR_SWORD(97, SEX_MALE)   /* He shall use a polearm */
 alignment 400  /* Just above neutral */

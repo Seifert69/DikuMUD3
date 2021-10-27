@@ -270,6 +270,7 @@ gmap(402,491)
 flags {UNIT_FL_SACRED}
 light 5
 south to ct_6;
+north to clan_guard@clan_koh;
 end
 
 				ct_7
