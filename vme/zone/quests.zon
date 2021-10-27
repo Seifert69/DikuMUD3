@@ -336,7 +336,6 @@ code
 dilend
 
 
-
 // Add this to a quest NPC that's waiting to "get items" from a player.
 // The items received will be destroyed, and incorrect items given back.
 //
@@ -568,10 +567,10 @@ code
    u := null;
 
    :start:
-   if ((qname + " Complete") in activator.quests)
+   if ((qname + " Complete") in pc.quests)
      return(u);
 
-   exdp := (qname + " Ongoing") in activator.quests;
+   exdp := (qname + " Ongoing") in pc.quests;
 
    if (not exdp)
       return(u);
