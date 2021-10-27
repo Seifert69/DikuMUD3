@@ -1176,10 +1176,11 @@ fs_05
 names {"farm yard", "farm"}
 title "Barnham's Corn Field"
 descr
-"Strong tall corn stalks block much view beyond whats right here. You can make out 
-the fence surrounding Barnham's farm to the immediate north and west. Somewhere, 
-the sound of a crow exulting in finding a trinket is emerging to break the otherwise 
-peaceful quiet. South and east of here the corn fields extend beyond your view."
+"Strong tall corn stalks block much view beyond whats right here. You can make 
+out the fence surrounding Barnham's farm to the immediate north and west. 
+Somewhere, the sound of a crow exulting in finding a trinket is emerging to 
+break the otherwise peaceful quiet. South and east of here the corn fields 
+extend beyond your view."
 movement SECT_FIELD
 
 south to fs_06 descr "Barnham's Corn Field";
@@ -1190,11 +1191,12 @@ fs_06
 names {"farm yard", "farm"}
 title "Barnham's Corn Field"
 descr
-"Here in the far corner of Barnhams farm, a peaceful quiet can be found. Indeed, 
-a small bench sits here among the rows of corn. It appears as if Barnham himself 
-has taken advantage of the solitude offered, and spent time reflecting in its 
-well-worn seat. The fence surrounding the fields blocks travel to the south and 
-west, while rows of corn block sight as they extend to the north and east."
+"Here in the far corner of Barnhams farm, a peaceful quiet can be found. 
+Indeed, a small bench sits here among the rows of corn. It appears as if 
+Barnham himself has taken advantage of the solitude offered, and spent time 
+reflecting in its well-worn seat. The fence surrounding the fields blocks 
+travel to the south and west, while rows of corn block sight as they extend to 
+the north and east."
 movement SECT_FIELD
 north to fs_05 descr "Barnham's Corn Field";
 east to fs_03 descr "Barnham's Corn Field";
@@ -1210,8 +1212,8 @@ descr
 large field that extends beyond it. It is a well-constructed home, with 
 amenities to support the operations and maintainance of the property. A small 
 farm cart rests along one side of the front door. Beyond, in the distance 
-to the north and west, some hills rise up obscuring the horizon. Away to the south and east
-you know lies the city of Midgaard."
+to the north and west, some hills rise up obscuring the horizon. Away to the 
+south and east you know lies the city of Midgaard."
 movement SECT_FIELD
 
 west to farm_house descr "Barnham's Farm House"
@@ -1229,9 +1231,9 @@ descr
 "Gravel, sand and dust makes this desert like trail, which leads north from the 
 path ultimately connecting to the city of Midgaard to the east, and Udgaard far 
 away to the west beyond the Cypress Forest. As you travel to the north, the 
-well-traveled becomes less dusty, and more firmly-packed. The trail continues to 
-the north, where some distance away you can make out a farm house. Travelling 
-south from here will return you to the Dusty Trail west of Midgaard."
+well-traveled becomes less dusty, and more firmly-packed. The trail continues 
+to the north, where some distance away you can make out a farm house. 
+Travelling south from here will return you to the Dusty Trail west of Midgaard."
 movement SECT_CITY
 
 north to trail_02 descr "On a Well-Worn Trail";
@@ -1428,11 +1430,12 @@ fcave_07
 names {"inside cave", "cave"}
 title "A Tunnel in the Cave"
 descr
-"As you crawl through this narrow tunnel, the space feels stifling. The acrid reek 
-that permeates these caves does nothing to help the onset of claustrophobia. To 
-further add to the discomfort, from above you a steady drip has made this tunnel 
-wet. If you work carefully you can return from where you came. Similarly you may 
-be able to continue through, and it seems things open up just ahead."
+"As you crawl through this narrow tunnel, the space feels stifling. The acrid 
+reek that permeates these caves does nothing to help the onset of 
+claustrophobia. To further add to the discomfort, from above you a steady drip 
+has made this tunnel wet. If you work carefully you can return from where you 
+came. Similarly you may be able to continue through, and it seems things open 
+up just ahead."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
 
@@ -1444,12 +1447,13 @@ fcave_08
 names {"inside cave", "cave"}
 title "A Large Cavern"
 descr
-"The narrow tunnel opens here into a large cavern. The ceiling climbs up and becomes 
-lost in the darkness high above. Here and there, a steady heartbeat of a water  
-dripping can be heard as the moisture falls from distant stalactites. The darnkess
-feels complete and almost smothering, and every noise echoes through the space. And 
-noises there are. There are things moving in the darnkess, somewhere. It seems that
-the cavern contiues north, or back through the narrow passage west."
+"The narrow tunnel opens here into a large cavern. The ceiling climbs up and 
+becomes lost in the darkness high above. Here and there, a steady heartbeat of 
+a water dripping can be heard as the moisture falls from distant stalactites. 
+The darnkess feels complete and almost smothering, and every noise echoes 
+through the space. And noises there are. There are things moving in the 
+darnkess, somewhere. It seems that the cavern contiues north, or back through 
+the narrow passage west."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
 
@@ -1461,11 +1465,11 @@ fcave_09
 names {"inside cave", "cave"}
 title "Inside the Cave"
 descr
-"The large cavern disappears into the darkness high above. Here and there, a steady 
-heartbeat of a water dripping can be heard as the moisture falls from distant 
-stalactites. The darnkess feels complete and almost smothering, and every noise 
-echoes through the space. Somewhere, there are things moving in the darnkess. It 
-seems that the cavern contiues south and east."
+"The large cavern disappears into the darkness high above. Here and there, a 
+steady heartbeat of a water dripping can be heard as the moisture falls from 
+distant stalactites. The darnkess feels complete and almost smothering, and 
+every noise echoes through the space. Somewhere, there are things moving in 
+the darnkess. It seems that the cavern contiues south and east."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
 
@@ -1513,9 +1517,9 @@ descr
 "Suddenly the cave that seemed like it may continue winding through the hills 
 forever, comes to an abrupt end. Travel is no longer possible along this trail. 
 The stale rank air in this end of the cave is overwhelming, where that smell 
-comes from, is perhaps better not explored. The damp accumulates into pools here 
-and you suspect that they may be related to the smell. The sounds of something, 
-or someone moving in the darnkess leaves hair raised on end."
+comes from, is perhaps better not explored. The damp accumulates into pools 
+here and you suspect that they may be related to the smell. The sounds of 
+something, or someone moving in the darnkess leaves hair raised on end."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
 
@@ -1528,11 +1532,11 @@ title "Dead End"
 descr
 "Suddenly the cave that seemed like it may continue winding through the hills 
 forever, comes to an abrupt end. A slight draft, and with it the welcome aroma 
-of fresh air, tickles the senses here. The cave wall before you is evidently the 
-end of the path. Where is that fresh air coming from however. The rocks on the 
-cave wall may be worth looking at further. The damp accumulates into pools here 
-and you suspect that they may be related to the smell. The sounds of something, 
-or someone moving in the darnkess leaves hair raised on end."
+of fresh air, tickles the senses here. The cave wall before you is evidently 
+the end of the path. Where is that fresh air coming from however. The rocks on 
+the cave wall may be worth looking at further. The damp accumulates into pools 
+here and you suspect that they may be related to the smell. The sounds of 
+something, or someone moving in the darnkess leaves hair raised on end."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
 
@@ -1626,9 +1630,10 @@ names {"Boldin","man"}
 title "Boldin the wise"
 descr "Boldin the wise is here."
 extra {}
-"Boldin The Wise as he is known. A slim elderly man, Boldin definitely didnt make it through
-life by blade or hammer. The look of one well studied, and with a deep smile, you can appreciate 
-the clear evidence that his alternative path through life has been effective."
+"Boldin The Wise as he is known. A slim elderly man, Boldin definitely didnt 
+make it through life by blade or hammer. The look of one well studied, and 
+with a deep smile, you can appreciate the clear evidence that his alternative 
+path through life has been effective."
 M_AVG_HUMAN(199, SEX_MALE)
 alignment 1000
 bright 4
@@ -1770,8 +1775,9 @@ names {"rogue", "sventer"}
 title "Sventer the rogue"
 descr "A tall roguish man is here."
 extra {}
-"Tall, and dashingly handsom, Sventer has a scar down one cheek from an apparent run-in 
-with a blade of one form or another. He is cowled in a dark cloak, and has a gleam in his eye."
+"Tall, and dashingly handsom, Sventer has a scar down one cheek from an 
+apparent run-in with a blade of one form or another. He is cowled in a dark 
+cloak, and has a gleam in his eye."
 M_HUMAN_THIEF_AXE(30,SEX_MALE)
 money 1 GOLD_PIECE
 
@@ -1789,8 +1795,9 @@ descr "The remains of someone, or something, have been dumped here."
 weight 1
 cost 1 IRON_PIECE
 extra {}
-"These remains are more decayed than otherwise. All that you can discern is that 
-they appear to have been human, originally. This may be all that is left of Bernhard."
+"These remains are more decayed than otherwise. All that you can discern is 
+that they appear to have been human, originally. This may be all that is left 
+of Bernhard."
 end
 
 grump_sign
@@ -1847,8 +1854,8 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_SHORT_SWORD, -1,-1)
 weight 1
 extra {}
-"This rusty sword appears to have been left in the rain for a period of several years. Despite 
-this, you wouldn't want anyone to swing it at you."
+"This rusty sword appears to have been left in the rain for a period of 
+several years. Despite this, you wouldn't want anyone to swing it at you."
 end
 
 coins
@@ -1860,8 +1867,8 @@ names {"barrel"}
 title "a barrel"
 descr "A barrel has been left here."
 extra {}
-"This is an excellent barrel for carrying water. If you were to find a source of water, you could pour it in!<br>
-<br><div class='hint'>HINT: At the Obelisk in the Market Square of Midgaard, 'pour obelisk in barrel'.</div>"
+"This is an excellent barrel for carrying water. If you were to find a source 
+of water, you could pour it in!<br><br><div class='hint'>HINT: At the Obelisk in the Market Square of Midgaard, 'pour obelisk in barrel'.</div>"
 manipulate {MANIPULATE_TAKE}
 LIQ_DEF("clear",4,24,0,10,1,0,0)
 cost 2 IRON_PIECE
@@ -2152,7 +2159,7 @@ extra {}
 it has been worn smoothe by countless generations of hands clasping at it. 
 While it's not clear why, there seems to be a deep power within."
 extra {"$identify"}
-"Gwydion's Amulet is a powerful tool for both the divine and magically inclined. 
+"Gwydion's Amulet is a powerful tool for both the divine and magically inclined.
 It brings its wearer closer to the source of their power.<br/>"
 extra {"$wear_s"}
 "You carefully place $2n around your neck. Your power grows."

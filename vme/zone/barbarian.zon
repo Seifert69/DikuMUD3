@@ -653,7 +653,7 @@ code
 		{
 			if(BARBARIAN_ITEM in pc.quests)
 			{
-				exec("say Well, if it isnt "+pc.name+", back for more handouts, I presume?",self);pause;
+				exec("say Well, if it isnt "+pc.name+". Back for more handouts I presume?",self);pause;
 				exec("sigh",self);
 				pause;
 				exec("say I think you managed to lose your Bloody Gauntlets and are here "+
@@ -772,12 +772,12 @@ code
 			exec("drink bowl",self);
 			destroy(gift);
 			exec("grimace",self);
-			act("Hilka's eye lids suddenly flare open!",A_SOMEONE, pc, null, null, TO_ROOM);
-			act("You recoil at the sight of two <div class='cr'>blood-red</div> orbs where her eyes were.",A_SOMEONE, pc, null, null, TO_ROOM);	
+			act("Hilka's eye lids suddenly flare open!",A_SOMEONE, pc, null, null, TO_ALL);
+			act("You recoil at the sight of two <div class='cr'>blood-red</div> orbs where her eyes were.",A_SOMEONE, pc, null, null, TO_ALL);	
 			pause;
 			exec("scream",self);
 			pause;
-			act("Hilka's eyes slowly return to sight, maintaining a subtle red.",A_SOMEONE, pc, null, null, TO_ROOM);
+			act("Hilka's eyes slowly return to sight, maintaining a subtle red.",A_SOMEONE, pc, null, null, TO_ALL);
 			exec("say "+pc.name+", here is your reward.",self);
 			item := load("bloody_gauntlet@barbarian");
 			item.height := pc.height;

@@ -96,9 +96,9 @@ htown
 title "The Knights Hoard"
 descr
 "A solid underground chamber, this room holds the famous wealth of the 
-Knights of Honor. You see a large chest in the corner of this room. Perhaps it is
-filled with treasure. To reach the chest you must walk through the Veil of Truth. 
-You begin to walk towards it but oddly you begin to feel warm..."
+Knights of Honor. You see a large chest in the corner of this room. Perhaps it 
+is filled with treasure. To reach the chest you must walk through the Veil of 
+Truth. You begin to walk towards it but oddly you begin to feel warm..."
 
 
 flags {UNIT_FL_NO_TELEPORT, UNIT_FL_NO_WEATHER}
@@ -567,7 +567,6 @@ load guard3 into clan_enter@clan_koh max 1
    equip spear0@midgaard position WEAR_WIELD
          }
  
-load veil into tree_circle@cypress max 1
 
 %end
 
