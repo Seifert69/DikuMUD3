@@ -680,21 +680,15 @@ code
    :start:
    wait(SFB_CMD, (activator.type == UNIT_ST_PC));
 
-   log("Debug qstWaitHero begin");
    pc := qstWaitHero@quests(qname, activator, qstAsk, "");
-   log("Debug qstWaitHero end");
 
    if (pc != null)
    {
-      log("Debug qstAssign begin");
       exdp := qstAssign@quests(qname, pc, qstAccepted, qstDescr);
-      log("Debug qstAssign end");
       goto start;
    }
 
-   log("Debug qstWaitDone begin");
    pc := qstWaitDone@quests(qname, activator, qstDone, xp, gold, itemsl);
-   log("Debug qstWaitDone end");
    goto start;
 }
 dilend

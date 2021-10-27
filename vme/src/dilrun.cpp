@@ -572,6 +572,42 @@ void dil_clear_lost_reference(register struct dilframe *frm, void *ptr)
             frm->vars[i].val.unitptr = NULL;
 }
 
+
+/*
+    MS 2020-10-21
+
+    There was a major issue with dil_test_secure() that I had to fix.
+    And there's no perfect fix for the problem.
+
+    Imagine that a dil program has a secured variable then then calls
+    another secured dil program that returns a value which also has a
+    secured variable. 
+
+    When the secure is broken, the first program exits, and returns a value,
+    the second (original) program, should then have received the value which 
+    was placed on the stack, but because the dil_test_secure() moved the program
+    pointer for both programs, the second program is no longer at the original
+    point and doesn't know there are values to pop from the stack.
+
+    Since the last program can't know if it is used in a stack sensitive context,
+    the only option seems to be to not change the program point of any program 
+    except the currently executing DIL program. 
+
+    Thus the code has been modified to change only the active program's execution
+    point (e.g. to secure(pc, lostpc); -> :lostpc: // new exec point). It will still
+    null out the variable for all programs that secured them. 
+
+    It's impossible to know how big an impact this will have, if any. If it is an
+    issue, then my next plan would be to mark the new execution point in a variable
+    in the frame of the other programs. Once they get to execute, they should jump
+    to this point. However, it's also non-trivial. We can't just do that on the first
+    instruction when returning from the second program, or we'd run into the same issue
+    as far as I can tell. So it would have to be at a "valid point". Since I don't have 
+    a great idea for what defines a valid point, I'm punting to see if we can live with
+    only the currently executing program triggering the secure().
+
+*/
+
 void dil_test_secure(register class dilprg *prg, int bForeach)
 {
     int i;
@@ -596,7 +632,9 @@ void dil_test_secure(register class dilprg *prg, int bForeach)
                        waitcmd must be less than MAXINST (see dilfi_wit) */
 
                     prg->waitcmd--;
-                    frm->pc = frm->secure[i].lab;
+
+                    if (frm == prg->fp) // See long comment above. Only the active frame changes execution point 
+                        frm->pc = frm->secure[i].lab;
                 }
 
                 dil_clear_lost_reference(frm, frm->secure[i].sup);

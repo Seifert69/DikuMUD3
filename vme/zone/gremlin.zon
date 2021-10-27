@@ -570,6 +570,7 @@ code
 	item := load("midgaard_map@gremlin");
 	link(item, pc);
 	act("<div class='hint'>HINT: Type 'look map' to find directions to Midgaard.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 	
+
 	unsecure(pc);
 	goto start;
 
@@ -1651,7 +1652,7 @@ dilcopy qstItemsWanted@quests(BOLDIN_WATER, {"water_barrel@gremlin"}, {"fluidche
 		{"say A barrel full of water. Thank you $1N."},
       "say Please bring me back my barrel filled with water.");
 
-dilcopy boldin_give@gremlin();
+// dilcopy boldin_give@gremlin();
 
 end
 
