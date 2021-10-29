@@ -36,6 +36,10 @@ END HEADER*/
 #define EXPLORE_ONGOING  "Seeking Bernhard"
 #define EXPLORE_COMPLETE "Seeking Bernhard Complete"
 
+#define SOUL_ANCHOR_QUEST     "Soul Anchor Request"
+#define SOUL_ANCHOR_ONGOING   "Soul Anchor Request Ongoing"
+#define SOUL_ANCHOR_COMPLETE  "Soul Anchor Request Complete"
+
 /* ================================================================== */
 /*                                ZONE                                */
 /* ================================================================== */
@@ -660,6 +664,191 @@ code
 }
 dilend // END boldin_request
 
+dilbegin soul_anchor_qst();
+external
+  extraptr qstSetDone@quests(qname : string, pc : unitptr);
+  unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer,
+                             gold : integer, itemsl : stringlist);
+  extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+var
+  item: unitptr;
+  pc: unitptr;
+  exdp: extraptr;
+  mypc: unitptr;
+
+code
+{
+  heartbeat := PULSE_SEC * 3;
+
+  :start:
+
+    wait(SFB_DONE, (activator.type == UNIT_ST_PC) and (not (SOUL_ANCHOR_COMPLETE in activator.quests)));
+    pc := activator;
+
+    if (SOUL_ANCHOR_COMPLETE in pc.quests)
+    {
+      goto start;
+    }
+
+    if (SOUL_ANCHOR_ONGOING in pc.quests)
+    {
+      goto soul_anchor_ongoing;
+    }
+
+    wait(SFB_DONE,(activator.type == UNIT_ST_PC) and command("smile"));
+
+    pc := activator;
+    secure(pc, lostpc);
+
+    pause;
+    exec("emote sees your smile and cautiously wanders over.", self);
+    pause;
+    exec("say Hello, adventurer.", self);
+    pause;
+    exec("emote looks you over appraisingly.", self);
+    pause;
+    exec("say You have a strong spirit, I think.", self);
+    pause;
+    exec("say One which could withstand being separated from its body! To die and live again!", self);
+    pause;
+    exec("cackle", self);
+    pause;
+    exec("say But...", self);
+    pause;
+    exec("say If you reincarnate, it could be difficult to find your old body.", self);
+    pause;
+    exec("say Of course, the easiest thing to do would be to simply go find it.", self);
+    pause;
+    exec("say But your corpse could wind up in the most inconvient locations!", self);
+    pause;
+    exec("emote mutters something about giant ants.", self);
+    pause;
+    exec("say So I've developed a solution!", self);
+    pause;
+    exec("say A way to anchor your body to your soul, allowing it to come back to you after some time.", self);
+    pause;
+    exec("say Would you be interested in this technique?", self);
+    pause;
+    exec("say If so, nod.", self);
+
+    goto accept_explore;
+
+  :accept_explore:
+    wait(SFB_DONE, activator.type == UNIT_ST_PC);
+    pc := activator;
+    if (command("nod"))
+    {
+      goto anchor_accepted;
+    }
+    else if (command("shake"))
+    {
+      goto no_quest;
+    }
+    else
+    {
+      act("<div class='whisper'>The shaman says '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR);
+      goto accept_explore;
+    }
+
+  :no_quest:
+
+    exec("say Too scared, I suppose.", self);
+    exec("shrug", self);
+    unsecure(pc);
+    goto start;
+
+  :anchor_accepted:
+    exec("grin", self);
+    pause;
+    exec("say Very good.", self);
+    pause;
+    exec("say To form the anchor, I need the life force of someone powerful.", self);
+    pause;
+    exec("say Not you or me, of course!", self);
+    pause;
+    exec("emote coughs awkwardly.", self);
+    pause;
+    exec("say One of the grumpkins, Gaflaw, is stronger than all the rest.", self);
+    pause;
+    exec("say Bring me something with his life force!", self);
+    pause;
+    exec("drool", self);
+
+    // note to self: there's explicitly-set heartbeat before this kicks in
+    qstAssign@quests(SOUL_ANCHOR_QUEST, pc,
+                     {"This string doesn't seem to be used?"},
+                     "seeking Gaflaw's life");
+    exec("say Go now, and return when you have what I need.", self);
+
+    unsecure(pc);
+    goto start;
+
+  :soul_anchor_ongoing:
+
+    // Due to this being very simple and issues with qstWaitDone / qstItemsWanted,
+    // it's just re-implemented here.
+    wait(SFB_DONE, command("give") and (target == self));
+
+    pc := activator;
+    item := medium;
+
+    secure(pc, lostpc);
+
+    if (item.symname == "heart@gremlin")
+    {
+      destroy(item);
+      exec("grin", self);
+      pause;
+      exec("emote beckons you over to the corner of the room.", self);
+      pause;
+      exec("emote holds the heart aloft in one hand while touching your head with the other.", self);
+      pause;
+      act("You feel a sudden shock! The heart disappears in a flash of light!", A_SOMEONE, pc, null, null, TO_CHAR);
+      pause;
+      exec("say It is done.", self);
+      pause;
+      exec("say Your body is linked with your soul!", self);
+      pause;
+      exec("say When you die, after some time, your corpse will return to where you resurrect.", self);
+      pause;
+      if (pc.hometown == "temple@udgaard")
+      {
+        exec("emote mutters 'Probably that temple in udgaard...'", self);
+      }
+      else
+      {
+        exec("emote mutters 'Probably your clan house...'", self);
+      }
+      pause;
+      exec("say But remember, it will take some time! It will be faster to find your corpse on your own.", self);
+      pause;
+      exec("say Now, go forth and die freely!", self);
+      pause;
+      exec("wave $1n", self);
+
+      // settle rewards
+      subextra(pc.quests, SOUL_ANCHOR_ONGOING);
+      addextra(pc.quests, {SOUL_ANCHOR_COMPLETE}, "");
+
+      experience(1000, pc);
+      sendtext("You earned 1000 experience.<br/>", pc);
+
+    }
+    else
+    {
+      exec("say This isn't the right thing.", self);
+      link(medium, activator);
+    }
+
+    unsecure(pc);
+    goto start;
+
+  :lostpc:
+    exec("sigh", self);
+    goto start;
+}
+dilend // END soul_anchor_quest
 
 dilbegin barnham_request();
 external
@@ -1656,6 +1845,19 @@ dilcopy qstItemsWanted@quests(BOLDIN_WATER, {"water_barrel@gremlin"}, {"fluidche
 
 end
 
+anchorman
+names {"shaman", "gremlin"}
+title "the shaman"
+descr "A gremlin in dark robes stands in the corner."
+extra {}
+"Small and ugly like the rest of the gremlins, this one looks a little less hostile than the rest. It briefly makes eye contact with you with a questioning expression on its face before looking away. Perhaps a smile would show you mean no harm?"
+M_AVG_GOBLIN(30, SEX_FEMALE)
+alignment -500
+money 2 COPPER_PIECE
+dilcopy soul_anchor_qst@gremlin();
+
+end
+
 barnham
 names {"barnham","man"}
 title "Farmer Barnham"
@@ -2180,6 +2382,17 @@ dilcopy mana_drain@sorcerer();
 rent 100 IRON_PIECE
 end
 
+heart
+names {"gaflaw's heart", "heart"}
+title "a beating heart"
+descr "A heart beats here on the ground."
+extra {} "A steaming heart, fresh and full of life. It wiggles slightly, trying to beat even outside the body."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(12, 0)
+weight 2
+cost 1 IRON_PIECE
+end
+
 %reset
 
 load carrot_sign into fn_02 max 1
@@ -2390,6 +2603,7 @@ load gaflaw into fcave_12 max 1
 {
    equip gaflaw_club position WEAR_WIELD
    equip adv_helm position WEAR_HEAD
+   load heart
 }
 load gguard into fcave_12 max 2
 {
@@ -2421,6 +2635,8 @@ load adv_chest into farm_attic local 1
 load heal_jug into cave_01 local 3
 
 load sventer into dock1@torsbay max 1
+
+load anchorman into fcave_11@gremlin max 1
 
 // doors
 
