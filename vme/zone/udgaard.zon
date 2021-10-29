@@ -229,7 +229,7 @@ code
 		}
 	}
 	addextra(item.extra, {FIXED_ITEM}, "");
-	item.height = pc.height;
+	item.height := pc.height;
 	unsecure(olditem);
 	link(item, pc);
 	destroy(olditem);
