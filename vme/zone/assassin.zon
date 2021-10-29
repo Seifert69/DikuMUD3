@@ -567,7 +567,7 @@ code
   :loop:
   wait(SFB_COM, TRUE);
   if ((pc.fighting.nameidx == "amir1") and
-      (pc.fighting.zoneidx=$= "arabian"))
+      (pc.fighting.zoneidx == "arabian"))
   {
     act("Blood pours out from the wound in the $3N's back.",
 	A_HIDEINV, pc, null, pc.fighting, TO_CHAR);
