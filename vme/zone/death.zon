@@ -20,7 +20,7 @@ creators {"whistler"}
 #define CORPSE_EXTRA  "$CORPSE_EXTRA"
 #define CORPSE_FILE  "$CORPSE_FILE"
 #define CORPSE_TIME  "$CORPSE_TIME"
-
+#define CORPSE_HOMETOWN "$CORPSE_HOMETOWN"
 
 %dil
 
@@ -379,18 +379,26 @@ dilend
 //
 dilbegin recall rot_corpse();
 var
-	n : integer; /*amount of hours since created*/
+   n : integer; /*amount of hours since created*/
    i : integer;
    s : string;
+   corpse_room : unitptr;
 code
 {
    heartbeat:=PULSE_SEC;
    pause; // IMPORTANT. OTHERWISE THE VALUES WONT GET SET because the code will run on load()
    pause;
 
-   if (self.value[2] == 1)
+   if (self.value[2] == 1) // corpse is a player corpse
    {
-      i := 143200; // ~40 hours
+     if (self.extra.[CORPSE_HOMETOWN] != null)
+     {
+       i := 3600; // roughly 1hr plus 15m below before potential player corpse recall
+     }
+     else
+     {
+       i := 143200; // ~40 hours
+     }
       if (self.inside == null) 
          s := " empty ";
       else
@@ -410,7 +418,7 @@ code
       goto quickmag;
 
    if ((realtime-n) > i)
-	{
+   {
       :quickmag:
       if (self.value[2] == 1)
       {
@@ -430,16 +438,34 @@ code
       pause;
 
       if (not (isset(self.flags, UNIT_FL_BURIED)))
-         act("You notice some maggots crawling around on $1n", A_SOMEONE,self,null,null,TO_ALL);
+         act("You notice some maggots crawling around on $1n.", A_SOMEONE,self,null,null,TO_ALL);
       pause;
 
-      if (not (isset(self.flags, UNIT_FL_BURIED)))
-         act("A quivering horde of maggots consume $1n.", A_HIDEINV, self, null,null,TO_ALL);
+      if ((self.value[2] == 1) and (self.extra.[CORPSE_HOMETOWN] != null) and (self.inside != null))
+      {
+        act("$1n and everything in it dissolve into magical dust, floating away into the air.", A_HIDEINV, self, null, null, TO_ALL);
+        corpse_room := findroom(self.extra.[CORPSE_HOMETOWN].descr);
+        if (corpse_room == null)
+        {
+          corpse_room := findroom("temple@udgaard");
+        }
+        link (self, corpse_room);
+        act("The ashes of a body float down from the sky and form into $1n.", A_HIDEINV, self, null, null, TO_ALL);
+        log("Rescued " + self.name + " instead of destroying it.");
+        i := dildestroy("rot_corpse@death", self);
+        return;
+      }
+      else
+      {
+         if (not (isset(self.flags, UNIT_FL_BURIED)))
+            act("A quivering horde of maggots consume $1n.", A_HIDEINV, self, null,null,TO_ALL);
 
-      if (self.extra.[CORPSE_FILE] != null)
-         i := delunit(self.extra.[CORPSE_FILE].descr);
-      destroy (self);
-	}
+         if (self.extra.[CORPSE_FILE] != null)
+            i := delunit(self.extra.[CORPSE_FILE].descr);
+
+         destroy (self);
+      }
+   }
    goto start;
 
 }
@@ -713,7 +739,7 @@ dilend
 /* Corpse data is as follows:
  *   corpse.baseweight and corpse.weight set to self's baseweight
  *   corpse.height set to char's height
- *   value[2] is 0 if PC 1 if NPC
+ *   value[2] is 1 if PC 0 if NPC
  *   value[3] is the char's level
  *   value[4] is the char's race
  *   "$living_sym" in corpse.extra == self.symname of pc/npc.
@@ -819,6 +845,11 @@ code
    if (self.type==UNIT_ST_PC)
    {
       corpseroom := findcrproom(self);
+
+     if ("Soul Anchor Request Complete" in self.quests)
+     {
+         addextra(crp.extra, {CORPSE_HOMETOWN}, self.hometown);
+     }
       addextra(crp.extra, {CORPSE_EXTRA}, corpseroom);
 
       addextra(crp.extra, {CORPSE_FILE}, "corpse_"+self.name+"."+itoa(rltime));
