@@ -1216,7 +1216,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
 
 static void stat_contents(const class unit_data *ch, class unit_data *u)
 {
-    char buf[MAX_INPUT_LENGTH];
+    char buf[MAX_STRING_LENGTH];
     int bright = 0, light = 0;
     class unit_data *orgu;
 
