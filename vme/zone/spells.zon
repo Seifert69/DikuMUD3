@@ -8173,7 +8173,7 @@ code
    if (hm > 10) hm := 10;
 
    addaff(tgt, ID_BLESS, 10, WAIT_SEC*30,
-	  ABIL_DIV, hm, 0, TIF_BLESS_ON, TIF_BLESS_TICK, TIF_BLESS_OFF,
+	  ABIL_DIV, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
 	  APF_ABILITY);
 
    addaff(tgt, ID_BLESS, 10, WAIT_SEC*30,
@@ -8187,6 +8187,17 @@ code
    addaff(tgt, ID_BLESS, 10, WAIT_SEC*30,
 	  ABIL_BRA, hm, 0, TIF_NONE, TIF_NONE, TIF_NONE,
 	  APF_ABILITY);
+
+   // Move the notifications to a 0-increase on hp affect -
+   // we don't want to tie notifications to an individual stat boost
+   // (in case the target has 0 and is then not notified) and
+   // we assume the target always has >0 hp stat.
+   if (isaff(tgt, ID_BLESS))
+   {
+     addaff(tgt, ID_BLESS, 10, WAIT_SEC*30,
+     ABIL_HP, 0, 0, TIF_BLESS_ON, TIF_BLESS_TICK, TIF_BLESS_OFF,
+     APF_ABILITY);
+   }
 
    /* act("$1n lay hands on $3n and chants softly.",
       A_SOMEONE, sa->caster, 0, sa->target, TO_NOTVICT);
