@@ -1207,7 +1207,7 @@ void damage(class unit_data *ch, class unit_data *victim,
 
 void break_object(class unit_data *obj)
 {
-   char tmp[256];
+   char tmp[MAX_STRING_LENGTH];
 
    if (OBJ_EQP_POS(obj))
       unequip_object(obj);
