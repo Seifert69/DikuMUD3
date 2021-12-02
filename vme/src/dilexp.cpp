@@ -6,6 +6,7 @@ $Date: 2005/06/28 20:17:48 $
 $Revision: 2.18 $
 */
 
+#include "dbfind.h"
 #ifdef _WINDOWS
 #include <direct.h>
 #endif
@@ -2799,8 +2800,7 @@ void dilfe_fits(class dilprg *p)
         break;
     }
 
-    if (v->type == DILV_SP)
-        p->stack.push(v);
+    p->stack.push(v);
     delete v1;
     delete v2;
     delete v3;
@@ -3352,6 +3352,21 @@ void dilfe_gint(register class dilprg *p)
     {
         switch (idx)
         {
+        case DIL_GINT_MANAREG:
+            if ((p_u != NULL) && IS_CHAR(p_u))
+                v->val.num = mana_gain(p_u);
+            break;
+
+        case DIL_GINT_HITREG:
+            if ((p_u != NULL) && IS_CHAR(p_u))
+                v->val.num = hit_gain(p_u);
+            break;
+
+        case DIL_GINT_MOVEREG:
+            if ((p_u != NULL) && IS_CHAR(p_u))
+                v->val.num = move_gain(p_u);
+            break;
+
         case DIL_GINT_EFFDEX:
             if ((p_u != NULL) && IS_CHAR(p_u))
                 v->val.num = effective_dex(p_u);
@@ -4115,6 +4130,90 @@ void dilfe_dlf(register class dilprg *p)
     delete v2;
 }
 
+void dilfe_call(register class dilprg *p)
+{
+    dilval *v = new dilval;
+    /* Detection of DIL programs (TRUE/FALSE) */
+
+    dilval *v4 = p->stack.pop(); // string
+    dilval *v3 = p->stack.pop(); // integer
+    dilval *v2 = p->stack.pop(); // unitptr
+    dilval *v1 = p->stack.pop(); // The DIL to call
+
+    v->type = DILV_ERR; /* wrong type */
+
+    switch (dil_getval(v4))
+    {
+    case DILV_SP:
+    switch (dil_getval(v3))
+    {
+    case DILV_INT:
+    switch (dil_getval(v2))
+    {
+    case DILV_UP:
+        switch (dil_getval(v1))
+        {
+        case DILV_SP:
+            if (v1->val.ptr)
+            {
+                v->type = DILV_INT;
+                v->atyp = DILA_NONE;
+                v->val.num = -1;
+
+                struct diltemplate *tmpl;                
+                tmpl = find_dil_template((char *)v1->val.ptr);
+
+                if (tmpl)
+                {
+                    //
+                    // Push frame
+                    //
+                    void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl);
+
+                    p->stack.push(v2);
+                    p->stack.push(v3);
+                    p->stack.push(v4);
+
+                    delete v1;
+                    // Don't delete v2-v4 they now live on the stack.
+
+                    dil_push_frame(p, tmpl);
+                    return;
+                }
+                else
+                    szonelog(UNIT_FI_ZONE(p->sarg->owner),
+                                "DIL %s@%s, Unable to find template %s",
+                                UNIT_FI_NAME(p->sarg->owner),
+                                UNIT_FI_ZONENAME(p->sarg->owner), (char *) v1->val.ptr);
+            }
+            break;
+        case DILV_NULL:
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+        }
+        break;
+    case DILV_NULL:
+    case DILV_FAIL:
+        v->type = DILV_FAIL;
+        break;
+    default:
+        v->type = DILV_ERR; /* wrong type */
+        break;
+    }
+    }
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+    delete v3;
+    delete v4;
+}
+
 void dilfe_min(register class dilprg *p)
 {
     /* Subtraction of integers */
@@ -4589,7 +4688,6 @@ void dilfe_fndsidx(class dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
     char buf1[MAX_STRING_LENGTH], buf2[MAX_STRING_LENGTH];
-    class file_index_type *fi;
 
     v->type = DILV_UP;
     switch (dil_getval(v1))
@@ -4608,14 +4706,11 @@ void dilfe_fndsidx(class dilprg *p)
                 *buf1 = '\0';
                 *buf2 = '\0';
                 split_fi_ref((const char *) v1->val.ptr, buf1, buf2);
-                fi = find_file_index(buf1, buf2);
-                if (fi)
-                    v->val.ptr = find_symbolic_idx(buf1, buf2, v2->val.num);
-                else
-                {
-                    v->val.ptr = NULL;
+
+                v->val.ptr = find_symbolic_idx(buf1, buf2, v2->val.num);
+
+                if (v->val.ptr == NULL)
                     v->type = DILV_NULL; /* not found */
-                }
                 break;
             case DILV_FAIL:
                 v->type = DILV_FAIL;

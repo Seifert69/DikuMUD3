@@ -963,8 +963,8 @@ extra {"$wear_s"}
 extra {"$wear_o"}
 "$1n lets the belt circle $1s waist and fastens the buckle."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_WAIST}
-STR_TRANSFER(+1)
-WEAPON_TRANSFER(WPN_SWORD,+2)
+STR_TRANSFER(+3)
+WEAPON_TRANSFER(WPN_SWORD,+5)
 dilcopy guild_restrict@function ({GUILD_UDG_FIGHTER},0,25,"");
 dilcopy abi_restrict@function (ABIL_STR,10,0,25,"");
 dilcopy level_restrict@function (5,0,25,"");

@@ -1058,8 +1058,8 @@ extra {"$rem_s"}
 extra {"$rem_o"}
 "$1n lets go of $1s $2n, it flickers and fades away..."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_WAR_HAMMER,0,0)   //changed to one handed weapon ETNA
-STR_TRANSFER(+1)
+WEAPON_DEF(WPN_WAR_HAMMER,7,7)   //changed to one handed weapon ETNA
+STR_TRANSFER(+3)
 flags {UNIT_FL_MAGIC}
 romflags {OBJ_NO_DUAL}
 dilcopy guild_restrict@function ({GUILD_UDG_CLERIC},0,25,"");

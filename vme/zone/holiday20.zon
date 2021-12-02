@@ -42,7 +42,7 @@ help
 #define XMAS_SANTA20 "Visiting Santa 2020"
 #define XMAS_DONE20 "Holiday Gift 2020 Received"
 #define XMAS_DAY20 "Holiday Gift 2020 Upgraded"
-#define X_CHARGES "$XMAS 2020 Charges"
+#define X_CHARGES "$XMAS_Charges"
 
 %dil
 
@@ -664,35 +664,28 @@ dilbegin xmas_magic();
 var
 	pc		: unitptr;
 	charges : integer;
-	exdp	: extraptr;
 	i 		: integer;
 code
 {
+	heartbeat := PULSE_SEC;
 :start:
-// item will carry 1 charge. recharges once per day. will protect wearer from death.
+// item will carry 1 charge. recharges once per day. will restore wearer to full health.
 	wait(SFB_CMD, (command("say") and (argument == "Merry Christmas!") and (activator == self.outside) and (self.equip > 0)));
 	pc := activator;
 	secure(pc,lostpc);
 	
-	if(not(X_CHARGES in pc.quests))
+	if(not(X_CHARGES in self.extra))
+		addextra(self.extra, {X_CHARGES}, "charged");
+
+	if(self.extra.[X_CHARGES].descr == "empty") 
 	{
-		addextra(pc.quests, {X_CHARGES}, "");
-		exdp := X_CHARGES in pc.quests;
-		addstring(exdp.names,"charged");
-	}
-	else
-	{	
-		exdp := X_CHARGES in pc.quests;
-	}
-	  
-	if(exdp.names.[1] == "empty")   
+		wait(SFB_TICK, command(CMD_AUTO_TICK));
+		act("Your $2n seems to be drained of its holiday magic.",A_ALWAYS,self.outside,self,null,TO_CHAR);
 		goto start;
-	heartbeat := PULSE_SEC;
-	pause;
-	exdp := X_CHARGES in pc.quests;
-	substring(exdp.names,"charged");
-	addstring(exdp.names,"empty");
-	self.extra.descr := replace(" It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.","",self.extra.descr);
+	}
+	wait(SFB_TICK, command(CMD_AUTO_TICK));
+	self.extra.[X_CHARGES].descr := "empty";
+	self.extra.[0].descr := replace(" It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.","",self.extra.[0].descr);
 	
 	act("A burst of holiday magic erupts from your $2n!",A_ALWAYS,self.outside,self,null,TO_CHAR);
 	act("Your $2n has fully restored you!",A_ALWAYS,self.outside,self,null,TO_CHAR);
@@ -712,41 +705,23 @@ dilend
 
 dilbegin recall x_charge();
 var
-  exdp : extraptr;
-  pc : unitptr;
   charge 	: integer;
 code
 {
 	:start:
 	heartbeat := PULSE_SEC*SECS_PER_MUD_DAY;
 	wait(SFB_TICK, (self.equip > 0));
-	heartbeat := PULSE_SEC*5;
 	
-	pc:=self.outside;
-	secure(pc,lostpc);
+	if(not(X_CHARGES in self.extra))
+		addextra(self.extra, {X_CHARGES}, "charged");
 	
-	if(not(X_CHARGES in pc.quests))
+	act("Your $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act("$1n's $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_REST);
+	if(self.extra.[X_CHARGES].descr == "empty")
 	{
-		addextra(pc.quests, {X_CHARGES}, "");
-		exdp := X_CHARGES in pc.quests;
-		addstring(exdp.names, "charged");
+		self.extra.[0].descr := self.extra.[0].descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
+		self.extra.[X_CHARGES].descr := "charged";
 	}
-	else
-	{	
-		exdp := X_CHARGES in pc.quests;
-	}
-
-	if(exdp.names.[1] == "empty")
-	{
-		act("Your $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_CHAR);
-		act("$1n's $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_REST);
-		self.extra.descr := self.extra.descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
-		substring(exdp.names, "empty");
-		addstring(exdp.names, "charged");
-	}
-	
-	:lostpc:
-	unsecure(pc);
 	goto start;
 	
 }

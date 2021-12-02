@@ -1,26 +1,37 @@
-<br/>
-<br/>
-<br/>
-Usage<br/><br/>
-look<br/><br/>
-look (direction)<br/><br/>
-look (item)|(character)|(keyword)<br/><br/>
-look in (item)<br/><br/>
-<br/><br/>
-Example:<br/><br/>
-look cabal<br/><br/>
-look in bag<br/><br/>
-^^ Notice the IN keyword<br/><br/>
-look at bag<br/><br/>
-<br/><br/>
-The look command gives you a way of examining things:<br/><br/>
-<br/>
-When you type look alone you will get a description of your surroundings.<br/>
-There will be a general description of the area, including which visible<br/>
-items and/or characters are present.<br/><br/>
-<br/>
-<br/>See also:<br/><br/>
-Get<br/><br/>
-Put<br/><br/>
-Drop<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Look</h1>
+<p>Usage:
+</p>
+<pre> look
+ look (direction)
+ look [at] (item)|(character)|(keyword)
+ look in (item)
+ look :brief:
+ look :chars:
+ look :objects:
+</pre>
+<p><br />
+Example:
+</p>
+<pre> look cabal
+ look in bag
+      ^^ Notice the IN keyword
+ look at bag
+ look :chars:
+</pre>
+<p>The look command gives you a way of examining things:
+</p><p>When you type look alone you will get a description of your surroundings.
+There will be a general description of the area, including which visible
+items and/or characters are present.
+</p><p>The special commands look :chars: will list only the characters in the room
+and the command look :objects: will list only the objects in the room.
+</p><p>See also:
+</p>
+<pre> &gt; <a cmd='#'>Help Get</a>
+ &gt; <a cmd='#'>Help Put</a>
+ &gt; <a cmd='#'>Help Drop</a>
+</pre>
+
+
+
+
+</div>

@@ -20,7 +20,7 @@ creators {"whistler"}
 #define CORPSE_EXTRA  "$CORPSE_EXTRA"
 #define CORPSE_FILE  "$CORPSE_FILE"
 #define CORPSE_TIME  "$CORPSE_TIME"
-
+#define CORPSE_HOMETOWN "$CORPSE_HOMETOWN"
 
 %dil
 
@@ -157,79 +157,83 @@ else
 /*
 The following two dils are commands that had to be modified to work for death.
 */
-
+// 2021 - heads now carry an extra "$living_sym" that contains the symname of it's
+// host in life. This is useful for quests, and stuff.
+// do_decapitate
 dilbegin decap(arg : string); /* Decapitating corpses */
 external
-unitptr find_here@commands (s:string);
+   unitptr find_here@commands (s:string);
 
 var
    item      : unitptr;
    corpse    : unitptr;
- reward_exp : extraptr;
-
+   reward_exp : extraptr;
+   nextdude   : extraptr;
    temp_lst  : stringlist;
-	 temp_str2:string;
+   temp_str2:string;
    temp_str  : string;
-
    test_expt : extraptr;
    headless:string;
    chk : integer;
+   living_sym : string;
+
 code
 {
-heartbeat:=3;
+   heartbeat:=3;
    if (arg == "")
    {
-      act("What corpse do you wish to decapitate?",
-          A_ALWAYS, self, null, null, TO_CHAR);
-					quit;
+      act("What corpse do you wish to decapitate?", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
    }
 
    corpse := find_here@commands(arg);
 
-
    if ((not(corpse)) or (corpse.type != UNIT_ST_OBJ))
    {
-      act("No such corpse around.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-					quit;
+      act("No such corpse around.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
    }
 
    if ("headless" in corpse.outside_descr)
    {
-      act("Huh? That can't be done.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-					quit;
+      act("Huh? That can't be done.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
    }
 
    if ((corpse.nameidx != "corpse") or (corpse.zoneidx != "death"))
    {
-      act("Huh? That can't be done.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-					quit;
+      act("Huh? That can't be done.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
    }
-  chk := (corpse.value[4]);
-  if ( ((chk > RACE_CNIDARIA_MIN) and (chk <= RACE_CNIDARIA_MAX)) or
-       ((chk > RACE_PLANT_MIN) and (chk <= RACE_PLANT_MAX)) )
-  {
-   act("There is no head on that corpse silly!" ,
-    A_SOMEONE, self, null,null, TO_CHAR);
-   quit;
-  }
 
-   act("You brutally decapitate a corpse.",
-       A_ALWAYS, self, null, null, TO_CHAR);
-   act("$1n brutally decapitates a corpse.",
-       A_SOMEONE, self, null, null, TO_REST);
+   chk := (corpse.value[4]);
+   if ( ((chk > RACE_CNIDARIA_MIN) and (chk <= RACE_CNIDARIA_MAX)) or
+        ((chk > RACE_PLANT_MIN) and (chk <= RACE_PLANT_MAX)) )
+   {
+      act("There is no head on that corpse silly!" ,
+         A_SOMEONE, self, null,null, TO_CHAR);
+      quit;
+   }
+
+	living_sym := corpse.extra.["$living_sym"].descr;
+	
+   act("You brutally decapitate a corpse.", A_ALWAYS, self, null, null, TO_CHAR);
+   act("$1n brutally decapitates a corpse.", A_SOMEONE, self, null, null, TO_REST);
    item := load("head@death");
    addextra (item.extra,{"$head_time"},itoa(realtime));
+   addextra (item.extra,{"$living_sym"},living_sym);
    dilcopy ("rot_head@death",item);
    // If corpse has a reward on it copy it to the head.
-  
- reward_exp := "$reward" in corpse.extra;
- if (reward_exp)
- {
-   addextra(item.extra, reward_exp.names,reward_exp.descr);
- }    
+ 
+   reward_exp := "$reward" in corpse.extra;
+   while (reward_exp)
+   {
+      nextdude := "$reward" in reward_exp.next;
+      addextra(item.extra, reward_exp.names,reward_exp.descr);
+      subextra(corpse.extra, "$reward");
+      reward_exp := nextdude;
+   }
+ 
    item.minv := 200;
    link(item, self.outside);
 
@@ -259,10 +263,12 @@ heartbeat:=3;
    temp_str := getword(temp_str2);
    temp_str:=temp_str2;
    item.outside_descr := "The decapitated head of " + temp_str ;
+   addextra(item.extra, {""}, "The head has been severed from the body");
    headless:=left(corpse.title,length(corpse.title)-6);
    corpse.title:=headless+"headless corpse";
 
    corpse.outside_descr:="The headless corpse of "+temp_str;
+   addextra(corpse.extra, {""}, "The head has been severed from the body");
    item.value[2] := corpse.value[2];
    item.value[3] := corpse.value[3];
    quit;
@@ -373,18 +379,26 @@ dilend
 //
 dilbegin recall rot_corpse();
 var
-	n : integer; /*amount of hours since created*/
+   n : integer; /*amount of hours since created*/
    i : integer;
    s : string;
+   corpse_room : unitptr;
 code
 {
    heartbeat:=PULSE_SEC;
    pause; // IMPORTANT. OTHERWISE THE VALUES WONT GET SET because the code will run on load()
    pause;
 
-   if (self.value[2] == 1)
+   if (self.value[2] == 1) // corpse is a player corpse
    {
-      i := 143200; // ~40 hours
+     if (self.extra.[CORPSE_HOMETOWN] != null)
+     {
+       i := 3600; // roughly 1hr plus 15m below before potential player corpse recall
+     }
+     else
+     {
+       i := 143200; // ~40 hours
+     }
       if (self.inside == null) 
          s := " empty ";
       else
@@ -404,7 +418,7 @@ code
       goto quickmag;
 
    if ((realtime-n) > i)
-	{
+   {
       :quickmag:
       if (self.value[2] == 1)
       {
@@ -424,16 +438,34 @@ code
       pause;
 
       if (not (isset(self.flags, UNIT_FL_BURIED)))
-         act("You notice some maggots crawling around on $1n", A_SOMEONE,self,null,null,TO_ALL);
+         act("You notice some maggots crawling around on $1n.", A_SOMEONE,self,null,null,TO_ALL);
       pause;
 
-      if (not (isset(self.flags, UNIT_FL_BURIED)))
-         act("A quivering horde of maggots consume $1n.", A_HIDEINV, self, null,null,TO_ALL);
+      if ((self.value[2] == 1) and (self.extra.[CORPSE_HOMETOWN] != null) and (self.inside != null))
+      {
+        act("$1n and everything in it dissolve into magical dust, floating away into the air.", A_HIDEINV, self, null, null, TO_ALL);
+        corpse_room := findroom(self.extra.[CORPSE_HOMETOWN].descr);
+        if (corpse_room == null)
+        {
+          corpse_room := findroom("temple@udgaard");
+        }
+        link (self, corpse_room);
+        act("The ashes of a body float down from the sky and form into $1n.", A_HIDEINV, self, null, null, TO_ALL);
+        log("Rescued " + self.name + " instead of destroying it.");
+        i := dildestroy("rot_corpse@death", self);
+        return;
+      }
+      else
+      {
+         if (not (isset(self.flags, UNIT_FL_BURIED)))
+            act("A quivering horde of maggots consume $1n.", A_HIDEINV, self, null,null,TO_ALL);
 
-      if (self.extra.[CORPSE_FILE] != null)
-         i := delunit(self.extra.[CORPSE_FILE].descr);
-      destroy (self);
-	}
+         if (self.extra.[CORPSE_FILE] != null)
+            i := delunit(self.extra.[CORPSE_FILE].descr);
+
+         destroy (self);
+      }
+   }
    goto start;
 
 }
@@ -707,9 +739,10 @@ dilend
 /* Corpse data is as follows:
  *   corpse.baseweight and corpse.weight set to self's baseweight
  *   corpse.height set to char's height
- *   value[2] is 0 if PC 1 if NPC
+ *   value[2] is 1 if PC 0 if NPC
  *   value[3] is the char's level
  *   value[4] is the char's race
+ *   "$living_sym" in corpse.extra == self.symname of pc/npc.
 */
 dilbegin make_corpse();
 external
@@ -734,6 +767,8 @@ code
    crp := load("corpse@death");
 
    substring(crp.names, crp.names.[0]);
+   
+   addextra (crp.extra,{"$living_sym"},self.symname);
    
    if(self.symname == "familiar2@g_q")
    {
@@ -796,22 +831,13 @@ code
    //load Justice Database 
    jd := findsymbolic("database@justice");
   
-   //transfer reward infor to corpse if found. 
+   //transfer reward infor to corpse if found.
    reward_exp := "$reward" in self.extra;
-   if (reward_exp)
-   {
-     r_id := reward_exp.names.[1];
-     r_key := r_id;
-     jd_ptr := r_key in jd.extra;
-     if(jd_ptr)
-      {
-        addextra(crp.extra, jd_ptr.names,jd_ptr.descr);
-        subextra(jd.extra, r_key);
-      }
-    else
-     log("Justice: Unmatched reward extra found on "+self.name);
 
-     subextra(self.extra, "$reward");
+   while (reward_exp)
+   {
+      addextra(crp.extra, reward_exp.names, reward_exp.descr);
+      reward_exp := "$reward" in reward_exp.next;
    }
 
    rltime:=realtime;
@@ -819,6 +845,11 @@ code
    if (self.type==UNIT_ST_PC)
    {
       corpseroom := findcrproom(self);
+
+     if ("Soul Anchor Request Complete" in self.quests)
+     {
+         addextra(crp.extra, {CORPSE_HOMETOWN}, self.hometown);
+     }
       addextra(crp.extra, {CORPSE_EXTRA}, corpseroom);
 
       addextra(crp.extra, {CORPSE_FILE}, "corpse_"+self.name+"."+itoa(rltime));
@@ -906,8 +937,8 @@ external
    make_corpse ();
    remove_aff();
    death_cry();
-   rem_db_entry@justice(criminal : unitptr, extra_type : string);
-
+   rem_db_entry@justice(criminal : unitptr, extra_type : string, juris: string);
+   integer  valid_extra@justice(criminal : unitptr, extra_type : string, juris : string);
 code
 {
    heartbeat:=3;
@@ -927,6 +958,9 @@ code
    sendtext("You are dead. R.I.P.<br/>",self);
    death_cry();
    make_corpse();
+
+   //Remove extras just Justice DB
+     rem_db_entry@justice(self,"$reward","all");
 
    stop_fighting(self, null);
    self.position:=POSITION_DEAD;
@@ -1003,7 +1037,6 @@ external
    integer lose_exp(u:unitptr);
    gain_exp(u:unitptr,gain:integer);
    integer  valid_extra@justice(criminal : unitptr, extra_type : string);
-   rem_db_entry@justice(criminal : unitptr, extra_type : string);
 var
 	gain:integer;
         i:integer;
@@ -1022,11 +1055,8 @@ code
       dilcopy ("arena_death@arena()",self);
       quit;
    }
-    // If the character has a $arrest extra...delete it from the justice database
-    if(valid_extra@justice(self,"$arrest"))
-           rem_db_entry@justice(self,"$arrest");
 
-   if (self.type==UNIT_ST_PC)
+   if (self.type == UNIT_ST_PC)
    {
         if(not(isset(self.charflags, CHAR_PROTECTED)))
            set(self.charflags, CHAR_PROTECTED);
@@ -1053,23 +1083,22 @@ dilend
 
 
 
-dilbegin death_cry ();
+dilbegin death_cry();
 var
 	dir:integer;
 
 code
 {
    heartbeat:=PULSE_SEC*3;
-   act("<div class='death'>Your blood freezes as you hear $1n's death cry.</div>",
-      A_SOMEONE, self,null,null,TO_REST);
+   act("<div class='death'>Your blood freezes as you hear $1n's death cry.</div>", A_SOMEONE, self,null,null,TO_REST);
 
    dir:=0;
-   while (dir<=MAX_EXIT)
+   while (dir <= MAX_EXIT)
 	{
       if (self.outside.exit_to[dir])
-      act("<div class='death'>Your blood freezes as you hear someones death cry.",
-         A_ALWAYS,self.outside.exit_to[dir].inside,null,null,TO_ROOM);
-         dir:=dir+1;
+         act("<div class='death'>Your blood freezes as you hear someones death cry from a distance.",
+            A_ALWAYS,self.outside.exit_to[dir].inside,null,null,TO_ALL);
+      dir:=dir+1;
 	}
 
    return;

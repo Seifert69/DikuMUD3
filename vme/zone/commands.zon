@@ -29,6 +29,11 @@ help
 
 %dil
 
+
+//
+// This DIL is activated from C function change() in act_change.cpp
+// When no other arguments are matching, this runs.
+//
 dilbegin do_change(arg : string);
 code
 {
@@ -2758,7 +2763,7 @@ code
    sendtext ("You are not in a group silly.<br/>",self);
    }
    else
-      sendtext("Use either 'score' or 'score group'<br/>",self);
+      sendtext("Use 'score', 'score group', 'score mp', 'score ep', or 'score hp'.<br/>",self);
 
    :lead_end:
    unsecure(leader);
@@ -4557,57 +4562,57 @@ dilend
 
 dilbegin do_quests(arg : string);
 var
-ex : extraptr;
-str : string;
+   ex : extraptr;
+   str : string;
+
 code
 {
+   ex := self.quests;
+   str := "";
 
-ex := self.quests;
-str := "";
+   if(arg != "")
+   {
+      sendtext("Quests containing '"+arg+"'.<br/>", self);
 
-if(arg != "")
-{
+      while(ex != null)
+      {
+         if ((left(ex.names.[0],1) != "$") and (arg in ex.names.[0]))
+         {
+            if (ex.descr == "")
+               str := str+"<div class='cpy'>"+ex.names.[0]+"</div><br/>";
+            else
+               str := str+"<div class='cpy'>"+ex.names.[0]+"</div>: "+ex.descr+"<br/>";
+         }
 
- sendtext("Quests containing '"+arg+"'.<br/>", self);
+         ex := ex.next;
+      }
 
- while(ex != null)
- {
-  if((left(ex.names.[0],1) != "$") and
-     (arg in ex.names.[0]))
-  {
+      if (str == "") str := "None.<br/>";
 
-   str := str+ex.names.[0]+"<br/>";
-  }
+      str := textformat(str);
+      pagestring(str,self);
+   }
+   else
+   {
+      while(ex != null)
+      {
+         if (left(ex.names.[0],1) != "$")
+         {
+            if (ex.descr == "")
+               str := str+"<div class='cpy'>"+ex.names.[0]+"</div><br/>";
+            else
+               str := str+"<div class='cpy'>"+ex.names.[0]+"</div>: "+ex.descr+"<br/>";
+         }
+         ex := ex.next;
+      }
 
-  ex := ex.next;
- }
+      if(str == "") str := "You have not completed any quests.<br/>";
 
- if(str == "") str := "None.<br/>";
-
- str := textformat(str);
- pagestring(str,self);
-}
-else
-{
-
-while(ex != null)
-{
-
- if(left(ex.names.[0],1) != "$")
- {
-  str := str+ex.names.[0]+"<br/>";
- }
- ex := ex.next;
-}
-
-if(str == "") str := "You have not completed any quests.<br/>";
-
-str := textformat(str);
-pagestring(str,self);
-
-}
-send_done("quests",self,null,null,0,arg,null);
-quit;
+      str := textformat(str);
+      pagestring(str,self);
+   }
+   send_done("quests",self,null,null,0,arg,null);
+   quit;
 }
 dilend
 
@@ -9303,7 +9308,7 @@ dilend
 
 
 
-
+// do_bugs
 dilbegin aware cmd_bugs(st : string);
 var
    t : string;
@@ -9311,8 +9316,8 @@ var
    i : integer;
 code
 {
-if (self.type!=UNIT_ST_PC)
- return;
+   if (self.type!=UNIT_ST_PC)
+      return;
    sendtext("Enter your bug reports. You have approximately 4000 "+
             "characters to work with. Note that if you input only a "+
             "single word or nothing at all, it will abort.<br/>", self);
@@ -9327,11 +9332,12 @@ if (self.type!=UNIT_ST_PC)
    z := self.outside;
    while (z.type != UNIT_ST_ROOM)
       z := z.outside;
-   t := z.nameidx+"@"+z.zoneidx+" ["+self.name+"] "+asctime(realtime)+
-        argument+"<br/><br/>";
+   t := z.symname + " ["+self.name+"] " + asctime(realtime)+ argument;
    t := textformat(t);
    i := flog("bugs", t, "a");
    sendtext("Thank you. They will be corrected.<br/>", self);
+   dispatch("discord msg #bugs @" + self.name + " bug report: " + t); // Send to dispatcher.py via pipeDispatcher
+
    quit;
 }
 dilend
@@ -9397,6 +9403,7 @@ if (self.type!=UNIT_ST_PC)
    t := textformat(t);
    i := flog("typos", t, "a");
    sendtext("Thank you. They will be corrected.<br/>", self);
+   dispatch("discord msg #bugs @" + self.name + " TYPO report: " + t); // Send to dispatcher.py via pipeDispatcher
    quit;
 }
 dilend
@@ -12858,8 +12865,9 @@ dilend
 /*Quaff dil
 Made by Mesmer for the Realms Of The Past MUD
 realms.pdt.net 4242
-*/
 
+*/
+// do_quaff
 dilbegin quaff_dil(arg : string);
 var
 potion: unitptr;
@@ -12899,6 +12907,7 @@ TO_CHAR);
  n := cast_spell(potion.value[1],self,potion,self,"");
  n := cast_spell(potion.value[2],self,potion,self,"");
  n := cast_spell(potion.value[3],self,potion,self,"");
+ send_done("quaff",self,potion,potion,0,"",null);
  destroy(potion);
  quit;
 

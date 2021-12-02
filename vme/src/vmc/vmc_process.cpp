@@ -687,8 +687,10 @@ void check_namelist(class unit_data *unit, class cNamelist *nl)
 
             for (i=1; i < nl->Length(); i++)
             {
-                if (tmp.IsNameRaw(nl->Name(i)))
+                if (tmp.IsNameRaw(nl->Name(i)) && tmp.Name(0)[0] != '$')
                 {
+                    // If first char is $ then it's programmatic.
+                    //
                     dmc_error(TRUE, "Name order error (or matching names) "
                               "for '%s' in %s@",
                               nl->Name(i), UNIT_IDENT(unit));

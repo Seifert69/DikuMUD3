@@ -753,37 +753,36 @@ dilend
 
 dilbegin aware recall arena_enter();
 var
-   i : integer;
-	bag : unitptr;
-	entry_point : string;
-	entry_room : unitptr;
-	item : unitptr;
+    i : integer;
+    bag : unitptr;
+    entry_point : string;
+    entry_room : unitptr;
+    item : unitptr;
 code
 {
    if (not ("$ARENA" in self.quests)) {
       addextra(self.quests, {"$ARENA"}, "" );
    }
 
-   sendto ("remove kill prottection",self);
+   sendto("remove kill prottection",self);
 
    heartbeat := PULSE_SEC * 3;
 
-   act("As you speak the words of entry you feel your body " +
-	    "slowly begin to separate.",
+   act("As you speak the words of entry you feel your body slowly begin to separate.",
        A_ALWAYS, self, null, null, TO_CHAR);
 	act("$1n chants the words of entry and slowly fades from view",
 	    A_ALWAYS, self, null, null, TO_REST);
 
    bag := load("bag@arena");
 	secure(bag, abort);
-   // link (bag,self.outside);
+   link(bag, self.outside);
 
    while (self.inside != null)
 	  link(self.inside,bag);
 
    // set_weight_base(bag, 0);
    set_weight(bag, 0);
-	//link(bag, self);
+	link(bag, self);
 
 	unsecure(bag);
 
@@ -1157,14 +1156,14 @@ descr
 "You are in a high-ceiling entrance way to the arena.  You can hear the
 clatter of battle all around you.  Screams of honorable death and shouts of
 victory can be heard from inside the building.  There is no visible physical
-entrance but there is a big red sign you might want to read.  To the south
+entrance but there is a <a cmd='read #'>big red sign</a> you might want to read.  To the south
 a arched exit way leads to the square."
 movement SECT_INSIDE
 south to col_sq6@midgaard;
 ALWAYS_LIGHT
 dilcopy enter@arena();
 extra {"big red sign","big sign","red sign","sign"}
-"The sign reads: 
+"<pre>The sign reads: 
 
      Welcome to the New Arena.
 
@@ -1174,15 +1173,15 @@ more fun we can make it.
 
 To enter the arena just type:
 
-Enter arena
+<a cmd='#'>Enter arena</a>
 
 To exit the arena when you are done killing your friends type:
 
-withdraw
+<a cmd='#'>withdraw</cmd>
 
 For fastest response to arena ideas send mail to
 whistler@blinksoft.com or
-palio@blinksoft.com"
+palio@blinksoft.com</pre>"
 
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
 end

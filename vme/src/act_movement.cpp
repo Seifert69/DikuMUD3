@@ -197,24 +197,23 @@ int room_move(class unit_data *ch, class unit_data *mover, class unit_data *room
    if (!str_is_empty(pLeaveSelf))
       act(pLeaveSelf, A_ALWAYS, ch, room_from, mover, TO_CHAR);
 
-   unit_from_unit(mover);
-
    if (UNIT_CONTAINS(room_from) && !str_is_empty(pLeaveOther))
    {
       if ((mover != ch) ||  !CHAR_HAS_FLAG(ch, CHAR_SNEAK))
-         act(pLeaveOther, A_HIDEINV, UNIT_CONTAINS(room_from), ch, mover, TO_ALL);
+         act(pLeaveOther, A_HIDEINV, ch, ch, mover, TO_REST);
    }
+
+   unit_from_unit(mover);
+   // These two volatile flags are removed when you move.
+   REMOVE_BIT(CHAR_FLAGS(ch), CHAR_LEGAL_TARGET | CHAR_SELF_DEFENCE);
+   unit_to_unit(mover, room_to);
 
    if (UNIT_CONTAINS(room_to) && !str_is_empty(pArrOther))
    {
       if ((mover != ch) ||  !CHAR_HAS_FLAG(ch, CHAR_SNEAK))
-         act(pArrOther, A_HIDEINV, UNIT_CONTAINS(room_to), ch, mover, TO_ALL);
+         act(pArrOther, A_HIDEINV, ch, ch, mover, TO_REST);
    }
 
-   // These two volatile flags are removed when you move.
-   REMOVE_BIT(CHAR_FLAGS(ch), CHAR_LEGAL_TARGET | CHAR_SELF_DEFENCE);
-
-   unit_to_unit(mover, room_to);
 
    if (!str_is_empty(pArrSelf))
       act(pArrSelf, A_ALWAYS, ch, room_to, mover, TO_CHAR);

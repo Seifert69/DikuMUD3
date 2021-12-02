@@ -358,6 +358,9 @@ int search_block(const char *oarg, const char **list, ubit1 exact)
     char arg[4096];
     register int i, l;
 
+    if (list == NULL)
+        return -1;
+
     /* Make into lower case, and get length of string */
     l = str_lower(oarg, arg, sizeof(arg));
 
@@ -810,6 +813,22 @@ char **create_namelist(void)
 
     return list;
 }
+
+// Return the length of the namelist (terminated by NULL in the last entry)
+//
+int len_namelist(const char **namelist)
+{
+	if (namelist == NULL)
+		return 0;
+
+	int i;
+
+	for (i=0; namelist[i]; i++)
+		;
+
+	return i;
+}
+
 
 /* Add a new name to the end of an existing namelist */
 char **add_name(const char *name, char **namelist)

@@ -60,6 +60,11 @@ class MyDispatcher():
 
 
     def DispatchDiscord(self, message):
+        # Convert some HTML bits
+        message = message.replace("&quot;", '"')
+        message = message.replace("&amp;", '&')
+        message = message.replace("&lt;", '<')
+        message = message.replace("&gt;", '>')
         print('Relaying message to Discord: ' + message)
         os.write(self.pipeDiscord, message.encode())
         print('Message Sent')

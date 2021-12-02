@@ -9,18 +9,36 @@ END HEADER*/
 
 #include <macros.h>
 
-#define BOLDIN_ONGOING  "Boldin's Request Ongoing"
+#define BOLDIN_QUEST     "Boldin's Request"
+#define BOLDIN_ONGOING   "Boldin's Request Ongoing"
 #define BOLDIN_COMPLETE  "Boldin's Request Complete"
-#define BOLDIN_BREAD_ONGOING "$Find Boldin Bread"
-#define BOLDIN_WATER_ONGOING "$Find Boldin Water"
-#define BOLDIN_BREAD_COMPLETE "$Found Boldin Bread"
-#define BOLDIN_WATER_COMPLETE "$Found Boldin Water"
-#define BOLDIN_HANDOFF  "Feeding Boldin Complete"
-#define BOLDIN_ROGUE  "$Seeking Rogue"
-#define ROGUE_ONGOING  "Assisting a Rogue"
-#define ROGUE_COMPLETE  "Rogue Friend"
+
+#define BOLDIN_BREAD          "Find Boldin Bread"
+#define BOLDIN_BREAD_ONGOING  "Find Boldin Bread Ongoing"
+#define BOLDIN_BREAD_COMPLETE "Find Boldin Bread Complete"
+
+#define BOLDIN_WATER          "Find Boldin Water"
+#define BOLDIN_WATER_ONGOING  "Find Boldin Water Ongoing"
+#define BOLDIN_WATER_COMPLETE "Find Boldin Water Complete"
+
+#define BOLDIN_HANDOFF          "Boldin's Cousin"
+#define BOLDIN_HANDOFF_ONGOING  "Boldin's Cousin Ongoing"
+#define BOLDIN_HANDOFF_COMPLETE "Boldin's Cousin Complete"
+
+#define BOLDIN_ROGUE           "Boldin Seeking Rogue"
+#define BOLDIN_ROGUE_ONGOING   "Boldin Seeking Rogue Ongoing"
+#define BOLDIN_ROGUE_COMPLETE  "Boldin Seeking Rogue Complete"
+
+#define ROGUE_QUEST        "Rogue Quest"
+#define ROGUE_ONGOING      "Rogue Ongoing"
+#define ROGUE_COMPLETE     "Rogue Complete"
+
 #define EXPLORE_ONGOING  "Seeking Bernhard"
 #define EXPLORE_COMPLETE "Seeking Bernhard Complete"
+
+#define SOUL_ANCHOR_QUEST     "Soul Anchor Request"
+#define SOUL_ANCHOR_ONGOING   "Soul Anchor Request Ongoing"
+#define SOUL_ANCHOR_COMPLETE  "Soul Anchor Request Complete"
 
 /* ================================================================== */
 /*                                ZONE                                */
@@ -220,7 +238,12 @@ code
 }
 dilend
 
+
+
 dilbegin rogue_request();
+external
+   extraptr qstSetDone@quests(qname : string, pc : unitptr);
+
 var
   pc: unitptr;
   exdp: extraptr;
@@ -230,14 +253,8 @@ code
 	heartbeat:= PULSE_SEC*4;
 
 :start:
-	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (BOLDIN_ONGOING in activator.quests) and (BOLDIN_ROGUE in activator.quests) and (activator.position == POSITION_STANDING));
+	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (BOLDIN_ROGUE_ONGOING in activator.quests) and (activator.position == POSITION_STANDING));
 
-	if(activator.level >= 40)
-	{
-		goto start;
-		// send them away, perhaps with a token reward?
-	}
-	
 	pc := activator;
 	secure(pc, lostpc);
 
@@ -324,6 +341,7 @@ code
 	{
 		subextra(pc.quests, ROGUE_ONGOING);
 		addextra(pc.quests, {ROGUE_COMPLETE}, "");
+		exdp := qstSetDone@quests(BOLDIN_ROGUE, pc);
 		experience(3000, pc);
 		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 		act("<br><div class='xpgain'>You recieve 3000 experience.</div><br>",A_SOMEONE, pc, null, null, TO_CHAR); 
@@ -386,7 +404,7 @@ code
 		exec("say Ah-har, matey. This smells like it could strip the paint off a hull!", self);
 		destroy(self.inside);
 	}
-	else if ((22 == self.inside.type) and (not(ROGUE_COMPLETE in activator.quests)))
+	else if ((ITEM_BOAT == self.inside.objecttype) and (not(ROGUE_COMPLETE in activator.quests)))
 	{
 		addstring(exdp.names, "boat");
 		exec("say Ah-har, matey. She aint pretty, but she looks to float.", self);
@@ -394,6 +412,7 @@ code
 	}
 	else
 	{
+		destroy(self.inside);
 		exec("say No, "+pc.name +", I dont need this.", self);
 		pause;
 	}
@@ -410,371 +429,430 @@ code
 }
 dilend // END rogue_give
 
-dilbegin boldin_request();
+
+
+dilbegin aware boldin_request();
+external
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string);
+   extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+   unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
 var
   item: unitptr;
   pc: unitptr;
   exdp: extraptr;
+  i : integer;
 
 code
 {
 	heartbeat:= PULSE_SEC*3;
 
 :start:
-	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(BOLDIN_COMPLETE in activator.quests)) and (activator.level <= 40));
+   unsecure(pc);
+	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not (BOLDIN_COMPLETE in activator.quests)));
+
+   if (not (BOLDIN_ONGOING in activator.quests))
+      goto boldingo;
 
 	pc := activator;
 	secure(pc, lostpc);
 
-	if (BOLDIN_BREAD_ONGOING in pc.quests)
-		goto bread_ongoing;
-	if ((BOLDIN_BREAD_COMPLETE in pc.quests) and (not(BOLDIN_WATER_ONGOING in pc.quests)) and (not(BOLDIN_WATER_COMPLETE in pc.quests)))
-		goto water;
-	if (BOLDIN_WATER_ONGOING in pc.quests)
-		goto water_ongoing;
-	if ((BOLDIN_BREAD_COMPLETE in pc.quests) and (BOLDIN_WATER_COMPLETE in pc.quests) and (not(BOLDIN_HANDOFF in pc.quests)))
-		goto handoff;
-	if ((EXPLORE_COMPLETE in pc.quests) and (not(BOLDIN_COMPLETE in pc.quests)) and (not(BOLDIN_ROGUE in pc.quests)))
-		goto finish;
-	if ((BOLDIN_HANDOFF in pc.quests) or (BOLDIN_COMPLETE in pc.quests))
-		goto start;
-	pause;
-	exec("say Ahoy there traveller!", self);
-    pause;
-    exec("say you look to be somewhat new around here.", self);
-    pause;
-	exec("whisper "+pc.name+" I could use some help. And I'm guessing you could as well!", self);
-	pause;
-	exec("whisper "+pc.name+" You see, the older I get, the harder it seems it is to get around.", self);
-	pause;
-	exec("whisper "+pc.name+" Would you be so kind as to help me out?", self);
-	pause;
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+   if (not (BOLDIN_BREAD_COMPLETE in pc.quests))
+   {
+      if (not (BOLDIN_BREAD_ONGOING in pc.quests))
+         goto bread;
+      else
+         goto bread_ongoing;
+   }
+   else if (not (BOLDIN_WATER_COMPLETE in pc.quests))
+   {
+      if (not (BOLDIN_WATER_ONGOING in pc.quests))
+         goto water;
+      else
+         goto water_ongoing;
+   }
+   else if (not (BOLDIN_HANDOFF_COMPLETE in pc.quests))
+   {
+      if (not (BOLDIN_HANDOFF_ONGOING in pc.quests))
+         goto handoff;
+      else
+         goto handoffdone;
+   }
+   else if (not (BOLDIN_ROGUE_COMPLETE in pc.quests))
+   {
+      if (not (BOLDIN_ROGUE_ONGOING in pc.quests))
+         goto rogue;
+      else
+         goto roguedone;
+   }
+
+   goto start;
+
+:boldingo: 
+	pc := qstWaitHero@quests(BOLDIN_QUEST, activator,
+      {"say Ahoy there traveller!",
+      "say you look to be somewhat new around here.",
+      "whisper $1N I could use some help. And I'm guessing you could as well!",
+      "whisper $1N You see, the older I get, the harder it seems it is to get around.",
+      "whisper $1N Would you be so kind as to help me out?",
+      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.' <div class='cpy'>HINT: Simply type 'nod' and hit enter.</div>"
+      }, ""
+   );
+
+   if (pc == null)
+      goto start;
+
+   secure(pc, lostpc);
+
+   // Boldin Quest accepted
+
+   exdp := qstAssign@quests(BOLDIN_QUEST, pc, 
+      {"say Excellent!",
+       "clap"},
+      "Help Boldin in Udgaard with various quests."
+   );
+
+:bread:
+   // Bread Quest accepted
+
+
+   exdp := qstAssign@quests(BOLDIN_BREAD, pc, 
+      {"say A man gets hungry in his age.",
+      "whisper $1N If you could find a store and <div class='hint'>buy bread</div> for me, it would be well appreciated.",
+      "whisper $1N Take this money, and you can keep anything thats left after your purchase.",
+      "whisper $1N Use the <a cmd='#'>purse</a> command to check how much money you are carrying.'",
+      "whisper $1N A food store can be found west and north of here.",
+      "emote gives 2 copper pieces to $1N"},
+      "Buy a bread and give it to Boldin."
+   );
+
+   // Give money to the player
+   i := transfermoney(null, pc, 2 * COPPER_MULT);
+
+	unsecure(pc);
+	goto start;
+
+:bread_ongoing:
+   pc := qstWaitDone@quests(BOLDIN_BREAD, pc, 
+         {"smile $1N",
+          "say Quest complete, brave adventurer!",
+          "whisper $1N I suspect you'll need these coins sooner or later."},
+          500, 2 * COPPER_MULT,{""});
+	unsecure(pc);
+	goto start;
+	
+
+
+:water:	
+   pc  := qstWaitHero@quests(BOLDIN_WATER, pc,
+      {"emote quietly chews a chunk of bread.",
+      "say Thank you again for that bread, traveller!",
+      "say Now, could I ask one more favor?",
+      "whisper $1N You see, I'm feeling rather parched.",
+      "whisper $1N A dash of water would do me well!",
+      "whisper $1N Would you be so kind as to help me out?",
+      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "");
+
 	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 
-	goto accept_bread;
-	
-:water:
-	
-	pause;
-	act("Boldin the wise quietly chews a chunk of bread.",A_SOMEONE, pc, null, null, TO_ROOM); 
-	pause;
-	exec("say Thank you again for that bread, traveller!", self);
-    pause;
-    exec("say Now, could I ask one more favor?", self);
-    pause;
-	exec("whisper "+pc.name+" You see, I'm feeling rather parched.", self);
-	pause;
-	exec("whisper "+pc.name+" A dash of water would do me well!", self);
-	pause;
-	exec("whisper "+pc.name+" Would you be so kind as to help me out?", self);
-	pause;
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+   if (pc == null)
+      goto start;
 
-	goto accept_water;
+   // Find a hero to take the water quest
+   exdp := qstAssign@quests(BOLDIN_WATER, pc, 
+      {"say Excellent!",
+      "say I've got the thirst of a man twice my size and with three times my vigor.",
+      "whisper $1N Take this barrel, and map.",
+      "whisper $1N Simply <a cmd='look map'>look at this map</a> and it will guide you to the nearby city of Midgaard.",
+      "whisper $1N At the Midgaard Market Square you will find an obelisk full of water! Simply <a cmd='#'>pour obelisk in barrel</a> to fill it up.'",
+      "::$3n hands you an empty barrel and a crumpled map.::$3n hands an empty barrel and a crumpled map to $1n."},
+      "Return to Boldin with his barrel full of water. You can fill up the barrel in Midgaard at the Obelisk."
+   );
+
+	item := load("water_barrel@gremlin");
+	link(item, pc);
+	item := load("midgaard_map@gremlin");
+	link(item, pc);
+	act("<div class='hint'>HINT: Type 'look map' to find directions to Midgaard.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 	
+
+	unsecure(pc);
+	goto start;
+
+
+:water_ongoing:
+   pc := qstWaitDone@quests(BOLDIN_WATER, pc, 
+         {"smile $1N",
+          "emote takes a long drink from the barrel, completely emptying it!",
+          "say I think you're going to need these sooner or later",
+          "emote quite slips you some coins and gives you an empty barrel."
+          },
+          500, 2 * COPPER_MULT, {"water_barrel@gremlin"});
+	unsecure(pc);
+	goto start;
+
 
 :handoff:
+   pc  := qstWaitHero@quests(BOLDIN_HANDOFF, pc,
+      {"say Now that was refreshing, $1N!",
+      "say A dark rumour has been spreading, and I think you're up to helping with it.",
+      "whisper $1N There is word that gremlins have invaded a nearby farmstead!",
+      "whisper $1N What do you think, do you have it in you to help?",
+      "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "");
 
-	pause;
-	exec("say It's good to see you again " + pc.name + "!", self);
-    pause;
-    exec("say A dark rumour has been spreading, and I think you're up to helping with it.", self);
-    pause;
-	exec("whisper "+pc.name+" There is word that gremlins have invaded a nearby farmstead!", self);
-	pause;
-	exec("whisper "+pc.name+" What do you think, do you have it in you to help?", self);
-	pause;
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+   if (pc == null)
+      goto start;
 
-	goto accept_handoff;
+   // Find a hero to take the water quest
+   exdp := qstAssign@quests(BOLDIN_HANDOFF, pc, 
+      {"say Your help will be well appreciated $1N!",
+      "whisper $1N Between Cypress Forest and the City of Midgaard lies a dusty trail.",
+      "whisper $1N A small farmstead can be found by heading north on this trail.",
+      "whisper $1N Barnham is the master of this farm, and also a distant cousin of mine.",
+      "whisper $1N Please go find Barnham, he will warmly welcome you."},
+      "Go see Barnham in the farmstead north of a dusty trail between the Cypress forest and Midgaard."
+   );
+
+	unsecure(pc);
+	goto start;
+
 	
-:finish:
+:handoffdone:
+   pc := qstWaitDone@quests(BOLDIN_HANDOFF, pc, 
+         {"say I see you have returned, $1N.",
+          "say I am truly saddened by the news that has reached me.",
+          "whisper $1N Bernhard will be deeply missed. He was the last of a long line of heroic adventurers."},
+          500, 2 * COPPER_MULT, {""});
+	unsecure(pc);
+	goto start;
 
-	pause;
-	exec("say I see you have returned, " + pc.name + ".", self);
-    pause;
-    exec("say I am truly saddened by the news that has reached me.", self);
-    pause;
-	exec("whisper "+pc.name+" Bernhard will be deeply missed. He was the last of a long line of heroic adventurers.", self);
-	pause;
-	exec("whisper "+pc.name+" Given the state of affairs, I'm afraid I must ask for additional assistance.", self);
-	pause;
-	exec("whisper "+pc.name+" Can I count on you for one more request?", self);
-	pause;
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Just <div class='hint'>nod</div> your head, and I'll give you the details.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+:rogue:
+   pc  := qstWaitHero@quests(BOLDIN_ROGUE, pc,
+      {
+      "whisper $1N Given the state of affairs, I'm afraid I must ask for additional assistance.",
+      "whisper $1N Can I count on you for one more request?"
+      },"");
 
-	goto accept_finish;
-	
-:accept_bread:
+   if (pc == null)
+      goto start;
 
-	wait(SFB_CMD, activator #= pc);
-	if (command("nod"))
-		goto bread_accepted; 
-	else if (command("shake"))
-		goto no_quest;
-	else
-	{
-		act("<div class='whisper'>Boldin the wise whispers to you, '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		goto accept_bread;
-	}
+   // Find a hero to take the water quest
+   exdp := qstAssign@quests(BOLDIN_ROGUE, pc, 
+      {"say And so another adventure begins $1N.",
+   	  "whisper $1N Away beyond the East gate of Midgaard lies a crossroads.",
+        "whisper $1N South from this crossroads, lies the seaside town of Torsbay.",
+        "whisper $1N There in Torsbay, a rogue has landed on the shore.",
+        "whisper $1N Find this rogue, and mention my name. He will know what to do."
+      }, "Find the rogue in Torsbay.");
+	unsecure(pc);
+	goto start;
 
-:accept_water:
+:roguedone:
+   // Check if BOLDIN_ROGUE is done (qstWaitDone). For now I don't think you've compelted this part?
+   goto start;
 
-	wait(SFB_CMD, activator #= pc);
-	if (command("nod"))
-		goto water_accepted; 
-	else if (command("shake"))
-		goto no_quest;
-	else
-	{
-		act("<div class='whisper'>Boldin the wise whispers to you, '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		goto accept_water;
-	}
-	
-:accept_handoff:
 
-	wait(SFB_CMD, activator #= pc);
-	if (command("nod"))
-		goto handoff_accepted; 
-	else if (command("shake"))
-		goto no_quest;
-	else
-	{
-		act("<div class='whisper'>Boldin the wise whispers to you, '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		goto accept_handoff;
-	}
-
-:accept_finish:
-
-	wait(SFB_CMD, activator #= pc);
-	if (command("nod"))
-		goto finish_accepted; 
-	else if (command("shake"))
-		goto no_quest;
-	else
-	{
-		act("<div class='whisper'>Boldin the wise whispers to you, '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		goto accept_handoff;
-	}
 :no_quest:
 
 	exec("say So be it!", self);
 	unsecure(pc);
 	goto start;
 
-:bread_accepted:
-
-	pause;
-	exec("say Excellent!", self);
-	pause;
-	
-	exec("say A man gets hungry in his age.", self);
-	pause;
-	
-	act("<div class='whisper'>Boldin the wise whispers to you, 'If you could find a store and <div class='hint'>buy bread</div> for me, it would be well appreciated.",A_SOMEONE, pc, null, null, TO_CHAR); 
-	pause;
-	act("<div class='whisper'>Boldin the wise whispers something to " + pc.name + ".",A_SOMEONE, pc, null, null, TO_REST); 
-	pause;
-	exec("whisper "+pc.name+" Take this money, and you can keep anything thats left after your purchase.", self);
-	pause;
-	item := load("coins@gremlin");
-	link(item, pc);
-	act("<br>Boldin the wise quietly slips you some coins.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Use the <div class='hint'>purse</div> command to check how much money you are carrying.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	act("<div class='hint'>HINT: A food store can be found west and north of here.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	addextra(pc.quests, {BOLDIN_BREAD_ONGOING}, "");
-	addextra(pc.quests, {BOLDIN_ONGOING}, "");
-	pause;
-	
-	unsecure(pc);
-	goto start;
-
-:water_accepted:
-
-	pause;
-	exec("say Excellent!", self);
-	pause;
-	
-	exec("say I've got the thirst of a man twice my size and with three times my vigor.", self);
-	pause;
-	
-	exec("whisper "+pc.name+" Take this barrel, and map.", self);
-	pause;
-	
-	act("<div class='whisper'>Boldin the wise whispers to you, 'Simply <div class='hint'>look</div> at this <div class='hint'>map</div> and it will guide you to the nearby city of Midgaard.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	pause;
-	
-	act("<div class='whisper'>Boldin the wise whispers to you, 'At the Midgaard Market Square you will find an obelisk full of water! Simply <div class='hint'>pour obelisk in barrel</div> to fill it up.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	pause;
-	item := load("water_barrel@gremlin");
-	link(item, pc);
-	act("Boldin hands you an empty barrel.<br>",A_SOMEONE, pc, null, null, TO_CHAR);
-	item := load("midgaard_map@gremlin");
-	link(item, pc);
-	act("Boldin hands you a crumpled map.",A_SOMEONE, pc, null, null, TO_CHAR);
-	act("<div class='hint'>HINT: Type 'look map' to find directions to Midgaard.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-	addextra(pc.quests, {BOLDIN_WATER_ONGOING}, "");
-	pause;
-	
-	unsecure(pc);
-	goto start;
-	
-:handoff_accepted:
-
-	pause;
-	exec("say Your help will be well appreciated " + pc.name +"!", self);
-	pause;
-	exec("whisper "+pc.name+" Between Cypress Forest and the City of Midgaard lies a dusty trail.", self);
-	pause;
-	exec("whisper "+pc.name+" A small farmstead can be found by heading north on this trail.", self);
-	pause;
-	exec("whisper "+pc.name+" Barnham is the master of this farm, and also a distant cousin of mine.", self);
-	pause;
-	exec("whisper "+pc.name+" Please go find Barnham, he will warmly welcome you.", self);
-	pause;
-	addextra(pc.quests, {BOLDIN_HANDOFF}, "");
-	pause;
-	
-	unsecure(pc);
-	goto start;
-
-:finish_accepted:
-
-	pause;
-	exec("say And so another adventure begins " + pc.name +"!", self);
-	pause;
-	exec("whisper "+pc.name+" Away beyond the East gate of Midgaard lies a crossroads.", self);
-	pause;
-	exec("whisper "+pc.name+" South from this crossroads, lies the seaside town of Torsbay.", self);
-	pause;
-	exec("whisper "+pc.name+" There in Torsbay, a rogue has landed on the shore.", self);
-	pause;
-	exec("whisper "+pc.name+" Find this rogue, and mention my name. He will know what to do.", self);
-	pause;
-	addextra(pc.quests, {BOLDIN_ROGUE}, "");
-	pause;
-	unsecure(pc);
-	goto start;
-	
-:bread_ongoing:
-
-	exdp := BOLDIN_ONGOING in pc.quests;
-	if ("bread" in exdp.names)
-	{
-		pause;
-		exec("smile " + pc.name, self);
-		subextra(pc.quests, BOLDIN_BREAD_ONGOING);
-		addextra(pc.quests, {BOLDIN_BREAD_COMPLETE}, "");
-		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		act("<br><div class='xpgain'>You recieve 500 experience.</div><br>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		experience(500, pc);
-		item := load("coins@gremlin");
-		link(item, pc);
-		act("Boldin the wise quietly slips you some coins.",A_SOMEONE, pc, null, null, TO_CHAR); 
-		exec("whisper " + pc.name + " I suspect you'll need that sooner than later.", self);
-	}
-	unsecure(pc);
-	goto start;
-	
-:water_ongoing:
-
-	exdp := BOLDIN_ONGOING in pc.quests;
-	if ("water" in exdp.names)
-	{
-		pause;
-		exec("smile " + pc.name, self);
-		pause;
-		act("<br>Boldin takes a long drink from the barrel, completely emptying it!",A_SOMEONE, pc, null, null, TO_CHAR);
-		subextra(pc.quests, BOLDIN_WATER_ONGOING);
-		addextra(pc.quests, {BOLDIN_WATER_COMPLETE}, "");
-		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR);
-		act("<br><div class='xpgain'>You recieve 500 experience.</div><br>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		experience(500, pc);
-		item := load("coins@gremlin");
-		link(item, pc);	
-		item := load("water_barrel@gremlin");
-		link(item, pc);
-		act("Boldin the wise quietly slips you some coins.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		exec("whisper " + pc.name + " I suspect you'll need that sooner than later.", self);
-		act("<br><br>Boldin the wise hands you an empty barrel.<br>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		exec("whisper " + pc.name + " Why dont you keep that, it may be useful.", self);
-	}
-	unsecure(pc);
-	goto start;
 
 :lostpc:
-
-	exec("sigh", self);
-	goto start;
+   exec("sigh", self);
+   goto start;
 }
 dilend // END boldin_request
 
-/* Boldin Give */
-
-dilbegin boldin_give();
+dilbegin soul_anchor_qst();
+external
+  extraptr qstSetDone@quests(qname : string, pc : unitptr);
+  unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer,
+                             gold : integer, itemsl : stringlist);
+  extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
 var
-	pc: unitptr;
-	item: unitptr;
-	exdp: extraptr;
+  item: unitptr;
+  pc: unitptr;
+  exdp: extraptr;
+  mypc: unitptr;
 
 code
 {
-	heartbeat:= PULSE_SEC*3;
+  heartbeat := PULSE_SEC * 3;
 
-:start:
+  :start:
 
-	wait(SFB_DONE, (command("give")) and (target == self) and (activator.type == UNIT_ST_PC) and
-		(BOLDIN_ONGOING in activator.quests));
+    wait(SFB_DONE, (activator.type == UNIT_ST_PC) and (not (SOUL_ANCHOR_COMPLETE in activator.quests)));
+    pc := activator;
 
-:give:
+    if (SOUL_ANCHOR_COMPLETE in pc.quests)
+    {
+      goto start;
+    }
 
-	pc:= activator;
-	item:= medium;
-	secure(pc, lostpc);
-	exdp:= BOLDIN_ONGOING in pc.quests;
+    if (SOUL_ANCHOR_ONGOING in pc.quests)
+    {
+      goto soul_anchor_ongoing;
+    }
 
-	if (("bread@midgaard" == (self.inside.nameidx + "@" + self.inside.zoneidx)) and (not(BOLDIN_BREAD_COMPLETE in activator.quests)))
-	{
-		addstring(exdp.names, "bread");
-		exec("say Ahh, delicious!", self);
-		destroy(self.inside);
-	}
-	else if (("water_barrel@gremlin" == (self.inside.nameidx + "@" + self.inside.zoneidx)) and 
-		(not(BOLDIN_WATER_COMPLETE in activator.quests)) and (BOLDIN_BREAD_COMPLETE in activator.quests))
-	{
-		if(self.inside.weight < 28)
-		{
-			exec("say Why "+pc.name +", this isnt full!", self);
-			act("<div class='whisper'>Boldin the wise whispers to you, 'Find the Market Square and <div class='hint'>pour obelisk in barrel</div> then bring it back to me.'</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-			link(self.inside, pc);
-			goto rejected;
-		}
-		addstring(exdp.names, "water");
-		exec("say Ahh, my water!", self);
-		destroy(self.inside);
-	}
-	else
-	{
-		exec("say Did I ask for this, "+pc.name +"?", self);
-		pause;
-		exec("say I think not.", self);
-		link(self.inside, pc);
-	}
+    wait(SFB_DONE,(activator.type == UNIT_ST_PC) and command("smile"));
 
-:rejected:	
-	
-	unsecure(pc);
-	goto start;
+    pc := activator;
+    secure(pc, lostpc);
 
-:lostpc:
+    pause;
+    exec("emote sees your smile and cautiously wanders over.", self);
+    pause;
+    exec("say Hello, adventurer.", self);
+    pause;
+    exec("emote looks you over appraisingly.", self);
+    pause;
+    exec("say You have a strong spirit, I think.", self);
+    pause;
+    exec("say One which could withstand being separated from its body! To die and live again!", self);
+    pause;
+    exec("cackle", self);
+    pause;
+    exec("say But...", self);
+    pause;
+    exec("say If you reincarnate, it could be difficult to find your old body.", self);
+    pause;
+    exec("say Of course, the easiest thing to do would be to simply go find it.", self);
+    pause;
+    exec("say But your corpse could wind up in the most inconvient locations!", self);
+    pause;
+    exec("emote mutters something about giant ants.", self);
+    pause;
+    exec("say So I've developed a solution!", self);
+    pause;
+    exec("say A way to anchor your body to your soul, allowing it to come back to you after some time.", self);
+    pause;
+    exec("say Would you be interested in this technique?", self);
+    pause;
+    exec("say If so, nod.", self);
 
-	exec("say bah!", self);
-	goto start;
+    goto accept_explore;
+
+  :accept_explore:
+    wait(SFB_DONE, activator.type == UNIT_ST_PC);
+    pc := activator;
+    if (command("nod"))
+    {
+      goto anchor_accepted;
+    }
+    else if (command("shake"))
+    {
+      goto no_quest;
+    }
+    else
+    {
+      act("<div class='whisper'>The shaman says '<div class='hint'>Nod</div> if you agree to help, <div class='hint'>shake</div> your head otherwise.'</div>",A_SOMEONE, pc, null, null, TO_CHAR);
+      goto accept_explore;
+    }
+
+  :no_quest:
+
+    exec("say Too scared, I suppose.", self);
+    exec("shrug", self);
+    unsecure(pc);
+    goto start;
+
+  :anchor_accepted:
+    exec("grin", self);
+    pause;
+    exec("say Very good.", self);
+    pause;
+    exec("say To form the anchor, I need the life force of someone powerful.", self);
+    pause;
+    exec("say Not you or me, of course!", self);
+    pause;
+    exec("emote coughs awkwardly.", self);
+    pause;
+    exec("say One of the grumpkins, Gaflaw, is stronger than all the rest.", self);
+    pause;
+    exec("say Bring me something with his life force!", self);
+    pause;
+    exec("drool", self);
+
+    // note to self: there's explicitly-set heartbeat before this kicks in
+    qstAssign@quests(SOUL_ANCHOR_QUEST, pc,
+                     {"This string doesn't seem to be used?"},
+                     "seeking Gaflaw's life");
+    exec("say Go now, and return when you have what I need.", self);
+
+    unsecure(pc);
+    goto start;
+
+  :soul_anchor_ongoing:
+
+    // Due to this being very simple and issues with qstWaitDone / qstItemsWanted,
+    // it's just re-implemented here.
+    wait(SFB_DONE, command("give") and (target == self));
+
+    pc := activator;
+    item := medium;
+
+    secure(pc, lostpc);
+
+    if (item.symname == "heart@gremlin")
+    {
+      destroy(item);
+      exec("grin", self);
+      pause;
+      exec("emote beckons you over to the corner of the room.", self);
+      pause;
+      exec("emote holds the heart aloft in one hand while touching your head with the other.", self);
+      pause;
+      act("You feel a sudden shock! The heart disappears in a flash of light!", A_SOMEONE, pc, null, null, TO_CHAR);
+      pause;
+      exec("say It is done.", self);
+      pause;
+      exec("say Your body is linked with your soul!", self);
+      pause;
+      exec("say When you die, after some time, your corpse will return to where you resurrect.", self);
+      pause;
+      if (pc.hometown == "temple@udgaard")
+      {
+        exec("emote mutters 'Probably that temple in udgaard...'", self);
+      }
+      else
+      {
+        exec("emote mutters 'Probably your clan house...'", self);
+      }
+      pause;
+      exec("say But remember, it will take some time! It will be faster to find your corpse on your own.", self);
+      pause;
+      exec("say Now, go forth and die freely!", self);
+      pause;
+      exec("wave $1n", self);
+
+      // settle rewards
+      subextra(pc.quests, SOUL_ANCHOR_ONGOING);
+      addextra(pc.quests, {SOUL_ANCHOR_COMPLETE}, "");
+
+      experience(1000, pc);
+      sendtext("You earned 1000 experience.<br/>", pc);
+
+    }
+    else
+    {
+      exec("say This isn't the right thing.", self);
+      link(medium, activator);
+    }
+
+    unsecure(pc);
+    goto start;
+
+  :lostpc:
+    exec("sigh", self);
+    goto start;
 }
-dilend // END boldin_give
+dilend // END soul_anchor_quest
 
 dilbegin barnham_request();
+external
+   extraptr qstSetDone@quests(qname : string, pc : unitptr);
 var
   item: unitptr;
   pc: unitptr;
@@ -785,7 +863,7 @@ code
 	heartbeat:= PULSE_SEC*4;
 
 :start:
-	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(EXPLORE_COMPLETE in activator.quests)) and (activator.level <= 40) and (BOLDIN_HANDOFF in activator.quests));
+	wait(SFB_CMD,(activator.type == UNIT_ST_PC) and (not(EXPLORE_COMPLETE in activator.quests)) and (BOLDIN_HANDOFF_ONGOING in activator.quests));
 
 	pc := activator;
 	secure(pc, lostpc);
@@ -891,6 +969,7 @@ code
 		exec("emote returns the dagger to you.", self);
 		subextra(pc.quests, EXPLORE_ONGOING);
 		addextra(pc.quests, {EXPLORE_COMPLETE}, "");
+      exdp := qstSetDone@quests(BOLDIN_HANDOFF, pc);
 		experience(1000, pc);
 		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
 		act("<br><div class='xpgain'>You recieve 1000 experience.</div><br>",A_SOMEONE, pc, null, null, TO_CHAR); 
@@ -1286,10 +1365,11 @@ fs_05
 names {"farm yard", "farm"}
 title "Barnham's Corn Field"
 descr
-"Strong tall corn stalks block much view beyond whats right here. You can make out 
-the fence surrounding Barnham's farm to the immediate north and west. Somewhere, 
-the sound of a crow exulting in finding a trinket is emerging to break the otherwise 
-peaceful quiet. South and east of here the corn fields extend beyond your view."
+"Strong tall corn stalks block much view beyond whats right here. You can make 
+out the fence surrounding Barnham's farm to the immediate north and west. 
+Somewhere, the sound of a crow exulting in finding a trinket is emerging to 
+break the otherwise peaceful quiet. South and east of here the corn fields 
+extend beyond your view."
 movement SECT_FIELD
 
 south to fs_06 descr "Barnham's Corn Field";
@@ -1300,11 +1380,12 @@ fs_06
 names {"farm yard", "farm"}
 title "Barnham's Corn Field"
 descr
-"Here in the far corner of Barnhams farm, a peaceful quiet can be found. Indeed, 
-a small bench sits here among the rows of corn. It appears as if Barnham himself 
-has taken advantage of the solitude offered, and spent time reflecting in its 
-well-worn seat. The fence surrounding the fields blocks travel to the south and 
-west, while rows of corn block sight as they extend to the north and east."
+"Here in the far corner of Barnhams farm, a peaceful quiet can be found. 
+Indeed, a small bench sits here among the rows of corn. It appears as if 
+Barnham himself has taken advantage of the solitude offered, and spent time 
+reflecting in its well-worn seat. The fence surrounding the fields blocks 
+travel to the south and west, while rows of corn block sight as they extend to 
+the north and east."
 movement SECT_FIELD
 north to fs_05 descr "Barnham's Corn Field";
 east to fs_03 descr "Barnham's Corn Field";
@@ -1320,8 +1401,8 @@ descr
 large field that extends beyond it. It is a well-constructed home, with 
 amenities to support the operations and maintainance of the property. A small 
 farm cart rests along one side of the front door. Beyond, in the distance 
-to the north and west, some hills rise up obscuring the horizon. Away to the south and east
-you know lies the city of Midgaard."
+to the north and west, some hills rise up obscuring the horizon. Away to the 
+south and east you know lies the city of Midgaard."
 movement SECT_FIELD
 
 west to farm_house descr "Barnham's Farm House"
@@ -1339,9 +1420,9 @@ descr
 "Gravel, sand and dust makes this desert like trail, which leads north from the 
 path ultimately connecting to the city of Midgaard to the east, and Udgaard far 
 away to the west beyond the Cypress Forest. As you travel to the north, the 
-well-traveled becomes less dusty, and more firmly-packed. The trail continues to 
-the north, where some distance away you can make out a farm house. Travelling 
-south from here will return you to the Dusty Trail west of Midgaard."
+well-traveled becomes less dusty, and more firmly-packed. The trail continues 
+to the north, where some distance away you can make out a farm house. 
+Travelling south from here will return you to the Dusty Trail west of Midgaard."
 movement SECT_CITY
 
 north to trail_02 descr "On a Well-Worn Trail";
@@ -1538,11 +1619,12 @@ fcave_07
 names {"inside cave", "cave"}
 title "A Tunnel in the Cave"
 descr
-"As you crawl through this narrow tunnel, the space feels stifling. The acrid reek 
-that permeates these caves does nothing to help the onset of claustrophobia. To 
-further add to the discomfort, from above you a steady drip has made this tunnel 
-wet. If you work carefully you can return from where you came. Similarly you may 
-be able to continue through, and it seems things open up just ahead."
+"As you crawl through this narrow tunnel, the space feels stifling. The acrid 
+reek that permeates these caves does nothing to help the onset of 
+claustrophobia. To further add to the discomfort, from above you a steady drip 
+has made this tunnel wet. If you work carefully you can return from where you 
+came. Similarly you may be able to continue through, and it seems things open 
+up just ahead."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
 
@@ -1554,12 +1636,13 @@ fcave_08
 names {"inside cave", "cave"}
 title "A Large Cavern"
 descr
-"The narrow tunnel opens here into a large cavern. The ceiling climbs up and becomes 
-lost in the darkness high above. Here and there, a steady heartbeat of a water  
-dripping can be heard as the moisture falls from distant stalactites. The darnkess
-feels complete and almost smothering, and every noise echoes through the space. And 
-noises there are. There are things moving in the darnkess, somewhere. It seems that
-the cavern contiues north, or back through the narrow passage west."
+"The narrow tunnel opens here into a large cavern. The ceiling climbs up and 
+becomes lost in the darkness high above. Here and there, a steady heartbeat of 
+a water dripping can be heard as the moisture falls from distant stalactites. 
+The darnkess feels complete and almost smothering, and every noise echoes 
+through the space. And noises there are. There are things moving in the 
+darnkess, somewhere. It seems that the cavern contiues north, or back through 
+the narrow passage west."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
 
@@ -1571,11 +1654,11 @@ fcave_09
 names {"inside cave", "cave"}
 title "Inside the Cave"
 descr
-"The large cavern disappears into the darkness high above. Here and there, a steady 
-heartbeat of a water dripping can be heard as the moisture falls from distant 
-stalactites. The darnkess feels complete and almost smothering, and every noise 
-echoes through the space. Somewhere, there are things moving in the darnkess. It 
-seems that the cavern contiues south and east."
+"The large cavern disappears into the darkness high above. Here and there, a 
+steady heartbeat of a water dripping can be heard as the moisture falls from 
+distant stalactites. The darnkess feels complete and almost smothering, and 
+every noise echoes through the space. Somewhere, there are things moving in 
+the darnkess. It seems that the cavern contiues south and east."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
 
@@ -1623,9 +1706,9 @@ descr
 "Suddenly the cave that seemed like it may continue winding through the hills 
 forever, comes to an abrupt end. Travel is no longer possible along this trail. 
 The stale rank air in this end of the cave is overwhelming, where that smell 
-comes from, is perhaps better not explored. The damp accumulates into pools here 
-and you suspect that they may be related to the smell. The sounds of something, 
-or someone moving in the darnkess leaves hair raised on end."
+comes from, is perhaps better not explored. The damp accumulates into pools 
+here and you suspect that they may be related to the smell. The sounds of 
+something, or someone moving in the darnkess leaves hair raised on end."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
 
@@ -1638,11 +1721,11 @@ title "Dead End"
 descr
 "Suddenly the cave that seemed like it may continue winding through the hills 
 forever, comes to an abrupt end. A slight draft, and with it the welcome aroma 
-of fresh air, tickles the senses here. The cave wall before you is evidently the 
-end of the path. Where is that fresh air coming from however. The rocks on the 
-cave wall may be worth looking at further. The damp accumulates into pools here 
-and you suspect that they may be related to the smell. The sounds of something, 
-or someone moving in the darnkess leaves hair raised on end."
+of fresh air, tickles the senses here. The cave wall before you is evidently 
+the end of the path. Where is that fresh air coming from however. The rocks on 
+the cave wall may be worth looking at further. The damp accumulates into pools 
+here and you suspect that they may be related to the smell. The sounds of 
+something, or someone moving in the darnkess leaves hair raised on end."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
 
@@ -1736,9 +1819,10 @@ names {"Boldin","man"}
 title "Boldin the wise"
 descr "Boldin the wise is here."
 extra {}
-"Boldin The Wise as he is known. A slim elderly man, Boldin definitely didnt make it through
-life by blade or hammer. The look of one well studied, and with a deep smile, you can appreciate 
-the clear evidence that his alternative path through life has been effective."
+"Boldin The Wise as he is known. A slim elderly man, Boldin definitely didnt 
+make it through life by blade or hammer. The look of one well studied, and 
+with a deep smile, you can appreciate the clear evidence that his alternative 
+path through life has been effective."
 M_AVG_HUMAN(199, SEX_MALE)
 alignment 1000
 bright 4
@@ -1748,7 +1832,29 @@ default POSITION_STANDING
 dilcopy newbie_nokill@newbie();
 dilcopy newbie_nospl@newbie();
 dilcopy boldin_request@gremlin();
-dilcopy boldin_give@gremlin();
+
+dilcopy qstItemsWanted@quests(BOLDIN_BREAD, {"bread@midgaard"}, {""},
+		{"say Ahh, delicious! Thank you $1N.","emote eats the bread."}, 
+       "say Please bring me a bread from Rosanne's bakery.");
+
+dilcopy qstItemsWanted@quests(BOLDIN_WATER, {"water_barrel@gremlin"}, {"fluidcheck@quests 24"},
+		{"say A barrel full of water. Thank you $1N."},
+      "say Please bring me back my barrel filled with water.");
+
+// dilcopy boldin_give@gremlin();
+
+end
+
+anchorman
+names {"shaman", "gremlin"}
+title "the shaman"
+descr "A gremlin in dark robes stands in the corner."
+extra {}
+"Small and ugly like the rest of the gremlins, this one looks a little less hostile than the rest. It briefly makes eye contact with you with a questioning expression on its face before looking away. Perhaps a smile would show you mean no harm?"
+M_AVG_GOBLIN(30, SEX_FEMALE)
+alignment -500
+money 2 COPPER_PIECE
+dilcopy soul_anchor_qst@gremlin();
 
 end
 
@@ -1871,12 +1977,13 @@ names {"rogue", "sventer"}
 title "Sventer the rogue"
 descr "A tall roguish man is here."
 extra {}
-"Tall, and dashingly handsom, Sventer has a scar down one cheek from an apparent run-in 
-with a blade of one form or another. He is cowled in a dark cloak, and has a gleam in his eye."
+"Tall, and dashingly handsom, Sventer has a scar down one cheek from an 
+apparent run-in with a blade of one form or another. He is cowled in a dark 
+cloak, and has a gleam in his eye."
 M_HUMAN_THIEF_AXE(30,SEX_MALE)
 money 1 GOLD_PIECE
 
-dilcopy wander_zones@function ("torsbay", 30, 0,0);
+dilcopy wander_zones@function ("torsbay", 180, 0,0);
 dilcopy rogue_request@gremlin();
 dilcopy rogue_give@gremlin();
 end
@@ -1890,8 +1997,9 @@ descr "The remains of someone, or something, have been dumped here."
 weight 1
 cost 1 IRON_PIECE
 extra {}
-"These remains are more decayed than otherwise. All that you can discern is that 
-they appear to have been human, originally. This may be all that is left of Bernhard."
+"These remains are more decayed than otherwise. All that you can discern is 
+that they appear to have been human, originally. This may be all that is left 
+of Bernhard."
 end
 
 grump_sign
@@ -1948,8 +2056,8 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_SHORT_SWORD, -1,-1)
 weight 1
 extra {}
-"This rusty sword appears to have been left in the rain for a period of several years. Despite 
-this, you wouldn't want anyone to swing it at you."
+"This rusty sword appears to have been left in the rain for a period of 
+several years. Despite this, you wouldn't want anyone to swing it at you."
 end
 
 coins
@@ -1961,8 +2069,8 @@ names {"barrel"}
 title "a barrel"
 descr "A barrel has been left here."
 extra {}
-"This is an excellent barrel for carrying water. If you were to find a source of water, you could pour it in!<br>
-<br><div class='hint'>HINT: At the Obelisk in the Market Square of Midgaard, 'pour obelisk in barrel'.</div>"
+"This is an excellent barrel for carrying water. If you were to find a source 
+of water, you could pour it in!<br><br><div class='hint'>HINT: At the Obelisk in the Market Square of Midgaard, 'pour obelisk in barrel'.</div>"
 manipulate {MANIPULATE_TAKE}
 LIQ_DEF("clear",4,24,0,10,1,0,0)
 cost 2 IRON_PIECE
@@ -2253,7 +2361,7 @@ extra {}
 it has been worn smoothe by countless generations of hands clasping at it. 
 While it's not clear why, there seems to be a deep power within."
 extra {"$identify"}
-"Gwydion's Amulet is a powerful tool for both the divine and magically inclined. 
+"Gwydion's Amulet is a powerful tool for both the divine and magically inclined.
 It brings its wearer closer to the source of their power.<br/>"
 extra {"$wear_s"}
 "You carefully place $2n around your neck. Your power grows."
@@ -2272,6 +2380,17 @@ dilcopy abi_restrict@function (ABIL_BRA,25,0,0,"bra_rest@skaven");
 dilcopy charger@sorcerer();
 dilcopy mana_drain@sorcerer();
 rent 100 IRON_PIECE
+end
+
+heart
+names {"gaflaw's heart", "heart"}
+title "a beating heart"
+descr "A heart beats here on the ground."
+extra {} "A steaming heart, fresh and full of life. It wiggles slightly, trying to beat even outside the body."
+manipulate {MANIPULATE_TAKE}
+FOOD_DEF(12, 0)
+weight 2
+cost 1 IRON_PIECE
 end
 
 %reset
@@ -2484,6 +2603,7 @@ load gaflaw into fcave_12 max 1
 {
    equip gaflaw_club position WEAR_WIELD
    equip adv_helm position WEAR_HEAD
+   load heart
 }
 load gguard into fcave_12 max 2
 {
@@ -2515,6 +2635,8 @@ load adv_chest into farm_attic local 1
 load heal_jug into cave_01 local 3
 
 load sventer into dock1@torsbay max 1
+
+load anchorman into fcave_11@gremlin max 1
 
 // doors
 

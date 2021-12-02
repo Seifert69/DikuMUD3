@@ -988,7 +988,7 @@ void dil_pop_frame(class dilprg *p)
 /*
    'p' is the program in which a new frame should be created.
    'rtmpl' is the template which the frame should be based upon.
-   'av' are the arguments which are to be passed to the new frame.
+    the arguments must be pushed to the stack before the call.
 */
 
 void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl)
@@ -2579,9 +2579,16 @@ void dilfi_snta(register class dilprg *p)
                 sarg.arg = (char *)v1->val.ptr;
                 sarg.mflags = SFB_MSG;
 
-                std::forward_list<class unit_data *>::iterator it;
-                for (it = fi->fi_unit_list.begin() ; it != fi->fi_unit_list.end(); it++)
-                    unit_function_scan(*it, &sarg);
+               if (!fi->fi_unit_list.empty())
+               {
+                  std::forward_list<class unit_data *>::iterator it, next_it;
+                  for (it = fi->fi_unit_list.begin() ; it != fi->fi_unit_list.end(); it = next_it)
+                  {
+                     next_it = it;
+                     next_it++;
+                     unit_function_scan(*it, &sarg);
+                  }
+               }
 
                 /*for (u = unit_list; u; u = u->gnext)
                 {

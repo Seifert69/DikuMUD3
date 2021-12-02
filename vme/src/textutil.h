@@ -72,6 +72,7 @@ char *str_cc(const char *s1, const char *s2);
 char **add_name(const char *name, char **namelist);
 
 char **create_namelist(void);
+int len_namelist(const char **namelist);
 
 void free_namelist(char **list);
 char *str_ccmp_next_word(const char *buf, const char *next_word);

@@ -1078,7 +1078,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = -1
-restrict divine         =  40
+restrict divine         =  25
 profession paladin      = -3
 profession priest       = +2
 
@@ -2840,7 +2840,7 @@ race half-elf   = 0
 race brownie    = -1
 race groll      = -2
 race darkelf    = -1
-restrict divine         = 40
+restrict divine         = 20
 profession priest       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -3639,7 +3639,7 @@ race brownie    = 0
 race groll      = -1
 race darkelf    = 0
 restrict divine         = 28
-profession necromancer  = +0
+profession necromancer  = +4
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -3673,7 +3673,7 @@ race half-elf   = 0
 race brownie    = +2
 race groll      = -1
 race darkelf    = +1
-restrict divine         = 34
+restrict magic  = 34
 profession sorcerer     = +2
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -3780,9 +3780,9 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = 0
 race darkelf    = 0
-restrict divine         = 16
-profession priest       = +0
-profession necromancer  = +2
+restrict divine         = 25
+profession priest       = +2
+profession necromancer  = +4
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -3887,7 +3887,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -2
 race darkelf    = -1
-restrict divine         = 26
+restrict divine         = 10
 profession priest       = +0
 profession druid        = -3
 
@@ -4030,7 +4030,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -2
 race darkelf    = -2
-restrict divine         = 50
+restrict divine         = 15
 profession paladin      = -3
 profession priest       = +0
 profession druid        = -3
@@ -4067,7 +4067,7 @@ race half-elf   = 0
 race brownie    = 0
 race groll      = -1
 race darkelf    = 0
-restrict divine         = 38
+restrict divine         = 25
 profession priest       = +0
 profession druid        = -1
 
@@ -6015,10 +6015,10 @@ toself          = You focus your thoughts on yourself...
 realm           = ABIL_DIV
 sphere          = SPL_CREATION
 func            = refresh@spells
-minpos          = POSITION_RESTING
+minpos          = POSITION_FIGHTING
 mana            = 20
 turns           = PULSE_VIOLENCE
-targets         = FIND_UNIT_SURRO + TAR_FIGHT_VICT + TAR_CHAR + TAR_AUTO_SELF
+targets         = FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF + TAR_FIGHT_SELF
 mediums         = MEDIA_SPELL + MEDIA_POTION + MEDIA_SCROLL +MEDIA_WAND
 check           = SPLCST_CHECK
 offensive       = FALSE
@@ -6034,7 +6034,7 @@ race half-elf   = 0
 race brownie    = +2
 race groll      = -1
 race darkelf    = 0
-restrict divine         = 26
+restrict divine         = 25
 profession ranger       = -3
 profession druid        = +0
 

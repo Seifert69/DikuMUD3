@@ -191,13 +191,13 @@ if(pwr <= 0)
      goto start;
 
 fire := rnd(1,50);
-if(fire < 25)
+if(fire < 20)
      goto start;
 
 	 num:=level_guild_chk@guild_paths(activator,GUILD_SORCERER);
 	 if (num>-1)
    {
-      num2 := rnd(1, 5);
+      num2 := rnd(1, 10);
       storenum := self.outside.fighting.mana / (2 * num2);
       mag_skill := self.outside.abilities[ABIL_MAG];
       num2 := rnd(1,110);
@@ -1101,272 +1101,6 @@ M_DARK_ELF_MAGE_ACID(100,SEX_MALE,"acid ball")
 
 end
 
-                                good_mage
-names {"mage of goodness", "good mage", "mage"}
-title "the Mage of Goodness"
-descr "The Mage of Goodness awaits your show of strength!"
-extra {}
-"Although old and withered, the Mage of Goodness is known to be a powerful
-sorcerer indeed! His single practice and assignment is to test Sorcerers
-in their abilities. Don't let his senile ramblings fool you, his arcane
-skills are more than a match for any magician!"
-M_DARK_ELF_MAGE_FIRE(98,SEX_MALE,"firestorm")
-alignment 800
-money 5 SILVER_PIECE
-exp 120
-#define MAGE_ONGOING "Damned Mage Quest Ongoing"
-#define MAGE_COMPLETE "Damned Mage Quest Complete"
-#define PIT_ONGOING "Infinity Quest Ongoing"
-flags {UNIT_FL_NO_TELEPORT}
-dilbegin m_g1();
-var
-  pcname   : string;
-  item     : unitptr;
-  pc       : unitptr;
-  i        : integer;
-  exdp     : extraptr;
-
-code
-{
-
-  :init:
-  heartbeat := PULSE_SEC*5;
-  on_activation((self.position <= POSITION_SLEEPING) or
-	       (self.position == POSITION_FIGHTING), skip);
-
-  :start:
-  wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (not
-      command("give")) and ((PIT_ONGOING in activator.quests)));
-  if(MAGE_ONGOING in activator.quests)
-      goto waitawhile;
-  priority;
-  pc := activator;
-  secure(pc, lostpc);
-
-  if(not(MAGE_ONGOING in pc.quests))
-  {
-     pause;
-     exec("say Have you brought it?", self);
-     pause;
-     exec("say Its power must be contained, " +
-	  "you must have the book, please say you do.", self);
-  }
-
-      unsecure(pc);
-        nopriority;
-      goto start;
-
-	:waitawhile:
-        nopriority;
-	heartbeat := PULSE_SEC*60;
-	pause;
-	goto init;
-
-	:lostpc:
-	exec("say They always leave too soon.", self);
-	pause;
-	exec("sigh", self);
-        nopriority;
-	goto start;
-}
-dilend
-
-dilbegin m_g2();
-var
-  pc     : unitptr;
-  item   : unitptr;
-  exdp   : extraptr;
-
-  code
-  {
-    heartbeat := PULSE_SEC*5;
-    on_activation((self.position <= POSITION_SLEEPING) or
-	       (self.position == POSITION_FIGHTING), skip);
-
-    :start:
-    wait(SFB_CMD, command("give") and
-	(activator.type == UNIT_ST_PC));
-    priority;
-    :give:
-    if (not(MAGE_COMPLETE in activator.quests))
-	goto start;
-
-    pc := activator;
-    item := self.inside;
-    secure(pc, labsecure);
-    secure(item, labsecure);
-
-    wait(SFB_CMD | SFB_TICK, TRUE);
-    if(not(item #= self.inside))
-    {
-     unsecure(item);
-
-     if("necronomicon" in self.inside.name)
-     {
-		exec("say Ahh, the evil of this book shall be "+
-		     "sealed within the deepest of vaults.", self);
-		pause;
-		exec("say Its power can finally be contained.", self);
-		pause;
-		exec("say for too long it has reigned evil upon the "+
-			"world.  There shall be great things said about "+
-			"your name.", self);
-		pause;
-		exec("say Perhaps the world Zangleyot will be of some "+
-			"aid to you, it is rumored that it has the "+
-			"power to open doors.", self);
-		destroy(self.inside);
-     }
-     else
-     {
-		exec("say This is not what I am looking " +
-		      "for " +pc.name + ".", self);
-		pause;
-		exec("say Please have it back.", self);
-		link(self.inside, pc);
-     }
-    }
-    unsecure(pc);
-
-    if((command("give")) and
-       (activator.type == UNIT_ST_PC))
-    {
-      goto give;
-    }
-      else
-	goto start;
-
-    :labsecure:
-    exec("sigh", self);
-    nopriority;
-    goto start;
-
-}
-dilend
-
-
-dilbegin goodchat();
-var
-	flux : integer;
-code
-{
-	:start:
-heartbeat := PULSE_SEC*(rnd(3,7));
-flux := rnd(1,100);
-
-exec("emote straightens his hat.",self);
-pause;
-
-if (flux < 10)
-{
-exec("say I remember the times when a dragon was a dragon...",self);pause;
-exec("say ...Tiamat, you old girl... how many times haven't we bickered..."
-,self);pause;
-exec("sigh",self);pause;
-goto start;
-}
-if (flux < 20)
-{
-exec("emote peers at you from beneath the brim of his hat.",self);pause;
-exec("say You call this battle armour..?",self);pause;
-exec("snicker",self);pause;
-exec("say Naaaah, when I was young, there were REAL battle armours..!",self);
-pause;
-goto start;
-}
-if (flux<30)
-{
-exec("sigh",self);pause;
-exec("say I am as ancient as the world itself... well almost...",self);pause;
-exec("say But do they do me honours?",self);pause;
-exec("emote whispers loudly 'Not even put me on the oldbie list, did "+
-"they.'" ,self);pause;
-exec("nod",self);pause;
-goto start;
-}
-if (flux<40)
-{
-act("The mage's pointy hat slides down on his nose."
-,A_ALWAYS,null,null,null,TO_ALL);
-pause;
-exec("say Struck blind, by gods!",self);
-exec("emote flails around blindly with his staff!",self);pause;
-exec("emote stops suddenly and pulls his hat back on the top of his head."
-,self);pause;
-exec("blink",self);
-exec("say Now, what was I saying again?",self);pause;
-goto start;
-}
-if (flux<50)
-{
-exec("say ...and remember the silver dragon?",self);pause;
-exec("think",self);pause;
-exec("say Boy, was HE ever a chat head... never seemed to stop...",self);
-pause;
-exec("emote whispers loudly 'Can't abide such people... "+
-"annoying...'",self); pause;
-goto start;
-}
-if (flux<60)
-{
-exec("emote peers at his magus staff.",self);
-exec("blink",self);pause;
-exec("say Now, where did THAT thing came from?",self);pause;
-exec("say Say, sonny, you didn't snatch me staff while I wasn't looking?"
-,self);pause;
-exec("emote peers suspiciously at you.",self);pause;
-goto start;
-}
-if (flux<70)
-{
-exec("emote scratches his head.",self);pause;
-exec("say Say, sonny, ever seen a white dragon toast a city?",self);pause;
-exec("say No? Believe me, the sight is rather overrated...",self);pause;
-exec("emote sighs 'And the place is a bloody mess later on...'",self);
-pause;
-goto start;
-}
-if (flux<80)
-{
-exec("say Kid, if you see my sister, bring her me regards...",self);pause;
-exec("say We worked together, you know?",self);pause;
-exec("say ...but she took some low-payment, no-respect, no-benefits job..."
-,self); pause;
-exec("say ...as the so-called 'Mage of Neutrality' for the Sorcerers.",self);
-pause;
-exec("emote grins 'Have you ever heard of something as "+
-"ridiculous?'",self);pause;
-goto start;
-}
-if (flux<90)
-{
-exec("say Huh?",self);pause;
-exec("Say No respect for the aged and wise..!",self);pause;
-exec("emote gives you a beating of your life with his staff.",self);pause;
-exec("say Learn to treat the elderly with respect, sonny!",self);pause;
-goto start;
-}
-else
-{
-exec("say I will let you in on a secret.",self);pause;
-exec("peer",self);
-exec("emote whispers loudly 'Don't tell anyone...'",self);pause;
-exec("emote whispers loudly '...but Thor is starting to get "+
-"senile...'",self);pause;
-exec("snicker",self);pause;
-exec("say He cannot even remember where he puts that hammer of his.",self);
-pause;
-exec("say You know..? Hammer..? Huge, nasty thing, you can't miss it "+
-"if you see it...",self);pause;
-exec("say Half the world population of heroes is using it any ways.",self);
-pause;
-goto start;
-}
-goto start;
-}
-dilend
-
-end
 
                                 neutral_mage
 names {"mage of neutrality", "neutral mage", "mage"}
@@ -1383,6 +1117,12 @@ money 2 GOLD_PIECE
 exp 120
 
 end
+
+/* good_mage
+
+Now resides in another zone, because reasons.
+
+*/
 
 
                                 mist_guard
@@ -1732,11 +1472,14 @@ extra {"$rem_o"}
 "$1n sheaths $2n in $1s belt."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 WEAPON_DEF(WPN_DAGGER,0,0)
+MAG_TRANSFER(+2)
+BRA_TRANSFER(+2)
+STR_TRANSFER(-1)
+WEAPON_TRANSFER(WPN_DAGGER,+5)
 MATERIAL_METAL("This item is made of fine steel.")
 dilcopy guild_restrict@function ({GUILD_SORCERER},0,25,"");
 dilcopy abi_restrict@function (ABIL_BRA,25,0,0,"bra_rest@skaven");
 dilcopy abi_restrict@function (ABIL_MAG,20,0,25,"mag_rest@skaven");
-dilcopy mvlev_restrict@function (75,25,"");
 dilcopy charger@sorcerer();
 dilcopy mana_drain@sorcerer();
 rent 100 IRON_PIECE
@@ -2610,14 +2353,6 @@ load dark_mage into ratswarf/sphinct max 1
 	equip blkm_stiletto position WEAR_WIELD
 	equip acid_rod position WEAR_HOLD
 	equip curshoes position WEAR_FEET
-}
-load good_mage into torsbay/top_light max 1
-{
-	equip magus_staff position WEAR_WIELD
-	equip midgaard/pointy_hat position WEAR_HEAD
-	equip whiterobe position WEAR_BODY
-	equip invi_cloak1 position WEAR_ABOUT
-        equip curshoes position WEAR_FEET
 }
 load neutral_mage into ratswarf/shack2 max 1
 {
