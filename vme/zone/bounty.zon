@@ -4210,6 +4210,7 @@ code
 
 	pc := activator;
 	secure(pc,donezo);
+	idate := realtime / (60*60*24);
 	
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	
@@ -4229,6 +4230,7 @@ code
 				exec("say You've done it "+pc.name+"!",self);
 				subextra(pc.extra,"$DAILY_SPREE");
 				addextra(pc.extra,{"$DAILY_SPREE"},sdate+"|CLOSED");
+				addstring(pc.extra.["$DAILY_SPREE"].names,itoa(idate));
 				if("$spree_streak" in pc.extra)
 					i := atoi(pc.extra.["$spree_streak"].descr);
 
