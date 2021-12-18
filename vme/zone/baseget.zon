@@ -1557,16 +1557,11 @@ code
          cnt := 1;
 }
 
+   temp := arg;
 
 :loop2:
 
    toitem := findunit(self, temp, FIND_UNIT_SURRO, null);
-
-   if (toitem == null)
-   {
-      temp := arg;
-      toitem := findunit(self, temp, FIND_UNIT_SURRO, null);
-   }
 
    if ((toitem) and (not visible(self, toitem)))
    {
