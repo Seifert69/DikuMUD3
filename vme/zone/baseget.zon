@@ -1519,6 +1519,7 @@ code
 
    if ((item) and (not visible(self, item)))
    {
+      log("1. Woot... will this ever happen? MS 20 DEC 2021.");
       cnt := cnt + 1;
       temp := itoa(cnt) + "." + arg;
       goto loop;
@@ -1543,19 +1544,19 @@ code
 
    if ("." in temp)
    {
-   wrdlst := split(temp, ".");
+      wrdlst := split(temp, ".");
 
-   cnt := atoi(wrdlst.[0]);
+      cnt := atoi(wrdlst.[0]);
 
-   if ((wrdlst.[0] == "0") or (cnt))
+      if ((wrdlst.[0] == "0") or (cnt))
       {
          buff := getword(arg);
 
          arg := wrdlst.[1] + " " + arg;
       }
-   else
+      else
          cnt := 1;
-}
+   }
 
    temp := arg;
 
@@ -1565,6 +1566,7 @@ code
 
    if ((toitem) and (not visible(self, toitem)))
    {
+      log("2. Woot... will this ever happen? MS 20 DEC 2021.");
       cnt := cnt + 1;
       temp := itoa(cnt) + "." + arg;
       goto loop2;
