@@ -8,3 +8,14 @@ pp
 fixhtml
 discord.token
 __pycache__
+libvme_objs.a
+libmplex_dep_objs.a
+libmplex_objs.a
+libpp_objs.a
+libvmc_dep_objs.a
+libvmc_objs.a
+defcomp_unit_tests
+mplex_unit_tests
+pp_unit_tests
+vmc_unit_tests
+vme_unit_tests
