@@ -98,26 +98,34 @@ class log_buffer log_buf[MAXLOG];
 /* writes a string to the log */
 void slog(enum log_level level, ubit8 wizinv_level, const char *fmt, ...)
 {
-   static ubit8 idx = 0;
+   static ubit8  idx      = 0;
    static ubit32 log_size = 0;
-   char buf[MAX_STRING_LENGTH], *t;
-   va_list args;
+   char          buf[MAX_STRING_LENGTH]{};
+   char         *t                     = buf;
+   size_t        buffer_size_remaining = MAX_STRING_LENGTH;
+   va_list       args;
 
    time_t now = time(0);
    char *tmstr = ctime(&now);
 
    tmstr[strlen(tmstr) - 1] = '\0';
 
-   if (wizinv_level > 0)
-      sprintf(buf, "(%d) ", wizinv_level);
-   else
-      *buf = '\0';
-
-   t = buf;
-   TAIL(t);
+   if(wizinv_level > 0)
+   {
+      auto chars_printed = snprintf(buf, buffer_size_remaining, "(%d) ", wizinv_level);
+      if(chars_printed < 0 || chars_printed >= buffer_size_remaining)
+      {
+         buffer_size_remaining = 0;
+      }
+      else
+      {
+         buffer_size_remaining -= chars_printed;
+         t += chars_printed;
+      }
+   }
 
    va_start(args, fmt);
-   vsprintf(t, fmt, args);
+   vsnprintf(t, buffer_size_remaining, fmt, args);
    va_end(args);
 
    /* 5 == " :: \n";  24 == tmstr (Tue Sep 20 18:41:23 1994) */

@@ -1053,20 +1053,14 @@ class extra_descr_data *quest_add(class unit_data *ch, const char *name, const c
 /* void szonelog(char *zonename, const char *fmt, ...) */
 void szonelog(class zone_type *zone, const char *fmt, ...)
 {
-    char name[256];
-    char buf[MAX_STRING_LENGTH], buf2[MAX_STRING_LENGTH + 512];
+    char name[256]{};
+    char buf[MAX_STRING_LENGTH]{};
+    char buf2[MAX_STRING_LENGTH + 512]{};
     va_list args;
     FILE *f;
 
-    time_t now = time(0);
-    char *tmstr = ctime(&now);
-
-    tmstr[strlen(tmstr) - 1] = '\0';
-
     va_start(args, fmt);
-
     vsnprintf(buf, MAX_STRING_LENGTH - 51, fmt, args);
-    buf[MAX_STRING_LENGTH - 51] = 0;
     va_end(args);
 
     if (zone == NULL)
@@ -1075,13 +1069,22 @@ void szonelog(class zone_type *zone, const char *fmt, ...)
         return;
     }
 
-    sprintf(buf2, "%s/%s", zone->name, buf);
+    snprintf(buf2, sizeof(buf2), "%s/%s", zone->name, buf);
     slog(LOG_ALL, 0, buf2);
 
-    sprintf(name, "%s%s.err", g_cServerConfig.m_zondir, zone->filename);
+    snprintf(name, sizeof(name), "%s%s.err", g_cServerConfig.m_zondir, zone->filename);
 
     if ((f = fopen_cache(name, "a")) == NULL)
-        slog(LOG_ALL, 0, "Unable to append to zonelog '%s'", name);
+    {
+       slog(LOG_ALL, 0, "Unable to append to zonelog '%s'", name);
+    }
     else
-        fprintf(f, "%s :: %s\n", tmstr, buf);
+    {
+       time_t now = time(0);
+       char *tmstr = ctime(&now);
+
+       tmstr[strlen(tmstr) - 1] = '\0';
+
+       fprintf(f, "%s :: %s\n", tmstr, buf);
+    }
 }
