@@ -5,3 +5,6 @@ dilpar.tab.c
 dilpar.tab.h
 y.tab.c
 y.tab.h
+tmp_*
+CMakeFiles
+cmake_install.cmake
