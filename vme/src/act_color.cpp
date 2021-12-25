@@ -133,7 +133,7 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
 
     if (change == TRUE)
     {
-        string mystr; 
+        std::string mystr;
 
         mystr = UPC(ch)->color.change(full_name, cbuf);
         sprintf(cbuf, "Color %s changed.<br/>", mystr.c_str());

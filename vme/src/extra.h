@@ -58,7 +58,7 @@ public:
 
     class cintlist vals;
     class cNamelist names;	/* Keyword in look/examine          */
-    string descr;	/* What to see                      */
+    std::string descr;	/* What to see                      */
     class extra_descr_data *next;	/* Next in list                     */
 };
 

@@ -269,7 +269,7 @@ void info_show_one(class unit_data *teacher,
                    const char *text,
                    int indent, ubit8 isleaf, int min_level,
                    struct profession_cost *cost_entry,
-                   vector<pair<int, string>> &vect)
+                   std::vector<std::pair<int, std::string>> &vect)
 {
    char buf[256];
 
@@ -310,11 +310,11 @@ void info_show_one(class unit_data *teacher,
                     next_point >= 20 ? "<div class='ca'>" : "", spc(4 * indent), current_points, text, current_points, max_level,
                     next_point,
                     money_string(money_round(TRUE, gold, currency, 1), currency, FALSE),
-                    string(lvl, '*').c_str(), next_point >= 20 ? "</div>" : "");
+                    std::string(lvl, '*').c_str(), next_point >= 20 ? "</div>" : "");
          else
             sprintf(buf, "%s%s%3d%% %-20s [practice points %3d] %s%s<br/>",
                     next_point >= 20 ? "<div class='ca'>" : "", spc(4 * indent), current_points, text,
-                    next_point, string(lvl, '*').c_str(), next_point >= 20 ? "</div>" : "");
+                    next_point, std::string(lvl, '*').c_str(), next_point >= 20 ? "</div>" : "");
 
          vect.push_back(std::make_pair(next_point, buf));
       }
@@ -326,7 +326,7 @@ void info_show_one(class unit_data *teacher,
    }
 }
 
-bool pairISCompareAsc(const std::pair<int, string> &firstElem, const std::pair<int, string> &secondElem)
+bool pairISCompareAsc(const std::pair<int, std::string> &firstElem, const std::pair<int, std::string> &secondElem)
 {
    return firstElem.first < secondElem.first;
 }
@@ -337,7 +337,7 @@ void info_show_roots(class unit_data *teacher, class unit_data *pupil,
                      struct skill_teach_type *teaches_skills)
 {
    int i, cost;
-   vector<pair<int, string>> vect;
+   std::vector<std::pair<int, std::string>> vect;
 
    for (i = 0; teaches_skills[i].node != -1; i++)
       if ((!TREE_ISROOT(pColl->tree, teaches_skills[i].node) &&
@@ -363,7 +363,7 @@ void info_show_roots(class unit_data *teacher, class unit_data *pupil,
 
    std::sort(vect.begin(), vect.end(), pairISCompareAsc);
 
-   string str;
+   std::string str;
    str = "<pre>";
    for (auto it = vect.begin(); it != vect.end(); ++it)
       str.append(it->second.c_str());
@@ -381,7 +381,7 @@ void info_show_leaves(class unit_data *teacher, class unit_data *pupil,
                       struct pc_train_values *pTrainValues)
 {
    int i, cost;
-   vector<pair<int, string>> vect;
+   std::vector<std::pair<int, std::string>> vect;
 
    for (i = 0; teaches_skills[i].node != -1; i++)
       if (TREE_ISLEAF(pColl->tree, teaches_skills[i].node))
@@ -403,7 +403,7 @@ void info_show_leaves(class unit_data *teacher, class unit_data *pupil,
       }
 
    std::sort(vect.begin(), vect.end(), pairISCompareAsc);
-   string str;
+   std::string str;
    str = "<pre>";
    for (auto it = vect.begin(); it != vect.end(); ++it)
    {
@@ -426,7 +426,7 @@ void info_one_skill(class unit_data *teacher, class unit_data *pupil,
 {
    int indent, i, j, cost;
    indent = 0;
-   vector<pair<int, string>> vect;
+   std::vector<std::pair<int, std::string>> vect;
 
    /* Find category if index is a leaf with a category parent */
 
@@ -508,7 +508,7 @@ void info_one_skill(class unit_data *teacher, class unit_data *pupil,
    }
 
    std::sort(vect.begin(), vect.end(), pairISCompareAsc);
-   string str;
+   std::string str;
    str = "<pre>";
    for (auto it = vect.begin(); it != vect.end(); ++it)
       str.append(it->second.c_str());

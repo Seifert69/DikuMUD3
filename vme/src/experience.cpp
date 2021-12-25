@@ -768,7 +768,7 @@ int base_melee(class unit_data *att, class unit_data *def, int hit_loc)
 /* danger involved in combat (i.e. how fast would you die in worst case)    */
 /* Returns number of rounds it takes att to kill def                        */
 
-int base_consider(class unit_data *att, class unit_data *def, string *pStr)
+int base_consider(class unit_data *att, class unit_data *def, std::string *pStr)
 {
    int ocp, bonus;
    int att_wpn_type, def_arm_type;
@@ -801,7 +801,7 @@ void do_consider(class unit_data *ch, char *arg, const struct command_info *cmd)
    class unit_data *vict;
    int rtd;
    char *oarg = arg;
-   string str;
+   std::string str;
 
    if (IS_PC(ch) && PC_SKI_SKILL(ch, SKI_CONSIDER) == 0)
    {

@@ -313,7 +313,7 @@ char dil_getbool(class dilval *v, class dilprg *prg)
 
     case DILV_HASHSTR:
         /* return Lvalue */
-        return ((string *)(v->ref))->empty();
+        return ((std::string *)(v->ref))->empty();
 
     case DILV_INT:
         return (v->val.num != 0); /* return Rvalue */
@@ -380,7 +380,7 @@ int dil_getval(class dilval *v)
         break;
     case DILV_HASHSTR:
         /* Important! Remember that the HASHSTR may NEVER EVER BE CHANGED! */
-        v->val.ptr = (char *)((string *)v->ref)->c_str();
+        v->val.ptr = (char *)((std::string *)v->ref)->c_str();
         break;
 
     case DILV_SLPR:

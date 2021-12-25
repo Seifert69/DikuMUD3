@@ -9,7 +9,6 @@
 #define _MUD_NAMELIST_H
 
 #include "bytestring.h"
-using namespace std;
 #include <string>
 
 class cNamelist
@@ -37,7 +36,7 @@ public:
 
     void Substitute (ubit32 idx, const char *newname);
     const char *Name (ubit32 idx = 0);
-    string *InstanceName (ubit32 idx = 0);
+    std::string *InstanceName (ubit32 idx = 0);
 
     void AppendName (const char *name);
     void dAppendName (const char *name);
@@ -60,7 +59,7 @@ public:
     }
 
 private:
-    string ** namelist;
+    std::string ** namelist;
     ubit32 length;
 };
 

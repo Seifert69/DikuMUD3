@@ -11,7 +11,6 @@
 #include "essential.h"
 #include "bytestring.h"
 
-using namespace std;
 #include <string>
 
 class cintlist

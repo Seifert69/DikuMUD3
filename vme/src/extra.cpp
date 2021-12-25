@@ -167,7 +167,7 @@ int extra_list::count(void)
 
 std::string extra_list::json(void)
 {
-    string s;
+    std::string s;
 
     s = "\"extralist\": [ ";
 

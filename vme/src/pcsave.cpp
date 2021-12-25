@@ -47,7 +47,7 @@ void assign_player_file_index(unit_data *pc)
         fi->zone = z;
         fi->type = UNIT_ST_PC;
 
-        z->mmp_fi.insert(make_pair(fi->name, fi));
+        z->mmp_fi.insert(std::make_pair(fi->name, fi));
 
         UNIT_FILE_INDEX(pc) = fi;
     }

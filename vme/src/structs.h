@@ -20,13 +20,11 @@
 #include "color.h"
 #include "destruct.h"
 #include "dil.h"
-using namespace std;
 #include <vector>
 #include <map>
 #ifndef MPLEX_COMPILE
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
-using namespace boost;
 #endif
 #define FI_MAX_ZONENAME 30 /* Max length of any zone-name    */
 #define FI_MAX_UNITNAME 15 /* Max length of any unit-name    */
@@ -304,13 +302,13 @@ public:
     sbit16 alignment; /* +-1000 for alignments                         */
 
     /* Room title, Char title, Obj "the barrel", NPC "the Beastly Fido" */
-    string title;
+    std::string title;
 
     /* The outside description of a unit           */
-    string out_descr;
+    std::string out_descr;
 
     /* The inside description of a unit            */
-    string in_descr;
+    std::string in_descr;
 
     class extra_list extra;  /* All the look 'at' stuff                     */
 
@@ -359,12 +357,11 @@ public:
         edge_dir = 101
     };
 
-    typedef adjacency_list<vecS, vecS, directedS, no_property,
-                           property<edge_weight_t, int,
-                                    property<edge_dir_t, int> > >
+    typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS, boost::no_property,
+                                  boost::property<boost::edge_weight_t, int, boost::property<edge_dir_t, int>>>
         graph_t;
 
-    typedef graph_traits<graph_t>::vertex_descriptor vertex_descriptor;
+    typedef boost::graph_traits<graph_t>::vertex_descriptor vertex_descriptor;
     std::vector<vertex_descriptor> path;
     std::vector<vertex_descriptor> distance;
     int waiting_dijkstra;

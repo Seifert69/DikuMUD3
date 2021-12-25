@@ -14,7 +14,7 @@ extern cSector sector_dat;
 
 
 
-string cSector::get_name(int sector) {
+std::string cSector::get_name(int sector) {
     if ((sector >=0) && (sector < (int)names.size()))
         return (names[sector]);
     else
@@ -41,7 +41,7 @@ int cSector::get_enduance_cost (int from, int to) {
         return(1);
 };
 
-void cSector::add_sector( int sector, string sector_name )
+void cSector::add_sector( int sector, std::string sector_name )
 {
     if (sector < 0) return;
 
@@ -116,10 +116,10 @@ void cSector::set_path_endurance_cost (int from, int to, int pcost, int ecost)
 void boot_sector(void)
 {
 
-    ifstream in_file;
-    string temp;
-    vector<string> sector_vect;
-    queue<int> sector_queue;
+    std::ifstream in_file;
+    std::string temp;
+    std::vector<std::string> sector_vect;
+    std::queue<int> sector_queue;
 
 
     in_file.open(str_cc  (g_cServerConfig.m_libdir, SECTOR_DEFS));
@@ -202,5 +202,3 @@ void boot_sector(void)
         }
     }
 }
-
-

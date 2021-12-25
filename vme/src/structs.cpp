@@ -571,8 +571,8 @@ void unit_data::set_fi(class file_index_type *f)
 
 std::string unit_data::json(void)
 {
-    string s;
-    string t;
+    std::string s;
+    std::string t;
 
     t = UNIT_FI_NAME(this);
     t.append("@");

@@ -38,15 +38,13 @@ pthread_t dijkstra_thread;
 
 extern unit_data *room_head;
 
-using namespace boost;
-
 std::vector<graph_t> sc_graphs;
 std::vector<std::vector<unit_data *>> sc_room_ptr;
 
 void create_worldgraph()
 {
     graph_world_t WorldGraph;
-    typedef graph_traits<graph_world_t>::vertex_descriptor vertex_descriptor;
+    typedef boost::graph_traits<graph_world_t>::vertex_descriptor vertex_descriptor;
     //	typedef graph_traits < graph_world_t >::edge_descriptor edge_descriptor;
     vertex_descriptor vd;
     unit_data *u, *uu;
@@ -82,7 +80,7 @@ void create_worldgraph()
     std::vector<vertex_descriptor> sc(num_vertices(WorldGraph));
     i = strong_components(WorldGraph,
                           make_iterator_property_map(sc.begin(),
-                                                     get(vertex_index,
+                                                     get(boost::vertex_index,
                                                          WorldGraph)));
     std::vector<vertex_descriptor>
         sc_num(i);
@@ -132,7 +130,7 @@ void *create_sc_dijkstra(void *thread)
             ROOM_DISTANCE(u).resize(num_vertices(sc_graphs[ROOM_SC(u)]));
 
             dijkstra_shortest_paths(sc_graphs[ROOM_SC(u)], ROOM_NUM(u),
-                                    predecessor_map(&ROOM_PATH(u)[0]).distance_map(&ROOM_DISTANCE(u)[0]));
+                                    boost::predecessor_map(&ROOM_PATH(u)[0]).distance_map(&ROOM_DISTANCE(u)[0]));
             ROOM_WAITD(u) = FALSE;
         }
         usleep(10000);
@@ -147,8 +145,8 @@ void *create_sc_dijkstra(void *thread)
 void create_sc_graph(int num_of_sc)
 {
     int sc = 0;
-    typedef graph_traits<graph_t>::vertex_descriptor vertex_descriptor;
-    typedef graph_traits<graph_t>::edge_descriptor edge_descriptor;
+    typedef boost::graph_traits<graph_t>::vertex_descriptor vertex_descriptor;
+    typedef boost::graph_traits<graph_t>::edge_descriptor edge_descriptor;
     int i;
     vertex_descriptor vd;
     unit_data *u, *uu;
@@ -172,7 +170,7 @@ void create_sc_graph(int num_of_sc)
                 ROOM_NUM(u) = vd;
             }
 
-        property_map<graph_t, edge_dir_t>::type dir = get(edge_dir, sc_graphs[sc]);
+        boost::property_map<graph_t, boost::edge_dir_t>::type dir = get(boost::edge_dir, sc_graphs[sc]);
 
         for (u = room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
         {
@@ -241,7 +239,7 @@ int path_weight(unit_data *from, unit_data *to, int dir)
 /* Primitive move generator, returns direction */
 int move_to(unit_data *from, unit_data *to)
 {
-    typedef graph_traits<graph_t>::edge_descriptor edge_descriptor;
+    typedef boost::graph_traits<graph_t>::edge_descriptor edge_descriptor;
     edge_descriptor ed;
     bool success;
     int i, next;
@@ -279,7 +277,7 @@ int move_to(unit_data *from, unit_data *to)
         i = ROOM_PATH(from)[i];
     }
 
-    property_map<graph_t, edge_dir_t>::type dir = get(edge_dir, sc_graphs[ROOM_SC(from)]);
+    boost::property_map<graph_t, boost::edge_dir_t>::type dir = get(boost::edge_dir, sc_graphs[ROOM_SC(from)]);
     tie(ed, success) = edge(ROOM_NUM(from), next, sc_graphs[ROOM_SC(from)]);
     if (success)
         return (dir[ed]);

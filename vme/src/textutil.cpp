@@ -1413,7 +1413,7 @@ const char *getHTMLTag(const char *p, char *pTag, int nTagMax)
 
     n = c - p + 1; // How many chars including \0
 
-    n = min(n, nTagMax);
+    n = std::min(n, nTagMax);
 
     for (int i = 0; i < n; i++)
         pTag[i] = tolower(*(p + i));
@@ -1543,7 +1543,7 @@ const char *divcolor(const char *colorstr)
 // Encode str to JSON encoding (format X)
 std::string str_json_encode(const char *str)
 {
-    string s;
+   std::string s;
 
     s = str;
 
@@ -1556,7 +1556,7 @@ std::string str_json_encode(const char *str)
 // As str_json_encode but wraps string in quotes
 std::string str_json_encode_quote(const char *str)
 {
-    string s;
+   std::string s;
 
     s = "\"";
     s.append(str_json_encode(str));
@@ -1567,7 +1567,7 @@ std::string str_json_encode_quote(const char *str)
 
 std::string str_json(const char *lbl, ubit64 nInt)
 {
-    string s;
+   std::string s;
 
     s.append("\"");
     s.append(str_json_encode(lbl));
@@ -1580,7 +1580,7 @@ std::string str_json(const char *lbl, ubit64 nInt)
 
 std::string str_json(const char *lbl, const char *str)
 {
-    string s;
+    std::string s;
 
     s.append("\"");
     s.append(lbl);
