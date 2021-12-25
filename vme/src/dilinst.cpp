@@ -1336,7 +1336,7 @@ void dilfi_ass(register class dilprg *p)
             break;
 
         case DILV_NULL:
-            ((string *)v1->ref)->empty();
+            ((string *)v1->ref)->clear();
             break;
 
         case DILV_SP:
