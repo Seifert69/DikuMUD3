@@ -5,3 +5,7 @@ cmake-build-minsizerel/
 cmake-build-release/
 cmake-build-relwithdebinfo/
 .*.swp
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
+compile_commands.json
