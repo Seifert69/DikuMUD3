@@ -141,7 +141,7 @@ char *cNamelist::catnames()
 
 std::string cNamelist::json(void)
 {
-    string s;
+    std::string s;
 
     s = "\"namelist\": [";
 
@@ -164,7 +164,7 @@ void cNamelist::Remove(ubit32 idx)
         delete namelist[idx];
         if (idx != length - 1)
             memmove (&namelist[idx], &namelist[idx + 1],
-                     sizeof(string *) * (length - idx - 1));
+                     sizeof(std::string *) * (length - idx - 1));
         length--;
         if (length == 0)
         {
@@ -172,7 +172,7 @@ void cNamelist::Remove(ubit32 idx)
         }
         else
         {
-            RECREATE(namelist, string *, length);
+            RECREATE(namelist, std::string *, length);
         }
     }
 }
@@ -201,7 +201,7 @@ void cNamelist::Substitute (ubit32 idx, const char *newname)
     if (length > idx)
     {
         delete namelist[idx];
-        namelist[idx] = new string (newname?newname:"");
+        namelist[idx] = new std::string (newname?newname:"");
     }
 }
 
@@ -377,7 +377,7 @@ const char *cNamelist::Name(ubit32 idx)
 }
 
 
-string *cNamelist::InstanceName (ubit32 idx)
+std::string *cNamelist::InstanceName (ubit32 idx)
 {
     if (idx < length)
         return namelist[idx];
@@ -394,13 +394,13 @@ void cNamelist::dAppendName (const char *name)
 
     if (namelist == NULL)
     {
-        CREATE (namelist, string *, length);
+        CREATE (namelist, std::string *, length);
     }
     else
     {
-        RECREATE (namelist, string *, length);
+        RECREATE (namelist, std::string *, length);
     }
-    namelist[length - 1] = new string (name?name:"");
+    namelist[length - 1] = new std::string (name?name:"");
 }
 
 
@@ -412,13 +412,13 @@ void cNamelist::AppendName (const char *name)
 
     if (namelist == NULL)
     {
-        CREATE (namelist, string *, length);
+        CREATE (namelist, std::string *, length);
     }
     else
     {
-        RECREATE (namelist, string *, length);
+        RECREATE (namelist, std::string *, length);
     }
-    namelist[length - 1] = new string (name?name:"");
+    namelist[length - 1] = new std::string (name?name:"");
 
 }
 
@@ -431,16 +431,16 @@ void cNamelist::PrependName (const char *name)
 
     if (namelist == NULL)
     {
-        CREATE (namelist, string *, length);
+        CREATE (namelist, std::string *, length);
     }
     else
     {
-        RECREATE (namelist, string *, length);
+        RECREATE (namelist, std::string *, length);
     }
     if (length > 1)
-        memmove (&namelist[1], &namelist[0], sizeof (string *) * (length - 1));
+        memmove (&namelist[1], &namelist[0], sizeof (std::string *) * (length - 1));
 
-    namelist[0] = new string (name?name:"");
+    namelist[0] = new std::string (name?name:"");
 }
 
 void
@@ -464,21 +464,21 @@ cNamelist::InsertName (const char *name, ubit32 loc)
 
     if (namelist == NULL)
     {
-        CREATE (namelist, string *, length);
+        CREATE (namelist, std::string *, length);
     }
     else
     {
-        RECREATE (namelist, string *, length);
+        RECREATE (namelist, std::string *, length);
     }
     if (olen != loc)
     {
         if (length > 1)
             if (nadd == 1)
                 memmove (&namelist[loc + 1], &namelist[loc],
-                         sizeof (string *) * (olen - loc));
+                         sizeof (std::string *) * (olen - loc));
     }
-    namelist[loc] = new string (name?name:"");
+    namelist[loc] = new std::string (name?name:"");
     if (nadd > 1)
         for (x = length - nadd; x < (length - 1); x++)
-            namelist[x] = new string ("");
+            namelist[x] = new std::string ("");
 }

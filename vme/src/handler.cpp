@@ -616,10 +616,10 @@ class zone_type *unit_zone(const class unit_data *unit)
 //
 // Returns a symname text string of all the units a unit is in
 //
-string unit_trace_up(class unit_data *unit)
+std::string unit_trace_up(class unit_data *unit)
 {
     class unit_data *u;
-    string s, t;
+    std::string s, t;
 
     s = "";
     s.append(UNIT_FI_NAME(unit));

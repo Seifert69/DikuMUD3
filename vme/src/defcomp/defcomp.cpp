@@ -1,7 +1,6 @@
 #define   FALSE 0
 #define   TRUE   1
 #include  <ctype.h>
-using namespace std;
 #include <iostream>
 #include <string.h>
 #include <stdio.h>
@@ -21,7 +20,7 @@ int string_to_file(const char *name,const char *s)
 
     if (!out)
     {
-        cerr<<"Error in opening the "<<name<<" file."<<endl;
+        std::cerr<<"Error in opening the "<<name<<" file."<<std::endl;
         return (FALSE);
     }
 
@@ -164,13 +163,13 @@ char * convert_line(char *temp,int ln,char *save_buff)
 
     if ( strlen(token)<1)
     {
-        cerr<<"Erorr!  Line "<<ln<<":  No keyword value given."<<endl;
+        std::cerr<<"Erorr!  Line "<<ln<<":  No keyword value given."<<std::endl;
         return (NULL);
     }
 
     if (strlen(token)>20)
     {
-        cerr<<"Erorr!  Line "<<ln<<":  Keyword to long."<<endl;
+        std::cerr<<"Erorr!  Line "<<ln<<":  Keyword to long."<<std::endl;
         return (NULL);
     }
 
@@ -178,14 +177,14 @@ char * convert_line(char *temp,int ln,char *save_buff)
     {
         if (!isspace(*b))
         {
-            cerr<<"Erorr!  Line "<<ln<<":  Ilegal char in left hand value of '='"<<endl;
+            std::cerr<<"Erorr!  Line "<<ln<<":  Ilegal char in left hand value of '='"<<std::endl;
             return (NULL);
         }
         if ((*b=='\n') ||
                 (*b=='\r') ||
                 (*b=='\0'))
         {
-            cerr <<"Erorr!  Line "<<ln<<":  Missing '='"<<endl;
+            std::cerr <<"Erorr!  Line "<<ln<<":  Missing '='"<<std::endl;
             return (NULL);
         }
         b++;
@@ -196,14 +195,14 @@ char * convert_line(char *temp,int ln,char *save_buff)
         if ((!isspace(*b)) &&
                 (*b!='='))
         {
-            cerr<<"Erorr!  Line "<<ln<<":  Ilegal char in right hand value of '='"<<endl;
+            std::cerr<<"Erorr!  Line "<<ln<<":  Ilegal char in right hand value of '='"<<std::endl;
             return (NULL);
         }
         if ((*b=='\n') ||
                 (*b=='\r') ||
                 (*b=='\0'))
         {
-            cerr <<"Erorr!  Line "<<ln<<":  Missing right hand side of '='"<<endl;
+            std::cerr <<"Erorr!  Line "<<ln<<":  Missing right hand side of '='"<<std::endl;
             return (NULL);
         }
         b++;
@@ -225,13 +224,13 @@ char * convert_line(char *temp,int ln,char *save_buff)
 
     if (*b!='"')
     {
-        cerr <<"Erorr!  Line:  "<<ln<<":  Missing '\"'"<<endl;
+        std::cerr <<"Erorr!  Line:  "<<ln<<":  Missing '\"'"<<std::endl;
         return (NULL);
     }
 
     if (strlen(strval)<1)
     {
-        cerr<<"Erorr!  Line "<<ln<<":  No value inside '\"\"'"<<endl;
+        std::cerr<<"Erorr!  Line "<<ln<<":  No value inside '\"\"'"<<std::endl;
         return (NULL);
     }
 
@@ -255,7 +254,7 @@ char * convert_line(char *temp,int ln,char *save_buff)
     }
     else
     {
-        cerr<<"Error!  Line "<<ln<<":  "<<strval<<" is not a legal color value."<<endl;
+        std::cerr<<"Error!  Line "<<ln<<":  "<<strval<<" is not a legal color value."<<std::endl;
         return(NULL);
     }
 
@@ -295,7 +294,7 @@ int main (int argc, char **argv)
         in=fopen(in_name,"r");
         if (!in)
         {
-            cerr<<"In file not opened."<<endl;
+            std::cerr<<"In file not opened."<<std::endl;
             exit (1);
         }
 
@@ -312,9 +311,9 @@ int main (int argc, char **argv)
         fclose(in);
         exit (0);
     default:
-        cerr<<"You must supply the type of Define file."<<endl;
-        cerr<<"Example:"<<endl;
-        cerr<<"         defcomp -c  (To convert the color.def file)"<<endl;
+        std::cerr<<"You must supply the type of Define file."<<std::endl;
+        std::cerr<<"Example:"<<std::endl;
+        std::cerr<<"         defcomp -c  (To convert the color.def file)"<<std::endl;
         break;
     }
     exit (0);

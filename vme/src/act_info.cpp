@@ -92,7 +92,7 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
     register class unit_data *i;
     class descriptor_data *d;
     char *arg = (char *)aaa;
-    string mystr;
+    std::string mystr;
     int nCount = 0;
 
     if (IS_MORTAL(ch))

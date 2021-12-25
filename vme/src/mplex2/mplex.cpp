@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
     {
         /* MS2020 Websockets test hack */
         void runechoserver(void);
-        thread t1(runechoserver);
+        std::thread t1(runechoserver);
         t1.detach();
     }
     else

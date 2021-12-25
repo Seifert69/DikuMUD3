@@ -94,7 +94,7 @@ char *cintlist::catnames()
 
 std::string cintlist::json(void)
 {
-    string s;
+    std::string s;
 
     s = "\"intlist\": [";
 

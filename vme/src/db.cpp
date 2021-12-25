@@ -231,7 +231,7 @@ struct diltemplate *generate_templates(FILE *f, class zone_type *zone)
 
          tmpl->prgname = str_dup(nBuf);
          str_lower(tmpl->prgname);
-         zone->mmp_tmpl.insert(make_pair(tmpl->prgname, tmpl));
+         zone->mmp_tmpl.insert(std::make_pair(tmpl->prgname, tmpl));
 
          /* Link into list of indexes */
 
@@ -283,7 +283,7 @@ void generate_file_indexes(FILE *f, class zone_type *zone)
       if (fread(&(temp_index->crc), sizeof(ubit32), 1, f) != 1)
          error(HERE, "Failed to fread() temp_index->crc");
 
-      zone->mmp_fi.insert(make_pair(temp_index->name, temp_index));
+      zone->mmp_fi.insert(std::make_pair(temp_index->name, temp_index));
       fi = temp_index;
       zone->no_of_fi++;
       fi->filepos = ftell(f);
@@ -355,7 +355,7 @@ void generate_zone_indexes(void)
    z->notes = str_dup(   "This zone is only here to allow us to use playername@_plaeyrs as with all "
    "other indexes such as mayor@midgaard. It's not actually a zone, and it's not a represenation "
    "of player files on disk\n");
-   zone_info.mmp.insert(make_pair(z->name, z));
+   zone_info.mmp.insert(std::make_pair(z->name, z));
    z = NULL;
 
    for (;;)
@@ -447,7 +447,7 @@ void generate_zone_indexes(void)
       }
 
       // Insert zone into sorted list
-      zone_info.mmp.insert(make_pair(z->name, z));
+      zone_info.mmp.insert(std::make_pair(z->name, z));
 
       int mstmp = fread(&z->weather.base, sizeof(int), 1, f);
       if (mstmp < 1)

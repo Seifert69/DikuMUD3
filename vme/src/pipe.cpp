@@ -172,7 +172,7 @@ public:
       }
 
       int n;
-      string str;
+      std::string str;
 
       str = c;
       str.append("\n");
@@ -241,4 +241,3 @@ void namedpipe_setup(void)
 {
    g_pipeMUD_RO.Open();
 }
-

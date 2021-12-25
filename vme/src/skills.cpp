@@ -945,7 +945,7 @@ static void ability_init(void)
     g_AbiColl.text[ABIL_TREE_MAX] = NULL;
 }
 
-bool pairISCompare(const std::pair<int, string>& firstElem, const std::pair<int, string>& secondElem)
+bool pairISCompare(const std::pair<int, std::string>& firstElem, const std::pair<int, std::string>& secondElem)
 {
     return firstElem.first > secondElem.first;
 }
@@ -953,12 +953,12 @@ bool pairISCompare(const std::pair<int, string>& firstElem, const std::pair<int,
 
 void ability_dump(void)
 {
-    string str;
+    std::string str;
     char buf[MAX_STRING_LENGTH];
 
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
-        vector< pair <int,string> > vect; 
+        std::vector< std::pair <int,std::string> > vect;
 
         for (int i = 0; i < ABIL_TREE_MAX; i++)
         {
@@ -1325,12 +1325,12 @@ static void weapon_init(void)
 
 void weapon_dump(void)
 {
-    string str;
+    std::string str;
     char buf[MAX_STRING_LENGTH];
 
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
-        vector< pair <int,string> > vect; 
+        std::vector< std::pair <int,std::string> > vect;
 
         for (int i = WPN_GROUP_MAX; i < WPN_TREE_MAX; i++)
         {

@@ -342,7 +342,7 @@ void cCombat::status(const class unit_data *god)
 {
    char buf[MAX_STRING_LENGTH];
    int i;
-   string str;
+   std::string str;
 
    sprintf(buf,
            "Combat Status of '%s':<br/>"
@@ -468,7 +468,7 @@ void stat_combat(class unit_data *god, class unit_data *u, const char *pStr)
       CHAR_COMBAT(u)->status(god);
 
 
-   string str;
+   std::string str;
    melee_bonus(u, u2, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
    send_to_char(str.c_str(), god);
    melee_bonus(u2, u, WEAR_BODY, NULL, NULL, NULL, NULL, TRUE, &str);
@@ -522,7 +522,7 @@ void stat_spell(class unit_data *god, class unit_data *u, const char *pStr)
                   int *pDef_armour_type, class unit_data **pDef_armour,
                   std::string *pStat);
 
-   string str;
+   std::string str;
    spell_bonus(u, u, u2, WEAR_BODY, i, NULL, NULL, &str);
    send_to_char(str.c_str(), god);
    spell_bonus(u2, u2, u, WEAR_BODY, i, NULL, NULL, &str);

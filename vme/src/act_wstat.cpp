@@ -821,7 +821,7 @@ static void stat_extra(const class unit_data *ch, class extra_list &elist, char 
     /* MS: We used to do a TAIL here... bad idea as newspaper is VERY HUGE */
     /* This isn't nice either, but it works... */
     char *cname;
-    string str;
+    std::string str;
 
     str = "";
 
@@ -1286,7 +1286,7 @@ void do_wedit(class unit_data *ch, char *argument, const struct command_info *cm
         }
     }
 
-    string t;
+    std::string t;
 
     t = "<data type='$json'>";
     t.append(u->json());

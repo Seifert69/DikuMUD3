@@ -79,7 +79,7 @@ int cActParameter::isNull(void)
  *  user's color preferences.  You probably only want to do this for telnet users.
  *  web users can rely on the styles defined in the CSS
 */
-void substHTMLcolor(string &dest, const char *src, class color_type &color)
+void substHTMLcolor(std::string &dest, const char *src, class color_type &color)
 {
     const char *p;
 
@@ -157,7 +157,7 @@ void send_to_descriptor(const char *messg, class descriptor_data *d)
                 u = d->original;
 
             assert(IS_PC(u));
-            string dest;
+            std::string dest;
             dest.reserve(strlen(messg)*1.1);
             //char buf[strlen(messg) + 10000];
 

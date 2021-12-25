@@ -63,12 +63,9 @@ $Revision: 2.18 $
 #include <iostream>
 
 #include <iomanip>
-namespace fs = boost::filesystem;
 
 #include <boost/regex.hpp>
 #include <string>
-
-using namespace boost;
 
 struct time_info_data mud_date();
 extern struct trie_type *intr_trie;
@@ -130,9 +127,9 @@ void dilfe_replace(register class dilprg *p)
             case DILV_SP:
                 if (v->type == DILV_SP)
                 {
-                    string sch((char *) v1->val.ptr);
-                    string rpl((char *) v2->val.ptr);
-                    string mystr((char *) v3->val.ptr);
+                    std::string sch((char *) v1->val.ptr);
+                    std::string rpl((char *) v2->val.ptr);
+                    std::string mystr((char *) v3->val.ptr);
 
                     str_substitute(sch, rpl, mystr);
 
@@ -3043,7 +3040,7 @@ void *threadcallout(void *p)
 
     if (ok)
     {
-        string s;
+        std::string s;
         s = "./allow/";  // current dir iswhere vme/bin is located, set to bin/allow/
         s.append(str);
         slog(LOG_BRIEF , 0, "system('%s'); ", s.c_str());
@@ -3618,7 +3615,7 @@ void dilfe_udir(register class dilprg *p)
     dilval *v1 = p->stack.pop();
 
     cNamelist *words = new cNamelist;
-    string uPath, sPath;
+    std::string uPath, sPath;
 
     v->type = DILV_SLP;
 
@@ -3645,9 +3642,9 @@ void dilfe_udir(register class dilprg *p)
             if (sPath.empty())
                 sPath = ".*";
 
-            fs::path full_path(uPath);
-            fs::directory_iterator end_iter;
-            regex expression;
+            boost::filesystem::path full_path(uPath);
+            boost::filesystem::directory_iterator end_iter;
+            boost::regex expression;
 
             try
             {
@@ -3664,13 +3661,13 @@ void dilfe_udir(register class dilprg *p)
 
             try
             {
-                if ((fs::exists(full_path)) &&
-                    (fs::is_directory(full_path)))
-                    for (fs::directory_iterator dir_itr(full_path);
+                if ((boost::filesystem::exists(full_path)) &&
+                    (boost::filesystem::is_directory(full_path)))
+                    for (boost::filesystem::directory_iterator dir_itr(full_path);
                          dir_itr != end_iter;
                          ++dir_itr)
                     {
-                        cmatch what;
+                        boost::cmatch what;
 
                         if (regex_match(dir_itr->path().filename().c_str(), what, expression))
                         {
@@ -3713,7 +3710,7 @@ void dilfe_sdir(register class dilprg *p)
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
     cNamelist *words = new cNamelist;
-    string uPath, sPath;
+    std::string uPath, sPath;
     v->type = DILV_SLP;
 
     switch (dil_getval(v1))
@@ -3738,10 +3735,10 @@ void dilfe_sdir(register class dilprg *p)
             if (sPath.empty())
                 sPath = ".*";
 
-            fs::path full_path(uPath);
-            fs::directory_iterator end_iter;
+            boost::filesystem::path full_path(uPath);
+            boost::filesystem::directory_iterator end_iter;
 
-            regex expression;
+            boost::regex expression;
 
             try
             {
@@ -3755,13 +3752,13 @@ void dilfe_sdir(register class dilprg *p)
 
             try
             {
-                if ((fs::exists(full_path)) &&
-                    (fs::is_directory(full_path)))
-                    for (fs::directory_iterator dir_itr(full_path);
+                if ((boost::filesystem::exists(full_path)) &&
+                    (boost::filesystem::is_directory(full_path)))
+                    for (boost::filesystem::directory_iterator dir_itr(full_path);
                          dir_itr != end_iter;
                          ++dir_itr)
                     {
-                        cmatch what;
+                        boost::cmatch what;
 
                         if (regex_match(dir_itr->path().filename().c_str(), what, expression))
                             words->dAppendName(dir_itr->path().filename().c_str());

@@ -101,8 +101,8 @@ convert_item(class unit_data *u, class unit_data *pc, int bList)
         if (strcmp(UNIT_FI_ZONE(u)->name, "treasure") == 0)
         {
             class extra_descr_data *ed = UNIT_EXTRA(u).m_pList;
-            std::cout << endl
-                      << UNIT_FI_NAME(u) << "@treasure" << endl;
+            std::cout << std::endl
+                      << UNIT_FI_NAME(u) << "@treasure" << std::endl;
             if (ed)
             {
                 bool found = false;
@@ -120,7 +120,7 @@ convert_item(class unit_data *u, class unit_data *pc, int bList)
                         std::cout << ed->descr.c_str() << " ";
                     }
                 }
-                std::cout << endl;
+                std::cout << std::endl;
             }
         }
 
@@ -357,7 +357,7 @@ void clist()
     struct time_info_data age(class unit_data * ch);
     struct time_info_data real_time_passed(time_t t2, time_t t1);
 
-    string ipath;
+    std::string ipath;
     /*
         std::cout << "\nEnter the full path to the root player directory for example '/home/mud/vme2.0/lib/ply' or \n<enter> for the one listed in the server.cfg file:  ";
     char cpath[1024];
@@ -390,9 +390,9 @@ void clist()
         std::cout << "\nIn directory: "
                   << full_path << "\n\n";
         fs::directory_iterator end_iter;
-        string path_end = "";
+        std::string path_end = "";
 
-        std::cout << "name;id;Level;Admin;days since login;created;birth;" << endl;
+        std::cout << "name;id;Level;Admin;days since login;created;birth;" << std::endl;
  
         for (char c = 'a'; c <= 'z'; c++)
         {
@@ -419,7 +419,7 @@ void clist()
                     {
                         ++dir_count;
                     }
-                    else if (dir_itr->path().filename().string().find(".") == string::npos)
+                    else if (dir_itr->path().filename().string().find(".") == std::string::npos)
                     {
                         ++file_count;
 
@@ -497,7 +497,7 @@ void clist()
                         else
                             std::cout << " Less than an hour";
 
-                        std::cout << "; " << endl;
+                        std::cout << "; " << std::endl;
 
                         delete temp;
                     }
@@ -526,7 +526,7 @@ void clist()
 
 void convert_file(void)
 {
-    string ipath;
+    std::string ipath;
     ipath = CONVERT_PATH;
 
     fs::path full_path(ipath);
@@ -548,7 +548,7 @@ void convert_file(void)
         std::cout << "\nIn directory: "
                   << full_path << "\n\n";
         fs::directory_iterator end_iter;
-        string path_end = "";
+        std::string path_end = "";
         for (char c = 'a'; c <= 'z'; c++)
         {
             path_end = c;
@@ -575,7 +575,7 @@ void convert_file(void)
                     {
                         ++dir_count;
                     }
-                    else if (dir_itr->path().filename().string().find(".") == string::npos)
+                    else if (dir_itr->path().filename().string().find(".") == std::string::npos)
                     {
                         ++file_count;
                         std::cout << dir_itr->path() << "\n";
@@ -585,17 +585,17 @@ void convert_file(void)
 
                         if (pc == NULL)
                         {
-                            std::cout << "Corrupt Player ERASED." << endl;
+                            std::cout << "Corrupt Player ERASED." << std::endl;
                             delete_player(temp);
                             continue;
                         }
 
                         if (ids[PC_ID(pc)])
-                            std::cout << "Duplicate ID! (" << (signed long)PC_ID(pc) << ")" << endl;
+                            std::cout << "Duplicate ID! (" << (signed long)PC_ID(pc) << ")" << std::endl;
                         else
                             ids[PC_ID(pc)] = 1;
 
-                        std::cout << UNIT_NAME(pc) << " Lvl [" << CHAR_LEVEL(pc) << "] " << (IS_MORTAL(pc) ? "   " : "ADMIN") << endl;
+                        std::cout << UNIT_NAME(pc) << " Lvl [" << CHAR_LEVEL(pc) << "] " << (IS_MORTAL(pc) ? "   " : "ADMIN") << std::endl;
 
                         std::cout.flush();
                         load_contents(temp, pc);
@@ -631,7 +631,7 @@ void convert_file(void)
 
 void cleanup(void)
 {
-    string ipath;
+    std::string ipath;
     ipath = CONVERT_PATH;
 
     fs::path full_path(ipath);
@@ -656,7 +656,7 @@ void cleanup(void)
         std::cout << "\nIn directory: "
                   << full_path << "\n\n";
         fs::directory_iterator end_iter;
-        string path_end = "";
+        std::string path_end = "";
         for (char c = 'a'; c <= 'z'; c++)
         {
             path_end = c;
@@ -683,7 +683,7 @@ void cleanup(void)
                     {
                         ++dir_count;
                     }
-                    else if (dir_itr->path().filename().string().find(".") == string::npos)
+                    else if (dir_itr->path().filename().string().find(".") == std::string::npos)
                     {
                         ++file_count;
                         std::cout << dir_itr->path() << "\n";
@@ -694,7 +694,7 @@ void cleanup(void)
 
                         if (pc == NULL)
                         {
-                            std::cout << "Corrupt Player ERASED." << endl;
+                            std::cout << "Corrupt Player ERASED." << std::endl;
                             delete_player(temp);
                             delete temp;
                             ++players_deleted;
@@ -703,7 +703,7 @@ void cleanup(void)
 
                         if (str_ccmp(temp, UNIT_NAME(pc)))
                         {
-                            std::cout << "Name in file doesn't match filename." << endl;
+                            std::cout << "Name in file doesn't match filename." << std::endl;
                             convert_free_unit(pc);
                             delete_player(temp);
                             ++players_deleted;
@@ -746,8 +746,8 @@ void cleanup(void)
             }
         }
 
-        std::cout << "Players deleted:  " << players_deleted << endl
-                  << "Players converted:  " << players_converted << endl;
+        std::cout << "Players deleted:  " << players_deleted << std::endl
+                  << "Players converted:  " << players_converted << std::endl;
         std::cout << "\n"
                   << file_count << " files\n"
                   << dir_count << " directories\n"

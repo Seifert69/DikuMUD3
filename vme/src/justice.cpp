@@ -1075,7 +1075,7 @@ int reward_give(struct spec_arg *sarg)
 
    class unit_data *u;
    class unit_affected_type *paf;
-   string buf;
+   std::string buf;
    currency_t cur;
 
    if (!is_command(sarg->cmd, "give"))

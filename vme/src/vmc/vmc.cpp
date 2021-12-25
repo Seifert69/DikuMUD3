@@ -16,8 +16,6 @@
 #include <sstream>
 
 
-using namespace std;
-
 #ifdef WINDOWS
 
 #else
@@ -780,14 +778,13 @@ void dil_free_template (struct diltemplate *tmpl, int copy, int dil)
 void
 graph_sc( char *prefix )
 {
-    using namespace boost;
     class unit_data *u;
     int x;
     for (x=0,u=zone.z_rooms; u; u=u->next,x++)
         if (IS_ROOM(u))
             ROOM_NUM(u)=x;
 
-    typedef adjacency_list<> ZoneGraph;
+    typedef boost::adjacency_list<> ZoneGraph;
 
     ZoneGraph G(x);
     for (u=zone.z_rooms; u; u=u->next)
@@ -803,29 +800,29 @@ void
 write_dot (char *prefix)
 {
     char dotfilename[256];
-    ostringstream interconnect;
+    std::ostringstream interconnect;
     class unit_data *u;
     sprintf (dotfilename, "%s.%s", prefix, "dot");
-    ofstream dotfl (dotfilename);
+    std::ofstream dotfl (dotfilename);
     if (!(dotfl))
     {
         perror (dotfilename);
         exit (1);
     }
 
-    dotfl << "subgraph \"cluster@" << zone.z_zone.name << "\" {" << endl <<
-          "  label=\"" << zone.z_zone.name << "\";" << endl;
+    dotfl << "subgraph \"cluster@" << zone.z_zone.name << "\" {" << std::endl <<
+          "  label=\"" << zone.z_zone.name << "\";" << std::endl;
 
-    dotfl << endl << "  /* Room Labels */" << endl;
+    dotfl << std::endl << "  /* Room Labels */" << std::endl;
 
     for (u = zone.z_rooms; u; u = u->next)
     {
         if (IS_ROOM (u))
             dotfl << "\"" << UNIT_IDENT (u) << "@" << zone.z_zone.name << "\" "
-                  << "[label=\"" << UNIT_IDENT (u) << "\"];" << endl;
+                  << "[label=\"" << UNIT_IDENT (u) << "\"];" << std::endl;
     }
 
-    dotfl << endl << "/* Room Interconnects */" << endl;
+    dotfl << std::endl << "/* Room Interconnects */" << std::endl;
     for (u = zone.z_rooms; u; u = u->next)
     {
         if (IS_ROOM (u))
@@ -847,20 +844,20 @@ write_dot (char *prefix)
                     if (strcmp (c1, zone.z_zone.name) == 0)
                     {
                         dotfl << "\"" << UNIT_IDENT (u) << "@" << zone.z_zone.name
-                              << "\"->\"" << c2 << "@" << c1 << "\";" << endl;
+                              << "\"->\"" << c2 << "@" << c1 << "\";" << std::endl;
                     }
                     else
                     {
                         interconnect << "\"" << UNIT_IDENT (u) << "@"
                                      << zone.z_zone.name
-                                     << "\"->\"" << c2 << "@" << c1 << "\";" << endl;
+                                     << "\"->\"" << c2 << "@" << c1 << "\";" << std::endl;
                     }
                 }
             }
     }
-    dotfl <<  "}" << endl;
-    dotfl << endl << "/*  Zone Interconnect Points */" << endl << endl;
-    interconnect << endl << "/*  End of subgraph "<< zone.z_zone.name << " */" << endl << ends;
-    dotfl << interconnect.str() << endl;
+    dotfl <<  "}" << std::endl;
+    dotfl << std::endl << "/*  Zone Interconnect Points */" << std::endl << std::endl;
+    interconnect << std::endl << "/*  End of subgraph "<< zone.z_zone.name << " */" << std::endl << std::ends;
+    dotfl << interconnect.str() << std::endl;
     dotfl.close();
 }

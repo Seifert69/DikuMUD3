@@ -1336,15 +1336,15 @@ void dilfi_ass(register class dilprg *p)
             break;
 
         case DILV_NULL:
-            ((string *)v1->ref)->clear();
+            ((std::string *)v1->ref)->clear();
             break;
 
         case DILV_SP:
-            (*(string *)v1->ref) = ((char *)v2->val.ptr);
+            (*(std::string *)v1->ref) = ((char *)v2->val.ptr);
             break;
 
         case DILV_HASHSTR:
-            (*(string *)v1->ref) = (*(string *)v2->ref);
+            (*(std::string *)v1->ref) = (*(std::string *)v2->ref);
             break;
 
         default:
@@ -1375,7 +1375,7 @@ void dilfi_ass(register class dilprg *p)
 
         case DILV_HASHSTR:
             if (v2->ref)
-                *((char **)v1->ref) = str_dup(((string *)v2->ref)->c_str());
+                *((char **)v1->ref) = str_dup(((std::string *)v2->ref)->c_str());
             else
                 *((char **)v1->ref) = str_dup("");
             break;

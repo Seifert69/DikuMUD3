@@ -85,14 +85,14 @@ struct cmdload_struct cmdload[] = {
 
 void skill_dump(void)
 {
-    string str;
+    std::string str;
     char buf[MAX_STRING_LENGTH];
 
-    bool pairISCompare(const std::pair<int, string>& firstElem, const std::pair<int, string>& secondElem);
+    bool pairISCompare(const std::pair<int,std::string>& firstElem, const std::pair<int,std::string>& secondElem);
 
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
-        vector< pair <int,string> > vect;
+        std::vector< std::pair <int,std::string> > vect;
 
         for (int i = 0; i < SKI_TREE_MAX; i++)
         {
