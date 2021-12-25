@@ -35,4 +35,6 @@ add_library(mplex_dep_objs STATIC ${MPLEX_DEP_SRCS})
 target_link_libraries(mplex
         mplex_objs
         mplex_dep_objs
+        Boost::system
+        pthread
         )

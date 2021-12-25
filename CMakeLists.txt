@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.16.3)
 project(DikuMUD3)
 
 find_package(BISON)

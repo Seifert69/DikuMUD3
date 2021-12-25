@@ -26,6 +26,8 @@ How to build & launch
 
 1) First build the binaries:
 
+*If you would like to try the experimental cmake build system see [CMake](README_cmake.md)*
+
        cd vme/src/
        make all # add -j8 to compile on 8 threads in parallel
 

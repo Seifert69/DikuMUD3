@@ -108,4 +108,10 @@ add_library(vme_objs STATIC ${VME_SRCS})
 
 add_executable(vme main.cpp)
 
-target_link_libraries(vme vme_objs crypt Boost::filesystem)
+target_link_libraries(vme
+        vme_objs
+        crypt
+        Boost::filesystem
+        Boost::regex
+        pthread
+        )
