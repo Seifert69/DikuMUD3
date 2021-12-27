@@ -80,34 +80,34 @@ void stop_follower(class unit_data *ch);
 
 int pk_test(class unit_data *att, class unit_data *def, int message)
 {
-    if(IS_PC(att) && IS_PC(def) && att != def)
+    if (IS_PC(att) && IS_PC(def) && att != def)
     {
-        if(CHAR_LEVEL(att) <= 3)
+        if (CHAR_LEVEL(att) <= 3)
         {
-            if(message)
+            if (message)
                 act("You are not old enough to do that!", A_ALWAYS, att, cActParameter(), def, TO_CHAR);
             return TRUE;
         }
-        if(CHAR_LEVEL(def) <= 3)
+        if (CHAR_LEVEL(def) <= 3)
         {
-            if(message)
+            if (message)
                 act("$3e is too young to die now!", A_ALWAYS, att, cActParameter(), def, TO_CHAR);
             return TRUE;
         }
     }
 
-    if(!g_cServerConfig.m_bBOB)
+    if (!g_cServerConfig.m_bBOB)
         return FALSE;
 
-    if((att != def) && IS_PC(att) && IS_PC(def) && (!IS_SET(PC_FLAGS(att), PC_PK_RELAXED) || !IS_SET(PC_FLAGS(def), PC_PK_RELAXED)))
+    if ((att != def) && IS_PC(att) && IS_PC(def) && (!IS_SET(PC_FLAGS(att), PC_PK_RELAXED) || !IS_SET(PC_FLAGS(def), PC_PK_RELAXED)))
     {
         /* Ok, he's allowed to attack only if the other guy is rewarded! */
         /* if (affected_by_spell(def, ID_REWARD))
              return FALSE; */
 
-        if(message)
+        if (message)
         {
-            if(!IS_SET(PC_FLAGS(att), PC_PK_RELAXED))
+            if (!IS_SET(PC_FLAGS(att), PC_PK_RELAXED))
                 act("You are not allowed to do this unless you sign the "
                     "book of blood.",
                     A_ALWAYS,
@@ -138,17 +138,17 @@ int char_dual_wield(class unit_data *ch)
 /* Given an amount of experience, what is the 'virtual' level of the char? */
 int virtual_level(class unit_data *ch)
 {
-    if(IS_NPC(ch))
+    if (IS_NPC(ch))
         return CHAR_LEVEL(ch);
     else
     {
-        if(IS_MORTAL(ch))
+        if (IS_MORTAL(ch))
         {
             /* Above max mortal is just max mortal (shouldnt be possible) */
-            if(CHAR_LEVEL(ch) >= MORTAL_MAX_LEVEL)
+            if (CHAR_LEVEL(ch) >= MORTAL_MAX_LEVEL)
                 return CHAR_LEVEL(ch);
 
-            if(CHAR_EXP(ch) < required_xp(1 + PC_VIRTUAL_LEVEL(ch)))
+            if (CHAR_EXP(ch) < required_xp(1 + PC_VIRTUAL_LEVEL(ch)))
                 return CHAR_LEVEL(ch);
             else
                 return CHAR_LEVEL(ch) + 1 + (CHAR_EXP(ch) - required_xp(1 + CHAR_LEVEL(ch))) / level_xp(CHAR_LEVEL(ch));
@@ -164,8 +164,8 @@ int num_in_msg(struct combat_msg_list *msg, int no)
 {
     int i;
 
-    for(i = 0; msg->no[i] != -1; i++)
-        if(msg->no[i] == no)
+    for (i = 0; msg->no[i] != -1; i++)
+        if (msg->no[i] == no)
             return TRUE;
 
     return FALSE;
@@ -177,7 +177,7 @@ void fread_single(FILE *f1, struct combat_single_msg *msg)
     msg->to_vict = fread_string(f1);
     msg->to_notvict = fread_string(f1);
     int mstmp = fscanf(f1, " ");
-    if(mstmp < 0)
+    if (mstmp < 0)
     {
         slog(LOG_ALL, 0, "ERROR: Unexpected end of stream %d in fight.cpp", mstmp);
         assert(FALSE);
@@ -191,13 +191,13 @@ int load_msg_prehead(FILE *f1, struct combat_msg_list *msg)
 
     /* A group of -1 indicates end */
     int mstmp = fscanf(f1, " %d", &grp);
-    if(mstmp < 0)
+    if (mstmp < 0)
     {
         slog(LOG_ALL, 0, "ERROR: Unexpected end of stream %d in fight.cpp", mstmp);
         assert(FALSE);
     }
 
-    if(grp == -1)
+    if (grp == -1)
         return -1;
 
     pos = 0;
@@ -205,24 +205,24 @@ int load_msg_prehead(FILE *f1, struct combat_msg_list *msg)
     do
     {
         mstmp = fscanf(f1, " %d", &no[pos++]);
-        if(mstmp < 1)
+        if (mstmp < 1)
         {
             slog(LOG_ALL, 0, "ERROR: Unexpected end of stream %d in fight.cpp", mstmp);
             assert(FALSE);
         }
-    } while((no[pos - 1] != -1) && (pos < 199));
+    } while ((no[pos - 1] != -1) && (pos < 199));
 
     no[pos - 1] = -1;
 
     mstmp = fscanf(f1, " %[^\n\r] ", shit); /* Skip any remark */
-    if(mstmp < 0)
+    if (mstmp < 0)
     {
         slog(LOG_ALL, 0, "ERROR: Unexpected end of stream %d in fight.cpp", mstmp);
         assert(FALSE);
     }
 
     CREATE(msg->no, int, pos);
-    for(pos--; pos >= 0; pos--)
+    for (pos--; pos >= 0; pos--)
         msg->no[pos] = no[pos];
 
     return grp;
@@ -234,7 +234,7 @@ void load_messages(void)
     int i, grp;
     struct combat_msg_packet *messages;
 
-    if(!(f1 = fopen(str_cc(g_cServerConfig.m_etcdir, MESS_FILE), "r")))
+    if (!(f1 = fopen(str_cc(g_cServerConfig.m_etcdir, MESS_FILE), "r")))
     {
         slog(LOG_ALL, 0, "Unable to read fight messages.");
         exit(11);
@@ -243,7 +243,7 @@ void load_messages(void)
     char shit[200];
     fread_line_commented(f1, shit, sizeof(shit));
 
-    for(i = 0; i < COM_MAX_MSGS; i++)
+    for (i = 0; i < COM_MAX_MSGS; i++)
     {
         fight_messages[i].group = -1;
         fight_messages[i].no = 0; /* Nil */
@@ -252,14 +252,14 @@ void load_messages(void)
     }
 
     i = 0;
-    while(TRUE)
+    while (TRUE)
     {
         grp = load_msg_prehead(f1, &fight_messages[i]);
 
-        if(grp == -1)
+        if (grp == -1)
             break;
 
-        if(i >= COM_MAX_MSGS)
+        if (i >= COM_MAX_MSGS)
         {
             slog(LOG_OFF, 0, "Too many combat messages.");
             exit(12);
@@ -298,28 +298,28 @@ int damage_index(int dam, int maxhp)
 {
     int p;
 
-    if(dam < 1)
+    if (dam < 1)
         return 0;
-    else if(dam >= maxhp)
+    else if (dam >= maxhp)
         return 8;
 
     p = (100 * dam) / maxhp; /* Calculate relative damage (%) */
 
-    if(p < 5)
+    if (p < 5)
         return 0;
-    else if(p < 10)
+    else if (p < 10)
         return 1;
-    else if(p < 15)
+    else if (p < 15)
         return 2;
-    else if(p < 20)
+    else if (p < 20)
         return 3;
-    else if(p < 25) /* 20%..25% is default at own level */
+    else if (p < 25) /* 20%..25% is default at own level */
         return 4;
-    else if(p < 35)
+    else if (p < 35)
         return 5;
-    else if(p < 50)
+    else if (p < 50)
         return 6;
-    else if(p < 70)
+    else if (p < 70)
         return 7;
     else
         return 8;
@@ -495,11 +495,11 @@ char *sub_damage(char *str, int damage, int max_hp)
 
     cp = buf;
 
-    for(; *str; str++)
-        if(*str == '#')
+    for (; *str; str++)
+        if (*str == '#')
         {
             str++;
-            if(*str >= 'A' && *str <= 'P')
+            if (*str >= 'A' && *str <= 'P')
                 strcpy(cp, damage_blocks[*str - 'A'][damage_index(damage, max_hp)]);
             else
             {
@@ -525,17 +525,17 @@ static void combat_send(struct combat_single_msg *msg,
                         const char *color2,
                         const char *color3)
 {
-    if(msg->to_char)
+    if (msg->to_char)
     {
         cact(sub_damage(msg->to_char, dam, UNIT_MAX_HIT(arg3)), A_SOMEONE, arg1, arg2, arg3, TO_CHAR, color1);
     }
 
-    if(msg->to_vict)
+    if (msg->to_vict)
     {
         cact(sub_damage(msg->to_vict, dam, UNIT_MAX_HIT(arg3)), A_ALWAYS, arg1, arg2, arg3, TO_VICT, color2);
     }
 
-    if(msg->to_notvict)
+    if (msg->to_notvict)
     {
         cact(sub_damage(msg->to_notvict, dam, UNIT_MAX_HIT(arg3)), A_SOMEONE, arg1, arg2, arg3, TO_NOTVICT, color3);
     }
@@ -562,19 +562,19 @@ void combat_message(class unit_data *att,
 
     msg = 0;
 
-    for(i = 0; i < COM_MAX_MSGS; i++)
-        if((fight_messages[i].group == msg_group) && num_in_msg(&fight_messages[i], msg_number))
+    for (i = 0; i < COM_MAX_MSGS; i++)
+        if ((fight_messages[i].group == msg_group) && num_in_msg(&fight_messages[i], msg_number))
         {
             r = number(0, fight_messages[i].no_of_msgs - 1);
             msg = fight_messages[i].msg;
-            for(; msg && r; msg = msg->next, r--)
+            for (; msg && r; msg = msg->next, r--)
                 ;
             break;
         }
 
-    if(msg)
+    if (msg)
     {
-        switch(hit_location)
+        switch (hit_location)
         {
             case COM_MSG_MISS:
                 combat_send(&(msg->cmiss), att, medium, def, damage, "miss_me", "miss_opponent", "miss_other");
@@ -636,15 +636,15 @@ void combat_message(class unit_data *att,
 
 void update_pos(class unit_data *victim)
 {
-    if((UNIT_HIT(victim) > 0) && (CHAR_POS(victim) > POSITION_STUNNED))
+    if ((UNIT_HIT(victim) > 0) && (CHAR_POS(victim) > POSITION_STUNNED))
         return;
-    else if(UNIT_HIT(victim) > 0)
+    else if (UNIT_HIT(victim) > 0)
         CHAR_POS(victim) = POSITION_STANDING;
-    else if(UNIT_HIT(victim) <= -11)
+    else if (UNIT_HIT(victim) <= -11)
         CHAR_POS(victim) = POSITION_DEAD;
-    else if(UNIT_HIT(victim) <= -6)
+    else if (UNIT_HIT(victim) <= -6)
         CHAR_POS(victim) = POSITION_MORTALLYW;
-    else if(UNIT_HIT(victim) <= -3)
+    else if (UNIT_HIT(victim) <= -3)
         CHAR_POS(victim) = POSITION_INCAP;
     else
         CHAR_POS(victim) = POSITION_STUNNED;
@@ -660,39 +660,39 @@ static void change_alignment(class unit_data *slayer, class unit_data *victim)
 
     diff = UNIT_ALIGNMENT(slayer) - UNIT_ALIGNMENT(victim);
 
-    if(UNIT_IS_GOOD(slayer))
+    if (UNIT_IS_GOOD(slayer))
     {
-        if(UNIT_IS_EVIL(victim)) /* Diff >= 700 */
+        if (UNIT_IS_EVIL(victim)) /* Diff >= 700 */
             adjust = (diff - 700) / 70 + 1;
-        else if(UNIT_IS_NEUTRAL(victim))
+        else if (UNIT_IS_NEUTRAL(victim))
         {
-            if(UNIT_ALIGNMENT(victim) <= -100)
+            if (UNIT_ALIGNMENT(victim) <= -100)
                 adjust = 1;
-            else if(UNIT_ALIGNMENT(victim) >= 100)
+            else if (UNIT_ALIGNMENT(victim) >= 100)
                 adjust = -3;
         }
         else /* Victim is good */
             adjust = -(UNIT_ALIGNMENT(slayer) + UNIT_ALIGNMENT(victim) - 700) / 5 - 3;
     }
-    else if(UNIT_IS_EVIL(slayer))
+    else if (UNIT_IS_EVIL(slayer))
     {
-        if(UNIT_IS_GOOD(victim)) /* Diff <= -700 */
+        if (UNIT_IS_GOOD(victim)) /* Diff <= -700 */
             adjust = (diff + 700) / 35 - 2;
-        else if(diff > 0)
+        else if (diff > 0)
             adjust = +5;
     }
     else /* Neutral slayer - diff in -1350..+1350 */
     {
-        if(diff > 350)
+        if (diff > 350)
             adjust = (diff - 350) / 30 + 1;
-        else if(diff < -350)
+        else if (diff < -350)
             adjust = (diff + 350) / 30 - 1;
     }
 
     diff = CHAR_LEVEL(slayer) - CHAR_LEVEL(victim);
-    if(diff > 0)
+    if (diff > 0)
         adjust += (adjust * MIN(10, diff)) / 10;
-    else if(diff < 0)
+    else if (diff < 0)
         adjust += (adjust * MAX(-10, diff)) / 20;
 
     adjust = MIN(200, adjust);
@@ -707,34 +707,34 @@ static void change_alignment(class unit_data *slayer, class unit_data *victim)
 /* which are to share the "share" of experience                   */
 static void person_gain(class unit_data *ch, class unit_data *dead, int share, int grouped, int maxlevel)
 {
-    if(share > 0)
+    if (share > 0)
     {
-        if(UNIT_IS_GOOD(ch) && UNIT_IS_EVIL(dead))
+        if (UNIT_IS_GOOD(ch) && UNIT_IS_EVIL(dead))
             share += share / 5;
 
-        if(UNIT_IS_EVIL(ch) && UNIT_IS_GOOD(dead))
+        if (UNIT_IS_EVIL(ch) && UNIT_IS_GOOD(dead))
             share += share / 10;
     }
 
-    if(IS_PC(ch))
+    if (IS_PC(ch))
     {
-        if(share > 0)
+        if (share > 0)
         {
             /* No need to reduce XP since flee is now a skill
                if (IS_SET(CHAR_FLAGS(ch), CHAR_WIMPY))
                share /= 2; // Only 50% in wimpy */
 
-            if(CHAR_LEVEL(ch) < maxlevel - 5)
+            if (CHAR_LEVEL(ch) < maxlevel - 5)
                 share -= (MIN(95, 7 * (maxlevel - (CHAR_LEVEL(ch) + 5))) * share) / 100;
         }
 
         gain_exp(ch, share);
 
-        if(share > 0)
+        if (share > 0)
         {
             cact("You receive $2d experience points.", A_ALWAYS, ch, &share, cActParameter(), TO_CHAR, "xpgain");
         }
-        else if(share == 0)
+        else if (share == 0)
         {
             cact("You receive no experience points.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR, "xpgain");
         }
@@ -760,7 +760,7 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
 
     maxlevel = CHAR_LEVEL(ch);
 
-    if(IS_PC(victim) && IS_SET(PC_FLAGS(victim), PC_SPIRIT))
+    if (IS_PC(victim) && IS_SET(PC_FLAGS(victim), PC_SPIRIT))
     {
         act("Oh dear, what a mess!", A_SOMEONE, victim, cActParameter(), cActParameter(), TO_ROOM);
         slog(LOG_EXTENSIVE, 0, "Oh dear, a spirit was killed!");
@@ -769,11 +769,11 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
 
     head = ch; /* Who is head of potential group? */
 
-    if(CHAR_HAS_FLAG(ch, CHAR_GROUP) && CHAR_MASTER(ch) && CHAR_HAS_FLAG(CHAR_MASTER(ch), CHAR_GROUP) &&
-       same_surroundings(ch, CHAR_MASTER(ch)))
+    if (CHAR_HAS_FLAG(ch, CHAR_GROUP) && CHAR_MASTER(ch) && CHAR_HAS_FLAG(CHAR_MASTER(ch), CHAR_GROUP) &&
+        same_surroundings(ch, CHAR_MASTER(ch)))
         head = CHAR_MASTER(ch);
 
-    if(IS_PC(victim))
+    if (IS_PC(victim))
         share = 0;
     else /* NPC killed */
     {
@@ -781,7 +781,7 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
 
         paf = affected_by_spell(victim, ID_MAX_ATTACKER);
 
-        if(paf)
+        if (paf)
             maxlevel = MAX(virtual_level(head), paf->data[0]);
         else
             maxlevel = virtual_level(head);
@@ -790,10 +790,10 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
         sumlevel = maxlevel;
         no_members = 1;
 
-        if(CHAR_HAS_FLAG(ch, CHAR_GROUP))
+        if (CHAR_HAS_FLAG(ch, CHAR_GROUP))
         {
-            for(f = CHAR_FOLLOWERS(head); f; f = f->next)
-                if(CHAR_HAS_FLAG(f->follower, CHAR_GROUP) && same_surroundings(head, f->follower))
+            for (f = CHAR_FOLLOWERS(head); f; f = f->next)
+                if (CHAR_HAS_FLAG(f->follower, CHAR_GROUP) && same_surroundings(head, f->follower))
                 {
                     sumlevel += virtual_level(f->follower);
 
@@ -808,19 +808,19 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
 
         share = CHAR_EXP(victim);
 
-        if(share > 0)
+        if (share > 0)
         {
             /* rellevel = virtual_level(victim) - maxlevel - (no_members - 1); */
             rellevel = virtual_level(victim) - maxlevel;
 
             /* Check for level difference */
 
-            if(rellevel < 0)
+            if (rellevel < 0)
                 share = (MAX(0, 100 + 15 * rellevel) * share) / 100;
-            else if(rellevel > 0)
+            else if (rellevel > 0)
                 share = ((100 + 15 * rellevel) * share) / 100;
 
-            if(no_members > 1)
+            if (no_members > 1)
                 share = (4 * share) / (3 + no_members);
 
             share = MIN(100 * no_members + 300, share);
@@ -829,17 +829,17 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
 
     share = (8 * share) / 10; /* At 90% now... */
 
-    if(!CHAR_HAS_FLAG(ch, CHAR_GROUP))
+    if (!CHAR_HAS_FLAG(ch, CHAR_GROUP))
         person_gain(ch, victim, share, FALSE, maxlevel);
     else
     {
-        if(CHAR_HAS_FLAG(head, CHAR_GROUP) && same_surroundings(head, ch))
+        if (CHAR_HAS_FLAG(head, CHAR_GROUP) && same_surroundings(head, ch))
         {
             person_gain(head, victim, share, (no_members > 1), maxlevel);
         }
 
-        for(f = CHAR_FOLLOWERS(head); f; f = f->next)
-            if(CHAR_HAS_FLAG(f->follower, CHAR_GROUP) && same_surroundings(f->follower, ch))
+        for (f = CHAR_FOLLOWERS(head); f; f = f->next)
+            if (CHAR_HAS_FLAG(f->follower, CHAR_GROUP) && same_surroundings(f->follower, ch))
             {
                 person_gain(f->follower, victim, share, (no_members > 1), maxlevel);
             }
@@ -886,15 +886,15 @@ void die(class unit_data *ch)
 {
     struct diltemplate *death;
 
-    if(ch->is_destructed())
+    if (ch->is_destructed())
         return;
 
     death = find_dil_template("death@death");
-    if(death)
+    if (death)
     {
         send_death(ch);
         class dilprg *prg = dil_copy_template(death, ch, NULL);
-        if(prg)
+        if (prg)
         {
             prg->waitcmd = WAITCMD_MAXINST - 1;
             dil_activate(prg);
@@ -908,14 +908,14 @@ void die(class unit_data *ch)
 /* Call when adding or subtracting hitpoints to/from a character */
 void modify_hit(class unit_data *ch, int hit)
 {
-    if(CHAR_POS(ch) > POSITION_DEAD)
+    if (CHAR_POS(ch) > POSITION_DEAD)
     {
         UNIT_HIT(ch) += hit;
         UNIT_HIT(ch) = MIN(hit_limit(ch), UNIT_HIT(ch));
 
         update_pos(ch);
 
-        if(CHAR_POS(ch) == POSITION_DEAD)
+        if (CHAR_POS(ch) == POSITION_DEAD)
             die(ch);
     }
 }
@@ -933,47 +933,47 @@ void damage(class unit_data *ch,
     class unit_affected_type *paf;
     class unit_data *sch;
 
-    if(ch->is_destructed() || victim->is_destructed())
+    if (ch->is_destructed() || victim->is_destructed())
         return;
 
     /* Minimum is 0 damage points [ no maximum! ] */
     dam = MAX(dam, 0);
 
     /* If neither are allowed to attack each other... */
-    if(pk_test(ch, victim, FALSE) && pk_test(victim, ch, FALSE))
+    if (pk_test(ch, victim, FALSE) && pk_test(victim, ch, FALSE))
         dam = 0;
 
-    if(IS_IMMORTAL(victim))
+    if (IS_IMMORTAL(victim))
         dam = 0;
 
-    if((CHAR_POS(victim) == POSITION_SLEEPING) && (dam > 0))
+    if ((CHAR_POS(victim) == POSITION_SLEEPING) && (dam > 0))
     {
         CHAR_POS(victim) = POSITION_RESTING;
         send_to_char("OUCH! You wake up!<br/>", victim);
     }
 
-    if(victim != ch)
+    if (victim != ch)
     {
-        if(CHAR_LAST_ATTACKER(victim))
+        if (CHAR_LAST_ATTACKER(victim))
             FREE(CHAR_LAST_ATTACKER(victim));
-        if(ch->names.Name())
+        if (ch->names.Name())
             CHAR_LAST_ATTACKER(victim) = str_dup(ch->names.Name());
         CHAR_LAST_ATTACKER_TYPE(victim) = UNIT_TYPE(ch);
-        if(IS_SET(CHAR_FLAGS(victim), CHAR_HIDE))
+        if (IS_SET(CHAR_FLAGS(victim), CHAR_HIDE))
         {
-            if((paf = affected_by_spell(victim, ID_HIDE)))
+            if ((paf = affected_by_spell(victim, ID_HIDE)))
                 destroy_affect(paf);
             REMOVE_BIT(CHAR_FLAGS(victim), CHAR_HIDE);
         }
 
-        if(IS_SET(UNIT_FLAGS(victim), UNIT_FL_INVISIBLE))
+        if (IS_SET(UNIT_FLAGS(victim), UNIT_FL_INVISIBLE))
         {
-            while((paf = affected_by_spell(victim, ID_INVISIBILITY)))
+            while ((paf = affected_by_spell(victim, ID_INVISIBILITY)))
                 destroy_affect(paf);
             REMOVE_BIT(UNIT_FLAGS(victim), UNIT_FL_INVISIBLE);
         }
 
-        if((paf = affected_by_spell(ch, ID_SANCTUARY)))
+        if ((paf = affected_by_spell(ch, ID_SANCTUARY)))
             destroy_affect(paf);
 
         offend_legal_state(ch, victim);
@@ -983,9 +983,9 @@ void damage(class unit_data *ch,
              {  Don't check for STUNNED! Victim must be set fighting for murder
              resolution!!! */
 
-        if(!CHAR_FIGHTING(victim))
+        if (!CHAR_FIGHTING(victim))
         {
-            if(IS_PC(victim) && IS_IMMORTAL(victim) && IS_PC(ch))
+            if (IS_PC(victim) && IS_IMMORTAL(victim) && IS_PC(ch))
             {
                 cact("$1n ignores your feeble threats.", A_ALWAYS, victim, cActParameter(), ch, TO_VICT, "miss_me");
                 cact("$1n ignores $3n's feeble threats.", A_ALWAYS, victim, cActParameter(), ch, TO_NOTVICT, "miss_other");
@@ -998,7 +998,7 @@ void damage(class unit_data *ch,
             set_fighting(ch, victim); // If already fighting it makes no diff
         }
 
-        if(CHAR_MASTER(victim) == ch)
+        if (CHAR_MASTER(victim) == ch)
         {
             stop_following(victim);
             send_to_char("You stop following the jerk that is hitting you.<br/>", victim);
@@ -1009,11 +1009,11 @@ void damage(class unit_data *ch,
 
     sprintf(arg, "%d %d %d", attack_group, attack_number, hit_location);
 
-    if(send_ack(ch, medium, victim, &dam, &cmd_auto_damage, arg, victim) == SFR_BLOCK)
+    if (send_ack(ch, medium, victim, &dam, &cmd_auto_damage, arg, victim) == SFR_BLOCK)
         return;
-    if(victim != ch)
+    if (victim != ch)
     {
-        if((paf = affected_by_spell(victim, ID_MAX_ATTACKER)))
+        if ((paf = affected_by_spell(victim, ID_MAX_ATTACKER)))
             paf->data[0] = MAX(CHAR_LEVEL(ch), paf->data[0]);
         else
         {
@@ -1036,15 +1036,15 @@ void damage(class unit_data *ch,
 
     update_pos(victim);
 
-    if(bDisplay)
+    if (bDisplay)
     {
-        if(CHAR_POS(victim) > POSITION_DEAD)
+        if (CHAR_POS(victim) > POSITION_DEAD)
             combat_message(ch, victim, medium, dam, attack_group, attack_number, hit_location);
         else
             combat_message(ch, victim, medium, dam, attack_group, attack_number, COM_MSG_DEAD);
     }
 
-    switch(CHAR_POS(victim))
+    switch (CHAR_POS(victim))
     {
         case POSITION_MORTALLYW:
             send_to_char("You are mortally wounded!<br/>", victim);
@@ -1080,13 +1080,13 @@ void damage(class unit_data *ch,
 
             max_hit = hit_limit(victim);
 
-            if(dam > (max_hit / 5))
+            if (dam > (max_hit / 5))
             {
                 cact("That Really did HURT!", A_SOMEONE, victim, cActParameter(), cActParameter(), TO_CHAR, "hit_me");
                 cact("$1n screams with agony!", A_SOMEONE, victim, cActParameter(), cActParameter(), TO_ROOM, "hit_other");
             }
 
-            if(UNIT_HIT(victim) < (max_hit / 5))
+            if (UNIT_HIT(victim) < (max_hit / 5))
                 cact("You wish that your wounds would stop BLEEDING that much!",
                      A_SOMEONE,
                      victim,
@@ -1095,8 +1095,8 @@ void damage(class unit_data *ch,
                      TO_CHAR,
                      "hit_me");
 
-            if((dam > UNIT_HIT(victim) / 4) || (UNIT_HIT(victim) < (max_hit / 4)))
-                if(IS_SET(CHAR_FLAGS(victim), CHAR_WIMPY))
+            if ((dam > UNIT_HIT(victim) / 4) || (UNIT_HIT(victim) < (max_hit / 4)))
+                if (IS_SET(CHAR_FLAGS(victim), CHAR_WIMPY))
                 {
                     command_interpreter(victim, "flee");
                     return;
@@ -1110,46 +1110,46 @@ void damage(class unit_data *ch,
         it is supposed to equal one self... */
 
     /* Murder! */
-    if(CHAR_POS(victim) == POSITION_DEAD)
+    if (CHAR_POS(victim) == POSITION_DEAD)
     {
         sch = NULL;
-        if(ch == victim)
+        if (ch == victim)
         {
-            if(CHAR_LAST_ATTACKER(victim))
+            if (CHAR_LAST_ATTACKER(victim))
             {
-                for(sch = UNIT_CONTAINS(UNIT_IN(victim)); sch; sch = sch->next)
+                for (sch = UNIT_CONTAINS(UNIT_IN(victim)); sch; sch = sch->next)
                 {
-                    if(CHAR_LAST_ATTACKER(victim) && sch->names.Name())
-                        if(strcmp(CHAR_LAST_ATTACKER(victim), sch->names.Name()) == 0)
-                            if(CHAR_LAST_ATTACKER_TYPE(victim) == UNIT_TYPE(sch))
+                    if (CHAR_LAST_ATTACKER(victim) && sch->names.Name())
+                        if (strcmp(CHAR_LAST_ATTACKER(victim), sch->names.Name()) == 0)
+                            if (CHAR_LAST_ATTACKER_TYPE(victim) == UNIT_TYPE(sch))
                                 break;
                 }
             }
-            if(sch)
+            if (sch)
                 ch = sch;
         }
 
-        if(ch != victim)
+        if (ch != victim)
         {
             exp_align_gain(ch, victim);
 
             /* Except in self defence & legal target makes a crime */
-            if(!IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) && !IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
+            if (!IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) && !IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
             {
-                if(IS_PC(victim))
+                if (IS_PC(victim))
                 {
-                    if(!IS_SET(CHAR_FLAGS(victim), CHAR_OUTLAW) || IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
+                    if (!IS_SET(CHAR_FLAGS(victim), CHAR_OUTLAW) || IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
                         log_crime(ch, victim, CRIME_PK);
                 }
                 else
                 {
-                    if(IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
+                    if (IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
                         log_crime(ch, victim, CRIME_MURDER);
                 }
             }
         }
 
-        if(!IS_NPC(victim))
+        if (!IS_NPC(victim))
         {
             slog(LOG_EXTENSIVE,
                  MAX(UNIT_MINV(ch), UNIT_MINV(victim)),
@@ -1159,7 +1159,7 @@ void damage(class unit_data *ch,
                  STR(TITLENAME(UNIT_IN(ch))));
         }
 
-        if(victim == ch)
+        if (victim == ch)
         {
             SET_BIT(CHAR_FLAGS(ch), CHAR_KILL_SELF);
             die(ch);
@@ -1176,18 +1176,18 @@ void damage(class unit_data *ch,
         return;
     }
 
-    if(CHAR_POS(victim) <= POSITION_STUNNED)
+    if (CHAR_POS(victim) <= POSITION_STUNNED)
     {
-        if(CHAR_FIGHTING(victim))
+        if (CHAR_FIGHTING(victim))
             stop_fighting(victim);
-        if(CHAR_FIGHTING(ch) == victim)
+        if (CHAR_FIGHTING(ch) == victim)
             stop_fighting(ch);
     }
 
-    if(IS_PC(victim) && !CHAR_DESCRIPTOR(victim) && CHAR_AWAKE(victim))
+    if (IS_PC(victim) && !CHAR_DESCRIPTOR(victim) && CHAR_AWAKE(victim))
     {
         command_interpreter(victim, "flee");
-        if(victim->is_destructed() || CHAR_POS(victim) == POSITION_DEAD)
+        if (victim->is_destructed() || CHAR_POS(victim) == POSITION_DEAD)
             return;
     }
 }
@@ -1196,7 +1196,7 @@ void break_object(class unit_data *obj)
 {
     char tmp[MAX_STRING_LENGTH];
 
-    if(OBJ_EQP_POS(obj))
+    if (OBJ_EQP_POS(obj))
         unequip_object(obj);
 
     sprintf(tmp, "%s (broken)", STR(UNIT_TITLE_STRING(obj)));
@@ -1219,20 +1219,20 @@ void break_object(class unit_data *obj)
 /* 'ch' is optional, and will receive a message if 'obj' breaks */
 void damage_object(class unit_data *ch, class unit_data *obj, int dam)
 {
-    if(obj == NULL)
+    if (obj == NULL)
         return;
 
     assert(IS_OBJ(obj));
 
-    if(UNIT_HIT(obj) < 0) /* Endless */
+    if (UNIT_HIT(obj) < 0) /* Endless */
         return;
 
-    if(OBJ_TYPE(obj) == ITEM_WEAPON)
+    if (OBJ_TYPE(obj) == ITEM_WEAPON)
         dam /= 4; // Adjustments requested...
-    else if(OBJ_TYPE(obj) == ITEM_ARMOR)
+    else if (OBJ_TYPE(obj) == ITEM_ARMOR)
         dam *= 1; // Ditto...
 
-    switch(OBJ_TYPE(obj))
+    switch (OBJ_TYPE(obj))
     {
         case ITEM_SHIELD:
             dam *= 2;
@@ -1245,13 +1245,13 @@ void damage_object(class unit_data *ch, class unit_data *obj, int dam)
 
     dam /= 10;
 
-    if(dam > 0)
+    if (dam > 0)
     {
         UNIT_HIT(obj) -= dam;
 
-        if(UNIT_HIT(obj) < 0)
+        if (UNIT_HIT(obj) < 0)
         {
-            if(ch)
+            if (ch)
             {
                 act("Your $3N is broken by the impact!!!", A_ALWAYS, ch, cActParameter(), cActParameter(obj), TO_CHAR);
                 act("$1n's $3N is broken by the impact!!!", A_ALWAYS, ch, cActParameter(), cActParameter(obj), TO_ROOM);
@@ -1265,18 +1265,18 @@ void damage_object(class unit_data *ch, class unit_data *obj, int dam)
 /* Returns TRUE if ok */
 static int check_combat(class unit_data *ch)
 {
-    if(ch->is_destructed())
+    if (ch->is_destructed())
     {
         assert(!CHAR_COMBAT(ch));
         return FALSE;
     }
 
-    if(!CHAR_AWAKE(ch))
+    if (!CHAR_AWAKE(ch))
         stop_fighting(ch);
     else
     {
-        while(CHAR_FIGHTING(ch))
-            if(!same_surroundings(ch, CHAR_FIGHTING(ch)))
+        while (CHAR_FIGHTING(ch))
+            if (!same_surroundings(ch, CHAR_FIGHTING(ch)))
                 stop_fighting(ch, CHAR_FIGHTING(ch));
             else
                 break;
@@ -1298,7 +1298,7 @@ static int check_combat(class unit_data *ch)
 //
 int roll_boost(int roll, int level)
 {
-    if(level <= 50)
+    if (level <= 50)
         return roll;
     else
         return roll * (level - 30) / 25; // / 18;
@@ -1319,24 +1319,24 @@ int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapo
 
     assert(IS_CHAR(att) && IS_CHAR(def));
 
-    if(CHAR_POS(att) < POSITION_SLEEPING)
+    if (CHAR_POS(att) < POSITION_SLEEPING)
         return -1;
 
-    if(CHAR_POS(def) <= POSITION_DEAD)
+    if (CHAR_POS(def) <= POSITION_DEAD)
         return -1;
 
-    if(att == def)
+    if (att == def)
         return -1;
 
-    if(!same_surroundings(att, def))
+    if (!same_surroundings(att, def))
         return -1;
 
-    if(attack)
+    if (attack)
     {
-        if(!CHAR_FIGHTING(att))
+        if (!CHAR_FIGHTING(att))
             set_fighting(att, def, TRUE);
 
-        if(CHAR_POS(att) != POSITION_FIGHTING)
+        if (CHAR_POS(att) != POSITION_FIGHTING)
             CHAR_POS(att) = POSITION_FIGHTING;
         add_fighting(att, def, TRUE);
     }
@@ -1353,7 +1353,7 @@ int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapo
 
     roll = open100();
 
-    if(att_weapon && weapon_fumble(att_weapon, roll))
+    if (att_weapon && weapon_fumble(att_weapon, roll))
     {
         cact("You fumble with your $2N!", A_ALWAYS, att, att_weapon, cActParameter(), TO_CHAR, "miss_me");
         cact("$1n fumbles with $1s $2N!", A_ALWAYS, att, att_weapon, cActParameter(), TO_ROOM, "miss_other");
@@ -1367,31 +1367,31 @@ int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapo
         hm += roll_boost(roll, CHAR_LEVEL(att));
     }
 
-    if(CHAR_COMBAT(att))
+    if (CHAR_COMBAT(att))
         CHAR_COMBAT(att)->changeSpeed(wpn_info[att_weapon_type].speed);
 
-    if(!check_combat(att))
+    if (!check_combat(att))
         return -1;
 
     send_combat(att);
 
-    if(!check_combat(att))
+    if (!check_combat(att))
         return -1;
 
     dam = 0;
 
-    if(!CHAR_AWAKE(def))
+    if (!CHAR_AWAKE(def))
         hm = MAX(hm, 100);
 
-    if(hm < 0) /* a miss */
+    if (hm < 0) /* a miss */
     {
         damage(att, def, att_weapon, 0, MSG_TYPE_WEAPON, att_weapon_type, COM_MSG_MISS);
     }
     else /* A hit! */
     {
-        if(att_weapon)
+        if (att_weapon)
         {
-            if(OBJ_VALUE(att_weapon, 3) == CHAR_RACE(def))
+            if (OBJ_VALUE(att_weapon, 3) == CHAR_RACE(def))
             {
                 hm += hm / 5; /* Add 20% bonus extra again to damage */
                 act("Your $2N glows!", A_SOMEONE, att, att_weapon, cActParameter(), TO_CHAR);
@@ -1404,31 +1404,31 @@ int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapo
             dam = natural_damage(hm, att_weapon_type, def_armour_type, UNIT_BASE_WEIGHT(att));
         }
 
-        if(dam > 0)
+        if (dam > 0)
             damage_object(att, att_weapon, dam);
 
         def_shield_bonus = shield_bonus(att, def, &def_shield);
 
-        if(CHAR_AWAKE(def) && def_shield && wpn_info[att_weapon_type].shield != SHIELD_M_USELESS)
+        if (CHAR_AWAKE(def) && def_shield && wpn_info[att_weapon_type].shield != SHIELD_M_USELESS)
         {
-            if((wpn_info[att_weapon_type].shield == SHIELD_M_BLOCK) && (number(1, 100) <= def_shield_bonus))
+            if ((wpn_info[att_weapon_type].shield == SHIELD_M_BLOCK) && (number(1, 100) <= def_shield_bonus))
             {
                 damage_object(def, def_shield, dam);
                 damage(att, def, def_shield, 0, MSG_TYPE_WEAPON, att_weapon_type, WEAR_SHIELD);
                 return 0;
             }
-            if((wpn_info[att_weapon_type].shield == SHIELD_M_REDUCE) && (number(1, 100) <= def_shield_bonus))
+            if ((wpn_info[att_weapon_type].shield == SHIELD_M_REDUCE) && (number(1, 100) <= def_shield_bonus))
             {
                 dam -= (dam * def_shield_bonus) / 100;
             }
         }
 
-        if(dam > 0)
+        if (dam > 0)
         {
             damage_object(def, def_armour, dam);
 
             /* May the victim bleed under my beatiful system */
-            if(def_armour || CHAR_IS_HUMANOID(def))
+            if (def_armour || CHAR_IS_HUMANOID(def))
                 damage(att, def, att_weapon, dam, MSG_TYPE_WEAPON, att_weapon_type, hit_loc);
             else
                 damage(att, def, att_weapon, dam, MSG_TYPE_WEAPON, att_weapon_type, COM_MSG_EBODY);
@@ -1450,10 +1450,10 @@ int simple_one_hit(class unit_data *att, class unit_data *def)
 /* control the fights going on */
 void melee_violence(class unit_data *ch, int primary)
 {
-    if(!check_combat(ch))
+    if (!check_combat(ch))
         return;
 
-    if(CHAR_POS(ch) == POSITION_FIGHTING)
+    if (CHAR_POS(ch) == POSITION_FIGHTING)
         one_hit(ch, CHAR_FIGHTING(ch), 0, WPN_ROOT, primary, TRUE);
     else
     {
@@ -1486,7 +1486,7 @@ int hunting(struct spec_arg *sarg)
 {
     struct hunt_data *h;
 
-    if(sarg->cmd->no != CMD_AUTO_TICK)
+    if (sarg->cmd->no != CMD_AUTO_TICK)
         return SFR_SHARE;
 
     h = (struct hunt_data *)sarg->fptr->data;
@@ -1494,26 +1494,26 @@ int hunting(struct spec_arg *sarg)
 
     h->no--;
 
-    if(h->no <= 0)
+    if (h->no <= 0)
     {
         destroy_fptr(sarg->owner, sarg->fptr); /* Will free data automatically */
         return SFR_BLOCK;
     }
 
-    if(CHAR_AWAKE(sarg->owner))
+    if (CHAR_AWAKE(sarg->owner))
     {
         /* with new transparency, this should be a list
              of all visible chars in surroundings */
 
-        if(scan4_ref(sarg->owner, h->victim))
+        if (scan4_ref(sarg->owner, h->victim))
         {
-            if(!IS_CHAR(h->victim))
+            if (!IS_CHAR(h->victim))
             {
                 destroy_fptr(sarg->owner, sarg->fptr); /* Will free automatic. */
                 return SFR_BLOCK;
             }
 
-            if(!CHAR_CAN_SEE(sarg->owner, h->victim))
+            if (!CHAR_CAN_SEE(sarg->owner, h->victim))
                 return SFR_SHARE;
 
             act("$1n growls viciously at $3n.", A_SOMEONE, sarg->owner, cActParameter(), h->victim, TO_NOTVICT);
@@ -1521,10 +1521,10 @@ int hunting(struct spec_arg *sarg)
 
             /* If the victim was a legal target, then it must be such */
             /* again                                                  */
-            if(h->was_legal)
+            if (h->was_legal)
                 SET_BIT(CHAR_FLAGS(h->victim), CHAR_LEGAL_TARGET);
 
-            if(!CHAR_COMBAT(sarg->owner) || !CHAR_COMBAT(sarg->owner)->FindOpponent(h->victim))
+            if (!CHAR_COMBAT(sarg->owner) || !CHAR_COMBAT(sarg->owner)->FindOpponent(h->victim))
                 set_fighting(sarg->owner, h->victim, TRUE);
 
             destroy_fptr(sarg->owner, sarg->fptr); /* Will free fptr above */

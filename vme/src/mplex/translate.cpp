@@ -60,16 +60,16 @@ static void (*control_code[5][256])(class cConHook *con, char **b, ubit8 code);
 /* ----------------------------------------------------------------------- */
 
 #define PROTOCOL_TRANSLATE(con, code, b)                                                                                                   \
-    if(control_code[(con)->m_sSetup.emulation][code])                                                                                      \
+    if (control_code[(con)->m_sSetup.emulation][code])                                                                                     \
         (*control_code[(con)->m_sSetup.emulation][code])((con), (b), (code));
 
 void protocol_translate(class cConHook *con, ubit8 code, char **b)
 {
     assert(b && *b);
 
-    if(code >= CONTROL_FG_BLACK_CHAR && code <= CONTROL_BG_WHITE_CHAR)
+    if (code >= CONTROL_FG_BLACK_CHAR && code <= CONTROL_BG_WHITE_CHAR)
         code = default_colours[con->m_sSetup.colour_convert][code - CONTROL_FG_BLACK_CHAR];
-    if(control_code[(con)->m_sSetup.emulation][code])
+    if (control_code[(con)->m_sSetup.emulation][code])
         (*control_code[(con)->m_sSetup.emulation][code])((con), (b), (code));
 
     //   PROTOCOL_TRANSLATE(con, code, b);
@@ -84,7 +84,7 @@ static void Control_ANSI_Fg_Black(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_BLACK);
     TAIL(*b);
 
-    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -93,7 +93,7 @@ static void Control_ANSI_Fg_Red(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_RED);
     TAIL(*b);
 
-    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -102,7 +102,7 @@ static void Control_ANSI_Fg_Green(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_GREEN);
     TAIL(*b);
 
-    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -111,7 +111,7 @@ static void Control_ANSI_Fg_Yellow(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_YELLOW);
     TAIL(*b);
 
-    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -120,7 +120,7 @@ static void Control_ANSI_Fg_Blue(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_BLUE);
     TAIL(*b);
 
-    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -129,7 +129,7 @@ static void Control_ANSI_Fg_Magenta(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_MAGENTA);
     TAIL(*b);
 
-    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -138,7 +138,7 @@ static void Control_ANSI_Fg_Cyan(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_CYAN);
     TAIL(*b);
 
-    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -147,7 +147,7 @@ static void Control_ANSI_Fg_White(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_WHITE);
     TAIL(*b);
 
-    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -257,7 +257,7 @@ static void Control_ANSI_Bg_White(class cConHook *con, char **b, ubit8 code)
 
 static void Control_ANSI_Echo_Off(class cConHook *con, char **b, ubit8 code)
 {
-    if(con->m_sSetup.telnet)
+    if (con->m_sSetup.telnet)
     {
         TELNET_ECHO_OFF(*b);
         TAIL(*b);
@@ -271,7 +271,7 @@ static void Control_ANSI_Echo_Off(class cConHook *con, char **b, ubit8 code)
 
 static void Control_ANSI_Reset(class cConHook *con, char **b, ubit8 code)
 {
-    if(con->m_sSetup.telnet)
+    if (con->m_sSetup.telnet)
     {
         TELNET_ECHO_ON(*b);
         TAIL(*b);
@@ -304,7 +304,7 @@ static void Control_ANSI_Reverse(class cConHook *con, char **b, ubit8 code)
 
 static void Control_TTY_Echo_Off(class cConHook *con, char **b, ubit8 code)
 {
-    if(con->m_sSetup.telnet)
+    if (con->m_sSetup.telnet)
     {
         TELNET_ECHO_OFF(*b);
         TAIL(*b);
@@ -313,7 +313,7 @@ static void Control_TTY_Echo_Off(class cConHook *con, char **b, ubit8 code)
 
 static void Control_TTY_Echo_On(class cConHook *con, char **b, ubit8 code)
 {
-    if(con->m_sSetup.telnet)
+    if (con->m_sSetup.telnet)
     {
         TELNET_ECHO_ON(*b);
         TAIL(*b);
@@ -377,17 +377,17 @@ void translate_init(void)
 {
     int i, j;
 
-    for(j = 0; j < 4; j++)
-        for(i = 0; i < 256; i++)
+    for (j = 0; j < 4; j++)
+        for (i = 0; i < 256; i++)
             control_code[j][i] = NULL;
 
-    for(j = 0; j < 4; j++)
+    for (j = 0; j < 4; j++)
     {
         control_code[j][CONTROL_GOBBLE_ON_CHAR] = Control_Gobble_On;
         control_code[j][CONTROL_GOBBLE_OFF_CHAR] = Control_Gobble_Off;
     }
 
-    for(j = 0; j < 4; j++)
+    for (j = 0; j < 4; j++)
     {
         control_code[j][CONTROL_COLOR_CHANGE_CHAR] = control_color_change;
         control_code[j][CONTROL_COLOR_INSERT_CHAR] = control_color_insert;
@@ -438,6 +438,6 @@ void translate_init(void)
     control_code[TERM_ANSI][CONTROL_BG_CYAN_CHAR] = Control_ANSI_Bg_Cyan;
     control_code[TERM_ANSI][CONTROL_BG_WHITE_CHAR] = Control_ANSI_Bg_White;
 
-    for(i = 0; i < 256; i++)
+    for (i = 0; i < 256; i++)
         control_code[TERM_INTERNAL][i] = Control_Copy;
 }

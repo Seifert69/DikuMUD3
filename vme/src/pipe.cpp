@@ -20,7 +20,7 @@ class pipeMUD_RO : public cHookNative
 public:
     void Open(void)
     {
-        if(this->IsHooked())
+        if (this->IsHooked())
         {
             slog(LOG_OFF, 0, "Trying to open already opened pipe_ro.");
             return;
@@ -38,7 +38,7 @@ public:
         // Open FIFO for write only
         fd = ::open(myfifo, O_RDWR | O_NONBLOCK);
 
-        if(fd <= 0)
+        if (fd <= 0)
         {
             slog(LOG_OFF, 0, "Unable to open pipe RO %s, error code %d.", myfifo, errno);
             return;
@@ -60,11 +60,11 @@ public:
         // fd_set read_fds;
         // timeval null_time = {0, 0};
 
-        if(!this->IsHooked())
+        if (!this->IsHooked())
         {
             this->Open();
 
-            if(!this->IsHooked())
+            if (!this->IsHooked())
                 return -1;
         }
 
@@ -75,9 +75,9 @@ public:
             buf[sizeof(buf) - 1] = 0;
             n = this->read(buf, sizeof(buf) - 1);
 
-            if(n == 0)
+            if (n == 0)
                 break;
-            if(n == -1)
+            if (n == -1)
             {
                 slog(LOG_OFF, 0, "Error reading from pipeMUD RO.");
                 break;
@@ -86,18 +86,18 @@ public:
             {
                 buf[n] = 0;
                 str.append(buf);
-                if(n < (int)strlen(buf) - 1)
+                if (n < (int)strlen(buf) - 1)
                     break;
 
-                if(str.length() > 500000)
+                if (str.length() > 500000)
                 {
                     slog(LOG_OFF, 0, "pipeMUD RO, help I'm getting spammed. Discarding");
                     str = ""; // Just consume the spam and toss it out
                 }
             }
-        } while(n > 0);
+        } while (n > 0);
 
-        if(str.length() > 0)
+        if (str.length() > 0)
         {
             const char *p, *o;
 
@@ -105,22 +105,22 @@ public:
             do
             {
                 p = strchr(o, '\n');
-                if(p == NULL)
+                if (p == NULL)
                 {
-                    if(strlen(o) < 1)
+                    if (strlen(o) < 1)
                         break;
 
                     p = o + strlen(o);
                 }
                 std::string line(o, p - o);
                 o = p;
-                if(*o == '\n')
+                if (*o == '\n')
                     o++;
                 slog(LOG_OFF, 0, "Received line [%s]. Send to DIL", line.c_str());
 
                 void pipeMUD_dispatch(std::string str);
                 pipeMUD_dispatch(line);
-            } while(p);
+            } while (p);
         }
 
         return str.length();
@@ -133,7 +133,7 @@ class pipeMUD_WO : public cHookNative
 public:
     void Open(void)
     {
-        if(this->IsHooked())
+        if (this->IsHooked())
         {
             slog(LOG_OFF, 0, "Trying to open already opened pipe_wo.");
             return;
@@ -149,7 +149,7 @@ public:
         // Open FIFO for write only
         int fd = open(myfifo, O_WRONLY | O_NONBLOCK);
 
-        if(fd <= 0)
+        if (fd <= 0)
         {
             slog(LOG_OFF, 0, "Unable to open pipe WO %s, error code %d.", myfifo, errno);
             return;
@@ -160,11 +160,11 @@ public:
 
     void Write(const char *c)
     {
-        if(!this->IsHooked())
+        if (!this->IsHooked())
         {
             this->Open();
 
-            if(!this->IsHooked())
+            if (!this->IsHooked())
                 return;
         }
 
@@ -176,11 +176,11 @@ public:
 
         n = this->write(str.c_str(), str.length());
 
-        if(n == -1)
+        if (n == -1)
         {
             slog(LOG_OFF, 0, "Unable to write to pipeMUD WO, error code %d.", errno);
         }
-        else if(n < (int)str.length())
+        else if (n < (int)str.length())
         {
             slog(LOG_OFF, 0, "Unable to write full string to pipeMUD WO. code not developed for this yet", errno);
         }
@@ -208,10 +208,10 @@ void pipeMUD_dispatch(std::string str)
     class dilprg *prg;
     static unit_data *u = NULL;
 
-    if(!u)
+    if (!u)
     {
         u = find_symbolic("basis", "discord");
-        if(u == NULL)
+        if (u == NULL)
         {
             slog(LOG_OFF, 0, "Can't find discord@basis.");
             return;
@@ -221,7 +221,7 @@ void pipeMUD_dispatch(std::string str)
     tmpl = find_dil_template("dispatcher@comm");
     prg = dil_copy_template(tmpl, u, NULL);
 
-    if(prg)
+    if (prg)
     {
         str_correct_utf8(str);
         prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file

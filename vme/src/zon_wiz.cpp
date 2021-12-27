@@ -38,40 +38,40 @@ int ball(struct spec_arg *sarg)
     int v1, v2;
     int i;
 
-    if(is_command(sarg->cmd, "use"))
+    if (is_command(sarg->cmd, "use"))
     {
         u = find_unit(sarg->activator, &arg, 0, FIND_UNIT_IN_ME);
 
-        if(u != sarg->owner)
+        if (u != sarg->owner)
             return SFR_SHARE;
 
         arg = one_argument(arg, buf);
         v1 = atoi(buf);
         arg = one_argument(arg, buf);
         v2 = atoi(buf);
-        if((v2 < 0) || (v2 > 4))
+        if ((v2 < 0) || (v2 > 4))
             v2 = 0;
 
-        for(i = 0; i < TOP_MAX; top[i++] = NULL)
+        for (i = 0; i < TOP_MAX; top[i++] = NULL)
             ;
 
         sprintf(buf, "Searching for Objects of type %d with max value[%d]<br/>", v1, v2);
 
         send_to_char(buf, sarg->activator);
 
-        for(u = unit_list; u; u = u->gnext)
-            if(IS_OBJ(u) && (OBJ_TYPE(u) == v1))
+        for (u = unit_list; u; u = u->gnext)
+            if (IS_OBJ(u) && (OBJ_TYPE(u) == v1))
             {
-                for(i = 0; i < TOP_MAX; i++)
-                    if((top[i] == NULL) || OBJ_VALUE(u, v2) > OBJ_VALUE(top[i], v2))
+                for (i = 0; i < TOP_MAX; i++)
+                    if ((top[i] == NULL) || OBJ_VALUE(u, v2) > OBJ_VALUE(top[i], v2))
                     {
                         top[i] = u;
                         break;
                     }
             }
 
-        for(i = 0; i < TOP_MAX; i++)
-            if(top[i])
+        for (i = 0; i < TOP_MAX; i++)
+            if (top[i])
             {
                 sprintf(buf,
                         "%4ld %-15s@%-15s  IN  %s [%s@%s]<br/>",

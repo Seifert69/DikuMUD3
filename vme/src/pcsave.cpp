@@ -36,7 +36,7 @@ void assign_player_file_index(unit_data *pc)
     zone_type *z = find_zone(player_zone);
     auto it = z->mmp_fi.find(PC_FILENAME(pc));
 
-    if(it != z->mmp_fi.end())
+    if (it != z->mmp_fi.end())
         UNIT_FILE_INDEX(pc) = it->second;
     else
     {
@@ -76,7 +76,7 @@ class unit_data *find_player(char *name)
 
     d = find_descriptor(name, NULL);
 
-    if(d && (d->fptr == descriptor_interpreter) && d->character)
+    if (d && (d->fptr == descriptor_interpreter) && d->character)
         return d->character;
     else
         return NULL;
@@ -87,7 +87,7 @@ int delete_inventory(const char *pName)
 {
     char *ContentsFileName(const char *pName);
 
-    if(remove(ContentsFileName(pName)))
+    if (remove(ContentsFileName(pName)))
         return FALSE;
 
     return TRUE;
@@ -98,7 +98,7 @@ int delete_player(const char *pName)
 {
     char *ContentsFileName(const char *pName);
 
-    if(remove(PlayerFileName(pName)))
+    if (remove(PlayerFileName(pName)))
         return FALSE;
 
     delete_inventory(pName);
@@ -112,7 +112,7 @@ sbit32 find_player_id(char *pName)
     FILE *pFile;
     sbit32 id;
 
-    if(str_is_empty(pName))
+    if (str_is_empty(pName))
     {
         slog(LOG_ALL, 0, "Empty string in find_player_id.");
         return -1;
@@ -120,12 +120,12 @@ sbit32 find_player_id(char *pName)
 
     pFile = fopen(PlayerFileName(pName), "rb");
 
-    if(pFile == NULL)
+    if (pFile == NULL)
         return -1;
 
     rewind(pFile);
 
-    if(fread(&id, sizeof(sbit32), 1, pFile) != 1)
+    if (fread(&id, sizeof(sbit32), 1, pFile) != 1)
         error(HERE, "Unable to read ID for player: '%s'", pName);
 
     fclose(pFile);
@@ -146,7 +146,7 @@ sbit32 read_player_id(void)
     assert(pFile);
     fseek(pFile, 0, SEEK_SET);
     int mstmp = fscanf(pFile, " %d ", &tmp_sl);
-    if(mstmp < 1)
+    if (mstmp < 1)
     {
         slog(LOG_ALL, 0, "ERROR: Unexpected bytes in read_player_id %d", mstmp);
         assert(FALSE);
@@ -200,7 +200,7 @@ void save_player_disk(const char *pName, char *pPassword, sbit32 id, int nPlyLen
        full?). Anyway if that is a problem it should have been caught by
        the n == nPlyLen */
 
-    if(fseek(pPlayerFile, 0L, SEEK_END))
+    if (fseek(pPlayerFile, 0L, SEEK_END))
         assert(FALSE);
 
     assert(ftell(pPlayerFile) == (long int)(nPlyLen + sizeof(nPlyLen) + sizeof(id)));
@@ -231,10 +231,10 @@ void save_player_file(class unit_data *pc)
     assert(strlen(PC_FILENAME(pc)) < PC_MAX_NAME);
     assert(!pc->is_destructed());
 
-    if(pc->is_destructed())
+    if (pc->is_destructed())
         return;
 
-    if(locked)
+    if (locked)
     {
         slog(LOG_ALL, 0, "ERROR: INFORM PAPI OF A RECURSIVE CALL OF SAVE PLAYER!");
         return;
@@ -242,25 +242,25 @@ void save_player_file(class unit_data *pc)
 
     locked = TRUE;
 
-    if(PC_IS_UNSAVED(pc))
+    if (PC_IS_UNSAVED(pc))
         PC_TIME(pc).played++;
 
     /* PRIMITIVE SANITY CHECK */
     slog(LOG_ALL, 0, "Saving PC %s id =%d", UNIT_NAME(pc), PC_ID(pc));
     assert(PC_ID(pc) >= 0 && PC_ID(pc) <= 1000000);
 
-    if(UNIT_IN(pc) && !IS_SET(UNIT_FLAGS(unit_room(pc)), UNIT_FL_NOSAVE))
+    if (UNIT_IN(pc) && !IS_SET(UNIT_FLAGS(unit_room(pc)), UNIT_FL_NOSAVE))
         CHAR_LAST_ROOM(pc) = unit_room(pc);
 
     tmp_descr = CHAR_DESCRIPTOR(pc);
     CHAR_DESCRIPTOR(pc) = NULL; /* Do this to turn off all messages! */
 
     /* Remove all inventory and equipment in order to make a CLEAN save */
-    while((tmp_u = UNIT_CONTAINS(pc)))
+    while ((tmp_u = UNIT_CONTAINS(pc)))
     {
-        if(IS_OBJ(tmp_u))
+        if (IS_OBJ(tmp_u))
         {
-            if((tmp_i = OBJ_EQP_POS(tmp_u)))
+            if ((tmp_i = OBJ_EQP_POS(tmp_u)))
                 unequip_object(tmp_u);
             OBJ_EQP_POS(tmp_u) = tmp_i;
         }
@@ -277,18 +277,18 @@ void save_player_file(class unit_data *pc)
     save_player_disk(PC_FILENAME(pc), PC_PWD(pc), PC_ID(pc), nPlyLen, pBuf->GetData());
 
     /* Restore all inventory and equipment */
-    while((tmp_u = list))
+    while ((tmp_u = list))
     {
         list = list->next;
         tmp_u->next = NULL;
 
         unit_to_unit(tmp_u, pc);
 
-        if(IS_OBJ(tmp_u))
+        if (IS_OBJ(tmp_u))
         {
             tmp_i = OBJ_EQP_POS(tmp_u);
             OBJ_EQP_POS(tmp_u) = 0;
-            if(tmp_i)
+            if (tmp_i)
                 equip_char(pc, tmp_u, tmp_i);
         }
     }
@@ -310,7 +310,7 @@ void save_player_contents(class unit_data *pc, int fast)
 
     assert(IS_PC(pc));
 
-    if(locked)
+    if (locked)
     {
         slog(LOG_ALL, 0, "ERROR: INFORM PAPI OF A RECURSIVE SAVE INVENTORY!");
         return;
@@ -328,13 +328,13 @@ void save_player_contents(class unit_data *pc, int fast)
 
     daily_cost = save_contents(PC_FILENAME(pc), pc, fast, FALSE);
 
-    if(daily_cost <= 0)
+    if (daily_cost <= 0)
         keep_period += SECS_PER_REAL_DAY * 30;
     else
     {
         amount_t amount = char_holds_amount(pc, DEF_CURRENCY);
 
-        if(amount > 0)
+        if (amount > 0)
         {
             int tmp_i;
             time_t tdiff;
@@ -342,13 +342,13 @@ void save_player_contents(class unit_data *pc, int fast)
             /* No of days items may be kept (Maximum of 30!) */
             tmp_i = MIN(30, amount / daily_cost);
 
-            if(tmp_i >= 1)
+            if (tmp_i >= 1)
             {
                 keep_period += tmp_i * SECS_PER_REAL_DAY;
                 amount -= tmp_i * daily_cost;
             }
 
-            if(tmp_i < 30)
+            if (tmp_i < 30)
                 keep_period += (int)(((float)SECS_PER_REAL_DAY * (float)amount) / (float)daily_cost);
 
             tdiff = (keep_period - t0) / SECS_PER_REAL_HOUR;
@@ -371,13 +371,13 @@ void save_player_contents(class unit_data *pc, int fast)
 /* Save the player 'pc'. Update logon and playing time.        */
 void save_player(class unit_data *pc)
 {
-    if(CHAR_DESCRIPTOR(pc))
+    if (CHAR_DESCRIPTOR(pc))
     {
         time_t t0;
         ubit32 used;
 
         t0 = time(0);
-        if(t0 < CHAR_DESCRIPTOR(pc)->logon)
+        if (t0 < CHAR_DESCRIPTOR(pc)->logon)
         {
             slog(LOG_ALL, 0, "PCSAVE: Current less than last logon");
             CHAR_DESCRIPTOR(pc)->logon = t0;
@@ -390,9 +390,9 @@ void save_player(class unit_data *pc)
         PC_TIME(pc).played += used;
         CHAR_DESCRIPTOR(pc)->logon = t0;
 
-        if(account_is_closed(pc))
+        if (account_is_closed(pc))
             account_closed(pc);
-        else if(account_is_overdue(pc))
+        else if (account_is_overdue(pc))
             account_overdue(pc);
     }
 
@@ -411,25 +411,25 @@ class unit_data *load_player_file(FILE *pFile)
     assert(pFile);
 
     n = fread(&id, sizeof(int), 1, pFile);
-    if(n != 1)
+    if (n != 1)
         return NULL;
 
     n = fread(&nPlyLen, sizeof(nPlyLen), 1, pFile);
-    if(n != 1)
+    if (n != 1)
         return NULL;
 
     pBuf = &g_FileBuffer;
     n = pBuf->FileRead(pFile, nPlyLen);
 
-    if(n != nPlyLen)
+    if (n != nPlyLen)
         slog(LOG_ALL, 0, "ERROR: PC FILE LENGTH MISMATCHED RECORDED LENGTH!");
 
     pc = read_unit_string(pBuf, UNIT_ST_PC, nPlyLen, "Player");
 
-    if(pc == NULL)
+    if (pc == NULL)
         return NULL;
 
-    if(g_nCorrupt)
+    if (g_nCorrupt)
         return NULL;
 
     return pc;
@@ -445,11 +445,11 @@ class unit_data *load_player(const char *pName)
 
     void stop_all_special(class unit_data * u);
 
-    if(str_is_empty(pName))
+    if (str_is_empty(pName))
         return NULL;
 
     pFile = fopen(PlayerFileName(pName), "rb");
-    if(pFile == NULL)
+    if (pFile == NULL)
         return NULL;
 
     pc = load_player_file(pFile);
@@ -457,7 +457,7 @@ class unit_data *load_player(const char *pName)
 
     fclose(pFile);
 
-    if(pc == NULL)
+    if (pc == NULL)
     {
         slog(LOG_ALL, 0, "Corrupted player %s.", pName);
         return NULL;
@@ -469,14 +469,14 @@ class unit_data *load_player(const char *pName)
         DeactivateDil(pc);
     }
 
-    if(str_ccmp(pName, PC_FILENAME(pc)))
+    if (str_ccmp(pName, PC_FILENAME(pc)))
     {
         slog(LOG_ALL, 0, "Mismatching player name %s / %s.", pName, PC_FILENAME(pc));
         extract_unit(pc);
         return NULL;
     }
 
-    if(PC_IS_UNSAVED(pc))
+    if (PC_IS_UNSAVED(pc))
     {
         slog(LOG_ALL, 0, "PC loaded with unsaved set!", pName);
         PC_TIME(pc).played++;
@@ -495,22 +495,22 @@ void player_file_index(void)
     tmp_player_name = str_cc(g_cServerConfig.m_plydir, "player.tmp");
 
     /* Get rid of any temporary player save file */
-    while(file_exists(tmp_player_name))
+    while (file_exists(tmp_player_name))
     {
         n = remove(tmp_player_name);
-        if(n != 0)
+        if (n != 0)
             slog(LOG_ALL, 0, "Remove failed");
-        if(file_exists(tmp_player_name))
+        if (file_exists(tmp_player_name))
         {
             n = rename(tmp_player_name, "./playingfuck");
-            if(n != 0)
+            if (n != 0)
             {
                 error(HERE, "Rename failed too - going down :-(");
             }
         }
     }
 
-    if(!file_exists(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME)))
+    if (!file_exists(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME)))
     {
         touch_file(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME));
         player_id = -7;
@@ -521,12 +521,12 @@ void player_file_index(void)
     assert(pFile);
 
     int mstmp = fscanf(pFile, " %d ", &tmp_sl);
-    if(mstmp < 1)
+    if (mstmp < 1)
     {
         slog(LOG_ALL, 0, "ERROR: Unexpected bytes in player_file_index %d", mstmp);
         assert(FALSE);
     }
 
-    if((player_id = tmp_sl) <= 0)
+    if ((player_id = tmp_sl) <= 0)
         slog(LOG_ALL, 0, "WARNING: Player ID is %d", player_id);
 }

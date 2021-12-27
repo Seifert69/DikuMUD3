@@ -37,7 +37,7 @@ int new_crime_serial_no(void)
 
     n = time(0);
 
-    if(n > crime_serial_no)
+    if (n > crime_serial_no)
     {
         crime_serial_no = n;
     }
@@ -52,13 +52,13 @@ int new_crime_serial_no(void)
 
 void offend_legal_state(class unit_data *ch, class unit_data *victim)
 {
-    if(!IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
-        if(!CHAR_COMBAT(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET))
+    if (!IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
+        if (!CHAR_COMBAT(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET))
             SET_BIT(CHAR_FLAGS(victim), CHAR_SELF_DEFENCE);
 
     /* Test for LEGAL_TARGET bit */
-    if(IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED) && !IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) &&
-       !IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
+    if (IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED) && !IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) &&
+        !IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
         SET_BIT(CHAR_FLAGS(ch), CHAR_LEGAL_TARGET);
 }
 
@@ -106,13 +106,13 @@ void add_crime(class unit_data *criminal, class unit_data *victim, int type)
     class dilprg *prg;
     int crime_no;
 
-    if(str_is_empty(UNIT_NAME(criminal)))
+    if (str_is_empty(UNIT_NAME(criminal)))
     {
         slog(LOG_ALL, 0, "JUSTICE: NULL name in criminal");
         return;
     }
 
-    if(str_is_empty(UNIT_NAME(victim)))
+    if (str_is_empty(UNIT_NAME(victim)))
     {
         slog(LOG_ALL, 0, "JUSTICE: NULL name in victim");
         return;
@@ -122,11 +122,11 @@ void add_crime(class unit_data *criminal, class unit_data *victim, int type)
 
     tmpl = find_dil_template("add_crime@justice");
 
-    if(tmpl)
+    if (tmpl)
     {
         prg = dil_copy_template(tmpl, criminal, NULL);
 
-        if(prg)
+        if (prg)
         {
             prg->waitcmd = WAITCMD_MAXINST - 1;
 
@@ -155,30 +155,30 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
     class dilprg *prg2;
     class dilprg *prg3;
 
-    if(criminal == NULL)
+    if (criminal == NULL)
     {
         slog(LOG_ALL, 0, "log_crime() NULL criminal");
         return;
     }
 
-    if(victim == NULL)
+    if (victim == NULL)
     {
         slog(LOG_ALL, 0, "log_crime() NULL victim");
         return;
     }
 
-    if(!IS_CHAR(criminal) || !IS_CHAR(victim))
+    if (!IS_CHAR(criminal) || !IS_CHAR(victim))
     {
         slog(LOG_ALL, 0, "log_crime() criminal or victim not IS_CHAR");
         return;
     }
 
     /* When victim is legal target you can't get accused from it. */
-    if(IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) && ((crime_type == CRIME_MURDER) || (crime_type == CRIME_PK)))
+    if (IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) && ((crime_type == CRIME_MURDER) || (crime_type == CRIME_PK)))
         return;
 
     // It's OK to kill NPCs that are not "protected"
-    if(IS_NPC(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
+    if (IS_NPC(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
         return;
 
     // First let's deal with registering the crime the criminal committed
@@ -186,11 +186,11 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
 
     // prepare the set_witness function
     tmpl = find_dil_template("set_witness@justice");
-    if(tmpl)
+    if (tmpl)
     {
         prg = dil_copy_template(tmpl, victim, NULL);
 
-        if(prg)
+        if (prg)
         {
             prg->waitcmd = WAITCMD_MAXINST - 1;
             prg->fp->vars[0].val.unitptr = criminal;
@@ -208,17 +208,17 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
     // Find any bystanders and register them as witnesses
     scan4_unit(victim, UNIT_ST_PC | UNIT_ST_NPC);
 
-    for(i = 0; i < unit_vector.top; i++)
+    for (i = 0; i < unit_vector.top; i++)
     {
-        if(CHAR_CAN_SEE(UVI(i), criminal))
+        if (CHAR_CAN_SEE(UVI(i), criminal))
         {
             /* set_witness(criminal, UVI(i), crime_serial_no, crime_type, active); */
             tmpl = find_dil_template("set_witness@justice");
-            if(tmpl)
+            if (tmpl)
             {
                 prg2 = dil_copy_template(tmpl, UVI(i), NULL);
 
-                if(prg2)
+                if (prg2)
                 {
                     prg2->waitcmd = WAITCMD_MAXINST - 1;
                     prg2->fp->vars[0].val.unitptr = criminal;
@@ -236,20 +236,20 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
     }
 
     // Find any CHAR fighting the victim - they are complicit to the crime
-    for(j = 0; j < unit_vector.top; j++)
+    for (j = 0; j < unit_vector.top; j++)
     {
-        if(CHAR_COMBAT(UVI(j)) && CHAR_COMBAT(UVI(j))->FindOpponent(victim) && UVI(j) != criminal)
+        if (CHAR_COMBAT(UVI(j)) && CHAR_COMBAT(UVI(j))->FindOpponent(victim) && UVI(j) != criminal)
         {
             // add_crime(UVI(j), victim, crime_type);
 
-            for(i = 0; i < unit_vector.top; i++)
+            for (i = 0; i < unit_vector.top; i++)
             {
-                if(CHAR_CAN_SEE(UVI(i), UVI(j)))
+                if (CHAR_CAN_SEE(UVI(i), UVI(j)))
                 {
                     tmpl = find_dil_template("set_witness@justice");
                     prg3 = dil_copy_template(tmpl, UVI(i), NULL);
 
-                    if(prg3)
+                    if (prg3)
                     {
                         prg3->waitcmd = WAITCMD_MAXINST - 1;
                         prg3->fp->vars[0].val.unitptr = criminal;
@@ -1072,7 +1072,7 @@ int reward_give(struct spec_arg *sarg)
     std::string buf;
     currency_t cur;
 
-    if(!is_command(sarg->cmd, "give"))
+    if (!is_command(sarg->cmd, "give"))
         return SFR_SHARE;
 
     u = UNIT_CONTAINS(sarg->owner);
@@ -1081,10 +1081,10 @@ int reward_give(struct spec_arg *sarg)
     buf = buf + (char *)sarg->arg;
     command_interpreter(sarg->activator, (const char *)buf.c_str());
 
-    if(UNIT_CONTAINS(sarg->owner) == u) /* Was it given nothing? */
+    if (UNIT_CONTAINS(sarg->owner) == u) /* Was it given nothing? */
         return SFR_BLOCK;
 
-    if((paf = affected_by_spell(UNIT_CONTAINS(sarg->owner), ID_REWARD)) == NULL)
+    if ((paf = affected_by_spell(UNIT_CONTAINS(sarg->owner), ID_REWARD)) == NULL)
     {
         act("$1n says, 'Thank you $3n, that is very nice of you.'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
         return SFR_BLOCK;
@@ -1094,7 +1094,7 @@ int reward_give(struct spec_arg *sarg)
 
     cur = local_currency(sarg->owner);
 
-    if(IS_PC(sarg->activator))
+    if (IS_PC(sarg->activator))
         gain_exp(sarg->activator, MIN(level_xp(CHAR_LEVEL(sarg->activator)), paf->data[0]));
 
     money_to_unit(sarg->activator, paf->data[1], cur);

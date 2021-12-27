@@ -75,9 +75,9 @@ char_data::char_data(void)
 char_data::~char_data(void)
 {
 #ifdef DMSERVER
-    if(money)
+    if (money)
         FREE(money);
-    if(last_attacker)
+    if (last_attacker)
         FREE(last_attacker);
 #endif
     world_nochars--;
@@ -99,8 +99,8 @@ room_data::~room_data(void)
 {
     world_norooms--;
 
-    for(int i = 0; i < MAX_EXIT + 1; i++)
-        if(dir_option[i])
+    for (int i = 0; i < MAX_EXIT + 1; i++)
+        if (dir_option[i])
             delete dir_option[i];
 }
 
@@ -171,16 +171,16 @@ pc_data::~pc_data(void)
 {
     world_nopc--;
 
-    if(guild)
+    if (guild)
         FREE(guild);
 
-    if(hometown)
+    if (hometown)
         FREE(hometown);
 
-    if(bank)
+    if (bank)
         FREE(bank);
 
-    if(promptstr)
+    if (promptstr)
         FREE(promptstr);
 }
 
@@ -222,23 +222,23 @@ zone_type::zone_type(void)
 
 zone_type::~zone_type(void)
 {
-    if(name)
+    if (name)
         FREE(name);
 
-    if(title)
+    if (title)
         FREE(title);
 
-    if(notes)
+    if (notes)
         FREE(notes);
 
-    if(help)
+    if (help)
         FREE(help);
 
-    if(filename)
+    if (filename)
         FREE(filename);
     class unit_data *ut, *nextut;
 
-    for(ut = objects; ut; ut = nextut)
+    for (ut = objects; ut; ut = nextut)
     {
         nextut = ut->next;
         ut->next = NULL;
@@ -247,7 +247,7 @@ zone_type::~zone_type(void)
         delete ut;
     }
 
-    for(ut = npcs; ut; ut = nextut)
+    for (ut = npcs; ut; ut = nextut)
     {
         nextut = ut->next;
         ut->next = NULL;
@@ -257,7 +257,7 @@ zone_type::~zone_type(void)
     }
 
     auto nextfi = mmp_fi.begin();
-    for(auto p = mmp_fi.begin(); p != mmp_fi.end(); p = nextfi)
+    for (auto p = mmp_fi.begin(); p != mmp_fi.end(); p = nextfi)
     {
         nextfi = p;
         nextfi++;
@@ -267,7 +267,7 @@ zone_type::~zone_type(void)
 
     struct zone_reset_cmd *pzri, *nextzri;
 
-    for(pzri = zri; pzri; pzri = nextzri)
+    for (pzri = zri; pzri; pzri = nextzri)
     {
         nextzri = pzri->next;
         FREE(pzri);
@@ -275,18 +275,18 @@ zone_type::~zone_type(void)
 
     auto nextpt = mmp_tmpl.begin();
 
-    for(auto pt = mmp_tmpl.begin(); pt != mmp_tmpl.end(); pt = nextpt)
+    for (auto pt = mmp_tmpl.begin(); pt != mmp_tmpl.end(); pt = nextpt)
     {
         nextpt = pt;
         nextpt++;
 
-        if(pt->second->prgname)
+        if (pt->second->prgname)
             FREE(pt->second->prgname);
-        if(pt->second->argt)
+        if (pt->second->argt)
             FREE(pt->second->argt);
-        if(pt->second->core)
+        if (pt->second->core)
             FREE(pt->second->core);
-        if(pt->second->vart)
+        if (pt->second->vart)
             FREE(pt->second->vart);
 
         FREE(pt->second);
@@ -295,7 +295,7 @@ zone_type::~zone_type(void)
     // struct bin_search_type *ba;    /* Pointer to binarray of type      */
     // struct diltemplate *tmpl;      /* DIL templates in zone            */
     // struct bin_search_type *tmplba;/* Pointer to binarray of type      */
-    if(spmatrix)
+    if (spmatrix)
         FREE(spmatrix);
 }
 
@@ -322,7 +322,7 @@ file_index_type::file_index_type(void)
 
 file_index_type::~file_index_type(void)
 {
-    if(name)
+    if (name)
         FREE(name);
 }
 
@@ -381,7 +381,7 @@ unit_data *unit_data::copy()
     UNIT_IN_DESCR(u) = UNIT_IN_DESCR(this);
     UNIT_EXTRA(u).copyfrom(UNIT_EXTRA(this));
 
-    if(IS_ROOM(this))
+    if (IS_ROOM(this))
     {
         room_data *thisroom = UROOM(this);
         room_data *uroom = UROOM(u);
@@ -389,7 +389,7 @@ unit_data *unit_data::copy()
         uroom->resistance = thisroom->resistance;
         uroom->movement_type = thisroom->movement_type;
         uroom->flags = thisroom->flags;
-        for(x = 0; x < MAX_EXIT + 1; x++)
+        for (x = 0; x < MAX_EXIT + 1; x++)
         {
             uroom->dir_option[x]->open_name = thisroom->dir_option[x]->open_name;
             uroom->dir_option[x]->key = str_dup(thisroom->dir_option[x]->key);
@@ -397,12 +397,12 @@ unit_data *unit_data::copy()
             uroom->dir_option[x]->difficulty = thisroom->dir_option[x]->difficulty;
         }
     }
-    else if(IS_OBJ(this))
+    else if (IS_OBJ(this))
     {
         obj_data *thisobj = UOBJ(this);
         obj_data *uobj = UOBJ(u);
 
-        for(x = 0; x < 5; x++)
+        for (x = 0; x < 5; x++)
         {
             uobj->value[x] = thisobj->value[x];
         }
@@ -414,7 +414,7 @@ unit_data *unit_data::copy()
         uobj->equip_pos = thisobj->equip_pos;
         uobj->resistance = thisobj->resistance;
     }
-    else if(IS_CHAR(this))
+    else if (IS_CHAR(this))
     {
         CHAR_FLAGS(u) = CHAR_FLAGS(this);
         CHAR_EXP(u) = CHAR_EXP(this);
@@ -429,22 +429,22 @@ unit_data *unit_data::copy()
         CHAR_SEX(u) = CHAR_SEX(this);
         CHAR_LEVEL(u) = CHAR_LEVEL(this);
         CHAR_POS(u) = CHAR_POS(this);
-        for(x = 0; x < ABIL_TREE_MAX; x++)
+        for (x = 0; x < ABIL_TREE_MAX; x++)
         {
             CHAR_ABILITY(u, x) = CHAR_ABILITY(this, x);
         }
-        if(IS_PC(this))
+        if (IS_PC(this))
         {
             ;
             // Put in PC Copy stuff here
         }
         else
         {
-            for(x = 0; x < WPN_GROUP_MAX; x++)
+            for (x = 0; x < WPN_GROUP_MAX; x++)
             {
                 U_NPC(u)->weapons[x] = U_NPC(this)->weapons[x];
             }
-            for(x = 0; x < SPL_GROUP_MAX; x++)
+            for (x = 0; x < SPL_GROUP_MAX; x++)
             {
                 U_NPC(u)->spells[x] = U_NPC(this)->spells[x];
             }
@@ -466,13 +466,13 @@ unit_data *unit_data::copy()
 
 unit_data *new_unit_data(ubit8 type)
 {
-    if(type == UNIT_ST_ROOM)
+    if (type == UNIT_ST_ROOM)
         return new EMPLACE(room_data) room_data;
-    else if(type == UNIT_ST_OBJ)
+    else if (type == UNIT_ST_OBJ)
         return new EMPLACE(obj_data) obj_data;
-    else if(type == UNIT_ST_PC)
+    else if (type == UNIT_ST_PC)
         return new EMPLACE(pc_data) pc_data;
-    else if(type == UNIT_ST_NPC)
+    else if (type == UNIT_ST_NPC)
         return new EMPLACE(npc_data) npc_data;
     else
         assert(FALSE);
@@ -522,26 +522,26 @@ unit_data::~unit_data(void)
     assert(unit_list != this);
 #endif
 
-    if(key)
+    if (key)
         FREE(key);
 #ifdef DMSERVER
-    while(UNIT_FUNC(this))
+    while (UNIT_FUNC(this))
         destroy_fptr(this, UNIT_FUNC(this)); /* Unlinks, no free */
 
-    while(UNIT_AFFECTED(this))
+    while (UNIT_AFFECTED(this))
         unlink_affect(UNIT_AFFECTED(this));
 #endif
 
     /* Call functions of the unit which have any data                     */
     /* that they might want to work on.                                   */
 
-    if(IS_OBJ(this))
+    if (IS_OBJ(this))
         delete U_OBJ(this);
-    else if(IS_ROOM(this))
+    else if (IS_ROOM(this))
         delete U_ROOM(this);
-    else if(IS_CHAR(this))
+    else if (IS_CHAR(this))
     {
-        if(IS_NPC(this))
+        if (IS_NPC(this))
             delete U_NPC(this);
         else
             delete U_PC(this);
@@ -556,7 +556,7 @@ void unit_data::set_fi(class file_index_type *f)
 {
     assert(f);
 
-    if(this->fi)
+    if (this->fi)
         slog(LOG_ALL, 0, "ERROR: FI was already set. This shouldn't happen");
 
     this->fi = f;
@@ -615,7 +615,7 @@ std::string unit_data::json(void)
     s.append(str_json("alignment", this->alignment));
     s.append(",\n");
 
-    if(UNIT_TYPE(this) == UNIT_ST_ROOM)
+    if (UNIT_TYPE(this) == UNIT_ST_ROOM)
     {
         s.append("\"room\": {\n");
         s.append(str_json("roomflags", UROOM(this)->flags));
@@ -628,14 +628,14 @@ std::string unit_data::json(void)
         s.append(",\n");
         s.append(str_json("mapy", UROOM(this)->mapy));
 
-        for(int i = 0; i < MAX_EXIT + 1; i++)
+        for (int i = 0; i < MAX_EXIT + 1; i++)
         {
-            if(UROOM(this)->dir_option[i])
+            if (UROOM(this)->dir_option[i])
             {
                 s.append(",\n");
                 s.append(str_json_encode_quote(dirs[i]));
                 s.append(": {\n");
-                if(UROOM(this)->dir_option[i]->to_room)
+                if (UROOM(this)->dir_option[i]->to_room)
                 {
                     t = UNIT_FI_NAME(ROOM_EXIT(this, i)->to_room);
                     t.append("@");

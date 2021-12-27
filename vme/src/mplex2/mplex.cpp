@@ -114,15 +114,15 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
     arg->bWebSockets = FALSE;
     log_name = str_dup("./mplex.log");
 
-    for(i = 1; i < argc; i++)
+    for (i = 1; i < argc; i++)
     {
-        if(argv[i][0] != '-')
+        if (argv[i][0] != '-')
         {
             fprintf(stderr, "Illegal argument '%s'.\n", argv[i]);
             ShowUsage(argv[0]);
         }
 
-        switch(argv[i][1])
+        switch (argv[i][1])
         {
             case 'h':
             case '?':
@@ -167,7 +167,7 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
 
                 c = argv[i];
 
-                if(!isdigit(c[0]))
+                if (!isdigit(c[0]))
                 {
                     pHostInfo = gethostbyname(c);
                     Assert(pHostInfo != NULL, "Could not lookup address.");
@@ -203,7 +203,7 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
     }
     log_file_fd = fopen(log_name, "w");
 
-    if(!log_file_fd)
+    if (!log_file_fd)
     {
         fprintf(stderr, "Failed to open Log file:  %s", log_name);
         free(log_name);
@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
 
     assert(i++ == 0); /* Make sure we dont call ourselves... cheap hack! :) */
 
-    if(!ParseArg(argc, argv, &mplex_arg))
+    if (!ParseArg(argc, argv, &mplex_arg))
         exit(0);
 
 #ifndef _WINDOWS
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
 
     slog(LOG_OFF, 0, "Opening mother connection on port %d.", mplex_arg.nMotherPort);
 
-    if(mplex_arg.bWebSockets)
+    if (mplex_arg.bWebSockets)
     {
         /* MS2020 Websockets test hack */
         void runechoserver(void);
@@ -254,7 +254,7 @@ int main(int argc, char *argv[])
         fd = OpenMother(mplex_arg.nMotherPort);
         Assert(fd != -1, "NO MOTHER CONNECTION.");
 
-        if(MotherHook.tfd() != -1)
+        if (MotherHook.tfd() != -1)
             slog(LOG_ALL, 0, "Hook() in main called with a non -1 fd.");
 
         CaptainHook.Hook(fd, &MotherHook);

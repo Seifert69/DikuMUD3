@@ -97,7 +97,7 @@ int getrlimit(int, struct rlimit *);
 // Need this to be sure the typedefs are right for 64 bit architecture (MS2020)
 void type_validate_64(void)
 {
-    if(sizeof(void *) == 8)
+    if (sizeof(void *) == 8)
         slog(LOG_ALL, 0, "Running 64-bit mode");
     else
         slog(LOG_ALL, 0, "Running 32-bit mode");
@@ -120,16 +120,16 @@ int main(int argc, char **argv)
     int pos = 1;
 
     tempcfg = getenv("VME_SERVER_CFG");
-    if(tempcfg)
+    if (tempcfg)
         strcpy(srvcfg, tempcfg);
     else
         strcpy(srvcfg, "../etc/server.cfg"); // MS2020 add a default...
 
     log_name = str_dup("./vme.log");
 
-    while((pos < argc) && (*(argv[pos]) == '-'))
+    while ((pos < argc) && (*(argv[pos]) == '-'))
     {
-        switch(*(argv[pos] + 1))
+        switch (*(argv[pos] + 1))
         {
             case '?':
             case 'h':
@@ -152,9 +152,9 @@ int main(int argc, char **argv)
                 break;
 
             case 's':
-                if(*(argv[pos] + 2))
+                if (*(argv[pos] + 2))
                     strcpy(srvcfg, argv[pos] + 2);
-                else if(++pos < argc)
+                else if (++pos < argc)
                     strcpy(srvcfg, argv[pos]);
                 else
                 {
@@ -164,12 +164,12 @@ int main(int argc, char **argv)
                 break;
 
             case 'l':
-                if(*(argv[pos] + 2))
+                if (*(argv[pos] + 2))
                 {
                     FREE(log_name);
                     log_name = str_dup(argv[pos] + 2);
                 }
-                else if(++pos < argc)
+                else if (++pos < argc)
                 {
                     FREE(log_name);
                     log_name = str_dup(argv[pos]);
@@ -188,15 +188,15 @@ int main(int argc, char **argv)
         pos++;
     }
 
-    if(pos < argc)
-        if(!isdigit(*argv[pos]))
+    if (pos < argc)
+        if (!isdigit(*argv[pos]))
         {
             ShowUsage(argv[0]);
             exit(6);
         }
 
     log_file_fd = freopen(log_name, "w", stderr);
-    if(!log_file_fd)
+    if (!log_file_fd)
     {
         fprintf(stderr, "Error in opening the log:  '%s'", log_name);
         free(log_name);
@@ -316,7 +316,7 @@ void run_the_game(char *srvcfg)
     void db_shutdown(void);
     db_shutdown();
 
-    if(mud_reboot)
+    if (mud_reboot)
     {
         slog(LOG_OFF, 0, "Rebooting.");
         exit(42);
@@ -339,7 +339,7 @@ void game_loop()
     tics = 61;
     gettimeofday(&old, (struct timezone *)0);
 
-    while(!mud_shutdown)
+    while (!mud_shutdown)
     {
         /* work */
         game_event();
@@ -361,7 +361,7 @@ void game_loop()
 
         old = now;
 
-        if(delay > 0)
+        if (delay > 0)
         {
             usleep(delay);
             old.tv_usec += delay; /* This time has passed in usleep. Overrun is not important. */
@@ -369,11 +369,11 @@ void game_loop()
     }
 
     slog(LOG_ALL, 0, "Saving all players before exiting");
-    for(d = descriptor_list; d; d = d->next)
+    for (d = descriptor_list; d; d = d->next)
     {
-        if(d->original != NULL)
+        if (d->original != NULL)
         {
-            if(IS_PC(d->original) && UNIT_IN(d->original))
+            if (IS_PC(d->original) && UNIT_IN(d->original))
             {
                 slog(LOG_ALL, 0, "Saving %s.", UNIT_NAME(d->original));
                 save_player(d->original);
@@ -382,7 +382,7 @@ void game_loop()
         }
         else
         {
-            if(IS_PC(d->character) && UNIT_IN(d->character))
+            if (IS_PC(d->character) && UNIT_IN(d->character))
             {
                 slog(LOG_ALL, 0, "Saving %s.", UNIT_NAME(d->character));
                 save_player(d->character);
@@ -410,18 +410,18 @@ void game_event(void)
 
     i = CaptainHook.Wait(&null_time);
 
-    if(i < 0)
+    if (i < 0)
     {
         slog(LOG_ALL, 0, "Captain Hook error %d", i);
         return;
     }
 
     /* process_commands; */
-    for(point = descriptor_list; point; point = next_to_process)
+    for (point = descriptor_list; point; point = next_to_process)
     {
         next_to_process = point->next;
 
-        if(--(point->wait) <= 0 && !point->qInput.IsEmpty())
+        if (--(point->wait) <= 0 && !point->qInput.IsEmpty())
         {
             class cQueueElem *qe = point->qInput.GetHead();
             pcomm = (char *)qe->Data();
@@ -432,7 +432,7 @@ void game_event(void)
             point->timer = 0;
             point->prompt_mode = PROMPT_EXPECT;
 
-            if(point->snoop.snoop_by)
+            if (point->snoop.snoop_by)
             {
                 char buffer[MAX_INPUT_LENGTH + 10];
                 sprintf(buffer, "%s%s<br/>", SNOOP_PROMPT, pcomm);
@@ -445,9 +445,9 @@ void game_event(void)
     }
 
     /* give the people some prompts */
-    for(point = descriptor_list; point; point = point->next)
+    for (point = descriptor_list; point; point = point->next)
     {
-        if(point->prompt_mode == PROMPT_EXPECT)
+        if (point->prompt_mode == PROMPT_EXPECT)
         {
             send_prompt(point->character);
             point->prompt_mode = PROMPT_IGNORE;
@@ -513,35 +513,35 @@ void check_overpopulation_event(void *p1, void *p2)
     int i;
     int nUnits = 0;
 
-    for(u = unit_list; u; u = u->gnext)
+    for (u = unit_list; u; u = u->gnext)
     {
         membug_verify_class(u);
         nUnits++;
         // Make sure it's not a player
         t = u;
-        while(t)
+        while (t)
         {
-            if(UNIT_TYPE(t) == UNIT_ST_PC)
+            if (UNIT_TYPE(t) == UNIT_ST_PC)
                 break;
             t = UNIT_IN(t);
         }
-        if(t)
+        if (t)
             continue; // If it's inside a player, skip
 
         i = 0;
-        for(t = UNIT_CONTAINS(u); t; t = t->next) // count top layer
+        for (t = UNIT_CONTAINS(u); t; t = t->next) // count top layer
             i++;
 
-        if(i >= 50)
+        if (i >= 50)
         {
             slog(LOG_ALL, 0, "Too many items in %s@%s(%s) : %d units", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), unit_trace_up(u).c_str(), i);
 
             struct diltemplate *worms;
             worms = find_dil_template("worms@basis");
-            if(worms)
+            if (worms)
             {
                 class dilprg *prg = dil_copy_template(worms, u, NULL);
-                if(prg)
+                if (prg)
                 {
                     prg->waitcmd = WAITCMD_MAXINST - 1;
                     dil_activate(prg);
@@ -554,7 +554,7 @@ void check_overpopulation_event(void *p1, void *p2)
 
 void check_reboot_event(void *p1, void *p2)
 {
-    if(check_reboot() == 1)
+    if (check_reboot() == 1)
     {
         events.add(PULSE_SEC * SECS_PER_REAL_MIN * 2, check_reboot_event, 0, 0);
     }
@@ -571,12 +571,12 @@ struct timeval timediff(struct timeval *a, struct timeval *b)
 
     tmp = *a;
 
-    if((rslt.tv_usec = tmp.tv_usec - b->tv_usec) < 0)
+    if ((rslt.tv_usec = tmp.tv_usec - b->tv_usec) < 0)
     {
         rslt.tv_usec += 1000000;
         --(tmp.tv_sec);
     }
-    if(tmp.tv_sec - b->tv_sec < 0)
+    if (tmp.tv_sec - b->tv_sec < 0)
     {
         rslt.tv_usec = 0;
         rslt.tv_sec = 0;

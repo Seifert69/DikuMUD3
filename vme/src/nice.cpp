@@ -33,10 +33,10 @@ int check_reboot(void)
 
     tc = time(0);
     t_info = localtime(&tc);
-    if(count < 12)
+    if (count < 12)
     {
         count -= 2;
-        if(count > 0)
+        if (count > 0)
         {
             sprintf(buf,
                     "ATTENTION: %s will automaticly reboot "
@@ -55,7 +55,7 @@ int check_reboot(void)
         }
     }
 
-    if((t_info->tm_hour + 1) == g_cServerConfig.m_hReboot && (t_info->tm_min > 49))
+    if ((t_info->tm_hour + 1) == g_cServerConfig.m_hReboot && (t_info->tm_min > 49))
     {
         count -= 2;
         sprintf(buf,

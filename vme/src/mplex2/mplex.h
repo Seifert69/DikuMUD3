@@ -29,12 +29,12 @@ struct arg_type
 #define Assert(a, b)                                                                                                                       \
     do                                                                                                                                     \
     {                                                                                                                                      \
-        if(!(a))                                                                                                                           \
+        if (!(a))                                                                                                                          \
         {                                                                                                                                  \
             fprintf(stderr, "%s\n", b);                                                                                                    \
             assert(a);                                                                                                                     \
         }                                                                                                                                  \
-    } while(0);
+    } while (0);
 
 extern int g_bHadAlarm;
 extern struct arg_type mplex_arg;

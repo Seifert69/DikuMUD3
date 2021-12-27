@@ -54,7 +54,7 @@ int OpenMother(int nPort)
 
         wVersionRequested = MAKEWORD(1, 1);
 
-        if(WSAStartup(wVersionRequested, &wsaData) != 0)
+        if (WSAStartup(wVersionRequested, &wsaData) != 0)
         {
             slog(LOG_ALL, 0, "SYSERR: WinSock not available!");
             exit(1);
@@ -63,7 +63,7 @@ int OpenMother(int nPort)
 #endif
     fdMother = socket(AF_INET, SOCK_STREAM, 0);
 
-    if(fdMother == -1)
+    if (fdMother == -1)
     {
         slog(LOG_OFF, 0, "Can't open Mother Connection");
         exit(1);
@@ -75,7 +75,7 @@ int OpenMother(int nPort)
     n = ioctlsocket(fdMother, FIONBIO, &val);
 #endif
 
-    if(n == -1)
+    if (n == -1)
     {
 #ifdef _WINDOWS
         closesocket(fdMother);
@@ -87,7 +87,7 @@ int OpenMother(int nPort)
     }
 
     n = 1;
-    if(setsockopt(fdMother, SOL_SOCKET, SO_REUSEADDR, (char *)&n, sizeof(n)) < 0)
+    if (setsockopt(fdMother, SOL_SOCKET, SO_REUSEADDR, (char *)&n, sizeof(n)) < 0)
     {
 #ifdef _WINDOWS
         closesocket(fdMother);
@@ -101,7 +101,7 @@ int OpenMother(int nPort)
     ld.l_onoff = 0;
     ld.l_linger = 1000;
 
-    if(setsockopt(fdMother, SOL_SOCKET, SO_LINGER, (char *)&ld, sizeof(ld)) < 0)
+    if (setsockopt(fdMother, SOL_SOCKET, SO_LINGER, (char *)&ld, sizeof(ld)) < 0)
     {
 #ifdef _WINDOWS
         closesocket(fdMother);
@@ -114,7 +114,7 @@ int OpenMother(int nPort)
 
     n = bind(fdMother, (struct sockaddr *)&server_addr, sizeof(struct sockaddr_in));
 
-    if(n != 0)
+    if (n != 0)
     {
 #ifdef _WINDOWS
         closesocket(fdMother);
@@ -127,7 +127,7 @@ int OpenMother(int nPort)
 
     n = listen(fdMother, 5);
 
-    if(n != 0)
+    if (n != 0)
     {
 #ifdef _WINDOWS
         closesocket(fdMother);
@@ -157,7 +157,7 @@ int OpenNetwork(int nPort, char *pcAddress)
 
     fdClient = socket(AF_INET, SOCK_STREAM, 0);
 
-    if(fdClient == -1)
+    if (fdClient == -1)
     {
         slog(LOG_OFF, 0, "No TCP/IP connection to server.");
         return -1;
@@ -165,7 +165,7 @@ int OpenNetwork(int nPort, char *pcAddress)
 
     n = connect(fdClient, (struct sockaddr *)&server_addr, sizeof(struct sockaddr_in));
 
-    if(n == -1)
+    if (n == -1)
     {
 #ifdef _WINDOWS
         closesocket(fdClient);
@@ -181,7 +181,7 @@ int OpenNetwork(int nPort, char *pcAddress)
 #else
     n = fcntl(fdClient, F_SETFL, FNDELAY);
 #endif
-    if(n == -1)
+    if (n == -1)
     {
 #ifdef _WINDOWS
         closesocket(fdClient);
@@ -199,7 +199,7 @@ int OpenNetwork(int nPort, char *pcAddress)
     int i;
     n = setsockopt(fdClient, IPPROTO_TCP, TCP_NODELAY, &i, sizeof(i));
 #endif
-    if(n == -1)
+    if (n == -1)
     {
 #ifdef _WINDOWS
         closesocket(fdClient);

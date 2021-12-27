@@ -43,7 +43,7 @@ void membug_verify(void *ptr)
     size_t size;
     char *p = (char *)ptr;
 
-    if(!ptr)
+    if (!ptr)
         return;
 
     p -= 12;
@@ -54,12 +54,12 @@ void membug_verify(void *ptr)
     p = (char *)ptr;
     p -= 12;
 
-    for(size_t i = 0; i < 8; i++)
+    for (size_t i = 0; i < 8; i++)
     {
         assert((p[i] == cpp_pattern[i]) || (p[i] == creg_pattern[i]));
     }
 
-    for(size_t i = 0; i < 8; i++)
+    for (size_t i = 0; i < 8; i++)
     {
         assert((p[size - 8 + i] == cpp_pattern[i]) || (p[size - 8 + i] == creg_pattern[i]));
     }
@@ -80,13 +80,13 @@ void membug_setfree_class(void *ptr)
     p = (char *)ptr;
     p -= 12;
 
-    for(size_t i = 0; i < 8; i++)
+    for (size_t i = 0; i < 8; i++)
     {
         assert(p[i] == cpp_pattern[i]);
         p[i] = cpp_free_pattern[i];
     }
 
-    for(size_t i = 0; i < 8; i++)
+    for (size_t i = 0; i < 8; i++)
     {
         assert(p[size - 8 + i] == cpp_pattern[i]);
         p[size - 8 + i] = cpp_free_pattern[i];
@@ -99,7 +99,7 @@ void membug_verify_class(void *ptr)
     size_t size;
     char *p = (char *)ptr;
 
-    if(!ptr)
+    if (!ptr)
         return;
 
     p -= 12;
@@ -110,12 +110,12 @@ void membug_verify_class(void *ptr)
     p = (char *)ptr;
     p -= 12;
 
-    for(size_t i = 0; i < 8; i++)
+    for (size_t i = 0; i < 8; i++)
     {
         assert(p[i] == cpp_pattern[i]);
     }
 
-    for(size_t i = 0; i < 8; i++)
+    for (size_t i = 0; i < 8; i++)
     {
         assert(p[size - 8 + i] == cpp_pattern[i]);
     }
@@ -170,13 +170,13 @@ void membug_setfree_reg(void *ptr)
     p = (char *)ptr;
     p -= 12;
 
-    for(size_t i = 0; i < 8; i++)
+    for (size_t i = 0; i < 8; i++)
     {
         assert(p[i] == creg_pattern[i]);
         p[i] = creg_free_pattern[i];
     }
 
-    for(size_t i = 0; i < 8; i++)
+    for (size_t i = 0; i < 8; i++)
     {
         assert(p[size - 8 + i] == creg_pattern[i]);
         p[size - 8 + i] = creg_free_pattern[i];
@@ -189,7 +189,7 @@ void membug_verify_reg(void *ptr)
     size_t size;
     char *p = (char *)ptr;
 
-    if(!ptr)
+    if (!ptr)
         return;
 
     p -= 12;
@@ -200,12 +200,12 @@ void membug_verify_reg(void *ptr)
     p = (char *)ptr;
     p -= 12;
 
-    for(size_t i = 0; i < 8; i++)
+    for (size_t i = 0; i < 8; i++)
     {
         assert(p[i] == creg_pattern[i]);
     }
 
-    for(size_t i = 0; i < 8; i++)
+    for (size_t i = 0; i < 8; i++)
     {
         assert(p[size - 8 + i] == creg_pattern[i]);
     }

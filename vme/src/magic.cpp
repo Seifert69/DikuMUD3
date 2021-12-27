@@ -35,35 +35,35 @@ int dil_effect(char *pStr, struct spell_args *sa)
 {
     int run_dil(struct spec_arg * sarg);
 
-    if(str_is_empty(pStr))
+    if (str_is_empty(pStr))
         return FALSE;
 
     struct diltemplate *tmpl;
 
     tmpl = find_dil_template(pStr);
 
-    if(tmpl == NULL)
+    if (tmpl == NULL)
         return FALSE;
 
-    if(tmpl->argc != 3)
+    if (tmpl->argc != 3)
     {
         slog(LOG_ALL, 0, "Spell DIL effect wrong arg count.");
         return FALSE;
     }
 
-    if(tmpl->argt[0] != DILV_UP)
+    if (tmpl->argt[0] != DILV_UP)
     {
         slog(LOG_ALL, 0, "Spell DIL effect arg 1 mismatch.");
         return FALSE;
     }
 
-    if(tmpl->argt[1] != DILV_UP)
+    if (tmpl->argt[1] != DILV_UP)
     {
         slog(LOG_ALL, 0, "Spell DIL effect arg 2 mismatch.");
         return FALSE;
     }
 
-    if(tmpl->argt[2] != DILV_INT)
+    if (tmpl->argt[2] != DILV_INT)
     {
         slog(LOG_ALL, 0, "Spell DIL effect arg 3 mismatch.");
         return FALSE;
@@ -73,7 +73,7 @@ int dil_effect(char *pStr, struct spell_args *sa)
     class unit_fptr *fptr;
 
     prg = dil_copy_template(tmpl, sa->caster, &fptr);
-    if(prg)
+    if (prg)
     {
         prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
 
@@ -109,9 +109,9 @@ int dil_effect(char *pStr, struct spell_args *sa)
 /* wands and staffs uses one charge, no matter what 'mana' is. --HHS */
 ubit1 use_mana(class unit_data *medium, int mana)
 {
-    if(IS_CHAR(medium))
+    if (IS_CHAR(medium))
     {
-        if(CHAR_MANA(medium) >= mana)
+        if (CHAR_MANA(medium) >= mana)
         {
             CHAR_MANA(medium) -= mana;
             return TRUE;
@@ -119,13 +119,13 @@ ubit1 use_mana(class unit_data *medium, int mana)
         else
             return FALSE;
     }
-    else if(IS_OBJ(medium))
+    else if (IS_OBJ(medium))
     {
-        switch(OBJ_TYPE(medium))
+        switch (OBJ_TYPE(medium))
         {
             case ITEM_STAFF:
             case ITEM_WAND:
-                if(OBJ_VALUE(medium, 1))
+                if (OBJ_VALUE(medium, 1))
                 {
                     --OBJ_VALUE(medium, 1);
                     return TRUE;
@@ -145,25 +145,25 @@ ubit1 cast_magic_now(class unit_data *ch, int mana)
 {
     int hleft, sleft;
 
-    if(CHAR_MANA(ch) > mana)
+    if (CHAR_MANA(ch) > mana)
     {
-        if(UNIT_MAX_HIT(ch) <= 0)
+        if (UNIT_MAX_HIT(ch) <= 0)
             hleft = 0;
         else
             hleft = (100 * UNIT_HIT(ch)) / UNIT_MAX_HIT(ch);
 
         sleft = mana ? CHAR_MANA(ch) / mana : 20;
 
-        if(sleft >= 5)
+        if (sleft >= 5)
             return TRUE;
 
-        if(hleft >= 95)
+        if (hleft >= 95)
             return FALSE;
-        else if(hleft > 80) /* Small chance, allow heal to be possible */
+        else if (hleft > 80) /* Small chance, allow heal to be possible */
             return (number(1, MAX(1, 16 - 2 * sleft)) == 1);
-        else if(hleft > 50)
+        else if (hleft > 50)
             return (number(1, MAX(1, 6 - sleft)) == 1);
-        else if(hleft > 40)
+        else if (hleft > 40)
             return (number(1, MAX(1, 4 - sleft)) == 1);
         else
             return TRUE;
@@ -184,11 +184,11 @@ int variation(int num, int d, int u)
 /* i.e. if a player is allowed to transfer out of jail, etc.           */
 ubit1 may_teleport_away(class unit_data *unit)
 {
-    if(IS_SET(UNIT_FLAGS(unit), UNIT_FL_NO_TELEPORT))
+    if (IS_SET(UNIT_FLAGS(unit), UNIT_FL_NO_TELEPORT))
         return FALSE;
 
-    while((unit = UNIT_IN(unit)))
-        if(IS_SET(UNIT_FLAGS(unit), UNIT_FL_NO_TELEPORT))
+    while ((unit = UNIT_IN(unit)))
+        if (IS_SET(UNIT_FLAGS(unit), UNIT_FL_NO_TELEPORT))
             return FALSE;
 
     return TRUE;
@@ -197,15 +197,15 @@ ubit1 may_teleport_away(class unit_data *unit)
 /* See if unit is allowed to be transferred to 'dest' */
 ubit1 may_teleport_to(class unit_data *unit, class unit_data *dest)
 {
-    if(unit == dest || IS_SET(UNIT_FLAGS(dest), UNIT_FL_NO_TELEPORT) || unit_recursive(unit, dest) ||
-       UNIT_WEIGHT(unit) + UNIT_WEIGHT(dest) > UNIT_CAPACITY(dest))
+    if (unit == dest || IS_SET(UNIT_FLAGS(dest), UNIT_FL_NO_TELEPORT) || unit_recursive(unit, dest) ||
+        UNIT_WEIGHT(unit) + UNIT_WEIGHT(dest) > UNIT_CAPACITY(dest))
         return FALSE;
 
     do
     {
-        if(IS_SET(UNIT_FLAGS(dest), UNIT_FL_NO_TELEPORT))
+        if (IS_SET(UNIT_FLAGS(dest), UNIT_FL_NO_TELEPORT))
             return FALSE;
-    } while((dest = UNIT_IN(dest)));
+    } while ((dest = UNIT_IN(dest)));
 
     return TRUE;
 }
@@ -220,9 +220,9 @@ ubit1 may_teleport(class unit_data *unit, class unit_data *dest)
 
 int object_power(class unit_data *unit)
 {
-    if(IS_OBJ(unit))
+    if (IS_OBJ(unit))
     {
-        if(OBJ_TYPE(unit) == ITEM_POTION || OBJ_TYPE(unit) == ITEM_SCROLL || OBJ_TYPE(unit) == ITEM_WAND || OBJ_TYPE(unit) == ITEM_STAFF)
+        if (OBJ_TYPE(unit) == ITEM_POTION || OBJ_TYPE(unit) == ITEM_SCROLL || OBJ_TYPE(unit) == ITEM_WAND || OBJ_TYPE(unit) == ITEM_STAFF)
             return OBJ_VALUE(unit, 0);
         else
             return OBJ_RESISTANCE(unit);
@@ -233,7 +233,7 @@ int object_power(class unit_data *unit)
 
 int room_power(class unit_data *unit)
 {
-    if(IS_ROOM(unit))
+    if (IS_ROOM(unit))
         return ROOM_RESISTANCE(unit);
     else
         return 0;
@@ -246,42 +246,42 @@ int spell_defense_skill(class unit_data *unit, int spell)
 {
     int max;
 
-    if(IS_PC(unit))
+    if (IS_PC(unit))
     {
-        if(TREE_ISLEAF(g_SplColl.tree, spell))
+        if (TREE_ISLEAF(g_SplColl.tree, spell))
             max = PC_SPL_SKILL(unit, spell) / 2;
         else
             max = PC_SPL_SKILL(unit, spell);
 
-        while(!TREE_ISROOT(g_SplColl.tree, spell))
+        while (!TREE_ISROOT(g_SplColl.tree, spell))
         {
             spell = TREE_PARENT(g_SplColl.tree, spell);
 
-            if(PC_SPL_SKILL(unit, spell) > max)
+            if (PC_SPL_SKILL(unit, spell) > max)
                 max = PC_SPL_SKILL(unit, spell);
         }
 
         return max;
     }
 
-    if(IS_OBJ(unit))
+    if (IS_OBJ(unit))
         return object_power(unit); //  Philosophical... / 2 ?
 
-    if(IS_NPC(unit))
+    if (IS_NPC(unit))
     {
-        if(TREE_ISLEAF(g_SplColl.tree, spell))
+        if (TREE_ISLEAF(g_SplColl.tree, spell))
             spell = TREE_PARENT(g_SplColl.tree, spell);
 
-        if(TREE_ISROOT(g_SplColl.tree, spell))
+        if (TREE_ISROOT(g_SplColl.tree, spell))
             max = NPC_SPL_SKILL(unit, spell);
         else
             max = NPC_SPL_SKILL(unit, spell) / 2;
 
-        while(!TREE_ISROOT(g_SplColl.tree, spell))
+        while (!TREE_ISROOT(g_SplColl.tree, spell))
         {
             spell = TREE_PARENT(g_SplColl.tree, spell);
 
-            if(NPC_SPL_SKILL(unit, spell) > max)
+            if (NPC_SPL_SKILL(unit, spell) > max)
                 max = NPC_SPL_SKILL(unit, spell);
         }
 
@@ -296,15 +296,15 @@ int spell_defense_skill(class unit_data *unit, int spell)
 /*                                                                 */
 int spell_attack_skill(class unit_data *unit, int spell)
 {
-    if(IS_PC(unit))
+    if (IS_PC(unit))
         return PC_SPL_SKILL(unit, spell);
 
-    if(IS_OBJ(unit))
+    if (IS_OBJ(unit))
         return object_power(unit);
 
-    if(IS_NPC(unit))
+    if (IS_NPC(unit))
     {
-        if(TREE_ISLEAF(g_SplColl.tree, spell))
+        if (TREE_ISLEAF(g_SplColl.tree, spell))
             spell = TREE_PARENT(g_SplColl.tree, spell);
 
         return NPC_SPL_SKILL(unit, spell);
@@ -317,7 +317,7 @@ int spell_attack_skill(class unit_data *unit, int spell)
 /* For CHAR's determine if Divine or Magic power is used */
 int spell_attack_ability(class unit_data *medium, int spell)
 {
-    if(IS_CHAR(medium))
+    if (IS_CHAR(medium))
     {
         /* Figure out if char will use Divine or Magic powers */
         assert(spell_info[spell].realm == ABIL_MAG || spell_info[spell].realm == ABIL_DIV);
@@ -330,7 +330,7 @@ int spell_attack_ability(class unit_data *medium, int spell)
 
 int spell_ability(class unit_data *u, int ability, int spell)
 {
-    if(IS_CHAR(u))
+    if (IS_CHAR(u))
         return CHAR_ABILITY(u, ability);
     else
         return spell_defense_skill(u, spell);
@@ -344,7 +344,7 @@ int spell_ability(class unit_data *u, int ability, int spell)
 /*                                                                     */
 int spell_resistance(class unit_data *att, class unit_data *def, int spell)
 {
-    if(IS_CHAR(att) && IS_CHAR(def))
+    if (IS_CHAR(att) && IS_CHAR(def))
         return resistance_skill_check(spell_attack_ability(att, spell),
                                       spell_ability(def, ABIL_BRA, spell),
                                       spell_attack_skill(att, spell),
@@ -406,15 +406,15 @@ int spell_offensive(struct spell_args *sa, int spell_number, int bonus)
 
     def_shield_bonus = shield_bonus(sa->caster, sa->target, &def_shield);
 
-    if(def_shield && spell_info[spell_number].shield != SHIELD_M_USELESS)
+    if (def_shield && spell_info[spell_number].shield != SHIELD_M_USELESS)
     {
-        if((spell_info[spell_number].shield == SHIELD_M_BLOCK) && (number(1, 100) <= def_shield_bonus))
+        if ((spell_info[spell_number].shield == SHIELD_M_BLOCK) && (number(1, 100) <= def_shield_bonus))
         {
             damage_object(sa->target, def_shield, sa->hm);
             damage(sa->caster, sa->target, def_shield, 0, MSG_TYPE_SPELL, spell_number, WEAR_SHIELD);
             return 0;
         }
-        if((spell_info[spell_number].shield == SHIELD_M_REDUCE) && (number(1, 100) <= def_shield_bonus))
+        if ((spell_info[spell_number].shield == SHIELD_M_REDUCE) && (number(1, 100) <= def_shield_bonus))
         {
             sa->hm -= (sa->hm * def_shield_bonus) / 100;
         }
@@ -422,7 +422,7 @@ int spell_offensive(struct spell_args *sa, int spell_number, int bonus)
 
     bEffect = dil_effect(sa->pEffect, sa);
 
-    if(sa->hm > 0)
+    if (sa->hm > 0)
         damage(sa->caster, sa->target, 0, sa->hm, MSG_TYPE_SPELL, spell_number, COM_MSG_EBODY, !bEffect);
     else
         damage(sa->caster, sa->target, 0, 0, MSG_TYPE_SPELL, spell_number, COM_MSG_MISS, !bEffect);
@@ -436,7 +436,7 @@ void spell_clear_skies(struct spell_args *sa)
 {
     class unit_data *room = unit_room(sa->caster);
 
-    if((sa->hm / 20 <= 0) || (IS_SET(UNIT_FLAGS(room), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
+    if ((sa->hm / 20 <= 0) || (IS_SET(UNIT_FLAGS(room), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
     {
         act("Nothing happens.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_CHAR);
         return;
@@ -452,7 +452,7 @@ void spell_storm_call(struct spell_args *sa)
 {
     class unit_data *room = unit_room(sa->caster);
 
-    if((sa->hm / 20 <= 0) || (IS_SET(UNIT_FLAGS(room), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
+    if ((sa->hm / 20 <= 0) || (IS_SET(UNIT_FLAGS(room), UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS)))
     {
         act("Nothing happens.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_CHAR);
         return;

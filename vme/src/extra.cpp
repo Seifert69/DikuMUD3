@@ -28,7 +28,7 @@ extra_descr_data::extra_descr_data(const char *name, const char *descr)
     const char *names[2] = {name, NULL};
 
     this->names = names;
-    if(descr)
+    if (descr)
         this->descr = descr;
     this->next = NULL;
 }
@@ -37,7 +37,7 @@ extra_descr_data::extra_descr_data(const char *name, const char *descr)
 extra_descr_data::extra_descr_data(const char **names, const char *descr)
 {
     this->names = names;
-    if(descr)
+    if (descr)
         this->descr = descr;
     this->next = NULL;
 }
@@ -46,7 +46,7 @@ extra_descr_data::extra_descr_data(const char **names, const char *descr)
 extra_descr_data::extra_descr_data(cNamelist names, const char *descr)
 {
     this->names = names;
-    if(descr)
+    if (descr)
         this->descr = descr;
     this->next = NULL;
 }
@@ -63,17 +63,17 @@ class extra_descr_data *extra_descr_data::find_raw(const char *word)
     ubit32 i;
     class extra_descr_data *exd;
 
-    for(exd = this; exd; exd = exd->next)
+    for (exd = this; exd; exd = exd->next)
     {
-        if(exd->names.Length() < 1)
+        if (exd->names.Length() < 1)
         {
-            if(str_is_empty(word))
+            if (str_is_empty(word))
                 return exd;
         }
         else
         {
-            for(i = 0; i < exd->names.Length(); i++)
-                if(str_ccmp(word, exd->names.Name(i)) == 0)
+            for (i = 0; i < exd->names.Length(); i++)
+                if (str_ccmp(word, exd->names.Name(i)) == 0)
                     return exd;
         }
     }
@@ -95,10 +95,10 @@ void rogue_remove(class extra_descr_data **exlist, const char *name)
 {
     class extra_descr_data *tex = (*exlist)->find_raw(name);
 
-    if(tex)
+    if (tex)
     {
         // See if it's the head element
-        if(*exlist == tex)
+        if (*exlist == tex)
         {
             *exlist = tex->next;
             tex->next = NULL;
@@ -109,8 +109,8 @@ void rogue_remove(class extra_descr_data **exlist, const char *name)
         // Find exd in the list (not the first element)
         class extra_descr_data *pex;
 
-        for(pex = *exlist; pex->next; pex = pex->next)
-            if(pex->next == tex)
+        for (pex = *exlist; pex->next; pex = pex->next)
+            if (pex->next == tex)
             {
                 pex->next = tex->next;
                 tex->next = NULL;
@@ -137,7 +137,7 @@ extra_list::~extra_list(void)
 
 void extra_list::freelist(class extra_descr_data *ex)
 {
-    if(ex)
+    if (ex)
     {
         freelist(ex->next); // Recurse to delete reverse
         delete ex;
@@ -155,7 +155,7 @@ int extra_list::count(void)
     class extra_descr_data *e;
 
     // Count no of elements in list
-    for(e = this->m_pList, i = 0; e; e = e->next)
+    for (e = this->m_pList, i = 0; e; e = e->next)
         i++;
 
     return i;
@@ -170,7 +170,7 @@ std::string extra_list::json(void)
     class extra_descr_data *e;
 
     // Count no of elements in list
-    for(e = this->m_pList; e; e = e->next)
+    for (e = this->m_pList; e; e = e->next)
     {
         s.append("{");
         s.append(e->names.json());
@@ -180,7 +180,7 @@ std::string extra_list::json(void)
         s.append(e->vals.json());
         s.append("}");
 
-        if(e->next)
+        if (e->next)
             s.append(",\n");
     }
 
@@ -199,13 +199,13 @@ void extra_list::push_front(class extra_descr_data *ex)
 // Insert ex as the last element in front of the list
 void extra_list::push_tail(class extra_descr_data *ex)
 {
-    if(m_pList == NULL)
+    if (m_pList == NULL)
         push_front(ex);
     else
     {
         class extra_descr_data *p;
 
-        for(p = m_pList; p->next; p = p->next)
+        for (p = m_pList; p->next; p = p->next)
             ;
 
         // p now points to the last element in the list
@@ -220,7 +220,7 @@ void extra_list::erase(class extra_descr_data *exd)
     assert(m_pList && exd);
 
     // See if it's the head element
-    if(m_pList == exd)
+    if (m_pList == exd)
     {
         m_pList = exd->next;
         exd->next = NULL;
@@ -232,8 +232,8 @@ void extra_list::erase(class extra_descr_data *exd)
     // FInd exd in the list (not the first element)
     class extra_descr_data *pex;
 
-    for(pex = m_pList; pex->next; pex = pex->next)
-        if(pex->next == exd)
+    for (pex = m_pList; pex->next; pex = pex->next)
+        if (pex->next == exd)
         {
             pex->next = exd->next;
             exd->next = NULL;
@@ -292,7 +292,7 @@ void extra_list::remove(const char *name)
 {
     class extra_descr_data *tex = find_raw(name);
 
-    if(tex)
+    if (tex)
         this->erase(tex);
 }
 
@@ -306,7 +306,7 @@ void extra_list::AppendBuffer(CByteBuffer *pBuf)
     pBuf->Append32(this->count()); // Store number of extra_descr elements
 
     /* While description is non null, keep writing */
-    for(e = this->m_pList; e; e = e->next)
+    for (e = this->m_pList; e; e = e->next)
     {
         pBuf->AppendString(e->descr.c_str());
         e->names.AppendBuffer(pBuf);
@@ -320,7 +320,7 @@ void extra_list::AppendBuffer(CByteBuffer *pBuf)
 /*                                                            */
 class extra_descr_data *extra_list::find_raw(const char *word)
 {
-    if(this->m_pList)
+    if (this->m_pList)
         return this->m_pList->find_raw(word);
     else
         return NULL;
@@ -334,7 +334,7 @@ void extra_list::copyfrom(class extra_list &listToBeCopied)
     assert(this->m_pList == NULL);
 
     class extra_descr_data *exd;
-    for(exd = listToBeCopied.m_pList; exd; exd = exd->next)
+    for (exd = listToBeCopied.m_pList; exd; exd = exd->next)
     {
         new_ex = new class extra_descr_data(exd->names, exd->descr.c_str());
         this->add(new_ex);
@@ -352,23 +352,23 @@ class extra_descr_data *unit_find_extra(const char *word, class unit_data *unit)
 {
     word = skip_spaces(word);
 
-    if(unit && *word != '$')
+    if (unit && *word != '$')
     {
         class extra_descr_data *i;
 
         word = skip_spaces(word);
 
-        for(i = UNIT_EXTRA(unit).m_pList; i; i = i->next)
+        for (i = UNIT_EXTRA(unit).m_pList; i; i = i->next)
         {
-            if(i->names.Name())
+            if (i->names.Name())
             {
-                if(i->names.Name(0)[0] == '$')
+                if (i->names.Name(0)[0] == '$')
                     continue;
 
-                if(i->names.IsName(word))
+                if (i->names.IsName(word))
                     return i;
             }
-            else if(UNIT_NAMES(unit).IsName(word))
+            else if (UNIT_NAMES(unit).IsName(word))
                 return i;
         }
     }
@@ -380,14 +380,14 @@ class extra_descr_data *char_unit_find_extra(class unit_data *ch, class unit_dat
 {
     class extra_descr_data *exd = NULL;
 
-    if(!list)
+    if (!list)
         return NULL;
 
-    if(IS_ROOM(list))
+    if (IS_ROOM(list))
     {
-        if(CHAR_CAN_SEE(ch, list) && (exd = unit_find_extra(word, list)))
+        if (CHAR_CAN_SEE(ch, list) && (exd = unit_find_extra(word, list)))
         {
-            if(target)
+            if (target)
                 *target = list;
             return exd;
         }
@@ -397,17 +397,17 @@ class extra_descr_data *char_unit_find_extra(class unit_data *ch, class unit_dat
         }
     }
 
-    for(; list; list = list->next)
+    for (; list; list = list->next)
     {
-        if(CHAR_CAN_SEE(ch, list) && (exd = unit_find_extra(word, list)))
+        if (CHAR_CAN_SEE(ch, list) && (exd = unit_find_extra(word, list)))
         {
-            if(target)
+            if (target)
                 *target = list;
             return exd;
         }
     }
 
-    if(target)
+    if (target)
         *target = NULL;
 
     return NULL;
@@ -417,7 +417,7 @@ const char *unit_find_extra_string(class unit_data *ch, char *word, class unit_d
 {
     class extra_descr_data *exd = char_unit_find_extra(ch, NULL, word, list);
 
-    if(exd)
+    if (exd)
         return exd->descr.c_str();
 
     return NULL;

@@ -56,14 +56,14 @@ ubit8 *ids = NULL; /* For checking duplicate players... */
 int sel_name(const struct dirent *dptr);
 int sel_name(const struct dirent *dptr)
 {
-    if(strchr(dptr->d_name, '.') == NULL)
+    if (strchr(dptr->d_name, '.') == NULL)
         return 1;
     return 0;
 }
 
 void convert_free_unit(class unit_data *u)
 {
-    while(UNIT_CONTAINS(u))
+    while (UNIT_CONTAINS(u))
         convert_free_unit(UNIT_CONTAINS(u));
 
     UNIT_AFFECTED(u) = NULL;
@@ -79,7 +79,7 @@ void free_inventory(class unit_data *u)
 {
     class unit_data *tmp, *nxt;
 
-    for(tmp = u; tmp; tmp = nxt)
+    for (tmp = u; tmp; tmp = nxt)
     {
         nxt = tmp->next;
         convert_free_unit(tmp);
@@ -93,20 +93,20 @@ int days_old(time_t last_logon)
 
 class unit_data *convert_item(class unit_data *u, class unit_data *pc, int bList)
 {
-    if(bList)
+    if (bList)
     {
-        if(strcmp(UNIT_FI_ZONE(u)->name, "treasure") == 0)
+        if (strcmp(UNIT_FI_ZONE(u)->name, "treasure") == 0)
         {
             class extra_descr_data *ed = UNIT_EXTRA(u).m_pList;
             std::cout << std::endl << UNIT_FI_NAME(u) << "@treasure" << std::endl;
-            if(ed)
+            if (ed)
             {
                 bool found = false;
-                for(; ed; ed = ed->next)
+                for (; ed; ed = ed->next)
                 {
-                    if(ed->names.StrStr("$piname"))
+                    if (ed->names.StrStr("$piname"))
                     {
-                        if(found == false)
+                        if (found == false)
                         {
                             std::cout << "Owned by:  ";
                             found = true;
@@ -122,7 +122,7 @@ class unit_data *convert_item(class unit_data *u, class unit_data *pc, int bList
         return u;
     }
 
-    if(IS_OBJ(u))
+    if (IS_OBJ(u))
         UNIT_SIZE(u) = UNIT_SIZE(pc);
 
     return u;
@@ -132,7 +132,7 @@ void convert_inventory(class unit_data *u, class unit_data *pc, int bList = FALS
 {
     class unit_data *bla;
 
-    if(u == NULL)
+    if (u == NULL)
         return;
 
     convert_inventory(UNIT_CONTAINS(u), pc, bList);
@@ -143,7 +143,7 @@ void convert_inventory(class unit_data *u, class unit_data *pc, int bList = FALS
 
     assert(!u->is_destructed());
 
-    if(bla != u)
+    if (bla != u)
     {
         class unit_data *tmpu;
 
@@ -151,7 +151,7 @@ void convert_inventory(class unit_data *u, class unit_data *pc, int bList = FALS
 
         unit_to_unit(bla, UNIT_IN(u));
 
-        while(UNIT_CONTAINS(u))
+        while (UNIT_CONTAINS(u))
         {
             tmpu = UNIT_CONTAINS(u);
             unit_from_unit(tmpu);
@@ -175,55 +175,55 @@ int sanity_check(class unit_data *u)
 {
     void race_adjust(class unit_data * ch);
 
-    if(g_nCorrupt == TRUE)
+    if (g_nCorrupt == TRUE)
     {
         printf("Corrupted unit in READ.");
         return FALSE;
     }
 
-    if(PC_ID(u) > top_id)
+    if (PC_ID(u) > top_id)
     {
         printf("Maximum ID exceeded: %d > top id %d", PC_ID(u), top_id);
         return FALSE;
     }
 
-    if(PC_ID(u) < 0)
+    if (PC_ID(u) < 0)
     {
         printf("Illegal ID < 0!");
         return FALSE;
     }
 
-    if((UNIT_HIT(u) > 10000) || (UNIT_MAX_HIT(u) > 10000))
+    if ((UNIT_HIT(u) > 10000) || (UNIT_MAX_HIT(u) > 10000))
     {
         printf("Corrupted UNIT HITPOINTS");
         return FALSE;
     }
 
-    if(!IS_PC(u))
+    if (!IS_PC(u))
     {
         printf("Not a player!");
         return FALSE;
     }
 
-    if(PC_TIME(u).creation > time(0))
+    if (PC_TIME(u).creation > time(0))
     {
         printf("Corrupted creation time.");
         return FALSE;
     }
 
-    if(PC_TIME(u).connect > time(0))
+    if (PC_TIME(u).connect > time(0))
     {
         printf("Corrupted connect time.");
         return FALSE;
     }
 
-    if(CHAR_RACE(u) >= PC_RACE_MAX)
+    if (CHAR_RACE(u) >= PC_RACE_MAX)
     {
         printf("Corrupted RACE");
         return FALSE;
     }
 
-    if(!UNIT_CONTAINS(u) && (UNIT_WEIGHT(u) != UNIT_BASE_WEIGHT(u)))
+    if (!UNIT_CONTAINS(u) && (UNIT_WEIGHT(u) != UNIT_BASE_WEIGHT(u)))
     {
         printf("Fixed illegal weight.");
         UNIT_WEIGHT(u) = UNIT_BASE_WEIGHT(u);
@@ -239,16 +239,16 @@ int shall_delete(class unit_data *pc)
     days = days_old(PC_TIME(pc).connect);
 
     /* Player which have paid at some point in time remain almost permanent. */
-    if(PC_ACCOUNT(pc).total_credit > 0)
+    if (PC_ACCOUNT(pc).total_credit > 0)
         return FALSE;
 
-    if((days > 60) && (CHAR_LEVEL(pc) <= START_LEVEL + 4))
+    if ((days > 60) && (CHAR_LEVEL(pc) <= START_LEVEL + 4))
     {
         std::cout << "2 month inactivity and less than lvl 5 Will delete ";
         return TRUE;
     }
 
-    if((days > 185) && (CHAR_LEVEL(pc) <= START_LEVEL + 8))
+    if ((days > 185) && (CHAR_LEVEL(pc) <= START_LEVEL + 8))
     {
         std::cout << "1/2 year inactivity and less than lvl 8 Will delete ";
         return TRUE;
@@ -265,19 +265,19 @@ int shall_exclude(const char *name)
 
     result = _parse_name(name, buf);
 
-    if(result == 3)
+    if (result == 3)
     {
         std::cout << "Name in Badnames will delete\n";
         return TRUE;
     }
 
-    if(result == 2)
+    if (result == 2)
     {
         std::cout << "Name in Badstrings will delete\n";
         return TRUE;
     }
 
-    if(result != 0)
+    if (result != 0)
     {
         std::cout << "Name illegal will delete\n";
         return TRUE;
@@ -291,7 +291,7 @@ class unit_data *convert_load_player(char *name)
     class unit_data *ch;
     extern class unit_data *destroy_room;
 
-    if(!player_exists(name))
+    if (!player_exists(name))
     {
         /* printf("No such player.\n"); */
         return NULL;
@@ -299,7 +299,7 @@ class unit_data *convert_load_player(char *name)
 
     ch = load_player(name);
 
-    if(ch == NULL)
+    if (ch == NULL)
     {
         printf("NULL.\n");
         return NULL;
@@ -308,28 +308,28 @@ class unit_data *convert_load_player(char *name)
     insert_in_unit_list(ch);
     unit_to_unit(ch, destroy_room);
 
-    if(shall_exclude(name))
+    if (shall_exclude(name))
     {
         printf("EXCLUDED.\n");
         convert_free_unit(ch);
         return NULL;
     }
 
-    if(!sanity_check(ch))
+    if (!sanity_check(ch))
     {
         printf("SANITY ERROR.\n");
         convert_free_unit(ch);
         return NULL;
     }
 
-    if(PC_ID(ch) > top_id)
+    if (PC_ID(ch) > top_id)
     {
         printf("TOP ID ERROR %d vs %d.\n", PC_ID(ch), top_id);
         convert_free_unit(ch);
         return NULL;
     }
 
-    if(PC_ID(ch) > max_id)
+    if (PC_ID(ch) > max_id)
         max_id = PC_ID(ch);
 
     return ch;
@@ -355,7 +355,7 @@ void clist()
         std::cout << "\nEnter the full path to the root player directory for example '/home/mud/vme2.0/lib/ply' or \n<enter> for the one
     listed in the server.cfg file:  "; char cpath[1024]; cpath[0]=0; std::cin.ignore(); std::cin.getline(cpath,1024); ipath=cpath;
     */
-    if(ipath.empty())
+    if (ipath.empty())
         ipath = CONVERT_PATH;
 
     fs::path full_path(ipath);
@@ -368,13 +368,13 @@ void clist()
     class unit_data *pc;
     class unit_data *void_char = new EMPLACE(npc_data) npc_data;
 
-    if(!fs::exists(full_path))
+    if (!fs::exists(full_path))
     {
         std::cout << "\nNot found: " << full_path << std::endl;
         return;
     }
 
-    if(fs::is_directory(full_path))
+    if (fs::is_directory(full_path))
     {
         std::cout << "\nIn directory: " << full_path << "\n\n";
         fs::directory_iterator end_iter;
@@ -382,30 +382,30 @@ void clist()
 
         std::cout << "name;id;Level;Admin;days since login;created;birth;" << std::endl;
 
-        for(char c = 'a'; c <= 'z'; c++)
+        for (char c = 'a'; c <= 'z'; c++)
         {
             path_end = c;
             full_path = ipath + "/" + path_end;
-            if(!fs::exists(full_path))
+            if (!fs::exists(full_path))
             {
                 std::cout << "\nNot found: " << full_path << std::endl;
                 continue;
             }
 
-            if(!fs::is_directory(full_path))
+            if (!fs::is_directory(full_path))
                 continue;
             // std::cout << "\nIn directory: " << full_path << "\n\n";
 
-            for(fs::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
+            for (fs::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
             {
                 char *temp = NULL;
                 try
                 {
-                    if(fs::is_directory(*dir_itr))
+                    if (fs::is_directory(*dir_itr))
                     {
                         ++dir_count;
                     }
-                    else if(dir_itr->path().filename().string().find(".") == std::string::npos)
+                    else if (dir_itr->path().filename().string().find(".") == std::string::npos)
                     {
                         ++file_count;
 
@@ -414,7 +414,7 @@ void clist()
 
                         strcpy(temp, dir_itr->path().filename().c_str());
                         pc = convert_load_player(temp);
-                        if(pc == NULL)
+                        if (pc == NULL)
                         {
                             std::cout << "ERROR: Corrupt\n";
                             delete temp;
@@ -424,7 +424,7 @@ void clist()
                         std::cout << PC_ID(pc) << ";" << (int)CHAR_LEVEL(pc) << ";" << (IS_MORTAL(pc) ? " PLY  " : "ADMIN") << ";"
                                   << days_old(PC_TIME(pc).connect) << ";";
 
-                        if(ids[PC_ID(pc)])
+                        if (ids[PC_ID(pc)])
                             std::cout << "Duplicate ID! (" << (signed long)PC_ID(pc) << ")";
                         else
                             ids[PC_ID(pc)] = 1;
@@ -463,22 +463,22 @@ void clist()
                         tid2.month = -1;
                         tid2.year = val / (365 * 24);
 
-                        if(tid2.year > 0)
+                        if (tid2.year > 0)
                         {
                             std::cout << " " << (long)tid2.year << " years";
                             tmp = true;
                         }
-                        if(tid2.day > 0)
+                        if (tid2.day > 0)
                         {
                             std::cout << " " << (long)tid2.day << " days";
                             tmp = true;
                         }
-                        if(tid2.hours > 0)
+                        if (tid2.hours > 0)
                         {
                             std::cout << " " << (long)tid2.hours << " hours";
                             tmp = true;
                         }
-                        if(tmp)
+                        if (tmp)
                             std::cout << ".";
                         else
                             std::cout << " Less than an hour";
@@ -488,7 +488,7 @@ void clist()
                         delete temp;
                     }
                 }
-                catch(const std::exception &ex)
+                catch (const std::exception &ex)
                 {
                     ++err_count;
                     std::cout << dir_itr->path() << " " << ex.what() << std::endl;
@@ -520,41 +520,41 @@ void convert_file(void)
 
     class unit_data *pc;
 
-    if(!fs::exists(full_path))
+    if (!fs::exists(full_path))
     {
         std::cout << "\nNot found: " << full_path << std::endl;
         return;
     }
 
-    if(fs::is_directory(full_path))
+    if (fs::is_directory(full_path))
     {
         std::cout << "\nIn directory: " << full_path << "\n\n";
         fs::directory_iterator end_iter;
         std::string path_end = "";
-        for(char c = 'a'; c <= 'z'; c++)
+        for (char c = 'a'; c <= 'z'; c++)
         {
             path_end = c;
             full_path = ipath + "/" + path_end;
-            if(!fs::exists(full_path))
+            if (!fs::exists(full_path))
             {
                 std::cout << "\nNot found: " << full_path << std::endl;
                 continue;
             }
 
-            if(!fs::is_directory(full_path))
+            if (!fs::is_directory(full_path))
                 continue;
             std::cout << "\nIn directory: " << full_path << "\n\n";
 
-            for(fs::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
+            for (fs::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
             {
                 char *temp = NULL;
                 try
                 {
-                    if(fs::is_directory(*dir_itr))
+                    if (fs::is_directory(*dir_itr))
                     {
                         ++dir_count;
                     }
-                    else if(dir_itr->path().filename().string().find(".") == std::string::npos)
+                    else if (dir_itr->path().filename().string().find(".") == std::string::npos)
                     {
                         ++file_count;
                         std::cout << dir_itr->path() << "\n";
@@ -562,14 +562,14 @@ void convert_file(void)
                         strcpy(temp, dir_itr->path().filename().c_str());
                         pc = convert_load_player(temp);
 
-                        if(pc == NULL)
+                        if (pc == NULL)
                         {
                             std::cout << "Corrupt Player ERASED." << std::endl;
                             delete_player(temp);
                             continue;
                         }
 
-                        if(ids[PC_ID(pc)])
+                        if (ids[PC_ID(pc)])
                             std::cout << "Duplicate ID! (" << (signed long)PC_ID(pc) << ")" << std::endl;
                         else
                             ids[PC_ID(pc)] = 1;
@@ -586,7 +586,7 @@ void convert_file(void)
                         delete temp;
                     }
                 }
-                catch(const std::exception &ex)
+                catch (const std::exception &ex)
                 {
                     ++err_count;
                     std::cout << dir_itr->path() << " " << ex.what() << std::endl;
@@ -621,41 +621,41 @@ void cleanup(void)
     class unit_data *pc;
     class unit_data *void_char = new EMPLACE(npc_data) npc_data;
 
-    if(!fs::exists(full_path))
+    if (!fs::exists(full_path))
     {
         std::cout << "\nNot found: " << full_path << std::endl;
         return;
     }
 
-    if(fs::is_directory(full_path))
+    if (fs::is_directory(full_path))
     {
         std::cout << "\nIn directory: " << full_path << "\n\n";
         fs::directory_iterator end_iter;
         std::string path_end = "";
-        for(char c = 'a'; c <= 'z'; c++)
+        for (char c = 'a'; c <= 'z'; c++)
         {
             path_end = c;
             full_path = ipath + "/" + path_end;
-            if(!fs::exists(full_path))
+            if (!fs::exists(full_path))
             {
                 std::cout << "\nNot found: " << full_path << std::endl;
                 continue;
             }
 
-            if(!fs::is_directory(full_path))
+            if (!fs::is_directory(full_path))
                 continue;
             std::cout << "\nIn directory: " << full_path << "\n\n";
 
-            for(fs::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
+            for (fs::directory_iterator dir_itr(full_path); dir_itr != end_iter; ++dir_itr)
             {
                 char *temp = NULL;
                 try
                 {
-                    if(fs::is_directory(*dir_itr))
+                    if (fs::is_directory(*dir_itr))
                     {
                         ++dir_count;
                     }
-                    else if(dir_itr->path().filename().string().find(".") == std::string::npos)
+                    else if (dir_itr->path().filename().string().find(".") == std::string::npos)
                     {
                         ++file_count;
                         std::cout << dir_itr->path() << "\n";
@@ -664,7 +664,7 @@ void cleanup(void)
                         std::cout << temp;
                         pc = convert_load_player(temp);
 
-                        if(pc == NULL)
+                        if (pc == NULL)
                         {
                             std::cout << "Corrupt Player ERASED." << std::endl;
                             delete_player(temp);
@@ -673,7 +673,7 @@ void cleanup(void)
                             continue;
                         }
 
-                        if(str_ccmp(temp, UNIT_NAME(pc)))
+                        if (str_ccmp(temp, UNIT_NAME(pc)))
                         {
                             std::cout << "Name in file doesn't match filename." << std::endl;
                             convert_free_unit(pc);
@@ -685,7 +685,7 @@ void cleanup(void)
 
                         std::cout << UNIT_NAME(pc) << "]  Lvl " << CHAR_LEVEL(pc) << "]  " << (IS_MORTAL(pc) ? "   " : "ADMIN");
 
-                        if(shall_delete(pc))
+                        if (shall_delete(pc))
                         {
                             convert_free_unit(pc);
                             delete_player(temp);
@@ -698,7 +698,7 @@ void cleanup(void)
 
                         UNIT_CONTAINS(void_char) = NULL;
                         load_contents(temp, void_char);
-                        if(UNIT_CONTAINS(void_char))
+                        if (UNIT_CONTAINS(void_char))
                         {
                             std::cout << "  INV";
                             convert_inventory(UNIT_CONTAINS(void_char), pc, TRUE);
@@ -710,7 +710,7 @@ void cleanup(void)
                         delete temp;
                     }
                 }
-                catch(const std::exception &ex)
+                catch (const std::exception &ex)
                 {
                     ++err_count;
                     std::cout << dir_itr->path() << " " << ex.what() << std::endl;
@@ -742,9 +742,9 @@ void cleanup_playerfile(int c)
 
     entry_room = new EMPLACE(room_data) room_data;
     destroy_room = new EMPLACE(room_data) room_data;
-    if(c == 1)
+    if (c == 1)
         convert_file();
-    else if(c == 2)
+    else if (c == 2)
         cleanup();
     else
         clist();

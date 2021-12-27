@@ -93,14 +93,14 @@ int _parse_name(const char *arg, char *name)
     /* i+1 = chars copied    */
     /* PC_MAX_NAME-1 = chars */
 
-    for(i = 0; (*name = *arg); arg++, i++, name++)
-        if((*arg <= ' ') || !isalpha(*arg) || (i + 1) > (PC_MAX_NAME - 1))
+    for (i = 0; (*name = *arg); arg++, i++, name++)
+        if ((*arg <= ' ') || !isalpha(*arg) || (i + 1) > (PC_MAX_NAME - 1))
             return 1;
 
-    if(i <= 2) /* Names must be at least 3 chars due to passwords */
+    if (i <= 2) /* Names must be at least 3 chars due to passwords */
         return 1;
 
-    if(fill_word(name - i)) /* Don't allow fillwords */
+    if (fill_word(name - i)) /* Don't allow fillwords */
         return 1;
 
     touch_file(str_cc(g_cServerConfig.m_etcdir, BAD_STRINGS_FILE));
@@ -108,7 +108,7 @@ int _parse_name(const char *arg, char *name)
     badstrings.create(m_pBadStrings);
     FREE(m_pBadStrings);
 
-    if(badstrings.in(name - i))
+    if (badstrings.in(name - i))
         return 2;
 
     touch_file(str_cc(g_cServerConfig.m_etcdir, BAD_NAMES_FILE));
@@ -116,7 +116,7 @@ int _parse_name(const char *arg, char *name)
     badnames.create(m_pBadNames);
     FREE(m_pBadNames);
 
-    if(badnames.equal(name - i))
+    if (badnames.equal(name - i))
         return 3;
 
     str_lower(name);
@@ -131,15 +131,15 @@ void check_idle(void)
     class descriptor_data *d, *next_d;
     time_t now = time(0);
 
-    for(d = descriptor_list; d; d = next_d)
+    for (d = descriptor_list; d; d = next_d)
     {
         next_d = d->next;
         d->timer++;
-        if(!descriptor_is_playing(d)) /* Not in game yet */
+        if (!descriptor_is_playing(d)) /* Not in game yet */
         {
-            if(d->fptr == nanny_get_name)
+            if (d->fptr == nanny_get_name)
             {
-                if(d->timer >= 2)
+                if (d->timer >= 2)
                 {
                     slog(LOG_ALL, 0, "Kicking out idle player waiting for name.");
                     descriptor_close(d);
@@ -147,7 +147,7 @@ void check_idle(void)
             }
             else
             {
-                if(d->timer >= 10)
+                if (d->timer >= 10)
                 {
                     slog(LOG_ALL, 0, "Kicking out player from menu.");
                     descriptor_close(d);
@@ -156,12 +156,12 @@ void check_idle(void)
         }
         else
         {
-            if(d->timer >= 20 && IS_MORTAL(d->character))
+            if (d->timer >= 20 && IS_MORTAL(d->character))
             {
                 slog(LOG_ALL, 0, "Kicking out idle player and making link-dead.");
                 descriptor_close(d);
             }
-            else if(IS_PC(d->character) && now - d->logon >= SECS_PER_REAL_HOUR / 3)
+            else if (IS_PC(d->character) && now - d->logon >= SECS_PER_REAL_HOUR / 3)
             {
                 send_to_char("Autosave.<br/>", d->character);
                 save_player(d->character);
@@ -187,7 +187,7 @@ void pc_data::connect_game(void)
 {
     //  assert (CHAR_DESCRIPTOR (pc));
 
-    if(this->is_destructed() || !CHAR_DESCRIPTOR(this))
+    if (this->is_destructed() || !CHAR_DESCRIPTOR(this))
         return;
 
     PC_TIME(this).connect = time(0);
@@ -198,13 +198,13 @@ void pc_data::connect_game(void)
     set_descriptor_fptr(CHAR_DESCRIPTOR(this), descriptor_interpreter, FALSE);
 
     no_players++;
-    if(no_players > max_no_players)
+    if (no_players > max_no_players)
         max_no_players = no_players;
 }
 
 void pc_data::disconnect_game(void)
 {
-    if(CHAR_DESCRIPTOR(this))
+    if (CHAR_DESCRIPTOR(this))
     {
         CHAR_DESCRIPTOR(this)->RemoveBBS();
 
@@ -217,7 +217,7 @@ void pc_data::reconnect_game(class descriptor_data *d)
     // char *color;
     // char tbuf[MAX_STRING_LENGTH * 2];
 
-    if(this->is_destructed() || !d)
+    if (this->is_destructed() || !d)
         return;
 
     CHAR_DESCRIPTOR(d->character) = NULL;
@@ -229,7 +229,7 @@ void pc_data::reconnect_game(class descriptor_data *d)
 
     ActivateDil(this); // ch could potentially get zapped here.
 
-    if(this->is_destructed() || !d)
+    if (this->is_destructed() || !d)
         return;
 
     this->connect_game();
@@ -241,7 +241,7 @@ void pc_data::reconnect_game(class descriptor_data *d)
  */
     send_to_char("Reconnecting.<br/>", this);
 
-    if(CHAR_LAST_ROOM(this) && (CHAR_LAST_ROOM(this) != UNIT_IN(this)))
+    if (CHAR_LAST_ROOM(this) && (CHAR_LAST_ROOM(this) != UNIT_IN(this)))
     {
         act("$1n has reconnected, and is moved to another location.",
             A_HIDEINV,
@@ -267,11 +267,11 @@ void pc_data::reconnect_game(class descriptor_data *d)
 
 void update_lasthost(class unit_data *pc, ubit32 s_addr)
 {
-    if((sbit32)s_addr == -1)
+    if ((sbit32)s_addr == -1)
         return;
 
-    for(int i = 0; i < 5; i++)
-        if(PC_LASTHOST(pc)[i] == s_addr)
+    for (int i = 0; i < 5; i++)
+        if (PC_LASTHOST(pc)[i] == s_addr)
             return;
 
     memmove(&PC_LASTHOST(pc)[0], &PC_LASTHOST(pc)[1], sizeof(ubit32) * 4);
@@ -286,15 +286,15 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
     void dil_stop_special(class unit_data * unt, class dilprg * aprg);
     void stop_snoopwrite(unit_data * unit);
 
-    if(this->is_destructed())
+    if (this->is_destructed())
         return;
 
-    if(!char_is_playing(this))
+    if (!char_is_playing(this))
         return;
 
     // slog(LOG_ALL, 0, "DEBUG: To menu %s", UNIT_NAME(this));
 
-    if(!PC_IS_UNSAVED(this))
+    if (!PC_IS_UNSAVED(this))
     {
         save_player(this);
         save_player_contents(this, TRUE);
@@ -308,7 +308,7 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
     descriptor_data *tmp_descr = CHAR_DESCRIPTOR(this);
     CHAR_DESCRIPTOR(this) = NULL;
 
-    while(UNIT_CONTAINS(this))
+    while (UNIT_CONTAINS(this))
         extract_unit(UNIT_CONTAINS(this));
 
     CHAR_DESCRIPTOR(this) = tmp_descr;
@@ -334,15 +334,15 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     char *ContentsFileName(const char *);
     void dil_start_special(class unit_data * unt, class dilprg * aprg);
 
-    if(this->is_destructed())
+    if (this->is_destructed())
         return;
 
-    if(char_is_playing(this)) // Are we in the menu?
+    if (char_is_playing(this)) // Are we in the menu?
         return;
 
     // slog(LOG_ALL, 0, "DEBUG: To game %s", UNIT_NAME(this));
 
-    if(CHAR_DESCRIPTOR(this))
+    if (CHAR_DESCRIPTOR(this))
     {
         update_lasthost(this, inet_addr(CHAR_DESCRIPTOR(this)->host));
 
@@ -357,7 +357,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     }
 
     unit_data *load_room;
-    if(CHAR_LAST_ROOM(this))
+    if (CHAR_LAST_ROOM(this))
     {
         load_room = CHAR_LAST_ROOM(this);
         CHAR_LAST_ROOM(this) = NULL;
@@ -370,21 +370,21 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     insert_in_unit_list(this);
     unit_to_unit(this, load_room);
 
-    if(CHAR_DESCRIPTOR(this) && !DILWAY) /* Only do these things if player is connected */
+    if (CHAR_DESCRIPTOR(this) && !DILWAY) /* Only do these things if player is connected */
     {
         sprintf(buf, "%s has entered the world.<br/>", UNIT_NAME(this));
 
-        for(i = descriptor_list; i; i = i->next)
-            if(descriptor_is_playing(i) && i->character != this && CHAR_CAN_SEE(CHAR_ORIGINAL(i->character), this) &&
-               IS_PC(CHAR_ORIGINAL(i->character)) && IS_SET(PC_FLAGS(CHAR_ORIGINAL(i->character)), PC_INFORM) &&
-               !same_surroundings(this, i->character))
+        for (i = descriptor_list; i; i = i->next)
+            if (descriptor_is_playing(i) && i->character != this && CHAR_CAN_SEE(CHAR_ORIGINAL(i->character), this) &&
+                IS_PC(CHAR_ORIGINAL(i->character)) && IS_SET(PC_FLAGS(CHAR_ORIGINAL(i->character)), PC_INFORM) &&
+                !same_surroundings(this, i->character))
                 send_to_descriptor(buf, i);
 
         act("$1n has arrived.", A_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), TO_ROOM);
     }
 
     /* New player stats. Level can be zero after reroll while ID is not. */
-    if((CHAR_LEVEL(this) == 0) && PC_IS_UNSAVED(this))
+    if ((CHAR_LEVEL(this) == 0) && PC_IS_UNSAVED(this))
     {
         void start_player(class unit_data * ch);
         slog(LOG_BRIEF, 0, "%s[%s] (GUEST) has entered the game.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->host);
@@ -397,29 +397,29 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     }
     else
     {
-        if(!DILWAY)
+        if (!DILWAY)
             command_interpreter(this, "look");
     }
-    if(file_exists(ContentsFileName(PC_FILENAME(this))))
+    if (file_exists(ContentsFileName(PC_FILENAME(this))))
     {
         ubit32 rent_calc(class unit_data * ch, time_t savetime);
 
         load_contents(PC_FILENAME(this), this);
 
-        if(!DILWAY)
+        if (!DILWAY)
             rent_calc(this, last_connect);
     }
 
     /*		if (!dilway)*/
-    if(strcmp(g_cServerConfig.m_pImmortName, UNIT_NAME(this)) == 0)
+    if (strcmp(g_cServerConfig.m_pImmortName, UNIT_NAME(this)) == 0)
         CHAR_LEVEL(this) = ULTIMATE_LEVEL;
 
-    if(IS_ULTIMATE(this) && PC_IS_UNSAVED(this))
+    if (IS_ULTIMATE(this) && PC_IS_UNSAVED(this))
         save_player(this);
 
     start_affect(this); /* Activate affect ticks */
     // start_all_special(this); /* Activate fptr ticks   */
-    if(!DILWAY)
+    if (!DILWAY)
     {
         send_done(this, NULL, load_room, 0, &cmd_auto_play, "");
         send_done(this, NULL, load_room, 0, &cmd_auto_play, "", NULL, "void@basis");
@@ -441,9 +441,9 @@ void enter_game(class unit_data *ch, int dilway)
 
 void set_descriptor_fptr(class descriptor_data *d, void (*fptr)(class descriptor_data *, char *), ubit1 call)
 {
-    if(d->fptr == interpreter_string_add)
+    if (d->fptr == interpreter_string_add)
     {
-        if(d->localstr)
+        if (d->localstr)
             FREE(d->localstr);
 
         d->localstr = NULL;
@@ -453,7 +453,7 @@ void set_descriptor_fptr(class descriptor_data *d, void (*fptr)(class descriptor
     }
 
     d->fptr = fptr;
-    if(call)
+    if (call)
     {
         char constStr[] = ""; // cheat to get rid of warnings.  todo fix correctly
         d->state = 0;
@@ -503,12 +503,12 @@ void nanny_motd(class descriptor_data *d, char *arg)
     struct diltemplate *on_connect;
     dilmenu = FALSE;
     on_connect = find_dil_template("on_connect@basis");
-    if(on_connect)
+    if (on_connect)
     {
         dilmenu = TRUE;
         // Nono... only enter the game when entering from the menu (DIL) enter_game(d->character, TRUE);
         class dilprg *prg = dil_copy_template(on_connect, d->character, NULL);
-        if(prg)
+        if (prg)
         {
             set_descriptor_fptr(d, descriptor_interpreter, TRUE);
             prg->waitcmd = WAITCMD_MAXINST - 1;
@@ -535,7 +535,7 @@ void nanny_throw(class descriptor_data *d, char *arg)
     class descriptor_data *td;
     class unit_data *u;
 
-    if(STATE(d)++ == 0)
+    if (STATE(d)++ == 0)
     {
         send_to_descriptor("Already playing!<br/>Throw the other copy out? (Y/N) ", d);
         return;
@@ -543,10 +543,10 @@ void nanny_throw(class descriptor_data *d, char *arg)
 
     assert(d->character);
 
-    if(*arg == 'y' || *arg == 'Y')
+    if (*arg == 'y' || *arg == 'Y')
     {
         // Close all descriptors except the one that just said YES
-        while((td = find_descriptor(PC_FILENAME(d->character), d)))
+        while ((td = find_descriptor(PC_FILENAME(d->character), d)))
         {
             send_to_descriptor("You got purged by your alter ego from the menu.<br/>", td);
             descriptor_close(td, TRUE, TRUE);
@@ -556,17 +556,17 @@ void nanny_throw(class descriptor_data *d, char *arg)
 
         // Scan the game for a unit that is a PCs and hold the same name
         // they should all be descriptorless now (except for d trying to login)
-        for(u = unit_list; u; u = u->gnext)
+        for (u = unit_list; u; u = u->gnext)
         {
-            if(!IS_PC(u))
+            if (!IS_PC(u))
                 break; // PCs are always first in the list
 
-            if(str_ccmp(PC_FILENAME(d->character), PC_FILENAME(u)) == 0)
+            if (str_ccmp(PC_FILENAME(d->character), PC_FILENAME(u)) == 0)
             {
                 //	      assert (!CHAR_DESCRIPTOR (u));
                 //	      assert (UNIT_IN (u));
 
-                if(!UNIT_IN(u))
+                if (!UNIT_IN(u))
                     slog(LOG_ALL, 0, "nanny_throw() player found but not in any units. Debug info - inspect me.");
 
                 /*
@@ -585,7 +585,7 @@ void nanny_throw(class descriptor_data *d, char *arg)
         }
 
         // Reconnecting character was NOT in the game, in the menu, so for guests, just close
-        if(PC_IS_UNSAVED(d->character) || !player_exists(PC_FILENAME(d->character)))
+        if (PC_IS_UNSAVED(d->character) || !player_exists(PC_FILENAME(d->character)))
         {
             send_to_descriptor("Menu Guest, purging all connections - please retry.<br/>", d);
             set_descriptor_fptr(d, nanny_close, TRUE);
@@ -596,7 +596,7 @@ void nanny_throw(class descriptor_data *d, char *arg)
         set_descriptor_fptr(d, nanny_motd, TRUE);
         return;
     }
-    else if(*arg == 'n' || *arg == 'N')
+    else if (*arg == 'n' || *arg == 'N')
     {
         send_to_descriptor("Ok, goodbye then.<br/>", d);
         set_descriptor_fptr(d, nanny_close, TRUE);
@@ -611,19 +611,19 @@ void nanny_dil(class descriptor_data *d, char *arg)
 
     exd = UNIT_EXTRA(d->character).find_raw("$nanny");
 
-    if(exd && !str_is_empty(exd->names.Name(1)))
+    if (exd && !str_is_empty(exd->names.Name(1)))
     {
         char buf[256];
 
         strcpy(buf, exd->names.Name(1));
     }
 
-    if(nanny_dil_tmpl)
+    if (nanny_dil_tmpl)
     {
         class dilprg *prg;
 
         prg = dil_copy_template(nanny_dil_tmpl, d->character, NULL);
-        if(prg)
+        if (prg)
         {
             prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
 
@@ -633,7 +633,7 @@ void nanny_dil(class descriptor_data *d, char *arg)
         }
     }
 
-    if(d->character && UNIT_EXTRA(d->character).find_raw("$nanny") == NULL)
+    if (d->character && UNIT_EXTRA(d->character).find_raw("$nanny") == NULL)
     {
         dilmenu = TRUE;
         enter_game(d->character, TRUE);
@@ -644,7 +644,7 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
 {
     class unit_data *u;
 
-    if(STATE(d)++ == 0)
+    if (STATE(d)++ == 0)
     {
         send_to_descriptor("<br/>Please retype password: ", d);
         send_to_descriptor(scriptwrap("PasswordOn()").c_str(), d);
@@ -652,7 +652,7 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
     }
 
     char buf[512];
-    if(pwdcompare(crypt(arg, PC_FILENAME(d->character)), PC_PWD(d->character), PC_MAX_PASSWORD))
+    if (pwdcompare(crypt(arg, PC_FILENAME(d->character)), PC_PWD(d->character), PC_MAX_PASSWORD))
     {
         sprintf(buf, "PasswordOff('', '%s')", g_cServerConfig.m_mudname);
         send_to_descriptor(scriptwrap(buf).c_str(), d);
@@ -665,7 +665,7 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
     send_to_descriptor(scriptwrap(buf).c_str(), d);
 
     class descriptor_data *td;
-    while((td = find_descriptor(PC_FILENAME(d->character), d)))
+    while ((td = find_descriptor(PC_FILENAME(d->character), d)))
     {
         send_to_descriptor("You got purged by your alter ego from the menu.<br/>", td);
         descriptor_close(td, TRUE, TRUE);
@@ -676,8 +676,8 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
 
     /* See if guest is in game, if so - a guest was LD       */
     /* Password has now been redefined                       */
-    for(u = unit_list; u; u = u->gnext)
-        if(IS_PC(u) && (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->character)) == 0))
+    for (u = unit_list; u; u = u->gnext)
+        if (IS_PC(u) && (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->character)) == 0))
         {
             UPC(u)->reconnect_game(d);
             return;
@@ -690,7 +690,7 @@ int check_pwd(class descriptor_data *d, char *pwd)
 {
     int i, bA, bNA;
 
-    if(strlen(pwd) < 5)
+    if (strlen(pwd) < 5)
     {
         send_to_descriptor("The chosen password is too short.<br/>"
                            "Your password has to be at least 5 characters and "
@@ -704,13 +704,13 @@ int check_pwd(class descriptor_data *d, char *pwd)
     bA = FALSE;
     bNA = FALSE;
 
-    for(i = 0; pwd[i]; i++)
-        if(isalpha(pwd[i]))
+    for (i = 0; pwd[i]; i++)
+        if (isalpha(pwd[i]))
             bA = TRUE;
         else
             bNA = TRUE;
 
-    if(bA == FALSE)
+    if (bA == FALSE)
     {
         send_to_descriptor("<br/>The chosen password only contains letters.<br/>"
                            "Your password has to be at least 5 characters and "
@@ -719,7 +719,7 @@ int check_pwd(class descriptor_data *d, char *pwd)
         return FALSE;
     }
 
-    if(bNA == FALSE)
+    if (bNA == FALSE)
     {
         send_to_descriptor("<br/>The chosen password only contains "
                            "non-letters (digits).<br/>"
@@ -734,7 +734,7 @@ int check_pwd(class descriptor_data *d, char *pwd)
 
 void nanny_new_pwd(class descriptor_data *d, char *arg)
 {
-    if(STATE(d)++ == 0)
+    if (STATE(d)++ == 0)
     {
         char buf[100];
 
@@ -748,7 +748,7 @@ void nanny_new_pwd(class descriptor_data *d, char *arg)
     sprintf(buf, "PasswordOff('', '%s')", g_cServerConfig.m_mudname);
     send_to_descriptor(scriptwrap(buf).c_str(), d);
 
-    if(!check_pwd(d, arg))
+    if (!check_pwd(d, arg))
     {
         set_descriptor_fptr(d, nanny_new_pwd, TRUE);
         return;
@@ -766,10 +766,10 @@ ubit1 base_string_add(class descriptor_data *d, char *str)
     char *scan;
     int terminator = 0;
 
-    if(STATE(d)++ == 0)
+    if (STATE(d)++ == 0)
     {
         send_to_descriptor("Terminate with a '@'.<br/>", d);
-        if(d->localstr)
+        if (d->localstr)
         {
             slog(LOG_ALL, 0, "Spooky localstr in base_string_add - tell papi.");
             FREE(d->localstr); // Spooky!
@@ -779,14 +779,14 @@ ubit1 base_string_add(class descriptor_data *d, char *str)
     }
 
     /* determine if this is the terminal string, and truncate if so */
-    for(scan = str; *scan; scan++)
-        if((terminator = (*scan == '@' && scan[1] == '\0')))
+    for (scan = str; *scan; scan++)
+        if ((terminator = (*scan == '@' && scan[1] == '\0')))
         {
             *scan = '\0';
             break;
         }
 
-    if(MAX_STRING_LENGTH - (d->localstr ? strlen(d->localstr) : 0) < strlen(str))
+    if (MAX_STRING_LENGTH - (d->localstr ? strlen(d->localstr) : 0) < strlen(str))
     {
         str[MAX_STRING_LENGTH - (d->localstr ? strlen(d->localstr) : 0)] = '\0';
         terminator = 1;
@@ -794,7 +794,7 @@ ubit1 base_string_add(class descriptor_data *d, char *str)
         send_to_descriptor("String too long - Truncated.<br/>", d);
     }
 
-    if(d->localstr == NULL)
+    if (d->localstr == NULL)
     {
         CREATE(d->localstr, char, strlen(str) + 8);
         strcpy(d->localstr, str);
@@ -805,12 +805,12 @@ ubit1 base_string_add(class descriptor_data *d, char *str)
         strcat(d->localstr, str);
     }
 
-    if(terminator)
+    if (terminator)
     {
-        if(d->postedit)
+        if (d->postedit)
             d->postedit(d);
 
-        if(d->localstr)
+        if (d->localstr)
             FREE(d->localstr);
 
         d->localstr = NULL;
@@ -829,7 +829,7 @@ ubit1 base_string_add(class descriptor_data *d, char *str)
 /* Add user input to the 'current' string (as defined by d->str) */
 void interpreter_string_add(class descriptor_data *d, char *str)
 {
-    if(base_string_add(d, str))
+    if (base_string_add(d, str))
         set_descriptor_fptr(d, descriptor_interpreter, FALSE);
 }
 
@@ -840,16 +840,16 @@ void nanny_fix_descriptions(class unit_data *u)
     class extra_descr_data *exd;
     char buf[1024];
 
-    for(exd = UNIT_EXTRA(u).m_pList; exd; exd = exd->next)
+    for (exd = UNIT_EXTRA(u).m_pList; exd; exd = exd->next)
     {
-        if(exd->names.Name())
+        if (exd->names.Name())
             strcpy(buf, exd->names.Name());
         else
             *buf = 0;
 
-        if(!exd->names.Name() || search_block(buf, bodyparts, TRUE))
+        if (!exd->names.Name() || search_block(buf, bodyparts, TRUE))
         {
-            if(str_is_empty(exd->descr.c_str()))
+            if (str_is_empty(exd->descr.c_str()))
             {
                 UNIT_EXTRA(u).erase(exd);
                 nanny_fix_descriptions(u); // MS2020 terrible kludge :)
@@ -882,9 +882,9 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
 
     STATE(d)++;
 
-    if(STATE(d) == 1)
+    if (STATE(d) == 1)
     {
-        if(PC_CRACK_ATTEMPTS(d->character) > 2)
+        if (PC_CRACK_ATTEMPTS(d->character) > 2)
         {
             sprintf(buf,
                     "<br/>ATTENTION: Your password has been "
@@ -898,7 +898,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
         STATE(d)++;
     }
 
-    if(STATE(d) == 2)
+    if (STATE(d) == 2)
     {
         sprintf(buf, "Welcome back %s, please enter your password: ", UNIT_NAME(d->character));
         send_to_descriptor(buf, d);
@@ -909,7 +909,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
     sprintf(buf, "PasswordOff('%s', '%s')", UNIT_NAME(d->character), g_cServerConfig.m_mudname);
     send_to_descriptor(scriptwrap(buf).c_str(), d);
 
-    if(str_is_empty(arg))
+    if (str_is_empty(arg))
     {
         // UNIT_NAMES(d->character).Free();
         send_to_descriptor("<br/>Wrong password, please login again.", d);
@@ -928,14 +928,14 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
     int nCmp;
     nCmp = pwdcompare(crypt(arg, PC_PWD(d->character)), PC_PWD(d->character), PC_MAX_PASSWORD);
 
-    if(nCmp != 0)
+    if (nCmp != 0)
     {
-        if(!str_is_empty(arg))
+        if (!str_is_empty(arg))
         {
             slog(LOG_ALL, 0, "%s entered a wrong password [%s].", PC_FILENAME(d->character), d->host);
             PC_CRACK_ATTEMPTS(d->character)++;
 
-            if((td = find_descriptor(PC_FILENAME(d->character), d)))
+            if ((td = find_descriptor(PC_FILENAME(d->character), d)))
             {
                 send_to_descriptor("<br/>Someone just attempted to login under "
                                    "your name using an illegal password.<br/>",
@@ -943,7 +943,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
                 PC_CRACK_ATTEMPTS(td->character)++;
                 d->wait = PULSE_SEC * 5 + PC_CRACK_ATTEMPTS(td->character) * PULSE_SEC;
             }
-            else if(!PC_IS_UNSAVED(d->character))
+            else if (!PC_IS_UNSAVED(d->character))
                 save_player_file(d->character);
         }
 
@@ -961,7 +961,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
             ctime(&PC_TIME(d->character).connect));
     send_to_descriptor(buf, d);
 
-    if((td = find_descriptor(PC_FILENAME(d->character), d)))
+    if ((td = find_descriptor(PC_FILENAME(d->character), d)))
     {
         set_descriptor_fptr(d, nanny_throw, TRUE);
         return;
@@ -969,12 +969,12 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
 
     /* See if player is in game (guests are not created in file entries) */
     /* Enters game (reconnects) if true                                  */
-    for(u = unit_list; u; u = u->gnext)
+    for (u = unit_list; u; u = u->gnext)
     {
-        if(!IS_PC(u))
+        if (!IS_PC(u))
             break;
 
-        if(str_ccmp(PC_FILENAME(u), PC_FILENAME(d->character)) == 0)
+        if (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->character)) == 0)
         {
             //	  assert (!CHAR_DESCRIPTOR (u));
             //	  assert (UNIT_IN (u));
@@ -993,7 +993,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
 
 void nanny_name_confirm(class descriptor_data *d, char *arg)
 {
-    if(STATE(d)++ == 0)
+    if (STATE(d)++ == 0)
     {
         char buf[100];
 
@@ -1010,9 +1010,9 @@ void nanny_name_confirm(class descriptor_data *d, char *arg)
            return;
         }
      */
-    if(*arg == 'y' || *arg == 'Y')
+    if (*arg == 'y' || *arg == 'Y')
     {
-        if(site_banned(d->host) != NO_BAN)
+        if (site_banned(d->host) != NO_BAN)
         {
             show_ban_text(d->host, d);
             set_descriptor_fptr(d, nanny_close, TRUE);
@@ -1021,9 +1021,9 @@ void nanny_name_confirm(class descriptor_data *d, char *arg)
         send_to_descriptor("New character.<br/>", d);
         set_descriptor_fptr(d, nanny_new_pwd, TRUE);
     }
-    else if(*arg == 'n' || *arg == 'N')
+    else if (*arg == 'n' || *arg == 'N')
     {
-        if(PC_FILENAME(d->character))
+        if (PC_FILENAME(d->character))
             strcpy(PC_FILENAME(d->character), "");
         UNIT_NAMES(d->character).Free();
         send_to_descriptor("Ok, what IS it, then? ", d);
@@ -1038,24 +1038,24 @@ void nanny_get_name(class descriptor_data *d, char *arg)
     char tmp_name[100];
     class descriptor_data *td;
 
-    if(str_is_empty(arg))
+    if (str_is_empty(arg))
     {
         set_descriptor_fptr(d, nanny_close, TRUE);
         return;
     }
 
-    if(_parse_name(arg, tmp_name))
+    if (_parse_name(arg, tmp_name))
     {
         send_to_descriptor("Illegal name, please try another.<br/>", d);
         send_to_descriptor("Name: ", d);
         return;
     }
 
-    if(player_exists(tmp_name))
+    if (player_exists(tmp_name))
     {
         class unit_data *ch;
 
-        if(site_banned(d->host) == BAN_TOTAL)
+        if (site_banned(d->host) == BAN_TOTAL)
         {
             show_ban_text(d->host, d);
             set_descriptor_fptr(d, nanny_close, TRUE);
@@ -1065,7 +1065,7 @@ void nanny_get_name(class descriptor_data *d, char *arg)
         /* Known player, lets load his character information. */
         ch = load_player(tmp_name);
 
-        if(ch == NULL)
+        if (ch == NULL)
         {
             send_to_descriptor("LOAD ERROR! PLEASE MAKE A NOTE OF ANY "
                                "SPECIAL ACTIONS YOU MAY HAVE TAKEN JUST "
@@ -1083,7 +1083,7 @@ void nanny_get_name(class descriptor_data *d, char *arg)
         CHAR_DESCRIPTOR(ch) = d;
         d->character = ch;
 
-        if(wizlock && CHAR_LEVEL(d->character) < wizlock)
+        if (wizlock && CHAR_LEVEL(d->character) < wizlock)
         {
             send_to_descriptor("Sorry, the game is wizlocked for "
                                "your level.<br/>",
@@ -1101,7 +1101,7 @@ void nanny_get_name(class descriptor_data *d, char *arg)
     else
     {
         /* Check for wizlock */
-        if(wizlock)
+        if (wizlock)
         {
             send_to_descriptor("Sorry, no new players now, the game "
                                "is wizlocked!<br/>",
@@ -1122,10 +1122,10 @@ void nanny_get_name(class descriptor_data *d, char *arg)
         strcpy(PC_PWD(d->character), "");
 
         /* If someone is connected, we borrow his pwd */
-        if((td = find_descriptor(tmp_name, d)))
+        if ((td = find_descriptor(tmp_name, d)))
         {
             // Only borrow a password if its already been set
-            if(*PC_PWD(td->character))
+            if (*PC_PWD(td->character))
             {
                 strcpy(PC_PWD(d->character), PC_PWD(td->character));
                 set_descriptor_fptr(d, nanny_existing_pwd, TRUE);

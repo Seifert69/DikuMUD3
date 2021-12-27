@@ -69,13 +69,13 @@ void skill_dump(void)
 
     bool pairISCompare(const std::pair<int, std::string> &firstElem, const std::pair<int, std::string> &secondElem);
 
-    for(int j = 0; j < PROFESSION_MAX; j++)
+    for (int j = 0; j < PROFESSION_MAX; j++)
     {
         std::vector<std::pair<int, std::string>> vect;
 
-        for(int i = 0; i < SKI_TREE_MAX; i++)
+        for (int i = 0; i < SKI_TREE_MAX; i++)
         {
-            if(g_SkiColl.text[i] == NULL)
+            if (g_SkiColl.text[i] == NULL)
                 continue;
 
             str = "";
@@ -109,7 +109,7 @@ void skill_dump(void)
         }
 
         std::sort(vect.begin(), vect.end(), pairISCompare);
-        for(auto it = vect.begin(); it != vect.end(); ++it)
+        for (auto it = vect.begin(); it != vect.end(); ++it)
             printf("%s", it->second.c_str());
     }
 
@@ -122,12 +122,12 @@ void cmd_base_load(void)
 
     cmd_trie = 0;
 
-    for(i = 0; *cmdload[i].cmd_str; i++)
+    for (i = 0; *cmdload[i].cmd_str; i++)
         cmd_trie = add_trienode(cmdload[i].cmd_str, cmd_trie);
 
     qsort_triedata(cmd_trie);
 
-    for(i = 0; *cmdload[i].cmd_str; i++)
+    for (i = 0; *cmdload[i].cmd_str; i++)
         set_triedata(cmdload[i].cmd_str, cmd_trie, &cmdload[i], TRUE);
 
     command_read();
@@ -146,22 +146,22 @@ void command_read(void)
     struct cmdload_struct *intcmd;
 
     touch_file(str_cc(g_cServerConfig.m_etcdir, COMMAND_DEFS));
-    if(!(fl = fopen(str_cc(g_cServerConfig.m_etcdir, COMMAND_DEFS), "rb")))
+    if (!(fl = fopen(str_cc(g_cServerConfig.m_etcdir, COMMAND_DEFS), "rb")))
     {
         slog(LOG_ALL, 0, "FATAL: Unable to open etc/ " COMMAND_DEFS);
         exit(0);
     }
     slog(LOG_ALL, 0, "Booting Commands from: " COMMAND_DEFS);
 
-    while(!feof(fl))
+    while (!feof(fl))
     {
         char *mstmp = fgets(pTmp, sizeof(pTmp) - 1, fl);
-        if(mstmp == NULL)
+        if (mstmp == NULL)
             continue;
 
         str_remspc(pTmp);
 
-        if((pCh = strchr(pTmp, '=')))
+        if ((pCh = strchr(pTmp, '=')))
         {
             *pCh = 0;
             pCh = skip_blanks(pCh + 1);
@@ -171,16 +171,16 @@ void command_read(void)
         str_lower(pTmp);
         strip_trailing_blanks(pTmp);
 
-        if(pCh == NULL || str_is_empty(pCh))
+        if (pCh == NULL || str_is_empty(pCh))
             continue;
 
-        if(strncmp(pTmp, "command", 5) == 0)
+        if (strncmp(pTmp, "command", 5) == 0)
         {
-            if(cmdptr)
+            if (cmdptr)
             {
-                if(cmdptr->cmd_str && (cmdptr->cmd_fptr || cmdptr->tmpl))
+                if (cmdptr->cmd_str && (cmdptr->cmd_fptr || cmdptr->tmpl))
                 {
-                    if(cmdlist == NULL)
+                    if (cmdlist == NULL)
                     {
                         cmdlist = cmdptr;
                         cmdptr->prev = NULL;
@@ -216,14 +216,14 @@ void command_read(void)
             ignore = FALSE;
             continue;
         }
-        if(ignore)
+        if (ignore)
             continue;
 
-        if(strncmp(pTmp, "internal", 4) == 0)
+        if (strncmp(pTmp, "internal", 4) == 0)
         {
-            if((intcmd = ((struct cmdload_struct *)search_trie(pCh, cmd_trie))))
+            if ((intcmd = ((struct cmdload_struct *)search_trie(pCh, cmd_trie))))
             {
-                if(cmdptr)
+                if (cmdptr)
                 {
                     cmdptr->cmd_fptr = intcmd->cmd_fptr;
                     cmdptr->inttype = intcmd->inttype;
@@ -232,7 +232,7 @@ void command_read(void)
             }
             else
             {
-                if(cmdptr->cmd_str)
+                if (cmdptr->cmd_str)
                     FREE(cmdptr->cmd_str)
                 cmdptr = NULL;
                 slog(LOG_ALL, 0, "COMMAND LOAD ERROR: %s not a defined internal funciton.", pCh);
@@ -241,10 +241,10 @@ void command_read(void)
             continue;
         }
 
-        if(strncmp(pTmp, "index", 8) == 0)
+        if (strncmp(pTmp, "index", 8) == 0)
         {
             idx = atoi(pCh);
-            if(!str_is_number(pCh) || !is_in(idx, 0, SKI_TREE_MAX - 1))
+            if (!str_is_number(pCh) || !is_in(idx, 0, SKI_TREE_MAX - 1))
             {
                 slog(LOG_ALL, 0, "Skill boot error: %s", pCh);
                 idx = -1;
@@ -252,9 +252,9 @@ void command_read(void)
             continue;
         }
 
-        if(strncmp(pTmp, "name", 4) == 0)
+        if (strncmp(pTmp, "name", 4) == 0)
         {
-            if(g_SkiColl.text[idx])
+            if (g_SkiColl.text[idx])
             {
                 free((char *)g_SkiColl.text[idx]);
                 g_SkiColl.text[idx] = NULL;
@@ -263,41 +263,41 @@ void command_read(void)
             continue;
         }
 
-        if(strncmp(pTmp, "auto train", 10) == 0)
+        if (strncmp(pTmp, "auto train", 10) == 0)
         {
             dummy = atoi(pCh);
-            if(is_in(dummy, 0, 1))
+            if (is_in(dummy, 0, 1))
                 g_SkiColl.tree[idx].bAutoTrain = dummy;
             continue;
         }
 
-        if(strncmp(pTmp, "auto teacher no add", 19) == 0)
+        if (strncmp(pTmp, "auto teacher no add", 19) == 0)
         {
             dummy = atoi(pCh);
-            if(is_in(dummy, 0, 1))
+            if (is_in(dummy, 0, 1))
                 g_SkiColl.tree[idx].bAutoTeacherNoAdd = dummy;
             continue;
         }
 
-        if(strncmp(pTmp, "race ", 5) == 0)
+        if (strncmp(pTmp, "race ", 5) == 0)
         {
             dummy = atoi(pCh);
-            if(!is_in(dummy, -3, +3))
+            if (!is_in(dummy, -3, +3))
                 continue;
 
             int ridx = search_block(pTmp + 5, pc_races, TRUE);
 
-            if(ridx == -1)
+            if (ridx == -1)
                 slog(LOG_ALL, 0, "Skills: Illegal race in: %s", pTmp);
             else
                 g_SkiColl.racial[ridx][idx] = dummy;
             continue;
         }
 
-        if(strncmp(pTmp, "profession ", 11) == 0)
+        if (strncmp(pTmp, "profession ", 11) == 0)
         {
             dummy = atoi(pCh);
-            if(!is_in(dummy, -9, +5))
+            if (!is_in(dummy, -9, +5))
             {
                 slog(LOG_ALL, 0, "Skills: profession modifier %d for %s not in [-9..+5]", dummy, pTmp);
                 continue;
@@ -305,23 +305,23 @@ void command_read(void)
 
             int ridx = search_block(pTmp + 11, professions, TRUE);
 
-            if(ridx == -1)
+            if (ridx == -1)
                 slog(LOG_ALL, 0, "Skills: Illegal profession %s", pTmp);
             else
                 g_SkiColl.prof_table[idx].profession_cost[ridx] = dummy;
             continue;
         }
 
-        if(strncmp(pTmp, "restrict ", 9) == 0)
+        if (strncmp(pTmp, "restrict ", 9) == 0)
         {
             dummy = atoi(pCh);
-            if(!is_in(dummy, 0, 250))
+            if (!is_in(dummy, 0, 250))
             {
                 slog(LOG_ALL, 0, "Skills: restrict modifier %d for %s not in [0..250]", dummy, pTmp);
                 continue;
             }
 
-            if(strncmp(pTmp + 9, "level", 5) == 0)
+            if (strncmp(pTmp + 9, "level", 5) == 0)
             {
                 g_SkiColl.prof_table[idx].min_level = dummy;
             }
@@ -329,7 +329,7 @@ void command_read(void)
             {
                 int ridx = search_block(pTmp + 9, g_AbiColl.text, TRUE);
 
-                if(ridx == -1)
+                if (ridx == -1)
                     slog(LOG_ALL, 0, "Weapons: Illegal restrict %s", pTmp);
                 else
                     g_SkiColl.prof_table[idx].min_abil[ridx] = dummy;
@@ -337,10 +337,10 @@ void command_read(void)
             continue;
         }
 
-        if(strncmp(pTmp, "turns", 5) == 0)
+        if (strncmp(pTmp, "turns", 5) == 0)
         {
             dummy = atoi(pCh);
-            if(is_in(dummy, 0, 4 * PULSE_VIOLENCE))
+            if (is_in(dummy, 0, 4 * PULSE_VIOLENCE))
             {
                 cmdptr->combat_speed = dummy;
                 cmdptr->combat_buffer = TRUE;
@@ -348,20 +348,20 @@ void command_read(void)
             continue;
         }
 
-        if(strncmp(pTmp, "minpos", 6) == 0)
+        if (strncmp(pTmp, "minpos", 6) == 0)
         {
-            if(cmdptr)
+            if (cmdptr)
             {
                 dummy = atoi(pCh);
-                if(is_in(dummy, POSITION_DEAD, POSITION_STANDING))
+                if (is_in(dummy, POSITION_DEAD, POSITION_STANDING))
                     cmdptr->minimum_position = dummy;
             }
             continue;
         }
 
-        if(strncmp(pTmp, "minlevel", 8) == 0)
+        if (strncmp(pTmp, "minlevel", 8) == 0)
         {
-            if(cmdptr)
+            if (cmdptr)
             {
                 dummy = atoi(pCh);
                 cmdptr->minimum_level = dummy;
@@ -369,18 +369,18 @@ void command_read(void)
             continue;
         }
 
-        if(strncmp(pTmp, "loglevel", 8) == 0)
+        if (strncmp(pTmp, "loglevel", 8) == 0)
         {
-            if(cmdptr)
+            if (cmdptr)
             {
                 dummy = atoi(pCh);
                 cmdptr->log_level = dummy;
             }
             continue;
         }
-        if(strncmp(pTmp, "type", 4) == 0)
+        if (strncmp(pTmp, "type", 4) == 0)
         {
-            if(cmdptr)
+            if (cmdptr)
             {
                 dummy = atoi(pCh);
                 cmdptr->type = dummy;
@@ -388,27 +388,27 @@ void command_read(void)
             continue;
         }
 
-        if(strncmp(pTmp, "func", 4) == 0)
+        if (strncmp(pTmp, "func", 4) == 0)
         {
-            if(cmdptr)
+            if (cmdptr)
             {
-                if(cmdptr->tmpl)
+                if (cmdptr->tmpl)
                     FREE(cmdptr->tmpl);
 
-                if(!(cmdptr->tmpl = find_dil_template(pCh)))
+                if (!(cmdptr->tmpl = find_dil_template(pCh)))
                     slog(LOG_ALL, 0, "COMMAND LOAD WARNING: No such DIL template %s.", pCh);
             }
             continue;
         }
-        if(*pTmp)
+        if (*pTmp)
             slog(LOG_ALL, 0, "COMMAND LOAD ERROR: Unexpected text: %s", pTmp);
     }
 
-    if(cmdptr)
+    if (cmdptr)
     {
-        if(cmdptr->cmd_str && (cmdptr->cmd_fptr || cmdptr->tmpl))
+        if (cmdptr->cmd_str && (cmdptr->cmd_fptr || cmdptr->tmpl))
         {
-            if(cmdlist == NULL)
+            if (cmdlist == NULL)
             {
                 cmdlist = cmdptr;
                 cmdptr->prev = NULL;

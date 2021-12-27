@@ -225,11 +225,11 @@ void edit_extra(class descriptor_data *d)
 {
     class extra_descr_data *exd;
 
-    for(exd = UNIT_EXTRA(d->editing).m_pList; exd; exd = exd->next)
-        if(exd == d->editref)
+    for (exd = UNIT_EXTRA(d->editing).m_pList; exd; exd = exd->next)
+        if (exd == d->editref)
             break; // It still exists!
 
-    if(exd)
+    if (exd)
         exd->descr = (d->localstr);
 }
 
@@ -238,11 +238,11 @@ void edit_info(class descriptor_data *d)
 {
     class extra_descr_data *exd;
 
-    for(exd = PC_INFO(d->editing).m_pList; exd; exd = exd->next)
-        if(exd == d->editref)
+    for (exd = PC_INFO(d->editing).m_pList; exd; exd = exd->next)
+        if (exd == d->editref)
             break; // It still exists!
 
-    if(exd)
+    if (exd)
         exd->descr = (d->localstr);
 }
 
@@ -260,27 +260,27 @@ int search_block_set(char *arg, const char **list, bool exact)
 {
     register int i, l;
 
-    if(list == NULL)
+    if (list == NULL)
         return -1;
 
     /* Substitute '_' and get length of string */
-    for(l = 0; arg[l]; l++)
-        if(arg[l] == '_')
+    for (l = 0; arg[l]; l++)
+        if (arg[l] == '_')
             arg[l] = ' ';
 
-    if(exact)
+    if (exact)
     {
-        for(i = 0; list[i]; i++)
-            if(!strcmp(arg, list[i]))
+        for (i = 0; list[i]; i++)
+            if (!strcmp(arg, list[i]))
                 return i;
     }
     else
     {
-        if(l == 0)
+        if (l == 0)
             l = 1; /* Avoid "" to match the first available string */
 
-        for(i = 0; list[i]; i++)
-            if(!str_nccmp(arg, list[i], l)) /* no regard of case */
+        for (i = 0; list[i]; i++)
+            if (!str_nccmp(arg, list[i], l)) /* no regard of case */
                 return i;
     }
 
@@ -332,7 +332,7 @@ void show_fields(class unit_data *ch)
     sprintf(c, "<table class='colh3'>");
     TAIL(c);
 
-    for(i = 0; i < MAX_SET_FIELDS; i++)
+    for (i = 0; i < MAX_SET_FIELDS; i++)
     {
         sprintf(c,
                 "<tr><td>%s :</td><td> on %s. :</td><td>%s</td></tr>",
@@ -352,12 +352,12 @@ void show_structure(const char *structure[], class unit_data *ch)
 {
     char **c, *cc, buf[MAX_STRING_LENGTH];
 
-    if(structure == NULL)
+    if (structure == NULL)
         return;
 
     strcpy(buf, "Not defined yet.<br/>");
 
-    for(cc = buf, c = (char **)structure; *c; c++)
+    for (cc = buf, c = (char **)structure; *c; c++)
     {
         sprintf(cc, "%s<br/>", *c);
         TAIL(cc);
@@ -371,19 +371,19 @@ long int get_bit(char *bitlst, const char *structure[])
     long int bitval = 0, tmpval;
 
     /* walk through bitlist */
-    for(l = bitlst; *l;)
+    for (l = bitlst; *l;)
     {
         /* copy bitname */
-        for(s = bit; *l && *l != '|'; *(s++) = *(l++))
+        for (s = bit; *l && *l != '|'; *(s++) = *(l++))
             ;
 
         *s = 0;
-        if(*l)
+        if (*l)
             l++;
 
-        if(!str_is_empty(bit))
+        if (!str_is_empty(bit))
         {
-            if((tmpval = search_block_set(bit, structure, FALSE)) == -1)
+            if ((tmpval = search_block_set(bit, structure, FALSE)) == -1)
                 return -1;
             SET_BIT(bitval, 1 << tmpval);
         }
@@ -414,11 +414,11 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
     int required_xp(int level);
 
-    if(!CHAR_DESCRIPTOR(ch))
+    if (!CHAR_DESCRIPTOR(ch))
         return;
 
     /* Check argument */
-    if(str_is_empty(argument))
+    if (str_is_empty(argument))
     {
         send_to_char("Syntax: set &lt;name&gt; &lt;field&gt; &lt;arguments&gt;.<br/>", ch);
         return;
@@ -426,7 +426,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
     str_next_word(argument, arg);
 
-    if(str_ccmp(arg, "room") == 0)
+    if (str_ccmp(arg, "room") == 0)
     {
         argument = str_next_word(argument, arg);
         unt = UNIT_IN(ch);
@@ -434,13 +434,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
     else
     {
         unt = find_unit(ch, &argument, 0, FIND_UNIT_WORLD | FIND_UNIT_SURRO | FIND_UNIT_INVEN | FIND_UNIT_EQUIP);
-        if(unt == NULL)
+        if (unt == NULL)
         {
             send_to_char("No such thing.<br/>", ch);
             return;
         }
         /* Temporary fix, as modifying money CAN crash the game!   /gnort */
-        else if(IS_MONEY(unt) && CHAR_LEVEL(ch) < 255)
+        else if (IS_MONEY(unt) && CHAR_LEVEL(ch) < 255)
         {
             send_to_char("You can't modify money yet, sorry.<br/>", ch);
             return;
@@ -451,7 +451,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
     argument = str_next_word(argument, arg);
 
     /* Partial match on fields */
-    if((type = search_block(arg, unit_field_names, FALSE)) == -1)
+    if ((type = search_block(arg, unit_field_names, FALSE)) == -1)
     {
         send_to_char("Invalid field.<br/>", ch);
         show_fields(ch);
@@ -459,24 +459,24 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
     }
 
     /* check if level of users is ok */
-    if(CHAR_LEVEL(ch) < unit_field_data[type].minplayer && unt != ch && IS_PC(unt))
+    if (CHAR_LEVEL(ch) < unit_field_data[type].minplayer && unt != ch && IS_PC(unt))
     {
         send_to_char("Authority to set field for OTHER PLAYERS denied!<br/>", ch);
         return;
     }
 
     /* check if level of users is ok */
-    if((CHAR_LEVEL(ch) < unit_field_data[type].minother && unt != ch && IS_PC(unt)) ||
-       (CHAR_LEVEL(ch) < unit_field_data[type].minself && unt == ch))
+    if ((CHAR_LEVEL(ch) < unit_field_data[type].minother && unt != ch && IS_PC(unt)) ||
+        (CHAR_LEVEL(ch) < unit_field_data[type].minself && unt == ch))
     {
         send_to_char("Authority to set field denied!<br/>", ch);
         return;
     }
 
     /* see if field is valid for unit */
-    if((unit_field_data[type].utype == UT_ROOM && !IS_ROOM(unt)) || (unit_field_data[type].utype == UT_OBJ && !IS_OBJ(unt)) ||
-       (unit_field_data[type].utype == UT_NPC && !IS_NPC(unt)) || (unit_field_data[type].utype == UT_PC && !IS_PC(unt)) ||
-       (unit_field_data[type].utype == UT_CHAR && !IS_CHAR(unt)))
+    if ((unit_field_data[type].utype == UT_ROOM && !IS_ROOM(unt)) || (unit_field_data[type].utype == UT_OBJ && !IS_OBJ(unt)) ||
+        (unit_field_data[type].utype == UT_NPC && !IS_NPC(unt)) || (unit_field_data[type].utype == UT_PC && !IS_PC(unt)) ||
+        (unit_field_data[type].utype == UT_CHAR && !IS_CHAR(unt)))
     {
         send_to_char("Field invalid for type of unit.<br/>", ch);
         return;
@@ -485,10 +485,10 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
     argument = skip_spaces(argument);
 
     /* read in field parameters */
-    switch(unit_field_data[type].atype)
+    switch (unit_field_data[type].atype)
     {
         case AT_STR:
-            if(str_is_empty(argument))
+            if (str_is_empty(argument))
             {
                 send_to_char("Argument expected.<br/>", ch);
                 return;
@@ -496,7 +496,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             break;
 
         case AT_DES:
-            if(unit_is_edited(unt))
+            if (unit_is_edited(unt))
             {
                 send_to_char("Unit is already being edited.<br/>", ch);
                 return;
@@ -508,7 +508,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         case AT_VAL:
             send_to_char("Arg:&lt;value&gt;<br/>", ch);
             argument = str_next_word(argument, arg);
-            if(str_is_empty(arg))
+            if (str_is_empty(arg))
             {
                 send_to_char("Numeric argument expected.<br/>", ch);
                 return;
@@ -521,7 +521,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         case AT_BIT:
             send_to_char("Arg:&lt;bitlist&gt;<br/>", ch);
             argument = str_next_word(argument, arg);
-            if((bitarg = get_bit(arg, unit_field_data[type].structure)) == -1)
+            if ((bitarg = get_bit(arg, unit_field_data[type].structure)) == -1)
             {
                 send_to_char("Invalid or missing bit for field<br/>", ch);
                 show_structure(unit_field_data[type].structure, ch);
@@ -534,7 +534,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         case AT_TYP:
             send_to_char("Arg:&lt;type&gt;<br/>", ch);
             argument = str_next_word(argument, arg);
-            if((typarg = get_type(arg, unit_field_data[type].structure)) == -1)
+            if ((typarg = get_type(arg, unit_field_data[type].structure)) == -1)
             {
                 send_to_char("Invalid or missing type for field.<br/>", ch);
                 show_structure(unit_field_data[type].structure, ch);
@@ -548,7 +548,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             send_to_char("Arg:&lt;unitpath&gt;<br/>", ch);
             argument = str_next_word(argument, strarg);
             /* find unit by 'path' name in arg */
-            if((untarg = str_to_file_index(strarg)) == NULL)
+            if ((untarg = str_to_file_index(strarg)) == NULL)
             {
                 send_to_char("Invalid or missing unit path for field.<br/>", ch);
                 return;
@@ -559,12 +559,12 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
         case AT_KEYDES:
             send_to_char("Arg:&lt;string&gt; (description)<br/>", ch);
-            if(str_is_empty(argument))
+            if (str_is_empty(argument))
             {
                 send_to_char("Missing string argument.<br/>", ch);
                 return;
             }
-            if(unit_is_edited(unt))
+            if (unit_is_edited(unt))
             {
                 send_to_char("Unit is already being edited.<br/>", ch);
                 return;
@@ -576,7 +576,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         case AT_TYPVAL:
             send_to_char("Arg:&lt;type&gt; &lt;value&gt;<br/>", ch);
             argument = str_next_word(argument, arg);
-            if((typarg = get_type(arg, unit_field_data[type].structure)) == -1)
+            if ((typarg = get_type(arg, unit_field_data[type].structure)) == -1)
             {
                 send_to_char("Invalid or missing type for field.<br/>", ch);
                 show_structure(unit_field_data[type].structure, ch);
@@ -585,7 +585,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             sprintf(buf, "Type found is %s [%d]<br/>", unit_field_data[type].structure[typarg], typarg);
             send_to_char(buf, ch);
             argument = str_next_word(argument, arg);
-            if(str_is_empty(arg))
+            if (str_is_empty(arg))
             {
                 send_to_char("Numeric argument expected.<br/>", ch);
                 return;
@@ -598,7 +598,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         case AT_DIRBIT:
             send_to_char("Arg:&lt;direction&gt; <bitlist><br/>", ch);
             argument = str_next_word(argument, arg);
-            if((typarg = get_type(arg, dirs)) == -1)
+            if ((typarg = get_type(arg, dirs)) == -1)
             {
                 send_to_char("Invalid direction.<br/>", ch);
                 show_structure(dirs, ch);
@@ -607,7 +607,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             sprintf(buf, "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
             send_to_char(buf, ch);
             argument = str_next_word(argument, arg);
-            if((bitarg = get_bit(arg, unit_field_data[type].structure)) == -1)
+            if ((bitarg = get_bit(arg, unit_field_data[type].structure)) == -1)
             {
                 send_to_char("Invalid or missing bit for field.<br/>", ch);
                 show_structure(unit_field_data[type].structure, ch);
@@ -620,7 +620,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         case AT_DIRSTR:
             send_to_char("Arg:&lt;direction&gt; <string><br/>", ch);
             argument = str_next_word(argument, arg);
-            if((typarg = get_type(arg, dirs)) == -1)
+            if ((typarg = get_type(arg, dirs)) == -1)
             {
                 send_to_char("Invalid direction.<br/>", ch);
                 show_structure(dirs, ch);
@@ -628,7 +628,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             }
             sprintf(buf, "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
             send_to_char(buf, ch);
-            if(str_is_empty(argument))
+            if (str_is_empty(argument))
             {
                 send_to_char("Missing string argument.<br/>", ch);
                 return;
@@ -639,7 +639,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         case AT_DIRUNT:
             send_to_char("Arg:&lt;direction&gt; <unitpath><br/>", ch);
             argument = str_next_word(argument, arg);
-            if((typarg = get_type(arg, dirs)) == -1)
+            if ((typarg = get_type(arg, dirs)) == -1)
             {
                 send_to_char("Invalid or missing direction.<br/>", ch);
                 show_structure(dirs, ch);
@@ -648,7 +648,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             sprintf(buf, "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
             send_to_char(buf, ch);
             argument = str_next_word(argument, arg);
-            if((untarg = str_to_file_index(arg)) == NULL)
+            if ((untarg = str_to_file_index(arg)) == NULL)
             {
                 send_to_char("Invalid or missing unit path for field.<br/>", ch);
                 return;
@@ -660,7 +660,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         case AT_DIRDES:
             send_to_char("Arg:&lt;direction&gt; (description)<br/>", ch);
             argument = str_next_word(argument, arg);
-            if((typarg = get_type(arg, dirs)) == -1)
+            if ((typarg = get_type(arg, dirs)) == -1)
             {
                 send_to_char("Invalid or missing direction.<br/>", ch);
                 show_structure(dirs, ch);
@@ -668,7 +668,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             }
             sprintf(buf, "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
             send_to_char(buf, ch);
-            if(unit_is_edited(unt))
+            if (unit_is_edited(unt))
             {
                 send_to_char("Unit is already being edited.<br/>", ch);
                 return;
@@ -688,10 +688,10 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
     strip_trailing_spaces(argument);
 
     /* insert data read in argument */
-    switch(type)
+    switch (type)
     {
         case 0: /* "add-name" */
-            if(IS_PC(unt) && CHAR_LEVEL(ch) < 255)
+            if (IS_PC(unt) && CHAR_LEVEL(ch) < 255)
             {
                 send_to_char("Not allowed to modify PC's.<br/>", ch);
                 return;
@@ -705,7 +705,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 1: /* "del-name" */
-            if(!UNIT_NAMES(unt).Name(0) || !UNIT_NAMES(unt).Name(1))
+            if (!UNIT_NAMES(unt).Name(0) || !UNIT_NAMES(unt).Name(1))
             {
                 send_to_char("Must have minimum of two names<br/>", ch);
                 return;
@@ -731,11 +731,11 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             argument = str_next_word(argument, strarg);
             act("Searching for $2t.", A_ALWAYS, ch, strarg, cActParameter(), TO_CHAR);
 
-            if((ed = unit_find_extra(strarg, unt)) == NULL)
+            if ((ed = unit_find_extra(strarg, unt)) == NULL)
             {
                 /* the field was not found. create a new one. */
-                ed = new(class extra_descr_data);
-                while(*strarg) /* insert names */
+                ed = new (class extra_descr_data);
+                while (*strarg) /* insert names */
                 {
                     ed->names.AppendName(strarg);
                     argument = str_next_word(argument, strarg);
@@ -748,9 +748,9 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             {
                 /* add the rest of the names if they do not exist */
                 argument = str_next_word(argument, strarg);
-                while(*strarg)
+                while (*strarg)
                 {
-                    if(ed->names.IsName(strarg))
+                    if (ed->names.IsName(strarg))
                         ed->names.AppendName(strarg);
 
                     argument = str_next_word(argument, strarg);
@@ -766,7 +766,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 5: /* "del-extra" */
-            if(str_is_empty(argument))
+            if (str_is_empty(argument))
             {
                 send_to_char("You must supply a field name.<br/>", ch);
                 return;
@@ -781,9 +781,9 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 7: /* "unit-flags" */
-            if(IS_SET(UNIT_FLAGS(unt), UNIT_FL_TRANS) && !IS_SET(bitarg, UNIT_FL_TRANS))
+            if (IS_SET(UNIT_FLAGS(unt), UNIT_FL_TRANS) && !IS_SET(bitarg, UNIT_FL_TRANS))
                 trans_unset(unt);
-            else if(!IS_SET(UNIT_FLAGS(unt), UNIT_FL_TRANS) && IS_SET(bitarg, UNIT_FL_TRANS))
+            else if (!IS_SET(UNIT_FLAGS(unt), UNIT_FL_TRANS) && IS_SET(bitarg, UNIT_FL_TRANS))
                 trans_set(unt);
 
             UNIT_FLAGS(unt) = bitarg;
@@ -791,7 +791,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
         case 8: /* "weight" */
         {
-            if(UNIT_CONTAINS(unt))
+            if (UNIT_CONTAINS(unt))
             {
                 send_to_char("The unit isn't empty. Setting weight is supposed to happen on empty units only. Setting anyway<br/>", ch);
             }
@@ -829,7 +829,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 13: /* "alignment" */
-            if(is_in(valarg, -1000, 1000))
+            if (is_in(valarg, -1000, 1000))
                 UNIT_ALIGNMENT(unt) = valarg;
             else
                 send_to_char("Shame on you: Value must be in -1000..+1000!<br/>", ch);
@@ -854,7 +854,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 17: /* "bright" */
-            if(!is_in(valarg, -6, 6))
+            if (!is_in(valarg, -6, 6))
             {
                 send_to_char("Expected -6..+6<br/>", ch);
                 return;
@@ -871,7 +871,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 20: /* "ccinfo" */
-            if(valarg == -1)
+            if (valarg == -1)
             {
                 send_to_char("Erasing CC information.<br/>", ch);
                 PC_ACCOUNT(unt).last4 = -1;
@@ -879,7 +879,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             }
             else
             {
-                if(is_in(valarg, 0, 9999))
+                if (is_in(valarg, 0, 9999))
                 {
                     send_to_char("Setting CC information.<br/>", ch);
                     PC_ACCOUNT(unt).last4 = valarg;
@@ -891,7 +891,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 21: /* "add-dir-name" */
-            if(!ROOM_EXIT(unt, typarg))
+            if (!ROOM_EXIT(unt, typarg))
             {
                 send_to_char("No such exit.<br/>", ch);
                 return;
@@ -902,7 +902,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 22: /* "del-dir-name" */
-            if(!ROOM_EXIT(unt, typarg))
+            if (!ROOM_EXIT(unt, typarg))
             {
                 send_to_char("No such exit.<br/>", ch);
                 return;
@@ -913,7 +913,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 23: /* "dir-flags" */
-            if(!ROOM_EXIT(unt, typarg))
+            if (!ROOM_EXIT(unt, typarg))
             {
                 send_to_char("No such exit.<br/>", ch);
                 return;
@@ -923,7 +923,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 24: /* "dir-key" */
-            if(!ROOM_EXIT(unt, typarg))
+            if (!ROOM_EXIT(unt, typarg))
             {
                 send_to_char("No such exit.<br/>", ch);
                 return;
@@ -934,7 +934,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 25: /* "value0" */
-            switch(OBJ_TYPE(unt))
+            switch (OBJ_TYPE(unt))
             {
                 case ITEM_MONEY:
                     send_to_char("Operation not allowed on this type of object.<br/>", ch);
@@ -946,7 +946,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 26: /* "value1" */
-            switch(OBJ_TYPE(unt))
+            switch (OBJ_TYPE(unt))
             {
                 case ITEM_MONEY:
                     send_to_char("Operation not allowed on this type of object.<br/>", ch);
@@ -957,7 +957,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 27: /* "value2" */
-            switch(OBJ_TYPE(unt))
+            switch (OBJ_TYPE(unt))
             {
                 case ITEM_MONEY:
                     send_to_char("Operation not allowed on this type of object.<br/>", ch);
@@ -968,7 +968,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 28: /* "value3" */
-            switch(OBJ_TYPE(unt))
+            switch (OBJ_TYPE(unt))
             {
                 case ITEM_MONEY:
                     send_to_char("Operation not allowed on this type of object.<br/>", ch);
@@ -979,7 +979,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 29: /* "value4" */
-            switch(OBJ_TYPE(unt))
+            switch (OBJ_TYPE(unt))
             {
                 case ITEM_MONEY:
                     send_to_char("Operation not allowed on this type of object.<br/>", ch);
@@ -994,7 +994,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 31: /* "cost" */
-            switch(OBJ_TYPE(unt))
+            switch (OBJ_TYPE(unt))
             {
                 case ITEM_MONEY:
                     send_to_char("Operation not allowed on this type of object.<br/>", ch);
@@ -1009,14 +1009,14 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 33: /* "type" */
-            switch(OBJ_TYPE(unt))
+            switch (OBJ_TYPE(unt))
             {
                 case ITEM_MONEY:
                     send_to_char("Operation not allowed on this type of object.<br/>", ch);
                     return;
             }
 
-            if(typarg == ITEM_MONEY)
+            if (typarg == ITEM_MONEY)
             {
                 send_to_char("Operation not allowed to that kind of object.<br/>", ch);
                 return;
@@ -1030,9 +1030,9 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 35: /* "guild-name" */
-            if(str_ccmp_next_word(argument, "none"))
+            if (str_ccmp_next_word(argument, "none"))
             {
-                if(PC_GUILD(unt))
+                if (PC_GUILD(unt))
                 {
                     FREE(PC_GUILD(unt));
                     PC_GUILD(unt) = NULL;
@@ -1040,7 +1040,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 send_to_char("Changed.<br/>", ch);
                 return;
             }
-            if(PC_GUILD(unt) == NULL)
+            if (PC_GUILD(unt) == NULL)
             {
                 CREATE(PC_GUILD(unt), char, strlen(argument) + 1);
             }
@@ -1054,7 +1054,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
 
         case 36: /* "pwd" */
             argument = str_next_word(argument, strarg);
-            if(CHAR_LEVEL(ch) < CHAR_LEVEL(unt))
+            if (CHAR_LEVEL(ch) < CHAR_LEVEL(unt))
             {
                 slog(LOG_ALL, 0, "WARNING: %s attempted to set %s password", UNIT_NAME(ch), UNIT_NAME(unt));
                 send_to_char("You can not change a password of a higher level immortal", ch);
@@ -1097,7 +1097,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 44: /* hometown */
-            if(PC_HOME(unt) == NULL)
+            if (PC_HOME(unt) == NULL)
             {
                 CREATE(PC_HOME(unt), char, strlen(argument) + 1);
             }
@@ -1110,7 +1110,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 45: /* "exp" */
-            if(CHAR_LEVEL(unt) < MORTAL_MAX_LEVEL && valarg > required_xp(1000))
+            if (CHAR_LEVEL(unt) < MORTAL_MAX_LEVEL && valarg > required_xp(1000))
                 send_to_char("You are not allowed to set exp that high for "
                              "mortals<br/>",
                              ch);
@@ -1155,7 +1155,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 54: /* "level" */
-            if(is_in(valarg, 0, 199))
+            if (is_in(valarg, 0, 199))
                 CHAR_LEVEL(unt) = valarg;
             else
                 send_to_char("Shame on you: Value must be in 0..199!<br/>", ch);
@@ -1166,7 +1166,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 56: /* "ability" */
-            if(is_in(valarg, 0, 250))
+            if (is_in(valarg, 0, 250))
                 CHAR_ABILITY(unt, typarg) = valarg;
             else
                 send_to_char("Shame on you: Value must be in 0%..250%!<br/>", ch);
@@ -1181,7 +1181,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 59: /* "remove-affect" */
-            if((aff = affected_by_spell(unt, valarg)))
+            if ((aff = affected_by_spell(unt, valarg)))
             {
                 destroy_affect(aff);
                 send_to_char("Affect attempted removed.<br/>", ch);
@@ -1196,7 +1196,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 61: /* "del-quest" */
-            if(str_is_empty(argument))
+            if (str_is_empty(argument))
             {
                 send_to_char("You must supply a field name.<br/>", ch);
                 return;
@@ -1208,7 +1208,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 62: /* "speed" */
-            if(is_in(valarg, SPEED_MIN, SPEED_MAX))
+            if (is_in(valarg, SPEED_MIN, SPEED_MAX))
                 CHAR_SPEED(unt) = valarg;
             else
                 send_to_char("Speed must be in [12..200]!<br/>", ch);
@@ -1218,11 +1218,11 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             argument = str_next_word(argument, strarg);
             act("Searching for $2t.", A_ALWAYS, ch, strarg, cActParameter(), TO_CHAR);
 
-            if((ed = PC_INFO(unt).find_raw(strarg)) == NULL)
+            if ((ed = PC_INFO(unt).find_raw(strarg)) == NULL)
             {
                 /* the field was not found. create a new one. */
-                ed = new(class extra_descr_data);
-                while(*strarg) /* insert names */
+                ed = new (class extra_descr_data);
+                while (*strarg) /* insert names */
                 {
                     ed->names.AppendName(strarg);
                     argument = str_next_word(argument, strarg);
@@ -1235,9 +1235,9 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             {
                 /* add the rest of the names if they do not exist */
                 argument = str_next_word(argument, strarg);
-                while(*strarg)
+                while (*strarg)
                 {
-                    if(ed->names.IsName(strarg))
+                    if (ed->names.IsName(strarg))
                         ed->names.AppendName(strarg);
 
                     argument = str_next_word(argument, strarg);
@@ -1253,7 +1253,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 64: /* "del-info" */
-            if(str_is_empty(argument))
+            if (str_is_empty(argument))
             {
                 send_to_char("You must supply a field name.<br/>", ch);
                 return;
@@ -1269,7 +1269,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 66: /* "promptstr" */
-            if(UPC(unt)->promptstr != NULL)
+            if (UPC(unt)->promptstr != NULL)
                 free(UPC(unt)->promptstr);
             UPC(unt)->promptstr = str_dup(argument);
             send_to_char("Prompt String Modified.<br/>", ch);
@@ -1279,7 +1279,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             /* This sets a time_t so that the PC's age
              * will be as many years as valarg
              */
-            if(is_in(valarg, 10, 1000))
+            if (is_in(valarg, 10, 1000))
             {
                 slog(LOG_BRIEF,
                      CHAR_LEVEL(ch),
@@ -1299,7 +1299,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             /* This sets a time_t so that the PC's age
              * will be as many years as valarg
              */
-            if(is_in(valarg, 10, 1000))
+            if (is_in(valarg, 10, 1000))
             {
                 slog(LOG_BRIEF,
                      CHAR_LEVEL(ch),
@@ -1315,7 +1315,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
             return;
 
         case 69: /* "profession" */
-            if(is_in(valarg, 0, PROFESSION_MAX - 1))
+            if (is_in(valarg, 0, PROFESSION_MAX - 1))
             {
                 slog(LOG_BRIEF,
                      CHAR_LEVEL(ch),
@@ -1352,11 +1352,11 @@ void do_setskill(class unit_data *ch, char *argument, const struct command_info 
     char buf[MAX_STRING_LENGTH], arg[MAX_STRING_LENGTH];
     class unit_data *unt;
 
-    if(!CHAR_DESCRIPTOR(ch))
+    if (!CHAR_DESCRIPTOR(ch))
         return;
 
     /* Check argument */
-    if(str_is_empty(argument))
+    if (str_is_empty(argument))
     {
         send_to_char("Syntax: setskill &lt;name&gt; (skill|spell|weapon)"
                      " &lt;field&gt; &lt;value&gt;.<br/>",
@@ -1365,13 +1365,13 @@ void do_setskill(class unit_data *ch, char *argument, const struct command_info 
     }
 
     /* find unit to set */
-    if((unt = find_unit(ch, &argument, 0, FIND_UNIT_WORLD)) == NULL)
+    if ((unt = find_unit(ch, &argument, 0, FIND_UNIT_WORLD)) == NULL)
     {
         send_to_char("No such person or thing<br/>", ch);
         return;
     }
 
-    if(!IS_CHAR(unt))
+    if (!IS_CHAR(unt))
     {
         send_to_char("Unit-type must be char<br/>", ch);
         return;
@@ -1380,7 +1380,7 @@ void do_setskill(class unit_data *ch, char *argument, const struct command_info 
     /* find field to change */
     argument = str_next_word(argument, arg);
     /* Partial match on fields */
-    if((type = search_block(arg, skill_field_names, TRUE)) == -1)
+    if ((type = search_block(arg, skill_field_names, TRUE)) == -1)
     {
         send_to_char("Missing or invalid skill-type, <br/>"
                      "Use 'skill' 'spell' or 'weapon'.<br/>",
@@ -1390,15 +1390,15 @@ void do_setskill(class unit_data *ch, char *argument, const struct command_info 
 
     argument = str_next_word(argument, arg);
 
-    switch(type)
+    switch (type)
     {
         case SET_SKILL:
-            if(!IS_PC(unt))
+            if (!IS_PC(unt))
             {
                 send_to_char("Skills are only for PC's<br/>", ch);
                 return;
             }
-            if((skillarg = get_type(arg, g_SkiColl.text)) == -1)
+            if ((skillarg = get_type(arg, g_SkiColl.text)) == -1)
             {
                 send_to_char("Invalid or missing skill<br/>", ch);
                 show_structure(g_SkiColl.text, ch);
@@ -1410,13 +1410,13 @@ void do_setskill(class unit_data *ch, char *argument, const struct command_info 
             break;
 
         case SET_SPELL:
-            if((skillarg = get_type(arg, g_SplColl.text)) == -1)
+            if ((skillarg = get_type(arg, g_SplColl.text)) == -1)
             {
                 send_to_char("Invalid or missing spell<br/>", ch);
                 show_structure(g_SplColl.text, ch);
                 return;
             }
-            if(skillarg > SPL_EXTERNAL && IS_NPC(unt))
+            if (skillarg > SPL_EXTERNAL && IS_NPC(unt))
             {
                 send_to_char("Only spell-groups for NPC<br/>", ch);
                 return;
@@ -1424,20 +1424,20 @@ void do_setskill(class unit_data *ch, char *argument, const struct command_info 
             argument = str_next_word(argument, arg);
             valarg = atoi(arg);
 
-            if(IS_PC(unt))
+            if (IS_PC(unt))
                 PC_SPL_SKILL(unt, skillarg) = valarg;
             else
                 NPC_SPL_SKILL(unt, skillarg) = valarg;
             break;
 
         case SET_WEAPON:
-            if((skillarg = get_type(arg, g_WpnColl.text)) == -1)
+            if ((skillarg = get_type(arg, g_WpnColl.text)) == -1)
             {
                 send_to_char("Invalid or missing weaponskill<br/>", ch);
                 show_structure(g_WpnColl.text, ch);
                 return;
             }
-            if(skillarg > WPN_SPECIAL && IS_NPC(unt))
+            if (skillarg > WPN_SPECIAL && IS_NPC(unt))
             {
                 send_to_char("Only weapon-groups for NPC<br/>", ch);
                 return;
@@ -1445,7 +1445,7 @@ void do_setskill(class unit_data *ch, char *argument, const struct command_info 
             argument = str_next_word(argument, arg);
             valarg = atoi(arg);
 
-            if(IS_PC(unt))
+            if (IS_PC(unt))
                 PC_WPN_SKILL(unt, skillarg) = valarg;
             else
                 NPC_WPN_SKILL(unt, skillarg) = valarg;

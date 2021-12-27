@@ -24,30 +24,30 @@ static bool changed_balance;
 
 static bool init_bank(const class unit_data *pc, class unit_data *clerk, bool init)
 {
-    if(clerk && !CHAR_IS_READY(clerk))
+    if (clerk && !CHAR_IS_READY(clerk))
         act("It seems that $3e isn't paying attention!", A_SOMEONE, pc, cActParameter(), clerk, TO_CHAR);
-    else if(clerk && !CHAR_CAN_SEE(clerk, pc))
+    else if (clerk && !CHAR_CAN_SEE(clerk, pc))
         act("$1n says 'Sorry, but I only do business with people I can see...'",
             A_SOMEONE,
             clerk,
             cActParameter(),
             cActParameter(),
             TO_ROOM);
-    else if(!IS_PC(pc))
+    else if (!IS_PC(pc))
         send_to_char("Only trustworthy people are served...<br/>", pc);
     else
     {
-        if(init)
+        if (init)
         {
             char *c = PC_BANK(pc);
             long amt;
             int cur, i;
 
-            for(i = 0; i <= MAX_CURRENCY; ++i)
+            for (i = 0; i <= MAX_CURRENCY; ++i)
                 balance[i] = 0;
 
-            if(c)
-                while((c = strchr(c, '~')))
+            if (c)
+                while ((c = strchr(c, '~')))
                 {
                     sscanf(++c, "%d %ld", &cur, &amt);
                     balance[cur] = amt;
@@ -66,15 +66,15 @@ static void cmd_balance(const class unit_data *pc, class unit_data *clerk, char 
     bool any = FALSE;
     int i;
 
-    if(!init_bank(pc, clerk, TRUE))
+    if (!init_bank(pc, clerk, TRUE))
         return;
 
     strcpy(buf, "You don't have an account.");
 
-    for(i = 0; i <= MAX_CURRENCY; ++i)
-        if(balance[i])
+    for (i = 0; i <= MAX_CURRENCY; ++i)
+        if (balance[i])
         {
-            if(any)
+            if (any)
                 strcat(buf, ", ");
             else
                 strcpy(buf, "You've got a balance of ");
@@ -92,39 +92,39 @@ static void cmd_deposit(const class unit_data *pc, class unit_data *clerk, char 
     class unit_data *thing;
     amount_t amount = 0;
 
-    if(!init_bank(pc, clerk, TRUE))
+    if (!init_bank(pc, clerk, TRUE))
         return;
 
-    if(str_is_empty(s))
+    if (str_is_empty(s))
     {
         act("$1n says 'Deposit what, $3n?'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
         return;
     }
 
-    if(next_word_is_number(s))
+    if (next_word_is_number(s))
     {
         char buf[MAX_INPUT_LENGTH];
 
         s = str_next_word(s, buf);
-        if((amount = atoi(buf)) < 1)
+        if ((amount = atoi(buf)) < 1)
         {
             act("$1n coughs and says 'That's a silly thing to do, $3n...'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
             return;
         }
     }
 
-    if((thing = find_unit(pc, &s, 0, FIND_UNIT_INVEN)) == NULL)
+    if ((thing = find_unit(pc, &s, 0, FIND_UNIT_INVEN)) == NULL)
         act("$1n sighs and says 'I can't deposit what you haven't got, $3n...'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
-    else if(!IS_MONEY(thing))
+    else if (!IS_MONEY(thing))
         act("$1n says 'I won't store anything but money for you, $3n...'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
     else
     {
         currency_t cur = MONEY_CURRENCY(thing);
         amount_t old_balance;
 
-        if(amount == 0)
+        if (amount == 0)
             amount = MONEY_AMOUNT(thing);
-        else if(MONEY_AMOUNT(thing) < amount)
+        else if (MONEY_AMOUNT(thing) < amount)
         {
             act("$1n says 'Credit on deposits, $3n?  What a preposterous thought!'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
             return;
@@ -135,7 +135,7 @@ static void cmd_deposit(const class unit_data *pc, class unit_data *clerk, char 
         old_balance = balance[cur];
         balance[cur] += (INTEREST * MONEY_VALUE(thing));
 
-        if(balance[cur] < old_balance) /* overflow! */
+        if (balance[cur] < old_balance) /* overflow! */
         {
             balance[cur] = old_balance;
             act("$3n shrugs and says 'Uhm, your account is full?'", A_SOMEONE, pc, cActParameter(), clerk, TO_CHAR);
@@ -160,41 +160,41 @@ static void cmd_exchange(const class unit_data *pc, class unit_data *clerk, char
     currency_t cur;
     amount_t amount = 0;
 
-    if(!init_bank(pc, clerk, FALSE))
+    if (!init_bank(pc, clerk, FALSE))
         return;
 
-    if(str_is_empty(s))
+    if (str_is_empty(s))
     {
         act("$1n says 'Exchange what, $3n?'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
         return;
     }
 
-    if(next_word_is_number(s))
+    if (next_word_is_number(s))
     {
         char buf[MAX_INPUT_LENGTH];
 
         s = str_next_word(s, buf);
-        if((amount = atoi(buf)) < 1)
+        if ((amount = atoi(buf)) < 1)
         {
             act("$1n coughs and says 'That's a silly thing to do, $3n...'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
             return;
         }
     }
 
-    if((thing = find_unit(pc, &s, 0, FIND_UNIT_INVEN)) == NULL)
+    if ((thing = find_unit(pc, &s, 0, FIND_UNIT_INVEN)) == NULL)
     {
         act("$1n sighs and says 'I can't exchange what you haven't got, $3n...'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
         return;
     }
-    else if(!IS_MONEY(thing))
+    else if (!IS_MONEY(thing))
     {
         act("$1n says 'I only deal in money, $3n!'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
         return;
     }
 
-    if(amount == 0)
+    if (amount == 0)
         amount = MONEY_AMOUNT(thing);
-    else if(MONEY_AMOUNT(thing) < amount)
+    else if (MONEY_AMOUNT(thing) < amount)
     {
         act("$1n says 'No credit, $3n!  What cheek!'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
         return;
@@ -207,7 +207,7 @@ static void cmd_exchange(const class unit_data *pc, class unit_data *clerk, char
 
     unit_from_unit(thing);
 
-    if(str_is_empty(s))
+    if (str_is_empty(s))
     {
         act("$1n exchanges some $2t with $3n.", A_HIDEINV, pc, money_pluralis(thing), clerk, TO_NOTVICT);
         act("You exchange your $2t with $3n.", A_SOMEONE, pc, money_pluralis(thing), clerk, TO_CHAR);
@@ -217,18 +217,18 @@ static void cmd_exchange(const class unit_data *pc, class unit_data *clerk, char
         extract_unit(thing);
         money_to_unit((class unit_data *)pc, amount, cur);
     }
-    else if((s = str_ccmp_next_word(s, "to")))
+    else if ((s = str_ccmp_next_word(s, "to")))
     {
         int tmp, remainder, i;
 
-        for(i = 0; i <= MAX_MONEY; ++i)
-            if(is_name(s, money_types[i].strings))
+        for (i = 0; i <= MAX_MONEY; ++i)
+            if (is_name(s, money_types[i].strings))
             {
                 cur = money_types[i].currency;
                 break;
             }
 
-        if(i > MAX_MONEY)
+        if (i > MAX_MONEY)
         {
             act("$1n shrugs and says 'Never heard of that one before, $3n.'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
             unit_to_unit(thing, (class unit_data *)pc);
@@ -244,12 +244,12 @@ static void cmd_exchange(const class unit_data *pc, class unit_data *clerk, char
 
         extract_unit(thing);
 
-        if(tmp > 0)
+        if (tmp > 0)
         {
             coins_to_unit((class unit_data *)pc, tmp, i);
             act("You get $2d $3t back.", A_SOMEONE, pc, &tmp, tmp == 1 ? money_singularis_type(i) : money_pluralis_type(i), TO_CHAR);
         }
-        if(remainder > 0)
+        if (remainder > 0)
         {
             money_to_unit((class unit_data *)pc, remainder, cur);
             act(tmp > 0 ? "...and $2t in change." : "You get $2t back.",
@@ -274,21 +274,21 @@ static void cmd_withdraw(const class unit_data *pc, class unit_data *clerk, char
     amount_t amount;
     int i;
 
-    if(!init_bank(pc, clerk, TRUE))
+    if (!init_bank(pc, clerk, TRUE))
         return;
 
-    if(str_is_empty(s))
+    if (str_is_empty(s))
     {
         act("$1n says 'Withdraw what, $3n?'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
         return;
     }
 
-    if(next_word_is_number(s))
+    if (next_word_is_number(s))
     {
         char buf[MAX_INPUT_LENGTH];
 
         s = str_next_word(s, buf);
-        if((amount = atoi(buf)) < 1)
+        if ((amount = atoi(buf)) < 1)
         {
             act("$1n coughs and says 'That's a silly thing to do, $3n...'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
             return;
@@ -300,16 +300,16 @@ static void cmd_withdraw(const class unit_data *pc, class unit_data *clerk, char
         return;
     }
 
-    for(i = 0; i <= MAX_MONEY; ++i)
-        if(0 < balance[money_types[i].currency] && is_name(s, money_types[i].strings))
+    for (i = 0; i <= MAX_MONEY; ++i)
+        if (0 < balance[money_types[i].currency] && is_name(s, money_types[i].strings))
         {
             cur = money_types[i].currency;
             break;
         }
 
-    if(i > MAX_MONEY)
+    if (i > MAX_MONEY)
         act("$1n shrugs and says 'I'm storing nothing of the sort for you, $3n.'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
-    else if((balance[cur] < amount * money_types[i].relative_value) || (amount * money_types[i].relative_value < 0))
+    else if ((balance[cur] < amount * money_types[i].relative_value) || (amount * money_types[i].relative_value < 0))
         act("$1n shakes $1s head and says 'No loans, $3n.'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
     else
     {
@@ -325,31 +325,31 @@ static void cmd_withdraw(const class unit_data *pc, class unit_data *clerk, char
 
 int bank(struct spec_arg *sarg)
 {
-    if(sarg->activator == NULL)
+    if (sarg->activator == NULL)
         return SFR_SHARE;
 
     changed_balance = FALSE;
 
-    if(is_command(sarg->cmd, "balance"))
+    if (is_command(sarg->cmd, "balance"))
         cmd_balance(sarg->activator, sarg->owner, (char *)sarg->arg);
-    else if(is_command(sarg->cmd, "deposit"))
+    else if (is_command(sarg->cmd, "deposit"))
         cmd_deposit(sarg->activator, sarg->owner, (char *)sarg->arg);
-    else if(is_command(sarg->cmd, "exchange"))
+    else if (is_command(sarg->cmd, "exchange"))
         cmd_exchange(sarg->activator, sarg->owner, (char *)sarg->arg);
-    else if(is_command(sarg->cmd, "withdraw"))
+    else if (is_command(sarg->cmd, "withdraw"))
         cmd_withdraw(sarg->activator, sarg->owner, (char *)sarg->arg);
     else
         return SFR_SHARE;
 
-    if(changed_balance)
+    if (changed_balance)
     {
         char buf[MAX_STRING_LENGTH], *b;
         int i;
 
-        if(PC_BANK(sarg->activator))
+        if (PC_BANK(sarg->activator))
             FREE(PC_BANK(sarg->activator));
 
-        for(i = 0, *buf = '\0', b = buf; i <= MAX_CURRENCY; ++i)
+        for (i = 0, *buf = '\0', b = buf; i <= MAX_CURRENCY; ++i)
         {
             sprintf(b, "~%d %ld", i, (long)balance[i]);
             TAIL(b);
@@ -366,17 +366,17 @@ static bool move_money_up(class unit_data *ch, class unit_data *u)
     class unit_data *tmp, *next;
     bool found = FALSE;
 
-    for(tmp = UNIT_CONTAINS(u); tmp; tmp = next)
+    for (tmp = UNIT_CONTAINS(u); tmp; tmp = next)
     {
         next = tmp->next;
 
-        if(IS_MONEY(tmp))
-            while(UNIT_IN(tmp) != ch)
+        if (IS_MONEY(tmp))
+            while (UNIT_IN(tmp) != ch)
             {
                 found = TRUE;
                 unit_up(tmp);
             }
-        else if((IS_OBJ(tmp) && OBJ_TYPE(tmp) == ITEM_CONTAINER) || IS_ROOM(tmp) || IS_CHAR(tmp))
+        else if ((IS_OBJ(tmp) && OBJ_TYPE(tmp) == ITEM_CONTAINER) || IS_ROOM(tmp) || IS_CHAR(tmp))
             found = found || move_money_up(ch, tmp);
     }
 
@@ -400,20 +400,20 @@ void tax_player(class unit_data *ch)
 
     init_bank(ch, NULL, TRUE);
 
-    if(PC_BANK(ch))
+    if (PC_BANK(ch))
     {
         FREE(PC_BANK(ch)); /* clear the bank... */
         PC_BANK(ch) = NULL;
     }
 
-    for(i = 0; i <= MAX_CURRENCY; ++i)
-        if(balance[i])
+    for (i = 0; i <= MAX_CURRENCY; ++i)
+        if (balance[i])
         {
             tmp_bool = TRUE;
             money_to_unit(ch, balance[i], i);
         }
 
-    if(tmp_bool)
+    if (tmp_bool)
     {
         strcpy(b,
                "The holdings of your bank account was moved into your"
@@ -421,7 +421,7 @@ void tax_player(class unit_data *ch)
         TAIL(b);
     }
 
-    if(move_money_up(ch, ch))
+    if (move_money_up(ch, ch))
     {
         strcpy(b, "All money hidden in bags etc was moved into your purse.<br/>");
         TAIL(b);
@@ -432,11 +432,11 @@ void tax_player(class unit_data *ch)
     tmp_bool = FALSE;
 
     /* Loop because the holds check may overflow... */
-    for(i = 0; i <= MAX_CURRENCY; ++i)
+    for (i = 0; i <= MAX_CURRENCY; ++i)
     {
         holds_sum = 0;
 
-        while((holds = char_holds_amount(ch, i)) > limit)
+        while ((holds = char_holds_amount(ch, i)) > limit)
         {
             holds_sum += holds;
 
@@ -452,9 +452,9 @@ void tax_player(class unit_data *ch)
 
     CHAR_DESCRIPTOR(ch) = d;
 
-    if(b != buf)
+    if (b != buf)
     {
-        if(tmp_bool)
+        if (tmp_bool)
         {
             act("Due to the new money limits imposed on the game, you have been"
                 " subjected to a taxing, as reported below.  You will have to "
@@ -484,7 +484,7 @@ void stat_bank(const class unit_data *ch, class unit_data *u)
     bool none = TRUE;
     int i;
 
-    if(!IS_PC(u))
+    if (!IS_PC(u))
     {
         send_to_char("You can only get bank info for PC's<br/>", ch);
         return;
@@ -494,14 +494,14 @@ void stat_bank(const class unit_data *ch, class unit_data *u)
 
     act("$2n has a bank-deposit of:", A_ALWAYS, ch, u, cActParameter(), TO_CHAR);
 
-    for(i = 0; i <= MAX_CURRENCY; ++i)
-        if(balance[i])
+    for (i = 0; i <= MAX_CURRENCY; ++i)
+        if (balance[i])
         {
             none = FALSE;
 
             act("  $2t", A_ALWAYS, ch, money_string(balance[i], i, FALSE), cActParameter(), TO_CHAR);
         }
 
-    if(none)
+    if (none)
         send_to_char("  Nothing!<br/>", ch);
 }

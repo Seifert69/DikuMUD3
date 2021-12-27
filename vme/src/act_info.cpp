@@ -42,8 +42,8 @@ char *in_string(class unit_data *ch, class unit_data *u)
     static char in_str[512];
     char *tmp = in_str;
 
-    while((u = UNIT_IN(u)))
-        if(IS_ROOM(u))
+    while ((u = UNIT_IN(u)))
+        if (IS_ROOM(u))
         {
             sprintf(tmp, "<a href='#' cmd='goto #'>%s@%s</a>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
             return in_str;
@@ -64,11 +64,11 @@ void player_where(class unit_data *ch, char *arg)
     class descriptor_data *d;
     int any = FALSE;
 
-    for(d = descriptor_list; d; d = d->next)
+    for (d = descriptor_list; d; d = d->next)
     {
-        if(d->character && (d->character != ch) && UNIT_IN(d->character) && descriptor_is_playing(d) &&
-           (str_is_empty(arg) || !str_ccmp(arg, UNIT_NAME(d->character))) && CHAR_LEVEL(ch) >= UNIT_MINV(d->character) &&
-           d->original == NULL && CHAR_CAN_SEE(ch, d->character) && unit_zone(ch) == unit_zone(d->character))
+        if (d->character && (d->character != ch) && UNIT_IN(d->character) && descriptor_is_playing(d) &&
+            (str_is_empty(arg) || !str_ccmp(arg, UNIT_NAME(d->character))) && CHAR_LEVEL(ch) >= UNIT_MINV(d->character) &&
+            d->original == NULL && CHAR_CAN_SEE(ch, d->character) && unit_zone(ch) == unit_zone(d->character))
         {
             sprintf(buf, "%-30s at %s<br/>", UNIT_NAME(d->character), TITLENAME(unit_room(d->character)));
             send_to_char(buf, ch);
@@ -76,9 +76,9 @@ void player_where(class unit_data *ch, char *arg)
         }
     }
 
-    if(!any)
+    if (!any)
     {
-        if(str_is_empty(arg))
+        if (str_is_empty(arg))
             send_to_char("No other visible players in this area.<br/>", ch);
         else
             send_to_char("No such player found in this area.<br/>", ch);
@@ -94,22 +94,22 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
     std::string mystr;
     int nCount = 0;
 
-    if(IS_MORTAL(ch))
+    if (IS_MORTAL(ch))
     {
         player_where(ch, arg);
         return;
     }
 
-    if(str_is_empty(arg))
+    if (str_is_empty(arg))
     {
         mystr = "<u>Players</u><br/>";
 
-        for(d = descriptor_list; d; d = d->next)
-            if(d->character && UNIT_IN(d->character) && descriptor_is_playing(d) && CHAR_LEVEL(ch) >= UNIT_MINV(d->character) &&
-               (d->original == NULL || CHAR_LEVEL(ch) >= UNIT_MINV(d->original)))
+        for (d = descriptor_list; d; d = d->next)
+            if (d->character && UNIT_IN(d->character) && descriptor_is_playing(d) && CHAR_LEVEL(ch) >= UNIT_MINV(d->character) &&
+                (d->original == NULL || CHAR_LEVEL(ch) >= UNIT_MINV(d->original)))
             {
                 nCount++;
-                if(d->original) /* If switched */
+                if (d->original) /* If switched */
                     sprintf(buf2, " In body of %s", UNIT_NAME(d->character));
                 else
                     buf2[0] = '\0';
@@ -127,12 +127,12 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
     {
         mystr = "";
 
-        for(i = unit_list; i; i = i->gnext)
+        for (i = unit_list; i; i = i->gnext)
         {
-            if(UNIT_IN(i) && UNIT_NAMES(i).IsName(arg) && CHAR_LEVEL(ch) >= UNIT_MINV(i))
+            if (UNIT_IN(i) && UNIT_NAMES(i).IsName(arg) && CHAR_LEVEL(ch) >= UNIT_MINV(i))
             {
                 nCount++;
-                if(nCount++ > 100)
+                if (nCount++ > 100)
                     continue;
 
                 sprintf(buf1,
@@ -146,11 +146,11 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
         }
     }
 
-    if(mystr.length() < 1)
+    if (mystr.length() < 1)
         send_to_char("Couldn't find any such thing.<br/>", ch);
     else
     {
-        if(nCount > 100)
+        if (nCount > 100)
             mystr.append("...<br/>");
         mystr.append("Found ");
         mystr.append(itoa(nCount));

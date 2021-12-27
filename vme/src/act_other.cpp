@@ -37,12 +37,12 @@ extern int possible_saves;
 
 void do_save(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
-    if(!IS_PC(ch))
+    if (!IS_PC(ch))
         return;
 
-    if(!PC_IS_UNSAVED(ch) && CHAR_DESCRIPTOR(ch))
+    if (!PC_IS_UNSAVED(ch) && CHAR_DESCRIPTOR(ch))
     {
-        if(CHAR_LEVEL(ch) < 200 && difftime(time(0), CHAR_DESCRIPTOR(ch)->logon) < 60)
+        if (CHAR_LEVEL(ch) < 200 && difftime(time(0), CHAR_DESCRIPTOR(ch)->logon) < 60)
         {
             send_to_char("You must wait a minute between saves.<br/>", ch);
             return;
@@ -55,7 +55,7 @@ void do_save(class unit_data *ch, char *arg, const struct command_info *cmd)
     }
     act("Saving $1n.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
 
-    if(account_is_closed(ch))
+    if (account_is_closed(ch))
     {
         extract_unit(ch); /* Saves */
         return;
@@ -79,7 +79,7 @@ void race_adjust(class unit_data *ch)
 
     my_race = &race_info[CHAR_RACE(ch)];
 
-    if(CHAR_SEX(ch) == SEX_MALE)
+    if (CHAR_SEX(ch) == SEX_MALE)
         sex_race = &my_race->male;
     else
         sex_race = &my_race->female;
@@ -126,31 +126,31 @@ void points_reset(class unit_data *ch)
     PC_ABILITY_POINTS(ch) = 0;
     PC_SKILL_POINTS(ch) = 0;
 
-    for(i = 0; i < ABIL_TREE_MAX; i++)
+    for (i = 0; i < ABIL_TREE_MAX; i++)
     {
         CHAR_ABILITY(ch, i) = 0;
         PC_ABI_LVL(ch, i) = 0;
     }
 
-    for(i = 0; i < SKI_TREE_MAX; i++)
+    for (i = 0; i < SKI_TREE_MAX; i++)
     {
         PC_SKI_SKILL(ch, i) = 0;
         PC_SKI_LVL(ch, i) = 0;
     }
 
-    for(i = 0; i < SPL_TREE_MAX; i++)
+    for (i = 0; i < SPL_TREE_MAX; i++)
     {
         PC_SPL_LVL(ch, i) = 0;
-        if(i < SPL_GROUP_MAX)
+        if (i < SPL_GROUP_MAX)
             PC_SPL_SKILL(ch, i) = 1; /* So resistance spells work! */
         else
             PC_SPL_SKILL(ch, i) = 0;
     }
 
-    for(i = 0; i < WPN_TREE_MAX; i++)
+    for (i = 0; i < WPN_TREE_MAX; i++)
     {
         PC_WPN_LVL(ch, i) = 0;
-        if(i < WPN_GROUP_MAX)
+        if (i < WPN_GROUP_MAX)
             PC_WPN_SKILL(ch, i) = 1; /* So resistance spells work! */
         else
             PC_WPN_SKILL(ch, i) = 0;
@@ -186,17 +186,17 @@ void start_player(class unit_data *ch)
     SET_BIT(PC_FLAGS(ch), PC_ECHO);
     SET_BIT(PC_FLAGS(ch), PC_PROMPT);
 
-    if(!UNIT_IS_EVIL(ch))
+    if (!UNIT_IS_EVIL(ch))
         SET_BIT(CHAR_FLAGS(ch), CHAR_PEACEFUL);
 
     extern struct diltemplate *playerinit_tmpl;
 
-    if(playerinit_tmpl)
+    if (playerinit_tmpl)
     {
         /* Call DIL to see if we should init the player in any other way. */
         class dilprg *prg = dil_copy_template(playerinit_tmpl, ch, NULL);
 
-        if(prg)
+        if (prg)
         {
             prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
             dil_activate(prg);

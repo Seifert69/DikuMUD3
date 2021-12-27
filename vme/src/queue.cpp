@@ -21,7 +21,7 @@ cQueueElem::cQueueElem(char *pStr, int bCopy)
 
     ubit32 n = strlen(pStr) + 1;
 
-    if(bCopy)
+    if (bCopy)
     {
         CREATE(pData, ubit8, n);
         memcpy(pData, pStr, n);
@@ -34,9 +34,9 @@ cQueueElem::cQueueElem(char *pStr, int bCopy)
 
 cQueueElem::cQueueElem(ubit8 *d, ubit32 n, int bCopy)
 {
-    if(bCopy)
+    if (bCopy)
     {
-        if(n > 0)
+        if (n > 0)
         {
             CREATE(pData, ubit8, n);
             memcpy(pData, d, n);
@@ -93,12 +93,12 @@ void cQueue::Copy(ubit8 *data, ubit32 nLen)
         nLen -= now;
         data += now;
         qe = qe->PeekNext();
-    } while(nLen > 0);
+    } while (nLen > 0);
 }
 
 void cQueue::Cut(ubit32 nLen)
 {
-    if(nLen < 1)
+    if (nLen < 1)
         return;
 
     assert(nLen <= nBytes);
@@ -111,12 +111,12 @@ void cQueue::Cut(ubit32 nLen)
 
         assert(qe);
 
-        if(nLen < qe->Bytes())
+        if (nLen < qe->Bytes())
             Prepend(new cQueueElem(qe->Data() + nLen, qe->Bytes() - nLen));
 
         nLen -= MIN(qe->Bytes(), nLen);
         delete qe;
-    } while(nLen > 0);
+    } while (nLen > 0);
 }
 
 void cQueue::CutCopy(ubit8 *data, ubit32 nLen)
@@ -127,7 +127,7 @@ void cQueue::CutCopy(ubit8 *data, ubit32 nLen)
 
 void cQueue::Append(class cQueueElem *pe)
 {
-    if(IsEmpty())
+    if (IsEmpty())
     {
         pHead = pTail = pe;
     }
@@ -150,7 +150,7 @@ void cQueue::Append(class cQueueElem *pe)
  */
 void cQueue::Prepend(class cQueueElem *pe)
 {
-    if(IsEmpty())
+    if (IsEmpty())
     {
         pe->pNext = NULL;
         pTail = pe;
@@ -180,12 +180,12 @@ class cQueueElem *cQueue::GetHead(void)
 {
     class cQueueElem *pTmp;
 
-    if(IsEmpty())
+    if (IsEmpty())
         return NULL;
 
     pTmp = pHead;
 
-    if(nEntries == 1)
+    if (nEntries == 1)
         pHead = pTail = NULL;
     else
         pHead = pHead->pNext;
@@ -200,6 +200,6 @@ void cQueue::Flush(void)
 {
     class cQueueElem *pTmp;
 
-    while((pTmp = GetHead()))
+    while ((pTmp = GetHead()))
         delete pTmp;
 }

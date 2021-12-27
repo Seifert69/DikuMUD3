@@ -72,7 +72,7 @@ void basis_boot(void)
     assert(letter_fi);
 
     entry_room = world_room(DEFAULT_ENTRY_ZONE, DEFAULT_ENTRY_NAME);
-    if(entry_room == NULL)
+    if (entry_room == NULL)
     {
         slog(LOG_ALL, 0, "Entry room does not exist, using void.");
         entry_room = void_room;
@@ -85,14 +85,14 @@ int error_rod(struct spec_arg *sarg)
     FILE *fl;
     char filename[256];
 
-    if((!is_command(sarg->cmd, "use")) || (!IS_PC(sarg->activator)) || (OBJ_EQP_POS(sarg->owner) != WEAR_HOLD))
+    if ((!is_command(sarg->cmd, "use")) || (!IS_PC(sarg->activator)) || (OBJ_EQP_POS(sarg->owner) != WEAR_HOLD))
         return SFR_SHARE;
 
     zone = unit_zone(sarg->activator);
 
     strcpy(filename, UNIT_NAME(sarg->activator));
 
-    if(!IS_ADMINISTRATOR(sarg->activator) && !zone->creators.IsName(filename))
+    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->creators.IsName(filename))
     {
         send_to_char("You are only allowed to erase errors "
                      "in your own zone.<br/>",
@@ -102,7 +102,7 @@ int error_rod(struct spec_arg *sarg)
 
     sprintf(filename, "%s%s.err", g_cServerConfig.m_zondir, zone->filename);
 
-    if(!(fl = fopen(filename, "w")))
+    if (!(fl = fopen(filename, "w")))
     {
         slog(LOG_ALL, 0, "Could not clear the zone error-file");
         send_to_char("Could not clear the zone error-file.<br/>", sarg->activator);
@@ -122,14 +122,14 @@ int info_rod(struct spec_arg *sarg)
     FILE *fl;
     char filename[256];
 
-    if(!is_command(sarg->cmd, "wave") || !IS_PC(sarg->activator) || OBJ_EQP_POS(sarg->owner) != WEAR_HOLD)
+    if (!is_command(sarg->cmd, "wave") || !IS_PC(sarg->activator) || OBJ_EQP_POS(sarg->owner) != WEAR_HOLD)
         return SFR_SHARE;
 
     zone = unit_zone(sarg->activator);
 
     strcpy(filename, UNIT_NAME(sarg->activator));
 
-    if(!IS_ADMINISTRATOR(sarg->activator) && !zone->creators.IsName(filename))
+    if (!IS_ADMINISTRATOR(sarg->activator) && !zone->creators.IsName(filename))
     {
         send_to_char("You are only allowed to erase user-information"
                      " in your own zone.",
@@ -139,7 +139,7 @@ int info_rod(struct spec_arg *sarg)
 
     sprintf(filename, "%s%s.inf", g_cServerConfig.m_zondir, zone->filename);
 
-    if(!(fl = fopen(filename, "w")))
+    if (!(fl = fopen(filename, "w")))
     {
         slog(LOG_ALL, 0, "Could not clear the zone user info-file");
         send_to_char("Could not clear the zone user info-file.<br/>", sarg->activator);
@@ -164,7 +164,7 @@ int log_object(struct spec_arg *sarg)
     char c;
     class unit_data *ch = UNIT_IN(sarg->owner);
 
-    if(sarg->fptr->data == NULL)
+    if (sarg->fptr->data == NULL)
     {
         CREATE(ip, ubit8, 1);
         *ip = 0;
@@ -177,7 +177,7 @@ int log_object(struct spec_arg *sarg)
 
     c = OBJ_VALUE(sarg->owner, 0);
 
-    switch(sarg->cmd->no)
+    switch (sarg->cmd->no)
     {
         case CMD_AUTO_EXTRACT:
             FREE(ip);
@@ -185,7 +185,7 @@ int log_object(struct spec_arg *sarg)
             return SFR_SHARE;
 
         case CMD_AUTO_TICK:
-            switch(c)
+            switch (c)
             {
                 case 'o':
                     lev = LOG_OFF;
@@ -204,11 +204,11 @@ int log_object(struct spec_arg *sarg)
                     break;
             }
 
-            if(LOG_OFF < lev && IS_PC(ch) && PC_IMMORTAL(ch))
+            if (LOG_OFF < lev && IS_PC(ch) && PC_IMMORTAL(ch))
             {
-                while(!str_is_empty(log_buf[*ip].str))
+                while (!str_is_empty(log_buf[*ip].str))
                 {
-                    if(log_buf[*ip].level <= lev && log_buf[*ip].wizinv_level <= CHAR_LEVEL(ch))
+                    if (log_buf[*ip].level <= lev && log_buf[*ip].wizinv_level <= CHAR_LEVEL(ch))
                         cact("(LOG: $2t)", A_ALWAYS, ch, log_buf[*ip].str, cActParameter(), TO_CHAR, "log");
                     *ip = ((*ip + 1) % MAXLOG);
                 }
@@ -217,24 +217,24 @@ int log_object(struct spec_arg *sarg)
             return SFR_SHARE;
 
         default:
-            if(sarg->cmd->cmd_str && sarg->activator == UNIT_IN(sarg->owner) && !strcmp("log", sarg->cmd->cmd_str))
+            if (sarg->cmd->cmd_str && sarg->activator == UNIT_IN(sarg->owner) && !strcmp("log", sarg->cmd->cmd_str))
             {
                 sarg->arg = skip_spaces(sarg->arg);
-                if(is_abbrev(sarg->arg, "all"))
+                if (is_abbrev(sarg->arg, "all"))
                     c = 'a';
-                else if(is_abbrev(sarg->arg, "extensive"))
+                else if (is_abbrev(sarg->arg, "extensive"))
                     c = 'e';
-                else if(is_abbrev(sarg->arg, "dil"))
+                else if (is_abbrev(sarg->arg, "dil"))
                     c = 'd';
-                else if(is_abbrev(sarg->arg, "brief"))
+                else if (is_abbrev(sarg->arg, "brief"))
                     c = 'b';
-                else if(is_abbrev(sarg->arg, "off"))
+                else if (is_abbrev(sarg->arg, "off"))
                 {
                     cact("Ok, log is now off.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR, "log");
                     OBJ_VALUE(sarg->owner, 0) = 'o';
                     return SFR_BLOCK;
                 }
-                else if(is_abbrev(sarg->arg, "help"))
+                else if (is_abbrev(sarg->arg, "help"))
                 {
                     act("Possible settings are:<br/> off, brief, extensive, all, dil.",
                         A_ALWAYS,
@@ -273,7 +273,7 @@ int log_object(struct spec_arg *sarg)
 int system_check(class unit_data *pc, char *buf)
 {
     /* Check for `` and ; in system-string */
-    if(strchr(buf, '`') || strchr(buf, ';'))
+    if (strchr(buf, '`') || strchr(buf, ';'))
     {
         send_to_char("You can not use the ' and ; characters<br/>", pc);
         slog(LOG_ALL, 0, "%s may have tried to break security with %s", UNIT_NAME(pc), buf);
@@ -289,7 +289,7 @@ void execute_append(class unit_data *pc, char *str)
 
     f = fopen(str_cc(g_cServerConfig.m_libdir, EXECUTE_FILE), "ab+");
 
-    if(f == NULL)
+    if (f == NULL)
     {
         slog(LOG_ALL, 0, "Error appending to execute file.");
         return;
@@ -309,19 +309,19 @@ int admin_obj(struct spec_arg *sarg)
     class zone_type *zone;
     class extra_descr_data *exdp;
 
-    if(sarg->cmd->no != CMD_AUTO_UNKNOWN)
+    if (sarg->cmd->no != CMD_AUTO_UNKNOWN)
         return SFR_SHARE;
 
-    if(!IS_PC(sarg->activator))
+    if (!IS_PC(sarg->activator))
         return SFR_SHARE;
 
-    if(str_ccmp(sarg->cmd->cmd_str, "email") == 0)
+    if (str_ccmp(sarg->cmd->cmd_str, "email") == 0)
     {
         zonelist = FALSE;
     }
-    else if(str_ccmp(sarg->cmd->cmd_str, "zonelist") == 0)
+    else if (str_ccmp(sarg->cmd->cmd_str, "zonelist") == 0)
     {
-        if(!IS_ADMINISTRATOR(sarg->activator))
+        if (!IS_ADMINISTRATOR(sarg->activator))
         {
             send_to_char("Only administrators can use this function.<br/>", sarg->activator);
             return SFR_BLOCK;
@@ -331,28 +331,28 @@ int admin_obj(struct spec_arg *sarg)
     else
         return SFR_SHARE;
 
-    if((exdp = PC_INFO(sarg->activator).find_raw("$email")) == NULL)
+    if ((exdp = PC_INFO(sarg->activator).find_raw("$email")) == NULL)
     {
         send_to_char("You do not have an email address registered.<br/>", sarg->activator);
         return SFR_BLOCK;
     }
 
-    if(str_is_empty(exdp->descr.c_str()))
+    if (str_is_empty(exdp->descr.c_str()))
     {
         send_to_char("Your email is incorrectly registered.<br/>", sarg->activator);
         return SFR_BLOCK;
     }
 
-    if(zonelist)
+    if (zonelist)
         sprintf(buf, "mail zone zonelist %s", exdp->descr.c_str());
-    else if((zone = unit_zone(sarg->activator)) == NULL)
+    else if ((zone = unit_zone(sarg->activator)) == NULL)
     {
         send_to_char("You are inside no zone?", sarg->activator);
         return SFR_BLOCK;
     }
     else
     {
-        if((!zone->creators.IsName(UNIT_NAME(sarg->activator))) && (!IS_OVERSEER(sarg->activator)))
+        if ((!zone->creators.IsName(UNIT_NAME(sarg->activator))) && (!IS_OVERSEER(sarg->activator)))
         {
             send_to_char("Only overseers can use this function.<br/>", sarg->activator);
             return SFR_BLOCK;
@@ -360,7 +360,7 @@ int admin_obj(struct spec_arg *sarg)
         sprintf(buf, "mail zone %s %s", zone->filename, exdp->descr.c_str());
     }
 
-    if(!system_check(sarg->activator, buf))
+    if (!system_check(sarg->activator, buf))
         return SFR_BLOCK;
 
     execute_append(sarg->activator, buf);

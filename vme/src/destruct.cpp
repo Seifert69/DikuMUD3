@@ -77,7 +77,7 @@ int destructed_idx[3] = {-1, -1, -1};
 
 void destruct_resize(int i)
 {
-    if(destructed_top[i] == -1)
+    if (destructed_top[i] == -1)
     {
         CREATE(destructed[i], void *, 1000);
         destructed_top[i] = 1000;
@@ -113,7 +113,7 @@ void basedestruct::register_destruct(void)
 
     int i = destruct_classindex();
 
-    if(destructed_idx[i] >= destructed_top[i])
+    if (destructed_idx[i] >= destructed_top[i])
         destruct_resize(i);
 
     destructed[i][destructed_idx[i]] = this;
@@ -159,7 +159,7 @@ void destruct_unit(class unit_data *unit)
 #ifdef DMSERVER
     class descriptor_data *d;
     int in_menu = FALSE;
-    if(!unit)
+    if (!unit)
         return;
 
     extern class descriptor_data *descriptor_list;
@@ -174,23 +174,23 @@ void destruct_unit(class unit_data *unit)
 
     void do_return(class unit_data * ch, char *arg, struct command_info *cmd);
 
-    if(!IS_PC(unit))
+    if (!IS_PC(unit))
     {
         stop_all_special(unit); // MS2020 reactivated, this is imperative to avoid crash from obsoleted event q events
         stop_affect(unit);      // Reactivated
     }
 
     /* Remove all snooping, snoopers and return from any body */
-    if(IS_CHAR(unit))
+    if (IS_CHAR(unit))
     {
-        if(CHAR_DESCRIPTOR(unit))
+        if (CHAR_DESCRIPTOR(unit))
         {
             assert(IS_PC(unit));
 
             in_menu = TRUE;
 
             extern int dilmenu;
-            if(UNIT_IN(unit) && !dilmenu)
+            if (UNIT_IN(unit) && !dilmenu)
             {
                 set_descriptor_fptr(CHAR_DESCRIPTOR(unit), nanny_menu, TRUE);
                 unit->undo_destruct();
@@ -207,50 +207,50 @@ void destruct_unit(class unit_data *unit)
         assert(!CHAR_IS_SNOOPED(unit));
 
         /* If the PC which is switched is extracted, then unswitch */
-        if(IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
-            for(d = descriptor_list; d; d = d->next)
+        if (IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
+            for (d = descriptor_list; d; d = d->next)
                 assert(d->original != unit);
 
         assert(!CHAR_FOLLOWERS(unit));
         assert(!CHAR_MASTER(unit));
         assert(!CHAR_COMBAT(unit));
     }
-    else if(!IS_OBJ(unit))
+    else if (!IS_OBJ(unit))
     {
         slog(LOG_OFF, 0, "Extract on something not a char or an obj.");
         assert(FALSE);
     }
 
-    while(UNIT_CONTAINS(unit))
+    while (UNIT_CONTAINS(unit))
     {
-        if(IS_OBJ(UNIT_CONTAINS(unit)) && OBJ_EQP_POS(UNIT_CONTAINS(unit)))
+        if (IS_OBJ(UNIT_CONTAINS(unit)) && OBJ_EQP_POS(UNIT_CONTAINS(unit)))
             unequip_object(UNIT_CONTAINS(unit));
         destruct_unit(UNIT_CONTAINS(unit));
     }
 
-    if(!in_menu)
+    if (!in_menu)
     {
         /* Call functions of the unit which have any data                     */
         /* that they might want to work on.                                   */
-        while(UNIT_FUNC(unit))
+        while (UNIT_FUNC(unit))
             destroy_fptr(unit, UNIT_FUNC(unit)); /* Unlinks, no free */
 
-        while(UNIT_AFFECTED(unit))
+        while (UNIT_AFFECTED(unit))
             unlink_affect(UNIT_AFFECTED(unit));
     }
 
-    if(UNIT_IN(unit))
+    if (UNIT_IN(unit))
         unit_from_unit(unit);
 
-    if(UNIT_FILE_INDEX(unit))
+    if (UNIT_FILE_INDEX(unit))
     {
         UNIT_FILE_INDEX(unit)->no_in_mem--;
     }
 
-    if((unit_list == unit) || unit->gnext || unit->gprevious)
+    if ((unit_list == unit) || unit->gnext || unit->gprevious)
         remove_from_unit_list(unit);
 
-    if(!in_menu)
+    if (!in_menu)
     {
         DELETE(unit_data, unit);
         unit = NULL;
@@ -267,21 +267,21 @@ void clear_destructed(void)
     extern void special_event(void *p1, void *p2);
     extern eventqueue events;
 
-    for(i = 0; i < destructed_idx[DR_AFFECT]; i++)
-        delete(class unit_affected_type *)destructed[DR_AFFECT][i];
+    for (i = 0; i < destructed_idx[DR_AFFECT]; i++)
+        delete (class unit_affected_type *)destructed[DR_AFFECT][i];
 
     destructed_idx[DR_AFFECT] = 0;
 
-    for(i = 0; i < destructed_idx[DR_FUNC]; i++)
+    for (i = 0; i < destructed_idx[DR_FUNC]; i++)
     {
         f = (class unit_fptr *)destructed[DR_FUNC][i];
 
-        if(f->index == 82)
+        if (f->index == 82)
             assert(f->data == NULL);
 
         assert(f->event == NULL);
 
-        if(f->data)
+        if (f->data)
             FREE(f->data);
 
         DELETE(unit_fptr, f);
@@ -289,9 +289,9 @@ void clear_destructed(void)
     }
     destructed_idx[DR_FUNC] = 0;
 
-    for(i = 0; i < destructed_idx[DR_UNIT]; i++)
+    for (i = 0; i < destructed_idx[DR_UNIT]; i++)
     {
-        if((class unit_data *)destructed[DR_UNIT][i])
+        if ((class unit_data *)destructed[DR_UNIT][i])
         {
             destruct_unit((class unit_data *)destructed[DR_UNIT][i]);
             destructed[DR_UNIT][i] = NULL;

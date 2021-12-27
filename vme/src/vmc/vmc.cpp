@@ -97,11 +97,11 @@ int main(int argc, char **argv)
     mem_init();
 
     money = getenv("VME_MONEY");
-    if(money)
+    if (money)
         strcpy(moneyfile, money);
     else
         strcpy(moneyfile, "../etc/");
-    if(argc == 1)
+    if (argc == 1)
     {
         ShowUsage(argv[0]);
         exit(1);
@@ -114,9 +114,9 @@ int main(int argc, char **argv)
 
     fprintf(stderr, "VMC %s Copyright (C) 2001 by Valhalla [%s]\n", VERSION, __DATE__);
 
-    for(pos = 1; pos < argc; pos++)
-        if(*argv[pos] == '-')
-            switch(*(argv[pos] + 1))
+    for (pos = 1; pos < argc; pos++)
+        if (*argv[pos] == '-')
+            switch (*(argv[pos] + 1))
             {
                 case 'I':
                     Ipath[Ipcnt++] = argv[pos] + 2;
@@ -138,9 +138,9 @@ int main(int argc, char **argv)
                     fatal_warnings = 1;
                     break;
                 case 'd':
-                    if(*(argv[pos] + 2))
+                    if (*(argv[pos] + 2))
                         strcpy(moneyfile, argv[pos] + 2);
-                    else if(++pos < argc)
+                    else if (++pos < argc)
                         strcpy(moneyfile, argv[pos]);
                     else
                     {
@@ -180,10 +180,10 @@ char tmpfile2[L_tmpnam] = "";
 
 void dmc_exit(int n)
 {
-    if(*tmpfile1)
+    if (*tmpfile1)
         remove(tmpfile1);
 
-    if(*tmpfile2)
+    if (*tmpfile2)
         remove(tmpfile2);
 
     exit(n);
@@ -198,26 +198,26 @@ void fix(char *file)
 
     /* Examine filename */
     strcpy(filename_prefix, file);
-    if(!pponly)
+    if (!pponly)
     {
         /* find filename w/o .zon-suffix */
-        if(!(p = strrchr(filename_prefix, '.')) || strcmp(p + 1, INPUT_SUFFIX))
+        if (!(p = strrchr(filename_prefix, '.')) || strcmp(p + 1, INPUT_SUFFIX))
         {
             fprintf(stderr, "%s: Filename format error.\n", file);
             exit(1);
         }
         *p = '\0';
     }
-    if(make)
+    if (make)
     {
         sprintf(tmp, "%s.%s", filename_prefix, OUTPUT_WSUFFIX);
         sprintf(tmp2, "%s.%s", filename_prefix, OUTPUT_RSUFFIX);
         result = stat_mtime(file);
-        if(result <= stat_mtime(tmp) && result <= stat_mtime(tmp2))
+        if (result <= stat_mtime(tmp) && result <= stat_mtime(tmp2))
             return;
     }
     /* find filename component of path w/o .zon-suffix */
-    if(!(p = strrchr(filename_prefix, '/')))
+    if (!(p = strrchr(filename_prefix, '/')))
         p = filename_prefix;
     else
         ++p;
@@ -227,30 +227,30 @@ void fix(char *file)
     /* read & write */
     fprintf(stderr, "Compiling '%s'\n", cur_filename);
     zone_reset(filename);
-    if(pp_main(file) > 0)
+    if (pp_main(file) > 0)
     {
         fprintf(stderr, "Fatal error compiling in preprocessor stage in file '%s'.\n", cur_filename);
-        if(sOutput)
+        if (sOutput)
             FREE(sOutput);
         exit(1);
     }
 
     init_lex(sOutput);
     result = yyparse();
-    if(sOutput)
+    if (sOutput)
     {
         FREE(sOutput);
         sOutput_len = 0;
         sOutput_mlen = 0;
     }
-    if(result)
+    if (result)
     {
         fprintf(stderr, "Grave errors in file '%s'.\n", cur_filename);
         exit(1);
     }
-    else if(errcon)
+    else if (errcon)
     {
-        if(fatal_warnings)
+        if (fatal_warnings)
             fprintf(stderr, "Warnings have been treated as fatal errors.\n");
 
         fprintf(stderr, "Compilation aborted.\n");
@@ -287,14 +287,14 @@ void mem_init()
     tmplnames = create_namelist();
     CREATE(mm.bufs[0], char, MEMBLOCK);
     mm.buf = 0;
-    for(i = 1; i <= BUFS; i++)
+    for (i = 1; i <= BUFS; i++)
         mm.bufs[i] = 0;
     mm.free = 0;
 }
 
 void mem_reset()
 {
-    if(ident_names)
+    if (ident_names)
         free_namelist(ident_names);
 
     ident_names = create_namelist();
@@ -308,7 +308,7 @@ void *mmalloc(int size)
 {
     long ret;
 
-    if(size > MEMBLOCK)
+    if (size > MEMBLOCK)
     {
         fprintf(stderr, "trying to allocate too-large chunk.\n");
         exit(1);
@@ -316,14 +316,14 @@ void *mmalloc(int size)
     ret = mm.free;
 
     mm.free += size + (sizeof(int) - (size % sizeof(int)));
-    if(mm.free > (MEMBLOCK - 1))
+    if (mm.free > (MEMBLOCK - 1))
     {
-        if(++mm.buf >= BUFS)
+        if (++mm.buf >= BUFS)
         {
             fprintf(stderr, "Out of memory.\n");
             exit(1);
         }
-        if(!mm.bufs[mm.buf])
+        if (!mm.bufs[mm.buf])
             CREATE(mm.bufs[mm.buf], char, MEMBLOCK);
         mm.free = size + (sizeof(int) - (size % sizeof(int)));
         ret = 0;
@@ -352,7 +352,7 @@ class room_direction_data *mcreate_exit(void)
 {
     class room_direction_data *rslt;
 
-    rslt = new(class room_direction_data);
+    rslt = new (class room_direction_data);
 
     //   rslt->open_name = NULL;
     rslt->exit_info = 0;
@@ -380,7 +380,7 @@ void write_resetcom(FILE *fl, struct reset_command *c)
     static char nul[] = {0, 0};
 
     fwrite(&c->cmd_no, sizeof(c->cmd_no), 1, fl);
-    if(c->ref1)
+    if (c->ref1)
     {
         t = c->ref1;
         fwrite(t, 1, strlen(t) + 1, fl);
@@ -389,7 +389,7 @@ void write_resetcom(FILE *fl, struct reset_command *c)
     }
     else
         fwrite(nul, 1, 2, fl);
-    if(c->ref2)
+    if (c->ref2)
     {
         t = c->ref2;
         fwrite(t, 1, strlen(t) + 1, fl);
@@ -407,7 +407,7 @@ void write_resetcom(FILE *fl, struct reset_command *c)
 
 void check_unique_ident(class unit_data *u)
 {
-    if(is_name(UNIT_IDENT(u), ident_names))
+    if (is_name(UNIT_IDENT(u), ident_names))
     {
         fprintf(stderr, "Error: Duplicate symbolic reference '%s'\n", UNIT_IDENT(u));
         exit(1);
@@ -443,7 +443,7 @@ void dump_zone(char *prefix)
     assert(fl);
     fclose(fl);
 
-    if(!is_in(zone.z_zone.weather, 960, 1040))
+    if (!is_in(zone.z_zone.weather, 960, 1040))
     {
         dmc_error(TRUE,
                   "Error: Zone weather pressure of %d is outside the "
@@ -451,15 +451,15 @@ void dump_zone(char *prefix)
                   zone.z_zone.weather);
     }
 
-    for(u = zone.z_rooms; u; u = u->next)
+    for (u = zone.z_rooms; u; u = u->next)
     {
-        if(IS_ROOM(u))
+        if (IS_ROOM(u))
             no_rooms++;
         check_unique_ident(u);
         process_unit(u);
     }
 
-    if(no_rooms > 150)
+    if (no_rooms > 150)
     {
         dmc_error(FALSE,
                   "Warning: %3d rooms in zone [100 maximum suggested "
@@ -468,28 +468,28 @@ void dump_zone(char *prefix)
                   no_rooms);
     }
 
-    for(u = zone.z_objects; u; u = u->next)
+    for (u = zone.z_objects; u; u = u->next)
     {
         check_unique_ident(u);
         process_unit(u);
     }
 
-    for(u = zone.z_mobiles; u; u = u->next)
+    for (u = zone.z_mobiles; u; u = u->next)
     {
         check_unique_ident(u);
         process_unit(u);
     }
 
-    if(errcon)
+    if (errcon)
     {
         dmc_error(FALSE, "Fatal errors in zone.");
         exit(1);
     }
 
-    if(nooutput)
+    if (nooutput)
         return;
     sprintf(filename, "%s.%s", prefix, OUTPUT_WSUFFIX);
-    if(!(fl = fopen(filename, "w")))
+    if (!(fl = fopen(filename, "w")))
     {
         perror(filename);
         exit(1);
@@ -503,26 +503,26 @@ void dump_zone(char *prefix)
     fwrite(zone.z_zone.name, sizeof(char), strlen(zone.z_zone.name) + 1, fl);
     fwrite(&zone.z_zone.weather, sizeof(int), 1, fl);
     /* More data inserted here */
-    if(zone.z_zone.notes)
+    if (zone.z_zone.notes)
         fwrite(zone.z_zone.notes, sizeof(char), strlen(zone.z_zone.notes) + 1, fl);
     else
         fwrite("", sizeof(char), 1, fl);
 
-    if(zone.z_zone.help)
+    if (zone.z_zone.help)
         fwrite(zone.z_zone.help, sizeof(char), strlen(zone.z_zone.help) + 1, fl);
     else
         fwrite("No help for this zone.", sizeof(char), 23, fl);
-    if(zone.z_zone.creators)
+    if (zone.z_zone.creators)
     {
         // MS2020 for (creators = zone.z_zone.creators; (ubit32)*creators; creators++)
-        for(creators = zone.z_zone.creators; *creators; creators++)
+        for (creators = zone.z_zone.creators; *creators; creators++)
         {
             fwrite(*creators, sizeof(char), strlen(*creators) + 1, fl);
         }
     }
     fwrite("", sizeof(char), 1, fl);
 
-    if(zone.z_zone.title)
+    if (zone.z_zone.title)
     {
         fwrite(zone.z_zone.title, sizeof(char), strlen(zone.z_zone.title) + 1, fl);
     }
@@ -530,44 +530,44 @@ void dump_zone(char *prefix)
         fwrite("", sizeof(char), 1, fl);
 
     /* write DIL templates */
-    for(tmpl = zone.z_tmpl; tmpl; tmpl = tmpl->vmcnext)
+    for (tmpl = zone.z_tmpl; tmpl; tmpl = tmpl->vmcnext)
         write_diltemplate(fl, tmpl);
 
     /* end of DIL templates marker */
     dummy = 0;
-    if(fwrite(&dummy, sizeof(dummy), 1, fl) != 1)
+    if (fwrite(&dummy, sizeof(dummy), 1, fl) != 1)
         error(HERE, "Failed to fwrite() end of DIL templates");
 
     write_dot(prefix);
-    for(u = zone.z_rooms; u; u = u->next)
+    for (u = zone.z_rooms; u; u = u->next)
     {
         write_unit(fl, u, UNIT_IDENT(u));
     }
 
     u = zone.z_rooms;
-    while(u)
+    while (u)
     {
         v = u->next;
         delete u;
         u = v;
     }
 
-    for(u = zone.z_objects; u; u = u->next)
+    for (u = zone.z_objects; u; u = u->next)
         write_unit(fl, u, UNIT_IDENT(u));
 
     u = zone.z_objects;
-    while(u)
+    while (u)
     {
         v = u->next;
         delete u;
         u = v;
     }
 
-    for(u = zone.z_mobiles; u; u = u->next)
+    for (u = zone.z_mobiles; u; u = u->next)
         write_unit(fl, u, UNIT_IDENT(u));
 
     u = zone.z_mobiles;
-    while(u)
+    while (u)
     {
         v = u->next;
         delete u;
@@ -575,7 +575,7 @@ void dump_zone(char *prefix)
     }
 
     tmpl = zone.z_tmpl;
-    while(tmpl)
+    while (tmpl)
     {
         ut = tmpl->vmcnext;
         dil_free_template(tmpl, 0);
@@ -586,7 +586,7 @@ void dump_zone(char *prefix)
     fclose(fl);
 
     sprintf(filename, "%s.%s", prefix, OUTPUT_RSUFFIX);
-    if(!(fl = fopen(filename, "w")))
+    if (!(fl = fopen(filename, "w")))
     {
         perror(filename);
         exit(1);
@@ -594,7 +594,7 @@ void dump_zone(char *prefix)
     fwrite(&zone.z_zone.lifespan, sizeof(unsigned short), 1, fl);
     fwrite(&zone.z_zone.reset_mode, sizeof(unsigned char), 1, fl);
 
-    for(c = zone.z_table; c; c = c->next)
+    for (c = zone.z_table; c; c = c->next)
         write_resetcom(fl, c);
 
     fwrite("VMC", sizeof(char), 3, fl);
@@ -606,7 +606,7 @@ long stat_mtime(char *name)
 {
     struct stat buf;
 
-    if(stat(name, &buf) < 0)
+    if (stat(name, &buf) < 0)
         return 0;
     return buf.st_mtime;
 }
@@ -624,22 +624,22 @@ void dil_free_prg(struct dilprg *prg, int dil)
 
     tmpl = prg->frame[0].tmpl;
 
-    for(frm = prg->frame; frm <= (prg->fp); frm++)
+    for (frm = prg->frame; frm <= (prg->fp); frm++)
         dil_free_frame(frm);
-    if(!dil)
+    if (!dil)
         FREE(prg->frame);
 
     dil_free_template(tmpl, IS_SET(prg->flags, DILFL_COPY), dil);
-    if(!dil)
+    if (!dil)
         FREE(prg);
 }
 
 void dil_free_var(struct dilvar *v)
 {
-    switch(v->type)
+    switch (v->type)
     {
         case DILV_SP:
-            if(v->val.string)
+            if (v->val.string)
             {
                 FREE(v->val.string);
                 v->val.string = NULL;
@@ -647,7 +647,7 @@ void dil_free_var(struct dilvar *v)
             break;
 
         case DILV_SLP:
-            if(v->val.namelist)
+            if (v->val.namelist)
             {
                 delete v->val.namelist;
                 v->val.namelist = NULL;
@@ -656,7 +656,7 @@ void dil_free_var(struct dilvar *v)
 
         case DILV_ILP:
             /* Only free if temporary allocated expression */
-            if(v->val.intlist)
+            if (v->val.intlist)
             {
                 delete v->val.intlist;
                 v->val.intlist = NULL;
@@ -670,24 +670,24 @@ void dil_free_frame(struct dilframe *frame)
     int j;
 
     /* free variables */
-    for(j = 0; j < frame->tmpl->varc; j++)
+    for (j = 0; j < frame->tmpl->varc; j++)
         dil_free_var(&frame->vars[j]);
 
-    if(frame->vars)
+    if (frame->vars)
     {
         FREE(frame->vars);
         frame->vars = NULL;
     }
 
     /* discard secures */
-    if(frame->secure)
+    if (frame->secure)
     {
         FREE(frame->secure);
         frame->secure = NULL;
     }
 
     /* discard intr */
-    if(frame->intr)
+    if (frame->intr)
     {
         FREE(frame->intr);
         frame->intr = NULL;
@@ -698,41 +698,41 @@ void dil_free_template(struct diltemplate *tmpl, int copy, int dil)
 {
     int i;
 
-    if(tmpl->flags == DILFL_FREEME)
+    if (tmpl->flags == DILFL_FREEME)
     {
         /* free dummy template */
         FREE(tmpl->prgname);
         FREE(tmpl);
     }
-    else if(!copy)
+    else if (!copy)
     {
         /* free entire inline template */
         FREE(tmpl->prgname);
 
-        if(tmpl->argt)
+        if (tmpl->argt)
             FREE(tmpl->argt);
 
-        if(tmpl->vart)
+        if (tmpl->vart)
             FREE(tmpl->vart);
 
-        if(tmpl->core)
+        if (tmpl->core)
             FREE(tmpl->core);
 
-        if(tmpl->extprg)
+        if (tmpl->extprg)
             FREE(tmpl->extprg);
 
-        for(i = 0; i < tmpl->xrefcount; i++)
+        for (i = 0; i < tmpl->xrefcount; i++)
         {
-            if(tmpl->xrefs[i].name)
+            if (tmpl->xrefs[i].name)
                 FREE(tmpl->xrefs[i].name);
-            if(!dil)
-                if(tmpl->xrefs[i].argt)
+            if (!dil)
+                if (tmpl->xrefs[i].argt)
                     FREE(tmpl->xrefs[i].argt);
         }
 
-        if(tmpl->xrefs)
+        if (tmpl->xrefs)
             FREE(tmpl->xrefs);
-        if(!dil)
+        if (!dil)
             FREE(tmpl);
     }
 }
@@ -741,15 +741,15 @@ void graph_sc(char *prefix)
 {
     class unit_data *u;
     int x;
-    for(x = 0, u = zone.z_rooms; u; u = u->next, x++)
-        if(IS_ROOM(u))
+    for (x = 0, u = zone.z_rooms; u; u = u->next, x++)
+        if (IS_ROOM(u))
             ROOM_NUM(u) = x;
 
     typedef boost::adjacency_list<> ZoneGraph;
 
     ZoneGraph G(x);
-    for(u = zone.z_rooms; u; u = u->next)
-        if(IS_ROOM(u))
+    for (u = zone.z_rooms; u; u = u->next)
+        if (IS_ROOM(u))
         {
             add_edge(ROOM_NUM(u), 0, G);
         }
@@ -762,7 +762,7 @@ void write_dot(char *prefix)
     class unit_data *u;
     sprintf(dotfilename, "%s.%s", prefix, "dot");
     std::ofstream dotfl(dotfilename);
-    if(!(dotfl))
+    if (!(dotfl))
     {
         perror(dotfilename);
         exit(1);
@@ -772,25 +772,25 @@ void write_dot(char *prefix)
 
     dotfl << std::endl << "  /* Room Labels */" << std::endl;
 
-    for(u = zone.z_rooms; u; u = u->next)
+    for (u = zone.z_rooms; u; u = u->next)
     {
-        if(IS_ROOM(u))
+        if (IS_ROOM(u))
             dotfl << "\"" << UNIT_IDENT(u) << "@" << zone.z_zone.name << "\" "
                   << "[label=\"" << UNIT_IDENT(u) << "\"];" << std::endl;
     }
 
     dotfl << std::endl << "/* Room Interconnects */" << std::endl;
-    for(u = zone.z_rooms; u; u = u->next)
+    for (u = zone.z_rooms; u; u = u->next)
     {
-        if(IS_ROOM(u))
-            for(int i = 0; i < MAX_EXIT; i++)
+        if (IS_ROOM(u))
+            for (int i = 0; i < MAX_EXIT; i++)
             {
-                if(ROOM_EXIT(u, i))
+                if (ROOM_EXIT(u, i))
                 {
                     const char *c1 = "";
                     const char *c2 = "";
 
-                    if(ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->to_room)
+                    if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->to_room)
                     {
                         c1 = (char *)ROOM_EXIT(u, i)->to_room;
                         c2 = c1;
@@ -798,7 +798,7 @@ void write_dot(char *prefix)
                         c2++;
                     }
 
-                    if(strcmp(c1, zone.z_zone.name) == 0)
+                    if (strcmp(c1, zone.z_zone.name) == 0)
                     {
                         dotfl << "\"" << UNIT_IDENT(u) << "@" << zone.z_zone.name << "\"->\"" << c2 << "@" << c1 << "\";" << std::endl;
                     }

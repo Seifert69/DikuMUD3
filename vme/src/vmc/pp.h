@@ -540,13 +540,13 @@ struct ppdir pptab[] = {
 /*	 Directive	Do within	Procedure	Arg to	  */
 /*	   name		FALSE #ifxx	name		function  */
 /* --------------	-----------	----------	--------  */
-    #if(TARGET == T_QC) OR(TARGET == T_QCX) OR(TARGET == T_TCX)
+    #if (TARGET == T_QC) OR(TARGET == T_QCX) OR(TARGET == T_TCX)
     {"asm", NO, doasm, TRUE},
     #endif /* (TARGET == T_QC) OR (TARGET == T_QCX) OR (TARGET == T_TCX) */
     {"define", NO, dodefine, FALSE},
     {"elif", YES, doelse, TRUE},
     {"else", YES, doelse, FALSE},
-    #if(TARGET == T_QC) OR(TARGET == T_QCX) OR(TARGET == T_TCX)
+    #if (TARGET == T_QC) OR(TARGET == T_QCX) OR(TARGET == T_TCX)
     {"endasm", NO, doasm, FALSE},
     #endif /* (TARGET == T_QC) OR (TARGET == T_QCX) OR (TARGET == T_TCX) */
     {"endif", YES, doendif, EMPTY},
@@ -642,7 +642,7 @@ EXTERN char Date[12] I_BRZERO;     /* Date str for __DATE__*/
 EXTERN char _Time[9] I_BRZERO;     /* Time str for __TIME__*/
 EXTERN unsigned int Unique I_ZERO; /* Unique # for __NOW__/__NEXT__*/
 EXTERN int Verbose I_ZERO;         /* True to print verbose mess	*/
-#if(TARGET == T_QC) OR(TARGET == T_QCX) OR(TARGET == T_TCX)
+#if (TARGET == T_QC) OR(TARGET == T_QCX) OR(TARGET == T_TCX)
 EXTERN int Do_asm I_ZERO;    /* True if in asm/endasm body	*/
 EXTERN int Macexpand I_ZERO; /* True/macro expand on	*/
 EXTERN int Asmexpand I_ZERO; /* Set Macexpand in asm	*/

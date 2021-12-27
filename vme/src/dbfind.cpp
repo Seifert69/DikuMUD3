@@ -27,8 +27,8 @@ class descriptor_data *find_descriptor(const char *name, class descriptor_data *
     class descriptor_data *d;
 
     /* Check if already playing */
-    for(d = descriptor_list; d; d = d->next)
-        if(d != except && str_ccmp(PC_FILENAME(CHAR_ORIGINAL(d->character)), name) == 0)
+    for (d = descriptor_list; d; d = d->next)
+        if (d != except && str_ccmp(PC_FILENAME(CHAR_ORIGINAL(d->character)), name) == 0)
             return d;
 
     return NULL;
@@ -39,11 +39,11 @@ class zone_type *find_zone(const char *zonename)
 {
     // struct bin_search_type *ba;
 
-    if((zonename == NULL) || !*zonename)
+    if ((zonename == NULL) || !*zonename)
         return NULL;
 
     auto it = zone_info.mmp.find(zonename);
-    if(it != zone_info.mmp.end())
+    if (it != zone_info.mmp.end())
         return it->second;
     else
         return NULL;
@@ -58,7 +58,7 @@ class file_index_type *find_file_index(const char *zonename, const char *name)
 {
     class zone_type *zone;
 
-    if(!*name)
+    if (!*name)
         return NULL;
 
     char bufzone[MAX_STRING_LENGTH];
@@ -67,7 +67,7 @@ class file_index_type *find_file_index(const char *zonename, const char *name)
     strcpy(bufzone, zonename);
     str_lower(bufzone);
 
-    if((zone = find_zone(bufzone)) == NULL)
+    if ((zone = find_zone(bufzone)) == NULL)
         return NULL;
 
     strcpy(bufname, name);
@@ -75,7 +75,7 @@ class file_index_type *find_file_index(const char *zonename, const char *name)
 
     auto it = zone->mmp_fi.find(bufname);
 
-    if(it != zone->mmp_fi.end())
+    if (it != zone->mmp_fi.end())
         return it->second;
     else
         return NULL;
@@ -92,15 +92,15 @@ struct diltemplate *find_dil_index(const char *zonename, const char *name)
     class zone_type *zone;
     // struct bin_search_type *ba;
 
-    if(str_is_empty(name))
+    if (str_is_empty(name))
         return NULL;
 
-    if((zone = find_zone(zonename)) == NULL)
+    if ((zone = find_zone(zonename)) == NULL)
         return NULL;
 
     auto it = zone->mmp_tmpl.find(name);
 
-    if(it != zone->mmp_tmpl.end())
+    if (it != zone->mmp_tmpl.end())
         return it->second;
     else
         return NULL;
@@ -121,7 +121,7 @@ struct diltemplate *find_dil_template(const char *name)
 {
     char zbuf[256], pbuf[256];
 
-    if(str_is_empty(name))
+    if (str_is_empty(name))
         return NULL;
 
     split_fi_ref(name, zbuf, pbuf);
@@ -137,7 +137,7 @@ class unit_data *world_room(const char *zone, const char *name)
     class file_index_type *fi;
     fi = find_file_index(zone, name);
 
-    if(fi && (fi->type == UNIT_ST_ROOM) && (!fi->fi_unit_list.empty()))
+    if (fi && (fi->type == UNIT_ST_ROOM) && (!fi->fi_unit_list.empty()))
         return (fi->fi_unit_list.front());
 
     return NULL;
@@ -164,7 +164,7 @@ class file_index_type *pc_str_to_file_index(class unit_data *ch, const char *str
 
     split_fi_ref(str, zone, name);
 
-    if(*name && !*zone)
+    if (*name && !*zone)
         strcpy(zone, unit_zone(ch)->name);
 
     return find_file_index(zone, name);

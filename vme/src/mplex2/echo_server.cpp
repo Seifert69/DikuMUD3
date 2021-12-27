@@ -24,8 +24,8 @@ void remove_gmap(class cConHook *con)
 {
     std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
 
-    for(it = g_cMapHandler.begin(); it != g_cMapHandler.end(); it++)
-        if(it->second == con)
+    for (it = g_cMapHandler.begin(); it != g_cMapHandler.end(); it++)
+        if (it->second == con)
         {
             slog(LOG_OFF, 0, "remove_gmap located con class, removed.");
             g_cMapHandler.erase(it);
@@ -40,7 +40,7 @@ void on_close(websocketpp::connection_hdl hdl)
 
     it = g_cMapHandler.find(hdl);
 
-    if(it != g_cMapHandler.end())
+    if (it != g_cMapHandler.end())
     {
         con = it->second;
         g_cMapHandler.erase(it);
@@ -65,7 +65,7 @@ int ws_send_message(wsserver *s, websocketpp::connection_hdl hdl, const char *tx
         // s->send(hdl, txt, strlen(txt), websocketpp::frame::opcode::text);
         return 1;
     }
-    catch(websocketpp::exception const &e)
+    catch (websocketpp::exception const &e)
     {
         slog(LOG_OFF, 0, "Send failed: %s", e.what());
         return 0;
@@ -77,7 +77,7 @@ void on_message(wsserver *s, websocketpp::connection_hdl hdl, message_ptr msg)
 {
     class cConHook *con = 0;
 
-    if(g_cMapHandler.find(hdl) == g_cMapHandler.end())
+    if (g_cMapHandler.find(hdl) == g_cMapHandler.end())
     {
         // Crete the con hook
         con = new cConHook();
@@ -145,12 +145,12 @@ void runechoserver(void)
         // Start the ASIO io_service run loop
         echo_server.run();
     }
-    catch(websocketpp::exception const &e)
+    catch (websocketpp::exception const &e)
     {
         slog(LOG_OFF, 0, "Exception: %s.", e.what());
         exit(42);
     }
-    catch(...)
+    catch (...)
     {
         slog(LOG_OFF, 0, "Exception other");
         exit(42);

@@ -70,7 +70,7 @@ void init_char(class unit_data *ch)
 
     int required_xp(int level);
 
-    if(g_cServerConfig.m_bBBS)
+    if (g_cServerConfig.m_bBBS)
     {
         PC_SETUP_ECHO(ch) = TRUE;
         PC_SETUP_REDRAW(ch) = TRUE;
@@ -112,7 +112,7 @@ void init_char(class unit_data *ch)
     PC_SKILL_POINTS(ch) = 0;
 
     /* *** if this is our first player --- he be God *** */
-    if(player_id == -7)
+    if (player_id == -7)
     {
         player_id = 1;
         PC_ID(ch) = new_player_id();
@@ -130,7 +130,7 @@ void init_char(class unit_data *ch)
     CHAR_FLAGS(ch) = 0;
     SET_BIT(CHAR_FLAGS(ch), CHAR_PROTECTED);
 
-    for(i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
         PC_COND(ch, i) = (CHAR_LEVEL(ch) >= 200 ? 48 : 24);
 
     PC_COND(ch, DRUNK) = 0;
@@ -148,7 +148,7 @@ descriptor_data::descriptor_data(cMultiHook *pe)
     void nanny_get_name(class descriptor_data * d, char *arg);
 
     no_connections++;
-    if(no_connections > max_no_connections)
+    if (no_connections > max_no_connections)
         max_no_connections = no_connections;
 
     /* init desc data */
@@ -188,7 +188,7 @@ descriptor_data::descriptor_data(cMultiHook *pe)
 
 void descriptor_data::RemoveBBS(void)
 {
-    if(nLine != 255)
+    if (nLine != 255)
     {
         char buf[512];
 
@@ -199,14 +199,14 @@ void descriptor_data::RemoveBBS(void)
 
 void descriptor_data::CreateBBS(void)
 {
-    if(nLine != 255)
+    if (nLine != 255)
     {
         char buf[512];
         FILE *f;
 
         sprintf(buf, BBS_DIR "%d.%d", nPort, nLine);
 
-        if(!character)
+        if (!character)
         {
             slog(LOG_ALL, 0, "No character in %s.", buf);
             return;
@@ -214,13 +214,13 @@ void descriptor_data::CreateBBS(void)
 
         f = fopen(buf, "wb");
 
-        if(!f)
+        if (!f)
         {
             slog(LOG_ALL, 0, "Could not create %s.", buf);
             return;
         }
 
-        if(account_is_overdue(this->character))
+        if (account_is_overdue(this->character))
             fprintf(f, "1\n");
         else
             fprintf(f, "0\n");
@@ -264,7 +264,7 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
     /* Descriptor must be either in the game (UNIT_IN) or in menu.  */
     /* If unit has been extracted, then all his data is half erased */
     /* (affects, etc) and he shall not be saved!                    */
-    if(!char_is_playing(d->character)) /* In menu - extract completely */
+    if (!char_is_playing(d->character)) /* In menu - extract completely */
     {
         assert(!UNIT_IN(d->character));
         assert(!d->character->gnext);
@@ -272,7 +272,7 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
 
         /* Important that we set to NULL before calling extract,
            otherwise we just go to the menu... ... ... */
-        if(PC_IS_UNSAVED(d->character))
+        if (PC_IS_UNSAVED(d->character))
             possible_saves--;
         CHAR_DESCRIPTOR(d->character) = NULL;
         extract_unit(d->character);
@@ -281,7 +281,7 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
     }
     else
     {
-        if(d->localstr)
+        if (d->localstr)
             FREE(d->localstr);
 
         d->localstr = NULL;
@@ -304,23 +304,23 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
         act("$1n has lost $1s link.", A_HIDEINV, d->character, cActParameter(), cActParameter(), TO_ROOM);
         slog(LOG_BRIEF, UNIT_MINV(d->character), "Closing link and making link dead: %s.", UNIT_NAME(d->character));
 
-        if(!d->character->is_destructed())
+        if (!d->character->is_destructed())
         {
-            if(IS_PC(d->character))
+            if (IS_PC(d->character))
                 UPC(d->character)->disconnect_game();
-            if(!bReconnect)
+            if (!bReconnect)
             {
-                if(!PC_IS_UNSAVED(d->character))
+                if (!PC_IS_UNSAVED(d->character))
                 {
                     /* We need to save player to update his time status! */
                     save_player(d->character); /* Save non-guests */
                     save_player_contents(d->character, TRUE);
                     link_dead = find_dil_template("link_dead@basis");
-                    if(link_dead)
+                    if (link_dead)
                     {
                         CHAR_DESCRIPTOR(d->character) = NULL;
                         class dilprg *prg = dil_copy_template(link_dead, d->character, NULL);
-                        if(prg)
+                        if (prg)
                         {
                             prg->waitcmd = WAITCMD_MAXINST - 1;
                             dil_activate(prg);
@@ -341,20 +341,20 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
         d->character = NULL;
     }
 
-    if(bSendClose && d->multi->IsHooked())
+    if (bSendClose && d->multi->IsHooked())
         protocol_send_close(d->multi, d->id);
 
     no_connections--;
 
-    if(next_to_process == d) /* to avoid crashing the process loop */
+    if (next_to_process == d) /* to avoid crashing the process loop */
         next_to_process = next_to_process->next;
 
-    if(d == descriptor_list) /* this is the head of the list */
+    if (d == descriptor_list) /* this is the head of the list */
         descriptor_list = descriptor_list->next;
     else /* This is somewhere inside the list */
     {
         /* Locate the previous element */
-        for(tmp = descriptor_list; tmp && (tmp->next != d); tmp = tmp->next)
+        for (tmp = descriptor_list; tmp && (tmp->next != d); tmp = tmp->next)
             ;
         tmp->next = d->next;
     }
@@ -373,7 +373,7 @@ void system_memory(class unit_data *ch)
 
     n = getrusage(RUSAGE_CHILDREN, &rusage_data);
 
-    if(n != 0)
+    if (n != 0)
         slog(LOG_ALL, 0, "System memory status error.");
     else
     {

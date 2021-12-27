@@ -36,7 +36,7 @@ void link_affect(class unit_data *unit, class unit_affected_type *af)
 
     af->gprevious = 0;
 
-    if(affected_list)
+    if (affected_list)
     {
         af->gnext = affected_list;
         affected_list->gprevious = af;
@@ -73,26 +73,26 @@ class unit_affected_type *link_alloc_affect(class unit_data *unit, class unit_af
 /* linked.                                                  */
 void create_affect(class unit_data *unit, class unit_affected_type *af)
 {
-    if(!unit->is_destructed())
+    if (!unit->is_destructed())
     {
         af = link_alloc_affect(unit, af);
         af->event = NULL;
         /* If less than zero it is a transfer! */
-        if(af->id >= 0)
+        if (af->id >= 0)
         {
-            if(af->applyf_i >= 0)
-                if(!(*apf[af->applyf_i].func)(af, unit, TRUE))
+            if (af->applyf_i >= 0)
+                if (!(*apf[af->applyf_i].func)(af, unit, TRUE))
                     return;
 
-            if(af->firstf_i >= 0)
+            if (af->firstf_i >= 0)
                 (*tif[af->firstf_i].func)(af, unit);
 
-            if(af->duration > 0)
+            if (af->duration > 0)
                 af->duration--; /* When 1 it means stop next tick... */
 
-            if(af->beat > 0)
+            if (af->beat > 0)
             {
-                if(af->event)
+                if (af->event)
                     events.remove(affect_beat, (void *)af, 0);
                 af->event = events.add(af->beat, affect_beat, (void *)af, 0);
             }
@@ -114,32 +114,32 @@ void unlink_affect(class unit_affected_type *af)
 
     events.remove(affect_beat, (void *)af, 0);
 
-    if(next_affected_dude == af)
+    if (next_affected_dude == af)
         next_affected_dude = af->gnext;
 
     /* Unlink affect structure from global list of affects */
 
-    if(affected_list == af)
+    if (affected_list == af)
         affected_list = af->gnext;
 
-    if(af->gnext)
+    if (af->gnext)
         af->gnext->gprevious = af->gprevious;
 
-    if(af->gprevious)
+    if (af->gprevious)
         af->gprevious->gnext = af->gnext;
 
     /* Unlink affect structure from local list */
 
     i = UNIT_AFFECTED(af->owner);
-    if(i)
+    if (i)
     {
-        if(i == af)
+        if (i == af)
         {
             UNIT_AFFECTED(af->owner) = i->next;
         }
         else
         {
-            for(; i->next != af; i = i->next)
+            for (; i->next != af; i = i->next)
                 ;
 
             assert(i);
@@ -155,20 +155,20 @@ void destroy_affect(class unit_affected_type *af)
 {
     /* It is assumed that none of these function calls can */
     /* destroy the affect.                                 */
-    if(af->id >= 0)
+    if (af->id >= 0)
     {
-        if(af->applyf_i >= 0)
-            if(!(*apf[af->applyf_i].func)(af, af->owner, FALSE))
+        if (af->applyf_i >= 0)
+            if (!(*apf[af->applyf_i].func)(af, af->owner, FALSE))
             {
                 af->duration = 0;
                 af->beat = WAIT_SEC * 5;
-                if(af->event)
+                if (af->event)
                     events.remove(affect_beat, (void *)af, 0);
                 af->event = events.add(number(120, 240), affect_beat, (void *)af, 0);
                 return;
             }
 
-        if(af->lastf_i >= 0 && !af->owner->is_destructed())
+        if (af->lastf_i >= 0 && !af->owner->is_destructed())
             (*tif[af->lastf_i].func)(af, af->owner);
     }
 
@@ -183,16 +183,16 @@ void affect_clear_unit(class unit_data *unit)
 
     /* Some affects may not be destroyed at first attempt if it would */
     /* cause an overflow, therefore do several attemps to destroy     */
-    for(i = 0; UNIT_AFFECTED(unit) && (i < 5); i++)
+    for (i = 0; UNIT_AFFECTED(unit) && (i < 5); i++)
     {
-        for(taf1 = UNIT_AFFECTED(unit); taf1; taf1 = taf2)
+        for (taf1 = UNIT_AFFECTED(unit); taf1; taf1 = taf2)
         {
             taf2 = taf1->next;
             destroy_affect(taf1);
         }
     }
 
-    if(UNIT_AFFECTED(unit))
+    if (UNIT_AFFECTED(unit))
         slog(LOG_ALL, 0, "ERROR: Could not clear unit of affects!");
 }
 
@@ -200,8 +200,8 @@ class unit_affected_type *affected_by_spell(const class unit_data *unit, sbit16 
 {
     class unit_affected_type *af;
 
-    for(af = UNIT_AFFECTED(unit); af; af = af->next)
-        if(af->id == id)
+    for (af = UNIT_AFFECTED(unit); af; af = af->next)
+        if (af->id == id)
             return af;
 
     return 0;
@@ -217,14 +217,14 @@ void affect_beat(void *p1, void *p2)
 
     /* Used to be assert(af->beat > 0);  */
     /* But crashes game, I've set 0 to 8 */
-    if(af->beat <= 0)
+    if (af->beat <= 0)
         af->beat = 2 * WAIT_SEC;
 
     destroyed = FALSE;
 
-    if(!IS_PC(af->owner) || CHAR_DESCRIPTOR(af->owner))
+    if (!IS_PC(af->owner) || CHAR_DESCRIPTOR(af->owner))
     {
-        if(af->duration == 0)
+        if (af->duration == 0)
         {
             /* 'destroy_affect' will try to destroy the event, but there */
             /* is none. It doesn't matter though                         */
@@ -233,18 +233,18 @@ void affect_beat(void *p1, void *p2)
         }
         else
         {
-            if(af->tickf_i >= 0)
+            if (af->tickf_i >= 0)
                 (*tif[af->tickf_i].func)(af, af->owner);
 
             destroyed = af->is_destructed();
 
-            if(!destroyed && (af->duration > 0))
+            if (!destroyed && (af->duration > 0))
                 af->duration--;
         }
     }
-    if(!destroyed)
+    if (!destroyed)
     {
-        if(af->event)
+        if (af->event)
             events.remove(affect_beat, (void *)af, 0);
         af->event = events.add(af->beat, affect_beat, (void *)af, 0);
     }
@@ -257,10 +257,10 @@ void apply_affect(class unit_data *unit)
     class unit_affected_type *af;
 
     /* If less than zero it is a transfer, and nothing will be set */
-    for(af = UNIT_AFFECTED(unit); af; af = af->next)
-        if((af->id >= 0) && (af->applyf_i >= 0))
+    for (af = UNIT_AFFECTED(unit); af; af = af->next)
+        if ((af->id >= 0) && (af->applyf_i >= 0))
         {
-            if(!(*apf[af->applyf_i].func)(af, unit, TRUE))
+            if (!(*apf[af->applyf_i].func)(af, unit, TRUE))
                 continue;
         }
 }
@@ -270,10 +270,10 @@ void start_affect(class unit_data *unit)
     class unit_affected_type *af;
 
     /* If less than zero it is a transfer, and nothing will be set */
-    for(af = UNIT_AFFECTED(unit); af; af = af->next)
-        if((af->id >= 0) && (af->beat > 0))
+    for (af = UNIT_AFFECTED(unit); af; af = af->next)
+        if ((af->id >= 0) && (af->beat > 0))
         {
-            if(af->event)
+            if (af->event)
                 events.remove(affect_beat, (void *)af, 0);
             af->event = events.add(af->beat, affect_beat, (void *)af, 0);
         }
@@ -285,7 +285,7 @@ void stop_affect(class unit_data *unit)
 {
     class unit_affected_type *af;
 
-    for(af = UNIT_AFFECTED(unit); af; af = af->next)
-        if(af->event != NULL)
+    for (af = UNIT_AFFECTED(unit); af; af = af->next)
+        if (af->event != NULL)
             events.remove(affect_beat, (void *)af, 0);
 }

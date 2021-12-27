@@ -69,7 +69,7 @@ void mud_went_down(void); // Circular reference
 
 void alarm_check(int i)
 {
-    if(g_bHadAlarm)
+    if (g_bHadAlarm)
     {
         slog(LOG_OFF, 0, "Alarm checkpoint %d.", i);
         g_bHadAlarm = FALSE;
@@ -89,7 +89,7 @@ void test_mud_up(void)
     // If this acts up then it might be because of multithreading issues
     // from the clientconnector.
 
-    if(fd == -1)
+    if (fd == -1)
     {
 #if defined(_WINDOWS)
         Sleep(1000);
@@ -98,7 +98,7 @@ void test_mud_up(void)
 #endif
         slog(LOG_OFF, 0, "Unable to connect to MUD server %s:%d", mplex_arg.pAddress, mplex_arg.nMudPort);
         nRetries++;
-        if(nRetries > 600)
+        if (nRetries > 600)
         {
             slog(LOG_OFF, 0, "Giving up after %d attempts", nRetries);
             exit(1);
@@ -109,7 +109,7 @@ void test_mud_up(void)
     nRetries = 0;
     slog(LOG_OFF, 0, "Stream to server was re-opened!");
 
-    if(MudHook.tfd() != -1)
+    if (MudHook.tfd() != -1)
         slog(LOG_ALL, 0, "test mud up called with a non -1 fd.");
 
     CaptainHook.Hook(fd, &MudHook);
@@ -117,7 +117,7 @@ void test_mud_up(void)
 
     protocol_send_mplex_info(&MudHook, mplex_arg.bWebSockets);
 
-    for(con = g_connection_list; con; con = nextcon)
+    for (con = g_connection_list; con; con = nextcon)
     {
         nextcon = con->m_pNext;
         sprintf(buf, "%s has begun rebooting... please wait.<br/>", mudname);
@@ -136,10 +136,10 @@ void mud_went_down(void)
     class cConHook *con;
     char buf[200];
 
-    if(MudHook.IsHooked())
+    if (MudHook.IsHooked())
         MudHook.Unhook();
 
-    for(con = g_connection_list; con; con = con->m_pNext)
+    for (con = g_connection_list; con; con = con->m_pNext)
     {
         sprintf(buf,
                 "The connection to %s was broken. "
@@ -158,14 +158,14 @@ void Control(void)
     static int tries = 0;
     int n;
 
-    for(;;)
+    for (;;)
     {
-        if(!MotherHook.IsHooked())
+        if (!MotherHook.IsHooked())
             return;
 
-        if(!MudHook.IsHooked())
+        if (!MudHook.IsHooked())
         {
-            if(tries++ > 600)
+            if (tries++ > 600)
             {
                 slog(LOG_ALL, 0, "Giving up connecting to mud, retrying...");
                 return;
@@ -177,7 +177,7 @@ void Control(void)
 #endif
             test_mud_up(); /* Need to do this first... */
 
-            if(mplex_arg.bWebSockets)
+            if (mplex_arg.bWebSockets)
             {
                 slog(LOG_ALL, 0, "Waiting for a MUDHook to get reconnected...");
                 continue; // See bug description below. Dont wait until MUDHook is reestablished.
@@ -198,7 +198,7 @@ void Control(void)
         // round begins.
         n = CaptainHook.Wait(NULL);
 
-        if(n == -1)
+        if (n == -1)
         {
             slog(LOG_ALL, 0, "Select error (errno %d)", errno);
             return;
@@ -215,23 +215,23 @@ void cMotherHook::Unhook(void)
 
 int cMotherHook::IsHooked(void)
 {
-    if(mplex_arg.bWebSockets)
+    if (mplex_arg.bWebSockets)
         return TRUE;
     return cHook::IsHooked();
 }
 
 void cMotherHook::Input(int nFlags)
 {
-    if(nFlags & SELECT_EXCEPT)
+    if (nFlags & SELECT_EXCEPT)
     {
         slog(LOG_OFF, 0, "MOTHER CONNECTION CLOSED DOWN!");
         this->Unhook();
     }
-    else if(nFlags & SELECT_READ)
+    else if (nFlags & SELECT_READ)
     {
         class cConHook *con = new cConHook();
 
-        if(g_nConnectionsLeft <= 1)
+        if (g_nConnectionsLeft <= 1)
         {
             slog(LOG_OFF, 0, "Can't accept more connections.");
             con->SendCon("This server has no more available connections, try "
@@ -251,28 +251,28 @@ void cMudHook::Input(int nFlags)
 {
     // slog(LOG_OFF, 0, "cMudHook: Input()");
 
-    if(nFlags & SELECT_EXCEPT)
+    if (nFlags & SELECT_EXCEPT)
     {
         slog(LOG_OFF, 0, "MUD CONNECTION CLOSED DOWN!");
         mud_went_down();
     }
-    else if(nFlags & SELECT_READ)
+    else if (nFlags & SELECT_READ)
     {
         int n;
 
-        for(;;)
+        for (;;)
         {
             n = read_mud();
-            if((n == 0) || (n == -1))
+            if ((n == 0) || (n == -1))
                 break;
         }
 
-        if(n == -1)
+        if (n == -1)
         {
             slog(LOG_OFF, 0, "ERROR READING FROM MUD.");
             mud_went_down();
         }
-        else if(n == -2)
+        else if (n == -2)
         {
             slog(LOG_OFF, 0, "PROTOCOL ERROR.");
         }
@@ -291,7 +291,7 @@ char Outbuf[32768];
 */
 void cMudHook::Unhook(void)
 {
-    if(this->IsHooked())
+    if (this->IsHooked())
     {
         slog(LOG_OFF, 0, "Unhooking MUD Hook");
         CaptainHook.Unhook(this);
@@ -311,10 +311,10 @@ int cMudHook::read_mud(void)
     p = protocol_parse_incoming(this, &id, &len, &data, &text_type);
     // slog(LOG_OFF, 0, "read_mud(): p=%d. len=%d", p, len);
 
-    if(p <= 0)
+    if (p <= 0)
         return p;
 
-    switch(p)
+    switch (p)
     {
         case MULTI_PING_CHAR:
             break;
@@ -328,21 +328,21 @@ int cMudHook::read_mud(void)
             break;
 
         case MULTI_SETUP_CHAR:
-            if(len != sizeof(struct terminal_setup_type))
+            if (len != sizeof(struct terminal_setup_type))
             {
                 slog(LOG_OFF, 0, "Illegal size m_sSetup received.");
                 break;
             }
 
-            for(con = g_connection_list; con; con = con->m_pNext)
+            for (con = g_connection_list; con; con = con->m_pNext)
             {
-                if(con->m_nId == id)
+                if (con->m_nId == id)
                 {
                     n = (con->m_sSetup.emulation == TERM_INTERNAL);
 
                     memcpy(&(con->m_sSetup), data, len);
 
-                    if(n)
+                    if (n)
                         con->m_sSetup.emulation = TERM_INTERNAL;
 
                     assert(is_in(con->m_sSetup.emulation, TERM_DUMB, TERM_INTERNAL));
@@ -356,37 +356,37 @@ int cMudHook::read_mud(void)
                     break;
                 }
             }
-            if(con == NULL)
+            if (con == NULL)
                 slog(LOG_OFF, 0, "ERROR: Unknown ID m_sSetup received.");
             break;
 
         case MULTI_TERMINATE_CHAR:
-            if(data)
+            if (data)
                 free(data);
-            for(con = g_connection_list; con; con = con->m_pNext)
+            for (con = g_connection_list; con; con = con->m_pNext)
             {
-                if(con->m_nId == id)
+                if (con->m_nId == id)
                 {
                     con->SendCon("Your connection was requested terminated.<br/>");
                     con->Close(FALSE);
                     return 1;
                 }
             }
-            if(con == NULL)
+            if (con == NULL)
                 slog(LOG_OFF, 0, "ERROR: Unknown ID requested terminated.");
             return 1;
 
         case MULTI_CONNECT_CON_CHAR:
             // slog(LOG_OFF,0,"MULTI_CON_CHAR: Received id=%d", id);
-            if(data)
+            if (data)
                 free(data);
-            for(con = g_connection_list; con; con = con->m_pNext)
+            for (con = g_connection_list; con; con = con->m_pNext)
             {
                 // Only pick those waiting in the PlayLoop, not those new connections
-                if(con->m_nId == 0)
+                if (con->m_nId == 0)
                 {
                     // slog(LOG_OFF,0,"MULTI_CON_CHAR: Found cCOnHook with zero ID");
-                    if(con->m_pFptr == dumbPlayLoop)
+                    if (con->m_pFptr == dumbPlayLoop)
                     {
                         slog(LOG_OFF, 0, "MULTI_CON_CHAR: Connected zero id to %d", id);
                         assert(id != 0);
@@ -396,7 +396,7 @@ int cMudHook::read_mud(void)
                     }
                 }
             }
-            if(con == NULL)
+            if (con == NULL)
             {
                 slog(LOG_OFF, 0, "Unknown destination for confirm! Requesting term.");
                 protocol_send_close(&MudHook, id);
@@ -406,22 +406,22 @@ int cMudHook::read_mud(void)
         case MULTI_TEXT_CHAR:
         case MULTI_PAGE_CHAR:
         case MULTI_PROMPT_CHAR:
-            if(len == 0)
+            if (len == 0)
                 break;
 
-            for(con = g_connection_list; con; con = con->m_pNext)
+            for (con = g_connection_list; con; con = con->m_pNext)
             {
-                if(id == con->m_nId)
+                if (id == con->m_nId)
                 {
                     char *parsed;
 
                     parsed = con->ParseOutput(data);
 
-                    switch(p)
+                    switch (p)
                     {
                         case MULTI_PAGE_CHAR:
                             // Dont page to the web-client - it pops up an overlay instead.
-                            if(con->m_pWebsServer)
+                            if (con->m_pWebsServer)
                                 con->Write((ubit8 *)parsed, strlen(parsed));
                             else
                             {
@@ -442,7 +442,7 @@ int cMudHook::read_mud(void)
                 }
             }
 
-            if(con == NULL)
+            if (con == NULL)
             {
                 slog(LOG_OFF, 0, "Unknown destination text received.");
             }
@@ -452,7 +452,7 @@ int cMudHook::read_mud(void)
             abort();
     }
 
-    if(data)
+    if (data)
         free(data);
 
     return 1;

@@ -33,7 +33,7 @@ int spec_unused(struct spec_arg *sarg)
 {
 #ifdef VMC
 #else
-    if(sarg->cmd->no != CMD_AUTO_EXTRACT)
+    if (sarg->cmd->no != CMD_AUTO_EXTRACT)
     {
         slog(LOG_ALL, 0, "Unit %s@%s had undefined special routine.", UNIT_FI_NAME(sarg->owner), UNIT_FI_ZONENAME(sarg->owner));
         destroy_fptr(sarg->owner, sarg->fptr);

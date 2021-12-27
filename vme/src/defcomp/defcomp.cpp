@@ -17,7 +17,7 @@ int string_to_file(const char *name, const char *s)
 
     out = open(name, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
 
-    if(!out)
+    if (!out)
     {
         std::cerr << "Error in opening the " << name << " file." << std::endl;
         return (FALSE);
@@ -127,10 +127,10 @@ int checkcolor(char *cstr)
 
 int iscomment(char *b)
 {
-    while(!isgraph(*b))
+    while (!isgraph(*b))
         b++;
 
-    if((*b == '#') || (*b == '\0') || (*b == '\r') || (*b == '\n'))
+    if ((*b == '#') || (*b == '\0') || (*b == '\r') || (*b == '\n'))
         return (1);
     else
         return (0);
@@ -143,11 +143,11 @@ char *convert_line(char *temp, int ln, char *save_buff)
     char token[1024], strval[1024], *b = temp;
     int i = 0;
 
-    while(!isgraph(*b))
+    while (!isgraph(*b))
         b++;
 
     i = 0;
-    while((isalnum(*b)) || (*b == '_'))
+    while ((isalnum(*b)) || (*b == '_'))
     {
         token[i] = *b;
         b++;
@@ -155,26 +155,26 @@ char *convert_line(char *temp, int ln, char *save_buff)
     }
     token[i] = '\0';
 
-    if(strlen(token) < 1)
+    if (strlen(token) < 1)
     {
         std::cerr << "Erorr!  Line " << ln << ":  No keyword value given." << std::endl;
         return (NULL);
     }
 
-    if(strlen(token) > 20)
+    if (strlen(token) > 20)
     {
         std::cerr << "Erorr!  Line " << ln << ":  Keyword to long." << std::endl;
         return (NULL);
     }
 
-    while(*b != '=')
+    while (*b != '=')
     {
-        if(!isspace(*b))
+        if (!isspace(*b))
         {
             std::cerr << "Erorr!  Line " << ln << ":  Ilegal char in left hand value of '='" << std::endl;
             return (NULL);
         }
-        if((*b == '\n') || (*b == '\r') || (*b == '\0'))
+        if ((*b == '\n') || (*b == '\r') || (*b == '\0'))
         {
             std::cerr << "Erorr!  Line " << ln << ":  Missing '='" << std::endl;
             return (NULL);
@@ -182,14 +182,14 @@ char *convert_line(char *temp, int ln, char *save_buff)
         b++;
     }
 
-    while(*b != '"')
+    while (*b != '"')
     {
-        if((!isspace(*b)) && (*b != '='))
+        if ((!isspace(*b)) && (*b != '='))
         {
             std::cerr << "Erorr!  Line " << ln << ":  Ilegal char in right hand value of '='" << std::endl;
             return (NULL);
         }
-        if((*b == '\n') || (*b == '\r') || (*b == '\0'))
+        if ((*b == '\n') || (*b == '\r') || (*b == '\0'))
         {
             std::cerr << "Erorr!  Line " << ln << ":  Missing right hand side of '='" << std::endl;
             return (NULL);
@@ -199,7 +199,7 @@ char *convert_line(char *temp, int ln, char *save_buff)
 
     b++;
     i = 0;
-    while((*b != '"') && (*b != '\r') && (*b != '\n') && (*b != '\0'))
+    while ((*b != '"') && (*b != '\r') && (*b != '\n') && (*b != '\0'))
     {
         strval[i] = *b;
         b++;
@@ -208,27 +208,27 @@ char *convert_line(char *temp, int ln, char *save_buff)
 
     strval[i] = '\0';
 
-    if(*b != '"')
+    if (*b != '"')
     {
         std::cerr << "Erorr!  Line:  " << ln << ":  Missing '\"'" << std::endl;
         return (NULL);
     }
 
-    if(strlen(strval) < 1)
+    if (strlen(strval) < 1)
     {
         std::cerr << "Erorr!  Line " << ln << ":  No value inside '\"\"'" << std::endl;
         return (NULL);
     }
 
-    if(checkcolor(strval))
+    if (checkcolor(strval))
     {
-        if(save_buff)
+        if (save_buff)
             size = strlen(save_buff) + 1;
         size += strlen(token) + 1;
         size += strlen(strval) + 1;
         new_buff = new char[size];
         new_buff[0] = '\0';
-        if(save_buff)
+        if (save_buff)
         {
             strcat(new_buff, save_buff);
             strcat(new_buff, ":");
@@ -255,9 +255,9 @@ int main(int argc, char **argv)
     FILE *in;
     int opt, p_opt;
 
-    while((opt = getopt(argc, argv, "cf:")) != -1)
+    while ((opt = getopt(argc, argv, "cf:")) != -1)
     {
-        switch(opt)
+        switch (opt)
         {
             case 'c':
                 strcpy(in_name, "color.def");
@@ -275,25 +275,25 @@ int main(int argc, char **argv)
         }
     }
 
-    switch(p_opt)
+    switch (p_opt)
     {
         case 'c':
             in = fopen(in_name, "r");
-            if(!in)
+            if (!in)
             {
                 std::cerr << "In file not opened." << std::endl;
                 exit(1);
             }
 
-            while(fgets(buff, 1024, in))
+            while (fgets(buff, 1024, in))
             {
                 ln++;
-                if(!iscomment(buff))
-                    if(!(save_buff = convert_line(buff, ln, save_buff)))
+                if (!iscomment(buff))
+                    if (!(save_buff = convert_line(buff, ln, save_buff)))
                         error++;
             }
 
-            if(error <= 0)
+            if (error <= 0)
                 string_to_file("color.dat", save_buff);
             fclose(in);
             exit(0);

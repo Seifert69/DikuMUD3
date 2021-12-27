@@ -62,28 +62,28 @@ cMultiHook::cMultiHook(void)
 
 void cMultiHook::Input(int nFlags)
 {
-    if(nFlags & SELECT_EXCEPT)
+    if (nFlags & SELECT_EXCEPT)
     {
         slog(LOG_ALL, 0, "Freaky multi!");
         Close();
     }
-    if(nFlags & SELECT_READ)
+    if (nFlags & SELECT_READ)
     {
         int n;
 
-        for(;;)
+        for (;;)
         {
             n = Read();
-            if((n == 0) || (n == -1))
+            if ((n == 0) || (n == -1))
                 break;
         }
 
-        if(n == -1)
+        if (n == -1)
         {
             slog(LOG_OFF, 0, "ERROR READING FROM MPLEX.");
             Close();
         }
-        else if(n == -2)
+        else if (n == -2)
         {
             slog(LOG_OFF, 0, "MPLEX PROTOCOL ERROR.");
         }
@@ -97,7 +97,7 @@ void cMultiHook::Ping(void)
 
 void cMultiHook::Unhook(void)
 {
-    if(this->IsHooked())
+    if (this->IsHooked())
     {
         slog(LOG_OFF, 0, "Unhooking MultiHook");
         CaptainHook.Unhook(this);
@@ -110,7 +110,7 @@ void cMultiHook::Close(void)
 {
     slog(LOG_ALL, 0, "Closing connection to multi host.");
 
-    if(this->IsHooked())
+    if (this->IsHooked())
         Unhook();
 
     Multi.nCount--;
@@ -128,19 +128,19 @@ int cMultiHook::Read(void)
 
     p = protocol_parse_incoming(this, &id, &len, &data, &text_type);
 
-    if(p <= 0)
+    if (p <= 0)
         return p;
 
-    if(id != 0)
+    if (id != 0)
     {
-        for(d = descriptor_list; d; d = d->next)
-            if(d->id == id)
+        for (d = descriptor_list; d; d = d->next)
+            if (d->id == id)
             {
                 assert(d->multi == this);
                 break;
             }
 
-        if(d == NULL)
+        if (d == NULL)
         {
             /* This could perhaps occur if a connected player issues a command
                simultaneously with the server throwing the person out.
@@ -149,11 +149,11 @@ int cMultiHook::Read(void)
 
             slog(LOG_ALL, 0, "No destination ID (%d).", id);
 
-            if(succ_err++ > 5)
+            if (succ_err++ > 5)
             {
                 slog(LOG_ALL, 0, "Lost track of multi stream.");
                 Close();
-                if(data)
+                if (data)
                     FREE(data);
                 return -1;
             }
@@ -162,25 +162,25 @@ int cMultiHook::Read(void)
             succ_err = 0;
     }
 
-    switch(p)
+    switch (p)
     {
         case MULTI_MPLEX_INFO_CHAR:
             bWebsockets = data[0]; // data[0] is 1 if websockets
-            if(data)
+            if (data)
                 FREE(data);
             break;
 
         case MULTI_PING_CHAR:
-            if(data)
+            if (data)
                 FREE(data);
             break;
 
         case MULTI_TERMINATE_CHAR:
             /* This is very nice, but it prevents descriptor_close to send
                a connection_close to the mplex'er */
-            if(d)
+            if (d)
                 descriptor_close(d, FALSE);
-            if(data)
+            if (data)
                 FREE(data);
             break;
 
@@ -192,7 +192,7 @@ int cMultiHook::Read(void)
             break;
 
         case MULTI_HOST_CHAR:
-            if(d && data)
+            if (d && data)
             {
                 ubit8 *b = (ubit8 *)data;
 
@@ -201,12 +201,12 @@ int cMultiHook::Read(void)
                 strncpy(d->host, (char *)b, sizeof(d->host));
                 d->host[sizeof(d->host) - 1] = 0;
             }
-            if(data)
+            if (data)
                 FREE(data);
             break;
 
         case MULTI_TEXT_CHAR:
-            if(d)
+            if (d)
             {
                 // Important to HTML encode any string received from the Mplex
                 // for security and other reasons.
@@ -214,7 +214,7 @@ int cMultiHook::Read(void)
                 char *mystr = html_encode_utf8(data);
 
                 d->qInput.Append(new cQueueElem(mystr, FALSE));
-                if(data)
+                if (data)
                     FREE(data);
             }
             /* Kept in queue */
@@ -223,7 +223,7 @@ int cMultiHook::Read(void)
         default:
             slog(LOG_ALL, 0, "Illegal unexpected unique multi character #1.");
             Close();
-            if(data)
+            if (data)
                 FREE(data);
             return -1;
     }
@@ -235,10 +235,10 @@ void multi_clear(void)
 {
     class descriptor_data *nextd, *d;
 
-    for(d = descriptor_list; d; d = nextd)
+    for (d = descriptor_list; d; d = nextd)
     {
         nextd = d->next;
-        if(!d->multi->IsHooked())
+        if (!d->multi->IsHooked())
             descriptor_close(d);
     }
 }
@@ -249,7 +249,7 @@ void multi_close_all(void)
 
     slog(LOG_BRIEF, 0, "Closing all multi connections.");
 
-    for(i = 0; i < MAX_MULTI; i++)
+    for (i = 0; i < MAX_MULTI; i++)
         Multi.Multi[i].Close();
 
     multi_clear();
@@ -259,8 +259,8 @@ void multi_ping_all(void)
 {
     int i;
 
-    for(i = 0; i < MAX_MULTI; i++)
-        if(Multi.Multi[i].IsHooked())
+    for (i = 0; i < MAX_MULTI; i++)
+        if (Multi.Multi[i].IsHooked())
             Multi.Multi[i].Ping();
 }
 
@@ -281,13 +281,13 @@ void multi_ping_all(void)
 // an unhooked Multi and hook it.
 void cMotherHook::Input(int nFlags)
 {
-    if(nFlags & SELECT_EXCEPT)
+    if (nFlags & SELECT_EXCEPT)
     {
         slog(LOG_ALL, 0, "Mother connection closed down.");
         Close();
     }
 
-    if(nFlags & SELECT_READ)
+    if (nFlags & SELECT_READ)
     {
         struct sockaddr_in isa;
         int i, t;
@@ -295,13 +295,13 @@ void cMotherHook::Input(int nFlags)
 
         len = sizeof(isa);
 
-        if((t = accept(this->tfd(), (struct sockaddr *)&isa, &len)) < 0)
+        if ((t = accept(this->tfd(), (struct sockaddr *)&isa, &len)) < 0)
         {
             slog(LOG_ALL, 0, "Mother accept error %d", errno);
             return;
         }
 
-        if(!g_cServerConfig.ValidMplex(&isa))
+        if (!g_cServerConfig.ValidMplex(&isa))
         {
             slog(LOG_ALL, 0, "Mplex not from trusted host, terminating.");
             close(t);
@@ -310,22 +310,22 @@ void cMotherHook::Input(int nFlags)
 
         i = fcntl(t, F_SETFL, FNDELAY);
 
-        if(i == -1)
+        if (i == -1)
             error(HERE, "Noblock");
 
         int n;
         n = setsockopt(t, IPPROTO_TCP, TCP_NODELAY, &i, sizeof(i));
-        if(n == -1)
+        if (n == -1)
         {
             error(HERE, "No Setsockopt()");
             exit(21);
         }
 
-        for(i = 0; i < MAX_MULTI; i++)
-            if(!Multi.Multi[i].IsHooked())
+        for (i = 0; i < MAX_MULTI; i++)
+            if (!Multi.Multi[i].IsHooked())
                 break;
 
-        if((i >= MAX_MULTI) || Multi.Multi[i].IsHooked())
+        if ((i >= MAX_MULTI) || Multi.Multi[i].IsHooked())
         {
             slog(LOG_ALL, 0, "No more multi connections allowed");
             close(t);
@@ -344,7 +344,7 @@ void cMotherHook::Input(int nFlags)
 
 void cMotherHook::Unhook(void)
 {
-    if(this->IsHooked())
+    if (this->IsHooked())
     {
         slog(LOG_OFF, 0, "Unhooking Mother Hook");
         CaptainHook.Unhook(this);
@@ -356,7 +356,7 @@ void cMotherHook::Unhook(void)
 // If the mother port 4999 is closed then close all mplex connections
 void cMotherHook::Close(void)
 {
-    if(this->IsHooked())
+    if (this->IsHooked())
         Unhook();
 
     multi_close_all();
@@ -375,14 +375,14 @@ void init_mother(int nPort)
 
     fdMother = socket(AF_INET, SOCK_STREAM, 0);
 
-    if(fdMother == -1)
+    if (fdMother == -1)
     {
         slog(LOG_OFF, 0, "Can't open Mother Connection");
         exit(0);
     }
 
     n = 1;
-    if(setsockopt(fdMother, SOL_SOCKET, SO_REUSEADDR, (char *)&n, sizeof(n)) < 0)
+    if (setsockopt(fdMother, SOL_SOCKET, SO_REUSEADDR, (char *)&n, sizeof(n)) < 0)
     {
         close(fdMother);
         slog(LOG_OFF, 0, "OpenMother setsockopt REUSEADDR");
@@ -392,7 +392,7 @@ void init_mother(int nPort)
     ld.l_onoff = 0;
     ld.l_linger = 1000;
 
-    if(setsockopt(fdMother, SOL_SOCKET, SO_LINGER, (char *)&ld, sizeof(ld)) < 0)
+    if (setsockopt(fdMother, SOL_SOCKET, SO_LINGER, (char *)&ld, sizeof(ld)) < 0)
     {
         close(fdMother);
         slog(LOG_OFF, 0, "OpenMother setsockopt LINGER");
@@ -401,7 +401,7 @@ void init_mother(int nPort)
 
     n = bind(fdMother, (struct sockaddr *)&server_addr, sizeof(struct sockaddr_in));
 
-    if(n != 0)
+    if (n != 0)
     {
         close(fdMother);
         slog(LOG_OFF, 0, "Can't bind Mother Connection port %d (errno %d).", nPort, errno);
@@ -410,7 +410,7 @@ void init_mother(int nPort)
 
     n = listen(fdMother, 5);
 
-    if(n != 0)
+    if (n != 0)
     {
         close(fdMother);
         slog(LOG_OFF, 0, "Can't listen on Mother Connection.");
@@ -419,7 +419,7 @@ void init_mother(int nPort)
 
     n = fcntl(fdMother, F_SETFL, FNDELAY);
 
-    if(n == -1)
+    if (n == -1)
     {
         close(fdMother);
         slog(LOG_OFF, 0, "Non blocking set error.");
@@ -428,7 +428,7 @@ void init_mother(int nPort)
 
     int i = 0;
     n = setsockopt(fdMother, IPPROTO_TCP, TCP_NODELAY, &i, sizeof(i));
-    if(n == -1)
+    if (n == -1)
     {
         close(fdMother);
         slog(LOG_OFF, 0, "Setsockopt TCP_NODELAY failed.");

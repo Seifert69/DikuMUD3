@@ -20,7 +20,7 @@ public:
     cQueueElem(ubit8 *d, ubit32 n, int bCopy = TRUE);
     ~cQueueElem(void)
     {
-        if(pData)
+        if (pData)
             FREE(pData);
     }
 

@@ -44,7 +44,7 @@ void save_ban(void)
     FILE *bf = fopen(BAN_SAVE, "w");
     assert(bf);
 
-    for(tmp = ban_list; tmp; tmp = tmp->next)
+    for (tmp = ban_list; tmp; tmp = tmp->next)
         fprintf(bf, "%s %c %ld %s\n", tmp->site, tmp->type, tmp->until, tmp->textfile);
 
     fclose(bf);
@@ -61,7 +61,7 @@ void load_ban(void)
     bf = fopen(BAN_SAVE, "r");
     assert(bf);
 
-    while(fgets(buf, sizeof buf, bf) != NULL)
+    while (fgets(buf, sizeof buf, bf) != NULL)
     {
         CREATE(tmp, struct ban_t, 1);
         sscanf(buf, "%s %c %ld %s\n", site, &tmp->type, &tmp->until, textfile);
@@ -78,15 +78,15 @@ time_t ban_timer(char *arg)
 {
     time_t now = time(0);
 
-    while(*arg)
+    while (*arg)
     {
         int mult = 0;
 
         arg = skip_spaces(arg);
-        while(isdigit(*arg))
+        while (isdigit(*arg))
             mult = 10 * mult + (*arg++ - '0');
         arg = skip_spaces(arg);
-        switch(*arg++)
+        switch (*arg++)
         {
             case 'd':
                 mult *= SECS_PER_REAL_DAY;
@@ -112,19 +112,19 @@ void add_ban(class unit_data *ch, char *site, char type, time_t *until, char *te
     struct ban_t *entry;
     char d[50], buf[MAX_STRING_LENGTH];
 
-    for(entry = ban_list; entry; entry = entry->next)
-        if(!str_ccmp(entry->site, site))
+    for (entry = ban_list; entry; entry = entry->next)
+        if (!str_ccmp(entry->site, site))
             break;
 
-    if(!entry)
+    if (!entry)
     {
         CREATE(entry, struct ban_t, 1);
         entry->site = str_dup(site);
-        if(!str_is_empty(textfile))
+        if (!str_is_empty(textfile))
             entry->textfile = str_dup(textfile);
         else
         {
-            if(type == BAN_TOTAL)
+            if (type == BAN_TOTAL)
                 entry->textfile = str_dup("bantotal.txt");
             else
                 entry->textfile = str_dup("bannew.txt");
@@ -137,7 +137,7 @@ void add_ban(class unit_data *ch, char *site, char type, time_t *until, char *te
     entry->type = type;
     entry->until = *until;
 
-    if(*until)
+    if (*until)
         strftime(d, 50, "Lasting 'til %a %b %d %H:%M.", localtime(until));
     else
         strcpy(d, "");
@@ -149,20 +149,20 @@ void add_ban(class unit_data *ch, char *site, char type, time_t *until, char *te
 
 void kill_entry(struct ban_t *entry)
 {
-    if(entry == ban_list)
+    if (entry == ban_list)
         ban_list = entry->next;
     else
     {
         struct ban_t *tmp;
 
-        for(tmp = ban_list; tmp; tmp = tmp->next)
-            if(tmp->next == entry)
+        for (tmp = ban_list; tmp; tmp = tmp->next)
+            if (tmp->next == entry)
                 break;
         tmp->next = entry->next;
     }
 
     FREE(entry->site);
-    if(entry->textfile)
+    if (entry->textfile)
         FREE(entry->textfile);
     FREE(entry);
 
@@ -173,11 +173,11 @@ void del_ban(class unit_data *ch, char *site)
 {
     struct ban_t *entry;
 
-    for(entry = ban_list; entry; entry = entry->next)
-        if(!str_ccmp(entry->site, site))
+    for (entry = ban_list; entry; entry = entry->next)
+        if (!str_ccmp(entry->site, site))
             break;
 
-    if(entry)
+    if (entry)
     {
         kill_entry(entry);
         act("$2t taken succesfully off ban list.", A_ALWAYS, ch, site, cActParameter(), TO_CHAR);
@@ -190,7 +190,7 @@ void show_site(class unit_data *ch, struct ban_t *entry)
 {
     char buf[200], d[40];
 
-    if(entry->until)
+    if (entry->until)
         strftime(d, 40, "until %a %b %d %H:%M", localtime(&entry->until));
     else
         strcpy(d, " ");
@@ -205,12 +205,12 @@ void do_ban(class unit_data *ch, char *arg, const struct command_info *cmd)
     char type;
     time_t until = 0;
 
-    if(str_is_empty(arg))
+    if (str_is_empty(arg))
     {
-        if(ban_list)
+        if (ban_list)
         {
             send_to_char("Sites banned:<br/>-------------<br/>", ch);
-            for(tmp = ban_list; tmp; tmp = tmp->next)
+            for (tmp = ban_list; tmp; tmp = tmp->next)
                 show_site(ch, tmp);
         }
         else
@@ -222,18 +222,18 @@ void do_ban(class unit_data *ch, char *arg, const struct command_info *cmd)
     mode = tolower(*arg);
     ++arg;
 
-    if(!str_is_empty(arg))
+    if (!str_is_empty(arg))
     {
         arg = one_argument(arg, site);
         arg = one_argument(arg, textfile);
 
-        switch(mode)
+        switch (mode)
         {
             case 'n':
             case 't':
                 type = (mode == 't') ? BAN_TOTAL : BAN_NEW_CHARS;
 
-                if(!str_is_empty(arg) && (until = ban_timer(arg)) == 0)
+                if (!str_is_empty(arg) && (until = ban_timer(arg)) == 0)
                     send_to_char("Wrong syntax in time. Not banned.<br/>.", ch);
                 else
                     add_ban(ch, site, type, &until, textfile);
@@ -253,23 +253,23 @@ void do_ban(class unit_data *ch, char *arg, const struct command_info *cmd)
 /* Complex little recursive bugger */
 bool ban_check(char *ban, char *site) /* TRUE, if banned */
 {
-    if(*ban == '\0' && *site == '\0')
+    if (*ban == '\0' && *site == '\0')
         return TRUE;
-    else if(*ban == '*')
+    else if (*ban == '*')
     {
-        if(*site == '\0' || *++ban == '\0')
+        if (*site == '\0' || *++ban == '\0')
             return TRUE;
-        for(;;)
+        for (;;)
         {
-            if(ban_check(ban, site))
+            if (ban_check(ban, site))
                 return TRUE;
-            if(*++site == '\0')
+            if (*++site == '\0')
                 return FALSE;
         }
     }
-    else if(*site == '\0')
+    else if (*site == '\0')
         return FALSE;
-    else if(*ban == '?' || *ban == tolower(*site))
+    else if (*ban == '?' || *ban == tolower(*site))
         return ban_check(++ban, ++site);
     else
         return FALSE;
@@ -280,13 +280,13 @@ char site_banned(char *cur_site)
     struct ban_t *entry, *next_entry;
     time_t now = time(0);
 
-    for(entry = ban_list; entry; entry = next_entry)
+    for (entry = ban_list; entry; entry = next_entry)
     {
         next_entry = entry->next;
 
-        if(entry->until && entry->until < now)
+        if (entry->until && entry->until < now)
             kill_entry(entry);
-        else if(ban_check(entry->site, cur_site))
+        else if (ban_check(entry->site, cur_site))
             return entry->type;
     }
 
@@ -299,11 +299,11 @@ void show_ban_text(char *site, class descriptor_data *d)
     char bantext[MAX_STRING_LENGTH];
     char formtext[MAX_STRING_LENGTH];
 
-    for(entry = ban_list; entry; entry = entry->next)
+    for (entry = ban_list; entry; entry = entry->next)
     {
-        if(ban_check(entry->site, site))
+        if (ban_check(entry->site, site))
         {
-            if(file_to_string(str_cc(g_cServerConfig.m_etcdir, entry->textfile), bantext, sizeof(bantext) - 1) == -1)
+            if (file_to_string(str_cc(g_cServerConfig.m_etcdir, entry->textfile), bantext, sizeof(bantext) - 1) == -1)
                 send_to_descriptor("Your site has been banned.<br/>", d);
             else
             {

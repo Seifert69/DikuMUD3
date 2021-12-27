@@ -34,10 +34,10 @@
 
 int kludge_bonus(int level, int points)
 {
-    if(level <= 20)
+    if (level <= 20)
         return 0;
 
-    if(level <= 50)
+    if (level <= 50)
         return ((5 * (level - 20)) * MIN(100, points)) / 100;
 
     int b, expected;
@@ -70,20 +70,20 @@ int shield_bonus(class unit_data *att, class unit_data *def, class unit_data **p
 
     /* If attacker can't see the defender, then the defender has a   */
     /* much better effective dexterity (since attacker can't see him */
-    if(!CHAR_CAN_SEE(att, def))
+    if (!CHAR_CAN_SEE(att, def))
         att_dex -= 12;
 
-    if((def_shield = equipment_type(def, WEAR_SHIELD, ITEM_SHIELD)))
+    if ((def_shield = equipment_type(def, WEAR_SHIELD, ITEM_SHIELD)))
     {
         int shield_bonus = 0;
         extern struct shi_info_type shi_info[];
 
-        if(!is_in(OBJ_VALUE(def_shield, 0), SHIELD_SMALL, SHIELD_LARGE))
+        if (!is_in(OBJ_VALUE(def_shield, 0), SHIELD_SMALL, SHIELD_LARGE))
         {
             slog(LOG_ALL, 0, "Illegal shield type.");
             OBJ_TYPE(def_shield) = ITEM_TRASH;
         }
-        else if(!is_in(OBJ_VALUE(def_shield, 1), -25, 25) || !is_in(OBJ_VALUE(def_shield, 2), -25, 25))
+        else if (!is_in(OBJ_VALUE(def_shield, 1), -25, 25) || !is_in(OBJ_VALUE(def_shield, 2), -25, 25))
         {
             slog(LOG_ALL, 0, "Illegal shield bonus");
             OBJ_TYPE(def_shield) = ITEM_TRASH;
@@ -98,12 +98,12 @@ int shield_bonus(class unit_data *att, class unit_data *def, class unit_data **p
                                         IS_PC(def) ? PC_SKI_SKILL(def, SKI_SHIELD) : def_dex,
                                         IS_PC(att) ? PC_SKI_SKILL(att, SKI_SHIELD) : att_dex);
 
-            if(hm >= 0) /* Successful Shield use */
+            if (hm >= 0) /* Successful Shield use */
                 def_shield_bonus = shi_info[OBJ_VALUE(def_shield, 0)].melee + shield_bonus / 2;
         }
     } /* End of Shield */
 
-    if(pDef_shield)
+    if (pDef_shield)
         *pDef_shield = def_shield;
 
     return def_shield_bonus;
@@ -129,16 +129,16 @@ int dikuii_spell_bonus(class unit_data *att,
 
     /* If attacker can't see the defender, then the defender has a   */
     /* much better effective dexterity (since attacker can't see him */
-    if(!CHAR_CAN_SEE(att, def))
+    if (!CHAR_CAN_SEE(att, def))
         att_bonus -= 12;
 
-    if((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) || (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
+    if ((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) || (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
         def_bonus += 10;
 
-    if((def_armour = equipment_type(def, hit_loc, ITEM_ARMOR)))
+    if ((def_armour = equipment_type(def, hit_loc, ITEM_ARMOR)))
     {
         def_armour_type = OBJ_VALUE(def_armour, 0);
-        if(is_in(OBJ_VALUE(def_armour, 1), -25, 25))
+        if (is_in(OBJ_VALUE(def_armour, 1), -25, 25))
             def_bonus += OBJ_VALUE(def_armour, 1) + OBJ_VALUE(def_armour, 2);
         else
             slog(LOG_ALL, 0, "Illegal armour bonus.");
@@ -146,10 +146,10 @@ int dikuii_spell_bonus(class unit_data *att,
     else
         def_armour_type = CHAR_NATURAL_ARMOUR(def);
 
-    if(pDef_armour_type)
+    if (pDef_armour_type)
         *pDef_armour_type = def_armour_type;
 
-    if(pDef_armour)
+    if (pDef_armour)
         *pDef_armour = def_armour;
 
     att_spl_knowledge = spell_attack_skill(medium, spell_number);
@@ -158,7 +158,7 @@ int dikuii_spell_bonus(class unit_data *att,
     att_spl_knowledge += kludge_bonus(CHAR_LEVEL(att), att_spl_knowledge);
     def_spl_knowledge += kludge_bonus(CHAR_LEVEL(def), def_spl_knowledge) / 2;
 
-    if(CHAR_AWAKE(def))
+    if (CHAR_AWAKE(def))
     {
         hm = (5 * (spell_attack_ability(medium, spell_number) - spell_ability(def, ABIL_BRA, spell_number))) / 2 +
              2 * (att_spl_knowledge - def_spl_knowledge) - def_bonus;
@@ -200,7 +200,7 @@ int dikuii_melee_bonus(class unit_data *att,
     att_bonus = CHAR_OFFENSIVE(att);
     def_bonus = CHAR_DEFENSIVE(def);
 
-    if(pAtt_weapon_type && is_in(*pAtt_weapon_type, WPN_GROUP_MAX, WPN_TREE_MAX - 1))
+    if (pAtt_weapon_type && is_in(*pAtt_weapon_type, WPN_GROUP_MAX, WPN_TREE_MAX - 1))
     {
         att_wpn = NULL;
         att_wpn_type = *pAtt_weapon_type;
@@ -208,16 +208,16 @@ int dikuii_melee_bonus(class unit_data *att,
     }
     else
     {
-        if(primary)
+        if (primary)
             att_wpn = equipment_type(att, WEAR_WIELD, ITEM_WEAPON);
         else
             att_wpn = equipment_type(att, WEAR_HOLD, ITEM_WEAPON);
 
-        if(att_wpn)
+        if (att_wpn)
         {
             att_wpn_type = OBJ_VALUE(att_wpn, 0); /* [0] is category */
             att_wpn_knowledge = weapon_attack_skill(att, att_wpn_type);
-            if(is_in(OBJ_VALUE(att_wpn, 1), -25, 25))
+            if (is_in(OBJ_VALUE(att_wpn, 1), -25, 25))
                 att_bonus += OBJ_VALUE(att_wpn, 1) + OBJ_VALUE(att_wpn, 2);
         }
         else
@@ -227,16 +227,16 @@ int dikuii_melee_bonus(class unit_data *att,
         }
     }
 
-    if(char_dual_wield(att))
+    if (char_dual_wield(att))
     {
         int dual_skill;
 
-        if(IS_PC(att))
+        if (IS_PC(att))
             dual_skill = PC_SKI_SKILL(att, SKI_DUAL_WIELD);
         else
             dual_skill = CHAR_DEX(att);
 
-        if(primary)
+        if (primary)
             att_bonus -= MAX(0, 25 - (dual_skill / 4));
         else
             att_bonus -= MAX(0, 50 - (dual_skill / 4));
@@ -244,28 +244,28 @@ int dikuii_melee_bonus(class unit_data *att,
 
     def_wpn_knowledge = weapon_defense_skill(def, att_wpn_type);
 
-    if(CHAR_FIGHTING(def) != att)
+    if (CHAR_FIGHTING(def) != att)
         def_bonus -= 25;
 
     /* If attacker can't see the defender, then the defender has a   */
     /* much better effective dexterity (since attacker can't see him */
-    if(!CHAR_CAN_SEE(att, def))
+    if (!CHAR_CAN_SEE(att, def))
         def_bonus += 25;
 
-    if(!CHAR_CAN_SEE(def, att))
+    if (!CHAR_CAN_SEE(def, att))
         att_bonus += 25;
 
     /* Slaying Weapons */
-    if(att_wpn && OBJ_VALUE(att_wpn, 3) == CHAR_RACE(def))
+    if (att_wpn && OBJ_VALUE(att_wpn, 3) == CHAR_RACE(def))
         att_bonus += 25;
 
-    if((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) || (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
+    if ((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) || (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
         def_bonus += 20;
 
-    if((def_armour = equipment_type(def, hit_loc, ITEM_ARMOR)))
+    if ((def_armour = equipment_type(def, hit_loc, ITEM_ARMOR)))
     {
         def_armour_type = OBJ_VALUE(def_armour, 0);
-        if(is_in(OBJ_VALUE(def_armour, 1), -25, 25))
+        if (is_in(OBJ_VALUE(def_armour, 1), -25, 25))
             def_bonus += OBJ_VALUE(def_armour, 1) + OBJ_VALUE(def_armour, 2);
         else
             slog(LOG_ALL, 0, "Illegal armour bonus.");
@@ -273,16 +273,16 @@ int dikuii_melee_bonus(class unit_data *att,
     else
         def_armour_type = CHAR_NATURAL_ARMOUR(def);
 
-    if(pAtt_weapon_type)
+    if (pAtt_weapon_type)
         *pAtt_weapon_type = att_wpn_type;
 
-    if(pAtt_weapon)
+    if (pAtt_weapon)
         *pAtt_weapon = att_wpn;
 
-    if(pDef_armour_type)
+    if (pDef_armour_type)
         *pDef_armour_type = def_armour_type;
 
-    if(pDef_armour)
+    if (pDef_armour)
         *pDef_armour = def_armour;
 
     att_wpn_knowledge += kludge_bonus(CHAR_LEVEL(att), att_wpn_knowledge);
@@ -290,7 +290,7 @@ int dikuii_melee_bonus(class unit_data *att,
 
     int att_abil = weapon_attack_ability(att, att_wpn_type);
 
-    if(CHAR_AWAKE(def))
+    if (CHAR_AWAKE(def))
         hm = (5 * (att_abil - def_dex)) / 2 + (2 * (att_wpn_knowledge - def_wpn_knowledge)) + att_bonus - def_bonus;
     else
         hm = (5 * att_abil) / 2 + att_bonus + 2 * att_wpn_knowledge + 50;
@@ -317,7 +317,7 @@ int spell_bonus(class unit_data *att,
     int hm;
     char buf[MAX_STRING_LENGTH];
 
-    if(pStat)
+    if (pStat)
     {
         sprintf(buf, "<u>%s spelling %s with %s:</u><br/><pre>", UNIT_NAME(att), UNIT_NAME(def), g_SplColl.text[spell_number]);
         *pStat = buf;
@@ -326,7 +326,7 @@ int spell_bonus(class unit_data *att,
 
     att_bonus = CHAR_OFFENSIVE(att);
     def_bonus = CHAR_DEFENSIVE(def);
-    if(pStat)
+    if (pStat)
     {
         sprintf(buf, "Off / Def bonus     :  %4d    %4d<br/>", att_bonus, def_bonus);
         pStat->append(buf);
@@ -334,10 +334,10 @@ int spell_bonus(class unit_data *att,
 
     /* If attacker can't see the defender, then the defender has a   */
     /* much better effective attack (since attacker can't see him    */
-    if(!CHAR_CAN_SEE(att, def))
+    if (!CHAR_CAN_SEE(att, def))
     {
         att_bonus -= 25;
-        if(pStat)
+        if (pStat)
         {
             sprintf(buf, "Attacker cant see    :         %4d<br/>", -25);
             pStat->append(buf);
@@ -349,12 +349,12 @@ int spell_bonus(class unit_data *att,
     // What if the CHAR is holding something?
     struct unit_data *wield = equipment(att, WEAR_WIELD);
     struct unit_data *shield = equipment(att, WEAR_SHIELD);
-    if(shield == NULL)
+    if (shield == NULL)
     {
-        if(wield == NULL)
+        if (wield == NULL)
         {
             att_bonus += 50;
-            if(pStat)
+            if (pStat)
             {
                 sprintf(buf, "Free wield+shield    :         %4d<br/>", +50);
                 pStat->append(buf);
@@ -362,9 +362,9 @@ int spell_bonus(class unit_data *att,
         }
     }
 
-    if((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) || (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
+    if ((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) || (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
     {
-        if(pStat)
+        if (pStat)
         {
             sprintf(buf, "Evil good protect     :       %4d  <br/>", +25);
             pStat->append(buf);
@@ -372,15 +372,15 @@ int spell_bonus(class unit_data *att,
         def_bonus += 25;
     }
 
-    if((def_armour = equipment_type(def, hit_loc, ITEM_ARMOR)))
+    if ((def_armour = equipment_type(def, hit_loc, ITEM_ARMOR)))
     {
         def_armour_type = OBJ_VALUE(def_armour, 0);
-        if(is_in(OBJ_VALUE(def_armour, 1), -25, 25))
+        if (is_in(OBJ_VALUE(def_armour, 1), -25, 25))
         {
             int tmp = OBJ_VALUE(def_armour, 1) + OBJ_VALUE(def_armour, 2);
             def_bonus += tmp;
 
-            if(pStat)
+            if (pStat)
             {
                 sprintf(buf, "Armor bonus         :       %4d  <br/>", tmp);
                 pStat->append(buf);
@@ -392,10 +392,10 @@ int spell_bonus(class unit_data *att,
     else
         def_armour_type = CHAR_NATURAL_ARMOUR(def);
 
-    if(pDef_armour_type)
+    if (pDef_armour_type)
         *pDef_armour_type = def_armour_type;
 
-    if(pDef_armour)
+    if (pDef_armour)
         *pDef_armour = def_armour;
 
     att_spl_knowledge = spell_attack_skill(medium, spell_number);
@@ -404,7 +404,7 @@ int spell_bonus(class unit_data *att,
     int att_spl_ability = spell_attack_ability(medium, spell_number);
     int def_spl_ability = spell_ability(def, ABIL_BRA, spell_number);
 
-    if(pStat)
+    if (pStat)
     {
         sprintf(buf, " --- SUMMARY ---<br/>");
         pStat->append(buf);
@@ -417,12 +417,12 @@ int spell_bonus(class unit_data *att,
     }
 
     // MS2020. Maybe the CHAR_LEVEL should not be a part of the final formula.
-    if(CHAR_AWAKE(def))
+    if (CHAR_AWAKE(def))
     {
         hm = 2 * (att_spl_ability - def_spl_ability) + 2 * (att_spl_knowledge - def_spl_knowledge) +
              (att_bonus - def_bonus); // + CHAR_LEVEL(att) - CHAR_LEVEL(def);
 
-        if(pStat)
+        if (pStat)
         {
             sprintf(buf, "Result              :  %4d<br/>", hm);
             pStat->append(buf);
@@ -432,14 +432,14 @@ int spell_bonus(class unit_data *att,
     {
         hm = 2 * att_spl_ability + 2 * att_spl_knowledge + (att_bonus - def_bonus); // + CHAR_LEVEL(att) - CHAR_LEVEL(def);
 
-        if(pStat)
+        if (pStat)
         {
             sprintf(buf, "Result (sleep def)  :  %4d<br/>", hm);
             pStat->append(buf);
         }
     }
 
-    if(pStat)
+    if (pStat)
     {
         pStat->append("Result = 2*(att_abil-def_abil) + 2*(att_spl - def_spl) + (att_bonus - def_bonus)) + roll<br/>");
         pStat->append("<br/>");
@@ -490,7 +490,7 @@ int melee_bonus(class unit_data *att,
     class unit_data *def_armour;
     int hm;
 
-    if(pStat)
+    if (pStat)
     {
         sprintf(buf, "<u>%s attacking %s:</u><br/><pre>", UNIT_NAME(att), UNIT_NAME(def));
         *pStat = buf;
@@ -499,13 +499,13 @@ int melee_bonus(class unit_data *att,
 
     att_bonus = CHAR_OFFENSIVE(att);
     def_bonus = CHAR_DEFENSIVE(def);
-    if(pStat)
+    if (pStat)
     {
         sprintf(buf, "Off / Def bonus     :  %4d   %4d<br/>", att_bonus, def_bonus);
         pStat->append(buf);
     }
 
-    if(pAtt_weapon_type && is_in(*pAtt_weapon_type, WPN_GROUP_MAX, WPN_TREE_MAX - 1))
+    if (pAtt_weapon_type && is_in(*pAtt_weapon_type, WPN_GROUP_MAX, WPN_TREE_MAX - 1))
     {
         att_wpn = NULL;
         att_wpn_type = *pAtt_weapon_type;
@@ -513,25 +513,25 @@ int melee_bonus(class unit_data *att,
     }
     else
     {
-        if(primary)
+        if (primary)
             att_wpn = equipment_type(att, WEAR_WIELD, ITEM_WEAPON);
         else
             att_wpn = equipment_type(att, WEAR_HOLD, ITEM_WEAPON);
 
-        if(att_wpn)
+        if (att_wpn)
         {
             att_wpn_type = OBJ_VALUE(att_wpn, 0); /* [0] is category */
             att_wpn_knowledge = weapon_attack_skill(att, att_wpn_type);
-            if(pStat)
+            if (pStat)
             {
                 sprintf(buf, "Att Weapon          :  %s       <br/>", UNIT_NAME(att_wpn));
                 pStat->append(buf);
             }
-            if(is_in(OBJ_VALUE(att_wpn, 1), -25, 25))
+            if (is_in(OBJ_VALUE(att_wpn, 1), -25, 25))
             {
                 tmp = OBJ_VALUE(att_wpn, 1) + OBJ_VALUE(att_wpn, 2);
                 att_bonus += tmp;
-                if(pStat)
+                if (pStat)
                 {
                     sprintf(buf, "Att Weapon mat+mag  :  %4d       <br/>", tmp);
                     pStat->append(buf);
@@ -543,7 +543,7 @@ int melee_bonus(class unit_data *att,
             att_wpn_type = CHAR_ATTACK_TYPE(att);
             att_wpn_knowledge = weapon_attack_skill(att, att_wpn_type);
 
-            if(pStat)
+            if (pStat)
             {
                 sprintf(buf, "Att Weapon          :  None       <br/>");
                 pStat->append(buf);
@@ -551,23 +551,23 @@ int melee_bonus(class unit_data *att,
         }
     }
 
-    if(char_dual_wield(att))
+    if (char_dual_wield(att))
     {
         int dual_skill;
 
-        if(IS_PC(att))
+        if (IS_PC(att))
             dual_skill = PC_SKI_SKILL(att, SKI_DUAL_WIELD);
         else
             dual_skill = CHAR_DEX(att);
 
-        if(primary)
+        if (primary)
             tmp = -MAX(0, 25 - (dual_skill / 4));
         else
             tmp = -MAX(0, 50 - (dual_skill / 4));
 
         att_bonus += tmp;
 
-        if(pStat)
+        if (pStat)
         {
             sprintf(buf, "Dual wield          :  %4d       <br/>", tmp);
             pStat->append(buf);
@@ -575,17 +575,17 @@ int melee_bonus(class unit_data *att,
     }
 
     def_wpn_knowledge = weapon_defense_skill(def, att_wpn_type);
-    if(pStat)
+    if (pStat)
     {
         sprintf(buf, "Weapon skill        :  %4d   %4d<br/>", att_wpn_knowledge, def_wpn_knowledge);
         pStat->append(buf);
     }
 
-    if(CHAR_FIGHTING(def) != att)
+    if (CHAR_FIGHTING(def) != att)
     {
         def_bonus -= 25;
 
-        if(pStat)
+        if (pStat)
         {
             sprintf(buf, "Def not fighting att:          %4d<br/>", -25);
             pStat->append(buf);
@@ -594,20 +594,20 @@ int melee_bonus(class unit_data *att,
 
     /* If attacker can't see the defender, then the defender has a   */
     /* much better effective dexterity (since attacker can't see him */
-    if(!CHAR_CAN_SEE(att, def))
+    if (!CHAR_CAN_SEE(att, def))
     {
         def_bonus += 25;
-        if(pStat)
+        if (pStat)
         {
             sprintf(buf, "Attacker cant see    :       %4d<br/>", 25);
             pStat->append(buf);
         }
     }
 
-    if(!CHAR_CAN_SEE(def, att))
+    if (!CHAR_CAN_SEE(def, att))
     {
         att_bonus += 25;
-        if(pStat)
+        if (pStat)
         {
             sprintf(buf, "Defender cant see    :  %4d<br/>", 25);
             pStat->append(buf);
@@ -615,37 +615,37 @@ int melee_bonus(class unit_data *att,
     }
 
     /* Slaying Weapons */
-    if(att_wpn && OBJ_VALUE(att_wpn, 3) == CHAR_RACE(def))
+    if (att_wpn && OBJ_VALUE(att_wpn, 3) == CHAR_RACE(def))
     {
         att_bonus += 50;
 
-        if(pStat)
+        if (pStat)
         {
             sprintf(buf, "Slaying              :  %4d  <br/>", 50);
             pStat->append(buf);
         }
     }
 
-    if((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) || (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
+    if ((UNIT_IS_GOOD(att) && affected_by_spell(def, ID_PROT_GOOD)) || (UNIT_IS_EVIL(att) && affected_by_spell(def, ID_PROT_EVIL)))
     {
         def_bonus += 20;
 
-        if(pStat)
+        if (pStat)
         {
             sprintf(buf, "Evil good protect     :       %4d  <br/>", 20);
             pStat->append(buf);
         }
     }
 
-    if((def_armour = equipment_type(def, hit_loc, ITEM_ARMOR)))
+    if ((def_armour = equipment_type(def, hit_loc, ITEM_ARMOR)))
     {
         def_armour_type = OBJ_VALUE(def_armour, 0);
-        if(is_in(OBJ_VALUE(def_armour, 1), -25, 25))
+        if (is_in(OBJ_VALUE(def_armour, 1), -25, 25))
         {
             tmp = OBJ_VALUE(def_armour, 1) + OBJ_VALUE(def_armour, 2);
             def_bonus += tmp;
 
-            if(pStat)
+            if (pStat)
             {
                 sprintf(buf, "Armor bonus         :       %4d  <br/>", tmp);
                 pStat->append(buf);
@@ -657,22 +657,22 @@ int melee_bonus(class unit_data *att,
     else
         def_armour_type = CHAR_NATURAL_ARMOUR(def);
 
-    if(pAtt_weapon_type)
+    if (pAtt_weapon_type)
         *pAtt_weapon_type = att_wpn_type;
 
-    if(pAtt_weapon)
+    if (pAtt_weapon)
         *pAtt_weapon = att_wpn;
 
-    if(pDef_armour_type)
+    if (pDef_armour_type)
         *pDef_armour_type = def_armour_type;
 
-    if(pDef_armour)
+    if (pDef_armour)
         *pDef_armour = def_armour;
 
     int def_dex = effective_dex(def);
     int att_abil = weapon_attack_ability(att, att_wpn_type);
 
-    if(pStat)
+    if (pStat)
     {
         sprintf(buf, " --- SUMMARY ---<br/>");
         pStat->append(buf);
@@ -686,11 +686,11 @@ int melee_bonus(class unit_data *att,
         // pStat->append(buf);
     }
 
-    if(CHAR_AWAKE(def))
+    if (CHAR_AWAKE(def))
     {
         hm = 2 * (att_abil - def_dex) + 2 * (att_wpn_knowledge - def_wpn_knowledge) + (att_bonus - def_bonus);
 
-        if(pStat)
+        if (pStat)
         {
             sprintf(buf, "Result              :  %4d<br/>", hm);
             pStat->append(buf);
@@ -699,14 +699,14 @@ int melee_bonus(class unit_data *att,
     else
     {
         hm = 2 * att_abil + 2 * att_wpn_knowledge + att_bonus;
-        if(pStat)
+        if (pStat)
         {
             sprintf(buf, "Result (sleep def)  :  %4d<br/>", hm);
             pStat->append(buf);
         }
     }
 
-    if(pStat)
+    if (pStat)
     {
         pStat->append("Result = 2*(att_abil-def_dex) + 2*(att_wpn - def_wpn) + (att_bonus - def_bonus)) + roll<br/>");
         pStat->append("<br/>");
@@ -773,7 +773,7 @@ int base_consider(class unit_data *att, class unit_data *def, std::string *pStr)
     dam += weapon_damage(95 + bonus, att_wpn_type, def_arm_type);
     dam /= 3;
 
-    if(dam <= 0)
+    if (dam <= 0)
         return 100;
     else
         return UNIT_MAX_HIT(def) / dam; /* Rounds to die.... */
@@ -786,50 +786,50 @@ void do_consider(class unit_data *ch, char *arg, const struct command_info *cmd)
     char *oarg = arg;
     std::string str;
 
-    if(IS_PC(ch) && PC_SKI_SKILL(ch, SKI_CONSIDER) == 0)
+    if (IS_PC(ch) && PC_SKI_SKILL(ch, SKI_CONSIDER) == 0)
     {
         send_to_char("You must practice first.<br/>", ch);
         return;
     }
 
-    if(str_is_empty(arg))
+    if (str_is_empty(arg))
     {
         send_to_char("You consider Life, the Universe and everything.<br/>", ch);
         return;
     }
 
-    if((vict = find_unit(ch, &arg, 0, FIND_UNIT_SURRO)) == NULL)
+    if ((vict = find_unit(ch, &arg, 0, FIND_UNIT_SURRO)) == NULL)
     {
         send_to_char("No such person around.<br/>", ch);
         return;
     }
 
-    if(!IS_CHAR(vict))
+    if (!IS_CHAR(vict))
     {
         send_to_char("It must be dead already?<br/>", ch);
         return;
     }
 
-    if(vict == ch)
+    if (vict == ch)
     {
         send_to_char("Easy! Very easy indeed!<br/>", ch);
         return;
     }
 
-    if(IS_SET(CHAR_FLAGS(vict), CHAR_PROTECTED))
+    if (IS_SET(CHAR_FLAGS(vict), CHAR_PROTECTED))
     {
         send_to_char("Why not just walk to the jail yourself?<br/>", ch);
         return;
     }
 
-    if(CHAR_LEVEL(vict) - 10 >= CHAR_LEVEL(ch))
+    if (CHAR_LEVEL(vict) - 10 >= CHAR_LEVEL(ch))
     {
         act("$3e is probably out of your league.", A_SOMEONE, ch, cActParameter(), vict, TO_CHAR);
     }
 
     rtd = base_consider(vict, ch, &str);
 
-    if(IS_IMMORTAL(ch))
+    if (IS_IMMORTAL(ch))
     {
         act("Rounds to be killed by $3n = $2d.", A_SOMEONE, ch, &rtd, vict, TO_CHAR);
         send_to_char(str.c_str(), ch);
@@ -841,19 +841,19 @@ void do_consider(class unit_data *ch, char *arg, const struct command_info *cmd)
         return;
     }
 
-    if(rtd <= 1)
+    if (rtd <= 1)
         send_to_char("RUN AWAY!<br/>", ch);
-    else if(rtd <= 2)
+    else if (rtd <= 2)
         send_to_char("You ARE mad!<br/>", ch);
-    else if(rtd <= 3)
+    else if (rtd <= 3)
         send_to_char("Very risky indeed!<br/>", ch);
-    else if(rtd <= 4)
+    else if (rtd <= 4)
         send_to_char("Quite a risk.<br/>", ch);
-    else if(rtd <= 5)
+    else if (rtd <= 5)
         send_to_char("Perhaps you would have time to flee.<br/>", ch);
-    else if(rtd <= 7)
+    else if (rtd <= 7)
         send_to_char("You got a fair chance of fleeing.<br/>", ch);
-    else if(rtd <= 10)
+    else if (rtd <= 10)
         send_to_char("You got a very good chance of fleeing.<br/>", ch);
     else
         send_to_char("Plenty of time to flee.<br/>", ch);

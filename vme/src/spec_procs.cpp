@@ -41,13 +41,13 @@ int charname_in_list(class unit_data *ch, char *arg)
 {
     char *c;
 
-    if(!arg || !*arg || IS_PC(ch))
+    if (!arg || !*arg || IS_PC(ch))
         return FALSE;
 
-    while((c = strchr(arg, '/')))
+    while ((c = strchr(arg, '/')))
     {
         *c = '\0';
-        if(UNIT_NAMES(ch).IsName(arg))
+        if (UNIT_NAMES(ch).IsName(arg))
         {
             *c = '/';
             return TRUE;
@@ -55,7 +55,7 @@ int charname_in_list(class unit_data *ch, char *arg)
         *c = '/';
         arg = ++c;
     }
-    if(UNIT_NAMES(ch).IsName(arg))
+    if (UNIT_NAMES(ch).IsName(arg))
         return TRUE;
 
     return FALSE;

@@ -53,7 +53,7 @@ int number(int from, int to)
     int temp;
 #endif
 
-    if(from > to)
+    if (from > to)
     {
 #ifndef VMC_SRC
         temp = to;
@@ -80,7 +80,7 @@ int dice(int number, int size)
 
     assert(size >= 1);
 
-    for(r = 1; r <= number; r++)
+    for (r = 1; r <= number; r++)
 #ifdef GENERIC_SYSV
         sum += ((lrand48() % size) + 1);
 #else
@@ -107,10 +107,10 @@ void slog(enum log_level level, ubit8 wizinv_level, const char *fmt, ...)
 
     tmstr[strlen(tmstr) - 1] = '\0';
 
-    if(wizinv_level > 0)
+    if (wizinv_level > 0)
     {
         auto chars_printed = snprintf(buf, buffer_size_remaining, "(%d) ", wizinv_level);
-        if(chars_printed < 0 || chars_printed >= buffer_size_remaining)
+        if (chars_printed < 0 || chars_printed >= buffer_size_remaining)
         {
             buffer_size_remaining = 0;
         }
@@ -128,7 +128,7 @@ void slog(enum log_level level, ubit8 wizinv_level, const char *fmt, ...)
     /* 5 == " :: \n";  24 == tmstr (Tue Sep 20 18:41:23 1994) */
     log_size += strlen(buf) + 5 + 24;
 
-    if(log_size > 40000000) /* 4 meg is indeed a very big logfile! */
+    if (log_size > 40000000) /* 4 meg is indeed a very big logfile! */
     {
         fprintf(log_file_fd, "Log-file insanely big!  Going down.\n");
         abort(); // Dont use error, it calls syslog!!! *grin*
@@ -137,7 +137,7 @@ void slog(enum log_level level, ubit8 wizinv_level, const char *fmt, ...)
     fprintf(log_file_fd, "%s :: %s\n", tmstr, buf);
     fflush(log_file_fd);
 
-    if(level > LOG_OFF)
+    if (level > LOG_OFF)
     {
         log_buf[idx].level = level;
         log_buf[idx].wizinv_level = wizinv_level;
@@ -177,14 +177,14 @@ char *sprintbit(char *buf, ubit32 vektor, const char *names[])
 
     *result = '\0';
 
-    for(nr = 0; vektor; vektor >>= 1, nr += names[nr] ? 1 : 0)
-        if(IS_SET(1, vektor))
+    for (nr = 0; vektor; vektor >>= 1, nr += names[nr] ? 1 : 0)
+        if (IS_SET(1, vektor))
         {
             sprintf(result, "%s ", names[nr] ? names[nr] : "UNDEFINED");
             TAIL(result);
         }
 
-    if(!*buf)
+    if (!*buf)
         strcpy(buf, "NOBITS");
 
     return buf;
@@ -195,12 +195,12 @@ char *sprinttype(char *buf, int type, const char *names[])
     char *str;
     int nr;
 
-    for(nr = 0; names[nr]; nr++)
+    for (nr = 0; names[nr]; nr++)
         ;
 
     str = (0 <= type && type < nr) ? (char *)names[type] : (char *)"UNDEFINED";
 
-    if(buf)
+    if (buf)
         return strcpy(buf, str);
     else
         return str;

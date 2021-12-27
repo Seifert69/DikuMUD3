@@ -33,7 +33,7 @@ color_type::color_type(char *key, char *c)
     // color = new char[len + 1];
 
     CREATE(color, char, len + 1);
-    if(!color)
+    if (!color)
     {
         slog(LOG_ALL, 0, "Error in allocating color");
         assert(color);
@@ -43,7 +43,7 @@ color_type::color_type(char *key, char *c)
     len = strlen(key);
     // keyword = new char[len + 1];
     CREATE(keyword, char, len + 1);
-    if(!keyword)
+    if (!keyword)
     {
         slog(LOG_ALL, 0, "Error in allocating keyword");
         assert(keyword);
@@ -56,13 +56,13 @@ color_type::~color_type(void)
     color_type *l = this->next;
 
     next = NULL;
-    if(keyword)
+    if (keyword)
         FREE(keyword);
-    if(color)
+    if (color)
         FREE(color);
     color = NULL;
     keyword = NULL;
-    if(l)
+    if (l)
         delete l;
 }
 
@@ -84,14 +84,14 @@ char *color_type::insert(char *key, char *c)
 {
     color_type *l = this->next, *b = this;
     color_type *temp;
-    if((!key) || (!c))
+    if ((!key) || (!c))
         return (NULL);
     temp = new color_type(key, c);
-    if(!temp)
+    if (!temp)
         return (NULL);
-    while(l)
+    while (l)
     {
-        if(strcmp(l->keyword, key) >= 0)
+        if (strcmp(l->keyword, key) >= 0)
             break;
         else
         {
@@ -100,12 +100,12 @@ char *color_type::insert(char *key, char *c)
         }
     }
 
-    if(!l)
+    if (!l)
     {
         b->next = temp;
         count_plus(key, c);
     }
-    else if(strcmp(key, l->keyword) == 0)
+    else if (strcmp(key, l->keyword) == 0)
     {
         temp->next = l->next;
         b->next = temp;
@@ -131,12 +131,12 @@ void color_type::change(char *combo)
     char *key, *tok;
 
     key = strtok(combo, ":");
-    if(!key)
+    if (!key)
     {
         return;
     }
     tok = strtok(0, ":");
-    if(!tok)
+    if (!tok)
     {
         return;
     }
@@ -148,12 +148,12 @@ void color_type::insert(char *combo)
     char *key, *tok, *ret;
 
     key = strtok(combo, ":");
-    if(!key)
+    if (!key)
     {
         return;
     }
     tok = strtok(0, ":");
-    if(!tok)
+    if (!tok)
     {
         return;
     }
@@ -168,18 +168,18 @@ std::string color_type::change(char *key, char *c)
     // temp = new char[strlen (c) + 1];
     CREATE(temp, char, strlen(c) + 1);
 
-    if(!temp)
+    if (!temp)
     {
         slog(LOG_ALL, 0, "Error in allocating change color.");
         assert(temp);
     }
 
-    while(l)
+    while (l)
     {
-        if(strncmp(l->keyword, key, strlen(key)) == 0)
+        if (strncmp(l->keyword, key, strlen(key)) == 0)
         {
             color_size -= (strlen(l->color) + 1);
-            delete(l->color);
+            delete (l->color);
             strcpy(temp, c);
             l->color = temp;
             color_size += (strlen(temp) + 1);
@@ -200,16 +200,16 @@ const char *color_type::get(const char *key)
 {
     color_type *l = this->next;
 
-    if(!key)
+    if (!key)
         return (NULL);
-    while(l)
+    while (l)
     {
-        if(strncmp(key, l->keyword, strlen(key)) == 0)
+        if (strncmp(key, l->keyword, strlen(key)) == 0)
             break;
         l = l->next;
     }
 
-    if(l)
+    if (l)
         return (l->color);
     else
         return (NULL);
@@ -219,16 +219,16 @@ const char *color_type::get(const char *key, char *full_key)
 {
     color_type *l = this->next;
 
-    if(!key)
+    if (!key)
         return (NULL);
-    while(l)
+    while (l)
     {
-        if(strncmp(key, l->keyword, strlen(key)) == 0)
+        if (strncmp(key, l->keyword, strlen(key)) == 0)
             break;
         l = l->next;
     }
 
-    if(l)
+    if (l)
     {
         strcpy(full_key, l->keyword);
         return (l->color);
@@ -240,15 +240,15 @@ const char *color_type::get(const char *key, char *full_key)
 int color_type::remove(char *key)
 {
     color_type *temp = this, *l = this->next;
-    if(!l)
+    if (!l)
     {
         return (0);
         // If blank list return nothing to remove
     }
 
-    while(l)
+    while (l)
     {
-        if(strcmp(key, l->keyword) == 0)
+        if (strcmp(key, l->keyword) == 0)
             break;
         else
         {
@@ -257,7 +257,7 @@ int color_type::remove(char *key)
         }
     }
 
-    if(!l)
+    if (!l)
         return (0);
 
     temp->next = l->next;
@@ -273,13 +273,13 @@ void color_type::remove_all()
 
     next = NULL;
 
-    if(keyword)
+    if (keyword)
         FREE(keyword);
-    if(color)
+    if (color)
         FREE(color);
     color = NULL;
     keyword = NULL;
-    if(l)
+    if (l)
         delete l;
 
     key_size = 0;
@@ -293,19 +293,19 @@ void color_type::create(char *input_temp)
     char *tok, *key;
     char *input_str;
 
-    if((!input_temp) || (input_temp[0] == '\0'))
+    if ((!input_temp) || (input_temp[0] == '\0'))
         return;
 
     // input_str = new char[strlen (input_temp) + 1];
     CREATE(input_str, char, strlen(input_temp) + 1);
 
     delstr = input_str;
-    if(!input_str)
+    if (!input_str)
         return;
 
-    while(*input_temp != '\0')
+    while (*input_temp != '\0')
     {
-        if((*input_temp == '\r'))
+        if ((*input_temp == '\r'))
         {
             input_temp++;
             continue;
@@ -319,13 +319,13 @@ void color_type::create(char *input_temp)
     input_str = delstr;
     key = strtok(input_str, ":");
 
-    if(!key)
+    if (!key)
     {
         FREE(delstr);
         return;
     }
     tok = strtok(0, ":");
-    if(!tok)
+    if (!tok)
     {
         FREE(delstr);
         return;
@@ -333,10 +333,10 @@ void color_type::create(char *input_temp)
 
     insert(key, tok);
 
-    while((key = strtok(0, ":")) != NULL)
+    while ((key = strtok(0, ":")) != NULL)
     {
         tok = strtok(0, ":");
-        if(!tok)
+        if (!tok)
             break;
 
         insert(key, tok);
@@ -355,17 +355,17 @@ char *color_type::key_string(void)
     CREATE(buff, char, i);
 
     color_type *l = this->next;
-    if(!buff)
+    if (!buff)
     {
         slog(LOG_ALL, 0, "Error allocating key string for colors.");
         assert(buff);
     }
 
     buff[0] = '\0';
-    if(!l)
+    if (!l)
         return (NULL);
 
-    while(l)
+    while (l)
     {
         char tmp[200];
         i = MAX(0, 25 - strlen(l->keyword));
@@ -385,26 +385,26 @@ char *color_type::key_string(color_type &dft)
     color_type temp;
     int i = 0;
     char *f;
-    if(d)
+    if (d)
         i += strlen(d) + 1;
-    if(t)
+    if (t)
         i += strlen(t) + 2;
     // f = new char[i];
     CREATE(f, char, i);
 
-    if(!f)
+    if (!f)
     {
         slog(LOG_ALL, 0, "Problem with the 'final' pointer when doing save_string in key_string");
         assert(f);
     }
     f[0] = '\0';
 
-    if(d)
+    if (d)
     {
         strcat(f, d);
         FREE(d);
     }
-    if(t)
+    if (t)
     {
         strcat(f, ":");
         strcat(f, t);
@@ -419,7 +419,7 @@ char *color_type::key_string(color_type &dft)
     // ftemp = new char[strlen (f) + 1];
     CREATE(ftemp, char, strlen(f) + 1);
     strcpy(ftemp, f);
-    if(f)
+    if (f)
         FREE(f);
     return (ftemp);
 }
@@ -428,7 +428,7 @@ char *color_type::save_string(void)
 {
     color_type *l = this->next;
 
-    if(!l)
+    if (!l)
     {
         return (NULL);
     }
@@ -437,14 +437,14 @@ char *color_type::save_string(void)
     char *buff;
     CREATE(buff, char, key_size + color_size + (count * 2));
 
-    if(!buff)
+    if (!buff)
     {
         slog(LOG_ALL, 0, "Error allocating save string for colors.");
         assert(buff);
     }
     buff[0] = '\0';
 
-    while(l)
+    while (l)
     {
         strcat(buff, l->keyword);
         strcat(buff, ":");

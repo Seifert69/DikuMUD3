@@ -45,7 +45,7 @@ enum log_level
 #define ODD(i) ((i)&1)
 #define EVEN(i) (!((i)&1))
 
-#define TAIL(str) for(; *(str); (str)++)
+#define TAIL(str) for (; *(str); (str)++)
 
 #define STRCAT(p, c)                                                                                                                       \
     strcat(p, c);                                                                                                                          \
@@ -86,7 +86,7 @@ enum log_level
     do                                                                                                                                     \
     {                                                                                                                                      \
         fprintf(stderr, a);                                                                                                                \
-    } while(0)
+    } while (0)
 
 #ifndef HPUX
 typedef signed char sbit8;
@@ -111,11 +111,11 @@ extern FILE *log_file_fd;
 void slog(enum log_level, ubit8, const char *, ...);
 
 #define CREATE(res, type, num)                                                                                                             \
-    if(((res) = (type *)calloc((num), sizeof(type))) == NULL)                                                                              \
+    if (((res) = (type *)calloc((num), sizeof(type))) == NULL)                                                                             \
         assert(FALSE);
 
 #define RECREATE(res, type, num)                                                                                                           \
-    if(((res) = (type *)realloc((res), sizeof(type) * (num))) == NULL)                                                                     \
+    if (((res) = (type *)realloc((res), sizeof(type) * (num))) == NULL)                                                                    \
         assert(FALSE);
 
 #define FREE(p)                                                                                                                            \

@@ -40,11 +40,11 @@ struct shi_info_type shi_info[] = {
 
 int ability_point_gain(class unit_data *ch)
 {
-    if(IS_NPC(ch))
+    if (IS_NPC(ch))
         return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR;
     else
     {
-        if(PC_VIRTUAL_LEVEL(ch) <= 100)
+        if (PC_VIRTUAL_LEVEL(ch) <= 100)
             return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR;
         else
             return 0;
@@ -67,7 +67,7 @@ int ability_point_gain(class unit_data *ch)
 //
 int ability_point_total(class unit_data *ch)
 {
-    if(IS_NPC(ch))
+    if (IS_NPC(ch))
         return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR * CHAR_LEVEL(ch);
     else
         return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR * MIN(PC_VIRTUAL_LEVEL(ch), 100);
@@ -96,9 +96,9 @@ int buy_points(int points, int level, int *error)
     skill = 0;
     cost = AVERAGE_SKILL_COST;
 
-    while(points > 0)
+    while (points > 0)
     {
-        for(i = 0; (i <= level) && (points > 0); i++)
+        for (i = 0; (i <= level) && (points > 0); i++)
         {
             points -= cost;
             skill++;
@@ -106,22 +106,22 @@ int buy_points(int points, int level, int *error)
         cost += AVERAGE_SKILL_COST;
     }
 
-    if(points < 0)
+    if (points < 0)
         skill--;
 
-    if(error)
+    if (error)
         *error = 0;
 
-    if(skill > SKILL_MAX)
+    if (skill > SKILL_MAX)
     {
-        if(error)
+        if (error)
             *error = skill;
 
         return SKILL_MAX;
     }
-    if(skill < 0)
+    if (skill < 0)
     {
-        if(error)
+        if (error)
             *error = skill;
 
         return 0;
@@ -142,10 +142,10 @@ int distribute_points(sbit16 *skills, int max, int points, int level)
 
     sumerror = 0;
 
-    for(i = 0; i < max; i++)
+    for (i = 0; i < max; i++)
     {
         skills[i] = buy_points((int)((double)skills[i] * points / 100.0), level, &error);
-        if(error > sumerror)
+        if (error > sumerror)
             sumerror = error;
     }
 
@@ -158,10 +158,10 @@ int distribute_points(ubit8 *skills, int max, int points, int level)
 
     sumerror = 0;
 
-    for(i = 0; i < max; i++)
+    for (i = 0; i < max; i++)
     {
         skills[i] = buy_points((int)((double)skills[i] * points / 100.0), level, &error);
-        if(error > sumerror)
+        if (error > sumerror)
             sumerror = error;
     }
 
@@ -178,10 +178,10 @@ int required_xp(int level)
 #define LEVEL_MULT 300 // Diku II was : 1500
 #define POWER_MULT 200 // Diku II was :  150
 
-    if(level <= 0)
+    if (level <= 0)
         return 0;
 
-    if(level <= MORTAL_MAX_LEVEL)
+    if (level <= MORTAL_MAX_LEVEL)
         return LEVEL_MULT * level + level * level * POWER_MULT;
     else
         return required_xp(MORTAL_MAX_LEVEL) + level_xp(MORTAL_MAX_LEVEL - 1) * (level - MORTAL_MAX_LEVEL);
@@ -196,7 +196,7 @@ int required_xp(int level)
 /* Level has to be < MORTAL_MAX_LEVEL */
 int level_xp(int level)
 {
-    if(level >= MORTAL_MAX_LEVEL)
+    if (level >= MORTAL_MAX_LEVEL)
         level = MORTAL_MAX_LEVEL - 1;
 
     return required_xp(level + 1) - required_xp(level);
@@ -210,11 +210,11 @@ int level_xp(int level)
 /* Primarily used for shields, armours and weapons */
 void set_hits(class unit_data *obj, int craftsmanship)
 {
-    if(UNIT_HIT(obj) == 100) // 100 is the *default* and is overridden
+    if (UNIT_HIT(obj) == 100) // 100 is the *default* and is overridden
     {
         /* Hits are in [100..6000] based on craft, default == 1000 */
 
-        if(craftsmanship >= 0)
+        if (craftsmanship >= 0)
             UNIT_MAX_HIT(obj) = 1000 + (1000 * craftsmanship) / 5;
         else
             UNIT_MAX_HIT(obj) = 1000 - (175 * -craftsmanship) / 5;

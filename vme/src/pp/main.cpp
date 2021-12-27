@@ -34,21 +34,21 @@ int original_main(int argc, char *argv[])
     ifile =            /* No input file specified	*/
         ofile = FALSE; /* No output file specified	*/
 
-    while(--argc != 0)
+    while (--argc != 0)
     {
         s = *++argv;
-        if(s[0] == '-')
+        if (s[0] == '-')
         {
             skip = FALSE;
-            while((!skip) && (*++s != '\0'))
+            while ((!skip) && (*++s != '\0'))
             {
-                switch((int)*s)
+                switch ((int)*s)
                 {
                     /* -[c 0|1|2|3|4|5|6|8|9] */
                     case 'C':
                     case 'c':
                         s2 = getnext(s, &argc, &argv, NO);
-                        switch((int)*s2)
+                        switch ((int)*s2)
                         {
                             case '0':
                                 s2 = "arg_string";
@@ -117,7 +117,7 @@ int original_main(int argc, char *argv[])
                     case 'd':
                         s = getnext(s, &argc, &argv, NO);
                         s2 = strchr(s, '='); /* Location of val */
-                        if(s2)
+                        if (s2)
                         {
                             // MS2020 Hack bad code.
                             *((char *)s2) = '\0';
@@ -126,7 +126,7 @@ int original_main(int argc, char *argv[])
                         else
                             s2 = one_string; /* Default */
 
-                        if(lookup(s, NULL) != NULL)
+                        if (lookup(s, NULL) != NULL)
                             warning("Symbol already defined: ", s);
                         else
                             sbind(s, s2, NO_PARAMS);
@@ -143,7 +143,7 @@ int original_main(int argc, char *argv[])
                     /* -iI <#include search path> */
                     case 'I':
                     case 'i':
-                        if(Ipcnt > NIPATHS)
+                        if (Ipcnt > NIPATHS)
                             fatal("Too many pathnames", "");
                         Ipath[Ipcnt++] = getnext(s, &argc, &argv, NO);
                         skip = TRUE; /* Skip to next param */
@@ -153,7 +153,7 @@ int original_main(int argc, char *argv[])
                     case 'L':
                     case 'l':
                         s2 = getnext(s, &argc, &argv, NO);
-                        switch((int)*s2)
+                        switch ((int)*s2)
                         {
                             case 'A':
                             case 'a':
@@ -196,7 +196,7 @@ int original_main(int argc, char *argv[])
                     case 'T':
                     case 't':
                         s2 = getnext(s, &argc, &argv, NO);
-                        switch((int)*s2++)
+                        switch ((int)*s2++)
                         {
                             case 'a':
                             case 'A':
@@ -212,9 +212,9 @@ int original_main(int argc, char *argv[])
                                 usage(TRUE);
                         }
 
-                        for(; *s2 != '\0'; s2++)
+                        for (; *s2 != '\0'; s2++)
                         {
-                            if(i)
+                            if (i)
                                 typetab[*s2 + 1] |= C_L;
                             else
                                 typetab[*s2 + 1] &= ~C_L;
@@ -228,7 +228,7 @@ int original_main(int argc, char *argv[])
                     case 'u':
                         s = getnext(s, &argc, &argv, NO);
 
-                        if(lookup(s, NULL) == NULL)
+                        if (lookup(s, NULL) == NULL)
                             warning("Symbol not defined: ", s);
                         else
                             unsbind(s);
@@ -258,14 +258,14 @@ int original_main(int argc, char *argv[])
                 }
             }
         }
-        else if(!ifile)
+        else if (!ifile)
         {
             /* Try to get input file */
 #if HOST == H_CPM
-            if(!inc_open(s, -1, 0)) /* Open file here */
-#else                               /* !H_CPM */
-            if(!inc_open(s)) /* Open input file */
-#endif                              /* H_CPM */
+            if (!inc_open(s, -1, 0)) /* Open file here */
+#else                                /* !H_CPM */
+            if (!inc_open(s)) /* Open input file */
+#endif                               /* H_CPM */
             {
                 fatal("Unable to open input file: ", s);
             }
@@ -286,36 +286,36 @@ int original_main(int argc, char *argv[])
 
     Nextch = gchbuf; /* Next char source */
 
-    if(!ifile)
+    if (!ifile)
     {
         /* Must have at least an input file name */
         usage(TRUE);
     }
 
-    if(!ofile)
+    if (!ofile)
     {
         /* No output name given; use input name and modify it */
         strcpy(Outfile, Filestack[0]->f_name);
         /* terminate the file name before any extension */
-        if((s = strrchr(Outfile, '.')) != NULL)
+        if ((s = strrchr(Outfile, '.')) != NULL)
             *s = '\0';
         strcat(Outfile, ".pp");
     }
 
-    if(strcmp(Outfile, Filestack[0]->f_name) == EQUAL)
+    if (strcmp(Outfile, Filestack[0]->f_name) == EQUAL)
         fatal("Input and output filenames are the same: ", Outfile);
-    else if((Output = fopen(Outfile, "w")) == NULL)
+    else if ((Output = fopen(Outfile, "w")) == NULL)
         fatal("Unable to create output file: ", Outfile);
 
 #if HOST == H_CPM
     /* Create a bigger than average buffer */
-    if((s = malloc(OUTBUFSIZE)) == NULL)
+    if ((s = malloc(OUTBUFSIZE)) == NULL)
         out_of_memory();
     setbuf(Output, s);
     setbsize(Output, OUTBUFSIZE);
 #endif /* H_CPM */
 
-    if(Verbose)
+    if (Verbose)
     {
         printf("%s%s\n\n", "PP Preprocessor, ", PP_VERSION);
         printf("Output will be on <%s>\n", Outfile);
@@ -331,7 +331,7 @@ int original_main(int argc, char *argv[])
                           *	"_pragma" macro definition.  We also need to enable \uxxxx and
                           *	\Uxxxxxxxx "universal characters".
                           */
-    if(A_c99)
+    if (A_c99)
     {
         pbstr("#define _Pragma([line,RQ]) #pragma line\n");
         typetab['\\' + 1] |= C_L;
@@ -341,50 +341,50 @@ int original_main(int argc, char *argv[])
      */
 
     Lastnl = TRUE; /* We are at the file beginning */
-    while((t = gettoken(GT_STR)) != EOF)
+    while ((t = gettoken(GT_STR)) != EOF)
     {
-        if((t == DIRECTIVE_CHAR) && Lastnl)
+        if ((t == DIRECTIVE_CHAR) && Lastnl)
         {
             t = getnstoken(GT_STR);
-            if(t == LETTER)
+            if (t == LETTER)
             {
-                if((sp = predef(Token, pptab)) != NULL)
+                if ((sp = predef(Token, pptab)) != NULL)
                 {
                     /*
                      *	If unconditionally do it or if emitting code...
                      */
-                    if(sp->pp_ifif || (Ifstate == IFTRUE))
+                    if (sp->pp_ifif || (Ifstate == IFTRUE))
                     {
                         /* Do #func */ (void)(*(sp->pp_func))(sp->pp_arg, 0, ""); // MS2020 add missing params??? Totally odd.
                     }
                 }
-                else if(Ifstate == IFTRUE)
+                else if (Ifstate == IFTRUE)
                     non_fatal("Illegal directive", "");
             }
-            else if(t != '\n')
+            else if (t != '\n')
                 non_fatal("Bad directive", "");
             /*
              *	After processing directive toss the remainder of the input
              *	line and just output the linefeed.
              */
-            while((t != '\n') && (t != EOF))
+            while ((t != '\n') && (t != EOF))
                 t = gettoken(GT_STR);
-            if(t == '\n')
+            if (t == '\n')
                 puttoken(Token);
             Lastnl = TRUE;
         }
-        else if(Ifstate == IFTRUE)
+        else if (Ifstate == IFTRUE)
         {
 /*
  *	We need to process this line.
  */
 #if EMBEDDED_EXT
-            if(t == LETTER && Macexpand)
+            if (t == LETTER && Macexpand)
 #else  /* !EMBEDDED_EXT */
-            if(t == LETTER)
+            if (t == LETTER)
 #endif /* EMBEDDED_EXT */
             {
-                if((p = lookup(Token, NULL)) != NULL)
+                if ((p = lookup(Token, NULL)) != NULL)
                     /* Call macro */ (void)docall(p, NULL, NULL);
                 else
                 {
@@ -395,9 +395,9 @@ int original_main(int argc, char *argv[])
             else
             {
                 puttoken(Token);
-                if(t == '\n')
+                if (t == '\n')
                     Lastnl = TRUE; /* Turn on if '\n' */
-                else if(t != SPACE)
+                else if (t != SPACE)
                     Lastnl = FALSE; /* Turn off if !ws */
             }
         }
@@ -408,9 +408,9 @@ int original_main(int argc, char *argv[])
          *	some such on a line that will be processed the next time around.
          */
         {
-            if(t != SPACE) /* Generic whitespace? */
+            if (t != SPACE) /* Generic whitespace? */
             {
-                while((t != '\n') && (t != EOF))
+                while ((t != '\n') && (t != EOF))
                     t = gettoken(GT_STR);
                 Lastnl = TRUE;
             }
@@ -421,13 +421,13 @@ int original_main(int argc, char *argv[])
     // Done pre processing the file
     //
 
-    if(Iflevel != 0)
+    if (Iflevel != 0)
     {
         /* Unterminated #if */
         non_fatal("Unterminated conditional", "");
     }
 
-    if(Verbose)
+    if (Verbose)
     {
         printf("\nActive symbols at end:\t%d\tMaximum symbols used:\t%d\n", Nsyms, Maxsyms);
 #if HOST == H_CPM
@@ -435,23 +435,23 @@ int original_main(int argc, char *argv[])
 #endif /* H_CPM */
     }
 
-    if(Verbose || Errors)
+    if (Verbose || Errors)
     {
-        if(Errors)
+        if (Errors)
             printf("\n%d errors detected\n", Errors);
         else
             printf("\nNo errors detected\n");
     }
 
 #if DEBUG
-    if(Stats)
+    if (Stats)
     {
         printf("\nSymbol table bucket statistics:");
-        for(i = 0; i < NUMBUCKETS; i++)
+        for (i = 0; i < NUMBUCKETS; i++)
         {
-            if((i % 8) == 0)
+            if ((i % 8) == 0)
                 printf("\n"); /* New line */
-            for(n = 0, p = Macros[i]; p != 0; p = p->s_link, n++)
+            for (n = 0, p = Macros[i]; p != 0; p = p->s_link, n++)
                 ; /* Count items in list */
             printf("  %3d:%-3d", i, n);
         }
@@ -464,7 +464,7 @@ int original_main(int argc, char *argv[])
     // ppmain() by the Perry's
     //
 
-    if(Errors > 0)
+    if (Errors > 0)
     {
         fprintf(stderr, "Terminating with error count #%d\n", Errors);
         exit(1);
@@ -475,7 +475,7 @@ int original_main(int argc, char *argv[])
     //
     // Before it just closed the output file
 
-    if((Output != stdout) && (fclose(Output) == EOF))
+    if ((Output != stdout) && (fclose(Output) == EOF))
         fatal("Unable to close output file: ", Outfile);
 
     exit(Eflag ? 0 : Errors);
@@ -496,7 +496,7 @@ int main(int argc, char *argv[])
 
     char path[200];
 
-    if(argc < 2)
+    if (argc < 2)
     {
         fprintf(stderr, "please specify a filename to input as the first parameter.\n");
         return 1;

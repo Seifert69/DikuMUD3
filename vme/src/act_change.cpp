@@ -17,7 +17,7 @@
 
 static void chg_wimpy(class unit_data *ch)
 {
-    if(IS_SET(CHAR_FLAGS(ch), CHAR_WIMPY))
+    if (IS_SET(CHAR_FLAGS(ch), CHAR_WIMPY))
         send_to_char("You feel brave again.<br/>", ch);
     else
         send_to_char("Ok, you'll flee when death is near.<br/>", ch);
@@ -27,7 +27,7 @@ static void chg_wimpy(class unit_data *ch)
 
 static void chg_expert(class unit_data *ch)
 {
-    if(IS_SET(PC_FLAGS(ch), PC_EXPERT))
+    if (IS_SET(PC_FLAGS(ch), PC_EXPERT))
         send_to_char("You are now in normal mode.<br/>", ch);
     else
         send_to_char("You are now in expert mode.<br/>", ch);
@@ -37,7 +37,7 @@ static void chg_expert(class unit_data *ch)
 
 static void chg_brief(class unit_data *ch)
 {
-    if(IS_SET(PC_FLAGS(ch), PC_BRIEF))
+    if (IS_SET(PC_FLAGS(ch), PC_BRIEF))
         send_to_char("Brief mode off.<br/>", ch);
     else
         send_to_char("Brief mode on.<br/>", ch);
@@ -47,7 +47,7 @@ static void chg_brief(class unit_data *ch)
 
 static void chg_compact(class unit_data *ch)
 {
-    if(IS_SET(PC_FLAGS(ch), PC_COMPACT))
+    if (IS_SET(PC_FLAGS(ch), PC_COMPACT))
         send_to_char("You are now in the uncompacted mode.<br/>", ch);
     else
         send_to_char("You are now in compact mode.<br/>", ch);
@@ -57,7 +57,7 @@ static void chg_compact(class unit_data *ch)
 
 static void chg_peaceful(class unit_data *ch)
 {
-    if(IS_SET(CHAR_FLAGS(ch), CHAR_PEACEFUL))
+    if (IS_SET(CHAR_FLAGS(ch), CHAR_PEACEFUL))
         send_to_char("They will come in peace and leave in pieces.<br/>", ch);
     else
         send_to_char("You will no longer attack aggressors.<br/>", ch);
@@ -75,7 +75,7 @@ static void chg_inform(class unit_data *ch)
 {
     TOGGLE_BIT(PC_FLAGS(ch), PC_INFORM);
 
-    if(IS_SET(PC_FLAGS(ch), PC_INFORM))
+    if (IS_SET(PC_FLAGS(ch), PC_INFORM))
         send_to_char("You will now get more information.<br/>", ch);
     else
         send_to_char("You will now get less information.<br/>", ch);
@@ -83,7 +83,7 @@ static void chg_inform(class unit_data *ch)
 
 static void chg_shout(class unit_data *ch)
 {
-    if(IS_SET(PC_FLAGS(ch), PC_NOSHOUT))
+    if (IS_SET(PC_FLAGS(ch), PC_NOSHOUT))
         send_to_char("You can now hear shouts again.<br/>", ch);
     else
         send_to_char("From now on, you won't hear shouts.<br/>", ch);
@@ -93,7 +93,7 @@ static void chg_shout(class unit_data *ch)
 
 static void chg_tell(class unit_data *ch)
 {
-    if(IS_SET(PC_FLAGS(ch), PC_NOTELL))
+    if (IS_SET(PC_FLAGS(ch), PC_NOTELL))
         send_to_char("You can now hear tells again.<br/>", ch);
     else
         send_to_char("From now on, you won't hear tells.<br/>", ch);
@@ -103,7 +103,7 @@ static void chg_tell(class unit_data *ch)
 
 static void chg_exits(class unit_data *ch)
 {
-    if(IS_SET(PC_FLAGS(ch), PC_EXITS))
+    if (IS_SET(PC_FLAGS(ch), PC_EXITS))
         send_to_char("Exit information disabled.<br/>", ch);
     else
         send_to_char("Exit information enabled.<br/>", ch);
@@ -113,7 +113,7 @@ static void chg_exits(class unit_data *ch)
 
 static void chg_columns(class unit_data *ch, const char *arg)
 {
-    if(str_is_empty(arg) || !str_is_number(arg))
+    if (str_is_empty(arg) || !str_is_number(arg))
     {
         send_to_char("You must enter a column number between 40 and 160.<br/>", ch);
         return;
@@ -121,7 +121,7 @@ static void chg_columns(class unit_data *ch, const char *arg)
 
     int width = atoi(arg);
 
-    if((width < 40) || (width > 160))
+    if ((width < 40) || (width > 160))
     {
         send_to_char("You must enter a column number between 40 and 160.<br/>", ch);
         return;
@@ -136,7 +136,7 @@ static void chg_columns(class unit_data *ch, const char *arg)
 
 static void chg_rows(class unit_data *ch, const char *arg)
 {
-    if(str_is_empty(arg) || !str_is_number(arg))
+    if (str_is_empty(arg) || !str_is_number(arg))
     {
         send_to_char("You must enter a row number between 15 and 60.<br/>", ch);
         return;
@@ -144,7 +144,7 @@ static void chg_rows(class unit_data *ch, const char *arg)
 
     int height = atoi(arg);
 
-    if((height < 15) || (height > 60))
+    if ((height < 15) || (height > 60))
     {
         send_to_char("You must enter a row number between 15 and 60.<br/>", ch);
         return;
@@ -164,7 +164,7 @@ static void chg_terminal(class unit_data *ch, const char *arg)
     char buf[1024];
     int n;
 
-    if(PC_SETUP_EMULATION(ch) == TERM_INTERNAL)
+    if (PC_SETUP_EMULATION(ch) == TERM_INTERNAL)
     {
         send_to_char("You can not change terminal mode at this time.<br/>", ch);
         return;
@@ -174,7 +174,7 @@ static void chg_terminal(class unit_data *ch, const char *arg)
 
     n = search_block(buf, Terminals, 0);
 
-    switch(n)
+    switch (n)
     {
         case 0:
             PC_SETUP_EMULATION(ch) = TERM_DUMB;
@@ -201,7 +201,7 @@ static void chg_terminal(class unit_data *ch, const char *arg)
 
 static void chg_telnet(class unit_data *ch)
 {
-    if(PC_SETUP_EMULATION(ch) == TERM_INTERNAL)
+    if (PC_SETUP_EMULATION(ch) == TERM_INTERNAL)
     {
         send_to_char("You can not change telnet mode at this time.<br/>", ch);
         return;
@@ -209,7 +209,7 @@ static void chg_telnet(class unit_data *ch)
 
     PC_SETUP_TELNET(ch) = !PC_SETUP_TELNET(ch);
 
-    if(PC_SETUP_TELNET(ch))
+    if (PC_SETUP_TELNET(ch))
         act("You are now assumed to be using telnet.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
     else
         act("You are now assumed not to be using telnet.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
@@ -219,7 +219,7 @@ static void chg_telnet(class unit_data *ch)
 
 static void chg_character_echo(class unit_data *ch)
 {
-    if(PC_SETUP_EMULATION(ch) == TERM_INTERNAL)
+    if (PC_SETUP_EMULATION(ch) == TERM_INTERNAL)
     {
         send_to_char("You can not change echo mode at this time.<br/>", ch);
         return;
@@ -227,7 +227,7 @@ static void chg_character_echo(class unit_data *ch)
 
     PC_SETUP_ECHO(ch) = !PC_SETUP_ECHO(ch);
 
-    if(PC_SETUP_ECHO(ch))
+    if (PC_SETUP_ECHO(ch))
         act("You will now get all typed characters echoed.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
     else
         act("You will now receive no echo characters.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
@@ -237,7 +237,7 @@ static void chg_character_echo(class unit_data *ch)
 
 static void chg_redraw_prompt(class unit_data *ch)
 {
-    if(PC_SETUP_EMULATION(ch) == TERM_INTERNAL)
+    if (PC_SETUP_EMULATION(ch) == TERM_INTERNAL)
     {
         send_to_char("You can not change redraw mode at this time.<br/>", ch);
         return;
@@ -245,7 +245,7 @@ static void chg_redraw_prompt(class unit_data *ch)
 
     PC_SETUP_REDRAW(ch) = !PC_SETUP_REDRAW(ch);
 
-    if(PC_SETUP_REDRAW(ch))
+    if (PC_SETUP_REDRAW(ch))
         act("You will now get your prompt redrawn.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
     else
         act("Your prompt will no longer get redrawn.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
@@ -257,7 +257,7 @@ static void chg_echo_say(class unit_data *ch)
 {
     TOGGLE_BIT(PC_FLAGS(ch), PC_ECHO);
 
-    if(IS_SET(PC_FLAGS(ch), PC_ECHO))
+    if (IS_SET(PC_FLAGS(ch), PC_ECHO))
         act("You will now get your communications echoed.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
     else
         act("You will no longer get your communications echoed.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
@@ -289,22 +289,22 @@ void do_change(class unit_data *ch, char *arg, const struct command_info *cmd)
 
     char buf[MAX_INPUT_LENGTH];
 
-    if(!IS_PC(ch))
+    if (!IS_PC(ch))
     {
         send_to_char("You don't want to do that.  Trust me.<br/>", ch);
         return;
     }
 
-    if(!CHAR_DESCRIPTOR(ch))
+    if (!CHAR_DESCRIPTOR(ch))
         return;
 
-    if(str_is_empty(arg))
+    if (str_is_empty(arg))
     {
         send_to_char("Usage: change <type> [arguments]<br/>"
                      "<type> being one of:<br/>",
                      ch);
 
-        for(const char **p = args; *p; p++)
+        for (const char **p = args; *p; p++)
         {
             sprintf(buf, "   %s<br/>", *p);
             send_to_char(buf, ch);
@@ -316,7 +316,7 @@ void do_change(class unit_data *ch, char *arg, const struct command_info *cmd)
     char *org_arg = arg;
     arg = one_argument(arg, buf);
 
-    switch(search_block(buf, args, 0))
+    switch (search_block(buf, args, 0))
     {
         case 0:
             chg_brief(ch);
@@ -414,7 +414,7 @@ void do_change(class unit_data *ch, char *arg, const struct command_info *cmd)
             tmpl = find_dil_template("do_change@commands");
             prg = dil_copy_template(tmpl, ch, NULL);
 
-            if(prg)
+            if (prg)
             {
                 prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
                 prg->fp->vars[0].val.string = str_dup(org_arg);

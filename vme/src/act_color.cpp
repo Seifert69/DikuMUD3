@@ -43,18 +43,18 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
     int change = FALSE, add = FALSE;
 
     char *arg = (char *)aaa;
-    if(!IS_PC(ch))
+    if (!IS_PC(ch))
     {
         send_to_char("Warning: A non pc trying to change colors", ch);
         return;
     }
 
-    if(!CHAR_DESCRIPTOR(ch))
+    if (!CHAR_DESCRIPTOR(ch))
         return;
 
     arg = one_argument(arg, buf);
 
-    if(str_is_empty(buf))
+    if (str_is_empty(buf))
     {
         print_str = UPC(ch)->color.key_string(g_cServerConfig.color);
         page_string(CHAR_DESCRIPTOR(ch), print_str);
@@ -63,34 +63,34 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
         FREE(print_str);
         return;
     }
-    if(strcmp(buf, "reset") == 0)
+    if (strcmp(buf, "reset") == 0)
     {
         send_to_char("Resetting your colors to default system colors.<br/>", ch);
         UPC(ch)->color.remove_all();
         return;
     }
 
-    if(UPC(ch)->color.get(buf, full_name))
+    if (UPC(ch)->color.get(buf, full_name))
     {
         change = TRUE;
     }
 
-    if(g_cServerConfig.color.get(buf, full_name))
+    if (g_cServerConfig.color.get(buf, full_name))
     {
         add = TRUE;
     }
 
-    if(!change && !add)
+    if (!change && !add)
     {
         send_to_char("No such color.<br/>", ch);
         return;
     }
     arg = one_argument(arg, fore);
-    if(str_is_empty(fore))
+    if (str_is_empty(fore))
     {
-        if((change == TRUE) && (add == TRUE))
+        if ((change == TRUE) && (add == TRUE))
         {
-            if(UPC(ch)->color.remove(full_name))
+            if (UPC(ch)->color.remove(full_name))
             {
                 sprintf(cbuf, "Reseting %s to sytem colors.<br/>", full_name);
                 // send_to_char(cbuf, ch);
@@ -107,7 +107,7 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
         return;
     }
 
-    if(!is_forground(fore))
+    if (!is_forground(fore))
     {
         sprintf(cbuf, "Invalid color for the forground color you typed '%s'<br/>", fore);
         send_to_char(cbuf, ch);
@@ -115,12 +115,12 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
     }
 
     arg = one_argument(arg, back);
-    if(str_is_empty(back))
+    if (str_is_empty(back))
     {
         send_to_char("You must supply a backgroud color.<br/>", ch);
         return;
     }
-    if(!is_background(back))
+    if (!is_background(back))
     {
         sprintf(cbuf, "Invalid color for the background color you typed '%s'<br/>", back);
         send_to_char(cbuf, ch);
@@ -129,7 +129,7 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
 
     sprintf(cbuf, "%s %s", fore, back);
 
-    if(change == TRUE)
+    if (change == TRUE)
     {
         std::string mystr;
 
@@ -138,7 +138,7 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
         send_to_char(cbuf, ch);
         return;
     }
-    if((add == TRUE) && (change == FALSE))
+    if ((add == TRUE) && (change == FALSE))
     {
         print_str = UPC(ch)->color.insert(full_name, cbuf);
         sprintf(cbuf, "Color %s changed.<br/>", print_str);
@@ -152,22 +152,22 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
 // Test validity of e.g. cg or cpg
 int is_forground(char *cstr)
 {
-    if((strlen(cstr) > 3) || (strlen(cstr) < 2))
+    if ((strlen(cstr) > 3) || (strlen(cstr) < 2))
         return FALSE;
 
-    if(cstr[0] != 'c')
+    if (cstr[0] != 'c')
         return FALSE;
 
-    if(strlen(cstr) == 3)
+    if (strlen(cstr) == 3)
     {
-        if(cstr[1] != 'p')
+        if (cstr[1] != 'p')
             return (FALSE);
         cstr++;
     }
 
     cstr++; // skip c (or c and p)
 
-    switch(*cstr)
+    switch (*cstr)
     {
         case 'p':
             return FALSE;
@@ -189,13 +189,13 @@ int is_forground(char *cstr)
 
 int is_background(char *cstr)
 {
-    if(strlen(cstr) != 2)
+    if (strlen(cstr) != 2)
         return FALSE;
 
-    if(cstr[0] != 'b')
+    if (cstr[0] != 'b')
         return FALSE;
 
-    switch(cstr[1])
+    switch (cstr[1])
     {
         case 'n':
         case 'r':
