@@ -69,7 +69,7 @@ static void account_log(char action, class unit_data *god, class unit_data *pc, 
 
     if (fseek(f, 8L, SEEK_SET) != 0)
         error(HERE, "Unable to seek in account log.");
-    sprintf(buf, "%08x", next_crc);
+    snprintf(buf, sizeof(buf), "%08x", next_crc);
 
     if (fwrite(buf, sizeof(char), 8, f) != 8)
         error(HERE, "Unable to write 1 in account log.");
@@ -134,7 +134,7 @@ void account_local_stat(const class unit_data *ch, class unit_data *u)
     time_t now = time(0);
 
     if (IS_ADMINISTRATOR(ch))
-        sprintf(buf,
+        snprintf(buf, sizeof(buf), 
                 "Credit         : %5.2f\n\r"
                 "Credit Limit   : %5.2f\n\r"
                 "Credit to date : %5.2f\n\r"
@@ -153,9 +153,9 @@ void account_local_stat(const class unit_data *ch, class unit_data *u)
     else
     {
         if (PC_ACCOUNT(u).total_credit > 0)
-            sprintf(buf, "Has paid for playing.\n\r");
+            snprintf(buf, sizeof(buf), "Has paid for playing.\n\r");
         else
-            sprintf(buf, "Has NOT yet paid for playing.\n\r");
+            snprintf(buf, sizeof(buf), "Has NOT yet paid for playing.\n\r");
     }
 
     send_to_char(buf, ch);
@@ -170,7 +170,7 @@ void account_global_stat(class unit_data *ch)
     if (!g_cServerConfig.m_bAccounting)
         return;
 
-    sprintf(buf,
+    snprintf(buf, sizeof(buf),
             "\n\rAccounting mode:\n\r"
             "  Free from level : %d\n\r"
             "  Currency Name   : %s\n\r"
@@ -184,7 +184,7 @@ void account_global_stat(class unit_data *ch)
     send_to_char(buf, ch);
 
     b = buf;
-    sprintf(buf, "    Time    Sun  Mon  Tir  Wed  Thu  Fri  Sat\n\r");
+    snprintf(buf, sizeof(buf), "    Time    Sun  Mon  Tir  Wed  Thu  Fri  Sat\n\r");
     TAIL(b);
 
     for (i = 0; i < TIME_GRANULARITY; i++)
@@ -232,7 +232,7 @@ void account_overdue(const class unit_data *ch)
             i = i / lcharge;
         }
 
-        sprintf(Buf,
+        snprintf(Buf, sizeof(Buf),
                 "Your account is overdue by %.2f %s with a "
                 "limit of %.2f %s.\n\r"
                 "The account will expire in %d hours and %d minutes.\n\r\n\r",
@@ -340,7 +340,7 @@ static void account_calc(class unit_data *pc, struct tm *b, struct tm *e)
 #ifdef ACCOUNT_DEBUG
     {
         char buf[500];
-        sprintf(buf,
+        snprintf(buf, sizeof(buf), 
                 "%d:%d.%d (%d) to %d:%d.%d (%d) = %d -- "
                 "charge %d / %.2f\n\r",
                 b->tm_hour,
@@ -395,7 +395,7 @@ void account_subtract(class unit_data *pc, time_t from, time_t to)
     et = *localtime(&to);
 
     /* DEBUG:
-       sprintf(buf, "%d:%d.%d (%d) to %d:%d.%d (%d)\n\r",
+       snprintf(buf, sizeof(buf), "%d:%d.%d (%d) to %d:%d.%d (%d)\n\r",
        bt.tm_hour, bt.tm_min, bt.tm_sec, bt.tm_wday,
        et.tm_hour, et.tm_min, et.tm_sec, et.tm_wday);
        send_to_char(buf, pc); */
@@ -432,19 +432,19 @@ static void account_status(const class unit_data *ch)
 
     if (discount > 0)
     {
-        sprintf(Buf, "You have an overall discount of %d%%.\n\r", discount);
+        snprintf(Buf, sizeof(Buf), "You have an overall discount of %d%%.\n\r", discount);
         send_to_char(Buf, ch);
     }
 
     if (PC_ACCOUNT(ch).flatrate > (ubit32)time(0))
     {
         pTmstr = ctime((time_t *)&PC_ACCOUNT(ch).flatrate);
-        sprintf(Buf, "Your account is on a flat rate until %s", pTmstr);
+        snprintf(Buf, sizeof(Buf), "Your account is on a flat rate until %s", pTmstr);
         send_to_char(Buf, ch);
 
         if (PC_ACCOUNT(ch).credit >= 0.0)
         {
-            sprintf(Buf, "You have a positive balance of %.2f %s.\n\r", PC_ACCOUNT(ch).credit / 100.0, g_cAccountConfig.m_pCoinName);
+            snprintf(Buf, sizeof(Buf), "You have a positive balance of %.2f %s.\n\r", PC_ACCOUNT(ch).credit / 100.0, g_cAccountConfig.m_pCoinName);
 
             send_to_char(Buf, ch);
         }
@@ -453,7 +453,7 @@ static void account_status(const class unit_data *ch)
 
     if (PC_ACCOUNT(ch).credit >= 0.0)
     {
-        sprintf(Buf, "You have a positive balance of %.2f %s.\n\r", PC_ACCOUNT(ch).credit / 100.0, g_cAccountConfig.m_pCoinName);
+        snprintf(Buf, sizeof(Buf), "You have a positive balance of %.2f %s.\n\r", PC_ACCOUNT(ch).credit / 100.0, g_cAccountConfig.m_pCoinName);
 
         send_to_char(Buf, ch);
 
@@ -467,7 +467,7 @@ static void account_status(const class unit_data *ch)
 
             i = (int)(((float)PC_ACCOUNT(ch).credit_limit / (float)(lcharge)));
 
-            sprintf(Buf,
+            snprintf(Buf, sizeof(Buf), 
                     "Your credit limit is %d hours (%.2f %s).\n\r",
                     i,
                     (float)PC_ACCOUNT(ch).credit_limit / 100.0,
@@ -483,7 +483,7 @@ static void account_status(const class unit_data *ch)
             j = (int)(((float)(i % lcharge) / (float)((float)lcharge / 60.0)));
             i = i / lcharge;
 
-            sprintf(Buf,
+            snprintf(Buf, sizeof(Buf),
                     "Your account is overdue by %.2f %s with a "
                     "limit of %.2f %s.\n\r"
                     "The account will expire in %d hours and %d minutes.\n\r",
@@ -497,7 +497,7 @@ static void account_status(const class unit_data *ch)
         }
         else
         {
-            sprintf(Buf, "You have a negative balance of %.2f %s.\n\r", PC_ACCOUNT(ch).credit / 100.0, g_cAccountConfig.m_pCoinName);
+            snprintf(Buf, sizeof(Buf), "You have a negative balance of %.2f %s.\n\r", PC_ACCOUNT(ch).credit / 100.0, g_cAccountConfig.m_pCoinName);
         }
     }
 }
@@ -553,13 +553,13 @@ void account_flatrate_change(class unit_data *god, class unit_data *whom, sbit32
     {
         if (PC_ACCOUNT(whom).flatrate > (ubit32)now)
         {
-            sprintf(Buf, "\n\rAdding %d days to the flatrate.\n\r\n\r", days);
+            snprintf(Buf, sizeof(Buf), "\n\rAdding %d days to the flatrate.\n\r\n\r", days);
             PC_ACCOUNT(whom).flatrate += add;
         }
         else
         {
             assert(add > 0);
-            sprintf(Buf, "\n\rSetting flatrate to %d days.\n\r\n\r", days);
+            snprintf(Buf, sizeof(Buf), "\n\rSetting flatrate to %d days.\n\r\n\r", days);
             PC_ACCOUNT(whom).flatrate = now + add;
         }
     }
@@ -567,12 +567,12 @@ void account_flatrate_change(class unit_data *god, class unit_data *whom, sbit32
     {
         if ((sbit32)PC_ACCOUNT(whom).flatrate + add < now)
         {
-            sprintf(Buf, "\n\rDisabling flatrate, enabling measure rate.\n\r\n\r");
+            snprintf(Buf, sizeof(Buf), "\n\rDisabling flatrate, enabling measure rate.\n\r\n\r");
             PC_ACCOUNT(whom).flatrate = 0;
         }
         else
         {
-            sprintf(Buf, "\n\rSubtracting %d days from the flatrate.\n\r\n\r", days);
+            snprintf(Buf, sizeof(Buf), "\n\rSubtracting %d days from the flatrate.\n\r\n\r", days);
             PC_ACCOUNT(whom).flatrate += add;
         }
     }
@@ -681,14 +681,14 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
         case 0: /* Insert amount   */
             account_local_stat(ch, u);
 
-            sprintf(Buf, "\n\rInserting %.2f %s.\n\r\n\r", (float)amount / 100.0, g_cAccountConfig.m_pCoinName);
+            snprintf(Buf, sizeof(Buf), "\n\rInserting %.2f %s.\n\r\n\r", (float)amount / 100.0, g_cAccountConfig.m_pCoinName);
             send_to_char(Buf, ch);
 
             account_insert(ch, u, amount);
 
             account_local_stat(ch, u);
 
-            sprintf(Buf, "%s inserted %.2f %s on your account.\n\r", UNIT_NAME(ch), (float)amount / 100.0, g_cAccountConfig.m_pCoinName);
+            snprintf(Buf, sizeof(Buf), "%s inserted %.2f %s on your account.\n\r", UNIT_NAME(ch), (float)amount / 100.0, g_cAccountConfig.m_pCoinName);
             note = read_unit(letter_fi);
             UNIT_EXTRA(note).add("", Buf);
             unit_to_unit(note, u);
@@ -697,7 +697,7 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
         case 1: /* Withdraw amount */
             account_local_stat(ch, u);
 
-            sprintf(Buf, "\n\rWithdrawing %.2f %s.\n\r\n\r", ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
+            snprintf(Buf, sizeof(Buf), "\n\rWithdrawing %.2f %s.\n\r\n\r", ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
             send_to_char(Buf, ch);
 
             account_withdraw(ch, u, amount);
@@ -708,7 +708,7 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
         case 2: /* Change limit    */
             account_local_stat(ch, u);
 
-            sprintf(Buf, "\n\rSetting limit to %.2f %s.\n\r\n\r", (float)amount / 100.0, g_cAccountConfig.m_pCoinName);
+            snprintf(Buf, sizeof(Buf), "\n\rSetting limit to %.2f %s.\n\r\n\r", (float)amount / 100.0, g_cAccountConfig.m_pCoinName);
 
             send_to_char(Buf, ch);
 
@@ -729,7 +729,7 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
 
             account_local_stat(ch, u);
 
-            sprintf(Buf, "\n\rSetting discount to %3d%%.\n\r\n\r", amount);
+            snprintf(Buf, sizeof(Buf), "\n\rSetting discount to %3d%%.\n\r\n\r", amount);
 
             send_to_char(Buf, ch);
 
@@ -1112,7 +1112,7 @@ void CAccountConfig::Boot(void)
 
     for (i = 0; i < MAX_FLATRATE; i++)
     {
-        sprintf(Buf, "Flatrate%d", i + 1);
+        snprintf(Buf, sizeof(Buf), "Flatrate%d", i + 1);
 
         numlist = parse_match_numlist((const char **)&c, Buf, &len);
         if (numlist)

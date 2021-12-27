@@ -276,7 +276,7 @@ void do_shutdown(class unit_data *ch, char *argument, const struct command_info 
         return;
     }
 
-    sprintf(buf, "Shutdown by %s.<br/>", UNIT_NAME(ch));
+    snprintf(buf, sizeof(buf), "Shutdown by %s.<br/>", UNIT_NAME(ch));
     send_to_all(buf);
     mud_shutdown = 1;
 }
@@ -518,7 +518,7 @@ void do_wizlock(class unit_data *ch, char *arg, const struct command_info *cmd)
     }
     else
     {
-        sprintf(buf, "Game is now wizlocked for level %d%s.<br/>", lvl - 1, lvl - 1 > 0 ? " and down" : "");
+        snprintf(buf, sizeof(buf), "Game is now wizlocked for level %d%s.<br/>", lvl - 1, lvl - 1 > 0 ? " and down" : "");
         send_to_char(buf, ch);
         wizlock = lvl;
     }

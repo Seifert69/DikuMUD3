@@ -319,7 +319,7 @@ int spell_bonus(class unit_data *att,
 
     if (pStat)
     {
-        sprintf(buf, "<u>%s spelling %s with %s:</u><br/><pre>", UNIT_NAME(att), UNIT_NAME(def), g_SplColl.text[spell_number]);
+        snprintf(buf, sizeof(buf), "<u>%s spelling %s with %s:</u><br/><pre>", UNIT_NAME(att), UNIT_NAME(def), g_SplColl.text[spell_number]);
         *pStat = buf;
         pStat->append("                        ATT     DEF<br/>");
     }
@@ -328,7 +328,7 @@ int spell_bonus(class unit_data *att,
     def_bonus = CHAR_DEFENSIVE(def);
     if (pStat)
     {
-        sprintf(buf, "Off / Def bonus     :  %4d    %4d<br/>", att_bonus, def_bonus);
+        snprintf(buf, sizeof(buf), "Off / Def bonus     :  %4d    %4d<br/>", att_bonus, def_bonus);
         pStat->append(buf);
     }
 
@@ -339,7 +339,7 @@ int spell_bonus(class unit_data *att,
         att_bonus -= 25;
         if (pStat)
         {
-            sprintf(buf, "Attacker cant see    :         %4d<br/>", -25);
+            snprintf(buf, sizeof(buf), "Attacker cant see    :         %4d<br/>", -25);
             pStat->append(buf);
         }
     }
@@ -356,7 +356,7 @@ int spell_bonus(class unit_data *att,
             att_bonus += 50;
             if (pStat)
             {
-                sprintf(buf, "Free wield+shield    :         %4d<br/>", +50);
+                snprintf(buf, sizeof(buf), "Free wield+shield    :         %4d<br/>", +50);
                 pStat->append(buf);
             }
         }
@@ -366,7 +366,7 @@ int spell_bonus(class unit_data *att,
     {
         if (pStat)
         {
-            sprintf(buf, "Evil good protect     :       %4d  <br/>", +25);
+            snprintf(buf, sizeof(buf), "Evil good protect     :       %4d  <br/>", +25);
             pStat->append(buf);
         }
         def_bonus += 25;
@@ -382,7 +382,7 @@ int spell_bonus(class unit_data *att,
 
             if (pStat)
             {
-                sprintf(buf, "Armor bonus         :       %4d  <br/>", tmp);
+                snprintf(buf, sizeof(buf), "Armor bonus         :       %4d  <br/>", tmp);
                 pStat->append(buf);
             }
         }
@@ -406,13 +406,13 @@ int spell_bonus(class unit_data *att,
 
     if (pStat)
     {
-        sprintf(buf, " --- SUMMARY ---<br/>");
+        snprintf(buf, sizeof(buf), " --- SUMMARY ---<br/>");
         pStat->append(buf);
-        sprintf(buf, "Spl knowledge       :  %4d    %4d<br/>", att_spl_knowledge, def_spl_knowledge);
+        snprintf(buf, sizeof(buf), "Spl knowledge       :  %4d    %4d<br/>", att_spl_knowledge, def_spl_knowledge);
         pStat->append(buf);
-        sprintf(buf, "Spl ability         :  %4d    %4d<br/>", att_spl_ability, def_spl_ability);
+        snprintf(buf, sizeof(buf), "Spl ability         :  %4d    %4d<br/>", att_spl_ability, def_spl_ability);
         pStat->append(buf);
-        sprintf(buf, "Att bonus vs Def    :  %4d    %4d<br/>", att_bonus, def_bonus);
+        snprintf(buf, sizeof(buf), "Att bonus vs Def    :  %4d    %4d<br/>", att_bonus, def_bonus);
         pStat->append(buf);
     }
 
@@ -424,7 +424,7 @@ int spell_bonus(class unit_data *att,
 
         if (pStat)
         {
-            sprintf(buf, "Result              :  %4d<br/>", hm);
+            snprintf(buf, sizeof(buf), "Result              :  %4d<br/>", hm);
             pStat->append(buf);
         }
     }
@@ -434,7 +434,7 @@ int spell_bonus(class unit_data *att,
 
         if (pStat)
         {
-            sprintf(buf, "Result (sleep def)  :  %4d<br/>", hm);
+            snprintf(buf, sizeof(buf), "Result (sleep def)  :  %4d<br/>", hm);
             pStat->append(buf);
         }
     }
@@ -449,10 +449,10 @@ int spell_bonus(class unit_data *att,
         int dam95 = chart_damage(hm + roll_boost(95, CHAR_LEVEL(att)), &(spell_chart[spell_number].element[def_armour_type]));
 
         char buf[MAX_STRING_LENGTH];
-        sprintf(buf, "Spell  dmg (5/50/95) : %4d %4d %4d<br/>", dam5, dam50, dam95);
+        snprintf(buf, sizeof(buf), "Spell  dmg (5/50/95) : %4d %4d %4d<br/>", dam5, dam50, dam95);
         pStat->append(buf);
 
-        sprintf(buf, "Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / MAX(1, (dam5 + dam50 + dam95) / 3));
+        snprintf(buf, sizeof(buf), "Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / MAX(1, (dam5 + dam50 + dam95) / 3));
         pStat->append(buf);
 
         pStat->append("Defensive Shield bonus not part of stat<br/>");
@@ -492,7 +492,7 @@ int melee_bonus(class unit_data *att,
 
     if (pStat)
     {
-        sprintf(buf, "<u>%s attacking %s:</u><br/><pre>", UNIT_NAME(att), UNIT_NAME(def));
+        snprintf(buf, sizeof(buf), "<u>%s attacking %s:</u><br/><pre>", UNIT_NAME(att), UNIT_NAME(def));
         *pStat = buf;
         pStat->append("                        ATT     DEF<br/>");
     }
@@ -501,7 +501,7 @@ int melee_bonus(class unit_data *att,
     def_bonus = CHAR_DEFENSIVE(def);
     if (pStat)
     {
-        sprintf(buf, "Off / Def bonus     :  %4d   %4d<br/>", att_bonus, def_bonus);
+        snprintf(buf, sizeof(buf), "Off / Def bonus     :  %4d   %4d<br/>", att_bonus, def_bonus);
         pStat->append(buf);
     }
 
@@ -524,7 +524,7 @@ int melee_bonus(class unit_data *att,
             att_wpn_knowledge = weapon_attack_skill(att, att_wpn_type);
             if (pStat)
             {
-                sprintf(buf, "Att Weapon          :  %s       <br/>", UNIT_NAME(att_wpn));
+                snprintf(buf, sizeof(buf), "Att Weapon          :  %s       <br/>", UNIT_NAME(att_wpn));
                 pStat->append(buf);
             }
             if (is_in(OBJ_VALUE(att_wpn, 1), -25, 25))
@@ -533,7 +533,7 @@ int melee_bonus(class unit_data *att,
                 att_bonus += tmp;
                 if (pStat)
                 {
-                    sprintf(buf, "Att Weapon mat+mag  :  %4d       <br/>", tmp);
+                    snprintf(buf, sizeof(buf), "Att Weapon mat+mag  :  %4d       <br/>", tmp);
                     pStat->append(buf);
                 }
             }
@@ -545,7 +545,7 @@ int melee_bonus(class unit_data *att,
 
             if (pStat)
             {
-                sprintf(buf, "Att Weapon          :  None       <br/>");
+                snprintf(buf, sizeof(buf), "Att Weapon          :  None       <br/>");
                 pStat->append(buf);
             }
         }
@@ -569,7 +569,7 @@ int melee_bonus(class unit_data *att,
 
         if (pStat)
         {
-            sprintf(buf, "Dual wield          :  %4d       <br/>", tmp);
+            snprintf(buf, sizeof(buf), "Dual wield          :  %4d       <br/>", tmp);
             pStat->append(buf);
         }
     }
@@ -577,7 +577,7 @@ int melee_bonus(class unit_data *att,
     def_wpn_knowledge = weapon_defense_skill(def, att_wpn_type);
     if (pStat)
     {
-        sprintf(buf, "Weapon skill        :  %4d   %4d<br/>", att_wpn_knowledge, def_wpn_knowledge);
+        snprintf(buf, sizeof(buf), "Weapon skill        :  %4d   %4d<br/>", att_wpn_knowledge, def_wpn_knowledge);
         pStat->append(buf);
     }
 
@@ -587,7 +587,7 @@ int melee_bonus(class unit_data *att,
 
         if (pStat)
         {
-            sprintf(buf, "Def not fighting att:          %4d<br/>", -25);
+            snprintf(buf, sizeof(buf), "Def not fighting att:          %4d<br/>", -25);
             pStat->append(buf);
         }
     }
@@ -599,7 +599,7 @@ int melee_bonus(class unit_data *att,
         def_bonus += 25;
         if (pStat)
         {
-            sprintf(buf, "Attacker cant see    :       %4d<br/>", 25);
+            snprintf(buf, sizeof(buf), "Attacker cant see    :       %4d<br/>", 25);
             pStat->append(buf);
         }
     }
@@ -609,7 +609,7 @@ int melee_bonus(class unit_data *att,
         att_bonus += 25;
         if (pStat)
         {
-            sprintf(buf, "Defender cant see    :  %4d<br/>", 25);
+            snprintf(buf, sizeof(buf), "Defender cant see    :  %4d<br/>", 25);
             pStat->append(buf);
         }
     }
@@ -621,7 +621,7 @@ int melee_bonus(class unit_data *att,
 
         if (pStat)
         {
-            sprintf(buf, "Slaying              :  %4d  <br/>", 50);
+            snprintf(buf, sizeof(buf), "Slaying              :  %4d  <br/>", 50);
             pStat->append(buf);
         }
     }
@@ -632,7 +632,7 @@ int melee_bonus(class unit_data *att,
 
         if (pStat)
         {
-            sprintf(buf, "Evil good protect     :       %4d  <br/>", 20);
+            snprintf(buf, sizeof(buf), "Evil good protect     :       %4d  <br/>", 20);
             pStat->append(buf);
         }
     }
@@ -647,7 +647,7 @@ int melee_bonus(class unit_data *att,
 
             if (pStat)
             {
-                sprintf(buf, "Armor bonus         :       %4d  <br/>", tmp);
+                snprintf(buf, sizeof(buf), "Armor bonus         :       %4d  <br/>", tmp);
                 pStat->append(buf);
             }
         }
@@ -674,15 +674,15 @@ int melee_bonus(class unit_data *att,
 
     if (pStat)
     {
-        sprintf(buf, " --- SUMMARY ---<br/>");
+        snprintf(buf, sizeof(buf), " --- SUMMARY ---<br/>");
         pStat->append(buf);
-        sprintf(buf, "Abil wpn vs def DB  :  %4d    %4d<br/>", att_abil, def_dex);
+        snprintf(buf, sizeof(buf), "Abil wpn vs def DB  :  %4d    %4d<br/>", att_abil, def_dex);
         pStat->append(buf);
-        sprintf(buf, "Wpn knowledge       :  %4d    %4d<br/>", att_wpn_knowledge, def_wpn_knowledge);
+        snprintf(buf, sizeof(buf), "Wpn knowledge       :  %4d    %4d<br/>", att_wpn_knowledge, def_wpn_knowledge);
         pStat->append(buf);
-        sprintf(buf, "Att bonus vs Def    :  %4d    %4d<br/>", att_bonus, def_bonus);
+        snprintf(buf, sizeof(buf), "Att bonus vs Def    :  %4d    %4d<br/>", att_bonus, def_bonus);
         pStat->append(buf);
-        // sprintf(buf, "Level vs level      :  %4d    %4d<br/>", CHAR_LEVEL(att), CHAR_LEVEL(def));
+        // snprintf(buf, sizeof(buf), "Level vs level      :  %4d    %4d<br/>", CHAR_LEVEL(att), CHAR_LEVEL(def));
         // pStat->append(buf);
     }
 
@@ -692,7 +692,7 @@ int melee_bonus(class unit_data *att,
 
         if (pStat)
         {
-            sprintf(buf, "Result              :  %4d<br/>", hm);
+            snprintf(buf, sizeof(buf), "Result              :  %4d<br/>", hm);
             pStat->append(buf);
         }
     }
@@ -701,7 +701,7 @@ int melee_bonus(class unit_data *att,
         hm = 2 * att_abil + 2 * att_wpn_knowledge + att_bonus;
         if (pStat)
         {
-            sprintf(buf, "Result (sleep def)  :  %4d<br/>", hm);
+            snprintf(buf, sizeof(buf), "Result (sleep def)  :  %4d<br/>", hm);
             pStat->append(buf);
         }
     }
@@ -715,10 +715,10 @@ int melee_bonus(class unit_data *att,
         int dam50 = weapon_damage(roll_boost(50, CHAR_LEVEL(att)) + hm, att_wpn_type, def_armour_type);
         int dam95 = weapon_damage(roll_boost(95, CHAR_LEVEL(att)) + hm, att_wpn_type, def_armour_type);
 
-        sprintf(buf, "Weapon dmg (5/50/95) : %4d %4d %4d<br/>", dam5, dam50, dam95);
+        snprintf(buf, sizeof(buf), "Weapon dmg (5/50/95) : %4d %4d %4d<br/>", dam5, dam50, dam95);
         pStat->append(buf);
 
-        sprintf(buf, "Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / MAX(1, (dam5 + dam50 + dam95) / 3));
+        snprintf(buf, sizeof(buf), "Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / MAX(1, (dam5 + dam50 + dam95) / 3));
         pStat->append(buf);
 
         pStat->append("</pre>");
