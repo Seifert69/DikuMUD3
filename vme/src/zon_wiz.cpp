@@ -55,7 +55,7 @@ int ball(struct spec_arg *sarg)
         for (i = 0; i < TOP_MAX; top[i++] = NULL)
             ;
 
-        sprintf(buf, "Searching for Objects of type %d with max value[%d]<br/>", v1, v2);
+        snprintf(buf, sizeof(buf), "Searching for Objects of type %d with max value[%d]<br/>", v1, v2);
 
         send_to_char(buf, sarg->activator);
 
@@ -73,7 +73,7 @@ int ball(struct spec_arg *sarg)
         for (i = 0; i < TOP_MAX; i++)
             if (top[i])
             {
-                sprintf(buf,
+                snprintf(buf, sizeof(buf),
                         "%4ld %-15s@%-15s  IN  %s [%s@%s]<br/>",
                         (signed long)OBJ_VALUE(top[i], v2),
                         UNIT_FI_NAME(top[i]),

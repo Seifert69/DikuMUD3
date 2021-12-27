@@ -100,7 +100,7 @@ int error_rod(struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    sprintf(filename, "%s%s.err", g_cServerConfig.m_zondir, zone->filename);
+    snprintf(filename, sizeof(filename), "%s%s.err", g_cServerConfig.m_zondir, zone->filename);
 
     if (!(fl = fopen(filename, "w")))
     {
@@ -137,7 +137,7 @@ int info_rod(struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    sprintf(filename, "%s%s.inf", g_cServerConfig.m_zondir, zone->filename);
+    snprintf(filename, sizeof(filename), "%s%s.inf", g_cServerConfig.m_zondir, zone->filename);
 
     if (!(fl = fopen(filename, "w")))
     {
@@ -344,7 +344,7 @@ int admin_obj(struct spec_arg *sarg)
     }
 
     if (zonelist)
-        sprintf(buf, "mail zone zonelist %s", exdp->descr.c_str());
+        snprintf(buf, sizeof(buf), "mail zone zonelist %s", exdp->descr.c_str());
     else if ((zone = unit_zone(sarg->activator)) == NULL)
     {
         send_to_char("You are inside no zone?", sarg->activator);
@@ -357,7 +357,7 @@ int admin_obj(struct spec_arg *sarg)
             send_to_char("Only overseers can use this function.<br/>", sarg->activator);
             return SFR_BLOCK;
         }
-        sprintf(buf, "mail zone %s %s", zone->filename, exdp->descr.c_str());
+        snprintf(buf, sizeof(buf), "mail zone %s %s", zone->filename, exdp->descr.c_str());
     }
 
     if (!system_check(sarg->activator, buf))

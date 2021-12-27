@@ -125,7 +125,7 @@ char *itoa(int n)
 {
     static char buf[32]; /* 32 digits can even cope with 64 bit ints */
 
-    sprintf(buf, "%d", n);
+    snprintf(buf, sizeof(buf), "%d", n);
     return buf;
 }
 
@@ -137,7 +137,7 @@ char *ltoa(long n)
 {
     static char buf[32]; /* 32 digits can even cope with 64 bit ints */
 
-    sprintf(buf, "%ld", n);
+    snprintf(buf, sizeof(buf), "%ld", n);
     return buf;
 }
 
@@ -1526,7 +1526,7 @@ const char *divcolor(const char *colorstr)
 {
     static char buf[256];
 
-    sprintf(buf, "<div class='%s'>", colorstr);
+    snprintf(buf, sizeof(buf), "<div class='%s'>", colorstr);
 
     return buf;
 }

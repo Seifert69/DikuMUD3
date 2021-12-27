@@ -280,21 +280,21 @@ void info_show_one(class unit_data *teacher,
 
         if (*req)
         {
-            sprintf(buf, "<div class='ca'>%s     %-20s %s</div><br/>", spc(4 * indent), text, req);
+            snprintf(buf, sizeof(buf), "<div class='ca'>%s     %-20s %s</div><br/>", spc(4 * indent), text, req);
             vect.push_back(std::make_pair(1000, buf));
             return;
         }
 
         if (current_points >= max_level)
         {
-            sprintf(buf, "<div class='ca'>%s%3d%% %-20s [Teacher at max]</div><br/>", spc(4 * indent), current_points, text);
+            snprintf(buf, sizeof(buf), "<div class='ca'>%s%3d%% %-20s [Teacher at max]</div><br/>", spc(4 * indent), current_points, text);
             vect.push_back(std::make_pair(1002, buf));
             return;
         }
 
         if (next_point == 0)
         {
-            sprintf(buf, "<div class='ca'>%s%3d%% %-20s [Practice next level]</div><br/>", spc(4 * indent), current_points, text);
+            snprintf(buf, sizeof(buf), "<div class='ca'>%s%3d%% %-20s [Practice next level]</div><br/>", spc(4 * indent), current_points, text);
             vect.push_back(std::make_pair(1001, buf));
         }
         else
@@ -302,7 +302,7 @@ void info_show_one(class unit_data *teacher,
             currency_t currency = local_currency(teacher);
 
             if (IS_SET(PC_FLAGS(pupil), PC_EXPERT))
-                sprintf(buf,
+                snprintf(buf, sizeof(buf),
                         "%s%s%3d%% %-20s [%3d%% of %3d%%, points %2d, %s] %s%s<br/>",
                         next_point >= 20 ? "<div class='ca'>" : "",
                         spc(4 * indent),
@@ -315,7 +315,7 @@ void info_show_one(class unit_data *teacher,
                         std::string(lvl, '*').c_str(),
                         next_point >= 20 ? "</div>" : "");
             else
-                sprintf(buf,
+                snprintf(buf, sizeof(buf),
                         "%s%s%3d%% %-20s [practice points %3d] %s%s<br/>",
                         next_point >= 20 ? "<div class='ca'>" : "",
                         spc(4 * indent),
@@ -330,7 +330,7 @@ void info_show_one(class unit_data *teacher,
     }
     else // category, not isleaf
     {
-        sprintf(buf, "%s     <a cmd='info #'>%s</a><br/>", spc(4 * indent), text);
+        snprintf(buf, sizeof(buf), "%s     <a cmd='info #'>%s</a><br/>", spc(4 * indent), text);
         vect.push_back(std::make_pair(-1, buf));
     }
 }
@@ -657,7 +657,7 @@ int practice(class unit_data *teacher,
 
     if (!TREE_ISLEAF(pColl->tree, pckt->teaches[teach_index].node))
     {
-        sprintf(buf,
+        snprintf(buf, sizeof(buf),
                 "It is not possible to practice the category '%s'.<br/>"
                 "The category is there to prevent you from being flooded with information.<br/>"
                 "Try the command: 'info %s' on the category itself,<br/>"
@@ -678,7 +678,7 @@ int practice(class unit_data *teacher,
     req = trainrestricted(pupil, &pColl->prof_table[pckt->teaches[teach_index].node], pckt->teaches[teach_index].min_glevel);
     if (*req)
     {
-        sprintf(buf,
+        snprintf(buf, sizeof(buf),
                 "To practice %s you need to meet the following requirements %s.<br/>",
                 pColl->text[pckt->teaches[teach_index].node],
                 req);
@@ -706,7 +706,7 @@ int practice(class unit_data *teacher,
 
     if (*pTrainValues->practice_points < cost)
     {
-        sprintf(buf, pckt->msgs.not_enough_points, cost);
+        snprintf(buf, sizeof(buf), pckt->msgs.not_enough_points, cost);
         act(buf, A_SOMEONE, teacher, cActParameter(), pupil, TO_VICT);
         if (CHAR_LEVEL(pupil) == START_LEVEL)
             send_to_char("Beginners note: Go on adventure and gain a level.<br/>"
@@ -727,7 +727,7 @@ int practice(class unit_data *teacher,
 
     if (CHAR_LEVEL(pupil) > PRACTICE_COST_LEVEL && !char_can_afford(pupil, amt, currency))
     {
-        sprintf(buf, pckt->msgs.not_enough_gold, money_string(amt, local_currency(pupil), TRUE));
+        snprintf(buf, sizeof(buf), pckt->msgs.not_enough_gold, money_string(amt, local_currency(pupil), TRUE));
         act(buf, A_SOMEONE, teacher, cActParameter(), pupil, TO_VICT);
         return TRUE;
     }
@@ -990,7 +990,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
         if (is_command(sarg->cmd, "info"))
         {
             info_show_leaves(sarg->owner, sarg->activator, pColl, pckt->teaches, &TrainValues);
-            sprintf(buf, "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
+            snprintf(buf, sizeof(buf), "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
             send_to_char(buf, sarg->activator);
         }
         else
@@ -1008,7 +1008,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
     if (str_ccmp(arg, "roots") == 0)
     {
         info_show_roots(sarg->owner, sarg->activator, pColl, &TrainValues, pckt->teaches);
-        sprintf(buf, "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
+        snprintf(buf, sizeof(buf), "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
         send_to_char(buf, sarg->activator);
         return SFR_BLOCK;
     }
@@ -1017,7 +1017,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
     {
         if (TrainValues.values == NULL)
         {
-            sprintf(buf, "<br/>Please specify ability, skill, spell, weapon before the auto keyword.<br/>");
+            snprintf(buf, sizeof(buf), "<br/>Please specify ability, skill, spell, weapon before the auto keyword.<br/>");
             send_to_char(buf, sarg->activator);
         }
         else
@@ -1030,7 +1030,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
 
             if (!exd)
             {
-                sprintf(buf, "Your guild is not setup properly. If you're already in a guild please contact an administrator.<br/>");
+                snprintf(buf, sizeof(buf), "Your guild is not setup properly. If you're already in a guild please contact an administrator.<br/>");
                 send_to_char(buf, sarg->activator);
                 return SFR_BLOCK;
             }
@@ -1054,7 +1054,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
                 }
             }
 
-            sprintf(buf,
+            snprintf(buf, sizeof(buf),
                     "<br/>Done auto practicing. You have %d ability and %d skill points left.<br/>",
                     PC_ABILITY_POINTS(sarg->activator),
                     PC_SKILL_POINTS(sarg->activator));
@@ -1082,7 +1082,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
     if (is_command(sarg->cmd, "info"))
     {
         info_one_skill(sarg->owner, sarg->activator, pColl, &TrainValues, pckt->teaches, index, &pckt->msgs);
-        sprintf(buf, "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
+        snprintf(buf, sizeof(buf), "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
         send_to_char(buf, sarg->activator);
     }
     else /* Practice! */
@@ -1093,7 +1093,7 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
         UNIT_MAX_HIT(sarg->activator) = hit_limit(sarg->activator);
 
         info_one_skill(sarg->owner, sarg->activator, pColl, &TrainValues, pckt->teaches, index, &pckt->msgs);
-        sprintf(buf, "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
+        snprintf(buf, sizeof(buf), "<br/>You have %d practice points left.<br/>", *(TrainValues.practice_points));
         send_to_char(buf, sarg->activator);
     }
 
