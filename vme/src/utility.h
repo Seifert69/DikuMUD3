@@ -8,6 +8,8 @@
 #ifndef _MUD_UTILITY_H
 #define _MUD_UTILITY_H
 
+#include <string>
+
 #ifdef MIN
     #undef MIN
 #endif
@@ -23,7 +25,7 @@ int MAX(int a, int b);
 int number(int from, int to);
 int dice(int number, int size);
 
-char *sprintbit(char *buf, ubit32 vektor, const char *names[]);
+const char *sprintbit(std::string &dest, ubit32 vektor, const char *names[]);
 char *sprinttype(char *buf, int type, const char *names[]);
 
 /* in game log stuff below */

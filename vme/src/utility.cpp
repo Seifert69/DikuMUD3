@@ -170,24 +170,30 @@ void error(const char *file, int line, const char *fmt, ...)
     abort();
 }
 
-char *sprintbit(char *buf, ubit32 vektor, const char *names[])
+// Clears dest and then writes the text "bits" into 'dest' and 
+// also return a char * to the same resulting string (&dest[0])
+const char *sprintbit(std::string &dest, ubit32 vektor, const char *names[])
 {
-    char *result = buf;
     long nr;
 
-    *result = '\0';
+    dest = "";
 
     for (nr = 0; vektor; vektor >>= 1, nr += names[nr] ? 1 : 0)
         if (IS_SET(1, vektor))
         {
-            sprintf(result, "%s ", names[nr] ? names[nr] : "UNDEFINED");
-            TAIL(result);
+            if (names[nr])
+            {
+                dest.append(names[nr]);
+                dest.append(" ");
+            }
+            else
+                dest.append("UNDEFINED ");
         }
 
-    if (!*buf)
-        strcpy(buf, "NOBITS");
+    if (dest.empty())
+        dest = "NOBITS";
 
-    return buf;
+    return &dest[0];
 }
 
 char *sprinttype(char *buf, int type, const char *names[])

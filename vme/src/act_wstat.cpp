@@ -11,6 +11,7 @@
 #include <ctype.h>
 #include <time.h>
 #include <map>
+#include <string>
 
 #ifdef _WINDOWS
     #include <winsock2.h>
@@ -202,8 +203,7 @@ static char *stat_buffer, *stat_p;
 static void stat_zone_reset(const char *indnt, struct zone_reset_cmd *zrip, class unit_data *ch)
 {
     static const char *nums[] = {"max", "zonemax", "local"};
-
-    char buf[100];
+    std::string bits;
     int i;
 
     *stat_p = 0;
@@ -241,7 +241,7 @@ static void stat_zone_reset(const char *indnt, struct zone_reset_cmd *zrip, clas
             break;
 
         case 3:
-            sprintf(stat_p, "Door at %s : %s : %s", zrip->fi[0]->name, dirs[zrip->num[0]], sprintbit(buf, zrip->num[1], unit_open_flags));
+            sprintf(stat_p, "Door at %s : %s : %s", zrip->fi[0]->name, dirs[zrip->num[0]], sprintbit(bits, zrip->num[1], unit_open_flags));
             break;
 
         case 4:
@@ -743,7 +743,8 @@ static void stat_func(const class unit_data *ch, class unit_data *u)
 {
     extern struct unit_function_array_type unit_function_array[];
 
-    char buf[4096], buf2[512];
+    char buf[4096];
+    std::string bits;
     class unit_fptr *f;
 
     if (!UNIT_FUNC(u))
@@ -776,7 +777,7 @@ static void stat_func(const class unit_data *ch, class unit_data *u)
                 "%s<br/><br/>",
                 f->priority,
                 unit_function_array[f->index].name,
-                sprintbit(buf2, f->flags, sfb_flags),
+                sprintbit(bits, f->flags, sfb_flags),
                 f->index,
                 f->heart_beat,
                 f->data ? unit_function_array[f->index].save_w_d == SD_ASCII ? (char *)f->data : "Has raw data." : "No data.");
@@ -786,7 +787,8 @@ static void stat_func(const class unit_data *ch, class unit_data *u)
 
 static void stat_normal(class unit_data *ch, class unit_data *u)
 {
-    char buf[MAX_STRING_LENGTH], tmpbuf1[512], tmpbuf2[256];
+    char buf[MAX_STRING_LENGTH];
+    std::string bits1, bits2;
     char *cname;
 
     /* Stat on the unit */
@@ -800,7 +802,7 @@ static void stat_normal(class unit_data *ch, class unit_data *u)
             "Unit status: %s [%s@%s] %d copies (CRC %lu)<br/>Namelist: %s<br/>"
             "Title: \"%s\"<br/>Outside_descr:<br/>\"%s\"<br/>"
             "Inside_descr:<br/>\"%s\"<br/>",
-            sprintbit(tmpbuf2, UNIT_TYPE(u), unit_status),
+            sprintbit(bits2, UNIT_TYPE(u), unit_status),
             UNIT_FI_NAME(u),
             UNIT_FI_ZONENAME(u),
             UNIT_FILE_INDEX(u) ? UNIT_FILE_INDEX(u)->no_in_mem : -1,
@@ -825,8 +827,8 @@ static void stat_normal(class unit_data *ch, class unit_data *u)
             UNIT_MINV(u),
             UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing",
             UNIT_CONTAINS(u) ? "has contents" : "is empty",
-            sprintbit(tmpbuf2, UNIT_MANIPULATE(u), unit_manipulate),
-            sprintbit(tmpbuf1, UNIT_FLAGS(u), unit_flags),
+            sprintbit(bits2, UNIT_MANIPULATE(u), unit_manipulate),
+            sprintbit(bits1, UNIT_FLAGS(u), unit_flags),
             (signed long)UNIT_HIT(u),
             (signed long)UNIT_MAX_HIT(u),
             UNIT_ALIGNMENT(u));
@@ -836,7 +838,7 @@ static void stat_normal(class unit_data *ch, class unit_data *u)
             "Key name: [%s]  Open flags: %s  Open Diff: %d<br/>"
             "Base weight : [%d] Weight : [%d] Capacity : [%d] Size [%d]<br/>",
             UNIT_KEY(u) ? UNIT_KEY(u) : "none",
-            sprintbit(tmpbuf1, UNIT_OPEN_FLAGS(u), unit_open_flags),
+            sprintbit(bits1, UNIT_OPEN_FLAGS(u), unit_open_flags),
             UNIT_OPEN_DIFF(u),
             UNIT_BASE_WEIGHT(u),
             UNIT_WEIGHT(u),
@@ -1083,7 +1085,9 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
          {0, 0, 0, 0, 0}} /*SHIELD    */
     };
 
-    char buf[4096], tmpbuf1[256], tmpbuf2[256];
+    char buf[4096];
+    char tmp[512];
+    std::string bits1, bits2;
     int i;
 
     if (IS_CHAR(u))
@@ -1112,7 +1116,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
                 IS_PC(u) ? sprinttype(NULL, CHAR_RACE(u), pc_races) : itoa(CHAR_RACE(u)),
                 char_carry_w_limit(u),
                 char_carry_n_limit(u),
-                sprintbit(tmpbuf1, CHAR_FLAGS(u), char_flags),
+                sprintbit(bits1, CHAR_FLAGS(u), char_flags),
                 (signed long)CHAR_EXP(u),
                 CHAR_OFFENSIVE(u),
                 CHAR_DEFENSIVE(u),
@@ -1146,7 +1150,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
             tid1 = age(u);
             tid2 = real_time_passed((time_t)PC_TIME(u).played, 0);
 
-            strcpy(tmpbuf2, ctime(&PC_TIME(u).connect));
+            strcpy(tmp, ctime(&PC_TIME(u).connect));
             snprintf(buf, sizeof(buf),
                     "----------------- PLAYER -------------------<br/>"
                     "Filename [%s]  Unique ID [%ld]  BBS [%3d]  Cracks [%2d]<br/>"
@@ -1177,7 +1181,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
                     PC_COND(u, FULL),
                     PC_COND(u, THIRST),
                     PC_ACCOUNT(u).last4 == -1 ? "NONE" : "SET",
-                    sprintbit(tmpbuf1, PC_FLAGS(u), pc_flags),
+                    sprintbit(bits1, PC_FLAGS(u), pc_flags),
                     tid1.year,
                     tid1.month,
                     tid1.day,
@@ -1186,7 +1190,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
                     tid2.day,
                     tid2.hours,
                     PC_TIME(u).played,
-                    tmpbuf2,
+                    tmp,
                     ctime(&PC_TIME(u).creation));
 
             send_to_char(buf, ch);
@@ -1198,7 +1202,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
                     "Default position: %s<br/>"
                     "NPC-flags: %s<br/>",
                     sprinttype(NULL, NPC_DEFAULT(u), char_pos),
-                    sprintbit(tmpbuf1, NPC_FLAGS(u), npc_flags));
+                    sprintbit(bits1, NPC_FLAGS(u), npc_flags));
             send_to_char(buf, ch);
         }
     }
@@ -1221,7 +1225,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
                 (signed long)OBJ_VALUE(u, 4),
                 OBJ_RESISTANCE(u),
                 stat_obj_data(u, wstat_obj_type),
-                sprintbit(tmpbuf1, OBJ_FLAGS(u), obj_flags),
+                sprintbit(bits1, OBJ_FLAGS(u), obj_flags),
                 (unsigned long)OBJ_PRICE(u),
                 (unsigned long)OBJ_PRICE_DAY(u),
                 sprinttype(NULL, OBJ_EQP_POS(u), equip_pos));
@@ -1247,7 +1251,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
             if (ROOM_EXIT(u, i))
             {
                 cname = ROOM_EXIT(u, i)->open_name.catnames();
-                sprintbit(tmpbuf2, ROOM_EXIT(u, i)->exit_info, unit_open_flags);
+                sprintbit(bits2, ROOM_EXIT(u, i)->exit_info, unit_open_flags);
 
                 if (ROOM_EXIT(u, i)->to_room)
                 {
@@ -1261,7 +1265,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
                             UNIT_FI_ZONENAME(ROOM_EXIT(u, i)->to_room),
                             UNIT_TITLE_STRING(ROOM_EXIT(u, i)->to_room),
                             cname,
-                            tmpbuf2,
+                            &bits2[0],
                             ROOM_EXIT(u, i)->difficulty,
                             ROOM_EXIT(u, i)->key ? ROOM_EXIT(u, i)->key : "");
                 }
@@ -1273,7 +1277,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
                             "   Exit Bits: [%s]<br/>",
                             dirs[i],
                             cname,
-                            tmpbuf2);
+                            &bits2[0]);
                 }
                 FREE(cname);
                 send_to_char(buf, ch);
