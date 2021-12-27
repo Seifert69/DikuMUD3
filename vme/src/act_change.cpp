@@ -306,7 +306,7 @@ void do_change(class unit_data *ch, char *arg, const struct command_info *cmd)
 
         for (const char **p = args; *p; p++)
         {
-            sprintf(buf, "   %s<br/>", *p);
+            snprintf(buf, sizeof(buf), "   %s<br/>", *p);
             send_to_char(buf, ch);
         }
 

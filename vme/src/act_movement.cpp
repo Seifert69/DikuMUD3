@@ -324,11 +324,11 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
             return 0;
         }
 
-        sprintf(aLeaveOther, "$2n leaves %s.", dirs[direction]);
+        snprintf(aLeaveOther, sizeof(aLeaveOther), "$2n leaves %s.", dirs[direction]);
         ls = single_unit_messg(room_from, "$leave_s", direction, aLeaveSelf);
         lo = single_unit_messg(room_from, "$leave_o", direction, aLeaveOther);
 
-        sprintf(aArrOther, "$2n has arrived from %s.", enter_dirs[rev_dir[direction]]);
+        snprintf(aArrOther, sizeof(aArrOther), "$2n has arrived from %s.", enter_dirs[rev_dir[direction]]);
         as = single_unit_messg(room_to, "$arrive_s", rev_dir[direction], aArrSelf);
         ao = single_unit_messg(room_to, "$arrive_o", rev_dir[direction], aArrOther);
     }
@@ -344,10 +344,10 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
 
         if (IS_CHAR(mover)) // Mounted on a steed
         {
-            sprintf(aLeaveSelf, "You ride your $3N %s.", dirs[direction]);
-            sprintf(aLeaveOther, "$2n rides $2s $3N %s.", dirs[direction]);
-            sprintf(aArrOther, "$2n rides $2s $3N in from %s.", enter_dirs[rev_dir[direction]]);
-            sprintf(aPassengersOther, "$2n rides $2s $3N %s.", dirs[direction]);
+            snprintf(aLeaveSelf, sizeof(aLeaveSelf), "You ride your $3N %s.", dirs[direction]);
+            snprintf(aLeaveOther, sizeof(aLeaveOther), "$2n rides $2s $3N %s.", dirs[direction]);
+            snprintf(aArrOther, sizeof(aArrOther), "$2n rides $2s $3N in from %s.", enter_dirs[rev_dir[direction]]);
+            snprintf(aPassengersOther, sizeof(aPassengersOther), "$2n rides $2s $3N %s.", dirs[direction]);
 
             if (CHAR_POS(mover) < POSITION_STANDING)
             {
@@ -376,17 +376,17 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
         {
             if (OBJ_TYPE(mover) == ITEM_VEHICLE)
             {
-                sprintf(aLeaveSelf, "You drive your $3N %s.", dirs[direction]);
-                sprintf(aLeaveOther, "$2n drives $2s $3N %s.", dirs[direction]);
-                sprintf(aArrOther, "$2n drives $2s $3N in from %s.", enter_dirs[rev_dir[direction]]);
-                sprintf(aPassengersOther, "$2n drives $2s $3N %s.", dirs[direction]);
+                snprintf(aLeaveSelf, sizeof(aLeaveSelf), "You drive your $3N %s.", dirs[direction]);
+                snprintf(aLeaveOther, sizeof(aLeaveOther), "$2n drives $2s $3N %s.", dirs[direction]);
+                snprintf(aArrOther, sizeof(aArrOther), "$2n drives $2s $3N in from %s.", enter_dirs[rev_dir[direction]]);
+                snprintf(aPassengersOther, sizeof(aPassengersOther), "$2n drives $2s $3N %s.", dirs[direction]);
             }
             else
             {
-                sprintf(aLeaveSelf, "You sail your $3N %s.", dirs[direction]);
-                sprintf(aLeaveOther, "$2n sails $2s $3N %s.", dirs[direction]);
-                sprintf(aArrOther, "$2n sails $2s $3N in from %s.", enter_dirs[rev_dir[direction]]);
-                sprintf(aPassengersOther, "$2n sails $2s $3N %s.", dirs[direction]);
+                snprintf(aLeaveSelf, sizeof(aLeaveSelf), "You sail your $3N %s.", dirs[direction]);
+                snprintf(aLeaveOther, sizeof(aLeaveOther), "$2n sails $2s $3N %s.", dirs[direction]);
+                snprintf(aArrOther, sizeof(aArrOther), "$2n sails $2s $3N in from %s.", enter_dirs[rev_dir[direction]]);
+                snprintf(aPassengersOther, sizeof(aPassengersOther), "$2n sails $2s $3N %s.", dirs[direction]);
             }
 
             if (CHAR_POS(ch) < POSITION_STANDING)

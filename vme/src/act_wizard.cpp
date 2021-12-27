@@ -65,7 +65,7 @@ void do_timewarp(class unit_data *ch, char *argument, const struct command_info 
     }
 
     char buf[256];
-    sprintf(buf, "Time warping for %d seconds<br/>", i);
+    snprintf(buf, sizeof(buf), "Time warping for %d seconds<br/>", i);
     send_to_char(buf, ch);
 
     void timewarp_end(void *p1, void *p2);
@@ -108,7 +108,7 @@ void do_users(class unit_data *ch, char *argument, const struct command_info *cm
             if (IS_IMMORTAL(d->character))
             {
                 /* an immortal character */
-                sprintf(tmp,
+                snprintf(tmp, sizeof(tmp), 
                         "&lt;I%3d/%3d&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
                         CHAR_LEVEL(CHAR_ORIGINAL(d->character)),
                         UNIT_MINV(CHAR_ORIGINAL(d->character)),
@@ -122,7 +122,7 @@ void do_users(class unit_data *ch, char *argument, const struct command_info *cm
             else
             {
                 /* a mortal character */
-                sprintf(tmp,
+                snprintf(tmp, sizeof(tmp), 
                         "&lt; %6d%c&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
                         PC_VIRTUAL_LEVEL(CHAR_ORIGINAL(d->character)),
                         UNIT_MINV(CHAR_ORIGINAL(d->character)) ? '*' : ' ',
@@ -144,7 +144,7 @@ void do_users(class unit_data *ch, char *argument, const struct command_info *cm
         }
     }
 
-    sprintf(tmp, "<br/>%d visible players connected.<br/>", users);
+    snprintf(tmp, sizeof(tmp), "<br/>%d visible players connected.<br/>", users);
 
     len += strlen(tmp);
     if (cur_size < len + 1)

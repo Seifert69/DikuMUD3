@@ -92,16 +92,16 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
         {
             if (UPC(ch)->color.remove(full_name))
             {
-                sprintf(cbuf, "Reseting %s to sytem colors.<br/>", full_name);
+                snprintf(cbuf, sizeof(cbuf), "Reseting %s to sytem colors.<br/>", full_name);
                 // send_to_char(cbuf, ch);
-                // sprintf (cbuf, "%s%s%s", CONTROL_COLOR_REMOVE, full_name, CONTROL_COLOR_END);
+                // s printf (cbuf, "%s%s%s", CONTROL_COLOR_REMOVE, full_name, CONTROL_COLOR_END);
             }
             else
-                sprintf(cbuf, "Error: Can not reset %s to default color, report to admin.<br/>", full_name);
+                snprintf(cbuf, sizeof(cbuf), "Error: Can not reset %s to default color, report to admin.<br/>", full_name);
         }
         else
         {
-            sprintf(cbuf, "%s is already set to system color.<br/>", full_name);
+            snprintf(cbuf, sizeof(cbuf), "%s is already set to system color.<br/>", full_name);
         }
         send_to_char(cbuf, ch);
         return;
@@ -109,7 +109,7 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
 
     if (!is_forground(fore))
     {
-        sprintf(cbuf, "Invalid color for the forground color you typed '%s'<br/>", fore);
+        snprintf(cbuf, sizeof(cbuf), "Invalid color for the forground color you typed '%s'<br/>", fore);
         send_to_char(cbuf, ch);
         return;
     }
@@ -122,26 +122,26 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
     }
     if (!is_background(back))
     {
-        sprintf(cbuf, "Invalid color for the background color you typed '%s'<br/>", back);
+        snprintf(cbuf, sizeof(cbuf), "Invalid color for the background color you typed '%s'<br/>", back);
         send_to_char(cbuf, ch);
         return;
     }
 
-    sprintf(cbuf, "%s %s", fore, back);
+    snprintf(cbuf, sizeof(cbuf), "%s %s", fore, back);
 
     if (change == TRUE)
     {
         std::string mystr;
 
         mystr = UPC(ch)->color.change(full_name, cbuf);
-        sprintf(cbuf, "Color %s changed.<br/>", mystr.c_str());
+        snprintf(cbuf, sizeof(cbuf), "Color %s changed.<br/>", mystr.c_str());
         send_to_char(cbuf, ch);
         return;
     }
     if ((add == TRUE) && (change == FALSE))
     {
         print_str = UPC(ch)->color.insert(full_name, cbuf);
-        sprintf(cbuf, "Color %s changed.<br/>", print_str);
+        snprintf(cbuf, sizeof(cbuf), "Color %s changed.<br/>", print_str);
         send_to_char(cbuf, ch);
         FREE(print_str);
         return;

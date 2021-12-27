@@ -469,7 +469,7 @@ static struct alias_head *str_to_alias(const char *str)
             ah->owner[strlen(ah->owner) - 1] = '\0'; /* Cut of tilde */
         }
         else
-            sprintf(ah->owner, "old_hat");
+            snprintf(ah->owner, sizeof(ah->owner), "old_hat");
 
         while (*str)
         {

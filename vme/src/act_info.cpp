@@ -70,7 +70,7 @@ void player_where(class unit_data *ch, char *arg)
             (str_is_empty(arg) || !str_ccmp(arg, UNIT_NAME(d->character))) && CHAR_LEVEL(ch) >= UNIT_MINV(d->character) &&
             d->original == NULL && CHAR_CAN_SEE(ch, d->character) && unit_zone(ch) == unit_zone(d->character))
         {
-            sprintf(buf, "%-30s at %s<br/>", UNIT_NAME(d->character), TITLENAME(unit_room(d->character)));
+            snprintf(buf, sizeof(buf), "%-30s at %s<br/>", UNIT_NAME(d->character), TITLENAME(unit_room(d->character)));
             send_to_char(buf, ch);
             any = TRUE;
         }
@@ -110,11 +110,11 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
             {
                 nCount++;
                 if (d->original) /* If switched */
-                    sprintf(buf2, " In body of %s", UNIT_NAME(d->character));
+                    snprintf(buf2, sizeof(buf2), " In body of %s", UNIT_NAME(d->character));
                 else
                     buf2[0] = '\0';
 
-                sprintf(buf1,
+                snprintf(buf1, sizeof(buf1),
                         "%-20s - %s [%s]%s<br/>",
                         UNIT_NAME(CHAR_ORIGINAL(d->character)),
                         UNIT_SEE_TITLE(ch, UNIT_IN(d->character)),
@@ -135,7 +135,7 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
                 if (nCount++ > 100)
                     continue;
 
-                sprintf(buf1,
+                snprintf(buf1, sizeof(buf1),
                         "%-30s - %s [%s]<br/>",
                         TITLENAME(i),
                         UNIT_SEE_TITLE(ch, UNIT_IN(i)),
