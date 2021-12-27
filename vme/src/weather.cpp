@@ -74,7 +74,6 @@ struct time_info_data mud_date(time_t t)
     return mdate;
 }
 
-
 struct time_info_data mud_date(void)
 {
     extern int tics;
@@ -114,7 +113,7 @@ struct time_info_data age(class unit_data *ch)
 {
     static struct time_info_data player_age;
 
-    if (IS_PC(ch))
+    if(IS_PC(ch))
         player_age = mud_time_passed(time(0), PC_TIME(ch).birth);
     else
         player_age = mud_time_passed(0, 0);
@@ -125,30 +124,30 @@ struct time_info_data age(class unit_data *ch)
 /* Here comes the code */
 static void another_hour(struct time_info_data time_data)
 {
-    switch (time_data.hours)
+    switch(time_data.hours)
     {
-    case 5:
-        sunlight = SUN_RISE;
-        send_to_outdoor("The sun rises in the east.<br/>");
-        break;
+        case 5:
+            sunlight = SUN_RISE;
+            send_to_outdoor("The sun rises in the east.<br/>");
+            break;
 
-    case 6:
-        sunlight = SUN_LIGHT;
-        send_to_outdoor("The day has begun.<br/>");
-        break;
+        case 6:
+            sunlight = SUN_LIGHT;
+            send_to_outdoor("The day has begun.<br/>");
+            break;
 
-    case 21:
-        sunlight = SUN_SET;
-        send_to_outdoor("The sun slowly disappears in the west.<br/>");
-        break;
+        case 21:
+            sunlight = SUN_SET;
+            send_to_outdoor("The sun slowly disappears in the west.<br/>");
+            break;
 
-    case 22:
-        sunlight = SUN_DARK;
-        send_to_outdoor("The night has begun.<br/>");
-        break;
+        case 22:
+            sunlight = SUN_DARK;
+            send_to_outdoor("The night has begun.<br/>");
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -156,11 +155,11 @@ static void weather_change(class zone_type *zone, struct time_info_data time_dat
 {
     int diff, change;
 
-    if (time_data.month <= 2) /* Winter */
+    if(time_data.month <= 2) /* Winter */
         diff = (zone->weather.pressure <= (zone->weather.base - 25) ? 2 : -2);
-    else if (time_data.month <= 4) /* Spring */
+    else if(time_data.month <= 4) /* Spring */
         diff = (zone->weather.pressure <= (zone->weather.base + 5) ? 2 : -2);
-    else if (time_data.month <= 6) /* Summer */
+    else if(time_data.month <= 6) /* Summer */
         diff = (zone->weather.pressure <= (zone->weather.base + 20) ? 2 : -2);
     else /* Fall   */
         diff = (zone->weather.pressure <= (zone->weather.base - 5) ? 2 : -2);
@@ -177,102 +176,102 @@ static void weather_change(class zone_type *zone, struct time_info_data time_dat
 
     change = 0;
 
-    switch (zone->weather.sky)
+    switch(zone->weather.sky)
     {
-    case SKY_CLOUDLESS:
-    {
-        if (zone->weather.pressure < 990)
-            change = 1;
-        else if (zone->weather.pressure < 1010)
-            if (dice(1, 4) == 1)
+        case SKY_CLOUDLESS:
+        {
+            if(zone->weather.pressure < 990)
                 change = 1;
-        break;
-    }
-    case SKY_CLOUDY:
-    {
-        if (zone->weather.pressure < 970)
-            change = 2;
-        else if (zone->weather.pressure < 990)
-            if (dice(1, 4) == 1)
+            else if(zone->weather.pressure < 1010)
+                if(dice(1, 4) == 1)
+                    change = 1;
+            break;
+        }
+        case SKY_CLOUDY:
+        {
+            if(zone->weather.pressure < 970)
                 change = 2;
-            else
-                change = 0;
-        else if (zone->weather.pressure > 1030)
-            if (dice(1, 4) == 1)
-                change = 3;
+            else if(zone->weather.pressure < 990)
+                if(dice(1, 4) == 1)
+                    change = 2;
+                else
+                    change = 0;
+            else if(zone->weather.pressure > 1030)
+                if(dice(1, 4) == 1)
+                    change = 3;
 
-        break;
-    }
-    case SKY_RAINING:
-    {
-        if (zone->weather.pressure < 970)
-            if (dice(1, 4) == 1)
-                change = 4;
-            else
-                change = 0;
-        else if (zone->weather.pressure > 1030)
-            change = 5;
-        else if (zone->weather.pressure > 1010)
-            if (dice(1, 4) == 1)
+            break;
+        }
+        case SKY_RAINING:
+        {
+            if(zone->weather.pressure < 970)
+                if(dice(1, 4) == 1)
+                    change = 4;
+                else
+                    change = 0;
+            else if(zone->weather.pressure > 1030)
                 change = 5;
+            else if(zone->weather.pressure > 1010)
+                if(dice(1, 4) == 1)
+                    change = 5;
 
-        break;
-    }
-    case SKY_LIGHTNING:
-    {
-        if (zone->weather.pressure > 1010)
-            change = 6;
-        else if (zone->weather.pressure > 990)
-            if (dice(1, 4) == 1)
+            break;
+        }
+        case SKY_LIGHTNING:
+        {
+            if(zone->weather.pressure > 1010)
                 change = 6;
+            else if(zone->weather.pressure > 990)
+                if(dice(1, 4) == 1)
+                    change = 6;
 
-        break;
+            break;
+        }
+        default:
+        {
+            change = 0;
+            zone->weather.sky = SKY_CLOUDLESS;
+            break;
+        }
     }
-    default:
+
+    switch(change)
     {
-        change = 0;
-        zone->weather.sky = SKY_CLOUDLESS;
-        break;
-    }
-    }
+        case 0:
+            break;
 
-    switch (change)
-    {
-    case 0:
-        break;
+        case 1:
+            send_to_zone_outdoor(zone, "The sky is getting cloudy.<br/>");
+            zone->weather.sky = SKY_CLOUDY;
+            break;
 
-    case 1:
-        send_to_zone_outdoor(zone, "The sky is getting cloudy.<br/>");
-        zone->weather.sky = SKY_CLOUDY;
-        break;
+        case 2:
+            send_to_zone_outdoor(zone, "It starts to rain.<br/>");
+            zone->weather.sky = SKY_RAINING;
+            break;
 
-    case 2:
-        send_to_zone_outdoor(zone, "It starts to rain.<br/>");
-        zone->weather.sky = SKY_RAINING;
-        break;
+        case 3:
+            send_to_zone_outdoor(zone, "The clouds disappear.<br/>");
+            zone->weather.sky = SKY_CLOUDLESS;
+            break;
 
-    case 3:
-        send_to_zone_outdoor(zone, "The clouds disappear.<br/>");
-        zone->weather.sky = SKY_CLOUDLESS;
-        break;
+        case 4:
+            send_to_zone_outdoor(zone, "Lightning starts to show in the sky.<br/>");
+            zone->weather.sky = SKY_LIGHTNING;
+            break;
 
-    case 4:
-        send_to_zone_outdoor(zone, "Lightning starts to show in the sky.<br/>");
-        zone->weather.sky = SKY_LIGHTNING;
-        break;
+        case 5:
+            send_to_zone_outdoor(zone, "The rain stopped.<br/>");
+            zone->weather.sky = SKY_CLOUDY;
+            break;
 
-    case 5:
-        send_to_zone_outdoor(zone, "The rain stopped.<br/>");
-        zone->weather.sky = SKY_CLOUDY;
-        break;
+        case 6:
+            send_to_zone_outdoor(zone, "The lightning has stopped.<br/>");
+            zone->weather.sky = SKY_RAINING;
+            break;
 
-    case 6:
-        send_to_zone_outdoor(zone, "The lightning has stopped.<br/>");
-        zone->weather.sky = SKY_RAINING;
-        break;
-
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -284,7 +283,7 @@ void update_time_and_weather(void)
 
     another_hour(time_info);
 
-    for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.begin(); z++)
+    for(auto z = zone_info.mmp.begin(); z != zone_info.mmp.begin(); z++)
         weather_change(z->second, time_info);
 }
 
@@ -312,34 +311,33 @@ void boot_time_and_weather(void)
 
     time_info = mud_time_passed(time(0), beginning_of_time);
 
-    if (time_info.hours == 5)
+    if(time_info.hours == 5)
         sunlight = SUN_RISE;
-    else if (6 <= time_info.hours && time_info.hours <= 20)
+    else if(6 <= time_info.hours && time_info.hours <= 20)
         sunlight = SUN_LIGHT;
-    else if (time_info.hours == 21)
+    else if(time_info.hours == 21)
         sunlight = SUN_SET;
     else
         sunlight = SUN_DARK;
 
-    slog(LOG_OFF, 0, "   Current Gametime: %dH %dD %dM %dY.",
-         time_info.hours, time_info.day, time_info.month, time_info.year);
+    slog(LOG_OFF, 0, "   Current Gametime: %dH %dD %dM %dY.", time_info.hours, time_info.day, time_info.month, time_info.year);
 
-    for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.begin(); z++)
+    for(auto z = zone_info.mmp.begin(); z != zone_info.mmp.begin(); z++)
     {
         z->second->weather.pressure = z->second->weather.base;
 
-        if (time_info.month >= 7 && time_info.month <= 12)
+        if(time_info.month >= 7 && time_info.month <= 12)
             z->second->weather.pressure += number(-6, 6);
         else
             z->second->weather.pressure += number(-10, 10);
 
         z->second->weather.change = number(-2, 2);
 
-        if (z->second->weather.pressure <= 980)
+        if(z->second->weather.pressure <= 980)
             z->second->weather.sky = SKY_LIGHTNING;
-        else if (z->second->weather.pressure <= 1000)
+        else if(z->second->weather.pressure <= 1000)
             z->second->weather.sky = SKY_RAINING;
-        else if (z->second->weather.pressure <= 1020)
+        else if(z->second->weather.pressure <= 1020)
             z->second->weather.sky = SKY_CLOUDY;
         else
             z->second->weather.sky = SKY_CLOUDLESS;

@@ -12,9 +12,7 @@
 extern struct command_info *cmdlist;
 int char_is_playing(class unit_data *u);
 int descriptor_is_playing(class descriptor_data *d);
-void set_descriptor_fptr(class descriptor_data *d,
-                         void (*fptr)(class descriptor_data *, char *),
-                         ubit1 call);
+void set_descriptor_fptr(class descriptor_data *d, void (*fptr)(class descriptor_data *, char *), ubit1 call);
 void descriptor_interpreter(class descriptor_data *d, char *arg);
 void interpreter_string_add(class descriptor_data *d, char *str);
 
@@ -44,8 +42,7 @@ struct command_info
 
     ubit8 minimum_position;
 
-    void (*cmd_fptr)(class unit_data *ch, char *arg,
-                     const struct command_info *c);
+    void (*cmd_fptr)(class unit_data *ch, char *arg, const struct command_info *c);
 
     ubit8 minimum_level;
     ubit8 log_level; /* For logging certain immortal commands */
@@ -96,8 +93,7 @@ ubit1 cmd_is_abbrev(class unit_data *ch, const struct command_info *cmd);
 /* Interpreter routines */
 void wrong_position(class unit_data *ch);
 void command_interpreter(class unit_data *ch, const char *cmdArg);
-void argument_interpreter(const char *argument,
-                          char *first_arg, char *second_arg);
+void argument_interpreter(const char *argument, char *first_arg, char *second_arg);
 void half_chop(char *string, char *arg1, char *arg2);
 
 /* The routine to check for special routines */
@@ -105,19 +101,25 @@ void half_chop(char *string, char *arg1, char *arg2);
 int unit_function_scan(class unit_data *u, struct spec_arg *sarg);
 int function_activate(class unit_data *u, struct spec_arg *sarg);
 #ifdef DMSERVER
-int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt,
-                  class unit_data *extra_target = NULL, const char *to = NULL);
+int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class unit_data *extra_target = NULL, const char *to = NULL);
 #endif
-int send_preprocess(class unit_data *ch, const struct command_info *cmd,
-                    char *arg);
-void send_done(class unit_data *activator, class unit_data *medium,
-               class unit_data *target, int i,
-               const struct command_info *cmd, const char *arg,
-               class unit_data *extra_target = NULL, const char *to = NULL);
-int send_ack(class unit_data *activator, class unit_data *medium,
-             class unit_data *target, int *i,
-             const struct command_info *cmd, const char *arg,
-             class unit_data *extra_target = NULL, char *to = NULL);
+int send_preprocess(class unit_data *ch, const struct command_info *cmd, char *arg);
+void send_done(class unit_data *activator,
+               class unit_data *medium,
+               class unit_data *target,
+               int i,
+               const struct command_info *cmd,
+               const char *arg,
+               class unit_data *extra_target = NULL,
+               const char *to = NULL);
+int send_ack(class unit_data *activator,
+             class unit_data *medium,
+             class unit_data *target,
+             int *i,
+             const struct command_info *cmd,
+             const char *arg,
+             class unit_data *extra_target = NULL,
+             char *to = NULL);
 int send_message(class unit_data *ch, char *arg);
 int send_edit(class unit_data *ch, char *arg);
 int send_death(class unit_data *ch);
@@ -157,6 +159,5 @@ void do_crash(class unit_data *, char *, const struct command_info *);
 void do_wizlock(class unit_data *, char *, const struct command_info *);
 void do_account(class unit_data *, char *, const struct command_info *);
 void do_move(class unit_data *, char *, const struct command_info *);
-
 
 #endif /* _MUD_INTERPRETER_H */

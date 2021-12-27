@@ -26,8 +26,15 @@ struct arg_type
     int bWebSockets;
 };
 
-#define Assert(a,b) \
-   do { if (!(a)) {fprintf(stderr, "%s\n", b); assert(a);} } while (0);
+#define Assert(a, b)                                                                                                                       \
+    do                                                                                                                                     \
+    {                                                                                                                                      \
+        if(!(a))                                                                                                                           \
+        {                                                                                                                                  \
+            fprintf(stderr, "%s\n", b);                                                                                                    \
+            assert(a);                                                                                                                     \
+        }                                                                                                                                  \
+    } while(0);
 
 extern int g_bHadAlarm;
 extern struct arg_type mplex_arg;

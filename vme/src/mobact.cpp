@@ -32,18 +32,17 @@ void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
     assert(!u->is_destructed());
     assert(!fptr->is_destructed());
 
-    if ((ticks = fptr->heart_beat) > 0)
+    if((ticks = fptr->heart_beat) > 0)
     {
-        if (ticks < PULSE_SEC)
+        if(ticks < PULSE_SEC)
         {
-            szonelog(boot_zone, "Error: %s@%s had heartbeat of %d.",
-                     UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), ticks);
-            if ((fptr->index == SFUN_DILCOPY_INTERNAL) || (fptr->index == SFUN_DIL_INTERNAL))
+            szonelog(boot_zone, "Error: %s@%s had heartbeat of %d.", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), ticks);
+            if((fptr->index == SFUN_DILCOPY_INTERNAL) || (fptr->index == SFUN_DIL_INTERNAL))
             {
-                class dilprg * p;
-                p = (class dilprg *) fptr->data;
+                class dilprg *p;
+                p = (class dilprg *)fptr->data;
 
-                if (p)
+                if(p)
                 {
                     szonelog(boot_zone, "DIL [%s] had heartbeat issue", p->fp->tmpl->prgname);
                 }
@@ -51,9 +50,9 @@ void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
             ticks = fptr->heart_beat = PULSE_SEC * 3;
         }
 
-        if (IS_SET(fptr->flags, SFB_RANTIME))
+        if(IS_SET(fptr->flags, SFB_RANTIME))
             ticks = number(ticks - ticks / 2, ticks + ticks / 2);
-        if (fptr->event)
+        if(fptr->event)
             events.remove(special_event, u, fptr);
         fptr->event = events.add(ticks, special_event, u, fptr);
         //      events.add(ticks, special_event, u, fptr);
@@ -74,7 +73,6 @@ void ResetFptrTimer(class unit_data *u, class unit_fptr *fptr)
     membug_verify(fptr->data);
 }
 
-
 void special_event(void *p1, void *p2)
 {
     class unit_data *u = (class unit_data *)p1;
@@ -89,47 +87,47 @@ void special_event(void *p1, void *p2)
 
     extern struct command_info cmd_auto_tick;
 
-/*    if (fptr->index == SFUN_DIL_INTERNAL)
-        if (fptr && fptr->data)
-                if (strcmp(((class dilprg *) fptr->data)->fp->tmpl->prgname, "wander_zones")==0)
-                {
-                    if (strcmp(UNIT_FI_ZONENAME(u), "gnome") == 0)
-                        slog(LOG_ALL, 0, "The wanderer!");
-                } MS2020 debug */
+    /*    if (fptr->index == SFUN_DIL_INTERNAL)
+            if (fptr && fptr->data)
+                    if (strcmp(((class dilprg *) fptr->data)->fp->tmpl->prgname, "wander_zones")==0)
+                    {
+                        if (strcmp(UNIT_FI_ZONENAME(u), "gnome") == 0)
+                            slog(LOG_ALL, 0, "The wanderer!");
+                    } MS2020 debug */
 
-    if (g_cServerConfig.m_bNoSpecials)
+    if(g_cServerConfig.m_bNoSpecials)
         return;
 
-    if (!u)
+    if(!u)
         return;
-    if (!fptr)
+    if(!fptr)
         return;
-    if (u->is_destructed())
+    if(u->is_destructed())
         return;
-    if (fptr->is_destructed())
+    if(fptr->is_destructed())
         return;
-    if (fptr->event)
+    if(fptr->event)
         fptr->event->func = NULL;
 
     fptr->event = NULL;
     priority = FALSE;
 
-    for (ftmp = UNIT_FUNC(u); ftmp; ftmp = ftmp->next)
+    for(ftmp = UNIT_FUNC(u); ftmp; ftmp = ftmp->next)
     {
-        if (ftmp == fptr)
+        if(ftmp == fptr)
             break;
 
-        if (IS_SET(ftmp->flags, SFB_PRIORITY))
+        if(IS_SET(ftmp->flags, SFB_PRIORITY))
             priority = TRUE;
     }
 
-    if (!priority)
+    if(!priority)
     /* If switched, disable all tick functions, so we can control the mother fucker!
            if (!IS_CHAR (u) || !CHAR_IS_SWITCHED (u)) */
     {
-        if (unit_function_array[fptr->index].func)
+        if(unit_function_array[fptr->index].func)
         {
-            if (IS_SET(fptr->flags, SFB_TICK))
+            if(IS_SET(fptr->flags, SFB_TICK))
             {
 #ifdef DEBUG_HISTORY
                 add_func_history(u, fptr->index, SFB_TICK);
@@ -151,43 +149,41 @@ void special_event(void *p1, void *p2)
         else
             slog(LOG_ALL, 0, "Null function call!");
     }
-    else // Not executed because SFUN Before it raised priority 
+    else // Not executed because SFUN Before it raised priority
     {
-        if (fptr->index == SFUN_DIL_INTERNAL)
+        if(fptr->index == SFUN_DIL_INTERNAL)
         {
-            if (fptr->heart_beat == 1)
+            if(fptr->heart_beat == 1)
                 fptr->heart_beat = 5 * PULSE_SEC;
         }
     }
 
-    if (fptr->is_destructed())
+    if(fptr->is_destructed())
         return;
 
-    if (fptr->heart_beat < PULSE_SEC)
+    if(fptr->heart_beat < PULSE_SEC)
     {
-        slog(LOG_ALL, 0,  "Error: %s@%s had heartbeat of %d.",
-                    UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), fptr->heart_beat);
+        slog(LOG_ALL, 0, "Error: %s@%s had heartbeat of %d.", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), fptr->heart_beat);
     }
 
-    if (fptr->index == SFUN_DIL_INTERNAL)
+    if(fptr->index == SFUN_DIL_INTERNAL)
     {
         int diltick, i;
         diltick = FALSE;
-        if (IS_SET(fptr->flags, SFB_TICK))
+        if(IS_SET(fptr->flags, SFB_TICK))
             diltick = TRUE;
-        else if (fptr->data)
+        else if(fptr->data)
         {
             register class dilprg *prg = (class dilprg *)fptr->data;
-            for (i = 0; i < prg->fp->intrcount; i++)
-                if
-                    IS_SET(prg->fp->intr[i].flags, SFB_TICK)
-            diltick = TRUE;
+            for(i = 0; i < prg->fp->intrcount; i++)
+                if IS_SET(prg->fp->intr[i].flags, SFB_TICK)
+                    diltick = TRUE;
         }
-        if (!diltick)
+        if(!diltick)
             return;
     }
 
-    if (!u->is_destructed() && !fptr->is_destructed())
+    if(!u->is_destructed() && !fptr->is_destructed())
         SetFptrTimer(u, fptr);
 }
 
@@ -200,25 +196,25 @@ void stop_special(class unit_data *u, class unit_fptr *fptr)
 void start_special(class unit_data *u, class unit_fptr *fptr)
 {
     int diltick = 0, i;
-    if (fptr->index == SFUN_DIL_INTERNAL)
+    if(fptr->index == SFUN_DIL_INTERNAL)
     {
-        if (IS_SET(fptr->flags, SFB_TICK))
+        if(IS_SET(fptr->flags, SFB_TICK))
             diltick = 1;
-        else if (fptr->data)
+        else if(fptr->data)
         {
             register class dilprg *prg = (class dilprg *)fptr->data;
-            for (i = 0; i < prg->fp->intrcount; i++)
-                if (IS_SET(prg->fp->intr[i].flags, SFB_TICK))
+            for(i = 0; i < prg->fp->intrcount; i++)
+                if(IS_SET(prg->fp->intr[i].flags, SFB_TICK))
                     diltick = 1;
         }
-        if (!diltick)
+        if(!diltick)
             return;
     }
 
-    if (IS_SET(fptr->flags, SFB_TICK) || fptr->index == SFUN_DIL_INTERNAL)
+    if(IS_SET(fptr->flags, SFB_TICK) || fptr->index == SFUN_DIL_INTERNAL)
     {
         /* If people forget to set the ticking functions... */
-        if (fptr->heart_beat <= 0)
+        if(fptr->heart_beat <= 0)
         {
             fptr->heart_beat = unit_function_array[fptr->index].tick;
 
@@ -235,10 +231,10 @@ void start_special(class unit_data *u, class unit_fptr *fptr)
         }
 
         //      events.add(fptr->heart_beat, special_event, u, fptr);
-        if (fptr->event)
+        if(fptr->event)
             events.remove(special_event, u, fptr);
-        
-        if (!u->is_destructed() && !fptr->is_destructed())
+
+        if(!u->is_destructed() && !fptr->is_destructed())
             fptr->event = events.add(fptr->heart_beat, special_event, u, fptr);
     }
 }
@@ -247,7 +243,7 @@ void start_all_special(class unit_data *u)
 {
     class unit_fptr *fptr;
 
-    for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
+    for(fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
         start_special(u, fptr);
 }
 
@@ -255,6 +251,6 @@ void stop_all_special(class unit_data *u)
 {
     class unit_fptr *fptr;
 
-    for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
+    for(fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
         stop_special(u, fptr);
 }

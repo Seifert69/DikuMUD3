@@ -16,20 +16,7 @@
 #include "textutil.h"
 #include "common.h"
 
-const char *fillwords[] = {
-    "a",
-    "an",
-    "at",
-    "from",
-    "in",
-    "on",
-    "of",
-    "the",
-    "to",
-    "with",
-    "into",
-    NULL};
-
+const char *fillwords[] = {"a", "an", "at", "from", "in", "on", "of", "the", "to", "with", "into", NULL};
 
 /*  From char * input stream 'str' copy characters into 'buf' until
  *  end of string or newline. Returns position of 'str' after copied
@@ -37,17 +24,17 @@ const char *fillwords[] = {
  */
 char *str_line(const char *str, char *buf)
 {
-    if (str == NULL || buf == NULL)
+    if(str == NULL || buf == NULL)
         return NULL;
 
-    for (; *str == ' ' || *str == '\n' || *str == '\r'; str++)
+    for(; *str == ' ' || *str == '\n' || *str == '\r'; str++)
         ;
 
-    if (*str == '\0')
+    if(*str == '\0')
         return NULL;
 
-    for (; (*buf = *str); buf++, str++)
-        if (*str == '\n' || *str == '\r')
+    for(; (*buf = *str); buf++, str++)
+        if(*str == '\n' || *str == '\r')
             break;
 
     *buf = '\0'; /* Erase last separator */
@@ -60,8 +47,8 @@ int str_lower(char *s)
 {
     int l;
 
-    for (l = 0; *s; s++, l++)
-        if (isupper(*s))
+    for(l = 0; *s; s++, l++)
+        if(isupper(*s))
             *s = tolower(*s);
 
     return l;
@@ -71,8 +58,8 @@ int str_upper(char *s)
 {
     int l;
 
-    for (l = 0; *s; s++, l++)
-        if (islower(*s))
+    for(l = 0; *s; s++, l++)
+        if(islower(*s))
             *s = toupper(*s);
 
     return l;
@@ -84,13 +71,13 @@ int str_lower(const char *s, char *d, int nBufSize)
 {
     int l;
 
-    for (l = 0; *s && (l < nBufSize); s++, d++, l++)
-        if (isupper(*s))
+    for(l = 0; *s && (l < nBufSize); s++, d++, l++)
+        if(isupper(*s))
             *d = tolower(*s);
         else
             *d = *s;
 
-    if (l < nBufSize)
+    if(l < nBufSize)
         *d = 0;
     else
     {
@@ -106,15 +93,15 @@ char *str_repeatchar(int n, char c)
 {
     static char buf[256];
 
-    if (n > 255)
+    if(n > 255)
         n = 255;
 
-    if (n < 0)
+    if(n < 0)
         n = 0;
 
     buf[n] = '\0';
 
-    for (; n;)
+    for(; n;)
         buf[--n] = c;
 
     return buf;
@@ -166,16 +153,16 @@ char *ltoa(long n)
  */
 int str_ccmp(const char *s, const char *d)
 {
-    if (s == d)
+    if(s == d)
         return 0;
 
-    if (s == NULL)
+    if(s == NULL)
         return -1;
-    else if (d == NULL)
+    else if(d == NULL)
         return 1;
 
-    for (; tolower(*s) == tolower(*d); s++, d++)
-        if (*s == '\0')
+    for(; tolower(*s) == tolower(*d); s++, d++)
+        if(*s == '\0')
             return 0;
 
     return (tolower(*s) - tolower(*d));
@@ -186,16 +173,16 @@ int str_ccmp(const char *s, const char *d)
  */
 int str_nccmp(const char *s, const char *d, int n)
 {
-    if (s == d)
+    if(s == d)
         return 0;
 
-    if (s == NULL)
+    if(s == NULL)
         return -1;
-    else if (d == NULL)
+    else if(d == NULL)
         return 1;
 
-    for (n--; tolower(*s) == tolower(*d); s++, d++, n--)
-        if (*s == '\0' || n <= 0)
+    for(n--; tolower(*s) == tolower(*d); s++, d++, n--)
+        if(*s == '\0' || n <= 0)
             return 0;
 
     return (tolower(*s) - tolower(*d));
@@ -206,7 +193,7 @@ char *str_dup(const char *source)
 {
     char *dest;
 
-    if (source)
+    if(source)
     {
         CREATE(dest, char, strlen(source) + 1);
         strcpy(dest, source);
@@ -231,11 +218,11 @@ char *str_str(register const char *cs, register const char *ct)
         si = (char *)cs;
         ti = (char *)ct;
 
-        while (*si++ == *ti++)
-            if (*ti == '\0')
+        while(*si++ == *ti++)
+            if(*ti == '\0')
                 return (char *)cs;
 
-    } while (*cs++);
+    } while(*cs++);
 
     return NULL;
 }
@@ -264,10 +251,10 @@ const char *str_cstr(const char *cs, const char *ct)
 /* return string without leading spaces */
 char *skip_blanks(const char *string)
 {
-    if (string == NULL)
+    if(string == NULL)
         return NULL;
 
-    for (; *string && isspace(*string); string++)
+    for(; *string && isspace(*string); string++)
         ;
 
     return (char *)string;
@@ -276,10 +263,10 @@ char *skip_blanks(const char *string)
 /* return string without leading spaces */
 char *skip_spaces(const char *string)
 {
-    if (string == NULL)
+    if(string == NULL)
         return NULL;
 
-    for (; *string && isaspace(*string); string++)
+    for(; *string && isaspace(*string); string++)
         ;
 
     return (char *)string;
@@ -287,16 +274,16 @@ char *skip_spaces(const char *string)
 
 void strip_trailing_blanks(char *str)
 {
-    if (!*str) /* empty string: return at once      */
+    if(!*str) /* empty string: return at once      */
         return;
 
-    for (; *str; ++str) /* wind to end of string             */
+    for(; *str; ++str) /* wind to end of string             */
         ;
 
-    if (!isspace(*--str)) /* Not a spaceterminated string      */
-        return;           /* This is mainly for `inter-code' strings */
+    if(!isspace(*--str)) /* Not a spaceterminated string      */
+        return;          /* This is mainly for `inter-code' strings */
 
-    while (isspace(*--str)) /* rewind to last nonspace character */
+    while(isspace(*--str)) /* rewind to last nonspace character */
         ;
 
     *++str = '\0'; /* step ahead and end string         */
@@ -304,16 +291,16 @@ void strip_trailing_blanks(char *str)
 
 void strip_trailing_spaces(char *str)
 {
-    if (!*str) /* empty string: return at once      */
+    if(!*str) /* empty string: return at once      */
         return;
 
-    for (; *str; ++str) /* wind to end of string             */
+    for(; *str; ++str) /* wind to end of string             */
         ;
 
-    if (!isaspace(*--str)) /* Not a spaceterminated string      */
-        return;            /* This is mainly for `inter-code' strings */
+    if(!isaspace(*--str)) /* Not a spaceterminated string      */
+        return;           /* This is mainly for `inter-code' strings */
 
-    while (isaspace(*--str)) /* rewind to last nonspace character */
+    while(isaspace(*--str)) /* rewind to last nonspace character */
         ;
 
     *++str = '\0'; /* step ahead and end string         */
@@ -322,7 +309,7 @@ void strip_trailing_spaces(char *str)
 /* Returns true is arg is empty */
 ubit1 str_is_empty(const char *arg)
 {
-    if (arg == NULL)
+    if(arg == NULL)
         return TRUE;
 
     return *(skip_blanks(arg)) == '\0';
@@ -331,12 +318,12 @@ ubit1 str_is_empty(const char *arg)
 /* Check if the string contains nothing but numbers */
 ubit1 str_is_number(const char *str)
 {
-    if (!*str)
+    if(!*str)
         return FALSE;
-    if ((*str == '-') || (*str == '+'))
+    if((*str == '-') || (*str == '+'))
         str++;
-    for (; *str; str++)
-        if (!isdigit(*str))
+    for(; *str; str++)
+        if(!isdigit(*str))
             return FALSE;
 
     return TRUE;
@@ -358,25 +345,25 @@ int search_block(const char *oarg, const char **list, ubit1 exact)
     char arg[4096];
     register int i, l;
 
-    if (list == NULL)
+    if(list == NULL)
         return -1;
 
     /* Make into lower case, and get length of string */
     l = str_lower(oarg, arg, sizeof(arg));
 
-    if (exact)
+    if(exact)
     {
-        for (i = 0; list[i]; i++)
-            if (strcmp(arg, list[i]) == 0)
+        for(i = 0; list[i]; i++)
+            if(strcmp(arg, list[i]) == 0)
                 return i;
     }
     else
     {
-        if (!l)
+        if(!l)
             l = 1; /* Avoid "" to match the first available string */
 
-        for (i = 0; list[i]; i++)
-            if (strncmp(arg, list[i], l) == 0)
+        for(i = 0; list[i]; i++)
+            if(strncmp(arg, list[i], l) == 0)
                 return i;
     }
 
@@ -385,8 +372,7 @@ int search_block(const char *oarg, const char **list, ubit1 exact)
 
 /* Block must end with null pointer                                  */
 /* Warning, argument 1 is made into lowercase!                       */
-int search_block_length(const char *oarg, int length,
-                        const char **list, ubit1 exact)
+int search_block_length(const char *oarg, int length, const char **list, ubit1 exact)
 {
     char arg[4096];
     register int i;
@@ -394,19 +380,19 @@ int search_block_length(const char *oarg, int length,
     /* Make into lower case, and get length of string */
     str_lower(oarg, arg, sizeof(arg));
 
-    if (exact)
+    if(exact)
     {
-        for (i = 0; list[i]; i++)
-            if (!strncmp(arg, list[i], length))
-                if (list[i][length] <= ' ')
+        for(i = 0; list[i]; i++)
+            if(!strncmp(arg, list[i], length))
+                if(list[i][length] <= ' ')
                     return i;
     }
     else
     {
-        if (!length)
+        if(!length)
             length = 1; /* Avoid "" to match the first available string */
-        for (i = 0; list[i]; i++)
-            if (!strncmp(arg, list[i], length))
+        for(i = 0; list[i]; i++)
+            if(!strncmp(arg, list[i], length))
                 return i;
     }
 
@@ -425,7 +411,7 @@ char *str_next_word_copy(const char *argument, char *first_arg)
     argument = skip_spaces(argument);
 
     /* Copy next word and make it lower case */
-    for (; *argument > ' '; argument++)
+    for(; *argument > ' '; argument++)
         *first_arg++ = *argument;
 
     *first_arg = '\0';
@@ -440,7 +426,7 @@ char *str_next_word(const char *argument, char *first_arg)
     argument = skip_spaces(argument);
 
     /* Copy next word and make it lower case */
-    for (; *argument > ' '; argument++)
+    for(; *argument > ' '; argument++)
         *first_arg++ = tolower(*argument);
 
     *first_arg = '\0';
@@ -457,7 +443,7 @@ char *one_argument(const char *argument, char *first_arg)
 
     do
         argument = str_next_word(argument, first_arg);
-    while (fill_word(first_arg));
+    while(fill_word(first_arg));
 
     return (char *)argument;
 }
@@ -465,11 +451,11 @@ char *one_argument(const char *argument, char *first_arg)
 /* determine if 'arg1' is an abbreviation of 'arg2'. */
 ubit1 is_abbrev(const char *arg1, const char *arg2)
 {
-    if (!*arg1)
+    if(!*arg1)
         return FALSE;
 
-    for (; *arg1; arg1++, arg2++)
-        if (tolower(*arg1) != tolower(*arg2))
+    for(; *arg1; arg1++, arg2++)
+        if(tolower(*arg1) != tolower(*arg2))
             return FALSE;
 
     return TRUE;
@@ -479,11 +465,11 @@ ubit1 is_abbrev(const char *arg1, const char *arg2)
 /* The empty string is never an abbrevation of another string */
 ubit1 is_multi_abbrev(const char *arg1, const char *arg2)
 {
-    if (!*arg1)
+    if(!*arg1)
         return FALSE;
 
-    for (; *arg1 && !isspace(*arg1); arg1++, arg2++)
-        if (tolower(*arg1) != tolower(*arg2))
+    for(; *arg1 && !isspace(*arg1); arg1++, arg2++)
+        if(tolower(*arg1) != tolower(*arg2))
             return FALSE;
 
     return TRUE;
@@ -505,14 +491,14 @@ int search_block_abbrevs(const char *oarg, const char **list, const char **end)
     bestidx = -1;
     bestpos = NULL;
 
-    for (i = 0; list[i]; i++)
+    for(i = 0; list[i]; i++)
     {
-        for (match = 0, s = arg, d = list[i];;)
+        for(match = 0, s = arg, d = list[i];;)
         {
             ps = s;
             s = str_next_word(s, buf1);
             d = str_next_word(d, buf2);
-            if (is_multi_abbrev(buf1, buf2))
+            if(is_multi_abbrev(buf1, buf2))
             {
                 s = skip_spaces(s);
                 d = skip_spaces(d);
@@ -521,14 +507,14 @@ int search_block_abbrevs(const char *oarg, const char **list, const char **end)
             else
                 break;
         }
-        if (match && ps > bestpos)
+        if(match && ps > bestpos)
         {
             bestpos = ps;
             bestidx = i;
         }
     }
 
-    if (bestidx != -1)
+    if(bestidx != -1)
     {
         *end = oarg + (bestpos - arg);
         return bestidx;
@@ -574,13 +560,13 @@ void str_substitute(const char *old, const char *newstr, char *str)
     char *b;
     int olen, nlen, slen;
 
-    if (!str)
+    if(!str)
         return;
 
-    if (!old)
+    if(!old)
         return;
 
-    if (!newstr)
+    if(!newstr)
         nlen = 0;
     else
         nlen = strlen(newstr);
@@ -588,11 +574,11 @@ void str_substitute(const char *old, const char *newstr, char *str)
     olen = strlen(old);
     slen = strlen(str);
 
-    while ((b = str_str(str, old)))
+    while((b = str_str(str, old)))
     {
-        if (nlen <= olen)
+        if(nlen <= olen)
         {
-            if (nlen != 0)
+            if(nlen != 0)
             {
                 memcpy(b, newstr, nlen);
             }
@@ -613,10 +599,10 @@ void str_substitute(const std::string &search, const std::string &replace, std::
 {
     size_t pos = 0;
 
-    if (search.empty())
+    if(search.empty())
         return;
 
-    while ((pos = subject.find(search, pos)) != std::string::npos)
+    while((pos = subject.find(search, pos)) != std::string::npos)
     {
         subject.replace(pos, search.length(), replace);
         pos += replace.length();
@@ -628,12 +614,12 @@ void str_rem(char *s, char c)
 {
     int diff;
 
-    if (c == '\0')
+    if(c == '\0')
         return;
 
-    for (diff = 0; *(s + diff);)
+    for(diff = 0; *(s + diff);)
     {
-        if (*s == c)
+        if(*s == c)
             diff++;
         else
             s++;
@@ -647,9 +633,9 @@ void str_rem_codes(char *s)
 {
     int diff;
 
-    for (diff = 0; *(s + diff);)
+    for(diff = 0; *(s + diff);)
     {
-        if ((*s < ' ') && (*s != '\n') && (*s != '\r'))
+        if((*s < ' ') && (*s != '\n') && (*s != '\r'))
             diff++;
         else
             s++;
@@ -661,9 +647,9 @@ void str_rem_codes(char *s)
 /* Change all \n\r to <br/>\n\r */
 void str_amp_html(const char *s, char *d)
 {
-    for (; *s;)
+    for(; *s;)
     {
-        if (*s == '&')
+        if(*s == '&')
         {
             *d++ = '&';
             *d++ = 'a';
@@ -681,9 +667,9 @@ void str_amp_html(const char *s, char *d)
 /* Change all \n\r to <br/>\n\r */
 void str_nr_brnr(const char *s, char *d)
 {
-    for (; *s;)
+    for(; *s;)
     {
-        if ((*s == '\n') && (*(s + 1) == '\r'))
+        if((*s == '\n') && (*(s + 1) == '\r'))
         {
             *d++ = '<';
             *d++ = 'b';
@@ -705,8 +691,8 @@ void str_blank_punct(char *s)
 {
     static char c[3] = {' ', ' ', 0};
 
-    for (; *s; s++)
-        if (ispunct(*s))
+    for(; *s; s++)
+        if(ispunct(*s))
         {
             c[0] = *s;
             *s = ' ';
@@ -720,17 +706,17 @@ void str_remspc(register char *s)
 {
     register char *cp;
 
-    while (*s && (*s != ' ' || *(s + 1) != ' '))
+    while(*s && (*s != ' ' || *(s + 1) != ' '))
         s++;
 
-    if (*s == 0)
+    if(*s == 0)
         return;
 
     cp = s;
 
-    while (*cp)
+    while(*cp)
     {
-        while (*cp == ' ' && *(cp + 1) == ' ')
+        while(*cp == ' ' && *(cp + 1) == ' ')
             cp++;
 
         *s++ = *cp++;
@@ -763,14 +749,14 @@ const char *is_name_raw(const char *arg, char const *const *names) // MS2020 con
 {
     register int i, j;
 
-    for (i = 0; names[i]; i++)
+    for(i = 0; names[i]; i++)
     {
-        for (j = 0; names[i][j]; j++)
-            if (tolower(arg[j]) != tolower(names[i][j]))
+        for(j = 0; names[i][j]; j++)
+            if(tolower(arg[j]) != tolower(names[i][j]))
                 break;
 
-        if (!names[i][j])
-            if (!arg[j] || isaspace(arg[j]))
+        if(!names[i][j])
+            if(!arg[j] || isaspace(arg[j]))
                 return (arg + j);
     }
 
@@ -792,15 +778,15 @@ const char *is_name_raw(const char *arg, char const *const *names) // MS2020 con
 
 char *is_name(char *arg, char const *const *names) // MS2020 const char *names[])
 {
-    for (; isaspace(*arg); arg++)
+    for(; isaspace(*arg); arg++)
         ;
 
-    if (!*arg)
+    if(!*arg)
         return 0;
 
     str_remspc(arg);
 
-    return (char *) is_name_raw(arg, names);
+    return (char *)is_name_raw(arg, names);
 }
 
 /* Create an empty namelist */
@@ -818,17 +804,16 @@ char **create_namelist(void)
 //
 int len_namelist(const char **namelist)
 {
-	if (namelist == NULL)
-		return 0;
+    if(namelist == NULL)
+        return 0;
 
-	int i;
+    int i;
 
-	for (i=0; namelist[i]; i++)
-		;
+    for(i = 0; namelist[i]; i++)
+        ;
 
-	return i;
+    return i;
 }
-
 
 /* Add a new name to the end of an existing namelist */
 char **add_name(const char *name, char **namelist)
@@ -837,7 +822,7 @@ char **add_name(const char *name, char **namelist)
 
     assert(name && namelist);
 
-    while (namelist[pos])
+    while(namelist[pos])
         pos++;
 
     RECREATE(namelist, char *, pos + 2);
@@ -857,7 +842,7 @@ void free_namelist(char **list)
 
     original = list;
 
-    while (*list)
+    while(*list)
     {
         free(*list);
         list++;
@@ -876,11 +861,11 @@ char *str_ccmp_next_word(const char *buf, const char *next_word)
 {
     buf = skip_spaces(buf);
 
-    for (; *next_word; next_word++, buf++)
-        if (*next_word != *buf)
+    for(; *next_word; next_word++, buf++)
+        if(*next_word != *buf)
             return NULL;
 
-    if (!*buf || isaspace(*buf)) /* Buf must end here or be word separated */
+    if(!*buf || isaspace(*buf)) /* Buf must end here or be word separated */
         return (char *)buf;
 
     return NULL;
@@ -899,33 +884,33 @@ void split_fi_ref(const char *str, char *zone, char *name)
     *zone = 0;
     *name = 0;
 
-    if (!str)
+    if(!str)
         return;
 
     str = skip_spaces(str);
 
-    if ((c = (char *)strchr(str, '@')))
+    if((c = (char *)strchr(str, '@')))
     {
         l = MIN(c - str, FI_MAX_UNITNAME);
         strncpy(name, str, l);
         name[l] = '\0';
 
         l = MIN(strlen(c + 1), FI_MAX_ZONENAME);
-        if ((t = strchr(c + 1, ' ')))
+        if((t = strchr(c + 1, ' ')))
             l = MIN(l, t - (c + 1));
         strncpy(zone, c + 1, l);
         zone[l] = 0;
         str_lower(zone);
         str_lower(name);
     }
-    else if ((c = (char *)strchr(str, '/')))
+    else if((c = (char *)strchr(str, '/')))
     {
         l = MIN(c - str, FI_MAX_ZONENAME);
         strncpy(zone, str, l);
         zone[l] = '\0';
 
         l = MIN(strlen(c + 1), FI_MAX_UNITNAME);
-        if ((t = strchr(c + 1, ' ')))
+        if((t = strchr(c + 1, ' ')))
             l = MIN(l, t - (c + 1));
         strncpy(name, c + 1, l);
         name[l] = 0;
@@ -934,7 +919,7 @@ void split_fi_ref(const char *str, char *zone, char *name)
     }
     else
     {
-        if ((c = (char *)strchr(str, ' ')))
+        if((c = (char *)strchr(str, ' ')))
         {
             l = MIN(c - str, FI_MAX_UNITNAME);
             strncpy(name, str, l);
@@ -958,17 +943,17 @@ char *catnames(char *s, char **names)
     char **nam;
     ubit1 ok = FALSE;
 
-    if (names)
+    if(names)
     {
         strcpy(s, "{");
         TAIL(s);
-        for (nam = names; *nam; nam++)
+        for(nam = names; *nam; nam++)
         {
             ok = TRUE;
             sprintf(s, "\"%s\",", *nam);
             TAIL(s);
         }
-        if (ok)
+        if(ok)
             s--; /* remove the comma */
         strcpy(s, "}");
     }
@@ -984,33 +969,33 @@ char *catnames(char *s, char **names)
 // never writes more characters than in src.
 void str_cescape_format(const char *src, char *dest)
 {
-    while (*src)
+    while(*src)
     {
         *dest = *src++;
 
-        if (*dest == '\\')
+        if(*dest == '\\')
         {
-            switch (*src)
+            switch(*src)
             {
-            case 'n':
-                *dest = '\n';
-                src++;
-                break;
-            case 'r':
-                *dest = '\r';
-                src++;
-                break;
-            case '\\':
-                break;
-            case 0:
-                dest++;    // Save the backslash
-                *dest = 0; // terminate dest
-                break;
-            default:
-                dest++;       // Save the backslash
-                *dest = *src; // Copy the unknown code
-                src++;
-                break;
+                case 'n':
+                    *dest = '\n';
+                    src++;
+                    break;
+                case 'r':
+                    *dest = '\r';
+                    src++;
+                    break;
+                case '\\':
+                    break;
+                case 0:
+                    dest++;    // Save the backslash
+                    *dest = 0; // terminate dest
+                    break;
+                default:
+                    dest++;       // Save the backslash
+                    *dest = *src; // Copy the unknown code
+                    src++;
+                    break;
             }
         }
         dest++;
@@ -1041,7 +1026,6 @@ char *str_escape_format(const char *src, int formatting)
     return str_dup(dest);
 }
 
-
 // Adapted from
 // Copyright (c) 2008-2009 Bjoern Hoehrmann <bjoern@hoehrmann.de>
 // See http://bjoern.hoehrmann.de/utf-8/decoder/dfa/ for details.
@@ -1049,20 +1033,31 @@ char *str_escape_format(const char *src, int formatting)
 #define UTF8_REJECT 1
 
 static const uint8_t utf8d[] = {
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // 00..1f
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // 20..3f
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // 40..5f
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // 60..7f
-  1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9, // 80..9f
-  7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7, // a0..bf
-  8,8,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2, // c0..df
-  0xa,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x4,0x3,0x3, // e0..ef
-  0xb,0x6,0x6,0x6,0x5,0x8,0x8,0x8,0x8,0x8,0x8,0x8,0x8,0x8,0x8,0x8, // f0..ff
-  0x0,0x1,0x2,0x3,0x5,0x8,0x7,0x1,0x1,0x1,0x4,0x6,0x1,0x1,0x1,0x1, // s0..s0
-  1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1,1, // s1..s2
-  1,2,1,1,1,1,1,2,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1, // s3..s4
-  1,2,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,3,1,1,1,1,1,1, // s5..s6
-  1,3,1,1,1,1,1,3,1,3,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1, // s7..s8
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, // 00..1f
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, // 20..3f
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, // 40..5f
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, // 60..7f
+    1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+    9,   9,   9,   9,   9,   9,   9,   9,   9,   9,   9,   9,   9,   9,   9,   9, // 80..9f
+    7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,
+    7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7, // a0..bf
+    8,   8,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,
+    2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   // c0..df
+    0xa, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x4, 0x3, 0x3, // e0..ef
+    0xb, 0x6, 0x6, 0x6, 0x5, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, // f0..ff
+    0x0, 0x1, 0x2, 0x3, 0x5, 0x8, 0x7, 0x1, 0x1, 0x1, 0x4, 0x6, 0x1, 0x1, 0x1, 0x1, // s0..s0
+    1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+    1,   0,   1,   1,   1,   1,   1,   0,   1,   0,   1,   1,   1,   1,   1,   1, // s1..s2
+    1,   2,   1,   1,   1,   1,   1,   2,   1,   2,   1,   1,   1,   1,   1,   1,
+    1,   1,   1,   1,   1,   1,   1,   2,   1,   1,   1,   1,   1,   1,   1,   1, // s3..s4
+    1,   2,   1,   1,   1,   1,   1,   1,   1,   2,   1,   1,   1,   1,   1,   1,
+    1,   1,   1,   1,   1,   1,   1,   3,   1,   3,   1,   1,   1,   1,   1,   1, // s5..s6
+    1,   3,   1,   1,   1,   1,   1,   3,   1,   3,   1,   1,   1,   1,   1,   1,
+    1,   3,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1, // s7..s8
 };
 
 ubit32 inline utf8_decode(ubit32 *state, ubit32 *codep, ubit8 byte)
@@ -1070,11 +1065,10 @@ ubit32 inline utf8_decode(ubit32 *state, ubit32 *codep, ubit8 byte)
     ubit32 type = utf8d[byte];
 
     *codep = (*state != UTF8_ACCEPT) ? (byte & 0x3fu) | (*codep << 6) : (0xff >> type) & (byte);
-    *state = utf8d[256 + *state*16 + type];
+    *state = utf8d[256 + *state * 16 + type];
 
     return *state;
 }
-
 
 void str_correct_utf8(char *src)
 {
@@ -1082,26 +1076,26 @@ void str_correct_utf8(char *src)
     ubit32 prev = 0, current = 0;
     char *s = src;
 
-    for (; *s; prev = current, s++)
+    for(; *s; prev = current, s++)
     {
-        if (utf8_decode(&current, &codepoint, *s) == UTF8_REJECT)
+        if(utf8_decode(&current, &codepoint, *s) == UTF8_REJECT)
         {
             // The byte is invalid, replace it and restart.
             *s = '?';
             current = UTF8_ACCEPT;
-            if (prev != UTF8_ACCEPT)
+            if(prev != UTF8_ACCEPT)
             {
                 s--;
                 *s = '?';
-                if (s >= src) 
+                if(s >= src)
                     s--; // end of for means we'll start checking this '?'
-                if (s >= src)
+                if(s >= src)
                     s--; // so go back yet another char so we'll check the char before '?'
 
                 // s can become 1 less than src, but for loop above +1 and then it's equal src
                 // MS: Code on the website most definitely seemed wrong
-                // so if prev was not accept, then because I fear it might 
-                // be a 3 character sequence, I go back 
+                // so if prev was not accept, then because I fear it might
+                // be a 3 character sequence, I go back
             }
         }
     }
@@ -1109,9 +1103,8 @@ void str_correct_utf8(char *src)
 
 void str_correct_utf8(std::string &src)
 {
-    str_correct_utf8((char *) src.c_str());
+    str_correct_utf8((char *)src.c_str());
 }
-
 
 // This validates a string to be UTF-8 cool
 // Illegal characters become question marks
@@ -1119,37 +1112,37 @@ void str_correct_utf8(std::string &src)
 void obs_str_correct_utf8(std::string &src)
 {
     int nLen = src.length();
-    
-    for (int pos = 0; pos < nLen; ++pos)
+
+    for(int pos = 0; pos < nLen; ++pos)
     {
-        if ((src[pos] & 0x80) == 0) // lead bit is zero, must be a single ascii
+        if((src[pos] & 0x80) == 0) // lead bit is zero, must be a single ascii
         {
-             // ignore all odd/control ascii characters.
-            if ((src[pos] < 32) && (src[pos] != '\n') && (src[pos] != '\r'))
+            // ignore all odd/control ascii characters.
+            if((src[pos] < 32) && (src[pos] != '\n') && (src[pos] != '\r'))
                 src[pos] = '?';
             continue;
         }
-        else if ((src[pos] & 0xE0) == 0xC0) // 110x xxxx
+        else if((src[pos] & 0xE0) == 0xC0) // 110x xxxx
         {
-            if (pos + 1 < nLen)
+            if(pos + 1 < nLen)
             {
                 pos += 1;
                 continue;
             }
             src[pos] = '?'; // Must be a UTF8 error of sorts
         }
-        else if ((src[pos] & 0xF0) == 0xE0) // 1110 xxxx
+        else if((src[pos] & 0xF0) == 0xE0) // 1110 xxxx
         {
-            if (pos + 2 < nLen)
+            if(pos + 2 < nLen)
             {
                 pos += 2;
                 continue;
             }
             src[pos] = '?'; // Must be a UTF8 error of sorts
         }
-        else if ((src[pos] & 0xF8) == 0xF0) // 1111 0xxx
+        else if((src[pos] & 0xF8) == 0xF0) // 1111 0xxx
         {
-            if (pos + 3 < nLen)
+            if(pos + 3 < nLen)
             {
                 pos += 3;
                 continue;
@@ -1158,9 +1151,8 @@ void obs_str_correct_utf8(std::string &src)
         }
         else
             src[pos] = '?'; // Must be a UTF8 error of sorts
-    } // end for
+    }                       // end for
 }
-
 
 // This both encodes and prepares string for interpreter.
 // Removes all leading and trailing whitespace.
@@ -1170,7 +1162,7 @@ void obs_str_correct_utf8(std::string &src)
 //
 char *html_encode_utf8(const char *src)
 {
-    if (!src)
+    if(!src)
         return NULL;
 
     int nLen = strlen(src);
@@ -1179,52 +1171,52 @@ char *html_encode_utf8(const char *src)
     int pos = 0;
 
     // First skip all leading whitespace
-    while (isspace(src[pos]))
+    while(isspace(src[pos]))
         pos++;
 
-    for (; pos < nLen; ++pos)
+    for(; pos < nLen; ++pos)
     {
-        if ((src[pos] & 0x80) == 0) // lead bit is zero, must be a single ascii
+        if((src[pos] & 0x80) == 0) // lead bit is zero, must be a single ascii
         {
-            if (src[pos] < 32) // ignore all odd/control ascii characters.
+            if(src[pos] < 32) // ignore all odd/control ascii characters.
                 continue;
 
-            switch (src[pos])
+            switch(src[pos])
             {
-            case ' ':
-            { // Trim all whitespace to one space
-                sBuffer.append(" ");
-                while (isspace(src[pos + 1]))
-                    pos++;
-                continue;
-            }
-            case '&':
-            {
-                sBuffer.append("&amp;");
-                continue;
-            }
-            case '\"':
-            {
-                sBuffer.append("&quot;");
-                continue;
-            }
-            case '<':
-            {
-                sBuffer.append("&lt;");
-                continue;
-            }
-            case '>':
-            {
-                sBuffer.append("&gt;");
-                continue;
-            }
-            } //Switch
+                case ' ':
+                { // Trim all whitespace to one space
+                    sBuffer.append(" ");
+                    while(isspace(src[pos + 1]))
+                        pos++;
+                    continue;
+                }
+                case '&':
+                {
+                    sBuffer.append("&amp;");
+                    continue;
+                }
+                case '\"':
+                {
+                    sBuffer.append("&quot;");
+                    continue;
+                }
+                case '<':
+                {
+                    sBuffer.append("&lt;");
+                    continue;
+                }
+                case '>':
+                {
+                    sBuffer.append("&gt;");
+                    continue;
+                }
+            } // Switch
             sBuffer.append(&src[pos], 1);
             continue;
         }
-        else if ((src[pos] & 0xE0) == 0xC0) // 110x xxxx
+        else if((src[pos] & 0xE0) == 0xC0) // 110x xxxx
         {
-            if (pos + 1 < nLen)
+            if(pos + 1 < nLen)
             {
                 sBuffer.append(&src[pos], 2);
                 pos += 1;
@@ -1232,9 +1224,9 @@ char *html_encode_utf8(const char *src)
             }
             sBuffer.append(&src[pos], 1); // Must be a UTF8 error of sorts
         }
-        else if ((src[pos] & 0xF0) == 0xE0) // 1110 xxxx
+        else if((src[pos] & 0xF0) == 0xE0) // 1110 xxxx
         {
-            if (pos + 2 < nLen)
+            if(pos + 2 < nLen)
             {
                 sBuffer.append(&src[pos], 3);
                 pos += 2;
@@ -1242,9 +1234,9 @@ char *html_encode_utf8(const char *src)
             }
             sBuffer.append(&src[pos], 1); // Must be a UTF8 error of sorts
         }
-        else if ((src[pos] & 0xF8) == 0xF0) // 1111 0xxx
+        else if((src[pos] & 0xF8) == 0xF0) // 1111 0xxx
         {
-            if (pos + 3 < nLen)
+            if(pos + 3 < nLen)
             {
                 sBuffer.append(&src[pos], 4);
                 pos += 3;
@@ -1282,15 +1274,15 @@ int my_str_replace_space(char *sbuf)
     int i = 0;
     int ln = strlen(sbuf);
 
-    while (i < ln)
+    while(i < ln)
     {
-        if ((*sbuf == '&') && ((*(sbuf + 1) == 's') || (*(sbuf + 1) == 'S')))
+        if((*sbuf == '&') && ((*(sbuf + 1) == 's') || (*(sbuf + 1) == 'S')))
         {
             char Buf[3];
             int rep = 0;
             char *src = sbuf + 2;
 
-            while (isdigit(*src) && rep < (int)sizeof(Buf) - 1)
+            while(isdigit(*src) && rep < (int)sizeof(Buf) - 1)
                 Buf[rep++] = *src++;
             Buf[rep] = 0;
 
@@ -1345,7 +1337,7 @@ char *fix_old_codes_to_html(const char *c)
     str_substitute("&x", "\n", buf);
     str_substitute("&n", "<br/>", buf);
 
-    if (str_str(buf, "&l"))
+    if(str_str(buf, "&l"))
     {
         str_substitute("&l", "<pre>", buf);
         bPre = 1;
@@ -1366,22 +1358,22 @@ char *fix_old_codes_to_html(const char *c)
     str_substitute(">", "&gt;", buf);
 
     // replace &s[0-9] with spaces
-    //sed -i -- 's/&s[0-9][0-9]/ /g' *.zon
+    // sed -i -- 's/&s[0-9][0-9]/ /g' *.zon
     // replace &s[00-99] with spaces
-    //sed -i -- 's/&s[0-9]/ /g' *.zon
+    // sed -i -- 's/&s[0-9]/ /g' *.zon
 
     str_substitute("&[default]", "</div>", buf);
 
-    while (my_str_replace_space(buf))
+    while(my_str_replace_space(buf))
         ;
 
     // I'm hoping this is not necessary to change
     // Replace &[name] with <div class='name'>
-    //sed -i -- 's/&\[\([^]]*\)\]/\<div class\=\x27\1\x27\>/g' *.zon
+    // sed -i -- 's/&\[\([^]]*\)\]/\<div class\=\x27\1\x27\>/g' *.zon
 
     str_substitute("\x1B", "&amp;", buf);
 
-    if (bPre)
+    if(bPre)
     {
         strcat(buf, "</pre>");
     }
@@ -1392,8 +1384,8 @@ char *fix_old_codes_to_html(const char *c)
 
 /* Get the contents between <htmltag> and convert it to lowercase
  *    p must point to first <.
- *    Copies the tag between <> into pTag. 
- *    Copies at most nTagMax bytes (incl \0) 
+ *    Copies the tag between <> into pTag.
+ *    Copies at most nTagMax bytes (incl \0)
  *    returns position right after > and returns p if no >
  */
 const char *getHTMLTag(const char *p, char *pTag, int nTagMax)
@@ -1408,14 +1400,14 @@ const char *getHTMLTag(const char *p, char *pTag, int nTagMax)
     p++; // Skip '<'
 
     c = strchr(p, '>');
-    if (c == NULL)
+    if(c == NULL)
         return p;
 
     n = c - p + 1; // How many chars including \0
 
     n = std::min(n, nTagMax);
 
-    for (int i = 0; i < n; i++)
+    for(int i = 0; i < n; i++)
         pTag[i] = tolower(*(p + i));
 
     pTag[n - 1] = 0;
@@ -1437,30 +1429,30 @@ int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax)
     *pTag = 0;
 
     c = strstr(p, name);
-    if (c == NULL)
+    if(c == NULL)
         return 0;
 
     c += strlen(name);
     c = skip_blanks(c); // skip any whitespace before equal
-    if (*c != '=')
+    if(*c != '=')
         return 0;
     c++;                // skip equal
     c = skip_blanks(c); // skip any whitespace after equal
 
-    if (*c != '\'')
+    if(*c != '\'')
         return 0;
 
     c++; // Skip '
 
     const char *ce;
     ce = strchr(c, '\''); // Find the last ' for the value
-    if (ce == NULL)
+    if(ce == NULL)
         return 0;
 
-    if (ce - c <= 1) // If the string is empty
+    if(ce - c <= 1) // If the string is empty
         return 0;
 
-    if (ce - c > nTagMax - 1) // Not enough space
+    if(ce - c > nTagMax - 1) // Not enough space
         return 0;
 
     strncpy(pTag, c, ce - c);
@@ -1469,10 +1461,10 @@ int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax)
     return ce - c;
 }
 
-/* 
- * Given an HTML tag pOldTag without <>, change the value of the attribute pAttr to pNewVal 
+/*
+ * Given an HTML tag pOldTag without <>, change the value of the attribute pAttr to pNewVal
  * and put the result in pNewTag
- * 
+ *
  * pOldTag: the HTML tag, e.g. div class='default'
  * pATtr    the attribute to change, e.g. class
  * pNewVal  the new value to put into the class, e.g. hello
@@ -1487,17 +1479,17 @@ int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVa
     *pNewTag = 0;
 
     c = strstr(pOldTag, pAttr);
-    if (c == NULL)
+    if(c == NULL)
         return 0;
 
     c += strlen(pAttr);
     c = skip_blanks(c); // skip any whitespace before equal
-    if (*c != '=')
+    if(*c != '=')
         return 0;
     c++;                // skip equal
     c = skip_blanks(c); // skip any whitespace after equal
 
-    if (*c != '\'')
+    if(*c != '\'')
         return 0;
 
     c++; // Skip '
@@ -1510,7 +1502,7 @@ int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVa
     const char *ce;
 
     c = strchr(c, '\''); // Find the last ' for the value
-    if (c == NULL)       // Missing ending '
+    if(c == NULL)        // Missing ending '
         return 0;
 
     c++; // Skip the '
@@ -1518,10 +1510,10 @@ int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVa
     ce = c;
     TAIL(ce); // find the remaineder of the string
 
-    if (ce - c <= 0) // If the string is empty, we are done
+    if(ce - c <= 0) // If the string is empty, we are done
         return 1;
 
-    if (strlen(pNewTag) + strlen(c) >= (size_t)nTagMax - 1) // Not enough space
+    if(strlen(pNewTag) + strlen(c) >= (size_t)nTagMax - 1) // Not enough space
         return 0;
 
     strcat(pNewTag, c);
@@ -1539,11 +1531,10 @@ const char *divcolor(const char *colorstr)
     return buf;
 }
 
-
 // Encode str to JSON encoding (format X)
 std::string str_json_encode(const char *str)
 {
-   std::string s;
+    std::string s;
 
     s = str;
 
@@ -1556,18 +1547,18 @@ std::string str_json_encode(const char *str)
 // As str_json_encode but wraps string in quotes
 std::string str_json_encode_quote(const char *str)
 {
-   std::string s;
+    std::string s;
 
     s = "\"";
     s.append(str_json_encode(str));
     s.append("\"");
 
     return s;
-} 
+}
 
 std::string str_json(const char *lbl, ubit64 nInt)
 {
-   std::string s;
+    std::string s;
 
     s.append("\"");
     s.append(str_json_encode(lbl));
@@ -1587,7 +1578,7 @@ std::string str_json(const char *lbl, const char *str)
     s.append("\"");
     s.append(": ");
     s.append("\"");
-    if (str)
+    if(str)
         s.append(str_json_encode(str));
     s.append("\"");
 
@@ -1599,34 +1590,33 @@ std::string str_json(const char *lbl, const std::string &str)
     return str_json(lbl, str.c_str());
 }
 
-
-// Kind of like strncmp except it returns true if the string matches 
+// Kind of like strncmp except it returns true if the string matches
 // up to the first \0 character. Necessary hack as a bridge between
-// old and new password system to both rectify incorrect salt in 
+// old and new password system to both rectify incorrect salt in
 // set pwd <player> and to handle increase in stored password length
 // return 0 = match, 1 = differ
 int pwdcompare(const char *p1, const char *p2, int nMax)
 {
     int i;
 
-    if ((p1 == NULL) || (p2 == NULL))
+    if((p1 == NULL) || (p2 == NULL))
         return 1;
 
-    for (i=0; i < nMax; i++)
+    for(i = 0; i < nMax; i++)
     {
-        if (p1[i] != p2[i])
+        if(p1[i] != p2[i])
         {
-            if ((p1[i] == 0) || (p2[i] == 0))
+            if((p1[i] == 0) || (p2[i] == 0))
             {
-                if (i < 10)
+                if(i < 10)
                     return 1;
                 else
-                    return 0;                
+                    return 0;
             }
             else
                 return 1;
         }
-        else if (p1[i] == 0) // They are both zero
+        else if(p1[i] == 0) // They are both zero
             return 1;
     }
 

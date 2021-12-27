@@ -6,9 +6,9 @@
  */
 
 #ifdef _WINDOWS
-#include <winsock2.h>
+    #include <winsock2.h>
 #else
-#include <unistd.h>
+    #include <unistd.h>
 #endif
 
 #include <string.h>
@@ -35,7 +35,7 @@ void protocol_send_close(cHook *Hook, ubit16 id)
     ubit16 len = 0;
     ubit8 buf[20];
 
-    if (!Hook->IsHooked())
+    if(!Hook->IsHooked())
         return;
 
     memcpy(&(buf[0]), MULTI_TERMINATE, 2);
@@ -45,13 +45,12 @@ void protocol_send_close(cHook *Hook, ubit16 id)
     Hook->Write(buf, 6);
 }
 
-
 /* Create the standard header and send a ping to the remote mplex          */
 void protocol_send_ping(cHook *Hook)
 {
     ubit8 buf[20];
 
-    if (!Hook->IsHooked())
+    if(!Hook->IsHooked())
     {
         slog(LOG_ALL, 0, "protocol_send_ping() was UNHOOKED");
         return;
@@ -63,7 +62,6 @@ void protocol_send_ping(cHook *Hook)
     Hook->Write(buf, 6);
 }
 
-
 /* Create the standard header and send a connection confirm to             */
 /* file descriptor 'fd'. If fd is -1 then don't send anything.             */
 /* Return -1 on socket fail, 0 on amount fail, 1 on success                */
@@ -72,13 +70,13 @@ void protocol_send_confirm(cHook *Hook, ubit16 id)
     ubit16 len = 0;
     ubit8 buf[20];
 
-    if (!Hook->IsHooked())
+    if(!Hook->IsHooked())
     {
-        //slog(LOG_ALL, 0, "protocol_send_confirm() was UNHOOKED");
+        // slog(LOG_ALL, 0, "protocol_send_confirm() was UNHOOKED");
         return;
     }
 
-    //slog(LOG_ALL, 0, "protocol_send_confirm() ID %d", id);
+    // slog(LOG_ALL, 0, "protocol_send_confirm() ID %d", id);
 
     memcpy(&(buf[0]), MULTI_CONNECT_CON, 2);
     memcpy(&(buf[2]), &id, sizeof(id));
@@ -95,20 +93,19 @@ void protocol_send_request(cHook *Hook)
     ubit16 id = 0, len = 0;
     ubit8 buf[10];
 
-    if (!Hook->IsHooked())
+    if(!Hook->IsHooked())
     {
-        //slog(LOG_ALL, 0, "protocol_send_request() was UNHOOKED");
+        // slog(LOG_ALL, 0, "protocol_send_request() was UNHOOKED");
         return;
     }
 
-    //slog(LOG_ALL, 0, "protocol_send_request()");
+    // slog(LOG_ALL, 0, "protocol_send_request()");
     memcpy(&(buf[0]), MULTI_CONNECT_REQ, 2);
     memcpy(&(buf[2]), &id, sizeof(id));
     memcpy(&(buf[4]), &len, sizeof(len));
 
     Hook->Write(buf, 6);
 }
-
 
 /* Create the standard header and send a connection request to             */
 /* file descriptor 'fd'. If fd is -1 then don't send anything.             */
@@ -118,13 +115,13 @@ void protocol_send_mplex_info(cHook *Hook, ubit8 bWebsockets)
     ubit16 id = 0, len = 0;
     ubit8 buf[10];
 
-    if (!Hook->IsHooked())
+    if(!Hook->IsHooked())
     {
-        //slog(LOG_ALL, 0, "protocol_send_request() was UNHOOKED");
+        // slog(LOG_ALL, 0, "protocol_send_request() was UNHOOKED");
         return;
     }
 
-    //slog(LOG_ALL, 0, "protocol_send_request()");
+    // slog(LOG_ALL, 0, "protocol_send_request()");
     len = 1;
     memcpy(&(buf[0]), MULTI_MPLEX_INFO, 2);
     memcpy(&(buf[2]), &id, sizeof(id));
@@ -134,22 +131,20 @@ void protocol_send_mplex_info(cHook *Hook, ubit8 bWebsockets)
     Hook->Write(buf, 7);
 }
 
-
 /* Create the standard header and send (from mplex to server) the host     */
 /* name information.     If fd is -1 then don't send anything.             */
 /* Return -1 on socket fail, 0 on amount fail, 1 on success                */
-void protocol_send_host(cHook *Hook, ubit16 id, const char *host,
-                        ubit16 nPort, ubit8 nLine)
+void protocol_send_host(cHook *Hook, ubit16 id, const char *host, ubit16 nPort, ubit8 nLine)
 {
     ubit16 len = 0;
     ubit8 buf[80];
     char ptext[1024] = "UNKNOWN HOST";
     ubit8 *b;
 
-    if (!Hook->IsHooked())
+    if(!Hook->IsHooked())
         return;
 
-    if (host)
+    if(host)
     {
         memset(ptext, 0, 1024);
         strcpy(ptext, host);
@@ -177,8 +172,7 @@ void protocol_send_host(cHook *Hook, ubit16 id, const char *host,
 /* 'type' is used to tell difference between normal text, page string text, */
 /* etc.                                                                     */
 /* Return -1 on socket fail, 0 on amount fail, 1 on success                 */
-void protocol_send_text(cHook *Hook, const ubit16 id,
-                        const char *text, const ubit8 type)
+void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ubit8 type)
 {
 #define MAX_TEXT_LEN (32768)
     ubit16 len, txlen;
@@ -187,27 +181,27 @@ void protocol_send_text(cHook *Hook, const ubit16 id,
 
     assert(id != 0);
 
-    if (!Hook->IsHooked())
+    if(!Hook->IsHooked())
         return;
 
     len = strlen(text) + 1;
 
     txlen = MIN(MAX_TEXT_LEN, len);
 
-    if (txlen < len)
+    if(txlen < len)
     {
         /* Fragmented text, break it up at a newline for
            indentation purposes! (if possible) */
         slog(LOG_ALL, 0, "WARNING: protcol_send_text() needed to break up text %d long", len);
 
-        for (; txlen != 0; txlen--)
+        for(; txlen != 0; txlen--)
         {
             c = text[txlen - 1];
-            if ((c == '>') || ISNEWL(c))
+            if((c == '>') || ISNEWL(c))
                 break;
         }
 
-        if (txlen == 0)
+        if(txlen == 0)
             txlen = MIN(MAX_TEXT_LEN, len);
     }
 
@@ -223,7 +217,7 @@ void protocol_send_text(cHook *Hook, const ubit16 id,
 
     len -= txlen;
 
-    if (len > 0)
+    if(len > 0)
         protocol_send_text(Hook, id, &text[txlen], type);
 #undef MAX_TEXT_LEN
 }
@@ -233,15 +227,14 @@ void protocol_send_text(cHook *Hook, const ubit16 id,
 /* file descriptor 'fd'. If fd is -1 then don't send anything.             */
 /* Return -1 on socket fail, 0 on amount fail, 1 on success                */
 
-void protocol_send_setup(cHook *Hook, ubit16 id,
-                         struct terminal_setup_type *setup)
+void protocol_send_setup(cHook *Hook, ubit16 id, struct terminal_setup_type *setup)
 {
     ubit16 len;
     ubit8 buf[sizeof(struct terminal_setup_type) + 6 + 4];
 
     assert(id != 0);
 
-    if (!Hook->IsHooked())
+    if(!Hook->IsHooked())
         return;
 
     len = sizeof(struct terminal_setup_type);
@@ -254,7 +247,6 @@ void protocol_send_setup(cHook *Hook, ubit16 id,
     Hook->Write(buf, 6 + len);
 }
 
-
 // Send the MUD name to the mplex
 void protocol_send_exchange(cHook *Hook, ubit16 id, char *mudname)
 {
@@ -264,7 +256,7 @@ void protocol_send_exchange(cHook *Hook, ubit16 id, char *mudname)
     assert(strlen(mudname) < MULTI_MAX_MUDNAME);
 
     id = 0;
-    if (!Hook->IsHooked())
+    if(!Hook->IsHooked())
         return;
 
     len = strlen(mudname) + 1;
@@ -287,7 +279,7 @@ void protocol_send_color(cHook *Hook, ubit16 id, char *colorstr)
     assert(strlen(colorstr) < MAX_STRING_LENGTH * 2);
 
     id = 0;
-    if (!Hook->IsHooked())
+    if(!Hook->IsHooked())
         return;
 
     len = strlen(colorstr) + 1;
@@ -315,8 +307,7 @@ void protocol_send_color(cHook *Hook, ubit16 id, char *colorstr)
 /*      -2 on protocol fail                                                */
 /* or type on success                                                      */
 /*                                                                         */
-int protocol_parse_incoming(cHook *Hook, ubit16 *pid,
-                            ubit16 *plen, char **str, ubit8 *text_type)
+int protocol_parse_incoming(cHook *Hook, ubit16 *pid, ubit16 *plen, char **str, ubit8 *text_type)
 {
     int n;
     ubit16 id;
@@ -324,26 +315,26 @@ int protocol_parse_incoming(cHook *Hook, ubit16 *pid,
     char buf[10];
     char *data;
 
-    if (str)
+    if(str)
         *str = NULL;
 
-    if (!Hook->IsHooked())
+    if(!Hook->IsHooked())
         return 0;
 
     n = Hook->ReadToQueue();
 
-    if (n == -1)
+    if(n == -1)
     {
         slog(LOG_ALL, 0, "Protocol: parse_incoming error.");
         return -1;
     }
 
-    if (Hook->qRX.Bytes() < 6)
+    if(Hook->qRX.Bytes() < 6)
         return 0;
 
     Hook->qRX.Copy((ubit8 *)buf, 6);
 
-    if (buf[0] != MULTI_UNIQUE_CHAR)
+    if(buf[0] != MULTI_UNIQUE_CHAR)
     {
         slog(LOG_ALL, 0, "Illegal unexpected unique multi character #2.");
         Hook->Unhook();
@@ -353,7 +344,7 @@ int protocol_parse_incoming(cHook *Hook, ubit16 *pid,
     memcpy(&id, &(buf[2]), sizeof(ubit16));
     memcpy(&len, &(buf[4]), sizeof(sbit16));
 
-    if (Hook->qRX.Bytes() - 6 < len)
+    if(Hook->qRX.Bytes() - 6 < len)
     {
         // slog(LOG_ALL, 0, "Short of data...");
         return 0; /* We havn't got all the data yet! */
@@ -361,99 +352,99 @@ int protocol_parse_incoming(cHook *Hook, ubit16 *pid,
 
     Hook->qRX.Cut(6);
 
-    if (pid)
+    if(pid)
         *pid = id;
 
-    if (plen)
+    if(plen)
         *plen = len;
 
-    switch (buf[1])
+    switch(buf[1])
     {
-    case MULTI_MPLEX_INFO_CHAR:
-        break; // Get the data (down below)
+        case MULTI_MPLEX_INFO_CHAR:
+            break; // Get the data (down below)
 
-    case MULTI_PING_CHAR:
-        if (id != 0)
-        {
-            slog(LOG_ALL, 0, "Received none-zero ID on a ping");
+        case MULTI_PING_CHAR:
+            if(id != 0)
+            {
+                slog(LOG_ALL, 0, "Received none-zero ID on a ping");
+                return -2;
+            }
+            // slog(LOG_ALL, 0, "Ping received");
+            return buf[1];
+
+        case MULTI_TERMINATE_CHAR:
+            if(id == 0)
+            {
+                slog(LOG_ALL, 0, "Received ID zero on a terminate request!");
+                return -2;
+            }
+            return buf[1];
+
+        case MULTI_CONNECT_CON_CHAR:
+            // slog(LOG_ALL, 0, "MULTI_CONNECT_CON_CHAR protocol_parse_incoming() ID=%d", id);
+            if(id == 0)
+            {
+                slog(LOG_ALL, 0, "ID 0 on connection confirm.");
+                return -2;
+            }
+            return buf[1];
+
+        case MULTI_CONNECT_REQ_CHAR:
+            // slog(LOG_ALL, 0, "MULTI_CONNECT_REQ_CHAR protocol_parse_incoming()", id);
+            if(id != 0)
+            {
+                slog(LOG_ALL, 0, "Received non-zero ID on a connection request!");
+                return -2;
+            }
+            return buf[1];
+
+        case MULTI_HOST_CHAR:
+            if(id == 0)
+            {
+                slog(LOG_ALL, 0, "Received zero ID on a host name transfer!");
+                return -2;
+            }
+            if(len <= 0)
+            {
+                slog(LOG_ALL, 0, "Received 0 length host information.");
+                return -2;
+            }
+            break; /* Get text */
+
+        case MULTI_SETUP_CHAR:
+            if(id == 0)
+            {
+                slog(LOG_ALL, 0, "Received setup from ID zero!");
+                return -2;
+            }
+            break; /* Get data */
+
+        case MULTI_EXCHANGE_CHAR:
+            if(id != 0)
+            {
+                slog(LOG_ALL, 0, "ID must be 0 on data exchange!");
+                return -2;
+            }
+            break; /* Get data */
+
+        case MULTI_COLOR_CHAR:
+            if(id != 0)
+            {
+                slog(LOG_ALL, 0, "ID must be 0 on data exchange!");
+                return -2;
+            }
+            break; /* Get data */
+
+        case MULTI_TEXT_CHAR:
+        case MULTI_PAGE_CHAR:
+        case MULTI_PROMPT_CHAR:
+            if(id == 0)
+                slog(LOG_ALL, 0, "Received text from ID zero!");
+            break; /* Get text */
+
+        default:
+            slog(LOG_ALL, 0, "Illegal unexpected unique multi character.#3");
             return -2;
-        }
-        //slog(LOG_ALL, 0, "Ping received");
-        return buf[1];
-
-    case MULTI_TERMINATE_CHAR:
-        if (id == 0)
-        {
-            slog(LOG_ALL, 0, "Received ID zero on a terminate request!");
-            return -2;
-        }
-        return buf[1];
-
-    case MULTI_CONNECT_CON_CHAR:
-        //slog(LOG_ALL, 0, "MULTI_CONNECT_CON_CHAR protocol_parse_incoming() ID=%d", id);
-        if (id == 0)
-        {
-            slog(LOG_ALL, 0, "ID 0 on connection confirm.");
-            return -2;
-        }
-        return buf[1];
-
-    case MULTI_CONNECT_REQ_CHAR:
-        //slog(LOG_ALL, 0, "MULTI_CONNECT_REQ_CHAR protocol_parse_incoming()", id);
-        if (id != 0)
-        {
-            slog(LOG_ALL, 0, "Received non-zero ID on a connection request!");
-            return -2;
-        }
-        return buf[1];
-
-    case MULTI_HOST_CHAR:
-        if (id == 0)
-        {
-            slog(LOG_ALL, 0, "Received zero ID on a host name transfer!");
-            return -2;
-        }
-        if (len <= 0)
-        {
-            slog(LOG_ALL, 0, "Received 0 length host information.");
-            return -2;
-        }
-        break; /* Get text */
-
-    case MULTI_SETUP_CHAR:
-        if (id == 0)
-        {
-            slog(LOG_ALL, 0, "Received setup from ID zero!");
-            return -2;
-        }
-        break; /* Get data */
-
-    case MULTI_EXCHANGE_CHAR:
-        if (id != 0)
-        {
-            slog(LOG_ALL, 0, "ID must be 0 on data exchange!");
-            return -2;
-        }
-        break; /* Get data */
-
-    case MULTI_COLOR_CHAR:
-        if (id != 0)
-        {
-            slog(LOG_ALL, 0, "ID must be 0 on data exchange!");
-            return -2;
-        }
-        break; /* Get data */
-
-    case MULTI_TEXT_CHAR:
-    case MULTI_PAGE_CHAR:
-    case MULTI_PROMPT_CHAR:
-        if (id == 0)
-            slog(LOG_ALL, 0, "Received text from ID zero!");
-        break; /* Get text */
-
-    default:
-        slog(LOG_ALL, 0, "Illegal unexpected unique multi character.#3");
-        return -2;
     }
 
     /* Get extra data into "text" buffer */

@@ -9,11 +9,11 @@
 #define _MUD_UTILITY_H
 
 #ifdef MIN
-#undef MIN
+    #undef MIN
 #endif
 
 #ifdef MAX
-#undef MAX
+    #undef MAX
 #endif
 
 int is_in(int a, int from, int to);
@@ -40,10 +40,7 @@ class unit_data *hometown_unit(char *str);
 class log_buffer
 {
 public:
-    log_buffer(void)
-    {
-        str[0] = 0;
-    }
+    log_buffer(void) { str[0] = 0; }
 
     char str[MAX_INPUT_LENGTH + 50];
     enum log_level level;

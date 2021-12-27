@@ -9,20 +9,19 @@
 #define _MUD_NETWORK_H
 
 #ifdef _WINDOWS
-#include <winsock.h>
+    #include <winsock.h>
 #endif
 
 #include <sys/types.h>
 
 #ifdef LINUX
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#define DEF_SERVER_ADDR  "127.0.0.1"
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+    #define DEF_SERVER_ADDR "127.0.0.1"
 #endif
 
 int OpenMother(int port);
 int OpenNetwork(int nMudPort, char *pMudAddr);
 
 #endif
-

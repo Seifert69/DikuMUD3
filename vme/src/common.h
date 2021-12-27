@@ -24,13 +24,13 @@ void set_hits(class unit_data *obj, int craftsmanship);
 int skill_point_gain(void);
 int ability_point_gain(class unit_data *ch);
 int ability_point_total(class unit_data *ch);
-//double damage_str(int strength);
+// double damage_str(int strength);
 
 int distribute_points(sbit16 *skills, int max, int points, int level);
 int distribute_points(ubit8 *skills, int max, int points, int level);
 int buy_points(int points, int level, int *error);
 
-//int apply_quality (int num, int quality);
+// int apply_quality (int num, int quality);
 
 int hitpoint_total(int hpp);
 

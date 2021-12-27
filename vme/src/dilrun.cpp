@@ -118,8 +118,8 @@ extern void special_event(void *p1, void *p2);
  *
  * *********************************************************************** */
 
-//class dilprg *dil_list = NULL;
-//class dilprg *dil_list_nextdude = NULL;
+// class dilprg *dil_list = NULL;
+// class dilprg *dil_list_nextdude = NULL;
 
 void dil_edit_done(class descriptor_data *d)
 {
@@ -128,10 +128,9 @@ void dil_edit_done(class descriptor_data *d)
 
 void dil_intr_remove(class dilprg *p, int idx)
 {
-    if ((idx >= 0) && (idx < p->fp->intrcount))
+    if((idx >= 0) && (idx < p->fp->intrcount))
     {
-        memmove(&(p->fp->intr[idx]), &(p->fp->intr[idx + 1]),
-                sizeof(struct dilintr) * (p->fp->intrcount - idx - 1));
+        memmove(&(p->fp->intr[idx]), &(p->fp->intr[idx + 1]), sizeof(struct dilintr) * (p->fp->intrcount - idx - 1));
         p->fp->intr[p->fp->intrcount - 1].flags = 0;
         p->fp->intr[p->fp->intrcount - 1].lab = NULL;
         p->fp->intr[p->fp->intrcount - 1].elab = NULL;
@@ -143,16 +142,16 @@ int dil_intr_insert(class dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags)
     int intnum;
 
     /* find intnum */
-    for (intnum = 0; intnum < p->fp->intrcount; intnum++)
-        if (p->fp->intr[intnum].lab == lab)
+    for(intnum = 0; intnum < p->fp->intrcount; intnum++)
+        if(p->fp->intr[intnum].lab == lab)
         {
             dil_intr_remove(p, intnum);
             break;
         }
 
     /* find intnum */
-    for (intnum = 0; intnum < p->fp->intrcount; intnum++)
-        if (!p->fp->intr[intnum].flags)
+    for(intnum = 0; intnum < p->fp->intrcount; intnum++)
+        if(!p->fp->intr[intnum].flags)
             break;
 
     assert(intnum < p->fp->intrcount);
@@ -165,32 +164,32 @@ int dil_intr_insert(class dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags)
 }
 void dil_free_var(struct dilvar *v)
 {
-    switch (v->type)
+    switch(v->type)
     {
-    case DILV_SP:
-        if (v->val.string)
-        {
-            FREE(v->val.string);
-            v->val.string = NULL;
-        }
-        break;
+        case DILV_SP:
+            if(v->val.string)
+            {
+                FREE(v->val.string);
+                v->val.string = NULL;
+            }
+            break;
 
-    case DILV_SLP:
-        if (v->val.namelist)
-        {
-            delete v->val.namelist;
-            v->val.namelist = NULL;
-        }
-        break;
+        case DILV_SLP:
+            if(v->val.namelist)
+            {
+                delete v->val.namelist;
+                v->val.namelist = NULL;
+            }
+            break;
 
-    case DILV_ILP:
-        /* Only free if temporary allocated expression */
-        if (v->val.intlist)
-        {
-            delete v->val.intlist;
-            v->val.intlist = NULL;
-        }
-        break;
+        case DILV_ILP:
+            /* Only free if temporary allocated expression */
+            if(v->val.intlist)
+            {
+                delete v->val.intlist;
+                v->val.intlist = NULL;
+            }
+            break;
     }
 }
 
@@ -199,24 +198,24 @@ void dil_free_frame(struct dilframe *frame)
     int j;
 
     /* free variables */
-    for (j = 0; j < frame->tmpl->varc; j++)
+    for(j = 0; j < frame->tmpl->varc; j++)
         dil_free_var(&frame->vars[j]);
 
-    if (frame->vars)
+    if(frame->vars)
     {
         FREE(frame->vars);
         frame->vars = NULL;
     }
 
     /* discard secures */
-    if (frame->secure)
+    if(frame->secure)
     {
         FREE(frame->secure);
         frame->secure = NULL;
     }
 
     /* discard intr */
-    if (frame->intr)
+    if(frame->intr)
     {
         FREE(frame->intr);
         frame->intr = NULL;
@@ -227,42 +226,42 @@ void dil_free_template(struct diltemplate *tmpl, int copy)
 {
     int i;
 
-    if (tmpl->flags == DILFL_FREEME)
+    if(tmpl->flags == DILFL_FREEME)
     {
         /* free dummy template */
-        //FREE(tmpl->prgname); xxx
+        // FREE(tmpl->prgname); xxx
         tmpl->zone = NULL;
         tmpl->argt = NULL;
         tmpl->xrefs = NULL;
         FREE(tmpl);
     }
-    else if (!copy)
+    else if(!copy)
     {
         /* free entire inline template */
         FREE(tmpl->prgname);
 
-        if (tmpl->argt)
+        if(tmpl->argt)
             FREE(tmpl->argt);
 
-        if (tmpl->vart)
+        if(tmpl->vart)
             FREE(tmpl->vart);
 
-        if (tmpl->core)
+        if(tmpl->core)
             FREE(tmpl->core);
 
-        if (tmpl->extprg)
+        if(tmpl->extprg)
             FREE(tmpl->extprg);
 
-        for (i = 0; i < tmpl->xrefcount; i++)
+        for(i = 0; i < tmpl->xrefcount; i++)
         {
-            if (tmpl->xrefs[i].name)
+            if(tmpl->xrefs[i].name)
                 FREE(tmpl->xrefs[i].name);
 
-            if (tmpl->xrefs[i].argt)
+            if(tmpl->xrefs[i].argt)
                 FREE(tmpl->xrefs[i].argt);
         }
 
-        if (tmpl->xrefs)
+        if(tmpl->xrefs)
             FREE(tmpl->xrefs);
 
         tmpl->zone = NULL;
@@ -283,68 +282,71 @@ char dil_getbool(class dilval *v, class dilprg *prg)
        the pointer variable! The new value type is very
        simplified, and thus more effective.
      */
-    switch (v->type)
+    switch(v->type)
     {
-    case DILV_UP:
-    case DILV_ZP:
-    case DILV_CP:
-    case DILV_SP:
-    case DILV_EDP:
-        return (v->val.ptr != NULL); /* return Rvalue */
+        case DILV_UP:
+        case DILV_ZP:
+        case DILV_CP:
+        case DILV_SP:
+        case DILV_EDP:
+            return (v->val.ptr != NULL); /* return Rvalue */
 
-    case DILV_UPR:
-    case DILV_ZPR:
-    case DILV_CPR:
-    case DILV_SPR:
-    case DILV_EDPR:
-        return (*((void **)v->ref) != NULL); /* return Lvalue */
+        case DILV_UPR:
+        case DILV_ZPR:
+        case DILV_CPR:
+        case DILV_SPR:
+        case DILV_EDPR:
+            return (*((void **)v->ref) != NULL); /* return Lvalue */
 
-    case DILV_SLP:
-        return ((cNamelist *)v->val.ptr)->Length() != 0;
+        case DILV_SLP:
+            return ((cNamelist *)v->val.ptr)->Length() != 0;
 
-    case DILV_SLPR:
-        return ((cNamelist *)v->ref)->Length() != 0;
+        case DILV_SLPR:
+            return ((cNamelist *)v->ref)->Length() != 0;
 
-    case DILV_ILP:
-        return ((cintlist *)v->val.ptr)->Length() != 0;
+        case DILV_ILP:
+            return ((cintlist *)v->val.ptr)->Length() != 0;
 
-    case DILV_ILPR:
-        return ((cintlist *)v->ref)->Length() != 0;
+        case DILV_ILPR:
+            return ((cintlist *)v->ref)->Length() != 0;
 
-    case DILV_HASHSTR:
-        /* return Lvalue */
-        return ((std::string *)(v->ref))->empty();
+        case DILV_HASHSTR:
+            /* return Lvalue */
+            return ((std::string *)(v->ref))->empty();
 
-    case DILV_INT:
-        return (v->val.num != 0); /* return Rvalue */
+        case DILV_INT:
+            return (v->val.num != 0); /* return Rvalue */
 
-    case DILV_SINT1R:
-        return (*((sbit8 *)v->ref) != 0); /* return Lvalue */
+        case DILV_SINT1R:
+            return (*((sbit8 *)v->ref) != 0); /* return Lvalue */
 
-    case DILV_SINT2R:
-        return (*((sbit16 *)v->ref) != 0); /* return Lvalue */
+        case DILV_SINT2R:
+            return (*((sbit16 *)v->ref) != 0); /* return Lvalue */
 
-    case DILV_SINT4R:
-        return (*((sbit32 *)v->ref) != 0); /* return Lvalue */
+        case DILV_SINT4R:
+            return (*((sbit32 *)v->ref) != 0); /* return Lvalue */
 
-    case DILV_UINT1R:
-        return (*((ubit8 *)v->ref) != 0); /* return Lvalue */
+        case DILV_UINT1R:
+            return (*((ubit8 *)v->ref) != 0); /* return Lvalue */
 
-    case DILV_UINT2R:
-        return (*((ubit16 *)v->ref) != 0); /* return Lvalue */
+        case DILV_UINT2R:
+            return (*((ubit16 *)v->ref) != 0); /* return Lvalue */
 
-    case DILV_UINT4R:
-        return (*((ubit32 *)v->ref) != 0); /* return Lvalue */
+        case DILV_UINT4R:
+            return (*((ubit32 *)v->ref) != 0); /* return Lvalue */
 
-    case DILV_FAIL:
-    case DILV_NULL:
-        return FALSE;
+        case DILV_FAIL:
+        case DILV_NULL:
+            return FALSE;
 
-    default:
-        slog(LOG_ALL, 0, "DIL getbool error in dil %s on unit %s@%s.",
-             prg->frame->tmpl->prgname, UNIT_FI_NAME(prg->sarg->owner),
-             UNIT_FI_ZONENAME(prg->sarg->owner));
-        return FALSE;
+        default:
+            slog(LOG_ALL,
+                 0,
+                 "DIL getbool error in dil %s on unit %s@%s.",
+                 prg->frame->tmpl->prgname,
+                 UNIT_FI_NAME(prg->sarg->owner),
+                 UNIT_FI_ZONENAME(prg->sarg->owner));
+            return FALSE;
     }
 }
 
@@ -353,80 +355,74 @@ int dil_getval(class dilval *v)
 {
     /* original type */
     static int orig_type[DILV_MAX + 1] = {
-        DILV_ERR,
-        DILV_UP, DILV_SP, DILV_SLP, DILV_EDP, DILV_INT,
-        DILV_UP, DILV_SP, DILV_SLP, DILV_EDP, DILV_INT,
-        DILV_INT, DILV_INT, DILV_INT, DILV_INT, DILV_INT,
-        DILV_ERR, DILV_NULL, DILV_FAIL,
-        DILV_ERR, DILV_ERR, DILV_ERR, DILV_SP,
-        DILV_ZP, DILV_ZP, DILV_ERR, DILV_ERR, DILV_ERR, DILV_ERR,
-        DILV_CP, DILV_CP, DILV_ERR, DILV_ERR, DILV_ERR, DILV_ILP, DILV_ILP,
-        DILV_ERR};
+        DILV_ERR, DILV_UP,  DILV_SP,  DILV_SLP, DILV_EDP,  DILV_INT,  DILV_UP,  DILV_SP,  DILV_SLP, DILV_EDP, DILV_INT, DILV_INT, DILV_INT,
+        DILV_INT, DILV_INT, DILV_INT, DILV_ERR, DILV_NULL, DILV_FAIL, DILV_ERR, DILV_ERR, DILV_ERR, DILV_SP,  DILV_ZP,  DILV_ZP,  DILV_ERR,
+        DILV_ERR, DILV_ERR, DILV_ERR, DILV_CP,  DILV_CP,   DILV_ERR,  DILV_ERR, DILV_ERR, DILV_ILP, DILV_ILP, DILV_ERR};
 
-    switch (v->type)
+    switch(v->type)
     {
-    case DILV_UP:
-    case DILV_SP:
-    case DILV_SLP:
-    case DILV_ILP:
-    case DILV_EDP:
-    case DILV_INT:
-    case DILV_ZP:
-    case DILV_CP:
-        v->ref = NULL; /* this is NOT a reference */
-        break;
-    case DILV_SPR:
-        v->val.ptr = *((char **)v->ref); /* get value of ref */
-        break;
-    case DILV_HASHSTR:
-        /* Important! Remember that the HASHSTR may NEVER EVER BE CHANGED! */
-        v->val.ptr = (char *)((std::string *)v->ref)->c_str();
-        break;
+        case DILV_UP:
+        case DILV_SP:
+        case DILV_SLP:
+        case DILV_ILP:
+        case DILV_EDP:
+        case DILV_INT:
+        case DILV_ZP:
+        case DILV_CP:
+            v->ref = NULL; /* this is NOT a reference */
+            break;
+        case DILV_SPR:
+            v->val.ptr = *((char **)v->ref); /* get value of ref */
+            break;
+        case DILV_HASHSTR:
+            /* Important! Remember that the HASHSTR may NEVER EVER BE CHANGED! */
+            v->val.ptr = (char *)((std::string *)v->ref)->c_str();
+            break;
 
-    case DILV_SLPR:
-        v->val.ptr = v->ref;
-        break;
+        case DILV_SLPR:
+            v->val.ptr = v->ref;
+            break;
 
-    case DILV_ILPR:
-        v->val.ptr = v->ref;
-        break;
+        case DILV_ILPR:
+            v->val.ptr = v->ref;
+            break;
 
-    case DILV_ZPR:
-    case DILV_CPR:
-    case DILV_UPR:
-    case DILV_EDPR:
-        v->val.ptr = *((void **)v->ref); /* get value of ref */
-        break;
+        case DILV_ZPR:
+        case DILV_CPR:
+        case DILV_UPR:
+        case DILV_EDPR:
+            v->val.ptr = *((void **)v->ref); /* get value of ref */
+            break;
 
-    case DILV_SINT1R:
-        v->val.num = *((sbit8 *)v->ref);
-        break;
-    case DILV_SINT2R:
-        v->val.num = *((sbit16 *)v->ref);
-        break;
-    case DILV_SINT4R:
-        v->val.num = *((sbit32 *)v->ref);
-        break;
-    case DILV_UINT1R:
-        v->val.num = *((ubit8 *)v->ref);
-        break;
-    case DILV_UINT2R:
-        v->val.num = *((ubit16 *)v->ref);
-        break;
-    case DILV_UINT4R:
-        v->val.num = *((ubit32 *)v->ref);
-        break;
-    case DILV_NULL:
-    case DILV_FAIL:
-        v->val.ptr = NULL;
-        v->ref = NULL;
-        break;
+        case DILV_SINT1R:
+            v->val.num = *((sbit8 *)v->ref);
+            break;
+        case DILV_SINT2R:
+            v->val.num = *((sbit16 *)v->ref);
+            break;
+        case DILV_SINT4R:
+            v->val.num = *((sbit32 *)v->ref);
+            break;
+        case DILV_UINT1R:
+            v->val.num = *((ubit8 *)v->ref);
+            break;
+        case DILV_UINT2R:
+            v->val.num = *((ubit16 *)v->ref);
+            break;
+        case DILV_UINT4R:
+            v->val.num = *((ubit32 *)v->ref);
+            break;
+        case DILV_NULL:
+        case DILV_FAIL:
+            v->val.ptr = NULL;
+            v->ref = NULL;
+            break;
 
-    default:
-        v->type = DILV_ERR; /* illegal type! */
-        v->val.num = 0;
-        v->ref = NULL;
-        break;
+        default:
+            v->type = DILV_ERR; /* illegal type! */
+            v->val.num = 0;
+            v->ref = NULL;
+            break;
     }
     return orig_type[v->type];
 }
@@ -434,10 +430,10 @@ int dil_getval(class dilval *v)
 /* adds exp node to exp, returns node number */
 void dil_add_secure(class dilprg *prg, class unit_data *sup, ubit8 *lab)
 {
-    if (sup == NULL)
+    if(sup == NULL)
         return;
 
-    if (prg->fp->securecount)
+    if(prg->fp->securecount)
     {
         RECREATE(prg->fp->secure, struct dilsecure, prg->fp->securecount + 1);
     }
@@ -458,18 +454,18 @@ int dil_sub_secure(struct dilframe *frm, class unit_data *sup, int bForeach)
     int count;
     count = 0;
 
-    for (i = 0; i < frm->securecount; i++)
-        if (frm->secure[i].sup == sup)
+    for(i = 0; i < frm->securecount; i++)
+        if(frm->secure[i].sup == sup)
         {
-            if (bForeach && frm->secure[i].lab)
+            if(bForeach && frm->secure[i].lab)
                 continue;
 
-            if (!bForeach && !frm->secure[i].lab)
+            if(!bForeach && !frm->secure[i].lab)
                 continue;
 
             frm->secure[i] = frm->secure[--(frm->securecount)];
             count++;
-            if (frm->securecount)
+            if(frm->securecount)
             {
                 RECREATE(frm->secure, struct dilsecure, frm->securecount);
             }
@@ -489,42 +485,41 @@ int dil_sub_secure(struct dilframe *frm, class unit_data *sup, int bForeach)
    exec(), send() and sendto().
    ********************************************************************* */
 
-
 /* Clears all extra pointers equal to a removed extra            */
 void dil_clear_extras(register class dilprg *prg, class extra_descr_data *exd)
 {
     register int i;
     struct dilframe *frm;
 
-    if (!prg->frame)
+    if(!prg->frame)
     {
         slog(LOG_ALL, 0, "tried to clean empty frame");
         return;
     }
 
-    for (frm = prg->frame; frm <= prg->fp; frm++)
+    for(frm = prg->frame; frm <= prg->fp; frm++)
     {
-        for (i = 0; i < frm->tmpl->varc; i++)
+        for(i = 0; i < frm->tmpl->varc; i++)
         {
-            if (frm->vars[i].type == DILV_EDP)
+            if(frm->vars[i].type == DILV_EDP)
             {
-                if (frm->vars[i].val.extraptr == exd)
+                if(frm->vars[i].val.extraptr == exd)
                     frm->vars[i].val.extraptr = NULL;
             }
         }
     }
 
     // Guess this might be needed when calling remote routines. Not tested... :-/
-    for (i = 0; i < prg->stack.length(); i++)
+    for(i = 0; i < prg->stack.length(); i++)
     {
-        if (prg->stack[i]->atyp == DILV_EDPR)
+        if(prg->stack[i]->atyp == DILV_EDPR)
         {
-            if (*((class extra_descr_data **)prg->stack[i]->ref) == exd)
+            if(*((class extra_descr_data **)prg->stack[i]->ref) == exd)
                 prg->stack[i]->ref = NULL;
         }
-        else if (prg->stack[i]->atyp == DILV_EDP)
+        else if(prg->stack[i]->atyp == DILV_EDP)
         {
-            if (prg->stack[i]->val.ptr == exd)
+            if(prg->stack[i]->val.ptr == exd)
                 prg->stack[i]->val.ptr = NULL;
         }
     }
@@ -537,24 +532,24 @@ void dil_clear_non_secured(register class dilprg *prg)
     register int i, j;
     struct dilframe *frm;
 
-    if (!prg->frame)
+    if(!prg->frame)
     {
         slog(LOG_ALL, 0, "tried to clean empty frame");
         return;
     }
 
-    for (frm = prg->frame; frm <= prg->fp; frm++)
+    for(frm = prg->frame; frm <= prg->fp; frm++)
     {
-        for (i = 0; i < frm->tmpl->varc; i++)
+        for(i = 0; i < frm->tmpl->varc; i++)
         {
-            if (frm->vars[i].type == DILV_EDP)
+            if(frm->vars[i].type == DILV_EDP)
                 frm->vars[i].val.extraptr = NULL;
-            else if (frm->vars[i].type == DILV_UP)
+            else if(frm->vars[i].type == DILV_UP)
             {
-                for (j = 0; j < frm->securecount; j++)
-                    if (frm->secure[j].sup == frm->vars[i].val.unitptr)
+                for(j = 0; j < frm->securecount; j++)
+                    if(frm->secure[j].sup == frm->vars[i].val.unitptr)
                         break;
-                if (j >= frm->securecount)
+                if(j >= frm->securecount)
                     frm->vars[i].val.unitptr = NULL;
             }
         }
@@ -567,11 +562,10 @@ void dil_clear_lost_reference(register struct dilframe *frm, void *ptr)
 {
     int i;
 
-    for (i = 0; i < frm->tmpl->varc; i++)
-        if (frm->vars[i].val.unitptr == ptr)
+    for(i = 0; i < frm->tmpl->varc; i++)
+        if(frm->vars[i].val.unitptr == ptr)
             frm->vars[i].val.unitptr = NULL;
 }
-
 
 /*
     MS 2020-10-21
@@ -581,28 +575,28 @@ void dil_clear_lost_reference(register struct dilframe *frm, void *ptr)
 
     Imagine that a dil program has a secured variable then then calls
     another secured dil program that returns a value which also has a
-    secured variable. 
+    secured variable.
 
     When the secure is broken, the first program exits, and returns a value,
-    the second (original) program, should then have received the value which 
+    the second (original) program, should then have received the value which
     was placed on the stack, but because the dil_test_secure() moved the program
     pointer for both programs, the second program is no longer at the original
     point and doesn't know there are values to pop from the stack.
 
     Since the last program can't know if it is used in a stack sensitive context,
-    the only option seems to be to not change the program point of any program 
-    except the currently executing DIL program. 
+    the only option seems to be to not change the program point of any program
+    except the currently executing DIL program.
 
     Thus the code has been modified to change only the active program's execution
     point (e.g. to secure(pc, lostpc); -> :lostpc: // new exec point). It will still
-    null out the variable for all programs that secured them. 
+    null out the variable for all programs that secured them.
 
     It's impossible to know how big an impact this will have, if any. If it is an
     issue, then my next plan would be to mark the new execution point in a variable
     in the frame of the other programs. Once they get to execute, they should jump
     to this point. However, it's also non-trivial. We can't just do that on the first
     instruction when returning from the second program, or we'd run into the same issue
-    as far as I can tell. So it would have to be at a "valid point". Since I don't have 
+    as far as I can tell. So it would have to be at a "valid point". Since I don't have
     a great idea for what defines a valid point, I'm punting to see if we can live with
     only the currently executing program triggering the secure().
 
@@ -614,17 +608,17 @@ void dil_test_secure(register class dilprg *prg, int bForeach)
     int count;
     struct dilframe *frm;
 
-    if (prg->waitcmd <= WAITCMD_STOP)
+    if(prg->waitcmd <= WAITCMD_STOP)
         return;
 
-    for (frm = prg->frame; frm <= prg->fp; frm++)
-        for (i = 0; i < frm->securecount; i++)
+    for(frm = prg->frame; frm <= prg->fp; frm++)
+        for(i = 0; i < frm->securecount; i++)
         {
-            if (bForeach && frm->secure[i].lab)
+            if(bForeach && frm->secure[i].lab)
                 continue;
-            if (scan4_ref(prg->sarg->owner, frm->secure[i].sup) == NULL)
+            if(scan4_ref(prg->sarg->owner, frm->secure[i].sup) == NULL)
             {
-                if (frm->secure[i].lab)
+                if(frm->secure[i].lab)
                 {
                     /* This is REALLY important! Imagine a broken secure in a
                        pause; the execution then continues at the label point,
@@ -633,13 +627,13 @@ void dil_test_secure(register class dilprg *prg, int bForeach)
 
                     prg->waitcmd--;
 
-                    if (frm == prg->fp) // See long comment above. Only the active frame changes execution point 
+                    if(frm == prg->fp) // See long comment above. Only the active frame changes execution point
                         frm->pc = frm->secure[i].lab;
                 }
 
                 dil_clear_lost_reference(frm, frm->secure[i].sup);
                 count = dil_sub_secure(frm, frm->secure[i].sup, bForeach);
-                if (count > 0)
+                if(count > 0)
                     i--;
                 /* Do not return until all have been tested! */
             }
@@ -655,8 +649,10 @@ void dil_typeerr(class dilprg *p, const char *where)
     szonelog(UNIT_FI_ZONE(p->sarg->owner),
              "DIL SERIOUS: on %s@%s %s@%s, Type error in %s\n",
              UNIT_FI_NAME(p->sarg->owner),
-             UNIT_FI_ZONENAME(p->sarg->owner), p->fp->tmpl->prgname,
-             p->fp->tmpl->zone->name, where);
+             UNIT_FI_ZONENAME(p->sarg->owner),
+             p->fp->tmpl->prgname,
+             p->fp->tmpl->zone->name,
+             where);
     p->waitcmd = WAITCMD_QUIT;
 }
 
@@ -676,7 +672,7 @@ int dil_type_check(const char *f, class dilprg *p, int tot, ...)
 
     va_start(args, tot);
 
-    while (tot--)
+    while(tot--)
     {
         v[idx] = va_arg(args, class dilval *);
 
@@ -686,17 +682,16 @@ int dil_type_check(const char *f, class dilprg *p, int tot, ...)
         val = dil_getval(v[idx]);
 
         any = FALSE;
-        while (cnt--)
-            if (val == va_arg(args, int))
+        while(cnt--)
+            if(val == va_arg(args, int))
                 any = TRUE;
 
-        if (!any)
+        if(!any)
         {
             /* Don't write type error if dil_getval failed or
              * returned DILV_NULL (provided we fail on nulls)
              */
-            if ((val != DILV_FAIL) && ((val != DILV_NULL) ||
-                                       (flag != FAIL_NULL)))
+            if((val != DILV_FAIL) && ((val != DILV_NULL) || (flag != FAIL_NULL)))
             {
                 dil_typeerr(p, f);
                 ok_sofar = FALSE;
@@ -708,7 +703,7 @@ int dil_type_check(const char *f, class dilprg *p, int tot, ...)
 
     va_end(args);
 
-    if (ok_sofar)
+    if(ok_sofar)
         return TRUE;
 
     /* Type error, clean up  They clean themselves up now... :-/
@@ -726,217 +721,96 @@ int dil_type_check(const char *f, class dilprg *p, int tot, ...)
 
 struct dil_func_type dilfe_func[DILI_MAX + 1] = {
     {dilfe_illegal}, /* 0 */
-    {dilfe_plus},
-    {dilfe_min},
-    {dilfe_mul},
-    {dilfe_div},
-    {dilfe_mod},
-    {dilfe_and},
-    {dilfe_or},
-    {dilfe_not},
-    {dilfe_gt},
+    {dilfe_plus},     {dilfe_min},       {dilfe_mul},
+    {dilfe_div},      {dilfe_mod},       {dilfe_and},
+    {dilfe_or},       {dilfe_not},       {dilfe_gt},
     {dilfe_lt}, /* 10 */
-    {dilfe_ge},
-    {dilfe_le},
-    {dilfe_eq},
-    {dilfe_pe},
-    {dilfe_ne},
-    {dilfe_in},
-    {dilfe_umin},
-    {dilfe_se},
-    {dilfe_null},
+    {dilfe_ge},       {dilfe_le},        {dilfe_eq},
+    {dilfe_pe},       {dilfe_ne},        {dilfe_in},
+    {dilfe_umin},     {dilfe_se},        {dilfe_null},
 
     {dilfe_fld}, /* 20 */
-    {dilfe_atoi},
-    {dilfe_itoa},
-    {dilfe_rnd},
-    {dilfe_fndu},  // findunit
-    {dilfe_fndr},  // 25 findroom
-    {dilfe_load},
-    {dilfe_iss},
-    {dilfe_getw},
-    {dilfe_isa},
-    {dilfe_cmds}, /* 30 */
-    {dilfe_fnds}, // findsymbolic
+    {dilfe_atoi},     {dilfe_itoa},      {dilfe_rnd},
+    {dilfe_fndu}, // findunit
+    {dilfe_fndr}, // 25 findroom
+    {dilfe_load},     {dilfe_iss},       {dilfe_getw},
+    {dilfe_isa},      {dilfe_cmds}, /* 30 */
+    {dilfe_fnds},                   // findsymbolic
 
-    {dilfe_acti},
-    {dilfe_argm},
-    {dilfe_tho},
-    {dilfe_tda},
-    {dilfe_tmd},
-    {dilfe_tye},
-    {dilfe_hrt},
-    {dilfe_self},
+    {dilfe_acti},     {dilfe_argm},      {dilfe_tho},
+    {dilfe_tda},      {dilfe_tmd},       {dilfe_tye},
+    {dilfe_hrt},      {dilfe_self},
 
     {dilfe_var}, /* 40 */
-    {dilfe_fs},
-    {dilfe_fsl},
-    {dilfe_int},
+    {dilfe_fs},       {dilfe_fsl},       {dilfe_int},
     {dilfe_len},
 
-    {dilfi_ass},
-    {dilfi_lnk},
-    {dilfi_exp},
-    {dilfi_cast},
-    {dilfi_if},
-    {dilfi_set}, /* 50 */
-    {dilfi_uset},
-    {dilfi_adl},
-    {dilfi_sul},
-    {dilfi_ade},
-    {dilfi_sue},
-    {dilfi_dst},
-    {dilfi_popstk},
-    {dilfi_exec},
-    {dilfi_wit},
+    {dilfi_ass},      {dilfi_lnk},       {dilfi_exp},
+    {dilfi_cast},     {dilfi_if},        {dilfi_set}, /* 50 */
+    {dilfi_uset},     {dilfi_adl},       {dilfi_sul},
+    {dilfi_ade},      {dilfi_sue},       {dilfi_dst},
+    {dilfi_popstk},   {dilfi_exec},      {dilfi_wit},
     {dilfi_act}, /* 60 */
-    {dilfi_goto},
-    {dilfi_sua},
-    {dilfi_ada},
-    {dilfi_pri},
-    {dilfi_npr},
-    {dilfi_snd},
-    {dilfi_snt},
-    {dilfi_sec},
-    {dilfi_use},
+    {dilfi_goto},     {dilfi_sua},       {dilfi_ada},
+    {dilfi_pri},      {dilfi_npr},       {dilfi_snd},
+    {dilfi_snt},      {dilfi_sec},       {dilfi_use},
     {dilfi_foe}, /* 70 */
-    {dilfi_fon},
-    {dilfi_eqp},
-    {dilfi_ueq},
-    {dilfe_weat},
-    {dilfe_oppo},
-    {dilfi_quit},
+    {dilfi_fon},      {dilfi_eqp},       {dilfi_ueq},
+    {dilfe_weat},     {dilfe_oppo},      {dilfi_quit},
 
-    {dilfi_blk},
-    {dilfi_pup},
+    {dilfi_blk},      {dilfi_pup},
 
-    {dilfe_getws},
-    {dilfi_snta}, /* 80 */
-    {dilfi_log},
-    {dilfe_pne},
-    {dilfe_sne},
-    {dilfi_rfunc},
-    {dilfi_rfunc},
-    {dilfi_rtf},
-    {dilfi_rtf},
-    {dilfe_dld},
-    {dilfe_dlf},
+    {dilfe_getws},    {dilfi_snta}, /* 80 */
+    {dilfi_log},      {dilfe_pne},       {dilfe_sne},
+    {dilfi_rfunc},    {dilfi_rfunc},     {dilfi_rtf},
+    {dilfi_rtf},      {dilfe_dld},       {dilfe_dlf},
     {dilfi_dlc}, /* 90 */
-    {dilfe_lor},
-    {dilfe_land},
-    {dilfi_on},
-    {dilfi_rsfunc},
-    {dilfi_rsfunc},
-    {dilfe_intr},
-    {dilfi_cli},
-    {dilfi_sbt},
-    {dilfi_set_weight_base},
+    {dilfe_lor},      {dilfe_land},      {dilfi_on},
+    {dilfi_rsfunc},   {dilfi_rsfunc},    {dilfe_intr},
+    {dilfi_cli},      {dilfi_sbt},       {dilfi_set_weight_base},
     {dilfe_fndru}, /* 100 */
-    {dilfe_visi},
-    {dilfe_atsp},
-    {dilfe_purs},
-    {dilfi_chas},
-    {dilfi_setf}, /* 105 */
-    {dilfe_medi},
-    {dilfe_targ},
-    {dilfe_powe},
-    {dilfe_trmo},
-    {dilfi_sntadil}, /* 110 */
-    {dilfe_cast2},
-    {dilfe_mel},
-    {dilfe_eqpm},
-    {dilfe_cmst},
-    {dilfe_opro}, /* 115 */
-    {dilfe_delstr},
-    {dilfe_delunit},
-    {dilfi_amod},
-    {dilfi_sete},
-    {dilfi_folo}, /* 120 */
-    {dilfi_lcri},
-    {dilfe_fits},
-    {dilfe_cary},
+    {dilfe_visi},     {dilfe_atsp},      {dilfe_purs},
+    {dilfi_chas},     {dilfi_setf}, /* 105 */
+    {dilfe_medi},     {dilfe_targ},      {dilfe_powe},
+    {dilfe_trmo},     {dilfi_sntadil}, /* 110 */
+    {dilfe_cast2},    {dilfe_mel},       {dilfe_eqpm},
+    {dilfe_cmst},     {dilfe_opro}, /* 115 */
+    {dilfe_delstr},   {dilfe_delunit},   {dilfi_amod},
+    {dilfi_sete},     {dilfi_folo}, /* 120 */
+    {dilfi_lcri},     {dilfe_fits},      {dilfe_cary},
     {dilfe_fnds2}, // findsymbolic(#,#)
-    {dilfe_path}, /* 125  */
-    {dilfe_mons},
-    {dilfe_splx},
-    {dilfe_spli},
-    {dilfe_rti},
-    {dilfe_txf}, /* 130  */
-    {dilfe_ast},
-    {dilfe_pck},
-    {dilfe_act},
-    {dilfe_islt},
-    {dilfe_clr}, /* 135  */
-    {dilfe_clradd},
-    {dilfe_split},
-    {dilfe_ghead},
-    {dilfe_replace},
-    {dilfe_meldam}, /*140 */
-    {dilfi_rslv},
-    {dilfi_rsvlv},
-    {dilfi_rsrce},
-    {dilfi_pgstr},
-    {dilfe_clrdel}, /*145 */
-    {dilfe_clrchg},
-    {dilfe_svstr},
-    {dilfe_ldstr},
-    {dilfe_flog},
-    {dilfe_resta}, /*150 */
-    {dilfi_stora},
-    {dilfi_stopf},
-    {dilfi_edit},
-    {dilfe_zhead},
-    {dilfe_udir}, //155
-    {dilfe_sdir},
-    {dilfi_send_done},
-    {dilfi_gamestate},
-    {dilfi_setpwd},
-    {dilfi_delpc},
-    {dilfe_ckpwd},
-    {dilfe_left},
-    {dilfe_right},
-    {dilfe_mid},
-    {dilfe_sgt}, //165
-    {dilfe_slt},
-    {dilfe_sge},
-    {dilfe_sle},
-    {dilfe_isplayer},
-    {dilfe_tolower},
-    {dilfe_toupper},
-    {dilfe_skitxt},
-    {dilfe_wpntxt},
-    {dilfe_clone},
-    {dilfe_chead},
-    {dilfe_sendpre},
-    {dilfe_excmst},
-    {dilfe_fil},
-    {dilfi_inslst},
-    {dilfi_remlst},
-    {dilfi_ade2},
-    {dilfe_getcmd},
-    {dilfi_reboot},
-    {dilfi_kedit},
-    {dilfe_gopp},
-    {dilfe_excmstc},
-    {dilfe_strcmp},
-    {dilfe_strncmp},
-    {dilfe_wepinfo},
-    {dilfe_nhead},
-    {dilfe_rhead},
-    {dilfe_ohead},
-    {dilfe_phead},
-    {dilfe_fndu2},
-    {dilfe_gfol},
+    {dilfe_path},  /* 125  */
+    {dilfe_mons},     {dilfe_splx},      {dilfe_spli},
+    {dilfe_rti},      {dilfe_txf}, /* 130  */
+    {dilfe_ast},      {dilfe_pck},       {dilfe_act},
+    {dilfe_islt},     {dilfe_clr}, /* 135  */
+    {dilfe_clradd},   {dilfe_split},     {dilfe_ghead},
+    {dilfe_replace},  {dilfe_meldam}, /*140 */
+    {dilfi_rslv},     {dilfi_rsvlv},     {dilfi_rsrce},
+    {dilfi_pgstr},    {dilfe_clrdel}, /*145 */
+    {dilfe_clrchg},   {dilfe_svstr},     {dilfe_ldstr},
+    {dilfe_flog},     {dilfe_resta}, /*150 */
+    {dilfi_stora},    {dilfi_stopf},     {dilfi_edit},
+    {dilfe_zhead},    {dilfe_udir}, // 155
+    {dilfe_sdir},     {dilfi_send_done}, {dilfi_gamestate},
+    {dilfi_setpwd},   {dilfi_delpc},     {dilfe_ckpwd},
+    {dilfe_left},     {dilfe_right},     {dilfe_mid},
+    {dilfe_sgt}, // 165
+    {dilfe_slt},      {dilfe_sge},       {dilfe_sle},
+    {dilfe_isplayer}, {dilfe_tolower},   {dilfe_toupper},
+    {dilfe_skitxt},   {dilfe_wpntxt},    {dilfe_clone},
+    {dilfe_chead},    {dilfe_sendpre},   {dilfe_excmst},
+    {dilfe_fil},      {dilfi_inslst},    {dilfi_remlst},
+    {dilfi_ade2},     {dilfe_getcmd},    {dilfi_reboot},
+    {dilfi_kedit},    {dilfe_gopp},      {dilfe_excmstc},
+    {dilfe_strcmp},   {dilfe_strncmp},   {dilfe_wepinfo},
+    {dilfe_nhead},    {dilfe_rhead},     {dilfe_ohead},
+    {dilfe_phead},    {dilfe_fndu2},     {dilfe_gfol},
     {dilfe_sact}, // 196
-    {dilfe_gint},
-    {dilfe_shell},
-    {dilfi_set_weight},
-    {dilfi_dispatch},  // 200
-    {dilfe_fndz},
-    {dilfe_fndsidx},
-    {dilfe_call} // 203
- };
-
+    {dilfe_gint},     {dilfe_shell},     {dilfi_set_weight},
+    {dilfi_dispatch},                                 // 200
+    {dilfe_fndz},     {dilfe_fndsidx},   {dilfe_call} // 203
+};
 
 static int check_interrupt(class dilprg *prg)
 {
@@ -944,11 +818,10 @@ static int check_interrupt(class dilprg *prg)
     struct timeval tbegin, tend;
     double ttime;
 
-    for (i = 0; i < prg->fp->intrcount; i++)
+    for(i = 0; i < prg->fp->intrcount; i++)
     {
-        if (IS_SET(prg->fp->intr[i].flags, prg->sarg->mflags | SFB_ACTIVATE))
+        if(IS_SET(prg->fp->intr[i].flags, prg->sarg->mflags | SFB_ACTIVATE))
         {
-
             ubit32 adr;
             int oldwaitcmd = prg->waitcmd;
             ubit8 *oldpc = prg->fp->pc;
@@ -956,24 +829,21 @@ static int check_interrupt(class dilprg *prg)
             prg->fp->pc = prg->fp->intr[i].lab;
             prg->fp->stacklen = prg->stack.length();
 
-            gettimeofday(&tbegin, (struct timezone *) 0);
+            gettimeofday(&tbegin, (struct timezone *)0);
 
             (prg)->fp->tmpl->nTriggers++;
-            while (prg->waitcmd > 0 && (prg->fp->pc < prg->fp->intr[i].elab))
+            while(prg->waitcmd > 0 && (prg->fp->pc < prg->fp->intr[i].elab))
             {
                 (prg)->fp->pc++;
                 (prg)->fp->tmpl->nInstructions++;
-                assert(prg->fp->pc <=
-                       &(prg->fp->tmpl->core[prg->fp->tmpl->coresz]));
+                assert(prg->fp->pc <= &(prg->fp->tmpl->core[prg->fp->tmpl->coresz]));
                 (dilfe_func[*(prg->fp->pc - 1)].func(prg));
             }
 
-            gettimeofday(&tend, (struct timezone *) 0);
+            gettimeofday(&tend, (struct timezone *)0);
 
-            ttime = (tend.tv_sec -  tbegin.tv_sec)  * 1000.0 +
-                    (tend.tv_usec - tbegin.tv_usec) / 1000.0;
+            ttime = (tend.tv_sec - tbegin.tv_sec) * 1000.0 + (tend.tv_usec - tbegin.tv_usec) / 1000.0;
             (prg)->fp->tmpl->fCPU += ttime;
-
 
             assert((prg->fp->stacklen + 1) == prg->stack.length());
 
@@ -983,9 +853,9 @@ static int check_interrupt(class dilprg *prg)
 
             prg->waitcmd = oldwaitcmd;
 
-            if (dil_getbool(v1, prg))
+            if(dil_getbool(v1, prg))
             {
-                if (adr == SKIP)
+                if(adr == SKIP)
                 {
                     prg->fp->pc = oldpc;
                     delete v1;
@@ -995,7 +865,7 @@ static int check_interrupt(class dilprg *prg)
                 prg->waitcmd--;
                 prg->fp->pc = &(prg->fp->tmpl->core[adr]);
 
-                if (IS_SET(prg->fp->intr[i].flags, SFB_ACTIVATE))
+                if(IS_SET(prg->fp->intr[i].flags, SFB_ACTIVATE))
                 {
                     prg->fp->intr[i].flags = 0;
                     prg->fp->intr[i].lab = NULL;
@@ -1022,14 +892,14 @@ void ActivateDil(class unit_data *pc)
     class unit_fptr *fptr;
     class dilprg *prg;
 
-    for (fptr = UNIT_FUNC(pc); fptr; fptr = fptr->next)
+    for(fptr = UNIT_FUNC(pc); fptr; fptr = fptr->next)
     {
-        if (fptr->is_destructed())
+        if(fptr->is_destructed())
         {
             assert(FALSE);
         }
-       if (fptr->index == SFUN_DIL_INTERNAL && fptr->data)
-        { 
+        if(fptr->index == SFUN_DIL_INTERNAL && fptr->data)
+        {
             prg = (class dilprg *)fptr->data;
             REMOVE_BIT(prg->flags, DILFL_DEACTIVATED);
         }
@@ -1039,17 +909,17 @@ void ActivateDil(class unit_data *pc)
 /* added active program exclusion for menu dil, we will
  * deactivate all dil's except the running one on a player
  * during a gamestate change.
-*/
+ */
 void DeactivateDil(class unit_data *pc, class dilprg *aprg)
 {
     class unit_fptr *fptr;
     class dilprg *prg;
 
-    for (fptr = UNIT_FUNC(pc); fptr; fptr = fptr->next)
+    for(fptr = UNIT_FUNC(pc); fptr; fptr = fptr->next)
     {
-        if (fptr->index == SFUN_DIL_INTERNAL && fptr->data)
+        if(fptr->index == SFUN_DIL_INTERNAL && fptr->data)
         {
-            if (aprg && (aprg == fptr->data))
+            if(aprg && (aprg == fptr->data))
                 continue;
             prg = (class dilprg *)fptr->data;
             SET_BIT(prg->flags, DILFL_DEACTIVATED);
@@ -1072,18 +942,18 @@ int run_dil(struct spec_arg *sarg)
     struct timeval tbegin, tend;
     double ttime;
 
-    if (prg == NULL)
+    if(prg == NULL)
         return SFR_SHARE;
 
     membug_verify_class(prg);
 
-    if (prg->owner == NULL)
+    if(prg->owner == NULL)
     {
         slog(LOG_ALL, 0, "run_dil() owner is null :-(");
         return SFR_SHARE;
     }
 
-    if (prg->fp == NULL)
+    if(prg->fp == NULL)
     {
         slog(LOG_ALL, 0, "run_dil() has empty frame?! :-(");
         return SFR_SHARE;
@@ -1091,26 +961,26 @@ int run_dil(struct spec_arg *sarg)
 
     prg->nest++; // How many recursive calls does this program have?
 
-    if (prg->nest > 2)
+    if(prg->nest > 2)
     {
         slog(LOG_ALL, 0, "run_dil() %s has nest %d", prg->fp->tmpl->prgname, prg->nest);
     }
 
-    if (sarg->cmd->no == CMD_AUTO_EXTRACT)
+    if(sarg->cmd->no == CMD_AUTO_EXTRACT)
     {
         prg->nest--; // We return below, get to zero before free
         prg->waitcmd = WAITCMD_DESTROYED;
 
-        if (IS_SET(prg->flags, DILFL_EXECUTING))
+        if(IS_SET(prg->flags, DILFL_EXECUTING))
         {
             /* Set so as to notify command loop! Extracted recursively! */
 
             sarg->fptr->data = NULL;
 
             /* The very very very dirty static template hack... :-) */
-            if (IS_SET(prg->fp->tmpl->flags, DILFL_FREEME))
+            if(IS_SET(prg->fp->tmpl->flags, DILFL_FREEME))
             {
-                if (prg->canfree())
+                if(prg->canfree())
                 {
                     DELETE(dilprg, prg);
                     prg = NULL;
@@ -1119,8 +989,8 @@ int run_dil(struct spec_arg *sarg)
         }
         else
         {
-            sarg->fptr->data = NULL; 
-            if (prg->canfree())
+            sarg->fptr->data = NULL;
+            if(prg->canfree())
             {
                 DELETE(dilprg, prg);
                 prg = NULL;
@@ -1134,7 +1004,7 @@ int run_dil(struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    if ((prg->waitcmd > 0) && IS_SET(prg->flags, DILFL_EXECUTING | DILFL_DEACTIVATED))
+    if((prg->waitcmd > 0) && IS_SET(prg->flags, DILFL_EXECUTING | DILFL_DEACTIVATED))
     {
         prg->nest--;
         return SFR_SHARE;
@@ -1154,16 +1024,15 @@ int run_dil(struct spec_arg *sarg)
         return SFR_SHARE;
     }*/
 
-
     /* A MEGA HACK! The DIL activated spells will not be tested for
        secures on first call only, to avoid loosing global pointers */
-    if (prg->waitcmd == WAITCMD_MAXINST)
+    if(prg->waitcmd == WAITCMD_MAXINST)
         dil_test_secure(prg);
 
     dil_clear_non_secured(prg);
 
     /* Test if the ON_ACTIVATION should be triggered */
-    if ((prg->waitcmd > 0) && check_interrupt(prg) == 1)
+    if((prg->waitcmd > 0) && check_interrupt(prg) == 1)
     {
         REMOVE_BIT(prg->flags, DILFL_EXECUTING);
         sarg->arg = orgarg;
@@ -1171,7 +1040,7 @@ int run_dil(struct spec_arg *sarg)
         return SFR_SHARE;
     }
 
-    if (activates + 1 > 5000)
+    if(activates + 1 > 5000)
     {
         slog(LOG_ALL, 0, "RECURSIVE DIL ERROR IN %s", prg->fp->tmpl->prgname);
         prg->nest--;
@@ -1183,10 +1052,10 @@ int run_dil(struct spec_arg *sarg)
 
     activates++;
 
-    gettimeofday(&tbegin, (struct timezone *) 0);
+    gettimeofday(&tbegin, (struct timezone *)0);
 
     (prg)->fp->tmpl->nTriggers++;
-    while (prg->waitcmd > 0)
+    while(prg->waitcmd > 0)
     {
         (prg)->fp->pc++;
 
@@ -1197,10 +1066,9 @@ int run_dil(struct spec_arg *sarg)
         (dilfe_func[*(prg->fp->pc - 1)].func(prg));
     }
     membug_verify(prg);
-    gettimeofday(&tend, (struct timezone *) 0);
+    gettimeofday(&tend, (struct timezone *)0);
 
-    ttime = (tend.tv_sec -  tbegin.tv_sec)  * 1000.0 +
-            (tend.tv_usec - tbegin.tv_usec) / 1000.0;
+    ttime = (tend.tv_sec - tbegin.tv_sec) * 1000.0 + (tend.tv_usec - tbegin.tv_usec) / 1000.0;
     (prg)->fp->tmpl->fCPU += ttime;
 
     activates--;
@@ -1208,12 +1076,12 @@ int run_dil(struct spec_arg *sarg)
     //	assert (!(prg->waitcmd>WAITCMD_FINISH) && (prg->fp==prg->frame) && (prg->stack.length()!=0)));
     sarg->arg = orgarg;
 
-    if (prg->waitcmd <= WAITCMD_DESTROYED) // Maybe also destroy if fptr or owner is destroyed?
-    { /* Was it destroyed?? */
+    if(prg->waitcmd <= WAITCMD_DESTROYED) // Maybe also destroy if fptr or owner is destroyed?
+    {                                     /* Was it destroyed?? */
         prg->nest--;
 
         int bBlock = IS_SET(prg->flags, DILFL_CMDBLOCK);
-        if (prg->canfree())
+        if(prg->canfree())
         {
             DELETE(dilprg, prg);
             prg = NULL;
@@ -1221,17 +1089,17 @@ int run_dil(struct spec_arg *sarg)
             destroy_fptr(sarg->owner, sarg->fptr);
         }
 
-        if (bBlock)
+        if(bBlock)
             return SFR_BLOCK;
         else
             return SFR_SHARE;
     }
-    else if (prg->waitcmd <= WAITCMD_QUIT)
+    else if(prg->waitcmd <= WAITCMD_QUIT)
     {
         prg->nest--;
 
         int bBlock = IS_SET(prg->flags, DILFL_CMDBLOCK);
-        if (prg->canfree())
+        if(prg->canfree())
         {
             DELETE(dilprg, prg);
             prg = NULL;
@@ -1239,24 +1107,28 @@ int run_dil(struct spec_arg *sarg)
             destroy_fptr(sarg->owner, sarg->fptr);
         }
 
-        if (bBlock)
+        if(bBlock)
             return SFR_BLOCK;
         else
             return SFR_SHARE;
     }
-    else if (prg->waitcmd <= WAITCMD_STOP)
+    else if(prg->waitcmd <= WAITCMD_STOP)
     {
         /* Just return and let the EXECUTING bit stay turned on, so all execution is blocked */
         // Not sure when this might happen, logging
-        slog(LOG_ALL, 0, "DIL program [%s] stopped on unit %s@%s.", 
-            prg->fp->tmpl->prgname, UNIT_FI_NAME(sarg->owner), UNIT_FI_ZONENAME(sarg->owner));
+        slog(LOG_ALL,
+             0,
+             "DIL program [%s] stopped on unit %s@%s.",
+             prg->fp->tmpl->prgname,
+             UNIT_FI_NAME(sarg->owner),
+             UNIT_FI_ZONENAME(sarg->owner));
         prg->nest--;
 
-        // 
-        // MS2020 It seems we should delete the program to avoid having it hang around broken. 
+        //
+        // MS2020 It seems we should delete the program to avoid having it hang around broken.
         //
         int bBlock = IS_SET(prg->flags, DILFL_CMDBLOCK);
-        if (prg->canfree())
+        if(prg->canfree())
         {
             DELETE(dilprg, prg);
             prg = NULL;
@@ -1264,19 +1136,21 @@ int run_dil(struct spec_arg *sarg)
             destroy_fptr(sarg->owner, sarg->fptr);
         }
 
-        if (bBlock)
+        if(bBlock)
             return SFR_BLOCK;
         else
             return SFR_SHARE;
     }
-    else if (prg->waitcmd > WAITCMD_FINISH)
+    else if(prg->waitcmd > WAITCMD_FINISH)
     {
-        szonelog(UNIT_FI_ZONE(sarg->owner), "DIL %s in unit %s@%s had endless loop.",
+        szonelog(UNIT_FI_ZONE(sarg->owner),
+                 "DIL %s in unit %s@%s had endless loop.",
                  prg->fp->tmpl->prgname,
-                 UNIT_FI_NAME(sarg->owner), UNIT_FI_ZONENAME(sarg->owner));
+                 UNIT_FI_NAME(sarg->owner),
+                 UNIT_FI_ZONENAME(sarg->owner));
 
         prg->nest--;
-        if (prg->canfree())
+        if(prg->canfree())
         {
             DELETE(dilprg, prg);
             prg = NULL;
@@ -1286,7 +1160,7 @@ int run_dil(struct spec_arg *sarg)
         return SFR_SHARE;
     }
 
-    for (i = 0; i < prg->fp->intrcount; i++)
+    for(i = 0; i < prg->fp->intrcount; i++)
         SET_BIT(prg->sarg->fptr->flags, prg->fp->intr[i].flags);
 
     /* Okay this is the problem:
@@ -1305,28 +1179,26 @@ int run_dil(struct spec_arg *sarg)
 
     prg->nest--;
 
-    if (prg->nest <= 0)
+    if(prg->nest <= 0)
     {
         sarg->fptr->heart_beat = MAX(PULSE_SEC * 1, sarg->fptr->heart_beat);
 
-        if (IS_SET(prg->sarg->fptr->flags, SFB_TICK))
+        if(IS_SET(prg->sarg->fptr->flags, SFB_TICK))
         {
             void ResetFptrTimer(class unit_data * u, class unit_fptr * fptr);
 
             /* Purely for optimization purposes! Enqueue / dequeue are HUGE! */
-            if ((OrgHeartBeat != sarg->fptr->heart_beat) &&
-                (sarg->cmd->no != CMD_AUTO_TICK))
+            if((OrgHeartBeat != sarg->fptr->heart_beat) && (sarg->cmd->no != CMD_AUTO_TICK))
                 ResetFptrTimer(sarg->owner, sarg->fptr);
         }
         prg->waitcmd = WAITCMD_MAXINST;
 
         REMOVE_BIT(prg->flags, DILFL_EXECUTING);
-
     }
 
     membug_verify(prg);
 
-    if (IS_SET(prg->flags, DILFL_CMDBLOCK))
+    if(IS_SET(prg->flags, DILFL_CMDBLOCK))
         return SFR_BLOCK;
     else
         return SFR_SHARE;
@@ -1334,9 +1206,9 @@ int run_dil(struct spec_arg *sarg)
 
 int dil_init(struct spec_arg *sarg)
 {
-    if (sarg->cmd->no != CMD_AUTO_EXTRACT)
+    if(sarg->cmd->no != CMD_AUTO_EXTRACT)
     {
-        if (sarg->fptr->data)
+        if(sarg->fptr->data)
             dil_copy((char *)sarg->fptr->data, sarg->owner);
         else
         {
@@ -1353,25 +1225,25 @@ int dil_init(struct spec_arg *sarg)
 
 static void dil_free_dilargs(struct dilargstype *dilargs)
 {
-    if (dilargs->name)
+    if(dilargs->name)
         FREE(dilargs->name);
 
-    for (int i = 0; i < dilargs->no; i++)
-        switch (dilargs->dilarg[i].type)
+    for(int i = 0; i < dilargs->no; i++)
+        switch(dilargs->dilarg[i].type)
         {
-        case DILV_SP:
-            if (dilargs->dilarg[i].data.string)
-                FREE(dilargs->dilarg[i].data.string);
-            break;
+            case DILV_SP:
+                if(dilargs->dilarg[i].data.string)
+                    FREE(dilargs->dilarg[i].data.string);
+                break;
 
-        case DILV_SLP:
-            if (dilargs->dilarg[i].data.stringlist)
-                free_namelist(dilargs->dilarg[i].data.stringlist);
-            break;
-        case DILV_ILP:
-            if (dilargs->dilarg[i].data.intlist)
-                FREE(dilargs->dilarg[i].data.intlist);
-            break;
+            case DILV_SLP:
+                if(dilargs->dilarg[i].data.stringlist)
+                    free_namelist(dilargs->dilarg[i].data.stringlist);
+                break;
+            case DILV_ILP:
+                if(dilargs->dilarg[i].data.intlist)
+                    FREE(dilargs->dilarg[i].data.intlist);
+                break;
         }
 
     FREE(dilargs);
@@ -1383,14 +1255,14 @@ int dil_direct_init(struct spec_arg *sarg)
 
     assert(dilargs);
 
-    if (sarg->cmd->no != CMD_AUTO_EXTRACT)
+    if(sarg->cmd->no != CMD_AUTO_EXTRACT)
     {
         class dilprg *prg;
         struct diltemplate *tmpl;
 
         tmpl = find_dil_template(dilargs->name);
 
-        if (tmpl == NULL)
+        if(tmpl == NULL)
         {
             szonelog(UNIT_FI_ZONE(sarg->owner),
                      "Template '%s' not found: %s@%s",
@@ -1398,7 +1270,7 @@ int dil_direct_init(struct spec_arg *sarg)
                      UNIT_FI_NAME(sarg->owner),
                      UNIT_FI_ZONENAME(sarg->owner));
         }
-        else if (tmpl->argc != dilargs->no)
+        else if(tmpl->argc != dilargs->no)
         {
             szonelog(UNIT_FI_ZONE(sarg->owner),
                      "Template '%s' had mismatching argument count %d: %s@%s",
@@ -1410,59 +1282,56 @@ int dil_direct_init(struct spec_arg *sarg)
         else
         {
             int i;
-            for (i = 0; i < dilargs->no; i++)
-                if (tmpl->argt[i] != dilargs->dilarg[i].type)
+            for(i = 0; i < dilargs->no; i++)
+                if(tmpl->argt[i] != dilargs->dilarg[i].type)
                     break;
 
-            if (i < dilargs->no)
+            if(i < dilargs->no)
             {
                 szonelog(UNIT_FI_ZONE(sarg->owner),
                          "Template '%s' had argument "
                          "mismatch for argument %d: %s@%s",
-                         dilargs->name, i, UNIT_FI_NAME(sarg->owner),
+                         dilargs->name,
+                         i,
+                         UNIT_FI_NAME(sarg->owner),
                          UNIT_FI_ZONENAME(sarg->owner));
             }
             else
             {
                 prg = dil_copy_template(tmpl, sarg->owner, NULL);
 
-                if (prg && dilargs->no > 0)
+                if(prg && dilargs->no > 0)
                 {
-                    for (i = 0; i < dilargs->no; i++)
+                    for(i = 0; i < dilargs->no; i++)
                     {
-                        if (tmpl->argt[i] == DILV_SP)
+                        if(tmpl->argt[i] == DILV_SP)
                         {
-                            prg->fp->vars[i].val.string =
-                                dilargs->dilarg[i].data.string;
+                            prg->fp->vars[i].val.string = dilargs->dilarg[i].data.string;
                             dilargs->dilarg[i].data.string = NULL;
                         }
-                        else if (tmpl->argt[i] == DILV_SLP)
+                        else if(tmpl->argt[i] == DILV_SLP)
                         {
-                            if (prg->fp->vars[i].val.namelist)
-                                delete (cNamelist *)prg->fp->vars[i].val.namelist;
-                            prg->fp->vars[i].val.namelist =
-                                new cNamelist((const char **)dilargs->dilarg[i].data.stringlist);
+                            if(prg->fp->vars[i].val.namelist)
+                                delete(cNamelist *)prg->fp->vars[i].val.namelist;
+                            prg->fp->vars[i].val.namelist = new cNamelist((const char **)dilargs->dilarg[i].data.stringlist);
                         }
-                        else if (tmpl->argt[i] == DILV_ILP)
+                        else if(tmpl->argt[i] == DILV_ILP)
                         {
-                            if (prg->fp->vars[i].val.intlist)
-                                delete (cintlist *)prg->fp->vars[i].val.intlist;
+                            if(prg->fp->vars[i].val.intlist)
+                                delete(cintlist *)prg->fp->vars[i].val.intlist;
                             prg->fp->vars[i].val.intlist = new cintlist();
                             int m;
-                            for (m = 1; m <= dilargs->dilarg[i].data.intlist[0];
-                                 m++)
+                            for(m = 1; m <= dilargs->dilarg[i].data.intlist[0]; m++)
                                 prg->fp->vars[i].val.intlist->Append((int)dilargs->dilarg[i].data.intlist[m]);
                         }
-                        else if (tmpl->argt[i] == DILV_INT)
+                        else if(tmpl->argt[i] == DILV_INT)
                         {
-                            prg->fp->vars[i].val.integer =
-                                dilargs->dilarg[i].data.num;
+                            prg->fp->vars[i].val.integer = dilargs->dilarg[i].data.num;
                         }
                     }
                 }
             }
         }
-
 
         destroy_fptr(sarg->owner, sarg->fptr);
     }
@@ -1481,7 +1350,7 @@ int dil_destroy(const char *name, class unit_data *u)
     struct spec_arg sarg;
 
     fptr = dil_find(name, u);
-    if (fptr && !fptr->is_destructed())
+    if(fptr && !fptr->is_destructed())
     {
         assert(fptr->data); /* MUST or ged! */
         prg = ((class dilprg *)fptr->data);
@@ -1499,9 +1368,8 @@ int dil_destroy(const char *name, class unit_data *u)
 
         run_dil(&sarg);
 
-
         //  We finished the signalling, now lets really destroy it.
-        if (!fptr->is_destructed() && fptr && fptr->data)
+        if(!fptr->is_destructed() && fptr && fptr->data)
         {
             REMOVE_BIT(prg->flags, DILFL_DEACTIVATED); // We're going to destroy it
             prg->waitcmd = WAITCMD_QUIT;
@@ -1515,44 +1383,43 @@ int dil_destroy(const char *name, class unit_data *u)
 
 void dil_init_vars(int varc, struct dilframe *frm)
 {
-    for (int i = 0; i < varc; i++)
+    for(int i = 0; i < varc; i++)
     {
-        switch (frm->vars[i].type)
+        switch(frm->vars[i].type)
         {
-        case DILV_SLP:
-            frm->vars[i].val.namelist = new cNamelist;
-            break;
+            case DILV_SLP:
+                frm->vars[i].val.namelist = new cNamelist;
+                break;
 
-        case DILV_ILP:
-            frm->vars[i].val.intlist = new cintlist;
-            break;
+            case DILV_ILP:
+                frm->vars[i].val.intlist = new cintlist;
+                break;
 
-        case DILV_SP:
-            frm->vars[i].val.string = NULL;
-            break;
+            case DILV_SP:
+                frm->vars[i].val.string = NULL;
+                break;
 
-        default:
-            frm->vars[i].val.integer = 0;
+            default:
+                frm->vars[i].val.integer = 0;
         }
     }
 }
 
-class dilprg *dil_copy_template(struct diltemplate *tmpl,
-                                 class unit_data *u, class unit_fptr **pfptr)
+class dilprg *dil_copy_template(struct diltemplate *tmpl, class unit_data *u, class unit_fptr **pfptr)
 {
     class dilprg *prg;
     class unit_fptr *fptr;
 
-    if (IS_SET(tmpl->flags, DILFL_UNIQUE))
+    if(IS_SET(tmpl->flags, DILFL_UNIQUE))
     {
         class unit_fptr *f;
-        for (f = UNIT_FUNC(u); f; f = f->next)
+        for(f = UNIT_FUNC(u); f; f = f->next)
         {
-            if (f->index == SFUN_DIL_INTERNAL)
+            if(f->index == SFUN_DIL_INTERNAL)
             {
                 class dilprg *uprg;
-                if ((uprg = (class dilprg *)f->data))
-                    if (uprg->frame[0].tmpl == tmpl)
+                if((uprg = (class dilprg *)f->data))
+                    if(uprg->frame[0].tmpl == tmpl)
                         return (NULL);
             }
         }
@@ -1567,17 +1434,17 @@ class dilprg *dil_copy_template(struct diltemplate *tmpl,
     prg->flags = DILFL_COPY | REMOVE_BIT(tmpl->flags, DILFL_EXECUTING | DILFL_CMDBLOCK);
     prg->frame->pc = tmpl->core;
 
-    if (tmpl->varc)
+    if(tmpl->varc)
     {
         CREATE(prg->frame->vars, struct dilvar, tmpl->varc);
     }
 
-    for (int i = 0; i < tmpl->varc; i++)
+    for(int i = 0; i < tmpl->varc; i++)
         prg->frame->vars[i].type = tmpl->vart[i];
 
     dil_init_vars(tmpl->varc, prg->frame);
 
-    if (tmpl->intrcount)
+    if(tmpl->intrcount)
     {
         CREATE(prg->frame->intr, struct dilintr, tmpl->intrcount);
     }
@@ -1585,12 +1452,12 @@ class dilprg *dil_copy_template(struct diltemplate *tmpl,
     prg->frame->intrcount = tmpl->intrcount;
 
     /* activate on tick SOON! */
-    if (IS_SET(tmpl->flags, DILFL_AWARE))
-        fptr = create_fptr(u, SFUN_DIL_INTERNAL, tmpl->priority , PULSE_SEC, SFB_ALL | SFB_AWARE, prg);
+    if(IS_SET(tmpl->flags, DILFL_AWARE))
+        fptr = create_fptr(u, SFUN_DIL_INTERNAL, tmpl->priority, PULSE_SEC, SFB_ALL | SFB_AWARE, prg);
     else
-        fptr = create_fptr(u, SFUN_DIL_INTERNAL,  tmpl->priority, PULSE_SEC, SFB_ALL, prg);
+        fptr = create_fptr(u, SFUN_DIL_INTERNAL, tmpl->priority, PULSE_SEC, SFB_ALL, prg);
 
-    if (pfptr)
+    if(pfptr)
         *pfptr = fptr;
 
     membug_verify(fptr->data);
@@ -1606,8 +1473,8 @@ void dil_activate(class dilprg *prg)
 
     assert(prg);
 
-    for (fptr = UNIT_FUNC(prg->owner); fptr; fptr = fptr->next)
-        if (fptr->data == prg)
+    for(fptr = UNIT_FUNC(prg->owner); fptr; fptr = fptr->next)
+        if(fptr->data == prg)
             break;
 
     assert(fptr);
@@ -1637,8 +1504,8 @@ void dil_activate_cmd(class dilprg *prg, struct command_info *cmd_ptr)
 
     assert(prg);
 
-    for (fptr = UNIT_FUNC(prg->owner); fptr; fptr = fptr->next)
-        if (fptr->data == prg)
+    for(fptr = UNIT_FUNC(prg->owner); fptr; fptr = fptr->next)
+        if(fptr->data == prg)
             break;
 
     assert(fptr);
@@ -1664,15 +1531,15 @@ void dil_activate_cmd(class dilprg *prg, struct command_info *cmd_ptr)
 void dil_loadtime_activate(class unit_data *u)
 {
     class unit_fptr *f, *fnext;
-    for (f = UNIT_FUNC(u); f; f = fnext)
+    for(f = UNIT_FUNC(u); f; f = fnext)
     {
         fnext = f->next;
-        if (f->index == SFUN_DILCOPY_INTERNAL)
+        if(f->index == SFUN_DILCOPY_INTERNAL)
         {
             events.remove(special_event, u, f);
             special_event(u, f);
         }
-        else if ((f->index == SFUN_DIL_INTERNAL) && f->data)
+        else if((f->index == SFUN_DIL_INTERNAL) && f->data)
         {
             events.remove(special_event, u, f);
             special_event(u, f);
@@ -1702,7 +1569,7 @@ class dilprg *dil_copy(char *name, class unit_data *u)
     targ = NULL;
     narg = 0;
 
-    if (farg)
+    if(farg)
     {
         /* To avoid "(,25) giving no arg as 1 - do -1 and set to ' '. */
         farg--;
@@ -1711,15 +1578,15 @@ class dilprg *dil_copy(char *name, class unit_data *u)
         targ = farg;
         args[0] = strtok(farg, ",");
 
-        if (args[0])
+        if(args[0])
         {
             args[0]++; /* Skip the space we just generated! */
 
-            for (narg = 1; narg < (int)sizeof(args); narg++)
+            for(narg = 1; narg < (int)sizeof(args); narg++)
             {
                 args[narg] = strtok(NULL, ",");
 
-                if (args[narg] == NULL)
+                if(args[narg] == NULL)
                     break;
             }
         }
@@ -1727,61 +1594,65 @@ class dilprg *dil_copy(char *name, class unit_data *u)
 
     tmpl = find_dil_template(tmplname);
 
-    if (!tmpl)
+    if(!tmpl)
     {
-        szonelog(UNIT_FI_ZONE(u),
-                 "Template '%s' not found: %s@%s",
-                 tmplname, UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
-        if (targ)
+        szonelog(UNIT_FI_ZONE(u), "Template '%s' not found: %s@%s", tmplname, UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
+        if(targ)
             FREE(targ)
         return NULL;
     }
 
     /* check argument count and types */
-    if (tmpl->argc != narg)
+    if(tmpl->argc != narg)
     {
         szonelog(UNIT_FI_ZONE(u),
                  "Template '%s' had mismatching argument count %d: %s@%s",
-                 tmplname, narg, UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
-        if (targ)
+                 tmplname,
+                 narg,
+                 UNIT_FI_NAME(u),
+                 UNIT_FI_ZONENAME(u));
+        if(targ)
             FREE(targ)
         return NULL;
     }
 
-    for (i = 0; i < narg; i++)
+    for(i = 0; i < narg; i++)
     {
-        if (tmpl->argt[i] == DILV_SP)
+        if(tmpl->argt[i] == DILV_SP)
         {
             continue;
         }
-        else if (tmpl->argt[i] == DILV_INT)
+        else if(tmpl->argt[i] == DILV_INT)
         {
             args[i] = skip_spaces(args[i]);
             strip_trailing_spaces(args[i]);
 
-            if (str_is_number(args[i]))
+            if(str_is_number(args[i]))
                 continue;
         }
 
         szonelog(UNIT_FI_ZONE(u),
                  "Template '%s' had mismatching argument mismatch for %d: %s@%s",
-                 tmplname, i, UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
-        if (targ)
+                 tmplname,
+                 i,
+                 UNIT_FI_NAME(u),
+                 UNIT_FI_ZONENAME(u));
+        if(targ)
             FREE(targ)
         return NULL;
     }
 
     prg = dil_copy_template(tmpl, u, NULL);
 
-    if (prg && narg > 0)
+    if(prg && narg > 0)
     {
-        for (i = 0; i < narg; i++)
+        for(i = 0; i < narg; i++)
         {
-            if (tmpl->argt[i] == DILV_SP)
+            if(tmpl->argt[i] == DILV_SP)
             {
                 prg->fp->vars[i].val.string = str_dup(args[i]);
             }
-            else if (tmpl->argt[i] == DILV_INT)
+            else if(tmpl->argt[i] == DILV_INT)
             {
                 prg->fp->vars[i].val.integer = atoi(args[i]);
             }
@@ -1789,7 +1660,7 @@ class dilprg *dil_copy(char *name, class unit_data *u)
                 error(HERE, "DIL COPY Arg parse");
         }
     }
-    if (targ)
+    if(targ)
         FREE(targ);
     return prg;
 }
@@ -1799,11 +1670,11 @@ class unit_fptr *dil_find(const char *name, class unit_data *u)
     class unit_fptr *fptr;
     struct diltemplate *tmpl;
 
-    if ((tmpl = find_dil_template(name)))
+    if((tmpl = find_dil_template(name)))
     {
-        for (fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
-            if ((!fptr->is_destructed()) && (fptr->index == SFUN_DIL_INTERNAL))
-                if ((((class dilprg *)fptr->data)->frame[0].tmpl == tmpl) &&  ((class dilprg *)fptr->data)->waitcmd > WAITCMD_QUIT)
+        for(fptr = UNIT_FUNC(u); fptr; fptr = fptr->next)
+            if((!fptr->is_destructed()) && (fptr->index == SFUN_DIL_INTERNAL))
+                if((((class dilprg *)fptr->data)->frame[0].tmpl == tmpl) && ((class dilprg *)fptr->data)->waitcmd > WAITCMD_QUIT)
                     return fptr;
     }
     return NULL;

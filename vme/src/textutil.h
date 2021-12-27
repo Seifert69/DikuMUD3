@@ -33,9 +33,9 @@ void str_remspc(register char *s);
 void str_chraround(char *str, char c);
 
 const char *is_name_raw(const char *arg, char const *const *names); // MS2020 const char *names[])
-char *is_name(char *arg, char const *const *names);     // arg will get double spaces zapped
-//const char *is_name_raw(const char *arg, const char *names[]);
-//const char *is_name(const char *arg, const char *names[]);
+char *is_name(char *arg, char const *const *names);                 // arg will get double spaces zapped
+// const char *is_name_raw(const char *arg, const char *names[]);
+// const char *is_name(const char *arg, const char *names[]);
 
 int str_lower(char *s);
 int str_upper(char *s);
@@ -46,7 +46,7 @@ char *str_repeatchar(int n, char c);
 
 char *str_line(const char *, char *);
 #ifdef DOS
-#define itoa(n) itoa_dos(n)
+    #define itoa(n) itoa_dos(n)
 char *itoa_dos(int n);
 #else
 char *itoa(int n);
@@ -61,11 +61,9 @@ ubit1 str_is_empty(const char *arg);
 ubit1 str_is_number(const char *str);
 ubit1 next_word_is_number(const char *str);
 char *one_argument(const char *argument, char *first_arg);
-int search_block_abbrevs(const char *oarg, const char **list,
-                         const char **end);
+int search_block_abbrevs(const char *oarg, const char **list, const char **end);
 int search_block(const char *arg, const char **list, ubit1 exact);
-int search_block_length(const char *arg, int length,
-                        const char **list, ubit1 exact);
+int search_block_length(const char *arg, int length, const char **list, ubit1 exact);
 int fill_word(const char *argument);
 ubit1 is_abbrev(const char *arg1, const char *arg2);
 char *str_cc(const char *s1, const char *s2);
@@ -89,7 +87,6 @@ const char *divcolor(const char *colorstr);
 int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVal, char *pNewTag, int nTagMax);
 int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax);
 const char *getHTMLTag(const char *p, char *pTag, int nTagMax);
-
 
 std::string str_json(const char *lbl, ubit64 nInt);
 std::string str_json(const char *lbl, const char *str);

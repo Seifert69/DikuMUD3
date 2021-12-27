@@ -98,88 +98,127 @@ void Control_ANSI_Echo_Off(class cConHook *con, char **b, ubit8 code);
 #define CONTROL_BG_CYAN_CHAR 'w'
 #define CONTROL_BG_WHITE_CHAR 'x'
 
-#define CONTROL_ECHO_OFF "\x1B" \
-                         "A"
-#define CONTROL_ECHO_ON "\x1B" \
-                        "B"
+#define CONTROL_ECHO_OFF                                                                                                                   \
+    "\x1B"                                                                                                                                 \
+    "A"
+#define CONTROL_ECHO_ON                                                                                                                    \
+    "\x1B"                                                                                                                                 \
+    "B"
 
-#define CONTROL_BOLD "\x1B" \
-                     "C"
-#define CONTROL_sREVERSE "\x1B" \
-                         "D"
+#define CONTROL_BOLD                                                                                                                       \
+    "\x1B"                                                                                                                                 \
+    "C"
+#define CONTROL_sREVERSE                                                                                                                   \
+    "\x1B"                                                                                                                                 \
+    "D"
 
-#define CONTROL_RESET "\x1B" \
-                      "E"
-#define CONTROL_DIM "\x1B" \
-                    "F"
-#define CONTROL_HOME "\x1B" \
-                     "H"
-#define CONTROL_GOBBLE_ON "\x1B" \
-                          "I"
-#define CONTROL_GOBBLE_OFF "\x1B" \
-                           "J"
-#define CONTROL_COLOR_CHANGE "\x1B" \
-                             "K"
-#define CONTROL_COLOR_INSERT "\x1B" \
-                             "L"
-#define CONTROL_COLOR_CREATE "\x1B" \
-                             "M"
-#define CONTROL_COLOR_REMOVE "\x1B" \
-                             "N"
-#define CONTROL_COLOR_DISP "\x1B" \
-                           "O"
-#define CONTROL_COLOR_END "\x1B" \
-                          "P"
+#define CONTROL_RESET                                                                                                                      \
+    "\x1B"                                                                                                                                 \
+    "E"
+#define CONTROL_DIM                                                                                                                        \
+    "\x1B"                                                                                                                                 \
+    "F"
+#define CONTROL_HOME                                                                                                                       \
+    "\x1B"                                                                                                                                 \
+    "H"
+#define CONTROL_GOBBLE_ON                                                                                                                  \
+    "\x1B"                                                                                                                                 \
+    "I"
+#define CONTROL_GOBBLE_OFF                                                                                                                 \
+    "\x1B"                                                                                                                                 \
+    "J"
+#define CONTROL_COLOR_CHANGE                                                                                                               \
+    "\x1B"                                                                                                                                 \
+    "K"
+#define CONTROL_COLOR_INSERT                                                                                                               \
+    "\x1B"                                                                                                                                 \
+    "L"
+#define CONTROL_COLOR_CREATE                                                                                                               \
+    "\x1B"                                                                                                                                 \
+    "M"
+#define CONTROL_COLOR_REMOVE                                                                                                               \
+    "\x1B"                                                                                                                                 \
+    "N"
+#define CONTROL_COLOR_DISP                                                                                                                 \
+    "\x1B"                                                                                                                                 \
+    "O"
+#define CONTROL_COLOR_END                                                                                                                  \
+    "\x1B"                                                                                                                                 \
+    "P"
 
-#define CONTROL_FG_BLACK "\x1B" \
-                         "a"
-#define CONTROL_FG_RED "\x1B" \
-                       "b"
-#define CONTROL_FG_GREEN "\x1B" \
-                         "c"
-#define CONTROL_FG_YELLOW "\x1B" \
-                          "d"
-#define CONTROL_FG_BLUE "\x1B" \
-                        "e"
-#define CONTROL_FG_MAGENTA "\x1B" \
-                           "f"
-#define CONTROL_FG_CYAN "\x1B" \
-                        "g"
-#define CONTROL_FG_WHITE "\x1B" \
-                         "h"
+#define CONTROL_FG_BLACK                                                                                                                   \
+    "\x1B"                                                                                                                                 \
+    "a"
+#define CONTROL_FG_RED                                                                                                                     \
+    "\x1B"                                                                                                                                 \
+    "b"
+#define CONTROL_FG_GREEN                                                                                                                   \
+    "\x1B"                                                                                                                                 \
+    "c"
+#define CONTROL_FG_YELLOW                                                                                                                  \
+    "\x1B"                                                                                                                                 \
+    "d"
+#define CONTROL_FG_BLUE                                                                                                                    \
+    "\x1B"                                                                                                                                 \
+    "e"
+#define CONTROL_FG_MAGENTA                                                                                                                 \
+    "\x1B"                                                                                                                                 \
+    "f"
+#define CONTROL_FG_CYAN                                                                                                                    \
+    "\x1B"                                                                                                                                 \
+    "g"
+#define CONTROL_FG_WHITE                                                                                                                   \
+    "\x1B"                                                                                                                                 \
+    "h"
 
-#define CONTROL_FGB_BLACK "\x1B" \
-                          "i"
-#define CONTROL_FGB_RED "\x1B" \
-                        "j"
-#define CONTROL_FGB_GREEN "\x1B" \
-                          "k"
-#define CONTROL_FGB_YELLOW "\x1B" \
-                           "l"
-#define CONTROL_FGB_BLUE "\x1B" \
-                         "m"
-#define CONTROL_FGB_MAGENTA "\x1B" \
-                            "n"
-#define CONTROL_FGB_CYAN "\x1B" \
-                         "o"
-#define CONTROL_FGB_WHITE "\x1B" \
-                          "p"
+#define CONTROL_FGB_BLACK                                                                                                                  \
+    "\x1B"                                                                                                                                 \
+    "i"
+#define CONTROL_FGB_RED                                                                                                                    \
+    "\x1B"                                                                                                                                 \
+    "j"
+#define CONTROL_FGB_GREEN                                                                                                                  \
+    "\x1B"                                                                                                                                 \
+    "k"
+#define CONTROL_FGB_YELLOW                                                                                                                 \
+    "\x1B"                                                                                                                                 \
+    "l"
+#define CONTROL_FGB_BLUE                                                                                                                   \
+    "\x1B"                                                                                                                                 \
+    "m"
+#define CONTROL_FGB_MAGENTA                                                                                                                \
+    "\x1B"                                                                                                                                 \
+    "n"
+#define CONTROL_FGB_CYAN                                                                                                                   \
+    "\x1B"                                                                                                                                 \
+    "o"
+#define CONTROL_FGB_WHITE                                                                                                                  \
+    "\x1B"                                                                                                                                 \
+    "p"
 
-#define CONTROL_BG_BLACK "\x1B" \
-                         "q"
-#define CONTROL_BG_RED "\x1B" \
-                       "r"
-#define CONTROL_BG_GREEN "\x1B" \
-                         "s"
-#define CONTROL_BG_YELLOW "\x1B" \
-                          "t"
-#define CONTROL_BG_BLUE "\x1B" \
-                        "u"
-#define CONTROL_BG_MAGENTA "\x1B" \
-                           "v"
-#define CONTROL_BG_CYAN "\x1B" \
-                        "w"
-#define CONTROL_BG_WHITE "\x1B" \
-                         "x"
+#define CONTROL_BG_BLACK                                                                                                                   \
+    "\x1B"                                                                                                                                 \
+    "q"
+#define CONTROL_BG_RED                                                                                                                     \
+    "\x1B"                                                                                                                                 \
+    "r"
+#define CONTROL_BG_GREEN                                                                                                                   \
+    "\x1B"                                                                                                                                 \
+    "s"
+#define CONTROL_BG_YELLOW                                                                                                                  \
+    "\x1B"                                                                                                                                 \
+    "t"
+#define CONTROL_BG_BLUE                                                                                                                    \
+    "\x1B"                                                                                                                                 \
+    "u"
+#define CONTROL_BG_MAGENTA                                                                                                                 \
+    "\x1B"                                                                                                                                 \
+    "v"
+#define CONTROL_BG_CYAN                                                                                                                    \
+    "\x1B"                                                                                                                                 \
+    "w"
+#define CONTROL_BG_WHITE                                                                                                                   \
+    "\x1B"                                                                                                                                 \
+    "x"
 
 #endif

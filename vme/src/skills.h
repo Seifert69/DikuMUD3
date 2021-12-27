@@ -11,30 +11,29 @@
 struct skill_interval
 {
     int skill;
-    const   char *descr;
+    const char *descr;
 };
 
-
-extern const char *professions[PROFESSION_MAX+1];
+extern const char *professions[PROFESSION_MAX + 1];
 
 class skill_collection
 {
-   public:
-   const char **gettext(void);
-   skill_collection(int nSize);
+public:
+    const char **gettext(void);
+    skill_collection(int nSize);
 
-   struct profession_cost *prof_table;
-   const char **text;
-   struct tree_type *tree;
-   sbit8 *racial[PC_RACE_MAX];
+    struct profession_cost *prof_table;
+    const char **text;
+    struct tree_type *tree;
+    sbit8 *racial[PC_RACE_MAX];
 };
 
 struct profession_cost
 {
     ubit16 sanity; /* Used for sanity check */
-    ubit8  min_level;
-    ubit8  min_abil[ABIL_TREE_MAX];
-    sbit8  profession_cost[PROFESSION_MAX];  // 0 is middle, +1 easier to learn, -1 more dificult, etc. 
+    ubit8 min_level;
+    ubit8 min_abil[ABIL_TREE_MAX];
+    sbit8 profession_cost[PROFESSION_MAX]; // 0 is middle, +1 easier to learn, -1 more dificult, etc.
 };
 
 int get_racial_ability(int nRace, int nAbility);
@@ -42,35 +41,28 @@ int get_racial_weapon(int nRace, int nWeapon);
 int get_racial_skill(int nRace, int nSkill);
 int get_racial_spells(int nRace, int nSpell);
 
-
 /* ---------------- COMBAT MESSAGE SYSTEM -------------------- */
 
-#define COM_MAX_MSGS   60
+#define COM_MAX_MSGS 60
 
-#define COM_MSG_DEAD   -1
-#define COM_MSG_MISS   -2
-#define COM_MSG_NODAM  -3
-#define COM_MSG_EBODY  -4
+#define COM_MSG_DEAD -1
+#define COM_MSG_MISS -2
+#define COM_MSG_NODAM -3
+#define COM_MSG_EBODY -4
 
 /* ---------------- RACES -------------------- */
 
-#define RACE_IS_HUMANOID(race) \
-  ((race) <= RACE_OTHER_HUMANOID)
+#define RACE_IS_HUMANOID(race) ((race) <= RACE_OTHER_HUMANOID)
 
-#define CHAR_IS_MAMMAL(ch)     \
-  RACE_IS_MAMMAL(CHAR_RACE(ch))
+#define CHAR_IS_MAMMAL(ch) RACE_IS_MAMMAL(CHAR_RACE(ch))
 
-#define RACE_IS_MAMMAL(race) \
-  (((race) > RACE_OTHER_HUMANOID) && ((race) <= RACE_OTHER_MAMMAL))
+#define RACE_IS_MAMMAL(race) (((race) > RACE_OTHER_HUMANOID) && ((race) <= RACE_OTHER_MAMMAL))
 
-#define RACE_IS_UNDEAD(race)     \
-  (((race) > RACE_OTHER_CREATURE) && ((race) <= RACE_OTHER_UNDEAD))
+#define RACE_IS_UNDEAD(race) (((race) > RACE_OTHER_CREATURE) && ((race) <= RACE_OTHER_UNDEAD))
 
-#define CHAR_IS_HUMANOID(ch)   \
-  RACE_IS_HUMANOID(CHAR_RACE(ch))
+#define CHAR_IS_HUMANOID(ch) RACE_IS_HUMANOID(CHAR_RACE(ch))
 
-#define CHAR_IS_UNDEAD(ch)     \
-  RACE_IS_UNDEAD(CHAR_RACE(ch))
+#define CHAR_IS_UNDEAD(ch) RACE_IS_UNDEAD(CHAR_RACE(ch))
 
 struct dice_type
 {
@@ -90,7 +82,6 @@ struct base_race_info_type
     struct dice_type lifespan_dice;
 };
 
-
 struct race_info_type
 {
     struct base_race_info_type male;
@@ -100,25 +91,24 @@ struct race_info_type
     struct dice_type age_dice;
 };
 
-
 struct damage_chart_element_type
 {
-    int offset;			/* When does damage start         */
-    int basedam;			/* The damage given at 'offset'   */
-    int alpha;			/* Step size of damage as 1/alpha */
+    int offset;  /* When does damage start         */
+    int basedam; /* The damage given at 'offset'   */
+    int alpha;   /* Step size of damage as 1/alpha */
 };
 
 struct damage_chart_type
 {
-    int fumble;			/* from 01 - fuble => fumble      */
+    int fumble; /* from 01 - fuble => fumble      */
 
     struct damage_chart_element_type element[5];
 };
 
-#define TREE_PARENT(tree, node)        (tree[node].parent)
-#define TREE_GRANDPARENT(tree, node)   (tree[tree[node].parent].parent)
-#define TREE_ISROOT(tree, node)        ((node) == (tree[node].parent))
-#define TREE_ISLEAF(tree, node)        (tree[node].isleaf)
+#define TREE_PARENT(tree, node) (tree[node].parent)
+#define TREE_GRANDPARENT(tree, node) (tree[tree[node].parent].parent)
+#define TREE_ISROOT(tree, node) ((node) == (tree[node].parent))
+#define TREE_ISLEAF(tree, node) (tree[node].isleaf)
 
 struct tree_type
 {
@@ -131,63 +121,53 @@ struct tree_type
 /* Tree has a pointer to parent for each node. 0 pointer from root */
 struct wpn_info_type
 {
-    int hands;			/* 0=N/A, 1 = 1, 2 = 1.5, 3 = 2          */
-    int speed;			/* Speed modification by weapon 0..      */
-    int type;			/* Is the weapon slashing/piercing...    */
-    ubit8 ability[3]; // Primary abilities, e.g. [0]=ABIL_STR, [1]=ABIL_STR, [2]=ABIL_DEX 
-    ubit8 shield;			/* Shield method SHIELD_M_XXX            */
-
+    int hands;        /* 0=N/A, 1 = 1, 2 = 1.5, 3 = 2          */
+    int speed;        /* Speed modification by weapon 0..      */
+    int type;         /* Is the weapon slashing/piercing...    */
+    ubit8 ability[3]; // Primary abilities, e.g. [0]=ABIL_STR, [1]=ABIL_STR, [2]=ABIL_DEX
+    ubit8 shield;     /* Shield method SHIELD_M_XXX            */
 };
-
 
 #define DEMIGOD_LEVEL_XP (40000000)
 
-
-void roll_description (class unit_data * att, const char *text, int roll);
-int open_ended_roll (int size, int end);
-inline int open100 (void)
+void roll_description(class unit_data *att, const char *text, int roll);
+int open_ended_roll(int size, int end);
+inline int open100(void)
 {
-  // MS2020 reducing open roll chance to 2% on high and 1% low.
-  return open_ended_roll(100, 2);
+    // MS2020 reducing open roll chance to 2% on high and 1% low.
+    return open_ended_roll(100, 2);
 }
 
 int skillchecksa(class unit_data *u, int skillidx, int abiidx, int difficulty);
-int resistance_skill_check (int att_skill1, int def_skill1,
-                            int att_skill2, int def_skill2);
-int resistance_level_check (int att_level, int def_level,
-                            int att_skill, int def_skill);
+int resistance_skill_check(int att_skill1, int def_skill1, int att_skill2, int def_skill2);
+int resistance_level_check(int att_level, int def_level, int att_skill, int def_skill);
 
+int weapon_fumble(class unit_data *weapon, int roll);
+int chart_damage(int roll, struct damage_chart_element_type *element);
+int chart_size_damage(int roll, struct damage_chart_element_type *element, int lbs);
+int weapon_damage(int roll, int weapon_type, int armour_type);
+int natural_damage(int roll, int weapon_type, int armour_type, int lbs);
 
-int weapon_fumble (class unit_data * weapon, int roll);
-int chart_damage (int roll, struct damage_chart_element_type *element);
-int chart_size_damage (int roll, struct damage_chart_element_type *element,
-                       int lbs);
-int weapon_damage (int roll, int weapon_type, int armour_type);
-int natural_damage (int roll, int weapon_type, int armour_type, int lbs);
+int basic_char_tgh_absorb(class unit_data *ch);
+int basic_armor_absorb(class unit_data *armour, int att_type);
+int basic_char_absorb(class unit_data *ch, class unit_data *armor, int att_type);
 
+int basic_char_weapon_dam(class unit_data *ch, class unit_data *weapon);
+int basic_char_hand_dam(class unit_data *ch);
+int char_weapon_dam(class unit_data *ch, class unit_data *weapon);
+int char_hand_dam(class unit_data *ch);
 
-int basic_char_tgh_absorb (class unit_data * ch);
-int basic_armor_absorb (class unit_data * armour, int att_type);
-int basic_char_absorb (class unit_data * ch, class unit_data * armor,
-                       int att_type);
-
-
-int basic_char_weapon_dam (class unit_data * ch, class unit_data * weapon);
-int basic_char_hand_dam (class unit_data * ch);
-int char_weapon_dam (class unit_data * ch, class unit_data * weapon);
-int char_hand_dam (class unit_data * ch);
-
-int relative_level (int l1, int l2);
-int weapon_defense_skill(class unit_data * ch, int skill);
-int weapon_attack_skill(class unit_data * ch, int skill);
+int relative_level(int l1, int l2);
+int weapon_defense_skill(class unit_data *ch, int skill);
+int weapon_attack_skill(class unit_data *ch, int skill);
 int weapon_attack_ability(class unit_data *ch, int skill);
-int hit_location (class unit_data * att, class unit_data * def);
-int effective_dex (class unit_data * ch);
+int hit_location(class unit_data *att, class unit_data *def);
+int effective_dex(class unit_data *ch);
 
-int av_value (int abila, int abilb, int skilla, int skillb);
-int av_howmuch (int av);
-int av_makes (int av);
-void check_fitting (class unit_data * u);
+int av_value(int abila, int abilb, int skilla, int skillb);
+int av_howmuch(int av);
+int av_makes(int av);
+void check_fitting(class unit_data *u);
 
 extern struct race_info_type race_info[PC_RACE_MAX];
 extern const char *pc_races[PC_RACE_MAX + 1];

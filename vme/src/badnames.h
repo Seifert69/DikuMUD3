@@ -6,11 +6,11 @@
  */
 
 #ifndef _MUD_BADNAMES_H_
-#define	_MUD_BADNAMES_H_
+#define _MUD_BADNAMES_H_
 #ifdef _WINDOWS
-#include <string.h>
+    #include <string.h>
 #else
-#include <strings.h>
+    #include <strings.h>
 #endif
 class badnames_list
 {
@@ -19,14 +19,13 @@ private:
     badnames_list *next;
 
 public:
+    badnames_list(void);
+    badnames_list(char *n);
+    ~badnames_list(void);
 
-    badnames_list (void);
-    badnames_list (char *n);
-    ~badnames_list (void);
-
-    char *insert (char *n);
-    char *in (char *n);
-    char *equal (char *n);
-    void create (char *input_str);
+    char *insert(char *n);
+    char *in(char *n);
+    char *equal(char *n);
+    void create(char *input_str);
 };
 #endif

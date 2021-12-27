@@ -54,7 +54,7 @@
 /*									*/
 /************************************************************************/
 
-#include	"pp.h"
+#include "pp.h"
 
 /************************************************************************/
 /*									*/
@@ -69,24 +69,23 @@
 EVALINT
 eval()
 {
-    char			buf[TOKENSIZE];
-    EVALINT			val;
+    char buf[TOKENSIZE];
+    EVALINT val;
 
-    pbcstr(readexpline(buf,TOKENSIZE));	/* Macro expand line */
+    pbcstr(readexpline(buf, TOKENSIZE)); /* Macro expand line */
 
     for(;;)
     {
-        val = evaltern();	/* Top level ternary form */
+        val = evaltern(); /* Top level ternary form */
 
         if(Token[0] != ',')
         {
             if(Token[0] != '\n')
             {
-                non_fatal("Expression: Invalid operator: ",
-                          Token);
+                non_fatal("Expression: Invalid operator: ", Token);
             }
             else
-                pushback('\n');	/* Put eol back out */
+                pushback('\n'); /* Put eol back out */
             break;
         }
     }
@@ -104,23 +103,23 @@ eval()
 EVALINT
 evaltern()
 {
-    EVALINT			val;
-    EVALINT			val_f;
-    EVALINT			val_t;
+    EVALINT val;
+    EVALINT val_f;
+    EVALINT val_t;
 
-    val = evallor();		/* Look for expression */
-    if(! test("?"))			/* ? part of ?: */
+    val = evallor(); /* Look for expression */
+    if(!test("?"))   /* ? part of ?: */
         return (val);
 
-    val_t = eval();			/* Get true-side expression */
-    if(! test(":"))
+    val_t = eval(); /* Get true-side expression */
+    if(!test(":"))
     {
-        non_fatal("Expression: ':' expected","");
-        return ((EVALINT) 0);
+        non_fatal("Expression: ':' expected", "");
+        return ((EVALINT)0);
     }
-    val_f = eval();			/* Get false-side expression */
+    val_f = eval(); /* Get false-side expression */
 
-    return (val ? val_t : val_f );	/* Use it or loose it */
+    return (val ? val_t : val_f); /* Use it or loose it */
 }
 
 /************************************************************************/
@@ -132,9 +131,9 @@ evaltern()
 EVALINT
 evallor()
 {
-    EVALINT			val;
+    EVALINT val;
 
-    for(val = evalland(); test("||") ;)
+    for(val = evalland(); test("||");)
     {
         if(evalland() != 0)
             val = TRUE;
@@ -151,12 +150,12 @@ evallor()
 EVALINT
 evalland()
 {
-    EVALINT			val;
+    EVALINT val;
 
-    for(val = evalbor(); test("&&") ;)
+    for(val = evalbor(); test("&&");)
     {
         /*lint -e503 lint doesn't like boolean arguments to relationals */
-        if(! evalbor() != 0)
+        if(!evalbor() != 0)
             /*lint +e503 lint doesn't like boolean arguments to relationals */
             val = FALSE;
     }
@@ -172,9 +171,9 @@ evalland()
 EVALINT
 evalbor()
 {
-    EVALINT			val;
+    EVALINT val;
 
-    for(val = evalbxor(); !look("||") && test("|"); )
+    for(val = evalbxor(); !look("||") && test("|");)
         val = val | evalbxor();
 
     return (val);
@@ -189,9 +188,9 @@ evalbor()
 EVALINT
 evalbxor()
 {
-    EVALINT			val;
+    EVALINT val;
 
-    for(val = evalband(); test("^"); )
+    for(val = evalband(); test("^");)
         val = val ^ evalband();
 
     return (val);
@@ -206,9 +205,9 @@ evalbxor()
 EVALINT
 evalband()
 {
-    EVALINT			val;
+    EVALINT val;
 
-    for(val = evaleq(); !look("&&") && test("&"); )
+    for(val = evaleq(); !look("&&") && test("&");)
         val = val & evaleq();
 
     return (val);
@@ -223,9 +222,9 @@ evalband()
 EVALINT
 evaleq()
 {
-    EVALINT			val;
+    EVALINT val;
 
-    for(val = evalrel() ; ;)
+    for(val = evalrel();;)
     {
         if(test("=="))
             val = val == evalrel();
@@ -246,9 +245,9 @@ evaleq()
 EVALINT
 evalrel()
 {
-    EVALINT			val;
+    EVALINT val;
 
-    for(val = evalsh() ; ; )
+    for(val = evalsh();;)
     {
         if(test("<="))
             val = val <= evalsh();
@@ -273,9 +272,9 @@ evalrel()
 EVALINT
 evalsh()
 {
-    EVALINT			val;
+    EVALINT val;
 
-    for(val = evalsum() ; ; )
+    for(val = evalsum();;)
     {
         if(test("<<"))
             val = val << evalsum();
@@ -296,9 +295,9 @@ evalsh()
 EVALINT
 evalsum()
 {
-    EVALINT			val;
+    EVALINT val;
 
-    for(val = evalmdr() ; ; )
+    for(val = evalmdr();;)
     {
         if(test("+"))
             val = val + evalmdr();
@@ -319,10 +318,10 @@ evalsum()
 EVALINT
 evalmdr()
 {
-    EVALINT			temp;
-    EVALINT			val;
+    EVALINT temp;
+    EVALINT val;
 
-    for(val = evalfuns() ; ; )
+    for(val = evalfuns();;)
     {
         if(test("*"))
             val = val * evalfuns();
@@ -331,7 +330,7 @@ evalmdr()
             temp = evalfuns();
             if(temp == 0)
             {
-                non_fatal("Expression: Division by zero","");
+                non_fatal("Expression: Division by zero", "");
                 val = 0;
             }
             else
@@ -342,7 +341,7 @@ evalmdr()
             temp = evalfuns();
             if(temp == 0)
             {
-                non_fatal("Expression: Division by zero","");
+                non_fatal("Expression: Division by zero", "");
                 val = 0;
             }
             else
@@ -378,59 +377,57 @@ evalmdr()
 EVALINT
 evalfuns()
 {
-    int			count;
-    int			pflag;
-    int			rv;
-    char			*str;
-    int			t;
+    int count;
+    int pflag;
+    int rv;
+    char *str;
+    int t;
 
     if(test("sizeof"))
     {
-        non_fatal("Expression: sizeof() not allowed","");
+        non_fatal("Expression: sizeof() not allowed", "");
 
-        while(((t = getnstoken(GT_STR)) != ')') &&
-                (t != '\n') && (t != EOF))
+        while(((t = getnstoken(GT_STR)) != ')') && (t != '\n') && (t != EOF))
             ;
-        return ((EVALINT) 0);
+        return ((EVALINT)0);
     }
     else if(test("defined"))
     {
-        if(! (pflag = (getnstoken(GT_STR) == '('))) /* Latch '(' */
-            pbstr(Token);	/* Put it back if not */
+        if(!(pflag = (getnstoken(GT_STR) == '('))) /* Latch '(' */
+            pbstr(Token);                          /* Put it back if not */
 
         if((t = getnstoken(GT_STR)) == LETTER) /* Get an Id */
         {
-            rv = (int) (lookup(Token,NULL) != NULL);
+            rv = (int)(lookup(Token, NULL) != NULL);
 
             if(pflag && (getnstoken(GT_STR) != ')'))
             {
-                non_fatal("Expression: Missing ')'","");
+                non_fatal("Expression: Missing ')'", "");
                 pbstr(Token);
             }
 
-            return ((EVALINT) rv);
+            return ((EVALINT)rv);
         }
         else if(t == '\n')
             pushback('\n');
         else if(t == EOF)
             end_of_file();
 
-        non_fatal("Expression: Not an identifier: ",Token);
-        return ((EVALINT) FALSE);
+        non_fatal("Expression: Not an identifier: ", Token);
+        return ((EVALINT)FALSE);
     }
     else if(test("_isstring"))
     {
         rv = FALSE;
-        if(! test("("))
-            non_fatal("Expression: Missing '('","");
+        if(!test("("))
+            non_fatal("Expression: Missing '('", "");
         else
         {
-            if(item(getnstoken,GT_STR) && (Token[0] == '"'))
+            if(item(getnstoken, GT_STR) && (Token[0] == '"'))
                 rv = TRUE;
             t = Token[0];
-            count = 0;	/* Paren nesting level */
-            while((! ((t == ')') && (count == 0))) &&
-                    (t != '\n') && (t != EOF))
+            count = 0; /* Paren nesting level */
+            while((!((t == ')') && (count == 0))) && (t != '\n') && (t != EOF))
             {
                 if(t == '(')
                     count++;
@@ -440,28 +437,27 @@ evalfuns()
             }
             if(t != ')')
             {
-                non_fatal("Expression: Missing ')'","");
+                non_fatal("Expression: Missing ')'", "");
                 if(t == EOF)
                     end_of_file();
                 pbstr(Token);
             }
         }
-        return ((EVALINT) rv);
+        return ((EVALINT)rv);
     }
     else if(test("_strsize"))
     {
         rv = 1;
-        if(! test("("))
-            non_fatal("Expression: Missing '('","");
+        if(!test("("))
+            non_fatal("Expression: Missing '('", "");
         else
         {
-            if(item(getnstoken,GT_STR) && (Token[0] != '"'))
+            if(item(getnstoken, GT_STR) && (Token[0] != '"'))
             {
-                non_fatal("_strsize: Missing string","");
+                non_fatal("_strsize: Missing string", "");
                 t = Token[0];
-                count = 0;	/* Paren nesting level */
-                while((! ((t == ')') && (count == 0))) &&
-                        (t != '\n') && (t != EOF))
+                count = 0; /* Paren nesting level */
+                while((!((t == ')') && (count == 0))) && (t != '\n') && (t != EOF))
                 {
                     if(t == '(')
                         count++;
@@ -471,8 +467,7 @@ evalfuns()
                 }
                 if(t != ')')
                 {
-                    non_fatal("Expression: Missing ')'",
-                              "");
+                    non_fatal("Expression: Missing ')'", "");
                     if(t == EOF)
                         end_of_file();
                     pbstr(Token);
@@ -483,14 +478,13 @@ evalfuns()
                 for(;;)
                 {
                     str = &Token[1];
-                    for(; (*str != '\0') &&
-                            (*str != '\"'); rv++)
+                    for(; (*str != '\0') && (*str != '\"'); rv++)
                     {
                         /************************************************************************/
                         if(*str == '\\')
                         {
                             if(*++str == 'x')
-                            {   /* Hex seq. >= 2 hex digits */
+                            { /* Hex seq. >= 2 hex digits */
                                 count = 0;
                                 while(isxdigit(*++str) && (++count < 3))
                                     ;
@@ -498,9 +492,9 @@ evalfuns()
                             else
                             {
                                 if(isdigit(*str))
-                                {   /* Octal seq. >=3 octal dig */
+                                { /* Octal seq. >=3 octal dig */
                                     count = 0;
-                                    while (isdigit(*++str) && (++count < 3))
+                                    while(isdigit(*++str) && (++count < 3))
                                         ;
                                 }
                                 else
@@ -512,14 +506,13 @@ evalfuns()
                         /************************************************************************/
                     }
                     if((t = getnstoken(GT_STR)) == ')')
-                        break;	/* Done */
+                        break; /* Done */
                     if(t == '"')
                         /* Concatenated string */
                         continue;
-                    non_fatal("_strsize: Not a string","");
-                    count = 0;	/* Paren nesting lvl */
-                    while(((t != ')') || (count != 0)) &&
-                            (t != '\n') && (t != EOF))
+                    non_fatal("_strsize: Not a string", "");
+                    count = 0; /* Paren nesting lvl */
+                    while(((t != ')') || (count != 0)) && (t != '\n') && (t != EOF))
                     {
                         if(t == '(')
                             count++;
@@ -529,7 +522,7 @@ evalfuns()
                     }
                     if(t != ')')
                     {
-                        non_fatal("Expression: Missing ')'","");
+                        non_fatal("Expression: Missing ')'", "");
                         if(t == '\n')
                             pushback('\n');
                         else if(t == EOF)
@@ -539,7 +532,7 @@ evalfuns()
                 }
             }
         }
-        return ((EVALINT) rv);
+        return ((EVALINT)rv);
     }
     else
         return (evalucom());
@@ -572,7 +565,7 @@ EVALINT
 evalunot()
 {
     if(test("!"))
-        return ((EVALINT) !evalfuns());
+        return ((EVALINT)!evalfuns());
     else
         return (evalumin());
 }
@@ -587,9 +580,9 @@ EVALINT
 evalumin()
 {
     if(test("+"))
-        return ((EVALINT) evalfuns());
+        return ((EVALINT)evalfuns());
     else if(test("-"))
-        return ((EVALINT) -evalfuns());
+        return ((EVALINT)-evalfuns());
     else
         return (evalval());
 }
@@ -603,123 +596,123 @@ evalumin()
 EVALINT
 evalval()
 {
-    int			c;
-    char			*p;
-    EVALINT			val;
+    int c;
+    char *p;
+    EVALINT val;
 
     if(test("("))
     {
-        val = evaltern();	/* Get deeper expression */
-        if(! test(")"))
-            non_fatal("Expression: Mismatched \"()\"","");
+        val = evaltern(); /* Get deeper expression */
+        if(!test(")"))
+            non_fatal("Expression: Mismatched \"()\"", "");
     }
-    else if(test("'"))		/* Quoted character constant ? */
+    else if(test("'")) /* Quoted character constant ? */
     {
-        val = getchn();		/* Get next character char */
-        if(val == '\\')		/* Special test for escaped chars */
+        val = getchn(); /* Get next character char */
+        if(val == '\\') /* Special test for escaped chars */
         {
-            switch((char) (val = getchn()))
+            switch((char)(val = getchn()))
             {
-            case 'a':
-                val = '\a';
-                break;	/* Alert char	*/
-            case 'b':
-                val = '\b';
-                break;	/* Backspace	*/
-            case 'f':
-                val = '\f';
-                break;	/* Form feed	*/
-            case 'n':
-                val = '\n';
-                break;	/* Newline	*/
-            case 'r':
-                val = '\r';
-                break;	/* Return	*/
-            case 't':
-                val = '\t';
-                break;	/* Horiz. tab	*/
-            case 'v':
-                val = '\v';
-                break;	/* Vert. tab	*/
-            case '\\':
-                val = '\\';
-                break;
-            case '\'':
-                val = '\'';
-                break;
-            case '\"':
-                val = '\"';
-                break;
-            case '?':
-                val = '?';
-                break;
+                case 'a':
+                    val = '\a';
+                    break; /* Alert char	*/
+                case 'b':
+                    val = '\b';
+                    break; /* Backspace	*/
+                case 'f':
+                    val = '\f';
+                    break; /* Form feed	*/
+                case 'n':
+                    val = '\n';
+                    break; /* Newline	*/
+                case 'r':
+                    val = '\r';
+                    break; /* Return	*/
+                case 't':
+                    val = '\t';
+                    break; /* Horiz. tab	*/
+                case 'v':
+                    val = '\v';
+                    break; /* Vert. tab	*/
+                case '\\':
+                    val = '\\';
+                    break;
+                case '\'':
+                    val = '\'';
+                    break;
+                case '\"':
+                    val = '\"';
+                    break;
+                case '?':
+                    val = '?';
+                    break;
 
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-                /*
-                 *	Lead in to octal numeric field: get octal number.
-                 */
-                for(val -= '0'; (c = getchn()) != '\'';)
-                {
-                    if(c == '\n')
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                    /*
+                     *	Lead in to octal numeric field: get octal number.
+                     */
+                    for(val -= '0'; (c = getchn()) != '\'';)
                     {
-                        non_fatal("Expression: EOL in '' constant","");
-                        break;
+                        if(c == '\n')
+                        {
+                            non_fatal("Expression: EOL in '' constant", "");
+                            break;
+                        }
+                        else if(c == EOF)
+                            end_of_file();
+                        else if(isoct(c))
+                            val = val * 8 + c - '0'; /* Add in */
+                        else
+                        {
+                            non_fatal("Expression: Illegal octal digit", "");
+                            break;
+                        }
                     }
-                    else if(c == EOF)
-                        end_of_file();
-                    else if(isoct(c))
-                        val = val * 8 + c - '0';  /* Add in */
-                    else
-                    {
-                        non_fatal("Expression: Illegal octal digit","");
-                        break;
-                    }
-                }
-                pushback(c);
-                break;
+                    pushback(c);
+                    break;
 
-            case 'x':
-                /*
-                 *	Beginning of hex numeric field, get number.
-                 */
-                for(val = 0; (c = getchn()) != '\'';)
-                {
-                    if(c == '\n')
+                case 'x':
+                    /*
+                     *	Beginning of hex numeric field, get number.
+                     */
+                    for(val = 0; (c = getchn()) != '\'';)
                     {
-                        non_fatal("Expression: EOL in '' constant","");
-                        break;
+                        if(c == '\n')
+                        {
+                            non_fatal("Expression: EOL in '' constant", "");
+                            break;
+                        }
+                        else if(c == EOF)
+                            end_of_file();
+                        else if(ishex(c))
+                            val = val * 16 + hexbin(c);
+                        else
+                        {
+                            non_fatal("Expression: Illegal hex digit", "");
+                            break;
+                        }
                     }
-                    else if(c == EOF)
-                        end_of_file();
-                    else if(ishex(c))
-                        val = val * 16 + hexbin(c);
-                    else
-                    {
-                        non_fatal("Expression: Illegal hex digit","");
-                        break;
-                    }
-                }
-                pushback(c);
-                break;
-            default:
-                non_fatal("Expression: Illegal character escape","");
-                break;
+                    pushback(c);
+                    break;
+                default:
+                    non_fatal("Expression: Illegal character escape", "");
+                    break;
             }
         }
-        if(! test("'"))
-            non_fatal("Expression: Mismatched apostrophes","");
+        if(!test("'"))
+            non_fatal("Expression: Mismatched apostrophes", "");
     }
     else
     {
         /* Pack a number */
-        if(item(getnstoken,GT_STR))
+        if(item(getnstoken, GT_STR))
         {
             if(isdigit(Token[0]))
             {
@@ -733,8 +726,7 @@ evalval()
                         /* Hex number */
                         for(++p; ishex(*p); ++p)
                         {
-                            val = val * 16 +
-                                  hexbin(*p);
+                            val = val * 16 + hexbin(*p);
                         }
                     }
                     else
@@ -742,8 +734,7 @@ evalval()
                         /* Octal number */
                         for(; isoct(*p); ++p)
                         {
-                            val = val * 8 +
-                                  *p - '0';
+                            val = val * 8 + *p - '0';
                         }
                     }
                 }
@@ -755,24 +746,23 @@ evalval()
                 }
                 if(*p != '\0')
                 {
-                    non_fatal("Expression: Bad operand: ",
-                              Token);
+                    non_fatal("Expression: Bad operand: ", Token);
                 }
             }
             else
             {
                 /* #if of undef'd id OK */
-                if(! istype(Token[0] & 0xFF,C_L))
+                if(!istype(Token[0] & 0xFF, C_L))
                 {
-                    non_fatal("Expression: Expected operand: ",Token);
+                    non_fatal("Expression: Expected operand: ", Token);
                 }
-                return ((EVALINT) 0);
+                return ((EVALINT)0);
             }
         }
         else
         {
-            non_fatal("Expression: Expected operand: ",Token);
-            return ((EVALINT) 0);
+            non_fatal("Expression: Expected operand: ", Token);
+            return ((EVALINT)0);
         }
     }
     return (val);
@@ -790,9 +780,9 @@ EVALINT
 hexbin(char ch)
 {
     if(isdigit(ch))
-        return ((EVALINT) (ch - '0'));
+        return ((EVALINT)(ch - '0'));
     else
-        return ((EVALINT) ((isupper(ch) ? tolower(ch) : ch) - 'a'+10));
+        return ((EVALINT)((isupper(ch) ? tolower(ch) : ch) - 'a' + 10));
 }
 
 /************************************************************************/
@@ -803,12 +793,9 @@ hexbin(char ch)
 /*									*/
 /************************************************************************/
 
-int
-ishex(char ch)
+int ishex(char ch)
 {
-    return (isdigit(ch)			||
-            ((ch >= 'a') && (ch <= 'f'))	||
-            ((ch >= 'A') && (ch <= 'F')));
+    return (isdigit(ch) || ((ch >= 'a') && (ch <= 'f')) || ((ch >= 'A') && (ch <= 'F')));
 }
 
 /************************************************************************/
@@ -819,8 +806,7 @@ ishex(char ch)
 /*									*/
 /************************************************************************/
 
-int
-isoct(char ch)
+int isoct(char ch)
 {
     return ((ch >= '0') && (ch <= '7'));
 }
@@ -835,18 +821,17 @@ isoct(char ch)
 /*									*/
 /************************************************************************/
 
-int
-item(register int (fun)(int),int f)
+int item(register int(fun)(int), int f)
 {
-    register int		t;
+    register int t;
 
     while((t = (*fun)(f)) != '\n')
     {
         if(t == EOF)
-            end_of_file();	/* Abort on end of file */
-        return(TRUE);
+            end_of_file(); /* Abort on end of file */
+        return (TRUE);
     }
-    pushback('\n');			/* Unfetch the newline */
+    pushback('\n'); /* Unfetch the newline */
 
     return (FALSE);
 }
@@ -860,14 +845,13 @@ item(register int (fun)(int),int f)
 /*									*/
 /************************************************************************/
 
-int
-look(register const char *str)
+int look(register const char *str)
 {
-    register int		rc;
-    char			tokenbuf[TOKENSIZE];
+    register int rc;
+    char tokenbuf[TOKENSIZE];
 
-    rc = match(tokenbuf,str);
-    pbstr(tokenbuf);		/* Unfetch the item */
+    rc = match(tokenbuf, str);
+    pbstr(tokenbuf); /* Unfetch the item */
     return (rc);
 }
 
@@ -882,40 +866,38 @@ look(register const char *str)
 /*									*/
 /************************************************************************/
 
-int
-match(register char *tbuf,register const char *str)
+int match(register char *tbuf, register const char *str)
 {
-    int		(*fun)(int);
-    register const char		*s;
-    register char		*t;
+    int (*fun)(int);
+    register const char *s;
+    register char *t;
 
-    fun = getnstoken;		/* Initially skip spaces */
-    t = tbuf;			/* Token packing buffer */
-    s = str;			/* String to match */
+    fun = getnstoken; /* Initially skip spaces */
+    t = tbuf;         /* Token packing buffer */
+    s = str;          /* String to match */
 
-    while((*s != '\0') && item(fun,0))
+    while((*s != '\0') && item(fun, 0))
     {
-        if(strncmp(Token,s,strlen(Token)) == EQUAL)
+        if(strncmp(Token, s, strlen(Token)) == EQUAL)
         {
             /* Build token */
-            t = addstr(t,&tbuf[TOKENSIZE],
-                       "Expression: Token too long",Token);
+            t = addstr(t, &tbuf[TOKENSIZE], "Expression: Token too long", Token);
 
-            s += strlen(Token);	/* Move past matched part */
+            s += strlen(Token); /* Move past matched part */
             if(*s == '\0')
-                break;	/* Exit if end of string */
+                break; /* Exit if end of string */
         }
         else
         {
-            pbstr(Token);	/* Unfetch unmatching string */
+            pbstr(Token); /* Unfetch unmatching string */
             break;
         }
-        fun = gettoken;		/* Don't skip spaces anymore */
+        fun = gettoken; /* Don't skip spaces anymore */
     }
 
-    *t = '\0';			/* End of token here */
+    *t = '\0'; /* End of token here */
 
-    return (*s == '\0');		/* Return TRUE if end of string	*/
+    return (*s == '\0'); /* Return TRUE if end of string	*/
 }
 
 /************************************************************************/
@@ -927,51 +909,47 @@ match(register char *tbuf,register const char *str)
 /*									*/
 /************************************************************************/
 
-char	*
-readexpline(register char *buf,register int bufsize)
+char *readexpline(register char *buf, register int bufsize)
 {
-    static	char		rbo[] = "Read buffer overflow";
+    static char rbo[] = "Read buffer overflow";
 
-    register char		*bufp;
-    register int		is_func;
-    struct	symtab		*sy;
-    register int		t;
+    register char *bufp;
+    register int is_func;
+    struct symtab *sy;
+    register int t;
 
     is_func = FALSE;
 
-    for(bufp = buf; (t = gettoken(GT_STR)) != '\n'; )
+    for(bufp = buf; (t = gettoken(GT_STR)) != '\n';)
     {
         if(t == EOF)
             end_of_file();
         if(t == LETTER)
         {
-            if((! is_func) &&
-                    ((sy = lookup(Token,NULL)) != NULL) &&
-                    (sy->disable != TRUE))
+            if((!is_func) && ((sy = lookup(Token, NULL)) != NULL) && (sy->disable != TRUE))
             {
-                bufp = docall(sy,bufp,&buf[bufsize - 1]);
+                bufp = docall(sy, bufp, &buf[bufsize - 1]);
             }
             else
             {
-                bufp = addstr(bufp,&buf[bufsize - 1],rbo,
-                              Token);
+                bufp = addstr(bufp, &buf[bufsize - 1], rbo, Token);
                 if(is_func)
                     is_func = FALSE;
-                else if(strcmp(Token,"defined") == EQUAL)
+                else if(strcmp(Token, "defined") == EQUAL)
                     is_func = TRUE;
             }
         }
         else
-            bufp = addstr(bufp,&buf[bufsize - 1],rbo,Token);
+            bufp = addstr(bufp, &buf[bufsize - 1], rbo, Token);
     }
 
     pushback('\n');
     *bufp = '\0';
 
-    for(bufp = buf; istype(*bufp & 0xFF,C_W); ++bufp)
-        ;			/* Skip leading blanks */
+    for(bufp = buf; istype(*bufp & 0xFF, C_W); ++bufp)
+        ; /* Skip leading blanks */
 
-    return(bufp);
+    return (bufp);
 }
 
 /************************************************************************/
@@ -985,17 +963,15 @@ readexpline(register char *buf,register int bufsize)
 /*									*/
 /************************************************************************/
 
-int
-test(register const char *str)
+int test(register const char *str)
 {
-    char			tokenbuf[TOKENSIZE];
+    char tokenbuf[TOKENSIZE];
 
-    if(match(tokenbuf,str))
+    if(match(tokenbuf, str))
         return (TRUE);
     else
     {
-        pbstr(tokenbuf);	/* Lets look at it again later */
+        pbstr(tokenbuf); /* Lets look at it again later */
         return (FALSE);
     }
 }
-

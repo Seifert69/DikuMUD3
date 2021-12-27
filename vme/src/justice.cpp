@@ -29,40 +29,37 @@
 #include "fight.h"
 #include "dilrun.h"
 
-
 static int crime_serial_no = time(0);
 
 int new_crime_serial_no(void)
 {
-   int n;
+    int n;
 
-   n = time(0);
+    n = time(0);
 
-   if (n > crime_serial_no)
-   {
-      crime_serial_no = n;
-   }
-   else
-   {
-      // If there's a race condition, just pick the next second
-      crime_serial_no++;
-   }
+    if(n > crime_serial_no)
+    {
+        crime_serial_no = n;
+    }
+    else
+    {
+        // If there's a race condition, just pick the next second
+        crime_serial_no++;
+    }
 
-   return crime_serial_no;
+    return crime_serial_no;
 }
 
 void offend_legal_state(class unit_data *ch, class unit_data *victim)
 {
-   if (!IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
-      if (!CHAR_COMBAT(victim) &&
-          !IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET))
-         SET_BIT(CHAR_FLAGS(victim), CHAR_SELF_DEFENCE);
+    if(!IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
+        if(!CHAR_COMBAT(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET))
+            SET_BIT(CHAR_FLAGS(victim), CHAR_SELF_DEFENCE);
 
-   /* Test for LEGAL_TARGET bit */
-   if (IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED) &&
-       !IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) &&
+    /* Test for LEGAL_TARGET bit */
+    if(IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED) && !IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) &&
        !IS_SET(CHAR_FLAGS(ch), CHAR_SELF_DEFENCE))
-      SET_BIT(CHAR_FLAGS(ch), CHAR_LEGAL_TARGET);
+        SET_BIT(CHAR_FLAGS(ch), CHAR_LEGAL_TARGET);
 }
 
 // MS2020: Have the NPC walk to the designated room
@@ -100,51 +97,49 @@ void npc_walkto(class unit_data *u, class unit_data *toroom)
 }
 */
 
-
-
 // Activate the add_crime@justice DIL
 //
 //
 void add_crime(class unit_data *criminal, class unit_data *victim, int type)
 {
-   struct diltemplate *tmpl;
-   class dilprg *prg;
-   int crime_no;
+    struct diltemplate *tmpl;
+    class dilprg *prg;
+    int crime_no;
 
-   if (str_is_empty(UNIT_NAME(criminal)))
-   {
-      slog(LOG_ALL, 0, "JUSTICE: NULL name in criminal");
-      return;
-   }
+    if(str_is_empty(UNIT_NAME(criminal)))
+    {
+        slog(LOG_ALL, 0, "JUSTICE: NULL name in criminal");
+        return;
+    }
 
-   if (str_is_empty(UNIT_NAME(victim)))
-   {
-      slog(LOG_ALL, 0, "JUSTICE: NULL name in victim");
-      return;
-   }
+    if(str_is_empty(UNIT_NAME(victim)))
+    {
+        slog(LOG_ALL, 0, "JUSTICE: NULL name in victim");
+        return;
+    }
 
-   crime_no = new_crime_serial_no();
+    crime_no = new_crime_serial_no();
 
-   tmpl = find_dil_template("add_crime@justice");
+    tmpl = find_dil_template("add_crime@justice");
 
-   if (tmpl)
-   {
-      prg = dil_copy_template(tmpl, criminal, NULL);
+    if(tmpl)
+    {
+        prg = dil_copy_template(tmpl, criminal, NULL);
 
-      if (prg)
-      {
-         prg->waitcmd = WAITCMD_MAXINST - 1;
+        if(prg)
+        {
+            prg->waitcmd = WAITCMD_MAXINST - 1;
 
-         prg->fp->vars[0].val.unitptr = criminal;
-         prg->fp->vars[1].val.unitptr = victim;
-         prg->fp->vars[2].val.integer = type;
-         prg->fp->vars[3].val.integer = crime_no;
-         prg->fp->vars[4].val.integer = CRIME_LIFE + 2;
-         dil_add_secure(prg, criminal, prg->fp->tmpl->core);
-         dil_add_secure(prg, victim, prg->fp->tmpl->core);
-         dil_activate(prg);
-      }         
-   }
+            prg->fp->vars[0].val.unitptr = criminal;
+            prg->fp->vars[1].val.unitptr = victim;
+            prg->fp->vars[2].val.integer = type;
+            prg->fp->vars[3].val.integer = crime_no;
+            prg->fp->vars[4].val.integer = CRIME_LIFE + 2;
+            dil_add_secure(prg, criminal, prg->fp->tmpl->core);
+            dil_add_secure(prg, victim, prg->fp->tmpl->core);
+            dil_activate(prg);
+        }
+    }
 }
 
 // criminal points to the perpetrating char. Mandatory.
@@ -154,124 +149,124 @@ void add_crime(class unit_data *criminal, class unit_data *victim, int type)
 //
 void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_type, int active)
 {
-   int i, j;
-   struct diltemplate *tmpl;
-   class dilprg *prg;
-   class dilprg *prg2;
-   class dilprg *prg3;
+    int i, j;
+    struct diltemplate *tmpl;
+    class dilprg *prg;
+    class dilprg *prg2;
+    class dilprg *prg3;
 
-   if (criminal == NULL)
-   {
-      slog(LOG_ALL, 0, "log_crime() NULL criminal");
-      return;
-   }
+    if(criminal == NULL)
+    {
+        slog(LOG_ALL, 0, "log_crime() NULL criminal");
+        return;
+    }
 
-   if (victim == NULL)
-   {
-      slog(LOG_ALL, 0, "log_crime() NULL victim");
-      return;
-   }
+    if(victim == NULL)
+    {
+        slog(LOG_ALL, 0, "log_crime() NULL victim");
+        return;
+    }
 
-   if (!IS_CHAR(criminal) || !IS_CHAR(victim))
-   {
-      slog(LOG_ALL, 0, "log_crime() criminal or victim not IS_CHAR");
-      return;
-   }
+    if(!IS_CHAR(criminal) || !IS_CHAR(victim))
+    {
+        slog(LOG_ALL, 0, "log_crime() criminal or victim not IS_CHAR");
+        return;
+    }
 
-   /* When victim is legal target you can't get accused from it. */
-   if (IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) && ((crime_type == CRIME_MURDER) || (crime_type == CRIME_PK)))
-      return;
+    /* When victim is legal target you can't get accused from it. */
+    if(IS_SET(CHAR_FLAGS(victim), CHAR_LEGAL_TARGET) && ((crime_type == CRIME_MURDER) || (crime_type == CRIME_PK)))
+        return;
 
-   // It's OK to kill NPCs that are not "protected"
-   if (IS_NPC(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
-      return;
+    // It's OK to kill NPCs that are not "protected"
+    if(IS_NPC(victim) && !IS_SET(CHAR_FLAGS(victim), CHAR_PROTECTED))
+        return;
 
-   // First let's deal with registering the crime the criminal committed
-   //add_crime(criminal, victim, crime_type);
+    // First let's deal with registering the crime the criminal committed
+    // add_crime(criminal, victim, crime_type);
 
-   // prepare the set_witness function
-   tmpl = find_dil_template("set_witness@justice");
-   if (tmpl)
-   {
-      prg = dil_copy_template(tmpl, victim, NULL);
+    // prepare the set_witness function
+    tmpl = find_dil_template("set_witness@justice");
+    if(tmpl)
+    {
+        prg = dil_copy_template(tmpl, victim, NULL);
 
-      if (prg)
-      {
-         prg->waitcmd = WAITCMD_MAXINST - 1;
-         prg->fp->vars[0].val.unitptr = criminal;
-         prg->fp->vars[1].val.unitptr = victim;
-         prg->fp->vars[2].val.integer = crime_serial_no;
-         prg->fp->vars[3].val.integer = crime_type;
-         prg->fp->vars[4].val.integer = active;
-         prg->fp->vars[5].val.string = str_dup(UNIT_NAME(victim));
-	 dil_add_secure(prg, criminal, prg->fp->tmpl->core);
-         dil_add_secure(prg, victim, prg->fp->tmpl->core);
-         dil_activate(prg);
-      }
-   }
+        if(prg)
+        {
+            prg->waitcmd = WAITCMD_MAXINST - 1;
+            prg->fp->vars[0].val.unitptr = criminal;
+            prg->fp->vars[1].val.unitptr = victim;
+            prg->fp->vars[2].val.integer = crime_serial_no;
+            prg->fp->vars[3].val.integer = crime_type;
+            prg->fp->vars[4].val.integer = active;
+            prg->fp->vars[5].val.string = str_dup(UNIT_NAME(victim));
+            dil_add_secure(prg, criminal, prg->fp->tmpl->core);
+            dil_add_secure(prg, victim, prg->fp->tmpl->core);
+            dil_activate(prg);
+        }
+    }
 
-   // Find any bystanders and register them as witnesses
-   scan4_unit(victim, UNIT_ST_PC | UNIT_ST_NPC);
+    // Find any bystanders and register them as witnesses
+    scan4_unit(victim, UNIT_ST_PC | UNIT_ST_NPC);
 
-   for (i = 0; i < unit_vector.top; i++)
-   {
-      if (CHAR_CAN_SEE(UVI(i), criminal))
-      {
-         /* set_witness(criminal, UVI(i), crime_serial_no, crime_type, active); */
-         tmpl = find_dil_template("set_witness@justice");
-         if (tmpl)
-         {
-            prg2 = dil_copy_template(tmpl, UVI(i), NULL);
-
-            if (prg2)
+    for(i = 0; i < unit_vector.top; i++)
+    {
+        if(CHAR_CAN_SEE(UVI(i), criminal))
+        {
+            /* set_witness(criminal, UVI(i), crime_serial_no, crime_type, active); */
+            tmpl = find_dil_template("set_witness@justice");
+            if(tmpl)
             {
-               prg2->waitcmd = WAITCMD_MAXINST - 1;
-               prg2->fp->vars[0].val.unitptr = criminal;
-               prg2->fp->vars[1].val.unitptr = UVI(i);
-               prg2->fp->vars[2].val.integer = crime_serial_no;
-               prg2->fp->vars[3].val.integer = crime_type;
-               prg2->fp->vars[4].val.integer = active;
-               prg2->fp->vars[5].val.string = str_dup(UNIT_NAME(victim)); 
-	       dil_add_secure(prg2, criminal, prg2->fp->tmpl->core);
-               dil_add_secure(prg2, UVI(i), prg2->fp->tmpl->core);
-               dil_activate(prg2);
+                prg2 = dil_copy_template(tmpl, UVI(i), NULL);
+
+                if(prg2)
+                {
+                    prg2->waitcmd = WAITCMD_MAXINST - 1;
+                    prg2->fp->vars[0].val.unitptr = criminal;
+                    prg2->fp->vars[1].val.unitptr = UVI(i);
+                    prg2->fp->vars[2].val.integer = crime_serial_no;
+                    prg2->fp->vars[3].val.integer = crime_type;
+                    prg2->fp->vars[4].val.integer = active;
+                    prg2->fp->vars[5].val.string = str_dup(UNIT_NAME(victim));
+                    dil_add_secure(prg2, criminal, prg2->fp->tmpl->core);
+                    dil_add_secure(prg2, UVI(i), prg2->fp->tmpl->core);
+                    dil_activate(prg2);
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
-   // Find any CHAR fighting the victim - they are complicit to the crime
-   for (j = 0; j < unit_vector.top; j++)
-   {
-      if (CHAR_COMBAT(UVI(j)) && CHAR_COMBAT(UVI(j))->FindOpponent(victim) && UVI(j) != criminal)
-      {
-         //add_crime(UVI(j), victim, crime_type);
+    // Find any CHAR fighting the victim - they are complicit to the crime
+    for(j = 0; j < unit_vector.top; j++)
+    {
+        if(CHAR_COMBAT(UVI(j)) && CHAR_COMBAT(UVI(j))->FindOpponent(victim) && UVI(j) != criminal)
+        {
+            // add_crime(UVI(j), victim, crime_type);
 
-         for (i = 0; i < unit_vector.top; i++)
-         {
-            if (CHAR_CAN_SEE(UVI(i), UVI(j)))
+            for(i = 0; i < unit_vector.top; i++)
             {
-               tmpl = find_dil_template("set_witness@justice");
-               prg3 = dil_copy_template(tmpl, UVI(i), NULL);
+                if(CHAR_CAN_SEE(UVI(i), UVI(j)))
+                {
+                    tmpl = find_dil_template("set_witness@justice");
+                    prg3 = dil_copy_template(tmpl, UVI(i), NULL);
 
-               if (prg3)
-               {
-                  prg3->waitcmd = WAITCMD_MAXINST - 1;
-                  prg3->fp->vars[0].val.unitptr = criminal;
-                  prg3->fp->vars[1].val.unitptr = UVI(j);
-                  prg3->fp->vars[2].val.integer = crime_serial_no;
-                  prg3->fp->vars[3].val.integer = crime_type;
-                  prg3->fp->vars[4].val.integer = active;
-                  prg3->fp->vars[5].val.string = str_dup(UNIT_NAME(victim));
-		  dil_add_secure(prg3, criminal, prg3->fp->tmpl->core);
-                  dil_add_secure(prg3, UVI(j), prg3->fp->tmpl->core);
-                  dil_activate(prg3);
-               }
+                    if(prg3)
+                    {
+                        prg3->waitcmd = WAITCMD_MAXINST - 1;
+                        prg3->fp->vars[0].val.unitptr = criminal;
+                        prg3->fp->vars[1].val.unitptr = UVI(j);
+                        prg3->fp->vars[2].val.integer = crime_serial_no;
+                        prg3->fp->vars[3].val.integer = crime_type;
+                        prg3->fp->vars[4].val.integer = active;
+                        prg3->fp->vars[5].val.string = str_dup(UNIT_NAME(victim));
+                        dil_add_secure(prg3, criminal, prg3->fp->tmpl->core);
+                        dil_add_secure(prg3, UVI(j), prg3->fp->tmpl->core);
+                        dil_activate(prg3);
+                    }
+                }
             }
-         }
-         /*  set_witness(UVI(j), UVI(i), crime_serial_no, crime_type, active); */
-      }
-   }
+            /*  set_witness(UVI(j), UVI(i), crime_serial_no, crime_type, active); */
+        }
+    }
 }
 
 /* ---------------------------------------------------------------------- */
@@ -280,7 +275,7 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
 
 /* SFUN_NPC_VISIT_ROOM. Used by npc_set_visit() to move back and    */
 /* forth.                                                           */
-/*                                                                
+/*
 int npc_visit_room (struct spec_arg *sarg)
 {
     struct visit_data *vd;
@@ -308,7 +303,7 @@ int npc_visit_room (struct spec_arg *sarg)
     // FUCK FUCK FUCK
     //npc_move (sarg->owner, vd->go_to);
 
-    if (i == MOVE_DEAD)		// Npc died 
+    if (i == MOVE_DEAD)		// Npc died
         return SFR_BLOCK;
 
     if (i == MOVE_FAILED)
@@ -317,7 +312,7 @@ int npc_visit_room (struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    if ((i == MOVE_GOAL) && CHAR_IS_READY (sarg->owner))	// Reached dest? 
+    if ((i == MOVE_GOAL) && CHAR_IS_READY (sarg->owner))	// Reached dest?
     {
         // We may not be finished walking - set to 0
 
@@ -407,7 +402,7 @@ void npc_set_visit (class unit_data * npc, class unit_data * dest_room,
 
     int lose_exp(class unit_data * ch);
 
-     Just to make sure in case anyone gets randomly rewarded 
+     Just to make sure in case anyone gets randomly rewarded
     REMOVE_BIT(CHAR_FLAGS(ch), CHAR_PROTECTED);
     SET_BIT(CHAR_FLAGS(ch), CHAR_OUTLAW);
 
@@ -467,9 +462,9 @@ void set_witness(class unit_data *criminal, class unit_data *witness,
     if (show)
         act("You just witnessed a crime committed by $1n.", A_ALWAYS, criminal, cActParameter(), witness, TO_VICT);
 
-     Create witness data 
+     Create witness data
     af.id = ID_WITNESS;
-    af.beat = WAIT_SEC * 5 * 60;  Every 5 minutes        
+    af.beat = WAIT_SEC * 5 * 60;  Every 5 minutes
     af.duration = CRIME_LIFE;
     af.data[0] = no;
     af.data[1] = type;
@@ -491,12 +486,12 @@ void set_witness(class unit_data *criminal, class unit_data *witness,
 
         if (prg)
         {
-            prg->waitcmd = WAITCMD_MAXINST - 1; 
+            prg->waitcmd = WAITCMD_MAXINST - 1;
 
             prg->fp->vars[1].val.integer = type;
-            prg->fp->vars[2].val.string = str_dup(UNIT_NAME(criminal)); 
+            prg->fp->vars[2].val.string = str_dup(UNIT_NAME(criminal));
 
-	    dil_activate(prg);
+            dil_activate(prg);
         }
       }
 }
@@ -554,7 +549,7 @@ void set_witness(class unit_data *criminal, class unit_data *witness,
      Was fclose(file) */
 //}
 
-/* 
+/*
 static void
 crime_counter(class unit_data *criminal, int incr, int first_accuse)
 {
@@ -846,8 +841,8 @@ int accuse(struct spec_arg *sarg)
     return DESTROY_ME;
 }
 i*/
-//MS2020: this must be broken now. Convert to DIL?
-//id activate_accuse(class unit_data *npc, ubit8 crime_type, const char *cname)
+// MS2020: this must be broken now. Convert to DIL?
+// id activate_accuse(class unit_data *npc, ubit8 crime_type, const char *cname)
 //
 //  struct npc_accuse_data *nad;
 //  class unit_data *prison;
@@ -913,7 +908,7 @@ i*/
 }
 
  Help another friendly guard! :-) */
-/*                                  
+/*
 int guard_assist(const class unit_data *npc, struct visit_data *vd)
 {
    switch (vd->state++)
@@ -972,7 +967,6 @@ void call_guards(class unit_data *guard)
 }
 */
 
-
 /* This routine protects lawful characters                               */
 /* SFUN_PROTECT_LAWFUL                                                   */
 /* int protect_lawful(struct spec_arg *sarg)
@@ -1009,7 +1003,7 @@ void call_guards(class unit_data *guard)
     {
         if (!IS_CHAR(sarg->activator))
             return SFR_SHARE;
-            
+
         if (sarg->cmd->no == CMD_AUTO_DEATH)
         {
             if (crime_in_progress(CHAR_FIGHTING(sarg->activator), sarg->activator))
@@ -1071,46 +1065,43 @@ void call_guards(class unit_data *guard)
 
 int reward_give(struct spec_arg *sarg)
 {
-   void gain_exp(class unit_data * ch, int gain);
+    void gain_exp(class unit_data * ch, int gain);
 
-   class unit_data *u;
-   class unit_affected_type *paf;
-   std::string buf;
-   currency_t cur;
+    class unit_data *u;
+    class unit_affected_type *paf;
+    std::string buf;
+    currency_t cur;
 
-   if (!is_command(sarg->cmd, "give"))
-      return SFR_SHARE;
+    if(!is_command(sarg->cmd, "give"))
+        return SFR_SHARE;
 
-   u = UNIT_CONTAINS(sarg->owner);
+    u = UNIT_CONTAINS(sarg->owner);
 
-   buf = "give ";
-   buf = buf + (char *)sarg->arg;
-   command_interpreter(sarg->activator, (const char *)buf.c_str());
+    buf = "give ";
+    buf = buf + (char *)sarg->arg;
+    command_interpreter(sarg->activator, (const char *)buf.c_str());
 
-   if (UNIT_CONTAINS(sarg->owner) == u) /* Was it given nothing? */
-      return SFR_BLOCK;
+    if(UNIT_CONTAINS(sarg->owner) == u) /* Was it given nothing? */
+        return SFR_BLOCK;
 
-   if ((paf = affected_by_spell(UNIT_CONTAINS(sarg->owner), ID_REWARD)) == NULL)
-   {
-      act("$1n says, 'Thank you $3n, that is very nice of you.'",
-          A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
-      return SFR_BLOCK;
-   }
+    if((paf = affected_by_spell(UNIT_CONTAINS(sarg->owner), ID_REWARD)) == NULL)
+    {
+        act("$1n says, 'Thank you $3n, that is very nice of you.'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+        return SFR_BLOCK;
+    }
 
-   act("$1n says, '$3n, receieve this as a token of our gratitude.'",
-       A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+    act("$1n says, '$3n, receieve this as a token of our gratitude.'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
 
-   cur = local_currency(sarg->owner);
+    cur = local_currency(sarg->owner);
 
-   if (IS_PC(sarg->activator))
-      gain_exp(sarg->activator, MIN(level_xp(CHAR_LEVEL(sarg->activator)),
-                                    paf->data[0]));
+    if(IS_PC(sarg->activator))
+        gain_exp(sarg->activator, MIN(level_xp(CHAR_LEVEL(sarg->activator)), paf->data[0]));
 
-   money_to_unit(sarg->activator, paf->data[1], cur);
+    money_to_unit(sarg->activator, paf->data[1], cur);
 
-   extract_unit(UNIT_CONTAINS(sarg->owner));
+    extract_unit(UNIT_CONTAINS(sarg->owner));
 
-   return SFR_BLOCK;
+    return SFR_BLOCK;
 }
 
 /* int reward_board(struct spec_arg *sarg)

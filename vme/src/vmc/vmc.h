@@ -16,32 +16,32 @@
 
 #define SYMSIZE 40
 
-#define INPUT_SUFFIX      "zon"
-#define OUTPUT_RSUFFIX    "reset"
-#define OUTPUT_WSUFFIX    "data"
+#define INPUT_SUFFIX "zon"
+#define OUTPUT_RSUFFIX "reset"
+#define OUTPUT_WSUFFIX "data"
 
 #ifdef CPP
-#undef CPP
+    #undef CPP
 #endif
 
 /* I hate that you can't get `gcc -E' to write to stdout... /gnort */
 
 #if defined(AMIGA)
-#define CPP               "gnu:lib/gcc-lib/mc68020-cbm-amigados/2.6.3/cpp"
+    #define CPP "gnu:lib/gcc-lib/mc68020-cbm-amigados/2.6.3/cpp"
 #else
-#define CPP               "cpp"
+    #define CPP "cpp"
 #endif
 
 #ifndef CPPI
-#define CPPI              "."
+    #define CPPI "."
 #endif
 
 #ifndef ZCAT
-#define ZCAT              "zcat" /* filter to use with .Z-suffixes */
+    #define ZCAT "zcat" /* filter to use with .Z-suffixes */
 #endif
 
 #ifndef CAT
-#define CAT               "cat"
+    #define CAT "cat"
 #endif
 
 struct zone_header
@@ -88,11 +88,10 @@ void mem_init(void);
 
 void process_unit(class unit_data *u);
 
-#define MCREATE(result, type, number) \
-	((result) = (type *) mmalloc(sizeof(type) * number))
+#define MCREATE(result, type, number) ((result) = (type *)mmalloc(sizeof(type) * number))
 
-#define UNIT_IDENT(unit) ((char *) (unit)->gnext) /* can you say 'filth'? */
+#define UNIT_IDENT(unit) ((char *)(unit)->gnext) /* can you say 'filth'? */
 /* You betcha... */
-#define UNIT_IDENT_ASSIGN(unit,val) ((unit)->gnext = (class unit_data *)(val))
+#define UNIT_IDENT_ASSIGN(unit, val) ((unit)->gnext = (class unit_data *)(val))
 
 #endif /* _MUD_VMC_H */

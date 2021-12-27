@@ -20,9 +20,9 @@ int follower_count(class unit_data *u)
     struct char_follow_type *f;
     int x = 0;
 
-    if (IS_CHAR(u))
+    if(IS_CHAR(u))
     {
-        for (f = CHAR_FOLLOWERS(u); f; f = f->next)
+        for(f = CHAR_FOLLOWERS(u); f; f = f->next)
             x++;
     }
     return x;
@@ -33,11 +33,11 @@ class unit_data *get_follower(class unit_data *u, int num)
     struct char_follow_type *f;
     int x = 0;
 
-    if (IS_CHAR(u))
+    if(IS_CHAR(u))
     {
-        for (f = CHAR_FOLLOWERS(u); f; f = f->next)
+        for(f = CHAR_FOLLOWERS(u); f; f = f->next)
         {
-            if (x == num)
+            if(x == num)
                 return (f->follower);
             x++;
         }
@@ -48,13 +48,13 @@ class unit_data *get_follower(class unit_data *u, int num)
 /* Assumes UNIT_IN(room) == NULL */
 static ubit1 same_surroundings_room(class unit_data *room, class unit_data *u2)
 {
-    if (!UNIT_IN(u2))
+    if(!UNIT_IN(u2))
         return FALSE;
 
-    if (UNIT_IN(u2) == room)
+    if(UNIT_IN(u2) == room)
         return TRUE;
 
-    if (UNIT_IS_TRANSPARENT(UNIT_IN(u2)) && UNIT_IN(UNIT_IN(u2)) == room)
+    if(UNIT_IS_TRANSPARENT(UNIT_IN(u2)) && UNIT_IN(UNIT_IN(u2)) == room)
         return TRUE;
 
     return FALSE;
@@ -62,21 +62,21 @@ static ubit1 same_surroundings_room(class unit_data *room, class unit_data *u2)
 
 ubit1 same_surroundings(class unit_data *u1, class unit_data *u2)
 {
-    if (!UNIT_IN(u1))
+    if(!UNIT_IN(u1))
         return same_surroundings_room(u1, u2);
-    else if (!UNIT_IN(u2))
+    else if(!UNIT_IN(u2))
         return same_surroundings_room(u2, u1);
 
-    if (UNIT_IN(u1) == UNIT_IN(u2))
+    if(UNIT_IN(u1) == UNIT_IN(u2))
         return TRUE;
 
-    if (UNIT_IS_TRANSPARENT(UNIT_IN(u1)) && UNIT_IN(UNIT_IN(u1)) == UNIT_IN(u2))
+    if(UNIT_IS_TRANSPARENT(UNIT_IN(u1)) && UNIT_IN(UNIT_IN(u1)) == UNIT_IN(u2))
         return TRUE;
 
-    if (UNIT_IS_TRANSPARENT(UNIT_IN(u2)) && UNIT_IN(UNIT_IN(u2)) == UNIT_IN(u1))
+    if(UNIT_IS_TRANSPARENT(UNIT_IN(u2)) && UNIT_IN(UNIT_IN(u2)) == UNIT_IN(u1))
         return TRUE;
 
-    if (UNIT_IS_TRANSPARENT(UNIT_IN(u1)) && UNIT_IS_TRANSPARENT(UNIT_IN(u2)) && UNIT_IN(UNIT_IN(u1)) == UNIT_IN(UNIT_IN(u2)))
+    if(UNIT_IS_TRANSPARENT(UNIT_IN(u1)) && UNIT_IS_TRANSPARENT(UNIT_IN(u2)) && UNIT_IN(UNIT_IN(u1)) == UNIT_IN(UNIT_IN(u2)))
         return TRUE;
 
     return FALSE;
@@ -111,9 +111,7 @@ ubit1 same_surroundings(class unit_data *u1, class unit_data *u2)
 /* returns if PC is pay/no pay !0/0 */
 static inline int pcpay(class unit_data *u)
 {
-    return ((PC_ACCOUNT(u).credit > 0.0) ||
-            (PC_ACCOUNT(u).discount == 100) ||
-            (PC_ACCOUNT(u).flatrate > (ubit32)time(0)) ||
+    return ((PC_ACCOUNT(u).credit > 0.0) || (PC_ACCOUNT(u).discount == 100) || (PC_ACCOUNT(u).flatrate > (ubit32)time(0)) ||
             (CHAR_DESCRIPTOR(u) ? g_cServerConfig.FromLAN(CHAR_DESCRIPTOR(u)->host) : 0));
 }
 
@@ -126,24 +124,24 @@ static inline int roompay(class unit_data *u)
 /* These functions determine if the units are candidates in find */
 static inline int findcheck(class unit_data *u, int pset, int tflags)
 {
-    if (IS_SET(UNIT_TYPE(u), tflags))
+    if(IS_SET(UNIT_TYPE(u), tflags))
     {
-        if (pset == FIND_UNIT_PAY)
+        if(pset == FIND_UNIT_PAY)
         {
-            if (IS_PC(u) && pcpay(u))
+            if(IS_PC(u) && pcpay(u))
                 return 1;
 
-            if (IS_ROOM(u) && roompay(u))
+            if(IS_ROOM(u) && roompay(u))
                 return 1;
 
             return 0;
         }
-        else if (pset == FIND_UNIT_NOPAY)
+        else if(pset == FIND_UNIT_NOPAY)
         {
-            if (IS_PC(u) && !pcpay(u))
+            if(IS_PC(u) && !pcpay(u))
                 return 1;
 
-            if (IS_ROOM(u) && !roompay(u))
+            if(IS_ROOM(u) && !roompay(u))
                 return 1;
 
             return 0;
@@ -155,10 +153,9 @@ static inline int findcheck(class unit_data *u, int pset, int tflags)
     return 0;
 }
 
-
 // 2020. This really needs some rewriting... Plus the number(1,count) looks
 // like it will always return the first unit...
-// 
+//
 class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
 {
     register class unit_data *u, *selected = NULL;
@@ -170,80 +167,76 @@ class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
 
     /* Needs work, there must be a better way to do this... */
 
-    if (sflags == FIND_UNIT_WORLD)
+    if(sflags == FIND_UNIT_WORLD)
     {
-        for (u = unit_list; u; u = u->gnext)
-            if ((u != ref) && findcheck(u, pset, tflags))
+        for(u = unit_list; u; u = u->gnext)
+            if((u != ref) && findcheck(u, pset, tflags))
             {
                 count++;
-                if (number(1, count) == 1)
+                if(number(1, count) == 1)
                     selected = u;
             }
 
         return selected;
     }
-    else if (sflags == FIND_UNIT_ZONE)
+    else if(sflags == FIND_UNIT_ZONE)
     {
         class zone_type *z;
 
-        if (UNIT_FI_ZONE(ref))
+        if(UNIT_FI_ZONE(ref))
             z = UNIT_FI_ZONE(ref);
         else
             z = unit_zone(ref);
 
-        for (u = unit_list; u; u = u->gnext)
-            if ((u != ref) &&
-                ((IS_PC(u) && unit_zone(u) == z) ||
-                 (UNIT_FI_ZONE(u) == z)) &&
-                findcheck(u, pset, tflags))
+        for(u = unit_list; u; u = u->gnext)
+            if((u != ref) && ((IS_PC(u) && unit_zone(u) == z) || (UNIT_FI_ZONE(u) == z)) && findcheck(u, pset, tflags))
             {
                 count++;
-                if (number(1, count) == 1)
+                if(number(1, count) == 1)
                     selected = u;
             }
 
         return selected;
     }
-    else if (sflags == FIND_UNIT_INVEN)
+    else if(sflags == FIND_UNIT_INVEN)
     {
-        for (u = UNIT_CONTAINS(ref); u; u = u->next)
-            if ((!IS_OBJ(u) || (OBJ_EQP_POS(u) == 0)) &&
-                findcheck(u, pset, tflags))
+        for(u = UNIT_CONTAINS(ref); u; u = u->next)
+            if((!IS_OBJ(u) || (OBJ_EQP_POS(u) == 0)) && findcheck(u, pset, tflags))
             {
                 count++;
-                if (number(1, count) == count)
+                if(number(1, count) == count)
                     selected = u;
             }
 
         return selected;
     }
-    else if (sflags == FIND_UNIT_EQUIP)
+    else if(sflags == FIND_UNIT_EQUIP)
     {
         /* Should this return ONLY? objects? HHS */
-        if (IS_SET(UNIT_ST_OBJ, tflags))
+        if(IS_SET(UNIT_ST_OBJ, tflags))
         {
-            for (u = UNIT_CONTAINS(ref); u; u = u->next)
-                if (IS_OBJ(u) && OBJ_EQP_POS(u))
-                    if (number(1, count) == count)
+            for(u = UNIT_CONTAINS(ref); u; u = u->next)
+                if(IS_OBJ(u) && OBJ_EQP_POS(u))
+                    if(number(1, count) == count)
                         selected = u;
 
             return selected;
         }
     }
-    else if (sflags == FIND_UNIT_SURRO)
+    else if(sflags == FIND_UNIT_SURRO)
     {
         int i, p;
         scan4_unit(ref, tflags);
-        if (UVITOP > 0)
+        if(UVITOP > 0)
         {
             p = number(0, UVITOP - 1);
             /* find nearest that fulfill findcheck() */
-            for (i = p; i < UVITOP; i++)
-                if (findcheck(UVI(i), pset, tflags))
+            for(i = p; i < UVITOP; i++)
+                if(findcheck(UVI(i), pset, tflags))
                     return UVI(i);
             /* try lookin back then */
-            for (i = p - 1; i >= 0; i--)
-                if (findcheck(UVI(i), pset, tflags))
+            for(i = p - 1; i >= 0; i--)
+                if(findcheck(UVI(i), pset, tflags))
                     return UVI(i);
             /* then give up (UV not containing any usefull
                units (findcheck()) */
@@ -259,7 +252,7 @@ class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
 // type are the UNIT_ST bits to match for, default is FIND_UNIT (all bits)
 //
 // I consolidated almost identical version of this function. The old "dil" variant
-// didn't respect CHAR_CAN_SEE. Which led to odd game behaviour. If for any reason 
+// didn't respect CHAR_CAN_SEE. Which led to odd game behaviour. If for any reason
 // this also needs to work on units that can't be seen, let's add a boolean  argument if the
 // function only returns units that are visible to the viewer, or not.
 //
@@ -267,7 +260,8 @@ class unit_data *find_unit_general(const class unit_data *viewer,
                                    const class unit_data *ch,
                                    char **arg,
                                    const class unit_data *list,
-                                   const ubit32 bitvector, ubit8 type)
+                                   const ubit32 bitvector,
+                                   ubit8 type)
 {
     class unit_data *best = NULL;
     int best_len = 0;
@@ -279,41 +273,41 @@ class unit_data *find_unit_general(const class unit_data *viewer,
     ubit1 is_fillword = TRUE;
     class unit_data *u, *uu;
 
-    if (type == 0)
+    if(type == 0)
         return NULL;
 
     /* Eliminate the 'pay' bits */
     bitvectorm = bitvector & FIND_UNIT_LOCATION_MASK;
 
-    for (c = *arg; isaspace(*c); c++)
+    for(c = *arg; isaspace(*c); c++)
         ;
 
     /* Eliminate spaces and all "ignore" words */
-    while (is_fillword)
+    while(is_fillword)
     {
-        for (i = 0; (name[i] = c[i]) && name[i] != ' '; i++)
+        for(i = 0; (name[i] = c[i]) && name[i] != ' '; i++)
             ;
         name[i] = 0;
 
-        if (search_block(name, fillwords, TRUE) < 0)
+        if(search_block(name, fillwords, TRUE) < 0)
             is_fillword = FALSE;
         else
             c += i;
 
-        for (; *c == ' '; c++)
+        for(; *c == ' '; c++)
             ;
     }
 
-    if (!*c)
+    if(!*c)
         return NULL;
 
     str_remspc(c);
 
-    for (i = 0; isdigit(name[i] = c[i]); i++)
+    for(i = 0; isdigit(name[i] = c[i]); i++)
         ;
     name[i] = 0;
 
-    if (c[i] == '.')
+    if(c[i] == '.')
     {
         number = original_number = atoi(name);
         c += i + 1;
@@ -321,53 +315,51 @@ class unit_data *find_unit_general(const class unit_data *viewer,
     else
         number = original_number = 1;
 
-    if (IS_CHAR(ch)) /* Only check bitvector if ch IS a char! */
+    if(IS_CHAR(ch)) /* Only check bitvector if ch IS a char! */
     {
         /* Equipment can only be objects. */
-        if (IS_SET(bitvectorm, FIND_UNIT_EQUIP))
-            for (u = UNIT_CONTAINS(ch); u; u = u->next)
-                if (IS_SET(type, UNIT_TYPE(u)) && IS_OBJ(u) && OBJ_EQP_POS(u) &&
-                    ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
-                    (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
+        if(IS_SET(bitvectorm, FIND_UNIT_EQUIP))
+            for(u = UNIT_CONTAINS(ch); u; u = u->next)
+                if(IS_SET(type, UNIT_TYPE(u)) && IS_OBJ(u) && OBJ_EQP_POS(u) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
+                   (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
                 {
-                    if (ct - c > best_len)
+                    if(ct - c > best_len)
                     {
                         number = original_number;
                         best_len = ct - c;
                     }
 
-                    if (--number == 0)
+                    if(--number == 0)
                         best = u;
                 }
 
-        if (IS_SET(bitvectorm, FIND_UNIT_INVEN))
-            for (u = UNIT_CONTAINS(ch); u; u = u->next)
-                if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) &&
-                    ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
-                    !(IS_OBJ(u) && OBJ_EQP_POS(u)) && (ct - c >= best_len))
+        if(IS_SET(bitvectorm, FIND_UNIT_INVEN))
+            for(u = UNIT_CONTAINS(ch); u; u = u->next)
+                if(IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && ((viewer == ch) || CHAR_CAN_SEE(viewer, u)) &&
+                   !(IS_OBJ(u) && OBJ_EQP_POS(u)) && (ct - c >= best_len))
                 {
-                    if (ct - c > best_len)
+                    if(ct - c > best_len)
                     {
                         number = original_number;
                         best_len = ct - c;
                     }
 
-                    if (--number == 0)
+                    if(--number == 0)
                         best = u;
                 }
 
         /* This is the ugly one, modified for transparance */
-        if (IS_SET(bitvectorm, FIND_UNIT_SURRO))
+        if(IS_SET(bitvectorm, FIND_UNIT_SURRO))
         {
             const char *tmp_self[] = {"self", NULL};
 
-            if ((ct = is_name_raw(c, tmp_self)))
+            if((ct = is_name_raw(c, tmp_self)))
             {
                 *arg = (char *)ct;
                 return (class unit_data *)ch;
             }
 
-            if (UNIT_IN(ch) == NULL)
+            if(UNIT_IN(ch) == NULL)
             {
                 slog(LOG_ALL, 0, "%s@%s is not in a room while in find_unit_general<br/>", UNIT_FI_NAME(ch), UNIT_FI_ZONENAME(ch));
             }
@@ -375,49 +367,49 @@ class unit_data *find_unit_general(const class unit_data *viewer,
             {
                 /* MS: Removed !IS_ROOM(UNIT_IN(ch)) because you must be able to
                 open rooms from the inside... */
-                if (IS_SET(type, UNIT_TYPE(UNIT_IN(ch))) && (ct = UNIT_NAMES(UNIT_IN(ch)).IsNameRaw(c)) &&
-                    CHAR_CAN_SEE(viewer, UNIT_IN(ch)) && (ct - c >= best_len))
+                if(IS_SET(type, UNIT_TYPE(UNIT_IN(ch))) && (ct = UNIT_NAMES(UNIT_IN(ch)).IsNameRaw(c)) &&
+                   CHAR_CAN_SEE(viewer, UNIT_IN(ch)) && (ct - c >= best_len))
                 {
-                    if (ct - c > best_len)
+                    if(ct - c > best_len)
                     {
                         number = original_number;
                         best_len = ct - c;
                     }
 
-                    if (--number == 0)
+                    if(--number == 0)
                         best = UNIT_IN(ch);
                 }
 
                 /* Run through units in local environment */
-                for (u = UNIT_CONTAINS(UNIT_IN(ch)); u; u = u->next)
+                for(u = UNIT_CONTAINS(UNIT_IN(ch)); u; u = u->next)
                 {
-                    if (IS_SET(type, UNIT_TYPE(u)) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
+                    if(IS_SET(type, UNIT_TYPE(u)) && (IS_ROOM(u) || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
                     {
-                        if ((ct = UNIT_NAMES(u).IsNameRaw(c)) &&
-                            (ct - c >= best_len))
+                        if((ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
                         {
-                            if (ct - c > best_len)
+                            if(ct - c > best_len)
                             {
                                 number = original_number;
                                 best_len = ct - c;
                             }
 
-                            if (--number == 0)
+                            if(--number == 0)
                                 best = u;
                         }
 
                         /* check tranparancy */
-                        if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
-                            for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
-                                if (IS_SET(type, UNIT_TYPE(uu)) && IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
+                        if(UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
+                            for(uu = UNIT_CONTAINS(u); uu; uu = uu->next)
+                                if(IS_SET(type, UNIT_TYPE(uu)) && IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRaw(c)) &&
+                                   CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
                                 {
-                                    if (ct - c > best_len)
+                                    if(ct - c > best_len)
                                     {
                                         number = original_number;
                                         best_len = ct - c;
                                     }
 
-                                    if (--number == 0)
+                                    if(--number == 0)
                                         best = uu;
                                 }
                     }
@@ -425,37 +417,36 @@ class unit_data *find_unit_general(const class unit_data *viewer,
                 } /* End for */
 
                 /* Run through units in local environment if upwards transparent */
-                if ((u = UNIT_IN(UNIT_IN(ch))) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)))
+                if((u = UNIT_IN(UNIT_IN(ch))) && UNIT_IS_TRANSPARENT(UNIT_IN(ch)))
                 {
-                    for (u = UNIT_CONTAINS(u); u; u = u->next)
-                        if (u != UNIT_IN(ch) && CHAR_CAN_SEE(viewer, u))
+                    for(u = UNIT_CONTAINS(u); u; u = u->next)
+                        if(u != UNIT_IN(ch) && CHAR_CAN_SEE(viewer, u))
                         {
-                            if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
+                            if(IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && (ct - c >= best_len))
                             {
-                                if (ct - c > best_len)
+                                if(ct - c > best_len)
                                 {
                                     number = original_number;
                                     best_len = ct - c;
                                 }
 
-                                if (--number == 0)
+                                if(--number == 0)
                                     best = u;
                             }
 
                             /* check down into transparent unit */
-                            if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
-                                for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
-                                    if (IS_SET(type, UNIT_TYPE(uu)) && IS_CHAR(uu) &&
-                                        (ct = UNIT_NAMES(uu).IsNameRaw(c)) &&
-                                        CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
+                            if(UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
+                                for(uu = UNIT_CONTAINS(u); uu; uu = uu->next)
+                                    if(IS_SET(type, UNIT_TYPE(uu)) && IS_CHAR(uu) && (ct = UNIT_NAMES(uu).IsNameRaw(c)) &&
+                                       CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
                                     {
-                                        if (ct - c > best_len)
+                                        if(ct - c > best_len)
                                         {
                                             number = original_number;
                                             best_len = ct - c;
                                         }
 
-                                        if (--number == 0)
+                                        if(--number == 0)
                                             best = uu;
                                     }
                         }
@@ -463,47 +454,48 @@ class unit_data *find_unit_general(const class unit_data *viewer,
             }
         }
 
-        if (IS_SET(bitvectorm, FIND_UNIT_ZONE))
-            for (u = unit_list; u; u = u->gnext)
-                if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, u) && unit_zone(u) == unit_zone(ch) && (ct - c >= best_len))
+        if(IS_SET(bitvectorm, FIND_UNIT_ZONE))
+            for(u = unit_list; u; u = u->gnext)
+                if(IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, u) &&
+                   unit_zone(u) == unit_zone(ch) && (ct - c >= best_len))
                 {
-                    if (ct - c > best_len)
+                    if(ct - c > best_len)
                     {
                         number = original_number;
                         best_len = ct - c;
                     }
 
-                    if (--number == 0)
+                    if(--number == 0)
                         best = u;
                 }
 
-        if (IS_SET(bitvectorm, FIND_UNIT_WORLD))
-            for (u = unit_list; u; u = u->gnext)
-                if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) &&
-                    CHAR_CAN_SEE(viewer, u) && (ct - c >= best_len))
+        if(IS_SET(bitvectorm, FIND_UNIT_WORLD))
+            for(u = unit_list; u; u = u->gnext)
+                if(IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, u) && (ct - c >= best_len))
                 {
-                    if (ct - c > best_len)
+                    if(ct - c > best_len)
                     {
                         number = original_number;
                         best_len = ct - c;
                     }
 
-                    if (--number == 0)
+                    if(--number == 0)
                         best = u;
                 }
     }
 
-    for (; list; list = list->next)
+    for(; list; list = list->next)
     {
-        if (IS_SET(type, UNIT_TYPE((class unit_data *) list)) && (ct = UNIT_NAMES((class unit_data *)list).IsNameRaw(c)) && (ct - c >= best_len) && CHAR_CAN_SEE(viewer, list))
+        if(IS_SET(type, UNIT_TYPE((class unit_data *)list)) && (ct = UNIT_NAMES((class unit_data *)list).IsNameRaw(c)) &&
+           (ct - c >= best_len) && CHAR_CAN_SEE(viewer, list))
         {
-            if (ct - c > best_len)
+            if(ct - c > best_len)
             {
                 number = original_number;
                 best_len = ct - c;
             }
 
-            if (--number == 0)
+            if(--number == 0)
                 best = (class unit_data *)list;
         }
     }
@@ -547,15 +539,12 @@ class unit_data *find_unit_general(const class unit_data *viewer,
 
   */
 
-class unit_data *find_unit(const class unit_data *ch, char **arg,
-                           const class unit_data *list, const ubit32 bitvector)
+class unit_data *find_unit(const class unit_data *ch, char **arg, const class unit_data *list, const ubit32 bitvector)
 {
     return find_unit_general(ch, ch, arg, list, bitvector);
 }
 
-class unit_data *find_unit_dil(const class unit_data *ch, char **arg,
-                               const class unit_data *list, const ubit32 bitvector,
-                               ubit8 type)
+class unit_data *find_unit_dil(const class unit_data *ch, char **arg, const class unit_data *list, const ubit32 bitvector, ubit8 type)
 {
     return find_unit_general(ch, ch, arg, list, bitvector, type);
 }
@@ -566,87 +555,87 @@ class unit_data *file_index_type::find_symbolic_instance_ref(class unit_data *re
 
     assert(this);
 
-    if (ref == NULL)
+    if(ref == NULL)
         return NULL;
 
-    if (IS_SET(bitvector, FIND_UNIT_EQUIP))
+    if(IS_SET(bitvector, FIND_UNIT_EQUIP))
     {
-        for (u = UNIT_CONTAINS(ref); u; u = u->next)
-            if ((UNIT_FILE_INDEX(u) == this) && UNIT_IS_EQUIPPED(u))
+        for(u = UNIT_CONTAINS(ref); u; u = u->next)
+            if((UNIT_FILE_INDEX(u) == this) && UNIT_IS_EQUIPPED(u))
                 return u;
     }
 
-    if (IS_SET(bitvector, FIND_UNIT_INVEN))
+    if(IS_SET(bitvector, FIND_UNIT_INVEN))
     {
-        for (u = UNIT_CONTAINS(ref); u; u = u->next)
-            if ((UNIT_FILE_INDEX(u) == this) && !UNIT_IS_EQUIPPED(u))
+        for(u = UNIT_CONTAINS(ref); u; u = u->next)
+            if((UNIT_FILE_INDEX(u) == this) && !UNIT_IS_EQUIPPED(u))
                 return u;
     }
 
-    if (IS_SET(bitvector, FIND_UNIT_SURRO) && UNIT_IN(ref))
+    if(IS_SET(bitvector, FIND_UNIT_SURRO) && UNIT_IN(ref))
     {
-        if (this == UNIT_FILE_INDEX(UNIT_IN(ref)))
+        if(this == UNIT_FILE_INDEX(UNIT_IN(ref)))
             return UNIT_IN(ref);
 
         /* Run through units in local environment */
-        for (u = UNIT_CONTAINS(UNIT_IN(ref)); u; u = u->next)
+        for(u = UNIT_CONTAINS(UNIT_IN(ref)); u; u = u->next)
         {
-            if (UNIT_FILE_INDEX(u) == this)
+            if(UNIT_FILE_INDEX(u) == this)
                 return u;
 
             /* check tranparancy */
-            if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
-                for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
-                    if (UNIT_FILE_INDEX(uu) == this)
+            if(UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
+                for(uu = UNIT_CONTAINS(u); uu; uu = uu->next)
+                    if(UNIT_FILE_INDEX(uu) == this)
                         return uu;
         }
 
         /* Run through units in local environment if upwards transparent */
-        if ((u = UNIT_IN(UNIT_IN(ref))) && UNIT_IS_TRANSPARENT(UNIT_IN(ref)))
+        if((u = UNIT_IN(UNIT_IN(ref))) && UNIT_IS_TRANSPARENT(UNIT_IN(ref)))
         {
-            for (u = UNIT_CONTAINS(u); u; u = u->next)
-                if (u != UNIT_IN(ref))
+            for(u = UNIT_CONTAINS(u); u; u = u->next)
+                if(u != UNIT_IN(ref))
                 {
-                    if (this == UNIT_FILE_INDEX(u))
+                    if(this == UNIT_FILE_INDEX(u))
                         return u;
 
                     /* check down into transparent unit */
-                    if (UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
-                        for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
-                            if (this == UNIT_FILE_INDEX(uu))
+                    if(UNIT_CHARS(u) && UNIT_IS_TRANSPARENT(u))
+                        for(uu = UNIT_CONTAINS(u); uu; uu = uu->next)
+                            if(this == UNIT_FILE_INDEX(uu))
                                 return uu;
                 }
         }
     }
 
-    if (IS_SET(bitvector, FIND_UNIT_ZONE))
+    if(IS_SET(bitvector, FIND_UNIT_ZONE))
     {
         /* for (u = unit_list; u; u = u->gnext)
             if ((unit_zone(u) == this->zone) && (UNIT_FILE_INDEX(u) == this))
                 return u;*/
 
-        if (!this->fi_unit_list.empty())
+        if(!this->fi_unit_list.empty())
         {
-            for (std::forward_list<class unit_data *>::iterator it = this->fi_unit_list.begin() ; it != this->fi_unit_list.end(); it++)
-                if (UNIT_FILE_INDEX(*it) == this)
+            for(std::forward_list<class unit_data *>::iterator it = this->fi_unit_list.begin(); it != this->fi_unit_list.end(); it++)
+                if(UNIT_FILE_INDEX(*it) == this)
                     return u;
         }
     }
 
-    if (IS_SET(bitvector, FIND_UNIT_WORLD))
+    if(IS_SET(bitvector, FIND_UNIT_WORLD))
     {
         /* for (u = unit_list; u; u = u->gnext)
             if (UNIT_FILE_INDEX(u) == this)
                 return u;*/
 
-        if (!this->fi_unit_list.empty())
+        if(!this->fi_unit_list.empty())
             return this->fi_unit_list.front();
     }
 
     return NULL;
 }
 
-class unit_data * file_index_type::find_symbolic_instance(void)
+class unit_data *file_index_type::find_symbolic_instance(void)
 {
     // class unit_data *u;
 
@@ -659,19 +648,19 @@ class unit_data * file_index_type::find_symbolic_instance(void)
         {
             if (this->fi_unit_list.front() != u)
             {
-                slog(LOG_ALL, 0, "Break me here %s@%s is not in a room while in find_unit_general<br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
+                slog(LOG_ALL, 0, "Break me here %s@%s is not in a room while in find_unit_general<br/>", UNIT_FI_NAME(u),
+    UNIT_FI_ZONENAME(u));
             }
 
             return u;
         }
     }*/
 
-    if (!this->fi_unit_list.empty())
+    if(!this->fi_unit_list.empty())
         return this->fi_unit_list.front();
 
     return NULL;
 }
-
 
 // Will find the unit_data for the file_index_type in question
 // which is matching the idx (ignore for PCs)
@@ -680,22 +669,22 @@ class unit_data *find_symbolic_idx(const char *zone, const char *name, int idx)
 {
     class file_index_type *fi = find_file_index(zone, name);
 
-    union {
+    union
+    {
         int i;
         void *p;
     } val;
-    
-    if (fi && !fi->fi_unit_list.empty())
+
+    if(fi && !fi->fi_unit_list.empty())
     {
-        if (fi->type == UNIT_ST_PC)
+        if(fi->type == UNIT_ST_PC)
             return fi->fi_unit_list.front();
 
-        for (std::forward_list<class unit_data *>::iterator it = fi->fi_unit_list.begin() ; it != fi->fi_unit_list.end(); it++)
+        for(std::forward_list<class unit_data *>::iterator it = fi->fi_unit_list.begin(); it != fi->fi_unit_list.end(); it++)
         {
             val.p = *it;
-            if (val.i == idx)
+            if(val.i == idx)
                 return *it;
- 
         }
     }
 
@@ -706,7 +695,7 @@ class unit_data *find_symbolic(const char *zone, const char *name)
 {
     class file_index_type *fi = find_file_index(zone, name);
 
-    if (fi)
+    if(fi)
         return fi->find_symbolic_instance();
     else
         return NULL;
@@ -740,25 +729,25 @@ void scan4_unit_room(class unit_data *room, ubit8 type)
 
     unit_vector.top = 0;
 
-    if (unit_vector.size == 0)
+    if(unit_vector.size == 0)
         init_unit_vector();
 
-    for (u = UNIT_CONTAINS(room); u; u = u->next)
+    for(u = UNIT_CONTAINS(room); u; u = u->next)
     {
-        if (IS_SET(UNIT_TYPE(u), type))
+        if(IS_SET(UNIT_TYPE(u), type))
         {
             unit_vector.units[unit_vector.top++] = u;
-            if (unit_vector.size == unit_vector.top)
+            if(unit_vector.size == unit_vector.top)
                 double_unit_vector();
         }
 
         /* down into transparent unit */
-        if (UNIT_IS_TRANSPARENT(u))
-            for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
-                if (IS_SET(UNIT_TYPE(uu), type))
+        if(UNIT_IS_TRANSPARENT(u))
+            for(uu = UNIT_CONTAINS(u); uu; uu = uu->next)
+                if(IS_SET(UNIT_TYPE(uu), type))
                 {
                     unit_vector.units[unit_vector.top++] = uu;
-                    if (unit_vector.size == unit_vector.top)
+                    if(unit_vector.size == unit_vector.top)
                         double_unit_vector();
                 }
     }
@@ -774,7 +763,7 @@ void scan4_unit(class unit_data *ch, ubit8 type)
 {
     class unit_data *u, *uu;
 
-    if (!UNIT_IN(ch))
+    if(!UNIT_IN(ch))
     {
         scan4_unit_room(ch, type);
         return;
@@ -782,47 +771,47 @@ void scan4_unit(class unit_data *ch, ubit8 type)
 
     unit_vector.top = 0;
 
-    if (unit_vector.size == 0)
+    if(unit_vector.size == 0)
         init_unit_vector();
 
-    for (u = UNIT_CONTAINS(UNIT_IN(ch)); u; u = u->next)
+    for(u = UNIT_CONTAINS(UNIT_IN(ch)); u; u = u->next)
     {
-        if (u != ch && IS_SET(UNIT_TYPE(u), type))
+        if(u != ch && IS_SET(UNIT_TYPE(u), type))
         {
             unit_vector.units[unit_vector.top++] = u;
-            if (unit_vector.size == unit_vector.top)
+            if(unit_vector.size == unit_vector.top)
                 double_unit_vector();
         }
 
         /* down into transparent unit */
-        if (UNIT_IS_TRANSPARENT(u))
-            for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
-                if (IS_SET(UNIT_TYPE(uu), type))
+        if(UNIT_IS_TRANSPARENT(u))
+            for(uu = UNIT_CONTAINS(u); uu; uu = uu->next)
+                if(IS_SET(UNIT_TYPE(uu), type))
                 {
                     unit_vector.units[unit_vector.top++] = uu;
-                    if (unit_vector.size == unit_vector.top)
+                    if(unit_vector.size == unit_vector.top)
                         double_unit_vector();
                 }
     }
 
     /* up through transparent unit */
-    if (UNIT_IS_TRANSPARENT(UNIT_IN(ch)) && UNIT_IN(UNIT_IN(ch)))
-        for (u = UNIT_CONTAINS(UNIT_IN(UNIT_IN(ch))); u; u = u->next)
+    if(UNIT_IS_TRANSPARENT(UNIT_IN(ch)) && UNIT_IN(UNIT_IN(ch)))
+        for(u = UNIT_CONTAINS(UNIT_IN(UNIT_IN(ch))); u; u = u->next)
         {
-            if (IS_SET(UNIT_TYPE(u), type))
+            if(IS_SET(UNIT_TYPE(u), type))
             {
                 unit_vector.units[unit_vector.top++] = u;
-                if (unit_vector.size == unit_vector.top)
+                if(unit_vector.size == unit_vector.top)
                     double_unit_vector();
             }
 
             /* down into transparent unit */
-            if (UNIT_IS_TRANSPARENT(u) && u != UNIT_IN(ch))
-                for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
-                    if (IS_SET(UNIT_TYPE(uu), type))
+            if(UNIT_IS_TRANSPARENT(u) && u != UNIT_IN(ch))
+                for(uu = UNIT_CONTAINS(u); uu; uu = uu->next)
+                    if(IS_SET(UNIT_TYPE(uu), type))
                     {
                         unit_vector.units[unit_vector.top++] = uu; /* MS FIX */
-                        if (unit_vector.size == unit_vector.top)
+                        if(unit_vector.size == unit_vector.top)
                             double_unit_vector();
                     }
         }
@@ -832,18 +821,18 @@ static class unit_data *scan4_ref_room(class unit_data *room, class unit_data *f
 {
     class unit_data *u;
 
-    if (room == fu)
+    if(room == fu)
         return fu;
-        
-    for (u = UNIT_CONTAINS(room); u; u = u->next)
-        if (u == fu)
+
+    for(u = UNIT_CONTAINS(room); u; u = u->next)
+        if(u == fu)
             return fu;
 
-    for (u = UNIT_CONTAINS(room); u; u = u->next)
+    for(u = UNIT_CONTAINS(room); u; u = u->next)
     {
-        if (((IS_ROOM(u) || IS_OBJ(u)) && (!UNIT_IS_TRANSPARENT(u))))
+        if(((IS_ROOM(u) || IS_OBJ(u)) && (!UNIT_IS_TRANSPARENT(u))))
             continue;
-        if (scan4_ref_room(u, fu))
+        if(scan4_ref_room(u, fu))
             return fu;
     }
 
@@ -858,16 +847,15 @@ static class unit_data *scan4_ref_room(class unit_data *room, class unit_data *f
 /* No checks for invisibility and the like                                */
 class unit_data *scan4_ref(class unit_data *ch, class unit_data *fu)
 {
-
-    if (!UNIT_IN(ch))
+    if(!UNIT_IN(ch))
         return (scan4_ref_room(ch, fu));
-    else if (((IS_ROOM(UNIT_IN(ch)) || IS_OBJ(UNIT_IN(ch))) && (!UNIT_IS_TRANSPARENT(UNIT_IN(ch)))))
+    else if(((IS_ROOM(UNIT_IN(ch)) || IS_OBJ(UNIT_IN(ch))) && (!UNIT_IS_TRANSPARENT(UNIT_IN(ch)))))
         return (scan4_ref_room(UNIT_IN(ch), fu));
     else
         return (scan4_ref(UNIT_IN(ch), fu));
 }
 
-/* Possible alternate of the above function. The above doesn't seem to properly 
+/* Possible alternate of the above function. The above doesn't seem to properly
    interpret the transparent and closed. But it proabably doesn't matter because
    it's just a DIL secure question I believe :o)
 class unit_data *alternate_scan4_ref(class unit_data *ch, class unit_data *fu)

@@ -32,27 +32,24 @@ int write_unit_string(ubit8 *b, class unit_data *u);
 
 static int rent_info;
 
-static void
-show_items(class unit_data *ch, class unit_data *item, ubit32 price)
+static void show_items(class unit_data *ch, class unit_data *item, ubit32 price)
 {
-    if (price > 0)
+    if(price > 0)
     {
         price = money_round_up(price, local_currency(ch), 2);
 
-        act("$2t for $3n", A_ALWAYS, ch,
-            money_string(price, local_currency(ch), FALSE), item, TO_CHAR);
+        act("$2t for $3n", A_ALWAYS, ch, money_string(price, local_currency(ch), FALSE), item, TO_CHAR);
         rent_info = TRUE;
     }
 }
 
 /* ----------------------------------------------------------------- */
 
-static void
-subtract_rent(class unit_data *ch, class unit_data *item, ubit32 price)
+static void subtract_rent(class unit_data *ch, class unit_data *item, ubit32 price)
 {
-    if (price > 0)
+    if(price > 0)
     {
-        if (!char_can_afford(ch, price, DEF_CURRENCY))
+        if(!char_can_afford(ch, price, DEF_CURRENCY))
         {
             act("You couldn't afford to keep $2n.", A_ALWAYS, ch, item, cActParameter(), TO_CHAR);
             extract_unit(item);
@@ -64,41 +61,38 @@ subtract_rent(class unit_data *ch, class unit_data *item, ubit32 price)
 
 /* ----------------------------------------------------------------- */
 
-static ubit32
-subtract_recurse(class unit_data *ch,
-                 class unit_data *item,
-                 ubit32 seconds,
-                 void (*fptr)(class unit_data *ch,
-                              class unit_data *obj, ubit32 price))
+static ubit32 subtract_recurse(class unit_data *ch,
+                               class unit_data *item,
+                               ubit32 seconds,
+                               void (*fptr)(class unit_data *ch, class unit_data *obj, ubit32 price))
 {
     ubit32 sum = 0;
 
-    if (IS_IMMORTAL(ch))
+    if(IS_IMMORTAL(ch))
         return 0;
 
-    if (item == NULL)
+    if(item == NULL)
         return 0;
 
-    if (!UNIT_MINV(item))
+    if(!UNIT_MINV(item))
         sum += subtract_recurse(ch, UNIT_CONTAINS(item), seconds, fptr);
 
     sum += subtract_recurse(ch, item->next, seconds, fptr);
 
-    if (IS_OBJ(item) && !UNIT_MINV(item))
+    if(IS_OBJ(item) && !UNIT_MINV(item))
     {
         ubit32 price = 0;
 
-        if (OBJ_PRICE_DAY(item) > 0)
+        if(OBJ_PRICE_DAY(item) > 0)
         {
-            price = (int)((float)OBJ_PRICE_DAY(item) * (float)seconds /
-                          (float)SECS_PER_REAL_DAY);
+            price = (int)((float)OBJ_PRICE_DAY(item) * (float)seconds / (float)SECS_PER_REAL_DAY);
 
             price = (price * g_cServerConfig.m_nRentModifier) / 100;
 
             sum += price;
         }
 
-        if (fptr)
+        if(fptr)
             (*fptr)(ch, item, price);
     }
 
@@ -113,18 +107,18 @@ ubit32 rent_calc(class unit_data *ch, time_t savetime)
 
     assert(IS_PC(ch));
 
-    if (CHAR_DESCRIPTOR(ch) == NULL) /* If loading or similar, dont subtract! */
+    if(CHAR_DESCRIPTOR(ch) == NULL) /* If loading or similar, dont subtract! */
         return 0;
 
-    if (IS_MORTAL(ch))
+    if(IS_MORTAL(ch))
     {
         time_t t = time(0);
 
-        if ((t > savetime) && (savetime > 0))
+        if((t > savetime) && (savetime > 0))
         {
             t -= savetime;
 
-            if (t > SECS_PER_REAL_MIN * 10)
+            if(t > SECS_PER_REAL_MIN * 10)
                 sum = subtract_recurse(ch, UNIT_CONTAINS(ch), t, subtract_rent);
         }
     }
@@ -138,15 +132,17 @@ void do_rent(class unit_data *ch, char *arg, const struct command_info *cmd)
 
     rent_info = FALSE;
 
-    sum = subtract_recurse(ch, UNIT_CONTAINS(ch),
-                           SECS_PER_REAL_DAY, show_items);
+    sum = subtract_recurse(ch, UNIT_CONTAINS(ch), SECS_PER_REAL_DAY, show_items);
 
-    if (!rent_info)
+    if(!rent_info)
         send_to_char("You are charged no rent.<br/>", ch);
     else
         act("Your inventory costs $2t per day to rent.",
-            A_ALWAYS, ch, money_string(sum, local_currency(ch), FALSE),
-            cActParameter(), TO_CHAR);
+            A_ALWAYS,
+            ch,
+            money_string(sum, local_currency(ch), FALSE),
+            cActParameter(),
+            TO_CHAR);
 }
 
 /* *************************************************************************
@@ -180,7 +176,7 @@ struct objheaderold
 /* Per-object header */
 struct objheadernew
 {
-    ubit32 length; /* length of data */
+    ubit32 length;  /* length of data */
     ubit8 nVersion; // Version number
     char zone[FI_MAX_ZONENAME + 1];
     char unit[FI_MAX_UNITNAME + 1];
@@ -214,22 +210,20 @@ void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
 
     int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif, int diflen, ubit32 crc);
 
-    if (!IS_SET(UNIT_TYPE(unit), UNIT_ST_NPC | UNIT_ST_OBJ))
+    if(!IS_SET(UNIT_TYPE(unit), UNIT_ST_NPC | UNIT_ST_OBJ))
     {
-        slog(LOG_ALL, 0,
-             "MAJOR ERROR - enlist a non-NPC or non-OBJ is being saved. Aborted");
+        slog(LOG_ALL, 0, "MAJOR ERROR - enlist a non-NPC or non-OBJ is being saved. Aborted");
         return;
     }
-    if (unit->is_destructed())
+    if(unit->is_destructed())
     {
-        slog(LOG_ALL, 0,
-             "MAJOR ERROR - enlist a destructed unit is being saved. Aborted");
+        slog(LOG_ALL, 0, "MAJOR ERROR - enlist a destructed unit is being saved. Aborted");
         return;
     }
 
     len = write_unit_string(&TmpBuf, unit);
 
-    if (fast || !UNIT_FILE_INDEX(unit))
+    if(fast || !UNIT_FILE_INDEX(unit))
     {
         hn.compressed = 0;
     }
@@ -244,7 +238,7 @@ void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
     hn.type = UNIT_TYPE(unit);
     hn.level = level;
 
-    if (IS_OBJ(unit))
+    if(IS_OBJ(unit))
         hn.equip = OBJ_EQP_POS(unit);
     else
         hn.equip = 0;
@@ -270,21 +264,20 @@ void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
 /*    level  - 0 for contents only, 1 for contents & container   */
 /*    fast   - TRUE for compression, FALSE for no compression.   */
 
-void add_units(CByteBuffer *pBuf, class unit_data *parent,
-               class unit_data *unit, int level, int fast)
+void add_units(CByteBuffer *pBuf, class unit_data *parent, class unit_data *unit, int level, int fast)
 {
     int tmp_i = 0;
     class unit_data *tmp_u;
 
-    if (IS_ROOM(unit))
+    if(IS_ROOM(unit))
     {
         slog(LOG_ALL, 0, "BAD ERROR: Room attempted saved as inventory!");
         return;
     }
 
-    if ((tmp_u = UNIT_CONTAINS(unit)))
+    if((tmp_u = UNIT_CONTAINS(unit)))
     {
-        if (IS_OBJ(tmp_u) && (tmp_i = OBJ_EQP_POS(tmp_u)))
+        if(IS_OBJ(tmp_u) && (tmp_i = OBJ_EQP_POS(tmp_u)))
         {
             unequip_object(tmp_u);
             OBJ_EQP_POS(tmp_u) = tmp_i;
@@ -294,36 +287,34 @@ void add_units(CByteBuffer *pBuf, class unit_data *parent,
 
         add_units(pBuf, parent, unit, level, fast);
 
-        if (IS_OBJ(tmp_u) || IS_NPC(tmp_u))
+        if(IS_OBJ(tmp_u) || IS_NPC(tmp_u))
             add_units(pBuf, parent, tmp_u, level + 1, fast);
 
         unit_to_unit(tmp_u, unit);
 
-        if (IS_OBJ(tmp_u) && tmp_i)
+        if(IS_OBJ(tmp_u) && tmp_i)
         {
             OBJ_EQP_POS(tmp_u) = 0;
             equip_char(unit, tmp_u, tmp_i);
         }
     }
-    else /* UNIT CONTAINS NOTHING */ if ((level != 0) && (IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
+    else /* UNIT CONTAINS NOTHING */ if((level != 0) && (IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
         enlist(pBuf, unit, level, fast);
 }
 
 void send_saves(class unit_data *parent, class unit_data *unit)
 {
-    if (!unit)
+    if(!unit)
         return;
 
     send_saves(parent, UNIT_CONTAINS(unit));
     send_saves(parent, unit->next);
 
-    if ((IS_OBJ(unit) || IS_NPC(unit)) &&
-        !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
+    if((IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
         send_save_to(parent, unit);
 }
 
-char *
-ContentsFileName(const char *pName)
+char *ContentsFileName(const char *pName)
 {
     static char Buf[MAX_INPUT_LENGTH + 1];
 
@@ -338,8 +329,7 @@ ContentsFileName(const char *pName)
 /* if fast == 1 or compressed if fast == 0. Only OBJ's and NPC's will */
 /* be saved!                                                          */
 /* Container = 1 if container should be saved also                    */
-void basic_save_contents(const char *pFileName, class unit_data *unit,
-                         int fast, int bContainer)
+void basic_save_contents(const char *pFileName, class unit_data *unit, int fast, int bContainer)
 {
     class descriptor_data *tmp_descr = NULL;
     FILE *pFile;
@@ -348,7 +338,7 @@ void basic_save_contents(const char *pFileName, class unit_data *unit,
     fast = 1; /* MAJOR BUG IN DIFF CAUSING BAD PLAYERS! WITH TOO MUCH */
     /* INVENTORY, THE PLAYER INDEX WILL GET FUCKED UP!      */
 
-    if (IS_CHAR(unit))
+    if(IS_CHAR(unit))
     {
         tmp_descr = CHAR_DESCRIPTOR(unit);
         CHAR_DESCRIPTOR(unit) = NULL;
@@ -357,17 +347,17 @@ void basic_save_contents(const char *pFileName, class unit_data *unit,
     CByteBuffer *pBuf = &g_FileBuffer;
     pBuf->Clear();
 
-    if (bContainer)
+    if(bContainer)
         send_save_to(unit, unit);
 
     send_saves(unit, UNIT_CONTAINS(unit));
 
     add_units(pBuf, unit, unit, bContainer ? 1 : 0, fast);
 
-    if (IS_CHAR(unit))
+    if(IS_CHAR(unit))
         CHAR_DESCRIPTOR(unit) = tmp_descr;
 
-    if (pBuf->GetLength() > 0)
+    if(pBuf->GetLength() > 0)
     {
         strcpy(TmpName, ContentsFileName("aaa-inv.tmp"));
         pFile = fopen(TmpName, "wb");
@@ -375,7 +365,7 @@ void basic_save_contents(const char *pFileName, class unit_data *unit,
         pBuf->FileWrite(pFile);
         fclose(pFile);
 
-        if (rename(TmpName, pFileName) != 0)
+        if(rename(TmpName, pFileName) != 0)
         {
             perror("rename:");
             exit(2);
@@ -387,8 +377,7 @@ void basic_save_contents(const char *pFileName, class unit_data *unit,
 /* if fast == 1 or compressed if fast == 0. Only OBJ's and NPC's will */
 /* be saved!                                                          */
 /* Container = 1 if container should be saved also                    */
-int save_contents(const char *pFileName, class unit_data *unit,
-                  int fast, int bContainer)
+int save_contents(const char *pFileName, class unit_data *unit, int fast, int bContainer)
 {
     char name[MAX_INPUT_LENGTH + 1];
 
@@ -397,7 +386,7 @@ int save_contents(const char *pFileName, class unit_data *unit,
 
     strcpy(name, ContentsFileName(pFileName));
 
-    if (!UNIT_CONTAINS(unit))
+    if(!UNIT_CONTAINS(unit))
     {
         remove(name);
         return 0;
@@ -405,8 +394,7 @@ int save_contents(const char *pFileName, class unit_data *unit,
 
     basic_save_contents(name, unit, fast, bContainer);
 
-    return subtract_recurse(unit, UNIT_CONTAINS(unit),
-                            SECS_PER_REAL_DAY, NULL);
+    return subtract_recurse(unit, UNIT_CONTAINS(unit), SECS_PER_REAL_DAY, NULL);
 }
 
 /* From the block_file 'bf' at index 'blk_idx' load the objects    */
@@ -438,11 +426,11 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
 
     pFile = fopen(pFileName, "rb");
 
-    if (pFile == NULL)
+    if(pFile == NULL)
         return NULL;
 
     len = fsize(pFile);
-    if (len == 0)
+    if(len == 0)
     {
         fclose(pFile);
         return NULL;
@@ -451,7 +439,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
     n = InvBuf.FileRead(pFile, len);
     fclose(pFile);
 
-    if (n != len)
+    if(n != len)
     {
         slog(LOG_ALL, 0, "Corrupted inventory: %s", pFileName);
         return NULL;
@@ -460,22 +448,22 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
     frame = 0;
     pstack[frame] = (class unit_data *)unit;
 
-    if (unit && IS_CHAR(unit))
+    if(unit && IS_CHAR(unit))
     {
         tmp_descr = CHAR_DESCRIPTOR(unit);
         CHAR_DESCRIPTOR(unit) = NULL;
     }
 
-    for (init = TRUE; InvBuf.GetReadPosition() < InvBuf.GetLength();)
+    for(init = TRUE; InvBuf.GetReadPosition() < InvBuf.GetLength();)
     {
-        if (InvBuf.Read((ubit8 *)&ho, sizeof(ho)))
+        if(InvBuf.Read((ubit8 *)&ho, sizeof(ho)))
             break;
 
         // It's the new version if both are equal to "obsoleted"
-        if ((strcmp(ho.zone, "_obsoleted") == 0) && (strcmp(ho.unit, "_obsoleted") == 0))
+        if((strcmp(ho.zone, "_obsoleted") == 0) && (strcmp(ho.unit, "_obsoleted") == 0))
         {
             // It's a new version
-            if (InvBuf.Read((ubit8 *)&hn, sizeof(hn)))
+            if(InvBuf.Read((ubit8 *)&hn, sizeof(hn)))
                 break;
         }
         else
@@ -490,7 +478,6 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
             strcpy(hn.unit, ho.unit);
             strcpy(hn.zone, ho.zone);
         }
-        
 
         fi = find_file_index(hn.zone, hn.unit);
 
@@ -498,10 +485,10 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
 
         equip_ok = TRUE;
 
-        if (hn.compressed)
+        if(hn.compressed)
         {
             slog(LOG_ALL, 0, "Corrupted inventory: %s", pFileName);
-            if (unit && IS_CHAR(unit))
+            if(unit && IS_CHAR(unit))
             {
                 CHAR_DESCRIPTOR(unit) = tmp_descr;
                 send_to_char("Your inventory was corrupt, please contact the Admin.<br/>", unit);
@@ -511,26 +498,26 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
         }
         else /* uncompressed */
         {
-            if ((fi == NULL) || is_slimed(fi))
+            if((fi == NULL) || is_slimed(fi))
             {
-                slog(LOG_ALL, 0, "Sliming %s@%s for %s@%s", hn.unit, hn.zone, UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));                
-                pnew = read_unit(slime_fi);  // Inserts unit into glist
+                slog(LOG_ALL, 0, "Sliming %s@%s for %s@%s", hn.unit, hn.zone, UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
+                pnew = read_unit(slime_fi); // Inserts unit into glist
                 pnew_tmp = read_unit_string(&InvBuf, hn.type, hn.length, "preslime", FALSE);
 
-                if (g_nCorrupt)
+                if(g_nCorrupt)
                 {
                     slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
                     break;
                 }
 
-                if (pnew->fi == NULL)
+                if(pnew->fi == NULL)
                     pnew->set_fi(slime_fi);
             }
             else
             {
                 pnew_tmp = NULL;
                 pnew = read_unit_string(&InvBuf, hn.type, hn.length, str_cc(fi->name, fi->zone->name));
-                if (g_nCorrupt)
+                if(g_nCorrupt)
                 {
                     slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
                     break;
@@ -539,7 +526,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
                 insert_in_unit_list(pnew);
             }
 
-            if (pnew_tmp && pnew)
+            if(pnew_tmp && pnew)
             {
                 char buf[MAX_STRING_LENGTH];
                 sprintf(buf, "The slimy remains of %s", TITLENAME(pnew_tmp));
@@ -550,30 +537,29 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
             }
         }
 
-        if (init)
+        if(init)
         {
             topu = pnew;
             init = FALSE;
         }
-        if (pstack[frame] == NULL)
+        if(pstack[frame] == NULL)
         {
-            if (UNIT_IN(pnew))
+            if(UNIT_IN(pnew))
                 pstack[frame] = UNIT_IN(pnew);
             else
                 pstack[frame] = void_room;
         }
 
         UNIT_IN(pnew) = NULL;
-        if (pnew == pstack[frame])
+        if(pnew == pstack[frame])
         {
             slog(LOG_ALL, 0, "ERROR. Loading inventory, recursive linking. Please report.");
-            send_to_char("Your inventory was corrupt, please contact the Admin. Recursive Linking<br/>",
-                         unit);
+            send_to_char("Your inventory was corrupt, please contact the Admin. Recursive Linking<br/>", unit);
             return topu;
         }
         else
         {
-            if (hn.level > frame)
+            if(hn.level > frame)
             {
                 unit_to_unit(pnew, pstack[frame]);
                 frame = hn.level;
@@ -585,14 +571,14 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
             }
 
             /* IS_CHAR() needed, since a potential char may have been slimed! */
-            if (hn.equip && equip_ok && IS_CHAR(UNIT_IN(pnew)))
+            if(hn.equip && equip_ok && IS_CHAR(UNIT_IN(pnew)))
                 equip_char(UNIT_IN(pnew), pnew, hn.equip);
 
             pstack[frame] = pnew;
         }
     }
 
-    if (unit && IS_CHAR(unit))
+    if(unit && IS_CHAR(unit))
     {
         CHAR_DESCRIPTOR(unit) = tmp_descr;
     }
@@ -619,8 +605,7 @@ void reception_boot(void)
  ************************************************************************* */
 
 /* Create difference-data (patch can reconstruct obj based on ref & dif) */
-int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif,
-         int diflen, ubit32 crc)
+int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif, int diflen, ubit32 crc)
 {
     int dstart, dend, len, rlen;
     char *oend, *rend;
@@ -632,16 +617,16 @@ int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif,
     rlen = reflen;
 
     /* find start of difference */
-    for (dstart = 0; len && rlen; dstart++, len--, rlen--)
-        if (*(ref + dstart) != *(obj + dstart))
+    for(dstart = 0; len && rlen; dstart++, len--, rlen--)
+        if(*(ref + dstart) != *(obj + dstart))
             break;
 
     /* find end of difference */
-    for (dend = 0; len && rlen; dend++, len--, rlen--)
-        if (*(rend - dend) != *(oend - dend))
+    for(dend = 0; len && rlen; dend++, len--, rlen--)
+        if(*(rend - dend) != *(oend - dend))
             break;
 
-    if ((int)(sizeof(head) + len) > diflen)
+    if((int)(sizeof(head) + len) > diflen)
         return -1;
     else
         diflen = sizeof(head) + len;
@@ -653,38 +638,37 @@ int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif,
 
     memcpy(dif, (char *)&head, sizeof(head));
     dif += sizeof(head);
-    if (len)
+    if(len)
         memcpy(dif, (char *)obj + dstart, len);
     return (diflen);
 }
 
 /* reconstruct obj based on ref and diff */
-int patch(char *ref, ubit32 reflen, char *dif, int diflen, char *res,
-          int reslen, ubit32 crc)
+int patch(char *ref, ubit32 reflen, char *dif, int diflen, char *res, int reslen, ubit32 crc)
 {
     struct diffhead head;
 
-    if (diflen < (int)sizeof(head))
+    if(diflen < (int)sizeof(head))
         return -1;
 
     memcpy((char *)&head, dif, sizeof(head));
     dif += sizeof(head);
     diflen -= sizeof(head);
 
-    if ((int)(head.start + diflen + reflen - head.end) > reslen)
+    if((int)(head.start + diflen + reflen - head.end) > reslen)
         return -1;
 
-    if (head.reflen != reflen)
+    if(head.reflen != reflen)
         return -1;
 
-    if (head.crc != crc)
+    if(head.crc != crc)
         return -1;
 
-    if (head.start)
+    if(head.start)
         memcpy(res, ref, head.start);
-    if (diflen)
+    if(diflen)
         memcpy(res + head.start, dif, diflen);
-    if (head.end < (int)reflen)
+    if(head.end < (int)reflen)
         memcpy(res + head.start + diflen, ref + head.end, reflen - head.end);
 
     return (head.start + diflen + reflen - head.end);
@@ -694,7 +678,6 @@ int patch(char *ref, ubit32 reflen, char *dif, int diflen, char *res,
 
 void store_all_unit(class unit_data *u, char *fname, int svcont)
 {
-
     /*fuck  if (!UNIT_FILE_INDEX (u))
         return;*/
 

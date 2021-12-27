@@ -6,14 +6,14 @@
  */
 
 #ifdef _WINDOWS
-#include <string.h>
-#include <winsock.h>
-#include "telnet.h"
+    #include <string.h>
+    #include <winsock.h>
+    #include "telnet.h"
 #endif
 
 #ifdef LINUX
-#include <strings.h>
-#include <arpa/telnet.h>
+    #include <strings.h>
+    #include <arpa/telnet.h>
 #endif
 
 #include <assert.h>
@@ -26,41 +26,32 @@
 
 static ubit8 default_colours[3][24] = {
     /* Default (no change in table) */
-    {CONTROL_FG_BLACK_CHAR, CONTROL_FG_RED_CHAR, CONTROL_FG_GREEN_CHAR,
-     CONTROL_FG_YELLOW_CHAR, CONTROL_FG_BLUE_CHAR, CONTROL_FG_MAGENTA_CHAR,
-     CONTROL_FG_CYAN_CHAR, CONTROL_FG_WHITE_CHAR,
+    {CONTROL_FG_BLACK_CHAR,  CONTROL_FG_RED_CHAR,      CONTROL_FG_GREEN_CHAR,  CONTROL_FG_YELLOW_CHAR,
+     CONTROL_FG_BLUE_CHAR,   CONTROL_FG_MAGENTA_CHAR,  CONTROL_FG_CYAN_CHAR,   CONTROL_FG_WHITE_CHAR,
 
-     CONTROL_FGB_BLACK_CHAR, CONTROL_FGB_RED_CHAR, CONTROL_FGB_GREEN_CHAR,
-     CONTROL_FGB_YELLOW_CHAR, CONTROL_FGB_BLUE_CHAR, CONTROL_FGB_MAGENTA_CHAR,
-     CONTROL_FGB_CYAN_CHAR, CONTROL_FGB_WHITE_CHAR,
+     CONTROL_FGB_BLACK_CHAR, CONTROL_FGB_RED_CHAR,     CONTROL_FGB_GREEN_CHAR, CONTROL_FGB_YELLOW_CHAR,
+     CONTROL_FGB_BLUE_CHAR,  CONTROL_FGB_MAGENTA_CHAR, CONTROL_FGB_CYAN_CHAR,  CONTROL_FGB_WHITE_CHAR,
 
-     CONTROL_BG_BLACK_CHAR, CONTROL_BG_RED_CHAR, CONTROL_BG_GREEN_CHAR,
-     CONTROL_BG_YELLOW_CHAR, CONTROL_BG_BLUE_CHAR, CONTROL_BG_MAGENTA_CHAR,
-     CONTROL_BG_CYAN_CHAR, CONTROL_BG_WHITE_CHAR},
+     CONTROL_BG_BLACK_CHAR,  CONTROL_BG_RED_CHAR,      CONTROL_BG_GREEN_CHAR,  CONTROL_BG_YELLOW_CHAR,
+     CONTROL_BG_BLUE_CHAR,   CONTROL_BG_MAGENTA_CHAR,  CONTROL_BG_CYAN_CHAR,   CONTROL_BG_WHITE_CHAR},
 
-    {CONTROL_FG_BLACK_CHAR, CONTROL_FG_RED_CHAR, CONTROL_FG_YELLOW_CHAR,
-     CONTROL_FG_YELLOW_CHAR, CONTROL_FG_BLUE_CHAR, CONTROL_FG_MAGENTA_CHAR,
-     CONTROL_FG_BLUE_CHAR, CONTROL_FG_BLACK_CHAR,
+    {CONTROL_FG_BLACK_CHAR,  CONTROL_FG_RED_CHAR,      CONTROL_FG_YELLOW_CHAR,  CONTROL_FG_YELLOW_CHAR,
+     CONTROL_FG_BLUE_CHAR,   CONTROL_FG_MAGENTA_CHAR,  CONTROL_FG_BLUE_CHAR,    CONTROL_FG_BLACK_CHAR,
 
-     CONTROL_FGB_BLACK_CHAR, CONTROL_FGB_RED_CHAR, CONTROL_FGB_YELLOW_CHAR,
-     CONTROL_FGB_YELLOW_CHAR, CONTROL_FGB_BLUE_CHAR, CONTROL_FGB_MAGENTA_CHAR,
-     CONTROL_FGB_BLUE_CHAR, CONTROL_FGB_BLACK_CHAR,
+     CONTROL_FGB_BLACK_CHAR, CONTROL_FGB_RED_CHAR,     CONTROL_FGB_YELLOW_CHAR, CONTROL_FGB_YELLOW_CHAR,
+     CONTROL_FGB_BLUE_CHAR,  CONTROL_FGB_MAGENTA_CHAR, CONTROL_FGB_BLUE_CHAR,   CONTROL_FGB_BLACK_CHAR,
 
-     CONTROL_BG_WHITE_CHAR, CONTROL_BG_RED_CHAR, CONTROL_BG_GREEN_CHAR,
-     CONTROL_BG_YELLOW_CHAR, CONTROL_BG_BLUE_CHAR, CONTROL_BG_MAGENTA_CHAR,
-     CONTROL_BG_CYAN_CHAR, CONTROL_BG_WHITE_CHAR},
+     CONTROL_BG_WHITE_CHAR,  CONTROL_BG_RED_CHAR,      CONTROL_BG_GREEN_CHAR,   CONTROL_BG_YELLOW_CHAR,
+     CONTROL_BG_BLUE_CHAR,   CONTROL_BG_MAGENTA_CHAR,  CONTROL_BG_CYAN_CHAR,    CONTROL_BG_WHITE_CHAR},
 
-    {CONTROL_FG_BLACK_CHAR, CONTROL_FG_MAGENTA_CHAR, CONTROL_FG_GREEN_CHAR,
-     CONTROL_FG_YELLOW_CHAR, CONTROL_FG_BLUE_CHAR, CONTROL_FG_MAGENTA_CHAR,
-     CONTROL_FG_CYAN_CHAR, CONTROL_FG_WHITE_CHAR,
+    {CONTROL_FG_BLACK_CHAR,  CONTROL_FG_MAGENTA_CHAR,  CONTROL_FG_GREEN_CHAR,  CONTROL_FG_YELLOW_CHAR,
+     CONTROL_FG_BLUE_CHAR,   CONTROL_FG_MAGENTA_CHAR,  CONTROL_FG_CYAN_CHAR,   CONTROL_FG_WHITE_CHAR,
 
-     CONTROL_FGB_BLACK_CHAR, CONTROL_FGB_MAGENTA_CHAR, CONTROL_FGB_GREEN_CHAR,
-     CONTROL_FGB_YELLOW_CHAR, CONTROL_FGB_BLUE_CHAR, CONTROL_FGB_MAGENTA_CHAR,
-     CONTROL_FGB_CYAN_CHAR, CONTROL_FGB_WHITE_CHAR,
+     CONTROL_FGB_BLACK_CHAR, CONTROL_FGB_MAGENTA_CHAR, CONTROL_FGB_GREEN_CHAR, CONTROL_FGB_YELLOW_CHAR,
+     CONTROL_FGB_BLUE_CHAR,  CONTROL_FGB_MAGENTA_CHAR, CONTROL_FGB_CYAN_CHAR,  CONTROL_FGB_WHITE_CHAR,
 
-     CONTROL_BG_BLUE_CHAR, CONTROL_BG_RED_CHAR, CONTROL_BG_GREEN_CHAR,
-     CONTROL_BG_YELLOW_CHAR, CONTROL_BG_BLUE_CHAR, CONTROL_BG_MAGENTA_CHAR,
-     CONTROL_BG_CYAN_CHAR, CONTROL_BG_WHITE_CHAR}};
+     CONTROL_BG_BLUE_CHAR,   CONTROL_BG_RED_CHAR,      CONTROL_BG_GREEN_CHAR,  CONTROL_BG_YELLOW_CHAR,
+     CONTROL_BG_BLUE_CHAR,   CONTROL_BG_MAGENTA_CHAR,  CONTROL_BG_CYAN_CHAR,   CONTROL_BG_WHITE_CHAR}};
 
 void (*control_code[5][256])(class cConHook *con, char **b, ubit8 code);
 
@@ -70,16 +61,15 @@ void (*control_code[5][256])(class cConHook *con, char **b, ubit8 code);
 
 /* ----------------------------------------------------------------------- */
 
-#define PROTOCOL_TRANSLATE(con, code, b)               \
-    if (control_code[(con)->m_sSetup.emulation][code]) \
+#define PROTOCOL_TRANSLATE(con, code, b)                                                                                                   \
+    if(control_code[(con)->m_sSetup.emulation][code])                                                                                      \
         (*control_code[(con)->m_sSetup.emulation][code])((con), (b), (code));
 
 void protocol_translate(class cConHook *con, ubit8 code, char **b)
 {
-    if (code >= CONTROL_FG_BLACK_CHAR && code <= CONTROL_BG_WHITE_CHAR)
-        code = default_colours[con->m_sSetup.colour_convert]
-                              [code - CONTROL_FG_BLACK_CHAR];
-    if (control_code[(con)->m_sSetup.emulation][code])
+    if(code >= CONTROL_FG_BLACK_CHAR && code <= CONTROL_BG_WHITE_CHAR)
+        code = default_colours[con->m_sSetup.colour_convert][code - CONTROL_FG_BLACK_CHAR];
+    if(control_code[(con)->m_sSetup.emulation][code])
         (*control_code[(con)->m_sSetup.emulation][code])((con), (b), (code));
 
     //   PROTOCOL_TRANSLATE(con, code, b);
@@ -93,12 +83,12 @@ void protocol_translate(class cConHook *con, ubit8 code, char **b)
 
 void Control_Echo_Off(class cConHook *con, char **b, ubit8 code)
 {
-    if (con->m_sSetup.telnet || (con->m_sSetup.emulation == TERM_TTY))
+    if(con->m_sSetup.telnet || (con->m_sSetup.emulation == TERM_TTY))
     {
         TELNET_ECHO_OFF(*b);
         TAIL(*b);
     }
-    else if (con->m_sSetup.emulation == TERM_ANSI)
+    else if(con->m_sSetup.emulation == TERM_ANSI)
     {
         strcpy(*b, ANSI_CONCEALED);
         TAIL(*b);
@@ -107,12 +97,12 @@ void Control_Echo_Off(class cConHook *con, char **b, ubit8 code)
 
 void Control_Echo_On(class cConHook *con, char **b, ubit8 code)
 {
-    if (con->m_sSetup.telnet || (con->m_sSetup.emulation == TERM_TTY))
+    if(con->m_sSetup.telnet || (con->m_sSetup.emulation == TERM_TTY))
     {
         TELNET_ECHO_ON(*b);
         TAIL(*b);
     }
-    else if (con->m_sSetup.emulation == TERM_ANSI)
+    else if(con->m_sSetup.emulation == TERM_ANSI)
     {
         strcpy(*b, ANSI_RESET);
         TAIL(*b);
@@ -125,113 +115,112 @@ void Control_Echo_On(class cConHook *con, char **b, ubit8 code)
 
 void Control_ANSI_Fg(class cConHook *con, char **dest, ubit8 code, int bBold)
 {
-    switch (code)
+    switch(code)
     {
-    case 'r':
-        if (bBold)
-            Control_ANSI_Fg_Red(con, dest, 0);
-        else
-            Control_ANSI_Fgb_Red(con, dest, 0);
-        break;
+        case 'r':
+            if(bBold)
+                Control_ANSI_Fg_Red(con, dest, 0);
+            else
+                Control_ANSI_Fgb_Red(con, dest, 0);
+            break;
 
-    case 'n':
-        if (bBold)
-            Control_ANSI_Fgb_Black(con, dest, 0);
-        else
-            Control_ANSI_Fg_Black(con, dest, 0);
-        break;
+        case 'n':
+            if(bBold)
+                Control_ANSI_Fgb_Black(con, dest, 0);
+            else
+                Control_ANSI_Fg_Black(con, dest, 0);
+            break;
 
-    case 'g':
-        if (bBold)
-            Control_ANSI_Fgb_Green(con, dest, 0);
-        else
-            Control_ANSI_Fg_Green(con, dest, 0);
-        break;
+        case 'g':
+            if(bBold)
+                Control_ANSI_Fgb_Green(con, dest, 0);
+            else
+                Control_ANSI_Fg_Green(con, dest, 0);
+            break;
 
-    case 'y':
-        if (bBold)
-            Control_ANSI_Fgb_Yellow(con, dest, 0);
-        else
-            Control_ANSI_Fg_Yellow(con, dest, 0);
-        break;
+        case 'y':
+            if(bBold)
+                Control_ANSI_Fgb_Yellow(con, dest, 0);
+            else
+                Control_ANSI_Fg_Yellow(con, dest, 0);
+            break;
 
-    case 'b':
-        if (bBold)
-            Control_ANSI_Fgb_Blue(con, dest, 0);
-        else
-            Control_ANSI_Fg_Blue(con, dest, 0);
-        break;
+        case 'b':
+            if(bBold)
+                Control_ANSI_Fgb_Blue(con, dest, 0);
+            else
+                Control_ANSI_Fg_Blue(con, dest, 0);
+            break;
 
-    case 'm':
-        if (bBold)
-            Control_ANSI_Fgb_Magenta(con, dest, 0);
-        else
-            Control_ANSI_Fg_Magenta(con, dest, 0);
-        break;
+        case 'm':
+            if(bBold)
+                Control_ANSI_Fgb_Magenta(con, dest, 0);
+            else
+                Control_ANSI_Fg_Magenta(con, dest, 0);
+            break;
 
-    case 'c':
-        if (bBold)
-            Control_ANSI_Fgb_Cyan(con, dest, 0);
-        else
-            Control_ANSI_Fg_Cyan(con, dest, 0);
-        break;
+        case 'c':
+            if(bBold)
+                Control_ANSI_Fgb_Cyan(con, dest, 0);
+            else
+                Control_ANSI_Fg_Cyan(con, dest, 0);
+            break;
 
-    case 'w':
-        if (bBold)
-            Control_ANSI_Fgb_White(con, dest, 0);
-        else
-            Control_ANSI_Fg_White(con, dest, 0);
-        break;
+        case 'w':
+            if(bBold)
+                Control_ANSI_Fgb_White(con, dest, 0);
+            else
+                Control_ANSI_Fg_White(con, dest, 0);
+            break;
 
-    default:
-        slog(LOG_ALL, 0, "Illegal fg color code %c", code);
-        break;
+        default:
+            slog(LOG_ALL, 0, "Illegal fg color code %c", code);
+            break;
     }
 
-    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) &&
-        (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, dest);
 }
 
 void Control_ANSI_Bg(class cConHook *con, char **dest, ubit8 code)
 {
-    switch (code)
+    switch(code)
     {
-    case 'r':
-        Control_ANSI_Bg_Red(con, dest, 0);
-        break;
+        case 'r':
+            Control_ANSI_Bg_Red(con, dest, 0);
+            break;
 
-    case 'n':
-        Control_ANSI_Bg_Black(con, dest, 0);
-        break;
+        case 'n':
+            Control_ANSI_Bg_Black(con, dest, 0);
+            break;
 
-    case 'g':
-        Control_ANSI_Bg_Green(con, dest, 0);
-        break;
+        case 'g':
+            Control_ANSI_Bg_Green(con, dest, 0);
+            break;
 
-    case 'y':
-        Control_ANSI_Bg_Yellow(con, dest, 0);
-        break;
+        case 'y':
+            Control_ANSI_Bg_Yellow(con, dest, 0);
+            break;
 
-    case 'b':
-        Control_ANSI_Bg_Blue(con, dest, 0);
-        break;
+        case 'b':
+            Control_ANSI_Bg_Blue(con, dest, 0);
+            break;
 
-    case 'm':
-        Control_ANSI_Bg_Magenta(con, dest, 0);
-        break;
+        case 'm':
+            Control_ANSI_Bg_Magenta(con, dest, 0);
+            break;
 
-    case 'c':
-        Control_ANSI_Bg_Cyan(con, dest, 0);
-        break;
+        case 'c':
+            Control_ANSI_Bg_Cyan(con, dest, 0);
+            break;
 
-    case 'w':
-        Control_ANSI_Bg_White(con, dest, 0);
-        break;
+        case 'w':
+            Control_ANSI_Bg_White(con, dest, 0);
+            break;
 
-    default:
-        slog(LOG_ALL, 0, "Illegal bg color code %c", code);
-        break;
+        default:
+            slog(LOG_ALL, 0, "Illegal bg color code %c", code);
+            break;
     }
 }
 
@@ -240,8 +229,7 @@ void Control_ANSI_Fg_Black(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_BLACK);
     TAIL(*b);
 
-    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) &&
-        (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -250,8 +238,7 @@ void Control_ANSI_Fg_Red(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_RED);
     TAIL(*b);
 
-    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) &&
-        (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -260,8 +247,7 @@ void Control_ANSI_Fg_Green(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_GREEN);
     TAIL(*b);
 
-    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) &&
-        (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -270,8 +256,7 @@ void Control_ANSI_Fg_Yellow(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_YELLOW);
     TAIL(*b);
 
-    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) &&
-        (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -280,8 +265,7 @@ void Control_ANSI_Fg_Blue(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_BLUE);
     TAIL(*b);
 
-    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) &&
-        (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -290,8 +274,7 @@ void Control_ANSI_Fg_Magenta(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_MAGENTA);
     TAIL(*b);
 
-    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) &&
-        (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -300,8 +283,7 @@ void Control_ANSI_Fg_Cyan(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_CYAN);
     TAIL(*b);
 
-    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) &&
-        (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -310,8 +292,7 @@ void Control_ANSI_Fg_White(class cConHook *con, char **b, ubit8 code)
     strcpy(*b, ANSI_FG_WHITE);
     TAIL(*b);
 
-    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) &&
-        (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
+    if((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
         PROTOCOL_TRANSLATE(con, con->m_nBgColor, b);
 }
 
@@ -421,7 +402,7 @@ void Control_ANSI_Bg_White(class cConHook *con, char **b, ubit8 code)
 
 void Control_ANSI_Echo_Off(class cConHook *con, char **b, ubit8 code)
 {
-    if (con->m_sSetup.telnet)
+    if(con->m_sSetup.telnet)
     {
         TELNET_ECHO_OFF(*b);
         TAIL(*b);
@@ -433,7 +414,7 @@ void Control_ANSI_Echo_Off(class cConHook *con, char **b, ubit8 code)
 
 void Control_ANSI_Reset(class cConHook *con, char **b, ubit8 code)
 {
-    if (con->m_sSetup.telnet)
+    if(con->m_sSetup.telnet)
     {
         TELNET_ECHO_ON(*b);
         TAIL(*b);
@@ -466,7 +447,7 @@ void Control_ANSI_Reverse(class cConHook *con, char **b, ubit8 code)
 
 void Control_TTY_Echo_Off(class cConHook *con, char **b, ubit8 code)
 {
-    if (con->m_sSetup.telnet)
+    if(con->m_sSetup.telnet)
     {
         TELNET_ECHO_OFF(*b);
         TAIL(*b);
@@ -475,7 +456,7 @@ void Control_TTY_Echo_Off(class cConHook *con, char **b, ubit8 code)
 
 void Control_TTY_Echo_On(class cConHook *con, char **b, ubit8 code)
 {
-    if (con->m_sSetup.telnet)
+    if(con->m_sSetup.telnet)
     {
         TELNET_ECHO_ON(*b);
         TAIL(*b);
@@ -539,17 +520,17 @@ void translate_init(void)
 {
     int i, j;
 
-    for (j = 0; j < 4; j++)
-        for (i = 0; i < 256; i++)
+    for(j = 0; j < 4; j++)
+        for(i = 0; i < 256; i++)
             control_code[j][i] = NULL;
 
-    for (j = 0; j < 4; j++)
+    for(j = 0; j < 4; j++)
     {
         control_code[j][CONTROL_GOBBLE_ON_CHAR] = Control_Gobble_On;
         control_code[j][CONTROL_GOBBLE_OFF_CHAR] = Control_Gobble_Off;
     }
 
-    for (j = 0; j < 4; j++)
+    for(j = 0; j < 4; j++)
     {
         control_code[j][CONTROL_COLOR_CHANGE_CHAR] = control_color_change;
         control_code[j][CONTROL_COLOR_INSERT_CHAR] = control_color_insert;
@@ -600,6 +581,6 @@ void translate_init(void)
     control_code[TERM_ANSI][CONTROL_BG_CYAN_CHAR] = Control_ANSI_Bg_Cyan;
     control_code[TERM_ANSI][CONTROL_BG_WHITE_CHAR] = Control_ANSI_Bg_White;
 
-    for (i = 0; i < 256; i++)
+    for(i = 0; i < 256; i++)
         control_code[TERM_INTERNAL][i] = Control_Copy;
 }

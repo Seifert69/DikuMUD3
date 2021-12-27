@@ -12,9 +12,9 @@
 #include "queue.h"
 
 #ifdef _WINDOWS
-#include <winsock.h>
+    #include <winsock.h>
 #else
-#include <sys/select.h>
+    #include <sys/select.h>
 #endif
 
 extern int bPipeSignal;
@@ -38,73 +38,71 @@ class cCaptainHook;
 class cHookNative
 {
 public:
-   cHookNative(void);
-   virtual ~cHookNative();
+    cHookNative(void);
+    virtual ~cHookNative();
 
-   void Hook(int fd);
-   int IsHooked(void);
-   virtual void Unhook(void);
+    void Hook(int fd);
+    int IsHooked(void);
+    virtual void Unhook(void);
 
-   int get_fd(void);
+    int get_fd(void);
 
-   int write(const void *buf, int count);
-   int read(void *buf, int count);
+    int write(const void *buf, int count);
+    int read(void *buf, int count);
 
-   int fd;  // This should be private, but to not introduce bugs I'm just leaving it here for now
-//private:
+    int fd; // This should be private, but to not introduce bugs I'm just leaving it here for now
+    // private:
 };
-
 
 class cHook : public cHookNative
 {
-  friend class cCaptainHook;
+    friend class cCaptainHook;
 
 public:
-  cHook(void);
-  virtual ~cHook(void);
+    cHook(void);
+    virtual ~cHook(void);
 
-  int tfd(void);
-  //virtual int IsHooked(void);
-  virtual void Unhook(void);
+    int tfd(void);
+    // virtual int IsHooked(void);
+    virtual void Unhook(void);
 
-  virtual void Write(ubit8 *pData, ubit32 nLen, int bCopy = TRUE);
-  int ReadToQueue(void);
+    virtual void Write(ubit8 *pData, ubit32 nLen, int bCopy = TRUE);
+    int ReadToQueue(void);
 
-  cQueue qRX;
+    cQueue qRX;
 
 protected:
-  void PushWrite(void);
-  virtual void Input(int nFlags) = 0;
+    void PushWrite(void);
+    virtual void Input(int nFlags) = 0;
 
-  cQueue qTX;
+    cQueue qTX;
 
 private:
-  //int fd;
-  int id;
+    // int fd;
+    int id;
 };
 
 class cCaptainHook
 {
-  friend class cHook;
+    friend class cHook;
 
 public:
-  cCaptainHook(void);
-  ~cCaptainHook(void);
+    cCaptainHook(void);
+    ~cCaptainHook(void);
 
-  void Close(void);
-  void Hook(int nHandle, cHook *hook);
-  int Wait(struct timeval *timeout);
-  void Unhook(cHook *hook);
+    void Close(void);
+    void Hook(int nHandle, cHook *hook);
+    int Wait(struct timeval *timeout);
+    void Unhook(cHook *hook);
 
 private:
+    fd_set read_set, write_set;
 
-  fd_set read_set, write_set;
+    cHook *pfHook[256];
 
-  cHook *pfHook[256];
-
-  int nIdx[256];
-  int nMax;
-  int nTop;
+    int nIdx[256];
+    int nMax;
+    int nTop;
 };
 
 extern cCaptainHook CaptainHook;

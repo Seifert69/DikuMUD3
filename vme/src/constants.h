@@ -25,7 +25,7 @@ extern const char *weekdays[];
 extern const char *month_name[];
 extern const sbit8 time_light[SUN_SET + 1];
 extern const char *color_liquid[];
-//extern const int drink_aff[LIQ_MAX+2][3];
+// extern const int drink_aff[LIQ_MAX+2][3];
 extern const char *fullness[];
 extern const char *arm_text[];
 extern const char *shi_text[];

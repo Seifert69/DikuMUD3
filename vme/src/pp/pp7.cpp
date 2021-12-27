@@ -36,7 +36,7 @@
 /*									*/
 /************************************************************************/
 
-#include	"pp.h"
+#include "pp.h"
 
 /************************************************************************/
 /*									*/
@@ -46,10 +46,9 @@
 /*									*/
 /************************************************************************/
 
-void
-end_of_file()
+void end_of_file()
 {
-    fatal("Unexpected EOF","");
+    fatal("Unexpected EOF", "");
 }
 
 /************************************************************************/
@@ -60,10 +59,9 @@ end_of_file()
 /*									*/
 /************************************************************************/
 
-void
-fatal(const char *s1,const char *s2)
+void fatal(const char *s1, const char *s2)
 {
-    fprintf(STDERR,"FATAL: %s%s\n",s1,s2);	/* Print message */
+    fprintf(STDERR, "FATAL: %s%s\n", s1, s2); /* Print message */
     exit(TRUE);
 }
 
@@ -75,11 +73,10 @@ fatal(const char *s1,const char *s2)
 /*									*/
 /************************************************************************/
 
-void
-illegal_symbol()
+void illegal_symbol()
 {
-//	non_fatal("Illegal symbol name: ",Token);
-    warning("Illegal symbol name: ",Token);
+    //	non_fatal("Illegal symbol name: ",Token);
+    warning("Illegal symbol name: ", Token);
 }
 
 /************************************************************************/
@@ -90,11 +87,10 @@ illegal_symbol()
 /*									*/
 /************************************************************************/
 
-void
-non_fatal(const char *s1,const char *s2)
+void non_fatal(const char *s1, const char *s2)
 {
-    prmsg("",s1,s2);
-    Errors++;			/* Count the error */
+    prmsg("", s1, s2);
+    Errors++; /* Count the error */
 }
 
 /************************************************************************/
@@ -105,10 +101,9 @@ non_fatal(const char *s1,const char *s2)
 /*									*/
 /************************************************************************/
 
-void
-out_of_memory()
+void out_of_memory()
 {
-    fatal("Out of memory","");
+    fatal("Out of memory", "");
 }
 
 /************************************************************************/
@@ -122,12 +117,9 @@ out_of_memory()
 /*									*/
 /************************************************************************/
 
-void
-prmsg(const char *s1, const char *s2, const char *s3)
+void prmsg(const char *s1, const char *s2, const char *s3)
 {
-    fprintf(STDERR,"<%s> @ %u: %s%s%s\n",
-            Filestack[Filelevel >= 0 ? Filelevel : 0]->f_name,LLine,
-            s1,s2,s3);
+    fprintf(STDERR, "<%s> @ %u: %s%s%s\n", Filestack[Filelevel >= 0 ? Filelevel : 0]->f_name, LLine, s1, s2, s3);
 }
 
 /************************************************************************/
@@ -138,9 +130,7 @@ prmsg(const char *s1, const char *s2, const char *s3)
 /*									*/
 /************************************************************************/
 
-void
-warning(const char *s1, const char *s2)
+void warning(const char *s1, const char *s2)
 {
-    prmsg("WARNING: ",s1,s2);
+    prmsg("WARNING: ", s1, s2);
 }
-

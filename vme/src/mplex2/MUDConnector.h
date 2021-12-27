@@ -19,17 +19,17 @@
 class cMotherHook : public cHook
 {
 public:
-   void Unhook(void);
-   void Input(int nFlags);
-   int IsHooked(void);
+    void Unhook(void);
+    void Input(int nFlags);
+    int IsHooked(void);
 };
 
 class cMudHook : public cHook
 {
 public:
-   void Unhook(void);
-   int read_mud(void);
-   void Input(int nFlags);
+    void Unhook(void);
+    int read_mud(void);
+    void Input(int nFlags);
 };
 
 // I think this is the open socket from the main listening telnet port

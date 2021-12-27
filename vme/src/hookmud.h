@@ -31,8 +31,6 @@ public:
 
 extern class cMultiMaster Multi;
 
-
-
 class cMotherHook : public cHook
 {
 public:
@@ -42,7 +40,6 @@ public:
 };
 
 extern class cMotherHook MotherHook;
-
 
 void multi_close_all(void);
 void init_mother(int nPort);

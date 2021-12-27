@@ -14,9 +14,10 @@
 
 /* This is for the compiler */
 
-#define CODESIZE 16768     /* maximum expression size */
+#define CODESIZE 16768 /* maximum expression size */
 
-struct exptype {
+struct exptype
+{
     ubit8 dsl, typ, rtyp; /* static/dynamic/lvalue, type, req type */
     ubit8 boolean;        /* if expression contains boolean op */
     sbit32 num;           /* static value INT or field type */
@@ -24,14 +25,14 @@ struct exptype {
     ubit8 *codep;         /* code write pointer */
 };
 
-
-struct dilref {
-    char *zname;		/* func/proc name */
-    char *name;          /* zone name */
-    ubit8 rtnt;		/* return type */
-    ubit8 argc;		/* number of arguments (min 1) */
-    ubit8 *argt;		/* argument types */
-    char **argv;		/* argument names */
+struct dilref
+{
+    char *zname; /* func/proc name */
+    char *name;  /* zone name */
+    ubit8 rtnt;  /* return type */
+    ubit8 argc;  /* number of arguments (min 1) */
+    ubit8 *argt; /* argument types */
+    char **argv; /* argument names */
 };
 
 #endif /* _MUD_DILPAR_H */

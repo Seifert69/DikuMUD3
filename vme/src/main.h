@@ -29,11 +29,10 @@ extern int world_nochars;
 extern int world_nozones;
 extern char world_boottime[64];
 
-
 extern const char *compile_date;
 extern const char *compile_time;
 
-//Prototypes
+// Prototypes
 void ShowUsage(const char *c);
 
 #endif

@@ -30,13 +30,13 @@ static void slime_save(void)
     int i;
     FILE *f;
 
-    if (!(f = fopen(str_cc(g_cServerConfig.m_libdir, SLIME_FILE), "wb")))
+    if(!(f = fopen(str_cc(g_cServerConfig.m_libdir, SLIME_FILE), "wb")))
     {
         slog(LOG_ALL, 0, "Slime file could not be opened.");
         assert(FALSE);
     }
 
-    for (i = 0; i < slime_count; i++)
+    for(i = 0; i < slime_count; i++)
     {
         fputs(slime_list[i]->zone->name, f);
         fputc(0, f);
@@ -48,10 +48,10 @@ static void slime_save(void)
 
 static void slime_add(class file_index_type *sp)
 {
-    if (sp == NULL)
+    if(sp == NULL)
         return;
 
-    if (slime_count++ == 0)
+    if(slime_count++ == 0)
     {
         CREATE(slime_list, class file_index_type *, slime_count);
     }
@@ -66,12 +66,12 @@ static void slime_remove(class file_index_type *sp)
 {
     int i;
 
-    for (i = 0; i < slime_count; i++)
-        if (slime_list[i] == sp)
+    for(i = 0; i < slime_count; i++)
+        if(slime_list[i] == sp)
         {
             slime_list[i] = slime_list[slime_count - 1];
             slime_count--;
-            if (slime_count == 0)
+            if(slime_count == 0)
             {
                 FREE(slime_list);
                 slime_list = NULL;
@@ -84,8 +84,8 @@ int is_slimed(class file_index_type *sp)
 {
     int i;
 
-    for (i = 0; i < slime_count; i++)
-        if (slime_list[i] == sp)
+    for(i = 0; i < slime_count; i++)
+        if(slime_list[i] == sp)
             return TRUE;
 
     return FALSE;
@@ -96,26 +96,24 @@ int slime_obj(struct spec_arg *sarg)
     char buf[MAX_INPUT_LENGTH], fi_name[MAX_INPUT_LENGTH];
     class file_index_type *fi;
 
-    if (!is_command(sarg->cmd, "slime"))
+    if(!is_command(sarg->cmd, "slime"))
         return SFR_SHARE;
 
-    if (!IS_OVERSEER(sarg->activator))
+    if(!IS_OVERSEER(sarg->activator))
     {
-        send_to_char("Only overseers can use this function.<br/>",
-                     sarg->activator);
+        send_to_char("Only overseers can use this function.<br/>", sarg->activator);
         return SFR_BLOCK;
     }
 
     sarg->arg = one_argument(sarg->arg, buf);
 
-    if (is_abbrev(buf, "list"))
+    if(is_abbrev(buf, "list"))
     {
         int i;
         send_to_char("List of slimed units:<br/>", sarg->activator);
-        for (i = 0; i < slime_count; i++)
+        for(i = 0; i < slime_count; i++)
         {
-            sprintf(buf, "%s@%s<br/>",
-                    slime_list[i]->name, slime_list[i]->zone->name);
+            sprintf(buf, "%s@%s<br/>", slime_list[i]->name, slime_list[i]->zone->name);
             send_to_char(buf, sarg->activator);
         }
 
@@ -126,23 +124,21 @@ int slime_obj(struct spec_arg *sarg)
 
     fi = str_to_file_index(fi_name);
 
-    if (fi == NULL)
+    if(fi == NULL)
     {
-        act("No such file index '$2t'.",
-            A_ALWAYS, sarg->activator, fi_name, cActParameter(), TO_CHAR);
+        act("No such file index '$2t'.", A_ALWAYS, sarg->activator, fi_name, cActParameter(), TO_CHAR);
         return SFR_BLOCK;
     }
 
-    if (fi->zone == find_zone(BASIS_ZONE))
+    if(fi->zone == find_zone(BASIS_ZONE))
     {
-        act("Basis zone is not allowed slimed.",
-            A_ALWAYS, sarg->activator, cActParameter(), cActParameter(), TO_CHAR);
+        act("Basis zone is not allowed slimed.", A_ALWAYS, sarg->activator, cActParameter(), cActParameter(), TO_CHAR);
         return SFR_BLOCK;
     }
 
-    if (is_abbrev(buf, "add"))
+    if(is_abbrev(buf, "add"))
     {
-        if (is_slimed(fi))
+        if(is_slimed(fi))
         {
             send_to_char("Already slimed.<br/>", sarg->activator);
         }
@@ -153,9 +149,9 @@ int slime_obj(struct spec_arg *sarg)
             send_to_char("Added.<br/>", sarg->activator);
         }
     }
-    else if (is_abbrev(buf, "remove"))
+    else if(is_abbrev(buf, "remove"))
     {
-        if (!is_slimed(fi))
+        if(!is_slimed(fi))
         {
             send_to_char("No such file index is slimed!<br/>", sarg->activator);
         }
@@ -168,8 +164,7 @@ int slime_obj(struct spec_arg *sarg)
     }
     else
     {
-        act("Please specify 'add' or 'remove'.",
-            A_ALWAYS, sarg->activator, cActParameter(), cActParameter(), TO_CHAR);
+        act("Please specify 'add' or 'remove'.", A_ALWAYS, sarg->activator, cActParameter(), cActParameter(), TO_CHAR);
     }
 
     return SFR_BLOCK;
@@ -183,13 +178,13 @@ void slime_boot(void)
     FILE *f;
 
     touch_file(str_cc(g_cServerConfig.m_libdir, SLIME_FILE));
-    if (!(f = fopen(str_cc(g_cServerConfig.m_libdir, SLIME_FILE), "rb")))
+    if(!(f = fopen(str_cc(g_cServerConfig.m_libdir, SLIME_FILE), "rb")))
     {
         slog(LOG_ALL, 0, "Slime file could not be opened.");
         assert(FALSE);
     }
 
-    while (!feof(f))
+    while(!feof(f))
     {
         fstrcpy(&cBuf, f);
         strcpy(buf1, (char *)cBuf.GetData());
