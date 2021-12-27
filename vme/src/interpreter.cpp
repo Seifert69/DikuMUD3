@@ -245,7 +245,7 @@ void add_func_history(class unit_data *u, ubit16 idx, ubit16 flags)
 static void dump_func_history(void)
 {
     int i, j;
-    char buf2[512];
+    std::string bits;
 
     for (j = 0, i = func_history_pos; j < MAX_DEBUG_HISTORY; j++)
     {
@@ -256,7 +256,7 @@ static void dump_func_history(void)
              FI_ZONENAME(func_history_data[i].fi),
              unit_function_array[func_history_data[i].idx].name,
              func_history_data[i].idx,
-             sprintbit(buf2, func_history_data[i].flags, sfb_flags),
+             sprintbit(bits, func_history_data[i].flags, sfb_flags),
              func_history_data[i].flags);
         i = (i + 1) % MAX_DEBUG_HISTORY;
     }
