@@ -1127,7 +1127,7 @@ int reward_give(struct spec_arg *sarg)
             if ((af = affected_by_spell(u, ID_REWARD)))
             {
                 found = TRUE;
-                sprintf(buf, "%s (%s) wanted dead for %d xp "
+                s printf(buf, "%s (%s) wanted dead for %d xp "
                              "and %s (%d crimes).<br/>",
                         UNIT_NAME(u),
                         IS_PC(u) ? "Player" : "Monster",
@@ -1140,14 +1140,14 @@ int reward_give(struct spec_arg *sarg)
             else if (IS_SET(CHAR_FLAGS(u), CHAR_OUTLAW) &&
                      IS_SET(CHAR_FLAGS(u), CHAR_PROTECTED))
             {
-                sprintf(buf, "%s (%s) wanted alive for imprisonment.<br/>",
+                s printf(buf, "%s (%s) wanted alive for imprisonment.<br/>",
                         UNIT_NAME(u), IS_PC(u) ? "Player" : "Monster");
                 send_to_char(buf, sarg->activator);
                 found = TRUE;
             }
             else if (IS_SET(CHAR_FLAGS(u), CHAR_OUTLAW))
             {
-                sprintf(buf, "%s (%s) wanted dead or alive.<br/>",
+                s printf(buf, "%s (%s) wanted dead or alive.<br/>",
                         UNIT_NAME(u), IS_PC(u) ? "Player" : "Monster");
                 send_to_char(buf, sarg->activator);
                 found = TRUE;

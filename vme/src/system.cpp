@@ -192,7 +192,7 @@ void descriptor_data::RemoveBBS(void)
     {
         char buf[512];
 
-        sprintf(buf, BBS_DIR "%d.%d", nPort, nLine);
+        snprintf(buf, sizeof(buf), BBS_DIR "%d.%d", nPort, nLine);
         remove(buf);
     }
 }
@@ -204,7 +204,7 @@ void descriptor_data::CreateBBS(void)
         char buf[512];
         FILE *f;
 
-        sprintf(buf, BBS_DIR "%d.%d", nPort, nLine);
+        snprintf(buf, sizeof(buf), BBS_DIR "%d.%d", nPort, nLine);
 
         if (!character)
         {
@@ -377,7 +377,7 @@ void system_memory(class unit_data *ch)
         slog(LOG_ALL, 0, "System memory status error.");
     else
     {
-        sprintf(Buf,
+        snprintf(Buf, sizeof(Buf),
                 "Vol. Switches       %8ld<br/>"
                 "Max RSS             %8ld<br/>"
                 "Shared memory size  %8ld<br/>"

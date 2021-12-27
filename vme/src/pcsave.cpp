@@ -59,7 +59,7 @@ char *PlayerFileName(const char *pName)
 
     strcpy(TmpBuf, pName);
     str_lower(TmpBuf);
-    sprintf(Buf, "%s%c/%s", g_cServerConfig.m_plydir, *TmpBuf, TmpBuf);
+    snprintf(Buf, sizeof(Buf), "%s%c/%s", g_cServerConfig.m_plydir, *TmpBuf, TmpBuf);
 
     return Buf;
 }

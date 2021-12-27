@@ -115,7 +115,7 @@ void substHTMLcolor(std::string &dest, const char *src, class color_type &color)
                     dest.push_back('<');
                     dest.append(newtag);
                     dest.push_back('>');
-                    // sprintf(dest, "<%s>", newtag);
+                    // s printf(dest, "<%s>", newtag);
                     // TAIL(dest);
                 }
             }

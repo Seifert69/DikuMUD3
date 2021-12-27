@@ -154,7 +154,7 @@ void cCombatList::status(const class unit_data *ch)
 {
     char buf[MAX_STRING_LENGTH];
 
-    sprintf(buf, "The Global Combat List contains [%d] entries.<br/>", nTop);
+    snprintf(buf, sizeof(buf), "The Global Combat List contains [%d] entries.<br/>", nTop);
     send_to_char(buf, ch);
 }
 
@@ -339,7 +339,7 @@ void cCombat::status(const class unit_data *god)
     int i;
     std::string str;
 
-    sprintf(buf,
+    snprintf(buf, sizeof(buf),
             "Combat Status of '%s':<br/>"
             "Combat Speed [%d]  Turn [%d]<br/>"
             "Melee Opponent '%s'<br/>"
@@ -354,11 +354,11 @@ void cCombat::status(const class unit_data *god)
 
     for (i = 0; i < nNoOpponents; i++)
     {
-        sprintf(buf, "   %s<br/>", STR(UNIT_NAME(pOpponents[i])));
+        snprintf(buf, sizeof(buf), "   %s<br/>", STR(UNIT_NAME(pOpponents[i])));
         str.append(buf);
     }
 
-    send_to_char(buf, god);
+    send_to_char(&str[0], god);
 }
 
 /* ======================================================================= */

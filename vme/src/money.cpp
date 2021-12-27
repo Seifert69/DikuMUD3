@@ -92,12 +92,12 @@ char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
             if (verbose)
             {
                 if (times == 1)
-                    sprintf(tmp, "%s %s, ", strchr("aeiou", *(money_tmp[nr]->strings[0])) ? "an" : "a", money_tmp[nr]->strings[0]);
+                    snprintf(tmp, sizeof(tmp), "%s %s, ", strchr("aeiou", *(money_tmp[nr]->strings[0])) ? "an" : "a", money_tmp[nr]->strings[0]);
                 else
-                    sprintf(tmp, "%d %s, ", (int)times, money_tmp[nr]->strings[money_tmp[nr]->pl_idx]);
+                    snprintf(tmp, sizeof(tmp), "%d %s, ", (int)times, money_tmp[nr]->strings[money_tmp[nr]->pl_idx]);
             }
             else /* Short version for lists... */
-                sprintf(tmp, "%d %s, ", (int)times, money_tmp[nr]->abbrev);
+                snprintf(tmp, sizeof(tmp), "%d %s, ", (int)times, money_tmp[nr]->abbrev);
 
             count++;
         }
@@ -213,9 +213,9 @@ class unit_data *set_money(class unit_data *money, amount_t amt)
     UNIT_TITLE(money) = (obj_money_string(money, amt));
 
     if (amt == 1)
-        sprintf(tmp, "A single %s has been left here.", money_singularis(money));
+        snprintf(tmp, sizeof(tmp), "A single %s has been left here.", money_singularis(money));
     else
-        sprintf(tmp,
+        snprintf(tmp, sizeof(tmp),
                 "A %s %s has been left here.",
                 amt == 2 ? "couple of"
                          : amt < 10 ? "few"
@@ -236,7 +236,7 @@ static class unit_data *make_money(class file_index_type *fi, amount_t amt)
 
     UNIT_WEIGHT(money) = 0; /* Init money-weight */
 
-    sprintf(buf, cur_strings[MONEY_CURRENCY(money)], money_types[MONEY_TYPE(money)].tails);
+    snprintf(buf, sizeof(buf), cur_strings[MONEY_CURRENCY(money)], money_types[MONEY_TYPE(money)].tails);
 
     UNIT_EXTRA(money).add("", buf);
 
@@ -611,9 +611,9 @@ char *obj_money_string(class unit_data *obj, amount_t amt)
         amt = MONEY_AMOUNT(obj);
 
     if (amt == 1)
-        sprintf(buf, "%s %s", strchr("aeiou", *(money_tmp->strings[0])) ? "an" : "a", money_tmp->strings[0]);
+        snprintf(buf, sizeof(buf), "%s %s", strchr("aeiou", *(money_tmp->strings[0])) ? "an" : "a", money_tmp->strings[0]);
     else
-        sprintf(buf, "%d %s", (int)amt, money_tmp->strings[money_tmp->pl_idx]);
+        snprintf(buf, sizeof(buf), "%d %s", (int)amt, money_tmp->strings[money_tmp->pl_idx]);
 
     return buf;
 }

@@ -379,7 +379,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
     {
         /* read local program, and convert to global template */
         tmpl = bread_diltemplate(pBuf, version);
-        sprintf(name, "%s", tmpl->prgname);
+        snprintf(name, sizeof(name), "%s", tmpl->prgname);
         void dil_free_template(struct diltemplate * tmpl, int copy);
         dil_free_template(tmpl, IS_SET(prg->flags, DILFL_COPY));
         SET_BIT(prg->flags, DILFL_COPY);
@@ -476,7 +476,7 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
     if ((prg->varcrc != tmpl->varcrc) || (novar != tmpl->varc))
     {
         /* state of variables have changed */
-        /* sprintf(buf,"Var CRC mismatch. prg:%d, tmpl:%d",
+        /* s printf(buf,"Var CRC mismatch. prg:%d, tmpl:%d",
            prg->varcrc,tmpl->varcrc);
            slog(LOG_ALL,0,buf); */
 
@@ -771,7 +771,7 @@ void bwrite_diltemplate(CByteBuffer *pBuf, struct diltemplate *tmpl)
     {
         char buf[512];
 
-        sprintf(buf, "%s@%s", tmpl->prgname, tmpl->zone->name);
+        snprintf(buf, sizeof(buf), "%s@%s", tmpl->prgname, tmpl->zone->name);
         pBuf->AppendString(buf);
     }
     else
@@ -834,7 +834,7 @@ void bwrite_dil(CByteBuffer *pBuf, class dilprg *prg)
         {
             char buf[512];
 
-            sprintf(buf, "%s@%s", tmpl->prgname, tmpl->zone->name);
+            snprintf(buf, sizeof(buf), "%s@%s", tmpl->prgname, tmpl->zone->name);
             pBuf->AppendString(buf);
         }
         else

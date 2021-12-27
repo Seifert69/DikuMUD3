@@ -861,10 +861,10 @@ void spell_dump(void)
 
             str = "";
 
-            sprintf(buf, "%s,%s", g_SplColl.text[i], spc(30 - strlen(g_SplColl.text[i])));
+            snprintf(buf, sizeof(buf), "%s,%s", g_SplColl.text[i], spc(30 - strlen(g_SplColl.text[i])));
             str.append(buf);
 
-            sprintf(buf,
+            snprintf(buf, sizeof(buf), 
                     ".profession %s%s = %s%d\n",
                     professions[j],
                     spc(12 - strlen(professions[j])),
@@ -874,14 +874,14 @@ void spell_dump(void)
 
             /*if (g_SplColl.prof_table[i].min_level > 0)
             {
-                sprintf(buf, "restrict level          = %d\n", g_SplColl.prof_table[i].min_level);
+                snprintf(buf, sizeof(buf), "restrict level          = %d\n", g_SplColl.prof_table[i].min_level);
                 str.append(buf);
             }
 
             for (int k=0; k < ABIL_TREE_MAX; k++)
                 if (g_SplColl.prof_table[i].min_abil[k] > 0)
                 {
-                    sprintf(buf, "restrict %s%s    = %s%d\n", abil_text[k], spc(12-strlen(abil_text[k])),
+                    snprintf(buf, sizeof(buf), "restrict %s%s    = %s%d\n", abil_text[k], spc(12-strlen(abil_text[k])),
                         (g_SplColl.prof_table[i].min_abil[k] >= 0) ? "+" : "", g_SplColl.prof_table[i].min_abil[k]);
                     str.append(buf);
                 }*/

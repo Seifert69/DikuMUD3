@@ -307,7 +307,7 @@ void boot_time_and_weather(void)
     char *p = ctime(&g_tBootTime);
     p[strlen(p) - 1] = '\0';
 
-    sprintf(world_boottime, "%s", p);
+    snprintf(world_boottime, sizeof(world_boottime), "%s", p);
 
     time_info = mud_time_passed(time(0), beginning_of_time);
 

@@ -511,7 +511,7 @@ void eliza_log(class unit_data *who, const char *str, int comms)
     {
         char tmp[1024];
 
-        sprintf(tmp, "%-12s::  %s\n", UNIT_NAME(who), str);
+        snprintf(tmp, sizeof(tmp), "%-12s::  %s\n", UNIT_NAME(who), str);
 
         buf[idx++] = str_dup(tmp);
         return;
@@ -609,19 +609,19 @@ int oracle(struct spec_arg *sarg)
             switch (number(0, 3))
             {
                 case 0:
-                    sprintf(buf, "smile %s", UNIT_NAME(sarg->activator));
+                    snprintf(buf, sizeof(buf), "smile %s", UNIT_NAME(sarg->activator));
                     break;
 
                 case 1:
-                    sprintf(buf, "hug %s", UNIT_NAME(sarg->activator));
+                    snprintf(buf, sizeof(buf), "hug %s", UNIT_NAME(sarg->activator));
                     break;
 
                 case 2:
-                    sprintf(buf, "ruffle %s", UNIT_NAME(sarg->activator));
+                    snprintf(buf, sizeof(buf), "ruffle %s", UNIT_NAME(sarg->activator));
                     break;
 
                 case 3:
-                    sprintf(buf, "bow %s...", UNIT_NAME(sarg->activator));
+                    snprintf(buf, sizeof(buf), "bow %s", UNIT_NAME(sarg->activator));
                     break;
             }
             od->patient = sarg->activator;
@@ -636,7 +636,7 @@ int oracle(struct spec_arg *sarg)
 
     if (IS_PC(sarg->activator) || ELIZA_DEBUG)
     {
-        sprintf(buf, "%s %s", sarg->cmd->cmd_str, sarg->arg);
+        snprintf(buf, sizeof(buf), "%s %s", sarg->cmd->cmd_str, sarg->arg);
         eliza_log(sarg->activator, buf, comms);
     }
 

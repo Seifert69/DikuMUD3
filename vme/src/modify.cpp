@@ -310,39 +310,37 @@ int search_block_set(char *arg, const char **list, bool exact)
                                       : (c) == AT_KEYDES                                                                                   \
                                             ? "&lt;keyword&gt; (enter description)"                                                        \
                                             : (c) == AT_TYPVAL                                                                             \
-                                                  ? "&lt;type&gt; <value&gt;"                                                              \
+                                                  ? "&lt;type&gt; &lt;value&gt;"                                                              \
                                                   : (c) == AT_DIRBIT                                                                       \
-                                                        ? "&lt;direction&gt; <bitlist&gt;"                                                 \
+                                                        ? "&lt;direction&gt; &lt;bitlist&gt;"                                                 \
                                                         : (c) == AT_TYPDES                                                                 \
                                                               ? "&lt;type&gt; (enter description)"                                         \
                                                               : (c) == AT_DIRSTR                                                           \
-                                                                    ? "&lt;direction&gt; <string&gt;"                                      \
+                                                                    ? "&lt;direction&gt; &lt;string&gt;"                                      \
                                                                     : (c) == AT_DIRUNT                                                     \
-                                                                          ? "&lt;direction&gt; <unitpath&gt;"                              \
+                                                                          ? "&lt;direction&gt; &lt;unitpath&gt;"                              \
                                                                           : (c) == AT_DIRDES ? "&lt;direction&gt; (enter description)"     \
                                                                                              : "Not usable"
 
 void show_fields(class unit_data *ch)
 {
-    char string[4 * MAX_STRING_LENGTH], *c;
+    char buf[400];
     int i;
+    std::string s;
 
-    *string = '\0';
-    c = string;
-    sprintf(c, "<table class='colh3'>");
-    TAIL(c);
+    s = "<table class='colh3'>";
 
     for (i = 0; i < MAX_SET_FIELDS; i++)
     {
-        sprintf(c,
+        snprintf(buf, sizeof(buf),
                 "<tr><td>%s :</td><td> on %s. :</td><td>%s</td></tr>",
                 unit_field_names[i],
                 GET_FIELD_UT(unit_field_data[i].utype),
                 GET_FIELD_AT(unit_field_data[i].atype));
-        TAIL(c);
+        s.append(buf);
     }
-    sprintf(c, "</table>");
-    send_to_char(string, ch);
+    s.append("</table>");
+    send_to_char(&s[0], ch);
 }
 
 #undef GET_FIELDT_UT
@@ -350,19 +348,22 @@ void show_fields(class unit_data *ch)
 
 void show_structure(const char *structure[], class unit_data *ch)
 {
-    char **c, *cc, buf[MAX_STRING_LENGTH];
+    char **c, buf[MAX_STRING_LENGTH];
+    std::string s;
 
     if (structure == NULL)
         return;
 
-    strcpy(buf, "Not defined yet.<br/>");
-
-    for (cc = buf, c = (char **)structure; *c; c++)
+    for (c = (char **)structure; *c; c++)
     {
-        sprintf(cc, "%s<br/>", *c);
-        TAIL(cc);
+        snprintf(buf, sizeof(buf), "%s<br/>", *c);
+        s.append(buf);
     }
-    send_to_char(buf, ch);
+
+    if (s.empty())
+        send_to_char("Not defined yet.<br/>", ch);
+    else
+        send_to_char(&s[0], ch);
 }
 
 long int get_bit(char *bitlst, const char *structure[])
@@ -514,7 +515,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 return;
             }
             valarg = atoi(arg);
-            sprintf(buf, "Value is %ld<br/>", valarg);
+            snprintf(buf, sizeof(buf), "Value is %ld<br/>", valarg);
             send_to_char(buf, ch);
             break;
 
@@ -527,7 +528,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(unit_field_data[type].structure, ch);
                 return;
             }
-            sprintf(buf, "Bit found is %ld<br/>", bitarg);
+            snprintf(buf, sizeof(buf), "Bit found is %ld<br/>", bitarg);
             send_to_char(buf, ch);
             break;
 
@@ -540,7 +541,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(unit_field_data[type].structure, ch);
                 return;
             }
-            sprintf(buf, "Type found is %s [%d]<br/>", unit_field_data[type].structure[typarg], typarg);
+            snprintf(buf, sizeof(buf), "Type found is %s [%d]<br/>", unit_field_data[type].structure[typarg], typarg);
             send_to_char(buf, ch);
             break;
 
@@ -553,7 +554,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 send_to_char("Invalid or missing unit path for field.<br/>", ch);
                 return;
             }
-            sprintf(buf, "Unit pointer is [%s@%s]<br/>", untarg->name, untarg->zone->name);
+            snprintf(buf, sizeof(buf), "Unit pointer is [%s@%s]<br/>", untarg->name, untarg->zone->name);
             send_to_char(buf, ch);
             break;
 
@@ -582,7 +583,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(unit_field_data[type].structure, ch);
                 return;
             }
-            sprintf(buf, "Type found is %s [%d]<br/>", unit_field_data[type].structure[typarg], typarg);
+            snprintf(buf, sizeof(buf), "Type found is %s [%d]<br/>", unit_field_data[type].structure[typarg], typarg);
             send_to_char(buf, ch);
             argument = str_next_word(argument, arg);
             if (str_is_empty(arg))
@@ -591,7 +592,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 return;
             }
             valarg = atoi(arg);
-            sprintf(buf, "Value is %ld<br/>", valarg);
+            snprintf(buf, sizeof(buf), "Value is %ld<br/>", valarg);
             send_to_char(buf, ch);
             break;
 
@@ -604,7 +605,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(dirs, ch);
                 return;
             }
-            sprintf(buf, "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
+            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
             send_to_char(buf, ch);
             argument = str_next_word(argument, arg);
             if ((bitarg = get_bit(arg, unit_field_data[type].structure)) == -1)
@@ -613,7 +614,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(unit_field_data[type].structure, ch);
                 return;
             }
-            sprintf(buf, "Bit found is %ld<br/>", bitarg);
+            snprintf(buf, sizeof(buf), "Bit found is %ld<br/>", bitarg);
             send_to_char(buf, ch);
             break;
 
@@ -626,7 +627,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(dirs, ch);
                 return;
             }
-            sprintf(buf, "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
+            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
             send_to_char(buf, ch);
             if (str_is_empty(argument))
             {
@@ -645,7 +646,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(dirs, ch);
                 return;
             }
-            sprintf(buf, "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
+            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
             send_to_char(buf, ch);
             argument = str_next_word(argument, arg);
             if ((untarg = str_to_file_index(arg)) == NULL)
@@ -653,7 +654,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 send_to_char("Invalid or missing unit path for field.<br/>", ch);
                 return;
             }
-            sprintf(buf, "Unit pointer is [%s@%s]<br/>", untarg->name, untarg->zone->name);
+            snprintf(buf, sizeof(buf), "Unit pointer is [%s@%s]<br/>", untarg->name, untarg->zone->name);
             send_to_char(buf, ch);
             break;
 
@@ -666,7 +667,7 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
                 show_structure(dirs, ch);
                 return;
             }
-            sprintf(buf, "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
+            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
             send_to_char(buf, ch);
             if (unit_is_edited(unt))
             {
@@ -1451,6 +1452,6 @@ void do_setskill(class unit_data *ch, char *argument, const struct command_info 
                 NPC_WPN_SKILL(unt, skillarg) = valarg;
     }
 
-    sprintf(buf, "New value: %d<br/>Ok.<br/>", valarg);
+    snprintf(buf, sizeof(buf), "New value: %d<br/>Ok.<br/>", valarg);
     send_to_char(buf, ch);
 }

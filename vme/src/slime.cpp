@@ -113,7 +113,7 @@ int slime_obj(struct spec_arg *sarg)
         send_to_char("List of slimed units:<br/>", sarg->activator);
         for (i = 0; i < slime_count; i++)
         {
-            sprintf(buf, "%s@%s<br/>", slime_list[i]->name, slime_list[i]->zone->name);
+            snprintf(buf, sizeof(buf), "%s@%s<br/>", slime_list[i]->name, slime_list[i]->zone->name);
             send_to_char(buf, sarg->activator);
         }
 

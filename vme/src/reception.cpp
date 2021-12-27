@@ -320,7 +320,7 @@ char *ContentsFileName(const char *pName)
 
     char *PlayerFileName(const char *);
 
-    sprintf(Buf, "%s.inv", PlayerFileName(pName));
+    snprintf(Buf, sizeof(Buf), "%s.inv", PlayerFileName(pName));
 
     return Buf;
 }
@@ -529,7 +529,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
             if (pnew_tmp && pnew)
             {
                 char buf[MAX_STRING_LENGTH];
-                sprintf(buf, "The slimy remains of %s", TITLENAME(pnew_tmp));
+                snprintf(buf, sizeof(buf), "The slimy remains of %s", TITLENAME(pnew_tmp));
                 UNIT_OUT_DESCR(pnew) = (buf);
                 UNIT_TITLE(pnew) = (buf);
                 UNIT_NAMES(pnew).PrependName(str_cc("slime of ", UNIT_NAME(pnew_tmp)));

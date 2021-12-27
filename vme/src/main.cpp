@@ -435,7 +435,7 @@ void game_event(void)
             if (point->snoop.snoop_by)
             {
                 char buffer[MAX_INPUT_LENGTH + 10];
-                sprintf(buffer, "%s%s<br/>", SNOOP_PROMPT, pcomm);
+                snprintf(buffer, sizeof(buffer), "%s%s<br/>", SNOOP_PROMPT, pcomm);
                 send_to_descriptor(buffer, CHAR_DESCRIPTOR(point->snoop.snoop_by));
             }
 

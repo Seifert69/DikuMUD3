@@ -422,7 +422,7 @@ void set_title(class unit_data *ch)
     else if (CHAR_LEVEL(ch) <= START_LEVEL)
     {
         assert(CHAR_RACE(ch) < PC_RACE_MAX);
-        sprintf(buf, "the %s", pc_races[CHAR_RACE(ch)]);
+        snprintf(buf, sizeof(buf), "the %s", pc_races[CHAR_RACE(ch)]);
         UNIT_TITLE(ch) = (buf);
     }
     else if (IS_IMMORTAL(ch))

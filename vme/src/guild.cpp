@@ -653,9 +653,9 @@ int guild_title(struct spec_arg *sarg)
     }
 
     if (CHAR_SEX(sarg->activator) == SEX_FEMALE)
-        sprintf(buf, female, pc_race_adverbs[CHAR_RACE(sarg->activator)]);
+        snprintf(buf, sizeof(buf), female, pc_race_adverbs[CHAR_RACE(sarg->activator)]);
     else
-        sprintf(buf, male, pc_race_adverbs[CHAR_RACE(sarg->activator)]);
+        snprintf(buf, sizeof(buf), male, pc_race_adverbs[CHAR_RACE(sarg->activator)]);
 
     if (strcmp(buf, UNIT_TITLE_STRING(sarg->activator)) == 0)
     {
@@ -690,7 +690,7 @@ void do_guild(class unit_data *ch, char *arg, const struct command_info *cmd)
         if (exd->names.IsName("$guild"))
         {
             found = TRUE;
-            sprintf(buf, "%-30s %-2s<br/>", exd->names.Name(0) + 1, exd->names.Name(1));
+            snprintf(buf, sizeof(buf), "%-30s %-2s<br/>", exd->names.Name(0) + 1, exd->names.Name(1));
             send_to_char(buf, ch);
         }
     }

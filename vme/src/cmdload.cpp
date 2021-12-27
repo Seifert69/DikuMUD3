@@ -80,10 +80,10 @@ void skill_dump(void)
 
             str = "";
 
-            sprintf(buf, "%s,%s", g_SkiColl.text[i], spc(20 - strlen(g_SkiColl.text[i])));
+            snprintf(buf, sizeof(buf), "%s,%s", g_SkiColl.text[i], spc(20 - strlen(g_SkiColl.text[i])));
             str.append(buf);
 
-            sprintf(buf,
+            snprintf(buf, sizeof(buf),
                     ".profession %s%s = %s%d\n",
                     professions[j],
                     spc(12 - strlen(professions[j])),
@@ -93,14 +93,14 @@ void skill_dump(void)
 
             /*if (g_SkiColl.prof_table[i].min_level > 0)
             {
-                sprintf(buf, "restrict level          = %d\n", g_SkiColl.prof_table[i].min_level);
+                s printf(buf, "restrict level          = %d\n", g_SkiColl.prof_table[i].min_level);
                 str.append(buf);
             }
 
             for (int k=0; k < ABIL_TREE_MAX; k++)
                 if (g_SkiColl.prof_table[i].min_abil[k] > 0)
                 {
-                    sprintf(buf, "restrict %s%s    = %s%d\n", g_SkiColl.text[i], spc(12-strlen(g_SkiColl.text[i])),
+                    s printf(buf, "restrict %s%s    = %s%d\n", g_SkiColl.text[i], spc(12-strlen(g_SkiColl.text[i])),
                         (g_SkiColl.prof_table[i].min_abil[k] >= 0) ? "+" : "", g_SkiColl.prof_table[i].min_abil[k]);
                     str.append(buf);
                 }*/

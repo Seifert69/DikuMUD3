@@ -944,10 +944,10 @@ void ability_dump(void)
         {
             str = "";
 
-            sprintf(buf, "%s,%s", g_AbiColl.text[i], spc(20 - strlen(g_AbiColl.text[i])));
+            snprintf(buf, sizeof(buf), "%s,%s", g_AbiColl.text[i], spc(20 - strlen(g_AbiColl.text[i])));
             str.append(buf);
 
-            sprintf(buf,
+            snprintf(buf, sizeof(buf),
                     ".profession %s%s = %s%d\n",
                     professions[j],
                     spc(12 - strlen(professions[j])),
@@ -959,14 +959,14 @@ void ability_dump(void)
 
             if (g_AbiColl.prof_table[i].min_level > 0)
             {
-                sprintf(buf, "restrict level          = %d\n", g_AbiColl.prof_table[i].min_level);
+                snprintf(buf, sizeof(buf), "restrict level          = %d\n", g_AbiColl.prof_table[i].min_level);
                 str.append(buf);
             }
 
             for (int j = 0; j < ABIL_TREE_MAX; j++)
                 if (g_AbiColl.prof_table[i].min_abil[j] > 0)
                 {
-                    sprintf(buf,
+                    snprintf(buf, sizeof(buf),
                             "restrict %s%s    = %s%d\n",
                             g_AbiColl.text[j],
                             spc(12 - strlen(professions[j])),
@@ -1324,10 +1324,10 @@ void weapon_dump(void)
 
             str = "";
 
-            sprintf(buf, "%s,%s", g_WpnColl.text[i], spc(20 - strlen(g_WpnColl.text[i])));
+            snprintf(buf, sizeof(buf), "%s,%s", g_WpnColl.text[i], spc(20 - strlen(g_WpnColl.text[i])));
             str.append(buf);
 
-            sprintf(buf,
+            snprintf(buf, sizeof(buf),
                     ".profession %s%s = %s%d\n",
                     professions[j],
                     spc(12 - strlen(professions[j])),

@@ -321,21 +321,21 @@ void eventqueue::process(void)
                     else
                     {
                         if (tfunc == check_reboot_event)
-                            sprintf(pname, "Reboot Event");
+                            snprintf(pname, sizeof(pname), "Reboot Event");
                         else if (tfunc == affect_beat)
-                            sprintf(pname, "Affect Beat");
+                            snprintf(pname, sizeof(pname), "Affect Beat");
                         else if (tfunc == delayed_action)
-                            sprintf(pname, "Affect Beat");
+                            snprintf(pname, sizeof(pname), "Affect Beat");
                         else if (tfunc == check_idle_event)
-                            sprintf(pname, "Check Idle Event");
+                            snprintf(pname, sizeof(pname), "Check Idle Event");
                         else if (tfunc == perform_violence_event)
-                            sprintf(pname, "Violence Event");
+                            snprintf(pname, sizeof(pname), "Violence Event");
                         else if (tfunc == weather_and_time_event)
-                            sprintf(pname, "Weather And Time Event");
+                            snprintf(pname, sizeof(pname), "Weather And Time Event");
                         else if (tfunc == zone_event)
-                            sprintf(pname, "Zone Reset Event");
+                            snprintf(pname, sizeof(pname), "Zone Reset Event");
                         else
-                            sprintf(pname, "UNKNOWN Event");
+                            snprintf(pname, sizeof(pname), "UNKNOWN Event");
                         slog(LOG_DIL, 0, "Internal Process (%s) Took %1.4f seconds to Complete", pname, loop_time);
                     }
                 }

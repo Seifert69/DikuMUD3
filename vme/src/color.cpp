@@ -186,7 +186,7 @@ std::string color_type::change(char *key, char *c)
 
             char c_return[512];
 
-            sprintf(c_return, "<div class='%s'>%s = %s</div>", l->color, l->keyword, l->color);
+            snprintf(c_return, sizeof(c_return), "<div class='%s'>%s = %s</div>", l->color, l->keyword, l->color);
             return c_return;
         }
         else
@@ -369,7 +369,7 @@ char *color_type::key_string(void)
     {
         char tmp[200];
         i = MAX(0, 25 - strlen(l->keyword));
-        sprintf(tmp, "<div class='%s'>%s%s= %s</div><br/>", l->color, l->keyword, spc(i), l->color);
+        snprintf(tmp, sizeof(tmp), "<div class='%s'>%s%s= %s</div><br/>", l->color, l->keyword, spc(i), l->color);
         strcat(buff, tmp);
         l = l->next;
     }

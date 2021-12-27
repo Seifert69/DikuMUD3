@@ -162,7 +162,7 @@ void error(const char *file, int line, const char *fmt, ...)
     va_list args;
 
     va_start(args, fmt);
-    vsprintf(buf, fmt, args);
+    vsnprintf(buf, sizeof(buf), fmt, args);
     va_end(args);
 
     slog(LOG_OFF, 0, "%s:%d: %s", file, line, buf);

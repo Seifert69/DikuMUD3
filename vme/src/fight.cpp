@@ -1007,7 +1007,7 @@ void damage(class unit_data *ch,
 
     char arg[40];
 
-    sprintf(arg, "%d %d %d", attack_group, attack_number, hit_location);
+    snprintf(arg, sizeof(arg), "%d %d %d", attack_group, attack_number, hit_location);
 
     if (send_ack(ch, medium, victim, &dam, &cmd_auto_damage, arg, victim) == SFR_BLOCK)
         return;
@@ -1199,7 +1199,7 @@ void break_object(class unit_data *obj)
     if (OBJ_EQP_POS(obj))
         unequip_object(obj);
 
-    sprintf(tmp, "%s (broken)", STR(UNIT_TITLE_STRING(obj)));
+    snprintf(tmp, sizeof(tmp), "%s (broken)", STR(UNIT_TITLE_STRING(obj)));
 
     UNIT_TITLE(obj) = (tmp);
 

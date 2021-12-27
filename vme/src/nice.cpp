@@ -38,7 +38,7 @@ int check_reboot(void)
         count -= 2;
         if (count > 0)
         {
-            sprintf(buf,
+            snprintf(buf, sizeof(buf),
                     "ATTENTION: %s will automaticly reboot "
                     "in %d minutes.<br/>",
                     g_cServerConfig.m_mudname,
@@ -58,7 +58,7 @@ int check_reboot(void)
     if ((t_info->tm_hour + 1) == g_cServerConfig.m_hReboot && (t_info->tm_min > 49))
     {
         count -= 2;
-        sprintf(buf,
+        snprintf(buf, sizeof(buf),
                 "ATTENTION: %s will automaticly reboot "
                 "in 10 minutes.<br/>",
                 g_cServerConfig.m_mudname);

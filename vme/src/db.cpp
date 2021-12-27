@@ -366,7 +366,7 @@ void generate_zone_indexes(void)
         if (str_is_empty(zone))
             break;
 
-        sprintf(filename, "%s%s.data", g_cServerConfig.m_zondir, zone);
+        snprintf(filename, sizeof(filename), "%s%s.data", g_cServerConfig.m_zondir, zone);
 
         /* Skip password */
         c = str_next_word_copy(c, tmpbuf);
@@ -719,7 +719,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
 
     if (!str_is_empty(name))
     {
-        sprintf(tmpbuf, "%s@%s", name, zone);
+        snprintf(tmpbuf, sizeof(tmpbuf), "%s@%s", name, zone);
         UNIT_KEY(u) = str_dup(tmpbuf);
     }
     else
@@ -1243,7 +1243,7 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
 
                         if (!str_is_empty(name))
                         {
-                            sprintf(tmpbuf, "%s@%s", name, zone);
+                            snprintf(tmpbuf, sizeof(tmpbuf), "%s@%s", name, zone);
                             ROOM_EXIT(u, i)->key = str_dup(tmpbuf);
                         }
                         else
@@ -1343,7 +1343,7 @@ void read_unit_file(class file_index_type *org_fi, CByteBuffer *pBuf)
     FILE *f;
     char buf[256];
 
-    sprintf(buf, "%s%s.data", g_cServerConfig.m_zondir, org_fi->zone->filename);
+    snprintf(buf, sizeof(buf), "%s%s.data", g_cServerConfig.m_zondir, org_fi->zone->filename);
 
     if ((f = fopen_cache(buf, "rb")) == NULL)
         error(HERE, "Couldn't open %s for reading.", buf);
@@ -1611,7 +1611,7 @@ void read_all_zones(void)
         if (strcmp(zone->second->name, "_players") == 0)
             continue;
 
-        sprintf(filename, "%s%s.reset", g_cServerConfig.m_zondir, zone->second->filename);
+        snprintf(filename, sizeof(filename), "%s%s.reset", g_cServerConfig.m_zondir, zone->second->filename);
 
         if ((f = fopen(filename, "rb")) == NULL)
         {

@@ -339,7 +339,7 @@ const char *isodate(struct tm *t)
 {
     static char buf[200];
 
-    sprintf(buf, "%04d-%02d-%02d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday);
+    snprintf(buf, sizeof(buf), "%04d-%02d-%02d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday);
 
     return buf;
 }

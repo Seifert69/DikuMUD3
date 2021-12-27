@@ -76,10 +76,10 @@ static void set_owner(class unit_data *obj, struct alias_head *ah, class unit_da
 
     strcpy(ah->owner, UNIT_NAME(ch));
 
-    sprintf(buf, "On the ground lies %s's %s.", ah->owner, UNIT_NAME(obj));
+    snprintf(buf, sizeof(buf), "On the ground lies %s's %s.", ah->owner, UNIT_NAME(obj));
     UNIT_OUT_DESCR(obj) = buf;
 
-    sprintf(buf, "%s's %s", ah->owner, UNIT_NAME(obj));
+    snprintf(buf, sizeof(buf), "%s's %s", ah->owner, UNIT_NAME(obj));
     UNIT_TITLE(obj) = buf;
 }
 
@@ -203,7 +203,7 @@ static void alias_to_char(struct alias_t *al, class unit_data *ch)
 {
     char buf[2 * MAX_INPUT_LENGTH + 2];
 
-    sprintf(buf, " %-*s%s", MAX_ALIAS_LENGTH + 5, al->key, al->value);
+    snprintf(buf, sizeof(buf), " %-*s%s", MAX_ALIAS_LENGTH + 5, al->key, al->value);
     act("$2t", A_ALWAYS, ch, buf, cActParameter(), TO_CHAR);
 }
 

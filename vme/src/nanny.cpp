@@ -235,7 +235,7 @@ void pc_data::reconnect_game(class descriptor_data *d)
     this->connect_game();
     /* MS2020
      color = UPC (ch)->color.save_string ();
-     sprintf (tbuf, "%s%s%s", CONTROL_COLOR_CREATE, color, CONTROL_COLOR_END);
+     s printf (tbuf, "%s%s%s", CONTROL_COLOR_CREATE, color, CONTROL_COLOR_END);
      send_to_char (tbuf, ch);
      delete color;
  */
@@ -372,7 +372,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
 
     if (CHAR_DESCRIPTOR(this) && !DILWAY) /* Only do these things if player is connected */
     {
-        sprintf(buf, "%s has entered the world.<br/>", UNIT_NAME(this));
+        snprintf(buf, sizeof(buf), "%s has entered the world.<br/>", UNIT_NAME(this));
 
         for (i = descriptor_list; i; i = i->next)
             if (descriptor_is_playing(i) && i->character != this && CHAR_CAN_SEE(CHAR_ORIGINAL(i->character), this) &&
@@ -486,7 +486,7 @@ void set_descriptor_fptr(class descriptor_data *d, void (*fptr)(class descriptor
 
    if (!help_base(d, arg))
    {
-      sprintf(buf, "There is no help on the subject '%s'.<br/>", arg);
+      s printf(buf, "There is no help on the subject '%s'.<br/>", arg);
       send_to_descriptor(buf, d);
    }
    return TRUE;
@@ -523,7 +523,7 @@ void nanny_motd(class descriptor_data *d, char *arg)
     {
         /*fuck*/
         char buf[200];
-        sprintf(buf, "Welcome to %s!<br/>", g_cServerConfig.m_mudname);
+        snprintf(buf, sizeof(buf), "Welcome to %s!<br/>", g_cServerConfig.m_mudname);
         send_to_descriptor(buf, d);
         enter_game(d->character);
     }
@@ -654,14 +654,14 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
     char buf[512];
     if (pwdcompare(crypt(arg, PC_FILENAME(d->character)), PC_PWD(d->character), PC_MAX_PASSWORD))
     {
-        sprintf(buf, "PasswordOff('', '%s')", g_cServerConfig.m_mudname);
+        snprintf(buf, sizeof(buf), "PasswordOff('', '%s')", g_cServerConfig.m_mudname);
         send_to_descriptor(scriptwrap(buf).c_str(), d);
         send_to_descriptor("Passwords don't match.<br/>", d);
         set_descriptor_fptr(d, nanny_new_pwd, TRUE);
         return;
     }
 
-    sprintf(buf, "PasswordOff('%s', '%s')", PC_FILENAME(d->character), g_cServerConfig.m_mudname);
+    snprintf(buf, sizeof(buf), "PasswordOff('%s', '%s')", PC_FILENAME(d->character), g_cServerConfig.m_mudname);
     send_to_descriptor(scriptwrap(buf).c_str(), d);
 
     class descriptor_data *td;
@@ -738,14 +738,14 @@ void nanny_new_pwd(class descriptor_data *d, char *arg)
     {
         char buf[100];
 
-        sprintf(buf, "Give me a new password for %s: ", UNIT_NAME(d->character));
+        snprintf(buf, sizeof(buf), "Give me a new password for %s: ", UNIT_NAME(d->character));
         send_to_descriptor(buf, d);
         send_to_descriptor(scriptwrap("PasswordOn()").c_str(), d);
         return;
     }
 
     char buf[512];
-    sprintf(buf, "PasswordOff('', '%s')", g_cServerConfig.m_mudname);
+    snprintf(buf, sizeof(buf), "PasswordOff('', '%s')", g_cServerConfig.m_mudname);
     send_to_descriptor(scriptwrap(buf).c_str(), d);
 
     if (!check_pwd(d, arg))
@@ -886,7 +886,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
     {
         if (PC_CRACK_ATTEMPTS(d->character) > 2)
         {
-            sprintf(buf,
+            snprintf(buf, sizeof(buf),
                     "<br/>ATTENTION: Your password has been "
                     "attempted cracked %d times since your last logon."
                     " Press [enter] and wait for the password prompt.",
@@ -900,13 +900,13 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
 
     if (STATE(d) == 2)
     {
-        sprintf(buf, "Welcome back %s, please enter your password: ", UNIT_NAME(d->character));
+        snprintf(buf, sizeof(buf), "Welcome back %s, please enter your password: ", UNIT_NAME(d->character));
         send_to_descriptor(buf, d);
         send_to_descriptor(scriptwrap("PasswordOn()").c_str(), d);
         return;
     }
 
-    sprintf(buf, "PasswordOff('%s', '%s')", UNIT_NAME(d->character), g_cServerConfig.m_mudname);
+    snprintf(buf, sizeof(buf), "PasswordOff('%s', '%s')", UNIT_NAME(d->character), g_cServerConfig.m_mudname);
     send_to_descriptor(scriptwrap(buf).c_str(), d);
 
     if (str_is_empty(arg))
@@ -954,7 +954,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
 
     PC_CRACK_ATTEMPTS(d->character) = 0;
 
-    sprintf(buf,
+    snprintf(buf, sizeof(buf),
             "<br/>Welcome back %s, you last visited %s on %s<br/>",
             UNIT_NAME(d->character),
             g_cServerConfig.m_mudname,
@@ -998,7 +998,7 @@ void nanny_name_confirm(class descriptor_data *d, char *arg)
         char buf[100];
 
         // MS: removed help option since it was not implemented.
-        sprintf(buf, "Did I get that right, %s (Y/N)? ", UNIT_NAME(d->character));
+        snprintf(buf, sizeof(buf), "Did I get that right, %s (Y/N)? ", UNIT_NAME(d->character));
         send_to_descriptor(buf, d);
         return;
     }
