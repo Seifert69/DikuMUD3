@@ -46,12 +46,12 @@ char *in_string(class unit_data *ch, class unit_data *u)
     while ((u = UNIT_IN(u)))
         if (IS_ROOM(u))
         {
-            sprintf(tmp, "<a href='#' cmd='goto #'>%s@%s</a>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
+            snprintf(tmp, sizeof(tmp), "<a href='#' cmd='goto #'>%s@%s</a>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
             return in_str;
         }
         else
         {
-            sprintf(tmp, "%s/", UNIT_SEE_NAME(ch, u));
+            snprintf(tmp, sizeof(tmp), "%s/", UNIT_SEE_NAME(ch, u));
             TAIL(tmp);
         }
 
