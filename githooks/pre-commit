@@ -1,0 +1,14 @@
+#!/usr/bin/sh
+for FILE in $(git diff --cached --name-only)
+do
+   if [[ "$FILE" =~ \.(c|h|cpp|cc)$ ]]; then
+      echo "Reformatting with clang-format: $FILE"
+      clang-format -i $FILE
+      git add $FILE
+   fi
+   if [ "$(git diff --cached --name-only | wc -l)" -lt "1" ]; then
+      echo "No files changed after clang-formating"
+      exit 2 #Abandon commit - no files
+   fi
+done
+exit 0
