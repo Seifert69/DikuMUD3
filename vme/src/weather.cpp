@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-
+#include "external_vars.h"
 #include "structs.h"
 #include "utils.h"
 #include "comm.h"
@@ -20,10 +20,9 @@
 #include "main.h"
 #include "weather.h"
 
-extern eventqueue events;
-int sunlight = SUN_SET;                     /* And how much sun. */
-const time_t beginning_of_time = 650336715; /* Sat Aug 11 01:05:15 1990 */
-time_t g_tBootTime = 0;                     // time(0) when server boots
+int g_sunlight = SUN_SET;                     /* And how much sun. */
+const time_t g_beginning_of_time = 650336715; /* Sat Aug 11 01:05:15 1990 */
+time_t g_tBootTime = 0;                       // time(0) when server boots
 
 /* What a coincidence!
  * I actually (REALLY!) converted the time_t on:  11-Aug-94 12:38:58.
@@ -56,9 +55,8 @@ struct time_info_data mud_date(time_t t)
 {
     struct time_info_data mdate;
     long p;
-    extern const time_t beginning_of_time;
 
-    p = (long)difftime(t, beginning_of_time);
+    p = (long)difftime(t, g_beginning_of_time);
 
     mdate.hours = (p / SECS_PER_MUD_HOUR) % 24; /* 0..23 hours */
     p -= SECS_PER_MUD_HOUR * mdate.hours;
@@ -76,13 +74,11 @@ struct time_info_data mud_date(time_t t)
 
 struct time_info_data mud_date(void)
 {
-    extern int tics;
-
     // By doing this, essentially we allow timewarping to also warp the MUD time and date
     // MUD time can skew a tiny bit this way if ticks generally take longer than 250ms.
     // Before it simply used time(0).  I like this for debugging complicated zones, e.g. ships.
 
-    time_t t = g_tBootTime + (tics / PULSE_SEC);
+    time_t t = g_tBootTime + (g_tics / PULSE_SEC);
 
     return mud_date(t);
 }
@@ -127,22 +123,22 @@ static void another_hour(struct time_info_data time_data)
     switch (time_data.hours)
     {
         case 5:
-            sunlight = SUN_RISE;
+            g_sunlight = SUN_RISE;
             send_to_outdoor("The sun rises in the east.<br/>");
             break;
 
         case 6:
-            sunlight = SUN_LIGHT;
+            g_sunlight = SUN_LIGHT;
             send_to_outdoor("The day has begun.<br/>");
             break;
 
         case 21:
-            sunlight = SUN_SET;
+            g_sunlight = SUN_SET;
             send_to_outdoor("The sun slowly disappears in the west.<br/>");
             break;
 
         case 22:
-            sunlight = SUN_DARK;
+            g_sunlight = SUN_DARK;
             send_to_outdoor("The night has begun.<br/>");
             break;
 
@@ -283,7 +279,7 @@ void update_time_and_weather(void)
 
     another_hour(time_info);
 
-    for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.begin(); z++)
+    for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.begin(); z++)
         weather_change(z->second, time_info);
 }
 
@@ -292,7 +288,7 @@ void update_time_and_weather(void)
 void weather_and_time_event(void *p1, void *p2)
 {
     update_time_and_weather();
-    events.add(SECS_PER_MUD_HOUR * 4, weather_and_time_event, 0, 0);
+    g_events.add(SECS_PER_MUD_HOUR * 4, weather_and_time_event, 0, 0);
 }
 
 /* reset the time in the game from file */
@@ -300,29 +296,27 @@ void boot_time_and_weather(void)
 {
     struct time_info_data mud_time_passed(time_t t2, time_t t1);
 
-    extern char world_boottime[64];
-
     struct time_info_data time_info;
     g_tBootTime = time(0);
     char *p = ctime(&g_tBootTime);
     p[strlen(p) - 1] = '\0';
 
-    snprintf(world_boottime, sizeof(world_boottime), "%s", p);
+    snprintf(g_world_boottime, sizeof(g_world_boottime), "%s", p);
 
-    time_info = mud_time_passed(time(0), beginning_of_time);
+    time_info = mud_time_passed(time(0), g_beginning_of_time);
 
     if (time_info.hours == 5)
-        sunlight = SUN_RISE;
+        g_sunlight = SUN_RISE;
     else if (6 <= time_info.hours && time_info.hours <= 20)
-        sunlight = SUN_LIGHT;
+        g_sunlight = SUN_LIGHT;
     else if (time_info.hours == 21)
-        sunlight = SUN_SET;
+        g_sunlight = SUN_SET;
     else
-        sunlight = SUN_DARK;
+        g_sunlight = SUN_DARK;
 
     slog(LOG_OFF, 0, "   Current Gametime: %dH %dD %dM %dY.", time_info.hours, time_info.day, time_info.month, time_info.year);
 
-    for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.begin(); z++)
+    for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.begin(); z++)
     {
         z->second->weather.pressure = z->second->weather.base;
 
@@ -343,5 +337,5 @@ void boot_time_and_weather(void)
             z->second->weather.sky = SKY_CLOUDLESS;
     }
 
-    events.add(PULSE_SEC * SECS_PER_MUD_HOUR, weather_and_time_event, 0, 0);
+    g_events.add(PULSE_SEC * SECS_PER_MUD_HOUR, weather_and_time_event, 0, 0);
 }

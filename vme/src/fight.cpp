@@ -64,10 +64,6 @@ struct combat_msg_list
 
 struct combat_msg_list fight_messages[COM_MAX_MSGS];
 
-/* External structures */
-
-extern class unit_data *unit_list;
-
 /* External procedures */
 
 void gain_exp(class unit_data *ch, int gain);
@@ -1009,7 +1005,7 @@ void damage(class unit_data *ch,
 
     snprintf(arg, sizeof(arg), "%d %d %d", attack_group, attack_number, hit_location);
 
-    if (send_ack(ch, medium, victim, &dam, &cmd_auto_damage, arg, victim) == SFR_BLOCK)
+    if (send_ack(ch, medium, victim, &dam, &g_cmd_auto_damage, arg, victim) == SFR_BLOCK)
         return;
     if (victim != ch)
     {
@@ -1368,7 +1364,7 @@ int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapo
     }
 
     if (CHAR_COMBAT(att))
-        CHAR_COMBAT(att)->changeSpeed(wpn_info[att_weapon_type].speed);
+        CHAR_COMBAT(att)->changeSpeed(g_wpn_info[att_weapon_type].speed);
 
     if (!check_combat(att))
         return -1;
@@ -1409,15 +1405,15 @@ int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapo
 
         def_shield_bonus = shield_bonus(att, def, &def_shield);
 
-        if (CHAR_AWAKE(def) && def_shield && wpn_info[att_weapon_type].shield != SHIELD_M_USELESS)
+        if (CHAR_AWAKE(def) && def_shield && g_wpn_info[att_weapon_type].shield != SHIELD_M_USELESS)
         {
-            if ((wpn_info[att_weapon_type].shield == SHIELD_M_BLOCK) && (number(1, 100) <= def_shield_bonus))
+            if ((g_wpn_info[att_weapon_type].shield == SHIELD_M_BLOCK) && (number(1, 100) <= def_shield_bonus))
             {
                 damage_object(def, def_shield, dam);
                 damage(att, def, def_shield, 0, MSG_TYPE_WEAPON, att_weapon_type, WEAR_SHIELD);
                 return 0;
             }
-            if ((wpn_info[att_weapon_type].shield == SHIELD_M_REDUCE) && (number(1, 100) <= def_shield_bonus))
+            if ((g_wpn_info[att_weapon_type].shield == SHIELD_M_REDUCE) && (number(1, 100) <= def_shield_bonus))
             {
                 dam -= (dam * def_shield_bonus) / 100;
             }

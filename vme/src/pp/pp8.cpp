@@ -78,11 +78,11 @@ eval()
     {
         val = evaltern(); /* Top level ternary form */
 
-        if (Token[0] != ',')
+        if (g_Token[0] != ',')
         {
-            if (Token[0] != '\n')
+            if (g_Token[0] != '\n')
             {
-                non_fatal("Expression: Invalid operator: ", Token);
+                non_fatal("Expression: Invalid operator: ", g_Token);
             }
             else
                 pushback('\n'); /* Put eol back out */
@@ -394,16 +394,16 @@ evalfuns()
     else if (test("defined"))
     {
         if (!(pflag = (getnstoken(GT_STR) == '('))) /* Latch '(' */
-            pbstr(Token);                           /* Put it back if not */
+            pbstr(g_Token);                         /* Put it back if not */
 
         if ((t = getnstoken(GT_STR)) == LETTER) /* Get an Id */
         {
-            rv = (int)(lookup(Token, NULL) != NULL);
+            rv = (int)(lookup(g_Token, NULL) != NULL);
 
             if (pflag && (getnstoken(GT_STR) != ')'))
             {
                 non_fatal("Expression: Missing ')'", "");
-                pbstr(Token);
+                pbstr(g_Token);
             }
 
             return ((EVALINT)rv);
@@ -413,7 +413,7 @@ evalfuns()
         else if (t == EOF)
             end_of_file();
 
-        non_fatal("Expression: Not an identifier: ", Token);
+        non_fatal("Expression: Not an identifier: ", g_Token);
         return ((EVALINT)FALSE);
     }
     else if (test("_isstring"))
@@ -423,9 +423,9 @@ evalfuns()
             non_fatal("Expression: Missing '('", "");
         else
         {
-            if (item(getnstoken, GT_STR) && (Token[0] == '"'))
+            if (item(getnstoken, GT_STR) && (g_Token[0] == '"'))
                 rv = TRUE;
-            t = Token[0];
+            t = g_Token[0];
             count = 0; /* Paren nesting level */
             while ((!((t == ')') && (count == 0))) && (t != '\n') && (t != EOF))
             {
@@ -440,7 +440,7 @@ evalfuns()
                 non_fatal("Expression: Missing ')'", "");
                 if (t == EOF)
                     end_of_file();
-                pbstr(Token);
+                pbstr(g_Token);
             }
         }
         return ((EVALINT)rv);
@@ -452,10 +452,10 @@ evalfuns()
             non_fatal("Expression: Missing '('", "");
         else
         {
-            if (item(getnstoken, GT_STR) && (Token[0] != '"'))
+            if (item(getnstoken, GT_STR) && (g_Token[0] != '"'))
             {
                 non_fatal("_strsize: Missing string", "");
-                t = Token[0];
+                t = g_Token[0];
                 count = 0; /* Paren nesting level */
                 while ((!((t == ')') && (count == 0))) && (t != '\n') && (t != EOF))
                 {
@@ -470,14 +470,14 @@ evalfuns()
                     non_fatal("Expression: Missing ')'", "");
                     if (t == EOF)
                         end_of_file();
-                    pbstr(Token);
+                    pbstr(g_Token);
                 }
             }
             else
             {
                 for (;;)
                 {
-                    str = &Token[1];
+                    str = &g_Token[1];
                     for (; (*str != '\0') && (*str != '\"'); rv++)
                     {
                         /************************************************************************/
@@ -714,10 +714,10 @@ evalval()
         /* Pack a number */
         if (item(getnstoken, GT_STR))
         {
-            if (isdigit(Token[0]))
+            if (isdigit(g_Token[0]))
             {
                 val = 0;
-                p = Token;
+                p = g_Token;
                 if (*p == '0')
                 {
                     /* Octal or Hex number */
@@ -746,22 +746,22 @@ evalval()
                 }
                 if (*p != '\0')
                 {
-                    non_fatal("Expression: Bad operand: ", Token);
+                    non_fatal("Expression: Bad operand: ", g_Token);
                 }
             }
             else
             {
                 /* #if of undef'd id OK */
-                if (!istype(Token[0] & 0xFF, C_L))
+                if (!istype(g_Token[0] & 0xFF, C_L))
                 {
-                    non_fatal("Expression: Expected operand: ", Token);
+                    non_fatal("Expression: Expected operand: ", g_Token);
                 }
                 return ((EVALINT)0);
             }
         }
         else
         {
-            non_fatal("Expression: Expected operand: ", Token);
+            non_fatal("Expression: Expected operand: ", g_Token);
             return ((EVALINT)0);
         }
     }
@@ -878,18 +878,18 @@ int match(register char *tbuf, register const char *str)
 
     while ((*s != '\0') && item(fun, 0))
     {
-        if (strncmp(Token, s, strlen(Token)) == EQUAL)
+        if (strncmp(g_Token, s, strlen(g_Token)) == EQUAL)
         {
             /* Build token */
-            t = addstr(t, &tbuf[TOKENSIZE], "Expression: Token too long", Token);
+            t = addstr(t, &tbuf[TOKENSIZE], "Expression: Token too long", g_Token);
 
-            s += strlen(Token); /* Move past matched part */
+            s += strlen(g_Token); /* Move past matched part */
             if (*s == '\0')
                 break; /* Exit if end of string */
         }
         else
         {
-            pbstr(Token); /* Unfetch unmatching string */
+            pbstr(g_Token); /* Unfetch unmatching string */
             break;
         }
         fun = gettoken; /* Don't skip spaces anymore */
@@ -926,21 +926,21 @@ char *readexpline(register char *buf, register int bufsize)
             end_of_file();
         if (t == LETTER)
         {
-            if ((!is_func) && ((sy = lookup(Token, NULL)) != NULL) && (sy->disable != TRUE))
+            if ((!is_func) && ((sy = lookup(g_Token, NULL)) != NULL) && (sy->disable != TRUE))
             {
                 bufp = docall(sy, bufp, &buf[bufsize - 1]);
             }
             else
             {
-                bufp = addstr(bufp, &buf[bufsize - 1], rbo, Token);
+                bufp = addstr(bufp, &buf[bufsize - 1], rbo, g_Token);
                 if (is_func)
                     is_func = FALSE;
-                else if (strcmp(Token, "defined") == EQUAL)
+                else if (strcmp(g_Token, "defined") == EQUAL)
                     is_func = TRUE;
             }
         }
         else
-            bufp = addstr(bufp, &buf[bufsize - 1], rbo, Token);
+            bufp = addstr(bufp, &buf[bufsize - 1], rbo, g_Token);
     }
 
     pushback('\n');

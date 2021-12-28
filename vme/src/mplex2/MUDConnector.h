@@ -33,10 +33,10 @@ public:
 };
 
 // I think this is the open socket from the main listening telnet port
-extern cMotherHook MotherHook;
+extern cMotherHook g_MotherHook;
 
 // Connection to and from the MUD server
-extern cMudHook MudHook;
+extern cMudHook g_MudHook;
 void Control(void);
 extern int g_nConnectionsLeft;
 extern class color_type g_cDefcolor;

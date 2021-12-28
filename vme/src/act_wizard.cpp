@@ -4,7 +4,7 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.9 $
  */
-
+#include "external_vars.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -32,12 +32,6 @@
 #include "main.h"
 #include "dilrun.h"
 #include "event.h"
-/*   external vars  */
-
-extern struct zone_info_type zone_info;
-extern class unit_data *unit_list;
-extern class descriptor_data *descriptor_list;
-
 /* external functs */
 
 struct time_info_data age(class unit_data *ch);
@@ -69,11 +63,9 @@ void do_timewarp(class unit_data *ch, char *argument, const struct command_info 
     send_to_char(buf, ch);
 
     void timewarp_end(void *p1, void *p2);
-    extern eventqueue events;
 
-    events.add(PULSE_SEC * i, timewarp_end, 0, 0);
+    g_events.add(PULSE_SEC * i, timewarp_end, 0, 0);
 
-    extern long g_nTickUsec;
     g_nTickUsec = 0; // Warp the time
 }
 
@@ -99,7 +91,7 @@ void do_users(class unit_data *ch, char *argument, const struct command_info *cm
        < %3d/%3d> mortal vlvl/ wizi
     */
 
-    for (d = descriptor_list; d; d = d->next)
+    for (d = g_descriptor_list; d; d = d->next)
     {
         assert(d->character);
         if (CHAR_LEVEL(ch) >= UNIT_MINV(CHAR_ORIGINAL(d->character)))
@@ -108,30 +100,32 @@ void do_users(class unit_data *ch, char *argument, const struct command_info *cm
             if (IS_IMMORTAL(d->character))
             {
                 /* an immortal character */
-                snprintf(tmp, sizeof(tmp), 
-                        "&lt;I%3d/%3d&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
-                        CHAR_LEVEL(CHAR_ORIGINAL(d->character)),
-                        UNIT_MINV(CHAR_ORIGINAL(d->character)),
-                        UNIT_NAME(CHAR_ORIGINAL(d->character)),
-                        descriptor_is_playing(d) ? "Playing" : "Menu",
-                        g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
-                        d->nPort,
-                        d->nLine == 255 ? "---" : itoa(d->nLine),
-                        d->host);
+                snprintf(tmp,
+                         sizeof(tmp),
+                         "&lt;I%3d/%3d&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
+                         CHAR_LEVEL(CHAR_ORIGINAL(d->character)),
+                         UNIT_MINV(CHAR_ORIGINAL(d->character)),
+                         UNIT_NAME(CHAR_ORIGINAL(d->character)),
+                         descriptor_is_playing(d) ? "Playing" : "Menu",
+                         g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
+                         d->nPort,
+                         d->nLine == 255 ? "---" : itoa(d->nLine),
+                         d->host);
             }
             else
             {
                 /* a mortal character */
-                snprintf(tmp, sizeof(tmp), 
-                        "&lt; %6d%c&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
-                        PC_VIRTUAL_LEVEL(CHAR_ORIGINAL(d->character)),
-                        UNIT_MINV(CHAR_ORIGINAL(d->character)) ? '*' : ' ',
-                        UNIT_NAME(CHAR_ORIGINAL(d->character)),
-                        descriptor_is_playing(d) ? "Playing" : "Menu",
-                        g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
-                        d->nPort,
-                        d->nLine == 255 ? "---" : itoa(d->nLine),
-                        d->host);
+                snprintf(tmp,
+                         sizeof(tmp),
+                         "&lt; %6d%c&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
+                         PC_VIRTUAL_LEVEL(CHAR_ORIGINAL(d->character)),
+                         UNIT_MINV(CHAR_ORIGINAL(d->character)) ? '*' : ' ',
+                         UNIT_NAME(CHAR_ORIGINAL(d->character)),
+                         descriptor_is_playing(d) ? "Playing" : "Menu",
+                         g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
+                         d->nPort,
+                         d->nLine == 255 ? "---" : itoa(d->nLine),
+                         d->host);
             }
 
             len += strlen(tmp);
@@ -265,7 +259,6 @@ void do_execute(class unit_data *ch, char *argument, const struct command_info *
 void do_shutdown(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
     char buf[100];
-    extern int mud_shutdown;
 
     if (!IS_PC(ch))
         return;
@@ -278,7 +271,7 @@ void do_shutdown(class unit_data *ch, char *argument, const struct command_info 
 
     snprintf(buf, sizeof(buf), "Shutdown by %s.<br/>", UNIT_NAME(ch));
     send_to_all(buf);
-    mud_shutdown = 1;
+    g_mud_shutdown = 1;
 }
 
 void do_snoop(class unit_data *ch, char *argument, const struct command_info *cmd)
@@ -412,7 +405,7 @@ void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
 
     if ((fi = pc_str_to_file_index(ch, buf)) == NULL)
     {
-        for (tmp = unit_list; tmp; tmp = tmp->gnext)
+        for (tmp = g_unit_list; tmp; tmp = tmp->gnext)
             if (IS_PC(tmp) && !str_ccmp(UNIT_NAME(tmp), buf))
             {
                 send_to_char("A player by that name is linkdead in the game.<br/>", ch);
@@ -495,7 +488,6 @@ void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
  */
 void do_wizlock(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
-    extern int wizlock;
     int lvl;
     char buf[128];
 
@@ -511,15 +503,15 @@ void do_wizlock(class unit_data *ch, char *arg, const struct command_info *cmd)
     if (lvl == 0)
         lvl = 1;
 
-    if (wizlock && !*buf)
+    if (g_wizlock && !*buf)
     {
         send_to_char("Game is no longer wizlocked.<br/>", ch);
-        wizlock = 0;
+        g_wizlock = 0;
     }
     else
     {
         snprintf(buf, sizeof(buf), "Game is now wizlocked for level %d%s.<br/>", lvl - 1, lvl - 1 > 0 ? " and down" : "");
         send_to_char(buf, ch);
-        wizlock = lvl;
+        g_wizlock = lvl;
     }
 }

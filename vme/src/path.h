@@ -19,7 +19,7 @@
 int path_weight(unit_data *from, unit_data *to, int dir);
 void create_sc_graph(int num_of_sc);
 void create_sc_dijkstra();
-extern unit_data *room_head;
+extern unit_data *g_room_head;
 
 namespace boost
 {
@@ -39,5 +39,5 @@ typedef boost::adjacency_list<boost::vecS,
                               boost::property<boost::edge_weight_t, int, boost::property<boost::edge_dir_t, int>>>
     graph_t;
 
-extern std::vector<graph_t> sc_graphs;
-extern std::vector<std::vector<unit_data *>> sc_room_ptr;
+extern std::vector<graph_t> g_sc_graphs;
+extern std::vector<std::vector<unit_data *>> g_sc_room_ptr;

@@ -18,7 +18,7 @@
 
 // The Global Combat List...
 
-class cCombatList CombatList;
+class cCombatList g_CombatList;
 
 cCombatList::cCombatList()
 {
@@ -177,7 +177,7 @@ cCombat::cCombat(class unit_data *owner, int bMelee)
     pOpponents = NULL;
     nNoOpponents = 0;
 
-    CombatList.add(this);
+    g_CombatList.add(this);
 }
 
 cCombat::~cCombat(void)
@@ -193,7 +193,7 @@ cCombat::~cCombat(void)
 
     CHAR_COMBAT(pOwner) = NULL;
 
-    CombatList.sub(this);
+    g_CombatList.sub(this);
 
     CHAR_POS(pOwner) = POSITION_STANDING;
     update_pos(pOwner);
@@ -339,16 +339,17 @@ void cCombat::status(const class unit_data *god)
     int i;
     std::string str;
 
-    snprintf(buf, sizeof(buf),
-            "Combat Status of '%s':<br/>"
-            "Combat Speed [%d]  Turn [%d]<br/>"
-            "Melee Opponent '%s'<br/>"
-            "Total of %d Opponents:<br/><br/>",
-            STR(UNIT_NAME(pOwner)),
-            CHAR_SPEED(pOwner),
-            nWhen,
-            CHAR_FIGHTING(pOwner) ? STR(UNIT_NAME(CHAR_FIGHTING(pOwner))) : "NONE",
-            nNoOpponents);
+    snprintf(buf,
+             sizeof(buf),
+             "Combat Status of '%s':<br/>"
+             "Combat Speed [%d]  Turn [%d]<br/>"
+             "Melee Opponent '%s'<br/>"
+             "Total of %d Opponents:<br/><br/>",
+             STR(UNIT_NAME(pOwner)),
+             CHAR_SPEED(pOwner),
+             nWhen,
+             CHAR_FIGHTING(pOwner) ? STR(UNIT_NAME(CHAR_FIGHTING(pOwner))) : "NONE",
+             nNoOpponents);
 
     str.append(buf);
 
@@ -457,7 +458,7 @@ void stat_combat(class unit_data *god, class unit_data *u, const char *pStr)
         return;
     }
 
-    CombatList.status(god);
+    g_CombatList.status(god);
 
     if (!CHAR_COMBAT(u))
         act("No combat structure on '$2n'", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
@@ -500,7 +501,7 @@ void stat_spell(class unit_data *god, class unit_data *u, const char *pStr)
         return;
     }
 
-    CombatList.status(god);
+    g_CombatList.status(god);
 
     if (!CHAR_COMBAT(u))
         act("No combat structure on '$2n'", A_ALWAYS, god, u, cActParameter(), TO_CHAR);

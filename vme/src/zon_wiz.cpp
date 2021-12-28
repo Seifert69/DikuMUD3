@@ -25,8 +25,6 @@
 #include "magic.h"
 #include "utility.h"
 
-extern class unit_data *unit_list;
-
 int ball(struct spec_arg *sarg)
 {
 #define TOP_MAX 10
@@ -59,7 +57,7 @@ int ball(struct spec_arg *sarg)
 
         send_to_char(buf, sarg->activator);
 
-        for (u = unit_list; u; u = u->gnext)
+        for (u = g_unit_list; u; u = u->gnext)
             if (IS_OBJ(u) && (OBJ_TYPE(u) == v1))
             {
                 for (i = 0; i < TOP_MAX; i++)
@@ -73,14 +71,15 @@ int ball(struct spec_arg *sarg)
         for (i = 0; i < TOP_MAX; i++)
             if (top[i])
             {
-                snprintf(buf, sizeof(buf),
-                        "%4ld %-15s@%-15s  IN  %s [%s@%s]<br/>",
-                        (signed long)OBJ_VALUE(top[i], v2),
-                        UNIT_FI_NAME(top[i]),
-                        UNIT_FI_ZONENAME(top[i]),
-                        UNIT_NAME(UNIT_IN(top[i])),
-                        UNIT_FI_NAME(UNIT_IN(top[i])),
-                        UNIT_FI_ZONENAME(UNIT_IN(top[i])));
+                snprintf(buf,
+                         sizeof(buf),
+                         "%4ld %-15s@%-15s  IN  %s [%s@%s]<br/>",
+                         (signed long)OBJ_VALUE(top[i], v2),
+                         UNIT_FI_NAME(top[i]),
+                         UNIT_FI_ZONENAME(top[i]),
+                         UNIT_NAME(UNIT_IN(top[i])),
+                         UNIT_FI_NAME(UNIT_IN(top[i])),
+                         UNIT_FI_ZONENAME(UNIT_IN(top[i])));
                 send_to_char(buf, sarg->activator);
             }
         return SFR_BLOCK;

@@ -136,8 +136,8 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
                         if ((pp != NULL) && ((pp->p_flags & PF_RQUOTES) != 0))
                         {
                             /* Remove surrounding quotes */
-                            memmov(Token + 1, Token, (unsigned)strlen(Token));
-                            Token[strlen(Token) - 1] = '\0';
+                            memmov(g_Token + 1, g_Token, (unsigned)strlen(g_Token));
+                            g_Token[strlen(g_Token) - 1] = '\0';
                         }
                         break;
 
@@ -145,8 +145,8 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
                         if ((pp != NULL) && ((pp->p_flags & PF_PNLINES) == 0))
                         {
                             /* Remove parameter newlines */
-                            Token[0] = ' ';
-                            Token[1] = '\0';
+                            g_Token[0] = ' ';
+                            g_Token[1] = '\0';
                         }
                         break;
 
@@ -204,7 +204,7 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
 
                 if (addit)
                 {
-                    cp = addstr(cp, &t_token[TOKENSIZE - 1], "Parameter buffer overflow", Token);
+                    cp = addstr(cp, &t_token[TOKENSIZE - 1], "Parameter buffer overflow", g_Token);
                 }
             }
             /*
@@ -224,7 +224,7 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
              *	the non "(" token, together with a whitespace, if one was present.
              *	Then just output the macro name.
              */
-            pbstr(Token); /* Put it back */
+            pbstr(g_Token); /* Put it back */
 
             while (nl_count-- > 0) /* Dump linefeeds through */
                 pushback('\n');
@@ -273,7 +273,7 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
     if ((body = (char *)malloc((unsigned)MACROSIZE)) == NULL)
         out_of_memory();
 
-    flags = (A_astring ? (0) : (GT_STR));
+    flags = (g_A_astring ? (0) : (GT_STR));
     had_ws = FALSE;
     expand = TRUE;
     bodyp = body; /* Point at start of body */
@@ -339,7 +339,7 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
                     continue;
                 }
                 had_ws = FALSE; /* Ignore whitespace */
-                if ((t == LETTER) && ((cp = flookup(formals, Token)) != NULL))
+                if ((t == LETTER) && ((cp = flookup(formals, g_Token)) != NULL))
                 {
                     pushback(END_MACRO);
                     pbcstr(cp);
@@ -353,7 +353,7 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
                         expand = TRUE;
                         pushback(TOGGLE_EXPAND);
                     }
-                    /* Refetch in while loop */ pbstr(Token);
+                    /* Refetch in while loop */ pbstr(g_Token);
                     while ((t = gettoken(flags)) != END_MACRO)
                     {
                         if (t == EOF)
@@ -378,20 +378,20 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
                             expand = TRUE;
                             bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, toggle_token);
                         }
-                        bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, Token);
+                        bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, g_Token);
                     }
                 }
                 else
                 {
-                    bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, Token);
+                    bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, g_Token);
                 }
 
                 continue;
             }
             else /* Was # operator, look at in a bit */
             {
-                pbstr(Token);
-                strcpy(Token, "#");
+                pbstr(g_Token);
+                strcpy(g_Token, "#");
                 t = '#';
             }
         }
@@ -421,7 +421,7 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
                 else if (t == TOGGLE_EXPAND)
                     /* Skip toggle tokens */ expand = !expand;
             }
-            if ((t == LETTER) && ((cp = flookup(formals, Token)) != NULL))
+            if ((t == LETTER) && ((cp = flookup(formals, g_Token)) != NULL))
             {
                 had_ws = FALSE;
                 bodyp = strize(bodyp, &body[MACROSIZE - 1], mbomsg, cp);
@@ -444,7 +444,7 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
                     expand = TRUE;
                     bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, toggle_token);
                 }
-                pbstr(Token); /* Refetch later */
+                pbstr(g_Token); /* Refetch later */
             }
             continue;
         }
@@ -453,7 +453,7 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
          *	the next operator is ## in order to know whether to perform macro
          *	expansion on the parameter value or not.
          */
-        if ((t == LETTER) && ((cp = flookup(formals, Token)) != NULL))
+        if ((t == LETTER) && ((cp = flookup(formals, g_Token)) != NULL))
         {
             while (istype((t = gettoken(flags)), C_W) || (t == TOGGLE_EXPAND))
             {
@@ -500,7 +500,7 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
                             expand = TRUE;
                             bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, toggle_token);
                         }
-                        bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, Token);
+                        bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, g_Token);
                     }
                     pbstr("##"); /* Refetch again */
                     continue;
@@ -510,11 +510,11 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
                     /*
                      *	Was single #, pushback # for later.
                      */
-                    pbstr(Token);
-                    strcpy(Token, "#");
+                    pbstr(g_Token);
+                    strcpy(g_Token, "#");
                 }
             }
-            pbstr(Token); /* Refetch the last non # token */
+            pbstr(g_Token); /* Refetch the last non # token */
 
             if (had_ws)
             {
@@ -560,7 +560,7 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
                  *	Process an individual token in the replacement string for the formal
                  *	parameter.
                  */
-                if ((t == LETTER) && ((sy = lookup(Token, NULL)) != NULL) && (!sy->disable))
+                if ((t == LETTER) && ((sy = lookup(g_Token, NULL)) != NULL) && (!sy->disable))
                 {
                     *docall(sy, t_token, &t_token[TOKENSIZE - 1]) = '\0';
                     pushback(END_MACRO);
@@ -581,13 +581,13 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
                             had_ws = FALSE;
                             bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, " ");
                         }
-                        bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, Token);
+                        bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, g_Token);
                     }
                     expand = FALSE;
                 }
                 else
                 {
-                    bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, Token);
+                    bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, g_Token);
                 }
             }
         }
@@ -595,7 +595,7 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
          *	Handle all other tokens.
          */
         else
-            bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, Token);
+            bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, g_Token);
     }
     /*
      *	Flush any remaining whitespace or disable tokens.
@@ -638,7 +638,7 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
             end_of_file();
         if (t == TOGGLE_EXPAND)
             expand = !expand;
-        else if ((t == LETTER) && expand && ((bodyp > body) ? (body[0] != '#') : TRUE) && ((sy = lookup(Token, NULL)) != NULL) &&
+        else if ((t == LETTER) && expand && ((bodyp > body) ? (body[0] != '#') : TRUE) && ((sy = lookup(g_Token, NULL)) != NULL) &&
                  (!sy->disable))
         {
             if (had_ws)
@@ -650,7 +650,7 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
         }
         else if (t == '\n')
         {
-            bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, Token);
+            bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, g_Token);
             *bodyp = '\0';
             internal = _docall(body, internal, internal_limit);
             had_ws = FALSE;
@@ -665,7 +665,7 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
                 had_ws = FALSE;
                 bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, " ");
             }
-            bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, Token);
+            bodyp = addstr(bodyp, &body[MACROSIZE - 1], mbomsg, g_Token);
         }
     }
     /*
@@ -705,21 +705,21 @@ char *_docall(char *line, char *internal, char *internal_limit)
     pushback(END_MACRO);
     pbcstr(line);
 
-    Lastnl = TRUE;
+    g_Lastnl = TRUE;
     while ((t = gettoken(GT_STR)) != END_MACRO)
     {
-        if (Lastnl && (t == DIRECTIVE_CHAR)) /* Process directive */
+        if (g_Lastnl && (t == DIRECTIVE_CHAR)) /* Process directive */
         {
             had_ws = FALSE;
             while (((t = gettoken(GT_STR)) != END_MACRO) && (t != EOF) && istype(t, C_W))
             {
                 had_ws = TRUE;
             }
-            if ((t == LETTER) && ((d = predef(Token, pptab)) != NULL) && ((d->pp_func == dopragma) || A_rescan))
+            if ((t == LETTER) && ((d = predef(g_Token, g_pptab)) != NULL) && ((d->pp_func == dopragma) || g_A_rescan))
             {
-                if (d->pp_ifif || (Ifstate == IFTRUE))
+                if (d->pp_ifif || (g_Ifstate == IFTRUE))
                     (void)(*(d->pp_func))(d->pp_arg, 0, 0);
-                Lastnl = TRUE;
+                g_Lastnl = TRUE;
             }
             else
             {
@@ -729,22 +729,22 @@ char *_docall(char *line, char *internal, char *internal_limit)
                 {
                     internal = addstr(internal, internal_limit, mbomsg, "#");
                 }
-                pbstr(Token);
+                pbstr(g_Token);
                 if (had_ws)
                     pushback(' ');
-                Lastnl = FALSE;
+                g_Lastnl = FALSE;
             }
         }
-        else if (Ifstate == IFTRUE) /* Normal token, just output */
+        else if (g_Ifstate == IFTRUE) /* Normal token, just output */
         {
             if (internal == NULL)
-                puttoken(Token);
+                puttoken(g_Token);
             else
             {
-                internal = addstr(internal, internal_limit, mbomsg, Token);
+                internal = addstr(internal, internal_limit, mbomsg, g_Token);
             }
             if (!istype(t, C_W))
-                Lastnl = FALSE;
+                g_Lastnl = FALSE;
         }
         else /* Toss up to EOL */
         {
@@ -754,7 +754,7 @@ char *_docall(char *line, char *internal, char *internal_limit)
         if (t == EOF)
             end_of_file();
         else if (t == '\n')
-            Lastnl = TRUE;
+            g_Lastnl = TRUE;
         else if (t == END_MACRO)
             break;
     }
@@ -804,7 +804,7 @@ void dodefine(int mactype, int ixzy, const char *ixzz)
 
     if (getnstoken(GT_STR) == LETTER)
     {
-        strcpy(name, Token); /* Move name token to save buffer */
+        strcpy(name, g_Token); /* Move name token to save buffer */
 
 #if PPDEBUG
         if (PPDEBUG)
@@ -815,8 +815,8 @@ void dodefine(int mactype, int ixzy, const char *ixzz)
             pp = getparams(); /* Get list of param protos */
         else
         {
-            pp = NULL;    /* No parameters to check for */
-            pbstr(Token); /* Will see it again */
+            pp = NULL;      /* No parameters to check for */
+            pbstr(g_Token); /* Will see it again */
         }
 
         while (istype(t = gettoken(GT_STR), C_W))
@@ -824,7 +824,7 @@ void dodefine(int mactype, int ixzy, const char *ixzz)
             if (t == EOF)
                 end_of_file(); /* Unexpected EOF */
         }
-        pbstr(Token); /* Push it back */
+        pbstr(g_Token); /* Push it back */
 
         if (mactype)
             scaneol(); /* Scan to eol but leave eol */
@@ -837,7 +837,7 @@ void dodefine(int mactype, int ixzy, const char *ixzz)
                     lasttok = '#';
                 else if ((lasttok == '#') && (t == LETTER))
                 {
-                    if (strcmp(Token, "pragma") == EQUAL)
+                    if (strcmp(g_Token, "pragma") == EQUAL)
                     {
                         /************************************************************************/
                         /*
@@ -846,7 +846,7 @@ void dodefine(int mactype, int ixzy, const char *ixzz)
                          */
                         if (getnstoken(GT_STR) == LETTER)
                         {
-                            if (strcmp(Token, "endmacro") == EQUAL)
+                            if (strcmp(g_Token, "endmacro") == EQUAL)
                             {
                                 if (macctr-- == 0)
                                 {
@@ -855,13 +855,13 @@ void dodefine(int mactype, int ixzy, const char *ixzz)
                                     break;
                                 }
                             }
-                            /* Nesting? */ else if (strcmp(Token, "macro") == EQUAL)
+                            /* Nesting? */ else if (strcmp(g_Token, "macro") == EQUAL)
                                 macctr++;
                         }
 
-                        pbstr(Token);
+                        pbstr(g_Token);
                         pushback(' ');
-                        strcpy(Token, "pragma"); /* Refetch it all */
+                        strcpy(g_Token, "pragma"); /* Refetch it all */
                         /************************************************************************/
                     }
                 }
@@ -875,7 +875,7 @@ void dodefine(int mactype, int ixzy, const char *ixzz)
                 end_of_file(); /* Unexpected eof */
             else
             {
-                bodyp = addstr(bodyp, &body[MACROSIZE - 1], mtlmsg, Token);
+                bodyp = addstr(bodyp, &body[MACROSIZE - 1], mtlmsg, g_Token);
             }
         }
         pushback('\n');
@@ -899,7 +899,7 @@ void dodefine(int mactype, int ixzy, const char *ixzz)
 
         if ((sy = lookup(name, NULL)) != NULL)
         {
-            if (!A_stack)
+            if (!g_A_stack)
             {
                 if (strcmp(sy->s_body, body) != EQUAL)
                 {
@@ -958,8 +958,8 @@ void doundef(int aaa, int bbb, const char *ccc)
 {
     if (getnstoken(GT_STR) == LETTER)
     {
-        if (lookup(Token, NULL) != NULL) /* OK if symbol not defined */
-            unsbind(Token);              /* Remove symbol from table */
+        if (lookup(g_Token, NULL) != NULL) /* OK if symbol not defined */
+            unsbind(g_Token);              /* Remove symbol from table */
     }
     else
         illegal_symbol();
@@ -1070,7 +1070,7 @@ struct param *getparams()
             }
             else
             {
-                strcpy(pname, Token);
+                strcpy(pname, g_Token);
                 flags = 0;
 
                 for (t = getnstoken(GT_STR); t != ']'; t = getnstoken(GT_STR))
@@ -1085,25 +1085,25 @@ struct param *getparams()
 
                     if (t == LETTER)
                     {
-                        if (strcmp(Token, "RQ") == EQUAL)
+                        if (strcmp(g_Token, "RQ") == EQUAL)
                             flags |= PF_RQUOTES;
-                        else if (strcmp(Token, "PN") == EQUAL)
+                        else if (strcmp(g_Token, "PN") == EQUAL)
                         {
                             flags |= PF_PNLINES;
                         }
                         else
                         {
-                            non_fatal(iffmsg, Token);
+                            non_fatal(iffmsg, g_Token);
                         }
                     }
                     else
-                        non_fatal(iffmsg, Token);
+                        non_fatal(iffmsg, g_Token);
                 }
                 p = makeparam(pname, flags);
             }
         }
         else if (t == LETTER)
-            p = makeparam(Token, 0);
+            p = makeparam(g_Token, 0);
         else
         {
             p = NULL; /* For lint */
@@ -1123,7 +1123,7 @@ struct param *getparams()
     }
 
     if (t != ')')
-        non_fatal("Illegal or out of place token: ", Token);
+        non_fatal("Illegal or out of place token: ", g_Token);
 
     if (lh == NULL)
         lh = makeparam("", 0); /* Make a null parameter */
@@ -1172,7 +1172,7 @@ struct symtab *lookup(char *name, struct symtab **pe)
     if (PPDEBUG)
         printf("lookup: %s - ", name);
 #endif /* PPDEBUG */
-    p = (struct symtab *)&Macros[pphash(name) & (NUMBUCKETS - 1)];
+    p = (struct symtab *)&g_Macros[pphash(name) & (NUMBUCKETS - 1)];
     c = p->s_link;
 
     while (c != NULL)
@@ -1291,11 +1291,11 @@ void sbind(const char *sym, const char *defn, struct param *params)
 
     i = pphash(sym) & (NUMBUCKETS - 1); /* Hash value for symbol */
 
-    p->s_link = Macros[i];
-    Macros[i] = p; /* Link in to list */
+    p->s_link = g_Macros[i];
+    g_Macros[i] = p; /* Link in to list */
 
-    if (++Nsyms > Maxsyms)
-        Maxsyms = Nsyms; /* One more symbol counted */
+    if (++g_Nsyms > g_Maxsyms)
+        g_Maxsyms = g_Nsyms; /* One more symbol counted */
 }
 
 /************************************************************************/
@@ -1443,6 +1443,6 @@ void unsbind(char *sym)
         p->s_link = s->s_link; /* Remove item from list */
         free((char *)s);       /* Free the symbol table entry */
 
-        Nsyms--; /* One less symbol */
+        g_Nsyms--; /* One less symbol */
     }
 }

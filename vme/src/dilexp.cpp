@@ -5,12 +5,13 @@ $RCSfile: dilexp.cpp,v $
 $Date: 2005/06/28 20:17:48 $
 $Revision: 2.18 $
 */
-
+#include "external_vars.h"
 #include "dbfind.h"
 #ifdef _WINDOWS
     #include <direct.h>
 #endif
-
+#include "external_vars.h"
+#include "dilsup.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -68,7 +69,6 @@ $Revision: 2.18 $
 #include <string>
 
 struct time_info_data mud_date();
-extern struct trie_type *intr_trie;
 /* ************************************************************************ */
 /* DIL-expressions							    */
 /* ************************************************************************ */
@@ -490,18 +490,18 @@ void dilfe_ghead(class dilprg *p)
     dilval *v = new dilval;
     v->atyp = DILA_NORM;
     v->type = DILV_UP;
-    v->val.ptr = unit_list;
+    v->val.ptr = g_unit_list;
     p->stack.push(v);
 }
 
 void dilfe_phead(class dilprg *p)
 {
     dilval *v = new dilval;
-    if (IS_PC(unit_list))
+    if (IS_PC(g_unit_list))
     {
         v->atyp = DILA_NORM;
         v->type = DILV_UP;
-        v->val.ptr = unit_list;
+        v->val.ptr = g_unit_list;
     }
     else
         v->type = DILV_NULL;
@@ -511,11 +511,11 @@ void dilfe_phead(class dilprg *p)
 void dilfe_ohead(class dilprg *p)
 {
     dilval *v = new dilval;
-    if (IS_OBJ(obj_head))
+    if (IS_OBJ(g_obj_head))
     {
         v->atyp = DILA_NORM;
         v->type = DILV_UP;
-        v->val.ptr = obj_head;
+        v->val.ptr = g_obj_head;
     }
     else
         v->type = DILV_NULL;
@@ -525,11 +525,11 @@ void dilfe_ohead(class dilprg *p)
 void dilfe_nhead(class dilprg *p)
 {
     dilval *v = new dilval;
-    if (IS_NPC(npc_head))
+    if (IS_NPC(g_npc_head))
     {
         v->atyp = DILA_NORM;
         v->type = DILV_UP;
-        v->val.ptr = npc_head;
+        v->val.ptr = g_npc_head;
     }
     else
         v->type = DILV_NULL;
@@ -539,11 +539,11 @@ void dilfe_nhead(class dilprg *p)
 void dilfe_rhead(class dilprg *p)
 {
     dilval *v = new dilval;
-    if (IS_ROOM(room_head))
+    if (IS_ROOM(g_room_head))
     {
         v->atyp = DILA_NORM;
         v->type = DILV_UP;
-        v->val.ptr = room_head;
+        v->val.ptr = g_room_head;
     }
     else
         v->type = DILV_NULL;
@@ -555,7 +555,7 @@ void dilfe_zhead(class dilprg *p)
     dilval *v = new dilval;
     v->atyp = DILA_NORM;
     v->type = DILV_ZP;
-    v->val.ptr = zone_info.mmp.begin()->second;
+    v->val.ptr = g_zone_info.mmp.begin()->second;
     p->stack.push(v);
 }
 
@@ -564,7 +564,7 @@ void dilfe_chead(class dilprg *p)
     dilval *v = new dilval;
     v->atyp = DILA_NORM;
     v->type = DILV_CP;
-    v->val.ptr = cmdlist;
+    v->val.ptr = g_cmdlist;
     p->stack.push(v);
 }
 
@@ -630,7 +630,7 @@ void dilfe_sendpre(class dilprg *p)
                                                     {
                                                         case DILV_UP:
                                                         case DILV_NULL:
-                                                            cmd = ((struct command_info *)search_trie((char *)v1->val.ptr, intr_trie));
+                                                            cmd = ((struct command_info *)search_trie((char *)v1->val.ptr, g_intr_trie));
                                                             if (!cmd)
                                                             {
                                                                 szonelog(UNIT_FI_ZONE(p->sarg->owner),
@@ -1091,7 +1091,8 @@ void dilfe_atsp(register class dilprg *p)
                                                         {
                                                             case DILV_SP:
                                                                 if (is_in(v1->val.num, SPL_GROUP_MAX, SPL_TREE_MAX - 1) &&
-                                                                    (spell_info[v1->val.num].spell_pointer || spell_info[v1->val.num].tmpl))
+                                                                    (g_spell_info[v1->val.num].spell_pointer ||
+                                                                     g_spell_info[v1->val.num].tmpl))
                                                                 {
                                                                     struct spell_args sa;
 
@@ -1210,7 +1211,7 @@ void dilfe_cast2(register class dilprg *p)
                                                 {
                                                     case DILV_SP:
                                                         if (is_in(v1->val.num, SPL_GROUP_MAX, SPL_TREE_MAX - 1) &&
-                                                            (spell_info[v1->val.num].spell_pointer || spell_info[v1->val.num].tmpl))
+                                                            (g_spell_info[v1->val.num].spell_pointer || g_spell_info[v1->val.num].tmpl))
                                                         {
                                                             /* cast the spell */
                                                             v->val.num = spell_perform(v1->val.num,
@@ -2286,13 +2287,13 @@ void dilfe_spli(class dilprg *p)
 
                                                                         /* We're home free... */
 
-                                                                        *((ubit32 *)v2->ref) = spell_info[v1->val.num].realm;
+                                                                        *((ubit32 *)v2->ref) = g_spell_info[v1->val.num].realm;
                                                                         *((ubit32 *)v3->ref) = g_SplColl.tree[v1->val.num].parent;
-                                                                        *((ubit32 *)v4->ref) = spell_info[v1->val.num].usesmana;
-                                                                        *((ubit32 *)v5->ref) = spell_info[v1->val.num].offensive;
-                                                                        *((ubit32 *)v6->ref) = spell_info[v1->val.num].cast_type;
-                                                                        *((ubit32 *)v7->ref) = spell_info[v1->val.num].media;
-                                                                        *((ubit32 *)v8->ref) = spell_info[v1->val.num].targets;
+                                                                        *((ubit32 *)v4->ref) = g_spell_info[v1->val.num].usesmana;
+                                                                        *((ubit32 *)v5->ref) = g_spell_info[v1->val.num].offensive;
+                                                                        *((ubit32 *)v6->ref) = g_spell_info[v1->val.num].cast_type;
+                                                                        *((ubit32 *)v7->ref) = g_spell_info[v1->val.num].media;
+                                                                        *((ubit32 *)v8->ref) = g_spell_info[v1->val.num].targets;
 
                                                                         v->type = DILV_SP;
                                                                         v->atyp = DILA_EXP;
@@ -2390,7 +2391,7 @@ void dilfe_purs(class dilprg *p)
                             v->val.num = 0;
 
                             for (i = 0; i <= MAX_MONEY; i++)
-                                if (strcmp((char *)v2->val.ptr, money_types[i].abbrev) == 0)
+                                if (strcmp((char *)v2->val.ptr, g_money_types[i].abbrev) == 0)
                                     break;
 
                             if (i <= MAX_MONEY)
@@ -3769,16 +3770,16 @@ void dilfe_wepinfo(register class dilprg *p)
             if (((int)v1->val.num >= 0) && ((int)v1->val.num < WPN_TREE_MAX))
             {
                 cintlist *ilist = new cintlist;
-                ilist->Append(wpn_info[(int)v1->val.num].hands);
-                ilist->Append(wpn_info[(int)v1->val.num].speed);
-                ilist->Append(wpn_info[(int)v1->val.num].type);
-                ilist->Append(wpn_info[(int)v1->val.num].shield);
+                ilist->Append(g_wpn_info[(int)v1->val.num].hands);
+                ilist->Append(g_wpn_info[(int)v1->val.num].speed);
+                ilist->Append(g_wpn_info[(int)v1->val.num].type);
+                ilist->Append(g_wpn_info[(int)v1->val.num].shield);
                 ilist->Append(g_WpnColl.tree[(int)v1->val.num].parent);
                 for (int idx2 = 0; idx2 < MAX_ARMOUR_TYPES; idx2++)
                 {
-                    ilist->Append(weapon_chart[(int)v1->val.num].element[idx2].offset);
-                    ilist->Append(weapon_chart[(int)v1->val.num].element[idx2].basedam);
-                    ilist->Append(weapon_chart[(int)v1->val.num].element[idx2].alpha);
+                    ilist->Append(g_weapon_chart[(int)v1->val.num].element[idx2].offset);
+                    ilist->Append(g_weapon_chart[(int)v1->val.num].element[idx2].basedam);
+                    ilist->Append(g_weapon_chart[(int)v1->val.num].element[idx2].alpha);
                 }
                 v->val.ptr = ilist;
             }
@@ -3862,7 +3863,7 @@ void dilfe_getcmd(register class dilprg *p)
         case DILV_SP:
             if (v1->val.ptr)
             {
-                v->val.ptr = (struct command_info *)search_trie((char *)v1->val.ptr, intr_trie);
+                v->val.ptr = (struct command_info *)search_trie((char *)v1->val.ptr, g_intr_trie);
                 if (v->val.ptr)
                 {
                     v->atyp = DILA_NORM;
@@ -6435,7 +6436,6 @@ void dilfe_cmds(register class dilprg *p)
 void dilfe_pck(class dilprg *p)
 {
     dilval *v = new dilval;
-    extern int pay_point_charlie(class unit_data * ch, class unit_data * to); /* from act_movement.c */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 

@@ -17,7 +17,7 @@
     #include <sys/select.h>
 #endif
 
-extern int bPipeSignal;
+extern int g_bPipegSignal;
 
 int PipeRead(int fd, char *buf, size_t count);
 int PipeWrite(int fd, char *buf, size_t count);
@@ -105,6 +105,6 @@ private:
     int nTop;
 };
 
-extern cCaptainHook CaptainHook;
+extern cCaptainHook g_CaptainHook;
 
 #endif

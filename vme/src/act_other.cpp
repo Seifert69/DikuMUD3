@@ -25,15 +25,12 @@
 #include "spells.h"
 #include "affect.h"
 #include "utility.h"
+#include "external_vars.h"
 #include "vmelimits.h"
 #include "account.h"
 #include "weather.h"
 #include "constants.h"
 #include "dilrun.h"
-
-/* extern variables */
-extern struct requirement_type pc_race_base[];
-extern int possible_saves;
 
 void do_save(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
@@ -51,7 +48,7 @@ void do_save(class unit_data *ch, char *arg, const struct command_info *cmd)
     else
     {
         send_to_char("You are no longer a guest on this game.<br/>", ch);
-        possible_saves--;
+        g_possible_saves--;
     }
     act("Saving $1n.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
 
@@ -77,7 +74,7 @@ void race_adjust(class unit_data *ch)
     assert(IS_PC(ch));
     assert(is_in(CHAR_RACE(ch), 0, PC_RACE_MAX - 1));
 
-    my_race = &race_info[CHAR_RACE(ch)];
+    my_race = &g_race_info[CHAR_RACE(ch)];
 
     if (CHAR_SEX(ch) == SEX_MALE)
         sex_race = &my_race->male;
@@ -189,12 +186,10 @@ void start_player(class unit_data *ch)
     if (!UNIT_IS_EVIL(ch))
         SET_BIT(CHAR_FLAGS(ch), CHAR_PEACEFUL);
 
-    extern struct diltemplate *playerinit_tmpl;
-
-    if (playerinit_tmpl)
+    if (g_playerinit_tmpl)
     {
         /* Call DIL to see if we should init the player in any other way. */
-        class dilprg *prg = dil_copy_template(playerinit_tmpl, ch, NULL);
+        class dilprg *prg = dil_copy_template(g_playerinit_tmpl, ch, NULL);
 
         if (prg)
         {

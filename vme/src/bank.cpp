@@ -222,9 +222,9 @@ static void cmd_exchange(const class unit_data *pc, class unit_data *clerk, char
         int tmp, remainder, i;
 
         for (i = 0; i <= MAX_MONEY; ++i)
-            if (is_name(s, money_types[i].strings))
+            if (is_name(s, g_money_types[i].strings))
             {
-                cur = money_types[i].currency;
+                cur = g_money_types[i].currency;
                 break;
             }
 
@@ -235,8 +235,8 @@ static void cmd_exchange(const class unit_data *pc, class unit_data *clerk, char
             return;
         }
 
-        tmp = amount / money_types[i].relative_value;
-        remainder = amount - tmp * money_types[i].relative_value;
+        tmp = amount / g_money_types[i].relative_value;
+        remainder = amount - tmp * g_money_types[i].relative_value;
 
         act("$1n exchanges some $2t with $3n.", A_HIDEINV, pc, money_pluralis(thing), clerk, TO_NOTVICT);
         act("You exchange your $2t with $3n.", A_SOMEONE, pc, money_pluralis(thing), clerk, TO_CHAR);
@@ -301,19 +301,19 @@ static void cmd_withdraw(const class unit_data *pc, class unit_data *clerk, char
     }
 
     for (i = 0; i <= MAX_MONEY; ++i)
-        if (0 < balance[money_types[i].currency] && is_name(s, money_types[i].strings))
+        if (0 < balance[g_money_types[i].currency] && is_name(s, g_money_types[i].strings))
         {
-            cur = money_types[i].currency;
+            cur = g_money_types[i].currency;
             break;
         }
 
     if (i > MAX_MONEY)
         act("$1n shrugs and says 'I'm storing nothing of the sort for you, $3n.'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
-    else if ((balance[cur] < amount * money_types[i].relative_value) || (amount * money_types[i].relative_value < 0))
+    else if ((balance[cur] < amount * g_money_types[i].relative_value) || (amount * g_money_types[i].relative_value < 0))
         act("$1n shakes $1s head and says 'No loans, $3n.'", A_SOMEONE, clerk, cActParameter(), pc, TO_VICT);
     else
     {
-        balance[cur] -= amount * money_types[i].relative_value;
+        balance[cur] -= amount * g_money_types[i].relative_value;
         changed_balance = TRUE;
 
         coins_to_unit((class unit_data *)pc, amount, i);

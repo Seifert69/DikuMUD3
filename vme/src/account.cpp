@@ -5,6 +5,7 @@
  $Revision: 2.3 $
  */
 
+#include "external_vars.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -134,22 +135,23 @@ void account_local_stat(const class unit_data *ch, class unit_data *u)
     time_t now = time(0);
 
     if (IS_ADMINISTRATOR(ch))
-        snprintf(buf, sizeof(buf), 
-                "Credit         : %5.2f\n\r"
-                "Credit Limit   : %5.2f\n\r"
-                "Credit to date : %5.2f\n\r"
-                "Credit Card    : %s\n\r"
-                "Discount       : %3d%%\n\r"
-                "Flat Rate      : %s%s"
-                "Crack counter  : %3d\n\r",
-                (float)PC_ACCOUNT(u).credit / 100.0,
-                (float)PC_ACCOUNT(u).credit_limit / 100.0,
-                (float)PC_ACCOUNT(u).total_credit / 100.0,
-                PC_ACCOUNT(u).last4 == -1 ? "NONE" : "REGISTERED",
-                PC_ACCOUNT(u).discount,
-                PC_ACCOUNT(u).flatrate < (ubit32)now ? "Expired" : "Expires on ",
-                PC_ACCOUNT(u).flatrate < (ubit32)now ? " (none)\n\r" : pTmstr,
-                PC_ACCOUNT(u).cracks);
+        snprintf(buf,
+                 sizeof(buf),
+                 "Credit         : %5.2f\n\r"
+                 "Credit Limit   : %5.2f\n\r"
+                 "Credit to date : %5.2f\n\r"
+                 "Credit Card    : %s\n\r"
+                 "Discount       : %3d%%\n\r"
+                 "Flat Rate      : %s%s"
+                 "Crack counter  : %3d\n\r",
+                 (float)PC_ACCOUNT(u).credit / 100.0,
+                 (float)PC_ACCOUNT(u).credit_limit / 100.0,
+                 (float)PC_ACCOUNT(u).total_credit / 100.0,
+                 PC_ACCOUNT(u).last4 == -1 ? "NONE" : "REGISTERED",
+                 PC_ACCOUNT(u).discount,
+                 PC_ACCOUNT(u).flatrate < (ubit32)now ? "Expired" : "Expires on ",
+                 PC_ACCOUNT(u).flatrate < (ubit32)now ? " (none)\n\r" : pTmstr,
+                 PC_ACCOUNT(u).cracks);
     else
     {
         if (PC_ACCOUNT(u).total_credit > 0)
@@ -170,16 +172,17 @@ void account_global_stat(class unit_data *ch)
     if (!g_cServerConfig.m_bAccounting)
         return;
 
-    snprintf(buf, sizeof(buf),
-            "\n\rAccounting mode:\n\r"
-            "  Free from level : %d\n\r"
-            "  Currency Name   : %s\n\r"
-            "  Default limit   : %.2f\n\r"
-            "  Default start   : %.2f\n\r\n\r",
-            g_cAccountConfig.m_nFreeFromLevel,
-            g_cAccountConfig.m_pCoinName,
-            (float)g_cAccountConfig.m_nAccountLimit / 100.0,
-            (float)g_cAccountConfig.m_nAccountFree / 100.0);
+    snprintf(buf,
+             sizeof(buf),
+             "\n\rAccounting mode:\n\r"
+             "  Free from level : %d\n\r"
+             "  Currency Name   : %s\n\r"
+             "  Default limit   : %.2f\n\r"
+             "  Default start   : %.2f\n\r\n\r",
+             g_cAccountConfig.m_nFreeFromLevel,
+             g_cAccountConfig.m_pCoinName,
+             (float)g_cAccountConfig.m_nAccountLimit / 100.0,
+             (float)g_cAccountConfig.m_nAccountFree / 100.0);
 
     send_to_char(buf, ch);
 
@@ -232,16 +235,17 @@ void account_overdue(const class unit_data *ch)
             i = i / lcharge;
         }
 
-        snprintf(Buf, sizeof(Buf),
-                "Your account is overdue by %.2f %s with a "
-                "limit of %.2f %s.\n\r"
-                "The account will expire in %d hours and %d minutes.\n\r\n\r",
-                (float)-PC_ACCOUNT(ch).credit / 100.0,
-                g_cAccountConfig.m_pCoinName,
-                (float)PC_ACCOUNT(ch).credit_limit / 100.0,
-                g_cAccountConfig.m_pCoinName,
-                i,
-                j);
+        snprintf(Buf,
+                 sizeof(Buf),
+                 "Your account is overdue by %.2f %s with a "
+                 "limit of %.2f %s.\n\r"
+                 "The account will expire in %d hours and %d minutes.\n\r\n\r",
+                 (float)-PC_ACCOUNT(ch).credit / 100.0,
+                 g_cAccountConfig.m_pCoinName,
+                 (float)PC_ACCOUNT(ch).credit_limit / 100.0,
+                 g_cAccountConfig.m_pCoinName,
+                 i,
+                 j);
 
         send_to_char(Buf, ch);
         send_to_char(g_cAccountConfig.m_pOverdueMessage, ch);
@@ -340,20 +344,21 @@ static void account_calc(class unit_data *pc, struct tm *b, struct tm *e)
 #ifdef ACCOUNT_DEBUG
     {
         char buf[500];
-        snprintf(buf, sizeof(buf), 
-                "%d:%d.%d (%d) to %d:%d.%d (%d) = %d -- "
-                "charge %d / %.2f\n\r",
-                b->tm_hour,
-                b->tm_min,
-                b->tm_sec,
-                b->tm_wday,
-                t.tm_hour,
-                t.tm_min,
-                t.tm_sec,
-                e->tm_wday,
-                secs,
-                day_charge[b->tm_wday][bidx],
-                (((float)secs) * ((float)day_charge[b->tm_wday][bidx]) / 3600.0));
+        snprintf(buf,
+                 sizeof(buf),
+                 "%d:%d.%d (%d) to %d:%d.%d (%d) = %d -- "
+                 "charge %d / %.2f\n\r",
+                 b->tm_hour,
+                 b->tm_min,
+                 b->tm_sec,
+                 b->tm_wday,
+                 t.tm_hour,
+                 t.tm_min,
+                 t.tm_sec,
+                 e->tm_wday,
+                 secs,
+                 day_charge[b->tm_wday][bidx],
+                 (((float)secs) * ((float)day_charge[b->tm_wday][bidx]) / 3600.0));
         send_to_char(buf, pc);
     }
 #endif
@@ -444,7 +449,11 @@ static void account_status(const class unit_data *ch)
 
         if (PC_ACCOUNT(ch).credit >= 0.0)
         {
-            snprintf(Buf, sizeof(Buf), "You have a positive balance of %.2f %s.\n\r", PC_ACCOUNT(ch).credit / 100.0, g_cAccountConfig.m_pCoinName);
+            snprintf(Buf,
+                     sizeof(Buf),
+                     "You have a positive balance of %.2f %s.\n\r",
+                     PC_ACCOUNT(ch).credit / 100.0,
+                     g_cAccountConfig.m_pCoinName);
 
             send_to_char(Buf, ch);
         }
@@ -453,7 +462,11 @@ static void account_status(const class unit_data *ch)
 
     if (PC_ACCOUNT(ch).credit >= 0.0)
     {
-        snprintf(Buf, sizeof(Buf), "You have a positive balance of %.2f %s.\n\r", PC_ACCOUNT(ch).credit / 100.0, g_cAccountConfig.m_pCoinName);
+        snprintf(Buf,
+                 sizeof(Buf),
+                 "You have a positive balance of %.2f %s.\n\r",
+                 PC_ACCOUNT(ch).credit / 100.0,
+                 g_cAccountConfig.m_pCoinName);
 
         send_to_char(Buf, ch);
 
@@ -467,11 +480,12 @@ static void account_status(const class unit_data *ch)
 
             i = (int)(((float)PC_ACCOUNT(ch).credit_limit / (float)(lcharge)));
 
-            snprintf(Buf, sizeof(Buf), 
-                    "Your credit limit is %d hours (%.2f %s).\n\r",
-                    i,
-                    (float)PC_ACCOUNT(ch).credit_limit / 100.0,
-                    g_cAccountConfig.m_pCoinName);
+            snprintf(Buf,
+                     sizeof(Buf),
+                     "Your credit limit is %d hours (%.2f %s).\n\r",
+                     i,
+                     (float)PC_ACCOUNT(ch).credit_limit / 100.0,
+                     g_cAccountConfig.m_pCoinName);
             send_to_char(Buf, ch);
         }
     }
@@ -483,21 +497,26 @@ static void account_status(const class unit_data *ch)
             j = (int)(((float)(i % lcharge) / (float)((float)lcharge / 60.0)));
             i = i / lcharge;
 
-            snprintf(Buf, sizeof(Buf),
-                    "Your account is overdue by %.2f %s with a "
-                    "limit of %.2f %s.\n\r"
-                    "The account will expire in %d hours and %d minutes.\n\r",
-                    (float)-PC_ACCOUNT(ch).credit / 100.0,
-                    g_cAccountConfig.m_pCoinName,
-                    (float)PC_ACCOUNT(ch).credit_limit / 100.0,
-                    g_cAccountConfig.m_pCoinName,
-                    i,
-                    j);
+            snprintf(Buf,
+                     sizeof(Buf),
+                     "Your account is overdue by %.2f %s with a "
+                     "limit of %.2f %s.\n\r"
+                     "The account will expire in %d hours and %d minutes.\n\r",
+                     (float)-PC_ACCOUNT(ch).credit / 100.0,
+                     g_cAccountConfig.m_pCoinName,
+                     (float)PC_ACCOUNT(ch).credit_limit / 100.0,
+                     g_cAccountConfig.m_pCoinName,
+                     i,
+                     j);
             send_to_char(Buf, ch);
         }
         else
         {
-            snprintf(Buf, sizeof(Buf), "You have a negative balance of %.2f %s.\n\r", PC_ACCOUNT(ch).credit / 100.0, g_cAccountConfig.m_pCoinName);
+            snprintf(Buf,
+                     sizeof(Buf),
+                     "You have a negative balance of %.2f %s.\n\r",
+                     PC_ACCOUNT(ch).credit / 100.0,
+                     g_cAccountConfig.m_pCoinName);
         }
     }
 }
@@ -593,8 +612,6 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
     const char *operations[] = {"insert", "withdraw", "limit", "discount", "flatrate", NULL};
     int i, amount;
 
-    extern class file_index_type *letter_fi;
-
     if (!g_cServerConfig.m_bAccounting || !IS_PC(ch))
     {
         send_to_char("That command is not available.<br/>", ch);
@@ -688,8 +705,13 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
 
             account_local_stat(ch, u);
 
-            snprintf(Buf, sizeof(Buf), "%s inserted %.2f %s on your account.\n\r", UNIT_NAME(ch), (float)amount / 100.0, g_cAccountConfig.m_pCoinName);
-            note = read_unit(letter_fi);
+            snprintf(Buf,
+                     sizeof(Buf),
+                     "%s inserted %.2f %s on your account.\n\r",
+                     UNIT_NAME(ch),
+                     (float)amount / 100.0,
+                     g_cAccountConfig.m_pCoinName);
+            note = read_unit(g_letter_fi);
             UNIT_EXTRA(note).add("", Buf);
             unit_to_unit(note, u);
             break;

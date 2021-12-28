@@ -20,8 +20,6 @@
 #include "files.h"
 #include "comm.h"
 
-extern class file_index_type *slime_fi;
-
 static int slime_count = 0;
 class file_index_type **slime_list = NULL;
 

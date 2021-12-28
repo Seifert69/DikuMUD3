@@ -5,6 +5,7 @@
  $Revision: 2.2 $
  */
 
+#include "external_vars.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -28,7 +29,6 @@ int check_reboot(void)
     long tc;
     struct tm *t_info;
     char buf[200];
-    extern int mud_shutdown, mud_reboot;
     static int count = 12;
 
     tc = time(0);
@@ -38,11 +38,12 @@ int check_reboot(void)
         count -= 2;
         if (count > 0)
         {
-            snprintf(buf, sizeof(buf),
-                    "ATTENTION: %s will automaticly reboot "
-                    "in %d minutes.<br/>",
-                    g_cServerConfig.m_mudname,
-                    count);
+            snprintf(buf,
+                     sizeof(buf),
+                     "ATTENTION: %s will automaticly reboot "
+                     "in %d minutes.<br/>",
+                     g_cServerConfig.m_mudname,
+                     count);
             send_to_all(buf);
             return (1);
         }
@@ -50,7 +51,7 @@ int check_reboot(void)
         {
             slog(LOG_ALL, 0, "REBOOT:  ***Automatic Reboot***");
             send_to_all("Automatic reboot.  Come back in a little while.<br/>");
-            mud_shutdown = mud_reboot = 1;
+            g_mud_shutdown = g_mud_reboot = 1;
             return (0);
         }
     }
@@ -58,10 +59,11 @@ int check_reboot(void)
     if ((t_info->tm_hour + 1) == g_cServerConfig.m_hReboot && (t_info->tm_min > 49))
     {
         count -= 2;
-        snprintf(buf, sizeof(buf),
-                "ATTENTION: %s will automaticly reboot "
-                "in 10 minutes.<br/>",
-                g_cServerConfig.m_mudname);
+        snprintf(buf,
+                 sizeof(buf),
+                 "ATTENTION: %s will automaticly reboot "
+                 "in 10 minutes.<br/>",
+                 g_cServerConfig.m_mudname);
         send_to_all(buf);
         return (1);
     }

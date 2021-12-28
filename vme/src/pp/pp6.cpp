@@ -78,15 +78,15 @@ void dopragma(int aaa, int bbb, const char *ccc)
 
     if ((ltr_flag = (getnstoken(GT_STR) == LETTER)) != 0)
     {
-        if (strcmp(Token, "no") == EQUAL)
+        if (strcmp(g_Token, "no") == EQUAL)
         {
             no_flag = TRUE;
             ltr_flag = (getnstoken(GT_STR) == LETTER);
         }
-        if (ltr_flag && ((pp = predef(Token, pragtab)) != NULL))
+        if (ltr_flag && ((pp = predef(g_Token, g_pragtab)) != NULL))
         {
             /* If unconditionally do it or if emitting code */
-            if (pp->pp_ifif || (Ifstate == IFTRUE))
+            if (pp->pp_ifif || (g_Ifstate == IFTRUE))
             {
                 (void)(*(pp->pp_func))(pp->pp_arg, no_flag, pp->pp_name);
             }
@@ -97,13 +97,13 @@ void dopragma(int aaa, int bbb, const char *ccc)
      *	We do not understand: print original (or similar) #pragma to output
      *	if we are emitting code.
      */
-    if (Ifstate == IFTRUE)
+    if (g_Ifstate == IFTRUE)
     {
         puttoken("#pragma "); /* Write #pragma directive */
         if (no_flag)
             puttoken("no ");
-        puttoken(Token); /* Unrecognized token */
-        puttoken(" ");   /* Whitespace separating */
+        puttoken(g_Token); /* Unrecognized token */
+        puttoken(" ");     /* Whitespace separating */
         /*
          *	Expand macros...
          */
@@ -123,19 +123,19 @@ void dopragma(int aaa, int bbb, const char *ccc)
 
 void pragasm(int asmtype, int bbb, char *ccc)
 {
-    if (Do_asm == asmtype)
+    if (g_Do_asm == asmtype)
     {
-        if (Do_asm)
+        if (g_Do_asm)
             non_fatal("Already within \"#pragma asm\"", "");
         else
             non_fatal("Not within \"#pragma asm\"", "");
     }
     else
     {
-        pbstr(Do_asm ? "#endasm" : "#asm");     /* For 2nd pass */
-        pushback('\n');                         /* So scaneol finds the end */
-        Do_asm = asmtype;                       /* Set flag and let main line handle */
-        Macexpand = asmtype ? Asmexpand : TRUE; /* Set expand mode */
+        pbstr(g_Do_asm ? "#endasm" : "#asm");       /* For 2nd pass */
+        pushback('\n');                             /* So scaneol finds the end */
+        g_Do_asm = asmtype;                         /* Set flag and let main line handle */
+        g_Macexpand = asmtype ? g_Asmexpand : TRUE; /* Set expand mode */
     }
 }
 #endif /* (TARGET == T_QC) OR (TARGET == T_QCX) OR (TARGET == T_TCX) */
@@ -183,7 +183,10 @@ void pragmsg(int aaa, int bbb, const char *ccc)
 {
     char msgbuf[MESSAGEBUFSIZE];
 
-    printf("<%s> @ %u: MESSAGE: %s\n", Filestack[Filelevel >= 0 ? Filelevel : 0]->f_name, LLine, readline(msgbuf, MESSAGEBUFSIZE, GT_STR));
+    printf("<%s> @ %u: MESSAGE: %s\n",
+           g_Filestack[g_Filelevel >= 0 ? g_Filelevel : 0]->f_name,
+           g_LLine,
+           readline(msgbuf, MESSAGEBUFSIZE, GT_STR));
 }
 
 /************************************************************************/
@@ -205,21 +208,21 @@ void pragopt(int dummy, int no_flag, const char *name)
     char *toptr;
 
     if (strcmp(name, "arg_string") == EQUAL)
-        A_astring = !no_flag;
+        g_A_astring = !no_flag;
 #if (TARGET == T_QC) OR(TARGET == T_QCX) OR(TARGET == T_TCX)
     else if (strcmp(name, "asm_expand") == EQUAL)
-        Asmexpand = !no_flag;
+        g_Asmexpand = !no_flag;
 #endif /* (TARGET == T_QC) OR (TARGET == T_QCX) OR (TARGET == T_TCX) */
     else if (strcmp(name, "comment_recurse") == EQUAL)
-        A_crecurse = !no_flag;
+        g_A_crecurse = !no_flag;
     else if (strcmp(name, "eol_comment") == EQUAL)
-        A_eolcomment = !no_flag;
+        g_A_eolcomment = !no_flag;
     else if (strcmp(name, "macro_rescan") == EQUAL)
-        A_rescan = !no_flag;
+        g_A_rescan = !no_flag;
     else if (strcmp(name, "macro_stack") == EQUAL)
-        A_stack = !no_flag;
+        g_A_stack = !no_flag;
     else if (strcmp(name, "trigraph") == EQUAL)
-        A_trigraph = !no_flag;
+        g_A_trigraph = !no_flag;
     /*
      *	We need to keep track of the current setting of the options via
      *	the appropriate "__<uppercase option name>__" macro.  First we

@@ -66,7 +66,7 @@ private:
     char cmd[MAX_INPUT_LENGTH + 1]; // A combat command
 };
 
-extern class cCombatList CombatList;
+extern class cCombatList g_CombatList;
 
 void set_fighting(class unit_data *ch, class unit_data *vict, int bMelee = FALSE);
 void add_fighting(class unit_data *ch, class unit_data *vict, int bMelee = FALSE);

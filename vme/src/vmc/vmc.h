@@ -94,4 +94,10 @@ void process_unit(class unit_data *u);
 /* You betcha... */
 #define UNIT_IDENT_ASSIGN(unit, val) ((unit)->gnext = (class unit_data *)(val))
 
+extern char **g_tmplnames;
+extern const char *g_error_zone_name;
+extern int g_errcon;
+extern int g_fatal_warnings;
+extern int g_verbose;
+
 #endif /* _MUD_VMC_H */

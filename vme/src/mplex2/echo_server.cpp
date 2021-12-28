@@ -137,7 +137,7 @@ void runechoserver(void)
 
         // Listen on port
         echo_server.set_reuse_addr(true);
-        echo_server.listen(mplex_arg.nMotherPort);
+        echo_server.listen(g_mplex_arg.nMotherPort);
 
         // Start the server accept loop
         echo_server.start_accept();
