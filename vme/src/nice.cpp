@@ -5,6 +5,7 @@
  $Revision: 2.2 $
  */
 
+#include "external_vars.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -28,7 +29,6 @@ int check_reboot(void)
     long tc;
     struct tm *t_info;
     char buf[200];
-    extern int mud_shutdown, mud_reboot;
     static int count = 12;
 
     tc = time(0);
@@ -51,7 +51,7 @@ int check_reboot(void)
         {
             slog(LOG_ALL, 0, "REBOOT:  ***Automatic Reboot***");
             send_to_all("Automatic reboot.  Come back in a little while.<br/>");
-            mud_shutdown = mud_reboot = 1;
+            g_mud_shutdown = g_mud_reboot = 1;
             return (0);
         }
     }

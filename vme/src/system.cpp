@@ -4,7 +4,7 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.8 $
  */
-
+#include "external_vars.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,11 +41,6 @@
 #include "dilrun.h"
 #include "hookmud.h"
 
-/* extern vars */
-extern class descriptor_data *descriptor_list;
-extern class descriptor_data *next_to_process;
-extern int possible_saves;
-
 void MplexSendSetup(class descriptor_data *d)
 {
     assert(d);
@@ -65,8 +60,6 @@ void init_char(class unit_data *ch)
     int new_player_id(void);
 
     int i;
-
-    extern sbit32 player_id;
 
     int required_xp(int level);
 
@@ -112,9 +105,9 @@ void init_char(class unit_data *ch)
     PC_SKILL_POINTS(ch) = 0;
 
     /* *** if this is our first player --- he be God *** */
-    if (player_id == -7)
+    if (g_player_id == -7)
     {
-        player_id = 1;
+        g_player_id = 1;
         PC_ID(ch) = new_player_id();
     }
 
@@ -138,8 +131,8 @@ void init_char(class unit_data *ch)
     set_title(ch);
 }
 
-int no_connections = 0;     /* No of used descriptors                    */
-int max_no_connections = 0; /* Statistics                                */
+int g_no_connections = 0;     /* No of used descriptors                    */
+int g_max_no_connections = 0; /* Statistics                                */
 
 descriptor_data::descriptor_data(cMultiHook *pe)
 {
@@ -147,9 +140,9 @@ descriptor_data::descriptor_data(cMultiHook *pe)
 
     void nanny_get_name(class descriptor_data * d, char *arg);
 
-    no_connections++;
-    if (no_connections > max_no_connections)
-        max_no_connections = no_connections;
+    g_no_connections++;
+    if (g_no_connections > g_max_no_connections)
+        g_max_no_connections = g_no_connections;
 
     /* init desc data */
     multi = pe;
@@ -182,8 +175,8 @@ descriptor_data::descriptor_data(cMultiHook *pe)
     CHAR_DESCRIPTOR(character) = this;
 
     /* prepend to list */
-    next = descriptor_list;
-    descriptor_list = this;
+    next = g_descriptor_list;
+    g_descriptor_list = this;
 }
 
 void descriptor_data::RemoveBBS(void)
@@ -273,7 +266,7 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
         /* Important that we set to NULL before calling extract,
            otherwise we just go to the menu... ... ... */
         if (PC_IS_UNSAVED(d->character))
-            possible_saves--;
+            g_possible_saves--;
         CHAR_DESCRIPTOR(d->character) = NULL;
         extract_unit(d->character);
         d->character = NULL;
@@ -331,7 +324,7 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
                 {
                     CHAR_DESCRIPTOR(d->character) = NULL; // Prevent counting down players, we did above
                     extract_unit(d->character);           /* We extract guests */
-                    possible_saves--;
+                    g_possible_saves--;
                 }
             }
         }
@@ -344,17 +337,17 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
     if (bSendClose && d->multi->IsHooked())
         protocol_send_close(d->multi, d->id);
 
-    no_connections--;
+    g_no_connections--;
 
-    if (next_to_process == d) /* to avoid crashing the process loop */
-        next_to_process = next_to_process->next;
+    if (g_next_to_process == d) /* to avoid crashing the process loop */
+        g_next_to_process = g_next_to_process->next;
 
-    if (d == descriptor_list) /* this is the head of the list */
-        descriptor_list = descriptor_list->next;
+    if (d == g_descriptor_list) /* this is the head of the list */
+        g_descriptor_list = g_descriptor_list->next;
     else /* This is somewhere inside the list */
     {
         /* Locate the previous element */
-        for (tmp = descriptor_list; tmp && (tmp->next != d); tmp = tmp->next)
+        for (tmp = g_descriptor_list; tmp && (tmp->next != d); tmp = tmp->next)
             ;
         tmp->next = d->next;
     }

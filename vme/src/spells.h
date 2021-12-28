@@ -57,8 +57,8 @@ struct spell_info_type
 };
 
 /* Spell externs */
-extern struct spell_info_type spell_info[SPL_TREE_MAX];
-extern struct requirement_type spl_requirement[];
+extern struct spell_info_type g_spell_info[SPL_TREE_MAX];
+extern struct requirement_type g_spl_requirement[];
 
 #define SPL_MAG_REQ(spell) (spl_requirement[spell].abilities[ABIL_MAG])
 

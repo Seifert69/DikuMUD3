@@ -35,11 +35,11 @@
 #define MEMBLOCK (200000)
 #define BUFS 30
 
-int sunlight = 0;
-const sbit8 time_light[4] = {-1, 0, 1, 0};
+int g_sunlight = 0;
+const sbit8 g_time_light[4] = {-1, 0, 1, 0};
 
-struct zone_info zone;
-char cur_filename[256], top_filename[256];
+struct zone_info g_zone;
+char g_cur_filename[256], top_filename[256];
 
 void boot_money(char *moneyfile);
 void fix(char *file);
@@ -53,13 +53,10 @@ void dil_free_frame(struct dilframe *frame);
 void dil_free_prg(struct dilprg *prg, int dil = FALSE);
 void write_dot(char *prefix);
 
-int make = 0,           /* cmp mod-times of files before compiling */
-    nooutput = 0,       /* suppress output */
-    verbose = 0,        /* be talkative */
-    fatal_warnings = 0; /* allow warnings */
-
-extern int errcon;
-extern char *error_zone_name;
+int make = 0,             /* cmp mod-times of files before compiling */
+    g_nooutput = 0,       /* suppress output */
+    g_verbose = 0,        /* be talkative */
+    g_fatal_warnings = 0; /* allow warnings */
 
 char **ident_names = NULL; /* Used to check unique ident */
 
@@ -126,16 +123,16 @@ int main(int argc, char **argv)
                     make = 1;
                     break;
                 case 's':
-                    nooutput = 1;
+                    g_nooutput = 1;
                     break;
                 case 'v':
-                    verbose = 1;
+                    g_verbose = 1;
                     break;
                 case 'p':
                     pponly = 1;
                     break;
                 case 'l':
-                    fatal_warnings = 1;
+                    g_fatal_warnings = 1;
                     break;
                 case 'd':
                     if (*(argv[pos] + 2))
@@ -222,14 +219,14 @@ void fix(char *file)
     else
         ++p;
     strcpy(filename, p);
-    strcpy(cur_filename, file);
+    strcpy(g_cur_filename, file);
     strcpy(top_filename, file);
     /* read & write */
-    fprintf(stderr, "Compiling '%s'\n", cur_filename);
+    fprintf(stderr, "Compiling '%s'\n", g_cur_filename);
     zone_reset(filename);
     if (pp_main(file) > 0)
     {
-        fprintf(stderr, "Fatal error compiling in preprocessor stage in file '%s'.\n", cur_filename);
+        fprintf(stderr, "Fatal error compiling in preprocessor stage in file '%s'.\n", g_cur_filename);
         if (sOutput)
             FREE(sOutput);
         exit(1);
@@ -245,12 +242,12 @@ void fix(char *file)
     }
     if (result)
     {
-        fprintf(stderr, "Grave errors in file '%s'.\n", cur_filename);
+        fprintf(stderr, "Grave errors in file '%s'.\n", g_cur_filename);
         exit(1);
     }
-    else if (errcon)
+    else if (g_errcon)
     {
-        if (fatal_warnings)
+        if (g_fatal_warnings)
             fprintf(stderr, "Warnings have been treated as fatal errors.\n");
 
         fprintf(stderr, "Compilation aborted.\n");
@@ -263,28 +260,27 @@ void fix(char *file)
 void zone_reset(char *default_name)
 {
     mem_reset();
-    zone.z_rooms = 0;
-    zone.z_mobiles = 0;
-    zone.z_objects = 0;
-    zone.z_table = 0;
-    zone.z_zone.name = default_name;
-    zone.z_zone.lifespan = 60;
-    zone.z_zone.reset_mode = 0;
-    zone.z_zone.creators = 0;
-    zone.z_zone.title = 0;
-    zone.z_zone.notes = 0;
-    zone.z_zone.help = 0;
-    zone.z_zone.weather = 1000;
-    zone.z_tmpl = NULL;
+    g_zone.z_rooms = 0;
+    g_zone.z_mobiles = 0;
+    g_zone.z_objects = 0;
+    g_zone.z_table = 0;
+    g_zone.z_zone.name = default_name;
+    g_zone.z_zone.lifespan = 60;
+    g_zone.z_zone.reset_mode = 0;
+    g_zone.z_zone.creators = 0;
+    g_zone.z_zone.title = 0;
+    g_zone.z_zone.notes = 0;
+    g_zone.z_zone.help = 0;
+    g_zone.z_zone.weather = 1000;
+    g_zone.z_tmpl = NULL;
 }
 
 void mem_init()
 {
-    extern char **tmplnames;
     int i;
 
     ident_names = NULL;
-    tmplnames = create_namelist();
+    g_tmplnames = create_namelist();
     CREATE(mm.bufs[0], char, MEMBLOCK);
     mm.buf = 0;
     for (i = 1; i <= BUFS; i++)
@@ -435,23 +431,23 @@ void dump_zone(char *prefix)
     /* Quinn, I do this to get all the sematic errors and info */
     /* appear when nooutput = TRUE - it didn't before!         */
 
-    error_zone_name = prefix;
+    g_error_zone_name = prefix;
 
     /* Purge the error file */
-    sprintf(filename, "%s.err", error_zone_name);
+    sprintf(filename, "%s.err", g_error_zone_name);
     fl = fopen(filename, "w");
     assert(fl);
     fclose(fl);
 
-    if (!is_in(zone.z_zone.weather, 960, 1040))
+    if (!is_in(g_zone.z_zone.weather, 960, 1040))
     {
         dmc_error(TRUE,
                   "Error: Zone weather pressure of %d is outside the "
                   "valid range of [960..1040]. (Latter bad, former best).",
-                  zone.z_zone.weather);
+                  g_zone.z_zone.weather);
     }
 
-    for (u = zone.z_rooms; u; u = u->next)
+    for (u = g_zone.z_rooms; u; u = u->next)
     {
         if (IS_ROOM(u))
             no_rooms++;
@@ -468,25 +464,25 @@ void dump_zone(char *prefix)
                   no_rooms);
     }
 
-    for (u = zone.z_objects; u; u = u->next)
+    for (u = g_zone.z_objects; u; u = u->next)
     {
         check_unique_ident(u);
         process_unit(u);
     }
 
-    for (u = zone.z_mobiles; u; u = u->next)
+    for (u = g_zone.z_mobiles; u; u = u->next)
     {
         check_unique_ident(u);
         process_unit(u);
     }
 
-    if (errcon)
+    if (g_errcon)
     {
         dmc_error(FALSE, "Fatal errors in zone.");
         exit(1);
     }
 
-    if (nooutput)
+    if (g_nooutput)
         return;
     sprintf(filename, "%s.%s", prefix, OUTPUT_WSUFFIX);
     if (!(fl = fopen(filename, "w")))
@@ -500,37 +496,37 @@ void dump_zone(char *prefix)
     write_unit(fl, zone.z_rooms, UNIT_IDENT(zone.z_rooms));
     exit(10);
     #endif
-    fwrite(zone.z_zone.name, sizeof(char), strlen(zone.z_zone.name) + 1, fl);
-    fwrite(&zone.z_zone.weather, sizeof(int), 1, fl);
+    fwrite(g_zone.z_zone.name, sizeof(char), strlen(g_zone.z_zone.name) + 1, fl);
+    fwrite(&g_zone.z_zone.weather, sizeof(int), 1, fl);
     /* More data inserted here */
-    if (zone.z_zone.notes)
-        fwrite(zone.z_zone.notes, sizeof(char), strlen(zone.z_zone.notes) + 1, fl);
+    if (g_zone.z_zone.notes)
+        fwrite(g_zone.z_zone.notes, sizeof(char), strlen(g_zone.z_zone.notes) + 1, fl);
     else
         fwrite("", sizeof(char), 1, fl);
 
-    if (zone.z_zone.help)
-        fwrite(zone.z_zone.help, sizeof(char), strlen(zone.z_zone.help) + 1, fl);
+    if (g_zone.z_zone.help)
+        fwrite(g_zone.z_zone.help, sizeof(char), strlen(g_zone.z_zone.help) + 1, fl);
     else
         fwrite("No help for this zone.", sizeof(char), 23, fl);
-    if (zone.z_zone.creators)
+    if (g_zone.z_zone.creators)
     {
         // MS2020 for (creators = zone.z_zone.creators; (ubit32)*creators; creators++)
-        for (creators = zone.z_zone.creators; *creators; creators++)
+        for (creators = g_zone.z_zone.creators; *creators; creators++)
         {
             fwrite(*creators, sizeof(char), strlen(*creators) + 1, fl);
         }
     }
     fwrite("", sizeof(char), 1, fl);
 
-    if (zone.z_zone.title)
+    if (g_zone.z_zone.title)
     {
-        fwrite(zone.z_zone.title, sizeof(char), strlen(zone.z_zone.title) + 1, fl);
+        fwrite(g_zone.z_zone.title, sizeof(char), strlen(g_zone.z_zone.title) + 1, fl);
     }
     else
         fwrite("", sizeof(char), 1, fl);
 
     /* write DIL templates */
-    for (tmpl = zone.z_tmpl; tmpl; tmpl = tmpl->vmcnext)
+    for (tmpl = g_zone.z_tmpl; tmpl; tmpl = tmpl->vmcnext)
         write_diltemplate(fl, tmpl);
 
     /* end of DIL templates marker */
@@ -539,12 +535,12 @@ void dump_zone(char *prefix)
         error(HERE, "Failed to fwrite() end of DIL templates");
 
     write_dot(prefix);
-    for (u = zone.z_rooms; u; u = u->next)
+    for (u = g_zone.z_rooms; u; u = u->next)
     {
         write_unit(fl, u, UNIT_IDENT(u));
     }
 
-    u = zone.z_rooms;
+    u = g_zone.z_rooms;
     while (u)
     {
         v = u->next;
@@ -552,10 +548,10 @@ void dump_zone(char *prefix)
         u = v;
     }
 
-    for (u = zone.z_objects; u; u = u->next)
+    for (u = g_zone.z_objects; u; u = u->next)
         write_unit(fl, u, UNIT_IDENT(u));
 
-    u = zone.z_objects;
+    u = g_zone.z_objects;
     while (u)
     {
         v = u->next;
@@ -563,10 +559,10 @@ void dump_zone(char *prefix)
         u = v;
     }
 
-    for (u = zone.z_mobiles; u; u = u->next)
+    for (u = g_zone.z_mobiles; u; u = u->next)
         write_unit(fl, u, UNIT_IDENT(u));
 
-    u = zone.z_mobiles;
+    u = g_zone.z_mobiles;
     while (u)
     {
         v = u->next;
@@ -574,7 +570,7 @@ void dump_zone(char *prefix)
         u = v;
     }
 
-    tmpl = zone.z_tmpl;
+    tmpl = g_zone.z_tmpl;
     while (tmpl)
     {
         ut = tmpl->vmcnext;
@@ -591,10 +587,10 @@ void dump_zone(char *prefix)
         perror(filename);
         exit(1);
     }
-    fwrite(&zone.z_zone.lifespan, sizeof(unsigned short), 1, fl);
-    fwrite(&zone.z_zone.reset_mode, sizeof(unsigned char), 1, fl);
+    fwrite(&g_zone.z_zone.lifespan, sizeof(unsigned short), 1, fl);
+    fwrite(&g_zone.z_zone.reset_mode, sizeof(unsigned char), 1, fl);
 
-    for (c = zone.z_table; c; c = c->next)
+    for (c = g_zone.z_table; c; c = c->next)
         write_resetcom(fl, c);
 
     fwrite("VMC", sizeof(char), 3, fl);
@@ -741,14 +737,14 @@ void graph_sc(char *prefix)
 {
     class unit_data *u;
     int x;
-    for (x = 0, u = zone.z_rooms; u; u = u->next, x++)
+    for (x = 0, u = g_zone.z_rooms; u; u = u->next, x++)
         if (IS_ROOM(u))
             ROOM_NUM(u) = x;
 
     typedef boost::adjacency_list<> ZoneGraph;
 
     ZoneGraph G(x);
-    for (u = zone.z_rooms; u; u = u->next)
+    for (u = g_zone.z_rooms; u; u = u->next)
         if (IS_ROOM(u))
         {
             add_edge(ROOM_NUM(u), 0, G);
@@ -768,19 +764,19 @@ void write_dot(char *prefix)
         exit(1);
     }
 
-    dotfl << "subgraph \"cluster@" << zone.z_zone.name << "\" {" << std::endl << "  label=\"" << zone.z_zone.name << "\";" << std::endl;
+    dotfl << "subgraph \"cluster@" << g_zone.z_zone.name << "\" {" << std::endl << "  label=\"" << g_zone.z_zone.name << "\";" << std::endl;
 
     dotfl << std::endl << "  /* Room Labels */" << std::endl;
 
-    for (u = zone.z_rooms; u; u = u->next)
+    for (u = g_zone.z_rooms; u; u = u->next)
     {
         if (IS_ROOM(u))
-            dotfl << "\"" << UNIT_IDENT(u) << "@" << zone.z_zone.name << "\" "
+            dotfl << "\"" << UNIT_IDENT(u) << "@" << g_zone.z_zone.name << "\" "
                   << "[label=\"" << UNIT_IDENT(u) << "\"];" << std::endl;
     }
 
     dotfl << std::endl << "/* Room Interconnects */" << std::endl;
-    for (u = zone.z_rooms; u; u = u->next)
+    for (u = g_zone.z_rooms; u; u = u->next)
     {
         if (IS_ROOM(u))
             for (int i = 0; i < MAX_EXIT; i++)
@@ -798,13 +794,13 @@ void write_dot(char *prefix)
                         c2++;
                     }
 
-                    if (strcmp(c1, zone.z_zone.name) == 0)
+                    if (strcmp(c1, g_zone.z_zone.name) == 0)
                     {
-                        dotfl << "\"" << UNIT_IDENT(u) << "@" << zone.z_zone.name << "\"->\"" << c2 << "@" << c1 << "\";" << std::endl;
+                        dotfl << "\"" << UNIT_IDENT(u) << "@" << g_zone.z_zone.name << "\"->\"" << c2 << "@" << c1 << "\";" << std::endl;
                     }
                     else
                     {
-                        interconnect << "\"" << UNIT_IDENT(u) << "@" << zone.z_zone.name << "\"->\"" << c2 << "@" << c1 << "\";"
+                        interconnect << "\"" << UNIT_IDENT(u) << "@" << g_zone.z_zone.name << "\"->\"" << c2 << "@" << c1 << "\";"
                                      << std::endl;
                     }
                 }
@@ -812,7 +808,7 @@ void write_dot(char *prefix)
     }
     dotfl << "}" << std::endl;
     dotfl << std::endl << "/*  Zone Interconnect Points */" << std::endl << std::endl;
-    interconnect << std::endl << "/*  End of subgraph " << zone.z_zone.name << " */" << std::endl << std::ends;
+    interconnect << std::endl << "/*  End of subgraph " << g_zone.z_zone.name << " */" << std::endl << std::ends;
     dotfl << interconnect.str() << std::endl;
     dotfl.close();
 }

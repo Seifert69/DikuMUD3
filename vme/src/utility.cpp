@@ -21,7 +21,7 @@
 #include "interpreter.h"
 #include "db_file.h"
 
-FILE *log_file_fd = stderr;
+FILE *g_log_file_fd = stderr;
 
 /* ----------------------------------------------------------------- */
 
@@ -90,7 +90,7 @@ int dice(int number, int size)
     return sum;
 }
 
-class log_buffer log_buf[MAXLOG];
+class log_buffer g_log_buf[MAXLOG];
 
 /* writes a string to the log */
 void slog(enum log_level level, ubit8 wizinv_level, const char *fmt, ...)
@@ -130,24 +130,24 @@ void slog(enum log_level level, ubit8 wizinv_level, const char *fmt, ...)
 
     if (log_size > 40000000) /* 4 meg is indeed a very big logfile! */
     {
-        fprintf(log_file_fd, "Log-file insanely big!  Going down.\n");
+        fprintf(g_log_file_fd, "Log-file insanely big!  Going down.\n");
         abort(); // Dont use error, it calls syslog!!! *grin*
     }
 
-    fprintf(log_file_fd, "%s :: %s\n", tmstr, buf);
-    fflush(log_file_fd);
+    fprintf(g_log_file_fd, "%s :: %s\n", tmstr, buf);
+    fflush(g_log_file_fd);
 
     if (level > LOG_OFF)
     {
-        log_buf[idx].level = level;
-        log_buf[idx].wizinv_level = wizinv_level;
-        memcpy(log_buf[idx].str, buf, sizeof(log_buf[idx].str) - 1);
-        log_buf[idx].str[sizeof(log_buf[idx].str) - 1] = 0;
+        g_log_buf[idx].level = level;
+        g_log_buf[idx].wizinv_level = wizinv_level;
+        memcpy(g_log_buf[idx].str, buf, sizeof(g_log_buf[idx].str) - 1);
+        g_log_buf[idx].str[sizeof(g_log_buf[idx].str) - 1] = 0;
 
         idx++;
         idx %= MAXLOG; /* idx = 1 .. MAXLOG-1 */
 
-        log_buf[idx].str[0] = 0;
+        g_log_buf[idx].str[0] = 0;
     }
 }
 

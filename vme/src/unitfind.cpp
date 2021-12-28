@@ -169,7 +169,7 @@ class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
 
     if (sflags == FIND_UNIT_WORLD)
     {
-        for (u = unit_list; u; u = u->gnext)
+        for (u = g_unit_list; u; u = u->gnext)
             if ((u != ref) && findcheck(u, pset, tflags))
             {
                 count++;
@@ -188,7 +188,7 @@ class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
         else
             z = unit_zone(ref);
 
-        for (u = unit_list; u; u = u->gnext)
+        for (u = g_unit_list; u; u = u->gnext)
             if ((u != ref) && ((IS_PC(u) && unit_zone(u) == z) || (UNIT_FI_ZONE(u) == z)) && findcheck(u, pset, tflags))
             {
                 count++;
@@ -289,7 +289,7 @@ class unit_data *find_unit_general(const class unit_data *viewer,
             ;
         name[i] = 0;
 
-        if (search_block(name, fillwords, TRUE) < 0)
+        if (search_block(name, g_fillwords, TRUE) < 0)
             is_fillword = FALSE;
         else
             c += i;
@@ -455,7 +455,7 @@ class unit_data *find_unit_general(const class unit_data *viewer,
         }
 
         if (IS_SET(bitvectorm, FIND_UNIT_ZONE))
-            for (u = unit_list; u; u = u->gnext)
+            for (u = g_unit_list; u; u = u->gnext)
                 if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, u) &&
                     unit_zone(u) == unit_zone(ch) && (ct - c >= best_len))
                 {
@@ -470,7 +470,7 @@ class unit_data *find_unit_general(const class unit_data *viewer,
                 }
 
         if (IS_SET(bitvectorm, FIND_UNIT_WORLD))
-            for (u = unit_list; u; u = u->gnext)
+            for (u = g_unit_list; u; u = u->gnext)
                 if (IS_SET(type, UNIT_TYPE(u)) && (ct = UNIT_NAMES(u).IsNameRaw(c)) && CHAR_CAN_SEE(viewer, u) && (ct - c >= best_len))
                 {
                     if (ct - c > best_len)
@@ -610,7 +610,7 @@ class unit_data *file_index_type::find_symbolic_instance_ref(class unit_data *re
 
     if (IS_SET(bitvector, FIND_UNIT_ZONE))
     {
-        /* for (u = unit_list; u; u = u->gnext)
+        /* for (u = g_unit_list; u; u = u->gnext)
             if ((unit_zone(u) == this->zone) && (UNIT_FILE_INDEX(u) == this))
                 return u;*/
 
@@ -624,7 +624,7 @@ class unit_data *file_index_type::find_symbolic_instance_ref(class unit_data *re
 
     if (IS_SET(bitvector, FIND_UNIT_WORLD))
     {
-        /* for (u = unit_list; u; u = u->gnext)
+        /* for (u = g_unit_list; u; u = u->gnext)
             if (UNIT_FILE_INDEX(u) == this)
                 return u;*/
 
@@ -642,7 +642,7 @@ class unit_data *file_index_type::find_symbolic_instance(void)
     assert(this);
 
     /*
-    for (class unit_data *u = unit_list; u; u = u->gnext)
+    for (class unit_data *u = g_unit_list; u; u = u->gnext)
     {
         if (UNIT_FILE_INDEX(u) == this)
         {
@@ -701,22 +701,22 @@ class unit_data *find_symbolic(const char *zone, const char *name)
         return NULL;
 }
 
-struct unit_vector_data unit_vector;
+struct unit_vector_data g_unit_vector;
 
-/* Init the unit_vector for FIRST use */
+/* Init the g_unit_vector for FIRST use */
 static void init_unit_vector(void)
 {
-    unit_vector.size = 10;
+    g_unit_vector.size = 10;
 
-    CREATE(unit_vector.units, class unit_data *, unit_vector.size);
+    CREATE(g_unit_vector.units, class unit_data *, g_unit_vector.size);
 }
 
-/* If things get too cramped, double size of unit_vector */
+/* If things get too cramped, double size of g_unit_vector */
 static void double_unit_vector(void)
 {
-    unit_vector.size *= 2;
+    g_unit_vector.size *= 2;
 
-    RECREATE(unit_vector.units, class unit_data *, unit_vector.size);
+    RECREATE(g_unit_vector.units, class unit_data *, g_unit_vector.size);
 }
 
 /* Scan the chars surroundings and all transparent surroundings for all  */
@@ -727,17 +727,17 @@ void scan4_unit_room(class unit_data *room, ubit8 type)
 {
     class unit_data *u, *uu;
 
-    unit_vector.top = 0;
+    g_unit_vector.top = 0;
 
-    if (unit_vector.size == 0)
+    if (g_unit_vector.size == 0)
         init_unit_vector();
 
     for (u = UNIT_CONTAINS(room); u; u = u->next)
     {
         if (IS_SET(UNIT_TYPE(u), type))
         {
-            unit_vector.units[unit_vector.top++] = u;
-            if (unit_vector.size == unit_vector.top)
+            g_unit_vector.units[g_unit_vector.top++] = u;
+            if (g_unit_vector.size == g_unit_vector.top)
                 double_unit_vector();
         }
 
@@ -746,8 +746,8 @@ void scan4_unit_room(class unit_data *room, ubit8 type)
             for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
                 if (IS_SET(UNIT_TYPE(uu), type))
                 {
-                    unit_vector.units[unit_vector.top++] = uu;
-                    if (unit_vector.size == unit_vector.top)
+                    g_unit_vector.units[g_unit_vector.top++] = uu;
+                    if (g_unit_vector.size == g_unit_vector.top)
                         double_unit_vector();
                 }
     }
@@ -757,7 +757,7 @@ void scan4_unit_room(class unit_data *room, ubit8 type)
 /*     check. Now assigns 'uu' instead                                 */
 
 /* Scan the chars surroundings and all transparent surroundsings for all */
-/* units of types which match 'flags'. Updates the 'unit_vector' for     */
+/* units of types which match 'flags'. Updates the 'g_unit_vector' for     */
 /* use in local routines.                                                */
 void scan4_unit(class unit_data *ch, ubit8 type)
 {
@@ -769,17 +769,17 @@ void scan4_unit(class unit_data *ch, ubit8 type)
         return;
     }
 
-    unit_vector.top = 0;
+    g_unit_vector.top = 0;
 
-    if (unit_vector.size == 0)
+    if (g_unit_vector.size == 0)
         init_unit_vector();
 
     for (u = UNIT_CONTAINS(UNIT_IN(ch)); u; u = u->next)
     {
         if (u != ch && IS_SET(UNIT_TYPE(u), type))
         {
-            unit_vector.units[unit_vector.top++] = u;
-            if (unit_vector.size == unit_vector.top)
+            g_unit_vector.units[g_unit_vector.top++] = u;
+            if (g_unit_vector.size == g_unit_vector.top)
                 double_unit_vector();
         }
 
@@ -788,8 +788,8 @@ void scan4_unit(class unit_data *ch, ubit8 type)
             for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
                 if (IS_SET(UNIT_TYPE(uu), type))
                 {
-                    unit_vector.units[unit_vector.top++] = uu;
-                    if (unit_vector.size == unit_vector.top)
+                    g_unit_vector.units[g_unit_vector.top++] = uu;
+                    if (g_unit_vector.size == g_unit_vector.top)
                         double_unit_vector();
                 }
     }
@@ -800,8 +800,8 @@ void scan4_unit(class unit_data *ch, ubit8 type)
         {
             if (IS_SET(UNIT_TYPE(u), type))
             {
-                unit_vector.units[unit_vector.top++] = u;
-                if (unit_vector.size == unit_vector.top)
+                g_unit_vector.units[g_unit_vector.top++] = u;
+                if (g_unit_vector.size == g_unit_vector.top)
                     double_unit_vector();
             }
 
@@ -810,8 +810,8 @@ void scan4_unit(class unit_data *ch, ubit8 type)
                 for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
                     if (IS_SET(UNIT_TYPE(uu), type))
                     {
-                        unit_vector.units[unit_vector.top++] = uu; /* MS FIX */
-                        if (unit_vector.size == unit_vector.top)
+                        g_unit_vector.units[g_unit_vector.top++] = uu; /* MS FIX */
+                        if (g_unit_vector.size == g_unit_vector.top)
                             double_unit_vector();
                     }
         }

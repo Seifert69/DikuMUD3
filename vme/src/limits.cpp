@@ -26,8 +26,6 @@
 #include "dbfind.h"
 #include "dilrun.h"
 
-extern class unit_data *unit_list;
-
 /* External procedures */
 
 int required_xp(int level);               /* common.c   */
@@ -422,7 +420,7 @@ void set_title(class unit_data *ch)
     else if (CHAR_LEVEL(ch) <= START_LEVEL)
     {
         assert(CHAR_RACE(ch) < PC_RACE_MAX);
-        snprintf(buf, sizeof(buf), "the %s", pc_races[CHAR_RACE(ch)]);
+        snprintf(buf, sizeof(buf), "the %s", g_pc_races[CHAR_RACE(ch)]);
         UNIT_TITLE(ch) = (buf);
     }
     else if (IS_IMMORTAL(ch))
@@ -538,7 +536,7 @@ void point_update(void)
     class unit_data *u, *next_dude;
 
     //
-    for (u = unit_list; u; u = next_dude)
+    for (u = g_unit_list; u; u = next_dude)
     {
         next_dude = u->gnext;
         if (IS_NPC(u))

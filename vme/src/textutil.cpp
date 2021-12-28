@@ -16,7 +16,7 @@
 #include "textutil.h"
 #include "common.h"
 
-const char *fillwords[] = {"a", "an", "at", "from", "in", "on", "of", "the", "to", "with", "into", NULL};
+const char *g_fillwords[] = {"a", "an", "at", "from", "in", "on", "of", "the", "to", "with", "into", NULL};
 
 /*  From char * input stream 'str' copy characters into 'buf' until
  *  end of string or newline. Returns position of 'str' after copied
@@ -401,7 +401,7 @@ int search_block_length(const char *oarg, int length, const char **list, ubit1 e
 
 int fill_word(const char *argument)
 {
-    return (search_block(argument, fillwords, TRUE) >= 0);
+    return (search_block(argument, g_fillwords, TRUE) >= 0);
 }
 
 /* Exactly as str_next-word, except it wont change the case */
