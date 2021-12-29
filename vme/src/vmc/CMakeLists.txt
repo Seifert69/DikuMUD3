@@ -67,6 +67,12 @@ add_library(vmc_objs STATIC
         ${FLEX_vmclex_OUTPUTS}
         )
 
+# Add report files to clean target
+set_target_properties(vmc_objs
+        PROPERTIES
+            ADDITIONAL_CLEAN_FILES "${CMAKE_CURRENT_BINARY_DIR}/tmp_vmcpar.output;${CMAKE_CURRENT_BINARY_DIR}/tmp_dilpar.output;"
+        )
+
 #Add all other project sources to a library file so we can link with subject projects and test suites
 add_library(vmc_dep_objs STATIC ${VMC_DEP_SRCS})
 
