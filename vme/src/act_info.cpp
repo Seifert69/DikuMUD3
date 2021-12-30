@@ -24,17 +24,13 @@
 #include "affect.h"
 #include "utility.h"
 #include "trie.h"
+#include "external_vars.h"
 #include "textutil.h"
 #include "money.h"
 #include "protocol.h"
 #include "constants.h"
 #include "common.h"
 #include "guild.h"
-
-/* extern variables */
-
-extern class descriptor_data *descriptor_list;
-extern class unit_data *unit_list;
 
 /* also used in "corpses" wizard-command */
 char *in_string(class unit_data *ch, class unit_data *u)
@@ -64,7 +60,7 @@ void player_where(class unit_data *ch, char *arg)
     class descriptor_data *d;
     int any = FALSE;
 
-    for (d = descriptor_list; d; d = d->next)
+    for (d = g_descriptor_list; d; d = d->next)
     {
         if (d->character && (d->character != ch) && UNIT_IN(d->character) && descriptor_is_playing(d) &&
             (str_is_empty(arg) || !str_ccmp(arg, UNIT_NAME(d->character))) && CHAR_LEVEL(ch) >= UNIT_MINV(d->character) &&
@@ -104,7 +100,7 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
     {
         mystr = "<u>Players</u><br/>";
 
-        for (d = descriptor_list; d; d = d->next)
+        for (d = g_descriptor_list; d; d = d->next)
             if (d->character && UNIT_IN(d->character) && descriptor_is_playing(d) && CHAR_LEVEL(ch) >= UNIT_MINV(d->character) &&
                 (d->original == NULL || CHAR_LEVEL(ch) >= UNIT_MINV(d->original)))
             {
@@ -114,12 +110,13 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
                 else
                     buf2[0] = '\0';
 
-                snprintf(buf1, sizeof(buf1),
-                        "%-20s - %s [%s]%s<br/>",
-                        UNIT_NAME(CHAR_ORIGINAL(d->character)),
-                        UNIT_SEE_TITLE(ch, UNIT_IN(d->character)),
-                        in_string(ch, d->character),
-                        buf2);
+                snprintf(buf1,
+                         sizeof(buf1),
+                         "%-20s - %s [%s]%s<br/>",
+                         UNIT_NAME(CHAR_ORIGINAL(d->character)),
+                         UNIT_SEE_TITLE(ch, UNIT_IN(d->character)),
+                         in_string(ch, d->character),
+                         buf2);
                 mystr.append(buf1);
             }
     }
@@ -127,7 +124,7 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
     {
         mystr = "";
 
-        for (i = unit_list; i; i = i->gnext)
+        for (i = g_unit_list; i; i = i->gnext)
         {
             if (UNIT_IN(i) && UNIT_NAMES(i).IsName(arg) && CHAR_LEVEL(ch) >= UNIT_MINV(i))
             {
@@ -135,11 +132,12 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
                 if (nCount++ > 100)
                     continue;
 
-                snprintf(buf1, sizeof(buf1),
-                        "%-30s - %s [%s]<br/>",
-                        TITLENAME(i),
-                        UNIT_SEE_TITLE(ch, UNIT_IN(i)),
-                        (!in_string(ch, i) ? "MENU" : in_string(ch, i)));
+                snprintf(buf1,
+                         sizeof(buf1),
+                         "%-30s - %s [%s]<br/>",
+                         TITLENAME(i),
+                         UNIT_SEE_TITLE(ch, UNIT_IN(i)),
+                         (!in_string(ch, i) ? "MENU" : in_string(ch, i)));
 
                 mystr.append(buf1);
             }

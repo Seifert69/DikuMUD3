@@ -94,12 +94,12 @@ class unit_data *create_unit(ubit8 type);
 
 /* --- The globals of db.c --- */
 
-extern int room_number;
-extern class unit_data *unit_list;
-extern class unit_data *room_head;
-extern class unit_data *npc_head;
-extern class unit_data *obj_head;
-extern struct zone_info_type zone_info;
-extern const char *player_zone;
+extern int g_room_number;
+extern class unit_data *g_unit_list;
+extern class unit_data *g_room_head;
+extern class unit_data *g_npc_head;
+extern class unit_data *g_obj_head;
+extern struct zone_info_type g_zone_info;
+extern const char *g_player_zone;
 
 #endif /* _MUD_DB_H */

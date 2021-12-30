@@ -5,6 +5,7 @@
  $Revision: 2.2 $
  */
 
+#include "external_vars.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -38,14 +39,14 @@ int kludge_bonus(int level, int points)
         return 0;
 
     if (level <= 50)
-        return ((5 * (level - 20)) * MIN(100, points)) / 100;
+        return ((5 * (level - 20)) * std::min(100, points)) / 100;
 
     int b, expected;
 
     expected = 100 + (level - 50);
 
     b = 150;
-    b += (5 * (level - 50) * MIN(expected, points)) / expected;
+    b += (5 * (level - 50) * std::min(expected, points)) / expected;
 
     return b;
 }
@@ -76,7 +77,6 @@ int shield_bonus(class unit_data *att, class unit_data *def, class unit_data **p
     if ((def_shield = equipment_type(def, WEAR_SHIELD, ITEM_SHIELD)))
     {
         int shield_bonus = 0;
-        extern struct shi_info_type shi_info[];
 
         if (!is_in(OBJ_VALUE(def_shield, 0), SHIELD_SMALL, SHIELD_LARGE))
         {
@@ -99,7 +99,7 @@ int shield_bonus(class unit_data *att, class unit_data *def, class unit_data **p
                                         IS_PC(att) ? PC_SKI_SKILL(att, SKI_SHIELD) : att_dex);
 
             if (hm >= 0) /* Successful Shield use */
-                def_shield_bonus = shi_info[OBJ_VALUE(def_shield, 0)].melee + shield_bonus / 2;
+                def_shield_bonus = g_shi_info[OBJ_VALUE(def_shield, 0)].melee + shield_bonus / 2;
         }
     } /* End of Shield */
 
@@ -166,7 +166,7 @@ int dikuii_spell_bonus(class unit_data *att,
     else
         hm = (5 * spell_attack_ability(medium, spell_number)) / 2 + 2 * spell_attack_skill(medium, spell_number) - def_bonus;
 
-    return MAX(-50, hm);
+    return std::max(-50, hm);
 }
 
 /* If 'att' hits 'def' on 'hit_loc' then what is his basic attack */
@@ -237,9 +237,9 @@ int dikuii_melee_bonus(class unit_data *att,
             dual_skill = CHAR_DEX(att);
 
         if (primary)
-            att_bonus -= MAX(0, 25 - (dual_skill / 4));
+            att_bonus -= std::max(0, 25 - (dual_skill / 4));
         else
-            att_bonus -= MAX(0, 50 - (dual_skill / 4));
+            att_bonus -= std::max(0, 50 - (dual_skill / 4));
     }
 
     def_wpn_knowledge = weapon_defense_skill(def, att_wpn_type);
@@ -297,7 +297,7 @@ int dikuii_melee_bonus(class unit_data *att,
 
     // This results in a 5% hm increase per "level"
 
-    return MAX(-50, hm);
+    return std::max(-50, hm);
 }
 
 int spell_bonus(class unit_data *att,
@@ -319,7 +319,12 @@ int spell_bonus(class unit_data *att,
 
     if (pStat)
     {
-        snprintf(buf, sizeof(buf), "<u>%s spelling %s with %s:</u><br/><pre>", UNIT_NAME(att), UNIT_NAME(def), g_SplColl.text[spell_number]);
+        snprintf(buf,
+                 sizeof(buf),
+                 "<u>%s spelling %s with %s:</u><br/><pre>",
+                 UNIT_NAME(att),
+                 UNIT_NAME(def),
+                 g_SplColl.text[spell_number]);
         *pStat = buf;
         pStat->append("                        ATT     DEF<br/>");
     }
@@ -444,15 +449,15 @@ int spell_bonus(class unit_data *att,
         pStat->append("Result = 2*(att_abil-def_abil) + 2*(att_spl - def_spl) + (att_bonus - def_bonus)) + roll<br/>");
         pStat->append("<br/>");
 
-        int dam5 = chart_damage(hm + roll_boost(5, CHAR_LEVEL(att)), &(spell_chart[spell_number].element[def_armour_type]));
-        int dam50 = chart_damage(hm + roll_boost(50, CHAR_LEVEL(att)), &(spell_chart[spell_number].element[def_armour_type]));
-        int dam95 = chart_damage(hm + roll_boost(95, CHAR_LEVEL(att)), &(spell_chart[spell_number].element[def_armour_type]));
+        int dam5 = chart_damage(hm + roll_boost(5, CHAR_LEVEL(att)), &(g_spell_chart[spell_number].element[def_armour_type]));
+        int dam50 = chart_damage(hm + roll_boost(50, CHAR_LEVEL(att)), &(g_spell_chart[spell_number].element[def_armour_type]));
+        int dam95 = chart_damage(hm + roll_boost(95, CHAR_LEVEL(att)), &(g_spell_chart[spell_number].element[def_armour_type]));
 
         char buf[MAX_STRING_LENGTH];
         snprintf(buf, sizeof(buf), "Spell  dmg (5/50/95) : %4d %4d %4d<br/>", dam5, dam50, dam95);
         pStat->append(buf);
 
-        snprintf(buf, sizeof(buf), "Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / MAX(1, (dam5 + dam50 + dam95) / 3));
+        snprintf(buf, sizeof(buf), "Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / std::max(1, (dam5 + dam50 + dam95) / 3));
         pStat->append(buf);
 
         pStat->append("Defensive Shield bonus not part of stat<br/>");
@@ -460,7 +465,7 @@ int spell_bonus(class unit_data *att,
         pStat->append("</pre>");
     }
 
-    return MAX(-50, hm);
+    return std::max(-50, hm);
 }
 
 /* If 'att' hits 'def' on 'hit_loc' then what is his basic attack */
@@ -561,9 +566,9 @@ int melee_bonus(class unit_data *att,
             dual_skill = CHAR_DEX(att);
 
         if (primary)
-            tmp = -MAX(0, 25 - (dual_skill / 4));
+            tmp = -std::max(0, 25 - (dual_skill / 4));
         else
-            tmp = -MAX(0, 50 - (dual_skill / 4));
+            tmp = -std::max(0, 50 - (dual_skill / 4));
 
         att_bonus += tmp;
 
@@ -718,13 +723,13 @@ int melee_bonus(class unit_data *att,
         snprintf(buf, sizeof(buf), "Weapon dmg (5/50/95) : %4d %4d %4d<br/>", dam5, dam50, dam95);
         pStat->append(buf);
 
-        snprintf(buf, sizeof(buf), "Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / MAX(1, (dam5 + dam50 + dam95) / 3));
+        snprintf(buf, sizeof(buf), "Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / std::max(1, (dam5 + dam50 + dam95) / 3));
         pStat->append(buf);
 
         pStat->append("</pre>");
     }
 
-    return MAX(-50, hm);
+    return std::max(-50, hm);
 }
 
 int base_melee(class unit_data *att, class unit_data *def, int hit_loc)

@@ -22,8 +22,8 @@
 #include "trie.h"
 #include "spelldef.h"
 
-int hit_location_table[] = /* Determine by using 2d8 */
-    {WEAR_HEAD,            /* 2..3   =>  4.68% for Head  */
+int g_hit_location_table[] = /* Determine by using 2d8 */
+    {WEAR_HEAD,              /* 2..3   =>  4.68% for Head  */
      WEAR_HEAD,
      WEAR_HANDS, /* 4      =>  4.69% for Hands */
      WEAR_ARMS,  /* 5..7   => 23.43% for Arms  */
@@ -67,16 +67,16 @@ int hit_probability_table[] = /* Determine by using 2d8 */
      2,  /* 15..16 => 4.68% for feet   */
      1}; // 64 total
 
-const char *professions[PROFESSION_MAX + 1] = {PROFESSION_STRINGS, NULL};
+const char *g_professions[PROFESSION_MAX + 1] = {PROFESSION_STRINGS, NULL};
 
-const char *pc_races[PC_RACE_MAX + 1];
-const char *pc_race_adverbs[PC_RACE_MAX + 1];
-struct race_info_type race_info[PC_RACE_MAX];
+const char *g_pc_races[PC_RACE_MAX + 1];
+const char *g_pc_race_adverbs[PC_RACE_MAX + 1];
+struct race_info_type g_race_info[PC_RACE_MAX];
 
-struct damage_chart_type spell_chart[SPL_TREE_MAX];
+struct damage_chart_type g_spell_chart[SPL_TREE_MAX];
 
-struct damage_chart_type weapon_chart[WPN_TREE_MAX];
-struct wpn_info_type wpn_info[WPN_TREE_MAX];
+struct damage_chart_type g_weapon_chart[WPN_TREE_MAX];
+struct wpn_info_type g_wpn_info[WPN_TREE_MAX];
 
 // I had to move these to modify.cpp of the member function was
 // called before the class constructor ! :-/ Yikes.
@@ -263,7 +263,7 @@ int weapon_fumble(class unit_data *weapon, int roll)
 {
     assert(IS_OBJ(weapon) && (OBJ_TYPE(weapon) == ITEM_WEAPON));
 
-    return roll <= weapon_chart[OBJ_VALUE(weapon, 0)].fumble;
+    return roll <= g_weapon_chart[OBJ_VALUE(weapon, 0)].fumble;
 }
 
 int chart_damage(int roll, struct damage_chart_element_type *element)
@@ -296,22 +296,22 @@ int chart_size_damage(int roll, struct damage_chart_element_type *element, int l
         switch (weight_size(lbs))
         {
             case SIZ_TINY:
-                // roll = MIN(100, roll);
+                // roll = std::min(100, roll);
                 roll *= 0.5;
                 break;
 
             case SIZ_SMALL:
-                // roll = MIN(110, roll);
+                // roll = std::min(110, roll);
                 roll *= 0.6;
                 break;
 
             case SIZ_MEDIUM:
-                // roll = MIN(130, roll);
+                // roll = std::min(130, roll);
                 roll *= 0.7;
                 break;
 
             case SIZ_LARGE:
-                // roll = MIN(150, roll);
+                // roll = std::min(150, roll);
                 roll *= 0.8;
                 break;
         }
@@ -334,7 +334,7 @@ int weapon_damage(int roll, int weapon_type, int armour_type)
         armour_type = ARM_CLOTHES;
     }
 
-    return chart_damage(roll, &(weapon_chart[weapon_type].element[armour_type]));
+    return chart_damage(roll, &(g_weapon_chart[weapon_type].element[armour_type]));
 }
 
 int natural_damage(int roll, int weapon_type, int armour_type, int lbs)
@@ -351,7 +351,7 @@ int natural_damage(int roll, int weapon_type, int armour_type, int lbs)
         armour_type = ARM_CLOTHES;
     }
 
-    return chart_size_damage(roll, &(weapon_chart[weapon_type].element[armour_type]), lbs);
+    return chart_size_damage(roll, &(g_weapon_chart[weapon_type].element[armour_type]), lbs);
 }
 
 /* Return [0..200] for skill when defending with a weapon */
@@ -408,7 +408,7 @@ int weapon_attack_skill(class unit_data *ch, int skill)
         n = PC_WPN_SKILL(ch, skill);
 
         if (TREE_ISLEAF(g_WpnColl.tree, skill))
-            n = MAX(TREE_PARENT(g_WpnColl.tree, skill), n);
+            n = std::max(TREE_PARENT(g_WpnColl.tree, skill), n);
 
         if (n == 0)
             n = -25;
@@ -428,8 +428,8 @@ int weapon_attack_ability(class unit_data *ch, int skill)
 {
     int i;
 
-    i = CHAR_ABILITY(ch, wpn_info[skill].ability[0]) + CHAR_ABILITY(ch, wpn_info[skill].ability[1]) +
-        CHAR_ABILITY(ch, wpn_info[skill].ability[2]);
+    i = CHAR_ABILITY(ch, g_wpn_info[skill].ability[0]) + CHAR_ABILITY(ch, g_wpn_info[skill].ability[1]) +
+        CHAR_ABILITY(ch, g_wpn_info[skill].ability[2]);
 
     i = i / 3;
 
@@ -441,7 +441,7 @@ int hit_location(class unit_data *att, class unit_data *def)
 {
     /* Maybe do height reductions later */
 
-    return hit_location_table[dice(2, 8) - 2];
+    return g_hit_location_table[dice(2, 8) - 2];
 }
 
 /* Return the effective dex of a person in armour ...             */
@@ -492,13 +492,13 @@ int effective_dex(class unit_data *ch)
                     continue;
             } // switch
 
-            b = MIN(100, b);
+            b = std::min(100, b);
             p = arm_dex_penalty[at] - (b * arm_dex_penalty[at]) / 200;
             psum += p * wear_location_prop[OBJ_EQP_POS(u)];
         }
     } // for
 
-    return MAX(0, CHAR_DEX(ch) - psum / 64);
+    return std::max(0, CHAR_DEX(ch) - psum / 64);
 }
 
 /* ========================================================================= */
@@ -508,11 +508,11 @@ void profession_init(void)
     int i;
     int ln;
 
-    ln = sizeof(professions) / sizeof(professions[0]);
+    ln = sizeof(g_professions) / sizeof(g_professions[0]);
 
     for (i = 0; i < ln; i++)
     {
-        professions[i] = NULL;
+        g_professions[i] = NULL;
     }
 }
 
@@ -565,9 +565,9 @@ static void profession_read(void)
 
         if (strncmp(pTmp, "name", 4) == 0)
         {
-            if (professions[idx])
-                free((char *)professions[idx]);
-            professions[idx] = str_dup(pCh);
+            if (g_professions[idx])
+                free((char *)g_professions[idx]);
+            g_professions[idx] = str_dup(pCh);
         }
         else
             slog(LOG_ALL, 0, "Profession boot unknown string: %s", pTmp);
@@ -634,98 +634,98 @@ static void race_read(void)
 
         if (strncmp(pTmp, "name", 4) == 0)
         {
-            if (pc_races[idx])
+            if (g_pc_races[idx])
             {
-                free((char *)pc_races[idx]);
-                pc_races[idx] = NULL;
+                free((char *)g_pc_races[idx]);
+                g_pc_races[idx] = NULL;
             }
-            pc_races[idx] = str_dup(pCh);
+            g_pc_races[idx] = str_dup(pCh);
         }
         else if (strncmp(pTmp, "adverb", 6) == 0)
         {
-            if (pc_race_adverbs[idx])
+            if (g_pc_race_adverbs[idx])
             {
-                free((char *)pc_race_adverbs[idx]);
-                pc_race_adverbs[idx] = NULL;
+                free((char *)g_pc_race_adverbs[idx]);
+                g_pc_race_adverbs[idx] = NULL;
             }
-            pc_race_adverbs[idx] = str_dup(pCh);
+            g_pc_race_adverbs[idx] = str_dup(pCh);
         }
         else if (strncmp(pTmp, "height male", 11) == 0)
         {
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].male.height = atoi(tmp);
+            g_race_info[idx].male.height = atoi(tmp);
 
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].male.height_dice.reps = atoi(tmp);
+            g_race_info[idx].male.height_dice.reps = atoi(tmp);
 
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].male.height_dice.size = atoi(tmp);
+            g_race_info[idx].male.height_dice.size = atoi(tmp);
         }
         else if (strncmp(pTmp, "height female", 13) == 0)
         {
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].female.height = atoi(tmp);
+            g_race_info[idx].female.height = atoi(tmp);
 
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].female.height_dice.reps = atoi(tmp);
+            g_race_info[idx].female.height_dice.reps = atoi(tmp);
 
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].female.height_dice.size = atoi(tmp);
+            g_race_info[idx].female.height_dice.size = atoi(tmp);
         }
         else if (strncmp(pTmp, "weight male", 11) == 0)
         {
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].male.weight = atoi(tmp);
+            g_race_info[idx].male.weight = atoi(tmp);
 
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].male.weight_dice.reps = atoi(tmp);
+            g_race_info[idx].male.weight_dice.reps = atoi(tmp);
 
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].male.weight_dice.size = atoi(tmp);
+            g_race_info[idx].male.weight_dice.size = atoi(tmp);
         }
         else if (strncmp(pTmp, "weight female", 13) == 0)
         {
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].female.weight = atoi(tmp);
+            g_race_info[idx].female.weight = atoi(tmp);
 
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].female.weight_dice.reps = atoi(tmp);
+            g_race_info[idx].female.weight_dice.reps = atoi(tmp);
 
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].female.weight_dice.size = atoi(tmp);
+            g_race_info[idx].female.weight_dice.size = atoi(tmp);
         }
         else if (strncmp(pTmp, "lifespan male", 13) == 0)
         {
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].male.lifespan = atoi(tmp);
+            g_race_info[idx].male.lifespan = atoi(tmp);
 
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].male.lifespan_dice.reps = atoi(tmp);
+            g_race_info[idx].male.lifespan_dice.reps = atoi(tmp);
 
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].male.lifespan_dice.size = atoi(tmp);
+            g_race_info[idx].male.lifespan_dice.size = atoi(tmp);
         }
         else if (strncmp(pTmp, "lifespan female", 15) == 0)
         {
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].female.lifespan = atoi(tmp);
+            g_race_info[idx].female.lifespan = atoi(tmp);
 
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].female.lifespan_dice.reps = atoi(tmp);
+            g_race_info[idx].female.lifespan_dice.reps = atoi(tmp);
 
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].female.lifespan_dice.size = atoi(tmp);
+            g_race_info[idx].female.lifespan_dice.size = atoi(tmp);
         }
         else if (strncmp(pTmp, "age", 3) == 0)
         {
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].age = atoi(tmp);
+            g_race_info[idx].age = atoi(tmp);
 
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].age_dice.reps = atoi(tmp);
+            g_race_info[idx].age_dice.reps = atoi(tmp);
 
             pCh = str_next_word(pCh, tmp);
-            race_info[idx].age_dice.size = atoi(tmp);
+            g_race_info[idx].age_dice.size = atoi(tmp);
         }
         else
             slog(LOG_ALL, 0, "Race boot unknown string: %s", pTmp);
@@ -734,8 +734,8 @@ static void race_read(void)
     fclose(fl);
 }
 
-struct diltemplate *playerinit_tmpl;
-struct diltemplate *nanny_dil_tmpl;
+struct diltemplate *g_playerinit_tmpl;
+struct diltemplate *g_nanny_dil_tmpl;
 
 static void race_init(void)
 {
@@ -743,36 +743,36 @@ static void race_init(void)
 
     for (i = 0; i < PC_RACE_MAX; i++)
     {
-        memset(&race_info[i], 0, sizeof(struct race_info_type));
+        memset(&g_race_info[i], 0, sizeof(struct race_info_type));
 
-        pc_races[i] = NULL;
-        pc_race_adverbs[i] = NULL;
+        g_pc_races[i] = NULL;
+        g_pc_race_adverbs[i] = NULL;
     }
 
-    pc_races[PC_RACE_MAX] = NULL;
-    pc_race_adverbs[PC_RACE_MAX] = NULL;
+    g_pc_races[PC_RACE_MAX] = NULL;
+    g_pc_race_adverbs[PC_RACE_MAX] = NULL;
 
-    playerinit_tmpl = find_dil_template("playerinit@basis");
-    if (playerinit_tmpl == NULL)
+    g_playerinit_tmpl = find_dil_template("playerinit@basis");
+    if (g_playerinit_tmpl == NULL)
         slog(LOG_ALL, 0, "No 'playerinit@basis' DIL template.");
     else
     {
-        if (playerinit_tmpl->argc != 0)
+        if (g_playerinit_tmpl->argc != 0)
         {
             slog(LOG_ALL, 0, "playerinit@basis(); not defined correctly.");
-            playerinit_tmpl = NULL;
+            g_playerinit_tmpl = NULL;
         }
     }
 
-    nanny_dil_tmpl = find_dil_template("nanny@basis");
-    if (nanny_dil_tmpl == NULL)
+    g_nanny_dil_tmpl = find_dil_template("nanny@basis");
+    if (g_nanny_dil_tmpl == NULL)
         slog(LOG_ALL, 0, "No 'nanny@basis' DIL template.");
     else
     {
-        if ((nanny_dil_tmpl->argc != 1) || (nanny_dil_tmpl->argt[0] != DILV_SP))
+        if ((g_nanny_dil_tmpl->argc != 1) || (g_nanny_dil_tmpl->argt[0] != DILV_SP))
         {
             slog(LOG_ALL, 0, "nanny@basis(string); not defined correctly.");
-            nanny_dil_tmpl = NULL;
+            g_nanny_dil_tmpl = NULL;
         }
     }
 }
@@ -865,7 +865,7 @@ static void ability_read(void)
                 continue;
             }
 
-            int ridx = search_block(pTmp + 5, pc_races, TRUE);
+            int ridx = search_block(pTmp + 5, g_pc_races, TRUE);
 
             if (ridx == -1)
                 slog(LOG_ALL, 0, "Abilities: Illegal race in: %s", pTmp);
@@ -881,7 +881,7 @@ static void ability_read(void)
                 continue;
             }
 
-            int ridx = search_block(pTmp + 11, professions, TRUE);
+            int ridx = search_block(pTmp + 11, g_professions, TRUE);
 
             if (ridx == -1)
                 slog(LOG_ALL, 0, "Abilities: Illegal profession %s", pTmp);
@@ -947,12 +947,13 @@ void ability_dump(void)
             snprintf(buf, sizeof(buf), "%s,%s", g_AbiColl.text[i], spc(20 - strlen(g_AbiColl.text[i])));
             str.append(buf);
 
-            snprintf(buf, sizeof(buf),
-                    ".profession %s%s = %s%d\n",
-                    professions[j],
-                    spc(12 - strlen(professions[j])),
-                    (g_AbiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                    g_AbiColl.prof_table[i].profession_cost[j]);
+            snprintf(buf,
+                     sizeof(buf),
+                     ".profession %s%s = %s%d\n",
+                     g_professions[j],
+                     spc(12 - strlen(g_professions[j])),
+                     (g_AbiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                     g_AbiColl.prof_table[i].profession_cost[j]);
             str.append(buf);
 
             vect.push_back(std::make_pair(g_AbiColl.prof_table[i].profession_cost[j], str));
@@ -966,12 +967,13 @@ void ability_dump(void)
             for (int j = 0; j < ABIL_TREE_MAX; j++)
                 if (g_AbiColl.prof_table[i].min_abil[j] > 0)
                 {
-                    snprintf(buf, sizeof(buf),
-                            "restrict %s%s    = %s%d\n",
-                            g_AbiColl.text[j],
-                            spc(12 - strlen(professions[j])),
-                            (g_AbiColl.prof_table[i].min_abil[j] >= 0) ? "+" : "",
-                            g_AbiColl.prof_table[i].min_abil[j]);
+                    snprintf(buf,
+                             sizeof(buf),
+                             "restrict %s%s    = %s%d\n",
+                             g_AbiColl.text[j],
+                             spc(12 - strlen(g_professions[j])),
+                             (g_AbiColl.prof_table[i].min_abil[j] >= 0) ? "+" : "",
+                             g_AbiColl.prof_table[i].min_abil[j]);
                     str.append(buf);
                 }
         }
@@ -1065,7 +1067,7 @@ static void weapon_read(void)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, SHIELD_M_BLOCK, SHIELD_M_USELESS))
-                wpn_info[idx].shield = dummy;
+                g_wpn_info[idx].shield = dummy;
         }
         else if (strncmp(pTmp, "sphere", 6) == 0)
         {
@@ -1091,7 +1093,7 @@ static void weapon_read(void)
             if (!is_in(dummy, -3, +3))
                 continue;
 
-            int ridx = search_block(pTmp + 5, pc_races, TRUE);
+            int ridx = search_block(pTmp + 5, g_pc_races, TRUE);
 
             if (ridx == -1)
                 slog(LOG_ALL, 0, "Weapons: Illegal race in: %s", pTmp);
@@ -1102,19 +1104,19 @@ static void weapon_read(void)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 99))
-                weapon_chart[idx].fumble = dummy;
+                g_weapon_chart[idx].fumble = dummy;
         }
         else if (strncmp(pTmp, "hands", 5) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 1, 2))
-                wpn_info[idx].hands = dummy;
+                g_wpn_info[idx].hands = dummy;
         }
         else if (strncmp(pTmp, "speed", 5) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 12))
-                wpn_info[idx].speed = dummy;
+                g_wpn_info[idx].speed = dummy;
         }
         else if (strncmp(pTmp, "type", 4) == 0)
         {
@@ -1124,7 +1126,7 @@ static void weapon_read(void)
                 case WPNT_SLASH:
                 case WPNT_PIERCE:
                 case WPNT_BLUDGEON:
-                    wpn_info[idx].type = dummy;
+                    g_wpn_info[idx].type = dummy;
             }
         }
         else if (strncmp(pTmp, "profession ", 11) == 0)
@@ -1136,7 +1138,7 @@ static void weapon_read(void)
                 continue;
             }
 
-            int ridx = search_block(pTmp + 11, professions, TRUE);
+            int ridx = search_block(pTmp + 11, g_professions, TRUE);
 
             if (ridx == -1)
                 slog(LOG_ALL, 0, "Weapons: Illegal profession %s", pTmp);
@@ -1195,9 +1197,9 @@ static void weapon_read(void)
                 continue;
             }
 
-            wpn_info[idx].ability[0] = i1;
-            wpn_info[idx].ability[1] = i2;
-            wpn_info[idx].ability[2] = i3;
+            g_wpn_info[idx].ability[0] = i1;
+            g_wpn_info[idx].ability[1] = i2;
+            g_wpn_info[idx].ability[2] = i3;
         }
         else if (strncmp(pTmp, "attack ", 7) == 0)
         {
@@ -1236,9 +1238,9 @@ static void weapon_read(void)
 
             if (idx2 != -1)
             {
-                weapon_chart[idx].element[idx2].offset = i1;
-                weapon_chart[idx].element[idx2].basedam = i2;
-                weapon_chart[idx].element[idx2].alpha = i3;
+                g_weapon_chart[idx].element[idx2].offset = i1;
+                g_weapon_chart[idx].element[idx2].basedam = i2;
+                g_weapon_chart[idx].element[idx2].alpha = i3;
             }
         }
         else
@@ -1255,21 +1257,21 @@ static void weapon_init(void)
 
     for (i = 0; i < WPN_TREE_MAX; i++)
     {
-        weapon_chart[i].fumble = 0;
+        g_weapon_chart[i].fumble = 0;
         for (j = 0; j < 5; j++)
         {
-            weapon_chart[i].element[j].offset = 100;
-            weapon_chart[i].element[j].basedam = 0;
-            weapon_chart[i].element[j].alpha = 100;
+            g_weapon_chart[i].element[j].offset = 100;
+            g_weapon_chart[i].element[j].basedam = 0;
+            g_weapon_chart[i].element[j].alpha = 100;
         }
 
-        wpn_info[i].hands = 1;
-        wpn_info[i].type = WPNT_SLASH;
-        wpn_info[i].speed = 0;
-        wpn_info[i].shield = SHIELD_M_BLOCK;
-        wpn_info[i].ability[0] = ABIL_STR;
-        wpn_info[i].ability[1] = ABIL_STR;
-        wpn_info[i].ability[2] = ABIL_DEX;
+        g_wpn_info[i].hands = 1;
+        g_wpn_info[i].type = WPNT_SLASH;
+        g_wpn_info[i].speed = 0;
+        g_wpn_info[i].shield = SHIELD_M_BLOCK;
+        g_wpn_info[i].ability[0] = ABIL_STR;
+        g_wpn_info[i].ability[1] = ABIL_STR;
+        g_wpn_info[i].ability[2] = ABIL_DEX;
 
         g_WpnColl.tree[i].parent = WPN_ROOT;
         g_WpnColl.tree[i].bAutoTrain = TRUE;
@@ -1327,12 +1329,13 @@ void weapon_dump(void)
             snprintf(buf, sizeof(buf), "%s,%s", g_WpnColl.text[i], spc(20 - strlen(g_WpnColl.text[i])));
             str.append(buf);
 
-            snprintf(buf, sizeof(buf),
-                    ".profession %s%s = %s%d\n",
-                    professions[j],
-                    spc(12 - strlen(professions[j])),
-                    (g_WpnColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                    g_WpnColl.prof_table[i].profession_cost[j]);
+            snprintf(buf,
+                     sizeof(buf),
+                     ".profession %s%s = %s%d\n",
+                     g_professions[j],
+                     spc(12 - strlen(g_professions[j])),
+                     (g_WpnColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                     g_WpnColl.prof_table[i].profession_cost[j]);
             str.append(buf);
 
             vect.push_back(std::make_pair(g_WpnColl.prof_table[i].profession_cost[j], str));

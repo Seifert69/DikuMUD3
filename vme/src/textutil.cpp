@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <algorithm>
 
 #include "structs.h"
 #include "utils.h"
@@ -16,7 +17,7 @@
 #include "textutil.h"
 #include "common.h"
 
-const char *fillwords[] = {"a", "an", "at", "from", "in", "on", "of", "the", "to", "with", "into", NULL};
+const char *g_fillwords[] = {"a", "an", "at", "from", "in", "on", "of", "the", "to", "with", "into", NULL};
 
 /*  From char * input stream 'str' copy characters into 'buf' until
  *  end of string or newline. Returns position of 'str' after copied
@@ -401,7 +402,7 @@ int search_block_length(const char *oarg, int length, const char **list, ubit1 e
 
 int fill_word(const char *argument)
 {
-    return (search_block(argument, fillwords, TRUE) >= 0);
+    return (search_block(argument, g_fillwords, TRUE) >= 0);
 }
 
 /* Exactly as str_next-word, except it wont change the case */
@@ -891,13 +892,13 @@ void split_fi_ref(const char *str, char *zone, char *name)
 
     if ((c = (char *)strchr(str, '@')))
     {
-        l = MIN(c - str, FI_MAX_UNITNAME);
+        l = std::min(c - str, static_cast<ptrdiff_t>(FI_MAX_UNITNAME));
         strncpy(name, str, l);
         name[l] = '\0';
 
-        l = MIN(strlen(c + 1), FI_MAX_ZONENAME);
+        l = std::min(strlen(c + 1), static_cast<size_t>(FI_MAX_ZONENAME));
         if ((t = strchr(c + 1, ' ')))
-            l = MIN(l, t - (c + 1));
+            l = std::min(static_cast<ptrdiff_t>(l), t - (c + 1));
         strncpy(zone, c + 1, l);
         zone[l] = 0;
         str_lower(zone);
@@ -905,13 +906,13 @@ void split_fi_ref(const char *str, char *zone, char *name)
     }
     else if ((c = (char *)strchr(str, '/')))
     {
-        l = MIN(c - str, FI_MAX_ZONENAME);
+        l = std::min(c - str, static_cast<ptrdiff_t>(FI_MAX_ZONENAME));
         strncpy(zone, str, l);
         zone[l] = '\0';
 
-        l = MIN(strlen(c + 1), FI_MAX_UNITNAME);
+        l = std::min(strlen(c + 1), static_cast<size_t>(FI_MAX_UNITNAME));
         if ((t = strchr(c + 1, ' ')))
-            l = MIN(l, t - (c + 1));
+            l = std::min(static_cast<ptrdiff_t>(l), t - (c + 1));
         strncpy(name, c + 1, l);
         name[l] = 0;
         str_lower(zone);
@@ -921,13 +922,13 @@ void split_fi_ref(const char *str, char *zone, char *name)
     {
         if ((c = (char *)strchr(str, ' ')))
         {
-            l = MIN(c - str, FI_MAX_UNITNAME);
+            l = std::min(c - str, static_cast<ptrdiff_t>(FI_MAX_UNITNAME));
             strncpy(name, str, l);
             name[l] = '\0';
         }
         else
         {
-            l = MIN(strlen(str), FI_MAX_UNITNAME);
+            l = std::min(strlen(str), static_cast<size_t>(FI_MAX_UNITNAME));
             strncpy(name, str, l);
             name[l] = 0;
         }

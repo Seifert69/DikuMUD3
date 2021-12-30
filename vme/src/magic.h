@@ -25,7 +25,7 @@
     #define _MUD_MAGIC_H
 
 /* #define MAGIC_POWER(ch)  \
-   MAX(CHAR_MAG(ch), CHAR_DIV(ch)) */
+   std::max(CHAR_MAG(ch), CHAR_DIV(ch)) */
 
 int dil_effect(char *pStr, struct spell_args *sa);
 int object_power(class unit_data *unit);

@@ -7,7 +7,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-
+#include "external_vars.h"
 #include "utils.h"
 #include "structs.h"
 #include "skills.h"
@@ -18,12 +18,7 @@
 #include "utility.h"
 #include "main.h"
 #include "dilrun.h"
-void special_event(void *p1, void *p2);
-
-extern class zone_type *boot_zone;
-extern struct unit_function_array_type unit_function_array[];
-extern eventqueue events;
-extern int mudboot;
+#include "mobact.h"
 
 void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
 {
@@ -36,7 +31,7 @@ void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
     {
         if (ticks < PULSE_SEC)
         {
-            szonelog(boot_zone, "Error: %s@%s had heartbeat of %d.", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), ticks);
+            szonelog(g_boot_zone, "Error: %s@%s had heartbeat of %d.", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), ticks);
             if ((fptr->index == SFUN_DILCOPY_INTERNAL) || (fptr->index == SFUN_DIL_INTERNAL))
             {
                 class dilprg *p;
@@ -44,7 +39,7 @@ void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
 
                 if (p)
                 {
-                    szonelog(boot_zone, "DIL [%s] had heartbeat issue", p->fp->tmpl->prgname);
+                    szonelog(g_boot_zone, "DIL [%s] had heartbeat issue", p->fp->tmpl->prgname);
                 }
             }
             ticks = fptr->heart_beat = PULSE_SEC * 3;
@@ -53,9 +48,9 @@ void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
         if (IS_SET(fptr->flags, SFB_RANTIME))
             ticks = number(ticks - ticks / 2, ticks + ticks / 2);
         if (fptr->event)
-            events.remove(special_event, u, fptr);
-        fptr->event = events.add(ticks, special_event, u, fptr);
-        //      events.add(ticks, special_event, u, fptr);
+            g_events.remove(special_event, u, fptr);
+        fptr->event = g_events.add(ticks, special_event, u, fptr);
+        //      g_events.add(ticks, special_event, u, fptr);
         membug_verify_class(fptr);
         membug_verify(fptr->data);
     }
@@ -67,7 +62,7 @@ void ResetFptrTimer(class unit_data *u, class unit_fptr *fptr)
     membug_verify_class(fptr);
     membug_verify(fptr->data);
 
-    events.remove(special_event, u, fptr);
+    g_events.remove(special_event, u, fptr);
     SetFptrTimer(u, fptr);
 
     membug_verify(fptr->data);
@@ -84,8 +79,6 @@ void special_event(void *p1, void *p2)
     struct spec_arg sarg;
 
     void add_func_history(class unit_data * u, ubit16, ubit16);
-
-    extern struct command_info cmd_auto_tick;
 
     /*    if (fptr->index == SFUN_DIL_INTERNAL)
             if (fptr && fptr->data)
@@ -125,7 +118,7 @@ void special_event(void *p1, void *p2)
     /* If switched, disable all tick functions, so we can control the mother fucker!
            if (!IS_CHAR (u) || !CHAR_IS_SWITCHED (u)) */
     {
-        if (unit_function_array[fptr->index].func)
+        if (g_unit_function_array[fptr->index].func)
         {
             if (IS_SET(fptr->flags, SFB_TICK))
             {
@@ -135,14 +128,14 @@ void special_event(void *p1, void *p2)
                 sarg.owner = u;
                 sarg.activator = NULL;
                 sarg.fptr = fptr;
-                sarg.cmd = &cmd_auto_tick;
+                sarg.cmd = &g_cmd_auto_tick;
                 sarg.arg = "";
                 sarg.mflags = SFB_TICK;
                 sarg.medium = NULL;
                 sarg.target = NULL;
                 sarg.pInt = NULL;
 
-                ret = (*(unit_function_array[fptr->index].func))(&sarg);
+                ret = (*(g_unit_function_array[fptr->index].func))(&sarg);
             }
             assert((ret == SFR_SHARE) || (ret == SFR_BLOCK));
         }
@@ -190,7 +183,7 @@ void special_event(void *p1, void *p2)
 /* Return TRUE while stopping events */
 void stop_special(class unit_data *u, class unit_fptr *fptr)
 {
-    events.remove(special_event, u, fptr);
+    g_events.remove(special_event, u, fptr);
 }
 
 void start_special(class unit_data *u, class unit_fptr *fptr)
@@ -216,26 +209,26 @@ void start_special(class unit_data *u, class unit_fptr *fptr)
         /* If people forget to set the ticking functions... */
         if (fptr->heart_beat <= 0)
         {
-            fptr->heart_beat = unit_function_array[fptr->index].tick;
+            fptr->heart_beat = g_unit_function_array[fptr->index].tick;
 
             /* Well, the builders are supposed to fix it! That's why it is
                sent to the log, so they can see it! */
             /* HUUUGE amount of log :(  /gnort */
             /* Now we default for the suckers... no need to warn any more
-               szonelog(boot_zone,
+               szonelog(g_boot_zone,
                "%s@%s(%s): Heartbeat was 0 (idx %d), "
                "set to defualt: %d",
                UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u),
                UNIT_NAME(u), fptr->index,
-               unit_function_array[fptr->index].tick); */
+               g_unit_function_array[fptr->index].tick); */
         }
 
-        //      events.add(fptr->heart_beat, special_event, u, fptr);
+        //      g_events.add(fptr->heart_beat, special_event, u, fptr);
         if (fptr->event)
-            events.remove(special_event, u, fptr);
+            g_events.remove(special_event, u, fptr);
 
         if (!u->is_destructed() && !fptr->is_destructed())
-            fptr->event = events.add(fptr->heart_beat, special_event, u, fptr);
+            fptr->event = g_events.add(fptr->heart_beat, special_event, u, fptr);
     }
 }
 

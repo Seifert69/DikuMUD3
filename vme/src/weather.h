@@ -8,9 +8,9 @@
 #ifndef _MUD_WEATHER
 #define _MUD_WEATHER
 
-extern int sunlight;
+extern int g_sunlight;
 
-extern const time_t beginning_of_time;
+extern const time_t g_beginning_of_time;
 
 struct time_info_data real_time_passed(time_t t2, time_t t1);
 struct time_info_data mud_date(void);

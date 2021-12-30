@@ -20,7 +20,7 @@
 #include "money.h"
 #include "vmelimits.h"
 
-struct money_type money_types[MAX_MONEY + 1];
+struct money_type g_money_types[MAX_MONEY + 1];
 char *cur_strings[MAX_CURRENCY + 1];
 
 /* procedures also used in the vmc part */
@@ -31,19 +31,19 @@ static amount_t adjust_money(amount_t amt, currency_t currency)
     int i;
 
     for (i = 0; i <= MAX_MONEY; i++)
-        if (money_types[i].currency == currency)
+        if (g_money_types[i].currency == currency)
         {
             /* Calculate remainder of amount */
-            amount_t tmp = amt % money_types[i].min_value;
+            amount_t tmp = amt % g_money_types[i].min_value;
 
-            if (tmp >= money_types[i].min_value / 2)
-                tmp -= money_types[i].min_value; /* Round up value */
+            if (tmp >= g_money_types[i].min_value / 2)
+                tmp -= g_money_types[i].min_value; /* Round up value */
 
             amt -= tmp; /* adjust amount */
 
             /* Zero isn't an acceptable outcome, so make it the minimum */
-            if (amt < money_types[i].min_value)
-                amt = money_types[i].min_value;
+            if (amt < g_money_types[i].min_value)
+                amt = g_money_types[i].min_value;
 
             return amt;
         }
@@ -76,8 +76,8 @@ char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
 
     /* Get an array of all types in this currency */
     for (i = 0; i <= MAX_MONEY; i++)
-        if (money_types[i].currency == currency)
-            money_tmp[nr++] = &money_types[i];
+        if (g_money_types[i].currency == currency)
+            money_tmp[nr++] = &g_money_types[i];
 
     *buf = *tmp = '\0';
 
@@ -92,7 +92,11 @@ char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
             if (verbose)
             {
                 if (times == 1)
-                    snprintf(tmp, sizeof(tmp), "%s %s, ", strchr("aeiou", *(money_tmp[nr]->strings[0])) ? "an" : "a", money_tmp[nr]->strings[0]);
+                    snprintf(tmp,
+                             sizeof(tmp),
+                             "%s %s, ",
+                             strchr("aeiou", *(money_tmp[nr]->strings[0])) ? "an" : "a",
+                             money_tmp[nr]->strings[0]);
                 else
                     snprintf(tmp, sizeof(tmp), "%d %s, ", (int)times, money_tmp[nr]->strings[money_tmp[nr]->pl_idx]);
             }
@@ -144,7 +148,7 @@ static amount_t calc_money(amount_t v1, char op, amount_t v2)
     }
 
     if (res < 0) /* overflow */
-        return MAX(v1, v2);
+        return std::max(v1, v2);
 
     return res;
 }
@@ -166,11 +170,11 @@ class unit_data *set_money(class unit_data *money, amount_t amt)
     UNIT_NAMES(money).Free();
 
     /* Set relevant strings as names */
-    for (i = 0; money_types[MONEY_TYPE(money)].strings[i]; ++i)
-        if (amt == 1 && money_types[MONEY_TYPE(money)].pl_idx == i)
+    for (i = 0; g_money_types[MONEY_TYPE(money)].strings[i]; ++i)
+        if (amt == 1 && g_money_types[MONEY_TYPE(money)].pl_idx == i)
             break;
         else
-            UNIT_NAMES(money).AppendName(money_types[MONEY_TYPE(money)].strings[i]);
+            UNIT_NAMES(money).AppendName(g_money_types[MONEY_TYPE(money)].strings[i]);
 
     /* This isn't very pretty, but i couldn't come up with anything better
      * at this hour :-)
@@ -215,12 +219,16 @@ class unit_data *set_money(class unit_data *money, amount_t amt)
     if (amt == 1)
         snprintf(tmp, sizeof(tmp), "A single %s has been left here.", money_singularis(money));
     else
-        snprintf(tmp, sizeof(tmp),
-                "A %s %s has been left here.",
-                amt == 2 ? "couple of"
-                         : amt < 10 ? "few"
-                                    : amt < 100 ? "small pile of" : amt < 1000 ? "pile of" : amt < 50000 ? "large pile of" : "mountain of",
-                money_pluralis(money));
+        snprintf(tmp,
+                 sizeof(tmp),
+                 "A %s %s has been left here.",
+                 amt == 2      ? "couple of"
+                 : amt < 10    ? "few"
+                 : amt < 100   ? "small pile of"
+                 : amt < 1000  ? "pile of"
+                 : amt < 50000 ? "large pile of"
+                               : "mountain of",
+                 money_pluralis(money));
 
     UNIT_OUT_DESCR(money) = (tmp);
 
@@ -236,7 +244,7 @@ static class unit_data *make_money(class file_index_type *fi, amount_t amt)
 
     UNIT_WEIGHT(money) = 0; /* Init money-weight */
 
-    snprintf(buf, sizeof(buf), cur_strings[MONEY_CURRENCY(money)], money_types[MONEY_TYPE(money)].tails);
+    snprintf(buf, sizeof(buf), cur_strings[MONEY_CURRENCY(money)], g_money_types[MONEY_TYPE(money)].tails);
 
     UNIT_EXTRA(money).add("", buf);
 
@@ -278,7 +286,7 @@ void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, cu
         for (i = 0; i <= MAX_MONEY; i++)
         {
             mon_array[i].take = mon_array[i].have = 0;
-            mon_array[i].value = money_types[i].relative_value;
+            mon_array[i].value = g_money_types[i].relative_value;
             mon_array[i].unit = NULL;
             mon_array[i].cur = DEF_CURRENCY;
         }
@@ -317,7 +325,7 @@ void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, cu
         for (i = last; 0 <= i && calc < 0; --i)
             if (0 < mon_array[i].take) /* Did we take any of these? */
                 /* Put back as many as we can `afford' or have */
-                if (0 < (temp = MIN((-calc) / mon_array[i].value, mon_array[i].take)))
+                if (0 < (temp = std::min((-calc) / mon_array[i].value, mon_array[i].take)))
                 {
                     mon_array[i].take -= temp;
                     calc += calc_money(mon_array[i].value, '*', temp);
@@ -378,8 +386,8 @@ void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, cu
         amount_t times;
 
         for (i = 0, nr = 0; i <= MAX_MONEY; i++)
-            if (money_types[i].currency == currency)
-                money_tmp[nr++] = &money_types[i];
+            if (g_money_types[i].currency == currency)
+                money_tmp[nr++] = &g_money_types[i];
 
         for (i = nr - 1; 0 <= i; --i)
             if (0 < (times = amt / money_tmp[i]->relative_value))
@@ -411,7 +419,7 @@ void coins_to_unit(class unit_data *unit, amount_t amt, int type)
     }
     else
     {
-        class unit_data *tmp = make_money(money_types[type].fi, amt);
+        class unit_data *tmp = make_money(g_money_types[type].fi, amt);
         unit_to_unit(tmp, unit);
     }
 }
@@ -530,7 +538,7 @@ class unit_data *split_money(class unit_data *money, amount_t amt)
         /* Not very pretty to use this, but I really can't find an alternative */
         void intern_unit_to_unit(class unit_data *, class unit_data *, ubit1);
 
-        class unit_data *pnew = make_money(money_types[MONEY_TYPE(money)].fi, amt);
+        class unit_data *pnew = make_money(g_money_types[MONEY_TYPE(money)].fi, amt);
         set_money(money, calc_money(MONEY_AMOUNT(money), '-', amt));
 
         if (UNIT_IN(money))
@@ -573,8 +581,8 @@ amount_t money_round(ubit1 up, amount_t amt, currency_t currency, int types)
 
     /* Get an array of all types in this currency */
     for (i = 0; i <= MAX_MONEY; i++)
-        if (money_types[i].currency == currency)
-            money_tmp[nr++] = &money_types[i];
+        if (g_money_types[i].currency == currency)
+            money_tmp[nr++] = &g_money_types[i];
 
     /*  Loop while we have coin-types left,
      *  but don't select a `type' more than `types' times...
@@ -605,7 +613,7 @@ char *obj_money_string(class unit_data *obj, amount_t amt)
 
     assert(IS_MONEY(obj));
 
-    money_tmp = &money_types[MONEY_TYPE(obj)];
+    money_tmp = &g_money_types[MONEY_TYPE(obj)];
 
     if (amt == 0)
         amt = MONEY_AMOUNT(obj);
@@ -622,14 +630,14 @@ amount_t char_can_carry_amount(class unit_data *ch, class unit_data *money)
 {
     int d_wgt = char_carry_w_limit(ch) - UNIT_CONTAINING_W(ch);
 
-    return MIN((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
+    return std::min((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
 }
 
 amount_t unit_can_hold_amount(class unit_data *unit, class unit_data *money)
 {
     int d_wgt = UNIT_CAPACITY(unit) - UNIT_CONTAINING_W(unit);
 
-    return MIN((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
+    return std::min((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
 }
 
     /* Temporary (?) wizcommand to create money */
@@ -692,15 +700,15 @@ static void set_money_strings(FILE *fl, int idx)
         {
             s = sc;
             sc = NULL;
-            money_types[idx].pl_idx = i;
+            g_money_types[idx].pl_idx = i;
         }
     } while (s);
 
     tmp[i] = NULL;
 
-    CREATE(money_types[idx].strings, char *, i + 1);
+    CREATE(g_money_types[idx].strings, char *, i + 1);
     for (; 0 <= i; --i)
-        money_types[idx].strings[i] = tmp[i];
+        g_money_types[idx].strings[i] = tmp[i];
 }
 
 static void set_relval(FILE *fl, int idx)
@@ -715,9 +723,9 @@ static void set_relval(FILE *fl, int idx)
     }
 
     if (strchr(buf, '*'))
-        res *= money_types[idx - 1].relative_value;
+        res *= g_money_types[idx - 1].relative_value;
 
-    money_types[idx].relative_value = res;
+    g_money_types[idx].relative_value = res;
 }
 
 /*  flag has the bits:
@@ -819,11 +827,11 @@ void boot_money(void)
             assert(FALSE);
         }
 
-        money_types[idx].currency = (currency_t)tmp;
+        g_money_types[idx].currency = (currency_t)tmp;
 
         set_money_strings(fl, idx);
 
-        money_types[idx].abbrev = get_string(fl, "abbrev string", 3);
+        g_money_types[idx].abbrev = get_string(fl, "abbrev string", 3);
 
         set_relval(fl, idx);
 
@@ -832,16 +840,16 @@ void boot_money(void)
             slog(LOG_OFF, 0, "Error reading coins_per_weight");
             assert(FALSE);
         }
-        money_types[idx].coins_per_weight = (ubit8)tmp;
+        g_money_types[idx].coins_per_weight = (ubit8)tmp;
 
 #ifndef VMC_SRC
-        money_types[idx].fi = str_to_file_index(get_string(fl, "unit-string", 1));
-        assert(money_types[idx].fi);
+        g_money_types[idx].fi = str_to_file_index(get_string(fl, "unit-string", 1));
+        assert(g_money_types[idx].fi);
 #else
         get_string(fl, "unit-string (not used)", 0);
 #endif
 
-        money_types[idx].tails = get_string(fl, "tails-string", 3);
+        g_money_types[idx].tails = get_string(fl, "tails-string", 3);
     }
 
 done:
@@ -850,11 +858,11 @@ done:
         tmp = -1;
 
         for (idx = 0; idx <= MAX_MONEY; ++idx)
-            if (money_types[idx].currency == cur)
-                tmp = (tmp < 0) ? money_types[idx].relative_value : MIN(tmp, money_types[idx].relative_value);
+            if (g_money_types[idx].currency == cur)
+                tmp = (tmp < 0) ? g_money_types[idx].relative_value : std::min(tmp, g_money_types[idx].relative_value);
 
         for (idx = 0; idx <= MAX_MONEY; ++idx)
-            if (money_types[idx].currency == cur)
-                money_types[idx].min_value = tmp;
+            if (g_money_types[idx].currency == cur)
+                g_money_types[idx].min_value = tmp;
     }
 }

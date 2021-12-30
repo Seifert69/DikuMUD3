@@ -87,14 +87,14 @@ void cConHook::PlayLoop(const char *cmd)
     {
         if (m_nState == 0)
         {
-            sprintf(buf, "Your ID to %s was reset due to connection lost.<br/>", mudname);
+            sprintf(buf, "Your ID to %s was reset due to connection lost.<br/>", g_mudname);
             WriteCon(buf);
             return;
         }
 
         if (m_nState++ < 50)
         {
-            sprintf(buf, "Waiting to receive an ID from %s.<br/>", mudname);
+            sprintf(buf, "Waiting to receive an ID from %s.<br/>", g_mudname);
             WriteCon(buf);
             return;
         }
@@ -120,9 +120,9 @@ void cConHook::MenuSelect(const char *cmd)
 {
     char buf[400];
 
-    if (!MudHook.IsHooked())
+    if (!g_MudHook.IsHooked())
     {
-        sprintf(buf, "%s is unreachable right now...<br/>", mudname);
+        sprintf(buf, "%s is unreachable right now...<br/>", g_mudname);
         SendCon(buf);
         test_mud_up(); // Wonder if I have multi threading issues here :o)
         return;
@@ -130,15 +130,15 @@ void cConHook::MenuSelect(const char *cmd)
 
     if (m_nId == 0)
     {
-        sprintf(buf, "Requesting an ID from %s.<br/>", mudname);
+        sprintf(buf, "Requesting an ID from %s.<br/>", g_mudname);
         SendCon(buf);
         m_nState = 1; // This means we're waiting for a response
         m_pFptr = dumbPlayLoop;
-        protocol_send_request(&MudHook);
+        protocol_send_request(&g_MudHook);
     }
     else
     {
-        sprintf(buf, "You got ID from %s...<br/>", mudname);
+        sprintf(buf, "You got ID from %s...<br/>", g_mudname);
         SendCon(buf);
         m_nState = 0;
         m_pFptr = dumbPlayLoop;
@@ -155,7 +155,7 @@ void cConHook::MudDown(const char *cmd)
     void test_mud_up(void);
 
     char buf[200];
-    sprintf(buf, "There is still no connection to %s.<br/>", mudname);
+    sprintf(buf, "There is still no connection to %s.<br/>", g_mudname);
     SendCon(buf);
 
     test_mud_up(); // Wonder if I have multi threading issues here :o)
@@ -243,7 +243,7 @@ void cConHook::Unhook(void)
     if (IsHooked())
     {
         slog(LOG_OFF, 0, "Unhooking player connection");
-        CaptainHook.Unhook(this);
+        g_CaptainHook.Unhook(this);
     }
 
     if (this->m_pWebsServer == 0)
@@ -274,10 +274,10 @@ void cConHook::Close(int bNotifyMud)
     if (IsHooked())
         Unhook();
 
-    if (bNotifyMud && m_nId != 0 && MudHook.IsHooked())
+    if (bNotifyMud && m_nId != 0 && g_MudHook.IsHooked())
     {
         slog(LOG_ALL, 0, "Closing con id %d.", m_nId);
-        protocol_send_close(&MudHook, m_nId);
+        protocol_send_close(&g_MudHook, m_nId);
     }
 
     m_aOutput[0] = 0;
@@ -321,7 +321,7 @@ void cConHook::TransmitCommand(const char *text)
 
     m_nPromptLen = 0;
 
-    protocol_send_text(&MudHook, m_nId, sendText, MULTI_TEXT_CHAR);
+    protocol_send_text(&g_MudHook, m_nId, sendText, MULTI_TEXT_CHAR);
 }
 
 /* ======================= TEXT PARSE & ECHO INPUT ====================== */
@@ -581,7 +581,7 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
     unsigned int x, crlen;
     const char *cretbuf;
     char *newptr;
-    int column = 0, cutpoint = MIN(30, width / 2);
+    int column = 0, cutpoint = std::min(30, width / 2);
 
     if (!(current = source))
         return NULL;
@@ -817,7 +817,7 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
  */
 void cConHook::StripHTML(char *dest, const char *src)
 {
-    if (mplex_arg.g_bModeRawHTML)
+    if (g_mplex_arg.g_bModeRawHTML)
     {
         strcpy(dest, src);
         return;
@@ -1308,12 +1308,12 @@ cConHook::cConHook(void)
     // m_pWebsHdl = 0;
     m_pWebsServer = 0;
 
-    m_sSetup.echo = mplex_arg.g_bModeEcho;
-    m_sSetup.redraw = mplex_arg.g_bModeRedraw;
-    m_sSetup.telnet = mplex_arg.g_bModeTelnet;
-    m_sSetup.websockets = mplex_arg.bWebSockets;
+    m_sSetup.echo = g_mplex_arg.g_bModeEcho;
+    m_sSetup.redraw = g_mplex_arg.g_bModeRedraw;
+    m_sSetup.telnet = g_mplex_arg.g_bModeTelnet;
+    m_sSetup.websockets = g_mplex_arg.bWebSockets;
 
-    if (mplex_arg.g_bModeANSI)
+    if (g_mplex_arg.g_bModeANSI)
         m_sSetup.emulation = TERM_ANSI;
     else
         m_sSetup.emulation = TERM_TTY;
@@ -1331,7 +1331,7 @@ cConHook::cConHook(void)
     m_nPromptMode = 0;
     strcpy(m_aHost, "");
 
-    if (mplex_arg.bWebSockets)
+    if (g_mplex_arg.bWebSockets)
     {
         return; // Hack for making websockets work
     }
@@ -1349,11 +1349,11 @@ cConHook::cConHook(void)
     char hostname[49];
     int x;
 
-    assert(MotherHook.IsHooked());
+    assert(g_MotherHook.IsHooked());
 
     j = sizeof(conaddr);
     // slog(LOG_OFF, 0, "accept() before.");
-    fd = accept(MotherHook.tfd(), (struct sockaddr *)&conaddr, &j);
+    fd = accept(g_MotherHook.tfd(), (struct sockaddr *)&conaddr, &j);
     // slog(LOG_OFF, 0, "accept() after.");
     Assert(fd >= 0, "ACCEPT");
 
@@ -1418,7 +1418,7 @@ cConHook::cConHook(void)
     if (this->tfd() != -1)
         slog(LOG_ALL, 0, "cConHook() called with a non -1 fd.");
 
-    CaptainHook.Hook(fd, this);
+    g_CaptainHook.Hook(fd, this);
 
     g_nConnectionsLeft--;
 }

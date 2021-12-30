@@ -15,12 +15,12 @@
 #include "affect.h"
 #include "textutil.h"
 
-int world_norooms = 0;   /* number of rooms in the world   */
-int world_noobjects = 0; /* number of objects in the world */
-int world_nochars = 0;   /* number of chars in the world   */
-int world_nonpc = 0;     /* number of chars in the world   */
-int world_nopc = 0;      /* number of chars in the world   */
-int world_nozones = 0;   /* number of zones in the world   */
+int g_world_norooms = 0;   /* number of rooms in the world   */
+int g_world_noobjects = 0; /* number of objects in the world */
+int g_world_nochars = 0;   /* number of chars in the world   */
+int g_world_nonpc = 0;     /* number of chars in the world   */
+int g_world_nopc = 0;      /* number of chars in the world   */
+int g_world_nozones = 0;   /* number of zones in the world   */
 
 /* Descriptor stuff is in system.c */
 
@@ -57,7 +57,7 @@ char_point_data::char_point_data(void)
 
 char_data::char_data(void)
 {
-    world_nochars++;
+    g_world_nochars++;
 
     money = NULL;
     descriptor = NULL;
@@ -80,14 +80,14 @@ char_data::~char_data(void)
     if (last_attacker)
         FREE(last_attacker);
 #endif
-    world_nochars--;
+    g_world_nochars--;
 }
 
 room_data::room_data(void)
 {
     status = UNIT_ST_ROOM;
 
-    world_norooms++;
+    g_world_norooms++;
     mapx = -1;
     mapy = -1;
 #ifdef DMSERVER
@@ -97,7 +97,7 @@ room_data::room_data(void)
 
 room_data::~room_data(void)
 {
-    world_norooms--;
+    g_world_norooms--;
 
     for (int i = 0; i < MAX_EXIT + 1; i++)
         if (dir_option[i])
@@ -108,7 +108,7 @@ obj_data::obj_data(void)
 {
     status = UNIT_ST_OBJ;
 
-    world_noobjects++;
+    g_world_noobjects++;
 
     memset(value, 0, sizeof(value));
     cost = 0;
@@ -121,14 +121,14 @@ obj_data::obj_data(void)
 
 obj_data::~obj_data(void)
 {
-    world_noobjects--;
+    g_world_noobjects--;
 }
 
 pc_data::pc_data(void)
 {
     status = UNIT_ST_PC;
 
-    world_nopc++;
+    g_world_nopc++;
 
     bank = NULL;
     guild = NULL;
@@ -169,7 +169,7 @@ pc_data::pc_data(void)
 
 pc_data::~pc_data(void)
 {
-    world_nopc--;
+    g_world_nopc--;
 
     if (guild)
         FREE(guild);
@@ -188,7 +188,7 @@ npc_data::npc_data(void)
 {
     status = UNIT_ST_NPC;
 
-    world_nonpc++;
+    g_world_nonpc++;
 
     memset(weapons, 0, sizeof(weapons));
     memset(spells, 0, sizeof(spells));
@@ -198,7 +198,7 @@ npc_data::npc_data(void)
 
 npc_data::~npc_data(void)
 {
-    world_nonpc--;
+    g_world_nonpc--;
 }
 
 zone_type::zone_type(void)
@@ -454,7 +454,7 @@ unit_data *unit_data::copy()
     }
     else
         assert(FALSE);
-    insert_in_unit_list(u); /* Put unit into the unit_list      */
+    insert_in_unit_list(u); /* Put unit into the g_unit_list      */
     apply_affect(u);        /* Set all affects that modify      */
     void start_all_special(class unit_data * u);
     start_all_special(u);
@@ -514,12 +514,10 @@ unit_data::~unit_data(void)
     /* Sanity due to wierd bug I saw (MS, 30/05-95) */
 
 #ifdef DMSERVER
-    extern class unit_data *unit_list;
-
     assert(gnext == NULL);
     assert(gprevious == NULL);
     assert(next == NULL);
-    assert(unit_list != this);
+    assert(g_unit_list != this);
 #endif
 
     if (key)
@@ -633,7 +631,7 @@ std::string unit_data::json(void)
             if (UROOM(this)->dir_option[i])
             {
                 s.append(",\n");
-                s.append(str_json_encode_quote(dirs[i]));
+                s.append(str_json_encode_quote(g_dirs[i]));
                 s.append(": {\n");
                 if (UROOM(this)->dir_option[i]->to_room)
                 {

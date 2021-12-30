@@ -53,10 +53,10 @@ class color_type g_cDefcolor;
 int g_nConnectionsLeft = -1;
 
 // Listening for new telnet connections on def. 4242
-class cMotherHook MotherHook;
+class cMotherHook g_MotherHook;
 
 // Sending and receiving data to the MUD server
-class cMudHook MudHook;
+class cMudHook g_MudHook;
 
 //
 // The MotherHook: listens for new connections on the client port (4242)
@@ -84,7 +84,7 @@ void test_mud_up(void)
     char buf[200];
     static int nRetries = 0;
 
-    fd = OpenNetwork(mplex_arg.nMudPort, mplex_arg.pAddress);
+    fd = OpenNetwork(g_mplex_arg.nMudPort, g_mplex_arg.pAddress);
 
     // If this acts up then it might be because of multithreading issues
     // from the clientconnector.
@@ -96,7 +96,7 @@ void test_mud_up(void)
 #else
         sleep(1);
 #endif
-        slog(LOG_OFF, 0, "Unable to connect to MUD server %s:%d", mplex_arg.pAddress, mplex_arg.nMudPort);
+        slog(LOG_OFF, 0, "Unable to connect to MUD server %s:%d", g_mplex_arg.pAddress, g_mplex_arg.nMudPort);
         nRetries++;
         if (nRetries > 600)
         {
@@ -109,18 +109,18 @@ void test_mud_up(void)
     nRetries = 0;
     slog(LOG_OFF, 0, "Stream to server was re-opened!");
 
-    if (MudHook.tfd() != -1)
+    if (g_MudHook.tfd() != -1)
         slog(LOG_ALL, 0, "test mud up called with a non -1 fd.");
 
-    CaptainHook.Hook(fd, &MudHook);
-    // assert(MudHook.IsHooked());
+    g_CaptainHook.Hook(fd, &g_MudHook);
+    // assert(g_MudHook.IsHooked());
 
-    protocol_send_mplex_info(&MudHook, mplex_arg.bWebSockets);
+    protocol_send_mplex_info(&g_MudHook, g_mplex_arg.bWebSockets);
 
     for (con = g_connection_list; con; con = nextcon)
     {
         nextcon = con->m_pNext;
-        sprintf(buf, "%s has begun rebooting... please wait.<br/>", mudname);
+        sprintf(buf, "%s has begun rebooting... please wait.<br/>", g_mudname);
         con->SendCon(buf);
 
         con->m_pFptr = dumbMenuSelect;
@@ -136,15 +136,15 @@ void mud_went_down(void)
     class cConHook *con;
     char buf[200];
 
-    if (MudHook.IsHooked())
-        MudHook.Unhook();
+    if (g_MudHook.IsHooked())
+        g_MudHook.Unhook();
 
     for (con = g_connection_list; con; con = con->m_pNext)
     {
         sprintf(buf,
                 "The connection to %s was broken. "
                 "Please be patient...<br/>",
-                mudname);
+                g_mudname);
         con->SendCon(buf);
         con->m_nId = 0;
         con->m_pFptr = dumbMudDown;
@@ -160,10 +160,10 @@ void Control(void)
 
     for (;;)
     {
-        if (!MotherHook.IsHooked())
+        if (!g_MotherHook.IsHooked())
             return;
 
-        if (!MudHook.IsHooked())
+        if (!g_MudHook.IsHooked())
         {
             if (tries++ > 600)
             {
@@ -177,7 +177,7 @@ void Control(void)
 #endif
             test_mud_up(); /* Need to do this first... */
 
-            if (mplex_arg.bWebSockets)
+            if (g_mplex_arg.bWebSockets)
             {
                 slog(LOG_ALL, 0, "Waiting for a MUDHook to get reconnected...");
                 continue; // See bug description below. Dont wait until MUDHook is reestablished.
@@ -196,7 +196,7 @@ void Control(void)
         // not a problem because somebody will either trigger an existing connection
         // or telnet to get a new connection. Then Wait() will finish and a new
         // round begins.
-        n = CaptainHook.Wait(NULL);
+        n = g_CaptainHook.Wait(NULL);
 
         if (n == -1)
         {
@@ -210,12 +210,12 @@ void Control(void)
 
 void cMotherHook::Unhook(void)
 {
-    CaptainHook.Unhook(this);
+    g_CaptainHook.Unhook(this);
 }
 
 int cMotherHook::IsHooked(void)
 {
-    if (mplex_arg.bWebSockets)
+    if (g_mplex_arg.bWebSockets)
         return TRUE;
     return cHook::IsHooked();
 }
@@ -294,7 +294,7 @@ void cMudHook::Unhook(void)
     if (this->IsHooked())
     {
         slog(LOG_OFF, 0, "Unhooking MUD Hook");
-        CaptainHook.Unhook(this);
+        g_CaptainHook.Unhook(this);
         assert(this->fd != -1);
         cHook::Unhook();
     }
@@ -320,7 +320,7 @@ int cMudHook::read_mud(void)
             break;
 
         case MULTI_EXCHANGE_CHAR:
-            memcpy(mudname, data, len);
+            memcpy(g_mudname, data, len);
             break;
 
         case MULTI_COLOR_CHAR:
@@ -391,7 +391,7 @@ int cMudHook::read_mud(void)
                         slog(LOG_OFF, 0, "MULTI_CON_CHAR: Connected zero id to %d", id);
                         assert(id != 0);
                         con->m_nId = id;
-                        protocol_send_host(&MudHook, id, con->m_aHost, mplex_arg.nMotherPort, con->m_nLine);
+                        protocol_send_host(&g_MudHook, id, con->m_aHost, g_mplex_arg.nMotherPort, con->m_nLine);
                         break;
                     }
                 }
@@ -399,7 +399,7 @@ int cMudHook::read_mud(void)
             if (con == NULL)
             {
                 slog(LOG_OFF, 0, "Unknown destination for confirm! Requesting term.");
-                protocol_send_close(&MudHook, id);
+                protocol_send_close(&g_MudHook, id);
             }
             return 1;
 

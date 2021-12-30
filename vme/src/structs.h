@@ -36,7 +36,7 @@
 #define MESS_VICTIM 2
 #define MESS_ROOM 3
 
-/* For use in spec_assign.c's unit_function_array[] */
+/* For use in spec_assign.c's g_unit_function_array[] */
 #define SD_NEVER 0 /* Never save this function           */
 #define SD_NULL 1  /* Ignore fptr->data (save as 0 ptr)  */
 #define SD_ASCII 2 /* If pointer, then it's ascii char * */

@@ -4,7 +4,7 @@
  $Date: 2004/03/20 06:13:22 $
  $Revision: 2.6 $
  */
-
+#include "external_vars.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -26,16 +26,15 @@
 #include "interpreter.h"
 #include "main.h"
 #include "dilrun.h"
-extern eventqueue events;
 
-class zone_type *boot_zone = NULL; /* Points to the zone currently booted */
+class zone_type *g_boot_zone = NULL; /* Points to the zone currently booted */
 
 /* No Operation */
 class unit_data *zone_nop(class unit_data *u, struct zone_reset_cmd *cmd)
 {
     /* Return TRUE - NOP always succeedes */
 
-    return (class unit_data *)boot_zone; /* dummy */
+    return (class unit_data *)g_boot_zone; /* dummy */
 }
 
 /* Random */
@@ -43,33 +42,30 @@ class unit_data *zone_random(class unit_data *u, struct zone_reset_cmd *cmd)
 {
     /* Return TRUE if random 0-99 less than given percent  */
     if (number(0, 99) < cmd->num[0])
-        return (class unit_data *)boot_zone; /* dummy */
+        return (class unit_data *)g_boot_zone; /* dummy */
     else
         return NULL;
 }
 
-/* Count ->no_in_zone for current 'boot_zone' (above) */
+/* Count ->no_in_zone for current 'g_boot_zone' (above) */
 void zone_update_no_in_zone(void)
 {
-    extern class unit_data *unit_list;
-    extern struct zone_info_type zone_info;
-
     register class unit_data *u;
 
     /* Clear ALL ->no_in_zone */
-    for (auto tmp_zone = zone_info.mmp.begin(); tmp_zone != zone_info.mmp.end(); tmp_zone++)
+    for (auto tmp_zone = g_zone_info.mmp.begin(); tmp_zone != g_zone_info.mmp.end(); tmp_zone++)
         for (auto fi = tmp_zone->second->mmp_fi.begin(); fi != tmp_zone->second->mmp_fi.end(); fi++)
             fi->second->no_in_zone = 0;
 
-    for (u = unit_list; u; u = u->gnext)
-        if (UNIT_FILE_INDEX(u) && (unit_zone(u) == boot_zone))
+    for (u = g_unit_list; u; u = u->gnext)
+        if (UNIT_FILE_INDEX(u) && (unit_zone(u) == g_boot_zone))
             UNIT_FILE_INDEX(u)->no_in_zone++;
 }
 
 /* After loading a unit, call this function to update no_in_zone */
 void zone_loaded_a_unit(class unit_data *u)
 {
-    if (unit_zone(u) == boot_zone)
+    if (unit_zone(u) == g_boot_zone)
         UNIT_FILE_INDEX(u)->no_in_zone++;
 }
 
@@ -100,7 +96,7 @@ bool zone_limit(class unit_data *u, class file_index_type *fi, struct zone_reset
         return FALSE;
 
     /* Check for zone maximum */
-    if (cmd->num[1] && fi->no_in_zone >= cmd->num[1] && unit_zone(u) == boot_zone)
+    if (cmd->num[1] && fi->no_in_zone >= cmd->num[1] && unit_zone(u) == g_boot_zone)
         return FALSE;
 
     /* Check for local maxima */
@@ -131,9 +127,9 @@ class unit_data *zone_load(class unit_data *u, struct zone_reset_cmd *cmd)
 
     /* Does the destination room exist */
     if (u == NULL)
-        szonelog(boot_zone, "Reset Error: Don't know where to put %s@%s", cmd->fi[0]->name, cmd->fi[0]->zone->name);
+        szonelog(g_boot_zone, "Reset Error: Don't know where to put %s@%s", cmd->fi[0]->name, cmd->fi[0]->zone->name);
     else if (cmd->fi[0]->type != UNIT_ST_OBJ && cmd->fi[0]->type != UNIT_ST_NPC)
-        szonelog(boot_zone, "Reset Error: %s@%s loaded object is neither an obj nor npc.", cmd->fi[0]->name, cmd->fi[0]->zone->name);
+        szonelog(g_boot_zone, "Reset Error: %s@%s loaded object is neither an obj nor npc.", cmd->fi[0]->name, cmd->fi[0]->zone->name);
     else if (zone_limit(u, cmd->fi[0], cmd))
     {
         loaded = read_unit(cmd->fi[0]);
@@ -167,21 +163,21 @@ class unit_data *zone_equip(class unit_data *u, struct zone_reset_cmd *cmd)
 
     /* Does the destination unit exist */
     if (u == NULL)
-        szonelog(boot_zone, "Reset error: %s@%s has no parent in equip.", cmd->fi[0]->name, cmd->fi[0]->zone->name);
+        szonelog(g_boot_zone, "Reset error: %s@%s has no parent in equip.", cmd->fi[0]->name, cmd->fi[0]->zone->name);
     else if (!IS_CHAR(u))
-        szonelog(boot_zone,
+        szonelog(g_boot_zone,
                  "Reset Error: %s@%s is not a char in equip.",
                  UNIT_FI_NAME(u),
                  UNIT_FI_ZONENAME(u)); // cmd->fi[0]->name, cmd->fi[0]->zone->name);
     else if (cmd->fi[0]->type != UNIT_ST_OBJ)
-        szonelog(boot_zone,
+        szonelog(g_boot_zone,
                  "Reset Error: %s@%s equipping %s@%s is not an object.",
                  UNIT_FI_NAME(u),
                  UNIT_FI_ZONENAME(u),
                  cmd->fi[0]->name,
                  cmd->fi[0]->zone->name);
     else if (cmd->num[1] <= 0)
-        szonelog(boot_zone,
+        szonelog(g_boot_zone,
                  "Reset Error: %s@%s equipping %s@%s doesn't have a legal equip position.",
                  UNIT_FI_NAME(u),
                  UNIT_FI_ZONENAME(u),
@@ -228,9 +224,9 @@ class unit_data *zone_equip(class unit_data *u, struct zone_reset_cmd *cmd)
 class unit_data *zone_door(class unit_data *u, struct zone_reset_cmd *cmd)
 {
     if (!cmd->fi[0] || (cmd->fi[0]->type != UNIT_ST_ROOM))
-        szonelog(boot_zone, "Zone Reset Error: Not a room in door reference!");
+        szonelog(g_boot_zone, "Zone Reset Error: Not a room in door reference!");
     else if (!ROOM_EXIT(cmd->fi[0]->fi_unit_list.front(), cmd->num[0]))
-        szonelog(boot_zone, "Zone Reset Error: No %s direction from room %s in door.", dirs[cmd->num[0]], cmd->fi[0]->name);
+        szonelog(g_boot_zone, "Zone Reset Error: No %s direction from room %s in door.", g_dirs[cmd->num[0]], cmd->fi[0]->name);
     else
         ROOM_EXIT(cmd->fi[0]->fi_unit_list.front(), cmd->num[0])->exit_info = cmd->num[1];
 
@@ -243,7 +239,7 @@ class unit_data *zone_purge(class unit_data *u, struct zone_reset_cmd *cmd)
     class unit_data *next;
 
     if (cmd->fi[0]->type != UNIT_ST_ROOM)
-        szonelog(boot_zone, "Reset Error : No room in purge reference!");
+        szonelog(g_boot_zone, "Reset Error : No room in purge reference!");
     else
         for (u = UNIT_CONTAINS(cmd->fi[0]->fi_unit_list.front()); u; u = next)
         {
@@ -262,7 +258,7 @@ class unit_data *zone_remove(class unit_data *u, struct zone_reset_cmd *cmd)
     class unit_data *next;
 
     if (cmd->fi[1]->type != UNIT_ST_ROOM)
-        szonelog(boot_zone, "Reset Error: No room in remove reference!");
+        szonelog(g_boot_zone, "Reset Error: No room in remove reference!");
     else
         for (u = UNIT_CONTAINS(cmd->fi[1]->fi_unit_list.front()); u; u = next)
         {
@@ -285,11 +281,11 @@ class unit_data *zone_follow(class unit_data *u, struct zone_reset_cmd *cmd)
 
     /* Does the master exist */
     if (u == NULL)
-        szonelog(boot_zone, "Reset Error: Non Existant destination-unit in follow");
+        szonelog(g_boot_zone, "Reset Error: Non Existant destination-unit in follow");
     else if (!IS_CHAR(u))
-        szonelog(boot_zone, "Reset Error: Master to follow is not a mobile.");
+        szonelog(g_boot_zone, "Reset Error: Master to follow is not a mobile.");
     else if (cmd->fi[0]->type != UNIT_ST_NPC)
-        szonelog(boot_zone, "Reset Error: Follower %s is not a mobile.", cmd->fi[0]->name);
+        szonelog(g_boot_zone, "Reset Error: Follower %s is not a mobile.", cmd->fi[0]->name);
     else if (zone_limit(u, cmd->fi[0], cmd))
     {
         loaded = read_unit(cmd->fi[0]);
@@ -331,9 +327,8 @@ bool low_reset_zone(class unit_data *u, struct zone_reset_cmd *cmd)
 void zone_reset(class zone_type *zone)
 {
     /* extern int memory_total_alloc;
-       int i = memory_total_alloc; */
-
-    boot_zone = zone;
+           int i = memory_total_alloc; */
+    g_boot_zone = zone;
 
     zone_update_no_in_zone(); /* Reset the fi->no_in_zone */
 
@@ -341,9 +336,9 @@ void zone_reset(class zone_type *zone)
 
     /* Far too much LOG:
        slog(LOG_OFF, 0, "Zone reset of '%s' done (%d bytes used).",
-       zone->name, memory_total_alloc - i); */
+       zone->name, g_memory_total_alloc - i); */
 
-    boot_zone = NULL;
+    g_boot_zone = NULL;
 }
 
 /* MS: Changed this to queue reset events at boot such that game comes up
@@ -356,14 +351,12 @@ void reset_all_zones(void)
 
     void zone_event(void *, void *);
 
-    extern int world_nozones;
-
     for (j = 0; j <= 255; j++)
     {
-        for (auto zone = zone_info.mmp.begin(); zone != zone_info.mmp.end(); zone++)
+        for (auto zone = g_zone_info.mmp.begin(); zone != g_zone_info.mmp.end(); zone++)
         {
             if (j == 0)
-                world_nozones++;
+                g_world_nozones++;
 
             if (zone->second->access != j)
                 continue;
@@ -376,11 +369,9 @@ void reset_all_zones(void)
 
 bool zone_is_empty(class zone_type *zone)
 {
-    extern class descriptor_data *descriptor_list;
-
     class descriptor_data *d;
 
-    for (d = descriptor_list; d; d = d->next)
+    for (d = g_descriptor_list; d; d = d->next)
         if (descriptor_is_playing(d))
             if (unit_zone(d->character) == zone)
                 return FALSE;
@@ -402,8 +393,8 @@ void zone_event(void *p1, void *p2)
          */
 
         if (zone->reset_mode != RESET_NOT)
-            events.add(zone->zone_time * PULSE_ZONE + number(0, WAIT_SEC * 180), zone_event, zone, 0);
+            g_events.add(zone->zone_time * PULSE_ZONE + number(0, WAIT_SEC * 180), zone_event, zone, 0);
     }
     else
-        events.add(1 * PULSE_ZONE, zone_event, zone, 0);
+        g_events.add(1 * PULSE_ZONE, zone_event, zone, 0);
 }

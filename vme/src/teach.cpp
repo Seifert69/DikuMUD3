@@ -139,7 +139,7 @@ int actual_cost(int cost, sbit8 racemodifier, int level, int virtual_level)
     if (virtual_level > 100)
     {
        int i;
-       i = MIN(100, virtual_level - 100);
+       i = std::min(100, virtual_level - 100);
        avg_skill_cost += (i * AVERAGE_SKILL_COST * (ABILITY_POINT_FACTOR - 1)) / 100;
        // With level > 100, the average skill cost will increase as per these average examples
        // 100 : 10 + ( 0   * 10 * (4-1))/100 = 10+0
@@ -294,7 +294,12 @@ void info_show_one(class unit_data *teacher,
 
         if (next_point == 0)
         {
-            snprintf(buf, sizeof(buf), "<div class='ca'>%s%3d%% %-20s [Practice next level]</div><br/>", spc(4 * indent), current_points, text);
+            snprintf(buf,
+                     sizeof(buf),
+                     "<div class='ca'>%s%3d%% %-20s [Practice next level]</div><br/>",
+                     spc(4 * indent),
+                     current_points,
+                     text);
             vect.push_back(std::make_pair(1001, buf));
         }
         else
@@ -302,28 +307,30 @@ void info_show_one(class unit_data *teacher,
             currency_t currency = local_currency(teacher);
 
             if (IS_SET(PC_FLAGS(pupil), PC_EXPERT))
-                snprintf(buf, sizeof(buf),
-                        "%s%s%3d%% %-20s [%3d%% of %3d%%, points %2d, %s] %s%s<br/>",
-                        next_point >= 20 ? "<div class='ca'>" : "",
-                        spc(4 * indent),
-                        current_points,
-                        text,
-                        current_points,
-                        max_level,
-                        next_point,
-                        money_string(money_round(TRUE, gold, currency, 1), currency, FALSE),
-                        std::string(lvl, '*').c_str(),
-                        next_point >= 20 ? "</div>" : "");
+                snprintf(buf,
+                         sizeof(buf),
+                         "%s%s%3d%% %-20s [%3d%% of %3d%%, points %2d, %s] %s%s<br/>",
+                         next_point >= 20 ? "<div class='ca'>" : "",
+                         spc(4 * indent),
+                         current_points,
+                         text,
+                         current_points,
+                         max_level,
+                         next_point,
+                         money_string(money_round(TRUE, gold, currency, 1), currency, FALSE),
+                         std::string(lvl, '*').c_str(),
+                         next_point >= 20 ? "</div>" : "");
             else
-                snprintf(buf, sizeof(buf),
-                        "%s%s%3d%% %-20s [practice points %3d] %s%s<br/>",
-                        next_point >= 20 ? "<div class='ca'>" : "",
-                        spc(4 * indent),
-                        current_points,
-                        text,
-                        next_point,
-                        std::string(lvl, '*').c_str(),
-                        next_point >= 20 ? "</div>" : "");
+                snprintf(buf,
+                         sizeof(buf),
+                         "%s%s%3d%% %-20s [practice points %3d] %s%s<br/>",
+                         next_point >= 20 ? "<div class='ca'>" : "",
+                         spc(4 * indent),
+                         current_points,
+                         text,
+                         next_point,
+                         std::string(lvl, '*').c_str(),
+                         next_point >= 20 ? "</div>" : "");
 
             vect.push_back(std::make_pair(next_point, buf));
         }
@@ -657,13 +664,14 @@ int practice(class unit_data *teacher,
 
     if (!TREE_ISLEAF(pColl->tree, pckt->teaches[teach_index].node))
     {
-        snprintf(buf, sizeof(buf),
-                "It is not possible to practice the category '%s'.<br/>"
-                "The category is there to prevent you from being flooded with information.<br/>"
-                "Try the command: 'info %s' on the category itself,<br/>"
-                "to see which skills it contains.<br/>",
-                pColl->text[pckt->teaches[teach_index].node],
-                pColl->text[pckt->teaches[teach_index].node]);
+        snprintf(buf,
+                 sizeof(buf),
+                 "It is not possible to practice the category '%s'.<br/>"
+                 "The category is there to prevent you from being flooded with information.<br/>"
+                 "Try the command: 'info %s' on the category itself,<br/>"
+                 "to see which skills it contains.<br/>",
+                 pColl->text[pckt->teaches[teach_index].node],
+                 pColl->text[pckt->teaches[teach_index].node]);
         send_to_char(buf, pupil);
         return TRUE;
     }
@@ -678,10 +686,11 @@ int practice(class unit_data *teacher,
     req = trainrestricted(pupil, &pColl->prof_table[pckt->teaches[teach_index].node], pckt->teaches[teach_index].min_glevel);
     if (*req)
     {
-        snprintf(buf, sizeof(buf),
-                "To practice %s you need to meet the following requirements %s.<br/>",
-                pColl->text[pckt->teaches[teach_index].node],
-                req);
+        snprintf(buf,
+                 sizeof(buf),
+                 "To practice %s you need to meet the following requirements %s.<br/>",
+                 pColl->text[pckt->teaches[teach_index].node],
+                 req);
         send_to_char(buf, pupil);
         return TRUE;
     }
@@ -839,10 +848,10 @@ int auto_train(int type,
                 if ((nodeidx == ABIL_CON) && (CHAR_ABILITY(pupil, ABIL_CON) < CHAR_ABILITY(pupil, ABIL_HP) / 2))
                     ;
                 else if ((nodeidx == ABIL_BRA) &&
-                         (CHAR_ABILITY(pupil, ABIL_BRA) < MAX(CHAR_ABILITY(pupil, ABIL_MAG), CHAR_ABILITY(pupil, ABIL_DIV)) / 2))
+                         (CHAR_ABILITY(pupil, ABIL_BRA) < std::max(CHAR_ABILITY(pupil, ABIL_MAG), CHAR_ABILITY(pupil, ABIL_DIV)) / 2))
                     ;
                 else if ((nodeidx == ABIL_CHA) &&
-                         (CHAR_ABILITY(pupil, ABIL_CHA) < MAX(CHAR_ABILITY(pupil, ABIL_MAG), CHAR_ABILITY(pupil, ABIL_DIV)) / 2))
+                         (CHAR_ABILITY(pupil, ABIL_CHA) < std::max(CHAR_ABILITY(pupil, ABIL_MAG), CHAR_ABILITY(pupil, ABIL_DIV)) / 2))
                     ;
                 else if ((nodeidx == ABIL_HP) && ((CHAR_ABILITY(pupil, ABIL_HP) * cost) / 10 < CHAR_LEVEL(pupil)))
                     ;
@@ -1030,7 +1039,9 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
 
             if (!exd)
             {
-                snprintf(buf, sizeof(buf), "Your guild is not setup properly. If you're already in a guild please contact an administrator.<br/>");
+                snprintf(buf,
+                         sizeof(buf),
+                         "Your guild is not setup properly. If you're already in a guild please contact an administrator.<br/>");
                 send_to_char(buf, sarg->activator);
                 return SFR_BLOCK;
             }
@@ -1054,10 +1065,11 @@ int teach_basis(struct spec_arg *sarg, struct teach_packet *pckt)
                 }
             }
 
-            snprintf(buf, sizeof(buf),
-                    "<br/>Done auto practicing. You have %d ability and %d skill points left.<br/>",
-                    PC_ABILITY_POINTS(sarg->activator),
-                    PC_SKILL_POINTS(sarg->activator));
+            snprintf(buf,
+                     sizeof(buf),
+                     "<br/>Done auto practicing. You have %d ability and %d skill points left.<br/>",
+                     PC_ABILITY_POINTS(sarg->activator),
+                     PC_SKILL_POINTS(sarg->activator));
             send_to_char(buf, sarg->activator);
         }
 
@@ -1232,9 +1244,7 @@ int teach_init(struct spec_arg *sarg)
     int nProfession = -1;
     if (!str_is_empty(buf))
     {
-        extern const char *professions[];
-
-        if ((nProfession = search_block(buf, professions, TRUE)) == -1)
+        if ((nProfession = search_block(buf, g_professions, TRUE)) == -1)
         {
             szonelog(UNIT_FI_ZONE(sarg->owner),
                      "%s@%s: Unknown profession %s in teacher-init.",
@@ -1368,7 +1378,7 @@ int teach_init(struct spec_arg *sarg)
                         a_skill.node = n;
                         a_skill.min_cost_per_point = 1;
                         a_skill.max_cost_per_point =
-                            MAX(1, 1000 + -100 * max_skill_mod(g_WpnColl.prof_table[n].profession_cost[nProfession]));
+                            std::max(1, 1000 + -100 * max_skill_mod(g_WpnColl.prof_table[n].profession_cost[nProfession]));
                         packet->teaches[count - 1] = a_skill;
 
                         count++;
@@ -1452,9 +1462,9 @@ int teach_init(struct spec_arg *sarg)
 
                if (realm == -1)
                {
-                   realm = spell_info[i].realm;
+                   realm = g_spell_info[i].realm;
                }
-               else if (realm != spell_info[i].realm)
+               else if (realm != g_spell_info[i].realm)
                {
                    szonelog(UNIT_FI_ZONE(sarg->owner),
                             "%s@%s: Differing realms in %s",
@@ -1578,9 +1588,9 @@ int teach_init(struct spec_arg *sarg)
         {
             packet->teaches[n].min_glevel = a_skill.min_glevel;
             if (a_skill.max_skill < 100)
-                packet->teaches[n].max_skill = MIN(packet->teaches[n].max_skill, a_skill.max_skill);
+                packet->teaches[n].max_skill = std::min(packet->teaches[n].max_skill, a_skill.max_skill);
             if (a_skill.max_skill > 100)
-                packet->teaches[n].max_skill = MAX(packet->teaches[n].max_skill, a_skill.max_skill);
+                packet->teaches[n].max_skill = std::max(packet->teaches[n].max_skill, a_skill.max_skill);
 
             // Retain the calculated max & min and cost.
             // I'm quite sure they're "more fun & diverse"

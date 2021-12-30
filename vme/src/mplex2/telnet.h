@@ -63,12 +63,12 @@
 #define SYNCH 242 /* for telfunc calls */
 
 #ifdef TELCMDS
-char *telcmds[] = {
+char *g_telcmds[] = {
     "EOF", "SUSP", "ABORT", "EOR", "SE",   "NOP",  "DMARK", "BRK",  "IP",  "AO", "AYT",
     "EC",  "EL",   "GA",    "SB",  "WILL", "WONT", "DO",    "DONT", "IAC", 0,
 };
 #else
-extern char *telcmds[];
+extern char *g_telcmds[];
 #endif
 
 #define TELCMD_FIRST xEOF
@@ -234,9 +234,9 @@ char *telopts[NTELOPTS + 1] = {
     "0", "SYNCH", "BRK", "IP", "AO", "AYT", "EOR", "ABORT", "EOF", "SUSP", "EC", "EL", "EW", "RP", "LNEXT", "XON", "XOFF", "FORW1",        \
         "FORW2", 0,
 #ifdef SLC_NAMES
-char *slc_names[] = {SLC_NAMELIST};
+char *g_slc_names[] = {SLC_NAMELIST};
 #else
-extern char *slc_names[];
+extern char *g_slc_names[];
     #define SLC_NAMES SLC_NAMELIST
 #endif
 
@@ -292,7 +292,7 @@ extern char *slc_names[];
 #define AUTHTYPE_TEST 99
 
 #ifdef AUTH_NAMES
-char *authtype_names[] = {
+char *g_authtype_names[] = {
     "NULL",
     "KERBEROS_V4",
     "KERBEROS_V5",
@@ -301,7 +301,7 @@ char *authtype_names[] = {
     0,
 };
 #else
-extern char *authtype_names[];
+extern char *g_authtype_names[];
 #endif
 
 #define AUTHTYPE_NAME_OK(x) ((unsigned int)(x) < AUTHTYPE_CNT)
@@ -327,7 +327,7 @@ extern char *authtype_names[];
 #define ENCTYPE_CNT 3
 
 #ifdef ENCRYPT_NAMES
-char *encrypt_names[] = {
+char *g_encrypt_names[] = {
     "IS",
     "SUPPORT",
     "REPLY",
@@ -339,15 +339,15 @@ char *encrypt_names[] = {
     "DEC-KEYID",
     0,
 };
-char *enctype_names[] = {
+char *g_enctype_names[] = {
     "ANY",
     "DES_CFB64",
     "DES_OFB64",
     0,
 };
 #else
-extern char *encrypt_names[];
-extern char *enctype_names[];
+extern char *g_encrypt_names[];
+extern char *g_enctype_names[];
 #endif
 
 #define ENCRYPT_NAME_OK(x) ((unsigned int)(x) < ENCRYPT_CNT)

@@ -368,7 +368,7 @@ char *color_type::key_string(void)
     while (l)
     {
         char tmp[200];
-        i = MAX(0, 25 - strlen(l->keyword));
+        i = std::max(static_cast<size_t>(0), 25 - strlen(l->keyword));
         snprintf(tmp, sizeof(tmp), "<div class='%s'>%s%s= %s</div><br/>", l->color, l->keyword, spc(i), l->color);
         strcat(buff, tmp);
         l = l->next;

@@ -47,18 +47,18 @@ void doelse(int elif, int abcd, const char *dcba)
 {
 #if PPDEBUG
     if (PPDEBUG)
-        printf("doelse: %d\n", Iflevel);
+        printf("doelse: %d\n", g_Iflevel);
 #endif /* PPDEBUG */
-    if (Iflevel)
+    if (g_Iflevel)
     {
         /* We are processing an if */
-        if (Ifstack[Iflevel].i_else)
+        if (g_Ifstack[g_Iflevel].i_else)
             non_fatal("\"#else\" already encountered", "");
         else
         {
-            if (Ifstate == IFTRUE)
-                Ifstate = Ifstack[Iflevel].i_state = IFNEVER;
-            else if (Ifstate == IFFALSE)
+            if (g_Ifstate == IFTRUE)
+                g_Ifstate = g_Ifstack[g_Iflevel].i_state = IFNEVER;
+            else if (g_Ifstate == IFFALSE)
             {
                 if (elif)
                 {
@@ -67,16 +67,16 @@ void doelse(int elif, int abcd, const char *dcba)
                      *	that routines which "eval" causes to be called will correctly process
                      *	the "elif" expression (in particular "_docall").
                      */
-                    Ifstate = Ifstack[Iflevel].i_state = IFTRUE;
-                    Ifstate = Ifstack[Iflevel].i_state = eval() ? IFTRUE : IFFALSE;
+                    g_Ifstate = g_Ifstack[g_Iflevel].i_state = IFTRUE;
+                    g_Ifstate = g_Ifstack[g_Iflevel].i_state = eval() ? IFTRUE : IFFALSE;
                 }
                 else
                 {
-                    Ifstate = Ifstack[Iflevel].i_state = IFTRUE;
+                    g_Ifstate = g_Ifstack[g_Iflevel].i_state = IFTRUE;
                 }
             }
             /* If have seen an #else */
-            Ifstack[Iflevel].i_else = !elif;
+            g_Ifstack[g_Iflevel].i_else = !elif;
         }
     }
     else
@@ -100,10 +100,10 @@ void doendif(int aaa, int bbb, const char *ccc)
 {
 #if PPDEBUG
     if (PPDEBUG)
-        printf("doendif: %d\n", Iflevel);
+        printf("doendif: %d\n", g_Iflevel);
 #endif /* PPDEBUG */
-    if (Iflevel)
-        Ifstate = Ifstack[--Iflevel].i_state; /* Pop stack */
+    if (g_Iflevel)
+        g_Ifstate = g_Ifstack[--g_Iflevel].i_state; /* Pop stack */
     else
         non_fatal("\"#endif\" outside of \"#if\"", "");
 }
@@ -118,20 +118,20 @@ void doendif(int aaa, int bbb, const char *ccc)
 
 void doif(int aaa, int bbb, const char *ccc)
 {
-    if (Iflevel >= IFSTACKSIZE)
+    if (g_Iflevel >= IFSTACKSIZE)
         non_fatal("\"#if\" stack overflow", "");
     else
     {
-        if (Ifstate == IFTRUE)
+        if (g_Ifstate == IFTRUE)
         {
-            Ifstate = Ifstack[++Iflevel].i_state = eval() ? IFTRUE : IFFALSE;
+            g_Ifstate = g_Ifstack[++g_Iflevel].i_state = eval() ? IFTRUE : IFFALSE;
         }
         else
         {
-            Ifstate = Ifstack[++Iflevel].i_state = IFNEVER; /* NO #else */
-            scaneol();                                      /* Just absorb the rest */
+            g_Ifstate = g_Ifstack[++g_Iflevel].i_state = IFNEVER; /* NO #else */
+            scaneol();                                            /* Just absorb the rest */
         }
-        Ifstack[Iflevel].i_else = FALSE; /* No #else seen */
+        g_Ifstack[g_Iflevel].i_else = FALSE; /* No #else seen */
     }
 }
 
@@ -150,7 +150,7 @@ void doifs(int t, int bbb, const char *ccc)
 {
     register int iftype;
 
-    if (Ifstate == IFTRUE)
+    if (g_Ifstate == IFTRUE)
     {
         /* Get next non-space token */
         if (getnstoken(GT_STR) == LETTER)
@@ -159,7 +159,7 @@ void doifs(int t, int bbb, const char *ccc)
             if (PPDEBUG)
                 printf("doifs: %d %s", t, Token);
 #endif /* PPDEBUG */
-            iftype = (lookup(Token, NULL) ? TRUE : FALSE) ^ (t ? FALSE : TRUE) ? IFTRUE : IFFALSE;
+            iftype = (lookup(g_Token, NULL) ? TRUE : FALSE) ^ (t ? FALSE : TRUE) ? IFTRUE : IFFALSE;
         }
         else
         {
@@ -170,16 +170,16 @@ void doifs(int t, int bbb, const char *ccc)
     else
         iftype = IFNEVER; /* Inside false #if -- No #else */
 
-    if (Iflevel >= IFSTACKSIZE)
+    if (g_Iflevel >= IFSTACKSIZE)
         non_fatal("\"#if\" stack overflow", "");
     else
     {
-        Ifstate = Ifstack[++Iflevel].i_state = iftype;
-        Ifstack[Iflevel].i_else = FALSE;
+        g_Ifstate = g_Ifstack[++g_Iflevel].i_state = iftype;
+        g_Ifstack[g_Iflevel].i_else = FALSE;
     }
 
 #if PPDEBUG
     if (PPDEBUG)
-        printf("doifs: %d %d %d\n", t, iftype, Iflevel);
+        printf("doifs: %d %d %d\n", t, iftype, g_Iflevel);
 #endif /* PPDEBUG */
 }

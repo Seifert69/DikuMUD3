@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <algorithm>
+
 #include "structs.h"
 #include "utils.h"
 #include "skills.h"
@@ -63,10 +65,6 @@ struct combat_msg_list
 };
 
 struct combat_msg_list fight_messages[COM_MAX_MSGS];
-
-/* External structures */
-
-extern class unit_data *unit_list;
 
 /* External procedures */
 
@@ -691,16 +689,16 @@ static void change_alignment(class unit_data *slayer, class unit_data *victim)
 
     diff = CHAR_LEVEL(slayer) - CHAR_LEVEL(victim);
     if (diff > 0)
-        adjust += (adjust * MIN(10, diff)) / 10;
+        adjust += (adjust * std::min(10, diff)) / 10;
     else if (diff < 0)
-        adjust += (adjust * MAX(-10, diff)) / 20;
+        adjust += (adjust * std::max(-10, diff)) / 20;
 
-    adjust = MIN(200, adjust);
-    adjust = MAX(-200, adjust);
+    adjust = std::min(200, adjust);
+    adjust = std::max(-200, adjust);
 
     UNIT_ALIGNMENT(slayer) += adjust;
-    UNIT_ALIGNMENT(slayer) = MIN(1000, UNIT_ALIGNMENT(slayer));
-    UNIT_ALIGNMENT(slayer) = MAX(-1000, UNIT_ALIGNMENT(slayer));
+    UNIT_ALIGNMENT(slayer) = std::min(static_cast<sbit16>(1000), UNIT_ALIGNMENT(slayer));
+    UNIT_ALIGNMENT(slayer) = std::max(static_cast<sbit16>(-1000), UNIT_ALIGNMENT(slayer));
 }
 
 /* Do all the gain stuff for CH where no is the number of players */
@@ -725,7 +723,7 @@ static void person_gain(class unit_data *ch, class unit_data *dead, int share, i
                share /= 2; // Only 50% in wimpy */
 
             if (CHAR_LEVEL(ch) < maxlevel - 5)
-                share -= (MIN(95, 7 * (maxlevel - (CHAR_LEVEL(ch) + 5))) * share) / 100;
+                share -= (std::min(95, 7 * (maxlevel - (CHAR_LEVEL(ch) + 5))) * share) / 100;
         }
 
         gain_exp(ch, share);
@@ -782,7 +780,7 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
         paf = affected_by_spell(victim, ID_MAX_ATTACKER);
 
         if (paf)
-            maxlevel = MAX(virtual_level(head), paf->data[0]);
+            maxlevel = std::max(virtual_level(head), paf->data[0]);
         else
             maxlevel = virtual_level(head);
 
@@ -797,8 +795,8 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
                 {
                     sumlevel += virtual_level(f->follower);
 
-                    maxlevel = MAX(virtual_level(f->follower), maxlevel);
-                    minlevel = MIN(virtual_level(f->follower), minlevel);
+                    maxlevel = std::max(virtual_level(f->follower), maxlevel);
+                    minlevel = std::min(virtual_level(f->follower), minlevel);
 
                     no_members++;
                 }
@@ -816,14 +814,14 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
             /* Check for level difference */
 
             if (rellevel < 0)
-                share = (MAX(0, 100 + 15 * rellevel) * share) / 100;
+                share = (std::max(0, 100 + 15 * rellevel) * share) / 100;
             else if (rellevel > 0)
                 share = ((100 + 15 * rellevel) * share) / 100;
 
             if (no_members > 1)
                 share = (4 * share) / (3 + no_members);
 
-            share = MIN(100 * no_members + 300, share);
+            share = std::min(100 * no_members + 300, share);
         }
     }
 
@@ -859,7 +857,7 @@ int lose_exp(class unit_data *ch)
 
    // This line makes sure, that you lose at most half a level...
 
-   loss = MIN(loss, level_xp(PC_VIRTUAL_LEVEL(ch)) / 2);
+   loss = std::min(loss, level_xp(PC_VIRTUAL_LEVEL(ch)) / 2);
 
    // This line takes care of the case where you have less or almost
    // equal XP to your required. You thus lose at least 1/5th your
@@ -868,7 +866,7 @@ int lose_exp(class unit_data *ch)
    loss = MAX(loss, level_xp(PC_VIRTUAL_LEVEL(ch)) / 5);
 
    // This line takes care of newbies, setting the lower bound..
-   i = MAX(0, (CHAR_EXP(ch) - required_xp(START_LEVEL)) / 2);
+   i = std::max(0, (CHAR_EXP(ch) - required_xp(START_LEVEL)) / 2);
 
    if (loss > i)
       loss = i;
@@ -911,7 +909,7 @@ void modify_hit(class unit_data *ch, int hit)
     if (CHAR_POS(ch) > POSITION_DEAD)
     {
         UNIT_HIT(ch) += hit;
-        UNIT_HIT(ch) = MIN(hit_limit(ch), UNIT_HIT(ch));
+        UNIT_HIT(ch) = std::min(hit_limit(ch), UNIT_HIT(ch));
 
         update_pos(ch);
 
@@ -937,7 +935,7 @@ void damage(class unit_data *ch,
         return;
 
     /* Minimum is 0 damage points [ no maximum! ] */
-    dam = MAX(dam, 0);
+    dam = std::max(dam, 0);
 
     /* If neither are allowed to attack each other... */
     if (pk_test(ch, victim, FALSE) && pk_test(victim, ch, FALSE))
@@ -1009,12 +1007,12 @@ void damage(class unit_data *ch,
 
     snprintf(arg, sizeof(arg), "%d %d %d", attack_group, attack_number, hit_location);
 
-    if (send_ack(ch, medium, victim, &dam, &cmd_auto_damage, arg, victim) == SFR_BLOCK)
+    if (send_ack(ch, medium, victim, &dam, &g_cmd_auto_damage, arg, victim) == SFR_BLOCK)
         return;
     if (victim != ch)
     {
         if ((paf = affected_by_spell(victim, ID_MAX_ATTACKER)))
-            paf->data[0] = MAX(CHAR_LEVEL(ch), paf->data[0]);
+            paf->data[0] = std::max(static_cast<int>(CHAR_LEVEL(ch)), paf->data[0]);
         else
         {
             class unit_affected_type af;
@@ -1152,7 +1150,7 @@ void damage(class unit_data *ch,
         if (!IS_NPC(victim))
         {
             slog(LOG_EXTENSIVE,
-                 MAX(UNIT_MINV(ch), UNIT_MINV(victim)),
+                 std::max(UNIT_MINV(ch), UNIT_MINV(victim)),
                  "%s killed by %s at %s",
                  STR(UNIT_NAME(victim)),
                  TITLENAME(ch),
@@ -1357,7 +1355,7 @@ int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapo
     {
         cact("You fumble with your $2N!", A_ALWAYS, att, att_weapon, cActParameter(), TO_CHAR, "miss_me");
         cact("$1n fumbles with $1s $2N!", A_ALWAYS, att, att_weapon, cActParameter(), TO_ROOM, "miss_other");
-        hm = MIN(-10, roll - open100());
+        hm = std::min(-10, roll - open100());
         damage_object(att, att_weapon, hm);
         return 0;
     }
@@ -1368,7 +1366,7 @@ int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapo
     }
 
     if (CHAR_COMBAT(att))
-        CHAR_COMBAT(att)->changeSpeed(wpn_info[att_weapon_type].speed);
+        CHAR_COMBAT(att)->changeSpeed(g_wpn_info[att_weapon_type].speed);
 
     if (!check_combat(att))
         return -1;
@@ -1381,7 +1379,7 @@ int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapo
     dam = 0;
 
     if (!CHAR_AWAKE(def))
-        hm = MAX(hm, 100);
+        hm = std::max(hm, 100);
 
     if (hm < 0) /* a miss */
     {
@@ -1409,15 +1407,15 @@ int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapo
 
         def_shield_bonus = shield_bonus(att, def, &def_shield);
 
-        if (CHAR_AWAKE(def) && def_shield && wpn_info[att_weapon_type].shield != SHIELD_M_USELESS)
+        if (CHAR_AWAKE(def) && def_shield && g_wpn_info[att_weapon_type].shield != SHIELD_M_USELESS)
         {
-            if ((wpn_info[att_weapon_type].shield == SHIELD_M_BLOCK) && (number(1, 100) <= def_shield_bonus))
+            if ((g_wpn_info[att_weapon_type].shield == SHIELD_M_BLOCK) && (number(1, 100) <= def_shield_bonus))
             {
                 damage_object(def, def_shield, dam);
                 damage(att, def, def_shield, 0, MSG_TYPE_WEAPON, att_weapon_type, WEAR_SHIELD);
                 return 0;
             }
-            if ((wpn_info[att_weapon_type].shield == SHIELD_M_REDUCE) && (number(1, 100) <= def_shield_bonus))
+            if ((g_wpn_info[att_weapon_type].shield == SHIELD_M_REDUCE) && (number(1, 100) <= def_shield_bonus))
             {
                 dam -= (dam * def_shield_bonus) / 100;
             }

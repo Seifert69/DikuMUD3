@@ -4,7 +4,8 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.14 $
  */
-
+#include "mobact.h"
+#include "external_vars.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -32,10 +33,6 @@
 #include "intlist.h"
 #include "essential.h"
 
-extern struct unit_function_array_type unit_function_array[];
-extern int mudboot;
-extern eventqueue events;
-extern void special_event(void *p1, void *p2);
 /* *********************************************************************** *
  * Implementation notes:
  *
@@ -719,7 +716,7 @@ int dil_type_check(const char *f, class dilprg *p, int tot, ...)
 /* Evaluating DIL-expressions/instructions				    */
 /* ************************************************************************ */
 
-struct dil_func_type dilfe_func[DILI_MAX + 1] = {
+struct dil_func_type g_dilfe_func[DILI_MAX + 1] = {
     {dilfe_illegal}, /* 0 */
     {dilfe_plus},     {dilfe_min},       {dilfe_mul},
     {dilfe_div},      {dilfe_mod},       {dilfe_and},
@@ -837,7 +834,7 @@ static int check_interrupt(class dilprg *prg)
                 (prg)->fp->pc++;
                 (prg)->fp->tmpl->nInstructions++;
                 assert(prg->fp->pc <= &(prg->fp->tmpl->core[prg->fp->tmpl->coresz]));
-                (dilfe_func[*(prg->fp->pc - 1)].func(prg));
+                (g_dilfe_func[*(prg->fp->pc - 1)].func(prg));
             }
 
             gettimeofday(&tend, (struct timezone *)0);
@@ -1063,7 +1060,7 @@ int run_dil(struct spec_arg *sarg)
 
         assert(prg->fp->pc <= &(prg->fp->tmpl->core[prg->fp->tmpl->coresz]));
 
-        (dilfe_func[*(prg->fp->pc - 1)].func(prg));
+        (g_dilfe_func[*(prg->fp->pc - 1)].func(prg));
     }
     membug_verify(prg);
     gettimeofday(&tend, (struct timezone *)0);
@@ -1181,7 +1178,7 @@ int run_dil(struct spec_arg *sarg)
 
     if (prg->nest <= 0)
     {
-        sarg->fptr->heart_beat = MAX(PULSE_SEC * 1, sarg->fptr->heart_beat);
+        sarg->fptr->heart_beat = std::max(PULSE_SEC * 1, static_cast<int>(sarg->fptr->heart_beat));
 
         if (IS_SET(prg->sarg->fptr->flags, SFB_TICK))
         {
@@ -1359,7 +1356,7 @@ int dil_destroy(const char *name, class unit_data *u)
         sarg.owner = prg->owner;
         sarg.activator = NULL;
         sarg.fptr = fptr;
-        sarg.cmd = &cmd_auto_tick;
+        sarg.cmd = &g_cmd_auto_tick;
         sarg.arg = "";
         sarg.mflags = SFB_DILDESTROY;
         sarg.medium = NULL;
@@ -1487,7 +1484,7 @@ void dil_activate(class dilprg *prg)
     sarg.owner = prg->owner;
     sarg.activator = NULL;
     sarg.fptr = fptr;
-    sarg.cmd = &cmd_auto_tick;
+    sarg.cmd = &g_cmd_auto_tick;
     sarg.arg = "";
     sarg.mflags = SFB_TICK;
     sarg.medium = NULL;
@@ -1536,12 +1533,12 @@ void dil_loadtime_activate(class unit_data *u)
         fnext = f->next;
         if (f->index == SFUN_DILCOPY_INTERNAL)
         {
-            events.remove(special_event, u, f);
+            g_events.remove(special_event, u, f);
             special_event(u, f);
         }
         else if ((f->index == SFUN_DIL_INTERNAL) && f->data)
         {
-            events.remove(special_event, u, f);
+            g_events.remove(special_event, u, f);
             special_event(u, f);
             //          dil_activate((class dilprg *) f->data);
         }

@@ -26,8 +26,6 @@
 #include "dbfind.h"
 #include "dilrun.h"
 
-extern class unit_data *unit_list;
-
 /* External procedures */
 
 int required_xp(int level);               /* common.c   */
@@ -60,7 +58,7 @@ int char_can_carry_n(class unit_data *ch, int n)
 
 int char_carry_w_limit(class unit_data *ch)
 {
-    return 50 + MAX(50, UNIT_BASE_WEIGHT(ch) / 2) + CHAR_STR(ch) * 2;
+    return 50 + std::max(50, UNIT_BASE_WEIGHT(ch) / 2) + CHAR_STR(ch) * 2;
 }
 
 int char_can_carry_w(class unit_data *ch, int weight)
@@ -84,7 +82,7 @@ int char_can_carry_unit(class unit_data *ch, class unit_data *unit)
 
 int age_graph(int age, int lifespan, int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7)
 {
-    int step = MAX(1, lifespan / 6);
+    int step = std::max(1, lifespan / 6);
 
     if (age <= step)
         return (int)(p0 + (((age) * (p1 - p0)) / step));
@@ -167,7 +165,7 @@ int hit_gain(class unit_data *ch)
     {
         /* gain = graf(age(ch).year, 2,5,10,18,6,4,2); */
         if ((PC_COND(ch, FULL) < 0) || (PC_COND(ch, THIRST) < 0))
-            gain += 3 * MIN(PC_COND(ch, FULL), 3 * PC_COND(ch, THIRST));
+            gain += 3 * std::min(static_cast<int>(PC_COND(ch, FULL)), 3 * PC_COND(ch, THIRST));
     }
 
     return gain;
@@ -232,7 +230,7 @@ int move_gain(class unit_data *ch)
     {
         /* gain = graf(age(ch).year, ... Age calcs? */
         if ((PC_COND(ch, FULL) < 0) || (PC_COND(ch, THIRST) < 0))
-            gain += 3 * MIN(PC_COND(ch, FULL), 3 * PC_COND(ch, THIRST));
+            gain += 3 * std::min(static_cast<int>(PC_COND(ch, FULL)), 3 * PC_COND(ch, THIRST));
     }
 
     return gain;
@@ -242,7 +240,7 @@ int mana_limit(class unit_data *ch)
 {
     assert(IS_CHAR(ch));
 
-    int ml = MIN(200, 100 + (CHAR_BRA(ch) + CHAR_CHA(ch)) / 2);
+    int ml = std::min(200, 100 + (CHAR_BRA(ch) + CHAR_CHA(ch)) / 2);
 
     if (IS_PC(ch))
     {
@@ -269,8 +267,8 @@ int mana_gain(class unit_data *ch)
     if (CHAR_POS(ch) != POSITION_FIGHTING)
     {
         gain = 1 + mana_limit(ch) / 10;
-        gain += (CHAR_CHA(ch) - MAX(CHAR_MAG(ch), CHAR_DIV(ch))) / 3;
-        gain = MAX(1, gain);
+        gain += (CHAR_CHA(ch) - std::max(CHAR_MAG(ch), CHAR_DIV(ch))) / 3;
+        gain = std::max(1, gain);
     }
     else
         gain = 0;
@@ -301,7 +299,7 @@ int mana_gain(class unit_data *ch)
     if (IS_PC(ch))
     {
         if ((PC_COND(ch, FULL) < 0) || (PC_COND(ch, THIRST) < 0))
-            gain += 3 * MIN(PC_COND(ch, FULL), 3 * PC_COND(ch, THIRST));
+            gain += 3 * std::min(static_cast<int>(PC_COND(ch, FULL)), 3 * PC_COND(ch, THIRST));
     }
 
     return gain;
@@ -371,12 +369,12 @@ void gain_condition(class unit_data *ch, int condition, int value)
 
     PC_COND(ch, condition) += value;
 
-    PC_COND(ch, condition) = MIN(24, PC_COND(ch, condition));
+    PC_COND(ch, condition) = std::min(24, static_cast<int>(PC_COND(ch, condition)));
 
     if (condition == DRUNK) /* How can one be less sober than 0? */
-        PC_COND(ch, condition) = MAX(0, PC_COND(ch, condition));
+        PC_COND(ch, condition) = std::max(static_cast<sbit8>(0), PC_COND(ch, condition));
     else
-        PC_COND(ch, condition) = MAX(-96, PC_COND(ch, condition));
+        PC_COND(ch, condition) = std::max(static_cast<sbit8>(-96), PC_COND(ch, condition));
 
     if (PC_COND(ch, condition) > 3)
         return;
@@ -422,7 +420,7 @@ void set_title(class unit_data *ch)
     else if (CHAR_LEVEL(ch) <= START_LEVEL)
     {
         assert(CHAR_RACE(ch) < PC_RACE_MAX);
-        snprintf(buf, sizeof(buf), "the %s", pc_races[CHAR_RACE(ch)]);
+        snprintf(buf, sizeof(buf), "the %s", g_pc_races[CHAR_RACE(ch)]);
         UNIT_TITLE(ch) = (buf);
     }
     else if (IS_IMMORTAL(ch))
@@ -538,7 +536,7 @@ void point_update(void)
     class unit_data *u, *next_dude;
 
     //
-    for (u = unit_list; u; u = next_dude)
+    for (u = g_unit_list; u; u = next_dude)
     {
         next_dude = u->gnext;
         if (IS_NPC(u))

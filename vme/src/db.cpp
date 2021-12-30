@@ -4,6 +4,7 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.16 $
  */
+#include "external_vars.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -32,20 +33,17 @@
 #include "dilrun.h"
 #include "sector.h"
 
-const char *player_zone = "_players";
+const char *g_player_zone = "_players";
 
-int room_number;                   /* For counting numbers in rooms */
-class unit_data *unit_list = NULL; /* The global unit_list          */
-class unit_data *npc_head = NULL;
-class unit_data *obj_head = NULL;
-class unit_data *room_head = NULL;
+int g_room_number;                   /* For counting numbers in rooms */
+class unit_data *g_unit_list = NULL; /* The global unit_list          */
+class unit_data *g_npc_head = NULL;
+class unit_data *g_obj_head = NULL;
+class unit_data *g_room_head = NULL;
 
-cSector sector_dat;
-extern int mudboot;
+cSector g_sector_dat;
 /* Global permanent element of zone info */
-struct zone_info_type zone_info = {0, NULL};
-
-extern int memory_total_alloc;
+struct zone_info_type g_zone_info = {0, NULL};
 
 class room_direction_data *create_direction_data(void);
 
@@ -109,23 +107,23 @@ void generate_bin_arrays(void)
     // int i;
 
     /* Generate array for zones
-    CREATE(zone_info.ba, struct bin_search_type, zone_info.no_of_zones);
-    for (i = 0, z = zone_info.zone_list; z; z = z->next, i++)
+    CREATE(g_zone_info.ba, struct bin_search_type, g_zone_info.no_of_zones);
+    for (i = 0, z = g_zone_info.zone_list; z; z = z->next, i++)
     {
-       zone_info.ba[i].block = z;
-       zone_info.ba[i].compare = z->name;
+       g_zone_info.ba[i].block = z;
+       g_zone_info.ba[i].compare = z->name;
     }*/
 
     /* Generate array for zones
-    for (i = 0, z = zone_info.zone_list; z; z = z->next, i++)
-       zone_info.mmp.insert(make_pair("Barry Bonds", z));
+    for (i = 0, z = g_zone_info.zone_list; z; z = z->next, i++)
+       g_zone_info.mmp.insert(make_pair("Barry Bonds", z));
     {
-       zone_info.ba[i].block = z;
-       zone_info.ba[i].compare = z->name;
+       g_zone_info.ba[i].block = z;
+       g_zone_info.ba[i].compare = z->name;
     }*/
 
     /* Generate array for file indexes for each zone
-    for (z = zone_info.zone_list; z; z = z->next)
+    for (z = g_zone_info.zone_list; z; z = z->next)
     {
        if (z->no_of_fi)
        {
@@ -157,7 +155,7 @@ void resolve_templates(void)
     int i, j, valid;
 
     /* all zones */
-    for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.end(); z++)
+    for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
     {
         /* all templates in zone */
         for (auto tmpl = z->second->mmp_tmpl.begin(); tmpl != z->second->mmp_tmpl.end(); tmpl++)
@@ -255,7 +253,7 @@ void generate_file_indexes(FILE *f, class zone_type *zone)
 
     CByteBuffer cBuf(100);
 
-    room_number = 0;
+    g_room_number = 0;
 
     for (;;)
     {
@@ -302,7 +300,7 @@ void generate_file_indexes(FILE *f, class zone_type *zone)
 
         if (fi->type == UNIT_ST_ROOM)
         {
-            fi->room_no = room_number++;
+            fi->room_no = g_room_number++;
             room_num++;
         }
         else
@@ -321,7 +319,6 @@ void generate_file_indexes(FILE *f, class zone_type *zone)
 void generate_zone_indexes(void)
 {
     class zone_type *z;
-    extern int mud_bootzone;
     char zone[82], tmpbuf[82], filename[82 + 41];
     char buf[MAX_STRING_LENGTH];
     char dilfilepath[255];
@@ -330,7 +327,7 @@ void generate_zone_indexes(void)
     char *c;
     ubit8 access, loadlevel, payonly;
 
-    zone_info.no_of_zones = 0;
+    g_zone_info.no_of_zones = 0;
 
     if ((zone_file = fopen(str_cc(g_cServerConfig.m_etcdir, ZONE_FILE_LIST), "r")) == NULL)
     {
@@ -340,8 +337,8 @@ void generate_zone_indexes(void)
 
     // Insert a virtual zone _players
     z = new (class zone_type);
-    zone_info.no_of_zones++;
-    z->zone_no = zone_info.no_of_zones - 1;
+    g_zone_info.no_of_zones++;
+    z->zone_no = g_zone_info.no_of_zones - 1;
     z->name = str_dup("_players");
     z->filename = str_dup("ply");
     z->title = str_dup("Reserved zone for player file_indexes");
@@ -349,7 +346,7 @@ void generate_zone_indexes(void)
     z->notes = str_dup("This zone is only here to allow us to use playername@_plaeyrs as with all "
                        "other indexes such as mayor@midgaard. It's not actually a zone, and it's not a represenation "
                        "of player files on disk\n");
-    zone_info.mmp.insert(std::make_pair(z->name, z));
+    g_zone_info.mmp.insert(std::make_pair(z->name, z));
     z = NULL;
 
     for (;;)
@@ -386,7 +383,7 @@ void generate_zone_indexes(void)
         c = str_next_word_copy(c, tmpbuf);
 
         if (str_is_number(tmpbuf))
-            loadlevel = MAX(200, atoi(tmpbuf));
+            loadlevel = std::max(200, atoi(tmpbuf));
         else
             loadlevel = 200;
 
@@ -415,9 +412,9 @@ void generate_zone_indexes(void)
         slog(LOG_ALL, 0, "Indexing %s AC[%3d] LL[%d] PO[%d]", filename, access, loadlevel, payonly);
 
         z = new (class zone_type);
-        zone_info.no_of_zones++;
+        g_zone_info.no_of_zones++;
 
-        z->zone_no = zone_info.no_of_zones - 1;
+        z->zone_no = g_zone_info.no_of_zones - 1;
         z->filename = str_dup(zone);
 
         if (*dilfilepath)
@@ -440,7 +437,7 @@ void generate_zone_indexes(void)
         }
 
         // Insert zone into sorted list
-        zone_info.mmp.insert(std::make_pair(z->name, z));
+        g_zone_info.mmp.insert(std::make_pair(z->name, z));
 
         int mstmp = fread(&z->weather.base, sizeof(int), 1, f);
         if (mstmp < 1)
@@ -484,14 +481,14 @@ void generate_zone_indexes(void)
         z->no_of_fi = 0;
         z->zri = 0;
         generate_file_indexes(f, z);
-        z->no_rooms = room_number; /* Number of rooms in the zone */
+        z->no_rooms = g_room_number; /* Number of rooms in the zone */
 
         fflush(f); /* Don't fclose(f); since we are using _cache */
     }
     fclose(zone_file);
 
     // _players always there, so that plus basis is the minimum
-    if (zone_info.mmp.empty() || zone_info.no_of_zones <= 1)
+    if (g_zone_info.mmp.empty() || g_zone_info.no_of_zones <= 1)
     {
         slog(LOG_ALL, 0, "Basis zone is minimum reqired environment!");
         exit(0);
@@ -500,10 +497,10 @@ void generate_zone_indexes(void)
     generate_bin_arrays();
 
     resolve_templates();
-    mud_bootzone = 0;
+    g_mud_bootzone = 0;
 
     /* Allocate memory for the largest possible file-buffer */
-    /* filbuffer_length = MAX(filbuffer_length + 1, 16384); */
+    /* filbuffer_length = std::max(filbuffer_length + 1, 16384); */
     // CREATE(filbuffer, ubit8, filbuffer_length + 1);
     // slog(LOG_OFF, 0, "Max length for filebuffer is %d bytes.", filbuffer_length);
 }
@@ -625,14 +622,9 @@ void post_read_unit(class unit_data *u)
     }
 }
 
-extern int memory_pc_alloc;
-extern int memory_npc_alloc;
-extern int memory_obj_alloc;
-extern int memory_room_alloc;
-
 /*  Room directions points to file_indexes instead of units
  *  after a room has been read, due to initialization considerations
- *  Unit is NOT inserted in unit_list
+ *  Unit is NOT inserted in g_unit_list
  *
  * whom is an error message to be printed when something goes wrong.
  */
@@ -899,9 +891,9 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
                     struct base_race_info_type *sex_race;
 
                     if (CHAR_SEX(u) == SEX_MALE)
-                        sex_race = &race_info[CHAR_RACE(u)].male;
+                        sex_race = &g_race_info[CHAR_RACE(u)].male;
                     else
-                        sex_race = &race_info[CHAR_RACE(u)].female;
+                        sex_race = &g_race_info[CHAR_RACE(u)].female;
 
                     PC_LIFESPAN(u) = sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size);
                 }
@@ -1320,12 +1312,10 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
     }
     else
     {
-        extern class file_index_type *slime_fi;
-
         slog(LOG_ALL, 0, "FATAL: UNIT CORRUPT: %s", u->names.Name());
 
-        if ((type != UNIT_ST_PC) && (type != UNIT_ST_ROOM) && slime_fi)
-            return read_unit(slime_fi); /* Slime it! */
+        if ((type != UNIT_ST_PC) && (type != UNIT_ST_ROOM) && g_slime_fi)
+            return read_unit(g_slime_fi); /* Slime it! */
         else
             return NULL;
     }
@@ -1362,8 +1352,6 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
 {
     int is_slimed(class file_index_type * sp);
 
-    extern class file_index_type *slime_fi;
-
     class unit_data *u;
 
     if (org_fi == NULL)
@@ -1373,7 +1361,7 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
         return NULL;
 
     if (is_slimed(org_fi))
-        org_fi = slime_fi;
+        org_fi = g_slime_fi;
 
     read_unit_file(org_fi, &g_FileBuffer);
 
@@ -1392,7 +1380,7 @@ class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
 
     if (ins_list)
     {
-        insert_in_unit_list(u); /* Put unit into the unit_list      */
+        insert_in_unit_list(u); /* Put unit into the g_unit_list      */
         apply_affect(u);        /* Set all affects that modify      */
     }
     else
@@ -1408,11 +1396,9 @@ void read_all_rooms(void)
 {
     // MS2020 int room_num = 0;
 
-    extern class zone_type *boot_zone;
-
-    for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.end(); z++)
+    for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
     {
-        boot_zone = z->second;
+        g_boot_zone = z->second;
 
         for (auto fi = z->second->mmp_fi.begin(); fi != z->second->mmp_fi.end(); fi++)
         {
@@ -1423,7 +1409,7 @@ void read_all_rooms(void)
         }
     }
 
-    boot_zone = NULL;
+    g_boot_zone = NULL;
 }
 
 /* After boot time, normalize all room exits */
@@ -1433,7 +1419,7 @@ void normalize_world(void)
     class unit_data *u, *tmpu;
     int i;
 
-    for (u = unit_list; u; u = u->gnext)
+    for (u = g_unit_list; u; u = u->gnext)
         if (IS_ROOM(u))
         {
             /* Place room inside another room? */
@@ -1457,7 +1443,7 @@ void normalize_world(void)
                 }
         }
 
-    for (u = unit_list; u; u = u->gnext)
+    for (u = g_unit_list; u; u = u->gnext)
         if (IS_ROOM(u) && UNIT_IN(u))
         {
             tmpu = UNIT_IN(u);
@@ -1495,8 +1481,6 @@ struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
     char zonename[FI_MAX_ZONENAME + 1], name[FI_MAX_UNITNAME + 1];
     CByteBuffer cBuf(100);
 
-    extern class file_index_type *slime_fi;
-
     tmp_cmd = cmd_list;
 
     while (((cmdno = (ubit8)fgetc(f)) != 255) && !feof(f))
@@ -1524,7 +1508,7 @@ struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
             else
             {
                 szonelog(read_zone_error, "Slimed: Illegal ref.: %s@%s", name, zonename);
-                cmd->fi[0] = slime_fi;
+                cmd->fi[0] = g_slime_fi;
             }
         else
             cmd->fi[0] = 0;
@@ -1549,7 +1533,7 @@ struct zone_reset_cmd *read_zone(FILE *f, struct zone_reset_cmd *cmd_list)
             else
             {
                 szonelog(read_zone_error, "Illegal ref.: %s@%s", name, zonename);
-                cmd->fi[1] = slime_fi;
+                cmd->fi[1] = g_slime_fi;
             }
         else
             cmd->fi[1] = 0;
@@ -1604,7 +1588,7 @@ void read_all_zones(void)
     char filename[FI_MAX_ZONENAME + 41];
     FILE *f;
 
-    for (auto zone = zone_info.mmp.begin(); zone != zone_info.mmp.end(); zone++)
+    for (auto zone = g_zone_info.mmp.begin(); zone != g_zone_info.mmp.end(); zone++)
     {
         read_zone_error = zone->second;
 
@@ -1645,10 +1629,6 @@ char *read_info_file(char *name, char *oldstr)
     return str_dup(buf);
 }
 
-extern int memory_roomread_alloc;
-extern int memory_zoneidx_alloc;
-extern int memory_zonereset_alloc;
-
 void boot_db(void)
 {
     void create_worldgraph(void);
@@ -1674,7 +1654,6 @@ void boot_db(void)
     void interpreter_dil_check(void);
 
     void cleanup_playerfile(int c);
-    extern int player_convert;
 
     slog(LOG_OFF, 0, "Boot DB -- BEGIN.");
     slog(LOG_OFF, 0, "Copyright (C) 1994 - 2021 by DikuMUD & Valhalla.");
@@ -1714,7 +1693,7 @@ void boot_db(void)
     slog(LOG_OFF, 0, "Normalizing file index ref. and replacing rooms.");
     normalize_world();
 
-    if (!player_convert)
+    if (!g_player_convert)
     {
         slog(LOG_OFF, 0, "Initilizing shortest path matrixes for world.");
         create_worldgraph();
@@ -1744,9 +1723,9 @@ void boot_db(void)
     slog(LOG_OFF, 0, "Booting slime system.");
     slime_boot();
 
-    if (player_convert)
+    if (g_player_convert)
     {
-        cleanup_playerfile(player_convert);
+        cleanup_playerfile(g_player_convert);
         exit(0);
     }
 
@@ -1766,16 +1745,16 @@ void db_shutdown(void)
 
     void clear_destructed(void);
 
-    while (!IS_ROOM(unit_list))
+    while (!IS_ROOM(g_unit_list))
     {
-        tmpu = unit_list;
+        tmpu = g_unit_list;
         extract_unit(tmpu);
         clear_destructed();
     }
 
     void stop_all_special(class unit_data * u);
 
-    while ((tmpu = unit_list))
+    while ((tmpu = g_unit_list))
     {
         //      DeactivateDil(tmpu);
         stop_all_special(tmpu);
@@ -1790,9 +1769,9 @@ void db_shutdown(void)
 
     slog(LOG_OFF, 0, "Destroying zone list.");
 
-    auto nextz = zone_info.mmp.begin();
+    auto nextz = g_zone_info.mmp.begin();
 
-    for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.end(); z = nextz)
+    for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z = nextz)
     {
         nextz = z++;
         delete z->second;
