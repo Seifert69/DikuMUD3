@@ -581,7 +581,7 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
     unsigned int x, crlen;
     const char *cretbuf;
     char *newptr;
-    int column = 0, cutpoint = MIN(30, width / 2);
+    int column = 0, cutpoint = std::min(30, width / 2);
 
     if (!(current = source))
         return NULL;

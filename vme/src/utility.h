@@ -10,16 +10,11 @@
 
 #include <string>
 
-#ifdef MIN
-    #undef MIN
-#endif
-
 #ifdef MAX
     #undef MAX
 #endif
 
 int is_in(int a, int from, int to);
-int MIN(int a, int b);
 int MAX(int a, int b);
 
 int number(int from, int to);

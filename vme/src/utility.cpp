@@ -31,11 +31,6 @@ int is_in(int a, int from, int to)
 }
 
 #ifndef HPUX
-int MIN(int a, int b)
-{
-    return ((a < b) ? a : b);
-}
-
 int MAX(int a, int b)
 {
     return ((a > b) ? a : b);

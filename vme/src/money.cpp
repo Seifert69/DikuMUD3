@@ -325,7 +325,7 @@ void money_transfer(class unit_data *from, class unit_data *to, amount_t amt, cu
         for (i = last; 0 <= i && calc < 0; --i)
             if (0 < mon_array[i].take) /* Did we take any of these? */
                 /* Put back as many as we can `afford' or have */
-                if (0 < (temp = MIN((-calc) / mon_array[i].value, mon_array[i].take)))
+                if (0 < (temp = std::min((-calc) / mon_array[i].value, mon_array[i].take)))
                 {
                     mon_array[i].take -= temp;
                     calc += calc_money(mon_array[i].value, '*', temp);
@@ -630,14 +630,14 @@ amount_t char_can_carry_amount(class unit_data *ch, class unit_data *money)
 {
     int d_wgt = char_carry_w_limit(ch) - UNIT_CONTAINING_W(ch);
 
-    return MIN((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
+    return std::min((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
 }
 
 amount_t unit_can_hold_amount(class unit_data *unit, class unit_data *money)
 {
     int d_wgt = UNIT_CAPACITY(unit) - UNIT_CONTAINING_W(unit);
 
-    return MIN((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
+    return std::min((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
 }
 
     /* Temporary (?) wizcommand to create money */
@@ -859,7 +859,7 @@ done:
 
         for (idx = 0; idx <= MAX_MONEY; ++idx)
             if (g_money_types[idx].currency == cur)
-                tmp = (tmp < 0) ? g_money_types[idx].relative_value : MIN(tmp, g_money_types[idx].relative_value);
+                tmp = (tmp < 0) ? g_money_types[idx].relative_value : std::min(tmp, g_money_types[idx].relative_value);
 
         for (idx = 0; idx <= MAX_MONEY; ++idx)
             if (g_money_types[idx].currency == cur)

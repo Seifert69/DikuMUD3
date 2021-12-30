@@ -438,7 +438,7 @@ void spell_clear_skies(struct spell_args *sa)
     }
 
     unit_zone(sa->caster)->weather.change += sa->hm / 20;
-    unit_zone(sa->caster)->weather.change = MIN(unit_zone(sa->caster)->weather.change, 12);
+    unit_zone(sa->caster)->weather.change = std::min(unit_zone(sa->caster)->weather.change, 12);
 
     act("You feel a warm breeze.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_ALL);
 }

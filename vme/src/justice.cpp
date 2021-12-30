@@ -421,7 +421,7 @@ void npc_set_visit (class unit_data * npc, class unit_data * dest_room,
     if (IS_PC(ch))
     {
         PC_CRIMES(ch) += crimes;
-        xp = MIN(lose_exp(ch) / 2, xp);
+        xp = std::min(lose_exp(ch) / 2, xp);
     }
 
     af.id = ID_REWARD;
@@ -1095,7 +1095,7 @@ int reward_give(struct spec_arg *sarg)
     cur = local_currency(sarg->owner);
 
     if (IS_PC(sarg->activator))
-        gain_exp(sarg->activator, MIN(level_xp(CHAR_LEVEL(sarg->activator)), paf->data[0]));
+        gain_exp(sarg->activator, std::min(level_xp(CHAR_LEVEL(sarg->activator)), paf->data[0]));
 
     money_to_unit(sarg->activator, paf->data[1], cur);
 

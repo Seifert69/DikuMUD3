@@ -39,14 +39,14 @@ int kludge_bonus(int level, int points)
         return 0;
 
     if (level <= 50)
-        return ((5 * (level - 20)) * MIN(100, points)) / 100;
+        return ((5 * (level - 20)) * std::min(100, points)) / 100;
 
     int b, expected;
 
     expected = 100 + (level - 50);
 
     b = 150;
-    b += (5 * (level - 50) * MIN(expected, points)) / expected;
+    b += (5 * (level - 50) * std::min(expected, points)) / expected;
 
     return b;
 }

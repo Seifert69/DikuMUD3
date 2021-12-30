@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <algorithm>
 
 #include "structs.h"
 #include "utils.h"
@@ -891,13 +892,13 @@ void split_fi_ref(const char *str, char *zone, char *name)
 
     if ((c = (char *)strchr(str, '@')))
     {
-        l = MIN(c - str, FI_MAX_UNITNAME);
+        l = std::min(c - str, static_cast<ptrdiff_t>(FI_MAX_UNITNAME));
         strncpy(name, str, l);
         name[l] = '\0';
 
-        l = MIN(strlen(c + 1), FI_MAX_ZONENAME);
+        l = std::min(strlen(c + 1), static_cast<size_t>(FI_MAX_ZONENAME));
         if ((t = strchr(c + 1, ' ')))
-            l = MIN(l, t - (c + 1));
+            l = std::min(static_cast<ptrdiff_t>(l), t - (c + 1));
         strncpy(zone, c + 1, l);
         zone[l] = 0;
         str_lower(zone);
@@ -905,13 +906,13 @@ void split_fi_ref(const char *str, char *zone, char *name)
     }
     else if ((c = (char *)strchr(str, '/')))
     {
-        l = MIN(c - str, FI_MAX_ZONENAME);
+        l = std::min(c - str, static_cast<ptrdiff_t>(FI_MAX_ZONENAME));
         strncpy(zone, str, l);
         zone[l] = '\0';
 
-        l = MIN(strlen(c + 1), FI_MAX_UNITNAME);
+        l = std::min(strlen(c + 1), static_cast<size_t>(FI_MAX_UNITNAME));
         if ((t = strchr(c + 1, ' ')))
-            l = MIN(l, t - (c + 1));
+            l = std::min(static_cast<ptrdiff_t>(l), t - (c + 1));
         strncpy(name, c + 1, l);
         name[l] = 0;
         str_lower(zone);
@@ -921,13 +922,13 @@ void split_fi_ref(const char *str, char *zone, char *name)
     {
         if ((c = (char *)strchr(str, ' ')))
         {
-            l = MIN(c - str, FI_MAX_UNITNAME);
+            l = std::min(c - str, static_cast<ptrdiff_t>(FI_MAX_UNITNAME));
             strncpy(name, str, l);
             name[l] = '\0';
         }
         else
         {
-            l = MIN(strlen(str), FI_MAX_UNITNAME);
+            l = std::min(strlen(str), static_cast<size_t>(FI_MAX_UNITNAME));
             strncpy(name, str, l);
             name[l] = 0;
         }

@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <algorithm>
+
 #include "structs.h"
 #include "utils.h"
 #include "skills.h"
@@ -687,15 +689,15 @@ static void change_alignment(class unit_data *slayer, class unit_data *victim)
 
     diff = CHAR_LEVEL(slayer) - CHAR_LEVEL(victim);
     if (diff > 0)
-        adjust += (adjust * MIN(10, diff)) / 10;
+        adjust += (adjust * std::min(10, diff)) / 10;
     else if (diff < 0)
         adjust += (adjust * MAX(-10, diff)) / 20;
 
-    adjust = MIN(200, adjust);
+    adjust = std::min(200, adjust);
     adjust = MAX(-200, adjust);
 
     UNIT_ALIGNMENT(slayer) += adjust;
-    UNIT_ALIGNMENT(slayer) = MIN(1000, UNIT_ALIGNMENT(slayer));
+    UNIT_ALIGNMENT(slayer) = std::min(static_cast<sbit16>(1000), UNIT_ALIGNMENT(slayer));
     UNIT_ALIGNMENT(slayer) = MAX(-1000, UNIT_ALIGNMENT(slayer));
 }
 
@@ -721,7 +723,7 @@ static void person_gain(class unit_data *ch, class unit_data *dead, int share, i
                share /= 2; // Only 50% in wimpy */
 
             if (CHAR_LEVEL(ch) < maxlevel - 5)
-                share -= (MIN(95, 7 * (maxlevel - (CHAR_LEVEL(ch) + 5))) * share) / 100;
+                share -= (std::min(95, 7 * (maxlevel - (CHAR_LEVEL(ch) + 5))) * share) / 100;
         }
 
         gain_exp(ch, share);
@@ -794,7 +796,7 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
                     sumlevel += virtual_level(f->follower);
 
                     maxlevel = MAX(virtual_level(f->follower), maxlevel);
-                    minlevel = MIN(virtual_level(f->follower), minlevel);
+                    minlevel = std::min(virtual_level(f->follower), minlevel);
 
                     no_members++;
                 }
@@ -819,7 +821,7 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
             if (no_members > 1)
                 share = (4 * share) / (3 + no_members);
 
-            share = MIN(100 * no_members + 300, share);
+            share = std::min(100 * no_members + 300, share);
         }
     }
 
@@ -855,7 +857,7 @@ int lose_exp(class unit_data *ch)
 
    // This line makes sure, that you lose at most half a level...
 
-   loss = MIN(loss, level_xp(PC_VIRTUAL_LEVEL(ch)) / 2);
+   loss = std::min(loss, level_xp(PC_VIRTUAL_LEVEL(ch)) / 2);
 
    // This line takes care of the case where you have less or almost
    // equal XP to your required. You thus lose at least 1/5th your
@@ -907,7 +909,7 @@ void modify_hit(class unit_data *ch, int hit)
     if (CHAR_POS(ch) > POSITION_DEAD)
     {
         UNIT_HIT(ch) += hit;
-        UNIT_HIT(ch) = MIN(hit_limit(ch), UNIT_HIT(ch));
+        UNIT_HIT(ch) = std::min(hit_limit(ch), UNIT_HIT(ch));
 
         update_pos(ch);
 
@@ -1353,7 +1355,7 @@ int one_hit(class unit_data *att, class unit_data *def, int bonus, int att_weapo
     {
         cact("You fumble with your $2N!", A_ALWAYS, att, att_weapon, cActParameter(), TO_CHAR, "miss_me");
         cact("$1n fumbles with $1s $2N!", A_ALWAYS, att, att_weapon, cActParameter(), TO_ROOM, "miss_other");
-        hm = MIN(-10, roll - open100());
+        hm = std::min(-10, roll - open100());
         damage_object(att, att_weapon, hm);
         return 0;
     }

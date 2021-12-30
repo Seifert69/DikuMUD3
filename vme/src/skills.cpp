@@ -296,22 +296,22 @@ int chart_size_damage(int roll, struct damage_chart_element_type *element, int l
         switch (weight_size(lbs))
         {
             case SIZ_TINY:
-                // roll = MIN(100, roll);
+                // roll = std::min(100, roll);
                 roll *= 0.5;
                 break;
 
             case SIZ_SMALL:
-                // roll = MIN(110, roll);
+                // roll = std::min(110, roll);
                 roll *= 0.6;
                 break;
 
             case SIZ_MEDIUM:
-                // roll = MIN(130, roll);
+                // roll = std::min(130, roll);
                 roll *= 0.7;
                 break;
 
             case SIZ_LARGE:
-                // roll = MIN(150, roll);
+                // roll = std::min(150, roll);
                 roll *= 0.8;
                 break;
         }
@@ -492,7 +492,7 @@ int effective_dex(class unit_data *ch)
                     continue;
             } // switch
 
-            b = MIN(100, b);
+            b = std::min(100, b);
             p = arm_dex_penalty[at] - (b * arm_dex_penalty[at]) / 200;
             psum += p * wear_location_prop[OBJ_EQP_POS(u)];
         }

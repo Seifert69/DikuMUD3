@@ -340,7 +340,7 @@ void save_player_contents(class unit_data *pc, int fast)
             time_t tdiff;
 
             /* No of days items may be kept (Maximum of 30!) */
-            tmp_i = MIN(30, amount / daily_cost);
+            tmp_i = std::min(30, amount / daily_cost);
 
             if (tmp_i >= 1)
             {

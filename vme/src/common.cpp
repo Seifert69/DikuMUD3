@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h> /* floor and pow */
+#include <algorithm>
 
 #include "structs.h"
 #include "utils.h"
@@ -70,7 +71,7 @@ int ability_point_total(class unit_data *ch)
     if (IS_NPC(ch))
         return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR * CHAR_LEVEL(ch);
     else
-        return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR * MIN(PC_VIRTUAL_LEVEL(ch), 100);
+        return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR * std::min(PC_VIRTUAL_LEVEL(ch), static_cast<ubit16>(100));
 }
 
 int skill_point_gain(void)

@@ -279,7 +279,7 @@ void cHook::PushWrite(void)
 
     while (!qTX.IsEmpty())
     {
-        len = MIN(sizeof(buf), qTX.Bytes());
+        len = std::min(sizeof(buf), static_cast<std::size_t>(qTX.Bytes()));
 
         qTX.CutCopy(buf, len);
 

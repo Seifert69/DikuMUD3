@@ -888,7 +888,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
                      " Press [enter] and wait for the password prompt.",
                      PC_CRACK_ATTEMPTS(d->character));
             send_to_descriptor(buf, d);
-            d->wait = MIN(30, PC_CRACK_ATTEMPTS(d->character)) * 2 * PULSE_SEC;
+            d->wait = std::min(static_cast<ubit16>(30), PC_CRACK_ATTEMPTS(d->character)) * 2 * PULSE_SEC;
             return;
         }
         STATE(d)++;

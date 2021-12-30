@@ -165,7 +165,7 @@ int hit_gain(class unit_data *ch)
     {
         /* gain = graf(age(ch).year, 2,5,10,18,6,4,2); */
         if ((PC_COND(ch, FULL) < 0) || (PC_COND(ch, THIRST) < 0))
-            gain += 3 * MIN(PC_COND(ch, FULL), 3 * PC_COND(ch, THIRST));
+            gain += 3 * std::min(static_cast<int>(PC_COND(ch, FULL)), 3 * PC_COND(ch, THIRST));
     }
 
     return gain;
@@ -230,7 +230,7 @@ int move_gain(class unit_data *ch)
     {
         /* gain = graf(age(ch).year, ... Age calcs? */
         if ((PC_COND(ch, FULL) < 0) || (PC_COND(ch, THIRST) < 0))
-            gain += 3 * MIN(PC_COND(ch, FULL), 3 * PC_COND(ch, THIRST));
+            gain += 3 * std::min(static_cast<int>(PC_COND(ch, FULL)), 3 * PC_COND(ch, THIRST));
     }
 
     return gain;
@@ -240,7 +240,7 @@ int mana_limit(class unit_data *ch)
 {
     assert(IS_CHAR(ch));
 
-    int ml = MIN(200, 100 + (CHAR_BRA(ch) + CHAR_CHA(ch)) / 2);
+    int ml = std::min(200, 100 + (CHAR_BRA(ch) + CHAR_CHA(ch)) / 2);
 
     if (IS_PC(ch))
     {
@@ -299,7 +299,7 @@ int mana_gain(class unit_data *ch)
     if (IS_PC(ch))
     {
         if ((PC_COND(ch, FULL) < 0) || (PC_COND(ch, THIRST) < 0))
-            gain += 3 * MIN(PC_COND(ch, FULL), 3 * PC_COND(ch, THIRST));
+            gain += 3 * std::min(static_cast<int>(PC_COND(ch, FULL)), 3 * PC_COND(ch, THIRST));
     }
 
     return gain;
@@ -369,7 +369,7 @@ void gain_condition(class unit_data *ch, int condition, int value)
 
     PC_COND(ch, condition) += value;
 
-    PC_COND(ch, condition) = MIN(24, PC_COND(ch, condition));
+    PC_COND(ch, condition) = std::min(24, static_cast<int>(PC_COND(ch, condition)));
 
     if (condition == DRUNK) /* How can one be less sober than 0? */
         PC_COND(ch, condition) = MAX(0, PC_COND(ch, condition));

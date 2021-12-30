@@ -162,12 +162,12 @@ static void weather_change(class zone_type *zone, struct time_info_data time_dat
 
     zone->weather.change += (dice(1, 4) * diff + dice(2, 6) - dice(2, 6));
 
-    zone->weather.change = MIN(zone->weather.change, 12);
+    zone->weather.change = std::min(zone->weather.change, 12);
     zone->weather.change = MAX(zone->weather.change, -12);
 
     zone->weather.pressure += zone->weather.change;
 
-    zone->weather.pressure = MIN(zone->weather.pressure, 1050);
+    zone->weather.pressure = std::min(zone->weather.pressure, 1050);
     zone->weather.pressure = MAX(zone->weather.pressure, 950);
 
     change = 0;

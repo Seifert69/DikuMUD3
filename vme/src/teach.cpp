@@ -139,7 +139,7 @@ int actual_cost(int cost, sbit8 racemodifier, int level, int virtual_level)
     if (virtual_level > 100)
     {
        int i;
-       i = MIN(100, virtual_level - 100);
+       i = std::min(100, virtual_level - 100);
        avg_skill_cost += (i * AVERAGE_SKILL_COST * (ABILITY_POINT_FACTOR - 1)) / 100;
        // With level > 100, the average skill cost will increase as per these average examples
        // 100 : 10 + ( 0   * 10 * (4-1))/100 = 10+0
@@ -1588,7 +1588,7 @@ int teach_init(struct spec_arg *sarg)
         {
             packet->teaches[n].min_glevel = a_skill.min_glevel;
             if (a_skill.max_skill < 100)
-                packet->teaches[n].max_skill = MIN(packet->teaches[n].max_skill, a_skill.max_skill);
+                packet->teaches[n].max_skill = std::min(packet->teaches[n].max_skill, a_skill.max_skill);
             if (a_skill.max_skill > 100)
                 packet->teaches[n].max_skill = MAX(packet->teaches[n].max_skill, a_skill.max_skill);
 
