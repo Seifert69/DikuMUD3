@@ -848,10 +848,10 @@ int auto_train(int type,
                 if ((nodeidx == ABIL_CON) && (CHAR_ABILITY(pupil, ABIL_CON) < CHAR_ABILITY(pupil, ABIL_HP) / 2))
                     ;
                 else if ((nodeidx == ABIL_BRA) &&
-                         (CHAR_ABILITY(pupil, ABIL_BRA) < MAX(CHAR_ABILITY(pupil, ABIL_MAG), CHAR_ABILITY(pupil, ABIL_DIV)) / 2))
+                         (CHAR_ABILITY(pupil, ABIL_BRA) < std::max(CHAR_ABILITY(pupil, ABIL_MAG), CHAR_ABILITY(pupil, ABIL_DIV)) / 2))
                     ;
                 else if ((nodeidx == ABIL_CHA) &&
-                         (CHAR_ABILITY(pupil, ABIL_CHA) < MAX(CHAR_ABILITY(pupil, ABIL_MAG), CHAR_ABILITY(pupil, ABIL_DIV)) / 2))
+                         (CHAR_ABILITY(pupil, ABIL_CHA) < std::max(CHAR_ABILITY(pupil, ABIL_MAG), CHAR_ABILITY(pupil, ABIL_DIV)) / 2))
                     ;
                 else if ((nodeidx == ABIL_HP) && ((CHAR_ABILITY(pupil, ABIL_HP) * cost) / 10 < CHAR_LEVEL(pupil)))
                     ;
@@ -1378,7 +1378,7 @@ int teach_init(struct spec_arg *sarg)
                         a_skill.node = n;
                         a_skill.min_cost_per_point = 1;
                         a_skill.max_cost_per_point =
-                            MAX(1, 1000 + -100 * max_skill_mod(g_WpnColl.prof_table[n].profession_cost[nProfession]));
+                            std::max(1, 1000 + -100 * max_skill_mod(g_WpnColl.prof_table[n].profession_cost[nProfession]));
                         packet->teaches[count - 1] = a_skill;
 
                         count++;
@@ -1590,7 +1590,7 @@ int teach_init(struct spec_arg *sarg)
             if (a_skill.max_skill < 100)
                 packet->teaches[n].max_skill = std::min(packet->teaches[n].max_skill, a_skill.max_skill);
             if (a_skill.max_skill > 100)
-                packet->teaches[n].max_skill = MAX(packet->teaches[n].max_skill, a_skill.max_skill);
+                packet->teaches[n].max_skill = std::max(packet->teaches[n].max_skill, a_skill.max_skill);
 
             // Retain the calculated max & min and cost.
             // I'm quite sure they're "more fun & diverse"

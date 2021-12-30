@@ -58,7 +58,7 @@ int char_can_carry_n(class unit_data *ch, int n)
 
 int char_carry_w_limit(class unit_data *ch)
 {
-    return 50 + MAX(50, UNIT_BASE_WEIGHT(ch) / 2) + CHAR_STR(ch) * 2;
+    return 50 + std::max(50, UNIT_BASE_WEIGHT(ch) / 2) + CHAR_STR(ch) * 2;
 }
 
 int char_can_carry_w(class unit_data *ch, int weight)
@@ -82,7 +82,7 @@ int char_can_carry_unit(class unit_data *ch, class unit_data *unit)
 
 int age_graph(int age, int lifespan, int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7)
 {
-    int step = MAX(1, lifespan / 6);
+    int step = std::max(1, lifespan / 6);
 
     if (age <= step)
         return (int)(p0 + (((age) * (p1 - p0)) / step));
@@ -267,8 +267,8 @@ int mana_gain(class unit_data *ch)
     if (CHAR_POS(ch) != POSITION_FIGHTING)
     {
         gain = 1 + mana_limit(ch) / 10;
-        gain += (CHAR_CHA(ch) - MAX(CHAR_MAG(ch), CHAR_DIV(ch))) / 3;
-        gain = MAX(1, gain);
+        gain += (CHAR_CHA(ch) - std::max(CHAR_MAG(ch), CHAR_DIV(ch))) / 3;
+        gain = std::max(1, gain);
     }
     else
         gain = 0;
@@ -372,9 +372,9 @@ void gain_condition(class unit_data *ch, int condition, int value)
     PC_COND(ch, condition) = std::min(24, static_cast<int>(PC_COND(ch, condition)));
 
     if (condition == DRUNK) /* How can one be less sober than 0? */
-        PC_COND(ch, condition) = MAX(0, PC_COND(ch, condition));
+        PC_COND(ch, condition) = std::max(static_cast<sbit8>(0), PC_COND(ch, condition));
     else
-        PC_COND(ch, condition) = MAX(-96, PC_COND(ch, condition));
+        PC_COND(ch, condition) = std::max(static_cast<sbit8>(-96), PC_COND(ch, condition));
 
     if (PC_COND(ch, condition) > 3)
         return;

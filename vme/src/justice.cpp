@@ -409,7 +409,7 @@ void npc_set_visit (class unit_data * npc, class unit_data * dest_room,
     if ((paf = affected_by_spell(ch, ID_REWARD)))
     {
         paf->data[0] = MAX(xp, paf->data[0]);
-        paf->data[1] = MAX(gold, paf->data[1]);
+        paf->data[1] = std::max(gold, paf->data[1]);
         paf->data[2]++;
         return;
     }

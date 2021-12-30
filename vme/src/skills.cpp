@@ -408,7 +408,7 @@ int weapon_attack_skill(class unit_data *ch, int skill)
         n = PC_WPN_SKILL(ch, skill);
 
         if (TREE_ISLEAF(g_WpnColl.tree, skill))
-            n = MAX(TREE_PARENT(g_WpnColl.tree, skill), n);
+            n = std::max(TREE_PARENT(g_WpnColl.tree, skill), n);
 
         if (n == 0)
             n = -25;
@@ -498,7 +498,7 @@ int effective_dex(class unit_data *ch)
         }
     } // for
 
-    return MAX(0, CHAR_DEX(ch) - psum / 64);
+    return std::max(0, CHAR_DEX(ch) - psum / 64);
 }
 
 /* ========================================================================= */

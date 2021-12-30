@@ -148,7 +148,7 @@ static amount_t calc_money(amount_t v1, char op, amount_t v2)
     }
 
     if (res < 0) /* overflow */
-        return MAX(v1, v2);
+        return std::max(v1, v2);
 
     return res;
 }

@@ -100,7 +100,7 @@ void cCombatList::PerformViolence(void)
     // Happens just ONCE per turn, give everybody 12 actions...
     for (nIdx = 0; nIdx < nTop; nIdx++)
         if (pElems[nIdx]->nWhen > 0)
-            pElems[nIdx]->nWhen = MAX(0, pElems[nIdx]->nWhen - SPEED_DEFAULT);
+            pElems[nIdx]->nWhen = std::max(0, pElems[nIdx]->nWhen - SPEED_DEFAULT);
 
     do
     {
@@ -132,14 +132,14 @@ void cCombatList::PerformViolence(void)
                         bAnyaction = TRUE;
                         melee_violence(pElems[nIdx]->pOwner, tmp->nWhen <= (SPEED_DEFAULT + 1) / 2);
                         if ((nIdx != -1) && (nIdx < nTop) && (tmp == pElems[nIdx]))
-                            tmp->nWhen += MAX(2, (1 + CHAR_SPEED(tmp->pOwner)) / 2);
+                            tmp->nWhen += std::max(2, (1 + CHAR_SPEED(tmp->pOwner)) / 2);
                     }
                     else
                     {
                         bAnyaction = TRUE;
                         melee_violence(pElems[nIdx]->pOwner, TRUE);
                         if ((nIdx != -1) && (nIdx < nTop) && (tmp == pElems[nIdx]))
-                            tmp->nWhen += MAX(4, CHAR_SPEED(tmp->pOwner));
+                            tmp->nWhen += std::max(static_cast<ubit8>(4), CHAR_SPEED(tmp->pOwner));
                     }
                 }
             }

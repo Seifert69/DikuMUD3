@@ -383,7 +383,7 @@ void generate_zone_indexes(void)
         c = str_next_word_copy(c, tmpbuf);
 
         if (str_is_number(tmpbuf))
-            loadlevel = MAX(200, atoi(tmpbuf));
+            loadlevel = std::max(200, atoi(tmpbuf));
         else
             loadlevel = 200;
 
@@ -500,7 +500,7 @@ void generate_zone_indexes(void)
     g_mud_bootzone = 0;
 
     /* Allocate memory for the largest possible file-buffer */
-    /* filbuffer_length = MAX(filbuffer_length + 1, 16384); */
+    /* filbuffer_length = std::max(filbuffer_length + 1, 16384); */
     // CREATE(filbuffer, ubit8, filbuffer_length + 1);
     // slog(LOG_OFF, 0, "Max length for filebuffer is %d bytes.", filbuffer_length);
 }

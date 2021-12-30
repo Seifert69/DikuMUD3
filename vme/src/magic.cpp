@@ -157,11 +157,11 @@ ubit1 cast_magic_now(class unit_data *ch, int mana)
         if (hleft >= 95)
             return FALSE;
         else if (hleft > 80) /* Small chance, allow heal to be possible */
-            return (number(1, MAX(1, 16 - 2 * sleft)) == 1);
+            return (number(1, std::max(1, 16 - 2 * sleft)) == 1);
         else if (hleft > 50)
-            return (number(1, MAX(1, 6 - sleft)) == 1);
+            return (number(1, std::max(1, 6 - sleft)) == 1);
         else if (hleft > 40)
-            return (number(1, MAX(1, 4 - sleft)) == 1);
+            return (number(1, std::max(1, 4 - sleft)) == 1);
         else
             return TRUE;
     }
@@ -454,7 +454,7 @@ void spell_storm_call(struct spell_args *sa)
     }
 
     unit_zone(sa->caster)->weather.change -= sa->hm / 20;
-    unit_zone(sa->caster)->weather.change = MAX(unit_zone(sa->caster)->weather.change, -12);
+    unit_zone(sa->caster)->weather.change = std::max(unit_zone(sa->caster)->weather.change, -12);
 
     act("A cold wind chills you to the bone.", A_ALWAYS, sa->caster, cActParameter(), cActParameter(), TO_ALL);
 }

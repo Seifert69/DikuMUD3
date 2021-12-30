@@ -1178,7 +1178,7 @@ int run_dil(struct spec_arg *sarg)
 
     if (prg->nest <= 0)
     {
-        sarg->fptr->heart_beat = MAX(PULSE_SEC * 1, sarg->fptr->heart_beat);
+        sarg->fptr->heart_beat = std::max(PULSE_SEC * 1, static_cast<int>(sarg->fptr->heart_beat));
 
         if (IS_SET(prg->sarg->fptr->flags, SFB_TICK))
         {

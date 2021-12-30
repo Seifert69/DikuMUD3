@@ -30,13 +30,6 @@ int is_in(int a, int from, int to)
     return ((a >= from) && (a <= to));
 }
 
-#ifndef HPUX
-int MAX(int a, int b)
-{
-    return ((a > b) ? a : b);
-}
-#endif /* HPUX */
-
 #ifdef SOLARIS
 long lrand48();
 #endif

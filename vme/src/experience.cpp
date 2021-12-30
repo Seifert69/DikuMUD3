@@ -166,7 +166,7 @@ int dikuii_spell_bonus(class unit_data *att,
     else
         hm = (5 * spell_attack_ability(medium, spell_number)) / 2 + 2 * spell_attack_skill(medium, spell_number) - def_bonus;
 
-    return MAX(-50, hm);
+    return std::max(-50, hm);
 }
 
 /* If 'att' hits 'def' on 'hit_loc' then what is his basic attack */
@@ -237,9 +237,9 @@ int dikuii_melee_bonus(class unit_data *att,
             dual_skill = CHAR_DEX(att);
 
         if (primary)
-            att_bonus -= MAX(0, 25 - (dual_skill / 4));
+            att_bonus -= std::max(0, 25 - (dual_skill / 4));
         else
-            att_bonus -= MAX(0, 50 - (dual_skill / 4));
+            att_bonus -= std::max(0, 50 - (dual_skill / 4));
     }
 
     def_wpn_knowledge = weapon_defense_skill(def, att_wpn_type);
@@ -297,7 +297,7 @@ int dikuii_melee_bonus(class unit_data *att,
 
     // This results in a 5% hm increase per "level"
 
-    return MAX(-50, hm);
+    return std::max(-50, hm);
 }
 
 int spell_bonus(class unit_data *att,
@@ -457,7 +457,7 @@ int spell_bonus(class unit_data *att,
         snprintf(buf, sizeof(buf), "Spell  dmg (5/50/95) : %4d %4d %4d<br/>", dam5, dam50, dam95);
         pStat->append(buf);
 
-        snprintf(buf, sizeof(buf), "Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / MAX(1, (dam5 + dam50 + dam95) / 3));
+        snprintf(buf, sizeof(buf), "Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / std::max(1, (dam5 + dam50 + dam95) / 3));
         pStat->append(buf);
 
         pStat->append("Defensive Shield bonus not part of stat<br/>");
@@ -465,7 +465,7 @@ int spell_bonus(class unit_data *att,
         pStat->append("</pre>");
     }
 
-    return MAX(-50, hm);
+    return std::max(-50, hm);
 }
 
 /* If 'att' hits 'def' on 'hit_loc' then what is his basic attack */
@@ -566,9 +566,9 @@ int melee_bonus(class unit_data *att,
             dual_skill = CHAR_DEX(att);
 
         if (primary)
-            tmp = -MAX(0, 25 - (dual_skill / 4));
+            tmp = -std::max(0, 25 - (dual_skill / 4));
         else
-            tmp = -MAX(0, 50 - (dual_skill / 4));
+            tmp = -std::max(0, 50 - (dual_skill / 4));
 
         att_bonus += tmp;
 
@@ -723,13 +723,13 @@ int melee_bonus(class unit_data *att,
         snprintf(buf, sizeof(buf), "Weapon dmg (5/50/95) : %4d %4d %4d<br/>", dam5, dam50, dam95);
         pStat->append(buf);
 
-        snprintf(buf, sizeof(buf), "Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / MAX(1, (dam5 + dam50 + dam95) / 3));
+        snprintf(buf, sizeof(buf), "Rounds to kill def = %d<br/>", UNIT_MAX_HIT(def) / std::max(1, (dam5 + dam50 + dam95) / 3));
         pStat->append(buf);
 
         pStat->append("</pre>");
     }
 
-    return MAX(-50, hm);
+    return std::max(-50, hm);
 }
 
 int base_melee(class unit_data *att, class unit_data *def, int hit_loc)

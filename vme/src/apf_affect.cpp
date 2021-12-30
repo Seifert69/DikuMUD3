@@ -314,7 +314,7 @@ ubit1 apf_natural_armour(class unit_affected_type *af, class unit_data *unit, ub
                 break;
             }
 
-        CHAR_NATURAL_ARMOUR(unit) = MAX(CHAR_NATURAL_ARMOUR(unit), af->data[0]);
+        CHAR_NATURAL_ARMOUR(unit) = std::max(static_cast<int>(CHAR_NATURAL_ARMOUR(unit)), af->data[0]);
     }
     else
     {

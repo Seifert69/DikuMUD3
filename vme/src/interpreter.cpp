@@ -351,8 +351,8 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
     {
         return;
     }
-    strncpy(argstr, skip_blanks(arg), MAX(0, MAX_INPUT_LENGTH - 1 - strlen(cmd)));
-    argstr[MAX(0, MAX_INPUT_LENGTH - 1 - strlen(cmd))] = 0;
+    strncpy(argstr, skip_blanks(arg), std::max(static_cast<size_t>(0), MAX_INPUT_LENGTH - 1 - strlen(cmd)));
+    argstr[std::max(static_cast<size_t>(0), MAX_INPUT_LENGTH - 1 - strlen(cmd))] = 0;
 
     strip_trailing_spaces(argstr);
 
@@ -440,7 +440,7 @@ void command_interpreter(class unit_data *ch, const char *cmdArg)
     }
 
     if (cmd_ptr->log_level)
-        slog(LOG_ALL, MAX(CHAR_LEVEL(ch), cmd_ptr->log_level), "CMDLOG %s: %s %s", UNIT_NAME(ch), cmd_ptr->cmd_str, argstr);
+        slog(LOG_ALL, std::max(CHAR_LEVEL(ch), cmd_ptr->log_level), "CMDLOG %s: %s %s", UNIT_NAME(ch), cmd_ptr->cmd_str, argstr);
 
     if (cmd_ptr->tmpl)
     {
