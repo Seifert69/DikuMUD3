@@ -1,4 +1,5 @@
 file(GLOB VME_ZONES "*.zon")
+file(GLOB HEADER_DEPS "{CMAKE_SOURCE_DIR}/vme/include/*.h")
 
 # Create empty variable for outputs
 set(OUTPUT_FILES)
@@ -11,9 +12,9 @@ foreach (VME_SRC_ZONE ${VME_ZONES})
 
     add_custom_command(
             OUTPUT ${OUTPUT_DATA_FILE}
-            COMMAND vmc -I../include ${SHORT}.zon
+            COMMAND vmc -I${CMAKE_SOURCE_DIR}/vme/include ${SHORT}.zon
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/zone
-            DEPENDS ${SHORT}.zon ../include/*.h
+            DEPENDS ${SHORT}.zon ${HEADER_DEPS}
             VERBATIM
     )
 
