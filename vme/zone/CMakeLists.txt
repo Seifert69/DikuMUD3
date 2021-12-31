@@ -4,13 +4,15 @@ file(GLOB VME_ZONES "*.zon")
 set(OUTPUT_FILES)
 
 foreach (VME_SRC_ZONE ${VME_ZONES})
-    set(OUTPUT_DATA_FILE "${VME_SRC_ZONE}.data")
+    get_filename_component(SHORT "${VME_SRC_ZONE}" NAME_WLE)
+
+    set(OUTPUT_DATA_FILE ${SHORT}.data)
 
     add_custom_command(
             OUTPUT ${OUTPUT_DATA_FILE}
-            COMMAND vmc -m -I../include ${VME_SRC_ZONE}
+            COMMAND vmc -I../include ${SHORT}.zon
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/zone
-            DEPENDS ${VME_SRC_ZONE}
+            DEPENDS ${SHORT}.zon ../include/*.h
             VERBATIM
     )
 
