@@ -52,13 +52,13 @@ void dil_add_secure(class dilprg *prg, class unit_data *sup, ubit8 *lab);
 #ifdef __cplusplus
 int dil_sub_secure(struct dilframe *frm, class unit_data *sup, int bForeach = FALSE);
 #endif
-void dil_secure_test(register class dilprg *prg);
+void dil_secure_test(class dilprg *prg);
 int same_environment(class unit_data *u1, class unit_data *u2);
 void unhash_str(char **s);
-void dil_clear_extras(register class dilprg *prg, class extra_descr_data *exd);
-void dil_clear_non_secured(register class dilprg *prg);
-void dil_clear_lost_reference(register struct dilframe *frm, void *ptr);
-void dil_test_secure(register class dilprg *prg, int bForeach = FALSE);
+void dil_clear_extras(class dilprg *prg, class extra_descr_data *exd);
+void dil_clear_non_secured(class dilprg *prg);
+void dil_clear_lost_reference(struct dilframe *frm, void *ptr);
+void dil_test_secure(class dilprg *prg, int bForeach = FALSE);
 int dil_destroy(const char *name, class unit_data *u);
 
 /* NULL fptr creates one...  */
