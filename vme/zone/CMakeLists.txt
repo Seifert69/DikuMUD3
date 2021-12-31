@@ -2,11 +2,12 @@ file(GLOB VME_ZONES "*.zon")
 
 # Create empty variable for outputs
 set(OUTPUT_FILES)
+#set(CLEAN_FILES)
 
 foreach (VME_SRC_ZONE ${VME_ZONES})
     get_filename_component(SHORT "${VME_SRC_ZONE}" NAME_WLE)
 
-    set(OUTPUT_DATA_FILE ${SHORT}.data)
+    set(OUTPUT_DATA_FILE "${SHORT}.data;${SHORT}.reset")
 
     add_custom_command(
             OUTPUT ${OUTPUT_DATA_FILE}
@@ -18,6 +19,12 @@ foreach (VME_SRC_ZONE ${VME_ZONES})
 
     # Append new .data file to outputs list
     set(OUTPUT_FILES ${OUTPUT_FILES} ${OUTPUT_DATA_FILE})
+    set(CLEAN_FILES ${CLEAN_FILES} "${SHORT}.dh;${SHORT}.err;${SHORT}.dot;")
 endforeach (VME_SRC_ZONE)
 
 add_custom_target(zone_files ALL DEPENDS vmc ${OUTPUT_FILES})
+
+set_target_properties(zone_files
+        PROPERTIES
+            ADDITIONAL_CLEAN_FILES "${CLEAN_FILES}"
+        )
