@@ -32,7 +32,7 @@
 #include <db_file.h>
 #include <common.h>
 
-#define MEMBLOCK 65536
+#define MEMBLOCK (200000)
 #define BUFS 30
 
 int sunlight = 0;
