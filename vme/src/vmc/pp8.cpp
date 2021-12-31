@@ -836,9 +836,9 @@ isoct(char ch)
 /************************************************************************/
 
 int
-item(register int (fun)(int),int f)
+item(int (fun)(int),int f)
 {
-    register int		t;
+    int		t;
 
     while((t = (*fun)(f)) != '\n')
     {
@@ -861,9 +861,9 @@ item(register int (fun)(int),int f)
 /************************************************************************/
 
 int
-look(register const char *str)
+look(const char *str)
 {
-    register int		rc;
+    int		rc;
     char			tokenbuf[TOKENSIZE];
 
     rc = match(tokenbuf,str);
@@ -883,11 +883,11 @@ look(register const char *str)
 /************************************************************************/
 
 int
-match(register char *tbuf,register const char *str)
+match(char *tbuf,const char *str)
 {
     int		(*fun)(int);
-    register const char		*s;
-    register char		*t;
+    const char		*s;
+    char		*t;
 
     fun = getnstoken;		/* Initially skip spaces */
     t = tbuf;			/* Token packing buffer */
@@ -928,14 +928,14 @@ match(register char *tbuf,register const char *str)
 /************************************************************************/
 
 char	*
-readexpline(register char *buf,register int bufsize)
+readexpline(char *buf,int bufsize)
 {
     static	char		rbo[] = "Read buffer overflow";
 
-    register char		*bufp;
-    register int		is_func;
+    char		*bufp;
+    int		is_func;
     struct	symtab		*sy;
-    register int		t;
+    int		t;
 
     is_func = FALSE;
 
@@ -986,7 +986,7 @@ readexpline(register char *buf,register int bufsize)
 /************************************************************************/
 
 int
-test(register const char *str)
+test(const char *str)
 {
     char			tokenbuf[TOKENSIZE];
 

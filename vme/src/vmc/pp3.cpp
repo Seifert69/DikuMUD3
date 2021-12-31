@@ -92,7 +92,7 @@ do_line(char at_bol)
 {
     char			buf[TOKENSIZE + 1];
     char			filen[FILENAMESIZE + 1 + 3];
-    register	int	n;
+    int	n;
 
     n = Tokenline - Outline;	/* Difference in line #s */
 
@@ -152,20 +152,20 @@ void
 doinclude(int aaa, int bbb, const char *ccc)
 {
     char			buf[TOKENSIZE];
-    register int		c;
-    register int		d=0;
-    register char		*incf;
+    int		c;
+    int		d=0;
+    char		*incf;
     char			incfile[FILENAMESIZE + 1];
 #if	HOST != H_CPM
     char			filename[FILENAMESIZE + 1];
-    register char		**ip;
+    char		**ip;
 #endif	/* HOST != H_CPM */
-    register int		ok;
+    int		ok;
 #if	HOST == H_CPM
-    register int		disk;
-    register char		*p;
-    register char		**ip;
-    register int		user;
+    int		disk;
+    char		*p;
+    char		**ip;
+    int		user;
 #endif	/* HOST == H_CPM */
 
 #if	PPDEBUG
@@ -404,7 +404,7 @@ doline(int aaa, int bbb, const char *ccc)
 int
 gchbuf()
 {
-    register int		c;
+    int		c;
 
     for(;;)
     {
@@ -455,7 +455,7 @@ gchfile()
     extern	int		read();
 #endif	/* PP_SYSIO */
 
-    register struct	file	*f;
+    struct	file	*f;
 
     if(Filelevel < 0)
     {
@@ -507,7 +507,7 @@ gchfile()
 int
 gchpb()
 {
-    register int		c;
+    int		c;
 
     for(;;)
     {
@@ -578,7 +578,7 @@ getchn()
 #if	HOST == H_CPM
 int
 inc_open(incfile,u,d)
-register char		*incfile;
+char		*incfile;
 int			u;
 int			d;
 #else	/* HOST != H_CPM */
@@ -590,9 +590,9 @@ inc_open(const char *incfile)
     extern	int		open();
 #endif	/* PP_SYSIO */
 
-    register int		v;
-    register struct	file	*f;
-    register struct file	*fold;
+    int		v;
+    struct	file	*f;
+    struct file	*fold;
 
 #if	HOST == H_CPM
 
@@ -690,9 +690,9 @@ void
 init_path()
 {
 #if	HOST == H_CPM
-    register int		inum;
+    int		inum;
     char			pb[TOKENSIZE];
-    register FILE		*pf;
+    FILE		*pf;
 
     bdos(BDOS_USER,0);
     bdos(BDOS_SELDISK,0);		/* Select A0 */
@@ -786,7 +786,7 @@ popfile()
 #ifdef	PP_SYSIO
     extern	int		close();
 #endif	/* PP_SYSIO */
-    register struct	file	*f;
+    struct	file	*f;
 
 #if	HOST == H_CPM
     set_user();
@@ -837,13 +837,13 @@ popfile()
 /************************************************************************/
 
 char	*
-readline(register char *buf, register int bufsize, register int flags)
+readline(char *buf, int bufsize, int flags)
 {
     static	char		rbo[] = "Read buffer overflow";
 
-    register char		*bufp;
+    char		*bufp;
     struct	symtab		*sy;
-    register int		t;
+    int		t;
 
     for(bufp = buf; (t = gettoken(flags)) != '\n'; )
     {
@@ -877,7 +877,7 @@ readline(register char *buf, register int bufsize, register int flags)
 void
 scaneol()
 {
-    register int		t;
+    int		t;
 
     while((t = gettoken(GT_STR)) != '\n')
     {

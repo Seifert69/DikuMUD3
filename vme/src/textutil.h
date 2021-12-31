@@ -29,7 +29,7 @@ void str_substitute(const char *old, const char *newstr, char *str);
 void str_substitute(const std::string &search, const std::string &replace, std::string &subject);
 void str_rem(char *s, char c);
 void str_blank_punct(char *s);
-void str_remspc(register char *s);
+void str_remspc(char *s);
 void str_chraround(char *str, char c);
 
 const char *is_name_raw(const char *arg, char const *const *names); // MS2020 const char *names[])
