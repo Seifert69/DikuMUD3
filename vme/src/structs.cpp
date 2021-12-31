@@ -475,7 +475,10 @@ unit_data *new_unit_data(ubit8 type)
     else if (type == UNIT_ST_NPC)
         return new EMPLACE(npc_data) npc_data;
     else
+    {
         assert(FALSE);
+        return NULL; // Need to avoid warning on Git actions.
+    }
 }
 
 unit_data::unit_data(void)
