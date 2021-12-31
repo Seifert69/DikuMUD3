@@ -97,7 +97,7 @@ void slog(enum log_level level, ubit8 wizinv_level, const char *fmt, ...)
 
     if (wizinv_level > 0)
     {
-        auto chars_printed = snprintf(buf, buffer_size_remaining, "(%d) ", wizinv_level);
+        size_t chars_printed = snprintf(buf, buffer_size_remaining, "(%d) ", wizinv_level);
         if (chars_printed < 0 || chars_printed >= buffer_size_remaining)
         {
             buffer_size_remaining = 0;
