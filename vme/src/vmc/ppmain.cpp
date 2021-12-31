@@ -215,9 +215,9 @@ int original_main(int argc, char *argv[])
                         for (; *s2 != '\0'; s2++)
                         {
                             if (i)
-                                typetab[*s2 + 1] |= C_L;
+                                g_typetab[*s2 + 1] |= C_L;
                             else
-                                typetab[*s2 + 1] &= ~C_L;
+                                g_typetab[*s2 + 1] &= ~C_L;
                         }
 
                         skip = TRUE; /* Skip to next param */
@@ -334,7 +334,7 @@ int original_main(int argc, char *argv[])
     if (A_c99)
     {
         pbstr("#define _Pragma([line,RQ]) #pragma line\n");
-        typetab['\\' + 1] |= C_L;
+        g_typetab['\\' + 1] |= C_L;
     }
     /*
      *	Time to start processing the input file(s)!

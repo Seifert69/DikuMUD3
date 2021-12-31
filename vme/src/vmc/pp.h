@@ -235,7 +235,7 @@ int test(register const char *str);
 #define C_N 0x80 /* A NUL (no output)			*/
 
 #if PP
-    #define istype(c, v) ((typetab + 1)[(c)] & (v))
+    #define istype(c, v) ((g_typetab + 1)[(c)] & (v))
 #endif /* PP */
 
 #ifdef MAIN

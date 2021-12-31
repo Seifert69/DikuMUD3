@@ -514,7 +514,7 @@ int gettoken(int f)
 
 int istype(int c, int v)
 {
-    return ((typetab + 1)[c] & v);
+    return ((g_typetab + 1)[c] & v);
 }
 #endif /* !PP */
 
