@@ -18,6 +18,7 @@
 #include "textutil.h"
 #include "utility.h"
 #include "money.h"
+extern struct arm_info_type shi_info[];
 
 /* PS Algorithm 3                                                      */
 /* This algorithm returns the total amount of hitpoints possessed when */
@@ -29,15 +30,19 @@ int hitpoint_total(int hpp)
     return 10 + 3 * hpp;
 }
 
-const char *g_error_zone_name = "";
+const char *error_zone_name = "";
 
 /* if fatal is 2, it will NEVER be fatal */
 void dmc_error(int fatal, const char *fmt, ...)
 {
+    extern int fatal_warnings;
+
     char buf[MAX_STRING_LENGTH];
     char filename[128];
     va_list args;
     FILE *f;
+
+    extern int errcon;
 
     va_start(args, fmt);
     vsnprintf(buf, sizeof(buf) - 10, fmt, args);
@@ -45,7 +50,7 @@ void dmc_error(int fatal, const char *fmt, ...)
     va_end(args);
 
     fprintf(stderr, "%s: %s\n", fatal && fatal != 2 ? "FATAL" : "WARNING", buf);
-    sprintf(filename, "%s.err", g_error_zone_name);
+    sprintf(filename, "%s.err", error_zone_name);
 
     if ((f = fopen(filename, "a")))
     {
@@ -53,8 +58,8 @@ void dmc_error(int fatal, const char *fmt, ...)
         fclose(f);
     }
 
-    if (fatal != 2 && (fatal || g_fatal_warnings))
-        g_errcon = 1;
+    if (fatal != 2 && (fatal || fatal_warnings))
+        errcon = 1;
 }
 
 /*  MONEY
@@ -640,6 +645,8 @@ void process_unit(class unit_data *u)
     int i;
     struct extra_descr_data *exd;
 
+    extern int verbose;
+
     process_affects(u);
     process_funcs(u);
 
@@ -716,7 +723,7 @@ void process_unit(class unit_data *u)
                         int i;
 
                         for (i = 0; i <= MAX_MONEY; i++)
-                            if (!strcmp(UNIT_TITLE(u).c_str(), g_money_types[i].abbrev))
+                            if (!strcmp(UNIT_TITLE(u).c_str(), money_types[i].abbrev))
                                 break;
 
                         if (i > MAX_MONEY)
@@ -804,7 +811,7 @@ void process_unit(class unit_data *u)
                 */
             }
 
-            if (g_verbose)
+            if (verbose)
                 show_info(u);
             break;
     }

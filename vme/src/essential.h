@@ -107,7 +107,7 @@ typedef unsigned long int ubit64; // MS2020
 #endif /* HPUX */
 
 typedef ubit8 ubit1; /* Boolean */
-extern FILE *g_log_file_fd;
+extern FILE *log_file_fd;
 void slog(enum log_level, ubit8, const char *, ...);
 
 #define CREATE(res, type, num)                                                                                                             \

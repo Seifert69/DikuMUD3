@@ -4,7 +4,7 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.2 $
  */
-#include "external_vars.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -162,6 +162,9 @@ void destruct_unit(class unit_data *unit)
     if (!unit)
         return;
 
+    extern class descriptor_data *descriptor_list;
+    extern class unit_data *unit_list;
+
     void stop_all_special(class unit_data * u);
     void unswitchbody(class unit_data * npc);
     void unsnoop(class unit_data * ch, int mode);
@@ -186,7 +189,8 @@ void destruct_unit(class unit_data *unit)
 
             in_menu = TRUE;
 
-            if (UNIT_IN(unit) && !g_dilmenu)
+            extern int dilmenu;
+            if (UNIT_IN(unit) && !dilmenu)
             {
                 set_descriptor_fptr(CHAR_DESCRIPTOR(unit), nanny_menu, TRUE);
                 unit->undo_destruct();
@@ -204,7 +208,7 @@ void destruct_unit(class unit_data *unit)
 
         /* If the PC which is switched is extracted, then unswitch */
         if (IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
-            for (d = g_descriptor_list; d; d = d->next)
+            for (d = descriptor_list; d; d = d->next)
                 assert(d->original != unit);
 
         assert(!CHAR_FOLLOWERS(unit));
@@ -243,7 +247,7 @@ void destruct_unit(class unit_data *unit)
         UNIT_FILE_INDEX(unit)->no_in_mem--;
     }
 
-    if ((g_unit_list == unit) || unit->gnext || unit->gprevious)
+    if ((unit_list == unit) || unit->gnext || unit->gprevious)
         remove_from_unit_list(unit);
 
     if (!in_menu)
@@ -259,6 +263,9 @@ void clear_destructed(void)
 {
     class unit_fptr *f;
     int i;
+
+    extern void special_event(void *p1, void *p2);
+    extern eventqueue events;
 
     for (i = 0; i < destructed_idx[DR_AFFECT]; i++)
         delete (class unit_affected_type *)destructed[DR_AFFECT][i];

@@ -40,7 +40,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-#include "external_vars.h"
+
 #include "structs.h"
 #include "utils.h"
 #include "utility.h"
@@ -62,6 +62,8 @@
 #include "fight.h"
 #include "skills.h"
 
+extern struct command_info *cmd_dirs[MAX_EXIT + 1];
+
 // I had to add a act() kludge here.
 // The $arrive_ and $leave_ extras depend on $2t for special descriptions.
 // However, many act() in movement require 3 units, so therefore $2t in extras is
@@ -78,10 +80,10 @@ const char *single_unit_messg(class unit_data *unit, const char *type, int direc
     {
         if (is_in(direction, 0, MAX_EXIT))
         {
-            if ((exd->names.Name(1) == NULL) || str_cstr(exd->names.Name(1), g_dirs_short[direction]))
+            if ((exd->names.Name(1) == NULL) || str_cstr(exd->names.Name(1), dirs_short[direction]))
             {
                 strcpy(mesg, exd->descr.c_str());
-                str_substitute("$2t", g_dirs[direction], mesg);
+                str_substitute("$2t", dirs[direction], mesg);
             }
         }
         else
@@ -176,7 +178,7 @@ int room_move(class unit_data *ch,
     {
         char buf[MAX_INPUT_LENGTH];
         strcpy(buf, "");
-        res = send_preprocess(mover, g_cmd_dirs[direction], buf);
+        res = send_preprocess(mover, cmd_dirs[direction], buf);
         if (ch->is_destructed())
             return -1;
     }
@@ -233,7 +235,7 @@ int room_move(class unit_data *ch,
         }
     }
 
-    send_done(mover, ch, room_from, direction, &g_cmd_auto_enter, "");
+    send_done(mover, ch, room_from, direction, &cmd_auto_enter, "");
 
     return 1;
 }
@@ -322,13 +324,13 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
             return 0;
         }
 
-        snprintf(aLeaveOther, sizeof(aLeaveOther), "$2n leaves %s.", g_dirs[direction]);
+        snprintf(aLeaveOther, sizeof(aLeaveOther), "$2n leaves %s.", dirs[direction]);
         ls = single_unit_messg(room_from, "$leave_s", direction, aLeaveSelf);
         lo = single_unit_messg(room_from, "$leave_o", direction, aLeaveOther);
 
-        snprintf(aArrOther, sizeof(aArrOther), "$2n has arrived from %s.", g_enter_dirs[g_rev_dir[direction]]);
-        as = single_unit_messg(room_to, "$arrive_s", g_rev_dir[direction], aArrSelf);
-        ao = single_unit_messg(room_to, "$arrive_o", g_rev_dir[direction], aArrOther);
+        snprintf(aArrOther, sizeof(aArrOther), "$2n has arrived from %s.", enter_dirs[rev_dir[direction]]);
+        as = single_unit_messg(room_to, "$arrive_s", rev_dir[direction], aArrSelf);
+        ao = single_unit_messg(room_to, "$arrive_o", rev_dir[direction], aArrOther);
     }
     else // Steed or boat code (shares scan for passenger combat)
     {
@@ -342,10 +344,10 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
 
         if (IS_CHAR(mover)) // Mounted on a steed
         {
-            snprintf(aLeaveSelf, sizeof(aLeaveSelf), "You ride your $3N %s.", g_dirs[direction]);
-            snprintf(aLeaveOther, sizeof(aLeaveOther), "$2n rides $2s $3N %s.", g_dirs[direction]);
-            snprintf(aArrOther, sizeof(aArrOther), "$2n rides $2s $3N in from %s.", g_enter_dirs[g_rev_dir[direction]]);
-            snprintf(aPassengersOther, sizeof(aPassengersOther), "$2n rides $2s $3N %s.", g_dirs[direction]);
+            snprintf(aLeaveSelf, sizeof(aLeaveSelf), "You ride your $3N %s.", dirs[direction]);
+            snprintf(aLeaveOther, sizeof(aLeaveOther), "$2n rides $2s $3N %s.", dirs[direction]);
+            snprintf(aArrOther, sizeof(aArrOther), "$2n rides $2s $3N in from %s.", enter_dirs[rev_dir[direction]]);
+            snprintf(aPassengersOther, sizeof(aPassengersOther), "$2n rides $2s $3N %s.", dirs[direction]);
 
             if (CHAR_POS(mover) < POSITION_STANDING)
             {
@@ -374,17 +376,17 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
         {
             if (OBJ_TYPE(mover) == ITEM_VEHICLE)
             {
-                snprintf(aLeaveSelf, sizeof(aLeaveSelf), "You drive your $3N %s.", g_dirs[direction]);
-                snprintf(aLeaveOther, sizeof(aLeaveOther), "$2n drives $2s $3N %s.", g_dirs[direction]);
-                snprintf(aArrOther, sizeof(aArrOther), "$2n drives $2s $3N in from %s.", g_enter_dirs[g_rev_dir[direction]]);
-                snprintf(aPassengersOther, sizeof(aPassengersOther), "$2n drives $2s $3N %s.", g_dirs[direction]);
+                snprintf(aLeaveSelf, sizeof(aLeaveSelf), "You drive your $3N %s.", dirs[direction]);
+                snprintf(aLeaveOther, sizeof(aLeaveOther), "$2n drives $2s $3N %s.", dirs[direction]);
+                snprintf(aArrOther, sizeof(aArrOther), "$2n drives $2s $3N in from %s.", enter_dirs[rev_dir[direction]]);
+                snprintf(aPassengersOther, sizeof(aPassengersOther), "$2n drives $2s $3N %s.", dirs[direction]);
             }
             else
             {
-                snprintf(aLeaveSelf, sizeof(aLeaveSelf), "You sail your $3N %s.", g_dirs[direction]);
-                snprintf(aLeaveOther, sizeof(aLeaveOther), "$2n sails $2s $3N %s.", g_dirs[direction]);
-                snprintf(aArrOther, sizeof(aArrOther), "$2n sails $2s $3N in from %s.", g_enter_dirs[g_rev_dir[direction]]);
-                snprintf(aPassengersOther, sizeof(aPassengersOther), "$2n sails $2s $3N %s.", g_dirs[direction]);
+                snprintf(aLeaveSelf, sizeof(aLeaveSelf), "You sail your $3N %s.", dirs[direction]);
+                snprintf(aLeaveOther, sizeof(aLeaveOther), "$2n sails $2s $3N %s.", dirs[direction]);
+                snprintf(aArrOther, sizeof(aArrOther), "$2n sails $2s $3N in from %s.", enter_dirs[rev_dir[direction]]);
+                snprintf(aPassengersOther, sizeof(aPassengersOther), "$2n sails $2s $3N %s.", dirs[direction]);
             }
 
             if (CHAR_POS(ch) < POSITION_STANDING)
@@ -552,7 +554,7 @@ int generic_move(class unit_data *ch, class unit_data *mover, int direction, int
 
     if (IS_CHAR(mover))
     {
-        int need_movement = (g_movement_loss[ROOM_LANDSCAPE(room_from)] + g_movement_loss[ROOM_LANDSCAPE(room_to)]) / 2;
+        int need_movement = (movement_loss[ROOM_LANDSCAPE(room_from)] + movement_loss[ROOM_LANDSCAPE(room_to)]) / 2;
 
         int overweight = UNIT_CONTAINING_W(ch) - char_carry_w_limit(mover);
 
@@ -708,7 +710,7 @@ int low_find_door(class unit_data *ch, char *doorstr, int err_msg, int check_hid
         return -1;
     }
 
-    if ((door = search_block(dir, g_dirs, FALSE)) != -1) /* Partial Match */
+    if ((door = search_block(dir, dirs, FALSE)) != -1) /* Partial Match */
     {
         /* A direction and name was specified */
         if (str_is_empty(dirdoorstr))
@@ -790,7 +792,7 @@ int do_simple_move(class unit_data *ch, int direction, int following)
        in command interpreter! */
     if (following)
     {
-        res = send_preprocess(ch, g_cmd_dirs[direction], buf);
+        res = send_preprocess(ch, cmd_dirs[direction], buf);
         if (ch->is_destructed())
             return -1;
     }
@@ -815,7 +817,7 @@ int do_simple_move(class unit_data *ch, int direction, int following)
         return 0;
     }
 
-    need_movement = (g_movement_loss[ROOM_LANDSCAPE(room)] + g_movement_loss[ROOM_LANDSCAPE(ROOM_EXIT(room, direction)->to_room)]) / 2;
+    need_movement = (movement_loss[ROOM_LANDSCAPE(room)] + movement_loss[ROOM_LANDSCAPE(ROOM_EXIT(room, direction)->to_room)]) / 2;
 
     if (CHAR_ENDURANCE(ch) < need_movement)
     {
@@ -839,17 +841,17 @@ int do_simple_move(class unit_data *ch, int direction, int following)
     if (CHAR_LEVEL(ch) < 200)
         CHAR_ENDURANCE(ch) -= need_movement;
 
-    dirbuf[0] = g_dirs[direction][0];
+    dirbuf[0] = dirs[direction][0];
 
     c = single_unit_messg(room, "$leave_o", dirbuf, "$1n leaves $3t.");
 
     if (!CHAR_HAS_FLAG(ch, CHAR_SNEAK) && !str_is_empty(c))
-        act(c, A_HIDEINV, ch, room, g_dirs[direction], TO_ROOM);
+        act(c, A_HIDEINV, ch, room, dirs[direction], TO_ROOM);
 
     c = single_unit_messg(room, "$leave_s", dirbuf, "");
 
     if (!str_is_empty(c))
-        act(c, A_ALWAYS, ch, room, g_dirs[direction], TO_CHAR);
+        act(c, A_ALWAYS, ch, room, dirs[direction], TO_CHAR);
 
     unit_from_unit(ch);
 
@@ -857,21 +859,21 @@ int do_simple_move(class unit_data *ch, int direction, int following)
 
     unit_to_unit(ch, to);
 
-    dirbuf[0] = g_dirs[g_rev_dir[direction]][0];
+    dirbuf[0] = dirs[rev_dir[direction]][0];
 
     c = single_unit_messg(room, "$arrive_o", dirbuf, "$1n has arrived from $3t.");
 
     if (!CHAR_HAS_FLAG(ch, CHAR_SNEAK) && !str_is_empty(c))
-        act(c, A_HIDEINV, ch, to, g_enter_dirs[g_rev_dir[direction]], TO_ROOM);
+        act(c, A_HIDEINV, ch, to, enter_dirs[rev_dir[direction]], TO_ROOM);
 
     c = single_unit_messg(to, "$arrive_s", dirbuf, "");
 
     if (!str_is_empty(c))
-        act(c, A_ALWAYS, ch, to, g_enter_dirs[g_rev_dir[direction]], TO_CHAR);
+        act(c, A_ALWAYS, ch, to, enter_dirs[rev_dir[direction]], TO_CHAR);
 
     command_interpreter(ch, "look");
 
-    send_done(ch, ch, room, direction, &g_cmd_auto_enter, ""); // Send to was_in
+    send_done(ch, ch, room, direction, &cmd_auto_enter, ""); // Send to was_in
 
     return (1);
 }
@@ -1063,7 +1065,7 @@ int do_simple_sail(class unit_data *boat, class unit_data *captain, int directio
     /* Ok, the boat must always issue a special call in case some room
        might want to catch it! Not like walking! */
 
-    res = send_preprocess(boat, g_cmd_dirs[direction], buf);
+    res = send_preprocess(boat, cmd_dirs[direction], buf);
 
     for (u = UNIT_CONTAINS(boat); u; u = u->next)
         if (!pay_point_charlie(u, to))
@@ -1078,21 +1080,21 @@ int do_simple_sail(class unit_data *boat, class unit_data *captain, int directio
     unit_from_unit(boat);
 
     if (UNIT_CONTAINS(was_in))
-        act("$2n sails $3t.", A_HIDEINV, UNIT_CONTAINS(was_in), boat, g_dirs[direction], TO_ALL);
+        act("$2n sails $3t.", A_HIDEINV, UNIT_CONTAINS(was_in), boat, dirs[direction], TO_ALL);
 
     if (UNIT_CONTAINS(to))
-        act("$2n has arrived from $3t.", A_HIDEINV, UNIT_CONTAINS(to), boat, g_enter_dirs[g_rev_dir[direction]], TO_ALL);
+        act("$2n has arrived from $3t.", A_HIDEINV, UNIT_CONTAINS(to), boat, enter_dirs[rev_dir[direction]], TO_ALL);
 
     unit_to_unit(boat, to);
 
     for (u = UNIT_CONTAINS(boat); u; u = u->next)
         if (IS_CHAR(u))
         {
-            act("$1n sails $2t with you.", A_SOMEONE, boat, g_dirs[direction], u, TO_VICT);
+            act("$1n sails $2t with you.", A_SOMEONE, boat, dirs[direction], u, TO_VICT);
             command_interpreter(u, "look");
         }
 
-    send_done(boat, captain, was_in, direction, &g_cmd_auto_enter, "");
+    send_done(boat, captain, was_in, direction, &cmd_auto_enter, "");
 
     return 1;
 }
@@ -1125,7 +1127,7 @@ int do_simple_ride(class unit_data *beast, class unit_data *master, int directio
     to = ROOM_EXIT(was_in, direction)->to_room;
 
     strcpy(buf, "");
-    res = send_preprocess(beast, g_cmd_dirs[direction], buf);
+    res = send_preprocess(beast, cmd_dirs[direction], buf);
 
     for (u = UNIT_CONTAINS(beast); u; u = u->next)
         if (!pay_point_charlie(u, to))
@@ -1143,7 +1145,7 @@ int do_simple_ride(class unit_data *beast, class unit_data *master, int directio
         return 0;
     }
 
-    need_movement = (g_movement_loss[ROOM_LANDSCAPE(UNIT_IN(beast))] + g_movement_loss[ROOM_LANDSCAPE(to)]) / 2;
+    need_movement = (movement_loss[ROOM_LANDSCAPE(UNIT_IN(beast))] + movement_loss[ROOM_LANDSCAPE(to)]) / 2;
 
     if (CHAR_ENDURANCE(beast) < need_movement)
     {
@@ -1156,10 +1158,10 @@ int do_simple_ride(class unit_data *beast, class unit_data *master, int directio
     unit_from_unit(beast);
 
     if (UNIT_CONTAINS(was_in))
-        act("$2n rides $3t.", A_HIDEINV, UNIT_CONTAINS(was_in), beast, g_dirs[direction], TO_ALL);
+        act("$2n rides $3t.", A_HIDEINV, UNIT_CONTAINS(was_in), beast, dirs[direction], TO_ALL);
 
     if (UNIT_CONTAINS(to))
-        act("$2n has arrived from $3t.", A_HIDEINV, UNIT_CONTAINS(to), beast, g_enter_dirs[g_rev_dir[direction]], TO_ALL);
+        act("$2n has arrived from $3t.", A_HIDEINV, UNIT_CONTAINS(to), beast, enter_dirs[rev_dir[direction]], TO_ALL);
 
     unit_to_unit(beast, to);
 
@@ -1167,12 +1169,12 @@ int do_simple_ride(class unit_data *beast, class unit_data *master, int directio
     {
         if (IS_CHAR(u))
         {
-            act("$1n rides $2t with you.", A_SOMEONE, beast, g_dirs[direction], u, TO_VICT);
+            act("$1n rides $2t with you.", A_SOMEONE, beast, dirs[direction], u, TO_VICT);
             command_interpreter(u, "look");
         }
     }
 
-    send_done(beast, master, was_in, direction, &g_cmd_auto_enter, "");
+    send_done(beast, master, was_in, direction, &cmd_auto_enter, "");
 
     return 1;
 }

@@ -10,7 +10,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <assert.h>
-#include "external_vars.h"
+
 #include "structs.h"
 #include "utils.h"
 #include "interpreter.h"
@@ -26,6 +26,7 @@
 #define ELIZA_LOGFILE "log.eli"
 
 #define MAX_HISTORY 4
+extern eventqueue events;
 struct oracle_data
 {
     int *nextrep;
@@ -468,14 +469,14 @@ void set_delayed_action(class unit_data *npc, char *str)
     while ((cp = strchr(str, '@')))
     {
         *cp = 0;
-        g_events.add(when, delayed_action, npc, str_dup(str));
+        events.add(when, delayed_action, npc, str_dup(str));
         str = cp + 1;
         when += WAIT_SEC * 1;
     }
 
     when += WAIT_SEC * 3;
 
-    g_events.add(when, delayed_action, npc, str_dup(str));
+    events.add(when, delayed_action, npc, str_dup(str));
 }
 
 #define MAX_ELIBUF 50
@@ -554,7 +555,7 @@ int oracle(struct spec_arg *sarg)
             FREE(od);
         }
         sarg->fptr->data = NULL;
-        g_events.remove_relaxed(delayed_action, sarg->owner, NULL);
+        events.remove_relaxed(delayed_action, sarg->owner, NULL);
         return SFR_BLOCK;
     }
 

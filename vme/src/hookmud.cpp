@@ -33,7 +33,7 @@
 #include "dilrun.h"
 #include "hookmud.h"
 
-class cMotherHook g_MotherHook;
+class cMotherHook MotherHook;
 
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -100,7 +100,7 @@ void cMultiHook::Unhook(void)
     if (this->IsHooked())
     {
         slog(LOG_OFF, 0, "Unhooking MultiHook");
-        g_CaptainHook.Unhook(this);
+        CaptainHook.Unhook(this);
         assert(this->fd != -1);
         cHook::Unhook();
     }
@@ -113,7 +113,7 @@ void cMultiHook::Close(void)
     if (this->IsHooked())
         Unhook();
 
-    g_Multi.nCount--;
+    Multi.nCount--;
 }
 
 // Get the data and parse the mplex protocol
@@ -133,7 +133,7 @@ int cMultiHook::Read(void)
 
     if (id != 0)
     {
-        for (d = g_descriptor_list; d; d = d->next)
+        for (d = descriptor_list; d; d = d->next)
             if (d->id == id)
             {
                 assert(d->multi == this);
@@ -235,7 +235,7 @@ void multi_clear(void)
 {
     class descriptor_data *nextd, *d;
 
-    for (d = g_descriptor_list; d; d = nextd)
+    for (d = descriptor_list; d; d = nextd)
     {
         nextd = d->next;
         if (!d->multi->IsHooked())
@@ -250,7 +250,7 @@ void multi_close_all(void)
     slog(LOG_BRIEF, 0, "Closing all multi connections.");
 
     for (i = 0; i < MAX_MULTI; i++)
-        g_Multi.Multi[i].Close();
+        Multi.Multi[i].Close();
 
     multi_clear();
 }
@@ -260,8 +260,8 @@ void multi_ping_all(void)
     int i;
 
     for (i = 0; i < MAX_MULTI; i++)
-        if (g_Multi.Multi[i].IsHooked())
-            g_Multi.Multi[i].Ping();
+        if (Multi.Multi[i].IsHooked())
+            Multi.Multi[i].Ping();
 }
 
 /* ----------------------------------------------------------------- */
@@ -322,23 +322,23 @@ void cMotherHook::Input(int nFlags)
         }
 
         for (i = 0; i < MAX_MULTI; i++)
-            if (!g_Multi.Multi[i].IsHooked())
+            if (!Multi.Multi[i].IsHooked())
                 break;
 
-        if ((i >= MAX_MULTI) || g_Multi.Multi[i].IsHooked())
+        if ((i >= MAX_MULTI) || Multi.Multi[i].IsHooked())
         {
             slog(LOG_ALL, 0, "No more multi connections allowed");
             close(t);
             return;
         }
 
-        g_CaptainHook.Hook(t, &g_Multi.Multi[i]);
+        CaptainHook.Hook(t, &Multi.Multi[i]);
 
-        g_Multi.nCount++;
+        Multi.nCount++;
 
         slog(LOG_ALL, 0, "A multi-host has connected to the game.");
-        protocol_send_exchange(&g_Multi.Multi[i], 0, g_cServerConfig.m_mudname);
-        protocol_send_color(&g_Multi.Multi[i], 0, g_cServerConfig.m_pColor);
+        protocol_send_exchange(&Multi.Multi[i], 0, g_cServerConfig.m_mudname);
+        protocol_send_color(&Multi.Multi[i], 0, g_cServerConfig.m_pColor);
     }
 }
 
@@ -347,7 +347,7 @@ void cMotherHook::Unhook(void)
     if (this->IsHooked())
     {
         slog(LOG_OFF, 0, "Unhooking Mother Hook");
-        g_CaptainHook.Unhook(this);
+        CaptainHook.Unhook(this);
         assert(this->fd != -1);
         cHook::Unhook();
     }
@@ -435,5 +435,5 @@ void init_mother(int nPort)
         exit(23);
     }
 
-    g_CaptainHook.Hook(fdMother, &g_MotherHook);
+    CaptainHook.Hook(fdMother, &MotherHook);
 }

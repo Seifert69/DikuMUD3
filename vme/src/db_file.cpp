@@ -4,7 +4,7 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.15 $
  */
-#include "external_vars.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -29,6 +29,10 @@ CByteBuffer g_FileBuffer(16384);
 
 // int filbuffer_length = 0;             /* The length of filbuffer         */
 // ubit8 *filbuffer = 0;                 /* Buffer for read/write unit      */
+
+//#ifdef DMSERVER
+extern struct unit_function_array_type unit_function_array[];
+//#endif
 
 // Return 1 on error, 0 if OK
 int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version)
@@ -97,6 +101,7 @@ int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version)
 struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 {
 #ifdef DMSERVER
+    extern int mud_bootzone;
     int valid;
 #endif
     int i, j;
@@ -196,7 +201,7 @@ struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     else
         tmpl->extprg = NULL;
 
-    if (!g_mud_bootzone)
+    if (!mud_bootzone)
     {
         /*
          * This template not loaded boottime, so resolve
@@ -663,7 +668,7 @@ class unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, class unit_data *o
         {
 #ifdef DMSERVER
             REMOVE_BIT(fptr->flags, SFB_ALL);
-            SET_BIT(fptr->flags, g_unit_function_array[fptr->index].sfb);
+            SET_BIT(fptr->flags, unit_function_array[fptr->index].sfb);
 #endif
             pBuf->ReadStringAlloc((char **)&fptr->data);
         }
@@ -899,10 +904,10 @@ void bwrite_func(CByteBuffer *pBuf, class unit_fptr *fptr)
         data = (char *)fptr->data;
 
 #ifdef DMSERVER
-        if (g_unit_function_array[fptr->index].save_w_d == SD_NEVER)
+        if (unit_function_array[fptr->index].save_w_d == SD_NEVER)
             continue; /* DONT SAVE THIS FROM INSIDE THE GAME! */
 
-        if (fptr->data && g_unit_function_array[fptr->index].save_w_d == SD_NULL)
+        if (fptr->data && unit_function_array[fptr->index].save_w_d == SD_NULL)
             data = 0;
 
             /* Else this is SD_ASCII and we can save anything we like ... :-) */

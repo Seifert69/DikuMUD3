@@ -49,13 +49,13 @@
 #include "MUDConnector.h"
 #include "ClientConnector.h"
 
-char g_mudname[50] = "the MUD server (via DikuMUD Mplex)";
+char mudname[50] = "the MUD server (via DikuMUD Mplex)";
 int g_bHadAlarm = FALSE;
-struct arg_type g_mplex_arg;
+struct arg_type mplex_arg;
 
 void bye_signal(int signal)
 {
-    g_CaptainHook.Close();
+    CaptainHook.Close();
 
     slog(LOG_OFF,
          0,
@@ -201,9 +201,9 @@ int ParseArg(int argc, char *argv[], struct arg_type *arg)
                 exit(0);
         }
     }
-    g_log_file_fd = fopen(log_name, "w");
+    log_file_fd = fopen(log_name, "w");
 
-    if (!g_log_file_fd)
+    if (!log_file_fd)
     {
         fprintf(stderr, "Failed to open Log file:  %s", log_name);
         free(log_name);
@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
 
     assert(i++ == 0); /* Make sure we dont call ourselves... cheap hack! :) */
 
-    if (!ParseArg(argc, argv, &g_mplex_arg))
+    if (!ParseArg(argc, argv, &mplex_arg))
         exit(0);
 
 #ifndef _WINDOWS
@@ -240,9 +240,9 @@ int main(int argc, char *argv[])
     /* MS2020 Websockets test hack */
     translate_init();
 
-    slog(LOG_OFF, 0, "Opening mother connection on port %d.", g_mplex_arg.nMotherPort);
+    slog(LOG_OFF, 0, "Opening mother connection on port %d.", mplex_arg.nMotherPort);
 
-    if (g_mplex_arg.bWebSockets)
+    if (mplex_arg.bWebSockets)
     {
         /* MS2020 Websockets test hack */
         void runechoserver(void);
@@ -251,13 +251,13 @@ int main(int argc, char *argv[])
     }
     else
     {
-        fd = OpenMother(g_mplex_arg.nMotherPort);
+        fd = OpenMother(mplex_arg.nMotherPort);
         Assert(fd != -1, "NO MOTHER CONNECTION.");
 
-        if (g_MotherHook.tfd() != -1)
+        if (MotherHook.tfd() != -1)
             slog(LOG_ALL, 0, "Hook() in main called with a non -1 fd.");
 
-        g_CaptainHook.Hook(fd, &g_MotherHook);
+        CaptainHook.Hook(fd, &MotherHook);
     }
 
     /* Subtract stdout, stdin, stderr, fdmud, fdmother and 2 to be safe. */
@@ -268,8 +268,8 @@ int main(int argc, char *argv[])
 #endif
     Control();
 
-    g_MudHook.Unhook();
-    g_MotherHook.Unhook();
+    MudHook.Unhook();
+    MotherHook.Unhook();
 
     return 0;
 }

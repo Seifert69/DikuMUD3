@@ -76,7 +76,7 @@ void fatal(const char *s1, const char *s2)
 void illegal_symbol()
 {
     //	non_fatal("Illegal symbol name: ",Token);
-    warning("Illegal symbol name: ", g_Token);
+    warning("Illegal symbol name: ", Token);
 }
 
 /************************************************************************/
@@ -90,7 +90,7 @@ void illegal_symbol()
 void non_fatal(const char *s1, const char *s2)
 {
     prmsg("", s1, s2);
-    g_Errors++; /* Count the error */
+    Errors++; /* Count the error */
 }
 
 /************************************************************************/
@@ -119,7 +119,7 @@ void out_of_memory()
 
 void prmsg(const char *s1, const char *s2, const char *s3)
 {
-    fprintf(STDERR, "<%s> @ %u: %s%s%s\n", g_Filestack[g_Filelevel >= 0 ? g_Filelevel : 0]->f_name, g_LLine, s1, s2, s3);
+    fprintf(STDERR, "<%s> @ %u: %s%s%s\n", Filestack[Filelevel >= 0 ? Filelevel : 0]->f_name, LLine, s1, s2, s3);
 }
 
 /************************************************************************/

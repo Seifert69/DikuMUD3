@@ -88,7 +88,7 @@ void cQueue::Copy(ubit8 *data, ubit32 nLen)
     do
     {
         assert(qe);
-        now = std::min(nLen, qe->Bytes());
+        now = MIN(nLen, qe->Bytes());
         memcpy(data, qe->Data(), now);
         nLen -= now;
         data += now;
@@ -114,7 +114,7 @@ void cQueue::Cut(ubit32 nLen)
         if (nLen < qe->Bytes())
             Prepend(new cQueueElem(qe->Data() + nLen, qe->Bytes() - nLen));
 
-        nLen -= std::min(qe->Bytes(), nLen);
+        nLen -= MIN(qe->Bytes(), nLen);
         delete qe;
     } while (nLen > 0);
 }

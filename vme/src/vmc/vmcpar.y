@@ -12,7 +12,6 @@
 #include "vmc.h"
 #include "dil.h"
 #include "utils.h"
-#include "external_vars.h"
 #include "textutil.h"
 #include "money.h"
 #include "db_file.h"
@@ -34,10 +33,10 @@ int yylex(void);
 
 #define yyerror(dum) syntax(dum)
 
-extern char g_cur_filename[];
+extern char cur_filename[];
 extern int linenum;
-extern struct zone_info g_zone;
-extern int g_nooutput;
+extern struct zone_info zone;
+extern int nooutput;
 struct unit_data *cur;
 struct extra_descr_data *cur_extra;
 struct reset_command *cur_cmd;
@@ -45,7 +44,7 @@ struct unit_affected_type *cur_aff;
 struct unit_fptr *cur_func;
 struct diltemplate *cur_tmpl;
 struct dilprg *cur_prg;
-int myi, cur_ex, g_errcon = 0;
+int myi, cur_ex, errcon = 0;
 
 /* Temporary data for stringlists */
 int str_top, int_top;
@@ -53,7 +52,7 @@ char *str_list[50];
 int int_list[50];
 char empty_ref[] = {'\0', '\0'};
 int istemplate=1;
-char **g_tmplnames = NULL;
+char **tmplnames = NULL;
 char tzone[30], tname[30];
 
 CByteBuffer *vpBuf = &g_FileBuffer;
@@ -143,7 +142,7 @@ void warning(const char *str);
  * specifications ************************************
  */
 
-file		: { cur = NULL; g_tmplnames = create_namelist();  } sections ENDMARK
+file		: { cur = NULL; tmplnames = create_namelist();  } sections ENDMARK
 		;
 sections	: zone_section uglykludge
 		;
@@ -163,7 +162,7 @@ uglykludge      : object_section uglykludge
 dil_section	: DIL
 		{
 		   char fname[256];
-		   sprintf(fname,"%s.dh", g_zone.z_zone.name);
+		   sprintf(fname,"%s.dh", zone.z_zone.name);
 		   remove(fname);
 		   istemplate = 1;
 		}
@@ -192,20 +191,20 @@ dil		: DILPRG
 
 			/* register DIL template in zone */
 			if (search_block(cur_tmpl->prgname, 
-				(const char **) g_tmplnames, TRUE) != -1)
+				(const char **) tmplnames, TRUE) != -1) 
 			{
 				/* redifinition of template */
 				sprintf(buf,"Redefinition of template named '%s'",
 					cur_tmpl->prgname);
 				fatal(buf);			
 			} else {
-				if (!g_zone.z_tmpl) {
-			   		g_zone.z_tmpl = cur_tmpl;
+				if (!zone.z_tmpl) {
+			   		zone.z_tmpl = cur_tmpl;
 				} else {
-			   		cur_tmpl->vmcnext = g_zone.z_tmpl;
-					g_zone.z_tmpl = cur_tmpl;
+			   		cur_tmpl->vmcnext = zone.z_tmpl;
+					zone.z_tmpl = cur_tmpl;
 				}
-				g_tmplnames = add_name(cur_tmpl->prgname, g_tmplnames);
+				tmplnames = add_name(cur_tmpl->prgname, tmplnames);
 			}
 		}
 		;
@@ -227,8 +226,8 @@ rooms		: /* naught */
 			  }
 			  else
 			  {
-			    g_zone.z_rooms = mcreate_unit(UNIT_ST_ROOM);
-			    cur = g_zone.z_rooms;
+			    zone.z_rooms = mcreate_unit(UNIT_ST_ROOM);
+			    cur = zone.z_rooms;
 			  }
 			  cur_extra = 0;
 			}
@@ -318,10 +317,12 @@ exit_field	: TO reference
 			}
 		| DESCR STRING
 			{
+				extern const char *dirs[];
+
 				// ms2020 xxx 1
 				class extra_descr_data *ed;
 				strip_trailing_blanks($2);
-				ed = new extra_descr_data((char *) g_dirs[cur_ex], ($2));
+				ed = new extra_descr_data((char *) dirs[cur_ex], ($2));
 
 				if (cur_extra)
 				{
@@ -335,6 +336,7 @@ exit_field	: TO reference
 				}
 				
 				/*
+			   extern const char *dirs[];
 
 			   if (cur_extra)
 			   {
@@ -349,7 +351,7 @@ exit_field	: TO reference
 			   }
 			   cur_extra->next = 0;
 			   
-			   cur_extra->names.AppendName((char *) g_dirs[cur_ex]);
+			   cur_extra->names.AppendName((char *) dirs[cur_ex]);
 			   // strcat($2, "\n\r");
 			   strip_trailing_blanks($2);
 			   cur_extra->descr=($2);*/
@@ -372,8 +374,8 @@ objects		: /* naught */
 			  }
 			  else
 			  {
-			    g_zone.z_objects = mcreate_unit(UNIT_ST_OBJ);
-			    cur = g_zone.z_objects;
+			    zone.z_objects = mcreate_unit(UNIT_ST_OBJ);
+			    cur = zone.z_objects;
 			  }
 			  cur_extra = 0;
 			}
@@ -433,8 +435,8 @@ mobiles		: /* naught */
 			  }
 			  else
 			  {
-			    g_zone.z_mobiles = mcreate_unit(UNIT_ST_NPC);
-			    cur = g_zone.z_mobiles;
+			    zone.z_mobiles = mcreate_unit(UNIT_ST_NPC);
+			    cur = zone.z_mobiles;
 			  }
 			  cur_extra = 0;
 			}
@@ -564,20 +566,20 @@ unit_field	: NAMES stringlist
 
 				/* register DIL template in zone */
 				if (search_block(cur_tmpl->prgname, 
-						(const char **) g_tmplnames, TRUE) != -1)
+						(const char **) tmplnames, TRUE) != -1) 
 				{
 					/* redifinition of template */
 					sprintf(buf,"Redefinition of template named '%s'",
 									cur_tmpl->prgname);
 					fatal(buf);			
 				} else {
-					if (! g_zone.z_tmpl) {
-				 g_zone.z_tmpl = cur_tmpl;
+					if (!zone.z_tmpl) {
+					zone.z_tmpl = cur_tmpl;
 				} else {
-					cur_tmpl->vmcnext = g_zone.z_tmpl;
-				 g_zone.z_tmpl = cur_tmpl;
+					cur_tmpl->vmcnext = zone.z_tmpl;
+					zone.z_tmpl = cur_tmpl;
 				}
-				g_tmplnames = add_name(cur_tmpl->prgname, g_tmplnames);
+				tmplnames = add_name(cur_tmpl->prgname, tmplnames);
 				struct dilargstype *idargcopy;
 				char name[255], zone[255];
 				char *prgname;
@@ -837,7 +839,8 @@ unit_field	: NAMES stringlist
 			      break;
 			  }
 			  cur_func->index = $3;
-			    cur_func->priority = g_unit_function_array[cur_func->index].priority;
+				extern struct unit_function_array_type unit_function_array[];
+			    cur_func->priority = unit_function_array[cur_func->index].priority;
 			}
 		  optfuncargs
 		| AFFECT
@@ -1000,35 +1003,35 @@ zone_fields	: /*naught */
 		;
 zone_field	: LIFESPAN number
 			{
-			   g_zone.z_zone.lifespan = $2;
+			   zone.z_zone.lifespan = $2;
 			}
                 | WEATHER number
                         {
-			   g_zone.z_zone.weather = $2;
+			   zone.z_zone.weather = $2;
 			}
 		| RESET_F number
 			{
-			  g_zone.z_zone.reset_mode = $2;
+			  zone.z_zone.reset_mode = $2;
 			}
 		| CREATORS stringlist
 			{
-			  g_zone.z_zone.creators = $2;
+			  zone.z_zone.creators = $2;
 			}
 		| NOTES STRING
 			{
-			  g_zone.z_zone.notes = $2;
+			  zone.z_zone.notes = $2;
 			}
 		| TITLE STRING
 			{
-			  g_zone.z_zone.title = $2;
+			  zone.z_zone.title = $2;
 			}
 		| HELP STRING
 			{
-			  g_zone.z_zone.help = $2;
+			  zone.z_zone.help = $2;
 			}
 		| zonename
 			{
-			  g_zone.z_zone.name = $1;
+			  zone.z_zone.name = $1;
 			}
 		| error
 		;
@@ -1081,9 +1084,9 @@ alloc		: /* naught */
 			  }
 			  else
 			  {
-			    g_zone.z_table = (struct reset_command *)
+			    zone.z_table = (struct reset_command *)
 			      mmalloc(sizeof(struct reset_command));
-			    cur_cmd = g_zone.z_table;
+			    cur_cmd = zone.z_table;
 			  }
 			  /* init ? */
 			  cur_cmd->next = 0;
@@ -1217,7 +1220,7 @@ moneylist	: number moneytype
 			   mon_list[mon_top][0] = $1;
 			   mon_list[mon_top][1] = $2;
 
-			   $$ = $1 * g_money_types[$2].relative_value;
+			   $$ = $1 * money_types[$2].relative_value;
 			}
 		| moneylist ',' number moneytype
 			{
@@ -1227,7 +1230,7 @@ moneylist	: number moneytype
 
 			   $$ = $1;
 
-			   $$ += $3 * g_money_types[$4].relative_value;
+			   $$ += $3 * money_types[$4].relative_value;
 			}
 		;
 moneytype	: STRING
@@ -1236,7 +1239,7 @@ moneytype	: STRING
 			   $$ = -1;
 
 			   for (myi = 0; myi <= MAX_MONEY; myi++)
-			     if (!strcmp($1, g_money_types[myi].abbrev))
+			     if (!strcmp($1, money_types[myi].abbrev))
 			     {
 				$$ = myi;
 				break;
@@ -1481,7 +1484,7 @@ cunitname	: SYMBOL
 		;
 reference	: cunitname
 			{
-			  if (! g_zone.z_zone.name)
+			  if (!zone.z_zone.name)
 			  {
 			    fatal("local zonename must be defined.");
 			    $$ = empty_ref;
@@ -1489,9 +1492,9 @@ reference	: cunitname
 			  else
 			  {
 			     $$ = (char *) mmalloc(strlen($1) +
-					     strlen( g_zone.z_zone.name) + 2);
-			     strcpy($$, g_zone.z_zone.name);
-			     strcpy($$ + strlen( g_zone.z_zone.name) + 1, $1);
+					     strlen(zone.z_zone.name) + 2);
+			     strcpy($$, zone.z_zone.name);
+			     strcpy($$ + strlen(zone.z_zone.name) + 1, $1);
 			  }
 			}
 		| cunitname '@' czonename
@@ -1518,30 +1521,30 @@ void syntax(const char *str)
 {
    extern char *yytext;
 
-   fprintf(stderr, "v: %s: %d: %s\n   Token: '%s'\n", g_cur_filename,
+   fprintf(stderr, "v: %s: %d: %s\n   Token: '%s'\n", cur_filename,
 	   linenum, str, yytext);
-   g_errcon = 1;
+   errcon = 1;
 }
 
 
 void fatal(const char *str)
 {
-  fprintf(stderr, "%s: %d: %s\n", g_cur_filename, linenum, str);
-  g_errcon = 1;
+  fprintf(stderr, "%s: %d: %s\n", cur_filename, linenum, str);
+  errcon = 1;
 }
 
 
 void real_warning(const char *str)
 {
-   fprintf(stderr, "WARNING: %s: %d: %s\n", g_cur_filename, linenum, str);
+   fprintf(stderr, "WARNING: %s: %d: %s\n", cur_filename, linenum, str);
 }
 
 
 void warning(const char *str)
 {
-   extern int g_fatal_warnings;
+   extern int fatal_warnings;
 
-   if (g_fatal_warnings)
+   if (fatal_warnings)
      fatal(str);
    else
      real_warning(str);
@@ -1562,3 +1565,5 @@ char *str_dup_file(FILE *fl)
   }
   return res;
 }
+
+

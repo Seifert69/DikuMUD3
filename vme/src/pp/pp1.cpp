@@ -32,10 +32,10 @@ int pp_main(const char *filename)
 
     init(); /* Initialize preprocessor	*/
 
-    if (g_iInit == 0)
+    if (iInit == 0)
     {
-        g_Ipath[g_Ipcnt++] = (char *)malloc(1000);
-        strcpy(g_Ipath[g_Ipcnt - 1], ".");
+        Ipath[Ipcnt++] = (char *)malloc(1000);
+        strcpy(Ipath[Ipcnt - 1], ".");
     }
     // MS2020 ifile	= FALSE;		/* No input file specified	*/
     // MS2020 ofile	= TRUE;		/* No output file specified	*/
@@ -45,36 +45,36 @@ int pp_main(const char *filename)
     }
     // MS2020 ifile = TRUE;	/* Got an input file */
 
-    g_Output = stdout;
-    g_Nextch = g_A_trigraph ? trigraph : gchbuf; /* Next char source */
+    Output = stdout;
+    Nextch = A_trigraph ? trigraph : gchbuf; /* Next char source */
 
-    g_Do_name = TRUE; /* Force name output on #line */
-    if (g_iInit == 0)
+    Do_name = TRUE; /* Force name output on #line */
+    if (iInit == 0)
     {
-        init_path();             /* Initialize search path */
-        g_Ipath[g_Ipcnt] = NULL; /* Terminate last include path */
+        init_path();         /* Initialize search path */
+        Ipath[Ipcnt] = NULL; /* Terminate last include path */
     }
-    for (g_Lastnl = TRUE, t = gettoken(GT_STR); t != EOF; t = gettoken(GT_STR))
+    for (Lastnl = TRUE, t = gettoken(GT_STR); t != EOF; t = gettoken(GT_STR))
     {
-        if ((g_Ifstate != IFTRUE) && (t != '\n') && istype(t, C_W))
+        if ((Ifstate != IFTRUE) && (t != '\n') && istype(t, C_W))
         {
         }
-        else if (g_Lastnl && (t == DIRECTIVE_CHAR))
+        else if (Lastnl && (t == DIRECTIVE_CHAR))
         {
             t = getnstoken(GT_STR);
             if (t == LETTER)
             {
-                if ((sp = predef(g_Token, g_pptab)) != NULL)
+                if ((sp = predef(Token, pptab)) != NULL)
                 {
                     /*
                      *	If unconditionally do it or if emitting code...
                      */
-                    if (sp->pp_ifif || (g_Ifstate == IFTRUE))
+                    if (sp->pp_ifif || (Ifstate == IFTRUE))
                     {
                         /* Do #func */ (void)(*(sp->pp_func))(sp->pp_arg, 0, 0);
                     }
                 }
-                else if (g_Ifstate == IFTRUE)
+                else if (Ifstate == IFTRUE)
                     non_fatal("Illegal directive", "");
 
                 scaneol(); /* Suck till EOL ('\n' next) */
@@ -87,28 +87,28 @@ int pp_main(const char *filename)
             else
                 pushback('\n'); /* Leave for fetch to get */
         }
-        else if ((t != EOF) && (g_Ifstate == IFTRUE))
+        else if ((t != EOF) && (Ifstate == IFTRUE))
         {
 #if (TARGET == T_QC) OR(TARGET == T_QCX) OR(TARGET == T_TCX)
-            if (t == LETTER && g_Macexpand)
+            if (t == LETTER && Macexpand)
 #else  /* !((TARGET == T_QC) OR (TARGET == T_QCX) OR (TARGET == T_TCX)) */
             if (t == LETTER)
 #endif /* (TARGET == T_QC) OR (TARGET == T_QCX) OR (TARGET == T_TCX) */
             {
-                if ((p = lookup(g_Token, NULL)) != NULL)
+                if ((p = lookup(Token, NULL)) != NULL)
                 {
                     /* Call macro */ (void)docall(p, NULL, NULL);
                 }
                 else
-                    /* Just output token if nothing */ puttoken(g_Token);
+                    /* Just output token if nothing */ puttoken(Token);
             }
             else
             {
-                puttoken(g_Token);
+                puttoken(Token);
                 if (t == '\n')
-                    g_Lastnl = TRUE; /* Turn on if '\n' */
+                    Lastnl = TRUE; /* Turn on if '\n' */
                 else if (!istype(t, C_W))
-                    g_Lastnl = FALSE; /* Turn off if !ws */
+                    Lastnl = FALSE; /* Turn off if !ws */
             }
         }
         else
@@ -118,11 +118,11 @@ int pp_main(const char *filename)
                 /* Absorb to EOL if False #ifxx */
                 t = gettoken(GT_STR);
             }
-            g_Lastnl = TRUE;
+            Lastnl = TRUE;
         }
     }
 
-    if (g_Iflevel != 0)
+    if (Iflevel != 0)
     {
         /* Unterminated #if */
         non_fatal("Unterminated conditional", "");
@@ -130,7 +130,7 @@ int pp_main(const char *filename)
 
     for (i = 0; i < NUMBUCKETS; i++)
     {
-        for (p = g_Macros[i], (p && (p1 = p->s_link)); p; p && (p1 = p->s_link))
+        for (p = Macros[i], (p && (p1 = p->s_link)); p; p && (p1 = p->s_link))
         {
             if (p->s_body != NULL)
                 free(p->s_body);  /* Free macro body */
@@ -139,26 +139,26 @@ int pp_main(const char *filename)
                 free((char *)p); /* Free the symbol table entry */
             p = 0;
             p = p1; /* Remove item from list */
-            g_Macros[i] = p1;
-            g_Nsyms--; /* One less symbol */
+            Macros[i] = p1;
+            Nsyms--; /* One less symbol */
         }
     }
-    if ((g_Output != stdout) && (fclose(g_Output) == EOF))
-        fatal("Unable to close output file: ", g_Outfile);
-    if (g_pponly)
+    if ((Output != stdout) && (fclose(Output) == EOF))
+        fatal("Unable to close output file: ", Outfile);
+    if (pponly)
     {
-        if (g_Errors > 0)
+        if (Errors > 0)
         {
-            fprintf(stderr, "Terminating with error count #%d\n", g_Errors);
+            fprintf(stderr, "Terminating with error count #%d\n", Errors);
             exit(1);
         }
 
-        fwrite(g_sOutput, g_sOutput_len, 1, stdout);
-        exit(g_Errors);
+        fwrite(sOutput, sOutput_len, 1, stdout);
+        exit(Errors);
     }
-    g_iInit = 1;
+    iInit = 1;
 
-    return (g_Eflag ? 0 : g_Errors);
+    return (Eflag ? 0 : Errors);
 }
 
 /************************************************************************/
@@ -204,10 +204,10 @@ char *getnext(char *cp, int *argc, char ***argv, int swvalid)
 void init()
 {
     static const char *one_string = "1";
-    if (g_sOutput)
-        free(g_sOutput);
-    g_sOutput = 0;
-    g_sOutput_len = 0;
+    if (sOutput)
+        free(sOutput);
+    sOutput = 0;
+    sOutput_len = 0;
     const char *fromptr;
     int i;
 #if (HOST != H_CPM) AND(HOST != H_MPW)
@@ -220,46 +220,46 @@ void init()
     PPDEBUG = FALSE;
 #endif /* PPDEBUG */
 
-    g_Verbose = FALSE; /* Set verbose state */
+    Verbose = FALSE; /* Set verbose state */
 
-    g_Eflag = FALSE;      /* Say to abort on errors */
-    g_Lineopt = LINE_EXP; /* Default to "long" #line form */
+    Eflag = FALSE;      /* Say to abort on errors */
+    Lineopt = LINE_EXP; /* Default to "long" #line form */
 
 #if (TARGET == T_QC) OR(TARGET == T_QCX) OR(TARGET == T_TCX)
-    g_Do_asm = FALSE;    /* Not inside #pragma asm/endasm */
-    g_Macexpand = TRUE;  /* Macro expansion enabled */
-    g_Asmexpand = FALSE; /* Disabled inside asm/endasm */
-#endif                   /* (TARGET == T_QC) OR (TARGET == T_QCX) OR (TARGET == T_TCX) */
+    Do_asm = FALSE;    /* Not inside #pragma asm/endasm */
+    Macexpand = TRUE;  /* Macro expansion enabled */
+    Asmexpand = FALSE; /* Disabled inside asm/endasm */
+#endif                 /* (TARGET == T_QC) OR (TARGET == T_QCX) OR (TARGET == T_TCX) */
 
-    g_Outline = 1; /* Line number of next output line */
+    Outline = 1; /* Line number of next output line */
 
-    g_Filelevel = -1; /* Current file level */
-    if (g_iInit == 0)
-        g_Pbbuf = g_Pbbufp = (struct pbbuf *)malloc(sizeof(struct pbbuf) * PUSHBACKSIZE);
+    Filelevel = -1; /* Current file level */
+    if (iInit == 0)
+        Pbbuf = Pbbufp = (struct pbbuf *)malloc(sizeof(struct pbbuf) * PUSHBACKSIZE);
 
-    if (g_Pbbufp == NULL)
+    if (Pbbufp == NULL)
         out_of_memory();
 
-    g_Pbbufp->pb_type = PB_TOS; /* Top of stack marker */
+    Pbbufp->pb_type = PB_TOS; /* Top of stack marker */
 
-    g_A_astring =             /* Replace args within strings	*/
-        g_A_crecurse =        /* No recursive comments	*/
-        g_A_rescan =          /* No macro gen'd directives	*/
-        g_A_trigraph = FALSE; /* No Trigraph translation	*/
+    A_astring =             /* Replace args within strings	*/
+        A_crecurse =        /* No recursive comments	*/
+        A_rescan =          /* No macro gen'd directives	*/
+        A_trigraph = FALSE; /* No Trigraph translation	*/
 
-    g_Nsyms =         /* Number of symbols generated	*/
-        g_Errors =    /* Zero the error counter	*/
-        g_Iflevel =   /* #if stack pointer		*/
-        g_Unique = 0; /* Zero unique # counter	*/
+    Nsyms =         /* Number of symbols generated	*/
+        Errors =    /* Zero the error counter	*/
+        Iflevel =   /* #if stack pointer		*/
+        Unique = 0; /* Zero unique # counter	*/
 
-    g_A_stack = TRUE;                          /* No stacking of macro def's	*/
-    g_A_eolcomment = TRUE;                     /* No eol comments		*/
-    g_A_outstr = TRUE;                         /* No eol comments		*/
-    g_Ifstack[0].i_state = g_Ifstate = IFTRUE; /* Currently TRUE #ifxxx assumed */
+    A_stack = TRUE;                        /* No stacking of macro def's	*/
+    A_eolcomment = TRUE;                   /* No eol comments		*/
+    A_outstr = TRUE;                       /* No eol comments		*/
+    Ifstack[0].i_state = Ifstate = IFTRUE; /* Currently TRUE #ifxxx assumed */
 
 #if HOST == H_CPM
-    g_Orig_user = bdos1(BDOS_USER, 0xFF); /* Save user and disk */
-    g_Orig_disk = bdos1(BDOS_GETDISK, 0);
+    Orig_user = bdos1(BDOS_USER, 0xFF); /* Save user and disk */
+    Orig_disk = bdos1(BDOS_GETDISK, 0);
 #endif /* HOST == H_CPM */
 
     /*
@@ -267,18 +267,18 @@ void init()
      *	each will print out in response to __TIME__ and __DATE__ respectively.
      */
 #if (HOST == H_CPM) OR(HOST == H_MPW)
-    strcpy(g_Time, "HH:MM:SS"); /* Fake a time */
+    strcpy(_Time, "HH:MM:SS"); /* Fake a time */
     strcpy(Date, "Mmm DD YYYY");
 #else  /* !((HOST == H_CPM) OR (HOST == H_MPW)) */
     (void)time(&long_time);                          /* Seconds since whenever... */
     memcpy(str, asctime(localtime(&long_time)), 26); /* Get time/date */
 
-    memcpy(g_Time, &str[11], 8); /* Pull time portion out of string */
-    g_Time[8] = '\0';
+    memcpy(_Time, &str[11], 8); /* Pull time portion out of string */
+    _Time[8] = '\0';
 
-    memcpy(g_Date, &str[4], 7);      /* Pull month and day out of string */
-    memcpy(&g_Date[7], &str[20], 4); /* Pull year out of string */
-    g_Date[11] = '\0';
+    memcpy(Date, &str[4], 7);      /* Pull month and day out of string */
+    memcpy(&Date[7], &str[20], 4); /* Pull year out of string */
+    Date[11] = '\0';
 #endif /* (HOST == H_CPM) OR (HOST == H_MPW) */
 
     /************************************/
@@ -331,12 +331,12 @@ void init()
 
     /*	Bind macro symbols for the configuration setting variables	*/
 
-    for (i = 0; g_pragtab[i].pp_name != NULL; i++)
+    for (i = 0; pragtab[i].pp_name != NULL; i++)
     {
-        if ((void *)g_pragtab[i].pp_func == (void *)pragopt)
+        if ((void *)pragtab[i].pp_func == (void *)pragopt)
         {
             strcpy(str, "__");
-            for (toptr = &str[2], fromptr = g_pragtab[i].pp_name; *fromptr; fromptr++)
+            for (toptr = &str[2], fromptr = pragtab[i].pp_name; *fromptr; fromptr++)
             {
                 *toptr++ = (islower(*fromptr) ? toupper(*fromptr) : *fromptr);
             }
@@ -395,21 +395,21 @@ void output_adds(char *s)
 {
     char *p;
 
-    g_sOutput_len = g_sOutput_len + strlen(s);
-    if (g_sOutput_mlen < (g_sOutput_len + 5))
+    sOutput_len = sOutput_len + strlen(s);
+    if (sOutput_mlen < (sOutput_len + 5))
     {
-        if ((g_sOutput_len + 1) < (g_sOutput_mlen + 32768))
+        if ((sOutput_len + 1) < (sOutput_mlen + 32768))
         {
-            g_sOutput = (char *)realloc(g_sOutput, (g_sOutput_mlen + 32768));
-            g_sOutput_mlen = g_sOutput_mlen + 32768;
+            sOutput = (char *)realloc(sOutput, (sOutput_mlen + 32768));
+            sOutput_mlen = sOutput_mlen + 32768;
         }
         else
         {
-            g_sOutput = (char *)realloc(g_sOutput, (g_sOutput_len + 32768));
-            g_sOutput_mlen = g_sOutput_len + 32768;
+            sOutput = (char *)realloc(sOutput, (sOutput_len + 32768));
+            sOutput_mlen = sOutput_len + 32768;
         }
     }
-    p = g_sOutput + (g_sOutput_len - strlen(s));
+    p = sOutput + (sOutput_len - strlen(s));
     strcpy(p, s);
 }
 
@@ -417,21 +417,21 @@ void output_addc(int s)
 {
     char *p;
 
-    g_sOutput_len = g_sOutput_len + 1;
-    if (g_sOutput_mlen < (g_sOutput_len + 5))
+    sOutput_len = sOutput_len + 1;
+    if (sOutput_mlen < (sOutput_len + 5))
     {
-        if ((g_sOutput_len + 1) < (g_sOutput_mlen + 32768))
+        if ((sOutput_len + 1) < (sOutput_mlen + 32768))
         {
-            g_sOutput = (char *)realloc(g_sOutput, (g_sOutput_mlen + 32768));
-            g_sOutput_mlen = g_sOutput_mlen + 32768;
+            sOutput = (char *)realloc(sOutput, (sOutput_mlen + 32768));
+            sOutput_mlen = sOutput_mlen + 32768;
         }
         else
         {
-            g_sOutput = (char *)realloc(g_sOutput, (g_sOutput_len + 32768));
-            g_sOutput_mlen = g_sOutput_len + 32768;
+            sOutput = (char *)realloc(sOutput, (sOutput_len + 32768));
+            sOutput_mlen = sOutput_len + 32768;
         }
     }
-    p = g_sOutput + (g_sOutput_len - 1);
+    p = sOutput + (sOutput_len - 1);
     *p = s;
     *++p = '\0';
 }

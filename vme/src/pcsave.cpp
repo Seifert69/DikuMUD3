@@ -26,14 +26,14 @@
 #include "db_file.h"
 #include "dilrun.h"
 
-// MS2020 sbit32 g_player_id = -1;
-sbit32 g_player_id = 1; // Looks to me like it needs to begin with 1 (crash on start)
+// MS2020 sbit32 player_id = -1;
+sbit32 player_id = 1; // Looks to me like it needs to begin with 1 (crash on start)
 
 class descriptor_data *find_descriptor(const char *name, class descriptor_data *except);
 
 void assign_player_file_index(unit_data *pc)
 {
-    zone_type *z = find_zone(g_player_zone);
+    zone_type *z = find_zone(player_zone);
     auto it = z->mmp_fi.find(PC_FILENAME(pc));
 
     if (it != z->mmp_fi.end())
@@ -167,11 +167,11 @@ sbit32 new_player_id(void)
     assert(pFile);
     fseek(pFile, 0, SEEK_SET);
 
-    fprintf(pFile, " %d ", g_player_id + 1);
+    fprintf(pFile, " %d ", player_id + 1);
 
     // fflush(pFile);
-    slog(LOG_ALL, 0, "new player id = %d", (g_player_id + 1));
-    return g_player_id++;
+    slog(LOG_ALL, 0, "new player id = %d", (player_id + 1));
+    return player_id++;
 }
 
 void save_player_disk(const char *pName, char *pPassword, sbit32 id, int nPlyLen, const ubit8 *pPlyBuf)
@@ -340,7 +340,7 @@ void save_player_contents(class unit_data *pc, int fast)
             time_t tdiff;
 
             /* No of days items may be kept (Maximum of 30!) */
-            tmp_i = std::min(30, amount / daily_cost);
+            tmp_i = MIN(30, amount / daily_cost);
 
             if (tmp_i >= 1)
             {
@@ -513,7 +513,7 @@ void player_file_index(void)
     if (!file_exists(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME)))
     {
         touch_file(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME));
-        g_player_id = -7;
+        player_id = -7;
         return;
     }
 
@@ -527,6 +527,6 @@ void player_file_index(void)
         assert(FALSE);
     }
 
-    if ((g_player_id = tmp_sl) <= 0)
-        slog(LOG_ALL, 0, "WARNING: Player ID is %d", g_player_id);
+    if ((player_id = tmp_sl) <= 0)
+        slog(LOG_ALL, 0, "WARNING: Player ID is %d", player_id);
 }

@@ -4,9 +4,7 @@
  $Date: 2004/09/18 19:52:56 $
  $Revision: 2.11 $
  */
-#include "affect.h"
-#include "mobact.h"
-#include "external_vars.h"
+
 #ifdef _WINDOWS
 
 #else
@@ -37,6 +35,11 @@ void check_idle_event(void *p1, void *p2);
 void perform_violence_event(void *, void *);
 void weather_and_time_event(void *, void *);
 void zone_event(void *, void *);
+
+extern void special_event(void *p1, void *p2);
+extern void affect_beat(void *p1, void *pd);
+extern struct unit_function_array_type unit_function_array[];
+extern int tics;
 
 eventqueue::eventqueue(void)
 {
@@ -114,7 +117,7 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void
     }
     count++;
     end = new eventq_elem;
-    end->when = g_tics + when;
+    end->when = tics + when;
     end->func = func;
     end->arg1 = arg1;
     end->arg2 = arg2;
@@ -191,7 +194,7 @@ void eventqueue::process(void)
     loop_process = 0;
     gettimeofday(&old, (struct timezone *)0);
 
-    while ((count >= 1) && (heap[1]->when <= g_tics))
+    while ((count >= 1) && (heap[1]->when <= tics))
     {
         gettimeofday(&now, (struct timezone *)0);
         us = (now.tv_sec - old.tv_sec) * 1000000L + (now.tv_usec - old.tv_usec);
@@ -304,7 +307,7 @@ void eventqueue::process(void)
                                  dilzname,
                                  diloname,
                                  dilozname,
-                                 g_unit_function_array[((class unit_fptr *)tmp_event->arg2)->index].name,
+                                 unit_function_array[((class unit_fptr *)tmp_event->arg2)->index].name,
                                  ((class unit_fptr *)tmp_event->arg2)->index);
 
                         else
@@ -312,7 +315,7 @@ void eventqueue::process(void)
                                  0,
                                  "Internal process took %1.4f seconds to complete: %s (%d)'",
                                  loop_time,
-                                 g_unit_function_array[((class unit_fptr *)tmp_event->arg2)->index].name,
+                                 unit_function_array[((class unit_fptr *)tmp_event->arg2)->index].name,
                                  ((class unit_fptr *)tmp_event->arg2)->index);
                     }
                     else

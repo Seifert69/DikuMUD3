@@ -5,7 +5,7 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.12 $
  */
-#include "external_vars.h"
+
 #include <stdlib.h>
 #include <string>
 #include <ctype.h>
@@ -57,7 +57,11 @@
 void enter_game(class unit_data *ch, int dilway = FALSE);
 void start_all_special(class unit_data *u);
 void stop_all_special(class unit_data *u);
-int g_dilmenu;
+extern class unit_data *unit_list;
+extern class descriptor_data *descriptor_list;
+extern int wizlock;
+extern int possible_saves;
+int dilmenu;
 void nanny_get_name(class descriptor_data *d, char *arg);
 void set_descriptor_fptr(class descriptor_data *d, void (*fptr)(class descriptor_data *, char *), ubit1 call);
 void nanny_menu(class descriptor_data *d, char *arg);
@@ -66,6 +70,7 @@ void multi_close(struct multi_element *pe);
 int player_exists(const char *pName);
 void save_player_file(class unit_data *ch);
 
+extern struct diltemplate *nanny_dil_tmpl;
 char *read_info_file(char *name, char *oldstr);
 char *m_pBadNames = NULL;
 char *m_pBadStrings = NULL;
@@ -126,7 +131,7 @@ void check_idle(void)
     class descriptor_data *d, *next_d;
     time_t now = time(0);
 
-    for (d = g_descriptor_list; d; d = next_d)
+    for (d = descriptor_list; d; d = next_d)
     {
         next_d = d->next;
         d->timer++;
@@ -192,9 +197,9 @@ void pc_data::connect_game(void)
 
     set_descriptor_fptr(CHAR_DESCRIPTOR(this), descriptor_interpreter, FALSE);
 
-    g_no_players++;
-    if (g_no_players > g_max_no_players)
-        g_max_no_players = g_no_players;
+    no_players++;
+    if (no_players > max_no_players)
+        max_no_players = no_players;
 }
 
 void pc_data::disconnect_game(void)
@@ -203,7 +208,7 @@ void pc_data::disconnect_game(void)
     {
         CHAR_DESCRIPTOR(this)->RemoveBBS();
 
-        g_no_players--;
+        no_players--;
     }
 }
 
@@ -369,7 +374,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     {
         snprintf(buf, sizeof(buf), "%s has entered the world.<br/>", UNIT_NAME(this));
 
-        for (i = g_descriptor_list; i; i = i->next)
+        for (i = descriptor_list; i; i = i->next)
             if (descriptor_is_playing(i) && i->character != this && CHAR_CAN_SEE(CHAR_ORIGINAL(i->character), this) &&
                 IS_PC(CHAR_ORIGINAL(i->character)) && IS_SET(PC_FLAGS(CHAR_ORIGINAL(i->character)), PC_INFORM) &&
                 !same_surroundings(this, i->character))
@@ -416,8 +421,8 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     // start_all_special(this); /* Activate fptr ticks   */
     if (!DILWAY)
     {
-        send_done(this, NULL, load_room, 0, &g_cmd_auto_play, "");
-        send_done(this, NULL, load_room, 0, &g_cmd_auto_play, "", NULL, "void@basis");
+        send_done(this, NULL, load_room, 0, &cmd_auto_play, "");
+        send_done(this, NULL, load_room, 0, &cmd_auto_play, "", NULL, "void@basis");
     }
 
     ActivateDil(this);
@@ -496,11 +501,11 @@ void nanny_close(class descriptor_data *d, char *arg)
 void nanny_motd(class descriptor_data *d, char *arg)
 {
     struct diltemplate *on_connect;
-    g_dilmenu = FALSE;
+    dilmenu = FALSE;
     on_connect = find_dil_template("on_connect@basis");
     if (on_connect)
     {
-        g_dilmenu = TRUE;
+        dilmenu = TRUE;
         // Nono... only enter the game when entering from the menu (DIL) enter_game(d->character, TRUE);
         class dilprg *prg = dil_copy_template(on_connect, d->character, NULL);
         if (prg)
@@ -551,7 +556,7 @@ void nanny_throw(class descriptor_data *d, char *arg)
 
         // Scan the game for a unit that is a PCs and hold the same name
         // they should all be descriptorless now (except for d trying to login)
-        for (u = g_unit_list; u; u = u->gnext)
+        for (u = unit_list; u; u = u->gnext)
         {
             if (!IS_PC(u))
                 break; // PCs are always first in the list
@@ -613,11 +618,11 @@ void nanny_dil(class descriptor_data *d, char *arg)
         strcpy(buf, exd->names.Name(1));
     }
 
-    if (g_nanny_dil_tmpl)
+    if (nanny_dil_tmpl)
     {
         class dilprg *prg;
 
-        prg = dil_copy_template(g_nanny_dil_tmpl, d->character, NULL);
+        prg = dil_copy_template(nanny_dil_tmpl, d->character, NULL);
         if (prg)
         {
             prg->waitcmd = WAITCMD_MAXINST - 1; // The usual hack, see db_file
@@ -630,7 +635,7 @@ void nanny_dil(class descriptor_data *d, char *arg)
 
     if (d->character && UNIT_EXTRA(d->character).find_raw("$nanny") == NULL)
     {
-        g_dilmenu = TRUE;
+        dilmenu = TRUE;
         enter_game(d->character, TRUE);
     }
 }
@@ -671,7 +676,7 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
 
     /* See if guest is in game, if so - a guest was LD       */
     /* Password has now been redefined                       */
-    for (u = g_unit_list; u; u = u->gnext)
+    for (u = unit_list; u; u = u->gnext)
         if (IS_PC(u) && (str_ccmp(PC_FILENAME(u), PC_FILENAME(d->character)) == 0))
         {
             UPC(u)->reconnect_game(d);
@@ -842,7 +847,7 @@ void nanny_fix_descriptions(class unit_data *u)
         else
             *buf = 0;
 
-        if (!exd->names.Name() || search_block(buf, g_bodyparts, TRUE))
+        if (!exd->names.Name() || search_block(buf, bodyparts, TRUE))
         {
             if (str_is_empty(exd->descr.c_str()))
             {
@@ -881,14 +886,13 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
     {
         if (PC_CRACK_ATTEMPTS(d->character) > 2)
         {
-            snprintf(buf,
-                     sizeof(buf),
-                     "<br/>ATTENTION: Your password has been "
-                     "attempted cracked %d times since your last logon."
-                     " Press [enter] and wait for the password prompt.",
-                     PC_CRACK_ATTEMPTS(d->character));
+            snprintf(buf, sizeof(buf),
+                    "<br/>ATTENTION: Your password has been "
+                    "attempted cracked %d times since your last logon."
+                    " Press [enter] and wait for the password prompt.",
+                    PC_CRACK_ATTEMPTS(d->character));
             send_to_descriptor(buf, d);
-            d->wait = std::min(static_cast<ubit16>(30), PC_CRACK_ATTEMPTS(d->character)) * 2 * PULSE_SEC;
+            d->wait = MIN(30, PC_CRACK_ATTEMPTS(d->character)) * 2 * PULSE_SEC;
             return;
         }
         STATE(d)++;
@@ -950,12 +954,11 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
 
     PC_CRACK_ATTEMPTS(d->character) = 0;
 
-    snprintf(buf,
-             sizeof(buf),
-             "<br/>Welcome back %s, you last visited %s on %s<br/>",
-             UNIT_NAME(d->character),
-             g_cServerConfig.m_mudname,
-             ctime(&PC_TIME(d->character).connect));
+    snprintf(buf, sizeof(buf),
+            "<br/>Welcome back %s, you last visited %s on %s<br/>",
+            UNIT_NAME(d->character),
+            g_cServerConfig.m_mudname,
+            ctime(&PC_TIME(d->character).connect));
     send_to_descriptor(buf, d);
 
     if ((td = find_descriptor(PC_FILENAME(d->character), d)))
@@ -966,7 +969,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
 
     /* See if player is in game (guests are not created in file entries) */
     /* Enters game (reconnects) if true                                  */
-    for (u = g_unit_list; u; u = u->gnext)
+    for (u = unit_list; u; u = u->gnext)
     {
         if (!IS_PC(u))
             break;
@@ -1080,7 +1083,7 @@ void nanny_get_name(class descriptor_data *d, char *arg)
         CHAR_DESCRIPTOR(ch) = d;
         d->character = ch;
 
-        if (g_wizlock && CHAR_LEVEL(d->character) < g_wizlock)
+        if (wizlock && CHAR_LEVEL(d->character) < wizlock)
         {
             send_to_descriptor("Sorry, the game is wizlocked for "
                                "your level.<br/>",
@@ -1097,8 +1100,8 @@ void nanny_get_name(class descriptor_data *d, char *arg)
     }
     else
     {
-        /* Check for g_wizlock */
-        if (g_wizlock)
+        /* Check for wizlock */
+        if (wizlock)
         {
             send_to_descriptor("Sorry, no new players now, the game "
                                "is wizlocked!<br/>",

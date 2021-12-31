@@ -28,7 +28,7 @@
 #include "dilrun.h"
 
 struct trie_type *cmd_trie = NULL;
-struct command_info *g_cmdlist = NULL;
+struct command_info *cmdlist = NULL;
 struct cmdload_struct cmdload[] = {{"north", do_move, 0, 0},        {"northeast", do_move, 0, 0},
                                    {"ne", do_move, 0, 0},           {"northwest", do_move, 0, 0},
                                    {"nw", do_move, 0, 0},           {"east", do_move, 0, 0},
@@ -83,13 +83,12 @@ void skill_dump(void)
             snprintf(buf, sizeof(buf), "%s,%s", g_SkiColl.text[i], spc(20 - strlen(g_SkiColl.text[i])));
             str.append(buf);
 
-            snprintf(buf,
-                     sizeof(buf),
-                     ".profession %s%s = %s%d\n",
-                     g_professions[j],
-                     spc(12 - strlen(g_professions[j])),
-                     (g_SkiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                     g_SkiColl.prof_table[i].profession_cost[j]);
+            snprintf(buf, sizeof(buf),
+                    ".profession %s%s = %s%d\n",
+                    professions[j],
+                    spc(12 - strlen(professions[j])),
+                    (g_SkiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                    g_SkiColl.prof_table[i].profession_cost[j]);
             str.append(buf);
 
             /*if (g_SkiColl.prof_table[i].min_level > 0)
@@ -181,9 +180,9 @@ void command_read(void)
             {
                 if (cmdptr->cmd_str && (cmdptr->cmd_fptr || cmdptr->tmpl))
                 {
-                    if (g_cmdlist == NULL)
+                    if (cmdlist == NULL)
                     {
-                        g_cmdlist = cmdptr;
+                        cmdlist = cmdptr;
                         cmdptr->prev = NULL;
                         cmdptr->next = NULL;
                         lastptr = cmdptr;
@@ -286,7 +285,7 @@ void command_read(void)
             if (!is_in(dummy, -3, +3))
                 continue;
 
-            int ridx = search_block(pTmp + 5, g_pc_races, TRUE);
+            int ridx = search_block(pTmp + 5, pc_races, TRUE);
 
             if (ridx == -1)
                 slog(LOG_ALL, 0, "Skills: Illegal race in: %s", pTmp);
@@ -304,7 +303,7 @@ void command_read(void)
                 continue;
             }
 
-            int ridx = search_block(pTmp + 11, g_professions, TRUE);
+            int ridx = search_block(pTmp + 11, professions, TRUE);
 
             if (ridx == -1)
                 slog(LOG_ALL, 0, "Skills: Illegal profession %s", pTmp);
@@ -409,9 +408,9 @@ void command_read(void)
     {
         if (cmdptr->cmd_str && (cmdptr->cmd_fptr || cmdptr->tmpl))
         {
-            if (g_cmdlist == NULL)
+            if (cmdlist == NULL)
             {
-                g_cmdlist = cmdptr;
+                cmdlist = cmdptr;
                 cmdptr->prev = NULL;
                 cmdptr->next = NULL;
                 lastptr = cmdptr;

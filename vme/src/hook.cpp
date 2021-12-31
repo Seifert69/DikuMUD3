@@ -23,16 +23,16 @@
 #include "hook.h"
 #include "utility.h"
 
-cCaptainHook g_CaptainHook;
+cCaptainHook CaptainHook;
 
 //
 // For the MUD server:
 //     Listen on the mother port (4999) for connecting Multiplexers:
-//        g_CaptainHook.Hook(fdMother, &g_MotherHook);
+//        CaptainHook.Hook(fdMother, &MotherHook);
 //     thus Mother listening is in the cCaptainHook:cHook (I think)
 //
 //     Each connecting Mplex'er, and Mother Connection is stored here:
-//        g_CaptainHook.Hook (t, &g_Multi.g_Multi[i]);
+//        CaptainHook.Hook (t, &Multi.Multi[i]);
 //      which is a cMultiMaster::cMulti::cHook
 //
 // Also used in the Mplex'ers.
@@ -259,7 +259,7 @@ int cHook::tfd(void)
 void cHook::Unhook(void)
 {
     if (IsHooked())
-        g_CaptainHook.Unhook(this);
+        CaptainHook.Unhook(this);
 
     fd = -1;
 }*/
@@ -279,7 +279,7 @@ void cHook::PushWrite(void)
 
     while (!qTX.IsEmpty())
     {
-        len = std::min(sizeof(buf), static_cast<std::size_t>(qTX.Bytes()));
+        len = MIN(sizeof(buf), qTX.Bytes());
 
         qTX.CutCopy(buf, len);
 

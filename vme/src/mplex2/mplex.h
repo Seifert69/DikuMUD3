@@ -37,5 +37,5 @@ struct arg_type
     } while (0);
 
 extern int g_bHadAlarm;
-extern struct arg_type g_mplex_arg;
-extern char g_mudname[50];
+extern struct arg_type mplex_arg;
+extern char mudname[50];

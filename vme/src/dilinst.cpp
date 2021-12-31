@@ -24,7 +24,7 @@
 #elif defined LINUX
     #include <crypt.h>
 #endif
-#include "external_vars.h"
+
 #include "structs.h"
 #include "handler.h"
 #include "textutil.h"
@@ -53,6 +53,7 @@
 #include <sys/stat.h>
 #include "hookmud.h"
 
+extern struct trie_type *intr_trie;
 void stop_special(class unit_data *u, class unit_fptr *fptr);
 void start_special(class unit_data *u, class unit_fptr *fptr);
 
@@ -245,7 +246,7 @@ void dilfi_send_done(register class dilprg *p)
                        DILV_UP,
                        DILV_NULL))
     {
-        if ((cmd_ptr = (struct command_info *)search_trie((char *)v1->val.ptr, g_intr_trie)))
+        if ((cmd_ptr = (struct command_info *)search_trie((char *)v1->val.ptr, intr_trie)))
         {
             send_done((class unit_data *)v2->val.ptr,
                       (class unit_data *)v3->val.ptr,
@@ -341,7 +342,7 @@ void dilfi_delpc(register class dilprg *p)
                 }
                 else
                 {
-                    for (tmp = g_unit_list; tmp; tmp = tmp->gnext)
+                    for (tmp = unit_list; tmp; tmp = tmp->gnext)
                         if (IS_PC(tmp) && !str_ccmp(UNIT_NAME(tmp), ((char *)v1->val.ptr)))
                             extract_unit(tmp);
                 }
@@ -355,6 +356,7 @@ void dilfi_delpc(register class dilprg *p)
 
 void dilfi_reboot(register class dilprg *p)
 {
+    extern int mud_shutdown, mud_reboot;
     if (p->frame[0].tmpl->zone->access > 0)
     {
         szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (reboot).", p->frame->tmpl->prgname);
@@ -362,7 +364,7 @@ void dilfi_reboot(register class dilprg *p)
         return;
     }
 
-    g_mud_shutdown = g_mud_reboot = 1;
+    mud_shutdown = mud_reboot = 1;
 }
 
 /* foreach - clear / build */
@@ -391,7 +393,7 @@ void dilfi_foe(class dilprg *p)
             else
                 scan4_unit_room(p->sarg->owner, v1->val.num);
 
-            for (i = 0; i < g_unit_vector.top; i++)
+            for (i = 0; i < unit_vector.top; i++)
                 dil_add_secure(p, UVI(i), NULL);
 
             // This statement is incorrect in Yamato when a room uses foreach() this
@@ -2143,9 +2145,11 @@ void dilfi_exec(register class dilprg *p)
                 char buf[MAX_INPUT_LENGTH];
                 struct command_info *cmd_ptr;
 
+                extern struct trie_type *intr_trie;
+
                 str_next_word(cmd, buf);
 
-                if ((cmd_ptr = (struct command_info *)search_trie(buf, g_intr_trie)))
+                if ((cmd_ptr = (struct command_info *)search_trie(buf, intr_trie)))
                 {
                     if (cmd_ptr->minimum_level >= IMMORTAL_LEVEL)
                     {
@@ -2501,6 +2505,8 @@ void dilfi_snt(register class dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
+    extern struct command_info cmd_auto_msg;
+
     p->waitcmd--;
 
     if (dil_type_check("sendto", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, FAIL_NULL, 1, DILV_UP))
@@ -2513,7 +2519,7 @@ void dilfi_snt(register class dilprg *p)
             sarg.target = NULL;
             sarg.pInt = NULL;
             sarg.fptr = NULL; /* Set by unit_function_scan */
-            sarg.cmd = &g_cmd_auto_msg;
+            sarg.cmd = &cmd_auto_msg;
             sarg.arg = (char *)v1->val.ptr;
             sarg.mflags = SFB_MSG | SFB_AWARE;
 
@@ -2533,6 +2539,8 @@ void dilfi_snta(register class dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
+    extern struct command_info cmd_auto_msg;
+
     p->waitcmd--;
 
     if (dil_type_check("sendtoall", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_SP))
@@ -2551,7 +2559,7 @@ void dilfi_snta(register class dilprg *p)
                 sarg.fptr = NULL; /* Set by unit_function_scan */
 
                 sarg.fptr = NULL;
-                sarg.cmd = &g_cmd_auto_msg;
+                sarg.cmd = &cmd_auto_msg;
                 sarg.arg = (char *)v1->val.ptr;
                 sarg.mflags = SFB_MSG;
 
@@ -2566,7 +2574,7 @@ void dilfi_snta(register class dilprg *p)
                     }
                 }
 
-                /*for (u = g_unit_list; u; u = u->gnext)
+                /*for (u = unit_list; u; u = u->gnext)
                 {
                     if (UNIT_FILE_INDEX(u) == fi)
                         unit_function_scan(u, &sarg);
@@ -2629,7 +2637,7 @@ void dilfi_sntadil(register class dilprg *p)
                         sarg.pInt = NULL;
                         sarg.fptr = fptr;
 
-                        sarg.cmd = &g_cmd_auto_msg;
+                        sarg.cmd = &cmd_auto_msg;
                         sarg.arg = (char *)v1->val.ptr;
                         sarg.mflags = SFB_MSG;
 
@@ -2770,6 +2778,7 @@ void dilfi_cast(register class dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
     class unit_data *caster = NULL, *medium = NULL, *target = NULL;
+    extern struct spell_info_type spell_info[SPL_TREE_MAX];
 
     p->waitcmd--;
 
@@ -2798,7 +2807,7 @@ void dilfi_cast(register class dilprg *p)
         target = (class unit_data *)v4->val.ptr;
 
         if (is_in(v1->val.num, SPL_GROUP_MAX, SPL_TREE_MAX - 1) && caster && IS_CHAR(caster) && medium &&
-            (g_spell_info[v1->val.num].spell_pointer || g_spell_info[v1->val.num].tmpl))
+            (spell_info[v1->val.num].spell_pointer || spell_info[v1->val.num].tmpl))
         {
             /* cast the spell */
             spell_perform(v1->val.num, MEDIA_SPELL, caster, medium, target, "");
@@ -2814,6 +2823,8 @@ void dilfi_cast(register class dilprg *p)
 
 class unit_data *hometown_unit(char *str)
 {
+    extern class unit_data *entry_room;
+
     if (str)
     {
         char name[80], zone[80];
@@ -2824,5 +2835,5 @@ class unit_data *hometown_unit(char *str)
             return u;
     }
 
-    return g_entry_room;
+    return entry_room;
 }

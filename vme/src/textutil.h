@@ -13,7 +13,7 @@
 
 #define isaspace(c) ((c) == ' ')
 
-extern const char *g_fillwords[];
+extern const char *fillwords[];
 
 int str_escape_format(const char *str, char *dest, int destlen, int format = TRUE);
 char *str_escape_format(const char *src, int formatting = TRUE);

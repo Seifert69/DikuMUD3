@@ -84,7 +84,7 @@ int original_main(int argc, char *argv[])
                                 break;
 
                             case '9':
-                                g_A_c99 = TRUE;
+                                A_c99 = TRUE;
                                 sbind("__STDC__", one_string, NO_PARAMS);
 #if EMBEDDED_EXT
                                 sbind("__STDC_HOSTED__", zero_string, NO_PARAMS);
@@ -137,15 +137,15 @@ int original_main(int argc, char *argv[])
                     /* -[e] don't abort on errors */
                     case 'E':
                     case 'e':
-                        g_Eflag = TRUE;
+                        Eflag = TRUE;
                         break;
 
                     /* -iI <#include search path> */
                     case 'I':
                     case 'i':
-                        if (g_Ipcnt > NIPATHS)
+                        if (Ipcnt > NIPATHS)
                             fatal("Too many pathnames", "");
-                        g_Ipath[g_Ipcnt++] = getnext(s, &argc, &argv, NO);
+                        Ipath[Ipcnt++] = getnext(s, &argc, &argv, NO);
                         skip = TRUE; /* Skip to next param */
                         break;
 
@@ -157,17 +157,17 @@ int original_main(int argc, char *argv[])
                         {
                             case 'A':
                             case 'a':
-                                g_Lineopt = LINE_ABR;
+                                Lineopt = LINE_ABR;
                                 break;
 
                             case 'L':
                             case 'l':
-                                g_Lineopt = LINE_EXP;
+                                Lineopt = LINE_EXP;
                                 break;
 
                             case 'N':
                             case 'n':
-                                g_Lineopt = FALSE;
+                                Lineopt = FALSE;
                                 break;
 
                             default:
@@ -180,7 +180,7 @@ int original_main(int argc, char *argv[])
                     case 'O':
                     case 'o':
                         s2 = getnext(s, &argc, &argv, NO);
-                        strcpy(g_Outfile, s2); /* Copy filename */
+                        strcpy(Outfile, s2); /* Copy filename */
                         ofile = TRUE;
                         skip = TRUE; /* Skip to next param */
                         break;
@@ -189,7 +189,7 @@ int original_main(int argc, char *argv[])
                     /* -[s] give statistics at end */
                     case 'S':
                     case 's':
-                        g_Stats = Verbose = TRUE; /* Implies Verbose */
+                        Stats = Verbose = TRUE; /* Implies Verbose */
                         break;
 #endif /* DEBUG */
                         /* -[t Astr|Rstr] Add or delete chars from LETTER class */
@@ -215,9 +215,9 @@ int original_main(int argc, char *argv[])
                         for (; *s2 != '\0'; s2++)
                         {
                             if (i)
-                                g_typetab[*s2 + 1] |= C_L;
+                                typetab[*s2 + 1] |= C_L;
                             else
-                                g_typetab[*s2 + 1] &= ~C_L;
+                                typetab[*s2 + 1] &= ~C_L;
                         }
 
                         skip = TRUE; /* Skip to next param */
@@ -238,7 +238,7 @@ int original_main(int argc, char *argv[])
                     /* -[v] verbose mode toggle */
                     case 'V':
                     case 'v':
-                        g_Verbose = !g_Verbose;
+                        Verbose = !Verbose;
                         break;
 
 #if DEBUG
@@ -284,7 +284,7 @@ int original_main(int argc, char *argv[])
     // I presume the next bit of code is pre-processing the file
     //
 
-    g_Nextch = gchbuf; /* Next char source */
+    Nextch = gchbuf; /* Next char source */
 
     if (!ifile)
     {
@@ -295,17 +295,17 @@ int original_main(int argc, char *argv[])
     if (!ofile)
     {
         /* No output name given; use input name and modify it */
-        strcpy(g_Outfile, g_Filestack[0]->f_name);
+        strcpy(Outfile, Filestack[0]->f_name);
         /* terminate the file name before any extension */
-        if ((s = strrchr(g_Outfile, '.')) != NULL)
+        if ((s = strrchr(Outfile, '.')) != NULL)
             *s = '\0';
-        strcat(g_Outfile, ".pp");
+        strcat(Outfile, ".pp");
     }
 
-    if (strcmp(g_Outfile, g_Filestack[0]->f_name) == EQUAL)
-        fatal("Input and output filenames are the same: ", g_Outfile);
-    else if ((g_Output = fopen(g_Outfile, "w")) == NULL)
-        fatal("Unable to create output file: ", g_Outfile);
+    if (strcmp(Outfile, Filestack[0]->f_name) == EQUAL)
+        fatal("Input and output filenames are the same: ", Outfile);
+    else if ((Output = fopen(Outfile, "w")) == NULL)
+        fatal("Unable to create output file: ", Outfile);
 
 #if HOST == H_CPM
     /* Create a bigger than average buffer */
@@ -315,50 +315,50 @@ int original_main(int argc, char *argv[])
     setbsize(Output, OUTBUFSIZE);
 #endif /* H_CPM */
 
-    if (g_Verbose)
+    if (Verbose)
     {
         printf("%s%s\n\n", "PP Preprocessor, ", PP_VERSION);
-        printf("Output will be on <%s>\n", g_Outfile);
-        printf("*** Read    %s\n", g_Filestack[g_Filelevel]->f_name);
+        printf("Output will be on <%s>\n", Outfile);
+        printf("*** Read    %s\n", Filestack[Filelevel]->f_name);
     }
 
-    g_Do_name = TRUE; /* Force name output on #line */
+    Do_name = TRUE; /* Force name output on #line */
 
-    init_path();             /* Initialize search path */
-    g_Ipath[g_Ipcnt] = NULL; /* Terminate last include path */
-                             /*
-                              *	If we are in C99 mode then we need to prepend a definition for the
-                              *	"_pragma" macro definition.  We also need to enable \uxxxx and
-                              *	\Uxxxxxxxx "universal characters".
-                              */
-    if (g_A_c99)
+    init_path();         /* Initialize search path */
+    Ipath[Ipcnt] = NULL; /* Terminate last include path */
+                         /*
+                          *	If we are in C99 mode then we need to prepend a definition for the
+                          *	"_pragma" macro definition.  We also need to enable \uxxxx and
+                          *	\Uxxxxxxxx "universal characters".
+                          */
+    if (A_c99)
     {
         pbstr("#define _Pragma([line,RQ]) #pragma line\n");
-        g_typetab['\\' + 1] |= C_L;
+        typetab['\\' + 1] |= C_L;
     }
     /*
      *	Time to start processing the input file(s)!
      */
 
-    g_Lastnl = TRUE; /* We are at the file beginning */
+    Lastnl = TRUE; /* We are at the file beginning */
     while ((t = gettoken(GT_STR)) != EOF)
     {
-        if ((t == DIRECTIVE_CHAR) && g_Lastnl)
+        if ((t == DIRECTIVE_CHAR) && Lastnl)
         {
             t = getnstoken(GT_STR);
             if (t == LETTER)
             {
-                if ((sp = predef(g_Token, g_pptab)) != NULL)
+                if ((sp = predef(Token, pptab)) != NULL)
                 {
                     /*
                      *	If unconditionally do it or if emitting code...
                      */
-                    if (sp->pp_ifif || (g_Ifstate == IFTRUE))
+                    if (sp->pp_ifif || (Ifstate == IFTRUE))
                     {
                         /* Do #func */ (void)(*(sp->pp_func))(sp->pp_arg, 0, ""); // MS2020 add missing params??? Totally odd.
                     }
                 }
-                else if (g_Ifstate == IFTRUE)
+                else if (Ifstate == IFTRUE)
                     non_fatal("Illegal directive", "");
             }
             else if (t != '\n')
@@ -370,40 +370,40 @@ int original_main(int argc, char *argv[])
             while ((t != '\n') && (t != EOF))
                 t = gettoken(GT_STR);
             if (t == '\n')
-                puttoken(g_Token);
-            g_Lastnl = TRUE;
+                puttoken(Token);
+            Lastnl = TRUE;
         }
-        else if (g_Ifstate == IFTRUE)
+        else if (Ifstate == IFTRUE)
         {
 /*
  *	We need to process this line.
  */
 #if EMBEDDED_EXT
-            if (t == LETTER && g_Macexpand)
+            if (t == LETTER && Macexpand)
 #else  /* !EMBEDDED_EXT */
             if (t == LETTER)
 #endif /* EMBEDDED_EXT */
             {
-                if ((p = lookup(g_Token, NULL)) != NULL)
+                if ((p = lookup(Token, NULL)) != NULL)
                     /* Call macro */ (void)docall(p, NULL, NULL);
                 else
                 {
-                    /* Not a macro, just output */ puttoken(g_Token);
-                    g_Lastnl = FALSE;
+                    /* Not a macro, just output */ puttoken(Token);
+                    Lastnl = FALSE;
                 }
             }
             else
             {
-                puttoken(g_Token);
+                puttoken(Token);
                 if (t == '\n')
-                    g_Lastnl = TRUE; /* Turn on if '\n' */
+                    Lastnl = TRUE; /* Turn on if '\n' */
                 else if (t != SPACE)
-                    g_Lastnl = FALSE; /* Turn off if !ws */
+                    Lastnl = FALSE; /* Turn off if !ws */
             }
         }
         else
         /*
-         *	g_Ifstate is FALSE, so if it is anything but whitespace, toss it.
+         *	Ifstate is FALSE, so if it is anything but whitespace, toss it.
          *	We need to allow whitespace since it might be leading a #else or
          *	some such on a line that will be processed the next time around.
          */
@@ -412,7 +412,7 @@ int original_main(int argc, char *argv[])
             {
                 while ((t != '\n') && (t != EOF))
                     t = gettoken(GT_STR);
-                g_Lastnl = TRUE;
+                Lastnl = TRUE;
             }
         }
     } // end while
@@ -421,30 +421,30 @@ int original_main(int argc, char *argv[])
     // Done pre processing the file
     //
 
-    if (g_Iflevel != 0)
+    if (Iflevel != 0)
     {
         /* Unterminated #if */
         non_fatal("Unterminated conditional", "");
     }
 
-    if (g_Verbose)
+    if (Verbose)
     {
-        printf("\nActive symbols at end:\t%d\tMaximum symbols used:\t%d\n", g_Nsyms, g_Maxsyms);
+        printf("\nActive symbols at end:\t%d\tMaximum symbols used:\t%d\n", Nsyms, Maxsyms);
 #if HOST == H_CPM
         printf("Free memory: %5u\n", maxsbrk());
 #endif /* H_CPM */
     }
 
-    if (g_Verbose || g_Errors)
+    if (Verbose || Errors)
     {
-        if (g_Errors)
-            printf("\n%d errors detected\n", g_Errors);
+        if (Errors)
+            printf("\n%d errors detected\n", Errors);
         else
             printf("\nNo errors detected\n");
     }
 
 #if DEBUG
-    if (g_Stats)
+    if (Stats)
     {
         printf("\nSymbol table bucket statistics:");
         for (i = 0; i < NUMBUCKETS; i++)
@@ -464,21 +464,21 @@ int original_main(int argc, char *argv[])
     // ppmain() by the Perry's
     //
 
-    if (g_Errors > 0)
+    if (Errors > 0)
     {
-        fprintf(stderr, "Terminating with error count #%d\n", g_Errors);
+        fprintf(stderr, "Terminating with error count #%d\n", Errors);
         exit(1);
     }
 
-    fwrite(g_sOutput, g_sOutput_len, 1, stdout);
+    fwrite(sOutput, sOutput_len, 1, stdout);
 
     //
     // Before it just closed the output file
 
-    if ((g_Output != stdout) && (fclose(g_Output) == EOF))
-        fatal("Unable to close output file: ", g_Outfile);
+    if ((Output != stdout) && (fclose(Output) == EOF))
+        fatal("Unable to close output file: ", Outfile);
 
-    exit(g_Eflag ? 0 : g_Errors);
+    exit(Eflag ? 0 : Errors);
 }
 
 #ifdef MSC_OPT
@@ -492,7 +492,7 @@ int main(int argc, char *argv[])
     original_main(argc, argv);
     return 1;
 
-    g_pponly = 1;
+    pponly = 1;
 
     char path[200];
 
@@ -503,6 +503,6 @@ int main(int argc, char *argv[])
     }
 
     strcpy(path, "..");
-    g_Ipath[g_Ipcnt++] = path;
+    Ipath[Ipcnt++] = path;
     pp_main(argv[1]);
 }
