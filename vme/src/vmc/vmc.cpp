@@ -310,7 +310,7 @@ void *mmalloc(int size)
 
     if (size > MEMBLOCK)
     {
-        fprintf(stderr, "trying to allocate too-large chunk.\n");
+        fprintf(stderr, "trying to allocate %d bytes which is above our threshold of %d.\n", size, MEMBLOCK);
         exit(1);
     }
     ret = mm.free;
