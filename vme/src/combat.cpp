@@ -18,7 +18,7 @@
 
 // The Global Combat List...
 
-class cCombatList g_CombatList;
+class cCombatList CombatList;
 
 cCombatList::cCombatList()
 {
@@ -100,7 +100,7 @@ void cCombatList::PerformViolence(void)
     // Happens just ONCE per turn, give everybody 12 actions...
     for (nIdx = 0; nIdx < nTop; nIdx++)
         if (pElems[nIdx]->nWhen > 0)
-            pElems[nIdx]->nWhen = std::max(0, pElems[nIdx]->nWhen - SPEED_DEFAULT);
+            pElems[nIdx]->nWhen = MAX(0, pElems[nIdx]->nWhen - SPEED_DEFAULT);
 
     do
     {
@@ -132,14 +132,14 @@ void cCombatList::PerformViolence(void)
                         bAnyaction = TRUE;
                         melee_violence(pElems[nIdx]->pOwner, tmp->nWhen <= (SPEED_DEFAULT + 1) / 2);
                         if ((nIdx != -1) && (nIdx < nTop) && (tmp == pElems[nIdx]))
-                            tmp->nWhen += std::max(2, (1 + CHAR_SPEED(tmp->pOwner)) / 2);
+                            tmp->nWhen += MAX(2, (1 + CHAR_SPEED(tmp->pOwner)) / 2);
                     }
                     else
                     {
                         bAnyaction = TRUE;
                         melee_violence(pElems[nIdx]->pOwner, TRUE);
                         if ((nIdx != -1) && (nIdx < nTop) && (tmp == pElems[nIdx]))
-                            tmp->nWhen += std::max(static_cast<ubit8>(4), CHAR_SPEED(tmp->pOwner));
+                            tmp->nWhen += MAX(4, CHAR_SPEED(tmp->pOwner));
                     }
                 }
             }
@@ -177,7 +177,7 @@ cCombat::cCombat(class unit_data *owner, int bMelee)
     pOpponents = NULL;
     nNoOpponents = 0;
 
-    g_CombatList.add(this);
+    CombatList.add(this);
 }
 
 cCombat::~cCombat(void)
@@ -193,7 +193,7 @@ cCombat::~cCombat(void)
 
     CHAR_COMBAT(pOwner) = NULL;
 
-    g_CombatList.sub(this);
+    CombatList.sub(this);
 
     CHAR_POS(pOwner) = POSITION_STANDING;
     update_pos(pOwner);
@@ -339,17 +339,16 @@ void cCombat::status(const class unit_data *god)
     int i;
     std::string str;
 
-    snprintf(buf,
-             sizeof(buf),
-             "Combat Status of '%s':<br/>"
-             "Combat Speed [%d]  Turn [%d]<br/>"
-             "Melee Opponent '%s'<br/>"
-             "Total of %d Opponents:<br/><br/>",
-             STR(UNIT_NAME(pOwner)),
-             CHAR_SPEED(pOwner),
-             nWhen,
-             CHAR_FIGHTING(pOwner) ? STR(UNIT_NAME(CHAR_FIGHTING(pOwner))) : "NONE",
-             nNoOpponents);
+    snprintf(buf, sizeof(buf),
+            "Combat Status of '%s':<br/>"
+            "Combat Speed [%d]  Turn [%d]<br/>"
+            "Melee Opponent '%s'<br/>"
+            "Total of %d Opponents:<br/><br/>",
+            STR(UNIT_NAME(pOwner)),
+            CHAR_SPEED(pOwner),
+            nWhen,
+            CHAR_FIGHTING(pOwner) ? STR(UNIT_NAME(CHAR_FIGHTING(pOwner))) : "NONE",
+            nNoOpponents);
 
     str.append(buf);
 
@@ -458,7 +457,7 @@ void stat_combat(class unit_data *god, class unit_data *u, const char *pStr)
         return;
     }
 
-    g_CombatList.status(god);
+    CombatList.status(god);
 
     if (!CHAR_COMBAT(u))
         act("No combat structure on '$2n'", A_ALWAYS, god, u, cActParameter(), TO_CHAR);
@@ -501,7 +500,7 @@ void stat_spell(class unit_data *god, class unit_data *u, const char *pStr)
         return;
     }
 
-    g_CombatList.status(god);
+    CombatList.status(god);
 
     if (!CHAR_COMBAT(u))
         act("No combat structure on '$2n'", A_ALWAYS, god, u, cActParameter(), TO_CHAR);

@@ -8,8 +8,8 @@
 #ifndef _MUD_UNITFIND_H
 #define _MUD_UNITFIND_H
 
-#define UVI(i) (g_unit_vector.units[i])
-#define UVITOP (g_unit_vector.top)
+#define UVI(i) (unit_vector.units[i])
+#define UVITOP (unit_vector.top)
 
 struct unit_vector_data
 {
@@ -18,7 +18,7 @@ struct unit_vector_data
     int top;
 };
 
-extern struct unit_vector_data g_unit_vector;
+extern struct unit_vector_data unit_vector;
 
 int follower_count(class unit_data *u);
 class unit_data *get_follower(class unit_data *u, int num);

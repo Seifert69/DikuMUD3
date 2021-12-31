@@ -1,7 +1,6 @@
 #include "essential.h"
 #include "db.h"
 #include "textutil.h"
-#include "external_vars.h"
 
 #include <vector>
 #include <string>
@@ -9,6 +8,8 @@
 #include <fstream>
 #include "vme.h"
 #include "sector.h"
+
+extern cSector sector_dat;
 
 std::string cSector::get_name(int sector)
 {
@@ -164,7 +165,7 @@ void boot_sector(void)
         in_file.close();
 
         for (unsigned int i = 0; i < sector_vect.size(); i++)
-            g_sector_dat.add_sector(i, sector_vect[i]);
+            sector_dat.add_sector(i, sector_vect[i]);
 
         int sector_index = 0, sector_end = 0, sector_path = 0, sector_from = 0;
         while (sector_queue.size() > 0)
@@ -186,7 +187,7 @@ void boot_sector(void)
 
                 sector_path = sector_queue.front();
                 sector_queue.pop();
-                g_sector_dat.set_path_endurance_cost(sector_from, sector_index, sector_path, sector_end);
+                sector_dat.set_path_endurance_cost(sector_from, sector_index, sector_path, sector_end);
             }
             sector_queue.pop();
         }

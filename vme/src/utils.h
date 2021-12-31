@@ -14,7 +14,7 @@
 #include "structs.h"
 #include "essential.h"
 
-extern const sbit8 g_time_light[];
+extern const sbit8 time_light[];
 
 /* ..................................................................... */
 
@@ -153,9 +153,9 @@ extern const sbit8 g_time_light[];
 
 #define UNIT_IS_OUTSIDE(unit) (!IS_SET(UNIT_FLAGS(UNIT_IN(unit)), UNIT_FL_INDOORS))
 
-extern int g_sunlight;
+extern int sunlight;
 
-#define UNIT_OUTSIDE_LIGHT(unit) (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INDOORS) ? g_time_light[g_sunlight] : 0)
+#define UNIT_OUTSIDE_LIGHT(unit) (!IS_SET(UNIT_FLAGS(unit), UNIT_FL_INDOORS) ? time_light[sunlight] : 0)
 
 #define UNIT_IS_DARK(unit) (UNIT_LIGHTS(unit) + UNIT_OUTSIDE_LIGHT(unit) + (UNIT_IN(unit) ? UNIT_LIGHTS(UNIT_IN(unit)) : 0) < 0)
 

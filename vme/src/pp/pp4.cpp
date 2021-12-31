@@ -145,18 +145,18 @@ int gettoken(int f)
         printf("gettoken: ");
 #endif /* PPDEBUG */
 
-    p = g_Token;
+    p = Token;
     t = nextch();
-    g_Token[0] = t;
+    Token[0] = t;
 
-    g_Tokenfile = g_Filelevel; /* Remember file number and	*/
-    g_Tokenline = g_LLine;     /* Line number for this token	*/
+    Tokenfile = Filelevel; /* Remember file number and	*/
+    Tokenline = LLine;     /* Line number for this token	*/
 
     if (istype(t, C_L | C_D | C_W))
     {
         if (istype(t, C_L))
         {
-            for (p = &g_Token[1]; p < &g_Token[TOKENSIZE]; p++)
+            for (p = &Token[1]; p < &Token[TOKENSIZE]; p++)
             {
                 t = nextch();
                 *p = t;
@@ -179,7 +179,7 @@ int gettoken(int f)
                 else
                     tmask = 0; /* Not part of #'s */
 
-                while ((p < &g_Token[TOKENSIZE]) && (tmask != 0))
+                while ((p < &Token[TOKENSIZE]) && (tmask != 0))
                 {
                     t = nextch();
                     *++p = t;
@@ -200,7 +200,7 @@ int gettoken(int f)
             {
                 numstate = F_INTPART;
                 fail = FALSE;
-                for (p = &g_Token[1]; p < &g_Token[TOKENSIZE] && (!fail); /*none*/)
+                for (p = &Token[1]; p < &Token[TOKENSIZE] && (!fail); /*none*/)
                 {
                     t = nextch();
                     *p = t;
@@ -272,13 +272,13 @@ int gettoken(int f)
             if (t == '\n')
             {
                 /* Just forget we saw any of the above space */
-                p = g_Token; /* Reset token pointer */
-                g_Token[0] = '\n';
+                p = Token; /* Reset token pointer */
+                Token[0] = '\n';
             }
             else
             {
-                p = g_Token + 1;  /* Leave only one in buffer */
-                g_Token[0] = ' '; /* Make it a single space */
+                p = Token + 1;  /* Leave only one in buffer */
+                Token[0] = ' '; /* Make it a single space */
                 /* t = token to pushback */
             }
         }
@@ -289,8 +289,8 @@ int gettoken(int f)
         {
             if ((t = nextch()) == '\n')
             {
-                g_Token[0] = ' '; /* Generic whitespace token */
-                g_Token[1] = '\0';
+                Token[0] = ' '; /* Generic whitespace token */
+                Token[1] = '\0';
                 return (' ');
             }
             pushback(t);
@@ -298,13 +298,13 @@ int gettoken(int f)
         }
         else if (((t == '"') || (t == '\'')) && (f & GT_STR))
         {
-            // MS2020 strline=g_LLine;
+            // MS2020 strline=LLine;
 #if PPDEBUG
             if (PPDEBUG)
                 printf(" in quote");
 #endif /* PPDEBUG */
 
-            for (p = &g_Token[1]; p < &g_Token[TOKENSIZE]; p++)
+            for (p = &Token[1]; p < &Token[TOKENSIZE]; p++)
             {
                 *p = nextch();
                 if (*p == EOF)
@@ -341,7 +341,7 @@ int gettoken(int f)
                     }
                 }
             }
-            if (p >= &g_Token[TOKENSIZE])
+            if (p >= &Token[TOKENSIZE])
                 non_fatal("Token too long", "");
 
             p[1] = '\0';
@@ -354,13 +354,13 @@ int gettoken(int f)
                 printf(" in angle bracket");
 #endif /* PPDEBUG */
 
-            for (p = &g_Token[1]; p < &g_Token[TOKENSIZE]; p++)
+            for (p = &Token[1]; p < &Token[TOKENSIZE]; p++)
             {
                 *p = nextch();
                 if ((*p == '>') || (*p == '\n'))
                     break;
             }
-            if (p >= &g_Token[TOKENSIZE])
+            if (p >= &Token[TOKENSIZE])
                 non_fatal("Token too long", "");
 
             p[1] = '\0';
@@ -374,7 +374,7 @@ int gettoken(int f)
                 {
                     comment_level = 1;
                     t = ' ';
-                    g_Token[0] = t;
+                    Token[0] = t;
 #if PPDEBUG
                     if (PPDEBUG)
                         printf(" in comment");
@@ -393,7 +393,7 @@ int gettoken(int f)
                         nt = nextch();
                         if ((t == '/') && (nt == '*'))
                         {
-                            if (!g_A_crecurse)
+                            if (!A_crecurse)
                             {
                                 warning("\"/*\" found in comment", "");
                             }
@@ -407,12 +407,12 @@ int gettoken(int f)
                         if (comment_level > 0)
                             t = nt;
                     } while (comment_level > 0);
-                    t = g_Token[0];
+                    t = Token[0];
                 }
-                /* Optional C++ comments */ else if (g_A_eolcomment && (nt == '/'))
+                /* Optional C++ comments */ else if (A_eolcomment && (nt == '/'))
                 {
                     t = ' ';
-                    g_Token[0] = t;
+                    Token[0] = t;
 #if PPDEBUG
                     if (PPDEBUG)
                         printf(" in eol comment");
@@ -428,7 +428,7 @@ int gettoken(int f)
                     else
                         pushback(t);
 
-                    t = g_Token[0];
+                    t = Token[0];
                 }
                 else
                     pushback(nt);
@@ -440,56 +440,56 @@ int gettoken(int f)
             switch (t)
             {
                 case LINE_TOKEN:
-                    sprintf(g_Token, "%d", g_LLine);
+                    sprintf(Token, "%d", LLine);
                     break;
 
                 case FILE_TOKEN:
-                    sprintf(g_Token, "\"%s\"", g_Filestack[g_Filelevel]->f_name);
+                    sprintf(Token, "\"%s\"", Filestack[Filelevel]->f_name);
                     break;
 
                 case TIME_TOKEN:
-                    sprintf(g_Token, "\"%s\"", g_Time);
+                    sprintf(Token, "\"%s\"", _Time);
                     break;
 
                 case DATE_TOKEN:
-                    sprintf(g_Token, "\"%s\"", g_Date);
+                    sprintf(Token, "\"%s\"", Date);
                     break;
 
                 case NOW_TOKEN:
-                    sprintf(g_Token, "%u", g_Unique);
+                    sprintf(Token, "%u", Unique);
                     break;
 
                 case NEXT_TOKEN:
-                    sprintf(g_Token, "%u", ++g_Unique);
+                    sprintf(Token, "%u", ++Unique);
                     break;
 
                 case PREV_TOKEN:
-                    sprintf(g_Token, "%u", --g_Unique);
+                    sprintf(Token, "%u", --Unique);
                     break;
 
                 default:
-                    g_Token[0] = t;
-                    g_Token[1] = '\0';
+                    Token[0] = t;
+                    Token[1] = '\0';
                     break;
             }
-            return (type(g_Token[0] & 0xFF));
+            return (type(Token[0] & 0xFF));
         }
     }
 
-    if (p >= &g_Token[TOKENSIZE])
+    if (p >= &Token[TOKENSIZE])
         non_fatal("Token too long", "");
 
-    if (p > g_Token)
+    if (p > Token)
     {
         --p;
         pushback(t); /* Push back previous token value */
-        t = type(g_Token[0] & 0xFF);
+        t = type(Token[0] & 0xFF);
     }
 
     p[1] = '\0'; /* Null terminated */
 #ifdef PPDEBUG
     if (PPDEBUG)
-        printf(" returning: <%s> type: %c\n", g_Token, t);
+        printf(" returning: <%s> type: %c\n", Token, t);
 #endif
     return (t);
 }
@@ -514,7 +514,7 @@ int gettoken(int f)
 
 int istype(int c, int v)
 {
-    return ((g_typetab + 1)[c] & v);
+    return ((typetab + 1)[c] & v);
 }
 #endif /* !PP */
 
@@ -555,17 +555,17 @@ void pbcstr(char *s)
         out_of_memory();
     memmov(s, cp, length); /* Make a copy of memory */
 
-    if (g_Pbbufp++ >= &g_Pbbuf[PUSHBACKSIZE - 1])
+    if (Pbbufp++ >= &Pbbuf[PUSHBACKSIZE - 1])
         fatal("Pushback buffer overflow", "");
-    g_Pbbufp->pb_type = PB_STRING;
-    g_Pbbufp->pb_val.pb_str = cp;
+    Pbbufp->pb_type = PB_STRING;
+    Pbbufp->pb_val.pb_str = cp;
 
-    if (g_Pbbufp++ >= &g_Pbbuf[PUSHBACKSIZE - 1])
+    if (Pbbufp++ >= &Pbbuf[PUSHBACKSIZE - 1])
         fatal("Pushback buffer overflow", "");
-    g_Pbbufp->pb_type = PB_STRING;
-    g_Pbbufp->pb_val.pb_str = cp;
+    Pbbufp->pb_type = PB_STRING;
+    Pbbufp->pb_val.pb_str = cp;
 
-    g_Nextch = gchpb;
+    Nextch = gchpb;
 }
 
 /************************************************************************/
@@ -594,13 +594,13 @@ void pbstr(const char *in)
 
 void pushback(int c)
 {
-    if (g_Pbbufp++ >= &g_Pbbuf[PUSHBACKSIZE - 1])
+    if (Pbbufp++ >= &Pbbuf[PUSHBACKSIZE - 1])
         fatal("Pushback buffer overflow", "");
 
-    g_Pbbufp->pb_type = PB_CHAR;
-    g_Pbbufp->pb_val.pb_char = c;
+    Pbbufp->pb_type = PB_CHAR;
+    Pbbufp->pb_val.pb_char = c;
 
-    g_Nextch = gchpb;
+    Nextch = gchpb;
 }
 
 /************************************************************************/
@@ -627,14 +627,14 @@ void puttoken(const char s[])
     if (istype(*str & 0xFF, C_N)) /* Ignore null tokens */
         return;
 
-    if (g_Lineopt)
+    if (Lineopt)
     {
         /* Get line numbers in sync before emitting token */
 
 #if (TARGET == T_QC) OR(TARGET == T_QCX)
-        if (!g_Do_asm && (((*str != '\n') && (g_Outline != g_LLine)) || g_Do_name))
+        if (!Do_asm && (((*str != '\n') && (Outline != LLine)) || Do_name))
 #else  /* !((TARGET == T_QC) OR (TARGET == T_QCX)) */
-        if (((*str != '\n') && (g_Outline != g_LLine)) || g_Do_name)
+        if (((*str != '\n') && (Outline != LLine)) || Do_name)
 #endif /* (TARGET == T_QC) OR (TARGET == T_QCX) */
         {
             do_line(lastoutc == '\n'); /* True if at BOL */
@@ -647,29 +647,29 @@ void puttoken(const char s[])
             {
                 /* MS2020 if(lastoutc != '\n')
                    { We do need multiple newlines (in quoted text)*/
-                if (g_A_outstr)
+                if (A_outstr)
                     output_addc(lastoutc = '\n');
                 else
-                    putc(lastoutc = '\n', g_Output);
-                g_Outline++;
+                    putc(lastoutc = '\n', Output);
+                Outline++;
                 /* } MS2020 */
                 /*
                  *	No character written if lastoutc WAS a newline.
                  */
             }
-            else if (g_A_outstr)
+            else if (A_outstr)
                 output_addc(lastoutc = ch);
             else
-                putc(lastoutc = ch, g_Output);
+                putc(lastoutc = ch, Output);
         }
     }
     else
     {
         while ((ch = *str++) != '\0')
-            if (g_A_outstr)
+            if (A_outstr)
                 output_addc(lastoutc = ch);
             else
-                putc(ch, g_Output); /* if!line mode output token */
+                putc(ch, Output); /* if!line mode output token */
     }
 }
 

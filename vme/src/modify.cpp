@@ -154,56 +154,56 @@ struct field_type unit_field_data[MAX_SET_FIELDS + 1] = {
     {UT_UNIT, AT_DES, 0, 200, 200, 253},                      /* long-description */
     {UT_UNIT, AT_KEYDES, 0, 200, 200, 200},                   /* add-extra       */
     {UT_UNIT, AT_STR, 0, 200, 200, 200},                      /* del-extra       */
-    {UT_UNIT, AT_BIT, g_unit_manipulate, 200, 200, 250},      /* manipulate      */
-    {UT_UNIT, AT_BIT, g_unit_flags, 200, 200, 250},           /* unit-flags      */
+    {UT_UNIT, AT_BIT, unit_manipulate, 200, 200, 250},        /* manipulate      */
+    {UT_UNIT, AT_BIT, unit_flags, 200, 200, 250},             /* unit-flags      */
     {UT_UNIT, AT_VAL, 0, 200, 200, 230},                      /* weight          */
     {UT_UNIT, AT_VAL, 0, 200, 200, 230},                      /* capacity        */
     {UT_UNIT, AT_VAL, 0, 200, 200, 253},                      /* max-hp          */
     {UT_UNIT, AT_VAL, 0, 200, 200, 253},                      /* hp              */
     {UT_UNIT, AT_STR, 0, 200, 200, 253},                      /* key             */
     {UT_UNIT, AT_VAL, 0, 200, 200, 249},                      /* alignment       */
-    {UT_UNIT, AT_BIT, g_unit_open_flags, 200, 200, 253},      /* open-flags      */
+    {UT_UNIT, AT_BIT, unit_open_flags, 200, 200, 253},        /* open-flags      */
     {UT_UNIT, AT_VAL, 0, 200, 200, 253},                      /* tgh             */
     {UT_UNIT, AT_VAL, 0, 253, 253, 253},                      /* lights          */
     {UT_UNIT, AT_VAL, 0, 200, 200, 253},                      /* bright          */
-    {UT_ROOM, AT_BIT, g_room_flags, 200, 200, 200},           /* room-flags      */
-    {UT_ROOM, AT_TYP, g_room_landscape, 200, 200, 200},       /* movement        */
+    {UT_ROOM, AT_BIT, room_flags, 200, 200, 200},             /* room-flags      */
+    {UT_ROOM, AT_TYP, room_landscape, 200, 200, 200},         /* movement        */
     {UT_PC, AT_VAL, 0, 255, 255, 255},                        /* cc-info         */
     {UT_ROOM, AT_DIRSTR, 0, 200, 200, 200},                   /* add-dir-name    */
     {UT_ROOM, AT_DIRSTR, 0, 200, 200, 200},                   /* del-dir-name    */
-    {UT_ROOM, AT_DIRBIT, g_unit_open_flags, 200, 200, 200},   /* dir-flags       */
+    {UT_ROOM, AT_DIRBIT, unit_open_flags, 200, 200, 200},     /* dir-flags       */
     {UT_ROOM, AT_DIRSTR, 0, 200, 200, 200},                   /* dir-key         */
     {UT_OBJ, AT_VAL, 0, 200, 240, 200},                       /* value0          */
     {UT_OBJ, AT_VAL, 0, 200, 240, 200},                       /* value1          */
     {UT_OBJ, AT_VAL, 0, 200, 240, 200},                       /* value2          */
     {UT_OBJ, AT_VAL, 0, 200, 240, 200},                       /* value3          */
     {UT_OBJ, AT_VAL, 0, 200, 240, 200},                       /* value4          */
-    {UT_OBJ, AT_BIT, g_obj_flags, 200, 200, 200},             /* obj-flags       */
+    {UT_OBJ, AT_BIT, obj_flags, 200, 200, 200},               /* obj-flags       */
     {UT_OBJ, AT_VAL, 0, 200, 200, 200},                       /* cost            */
     {UT_OBJ, AT_VAL, 0, 200, 200, 200},                       /* rent            */
-    {UT_OBJ, AT_TYP, g_obj_types, 200, 240, 200},             /* type            */
-    {UT_OBJ, AT_TYP, g_obj_pos, 200, 240, 200},               /* equip           */
+    {UT_OBJ, AT_TYP, obj_types, 200, 240, 200},               /* type            */
+    {UT_OBJ, AT_TYP, obj_pos, 200, 240, 200},                 /* equip           */
     {UT_PC, AT_STR, 0, 200, 230, 253},                        /* guild-name      */
     {UT_PC, AT_STR, 0, 240, 253, 230},                        /* pwd             */
-    {UT_PC, AT_BIT, g_pc_flags, 200, 200, 253},               /* pc-flags        */
+    {UT_PC, AT_BIT, pc_flags, 200, 200, 253},                 /* pc-flags        */
     {UT_PC, AT_VAL, 0, 200, 200, 253},                        /* crimes          */
     {UT_PC, AT_VAL, 0, 200, 200, 200},                        /* drunk           */
     {UT_PC, AT_VAL, 0, 200, 200, 200},                        /* full            */
     {UT_PC, AT_VAL, 0, 200, 200, 200},                        /* thirsty         */
     {UT_NPC, AT_VAL, 0, 200, 200, 253},                       /* default-pos     */
-    {UT_NPC, AT_BIT, g_npc_flags, 200, 200, 200},             /* npc-flags       */
+    {UT_NPC, AT_BIT, npc_flags, 200, 200, 200},               /* npc-flags       */
     {UT_PC, AT_STR, 0, 200, 230, 230},                        /* hometown        */
     {UT_CHAR, AT_VAL, 0, 253, 253, 253},                      /* exp             */
-    {UT_CHAR, AT_BIT, g_char_flags, 200, 200, 253},           /* char-flags      */
+    {UT_CHAR, AT_BIT, char_flags, 200, 200, 253},             /* char-flags      */
     {UT_CHAR, AT_VAL, 0, 200, 200, 240},                      /* mana            */
     {UT_CHAR, AT_VAL, 0, 200, 200, 240},                      /* endurance       */
     {UT_CHAR, AT_TYP, g_WpnColl.gettext(), 200, 200, 253},    /* attack-type     */
     {UT_CHAR, AT_VAL, 0, 200, 200, 253},                      /* hand-quality    */
     {UT_UNIT, AT_VAL, 0, 200, 200, 230},                      /* height          */
-    {UT_CHAR, AT_TYP, g_pc_races, 200, 200, 253},             /* race            */
-    {UT_CHAR, AT_TYP, g_char_sex, 200, 200, 253},             /* sex             */
+    {UT_CHAR, AT_TYP, pc_races, 200, 200, 253},               /* race            */
+    {UT_CHAR, AT_TYP, char_sex, 200, 200, 253},               /* sex             */
     {UT_NPC, AT_VAL, 0, 255, 255, 255},                       /* level           */
-    {UT_CHAR, AT_TYP, g_char_pos, 200, 253, 253},             /* position        */
+    {UT_CHAR, AT_TYP, char_pos, 200, 253, 253},               /* position        */
     {UT_CHAR, AT_TYPVAL, g_AbiColl.gettext(), 240, 253, 253}, /* ability         */
     {UT_PC, AT_VAL, 0, 230, 253, 253},                        /* skill-points    */
     {UT_PC, AT_VAL, 0, 230, 253, 253},                        /* ability-points  */
@@ -289,29 +289,38 @@ int search_block_set(char *arg, const char **list, bool exact)
 
 /* show possible fields */
 #define GET_FIELD_UT(c)                                                                                                                    \
-    (c) == UT_CHAR   ? "Char"                                                                                                              \
-    : (c) == UT_PC   ? "Pc"                                                                                                                \
-    : (c) == UT_NPC  ? "Npc"                                                                                                               \
-    : (c) == UT_OBJ  ? "Obj"                                                                                                               \
-    : (c) == UT_UNIT ? "Unit"                                                                                                              \
-    : (c) == UT_ROOM ? "Room"                                                                                                              \
-                     : "Not Used"
+    (c) == UT_CHAR                                                                                                                         \
+        ? "Char"                                                                                                                           \
+        : (c) == UT_PC ? "Pc"                                                                                                              \
+                       : (c) == UT_NPC ? "Npc" : (c) == UT_OBJ ? "Obj" : (c) == UT_UNIT ? "Unit" : (c) == UT_ROOM ? "Room" : "Not Used"
 
 #define GET_FIELD_AT(c)                                                                                                                    \
-    (c) == AT_VAL      ? "&lt;value&gt;"                                                                                                   \
-    : (c) == AT_BIT    ? "&lt;bitlist&gt;"                                                                                                 \
-    : (c) == AT_TYP    ? "&lt;type&gt;"                                                                                                    \
-    : (c) == AT_STR    ? "&lt;string&gt;"                                                                                                  \
-    : (c) == AT_DES    ? "(enter description)"                                                                                             \
-    : (c) == AT_UNT    ? "&lt;unitpath&gt;"                                                                                                \
-    : (c) == AT_KEYDES ? "&lt;keyword&gt; (enter description)"                                                                             \
-    : (c) == AT_TYPVAL ? "&lt;type&gt; &lt;value&gt;"                                                                                      \
-    : (c) == AT_DIRBIT ? "&lt;direction&gt; &lt;bitlist&gt;"                                                                               \
-    : (c) == AT_TYPDES ? "&lt;type&gt; (enter description)"                                                                                \
-    : (c) == AT_DIRSTR ? "&lt;direction&gt; &lt;string&gt;"                                                                                \
-    : (c) == AT_DIRUNT ? "&lt;direction&gt; &lt;unitpath&gt;"                                                                              \
-    : (c) == AT_DIRDES ? "&lt;direction&gt; (enter description)"                                                                           \
-                       : "Not usable"
+    (c) == AT_VAL                                                                                                                          \
+        ? "&lt;value&gt;"                                                                                                                  \
+        : (c) == AT_BIT                                                                                                                    \
+              ? "&lt;bitlist&gt;"                                                                                                          \
+              : (c) == AT_TYP                                                                                                              \
+                    ? "&lt;type&gt;"                                                                                                       \
+                    : (c) == AT_STR                                                                                                        \
+                          ? "&lt;string&gt;"                                                                                               \
+                          : (c) == AT_DES                                                                                                  \
+                                ? "(enter description)"                                                                                    \
+                                : (c) == AT_UNT                                                                                            \
+                                      ? "&lt;unitpath&gt;"                                                                                 \
+                                      : (c) == AT_KEYDES                                                                                   \
+                                            ? "&lt;keyword&gt; (enter description)"                                                        \
+                                            : (c) == AT_TYPVAL                                                                             \
+                                                  ? "&lt;type&gt; &lt;value&gt;"                                                              \
+                                                  : (c) == AT_DIRBIT                                                                       \
+                                                        ? "&lt;direction&gt; &lt;bitlist&gt;"                                                 \
+                                                        : (c) == AT_TYPDES                                                                 \
+                                                              ? "&lt;type&gt; (enter description)"                                         \
+                                                              : (c) == AT_DIRSTR                                                           \
+                                                                    ? "&lt;direction&gt; &lt;string&gt;"                                      \
+                                                                    : (c) == AT_DIRUNT                                                     \
+                                                                          ? "&lt;direction&gt; &lt;unitpath&gt;"                              \
+                                                                          : (c) == AT_DIRDES ? "&lt;direction&gt; (enter description)"     \
+                                                                                             : "Not usable"
 
 void show_fields(class unit_data *ch)
 {
@@ -323,12 +332,11 @@ void show_fields(class unit_data *ch)
 
     for (i = 0; i < MAX_SET_FIELDS; i++)
     {
-        snprintf(buf,
-                 sizeof(buf),
-                 "<tr><td>%s :</td><td> on %s. :</td><td>%s</td></tr>",
-                 unit_field_names[i],
-                 GET_FIELD_UT(unit_field_data[i].utype),
-                 GET_FIELD_AT(unit_field_data[i].atype));
+        snprintf(buf, sizeof(buf),
+                "<tr><td>%s :</td><td> on %s. :</td><td>%s</td></tr>",
+                unit_field_names[i],
+                GET_FIELD_UT(unit_field_data[i].utype),
+                GET_FIELD_AT(unit_field_data[i].atype));
         s.append(buf);
     }
     s.append("</table>");
@@ -591,13 +599,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         case AT_DIRBIT:
             send_to_char("Arg:&lt;direction&gt; <bitlist><br/>", ch);
             argument = str_next_word(argument, arg);
-            if ((typarg = get_type(arg, g_dirs)) == -1)
+            if ((typarg = get_type(arg, dirs)) == -1)
             {
                 send_to_char("Invalid direction.<br/>", ch);
-                show_structure(g_dirs, ch);
+                show_structure(dirs, ch);
                 return;
             }
-            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", g_dirs[typarg], typarg);
+            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
             send_to_char(buf, ch);
             argument = str_next_word(argument, arg);
             if ((bitarg = get_bit(arg, unit_field_data[type].structure)) == -1)
@@ -613,13 +621,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         case AT_DIRSTR:
             send_to_char("Arg:&lt;direction&gt; <string><br/>", ch);
             argument = str_next_word(argument, arg);
-            if ((typarg = get_type(arg, g_dirs)) == -1)
+            if ((typarg = get_type(arg, dirs)) == -1)
             {
                 send_to_char("Invalid direction.<br/>", ch);
-                show_structure(g_dirs, ch);
+                show_structure(dirs, ch);
                 return;
             }
-            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", g_dirs[typarg], typarg);
+            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
             send_to_char(buf, ch);
             if (str_is_empty(argument))
             {
@@ -632,13 +640,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         case AT_DIRUNT:
             send_to_char("Arg:&lt;direction&gt; <unitpath><br/>", ch);
             argument = str_next_word(argument, arg);
-            if ((typarg = get_type(arg, g_dirs)) == -1)
+            if ((typarg = get_type(arg, dirs)) == -1)
             {
                 send_to_char("Invalid or missing direction.<br/>", ch);
-                show_structure(g_dirs, ch);
+                show_structure(dirs, ch);
                 return;
             }
-            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", g_dirs[typarg], typarg);
+            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
             send_to_char(buf, ch);
             argument = str_next_word(argument, arg);
             if ((untarg = str_to_file_index(arg)) == NULL)
@@ -653,13 +661,13 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
         case AT_DIRDES:
             send_to_char("Arg:&lt;direction&gt; (description)<br/>", ch);
             argument = str_next_word(argument, arg);
-            if ((typarg = get_type(arg, g_dirs)) == -1)
+            if ((typarg = get_type(arg, dirs)) == -1)
             {
                 send_to_char("Invalid or missing direction.<br/>", ch);
-                show_structure(g_dirs, ch);
+                show_structure(dirs, ch);
                 return;
             }
-            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", g_dirs[typarg], typarg);
+            snprintf(buf, sizeof(buf), "Direction found is %s [%d]<br/>", dirs[typarg], typarg);
             send_to_char(buf, ch);
             if (unit_is_edited(unt))
             {

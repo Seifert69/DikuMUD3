@@ -8,13 +8,13 @@
 #ifndef _MUD_COMMON_H
 #define _MUD_COMMON_H
 
-extern struct wpn_info_type g_wpn_info[];
+extern struct wpn_info_type wpn_info[];
 
-extern const char *g_drinks[];
-extern const char *g_dirs[];
-extern const char *g_dirs_short[];
+extern const char *drinks[];
+extern const char *dirs[];
+extern const char *dirs_short[];
 
-extern char g_libdir[64];
+extern char libdir[64];
 
 int required_xp(int level);
 int level_xp(int level);

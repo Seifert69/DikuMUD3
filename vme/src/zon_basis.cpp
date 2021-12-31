@@ -4,7 +4,7 @@
  $Date: 2003/12/28 22:02:45 $
  $Revision: 2.5 $
  */
-#include "external_vars.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -42,22 +42,22 @@
 #define MAIL_NOTE_NAME "letter"
 #define DESTROY_ROOM "destroy_room"
 
-class unit_data *g_void_room = 0;
-class unit_data *g_destroy_room = 0;
+class unit_data *void_room = 0;
+class unit_data *destroy_room = 0;
 class unit_data *heaven_room = 0;
 class unit_data *seq_room = 0;
 class unit_data *time_room = 0;
-class unit_data *g_entry_room = 0;
+class unit_data *entry_room = 0;
 
-class file_index_type *g_letter_fi = 0;
+class file_index_type *letter_fi = 0;
 
 void basis_boot(void)
 {
-    g_void_room = world_room(BASIS_ZONE, VOID_ROOM);
-    assert(g_void_room);
+    void_room = world_room(BASIS_ZONE, VOID_ROOM);
+    assert(void_room);
 
-    g_destroy_room = world_room(BASIS_ZONE, DESTROY_ROOM);
-    assert(g_destroy_room);
+    destroy_room = world_room(BASIS_ZONE, DESTROY_ROOM);
+    assert(destroy_room);
 
     heaven_room = world_room(BASIS_ZONE, PC_DEATHLOC_NAME);
     assert(heaven_room);
@@ -68,14 +68,14 @@ void basis_boot(void)
     time_room = world_room(BASIS_ZONE, PC_TIMEOUTLOC_NAME);
     assert(time_room);
 
-    g_letter_fi = find_file_index(BASIS_ZONE, MAIL_NOTE_NAME);
-    assert(g_letter_fi);
+    letter_fi = find_file_index(BASIS_ZONE, MAIL_NOTE_NAME);
+    assert(letter_fi);
 
-    g_entry_room = world_room(DEFAULT_ENTRY_ZONE, DEFAULT_ENTRY_NAME);
-    if (g_entry_room == NULL)
+    entry_room = world_room(DEFAULT_ENTRY_ZONE, DEFAULT_ENTRY_NAME);
+    if (entry_room == NULL)
     {
         slog(LOG_ALL, 0, "Entry room does not exist, using void.");
-        g_entry_room = g_void_room;
+        entry_room = void_room;
     }
 }
 
@@ -155,6 +155,8 @@ int info_rod(struct spec_arg *sarg)
 
 /* Log stuff below */
 
+extern class log_buffer log_buf[];
+
 int log_object(struct spec_arg *sarg)
 {
     ubit8 *ip;
@@ -204,10 +206,10 @@ int log_object(struct spec_arg *sarg)
 
             if (LOG_OFF < lev && IS_PC(ch) && PC_IMMORTAL(ch))
             {
-                while (!str_is_empty(g_log_buf[*ip].str))
+                while (!str_is_empty(log_buf[*ip].str))
                 {
-                    if (g_log_buf[*ip].level <= lev && g_log_buf[*ip].wizinv_level <= CHAR_LEVEL(ch))
-                        cact("(LOG: $2t)", A_ALWAYS, ch, g_log_buf[*ip].str, cActParameter(), TO_CHAR, "log");
+                    if (log_buf[*ip].level <= lev && log_buf[*ip].wizinv_level <= CHAR_LEVEL(ch))
+                        cact("(LOG: $2t)", A_ALWAYS, ch, log_buf[*ip].str, cActParameter(), TO_CHAR, "log");
                     *ip = ((*ip + 1) % MAXLOG);
                 }
                 return SFR_BLOCK;
@@ -247,11 +249,7 @@ int log_object(struct spec_arg *sarg)
                     act("Current log level is `$2t'.",
                         A_ALWAYS,
                         ch,
-                        c == 'd'   ? "dil"
-                        : c == 'o' ? "off"
-                        : c == 'b' ? "brief"
-                        : c == 'a' ? "all"
-                                   : "extensive",
+                        c == 'd' ? "dil" : c == 'o' ? "off" : c == 'b' ? "brief" : c == 'a' ? "all" : "extensive",
                         cActParameter(),
                         TO_CHAR);
                     return SFR_BLOCK;
@@ -260,10 +258,7 @@ int log_object(struct spec_arg *sarg)
                 act("You will now see the $2t log.",
                     A_ALWAYS,
                     ch,
-                    c == 'd'   ? "dil"
-                    : c == 'b' ? "brief"
-                    : c == 'a' ? "entire"
-                               : "extensive",
+                    c == 'd' ? "dil" : c == 'b' ? "brief" : c == 'a' ? "entire" : "extensive",
                     cActParameter(),
                     TO_CHAR);
                 OBJ_VALUE(sarg->owner, 0) = c;

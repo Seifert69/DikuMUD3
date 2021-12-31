@@ -239,7 +239,7 @@ int test(register const char *str);
 #endif /* PP */
 
 #ifdef MAIN
-char g_typetab[] = {
+char typetab[] = {
     (char)(C_C | C_N), /* EOF         */
     0,
     0,
@@ -382,7 +382,7 @@ char g_typetab[] = {
     (char)(C_M | C_N)  /* __PREV__ token  */
 };
 #else
-extern char g_typetab[];
+extern char typetab[];
 #endif /* MAIN */
 
 #define EQUAL 0 /* Value returned by strcmp if equal	*/
@@ -430,8 +430,8 @@ extern char g_typetab[];
  *	Pushback buffer
  */
 
-EXTERN struct pbbuf *g_Pbbufp I_ZERO;
-EXTERN struct pbbuf *g_Pbbuf I_ZERO;
+EXTERN struct pbbuf *Pbbufp I_ZERO;
+EXTERN struct pbbuf *Pbbuf I_ZERO;
 
 struct pbbuf
 {
@@ -446,12 +446,12 @@ struct pbbuf
     } pb_val;
 };
 
-EXTERN FILE *g_Output I_ZERO;     /* Output file				*/
-EXTERN char *g_sOutput I_ZERO;    /* Output file			*/
-EXTERN int g_sOutput_len I_ZERO;  /* Output file			*/
-EXTERN int g_sOutput_mlen I_ZERO; /* Output file			*/
-EXTERN int g_pponly I_ZERO;       /* Output file			*/
-EXTERN int g_iInit I_ZERO;
+EXTERN FILE *Output I_ZERO;     /* Output file				*/
+EXTERN char *sOutput I_ZERO;    /* Output file			*/
+EXTERN int sOutput_len I_ZERO;  /* Output file			*/
+EXTERN int sOutput_mlen I_ZERO; /* Output file			*/
+EXTERN int pponly I_ZERO;       /* Output file			*/
+EXTERN int iInit I_ZERO;
 struct file
 {
     int f_line;                    /* Line number				*/
@@ -472,23 +472,23 @@ struct file
  *	Define static vars that are a bit more efficient to access.
  */
 
-EXTERN int g_Bufc I_ZERO;    /* Current file char count		*/
-EXTERN char *g_Bufp I_ZERO;  /* Current file char ptr 		*/
-EXTERN int g_Lasteol I_ZERO; /* True if last char processed was EOL	*/
-EXTERN int g_LLine I_ZERO;   /* Last line number			*/
-EXTERN int (*g_Nextch)();    /* Next char function           */
-#define nextch (*Nextch)     /* Macro to rd chars via g_Nextch	*/
+EXTERN int Bufc I_ZERO;    /* Current file char count		*/
+EXTERN char *Bufp I_ZERO;  /* Current file char ptr 		*/
+EXTERN int Lasteol I_ZERO; /* True if last char processed was EOL	*/
+EXTERN int LLine I_ZERO;   /* Last line number			*/
+EXTERN int (*Nextch)();    /* Next char function           */
+#define nextch (*Nextch)   /* Macro to rd chars via Nextch	*/
 
-EXTERN struct file *g_Filestack[FILESTACKSIZE + 1] I_BRZERO;
-EXTERN int g_Filelevel I_ZERO; /* Include level	*/
-EXTERN int g_Do_name I_ZERO;   /* True to put name on #line	*/
+EXTERN struct file *Filestack[FILESTACKSIZE + 1] I_BRZERO;
+EXTERN int Filelevel I_ZERO; /* Include level	*/
+EXTERN int Do_name I_ZERO;   /* True to put name on #line	*/
 
-EXTERN char g_Outfile[FILENAMESIZE + 1] I_BRZERO;
-EXTERN char g_Token[TOKENSIZE + 1] I_BRZERO; /* Token buffer	*/
-EXTERN unsigned int g_Tokenline I_ZERO;      /* Line # token began	*/
-EXTERN unsigned int g_Tokenfile I_ZERO;      /* File # token began	*/
-EXTERN int g_Lastnl I_ZERO;                  /* Last token processed was \n	*/
-EXTERN int g_inquote I_ZERO;
+EXTERN char Outfile[FILENAMESIZE + 1] I_BRZERO;
+EXTERN char Token[TOKENSIZE + 1] I_BRZERO; /* Token buffer	*/
+EXTERN unsigned int Tokenline I_ZERO;      /* Line # token began	*/
+EXTERN unsigned int Tokenfile I_ZERO;      /* File # token began	*/
+EXTERN int Lastnl I_ZERO;                  /* Last token processed was \n	*/
+EXTERN int inquote I_ZERO;
 /*
  *	Macro proto pointers.
  */
@@ -536,7 +536,7 @@ struct ppdir
  */
 
 #ifdef MAIN /* If in main() module			*/
-struct ppdir g_pptab[] = {
+struct ppdir pptab[] = {
 /*	 Directive	Do within	Procedure	Arg to	  */
 /*	   name		FALSE #ifxx	name		function  */
 /* --------------	-----------	----------	--------  */
@@ -561,7 +561,7 @@ struct ppdir g_pptab[] = {
     {NULL} /* The end */
 };
 
-struct ppdir g_pragtab[] = {
+struct ppdir pragtab[] = {
     /*	 Keyword	Do within	Procedure	Arg to	  */
     /*	   name		FALSE #ifxx	name		function  */
     /* ------------------	-----------	----------	--------  */
@@ -587,22 +587,22 @@ struct ppdir g_pragtab[] = {
 };
 
 #else  /* !MAIN */
-extern struct ppdir g_pptab[];
-extern struct ppdir g_pragtab[];
+extern struct ppdir pptab[];
+extern struct ppdir pragtab[];
 #endif /* MAIN */
 
-EXTERN int g_A_astring I_ZERO;    /* TRUE/args in strings	*/
-EXTERN int g_A_c99 I_ZERO;        /* TRUE/configure for C99       */
-EXTERN int g_A_outstr I_ZERO;     /* output is sOutput	*/
-EXTERN int g_A_crecurse I_ZERO;   /* TRUE/comments nest	*/
-EXTERN int g_A_eolcomment I_ZERO; /* TRUE/eol comments OK	*/
-EXTERN int g_A_rescan I_ZERO;     /* TRUE/direct. from macro's	*/
-EXTERN int g_A_stack I_ZERO;      /* TRUE/macro def's stack	*/
-EXTERN int g_A_trigraph I_ZERO;   /* TRUE/trigraphs active*/
+EXTERN int A_astring I_ZERO;    /* TRUE/args in strings	*/
+EXTERN int A_c99 I_ZERO;        /* TRUE/configure for C99       */
+EXTERN int A_outstr I_ZERO;     /* output is sOutput	*/
+EXTERN int A_crecurse I_ZERO;   /* TRUE/comments nest	*/
+EXTERN int A_eolcomment I_ZERO; /* TRUE/eol comments OK	*/
+EXTERN int A_rescan I_ZERO;     /* TRUE/direct. from macro's	*/
+EXTERN int A_stack I_ZERO;      /* TRUE/macro def's stack	*/
+EXTERN int A_trigraph I_ZERO;   /* TRUE/trigraphs active*/
 
-EXTERN struct symtab *g_Macros[NUMBUCKETS] I_BRZERO; /* Ptr/macro chains*/
-EXTERN int g_Nsyms I_ZERO;                           /* Number of symbols in table	*/
-EXTERN int g_Maxsyms I_ZERO;                         /* Max number of symbols used	*/
+EXTERN struct symtab *Macros[NUMBUCKETS] I_BRZERO; /* Ptr/macro chains*/
+EXTERN int Nsyms I_ZERO;                           /* Number of symbols in table	*/
+EXTERN int Maxsyms I_ZERO;                         /* Max number of symbols used	*/
 
 #define NO_PARAMS (struct param *)NULL /* For sbind of 0 params*/
 
@@ -613,49 +613,49 @@ struct ifstk
 };
 
 #ifdef MAIN
-struct ifstk g_Ifstack[IFSTACKSIZE + 1] = {{0}};
+struct ifstk Ifstack[IFSTACKSIZE + 1] = {{0}};
 #else             /* !MAIN */
-extern struct ifstk g_Ifstack[IFSTACKSIZE + 1];
+extern struct ifstk Ifstack[IFSTACKSIZE + 1];
 #endif            /* MAIN */
 #define IFTRUE 0  /* True - include code within #ifxx	*/
 #define IFFALSE 1 /* False - no code within #ifxx		*/
 #define IFNEVER 2 /* Treat as false forever after		*/
 
-EXTERN int g_Iflevel I_ZERO; /* Index into g_Ifstack		*/
-EXTERN int g_Ifstate I_ZERO; /* Current state of #if		*/
+EXTERN int Iflevel I_ZERO; /* Index into Ifstack		*/
+EXTERN int Ifstate I_ZERO; /* Current state of #if		*/
 
 #if PPDEBUG
 EXTERN int PPDEBUG I_ZERO; /* -z flag			*/
 #endif                     /* PPDEBUG */
 
-EXTERN int g_Lineopt; /* True if producing #line directives	*/
-#define LINE_EXP 1    /* If to expand to #line directives	*/
-#define LINE_ABR 2    /* If to abbreviate to # n "file"	*/
+EXTERN int Lineopt; /* True if producing #line directives	*/
+#define LINE_EXP 1  /* If to expand to #line directives	*/
+#define LINE_ABR 2  /* If to abbreviate to # n "file"	*/
 
-EXTERN int g_Outline I_ZERO; /* Line # of current output file*/
-EXTERN int g_Errors I_ZERO;  /* Total errors detected	*/
-EXTERN int g_Eflag I_ZERO;   /* True if to ignore errors	*/
+EXTERN int Outline I_ZERO; /* Line # of current output file*/
+EXTERN int Errors I_ZERO;  /* Total errors detected	*/
+EXTERN int Eflag I_ZERO;   /* True if to ignore errors	*/
 #if PPDEBUG
-EXTERN int g_Stats I_ZERO;           /* True to print stats at end	*/
-#endif                               /* PPDEBUG */
-EXTERN char g_Date[12] I_BRZERO;     /* Date str for __DATE__*/
-EXTERN char g_Time[9] I_BRZERO;      /* Time str for __TIME__*/
-EXTERN unsigned int g_Unique I_ZERO; /* g_Unique # for __NOW__/__NEXT__*/
-EXTERN int g_Verbose I_ZERO;         /* True to print g_verbose mess	*/
+EXTERN int Stats I_ZERO;           /* True to print stats at end	*/
+#endif                             /* PPDEBUG */
+EXTERN char Date[12] I_BRZERO;     /* Date str for __DATE__*/
+EXTERN char _Time[9] I_BRZERO;     /* Time str for __TIME__*/
+EXTERN unsigned int Unique I_ZERO; /* Unique # for __NOW__/__NEXT__*/
+EXTERN int Verbose I_ZERO;         /* True to print verbose mess	*/
 #if (TARGET == T_QC) OR(TARGET == T_QCX) OR(TARGET == T_TCX)
-EXTERN int g_Do_asm I_ZERO;    /* True if in asm/endasm body	*/
-EXTERN int g_Macexpand I_ZERO; /* True/macro expand on	*/
-EXTERN int g_Asmexpand I_ZERO; /* Set g_Macexpand in asm	*/
-#endif                         /* (TARGET == T_QC) OR (TARGET == T_QCX) OR (TARGET == T_TCX) */
+EXTERN int Do_asm I_ZERO;    /* True if in asm/endasm body	*/
+EXTERN int Macexpand I_ZERO; /* True/macro expand on	*/
+EXTERN int Asmexpand I_ZERO; /* Set Macexpand in asm	*/
+#endif                       /* (TARGET == T_QC) OR (TARGET == T_QCX) OR (TARGET == T_TCX) */
 
-#define NIPATHS 10                          /* Up to 10 -i pathnames		*/
-EXTERN char *g_Ipath[NIPATHS + 1] I_BRZERO; /* -i path list	*/
-EXTERN int g_Ipcnt I_ZERO;                  /* Count of -i parameters	*/
+#define NIPATHS 10                        /* Up to 10 -i pathnames		*/
+EXTERN char *Ipath[NIPATHS + 1] I_BRZERO; /* -i path list	*/
+EXTERN int Ipcnt I_ZERO;                  /* Count of -i parameters	*/
 
 #if HOST == H_CPM
-EXTERN int g_Orig_user I_ZERO; /* Original user	*/
-EXTERN int g_Orig_disk I_ZERO; /* Original disk	*/
-#endif                         /* HOST == H_CPM */
+EXTERN int Orig_user I_ZERO; /* Original user	*/
+EXTERN int Orig_disk I_ZERO; /* Original disk	*/
+#endif                       /* HOST == H_CPM */
 
 /*
  *	End of pp.h

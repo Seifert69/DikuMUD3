@@ -186,7 +186,7 @@ void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ub
 
     len = strlen(text) + 1;
 
-    txlen = std::min(static_cast<ubit16>(MAX_TEXT_LEN), len);
+    txlen = MIN(MAX_TEXT_LEN, len);
 
     if (txlen < len)
     {
@@ -202,7 +202,7 @@ void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ub
         }
 
         if (txlen == 0)
-            txlen = std::min(static_cast<ubit16>(MAX_TEXT_LEN), len);
+            txlen = MIN(MAX_TEXT_LEN, len);
     }
 
     assert(txlen > 0);

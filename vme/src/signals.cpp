@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <signal.h>
 #include <sys/time.h>
-#include "external_vars.h"
+
 #include "structs.h"
 #include "utils.h"
 #include "utility.h"
@@ -19,6 +19,8 @@
 #include "textutil.h"
 #include "comm.h"
 
+extern int mud_shutdown;
+
 void other_signal(int signal_no)
 {
     slog(LOG_ALL, 0, "RECEIVED SIGNAL %d.", signal_no);
@@ -26,19 +28,22 @@ void other_signal(int signal_no)
 
 void checkpointing(int signal_no)
 {
+    extern int tics;
     static int last_tick = 0;
 
-    if (g_player_convert)
+    extern int player_convert;
+
+    if (player_convert)
         return;
 
-    if (last_tick != 0 && g_tics == last_tick)
+    if (last_tick != 0 && tics == last_tick)
     {
         slog(LOG_ALL, 0, "CHECKPOINT shutdown: tics not updated");
         assert(FALSE);
     }
 
-    assert(g_tics != 0);
-    last_tick = g_tics;
+    assert(tics != 0);
+    last_tick = tics;
 
 #ifdef POSIX
     /* Default is usually a one_shot */
@@ -49,7 +54,7 @@ void checkpointing(int signal_no)
 void shutdown_request(int signal_no)
 {
     slog(LOG_ALL, 0, "Received USR2 - shutdown request");
-    g_mud_shutdown = 1;
+    mud_shutdown = 1;
 }
 
 void message_request(int signal_no)
@@ -83,7 +88,7 @@ void hupsig(int signal)
          "Received signal #%d (SIGHUP, SIGINT, or SIGTERM). "
          "Shutting down",
          signal);
-    g_mud_shutdown = 1;
+    mud_shutdown = 1;
     //  exit (0);			/* something more elegant should perhaps be substituted */
 }
 

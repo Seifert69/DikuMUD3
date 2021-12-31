@@ -11,7 +11,7 @@
 
 #define DIR_CMD 1
 
-extern const char *g_pc_races[PC_RACE_MAX + 1];
+extern const char *pc_races[PC_RACE_MAX + 1];
 struct cmdload_struct
 {
     const char *cmd_str;

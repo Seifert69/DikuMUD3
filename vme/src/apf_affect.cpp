@@ -314,7 +314,7 @@ ubit1 apf_natural_armour(class unit_affected_type *af, class unit_data *unit, ub
                 break;
             }
 
-        CHAR_NATURAL_ARMOUR(unit) = std::max(static_cast<int>(CHAR_NATURAL_ARMOUR(unit)), af->data[0]);
+        CHAR_NATURAL_ARMOUR(unit) = MAX(CHAR_NATURAL_ARMOUR(unit), af->data[0]);
     }
     else
     {
@@ -360,13 +360,13 @@ ubit1 apf_speed(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 
 /* --------------------------------------------------------------------- */
 
-struct apply_function_type g_apf[] = {{"Ability Adjustment", apf_ability_adj},
-                                      {"Spell skill adjustment", apf_spell_adj},
-                                      {"Modify bright/light", apf_light},
-                                      {"Modify CHAR_FLAGS()", apf_mod_char_flags},
-                                      {"Modify UNIT_FLAGS()", apf_mod_unit_flags},
-                                      {"Modify OBJ_FLAGS()", apf_mod_obj_flags},
-                                      {"Skill adjustment", apf_skill_adj},
-                                      {"Weapon adjustment", apf_weapon_adj},
-                                      {"Natural Armour Modification", apf_natural_armour},
-                                      {"Speed Adjustment", apf_speed}};
+struct apply_function_type apf[] = {{"Ability Adjustment", apf_ability_adj},
+                                    {"Spell skill adjustment", apf_spell_adj},
+                                    {"Modify bright/light", apf_light},
+                                    {"Modify CHAR_FLAGS()", apf_mod_char_flags},
+                                    {"Modify UNIT_FLAGS()", apf_mod_unit_flags},
+                                    {"Modify OBJ_FLAGS()", apf_mod_obj_flags},
+                                    {"Skill adjustment", apf_skill_adj},
+                                    {"Weapon adjustment", apf_weapon_adj},
+                                    {"Natural Armour Modification", apf_natural_armour},
+                                    {"Speed Adjustment", apf_speed}};

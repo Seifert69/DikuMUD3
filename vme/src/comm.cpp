@@ -4,7 +4,7 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.5 $
  */
-#include "external_vars.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -23,6 +23,9 @@
 #include "hookmud.h"
 #include "constants.h"
 #include "config.h"
+
+/* external vars */
+extern class descriptor_data *descriptor_list;
 
 cActParameter::cActParameter()
 {
@@ -197,7 +200,7 @@ void send_to_all(const char *messg)
     class descriptor_data *i;
 
     if (messg && *messg)
-        for (i = g_descriptor_list; i; i = i->next)
+        for (i = descriptor_list; i; i = i->next)
             if (descriptor_is_playing(i))
                 send_to_descriptor(messg, i);
 }
@@ -207,7 +210,7 @@ void send_to_zone_outdoor(const class zone_type *z, const char *messg)
     class descriptor_data *i;
 
     if (messg && *messg)
-        for (i = g_descriptor_list; i; i = i->next)
+        for (i = descriptor_list; i; i = i->next)
             if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->character) && unit_zone(i->character) == z && CHAR_AWAKE(i->character) &&
                 !IS_SET(UNIT_FLAGS(UNIT_IN(i->character)), UNIT_FL_NO_WEATHER) &&
                 !IS_SET(UNIT_FLAGS(unit_room(i->character)), UNIT_FL_NO_WEATHER))
@@ -219,7 +222,7 @@ void send_to_outdoor(const char *messg)
     class descriptor_data *i;
 
     if (messg && *messg)
-        for (i = g_descriptor_list; i; i = i->next)
+        for (i = descriptor_list; i; i = i->next)
             if (descriptor_is_playing(i) && UNIT_IS_OUTSIDE(i->character) && CHAR_AWAKE(i->character) &&
                 !IS_SET(UNIT_FLAGS(UNIT_IN(i->character)), UNIT_FL_NO_WEATHER) &&
                 !IS_SET(UNIT_FLAGS(unit_room(i->character)), UNIT_FL_NO_WEATHER))
@@ -348,7 +351,7 @@ void act_generate(char *buf,
                         if (sub->m_u != NULL)
                         {
                             if (IS_CHAR(sub->m_u))
-                                i = g_char_pos[CHAR_POS(sub->m_u)];
+                                i = char_pos[CHAR_POS(sub->m_u)];
                             else
                                 i = "lying";
                         }

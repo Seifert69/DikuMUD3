@@ -14,7 +14,7 @@ struct skill_interval
     const char *descr;
 };
 
-extern const char *g_professions[PROFESSION_MAX + 1];
+extern const char *professions[PROFESSION_MAX + 1];
 
 class skill_collection
 {
@@ -169,12 +169,12 @@ int av_howmuch(int av);
 int av_makes(int av);
 void check_fitting(class unit_data *u);
 
-extern struct race_info_type g_race_info[PC_RACE_MAX];
-extern const char *g_pc_races[PC_RACE_MAX + 1];
-extern const char *g_pc_race_adverbs[PC_RACE_MAX + 1];
+extern struct race_info_type race_info[PC_RACE_MAX];
+extern const char *pc_races[PC_RACE_MAX + 1];
+extern const char *pc_race_adverbs[PC_RACE_MAX + 1];
 
-extern struct damage_chart_type g_weapon_chart[WPN_TREE_MAX];
-extern struct damage_chart_type g_spell_chart[SPL_TREE_MAX];
+extern struct damage_chart_type weapon_chart[WPN_TREE_MAX];
+extern struct damage_chart_type spell_chart[SPL_TREE_MAX];
 /*
 extern struct profession_cost spell_prof_table[SPL_TREE_MAX + 1];
 extern struct profession_cost skill_prof_table[SKI_TREE_MAX + 1];
@@ -196,7 +196,7 @@ extern const char *spl_text[SPL_TREE_MAX + 1];
 extern const char *ski_text[SKI_TREE_MAX + 1];
 extern const char *abil_text[ABIL_TREE_MAX + 1];
 */
-extern int g_hit_location_table[];
+extern int hit_location_table[];
 
 extern class skill_collection g_AbiColl;
 extern class skill_collection g_WpnColl;

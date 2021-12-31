@@ -8,8 +8,6 @@
 #ifndef _MUD_AFFECT_H
 #define _MUD_AFFECT_H
 
-#include "essential.h"
-
 void apply_affect(class unit_data *unit);
 void start_affect(class unit_data *unit);
 void stop_affect(class unit_data *unit);
@@ -18,7 +16,6 @@ class unit_affected_type *affected_by_spell(const class unit_data *unit, sbit16 
 void create_affect(class unit_data *unit, class unit_affected_type *orgaf);
 void destroy_affect(class unit_affected_type *af);
 void affect_clear_unit(class unit_data *unit);
-void affect_beat(void *, void *);
 
 /* These functions may not send messages - nor destroy units. Only */
 /* affect a units values                                           */

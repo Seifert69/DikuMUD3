@@ -4,7 +4,7 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.9 $
  */
-#include "external_vars.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -26,6 +26,9 @@
 #include "main.h"
 #include "dilrun.h"
 
+extern class unit_data *unit_list;
+extern class unit_data *combat_list;
+extern class descriptor_data *descriptor_list;
 /* External procedures */
 
 void stop_special(class unit_data *u, class unit_fptr *fptr);
@@ -34,7 +37,7 @@ class descriptor_data *unit_is_edited(class unit_data *u)
 {
     class descriptor_data *d;
 
-    for (d = g_descriptor_list; d; d = d->next)
+    for (d = descriptor_list; d; d = d->next)
         if (d->editing == u)
             return d;
 
@@ -44,21 +47,21 @@ class descriptor_data *unit_is_edited(class unit_data *u)
 /* By using this, we can easily sort the list if ever needed */
 void insert_in_unit_list(class unit_data *u)
 {
-    assert(u->gnext == NULL && u->gprevious == NULL && g_unit_list != u);
+    assert(u->gnext == NULL && u->gprevious == NULL && unit_list != u);
 
     if (UNIT_FILE_INDEX(u))
         UNIT_FILE_INDEX(u)->fi_unit_list.push_front(u);
 
     class unit_data *tmp_u;
 
-    if (!g_unit_list)
+    if (!unit_list)
     {
         u->gnext = NULL;
         u->gprevious = NULL;
-        g_unit_list = u;
-        g_npc_head = u;
-        g_room_head = u;
-        g_obj_head = u;
+        unit_list = u;
+        npc_head = u;
+        room_head = u;
+        obj_head = u;
         return;
     }
 
@@ -66,25 +69,25 @@ void insert_in_unit_list(class unit_data *u)
     {
         case UNIT_ST_PC:
         {
-            tmp_u = g_unit_list;
+            tmp_u = unit_list;
             u->gnext = tmp_u;
             u->gprevious = tmp_u->gprevious;
             tmp_u->gprevious = u;
 
-            if (tmp_u == g_unit_list)
-                g_unit_list = u;
+            if (tmp_u == unit_list)
+                unit_list = u;
             break;
         }
         case UNIT_ST_NPC:
         {
-            if (UNIT_TYPE(g_npc_head) != UNIT_ST_NPC)
+            if (UNIT_TYPE(npc_head) != UNIT_ST_NPC)
             {
-                tmp_u = g_unit_list;
+                tmp_u = unit_list;
                 for (; tmp_u && IS_PC(tmp_u); tmp_u = tmp_u->gnext)
                     ;
             }
             else
-                tmp_u = g_npc_head;
+                tmp_u = npc_head;
 
             u->gnext = tmp_u;
             u->gprevious = tmp_u->gprevious;
@@ -92,21 +95,21 @@ void insert_in_unit_list(class unit_data *u)
                 tmp_u->gprevious->gnext = u;
             tmp_u->gprevious = u;
 
-            if (tmp_u == g_unit_list)
-                g_unit_list = u;
-            g_npc_head = u;
+            if (tmp_u == unit_list)
+                unit_list = u;
+            npc_head = u;
             break;
         }
         case UNIT_ST_OBJ:
         {
-            if (UNIT_TYPE(g_obj_head) != UNIT_ST_OBJ)
+            if (UNIT_TYPE(obj_head) != UNIT_ST_OBJ)
             {
-                tmp_u = g_unit_list;
+                tmp_u = unit_list;
                 for (; tmp_u && IS_CHAR(tmp_u); tmp_u = tmp_u->gnext)
                     ;
             }
             else
-                tmp_u = g_obj_head;
+                tmp_u = obj_head;
 
             u->gnext = tmp_u;
             u->gprevious = tmp_u->gprevious;
@@ -114,21 +117,21 @@ void insert_in_unit_list(class unit_data *u)
                 tmp_u->gprevious->gnext = u;
             tmp_u->gprevious = u;
 
-            if (tmp_u == g_unit_list)
-                g_unit_list = u;
-            g_obj_head = u;
+            if (tmp_u == unit_list)
+                unit_list = u;
+            obj_head = u;
             break;
         }
         case UNIT_ST_ROOM:
         {
-            if (UNIT_TYPE(g_room_head) != UNIT_ST_ROOM)
+            if (UNIT_TYPE(room_head) != UNIT_ST_ROOM)
             {
-                tmp_u = g_unit_list;
+                tmp_u = unit_list;
                 for (; tmp_u && (IS_CHAR(tmp_u) || IS_OBJ(tmp_u)); tmp_u = tmp_u->gnext)
                     ;
             }
             else
-                tmp_u = g_room_head;
+                tmp_u = room_head;
 
             u->gnext = tmp_u;
             u->gprevious = tmp_u->gprevious;
@@ -136,30 +139,30 @@ void insert_in_unit_list(class unit_data *u)
                 tmp_u->gprevious->gnext = u;
             tmp_u->gprevious = u;
 
-            if (tmp_u == g_unit_list)
-                g_unit_list = u;
-            g_room_head = u;
+            if (tmp_u == unit_list)
+                unit_list = u;
+            room_head = u;
             break;
         }
     }
 }
 
-/* Remove a unit from the g_unit_list */
+/* Remove a unit from the unit_list */
 void remove_from_unit_list(class unit_data *unit)
 {
-    assert(unit->gprevious || unit->gnext || (g_unit_list == unit));
+    assert(unit->gprevious || unit->gnext || (unit_list == unit));
 
     if (UNIT_FILE_INDEX(unit))
         UNIT_FILE_INDEX(unit)->fi_unit_list.remove(unit);
 
-    if (g_npc_head == unit)
-        g_npc_head = unit->gnext;
-    if (g_obj_head == unit)
-        g_obj_head = unit->gnext;
-    if (g_room_head == unit)
-        g_room_head = unit->gnext;
-    if (g_unit_list == unit)
-        g_unit_list = unit->gnext;
+    if (npc_head == unit)
+        npc_head = unit->gnext;
+    if (obj_head == unit)
+        obj_head = unit->gnext;
+    if (room_head == unit)
+        room_head = unit->gnext;
+    if (unit_list == unit)
+        unit_list = unit->gnext;
     else /* Then this is always true 'if (unit->gprevious)'  */
         unit->gprevious->gnext = unit->gnext;
 
@@ -261,6 +264,9 @@ void destroy_fptr(class unit_data *u, class unit_fptr *f)
     class unit_fptr *tf;
     struct spec_arg sarg;
 
+    extern struct unit_function_array_type unit_function_array[];
+    extern struct command_info cmd_auto_extract;
+
     void register_destruct(int i, void *ptr);
     void add_func_history(class unit_data * u, ubit16, ubit16);
 
@@ -282,11 +288,11 @@ void destroy_fptr(class unit_data *u, class unit_fptr *f)
     sarg.target = NULL;
     sarg.pInt = NULL;
     sarg.fptr = f;
-    sarg.cmd = &g_cmd_auto_extract;
+    sarg.cmd = &cmd_auto_extract;
     sarg.arg = "";
     sarg.mflags = ((ubit16)0);
 
-    (*(g_unit_function_array[f->index].func))(&sarg);
+    (*(unit_function_array[f->index].func))(&sarg);
 
     /* Data is free'ed in destruct() if it is not NULL now */
 
@@ -318,6 +324,8 @@ void stop_following(class unit_data *ch)
 {
     struct char_follow_type *j, *k;
 
+    extern struct command_info *cmd_follow;
+
     assert(CHAR_MASTER(ch));
 
     if (CHAR_FOLLOWERS(CHAR_MASTER(ch))->follower == ch) /* Head of list? */
@@ -337,13 +345,15 @@ void stop_following(class unit_data *ch)
 
     CHAR_MASTER(ch) = 0;
 
-    send_done(ch, NULL, NULL, 0, g_cmd_follow, "");
+    send_done(ch, NULL, NULL, 0, cmd_follow, "");
 }
 
 /* Set 'ch' to follow leader. Circles allowed. */
 void start_following(class unit_data *ch, class unit_data *leader)
 {
     struct char_follow_type *k;
+
+    extern struct command_info *cmd_follow;
 
     assert(!leader->is_destructed());
     assert(!ch->is_destructed());
@@ -357,7 +367,7 @@ void start_following(class unit_data *ch, class unit_data *leader)
     k->next = CHAR_FOLLOWERS(leader);
     CHAR_FOLLOWERS(leader) = k;
 
-    send_done(ch, NULL, leader, 0, g_cmd_follow, "");
+    send_done(ch, NULL, leader, 0, cmd_follow, "");
 }
 
 /* Called by extract_unit when a character that follows/is followed dies */
@@ -896,7 +906,7 @@ void stop_snoopwrite(unit_data *unit)
 
         /* If the PC which is switched is extracted, then unswitch */
         if (IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
-            for (d = g_descriptor_list; d; d = d->next)
+            for (d = descriptor_list; d; d = d->next)
                 if (d->original == unit)
                 {
                     unswitchbody(d->character);
@@ -912,6 +922,8 @@ void stop_snoopwrite(unit_data *unit)
 /* Extracts recursively                              */
 void extract_unit(class unit_data *unit)
 {
+    extern class unit_data *destroy_room;
+
     void register_destruct(int i, void *ptr);
     void nanny_menu(class descriptor_data * d, char *arg);
     void stop_all_special(class unit_data * u);
@@ -972,7 +984,7 @@ void extract_unit(class unit_data *unit)
       if (UNIT_IN(unit))
          unit_from_unit(unit);
 
-      unit_to_unit(unit, g_destroy_room);
+      unit_to_unit(unit, destroy_room);
 
       // Otherwise find_unit will find it AFTER it has been extracted!!
       remove_from_unit_list(unit);
@@ -983,7 +995,7 @@ void extract_unit(class unit_data *unit)
 
     if (!IS_PC(unit))
     {
-        unit_to_unit(unit, g_destroy_room); // Apparently dont place PCs in the destroy room
+        unit_to_unit(unit, destroy_room); // Apparently dont place PCs in the destroy room
 
         // Otherwise find_unit will find it AFTER it has been extracted!!
         // Players are already removed from the list in gstate_tomenu()

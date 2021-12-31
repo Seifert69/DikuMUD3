@@ -4,7 +4,7 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.7 $
  */
-#include "external_vars.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -289,6 +289,7 @@ int shall_exclude(const char *name)
 class unit_data *convert_load_player(char *name)
 {
     class unit_data *ch;
+    extern class unit_data *destroy_room;
 
     if (!player_exists(name))
     {
@@ -305,7 +306,7 @@ class unit_data *convert_load_player(char *name)
     }
 
     insert_in_unit_list(ch);
-    unit_to_unit(ch, g_destroy_room);
+    unit_to_unit(ch, destroy_room);
 
     if (shall_exclude(name))
     {
@@ -730,6 +731,8 @@ void cleanup(void)
 
 void cleanup_playerfile(int c)
 {
+    extern class unit_data *entry_room;
+    extern class unit_data *destroy_room;
     int read_player_id(void);
 
     top_id = read_player_id();
@@ -737,8 +740,8 @@ void cleanup_playerfile(int c)
 
     memset(ids, 0, top_id);
 
-    g_entry_room = new EMPLACE(room_data) room_data;
-    g_destroy_room = new EMPLACE(room_data) room_data;
+    entry_room = new EMPLACE(room_data) room_data;
+    destroy_room = new EMPLACE(room_data) room_data;
     if (c == 1)
         convert_file();
     else if (c == 2)

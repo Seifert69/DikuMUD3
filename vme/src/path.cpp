@@ -4,7 +4,7 @@
  $Date: 2003/11/29 03:31:16 $
  $Revision: 2.8 $
  */
-#include "external_vars.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -29,14 +29,17 @@
 #include "path.h"
 
 void signal_reset(void);
+extern cSector sector_dat;
 void create_sc_graph(int num_of_sc);
 void *create_sc_dijkstra(void *thread);
 pthread_mutex_t dijkstra_queue_mutex;
 std::list<unit_data *> dijkstra_queue;
-pthread_t g_dijkstra_thread;
+pthread_t dijkstra_thread;
 
-std::vector<graph_t> g_sc_graphs;
-std::vector<std::vector<unit_data *>> g_sc_room_ptr;
+extern unit_data *room_head;
+
+std::vector<graph_t> sc_graphs;
+std::vector<std::vector<unit_data *>> sc_room_ptr;
 
 void create_worldgraph()
 {
@@ -46,13 +49,13 @@ void create_worldgraph()
     vertex_descriptor vd;
     unit_data *u, *uu;
     int i;
-    for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
+    for (u = room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
     {
         vd = add_vertex(WorldGraph);
         ROOM_NUM(u) = vd;
     }
 
-    for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
+    for (u = room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
     {
         for (i = 0; i <= MAX_EXIT; i++)
             if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->to_room)
@@ -78,7 +81,7 @@ void create_worldgraph()
     std::vector<vertex_descriptor> sc_num(i);
     slog(LOG_ALL, 0, "Total Number of SC - %d", i);
     slog(LOG_ALL, 0, "Completed Strong Connected Components");
-    for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
+    for (u = room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
     {
         ROOM_SC(u) = sc[ROOM_NUM(u)];
         //			slog (LOG_ALL, 0, "%d - %d - %s@%s", ROOM_SC (u), ROOM_NUM (u),
@@ -89,7 +92,7 @@ void create_worldgraph()
     create_sc_graph(i);
     pthread_mutex_init(&dijkstra_queue_mutex, NULL);
     slog(LOG_ALL, 0, "Create Shortest Path VME thread");
-    pthread_create(&g_dijkstra_thread, NULL, create_sc_dijkstra, (void *)NULL);
+    pthread_create(&dijkstra_thread, NULL, create_sc_dijkstra, (void *)NULL);
 }
 
 void cleanup_sc_dijkstra(void *t)
@@ -105,7 +108,9 @@ void *create_sc_dijkstra(void *thread)
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
     pthread_cleanup_push(cleanup_sc_dijkstra, NULL);
 
-    while (!g_mud_shutdown)
+    extern int mud_shutdown;
+
+    while (!mud_shutdown)
     {
         while (dijkstra_queue.size() > 0)
         {
@@ -116,10 +121,10 @@ void *create_sc_dijkstra(void *thread)
             //					slog (LOG_ALL, 0, "Creating Dijkstra for room %s@%s",
             //								UNIT_FI_NAME (u), UNIT_FI_ZONENAME (u));
 
-            ROOM_PATH(u).resize(num_vertices(g_sc_graphs[ROOM_SC(u)]));
-            ROOM_DISTANCE(u).resize(num_vertices(g_sc_graphs[ROOM_SC(u)]));
+            ROOM_PATH(u).resize(num_vertices(sc_graphs[ROOM_SC(u)]));
+            ROOM_DISTANCE(u).resize(num_vertices(sc_graphs[ROOM_SC(u)]));
 
-            dijkstra_shortest_paths(g_sc_graphs[ROOM_SC(u)],
+            dijkstra_shortest_paths(sc_graphs[ROOM_SC(u)],
                                     ROOM_NUM(u),
                                     boost::predecessor_map(&ROOM_PATH(u)[0]).distance_map(&ROOM_DISTANCE(u)[0]));
             ROOM_WAITD(u) = FALSE;
@@ -150,20 +155,20 @@ void create_sc_graph(int num_of_sc)
     //	slog (LOG_ALL, 0, "Number of SC to create %d", num_of_sc);
     for (sc = 0; sc < num_of_sc; sc++)
     {
-        g_sc_graphs.push_back(base_g);
-        g_sc_room_ptr.push_back(rmptr);
+        sc_graphs.push_back(base_g);
+        sc_room_ptr.push_back(rmptr);
 
-        for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
+        for (u = room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
             if (ROOM_SC(u) == sc)
             {
-                vd = add_vertex(g_sc_graphs[sc]);
-                g_sc_room_ptr.back().push_back(u);
+                vd = add_vertex(sc_graphs[sc]);
+                sc_room_ptr.back().push_back(u);
                 ROOM_NUM(u) = vd;
             }
 
-        boost::property_map<graph_t, boost::edge_dir_t>::type dir = get(boost::edge_dir, g_sc_graphs[sc]);
+        boost::property_map<graph_t, boost::edge_dir_t>::type dir = get(boost::edge_dir, sc_graphs[sc]);
 
-        for (u = g_room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
+        for (u = room_head; u && UNIT_TYPE(u) == UNIT_ST_ROOM; u = u->gnext)
         {
             for (i = 0; i <= MAX_EXIT; i++)
                 if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->to_room && (ROOM_SC(u) == sc) && (ROOM_SC(ROOM_EXIT(u, i)->to_room) == sc))
@@ -171,14 +176,14 @@ void create_sc_graph(int num_of_sc)
                     tie(ed, success) = add_edge(ROOM_NUM(u),
                                                 ROOM_NUM(ROOM_EXIT(u, i)->to_room),
                                                 path_weight(u, ROOM_EXIT(u, i)->to_room, i),
-                                                g_sc_graphs[sc]);
+                                                sc_graphs[sc]);
                     dir[ed] = i;
                 }
             // DIR_ENTER
             for (uu = UNIT_CONTAINS(u); uu; uu = uu->next)
                 if (IS_ROOM(uu) && IS_SET(UNIT_MANIPULATE(uu), MANIPULATE_ENTER) && (ROOM_SC(u) == sc) && (ROOM_SC(uu) == sc))
                 {
-                    tie(ed, success) = add_edge(ROOM_NUM(u), ROOM_NUM(uu), path_weight(u, uu, DIR_ENTER) + 10, g_sc_graphs[sc]);
+                    tie(ed, success) = add_edge(ROOM_NUM(u), ROOM_NUM(uu), path_weight(u, uu, DIR_ENTER) + 10, sc_graphs[sc]);
                     dir[ed] = DIR_ENTER;
                 }
             // DIR_EXIT
@@ -186,7 +191,7 @@ void create_sc_graph(int num_of_sc)
                 if (IS_SET(UNIT_MANIPULATE(UNIT_IN(u)), MANIPULATE_ENTER) && (ROOM_SC(u) == sc) && (ROOM_SC(UNIT_IN(u)) == sc))
                 {
                     tie(ed, success) =
-                        add_edge(ROOM_NUM(u), ROOM_NUM(UNIT_IN(u)), path_weight(u, UNIT_IN(u), DIR_EXIT) + 10, g_sc_graphs[sc]);
+                        add_edge(ROOM_NUM(u), ROOM_NUM(UNIT_IN(u)), path_weight(u, UNIT_IN(u), DIR_EXIT) + 10, sc_graphs[sc]);
                     dir[ed] = DIR_EXIT;
                 }
         }
@@ -194,7 +199,7 @@ void create_sc_graph(int num_of_sc)
     //	for (sc = 0; sc < num_of_sc; sc++)
     //{
     // slog (LOG_ALL, 0, "Added %d vertices and %d edges to graph %d",
-    // num_vertices (g_sc_graphs[sc]), num_edges (g_sc_graphs[sc]), sc);
+    // num_vertices (sc_graphs[sc]), num_edges (sc_graphs[sc]), sc);
     //}
 }
 
@@ -223,7 +228,7 @@ int path_weight(unit_data *from, unit_data *to, int dir)
     if ((ROOM_LANDSCAPE(from) == SECT_WATER_SAIL) || (ROOM_LANDSCAPE(to) == SECT_WATER_SAIL))
         weight += 5000;
 
-    weight += g_sector_dat.get_path_cost(ROOM_LANDSCAPE(from), ROOM_LANDSCAPE(to));
+    weight += sector_dat.get_path_cost(ROOM_LANDSCAPE(from), ROOM_LANDSCAPE(to));
 
     return weight;
 }
@@ -252,7 +257,7 @@ int move_to(unit_data *from, unit_data *to)
     if (ROOM_WAITD(from) == TRUE)
         return DIR_TRYAGAIN;
 
-    if (ROOM_PATH(from).size() != num_vertices(g_sc_graphs[ROOM_SC(from)]))
+    if (ROOM_PATH(from).size() != num_vertices(sc_graphs[ROOM_SC(from)]))
     {
         pthread_mutex_lock(&dijkstra_queue_mutex);
         ROOM_WAITD(from) = TRUE;
@@ -269,8 +274,8 @@ int move_to(unit_data *from, unit_data *to)
         i = ROOM_PATH(from)[i];
     }
 
-    boost::property_map<graph_t, boost::edge_dir_t>::type dir = get(boost::edge_dir, g_sc_graphs[ROOM_SC(from)]);
-    tie(ed, success) = edge(ROOM_NUM(from), next, g_sc_graphs[ROOM_SC(from)]);
+    boost::property_map<graph_t, boost::edge_dir_t>::type dir = get(boost::edge_dir, sc_graphs[ROOM_SC(from)]);
+    tie(ed, success) = edge(ROOM_NUM(from), next, sc_graphs[ROOM_SC(from)]);
     if (success)
         return (dir[ed]);
     else

@@ -421,11 +421,10 @@ void dilfe_fld(register class dilprg *p)
                         v->type = DILV_SP;
 
                         static char buf[512];
-                        snprintf(buf,
-                                 sizeof(buf),
-                                 "%s@%s",
-                                 UNIT_FI_NAME((class unit_data *)v1->val.ptr),
-                                 UNIT_FI_ZONENAME((class unit_data *)v1->val.ptr));
+                        snprintf(buf, sizeof(buf),
+                                "%s@%s",
+                                UNIT_FI_NAME((class unit_data *)v1->val.ptr),
+                                UNIT_FI_ZONENAME((class unit_data *)v1->val.ptr));
 
                         v->val.ptr = strdup(buf);
                     }
@@ -511,11 +510,11 @@ void dilfe_fld(register class dilprg *p)
 
                         if (z)
                         {
-                            auto it = g_zone_info.mmp.find(z->name);
-                            if (it != g_zone_info.mmp.end())
+                            auto it = zone_info.mmp.find(z->name);
+                            if (it != zone_info.mmp.end())
                             {
                                 it++;
-                                if (it != g_zone_info.mmp.end())
+                                if (it != zone_info.mmp.end())
                                     v->val.ptr = it->second;
                             }
                         }
@@ -1720,7 +1719,7 @@ void dilfe_fld(register class dilprg *p)
                         if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == NULL)
                         {
                             class descriptor_data *d;
-                            for (d = g_descriptor_list; d; d = d->next)
+                            for (d = descriptor_list; d; d = d->next)
                             {
                                 if (descriptor_is_playing(d) && d->original == vict)
                                 {
@@ -1770,7 +1769,7 @@ void dilfe_fld(register class dilprg *p)
                         if (IS_PC(vict) && CHAR_DESCRIPTOR(vict) == NULL)
                         {
                             class descriptor_data *d;
-                            for (d = g_descriptor_list; d; d = d->next)
+                            for (d = descriptor_list; d; d = d->next)
                             {
                                 if (descriptor_is_playing(d) && d->original == vict)
                                 {

@@ -208,7 +208,7 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
     // Find any bystanders and register them as witnesses
     scan4_unit(victim, UNIT_ST_PC | UNIT_ST_NPC);
 
-    for (i = 0; i < g_unit_vector.top; i++)
+    for (i = 0; i < unit_vector.top; i++)
     {
         if (CHAR_CAN_SEE(UVI(i), criminal))
         {
@@ -236,13 +236,13 @@ void log_crime(class unit_data *criminal, class unit_data *victim, ubit8 crime_t
     }
 
     // Find any CHAR fighting the victim - they are complicit to the crime
-    for (j = 0; j < g_unit_vector.top; j++)
+    for (j = 0; j < unit_vector.top; j++)
     {
         if (CHAR_COMBAT(UVI(j)) && CHAR_COMBAT(UVI(j))->FindOpponent(victim) && UVI(j) != criminal)
         {
             // add_crime(UVI(j), victim, crime_type);
 
-            for (i = 0; i < g_unit_vector.top; i++)
+            for (i = 0; i < unit_vector.top; i++)
             {
                 if (CHAR_CAN_SEE(UVI(i), UVI(j)))
                 {
@@ -409,7 +409,7 @@ void npc_set_visit (class unit_data * npc, class unit_data * dest_room,
     if ((paf = affected_by_spell(ch, ID_REWARD)))
     {
         paf->data[0] = MAX(xp, paf->data[0]);
-        paf->data[1] = std::max(gold, paf->data[1]);
+        paf->data[1] = MAX(gold, paf->data[1]);
         paf->data[2]++;
         return;
     }
@@ -421,7 +421,7 @@ void npc_set_visit (class unit_data * npc, class unit_data * dest_room,
     if (IS_PC(ch))
     {
         PC_CRIMES(ch) += crimes;
-        xp = std::min(lose_exp(ch) / 2, xp);
+        xp = MIN(lose_exp(ch) / 2, xp);
     }
 
     af.id = ID_REWARD;
@@ -593,7 +593,7 @@ update_criminal(const class unit_data *deputy,
     void save_player_file(class unit_data * pc);
 
      Modified find_descriptor */
-/*  for (criminal = g_unit_list; criminal; criminal = criminal->gnext)
+/*  for (criminal = unit_list; criminal; criminal = criminal->gnext)
         if (IS_PC(criminal) && PC_ID(criminal) == pidx)
         {
             act("$1n tells you, 'You are in trouble, you good-for-nothing ...'",
@@ -947,7 +947,7 @@ void call_guards(class unit_data *guard)
 
    zone = unit_zone(guard);
 
-   for (u = g_unit_list; u; u = u->gnext)
+   for (u = unit_list; u; u = u->gnext)
    {
       membug_verify_class(u);
       assert(!u->is_destructed());
@@ -983,7 +983,7 @@ void call_guards(class unit_data *guard)
     {
         scan4_unit(sarg->owner, UNIT_ST_NPC); ///Implicit can see */
 
-/*      for (i = 0; i < g_unit_vector.top; i++)
+/*      for (i = 0; i < unit_vector.top; i++)
         {
             if (CHAR_CAN_SEE(sarg->owner, UVI(i)) &&
                 UNIT_IS_EVIL(UVI(i)))
@@ -1095,7 +1095,7 @@ int reward_give(struct spec_arg *sarg)
     cur = local_currency(sarg->owner);
 
     if (IS_PC(sarg->activator))
-        gain_exp(sarg->activator, std::min(level_xp(CHAR_LEVEL(sarg->activator)), paf->data[0]));
+        gain_exp(sarg->activator, MIN(level_xp(CHAR_LEVEL(sarg->activator)), paf->data[0]));
 
     money_to_unit(sarg->activator, paf->data[1], cur);
 
@@ -1121,7 +1121,7 @@ int reward_give(struct spec_arg *sarg)
     act("$1n looks at the board of rewards.",
         A_ALWAYS, sarg->activator, cActParameter(), cActParameter(), TO_ROOM);
 
-    for (u = g_unit_list; u; u = u->gnext)
+    for (u = unit_list; u; u = u->gnext)
         if (IS_CHAR(u))
         {
             if ((af = affected_by_spell(u, ID_REWARD)))
