@@ -23,7 +23,7 @@ foreach (VME_SRC_ZONE ${VME_ZONES})
     set(CLEAN_FILES ${CLEAN_FILES} "${SHORT}.dh;${SHORT}.err;${SHORT}.dot;")
 endforeach (VME_SRC_ZONE)
 
-add_custom_target(zone_files ALL DEPENDS vmc ${OUTPUT_FILES})
+add_custom_target(zone_files ALL DEPENDS ${CMAKE_SOURCE_DIR}/vme/bin/vmc ${OUTPUT_FILES})
 
 set_target_properties(zone_files
         PROPERTIES

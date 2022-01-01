@@ -22,7 +22,7 @@ foreach (DEF_SRC_FILE ${DEF_FILES})
     set(CLEAN_FILES ${CLEAN_FILES} "${SHORT}.dat;")
 endforeach (DEF_SRC_FILE)
 
-add_custom_target(dat_files ALL DEPENDS ${HEADER_DEPS} ${OUTPUT_FILES})
+add_custom_target(dat_files ALL DEPENDS ${CMAKE_SOURCE_DIR}/vme/bin/vmc ${HEADER_DEPS} ${OUTPUT_FILES})
 
 set_target_properties(dat_files
         PROPERTIES
@@ -58,7 +58,7 @@ foreach (DEF_SRC_FILE ${COLOR_FILES})
     set(CLEAN_FILES ${CLEAN_FILES} "${SHORT}.dat;")
 endforeach (DEF_SRC_FILE)
 
-add_custom_target(color_files ALL DEPENDS ${OUTPUT_FILES})
+add_custom_target(color_files ALL DEPENDS ${CMAKE_SOURCE_DIR}/vme/bin/defcomp ${OUTPUT_FILES})
 
 set_target_properties(color_files
         PROPERTIES
