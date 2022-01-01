@@ -674,7 +674,8 @@ void process_unit(class unit_data *u)
 
         i = strlen(UNIT_TITLE(u).c_str());
 
-        if ((i > 0) && !isalpha(UNIT_TITLE(u).c_str()[i - 1]))
+        // Title should end with character or HTML end code >
+        if ((i > 0) && !isalpha(UNIT_TITLE(u).c_str()[i - 1]) && (UNIT_TITLE(u).c_str()[i - 1] != '>'))
         {
             dmc_error(FALSE, "%s: Title ends with non-alphabet character '%s'", UNIT_IDENT(u), UNIT_TITLE(u).c_str());
         }
