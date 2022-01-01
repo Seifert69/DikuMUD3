@@ -27,5 +27,6 @@ add_subdirectory(vme/src/mplex2)
 add_subdirectory(vme/src/pp)
 add_subdirectory(vme/src/vmc)
 add_subdirectory(vme/zone)
+add_subdirectory(vme/etc)
 
 add_subdirectory(unit_tests)
