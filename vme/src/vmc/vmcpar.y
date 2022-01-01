@@ -47,9 +47,12 @@ struct dilprg *cur_prg;
 int myi, cur_ex, errcon = 0;
 
 /* Temporary data for stringlists */
+
+#define MAXLIST 100
+
 int str_top, int_top;
-char *str_list[50];
-int int_list[50];
+char *str_list[MAXLIST];
+int int_list[MAXLIST];
 char empty_ref[] = {'\0', '\0'};
 int istemplate=1;
 char **tmplnames = NULL;
@@ -1264,6 +1267,8 @@ stringlist	: hardstringlist
 
 hardstringlist	: '{' strings '}'
 			{
+				if (myi+1 >= MAXLIST)
+					fatal("Stringlist too long");
 			  $$ = (char **) mmalloc(sizeof(char *) * (str_top + 2));
 			  for (myi = 0; myi <= str_top; myi++)
 			    $$[myi] = str_list[myi];
@@ -1292,13 +1297,15 @@ intlist	: hardintlist
 
 hardintlist	: '{' ints '}'
 			{
+				if (myi+1 >= MAXLIST)
+					fatal("Intlist too long");
 			  $$ = (int *) mmalloc(sizeof(int) * (int_list[0]+1));
 			  for (myi = 0; myi <= int_list[0]; myi++)
 			    $$[myi] = int_list[myi];
 			}
 		| '{' '{' '}' '}'
 			{
-			  $$ = (int *) mmalloc(sizeof(int) );
+			  $$ = (int *) mmalloc(sizeof(int));
 			  $$[0] = 0;
 			}  /*Can't determine if it is a namelist or a intlist.*/
 		;
@@ -1309,6 +1316,8 @@ strings		: STRING
 			}
 		| strings ',' STRING
 			{
+				if (str_top+1 >= MAXLIST)
+					fatal("Stringlist too long");
 			  str_list[++str_top] = $3;
 			}
 		;
@@ -1320,6 +1329,8 @@ ints		: number
 			}
 		| ints ',' number
 			{
+				if (int_list[0]+1 >= MAXLIST)
+					fatal("Intlist too long");
 			  int_list[0]++;
 			  int_list[int_list[0]] = $3;
 			}
