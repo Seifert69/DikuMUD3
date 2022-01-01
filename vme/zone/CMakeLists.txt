@@ -12,7 +12,7 @@ foreach (VME_SRC_ZONE ${VME_ZONES})
 
     add_custom_command(
             OUTPUT ${OUTPUT_DATA_FILE}
-            COMMAND vmc -I${CMAKE_SOURCE_DIR}/vme/include ${SHORT}.zon
+            COMMAND vmc -d ${CMAKE_SOURCE_DIR}/vme/etc/ -I${CMAKE_SOURCE_DIR}/vme/include/ ${SHORT}.zon
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/zone
             DEPENDS ${SHORT}.zon ${HEADER_DEPS}
             VERBATIM
