@@ -38,7 +38,7 @@ jobs:
 
     - name: VMC Unit Test
       working-directory: ${{github.workspace}}/vme/bin
-      run: vmc_unit_tests --color_output=false --log_level=message
+      run: ${{github.workspace}}/vmc_unit_tests --color_output=false --log_level=message
 
     - name: Defcomp Unit Test
       working-directory: ${{github.workspace}}/vme/bin
