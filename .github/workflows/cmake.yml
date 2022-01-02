@@ -32,9 +32,22 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    - name: Test
-      working-directory: ${{github.workspace}}/build
-      # Execute tests defined by the CMake configuration.  
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -C ${{env.BUILD_TYPE}}
-      
+    - name: VME Unit Test
+      working-directory: ${{github.workspace}}/vme/bin
+      run: ${{github.workspace}}/vme/bin/vme_unit_tests --color_output=false --log_level=message
+
+    - name: VMC Unit Test
+      working-directory: ${{github.workspace}}/vme/bin
+      run: ${{github.workspace}}/vme/bin/vmc_unit_tests --color_output=false --log_level=message
+
+    - name: Defcomp Unit Test
+      working-directory: ${{github.workspace}}/vme/bin
+      run: ${{github.workspace}}/vme/bin/defcomp_unit_tests --color_output=false --log_level=message
+
+    - name: MPlex2 Unit Test
+      working-directory: ${{github.workspace}}/vme/bin
+      run: ${{github.workspace}}/vme/bin/mplex_unit_tests --color_output=false --log_level=message
+
+    - name: PP Unit Test
+      working-directory: ${{github.workspace}}/vme/bin
+      run: ${{github.workspace}}/vme/bin/pp_unit_tests --color_output=false --log_level=message
