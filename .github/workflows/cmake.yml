@@ -34,7 +34,7 @@ jobs:
 
     - name: VME Unit Test
       working-directory: ${{github.workspace}}/build/vme/bin
-      run: pwd && vme/bin/vme_unit_tests --color_output=false --log_level=message
+      run: ${{github.workspace}}/build/vme/bin/vme_unit_tests --color_output=false --log_level=message
 
     - name: VMC Unit Test
       working-directory: ${{github.workspace}}/build/vme/bin
