@@ -886,11 +886,12 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
     {
         if (PC_CRACK_ATTEMPTS(d->character) > 2)
         {
-            snprintf(buf, sizeof(buf),
-                    "<br/>ATTENTION: Your password has been "
-                    "attempted cracked %d times since your last logon."
-                    " Press [enter] and wait for the password prompt.",
-                    PC_CRACK_ATTEMPTS(d->character));
+            snprintf(buf,
+                     sizeof(buf),
+                     "<br/>ATTENTION: Your password has been "
+                     "attempted cracked %d times since your last logon."
+                     " Press [enter] and wait for the password prompt.",
+                     PC_CRACK_ATTEMPTS(d->character));
             send_to_descriptor(buf, d);
             d->wait = MIN(30, PC_CRACK_ATTEMPTS(d->character)) * 2 * PULSE_SEC;
             return;
@@ -954,11 +955,12 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
 
     PC_CRACK_ATTEMPTS(d->character) = 0;
 
-    snprintf(buf, sizeof(buf),
-            "<br/>Welcome back %s, you last visited %s on %s<br/>",
-            UNIT_NAME(d->character),
-            g_cServerConfig.m_mudname,
-            ctime(&PC_TIME(d->character).connect));
+    snprintf(buf,
+             sizeof(buf),
+             "<br/>Welcome back %s, you last visited %s on %s<br/>",
+             UNIT_NAME(d->character),
+             g_cServerConfig.m_mudname,
+             ctime(&PC_TIME(d->character).connect));
     send_to_descriptor(buf, d);
 
     if ((td = find_descriptor(PC_FILENAME(d->character), d)))

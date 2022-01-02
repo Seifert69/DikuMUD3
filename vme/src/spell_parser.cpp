@@ -864,12 +864,13 @@ void spell_dump(void)
             snprintf(buf, sizeof(buf), "%s,%s", g_SplColl.text[i], spc(30 - strlen(g_SplColl.text[i])));
             str.append(buf);
 
-            snprintf(buf, sizeof(buf), 
-                    ".profession %s%s = %s%d\n",
-                    professions[j],
-                    spc(12 - strlen(professions[j])),
-                    (g_SplColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                    g_SplColl.prof_table[i].profession_cost[j]);
+            snprintf(buf,
+                     sizeof(buf),
+                     ".profession %s%s = %s%d\n",
+                     professions[j],
+                     spc(12 - strlen(professions[j])),
+                     (g_SplColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                     g_SplColl.prof_table[i].profession_cost[j]);
             str.append(buf);
 
             /*if (g_SplColl.prof_table[i].min_level > 0)

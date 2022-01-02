@@ -947,12 +947,13 @@ void ability_dump(void)
             snprintf(buf, sizeof(buf), "%s,%s", g_AbiColl.text[i], spc(20 - strlen(g_AbiColl.text[i])));
             str.append(buf);
 
-            snprintf(buf, sizeof(buf),
-                    ".profession %s%s = %s%d\n",
-                    professions[j],
-                    spc(12 - strlen(professions[j])),
-                    (g_AbiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                    g_AbiColl.prof_table[i].profession_cost[j]);
+            snprintf(buf,
+                     sizeof(buf),
+                     ".profession %s%s = %s%d\n",
+                     professions[j],
+                     spc(12 - strlen(professions[j])),
+                     (g_AbiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                     g_AbiColl.prof_table[i].profession_cost[j]);
             str.append(buf);
 
             vect.push_back(std::make_pair(g_AbiColl.prof_table[i].profession_cost[j], str));
@@ -966,12 +967,13 @@ void ability_dump(void)
             for (int j = 0; j < ABIL_TREE_MAX; j++)
                 if (g_AbiColl.prof_table[i].min_abil[j] > 0)
                 {
-                    snprintf(buf, sizeof(buf),
-                            "restrict %s%s    = %s%d\n",
-                            g_AbiColl.text[j],
-                            spc(12 - strlen(professions[j])),
-                            (g_AbiColl.prof_table[i].min_abil[j] >= 0) ? "+" : "",
-                            g_AbiColl.prof_table[i].min_abil[j]);
+                    snprintf(buf,
+                             sizeof(buf),
+                             "restrict %s%s    = %s%d\n",
+                             g_AbiColl.text[j],
+                             spc(12 - strlen(professions[j])),
+                             (g_AbiColl.prof_table[i].min_abil[j] >= 0) ? "+" : "",
+                             g_AbiColl.prof_table[i].min_abil[j]);
                     str.append(buf);
                 }
         }
@@ -1327,12 +1329,13 @@ void weapon_dump(void)
             snprintf(buf, sizeof(buf), "%s,%s", g_WpnColl.text[i], spc(20 - strlen(g_WpnColl.text[i])));
             str.append(buf);
 
-            snprintf(buf, sizeof(buf),
-                    ".profession %s%s = %s%d\n",
-                    professions[j],
-                    spc(12 - strlen(professions[j])),
-                    (g_WpnColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
-                    g_WpnColl.prof_table[i].profession_cost[j]);
+            snprintf(buf,
+                     sizeof(buf),
+                     ".profession %s%s = %s%d\n",
+                     professions[j],
+                     spc(12 - strlen(professions[j])),
+                     (g_WpnColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                     g_WpnColl.prof_table[i].profession_cost[j]);
             str.append(buf);
 
             vect.push_back(std::make_pair(g_WpnColl.prof_table[i].profession_cost[j], str));

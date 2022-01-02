@@ -73,14 +73,15 @@ int ball(struct spec_arg *sarg)
         for (i = 0; i < TOP_MAX; i++)
             if (top[i])
             {
-                snprintf(buf, sizeof(buf),
-                        "%4ld %-15s@%-15s  IN  %s [%s@%s]<br/>",
-                        (signed long)OBJ_VALUE(top[i], v2),
-                        UNIT_FI_NAME(top[i]),
-                        UNIT_FI_ZONENAME(top[i]),
-                        UNIT_NAME(UNIT_IN(top[i])),
-                        UNIT_FI_NAME(UNIT_IN(top[i])),
-                        UNIT_FI_ZONENAME(UNIT_IN(top[i])));
+                snprintf(buf,
+                         sizeof(buf),
+                         "%4ld %-15s@%-15s  IN  %s [%s@%s]<br/>",
+                         (signed long)OBJ_VALUE(top[i], v2),
+                         UNIT_FI_NAME(top[i]),
+                         UNIT_FI_ZONENAME(top[i]),
+                         UNIT_NAME(UNIT_IN(top[i])),
+                         UNIT_FI_NAME(UNIT_IN(top[i])),
+                         UNIT_FI_ZONENAME(UNIT_IN(top[i])));
                 send_to_char(buf, sarg->activator);
             }
         return SFR_BLOCK;

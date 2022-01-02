@@ -142,7 +142,13 @@ void add_ban(class unit_data *ch, char *site, char type, time_t *until, char *te
     else
         strcpy(d, "");
 
-    snprintf(buf, sizeof(buf), "Ban on %s, type %s, textfile %s. %s<br/>", entry->site, type == BAN_TOTAL ? "TOTAL" : "NEW CHARS", entry->textfile, d);
+    snprintf(buf,
+             sizeof(buf),
+             "Ban on %s, type %s, textfile %s. %s<br/>",
+             entry->site,
+             type == BAN_TOTAL ? "TOTAL" : "NEW CHARS",
+             entry->textfile,
+             d);
     send_to_char(buf, ch);
     save_ban();
 }
@@ -194,7 +200,13 @@ void show_site(class unit_data *ch, struct ban_t *entry)
         strftime(d, 40, "until %a %b %d %H:%M", localtime(&entry->until));
     else
         strcpy(d, " ");
-    snprintf(buf, sizeof(buf), " %-30s : %-9s %s %s<br/>", entry->site, (entry->type == BAN_TOTAL) ? "TOTAL" : "NEW CHARS", entry->textfile, d);
+    snprintf(buf,
+             sizeof(buf),
+             " %-30s : %-9s %s %s<br/>",
+             entry->site,
+             (entry->type == BAN_TOTAL) ? "TOTAL" : "NEW CHARS",
+             entry->textfile,
+             d);
     send_to_char(buf, ch);
 }
 

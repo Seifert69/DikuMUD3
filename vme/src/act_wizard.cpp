@@ -108,30 +108,32 @@ void do_users(class unit_data *ch, char *argument, const struct command_info *cm
             if (IS_IMMORTAL(d->character))
             {
                 /* an immortal character */
-                snprintf(tmp, sizeof(tmp), 
-                        "&lt;I%3d/%3d&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
-                        CHAR_LEVEL(CHAR_ORIGINAL(d->character)),
-                        UNIT_MINV(CHAR_ORIGINAL(d->character)),
-                        UNIT_NAME(CHAR_ORIGINAL(d->character)),
-                        descriptor_is_playing(d) ? "Playing" : "Menu",
-                        g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
-                        d->nPort,
-                        d->nLine == 255 ? "---" : itoa(d->nLine),
-                        d->host);
+                snprintf(tmp,
+                         sizeof(tmp),
+                         "&lt;I%3d/%3d&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
+                         CHAR_LEVEL(CHAR_ORIGINAL(d->character)),
+                         UNIT_MINV(CHAR_ORIGINAL(d->character)),
+                         UNIT_NAME(CHAR_ORIGINAL(d->character)),
+                         descriptor_is_playing(d) ? "Playing" : "Menu",
+                         g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
+                         d->nPort,
+                         d->nLine == 255 ? "---" : itoa(d->nLine),
+                         d->host);
             }
             else
             {
                 /* a mortal character */
-                snprintf(tmp, sizeof(tmp), 
-                        "&lt; %6d%c&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
-                        PC_VIRTUAL_LEVEL(CHAR_ORIGINAL(d->character)),
-                        UNIT_MINV(CHAR_ORIGINAL(d->character)) ? '*' : ' ',
-                        UNIT_NAME(CHAR_ORIGINAL(d->character)),
-                        descriptor_is_playing(d) ? "Playing" : "Menu",
-                        g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
-                        d->nPort,
-                        d->nLine == 255 ? "---" : itoa(d->nLine),
-                        d->host);
+                snprintf(tmp,
+                         sizeof(tmp),
+                         "&lt; %6d%c&gt; %-16s %-10s [%c %4d %-3s %s]<br/>",
+                         PC_VIRTUAL_LEVEL(CHAR_ORIGINAL(d->character)),
+                         UNIT_MINV(CHAR_ORIGINAL(d->character)) ? '*' : ' ',
+                         UNIT_NAME(CHAR_ORIGINAL(d->character)),
+                         descriptor_is_playing(d) ? "Playing" : "Menu",
+                         g_cServerConfig.FromLAN(d->host) ? 'L' : 'W',
+                         d->nPort,
+                         d->nLine == 255 ? "---" : itoa(d->nLine),
+                         d->host);
             }
 
             len += strlen(tmp);

@@ -339,16 +339,17 @@ void cCombat::status(const class unit_data *god)
     int i;
     std::string str;
 
-    snprintf(buf, sizeof(buf),
-            "Combat Status of '%s':<br/>"
-            "Combat Speed [%d]  Turn [%d]<br/>"
-            "Melee Opponent '%s'<br/>"
-            "Total of %d Opponents:<br/><br/>",
-            STR(UNIT_NAME(pOwner)),
-            CHAR_SPEED(pOwner),
-            nWhen,
-            CHAR_FIGHTING(pOwner) ? STR(UNIT_NAME(CHAR_FIGHTING(pOwner))) : "NONE",
-            nNoOpponents);
+    snprintf(buf,
+             sizeof(buf),
+             "Combat Status of '%s':<br/>"
+             "Combat Speed [%d]  Turn [%d]<br/>"
+             "Melee Opponent '%s'<br/>"
+             "Total of %d Opponents:<br/><br/>",
+             STR(UNIT_NAME(pOwner)),
+             CHAR_SPEED(pOwner),
+             nWhen,
+             CHAR_FIGHTING(pOwner) ? STR(UNIT_NAME(CHAR_FIGHTING(pOwner))) : "NONE",
+             nNoOpponents);
 
     str.append(buf);
 

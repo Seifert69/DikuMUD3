@@ -421,10 +421,11 @@ void dilfe_fld(register class dilprg *p)
                         v->type = DILV_SP;
 
                         static char buf[512];
-                        snprintf(buf, sizeof(buf),
-                                "%s@%s",
-                                UNIT_FI_NAME((class unit_data *)v1->val.ptr),
-                                UNIT_FI_ZONENAME((class unit_data *)v1->val.ptr));
+                        snprintf(buf,
+                                 sizeof(buf),
+                                 "%s@%s",
+                                 UNIT_FI_NAME((class unit_data *)v1->val.ptr),
+                                 UNIT_FI_ZONENAME((class unit_data *)v1->val.ptr));
 
                         v->val.ptr = strdup(buf);
                     }

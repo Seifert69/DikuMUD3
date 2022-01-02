@@ -377,17 +377,18 @@ void system_memory(class unit_data *ch)
         slog(LOG_ALL, 0, "System memory status error.");
     else
     {
-        snprintf(Buf, sizeof(Buf),
-                "Vol. Switches       %8ld<br/>"
-                "Max RSS             %8ld<br/>"
-                "Shared memory size  %8ld<br/>"
-                "Unshared data size  %8ld<br/>"
-                "Unshared stack size %8ld<br/><br/>",
-                rusage_data.ru_nvcsw,
-                rusage_data.ru_maxrss,
-                rusage_data.ru_ixrss,
-                rusage_data.ru_isrss,
-                rusage_data.ru_idrss);
+        snprintf(Buf,
+                 sizeof(Buf),
+                 "Vol. Switches       %8ld<br/>"
+                 "Max RSS             %8ld<br/>"
+                 "Shared memory size  %8ld<br/>"
+                 "Unshared data size  %8ld<br/>"
+                 "Unshared stack size %8ld<br/><br/>",
+                 rusage_data.ru_nvcsw,
+                 rusage_data.ru_maxrss,
+                 rusage_data.ru_ixrss,
+                 rusage_data.ru_isrss,
+                 rusage_data.ru_idrss);
         send_to_char(Buf, ch);
     }
 #endif

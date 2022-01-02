@@ -319,7 +319,12 @@ int spell_bonus(class unit_data *att,
 
     if (pStat)
     {
-        snprintf(buf, sizeof(buf), "<u>%s spelling %s with %s:</u><br/><pre>", UNIT_NAME(att), UNIT_NAME(def), g_SplColl.text[spell_number]);
+        snprintf(buf,
+                 sizeof(buf),
+                 "<u>%s spelling %s with %s:</u><br/><pre>",
+                 UNIT_NAME(att),
+                 UNIT_NAME(def),
+                 g_SplColl.text[spell_number]);
         *pStat = buf;
         pStat->append("                        ATT     DEF<br/>");
     }

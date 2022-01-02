@@ -170,7 +170,7 @@ void error(const char *file, int line, const char *fmt, ...)
     abort();
 }
 
-// Clears dest and then writes the text "bits" into 'dest' and 
+// Clears dest and then writes the text "bits" into 'dest' and
 // also return a char * to the same resulting string (&dest[0])
 const char *sprintbit(std::string &dest, ubit32 vektor, const char *names[])
 {

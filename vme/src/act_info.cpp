@@ -114,12 +114,13 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
                 else
                     buf2[0] = '\0';
 
-                snprintf(buf1, sizeof(buf1),
-                        "%-20s - %s [%s]%s<br/>",
-                        UNIT_NAME(CHAR_ORIGINAL(d->character)),
-                        UNIT_SEE_TITLE(ch, UNIT_IN(d->character)),
-                        in_string(ch, d->character),
-                        buf2);
+                snprintf(buf1,
+                         sizeof(buf1),
+                         "%-20s - %s [%s]%s<br/>",
+                         UNIT_NAME(CHAR_ORIGINAL(d->character)),
+                         UNIT_SEE_TITLE(ch, UNIT_IN(d->character)),
+                         in_string(ch, d->character),
+                         buf2);
                 mystr.append(buf1);
             }
     }
@@ -135,11 +136,12 @@ void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
                 if (nCount++ > 100)
                     continue;
 
-                snprintf(buf1, sizeof(buf1),
-                        "%-30s - %s [%s]<br/>",
-                        TITLENAME(i),
-                        UNIT_SEE_TITLE(ch, UNIT_IN(i)),
-                        (!in_string(ch, i) ? "MENU" : in_string(ch, i)));
+                snprintf(buf1,
+                         sizeof(buf1),
+                         "%-30s - %s [%s]<br/>",
+                         TITLENAME(i),
+                         UNIT_SEE_TITLE(ch, UNIT_IN(i)),
+                         (!in_string(ch, i) ? "MENU" : in_string(ch, i)));
 
                 mystr.append(buf1);
             }

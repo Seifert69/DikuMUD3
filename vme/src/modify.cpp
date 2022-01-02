@@ -310,15 +310,15 @@ int search_block_set(char *arg, const char **list, bool exact)
                                       : (c) == AT_KEYDES                                                                                   \
                                             ? "&lt;keyword&gt; (enter description)"                                                        \
                                             : (c) == AT_TYPVAL                                                                             \
-                                                  ? "&lt;type&gt; &lt;value&gt;"                                                              \
+                                                  ? "&lt;type&gt; &lt;value&gt;"                                                           \
                                                   : (c) == AT_DIRBIT                                                                       \
-                                                        ? "&lt;direction&gt; &lt;bitlist&gt;"                                                 \
+                                                        ? "&lt;direction&gt; &lt;bitlist&gt;"                                              \
                                                         : (c) == AT_TYPDES                                                                 \
                                                               ? "&lt;type&gt; (enter description)"                                         \
                                                               : (c) == AT_DIRSTR                                                           \
-                                                                    ? "&lt;direction&gt; &lt;string&gt;"                                      \
+                                                                    ? "&lt;direction&gt; &lt;string&gt;"                                   \
                                                                     : (c) == AT_DIRUNT                                                     \
-                                                                          ? "&lt;direction&gt; &lt;unitpath&gt;"                              \
+                                                                          ? "&lt;direction&gt; &lt;unitpath&gt;"                           \
                                                                           : (c) == AT_DIRDES ? "&lt;direction&gt; (enter description)"     \
                                                                                              : "Not usable"
 
@@ -332,11 +332,12 @@ void show_fields(class unit_data *ch)
 
     for (i = 0; i < MAX_SET_FIELDS; i++)
     {
-        snprintf(buf, sizeof(buf),
-                "<tr><td>%s :</td><td> on %s. :</td><td>%s</td></tr>",
-                unit_field_names[i],
-                GET_FIELD_UT(unit_field_data[i].utype),
-                GET_FIELD_AT(unit_field_data[i].atype));
+        snprintf(buf,
+                 sizeof(buf),
+                 "<tr><td>%s :</td><td> on %s. :</td><td>%s</td></tr>",
+                 unit_field_names[i],
+                 GET_FIELD_UT(unit_field_data[i].utype),
+                 GET_FIELD_AT(unit_field_data[i].atype));
         s.append(buf);
     }
     s.append("</table>");

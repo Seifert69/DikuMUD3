@@ -92,7 +92,11 @@ char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
             if (verbose)
             {
                 if (times == 1)
-                    snprintf(tmp, sizeof(tmp), "%s %s, ", strchr("aeiou", *(money_tmp[nr]->strings[0])) ? "an" : "a", money_tmp[nr]->strings[0]);
+                    snprintf(tmp,
+                             sizeof(tmp),
+                             "%s %s, ",
+                             strchr("aeiou", *(money_tmp[nr]->strings[0])) ? "an" : "a",
+                             money_tmp[nr]->strings[0]);
                 else
                     snprintf(tmp, sizeof(tmp), "%d %s, ", (int)times, money_tmp[nr]->strings[money_tmp[nr]->pl_idx]);
             }
@@ -215,12 +219,13 @@ class unit_data *set_money(class unit_data *money, amount_t amt)
     if (amt == 1)
         snprintf(tmp, sizeof(tmp), "A single %s has been left here.", money_singularis(money));
     else
-        snprintf(tmp, sizeof(tmp),
-                "A %s %s has been left here.",
-                amt == 2 ? "couple of"
-                         : amt < 10 ? "few"
-                                    : amt < 100 ? "small pile of" : amt < 1000 ? "pile of" : amt < 50000 ? "large pile of" : "mountain of",
-                money_pluralis(money));
+        snprintf(tmp,
+                 sizeof(tmp),
+                 "A %s %s has been left here.",
+                 amt == 2 ? "couple of"
+                          : amt < 10 ? "few"
+                                     : amt < 100 ? "small pile of" : amt < 1000 ? "pile of" : amt < 50000 ? "large pile of" : "mountain of",
+                 money_pluralis(money));
 
     UNIT_OUT_DESCR(money) = (tmp);
 
