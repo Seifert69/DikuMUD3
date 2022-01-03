@@ -4,7 +4,7 @@
  $Date: 2004/05/16 04:34:34 $
  $Revision: 2.2 $
  */
-
+#include "external_vars.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -14,17 +14,11 @@
 #include "utility.h"
 #include "main.h"
 
-extern struct apply_function_type apf[];
-extern struct tick_function_type tif[];
-
 class unit_affected_type *affected_list = 0;  /* Global list pointer       */
 class unit_affected_type *next_affected_dude; /* dirty - very dirty indeed */
-extern eventqueue events;
 
 void register_destruct(int i, void *ptr);
 void clear_destruct(int i);
-
-void affect_beat(void *, void *);
 
 /* Link an affected structure into the units affected structure */
 void link_affect(class unit_data *unit, class unit_affected_type *af)
@@ -81,11 +75,11 @@ void create_affect(class unit_data *unit, class unit_affected_type *af)
         if (af->id >= 0)
         {
             if (af->applyf_i >= 0)
-                if (!(*apf[af->applyf_i].func)(af, unit, TRUE))
+                if (!(*g_apf[af->applyf_i].func)(af, unit, TRUE))
                     return;
 
             if (af->firstf_i >= 0)
-                (*tif[af->firstf_i].func)(af, unit);
+                (*g_tif[af->firstf_i].func)(af, unit);
 
             if (af->duration > 0)
                 af->duration--; /* When 1 it means stop next tick... */
@@ -93,8 +87,8 @@ void create_affect(class unit_data *unit, class unit_affected_type *af)
             if (af->beat > 0)
             {
                 if (af->event)
-                    events.remove(affect_beat, (void *)af, 0);
-                af->event = events.add(af->beat, affect_beat, (void *)af, 0);
+                    g_events.remove(affect_beat, (void *)af, 0);
+                af->event = g_events.add(af->beat, affect_beat, (void *)af, 0);
             }
         }
         else
@@ -112,7 +106,7 @@ void unlink_affect(class unit_affected_type *af)
     /* Affects may never be removed by lower function than this */
     af->register_destruct();
 
-    events.remove(affect_beat, (void *)af, 0);
+    g_events.remove(affect_beat, (void *)af, 0);
 
     if (next_affected_dude == af)
         next_affected_dude = af->gnext;
@@ -158,18 +152,18 @@ void destroy_affect(class unit_affected_type *af)
     if (af->id >= 0)
     {
         if (af->applyf_i >= 0)
-            if (!(*apf[af->applyf_i].func)(af, af->owner, FALSE))
+            if (!(*g_apf[af->applyf_i].func)(af, af->owner, FALSE))
             {
                 af->duration = 0;
                 af->beat = WAIT_SEC * 5;
                 if (af->event)
-                    events.remove(affect_beat, (void *)af, 0);
-                af->event = events.add(number(120, 240), affect_beat, (void *)af, 0);
+                    g_events.remove(affect_beat, (void *)af, 0);
+                af->event = g_events.add(number(120, 240), affect_beat, (void *)af, 0);
                 return;
             }
 
         if (af->lastf_i >= 0 && !af->owner->is_destructed())
-            (*tif[af->lastf_i].func)(af, af->owner);
+            (*g_tif[af->lastf_i].func)(af, af->owner);
     }
 
     unlink_affect(af);
@@ -234,7 +228,7 @@ void affect_beat(void *p1, void *p2)
         else
         {
             if (af->tickf_i >= 0)
-                (*tif[af->tickf_i].func)(af, af->owner);
+                (*g_tif[af->tickf_i].func)(af, af->owner);
 
             destroyed = af->is_destructed();
 
@@ -245,8 +239,8 @@ void affect_beat(void *p1, void *p2)
     if (!destroyed)
     {
         if (af->event)
-            events.remove(affect_beat, (void *)af, 0);
-        af->event = events.add(af->beat, affect_beat, (void *)af, 0);
+            g_events.remove(affect_beat, (void *)af, 0);
+        af->event = g_events.add(af->beat, affect_beat, (void *)af, 0);
     }
 }
 
@@ -260,7 +254,7 @@ void apply_affect(class unit_data *unit)
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
         if ((af->id >= 0) && (af->applyf_i >= 0))
         {
-            if (!(*apf[af->applyf_i].func)(af, unit, TRUE))
+            if (!(*g_apf[af->applyf_i].func)(af, unit, TRUE))
                 continue;
         }
 }
@@ -274,8 +268,8 @@ void start_affect(class unit_data *unit)
         if ((af->id >= 0) && (af->beat > 0))
         {
             if (af->event)
-                events.remove(affect_beat, (void *)af, 0);
-            af->event = events.add(af->beat, affect_beat, (void *)af, 0);
+                g_events.remove(affect_beat, (void *)af, 0);
+            af->event = g_events.add(af->beat, affect_beat, (void *)af, 0);
         }
         else
             af->event = NULL;
@@ -287,5 +281,5 @@ void stop_affect(class unit_data *unit)
 
     for (af = UNIT_AFFECTED(unit); af; af = af->next)
         if (af->event != NULL)
-            events.remove(affect_beat, (void *)af, 0);
+            g_events.remove(affect_beat, (void *)af, 0);
 }

@@ -26,9 +26,6 @@
 #include "dilrun.h"
 #include "interpreter.h"
 
-/* Extern structures */
-extern class unit_data *unit_list;
-
 /* Returns TRUE when effect is shown by DIL */
 
 int dil_effect(char *pStr, struct spell_args *sa)
@@ -94,7 +91,7 @@ int dil_effect(char *pStr, struct spell_args *sa)
         sarg.target = NULL;
         sarg.pInt = NULL;
         sarg.fptr = fptr;
-        sarg.cmd = &cmd_auto_tick;
+        sarg.cmd = &g_cmd_auto_tick;
         sarg.arg = NULL;
         sarg.mflags = SFB_TICK | SFB_AWARE;
 
@@ -320,9 +317,9 @@ int spell_attack_ability(class unit_data *medium, int spell)
     if (IS_CHAR(medium))
     {
         /* Figure out if char will use Divine or Magic powers */
-        assert(spell_info[spell].realm == ABIL_MAG || spell_info[spell].realm == ABIL_DIV);
+        assert(g_spell_info[spell].realm == ABIL_MAG || g_spell_info[spell].realm == ABIL_DIV);
 
-        return CHAR_ABILITY(medium, spell_info[spell].realm);
+        return CHAR_ABILITY(medium, g_spell_info[spell].realm);
     }
 
     return spell_attack_skill(medium, spell);
@@ -390,8 +387,6 @@ int spell_offensive(struct spell_args *sa, int spell_number, int bonus)
                     std::string *pStat);
     void damage_object(class unit_data * ch, class unit_data * obj, int dam);
 
-    extern struct damage_chart_type spell_chart[SPL_TREE_MAX];
-
     /* Does the spell perhaps only hit head / body? All?? Right now I
         do it randomly */
     hit_loc = hit_location(sa->caster, sa->target);
@@ -402,19 +397,19 @@ int spell_offensive(struct spell_args *sa, int spell_number, int bonus)
     roll_description(sa->caster, "spell", roll);
     bonus += roll_boost(roll, CHAR_LEVEL(sa->caster));
 
-    sa->hm = chart_damage(bonus, &(spell_chart[spell_number].element[armour_type]));
+    sa->hm = chart_damage(bonus, &(g_spell_chart[spell_number].element[armour_type]));
 
     def_shield_bonus = shield_bonus(sa->caster, sa->target, &def_shield);
 
-    if (def_shield && spell_info[spell_number].shield != SHIELD_M_USELESS)
+    if (def_shield && g_spell_info[spell_number].shield != SHIELD_M_USELESS)
     {
-        if ((spell_info[spell_number].shield == SHIELD_M_BLOCK) && (number(1, 100) <= def_shield_bonus))
+        if ((g_spell_info[spell_number].shield == SHIELD_M_BLOCK) && (number(1, 100) <= def_shield_bonus))
         {
             damage_object(sa->target, def_shield, sa->hm);
             damage(sa->caster, sa->target, def_shield, 0, MSG_TYPE_SPELL, spell_number, WEAR_SHIELD);
             return 0;
         }
-        if ((spell_info[spell_number].shield == SHIELD_M_REDUCE) && (number(1, 100) <= def_shield_bonus))
+        if ((g_spell_info[spell_number].shield == SHIELD_M_REDUCE) && (number(1, 100) <= def_shield_bonus))
         {
             sa->hm -= (sa->hm * def_shield_bonus) / 100;
         }

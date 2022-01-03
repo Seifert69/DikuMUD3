@@ -1244,9 +1244,7 @@ int teach_init(struct spec_arg *sarg)
     int nProfession = -1;
     if (!str_is_empty(buf))
     {
-        extern const char *professions[];
-
-        if ((nProfession = search_block(buf, professions, TRUE)) == -1)
+        if ((nProfession = search_block(buf, g_professions, TRUE)) == -1)
         {
             szonelog(UNIT_FI_ZONE(sarg->owner),
                      "%s@%s: Unknown profession %s in teacher-init.",
@@ -1464,9 +1462,9 @@ int teach_init(struct spec_arg *sarg)
 
                if (realm == -1)
                {
-                   realm = spell_info[i].realm;
+                   realm = g_spell_info[i].realm;
                }
-               else if (realm != spell_info[i].realm)
+               else if (realm != g_spell_info[i].realm)
                {
                    szonelog(UNIT_FI_ZONE(sarg->owner),
                             "%s@%s: Differing realms in %s",

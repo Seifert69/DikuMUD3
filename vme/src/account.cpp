@@ -5,6 +5,7 @@
  $Revision: 2.3 $
  */
 
+#include "external_vars.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -611,8 +612,6 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
     const char *operations[] = {"insert", "withdraw", "limit", "discount", "flatrate", NULL};
     int i, amount;
 
-    extern class file_index_type *letter_fi;
-
     if (!g_cServerConfig.m_bAccounting || !IS_PC(ch))
     {
         send_to_char("That command is not available.<br/>", ch);
@@ -712,7 +711,7 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
                      UNIT_NAME(ch),
                      (float)amount / 100.0,
                      g_cAccountConfig.m_pCoinName);
-            note = read_unit(letter_fi);
+            note = read_unit(g_letter_fi);
             UNIT_EXTRA(note).add("", Buf);
             unit_to_unit(note, u);
             break;

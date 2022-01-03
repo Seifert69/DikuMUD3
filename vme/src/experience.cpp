@@ -5,6 +5,7 @@
  $Revision: 2.2 $
  */
 
+#include "external_vars.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -76,7 +77,6 @@ int shield_bonus(class unit_data *att, class unit_data *def, class unit_data **p
     if ((def_shield = equipment_type(def, WEAR_SHIELD, ITEM_SHIELD)))
     {
         int shield_bonus = 0;
-        extern struct shi_info_type shi_info[];
 
         if (!is_in(OBJ_VALUE(def_shield, 0), SHIELD_SMALL, SHIELD_LARGE))
         {
@@ -99,7 +99,7 @@ int shield_bonus(class unit_data *att, class unit_data *def, class unit_data **p
                                         IS_PC(att) ? PC_SKI_SKILL(att, SKI_SHIELD) : att_dex);
 
             if (hm >= 0) /* Successful Shield use */
-                def_shield_bonus = shi_info[OBJ_VALUE(def_shield, 0)].melee + shield_bonus / 2;
+                def_shield_bonus = g_shi_info[OBJ_VALUE(def_shield, 0)].melee + shield_bonus / 2;
         }
     } /* End of Shield */
 
@@ -449,9 +449,9 @@ int spell_bonus(class unit_data *att,
         pStat->append("Result = 2*(att_abil-def_abil) + 2*(att_spl - def_spl) + (att_bonus - def_bonus)) + roll<br/>");
         pStat->append("<br/>");
 
-        int dam5 = chart_damage(hm + roll_boost(5, CHAR_LEVEL(att)), &(spell_chart[spell_number].element[def_armour_type]));
-        int dam50 = chart_damage(hm + roll_boost(50, CHAR_LEVEL(att)), &(spell_chart[spell_number].element[def_armour_type]));
-        int dam95 = chart_damage(hm + roll_boost(95, CHAR_LEVEL(att)), &(spell_chart[spell_number].element[def_armour_type]));
+        int dam5 = chart_damage(hm + roll_boost(5, CHAR_LEVEL(att)), &(g_spell_chart[spell_number].element[def_armour_type]));
+        int dam50 = chart_damage(hm + roll_boost(50, CHAR_LEVEL(att)), &(g_spell_chart[spell_number].element[def_armour_type]));
+        int dam95 = chart_damage(hm + roll_boost(95, CHAR_LEVEL(att)), &(g_spell_chart[spell_number].element[def_armour_type]));
 
         char buf[MAX_STRING_LENGTH];
         snprintf(buf, sizeof(buf), "Spell  dmg (5/50/95) : %4d %4d %4d<br/>", dam5, dam50, dam95);

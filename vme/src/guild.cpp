@@ -4,7 +4,7 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.5 $
  */
-
+#include "external_vars.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -177,15 +177,13 @@ void act_to_guild(const char *msg, char *guild, class unit_data *member, class u
 {
     class descriptor_data *d;
 
-    extern class descriptor_data *descriptor_list;
-
     if (guild == NULL || *guild == '\0')
     {
         slog(LOG_ALL, 0, "No guild name in send_to_guild");
         return;
     }
 
-    for (d = descriptor_list; d; d = d->next)
+    for (d = g_descriptor_list; d; d = d->next)
         if (descriptor_is_playing(d) && (d->character != nonmember) && IS_PC(d->character) && PC_GUILD(d->character) &&
             strcmp(PC_GUILD(d->character), guild) == 0)
             act(msg, A_ALWAYS, member, nonmember, d->character, TO_VICT);
@@ -590,9 +588,9 @@ int guild_basis(struct spec_arg *sarg)
     {
         scan4_unit(sarg->owner, UNIT_ST_PC);
 
-        for (i = 0; i < unit_vector.top; i++)
+        for (i = 0; i < g_unit_vector.top; i++)
         {
-            u = unit_vector.units[i];
+            u = g_unit_vector.units[i];
             if (IS_PC(u) && CHAR_FIGHTING(u) == sarg->owner && PC_GUILD(u) && CHAR_CAN_SEE(sarg->owner, u))
             {
                 if (strcmp(PC_GUILD(u), (char *)sarg->fptr->data) == 0)
@@ -620,8 +618,6 @@ int guild_title(struct spec_arg *sarg)
     char buf[MAX_STRING_LENGTH], male[MAX_STRING_LENGTH], female[MAX_STRING_LENGTH];
     char *c;
     int i, title_no;
-
-    extern const char *pc_race_adverbs[PC_RACE_MAX + 1];
 
     if (!is_command(sarg->cmd, "title") || !IS_PC(sarg->activator))
         return SFR_SHARE;
@@ -653,9 +649,9 @@ int guild_title(struct spec_arg *sarg)
     }
 
     if (CHAR_SEX(sarg->activator) == SEX_FEMALE)
-        snprintf(buf, sizeof(buf), female, pc_race_adverbs[CHAR_RACE(sarg->activator)]);
+        snprintf(buf, sizeof(buf), female, g_pc_race_adverbs[CHAR_RACE(sarg->activator)]);
     else
-        snprintf(buf, sizeof(buf), male, pc_race_adverbs[CHAR_RACE(sarg->activator)]);
+        snprintf(buf, sizeof(buf), male, g_pc_race_adverbs[CHAR_RACE(sarg->activator)]);
 
     if (strcmp(buf, UNIT_TITLE_STRING(sarg->activator)) == 0)
     {

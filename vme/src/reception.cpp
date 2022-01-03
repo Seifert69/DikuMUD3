@@ -4,12 +4,11 @@
  $Date: 2004/09/21 08:45:46 $
  $Revision: 2.9 $
  */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-
+#include "external_vars.h"
 #include "structs.h"
 #include "utils.h"
 #include "textutil.h"
@@ -193,7 +192,7 @@ static int membuflen = 0, mempos;
 */
 
 /* Global variables */
-class file_index_type *slime_fi = NULL;
+class file_index_type *g_slime_fi = NULL;
 
 /* save object */
 void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
@@ -298,8 +297,9 @@ void add_units(CByteBuffer *pBuf, class unit_data *parent, class unit_data *unit
             equip_char(unit, tmp_u, tmp_i);
         }
     }
-    else /* UNIT CONTAINS NOTHING */ if ((level != 0) && (IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
-        enlist(pBuf, unit, level, fast);
+    else /* UNIT CONTAINS NOTHING */
+        if ((level != 0) && (IS_OBJ(unit) || IS_NPC(unit)) && !IS_SET(UNIT_FLAGS(unit), UNIT_FL_NOSAVE))
+            enlist(pBuf, unit, level, fast);
 }
 
 void send_saves(class unit_data *parent, class unit_data *unit)
@@ -417,12 +417,10 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
     CByteBuffer InvBuf;
     InvBuf.Clear();
 
-    extern class unit_data *void_room;
-
     int is_slimed(class file_index_type * sp);
     int patch(char *ref, ubit32 reflen, char *dif, int diflen, char *res, int reslen, ubit32 crc);
 
-    assert(slime_fi != NULL);
+    assert(g_slime_fi != NULL);
 
     pFile = fopen(pFileName, "rb");
 
@@ -501,7 +499,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
             if ((fi == NULL) || is_slimed(fi))
             {
                 slog(LOG_ALL, 0, "Sliming %s@%s for %s@%s", hn.unit, hn.zone, UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
-                pnew = read_unit(slime_fi); // Inserts unit into glist
+                pnew = read_unit(g_slime_fi); // Inserts unit into glist
                 pnew_tmp = read_unit_string(&InvBuf, hn.type, hn.length, "preslime", FALSE);
 
                 if (g_nCorrupt)
@@ -511,7 +509,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
                 }
 
                 if (pnew->fi == NULL)
-                    pnew->set_fi(slime_fi);
+                    pnew->set_fi(g_slime_fi);
             }
             else
             {
@@ -547,7 +545,7 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
             if (UNIT_IN(pnew))
                 pstack[frame] = UNIT_IN(pnew);
             else
-                pstack[frame] = void_room;
+                pstack[frame] = g_void_room;
         }
 
         UNIT_IN(pnew) = NULL;
@@ -596,8 +594,8 @@ void load_contents(const char *pFileName, class unit_data *unit)
 
 void reception_boot(void)
 {
-    slime_fi = find_file_index("basis", "slime");
-    assert(slime_fi);
+    g_slime_fi = find_file_index("basis", "slime");
+    assert(g_slime_fi);
 }
 
 /* ************************************************************************

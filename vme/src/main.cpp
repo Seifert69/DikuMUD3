@@ -4,7 +4,7 @@
  $Date: 2004/09/18 19:52:56 $
  $Revision: 2.10 $
  */
-
+#include "external_vars.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -27,37 +27,35 @@
 #include "hookmud.h"
 #include "dilrun.h"
 
-extern ubit32 memory_total_alloc;
-extern void special_event(void *p1, void *p2);
 #define OPT_USEC 250000L     /* time delay corresponding to 4 passes/sec */
 long g_nTickUsec = OPT_USEC; // Dont mess with this, it's the game heartbeat. Look at 'timewarp'
 
 #define HEAPSPACE_INCREMENT 500
 /* constants */
-eventqueue events;
-class descriptor_data *descriptor_list = NULL;
-class descriptor_data *next_to_process = NULL;
+eventqueue g_events;
+class descriptor_data *g_descriptor_list = NULL;
+class descriptor_data *g_next_to_process = NULL;
 
 /* For multi-connectors */
-class cMultiMaster Multi;
+class cMultiMaster g_Multi;
 
 /* The global server configuration */
 
-int mud_bootzone = 1;   /* Used when booting & resolving DIL templts */
-int mudboot = 1;        /* Used when booting & resolving DIL templts */
-int no_players = 0;     /* Statistics                                */
-int max_no_players = 0; /* Statistics                                */
-int player_convert = 0;
-int slow_death = 0;   /* Shut her down, Martha, she's sucking mud */
-int mud_shutdown = 0; /* clean shutdown */
-int mud_reboot = 0;   /* reboot the game after a shutdown */
-int wizlock = 0;      /* no mortals on now */
-int tics = 60;        /* number of tics since boot-time */
+int g_mud_bootzone = 1;   /* Used when booting & resolving DIL templts */
+int g_mudboot = 1;        /* Used when booting & resolving DIL templts */
+int g_no_players = 0;     /* Statistics                                */
+int g_max_no_players = 0; /* Statistics                                */
+int g_player_convert = 0;
+int g_slow_death = 0;   /* Shut her down, Martha, she's sucking mud */
+int g_mud_shutdown = 0; /* clean shutdown */
+int g_mud_reboot = 0;   /* reboot the game after a shutdown */
+int g_wizlock = 0;      /* no mortals on now */
+int g_tics = 60;        /* number of tics since boot-time */
 
-char world_boottime[64] = ""; /* boottime of world */
+char g_world_boottime[64] = ""; /* boottime of world */
 
-const char *compile_date = __DATE__;
-const char *compile_time = __TIME__;
+const char *g_compile_date = __DATE__;
+const char *g_compile_time = __TIME__;
 
 /* external functions */
 void string_add(class descriptor_data *d, char *str);
@@ -138,17 +136,17 @@ int main(int argc, char **argv)
 
             case 'c':
                 slog(LOG_OFF, 0, "Converting player file mode.");
-                player_convert = 1;
+                g_player_convert = 1;
                 break;
 
             case 'C':
                 slog(LOG_OFF, 0, "Cleaning up player file mode.");
-                player_convert = 2;
+                g_player_convert = 2;
                 break;
 
             case 'L':
                 slog(LOG_OFF, 0, "Listing player file mode.");
-                player_convert = 3;
+                g_player_convert = 3;
                 break;
 
             case 's':
@@ -195,8 +193,8 @@ int main(int argc, char **argv)
             exit(6);
         }
 
-    log_file_fd = freopen(log_name, "w", stderr);
-    if (!log_file_fd)
+    g_log_file_fd = freopen(log_name, "w", stderr);
+    if (!g_log_file_fd)
     {
         fprintf(stderr, "Error in opening the log:  '%s'", log_name);
         free(log_name);
@@ -247,7 +245,7 @@ int main(int argc, char **argv)
 void run_the_game(char *srvcfg)
 {
 #ifdef PROFILE
-    extern char etext;
+    extern char g_etext;
 #endif
 
     void signal_setup(void);
@@ -257,14 +255,14 @@ void run_the_game(char *srvcfg)
      * monstartup HERE! Otherwise it defaults to the one below.
      *
      #ifdef PROFILE
-     monstartup((int) 2, etext);
+     monstartup((int) 2, g_etext);
      #endif
      */
 
-    descriptor_list = NULL;
+    g_descriptor_list = NULL;
 
     g_cServerConfig.Boot(srvcfg);
-    slog(LOG_ALL, 0, "VME SERVER COMPILED AT %s %s", compile_date, compile_time);
+    slog(LOG_ALL, 0, "VME SERVER COMPILED AT %s %s", g_compile_date, g_compile_time);
     slog(LOG_OFF, 0, "Read server configuration.");
 
     slog(LOG_OFF, 0, "Opening mother connection on port %d.", g_cServerConfig.m_nMotherPort);
@@ -279,22 +277,22 @@ void run_the_game(char *srvcfg)
     namedpipe_setup();
 
     boot_db();
-    mudboot = 0;
-    events.process();
+    g_mudboot = 0;
+    g_events.process();
     /*
     #ifdef PROFILE
-       monstartup((int) 2, etext);
+       monstartup((int) 2, g_etext);
     #endif
     */
     slog(LOG_OFF, 0, "Priming eventqueue.");
 
-    events.add(PULSE_SEC * SECS_PER_REAL_MIN * 2, check_idle_event, 0, 0);
-    events.add(PULSE_SEC * 5, ping_multiplexers_event, 0, 0);
-    events.add(PULSE_VIOLENCE, perform_violence_event, 0, 0);
-    // events.add(PULSE_POINTS, point_update_event, 0, 0);
-    // events.add(PULSE_SEC * SECS_PER_REAL_MIN * 5, update_crimes_event, 0, 0);
-    events.add(PULSE_SEC * SECS_PER_REAL_MIN * 10, check_reboot_event, 0, 0);
-    events.add(PULSE_SEC * SECS_PER_REAL_HOUR * 4, check_overpopulation_event, 0, 0);
+    g_events.add(PULSE_SEC * SECS_PER_REAL_MIN * 2, check_idle_event, 0, 0);
+    g_events.add(PULSE_SEC * 5, ping_multiplexers_event, 0, 0);
+    g_events.add(PULSE_VIOLENCE, perform_violence_event, 0, 0);
+    // g_events.add(PULSE_POINTS, point_update_event, 0, 0);
+    // g_events.add(PULSE_SEC * SECS_PER_REAL_MIN * 5, update_crimes_event, 0, 0);
+    g_events.add(PULSE_SEC * SECS_PER_REAL_MIN * 10, check_reboot_event, 0, 0);
+    g_events.add(PULSE_SEC * SECS_PER_REAL_HOUR * 4, check_overpopulation_event, 0, 0);
 
     slog(LOG_OFF, 0, "Entering game loop.");
 
@@ -304,7 +302,7 @@ void run_the_game(char *srvcfg)
     CloseTimer();
 #endif
 
-    CaptainHook.Close();
+    g_CaptainHook.Close();
 
 #ifdef PROFILE
     #if !defined(LINUX)
@@ -316,7 +314,7 @@ void run_the_game(char *srvcfg)
     void db_shutdown(void);
     db_shutdown();
 
-    if (mud_reboot)
+    if (g_mud_reboot)
     {
         slog(LOG_OFF, 0, "Rebooting.");
         exit(42);
@@ -336,10 +334,10 @@ void game_loop()
     void clear_destructed(void);
     std::string str;
 
-    tics = 61;
+    g_tics = 61;
     gettimeofday(&old, (struct timezone *)0);
 
-    while (!mud_shutdown)
+    while (!g_mud_shutdown)
     {
         /* work */
         game_event();
@@ -347,11 +345,11 @@ void game_loop()
         int pipeMUD_read(std::string & str);
         pipeMUD_read(str);
 
-        events.process();
+        g_events.process();
 
         clear_destructed();
 
-        tics++;
+        g_tics++;
 
         /* Timer stuff. MUD is always at least OPT_USEC useconds in making one cycle. */
 
@@ -369,7 +367,7 @@ void game_loop()
     }
 
     slog(LOG_ALL, 0, "Saving all players before exiting");
-    for (d = descriptor_list; d; d = d->next)
+    for (d = g_descriptor_list; d; d = d->next)
     {
         if (d->original != NULL)
         {
@@ -392,9 +390,8 @@ void game_loop()
     }
     multi_close_all();
 
-    extern pthread_t dijkstra_thread;
-    // pthread_cancel(dijkstra_thread);
-    pthread_join(dijkstra_thread, NULL);
+    // pthread_cancel(g_dijkstra_thread);
+    pthread_join(g_dijkstra_thread, NULL);
     sleep(1);
 }
 
@@ -408,7 +405,7 @@ void game_event(void)
     void multi_close(struct multi_element * pe);
     void multi_clear(void);
 
-    i = CaptainHook.Wait(&null_time);
+    i = g_CaptainHook.Wait(&null_time);
 
     if (i < 0)
     {
@@ -417,9 +414,9 @@ void game_event(void)
     }
 
     /* process_commands; */
-    for (point = descriptor_list; point; point = next_to_process)
+    for (point = g_descriptor_list; point; point = g_next_to_process)
     {
-        next_to_process = point->next;
+        g_next_to_process = point->next;
 
         if (--(point->wait) <= 0 && !point->qInput.IsEmpty())
         {
@@ -445,7 +442,7 @@ void game_event(void)
     }
 
     /* give the people some prompts */
-    for (point = descriptor_list; point; point = point->next)
+    for (point = g_descriptor_list; point; point = point->next)
     {
         if (point->prompt_mode == PROMPT_EXPECT)
         {
@@ -463,7 +460,7 @@ void ping_multiplexers_event(void *p1, void *p2)
 
     multi_ping_all();
 
-    events.add(PULSE_SEC * 5, ping_multiplexers_event, 0, 0);
+    g_events.add(PULSE_SEC * 5, ping_multiplexers_event, 0, 0);
 }
 
 void check_idle_event(void *p1, void *p2)
@@ -471,19 +468,19 @@ void check_idle_event(void *p1, void *p2)
     void check_idle(void);
 
     check_idle();
-    events.add(PULSE_ZONE, check_idle_event, 0, 0);
+    g_events.add(PULSE_ZONE, check_idle_event, 0, 0);
 }
 
 void perform_violence_event(void *p1, void *p2)
 {
-    CombatList.PerformViolence();
-    events.add(PULSE_VIOLENCE, perform_violence_event, 0, 0);
+    g_CombatList.PerformViolence();
+    g_events.add(PULSE_VIOLENCE, perform_violence_event, 0, 0);
 }
 
 // void update_crimes_event(void *p1, void *p2)
 //{
 //    update_crimes();
-//    events.add(1200, update_crimes_event, 0, 0);
+//    g_events.add(1200, update_crimes_event, 0, 0);
 //}
 
 /*void point_update_event(void *p1, void *p2)
@@ -492,7 +489,7 @@ void perform_violence_event(void *p1, void *p2)
 
     slog(LOG_ALL, 0, "Point update event()");
     point_update();
-    events.add(PULSE_POINTS, point_update_event, 0, 0);
+    g_events.add(PULSE_POINTS, point_update_event, 0, 0);
 }*/
 
 void timewarp_end(void *p1, void *p2)
@@ -503,17 +500,17 @@ void timewarp_end(void *p1, void *p2)
 
 void check_overpopulation_event(void *p1, void *p2)
 {
-    events.add(PULSE_SEC * SECS_PER_REAL_HOUR * 4, check_overpopulation_event, 0, 0);
+    g_events.add(PULSE_SEC * SECS_PER_REAL_HOUR * 4, check_overpopulation_event, 0, 0);
 
     int nHours;
-    nHours = (tics / PULSE_SEC) / 3600;
+    nHours = (g_tics / PULSE_SEC) / 3600;
     slog(LOG_ALL, 0, "Game up for %d tick hours, checking for overpopulation", nHours);
 
     class unit_data *u, *t;
     int i;
     int nUnits = 0;
 
-    for (u = unit_list; u; u = u->gnext)
+    for (u = g_unit_list; u; u = u->gnext)
     {
         membug_verify_class(u);
         nUnits++;
@@ -556,11 +553,11 @@ void check_reboot_event(void *p1, void *p2)
 {
     if (check_reboot() == 1)
     {
-        events.add(PULSE_SEC * SECS_PER_REAL_MIN * 2, check_reboot_event, 0, 0);
+        g_events.add(PULSE_SEC * SECS_PER_REAL_MIN * 2, check_reboot_event, 0, 0);
     }
     else
     {
-        events.add(PULSE_SEC * SECS_PER_REAL_MIN * 10, check_reboot_event, 0, 0);
+        g_events.add(PULSE_SEC * SECS_PER_REAL_MIN * 10, check_reboot_event, 0, 0);
     }
 }
 

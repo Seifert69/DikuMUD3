@@ -29,7 +29,7 @@ struct money_type
 /* You shouldn't have to refer to this array yourself.
  * Use the macros instead.
  */
-extern struct money_type money_types[];
+extern struct money_type g_money_types[];
 
 /* Give a number of coins (of a specific type) to unit
  * (type == -1 means money_to_unit with local_currency(unit)
@@ -107,10 +107,10 @@ char *money_string(amount_t amt, currency_t currency, ubit1 verbose);
 amount_t char_can_carry_amount(class unit_data *ch, class unit_data *money);
 amount_t unit_can_hold_amount(class unit_data *unit, class unit_data *money);
 
-#define money_pluralis_type(type) (money_types[(type)].strings[money_types[(type)].pl_idx])
+#define money_pluralis_type(type) (g_money_types[(type)].strings[g_money_types[(type)].pl_idx])
 #define money_pluralis(unit) (money_pluralis_type(MONEY_TYPE(unit)))
 
-#define money_singularis_type(type) (money_types[(type)].strings[0])
+#define money_singularis_type(type) (g_money_types[(type)].strings[0])
 #define money_singularis(unit) (money_singularis_type(MONEY_TYPE(unit)))
 
 #define money_from_unit(unit, amt, currency) (money_transfer((unit), NULL, (amt), (currency)))
@@ -124,13 +124,13 @@ amount_t unit_can_hold_amount(class unit_data *unit, class unit_data *money);
 /* Index into money-array */
 #define MONEY_TYPE(obj) (OBJ_VALUE((obj), 0))
 
-#define MONEY_CURRENCY(obj) (money_types[MONEY_TYPE(obj)].currency)
+#define MONEY_CURRENCY(obj) (g_money_types[MONEY_TYPE(obj)].currency)
 
-#define MONEY_RELATIVE(obj) (money_types[MONEY_TYPE(obj)].relative_value)
+#define MONEY_RELATIVE(obj) (g_money_types[MONEY_TYPE(obj)].relative_value)
 
-#define MONEY_MIN_VALUE(obj) (money_types[MONEY_TYPE(obj)].min_value)
+#define MONEY_MIN_VALUE(obj) (g_money_types[MONEY_TYPE(obj)].min_value)
 
-#define MONEY_WEIGHT(obj) (money_types[MONEY_TYPE(obj)].coins_per_weight)
+#define MONEY_WEIGHT(obj) (g_money_types[MONEY_TYPE(obj)].coins_per_weight)
 
 #define MONEY_VALUE(obj) (MONEY_AMOUNT(obj) * MONEY_RELATIVE(obj))
 

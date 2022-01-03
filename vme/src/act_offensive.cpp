@@ -73,7 +73,7 @@ void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd
 
     if ((CHAR_LEVEL(ch) < ULTIMATE_LEVEL) || IS_NPC(ch))
     {
-        do_hit(ch, argument, &cmd_auto_unknown);
+        do_hit(ch, argument, &g_cmd_auto_unknown);
         return;
     }
 

@@ -16,15 +16,15 @@
 #include "utility.h"
 #include "db.h"
 
-int possible_saves = 0;
+int g_possible_saves = 0;
 
 /* Used for converting general direction in dmc! */
-const char *dirs[] = {"north", "east", "south", "west", "up", "down", "northeast", "northwest", "southeast", "southwest", NULL};
+const char *g_dirs[] = {"north", "east", "south", "west", "up", "down", "northeast", "northwest", "southeast", "southwest", NULL};
 
 /* Used for converting general direction in dmc! */
-const char *dirs_short[] = {"n", "e", "s", "w", "u", "d", "ne", "nw", "se", "sw", NULL};
+const char *g_dirs_short[] = {"n", "e", "s", "w", "u", "d", "ne", "nw", "se", "sw", NULL};
 
-struct shi_info_type shi_info[] = {
+struct shi_info_type g_shi_info[] = {
     /* %age Chance of blocking an attack if ready to block */
     {15}, /* SHIELD_SMALL  */
     {20}, /* SHIELD_MEDIUM */

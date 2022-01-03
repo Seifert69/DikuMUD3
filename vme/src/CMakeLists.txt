@@ -15,7 +15,7 @@ set(VME_SRCS
         apf_affect.cpp
         badnames.cpp badnames.h
         ban.cpp ban.h
-        bank.cpp
+        bank.cpp bank.h
         base.h
         bytestring.cpp bytestring.h
         cmdload.cpp cmdload.h
@@ -43,6 +43,7 @@ set(VME_SRCS
         essential.h
         event.cpp event.h
         experience.cpp
+        external_vars.h
         extra.cpp extra.h
         fight.cpp fight.h
         files.cpp files.h
@@ -59,7 +60,7 @@ set(VME_SRCS
         magic.cpp magic.h
         main.h
         membug.cpp membug.h
-        mobact.cpp
+        mobact.cpp mobact.h
         modify.cpp modify.h
         money.cpp money.h
         movement.h
