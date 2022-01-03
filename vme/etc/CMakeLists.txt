@@ -1,4 +1,4 @@
-file(GLOB DEF_FILES ${CMAKE_SOURCE_DIR}/vme/etc/abilities.def;${CMAKE_SOURCE_DIR}/vme/etc/commands.def;${CMAKE_SOURCE_DIR}/vme/etc/professions.def;${CMAKE_SOURCE_DIR}/vme/etc/races.def;${CMAKE_SOURCE_DIR}/vme/etc/sector.def;${CMAKE_SOURCE_DIR}/vme/etc/spells.def;${CMAKE_SOURCE_DIR}/vme/etc/weapons.def)
+set(DEF_FILES abilities.def commands.def professions.def races.def sector.def spells.def weapons.def)
 file(GLOB HEADER_DEPS ${CMAKE_SOURCE_DIR}/vme/include/*.h)
 
 # Create empty variable for outputs
@@ -22,7 +22,7 @@ foreach (DEF_SRC_FILE ${DEF_FILES})
     set(CLEAN_FILES ${CLEAN_FILES} "${SHORT}.dat;")
 endforeach (DEF_SRC_FILE)
 
-add_custom_target(dat_files ALL DEPENDS ${CMAKE_SOURCE_DIR}/vme/bin/vmc ${HEADER_DEPS} ${OUTPUT_FILES})
+add_custom_target(dat_files ALL DEPENDS vmc ${HEADER_DEPS} ${OUTPUT_FILES})
 
 set_target_properties(dat_files
         PROPERTIES
@@ -34,7 +34,7 @@ set_target_properties(dat_files
 # Handle the color file. I'm sure this isn't a good way to handle a single file...
 #
 
-file(GLOB COLOR_FILES ${CMAKE_SOURCE_DIR}/vme/etc/color.def)
+set(COLOR_FILES color.def)
 
 # Create empty variable for outputs
 set(OUTPUT_FILES)
@@ -64,6 +64,3 @@ set_target_properties(color_files
         PROPERTIES
             ADDITIONAL_CLEAN_FILES "${CLEAN_FILES}"
         )
-
-
-

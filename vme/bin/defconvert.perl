@@ -8,8 +8,10 @@ $libdir = "../lib/";
 $bindir = "../bin/";
 $definf = "@ARGV[0]";
 $defouf = "@ARGV[1]";
-$deftmp = "../log/tmp.cpp";
-$tmplin = "../log/tmp.lin";
+$deftmp = `mktemp --tmpdir=../log --suffix=.cpp`;
+chomp $deftmp;
+$tmplin = `mktemp --tmpdir=../log --suffix=.lin`;
+chomp $tmplin;
 $cpp = "../bin/vmc -p -I../include/ ";
 
 system "$cpp $definf | grep -v \\# > $deftmp";
@@ -92,4 +94,3 @@ sub calc {
     die ("EVALED ERRORED");
   }
 }
-
