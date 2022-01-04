@@ -10,6 +10,7 @@
 
 #include <string>
 #include <cstring>
+#include "essential.h"
 
 struct SFightColorSet
 {
