@@ -11,11 +11,6 @@
 # E.g. ln -s /usr/bin/gh
 #
 
-# I can't get the .bashrc to set the VME_ROOT on all systems so I have to enter it here.
-#
-VME_ROOT='/home/val/vme'
-
-
 umask 000
 
 if [ -z ${VME_ROOT} ]; then

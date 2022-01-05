@@ -13,15 +13,13 @@
 # running from DIL. Symbolic links and scripts are your friends here
 # E.g. ln -s /usr/bin/gh
 #
-
-# I can't get the .bashrc to set the VME_ROOT on all systems so I have to enter it here.
+# 
 #
-VME_ROOT='/home/mud/vme'
 
 umask 000
 
 if [ -z ${VME_ROOT} ]; then
-   echo "VME_ROOT not set [$VME_ROOT]"
+   echo "VME_ROOT not set [$VME_ROOT]. Must be set to the vme/ directory of the install."
    exit 1
 fi
 
