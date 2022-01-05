@@ -1,11 +1,13 @@
 .idea/
 cmake-build-debug/
+cmake-build-debug-coverage/
 cmake-build-default/
 cmake-build-minsizerel/
 cmake-build-release/
 cmake-build-relwithdebinfo/
 build/
 .*.swp
+.swp
 CMakeCache.txt
 CMakeFiles
 cmake_install.cmake
