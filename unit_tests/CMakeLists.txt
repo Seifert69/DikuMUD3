@@ -3,7 +3,14 @@ set(Boost_USE_STATIC_LIBS OFF)
 include_directories(${Boost_INCLUDE_DIRS})
 
 add_custom_target(all_unit_tests)
-add_dependencies(vme vme_unit_tests vmc_unit_tests pp_unit_tests defcomp_unit_tests mplex_unit_tests)
+add_dependencies(all_unit_tests
+        vme
+        vme_unit_tests
+        vmc_unit_tests
+        pp_unit_tests
+        defcomp_unit_tests
+        mplex_unit_tests
+        )
 
 ############################### VME ######################################
 add_executable(vme_unit_tests
@@ -22,6 +29,7 @@ target_link_libraries(vme_unit_tests
         vme_objs
         crypt
         ${Boost_LIBRARIES}
+        pthread
         )
 
 ############################### VMC ######################################

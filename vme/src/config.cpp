@@ -45,6 +45,8 @@ CServerConfiguration::CServerConfiguration(void)
 
     memset(&m_sSubnetMask, 0, sizeof(m_sSubnetMask));
     memset(&m_sLocalhost, 0, sizeof(m_sLocalhost));
+    memset(&m_aMplexHosts, 0, sizeof(m_aMplexHosts));
+
     m_logdir = NULL;
     m_libdir = NULL;
     m_etcdir = NULL;
@@ -54,6 +56,7 @@ CServerConfiguration::CServerConfiguration(void)
     m_pLogo = NULL;
     m_pImmortName = NULL;
     m_hReboot = 0;
+    m_pColor = NULL;
 }
 
 int CServerConfiguration::FromLAN(char *pFromHost)
