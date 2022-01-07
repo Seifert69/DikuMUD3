@@ -4,20 +4,22 @@
  $Date: 2004/09/18 19:52:56 $
  $Revision: 2.10 $
  */
-
+#include "bank.h"
+#include "external_vars.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
 #include <map>
+#include <string>
 
 #ifdef _WINDOWS
-#include <winsock2.h>
+    #include <winsock2.h>
 #else
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
 #endif
 
 #include "structs.h"
@@ -40,16 +42,9 @@
 #include "constants.h"
 #include "main.h"
 
-/*   external vars  */
-extern struct zone_info_type zone_info;
-
 /* external functs */
 struct time_info_data age(class unit_data *ch);
 struct time_info_data real_time_passed(time_t t2, time_t t1);
-
-extern void stat_bank(const class unit_data *ch, class unit_data *u); /* bank.c */
-extern eventqueue events;
-
 
 static void stat_world_count(const class unit_data *ch, char *arg)
 {
@@ -61,11 +56,11 @@ static void stat_world_count(const class unit_data *ch, char *arg)
 
     int nMinCount = atoi(arg);
 
-    sprintf(buf, "The first 40 units containing at least %d units:<br/>", nMinCount);
+    snprintf(buf, sizeof(buf), "The first 40 units containing at least %d units:<br/>", nMinCount);
     mystr = buf;
 
     n = 0;
-    for (u = unit_list; u; u = u->gnext)
+    for (u = g_unit_list; u; u = u->gnext)
     {
         i = 0;
         for (t = UNIT_CONTAINS(u); t; t = t->next) // count top layer
@@ -73,21 +68,19 @@ static void stat_world_count(const class unit_data *ch, char *arg)
 
         if (i >= nMinCount)
         {
-            sprintf(buf, "%s@%s(%s) : %d units <br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), UNIT_NAME(u), i);
+            snprintf(buf, sizeof(buf), "%s@%s(%s) : %d units <br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u), UNIT_NAME(u), i);
             mystr.append(buf);
             n++;
 
             if (n >= 40)
                 break;
         }
-
     }
 
     mystr.append("<br/>");
 
     page_string(CHAR_DESCRIPTOR(ch), mystr.c_str());
 }
-
 
 static void stat_world_extra(const class unit_data *ch)
 {
@@ -96,15 +89,15 @@ static void stat_world_extra(const class unit_data *ch)
     std::string mystr;
 
     mystr = "";
-    sprintf(buf, "World zones (%d):<br/>", zone_info.no_of_zones);
+    snprintf(buf, sizeof(buf), "World zones (%d):<br/>", g_zone_info.no_of_zones);
     mystr.append(buf);
 
     mystr = "<div class='fourcol'>";
 
-    auto zp = zone_info.mmp.begin();
-    for (i = 1; zp != zone_info.mmp.end(); zp++, i++)
+    auto zp = g_zone_info.mmp.begin();
+    for (i = 1; zp != g_zone_info.mmp.end(); zp++, i++)
     {
-        sprintf(buf, "<a cmd='goto #'>%s</a><br/>", zp->second->name);
+        snprintf(buf, sizeof(buf), "<a cmd='goto #'>%s</a><br/>", zp->second->name);
         mystr.append(buf);
     }
     mystr.append("</div><br/>");
@@ -119,17 +112,21 @@ static void stat_memory(class unit_data *ch)
     void memory_status(char *buf);
     void system_memory(class unit_data * ch);
 
-    sprintf(buf, "Event queue entries: %d<br/>", events.Count());
+    snprintf(buf, sizeof(buf), "Event queue entries: %d<br/>", g_events.Count());
     send_to_char(buf, ch);
-    sprintf(buf, "Current Tic=%d , Event Queue Tic=%d<br/>", tics, events.NextEventTic());
+    snprintf(buf, sizeof(buf), "Current Tic=%d , Event Queue Tic=%d<br/>", g_tics, g_events.NextEventTic());
     send_to_char(buf, ch);
-    sprintf(buf, "Event queue GL Stats ( Proceses/Sec ): %d/%1.4f<br/>", events.PCount(), events.PTime());
+    snprintf(buf, sizeof(buf), "Event queue GL Stats ( Proceses/Sec ): %d/%1.4f<br/>", g_events.PCount(), g_events.PTime());
     send_to_char(buf, ch);
-    sprintf(buf, "Event queue Max Time  ( Proceses/Sec ): %d/%1.4f<br/>", events.Max_PTime_Process(), events.Max_PTime());
+    snprintf(buf, sizeof(buf), "Event queue Max Time  ( Proceses/Sec ): %d/%1.4f<br/>", g_events.Max_PTime_Process(), g_events.Max_PTime());
     send_to_char(buf, ch);
-    sprintf(buf, "Event queue Max Process  ( Proceses/Sec ): %d/%1.4f<br/>", events.Max_PCount(), events.Max_PCount_Time());
+    snprintf(buf,
+             sizeof(buf),
+             "Event queue Max Process  ( Proceses/Sec ): %d/%1.4f<br/>",
+             g_events.Max_PCount(),
+             g_events.Max_PCount_Time());
     send_to_char(buf, ch);
-    sprintf(buf, "Event queue Avg Process  ( Proceses/Sec ): %1.1f/%1.4f<br/>", events.Avg_PCount(), events.Avg_PTime());
+    snprintf(buf, sizeof(buf), "Event queue Avg Process  ( Proceses/Sec ): %1.1f/%1.4f<br/>", g_events.Avg_PCount(), g_events.Avg_PTime());
     send_to_char(buf, ch);
     //  system_memory (ch);
     //  memory_status (buf);
@@ -140,12 +137,12 @@ static void stat_memory(class unit_data *ch)
 
     class unit_data *u;
 
-    for (u = unit_list; u; u = u->next)
+    for (u = g_unit_list; u; u = u->next)
     {
         if (UNIT_TYPE(u) != UNIT_ST_ROOM)
             if (UNIT_IN(u) == NULL)
             {
-                sprintf(buf, "%s@%s is not in a room<br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
+                snprintf(buf, sizeof(buf), "%s@%s is not in a room<br/>", UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u));
                 send_to_char(buf, ch);
             }
     }
@@ -153,47 +150,53 @@ static void stat_memory(class unit_data *ch)
 
 static void stat_world(class unit_data *ch)
 {
-    extern int world_norooms, world_noobjects, world_nochars, world_nozones;
-    extern int world_nonpc, world_nopc;
-    extern char world_boottime[64];
-    extern int tics;
-    extern int g_nTickUsec;
-    //extern int g_nDilPrg;
     char buf[MAX_STRING_LENGTH];
     time_t now = time(0);
 
     char *p = ctime(&now);
     p[strlen(p) - 1] = '\0';
 
-    sprintf(buf, "Server compiled at %s %s<br/>"
-                 "World status (tick %d aka %d hours): %s<br/>"
-                 "#rooms [%4d]  #objects [%4d]  #chars [%4d]  #npcs [%4d] "
-                 "  #pcs [%4d]<br/>"
-                 "#units [%4d]  #zones   [%4d]<br/>"
-                 "#connections [%2d / peak %2d]<br/>"
-                 "#players     [%2d / peak %2d]<br/>"
-                 "Boottime: %s<br/>Time now: %s<br/>"
-                 "DIL programs [%d]   DIL Vals [%d]<br>",
-            compile_date, compile_time,
-            tics, tics / (PULSE_SEC * 3600), g_nTickUsec < 1 ? "time-warped" : "",
-            world_norooms, world_noobjects, world_nochars,
-            world_nonpc, world_nopc,
-            world_norooms + world_noobjects + world_nochars,
-            world_nozones,
-            no_connections, max_no_connections,
-            no_players, max_no_players, world_boottime, p, g_nDilPrg, g_nDilVal);
+    snprintf(buf,
+             sizeof(buf),
+             "Server compiled at %s %s<br/>"
+             "World status (tick %d aka %d hours): %s<br/>"
+             "#rooms [%4d]  #objects [%4d]  #chars [%4d]  #npcs [%4d] "
+             "  #pcs [%4d]<br/>"
+             "#units [%4d]  #zones   [%4d]<br/>"
+             "#connections [%2d / peak %2d]<br/>"
+             "#players     [%2d / peak %2d]<br/>"
+             "Boottime: %s<br/>Time now: %s<br/>"
+             "DIL programs [%d]   DIL Vals [%d]<br>",
+             g_compile_date,
+             g_compile_time,
+             g_tics,
+             g_tics / (PULSE_SEC * 3600),
+             g_nTickUsec < 1 ? "time-warped" : "",
+             g_world_norooms,
+             g_world_noobjects,
+             g_world_nochars,
+             g_world_nonpc,
+             g_world_nopc,
+             g_world_norooms + g_world_noobjects + g_world_nochars,
+             g_world_nozones,
+             g_no_connections,
+             g_max_no_connections,
+             g_no_players,
+             g_max_no_players,
+             g_world_boottime,
+             p,
+             g_nDilPrg,
+             g_nDilVal);
 
     page_string(CHAR_DESCRIPTOR(ch), buf);
 }
 
 static char *stat_buffer, *stat_p;
 
-static void stat_zone_reset(const char *indnt, struct zone_reset_cmd *zrip,
-                            class unit_data *ch)
+static void stat_zone_reset(const char *indnt, struct zone_reset_cmd *zrip, class unit_data *ch)
 {
     static const char *nums[] = {"max", "zonemax", "local"};
-
-    char buf[100];
+    std::string bits;
     int i;
 
     *stat_p = 0;
@@ -202,50 +205,49 @@ static void stat_zone_reset(const char *indnt, struct zone_reset_cmd *zrip,
 
     switch (zrip->cmd_no)
     {
-    case 0:
-        strcpy(stat_p, "Nop");
-        break;
+        case 0:
+            strcpy(stat_p, "Nop");
+            break;
 
-    case 1:
-        sprintf(stat_p, "Load %s", zrip->fi[0]->name);
-        TAIL(stat_p);
-
-        if (zrip->fi[1])
-        {
-            sprintf(stat_p, " into %s", zrip->fi[1]->name);
+        case 1:
+            sprintf(stat_p, "Load %s", zrip->fi[0]->name);
             TAIL(stat_p);
-        }
 
-        for (i = 0; i < 3; i++)
-            if (zrip->num[i])
+            if (zrip->fi[1])
             {
-                sprintf(stat_p, " %s %d", nums[i], zrip->num[i]);
+                sprintf(stat_p, " into %s", zrip->fi[1]->name);
                 TAIL(stat_p);
             }
 
-        strcpy(stat_p, zrip->cmpl ? " Complete" : "");
-        break;
+            for (i = 0; i < 3; i++)
+                if (zrip->num[i])
+                {
+                    sprintf(stat_p, " %s %d", nums[i], zrip->num[i]);
+                    TAIL(stat_p);
+                }
 
-    case 2:
-        sprintf(stat_p, "Equip %s %s max %d %s",
-                zrip->fi[0]->name, where[zrip->num[1]],
-                zrip->num[0], zrip->cmpl ? "Complete" : "");
-        break;
+            strcpy(stat_p, zrip->cmpl ? " Complete" : "");
+            break;
 
-    case 3:
-        sprintf(stat_p, "Door at %s : %s : %s",
-                zrip->fi[0]->name, dirs[zrip->num[0]],
-                sprintbit(buf, zrip->num[1], unit_open_flags));
-        break;
+        case 2:
+            sprintf(stat_p, "Equip %s %s max %d %s", zrip->fi[0]->name, g_where[zrip->num[1]], zrip->num[0], zrip->cmpl ? "Complete" : "");
+            break;
 
-    case 4:
-        sprintf(stat_p, "Purge %s", zrip->fi[0]->name);
-        break;
+        case 3:
+            sprintf(stat_p,
+                    "Door at %s : %s : %s",
+                    zrip->fi[0]->name,
+                    g_dirs[zrip->num[0]],
+                    sprintbit(bits, zrip->num[1], g_unit_open_flags));
+            break;
 
-    case 5:
-        sprintf(stat_p, "Remove %s in %s", zrip->fi[0]->name,
-                zrip->fi[1]->name);
-        break;
+        case 4:
+            sprintf(stat_p, "Purge %s", zrip->fi[0]->name);
+            break;
+
+        case 5:
+            sprintf(stat_p, "Remove %s in %s", zrip->fi[0]->name, zrip->fi[1]->name);
+            break;
     }
 
     STRCAT(stat_p, "<br/>");
@@ -276,11 +278,7 @@ static void stat_zone_reset(const char *indnt, struct zone_reset_cmd *zrip,
 
 static void stat_zone(class unit_data *ch, class zone_type *zone)
 {
-    static const char *reset_modes[] = {
-        "Never Reset",
-        "Reset When Empty",
-        "Reset Always",
-        "UNKNOWN"};
+    static const char *reset_modes[] = {"Never Reset", "Reset When Empty", "Reset Always", "UNKNOWN"};
     char *cname;
 
     char tmp[128], buf[MAX_STRING_LENGTH];
@@ -290,32 +288,43 @@ static void stat_zone(class unit_data *ch, class zone_type *zone)
     if (!is_in(reset_mode, 0, 2))
         reset_mode = 3;
 
-    sprintf(tmp, "%s%s.err", g_cServerConfig.m_zondir, zone->filename);
+    snprintf(tmp, sizeof(tmp), "%s%s.err", g_cServerConfig.m_zondir, zone->filename);
     errors = file_exists(tmp);
 
-    sprintf(tmp, "%s%s.inf", g_cServerConfig.m_zondir, zone->filename);
+    snprintf(tmp, sizeof(tmp), "%s%s.inf", g_cServerConfig.m_zondir, zone->filename);
     info = file_exists(tmp);
 
     cname = zone->creators.catnames();
 
-    sprintf(buf, "Zone [%s]  File [%s]  Access [%d]<br/>"
-                 "Title: \"%s\"<br/>"
-                 "Load level [%d] Pay only [%d]<br/>"
-                 "Number of Units [%d]    Number of Rooms [%d]<br/>"
-                 "Reset Mode : %s (%d)    Reset Interval [%d]<br/>"
-                 "Pressure [%d] Change [%d] Sky [%d] Base [%d]<br/><br/>"
-                 "Authors Mud Mail: %s<br/><br/>%s<br/><br/>"
-                 "%s<br/>%s<br/>",
-            zone->name, zone->filename, zone->access,
-            zone->title ? zone->title : "",
-            zone->loadlevel, zone->payonly,
-            zone->no_of_fi, zone->no_rooms,
-            reset_modes[reset_mode], reset_mode, zone->zone_time,
-            zone->weather.pressure, zone->weather.change,
-            zone->weather.sky, zone->weather.base,
-            cname, zone->notes,
-            errors ? "Errors in zone (stat zone error)" : "No errors registered in zone.",
-            info ? "User info feedback in zone (stat zone info)." : "No user info (feedback) in zone.");
+    snprintf(buf,
+             sizeof(buf),
+             "Zone [%s]  File [%s]  Access [%d]<br/>"
+             "Title: \"%s\"<br/>"
+             "Load level [%d] Pay only [%d]<br/>"
+             "Number of Units [%d]    Number of Rooms [%d]<br/>"
+             "Reset Mode : %s (%d)    Reset Interval [%d]<br/>"
+             "Pressure [%d] Change [%d] Sky [%d] Base [%d]<br/><br/>"
+             "Authors Mud Mail: %s<br/><br/>%s<br/><br/>"
+             "%s<br/>%s<br/>",
+             zone->name,
+             zone->filename,
+             zone->access,
+             zone->title ? zone->title : "",
+             zone->loadlevel,
+             zone->payonly,
+             zone->no_of_fi,
+             zone->no_rooms,
+             reset_modes[reset_mode],
+             reset_mode,
+             zone->zone_time,
+             zone->weather.pressure,
+             zone->weather.change,
+             zone->weather.sky,
+             zone->weather.base,
+             cname,
+             zone->notes,
+             errors ? "Errors in zone (stat zone error)" : "No errors registered in zone.",
+             info ? "User info feedback in zone (stat zone info)." : "No user info (feedback) in zone.");
     FREE(cname)
     page_string(CHAR_DESCRIPTOR(ch), buf);
 }
@@ -344,7 +353,7 @@ static void stat_creators(class unit_data *ch, char *arg)
 
         found = FALSE;
 
-        for (auto it = zone_info.mmp.begin(); it != zone_info.mmp.end(); it++)
+        for (auto it = g_zone_info.mmp.begin(); it != g_zone_info.mmp.end(); it++)
         {
             cname = it->second->creators.catnames();
 
@@ -362,7 +371,7 @@ static void stat_creators(class unit_data *ch, char *arg)
     TAIL(b);
 
     found = FALSE;
-    for (auto it = zone_info.mmp.begin(); it != zone_info.mmp.end(); it++)
+    for (auto it = g_zone_info.mmp.begin(); it != g_zone_info.mmp.end(); it++)
     {
         if (it->second->creators.IsName(tmp))
         {
@@ -386,7 +395,7 @@ static void stat_dil(class unit_data *ch, class zone_type *zone)
     std::string mystr;
     // struct diltemplate *tmpl;
 
-    sprintf(buf, "<u>List of DIL in zone %s (CPU secs, name, #activations, #instructions):</u><br/>", zone->name);
+    snprintf(buf, sizeof(buf), "<u>List of DIL in zone %s (CPU secs, name, #activations, #instructions):</u><br/>", zone->name);
     send_to_char(buf, ch);
 
     mystr = "<div class='twocol'>";
@@ -394,11 +403,17 @@ static void stat_dil(class unit_data *ch, class zone_type *zone)
 
     for (auto tmpl = zone->mmp_tmpl.begin(); tmpl != zone->mmp_tmpl.end(); tmpl++)
     {
-        sprintf(buf, "%.2fs %s [%d t / %d i]<br/>", tmpl->second->fCPU/1000.0, tmpl->second->prgname, tmpl->second->nTriggers, tmpl->second->nInstructions);
+        snprintf(buf,
+                 sizeof(buf),
+                 "%.2fs %s [%d t / %d i]<br/>",
+                 tmpl->second->fCPU / 1000.0,
+                 tmpl->second->prgname,
+                 tmpl->second->nTriggers,
+                 tmpl->second->nInstructions);
         mystr.append(buf);
     }
 
-    mystr.append("</div><br/>"); //MS2020
+    mystr.append("</div><br/>"); // MS2020
     send_to_char(mystr.c_str(), ch);
 }
 
@@ -408,24 +423,32 @@ static void stat_global_dil(class unit_data *ch, ubit32 nCount)
     std::string mystr;
     // struct diltemplate *tmpl;
 
-    sprintf(buf, "<u>List of global DIL in all zones running for more than %dms:</u><br/>", nCount);
+    snprintf(buf, sizeof(buf), "<u>List of global DIL in all zones running for more than %dms:</u><br/>", nCount);
     send_to_char(buf, ch);
 
     mystr = "<div class='twocol'>";
 
-    for (auto z = zone_info.mmp.begin(); z != zone_info.mmp.end(); z++)
+    for (auto z = g_zone_info.mmp.begin(); z != g_zone_info.mmp.end(); z++)
     {
         *buf = 0;
         for (auto tmpl = z->second->mmp_tmpl.begin(); tmpl != z->second->mmp_tmpl.end(); tmpl++)
         {
-            if (tmpl->second->fCPU >= nCount){
-                sprintf(buf, "%.2fs %s@%s [%d t / %d i]<br/>", tmpl->second->fCPU/1000.0, tmpl->second->prgname, tmpl->second->zone->name, tmpl->second->nTriggers, tmpl->second->nInstructions);
+            if (tmpl->second->fCPU >= nCount)
+            {
+                snprintf(buf,
+                         sizeof(buf),
+                         "%.2fs %s@%s [%d t / %d i]<br/>",
+                         tmpl->second->fCPU / 1000.0,
+                         tmpl->second->prgname,
+                         tmpl->second->zone->name,
+                         tmpl->second->nTriggers,
+                         tmpl->second->nInstructions);
                 mystr.append(buf);
             }
-        }        
+        }
     }
 
-    mystr.append("</div><br/>"); //MS2020
+    mystr.append("</div><br/>"); // MS2020
     send_to_char(mystr.c_str(), ch);
 }
 
@@ -438,21 +461,9 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
 
     //  void stat_dijkstraa (class unit_data * ch, class zone_type *z);
 
-    static const char *zone_args[] = {
-        "mobiles",
-        "objects",
-        "rooms",
-        "reset",
-        "errors",
-        "info",
-        "path",
-        "dil",
-        NULL};
+    static const char *zone_args[] = {"mobiles", "objects", "rooms", "reset", "errors", "info", "path", "dil", NULL};
 
-    static int search_types[] = {
-        UNIT_ST_NPC,
-        UNIT_ST_OBJ,
-        UNIT_ST_ROOM};
+    static int search_types[] = {UNIT_ST_NPC, UNIT_ST_OBJ, UNIT_ST_ROOM};
 
     arg = one_argument(arg, buf);
     argno = search_block(buf, zone_args, 0);
@@ -462,7 +473,8 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
         if ((zone = find_zone(buf)) == NULL)
         {
             send_to_char("Usage: wstat zone [name] "
-                         "[mobiles|objects|rooms|reset|info|errors|path|dil]<br/>", ch);
+                         "[mobiles|objects|rooms|reset|info|errors|path|dil]<br/>",
+                         ch);
             return;
         }
 
@@ -478,69 +490,67 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
 
     switch (argno)
     {
-    case 0:
-    case 1:
-    case 2:
-        sprintf(buf, "List of %s in zone %s:<br/>", zone_args[argno],
-                zone->name);
-        send_to_char(buf, ch);
-        search_type = search_types[argno];
-        break;
-
-    case 3:
-        if (zone->zri)
-        {
-            sprintf(buf, "Reset information for zone %s:<br/>", zone->name);
+        case 0:
+        case 1:
+        case 2:
+            snprintf(buf, sizeof(buf), "List of %s in zone %s:<br/>", zone_args[argno], zone->name);
             send_to_char(buf, ch);
-            CREATE(stat_buffer, char, 2 * MAX_STRING_LENGTH);
-            stat_p = stat_buffer;
-            stat_zone_reset("", zone->zri, ch);
-            page_string(CHAR_DESCRIPTOR(ch), stat_buffer);
-            FREE(stat_buffer);
-        }
-        else
-        {
-            sprintf(buf, "No reset information for zone %s.<br/>", zone->name);
-            send_to_char(buf, ch);
-        }
-        return;
+            search_type = search_types[argno];
+            break;
 
-    case 4:
-    case 5:
-        /* Errors/Info (Small hack, this :-) ) */
-        sprintf(filename, "%s%s.%.3s", g_cServerConfig.m_zondir,
-                zone->filename, zone_args[argno]);
-        if (!file_exists(filename))
+        case 3:
+            if (zone->zri)
+            {
+                snprintf(buf, sizeof(buf), "Reset information for zone %s:<br/>", zone->name);
+                send_to_char(buf, ch);
+                CREATE(stat_buffer, char, 2 * MAX_STRING_LENGTH);
+                stat_p = stat_buffer;
+                stat_zone_reset("", zone->zri, ch);
+                page_string(CHAR_DESCRIPTOR(ch), stat_buffer);
+                FREE(stat_buffer);
+            }
+            else
+            {
+                snprintf(buf, sizeof(buf), "No reset information for zone %s.<br/>", zone->name);
+                send_to_char(buf, ch);
+            }
             return;
-        file_to_string(filename, buf, MAX_STRING_LENGTH);
-        page_string(CHAR_DESCRIPTOR(ch), buf);
-        return;
 
-    case 6:
-        page_string(CHAR_DESCRIPTOR(ch), "Not Implemented");
-        //      stat_dijkstraa (ch, zone);
-        break;
+        case 4:
+        case 5:
+            /* Errors/Info (Small hack, this :-) ) */
+            snprintf(filename, sizeof(filename), "%s%s.%.3s", g_cServerConfig.m_zondir, zone->filename, zone_args[argno]);
+            if (!file_exists(filename))
+                return;
+            file_to_string(filename, buf, MAX_STRING_LENGTH);
+            page_string(CHAR_DESCRIPTOR(ch), buf);
+            return;
 
-    case 7:
-        stat_dil(ch, zone);
-        break;
+        case 6:
+            page_string(CHAR_DESCRIPTOR(ch), "Not Implemented");
+            //      stat_dijkstraa (ch, zone);
+            break;
 
-    default:
-        return;
+        case 7:
+            stat_dil(ch, zone);
+            break;
+
+        default:
+            return;
     }
 
     /* Search for mobs/objs/rooms and line in columns */
     mystr = "<div class='threecol'>";
     // for (*buf = 0, fi = zone->fi; fi; fi = fi->next)
     *buf = 0;
-    for ( auto fi = zone->mmp_fi.begin(); fi != zone->mmp_fi.end(); fi++)
+    for (auto fi = zone->mmp_fi.begin(); fi != zone->mmp_fi.end(); fi++)
         if (fi->second->type == search_type)
         {
             if ((fi->second->type == UNIT_ST_OBJ) || (fi->second->type == UNIT_ST_NPC))
-                sprintf(buf, "<a cmd='load #'>%s</a><br/>", fi->second->name);
+                snprintf(buf, sizeof(buf), "<a cmd='load #'>%s</a><br/>", fi->second->name);
             else
-                sprintf(buf, "%s<br/>", fi->second->name);
-            mystr.append(buf); //MS2020
+                snprintf(buf, sizeof(buf), "%s<br/>", fi->second->name);
+            mystr.append(buf); // MS2020
         }
 
     mystr.append("</div></br>");
@@ -563,9 +573,12 @@ static void stat_ability(const class unit_data *ch, class unit_data *u)
 
     for (i = 0; i < ABIL_TREE_MAX; i++)
     {
-        sprintf(b, "%20s : %3d%% Lvl %3d Racial %3d<br/>",
+        sprintf(b,
+                "%20s : %3d%% Lvl %3d Racial %3d<br/>",
                 g_AbiColl.text[i],
-                CHAR_ABILITY(u, i), PC_ABI_LVL(u, i), get_racial_ability(CHAR_RACE(u), i));
+                CHAR_ABILITY(u, i),
+                PC_ABI_LVL(u, i),
+                get_racial_ability(CHAR_RACE(u), i));
         TAIL(b);
     }
 
@@ -578,8 +591,6 @@ static void stat_spell(const class unit_data *ch, class unit_data *u)
     char tmpbuf2[110];
     char buf[100 * (SPL_TREE_MAX + 1)], *b = buf;
     int i, max;
-
-    extern struct spell_info_type spell_info[SPL_TREE_MAX];
 
     if (!IS_CHAR(u))
     {
@@ -597,22 +608,28 @@ static void stat_spell(const class unit_data *ch, class unit_data *u)
         str_next_word(TREE_ISLEAF(g_SplColl.tree, i) ? g_SplColl.text[TREE_PARENT(g_SplColl.tree, i)] : "sphere", tmpbuf1);
 
         if (TREE_ISLEAF(g_SplColl.tree, i) && strcmp(tmpbuf1, "sphere") == 0)
-            if (spell_info[i].tmpl == NULL && spell_info[i].spell_pointer == NULL)
+            if (g_spell_info[i].tmpl == NULL && g_spell_info[i].spell_pointer == NULL)
                 strcpy(tmpbuf1, "NOT IMPLEMENTED");
 
-        sprintf(tmpbuf2, "%s %s (%s)",
-                spell_info[i].cast_type == SPLCST_CHECK ? "CHECK " : (spell_info[i].cast_type == SPLCST_RESIST ? "RESIST" : "OTHER "), g_SplColl.text[i], tmpbuf1);
+        snprintf(tmpbuf2,
+                 sizeof(tmpbuf2),
+                 "%s %s (%s)",
+                 g_spell_info[i].cast_type == SPLCST_CHECK ? "CHECK " : (g_spell_info[i].cast_type == SPLCST_RESIST ? "RESIST" : "OTHER "),
+                 g_SplColl.text[i],
+                 tmpbuf1);
 
-        sprintf(b, "%c%c%c%c%c] %3d%%/%d %c %-50s [%3d racial]<br/>",
-                IS_SET(spell_info[i].media, MEDIA_SPELL) ? 'C' : '-',
-                IS_SET(spell_info[i].media, MEDIA_SCROLL) ? 'S' : '-',
-                IS_SET(spell_info[i].media, MEDIA_POTION) ? 'P' : '-',
-                IS_SET(spell_info[i].media, MEDIA_WAND) ? 'W' : '-',
-                IS_SET(spell_info[i].media, MEDIA_STAFF) ? 'R' : '-',
+        sprintf(b,
+                "%c%c%c%c%c] %3d%%/%d %c %-50s [%3d racial]<br/>",
+                IS_SET(g_spell_info[i].media, MEDIA_SPELL) ? 'C' : '-',
+                IS_SET(g_spell_info[i].media, MEDIA_SCROLL) ? 'S' : '-',
+                IS_SET(g_spell_info[i].media, MEDIA_POTION) ? 'P' : '-',
+                IS_SET(g_spell_info[i].media, MEDIA_WAND) ? 'W' : '-',
+                IS_SET(g_spell_info[i].media, MEDIA_STAFF) ? 'R' : '-',
                 IS_NPC(u) ? NPC_SPL_SKILL(u, i) : PC_SPL_SKILL(u, i),
                 IS_NPC(u) ? 0 : PC_SPL_LVL(u, i),
-                spell_info[i].realm == ABIL_DIV ? 'D' : (spell_info[i].realm == ABIL_MAG ? 'M' : '!'),
-                tmpbuf2, get_racial_spells(CHAR_RACE(u), i));
+                g_spell_info[i].realm == ABIL_DIV ? 'D' : (g_spell_info[i].realm == ABIL_MAG ? 'M' : '!'),
+                tmpbuf2,
+                get_racial_spells(CHAR_RACE(u), i));
         TAIL(b);
     }
 
@@ -637,9 +654,12 @@ static void stat_skill(const class unit_data *ch, class unit_data *u)
 
         for (i = 0; i < SKI_TREE_MAX; i++)
         {
-            sprintf(b, "%20s: %3d%% Lvl %3d Racial %3d<br/>",
-                    g_SkiColl.text[i], PC_SKI_SKILL(u, i),
-                    PC_SKI_LVL(u, i), get_racial_skill(CHAR_RACE(u), i));
+            sprintf(b,
+                    "%20s: %3d%% Lvl %3d Racial %3d<br/>",
+                    g_SkiColl.text[i],
+                    PC_SKI_SKILL(u, i),
+                    PC_SKI_LVL(u, i),
+                    get_racial_skill(CHAR_RACE(u), i));
             TAIL(b);
         }
 
@@ -665,7 +685,9 @@ static void stat_wskill(const class unit_data *ch, class unit_data *u)
 
     for (i = 0; i < max; i++)
     {
-        sprintf(b, "%20s : %3d%% Lvl %3d Racial %3d<br/>", g_WpnColl.text[i],
+        sprintf(b,
+                "%20s : %3d%% Lvl %3d Racial %3d<br/>",
+                g_WpnColl.text[i],
                 IS_NPC(u) ? NPC_WPN_SKILL(u, i) : PC_WPN_SKILL(u, i),
                 IS_NPC(u) ? 0 : PC_WPN_LVL(u, i),
                 get_racial_weapon(CHAR_RACE(u), i));
@@ -676,9 +698,6 @@ static void stat_wskill(const class unit_data *ch, class unit_data *u)
 
 static void stat_affect(const class unit_data *ch, class unit_data *u)
 {
-    extern struct tick_function_type tif[];
-    extern struct apply_function_type apf[];
-
     class unit_affected_type *af;
     char buf[1024];
 
@@ -692,32 +711,26 @@ static void stat_affect(const class unit_data *ch, class unit_data *u)
 
     for (af = UNIT_AFFECTED(u); af; af = af->next)
     {
-        sprintf(buf, "----------------------------------------------------<br/>"
-                     "Id [%d]   Duration [%d]   Beat [%d] Data [%d] [%d] [%d]<br/>"
-                     "First f() %s<br/>"
-                     "Tick  f() %s<br/>"
-                     "Last  f() %s<br/>"
-                     "Apply f() %s<br/>"
-                     "%s",
-                af->id, af->duration, af->beat, af->data[0], af->data[1],
-                af->data[2],
-                af->firstf_i >=
-                        0
-                    ? STR(tif[af->firstf_i].descr)
-                    : "Not used (-1)",
-                af->tickf_i >=
-                        0
-                    ? STR(tif[af->tickf_i].descr)
-                    : "Not used (-1)",
-                af->lastf_i >=
-                        0
-                    ? STR(tif[af->lastf_i].descr)
-                    : "Not used (-1)",
-                af->applyf_i >=
-                        0
-                    ? STR(apf[af->applyf_i].descr)
-                    : "Not used (-1)",
-                u == af->owner ? "" : "Serious error in owner pointer!<br/>");
+        snprintf(buf,
+                 sizeof(buf),
+                 "----------------------------------------------------<br/>"
+                 "Id [%d]   Duration [%d]   Beat [%d] Data [%d] [%d] [%d]<br/>"
+                 "First f() %s<br/>"
+                 "Tick  f() %s<br/>"
+                 "Last  f() %s<br/>"
+                 "Apply f() %s<br/>"
+                 "%s",
+                 af->id,
+                 af->duration,
+                 af->beat,
+                 af->data[0],
+                 af->data[1],
+                 af->data[2],
+                 af->firstf_i >= 0 ? STR(g_tif[af->firstf_i].descr) : "Not used (-1)",
+                 af->tickf_i >= 0 ? STR(g_tif[af->tickf_i].descr) : "Not used (-1)",
+                 af->lastf_i >= 0 ? STR(g_tif[af->lastf_i].descr) : "Not used (-1)",
+                 af->applyf_i >= 0 ? STR(g_apf[af->applyf_i].descr) : "Not used (-1)",
+                 u == af->owner ? "" : "Serious error in owner pointer!<br/>");
 
         send_to_char(buf, ch);
     }
@@ -725,9 +738,8 @@ static void stat_affect(const class unit_data *ch, class unit_data *u)
 
 static void stat_func(const class unit_data *ch, class unit_data *u)
 {
-    extern struct unit_function_array_type unit_function_array[];
-
-    char buf[4096], buf2[512];
+    char buf[4096];
+    std::string bits;
     class unit_fptr *f;
 
     if (!UNIT_FUNC(u))
@@ -746,27 +758,34 @@ static void stat_func(const class unit_data *ch, class unit_data *u)
 
             if ((prg = (class dilprg *)f->data))
             {
-                sprintf(buf, "DIL Name: %s@%s<br/>",
-                        prg->frame[0].tmpl->prgname,
-                        prg->frame[0].tmpl->zone ? prg->frame[0].tmpl->zone->name : "IDLE");
+                snprintf(buf,
+                         sizeof(buf),
+                         "DIL Name: %s@%s<br/>",
+                         prg->frame[0].tmpl->prgname,
+                         prg->frame[0].tmpl->zone ? prg->frame[0].tmpl->zone->name : "IDLE");
 
                 send_to_char(buf, ch);
             }
         }
 
-        sprintf(buf, "[%3d] %s Flags [%s] Index [%d] Beat [%d]<br/>"
-                     "%s<br/><br/>",
-                f->priority,
-                unit_function_array[f->index].name,
-                sprintbit(buf2, f->flags, sfb_flags), f->index, f->heart_beat,
-                f->data ? unit_function_array[f->index].save_w_d == SD_ASCII ? (char *)f->data : "Has raw data." : "No data.");
+        snprintf(buf,
+                 sizeof(buf),
+                 "[%3d] %s Flags [%s] Index [%d] Beat [%d]<br/>"
+                 "%s<br/><br/>",
+                 f->priority,
+                 g_unit_function_array[f->index].name,
+                 sprintbit(bits, f->flags, g_sfb_flags),
+                 f->index,
+                 f->heart_beat,
+                 f->data ? g_unit_function_array[f->index].save_w_d == SD_ASCII ? (char *)f->data : "Has raw data." : "No data.");
         send_to_char(buf, ch);
     }
 }
 
 static void stat_normal(class unit_data *ch, class unit_data *u)
 {
-    char buf[MAX_STRING_LENGTH], tmpbuf1[512], tmpbuf2[256];
+    char buf[MAX_STRING_LENGTH];
+    std::string bits1, bits2;
     char *cname;
 
     /* Stat on the unit */
@@ -776,41 +795,55 @@ static void stat_normal(class unit_data *ch, class unit_data *u)
     /* Even though type isn't a flag, we'd better show them all in case
      * more than one is set!
      */
-    sprintf(buf,
-            "Unit status: %s [%s@%s] %d copies (CRC %lu)<br/>Namelist: %s<br/>"
-            "Title: \"%s\"<br/>Outside_descr:<br/>\"%s\"<br/>"
-            "Inside_descr:<br/>\"%s\"<br/>",
-            sprintbit(tmpbuf2, UNIT_TYPE(u), unit_status),
-            UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u),
-            UNIT_FILE_INDEX(u) ? UNIT_FILE_INDEX(u)->no_in_mem : -1,
-            UNIT_FILE_INDEX(u) ? (unsigned long)UNIT_FILE_INDEX(u)->crc : 0,
-            cname, STR(UNIT_TITLE_STRING(u)),
-            STR(UNIT_OUT_DESCR_STRING(u)), STR(UNIT_IN_DESCR_STRING(u)));
+    snprintf(buf,
+             sizeof(buf),
+             "Unit status: %s [%s@%s] %d copies (CRC %lu)<br/>Namelist: %s<br/>"
+             "Title: \"%s\"<br/>Outside_descr:<br/>\"%s\"<br/>"
+             "Inside_descr:<br/>\"%s\"<br/>",
+             sprintbit(bits2, UNIT_TYPE(u), g_unit_status),
+             UNIT_FI_NAME(u),
+             UNIT_FI_ZONENAME(u),
+             UNIT_FILE_INDEX(u) ? UNIT_FILE_INDEX(u)->no_in_mem : -1,
+             UNIT_FILE_INDEX(u) ? (unsigned long)UNIT_FILE_INDEX(u)->crc : 0,
+             cname,
+             STR(UNIT_TITLE_STRING(u)),
+             STR(UNIT_OUT_DESCR_STRING(u)),
+             STR(UNIT_IN_DESCR_STRING(u)));
     send_to_char(buf, ch);
     FREE(cname);
-    sprintf(buf, "Lights: [%d]  Bright: [%d]  TrnIllu: [%d]  "
-                 "Chars Within [%d] WIZI [%d]<br/>"
-                 "Unit is inside: %s -- Unit %s<br/>"
-                 "Manipulate: %s<br/>"
-                 "Flags: %s<br/>"
-                 "Hitpoints/max: [%ld/%ld]  Alignment: [%d]<br/>",
-            UNIT_LIGHTS(u), UNIT_BRIGHT(u), UNIT_ILLUM(u), UNIT_CHARS(u),
-            UNIT_MINV(u),
-            UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing",
-            UNIT_CONTAINS(u) ? "has contents" : "is empty",
-            sprintbit(tmpbuf2, UNIT_MANIPULATE(u), unit_manipulate),
-            sprintbit(tmpbuf1, UNIT_FLAGS(u), unit_flags),
-            (signed long)UNIT_HIT(u),
-            (signed long)UNIT_MAX_HIT(u), UNIT_ALIGNMENT(u));
+    snprintf(buf,
+             sizeof(buf),
+             "Lights: [%d]  Bright: [%d]  TrnIllu: [%d]  "
+             "Chars Within [%d] WIZI [%d]<br/>"
+             "Unit is inside: %s -- Unit %s<br/>"
+             "Manipulate: %s<br/>"
+             "Flags: %s<br/>"
+             "Hitpoints/max: [%ld/%ld]  Alignment: [%d]<br/>",
+             UNIT_LIGHTS(u),
+             UNIT_BRIGHT(u),
+             UNIT_ILLUM(u),
+             UNIT_CHARS(u),
+             UNIT_MINV(u),
+             UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing",
+             UNIT_CONTAINS(u) ? "has contents" : "is empty",
+             sprintbit(bits2, UNIT_MANIPULATE(u), g_unit_manipulate),
+             sprintbit(bits1, UNIT_FLAGS(u), g_unit_flags),
+             (signed long)UNIT_HIT(u),
+             (signed long)UNIT_MAX_HIT(u),
+             UNIT_ALIGNMENT(u));
     send_to_char(buf, ch);
 
-    sprintf(buf,
-            "Key name: [%s]  Open flags: %s  Open Diff: %d<br/>"
-            "Base weight : [%d] Weight : [%d] Capacity : [%d] Size [%d]<br/>",
-            UNIT_KEY(u) ? UNIT_KEY(u) : "none",
-            sprintbit(tmpbuf1, UNIT_OPEN_FLAGS(u), unit_open_flags), UNIT_OPEN_DIFF(u),
-            UNIT_BASE_WEIGHT(u), UNIT_WEIGHT(u), UNIT_CAPACITY(u),
-            UNIT_SIZE(u));
+    snprintf(buf,
+             sizeof(buf),
+             "Key name: [%s]  Open flags: %s  Open Diff: %d<br/>"
+             "Base weight : [%d] Weight : [%d] Capacity : [%d] Size [%d]<br/>",
+             UNIT_KEY(u) ? UNIT_KEY(u) : "none",
+             sprintbit(bits1, UNIT_OPEN_FLAGS(u), g_unit_open_flags),
+             UNIT_OPEN_DIFF(u),
+             UNIT_BASE_WEIGHT(u),
+             UNIT_WEIGHT(u),
+             UNIT_CAPACITY(u),
+             UNIT_SIZE(u));
     send_to_char(buf, ch);
 }
 
@@ -821,7 +854,7 @@ static void stat_extra(const class unit_data *ch, class extra_list &elist, char 
     /* MS: We used to do a TAIL here... bad idea as newspaper is VERY HUGE */
     /* This isn't nice either, but it works... */
     char *cname;
-    string str;
+    std::string str;
 
     str = "";
 
@@ -940,7 +973,7 @@ static void stat_ip(const class unit_data *ch, class unit_data *u)
         for (int i = 0; i < 5; i++)
         {
             sock.sin_addr.s_addr = PC_LASTHOST(u)[i];
-            sprintf(buf, "IP [%s]<br/>", inet_ntoa(sock.sin_addr));
+            snprintf(buf, sizeof(buf), "IP [%s]<br/>", inet_ntoa(sock.sin_addr));
             send_to_char(buf, ch);
         }
     }
@@ -948,8 +981,11 @@ static void stat_ip(const class unit_data *ch, class unit_data *u)
         send_to_char("Information is only on Players.<br/>", ch);
 }
 
-#define STR_DATA(num) \
-    (pobjdata[idx].v[num] == 0 ? int_str[num] : (pobjdata[idx].v[num] == 1 ? (OBJ_VALUE(u, num) ? sprinttype(NULL, OBJ_VALUE(u, num), g_SplColl.text) : "None") : (pobjdata[idx].v[num] == 2 ? sprinttype(NULL, OBJ_VALUE(u, num), g_WpnColl.text) : "")))
+#define STR_DATA(num)                                                                                                                      \
+    (pobjdata[idx].v[num] == 0                                                                                                             \
+         ? int_str[num]                                                                                                                    \
+         : (pobjdata[idx].v[num] == 1 ? (OBJ_VALUE(u, num) ? sprinttype(NULL, OBJ_VALUE(u, num), g_SplColl.text) : "None")                 \
+                                      : (pobjdata[idx].v[num] == 2 ? sprinttype(NULL, OBJ_VALUE(u, num), g_WpnColl.text) : "")))
 
 char *stat_obj_data(class unit_data *u, struct obj_type_t *pobjdata)
 {
@@ -959,32 +995,26 @@ char *stat_obj_data(class unit_data *u, struct obj_type_t *pobjdata)
 
     switch (idx)
     {
-    case ITEM_WEAPON:
-        special_str = sprinttype(NULL, OBJ_VALUE(u, 0), g_WpnColl.text);
-        break;
+        case ITEM_WEAPON:
+            special_str = sprinttype(NULL, OBJ_VALUE(u, 0), g_WpnColl.text);
+            break;
 
-    case ITEM_CONTAINER:
-        special_str =
-            affected_by_spell(u,
-                              ID_CORPSE)
-                ? (char *)"IS A CORPSE"
-                : (char *)"";
-        break;
+        case ITEM_CONTAINER:
+            special_str = affected_by_spell(u, ID_CORPSE) ? (char *)"IS A CORPSE" : (char *)"";
+            break;
 
-        /*   case ITEM_DRINKCON:
-            special_str = sprinttype(NULL, OBJ_VALUE(u, 2), drinks);
-            break;*/
+            /*   case ITEM_DRINKCON:
+                special_str = sprinttype(NULL, OBJ_VALUE(u, 2), g_drinks);
+                break;*/
     }
 
     if (idx <= 0 || ITEM_SHIELD < idx)
         idx = ITEM_OTHER;
 
     for (i = 0; i < 5; ++i) /* Init obj-value strings */
-        sprintf(int_str[i], "%ld", (signed long)OBJ_VALUE(u, i));
+        snprintf(int_str[i], 32, "%ld", (signed long)OBJ_VALUE(u, i));
 
-    sprintf(result, pobjdata[idx].fmt,
-            STR_DATA(0), STR_DATA(1), STR_DATA(2), STR_DATA(3),
-            STR_DATA(4), special_str);
+    snprintf(result, sizeof(result), pobjdata[idx].fmt, STR_DATA(0), STR_DATA(1), STR_DATA(2), STR_DATA(3), STR_DATA(4), special_str);
 
     return result;
 }
@@ -1055,44 +1085,62 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
          {0, 0, 0, 0, 0}} /*SHIELD    */
     };
 
-    char buf[4096], tmpbuf1[256], tmpbuf2[256];
+    char buf[4096];
+    char tmp[512];
+    std::string bits1, bits2;
     int i;
 
     if (IS_CHAR(u))
     {
-        sprintf(buf,
-                "Char data:<br/>"
-                "Descriptor: %s  Fighting: '%s'<br/>"
-                "Master: '%s'  First Follower: '%s'<br/>"
-                "Last room: '%s'<br/>"
-                "Level [%d]  Sex [%s]  Position [%s]<br/>"
-                "Race [%s]  Can Carry W [%d]  Can Carry N [%d]<br/>"
-                "Char Flags [%s]<br/>"
-                "Exp: [%ld] Offensive Bonus [%d] Defensive Bonus [%d]<br/>"
-                "Attack [%s]   Speed [%d]   Natural-Armour [%d]<br/>"
-                "HP [H%ld/L%d/G%d]   Mana [H%d/L%d/G%d]  END [H%d/L%d/G%d]<br/>"
-                "STR [%d]  DEX [%d]  CON [%d]  CHA [%d]<br/>"
-                "BRA [%d]  MAG [%d]  DIV [%d]  HP  [%d]<br/>",
-                CHAR_DESCRIPTOR(u) ? "Yes" : "No",
-                CHAR_FIGHTING(u) ? STR(UNIT_NAME(CHAR_FIGHTING(u))) : "Nobody",
-                CHAR_MASTER(u) ? STR(UNIT_NAME(CHAR_MASTER(u))) : "Nobody",
-                CHAR_FOLLOWERS(u) ? STR(UNIT_NAME(CHAR_FOLLOWERS(u)->follower)) : "Nobody",
-                CHAR_LAST_ROOM(u) ? STR(UNIT_TITLE_STRING(CHAR_LAST_ROOM(u))) : "Nowhere",
-                CHAR_LEVEL(u), sprinttype(NULL, CHAR_SEX(u), char_sex),
-                sprinttype(NULL, CHAR_POS(u), char_pos),
-                IS_PC(u) ? sprinttype(NULL, CHAR_RACE(u),
-                                      pc_races)
-                         : itoa(CHAR_RACE(u)),
-                char_carry_w_limit(u), char_carry_n_limit(u),
-                sprintbit(tmpbuf1, CHAR_FLAGS(u), char_flags),
-                (signed long)CHAR_EXP(u), CHAR_OFFENSIVE(u),
-                CHAR_DEFENSIVE(u), sprinttype(NULL, CHAR_ATTACK_TYPE(u), g_WpnColl.text), CHAR_SPEED(u),
-                CHAR_NATURAL_ARMOUR(u), (signed long)UNIT_HIT(u),
-                hit_limit(u), hit_gain(u), CHAR_MANA(u), mana_limit(u),
-                mana_gain(u), CHAR_ENDURANCE(u), move_limit(u),
-                move_gain(u), CHAR_STR(u), CHAR_DEX(u), CHAR_CON(u),
-                CHAR_CHA(u), CHAR_BRA(u), CHAR_MAG(u), CHAR_DIV(u),
-                CHAR_HPP(u));
+        snprintf(buf,
+                 sizeof(buf),
+                 "Char data:<br/>"
+                 "Descriptor: %s  Fighting: '%s'<br/>"
+                 "Master: '%s'  First Follower: '%s'<br/>"
+                 "Last room: '%s'<br/>"
+                 "Level [%d]  Sex [%s]  Position [%s]<br/>"
+                 "Race [%s]  Can Carry W [%d]  Can Carry N [%d]<br/>"
+                 "Char Flags [%s]<br/>"
+                 "Exp: [%ld] Offensive Bonus [%d] Defensive Bonus [%d]<br/>"
+                 "Attack [%s]   Speed [%d]   Natural-Armour [%d]<br/>"
+                 "HP [H%ld/L%d/G%d]   Mana [H%d/L%d/G%d]  END [H%d/L%d/G%d]<br/>"
+                 "STR [%d]  DEX [%d]  CON [%d]  CHA [%d]<br/>"
+                 "BRA [%d]  MAG [%d]  DIV [%d]  HP  [%d]<br/>",
+                 CHAR_DESCRIPTOR(u) ? "Yes" : "No",
+                 CHAR_FIGHTING(u) ? STR(UNIT_NAME(CHAR_FIGHTING(u))) : "Nobody",
+                 CHAR_MASTER(u) ? STR(UNIT_NAME(CHAR_MASTER(u))) : "Nobody",
+                 CHAR_FOLLOWERS(u) ? STR(UNIT_NAME(CHAR_FOLLOWERS(u)->follower)) : "Nobody",
+                 CHAR_LAST_ROOM(u) ? STR(UNIT_TITLE_STRING(CHAR_LAST_ROOM(u))) : "Nowhere",
+                 CHAR_LEVEL(u),
+                 sprinttype(NULL, CHAR_SEX(u), g_char_sex),
+                 sprinttype(NULL, CHAR_POS(u), g_char_pos),
+                 IS_PC(u) ? sprinttype(NULL, CHAR_RACE(u), g_pc_races) : itoa(CHAR_RACE(u)),
+                 char_carry_w_limit(u),
+                 char_carry_n_limit(u),
+                 sprintbit(bits1, CHAR_FLAGS(u), g_char_flags),
+                 (signed long)CHAR_EXP(u),
+                 CHAR_OFFENSIVE(u),
+                 CHAR_DEFENSIVE(u),
+                 sprinttype(NULL, CHAR_ATTACK_TYPE(u), g_WpnColl.text),
+                 CHAR_SPEED(u),
+                 CHAR_NATURAL_ARMOUR(u),
+                 (signed long)UNIT_HIT(u),
+                 hit_limit(u),
+                 hit_gain(u),
+                 CHAR_MANA(u),
+                 mana_limit(u),
+                 mana_gain(u),
+                 CHAR_ENDURANCE(u),
+                 move_limit(u),
+                 move_gain(u),
+                 CHAR_STR(u),
+                 CHAR_DEX(u),
+                 CHAR_CON(u),
+                 CHAR_CHA(u),
+                 CHAR_BRA(u),
+                 CHAR_MAG(u),
+                 CHAR_DIV(u),
+                 CHAR_HPP(u));
         send_to_char(buf, ch);
 
         if (IS_PC(u))
@@ -1103,110 +1151,140 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
             tid1 = age(u);
             tid2 = real_time_passed((time_t)PC_TIME(u).played, 0);
 
-            strcpy(tmpbuf2, ctime(&PC_TIME(u).connect));
-            sprintf(buf, "----------------- PLAYER -------------------<br/>"
-                         "Filename [%s]  Unique ID [%ld]  BBS [%3d]  Cracks [%2d]<br/>"
-                         "Skill points: [%ld]  Ability points: [%ld]  CRIMES: [%d]<br/>"
-                         "Hometown: [%s] Prompt: [%s]<br/>VLVL: %d (%d lxp) <br/>"
-                         "Profession: [%d %s]  Guild: [%s (%d member)]<br/>"
-                         "Drunk: [%d]  Full: [%d]  Thirst: [%d]<br/>"
-                         "CCInfo: %s     Setup: %s<br/>"
-                         "Age: %ldY %ldM %ldD %ldH   Lifespan : %dY   Played: %ldDays %ldHours (%d)<br/>"
-                         "Last connected at: %s<br/>"
-                         "Created at       : %s<br/>",
-                    PC_FILENAME(u),
-                    (signed long)PC_ID(u),
-                    PC_ACCESS_LEVEL(u),
-                    PC_CRACK_ATTEMPTS(u),
-                    (signed long)PC_SKILL_POINTS(u),
-                    (signed long)PC_ABILITY_POINTS(u), PC_CRIMES(u),
-                    STR(PC_HOME(u)), STR(UPC(u)->promptstr),
-                    PC_VIRTUAL_LEVEL(u),
-                    required_xp(PC_VIRTUAL_LEVEL(u) + 1) -
-                        required_xp(PC_VIRTUAL_LEVEL(u)),
-                    PC_PROFESSION(u), PC_PROFESSION(u) >= 0 && PC_PROFESSION(u) <=PROFESSION_MAX ? professions[PC_PROFESSION(u)] : "Undefined",
-                    STR(PC_GUILD(u)),
-                    PC_TIME(u).played - PC_GUILD_TIME(u),
-                    PC_COND(u, DRUNK), PC_COND(u, FULL), PC_COND(u, THIRST),
-                    PC_ACCOUNT(u).last4 == -1 ? "NONE" : "SET",
-                    sprintbit(tmpbuf1, PC_FLAGS(u), pc_flags),
-                    tid1.year, tid1.month, tid1.day, tid1.hours,
-                    PC_LIFESPAN(u),
-                    tid2.day, tid2.hours, PC_TIME(u).played,
-                    tmpbuf2, ctime(&PC_TIME(u).creation));
+            strcpy(tmp, ctime(&PC_TIME(u).connect));
+            snprintf(buf,
+                     sizeof(buf),
+                     "----------------- PLAYER -------------------<br/>"
+                     "Filename [%s]  Unique ID [%ld]  BBS [%3d]  Cracks [%2d]<br/>"
+                     "Skill points: [%ld]  Ability points: [%ld]  CRIMES: [%d]<br/>"
+                     "Hometown: [%s] Prompt: [%s]<br/>VLVL: %d (%d lxp) <br/>"
+                     "Profession: [%d %s]  Guild: [%s (%d member)]<br/>"
+                     "Drunk: [%d]  Full: [%d]  Thirst: [%d]<br/>"
+                     "CCInfo: %s     Setup: %s<br/>"
+                     "Age: %ldY %ldM %ldD %ldH   Lifespan : %dY   Played: %ldDays %ldHours (%d)<br/>"
+                     "Last connected at: %s<br/>"
+                     "Created at       : %s<br/>",
+                     PC_FILENAME(u),
+                     (signed long)PC_ID(u),
+                     PC_ACCESS_LEVEL(u),
+                     PC_CRACK_ATTEMPTS(u),
+                     (signed long)PC_SKILL_POINTS(u),
+                     (signed long)PC_ABILITY_POINTS(u),
+                     PC_CRIMES(u),
+                     STR(PC_HOME(u)),
+                     STR(UPC(u)->promptstr),
+                     PC_VIRTUAL_LEVEL(u),
+                     required_xp(PC_VIRTUAL_LEVEL(u) + 1) - required_xp(PC_VIRTUAL_LEVEL(u)),
+                     PC_PROFESSION(u),
+                     PC_PROFESSION(u) >= 0 && PC_PROFESSION(u) <= PROFESSION_MAX ? g_professions[PC_PROFESSION(u)] : "Undefined",
+                     STR(PC_GUILD(u)),
+                     PC_TIME(u).played - PC_GUILD_TIME(u),
+                     PC_COND(u, DRUNK),
+                     PC_COND(u, FULL),
+                     PC_COND(u, THIRST),
+                     PC_ACCOUNT(u).last4 == -1 ? "NONE" : "SET",
+                     sprintbit(bits1, PC_FLAGS(u), g_pc_flags),
+                     tid1.year,
+                     tid1.month,
+                     tid1.day,
+                     tid1.hours,
+                     PC_LIFESPAN(u),
+                     tid2.day,
+                     tid2.hours,
+                     PC_TIME(u).played,
+                     tmp,
+                     ctime(&PC_TIME(u).creation));
 
             send_to_char(buf, ch);
         }
         else /* Stat on a monster */
         {
-            sprintf(buf, "---------------- NON PLAYER ----------------<br/>"
-                         "Default position: %s<br/>"
-                         "NPC-flags: %s<br/>",
-                    sprinttype(NULL, NPC_DEFAULT(u), char_pos),
-                    sprintbit(tmpbuf1, NPC_FLAGS(u), npc_flags));
+            snprintf(buf,
+                     sizeof(buf),
+                     "---------------- NON PLAYER ----------------<br/>"
+                     "Default position: %s<br/>"
+                     "NPC-flags: %s<br/>",
+                     sprinttype(NULL, NPC_DEFAULT(u), g_char_pos),
+                     sprintbit(bits1, NPC_FLAGS(u), g_npc_flags));
             send_to_char(buf, ch);
         }
     }
     else if (IS_OBJ(u)) /* Stat on an object */
     {
-        sprintf(buf, "Object data:<br/>"
-                     "Object type: %s (%d)<br/>"
-                     "Values: [%4ld] [%4ld] [%4ld] [%4ld] [%4ld]<br/>"
-                     "Magic resistance [%d]<br/><br/>"
-                     "%s<br/>"
-                     "Extra flags: %s<br/>"
-                     "Cost: [%lu]  Cost/day: [%lu]  Equipped: %s<br/>",
-                sprinttype(NULL, OBJ_TYPE(u), obj_types),
-                OBJ_TYPE(u),
-                (signed long)OBJ_VALUE(u, 0),
-                (signed long)OBJ_VALUE(u, 1),
-                (signed long)OBJ_VALUE(u, 2),
-                (signed long)OBJ_VALUE(u, 3),
-                (signed long)OBJ_VALUE(u, 4),
-                OBJ_RESISTANCE(u),
-                stat_obj_data(u, wstat_obj_type),
-                sprintbit(tmpbuf1, OBJ_FLAGS(u), obj_flags),
-                (unsigned long)OBJ_PRICE(u),
-                (unsigned long)OBJ_PRICE_DAY(u),
-                sprinttype(NULL, OBJ_EQP_POS(u), equip_pos));
+        snprintf(buf,
+                 sizeof(buf),
+                 "Object data:<br/>"
+                 "Object type: %s (%d)<br/>"
+                 "Values: [%4ld] [%4ld] [%4ld] [%4ld] [%4ld]<br/>"
+                 "Magic resistance [%d]<br/><br/>"
+                 "%s<br/>"
+                 "Extra flags: %s<br/>"
+                 "Cost: [%lu]  Cost/day: [%lu]  Equipped: %s<br/>",
+                 sprinttype(NULL, OBJ_TYPE(u), g_obj_types),
+                 OBJ_TYPE(u),
+                 (signed long)OBJ_VALUE(u, 0),
+                 (signed long)OBJ_VALUE(u, 1),
+                 (signed long)OBJ_VALUE(u, 2),
+                 (signed long)OBJ_VALUE(u, 3),
+                 (signed long)OBJ_VALUE(u, 4),
+                 OBJ_RESISTANCE(u),
+                 stat_obj_data(u, wstat_obj_type),
+                 sprintbit(bits1, OBJ_FLAGS(u), g_obj_flags),
+                 (unsigned long)OBJ_PRICE(u),
+                 (unsigned long)OBJ_PRICE_DAY(u),
+                 sprinttype(NULL, OBJ_EQP_POS(u), g_equip_pos));
         send_to_char(buf, ch);
     }
     else /* Stat on a room */
     {
-        sprintf(buf, "Room data:<br/>"
-                     "%s [%s@%s]  Sector type: %s<br/>"
-                     "Map (%d,%d) Magic resistance [%d]<br/>Outside Environment: %s<br/>",
-                UNIT_TITLE_STRING(u), UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u),
-                sprinttype(NULL, ROOM_LANDSCAPE(u), room_landscape),
-                UROOM(u)->mapx, UROOM(u)->mapy, ROOM_RESISTANCE(u),
-                UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing");
+        snprintf(buf,
+                 sizeof(buf),
+                 "Room data:<br/>"
+                 "%s [%s@%s]  Sector type: %s<br/>"
+                 "Map (%d,%d) Magic resistance [%d]<br/>Outside Environment: %s<br/>",
+                 UNIT_TITLE_STRING(u),
+                 UNIT_FI_NAME(u),
+                 UNIT_FI_ZONENAME(u),
+                 sprinttype(NULL, ROOM_LANDSCAPE(u), g_room_landscape),
+                 UROOM(u)->mapx,
+                 UROOM(u)->mapy,
+                 ROOM_RESISTANCE(u),
+                 UNIT_IN(u) ? STR(TITLENAME(UNIT_IN(u))) : "Nothing");
         send_to_char(buf, ch);
 
         for (i = 0; i <= MAX_EXIT; i++)
             if (ROOM_EXIT(u, i))
             {
                 cname = ROOM_EXIT(u, i)->open_name.catnames();
-                sprintbit(tmpbuf2, ROOM_EXIT(u, i)->exit_info, unit_open_flags);
+                sprintbit(bits2, ROOM_EXIT(u, i)->exit_info, g_unit_open_flags);
 
                 if (ROOM_EXIT(u, i)->to_room)
                 {
-                    sprintf(buf, "EXIT %-5s to [%s@%s] (%s)<br/>"
-                                 "   Exit Name: [%s]<br/>"
-                                 "   Exit Bits: [%s] Difficulty: [%d]<br/>"
-                                 "   Key: [%s]<br/>",
-                            dirs[i],
-                            UNIT_FI_NAME(ROOM_EXIT(u, i)->to_room),
-                            UNIT_FI_ZONENAME(ROOM_EXIT(u, i)->to_room),
-                            UNIT_TITLE_STRING(ROOM_EXIT(u, i)->to_room),
-                            cname, tmpbuf2, ROOM_EXIT(u, i)->difficulty, 
-                            ROOM_EXIT(u, i)->key ? ROOM_EXIT(u, i)->key : "");
+                    snprintf(buf,
+                             sizeof(buf),
+                             "EXIT %-5s to [%s@%s] (%s)<br/>"
+                             "   Exit Name: [%s]<br/>"
+                             "   Exit Bits: [%s] Difficulty: [%d]<br/>"
+                             "   Key: [%s]<br/>",
+                             g_dirs[i],
+                             UNIT_FI_NAME(ROOM_EXIT(u, i)->to_room),
+                             UNIT_FI_ZONENAME(ROOM_EXIT(u, i)->to_room),
+                             UNIT_TITLE_STRING(ROOM_EXIT(u, i)->to_room),
+                             cname,
+                             &bits2[0],
+                             ROOM_EXIT(u, i)->difficulty,
+                             ROOM_EXIT(u, i)->key ? ROOM_EXIT(u, i)->key : "");
                 }
                 else
                 {
-                    sprintf(buf, "EXIT %-5s to [NOWHERE]<br/>"
-                                 "   Exit Name: [%s]<br/>"
-                                 "   Exit Bits: [%s]<br/>",
-                            dirs[i], cname, tmpbuf2);
+                    snprintf(buf,
+                             sizeof(buf),
+                             "EXIT %-5s to [NOWHERE]<br/>"
+                             "   Exit Name: [%s]<br/>"
+                             "   Exit Bits: [%s]<br/>",
+                             g_dirs[i],
+                             cname,
+                             &bits2[0]);
                 }
                 FREE(cname);
                 send_to_char(buf, ch);
@@ -1216,7 +1294,7 @@ static void stat_data(const class unit_data *ch, class unit_data *u)
 
 static void stat_contents(const class unit_data *ch, class unit_data *u)
 {
-    char buf[MAX_INPUT_LENGTH];
+    char buf[MAX_STRING_LENGTH];
     int bright = 0, light = 0;
     class unit_data *orgu;
 
@@ -1228,19 +1306,24 @@ static void stat_contents(const class unit_data *ch, class unit_data *u)
         {
             if (CHAR_LEVEL(ch) >= UNIT_MINV(u))
             {
-                sprintf(buf, "[%s@%s] Name '%s', Title '%s'  %s (L%d B%d)<br/>",
-                        UNIT_FI_NAME(u), UNIT_FI_ZONENAME(u),
-                        UNIT_NAME(u), UNIT_TITLE_STRING(u),
-                        IS_OBJ(u) && OBJ_EQP_POS(u) ? "Equipped" : "",
-                        UNIT_LIGHTS(u), UNIT_BRIGHT(u));
+                snprintf(buf,
+                         sizeof(buf),
+                         "[%s@%s] Name '%s', Title '%s'  %s (L%d B%d)<br/>",
+                         UNIT_FI_NAME(u),
+                         UNIT_FI_ZONENAME(u),
+                         UNIT_NAME(u),
+                         UNIT_TITLE_STRING(u),
+                         IS_OBJ(u) && OBJ_EQP_POS(u) ? "Equipped" : "",
+                         UNIT_LIGHTS(u),
+                         UNIT_BRIGHT(u));
                 send_to_char(buf, ch);
                 bright += UNIT_BRIGHT(u);
                 light += UNIT_LIGHTS(u);
             }
         }
-        sprintf(buf, "Contents lights sum = %d, bright sum = %d<br/>", light, bright);
+        snprintf(buf, sizeof(buf), "Contents lights sum = %d, bright sum = %d<br/>", light, bright);
         send_to_char(buf, ch);
-        sprintf(buf, "Parent unit lights total = %d (bright %d)<br/>", UNIT_LIGHTS(orgu), UNIT_BRIGHT(orgu));
+        snprintf(buf, sizeof(buf), "Parent unit lights total = %d (bright %d)<br/>", UNIT_LIGHTS(orgu), UNIT_BRIGHT(orgu));
         send_to_char(buf, ch);
     }
     else
@@ -1281,21 +1364,20 @@ void do_wedit(class unit_data *ch, char *argument, const struct command_info *cm
             if (!u)
             {
                 send_to_char("No such thing anywhere.<br/>", ch);
-                return;                
+                return;
             }
         }
     }
 
-    string t;
+    std::string t;
 
     t = "<data type='$json'>";
     t.append(u->json());
     t.append("</data>");
     send_to_char(t.c_str(), ch);
-    
+
     send_to_char("Sending json edit info to your browser.<br/>", ch);
 }
-
 
 void do_wstat(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
@@ -1308,7 +1390,8 @@ void do_wstat(class unit_data *ch, char *argument, const struct command_info *cm
 
     if (str_is_empty(argument))
     {
-        send_to_char("Usage: See help wstat<br/>[room|zone|memory|account|creators|count <no>|world [dil (ms)|extra|zone]|unit-name]<br/>", ch);
+        send_to_char("Usage: See help wstat<br/>[room|zone|memory|account|creators|count <no>|world [dil (ms)|extra|zone]|unit-name]<br/>",
+                     ch);
         return;
     }
 

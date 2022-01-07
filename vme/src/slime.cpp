@@ -20,8 +20,6 @@
 #include "files.h"
 #include "comm.h"
 
-extern class file_index_type *slime_fi;
-
 static int slime_count = 0;
 class file_index_type **slime_list = NULL;
 
@@ -101,8 +99,7 @@ int slime_obj(struct spec_arg *sarg)
 
     if (!IS_OVERSEER(sarg->activator))
     {
-        send_to_char("Only overseers can use this function.<br/>",
-                     sarg->activator);
+        send_to_char("Only overseers can use this function.<br/>", sarg->activator);
         return SFR_BLOCK;
     }
 
@@ -114,8 +111,7 @@ int slime_obj(struct spec_arg *sarg)
         send_to_char("List of slimed units:<br/>", sarg->activator);
         for (i = 0; i < slime_count; i++)
         {
-            sprintf(buf, "%s@%s<br/>",
-                    slime_list[i]->name, slime_list[i]->zone->name);
+            snprintf(buf, sizeof(buf), "%s@%s<br/>", slime_list[i]->name, slime_list[i]->zone->name);
             send_to_char(buf, sarg->activator);
         }
 
@@ -128,15 +124,13 @@ int slime_obj(struct spec_arg *sarg)
 
     if (fi == NULL)
     {
-        act("No such file index '$2t'.",
-            A_ALWAYS, sarg->activator, fi_name, cActParameter(), TO_CHAR);
+        act("No such file index '$2t'.", A_ALWAYS, sarg->activator, fi_name, cActParameter(), TO_CHAR);
         return SFR_BLOCK;
     }
 
     if (fi->zone == find_zone(BASIS_ZONE))
     {
-        act("Basis zone is not allowed slimed.",
-            A_ALWAYS, sarg->activator, cActParameter(), cActParameter(), TO_CHAR);
+        act("Basis zone is not allowed slimed.", A_ALWAYS, sarg->activator, cActParameter(), cActParameter(), TO_CHAR);
         return SFR_BLOCK;
     }
 
@@ -168,8 +162,7 @@ int slime_obj(struct spec_arg *sarg)
     }
     else
     {
-        act("Please specify 'add' or 'remove'.",
-            A_ALWAYS, sarg->activator, cActParameter(), cActParameter(), TO_CHAR);
+        act("Please specify 'add' or 'remove'.", A_ALWAYS, sarg->activator, cActParameter(), cActParameter(), TO_CHAR);
     }
 
     return SFR_BLOCK;

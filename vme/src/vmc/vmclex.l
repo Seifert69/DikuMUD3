@@ -34,8 +34,8 @@ extern int yylex(); // Testing fix for issue #70
   */
 #define YY_SKIP_YYWRAP  
 #define yywrap(void) 1
-extern char cur_filename[], top_filename[];
-extern struct zone_info zone;
+extern char g_cur_filename[], top_filename[];
+extern struct zone_info g_zone;
 extern int istemplate;
 
 int first_dil = TRUE;
@@ -148,7 +148,7 @@ dilbegin[^\^]*\^        {
 
 			  first_dil = FALSE;
 			  pBuf->Clear();
-			  dilmain(istemplate, zone.z_zone.name,startlinenum,bptr) ;
+			  dilmain(istemplate, g_zone.z_zone.name,startlinenum,bptr) ;
 			  FREE(bptr);
 			  if (pBuf->GetLength()==0)
 			  {
@@ -218,15 +218,15 @@ void setline(char *str)
     return;
 
   str++;
-  p = cur_filename;
+  p = g_cur_filename;
 
   while (*str != '"' && *str)
     (*(p++) = *(str++));
 
   *p = '\0';
 
-  if(!*cur_filename)
-    strcpy(cur_filename, top_filename);
+  if(!*g_cur_filename)
+    strcpy(g_cur_filename, top_filename);
 }
 
 void init_lex(char *str)

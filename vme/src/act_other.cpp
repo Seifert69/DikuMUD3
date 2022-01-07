@@ -25,15 +25,12 @@
 #include "spells.h"
 #include "affect.h"
 #include "utility.h"
+#include "external_vars.h"
 #include "vmelimits.h"
 #include "account.h"
 #include "weather.h"
 #include "constants.h"
 #include "dilrun.h"
-
-/* extern variables */
-extern struct requirement_type pc_race_base[];
-extern int possible_saves;
 
 void do_save(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
@@ -51,7 +48,7 @@ void do_save(class unit_data *ch, char *arg, const struct command_info *cmd)
     else
     {
         send_to_char("You are no longer a guest on this game.<br/>", ch);
-        possible_saves--;
+        g_possible_saves--;
     }
     act("Saving $1n.", A_ALWAYS, ch, cActParameter(), cActParameter(), TO_CHAR);
 
@@ -77,36 +74,29 @@ void race_adjust(class unit_data *ch)
     assert(IS_PC(ch));
     assert(is_in(CHAR_RACE(ch), 0, PC_RACE_MAX - 1));
 
-    my_race = &race_info[CHAR_RACE(ch)];
+    my_race = &g_race_info[CHAR_RACE(ch)];
 
     if (CHAR_SEX(ch) == SEX_MALE)
         sex_race = &my_race->male;
     else
         sex_race = &my_race->female;
 
-    UNIT_WEIGHT(ch) = UNIT_BASE_WEIGHT(ch) =
-        sex_race->weight + dice(sex_race->weight_dice.reps,
-                                sex_race->weight_dice.size);
+    UNIT_WEIGHT(ch) = UNIT_BASE_WEIGHT(ch) = sex_race->weight + dice(sex_race->weight_dice.reps, sex_race->weight_dice.size);
 
-    UNIT_SIZE(ch) =
-        sex_race->height + dice(sex_race->height_dice.reps,
-                                sex_race->height_dice.size);
+    UNIT_SIZE(ch) = sex_race->height + dice(sex_race->height_dice.reps, sex_race->height_dice.size);
 
-    PC_LIFESPAN(ch) =
-        sex_race->lifespan + dice(sex_race->lifespan_dice.reps,
-                                  sex_race->lifespan_dice.size);
+    PC_LIFESPAN(ch) = sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size);
 
     PC_TIME(ch).birth = PC_TIME(ch).creation;
 
     int years;
 
-    years = my_race->age + dice(my_race->age_dice.reps,
-                                my_race->age_dice.size);
+    years = my_race->age + dice(my_race->age_dice.reps, my_race->age_dice.size);
 
     PC_TIME(ch).birth -= years * SECS_PER_MUD_YEAR;
 }
 
-/* OBSOLETE. Should only be called when initializing a new player (or rerolling) 
+/* OBSOLETE. Should only be called when initializing a new player (or rerolling)
 void race_cost(class unit_data *ch)
 {
     int i;
@@ -168,7 +158,6 @@ void points_reset(class unit_data *ch)
 
 void start_player(class unit_data *ch)
 {
-
     assert(CHAR_LEVEL(ch) == 0);
     assert(UNIT_CONTAINS(ch) == NULL);
     assert(IS_PC(ch));
@@ -197,12 +186,10 @@ void start_player(class unit_data *ch)
     if (!UNIT_IS_EVIL(ch))
         SET_BIT(CHAR_FLAGS(ch), CHAR_PEACEFUL);
 
-    extern struct diltemplate *playerinit_tmpl;
-
-    if (playerinit_tmpl)
+    if (g_playerinit_tmpl)
     {
         /* Call DIL to see if we should init the player in any other way. */
-        class dilprg *prg = dil_copy_template(playerinit_tmpl, ch, NULL);
+        class dilprg *prg = dil_copy_template(g_playerinit_tmpl, ch, NULL);
 
         if (prg)
         {

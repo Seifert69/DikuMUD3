@@ -8,9 +8,9 @@
 #ifndef _MUD_SYSTEM_H
 #define _MUD_SYSTEM_H
 #ifdef _WINDOWS
-#include <time.h>
+    #include <time.h>
 #else
-#include <sys/time.h>
+    #include <sys/time.h>
 #endif
 
 #define MAX_HOSTNAME 256

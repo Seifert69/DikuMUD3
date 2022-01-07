@@ -435,7 +435,7 @@ code
             s := sact("<br/>You've given $3m $2n", A_SOMEONE, pc, item, self, TO_CHAR);
             exdp.descr := exdp.descr + s;
             destroy(item);
-            block;
+            block;  // Important to block here or the NoThanks DIL will trigger too.
             goto checkit;
          }
       }
@@ -461,7 +461,10 @@ code
       i := i + 1;
    }
    if (not ("$done" in exdp.names))
+   {
       addstring(exdp.names, "$done");
+      sendto("quest$done " + pc.symname, self);  // Trigger self, to recognize quest completion
+   }
 
    goto start;
 }
@@ -671,13 +674,39 @@ var
    pc     : unitptr;
    pot    : unitptr;
    exdp   : extraptr;
+   s      : string;
 
 code
 {
    heartbeat := PULSE_SEC *4;
    
    :start:
-   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+   wait(SFB_CMD | SFB_MSG, TRUE);
+
+   // This little code block is optional and a quick hack.
+   // When present it ensures that
+   // on quest completion ($done) a message is received and the NPC
+   // can automatically start giving the reward. 
+   //
+   // It is very tempting to move the entire qstWaitDone into its own
+   // running DIL program on the NPC that only gets triggered via sendto().
+   // It would be less messy.
+   //
+   if (command(CMD_AUTO_MSG)) 
+   {
+      log("MSG : " + argument);
+
+      s := getword(argument);
+
+      if (s != "quest$done")
+         goto start;
+      pc := findsymbolic(argument); // The player activator
+      pc := qstWaitDone@quests(qname, pc, qstDone, xp, gold, itemsl);
+      goto start;
+   }
+
+   if (activator.type != UNIT_ST_PC)
+      goto start;
 
    pc := qstWaitHero@quests(qname, activator, qstAsk, "");
 

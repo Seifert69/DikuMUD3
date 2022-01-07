@@ -8,8 +8,6 @@
 #ifndef _MUD_ACT_H
 #define _MUD_ACT_H
 
-char *obj_wear_size (class unit_data * ch, class unit_data * obj,
-                     int keyword = -1);
-
+char *obj_wear_size(class unit_data *ch, class unit_data *obj, int keyword = -1);
 
 #endif

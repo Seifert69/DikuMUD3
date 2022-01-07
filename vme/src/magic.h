@@ -22,7 +22,7 @@
 #include "fight.h"
 
 #ifndef _MUD_MAGIC_H
-#define _MUD_MAGIC_H
+    #define _MUD_MAGIC_H
 
 /* #define MAGIC_POWER(ch)  \
    MAX(CHAR_MAG(ch), CHAR_DIV(ch)) */
@@ -37,8 +37,7 @@ ubit1 may_teleport_to(class unit_data *unit, class unit_data *dest);
 ubit1 may_teleport(class unit_data *unit, class unit_data *dest);
 
 int spell_cast_check(class unit_data *att, int spell);
-int spell_resistance(class unit_data *att, class unit_data *def,
-                     int spell);
+int spell_resistance(class unit_data *att, class unit_data *def, int spell);
 int spell_ability(class unit_data *u, int ability, int spell);
 int spell_attack_ability(class unit_data *medium, int spell);
 int spell_attack_skill(class unit_data *unit, int spell);

@@ -6,18 +6,18 @@
  */
 
 #ifdef _WINDOWS
-#include "telnet.h"
-#include "winsock2.h"
-#include <time.h>
-#include "string.h"
-#include "winbase.h"
+    #include "telnet.h"
+    #include "winsock2.h"
+    #include <time.h>
+    #include "string.h"
+    #include "winbase.h"
 #endif
 
 #ifdef LINUX
-#include <unistd.h>
-#include <arpa/telnet.h>
-#include <sys/time.h>
-#include <netdb.h>
+    #include <unistd.h>
+    #include <arpa/telnet.h>
+    #include <sys/time.h>
+    #include <netdb.h>
 #endif
 
 #include <stdlib.h>
@@ -53,11 +53,11 @@
 
 /*
    In Mplex main MotherHook is opened and put into CaptainHook.
-   Mother listens on 4242 for new players connecting 
+   Mother listens on 4242 for new players connecting
    in the mplex's Control() loop in MUDConnector.cpp
    which calls CaptainHook.Wait();
 
-    When a new player connects to the mother port, 
+    When a new player connects to the mother port,
     CaptainHook.Wait() in turn calls MotherHook.Input().
     MotherHook calls new cConHook() which is the player's
     client connection. The constructor adds itself to the
@@ -69,7 +69,7 @@
     stops before that.
 
     If the connection to the MUD goes down, all cConHooks
-    have their m_nId set to zero. 
+    have their m_nId set to zero.
 
 */
 
@@ -87,14 +87,14 @@ void cConHook::PlayLoop(const char *cmd)
     {
         if (m_nState == 0)
         {
-            sprintf(buf, "Your ID to %s was reset due to connection lost.<br/>", mudname);
+            sprintf(buf, "Your ID to %s was reset due to connection lost.<br/>", g_mudname);
             WriteCon(buf);
             return;
         }
 
         if (m_nState++ < 50)
         {
-            sprintf(buf, "Waiting to receive an ID from %s.<br/>", mudname);
+            sprintf(buf, "Waiting to receive an ID from %s.<br/>", g_mudname);
             WriteCon(buf);
             return;
         }
@@ -110,7 +110,6 @@ void cConHook::PlayLoop(const char *cmd)
     }
 }
 
-
 void dumbMenuSelect(class cConHook *con, const char *cmd)
 {
     con->MenuSelect(cmd);
@@ -121,9 +120,9 @@ void cConHook::MenuSelect(const char *cmd)
 {
     char buf[400];
 
-    if (!MudHook.IsHooked())
+    if (!g_MudHook.IsHooked())
     {
-        sprintf(buf, "%s is unreachable right now...<br/>", mudname);
+        sprintf(buf, "%s is unreachable right now...<br/>", g_mudname);
         SendCon(buf);
         test_mud_up(); // Wonder if I have multi threading issues here :o)
         return;
@@ -131,20 +130,19 @@ void cConHook::MenuSelect(const char *cmd)
 
     if (m_nId == 0)
     {
-        sprintf(buf, "Requesting an ID from %s.<br/>", mudname);
+        sprintf(buf, "Requesting an ID from %s.<br/>", g_mudname);
         SendCon(buf);
         m_nState = 1; // This means we're waiting for a response
         m_pFptr = dumbPlayLoop;
-        protocol_send_request(&MudHook);
+        protocol_send_request(&g_MudHook);
     }
     else
     {
-        sprintf(buf, "You got ID from %s...<br/>", mudname);
+        sprintf(buf, "You got ID from %s...<br/>", g_mudname);
         SendCon(buf);
         m_nState = 0;
         m_pFptr = dumbPlayLoop;
     }
-
 }
 
 void dumbMudDown(class cConHook *con, const char *cmd)
@@ -157,12 +155,11 @@ void cConHook::MudDown(const char *cmd)
     void test_mud_up(void);
 
     char buf[200];
-    sprintf(buf, "There is still no connection to %s.<br/>", mudname);
+    sprintf(buf, "There is still no connection to %s.<br/>", g_mudname);
     SendCon(buf);
 
     test_mud_up(); // Wonder if I have multi threading issues here :o)
 }
-
 
 void Idle(cConHook *con, const char *cmd)
 {
@@ -246,7 +243,7 @@ void cConHook::Unhook(void)
     if (IsHooked())
     {
         slog(LOG_OFF, 0, "Unhooking player connection");
-        CaptainHook.Unhook(this);
+        g_CaptainHook.Unhook(this);
     }
 
     if (this->m_pWebsServer == 0)
@@ -277,10 +274,10 @@ void cConHook::Close(int bNotifyMud)
     if (IsHooked())
         Unhook();
 
-    if (bNotifyMud && m_nId != 0 && MudHook.IsHooked())
+    if (bNotifyMud && m_nId != 0 && g_MudHook.IsHooked())
     {
         slog(LOG_ALL, 0, "Closing con id %d.", m_nId);
-        protocol_send_close(&MudHook, m_nId);
+        protocol_send_close(&g_MudHook, m_nId);
     }
 
     m_aOutput[0] = 0;
@@ -310,7 +307,7 @@ void cConHook::TransmitCommand(const char *text)
     char *d;
 
     strncpy(sendText, text, MAX_INPUT_LENGTH);
-    sendText[MAX_INPUT_LENGTH - 1] = 0; //MS2020 moved up to avoid strchr bug.
+    sendText[MAX_INPUT_LENGTH - 1] = 0; // MS2020 moved up to avoid strchr bug.
 
     if ((d = strchr(sendText, '\r')))
         *d = 0;
@@ -319,12 +316,12 @@ void cConHook::TransmitCommand(const char *text)
         *d = 0;
 
     strip_trailing_spaces(sendText);
-    //keep input short.
-    //maybe warn user if to long but we are not now.
+    // keep input short.
+    // maybe warn user if to long but we are not now.
 
     m_nPromptLen = 0;
 
-    protocol_send_text(&MudHook, m_nId, sendText, MULTI_TEXT_CHAR);
+    protocol_send_text(&g_MudHook, m_nId, sendText, MULTI_TEXT_CHAR);
 }
 
 /* ======================= TEXT PARSE & ECHO INPUT ====================== */
@@ -576,8 +573,7 @@ const char *mplex_getcolor(class cConHook *hook, const char *colorstr)
     return (gcolor);
 }
 
-char *cConHook::IndentText(const char *source,
-                           char *dest, int dest_size, int width)
+char *cConHook::IndentText(const char *source, char *dest, int dest_size, int width)
 {
     const char *last = source, *current;
     char tmpbuf[MAX_STRING_LENGTH * 2];
@@ -598,7 +594,7 @@ char *cConHook::IndentText(const char *source,
         {
             *newptr++ = *current++; // Copy control char
 
-            for (int j=0; j < 20; j++) // Skip the control sequence which ends with 'm'
+            for (int j = 0; j < 20; j++) // Skip the control sequence which ends with 'm'
             {
                 *newptr++ = *current; // copy char
 
@@ -702,7 +698,6 @@ char *cConHook::IndentText(const char *source,
 
         if (m_bColorChange == true)
         {
-
             *tmpbuf = '\0';
             i = 0;
             while (m_bColorChange == true && *current)
@@ -759,7 +754,6 @@ char *cConHook::IndentText(const char *source,
 
         if (m_bColorRemove == true)
         {
-
             *tmpbuf = '\0';
             i = 0;
             while (m_bColorRemove == true && *current)
@@ -819,11 +813,11 @@ char *cConHook::IndentText(const char *source,
 /*  Misleading name. Function changes HTML to TELNET
  *  <br/> becomes \n\r except if it is <br/>\n\r then it is ignored. Thus
  *  <br/><br/>\n\r becomes \n\r\n\r.
- *  That's by design to support both telnet and HTML reasonably. 
-*/
+ *  That's by design to support both telnet and HTML reasonably.
+ */
 void cConHook::StripHTML(char *dest, const char *src)
 {
-    if (mplex_arg.g_bModeRawHTML)
+    if (g_mplex_arg.g_bModeRawHTML)
     {
         strcpy(dest, src);
         return;
@@ -846,9 +840,9 @@ void cConHook::StripHTML(char *dest, const char *src)
                 continue;
 
             // We got a HTML tag
-            if (strcmp(aTag, "br")==0 || strcmp(aTag, "br/")==0)
+            if (strcmp(aTag, "br") == 0 || strcmp(aTag, "br/") == 0)
             {
-                if (*p == '\n' || *(p+1)=='\n') // If the next is \n then dont add <br>
+                if (*p == '\n' || *(p + 1) == '\n') // If the next is \n then dont add <br>
                     continue;
 
                 // the <br/> tag was not followed by \n\r so add \n\r
@@ -856,20 +850,20 @@ void cConHook::StripHTML(char *dest, const char *src)
                 *dest++ = '\r';
                 continue;
             }
-            if (strcmp(aTag, "/tr")==0)
+            if (strcmp(aTag, "/tr") == 0)
             {
                 *dest++ = '\n';
                 *dest++ = '\r';
                 continue;
             }
-            if (strcmp(aTag, "script")==0)
+            if (strcmp(aTag, "script") == 0)
             {
-                if (strncasecmp(p, "PasswordOn()", 12)==0)
+                if (strncasecmp(p, "PasswordOn()", 12) == 0)
                 {
                     Control_Echo_Off(this, &dest, 0);
                     p += 12;
                 }
-                else if (strncasecmp(p, "PasswordOff(", 12)==0)
+                else if (strncasecmp(p, "PasswordOff(", 12) == 0)
                 {
                     Control_Echo_On(this, &dest, 0);
                     p += 12;
@@ -879,31 +873,31 @@ void cConHook::StripHTML(char *dest, const char *src)
                     p = t + 9;
                 continue;
             }
-            else if (strncmp(aTag, "/div", 4)==0)
+            else if (strncmp(aTag, "/div", 4) == 0)
             {
                 // Hm, this'll send a lot of code... but telnet's a hack now :)
                 // How on earth will I get the "default color" if someone prefers e.g. yellow... ?
                 Control_ANSI_Fg(this, &dest, 'w', FALSE);
                 Control_ANSI_Bg(this, &dest, 'n');
             }
-            else if ((strncmp(aTag, "div ", 4)==0) || (strncmp(aTag, "h1 ", 3)==0))
+            else if ((strncmp(aTag, "div ", 4) == 0) || (strncmp(aTag, "h1 ", 3) == 0))
             {
                 char buf[256];
                 int l;
 
-                l = getHTMLValue("class", aTag, buf, sizeof(buf)-1);
+                l = getHTMLValue("class", aTag, buf, sizeof(buf) - 1);
 
                 if (l == 0)
                     continue;
 
                 // We got a single or double color code on our hands
                 // e.g. cpg, cg bn, cpy bb, etc.
-                if ((l >= 2) && (l <= 6) && ((buf[0]=='b') || (buf[0]=='c')))
+                if ((l >= 2) && (l <= 6) && ((buf[0] == 'b') || (buf[0] == 'c')))
                 {
                     char *p;
                     char tmp[256];
 
-                    p = str_next_word(buf, tmp); 
+                    p = str_next_word(buf, tmp);
 
                     while (tmp[0])
                     {
@@ -932,43 +926,43 @@ void cConHook::StripHTML(char *dest, const char *src)
         }
         else if (*p == '&')
         {
-            if (strncasecmp(p, "&gt;", 4)==0)
+            if (strncasecmp(p, "&gt;", 4) == 0)
             {
-              *dest++ = '>';
-              p += 4;
+                *dest++ = '>';
+                p += 4;
             }
-            else if (strncasecmp(p, "&lt;", 4)==0)
+            else if (strncasecmp(p, "&lt;", 4) == 0)
             {
-              *dest++ = '<';
-              p += 4;
+                *dest++ = '<';
+                p += 4;
             }
-            else if (strncasecmp(p, "&amp;", 5)==0)
+            else if (strncasecmp(p, "&amp;", 5) == 0)
             {
                 *dest++ = '&';
                 p += 5;
             }
-            else if (strncasecmp(p, "&apos;", 5)==0)
+            else if (strncasecmp(p, "&apos;", 5) == 0)
             {
                 *dest++ = '\'';
                 p += 5;
             }
-            else if (strncasecmp(p, "&nbsp;", 6)==0)
+            else if (strncasecmp(p, "&nbsp;", 6) == 0)
             {
                 *dest++ = ' ';
                 p += 6;
             }
-            else if (strncasecmp(p, "&quot;", 6)==0)
+            else if (strncasecmp(p, "&quot;", 6) == 0)
             {
                 *dest++ = '\"';
                 p += 6;
             }
             else
                 *dest++ = *p++;
-              
+
             continue;
         }
 
-        if (*p == '\n' && *(p+1) != '\r')
+        if (*p == '\n' && *(p + 1) != '\r')
         {
             *dest++ = '\n';
             *dest++ = '\r';
@@ -979,7 +973,6 @@ void cConHook::StripHTML(char *dest, const char *src)
     }
     *dest = 0;
 }
-
 
 // Parse the string 'text' and prepare it for output on 'con'
 // This should only be called for telnet
@@ -1000,7 +993,7 @@ char *cConHook::ParseOutput(const char *text)
             memcpy(Outbuf, text, sizeof(Outbuf));
             Outbuf[sizeof(Outbuf) - 1] = 0;
         }
-        
+
         return Outbuf;
     }
     else
@@ -1011,7 +1004,7 @@ char *cConHook::ParseOutput(const char *text)
     }
 }
 
-/* Attempts to erase the characters input after the prompt 
+/* Attempts to erase the characters input after the prompt
 void cConHook::PromptErase (void)
 {
     int n;
@@ -1084,7 +1077,7 @@ void cConHook::PromptRedraw(const char *prompt)
 
 void cConHook::SequenceCompare(ubit8 *pBuf, int *pnLen)
 {
-    //static const char *match = "a";
+    // static const char *match = "a";
     static const char *match = "[W32-V/C@SiGn]";
     /*  static int state = 0;*/
 
@@ -1123,68 +1116,68 @@ void cConHook::testChar(ubit8 c)
 {
     switch (m_nFirst)
     {
-    case 0:
-        if (c == IAC)
-            m_nFirst++;
-        else
-            m_nFirst = -1;
-        break;
+        case 0:
+            if (c == IAC)
+                m_nFirst++;
+            else
+                m_nFirst = -1;
+            break;
 
-    case 1:
-        if (c == WILL)
-            m_nFirst++;
-        else
-            m_nFirst = -1;
-        break;
+        case 1:
+            if (c == WILL)
+                m_nFirst++;
+            else
+                m_nFirst = -1;
+            break;
 
-    case 2:
-        if (c == TELOPT_ECHO)
-            m_nFirst++;
-        else
-            m_nFirst = -1;
-        break;
+        case 2:
+            if (c == TELOPT_ECHO)
+                m_nFirst++;
+            else
+                m_nFirst = -1;
+            break;
 
-    case 3:
-        m_nLine = c;
-        m_nFirst++;
-        break;
-
-    case 4:
-        if (c == IAC)
+        case 3:
+            m_nLine = c;
             m_nFirst++;
-        else
-        {
+            break;
+
+        case 4:
+            if (c == IAC)
+                m_nFirst++;
+            else
+            {
+                m_nFirst = -1;
+                m_nLine = 255;
+            }
+            break;
+
+        case 5:
+            if (c == WONT)
+                m_nFirst++;
+            else
+            {
+                m_nFirst = -1;
+                m_nLine = 255;
+            }
+            break;
+
+        case 6:
+            if (c == TELOPT_ECHO)
+            {
+                m_nFirst = -2;
+            }
+            else
+            {
+                m_nFirst = -1;
+                m_nLine = 255;
+            }
+            break;
+
+        default:
             m_nFirst = -1;
             m_nLine = 255;
-        }
-        break;
-
-    case 5:
-        if (c == WONT)
-            m_nFirst++;
-        else
-        {
-            m_nFirst = -1;
-            m_nLine = 255;
-        }
-        break;
-
-    case 6:
-        if (c == TELOPT_ECHO)
-        {
-            m_nFirst = -2;
-        }
-        else
-        {
-            m_nFirst = -1;
-            m_nLine = 255;
-        }
-        break;
-
-    default:
-        m_nFirst = -1;
-        m_nLine = 255;
-        break;
+            break;
     }
 }
 
@@ -1312,15 +1305,15 @@ cConHook::cConHook(void)
     m_nPromptMode = 0;
     m_nPromptLen = 0;
 
-    //m_pWebsHdl = 0;
+    // m_pWebsHdl = 0;
     m_pWebsServer = 0;
 
-    m_sSetup.echo = mplex_arg.g_bModeEcho;
-    m_sSetup.redraw = mplex_arg.g_bModeRedraw;
-    m_sSetup.telnet = mplex_arg.g_bModeTelnet;
-    m_sSetup.websockets = mplex_arg.bWebSockets;
+    m_sSetup.echo = g_mplex_arg.g_bModeEcho;
+    m_sSetup.redraw = g_mplex_arg.g_bModeRedraw;
+    m_sSetup.telnet = g_mplex_arg.g_bModeTelnet;
+    m_sSetup.websockets = g_mplex_arg.bWebSockets;
 
-    if (mplex_arg.g_bModeANSI)
+    if (g_mplex_arg.g_bModeANSI)
         m_sSetup.emulation = TERM_ANSI;
     else
         m_sSetup.emulation = TERM_TTY;
@@ -1338,7 +1331,7 @@ cConHook::cConHook(void)
     m_nPromptMode = 0;
     strcpy(m_aHost, "");
 
-    if (mplex_arg.bWebSockets)
+    if (g_mplex_arg.bWebSockets)
     {
         return; // Hack for making websockets work
     }
@@ -1356,12 +1349,12 @@ cConHook::cConHook(void)
     char hostname[49];
     int x;
 
-    assert(MotherHook.IsHooked());
+    assert(g_MotherHook.IsHooked());
 
     j = sizeof(conaddr);
-    //slog(LOG_OFF, 0, "accept() before.");
-    fd = accept(MotherHook.tfd(), (struct sockaddr *)&conaddr, &j);
-    //slog(LOG_OFF, 0, "accept() after.");
+    // slog(LOG_OFF, 0, "accept() before.");
+    fd = accept(g_MotherHook.tfd(), (struct sockaddr *)&conaddr, &j);
+    // slog(LOG_OFF, 0, "accept() after.");
     Assert(fd >= 0, "ACCEPT");
 
 #ifdef LINUX
@@ -1384,7 +1377,7 @@ cConHook::cConHook(void)
     if (getpeername(fd, (struct sockaddr *)&sock, &size) == -1)
     {
         slog(LOG_OFF, 0, "getpeername: socket %d error no %d.", fd, errno);
-        //MS2020 strncpy (hostname,"NO GETPEERNAME",strlen("NO GETPEERNAME")+1);
+        // MS2020 strncpy (hostname,"NO GETPEERNAME",strlen("NO GETPEERNAME")+1);
         strcpy(hostname, "NO GETPEERNAME");
     }
     else
@@ -1416,7 +1409,7 @@ cConHook::cConHook(void)
 
         /* The fix */
         //      addr = (unsigned char *) &sock.sin_addr.s_addr;
-        strncpy(hostname, inet_ntoa(sock.sin_addr), sizeof(hostname)-1);
+        strncpy(hostname, inet_ntoa(sock.sin_addr), sizeof(hostname) - 1);
     }
 
     strncpy(m_aHost, hostname, sizeof(m_aHost) - 1);
@@ -1425,7 +1418,7 @@ cConHook::cConHook(void)
     if (this->tfd() != -1)
         slog(LOG_ALL, 0, "cConHook() called with a non -1 fd.");
 
-    CaptainHook.Hook(fd, this);
+    g_CaptainHook.Hook(fd, this);
 
     g_nConnectionsLeft--;
 }

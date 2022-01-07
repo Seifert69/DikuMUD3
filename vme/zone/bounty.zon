@@ -4210,6 +4210,7 @@ code
 
 	pc := activator;
 	secure(pc,donezo);
+	idate := realtime / (60*60*24);
 	
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	
@@ -4229,6 +4230,7 @@ code
 				exec("say You've done it "+pc.name+"!",self);
 				subextra(pc.extra,"$DAILY_SPREE");
 				addextra(pc.extra,{"$DAILY_SPREE"},sdate+"|CLOSED");
+				addstring(pc.extra.["$DAILY_SPREE"].names,itoa(idate));
 				if("$spree_streak" in pc.extra)
 					i := atoi(pc.extra.["$spree_streak"].descr);
 
@@ -4426,14 +4428,14 @@ code
 	if (n == 0) // package deliver
 	{
 		slNpc := {"mob_35@pit","mob_34@pit","mob_33@pit","mob_32@pit","mob_31@pit","mob_30@pit","alain_1@timezon",
-					"lizard_1@timezon","robin_frog@torsbay","mcdroog_guard@torsbay","mcdroog_guard2@torsbay"};
+					"lizard_1@timezon","robin_frog@torsbay","mcdroog_guard@torsbay","mcdroog_guard2@torsbay", "moon_god@valley3"};
 	}
 	else if (n == 1) // contract
 	{
 		slNpc := {"swarm_small@valley2","swarm_med@valley2","swarm_large@valley2","mob_35@pit","mob_34@pit",
 					"mob_33@pit","mob_32@pit","mob_31@pit","mob_30@pit", "slime_black@midsewers","alain_1@timezon",
 					"lizard_1@timezon","blob1@arma","robin_frog@torsbay","mcdroog_guard@torsbay",
-					"mcdroog_guard2@torsbay","slime_purple@midsewers"};
+					"mcdroog_guard2@torsbay","slime_purple@midsewers", "moon_god@valley3"};
 	}
 	slSplit := split(s,"@");
 	

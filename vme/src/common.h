@@ -8,13 +8,13 @@
 #ifndef _MUD_COMMON_H
 #define _MUD_COMMON_H
 
-extern struct wpn_info_type wpn_info[];
+extern struct wpn_info_type g_wpn_info[];
 
-extern const char *drinks[];
-extern const char *dirs[];
-extern const char *dirs_short[];
+extern const char *g_drinks[];
+extern const char *g_dirs[];
+extern const char *g_dirs_short[];
 
-extern char libdir[64];
+extern char g_libdir[64];
 
 int required_xp(int level);
 int level_xp(int level);
@@ -24,13 +24,13 @@ void set_hits(class unit_data *obj, int craftsmanship);
 int skill_point_gain(void);
 int ability_point_gain(class unit_data *ch);
 int ability_point_total(class unit_data *ch);
-//double damage_str(int strength);
+// double damage_str(int strength);
 
 int distribute_points(sbit16 *skills, int max, int points, int level);
 int distribute_points(ubit8 *skills, int max, int points, int level);
 int buy_points(int points, int level, int *error);
 
-//int apply_quality (int num, int quality);
+// int apply_quality (int num, int quality);
 
 int hitpoint_total(int hpp);
 

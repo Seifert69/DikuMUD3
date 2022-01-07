@@ -94,7 +94,7 @@ char *cintlist::catnames()
 
 std::string cintlist::json(void)
 {
-    string s;
+    std::string s;
 
     s = "\"intlist\": [";
 
@@ -115,8 +115,7 @@ void cintlist::Remove(int idx)
     if ((idx >= 0) && (idx < length))
     {
         if (idx != length - 1)
-            memmove(&intlist[idx], &intlist[idx + 1],
-                    sizeof(int) * (length - idx));
+            memmove(&intlist[idx], &intlist[idx + 1], sizeof(int) * (length - idx));
         length--;
         if (length == 0)
         {
@@ -196,7 +195,6 @@ void cintlist::Prepend(int val)
     intlist[0] = val;
 }
 
-
 void cintlist::Insert(int val, int idx)
 {
     if ((idx < 0) || (idx > length))
@@ -225,7 +223,6 @@ void cintlist::Insert(int val, int idx)
     memmove(&intlist[idx + 1], &intlist[idx], sizeof(int) * (olen - idx));
     intlist[idx] = val;
 }
-
 
 cintlist *cintlist::Duplicate(void)
 {

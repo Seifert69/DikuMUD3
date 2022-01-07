@@ -28,71 +28,50 @@
 #include "dilrun.h"
 
 struct trie_type *cmd_trie = NULL;
-struct command_info *cmdlist = NULL;
-struct cmdload_struct cmdload[] = {
-    {"north", do_move, 0, 0},
-    {"northeast", do_move, 0, 0},
-    {"ne", do_move, 0, 0},
-    {"northwest", do_move, 0, 0},
-    {"nw", do_move, 0, 0},
-    {"east", do_move, 0, 0},
-    {"south", do_move, 0, 0},
-    {"southeast", do_move, 0, 0},
-    {"se", do_move, 0, 0},
-    {"west", do_move, 0, 0},
-    {"southwest", do_move, 0, 0},
-    {"sw", do_move, 0, 0},
-    {"up", do_move, 0, 0},
-    {"down", do_move, 0, 0},
+struct command_info *g_cmdlist = NULL;
+struct cmdload_struct cmdload[] = {{"north", do_move, 0, 0},        {"northeast", do_move, 0, 0},
+                                   {"ne", do_move, 0, 0},           {"northwest", do_move, 0, 0},
+                                   {"nw", do_move, 0, 0},           {"east", do_move, 0, 0},
+                                   {"south", do_move, 0, 0},        {"southeast", do_move, 0, 0},
+                                   {"se", do_move, 0, 0},           {"west", do_move, 0, 0},
+                                   {"southwest", do_move, 0, 0},    {"sw", do_move, 0, 0},
+                                   {"up", do_move, 0, 0},           {"down", do_move, 0, 0},
 
-    {"account", do_account, 0, 0},
-    {"at", do_at, 0, 0},
+                                   {"account", do_account, 0, 0},   {"at", do_at, 0, 0},
 
-    {"backstab", do_backstab, 0, 0},
-    {"ban", do_ban, 0, 0},
+                                   {"backstab", do_backstab, 0, 0}, {"ban", do_ban, 0, 0},
 
-    {"cast", do_cast, 0, 0},
-    {"change", do_change, 0, 0},
-    {"color", do_color, 0, 0},
-    {"consider", do_consider, 0, 0},
-    {"crash", do_crash, 0, 0},
+                                   {"cast", do_cast, 0, 0},         {"change", do_change, 0, 0},
+                                   {"color", do_color, 0, 0},       {"consider", do_consider, 0, 0},
+                                   {"crash", do_crash, 0, 0},
 
-    {"execute", do_execute, 0, 0},
+                                   {"execute", do_execute, 0, 0},
 
-    {"kill", do_kill, 0, 0},
+                                   {"kill", do_kill, 0, 0},
 
-    {"level", do_level, 0, 0},
-    {"load", do_load, 0, 0},
-    {"timewarp", do_timewarp, 0, 0},
+                                   {"level", do_level, 0, 0},       {"load", do_load, 0, 0},
+                                   {"timewarp", do_timewarp, 0, 0},
 
-    {"rent", do_rent, 0, 0},
-    {"reset", do_reset, 0, 0},
-    {"save", do_save, 0, 0},
-    {"set", do_set, 0, 0},
-    {"setskill", do_setskill, 0, 0},
-    {"shutdown", do_shutdown, 0, 0},
-    {"snoop", do_snoop, 0, 0},
-    {"switch", do_switch, 0, 0},
+                                   {"rent", do_rent, 0, 0},         {"reset", do_reset, 0, 0},
+                                   {"save", do_save, 0, 0},         {"set", do_set, 0, 0},
+                                   {"setskill", do_setskill, 0, 0}, {"shutdown", do_shutdown, 0, 0},
+                                   {"snoop", do_snoop, 0, 0},       {"switch", do_switch, 0, 0},
 
-    {"users", do_users, 0, 0},
-    {"where", do_where, 0, 0},
+                                   {"users", do_users, 0, 0},       {"where", do_where, 0, 0},
 
-    {"wizlock", do_wizlock, 0, 0},
-    {"wstat", do_wstat, 0, 0},
-    {"wedit", do_wedit, 0, 0},
-    {"", NULL, 0, 0}};
-
+                                   {"wizlock", do_wizlock, 0, 0},   {"wstat", do_wstat, 0, 0},
+                                   {"wedit", do_wedit, 0, 0},       {"", NULL, 0, 0}};
 
 void skill_dump(void)
 {
-    string str;
+    std::string str;
     char buf[MAX_STRING_LENGTH];
 
-    bool pairISCompare(const std::pair<int, string>& firstElem, const std::pair<int, string>& secondElem);
+    bool pairISCompare(const std::pair<int, std::string> &firstElem, const std::pair<int, std::string> &secondElem);
 
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
-        vector< pair <int,string> > vect;
+        std::vector<std::pair<int, std::string>> vect;
 
         for (int i = 0; i < SKI_TREE_MAX; i++)
         {
@@ -101,24 +80,28 @@ void skill_dump(void)
 
             str = "";
 
-            sprintf(buf, "%s,%s", g_SkiColl.text[i], spc(20-strlen(g_SkiColl.text[i])));
+            snprintf(buf, sizeof(buf), "%s,%s", g_SkiColl.text[i], spc(20 - strlen(g_SkiColl.text[i])));
             str.append(buf);
 
-            sprintf(buf, ".profession %s%s = %s%d\n", professions[j], spc(12-strlen(professions[j])),
-                (g_SkiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "", g_SkiColl.prof_table[i].profession_cost[j]);
+            snprintf(buf,
+                     sizeof(buf),
+                     ".profession %s%s = %s%d\n",
+                     g_professions[j],
+                     spc(12 - strlen(g_professions[j])),
+                     (g_SkiColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                     g_SkiColl.prof_table[i].profession_cost[j]);
             str.append(buf);
-
 
             /*if (g_SkiColl.prof_table[i].min_level > 0)
             {
-                sprintf(buf, "restrict level          = %d\n", g_SkiColl.prof_table[i].min_level);
+                s printf(buf, "restrict level          = %d\n", g_SkiColl.prof_table[i].min_level);
                 str.append(buf);
             }
 
             for (int k=0; k < ABIL_TREE_MAX; k++)
                 if (g_SkiColl.prof_table[i].min_abil[k] > 0)
                 {
-                    sprintf(buf, "restrict %s%s    = %s%d\n", g_SkiColl.text[i], spc(12-strlen(g_SkiColl.text[i])),
+                    s printf(buf, "restrict %s%s    = %s%d\n", g_SkiColl.text[i], spc(12-strlen(g_SkiColl.text[i])),
                         (g_SkiColl.prof_table[i].min_abil[k] >= 0) ? "+" : "", g_SkiColl.prof_table[i].min_abil[k]);
                     str.append(buf);
                 }*/
@@ -130,7 +113,7 @@ void skill_dump(void)
         for (auto it = vect.begin(); it != vect.end(); ++it)
             printf("%s", it->second.c_str());
     }
-        
+
     exit(0);
 }
 
@@ -148,9 +131,8 @@ void cmd_base_load(void)
     for (i = 0; *cmdload[i].cmd_str; i++)
         set_triedata(cmdload[i].cmd_str, cmd_trie, &cmdload[i], TRUE);
 
-
     command_read();
-    //skill_dump();
+    // skill_dump();
 }
 
 void command_read(void)
@@ -199,9 +181,9 @@ void command_read(void)
             {
                 if (cmdptr->cmd_str && (cmdptr->cmd_fptr || cmdptr->tmpl))
                 {
-                    if (cmdlist == NULL)
+                    if (g_cmdlist == NULL)
                     {
-                        cmdlist = cmdptr;
+                        g_cmdlist = cmdptr;
                         cmdptr->prev = NULL;
                         cmdptr->next = NULL;
                         lastptr = cmdptr;
@@ -240,9 +222,7 @@ void command_read(void)
 
         if (strncmp(pTmp, "internal", 4) == 0)
         {
-            if (
-                (intcmd =
-                     ((struct cmdload_struct *)search_trie(pCh, cmd_trie))))
+            if ((intcmd = ((struct cmdload_struct *)search_trie(pCh, cmd_trie))))
             {
                 if (cmdptr)
                 {
@@ -255,10 +235,8 @@ void command_read(void)
             {
                 if (cmdptr->cmd_str)
                     FREE(cmdptr->cmd_str)
-                    cmdptr = NULL;
-                slog(LOG_ALL, 0,
-                     "COMMAND LOAD ERROR: %s not a defined internal funciton.",
-                     pCh);
+                cmdptr = NULL;
+                slog(LOG_ALL, 0, "COMMAND LOAD ERROR: %s not a defined internal funciton.", pCh);
                 ignore = TRUE;
             }
             continue;
@@ -308,7 +286,7 @@ void command_read(void)
             if (!is_in(dummy, -3, +3))
                 continue;
 
-            int ridx = search_block(pTmp + 5, pc_races, TRUE);
+            int ridx = search_block(pTmp + 5, g_pc_races, TRUE);
 
             if (ridx == -1)
                 slog(LOG_ALL, 0, "Skills: Illegal race in: %s", pTmp);
@@ -326,7 +304,7 @@ void command_read(void)
                 continue;
             }
 
-            int ridx = search_block(pTmp + 11, professions, TRUE);
+            int ridx = search_block(pTmp + 11, g_professions, TRUE);
 
             if (ridx == -1)
                 slog(LOG_ALL, 0, "Skills: Illegal profession %s", pTmp);
@@ -334,7 +312,7 @@ void command_read(void)
                 g_SkiColl.prof_table[idx].profession_cost[ridx] = dummy;
             continue;
         }
-        
+
         if (strncmp(pTmp, "restrict ", 9) == 0)
         {
             dummy = atoi(pCh);
@@ -344,7 +322,7 @@ void command_read(void)
                 continue;
             }
 
-            if (strncmp(pTmp+9, "level", 5) == 0)
+            if (strncmp(pTmp + 9, "level", 5) == 0)
             {
                 g_SkiColl.prof_table[idx].min_level = dummy;
             }
@@ -431,9 +409,9 @@ void command_read(void)
     {
         if (cmdptr->cmd_str && (cmdptr->cmd_fptr || cmdptr->tmpl))
         {
-            if (cmdlist == NULL)
+            if (g_cmdlist == NULL)
             {
-                cmdlist = cmdptr;
+                g_cmdlist = cmdptr;
                 cmdptr->prev = NULL;
                 cmdptr->next = NULL;
                 lastptr = cmdptr;

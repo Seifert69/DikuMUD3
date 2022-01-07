@@ -4,7 +4,7 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.9 $
  */
-
+#include "external_vars.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -26,9 +26,6 @@
 #include "main.h"
 #include "dilrun.h"
 
-extern class unit_data *unit_list;
-extern class unit_data *combat_list;
-extern class descriptor_data *descriptor_list;
 /* External procedures */
 
 void stop_special(class unit_data *u, class unit_fptr *fptr);
@@ -37,7 +34,7 @@ class descriptor_data *unit_is_edited(class unit_data *u)
 {
     class descriptor_data *d;
 
-    for (d = descriptor_list; d; d = d->next)
+    for (d = g_descriptor_list; d; d = d->next)
         if (d->editing == u)
             return d;
 
@@ -47,124 +44,122 @@ class descriptor_data *unit_is_edited(class unit_data *u)
 /* By using this, we can easily sort the list if ever needed */
 void insert_in_unit_list(class unit_data *u)
 {
-    assert(u->gnext == NULL && u->gprevious == NULL && unit_list != u);
+    assert(u->gnext == NULL && u->gprevious == NULL && g_unit_list != u);
 
     if (UNIT_FILE_INDEX(u))
         UNIT_FILE_INDEX(u)->fi_unit_list.push_front(u);
 
     class unit_data *tmp_u;
 
-    if (!unit_list)
+    if (!g_unit_list)
     {
         u->gnext = NULL;
         u->gprevious = NULL;
-        unit_list = u;
-        npc_head = u;
-        room_head = u;
-        obj_head = u;
+        g_unit_list = u;
+        g_npc_head = u;
+        g_room_head = u;
+        g_obj_head = u;
         return;
     }
 
     switch (UNIT_TYPE(u))
     {
-    case UNIT_ST_PC:
-    {
-        tmp_u = unit_list;
-        u->gnext = tmp_u;
-        u->gprevious = tmp_u->gprevious;
-        tmp_u->gprevious = u;
-
-        if (tmp_u == unit_list)
-            unit_list = u;
-        break;
-    }
-    case UNIT_ST_NPC:
-    {
-        if (UNIT_TYPE(npc_head) != UNIT_ST_NPC)
+        case UNIT_ST_PC:
         {
-            tmp_u = unit_list;
-            for (; tmp_u && IS_PC(tmp_u); tmp_u = tmp_u->gnext)
-                ;
+            tmp_u = g_unit_list;
+            u->gnext = tmp_u;
+            u->gprevious = tmp_u->gprevious;
+            tmp_u->gprevious = u;
+
+            if (tmp_u == g_unit_list)
+                g_unit_list = u;
+            break;
         }
-        else
-            tmp_u = npc_head;
-
-        u->gnext = tmp_u;
-        u->gprevious = tmp_u->gprevious;
-        if (tmp_u->gprevious)
-            tmp_u->gprevious->gnext = u;
-        tmp_u->gprevious = u;
-
-        if (tmp_u == unit_list)
-            unit_list = u;
-        npc_head = u;
-        break;
-    }
-    case UNIT_ST_OBJ:
-    {
-        if (UNIT_TYPE(obj_head) != UNIT_ST_OBJ)
+        case UNIT_ST_NPC:
         {
-            tmp_u = unit_list;
-            for (; tmp_u && IS_CHAR(tmp_u); tmp_u = tmp_u->gnext)
-                ;
+            if (UNIT_TYPE(g_npc_head) != UNIT_ST_NPC)
+            {
+                tmp_u = g_unit_list;
+                for (; tmp_u && IS_PC(tmp_u); tmp_u = tmp_u->gnext)
+                    ;
+            }
+            else
+                tmp_u = g_npc_head;
+
+            u->gnext = tmp_u;
+            u->gprevious = tmp_u->gprevious;
+            if (tmp_u->gprevious)
+                tmp_u->gprevious->gnext = u;
+            tmp_u->gprevious = u;
+
+            if (tmp_u == g_unit_list)
+                g_unit_list = u;
+            g_npc_head = u;
+            break;
         }
-        else
-            tmp_u = obj_head;
-
-        u->gnext = tmp_u;
-        u->gprevious = tmp_u->gprevious;
-        if (tmp_u->gprevious)
-            tmp_u->gprevious->gnext = u;
-        tmp_u->gprevious = u;
-
-        if (tmp_u == unit_list)
-            unit_list = u;
-        obj_head = u;
-        break;
-    }
-    case UNIT_ST_ROOM:
-    {
-        if (UNIT_TYPE(room_head) != UNIT_ST_ROOM)
+        case UNIT_ST_OBJ:
         {
-            tmp_u = unit_list;
-            for (; tmp_u && (IS_CHAR(tmp_u) || IS_OBJ(tmp_u));
-                 tmp_u = tmp_u->gnext)
-                ;
+            if (UNIT_TYPE(g_obj_head) != UNIT_ST_OBJ)
+            {
+                tmp_u = g_unit_list;
+                for (; tmp_u && IS_CHAR(tmp_u); tmp_u = tmp_u->gnext)
+                    ;
+            }
+            else
+                tmp_u = g_obj_head;
+
+            u->gnext = tmp_u;
+            u->gprevious = tmp_u->gprevious;
+            if (tmp_u->gprevious)
+                tmp_u->gprevious->gnext = u;
+            tmp_u->gprevious = u;
+
+            if (tmp_u == g_unit_list)
+                g_unit_list = u;
+            g_obj_head = u;
+            break;
         }
-        else
-            tmp_u = room_head;
+        case UNIT_ST_ROOM:
+        {
+            if (UNIT_TYPE(g_room_head) != UNIT_ST_ROOM)
+            {
+                tmp_u = g_unit_list;
+                for (; tmp_u && (IS_CHAR(tmp_u) || IS_OBJ(tmp_u)); tmp_u = tmp_u->gnext)
+                    ;
+            }
+            else
+                tmp_u = g_room_head;
 
-        u->gnext = tmp_u;
-        u->gprevious = tmp_u->gprevious;
-        if (tmp_u->gprevious)
-            tmp_u->gprevious->gnext = u;
-        tmp_u->gprevious = u;
+            u->gnext = tmp_u;
+            u->gprevious = tmp_u->gprevious;
+            if (tmp_u->gprevious)
+                tmp_u->gprevious->gnext = u;
+            tmp_u->gprevious = u;
 
-        if (tmp_u == unit_list)
-            unit_list = u;
-        room_head = u;
-        break;
+            if (tmp_u == g_unit_list)
+                g_unit_list = u;
+            g_room_head = u;
+            break;
+        }
     }
-    }
-
 }
 
-/* Remove a unit from the unit_list */
+/* Remove a unit from the g_unit_list */
 void remove_from_unit_list(class unit_data *unit)
 {
-    assert(unit->gprevious || unit->gnext || (unit_list == unit));
+    assert(unit->gprevious || unit->gnext || (g_unit_list == unit));
 
     if (UNIT_FILE_INDEX(unit))
         UNIT_FILE_INDEX(unit)->fi_unit_list.remove(unit);
 
-    if (npc_head == unit)
-        npc_head = unit->gnext;
-    if (obj_head == unit)
-        obj_head = unit->gnext;
-    if (room_head == unit)
-        room_head = unit->gnext;
-    if (unit_list == unit)
-        unit_list = unit->gnext;
+    if (g_npc_head == unit)
+        g_npc_head = unit->gnext;
+    if (g_obj_head == unit)
+        g_obj_head = unit->gnext;
+    if (g_room_head == unit)
+        g_room_head = unit->gnext;
+    if (g_unit_list == unit)
+        g_unit_list = unit->gnext;
     else /* Then this is always true 'if (unit->gprevious)'  */
         unit->gprevious->gnext = unit->gnext;
 
@@ -184,7 +179,6 @@ class unit_fptr *find_fptr(class unit_data *u, ubit16 idx)
 
     return NULL;
 }
-
 
 // 2020: Add it prioritized
 void insert_fptr(class unit_data *u, class unit_fptr *f)
@@ -232,9 +226,7 @@ void insert_fptr(class unit_data *u, class unit_fptr *f)
     f->next = NULL;
 }
 
-
-class unit_fptr *create_fptr(class unit_data *u, ubit16 index, ubit16 priority,
-                              ubit16 beat, ubit16 flags, void *data)
+class unit_fptr *create_fptr(class unit_data *u, ubit16 index, ubit16 priority, ubit16 beat, ubit16 flags, void *data)
 {
     class unit_fptr *f;
 
@@ -269,9 +261,6 @@ void destroy_fptr(class unit_data *u, class unit_fptr *f)
     class unit_fptr *tf;
     struct spec_arg sarg;
 
-    extern struct unit_function_array_type unit_function_array[];
-    extern struct command_info cmd_auto_extract;
-
     void register_destruct(int i, void *ptr);
     void add_func_history(class unit_data * u, ubit16, ubit16);
 
@@ -293,11 +282,11 @@ void destroy_fptr(class unit_data *u, class unit_fptr *f)
     sarg.target = NULL;
     sarg.pInt = NULL;
     sarg.fptr = f;
-    sarg.cmd = &cmd_auto_extract;
+    sarg.cmd = &g_cmd_auto_extract;
     sarg.arg = "";
     sarg.mflags = ((ubit16)0);
 
-    (*(unit_function_array[f->index].func))(&sarg);
+    (*(g_unit_function_array[f->index].func))(&sarg);
 
     /* Data is free'ed in destruct() if it is not NULL now */
 
@@ -329,8 +318,6 @@ void stop_following(class unit_data *ch)
 {
     struct char_follow_type *j, *k;
 
-    extern struct command_info *cmd_follow;
-
     assert(CHAR_MASTER(ch));
 
     if (CHAR_FOLLOWERS(CHAR_MASTER(ch))->follower == ch) /* Head of list? */
@@ -341,8 +328,7 @@ void stop_following(class unit_data *ch)
     }
     else
     { /* locate follower who is not head of list */
-        for (k = CHAR_FOLLOWERS(CHAR_MASTER(ch));
-             k->next->follower != ch; k = k->next)
+        for (k = CHAR_FOLLOWERS(CHAR_MASTER(ch)); k->next->follower != ch; k = k->next)
             ;
         j = k->next;
         k->next = j->next;
@@ -351,15 +337,13 @@ void stop_following(class unit_data *ch)
 
     CHAR_MASTER(ch) = 0;
 
-    send_done(ch, NULL, NULL, 0, cmd_follow, "");
+    send_done(ch, NULL, NULL, 0, g_cmd_follow, "");
 }
 
 /* Set 'ch' to follow leader. Circles allowed. */
 void start_following(class unit_data *ch, class unit_data *leader)
 {
     struct char_follow_type *k;
-
-    extern struct command_info *cmd_follow;
 
     assert(!leader->is_destructed());
     assert(!ch->is_destructed());
@@ -373,7 +357,7 @@ void start_following(class unit_data *ch, class unit_data *leader)
     k->next = CHAR_FOLLOWERS(leader);
     CHAR_FOLLOWERS(leader) = k;
 
-    send_done(ch, NULL, leader, 0, cmd_follow, "");
+    send_done(ch, NULL, leader, 0, g_cmd_follow, "");
 }
 
 /* Called by extract_unit when a character that follows/is followed dies */
@@ -390,7 +374,6 @@ void die_follower(class unit_data *ch)
         stop_following(k->follower);
     }
 }
-
 
 /*
    An NPC can see if the sum of this is >= 0
@@ -410,9 +393,9 @@ ubit1 unit_islight(class unit_data *u)
 
 /* MS2020. Trying to remember how this worked:
 
-    BRIGHT: How much a unit shines wtih light/dark afecting what it is in 
+    BRIGHT: How much a unit shines wtih light/dark afecting what it is in
     LIGHTS: How much light is inside a unit (not how much it shines out)
-    ILLUM:  
+    ILLUM:
 
 Example: (Lights, Bright, Illum)
     Room: (-1,0,0)
@@ -425,7 +408,7 @@ Example: (Lights, Bright, Illum)
     NPC equips lantern Room: L+1. NPC: L:2, B:2
 
     What about NPC in coffin when it is open & closed?
-    What about room in room when it is open & closed? (barrel) 
+    What about room in room when it is open & closed? (barrel)
 
     coffin@midgaard & horse@midgaard are both transparent
 
@@ -556,14 +539,9 @@ class unit_data *unequip_object(class unit_data *obj)
         {
             for (caf = UNIT_AFFECTED(ch); caf; caf = caf->next)
             {
-                if ((-caf->id == af->id) &&
-                    (caf->duration == -1) &&
-                    (caf->data[0] == af->data[0]) &&
-                    (caf->data[1] == af->data[1]) &&
+                if ((-caf->id == af->id) && (caf->duration == -1) && (caf->data[0] == af->data[0]) && (caf->data[1] == af->data[1]) &&
                     // THIS IS NOT TESTED! (caf->data[2] == af->data[2]) &&
-                    (caf->applyf_i == af->applyf_i) &&
-                    (caf->firstf_i == af->firstf_i) &&
-                    (caf->lastf_i == af->lastf_i) &&
+                    (caf->applyf_i == af->applyf_i) && (caf->firstf_i == af->firstf_i) && (caf->lastf_i == af->lastf_i) &&
                     (caf->tickf_i == af->tickf_i))
                 {
                     destroy_affect(caf);
@@ -600,26 +578,23 @@ class zone_type *unit_zone(const class unit_data *unit)
             //      assert(IS_ROOM(unit));
             if (!IS_ROOM(unit))
             {
-                slog(LOG_ALL, 0,
-                     "ZONE: FATAL(1): %s@%s IN NO ROOMS WHILE NOT A ROOM!!",
-                     UNIT_FI_NAME(org), UNIT_FI_ZONENAME(org));
+                slog(LOG_ALL, 0, "ZONE: FATAL(1): %s@%s IN NO ROOMS WHILE NOT A ROOM!!", UNIT_FI_NAME(org), UNIT_FI_ZONENAME(org));
                 return NULL;
             }
             return UNIT_FILE_INDEX(unit)->zone;
         }
 
-    slog(LOG_ALL, 0, "ZONE: FATAL(2): %s@%s IN NO ROOMS WHILE NOT A ROOM!!",
-         UNIT_FI_NAME(org), UNIT_FI_ZONENAME(org));
+    slog(LOG_ALL, 0, "ZONE: FATAL(2): %s@%s IN NO ROOMS WHILE NOT A ROOM!!", UNIT_FI_NAME(org), UNIT_FI_ZONENAME(org));
     return NULL;
 }
 
 //
 // Returns a symname text string of all the units a unit is in
 //
-string unit_trace_up(class unit_data *unit)
+std::string unit_trace_up(class unit_data *unit)
 {
     class unit_data *u;
-    string s, t;
+    std::string s, t;
 
     s = "";
     s.append(UNIT_FI_NAME(unit));
@@ -640,18 +615,17 @@ string unit_trace_up(class unit_data *unit)
 
 class unit_data *unit_room(class unit_data *unit)
 {
-   if (unit == NULL)
-      return NULL;
+    if (unit == NULL)
+        return NULL;
 
-   class unit_data *org = unit;
+    class unit_data *org = unit;
 
-   for (; unit; unit = UNIT_IN(unit))
-      if (IS_ROOM(unit))
-         return unit;
+    for (; unit; unit = UNIT_IN(unit))
+        if (IS_ROOM(unit))
+            return unit;
 
-   slog(LOG_ALL, 0, "ROOM: FATAL(3): %s@%s IN NO ROOMS WHILE NOT A ROOM!!",
-      UNIT_FI_NAME(org), UNIT_FI_ZONENAME(org));
-   return 0;
+    slog(LOG_ALL, 0, "ROOM: FATAL(3): %s@%s IN NO ROOMS WHILE NOT A ROOM!!", UNIT_FI_NAME(org), UNIT_FI_ZONENAME(org));
+    return 0;
 }
 
 void intern_unit_up(class unit_data *unit, ubit1 pile)
@@ -763,8 +737,7 @@ void intern_unit_down(class unit_data *unit, class unit_data *to, ubit1 pile)
             UNIT_CONTAINS(UNIT_IN(unit)) = unit->next;
         else
         {
-            for (u = UNIT_CONTAINS(UNIT_IN(unit)); u->next != unit;
-                 u = u->next)
+            for (u = UNIT_CONTAINS(UNIT_IN(unit)); u->next != unit; u = u->next)
                 ;
             u->next = unit->next;
         }
@@ -819,8 +792,7 @@ void snoop(class unit_data *ch, class unit_data *victim)
     /*   assert(IS_PC(ch) && IS_PC(victim)); */
     assert(CHAR_DESCRIPTOR(ch) && CHAR_DESCRIPTOR(victim));
     assert(!CHAR_IS_SNOOPING(ch) && !CHAR_IS_SNOOPED(victim));
-    assert(CHAR_LEVEL(CHAR_ORIGINAL(victim)) <
-           CHAR_LEVEL(CHAR_ORIGINAL(ch)));
+    assert(CHAR_LEVEL(CHAR_ORIGINAL(victim)) < CHAR_LEVEL(CHAR_ORIGINAL(ch)));
     /*   assert(!CHAR_IS_SWITCHED(victim)); */
 
     CHAR_DESCRIPTOR(ch)->snoop.snooping = victim;
@@ -836,23 +808,18 @@ void unsnoop(class unit_data *ch, int mode)
 
     if (CHAR_IS_SNOOPING(ch))
     {
-        act("You no longer snoop $3n.",
-            A_SOMEONE, ch, cActParameter(), CHAR_DESCRIPTOR(ch)->snoop.snooping, TO_CHAR);
-        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->snoop.snooping)->snoop.snoop_by =
-            0;
+        act("You no longer snoop $3n.", A_SOMEONE, ch, cActParameter(), CHAR_DESCRIPTOR(ch)->snoop.snooping, TO_CHAR);
+        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->snoop.snooping)->snoop.snoop_by = 0;
         CHAR_DESCRIPTOR(ch)->snoop.snooping = 0;
     }
 
     if (CHAR_IS_SNOOPED(ch) && mode)
     {
-        act("You no longer snoop $3n, $3e was extracted.",
-            A_SOMEONE, CHAR_DESCRIPTOR(ch)->snoop.snoop_by, cActParameter(), ch, TO_CHAR);
-        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->snoop.snoop_by)->snoop.snooping =
-            0;
+        act("You no longer snoop $3n, $3e was extracted.", A_SOMEONE, CHAR_DESCRIPTOR(ch)->snoop.snoop_by, cActParameter(), ch, TO_CHAR);
+        CHAR_DESCRIPTOR(CHAR_DESCRIPTOR(ch)->snoop.snoop_by)->snoop.snooping = 0;
         CHAR_DESCRIPTOR(ch)->snoop.snoop_by = 0;
     }
 }
-
 
 void switchbody(class unit_data *ch, class unit_data *vict)
 {
@@ -876,7 +843,6 @@ void switchbody(class unit_data *ch, class unit_data *vict)
     CHAR_DESCRIPTOR(ch) = NULL;
     CHAR_LAST_ROOM(vict) = NULL;
 }
-
 
 void unswitchbody(class unit_data *npc)
 {
@@ -904,52 +870,48 @@ void stop_fightfollow(unit_data *unit)
 {
     if (IS_CHAR(unit))
     {
-      if (CHAR_FOLLOWERS(unit) || CHAR_MASTER(unit))
-         die_follower(unit);
+        if (CHAR_FOLLOWERS(unit) || CHAR_MASTER(unit))
+            die_follower(unit);
 
-      stop_fighting(unit);
+        stop_fighting(unit);
     }
 }
 
-
 void stop_snoopwrite(unit_data *unit)
 {
-   // removed this statement: if (!IS_PC(unit) || UNIT_IN(unit))
-   //
+    // removed this statement: if (!IS_PC(unit) || UNIT_IN(unit))
+    //
 
-   class descriptor_data *d;
-   while ((d = unit_is_edited(unit)))
-   {
-      send_to_char("<br/>Unit was extracted, sorry.<br/>", d->character);
-      set_descriptor_fptr(d, descriptor_interpreter, FALSE);
-   }
+    class descriptor_data *d;
+    while ((d = unit_is_edited(unit)))
+    {
+        send_to_char("<br/>Unit was extracted, sorry.<br/>", d->character);
+        set_descriptor_fptr(d, descriptor_interpreter, FALSE);
+    }
 
-   if (IS_CHAR(unit))
-   {
-      if (CHAR_IS_SWITCHED(unit))
-         unswitchbody(unit);
+    if (IS_CHAR(unit))
+    {
+        if (CHAR_IS_SWITCHED(unit))
+            unswitchbody(unit);
 
-      /* If the PC which is switched is extracted, then unswitch */
-      if (IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
-         for (d = descriptor_list; d; d = d->next)
-            if (d->original == unit)
-            {
-               unswitchbody(d->character);
-               break;
-            }
+        /* If the PC which is switched is extracted, then unswitch */
+        if (IS_PC(unit) && !CHAR_DESCRIPTOR(unit))
+            for (d = g_descriptor_list; d; d = d->next)
+                if (d->original == unit)
+                {
+                    unswitchbody(d->character);
+                    break;
+                }
 
-      if (CHAR_IS_SNOOPING(unit) || CHAR_IS_SNOOPED(unit))
-         unsnoop(unit, 1); /* Remove all snoopers */
-   }
+        if (CHAR_IS_SNOOPING(unit) || CHAR_IS_SNOOPED(unit))
+            unsnoop(unit, 1); /* Remove all snoopers */
+    }
 }
-
 
 /* Used when a unit is to be extracted from the game */
 /* Extracts recursively                              */
 void extract_unit(class unit_data *unit)
 {
-    extern class unit_data *destroy_room;
-
     void register_destruct(int i, void *ptr);
     void nanny_menu(class descriptor_data * d, char *arg);
     void stop_all_special(class unit_data * u);
@@ -967,7 +929,7 @@ void extract_unit(class unit_data *unit)
 
     if (IS_PC(unit))
     {
-        //slog(LOG_ALL, 0, "DEBUG: Extracting player %s", UNIT_NAME(unit));
+        // slog(LOG_ALL, 0, "DEBUG: Extracting player %s", UNIT_NAME(unit));
         UPC(unit)->gstate_tomenu(NULL);
     }
 
@@ -980,21 +942,21 @@ void extract_unit(class unit_data *unit)
 
     unit->register_destruct();
 
-   if (UNIT_IS_EQUIPPED(unit))
-      unequip_object(unit);
+    if (UNIT_IS_EQUIPPED(unit))
+        unequip_object(unit);
 
     stop_all_special(unit);
     stop_affect(unit);
 
-   while (UNIT_CONTAINS(unit))
-      extract_unit(UNIT_CONTAINS(unit));
+    while (UNIT_CONTAINS(unit))
+        extract_unit(UNIT_CONTAINS(unit));
 
     /*	void unlink_affect(class unit_affected_type *af);
           while (UNIT_FUNC(unit))
-    	destroy_fptr(unit, UNIT_FUNC(unit));
+        destroy_fptr(unit, UNIT_FUNC(unit));
 
           while (UNIT_AFFECTED(unit))
-    	     unlink_affect(UNIT_AFFECTED(unit));
+             unlink_affect(UNIT_AFFECTED(unit));
     */
 
     stop_fightfollow(unit);
@@ -1010,23 +972,23 @@ void extract_unit(class unit_data *unit)
       if (UNIT_IN(unit))
          unit_from_unit(unit);
 
-      unit_to_unit(unit, destroy_room);
+      unit_to_unit(unit, g_destroy_room);
 
       // Otherwise find_unit will find it AFTER it has been extracted!!
       remove_from_unit_list(unit);
     }*/
 
-   if (UNIT_IN(unit))
-      unit_from_unit(unit);
+    if (UNIT_IN(unit))
+        unit_from_unit(unit);
 
-   if (!IS_PC(unit))
-   {
-      unit_to_unit(unit, destroy_room);  // Apparently dont place PCs in the destroy room
+    if (!IS_PC(unit))
+    {
+        unit_to_unit(unit, g_destroy_room); // Apparently dont place PCs in the destroy room
 
-      // Otherwise find_unit will find it AFTER it has been extracted!!
-      // Players are already removed from the list in gstate_tomenu()
-      remove_from_unit_list(unit);
-   }
+        // Otherwise find_unit will find it AFTER it has been extracted!!
+        // Players are already removed from the list in gstate_tomenu()
+        remove_from_unit_list(unit);
+    }
 }
 
 /* ***********************************************************************
@@ -1053,20 +1015,14 @@ class extra_descr_data *quest_add(class unit_data *ch, const char *name, const c
 /* void szonelog(char *zonename, const char *fmt, ...) */
 void szonelog(class zone_type *zone, const char *fmt, ...)
 {
-    char name[256];
-    char buf[MAX_STRING_LENGTH], buf2[MAX_STRING_LENGTH + 512];
+    char name[256]{};
+    char buf[MAX_STRING_LENGTH]{};
+    char buf2[MAX_STRING_LENGTH + 512]{};
     va_list args;
     FILE *f;
 
-    time_t now = time(0);
-    char *tmstr = ctime(&now);
-
-    tmstr[strlen(tmstr) - 1] = '\0';
-
     va_start(args, fmt);
-
     vsnprintf(buf, MAX_STRING_LENGTH - 51, fmt, args);
-    buf[MAX_STRING_LENGTH - 51] = 0;
     va_end(args);
 
     if (zone == NULL)
@@ -1075,13 +1031,22 @@ void szonelog(class zone_type *zone, const char *fmt, ...)
         return;
     }
 
-    sprintf(buf2, "%s/%s", zone->name, buf);
+    snprintf(buf2, sizeof(buf2), "%s/%s", zone->name, buf);
     slog(LOG_ALL, 0, buf2);
 
-    sprintf(name, "%s%s.err", g_cServerConfig.m_zondir, zone->filename);
+    snprintf(name, sizeof(name), "%s%s.err", g_cServerConfig.m_zondir, zone->filename);
 
     if ((f = fopen_cache(name, "a")) == NULL)
+    {
         slog(LOG_ALL, 0, "Unable to append to zonelog '%s'", name);
+    }
     else
+    {
+        time_t now = time(0);
+        char *tmstr = ctime(&now);
+
+        tmstr[strlen(tmstr) - 1] = '\0';
+
         fprintf(f, "%s :: %s\n", tmstr, buf);
+    }
 }

@@ -40,16 +40,14 @@ void do_hit(class unit_data *ch, char *argument, const struct command_info *cmd)
 
     if (!victim || !IS_CHAR(victim))
     {
-        act("There is nobody here called $2t which you can hit.",
-            A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
+        act("There is nobody here called $2t which you can hit.", A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
         return;
     }
 
     if (victim == ch)
     {
         send_to_char("You hit yourself... OUCH!.<br/>", ch);
-        act("$1n hits $1mself, and says OUCH!",
-            A_SOMEONE, ch, cActParameter(), victim, TO_ROOM);
+        act("$1n hits $1mself, and says OUCH!", A_SOMEONE, ch, cActParameter(), victim, TO_ROOM);
     }
     else
     {
@@ -75,7 +73,7 @@ void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd
 
     if ((CHAR_LEVEL(ch) < ULTIMATE_LEVEL) || IS_NPC(ch))
     {
-        do_hit(ch, argument, &cmd_auto_unknown);
+        do_hit(ch, argument, &g_cmd_auto_unknown);
         return;
     }
 
@@ -83,8 +81,7 @@ void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd
 
     if (!victim || !IS_CHAR(victim))
     {
-        act("There is nobody here called $2t which you can kill.",
-            A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
+        act("There is nobody here called $2t which you can kill.", A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
         return;
     }
 
@@ -92,8 +89,7 @@ void do_kill(class unit_data *ch, char *argument, const struct command_info *cmd
         send_to_char("Your mother would be so sad.. :(<br/>", ch);
     else
     {
-        act("You chop $3m to pieces! Ah! The blood!",
-            A_SOMEONE, ch, cActParameter(), victim, TO_CHAR);
+        act("You chop $3m to pieces! Ah! The blood!", A_SOMEONE, ch, cActParameter(), victim, TO_CHAR);
         act("$3n chops you to pieces!", A_SOMEONE, victim, cActParameter(), ch, TO_CHAR);
         act("$1n brutally slays $3n.", A_SOMEONE, ch, cActParameter(), victim, TO_NOTVICT);
         set_fighting(ch, victim, TRUE); /* Point to the killer! */

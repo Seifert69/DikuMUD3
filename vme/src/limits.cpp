@@ -26,8 +26,6 @@
 #include "dbfind.h"
 #include "dilrun.h"
 
-extern class unit_data *unit_list;
-
 /* External procedures */
 
 int required_xp(int level);               /* common.c   */
@@ -41,8 +39,7 @@ int char_carry_n(class unit_data *unit)
 
     for (unit = UNIT_CONTAINS(unit), i = 0; unit; unit = unit->next)
     {
-        if (!IS_OBJ(unit) ||
-            ((OBJ_EQP_POS(unit) == 0) && (OBJ_TYPE(unit) != ITEM_MONEY)))
+        if (!IS_OBJ(unit) || ((OBJ_EQP_POS(unit) == 0) && (OBJ_TYPE(unit) != ITEM_MONEY)))
             i++;
     }
 
@@ -83,8 +80,7 @@ int char_can_carry_unit(class unit_data *ch, class unit_data *unit)
 /* When age in [81..mx] calculate the line between p5 & p6 */
 /* When age > mx return p7                                 */
 
-int age_graph(int age, int lifespan,
-              int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7)
+int age_graph(int age, int lifespan, int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7)
 {
     int step = MAX(1, lifespan / 6);
 
@@ -143,14 +139,14 @@ int hit_gain(class unit_data *ch)
 
     switch (CHAR_POS(ch))
     {
-    case POSITION_SLEEPING:
-    case POSITION_RESTING:
-        gain += gain / 2; /* gain *= 1.5  */
-        break;
+        case POSITION_SLEEPING:
+        case POSITION_RESTING:
+            gain += gain / 2; /* gain *= 1.5  */
+            break;
 
-    case POSITION_SITTING:
-        gain += gain / 4; /* gain *= 1.25 */
-        break;
+        case POSITION_SITTING:
+            gain += gain / 4; /* gain *= 1.25 */
+            break;
     }
 
     class unit_data *u = ch;
@@ -183,8 +179,7 @@ int move_limit(class unit_data *ch)
     {
         int pct;
 
-        pct = age_graph(age(ch).year, PC_LIFESPAN(ch),
-                        80, 130, 110, 90, 70, 50, 20, 0);
+        pct = age_graph(age(ch).year, PC_LIFESPAN(ch), 80, 130, 110, 90, 70, 50, 20, 0);
         if (IS_IMMORTAL(ch))
             pct = 100;
 
@@ -209,14 +204,14 @@ int move_gain(class unit_data *ch)
     /* Position calculations    */
     switch (CHAR_POS(ch))
     {
-    case POSITION_SLEEPING:
-    case POSITION_RESTING:
-        gain += gain / 2; /* Divide by 4 */
-        break;
+        case POSITION_SLEEPING:
+        case POSITION_RESTING:
+            gain += gain / 2; /* Divide by 4 */
+            break;
 
-    case POSITION_SITTING:
-        gain += gain / 4; /* Divide by 8 */
-        break;
+        case POSITION_SITTING:
+            gain += gain / 4; /* Divide by 8 */
+            break;
     }
 
     class unit_data *u = ch;
@@ -251,8 +246,7 @@ int mana_limit(class unit_data *ch)
     {
         int pct;
 
-        pct = age_graph(age(ch).year, PC_LIFESPAN(ch),
-                        0, 100, 105, 110, 120, 130, 140, 0);
+        pct = age_graph(age(ch).year, PC_LIFESPAN(ch), 0, 100, 105, 110, 120, 130, 140, 0);
         if (IS_IMMORTAL(ch))
             pct = 100;
 
@@ -281,13 +275,13 @@ int mana_gain(class unit_data *ch)
 
     switch (CHAR_POS(ch))
     {
-    case POSITION_SLEEPING:
-    case POSITION_RESTING:
-        gain += gain / 2; /* Divide by 2 */
-        break;
-    case POSITION_SITTING:
-        gain += gain / 4; /* Divide by 4 */
-        break;
+        case POSITION_SLEEPING:
+        case POSITION_RESTING:
+            gain += gain / 2; /* Divide by 2 */
+            break;
+        case POSITION_SITTING:
+            gain += gain / 4; /* Divide by 4 */
+            break;
     }
 
     class unit_data *u = ch;
@@ -337,7 +331,7 @@ void advance_level(class unit_data *ch)
     if (CHAR_LEVEL(ch) < MORTAL_MAX_LEVEL)
         CHAR_LEVEL(ch)++;
 
-    PC_SKILL_POINTS(ch)   += skill_point_gain();
+    PC_SKILL_POINTS(ch) += skill_point_gain();
     PC_ABILITY_POINTS(ch) += ability_point_gain(ch);
 
     struct diltemplate *dt;
@@ -349,9 +343,9 @@ void advance_level(class unit_data *ch)
 
     prg->waitcmd = WAITCMD_MAXINST - 1;
     dil_activate(prg);
-    
+
     // Now in DIL
-    // advance_guild_level(ch);    
+    // advance_guild_level(ch);
 
 #ifdef NOBLE
     if (IS_NOBLE(ch))
@@ -387,31 +381,31 @@ void gain_condition(class unit_data *ch, int condition, int value)
 
     switch (condition)
     {
-    case FULL:
-        if (condition > -4)
-            send_to_char("You are hungry.<br/>", ch);
-        else if (condition > -8)
-            send_to_char("You are very hungry.<br/>", ch);
-        else if (condition > -12)
-            send_to_char("You are starving.<br/>", ch);
-        break;
+        case FULL:
+            if (condition > -4)
+                send_to_char("You are hungry.<br/>", ch);
+            else if (condition > -8)
+                send_to_char("You are very hungry.<br/>", ch);
+            else if (condition > -12)
+                send_to_char("You are starving.<br/>", ch);
+            break;
 
-    case THIRST:
-        if (condition > -4)
-            send_to_char("You are thirsty.<br/>", ch);
-        else if (condition > -8)
-            send_to_char("You are very thirsty.<br/>", ch);
-        else if (condition > -12)
-            send_to_char("You are dehydrated.<br/>", ch);
-        break;
+        case THIRST:
+            if (condition > -4)
+                send_to_char("You are thirsty.<br/>", ch);
+            else if (condition > -8)
+                send_to_char("You are very thirsty.<br/>", ch);
+            else if (condition > -12)
+                send_to_char("You are dehydrated.<br/>", ch);
+            break;
 
-    case DRUNK:
-        if (intoxicated && (PC_COND(ch, DRUNK) == 0))
-            send_to_char("You are now sober.<br/>", ch);
-        break;
+        case DRUNK:
+            if (intoxicated && (PC_COND(ch, DRUNK) == 0))
+                send_to_char("You are now sober.<br/>", ch);
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -426,7 +420,7 @@ void set_title(class unit_data *ch)
     else if (CHAR_LEVEL(ch) <= START_LEVEL)
     {
         assert(CHAR_RACE(ch) < PC_RACE_MAX);
-        sprintf(buf, "the %s", pc_races[CHAR_RACE(ch)]);
+        snprintf(buf, sizeof(buf), "the %s", g_pc_races[CHAR_RACE(ch)]);
         UNIT_TITLE(ch) = (buf);
     }
     else if (IS_IMMORTAL(ch))
@@ -513,7 +507,8 @@ void do_level(class unit_data *ch, char *arg, const struct command_info *cmd)
         if (PC_VIRTUAL_LEVEL(ch) < 100)
         {
             send_to_char("You havn't used your ability points at all, if you "
-                        "really want to level now, type 'level now'<br/>", ch);
+                         "really want to level now, type 'level now'<br/>",
+                         ch);
             return;
         }
     }
@@ -526,7 +521,7 @@ void do_level(class unit_data *ch, char *arg, const struct command_info *cmd)
 /* MS2020 I put this in but I am taking it out again. It uses more resources than
    just having a DIL on a char. All ticks are in sync which is not so nice.
    I think I need to add priority to functions instead :(
-       
+
 void point_update(void)
 {
 
@@ -541,7 +536,7 @@ void point_update(void)
     class unit_data *u, *next_dude;
 
     //
-    for (u = unit_list; u; u = next_dude)
+    for (u = g_unit_list; u; u = next_dude)
     {
         next_dude = u->gnext;
         if (IS_NPC(u))
@@ -549,7 +544,7 @@ void point_update(void)
             // This could be resource intense. Maybe update NPCs in C code... ?
 
             class dilprg *prg_npc = dil_copy_template(regen_npc, u, NULL);
-            if (prg_npc== NULL) 
+            if (prg_npc== NULL)
             {
                 slog(LOG_ALL, 0, "DIL duplicate unique");
                 continue;
@@ -561,7 +556,7 @@ void point_update(void)
         else if (IS_PC(u) && !IS_SET(PC_FLAGS(u), PC_SPIRIT))
         {
             class dilprg *prg_pc = dil_copy_template(regen_pc, u, NULL);
-            if (prg_pc== NULL) 
+            if (prg_pc== NULL)
             {
                 slog(LOG_ALL, 0, "DIL duplicate unique");
                 continue;

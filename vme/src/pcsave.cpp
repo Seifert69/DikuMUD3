@@ -26,15 +26,14 @@
 #include "db_file.h"
 #include "dilrun.h"
 
-// MS2020 sbit32 player_id = -1;
-sbit32 player_id = 1; // Looks to me like it needs to begin with 1 (crash on start)
+// MS2020 sbit32 g_player_id = -1;
+sbit32 g_player_id = 1; // Looks to me like it needs to begin with 1 (crash on start)
 
-class descriptor_data *find_descriptor(const char *name,
-                                       class descriptor_data *except);
+class descriptor_data *find_descriptor(const char *name, class descriptor_data *except);
 
 void assign_player_file_index(unit_data *pc)
 {
-    zone_type *z = find_zone(player_zone);
+    zone_type *z = find_zone(g_player_zone);
     auto it = z->mmp_fi.find(PC_FILENAME(pc));
 
     if (it != z->mmp_fi.end())
@@ -47,7 +46,7 @@ void assign_player_file_index(unit_data *pc)
         fi->zone = z;
         fi->type = UNIT_ST_PC;
 
-        z->mmp_fi.insert(make_pair(fi->name, fi));
+        z->mmp_fi.insert(std::make_pair(fi->name, fi));
 
         UNIT_FILE_INDEX(pc) = fi;
     }
@@ -60,7 +59,7 @@ char *PlayerFileName(const char *pName)
 
     strcpy(TmpBuf, pName);
     str_lower(TmpBuf);
-    sprintf(Buf, "%s%c/%s", g_cServerConfig.m_plydir, *TmpBuf, TmpBuf);
+    snprintf(Buf, sizeof(Buf), "%s%c/%s", g_cServerConfig.m_plydir, *TmpBuf, TmpBuf);
 
     return Buf;
 }
@@ -164,20 +163,18 @@ sbit32 new_player_id(void)
     /* By using r+ we are sure that we don't erase it accidentially
        if the host crashes just after opening the file. */
 
-    pFile =
-        fopen_cache(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME), "r+");
+    pFile = fopen_cache(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME), "r+");
     assert(pFile);
     fseek(pFile, 0, SEEK_SET);
 
-    fprintf(pFile, " %d ", player_id + 1);
+    fprintf(pFile, " %d ", g_player_id + 1);
 
-    //fflush(pFile);
-    slog(LOG_ALL, 0, "new player id = %d", (player_id + 1));
-    return player_id++;
+    // fflush(pFile);
+    slog(LOG_ALL, 0, "new player id = %d", (g_player_id + 1));
+    return g_player_id++;
 }
 
-void save_player_disk(const char *pName, char *pPassword, sbit32 id,
-                      int nPlyLen, const ubit8 *pPlyBuf)
+void save_player_disk(const char *pName, char *pPassword, sbit32 id, int nPlyLen, const ubit8 *pPlyBuf)
 {
     int n;
     FILE *pPlayerFile;
@@ -206,8 +203,7 @@ void save_player_disk(const char *pName, char *pPassword, sbit32 id,
     if (fseek(pPlayerFile, 0L, SEEK_END))
         assert(FALSE);
 
-    assert(ftell(pPlayerFile) ==
-           (long int)(nPlyLen + sizeof(nPlyLen) + sizeof(id)));
+    assert(ftell(pPlayerFile) == (long int)(nPlyLen + sizeof(nPlyLen) + sizeof(id)));
 
     fclose(pPlayerFile);
 
@@ -278,8 +274,7 @@ void save_player_file(class unit_data *pc)
     /* Player is now clean (empty and unequipped) */
     nPlyLen = write_unit_string(pBuf, pc);
 
-    save_player_disk(PC_FILENAME(pc), PC_PWD(pc), PC_ID(pc),
-                     nPlyLen, pBuf->GetData());
+    save_player_disk(PC_FILENAME(pc), PC_PWD(pc), PC_ID(pc), nPlyLen, pBuf->GetData());
 
     /* Restore all inventory and equipment */
     while ((tmp_u = list))
@@ -311,8 +306,7 @@ void save_player_contents(class unit_data *pc, int fast)
     amount_t daily_cost;
     currency_t cur = local_currency(pc);
 
-    int save_contents(const char *pFileName, class unit_data *unit,
-                      int fast, int bContainer);
+    int save_contents(const char *pFileName, class unit_data *unit, int fast, int bContainer);
 
     assert(IS_PC(pc));
 
@@ -355,18 +349,19 @@ void save_player_contents(class unit_data *pc, int fast)
             }
 
             if (tmp_i < 30)
-                keep_period +=
-                    (int)(((float)SECS_PER_REAL_DAY * (float)amount) /
-                          (float)daily_cost);
+                keep_period += (int)(((float)SECS_PER_REAL_DAY * (float)amount) / (float)daily_cost);
 
             tdiff = (keep_period - t0) / SECS_PER_REAL_HOUR;
-            act("Inventory expires in $2d hours ($3t daily).", A_ALWAYS,
-                pc, (int *)&tdiff, money_string(daily_cost, cur, FALSE), TO_CHAR);
+            act("Inventory expires in $2d hours ($3t daily).", A_ALWAYS, pc, (int *)&tdiff, money_string(daily_cost, cur, FALSE), TO_CHAR);
         }
         else
         {
             act("You can't afford to keep your inventory (cost is $3t).",
-                A_ALWAYS, pc, cActParameter(), money_string(daily_cost, cur, FALSE), TO_CHAR);
+                A_ALWAYS,
+                pc,
+                cActParameter(),
+                money_string(daily_cost, cur, FALSE),
+                TO_CHAR);
         }
     }
 
@@ -476,8 +471,7 @@ class unit_data *load_player(const char *pName)
 
     if (str_ccmp(pName, PC_FILENAME(pc)))
     {
-        slog(LOG_ALL, 0, "Mismatching player name %s / %s.",
-             pName, PC_FILENAME(pc));
+        slog(LOG_ALL, 0, "Mismatching player name %s / %s.", pName, PC_FILENAME(pc));
         extract_unit(pc);
         return NULL;
     }
@@ -519,12 +513,11 @@ void player_file_index(void)
     if (!file_exists(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME)))
     {
         touch_file(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME));
-        player_id = -7;
+        g_player_id = -7;
         return;
     }
 
-    pFile =
-        fopen_cache(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME), "r+");
+    pFile = fopen_cache(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME), "r+");
     assert(pFile);
 
     int mstmp = fscanf(pFile, " %d ", &tmp_sl);
@@ -534,6 +527,6 @@ void player_file_index(void)
         assert(FALSE);
     }
 
-    if ((player_id = tmp_sl) <= 0)
-        slog(LOG_ALL, 0, "WARNING: Player ID is %d", player_id);
+    if ((g_player_id = tmp_sl) <= 0)
+        slog(LOG_ALL, 0, "WARNING: Player ID is %d", g_player_id);
 }

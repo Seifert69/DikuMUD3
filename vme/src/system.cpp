@@ -4,7 +4,7 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.8 $
  */
-
+#include "external_vars.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,12 +41,6 @@
 #include "dilrun.h"
 #include "hookmud.h"
 
-
-/* extern vars */
-extern class descriptor_data *descriptor_list;
-extern class descriptor_data *next_to_process;
-extern int possible_saves;
-
 void MplexSendSetup(class descriptor_data *d)
 {
     assert(d);
@@ -66,8 +60,6 @@ void init_char(class unit_data *ch)
     int new_player_id(void);
 
     int i;
-
-    extern sbit32 player_id;
 
     int required_xp(int level);
 
@@ -100,8 +92,7 @@ void init_char(class unit_data *ch)
     CHAR_RACE(ch) = RACE_HUMAN;
     CHAR_SEX(ch) = SEX_MALE;
 
-    PC_TIME(ch).connect = PC_TIME(ch).birth = PC_TIME(ch).creation =
-        time(0);
+    PC_TIME(ch).connect = PC_TIME(ch).birth = PC_TIME(ch).creation = time(0);
     PC_TIME(ch).played = 0;
     PC_LIFESPAN(ch) = 100;
 
@@ -114,9 +105,9 @@ void init_char(class unit_data *ch)
     PC_SKILL_POINTS(ch) = 0;
 
     /* *** if this is our first player --- he be God *** */
-    if (player_id == -7)
+    if (g_player_id == -7)
     {
-        player_id = 1;
+        g_player_id = 1;
         PC_ID(ch) = new_player_id();
     }
 
@@ -140,8 +131,8 @@ void init_char(class unit_data *ch)
     set_title(ch);
 }
 
-int no_connections = 0;     /* No of used descriptors                    */
-int max_no_connections = 0; /* Statistics                                */
+int g_no_connections = 0;     /* No of used descriptors                    */
+int g_max_no_connections = 0; /* Statistics                                */
 
 descriptor_data::descriptor_data(cMultiHook *pe)
 {
@@ -149,9 +140,9 @@ descriptor_data::descriptor_data(cMultiHook *pe)
 
     void nanny_get_name(class descriptor_data * d, char *arg);
 
-    no_connections++;
-    if (no_connections > max_no_connections)
-        max_no_connections = no_connections;
+    g_no_connections++;
+    if (g_no_connections > g_max_no_connections)
+        g_max_no_connections = g_no_connections;
 
     /* init desc data */
     multi = pe;
@@ -184,8 +175,8 @@ descriptor_data::descriptor_data(cMultiHook *pe)
     CHAR_DESCRIPTOR(character) = this;
 
     /* prepend to list */
-    next = descriptor_list;
-    descriptor_list = this;
+    next = g_descriptor_list;
+    g_descriptor_list = this;
 }
 
 void descriptor_data::RemoveBBS(void)
@@ -194,7 +185,7 @@ void descriptor_data::RemoveBBS(void)
     {
         char buf[512];
 
-        sprintf(buf, BBS_DIR "%d.%d", nPort, nLine);
+        snprintf(buf, sizeof(buf), BBS_DIR "%d.%d", nPort, nLine);
         remove(buf);
     }
 }
@@ -206,7 +197,7 @@ void descriptor_data::CreateBBS(void)
         char buf[512];
         FILE *f;
 
-        sprintf(buf, BBS_DIR "%d.%d", nPort, nLine);
+        snprintf(buf, sizeof(buf), BBS_DIR "%d.%d", nPort, nLine);
 
         if (!character)
         {
@@ -275,7 +266,7 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
         /* Important that we set to NULL before calling extract,
            otherwise we just go to the menu... ... ... */
         if (PC_IS_UNSAVED(d->character))
-            possible_saves--;
+            g_possible_saves--;
         CHAR_DESCRIPTOR(d->character) = NULL;
         extract_unit(d->character);
         d->character = NULL;
@@ -294,19 +285,17 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
         // Here we don't stop_fightfollow - do we ?
         stop_snoopwrite(d->character);
 
-        //if (CHAR_IS_SNOOPING(d->character) || CHAR_IS_SNOOPED(d->character))
+        // if (CHAR_IS_SNOOPING(d->character) || CHAR_IS_SNOOPED(d->character))
         //    unsnoop(d->character, 1);
 
-        //if (CHAR_IS_SWITCHED(d->character))
+        // if (CHAR_IS_SWITCHED(d->character))
         //    unswitchbody(d->character);
 
         assert(!d->snoop.snooping && !d->snoop.snoop_by);
         assert(!d->original);
 
         act("$1n has lost $1s link.", A_HIDEINV, d->character, cActParameter(), cActParameter(), TO_ROOM);
-        slog(LOG_BRIEF, UNIT_MINV(d->character),
-             "Closing link and making link dead: %s.",
-             UNIT_NAME(d->character));
+        slog(LOG_BRIEF, UNIT_MINV(d->character), "Closing link and making link dead: %s.", UNIT_NAME(d->character));
 
         if (!d->character->is_destructed())
         {
@@ -323,8 +312,7 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
                     if (link_dead)
                     {
                         CHAR_DESCRIPTOR(d->character) = NULL;
-                        class dilprg *prg =
-                            dil_copy_template(link_dead, d->character, NULL);
+                        class dilprg *prg = dil_copy_template(link_dead, d->character, NULL);
                         if (prg)
                         {
                             prg->waitcmd = WAITCMD_MAXINST - 1;
@@ -335,8 +323,8 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
                 else
                 {
                     CHAR_DESCRIPTOR(d->character) = NULL; // Prevent counting down players, we did above
-                    extract_unit(d->character); /* We extract guests */
-                    possible_saves--;
+                    extract_unit(d->character);           /* We extract guests */
+                    g_possible_saves--;
                 }
             }
         }
@@ -349,17 +337,17 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
     if (bSendClose && d->multi->IsHooked())
         protocol_send_close(d->multi, d->id);
 
-    no_connections--;
+    g_no_connections--;
 
-    if (next_to_process == d) /* to avoid crashing the process loop */
-        next_to_process = next_to_process->next;
+    if (g_next_to_process == d) /* to avoid crashing the process loop */
+        g_next_to_process = g_next_to_process->next;
 
-    if (d == descriptor_list) /* this is the head of the list */
-        descriptor_list = descriptor_list->next;
+    if (d == g_descriptor_list) /* this is the head of the list */
+        g_descriptor_list = g_descriptor_list->next;
     else /* This is somewhere inside the list */
     {
         /* Locate the previous element */
-        for (tmp = descriptor_list; tmp && (tmp->next != d); tmp = tmp->next)
+        for (tmp = g_descriptor_list; tmp && (tmp->next != d); tmp = tmp->next)
             ;
         tmp->next = d->next;
     }
@@ -382,16 +370,18 @@ void system_memory(class unit_data *ch)
         slog(LOG_ALL, 0, "System memory status error.");
     else
     {
-        sprintf(Buf,
-                "Vol. Switches       %8ld<br/>"
-                "Max RSS             %8ld<br/>"
-                "Shared memory size  %8ld<br/>"
-                "Unshared data size  %8ld<br/>"
-                "Unshared stack size %8ld<br/><br/>",
-                rusage_data.ru_nvcsw,
-                rusage_data.ru_maxrss,
-                rusage_data.ru_ixrss,
-                rusage_data.ru_isrss, rusage_data.ru_idrss);
+        snprintf(Buf,
+                 sizeof(Buf),
+                 "Vol. Switches       %8ld<br/>"
+                 "Max RSS             %8ld<br/>"
+                 "Shared memory size  %8ld<br/>"
+                 "Unshared data size  %8ld<br/>"
+                 "Unshared stack size %8ld<br/><br/>",
+                 rusage_data.ru_nvcsw,
+                 rusage_data.ru_maxrss,
+                 rusage_data.ru_ixrss,
+                 rusage_data.ru_isrss,
+                 rusage_data.ru_idrss);
         send_to_char(Buf, ch);
     }
 #endif

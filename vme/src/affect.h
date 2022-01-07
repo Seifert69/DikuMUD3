@@ -8,33 +8,32 @@
 #ifndef _MUD_AFFECT_H
 #define _MUD_AFFECT_H
 
-void apply_affect (class unit_data * unit);
-void start_affect (class unit_data * unit);
-void stop_affect (class unit_data * unit);
-class unit_affected_type *affected_by_spell (const class unit_data * unit,
-        sbit16 id);
+#include "essential.h"
 
-void create_affect (class unit_data * unit, class unit_affected_type *orgaf);
-void destroy_affect (class unit_affected_type *af);
-void affect_clear_unit (class unit_data * unit);
+void apply_affect(class unit_data *unit);
+void start_affect(class unit_data *unit);
+void stop_affect(class unit_data *unit);
+class unit_affected_type *affected_by_spell(const class unit_data *unit, sbit16 id);
 
+void create_affect(class unit_data *unit, class unit_affected_type *orgaf);
+void destroy_affect(class unit_affected_type *af);
+void affect_clear_unit(class unit_data *unit);
+void affect_beat(void *, void *);
 
 /* These functions may not send messages - nor destroy units. Only */
 /* affect a units values                                           */
 struct apply_function_type
 {
-    const   char *descr;
+    const char *descr;
 
-
-    ubit1 (*func) (class unit_affected_type * af, class unit_data * unit, ubit1 set);
+    ubit1 (*func)(class unit_affected_type *af, class unit_data *unit, ubit1 set);
 };
-
 
 /* These functions may send messages and destroy any unit. */
 struct tick_function_type
 {
-    const   char *descr;
-    void (*func) (class unit_affected_type * af, class unit_data * unit);
+    const char *descr;
+    void (*func)(class unit_affected_type *af, class unit_data *unit);
 };
 
 #endif /* _MUD_AFFECT_H */

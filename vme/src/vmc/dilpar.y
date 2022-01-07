@@ -6398,7 +6398,7 @@ void copy_code(struct exptype *dest, struct exptype *src)
 
 
 
-ubit16 UpdateCRC(register ubit8 c, register ubit16 crc)
+ubit16 UpdateCRC( ubit8 c,  ubit16 crc)
 {
 /*
 
@@ -6428,8 +6428,8 @@ SKIP:
 
 */
 
-   register int i;
-   register int rcl_cf;
+    int i;
+    int rcl_cf;
 
    for (i=0; i < 8; i++)
    {
@@ -6578,4 +6578,3 @@ void dumpdil(struct dilprg *prg) {
     dumpdiltemplate(prg->frame[i].tmpl);
   }
 }
-

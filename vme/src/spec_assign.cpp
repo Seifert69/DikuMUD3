@@ -35,8 +35,7 @@ int spec_unused(struct spec_arg *sarg)
 #else
     if (sarg->cmd->no != CMD_AUTO_EXTRACT)
     {
-        slog(LOG_ALL, 0, "Unit %s@%s had undefined special routine.",
-             UNIT_FI_NAME(sarg->owner), UNIT_FI_ZONENAME(sarg->owner));
+        slog(LOG_ALL, 0, "Unit %s@%s had undefined special routine.", UNIT_FI_NAME(sarg->owner), UNIT_FI_ZONENAME(sarg->owner));
         destroy_fptr(sarg->owner, sarg->fptr);
     }
 
@@ -49,12 +48,12 @@ int spec_unused(struct spec_arg *sarg)
  ******************************************************************** */
 
 #ifdef VMC
-#define VMCIT(a) spec_unused
+    #define VMCIT(a) spec_unused
 #else
-#define VMCIT(a) a
+    #define VMCIT(a) a
 #endif
 /* macro definitions for array indices are in values.h */
-struct unit_function_array_type unit_function_array[] = {
+struct unit_function_array_type g_unit_function_array[] = {
     {"0 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
     {"DIL Copy Internal", VMCIT(dil_direct_init), FN_PRI_CHORES, SD_NEVER, 0, 0},
     {"2 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
@@ -63,11 +62,12 @@ struct unit_function_array_type unit_function_array[] = {
     {"5 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
     {"6 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
     {"7 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
-    {"#8 XXXUnused", VMCIT(spec_unused), FN_PRI_RES , SD_NEVER, 0, 0},
+    {"#8 XXXUnused", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
     {"#9 XXX Unused", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
     {"10 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
     {"11 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
-    {"12 XXX Unused", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, SFB_TICK | SFB_PRIORITY, PULSE_SEC * 5}, // Was: npc_visit_room replaced with DIL
+    {"12 XXX Unused", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, SFB_TICK | SFB_PRIORITY, PULSE_SEC * 5}, // Was: npc_visit_room replaced
+                                                                                                         // with DIL
     {"13 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
     {"14 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},
     {"banking routine", VMCIT(bank), FN_PRI_CHORES, SD_NULL, SFB_CMD, 0},

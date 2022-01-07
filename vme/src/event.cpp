@@ -4,11 +4,13 @@
  $Date: 2004/09/18 19:52:56 $
  $Revision: 2.11 $
  */
-
+#include "affect.h"
+#include "mobact.h"
+#include "external_vars.h"
 #ifdef _WINDOWS
 
 #else
-#include <unistd.h>
+    #include <unistd.h>
 #endif
 
 #include <stdlib.h>
@@ -36,11 +38,6 @@ void perform_violence_event(void *, void *);
 void weather_and_time_event(void *, void *);
 void zone_event(void *, void *);
 
-extern void special_event(void *p1, void *p2);
-extern void affect_beat(void *p1, void *pd);
-extern struct unit_function_array_type unit_function_array[];
-extern int tics;
-
 eventqueue::eventqueue(void)
 {
     count = 0;
@@ -66,8 +63,7 @@ eventqueue::~eventqueue(void)
     }
 }
 
-struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *),
-                                     void *arg1, void *arg2)
+struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *), void *arg1, void *arg2)
 {
     struct eventq_elem *end;
     int parent_index, current_index;
@@ -77,11 +73,11 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *),
         slog(LOG_ALL, 0, "Error: %d EVENT", when);
     }
 
-    // One could add a sanity check to make sure that events for known 
+    // One could add a sanity check to make sure that events for known
     if (func == special_event)
     {
-        struct unit_data *u = (struct unit_data *) arg1;
-        struct unit_fptr *f = (struct unit_fptr *) arg2;
+        struct unit_data *u = (struct unit_data *)arg1;
+        struct unit_fptr *f = (struct unit_fptr *)arg2;
         membug_verify(u);
         membug_verify(f);
         membug_verify(f->data);
@@ -94,7 +90,7 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *),
 
         if (f->index == 82)
         {
-            struct dilprg *prg = (struct dilprg *) f->data;
+            struct dilprg *prg = (struct dilprg *)f->data;
             membug_verify(prg);
 
             assert(prg);
@@ -118,7 +114,7 @@ struct eventq_elem *eventqueue::add(int when, void (*func)(void *, void *),
     }
     count++;
     end = new eventq_elem;
-    end->when = tics + when;
+    end->when = g_tics + when;
     end->func = func;
     end->arg1 = arg1;
     end->arg2 = arg2;
@@ -149,35 +145,29 @@ void eventqueue::remove(void (*func)(void *, void *), void *arg1, void *arg2)
     {
         ((class unit_fptr *)arg2)->event->func = NULL;
         ((class unit_fptr *)arg2)->event = NULL;
-
     }
-    else if ((func == affect_beat) &&
-             arg1 && (((class unit_affected_type *)arg1)->event))
+    else if ((func == affect_beat) && arg1 && (((class unit_affected_type *)arg1)->event))
     {
         ((class unit_affected_type *)arg1)->event->func = NULL;
         ((class unit_affected_type *)arg1)->event = NULL;
     }
-    else if ((func == affect_beat) &&
-             arg1 && (!((class unit_affected_type *)arg1)->event))
+    else if ((func == affect_beat) && arg1 && (!((class unit_affected_type *)arg1)->event))
     {
         return;
     }
-    else if ((func == special_event) &&
-             arg2 && (!((class unit_fptr *)arg2)->event))
+    else if ((func == special_event) && arg2 && (!((class unit_fptr *)arg2)->event))
     {
         return;
     }
     else
     {
         for (i = 1; i <= count; i++)
-            if (heap[i]->func == func && heap[i]->arg1 == arg1 &&
-                heap[i]->arg2 == arg2)
+            if (heap[i]->func == func && heap[i]->arg1 == arg1 && heap[i]->arg2 == arg2)
                 heap[i]->func = NULL;
     }
 }
 
-void eventqueue::remove_relaxed(void (*func)(void *, void *), void *arg1,
-                                void *arg2)
+void eventqueue::remove_relaxed(void (*func)(void *, void *), void *arg1, void *arg2)
 {
     int i;
 
@@ -201,7 +191,7 @@ void eventqueue::process(void)
     loop_process = 0;
     gettimeofday(&old, (struct timezone *)0);
 
-    while ((count >= 1) && (heap[1]->when <= tics))
+    while ((count >= 1) && (heap[1]->when <= g_tics))
     {
         gettimeofday(&now, (struct timezone *)0);
         us = (now.tv_sec - old.tv_sec) * 1000000L + (now.tv_usec - old.tv_usec);
@@ -264,7 +254,7 @@ void eventqueue::process(void)
 
                 if (!bDestructed)
                 {
-                    class dilprg *prg = (class dilprg *) fptr->data;
+                    class dilprg *prg = (class dilprg *)fptr->data;
 
                     assert(prg);
                     membug_verify(prg);
@@ -306,34 +296,47 @@ void eventqueue::process(void)
                     if (tfunc == special_event)
                     {
                         if (((class unit_fptr *)tmp_event->arg2)->index == SFUN_DIL_INTERNAL)
-                            slog(LOG_DIL, 0, "Process took %1.4f seconds to complete: %s@%s on %s@%s - %s (%d)'", loop_time, dilname, dilzname, diloname, dilozname, unit_function_array[((class unit_fptr *)tmp_event->arg2)->index].name, ((class unit_fptr *)tmp_event->arg2)->index);
+                            slog(LOG_DIL,
+                                 0,
+                                 "Process took %1.4f seconds to complete: %s@%s on %s@%s - %s (%d)'",
+                                 loop_time,
+                                 dilname,
+                                 dilzname,
+                                 diloname,
+                                 dilozname,
+                                 g_unit_function_array[((class unit_fptr *)tmp_event->arg2)->index].name,
+                                 ((class unit_fptr *)tmp_event->arg2)->index);
 
                         else
-                            slog(LOG_DIL, 0, "Internal process took %1.4f seconds to complete: %s (%d)'",
-                                loop_time, unit_function_array[((class unit_fptr *)tmp_event->arg2)->index].name, ((class unit_fptr *)tmp_event->arg2)->index);
+                            slog(LOG_DIL,
+                                 0,
+                                 "Internal process took %1.4f seconds to complete: %s (%d)'",
+                                 loop_time,
+                                 g_unit_function_array[((class unit_fptr *)tmp_event->arg2)->index].name,
+                                 ((class unit_fptr *)tmp_event->arg2)->index);
                     }
                     else
                     {
                         if (tfunc == check_reboot_event)
-                            sprintf(pname, "Reboot Event");
+                            snprintf(pname, sizeof(pname), "Reboot Event");
                         else if (tfunc == affect_beat)
-                            sprintf(pname, "Affect Beat");
+                            snprintf(pname, sizeof(pname), "Affect Beat");
                         else if (tfunc == delayed_action)
-                            sprintf(pname, "Affect Beat");
+                            snprintf(pname, sizeof(pname), "Affect Beat");
                         else if (tfunc == check_idle_event)
-                            sprintf(pname, "Check Idle Event");
+                            snprintf(pname, sizeof(pname), "Check Idle Event");
                         else if (tfunc == perform_violence_event)
-                            sprintf(pname, "Violence Event");
+                            snprintf(pname, sizeof(pname), "Violence Event");
                         else if (tfunc == weather_and_time_event)
-                            sprintf(pname, "Weather And Time Event");
+                            snprintf(pname, sizeof(pname), "Weather And Time Event");
                         else if (tfunc == zone_event)
-                            sprintf(pname, "Zone Reset Event");
+                            snprintf(pname, sizeof(pname), "Zone Reset Event");
                         else
-                            sprintf(pname, "UNKNOWN Event");
+                            snprintf(pname, sizeof(pname), "UNKNOWN Event");
                         slog(LOG_DIL, 0, "Internal Process (%s) Took %1.4f seconds to Complete", pname, loop_time);
                     }
                 }
-            }  // !bDestructed
+            } // !bDestructed
         }
         delete tmp_event;
         tmp_event = NULL;

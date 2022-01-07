@@ -33,7 +33,7 @@
 #include "dilrun.h"
 #include "hookmud.h"
 
-class cMotherHook MotherHook;
+class cMotherHook g_MotherHook;
 
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -42,7 +42,7 @@ class cMotherHook MotherHook;
 /* ----------------------------------------------------------------- */
 
 //
-// The MultiHook contains up to 10 Hook classes. Each can be an 
+// The MultiHook contains up to 10 Hook classes. Each can be an
 // established Mplex connection. When data is received (Input)
 // the mplex protocol data is parsed in Read()
 // MotherHook sets up each multi and adds to CaptainHook
@@ -90,7 +90,6 @@ void cMultiHook::Input(int nFlags)
     }
 }
 
-
 void cMultiHook::Ping(void)
 {
     protocol_send_ping(this);
@@ -101,7 +100,7 @@ void cMultiHook::Unhook(void)
     if (this->IsHooked())
     {
         slog(LOG_OFF, 0, "Unhooking MultiHook");
-        CaptainHook.Unhook(this);
+        g_CaptainHook.Unhook(this);
         assert(this->fd != -1);
         cHook::Unhook();
     }
@@ -114,9 +113,8 @@ void cMultiHook::Close(void)
     if (this->IsHooked())
         Unhook();
 
-    Multi.nCount--;
+    g_Multi.nCount--;
 }
-
 
 // Get the data and parse the mplex protocol
 int cMultiHook::Read(void)
@@ -135,7 +133,7 @@ int cMultiHook::Read(void)
 
     if (id != 0)
     {
-        for (d = descriptor_list; d; d = d->next)
+        for (d = g_descriptor_list; d; d = d->next)
             if (d->id == id)
             {
                 assert(d->multi == this);
@@ -166,68 +164,68 @@ int cMultiHook::Read(void)
 
     switch (p)
     {
-    case MULTI_MPLEX_INFO_CHAR:
-        bWebsockets = data[0]; // data[0] is 1 if websockets
-        if (data)
-            FREE(data);
-        break;
-
-    case MULTI_PING_CHAR:
-        if (data)
-            FREE(data);
-        break;
-
-    case MULTI_TERMINATE_CHAR:
-        /* This is very nice, but it prevents descriptor_close to send
-           a connection_close to the mplex'er */
-        if (d)
-            descriptor_close(d, FALSE);
-        if (data)
-            FREE(data);
-        break;
-
-    case MULTI_CONNECT_REQ_CHAR:
-        d = descriptor_new(this);
-        protocol_send_confirm(this, d->id);
-        send_to_descriptor(g_cServerConfig.m_pLogo, d);
-        send_to_descriptor("By what name do they call you? ", d);
-        break;
-
-    case MULTI_HOST_CHAR:
-        if (d && data)
-        {
-            ubit8 *b = (ubit8 *)data;
-
-            d->nPort = bread_ubit16(&b);
-            d->nLine = bread_ubit8(&b);
-            strncpy(d->host, (char *)b, sizeof(d->host));
-            d->host[sizeof(d->host) - 1] = 0;
-        }
-        if (data)
-            FREE(data);
-        break;
-
-    case MULTI_TEXT_CHAR:
-        if (d)
-        {
-            // Important to HTML encode any string received from the Mplex
-            // for security and other reasons.
-            //
-            char *mystr = html_encode_utf8(data);
-
-            d->qInput.Append(new cQueueElem(mystr, FALSE));
+        case MULTI_MPLEX_INFO_CHAR:
+            bWebsockets = data[0]; // data[0] is 1 if websockets
             if (data)
                 FREE(data);
-        }
-        /* Kept in queue */
-        break;
+            break;
 
-    default:
-        slog(LOG_ALL, 0, "Illegal unexpected unique multi character #1.");
-        Close();
-        if (data)
-            FREE(data);
-        return -1;
+        case MULTI_PING_CHAR:
+            if (data)
+                FREE(data);
+            break;
+
+        case MULTI_TERMINATE_CHAR:
+            /* This is very nice, but it prevents descriptor_close to send
+               a connection_close to the mplex'er */
+            if (d)
+                descriptor_close(d, FALSE);
+            if (data)
+                FREE(data);
+            break;
+
+        case MULTI_CONNECT_REQ_CHAR:
+            d = descriptor_new(this);
+            protocol_send_confirm(this, d->id);
+            send_to_descriptor(g_cServerConfig.m_pLogo, d);
+            send_to_descriptor("By what name do they call you? ", d);
+            break;
+
+        case MULTI_HOST_CHAR:
+            if (d && data)
+            {
+                ubit8 *b = (ubit8 *)data;
+
+                d->nPort = bread_ubit16(&b);
+                d->nLine = bread_ubit8(&b);
+                strncpy(d->host, (char *)b, sizeof(d->host));
+                d->host[sizeof(d->host) - 1] = 0;
+            }
+            if (data)
+                FREE(data);
+            break;
+
+        case MULTI_TEXT_CHAR:
+            if (d)
+            {
+                // Important to HTML encode any string received from the Mplex
+                // for security and other reasons.
+                //
+                char *mystr = html_encode_utf8(data);
+
+                d->qInput.Append(new cQueueElem(mystr, FALSE));
+                if (data)
+                    FREE(data);
+            }
+            /* Kept in queue */
+            break;
+
+        default:
+            slog(LOG_ALL, 0, "Illegal unexpected unique multi character #1.");
+            Close();
+            if (data)
+                FREE(data);
+            return -1;
     }
 
     return p;
@@ -237,7 +235,7 @@ void multi_clear(void)
 {
     class descriptor_data *nextd, *d;
 
-    for (d = descriptor_list; d; d = nextd)
+    for (d = g_descriptor_list; d; d = nextd)
     {
         nextd = d->next;
         if (!d->multi->IsHooked())
@@ -252,7 +250,7 @@ void multi_close_all(void)
     slog(LOG_BRIEF, 0, "Closing all multi connections.");
 
     for (i = 0; i < MAX_MULTI; i++)
-        Multi.Multi[i].Close();
+        g_Multi.Multi[i].Close();
 
     multi_clear();
 }
@@ -262,8 +260,8 @@ void multi_ping_all(void)
     int i;
 
     for (i = 0; i < MAX_MULTI; i++)
-        if (Multi.Multi[i].IsHooked())
-            Multi.Multi[i].Ping();
+        if (g_Multi.Multi[i].IsHooked())
+            g_Multi.Multi[i].Ping();
 }
 
 /* ----------------------------------------------------------------- */
@@ -273,12 +271,11 @@ void multi_ping_all(void)
 /* ----------------------------------------------------------------- */
 
 //
-// init_mother is initially called to open file descriptor on 
+// init_mother is initially called to open file descriptor on
 // the mother port 4999. This fd is then added to CaptainHook with
-// MotherHook. CaptainHook.Wait() will be listening for events on 
+// MotherHook. CaptainHook.Wait() will be listening for events on
 // this MotherHook and will trigger Input when data arrives.
 //
-
 
 // Listen for Mplex connections. If one is established then find
 // an unhooked Multi and hook it.
@@ -325,33 +322,32 @@ void cMotherHook::Input(int nFlags)
         }
 
         for (i = 0; i < MAX_MULTI; i++)
-            if (!Multi.Multi[i].IsHooked())
+            if (!g_Multi.Multi[i].IsHooked())
                 break;
 
-        if ((i >= MAX_MULTI) || Multi.Multi[i].IsHooked())
+        if ((i >= MAX_MULTI) || g_Multi.Multi[i].IsHooked())
         {
             slog(LOG_ALL, 0, "No more multi connections allowed");
             close(t);
             return;
         }
 
-        CaptainHook.Hook(t, &Multi.Multi[i]);
+        g_CaptainHook.Hook(t, &g_Multi.Multi[i]);
 
-        Multi.nCount++;
+        g_Multi.nCount++;
 
         slog(LOG_ALL, 0, "A multi-host has connected to the game.");
-        protocol_send_exchange(&Multi.Multi[i], 0, g_cServerConfig.m_mudname);
-        protocol_send_color(&Multi.Multi[i], 0, g_cServerConfig.m_pColor);
+        protocol_send_exchange(&g_Multi.Multi[i], 0, g_cServerConfig.m_mudname);
+        protocol_send_color(&g_Multi.Multi[i], 0, g_cServerConfig.m_pColor);
     }
 }
-
 
 void cMotherHook::Unhook(void)
 {
     if (this->IsHooked())
     {
         slog(LOG_OFF, 0, "Unhooking Mother Hook");
-        CaptainHook.Unhook(this);
+        g_CaptainHook.Unhook(this);
         assert(this->fd != -1);
         cHook::Unhook();
     }
@@ -403,14 +399,12 @@ void init_mother(int nPort)
         exit(0);
     }
 
-    n = bind(fdMother, (struct sockaddr *)&server_addr,
-             sizeof(struct sockaddr_in));
+    n = bind(fdMother, (struct sockaddr *)&server_addr, sizeof(struct sockaddr_in));
 
     if (n != 0)
     {
         close(fdMother);
-        slog(LOG_OFF, 0, "Can't bind Mother Connection port %d (errno %d).",
-             nPort, errno);
+        slog(LOG_OFF, 0, "Can't bind Mother Connection port %d (errno %d).", nPort, errno);
         exit(0);
     }
 
@@ -432,7 +426,7 @@ void init_mother(int nPort)
         exit(22);
     }
 
-    int i=0;
+    int i = 0;
     n = setsockopt(fdMother, IPPROTO_TCP, TCP_NODELAY, &i, sizeof(i));
     if (n == -1)
     {
@@ -441,5 +435,5 @@ void init_mother(int nPort)
         exit(23);
     }
 
-    CaptainHook.Hook(fdMother, &MotherHook);
+    g_CaptainHook.Hook(fdMother, &g_MotherHook);
 }

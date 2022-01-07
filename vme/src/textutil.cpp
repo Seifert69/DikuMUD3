@@ -16,20 +16,7 @@
 #include "textutil.h"
 #include "common.h"
 
-const char *fillwords[] = {
-    "a",
-    "an",
-    "at",
-    "from",
-    "in",
-    "on",
-    "of",
-    "the",
-    "to",
-    "with",
-    "into",
-    NULL};
-
+const char *g_fillwords[] = {"a", "an", "at", "from", "in", "on", "of", "the", "to", "with", "into", NULL};
 
 /*  From char * input stream 'str' copy characters into 'buf' until
  *  end of string or newline. Returns position of 'str' after copied
@@ -138,7 +125,7 @@ char *itoa(int n)
 {
     static char buf[32]; /* 32 digits can even cope with 64 bit ints */
 
-    sprintf(buf, "%d", n);
+    snprintf(buf, sizeof(buf), "%d", n);
     return buf;
 }
 
@@ -150,7 +137,7 @@ char *ltoa(long n)
 {
     static char buf[32]; /* 32 digits can even cope with 64 bit ints */
 
-    sprintf(buf, "%ld", n);
+    snprintf(buf, sizeof(buf), "%ld", n);
     return buf;
 }
 
@@ -385,8 +372,7 @@ int search_block(const char *oarg, const char **list, ubit1 exact)
 
 /* Block must end with null pointer                                  */
 /* Warning, argument 1 is made into lowercase!                       */
-int search_block_length(const char *oarg, int length,
-                        const char **list, ubit1 exact)
+int search_block_length(const char *oarg, int length, const char **list, ubit1 exact)
 {
     char arg[4096];
     register int i;
@@ -415,7 +401,7 @@ int search_block_length(const char *oarg, int length,
 
 int fill_word(const char *argument)
 {
-    return (search_block(argument, fillwords, TRUE) >= 0);
+    return (search_block(argument, g_fillwords, TRUE) >= 0);
 }
 
 /* Exactly as str_next-word, except it wont change the case */
@@ -800,7 +786,7 @@ char *is_name(char *arg, char const *const *names) // MS2020 const char *names[]
 
     str_remspc(arg);
 
-    return (char *) is_name_raw(arg, names);
+    return (char *)is_name_raw(arg, names);
 }
 
 /* Create an empty namelist */
@@ -818,17 +804,16 @@ char **create_namelist(void)
 //
 int len_namelist(const char **namelist)
 {
-	if (namelist == NULL)
-		return 0;
+    if (namelist == NULL)
+        return 0;
 
-	int i;
+    int i;
 
-	for (i=0; namelist[i]; i++)
-		;
+    for (i = 0; namelist[i]; i++)
+        ;
 
-	return i;
+    return i;
 }
-
 
 /* Add a new name to the end of an existing namelist */
 char **add_name(const char *name, char **namelist)
@@ -992,25 +977,25 @@ void str_cescape_format(const char *src, char *dest)
         {
             switch (*src)
             {
-            case 'n':
-                *dest = '\n';
-                src++;
-                break;
-            case 'r':
-                *dest = '\r';
-                src++;
-                break;
-            case '\\':
-                break;
-            case 0:
-                dest++;    // Save the backslash
-                *dest = 0; // terminate dest
-                break;
-            default:
-                dest++;       // Save the backslash
-                *dest = *src; // Copy the unknown code
-                src++;
-                break;
+                case 'n':
+                    *dest = '\n';
+                    src++;
+                    break;
+                case 'r':
+                    *dest = '\r';
+                    src++;
+                    break;
+                case '\\':
+                    break;
+                case 0:
+                    dest++;    // Save the backslash
+                    *dest = 0; // terminate dest
+                    break;
+                default:
+                    dest++;       // Save the backslash
+                    *dest = *src; // Copy the unknown code
+                    src++;
+                    break;
             }
         }
         dest++;
@@ -1041,7 +1026,6 @@ char *str_escape_format(const char *src, int formatting)
     return str_dup(dest);
 }
 
-
 // Adapted from
 // Copyright (c) 2008-2009 Bjoern Hoehrmann <bjoern@hoehrmann.de>
 // See http://bjoern.hoehrmann.de/utf-8/decoder/dfa/ for details.
@@ -1049,20 +1033,31 @@ char *str_escape_format(const char *src, int formatting)
 #define UTF8_REJECT 1
 
 static const uint8_t utf8d[] = {
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // 00..1f
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // 20..3f
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // 40..5f
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // 60..7f
-  1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9, // 80..9f
-  7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7, // a0..bf
-  8,8,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2, // c0..df
-  0xa,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x4,0x3,0x3, // e0..ef
-  0xb,0x6,0x6,0x6,0x5,0x8,0x8,0x8,0x8,0x8,0x8,0x8,0x8,0x8,0x8,0x8, // f0..ff
-  0x0,0x1,0x2,0x3,0x5,0x8,0x7,0x1,0x1,0x1,0x4,0x6,0x1,0x1,0x1,0x1, // s0..s0
-  1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1,1, // s1..s2
-  1,2,1,1,1,1,1,2,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1, // s3..s4
-  1,2,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,3,1,1,1,1,1,1, // s5..s6
-  1,3,1,1,1,1,1,3,1,3,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1, // s7..s8
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, // 00..1f
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, // 20..3f
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, // 40..5f
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, // 60..7f
+    1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+    9,   9,   9,   9,   9,   9,   9,   9,   9,   9,   9,   9,   9,   9,   9,   9, // 80..9f
+    7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,
+    7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7,   7, // a0..bf
+    8,   8,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,
+    2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   // c0..df
+    0xa, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x4, 0x3, 0x3, // e0..ef
+    0xb, 0x6, 0x6, 0x6, 0x5, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, // f0..ff
+    0x0, 0x1, 0x2, 0x3, 0x5, 0x8, 0x7, 0x1, 0x1, 0x1, 0x4, 0x6, 0x1, 0x1, 0x1, 0x1, // s0..s0
+    1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+    1,   0,   1,   1,   1,   1,   1,   0,   1,   0,   1,   1,   1,   1,   1,   1, // s1..s2
+    1,   2,   1,   1,   1,   1,   1,   2,   1,   2,   1,   1,   1,   1,   1,   1,
+    1,   1,   1,   1,   1,   1,   1,   2,   1,   1,   1,   1,   1,   1,   1,   1, // s3..s4
+    1,   2,   1,   1,   1,   1,   1,   1,   1,   2,   1,   1,   1,   1,   1,   1,
+    1,   1,   1,   1,   1,   1,   1,   3,   1,   3,   1,   1,   1,   1,   1,   1, // s5..s6
+    1,   3,   1,   1,   1,   1,   1,   3,   1,   3,   1,   1,   1,   1,   1,   1,
+    1,   3,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1, // s7..s8
 };
 
 ubit32 inline utf8_decode(ubit32 *state, ubit32 *codep, ubit8 byte)
@@ -1070,11 +1065,10 @@ ubit32 inline utf8_decode(ubit32 *state, ubit32 *codep, ubit8 byte)
     ubit32 type = utf8d[byte];
 
     *codep = (*state != UTF8_ACCEPT) ? (byte & 0x3fu) | (*codep << 6) : (0xff >> type) & (byte);
-    *state = utf8d[256 + *state*16 + type];
+    *state = utf8d[256 + *state * 16 + type];
 
     return *state;
 }
-
 
 void str_correct_utf8(char *src)
 {
@@ -1093,15 +1087,15 @@ void str_correct_utf8(char *src)
             {
                 s--;
                 *s = '?';
-                if (s >= src) 
+                if (s >= src)
                     s--; // end of for means we'll start checking this '?'
                 if (s >= src)
                     s--; // so go back yet another char so we'll check the char before '?'
 
                 // s can become 1 less than src, but for loop above +1 and then it's equal src
                 // MS: Code on the website most definitely seemed wrong
-                // so if prev was not accept, then because I fear it might 
-                // be a 3 character sequence, I go back 
+                // so if prev was not accept, then because I fear it might
+                // be a 3 character sequence, I go back
             }
         }
     }
@@ -1109,9 +1103,8 @@ void str_correct_utf8(char *src)
 
 void str_correct_utf8(std::string &src)
 {
-    str_correct_utf8((char *) src.c_str());
+    str_correct_utf8((char *)src.c_str());
 }
-
 
 // This validates a string to be UTF-8 cool
 // Illegal characters become question marks
@@ -1119,12 +1112,12 @@ void str_correct_utf8(std::string &src)
 void obs_str_correct_utf8(std::string &src)
 {
     int nLen = src.length();
-    
+
     for (int pos = 0; pos < nLen; ++pos)
     {
         if ((src[pos] & 0x80) == 0) // lead bit is zero, must be a single ascii
         {
-             // ignore all odd/control ascii characters.
+            // ignore all odd/control ascii characters.
             if ((src[pos] < 32) && (src[pos] != '\n') && (src[pos] != '\r'))
                 src[pos] = '?';
             continue;
@@ -1158,9 +1151,8 @@ void obs_str_correct_utf8(std::string &src)
         }
         else
             src[pos] = '?'; // Must be a UTF8 error of sorts
-    } // end for
+    }                       // end for
 }
-
 
 // This both encodes and prepares string for interpreter.
 // Removes all leading and trailing whitespace.
@@ -1191,34 +1183,34 @@ char *html_encode_utf8(const char *src)
 
             switch (src[pos])
             {
-            case ' ':
-            { // Trim all whitespace to one space
-                sBuffer.append(" ");
-                while (isspace(src[pos + 1]))
-                    pos++;
-                continue;
-            }
-            case '&':
-            {
-                sBuffer.append("&amp;");
-                continue;
-            }
-            case '\"':
-            {
-                sBuffer.append("&quot;");
-                continue;
-            }
-            case '<':
-            {
-                sBuffer.append("&lt;");
-                continue;
-            }
-            case '>':
-            {
-                sBuffer.append("&gt;");
-                continue;
-            }
-            } //Switch
+                case ' ':
+                { // Trim all whitespace to one space
+                    sBuffer.append(" ");
+                    while (isspace(src[pos + 1]))
+                        pos++;
+                    continue;
+                }
+                case '&':
+                {
+                    sBuffer.append("&amp;");
+                    continue;
+                }
+                case '\"':
+                {
+                    sBuffer.append("&quot;");
+                    continue;
+                }
+                case '<':
+                {
+                    sBuffer.append("&lt;");
+                    continue;
+                }
+                case '>':
+                {
+                    sBuffer.append("&gt;");
+                    continue;
+                }
+            } // Switch
             sBuffer.append(&src[pos], 1);
             continue;
         }
@@ -1366,9 +1358,9 @@ char *fix_old_codes_to_html(const char *c)
     str_substitute(">", "&gt;", buf);
 
     // replace &s[0-9] with spaces
-    //sed -i -- 's/&s[0-9][0-9]/ /g' *.zon
+    // sed -i -- 's/&s[0-9][0-9]/ /g' *.zon
     // replace &s[00-99] with spaces
-    //sed -i -- 's/&s[0-9]/ /g' *.zon
+    // sed -i -- 's/&s[0-9]/ /g' *.zon
 
     str_substitute("&[default]", "</div>", buf);
 
@@ -1377,7 +1369,7 @@ char *fix_old_codes_to_html(const char *c)
 
     // I'm hoping this is not necessary to change
     // Replace &[name] with <div class='name'>
-    //sed -i -- 's/&\[\([^]]*\)\]/\<div class\=\x27\1\x27\>/g' *.zon
+    // sed -i -- 's/&\[\([^]]*\)\]/\<div class\=\x27\1\x27\>/g' *.zon
 
     str_substitute("\x1B", "&amp;", buf);
 
@@ -1392,8 +1384,8 @@ char *fix_old_codes_to_html(const char *c)
 
 /* Get the contents between <htmltag> and convert it to lowercase
  *    p must point to first <.
- *    Copies the tag between <> into pTag. 
- *    Copies at most nTagMax bytes (incl \0) 
+ *    Copies the tag between <> into pTag.
+ *    Copies at most nTagMax bytes (incl \0)
  *    returns position right after > and returns p if no >
  */
 const char *getHTMLTag(const char *p, char *pTag, int nTagMax)
@@ -1413,7 +1405,7 @@ const char *getHTMLTag(const char *p, char *pTag, int nTagMax)
 
     n = c - p + 1; // How many chars including \0
 
-    n = min(n, nTagMax);
+    n = std::min(n, nTagMax);
 
     for (int i = 0; i < n; i++)
         pTag[i] = tolower(*(p + i));
@@ -1469,10 +1461,10 @@ int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax)
     return ce - c;
 }
 
-/* 
- * Given an HTML tag pOldTag without <>, change the value of the attribute pAttr to pNewVal 
+/*
+ * Given an HTML tag pOldTag without <>, change the value of the attribute pAttr to pNewVal
  * and put the result in pNewTag
- * 
+ *
  * pOldTag: the HTML tag, e.g. div class='default'
  * pATtr    the attribute to change, e.g. class
  * pNewVal  the new value to put into the class, e.g. hello
@@ -1534,16 +1526,15 @@ const char *divcolor(const char *colorstr)
 {
     static char buf[256];
 
-    sprintf(buf, "<div class='%s'>", colorstr);
+    snprintf(buf, sizeof(buf), "<div class='%s'>", colorstr);
 
     return buf;
 }
 
-
 // Encode str to JSON encoding (format X)
 std::string str_json_encode(const char *str)
 {
-    string s;
+    std::string s;
 
     s = str;
 
@@ -1556,18 +1547,18 @@ std::string str_json_encode(const char *str)
 // As str_json_encode but wraps string in quotes
 std::string str_json_encode_quote(const char *str)
 {
-    string s;
+    std::string s;
 
     s = "\"";
     s.append(str_json_encode(str));
     s.append("\"");
 
     return s;
-} 
+}
 
 std::string str_json(const char *lbl, ubit64 nInt)
 {
-    string s;
+    std::string s;
 
     s.append("\"");
     s.append(str_json_encode(lbl));
@@ -1580,7 +1571,7 @@ std::string str_json(const char *lbl, ubit64 nInt)
 
 std::string str_json(const char *lbl, const char *str)
 {
-    string s;
+    std::string s;
 
     s.append("\"");
     s.append(lbl);
@@ -1599,10 +1590,9 @@ std::string str_json(const char *lbl, const std::string &str)
     return str_json(lbl, str.c_str());
 }
 
-
-// Kind of like strncmp except it returns true if the string matches 
+// Kind of like strncmp except it returns true if the string matches
 // up to the first \0 character. Necessary hack as a bridge between
-// old and new password system to both rectify incorrect salt in 
+// old and new password system to both rectify incorrect salt in
 // set pwd <player> and to handle increase in stored password length
 // return 0 = match, 1 = differ
 int pwdcompare(const char *p1, const char *p2, int nMax)
@@ -1612,7 +1602,7 @@ int pwdcompare(const char *p1, const char *p2, int nMax)
     if ((p1 == NULL) || (p2 == NULL))
         return 1;
 
-    for (i=0; i < nMax; i++)
+    for (i = 0; i < nMax; i++)
     {
         if (p1[i] != p2[i])
         {
@@ -1621,7 +1611,7 @@ int pwdcompare(const char *p1, const char *p2, int nMax)
                 if (i < 10)
                     return 1;
                 else
-                    return 0;                
+                    return 0;
             }
             else
                 return 1;

@@ -94,7 +94,6 @@ int CByteBuffer::FileRead(FILE *f, ubit32 nLength)
 
 int CByteBuffer::FileWrite(FILE *f)
 {
-
     if (m_nLength > 0)
         return fwrite(m_pData, 1, m_nLength, f);
     else
@@ -198,42 +197,42 @@ int CByteBuffer::ReadStringAlloc(char **ppStr)
 
 int CByteBuffer::ReadNames(char ***pppStr, int bOld)
 {
-   char *c;
-   *pppStr = create_namelist();
-   assert(*pppStr);
+    char *c;
+    *pppStr = create_namelist();
+    assert(*pppStr);
 
-   if (bOld)
-   {
-      for (;;)
-      {
-         if (SkipString(&c))
-               return 1;
+    if (bOld)
+    {
+        for (;;)
+        {
+            if (SkipString(&c))
+                return 1;
 
-         if (*c)
-               *pppStr = add_name(c, *pppStr);
-         else
-               break;
-      }
-   }
-   else // New xxx
-   {
-      int l;
-      int Corrupt;
-      char buf[MAX_STRING_LENGTH];
+            if (*c)
+                *pppStr = add_name(c, *pppStr);
+            else
+                break;
+        }
+    }
+    else // New xxx
+    {
+        int l;
+        int Corrupt;
+        char buf[MAX_STRING_LENGTH];
 
-      Corrupt = Read32(&l);
+        Corrupt = Read32(&l);
 
-      int i;
+        int i;
 
-      for (i=0; i < l; i++)
-      {
-         Corrupt += ReadStringCopy(buf, sizeof(buf)-1);
-         *pppStr = add_name(buf, *pppStr);
-      }
+        for (i = 0; i < l; i++)
+        {
+            Corrupt += ReadStringCopy(buf, sizeof(buf) - 1);
+            *pppStr = add_name(buf, *pppStr);
+        }
 
-      return Corrupt;
-   }
-   return 0;
+        return Corrupt;
+    }
+    return 0;
 }
 
 int CByteBuffer::ReadIntList(int **ilist)
@@ -410,20 +409,20 @@ void CByteBuffer::AppendNames(const char **ppNames, int bOld)
 {
     if (bOld)
     {
-      if (ppNames)
-         for (; (const char *)*ppNames && **ppNames; ppNames++)
-               AppendString(*ppNames);
-      AppendString("");
+        if (ppNames)
+            for (; (const char *)*ppNames && **ppNames; ppNames++)
+                AppendString(*ppNames);
+        AppendString("");
     }
     else // New xxx
     {
-       int l = len_namelist(ppNames);
-       
-       Append32(l);
+        int l = len_namelist(ppNames);
 
-       int i;
-       for (i=0; i < l; i++)
-          AppendString(ppNames[i]);
+        Append32(l);
+
+        int i;
+        for (i = 0; i < l; i++)
+            AppendString(ppNames[i]);
     }
 }
 
@@ -558,17 +557,17 @@ char **bread_nameblock(ubit8 **b, int bOld)
     }
     else // New xxx
     {
-      int l;
+        int l;
 
-      l = bread_ubit32(b);
+        l = bread_ubit32(b);
 
-      int i;
+        int i;
 
-      for (i=0; i < l; i++)
-      {
-         bread_strcpy(b, buf);
-         nb = add_name(buf, nb);
-      }
+        for (i = 0; i < l; i++)
+        {
+            bread_strcpy(b, buf);
+            nb = add_name(buf, nb);
+        }
     }
     return nb;
 }
@@ -671,14 +670,13 @@ void bwrite_nameblock(ubit8 **b, char **nb, int bOld)
     {
         int l;
 
-        l = len_namelist((const char **) nb);
+        l = len_namelist((const char **)nb);
         bwrite_ubit32(b, l);
 
         for (int i = 0; i < l; i++)
             bwrite_string(b, nb[i]);
     }
 }
-
 
 /* number of ints, followed by ints */
 void bwrite_intblock(ubit8 **b, int *ib)
@@ -695,9 +693,9 @@ void bwrite_intblock(ubit8 **b, int *ib)
         bwrite_ubit32(b, 0);
     }
     /*	  bwrite_sbit32(b,ib[0]);
-    	fprintf(stderr, "intlist Len %d\n", ib[0]);
+        fprintf(stderr, "intlist Len %d\n", ib[0]);
          for (i=1; i<=ib[0]; i++) {
-    	fprintf(stderr, "intlist %d=%d\n", i, ib[i]);
+        fprintf(stderr, "intlist %d=%d\n", i, ib[i]);
            bwrite_sbit32(b,ib[i]);
-    	  }*/
+          }*/
 }

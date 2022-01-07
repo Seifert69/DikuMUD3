@@ -38,7 +38,7 @@ extra_descr_data::extra_descr_data(const char **names, const char *descr)
 {
     this->names = names;
     if (descr)
-        this->descr =  descr;
+        this->descr = descr;
     this->next = NULL;
 }
 
@@ -47,7 +47,7 @@ extra_descr_data::extra_descr_data(cNamelist names, const char *descr)
 {
     this->names = names;
     if (descr)
-        this->descr =  descr;
+        this->descr = descr;
     this->next = NULL;
 }
 
@@ -61,9 +61,9 @@ extra_descr_data::~extra_descr_data(void)
 class extra_descr_data *extra_descr_data::find_raw(const char *word)
 {
     ubit32 i;
-    class extra_descr_data *exd; 
-    
-    for (exd=this; exd; exd = exd->next)
+    class extra_descr_data *exd;
+
+    for (exd = this; exd; exd = exd->next)
     {
         if (exd->names.Length() < 1)
         {
@@ -98,7 +98,7 @@ void rogue_remove(class extra_descr_data **exlist, const char *name)
     if (tex)
     {
         // See if it's the head element
-        if (*exlist  == tex)
+        if (*exlist == tex)
         {
             *exlist = tex->next;
             tex->next = NULL;
@@ -117,12 +117,8 @@ void rogue_remove(class extra_descr_data **exlist, const char *name)
                 delete tex;
                 return;
             }
-
-
     }
 }
-
-
 
 // =============================================================
 //               EXTRA LIST
@@ -167,7 +163,7 @@ int extra_list::count(void)
 
 std::string extra_list::json(void)
 {
-    string s;
+    std::string s;
 
     s = "\"extralist\": [ ";
 
@@ -186,14 +182,12 @@ std::string extra_list::json(void)
 
         if (e->next)
             s.append(",\n");
-
     }
 
     s.append(" ]");
 
     return s;
 }
-
 
 // Insert ex as the first element in front of the list
 void extra_list::push_front(class extra_descr_data *ex)
@@ -213,12 +207,11 @@ void extra_list::push_tail(class extra_descr_data *ex)
 
         for (p = m_pList; p->next; p = p->next)
             ;
-        
+
         // p now points to the last element in the list
         p->next = ex;
     }
 }
-
 
 // Unlink exd from the list and delete the object and return the next object
 // Always returns the list object (why?)
@@ -262,7 +255,6 @@ class extra_descr_data *extra_list::add(class extra_descr_data *ex)
     return ex;
 }
 
-
 /*                                                            */
 /* Adds an extra description just before the one given (this) */
 /*                                                            */
@@ -275,7 +267,6 @@ class extra_descr_data *extra_list::add(const char **names, const char *descr)
 
     return new_ex;
 }
-
 
 class extra_descr_data *extra_list::add(cNamelist cn, const char *descr)
 {
@@ -335,14 +326,13 @@ class extra_descr_data *extra_list::find_raw(const char *word)
         return NULL;
 }
 
-
 // From the elist object, make a copy of the list
 void extra_list::copyfrom(class extra_list &listToBeCopied)
 {
     class extra_descr_data *new_ex;
 
     assert(this->m_pList == NULL);
-    
+
     class extra_descr_data *exd;
     for (exd = listToBeCopied.m_pList; exd; exd = exd->next)
     {
@@ -386,9 +376,7 @@ class extra_descr_data *unit_find_extra(const char *word, class unit_data *unit)
     return NULL;
 }
 
-class extra_descr_data *char_unit_find_extra(class unit_data *ch,
-                     class unit_data **target,
-                     char *word, class unit_data *list)
+class extra_descr_data *char_unit_find_extra(class unit_data *ch, class unit_data **target, char *word, class unit_data *list)
 {
     class extra_descr_data *exd = NULL;
 
@@ -425,8 +413,7 @@ class extra_descr_data *char_unit_find_extra(class unit_data *ch,
     return NULL;
 }
 
-const char *unit_find_extra_string(class unit_data *ch,
-                                   char *word, class unit_data *list)
+const char *unit_find_extra_string(class unit_data *ch, char *word, class unit_data *list)
 {
     class extra_descr_data *exd = char_unit_find_extra(ch, NULL, word, list);
 

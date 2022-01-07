@@ -15,7 +15,7 @@
 
 class extra_list
 {
-   public:
+public:
     extra_list(void);
     ~extra_list(void);
 
@@ -40,41 +40,33 @@ class extra_list
     // and I can't get to the container only one pointer in DIL.
     class extra_descr_data *m_pList;
 
-   private:
+private:
     void freelist(class extra_descr_data *);
 };
-
 
 class extra_descr_data
 {
 public:
-    extra_descr_data (void);
+    extra_descr_data(void);
     extra_descr_data(const char *name, const char *descr);
     extra_descr_data(const char **names, const char *descr);
     extra_descr_data(cNamelist names, const char *descr);
-    ~extra_descr_data (void);
+    ~extra_descr_data(void);
 
     class extra_descr_data *find_raw(const char *word);
 
     class cintlist vals;
-    class cNamelist names;	/* Keyword in look/examine          */
-    string descr;	/* What to see                      */
-    class extra_descr_data *next;	/* Next in list                     */
+    class cNamelist names;        /* Keyword in look/examine          */
+    std::string descr;            /* What to see                      */
+    class extra_descr_data *next; /* Next in list                     */
 };
 
+const char *unit_find_extra_string(class unit_data *ch, char *word, class unit_data *list);
 
-const char *unit_find_extra_string (class unit_data * ch,
-                                    char *word, class unit_data * list);
+class extra_descr_data *char_unit_find_extra(class unit_data *ch, class unit_data **target, char *word, class unit_data *list);
 
-class extra_descr_data *char_unit_find_extra (class unit_data * ch,
-            class unit_data ** target,
-            char *word,
-            class unit_data * list);
-
-class extra_descr_data *unit_find_extra (const char *word,
-            class unit_data * unit);
+class extra_descr_data *unit_find_extra(const char *word, class unit_data *unit);
 void rogue_push_front(class extra_descr_data **exlist, class extra_descr_data *newex);
 void rogue_remove(class extra_descr_data **exlist, const char *name);
-
 
 #endif /* _MUD_STRUCTS_H */

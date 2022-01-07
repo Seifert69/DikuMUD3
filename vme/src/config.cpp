@@ -6,10 +6,10 @@
  */
 
 #ifdef _WINDOWS
-#include <winsock2.h>
-#include <io.h>
+    #include <winsock2.h>
+    #include <io.h>
 #else
-#include <unistd.h>
+    #include <unistd.h>
 
 #endif
 
@@ -45,6 +45,8 @@ CServerConfiguration::CServerConfiguration(void)
 
     memset(&m_sSubnetMask, 0, sizeof(m_sSubnetMask));
     memset(&m_sLocalhost, 0, sizeof(m_sLocalhost));
+    memset(&m_aMplexHosts, 0, sizeof(m_aMplexHosts));
+
     m_logdir = NULL;
     m_libdir = NULL;
     m_etcdir = NULL;
@@ -54,6 +56,7 @@ CServerConfiguration::CServerConfiguration(void)
     m_pLogo = NULL;
     m_pImmortName = NULL;
     m_hReboot = 0;
+    m_pColor = NULL;
 }
 
 int CServerConfiguration::FromLAN(char *pFromHost)
@@ -74,13 +77,11 @@ int CServerConfiguration::FromLAN(char *pFromHost)
     }
 #endif
 
-    return ((m_sSubnetMask.s_addr & m_sLocalhost.s_addr) ==
-            (m_sSubnetMask.s_addr & sTmp.s_addr));
+    return ((m_sSubnetMask.s_addr & m_sLocalhost.s_addr) == (m_sSubnetMask.s_addr & sTmp.s_addr));
 }
 
 int CServerConfiguration::ValidMplex(struct sockaddr_in *isa)
 {
-
     int i;
 
     for (i = 0; i < 10; i++)
@@ -108,8 +109,7 @@ void CServerConfiguration::Boot(char *srvcfg)
 
     if (!file_exists(srvcfg))
     {
-        slog(LOG_ALL, 0, "Could not find server configuration file. %s",
-             srvcfg);
+        slog(LOG_ALL, 0, "Could not find server configuration file. %s", srvcfg);
         exit(0);
     }
 
@@ -426,8 +426,7 @@ void CServerConfiguration::Boot(char *srvcfg)
         if (i < l)
         {
 #ifdef _WINDOWS
-            if (m_aMplexHosts[i].S_un.S_addr =
-                    inet_addr(ppNames[i]) == INADDR_NONE)
+            if (m_aMplexHosts[i].S_un.S_addr = inet_addr(ppNames[i]) == INADDR_NONE)
             {
                 slog(LOG_ALL, 0, "SubnetMask invalid.");
                 exit(0);

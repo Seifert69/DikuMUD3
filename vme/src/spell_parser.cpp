@@ -4,7 +4,7 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.3 $
  */
-
+#include "external_vars.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -27,15 +27,14 @@
 #include "files.h"
 #include "trie.h"
 
-/* Extern data */
-extern class unit_data *unit_list;
-
-struct spell_info_type spell_info[SPL_TREE_MAX];
+struct spell_info_type g_spell_info[SPL_TREE_MAX];
 
 void set_spellargs(struct spell_args *sa,
                    class unit_data *caster,
                    class unit_data *medium,
-                   class unit_data *target, const char *arg, int hm)
+                   class unit_data *target,
+                   const char *arg,
+                   int hm)
 {
     sa->caster = caster;
     sa->medium = medium;
@@ -49,17 +48,16 @@ void set_spellargs(struct spell_args *sa,
 /* above.                                                               */
 ubit1 spell_legal_type(int spl, int type)
 {
-    return IS_SET(spell_info[spl].media, type);
+    return IS_SET(g_spell_info[spl].media, type);
 }
 
 /* Check if target is proper compared to specifications in the spell list */
 /* above. Useable with for example wand checks to see if target is legal  */
-ubit1 spell_legal_target(int spl, class unit_data *caster,
-                         class unit_data *target)
+ubit1 spell_legal_target(int spl, class unit_data *caster, class unit_data *target)
 {
     int pk_test(class unit_data * att, class unit_data * def, int message);
 
-    if (IS_SET(spell_info[spl].targets, TAR_IGNORE))
+    if (IS_SET(g_spell_info[spl].targets, TAR_IGNORE))
         return TRUE;
 
     if (caster == NULL || target == NULL)
@@ -68,16 +66,14 @@ ubit1 spell_legal_target(int spl, class unit_data *caster,
         return FALSE;
     }
 
-    if (spell_info[spl].offensive && pk_test(caster, target, TRUE))
+    if (g_spell_info[spl].offensive && pk_test(caster, target, TRUE))
         return FALSE;
 
-    if (IS_SET(spell_info[spl].targets,
-               caster == target ? TAR_SELF_NONO : TAR_SELF_ONLY))
+    if (IS_SET(g_spell_info[spl].targets, caster == target ? TAR_SELF_NONO : TAR_SELF_ONLY))
         return FALSE;
 
-    if ((IS_SET(spell_info[spl].targets, TAR_ROOM) && IS_ROOM(target)) ||
-        (IS_SET(spell_info[spl].targets, TAR_CHAR) && IS_CHAR(target)) ||
-        (IS_SET(spell_info[spl].targets, TAR_OBJ) && IS_OBJ(target)))
+    if ((IS_SET(g_spell_info[spl].targets, TAR_ROOM) && IS_ROOM(target)) ||
+        (IS_SET(g_spell_info[spl].targets, TAR_CHAR) && IS_CHAR(target)) || (IS_SET(g_spell_info[spl].targets, TAR_OBJ) && IS_OBJ(target)))
         return TRUE;
 
     return FALSE;
@@ -87,36 +83,32 @@ void say_spell(class unit_data *ch, class unit_data *target, int si)
 {
     if (ch != target)
     {
-        cact(spell_info[si].tochar, A_ALWAYS, ch, cActParameter(), target, TO_CHAR,
-             "spells");
-        cact(spell_info[si].tovict, spell_info[si].acttype,
-             ch, cActParameter(), target, TO_VICT, "spells");
-        cact(spell_info[si].torest, spell_info[si].acttype,
-             ch, cActParameter(), target, TO_NOTVICT, "spells");
+        cact(g_spell_info[si].tochar, A_ALWAYS, ch, cActParameter(), target, TO_CHAR, "spells");
+        cact(g_spell_info[si].tovict, g_spell_info[si].acttype, ch, cActParameter(), target, TO_VICT, "spells");
+        cact(g_spell_info[si].torest, g_spell_info[si].acttype, ch, cActParameter(), target, TO_NOTVICT, "spells");
     }
     else
     {
-        cact(spell_info[si].toself, A_ALWAYS, ch, cActParameter(), target, TO_CHAR,
-             "spells");
-        cact(spell_info[si].toselfroom, spell_info[si].acttype,
-             ch, cActParameter(), target, TO_ROOM, "spells");
+        cact(g_spell_info[si].toself, A_ALWAYS, ch, cActParameter(), target, TO_CHAR, "spells");
+        cact(g_spell_info[si].toselfroom, g_spell_info[si].acttype, ch, cActParameter(), target, TO_ROOM, "spells");
     }
 }
 
-int spell_perform(int spell_no, int spell_type,
+int spell_perform(int spell_no,
+                  int spell_type,
                   class unit_data *caster,
                   class unit_data *medium,
                   class unit_data *target,
-                  const char *argument, char *pEffect, int bonus)
+                  const char *argument,
+                  char *pEffect,
+                  int bonus)
 {
     static struct command_info *cmd = NULL;
     int hm = -1;
 
     if (!cmd)
     {
-        extern struct trie_type *intr_trie;
-
-        cmd = (struct command_info *)search_trie("cast", intr_trie);
+        cmd = (struct command_info *)search_trie("cast", g_intr_trie);
         assert(cmd);
     }
 
@@ -131,23 +123,20 @@ int spell_perform(int spell_no, int spell_type,
         int i;
         int bitv = 0;
 
-        if (IS_SET(spell_info[spell_no].targets, TAR_CHAR))
+        if (IS_SET(g_spell_info[spell_no].targets, TAR_CHAR))
             SET_BIT(bitv, UNIT_ST_NPC | UNIT_ST_PC);
 
-        if (IS_SET(spell_info[spell_no].targets, TAR_OBJ))
+        if (IS_SET(g_spell_info[spell_no].targets, TAR_OBJ))
             SET_BIT(bitv, UNIT_ST_OBJ);
 
         scan4_unit(caster, bitv);
 
-        for (i = 0; i < unit_vector.top; i++)
-            hm = spell_perform(spell_no, MEDIA_WAND,
-                               caster, medium, UVI(i), argument, pEffect);
+        for (i = 0; i < g_unit_vector.top; i++)
+            hm = spell_perform(spell_no, MEDIA_WAND, caster, medium, UVI(i), argument, pEffect);
 
         /* Self too... */
-        if (!IS_SET(spell_info[spell_no].media, MEDIA_SELF_NONO))
-            hm = spell_perform(spell_no,
-                               MEDIA_WAND,
-                               caster, medium, caster, argument, pEffect);
+        if (!IS_SET(g_spell_info[spell_no].media, MEDIA_SELF_NONO))
+            hm = spell_perform(spell_no, MEDIA_WAND, caster, medium, caster, argument, pEffect);
 
         return hm;
     }
@@ -160,39 +149,39 @@ int spell_perform(int spell_no, int spell_type,
 
         szonelog(UNIT_FI_ZONE(medium),
                  "Illegal spell type (%d/%d): used on (%s@%s)!",
-                 spell_no, spell_type,
-                 UNIT_FI_NAME(medium), UNIT_FI_ZONENAME(medium));
+                 spell_no,
+                 spell_type,
+                 UNIT_FI_NAME(medium),
+                 UNIT_FI_ZONENAME(medium));
         return -1;
     }
 
     if (!spell_legal_target(spell_no, caster, target))
     {
-        cact("The magic disappears when cast on $3n.",
-             A_SOMEONE, caster, cActParameter(), target, TO_CHAR, "spells");
+        cact("The magic disappears when cast on $3n.", A_SOMEONE, caster, cActParameter(), target, TO_CHAR, "spells");
         return -1;
     }
 
-    if (spell_info[spell_no].offensive && target && IS_CHAR(target))
+    if (g_spell_info[spell_no].offensive && target && IS_CHAR(target))
         offend_legal_state(caster, target);
 
-    switch (spell_info[spell_no].cast_type)
+    switch (g_spell_info[spell_no].cast_type)
     {
-    case SPLCST_CHECK:
-        hm = spell_cast_check(medium, spell_no);
-        break;
+        case SPLCST_CHECK:
+            hm = spell_cast_check(medium, spell_no);
+            break;
 
-    case SPLCST_RESIST:
-        hm = spell_resistance(medium, target, spell_no);
-        break;
+        case SPLCST_RESIST:
+            hm = spell_resistance(medium, target, spell_no);
+            break;
 
-    case SPLCST_IGNORE:
-        hm = 0;
-        break;
+        case SPLCST_IGNORE:
+            hm = 0;
+            break;
 
-    default:
-        slog(LOG_ALL, 0, "Spell no %d had illegal cast type %d.",
-             spell_no, spell_info[spell_no].cast_type);
-        return -1;
+        default:
+            slog(LOG_ALL, 0, "Spell no %d had illegal cast type %d.", spell_no, g_spell_info[spell_no].cast_type);
+            return -1;
     }
 
     hm += bonus;
@@ -205,11 +194,11 @@ int spell_perform(int spell_no, int spell_type,
     if (send_ack(caster, medium, target, &hm, cmd, myarg, target) == SFR_BLOCK)
         return hm;
 
-    if (spell_info[spell_no].tmpl)
+    if (g_spell_info[spell_no].tmpl)
     {
         class dilprg *prg;
 
-        prg = dil_copy_template(spell_info[spell_no].tmpl, caster, NULL);
+        prg = dil_copy_template(g_spell_info[spell_no].tmpl, caster, NULL);
 
         if (prg)
         {
@@ -227,14 +216,14 @@ int spell_perform(int spell_no, int spell_type,
             dil_activate(prg);
         }
     }
-    else if (spell_info[spell_no].spell_pointer)
+    else if (g_spell_info[spell_no].spell_pointer)
     {
         struct spell_args sa;
 
         set_spellargs(&sa, caster, medium, target, argument, hm);
         sa.pEffect = pEffect;
 
-        (*spell_info[spell_no].spell_pointer)(&sa);
+        (*g_spell_info[spell_no].spell_pointer)(&sa);
 
         hm = sa.hm;
     }
@@ -269,8 +258,7 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
 
     if (spl == -1)
     {
-        act("The $2t spell is not known to this realm.",
-            A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
+        act("The $2t spell is not known to this realm.", A_ALWAYS, ch, argument, cActParameter(), TO_CHAR);
         return;
     }
 
@@ -280,27 +268,25 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
         return;
     }
 
-    if (CHAR_POS(ch) < spell_info[spl].minimum_position)
+    if (CHAR_POS(ch) < g_spell_info[spl].minimum_position)
     {
         switch (CHAR_POS(ch))
         {
-        case POSITION_SLEEPING:
-            send_to_char("In your dreams?<br/>", ch);
-            break;
-        case POSITION_RESTING:
-            send_to_char("You can't concentrate enough while resting.<br/>",
-                         ch);
-            break;
-        case POSITION_SITTING:
-            send_to_char("You can't do this sitting!<br/>", ch);
-            break;
-        case POSITION_FIGHTING:
-            send_to_char("Impossible! You can't concentrate enough!.<br/>", ch);
-            break;
-        default:
-            send_to_char("It seems like you're in a pretty bad shape!<br/>",
-                         ch);
-            break;
+            case POSITION_SLEEPING:
+                send_to_char("In your dreams?<br/>", ch);
+                break;
+            case POSITION_RESTING:
+                send_to_char("You can't concentrate enough while resting.<br/>", ch);
+                break;
+            case POSITION_SITTING:
+                send_to_char("You can't do this sitting!<br/>", ch);
+                break;
+            case POSITION_FIGHTING:
+                send_to_char("Impossible! You can't concentrate enough!.<br/>", ch);
+                break;
+            default:
+                send_to_char("It seems like you're in a pretty bad shape!<br/>", ch);
+                break;
         }
         /* Switch */
         return;
@@ -318,18 +304,16 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
             return;
         }
 
-        if (CHAR_ABILITY(ch, spell_info[spl].realm) < 1 ||
-            (CHAR_BRA(ch) == 0))
+        if (CHAR_ABILITY(ch, g_spell_info[spl].realm) < 1 || (CHAR_BRA(ch) == 0))
         {
             send_to_char("You are not powerful enough.<br/>", ch);
             return;
         }
     }
 
-    if ((spell_info[spl].spell_pointer == NULL) && spell_info[spl].tmpl == NULL)
+    if ((g_spell_info[spl].spell_pointer == NULL) && g_spell_info[spl].tmpl == NULL)
     {
-        send_to_char("Sorry, this magic has not yet been implemented.<br/>",
-                     ch);
+        send_to_char("Sorry, this magic has not yet been implemented.<br/>", ch);
         return;
     }
 
@@ -338,8 +322,7 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
         send_to_char("This isn't a legal spell for you to cast!  "
                      "Please report.<br/>",
                      ch);
-        slog(LOG_ALL, 0,
-             "do_cast: %s attempted to be used as spell.", g_SplColl.text[spl]);
+        slog(LOG_ALL, 0, "do_cast: %s attempted to be used as spell.", g_SplColl.text[spl]);
         return;
     }
 
@@ -350,35 +333,34 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
 
     orgarg = argument;
 
-    if (!IS_SET(spell_info[spl].targets, TAR_IGNORE))
+    if (!IS_SET(g_spell_info[spl].targets, TAR_IGNORE))
     {
         if (!str_is_empty(argument)) /* if there is an argument to look at */
         {
             /* Find unit by the name 'argument' at target location */
-            unit = find_unit(ch, &argument, 0, spell_info[spl].targets);
+            unit = find_unit(ch, &argument, 0, g_spell_info[spl].targets);
 
             if (unit)
                 target_ok = TRUE;
         }
         else /* string is empty */
         {
-            if (IS_SET(spell_info[spl].targets, TAR_FIGHT_SELF) && CHAR_FIGHTING(ch))
+            if (IS_SET(g_spell_info[spl].targets, TAR_FIGHT_SELF) && CHAR_FIGHTING(ch))
             {
                 unit = ch;
                 target_ok = TRUE;
             }
 
-            if (!target_ok && IS_SET(spell_info[spl].targets, TAR_FIGHT_VICT) && (unit = CHAR_FIGHTING(ch)))
+            if (!target_ok && IS_SET(g_spell_info[spl].targets, TAR_FIGHT_VICT) && (unit = CHAR_FIGHTING(ch)))
                 target_ok = TRUE;
 
-            if (!target_ok && IS_SET(spell_info[spl].targets, TAR_AUTO_SELF))
+            if (!target_ok && IS_SET(g_spell_info[spl].targets, TAR_AUTO_SELF))
             {
                 unit = ch;
                 target_ok = TRUE;
             }
 
-            if (!target_ok && IS_SET(spell_info[spl].targets, TAR_ROOM) &&
-                IS_ROOM(UNIT_IN(ch)))
+            if (!target_ok && IS_SET(g_spell_info[spl].targets, TAR_ROOM) && IS_ROOM(UNIT_IN(ch)))
             {
                 unit = UNIT_IN(ch);
                 target_ok = TRUE;
@@ -389,36 +371,30 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
         {
             if (*orgarg) /* If a name was typed */
             {
-                if (IS_SET(spell_info[spl].targets, TAR_CHAR))
-                    act("Nobody by the name '$2t' here.",
-                        A_ALWAYS, ch, orgarg, cActParameter(), TO_CHAR);
-                else if (IS_SET(spell_info[spl].targets, TAR_OBJ))
-                    act("Nothing by the name '' here.",
-                        A_ALWAYS, ch, orgarg, cActParameter(), TO_CHAR);
-                else if (IS_SET(spell_info[spl].targets, TAR_ROOM))
-                    act("No location by the name '$2t'.",
-                        A_ALWAYS, ch, orgarg, cActParameter(), TO_CHAR);
+                if (IS_SET(g_spell_info[spl].targets, TAR_CHAR))
+                    act("Nobody by the name '$2t' here.", A_ALWAYS, ch, orgarg, cActParameter(), TO_CHAR);
+                else if (IS_SET(g_spell_info[spl].targets, TAR_OBJ))
+                    act("Nothing by the name '' here.", A_ALWAYS, ch, orgarg, cActParameter(), TO_CHAR);
+                else if (IS_SET(g_spell_info[spl].targets, TAR_ROOM))
+                    act("No location by the name '$2t'.", A_ALWAYS, ch, orgarg, cActParameter(), TO_CHAR);
                 else
                     send_to_char("Uhm....?<br/>", ch);
             }
             else /* Nothing was given as argument */
-                act("What should the $2t spell be cast upon?",
-                    A_ALWAYS, ch, g_SplColl.text[spl], cActParameter(), TO_CHAR);
+                act("What should the $2t spell be cast upon?", A_ALWAYS, ch, g_SplColl.text[spl], cActParameter(), TO_CHAR);
 
             return;
         }
         else
         { /* TARGET IS OK */
-            if (unit == ch && IS_SET(spell_info[spl].targets, TAR_SELF_NONO))
+            if (unit == ch && IS_SET(g_spell_info[spl].targets, TAR_SELF_NONO))
             {
-                send_to_char("You can not cast this spell upon yourself.<br/>",
-                             ch);
+                send_to_char("You can not cast this spell upon yourself.<br/>", ch);
                 return;
             }
-            else if (unit != ch && IS_SET(spell_info[spl].targets, TAR_SELF_ONLY))
+            else if (unit != ch && IS_SET(g_spell_info[spl].targets, TAR_SELF_ONLY))
             {
-                send_to_char("You can only cast this spell upon yourself.<br/>",
-                             ch);
+                send_to_char("You can only cast this spell upon yourself.<br/>", ch);
                 return;
             }
         }
@@ -426,7 +402,7 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
 
     if (IS_MORTAL(ch))
     {
-        if (CHAR_MANA(ch) < (sbit16)(spell_info[spl].usesmana))
+        if (CHAR_MANA(ch) < (sbit16)(g_spell_info[spl].usesmana))
         {
             send_to_char("You can't summon enough energy to "
                          "cast the spell.<br/>",
@@ -434,12 +410,12 @@ void do_cast(class unit_data *ch, char *argument, const struct command_info *cmd
             return;
         }
 
-        CHAR_MANA(ch) -= spell_info[spl].usesmana;
+        CHAR_MANA(ch) -= g_spell_info[spl].usesmana;
     }
 
     // Spells take time too!
     if (CHAR_COMBAT(ch))
-        CHAR_COMBAT(ch)->changeSpeed(spell_info[spl].beats);
+        CHAR_COMBAT(ch)->changeSpeed(g_spell_info[spl].beats);
 
     say_spell(ch, unit, spl);
 
@@ -455,71 +431,64 @@ void spell_dil_check(void)
 
     for (i = 0; i < SPL_TREE_MAX; i++)
     {
-        if (spell_info[i].tmpl == NULL)
+        if (g_spell_info[i].tmpl == NULL)
             continue;
 
-        dil_name = (char *)spell_info[i].tmpl;
-        spell_info[i].tmpl = find_dil_template(dil_name);
+        dil_name = (char *)g_spell_info[i].tmpl;
+        g_spell_info[i].tmpl = find_dil_template(dil_name);
 
-        if (spell_info[i].tmpl == NULL)
+        if (g_spell_info[i].tmpl == NULL)
         {
             slog(LOG_ALL, 0, "Spell template %s not found.", dil_name);
             FREE(dil_name);
         }
         else
         {
-            if (spell_info[i].tmpl->argc != 5)
+            if (g_spell_info[i].tmpl->argc != 5)
             {
-                slog(LOG_ALL, 0,
-                     "Spell DIL %s argument count error, must be 5.",
-                     dil_name);
+                slog(LOG_ALL, 0, "Spell DIL %s argument count error, must be 5.", dil_name);
                 FREE(dil_name);
-                spell_info[i].tmpl = NULL;
+                g_spell_info[i].tmpl = NULL;
                 continue;
             }
 
-            if (spell_info[i].tmpl->argt[0] != DILV_UP)
+            if (g_spell_info[i].tmpl->argt[0] != DILV_UP)
             {
-                slog(LOG_ALL, 0, "Spell DIL %s argument 1 mismatch.",
-                     dil_name);
+                slog(LOG_ALL, 0, "Spell DIL %s argument 1 mismatch.", dil_name);
                 FREE(dil_name);
-                spell_info[i].tmpl = NULL;
+                g_spell_info[i].tmpl = NULL;
                 continue;
             }
 
-            if (spell_info[i].tmpl->argt[1] != DILV_UP)
+            if (g_spell_info[i].tmpl->argt[1] != DILV_UP)
             {
-                slog(LOG_ALL, 0, "Spell DIL %s argument 2 mismatch.",
-                     dil_name);
+                slog(LOG_ALL, 0, "Spell DIL %s argument 2 mismatch.", dil_name);
                 FREE(dil_name);
-                spell_info[i].tmpl = NULL;
+                g_spell_info[i].tmpl = NULL;
                 continue;
             }
 
-            if (spell_info[i].tmpl->argt[2] != DILV_SP)
+            if (g_spell_info[i].tmpl->argt[2] != DILV_SP)
             {
-                slog(LOG_ALL, 0, "Spell DIL %s argument 3 mismatch.",
-                     dil_name);
+                slog(LOG_ALL, 0, "Spell DIL %s argument 3 mismatch.", dil_name);
                 FREE(dil_name);
-                spell_info[i].tmpl = NULL;
+                g_spell_info[i].tmpl = NULL;
                 continue;
             }
 
-            if (spell_info[i].tmpl->argt[3] != DILV_INT)
+            if (g_spell_info[i].tmpl->argt[3] != DILV_INT)
             {
-                slog(LOG_ALL, 0, "Spell DIL %s argument 4 mismatch.",
-                     dil_name);
+                slog(LOG_ALL, 0, "Spell DIL %s argument 4 mismatch.", dil_name);
                 FREE(dil_name);
-                spell_info[i].tmpl = NULL;
+                g_spell_info[i].tmpl = NULL;
                 continue;
             }
 
-            if (spell_info[i].tmpl->argt[4] != DILV_SP)
+            if (g_spell_info[i].tmpl->argt[4] != DILV_SP)
             {
-                slog(LOG_ALL, 0, "Spell DIL %s argument 5 mismatch.",
-                     dil_name);
+                slog(LOG_ALL, 0, "Spell DIL %s argument 5 mismatch.", dil_name);
                 FREE(dil_name);
-                spell_info[i].tmpl = NULL;
+                g_spell_info[i].tmpl = NULL;
                 continue;
             }
         }
@@ -586,39 +555,39 @@ static void spell_read(void)
         }
         else if (strncmp(pTmp, "tochar", 6) == 0)
         {
-            if (spell_info[idx].tochar)
-                FREE(spell_info[idx].tochar);
-            spell_info[idx].tochar = str_dup(pCh);
+            if (g_spell_info[idx].tochar)
+                FREE(g_spell_info[idx].tochar);
+            g_spell_info[idx].tochar = str_dup(pCh);
         }
         else if (strncmp(pTmp, "tovict", 6) == 0)
         {
-            if (spell_info[idx].tovict)
-                FREE(spell_info[idx].tovict);
-            spell_info[idx].tovict = str_dup(pCh);
+            if (g_spell_info[idx].tovict)
+                FREE(g_spell_info[idx].tovict);
+            g_spell_info[idx].tovict = str_dup(pCh);
         }
         else if (strncmp(pTmp, "torest", 6) == 0)
         {
-            if (spell_info[idx].torest)
-                FREE(spell_info[idx].torest);
-            spell_info[idx].torest = str_dup(pCh);
+            if (g_spell_info[idx].torest)
+                FREE(g_spell_info[idx].torest);
+            g_spell_info[idx].torest = str_dup(pCh);
         }
         else if (strncmp(pTmp, "toselfroom", 10) == 0)
         {
-            if (spell_info[idx].toselfroom)
-                FREE(spell_info[idx].toselfroom);
-            spell_info[idx].toselfroom = str_dup(pCh);
+            if (g_spell_info[idx].toselfroom)
+                FREE(g_spell_info[idx].toselfroom);
+            g_spell_info[idx].toselfroom = str_dup(pCh);
         }
         else if (strncmp(pTmp, "toself", 6) == 0)
         {
-            if (spell_info[idx].toself)
-                FREE(spell_info[idx].toself);
-            spell_info[idx].toself = str_dup(pCh);
+            if (g_spell_info[idx].toself)
+                FREE(g_spell_info[idx].toself);
+            g_spell_info[idx].toself = str_dup(pCh);
         }
         else if (strncmp(pTmp, "acttype", 7) == 0)
         {
             dummy = atoi(pCh);
             if (dummy == A_ALWAYS || dummy == A_HIDEINV || dummy == A_SOMEONE)
-                spell_info[idx].acttype = dummy;
+                g_spell_info[idx].acttype = dummy;
         }
         else if (strncmp(pTmp, "sphere", 6) == 0)
         {
@@ -642,60 +611,59 @@ static void spell_read(void)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, SHIELD_M_BLOCK, SHIELD_M_USELESS))
-                spell_info[idx].shield = dummy;
+                g_spell_info[idx].shield = dummy;
         }
         else if (strncmp(pTmp, "realm", 5) == 0)
         {
             dummy = atoi(pCh);
             if (dummy == ABIL_MAG || dummy == ABIL_DIV)
-                spell_info[idx].realm = dummy;
+                g_spell_info[idx].realm = dummy;
         }
         else if (strncmp(pTmp, "func", 4) == 0)
         {
-            if (spell_info[idx].tmpl)
-                FREE(spell_info[idx].tmpl);
+            if (g_spell_info[idx].tmpl)
+                FREE(g_spell_info[idx].tmpl);
             /* Nasty, just needed for brief conversion */
-            spell_info[idx].tmpl = (struct diltemplate *)str_dup(pCh);
+            g_spell_info[idx].tmpl = (struct diltemplate *)str_dup(pCh);
         }
         else if (strncmp(pTmp, "minpos", 6) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, POSITION_DEAD, POSITION_STANDING))
-                spell_info[idx].minimum_position = dummy;
+                g_spell_info[idx].minimum_position = dummy;
         }
         else if (strncmp(pTmp, "mana", 4) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 100))
-                spell_info[idx].usesmana = dummy;
+                g_spell_info[idx].usesmana = dummy;
         }
         else if (strncmp(pTmp, "turns", 5) == 0)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 4 * PULSE_VIOLENCE))
-                spell_info[idx].beats = dummy;
+                g_spell_info[idx].beats = dummy;
         }
         else if (strncmp(pTmp, "targets", 7) == 0)
         {
             dummy = atoi(pCh);
-            spell_info[idx].targets = dummy;
+            g_spell_info[idx].targets = dummy;
         }
         else if (strncmp(pTmp, "mediums", 7) == 0)
         {
             dummy = atoi(pCh);
-            spell_info[idx].media = dummy;
+            g_spell_info[idx].media = dummy;
         }
         else if (strncmp(pTmp, "check", 5) == 0)
         {
             dummy = atoi(pCh);
-            if (dummy == SPLCST_IGNORE || dummy == SPLCST_RESIST ||
-                dummy == SPLCST_CHECK)
-                spell_info[idx].cast_type = dummy;
+            if (dummy == SPLCST_IGNORE || dummy == SPLCST_RESIST || dummy == SPLCST_CHECK)
+                g_spell_info[idx].cast_type = dummy;
         }
         else if (strncmp(pTmp, "offensive", 9) == 0)
         {
             dummy = atoi(pCh);
-            spell_info[idx].offensive = (dummy != 0);
+            g_spell_info[idx].offensive = (dummy != 0);
         }
         else if (strncmp(pTmp, "race ", 5) == 0)
         {
@@ -703,7 +671,7 @@ static void spell_read(void)
             if (!is_in(dummy, -3, +3))
                 continue;
 
-            int ridx = search_block(pTmp + 5, pc_races, TRUE);
+            int ridx = search_block(pTmp + 5, g_pc_races, TRUE);
 
             if (ridx == -1)
                 slog(LOG_ALL, 0, "Spells: Illegal race in: %s", pTmp);
@@ -719,7 +687,7 @@ static void spell_read(void)
                 continue;
             }
 
-            int ridx = search_block(pTmp + 11, professions, TRUE);
+            int ridx = search_block(pTmp + 11, g_professions, TRUE);
 
             if (ridx == -1)
                 slog(LOG_ALL, 0, "Spells: Illegal profession %s", pTmp);
@@ -735,7 +703,7 @@ static void spell_read(void)
                 continue;
             }
 
-            if (strncmp(pTmp+9, "level", 5) == 0)
+            if (strncmp(pTmp + 9, "level", 5) == 0)
             {
                 g_SplColl.prof_table[idx].min_level = dummy;
             }
@@ -753,7 +721,7 @@ static void spell_read(void)
         {
             dummy = atoi(pCh);
             if (is_in(dummy, 0, 99))
-                spell_chart[idx].fumble = dummy;
+                g_spell_chart[idx].fumble = dummy;
         }
         else if (strncmp(pTmp, "attack ", 7) == 0)
         {
@@ -770,9 +738,7 @@ static void spell_read(void)
 
             if (i3 <= 0)
             {
-                slog(LOG_ALL, 0,
-                     "Spell init %d: Illegal damage series %d %d %d.", idx, i1,
-                     i2, i3);
+                slog(LOG_ALL, 0, "Spell init %d: Illegal damage series %d %d %d.", idx, i1, i2, i3);
                 continue;
             }
 
@@ -789,9 +755,9 @@ static void spell_read(void)
 
             if (idx2 != -1)
             {
-                spell_chart[idx].element[idx2].offset = i1;
-                spell_chart[idx].element[idx2].basedam = i2;
-                spell_chart[idx].element[idx2].alpha = i3;
+                g_spell_chart[idx].element[idx2].offset = i1;
+                g_spell_chart[idx].element[idx2].basedam = i2;
+                g_spell_chart[idx].element[idx2].alpha = i3;
             }
         }
         else
@@ -808,20 +774,20 @@ static void spell_init(void)
 
     for (i = 0; i < SPL_TREE_MAX; i++)
     {
-        spell_chart[i].fumble = 0;
+        g_spell_chart[i].fumble = 0;
         for (j = 0; j < 5; j++)
         {
-            spell_chart[i].element[j].offset = 100;
-            spell_chart[i].element[j].basedam = 0;
-            spell_chart[i].element[j].alpha = 100;
+            g_spell_chart[i].element[j].offset = 100;
+            g_spell_chart[i].element[j].basedam = 0;
+            g_spell_chart[i].element[j].alpha = 100;
         }
 
-        spell_info[i].tochar = NULL;
-        spell_info[i].tovict = NULL;
-        spell_info[i].torest = NULL;
-        spell_info[i].toself = NULL;
-        spell_info[i].toselfroom = NULL;
-        spell_info[i].acttype = A_SOMEONE;
+        g_spell_info[i].tochar = NULL;
+        g_spell_info[i].tovict = NULL;
+        g_spell_info[i].torest = NULL;
+        g_spell_info[i].toself = NULL;
+        g_spell_info[i].toselfroom = NULL;
+        g_spell_info[i].acttype = A_SOMEONE;
 
         g_SplColl.tree[i].parent = SPL_ALL;
         g_SplColl.tree[i].bAutoTrain = TRUE;
@@ -832,17 +798,17 @@ static void spell_init(void)
         else
             g_SplColl.tree[i].isleaf = TRUE;
 
-        spell_info[i].spell_pointer = NULL;
-        spell_info[i].minimum_position = POSITION_STANDING;
-        spell_info[i].usesmana = 20;
-        spell_info[i].beats = PULSE_VIOLENCE;
-        spell_info[i].targets = 0;
-        spell_info[i].media = 0;
-        spell_info[i].cast_type = SPLCST_CHECK;
-        spell_info[i].demi_power = 0;
-        spell_info[i].offensive = FALSE;
-        spell_info[i].tmpl = NULL;
-        spell_info[i].shield = SHIELD_M_USELESS;
+        g_spell_info[i].spell_pointer = NULL;
+        g_spell_info[i].minimum_position = POSITION_STANDING;
+        g_spell_info[i].usesmana = 20;
+        g_spell_info[i].beats = PULSE_VIOLENCE;
+        g_spell_info[i].targets = 0;
+        g_spell_info[i].media = 0;
+        g_spell_info[i].cast_type = SPLCST_CHECK;
+        g_spell_info[i].demi_power = 0;
+        g_spell_info[i].offensive = FALSE;
+        g_spell_info[i].tmpl = NULL;
+        g_spell_info[i].shield = SHIELD_M_USELESS;
 
         g_SplColl.text[i] = NULL;
 
@@ -854,10 +820,10 @@ static void spell_init(void)
         g_SplColl.prof_table[i].sanity = i;
         g_SplColl.prof_table[i].min_level = 0;
 
-        for (int j=0; j < ABIL_TREE_MAX; j++)
+        for (int j = 0; j < ABIL_TREE_MAX; j++)
             g_SplColl.prof_table[i].min_abil[j] = 0;
 
-        for (int j=0; j < PROFESSION_MAX; j++)
+        for (int j = 0; j < PROFESSION_MAX; j++)
             g_SplColl.prof_table[i].profession_cost[j] = -7;
 
         if ((i <= LAST_SPELL) && (g_SplColl.prof_table[i].sanity != i))
@@ -872,17 +838,16 @@ static void spell_init(void)
     g_SplColl.text[SPL_TREE_MAX] = NULL;
 }
 
-
 void spell_dump(void)
 {
-    string str;
+    std::string str;
     char buf[MAX_STRING_LENGTH];
 
-    bool pairISCompare(const std::pair<int, string>& firstElem, const std::pair<int, string>& secondElem);
+    bool pairISCompare(const std::pair<int, std::string> &firstElem, const std::pair<int, std::string> &secondElem);
 
     for (int j = 0; j < PROFESSION_MAX; j++)
     {
-        vector< pair <int,string> > vect; 
+        std::vector<std::pair<int, std::string>> vect;
 
         for (int i = 0; i < SPL_TREE_MAX; i++)
         {
@@ -891,23 +856,28 @@ void spell_dump(void)
 
             str = "";
 
-            sprintf(buf, "%s,%s", g_SplColl.text[i], spc(30-strlen(g_SplColl.text[i])));
+            snprintf(buf, sizeof(buf), "%s,%s", g_SplColl.text[i], spc(30 - strlen(g_SplColl.text[i])));
             str.append(buf);
 
-            sprintf(buf, ".profession %s%s = %s%d\n", professions[j], spc(12-strlen(professions[j])),
-                (g_SplColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "", g_SplColl.prof_table[i].profession_cost[j]);
+            snprintf(buf,
+                     sizeof(buf),
+                     ".profession %s%s = %s%d\n",
+                     g_professions[j],
+                     spc(12 - strlen(g_professions[j])),
+                     (g_SplColl.prof_table[i].profession_cost[j] >= 0) ? "+" : "",
+                     g_SplColl.prof_table[i].profession_cost[j]);
             str.append(buf);
 
             /*if (g_SplColl.prof_table[i].min_level > 0)
             {
-                sprintf(buf, "restrict level          = %d\n", g_SplColl.prof_table[i].min_level);
+                snprintf(buf, sizeof(buf), "restrict level          = %d\n", g_SplColl.prof_table[i].min_level);
                 str.append(buf);
             }
 
             for (int k=0; k < ABIL_TREE_MAX; k++)
                 if (g_SplColl.prof_table[i].min_abil[k] > 0)
                 {
-                    sprintf(buf, "restrict %s%s    = %s%d\n", abil_text[k], spc(12-strlen(abil_text[k])),
+                    snprintf(buf, sizeof(buf), "restrict %s%s    = %s%d\n", abil_text[k], spc(12-strlen(abil_text[k])),
                         (g_SplColl.prof_table[i].min_abil[k] >= 0) ? "+" : "", g_SplColl.prof_table[i].min_abil[k]);
                     str.append(buf);
                 }*/
@@ -921,14 +891,13 @@ void spell_dump(void)
     exit(0);
 }
 
-
 void boot_spell(void)
 {
     spell_init();
     spell_read();
-    //spell_dump();
+    // spell_dump();
 
-#define SPELLO(a, b) spell_info[a].spell_pointer = (b)
+#define SPELLO(a, b) g_spell_info[a].spell_pointer = (b)
 
     SPELLO(SPL_CLEAR_SKIES, spell_clear_skies);
     SPELLO(SPL_STORM_CALL, spell_storm_call);

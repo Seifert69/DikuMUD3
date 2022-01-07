@@ -1,17 +1,17 @@
 
 /*
-	 $Author: All $
+         $Author: All $
  $RCSfile: files.cpp,v $
  $Date: 2003/12/11 04:47:11 $
  $Revision: 2.8 $
  */
 
 #ifdef _WINDOWS
-#include <direct.h>
-#include <io.h>
+    #include <direct.h>
+    #include <io.h>
 
 #else
-#include <unistd.h>
+    #include <unistd.h>
 
 #endif
 
@@ -73,8 +73,7 @@ void touch_file(char *name)
     fclose(fp);
 }
 
-char *
-fread_line_commented(FILE *fl, char *buf, int max)
+char *fread_line_commented(FILE *fl, char *buf, int max)
 {
     char *s;
 
@@ -93,8 +92,7 @@ fread_line_commented(FILE *fl, char *buf, int max)
 }
 
 /* read and allocate space for a '~'-terminated string from a given file */
-char *
-fread_string_copy(FILE *fl, char *buf, int max)
+char *fread_string_copy(FILE *fl, char *buf, int max)
 {
     char *obuf;
     register char *point;
@@ -118,8 +116,7 @@ fread_string_copy(FILE *fl, char *buf, int max)
             error(HERE, "fread_string_copy: string too large (db.c)");
         }
 
-        for (point = buf + strlen(buf) - 2; point >= buf && isspace(*point);
-             point--)
+        for (point = buf + strlen(buf) - 2; point >= buf && isspace(*point); point--)
             ;
 
         if ((flag = (*point == '~')))
@@ -142,8 +139,7 @@ fread_string_copy(FILE *fl, char *buf, int max)
 }
 
 /* read and allocate space for a '~'-terminated string from a given file */
-char *
-fread_string(FILE *fl)
+char *fread_string(FILE *fl)
 {
     char buf[MAX_STRING_LENGTH];
 
@@ -220,8 +216,7 @@ int file_to_string(char *name, char *buf, int max_len)
         {
             if (strlen(buf) + strlen(tmp) + 2 > (ubit32)max_len)
             {
-                slog(LOG_ALL, 0,
-                     "fl->strng: string too big (db.c, file_to_string)");
+                slog(LOG_ALL, 0, "fl->strng: string too big (db.c, file_to_string)");
                 strcpy(buf + strlen(buf) - 20, "TRUNCATED!");
                 return -1;
             }
@@ -265,10 +260,20 @@ struct fcache_type
 };
 
 static struct fcache_type fcache[FCACHE_MAX] = {
-    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
+    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
+    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
+    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
+    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
+    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
+    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
+    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
+    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
+    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
+    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
+    {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
+    {0, 0, 0, 0}};
 
-char *
-enl_strcpy(char *dest, const char *source, int *dest_size)
+char *enl_strcpy(char *dest, const char *source, int *dest_size)
 {
     int len = strlen(source);
 
@@ -300,8 +305,7 @@ BUT 'read-only' files may be written to!
 
 */
 
-FILE *
-fopen_cache(const char *name, const char *mode)
+FILE *fopen_cache(const char *name, const char *mode)
 {
     int i, min_i, hit_i;
     static int pure_hits = 0, purge = 0;
@@ -323,12 +327,10 @@ fopen_cache(const char *name, const char *mode)
         if (fcache[min_i].file)
         {
             if (fclose(fcache[min_i].file) != 0)
-                error(HERE, "Error on fcache fclose() on file [%s].",
-                      fcache[min_i].name);
+                error(HERE, "Error on fcache fclose() on file [%s].", fcache[min_i].name);
             purge++;
         }
-        fcache[min_i].name = enl_strcpy(fcache[min_i].name, name,
-                                        &fcache[min_i].name_s);
+        fcache[min_i].name = enl_strcpy(fcache[min_i].name, name, &fcache[min_i].name_s);
         fcache[min_i].hits = 0;
 
         if (strchr(mode, 'w'))
@@ -375,11 +377,9 @@ void fclose_cache(void)
     {
         if (fcache[i].file)
         {
-
             if (fclose(fcache[i].file) != 0)
             {
-                slog(LOG_ALL, 0, "fcache close failed on file %s.",
-                     fcache[i].name);
+                slog(LOG_ALL, 0, "fcache close failed on file %s.", fcache[i].name);
                 return;
             }
             else
@@ -460,11 +460,9 @@ int save_string(char *filename, char **file_str, char *opp)
 #endif
     else
 #ifdef _WINDOWS
-        output =
-            open(filename, O_WRONLY | O_CREAT | O_APPEND, S_IREAD | S_IWRITE);
+        output = open(filename, O_WRONLY | O_CREAT | O_APPEND, S_IREAD | S_IWRITE);
 #else
-        output =
-            open(filename, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
+        output = open(filename, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
 #endif
     if (!output)
         return (FILE_NOT_CREATED);
@@ -514,8 +512,7 @@ int store_name_test(char *name)
     if (ln > 512)
         return (0);
 
-    for (i = 0;
-         (i < ln) && ((isalnum(name[i])) || (name[i] == '_') || (name[i] == '.')); i++)
+    for (i = 0; (i < ln) && ((isalnum(name[i])) || (name[i] == '_') || (name[i] == '.')); i++)
         ;
 
     if (i < ln)

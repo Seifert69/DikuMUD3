@@ -8,6 +8,6 @@
 #ifndef _MUD_MODIFY_H
 #define _MUD_MODIFY_H
 
-void edit_extra (class descriptor_data *d);
+void edit_extra(class descriptor_data *d);
 
 #endif

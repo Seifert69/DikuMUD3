@@ -15,12 +15,12 @@
 #include "affect.h"
 #include "textutil.h"
 
-int world_norooms = 0;   /* number of rooms in the world   */
-int world_noobjects = 0; /* number of objects in the world */
-int world_nochars = 0;   /* number of chars in the world   */
-int world_nonpc = 0;     /* number of chars in the world   */
-int world_nopc = 0;      /* number of chars in the world   */
-int world_nozones = 0;   /* number of zones in the world   */
+int g_world_norooms = 0;   /* number of rooms in the world   */
+int g_world_noobjects = 0; /* number of objects in the world */
+int g_world_nochars = 0;   /* number of chars in the world   */
+int g_world_nonpc = 0;     /* number of chars in the world   */
+int g_world_nopc = 0;      /* number of chars in the world   */
+int g_world_nozones = 0;   /* number of zones in the world   */
 
 /* Descriptor stuff is in system.c */
 
@@ -57,7 +57,7 @@ char_point_data::char_point_data(void)
 
 char_data::char_data(void)
 {
-    world_nochars++;
+    g_world_nochars++;
 
     money = NULL;
     descriptor = NULL;
@@ -80,14 +80,14 @@ char_data::~char_data(void)
     if (last_attacker)
         FREE(last_attacker);
 #endif
-    world_nochars--;
+    g_world_nochars--;
 }
 
 room_data::room_data(void)
 {
     status = UNIT_ST_ROOM;
 
-    world_norooms++;
+    g_world_norooms++;
     mapx = -1;
     mapy = -1;
 #ifdef DMSERVER
@@ -97,9 +97,9 @@ room_data::room_data(void)
 
 room_data::~room_data(void)
 {
-    world_norooms--;
+    g_world_norooms--;
 
-    for (int i = 0; i < MAX_EXIT+1; i++)
+    for (int i = 0; i < MAX_EXIT + 1; i++)
         if (dir_option[i])
             delete dir_option[i];
 }
@@ -108,7 +108,7 @@ obj_data::obj_data(void)
 {
     status = UNIT_ST_OBJ;
 
-    world_noobjects++;
+    g_world_noobjects++;
 
     memset(value, 0, sizeof(value));
     cost = 0;
@@ -121,14 +121,14 @@ obj_data::obj_data(void)
 
 obj_data::~obj_data(void)
 {
-    world_noobjects--;
+    g_world_noobjects--;
 }
 
 pc_data::pc_data(void)
 {
     status = UNIT_ST_PC;
 
-    world_nopc++;
+    g_world_nopc++;
 
     bank = NULL;
     guild = NULL;
@@ -169,7 +169,7 @@ pc_data::pc_data(void)
 
 pc_data::~pc_data(void)
 {
-    world_nopc--;
+    g_world_nopc--;
 
     if (guild)
         FREE(guild);
@@ -188,7 +188,7 @@ npc_data::npc_data(void)
 {
     status = UNIT_ST_NPC;
 
-    world_nonpc++;
+    g_world_nonpc++;
 
     memset(weapons, 0, sizeof(weapons));
     memset(spells, 0, sizeof(spells));
@@ -198,7 +198,7 @@ npc_data::npc_data(void)
 
 npc_data::~npc_data(void)
 {
-    world_nonpc--;
+    g_world_nonpc--;
 }
 
 zone_type::zone_type(void)
@@ -261,7 +261,7 @@ zone_type::~zone_type(void)
     {
         nextfi = p;
         nextfi++;
-        
+
         delete p->second;
     }
 
@@ -303,17 +303,17 @@ file_index_type::file_index_type(void)
 {
     name = NULL;
     zone = NULL;
-    //next = NULL;
-    //unit = NULL;
+    // next = NULL;
+    // unit = NULL;
 
     filepos = 0;
-    length = 0; 
-    crc = 0;    
+    length = 0;
+    crc = 0;
 
     no_in_zone = 0;
     no_in_mem = 0;
-    room_no = 0;  
-    type = 0;     
+    room_no = 0;
+    type = 0;
 
 #ifdef DMSERVER
     no_in_zone = 0;
@@ -329,7 +329,7 @@ file_index_type::~file_index_type(void)
 unit_fptr::unit_fptr(void)
 {
     index = 0;
-    priority   = FN_PRI_CHORES;
+    priority = FN_PRI_CHORES;
     heart_beat = PULSE_SEC;
     flags = 0;
     data = NULL;
@@ -341,7 +341,6 @@ unit_fptr::~unit_fptr()
 {
     data = NULL;
 }
-
 
 #ifndef VMC_SRC
 unit_data *unit_data::copy()
@@ -372,7 +371,7 @@ unit_data *unit_data::copy()
     u->key = str_dup(key);
     u->set_fi(fi);
 
-    bwrite_affect(&abuf, UNIT_AFFECTED(this), 61); // WTF 61? 
+    bwrite_affect(&abuf, UNIT_AFFECTED(this), 61); // WTF 61?
     bread_affect(&abuf, u, 61);
     bwrite_func(&fbuf, UNIT_FUNC(this));
     UNIT_FUNC(u) = bread_func(&fbuf, 61, u, TRUE); // WTF 61?
@@ -386,20 +385,16 @@ unit_data *unit_data::copy()
     {
         room_data *thisroom = UROOM(this);
         room_data *uroom = UROOM(u);
-        
+
         uroom->resistance = thisroom->resistance;
         uroom->movement_type = thisroom->movement_type;
         uroom->flags = thisroom->flags;
-        for (x = 0; x < MAX_EXIT+1; x++)
+        for (x = 0; x < MAX_EXIT + 1; x++)
         {
-            uroom->dir_option[x]->open_name =
-                thisroom->dir_option[x]->open_name;
-            uroom->dir_option[x]->key =
-                str_dup(thisroom->dir_option[x]->key);
-            uroom->dir_option[x]->exit_info =
-                thisroom->dir_option[x]->exit_info;
-            uroom->dir_option[x]->difficulty =
-                thisroom->dir_option[x]->difficulty;
+            uroom->dir_option[x]->open_name = thisroom->dir_option[x]->open_name;
+            uroom->dir_option[x]->key = str_dup(thisroom->dir_option[x]->key);
+            uroom->dir_option[x]->exit_info = thisroom->dir_option[x]->exit_info;
+            uroom->dir_option[x]->difficulty = thisroom->dir_option[x]->difficulty;
         }
     }
     else if (IS_OBJ(this))
@@ -459,7 +454,7 @@ unit_data *unit_data::copy()
     }
     else
         assert(FALSE);
-    insert_in_unit_list(u); /* Put unit into the unit_list      */
+    insert_in_unit_list(u); /* Put unit into the g_unit_list      */
     apply_affect(u);        /* Set all affects that modify      */
     void start_all_special(class unit_data * u);
     start_all_special(u);
@@ -471,18 +466,20 @@ unit_data *unit_data::copy()
 
 unit_data *new_unit_data(ubit8 type)
 {
-   if (type == UNIT_ST_ROOM)
-      return new EMPLACE(room_data) room_data;
-   else if (type == UNIT_ST_OBJ)
-      return new EMPLACE(obj_data) obj_data;
-   else if (type == UNIT_ST_PC)
-      return new EMPLACE(pc_data) pc_data;
-   else if (type == UNIT_ST_NPC)
-      return new EMPLACE(npc_data) npc_data;
-   else
-      assert(FALSE);
+    if (type == UNIT_ST_ROOM)
+        return new EMPLACE(room_data) room_data;
+    else if (type == UNIT_ST_OBJ)
+        return new EMPLACE(obj_data) obj_data;
+    else if (type == UNIT_ST_PC)
+        return new EMPLACE(pc_data) pc_data;
+    else if (type == UNIT_ST_NPC)
+        return new EMPLACE(npc_data) npc_data;
+    else
+    {
+        assert(FALSE);
+        return NULL; // Need to avoid warning on Git actions.
+    }
 }
-
 
 unit_data::unit_data(void)
 {
@@ -520,12 +517,10 @@ unit_data::~unit_data(void)
     /* Sanity due to wierd bug I saw (MS, 30/05-95) */
 
 #ifdef DMSERVER
-    extern class unit_data *unit_list;
-
     assert(gnext == NULL);
     assert(gprevious == NULL);
     assert(next == NULL);
-    assert(unit_list != this);
+    assert(g_unit_list != this);
 #endif
 
     if (key)
@@ -564,78 +559,105 @@ void unit_data::set_fi(class file_index_type *f)
 
     if (this->fi)
         slog(LOG_ALL, 0, "ERROR: FI was already set. This shouldn't happen");
-    
+
     this->fi = f;
     this->fi->no_in_mem++;
 }
 
 std::string unit_data::json(void)
 {
-    string s;
-    string t;
+    std::string s;
+    std::string t;
 
     t = UNIT_FI_NAME(this);
     t.append("@");
     t.append(UNIT_FI_ZONENAME(this));
 
     s = "{";
-    s.append(str_json("idx", t)); s.append(",\n");
-    s.append(this->names.json()); s.append(",\n");
-    s.append(str_json("title", this->title)); s.append(",\n");
-    s.append(str_json("inside_descr", this->in_descr)); s.append(",\n");
-    s.append(str_json("outside_descr", this->out_descr)); s.append(",\n");
-    s.append(this->extra.json());  s.append(",\n");
+    s.append(str_json("idx", t));
+    s.append(",\n");
+    s.append(this->names.json());
+    s.append(",\n");
+    s.append(str_json("title", this->title));
+    s.append(",\n");
+    s.append(str_json("inside_descr", this->in_descr));
+    s.append(",\n");
+    s.append(str_json("outside_descr", this->out_descr));
+    s.append(",\n");
+    s.append(this->extra.json());
+    s.append(",\n");
 
-    s.append(str_json("manipulate", this->manipulate)); s.append(",\n");
-    s.append(str_json("flags", this->flags)); s.append(",\n");
-    s.append(str_json("baseweight", this->base_weight)); s.append(",\n");
-    s.append(str_json("capacity", this->capacity)); s.append(",\n");
-    s.append(str_json("size", this->size)); s.append(",\n");
+    s.append(str_json("manipulate", this->manipulate));
+    s.append(",\n");
+    s.append(str_json("flags", this->flags));
+    s.append(",\n");
+    s.append(str_json("baseweight", this->base_weight));
+    s.append(",\n");
+    s.append(str_json("capacity", this->capacity));
+    s.append(",\n");
+    s.append(str_json("size", this->size));
+    s.append(",\n");
 
-    s.append(str_json("key", this->key)); s.append(",\n");
-    s.append(str_json("openflags", this->open_flags)); s.append(",\n");
-    s.append(str_json("opendiff", this->open_diff)); s.append(",\n");
+    s.append(str_json("key", this->key));
+    s.append(",\n");
+    s.append(str_json("openflags", this->open_flags));
+    s.append(",\n");
+    s.append(str_json("opendiff", this->open_diff));
+    s.append(",\n");
 
-    s.append(str_json("bright", this->bright)); s.append(",\n");
-    s.append(str_json("minv", this->minv)); s.append(",\n");
-    s.append(str_json("maxhp", this->max_hp)); s.append(",\n");
-    s.append(str_json("hp", this->hp)); s.append(",\n");
-    s.append(str_json("alignment", this->alignment)); s.append(",\n");
+    s.append(str_json("bright", this->bright));
+    s.append(",\n");
+    s.append(str_json("minv", this->minv));
+    s.append(",\n");
+    s.append(str_json("maxhp", this->max_hp));
+    s.append(",\n");
+    s.append(str_json("hp", this->hp));
+    s.append(",\n");
+    s.append(str_json("alignment", this->alignment));
+    s.append(",\n");
 
     if (UNIT_TYPE(this) == UNIT_ST_ROOM)
     {
         s.append("\"room\": {\n");
-        s.append(str_json("roomflags", UROOM(this)->flags)); s.append(",\n");
-        s.append(str_json("movementtype", UROOM(this)->movement_type)); s.append(",\n");
-        s.append(str_json("resistance", UROOM(this)->resistance)); s.append(",\n");
-        s.append(str_json("mapx", UROOM(this)->mapx)); s.append(",\n");
+        s.append(str_json("roomflags", UROOM(this)->flags));
+        s.append(",\n");
+        s.append(str_json("movementtype", UROOM(this)->movement_type));
+        s.append(",\n");
+        s.append(str_json("resistance", UROOM(this)->resistance));
+        s.append(",\n");
+        s.append(str_json("mapx", UROOM(this)->mapx));
+        s.append(",\n");
         s.append(str_json("mapy", UROOM(this)->mapy));
 
-        for (int i=0; i < MAX_EXIT+1; i++)
+        for (int i = 0; i < MAX_EXIT + 1; i++)
         {
             if (UROOM(this)->dir_option[i])
             {
                 s.append(",\n");
-                s.append(str_json_encode_quote(dirs[i]));
+                s.append(str_json_encode_quote(g_dirs[i]));
                 s.append(": {\n");
                 if (UROOM(this)->dir_option[i]->to_room)
                 {
                     t = UNIT_FI_NAME(ROOM_EXIT(this, i)->to_room);
                     t.append("@");
                     t.append(UNIT_FI_ZONENAME(UROOM(this)->dir_option[i]->to_room));
-                    s.append(str_json("toroom", t)); s.append(",\n");
+                    s.append(str_json("toroom", t));
+                    s.append(",\n");
                 }
-                s.append(UROOM(this)->dir_option[i]->open_name.json()); s.append(",\n");
-                s.append(str_json("difficulty", UROOM(this)->dir_option[i]->difficulty)); s.append(",\n");
-                s.append(str_json("exitflags", UROOM(this)->dir_option[i]->exit_info)); s.append(",\n");
-                s.append(str_json("key", UROOM(this)->dir_option[i]->key)); s.append("\n");
-                s.append("}\n");                
+                s.append(UROOM(this)->dir_option[i]->open_name.json());
+                s.append(",\n");
+                s.append(str_json("difficulty", UROOM(this)->dir_option[i]->difficulty));
+                s.append(",\n");
+                s.append(str_json("exitflags", UROOM(this)->dir_option[i]->exit_info));
+                s.append(",\n");
+                s.append(str_json("key", UROOM(this)->dir_option[i]->key));
+                s.append("\n");
+                s.append("}\n");
             }
         }
 
         s.append("}\n");
     }
-
 
     s.append("\n}\n");
 

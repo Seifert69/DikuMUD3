@@ -43,8 +43,7 @@ ubit1 skill_overflow(int skill, int change, ubit1 set)
 /*                                                      */
 /* Data[0] Must contain bits to set in CHAR_FLAGS()     */
 /*                                                      */
-ubit1 apf_mod_char_flags(class unit_affected_type *af, class unit_data *unit,
-                         ubit1 set)
+ubit1 apf_mod_char_flags(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
     class unit_affected_type *taf;
 
@@ -72,8 +71,7 @@ ubit1 apf_mod_char_flags(class unit_affected_type *af, class unit_data *unit,
 /*                                                      */
 /* Data[0] Must contain bits to set in OBJ_FLAGS() */
 /*                                                      */
-ubit1 apf_mod_obj_flags(class unit_affected_type *af, class unit_data *unit,
-                        ubit1 set)
+ubit1 apf_mod_obj_flags(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
     class unit_affected_type *taf;
 
@@ -101,8 +99,7 @@ ubit1 apf_mod_obj_flags(class unit_affected_type *af, class unit_data *unit,
 /*                                                      */
 /* Data[0] Must contain bits to set in UNIT_FLAGS()     */
 /*                                                      */
-ubit1 apf_mod_unit_flags(class unit_affected_type *af, class unit_data *unit,
-                         ubit1 set)
+ubit1 apf_mod_unit_flags(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
     class unit_affected_type *taf;
 
@@ -125,15 +122,13 @@ ubit1 apf_mod_unit_flags(class unit_affected_type *af, class unit_data *unit,
     return TRUE;
 }
 
-ubit1 apf_weapon_adj(class unit_affected_type *af, class unit_data *unit,
-                     ubit1 set)
+ubit1 apf_weapon_adj(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
     int modify;
 
     if (!IS_CHAR(unit))
     {
-        slog(LOG_ALL, 0, "ERROR: Affect weapon groups on room/obj %s@%s",
-             UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
+        slog(LOG_ALL, 0, "ERROR: Affect weapon groups on room/obj %s@%s", UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
         return TRUE;
     }
 
@@ -173,13 +168,11 @@ ubit1 apf_weapon_adj(class unit_affected_type *af, class unit_data *unit,
 }
 
 /* NPC's are ignored, they don't have skills. */
-ubit1 apf_skill_adj(class unit_affected_type *af, class unit_data *unit,
-                    ubit1 set)
+ubit1 apf_skill_adj(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
     if (!IS_CHAR(unit))
     {
-        slog(LOG_ALL, 0, "ERROR: Affect skill groups on room/obj %s@%s",
-             UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
+        slog(LOG_ALL, 0, "ERROR: Affect skill groups on room/obj %s@%s", UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
         return TRUE;
     }
 
@@ -207,15 +200,13 @@ ubit1 apf_skill_adj(class unit_affected_type *af, class unit_data *unit,
 /* Data[1] must contain the amount to change              */
 /* Data[1] is added when set, and subtracted when not set */
 /* Unit can be CHAR                                       */
-ubit1 apf_spell_adj(class unit_affected_type *af, class unit_data *unit,
-                    ubit1 set)
+ubit1 apf_spell_adj(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
     int modify;
 
     if (!IS_CHAR(unit))
     {
-        slog(LOG_ALL, 0, "ERROR: Affect spell groups on room/obj %s@%s",
-             UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
+        slog(LOG_ALL, 0, "ERROR: Affect spell groups on room/obj %s@%s", UNIT_FI_NAME(unit), UNIT_FI_ZONENAME(unit));
         return TRUE;
     }
 
@@ -258,8 +249,7 @@ ubit1 apf_spell_adj(class unit_affected_type *af, class unit_data *unit,
 /* Data[1] must contain the amount to change              */
 /* Data[1] is added when set, and subtracted when not set */
 /* Unit must be a CHAR!                                   */
-ubit1 apf_ability_adj(class unit_affected_type *af, class unit_data *unit,
-                      ubit1 set)
+ubit1 apf_ability_adj(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
     assert(IS_CHAR(unit));
 
@@ -302,14 +292,12 @@ ubit1 apf_light(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 
 /* Data[0] = The new armour-type */
 /* Data[1] = The original armour-type */
-ubit1 apf_natural_armour(class unit_affected_type *af, class unit_data *unit,
-                         ubit1 set)
+ubit1 apf_natural_armour(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 {
     if (!IS_CHAR(unit))
         return TRUE;
 
-    if (!is_in(af->data[0], ARM_CLOTHES, ARM_PLATE) ||
-        (af->data[0] < CHAR_NATURAL_ARMOUR(unit)))
+    if (!is_in(af->data[0], ARM_CLOTHES, ARM_PLATE) || (af->data[0] < CHAR_NATURAL_ARMOUR(unit)))
     {
         af->data[0] = -1; /* Ineffective, other spell cancels this one */
         return TRUE;
@@ -326,8 +314,7 @@ ubit1 apf_natural_armour(class unit_affected_type *af, class unit_data *unit,
                 break;
             }
 
-        CHAR_NATURAL_ARMOUR(unit) =
-            MAX(CHAR_NATURAL_ARMOUR(unit), af->data[0]);
+        CHAR_NATURAL_ARMOUR(unit) = MAX(CHAR_NATURAL_ARMOUR(unit), af->data[0]);
     }
     else
     {
@@ -373,14 +360,13 @@ ubit1 apf_speed(class unit_affected_type *af, class unit_data *unit, ubit1 set)
 
 /* --------------------------------------------------------------------- */
 
-struct apply_function_type apf[] = {
-    {"Ability Adjustment", apf_ability_adj},
-    {"Spell skill adjustment", apf_spell_adj},
-    {"Modify bright/light", apf_light},
-    {"Modify CHAR_FLAGS()", apf_mod_char_flags},
-    {"Modify UNIT_FLAGS()", apf_mod_unit_flags},
-    {"Modify OBJ_FLAGS()", apf_mod_obj_flags},
-    {"Skill adjustment", apf_skill_adj},
-    {"Weapon adjustment", apf_weapon_adj},
-    {"Natural Armour Modification", apf_natural_armour},
-    {"Speed Adjustment", apf_speed}};
+struct apply_function_type g_apf[] = {{"Ability Adjustment", apf_ability_adj},
+                                      {"Spell skill adjustment", apf_spell_adj},
+                                      {"Modify bright/light", apf_light},
+                                      {"Modify CHAR_FLAGS()", apf_mod_char_flags},
+                                      {"Modify UNIT_FLAGS()", apf_mod_unit_flags},
+                                      {"Modify OBJ_FLAGS()", apf_mod_obj_flags},
+                                      {"Skill adjustment", apf_skill_adj},
+                                      {"Weapon adjustment", apf_weapon_adj},
+                                      {"Natural Armour Modification", apf_natural_armour},
+                                      {"Speed Adjustment", apf_speed}};

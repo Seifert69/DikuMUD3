@@ -4,7 +4,7 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.5 $
  */
-
+#include "external_vars.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -120,8 +120,7 @@ static void free_guild_data(struct guild_type *pGt)
     FREE(pGt);
 }
 
-static struct guild_type *
-parse_guild_data(class unit_data *npc, char *pStr)
+static struct guild_type *parse_guild_data(class unit_data *npc, char *pStr)
 {
     char *pTmp1;
     struct guild_type *pG;
@@ -138,12 +137,9 @@ parse_guild_data(class unit_data *npc, char *pStr)
     ok += parse_match_num((const char **)&pTmp1, "Guild Leave Cost", &pG->nLeaveCost);
     pG->ppExcludeQuest = parse_match_namelist((const char **)&pTmp1, "Guild Exclude Quest");
 
-    if (ok != 2 || !pG->pGuildName || !pG->ppLeaveQuest ||
-        !pG->ppEnterQuest || !pG->ppExcludeQuest)
+    if (ok != 2 || !pG->pGuildName || !pG->ppLeaveQuest || !pG->ppEnterQuest || !pG->ppExcludeQuest)
     {
-        szonelog(UNIT_FI_ZONE(npc),
-                 "GUILD-ERROR (%s@%s): Illegal initialization element.",
-                 UNIT_FI_NAME(npc), UNIT_FI_ZONENAME(npc));
+        szonelog(UNIT_FI_ZONE(npc), "GUILD-ERROR (%s@%s): Illegal initialization element.", UNIT_FI_NAME(npc), UNIT_FI_ZONENAME(npc));
         free_guild_data(pG);
         return NULL;
     }
@@ -157,8 +153,7 @@ int guild_master_init(struct spec_arg *sarg)
 
     if (sarg->cmd->no != CMD_AUTO_EXTRACT)
     {
-        pG = (struct guild_type *)
-            parse_guild_data(sarg->owner, (char *)sarg->fptr->data);
+        pG = (struct guild_type *)parse_guild_data(sarg->owner, (char *)sarg->fptr->data);
         if (pG == NULL)
         {
             destroy_fptr(sarg->owner, sarg->fptr);
@@ -178,12 +173,9 @@ int guild_master_init(struct spec_arg *sarg)
 /* 'guild'. Uses the act() function to send string with $1 as 'member' */
 /* $2 as 'nonmember' and $3 as character                               */
 /* Message will never be sent to 'nonmember'                           */
-void act_to_guild(const char *msg, char *guild,
-                  class unit_data *member, class unit_data *nonmember)
+void act_to_guild(const char *msg, char *guild, class unit_data *member, class unit_data *nonmember)
 {
     class descriptor_data *d;
-
-    extern class descriptor_data *descriptor_list;
 
     if (guild == NULL || *guild == '\0')
     {
@@ -191,11 +183,8 @@ void act_to_guild(const char *msg, char *guild,
         return;
     }
 
-    for (d = descriptor_list; d; d = d->next)
-        if (descriptor_is_playing(d) &&
-            (d->character != nonmember) &&
-            IS_PC(d->character) &&
-            PC_GUILD(d->character) &&
+    for (d = g_descriptor_list; d; d = d->next)
+        if (descriptor_is_playing(d) && (d->character != nonmember) && IS_PC(d->character) && PC_GUILD(d->character) &&
             strcmp(PC_GUILD(d->character), guild) == 0)
             act(msg, A_ALWAYS, member, nonmember, d->character, TO_VICT);
 }
@@ -211,8 +200,7 @@ int teach_members_only(struct spec_arg *sarg)
     char *str;
     int guild;
 
-    if ((is_command(sarg->cmd, "practice")) &&
-        IS_PC(sarg->activator) && CHAR_AWAKE(sarg->owner))
+    if ((is_command(sarg->cmd, "practice")) && IS_PC(sarg->activator) && CHAR_AWAKE(sarg->owner))
     {
         if (!(str = strchr((char *)sarg->fptr->data, '#')))
         {
@@ -223,8 +211,7 @@ int teach_members_only(struct spec_arg *sarg)
         if (PC_GUILD(sarg->activator))
         {
             *str = 0;
-            guild =
-                strcmp((char *)sarg->fptr->data, PC_GUILD(sarg->activator));
+            guild = strcmp((char *)sarg->fptr->data, PC_GUILD(sarg->activator));
             *str = '#';
         }
         else
@@ -256,14 +243,13 @@ int guard_guild_way(struct spec_arg *sarg)
 
     int charname_in_list(class unit_data * ch, char *arg);
 
-    if ((str = (char *)sarg->fptr->data) && (sarg->cmd->inttype == DIR_CMD) &&
-        (sarg->cmd->dir == (*str - '0')) && CHAR_IS_READY(sarg->owner))
+    if ((str = (char *)sarg->fptr->data) && (sarg->cmd->inttype == DIR_CMD) && (sarg->cmd->dir == (*str - '0')) &&
+        CHAR_IS_READY(sarg->owner))
     {
         guild_no = str + 2;
 
-        if (!(location = strchr(guild_no, '#')) ||
-            !(excl = strchr(location + 1, '#')) ||
-            !(msg1 = strchr(excl + 1, '#')) || !(msg2 = strchr(msg1 + 1, '#')))
+        if (!(location = strchr(guild_no, '#')) || !(excl = strchr(location + 1, '#')) || !(msg1 = strchr(excl + 1, '#')) ||
+            !(msg2 = strchr(msg1 + 1, '#')))
         {
             slog(LOG_ALL, 0, "Illegal data string in guard_way: %s", str);
             return SFR_SHARE;
@@ -271,8 +257,7 @@ int guard_guild_way(struct spec_arg *sarg)
 
         if (IS_PC(sarg->activator))
         {
-            if ((PC_GUILD(sarg->activator) != NULL) &&
-                (*PC_GUILD(sarg->activator) != '\0'))
+            if ((PC_GUILD(sarg->activator) != NULL) && (*PC_GUILD(sarg->activator) != '\0'))
             {
                 *location = '\0';
                 guild_cmp = strcmp(PC_GUILD(sarg->activator), guild_no);
@@ -362,16 +347,14 @@ void guild_banish_player(class unit_data *ch)
         if (pExd && !pExd->names.IsName("banished"))
         {
             pExd->names.AppendName("banished");
-            send_to_char("You have been banished from your own guild!<br/>",
-                         ch);
+            send_to_char("You have been banished from your own guild!<br/>", ch);
         }
 
         FREE(c);
     }
 }
 
-int can_leave_guild(struct guild_type *pG,
-                    class unit_data *master, class unit_data *ch)
+int can_leave_guild(struct guild_type *pG, class unit_data *master, class unit_data *ch)
 {
     char **p;
     currency_t currency = local_currency(master);
@@ -381,8 +364,7 @@ int can_leave_guild(struct guild_type *pG,
 
     if (!PC_GUILD(ch) || (strcmp(PC_GUILD(ch), pG->pGuildName) != 0))
     {
-        act("$1n says, 'You are not a member here, $3n'",
-            A_SOMEONE, master, cActParameter(), ch, TO_ROOM);
+        act("$1n says, 'You are not a member here, $3n'", A_SOMEONE, master, cActParameter(), ch, TO_ROOM);
         return FALSE;
     }
 
@@ -394,8 +376,7 @@ int can_leave_guild(struct guild_type *pG,
             {
                 if (find_quest(*p, ch) == NULL)
                 {
-                    act("$1n says, 'You must first complete the $2t quest, $3n'",
-                        A_SOMEONE, master, *p, ch, TO_ROOM);
+                    act("$1n says, 'You must first complete the $2t quest, $3n'", A_SOMEONE, master, *p, ch, TO_ROOM);
                     return FALSE;
                 }
             }
@@ -404,7 +385,11 @@ int can_leave_guild(struct guild_type *pG,
         if (!char_can_afford(ch, pG->nLeaveCost, currency))
         {
             act("$1n says, 'You can't afford the cost of $2t, $3n.'",
-                A_SOMEONE, master, money_string(pG->nLeaveCost, currency, TRUE), ch, TO_ROOM);
+                A_SOMEONE,
+                master,
+                money_string(pG->nLeaveCost, currency, TRUE),
+                ch,
+                TO_ROOM);
             return FALSE;
         }
     }
@@ -429,8 +414,7 @@ void join_guild(class unit_data *ch, char *guild_name)
     exd->names.AppendName("$guild");
 }
 
-int can_join_guild(struct guild_type *pG,
-                   class unit_data *master, class unit_data *ch)
+int can_join_guild(struct guild_type *pG, class unit_data *master, class unit_data *ch)
 {
     currency_t currency = local_currency(master);
     char **p;
@@ -441,12 +425,15 @@ int can_join_guild(struct guild_type *pG,
     if (PC_GUILD(ch))
     {
         if (strcmp(pG->pGuildName, PC_GUILD(ch)) == 0)
-            act("$1n says, 'You are already a member, $3n'",
-                A_SOMEONE, master, cActParameter(), ch, TO_ROOM);
+            act("$1n says, 'You are already a member, $3n'", A_SOMEONE, master, cActParameter(), ch, TO_ROOM);
         else
             act("$1n says, 'You must first break your ties with your current"
                 " guild, $3n'",
-                A_SOMEONE, master, cActParameter(), ch, TO_ROOM);
+                A_SOMEONE,
+                master,
+                cActParameter(),
+                ch,
+                TO_ROOM);
         return FALSE;
     }
 
@@ -456,8 +443,7 @@ int can_join_guild(struct guild_type *pG,
         {
             if (**p && find_quest(*p, ch) == NULL)
             {
-                act("$1n says, 'You must first complete the $2t quest, $3n'",
-                    A_SOMEONE, master, *p, ch, TO_ROOM);
+                act("$1n says, 'You must first complete the $2t quest, $3n'", A_SOMEONE, master, *p, ch, TO_ROOM);
                 return FALSE;
             }
         }
@@ -466,7 +452,11 @@ int can_join_guild(struct guild_type *pG,
         {
             act("$1n says, 'Don't you think we remeber how you acted last "
                 "time, $3n? ",
-                A_SOMEONE, master, cActParameter(), ch, TO_ROOM);
+                A_SOMEONE,
+                master,
+                cActParameter(),
+                ch,
+                TO_ROOM);
             return FALSE;
         }
 
@@ -476,7 +466,11 @@ int can_join_guild(struct guild_type *pG,
             {
                 act("$1n says, 'We will never be able to accept you as a "
                     "member due to the $2t quest, $3n'",
-                    A_SOMEONE, master, *p, ch, TO_ROOM);
+                    A_SOMEONE,
+                    master,
+                    *p,
+                    ch,
+                    TO_ROOM);
                 return FALSE;
             }
         }
@@ -484,7 +478,11 @@ int can_join_guild(struct guild_type *pG,
         if (!char_can_afford(ch, pG->nEnterCost, currency))
         {
             act("$1n says, 'You can't afford the entry cost of $2t, $3n.'",
-                A_SOMEONE, master, money_string(pG->nEnterCost, currency, TRUE), ch, TO_ROOM);
+                A_SOMEONE,
+                master,
+                money_string(pG->nEnterCost, currency, TRUE),
+                ch,
+                TO_ROOM);
             return FALSE;
         }
     }
@@ -519,17 +517,14 @@ int guild_master(struct spec_arg *sarg)
 
     if (strcmp(sarg->cmd->cmd_str, "join") == 0)
     {
-        if (PC_GUILD(sarg->activator) == NULL ||
-            *PC_GUILD(sarg->activator) == '\0')
+        if (PC_GUILD(sarg->activator) == NULL || *PC_GUILD(sarg->activator) == '\0')
         {
             if (can_join_guild(pG, sarg->owner, sarg->activator))
             {
-                act("$1n says, 'Welcome in our guild, $3n'",
-                    A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+                act("$1n says, 'Welcome in our guild, $3n'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
 
                 if (CHAR_LEVEL(sarg->activator) > START_LEVEL)
-                    money_transfer(sarg->activator, sarg->owner, pG->nEnterCost,
-                                   local_currency(sarg->owner));
+                    money_transfer(sarg->activator, sarg->owner, pG->nEnterCost, local_currency(sarg->owner));
 
                 join_guild(sarg->activator, pG->pGuildName);
             }
@@ -538,33 +533,38 @@ int guild_master(struct spec_arg *sarg)
         {
             act("$1n says, 'You must first break your ties with your current"
                 " guild, $3n'",
-                A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+                A_SOMEONE,
+                sarg->owner,
+                cActParameter(),
+                sarg->activator,
+                TO_ROOM);
         }
         return SFR_BLOCK;
     }
     else if (is_command(sarg->cmd, "insult"))
     {
-        if (find_unit(sarg->activator, &arg, 0, FIND_UNIT_SURRO) !=
-            sarg->owner)
+        if (find_unit(sarg->activator, &arg, 0, FIND_UNIT_SURRO) != sarg->owner)
             return SFR_SHARE;
 
         if (pc_pos != PC_ID(sarg->activator))
         {
             act("$1n says, 'Do that again $3n and I will kick you out of this "
                 "guild.'",
-                A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+                A_SOMEONE,
+                sarg->owner,
+                cActParameter(),
+                sarg->activator,
+                TO_ROOM);
             pc_pos = PC_ID(sarg->activator);
         }
         else /* Match! */
         {
             if (can_leave_guild(pG, sarg->owner, sarg->activator))
             {
-                act("$1n says, 'So be it. Buggar ye off, $3n'",
-                    A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+                act("$1n says, 'So be it. Buggar ye off, $3n'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
 
                 if (CHAR_LEVEL(sarg->activator) > START_LEVEL)
-                    money_transfer(sarg->activator, sarg->owner, pG->nLeaveCost,
-                                   local_currency(sarg->owner));
+                    money_transfer(sarg->activator, sarg->owner, pG->nLeaveCost, local_currency(sarg->owner));
 
                 leave_guild(sarg->activator);
 
@@ -588,11 +588,10 @@ int guild_basis(struct spec_arg *sarg)
     {
         scan4_unit(sarg->owner, UNIT_ST_PC);
 
-        for (i = 0; i < unit_vector.top; i++)
+        for (i = 0; i < g_unit_vector.top; i++)
         {
-            u = unit_vector.units[i];
-            if (IS_PC(u) && CHAR_FIGHTING(u) == sarg->owner && PC_GUILD(u) &&
-                CHAR_CAN_SEE(sarg->owner, u))
+            u = g_unit_vector.units[i];
+            if (IS_PC(u) && CHAR_FIGHTING(u) == sarg->owner && PC_GUILD(u) && CHAR_CAN_SEE(sarg->owner, u))
             {
                 if (strcmp(PC_GUILD(u), (char *)sarg->fptr->data) == 0)
                     guild_banish_player(u);
@@ -607,8 +606,7 @@ int guild_basis(struct spec_arg *sarg)
         /* Alert guild members of attack */
         /* Uhm, how do we know it is the 'first' attack, so that */
         /* we wont send this message all the time???             */
-        act_to_guild("$1n tells you, 'Help! Our guild is attacked by $2n'",
-                     (char *)sarg->fptr->data, sarg->owner, sarg->activator);
+        act_to_guild("$1n tells you, 'Help! Our guild is attacked by $2n'", (char *)sarg->fptr->data, sarg->owner, sarg->activator);
         return SFR_SHARE;
     }
 
@@ -617,12 +615,9 @@ int guild_basis(struct spec_arg *sarg)
 
 int guild_title(struct spec_arg *sarg)
 {
-    char buf[MAX_STRING_LENGTH], male[MAX_STRING_LENGTH],
-        female[MAX_STRING_LENGTH];
+    char buf[MAX_STRING_LENGTH], male[MAX_STRING_LENGTH], female[MAX_STRING_LENGTH];
     char *c;
     int i, title_no;
-
-    extern const char *pc_race_adverbs[PC_RACE_MAX + 1];
 
     if (!is_command(sarg->cmd, "title") || !IS_PC(sarg->activator))
         return SFR_SHARE;
@@ -632,18 +627,13 @@ int guild_title(struct spec_arg *sarg)
     if (!(c = str_line(c, buf)))
         return SFR_BLOCK;
 
-    if ((PC_GUILD(sarg->activator) == NULL) ||
-        (strcmp(PC_GUILD(sarg->activator), buf) != 0))
+    if ((PC_GUILD(sarg->activator) == NULL) || (strcmp(PC_GUILD(sarg->activator), buf) != 0))
     {
-        act("$1n says, 'Thou art not a member $3n'",
-            A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+        act("$1n says, 'Thou art not a member $3n'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
         return SFR_BLOCK;
     }
 
-    title_no =
-        (PC_TIME(sarg->activator).played -
-         PC_GUILD_TIME(sarg->activator)) /
-        (SECS_PER_REAL_HOUR * 4);
+    title_no = (PC_TIME(sarg->activator).played - PC_GUILD_TIME(sarg->activator)) / (SECS_PER_REAL_HOUR * 4);
     male[0] = female[0] = 0;
 
     for (i = 0;; i++)
@@ -659,25 +649,22 @@ int guild_title(struct spec_arg *sarg)
     }
 
     if (CHAR_SEX(sarg->activator) == SEX_FEMALE)
-        sprintf(buf, female, pc_race_adverbs[CHAR_RACE(sarg->activator)]);
+        snprintf(buf, sizeof(buf), female, g_pc_race_adverbs[CHAR_RACE(sarg->activator)]);
     else
-        sprintf(buf, male, pc_race_adverbs[CHAR_RACE(sarg->activator)]);
+        snprintf(buf, sizeof(buf), male, g_pc_race_adverbs[CHAR_RACE(sarg->activator)]);
 
     if (strcmp(buf, UNIT_TITLE_STRING(sarg->activator)) == 0)
     {
         if (c == NULL)
-            act("$1n says, 'You have reached the ultimate title, $3n'",
-                A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+            act("$1n says, 'You have reached the ultimate title, $3n'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
         else
-            act("$1n says, 'You must first be an older member $3N'",
-                A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+            act("$1n says, 'You must first be an older member $3N'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
         return SFR_BLOCK;
     }
 
     UNIT_TITLE(sarg->activator) = (buf);
 
-    act("$1n says, 'Enjoy the new title, $3n!'",
-        A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
+    act("$1n says, 'Enjoy the new title, $3n!'", A_SOMEONE, sarg->owner, cActParameter(), sarg->activator, TO_ROOM);
 
     return SFR_BLOCK;
 }
@@ -699,8 +686,7 @@ void do_guild(class unit_data *ch, char *arg, const struct command_info *cmd)
         if (exd->names.IsName("$guild"))
         {
             found = TRUE;
-            sprintf(buf, "%-30s %-2s<br/>",
-                    exd->names.Name(0) + 1, exd->names.Name(1));
+            snprintf(buf, sizeof(buf), "%-30s %-2s<br/>", exd->names.Name(0) + 1, exd->names.Name(1));
             send_to_char(buf, ch);
         }
     }

@@ -7,7 +7,7 @@
 
 #ifndef _MUD_STRUCTS_H
 #define _MUD_STRUCTS_H
-#include <forward_list> 
+#include <forward_list>
 #include "event.h"
 #include "essential.h"
 #include "values.h"
@@ -20,13 +20,11 @@
 #include "color.h"
 #include "destruct.h"
 #include "dil.h"
-using namespace std;
 #include <vector>
 #include <map>
 #ifndef MPLEX_COMPILE
-#include <boost/graph/graph_traits.hpp>
-#include <boost/graph/adjacency_list.hpp>
-using namespace boost;
+    #include <boost/graph/graph_traits.hpp>
+    #include <boost/graph/adjacency_list.hpp>
 #endif
 #define FI_MAX_ZONENAME 30 /* Max length of any zone-name    */
 #define FI_MAX_UNITNAME 15 /* Max length of any unit-name    */
@@ -38,7 +36,7 @@ using namespace boost;
 #define MESS_VICTIM 2
 #define MESS_ROOM 3
 
-/* For use in spec_assign.c's unit_function_array[] */
+/* For use in spec_assign.c's g_unit_function_array[] */
 #define SD_NEVER 0 /* Never save this function           */
 #define SD_NULL 1  /* Ignore fptr->data (save as 0 ptr)  */
 #define SD_ASCII 2 /* If pointer, then it's ascii char * */
@@ -48,12 +46,8 @@ using namespace boost;
 // Used for std::map in place of the old binary search
 struct cmp_str
 {
-   bool operator()(char const *a, char const *b) const
-   {
-      return std::strcmp(a, b) < 0;
-   }
+    bool operator()(char const *a, char const *b) const { return std::strcmp(a, b) < 0; }
 };
-
 
 /* A linked sorted list of all units within a zone file */
 class file_index_type
@@ -64,10 +58,10 @@ public:
 
     class unit_data *find_symbolic_instance(void);
     class unit_data *find_symbolic_instance_ref(class unit_data *ref, ubit16 bitvector);
-    std::forward_list<class unit_data *> fi_unit_list;  // This list of units that match this file_index
+    std::forward_list<class unit_data *> fi_unit_list; // This list of units that match this file_index
 
-    char *name;                  /* Unique within this list          */
-    class zone_type *zone;       /* Pointer to owner of structure    */
+    char *name;            /* Unique within this list          */
+    class zone_type *zone; /* Pointer to owner of structure    */
     // class file_index_type *next; // Replaced by zone's mmp_fi list Next file index, (zone_type->fi list)
     // obsoleted by fi_unit_list. class unit_data *unit; // Pointer to room if is room
 
@@ -112,11 +106,11 @@ public:
     class unit_data *objects; // unit pointer to the base objects, used in vmc really
     class unit_data *npcs;    // unit pointer to the base npcs, used in vmc really
 
-    std::map< const char * , file_index_type *, cmp_str > mmp_fi;
+    std::map<const char *, file_index_type *, cmp_str> mmp_fi;
 
     struct zone_reset_cmd *zri; /* List of Zone reset commands      */
 
-    std::map< const char * , diltemplate *, cmp_str > mmp_tmpl;
+    std::map<const char *, diltemplate *, cmp_str> mmp_tmpl;
 
     ubit8 **spmatrix; /* Shortest Path Matrix             */
 
@@ -240,13 +234,13 @@ public:
     unit_fptr(void);
     ~unit_fptr();
 
-    ubit16 index;           /* Index to function pointer array             */
-    ubit8  priority;        /* Order to insert ftpr on unit (2020)         */
-    ubit16 heart_beat;      /* in 1/4 of a sec                             */
-    ubit16 flags;           /* When to override next function (boolean)    */
-    void *data;             /* Pointer to data local for this unit         */
+    ubit16 index;          /* Index to function pointer array             */
+    ubit8 priority;        /* Order to insert ftpr on unit (2020)         */
+    ubit16 heart_beat;     /* in 1/4 of a sec                             */
+    ubit16 flags;          /* When to override next function (boolean)    */
+    void *data;            /* Pointer to data local for this unit         */
     class unit_fptr *next; /* Next in linked list                         */
-    eventq_elem *event;     /* pointer to eventq for quick removing        */
+    eventq_elem *event;    /* pointer to eventq for quick removing        */
 
     int destruct_classindex(void);
 };
@@ -293,9 +287,9 @@ public:
     ubit8 status;     /* IS_ROOM, IS_OBJ, IS_PC, IS_NPC                */
     ubit8 open_flags; /* In general OPEN will mean can "enter"?        */
     ubit8 open_diff;  /* Open dificulty                                */
-    sbit16 light;      /* Number of active light sources in unit        */
-    sbit16 bright;     /* How much the unit shines                      */
-    sbit16 illum;      /* how much bright is by transparency            */
+    sbit16 light;     /* Number of active light sources in unit        */
+    sbit16 bright;    /* How much the unit shines                      */
+    sbit16 illum;     /* how much bright is by transparency            */
     ubit8 chars;      /* How many chars is inside the unit             */
     ubit8 minv;       /* Level of wizard invisible                     */
     sbit32 max_hp;    /* The maximum number of hitpoint                */
@@ -304,20 +298,19 @@ public:
     sbit16 alignment; /* +-1000 for alignments                         */
 
     /* Room title, Char title, Obj "the barrel", NPC "the Beastly Fido" */
-    string title;
+    std::string title;
 
     /* The outside description of a unit           */
-    string out_descr;
+    std::string out_descr;
 
     /* The inside description of a unit            */
-    string in_descr;
+    std::string in_descr;
 
-    class extra_list extra;  /* All the look 'at' stuff                     */
+    class extra_list extra; /* All the look 'at' stuff                     */
 
     int destruct_classindex(void);
     std::string json(void);
 };
-
 
 /* ----------------- ROOM SPECIFIC STRUCTURES ----------------------- */
 
@@ -331,10 +324,10 @@ public:
 
     char *key;
     class unit_data *to_room;
-    ubit8 difficulty;          // Skill needed for swim, climb, search, pick-lock
-    int weight;                // Used for shortest path algorithm
+    ubit8 difficulty; // Skill needed for swim, climb, search, pick-lock
+    int weight;       // Used for shortest path algorithm
 
-    ubit8 exit_info;           // Door info flags
+    ubit8 exit_info; // Door info flags
 };
 
 class room_data : public unit_data
@@ -343,13 +336,13 @@ public:
     room_data(void);
     ~room_data();
 
-    class room_direction_data *dir_option[MAX_EXIT+1]; // Why 11? Why not MAX_EXIT+1? 
+    class room_direction_data *dir_option[MAX_EXIT + 1]; // Why 11? Why not MAX_EXIT+1?
 
     ubit8 flags;         /* Room flags                              */
     ubit8 movement_type; /* The type of movement (city, hills etc.) */
     ubit8 resistance;    /* Magic resistance of the room            */
 
-    sbit16 mapx, mapy;   /* Graphical map coordinates */
+    sbit16 mapx, mapy; /* Graphical map coordinates */
 
     int sc;  /*strong component, used for shortest path */
     int num; /*room number, used for shortest path */
@@ -359,12 +352,14 @@ public:
         edge_dir = 101
     };
 
-    typedef adjacency_list<vecS, vecS, directedS, no_property,
-                           property<edge_weight_t, int,
-                                    property<edge_dir_t, int> > >
+    typedef boost::adjacency_list<boost::vecS,
+                                  boost::vecS,
+                                  boost::directedS,
+                                  boost::no_property,
+                                  boost::property<boost::edge_weight_t, int, boost::property<edge_dir_t, int>>>
         graph_t;
 
-    typedef graph_traits<graph_t>::vertex_descriptor vertex_descriptor;
+    typedef boost::graph_traits<graph_t>::vertex_descriptor vertex_descriptor;
     std::vector<vertex_descriptor> path;
     std::vector<vertex_descriptor> distance;
     int waiting_dijkstra;
@@ -444,7 +439,6 @@ public:
     ubit8 last_attacker_type; /* Last attacker type of character */
 };
 
-
 /* ------------------  PC SPECIFIC STRUCTURES ------------------------ */
 struct pc_time_data
 {
@@ -480,7 +474,7 @@ public:
 
     struct terminal_setup_type setup;
 
-    struct pc_time_data m_time;       /* PCs time info  */
+    struct pc_time_data m_time;     /* PCs time info  */
     struct pc_account_data account; /* Accounting     */
 
     char *guild;     /* Which guild is the player a member of?  */
@@ -491,7 +485,7 @@ public:
     class extra_list info;  /* For saving Admin information             */
     class extra_list quest; /* For saving QUEST information            */
 
-    sbit8  profession; // The player's chosen profession, -1 means unknown
+    sbit8 profession;  // The player's chosen profession, -1 means unknown
     ubit32 guild_time; /* When (playing secs) player entered      */
     ubit16 vlvl;       /* Virtual Level for player                */
 
@@ -504,16 +498,16 @@ public:
     ubit16 crack_attempts; /* Number of wrong passwords entered       */
     ubit16 lifespan;       /* How many year to live....               */
 
-    sbit16 spells[SPL_TREE_MAX];    /* The spells learned                  */
-    ubit8 spell_lvl[SPL_TREE_MAX];  /* Practiced within that level         */
+    sbit16 spells[SPL_TREE_MAX];   /* The spells learned                  */
+    ubit8 spell_lvl[SPL_TREE_MAX]; /* Practiced within that level         */
 
-    sbit16 skills[SKI_TREE_MAX];    /* The skills learned                  */
-    ubit8 skill_lvl[SKI_TREE_MAX];  /* The skills practiced within level   */
+    sbit16 skills[SKI_TREE_MAX];   /* The skills learned                  */
+    ubit8 skill_lvl[SKI_TREE_MAX]; /* The skills practiced within level   */
 
-    sbit16 weapons[WPN_TREE_MAX];    /* The weapons learned                 */
-    ubit8 weapon_lvl[WPN_TREE_MAX];  /* The weapons learned                  */
+    sbit16 weapons[WPN_TREE_MAX];   /* The weapons learned                 */
+    ubit8 weapon_lvl[WPN_TREE_MAX]; /* The weapons learned                  */
 
-    ubit8 ability_lvl[ABIL_TREE_MAX];  /* The abilities learned                  */
+    ubit8 ability_lvl[ABIL_TREE_MAX]; /* The abilities learned                  */
 
     sbit8 conditions[3]; /* Drunk full etc.                     */
     ubit8 nAccessLevel;  /* Access Level for BBS use            */
@@ -538,7 +532,6 @@ public:
     ubit8 default_pos; /* Default position for NPC               */
     ubit8 flags;       /* flags for NPC behavior                 */
 };
-
 
 /* ----------------- Destructed decalrations ----------------------- */
 

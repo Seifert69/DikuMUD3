@@ -10,7 +10,7 @@
 
 struct symbols
 {
-    const 	char *nam;
+    const char *nam;
     int val;
 } sym[] = {
     /* Unit fields */
@@ -106,9 +106,6 @@ struct symbols
     {"remove", REMOVE},
     {"random", RANDOM},
     {"complete", COMPLETE},
-    {0,0}
-};
+    {0, 0}};
 
 #endif /* _MUD_VMCTOK_H */
-
-

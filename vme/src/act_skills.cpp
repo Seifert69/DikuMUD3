@@ -58,14 +58,11 @@ void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
 
     if ((stabber = equipment_type(ch, WEAR_WIELD, ITEM_WEAPON)) == NULL)
     {
-        send_to_char("You need to wield a weapon, to make it a succes.<br/>",
-                     ch);
+        send_to_char("You need to wield a weapon, to make it a succes.<br/>", ch);
         return;
     }
 
-    if (OBJ_VALUE(stabber, 0) != WPN_DAGGER &&
-        OBJ_VALUE(stabber, 0) != WPN_SHORT_SWORD &&
-        OBJ_VALUE(stabber, 0) != WPN_STILETTO)
+    if (OBJ_VALUE(stabber, 0) != WPN_DAGGER && OBJ_VALUE(stabber, 0) != WPN_SHORT_SWORD && OBJ_VALUE(stabber, 0) != WPN_STILETTO)
     {
         send_to_char("Only small piercing weapons can be used "
                      "for backstabbing.<br/>",
@@ -75,8 +72,7 @@ void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
 
     if (CHAR_FIGHTING(vict))
     {
-        send_to_char("You can't backstab a fighting person, too alert!<br/>",
-                     ch);
+        send_to_char("You can't backstab a fighting person, too alert!<br/>", ch);
         return;
     }
 
@@ -89,8 +85,7 @@ void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
         if ((paf = affected_by_spell(vict, ID_BACKSTABBED)))
             skillb += 50 * paf->data[0];
 
-        hm = resistance_skill_check(effective_dex(ch), CHAR_DEX(vict),
-                                    skilla, skillb);
+        hm = resistance_skill_check(effective_dex(ch), CHAR_DEX(vict), skilla, skillb);
     }
     else
         hm = resistance_skill_check(effective_dex(ch), 0, skilla, 0);
@@ -116,16 +111,14 @@ void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
 
     if (hm < 0)
     {
-        damage(ch, vict, stabber, 0,
-               MSG_TYPE_SKILL, SKI_BACKSTAB, COM_MSG_MISS);
+        damage(ch, vict, stabber, 0, MSG_TYPE_SKILL, SKI_BACKSTAB, COM_MSG_MISS);
     }
     else
     {
         int dam;
         int att_bonus;
 
-        att_bonus = melee_bonus(ch, vict, hit_location(ch, vict),
-                                NULL, NULL, NULL, NULL);
+        att_bonus = melee_bonus(ch, vict, hit_location(ch, vict), NULL, NULL, NULL, NULL);
 
         att_bonus += open100() + hm;
 
@@ -133,7 +126,6 @@ void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
 
         send_done(ch, stabber, vict, dam, cmd, oarg);
 
-        damage(ch, vict, stabber, dam,
-               MSG_TYPE_SKILL, SKI_BACKSTAB, COM_MSG_EBODY);
+        damage(ch, vict, stabber, dam, MSG_TYPE_SKILL, SKI_BACKSTAB, COM_MSG_EBODY);
     }
 }

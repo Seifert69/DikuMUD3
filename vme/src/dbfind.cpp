@@ -4,7 +4,7 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.4 $
  */
-
+#include "external_vars.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -20,21 +20,17 @@
 #include "dbfind.h"
 #include "handler.h"
 
-extern class descriptor_data *descriptor_list;
-
 class descriptor_data *find_descriptor(const char *name, class descriptor_data *except)
 {
     class descriptor_data *d;
 
     /* Check if already playing */
-    for (d = descriptor_list; d; d = d->next)
-        if (d != except &&
-            str_ccmp(PC_FILENAME(CHAR_ORIGINAL(d->character)), name) == 0)
+    for (d = g_descriptor_list; d; d = d->next)
+        if (d != except && str_ccmp(PC_FILENAME(CHAR_ORIGINAL(d->character)), name) == 0)
             return d;
 
     return NULL;
 }
-
 
 /* Find a named zone */
 class zone_type *find_zone(const char *zonename)
@@ -44,15 +40,15 @@ class zone_type *find_zone(const char *zonename)
     if ((zonename == NULL) || !*zonename)
         return NULL;
 
-    auto it = zone_info.mmp.find(zonename);
-    if (it != zone_info.mmp.end())
-      return it->second;
+    auto it = g_zone_info.mmp.find(zonename);
+    if (it != g_zone_info.mmp.end())
+        return it->second;
     else
-      return NULL;
+        return NULL;
 
-/*    ba = binary_search(zone_info.ba, zonename, zone_info.no_of_zones);
+    /*    ba = binary_search(g_zone_info.ba, zonename, g_zone_info.no_of_zones);
 
-    return ba ? (class zone_type *)ba->block : NULL;*/
+        return ba ? (class zone_type *)ba->block : NULL;*/
 }
 
 /* Zonename & name must point to non-empty strings. Must be lower case */
@@ -78,9 +74,9 @@ class file_index_type *find_file_index(const char *zonename, const char *name)
     auto it = zone->mmp_fi.find(bufname);
 
     if (it != zone->mmp_fi.end())
-      return it->second;
+        return it->second;
     else
-      return NULL;
+        return NULL;
 
     /*if ((ba = binary_search(zone->ba, name, zone->no_of_fi)) == NULL)
         return NULL;
@@ -92,7 +88,7 @@ class file_index_type *find_file_index(const char *zonename, const char *name)
 struct diltemplate *find_dil_index(const char *zonename, const char *name)
 {
     class zone_type *zone;
-    //struct bin_search_type *ba;
+    // struct bin_search_type *ba;
 
     if (str_is_empty(name))
         return NULL;
@@ -103,14 +99,14 @@ struct diltemplate *find_dil_index(const char *zonename, const char *name)
     auto it = zone->mmp_tmpl.find(name);
 
     if (it != zone->mmp_tmpl.end())
-      return it->second;
+        return it->second;
     else
-      return NULL;
-
-/*    if ((ba = binary_search(zone->tmplba, name, zone->no_tmpl)) == NULL)
         return NULL;
 
-    return (struct diltemplate *)ba->block;*/
+    /*    if ((ba = binary_search(zone->tmplba, name, zone->no_tmpl)) == NULL)
+            return NULL;
+
+        return (struct diltemplate *)ba->block;*/
 }
 
 /*

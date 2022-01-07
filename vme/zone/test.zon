@@ -1,0 +1,399 @@
+/*
+filename    test
+password    screwloose
+changedby   Whistler
+EmailAdd     HTMLCOMPILED
+request     compile
+version     1
+END HEADER*/
+
+#include <macros.h>
+
+%zone                                  test
+reset RESET_NOT
+
+weather 1040
+
+creators {"papi"}
+
+notes
+"This is a test zone. Can we do DIL 'unit testing' ?"
+
+help
+"This zone is not intended for players."
+
+/* used for a quest fix */
+
+%dil
+
+dilbegin integer buglostint(pc : unitptr, ip : integer, s : string);
+code
+{
+   secure(pc, lostpc);
+
+   :loop:
+   wait(SFB_CMD, 1==1);
+   goto loop;
+
+   :lostpc:
+   log("Lost PC in called function integer.");
+   return(0);
+}
+dilend
+
+
+dilbegin unitptr buglostpc(pc : unitptr);
+external
+   integer buglostint(pc : unitptr, ip : integer, s : string);
+
+
+var
+  i : integer;
+code
+{
+   secure(pc, lostpc);
+
+   :loop:
+   i := buglostint(pc, 42, "42");
+   if (pc == null)
+      log("PC is null");
+   else
+      log(pc.name);
+   wait(SFB_CMD, 1==1);
+   goto loop;
+
+   :lostpc:
+   exec("emote loses its grip.", self);
+   log("Lost PC in called function.");
+   pc := null;
+   return(pc);
+}
+dilend
+
+
+
+%rooms
+
+                                   testlabc
+
+title "Test Laboratory Center"
+descr
+"   You are in the first test laboratory."
+flags {UNIT_FL_NO_WEATHER}
+light 5
+east to testlabe;
+end
+
+                                   testlabe
+
+title "Test Laboratory East"
+descr
+"   You are in the first test laboratory."
+flags {UNIT_FL_NO_WEATHER}
+light 5
+west to testlabc;
+end
+
+%objects
+
+		deadbug
+
+names {"dead bug","bug"}
+title "a dead bug"
+descr "A dead bug lies here."
+extra {}
+"The bug kind of looks like a black lady bug - and it's obviously quite dead. Perhaps someone squashed it. 
+You notice the word 'Papi' inscribed with tiny letters on the rim of its shield"
+cost 1 SILVER_PIECE
+rent 1 IRON_PIECE
+type ITEM_OTHER
+manipulate {MANIPULATE_TAKE}
+weight 0
+
+dilbegin aware unique issue42();
+external
+   integer skillchecksa@skills(skillidx : integer, abiidx : integer, difficulty : integer);
+
+var
+   i : integer;
+   ext : extraptr;
+code
+{
+   quit;
+   heartbeat := PULSE_SEC;
+   :loop:
+   wait(SFB_CMD, TRUE);
+   ext := self.extra;
+   i := skillchecksa@skills(SKI_SEARCH, ABIL_BRA, ext.vals.[1]);
+   log(itoa(i));
+   goto loop;
+}
+dilend
+
+/* Program to test if a changed in compiled DIL will reset the recall counter
+dilbegin recall unique testbug();
+var
+   i : integer;
+code
+{
+   quit;
+   heartbeat := PULSE_SEC * 4;
+   i := rnd(1,10000);
+
+   :loop:
+   wait(SFB_TICK, TRUE);
+   log("My state is " + itoa(i));
+   //log("yay");
+   goto loop;
+
+   quit;
+}
+dilend*/
+
+end
+
+
+%mobiles
+
+   ladybug
+
+names {"lady bug","bug"}
+title "a lady bug"
+descr "A lady bug is crawling around."
+extra {}
+"The lady bug kind of looks like a black lady bug. It's alive. And it's crawling around.
+You notice the word 'Papi' inscribed with tiny letters on the rim of its shield."
+weight 0
+M_ZOMBIE_SMALL(1,SEX_NEUTRAL)
+
+dilbegin test001();
+
+var
+   u : unitptr;
+code
+{
+   log("test001 begin");
+   if (self.outside.symname != "testlabc@test")
+   {
+      log("test001 fail - wrong start location"); // not in the expected location 
+      quit;
+   }
+
+   wait(SFB_TICK, TRUE);
+   exec("east", self);
+
+   if (self.outside.symname != "testlabe@test")
+   {
+      log("test001 fail - unable to move east"); // not in the expected location 
+      quit;
+   }
+
+   wait(SFB_TICK, TRUE);
+   exec("west", self);
+   if (self.outside.symname != "testlabc@test")
+   {
+      log("test001 fail - unable to move west"); // not in the expected location 
+      quit;
+   }
+
+   log("test001 succcess - able to move");
+   quit;
+}
+dilend
+
+
+/* dilbegin clingontest();
+external
+   unitptr buglostpc(pc : unitptr);
+
+var
+   u : unitptr;
+code
+{
+   :loop:
+   wait(SFB_CMD, activator != self);
+   u := activator;
+   secure(u, lostpc);
+   log("Latched onto " + u.name);
+   //exec("emote climbs onto " + u.name, self);
+   u := buglostpc(u);
+   goto loop;
+
+   :lostpc:
+   exec("emote lost its host.", self);
+   log("Bug lost PC outer loop");
+   goto loop;
+}
+dilend
+
+
+dilbegin testzonenpcs();
+var
+   z : zoneptr;
+   u : unitptr;
+code
+{
+   z := zhead();
+
+   while (z)
+   {
+      log(z.name + " " + z.title);
+
+      u := z.npcs;
+
+      if (u)
+      {
+         log("got an NPC");
+         log("Its name is: " + u.symname);
+      }
+
+      z := z.next;
+   }
+   quit;
+}
+dilend
+
+
+dilbegin aware unique mytestsymname();
+external
+   string testsymname();
+
+var
+   s1 : string;
+   s2 : string;
+code
+{
+   :loop:
+   wait(SFB_CMD, activator != self);
+
+   s1 := activator.symname;
+   s2 := self.symname;
+   exec("say I am "+s2+" and you are "+s1, self);
+   exec("say I am "+self.symname+" and you are "+activator.symname, self);
+   s1 := "say I am "+self.symname+" and you are "+activator.symname;
+   exec(s1, self);
+   s1 := "say when calling: act, self, self, act " + activator.symname + testsymname() + self.symname + activator.symname;
+   exec(s1, self);
+   goto loop;
+}
+dilend*/
+end
+
+
+/*
+dilbegin findsymtest();
+var 
+   u : unitptr;
+   s : string;
+   i : integer;
+code
+{
+   heartbeat := PULSE_SEC * 10;
+   :loop:
+   wait(SFB_CMD, command("burp"));
+
+   log("activator = " + activator.symname + " idx = " + itoa(activator.idx));
+   log("self      = " + self.symname + " idx = " + itoa(self.idx));
+
+   if (self.symname == activator.symname)
+      log("Symname is identical");
+
+   if (self.idx == activator.idx)
+      log("Idx is identical");
+
+   u := findrndunit(self, FIND_UNIT_WORLD, UNIT_ST_NPC);
+   s := u.symname;
+   i := u.idx;
+
+   log("found " + s + " " + itoa(i));
+   pause;
+
+   u := findsymbolic(s, i);
+   s := u.symname;
+   i := u.idx;
+
+   log("found " + s + " " + itoa(i));
+   goto loop;
+}
+dilend
+
+
+
+dilbegin zonetest();
+var 
+   z : zoneptr;
+code
+{
+   :loop:
+   wait(SFB_CMD, command("smile"));
+   z := findzone("basis");
+
+   if (z == null)
+      log("no such zone");
+   else
+      log("found zone z = " + z.name);
+   goto loop;
+}
+dilend
+
+
+dilbegin dispatchtest();
+var 
+  s : string;
+code
+{
+   :loop:
+   wait(SFB_CMD, command("jump"));
+
+   s := "CHANNEL discord @ " + "<discord> @Papi says, 'Hiya'";
+   sendtoalldil(s, "channel@function");
+   goto loop;
+}
+dilend
+
+dilbegin shelltest();
+var 
+  i : integer;
+code
+{
+   :loop:
+   wait(SFB_CMD, command("bow"));
+
+   i := shell("test.sh olle golle");
+   log("shell = " + itoa(i));
+   goto loop;
+}
+dilend
+
+dilbegin aware comtest();
+var
+   s : string;
+code
+{
+   heartbeat := PULSE_SEC*4;
+
+   :init:
+   wait(SFB_COM, TRUE);
+
+   if (activator.fighting)
+      s := activator.fighting.nameidx;
+   else
+      s := "(null)";
+
+   log("COM message: " + activator.nameidx + " attacking " + s);
+   goto init;
+   
+   quit;
+}
+dilend
+
+end*/
+
+
+/* Reset is only performed at boot time */
+
+%reset
+
+load ladybug into testlabc max 1
+
+%end

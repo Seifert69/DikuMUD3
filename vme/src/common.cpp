@@ -16,37 +16,15 @@
 #include "utility.h"
 #include "db.h"
 
-int possible_saves = 0;
+int g_possible_saves = 0;
 
 /* Used for converting general direction in dmc! */
-const char *dirs[] = {
-    "north",
-    "east",
-    "south",
-    "west",
-    "up",
-    "down",
-    "northeast",
-    "northwest",
-    "southeast",
-    "southwest",
-    NULL};
+const char *g_dirs[] = {"north", "east", "south", "west", "up", "down", "northeast", "northwest", "southeast", "southwest", NULL};
 
 /* Used for converting general direction in dmc! */
-const char *dirs_short[] = {
-    "n",
-    "e",
-    "s",
-    "w",
-    "u",
-    "d",
-    "ne",
-    "nw",
-    "se",
-    "sw",
-    NULL};
+const char *g_dirs_short[] = {"n", "e", "s", "w", "u", "d", "ne", "nw", "se", "sw", NULL};
 
-struct shi_info_type shi_info[] = {
+struct shi_info_type g_shi_info[] = {
     /* %age Chance of blocking an attack if ready to block */
     {15}, /* SHIELD_SMALL  */
     {20}, /* SHIELD_MEDIUM */
@@ -86,7 +64,7 @@ int ability_point_gain(class unit_data *ch)
 /* particular level.                                                   */
 /* The formula is total up to the current level                        */
 // Only used for NPCs and their point distro so we ignore the 100 level cap.
-// 
+//
 int ability_point_total(class unit_data *ch)
 {
     if (IS_NPC(ch))
@@ -95,13 +73,10 @@ int ability_point_total(class unit_data *ch)
         return AVERAGE_SKILL_COST * ABILITY_POINT_FACTOR * MIN(PC_VIRTUAL_LEVEL(ch), 100);
 }
 
-
 int skill_point_gain(void)
 {
     return AVERAGE_SKILL_COST * SKILL_POINT_FACTOR;
 }
-
-
 
 /* Algorithm PS 4                                                      */
 /*                                                                     */
@@ -109,8 +84,6 @@ int skill_point_gain(void)
 /* (points). It then calculates how many ability points you could buy  */
 /* for the given amount of points (skill-buy-points)                   */
 /*                                                                     */
-
-
 
 int buy_points(int points, int level, int *error)
 {
@@ -171,8 +144,7 @@ int distribute_points(sbit16 *skills, int max, int points, int level)
 
     for (i = 0; i < max; i++)
     {
-        skills[i] = buy_points((int)((double)skills[i] * points / 100.0),
-                               level, &error);
+        skills[i] = buy_points((int)((double)skills[i] * points / 100.0), level, &error);
         if (error > sumerror)
             sumerror = error;
     }
@@ -188,8 +160,7 @@ int distribute_points(ubit8 *skills, int max, int points, int level)
 
     for (i = 0; i < max; i++)
     {
-        skills[i] = buy_points((int)((double)skills[i] * points / 100.0),
-                               level, &error);
+        skills[i] = buy_points((int)((double)skills[i] * points / 100.0), level, &error);
         if (error > sumerror)
             sumerror = error;
     }
@@ -204,8 +175,8 @@ int distribute_points(ubit8 *skills, int max, int points, int level)
 
 int required_xp(int level)
 {
-#define LEVEL_MULT 300  // Diku II was : 1500
-#define POWER_MULT 200  // Diku II was :  150
+#define LEVEL_MULT 300 // Diku II was : 1500
+#define POWER_MULT 200 // Diku II was :  150
 
     if (level <= 0)
         return 0;
@@ -213,8 +184,7 @@ int required_xp(int level)
     if (level <= MORTAL_MAX_LEVEL)
         return LEVEL_MULT * level + level * level * POWER_MULT;
     else
-        return required_xp(MORTAL_MAX_LEVEL) +
-               level_xp(MORTAL_MAX_LEVEL-1) * (level - MORTAL_MAX_LEVEL);
+        return required_xp(MORTAL_MAX_LEVEL) + level_xp(MORTAL_MAX_LEVEL - 1) * (level - MORTAL_MAX_LEVEL);
 
 #undef LEVEL_MULT
 #undef POWER_MULT
@@ -227,16 +197,15 @@ int required_xp(int level)
 int level_xp(int level)
 {
     if (level >= MORTAL_MAX_LEVEL)
-        level = MORTAL_MAX_LEVEL-1;
+        level = MORTAL_MAX_LEVEL - 1;
 
-    return required_xp(level+1) - required_xp(level);
+    return required_xp(level + 1) - required_xp(level);
 
     /* if (level <= MORTAL_MAX_LEVEL)
         return 1650 + level * 300;
     else
         return level_xp(MORTAL_MAX_LEVEL);*/
 }
-
 
 /* Primarily used for shields, armours and weapons */
 void set_hits(class unit_data *obj, int craftsmanship)

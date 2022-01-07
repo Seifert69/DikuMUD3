@@ -7,12 +7,12 @@
  */
 
 #ifdef _WINDOWS
-#include <time.h>
-#include <winsock2.h>
+    #include <time.h>
+    #include <winsock2.h>
 #else
-#include <unistd.h>
-#include <sys/time.h>
-#include <exception>
+    #include <unistd.h>
+    #include <sys/time.h>
+    #include <exception>
 
 #endif
 #include <sys/types.h>
@@ -23,21 +23,20 @@
 #include "hook.h"
 #include "utility.h"
 
-cCaptainHook CaptainHook;
+cCaptainHook g_CaptainHook;
 
 //
 // For the MUD server:
 //     Listen on the mother port (4999) for connecting Multiplexers:
-//        CaptainHook.Hook(fdMother, &MotherHook);
+//        g_CaptainHook.Hook(fdMother, &g_MotherHook);
 //     thus Mother listening is in the cCaptainHook:cHook (I think)
 //
 //     Each connecting Mplex'er, and Mother Connection is stored here:
-//        CaptainHook.Hook (t, &Multi.Multi[i]);
+//        g_CaptainHook.Hook (t, &g_Multi.g_Multi[i]);
 //      which is a cMultiMaster::cMulti::cHook
 //
 // Also used in the Mplex'ers.
 //
-
 
 /* ------------------------------------------------------------------- */
 /*                                HOOK NATIVE                          */
@@ -79,11 +78,11 @@ void cHookNative::Unhook(void)
         return;
 
     int i;
-    #ifdef _WINDOWS
-        i = closesocket(fd);
-    #else
-        i = close(fd);
-    #endif
+#ifdef _WINDOWS
+    i = closesocket(fd);
+#else
+    i = close(fd);
+#endif
 
     fd = -1;
 
@@ -97,9 +96,8 @@ void cHookNative::Unhook(void)
 /*                     NETWORK READ & WRITE                            */
 /* ------------------------------------------------------------------- */
 
-
 //  > 0 number of bytes written
-// == 0 try again later (EWOULDBLOCK) 
+// == 0 try again later (EWOULDBLOCK)
 // -1 : error (it's been unhooked)
 //
 int cHookNative::write(const void *buf, int count)
@@ -121,8 +119,7 @@ int cHookNative::write(const void *buf, int count)
         if (thisround == 0)
         {
             /* This should never happen! */
-            slog(LOG_ALL, 0,
-                    "SYSERR: Huh??  write() returned 0???  Please report this!");
+            slog(LOG_ALL, 0, "SYSERR: Huh??  write() returned 0???  Please report this!");
             Unhook();
             return -1;
         }
@@ -136,18 +133,16 @@ int cHookNative::write(const void *buf, int count)
             }
             else
             {
-
                 /* Must be a fatal error. */
-                slog(LOG_ALL, 0,
-                        "PushWrite (%d): Write to socket, error %d", fd,
-                        WSAGetLastError());
+                slog(LOG_ALL, 0, "PushWrite (%d): Write to socket, error %d", fd, WSAGetLastError());
                 Unhook();
                 return -1;
             }
         }
 #else
-        try {
-            thisround = ::write(fd, (char *) buf + sofar, count - sofar);
+        try
+        {
+            thisround = ::write(fd, (char *)buf + sofar, count - sofar);
         }
         catch (const std::exception &ex)
         {
@@ -158,13 +153,13 @@ int cHookNative::write(const void *buf, int count)
 
         if (thisround == 0)
         {
-            slog(LOG_ALL, 0, "cHookNative (%d): Write to socket EOF", (int) fd);
+            slog(LOG_ALL, 0, "cHookNative (%d): Write to socket EOF", (int)fd);
             Unhook();
             return -1;
         }
         else if (thisround < 0)
         {
-            if (errno == EWOULDBLOCK) 
+            if (errno == EWOULDBLOCK)
                 return sofar;
 
             slog(LOG_ALL, 0, "cHookNative (%d): Write to socket, error %d", fd, errno);
@@ -181,10 +176,8 @@ int cHookNative::write(const void *buf, int count)
     return sofar;
 }
 
-
-
 //  > 0 number of bytes read to buffer
-// == 0 try again later (EWOULDBLOCK) 
+// == 0 try again later (EWOULDBLOCK)
 // -1 : error (and it's been unhooked or was unhooked, fd closed)
 //
 int cHookNative::read(void *buf, int count)
@@ -230,9 +223,6 @@ int cHookNative::read(void *buf, int count)
     return -1;
 }
 
-
-
-
 /* ------------------------------------------------------------------- */
 /*                                HOOK                                 */
 /* ------------------------------------------------------------------- */
@@ -269,7 +259,7 @@ int cHook::tfd(void)
 void cHook::Unhook(void)
 {
     if (IsHooked())
-        CaptainHook.Unhook(this);
+        g_CaptainHook.Unhook(this);
 
     fd = -1;
 }*/
@@ -307,7 +297,7 @@ void cHook::PushWrite(void)
             else if (thisround < 0) // Error
             {
                 // will now be closed and error logged
-                if (IsHooked()) 
+                if (IsHooked())
                     slog(LOG_ALL, 0, "PushWrite: Still hooked even though error - not possible");
                 return;
             }
@@ -327,7 +317,6 @@ void cHook::PushWrite(void)
     }
 }
 
-
 void cHook::Write(ubit8 *pData, ubit32 nLen, int bCopy)
 {
     if (nLen <= 0)
@@ -344,7 +333,6 @@ void cHook::Write(ubit8 *pData, ubit32 nLen, int bCopy)
 
     PushWrite();
 }
-
 
 // For this hook, read as much as we can from the network
 // into the Hook's Rx queue...
@@ -371,7 +359,7 @@ int cHook::ReadToQueue(void)
         else // (thisround < 0)
         {
             // will now be closed and error logged
-            if (IsHooked()) 
+            if (IsHooked())
                 slog(LOG_ALL, 0, "ReadToQueue: Still hooked even though error - not possible");
             return -1;
         }
@@ -423,19 +411,19 @@ void cCaptainHook::Hook(int nHandle, cHook *hook)
 {
     static int newid = 0;
 
-    assert(nHandle < (int) sizeof(pfHook)); 
+    assert(nHandle < (int)sizeof(pfHook));
     assert(pfHook[nHandle] == NULL);
 
     if (hook->fd != -1)
     {
-        slog(LOG_ALL, 0, "ODD Hook() called with a non -1 fd (fd == %d).", (int) hook->fd);
+        slog(LOG_ALL, 0, "ODD Hook() called with a non -1 fd (fd == %d).", (int)hook->fd);
     }
 
-    //assert(hook->fd == -1);
+    // assert(hook->fd == -1);
 
     pfHook[nHandle] = hook;
     hook->Hook(nHandle);
-    //hook->fd = nHandle;
+    // hook->fd = nHandle;
     hook->id = newid++;
 
     hook->qTX.Flush();
@@ -450,7 +438,6 @@ void cCaptainHook::Hook(int nHandle, cHook *hook)
 
     // DEBUG("HOOKED: Fd %d, Flags %d, Max %d\n", nHandle, nFlag, nMax);
 }
-
 
 void cCaptainHook::Unhook(cHook *hook)
 {
@@ -476,7 +463,7 @@ void cCaptainHook::Unhook(cHook *hook)
     // pfHook[nHandle]->fd = -1; // This should get unset in Unhook on close()
     pfHook[nHandle]->id = -1;
     pfHook[nHandle]->qTX.Flush();
-    pfHook[nHandle]->qRX.Flush();    
+    pfHook[nHandle]->qRX.Flush();
     pfHook[nHandle] = NULL;
 
     nMax = 0;
@@ -529,7 +516,7 @@ int cCaptainHook::Wait(struct timeval *timeout)
             n = 1;
         else if (errno == EINTR)
         {
-            //slog(LOG_ALL, 0, "CaptainHook: Select Interrupted.\n");
+            // slog(LOG_ALL, 0, "CaptainHook: Select Interrupted.\n");
             n = 1;
         }
         else
@@ -560,7 +547,6 @@ int cCaptainHook::Wait(struct timeval *timeout)
 
             if (nFlag && pfTmpHook)
             {
-
                 if ((pfTmpHook == pfHook[tmpfd]) && (pfTmpHook->id == nId[i]))
                 {
                     if (pfTmpHook->tfd() == -1)
