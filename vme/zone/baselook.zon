@@ -821,7 +821,31 @@ code
                temp := temp + "She ";
             else
                temp := temp + "It ";
-            temp := temp + "has big green ears, and long greasy hair.";
+		   
+		    if (item.race == RACE_HUMAN)
+				temp := temp + "has dusty blond hair and a rebellious look.";
+			else if (item.race == RACE_ELF)
+				temp := temp + "has pointed ears and a fair complexion.";
+			else if (item.race == RACE_DWARF)
+				temp := temp + "is a stocky dwarf with a fierce air.";
+			else if (item.race == RACE_HALFLING)
+				temp := temp + "looks slyly back at you from under a topknot.";
+			else if (item.race == RACE_GNOME)
+				temp := temp + "is rather small and, well, gnomish.";
+			else if (item.race == RACE_HALF_ORC)
+				temp := temp + "has an ungly face and mishappen hair.";
+			else if (item.race == RACE_HALF_OGRE)
+				temp := temp + "has big green ears, and long greasy hair.";
+			else if (item.race == RACE_HALF_ELF)
+				temp := temp + "looks almost human, though has slightly pointed ears.";
+			else if (item.race == RACE_BROWNIE)
+				temp := temp + "has a knobby nose and bushy brows.";
+			else if (item.race == RACE_GROLL)
+				temp := temp + "looks gruffly back at you from an impressive height.";
+			else if (item.race == RACE_DARK_ELF)
+				temp := temp + "has pointed ears and a dark complexion.";
+			else
+				temp := temp + "seems strangely featureless.";
          }
          else if ((item.type == UNIT_ST_PC) and (item.level >= IMMORTAL_LEVEL))
          {
