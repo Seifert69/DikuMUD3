@@ -1,16 +1,86 @@
 #!/bin/bash
 #
 # No parameters
-
-# Get the general environment variables
 #
-#
-exec ./runloop.sh dispatcher.py "" MUDTAG
-exec $0
-
 # Don't forget in vme/bin/ to
+#    pip3 install virtualenv
+#    virtualenv pythonEnv  (or you can use: python3 -m venv ./pythonEnv)
+#    source pythonEnv/bin/activate
+#    python3 -m pip install -U discord.py
 #
-# pip3 install virtualenv
-# virtualenv pythonEnv
-# source pythonEnv/bin/activate
-# python3 -m pip install -U discord.py
+
+EXECUTABLE="dispatcher.py"
+FULLCMD="python3 -u $EXECUTABLE"
+LOG_FILE="$VME_ROOT/log/dispatcher.log"
+
+trap "" 1 2 3
+umask 007
+
+#
+# Test for the VME_ROOT variable and guess it if it is not available.
+#
+if [ -z ${VME_ROOT} ]; then
+   echo "VME_ROOT not set $VME_ROOT, guessing it is at {$PWD/..}"
+   VME_ROOT="$PWD/.."
+fi
+
+#
+# Test that there is a vme executable at $VME_ROOT/bin/$EXECUTABLE
+#
+if [ ! -f ${VME_ROOT}/bin/$EXECUTABLE ]; then
+   echo "No $EXECUTABLE executable at $VME_ROOT/bin/$EXECUTABLE"
+   exit 1
+fi
+
+#
+# Test if the executable is running already
+#
+MYPID="$(pgrep -lxf "$FULLCMD" -u $USER)"
+if [ -n "${MYPID}" ]; then
+   echo "An instance of $FULLCMD is already running [$MYPID]."
+   echo "Please stop it and try again."
+   exit 1
+fi
+
+#
+# I tried to detect if the script was running already but that
+# was pretty clonky  with both pgrep and pidof when you both
+# need to check for the user (only pgrep) and then can't exclude
+# child processes. So executable check only.
+
+#
+# Rotate the logs. It's simple. It works
+#
+cd $VME_ROOT/log
+if [ -f dispatcher.log ]; then
+   mv -f dispatcher.log.9.gz dispatcher.log.10.gz 2>/dev/null
+   mv -f dispatcher.log.8.gz dispatcher.log.9.gz  2>/dev/null
+   mv -f dispatcher.log.7.gz dispatcher.log.8.gz  2>/dev/null
+   mv -f dispatcher.log.6.gz dispatcher.log.7.gz  2>/dev/null
+   mv -f dispatcher.log.5.gz dispatcher.log.6.gz  2>/dev/null
+   mv -f dispatcher.log.4.gz dispatcher.log.5.gz  2>/dev/null
+   mv -f dispatcher.log.3.gz dispatcher.log.4.gz  2>/dev/null
+   mv -f dispatcher.log.2.gz dispatcher.log.3.gz  2>/dev/null
+   mv -f dispatcher.log.1.gz dispatcher.log.2.gz  2>/dev/null
+   gzip dispatcher.log
+   mv -f dispatcher.log.gz dispatcher.log.1.gz
+fi
+
+#
+# Switch to the default binary directory
+#
+cd $VME_ROOT/bin
+echo "*** $EXECUTABLE started by $USER at `date`. ***" >> $LOG_FILE
+echo `uptime` >> $LOG_FILE
+
+source ./pythonEnv/bin/activate
+$FULLCMD 2>&1 >> $LOG_FILE
+deactivate
+
+res="$?"
+echo "*** $EXECUTABLE exited with code [$res] ***" >> $LOG_FILE
+
+script_name=$(basename -- "$0")
+echo "Re-running $VME_ROOT/bin/$script_name"
+sleep 1
+exec $VME_ROOT/bin/$script_name >/dev/null 2>&1

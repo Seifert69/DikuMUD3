@@ -1,54 +1,85 @@
 #!/bin/bash
 #
-# runmud
+# runvme.sh
 # Usage:  Starting and maintaining run of VME Server
 #
+# $VME_ROOT needs to be set to the vme/ folder of your installation
+#
+EXECUTABLE="vme"
+
 umask 007
 
 #
-# if you intend to run this not from the bin directory uncommet the next line
-# and change the path to equal the bin dir
-cd /home/val/vme/bin
-
-
-#NOP=`ps -wx | grep "vme" | grep -v "runmplex" |grep -v "startvme" | grep -v "runvme"| wc | awk '{ print $1;}'`
-#STOP=`expr $NOP \> 1`
-
-#if [ $STOP -eq 1 ]
-#then
-
-#	echo "VME Server Already up, terminating.\n"#
-#	exit 0
-
-#fi
-
-gzip -f ../log/vme.log >/dev/null 2>&1
-
-nice -n 20 ./organize.sh >/dev/null 2>&1
-
-echo "*** VME Server started by $USER at `date`. ***" > ../log/vme.log
-echo `uptime` >> ../log/vme.log
-
-rm -f ../lib/ply/player.tmp >/dev/null 2>&1
-
-mv ../zone/nxtzon/* ../zone >/dev/null 2>&1
-
-./vme -s../etc/server.cfg -l../log/vme.log
-
-let "res = 1"
-echo "*** vme result was: $res ***" >> ../log/vme.log
-if [ $res -eq 0 ]
-then
-{
-   echo "*** VME Server shutdown at `date`." >> ../log/vme.log;
-	 exit 0
-}
-else
-{
-   echo "*** VME Server about to reboot at `date`." >> ../log/vme.log
-}
+# Test for the VME_ROOT variable and guess it if it is not available.
+#
+if [ -z ${VME_ROOT} ]; then
+   echo "VME_ROOT not set $VME_ROOT, guessing it is at {$PWD/..}"
+   VME_ROOT="$PWD/.."
 fi
 
-sleep 60 
+#
+# Test that there is a vme executable at $VME_ROOT/bin/$EXECUTABLE
+#
+if [ ! -f ${VME_ROOT}/bin/$EXECUTABLE ]; then
+   echo "No $EXECUTABLE executable at $VME_ROOT/bin/$EXECUTABLE"
+   exit 1
+fi
 
-exec ./runvme.sh >/dev/null 2>&1
+#
+# Test if the executable is running already
+#
+MYPID="$(pgrep -lx $EXECUTABLE -u $USER)"
+if [ -n "${MYPID}" ]; then
+   echo "An instance of $EXECUTABLE is already running [$MYPID]."
+   echo "Please stop it and try again."
+   exit 1
+fi
+
+#
+# I tried to detect if the script was running already but that
+# was pretty clonky  with both pgrep and pidof when you both
+# need to check for the user (only pgrep) and then can't exclude
+# child processes. So executable check only.
+
+#
+# Rotate the logs. It's simple. It works
+#
+cd $VME_ROOT/log
+if [ -f vme.log ]; then
+   mv -f vme.log.9.gz vme.log.10.gz 2>/dev/null
+   mv -f vme.log.8.gz vme.log.9.gz  2>/dev/null
+   mv -f vme.log.7.gz vme.log.8.gz  2>/dev/null
+   mv -f vme.log.6.gz vme.log.7.gz  2>/dev/null
+   mv -f vme.log.5.gz vme.log.6.gz  2>/dev/null
+   mv -f vme.log.4.gz vme.log.5.gz  2>/dev/null
+   mv -f vme.log.3.gz vme.log.4.gz  2>/dev/null
+   mv -f vme.log.2.gz vme.log.3.gz  2>/dev/null
+   mv -f vme.log.1.gz vme.log.2.gz  2>/dev/null
+   gzip vme.log
+   mv -f vme.log.gz vme.log.1.gz
+fi
+
+#
+# Ought to rotate cores here too,
+#
+
+
+#
+# Switch to the default binary directory
+#
+cd $VME_ROOT/bin
+echo "*** VME Server started by $USER at `date`. ***" >> $VME_ROOT/log/vme.log
+echo `uptime` >> $VME_ROOT/log/vme.log
+
+rm -f $VME_ROOT/lib/ply/player.tmp >/dev/null 2>&1
+mv $VME_ROOT/zone/nxtzon/* ../zone >/dev/null 2>&1
+
+$VME_ROOT/bin/vme -s$VME_ROOT/etc/server.cfg -l$VME_ROOT/log/vme.log
+
+res="$?"
+echo "*** vme exited with code [$res] ***" >> $VME_ROOT/log/vme.log
+
+script_name=$(basename -- "$0")
+#echo "exec $VME_ROOT/bin/$script_name"
+sleep 1
+exec $VME_ROOT/bin/$script_name >/dev/null 2>&1
