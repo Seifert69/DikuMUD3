@@ -1,5 +1,7 @@
 # Building with cmake from command line
 
+Special thanks to @bluedreamer for modernizing our Makefiles :+1
+
 Pre-requisites:
    * cmake
    * optional ninja build system (Fedora: `sudo dnf install ninja-build`)
@@ -10,7 +12,7 @@ Pre-requisites:
     Fedora/Centos 8/9: sudo dnf install cmake
 
 ### ninja
-    Ubuntu: sudo apt-get install ninja-build
+    Ubuntu: sudo apt-get insta@ll ninja-build
     Centos 7: not available in official repos - requires manual install
     Fedora/Centos 8/9: dnf install ninja-build
 
