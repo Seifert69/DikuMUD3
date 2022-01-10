@@ -15,6 +15,6 @@ void show_ban_text(char *site, class descriptor_data *d);
 #define BAN_NEW_CHARS 'n' /* if(until == 0) ban is forever, otherwise      */
 #define BAN_TOTAL 't'     /* it will be lifted when time(0) passes "until" */
 
-#define BAN_FILE "ban_list"
+const std::string BAN_FILE{"ban_list"};
 
 #endif /* _MUD_BAN_H */

@@ -5,16 +5,13 @@
  $Revision: 2.9 $
  */
 #include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdarg.h>
-#include <time.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <cstdarg>
+#include <ctime>
 
 #include "utils.h"
-#include "textutil.h"
-#include "skills.h"
 #include "comm.h"
 #include "db.h"
 #include "handler.h"
@@ -1034,7 +1031,7 @@ void szonelog(class zone_type *zone, const char *fmt, ...)
     snprintf(buf2, sizeof(buf2), "%s/%s", zone->name, buf);
     slog(LOG_ALL, 0, buf2);
 
-    snprintf(name, sizeof(name), "%s%s.err", g_cServerConfig.m_zondir, zone->filename);
+    snprintf(name, sizeof(name), "%s%s.err", g_cServerConfig.getZoneDir().c_str(), zone->filename);
 
     if ((f = fopen_cache(name, "a")) == NULL)
     {

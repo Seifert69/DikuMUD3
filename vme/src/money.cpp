@@ -5,11 +5,11 @@
  $Revision: 2.5 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <assert.h>
-#include <ctype.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <cassert>
+#include <cctype>
 
 #include "structs.h"
 #include "utils.h"
@@ -768,8 +768,7 @@ void boot_money(void)
 
     // if ((fl = fopen (str_cc (moneyfile, MONEYDEF_FILE), "r")) == NULL)
 #else
-    myfile = g_cServerConfig.m_etcdir;
-    myfile.append(MONEYDEF_FILE);
+    myfile = g_cServerConfig.getFileInEtcDir(MONEYDEF_FILE);
     // if ((fl = fopen (str_cc (g_cServerConfig.m_etcdir, MONEYDEF_FILE), "r")) == NULL)
 #endif
     if ((fl = fopen(myfile.c_str(), "r")) == NULL)

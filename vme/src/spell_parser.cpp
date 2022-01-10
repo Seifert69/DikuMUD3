@@ -5,9 +5,9 @@
  $Revision: 2.3 $
  */
 #include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 
 #include "structs.h"
 #include "utils.h"
@@ -20,8 +20,6 @@
 #include "textutil.h"
 #include "utility.h"
 #include "dilrun.h"
-#include "db_file.h"
-#include "common.h"
 #include "magic.h"
 #include "justice.h"
 #include "files.h"
@@ -502,8 +500,8 @@ static void spell_read(void)
     char *pCh;
     FILE *fl;
 
-    touch_file(str_cc(g_cServerConfig.m_etcdir, SPELL_DEFS));
-    if (!(fl = fopen(str_cc(g_cServerConfig.m_etcdir, SPELL_DEFS), "rb")))
+    touch_file(g_cServerConfig.getFileInEtcDir(SPELL_DEFS));
+    if (!(fl = fopen(g_cServerConfig.getFileInEtcDir(SPELL_DEFS).c_str(), "rb")))
     {
         slog(LOG_ALL, 0, "unable to create etc file " SPELL_DEFS);
         exit(0);

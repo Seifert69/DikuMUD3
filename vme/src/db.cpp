@@ -6,11 +6,10 @@
  */
 #include "external_vars.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <time.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <cctype>
 
 #include "dbfind.h"
 #include "structs.h"
@@ -18,9 +17,7 @@
 #include "db.h"
 #include "db_file.h"
 #include "dil.h"
-#include "comm.h"
 #include "handler.h"
-#include "vmelimits.h"
 #include "textutil.h"
 #include "skills.h"
 #include "affect.h"
@@ -46,7 +43,7 @@ cSector g_sector_dat;
 struct zone_info_type g_zone_info = {0, NULL};
 
 class room_direction_data *create_direction_data(void);
-
+char *read_info_file(const std::string &name, char *oldstr);
 /* By using this, we can easily sort the list if ever needed
 void insert_unit_in_zone_list(zone_type *zp, class unit_data *u)
 {
@@ -329,7 +326,7 @@ void generate_zone_indexes(void)
 
     g_zone_info.no_of_zones = 0;
 
-    if ((zone_file = fopen(str_cc(g_cServerConfig.m_etcdir, ZONE_FILE_LIST), "r")) == NULL)
+    if ((zone_file = fopen(g_cServerConfig.getFileInEtcDir(ZONE_FILE_LIST).c_str(), "r")) == NULL)
     {
         slog(LOG_OFF, 0, "Could not open file containing filenames of zones: %s", ZONE_FILE_LIST);
         exit(0);
@@ -363,7 +360,7 @@ void generate_zone_indexes(void)
         if (str_is_empty(zone))
             break;
 
-        snprintf(filename, sizeof(filename), "%s%s.data", g_cServerConfig.m_zondir, zone);
+        snprintf(filename, sizeof(filename), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), zone);
 
         /* Skip password */
         c = str_next_word_copy(c, tmpbuf);
@@ -1333,7 +1330,7 @@ void read_unit_file(class file_index_type *org_fi, CByteBuffer *pBuf)
     FILE *f;
     char buf[256];
 
-    snprintf(buf, sizeof(buf), "%s%s.data", g_cServerConfig.m_zondir, org_fi->zone->filename);
+    snprintf(buf, sizeof(buf), "%s%s.data", g_cServerConfig.getZoneDir().c_str(), org_fi->zone->filename);
 
     if ((f = fopen_cache(buf, "rb")) == NULL)
         error(HERE, "Couldn't open %s for reading.", buf);
@@ -1595,7 +1592,7 @@ void read_all_zones(void)
         if (strcmp(zone->second->name, "_players") == 0)
             continue;
 
-        snprintf(filename, sizeof(filename), "%s%s.reset", g_cServerConfig.m_zondir, zone->second->filename);
+        snprintf(filename, sizeof(filename), "%s%s.reset", g_cServerConfig.getZoneDir().c_str(), zone->second->filename);
 
         if ((f = fopen(filename, "rb")) == NULL)
         {
@@ -1615,7 +1612,7 @@ void read_all_zones(void)
     }
 }
 
-char *read_info_file(char *name, char *oldstr)
+char *read_info_file(const char *name, char *oldstr)
 {
     char tmp[20 * MAX_STRING_LENGTH];
     char buf[20 * MAX_STRING_LENGTH];
@@ -1627,6 +1624,11 @@ char *read_info_file(char *name, char *oldstr)
     str_escape_format(tmp, buf, sizeof(buf));
 
     return str_dup(buf);
+}
+
+char *read_info_file(const std::string &name, char *oldstr)
+{
+    return read_info_file(name.c_str(), oldstr);
 }
 
 void boot_db(void)
@@ -1732,7 +1734,7 @@ void boot_db(void)
     slog(LOG_OFF, 0, "Performing boot time reset.");
     reset_all_zones();
 
-    touch_file(str_cc(g_cServerConfig.m_logdir, STATISTICS_FILE));
+    touch_file(g_cServerConfig.getFileInLogDir(STATISTICS_FILE));
 }
 
 void db_shutdown(void)

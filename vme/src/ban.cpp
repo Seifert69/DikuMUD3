@@ -5,19 +5,16 @@
  $Revision: 2.2 $
  */
 
-#include <time.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <ctime>
+#include <cstring>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
 
 #include "structs.h"
-#include "utils.h"
 #include "comm.h"
 #include "textutil.h"
 #include "interpreter.h"
-#include "utility.h"
-#include "db_file.h"
 #include "db.h"
 #include "ban.h"
 #include "files.h"
@@ -26,8 +23,6 @@
 /* Kindly left out of time.h by <Insert_Unix_Vendor> */
 size_t strftime(char *s, size_t smax, const char *fmt, const struct tm *tp);
 #endif
-
-#define BAN_SAVE str_cc(g_cServerConfig.m_libdir, BAN_FILE)
 
 struct ban_t
 {
@@ -41,7 +36,7 @@ struct ban_t
 void save_ban(void)
 {
     struct ban_t *tmp;
-    FILE *bf = fopen(BAN_SAVE, "w");
+    FILE *bf = fopen(g_cServerConfig.getFileInLibDir(BAN_FILE).c_str(), "w");
     assert(bf);
 
     for (tmp = ban_list; tmp; tmp = tmp->next)
@@ -56,9 +51,9 @@ void load_ban(void)
     struct ban_t *tmp;
     char buf[256], site[256], textfile[256];
 
-    touch_file(BAN_SAVE);
+    touch_file(g_cServerConfig.getFileInLibDir(BAN_FILE));
 
-    bf = fopen(BAN_SAVE, "r");
+    bf = fopen(g_cServerConfig.getFileInLibDir(BAN_FILE).c_str(), "r");
     assert(bf);
 
     while (fgets(buf, sizeof buf, bf) != NULL)
@@ -315,7 +310,7 @@ void show_ban_text(char *site, class descriptor_data *d)
     {
         if (ban_check(entry->site, site))
         {
-            if (file_to_string(str_cc(g_cServerConfig.m_etcdir, entry->textfile), bantext, sizeof(bantext) - 1) == -1)
+            if (file_to_string(g_cServerConfig.getFileInEtcDir(entry->textfile), bantext, sizeof(bantext) - 1) == -1)
                 send_to_descriptor("Your site has been banned.<br/>", d);
             else
             {

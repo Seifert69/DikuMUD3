@@ -5,6 +5,7 @@
 #include <cstdarg>
 #include "config.h"
 #include "db.h"
+#include "diku_exception.h"
 
 struct CServerConfiguration_Fixture
 {
@@ -36,7 +37,6 @@ struct CServerConfiguration_Fixture
     } slog;
 
     char fake_server_config_filename[L_tmpnam]{};
-    bool exit_called{false};
 };
 
 // Make the current Fixture available to slog et al hijacks
@@ -58,16 +58,6 @@ void slog(enum log_level level, ubit8 wizinv_level, const char *fmt, ...)
     va_end(args);
 }
 
-struct hijack_exit_exception
-{
-};
-// Hijack lib exit()
-void exit(int)
-{
-    CServerConfiguration_Fixture::m_fixptr->exit_called = true;
-    throw hijack_exit_exception();
-}
-
 // Attach fixture to suite so each test case gets a new copy
 BOOST_FIXTURE_TEST_SUITE(CServerConfiguration_tests, CServerConfiguration_Fixture)
 
@@ -75,50 +65,42 @@ BOOST_AUTO_TEST_CASE(default_ctor_test)
 {
     CServerConfiguration config;
 
-    BOOST_TEST(config.m_nMotherPort == 4999);
-    BOOST_TEST(config.m_nRentModifier == 10);
-    BOOST_TEST(config.m_bAccounting == 0);
-    BOOST_TEST(config.m_bAliasShout == TRUE);
-    BOOST_TEST(config.m_bBBS == FALSE);
-    BOOST_TEST(config.m_bLawful == FALSE);
-    BOOST_TEST(config.m_bNoSpecials == FALSE);
-    BOOST_TEST(config.m_bBOB == FALSE);
-    BOOST_TEST(config.m_nShout == 1);
-    BOOST_TEST(config.m_hReboot == 0);
-    // Compile test that color member exists, it has its own unit tests
-    (void)config.color;
+    BOOST_TEST(config.getMotherPort() == 4999);
+    BOOST_TEST(config.getRentModifier() == 10);
+    BOOST_TEST(config.isAccounting() == false);
+    BOOST_TEST(config.isAliasShout() == true);
+    BOOST_TEST(config.isBBS() == false);
+    BOOST_TEST(config.isLawful() == false);
+    BOOST_TEST(config.isNoSpecials() == false);
+    BOOST_TEST(config.isBOB() == false);
+    BOOST_TEST(config.getShout() == 1);
+    BOOST_TEST(config.getReboot() == 0);
     {
-        auto empty = decltype(CServerConfiguration::m_sSubnetMask){0};
-        BOOST_TEST(memcmp(&config.m_sSubnetMask, &empty, sizeof(config.m_sSubnetMask)) == 0);
+        in_addr empty{0};
+        BOOST_TEST(config.getSubnetMask().s_addr == empty.s_addr);
     }
     {
-        auto empty = decltype(CServerConfiguration::m_sLocalhost){0};
-        BOOST_TEST(memcmp(&config.m_sLocalhost, &empty, sizeof(config.m_sLocalhost)) == 0);
+        in_addr empty{0};
+        BOOST_TEST(config.getLocalhost().s_addr == empty.s_addr);
     }
     {
-        auto empty = std::remove_reference<decltype(*CServerConfiguration::m_aMplexHosts)>::type{0};
-        auto array_size = sizeof(config.m_aMplexHosts) / sizeof(config.m_aMplexHosts[0]);
-        for (auto i = 0; i < array_size; ++i)
+        in_addr empty{0};
+        for (auto i = 0U; i < CServerConfiguration::MAX_MPLEX_HOSTS; ++i)
         {
-            BOOST_TEST(memcmp(&config.m_aMplexHosts[i], &empty, sizeof(config.m_aMplexHosts[0])) == 0);
+            BOOST_TEST(config.getMplexHost(i).s_addr == empty.s_addr);
         }
     }
-    (void)config.m_promptstr;
-    BOOST_TEST_WARN(false, "m_promptstr is not set in default ctor");
-    BOOST_TEST(config.m_libdir == nullptr);
-    BOOST_TEST(config.m_plydir == nullptr);
-    BOOST_TEST(config.m_etcdir == nullptr);
-    BOOST_TEST(config.m_logdir == nullptr);
-    BOOST_TEST(config.m_zondir == nullptr);
-    (void)config.m_dilfiledir;
-    BOOST_TEST_WARN(false, "m_dilfiledir is not set in default ctor");
-    BOOST_TEST(config.m_mudname == nullptr);
-    BOOST_TEST(config.m_pLogo == nullptr);
-
-    (void)config.m_pColor;
-    BOOST_TEST_WARN(false, "m_pColor is not set in default ctor");
-
-    BOOST_TEST(config.m_pImmortName == nullptr);
+    BOOST_TEST(config.getPromptString().empty());
+    BOOST_TEST(config.getLibDir().empty());
+    BOOST_TEST(config.getPlyDir().empty());
+    BOOST_TEST(config.getEtcDir().empty());
+    BOOST_TEST(config.getLogDir().empty());
+    BOOST_TEST(config.getZoneDir().empty());
+    BOOST_TEST(config.getDILFileDir().empty());
+    BOOST_TEST(config.getMudName().empty());
+    BOOST_TEST(config.getLogo().empty());
+    BOOST_TEST(config.getColorString().empty());
+    BOOST_TEST(config.getImmortalName().empty());
 }
 
 /**
@@ -129,103 +111,82 @@ BOOST_AUTO_TEST_CASE(Boot_test)
     CServerConfiguration config;
     config.Boot(fake_server_config_filename);
 
-    BOOST_TEST(config.m_nMotherPort == 4999);
-    BOOST_TEST(config.m_nRentModifier == 0);
-    BOOST_TEST(config.m_bAccounting == 0);
-    BOOST_TEST(config.m_bAliasShout == 0);
-    BOOST_TEST(config.m_bBBS == FALSE);
-    BOOST_TEST(config.m_bLawful == FALSE);
-    BOOST_TEST(config.m_bNoSpecials == FALSE);
-    BOOST_TEST(config.m_bBOB == 1);
-    BOOST_TEST(config.m_nShout == 0);
-    BOOST_TEST(config.m_hReboot == 0);
-    // Compile test that color member exists, it has its own unit tests
-    (void)config.color;
+    BOOST_TEST(config.getMotherPort() == 4999);
+    BOOST_TEST(config.getRentModifier() == 0);
+    BOOST_TEST(config.isAccounting() == false);
+    BOOST_TEST(config.isAliasShout() == false);
+    BOOST_TEST(config.isBBS() == false);
+    BOOST_TEST(config.isLawful() == false);
+    BOOST_TEST(config.isNoSpecials() == false);
+    BOOST_TEST(config.isBOB() == true);
+    BOOST_TEST(config.getShout() == 0);
+    BOOST_TEST(config.getReboot() == 0);
     {
-        auto expected = decltype(CServerConfiguration::m_sSubnetMask){UINT32_MAX};
-        BOOST_TEST(config.m_sSubnetMask.s_addr == expected.s_addr);
+        in_addr empty{UINT32_MAX};
+        BOOST_TEST(config.getSubnetMask().s_addr == empty.s_addr);
     }
     {
-        auto expected = decltype(CServerConfiguration::m_sLocalhost){0};
-        BOOST_TEST(memcmp(&config.m_sLocalhost, &expected, sizeof(config.m_sLocalhost)) == 0);
+        in_addr empty{0};
+        BOOST_TEST(config.getLocalhost().s_addr == empty.s_addr);
     }
     {
-        constexpr auto array_size = sizeof(config.m_aMplexHosts) / sizeof(config.m_aMplexHosts[0]);
-        std::remove_reference<decltype(*CServerConfiguration::m_aMplexHosts)>::type expected[array_size]{
-            16777343,  // 127.0.0.1
-            352823488, // 192.168.7.21
-            352823488, // This looks weird - its like the last IP gets copied to the rest of the slots
-            352823488,
-            352823488,
-            352823488,
-            352823488,
-            352823488,
-            352823488,
-            352823488,
+        std::vector<in_addr> expected{
+            {16777343},  // 127.0.0.1
+            {352823488}, // 192.168.7.21
+            {352823488}, // This looks weird - its like the last IP gets copied to the rest of the slots
+            {352823488},
+            {352823488},
+            {352823488},
+            {352823488},
+            {352823488},
+            {352823488},
+            {352823488},
         };
 
-        for (auto i = 0; i < array_size; ++i)
+        size_t i = 0;
+        for (auto host : config.getMplexHosts())
         {
-            BOOST_TEST(config.m_aMplexHosts[i].s_addr == expected[i].s_addr);
+            BOOST_TEST(host.s_addr == expected[i].s_addr,
+                       "index " << i << ": mplex:" << host.s_addr << " = " << expected[i].s_addr << ":expected");
+            ++i;
         }
     }
-    BOOST_TEST(config.m_promptstr);
-    BOOST_TEST(std::string(config.m_promptstr) == "%mana%m/%e%e/%hp%h> ");
-    BOOST_TEST(config.m_libdir);
-    BOOST_TEST(std::string(config.m_libdir) == "../lib/");
-    BOOST_TEST(config.m_plydir);
-    BOOST_TEST(std::string(config.m_plydir) == "../lib/ply/");
-    BOOST_TEST(config.m_etcdir);
-    BOOST_TEST(std::string(config.m_etcdir) == "../etc/");
-    BOOST_TEST(config.m_logdir);
-    BOOST_TEST(std::string(config.m_logdir) == "../log/");
-    BOOST_TEST(config.m_zondir);
-    BOOST_TEST(std::string(config.m_zondir) == "../zone/");
-    BOOST_TEST(config.m_dilfiledir);
-    BOOST_TEST(std::string(config.m_dilfiledir) == "../lib/dilfiles/");
-    BOOST_TEST(config.m_mudname);
-    BOOST_TEST(std::string(config.m_mudname) == "DikuMUD III Git Vanilla");
+    BOOST_TEST(config.getPromptString() == "%mana%m/%e%e/%hp%h> ");
+    BOOST_TEST(config.getLibDir() == "../lib/");
+    BOOST_TEST(config.getPlyDir() == "../lib/ply/");
+    BOOST_TEST(config.getEtcDir() == "../etc/");
+    BOOST_TEST(config.getLogDir() == "../log/");
+    BOOST_TEST(config.getZoneDir() == "../zone/");
+    BOOST_TEST(config.getDILFileDir() == "../lib/dilfiles/");
+    BOOST_TEST(config.getMudName() == "DikuMUD III Git Vanilla");
 
     {
-        BOOST_TEST(config.m_pLogo);
         // Don't like doing it this way TODO Update to pass in logo file
-        std::string filename{config.m_etcdir};
-        filename += LOGO_FILE;
-        std::ifstream in(filename, std::ios_base::binary);
+        std::ifstream in(config.getFileInEtcDir(LOGO_FILE), std::ios_base::binary);
         std::string expected{(std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>()};
-        BOOST_TEST(std::string(config.m_pLogo) == expected);
+        BOOST_TEST(config.getLogo() == expected);
     }
 
     {
-        BOOST_TEST(config.m_pColor);
         // Don't like doing it this way TODO Update to pass in color file
-        std::string filename{config.m_etcdir};
+        std::string filename{config.getEtcDir()};
         filename += COLOR_FILE;
         std::ifstream in(filename, std::ios_base::binary);
         std::string expected{(std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>()};
-        BOOST_TEST(std::string(config.m_pColor) == expected);
+        BOOST_TEST(config.getColorString() == expected);
     }
-    BOOST_TEST(config.m_pImmortName);
-    BOOST_TEST(std::string(config.m_pImmortName) == "Papi");
+    BOOST_TEST(config.getImmortalName() == "Papi");
 
-    remove(fake_server_config_filename);
+    std::remove(fake_server_config_filename);
 }
 
-// TODO I don't like this - it needs to be done better after refactor
-// BOOST_AUTO_TEST_CASE(Boot_no_file_test)
-//{
-//    CServerConfiguration config;
-//    char bad_file[] = "Bet this file doesn't exist!";
-//
-//    // While Boot doesn't throw - our hijacked exit() does
-//    BOOST_CHECK_THROW(config.Boot(bad_file), hijack_exit_exception);
-//
-//    slog.compare(LOG_ALL,
-//                 0,
-//                 "Could not find server configuration file. %s",
-//                 "Could not find server configuration file. Bet this file doesn't exist!");
-//    BOOST_TEST(exit_called);
-//}
+BOOST_AUTO_TEST_CASE(Boot_no_file_test)
+{
+    CServerConfiguration config;
+    char bad_file[] = "Bet this file doesn't exist!";
+
+    BOOST_CHECK_THROW(config.Boot(bad_file), diku_exception);
+}
 
 /**
  * Test FromLAN() Method
@@ -233,8 +194,6 @@ BOOST_AUTO_TEST_CASE(Boot_test)
 BOOST_AUTO_TEST_CASE(FromLAN_test)
 {
     CServerConfiguration config;
-    BOOST_TEST_WARN(false, "m_pColor isn't set in Ctor - and I'm writing tests not fixing bugs so hack it here only!!");
-    config.m_pColor = nullptr;
     config.Boot(fake_server_config_filename);
 
     char bad_input[] = "No way this is a dotted IP";
@@ -250,8 +209,6 @@ BOOST_AUTO_TEST_CASE(FromLAN_test)
 BOOST_FIXTURE_TEST_CASE(ValidMplex, CServerConfiguration_Fixture)
 {
     CServerConfiguration config;
-    BOOST_TEST_WARN(false, "m_pColor isn't set in Ctor - and I'm writing tests not fixing bugs so hack it here only!!");
-    config.m_pColor = nullptr;
     config.Boot(fake_server_config_filename);
 
     sockaddr_in ip{};
@@ -264,6 +221,17 @@ BOOST_FIXTURE_TEST_CASE(ValidMplex, CServerConfiguration_Fixture)
     ip.sin_addr.s_addr = 352823488; // 192.168.7.21
     BOOST_TEST(config.ValidMplex(&ip) == 1);
 }
+
+BOOST_FIXTURE_TEST_CASE(get_file_in_dir_throw_tests, CServerConfiguration_Fixture)
+{
+    CServerConfiguration config;
+    config.Boot(fake_server_config_filename);
+
+    BOOST_CHECK_THROW(config.getFileInEtcDir(nullptr), diku_exception);
+    BOOST_CHECK_THROW(config.getFileInLibDir(nullptr), diku_exception);
+    BOOST_CHECK_THROW(config.getFileInLogDir(nullptr), diku_exception);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 const std::string CServerConfiguration_Fixture::server_config = R"(

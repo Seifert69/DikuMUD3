@@ -6,11 +6,10 @@
  */
 #include "bank.h"
 #include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <time.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <ctime>
 #include <map>
 #include <string>
 
@@ -30,7 +29,6 @@
 #include "interpreter.h"
 #include "handler.h"
 #include "db.h"
-#include "db_file.h"
 #include "spells.h"
 #include "vmelimits.h"
 #include "affect.h"
@@ -288,10 +286,10 @@ static void stat_zone(class unit_data *ch, class zone_type *zone)
     if (!is_in(reset_mode, 0, 2))
         reset_mode = 3;
 
-    snprintf(tmp, sizeof(tmp), "%s%s.err", g_cServerConfig.m_zondir, zone->filename);
+    snprintf(tmp, sizeof(tmp), "%s%s.err", g_cServerConfig.getZoneDir().c_str(), zone->filename);
     errors = file_exists(tmp);
 
-    snprintf(tmp, sizeof(tmp), "%s%s.inf", g_cServerConfig.m_zondir, zone->filename);
+    snprintf(tmp, sizeof(tmp), "%s%s.inf", g_cServerConfig.getZoneDir().c_str(), zone->filename);
     info = file_exists(tmp);
 
     cname = zone->creators.catnames();
@@ -519,7 +517,7 @@ static void extra_stat_zone(class unit_data *ch, char *arg, class zone_type *zon
         case 4:
         case 5:
             /* Errors/Info (Small hack, this :-) ) */
-            snprintf(filename, sizeof(filename), "%s%s.%.3s", g_cServerConfig.m_zondir, zone->filename, zone_args[argno]);
+            snprintf(filename, sizeof(filename), "%s%s.%.3s", g_cServerConfig.getZoneDir().c_str(), zone->filename, zone_args[argno]);
             if (!file_exists(filename))
                 return;
             file_to_string(filename, buf, MAX_STRING_LENGTH);
@@ -887,7 +885,7 @@ static void stat_extra(const class unit_data *ch, class extra_list &elist, char 
                 }
                 else
                     str.append("\"");
-                str.append(ed->descr.c_str());
+                str.append(ed->descr);
                 str.append("\"<br/>-------------------<br/>");
             }
             else if (!(*buf))
@@ -914,7 +912,7 @@ static void stat_extra(const class unit_data *ch, class extra_list &elist, char 
                 }
                 else
                     str.append("\"");
-                str.append(ed->descr.c_str());
+                str.append(ed->descr);
                 str.append("\"<br/>-------------------<br/>");
             }
         }

@@ -4,24 +4,24 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.15 $
  */
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
+#include "db_file.h"
 
-#include "structs.h"
-#include "utils.h"
-#include "textutil.h"
-#include "interpreter.h"
+#include "bytestring.h"
+#include "db.h"
 #include "dil.h"
 #include "dilrun.h"
-#include "utility.h"
-#include "db_file.h"
+#include "external_vars.h"
 #include "handler.h"
-#include "db.h"
-#include "bytestring.h"
+#include "interpreter.h"
 #include "intlist.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 int g_nCorrupt = 0; /* > 0 when a unit is corrupt       */
 
@@ -1006,7 +1006,6 @@ int write_unit_string(CByteBuffer *pBuf, class unit_data *u)
     int i;
     ubit8 nVersion;
 #ifdef DMSERVER
-    char *ptemp;
     char zone[FI_MAX_ZONENAME + 1], name[FI_MAX_UNITNAME + 1];
 #endif
 
@@ -1160,10 +1159,8 @@ int write_unit_string(CByteBuffer *pBuf, class unit_data *u)
                 pBuf->Append8(PC_SETUP_TELNET(u));
                 pBuf->Append8(PC_SETUP_COLOUR(u));
 #ifdef DMSERVER
-                ptemp = UPC(u)->color.save_string();
-                pBuf->AppendString(ptemp);
-                if (ptemp)
-                    delete ptemp;
+                auto temp = UPC(u)->color.save_string();
+                pBuf->AppendString(temp.c_str());
 #endif
                 pBuf->AppendString(UPC(u)->promptstr);
                 pBuf->AppendString(PC_FILENAME(u));

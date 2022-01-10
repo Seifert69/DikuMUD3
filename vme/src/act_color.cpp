@@ -5,32 +5,21 @@
  $Revision: 2.6 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <time.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "comm.h"
-#include "handler.h"
-#include "interpreter.h"
-#include "files.h"
-#include "skills.h"
-#include "db.h"
-#include "spells.h"
-#include "vmelimits.h"
 #include "affect.h"
-#include "utility.h"
-#include "trie.h"
-#include "textutil.h"
-#include "money.h"
-#include "protocol.h"
+#include "comm.h"
 #include "constants.h"
-#include "common.h"
-#include "guild.h"
-#include "dilrun.h"
+#include "db.h"
+#include "interpreter.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cstdio>
+#include <cstring>
+
+int is_forground(char *cstr);
+int is_background(char *cstr);
 
 void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
 {
@@ -39,7 +28,6 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
     char buf[MAX_INPUT_LENGTH];
     char cbuf[MAX_STRING_LENGTH];
     char full_name[21];
-    char *print_str;
     int change = FALSE, add = FALSE;
 
     char *arg = (char *)aaa;
@@ -56,11 +44,10 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
 
     if (str_is_empty(buf))
     {
-        print_str = UPC(ch)->color.key_string(g_cServerConfig.color);
-        page_string(CHAR_DESCRIPTOR(ch), print_str);
+        auto print_str = UPC(ch)->color.key_string(g_cServerConfig.getColorType());
+        page_string(CHAR_DESCRIPTOR(ch), print_str.c_str());
         send_to_char("<br/><br/>", ch);
         send_to_char("Example: color default <forground color> <background color><br/>", ch);
-        FREE(print_str);
         return;
     }
     if (strcmp(buf, "reset") == 0)
@@ -70,12 +57,12 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
         return;
     }
 
-    if (UPC(ch)->color.get(buf, full_name))
+    if (UPC(ch)->color.get(buf, full_name).empty() == false)
     {
         change = TRUE;
     }
 
-    if (g_cServerConfig.color.get(buf, full_name))
+    if (!g_cServerConfig.getColorType().get(buf, full_name).empty() == false)
     {
         add = TRUE;
     }
@@ -140,10 +127,9 @@ void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
     }
     if ((add == TRUE) && (change == FALSE))
     {
-        print_str = UPC(ch)->color.insert(full_name, cbuf);
-        snprintf(cbuf, sizeof(cbuf), "Color %s changed.<br/>", print_str);
+        auto print_str = UPC(ch)->color.insert(full_name, cbuf);
+        snprintf(cbuf, sizeof(cbuf), "Color %s changed.<br/>", print_str.c_str());
         send_to_char(cbuf, ch);
-        FREE(print_str);
         return;
     }
     return;

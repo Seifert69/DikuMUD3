@@ -5,11 +5,9 @@
  $Revision: 2.7 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-#include <string.h>
-#include <ctype.h>
+#include <cstdio>
+#include <ctime>
+#include <cstring>
 
 #include "structs.h"
 #include "utils.h"
@@ -59,7 +57,7 @@ char *PlayerFileName(const char *pName)
 
     strcpy(TmpBuf, pName);
     str_lower(TmpBuf);
-    snprintf(Buf, sizeof(Buf), "%s%c/%s", g_cServerConfig.m_plydir, *TmpBuf, TmpBuf);
+    snprintf(Buf, sizeof(Buf), "%s%c/%s", g_cServerConfig.getPlyDir().c_str(), *TmpBuf, TmpBuf);
 
     return Buf;
 }
@@ -142,7 +140,7 @@ sbit32 read_player_id(void)
     /* By using r+ we are sure that we don't erase it accidentially
        if the host crashes just after opening the file. */
 
-    pFile = fopen_cache(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME), "r+");
+    pFile = fopen_cache(g_cServerConfig.getFileInLibDir(PLAYER_ID_NAME), "r+");
     assert(pFile);
     fseek(pFile, 0, SEEK_SET);
     int mstmp = fscanf(pFile, " %d ", &tmp_sl);
@@ -163,7 +161,7 @@ sbit32 new_player_id(void)
     /* By using r+ we are sure that we don't erase it accidentially
        if the host crashes just after opening the file. */
 
-    pFile = fopen_cache(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME), "r+");
+    pFile = fopen_cache(g_cServerConfig.getFileInLibDir(PLAYER_ID_NAME), "r+");
     assert(pFile);
     fseek(pFile, 0, SEEK_SET);
 
@@ -178,12 +176,11 @@ void save_player_disk(const char *pName, char *pPassword, sbit32 id, int nPlyLen
 {
     int n;
     FILE *pPlayerFile;
-    static char *tmp_player_name;
-    tmp_player_name = str_cc(g_cServerConfig.m_plydir, "player.tmp");
+    static auto tmp_player_name{g_cServerConfig.getPlyDir() + "player.tmp"};
 
     /* Fucking shiting pissing lort! This marcel is driving me mad! */
     assert(!file_exists(tmp_player_name));
-    pPlayerFile = fopen(tmp_player_name, "wb");
+    pPlayerFile = fopen(tmp_player_name.c_str(), "wb");
     assert(pPlayerFile);
 
     n = fwrite(&id, sizeof(id), 1, pPlayerFile);
@@ -211,7 +208,7 @@ void save_player_disk(const char *pName, char *pPassword, sbit32 id, int nPlyLen
        crashes, it doesn't garble the player. At least then, the
        old file will remain intact. */
 
-    n = rename(tmp_player_name, PlayerFileName(pName));
+    n = rename(tmp_player_name.c_str(), PlayerFileName(pName));
     assert(n == 0);
 }
 
@@ -491,18 +488,17 @@ void player_file_index(void)
     FILE *pFile;
     sbit32 tmp_sl;
     int n;
-    static char *tmp_player_name;
-    tmp_player_name = str_cc(g_cServerConfig.m_plydir, "player.tmp");
+    std::string tmp_player_name = g_cServerConfig.getPlyDir() + "player.tmp";
 
     /* Get rid of any temporary player save file */
     while (file_exists(tmp_player_name))
     {
-        n = remove(tmp_player_name);
+        n = std::remove(tmp_player_name.c_str());
         if (n != 0)
             slog(LOG_ALL, 0, "Remove failed");
         if (file_exists(tmp_player_name))
         {
-            n = rename(tmp_player_name, "./playingfuck");
+            n = std::rename(tmp_player_name.c_str(), "./playingfuck");
             if (n != 0)
             {
                 error(HERE, "Rename failed too - going down :-(");
@@ -510,14 +506,14 @@ void player_file_index(void)
         }
     }
 
-    if (!file_exists(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME)))
+    if (!file_exists(g_cServerConfig.getFileInLibDir(PLAYER_ID_NAME)))
     {
-        touch_file(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME));
+        touch_file(g_cServerConfig.getFileInLibDir(PLAYER_ID_NAME));
         g_player_id = -7;
         return;
     }
 
-    pFile = fopen_cache(str_cc(g_cServerConfig.m_libdir, PLAYER_ID_NAME), "r+");
+    pFile = fopen_cache(g_cServerConfig.getFileInLibDir(PLAYER_ID_NAME), "r+");
     assert(pFile);
 
     int mstmp = fscanf(pFile, " %d ", &tmp_sl);

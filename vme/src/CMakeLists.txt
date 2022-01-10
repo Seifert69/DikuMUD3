@@ -32,6 +32,7 @@ set(VME_SRCS
         dbfind.cpp dbfind.h
         destruct.cpp destruct.h
         dictionary.cpp
+        diku_exception.h
         dil.h
         dilexp.cpp dilexp.h
         dilfld.cpp

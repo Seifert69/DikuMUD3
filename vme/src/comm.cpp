@@ -4,25 +4,26 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.5 $
  */
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include <ctype.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "utility.h"
-#include "system.h"
 #include "comm.h"
-#include "textutil.h"
-#include "protocol.h"
-#include "interpreter.h"
+
+#include "config.h"
+#include "constants.h"
+#include "external_vars.h"
 #include "handler.h"
 #include "hookmud.h"
-#include "constants.h"
-#include "config.h"
+#include "interpreter.h"
+#include "protocol.h"
+#include "structs.h"
+#include "system.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cctype>
+#include <cerrno>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 cActParameter::cActParameter()
 {
@@ -97,18 +98,18 @@ void substHTMLcolor(std::string &dest, const char *src, class color_type &color)
             // We got a color code on our hands, let's see if we need to substitute
             if (l >= 1)
             {
-                const char *pCol;
+                auto Col = color.get(buf);
 
-                pCol = color.get(buf);
+                if (Col.empty() == true)
+                {
+                    Col = g_cServerConfig.getColorType().get(buf);
+                }
 
-                if (pCol == NULL)
-                    pCol = g_cServerConfig.color.get(buf);
-
-                if (pCol)
+                if (Col.empty() == false)
                 {
                     // Substitute the color
                     char newtag[256];
-                    substHTMLTagClass(aTag, "class", pCol, newtag, sizeof(newtag) - 1);
+                    substHTMLTagClass(aTag, "class", Col.c_str(), newtag, sizeof(newtag) - 1);
                     dest.push_back('<');
                     dest.append(newtag);
                     dest.push_back('>');
@@ -164,6 +165,11 @@ void send_to_descriptor(const char *messg, class descriptor_data *d)
             send_to_descriptor(messg, CHAR_DESCRIPTOR(d->snoop.snoop_by));
         }
     }
+}
+
+void send_to_descriptor(const std::string &messg, class descriptor_data *d)
+{
+    send_to_descriptor(messg.c_str(), d);
 }
 
 void page_string(class descriptor_data *d, const char *messg)

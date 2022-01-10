@@ -5,11 +5,11 @@
  $Revision: 2.3 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <assert.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <cctype>
+#include <cassert>
 #include "external_vars.h"
 #include "structs.h"
 #include "utils.h"
@@ -17,10 +17,8 @@
 #include "textutil.h"
 #include "handler.h"
 #include "db.h"
-#include "comm.h"
 #include "utility.h"
 #include "files.h"
-#include "main.h"
 
 #define ELIZA_TALKFILE "talk.eli"
 #define ELIZA_LOGFILE "log.eli"
@@ -516,7 +514,7 @@ void eliza_log(class unit_data *who, const char *str, int comms)
         return;
     }
 
-    if (!(f = fopen_cache(str_cc(g_cServerConfig.m_logdir, ELIZA_LOGFILE), "a+")))
+    if (!(f = fopen_cache(g_cServerConfig.getFileInLogDir(ELIZA_LOGFILE), "a+")))
         abort();
 
     if (idx <= MAX_ELIBUF)
@@ -933,7 +931,7 @@ void eliza_boot(void)
 
     slog(LOG_ALL, 0, "Booting Eliza");
 
-    if (!(f = fopen(str_cc(g_cServerConfig.m_etcdir, ELIZA_TALKFILE), "r")))
+    if (!(f = fopen(g_cServerConfig.getFileInEtcDir(ELIZA_TALKFILE).c_str(), "r")))
     {
         slog(LOG_ALL, 0, "ELIZA BOOT FILE NOT FOUND.");
         return;

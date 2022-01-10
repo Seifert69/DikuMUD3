@@ -10,11 +10,11 @@
 #else
 
 #endif
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include <stdarg.h> /* For type_check */
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <ctime>
+#include <cstdarg> /* For type_check */
 
 /* Per https://sourceforge.net/p/predef/wiki/OperatingSystems/, this identifies
  *  Mac OS X. This is needed since OS X doesn't have crypt.h and instead uses
@@ -481,15 +481,15 @@ void dilfi_stora(class dilprg *p)
                 {
                     if (str_is_empty(p->frame[0].tmpl->zone->dilfilepath))
                     {
-                        if (!file_exists(g_cServerConfig.m_dilfiledir))
+                        if (!file_exists(g_cServerConfig.getDILFileDir()))
                         {
 #ifdef _WINDOWS
                             _mkdir(g_cServerConfig.m_dilfiledir);
 #else
-                            mkdir(g_cServerConfig.m_dilfiledir, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
+                            mkdir(g_cServerConfig.getDILFileDir().c_str(), S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP);
 #endif
                         }
-                        strcpy(filename, g_cServerConfig.m_dilfiledir);
+                        strcpy(filename, g_cServerConfig.getDILFileDir().c_str());
                     }
                     else
                     {
@@ -563,7 +563,7 @@ void dilfi_amod(class dilprg *p)
     dilval *v1 = p->stack.pop();
 
     if (dil_type_check("acc_modify", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
-        if (g_cServerConfig.m_bAccounting && v1->val.ptr && IS_PC((class unit_data *)v1->val.ptr))
+        if (g_cServerConfig.isAccounting() && v1->val.ptr && IS_PC((class unit_data *)v1->val.ptr))
         {
             if (p->frame[0].tmpl->zone->access != 0)
             {

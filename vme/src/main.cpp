@@ -5,11 +5,10 @@
  $Revision: 2.10 $
  */
 #include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <string.h>
-#include <signal.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cctype>
+#include <cstring>
 #include <pthread.h>
 #include <unistd.h>
 
@@ -265,9 +264,9 @@ void run_the_game(char *srvcfg)
     slog(LOG_ALL, 0, "VME SERVER COMPILED AT %s %s", g_compile_date, g_compile_time);
     slog(LOG_OFF, 0, "Read server configuration.");
 
-    slog(LOG_OFF, 0, "Opening mother connection on port %d.", g_cServerConfig.m_nMotherPort);
+    slog(LOG_OFF, 0, "Opening mother connection on port %d.", g_cServerConfig.getMotherPort());
 
-    init_mother(g_cServerConfig.m_nMotherPort);
+    init_mother(g_cServerConfig.getMotherPort());
 
     slog(LOG_OFF, 0, "Signal trapping.");
     signal_setup();

@@ -5,31 +5,21 @@
  $Revision: 2.5 $
  */
 #include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <time.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 
 #include "structs.h"
 #include "utils.h"
-#include "skills.h"
 #include "textutil.h"
 #include "comm.h"
 #include "interpreter.h"
 #include "handler.h"
 #include "db.h"
-#include "spells.h"
-#include "vmelimits.h"
-#include "justice.h"
 #include "affect.h"
 #include "magic.h"
 #include "utility.h"
-#include "money.h"
 #include "spec_assign.h"
-#include "main.h"
-#include "fight.h"
-#include "common.h"
 
 #define DEFAULT_ENTRY_ZONE "udgaard"
 #define DEFAULT_ENTRY_NAME "temple"
@@ -100,7 +90,7 @@ int error_rod(struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    snprintf(filename, sizeof(filename), "%s%s.err", g_cServerConfig.m_zondir, zone->filename);
+    snprintf(filename, sizeof(filename), "%s%s.err", g_cServerConfig.getZoneDir().c_str(), zone->filename);
 
     if (!(fl = fopen(filename, "w")))
     {
@@ -137,7 +127,7 @@ int info_rod(struct spec_arg *sarg)
         return SFR_BLOCK;
     }
 
-    snprintf(filename, sizeof(filename), "%s%s.inf", g_cServerConfig.m_zondir, zone->filename);
+    snprintf(filename, sizeof(filename), "%s%s.inf", g_cServerConfig.getZoneDir().c_str(), zone->filename);
 
     if (!(fl = fopen(filename, "w")))
     {
@@ -292,7 +282,7 @@ void execute_append(class unit_data *pc, char *str)
 {
     FILE *f;
 
-    f = fopen(str_cc(g_cServerConfig.m_libdir, EXECUTE_FILE), "ab+");
+    f = fopen(g_cServerConfig.getFileInLibDir(EXECUTE_FILE).c_str(), "ab+");
 
     if (f == NULL)
     {

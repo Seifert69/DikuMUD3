@@ -15,16 +15,15 @@
 
 #endif
 
-#include <stdio.h>
-#include <ctype.h>
+#include <cstdio>
+#include <cctype>
 
 #include "utils.h"
 #include "utility.h"
 #include "textutil.h"
 #include "files.h"
 #include <fcntl.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstring>
 #include <sys/stat.h>
 
 /* Returns the size of a file in bytes */
@@ -57,8 +56,13 @@ ubit1 file_exists(const char *name)
     return TRUE;
 }
 
+ubit1 file_exists(const std::string &name)
+{
+    return file_exists(name.c_str());
+}
+
 /* create a file if it doesn't exist. if error, terminate */
-void touch_file(char *name)
+void touch_file(const char *name)
 {
     FILE *fp;
 
@@ -71,6 +75,11 @@ void touch_file(char *name)
         assert(FALSE);
     }
     fclose(fp);
+}
+
+void touch_file(const std::string &name)
+{
+    touch_file(name.c_str());
 }
 
 char *fread_line_commented(FILE *fl, char *buf, int max)
@@ -152,7 +161,7 @@ char *fread_string(FILE *fl)
 }
 
 /* Read contents of a file, but skip all remark lines and blank lines. */
-int config_file_to_string(char *name, char *buf, int max_len)
+int config_file_to_string(const char *name, char *buf, int max_len)
 {
     FILE *fl;
     char tmp[500];
@@ -195,8 +204,13 @@ int config_file_to_string(char *name, char *buf, int max_len)
     return (0);
 }
 
+int config_file_to_string(const std::string &name, char *buf, int max_len)
+{
+    return config_file_to_string(name.c_str(), buf, max_len);
+}
+
 /* read contents of a text file, and place in buf */
-int file_to_string(char *name, char *buf, int max_len)
+int file_to_string(const char *name, char *buf, int max_len)
 {
     FILE *fl;
     char tmp[500];
@@ -232,6 +246,10 @@ int file_to_string(char *name, char *buf, int max_len)
     return 0;
 }
 
+int file_to_string(const std::string &name, char *buf, int max_len)
+{
+    return file_to_string(name.c_str(), buf, max_len);
+}
 /* Read a null terminated string from file into str */
 void fstrcpy(CByteBuffer *pBuf, FILE *f)
 {
@@ -365,6 +383,11 @@ FILE *fopen_cache(const char *name, const char *mode)
 
         return fcache[hit_i].file;
     }
+}
+
+FILE *fopen_cache(const std::string &name, const char *mode)
+{
+    return fopen_cache(name.c_str(), mode);
 }
 
 void fclose_cache(void)

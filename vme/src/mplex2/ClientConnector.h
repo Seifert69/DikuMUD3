@@ -5,13 +5,14 @@
  $Revision: 2.0 $
  */
 
-#include "network.h"
-#include <string.h>
-#include "protocol.h"
-#include "essential.h"
-#include "queue.h"
-#include "hook.h"
 #include "color.h"
+#include "essential.h"
+#include "hook.h"
+#include "network.h"
+#include "protocol.h"
+#include "queue.h"
+
+#include <cstring>
 
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
@@ -93,7 +94,7 @@ private:
     std::mutex m_mtx; // Mutex for websockets threading
 };
 
-const char *mplex_getcolor(class cConHook *hook, const char *colorstr);
+std::string mplex_getcolor(class cConHook *hook, const char *colorstr);
 
 void dumbPlayLoop(cConHook *con, const char *cmd);
 void dumbPressReturn(class cConHook *con, const char *cmd);

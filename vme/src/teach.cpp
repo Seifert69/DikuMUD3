@@ -5,9 +5,9 @@
  $Revision: 2.5 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cctype>
 
 #include "structs.h"
 #include "utils.h"
@@ -21,7 +21,6 @@
 #include "money.h"
 #include "vmelimits.h"
 #include "guild.h"
-#include "spells.h"
 #include "vme.h"
 
 #define PRACTICE_COST_LEVEL (START_LEVEL + 5)
@@ -385,7 +384,7 @@ void info_show_roots(class unit_data *teacher,
     std::string str;
     str = "<pre>";
     for (auto it = vect.begin(); it != vect.end(); ++it)
-        str.append(it->second.c_str());
+        str.append(it->second);
     str.append("</pre>");
 
     if (str.length() <= 11)
@@ -432,7 +431,7 @@ void info_show_leaves(class unit_data *teacher,
     for (auto it = vect.begin(); it != vect.end(); ++it)
     {
         if (IS_SET(PC_FLAGS(pupil), PC_EXPERT) || it->first <= 25) // Limit display
-            str.append(it->second.c_str());
+            str.append(it->second);
     }
     str.append("</pre>");
 
@@ -553,7 +552,7 @@ void info_one_skill(class unit_data *teacher,
     std::string str;
     str = "<pre>";
     for (auto it = vect.begin(); it != vect.end(); ++it)
-        str.append(it->second.c_str());
+        str.append(it->second);
     str.append("</pre>");
     send_to_char(str.c_str(), pupil);
 }

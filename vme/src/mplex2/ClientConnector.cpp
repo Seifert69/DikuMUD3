@@ -6,50 +6,40 @@
  */
 
 #ifdef _WINDOWS
-    #include "telnet.h"
-    #include "winsock2.h"
-    #include <time.h>
     #include "string.h"
+    #include "telnet.h"
     #include "winbase.h"
+    #include "winsock2.h"
+
+    #include <time.h>
 #endif
 
 #ifdef LINUX
-    #include <unistd.h>
     #include <arpa/telnet.h>
-    #include <sys/time.h>
-    #include <netdb.h>
+    #include <unistd.h>
 #endif
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cassert>
+#include <cctype>
+#include <cerrno>
 #include <fcntl.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <ctype.h>
-#include <assert.h>
-#include <signal.h>
+#include <cstdio>
+#include <cstring>
 #include <thread>
 
 #define MPLEX_COMPILE 1
-#include "structs.h"
-
+#include "ClientConnector.h"
+#include "MUDConnector.h"
+#include "color.h"
+#include "essential.h"
+#include "hook.h"
+#include "mplex.h"
 #include "network.h"
 #include "protocol.h"
-#include "essential.h"
-#include "textutil.h"
-#include "ttydef.h"
-#include "db.h"
-#include "utility.h"
-#include "translate.h"
-#include "hook.h"
-#include "common.h"
 #include "queue.h"
-
-#include "mplex.h"
-#include "ClientConnector.h"
-#include "color.h"
-#include "MUDConnector.h"
+#include "textutil.h"
+#include "translate.h"
+#include "utility.h"
 
 /*
    In Mplex main MotherHook is opened and put into CaptainHook.
@@ -559,18 +549,14 @@ void cConHook::SendCon(const char *text)
 
 /* ======================= TEXT FORMATTING OUTPUT ====================== */
 
-const char *mplex_getcolor(class cConHook *hook, const char *colorstr)
+std::string mplex_getcolor(class cConHook *hook, const char *colorstr)
 {
-    const char *gcolor;
+    auto gcolor = hook->color.get(colorstr);
 
-    gcolor = hook->color.get(colorstr);
-
-    if (!gcolor)
+    if (gcolor.empty())
         gcolor = g_cDefcolor.get(colorstr);
-    if (!gcolor)
-        return (NULL);
 
-    return (gcolor);
+    return gcolor;
 }
 
 char *cConHook::IndentText(const char *source, char *dest, int dest_size, int width)
@@ -579,7 +565,6 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
     char tmpbuf[MAX_STRING_LENGTH * 2];
     int i;
     unsigned int x, crlen;
-    const char *cretbuf;
     char *newptr;
     int column = 0, cutpoint = MIN(30, width / 2);
 
@@ -630,27 +615,23 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
                     protocol_translate(this, *current, &newptr);
                     if (*current == CONTROL_COLOR_END_CHAR)
                     {
-                        cretbuf = mplex_getcolor(this, tmpbuf);
-                        if (cretbuf)
+                        auto mplex_color = mplex_getcolor(this, tmpbuf);
+                        if (mplex_color.empty() == false)
                         {
-                            x = 0;
-                            crlen = strlen(cretbuf);
-                            while (x < crlen)
+                            auto cretbuf = mplex_color.begin();
+                            while (cretbuf != mplex_color.end())
                             {
                                 if (*cretbuf == CONTROL_CHAR)
                                 {
                                     cretbuf++;
-                                    x++;
                                     protocol_translate(this, *cretbuf, &newptr);
                                     cretbuf++;
-                                    x++;
 
                                     continue;
                                 }
                                 else
                                 {
                                     cretbuf++;
-                                    x++;
                                 }
                             }
                         }
