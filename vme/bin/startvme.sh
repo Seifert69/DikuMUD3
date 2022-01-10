@@ -24,13 +24,14 @@ $VME_ROOT/bin/runvme.sh &
 #
 # Start the mplex'ers defined in server.cfg
 #
-mplexers=$(grep "^mplexer" ../etc/server.cfg | cut -d "=" -f 2)
+mplexers=$(grep "^mplexer" $VME_ROOT/etc/server.cfg | cut -d "=" -f 2)
 
 ORGIFS=$IFS
 IFS=$'\n'       # make newlines the only separator
 for m in $mplexers
 do
    IFS=$ORGIFS  # need to revert or parameters will be passed incorrectly
+   echo "Starting mplex: $VME_ROOT/bin/runmplex.sh $m &"
    $VME_ROOT/bin/runmplex.sh $m &
    IFS=$'\n'       # make newlines the only separator
 done

@@ -35,7 +35,7 @@ if [ ! -z "${SCRIPTPIDS}" ]; then
    #echo "1. Running script PIDs = $SCRIPTPIDS which is the child process checking this script"
    MYPID2="$(ps -o pid= --noheaders -p $SCRIPTPIDS)"
    if [ ! -z "${MYPID2}" ]; then
-      echo "There's another copy of this script running for PID $MYPID2"
+      echo "There's another copy of this script running for PID $MYPID2" >> $VME_ROOT/log/mplex-$PORT.log
       ps -o pid -o command= -p $MYPID2
       exit 7
    fi
@@ -45,7 +45,7 @@ fi
 # Test for the VME_ROOT variable and guess it if it is not available.
 #
 if [ -z ${VME_ROOT} ]; then
-   echo "VME_ROOT not set $VME_ROOT, guessing it is at {$PWD/..}"
+   echo "VME_ROOT not set $VME_ROOT, guessing it is at {$PWD/..}" >> $PWD/../log/mplex-$PORT.log
    VME_ROOT="$PWD/.."
 fi
 
@@ -53,7 +53,7 @@ fi
 # Test that there is a vme executable at $VME_ROOT/bin/$EXECUTABLE
 #
 if [ ! -f ${VME_ROOT}/bin/$EXECUTABLE ]; then
-   echo "No $EXECUTABLE executable at $VME_ROOT/bin/$EXECUTABLE"
+   echo "No $EXECUTABLE executable at $VME_ROOT/bin/$EXECUTABLE" >> $VME_ROOT/log/mplex-$PORT.log
    exit 1
 fi
 
@@ -65,8 +65,8 @@ MYPID="$(pgrep -ax "$EXECUTABLE" -u $USER) | cut -f 2"
 if [ -n "${MYPID}" ]; then
    MYPORT="$(echo $MYPID | grep $PORT)"
    if [ -n "${MYPORT}" ]; then
-      echo "An instance of $EXECUTABLE on port $PORT is already running."
-      echo "Please stop it and try again."
+      echo "An instance of $EXECUTABLE on port $PORT is already running." >> $VME_ROOT/log/mplex-$PORT.log
+      echo "Please stop it and try again." >> $VME_ROOT/log/mplex-$PORT.log
       exit 1
    fi
 fi
@@ -77,7 +77,7 @@ fi
 MOTHER_PORT=$(grep "^Port" $VME_ROOT/etc/server.cfg | grep "=" | gawk '{ print $3 }')
 if [ -z ${MOTHER_PORT} ]; then
    MOTHER_PORT="4999"
-   echo "MOTHER_PORT not set, setting to default $MOTHER_PORT"
+   echo "MOTHER_PORT not set, setting to default $MOTHER_PORT" >> $VME_ROOT/log/mplex-$PORT.log
 fi
 #echo "MOTHER_PORT=$MOTHER_PORT"
 
@@ -86,7 +86,9 @@ fi
 PARAMS="-p $PORT -s $MOTHER_PORT -l $VME_ROOT/log/mplex-$PORT.log"
 
 if [ ! -z $2 ]; then
-   PARAMS="$PARAMS $2"
+    echo "PARAMS = [$PARAMS]; dollar2=[$2]" >> $VME_ROOT/log/mplex-$PORT.log
+    PARAMS="$PARAMS $2"
+    echo "PARAMS=[$PARAMS]" >> $VME_ROOT/log/mplex-$PORT.log
 fi
 
 
