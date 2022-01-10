@@ -20,6 +20,28 @@ trap "" 1 2 3
 umask 007
 
 #
+# Test is another copy of this script is running for the current user.
+#
+
+#echo "PID = $$"
+#script_name=$(basename -- "$0")
+script_name="$(ps -o command= -p $$)"
+#echo "script name = $script_name"
+SCRIPTPIDS="$(pgrep -u $USER --exact --full "$script_name" | grep -v "$$")"
+#echo "pgrep -u $USER --exact --full "$script_name""
+#echo "scids=$SCRIPTIDS"
+
+if [ ! -z "${SCRIPTPIDS}" ]; then
+   #echo "1. Running script PIDs = $SCRIPTPIDS which is the child process checking this script"
+   MYPID2="$(ps -o pid= --noheaders -p $SCRIPTPIDS)"
+   if [ ! -z "${MYPID2}" ]; then
+      echo "There's another copy of this script running for PID $MYPID2"
+      ps -o pid -o command= -p $MYPID2
+      exit 7
+   fi
+fi
+
+#
 # Test for the VME_ROOT variable and guess it if it is not available.
 #
 if [ -z ${VME_ROOT} ]; then
@@ -35,14 +57,18 @@ if [ ! -f ${VME_ROOT}/bin/$EXECUTABLE ]; then
    exit 1
 fi
 
+
 #
 # Test if the executable is running already
 #
-MYPID="$(pgrep -lxf "$VME_ROOT/bin/$EXECUTABLE $PARAMS" -u $USER)"
+MYPID="$(pgrep -ax "$EXECUTABLE" -u $USER) | cut -f 2"
 if [ -n "${MYPID}" ]; then
-   echo "An instance of $EXECUTABLE $PARAMS is already running [$MYPID]."
-   echo "Please stop it and try again."
-   exit 1
+   MYPORT="$(echo $MYPID | grep $PORT)"
+   if [ -n "${MYPORT}" ]; then
+      echo "An instance of $EXECUTABLE on port $PORT is already running."
+      echo "Please stop it and try again."
+      exit 1
+   fi
 fi
 
 #
@@ -55,7 +81,14 @@ if [ -z ${MOTHER_PORT} ]; then
 fi
 #echo "MOTHER_PORT=$MOTHER_PORT"
 
-PARAMS="-p $PORT $2 -s $MOTHER_PORT -l $VME_ROOT/log/mplex-$PORT.log"
+
+
+PARAMS="-p $PORT -s $MOTHER_PORT -l $VME_ROOT/log/mplex-$PORT.log"
+
+if [ ! -z $2 ]; then
+   PARAMS="$PARAMS $2"
+fi
+
 
 #
 # I tried to detect if the script was running already but that

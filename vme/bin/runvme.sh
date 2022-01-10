@@ -10,6 +10,27 @@ EXECUTABLE="vme"
 umask 007
 
 #
+# Test is another copy of this script is running for the current user.
+#
+
+#echo "script_name = $script_name"
+#echo "dollar 0 = $0"
+#echo "user = $USER"
+#echo "PID = $$"
+script_name=$(basename -- "$0")
+SCRIPTPIDS="$(pgrep -x $script_name -u $USER | grep -v "$$")"
+if [ ! -z "${SCRIPTPIDS}" ]; then
+   #echo "1. Running script PIDs = $SCRIPTPIDS which is the child process checking this script"
+   MYPID2="$(ps -o pid= --noheaders -p $SCRIPTPIDS)"
+   if [ ! -z "${MYPID2}" ]; then
+      echo "There's another copy of this script running for PID $MYPID2"
+      ps -l -p $MYPID2
+      exit 7
+   fi
+fi
+
+
+#
 # Test for the VME_ROOT variable and guess it if it is not available.
 #
 if [ -z ${VME_ROOT} ]; then
