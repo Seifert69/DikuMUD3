@@ -5,11 +5,10 @@
  $Revision: 2.10 $
  */
 #include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <string.h>
-#include <signal.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cctype>
+#include <cstring>
 #include <pthread.h>
 #include <unistd.h>
 
@@ -26,6 +25,7 @@
 #include "files.h"
 #include "hookmud.h"
 #include "dilrun.h"
+#include "diku_exception.h"
 
 #define OPT_USEC 250000L     /* time delay corresponding to 4 passes/sec */
 long g_nTickUsec = OPT_USEC; // Dont mess with this, it's the game heartbeat. Look at 'timewarp'
@@ -113,97 +113,99 @@ void type_validate_64(void)
 
 int main(int argc, char **argv)
 {
-    void cleanup_playerfile(int argc, char *argv[]);
-    char srvcfg[512], *tempcfg, *log_name;
-    int pos = 1;
-
-    tempcfg = getenv("VME_SERVER_CFG");
-    if (tempcfg)
-        strcpy(srvcfg, tempcfg);
-    else
-        strcpy(srvcfg, "../etc/server.cfg"); // MS2020 add a default...
-
-    log_name = str_dup("./vme.log");
-
-    while ((pos < argc) && (*(argv[pos]) == '-'))
+    try
     {
-        switch (*(argv[pos] + 1))
+        void cleanup_playerfile(int argc, char *argv[]);
+        char srvcfg[512], *tempcfg, *log_name;
+        int pos = 1;
+
+        tempcfg = getenv("VME_SERVER_CFG");
+        if (tempcfg)
+            strcpy(srvcfg, tempcfg);
+        else
+            strcpy(srvcfg, "../etc/server.cfg"); // MS2020 add a default...
+
+        log_name = str_dup("./vme.log");
+
+        while ((pos < argc) && (*(argv[pos]) == '-'))
         {
-            case '?':
-            case 'h':
+            switch (*(argv[pos] + 1))
+            {
+                case '?':
+                case 'h':
+                    ShowUsage(argv[0]);
+                    exit(0);
+
+                case 'c':
+                    slog(LOG_OFF, 0, "Converting player file mode.");
+                    g_player_convert = 1;
+                    break;
+
+                case 'C':
+                    slog(LOG_OFF, 0, "Cleaning up player file mode.");
+                    g_player_convert = 2;
+                    break;
+
+                case 'L':
+                    slog(LOG_OFF, 0, "Listing player file mode.");
+                    g_player_convert = 3;
+                    break;
+
+                case 's':
+                    if (*(argv[pos] + 2))
+                        strcpy(srvcfg, argv[pos] + 2);
+                    else if (++pos < argc)
+                        strcpy(srvcfg, argv[pos]);
+                    else
+                    {
+                        slog(LOG_OFF, 0, "Full path and file name for the config file expected.");
+                        exit(4);
+                    }
+                    break;
+
+                case 'l':
+                    if (*(argv[pos] + 2))
+                    {
+                        FREE(log_name);
+                        log_name = str_dup(argv[pos] + 2);
+                    }
+                    else if (++pos < argc)
+                    {
+                        FREE(log_name);
+                        log_name = str_dup(argv[pos]);
+                    }
+                    else
+                    {
+                        slog(LOG_OFF, 0, "Full path and file name for the config file expected.");
+                        exit(5);
+                    }
+                    break;
+
+                default:
+                    slog(LOG_OFF, 0, "Unknown option %s in argument string.", (argv[pos]));
+                    break;
+            }
+            pos++;
+        }
+
+        if (pos < argc)
+            if (!isdigit(*argv[pos]))
+            {
                 ShowUsage(argv[0]);
-                exit(0);
+                exit(6);
+            }
 
-            case 'c':
-                slog(LOG_OFF, 0, "Converting player file mode.");
-                g_player_convert = 1;
-                break;
-
-            case 'C':
-                slog(LOG_OFF, 0, "Cleaning up player file mode.");
-                g_player_convert = 2;
-                break;
-
-            case 'L':
-                slog(LOG_OFF, 0, "Listing player file mode.");
-                g_player_convert = 3;
-                break;
-
-            case 's':
-                if (*(argv[pos] + 2))
-                    strcpy(srvcfg, argv[pos] + 2);
-                else if (++pos < argc)
-                    strcpy(srvcfg, argv[pos]);
-                else
-                {
-                    slog(LOG_OFF, 0, "Full path and file name for the config file expected.");
-                    exit(4);
-                }
-                break;
-
-            case 'l':
-                if (*(argv[pos] + 2))
-                {
-                    FREE(log_name);
-                    log_name = str_dup(argv[pos] + 2);
-                }
-                else if (++pos < argc)
-                {
-                    FREE(log_name);
-                    log_name = str_dup(argv[pos]);
-                }
-                else
-                {
-                    slog(LOG_OFF, 0, "Full path and file name for the config file expected.");
-                    exit(5);
-                }
-                break;
-
-            default:
-                slog(LOG_OFF, 0, "Unknown option %s in argument string.", (argv[pos]));
-                break;
-        }
-        pos++;
-    }
-
-    if (pos < argc)
-        if (!isdigit(*argv[pos]))
+        g_log_file_fd = freopen(log_name, "w", stderr);
+        if (!g_log_file_fd)
         {
-            ShowUsage(argv[0]);
-            exit(6);
+            fprintf(stderr, "Error in opening the log:  '%s'", log_name);
+            free(log_name);
+            exit(7);
         }
 
-    g_log_file_fd = freopen(log_name, "w", stderr);
-    if (!g_log_file_fd)
-    {
-        fprintf(stderr, "Error in opening the log:  '%s'", log_name);
         free(log_name);
-        exit(7);
-    }
 
-    free(log_name);
-
-    type_validate_64(); // MS2020
+        type_validate_64(); // MS2020
 
 #ifdef LINUX
 /*    {   MS2020 - appears not to be used at all?
@@ -227,17 +229,26 @@ int main(int argc, char **argv)
     }*/
 #endif
 
-    /*
-    #if defined(GENERIC_SYSV) || defined(HPUX)
-      srand48 (time (0));
-    #elif defined(LINUX)
-    */
-    /* Other used routines are declared obsolete by SVID3 */
-    //  srand (time (0));
-    //#else
-    srandom(time(0));
-    //#endif
-    run_the_game(srvcfg);
+        /*
+        #if defined(GENERIC_SYSV) || defined(HPUX)
+          srand48 (time (0));
+        #elif defined(LINUX)
+        */
+        /* Other used routines are declared obsolete by SVID3 */
+        //  srand (time (0));
+        //#else
+        srandom(time(0));
+        //#endif
+        run_the_game(srvcfg);
+    }
+    catch (const diku_exception &e)
+    {
+        std::cout << "DIKU EXCEPTION: " << e.what() << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cout << "EXCEPTION: " << e.what() << std::endl;
+    }
     return (0);
 }
 
@@ -265,9 +276,9 @@ void run_the_game(char *srvcfg)
     slog(LOG_ALL, 0, "VME SERVER COMPILED AT %s %s", g_compile_date, g_compile_time);
     slog(LOG_OFF, 0, "Read server configuration.");
 
-    slog(LOG_OFF, 0, "Opening mother connection on port %d.", g_cServerConfig.m_nMotherPort);
+    slog(LOG_OFF, 0, "Opening mother connection on port %d.", g_cServerConfig.getMotherPort());
 
-    init_mother(g_cServerConfig.m_nMotherPort);
+    init_mother(g_cServerConfig.getMotherPort());
 
     slog(LOG_OFF, 0, "Signal trapping.");
     signal_setup();

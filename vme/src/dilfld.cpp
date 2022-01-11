@@ -313,7 +313,7 @@ void dilfe_fld(register class dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
-                        if (g_cServerConfig.m_bAccounting)
+                        if (g_cServerConfig.isAccounting())
                             v->val.num = PC_ACCOUNT((class unit_data *)v1->val.ptr).total_credit;
                         else
                             v->val.num = 0;
@@ -341,7 +341,7 @@ void dilfe_fld(register class dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_INT;
-                        if (g_cServerConfig.m_bAccounting)
+                        if (g_cServerConfig.isAccounting())
                             v->val.num = (int)PC_ACCOUNT((class unit_data *)v1->val.ptr).credit;
                         else
                             v->val.num = 0;

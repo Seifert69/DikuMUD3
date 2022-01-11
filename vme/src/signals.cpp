@@ -5,18 +5,12 @@
  $Revision: 2.3 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <signal.h>
+#include <cstdio>
+#include <csignal>
 #include <sys/time.h>
 #include "external_vars.h"
-#include "structs.h"
-#include "utils.h"
-#include "utility.h"
-#include "pthread.h"
 #include "db.h"
 #include "config.h"
-#include "textutil.h"
 #include "comm.h"
 
 void other_signal(int signal_no)
@@ -59,7 +53,7 @@ void message_request(int signal_no)
 
     slog(LOG_ALL, 0, "Received USR1 - message request");
 
-    msg_file_fd = fopen(str_cc(g_cServerConfig.m_etcdir, MESSAGE_FILE), "r");
+    msg_file_fd = fopen(g_cServerConfig.getFileInEtcDir(MESSAGE_FILE).c_str(), "r");
     if (!msg_file_fd)
     {
         fprintf(stderr, "Error in opening the log:  '%s'", MESSAGE_FILE);

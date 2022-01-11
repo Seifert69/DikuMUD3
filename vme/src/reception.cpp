@@ -4,10 +4,10 @@
  $Date: 2004/09/21 08:45:46 $
  $Revision: 2.9 $
  */
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <ctime>
 #include "external_vars.h"
 #include "structs.h"
 #include "utils.h"
@@ -18,7 +18,6 @@
 #include "interpreter.h"
 #include "affect.h"
 #include "utility.h"
-#include "spells.h"
 #include "money.h"
 #include "files.h"
 #include "db_file.h"
@@ -86,7 +85,7 @@ static ubit32 subtract_recurse(class unit_data *ch,
         {
             price = (int)((float)OBJ_PRICE_DAY(item) * (float)seconds / (float)SECS_PER_REAL_DAY);
 
-            price = (price * g_cServerConfig.m_nRentModifier) / 100;
+            price = (price * g_cServerConfig.getRentModifier()) / 100;
 
             sum += price;
         }

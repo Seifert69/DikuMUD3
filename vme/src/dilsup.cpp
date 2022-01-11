@@ -5,31 +5,19 @@
  $Revision: 2.3 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
+#include <cstring>
 
 #include "structs.h"
 #include "utils.h"
-#include "skills.h"
-#include "textutil.h"
-#include "comm.h"
 #include "interpreter.h"
-#include "handler.h"
 #include "db.h"
-#include "spells.h"
 #include "affect.h"
 #include "constants.h"
-#include "vmelimits.h"
-#include "main.h"
 #include "account.h"
-#include "common.h"
-#include "cmdload.h"
-/*   external vars  */
+
 int pay_point_charlie(class unit_data *ch, class unit_data *to)
 {
-    if (IS_PC(ch) && g_cServerConfig.m_bAccounting && IS_MORTAL(ch))
+    if (IS_PC(ch) && g_cServerConfig.isAccounting() && IS_MORTAL(ch))
     {
         if (CHAR_DESCRIPTOR(ch))
             if (g_cServerConfig.FromLAN(CHAR_DESCRIPTOR(ch)->host))

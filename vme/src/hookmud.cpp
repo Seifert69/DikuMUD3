@@ -1,36 +1,22 @@
 #include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
+#include <cstdlib>
 #include <sys/socket.h>
 #include <sys/un.h>
-#include <sys/resource.h>
 
 #include <netinet/tcp.h>
 #include <fcntl.h>
-#include <errno.h>
+#include <cerrno>
 #include <netinet/in.h>
-#include <arpa/inet.h>
 
 #include "structs.h"
-#include "utils.h"
 #include "system.h"
 #include "db.h"
 #include "utility.h"
 #include "comm.h"
 #include "textutil.h"
-#include "ban.h"
-#include "handler.h"
 #include "files.h"
 #include "protocol.h"
 #include "main.h"
-#include "account.h"
-#include "vmelimits.h"
-#include "db_file.h"
-#include "str_parse.h"
-#include "common.h"
-#include "dilrun.h"
 #include "hookmud.h"
 
 class cMotherHook g_MotherHook;
@@ -187,7 +173,7 @@ int cMultiHook::Read(void)
         case MULTI_CONNECT_REQ_CHAR:
             d = descriptor_new(this);
             protocol_send_confirm(this, d->id);
-            send_to_descriptor(g_cServerConfig.m_pLogo, d);
+            send_to_descriptor(g_cServerConfig.getLogo(), d);
             send_to_descriptor("By what name do they call you? ", d);
             break;
 
@@ -337,8 +323,8 @@ void cMotherHook::Input(int nFlags)
         g_Multi.nCount++;
 
         slog(LOG_ALL, 0, "A multi-host has connected to the game.");
-        protocol_send_exchange(&g_Multi.Multi[i], 0, g_cServerConfig.m_mudname);
-        protocol_send_color(&g_Multi.Multi[i], 0, g_cServerConfig.m_pColor);
+        protocol_send_exchange(&g_Multi.Multi[i], 0, const_cast<char *>(g_cServerConfig.getMudName().data()));
+        protocol_send_color(&g_Multi.Multi[i], 0, const_cast<char *>(g_cServerConfig.getColorString().c_str()));
     }
 }
 

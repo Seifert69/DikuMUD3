@@ -5,9 +5,9 @@
  $Revision: 2.6 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include "structs.h"
 #include "utils.h"
 #include "skills.h"
@@ -17,12 +17,10 @@
 #include "handler.h"
 #include "interpreter.h"
 #include "db.h"
-#include "spells.h"
 #include "textutil.h"
 #include "affect.h"
 #include "justice.h"
 #include "utility.h"
-#include "protocol.h"
 #include "fight.h"
 #include "combat.h"
 #include "files.h"
@@ -92,7 +90,7 @@ int pk_test(class unit_data *att, class unit_data *def, int message)
         }
     }
 
-    if (!g_cServerConfig.m_bBOB)
+    if (!g_cServerConfig.isBOB())
         return FALSE;
 
     if ((att != def) && IS_PC(att) && IS_PC(def) && (!IS_SET(PC_FLAGS(att), PC_PK_RELAXED) || !IS_SET(PC_FLAGS(def), PC_PK_RELAXED)))
@@ -230,7 +228,7 @@ void load_messages(void)
     int i, grp;
     struct combat_msg_packet *messages;
 
-    if (!(f1 = fopen(str_cc(g_cServerConfig.m_etcdir, MESS_FILE), "r")))
+    if (!(f1 = fopen(g_cServerConfig.getFileInEtcDir(MESS_FILE).c_str(), "r")))
     {
         slog(LOG_ALL, 0, "Unable to read fight messages.");
         exit(11);

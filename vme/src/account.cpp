@@ -6,16 +6,15 @@
  */
 
 #include "external_vars.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #ifdef _WINDOWS
     #include <direct.h>
 #else
     #include <dirent.h>
 #endif
-#include <time.h>
-#include <ctype.h>
+#include <ctime>
 
 #include "structs.h"
 #include "utils.h"
@@ -26,11 +25,8 @@
 #include "interpreter.h"
 #include "textutil.h"
 #include "account.h"
-#include "common.h"
 #include "files.h"
 #include "str_parse.h"
-#include "account.h"
-#include "main.h"
 
 /* This is a LOT nicer than using structs. Trust me, I tried to program it! */
 
@@ -47,7 +43,7 @@ void account_cclog(class unit_data *ch, int amount)
 {
     FILE *f;
 
-    f = fopen(str_cc(g_cServerConfig.m_logdir, CREDITFILE_LOG), "a+b");
+    f = fopen(g_cServerConfig.getFileInLogDir(CREDITFILE_LOG).c_str(), "a+b");
 
     fprintf(f, "%-16s %6.2f %s\n", UNIT_NAME(ch), ((float)amount) / 100.0, g_cAccountConfig.m_pCoinName);
 
@@ -66,7 +62,7 @@ static void account_log(char action, class unit_data *god, class unit_data *pc, 
 
     next_crc ^= vxor;
 
-    f = fopen_cache(str_cc(g_cServerConfig.m_logdir, ACCOUNT_LOG), "r+b");
+    f = fopen_cache(g_cServerConfig.getFileInLogDir(ACCOUNT_LOG), "r+b");
 
     if (fseek(f, 8L, SEEK_SET) != 0)
         error(HERE, "Unable to seek in account log.");
@@ -118,7 +114,7 @@ int time_to_index(ubit8 hours, ubit8 minutes)
 
 void account_local_stat(const class unit_data *ch, class unit_data *u)
 {
-    if (!g_cServerConfig.m_bAccounting)
+    if (!g_cServerConfig.isAccounting())
     {
         send_to_char("Game is not in accounting mode.\n\r", ch);
         return;
@@ -169,7 +165,7 @@ void account_global_stat(class unit_data *ch)
     char *b;
     int i, j;
 
-    if (!g_cServerConfig.m_bAccounting)
+    if (!g_cServerConfig.isAccounting())
         return;
 
     snprintf(buf,
@@ -216,7 +212,7 @@ void account_overdue(const class unit_data *ch)
 {
     int i, j;
 
-    if (g_cServerConfig.m_bAccounting)
+    if (g_cServerConfig.isAccounting())
     {
         char Buf[256];
 
@@ -259,7 +255,7 @@ void account_paypoint(class unit_data *ch)
 
 void account_closed(class unit_data *ch)
 {
-    if (g_cServerConfig.m_bAccounting)
+    if (g_cServerConfig.isAccounting())
     {
         send_to_char(g_cAccountConfig.m_pClosedMessage, ch);
     }
@@ -390,7 +386,7 @@ void account_subtract(class unit_data *pc, time_t from, time_t to)
 
     assert(IS_PC(pc));
 
-    if (!g_cServerConfig.m_bAccounting)
+    if (!g_cServerConfig.isAccounting())
         return;
 
     if (CHAR_LEVEL(pc) >= g_cAccountConfig.m_nFreeFromLevel)
@@ -410,7 +406,7 @@ void account_subtract(class unit_data *pc, time_t from, time_t to)
 
 int account_is_overdue(const class unit_data *ch)
 {
-    if (g_cServerConfig.m_bAccounting && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
+    if (g_cServerConfig.isAccounting() && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
     {
         if (PC_ACCOUNT(ch).flatrate > (ubit32)time(0))
             return FALSE;
@@ -525,7 +521,7 @@ int account_is_closed(class unit_data *ch)
 {
     int i, j;
 
-    if (g_cServerConfig.m_bAccounting && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
+    if (g_cServerConfig.isAccounting() && (CHAR_LEVEL(ch) < g_cAccountConfig.m_nFreeFromLevel))
     {
         if (PC_ACCOUNT(ch).flatrate > (ubit32)time(0))
             return FALSE;
@@ -612,7 +608,7 @@ void do_account(class unit_data *ch, char *arg, const struct command_info *cmd)
     const char *operations[] = {"insert", "withdraw", "limit", "discount", "flatrate", NULL};
     int i, amount;
 
-    if (!g_cServerConfig.m_bAccounting || !IS_PC(ch))
+    if (!g_cServerConfig.isAccounting() || !IS_PC(ch))
     {
         send_to_char("That command is not available.<br/>", ch);
         return;
@@ -943,16 +939,16 @@ void CAccountConfig::Boot(void)
     int *numlist;
     FILE *f;
 
-    if (!g_cServerConfig.m_bAccounting)
+    if (!g_cServerConfig.isAccounting())
         return;
 
     slog(LOG_OFF, 0, "Booting account system.");
 
-    if (!file_exists(str_cc(g_cServerConfig.m_logdir, ACCOUNT_LOG)))
+    if (!file_exists(g_cServerConfig.getFileInLogDir(ACCOUNT_LOG)))
     {
         time_t now = time(0);
 
-        f = fopen(str_cc(g_cServerConfig.m_logdir, ACCOUNT_LOG), "wb");
+        f = fopen(g_cServerConfig.getFileInLogDir(ACCOUNT_LOG).c_str(), "wb");
 
         if (f == NULL)
         {
@@ -968,7 +964,7 @@ void CAccountConfig::Boot(void)
         fclose(f);
     }
 
-    f = fopen_cache(str_cc(g_cServerConfig.m_logdir, ACCOUNT_LOG), "rb");
+    f = fopen_cache(g_cServerConfig.getFileInLogDir(ACCOUNT_LOG), "rb");
 
     int mstmp = fscanf(f, "%*08x%08x", &next_crc);
     if (mstmp < 1)
@@ -977,9 +973,9 @@ void CAccountConfig::Boot(void)
         assert(FALSE);
     }
 
-    touch_file(str_cc(g_cServerConfig.m_etcdir, ACCOUNT_FILE));
+    touch_file(g_cServerConfig.getFileInEtcDir(ACCOUNT_FILE));
 
-    config_file_to_string(str_cc(g_cServerConfig.m_etcdir, ACCOUNT_FILE), Buf, sizeof(Buf));
+    config_file_to_string(g_cServerConfig.getFileInEtcDir(ACCOUNT_FILE), Buf, sizeof(Buf));
 
     c = Buf;
 

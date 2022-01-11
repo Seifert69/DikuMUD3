@@ -6,13 +6,9 @@
  $Revision: 2.12 $
  */
 #include "external_vars.h"
-#include <stdlib.h>
-#include <string>
-#include <ctype.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+#include <cstdlib>
+#include <cctype>
+#include <cstdio>
 #include <arpa/inet.h>
 
 /* Per https://sourceforge.net/p/predef/wiki/OperatingSystems/, this identifies
@@ -66,7 +62,6 @@ void multi_close(struct multi_element *pe);
 int player_exists(const char *pName);
 void save_player_file(class unit_data *ch);
 
-char *read_info_file(char *name, char *oldstr);
 char *m_pBadNames = NULL;
 char *m_pBadStrings = NULL;
 
@@ -98,16 +93,16 @@ int _parse_name(const char *arg, char *name)
     if (fill_word(name - i)) /* Don't allow fillwords */
         return 1;
 
-    touch_file(str_cc(g_cServerConfig.m_etcdir, BAD_STRINGS_FILE));
-    m_pBadStrings = read_info_file(str_cc(g_cServerConfig.m_etcdir, BAD_STRINGS_FILE), m_pBadStrings);
+    touch_file(g_cServerConfig.getFileInEtcDir(BAD_STRINGS_FILE));
+    m_pBadStrings = read_info_file(g_cServerConfig.getFileInEtcDir(BAD_STRINGS_FILE), m_pBadStrings);
     badstrings.create(m_pBadStrings);
     FREE(m_pBadStrings);
 
     if (badstrings.in(name - i))
         return 2;
 
-    touch_file(str_cc(g_cServerConfig.m_etcdir, BAD_NAMES_FILE));
-    m_pBadNames = read_info_file(str_cc(g_cServerConfig.m_etcdir, BAD_NAMES_FILE), m_pBadNames);
+    touch_file(g_cServerConfig.getFileInEtcDir(BAD_NAMES_FILE));
+    m_pBadNames = read_info_file(g_cServerConfig.getFileInEtcDir(BAD_NAMES_FILE), m_pBadNames);
     badnames.create(m_pBadNames);
     FREE(m_pBadNames);
 
@@ -406,7 +401,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     }
 
     /*		if (!dilway)*/
-    if (strcmp(g_cServerConfig.m_pImmortName, UNIT_NAME(this)) == 0)
+    if (strcmp(g_cServerConfig.getImmortalName().c_str(), UNIT_NAME(this)) == 0)
         CHAR_LEVEL(this) = ULTIMATE_LEVEL;
 
     if (IS_ULTIMATE(this) && PC_IS_UNSAVED(this))
@@ -518,7 +513,7 @@ void nanny_motd(class descriptor_data *d, char *arg)
     {
         /*fuck*/
         char buf[200];
-        snprintf(buf, sizeof(buf), "Welcome to %s!<br/>", g_cServerConfig.m_mudname);
+        snprintf(buf, sizeof(buf), "Welcome to %s!<br/>", g_cServerConfig.getMudName().c_str());
         send_to_descriptor(buf, d);
         enter_game(d->character);
     }
@@ -649,14 +644,14 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
     char buf[512];
     if (pwdcompare(crypt(arg, PC_FILENAME(d->character)), PC_PWD(d->character), PC_MAX_PASSWORD))
     {
-        snprintf(buf, sizeof(buf), "PasswordOff('', '%s')", g_cServerConfig.m_mudname);
+        snprintf(buf, sizeof(buf), "PasswordOff('', '%s')", g_cServerConfig.getMudName().c_str());
         send_to_descriptor(scriptwrap(buf).c_str(), d);
         send_to_descriptor("Passwords don't match.<br/>", d);
         set_descriptor_fptr(d, nanny_new_pwd, TRUE);
         return;
     }
 
-    snprintf(buf, sizeof(buf), "PasswordOff('%s', '%s')", PC_FILENAME(d->character), g_cServerConfig.m_mudname);
+    snprintf(buf, sizeof(buf), "PasswordOff('%s', '%s')", PC_FILENAME(d->character), g_cServerConfig.getMudName().c_str());
     send_to_descriptor(scriptwrap(buf).c_str(), d);
 
     class descriptor_data *td;
@@ -740,7 +735,7 @@ void nanny_new_pwd(class descriptor_data *d, char *arg)
     }
 
     char buf[512];
-    snprintf(buf, sizeof(buf), "PasswordOff('', '%s')", g_cServerConfig.m_mudname);
+    snprintf(buf, sizeof(buf), "PasswordOff('', '%s')", g_cServerConfig.getMudName().c_str());
     send_to_descriptor(scriptwrap(buf).c_str(), d);
 
     if (!check_pwd(d, arg))
@@ -902,7 +897,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
         return;
     }
 
-    snprintf(buf, sizeof(buf), "PasswordOff('%s', '%s')", UNIT_NAME(d->character), g_cServerConfig.m_mudname);
+    snprintf(buf, sizeof(buf), "PasswordOff('%s', '%s')", UNIT_NAME(d->character), g_cServerConfig.getMudName().c_str());
     send_to_descriptor(scriptwrap(buf).c_str(), d);
 
     if (str_is_empty(arg))
@@ -954,7 +949,7 @@ void nanny_existing_pwd(class descriptor_data *d, char *arg)
              sizeof(buf),
              "<br/>Welcome back %s, you last visited %s on %s<br/>",
              UNIT_NAME(d->character),
-             g_cServerConfig.m_mudname,
+             g_cServerConfig.getMudName().c_str(),
              ctime(&PC_TIME(d->character).connect));
     send_to_descriptor(buf, d);
 

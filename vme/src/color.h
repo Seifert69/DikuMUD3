@@ -35,14 +35,14 @@ public:
     void insert(char *combo);
     std::string change(char *key, char *c);
     void change(char *combo);
-    const char *get(const char *key);
-    const char *get(const char *key, char *full_key);
+    const char *get(const char *key) const;
+    const char *get(const char *key, char *full_key) const;
     int remove(char *key);
     void remove_all(void);
     void create(char *input_str);
     char *key_string(void);
-    char *key_string(color_type &dft);
-    char *save_string(void);
+    char *key_string(const color_type &dft);
+    char *save_string(void) const;
 };
 
 int is_forground(char *cstr);

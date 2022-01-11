@@ -7,7 +7,14 @@ find_package(Boost COMPONENTS unit_test_framework filesystem regex system REQUIR
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive -fdiagnostics-color=always -Wno-register")
+if (CMAKE_BUILD_TYPE STREQUAL Debug)
+    # Stronger warnings for debug build
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fpermissive -fdiagnostics-color=always -Wformat=2 -Wformat-overflow=2 -Wall")
+else ()
+    # Hide some warnings for a release build
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fpermissive -fdiagnostics-color=always -Wno-register -Wno-deprecated-declarations")
+endif ()
+message(STATUS "Compiler flags: ${CMAKE_CXX_FLAGS}")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin)

@@ -5,10 +5,10 @@
  $Revision: 2.4 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <cctype>
 
 #include "structs.h"
 #include "utils.h"
@@ -16,9 +16,7 @@
 #include "textutil.h"
 #include "interpreter.h"
 #include "utility.h"
-#include "db_file.h"
 #include "trie.h"
-#include "handler.h"
 #include "queue.h"
 #include "config.h"
 
@@ -395,7 +393,7 @@ static bool alias_is_ok(struct alias_head *ah, char *key, char *val, class unit_
             send_to_char("You can't use '!' from within an alias.<br/>", ch);
             return FALSE;
         case 5:
-            if (!g_cServerConfig.m_bAliasShout)
+            if (!g_cServerConfig.isAliasShout())
             {
                 send_to_char("Using `shout' in an alias is not very nice...<br/>", ch);
                 return FALSE;

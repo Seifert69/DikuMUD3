@@ -5,11 +5,11 @@
  $Revision: 2.5 $
  */
 #include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include <ctype.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <cerrno>
+#include <cctype>
 
 #include "structs.h"
 #include "utils.h"
@@ -102,7 +102,7 @@ void substHTMLcolor(std::string &dest, const char *src, class color_type &color)
                 pCol = color.get(buf);
 
                 if (pCol == NULL)
-                    pCol = g_cServerConfig.color.get(buf);
+                    pCol = g_cServerConfig.getColorType().get(buf);
 
                 if (pCol)
                 {
@@ -164,6 +164,11 @@ void send_to_descriptor(const char *messg, class descriptor_data *d)
             send_to_descriptor(messg, CHAR_DESCRIPTOR(d->snoop.snoop_by));
         }
     }
+}
+
+void send_to_descriptor(const std::string &messg, class descriptor_data *d)
+{
+    send_to_descriptor(messg.c_str(), d);
 }
 
 void page_string(class descriptor_data *d, const char *messg)

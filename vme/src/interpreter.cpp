@@ -5,10 +5,10 @@
  $Revision: 2.7 $
  */
 #include "external_vars.h"
-#include <string.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
 
 #include "structs.h"
 #include "textutil.h"
@@ -542,7 +542,7 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
     ubit16 orgflag;
     class unit_fptr *next;
 
-    if (g_cServerConfig.m_bNoSpecials)
+    if (g_cServerConfig.isNoSpecials())
         return SFR_SHARE;
 
     assert(u);
