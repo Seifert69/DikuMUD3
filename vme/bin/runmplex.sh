@@ -123,7 +123,7 @@ cd $VME_ROOT/bin
 echo "*** $EXECUTABLE started by $USER at `date`. ***" >> $VME_ROOT/log/mplex-$PORT.log
 echo `uptime` >> $VME_ROOT/log/mplex-$PORT.log
 
-echo "running: $VME_ROOT/bin/$EXECUTABLE $PARAMS"
+#echo "running: $VME_ROOT/bin/$EXECUTABLE $PARAMS"
 $VME_ROOT/bin/$EXECUTABLE $PARAMS
 
 res="$?"

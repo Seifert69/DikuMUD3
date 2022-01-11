@@ -19,6 +19,7 @@ fi
 # Start the VME
 #
 
+echo "Starting vme: $VME_ROOT/bin/runvme.sh &"
 $VME_ROOT/bin/runvme.sh &
 
 #
@@ -38,12 +39,21 @@ done
 IFS=$ORGIFS
 
 #
+# Launch the Dispatcher. Right now only used for Discord...
+# but who knows...
+#
+echo "Starting rundispatcher.sh: $VME_ROOT/bin/rundispatcher.sh &"
+$VME_ROOT/bin/rundispatcher.sh & 
+
+#
 # Launch the Discord integration if the token is present
 #
 
 if [ ! -f ${VME_ROOT}/bin/discord.token ]; then
    echo "No file at $VME_ROOT/bin/discord.token, not starting discord integration"
 else
-   $VME_ROOT/bin/rundispatcher.sh & 
+   echo "Starting runmuddiscord.sh: $VME_ROOT/bin/runmuddiscord.sh &"
    $VME_ROOT/bin/runmuddiscord.sh &
 fi
+
+echo "Done startvme.sh"
