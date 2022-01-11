@@ -11,7 +11,7 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
     # Stronger warnings for debug build
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fpermissive -fdiagnostics-color=always -Wformat=2 -Wformat-overflow=2 -Wall")
 else ()
-    # Hide some warnings for a release build
+    # Hide some warnings for a relase build
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fpermissive -fdiagnostics-color=always -Wno-register -Wno-deprecated-declarations")
 endif ()
 message(STATUS "Compiler flags: ${CMAKE_CXX_FLAGS}")
