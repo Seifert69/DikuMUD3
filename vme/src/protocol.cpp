@@ -8,14 +8,10 @@
 #ifdef _WINDOWS
     #include <winsock2.h>
 #else
-    #include <unistd.h>
 #endif
 
-#include <string.h>
-#include <sys/types.h>
-#include <assert.h>
-#include <errno.h>
-#include <stdio.h>
+#include <cstring>
+#include <cassert>
 
 #include "essential.h"
 #include "protocol.h"
@@ -248,7 +244,7 @@ void protocol_send_setup(cHook *Hook, ubit16 id, struct terminal_setup_type *set
 }
 
 // Send the MUD name to the mplex
-void protocol_send_exchange(cHook *Hook, ubit16 id, char *mudname)
+void protocol_send_exchange(cHook *Hook, ubit16 id, const char *mudname)
 {
     ubit16 len;
     ubit8 buf[MULTI_MAX_MUDNAME + 1 + 6 + 4];
@@ -271,7 +267,7 @@ void protocol_send_exchange(cHook *Hook, ubit16 id, char *mudname)
 }
 
 // Send the default colors to the Mplex
-void protocol_send_color(cHook *Hook, ubit16 id, char *colorstr)
+void protocol_send_color(cHook *Hook, ubit16 id, const char *colorstr)
 {
     ubit16 len;
     ubit8 buf[(MAX_STRING_LENGTH * 2) + 11];

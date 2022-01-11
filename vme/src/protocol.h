@@ -34,8 +34,8 @@ void protocol_send_confirm(cHook *Hook, ubit16 id);
 void protocol_send_request(cHook *Hook);
 void protocol_send_text(cHook *Hook, const ubit16 id, const char *text, const ubit8 type);
 void protocol_send_setup(cHook *Hook, ubit16 id, struct terminal_setup_type *setup);
-void protocol_send_exchange(cHook *Hook, ubit16 id, char *mudname);
-void protocol_send_color(cHook *Hook, ubit16 id, char *color);
+void protocol_send_exchange(cHook *Hook, ubit16 id, const char *mudname);
+void protocol_send_color(cHook *Hook, ubit16 id, const char *color);
 void protocol_send_host(cHook *Hook, ubit16 id, const char *host, ubit16 nPort, ubit8 nLine);
 
 int protocol_parse_incoming(cHook *Hook, ubit16 *pid, ubit16 *plen, char **str, ubit8 *text_type);

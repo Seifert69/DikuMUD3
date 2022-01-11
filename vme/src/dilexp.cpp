@@ -773,7 +773,7 @@ void dilfe_clradd(class dilprg *p)
 
                             if (v->type != DILV_FAIL)
                             {
-                                if (UPC((unit_data *)v1->val.ptr)->color.get((char *)v2->val.ptr, full_name))
+                                if (UPC((unit_data *)v1->val.ptr)->color.get((char *)v2->val.ptr, full_name).empty() == false)
                                 {
                                     v->type = DILV_INT;
                                     v->val.num = FALSE;
@@ -782,7 +782,6 @@ void dilfe_clradd(class dilprg *p)
                                 {
                                     color = str_escape_format((char *)v3->val.ptr, FALSE);
                                     auto unused = UPC((unit_data *)v1->val.ptr)->color.insert((char *)v2->val.ptr, color);
-                                    FREE(unused);
                                     FREE(color);
                                     v->type = DILV_INT;
                                     v->val.num = TRUE;
@@ -877,10 +876,10 @@ void dilfe_clrchg(class dilprg *p)
 
                             if (v->type != DILV_FAIL)
                             {
-                                if (UPC((unit_data *)v1->val.ptr)->color.get((char *)v2->val.ptr, full_name))
+                                if (UPC((unit_data *)v1->val.ptr)->color.get((char *)v2->val.ptr, full_name).empty() == false)
                                 {
                                     color = str_escape_format((char *)v3->val.ptr, FALSE);
-                                    UPC((unit_data *)v1->val.ptr)->color.change((char *)v2->val.ptr, color);
+                                    auto unused = UPC((unit_data *)v1->val.ptr)->color.change((char *)v2->val.ptr, color);
                                     FREE(color);
                                     v->type = DILV_INT;
                                     v->val.num = TRUE;
@@ -972,7 +971,7 @@ void dilfe_clrdel(class dilprg *p)
 
                     if (v->type != DILV_FAIL)
                     {
-                        if (UPC((unit_data *)v1->val.ptr)->color.get((char *)v2->val.ptr, full_name))
+                        if (UPC((unit_data *)v1->val.ptr)->color.get((char *)v2->val.ptr, full_name).empty() == false)
                         {
                             UPC((unit_data *)v1->val.ptr)->color.remove(full_name);
                             v->type = DILV_INT;

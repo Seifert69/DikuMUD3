@@ -97,18 +97,16 @@ void substHTMLcolor(std::string &dest, const char *src, class color_type &color)
             // We got a color code on our hands, let's see if we need to substitute
             if (l >= 1)
             {
-                const char *pCol;
+                auto Col = color.get(buf);
 
-                pCol = color.get(buf);
+                if (Col.empty())
+                    Col = g_cServerConfig.getColorType().get(buf);
 
-                if (pCol == NULL)
-                    pCol = g_cServerConfig.getColorType().get(buf);
-
-                if (pCol)
+                if (Col.empty() == false)
                 {
                     // Substitute the color
                     char newtag[256];
-                    substHTMLTagClass(aTag, "class", pCol, newtag, sizeof(newtag) - 1);
+                    substHTMLTagClass(aTag, "class", Col.c_str(), newtag, sizeof(newtag) - 1);
                     dest.push_back('<');
                     dest.append(newtag);
                     dest.push_back('>');
