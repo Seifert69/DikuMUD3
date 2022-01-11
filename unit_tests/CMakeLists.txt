@@ -17,6 +17,7 @@ add_executable(vme_unit_tests
         vme_main.cpp
         CServerConfiguration_tests.cpp
         color_type_tests.cpp
+        cNamelist_tests.cpp
         #Adding vme main for globals - multidef takes care of 2 main() funcs
         ../vme/src/main.cpp
         )
