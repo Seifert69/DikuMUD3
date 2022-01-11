@@ -10,11 +10,13 @@
    the linked list should be a doubly linked list for speed.
 */
 
-#include <assert.h>
-
 #include "queue.h"
+
 #include "utility.h"
-#include <string.h>
+
+#include <cassert>
+#include <cstring>
+
 cQueueElem::cQueueElem(char *pStr, int bCopy)
 {
     assert(pStr);

@@ -7,15 +7,7 @@
 
 #ifdef _WINDOWS
     #include <direct.h>
-#else
-
 #endif
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <ctime>
-#include <cstdarg> /* For type_check */
-
 /* Per https://sourceforge.net/p/predef/wiki/OperatingSystems/, this identifies
  *  Mac OS X. This is needed since OS X doesn't have crypt.h and instead uses
  *  unistd.h for these mappings. */
@@ -24,37 +16,41 @@
 #elif defined LINUX
     #include <crypt.h>
 #endif
-#include "external_vars.h"
-#include "structs.h"
-#include "handler.h"
-#include "textutil.h"
-#include "interpreter.h"
-#include "comm.h"
-#include "dil.h"
+
+#include "account.h"
+#include "act_other.h"
 #include "affect.h"
-#include "utility.h"
-#include "utils.h"
+#include "comm.h"
 #include "db.h"
-#include "db_file.h"
-#include "vmelimits.h"
-#include "common.h"
-#include "spells.h"
-#include "db_file.h"
+#include "dil.h"
 #include "dilinst.h"
 #include "dilrun.h"
-#include "magic.h"
-#include "trie.h"
-#include "main.h"
-#include "account.h"
-#include "justice.h"
 #include "files.h"
-#include <sys/types.h>
+#include "handler.h"
+#include "hookmud.h"
+#include "interpreter.h"
+#include "justice.h"
+#include "main_functions.h"
+#include "mobact.h"
+#include "nanny.h"
+#include "pcsave.h"
+#include "pipe.h"
+#include "reception.h"
+#include "spell_parser.h"
+#include "spells.h"
+#include "structs.h"
+#include "textutil.h"
+#include "trie.h"
+#include "utility.h"
+#include "utils.h"
+#include "vmelimits.h"
+#include "zon_basis.h"
+
 #include <fcntl.h>
 #include <sys/stat.h>
-#include "hookmud.h"
 
-void stop_special(class unit_data *u, class unit_fptr *fptr);
-void start_special(class unit_data *u, class unit_fptr *fptr);
+#include <cstdlib>
+#include <cstring>
 
 /* report error in instruction */
 void dil_stop_special(class unit_data *unt, class dilprg *aprg)
@@ -113,7 +109,7 @@ void dil_insterr(class dilprg *p, char *where)
 /* ************************************************************************ */
 /* DIL-instructions							    */
 /* ************************************************************************ */
-void dilfi_edit(register class dilprg *p)
+void dilfi_edit(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
 
@@ -136,7 +132,7 @@ void dilfi_edit(register class dilprg *p)
     delete v1;
 }
 
-void dilfi_kedit(register class dilprg *p)
+void dilfi_kedit(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
     class descriptor_data *d;
@@ -165,7 +161,7 @@ void dilfi_kedit(register class dilprg *p)
     delete v1;
 }
 
-void dilfi_gamestate(register class dilprg *p)
+void dilfi_gamestate(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -198,7 +194,7 @@ void dilfi_gamestate(register class dilprg *p)
     delete v2;
 }
 
-void dilfi_send_done(register class dilprg *p)
+void dilfi_send_done(class dilprg *p)
 {
     struct command_info *cmd_ptr;
     dilval *v7 = p->stack.pop();
@@ -273,7 +269,7 @@ void dilfi_send_done(register class dilprg *p)
 }
 
 /* pagestring */
-void dilfi_pgstr(register class dilprg *p)
+void dilfi_pgstr(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -289,7 +285,7 @@ void dilfi_pgstr(register class dilprg *p)
     delete v1;
 }
 
-void dilfi_setpwd(register class dilprg *p)
+void dilfi_setpwd(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -315,7 +311,7 @@ void dilfi_setpwd(register class dilprg *p)
     delete v2;
 }
 
-void dilfi_delpc(register class dilprg *p)
+void dilfi_delpc(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
     class descriptor_data *d;
@@ -330,8 +326,6 @@ void dilfi_delpc(register class dilprg *p)
         }
         else
         {
-            int delete_player(const char *);
-
             if (v1->val.ptr)
             {
                 if ((d = find_descriptor(((char *)v1->val.ptr), NULL)))
@@ -353,7 +347,7 @@ void dilfi_delpc(register class dilprg *p)
     delete v1;
 }
 
-void dilfi_reboot(register class dilprg *p)
+void dilfi_reboot(class dilprg *p)
 {
     if (p->frame[0].tmpl->zone->access > 0)
     {
@@ -460,7 +454,6 @@ void dilfi_stora(class dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
     char filename[512];
-    void store_all_unit(class unit_data * u, char *fname, int svcont);
 
     if (dil_type_check("storeall", p, 3, v1, FAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_SP, v3, FAIL_NULL, 1, DILV_INT))
     {
@@ -594,7 +587,6 @@ void dilfi_dispatch(class dilprg *p)
     {
         if (v1->val.ptr)
         {
-            void pipeMUD_write(const char *str);
             pipeMUD_write((const char *)v1->val.ptr);
         }
     }
@@ -742,8 +734,6 @@ void dilfi_rsvlv(class dilprg *p)
 void dilfi_rsrce(class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
-    void race_adjust(class unit_data * ch);
-
     if (dil_type_check("reset_race", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
         if (p->frame[0].tmpl->zone->access > 1)
@@ -1070,7 +1060,7 @@ void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl)
 }
 
 /* Remote function call */
-void dilfi_rfunc(register class dilprg *p)
+void dilfi_rfunc(class dilprg *p)
 {
     int xrefi;
     struct diltemplate *ctmpl;
@@ -1109,7 +1099,7 @@ void dilfi_rfunc(register class dilprg *p)
 }
 
 /* Remote symbolic function call */
-void dilfi_rsfunc(register class dilprg *p)
+void dilfi_rsfunc(class dilprg *p)
 {
     int i;
     struct diltemplate /* *ctmpl,*/ *ntmpl;
@@ -1205,7 +1195,7 @@ void dilfi_rsfunc(register class dilprg *p)
 }
 
 /* Assignment of value to reference */
-void dilfi_ass(register class dilprg *p)
+void dilfi_ass(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1536,7 +1526,7 @@ void dilfi_ass(register class dilprg *p)
 }
 
 /* Link unit into other unit */
-void dilfi_lnk(register class dilprg *p)
+void dilfi_lnk(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1562,7 +1552,7 @@ void dilfi_lnk(register class dilprg *p)
 }
 
 /* dilcopy */
-void dilfi_dlc(register class dilprg *p)
+void dilfi_dlc(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1577,7 +1567,7 @@ void dilfi_dlc(register class dilprg *p)
 }
 
 /* sendtext */
-void dilfi_sete(register class dilprg *p)
+void dilfi_sete(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -2744,10 +2734,6 @@ void dilfi_blk(register class dilprg *p)
 void dilfi_pup(register class dilprg *p)
 {
     dilval *v1 = p->stack.pop();
-
-    void update_pos(class unit_data * victim);
-    void die(class unit_data * ch);
-
     p->waitcmd--;
 
     if (dil_type_check("updatepos", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))

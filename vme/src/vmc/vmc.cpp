@@ -5,33 +5,28 @@
  $Revision: 2.10 $
  */
 
-#include <boost/config.hpp>
-#include <algorithm>
-#include <iostream>
-#include <boost/graph/adjacency_list.hpp>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string>
-#include <fstream>
-#include <sstream>
-
-#ifdef WINDOWS
-
-#else
-    #include <unistd.h>
-#endif
-#undef WRITE_TEST
-#include <sys/types.h>
-#include <sys/stat.h>
-#include "pp.h"
-#include <utils.h>
 #include "vmc.h"
-#include "compile_defines.h"
-#include <dil.h>
+
+#include "common.h"
+#include "db_file.h"
+#include "dil.h"
+#include "pp.h"
+#include "vmc_process.h"
+
+#include <sys/stat.h>
 #include <textutil.h>
+#include <unistd.h>
 #include <utility.h>
-#include <db_file.h>
-#include <common.h>
+#include <utils.h>
+
+#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <string>
+
+#include <boost/graph/adjacency_list.hpp>
 
 #define MEMBLOCK (200000)
 #define BUFS 30
@@ -43,7 +38,6 @@ struct zone_info g_zone;
 char g_cur_filename[256], top_filename[256];
 
 void zone_reset(char *default_name);
-void init_unit(class unit_data *u);
 void dump_zone(char *prefix);
 long stat_mtime(char *name);
 void dil_free_template(struct diltemplate *tmpl, int copy, int dil = FALSE);
@@ -51,11 +45,13 @@ void dil_free_var(struct dilvar *var);
 void dil_free_frame(struct dilframe *frame);
 void dil_free_prg(struct dilprg *prg, int dil = FALSE);
 void write_dot(char *prefix);
+void init_lex(char *str);
+int yyparse(void);
 
-int make = 0,             /* cmp mod-times of files before compiling */
-    g_nooutput = 0,       /* suppress output */
-    g_verbose = 0,        /* be talkative */
-    g_fatal_warnings = 0; /* allow warnings */
+int g_make = 0;           /* cmp mod-times of files before compiling */
+int g_nooutput = 0;       /* suppress output */
+int g_verbose = 0;        /* be talkative */
+int g_fatal_warnings = 0; /* allow warnings */
 bool g_quiet_compile = false;
 
 char **ident_names = NULL; /* Used to check unique ident */
@@ -105,8 +101,6 @@ void fix(char *file)
 {
     char *p, tmp[500], tmp2[500], filename_prefix[256], filename[256];
     int result;
-    void init_lex(char *str);
-    int yyparse(void);
 
     /* Examine filename */
     strcpy(filename_prefix, file);
@@ -120,7 +114,7 @@ void fix(char *file)
         }
         *p = '\0';
     }
-    if (make)
+    if (g_make)
     {
         sprintf(tmp, "%s.%s", filename_prefix, OUTPUT_WSUFFIX);
         sprintf(tmp2, "%s.%s", filename_prefix, OUTPUT_RSUFFIX);
@@ -344,7 +338,6 @@ void dump_zone(char *prefix)
     int no_rooms = 0;
     struct diltemplate *tmpl, *ut;
     ubit32 dummy;
-    void dmc_error(int fatal, const char *fmt, ...);
 
     /* Quinn, I do this to get all the sematic errors and info */
     /* appear when nooutput = TRUE - it didn't before!         */

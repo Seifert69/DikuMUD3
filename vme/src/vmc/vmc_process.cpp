@@ -5,19 +5,17 @@
  $Revision: 2.4 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string>
-#include <stdarg.h> /* va_args in dmc_error() */
-#include <time.h>
-#include <ctype.h>
-
-#include "vmc.h"
-#include "skills.h"
 #include "common.h"
+#include "money.h"
+#include "skills.h"
 #include "textutil.h"
 #include "utility.h"
-#include "money.h"
+#include "vmc.h"
+
+#include <cctype>
+#include <cstdarg> /* va_args in dmc_error() */
+#include <cstdio>
+#include <cstdlib>
 
 /* PS Algorithm 3                                                      */
 /* This algorithm returns the total amount of hitpoints possessed when */

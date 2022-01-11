@@ -4,25 +4,21 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.2 $
  */
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <type_traits>
+#include "destruct.h"
 
-#include "structs.h"
-#include "utils.h"
-#include "textutil.h"
-#include "skills.h"
-#include "comm.h"
+#include "affect.h"
 #include "db.h"
 #include "handler.h"
 #include "interpreter.h"
-#include "affect.h"
+#include "main_functions.h"
+#include "mobact.h"
+#include "nanny.h"
+#include "structs.h"
 #include "utility.h"
-#include "destruct.h"
-#include "event.h"
+#include "utils.h"
+
+#include <cstdlib>
+#include <cstring>
 
 /*
    This method is possible since we know that the only problem occurs when:
@@ -161,15 +157,6 @@ void destruct_unit(class unit_data *unit)
     int in_menu = FALSE;
     if (!unit)
         return;
-
-    void stop_all_special(class unit_data * u);
-    void unswitchbody(class unit_data * npc);
-    void unsnoop(class unit_data * ch, int mode);
-    void unlink_affect(class unit_affected_type * af);
-    void nanny_menu(class descriptor_data * d, char *arg);
-    void nanny_close(class descriptor_data * d, char *arg);
-
-    void do_return(class unit_data * ch, char *arg, struct command_info *cmd);
 
     if (!IS_PC(unit))
     {

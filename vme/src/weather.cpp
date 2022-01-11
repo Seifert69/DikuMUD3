@@ -5,20 +5,19 @@
  $Revision: 2.5 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include "external_vars.h"
-#include "structs.h"
-#include "utils.h"
-#include "comm.h"
-#include "handler.h"
-#include "interpreter.h"
-#include "db.h"
-#include "utility.h"
-#include "main.h"
 #include "weather.h"
+
+#include "comm.h"
+#include "db.h"
+#include "interpreter.h"
+#include "main_functions.h"
+#include "structs.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cstdio>
+#include <cstring>
+#include <ctime>
 
 int g_sunlight = SUN_SET;                     /* And how much sun. */
 const time_t g_beginning_of_time = 650336715; /* Sat Aug 11 01:05:15 1990 */
@@ -294,8 +293,6 @@ void weather_and_time_event(void *p1, void *p2)
 /* reset the time in the game from file */
 void boot_time_and_weather(void)
 {
-    struct time_info_data mud_time_passed(time_t t2, time_t t1);
-
     struct time_info_data time_info;
     g_tBootTime = time(0);
     char *p = ctime(&g_tBootTime);

@@ -5,29 +5,25 @@
  $Revision: 2.7 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-#include <string.h>
-#include <string>
-
-#include "structs.h"
-#include "utils.h"
-#include "handler.h"
-#include "textutil.h"
-#include "interpreter.h"
-#include "db.h"
-#include "comm.h"
 #include "justice.h"
-#include "skills.h"
+
 #include "affect.h"
-#include "utility.h"
-#include "money.h"
-#include "files.h"
+#include "comm.h"
 #include "common.h"
-#include "movement.h"
-#include "fight.h"
+#include "db.h"
 #include "dilrun.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "money.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+#include "vmelimits.h"
+
+#include <cstring>
+#include <ctime>
+#include <string>
 
 static int crime_serial_no = time(0);
 
@@ -1065,8 +1061,6 @@ void call_guards(class unit_data *guard)
 
 int reward_give(struct spec_arg *sarg)
 {
-    void gain_exp(class unit_data * ch, int gain);
-
     class unit_data *u;
     class unit_affected_type *paf;
     std::string buf;

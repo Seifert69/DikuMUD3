@@ -5,32 +5,19 @@
  $Revision: 2.6 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <time.h>
-
-#include "structs.h"
-#include "utils.h"
 #include "comm.h"
+#include "common.h"
+#include "db.h"
 #include "handler.h"
 #include "interpreter.h"
-#include "files.h"
-#include "skills.h"
-#include "db.h"
-#include "spells.h"
-#include "vmelimits.h"
-#include "affect.h"
-#include "utility.h"
-#include "trie.h"
-#include "external_vars.h"
+#include "main_functions.h"
+#include "structs.h"
 #include "textutil.h"
-#include "money.h"
-#include "protocol.h"
-#include "constants.h"
-#include "common.h"
-#include "guild.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cstdio>
+#include <cstring>
 
 /* also used in "corpses" wizard-command */
 char *in_string(class unit_data *ch, class unit_data *u)
@@ -84,7 +71,7 @@ void player_where(class unit_data *ch, char *arg)
 void do_where(class unit_data *ch, char *aaa, const struct command_info *cmd)
 {
     char buf1[MAX_STRING_LENGTH], buf2[512];
-    register class unit_data *i;
+    class unit_data *i;
     class descriptor_data *d;
     char *arg = (char *)aaa;
     std::string mystr;

@@ -4,23 +4,23 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.15 $
  */
-#include "external_vars.h"
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
+#include "db_file.h"
 
-#include "structs.h"
-#include "utils.h"
-#include "textutil.h"
-#include "interpreter.h"
+#include "bytestring.h"
+#include "db.h"
 #include "dil.h"
 #include "dilrun.h"
-#include "utility.h"
-#include "db_file.h"
 #include "handler.h"
-#include "db.h"
-#include "bytestring.h"
-#include "intlist.h"
+#include "main_functions.h"
+#include "spec_assign.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 int g_nCorrupt = 0; /* > 0 when a unit is corrupt       */
 
@@ -36,8 +36,6 @@ int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version)
     ubit8 x;
     ubit32 i; // for 32 bit extra lists
     char *c;
-
-    char *fix_old_codes_to_html(const char *c);
 
     assert(cExtra.isempty());
     te = NULL;
@@ -340,7 +338,6 @@ void bwrite_dilintr(CByteBuffer *pBuf, class dilprg *prg)
 
 void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class unit_fptr *fptr, int stspec)
 {
-    void *membug_new(size_t size);
 #ifdef DMSERVER
     class dilprg *prg;
     struct diltemplate *tmpl = NULL;
@@ -374,7 +371,6 @@ void *bread_dil(CByteBuffer *pBuf, class unit_data *owner, ubit8 version, class 
         /* read local program, and convert to global template */
         tmpl = bread_diltemplate(pBuf, version);
         snprintf(name, sizeof(name), "%s", tmpl->prgname);
-        void dil_free_template(struct diltemplate * tmpl, int copy);
         dil_free_template(tmpl, IS_SET(prg->flags, DILFL_COPY));
         SET_BIT(prg->flags, DILFL_COPY);
         slog(LOG_ALL, 0, "hula hop");

@@ -5,21 +5,15 @@
  $Revision: 2.7 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include <stdarg.h> /* va_args in slog()        */
+#include "utility.h"
 
 #include "structs.h"
-#include "utils.h"
-#include "files.h"
-#include "textutil.h"
-#include "comm.h"
-#include "db.h"
-#include "utility.h"
-#include "interpreter.h"
-#include "db_file.h"
+
+#include <cstdarg> /* va_args in slog()        */
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 FILE *g_log_file_fd = stderr;
 

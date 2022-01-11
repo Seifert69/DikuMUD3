@@ -4,27 +4,29 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.8 $
  */
-#include "external_vars.h"
+#include "system.h"
+
+#include "account.h"
+#include "comm.h"
+#include "db.h"
+#include "dilrun.h"
+#include "handler.h"
+#include "hookmud.h"
+#include "interpreter.h"
+#include "main_functions.h"
+#include "nanny.h"
+#include "pcsave.h"
+#include "protocol.h"
+#include "structs.h"
+#include "utility.h"
+#include "utils.h"
+#include "vmelimits.h"
+
+#include <sys/resource.h>
+#include <sys/un.h>
+
 #include <cstdio>
 #include <cstdlib>
-#include <sys/un.h>
-#include <sys/resource.h>
-
-#include "interpreter.h"
-#include "structs.h"
-#include "utils.h"
-#include "system.h"
-#include "db.h"
-#include "utility.h"
-#include "comm.h"
-#include "handler.h"
-#include "files.h"
-#include "protocol.h"
-#include "main.h"
-#include "account.h"
-#include "vmelimits.h"
-#include "dilrun.h"
-#include "hookmud.h"
 
 void MplexSendSetup(class descriptor_data *d)
 {
@@ -42,11 +44,7 @@ void MplexSendSetup(class descriptor_data *d)
 /* Call only once when creating a new char (guest)    */
 void init_char(class unit_data *ch)
 {
-    int new_player_id(void);
-
     int i;
-
-    int required_xp(int level);
 
     if (g_cServerConfig.isBBS())
     {
@@ -122,8 +120,6 @@ int g_max_no_connections = 0; /* Statistics                                */
 descriptor_data::descriptor_data(cMultiHook *pe)
 {
     static int nid = 0;
-
-    void nanny_get_name(class descriptor_data * d, char *arg);
 
     g_no_connections++;
     if (g_no_connections > g_max_no_connections)
@@ -234,9 +230,6 @@ void descriptor_close(class descriptor_data *d, int bSendClose, int bReconnect)
 {
     class descriptor_data *tmp;
     struct diltemplate *link_dead;
-    void unsnoop(class unit_data * ch, int mode);
-    void unswitchbody(class unit_data * npc);
-
     assert(d->character);
 
     /* Descriptor must be either in the game (UNIT_IN) or in menu.  */

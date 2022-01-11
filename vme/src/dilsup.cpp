@@ -5,15 +5,13 @@
  $Revision: 2.3 $
  */
 
-#include <cstring>
-
+#include "account.h"
+#include "db.h"
+#include "interpreter.h"
 #include "structs.h"
 #include "utils.h"
-#include "interpreter.h"
-#include "db.h"
-#include "affect.h"
-#include "constants.h"
-#include "account.h"
+
+#include <cstring>
 
 int pay_point_charlie(class unit_data *ch, class unit_data *to)
 {

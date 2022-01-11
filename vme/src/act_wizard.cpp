@@ -4,43 +4,27 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.9 $
  */
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
+#include "act_wizard.h"
 
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
-#include "textutil.h"
 #include "comm.h"
-#include "interpreter.h"
-#include "handler.h"
-#include "db.h"
-#include "db_file.h"
-#include "spells.h"
-#include "vmelimits.h"
-#include "affect.h"
-#include "magic.h"
 #include "common.h"
-#include "utility.h"
-#include "money.h"
-#include "system.h"
-#include "files.h"
-#include "movement.h"
-#include "main.h"
+#include "db.h"
 #include "dilrun.h"
-#include "event.h"
-/* external functs */
+#include "handler.h"
+#include "interpreter.h"
+#include "main_functions.h"
+#include "money.h"
+#include "nanny.h"
+#include "pcsave.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+#include "zon_basis.h"
+#include "zone_reset.h"
 
-struct time_info_data age(class unit_data *ch);
-struct time_info_data real_time_passed(time_t t2, time_t t1);
-class zone_type *find_zone(char *zonename);
-
-class descriptor_data *find_descriptor(const char *, class descriptor_data *);
-int player_exists(const char *pName);
-int delete_player(const char *name);
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 void do_timewarp(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
@@ -62,8 +46,6 @@ void do_timewarp(class unit_data *ch, char *argument, const struct command_info 
     snprintf(buf, sizeof(buf), "Time warping for %d seconds<br/>", i);
     send_to_char(buf, ch);
 
-    void timewarp_end(void *p1, void *p2);
-
     g_events.add(PULSE_SEC * i, timewarp_end, 0, 0);
 
     g_nTickUsec = 0; // Warp the time
@@ -73,8 +55,6 @@ void do_users(class unit_data *ch, char *argument, const struct command_info *cm
 {
     char *buf = NULL;
     int cur_size = 1024;
-
-    int available_connections(void);
 
     class descriptor_data *d;
     char tmp[256];
@@ -157,8 +137,6 @@ void do_users(class unit_data *ch, char *argument, const struct command_info *cm
 void do_reset(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     class zone_type *zone;
-
-    int zone_reset(class zone_type *);
 
     if (!str_is_empty(arg))
     {
@@ -244,9 +222,6 @@ void do_crash(class unit_data *ch, char *argument, const struct command_info *cm
 
 void do_execute(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
-    int system_check(class unit_data * pc, char *buf);
-    void execute_append(class unit_data * pc, char *str);
-
     argument = skip_spaces(argument);
 
     if (!system_check(ch, argument))
@@ -277,9 +252,6 @@ void do_shutdown(class unit_data *ch, char *argument, const struct command_info 
 void do_snoop(class unit_data *ch, char *argument, const struct command_info *cmd)
 {
     class unit_data *victim;
-
-    void unsnoop(class unit_data * ch, int mode);
-    void snoop(class unit_data * ch, class unit_data * victim);
 
     if (!CHAR_DESCRIPTOR(ch))
         return;
@@ -342,9 +314,6 @@ void do_switch(class unit_data *ch, char *argument, const struct command_info *c
 {
     class unit_data *victim;
 
-    void switchbody(class unit_data * ch, class unit_data * victim);
-    void unswitchbody(class unit_data * npc);
-
     if (!CHAR_DESCRIPTOR(ch))
         return;
 
@@ -385,9 +354,6 @@ void do_load(class unit_data *ch, char *arg, const struct command_info *cmd)
     char buf[MAX_INPUT_LENGTH];
     class file_index_type *fi;
     class unit_data *u, *tmp;
-
-    void reset_char(class unit_data * ch);
-    void enter_game(class unit_data * ch, int dilway = FALSE);
 
     if (str_is_empty(arg))
     {

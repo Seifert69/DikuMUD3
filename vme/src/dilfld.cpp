@@ -5,25 +5,24 @@
  $Revision: 2.11 $
  */
 
-#include "structs.h"
-#include "utils.h"
+#include "combat.h"
+#include "common.h"
+#include "config.h"
+#include "db.h"
 #include "dil.h"
 #include "dilexp.h"
 #include "dilrun.h"
-#include "textutil.h"
-#include "db_file.h"
 #include "handler.h"
 #include "interpreter.h"
-#include "utility.h"
-#include "common.h"
-#include "main.h"
-#include "vmelimits.h"
-#include "config.h"
-#include "combat.h"
+#include "main_functions.h"
 #include "skills.h"
-#include "db.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+#include "vmelimits.h"
 
-void dilfe_fld(register class dilprg *p)
+void dilfe_fld(class dilprg *p)
 {
     /* Get a structure field */
     class dilval *v1, *v2;

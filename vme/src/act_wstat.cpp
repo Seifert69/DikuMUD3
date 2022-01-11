@@ -4,45 +4,48 @@
  $Date: 2004/09/18 19:52:56 $
  $Revision: 2.10 $
  */
+
+#ifdef _WINDOWS
+    #include <winsock2.h>
+#endif
+
+#include "account.h"
+#include "act_wizard.h"
+#include "affect.h"
+#include "apf_affect.h"
 #include "bank.h"
-#include "external_vars.h"
-#include <cstdlib>
+#include "comm.h"
+#include "common.h"
+#include "constants.h"
+#include "db.h"
+#include "dilshare.h"
+#include "files.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "magic.h"
+#include "main_functions.h"
+#include "modify.h"
+#include "skills.h"
+#include "spec_assign.h"
+#include "spell_parser.h"
+#include "spells.h"
+#include "structs.h"
+#include "textutil.h"
+#include "tif_affect.h"
+#include "utility.h"
+#include "utils.h"
+#include "vmelimits.h"
+#include "weather.h"
+
+#include <arpa/inet.h>
+#include <netinet/in.h>
+
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <ctime>
 #include <map>
 #include <string>
-
-#ifdef _WINDOWS
-    #include <winsock2.h>
-#else
-    #include <sys/socket.h>
-    #include <netinet/in.h>
-    #include <arpa/inet.h>
-#endif
-
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
-#include "textutil.h"
-#include "comm.h"
-#include "interpreter.h"
-#include "handler.h"
-#include "db.h"
-#include "spells.h"
-#include "vmelimits.h"
-#include "affect.h"
-#include "magic.h"
-#include "utility.h"
-#include "files.h"
-#include "common.h"
-#include "account.h"
-#include "constants.h"
-#include "main.h"
-
-/* external functs */
-struct time_info_data age(class unit_data *ch);
-struct time_info_data real_time_passed(time_t t2, time_t t1);
 
 static void stat_world_count(const class unit_data *ch, char *arg)
 {
@@ -106,9 +109,6 @@ static void stat_world_extra(const class unit_data *ch)
 static void stat_memory(class unit_data *ch)
 {
     char buf[MAX_STRING_LENGTH];
-
-    void memory_status(char *buf);
-    void system_memory(class unit_data * ch);
 
     snprintf(buf, sizeof(buf), "Event queue entries: %d<br/>", g_events.Count());
     send_to_char(buf, ch);

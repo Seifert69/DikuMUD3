@@ -4,25 +4,26 @@
  $Date: 2004/09/21 08:45:46 $
  $Revision: 2.9 $
  */
-#include <cstdlib>
+#include "affect.h"
+#include "comm.h"
+#include "db.h"
+#include "db_file.h"
+#include "files.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "money.h"
+#include "pcsave.h"
+#include "slime.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+#include "zon_basis.h"
+
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include "external_vars.h"
-#include "structs.h"
-#include "utils.h"
-#include "textutil.h"
-#include "comm.h"
-#include "handler.h"
-#include "db.h"
-#include "interpreter.h"
-#include "affect.h"
-#include "utility.h"
-#include "money.h"
-#include "files.h"
-#include "db_file.h"
-
-int write_unit_string(ubit8 *b, class unit_data *u);
 
 /* *************************************************************************
  * Routines for calculating rent                                           *
@@ -206,8 +207,6 @@ void enlist(CByteBuffer *pBuf, class unit_data *unit, int level, int fast)
     memset(&ho, 0, sizeof(ho));
     memset(&hn, 0, sizeof(hn));
 
-    int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif, int diflen, ubit32 crc);
-
     if (!IS_SET(UNIT_TYPE(unit), UNIT_ST_NPC | UNIT_ST_OBJ))
     {
         slog(LOG_ALL, 0, "MAJOR ERROR - enlist a non-NPC or non-OBJ is being saved. Aborted");
@@ -317,8 +316,6 @@ char *ContentsFileName(const char *pName)
 {
     static char Buf[MAX_INPUT_LENGTH + 1];
 
-    char *PlayerFileName(const char *);
-
     snprintf(Buf, sizeof(Buf), "%s.inv", PlayerFileName(pName));
 
     return Buf;
@@ -415,9 +412,6 @@ class unit_data *base_load_contents(const char *pFileName, const class unit_data
 
     CByteBuffer InvBuf;
     InvBuf.Clear();
-
-    int is_slimed(class file_index_type * sp);
-    int patch(char *ref, ubit32 reflen, char *dif, int diflen, char *res, int reslen, ubit32 crc);
 
     assert(g_slime_fi != NULL);
 

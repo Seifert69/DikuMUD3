@@ -5,37 +5,29 @@
  $Revision: 2.4 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "structs.h"
-#include "skills.h"
-#include "common.h"
 #include "vmelimits.h"
-#include "utils.h"
-#include "spells.h"
+
 #include "comm.h"
-#include "utility.h"
-#include "textutil.h"
-#include "handler.h"
-#include "interpreter.h"
-#include "guild.h"
-#include "fight.h"
-#include "constants.h"
+#include "common.h"
 #include "dbfind.h"
 #include "dilrun.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "skills.h"
+#include "structs.h"
+#include "teach.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+#include "weather.h"
 
-/* External procedures */
-
-int required_xp(int level);               /* common.c   */
-void update_pos(class unit_data *victim); /* in fight.c */
-struct time_info_data age(class unit_data *ch);
+#include <cstdio>
+#include <cstring>
 
 /* Count the number of items a unit contains */
 int char_carry_n(class unit_data *unit)
 {
-    register int i;
+    int i;
 
     for (unit = UNIT_CONTAINS(unit), i = 0; unit; unit = unit->next)
     {
@@ -308,8 +300,6 @@ int mana_gain(class unit_data *ch)
 /* Gain maximum in various points */
 void advance_level(class unit_data *ch)
 {
-    void clear_training_level(class unit_data * ch);
-
     assert(IS_PC(ch));
 
     if (IS_IMMORTAL(ch))

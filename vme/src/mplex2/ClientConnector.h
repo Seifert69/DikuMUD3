@@ -4,15 +4,16 @@
  $Date: 2001/04/10 21:11:37 $
  $Revision: 2.0 $
  */
+#pragma once
 
-#include "network.h"
-#include <cstring>
-#include "protocol.h"
-#include "essential.h"
-#include "queue.h"
-#include "hook.h"
 #include "color.h"
+#include "essential.h"
+#include "hook.h"
+#include "network.h"
+#include "protocol.h"
+#include "queue.h"
 
+#include <cstring>
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 

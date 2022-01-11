@@ -1,19 +1,19 @@
-#include <stdio.h>
-#include <string>
+#include "pipe.h"
+
+#include "dbfind.h"
+#include "dil.h"
+#include "dilrun.h"
+#include "essential.h"
+#include "hook.h"
+#include "textutil.h"
+#include "unitfind.h"
+
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <errno.h>
-#include "essential.h"
+
+#include <cerrno>
 #include <cstring>
-#include "dilrun.h"
-#include "dbfind.h"
-#include "vme.h"
-#include "unitfind.h"
-#include "dil.h"
-#include "textutil.h"
-#include "hook.h"
+#include <string>
 
 class pipeMUD_RO : public cHookNative
 {
@@ -118,7 +118,6 @@ public:
                     o++;
                 slog(LOG_OFF, 0, "Received line [%s]. Send to DIL", line.c_str());
 
-                void pipeMUD_dispatch(std::string str);
                 pipeMUD_dispatch(line);
             } while (p);
         }

@@ -4,14 +4,12 @@
  * $Date: 2001/04/29 03:46:05 $
  * $Revision: 2.1 $
  */
+#pragma once
 
-#ifndef _MUD_CMDLOAD_H
-#define _MUD_CMDLOAD_H
-#include "vme.h"
+#include <vme.h>
 
 #define DIR_CMD 1
 
-extern const char *g_pc_races[PC_RACE_MAX + 1];
 struct cmdload_struct
 {
     const char *cmd_str;
@@ -22,4 +20,5 @@ struct cmdload_struct
 
 void cmd_base_load(void);
 void command_read(void);
-#endif
+
+extern struct command_info *g_cmdlist;

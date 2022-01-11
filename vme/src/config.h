@@ -11,9 +11,9 @@
 #else
     #include <arpa/inet.h>
 #endif
-#include "fight.h"
-#include "common.h"
 #include "color.h"
+#include "common.h"
+#include "fight.h"
 
 #include <map>
 #include <vector>

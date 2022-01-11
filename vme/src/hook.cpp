@@ -1,4 +1,3 @@
-
 /*
  $Author: All $
  $RCSfile: select.cpp,v $
@@ -9,19 +8,19 @@
 #ifdef _WINDOWS
     #include <time.h>
     #include <winsock2.h>
-#else
-    #include <unistd.h>
-    #include <sys/time.h>
-    #include <exception>
-
 #endif
-#include <sys/types.h>
-#include <assert.h>
-#include <signal.h>
-#include <string.h>
-#include <errno.h>
+
 #include "hook.h"
 #include "utility.h"
+
+#include <sys/time.h>
+#include <unistd.h>
+
+#include <cassert>
+#include <cerrno>
+#include <csignal>
+#include <cstring>
+#include <exception>
 
 cCaptainHook g_CaptainHook;
 

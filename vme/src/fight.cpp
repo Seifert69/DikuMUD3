@@ -5,26 +5,29 @@
  $Revision: 2.6 $
  */
 
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
-#include "common.h"
-#include "vmelimits.h"
+#include "fight.h"
+
+#include "affect.h"
+#include "combat.h"
 #include "comm.h"
+#include "common.h"
+#include "db.h"
+#include "dilrun.h"
+#include "experience.h"
+#include "files.h"
 #include "handler.h"
 #include "interpreter.h"
-#include "db.h"
-#include "textutil.h"
-#include "affect.h"
 #include "justice.h"
+#include "skills.h"
+#include "structs.h"
+#include "textutil.h"
 #include "utility.h"
-#include "fight.h"
-#include "combat.h"
-#include "files.h"
-#include "dilrun.h"
+#include "utils.h"
+#include "vmelimits.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* Structures */
 
@@ -61,12 +64,6 @@ struct combat_msg_list
 };
 
 struct combat_msg_list fight_messages[COM_MAX_MSGS];
-
-/* External procedures */
-
-void gain_exp(class unit_data *ch, int gain);
-char *fread_string(FILE *f1);
-void stop_follower(class unit_data *ch);
 
 /* Returns TRUE if combat is not allowed, and FALSE if combat is allowed */
 /* Also used for steal, etc.                                             */
@@ -749,8 +746,6 @@ static void exp_align_gain(class unit_data *ch, class unit_data *victim)
     int rellevel, sumlevel, maxlevel, minlevel, no_members = 1, share;
     class unit_data *head;
     struct char_follow_type *f;
-
-    int experience_modification(class unit_data * att, class unit_data * def);
 
     maxlevel = CHAR_LEVEL(ch);
 

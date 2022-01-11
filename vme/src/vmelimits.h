@@ -4,9 +4,7 @@
  $Date: 2003/11/29 03:31:16 $
  $Revision: 2.2 $
  */
-
-#ifndef _MUD_LIMITS_H
-#define _MUD_LIMITS_H
+#pragma once
 
 #include "structs.h"
 
@@ -20,7 +18,6 @@ int char_carry_w_limit(class unit_data *ch);
 int char_can_carry_w(class unit_data *ch, int weight);
 
 int mana_limit(class unit_data *ch);
-int hit_limit_number(int);
 int hit_limit(class unit_data *ch);
 int move_limit(class unit_data *ch);
 
@@ -34,5 +31,4 @@ void advance_level(class unit_data *ch);
 void gain_exp(class unit_data *ch, int gain);
 void gain_exp_regardless(class unit_data *ch, int gain);
 void gain_condition(class unit_data *ch, int condition, int value);
-
-#endif /* _MUD_LIMITS_H */
+void do_level(class unit_data *, char *, const struct command_info *);

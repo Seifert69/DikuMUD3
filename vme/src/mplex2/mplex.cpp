@@ -6,49 +6,29 @@
  */
 
 #ifdef _WINDOWS
-    #include "telnet.h"
-    #include "winsock2.h"
-    #include <time.h>
     #include "string.h"
+    #include "telnet.h"
     #include "winbase.h"
+    #include "winsock2.h"
+
+    #include <time.h>
 #endif
 
-#ifdef LINUX
-    #include <unistd.h>
-    #include <arpa/telnet.h>
-    #include <sys/time.h>
-    #include <netdb.h>
-#endif
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <ctype.h>
-#include <assert.h>
-#include <signal.h>
-#include <thread>
-
-#define MPLEX_COMPILE 1
-#include "structs.h"
-
-#include "network.h"
-#include "protocol.h"
-#include "essential.h"
-#include "textutil.h"
-#include "ttydef.h"
-#include "db.h"
-#include "utility.h"
-#include "translate.h"
-#include "hook.h"
-#include "common.h"
-#include "queue.h"
-#include "mplex.h"
 #include "MUDConnector.h"
-#include "ClientConnector.h"
-#include "compile_defines.h"
+#include "essential.h"
+#include "hook.h"
+#include "mplex.h"
+#include "network.h"
+#include "textutil.h"
+
+#include <netdb.h>
+
+#include <cassert>
+#include <cctype>
+#include <csignal>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 char g_mudname[50] = "the MUD server (via DikuMUD Mplex)";
 int g_bHadAlarm = FALSE;

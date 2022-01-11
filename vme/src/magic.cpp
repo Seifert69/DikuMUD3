@@ -5,33 +5,32 @@
  $Revision: 2.4 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
-#include "common.h"
-#include "textutil.h"
-#include "comm.h"
-#include "spells.h"
-#include "handler.h"
-#include "vmelimits.h"
-#include "affect.h"
 #include "magic.h"
-#include "utility.h"
-#include "fight.h"
+
+#include "comm.h"
+#include "common.h"
 #include "dbfind.h"
 #include "dil.h"
 #include "dilrun.h"
+#include "experience.h"
+#include "fight.h"
+#include "handler.h"
 #include "interpreter.h"
+#include "modify.h"
+#include "skills.h"
+#include "spell_parser.h"
+#include "spells.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cstdio>
 
 /* Returns TRUE when effect is shown by DIL */
 
 int dil_effect(char *pStr, struct spell_args *sa)
 {
-    int run_dil(struct spec_arg * sarg);
-
     if (str_is_empty(pStr))
         return FALSE;
 
@@ -376,16 +375,6 @@ int spell_offensive(struct spell_args *sa, int spell_number, int bonus)
     int roll;
     int bEffect;
     class unit_data *def_shield;
-
-    int spell_bonus(class unit_data * att,
-                    class unit_data * medium,
-                    class unit_data * def,
-                    int hit_loc,
-                    int spell_number,
-                    int *pDef_armour_type,
-                    class unit_data **pDef_armour,
-                    std::string *pStat);
-    void damage_object(class unit_data * ch, class unit_data * obj, int dam);
 
     /* Does the spell perhaps only hit head / body? All?? Right now I
         do it randomly */

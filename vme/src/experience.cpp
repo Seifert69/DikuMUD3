@@ -4,26 +4,23 @@
  $Date: 2002/05/22 01:35:59 $
  $Revision: 2.2 $
  */
+#include "experience.h"
 
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "textutil.h"
-#include "skills.h"
-#include "comm.h"
-#include "interpreter.h"
 #include "affect.h"
-#include "handler.h"
-#include "spells.h"
-#include "justice.h"
-#include "magic.h"
-#include "utility.h"
+#include "comm.h"
 #include "common.h"
 #include "fight.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "magic.h"
+#include "modify.h"
 #include "skills.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cstdio>
 
 // MS2020 Trying to decipher the purpose & get rid of this kludge for a more dynamic point system
 //   level 0 - 20 : Changes nothing

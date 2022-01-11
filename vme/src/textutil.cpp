@@ -5,16 +5,16 @@
  $Revision: 2.4 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "utility.h"
 #include "textutil.h"
+
 #include "common.h"
+#include "structs.h"
+#include "utility.h"
+
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 const char *g_fillwords[] = {"a", "an", "at", "from", "in", "on", "of", "the", "to", "with", "into", NULL};
 
@@ -117,11 +117,7 @@ char *spc(int n)
  *  of the integer 'n'
  *  I've made it the easy way :)
  */
-#ifdef DOS
-char *itoa_dos(int n)
-#else
 char *itoa(int n)
-#endif
 {
     static char buf[32]; /* 32 digits can even cope with 64 bit ints */
 
@@ -208,10 +204,10 @@ char *str_dup(const char *source)
  *  Return pointer to first occurence of ct in cs - or NULL
  *  Used to determine ei. "from" and "in"
  */
-char *str_str(register const char *cs, register const char *ct)
+char *str_str(const char *cs, const char *ct)
 {
-    register char *si;
-    register char *ti;
+    char *si;
+    char *ti;
 
     do
     {
@@ -343,7 +339,7 @@ ubit1 next_word_is_number(const char *str)
 int search_block(const char *oarg, const char **list, ubit1 exact)
 {
     char arg[4096];
-    register int i, l;
+    int i, l;
 
     if (list == NULL)
         return -1;
@@ -375,7 +371,7 @@ int search_block(const char *oarg, const char **list, ubit1 exact)
 int search_block_length(const char *oarg, int length, const char **list, ubit1 exact)
 {
     char arg[4096];
-    register int i;
+    int i;
 
     /* Make into lower case, and get length of string */
     str_lower(oarg, arg, sizeof(arg));
@@ -702,7 +698,7 @@ void str_blank_punct(char *s)
 }
 
 /* Remove all multiple space occurences in s */
-void str_remspc(register char *s)
+void str_remspc(char *s)
 {
     register char *cp;
 

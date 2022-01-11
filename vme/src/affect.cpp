@@ -4,21 +4,19 @@
  $Date: 2004/05/16 04:34:34 $
  $Revision: 2.2 $
  */
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-
-#include "structs.h"
-#include "utils.h"
 #include "affect.h"
+
+#include "apf_affect.h"
+#include "main_functions.h"
+#include "structs.h"
+#include "tif_affect.h"
 #include "utility.h"
-#include "main.h"
+#include "utils.h"
+
+#include <cstdio>
 
 class unit_affected_type *affected_list = 0;  /* Global list pointer       */
 class unit_affected_type *next_affected_dude; /* dirty - very dirty indeed */
-
-void register_destruct(int i, void *ptr);
-void clear_destruct(int i);
 
 /* Link an affected structure into the units affected structure */
 void link_affect(class unit_data *unit, class unit_affected_type *af)
@@ -47,7 +45,7 @@ void link_affect(class unit_data *unit, class unit_affected_type *af)
     af->owner = unit;
 }
 
-class unit_affected_type *link_alloc_affect(class unit_data *unit, class unit_affected_type *orgaf)
+unit_affected_type *link_alloc_affect(class unit_data *unit, class unit_affected_type *orgaf)
 {
     class unit_affected_type *af;
 
@@ -190,7 +188,7 @@ void affect_clear_unit(class unit_data *unit)
         slog(LOG_ALL, 0, "ERROR: Could not clear unit of affects!");
 }
 
-class unit_affected_type *affected_by_spell(const class unit_data *unit, sbit16 id)
+unit_affected_type *affected_by_spell(const class unit_data *unit, sbit16 id)
 {
     class unit_affected_type *af;
 
@@ -204,7 +202,7 @@ class unit_affected_type *affected_by_spell(const class unit_data *unit, sbit16 
 /* Called by event handler when its ticking time */
 void affect_beat(void *p1, void *p2)
 {
-    register class unit_affected_type *af = (class unit_affected_type *)p1;
+    class unit_affected_type *af = (class unit_affected_type *)p1;
     int destroyed;
 
     assert(af->id >= 0); /* Negative ids (transfer) dont have beats */

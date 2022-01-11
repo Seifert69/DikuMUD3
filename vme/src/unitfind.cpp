@@ -5,15 +5,16 @@
  $Revision: 2.5 $
  */
 
-#include <ctype.h>
-
-#include "utils.h"
-#include "db.h"
 #include "unitfind.h"
+
+#include "common.h"
+#include "db.h"
 #include "handler.h"
 #include "textutil.h"
 #include "utility.h"
-#include "common.h"
+#include "utils.h"
+
+#include <cctype>
 
 int follower_count(class unit_data *u)
 {
@@ -158,7 +159,7 @@ static inline int findcheck(class unit_data *u, int pset, int tflags)
 //
 class unit_data *random_unit(class unit_data *ref, int sflags, int tflags)
 {
-    register class unit_data *u, *selected = NULL;
+    class unit_data *u, *selected = NULL;
     int count = 0;
     int pset = 0;
 
@@ -551,7 +552,7 @@ class unit_data *find_unit_dil(const class unit_data *ch, char **arg, const clas
 
 class unit_data *file_index_type::find_symbolic_instance_ref(class unit_data *ref, ubit16 bitvector)
 {
-    register class unit_data *u, *uu;
+    class unit_data *u, *uu;
 
     assert(this);
 

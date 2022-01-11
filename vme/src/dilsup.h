@@ -4,10 +4,7 @@
  $Date: 2002/05/22 01:35:59 $
  $Revision: 2.1 $
  */
-
-#ifndef _VME_DILSUP_H
-#define _VME_DILSUP_H
+#pragma once
 
 int pay_point_charlie(class unit_data *ch, class unit_data *to);
-
-#endif
+char *obj_wear_size(class unit_data *ch, class unit_data *obj, int keyword = -1);

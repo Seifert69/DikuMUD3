@@ -4,28 +4,21 @@
  $Date: 2004/03/20 06:13:22 $
  $Revision: 2.6 $
  */
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <time.h>
-#include "structs.h"
-#include "utils.h"
-#include "db.h"
-#include "db_file.h"
+#include "zone_reset.h"
+
 #include "comm.h"
-#include "handler.h"
-#include "vmelimits.h"
-#include "textutil.h"
-#include "skills.h"
 #include "common.h"
-#include "affect.h"
-#include "utility.h"
-#include "money.h"
-#include "interpreter.h"
-#include "main.h"
+#include "db.h"
 #include "dilrun.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "main_functions.h"
+#include "money.h"
+#include "structs.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cstring>
 
 class zone_type *g_boot_zone = NULL; /* Points to the zone currently booted */
 
@@ -50,7 +43,7 @@ class unit_data *zone_random(class unit_data *u, struct zone_reset_cmd *cmd)
 /* Count ->no_in_zone for current 'g_boot_zone' (above) */
 void zone_update_no_in_zone(void)
 {
-    register class unit_data *u;
+    class unit_data *u;
 
     /* Clear ALL ->no_in_zone */
     for (auto tmp_zone = g_zone_info.mmp.begin(); tmp_zone != g_zone_info.mmp.end(); tmp_zone++)
@@ -348,8 +341,6 @@ void zone_reset(class zone_type *zone)
 void reset_all_zones(void)
 {
     int j;
-
-    void zone_event(void *, void *);
 
     for (j = 0; j <= 255; j++)
     {

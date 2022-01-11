@@ -4,29 +4,23 @@
  $Date: 2004/09/18 19:52:56 $
  $Revision: 2.10 $
  */
-#include "external_vars.h"
-#include <cstdlib>
-#include <cstdio>
-#include <cctype>
-#include <cstring>
-#include <pthread.h>
-#include <unistd.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "utility.h"
-#include "handler.h"
-#include "system.h"
-#include "comm.h"
-#include "db.h"
-#include "interpreter.h"
 #include "main.h"
-#include "textutil.h"
-#include "files.h"
-#include "hookmud.h"
-#include "dilrun.h"
-#include "diku_exception.h"
+
+#include "comm.h"
 #include "compile_defines.h"
+#include "diku_exception.h"
+#include "main_functions.h"
+#include "pipe.h"
+#include "structs.h"
+#include "system.h"
+#include "textutil.h"
+
+#include <pthread.h>
+
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #define OPT_USEC 250000L /* time delay corresponding to 4 passes/sec */
 
@@ -34,7 +28,6 @@ int main(int argc, char **argv)
 {
     try
     {
-        void cleanup_playerfile(int argc, char *argv[]);
         char srvcfg[512], *tempcfg, *log_name;
         int pos = 1;
 

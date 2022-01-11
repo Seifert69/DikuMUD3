@@ -5,20 +5,21 @@
  $Revision: 2.5 $
  */
 
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
+#include "money.h"
+
+#include "comm.h"
+#include "db.h"
+#include "handler.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "vmelimits.h"
+
 #include <cassert>
 #include <cctype>
-
-#include "structs.h"
-#include "utils.h"
-#include "textutil.h"
-#include "handler.h"
-#include "utility.h"
-#include "db.h"
-#include "money.h"
-#include "vmelimits.h"
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 struct money_type g_money_types[MAX_MONEY + 1];
 char *cur_strings[MAX_CURRENCY + 1];
@@ -127,7 +128,7 @@ char *money_string(amount_t amt, currency_t currency, ubit1 verbose)
 /* Money calculations. Assures we never get negative money */
 static amount_t calc_money(amount_t v1, char op, amount_t v2)
 {
-    register amount_t res = 0;
+    amount_t res = 0;
 
     if (v1 < 0 || v2 < 0)
         return 0;
@@ -536,8 +537,6 @@ class unit_data *split_money(class unit_data *money, amount_t amt)
     if (MONEY_AMOUNT(money) > amt)
     {
         /* Not very pretty to use this, but I really can't find an alternative */
-        void intern_unit_to_unit(class unit_data *, class unit_data *, ubit1);
-
         class unit_data *pnew = make_money(g_money_types[MONEY_TYPE(money)].fi, amt);
         set_money(money, calc_money(MONEY_AMOUNT(money), '-', amt));
 
@@ -639,10 +638,6 @@ amount_t unit_can_hold_amount(class unit_data *unit, class unit_data *money)
 
     return MIN((amount_t)(d_wgt * MONEY_WEIGHT(money)), MONEY_AMOUNT(money));
 }
-
-    /* Temporary (?) wizcommand to create money */
-    #include "interpreter.h"
-    #include "comm.h"
 
 void do_makemoney(class unit_data *ch, char *arg, const struct command_info *cmd)
 {

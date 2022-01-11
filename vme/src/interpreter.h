@@ -4,17 +4,11 @@
  $Date: 2004/03/20 06:13:22 $
  $Revision: 2.5 $
  */
-
-#ifndef _MUD_INTERPRETER_H
-#define _MUD_INTERPRETER_H
+#pragma once
 
 #include "dil.h"
-extern struct command_info *g_cmdlist;
-int char_is_playing(class unit_data *u);
-int descriptor_is_playing(class descriptor_data *d);
-void set_descriptor_fptr(class descriptor_data *d, void (*fptr)(class descriptor_data *, char *), ubit1 call);
-void descriptor_interpreter(class descriptor_data *d, char *arg);
-void interpreter_string_add(class descriptor_data *d, char *str);
+
+#include <vme.h>
 
 struct spec_arg
 {
@@ -70,20 +64,6 @@ struct unit_function_array_type
     sbit16 tick;  /* Default tick count */
 };
 
-extern struct command_info g_cmd_auto_play;
-extern struct command_info g_cmd_auto_leave;
-extern struct command_info g_cmd_auto_enter;
-extern struct command_info g_cmd_auto_tick;
-extern struct command_info g_cmd_auto_extract;
-extern struct command_info g_cmd_auto_death;
-extern struct command_info g_cmd_auto_combat;
-extern struct command_info g_cmd_auto_unknown;
-extern struct command_info g_cmd_auto_save;
-extern struct command_info g_cmd_auto_msg;
-extern struct command_info g_cmd_auto_edit;
-extern struct command_info g_cmd_auto_damage;
-extern struct command_info g_cmd_a_social;
-
 /* To check for commands by string */
 ubit1 is_command(const struct command_info *cmd, const char *str);
 
@@ -94,7 +74,6 @@ ubit1 cmd_is_abbrev(class unit_data *ch, const struct command_info *cmd);
 void wrong_position(class unit_data *ch);
 void command_interpreter(class unit_data *ch, const char *cmdArg);
 void argument_interpreter(const char *argument, char *first_arg, char *second_arg);
-void half_chop(char *string, char *arg1, char *arg2);
 
 /* The routine to check for special routines */
 
@@ -126,38 +105,25 @@ int send_death(class unit_data *ch);
 int send_combat(class unit_data *ch);
 int send_prompt(class unit_data *pc);
 int send_save_to(class unit_data *from, class unit_data *to);
+void assign_command_pointers(void);
+void boot_interpreter(void);
+void interpreter_dil_check(void);
+int char_is_playing(class unit_data *u);
+int descriptor_is_playing(class descriptor_data *d);
+void descriptor_interpreter(class descriptor_data *d, char *arg);
 
-#include "spec_assign.h"
-
-void do_snoop(class unit_data *, char *, const struct command_info *);
-void do_rent(class unit_data *, char *, const struct command_info *);
-void do_reset(class unit_data *, char *, const struct command_info *);
-void do_kill(class unit_data *, char *, const struct command_info *);
-void do_force(class unit_data *, char *, const struct command_info *);
-void do_shutdown(class unit_data *, char *, const struct command_info *);
-void do_execute(class unit_data *, char *, const struct command_info *);
-void do_save(class unit_data *, char *, const struct command_info *);
-void do_hit(class unit_data *, char *, const struct command_info *);
-void do_set(class unit_data *, char *, const struct command_info *);
-void do_setskill(class unit_data *, char *, const struct command_info *);
-void do_wstat(class unit_data *, char *, const struct command_info *);
-void do_wedit(class unit_data *, char *, const struct command_info *);
-void do_load(class unit_data *, char *, const struct command_info *);
-void do_cast(class unit_data *, char *, const struct command_info *);
-void do_at(class unit_data *, char *, const struct command_info *);
-void do_backstab(class unit_data *, char *, const struct command_info *);
-void do_users(class unit_data *, char *, const struct command_info *);
-void do_where(class unit_data *, char *, const struct command_info *);
-void do_level(class unit_data *, char *, const struct command_info *);
-void do_consider(class unit_data *, char *, const struct command_info *);
-void do_ban(class unit_data *, char *, const struct command_info *);
-void do_switch(class unit_data *, char *, const struct command_info *);
-void do_change(class unit_data *, char *, const struct command_info *);
-void do_color(class unit_data *, char *, const struct command_info *);
-void do_timewarp(class unit_data *, char *, const struct command_info *);
-void do_crash(class unit_data *, char *, const struct command_info *);
-void do_wizlock(class unit_data *, char *, const struct command_info *);
-void do_account(class unit_data *, char *, const struct command_info *);
-void do_move(class unit_data *, char *, const struct command_info *);
-
-#endif /* _MUD_INTERPRETER_H */
+extern struct command_info *g_cmd_follow;
+extern struct command_info *g_cmd_dirs[MAX_EXIT + 1];
+extern struct command_info g_cmd_auto_play;
+extern struct command_info g_cmd_auto_leave;
+extern struct command_info g_cmd_auto_enter;
+extern struct command_info g_cmd_auto_tick;
+extern struct command_info g_cmd_auto_extract;
+extern struct command_info g_cmd_auto_death;
+extern struct command_info g_cmd_auto_combat;
+extern struct command_info g_cmd_auto_unknown;
+extern struct command_info g_cmd_auto_save;
+extern struct command_info g_cmd_auto_msg;
+extern struct command_info g_cmd_auto_edit;
+extern struct command_info g_cmd_auto_damage;
+extern struct trie_type *g_intr_trie;

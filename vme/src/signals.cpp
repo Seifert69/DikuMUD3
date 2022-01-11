@@ -5,13 +5,15 @@
  $Revision: 2.3 $
  */
 
-#include <cstdio>
-#include <csignal>
-#include <sys/time.h>
-#include "external_vars.h"
-#include "db.h"
-#include "config.h"
 #include "comm.h"
+#include "config.h"
+#include "db.h"
+#include "main_functions.h"
+
+#include <sys/time.h>
+
+#include <csignal>
+#include <cstdio>
 
 void other_signal(int signal_no)
 {

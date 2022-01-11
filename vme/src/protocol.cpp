@@ -7,16 +7,15 @@
 
 #ifdef _WINDOWS
     #include <winsock2.h>
-#else
 #endif
 
-#include <cstring>
-#include <cassert>
-
+#include "db_file.h"
 #include "essential.h"
 #include "protocol.h"
 #include "utility.h"
-#include "db_file.h"
+
+#include <cassert>
+#include <cstring>
 
 //
 // This handles all protocol interpretation between the MUD and the Mplex.

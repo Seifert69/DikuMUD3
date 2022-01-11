@@ -5,14 +5,14 @@
  $Revision: 2.2 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
+#include "bytestring.h"
 
 #include "essential.h"
-#include "bytestring.h"
 #include "textutil.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /* =================================================================== */
 /* =================================================================== */

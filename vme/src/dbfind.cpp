@@ -4,21 +4,17 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.4 $
  */
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <time.h>
+#include "dbfind.h"
 
-#include "structs.h"
-#include "utils.h"
 #include "db.h"
 #include "dil.h"
-#include "textutil.h"
-#include "utility.h"
-#include "dbfind.h"
 #include "handler.h"
+#include "main_functions.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+
+#include <cstring>
 
 class descriptor_data *find_descriptor(const char *name, class descriptor_data *except)
 {

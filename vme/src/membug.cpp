@@ -1,6 +1,6 @@
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cassert>
+#include <cstdlib>
+#include <cstring>
 
 #undef malloc
 #undef calloc

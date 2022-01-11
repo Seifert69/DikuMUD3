@@ -5,14 +5,12 @@
  $Revision: 2.1 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include "trie.h"
 
 #include "structs.h"
-#include "utils.h"
-#include "trie.h"
-#include "utility.h"
+
+#include <cstdlib>
+#include <cstring>
 
 static int trie_size = 0, trie_nodes = 0;
 

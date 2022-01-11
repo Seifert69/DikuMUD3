@@ -4,28 +4,28 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.9 $
  */
-#include "external_vars.h"
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <cstdarg>
-#include <ctime>
+#include "handler.h"
 
-#include "utils.h"
+#include "affect.h"
 #include "comm.h"
 #include "db.h"
-#include "handler.h"
-#include "interpreter.h"
-#include "affect.h"
-#include "utility.h"
-#include "money.h"
-#include "files.h"
-#include "main.h"
 #include "dilrun.h"
+#include "files.h"
+#include "interpreter.h"
+#include "main_functions.h"
+#include "mobact.h"
+#include "money.h"
+#include "nanny.h"
+#include "spec_assign.h"
+#include "utility.h"
+#include "utils.h"
+#include "zon_basis.h"
 
-/* External procedures */
-
-void stop_special(class unit_data *u, class unit_fptr *fptr);
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 class descriptor_data *unit_is_edited(class unit_data *u)
 {
@@ -226,9 +226,6 @@ void insert_fptr(class unit_data *u, class unit_fptr *f)
 class unit_fptr *create_fptr(class unit_data *u, ubit16 index, ubit16 priority, ubit16 beat, ubit16 flags, void *data)
 {
     class unit_fptr *f;
-
-    void start_special(class unit_data * u, class unit_fptr * fptr);
-
     f = new EMPLACE(unit_fptr) unit_fptr;
 
     assert(f);
@@ -257,9 +254,6 @@ void destroy_fptr(class unit_data *u, class unit_fptr *f)
 {
     class unit_fptr *tf;
     struct spec_arg sarg;
-
-    void register_destruct(int i, void *ptr);
-    void add_func_history(class unit_data * u, ubit16, ubit16);
 
     assert(f);
     if (f->is_destructed())
@@ -909,10 +903,6 @@ void stop_snoopwrite(unit_data *unit)
 /* Extracts recursively                              */
 void extract_unit(class unit_data *unit)
 {
-    void register_destruct(int i, void *ptr);
-    void nanny_menu(class descriptor_data * d, char *arg);
-    void stop_all_special(class unit_data * u);
-
     /* Prevent recursive calling on extracted units. */
     /* This happens on for example corpses. When the */
     /* destruct_affect is called inside extract we   */

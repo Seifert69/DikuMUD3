@@ -5,24 +5,23 @@
  $Revision: 2.5 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "handler.h"
-#include "comm.h"
-#include "spells.h"
-#include "skills.h"
 #include "affect.h"
-#include "db.h"
-#include "utility.h"
+#include "comm.h"
+#include "dilinst.h"
+#include "fight.h"
+#include "handler.h"
 #include "interpreter.h"
 #include "magic.h"
-#include "money.h"
+#include "modify.h"
+#include "pcsave.h"
+#include "skills.h"
+#include "structs.h"
+#include "utility.h"
+#include "utils.h"
 #include "vmelimits.h"
-#include "fight.h"
+
+#include <cstdlib>
+#include <cstring>
 
 void tif_confusion_tick(class unit_affected_type *af, class unit_data *unit)
 {

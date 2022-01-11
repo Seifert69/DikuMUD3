@@ -4,9 +4,7 @@
  $Date: 2002/06/09 23:27:40 $
  $Revision: 2.3 $
  */
-
-#ifndef _MUD_DILEXP_H
-#define _MUD_DILEXP_H
+#pragma once
 
 #include "dil.h"
 
@@ -27,7 +25,7 @@ void dilfe_eqpm(class dilprg *);
 void dilfe_mel(class dilprg *);
 void dilfe_cast2(class dilprg *);
 void dilfe_atsp(class dilprg *);
-void dilfe_weat(register class dilprg *p);
+void dilfe_weat(class dilprg *p);
 void dilfe_illegal(class dilprg *);
 void dilfe_plus(class dilprg *);
 void dilfe_min(class dilprg *);
@@ -144,5 +142,3 @@ void dilfe_strcmp(class dilprg *);
 void dilfe_strncmp(class dilprg *);
 void dilfe_wepinfo(class dilprg *);
 void dilfe_gfol(class dilprg *);
-
-#endif

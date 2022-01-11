@@ -4,39 +4,27 @@
  $Date: 2004/09/18 19:52:56 $
  $Revision: 2.11 $
  */
-#include "affect.h"
-#include "mobact.h"
-#include "external_vars.h"
-#ifdef _WINDOWS
-
-#else
-    #include <unistd.h>
-#endif
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <string.h>
-#include "structs.h"
-#include "utils.h"
-#include "utility.h"
-#include "handler.h"
-#include "system.h"
-#include "comm.h"
-#include "db.h"
-#include "interpreter.h"
-#include "main.h"
-#include "textutil.h"
-#include "files.h"
 #include "event.h"
-#include "dilrun.h"
+
+#include "affect.h"
+#include "comm.h"
+#include "eliza.h"
+#include "interpreter.h"
+#include "main_functions.h"
+#include "mobact.h"
+#include "spec_assign.h"
+#include "structs.h"
+#include "utility.h"
+#include "utils.h"
+#include "weather.h"
+#include "zone_reset.h"
+
 #include <sys/time.h>
-void check_reboot_event(void *, void *);
-void delayed_action(void *p1, void *p2);
-void check_idle_event(void *p1, void *p2);
-void perform_violence_event(void *, void *);
-void weather_and_time_event(void *, void *);
-void zone_event(void *, void *);
+#include <unistd.h>
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 eventqueue::eventqueue(void)
 {

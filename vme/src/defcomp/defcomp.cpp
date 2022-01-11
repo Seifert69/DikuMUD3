@@ -1,14 +1,13 @@
 #define FALSE 0
 #define TRUE 1
-#include <ctype.h>
-#include <iostream>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <fcntl.h>
-
 #include <sys/stat.h>
-#include <assert.h>
+#include <unistd.h>
+
+#include <cassert>
+#include <cctype>
+#include <cstring>
+#include <iostream>
 
 int string_to_file(const char *name, const char *s)
 {

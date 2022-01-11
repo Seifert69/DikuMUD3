@@ -4,9 +4,7 @@
  $Date: 2001/04/29 03:46:07 $
  $Revision: 2.1 $
  */
-
-#ifndef _MUD_TTYDEF_H
-#define _MUD_TTYDEF_H
+#pragma once
 
 #define BACKSPACE1_CHAR '\b' /* The two standard BACKSPACE chars */
 #define BACKSPACE2_CHAR '\177'
@@ -52,5 +50,3 @@
 #define ANSI_BG_MAGENTA "\033[45m"
 #define ANSI_BG_CYAN "\033[46m"
 #define ANSI_BG_WHITE "\033[47m"
-
-#endif

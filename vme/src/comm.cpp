@@ -4,25 +4,23 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.5 $
  */
-#include "external_vars.h"
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <cerrno>
-#include <cctype>
-
-#include "structs.h"
-#include "utils.h"
-#include "utility.h"
-#include "system.h"
 #include "comm.h"
-#include "textutil.h"
-#include "protocol.h"
-#include "interpreter.h"
+
+#include "config.h"
+#include "constants.h"
 #include "handler.h"
 #include "hookmud.h"
-#include "constants.h"
-#include "config.h"
+#include "interpreter.h"
+#include "main_functions.h"
+#include "protocol.h"
+#include "structs.h"
+#include "system.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cctype>
+#include <cstring>
 
 cActParameter::cActParameter()
 {
@@ -128,8 +126,6 @@ void substHTMLcolor(std::string &dest, const char *src, class color_type &color)
  */
 void send_to_descriptor(const char *messg, class descriptor_data *d)
 {
-    void multi_close(struct multi_element * pe);
-
     if (d && messg && *messg)
     {
         if (d->prompt_mode == PROMPT_IGNORE)
@@ -241,9 +237,9 @@ void act_generate(char *buf,
                   const class unit_data *to,
                   int bNewline)
 {
-    register const char *strp;
-    register char *point;
-    register const char *i = NULL;
+    const char *strp;
+    char *point;
+    const char *i = NULL;
     // MS2020 register int uppercase = FALSE;
 
     class cActParameter *sub;

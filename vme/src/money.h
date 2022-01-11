@@ -4,11 +4,10 @@
  $Date: 2003/12/28 22:02:44 $
  $Revision: 2.2 $
  */
-
-#ifndef _MUD_MONEY_H
-#define _MUD_MONEY_H
+#pragma once
 
 #include "structs.h"
+#include "utils.h"
 
 typedef sbit16 currency_t;
 typedef sbit32 amount_t;
@@ -26,10 +25,57 @@ struct money_type
     class file_index_type *fi; /* Where is coin object in file */
 };
 
-/* You shouldn't have to refer to this array yourself.
- * Use the macros instead.
+#define money_round_up(a, c, t) (money_round(TRUE, (a), (c), (t)))
+#define money_round_down(a, c, t) (money_round(FALSE, (a), (c), (t)))
+#define money_pluralis_type(type) (g_money_types[(type)].strings[g_money_types[(type)].pl_idx])
+#define money_pluralis(unit) (money_pluralis_type(MONEY_TYPE(unit)))
+
+#define money_singularis_type(type) (g_money_types[(type)].strings[0])
+#define money_singularis(unit) (money_singularis_type(MONEY_TYPE(unit)))
+
+#define money_from_unit(unit, amt, currency) (money_transfer((unit), NULL, (amt), (currency)))
+
+#define money_to_unit(unit, amt, currency) (money_transfer(NULL, (unit), (amt), (currency)))
+
+#define IS_MONEY(unit) (IS_OBJ(unit) && OBJ_TYPE(unit) == ITEM_MONEY)
+
+#define MONEY_AMOUNT(unit) ((amount_t)OBJ_PRICE(unit))
+
+/* Index into money-array */
+#define MONEY_TYPE(obj) (OBJ_VALUE((obj), 0))
+
+#define MONEY_CURRENCY(obj) (g_money_types[MONEY_TYPE(obj)].currency)
+
+#define MONEY_RELATIVE(obj) (g_money_types[MONEY_TYPE(obj)].relative_value)
+
+#define MONEY_MIN_VALUE(obj) (g_money_types[MONEY_TYPE(obj)].min_value)
+
+#define MONEY_WEIGHT(obj) (g_money_types[MONEY_TYPE(obj)].coins_per_weight)
+
+#define MONEY_VALUE(obj) (MONEY_AMOUNT(obj) * MONEY_RELATIVE(obj))
+
+#define MONEY_WEIGHT_SUM(obj1, obj2) ((MONEY_AMOUNT(obj1) + MONEY_AMOUNT(obj2)) / MONEY_WEIGHT(obj1))
+
+/* Local currency of unit, or DEF_CURRENCY if not defined.
  */
-extern struct money_type g_money_types[];
+currency_t local_currency(class unit_data *unit);
+
+/* Print out representation of money-object with the amount amt .
+ * (amt == 0 means all)
+ */
+char *obj_money_string(class unit_data *obj, amount_t amt);
+
+/* Print out optimal representation of amt in currency
+ *
+ * Impossible amounts are converted automagically
+ */
+char *money_string(amount_t amt, currency_t currency, ubit1 verbose);
+
+/* How many `coins' of given money-object can char carry, resp. unit contain
+ *   (Naturally the amount of money is an upper bound)
+ */
+amount_t char_can_carry_amount(class unit_data *ch, class unit_data *money);
+amount_t unit_can_hold_amount(class unit_data *unit, class unit_data *money);
 
 /* Give a number of coins (of a specific type) to unit
  * (type == -1 means money_to_unit with local_currency(unit)
@@ -83,63 +129,13 @@ void pile_money(class unit_data *money);
  */
 amount_t money_round(ubit1 up, amount_t amt, currency_t currency, int types);
 
-#define money_round_up(a, c, t) (money_round(TRUE, (a), (c), (t)))
-#define money_round_down(a, c, t) (money_round(FALSE, (a), (c), (t)))
-
-/* Local currency of unit, or DEF_CURRENCY if not defined.
- */
-currency_t local_currency(class unit_data *unit);
-
-/* Print out representation of money-object with the amount amt .
- * (amt == 0 means all)
- */
-char *obj_money_string(class unit_data *obj, amount_t amt);
-
-/* Print out optimal representation of amt in currency
- *
- * Impossible amounts are converted automagically
- */
-char *money_string(amount_t amt, currency_t currency, ubit1 verbose);
-
-/* How many `coins' of given money-object can char carry, resp. unit contain
- *   (Naturally the amount of money is an upper bound)
- */
-amount_t char_can_carry_amount(class unit_data *ch, class unit_data *money);
-amount_t unit_can_hold_amount(class unit_data *unit, class unit_data *money);
-
 #ifdef VMC_SRC
 void boot_money(char *moneyfile);
 #else
 void boot_money(void);
 #endif
 
-#define money_pluralis_type(type) (g_money_types[(type)].strings[g_money_types[(type)].pl_idx])
-#define money_pluralis(unit) (money_pluralis_type(MONEY_TYPE(unit)))
-
-#define money_singularis_type(type) (g_money_types[(type)].strings[0])
-#define money_singularis(unit) (money_singularis_type(MONEY_TYPE(unit)))
-
-#define money_from_unit(unit, amt, currency) (money_transfer((unit), NULL, (amt), (currency)))
-
-#define money_to_unit(unit, amt, currency) (money_transfer(NULL, (unit), (amt), (currency)))
-
-#define IS_MONEY(unit) (IS_OBJ(unit) && OBJ_TYPE(unit) == ITEM_MONEY)
-
-#define MONEY_AMOUNT(unit) ((amount_t)OBJ_PRICE(unit))
-
-/* Index into money-array */
-#define MONEY_TYPE(obj) (OBJ_VALUE((obj), 0))
-
-#define MONEY_CURRENCY(obj) (g_money_types[MONEY_TYPE(obj)].currency)
-
-#define MONEY_RELATIVE(obj) (g_money_types[MONEY_TYPE(obj)].relative_value)
-
-#define MONEY_MIN_VALUE(obj) (g_money_types[MONEY_TYPE(obj)].min_value)
-
-#define MONEY_WEIGHT(obj) (g_money_types[MONEY_TYPE(obj)].coins_per_weight)
-
-#define MONEY_VALUE(obj) (MONEY_AMOUNT(obj) * MONEY_RELATIVE(obj))
-
-#define MONEY_WEIGHT_SUM(obj1, obj2) ((MONEY_AMOUNT(obj1) + MONEY_AMOUNT(obj2)) / MONEY_WEIGHT(obj1))
-
-#endif /* _MUD_MONEY_H */
+/* You shouldn't have to refer to this array yourself.
+ * Use the macros instead.
+ */
+extern struct money_type g_money_types[];

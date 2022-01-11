@@ -1,5 +1,6 @@
-#ifndef _MUD_DESTRUCTS_H
-#define _MUD_DESTRUCTS_H
+#pragma once
+
+#include "essential.h"
 
 class basedestruct
 {
@@ -16,4 +17,4 @@ private:
     ubit1 m_bDestructed;
 };
 
-#endif
+void clear_destructed(void);

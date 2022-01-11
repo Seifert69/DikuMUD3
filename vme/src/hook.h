@@ -17,11 +17,6 @@
     #include <sys/select.h>
 #endif
 
-extern int g_bPipegSignal;
-
-int PipeRead(int fd, char *buf, size_t count);
-int PipeWrite(int fd, char *buf, size_t count);
-
 #define SELECT_READ 0x01
 #define SELECT_WRITE 0x02
 #define SELECT_EXCEPT 0x04

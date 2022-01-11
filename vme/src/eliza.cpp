@@ -5,20 +5,23 @@
  $Revision: 2.3 $
  */
 
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <cctype>
-#include <cassert>
-#include "external_vars.h"
-#include "structs.h"
-#include "utils.h"
-#include "interpreter.h"
-#include "textutil.h"
-#include "handler.h"
+#include "eliza.h"
+
 #include "db.h"
-#include "utility.h"
 #include "files.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "main_functions.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cassert>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #define ELIZA_TALKFILE "talk.eli"
 #define ELIZA_LOGFILE "log.eli"
@@ -450,8 +453,6 @@ void delayed_action(void *p1, void *p2)
     class unit_data *npc = (class unit_data *)p1;
     char *str = (char *)p2;
 
-    void command_interpreter(class unit_data * ch, const char *argument);
-
     command_interpreter(npc, str);
     FREE(str);
 }
@@ -539,8 +540,6 @@ int oracle(struct spec_arg *sarg)
     char *response;
     struct oracle_data *od;
     int i;
-
-    void eliza_boot(void);
 
     od = (struct oracle_data *)sarg->fptr->data;
 

@@ -5,13 +5,14 @@
  $Revision: 2.6 $
  */
 
-#include <ctype.h>
-#include <string.h>
-
 #include "namelist.h"
+
+#include "db_file.h"
 #include "essential.h"
 #include "textutil.h"
-#include "db_file.h"
+
+#include <cctype>
+#include <cstring>
 
 cNamelist::cNamelist(void)
 {
@@ -173,7 +174,7 @@ void cNamelist::Remove(ubit32 idx)
 
 void cNamelist::RemoveName(const char *name)
 {
-    register ubit32 i, j;
+    ubit32 i, j;
 
     for (i = 0; i < length; i++)
     {
@@ -242,7 +243,7 @@ cNamelist *cNamelist::Duplicate(void)
 
 const char *cNamelist::IsNameRaw(const char *name)
 {
-    register ubit32 i, j;
+    ubit32 i, j;
 
     for (i = 0; i < length; i++)
     {
@@ -281,7 +282,7 @@ const char *cNamelist::IsName(const char *name)
 // see if name is in the name list names some where and return name if it is
 const char *cNamelist::StrStrRaw(const char *name)
 {
-    register ubit32 i;
+    ubit32 i;
 
     for (i = 0; i < length; i++)
     {
@@ -319,7 +320,7 @@ const char *cNamelist::StrStr(const char *name)
 /* Returns -1 if no name matches, or 0.. for the index in the namelist */
 const int cNamelist::IsNameRawIdx(const char *name)
 {
-    register ubit32 i, j;
+    ubit32 i, j;
 
     for (i = 0; i < length; i++)
     {

@@ -5,15 +5,15 @@
  $Revision: 2.1 $
  */
 
-#include <stdlib.h>
-
-#include "structs.h"
-#include "utils.h"
 #include "comm.h"
-#include "textutil.h"
-#include "interpreter.h"
-#include "dilrun.h"
 #include "dbfind.h"
+#include "dilrun.h"
+#include "interpreter.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+
+#include <cstdlib>
 
 static void chg_wimpy(class unit_data *ch)
 {

@@ -5,34 +5,16 @@
  $Revision: 2.10 $
  */
 
-#include <boost/config.hpp>
-#include <algorithm>
-#include <iostream>
-#include <boost/graph/adjacency_list.hpp>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string>
-#include <fstream>
-#include <sstream>
-
-#ifdef WINDOWS
-
-#else
-    #include <unistd.h>
-#endif
-#undef WRITE_TEST
-#include <sys/types.h>
-#include <sys/stat.h>
-#include "pp.h"
-#include <utils.h>
-#include "vmc.h"
+#include "common.h"
 #include "compile_defines.h"
 #include "money.h"
-#include <dil.h>
-#include <textutil.h>
-#include <utility.h>
-#include <db_file.h>
-#include <common.h>
+#include "pp.h"
+#include "vmc.h"
+
+#include <unistd.h>
+
+#include <cstdio>
+#include <cstdlib>
 
 #define MEMBLOCK (200000)
 #define BUFS 30
@@ -72,7 +54,7 @@ int main(int argc, char **argv)
                     ;
                     break;
                 case 'm':
-                    make = 1;
+                    g_make = 1;
                     break;
                 case 's':
                     g_nooutput = 1;

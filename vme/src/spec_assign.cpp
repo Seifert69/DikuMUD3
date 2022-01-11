@@ -22,12 +22,22 @@
  * authorization of Valhalla is prohobited.                                *
  * *********************************************************************** */
 
-#include <stdio.h>
-
-#include "utils.h"
-#include "interpreter.h"
 #include "spec_assign.h"
+
+#include "bank.h"
+#include "dictionary.h"
+#include "dilrun.h"
+#include "eliza.h"
+#include "fight.h"
+#include "guild.h"
 #include "handler.h"
+#include "interpreter.h"
+#include "justice.h"
+#include "slime.h"
+#include "teach.h"
+#include "utils.h"
+#include "zon_basis.h"
+#include "zon_wiz.h"
 
 int spec_unused(struct spec_arg *sarg)
 {
@@ -52,6 +62,7 @@ int spec_unused(struct spec_arg *sarg)
 #else
     #define VMCIT(a) a
 #endif
+
 /* macro definitions for array indices are in values.h */
 struct unit_function_array_type g_unit_function_array[] = {
     {"0 XXX UnUsed", VMCIT(spec_unused), FN_PRI_RES, SD_NEVER, 0, 0},

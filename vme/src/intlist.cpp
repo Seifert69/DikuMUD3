@@ -5,13 +5,12 @@
  $Revision: 2.1 $
  */
 
-#include <ctype.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "intlist.h"
+
 #include "textutil.h"
+
+#include <cstdlib>
+#include <cstring>
 
 cintlist::cintlist(void)
 {

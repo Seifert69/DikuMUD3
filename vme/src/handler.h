@@ -4,27 +4,15 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.3 $
  */
-
-#ifndef _MUD_HANDLER_H
-#define _MUD_HANDLER_H
-
+#pragma once
 #include "unitfind.h"
+
+#include <string>
 
 class descriptor_data *unit_is_edited(class unit_data *u);
 
-void unit_messg(class unit_data *ch, class unit_data *unit, const char *type, const char *mesg_s, const char *mesg_o);
-
-const char *single_unit_messg(class unit_data *unit, const char *type, const char *pSubStr, const char *mesg);
-
 void szonelog(class zone_type *zone, const char *fmt, ...);
 
-/* From pcsave.c - I'm just tired of specifying them everywhere */
-void save_player(class unit_data *pc);
-class unit_data *load_player(const char *pName);
-void load_contents(const char *pFileName, class unit_data *unit);
-void save_player_contents(class unit_data *pc, int fast);
-
-/* handler.c */
 class extra_descr_data *quest_add(class unit_data *ch, const char *name, const char *descr);
 
 void insert_in_unit_list(class unit_data *u);
@@ -48,7 +36,6 @@ class unit_data *equipment_type(class unit_data *ch, int pos, ubit8 type);
 void equip_char(class unit_data *ch, class unit_data *obj, ubit8 pos);
 
 class unit_data *unequip_object(class unit_data *obj);
-void recalc_dex_red(class unit_data *ch);
 
 int unit_recursive(class unit_data *from, class unit_data *to);
 class zone_type *unit_zone(const class unit_data *unit);
@@ -64,9 +51,9 @@ void extract_unit(class unit_data *unit);
 
 void weight_change_unit(class unit_data *unit, int weight);
 
-class unit_data *find_unit_in_list_num(int num, class unit_data *list);
-class unit_data *find_unit_num(int num);
-
 std::string unit_trace_up(class unit_data *unit);
-
-#endif /* _MUD_HANDLER_H */
+void intern_unit_to_unit(class unit_data *, class unit_data *, ubit1);
+void snoop(class unit_data *ch, class unit_data *victim);
+void switchbody(class unit_data *ch, class unit_data *victim);
+void unsnoop(class unit_data *ch, int mode);
+void unswitchbody(class unit_data *npc);

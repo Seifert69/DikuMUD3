@@ -5,20 +5,21 @@
  $Revision: 2.5 $
  */
 
-#include <cstdlib>
-#include <cstdio>
-#include "external_vars.h"
-#include "utils.h"
-#include "structs.h"
-#include "skills.h"
-#include "db.h"
-#include "comm.h"
-#include "interpreter.h"
-#include "handler.h"
-#include "utility.h"
-#include "main.h"
-#include "dilrun.h"
 #include "mobact.h"
+
+#include "comm.h"
+#include "db.h"
+#include "dilrun.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "main_functions.h"
+#include "spec_assign.h"
+#include "structs.h"
+#include "utility.h"
+#include "utils.h"
+#include "zone_reset.h"
+
+#include <cstdio>
 
 void SetFptrTimer(class unit_data *u, class unit_fptr *fptr)
 {
@@ -71,14 +72,12 @@ void ResetFptrTimer(class unit_data *u, class unit_fptr *fptr)
 void special_event(void *p1, void *p2)
 {
     class unit_data *u = (class unit_data *)p1;
-    register class unit_fptr *fptr = (class unit_fptr *)p2;
+    class unit_fptr *fptr = (class unit_fptr *)p2;
     int priority;
 
     ubit32 ret = SFR_SHARE;
     class unit_fptr *ftmp;
     struct spec_arg sarg;
-
-    void add_func_history(class unit_data * u, ubit16, ubit16);
 
     /*    if (fptr->index == SFUN_DIL_INTERNAL)
             if (fptr && fptr->data)
@@ -167,7 +166,7 @@ void special_event(void *p1, void *p2)
             diltick = TRUE;
         else if (fptr->data)
         {
-            register class dilprg *prg = (class dilprg *)fptr->data;
+            class dilprg *prg = (class dilprg *)fptr->data;
             for (i = 0; i < prg->fp->intrcount; i++)
                 if IS_SET (prg->fp->intr[i].flags, SFB_TICK)
                     diltick = TRUE;
@@ -195,7 +194,7 @@ void start_special(class unit_data *u, class unit_fptr *fptr)
             diltick = 1;
         else if (fptr->data)
         {
-            register class dilprg *prg = (class dilprg *)fptr->data;
+            class dilprg *prg = (class dilprg *)fptr->data;
             for (i = 0; i < prg->fp->intrcount; i++)
                 if (IS_SET(prg->fp->intr[i].flags, SFB_TICK))
                     diltick = 1;

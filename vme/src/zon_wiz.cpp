@@ -5,25 +5,17 @@
  $Revision: 2.2 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
-#include "textutil.h"
 #include "comm.h"
-#include "interpreter.h"
-#include "handler.h"
 #include "db.h"
-#include "spells.h"
-#include "vmelimits.h"
-#include "justice.h"
-#include "affect.h"
-#include "magic.h"
-#include "utility.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 int ball(struct spec_arg *sarg)
 {

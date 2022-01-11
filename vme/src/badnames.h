@@ -4,14 +4,8 @@
  $Date: 2004/01/09 20:34:23 $
  $Revision: 2.2 $
  */
+#pragma once
 
-#ifndef _MUD_BADNAMES_H_
-#define _MUD_BADNAMES_H_
-#ifdef _WINDOWS
-    #include <string.h>
-#else
-    #include <strings.h>
-#endif
 class badnames_list
 {
 private:
@@ -28,4 +22,3 @@ public:
     char *equal(char *n);
     void create(char *input_str);
 };
-#endif
