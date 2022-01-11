@@ -700,7 +700,7 @@ void str_blank_punct(char *s)
 /* Remove all multiple space occurences in s */
 void str_remspc(char *s)
 {
-    register char *cp;
+    char *cp;
 
     while (*s && (*s != ' ' || *(s + 1) != ' '))
         s++;
@@ -743,7 +743,7 @@ void str_chraround(char *str, char c)
 
 const char *is_name_raw(const char *arg, char const *const *names) // MS2020 const char *names[])
 {
-    register int i, j;
+    int i, j;
 
     for (i = 0; names[i]; i++)
     {

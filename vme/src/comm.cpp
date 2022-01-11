@@ -240,7 +240,7 @@ void act_generate(char *buf,
     const char *strp;
     char *point;
     const char *i = NULL;
-    // MS2020 register int uppercase = FALSE;
+    // MS2020 int uppercase = FALSE;
 
     class cActParameter *sub;
     /*union {

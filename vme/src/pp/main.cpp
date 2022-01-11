@@ -17,9 +17,9 @@ int original_main(int argc, char *argv[])
     static const char *zero_string = "0";
 #endif /* EMBEDDED_EXT */
 
-    register int t;            /* General holder for token	*/
-    register struct symtab *p; /* Ptr into symbol table	*/
-    register struct ppdir *sp; /* Ptr to predefined symbol	*/
+    int t;            /* General holder for token	*/
+    struct symtab *p; /* Ptr into symbol table	*/
+    struct ppdir *sp; /* Ptr to predefined symbol	*/
     int ifile;
     int ofile;
     char *s;

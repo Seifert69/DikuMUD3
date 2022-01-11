@@ -77,17 +77,17 @@ char *docall(struct symtab *p, char *internal, char *internal_limit)
     char *bodyp;
     char *cp;
     int done;
-    register int expand;
+    int expand;
     int flags;
     struct symtab *formals;
-    register int had_ws;
+    int had_ws;
     int maclevel;
     int nl_count;
     int pcount;
     struct param *pp;
     int printed;
     struct symtab *sy;
-    register int t;
+    int t;
     char t_token[TOKENSIZE];
     /*
      *	Crack the formal parameters for the macro.
@@ -698,9 +698,9 @@ char *_docall(char *line, char *internal, char *internal_limit)
 {
     static char mbomsg[] = "Macro body overflow";
 
-    register struct ppdir *d;
-    register int had_ws;
-    register int t;
+    struct ppdir *d;
+    int had_ws;
+    int t;
 
     pushback(END_MACRO);
     pbcstr(line);
@@ -793,14 +793,14 @@ void dodefine(int mactype, int ixzy, const char *ixzz)
 {
     static char mtlmsg[] = "Macro too long";
 
-    char body[MACROSIZE];       /* Body of def	*/
-    register char *bodyp;       /* Pointer into body		*/
-    register int lasttok;       /* Last token fetched in loop	*/
-    register int macctr;        /* Level ctr for #macro/#endm	*/
-    char name[TOKENSIZE];       /* Name buffer	*/
-    register struct param *pp;  /* Param proto pointer		*/
-    register struct symtab *sy; /* Symbol table ptr		*/
-    register int t;             /* Token type			*/
+    char body[MACROSIZE]; /* Body of def	*/
+    char *bodyp;          /* Pointer into body		*/
+    int lasttok;          /* Last token fetched in loop	*/
+    int macctr;           /* Level ctr for #macro/#endm	*/
+    char name[TOKENSIZE]; /* Name buffer	*/
+    struct param *pp;     /* Param proto pointer		*/
+    struct symtab *sy;    /* Symbol table ptr		*/
+    int t;                /* Token type			*/
 
     if (getnstoken(GT_STR) == LETTER)
     {
@@ -1049,12 +1049,12 @@ struct param *getparams()
 {
     static const char *iffmsg = "Invalid formal parameter flag: ";
 
-    register int flags;
-    register struct param *lh;
-    register struct param *lt;
-    register struct param *p;
+    int flags;
+    struct param *lh;
+    struct param *lt;
+    struct param *p;
     char pname[TOKENSIZE];
-    register int t;
+    int t;
 
     lh = NULL;
     lt = NULL; /* For lint */
@@ -1146,8 +1146,8 @@ struct param *getparams()
 
 unsigned int pphash(const char *sym)
 {
-    register unsigned int s;
-    register const char *str;
+    unsigned int s;
+    const char *str;
 
     for (str = sym, s = 0; *str != '\0'; s += *str++)
         ; /* Compute sum of chars */
@@ -1165,8 +1165,8 @@ unsigned int pphash(const char *sym)
 
 struct symtab *lookup(char *name, struct symtab **pe)
 {
-    register struct symtab *c;
-    register struct symtab *p;
+    struct symtab *c;
+    struct symtab *p;
 
 #if PPDEBUG
     if (PPDEBUG)
@@ -1232,8 +1232,8 @@ struct param *makeparam(const char *s, int f)
 
 struct ppdir *predef(char *n, struct ppdir *table)
 {
-    register char *name;
-    register struct ppdir *p;
+    char *name;
+    struct ppdir *p;
 
     for (name = n, p = table; p->pp_name != NULL; p++)
     {
@@ -1267,8 +1267,8 @@ struct ppdir *predef(char *n, struct ppdir *table)
 
 void sbind(const char *sym, const char *defn, struct param *params)
 {
-    register int i;
-    register struct symtab *p;
+    int i;
+    struct symtab *p;
 
 #if PPDEBUG
     if (PPDEBUG)
@@ -1385,7 +1385,7 @@ char *strize(char *result, char *limit, char *msg, char *snew)
 
 void unfbind(struct symtab *formals)
 {
-    register struct symtab *temp;
+    struct symtab *temp;
 
     while (formals != NULL)
     {
@@ -1426,7 +1426,7 @@ void unparam(struct param *pp)
 void unsbind(char *sym)
 {
     struct symtab *p;
-    register struct symtab *s;
+    struct symtab *s;
 
 #if PPDEBUG
     if (PPDEBUG)
