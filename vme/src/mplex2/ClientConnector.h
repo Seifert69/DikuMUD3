@@ -6,7 +6,7 @@
  */
 
 #include "network.h"
-#include <string.h>
+#include <cstring>
 #include "protocol.h"
 #include "essential.h"
 #include "queue.h"
@@ -93,7 +93,7 @@ private:
     std::mutex m_mtx; // Mutex for websockets threading
 };
 
-const char *mplex_getcolor(class cConHook *hook, const char *colorstr);
+std::string mplex_getcolor(class cConHook *hook, const char *colorstr);
 
 void dumbPlayLoop(cConHook *con, const char *cmd);
 void dumbPressReturn(class cConHook *con, const char *cmd);

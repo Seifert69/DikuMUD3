@@ -263,7 +263,7 @@ void CServerConfiguration::Boot(const std::string &srvcfg)
     tmp2 = read_info_file(getFileInEtcDir(COLOR_FILE), tmp2);
     m_pColor = tmp2;
     FREE(tmp2);
-    color.create(m_pColor.data());
+    color.create(m_pColor);
 
     slog(LOG_OFF, 0, "Reading in etc / logo.");
     touch_file(getFileInEtcDir(LOGO_FILE));

@@ -4,48 +4,53 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.4 $
  */
+#pragma once
 
-#ifndef _MUD_COLOR_H
-#define _MUD_COLOR_H
-
-#include <string>
 #include "essential.h"
 #include "values.h"
+
+#include <map>
+#include <optional>
+#include <string>
 
 class color_type
 {
 private:
-    int count;
-    long key_size;   // how big are all the key's together for maloc purposes
-    long color_size; // how big are all the color's together for maloc purposes
-    char *keyword;
-    char *color;
-    color_type *next;
-    color_type *current;
-
-    void count_plus(char *key, char *c);
-    void count_minus(char *key, char *c);
+    std::map<std::string, std::string> m_map;
 
 public:
-    color_type(void);
-    color_type(char *key, char *c);
-    ~color_type(void);
+    // These all use the pointer interface and should be removed later
+    // once each use has been checked. std::string does not like nullptr being
+    // passed, so I didn't want implicit conversions happening
+    // There are std::string overloads for all of them which these
+    // just call
+    [[deprecated, nodiscard]] std::string insert(char *key, char *c);
+    [[deprecated]] void insert(const char *combo);
+    [[deprecated, nodiscard]] std::string change(char *key, char *c);
+    [[deprecated]] void change(const char *combo);
+    [[deprecated, nodiscard]] std::string get(const char *key) const;
+    [[deprecated, nodiscard]] std::string get(const char *key, char *full_key) const;
+    [[deprecated]] int remove(char *key);
+    [[deprecated]] void create(const char *input_str);
 
-    char *insert(char *key, char *c);
-    void insert(char *combo);
-    std::string change(char *key, char *c);
-    void change(char *combo);
-    const char *get(const char *key) const;
-    const char *get(const char *key, char *full_key) const;
-    int remove(char *key);
-    void remove_all(void);
-    void create(char *input_str);
-    char *key_string(void);
-    char *key_string(const color_type &dft);
-    char *save_string(void) const;
+public:
+    color_type() = default;
+    color_type(const color_type &) = delete;
+    auto operator=(const color_type &) -> color_type & = delete;
+    color_type(color_type &&) = delete;
+    auto operator=(color_type &&) -> color_type & = delete;
+    ~color_type() = default;
+
+    [[nodiscard]] std::string insert(std::string keyword, std::string color);
+    void insert(const std::string &combo);
+    void change(const std::string &combo);
+    [[nodiscard]] std::string change(const std::string &keyword, std::string color); // Nothing uses this except the tests
+    [[nodiscard]] std::string get(const std::string &key) const;
+    [[nodiscard]] std::string get(const std::string &key, std::string &full_key) const;
+    int remove(const std::string &key);
+    void remove_all();
+    void create(const std::string &input_string);
+    [[nodiscard]] std::string key_string();
+    [[nodiscard]] std::string key_string(const color_type &dft) const;
+    [[nodiscard]] std::string save_string() const;
 };
-
-int is_forground(char *cstr);
-int is_background(char *cstr);
-
-#endif /* _MUD_COLOR_H */

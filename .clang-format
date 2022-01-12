@@ -76,20 +76,24 @@ ForEachMacros:
   - BOOST_FOREACH
 #StatementAttributeLikeMacros:
 #  - Q_EMIT
-IncludeBlocks:   Preserve
+IncludeBlocks:   Regroup
 IncludeCategories:
-  - Regex:           '^"(llvm|llvm-c|clang|clang-c)/'
+  - Regex:           '(\.h>)$'
     Priority:        2
     SortPriority:    0
-#    CaseSensitive:   false
-  - Regex:           '^(<|"(gtest|gmock|isl|json)/)'
+    CaseSensitive:   false
+  - Regex:           '^(<boost/)'
+    Priority:        4
+    SortPriority:    0
+    CaseSensitive:   false
+  - Regex:           '^<.*>'
     Priority:        3
     SortPriority:    0
-#    CaseSensitive:   false
+    CaseSensitive:   false
   - Regex:           '.*'
     Priority:        1
     SortPriority:    0
-#    CaseSensitive:   false
+    CaseSensitive:   false
 IncludeIsMainRegex: '(Test)?$'
 IncludeIsMainSourceRegex: ''
 IndentCaseLabels: true

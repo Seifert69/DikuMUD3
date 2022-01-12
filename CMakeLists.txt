@@ -36,4 +36,8 @@ add_subdirectory(vme/src/vmc)
 add_subdirectory(vme/zone)
 add_subdirectory(vme/etc)
 
+# Not enabling this yet incase it stops the github build
+# which will stop the detailed unit_test results being
+# displayed
+# enable_testing()
 add_subdirectory(unit_tests)
