@@ -88,6 +88,8 @@ class unit_data *read_unit(class file_index_type *fi, int ins_list = TRUE);
 void free_unit(class unit_data *ch);
 void free_extra_descr(class extra_descr_data *ex);
 void free_extra_descr_list(class extra_descr_data *ex);
+char *read_info_file(const char *name, char *oldstr);
+char *read_info_file(const std::string &name, char *oldstr);
 
 class extra_descr_data *create_extra_descr(void);
 class unit_data *create_unit(ubit8 type);

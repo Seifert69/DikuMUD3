@@ -5,27 +5,20 @@
  $Revision: 2.9 $
 */
 
-#include <string.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
 
 #include "cmdload.h"
 #include "structs.h"
 #include "textutil.h"
-#include "comm.h"
 #include "interpreter.h"
 #include "db.h"
-#include "utils.h"
-#include "vmelimits.h"
 #include "skills.h"
 #include "trie.h"
 #include "utility.h"
 #include "files.h"
-#include "common.h"
 #include "constants.h"
-#include "unitfind.h"
-#include "dilrun.h"
 
 struct trie_type *cmd_trie = NULL;
 struct command_info *g_cmdlist = NULL;
@@ -146,8 +139,8 @@ void command_read(void)
     struct command_info *cmdptr = NULL, *lastptr = NULL;
     struct cmdload_struct *intcmd;
 
-    touch_file(str_cc(g_cServerConfig.m_etcdir, COMMAND_DEFS));
-    if (!(fl = fopen(str_cc(g_cServerConfig.m_etcdir, COMMAND_DEFS), "rb")))
+    touch_file(g_cServerConfig.getFileInEtcDir(COMMAND_DEFS));
+    if (!(fl = fopen(g_cServerConfig.getFileInEtcDir(COMMAND_DEFS).c_str(), "rb")))
     {
         slog(LOG_ALL, 0, "FATAL: Unable to open etc/ " COMMAND_DEFS);
         exit(0);

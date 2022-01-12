@@ -5,20 +5,10 @@
  $Revision: 2.8 $
  */
 #include "external_vars.h"
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
+#include <cstdio>
+#include <cstdlib>
 #include <sys/un.h>
 #include <sys/resource.h>
-
-#include <netinet/tcp.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 
 #include "interpreter.h"
 #include "structs.h"
@@ -27,17 +17,12 @@
 #include "db.h"
 #include "utility.h"
 #include "comm.h"
-#include "textutil.h"
-#include "ban.h"
 #include "handler.h"
 #include "files.h"
 #include "protocol.h"
 #include "main.h"
 #include "account.h"
 #include "vmelimits.h"
-#include "db_file.h"
-#include "str_parse.h"
-#include "common.h"
 #include "dilrun.h"
 #include "hookmud.h"
 
@@ -63,7 +48,7 @@ void init_char(class unit_data *ch)
 
     int required_xp(int level);
 
-    if (g_cServerConfig.m_bBBS)
+    if (g_cServerConfig.isBBS())
     {
         PC_SETUP_ECHO(ch) = TRUE;
         PC_SETUP_REDRAW(ch) = TRUE;

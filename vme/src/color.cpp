@@ -196,7 +196,7 @@ std::string color_type::change(char *key, char *c)
     return "";
 }
 
-const char *color_type::get(const char *key)
+const char *color_type::get(const char *key) const
 {
     color_type *l = this->next;
 
@@ -215,7 +215,7 @@ const char *color_type::get(const char *key)
         return (NULL);
 }
 
-const char *color_type::get(const char *key, char *full_key)
+const char *color_type::get(const char *key, char *full_key) const
 {
     color_type *l = this->next;
 
@@ -378,7 +378,7 @@ char *color_type::key_string(void)
     return (buff);
 }
 
-char *color_type::key_string(color_type &dft)
+char *color_type::key_string(const color_type &dft)
 {
     char *t = this->save_string();
     char *d = dft.save_string(); // ptr to create string
@@ -424,7 +424,7 @@ char *color_type::key_string(color_type &dft)
     return (ftemp);
 }
 
-char *color_type::save_string(void)
+char *color_type::save_string(void) const
 {
     color_type *l = this->next;
 
