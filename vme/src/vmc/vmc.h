@@ -87,6 +87,8 @@ void mem_reset(void);
 void mem_init(void);
 
 void process_unit(class unit_data *u);
+void ShowUsage(char *name);
+void fix(char *file);
 
 #define MCREATE(result, type, number) ((result) = (type *)mmalloc(sizeof(type) * number))
 
@@ -99,5 +101,8 @@ extern const char *g_error_zone_name;
 extern int g_errcon;
 extern int g_fatal_warnings;
 extern int g_verbose;
+extern int g_nooutput;
+extern int make;
+extern bool g_quiet_compile;
 
 #endif /* _MUD_VMC_H */

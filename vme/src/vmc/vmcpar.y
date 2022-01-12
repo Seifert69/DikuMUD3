@@ -1544,7 +1544,10 @@ void fatal(const char *str)
 
 void real_warning(const char *str)
 {
-   fprintf(stderr, "WARNING: %s: %d: %s\n", g_cur_filename, linenum, str);
+   //if(!g_quiet_compile)
+   {
+       fprintf(stderr, "WARNING: %s: %d: %s\n", g_cur_filename, linenum, str);
+   }
 }
 
 

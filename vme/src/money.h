@@ -107,6 +107,12 @@ char *money_string(amount_t amt, currency_t currency, ubit1 verbose);
 amount_t char_can_carry_amount(class unit_data *ch, class unit_data *money);
 amount_t unit_can_hold_amount(class unit_data *unit, class unit_data *money);
 
+#ifdef VMC_SRC
+void boot_money(char *moneyfile);
+#else
+void boot_money(void);
+#endif
+
 #define money_pluralis_type(type) (g_money_types[(type)].strings[g_money_types[(type)].pl_idx])
 #define money_pluralis(unit) (money_pluralis_type(MONEY_TYPE(unit)))
 

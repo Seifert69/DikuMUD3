@@ -1,7 +1,12 @@
 project(defcomp)
 
 set(DC_SRCS
-        defcomp.cpp
+        defcomp.cpp  defcomp.h
         )
 
-add_executable(defcomp ${DC_SRCS})
+add_library(defcomp_objs STATIC ${DC_SRCS})
+target_compile_definitions(defcomp_objs PUBLIC LINUX POSIX)
+
+add_executable(defcomp main.cpp)
+target_compile_definitions(defcomp PUBLIC LINUX POSIX)
+target_link_libraries(defcomp defcomp_objs)

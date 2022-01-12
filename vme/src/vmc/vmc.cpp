@@ -26,6 +26,7 @@
 #include "pp.h"
 #include <utils.h>
 #include "vmc.h"
+#include "compile_defines.h"
 #include <dil.h>
 #include <textutil.h>
 #include <utility.h>
@@ -41,8 +42,6 @@ const sbit8 g_time_light[4] = {-1, 0, 1, 0};
 struct zone_info g_zone;
 char g_cur_filename[256], top_filename[256];
 
-void boot_money(char *moneyfile);
-void fix(char *file);
 void zone_reset(char *default_name);
 void init_unit(class unit_data *u);
 void dump_zone(char *prefix);
@@ -57,6 +56,7 @@ int make = 0,             /* cmp mod-times of files before compiling */
     g_nooutput = 0,       /* suppress output */
     g_verbose = 0,        /* be talkative */
     g_fatal_warnings = 0; /* allow warnings */
+bool g_quiet_compile = false;
 
 char **ident_names = NULL; /* Used to check unique ident */
 
@@ -83,93 +83,8 @@ void ShowUsage(char *name)
     fprintf(stderr, "   -d Specifiy the location of the money file\n");
     fprintf(stderr, "   -I Search specified dir for include files.\n");
     fprintf(stderr, "   -p preprocess file only, output to stdout.\n");
+    fprintf(stderr, "   -q Quiet compile.\n");
     fprintf(stderr, "Copyright 1994 - 2001 (C) by Valhalla.\n");
-}
-
-int main(int argc, char **argv)
-{
-    int pos;
-    char moneyfile[512], *money;
-
-    mem_init();
-
-    money = getenv("VME_MONEY");
-    if (money)
-        strcpy(moneyfile, money);
-    else
-        strcpy(moneyfile, "../etc/");
-    if (argc == 1)
-    {
-        ShowUsage(argv[0]);
-        exit(1);
-    }
-
-    /*
-    * not sure why this is here anymore.
-    inc_dirs[inc_count++] = CPPI;
-    */
-
-    fprintf(stderr, "VMC %s Copyright (C) 2001 by Valhalla [%s]\n", VERSION, __DATE__);
-
-    for (pos = 1; pos < argc; pos++)
-        if (*argv[pos] == '-')
-            switch (*(argv[pos] + 1))
-            {
-                case 'I':
-                    Ipath[Ipcnt++] = argv[pos] + 2;
-                    ;
-                    break;
-                case 'm':
-                    make = 1;
-                    break;
-                case 's':
-                    g_nooutput = 1;
-                    break;
-                case 'v':
-                    g_verbose = 1;
-                    break;
-                case 'p':
-                    pponly = 1;
-                    break;
-                case 'l':
-                    g_fatal_warnings = 1;
-                    break;
-                case 'd':
-                    if (*(argv[pos] + 2))
-                        strcpy(moneyfile, argv[pos] + 2);
-                    else if (++pos < argc)
-                        strcpy(moneyfile, argv[pos]);
-                    else
-                    {
-                        slog(LOG_OFF, 0, "Full path of the money file expected.");
-                        exit(1);
-                    }
-                    break;
-
-                case '?':
-                    ShowUsage(argv[0]);
-                    exit(0);
-                case 'h':
-                    ShowUsage(argv[0]);
-                    exit(0);
-
-                default:
-                    fprintf(stderr, "Unknown option '%c'.\n", *(argv[pos] + 1));
-                    ShowUsage(argv[0]);
-                    exit(0);
-            }
-        else
-        {
-#ifndef WINDOWS
-            alarm(15 * 60); /* If not done in 5 minutes, abort */
-#endif
-            boot_money(moneyfile); /* I guess it was inevitable... /gnort */
-            fix(argv[pos]);
-        }
-
-    fprintf(stderr, "VMC Done.\n");
-
-    return 0;
 }
 
 char tmpfile1[L_tmpnam] = "";
@@ -222,7 +137,10 @@ void fix(char *file)
     strcpy(g_cur_filename, file);
     strcpy(top_filename, file);
     /* read & write */
-    fprintf(stderr, "Compiling '%s'\n", g_cur_filename);
+    if (!g_quiet_compile)
+    {
+        fprintf(stderr, "Compiling '%s'\n", g_cur_filename);
+    }
     zone_reset(filename);
     if (pp_main(file) > 0)
     {

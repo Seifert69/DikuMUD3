@@ -13,49 +13,18 @@ struct CServerConfiguration_Fixture
     static const std::string server_config;
     CServerConfiguration_Fixture()
     {
-        m_fixptr = this; // has to be first
-
         // Get temp filename for config file for tests
         std::tmpnam(fake_server_config_filename);
         std::ofstream strm(fake_server_config_filename);
         strm << server_config;
     }
 
-    struct slog
-    {
-        int m_level{};
-        int m_wiz_inv_level{};
-        std::string m_fmt{};
-        std::string m_message{};
-        void compare(int level, int wiz_inv_level, const std::string &fmt, const std::string &message)
-        {
-            BOOST_TEST(m_level == level);
-            BOOST_TEST(m_wiz_inv_level == wiz_inv_level);
-            BOOST_TEST(m_fmt == fmt);
-            BOOST_TEST(m_message == message);
-        }
-    } slog;
-
     char fake_server_config_filename[L_tmpnam]{};
 };
 
-// Make the current Fixture available to slog et al hijacks
-CServerConfiguration_Fixture *CServerConfiguration_Fixture::m_fixptr = nullptr;
-
-// Hijack this function for the unit test
-void slog(enum log_level level, ubit8 wizinv_level, const char *fmt, ...)
+// Dummy slog to suppress messages
+void slog(enum log_level, ubit8, const char *, ...)
 {
-    auto &slog = CServerConfiguration_Fixture::m_fixptr->slog;
-    slog.m_level = (int)level;
-    slog.m_wiz_inv_level = wizinv_level;
-    slog.m_fmt = fmt;
-
-    va_list args;
-    va_start(args, fmt);
-    char buf[1024 * 1024];
-    vsnprintf(buf, sizeof(buf), fmt, args);
-    slog.m_message = buf;
-    va_end(args);
 }
 
 // Attach fixture to suite so each test case gets a new copy

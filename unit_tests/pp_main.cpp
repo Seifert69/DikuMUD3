@@ -1,9 +1,11 @@
 #define BOOST_TEST_MODULE "PP Unit Tests"
-#define BOOST_TEST_DYN_LINK
+#ifndef DIKU_STATIC
+    #define BOOST_TEST_DYN_LINK
+#endif
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_CASE(SampleTest)
 {
-   BOOST_CHECK(true == true);
+    BOOST_CHECK(true == true);
 }

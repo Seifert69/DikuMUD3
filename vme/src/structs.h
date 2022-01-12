@@ -20,6 +20,7 @@
 #include "color.h"
 #include "destruct.h"
 #include "dil.h"
+#include <vme.h>
 #include <vector>
 #include <map>
 #ifndef MPLEX_COMPILE

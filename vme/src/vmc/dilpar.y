@@ -24,6 +24,7 @@
 #include "intlist.h"
 #include "namelist.h"
 extern char *diltext;
+extern bool g_quiet_compile;
 int dillex(void);
 
 /*
@@ -285,15 +286,20 @@ file     : program
 
                if (!dilistemplate)
                {
-                  fprintf(stderr," prg : %-20s ", nBuf);
-
+                  if(!g_quiet_compile)
+                  {
+                      fprintf(stderr," prg : %-20s ", nBuf);
+                  }
                   bwrite_dil(pBuf, &prg);
                   dil_free_prg(&prg,1);
                   //		  dumpdil(&prg);
                }
                else
                {
-                  fprintf(stderr, "tmpl : %-20s", nBuf);
+                  if(!g_quiet_compile)
+                  {
+                      fprintf(stderr, "tmpl : %-20s", nBuf);
+                  }
                   //  	  dumpdiltemplate(&tmpl);
                   bwrite_diltemplate(pBuf, &tmpl);
                   dil_free_template(&tmpl,0,1);
@@ -318,7 +324,10 @@ file     : program
                free(label_adr);
 label_no=0;
 
-            fprintf(stderr," (%5d bytes)\n", pBuf->GetLength());
+            if(!g_quiet_compile)
+            {
+                fprintf(stderr," (%5d bytes)\n", pBuf->GetLength());
+            }
 	    if (dilerrcon)
 		pBuf->Clear();
  //           printf("Data in : %s\n", tmpfname);
@@ -377,8 +386,11 @@ diloptions: DILSC_REC diloptions
 
 dilinit   : /* nothing */
          {
-	         fprintf(stderr, "DIL (line %5d)",dillinenum);
+            if(!g_quiet_compile)
+            {
 
+	            fprintf(stderr, "DIL (line %5d)",dillinenum);
+            }
             /* Set up template  */
             CREATE(tmpl.argt, ubit8, ARGMAX);
             CREATE(tmpl.core, ubit8, CODESIZE);
