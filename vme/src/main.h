@@ -34,5 +34,6 @@ extern const char *g_compile_time;
 
 // Prototypes
 void ShowUsage(const char *c);
-
+void type_validate_64(void);
+void run_the_game(char *srvcfg);
 #endif

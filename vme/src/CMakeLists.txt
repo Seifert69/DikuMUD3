@@ -16,13 +16,13 @@ set(VME_SRCS
         badnames.cpp badnames.h
         ban.cpp ban.h
         bank.cpp bank.h
-        base.h
         bytestring.cpp bytestring.h
         cmdload.cpp cmdload.h
         color.cpp color.h
         combat.cpp combat.h
         comm.cpp comm.h
         common.cpp common.h
+        compile_defines.h
         config.cpp config.h
         constants.cpp constants.h
         convert.cpp
@@ -49,7 +49,6 @@ set(VME_SRCS
         fight.cpp fight.h
         files.cpp files.h
         guild.cpp guild.h
-        guilddef.h
         handler.cpp handler.h
         hook.cpp hook.h
         hookmud.cpp hookmud.h
@@ -57,9 +56,9 @@ set(VME_SRCS
         intlist.cpp intlist.h
         justice.cpp justice.h
         limits.cpp
-        liquid.h
         magic.cpp magic.h
         main.h
+        main_functions.cpp
         membug.cpp membug.h
         mobact.cpp mobact.h
         modify.cpp modify.h
@@ -81,7 +80,6 @@ set(VME_SRCS
         spec_assign.cpp spec_assign.h
         spec_procs.cpp
         spell_parser.cpp
-        spelldef.h
         spells.h
         str_parse.cpp str_parse.h
         structs.cpp structs.h
@@ -93,23 +91,22 @@ set(VME_SRCS
         unitfind.cpp unitfind.h
         utility.cpp utility.h
         utils.h
-        values.h
-        vme.h
         vmelimits.h
         weather.cpp weather.h
-        wmacros.h
         zon_basis.cpp
         zon_wiz.cpp
         zone_reset.cpp
         )
 
-add_compile_definitions(DMSERVER)
-
-# Add all sources to a library file so we can link with subject projects and test suites
+# Add all sources to a library file so we can link with other projects and test suites
 add_library(vme_objs STATIC ${VME_SRCS})
+target_compile_definitions(vme_objs PUBLIC DMSERVER LINUX POSIX)
+target_include_directories(vme_objs
+        PRIVATE .
+        PUBLIC ${CMAKE_SOURCE_DIR}/vme/include)
 
 add_executable(vme main.cpp)
-
+target_compile_definitions(vme PUBLIC DMSERVER LINUX POSIX)
 target_link_libraries(vme
         vme_objs
         crypt

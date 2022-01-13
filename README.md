@@ -31,6 +31,7 @@ How to build & launch (using the new cmake)
        cd DikuMUD3/
        cmake .
        make all -j8 # -j8 to compile on 8 threads in parallel
+       make test # optionally run the unit tests
 
 4) Now you're ready to launch, open four tabs in shell:
 

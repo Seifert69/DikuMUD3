@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE "cNamelsits Unit Tests"
+#define BOOST_TEST_MODULE "cNamelists Unit Tests"
 #include <boost/test/unit_test.hpp>
 #include "namelist.h"
 #include <vector>

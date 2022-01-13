@@ -3,6 +3,15 @@ project(DikuMUD3)
 
 find_package(BISON)
 find_package(FLEX)
+
+if (DIKU_STATIC)
+    set(Boost_USE_STATIC_LIBS ON) # This has to be before the boost find package below
+    add_compile_definitions(DIKU_STATIC)
+    message(STATUS "DIKU: Linking with static boost libraries")
+else ()
+    set(Boost_USE_STATIC_LIBS OFF)
+    message(STATUS "DIKU: Linking with dynamic boost libraries")
+endif ()
 find_package(Boost COMPONENTS unit_test_framework filesystem regex system REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -19,15 +28,8 @@ message(STATUS "Compiler flags: ${CMAKE_CXX_FLAGS}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin)
 
-add_compile_definitions(LINUX POSIX)
-
-include_directories(vme/src)
 link_directories(${CMAKE_SOURCE_DIR}/vme/bin)
 
-add_custom_target(everything)
-add_dependencies(everything vme vmc defcomp mplex pp)
-
-add_subdirectory(vme)
 add_subdirectory(vme/src)
 add_subdirectory(vme/src/defcomp)
 add_subdirectory(vme/src/mplex2)
@@ -36,8 +38,5 @@ add_subdirectory(vme/src/vmc)
 add_subdirectory(vme/zone)
 add_subdirectory(vme/etc)
 
-# Not enabling this yet incase it stops the github build
-# which will stop the detailed unit_test results being
-# displayed
-# enable_testing()
+enable_testing()
 add_subdirectory(unit_tests)

@@ -12,7 +12,7 @@ $deftmp = `mktemp --tmpdir=../log --suffix=.cpp`;
 chomp $deftmp;
 $tmplin = `mktemp --tmpdir=../log --suffix=.lin`;
 chomp $tmplin;
-$cpp = "../bin/vmc -p -I../include/ ";
+$cpp = "../bin/vmc -q -p -I../include/ ";
 
 system "$cpp $definf | grep -v \\# > $deftmp";
 if (!open(TMPIN, $deftmp))
@@ -32,7 +32,7 @@ if (!open(MYOUT, ">$tmplin"))
 
 close(MYOUT);
 
-print "Processing...\n";
+#print "Processing...\n";
 
 while (<TMPIN>)
 {
@@ -54,7 +54,7 @@ close(TMPOUT);
 
 system "rm -f $tmplin $deftmp";
 
-system "echo Complete.";
+#system "echo Complete.";
 
 sub calc {
   local ($str) = @_;

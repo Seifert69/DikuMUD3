@@ -15,6 +15,7 @@ libpp_objs.a
 libvmc_dep_objs.a
 libvmc_objs.a
 defcomp_unit_tests
+libdefcomp_objs.a
 mplex_unit_tests
 pp_unit_tests
 vmc_unit_tests

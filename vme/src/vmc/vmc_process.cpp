@@ -44,7 +44,10 @@ void dmc_error(int fatal, const char *fmt, ...)
     buf[sizeof(buf) - 10] = 0;
     va_end(args);
 
-    fprintf(stderr, "%s: %s\n", fatal && fatal != 2 ? "FATAL" : "WARNING", buf);
+    if (!g_quiet_compile || fatal)
+    {
+        fprintf(stderr, "%s: %s\n", fatal && fatal != 2 ? "FATAL" : "WARNING", buf);
+    }
     sprintf(filename, "%s.err", g_error_zone_name);
 
     if ((f = fopen(filename, "a")))
