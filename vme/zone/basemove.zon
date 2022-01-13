@@ -53,11 +53,11 @@ RIDE / SAIL   These commands are to be removed from service (wizi them or better
 
 #include <macros.h>
 
-#define SWIM_ON  "$swim_on"
+#define SWIM_ON_NAME  "$swim_on"
 
-#define IS_FISH  "$is_fish"
+#define IS_FISH_NAME  "$is_fish"
 
-#define IS_AMPHIB "$is_amphib"
+#define IS_AMPHIB_NAME "$is_amphib"
 
 
 %zone basemove
@@ -521,11 +521,11 @@ code
                {
                   i := 50; // Additional bonus for races born to swim :) 
                }
-               if ("$is_amphib" in u.extra)
+               if (IS_AMPHIB_NAME in u.extra)
                {
                   i := 80;
                }
-               if ("$is_fish" in u.extra)
+               if (IS_FISH_NAME in u.extra)
                {
                   i := 100;
                }
@@ -580,26 +580,26 @@ code
 
    if (arg == "on")
    {
-      if (self.extra.[SWIM_ON])
+      if (self.extra.[SWIM_ON_NAME])
       {
          act("You already have auto-swimming turned on.", A_ALWAYS, self, null, null, TO_CHAR);
          return;
       }
 
-     addextra(self.extra, {SWIM_ON}, "");
+     addextra(self.extra, {SWIM_ON_NAME}, "");
      act("Automatic swimming is now on.", A_ALWAYS, self, null, null, TO_CHAR);
      return;
    }
 
    if (arg == "off")
    {
-      if (not self.extra.[SWIM_ON])
+      if (not self.extra.[SWIM_ON_NAME])
       {
          act("You are not automatically swimming at this time.", A_ALWAYS, self, null, null, TO_CHAR);
          return;
       }
 
-      subextra(self.extra, SWIM_ON);
+      subextra(self.extra, SWIM_ON_NAME);
       act("Automatic swimming is now off.", A_ALWAYS, self, null, null, TO_CHAR);
       return;
    }
@@ -649,9 +649,9 @@ code
          }
       }
 
-      addextra(self.extra, {SWIM_ON}, "");
+      addextra(self.extra, {SWIM_ON_NAME}, "");
       exec(arg1, self);
-      subextra(self.extra, SWIM_ON);
+      subextra(self.extra, SWIM_ON_NAME);
    }
    else
    {
@@ -1727,13 +1727,13 @@ code
       return;
 
   /* Swimming Code : We are finally going to allow players to use that 100% swimming skill.
-     every movement will cost 50 points of endurance (unless the IS_FISH extra is found, then it is 1)
+     every movement will cost 50 points of endurance (unless the IS_FISH_NAME extra is found, then it is 1)
      and also there will be a skill check to determine if there is drowning damage. If
  	  it can use water or land it will use the is-amphib extra Darg added */
 
    if ((room_going.movement == SECT_WATER_SAIL) or (room_in.movement == SECT_WATER_SAIL))
    {
-      if ((not mover.extra.[SWIM_ON]) and ((not mover.extra.[IS_FISH]) or (not mover.extra.[IS_AMPHIB])))
+      if ((not mover.extra.[SWIM_ON_NAME]) and ((not mover.extra.[IS_FISH_NAME]) or (not mover.extra.[IS_AMPHIB_NAME])))
       {
          act("You might want to swim or get a boat.", A_ALWAYS, mover, null, null, TO_CHAR);
          return;
@@ -1742,10 +1742,10 @@ code
     if ((mover.type == UNIT_ST_NPC) and (mover.race >=RACE_ARTHROPODA_MIN) and (mover.race <=RACE_ARTHROPODA_MAX))
 	   goto insect;
 
-    if ((mover.type == UNIT_ST_NPC) and (mover.extra.[IS_FISH]))
+    if ((mover.type == UNIT_ST_NPC) and (mover.extra.[IS_FISH_NAME]))
 	   goto fish;
 
-	if ((mover.type == UNIT_ST_NPC) and (mover.extra.[IS_AMPHIB]))
+	if ((mover.type == UNIT_ST_NPC) and (mover.extra.[IS_AMPHIB_NAME]))
 	   goto amphib;
 
 
@@ -1763,7 +1763,7 @@ code
         return;
        }
    }
-else if (mover.extra.[IS_FISH])   /* If the mover is a fish, then we dont want them walking on land */
+else if (mover.extra.[IS_FISH_NAME])   /* If the mover is a fish, then we dont want them walking on land */
      return;
 
 
@@ -1772,7 +1772,7 @@ test := movementloss(room_going.movement);
 
 end_need := (end_need + test) / 2;
 
-if ((mover.extra.[IS_FISH]) and (end_need > 1))
+if ((mover.extra.[IS_FISH_NAME]) and (end_need > 1))
    end_need := 1;
 
 if ((mover.endurance - end_need < 0) and (not follows))
@@ -1804,7 +1804,7 @@ else if (mover.endurance - end_need < 0)
 }
 
 :insect:
-if (mover.extra.[IS_AMPHIB])
+if (mover.extra.[IS_AMPHIB_NAME])
 {
  if (mover.endurance <= 10)
  { mover.endurance := mover.max_endurance;
