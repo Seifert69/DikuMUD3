@@ -1,5 +1,7 @@
 #pragma once
 
+#include "essential.h"
+
 char *ContentsFileName(const char *);
 class unit_data *restore_all_unit(char *filename, unit_data *udest);
 int diff(char *ref, ubit32 reflen, char *obj, int objlen, char *dif, int diflen, ubit32 crc);
