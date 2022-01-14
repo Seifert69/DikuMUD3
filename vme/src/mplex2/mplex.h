@@ -26,6 +26,7 @@ struct arg_type
     int g_bModeTelnet;
     int g_bModeRawHTML;
     int bWebSockets;
+    int bMudProtocol;
 };
 
 #define Assert(a, b)                                                                                                                       \
