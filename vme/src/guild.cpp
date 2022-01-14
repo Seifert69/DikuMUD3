@@ -4,31 +4,25 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.5 $
  */
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <time.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
-#include "textutil.h"
-#include "comm.h"
-#include "interpreter.h"
-#include "handler.h"
-#include "db.h"
-#include "spells.h"
-#include "vmelimits.h"
-#include "justice.h"
-#include "affect.h"
-#include "magic.h"
-#include "utility.h"
-#include "common.h"
-#include "money.h"
-#include "str_parse.h"
 #include "cmdload.h"
+#include "comm.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "magic.h"
+#include "main_functions.h"
+#include "money.h"
+#include "skills.h"
+#include "spec_procs.h"
+#include "str_parse.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 struct guild_type
 {
@@ -240,8 +234,6 @@ int guard_guild_way(struct spec_arg *sarg)
 {
     char *str, *location, *excl = NULL, *msg1 = NULL, *msg2 = NULL, *guild_no;
     int guild_cmp;
-
-    int charname_in_list(class unit_data * ch, char *arg);
 
     if ((str = (char *)sarg->fptr->data) && (sarg->cmd->inttype == DIR_CMD) && (sarg->cmd->dir == (*str - '0')) &&
         CHAR_IS_READY(sarg->owner))

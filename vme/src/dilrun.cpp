@@ -4,34 +4,30 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.14 $
  */
-#include "mobact.h"
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include <stdarg.h> /* For type_check */
+#include "dilrun.h"
 
-#include "structs.h"
-#include "handler.h"
-#include "textutil.h"
-#include "interpreter.h"
-#include "comm.h"
+#include "db.h"
 #include "dil.h"
-#include "affect.h"
+#include "dilexp.h"
+#include "dilinst.h"
+#include "essential.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "intlist.h"
+#include "main_functions.h"
+#include "mobact.h"
+#include "structs.h"
+#include "textutil.h"
 #include "utility.h"
 #include "utils.h"
-#include "db.h"
-#include "db_file.h"
-#include "vmelimits.h"
-#include "common.h"
-#include "spells.h"
-#include "db_file.h"
-#include "dilinst.h"
-#include "dilexp.h"
-#include "dilrun.h"
-#include "intlist.h"
-#include "essential.h"
+
+#include <sys/time.h>
+
+#include <cstdarg> /* For type_check */
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 /* *********************************************************************** *
  * Implementation notes:
@@ -483,9 +479,9 @@ int dil_sub_secure(struct dilframe *frm, class unit_data *sup, int bForeach)
    ********************************************************************* */
 
 /* Clears all extra pointers equal to a removed extra            */
-void dil_clear_extras(register class dilprg *prg, class extra_descr_data *exd)
+void dil_clear_extras(class dilprg *prg, class extra_descr_data *exd)
 {
-    register int i;
+    int i;
     struct dilframe *frm;
 
     if (!prg->frame)
@@ -524,9 +520,9 @@ void dil_clear_extras(register class dilprg *prg, class extra_descr_data *exd)
 
 /* Clears all variables that are not secured! Called at every activation */
 /* of a DIL program (after secures are tested for!).			 */
-void dil_clear_non_secured(register class dilprg *prg)
+void dil_clear_non_secured(class dilprg *prg)
 {
-    register int i, j;
+    int i, j;
     struct dilframe *frm;
 
     if (!prg->frame)
@@ -555,7 +551,7 @@ void dil_clear_non_secured(register class dilprg *prg)
 
 /* If a secure is violated, this routine will clear all local DIL variables */
 /* that refer to this secure.						    */
-void dil_clear_lost_reference(register struct dilframe *frm, void *ptr)
+void dil_clear_lost_reference(struct dilframe *frm, void *ptr)
 {
     int i;
 
@@ -599,7 +595,7 @@ void dil_clear_lost_reference(register struct dilframe *frm, void *ptr)
 
 */
 
-void dil_test_secure(register class dilprg *prg, int bForeach)
+void dil_test_secure(class dilprg *prg, int bForeach)
 {
     int i;
     int count;
@@ -931,7 +927,7 @@ void DeactivateDil(class unit_data *pc, class dilprg *aprg)
 //
 int run_dil(struct spec_arg *sarg)
 {
-    register class dilprg *prg = (class dilprg *)sarg->fptr->data;
+    class dilprg *prg = (class dilprg *)sarg->fptr->data;
     char *orgarg = (char *)sarg->arg; /* Because fndu may mess with it!!! */
 
     int i;
@@ -1182,8 +1178,6 @@ int run_dil(struct spec_arg *sarg)
 
         if (IS_SET(prg->sarg->fptr->flags, SFB_TICK))
         {
-            void ResetFptrTimer(class unit_data * u, class unit_fptr * fptr);
-
             /* Purely for optimization purposes! Enqueue / dequeue are HUGE! */
             if ((OrgHeartBeat != sarg->fptr->heart_beat) && (sarg->cmd->no != CMD_AUTO_TICK))
                 ResetFptrTimer(sarg->owner, sarg->fptr);

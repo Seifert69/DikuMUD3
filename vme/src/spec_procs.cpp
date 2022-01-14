@@ -5,33 +5,12 @@
  $Revision: 2.4 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <time.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
-#include "textutil.h"
-#include "comm.h"
-#include "interpreter.h"
-#include "handler.h"
-#include "db.h"
-#include "spells.h"
-#include "vmelimits.h"
-#include "justice.h"
-#include "affect.h"
-#include "magic.h"
-#include "utility.h"
-#include "money.h"
-#include "str_parse.h"
-#include "files.h"
-#include "trie.h"
-#include "spec_assign.h"
-#include "fight.h"
 #include "cmdload.h"
+#include "structs.h"
+#include "trie.h"
+#include "utils.h"
+
+#include <cstring>
 
 /*String has format "<char name>{</><char-name>}<0> "   */
 /* Example: "king welmar/tim/tom"                        */

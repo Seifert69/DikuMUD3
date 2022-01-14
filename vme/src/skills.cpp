@@ -5,20 +5,22 @@
  $Revision: 2.3 $
  */
 
-#include <cstdlib>
-#include <cstdio>
+#include "skills.h"
 
 #include "cmdload.h"
-#include "structs.h"
-#include "skills.h"
-#include "utils.h"
-#include "utility.h"
 #include "comm.h"
-#include "files.h"
 #include "db.h"
-#include "textutil.h"
+#include "files.h"
 #include "interpreter.h"
+#include "modify.h"
 #include "spelldef.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cstdio>
+#include <cstdlib>
 
 int g_hit_location_table[] = /* Determine by using 2d8 */
     {WEAR_HEAD,              /* 2..3   =>  4.68% for Head  */

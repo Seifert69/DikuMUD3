@@ -4,31 +4,43 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.16 $
  */
-#include "external_vars.h"
-
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <cctype>
-
-#include "dbfind.h"
-#include "structs.h"
-#include "utils.h"
 #include "db.h"
-#include "db_file.h"
-#include "dil.h"
-#include "handler.h"
-#include "textutil.h"
-#include "skills.h"
-#include "affect.h"
-#include "utility.h"
-#include "money.h"
-#include "files.h"
-#include "common.h"
+
 #include "account.h"
-#include "weather.h"
+#include "act_other.h"
+#include "affect.h"
+#include "ban.h"
+#include "common.h"
+#include "convert.h"
+#include "db_file.h"
+#include "dbfind.h"
+#include "dil.h"
 #include "dilrun.h"
+#include "files.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "main_functions.h"
+#include "mobact.h"
+#include "money.h"
+#include "path.h"
+#include "pcsave.h"
+#include "reception.h"
 #include "sector.h"
+#include "skills.h"
+#include "slime.h"
+#include "spell_parser.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+#include "weather.h"
+#include "zon_basis.h"
+#include "zone_reset.h"
+
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 const char *g_player_zone = "_players";
 
@@ -41,8 +53,6 @@ class unit_data *g_room_head = NULL;
 cSector g_sector_dat;
 /* Global permanent element of zone info */
 struct zone_info_type g_zone_info = {0, NULL};
-
-class room_direction_data *create_direction_data(void);
 
 /* By using this, we can easily sort the list if ever needed
 void insert_unit_in_zone_list(zone_type *zp, class unit_data *u)
@@ -526,8 +536,6 @@ int bread_affect(CByteBuffer *pBuf, class unit_data *u, ubit8 nVersion)
     ubit8 t8;
     ubit16 t16;
 
-    class unit_affected_type *link_alloc_affect(class unit_data * unit, class unit_affected_type * orgaf);
-
     if (nVersion <= 56)
     {
         if (pBuf->Read8(&t8))
@@ -638,10 +646,6 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
     ubit32 t32;
     ubit32 nStart;
     char tmpbuf[2 * MAX_STRING_LENGTH];
-
-    char *fix_old_codes_to_html(const char *c);
-
-    void start_all_special(class unit_data * u);
 
     g_nCorrupt = 0;
 
@@ -1019,7 +1023,6 @@ class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const ch
 
                 if (unit_version < 44)
                 {
-                    void race_adjust(class unit_data *);
                     race_adjust(u);
                 }
 
@@ -1347,8 +1350,6 @@ void read_unit_file(class file_index_type *org_fi, CByteBuffer *pBuf)
  */
 class unit_data *read_unit(class file_index_type *org_fi, int ins_list)
 {
-    int is_slimed(class file_index_type * sp);
-
     class unit_data *u;
 
     if (org_fi == NULL)
@@ -1633,30 +1634,6 @@ char *read_info_file(const std::string &name, char *oldstr)
 
 void boot_db(void)
 {
-    void create_worldgraph(void);
-    void create_dijkstra(void);
-    void player_file_index(void);
-    void reception_boot(void);
-    void load_messages(void);
-    void assign_command_pointers(void);
-    void assign_spell_pointers(void);
-    void reset_all_zones(void);
-    void load_ban(void);
-    void boot_money(void);
-    void boot_sector(void);
-    void basis_boot(void);
-    void slime_boot(void);
-    void boot_spell(void);
-    void boot_skill(void);
-    void boot_weapon(void);
-    void boot_ability(void);
-    void boot_race(void);
-    void boot_profession(void);
-    void boot_interpreter(void);
-    void interpreter_dil_check(void);
-
-    void cleanup_playerfile(int c);
-
     slog(LOG_OFF, 0, "Boot DB -- BEGIN.");
     slog(LOG_OFF, 0, "Copyright (C) 1994 - 2021 by DikuMUD & Valhalla.");
 
@@ -1745,16 +1722,12 @@ void db_shutdown(void)
 
     slog(LOG_OFF, 0, "Destroying unit list.");
 
-    void clear_destructed(void);
-
     while (!IS_ROOM(g_unit_list))
     {
         tmpu = g_unit_list;
         extract_unit(tmpu);
         clear_destructed();
     }
-
-    void stop_all_special(class unit_data * u);
 
     while ((tmpu = g_unit_list))
     {

@@ -4,33 +4,27 @@
  $Date: 2003/11/29 03:31:16 $
  $Revision: 2.8 $
  */
-#include "external_vars.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
+#include "path.h"
+
+#include "common.h"
+#include "constants.h"
+#include "db.h"
+#include "main_functions.h"
+#include "sector.h"
+#include "structs.h"
+#include "utils.h"
+
+#include <pthread.h>
+
+#include <cstdio>
+#include <list>
+#include <vector>
+
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/filtered_graph.hpp>
-#include <boost/graph/graph_utility.hpp>
-#include <pthread.h>
-#include <vector>
-#include <list>
+#include <boost/graph/strong_components.hpp>
 
-#include "structs.h"
-#include "utils.h"
-#include "interpreter.h"
-#include "comm.h"
-#include "db.h"
-#include "handler.h"
-#include "utility.h"
-#include "common.h"
-#include "constants.h"
-#include "sector.h"
-#include "path.h"
-
-void signal_reset(void);
-void create_sc_graph(int num_of_sc);
-void *create_sc_dijkstra(void *thread);
 pthread_mutex_t dijkstra_queue_mutex;
 std::list<unit_data *> dijkstra_queue;
 pthread_t g_dijkstra_thread;

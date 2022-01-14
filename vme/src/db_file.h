@@ -4,23 +4,16 @@
  $Date: 2004/09/21 08:45:46 $
  $Revision: 2.4 $
  */
+#pragma once
 
-#ifndef _MUD_DB_FILE_H
-#define _MUD_DB_FILE_H
-
-#include "structs.h"
 #include "bytestring.h"
 #include "dil.h"
-
-extern CByteBuffer g_FileBuffer; /* Defined in db_file.c */
-extern int g_nCorrupt;           /*          "           */
+#include "structs.h"
 
 void *bread_dil(CByteBuffer *pBuf, class unit_data *, ubit8 version, class unit_fptr *fptr, int stspec = TRUE);
 
 struct diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version);
 int bread_extra(CByteBuffer *pBuf, class extra_list &cExtra, int unit_version);
-
-int bread_affect(CByteBuffer *pBuf, class unit_data *u, ubit8 nVersion);
 
 class unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, class unit_data *owner, int stspec = TRUE);
 
@@ -36,4 +29,5 @@ void write_unit(FILE *f, class unit_data *u, char *fname);
 void write_diltemplate(FILE *f, struct diltemplate *tmpl);
 int write_unit_string(CByteBuffer *pBuf, class unit_data *u);
 
-#endif /* _MUD_DB_FILE_H */
+extern CByteBuffer g_FileBuffer; /* Defined in db_file.c */
+extern int g_nCorrupt;           /*          "           */

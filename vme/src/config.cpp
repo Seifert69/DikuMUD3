@@ -7,25 +7,26 @@
  */
 
 #ifdef _WINDOWS
-    #include <winsock2.h>
     #include <io.h>
+    #include <winsock2.h>
 #endif
 
-#include <cstring>
-#include <filesystem>
-#include <boost/format.hpp>
-
 #include "color.h"
+#include "config.h"
 #include "db.h"
 #include "diku_exception.h"
 #include "essential.h"
-#include "utility.h"
-#include "config.h"
 #include "files.h"
-#include "textutil.h"
 #include "str_parse.h"
 #include "structs.h"
+#include "textutil.h"
+#include "utility.h"
 #include "values.h"
+
+#include <cstring>
+#include <filesystem>
+
+#include <boost/format.hpp>
 
 CServerConfiguration g_cServerConfig;
 

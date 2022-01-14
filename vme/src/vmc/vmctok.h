@@ -4,9 +4,7 @@
  $Date: 2001/04/10 21:11:36 $
  $Revision: 2.0 $
  */
-
-#ifndef _MUD_VMCTOK_H
-#define _MUD_VMCTOK_H
+#pragma once
 
 struct symbols
 {
@@ -107,5 +105,3 @@ struct symbols
     {"random", RANDOM},
     {"complete", COMPLETE},
     {0, 0}};
-
-#endif /* _MUD_VMCTOK_H */

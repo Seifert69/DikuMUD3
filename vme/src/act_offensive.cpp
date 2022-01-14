@@ -5,24 +5,18 @@
  $Revision: 2.3 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
-#include "textutil.h"
-#include "comm.h"
-#include "interpreter.h"
-#include "handler.h"
-#include "db.h"
-#include "spells.h"
-#include "vmelimits.h"
 #include "affect.h"
-#include "utility.h"
-#include "fight.h"
+#include "comm.h"
+#include "db.h"
 #include "dilrun.h"
+#include "fight.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+
+#include <cstring>
 
 /* extern variables */
 

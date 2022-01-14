@@ -5,20 +5,36 @@
  $Revision: 2.9 $
 */
 
-#include <cstring>
-#include <cstdio>
-#include <cstdlib>
-
 #include "cmdload.h"
+
+#include "account.h"
+#include "act_change.h"
+#include "act_color.h"
+#include "act_info.h"
+#include "act_movement.h"
+#include "act_offensive.h"
+#include "act_other.h"
+#include "act_skills.h"
+#include "act_wizard.h"
+#include "act_wstat.h"
+#include "ban.h"
+#include "db.h"
+#include "experience.h"
+#include "files.h"
+#include "interpreter.h"
+#include "modify.h"
+#include "reception.h"
+#include "skills.h"
+#include "spell_parser.h"
 #include "structs.h"
 #include "textutil.h"
-#include "interpreter.h"
-#include "db.h"
-#include "skills.h"
 #include "trie.h"
 #include "utility.h"
-#include "files.h"
-#include "constants.h"
+#include "vmelimits.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 struct trie_type *cmd_trie = NULL;
 struct command_info *g_cmdlist = NULL;
@@ -59,8 +75,6 @@ void skill_dump(void)
 {
     std::string str;
     char buf[MAX_STRING_LENGTH];
-
-    bool pairISCompare(const std::pair<int, std::string> &firstElem, const std::pair<int, std::string> &secondElem);
 
     for (int j = 0; j < PROFESSION_MAX; j++)
     {

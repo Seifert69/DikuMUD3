@@ -5,16 +5,17 @@
  $Revision: 2.1 $
  */
 
-#include "structs.h"
-#include "utils.h"
-#include "fight.h"
 #include "comm.h"
-#include "textutil.h"
-#include "interpreter.h"
-#include "utility.h"
+#include "experience.h"
 #include "fight.h"
-#include "unitfind.h"
+#include "interpreter.h"
+#include "modify.h"
 #include "skills.h"
+#include "structs.h"
+#include "textutil.h"
+#include "unitfind.h"
+#include "utility.h"
+#include "utils.h"
 
 // The Global Combat List...
 
@@ -511,15 +512,6 @@ void stat_spell(class unit_data *god, class unit_data *u, const char *pStr)
     int i = search_block(skip_blanks(pStr), g_SplColl.text, false);
     if (i == -1)
         i = SPL_ACID_BREATH;
-
-    int spell_bonus(class unit_data * att,
-                    class unit_data * medium,
-                    class unit_data * def,
-                    int hit_loc,
-                    int spell_number,
-                    int *pDef_armour_type,
-                    class unit_data **pDef_armour,
-                    std::string *pStat);
 
     std::string str;
     spell_bonus(u, u, u2, WEAR_BODY, i, NULL, NULL, &str);

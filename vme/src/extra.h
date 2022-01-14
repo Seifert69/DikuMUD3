@@ -4,13 +4,12 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.3 $
  */
-
-#ifndef _MUD_EXTRA_H
-#define _MUD_EXTRA_H
+#pragma once
 
 #include "essential.h"
-#include "namelist.h"
 #include "intlist.h"
+#include "namelist.h"
+
 #include <string>
 
 class extra_list
@@ -68,5 +67,3 @@ class extra_descr_data *char_unit_find_extra(class unit_data *ch, class unit_dat
 class extra_descr_data *unit_find_extra(const char *word, class unit_data *unit);
 void rogue_push_front(class extra_descr_data **exlist, class extra_descr_data *newex);
 void rogue_remove(class extra_descr_data **exlist, const char *name);
-
-#endif /* _MUD_STRUCTS_H */

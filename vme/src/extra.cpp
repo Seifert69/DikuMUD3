@@ -6,9 +6,10 @@
  */
 
 #include "extra.h"
-#include "utils.h"
-#include "utility.h"
+
 #include "textutil.h"
+#include "utility.h"
+#include "utils.h"
 
 //
 // MS2020. It seems like the old code would set unit's extra to NULL

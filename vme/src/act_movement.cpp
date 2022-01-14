@@ -36,31 +36,23 @@
 /* 23/08/93 jubal  : Added messages to leader when start/stop follow       */
 /* 23/08/93 jubal  : Fixed (nearly - still acttrouble) msgs around open etc*/
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include "external_vars.h"
-#include "structs.h"
-#include "utils.h"
-#include "utility.h"
-#include "skills.h"
-#include "textutil.h"
 #include "comm.h"
-#include "interpreter.h"
-#include "handler.h"
-#include "db.h"
-#include "spells.h"
-#include "affect.h"
-#include "movement.h"
-#include "constants.h"
-#include "vmelimits.h"
-#include "main.h"
-#include "account.h"
 #include "common.h"
+#include "constants.h"
 #include "dilsup.h"
 #include "fight.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "movement.h"
 #include "skills.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+#include "vmelimits.h"
+
+#include <cstdio>
+#include <cstring>
 
 // I had to add a act() kludge here.
 // The $arrive_ and $leave_ extras depend on $2t for special descriptions.

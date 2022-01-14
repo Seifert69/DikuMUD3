@@ -5,16 +5,16 @@
  $Revision: 2.3 $
  */
 
-#include <stdio.h>
-#include <string.h>
-
-#include "utils.h"
-#include "textutil.h"
 #include "comm.h"
-#include "interpreter.h"
 #include "handler.h"
+#include "interpreter.h"
 #include "money.h"
+#include "textutil.h"
 #include "utility.h"
+#include "utils.h"
+
+#include <cstdio>
+#include <cstring>
 
 static float INTEREST = .95;
 static int INT_INTEREST = 5;

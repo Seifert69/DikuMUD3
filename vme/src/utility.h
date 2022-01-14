@@ -4,9 +4,9 @@
  $Date: 2001/04/29 03:46:07 $
  $Revision: 2.1 $
  */
+#pragma once
 
-#ifndef _MUD_UTILITY_H
-#define _MUD_UTILITY_H
+#include "essential.h"
 
 #include <string>
 
@@ -18,26 +18,9 @@
     #undef MAX
 #endif
 
-int is_in(int a, int from, int to);
-int MIN(int a, int b);
-int MAX(int a, int b);
-
-int number(int from, int to);
-int dice(int number, int size);
-
-const char *sprintbit(std::string &dest, ubit32 vektor, const char *names[]);
-char *sprinttype(char *buf, int type, const char *names[]);
-
 /* in game log stuff below */
-
 #define MAXLOG 10
-
 #define HERE __FILE__, __LINE__
-
-/* Use like this:  error(HERE, "Something went wrong: %s", buf); */
-void error(const char *file, int line, const char *fmt, ...);
-
-class unit_data *hometown_unit(char *str);
 
 class log_buffer
 {
@@ -58,6 +41,16 @@ struct obj_type_t
     ubit8 v[5];
 };
 
-char *stat_obj_data(class unit_data *u, struct obj_type_t *obj_data);
+int is_in(int a, int from, int to);
+int MIN(int a, int b);
+int MAX(int a, int b);
 
-#endif
+int number(int from, int to);
+int dice(int number, int size);
+
+const char *sprintbit(std::string &dest, ubit32 vektor, const char *names[]);
+char *sprinttype(char *buf, int type, const char *names[]);
+/* Use like this:  error(HERE, "Something went wrong: %s", buf); */
+void error(const char *file, int line, const char *fmt, ...);
+
+extern class log_buffer g_log_buf[];

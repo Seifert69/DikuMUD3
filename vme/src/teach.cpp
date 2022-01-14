@@ -5,23 +5,24 @@
  $Revision: 2.5 $
  */
 
-#include <cstdlib>
-#include <cstdio>
-#include <cctype>
-
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
-#include "textutil.h"
 #include "comm.h"
-#include "interpreter.h"
-#include "handler.h"
 #include "common.h"
-#include "utility.h"
-#include "money.h"
-#include "vmelimits.h"
 #include "guild.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "modify.h"
+#include "money.h"
+#include "skills.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
 #include "vme.h"
+#include "vmelimits.h"
+
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
 
 #define PRACTICE_COST_LEVEL (START_LEVEL + 5)
 

@@ -4,12 +4,10 @@
  $Date: 2002/05/22 01:35:59 $
  $Revision: 2.2 $
  */
+#pragma once
 
-#ifndef _MUD_INTLIST_H
-#define _MUD_INTLIST_H
-
-#include "essential.h"
 #include "bytestring.h"
+#include "essential.h"
 
 #include <string>
 
@@ -40,5 +38,3 @@ private:
     int *intlist;
     sbit32 length;
 };
-
-#endif

@@ -4,25 +4,9 @@
  $Date: 2003/01/02 23:39:20 $
  $Revision: 2.3 $
  */
+#pragma once
 
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
-#include "textutil.h"
-#include "comm.h"
-#include "spells.h"
-#include "handler.h"
-#include "vmelimits.h"
-#include "affect.h"
-
-#include "db.h"
-#include "interpreter.h"
-#include "utility.h"
-#include "common.h"
-#include "fight.h"
-
-#ifndef _MUD_MAGIC_H
-    #define _MUD_MAGIC_H
+#include "essential.h"
 
 /* #define MAGIC_POWER(ch)  \
    MAX(CHAR_MAG(ch), CHAR_DIV(ch)) */
@@ -49,5 +33,3 @@ int variation(int n, int d, int u);
 /*last two internal spells*/
 void spell_clear_skies(struct spell_args *sa);
 void spell_storm_call(struct spell_args *sa);
-
-#endif /* _MUD_MAGIC_H */

@@ -4,8 +4,7 @@
  $Date: 2002/06/09 23:27:40 $
  $Revision: 2.2 $
  */
-#ifndef _MUD_DILINST_H
-#define _MUD_DILINST_H
+#pragma once
 
 void dil_insterr(class dilprg *p, char *where);
 
@@ -82,4 +81,7 @@ void dilfe_sact(class dilprg *);
 void dilfe_gint(class dilprg *);
 void dilfe_shell(class dilprg *);
 void dilfi_dispatch(class dilprg *);
-#endif
+void dil_push_frame(class dilprg *p, struct diltemplate *rtmpl);
+void dil_start_special(class unit_data *unt, class dilprg *aprg);
+void dil_stop_special(class unit_data *unt, class dilprg *aprg);
+class unit_data *hometown_unit(char *str);

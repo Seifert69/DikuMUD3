@@ -5,17 +5,17 @@
  $Revision: 2.2 $
  */
 
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-
-#include "structs.h"
-#include "utils.h"
-#include "textutil.h"
-#include "interpreter.h"
+#include "comm.h"
 #include "db.h"
 #include "files.h"
-#include "comm.h"
+#include "interpreter.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 static int slime_count = 0;
 class file_index_type **slime_list = NULL;

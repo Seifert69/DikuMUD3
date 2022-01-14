@@ -5,11 +5,11 @@
  $Revision: 1.2 $
  */
 
-#include "structs.h"
-#include "namelist.h"
-#include "intlist.h"
 #include "dil.h"
 #include "dilrun.h"
+#include "intlist.h"
+#include "namelist.h"
+#include "structs.h"
 #include "utils.h"
 
 int g_nDilPrg = 0;
@@ -207,7 +207,6 @@ dilprg::~dilprg(void)
 
     FREE(this->frame);
 
-    void dil_free_template(struct diltemplate * tmpl, int copy);
     dil_free_template(tmpl, IS_SET(this->flags, DILFL_COPY));
 
     dilval *v;

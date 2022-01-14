@@ -5,32 +5,21 @@
  $Revision: 2.6 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <limits.h>
-#include <time.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "files.h"
-#include "skills.h"
-#include "common.h"
-#include "textutil.h"
-#include "comm.h"
-#include "interpreter.h"
-#include "handler.h"
-#include "db.h"
-#include "spells.h"
-#include "affect.h"
-#include "utility.h"
-#include "external_vars.h"
-#include "vmelimits.h"
 #include "account.h"
-#include "weather.h"
-#include "constants.h"
+#include "comm.h"
+#include "common.h"
 #include "dilrun.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "pcsave.h"
+#include "skills.h"
+#include "structs.h"
+#include "utility.h"
+#include "utils.h"
+#include "vmelimits.h"
+
+#include <cstring>
+#include <ctime>
 
 void do_save(class unit_data *ch, char *arg, const struct command_info *cmd)
 {

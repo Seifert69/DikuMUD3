@@ -6,40 +6,38 @@
  */
 
 #ifdef _WINDOWS
-    #include "telnet.h"
-    #include "winsock2.h"
-    #include <time.h>
     #include "string.h"
+    #include "telnet.h"
     #include "winbase.h"
+    #include "winsock2.h"
+
+    #include <time.h>
 #endif
 
-#ifdef LINUX
-    #include <unistd.h>
-    #include <arpa/telnet.h>
-#endif
-
-#include <cstdio>
-#include <cstring>
-#include <fcntl.h>
-#include <cerrno>
-#include <cctype>
-#include <cassert>
-#include <thread>
-
-#define MPLEX_COMPILE 1
+#include "ClientConnector.h"
+#include "MUDConnector.h"
+#include "color.h"
+#include "echo_server.h"
+#include "essential.h"
+#include "hook.h"
+#include "mplex.h"
 #include "network.h"
 #include "protocol.h"
-#include "essential.h"
+#include "queue.h"
 #include "textutil.h"
 #include "translate.h"
 #include "utility.h"
-#include "hook.h"
-#include "queue.h"
 
-#include "mplex.h"
-#include "ClientConnector.h"
-#include "color.h"
-#include "MUDConnector.h"
+#include <arpa/telnet.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#include <cassert>
+#include <cctype>
+#include <cerrno>
+#include <cstdio>
+#include <cstring>
+#include <thread>
 
 /*
    In Mplex main MotherHook is opened and put into CaptainHook.
@@ -142,8 +140,6 @@ void dumbMudDown(class cConHook *con, const char *cmd)
 
 void cConHook::MudDown(const char *cmd)
 {
-    void test_mud_up(void);
-
     char buf[200];
     sprintf(buf, "There is still no connection to %s.<br/>", g_mudname);
     SendCon(buf);
@@ -242,8 +238,6 @@ void cConHook::Unhook(void)
 
 void cConHook::Write(ubit8 *pData, ubit32 nLen, int bCopy)
 {
-    int ws_send_message(wsserver * s, websocketpp::connection_hdl hdl, const char *txt);
-
     if (this->m_pWebsServer)
     {
         assert(pData[nLen] == 0);
@@ -278,7 +272,6 @@ void cConHook::Close(int bNotifyMud)
 
     m_pWebsServer = 0;
 
-    void remove_gmap(class cConHook * con);
     remove_gmap(this);
 
     // Still have the issue that we ought to close the

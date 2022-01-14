@@ -4,13 +4,6 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.6 $
  */
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <string.h>
-#include <unistd.h>
-
 /* Per https://sourceforge.net/p/predef/wiki/OperatingSystems/, this identifies
  *  Mac OS X. This is needed since OS X doesn't have crypt.h and instead uses
  *  unistd.h for these mappings. */
@@ -20,21 +13,26 @@
     #include <crypt.h>
 #endif
 
-#include "structs.h"
-#include "utils.h"
-#include "interpreter.h"
-#include "handler.h"
-#include "db.h"
+#include "affect.h"
 #include "comm.h"
-#include "system.h"
+#include "common.h"
+#include "constants.h"
+#include "db.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "money.h"
+#include "nanny.h"
+#include "skills.h"
+#include "structs.h"
 #include "textutil.h"
 #include "utility.h"
-#include "trie.h"
-#include "affect.h"
-#include "common.h"
-#include "money.h"
-#include "constants.h"
-#include "skills.h"
+#include "utils.h"
+
+#include <unistd.h>
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #define UT_ROOM (1 << 0)
 #define UT_OBJ (1 << 1)
@@ -258,7 +256,7 @@ void edit_inside_descr(class descriptor_data *d)
 
 int search_block_set(char *arg, const char **list, bool exact)
 {
-    register int i, l;
+    int i, l;
 
     if (list == NULL)
         return -1;
@@ -404,8 +402,6 @@ void do_set(class unit_data *ch, char *argument, const struct command_info *cmd)
     class extra_descr_data *ed;
     class unit_data *unt;
     class unit_affected_type *aff;
-
-    int required_xp(int level);
 
     if (!CHAR_DESCRIPTOR(ch))
         return;

@@ -5,74 +5,69 @@ $RCSfile: dilexp.cpp,v $
 $Date: 2005/06/28 20:17:48 $
 $Revision: 2.18 $
 */
-#include "dbfind.h"
-#ifdef _WINDOWS
-    #include <direct.h>
-#endif
-#include "external_vars.h"
-#include "dilsup.h"
-#include <unistd.h>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <ctime>
-#include <cctype>
-#include <cstdarg> /* For type_check */
-#include <sys/stat.h>
-#include <cerrno>
-
 /* Per https://sourceforge.net/p/predef/wiki/OperatingSystems/, this identifies
  *  Mac OS X. This is needed since OS X doesn't have crypt.h and instead uses
  *  unistd.h for these mappings. */
 #if defined __APPLE__ && __MACH__
     #include <unistd.h>
-#elif defined LINUX
-    #include <crypt.h>
+#endif
+#ifdef _WINDOWS
+    #include <direct.h>
 #endif
 
-#include "structs.h"
-#include "handler.h"
-#include "textutil.h"
-#include "interpreter.h"
-#include "comm.h"
-#include "dil.h"
 #include "affect.h"
+#include "cmdload.h"
+#include "comm.h"
+#include "common.h"
+#include "db.h"
+#include "dbfind.h"
+#include "dil.h"
+#include "dilexp.h"
+#include "dilinst.h"
+#include "dilrun.h"
+#include "dilsup.h"
+#include "fight.h"
+#include "files.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "intlist.h"
+#include "justice.h"
+#include "magic.h"
+#include "modify.h"
+#include "money.h"
+#include "path.h"
+#include "pcsave.h"
+#include "reception.h"
+#include "skills.h"
+#include "spell_parser.h"
+#include "spells.h"
+#include "structs.h"
+#include "textutil.h"
+#include "trie.h"
 #include "utility.h"
 #include "utils.h"
-#include "db.h"
 #include "vmelimits.h"
-#include "common.h"
-#include "spells.h"
-#include "db_file.h"
-#include "dilexp.h"
-#include "dilrun.h"
-#include "money.h"
-#include "magic.h"
-#include "fight.h"
-#include "skills.h"
-#include "color.h"
-#include "files.h"
-#include "trie.h"
-#include "intlist.h"
-#include "combat.h"
-#include "movement.h"
-#include "justice.h"
+#include "weather.h"
+
+#include <crypt.h>
+#include <sys/stat.h>
+
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <string>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
-#include <iostream>
-
-#include <iomanip>
-
 #include <boost/regex.hpp>
-#include <string>
 
-struct time_info_data mud_date();
 /* ************************************************************************ */
 /* DIL-expressions							    */
 /* ************************************************************************ */
 
-void dilfe_illegal(register class dilprg *p)
+void dilfe_illegal(class dilprg *p)
 {
     szonelog(UNIT_FI_ZONE(p->sarg->owner),
              "DIL %s@%s, Illegal Expression/Instruction Node.\n",
@@ -83,7 +78,7 @@ void dilfe_illegal(register class dilprg *p)
 
 /* replace all old with new in  string 3
    replace(old, new, string 3)*/
-void dilfe_replace(register class dilprg *p)
+void dilfe_replace(class dilprg *p)
 {
     dilval *v = new dilval;
     // char *buf;
@@ -170,7 +165,7 @@ void dilfe_replace(register class dilprg *p)
     delete v3;
 }
 
-void dilfe_tolower(register class dilprg *p)
+void dilfe_tolower(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
@@ -204,7 +199,7 @@ void dilfe_tolower(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_toupper(register class dilprg *p)
+void dilfe_toupper(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
@@ -239,7 +234,7 @@ void dilfe_toupper(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_left(register class dilprg *p)
+void dilfe_left(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v2 = p->stack.pop();
@@ -300,7 +295,7 @@ void dilfe_left(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_right(register class dilprg *p)
+void dilfe_right(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v2 = p->stack.pop();
@@ -361,7 +356,7 @@ void dilfe_right(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_mid(register class dilprg *p)
+void dilfe_mid(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v3 = p->stack.pop();
@@ -1049,7 +1044,7 @@ void dilfe_ckpwd(class dilprg *p)
     delete v2;
 }
 
-void dilfe_atsp(register class dilprg *p)
+void dilfe_atsp(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v6 = p->stack.pop();
@@ -1174,7 +1169,7 @@ void dilfe_atsp(register class dilprg *p)
     delete v6;
 }
 
-void dilfe_cast2(register class dilprg *p)
+void dilfe_cast2(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v5 = p->stack.pop();
@@ -1276,12 +1271,11 @@ void dilfe_cast2(register class dilprg *p)
     delete v5;
 }
 
-void dilfe_resta(register class dilprg *p)
+void dilfe_resta(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    class unit_data *restore_all_unit(char *filename, unit_data *udest);
     char filename[512];
 
     v->type = DILV_UP;
@@ -1342,7 +1336,7 @@ void dilfe_resta(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_opro(register class dilprg *p)
+void dilfe_opro(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v2 = p->stack.pop();
@@ -1377,7 +1371,7 @@ void dilfe_opro(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_eqpm(register class dilprg *p)
+void dilfe_eqpm(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v2 = p->stack.pop();
@@ -1420,7 +1414,7 @@ void dilfe_eqpm(register class dilprg *p)
 }
 
 /* int meleeAttack(unit, unit, int, int) */
-void dilfe_mel(register class dilprg *p)
+void dilfe_mel(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v4 = p->stack.pop();
@@ -1493,7 +1487,7 @@ void dilfe_mel(register class dilprg *p)
 }
 
 /* int meleedamage(unit, unit, int, int) */
-void dilfe_meldam(register class dilprg *p)
+void dilfe_meldam(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v4 = p->stack.pop();
@@ -2715,8 +2709,6 @@ void dilfe_fits(class dilprg *p)
                             switch (dil_getval(v3))
                             {
                                 case DILV_INT:
-                                    char *obj_wear_size(class unit_data * ch, class unit_data * obj, int keyword);
-
                                     c = obj_wear_size((class unit_data *)v1->val.ptr, (class unit_data *)v2->val.ptr, v3->val.num);
 
                                     v->atyp = DILA_EXP;
@@ -2782,7 +2774,7 @@ void dilfe_intr(class dilprg *p)
     delete v1;
 }
 
-void dilfe_not(register class dilprg *p)
+void dilfe_not(class dilprg *p)
 {
     dilval *v = new dilval;
     ;
@@ -2796,7 +2788,7 @@ void dilfe_not(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_umin(register class dilprg *p)
+void dilfe_umin(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
@@ -2820,7 +2812,7 @@ void dilfe_umin(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_skitxt(register class dilprg *p)
+void dilfe_skitxt(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
@@ -2847,7 +2839,7 @@ void dilfe_skitxt(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_wpntxt(register class dilprg *p)
+void dilfe_wpntxt(class dilprg *p)
 {
     dilval *v = new dilval;
     /* weapon_name uses wpn_text values to return skill names for a skill */
@@ -2953,7 +2945,6 @@ void dilfe_isplayer(register class dilprg *p)
             {
                 v->type = DILV_INT;
                 v->atyp = DILA_NONE;
-                int find_player_id(char *pName);
                 if (find_player_id((char *)v1->val.ptr) != -1)
                     v->val.num = TRUE;
                 else
@@ -3344,12 +3335,10 @@ void dilfe_gint(register class dilprg *p)
                 break;
 
             case DIL_GINT_REQXP:
-                int required_xp(int level);
                 v->val.num = required_xp(p_i);
                 break;
 
             case DIL_GINT_LEVELXP:
-                int level_xp(int level);
                 v->val.num = level_xp(p_i);
                 break;
 
@@ -3361,7 +3350,6 @@ void dilfe_gint(register class dilprg *p)
                 break;
 
             case DIL_GINT_CRIMENO:
-                int new_crime_serial_no(void);
                 v->val.num = new_crime_serial_no();
                 break;
 
@@ -3433,8 +3421,6 @@ void dilfe_getw(register class dilprg *p)
         case DILV_SP:
             if (v1->val.ptr)
             {
-                char *str_next_word_copy(const char *argument, char *first_arg);
-
                 v->atyp = DILA_EXP;
                 v->type = DILV_SP;
                 c = str_next_word_copy((char *)v1->val.ptr, buf1);
@@ -4129,8 +4115,6 @@ void dilfe_call(register class dilprg *p)
                                             //
                                             // Push frame
                                             //
-                                            void dil_push_frame(class dilprg * p, struct diltemplate * rtmpl);
-
                                             p->stack.push(v2);
                                             p->stack.push(v3);
                                             p->stack.push(v4);

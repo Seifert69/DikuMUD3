@@ -5,29 +5,29 @@
  $Revision: 2.7 $
  */
 
-#include <cstdio>
-#include <ctime>
-#include <cstring>
-
-#include "structs.h"
-#include "utils.h"
-#include "textutil.h"
-#include "handler.h"
+#include "account.h"
+#include "affect.h"
 #include "comm.h"
 #include "db.h"
-#include "interpreter.h"
-#include "utility.h"
-#include "money.h"
-#include "files.h"
-#include "affect.h"
-#include "account.h"
 #include "db_file.h"
 #include "dilrun.h"
+#include "files.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "mobact.h"
+#include "money.h"
+#include "reception.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cstdio>
+#include <cstring>
+#include <ctime>
 
 // MS2020 sbit32 g_player_id = -1;
 sbit32 g_player_id = 1; // Looks to me like it needs to begin with 1 (crash on start)
-
-class descriptor_data *find_descriptor(const char *name, class descriptor_data *except);
 
 void assign_player_file_index(unit_data *pc)
 {
@@ -83,8 +83,6 @@ class unit_data *find_player(char *name)
 /* Return TRUE if deleted */
 int delete_inventory(const char *pName)
 {
-    char *ContentsFileName(const char *pName);
-
     if (remove(ContentsFileName(pName)))
         return FALSE;
 
@@ -94,8 +92,6 @@ int delete_inventory(const char *pName)
 /* Return TRUE if deleted */
 int delete_player(const char *pName)
 {
-    char *ContentsFileName(const char *pName);
-
     if (remove(PlayerFileName(pName)))
         return FALSE;
 
@@ -303,8 +299,6 @@ void save_player_contents(class unit_data *pc, int fast)
     amount_t daily_cost;
     currency_t cur = local_currency(pc);
 
-    int save_contents(const char *pFileName, class unit_data *unit, int fast, int bContainer);
-
     assert(IS_PC(pc));
 
     if (locked)
@@ -439,8 +433,6 @@ class unit_data *load_player(const char *pName)
 {
     FILE *pFile;
     class unit_data *pc;
-
-    void stop_all_special(class unit_data * u);
 
     if (str_is_empty(pName))
         return NULL;

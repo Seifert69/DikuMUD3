@@ -6,23 +6,21 @@
  */
 
 #ifdef _WINDOWS
+    #include "telnet.h"
+
     #include <string.h>
     #include <winsock.h>
-    #include "telnet.h"
 #endif
 
-#ifdef LINUX
-    #include <strings.h>
-    #include <arpa/telnet.h>
-#endif
-
-#include <assert.h>
-#include <stdio.h>
-
-#include "mplex.h"
 #include "ClientConnector.h"
-#include "ttydef.h"
+#include "mplex.h"
 #include "translate.h"
+#include "ttydef.h"
+
+#include <arpa/telnet.h>
+#include <strings.h>
+
+#include <cstdio>
 
 static ubit8 default_colours[3][24] = {
     /* Default (no change in table) */

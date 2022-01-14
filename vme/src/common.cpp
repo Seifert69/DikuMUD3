@@ -5,16 +5,14 @@
  $Revision: 2.4 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h> /* floor and pow */
-
-#include "structs.h"
-#include "utils.h"
 #include "common.h"
+
 #include "skills.h"
+#include "structs.h"
 #include "utility.h"
-#include "db.h"
+#include "utils.h"
+
+#include <cstdio>
 
 int g_possible_saves = 0;
 

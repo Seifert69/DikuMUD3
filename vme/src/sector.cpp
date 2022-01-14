@@ -1,13 +1,12 @@
-#include "essential.h"
-#include "db.h"
-#include "external_vars.h"
-
-#include <vector>
-#include <string>
-#include <queue>
-#include <fstream>
-#include "vme.h"
 #include "sector.h"
+
+#include "db.h"
+#include "essential.h"
+
+#include <fstream>
+#include <queue>
+#include <string>
+#include <vector>
 
 std::string cSector::get_name(int sector)
 {

@@ -4,9 +4,9 @@
  $Date: 2002/06/09 23:27:41 $
  $Revision: 2.1 $
  */
+#pragma once
 
-#ifndef _MUD_DILPAR_H
-#define _MUD_DILPAR_H
+#include "essential.h"
 
 #define DIL_VERSION "v5.10"
 
@@ -34,5 +34,3 @@ struct dilref
     ubit8 *argt; /* argument types */
     char **argv; /* argument names */
 };
-
-#endif /* _MUD_DILPAR_H */

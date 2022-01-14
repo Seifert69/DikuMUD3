@@ -1,16 +1,9 @@
-
 /*
  $Author: All $
  $RCSfile: nanny.cpp,v $
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.12 $
  */
-#include "external_vars.h"
-#include <cstdlib>
-#include <cctype>
-#include <cstdio>
-#include <arpa/inet.h>
-
 /* Per https://sourceforge.net/p/predef/wiki/OperatingSystems/, this identifies
  *  Mac OS X. This is needed since OS X doesn't have crypt.h and instead uses
  *  unistd.h for these mappings. */
@@ -19,48 +12,42 @@
 #elif defined LINUX
     #include <crypt.h>
 #endif
-
-#include "db.h"
-#include "badnames.h"
-#include "structs.h"
-#include "utils.h"
-#include "textutil.h"
-#include "comm.h"
-#include "system.h"
-#include "db.h"
-#include "utility.h"
-#include "handler.h"
-#include "interpreter.h"
-#include "ban.h"
-#include "money.h"
-#include "files.h"
-#include "protocol.h"
-#include "common.h"
-#include "affect.h"
-#include "vmelimits.h"
-#include "account.h"
-#include "trie.h"
-#include "constants.h"
-#include "main.h"
-#include "modify.h"
-#include "dilrun.h"
-#ifndef _WINDOWS
+#ifdef _WINDOWS
     #include <arpa/telnet.h>
 #endif
 
+#include "act_other.h"
+#include "affect.h"
+#include "badnames.h"
+#include "ban.h"
+#include "comm.h"
+#include "constants.h"
+#include "db.h"
+#include "dilinst.h"
+#include "dilrun.h"
+#include "files.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "main_functions.h"
+#include "nanny.h"
+#include "pcsave.h"
+#include "reception.h"
+#include "structs.h"
+#include "system.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+#include "vmelimits.h"
+
+#include <arpa/inet.h>
+
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+
 #define STATE(d) ((d)->state)
 
-void enter_game(class unit_data *ch, int dilway = FALSE);
-void start_all_special(class unit_data *u);
-void stop_all_special(class unit_data *u);
 int g_dilmenu;
-void nanny_get_name(class descriptor_data *d, char *arg);
-void set_descriptor_fptr(class descriptor_data *d, void (*fptr)(class descriptor_data *, char *), ubit1 call);
-void nanny_menu(class descriptor_data *d, char *arg);
-void nanny_new_pwd(class descriptor_data *d, char *arg);
-void multi_close(struct multi_element *pe);
-int player_exists(const char *pName);
-void save_player_file(class unit_data *ch);
 
 char *m_pBadNames = NULL;
 char *m_pBadStrings = NULL;
@@ -273,9 +260,6 @@ void update_lasthost(class unit_data *pc, ubit32 s_addr)
 //
 void pc_data::gstate_tomenu(dilprg *pdontstop)
 {
-    void dil_stop_special(class unit_data * unt, class dilprg * aprg);
-    void stop_snoopwrite(unit_data * unit);
-
     if (this->is_destructed())
         return;
 
@@ -320,9 +304,6 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     char buf[256];
     time_t last_connect = PC_TIME(this).connect;
     // char *color;
-
-    char *ContentsFileName(const char *);
-    void dil_start_special(class unit_data * unt, class dilprg * aprg);
 
     if (this->is_destructed())
         return;
@@ -376,10 +357,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     /* New player stats. Level can be zero after reroll while ID is not. */
     if ((CHAR_LEVEL(this) == 0) && PC_IS_UNSAVED(this))
     {
-        void start_player(class unit_data * ch);
         slog(LOG_BRIEF, 0, "%s[%s] (GUEST) has entered the game.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->host);
-
-        sbit32 new_player_id(void);
 
         PC_ID(this) = new_player_id();
 
@@ -392,8 +370,6 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     }
     if (file_exists(ContentsFileName(PC_FILENAME(this))))
     {
-        ubit32 rent_calc(class unit_data * ch, time_t savetime);
-
         load_contents(PC_FILENAME(this), this);
 
         if (!DILWAY)
@@ -661,7 +637,6 @@ void nanny_pwd_confirm(class descriptor_data *d, char *arg)
         descriptor_close(td, TRUE, TRUE);
     }
 
-    void assign_player_file_index(unit_data * pc);
     assign_player_file_index(d->character);
 
     /* See if guest is in game, if so - a guest was LD       */

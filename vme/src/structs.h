@@ -4,29 +4,31 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.9 $
  */
+#pragma once
 
-#ifndef _MUD_STRUCTS_H
-#define _MUD_STRUCTS_H
-#include <forward_list>
-#include "event.h"
-#include "essential.h"
-#include "values.h"
-#include "protocol.h"
-#include "queue.h"
-#include "combat.h"
-#include "extra.h"
-#include "system.h"
-#include "fight.h"
 #include "color.h"
+#include "combat.h"
 #include "destruct.h"
 #include "dil.h"
+#include "essential.h"
+#include "event.h"
+#include "extra.h"
+#include "fight.h"
+#include "protocol.h"
+#include "queue.h"
+#include "system.h"
+#include "values.h"
+
 #include <vme.h>
-#include <vector>
+
+#include <forward_list>
 #include <map>
+#include <vector>
 #ifndef MPLEX_COMPILE
-    #include <boost/graph/graph_traits.hpp>
     #include <boost/graph/adjacency_list.hpp>
+    #include <boost/graph/graph_traits.hpp>
 #endif
+
 #define FI_MAX_ZONENAME 30 /* Max length of any zone-name    */
 #define FI_MAX_UNITNAME 15 /* Max length of any unit-name    */
 
@@ -540,7 +542,11 @@ public:
 #define DR_AFFECT 1
 #define DR_FUNC 2
 
-int is_destructed(int i, void *ptr);
 unit_data *new_unit_data(ubit8 type);
 
-#endif /* _MUD_STRUCTS_H */
+extern int g_world_nochars;
+extern int g_world_nonpc;
+extern int g_world_noobjects;
+extern int g_world_norooms;
+extern int g_world_nopc;
+extern int g_world_nozones;

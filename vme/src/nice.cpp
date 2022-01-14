@@ -5,11 +5,11 @@
  $Revision: 2.2 $
  */
 
-#include "external_vars.h"
-#include <cstdio>
-
-#include "db.h"
 #include "comm.h"
+#include "db.h"
+#include "main_functions.h"
+
+#include <cstdio>
 
 #define REBOOT_AT 10 /* 0-23, time of optional reboot if -e lib/reboot */
 

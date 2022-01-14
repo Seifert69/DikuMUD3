@@ -5,15 +5,13 @@
  $Revision: 2.3 $
  */
 
-#include <stdlib.h>
-
-#include "utils.h"
-#include "structs.h"
-#include "vmelimits.h"
-#include "skills.h"
-#include "protocol.h"
 #include "constants.h"
+
+#include "protocol.h"
+#include "skills.h"
 #include "values.h"
+
+#include <cstdlib>
 
 /* ---------------------------------------------------------------------- */
 /*                         M O V E M E N T                                */

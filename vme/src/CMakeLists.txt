@@ -1,18 +1,17 @@
 set(VME_SRCS
         account.cpp account.h
-        act.h
-        act_change.cpp
-        act_color.cpp
-        act_info.cpp
-        act_movement.cpp
-        act_offensive.cpp
-        act_other.cpp
-        act_skills.cpp
-        act_wizard.cpp
-        act_wstat.cpp
+        act_change.cpp act_change.h
+        act_color.cpp act_color.h
+        act_info.cpp act_info.h
+        act_movement.cpp act_movement.h
+        act_offensive.cpp act_offensive.h
+        act_other.cpp act_other.h
+        act_skills.cpp act_skills.h
+        act_wizard.cpp act_wizard.h
+        act_wstat.cpp act_wstat.h
         affect.cpp affect.h
         affectdil.h
-        apf_affect.cpp
+        apf_affect.cpp apf_affect.h
         badnames.cpp badnames.h
         ban.cpp ban.h
         bank.cpp bank.h
@@ -25,26 +24,24 @@ set(VME_SRCS
         compile_defines.h
         config.cpp config.h
         constants.cpp constants.h
-        convert.cpp
+        convert.cpp convert.h
         db.cpp db.h
         db_file.cpp db_file.h
-        db_utils.cpp
         dbfind.cpp dbfind.h
         destruct.cpp destruct.h
-        dictionary.cpp
+        dictionary.cpp dictionary.h
         diku_exception.h
         dil.h
         dilexp.cpp dilexp.h
         dilfld.cpp
         dilinst.cpp dilinst.h
         dilrun.cpp dilrun.h
-        dilshare.cpp
+        dilshare.cpp dilshare.h
         dilsup.cpp dilsup.h
-        eliza.cpp
+        eliza.cpp eliza.h
         essential.h
         event.cpp event.h
-        experience.cpp
-        external_vars.h
+        experience.cpp experience.h
         extra.cpp extra.h
         fight.cpp fight.h
         files.cpp files.h
@@ -55,47 +52,46 @@ set(VME_SRCS
         interpreter.cpp interpreter.h
         intlist.cpp intlist.h
         justice.cpp justice.h
-        limits.cpp
         magic.cpp magic.h
         main.h
-        main_functions.cpp
+        main_functions.cpp main_functions.h
         membug.cpp membug.h
         mobact.cpp mobact.h
         modify.cpp modify.h
         money.cpp money.h
         movement.h
         namelist.cpp namelist.h
-        nanny.cpp
-        nice.cpp
+        nanny.cpp nanny.h
+        nice.cpp nice.h
         path.cpp path.h
-        pcsave.cpp
-        pipe.cpp
+        pcsave.cpp pcsave.h
+        pipe.cpp pipe.h
         protocol.cpp protocol.h
         queue.cpp queue.h
-        reception.cpp
+        reception.cpp reception.h
         sector.cpp sector.h
-        signals.cpp
+        signals.cpp signals.h
         skills.cpp skills.h
-        slime.cpp
+        slime.cpp slime.h
         spec_assign.cpp spec_assign.h
-        spec_procs.cpp
-        spell_parser.cpp
+        spec_procs.cpp spec_procs.h
+        spell_parser.cpp spell_parser.h
         spells.h
         str_parse.cpp str_parse.h
         structs.cpp structs.h
         system.cpp system.h
-        teach.cpp
+        teach.cpp teach.h
         textutil.cpp textutil.h
-        tif_affect.cpp
+        tif_affect.cpp tif_affect.h
         trie.cpp trie.h
         unitfind.cpp unitfind.h
         utility.cpp utility.h
         utils.h
-        vmelimits.h
+        vmelimits.cpp vmelimits.h
         weather.cpp weather.h
-        zon_basis.cpp
-        zon_wiz.cpp
-        zone_reset.cpp
+        zon_basis.cpp zon_basis.h
+        zon_wiz.cpp zon_wiz.h
+        zone_reset.cpp zone_reset.h
         )
 
 # Add all sources to a library file so we can link with other projects and test suites
@@ -107,6 +103,7 @@ target_include_directories(vme_objs
 
 add_executable(vme main.cpp)
 target_compile_definitions(vme PUBLIC DMSERVER LINUX POSIX)
+target_include_directories(vme_objs PUBLIC ${CMAKE_SOURCE_DIR}/vme/include)
 target_link_libraries(vme
         vme_objs
         crypt

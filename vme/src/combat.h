@@ -4,11 +4,9 @@
  $Date: 2001/04/29 03:46:05 $
  $Revision: 2.1 $
  */
+#pragma once
 
-#ifndef _MUD_COMBAT_H
-#define _MUD_COMBAT_H
-
-#ifdef __cplusplus
+#include "essential.h"
 
 class cCombatList
 {
@@ -66,15 +64,10 @@ private:
     char cmd[MAX_INPUT_LENGTH + 1]; // A combat command
 };
 
-extern class cCombatList g_CombatList;
-
 void set_fighting(class unit_data *ch, class unit_data *vict, int bMelee = FALSE);
 void add_fighting(class unit_data *ch, class unit_data *vict, int bMelee = FALSE);
 void stop_fighting(class unit_data *ch, class unit_data *victim = NULL);
-
 void stat_combat(class unit_data *ch, class unit_data *u, const char *pStr);
 void stat_spell(class unit_data *god, class unit_data *u, const char *pStr);
 
-#endif
-
-#endif
+extern class cCombatList g_CombatList;

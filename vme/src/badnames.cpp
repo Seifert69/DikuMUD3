@@ -5,10 +5,13 @@
  $Revision: 2.2 $
  */
 #include "badnames.h"
-#include <ctype.h>
-#include "structs.h"
+
 #include "essential.h"
-#include "string.h"
+#include "structs.h"
+
+#include <cctype>
+#include <cstring>
+
 badnames_list::badnames_list(void)
 {
     next = NULL;

@@ -5,16 +5,23 @@
  $Revision: 2.4 $
  */
 
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
+#include "affect.h"
+#include "comm.h"
+#include "experience.h"
+#include "handler.h"
+#include "interpreter.h"
 #include "magic.h"
+#include "skills.h"
+#include "structs.h"
+#include "textutil.h"
+#include "unitfind.h"
+#include "utils.h"
 
-void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
 /*
  * coded: Mon Jun 22 00:22:44 MET DST 1992 [HH]
  * tested: No
  */
+void do_backstab(class unit_data *ch, char *arg, const struct command_info *cmd)
 {
     class unit_affected_type af, *paf = NULL;
     class unit_data *vict, *stabber;

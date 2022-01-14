@@ -4,26 +4,26 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.3 $
  */
-#include "external_vars.h"
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-
-#include "structs.h"
-#include "utils.h"
-#include "skills.h"
 #include "comm.h"
 #include "db.h"
-#include "interpreter.h"
-#include "spells.h"
-#include "handler.h"
-#include "textutil.h"
-#include "utility.h"
 #include "dilrun.h"
-#include "magic.h"
-#include "justice.h"
 #include "files.h"
+#include "handler.h"
+#include "interpreter.h"
+#include "justice.h"
+#include "magic.h"
+#include "modify.h"
+#include "skills.h"
+#include "spells.h"
+#include "structs.h"
+#include "textutil.h"
 #include "trie.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 struct spell_info_type g_spell_info[SPL_TREE_MAX];
 
@@ -53,8 +53,6 @@ ubit1 spell_legal_type(int spl, int type)
 /* above. Useable with for example wand checks to see if target is legal  */
 ubit1 spell_legal_target(int spl, class unit_data *caster, class unit_data *target)
 {
-    int pk_test(class unit_data * att, class unit_data * def, int message);
-
     if (IS_SET(g_spell_info[spl].targets, TAR_IGNORE))
         return TRUE;
 
@@ -840,8 +838,6 @@ void spell_dump(void)
 {
     std::string str;
     char buf[MAX_STRING_LENGTH];
-
-    bool pairISCompare(const std::pair<int, std::string> &firstElem, const std::pair<int, std::string> &secondElem);
 
     for (int j = 0; j < PROFESSION_MAX; j++)
     {

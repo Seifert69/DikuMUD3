@@ -5,28 +5,19 @@
  $Revision: 2.4 $
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "structs.h"
-#include "utils.h"
-#include "handler.h"
-#include "comm.h"
-#include "spells.h"
-#include "skills.h"
 #include "affect.h"
-#include "db.h"
+#include "handler.h"
+#include "modify.h"
+#include "skills.h"
+#include "structs.h"
 #include "utility.h"
-#include "interpreter.h"
-#include "magic.h"
-#include "common.h"
+#include "utils.h"
 #include "vmelimits.h"
+
+#include <cstring>
 
 ubit1 raw_destruct_affect(class unit_affected_type *af)
 {
-    void unlink_affect(class unit_affected_type * af);
-
     unlink_affect(af); /* registers and frees later */
     return FALSE;      /* CANCEL */
 }

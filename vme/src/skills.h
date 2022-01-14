@@ -4,17 +4,20 @@
  $Date: 2003/11/29 03:31:16 $
  $Revision: 2.4 $
  */
+#pragma once
 
-#ifndef _MUD_SKILLS_H
-#define _MUD_SKILLS_H
+#include "essential.h"
+#include "values.h"
+
+#include <csignal>
+#include <string>
+#include <utility>
 
 struct skill_interval
 {
     int skill;
     const char *descr;
 };
-
-extern const char *g_professions[PROFESSION_MAX + 1];
 
 class skill_collection
 {
@@ -35,11 +38,6 @@ struct profession_cost
     ubit8 min_abil[ABIL_TREE_MAX];
     sbit8 profession_cost[PROFESSION_MAX]; // 0 is middle, +1 easier to learn, -1 more dificult, etc.
 };
-
-int get_racial_ability(int nRace, int nAbility);
-int get_racial_weapon(int nRace, int nWeapon);
-int get_racial_skill(int nRace, int nSkill);
-int get_racial_spells(int nRace, int nSpell);
 
 /* ---------------- COMBAT MESSAGE SYSTEM -------------------- */
 
@@ -140,7 +138,6 @@ inline int open100(void)
 
 int skillchecksa(class unit_data *u, int skillidx, int abiidx, int difficulty);
 int resistance_skill_check(int att_skill1, int def_skill1, int att_skill2, int def_skill2);
-int resistance_level_check(int att_level, int def_level, int att_skill, int def_skill);
 
 int weapon_fumble(class unit_data *weapon, int roll);
 int chart_damage(int roll, struct damage_chart_element_type *element);
@@ -148,59 +145,32 @@ int chart_size_damage(int roll, struct damage_chart_element_type *element, int l
 int weapon_damage(int roll, int weapon_type, int armour_type);
 int natural_damage(int roll, int weapon_type, int armour_type, int lbs);
 
-int basic_char_tgh_absorb(class unit_data *ch);
-int basic_armor_absorb(class unit_data *armour, int att_type);
-int basic_char_absorb(class unit_data *ch, class unit_data *armor, int att_type);
-
-int basic_char_weapon_dam(class unit_data *ch, class unit_data *weapon);
-int basic_char_hand_dam(class unit_data *ch);
-int char_weapon_dam(class unit_data *ch, class unit_data *weapon);
-int char_hand_dam(class unit_data *ch);
-
-int relative_level(int l1, int l2);
 int weapon_defense_skill(class unit_data *ch, int skill);
 int weapon_attack_skill(class unit_data *ch, int skill);
 int weapon_attack_ability(class unit_data *ch, int skill);
 int hit_location(class unit_data *att, class unit_data *def);
 int effective_dex(class unit_data *ch);
 
-int av_value(int abila, int abilb, int skilla, int skillb);
-int av_howmuch(int av);
-int av_makes(int av);
-void check_fitting(class unit_data *u);
+bool pairISCompare(const std::pair<int, std::string> &firstElem, const std::pair<int, std::string> &secondElem);
+void boot_ability(void);
+void boot_profession(void);
+void boot_race(void);
+void boot_skill(void);
+void boot_weapon(void);
 
+int get_racial_ability(int nRace, int nAbility);
+int get_racial_weapon(int nRace, int nWeapon);
+int get_racial_skill(int nRace, int nSkill);
+int get_racial_spells(int nRace, int nSpell);
+
+extern struct diltemplate *g_nanny_dil_tmpl;
+extern struct diltemplate *g_playerinit_tmpl;
+extern struct wpn_info_type g_wpn_info[];
+extern const char *g_professions[PROFESSION_MAX + 1];
+extern int g_hit_location_table[];
 extern struct race_info_type g_race_info[PC_RACE_MAX];
 extern const char *g_pc_races[PC_RACE_MAX + 1];
 extern const char *g_pc_race_adverbs[PC_RACE_MAX + 1];
 
 extern struct damage_chart_type g_weapon_chart[WPN_TREE_MAX];
 extern struct damage_chart_type g_spell_chart[SPL_TREE_MAX];
-/*
-extern struct profession_cost spell_prof_table[SPL_TREE_MAX + 1];
-extern struct profession_cost skill_prof_table[SKI_TREE_MAX + 1];
-extern struct profession_cost weapon_prof_table[WPN_TREE_MAX + 1];
-extern struct profession_cost ability_prof_table[ABIL_TREE_MAX + 1];
-
-extern sbit8 racial_ability[PC_RACE_MAX][ABIL_TREE_MAX +1];
-extern sbit8 racial_weapons[PC_RACE_MAX][WPN_TREE_MAX + 1];
-extern sbit8 racial_skills[PC_RACE_MAX][SKI_TREE_MAX + 1];
-extern sbit8 racial_spells[PC_RACE_MAX][SPL_TREE_MAX + 1];
-
-extern struct tree_type wpn_tree[WPN_TREE_MAX + 1];
-extern struct tree_type spl_tree[SPL_TREE_MAX + 1];
-extern struct tree_type ski_tree[SKI_TREE_MAX + 1];
-extern struct tree_type abil_tree[ABIL_TREE_MAX + 1];
-
-extern const char *wpn_text[WPN_TREE_MAX + 1];
-extern const char *spl_text[SPL_TREE_MAX + 1];
-extern const char *ski_text[SKI_TREE_MAX + 1];
-extern const char *abil_text[ABIL_TREE_MAX + 1];
-*/
-extern int g_hit_location_table[];
-
-extern class skill_collection g_AbiColl;
-extern class skill_collection g_WpnColl;
-extern class skill_collection g_SkiColl;
-extern class skill_collection g_SplColl;
-
-#endif /* _MUD_SKILLS_H */

@@ -4,7 +4,7 @@ set(VMC_SRCS
         dilpar.h
         diltok.h
         vmc.cpp vmc.h
-        vmc_process.cpp
+        vmc_process.cpp vmc_process.h
         vmctok.h
         # Source files from other parts to link with vmc
         ../bytestring.cpp ../bytestring.h
@@ -72,10 +72,14 @@ set_target_properties(vmc_objs
 
 add_executable(vmc main.cpp)
 target_compile_definitions(vmc PUBLIC VMC_SRC VMC MUD_DEBUG)
+target_link_options(vmc PUBLIC -Wl,-zmuldefs) # TODO Come back and see if this can be removed
 target_link_libraries(vmc
         vmc_objs
         pp_objs
+        vme_objs
         ${FLEX_LIBRARIES}
+        crypt
+        Boost::filesystem
         )
 target_include_directories(vmc
         PRIVATE . ${CMAKE_SOURCE_DIR}/vme/src ${CMAKE_SOURCE_DIR}/vme/src/pp

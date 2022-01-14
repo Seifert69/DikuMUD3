@@ -1,12 +1,9 @@
-#include <websocketpp/config/asio_no_tls.hpp>
-
-#include <websocketpp/server.hpp>
-
-#include <iostream>
-
-#include "mplex.h"
 #include "ClientConnector.h"
+#include "mplex.h"
 #include "textutil.h"
+
+#include <websocketpp/config/asio_no_tls.hpp>
+#include <websocketpp/server.hpp>
 
 // typedef websocketpp::server<websocketpp::config::asio> wsserver;
 

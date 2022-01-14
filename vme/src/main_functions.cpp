@@ -4,29 +4,34 @@
  $Date: 2004/09/18 19:52:56 $
  $Revision: 2.10 $
  */
-#include "external_vars.h"
-#include <cstdlib>
-#include <cstdio>
-#include <cctype>
-#include <cstring>
+#include "main_functions.h"
+
+#include "comm.h"
+#include "compile_defines.h"
+#include "db.h"
+#include "dilrun.h"
+#include "files.h"
+#include "handler.h"
+#include "hookmud.h"
+#include "interpreter.h"
+#include "nanny.h"
+#include "nice.h"
+#include "path.h"
+#include "pcsave.h"
+#include "pipe.h"
+#include "signals.h"
+#include "structs.h"
+#include "system.h"
+#include "utils.h"
+
 #include <pthread.h>
+#include <sys/resource.h>
+#include <sys/time.h>
 #include <unistd.h>
 
-#include "structs.h"
-#include "utils.h"
-#include "utility.h"
-#include "handler.h"
-#include "system.h"
-#include "comm.h"
-#include "db.h"
-#include "interpreter.h"
-#include "main.h"
-#include "textutil.h"
-#include "files.h"
-#include "hookmud.h"
-#include "dilrun.h"
-#include "diku_exception.h"
-#include "compile_defines.h"
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #define OPT_USEC 250000L     /* time delay corresponding to 4 passes/sec */
 long g_nTickUsec = OPT_USEC; // Dont mess with this, it's the game heartbeat. Look at 'timewarp'
@@ -55,39 +60,9 @@ int g_tics = 60;        /* number of tics since boot-time */
 
 char g_world_boottime[64] = ""; /* boottime of world */
 
-/* external functions */
-void string_add(class descriptor_data *d, char *str);
-
-void boot_db(void);
-
-/* local functions */
-
-void game_loop(void);
-struct timeval timediff(struct timeval *a, struct timeval *b);
-
-/* local events */
-void game_event();
-void ping_multiplexers_event(void *, void *);
-void check_idle_event(void *, void *);
-void perform_violence_event(void *, void *);
-// void point_update_event(void *, void *);
-// void update_crimes_event(void *, void *);
-// void update_crimes();
-void check_reboot_event(void *, void *);
-void check_overpopulation_event(void *p1, void *p2);
-int check_reboot();
-
 /* ******************************************************************* *
  *             main game loop and related stuff                        *
  * ******************************************************************* */
-
-#ifdef LINUX
-    #include <sys/time.h>
-    #include <sys/resource.h>
-
-/* int setrlimit(int, struct rlimit *); */
-int getrlimit(int, struct rlimit *);
-#endif
 
 const char *g_compile_date = __DATE__;
 const char *g_compile_time = __TIME__;
@@ -118,9 +93,6 @@ void run_the_game(char *srvcfg)
 #ifdef PROFILE
     extern char g_etext;
 #endif
-
-    void signal_setup(void);
-
     /*
      * If you want BOOT TIME included in the PROFILE, use
      * monstartup HERE! Otherwise it defaults to the one below.
@@ -145,7 +117,6 @@ void run_the_game(char *srvcfg)
     signal_setup();
 
     slog(LOG_OFF, 0, "Named pipe setup.");
-    void namedpipe_setup(void);
     namedpipe_setup();
 
     boot_db();
@@ -183,7 +154,6 @@ void run_the_game(char *srvcfg)
 #endif
 
     fclose_cache();
-    void db_shutdown(void);
     db_shutdown();
 
     if (g_mud_reboot)
@@ -203,7 +173,6 @@ void game_loop()
     struct timeval now, old;
     long delay;
     class descriptor_data *d = NULL;
-    void clear_destructed(void);
     std::string str;
 
     g_tics = 61;
@@ -214,7 +183,6 @@ void game_loop()
         /* work */
         game_event();
 
-        int pipeMUD_read(std::string & str);
         pipeMUD_read(str);
 
         g_events.process();
@@ -274,8 +242,6 @@ void game_event(void)
     char *pcomm = NULL;
     class descriptor_data *point;
     static struct timeval null_time = {0, 0};
-    void multi_close(struct multi_element * pe);
-    void multi_clear(void);
 
     i = g_CaptainHook.Wait(&null_time);
 
@@ -328,8 +294,6 @@ void game_event(void)
 
 void ping_multiplexers_event(void *p1, void *p2)
 {
-    void multi_ping_all(void);
-
     multi_ping_all();
 
     g_events.add(PULSE_SEC * 5, ping_multiplexers_event, 0, 0);
@@ -337,8 +301,6 @@ void ping_multiplexers_event(void *p1, void *p2)
 
 void check_idle_event(void *p1, void *p2)
 {
-    void check_idle(void);
-
     check_idle();
     g_events.add(PULSE_ZONE, check_idle_event, 0, 0);
 }

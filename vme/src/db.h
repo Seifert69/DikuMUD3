@@ -4,14 +4,14 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.10 $
  */
+#pragma once
 
-#ifndef _MUD_DB_H
-#define _MUD_DB_H
-
-#include "structs.h"
 #include "bytestring.h"
-#include "dbfind.h"
 #include "config.h"
+#include "dbfind.h"
+#include "sector.h"
+#include "structs.h"
+
 #include <map>
 #include <string>
 
@@ -85,16 +85,11 @@ struct zone_info_type
 class unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *whom, int stspec = TRUE);
 void read_unit_file(class file_index_type *org_fi, CByteBuffer *pBuf);
 class unit_data *read_unit(class file_index_type *fi, int ins_list = TRUE);
-void free_unit(class unit_data *ch);
-void free_extra_descr(class extra_descr_data *ex);
-void free_extra_descr_list(class extra_descr_data *ex);
 char *read_info_file(const char *name, char *oldstr);
 char *read_info_file(const std::string &name, char *oldstr);
-
-class extra_descr_data *create_extra_descr(void);
-class unit_data *create_unit(ubit8 type);
-
-/* --- The globals of db.c --- */
+void boot_db(void);
+void db_shutdown(void);
+int bread_affect(CByteBuffer *pBuf, class unit_data *u, ubit8 nVersion);
 
 extern int g_room_number;
 extern class unit_data *g_unit_list;
@@ -103,5 +98,4 @@ extern class unit_data *g_npc_head;
 extern class unit_data *g_obj_head;
 extern struct zone_info_type g_zone_info;
 extern const char *g_player_zone;
-
-#endif /* _MUD_DB_H */
+extern cSector g_sector_dat;

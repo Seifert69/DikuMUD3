@@ -5,24 +5,22 @@
  $Revision: 2.2 $
  */
 
-#include <ctime>
-#include <cstring>
+#include "ban.h"
+
+#include "comm.h"
+#include "db.h"
+#include "files.h"
+#include "interpreter.h"
+#include "structs.h"
+#include "textutil.h"
+
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
+#include <ctime>
 
-#include "structs.h"
-#include "comm.h"
-#include "textutil.h"
-#include "interpreter.h"
-#include "db.h"
-#include "ban.h"
-#include "files.h"
-
-#ifndef DOS
-/* Kindly left out of time.h by <Insert_Unix_Vendor> */
-size_t strftime(char *s, size_t smax, const char *fmt, const struct tm *tp);
-#endif
+const std::string BAN_FILE{"ban_list"};
 
 struct ban_t
 {

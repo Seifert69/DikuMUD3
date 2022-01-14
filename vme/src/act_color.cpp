@@ -5,21 +5,19 @@
  $Revision: 2.6 $
  */
 
+#include "act_color.h"
+
+#include "comm.h"
+#include "common.h"
+#include "db.h"
+#include "interpreter.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+
 #include <cstdio>
 #include <cstring>
-
-#include "structs.h"
-#include "utils.h"
-#include "comm.h"
-#include "interpreter.h"
-#include "db.h"
-#include "affect.h"
-#include "utility.h"
-#include "textutil.h"
-#include "constants.h"
-
-int is_forground(char *cstr);
-int is_background(char *cstr);
 
 void do_color(class unit_data *ch, char *aaa, const struct command_info *cmd)
 {

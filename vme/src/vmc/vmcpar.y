@@ -12,7 +12,6 @@
 #include "vmc.h"
 #include "dil.h"
 #include "utils.h"
-#include "external_vars.h"
 #include "textutil.h"
 #include "money.h"
 #include "db_file.h"

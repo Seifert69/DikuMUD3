@@ -6,14 +6,15 @@
  */
 
 #include "structs.h"
-#include "utils.h"
-#include "main.h"
-#include "handler.h"
+
+#include "affect.h"
 #include "color.h"
 #include "db.h"
 #include "db_file.h"
-#include "affect.h"
+#include "handler.h"
+#include "mobact.h"
 #include "textutil.h"
+#include "utils.h"
 
 int g_world_norooms = 0;   /* number of rooms in the world   */
 int g_world_noobjects = 0; /* number of objects in the world */
@@ -456,7 +457,6 @@ unit_data *unit_data::copy()
         assert(FALSE);
     insert_in_unit_list(u); /* Put unit into the g_unit_list      */
     apply_affect(u);        /* Set all affects that modify      */
-    void start_all_special(class unit_data * u);
     start_all_special(u);
 
     return u;
@@ -512,8 +512,6 @@ unit_data::unit_data(void)
 
 unit_data::~unit_data(void)
 {
-    void unlink_affect(class unit_affected_type * af);
-
     /* Sanity due to wierd bug I saw (MS, 30/05-95) */
 
 #ifdef DMSERVER

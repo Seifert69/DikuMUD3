@@ -4,35 +4,31 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.7 $
  */
-#include "external_vars.h"
-#include <cstdlib>
+#include "affect.h"
+#include "db.h"
+#include "db_file.h"
+#include "handler.h"
+#include "nanny.h"
+#include "pcsave.h"
+#include "reception.h"
+#include "structs.h"
+#include "textutil.h"
+#include "utils.h"
+#include "zon_basis.h"
+
+#include <dirent.h>
+
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <ctime>
+#include <iostream>
+#include <string>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
-#include <iostream>
 
 namespace fs = boost::filesystem;
-
-#include <fstream>
-
-#include "structs.h"
-#include "utils.h"
-#include "textutil.h"
-#include "db_file.h"
-#include "db.h"
-#include "handler.h"
-#include "affect.h"
-
-int required_xp(int level);
-
-int save_contents(const char *pFileName, class unit_data *unit, int fast, int bContainer);
-int player_exists(const char *pName);
-int delete_player(const char *pName);
-int delete_inventory(const char *pName);
-void save_player_file(class unit_data *pc);
 
 char player_directory[1024] = "\0";
 int max_id = -1;
@@ -41,10 +37,6 @@ ubit8 *ids = NULL; /* For checking duplicate players... */
 
 #define OUTPUT_DIR "lib/"
 
-#include <dirent.h>
-#include <string>
-
-int sel_name(const struct dirent *dptr);
 int sel_name(const struct dirent *dptr)
 {
     if (strchr(dptr->d_name, '.') == NULL)
@@ -164,8 +156,6 @@ void convert_player(class unit_data *pc)
 /* Return TRUE if Ok. */
 int sanity_check(class unit_data *u)
 {
-    void race_adjust(class unit_data * ch);
-
     if (g_nCorrupt == TRUE)
     {
         printf("Corrupted unit in READ.");
@@ -251,7 +241,6 @@ int shall_delete(class unit_data *pc)
 int shall_exclude(const char *name)
 {
     char buf[256];
-    int _parse_name(const char *arg, char *name);
     int result = 0;
 
     result = _parse_name(name, buf);
@@ -336,10 +325,6 @@ const char *isodate(struct tm *t)
 
 void clist()
 {
-    /* external functs */
-    struct time_info_data age(class unit_data * ch);
-    struct time_info_data real_time_passed(time_t t2, time_t t1);
-
     std::string ipath;
     /*
         std::cout << "\nEnter the full path to the root player directory for example '/home/mud/vme2.0/lib/ply' or \n<enter> for the one
@@ -718,8 +703,6 @@ void cleanup(void)
 
 void cleanup_playerfile(int c)
 {
-    int read_player_id(void);
-
     top_id = read_player_id();
     CREATE(ids, ubit8, top_id + 1);
 

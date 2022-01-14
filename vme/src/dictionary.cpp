@@ -4,21 +4,22 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.4 $
  */
+#include "dictionary.h"
 
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <cctype>
-
-#include "structs.h"
-#include "utils.h"
 #include "comm.h"
-#include "textutil.h"
-#include "interpreter.h"
-#include "utility.h"
-#include "trie.h"
-#include "queue.h"
 #include "config.h"
+#include "interpreter.h"
+#include "queue.h"
+#include "structs.h"
+#include "textutil.h"
+#include "trie.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #define MAX_ALIAS_LENGTH 10  /* Max length of alias */
 #define MAX_ALIAS_COUNT 2000 /* Max room for string saved to file */

@@ -9,22 +9,20 @@
 #ifdef _WINDOWS
     #include <direct.h>
     #include <io.h>
-
-#else
-    #include <unistd.h>
-
 #endif
 
-#include <cstdio>
-#include <cctype>
-
-#include "utils.h"
-#include "utility.h"
-#include "textutil.h"
 #include "files.h"
+#include "textutil.h"
+#include "utility.h"
+#include "utils.h"
+
 #include <fcntl.h>
-#include <cstring>
 #include <sys/stat.h>
+#include <unistd.h>
+
+#include <cctype>
+#include <cstdio>
+#include <cstring>
 
 /* Returns the size of a file in bytes */
 long fsize(FILE *f)
@@ -104,7 +102,7 @@ char *fread_line_commented(FILE *fl, char *buf, int max)
 char *fread_string_copy(FILE *fl, char *buf, int max)
 {
     char *obuf;
-    register char *point;
+    char *point;
     int flag, total;
 
     memset(buf, '\0', max);

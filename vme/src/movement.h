@@ -4,10 +4,7 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.3 $
  */
-
-#ifndef _MUD_MOVEMENT_H
-#define _MUD_MOVEMENT_H
-int move_to(unit_data *from, unit_data *to);
+#pragma once
 
 #include "interpreter.h"
 
@@ -50,11 +47,3 @@ struct visit_data
     void *data;
     int non_tick_return; /* What to return upon non-ticks (SFR_...) */
 };
-
-void npc_set_visit(class unit_data *npc,
-                   class unit_data *dest_room,
-                   int what_now(const class unit_data *, struct visit_data *),
-                   void *data,
-                   int non_tick_return);
-
-#endif /* _MUD_MOVEMENT_H */

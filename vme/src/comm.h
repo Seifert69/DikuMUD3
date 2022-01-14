@@ -4,9 +4,7 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.3 $
  */
-
-#ifndef _MUD_COMM_H
-#define _MUD_COMM_H
+#pragma once
 
 #include "dil.h"
 
@@ -56,5 +54,3 @@ int process_input(class descriptor_data *t);
 #define PROMPT_SENT 0
 #define PROMPT_EXPECT 1
 #define PROMPT_IGNORE 2
-
-#endif /* _MUD_COMM_H */

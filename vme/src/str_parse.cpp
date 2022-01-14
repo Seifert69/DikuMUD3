@@ -5,13 +5,13 @@
  $Revision: 2.1 $
  */
 
-#include <ctype.h>
-#include <string.h>
-#include <stdlib.h>
-#include <assert.h>
-
 #include "essential.h"
 #include "textutil.h"
+
+#include <cassert>
+#include <cctype>
+#include <cstdlib>
+#include <cstring>
 
 char *parse_match(const char *pData, const char *pMatch)
 {

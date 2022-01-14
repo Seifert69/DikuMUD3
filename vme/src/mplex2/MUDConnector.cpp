@@ -6,48 +6,32 @@
  */
 
 #ifdef _WINDOWS
-    #include "telnet.h"
-    #include "winsock2.h"
-    #include <time.h>
     #include "string.h"
+    #include "telnet.h"
     #include "winbase.h"
+    #include "winsock2.h"
+
+    #include <time.h>
 #endif
 
-#ifdef LINUX
-    #include <unistd.h>
-    #include <arpa/telnet.h>
-    #include <sys/time.h>
-    #include <netdb.h>
-#endif
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <ctype.h>
-#include <assert.h>
-#include <signal.h>
-#include <thread>
-
-#define MPLEX_COMPILE 1
-#include "structs.h"
-
-#include "network.h"
-#include "protocol.h"
-#include "essential.h"
-#include "textutil.h"
-#include "ttydef.h"
-#include "db.h"
-#include "utility.h"
-#include "translate.h"
-#include "hook.h"
-#include "common.h"
-#include "queue.h"
-#include "mplex.h"
 #include "ClientConnector.h"
 #include "MUDConnector.h"
+#include "essential.h"
+#include "hook.h"
+#include "mplex.h"
+#include "network.h"
+#include "protocol.h"
+#include "queue.h"
+#include "utility.h"
+
+#include <unistd.h>
+
+#include <cassert>
+#include <cerrno>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <thread>
 
 class color_type g_cDefcolor;
 int g_nConnectionsLeft = -1;
@@ -64,8 +48,6 @@ class cMudHook g_MudHook;
 // The Control() loop keeps listening for new connections as well as
 // read / writing data to and from the MUDHook.
 //
-
-void mud_went_down(void); // Circular reference
 
 void alarm_check(int i)
 {

@@ -1,5 +1,4 @@
-#ifndef _MEMBUG_H
-#define _MEMBUG_H
+#pragma once
 
 #ifndef MEMORY_DEBUG
     #define membug_verify(ptr)       // NIL
@@ -32,6 +31,4 @@ void membug_verify_class(void *ptr);
     #define calloc membug_calloc
     #define malloc membug_malloc
     #define realloc membug_realloc
-#endif
-
 #endif

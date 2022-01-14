@@ -4,28 +4,24 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.7 $
  */
-#include "external_vars.h"
-#include <cstring>
-#include <cctype>
-#include <cstdio>
-#include <cstdlib>
+#include "interpreter.h"
 
+#include "cmdload.h"
+#include "comm.h"
+#include "common.h"
+#include "db.h"
+#include "dilrun.h"
+#include "mobact.h"
+#include "spec_assign.h"
 #include "structs.h"
 #include "textutil.h"
-#include "comm.h"
-#include "interpreter.h"
-#include "db.h"
-#include "utils.h"
-#include "vmelimits.h"
-#include "skills.h"
 #include "trie.h"
-#include "utility.h"
-#include "files.h"
-#include "common.h"
-#include "constants.h"
 #include "unitfind.h"
-#include "dilrun.h"
-#include "cmdload.h"
+#include "utility.h"
+#include "utils.h"
+
+#include <cstdlib>
+#include <cstring>
 
 struct trie_type *g_intr_trie = NULL;
 
@@ -570,14 +566,13 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
 
         if ((orgflag != sarg->fptr->flags) && (sarg->fptr->index == SFUN_DIL_INTERNAL))
         {
-            void SetFptrTimer(class unit_data * u, class unit_fptr * fptr);
             int diltick, i;
             diltick = FALSE;
             if (IS_SET(sarg->fptr->flags, SFB_TICK))
                 diltick = TRUE;
             else if (sarg->fptr->data)
             {
-                register class dilprg *prg = (class dilprg *)sarg->fptr->data;
+                class dilprg *prg = (class dilprg *)sarg->fptr->data;
                 for (i = 0; i < prg->fp->intrcount; i++)
                     if (IS_SET(prg->fp->intr[i].flags, SFB_TICK))
                         diltick = TRUE;
@@ -616,7 +611,7 @@ int unit_function_scan(class unit_data *u, struct spec_arg *sarg)
 
 int basic_special(class unit_data *ch, struct spec_arg *sarg, ubit16 mflt, class unit_data *extra_target, const char *to)
 {
-    register class unit_data *u, *uu, *next, *nextt, *tou;
+    class unit_data *u, *uu, *next, *nextt, *tou;
     class file_index_type *fi;
 
     if (ch && ch->is_destructed())

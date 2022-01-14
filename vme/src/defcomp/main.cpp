@@ -1,14 +1,14 @@
 #define FALSE 0
 #define TRUE 1
+#include "../compile_defines.h"
 #include "defcomp.h"
 
-#include <iostream>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 
-#include "../compile_defines.h"
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
 
 int main(int argc, char **argv)
 {

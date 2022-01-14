@@ -4,15 +4,16 @@
  $Date: 2004/03/20 06:13:21 $
  $Revision: 2.3 $
  */
-#ifndef _MUD_DILRUN_H
-#define _MUD_DILRUN_H
+#pragma once
+
+#include "essential.h"
+
+#include <cstddef>
 
 struct dil_func_type
 {
     void (*func)(class dilprg *);
 };
-
-extern struct dil_func_type g_dilfe_func[];
 
 /* Maximum number of consecutive instructions allowed in one tick */
 #define WAITCMD_FINISH -100    /* Stop program execution until next event */
@@ -30,6 +31,9 @@ extern struct dil_func_type g_dilfe_func[];
         (dilfe_func[*(prg->fp->pc - 1)].func((prg), (v)));                                                                                 \
         assert((prg)->fp->pc <= &((prg)->fp->tmpl->core[(prg)->fp->tmpl->coresz]));                                                        \
     }
+
+#define FAIL_NULL 1
+#define TYPEFAIL_NULL 2
 
 void dil_edit_done(class descriptor_data *d);
 void DeactivateDil(class unit_data *pc, class dilprg *prg = NULL);
@@ -49,12 +53,7 @@ void dil_free_frame(struct dilframe *frame);
 char dil_getbool(class dilval *v, class dilprg *prg);
 int dil_getval(class dilval *v);
 void dil_add_secure(class dilprg *prg, class unit_data *sup, ubit8 *lab);
-#ifdef __cplusplus
 int dil_sub_secure(struct dilframe *frm, class unit_data *sup, int bForeach = FALSE);
-#endif
-void dil_secure_test(class dilprg *prg);
-int same_environment(class unit_data *u1, class unit_data *u2);
-void unhash_str(char **s);
 void dil_clear_extras(class dilprg *prg, class extra_descr_data *exd);
 void dil_clear_non_secured(class dilprg *prg);
 void dil_clear_lost_reference(struct dilframe *frm, void *ptr);
@@ -69,13 +68,11 @@ class unit_fptr *dil_find(const char *name, class unit_data *u);
 
 void dil_typeerr(class dilprg *p, const char *where);
 
-#define FAIL_NULL 1
-#define TYPEFAIL_NULL 2
-
 int dil_type_check(const char *f, class dilprg *p, int tot, ...);
-void dil_free_prg(class dilprg *prg);
 
 void dil_intr_remove(class dilprg *p, int idx);
 int dil_intr_insert(class dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags);
+int run_dil(struct spec_arg *sarg);
+void dil_free_template(struct diltemplate *tmpl, int copy);
 
-#endif
+extern struct dil_func_type g_dilfe_func[];

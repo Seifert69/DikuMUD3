@@ -4,16 +4,16 @@
  $Date: 2005/06/28 20:17:48 $
  $Revision: 2.6 $
  */
+#pragma once
 
-#ifndef _MUD_ESSENTIAL_H
-#define _MUD_ESSENTIAL_H
-
-#include <stdlib.h>
-#include <sys/types.h>
-#include <stdio.h>
-#include <assert.h>
-#include <time.h>
 #include "membug.h"
+
+#include <sys/types.h>
+
+#include <cassert>
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
 
 #ifdef _WINDOWS
     #include <ctype.h>
@@ -123,5 +123,3 @@ void slog(enum log_level, ubit8, const char *, ...);
         free(p);                                                                                                                           \
         p = NULL;                                                                                                                          \
     }
-
-#endif // MUD_ESSENTIAL
