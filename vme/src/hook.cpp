@@ -208,10 +208,14 @@ int cHookNative::read(void *buf, int count)
         {
 #ifdef _WINDOWS
             if (WSAGetLastError() == WSAEWOULDBLOCK || WSAGetLastError() == WSAEINTR)
+            {
                 return 0;
+            }
 #else
             if (errno == EWOULDBLOCK)
+            {
                 return 0;
+            }
 #endif
             slog(LOG_ALL, 0, "Read from socket %d error %d", fd, errno);
             Unhook();
