@@ -2874,7 +2874,7 @@ void dilfe_wpntxt(class dilprg *p)
     delete v1;
 }
 
-void dilfe_itoa(register class dilprg *p)
+void dilfe_itoa(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Conversion of integers to strings */
@@ -2898,7 +2898,7 @@ void dilfe_itoa(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_atoi(register class dilprg *p)
+void dilfe_atoi(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Conversion of strings to integers */
@@ -2928,7 +2928,7 @@ void dilfe_atoi(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_isplayer(register class dilprg *p)
+void dilfe_isplayer(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Check to see if a player exists by name xxx */
@@ -2996,7 +2996,7 @@ void *threadcallout(void *p)
 }
 
 // DIL shell()
-void dilfe_shell(register class dilprg *p)
+void dilfe_shell(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Get the ID number of a player. */
@@ -3039,7 +3039,7 @@ void dilfe_shell(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_len(register class dilprg *p)
+void dilfe_len(class dilprg *p)
 {
     dilval *v = new dilval;
     /* length of strings, stringlists, or intlist */
@@ -3115,7 +3115,7 @@ long str_escape_size(char *sbuf, long ln)
 }
 
 /* textformat */
-void dilfe_txf(register class dilprg *p)
+void dilfe_txf(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
@@ -3154,7 +3154,7 @@ void dilfe_txf(register class dilprg *p)
 }
 
 /* sact - return string (call act_generate) */
-void dilfe_sact(register class dilprg *p)
+void dilfe_sact(class dilprg *p)
 {
     dilval *v = new dilval; // Return variable
     v->type = DILV_FAIL;    // NULL string
@@ -3250,7 +3250,7 @@ void dilfe_sact(register class dilprg *p)
 /* getinteger(idx, p_u, p_i) : index is the kind of int to get.
  * p_u / p_i are optional unitptr / integer parameters
  */
-void dilfe_gint(register class dilprg *p)
+void dilfe_gint(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v3 = p->stack.pop(); // INT
@@ -3373,7 +3373,7 @@ void dilfe_gint(register class dilprg *p)
 }
 
 /* asctime */
-void dilfe_ast(register class dilprg *p)
+void dilfe_ast(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
@@ -3404,7 +3404,7 @@ void dilfe_ast(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_getw(register class dilprg *p)
+void dilfe_getw(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Get first word of a string */
@@ -3443,7 +3443,7 @@ void dilfe_getw(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_getws(register class dilprg *p)
+void dilfe_getws(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Get first word of a string */
@@ -3485,7 +3485,7 @@ void dilfe_getws(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_split(register class dilprg *p)
+void dilfe_split(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Get first word of a string */
@@ -3573,7 +3573,7 @@ void dilfe_split(register class dilprg *p)
 
 // BOOST VERSION
 /*return a unit file directory listing */
-void dilfe_udir(register class dilprg *p)
+void dilfe_udir(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
@@ -3663,7 +3663,7 @@ void dilfe_udir(register class dilprg *p)
 
 // BOOST VERSION
 /*return a string file directory listing */
-void dilfe_sdir(register class dilprg *p)
+void dilfe_sdir(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
@@ -3743,7 +3743,7 @@ void dilfe_sdir(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_wepinfo(register class dilprg *p)
+void dilfe_wepinfo(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
@@ -3784,7 +3784,7 @@ void dilfe_wepinfo(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_load(register class dilprg *p)
+void dilfe_load(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Load a unit from database */
@@ -3835,7 +3835,7 @@ void dilfe_load(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_getcmd(register class dilprg *p)
+void dilfe_getcmd(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
@@ -3869,7 +3869,7 @@ void dilfe_getcmd(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_clone(register class dilprg *p)
+void dilfe_clone(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Load a unit from database */
@@ -3906,7 +3906,7 @@ void dilfe_clone(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_plus(register class dilprg *p)
+void dilfe_plus(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Addition of strings or integers */
@@ -3984,7 +3984,7 @@ void dilfe_plus(register class dilprg *p)
 }
 
 // DIL destroy
-void dilfe_dld(register class dilprg *p)
+void dilfe_dld(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Destruction of DIL programs */
@@ -4030,7 +4030,7 @@ void dilfe_dld(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_dlf(register class dilprg *p)
+void dilfe_dlf(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Detection of DIL programs (TRUE/FALSE) */
@@ -4077,7 +4077,7 @@ void dilfe_dlf(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_call(register class dilprg *p)
+void dilfe_call(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Detection of DIL programs (TRUE/FALSE) */
@@ -4160,7 +4160,7 @@ void dilfe_call(register class dilprg *p)
     delete v4;
 }
 
-void dilfe_min(register class dilprg *p)
+void dilfe_min(class dilprg *p)
 {
     /* Subtraction of integers */
     dilval *v2 = p->stack.pop();
@@ -4197,7 +4197,7 @@ void dilfe_min(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_mul(register class dilprg *p)
+void dilfe_mul(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -4233,7 +4233,7 @@ void dilfe_mul(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_div(register class dilprg *p)
+void dilfe_div(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -4272,7 +4272,7 @@ void dilfe_div(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_mod(register class dilprg *p)
+void dilfe_mod(class dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -4311,7 +4311,7 @@ void dilfe_mod(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_and(register class dilprg *p)
+void dilfe_and(class dilprg *p)
 {
     /* And two integers (or booleans) */
     dilval *v2 = p->stack.pop();
@@ -4332,7 +4332,7 @@ void dilfe_and(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_land(register class dilprg *p)
+void dilfe_land(class dilprg *p)
 {
     dilval *v = new dilval;
     /* And two integers (or booleans) */
@@ -4347,7 +4347,7 @@ void dilfe_land(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_or(register class dilprg *p)
+void dilfe_or(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Or two integers (or booleans) */
@@ -4366,7 +4366,7 @@ void dilfe_or(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_lor(register class dilprg *p)
+void dilfe_lor(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Or two integers (or booleans) */
@@ -4381,7 +4381,7 @@ void dilfe_lor(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_isa(register class dilprg *p)
+void dilfe_isa(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Test if unit is affected by affect */
@@ -4424,7 +4424,7 @@ void dilfe_isa(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_rnd(register class dilprg *p)
+void dilfe_rnd(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Random in an integer range */
@@ -4464,7 +4464,7 @@ void dilfe_rnd(register class dilprg *p)
 }
 
 // findroom(#)
-void dilfe_fndr(register class dilprg *p)
+void dilfe_fndr(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Find a room */
@@ -4504,7 +4504,7 @@ void dilfe_fndr(register class dilprg *p)
 }
 
 // findzone(#)
-void dilfe_fndz(register class dilprg *p)
+void dilfe_fndz(class dilprg *p)
 {
     dilval *v = new dilval;
     dilval *v1 = p->stack.pop();
@@ -4539,7 +4539,7 @@ void dilfe_fndz(register class dilprg *p)
 }
 
 // findsymbolic(#,#,#)
-void dilfe_fnds2(register class dilprg *p)
+void dilfe_fnds2(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Find a symbolic unit */
@@ -4681,7 +4681,7 @@ void dilfe_fndsidx(class dilprg *p)
 }
 
 // findsymbolic(#)
-void dilfe_fnds(register class dilprg *p)
+void dilfe_fnds(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Find a symbolic unit */
@@ -4714,7 +4714,7 @@ void dilfe_fnds(register class dilprg *p)
     delete v1;
 }
 
-void dilfe_gt(register class dilprg *p)
+void dilfe_gt(class dilprg *p)
 {
     /* Greater Than operator */
     dilval *v2 = p->stack.pop();
@@ -4752,7 +4752,7 @@ void dilfe_gt(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_lt(register class dilprg *p)
+void dilfe_lt(class dilprg *p)
 {
     /* Greater Than operator */
     dilval *v2 = p->stack.pop();
@@ -4790,7 +4790,7 @@ void dilfe_lt(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_ge(register class dilprg *p)
+void dilfe_ge(class dilprg *p)
 {
     /* Greater Than operator */
     dilval *v2 = p->stack.pop();
@@ -4828,7 +4828,7 @@ void dilfe_ge(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_le(register class dilprg *p)
+void dilfe_le(class dilprg *p)
 {
     /* Greater Than operator */
     dilval *v2 = p->stack.pop();
@@ -4866,7 +4866,7 @@ void dilfe_le(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_eq(register class dilprg *p)
+void dilfe_eq(class dilprg *p)
 {
     /* Greater Than operator */
     dilval *v2 = p->stack.pop();
@@ -4903,7 +4903,7 @@ void dilfe_eq(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_ne(register class dilprg *p)
+void dilfe_ne(class dilprg *p)
 {
     /* Greater Than operator */
     dilval *v2 = p->stack.pop();
@@ -4941,7 +4941,7 @@ void dilfe_ne(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_slt(register class dilprg *p)
+void dilfe_slt(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Less Than operator */
@@ -4995,7 +4995,7 @@ void dilfe_slt(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_sgt(register class dilprg *p)
+void dilfe_sgt(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Less Than operator */
@@ -5049,7 +5049,7 @@ void dilfe_sgt(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_sle(register class dilprg *p)
+void dilfe_sle(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Less Than operator */
@@ -5103,7 +5103,7 @@ void dilfe_sle(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_sge(register class dilprg *p)
+void dilfe_sge(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Less Than operator */
@@ -5157,7 +5157,7 @@ void dilfe_sge(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_se(register class dilprg *p)
+void dilfe_se(class dilprg *p)
 {
     dilval *v = new dilval;
     /* String equal operator */
@@ -5218,7 +5218,7 @@ void dilfe_se(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_sne(register class dilprg *p)
+void dilfe_sne(class dilprg *p)
 {
     dilval *v = new dilval;
     /* String not equal operator */
@@ -5273,7 +5273,7 @@ void dilfe_sne(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_pe(register class dilprg *p)
+void dilfe_pe(class dilprg *p)
 {
     dilval *v = new dilval;
     int ilp1 = 0;
@@ -5365,7 +5365,7 @@ void dilfe_pe(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_pne(register class dilprg *p)
+void dilfe_pne(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Pointer Equality operator */
@@ -5450,7 +5450,7 @@ void dilfe_pne(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_iss(register class dilprg *p)
+void dilfe_iss(class dilprg *p)
 {
     // Test if bist are set
     dilval *v2 = p->stack.pop();
@@ -5487,7 +5487,7 @@ void dilfe_iss(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_in(register class dilprg *p)
+void dilfe_in(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Test if string in string, stringlist or extra description */
@@ -5588,7 +5588,7 @@ void dilfe_in(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_strcmp(register class dilprg *p)
+void dilfe_strcmp(class dilprg *p)
 {
     dilval *v = new dilval;
     /* String equal operator */
@@ -5646,7 +5646,7 @@ void dilfe_strcmp(register class dilprg *p)
     delete v2;
 }
 
-void dilfe_strncmp(register class dilprg *p)
+void dilfe_strncmp(class dilprg *p)
 {
     dilval *v = new dilval;
     /* String equal operator */
@@ -5719,7 +5719,7 @@ void dilfe_strncmp(register class dilprg *p)
     delete v3;
 }
 
-void dilfe_fndu2(register class dilprg *p)
+void dilfe_fndu2(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Find a unit */
@@ -5852,7 +5852,7 @@ void dilfe_fndu2(register class dilprg *p)
     delete v5;
 }
 
-void dilfe_fndu(register class dilprg *p)
+void dilfe_fndu(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Find a unit */
@@ -5970,7 +5970,7 @@ void dilfe_fndu(register class dilprg *p)
 }
 
 // findrndunit(#,#,#)
-void dilfe_fndru(register class dilprg *p)
+void dilfe_fndru(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Find a unit */
@@ -6046,7 +6046,7 @@ void dilfe_fndru(register class dilprg *p)
 }
 
 // read a fixed string
-void dilfe_fs(register class dilprg *p)
+void dilfe_fs(class dilprg *p)
 {
     dilval *v = new dilval;
     /* A Fixed String */
@@ -6065,7 +6065,7 @@ void dilfe_fs(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_fsl(register class dilprg *p)
+void dilfe_fsl(class dilprg *p)
 {
     dilval *v = new dilval;
     cNamelist *namelist = new cNamelist;
@@ -6079,7 +6079,7 @@ void dilfe_fsl(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_fil(register class dilprg *p)
+void dilfe_fil(class dilprg *p)
 {
     dilval *v = new dilval;
     cintlist *intlist = new cintlist;
@@ -6093,7 +6093,7 @@ void dilfe_fil(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_var(register class dilprg *p)
+void dilfe_var(class dilprg *p)
 {
     dilval *v = new dilval;
     /* A variable */
@@ -6150,7 +6150,7 @@ void dilfe_var(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_weat(register class dilprg *p)
+void dilfe_weat(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Self */
@@ -6161,7 +6161,7 @@ void dilfe_weat(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_self(register class dilprg *p)
+void dilfe_self(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Self */
@@ -6172,7 +6172,7 @@ void dilfe_self(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_hrt(register class dilprg *p)
+void dilfe_hrt(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Heartbeat */
@@ -6183,7 +6183,7 @@ void dilfe_hrt(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_tho(register class dilprg *p)
+void dilfe_tho(class dilprg *p)
 {
     dilval *v = new dilval;
     /* MudHour */
@@ -6194,7 +6194,7 @@ void dilfe_tho(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_tda(register class dilprg *p)
+void dilfe_tda(class dilprg *p)
 {
     dilval *v = new dilval;
     /* MudDay */
@@ -6205,7 +6205,7 @@ void dilfe_tda(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_tmd(register class dilprg *p)
+void dilfe_tmd(class dilprg *p)
 {
     dilval *v = new dilval;
     /* MudMonth */
@@ -6216,7 +6216,7 @@ void dilfe_tmd(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_tye(register class dilprg *p)
+void dilfe_tye(class dilprg *p)
 {
     dilval *v = new dilval;
     /* MudYear */
@@ -6227,7 +6227,7 @@ void dilfe_tye(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_rti(register class dilprg *p)
+void dilfe_rti(class dilprg *p)
 {
     dilval *v = new dilval;
     /* RealTime */
@@ -6238,7 +6238,7 @@ void dilfe_rti(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_acti(register class dilprg *p)
+void dilfe_acti(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Activator */
@@ -6249,7 +6249,7 @@ void dilfe_acti(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_medi(register class dilprg *p)
+void dilfe_medi(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Medium */
@@ -6260,7 +6260,7 @@ void dilfe_medi(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_targ(register class dilprg *p)
+void dilfe_targ(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Target */
@@ -6271,7 +6271,7 @@ void dilfe_targ(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_powe(register class dilprg *p)
+void dilfe_powe(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Power */
@@ -6288,7 +6288,7 @@ void dilfe_powe(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_cmst(register class dilprg *p)
+void dilfe_cmst(class dilprg *p)
 {
     dilval *v = new dilval;
     /* cmdstr */
@@ -6306,7 +6306,7 @@ void dilfe_cmst(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_excmst(register class dilprg *p)
+void dilfe_excmst(class dilprg *p)
 {
     dilval *v = new dilval;
     /* cmdstr */
@@ -6324,7 +6324,7 @@ void dilfe_excmst(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_excmstc(register class dilprg *p)
+void dilfe_excmstc(class dilprg *p)
 {
     dilval *v = new dilval;
     /* excmdc */
@@ -6342,7 +6342,7 @@ void dilfe_excmstc(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_argm(register class dilprg *p)
+void dilfe_argm(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Argument */
@@ -6359,7 +6359,7 @@ void dilfe_argm(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_null(register class dilprg *p)
+void dilfe_null(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Pointer value null */
@@ -6370,7 +6370,7 @@ void dilfe_null(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_int(register class dilprg *p)
+void dilfe_int(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Fixed integer */
@@ -6381,7 +6381,7 @@ void dilfe_int(register class dilprg *p)
     p->stack.push(v);
 }
 
-void dilfe_cmds(register class dilprg *p)
+void dilfe_cmds(class dilprg *p)
 {
     dilval *v = new dilval;
     /* Check if the input command might the supplied argument */
@@ -6461,7 +6461,7 @@ void dilfe_pck(class dilprg *p)
     delete v2;
 }
 
-void dilfe_act(register class dilprg *p)
+void dilfe_act(class dilprg *p)
 {
     dilval *v = new dilval;
     char buf[1024];

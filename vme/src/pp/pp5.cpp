@@ -148,7 +148,7 @@ void doif(int aaa, int bbb, const char *ccc)
 
 void doifs(int t, int bbb, const char *ccc)
 {
-    register int iftype;
+    int iftype;
 
     if (Ifstate == IFTRUE)
     {
