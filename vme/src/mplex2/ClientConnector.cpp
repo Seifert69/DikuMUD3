@@ -830,15 +830,25 @@ void cConHook::StripHTML(char *dest, const char *src)
                 *dest++ = '\r';
                 continue;
             }
+
             if (strcmp(aTag, "script") == 0)
             {
                 if (strncasecmp(p, "PasswordOn()", 12) == 0)
                 {
+                    if (g_mplex_arg.bMudProtocol)
+                    {
+                        // Kyle, might be something here for MUD protocol
+                    }
+
                     Control_Echo_Off(this, &dest, 0);
                     p += 12;
                 }
                 else if (strncasecmp(p, "PasswordOff(", 12) == 0)
                 {
+                    if (g_mplex_arg.bMudProtocol)
+                    {
+                        // Kyle, might be something here for MUD protocol
+                    }
                     Control_Echo_On(this, &dest, 0);
                     p += 12;
                 }
@@ -858,6 +868,47 @@ void cConHook::StripHTML(char *dest, const char *src)
             {
                 char buf[256];
                 int l;
+
+                if (g_mplex_arg.bMudProtocol)
+                {
+                    // Kyle: if you remove these comments you'll see the full tag contents
+                    //       which is nice for debugging. Or use gdb ;)
+                    // strcpy(dest, "||"); TAIL(dest);
+                    // strcpy(dest, aTag); TAIL(dest);
+                    // strcpy(dest, "||"); TAIL(dest);
+
+
+                    // If the tag has 'bars' it's a health update
+                    l = getHTMLValue("bars", aTag, buf, sizeof(buf) - 1);
+
+                    if (l != 0)
+                    {
+                        strcpy(dest, "||"); TAIL(dest);
+                        strcpy(dest, buf); TAIL(dest);
+                        strcpy(dest, "||"); TAIL(dest);
+
+                        // KYLE: buf will have the hp,mp,ep
+                        // remove the three debug lines above, parse the string, and 
+                        // output mud protocol codes
+                        //
+                        continue;
+                    }
+
+                    l = getHTMLValue("exits", aTag, buf, sizeof(buf) - 1);
+
+                    if (l != 0)
+                    {
+                        strcpy(dest, "||"); TAIL(dest);
+                        strcpy(dest, buf); TAIL(dest);
+                        strcpy(dest, "||"); TAIL(dest);
+
+                        // KYLE: buf will have the visible exits
+                        // remove the three debug lines above, parse the string, and 
+                        // output mud protocol codes
+                        //
+                        continue;
+                    }
+                }
 
                 l = getHTMLValue("class", aTag, buf, sizeof(buf) - 1);
 
